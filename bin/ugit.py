@@ -1,18 +1,13 @@
 #!/usr/bin/env python
 import sys
 from PyQt4 import QtCore, QtGui
-
-from ugitmainwindow import ugitMainWindow
-from ugitdata import ugitData
-
-def main():
-	app = QtGui.QApplication(sys.argv)
-	ugitWindow = ugitMainWindow(app.activeWindow())
-
-	ugitdata = ugitData()
-	ugitWindow.setup_notifications(ugitdata)
-
-	ugitWindow.show()
+from ugitmodel import GitModel
+from ugitview import GitView
+from ugitcontroller import GitController
+if __name__ == "__main__":
+	app = QtGui.QApplication (sys.argv)
+	model = GitModel()
+	view = GitView (app.activeWindow())
+	ctl = GitController (model, view)
+	view.show()
 	sys.exit(app.exec_())
-
-if __name__ == "__main__": main()
