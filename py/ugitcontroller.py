@@ -13,7 +13,6 @@ class GitController(QObserver):
 				view.signOffButton,)
 
 		self.add_callbacks(model, {
-				#'commitText':    self.committext_callback,
 				'rescanButton':  self.rescan_callback,
 				'signOffButton': self.signoff_callback,
 				})
@@ -22,7 +21,9 @@ class GitController(QObserver):
 		print self.model
 
 	def signoff_callback(self, model, *args):
-		model.set_commitmsg('%s\n\nSigned-off by: %s <%s>' % (
-				model.get_commitmsg(),
-				model.get_name(),
-				model.get_email() ))
+		msg = model.get_commitmsg()
+		signoff = 'Signed-off by: %s <%s>' % (
+				model.get_name(), model.get_email() )
+
+		if signoff not in msg:
+			model.set_commitmsg( '%s\n\n%s' % ( msg, signoff ) )
