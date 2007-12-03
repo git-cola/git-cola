@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>579</width>
-    <height>439</height>
+    <width>582</width>
+    <height>454</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -17,10 +17,66 @@
     <item>
      <layout class="QHBoxLayout" >
       <item>
-       <widget class="QListView" name="stagedListView" />
+       <layout class="QVBoxLayout" >
+        <item>
+         <widget class="QLabel" name="label_2" >
+          <property name="text" >
+           <string>Staged Changes to commit</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="stagedList" >
+          <property name="selectionMode" >
+           <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
+          <property name="viewMode" >
+           <enum>QListView::ListMode</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
-       <widget class="QListView" name="unstagedListView" />
+       <layout class="QVBoxLayout" >
+        <item>
+         <layout class="QHBoxLayout" >
+          <item>
+           <widget class="QLabel" name="label_3" >
+            <property name="text" >
+             <string>Unstaged Changes</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="untrackedCheckBox" >
+            <property name="text" >
+             <string>Show Untracked Files</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+            <property name="tristate" >
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QListWidget" name="unstagedList" >
+          <property name="selectionMode" >
+           <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
+          <property name="viewMode" >
+           <enum>QListView::ListMode</enum>
+          </property>
+          <property name="uniformItemSizes" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -36,9 +92,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="stageChangesButton" >
+         <widget class="QPushButton" name="stageButton" >
           <property name="text" >
-           <string>Stage Changes</string>
+           <string>Stage</string>
           </property>
          </widget>
         </item>
@@ -139,28 +195,46 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>579</width>
-     <height>28</height>
+     <width>582</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuRepo" >
     <property name="title" >
      <string>Repo</string>
     </property>
-    <addaction name="actionBrowse_master" />
-    <addaction name="actionBrowse_branch" />
+    <addaction name="browseBranch" />
+    <addaction name="browseOtherBranch" />
+   </widget>
+   <widget class="QMenu" name="menuAdvanced" >
+    <property name="title" >
+     <string>Advanced</string>
+    </property>
+    <addaction name="unstage" />
+    <addaction name="rebase" />
    </widget>
    <addaction name="menuRepo" />
+   <addaction name="menuAdvanced" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
-  <action name="actionBrowse_master" >
+  <action name="browseBranch" >
    <property name="text" >
     <string>Browse master</string>
    </property>
   </action>
-  <action name="actionBrowse_branch" >
+  <action name="browseOtherBranch" >
    <property name="text" >
-    <string>Browse branch</string>
+    <string>Browse branch...</string>
+   </property>
+  </action>
+  <action name="unstage" >
+   <property name="text" >
+    <string>Unstage</string>
+   </property>
+  </action>
+  <action name="rebase" >
+   <property name="text" >
+    <string>Fetch and Rebase</string>
    </property>
   </action>
  </widget>

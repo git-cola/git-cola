@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 from os.path import join
+from glob import glob
 
 import Params
-from Params import fatal
+from Common import install_files
 from wafutils import pymod
 from wafutils import configure_python
 from wafutils import configure_pyqt
@@ -36,18 +37,26 @@ def configure(conf):
 	if Params.g_options.prefix is None:
 		env['PREFIX']         = '/shared/packages/%s-%s' % ( APPNAME, VERSION )
 
-	env['BIN']            = join(env['PREFIX'],'bin')
-	env['PYMODS_LIB']     = pymod(env['PREFIX'])
+	env['PYMODS']           = pymod(env['PREFIX'])
+	env['PYMODS_UGIT']      = join(env['PYMODS'],      'ugit')
+	env['ICONS']            = join(env['PYMODS_UGIT'], 'icons')
+	env['BIN']              = join(env['PREFIX'],      'bin')
 
 	configure_python(conf)
 	configure_pyqt(conf)
 
 
 def build(bld):
-	pyqt = bld.create_obj('py')
-	pyqt.inst_var = 'PYMODS_LIB'
-	pyqt.find_sources_in_dirs('py ui')
+	bld.add_subdirs('py ui')
 
 	bin = bld.create_obj('py')
 	bin.inst_var = 'BIN'
+	bin.chmod = 0755
 	bin.find_sources_in_dirs('bin')
+
+	api = bld.create_obj('py')
+	api.inst_var = 'PYMODS'
+	api.find_sources_in_dirs('api')
+
+	for icon in glob('icons/*.png'):
+		install_files ('ICONS', '', icon)

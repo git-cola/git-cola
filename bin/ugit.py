@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 from PyQt4 import QtCore, QtGui
+import ugitapi
 from ugitmodel import GitModel
 from ugitview import GitView
 from ugitcontroller import GitController
