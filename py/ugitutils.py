@@ -1,29 +1,89 @@
 #!/usr/bin/env python
 import os
-from commands import getoutput
+import re
+import commands
 
 KNOWN_FILE_TYPES = {
-	'ascii c':   'c',
-	'python':    'script',
-	'ruby':      'script',
-	'shell':     'script',
-	'perl':      'script',
-	'java':      'script',
-	'assembler': 'binary',
-	'binary':    'binary',
-	'byte':      'binary',
-	'image':     'image',
+	'ascii c':   'c.png',
+	'python':    'script.png',
+	'ruby':      'script.png',
+	'shell':     'script.png',
+	'perl':      'script.png',
+	'java':      'script.png',
+	'assembler': 'binary.png',
+	'binary':    'binary.png',
+	'byte':      'binary.png',
+	'image':     'image.png',
 }
 
+ICONSDIR = os.path.join (os.path.dirname (__file__), 'icons')
+
 def ident_file_type (filename):
+	'''Returns an icon based on the contents of filename.'''
 	if os.path.exists (filename):
-		fileinfo = getoutput('file -b "%s"' % filename)
+		quoted_filename = shell_quote (filename)
+		fileinfo = commands.getoutput('file -b %s' % quoted_filename)
 		for filetype, iconname in KNOWN_FILE_TYPES.iteritems():
 			if filetype in fileinfo.lower():
 				return iconname
-	return 'generic'
+	else:
+		return 'removed.png'
+
+	return 'generic.png'
 
 def get_icon (filename):
-	filetype = ident_file_type (filename)
-	ugitdir = os.path.dirname (__file__)
-	return os.path.join( ugitdir, 'icons', filetype + '.png' )
+	'''Returns the full path to an icon file corresponding to
+	filename's contents.'''
+	icon_file = ident_file_type (filename)
+	return os.path.join (ICONSDIR, icon_file)
+
+def get_staged_icon (filename):
+	'''Special-case method for staged items.  These are only
+	ever 'staged' and 'removed' items in the staged list.'''
+
+	if os.path.exists (filename):
+		return os.path.join (ICONSDIR, 'staged.png')
+	else:
+		return os.path.join (ICONSDIR, 'removed.png')
+
+def shell_quote (*inputs):
+	'''Quote strings so that they can be suitably martialled
+	off to the shell.  This method supports POSIX sh syntax.
+	This is crucial to properly handle command line arguments
+	with spaces, quotes, double-quotes, etc.'''
+
+	regex = re.compile ('[^\w!%+,\-./:@^]')
+	quote_regex = re.compile ("((?:'\\''){2,})")
+
+	ret = []
+	for input in inputs:
+		if not input:
+			continue
+
+		if '\x00' in input:
+		    raise AssertionError, ('No way to quote strings '
+				'containing null (\\000) bytes')
+
+		# = does need quoting else in command position it's a
+		# program-local environment setting
+		match = regex.search (input)
+		if match:
+			# ' -> '\''
+			input = input.replace ("'", "'\\''")
+
+			# make multiple ' in a row look simpler
+			# '\'''\'''\'' -> '"'''"'
+			quote_match = quote_regex.match (input)
+			if quote_match:
+				quotes = match.group (1)
+				input.replace (quotes,
+					("'" * (len(quotes)/4)) + "\"'")
+
+			input = "'%s'" % input
+			if input.startswith ("''"):
+				input = input.lstrip ("''")
+
+			if input.endswith ("''"):
+				input = input.rstrip ("''")
+		ret.append (input)
+	return ' '.join (ret)

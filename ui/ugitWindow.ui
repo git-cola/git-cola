@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>582</width>
-    <height>454</height>
+    <width>517</width>
+    <height>469</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -19,11 +19,25 @@
       <item>
        <layout class="QVBoxLayout" >
         <item>
-         <widget class="QLabel" name="label_2" >
-          <property name="text" >
-           <string>Staged Changes to commit</string>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" >
+          <item>
+           <widget class="QLabel" name="label_2" >
+            <property name="text" >
+             <string>Files to Commit</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="commitAllCheckBox" >
+            <property name="text" >
+             <string>Commit All Changes</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="QListWidget" name="stagedList" >
@@ -195,16 +209,19 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>582</width>
+     <width>517</width>
      <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuRepo" >
     <property name="title" >
-     <string>Repo</string>
+     <string>Repository</string>
     </property>
     <addaction name="browseBranch" />
     <addaction name="browseOtherBranch" />
+    <addaction name="separator" />
+    <addaction name="visualizeCurrent" />
+    <addaction name="visualizeAll" />
    </widget>
    <widget class="QMenu" name="menuAdvanced" >
     <property name="title" >
@@ -235,6 +252,16 @@
   <action name="rebase" >
    <property name="text" >
     <string>Fetch and Rebase</string>
+   </property>
+  </action>
+  <action name="visualizeCurrent" >
+   <property name="text" >
+    <string>Visualize current branch</string>
+   </property>
+  </action>
+  <action name="visualizeAll" >
+   <property name="text" >
+    <string>Visualize entire history</string>
    </property>
   </action>
  </widget>
