@@ -91,6 +91,7 @@ def shell_quote (*inputs):
 		ret.append (input)
 	return ' '.join (ret)
 
+ANSI_BACKGROUND_COLOR = 41
 ANSI_TABLE = {
 	'1':  'grey',
 	'30': 'black',
@@ -102,6 +103,10 @@ ANSI_TABLE = {
 	'36': 'cyan',
 	'37': 'white',
 }
+
+
+def html_document (html_fragment):
+	return '<body>%s</body>' % html_fragment
 
 def ansi_to_html (ansi):
 	'''Converts a block of text into an equivalent html fragment.'''
@@ -125,6 +130,9 @@ def ansi_to_html (ansi):
 			if middle in ANSI_TABLE:
 				color = ANSI_TABLE[middle]
 				middle = '<span style="color: %s">' % color
+				tagged = True
+			elif middle == str (ANSI_BACKGROUND_COLOR):
+				middle = '<span style="background-color:red">'
 				tagged = True
 			else:
 				if tagged:

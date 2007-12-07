@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>461</width>
-    <height>445</height>
+    <width>472</width>
+    <height>421</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -16,110 +16,174 @@
   <widget class="QWidget" name="centralwidget" >
    <layout class="QHBoxLayout" >
     <item>
-     <widget class="QSplitter" name="splitter_2" >
+     <widget class="QSplitter" name="splitter_3" >
       <property name="orientation" >
        <enum>Qt::Vertical</enum>
       </property>
-      <widget class="QSplitter" name="splitter" >
+      <property name="handleWidth" >
+       <number>4</number>
+      </property>
+      <widget class="QSplitter" name="splitter_2" >
        <property name="orientation" >
         <enum>Qt::Vertical</enum>
        </property>
-       <widget class="QWidget" name="layoutWidget" >
-        <layout class="QHBoxLayout" >
-         <item>
-          <layout class="QVBoxLayout" >
-           <item>
-            <layout class="QHBoxLayout" >
-             <item>
-              <widget class="QLabel" name="label_2" >
-               <property name="text" >
-                <string>Files to Commit</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="commitAllCheckBox" >
-               <property name="text" >
-                <string>Commit All Changes</string>
-               </property>
-               <property name="checked" >
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <widget class="QListWidget" name="stagedList" >
-             <property name="font" >
-              <font>
-               <family>Monospace</family>
-               <pointsize>11</pointsize>
-              </font>
-             </property>
-             <property name="selectionMode" >
-              <enum>QAbstractItemView::ExtendedSelection</enum>
-             </property>
-             <property name="viewMode" >
-              <enum>QListView::ListMode</enum>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" >
-           <item>
-            <layout class="QHBoxLayout" >
-             <item>
-              <widget class="QLabel" name="label_3" >
-               <property name="text" >
-                <string>Unstaged Changes</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="untrackedCheckBox" >
-               <property name="text" >
-                <string>Show Untracked Files</string>
-               </property>
-               <property name="checked" >
-                <bool>true</bool>
-               </property>
-               <property name="tristate" >
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <widget class="QListWidget" name="unstagedList" >
-             <property name="font" >
-              <font>
-               <family>Monospace</family>
-               <pointsize>11</pointsize>
-              </font>
-             </property>
-             <property name="selectionMode" >
-              <enum>QAbstractItemView::ExtendedSelection</enum>
-             </property>
-             <property name="viewMode" >
-              <enum>QListView::ListMode</enum>
-             </property>
-             <property name="uniformItemSizes" >
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
+       <property name="handleWidth" >
+        <number>4</number>
+       </property>
+       <widget class="QSplitter" name="splitter" >
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="handleWidth" >
+         <number>4</number>
+        </property>
+        <widget class="QWidget" name="layoutWidget" >
+         <layout class="QVBoxLayout" >
+          <property name="spacing" >
+           <number>0</number>
+          </property>
+          <property name="leftMargin" >
+           <number>1</number>
+          </property>
+          <property name="topMargin" >
+           <number>1</number>
+          </property>
+          <property name="rightMargin" >
+           <number>1</number>
+          </property>
+          <property name="bottomMargin" >
+           <number>1</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" >
+            <item>
+             <widget class="QLabel" name="label_2" >
+              <property name="text" >
+               <string>Files to Commit</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="commitAllCheckBox" >
+              <property name="text" >
+               <string>Commit All Changes</string>
+              </property>
+              <property name="checked" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QListWidget" name="stagedList" >
+            <property name="font" >
+             <font>
+              <family>Monospace</family>
+              <pointsize>11</pointsize>
+             </font>
+            </property>
+            <property name="alternatingRowColors" >
+             <bool>true</bool>
+            </property>
+            <property name="selectionMode" >
+             <enum>QAbstractItemView::ExtendedSelection</enum>
+            </property>
+            <property name="viewMode" >
+             <enum>QListView::ListMode</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="layoutWidget" >
+         <layout class="QVBoxLayout" >
+          <property name="spacing" >
+           <number>0</number>
+          </property>
+          <property name="leftMargin" >
+           <number>1</number>
+          </property>
+          <property name="topMargin" >
+           <number>1</number>
+          </property>
+          <property name="rightMargin" >
+           <number>1</number>
+          </property>
+          <property name="bottomMargin" >
+           <number>1</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" >
+            <item>
+             <widget class="QLabel" name="label_3" >
+              <property name="text" >
+               <string>Unstaged Changes</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="untrackedCheckBox" >
+              <property name="text" >
+               <string>Show Untracked Files</string>
+              </property>
+              <property name="checked" >
+               <bool>true</bool>
+              </property>
+              <property name="tristate" >
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QListWidget" name="unstagedList" >
+            <property name="font" >
+             <font>
+              <family>Monospace</family>
+              <pointsize>11</pointsize>
+             </font>
+            </property>
+            <property name="alternatingRowColors" >
+             <bool>true</bool>
+            </property>
+            <property name="selectionMode" >
+             <enum>QAbstractItemView::ExtendedSelection</enum>
+            </property>
+            <property name="viewMode" >
+             <enum>QListView::ListMode</enum>
+            </property>
+            <property name="uniformItemSizes" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
        <widget class="QWidget" name="layoutWidget" >
         <layout class="QHBoxLayout" >
+         <property name="spacing" >
+          <number>0</number>
+         </property>
+         <property name="leftMargin" >
+          <number>1</number>
+         </property>
+         <property name="topMargin" >
+          <number>1</number>
+         </property>
+         <property name="rightMargin" >
+          <number>1</number>
+         </property>
+         <property name="bottomMargin" >
+          <number>1</number>
+         </property>
          <item>
           <layout class="QVBoxLayout" >
+           <property name="spacing" >
+            <number>1</number>
+           </property>
            <item>
             <widget class="QPushButton" name="rescanButton" >
              <property name="text" >
@@ -162,6 +226,12 @@
          </item>
          <item>
           <layout class="QVBoxLayout" >
+           <property name="spacing" >
+            <number>0</number>
+           </property>
+           <property name="leftMargin" >
+            <number>4</number>
+           </property>
            <item>
             <layout class="QHBoxLayout" >
              <item>
@@ -241,24 +311,6 @@
             </color>
            </brush>
           </colorrole>
-          <colorrole role="Highlight" >
-           <brush brushstyle="SolidPattern" >
-            <color alpha="255" >
-             <red>0</red>
-             <green>255</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="HighlightedText" >
-           <brush brushstyle="SolidPattern" >
-            <color alpha="255" >
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
          </active>
          <inactive>
           <colorrole role="Text" >
@@ -271,24 +323,6 @@
            </brush>
           </colorrole>
           <colorrole role="Base" >
-           <brush brushstyle="SolidPattern" >
-            <color alpha="255" >
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Highlight" >
-           <brush brushstyle="SolidPattern" >
-            <color alpha="255" >
-             <red>0</red>
-             <green>255</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="HighlightedText" >
            <brush brushstyle="SolidPattern" >
             <color alpha="255" >
              <red>0</red>
@@ -317,31 +351,13 @@
             </color>
            </brush>
           </colorrole>
-          <colorrole role="Highlight" >
-           <brush brushstyle="SolidPattern" >
-            <color alpha="255" >
-             <red>68</red>
-             <green>68</green>
-             <blue>68</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="HighlightedText" >
-           <brush brushstyle="SolidPattern" >
-            <color alpha="255" >
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
          </disabled>
         </palette>
        </property>
        <property name="font" >
         <font>
          <family>Monospace</family>
-         <pointsize>10</pointsize>
+         <pointsize>11</pointsize>
         </font>
        </property>
        <property name="readOnly" >
@@ -357,7 +373,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>461</width>
+     <width>472</width>
      <height>26</height>
     </rect>
    </property>
@@ -377,15 +393,42 @@
     <property name="title" >
      <string>Commit</string>
     </property>
+    <addaction name="rescan" />
+    <addaction name="separator" />
     <addaction name="stageChanged" />
     <addaction name="stageUntracked" />
     <addaction name="stageSelected" />
     <addaction name="separator" />
-    <addaction name="unstage" />
+    <addaction name="unstageAll" />
+    <addaction name="unstageSelected" />
     <addaction name="separator" />
+    <addaction name="commitAll" />
+    <addaction name="commitSelected" />
+    <addaction name="separator" />
+    <addaction name="exportPatches" />
+    <addaction name="cherryPick" />
+    <addaction name="separator" />
+    <addaction name="getCommitMessage" />
     <addaction name="showDiffstat" />
    </widget>
+   <widget class="QMenu" name="menuEdit" >
+    <property name="title" >
+     <string>Edit</string>
+    </property>
+    <addaction name="undo" />
+    <addaction name="actionRedo" />
+    <addaction name="separator" />
+    <addaction name="cut" />
+    <addaction name="copy" />
+    <addaction name="paste" />
+    <addaction name="delete" />
+    <addaction name="separator" />
+    <addaction name="selectAll" />
+    <addaction name="separator" />
+    <addaction name="options" />
+   </widget>
    <addaction name="menuRepository" />
+   <addaction name="menuEdit" />
    <addaction name="menuCommit" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
@@ -396,59 +439,191 @@
   </action>
   <action name="browseOtherBranch" >
    <property name="text" >
-    <string>Browse branch...</string>
+    <string>Browse Branch...</string>
    </property>
   </action>
-  <action name="unstage" >
+  <action name="unstageSelected" >
    <property name="text" >
-    <string>Unstage selected</string>
+    <string>Unstage Selected</string>
    </property>
   </action>
   <action name="rebase" >
    <property name="text" >
-    <string>Fetch and rebase</string>
+    <string>Fetch and Rebase</string>
    </property>
   </action>
   <action name="visualizeCurrent" >
    <property name="text" >
-    <string>Visualize current branch</string>
+    <string>Visualize Current Branch</string>
    </property>
   </action>
   <action name="visualizeAll" >
    <property name="text" >
-    <string>Visualize entire history</string>
+    <string>Visualize Entire History</string>
    </property>
   </action>
   <action name="showDiffstat" >
    <property name="text" >
-    <string>Show latest diffstat</string>
+    <string>Show Latest Diffstat</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="stageChanged" >
    <property name="text" >
-    <string>Stage all changed</string>
+    <string>Stage All Changed</string>
    </property>
   </action>
   <action name="stageUntracked" >
    <property name="text" >
-    <string>Stage all untracked</string>
+    <string>Stage All Untracked</string>
    </property>
   </action>
   <action name="stageSelected" >
    <property name="text" >
-    <string>Stage selected</string>
+    <string>Stage Selected</string>
+   </property>
+  </action>
+  <action name="exportPatches" >
+   <property name="text" >
+    <string>Export Patches...</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="cut" >
+   <property name="text" >
+    <string>Cut</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="copy" >
+   <property name="text" >
+    <string>Copy</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="paste" >
+   <property name="text" >
+    <string>Paste</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="selectAll" >
+   <property name="text" >
+    <string>Select All</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="options" >
+   <property name="text" >
+    <string>Options...</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="delete" >
+   <property name="text" >
+    <string>Delete</string>
+   </property>
+   <property name="shortcut" >
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="undo" >
+   <property name="text" >
+    <string>Undo</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo" >
+   <property name="text" >
+    <string>Redo</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+Z</string>
+   </property>
+  </action>
+  <action name="rescan" >
+   <property name="text" >
+    <string>Rescan</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="commitSelected" >
+   <property name="text" >
+    <string>Commit Selected</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+S</string>
+   </property>
+  </action>
+  <action name="commitAll" >
+   <property name="text" >
+    <string>Commit All</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="getCommitMessage" >
+   <property name="text" >
+    <string>Get Latest Commit Message</string>
+   </property>
+  </action>
+  <action name="cherryPick" >
+   <property name="text" >
+    <string>Cherry-Pick Commits...</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="unstageAll" >
+   <property name="text" >
+    <string>Unstage All</string>
    </property>
   </action>
  </widget>
- <layoutdefault spacing="1" margin="1" />
+ <layoutdefault spacing="2" margin="2" />
+ <tabstops>
+  <tabstop>commitText</tabstop>
+  <tabstop>stagedList</tabstop>
+  <tabstop>unstagedList</tabstop>
+  <tabstop>rescanButton</tabstop>
+  <tabstop>stageButton</tabstop>
+  <tabstop>signOffButton</tabstop>
+  <tabstop>commitButton</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>commitAllCheckBox</tabstop>
+  <tabstop>untrackedCheckBox</tabstop>
+  <tabstop>newCommitRadio</tabstop>
+  <tabstop>amendRadio</tabstop>
+  <tabstop>displayText</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
  <designerdata>
   <property name="gridDeltaX" >
-   <number>5</number>
+   <number>4</number>
   </property>
   <property name="gridDeltaY" >
-   <number>5</number>
+   <number>4</number>
   </property>
   <property name="gridSnapX" >
    <bool>true</bool>
