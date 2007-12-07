@@ -38,7 +38,7 @@ def configure(conf):
 		env['PREFIX']         = '/shared/packages/%s-%s' % ( APPNAME, VERSION )
 
 	env['PYMODS']           = pymod(env['PREFIX'])
-	env['PYMODS_UGIT']      = join(env['PYMODS'],      'ugit')
+	env['PYMODS_UGIT']      = join(env['PYMODS'],      'ugitlibs')
 	env['ICONS']            = join(env['PYMODS_UGIT'], 'icons')
 	env['BIN']              = join(env['PREFIX'],      'bin')
 
@@ -53,10 +53,6 @@ def build(bld):
 	bin.inst_var = 'BIN'
 	bin.chmod = 0755
 	bin.find_sources_in_dirs('bin')
-
-	api = bld.create_obj('py')
-	api.inst_var = 'PYMODS'
-	api.find_sources_in_dirs('api')
 
 	for icon in glob('icons/*.png'):
 		install_files ('ICONS', '', icon)

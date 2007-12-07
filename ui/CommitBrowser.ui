@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>ugitCommitBrowser</class>
- <widget class="QDialog" name="ugitCommitBrowser" >
+ <class>CommitBrowser</class>
+ <widget class="QDialog" name="CommitBrowser" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -151,7 +151,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>ugitCommitBrowser</receiver>
+   <receiver>CommitBrowser</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -167,7 +167,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>ugitCommitBrowser</receiver>
+   <receiver>CommitBrowser</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >

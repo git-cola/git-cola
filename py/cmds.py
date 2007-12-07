@@ -2,7 +2,7 @@ import os
 import re
 import time
 import commands
-import ugitutils
+import utils
 
 def git_add (to_add):
 	'''Invokes 'git add' to index the filenames in to_add.'''
@@ -11,7 +11,7 @@ def git_add (to_add):
 
 	argv = [ 'git', 'add' ]
 	for filename in to_add:
-		argv.append (ugitutils.shell_quote (filename))
+		argv.append (utils.shell_quote (filename))
 
 	cmd = ' '.join (argv)
 	return 'Running:\t%s\n%s\n%s added successfully' % (
@@ -42,7 +42,7 @@ def git_add_or_remove (to_process):
 	argv = [ 'git', 'rm' ]
 	for filename in to_process:
 		if not os.path.exists (filename):
-			argv.append (ugitutils.shell_quote (filename))
+			argv.append (utils.shell_quote (filename))
 
 	cmd = ' '.join (argv)
 	return output + 'Running: %s\n%s' % ( cmd, commands.getoutput (cmd) )
@@ -94,7 +94,7 @@ def git_commit (msg, amend, commit_all, files):
 
 		argv.append ('--')
 		for file in files:
-			argv.append (ugitutils.shell_quote (file))
+			argv.append (utils.shell_quote (file))
 
 	# Create the commit message file
 	file = open (tmpfile, 'w')
@@ -126,7 +126,7 @@ def git_diff (filename, staged=True):
 		argv.append ('--cached')
 
 	argv.append ('--')
-	argv.append (ugitutils.shell_quote (filename))
+	argv.append (utils.shell_quote (filename))
 
 	diff = commands.getoutput (' '.join (argv))
 	diff_lines = diff.split ('\n')
@@ -192,7 +192,7 @@ def git_reset (to_unstage):
 
 	argv = [ 'git', 'reset', '--' ]
 	for filename in to_unstage:
-		argv.append (ugitutils.shell_quote (filename))
+		argv.append (utils.shell_quote (filename))
 
 	cmd = ' '.join (argv)
 	return 'Running:\t%s\n%s' % ( cmd, commands.getoutput (cmd) )

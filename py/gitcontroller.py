@@ -9,10 +9,10 @@ from PyQt4.QtGui import QPixmap
 from PyQt4.QtGui import QIcon
 from PyQt4.QtGui import QListWidgetItem
 from qobserver import QObserver
-import ugitcmds
-import ugitutils
-from ugitview import GitCommandDialog
-from ugitview import GitCommitBrowser
+import cmds
+import utils
+from gitview import GitCommandDialog
+from gitview import GitCommitBrowser
 
 class GitController (QObserver):
 	'''The controller is a mediator between the model and view.
@@ -116,7 +116,7 @@ class GitController (QObserver):
 
 		# chdir to the root of the git tree.  This is critical
 		# to being able to properly use the git porcelain.
-		cdup = ugitcmds.git_show_cdup()
+		cdup = cmds.git_show_cdup()
 		if cdup: os.chdir (cdup)
 
 		# Default to creating a new commit (i.e. not an amend commit)
@@ -161,15 +161,15 @@ class GitController (QObserver):
 
 	def cb_cherry_pick (self, model, *args):
 		'''Starts a cherry-picking session.'''
-		(revs, summaries) = ugitcmds.git_log (all=True)
+		(revs, summaries) = cmds.git_log (all=True)
 		selection, idxs = self.__select_commits (revs, summaries)
 		if not selection: return
 
-		output = ugitcmds.git_cherry_pick (selection)
+		output = cmds.git_cherry_pick (selection)
 		self.__show_command_output (output, model)
 
 	def cb_commit (self, model, *args):
-		'''Sets up data and calls ugitcmds.commit.'''
+		'''Sets up data and calls cmds.commit.'''
 
 		msg = model.get_commitmsg()
 		amend = self.view.amendRadio.isChecked()
@@ -181,7 +181,7 @@ class GitController (QObserver):
 					self.view.stagedList,
 					model.get_staged() )
 		# Perform the commit
-		output = ugitcmds.git_commit (msg, amend, commit_all, files)
+		output = cmds.git_commit (msg, amend, commit_all, files)
 
 		# Reset the commitmsg and rescan changes
 		if not output.startswith ('ERROR'):
@@ -219,8 +219,8 @@ class GitController (QObserver):
 		browser.revisionLine.selectAll()
 
 		# Lookup the info for that sha1 and display it
-		commit_info = ugitcmds.git_show (sha1, color=True)
-		html = ugitutils.ansi_to_html (commit_info)
+		commit_info = cmds.git_show (sha1, color=True)
+		html = utils.ansi_to_html (commit_info)
 		browser.commitText.setText (html)
 
 		# Copy the sha1 into the clipboard
@@ -236,13 +236,13 @@ class GitController (QObserver):
 			return
 
 		filename = model.get_staged()[row]
-		diff = ugitcmds.git_diff (filename, staged=True)
-		html = ugitutils.ansi_to_html (diff)
+		diff = cmds.git_diff (filename, staged=True)
+		html = utils.ansi_to_html (diff)
 
 		if os.path.exists (filename):
-			pre = ugitutils.html_header ('Staged for commit')
+			pre = utils.html_header ('Staged for commit')
 		else:
-			pre = ugitutils.html_header ('Staged for removal')
+			pre = utils.html_header ('Staged for removal')
 
 		self.view.displayText.setText (pre + html)
 
@@ -254,31 +254,31 @@ class GitController (QObserver):
 			return
 		filename = (model.get_unstaged() + model.get_untracked())[row]
 		if os.path.isdir (filename):
-			pre = ugitutils.html_header ('Untracked directory')
-			cmd = 'ls -la %s' % ugitutils.shell_quote (filename)
+			pre = utils.html_header ('Untracked directory')
+			cmd = 'ls -la %s' % utils.shell_quote (filename)
 			html = '<pre>%s</pre>' % commands.getoutput (cmd)
 			self.view.displayText.setText ( pre + html )
 			return
 
 		if filename in model.get_unstaged():
-			diff = ugitcmds.git_diff (filename, staged=False)
-			pre = ugitutils.html_header ('Modified, unstaged')
-			html = ugitutils.ansi_to_html (diff)
+			diff = cmds.git_diff (filename, staged=False)
+			pre = utils.html_header ('Modified, unstaged')
+			html = utils.ansi_to_html (diff)
 		else:
 			# untracked file
-			cmd = 'file -b %s' % ugitutils.shell_quote (filename)
+			cmd = 'file -b %s' % utils.shell_quote (filename)
 			file_type = commands.getoutput (cmd)
 			if 'binary' in file_type or 'data' in file_type:
-				sq_filename = ugitutils.shell_quote (filename)
+				sq_filename = utils.shell_quote (filename)
 				cmd = 'hexdump -C %s' % sq_filename
 				contents = commands.getoutput (cmd)
 			else:
 				file = open (filename, 'r')
-				contents = ugitutils.html_encode (file.read())
+				contents = utils.html_encode (file.read())
 				file.close()
 
 			header = 'Untracked file: ' + file_type
-			pre = ugitutils.html_header (header)
+			pre = utils.html_header (header)
 			html = '<pre>%s</pre>' % contents
 
 		self.view.displayText.setText (pre + html)
@@ -287,7 +287,7 @@ class GitController (QObserver):
 		'''Launches the commit browser and exports the selected
 		patches.'''
 
-		(revs, summaries) = ugitcmds.git_log ()
+		(revs, summaries) = cmds.git_log ()
 		selection, idxs = self.__select_commits (revs, summaries)
 		if not selection: return
 
@@ -296,13 +296,13 @@ class GitController (QObserver):
 		selected_range = range (idxs[0], idxs[-1] + 1)
 		export_range = len (idxs) > 1 and idxs == selected_range
 
-		output = ugitcmds.git_format_patch (selection, export_range)
+		output = cmds.git_format_patch (selection, export_range)
 		self.__show_command_output (output)
 
 	def cb_get_commit_msg (self, model, *args):
-		(revs, summaries) = ugitcmds.git_log (oneline=True)
+		(revs, summaries) = cmds.git_log (oneline=True)
 		commit_msg = []
-		commit_lines = ugitcmds.git_show (revs[0]).split ('\n')
+		commit_lines = cmds.git_show (revs[0]).split ('\n')
 		for idx, msg in enumerate (commit_lines):
 			if idx < 4: continue
 			msg = msg.lstrip()
@@ -329,7 +329,7 @@ class GitController (QObserver):
 		# Read git status items
 		( staged_items,
 		  unstaged_items,
-		  untracked_items ) = ugitcmds.git_status()
+		  untracked_items ) = cmds.git_status()
 
 		# Gather items to be committed
 		for staged in staged_items:
@@ -352,8 +352,8 @@ class GitController (QObserver):
 
 	def cb_show_diffstat (self, model, *args):
 		'''Show the diffstat from the latest commit.'''
-		output = ugitutils.ansi_to_html (ugitcmds.git_diff_stat())
-		doc = ugitutils.html_document (output)
+		output = utils.ansi_to_html (cmds.git_diff_stat())
+		doc = utils.html_document (output)
 		self.__show_command_output (doc, rescan=False)
 
 	def cb_signoff (self, model, *args):
@@ -369,32 +369,32 @@ class GitController (QObserver):
 
 	def cb_stage_changed (self, model, *args):
 		'''Stage all changed files for commit.'''
-		output = ugitcmds.git_add (model.get_unstaged())
+		output = cmds.git_add (model.get_unstaged())
 		self.__show_command_output (output, model)
 
 	def cb_stage_selected (self, model, *args):
 		'''Use "git add" to add items to the git index.
 		This is a thin wrapper around __apply_to_list.'''
-		command = ugitcmds.git_add_or_remove
+		command = cmds.git_add_or_remove
 		widget = self.view.unstagedList
 		items = model.get_unstaged() + model.get_untracked()
 		self.__apply_to_list (command, model, widget, items)
 
 	def cb_stage_untracked (self, model, *args):
 		'''Stage all untracked files for commit.'''
-		output = ugitcmds.git_add (model.get_untracked())
+		output = cmds.git_add (model.get_untracked())
 		self.__show_command_output (output, model)
 
 	def cb_unstage_all (self, model, *args):
 		'''Use "git reset" to remove all items from the git index.'''
-		output = ugitcmds.git_reset (model.get_staged())
+		output = cmds.git_reset (model.get_staged())
 		self.__show_command_output (output, model)
 
 	def cb_unstage_selected (self, model, *args):
 		'''Use "git reset" to remove items from the git index.
 		This is a thin wrapper around __apply_to_list.'''
 
-		command = ugitcmds.git_reset
+		command = cmds.git_reset
 		widget = self.view.stagedList
 		items = model.get_staged()
 		self.__apply_to_list (command, model, widget, items)
@@ -405,8 +405,8 @@ class GitController (QObserver):
 
 	def cb_viz_current (self, model):
 		'''Visualizes the current branch's history using gitk.'''
-		branch = ugitcmds.git_current_branch()
-		os.system ('gitk %s &' % ugitutils.shell_quote (branch))
+		branch = cmds.git_current_branch()
+		os.system ('gitk %s &' % utils.shell_quote (branch))
 
 	#####################################################################
 	# PRIVATE HELPER METHODS
@@ -427,11 +427,11 @@ class GitController (QObserver):
 		to use icons for the staged or unstaged list widget.'''
 
 		if staged:
-			icon_file = ugitutils.get_staged_icon (filename)
+			icon_file = utils.get_staged_icon (filename)
 		elif untracked:
-			icon_file = ugitutils.get_untracked_icon()
+			icon_file = utils.get_untracked_icon()
 		else:
-			icon_file = ugitutils.get_icon (filename)
+			icon_file = utils.get_icon (filename)
 
 		icon = QIcon (QPixmap (icon_file))
 		item = QListWidgetItem()
@@ -488,7 +488,7 @@ class GitController (QObserver):
 
 	def __set_branch_ui_items (self):
 		'''Sets up items that mention the current branch name.'''
-		current_branch = ugitcmds.git_current_branch()
+		current_branch = cmds.git_current_branch()
 		menu_text = 'Browse ' + current_branch + ' branch'
 		self.view.browseBranch.setText (menu_text)
 

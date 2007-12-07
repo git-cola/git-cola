@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>ugitCommandDialog</class>
- <widget class="QDialog" name="ugitCommandDialog" >
+ <class>CommandDialog</class>
+ <widget class="QDialog" name="CommandDialog" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -192,7 +192,7 @@
   <connection>
    <sender>okButton</sender>
    <signal>clicked()</signal>
-   <receiver>ugitCommandDialog</receiver>
+   <receiver>CommandDialog</receiver>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel" >

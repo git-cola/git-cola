@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 import sys
 from PyQt4 import QtCore, QtGui
-import ugitapi
-from ugitmodel import GitModel
-from ugitview import GitView
-from ugitcontroller import GitController
+from ugitlibs.gitmodel import GitModel
+from ugitlibs.gitview import GitView
+from ugitlibs.gitcontroller import GitController
 if __name__ == "__main__":
 	app = QtGui.QApplication (sys.argv)
 	model = GitModel()
