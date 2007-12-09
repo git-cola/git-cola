@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-from PyQt4.QtCore import QObject, SIGNAL
+from PyQt4.QtCore import QObject
+from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import QSpinBox, QPixmap, QTextEdit
 
 from observer import Observer
@@ -17,6 +18,14 @@ class QObserver (Observer, QObject):
 		self.__callbacks = {}
 		self.__model_to_view = {}
 		self.__view_to_model = {}
+
+	def connect (self, obj, signal_str, *args):
+		'''Convenience function so that subclasses do not have
+		to import QtCore.SIGNAL.'''
+		signal = signal_str
+		if type (signal) is str:
+			signal = SIGNAL (signal)
+		return QObject.connect ( obj, signal, *args)
 
 	def SLOT (self, *args):
 		'''Default slot to handle all Qt callbacks.
@@ -39,10 +48,10 @@ class QObserver (Observer, QObject):
 			else:
 				print "SLOT(): Unknown widget:", sender, widget
 
-	def add_signals (self, signal, *objects):
+	def add_signals (self, signal_str, *objects):
 		'''Connects object's signal to the QObserver.'''
 		for obj in objects:
-			QObject.connect (obj, SIGNAL (signal), self.SLOT)
+			self.connect (obj, signal_str, self.SLOT)
 
 	def add_callbacks (self, model, callbacks):
 		'''Registers callbacks that are called in response to GUI events.'''

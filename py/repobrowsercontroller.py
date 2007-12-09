@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import os
-from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import QFileDialog
 from qobserver import QObserver
 import cmds
@@ -27,7 +26,7 @@ class GitRepoBrowserController (QObserver):
 				})
 
 		self.connect (view.commitList,
-				SIGNAL ('itemDoubleClicked(QListWidgetItem*)'),
+				'itemDoubleClicked(QListWidgetItem*)',
 				lambda(x): self.cb_item_double_clicked (model))
 
 		# Collect data for the model

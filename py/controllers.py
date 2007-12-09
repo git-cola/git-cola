@@ -1,6 +1,5 @@
 import os
 import commands
-from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QMessageBox
 from qobserver import QObserver
@@ -70,11 +69,11 @@ class GitController (QObserver):
 		# These are vanilla signal/slots since the qobserver
 		# signal routing is already handling these lists' signals.
 		self.connect ( view.unstagedList,
-				SIGNAL ('itemDoubleClicked(QListWidgetItem*)'),
+				'itemDoubleClicked(QListWidgetItem*)',
 				lambda (x): self.cb_stage_selected (model) )
 
 		self.connect ( view.stagedList,
-				SIGNAL ('itemDoubleClicked(QListWidgetItem*)'),
+				'itemDoubleClicked(QListWidgetItem*)',
 				lambda (x): self.cb_unstage_selected (model) )
 
 		# These callbacks are called in response to the signals
@@ -498,7 +497,7 @@ class GitController (QObserver):
 
 		browser = GitCommitBrowser (self.view)
 		self.connect ( browser.commitList,
-				SIGNAL ('itemSelectionChanged()'),
+				'itemSelectionChanged()',
 				lambda: self.cb_commit_sha1_selected(
 						browser, revs) )
 
