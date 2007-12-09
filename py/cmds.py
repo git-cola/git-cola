@@ -51,6 +51,15 @@ def git_branch():
 	'''Returns 'git branch''s output in a list.'''
 	return commands.getoutput ('git branch').split ('\n')
 
+def git_branch_list():
+	return map (lambda (x): x.lstrip ('* '), git_branch())
+
+def git_cat_file (objtype, sha1, target_file=None):
+	cmd = 'git cat-file %s %s' % ( objtype, sha1 )
+	if target_file:
+		cmd += '> %s' % utils.shell_quote (target_file)
+	return commands.getoutput (cmd)
+
 def git_cherry_pick (revs, commit=False):
 	'''Cherry-picks each revision into the current branch.'''
 	if not revs:
@@ -65,13 +74,10 @@ def git_cherry_pick (revs, commit=False):
 		output.append ('')
 	return '\n'.join (output)
 
-def git_commit (msg, amend, commit_all, files):
+def git_commit (msg, amend, files):
 	'''Creates a git commit.  'commit_all' triggers the -a
 	flag to 'git commit.'  'amend' triggers --amend.
 	'files' is a list of files to use for commits without -a.'''
-
-	if not msg:
-		return 'ERROR: No commit message was provided.'
 
 	# Allow TMPDIR/TMP with a fallback to /tmp
 	tmpdir = os.getenv ('TMPDIR', os.getenv ('TMP', '/tmp'))
@@ -86,15 +92,12 @@ def git_commit (msg, amend, commit_all, files):
 
 	if amend: argv.append ('--amend')
 	
-	if commit_all:
-		argv.append ('-a')
-	else:
-		if not files:
-			return 'ERROR: No files selected for commit.'
+	if not files:
+		return 'ERROR: No files selected for commit.'
 
-		argv.append ('--')
-		for file in files:
-			argv.append (utils.shell_quote (file))
+	argv.append ('--')
+	for file in files:
+		argv.append (utils.shell_quote (file))
 
 	# Create the commit message file
 	file = open (tmpfile, 'w')
@@ -106,7 +109,7 @@ def git_commit (msg, amend, commit_all, files):
 	output = commands.getoutput (cmd)
 	os.unlink (tmpfile)
 
-	return 'Running:\t%s\n%s' % ( cmd, output )
+	return 'Running:\t%s\n%s' % (cmd, output)
 
 def git_current_branch():
 	'''Parses 'git branch' to find the current branch.'''
@@ -184,6 +187,22 @@ def git_log (oneline=True, all=False):
 			revs.append (match.group (1))
 			summaries.append (match.group (2))
 	return ( revs, summaries )
+
+def git_ls_tree (rev):
+	'''Returns a list of (mode, type, sha1, path) tuples.'''
+	regex = re.compile ('^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
+	sh_rev = utils.shell_quote (rev)
+	lines = commands.getoutput ('git ls-tree -r ' + sh_rev).split ('\n')
+	output = []
+	for line in lines:
+		match = regex.match (line)
+		if match:
+			mode = match.group (1)
+			objtype = match.group (2)
+			sha1 = match.group (3)
+			filename = match.group (4)
+			output.append ( (mode, objtype, sha1, filename,) )
+	return output
 
 def git_reset (to_unstage):
 	'''Use 'git reset' to unstage files from the index.'''

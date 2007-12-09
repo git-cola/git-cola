@@ -1,18 +1,17 @@
 import os
 import commands
-from PyQt4 import QtGui
-from PyQt4.QtCore import QObject
 from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import QClipboard
 from PyQt4.QtGui import QDialog
-from PyQt4.QtGui import QPixmap
-from PyQt4.QtGui import QIcon
-from PyQt4.QtGui import QListWidgetItem
+from PyQt4.QtGui import QMessageBox
 from qobserver import QObserver
 import cmds
 import utils
-from gitview import GitCommandDialog
-from gitview import GitCommitBrowser
+import qtutils
+from models import GitRepoBrowserModel
+from views import GitCommandDialog
+from views import GitCommitBrowser
+from views import GitBranchDialog
+from repobrowsercontroller import GitRepoBrowserController
 
 class GitController (QObserver):
 	'''The controller is a mediator between the model and view.
@@ -70,11 +69,11 @@ class GitController (QObserver):
 		# Handle double-clicks in the staged/unstaged lists.
 		# These are vanilla signal/slots since the qobserver
 		# signal routing is already handling these lists' signals.
-		QObject.connect ( view.unstagedList,
+		self.connect ( view.unstagedList,
 				SIGNAL ('itemDoubleClicked(QListWidgetItem*)'),
 				lambda (x): self.cb_stage_selected (model) )
 
-		QObject.connect ( view.stagedList,
+		self.connect ( view.stagedList,
 				SIGNAL ('itemDoubleClicked(QListWidgetItem*)'),
 				lambda (x): self.cb_unstage_selected (model) )
 
@@ -154,10 +153,17 @@ class GitController (QObserver):
 	#####################################################################
 
 	def cb_browse_current (self, model):
-		print "MODEL::::::::::", model
+		self.__browse_branch (cmds.git_current_branch())
 
 	def cb_browse_other (self, model):
-		print "MODEL::::::::::", model
+		branches = cmds.git_branch_list()
+		dialog = GitBranchDialog (self.view)
+		dialog.addBranches (branches)
+		dialog.show()
+		result = dialog.exec_()
+		if result != QDialog.Accepted: return
+
+		self.__browse_branch (dialog.getSelectedBranch())
 
 	def cb_cherry_pick (self, model, *args):
 		'''Starts a cherry-picking session.'''
@@ -172,21 +178,26 @@ class GitController (QObserver):
 		'''Sets up data and calls cmds.commit.'''
 
 		msg = model.get_commitmsg()
+		if not msg:
+			error_msg = 'ERROR: No commit message was provided.'
+			self.__show_command_output (error_msg)
+			return
+
 		amend = self.view.amendRadio.isChecked()
 		commit_all = self.view.commitAllCheckBox.isChecked()
 
 		files = []
-		if not commit_all:
+		if commit_all:
+			files = model.get_staged()
+		else:
 			files = self.__get_selection_from_view (
 					self.view.stagedList,
 					model.get_staged() )
 		# Perform the commit
-		output = cmds.git_commit (msg, amend, commit_all, files)
+		output = cmds.git_commit (msg, amend, files)
 
-		# Reset the commitmsg and rescan changes
-		if not output.startswith ('ERROR'):
-			model.set_commitmsg ('')
-
+		# Reset commitmsg and rescan
+		model.set_commitmsg ('')
 		self.__show_command_output (output, model)
 
 	def cb_commit_all (self, model, *args):
@@ -221,11 +232,10 @@ class GitController (QObserver):
 		# Lookup the info for that sha1 and display it
 		commit_info = cmds.git_show (sha1, color=True)
 		html = utils.ansi_to_html (commit_info)
-		browser.commitText.setText (html)
+		browser.commitText.setHtml (html)
 
 		# Copy the sha1 into the clipboard
-		QtGui.qApp.clipboard().setText (sha1, QClipboard.Clipboard)
-		QtGui.qApp.clipboard().setText (sha1, QClipboard.Selection)
+		qtutils.set_clipboard (sha1)
 
 	def cb_diff_staged (self, model):
 		list_widget = self.view.stagedList
@@ -244,7 +254,7 @@ class GitController (QObserver):
 		else:
 			pre = utils.html_header ('Staged for removal')
 
-		self.view.displayText.setText (pre + html)
+		self.view.displayText.setHtml (pre + html)
 
 	def cb_diff_unstaged (self, model):
 		list_widget = self.view.unstagedList
@@ -257,7 +267,7 @@ class GitController (QObserver):
 			pre = utils.html_header ('Untracked directory')
 			cmd = 'ls -la %s' % utils.shell_quote (filename)
 			html = '<pre>%s</pre>' % commands.getoutput (cmd)
-			self.view.displayText.setText ( pre + html )
+			self.view.displayText.setHtml ( pre + html )
 			return
 
 		if filename in model.get_unstaged():
@@ -281,7 +291,7 @@ class GitController (QObserver):
 			pre = utils.html_header (header)
 			html = '<pre>%s</pre>' % contents
 
-		self.view.displayText.setText (pre + html)
+		self.view.displayText.setHtml (pre + html)
 
 	def cb_export_patches (self, model, *args):
 		'''Launches the commit browser and exports the selected
@@ -350,11 +360,32 @@ class GitController (QObserver):
 		model.set_notify(True)
 		model.notify_observers ('staged', 'unstaged')
 
+		squash_msg = os.path.join (os.getcwd(), '.git', 'SQUASH_MSG')
+		if not os.path.exists (squash_msg): return
+
+		msg = model.get_commitmsg()
+
+		if msg:
+			result = QMessageBox.question (self.view,
+					'Import Commit Message?',
+					('A commit message from a '
+					+ 'merge-in-progress was found.\n'
+					+ 'Do you want to import it?'),
+					QMessageBox.Yes | QMessageBox.No,
+					QMessageBox.Yes)
+			if result != QMessageBox.Yes: return
+
+		file = open (squash_msg)
+		msg = file.read()
+		file.close()
+
+		# Set the new commit message
+		model.set_commitmsg (msg)
+
 	def cb_show_diffstat (self, model, *args):
 		'''Show the diffstat from the latest commit.'''
 		output = utils.ansi_to_html (cmds.git_diff_stat())
-		doc = utils.html_document (output)
-		self.__show_command_output (doc, rescan=False)
+		self.__show_command_output (output, rescan=False)
 
 	def cb_signoff (self, model, *args):
 		'''Adds a standard Signed-off by: tag to the end
@@ -421,6 +452,13 @@ class GitController (QObserver):
 		output = command (apply_items)
 		self.__show_command_output (output, model)
 
+	def __browse_branch (self, branch):
+		model = GitRepoBrowserModel (branch)
+		view = GitCommitBrowser()
+		controller = GitRepoBrowserController(model, view)
+		view.show()
+		view.exec_()
+
 	def __file_to_widget_item (self, filename, staged, untracked=False):
 		'''Given a filename, return a QListWidgetItem suitable
 		for adding to a QListWidget.  "staged" controls whether
@@ -433,11 +471,7 @@ class GitController (QObserver):
 		else:
 			icon_file = utils.get_icon (filename)
 
-		icon = QIcon (QPixmap (icon_file))
-		item = QListWidgetItem()
-		item.setText (filename)
-		item.setIcon (icon)
-		return item
+		return qtutils.create_listwidget_item (filename, icon_file)
 
 	def __get_selected_row (self, list_widget):
 		row = list_widget.currentRow()
@@ -463,7 +497,7 @@ class GitController (QObserver):
 			return ([],[])
 
 		browser = GitCommitBrowser (self.view)
-		QObject.connect ( browser.commitList,
+		self.connect ( browser.commitList,
 				SIGNAL ('itemSelectionChanged()'),
 				lambda: self.cb_commit_sha1_selected(
 						browser, revs) )

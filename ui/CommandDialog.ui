@@ -5,24 +5,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>300</height>
+    <width>590</width>
+    <height>420</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Git Command Output</string>
   </property>
   <layout class="QVBoxLayout" >
-   <item>
-    <widget class="QLabel" name="label" >
-     <property name="text" >
-      <string>Git Command Output:</string>
-     </property>
-     <property name="alignment" >
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
    <item>
     <widget class="QTextEdit" name="commandText" >
      <property name="palette" >

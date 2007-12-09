@@ -1,5 +1,5 @@
 import utils
 import cmds
-import gitmodel
-import gitview
-import gitcontroller
+import models
+import views
+import controllers

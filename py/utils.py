@@ -49,6 +49,12 @@ def get_staged_icon (filename):
 def get_untracked_icon():
 	return os.path.join (ICONSDIR, 'untracked.png')
 
+def get_directory_icon():
+	return os.path.join (ICONSDIR, 'dir.png')
+
+def get_file_icon():
+	return os.path.join (ICONSDIR, 'generic.png')
+
 def shell_quote (*inputs):
 	'''Quote strings so that they can be suitably martialled
 	off to the shell.  This method supports POSIX sh syntax.
@@ -91,7 +97,7 @@ def shell_quote (*inputs):
 		ret.append (input)
 	return ' '.join (ret)
 
-ANSI_BACKGROUND_COLOR = 41
+ANSI_BACKGROUND_COLOR = '41'
 ANSI_TABLE = {
 	'1':  'grey',
 	'30': 'black',
@@ -104,19 +110,15 @@ ANSI_TABLE = {
 	'37': 'white',
 }
 
-
-def html_document (html_fragment):
-	return '<body>%s</body>' % html_fragment
-
 def ansi_to_html (ansi):
-	'''Converts a block of text into an equivalent html fragment.'''
+	'''Converts a block of ANSI text into an equivalent html fragment.'''
 
 	html = []
 	regex = re.compile ('(.*?)\x1b\[(\d*)m')
 
 	for line in ansi.split ('\n'):
 
-		linecopy = str (html_encode(line))
+		linecopy = html_encode(line)
 		match = regex.match (linecopy)
 		tagged = False
 
@@ -131,21 +133,23 @@ def ansi_to_html (ansi):
 				color = ANSI_TABLE[middle]
 				middle = '<span style="color: %s">' % color
 				tagged = True
-			elif middle == str (ANSI_BACKGROUND_COLOR):
+
+			elif middle == ANSI_BACKGROUND_COLOR:
 				middle = '<span style="background-color:red">'
 				tagged = True
+
 			else:
 				if tagged:
 					middle = '</span>'
 				else:
 					middle = ''
 
-			linecopy = str (prefix + middle + postfix)
+			linecopy = prefix + middle + postfix
 			match = regex.match (linecopy)
 
 		html.append (linecopy)
 
-	return '<br />\n'.join (html)
+	return '<br/>'.join (html)
 
 def html_header (header):
 	return '''
@@ -155,16 +159,27 @@ def html_header (header):
 		</p>''' % header
 
 def html_encode (ascii):
+	'''HTML-encodes text.  This method explicitly avoids encoding
+	alphanumeric and ANSI-escape sequences.'''
+
 	html = []
-	ANSI = [ '\x1b', '[' ]
 	for char in ascii:
-		if char == '\t':
-			html.append ( '&nbsp;' * 8 )
-			continue
-		if char not in ANSI and not char.isalnum():
-			html.append (ENTITIES[char])
-		else:
+		if char.isalnum():
 			html.append (char)
+
+		elif char == '\t':
+			# There is no HTML equivalent to a tab, so just
+			# insert eight spaces
+			html.append ( '&nbsp;' * 8 )
+
+		elif char == '\x1b' or char == '[':
+			# Don't encode ANSI characters since these
+			# are stripped out during ansi_to_html
+			html.append (char)
+
+		else:
+			html.append (ENTITIES[char])
+
 	return ''.join (html)
 
 # Keep this at the bottom of the file since it's generated output.
