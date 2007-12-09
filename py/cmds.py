@@ -235,7 +235,11 @@ def git_status():
 	untracked_header_seen = False
 
 	modified_header = '# Changed but not updated:'
-	modified_regex = re.compile('(#\tmodified:|#\tnew file:|#\tdeleted:)')
+	modified_regex = re.compile ('(#\tmodified:\W{3}'
+			+ '|#\tnew file:\W{3}'
+			+ '|#\tdeleted:\W{4})')
+
+	renamed_regex = re.compile ('(#\trenamed:\W{4})(.*?)\W->\W(.*)')
 
 	untracked_header = '# Untracked files:'
 	untracked_regex = re.compile ('#\t(.+)')
@@ -244,6 +248,7 @@ def git_status():
 	unstaged = []
 	untracked = []
 
+	# Untracked files
 	for status_line in status_lines:
 		if untracked_header in status_line:
 			untracked_header_seen = True
@@ -255,6 +260,7 @@ def git_status():
 			filename = match.group (1)
 			untracked.append (filename)
 
+	# Staged, unstaged, and renamed files
 	for status_line in status_lines:
 		if modified_header in status_line:
 			unstaged_header_seen = True
@@ -264,8 +270,16 @@ def git_status():
 			tag = match.group (0)
 			filename = status_line.replace (tag, '')
 			if unstaged_header_seen:
-				unstaged.append (filename.lstrip())
+				unstaged.append (filename)
 			else:
-				staged.append (filename.lstrip())
+				staged.append (filename)
+			continue
+		# Renamed files
+		match = renamed_regex.match (status_line)
+		if match:
+			oldname = match.group (2)
+			newname = match.group (3)
+			staged.append (oldname)
+			staged.append (newname)
 
 	return ( staged, unstaged, untracked )
