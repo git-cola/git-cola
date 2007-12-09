@@ -1,20 +1,30 @@
+ugit is Copyright (C) 2007 David Aguilar
+
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions; read the LICENSE file for details.
+
+
+ABOUT UGIT:
+=============================================================================
+
 ugit: A PyQt-based git gui
 
 ugit started out as a PyQt re-implementation of git-gui.
 It has an evolving feature set and aims to be a full-featured
 companion to the existing git uis.
 
+
 DEPENDENCIES:
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=============================================================================
 	python 2.4.x
 	pyqt 4.3.x
 
 
 ABOUT THE ICONS:
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=============================================================================
 
 staged.png was blatanly stolen from the "slick" KDE icon set.
-
 All other icons were blatanly stolen from the Apache httpd server icon set.
 Those icons are covered by the following license:
 
