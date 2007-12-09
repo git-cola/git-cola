@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 import os
-from os.path import join
-from glob import glob
-from Common import install_files
-from buildutils import pymod
-from buildutils import configure_python
-from buildutils import configure_pyqt
+import glob
+import buildutils
+import Common
 
 APPNAME = 'ugit'
 VERSION = '0.5.0'
@@ -23,13 +20,13 @@ def set_options(opt):
 # Configure
 def configure(conf):
 	env = conf.env
-	env['PYMODS']           = pymod(env['PREFIX'])
-	env['PYMODS_UGIT']      = join(env['PYMODS'],      'ugitlibs')
-	env['ICONS']            = join(env['PYMODS_UGIT'], 'icons')
-	env['BIN']              = join(env['PREFIX'],      'bin')
+	env['PYMODS']           = buildutils.pymod(env['PREFIX'])
+	env['PYMODS_UGIT']      = os.path.join(env['PYMODS'], 'ugitlibs')
+	env['ICONS']            = os.path.join(env['PYMODS_UGIT'], 'icons')
+	env['BIN']              = os.path.join(env['PREFIX'], 'bin')
 
-	configure_python(conf)
-	configure_pyqt(conf)
+	buildutils.configure_python(conf)
+	buildutils.configure_pyqt(conf)
 
 # Build
 def build(bld):
@@ -40,5 +37,7 @@ def build(bld):
 	bin.chmod = 0755
 	bin.find_sources_in_dirs('bin')
 
-	for icon in glob('icons/*.png'):
-		install_files ('ICONS', '', icon)
+	for icon in glob.glob('icons/*.png'):
+		Common.install_files ('ICONS', '', icon)
+	
+	Common.symlink_as ('BIN', 'ugit.py', 'ugit')
