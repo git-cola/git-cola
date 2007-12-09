@@ -1,0 +1,146 @@
+#! /bin/sh
+
+# waf configure wrapper
+
+# Fancy colors used to beautify the output a bit.
+#
+if [ $NOCOLOR ] ; then
+    NORMAL=""
+    BOLD=""
+    RED=""
+    YELLOW=""
+    GREEN=""
+else
+    NORMAL="\033[0m"
+    BOLD="\033[1m"
+    RED="\033[91m"
+    YELLOW="\033[01;93m"
+    GREEN="\033[92m"
+fi
+
+EXIT_SUCCESS=0
+EXIT_FAILURE=1
+EXIT_ERROR=2
+EXIT_BUG=10
+
+CUR_DIR=$PWD
+
+#possible relative path
+WORKINGDIR=`dirname $0`
+cd $WORKINGDIR
+#abs path
+WORKINGDIR=`pwd`
+cd $CUR_DIR
+
+# We store waf under buildutils/
+PATH=$WORKINGDIR/buildutils:$PATH
+export PATH
+
+# Checks for Python interpreter. Honours $PYTHON if set. Stores path to
+# interpreter in $PYTHON.
+#
+checkPython()
+{
+	if [ -z "$PYTHON" ] ; then
+	    PYTHON=`which python 2>/dev/null`
+	fi
+	printf "Checking for Python\t\t\t:  "
+	if [ ! -x "$PYTHON" ] ; then
+	  printf $RED"not found!"$NORMAL"\n"
+	  echo "Please make sure that the Python interpreter is available in your PATH"
+	  echo "or invoke configure using the PYTHON flag, e.g."
+	  echo "$ PYTHON=/usr/local/bin/python configure"
+	  exit $EXIT_FAILURE
+	fi
+	printf $GREEN"$PYTHON"$NORMAL"\n"
+}
+
+# Checks for WAF. Honours $WAF if set. Stores path to 'waf' in $WAF.
+# Requires that $PYTHON is set.
+#
+checkWAF()
+{
+	printf "Checking for WAF\t\t\t:  "
+	#installed miniwaf in sourcedir
+	if [ -z "$WAF" ] ; then
+	    if [ -f "${WORKINGDIR}/waf" ] ; then
+		WAF="${WORKINGDIR}/waf"
+		if [ ! -x $WAF ] ; then
+		    chmod +x $WAF
+		fi
+	    fi
+	fi
+	#global installed waf with waf->waf.py link
+	if [ -z $WAF ] ; then
+	    WAF=`which waf 2>/dev/null`
+	fi
+	# neither waf nor miniwaf could be found
+	if [ ! -x "$WAF" ] ; then
+	    printf $RED"not found"$NORMAL"\n"
+	    echo "Goto http://www.freehackers.org/~tnagy/bksys.html"
+	    echo "and download a waf version"
+	    exit $EXIT_FAILURE
+	else
+	  printf $GREEN"$WAF"$NORMAL"\n"
+	fi
+}
+
+# Generates a Makefile. Requires that $WAF is set.
+#
+generateMakefile()
+{
+	cat > Makefile << EOF
+#!/usr/bin/make -f
+
+# Waf Makefile wrapper
+# http://www.freehackers.org/~tnagy/waf.html
+WAF_HOME=$CUR_DIR
+
+all:
+	@$WAF build
+
+all_debug:
+	@$WAF -v build
+
+all_progress:
+	@$WAF -p build
+
+install:
+	@$WAF install
+
+uninstall:
+	@$WAF uninstall
+
+clean:
+	@$WAF clean
+
+distclean:
+	@$WAF distclean
+	@-rm -rf cache/
+	@-rm -rf _build_
+	@-rm -f Makefile
+
+check:
+	@$WAF check
+
+dist:
+	@$WAF dist
+
+EOF
+}
+
+checkPython
+checkWAF
+
+echo "calling waf configure with parameters"
+$WAF configure $* || exit $EXIT_ERROR
+
+#create a Makefile if waf configure succeeds
+if [ -f "${WORKINGDIR}/.lock-wscript" ] ; then
+    if [ -f "Makefile" ] ; then
+	echo ""
+    else
+        generateMakefile
+    fi
+fi
+exit $EXIT_SUCCESS
