@@ -1,4 +1,6 @@
 /build
 /install
 /.lock-wscript
+*.pyo
+*.pyc
 *.swp

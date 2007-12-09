@@ -1,42 +1,28 @@
 #!/usr/bin/env python
+import os
 from os.path import join
 from glob import glob
-
-import Params
 from Common import install_files
-from wafutils import pymod
-from wafutils import configure_python
-from wafutils import configure_pyqt
-from wafutils import wafutils_dir
-
-# ===========================================================================
-# Mandatory variables
-# ===========================================================================
+from buildutils import pymod
+from buildutils import configure_python
+from buildutils import configure_pyqt
 
 APPNAME = 'ugit'
-VERSION = 'current'
+VERSION = '0.5.0'
 
+# Mandatory variables
 srcdir = '.'
 blddir = 'build'
 
-# ===========================================================================
-# Configure/Build
-# ===========================================================================
-
+# Options
 def set_options(opt):
 	opt.tool_options('python')
-	opt.tool_options('pyuic4', wafutils_dir())
-
-	opt.parser.remove_option('--prefix')
-	opt.add_option('--prefix', type='string', default=None,
-		help='Set installation prefix', dest='prefix')
+	opt.tool_options('pyuic4', 'buildutils')
 	pass
 
+# Configure
 def configure(conf):
 	env = conf.env
-	if Params.g_options.prefix is None:
-		env['PREFIX']         = '/shared/packages/%s-%s' % ( APPNAME, VERSION )
-
 	env['PYMODS']           = pymod(env['PREFIX'])
 	env['PYMODS_UGIT']      = join(env['PYMODS'],      'ugitlibs')
 	env['ICONS']            = join(env['PYMODS_UGIT'], 'icons')
@@ -45,7 +31,7 @@ def configure(conf):
 	configure_python(conf)
 	configure_pyqt(conf)
 
-
+# Build
 def build(bld):
 	bld.add_subdirs('py ui')
 
