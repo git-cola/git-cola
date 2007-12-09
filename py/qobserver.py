@@ -4,11 +4,11 @@ from PyQt4.QtGui import QSpinBox, QPixmap, QTextEdit
 
 from observer import Observer
 
-class QObserver(Observer, QObject):
+class QObserver (Observer, QObject):
 
-	def __init__(self, model, view):
-		Observer.__init__(self)
-		QObject.__init__(self)
+	def __init__ (self, model, view):
+		Observer.__init__ (self)
+		QObject.__init__ (self)
 
 		self.model = model
 		self.view = view
@@ -18,12 +18,12 @@ class QObserver(Observer, QObject):
 		self.__model_to_view = {}
 		self.__view_to_model = {}
 
-	def SLOT(self, *args):
+	def SLOT (self, *args):
 		'''Default slot to handle all Qt callbacks.
 		This method delegates to callbacks from add_signals.'''
 
 		widget = self.sender()
-		sender = str(widget.objectName())
+		sender = str (widget.objectName())
 
 		if sender in self.__callbacks:
 			model = self.__callbacks[sender][0]
@@ -33,54 +33,56 @@ class QObserver(Observer, QObject):
 		elif sender in self.__view_to_model:
 			model = self.__view_to_model[sender][0]
 			model_attr = self.__view_to_model[sender][1]
-			if isinstance(widget, QTextEdit):
-				model.set(model_attr, str(widget.toPlainText()))
+			if isinstance (widget, QTextEdit):
+				model.set (model_attr,
+						str (widget.toPlainText()))
 			else:
 				print "SLOT(): Unknown widget:", sender, widget
 
-	def add_signals(self, signal, *objects):
+	def add_signals (self, signal, *objects):
 		'''Connects object's signal to the QObserver.'''
 		for obj in objects:
-			QObject.connect(obj, SIGNAL(signal), self.SLOT)
-	
+			QObject.connect (obj, SIGNAL (signal), self.SLOT)
 
-	def add_callbacks(self, model, callbacks):
+	def add_callbacks (self, model, callbacks):
 		'''Registers callbacks that are called in response to GUI events.'''
 		for sender, callback in callbacks.iteritems():
 			self.__callbacks[sender] = ( model, callback )
 
-	def model_to_view(self, model, model_attr, *widget_names):
+	def model_to_view (self, model, model_attr, *widget_names):
 		'''Binds model attributes to qt widgets (model->view)'''
-		self.add_subject(model, model_attr)
+		self.add_subject (model, model_attr)
 		self.__model_to_view[model_attr] = widget_names
 		for widget_name in widget_names:
 			self.__view_to_model[widget_name] = (model, model_attr)
 
-	def add_actions(self, model, model_attr, callback):
+	def add_actions (self, model, model_attr, callback):
 		'''Register view actions that are called in response to
 		view changes. (view->model)'''
-		self.add_subject(model, model_attr)
+		self.add_subject (model, model_attr)
 		self.__actions[model_attr] = callback
 
-	def subject_changed(self, model, attr, value):
+	def subject_changed (self, model, attr, value):
 		'''Sends a model attribute to the view (model->view)'''
 		if attr in self.__model_to_view:
 			for widget_name in self.__model_to_view[attr]:
-				widget = getattr(self.view, widget_name)
-				if isinstance(widget, QSpinBox):
-					widget.setValue(value)
-				elif isinstance(widget, QPixmap):
-					widget.load(value)
-				elif isinstance(widget, QTextEdit):
-					widget.setText(value)
+				widget = getattr (self.view, widget_name)
+				if isinstance (widget, QSpinBox):
+					widget.setValue (value)
+				elif isinstance (widget, QPixmap):
+					widget.load (value)
+				elif isinstance (widget, QTextEdit):
+					widget.setText (value)
 				else:
-					print "subject_changed(): Unknown widget:", widget_name, widget
+					print ('subject_changed(): '
+							+ 'Unknown widget:',
+							widget_name, widget)
 
 		if attr not in self.__actions: return
 		widgets = []
 		if attr in self.__model_to_view:
 			for widget_name in self.__model_to_view[attr]:
-				widget = getattr(self.__view, widget_name)
-				widgets.append(widget)
+				widget = getattr (self.__view, widget_name)
+				widgets.append (widget)
 		# Call the model callback w/ the view's widgets as the args
-		self.__actions[attr](model, *widgets)
+		self.__actions[attr] (model, *widgets)
