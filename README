@@ -1,14 +1,13 @@
-ugit: ugit's git-gui's inner truffles
+ugit: A PyQt-based git gui
 
-ugit started out as a python/pyqt re-implementation of git-gui.
-It has an evolving feature set and aims to be a fully-featured
+ugit started out as a PyQt re-implementation of git-gui.
+It has an evolving feature set and aims to be a full-featured
 companion to the existing git uis.
 
 DEPENDENCIES:
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	python 2.4.x
 	pyqt 4.3.x
-	pyqtmvc 1.1.x
 
 
 ABOUT THE ICONS:
@@ -16,8 +15,8 @@ ABOUT THE ICONS:
 
 staged.png was blatanly stolen from the "slick" KDE icon set.
 
-All other icons blatanly stolen from Apache's icons:
-These icons are covered by the following copyright license:
+All other icons were blatanly stolen from the Apache httpd server icon set.
+Those icons are covered by the following license:
 
                                  Apache License
                            Version 2.0, January 2004
