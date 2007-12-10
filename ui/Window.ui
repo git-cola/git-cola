@@ -66,7 +66,9 @@
             <item>
              <widget class="QCheckBox" name="commitAllCheckBox" >
               <property name="toolTip" >
-               <string>Whether to commit all staged files.  Disabling this causes ugit to only commit the selected files in the "Files to Commit" list.</string>
+               <string>Whether to commit all staged files.
+Disabling this causes ugit to only commit the
+selected files in the "Files to Commit" list.</string>
               </property>
               <property name="text" >
                <string>Commit All</string>
@@ -131,7 +133,9 @@
             <item>
              <widget class="QCheckBox" name="untrackedCheckBox" >
               <property name="toolTip" >
-               <string>Whether to include untracked files in the unstaged changes list.  Disabling this causes ugit to only display files known to git in the unstaged changes list.</string>
+               <string>Includes untracked files in the unstaged changes list.
+Disabling this causes ugit to only display files known to git
+in the unstaged changes list.</string>
               </property>
               <property name="text" >
                <string>Show Untracked Files</string>
@@ -155,7 +159,9 @@
              </font>
             </property>
             <property name="toolTip" >
-             <string>A list of all the unstaged changes.  This list includes those files known to git and can optionally include untracked files if "Show Untracked Files" is checked.</string>
+             <string>A list of all the unstaged changes.
+This list includes those files known to git and can optionally
+include untracked files if "Show Untracked Files" is checked.</string>
             </property>
             <property name="alternatingRowColors" >
              <bool>true</bool>
@@ -209,7 +215,8 @@
            <item>
             <widget class="QPushButton" name="stageButton" >
              <property name="toolTip" >
-              <string>Invokes "git add" to stage the selected items from the "Unstaged Changes" list.</string>
+              <string>Invokes "git add" to stage the selected items
+from the "Unstaged Changes" list.</string>
              </property>
              <property name="text" >
               <string>Stage</string>
@@ -222,7 +229,8 @@
            <item>
             <widget class="QPushButton" name="signOffButton" >
              <property name="toolTip" >
-              <string>"Sign Off" appends the standard "Signed-Off by: ..." message to the current commit message.</string>
+              <string>"Sign Off" appends the standard "Signed-Off by: ..."
+message to the current commit message.</string>
              </property>
              <property name="text" >
               <string>Sign Off</string>
@@ -232,7 +240,10 @@
            <item>
             <widget class="QPushButton" name="commitButton" >
              <property name="toolTip" >
-              <string>Invokes a git commit.  This commits the files listed in the "Files to Commit" list.  If "Commit All" is checked, all listed items will be committed, otherwise only the selected items will be committed.</string>
+              <string>Invokes a git commit.
+This commits the files listed in the "Files to Commit" list.
+If "Commit All" is checked, all listed items will be committed,
+otherwise only the selected items will be committed.</string>
              </property>
              <property name="text" >
               <string>Commit</string>
@@ -294,7 +305,9 @@
              <item>
               <widget class="QRadioButton" name="amendRadio" >
                <property name="toolTip" >
-                <string>Causes git to reuse the latest commit object.  "git commit" will be supplied with the "--amend" option so that the latest commit is amended with contents of the next commit.</string>
+                <string>Causes git to reuse the latest commit object.
+"git commit" will be supplied with the "--amend" option so that
+the most recent commit is amended with contents of the next commit.</string>
                </property>
                <property name="text" >
                 <string>Amend</string>
@@ -314,7 +327,10 @@
                 </font>
                </property>
                <property name="toolTip" >
-                <string>The commit message for the next commit.  If you are going to amend a commit you can use the "Commit -> Get Latest Comit Message" action to retrieve the latest commit prior to committing.</string>
+                <string>The commit message for the next commit.
+If you are going to amend a commit you can use the
+"Commit -> Get Latest Comit Message" menu action to
+retrieve the latest commit message prior to committing.</string>
                </property>
               </widget>
              </item>
