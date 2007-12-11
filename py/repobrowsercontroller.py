@@ -11,8 +11,6 @@ class GitRepoBrowserController (QObserver):
 	def __init__ (self, model, view):
 		QObserver.__init__ (self, model, view)
 
-		model.add_observer (self)
-
 		view.setWindowTitle ('Git Repo Browser')
 
 		self.add_signals ('itemSelectionChanged()',
@@ -29,36 +27,23 @@ class GitRepoBrowserController (QObserver):
 				'itemDoubleClicked(QListWidgetItem*)',
 				lambda(x): self.cb_item_double_clicked (model))
 
-		# Collect data for the model
-		tree_info = cmds.git_ls_tree (model.get_branch())
-
-		types = map ( lambda (x): x[1], tree_info )
-		sha1s = map ( lambda (x): x[2], tree_info )
-		files = map ( lambda (x): x[3], tree_info )
-
-		model.add_types (*types)
-		model.add_files (*files)
-		model.add_sha1s (*sha1s)
-
-		model.setup_items()
-
 		self.__display_items (model)
 
 	######################################################################
 	# ACTIONS
 	######################################################################
 
-	def action_directory_changed (self, model, *args):
+	def action_directory_changed (self, model):
 		'''This is called in response to a change in the the
 		model's directory.'''
-		model.setup_items()
+		model.reset_items()
 		self.__display_items (model)
 
 	######################################################################
 	# CALLBACKS
 	######################################################################
 
-	def cb_item_changed (self, model, *args):
+	def cb_item_changed (self, model):
 		'''This is called when the current item changes in the
 		file/directory list (aka the commitList).'''
 		current = self.view.commitList.currentRow()
@@ -155,12 +140,13 @@ class GitRepoBrowserController (QObserver):
 		dirent = directories[current]
 		curdir = model.get_directory()
 
+		# '..' is a special case--it doesn't really exist...
 		if dirent == '..':
-			newdir = os.path.normpath (curdir + '..')
-			if newdir == '.' or not newdir:
-				model.set_directory ('')
+			newdir = os.path.dirname (os.path.dirname (curdir))
+			if newdir == '':
+				model.set_directory (newdir)
 			else:
-				model.set_directory (newdir + '/')
+				model.set_directory (newdir + os.sep)
 		else:
 			model.set_directory (curdir + dirent)
 

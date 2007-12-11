@@ -4,6 +4,9 @@ import time
 import commands
 import utils
 
+# A regex for matching the output of git (log|rev-list) --pretty=oneline
+REV_LIST_PATTERN = '([0-9a-f]+)\W(.*)'
+
 def git_add (to_add):
 	'''Invokes 'git add' to index the filenames in to_add.'''
 
@@ -47,12 +50,13 @@ def git_add_or_remove (to_process):
 	cmd = ' '.join (argv)
 	return output + 'Running: %s\n%s' % ( cmd, commands.getoutput (cmd) )
 
-def git_branch():
-	'''Returns 'git branch''s output in a list.'''
-	return commands.getoutput ('git branch').split ('\n')
-
-def git_branch_list():
-	return map (lambda (x): x.lstrip ('* '), git_branch())
+def git_branch (remote=False):
+	'''Returns a list of git branches.
+	Pass "remote=True" to list remote branches.'''
+	cmd = 'git branch'
+	if remote: cmd += ' -r'
+	branches = commands.getoutput (cmd).split ('\n')
+	return map (lambda (x): x.lstrip ('* '), branches)
 
 def git_cat_file (objtype, sha1, target_file=None):
 	cmd = 'git cat-file %s %s' % ( objtype, sha1 )
@@ -111,9 +115,20 @@ def git_commit (msg, amend, files):
 
 	return 'Running:\t%s\n%s' % (cmd, output)
 
+def git_create_branch (name, base, track=False):
+	'''Creates a branch starting from base.  Pass track=True
+	to create a remote tracking branch.'''
+	cmd = 'git branch'
+	if track: cmd += ' --track '
+	cmd += '%s %s' % ( utils.shell_quote (name),
+			utils.shell_quote (base))
+	return commands.getoutput (cmd)
+
+
 def git_current_branch():
 	'''Parses 'git branch' to find the current branch.'''
-	for branch in git_branch():
+	branches = commands.getoutput ('git branch').split ('\n')
+	for branch in branches:
 		if branch.startswith ('* '):
 			return branch.lstrip ('* ')
 	raise Exception, 'No current branch.  Detached HEAD?'
@@ -171,6 +186,17 @@ def git_format_patch (revs, use_range):
 		num_patches += output[-1].count ('\n')
 	return '\n'.join (output)
 
+def git_config(key, value=None):
+	'''Gets or sets git config values.  If value is not None, then
+	the config key will be set.  Otherwise, the config value of the
+	config key is returned.'''
+	k = utils.shell_quote (key)
+	if value is not None:
+		v = utils.shell_quote (value)
+		return commands.getoutput ('git config --set %s %s' % (k, v))
+	else:
+		return commands.getoutput ('git config --get %s' % k)
+
 def git_log (oneline=True, all=False):
 	'''Returns a pair of parallel arrays listing the revision sha1's
 	and commit summaries.'''
@@ -179,7 +205,7 @@ def git_log (oneline=True, all=False):
 	if all: argv.append ('--all')
 	revs = []
 	summaries = []
-	regex = re.compile ('(\w+)\W(.*)')
+	regex = re.compile (REV_LIST_PATTERN)
 	output = commands.getoutput (' '.join (argv))
 	for line in output.split ('\n'):
 		match = regex.match (line)
@@ -215,6 +241,22 @@ def git_reset (to_unstage):
 
 	cmd = ' '.join (argv)
 	return 'Running:\t%s\n%s' % ( cmd, commands.getoutput (cmd) )
+
+def git_rev_list_range (rev_start, rev_end):
+	cmd = ('git rev-list --pretty=oneline %s..%s'
+		% (utils.shell_quote (rev_start), utils.shell_quote(rev_end)))
+
+	revs = []
+	raw_revs = commands.getoutput (cmd).split ('\n')
+	regex = re.compile (REV_LIST_PATTERN)
+	for line in raw_revs:
+		match = regex.match (line)
+		if match:
+			rev_id = match.group (1)
+			summary = match.group (2)
+			revs.append ( (rev_id, summary,) )
+	
+	return revs
 
 def git_show (sha1, color=False):
 	cmd = 'git show '
@@ -283,3 +325,6 @@ def git_status():
 			staged.append (newname)
 
 	return ( staged, unstaged, untracked )
+
+def git_tag ():
+	return commands.getoutput ('git tag').split ('\n')

@@ -7,10 +7,12 @@ import cmds
 import utils
 import qtutils
 from models import GitRepoBrowserModel
-from views import GitCommandDialog
+from models import GitCreateBranchModel
 from views import GitCommitBrowser
 from views import GitBranchDialog
+from views import GitCreateBranchDialog
 from repobrowsercontroller import GitRepoBrowserController
+from createbranchcontroller import GitCreateBranchController
 
 class GitController (QObserver):
 	'''The controller is a mediator between the model and view.
@@ -18,9 +20,6 @@ class GitController (QObserver):
 
 	def __init__ (self, model, view):
 		QObserver.__init__ (self, model, view)
-
-		# Register ourselves with the model
-		model.add_observer (self)
 
 		# Binds a specific model attribute to a view widget,
 		# and vice versa.
@@ -36,7 +35,7 @@ class GitController (QObserver):
 		self.add_signals ('textChanged()', view.commitText)
 		self.add_signals ('stateChanged(int)', view.untrackedCheckBox)
 
-		self.add_signals ('pressed()',
+		self.add_signals ('released()',
 				view.rescanButton,
 				view.stageButton,
 				view.commitButton,
@@ -45,9 +44,10 @@ class GitController (QObserver):
 
 		self.add_signals ('triggered()',
 				view.rescan,
+				view.createBranch,
 				view.commitAll,
 				view.commitSelected,
-				view.getCommitMessage,
+				view.setCommitMessage,
 				view.stageChanged,
 				view.stageUntracked,
 				view.stageSelected,
@@ -86,7 +86,7 @@ class GitController (QObserver):
 				# Push Buttons
 				'rescanButton': self.cb_rescan,
 				'stageButton': self.cb_stage_selected,
-				'signOffButton': self.cb_signoff,
+				'signOffButton': lambda(m): m.add_signoff(),
 				'commitButton': self.cb_commit,
 				# Checkboxes
 				'untrackedCheckBox': self.cb_rescan,
@@ -95,9 +95,11 @@ class GitController (QObserver):
 				'unstagedList': self.cb_diff_unstaged,
 				# Menu Actions
 				'rescan': self.cb_rescan,
+				'createBranch': self.cb_branch_create,
 				'commitAll': self.cb_commit_all,
 				'commitSelected': self.cb_commit_selected,
-				'getCommitMessage': self.cb_get_commit_msg,
+				'setCommitMessage':
+					lambda(m): m.set_latest_commitmsg(),
 				'stageChanged': self.cb_stage_changed,
 				'stageUntracked': self.cb_stage_untracked,
 				'stageSelected': self.cb_stage_selected,
@@ -120,21 +122,20 @@ class GitController (QObserver):
 		# Default to creating a new commit (i.e. not an amend commit)
 		view.newCommitRadio.setChecked (True)
 
-		self.__set_branch_ui_items()
 		self.cb_rescan (model)
 
 	#####################################################################
 	# MODEL ACTIONS
 	#####################################################################
 
-	def action_staged (self, model, *args):
+	def action_staged (self, model):
 		'''This action is called when the model's staged list
 		changes.  This is a thin wrapper around update_list_widget.'''
 		list_widget = self.view.stagedList
 		staged = model.get_staged()
 		self.__update_list_widget (list_widget, staged, True)
 
-	def action_unstaged (self, model, *args):
+	def action_unstaged (self, model):
 		'''This action is called when the model's unstaged list
 		changes.  This is a thin wrapper around update_list_widget.'''
 		list_widget = self.view.unstagedList
@@ -151,20 +152,32 @@ class GitController (QObserver):
 	# CALLBACKS
 	#####################################################################
 
+	def cb_branch_create (self, ugit_model):
+		model = GitCreateBranchModel()
+		view = GitCreateBranchDialog (self.view)
+		controller = GitCreateBranchController (model, view)
+		view.show()
+		result = view.exec_()
+		if result == QDialog.Accepted:
+			self.cb_rescan (ugit_model)
+
 	def cb_browse_current (self, model):
 		self.__browse_branch (cmds.git_current_branch())
 
 	def cb_browse_other (self, model):
-		branches = cmds.git_branch_list()
+		# Prompt for a branch to browse
+		branches = (cmds.git_branch (remote=False)
+				+ cmds.git_branch (remote=True))
 		dialog = GitBranchDialog (self.view)
 		dialog.addBranches (branches)
 		dialog.show()
 		result = dialog.exec_()
 		if result != QDialog.Accepted: return
 
+		# Launch the repobrowser
 		self.__browse_branch (dialog.getSelectedBranch())
 
-	def cb_cherry_pick (self, model, *args):
+	def cb_cherry_pick (self, model):
 		'''Starts a cherry-picking session.'''
 		(revs, summaries) = cmds.git_log (all=True)
 		selection, idxs = self.__select_commits (revs, summaries)
@@ -173,7 +186,7 @@ class GitController (QObserver):
 		output = cmds.git_cherry_pick (selection)
 		self.__show_command_output (output, model)
 
-	def cb_commit (self, model, *args):
+	def cb_commit (self, model):
 		'''Sets up data and calls cmds.commit.'''
 
 		msg = model.get_commitmsg()
@@ -189,9 +202,9 @@ class GitController (QObserver):
 		if commit_all:
 			files = model.get_staged()
 		else:
-			files = self.__get_selection_from_view (
-					self.view.stagedList,
-					model.get_staged() )
+			wlist = self.view.stagedList
+			mlist = model.get_staged()
+			files = qtutils.get_selection_from_list (wlist, mlist)
 		# Perform the commit
 		output = cmds.git_commit (msg, amend, files)
 
@@ -199,15 +212,15 @@ class GitController (QObserver):
 		model.set_commitmsg ('')
 		self.__show_command_output (output, model)
 
-	def cb_commit_all (self, model, *args):
+	def cb_commit_all (self, model):
 		'''Sets the commit-all checkbox and runs cb_commit.'''
 		self.view.commitAllCheckBox.setChecked (True)
-		self.cb_commit (model, *args)
+		self.cb_commit (model)
 
-	def cb_commit_selected (self, model, *args):
+	def cb_commit_selected (self, model):
 		'''Unsets the commit-all checkbox and runs cb_commit.'''
 		self.view.commitAllCheckBox.setChecked (False)
-		self.cb_commit (model, *args)
+		self.cb_commit (model)
 
 	def cb_commit_sha1_selected (self, browser, revs):
 		'''This callback is called when a commit browser's
@@ -238,7 +251,7 @@ class GitController (QObserver):
 
 	def cb_diff_staged (self, model):
 		list_widget = self.view.stagedList
-		row, selected = self.__get_selected_row (list_widget)
+		row, selected = qtutils.get_selected_row (list_widget)
 
 		if not selected:
 			self.view.displayText.setText ('')
@@ -257,7 +270,7 @@ class GitController (QObserver):
 
 	def cb_diff_unstaged (self, model):
 		list_widget = self.view.unstagedList
-		row, selected = self.__get_selected_row (list_widget)
+		row, selected = qtutils.get_selected_row (list_widget)
 		if not selected:
 			self.view.displayText.setText ('')
 			return
@@ -292,7 +305,7 @@ class GitController (QObserver):
 
 		self.view.displayText.setHtml (pre + html)
 
-	def cb_export_patches (self, model, *args):
+	def cb_export_patches (self, model):
 		'''Launches the commit browser and exports the selected
 		patches.'''
 
@@ -308,21 +321,14 @@ class GitController (QObserver):
 		output = cmds.git_format_patch (selection, export_range)
 		self.__show_command_output (output)
 
-	def cb_get_commit_msg (self, model, *args):
-		(revs, summaries) = cmds.git_log (oneline=True)
-		commit_msg = []
-		commit_lines = cmds.git_show (revs[0]).split ('\n')
-		for idx, msg in enumerate (commit_lines):
-			if idx < 4: continue
-			msg = msg.lstrip()
-			if msg.startswith ('diff --git'):
-				commit_msg.pop()
-				break
-			commit_msg.append (msg)
-		model.set_commitmsg ('\n'.join (commit_msg).rstrip())
+	def cb_get_commit_msg (self, model):
+		model.retrieve_latest_commitmsg()
 
 	def cb_rescan (self, model, *args):
 		'''Populates view widgets with results from "git status."'''
+
+		# Scan for branch changes
+		self.__set_branch_ui_items()
 
 		# This allows us to defer notification until the
 		# we finish processing data
@@ -365,14 +371,12 @@ class GitController (QObserver):
 		msg = model.get_commitmsg()
 
 		if msg:
-			result = QMessageBox.question (self.view,
+			result = qtutils.question (self.view,
 					'Import Commit Message?',
 					('A commit message from a '
 					+ 'merge-in-progress was found.\n'
-					+ 'Do you want to import it?'),
-					QMessageBox.Yes | QMessageBox.No,
-					QMessageBox.Yes)
-			if result != QMessageBox.Yes: return
+					+ 'Do you want to import it?'))
+			if not result: return
 
 		file = open (squash_msg)
 		msg = file.read()
@@ -381,28 +385,17 @@ class GitController (QObserver):
 		# Set the new commit message
 		model.set_commitmsg (msg)
 
-	def cb_show_diffstat (self, model, *args):
+	def cb_show_diffstat (self, model):
 		'''Show the diffstat from the latest commit.'''
 		output = utils.ansi_to_html (cmds.git_diff_stat())
 		self.__show_command_output (output, rescan=False)
 
-	def cb_signoff (self, model, *args):
-		'''Adds a standard Signed-off by: tag to the end
-		of the current commit message.'''
-
-		msg = model.get_commitmsg()
-		signoff = 'Signed-off by: %s <%s>' % (
-				model.get_name(), model.get_email() )
-
-		if signoff not in msg:
-			model.set_commitmsg( '%s\n\n%s' % ( msg, signoff ) )
-
-	def cb_stage_changed (self, model, *args):
+	def cb_stage_changed (self, model):
 		'''Stage all changed files for commit.'''
 		output = cmds.git_add (model.get_unstaged())
 		self.__show_command_output (output, model)
 
-	def cb_stage_selected (self, model, *args):
+	def cb_stage_selected (self, model):
 		'''Use "git add" to add items to the git index.
 		This is a thin wrapper around __apply_to_list.'''
 		command = cmds.git_add_or_remove
@@ -410,17 +403,17 @@ class GitController (QObserver):
 		items = model.get_unstaged() + model.get_untracked()
 		self.__apply_to_list (command, model, widget, items)
 
-	def cb_stage_untracked (self, model, *args):
+	def cb_stage_untracked (self, model):
 		'''Stage all untracked files for commit.'''
 		output = cmds.git_add (model.get_untracked())
 		self.__show_command_output (output, model)
 
-	def cb_unstage_all (self, model, *args):
+	def cb_unstage_all (self, model):
 		'''Use "git reset" to remove all items from the git index.'''
 		output = cmds.git_reset (model.get_staged())
 		self.__show_command_output (output, model)
 
-	def cb_unstage_selected (self, model, *args):
+	def cb_unstage_selected (self, model):
 		'''Use "git reset" to remove items from the git index.
 		This is a thin wrapper around __apply_to_list.'''
 
@@ -447,7 +440,7 @@ class GitController (QObserver):
 		selection list, applies a command to that list,
 		displays a dialog showing the output of that command,
 		and calls cb_rescan to pickup changes.'''
-		apply_items = self.__get_selection_from_view (widget, items)
+		apply_items = qtutils.get_selection_from_list (widget, items)
 		output = command (apply_items)
 		self.__show_command_output (output, model)
 
@@ -472,22 +465,6 @@ class GitController (QObserver):
 
 		return qtutils.create_listwidget_item (filename, icon_file)
 
-	def __get_selected_row (self, list_widget):
-		row = list_widget.currentRow()
-		item = list_widget.item (row)
-		selected = item.isSelected()
-		return (row, selected)
-
-	def __get_selection_from_view (self, list_widget, items):
-		'''Returns an array of model items that correspond to
-		the selected QListWidget indices.'''
-		selected = []
-		for idx in range (list_widget.count()):
-			item = list_widget.item (idx)
-			if item.isSelected():
-				selected.append (items[idx])
-		return selected
-
 	def __select_commits (self, revs, summaries):
 		'''Use the GitCommitBrowser to select commits from a list.'''
 		if not summaries:
@@ -510,12 +487,12 @@ class GitController (QObserver):
 			return ([],[])
 
 		list_widget = browser.commitList
-		selection = self.__get_selection_from_view (list_widget, revs)
+		selection = qtutils.get_selection_from_list (list_widget, revs)
 		if not selection: return ([],[])
 
 		# also return the selected index numbers
 		index_nums = range (len (revs))
-		idxs = self.__get_selection_from_view (list_widget, index_nums)
+		idxs = qtutils.get_selection_from_list (list_widget, index_nums)
 
 		return (selection, idxs)
 
@@ -529,11 +506,8 @@ class GitController (QObserver):
 		self.view.statusBar().showMessage (status_text)
 
 	def __show_command_output (self, output, model=None, rescan=True):
-		'''Shows output in a GitCommandDialog and optionally
-		rescans for changes.'''
-		dialog = GitCommandDialog (self.view, output=output)
-		dialog.show()
-		dialog.exec_()
+		'''Shows output and optionally rescans for changes.'''
+		qtutils.show_command_output (self.view, output)
 		if rescan and model: self.cb_rescan (model)
 
 	def __update_list_widget (self, list_widget, items,

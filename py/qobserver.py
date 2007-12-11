@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from PyQt4.QtCore import QObject
 from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import QSpinBox, QPixmap, QTextEdit
+from PyQt4.QtGui import QSpinBox, QPixmap, QTextEdit, QLineEdit
 
 from observer import Observer
 
@@ -13,6 +13,7 @@ class QObserver (Observer, QObject):
 
 		self.model = model
 		self.view = view
+		model.add_observer (self)
 
 		self.__actions= {}
 		self.__callbacks = {}
@@ -43,10 +44,14 @@ class QObserver (Observer, QObject):
 			model = self.__view_to_model[sender][0]
 			model_attr = self.__view_to_model[sender][1]
 			if isinstance (widget, QTextEdit):
-				model.set (model_attr,
-						str (widget.toPlainText()))
+				value = str (widget.toPlainText())
+				model.set (model_attr, value)
+			elif isinstance (widget, QLineEdit):
+				value = str (widget.text())
+				model.set (model_attr, value)
 			else:
-				print "SLOT(): Unknown widget:", sender, widget
+				print ("SLOT(): Unknown widget:",
+						sender, widget)
 
 	def add_signals (self, signal_str, *objects):
 		'''Connects object's signal to the QObserver.'''
@@ -81,6 +86,8 @@ class QObserver (Observer, QObject):
 				elif isinstance (widget, QPixmap):
 					widget.load (value)
 				elif isinstance (widget, QTextEdit):
+					widget.setText (value)
+				elif isinstance (widget, QLineEdit):
 					widget.setText (value)
 				else:
 					print ('subject_changed(): '

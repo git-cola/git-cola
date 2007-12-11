@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>590</width>
-    <height>420</height>
+    <width>700</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget" >
    <layout class="QHBoxLayout" >
     <item>
-     <widget class="QSplitter" name="splitter_3" >
+     <widget class="QSplitter" name="display_splitter" >
       <property name="orientation" >
        <enum>Qt::Vertical</enum>
       </property>
@@ -425,8 +425,8 @@ retrieve the latest commit message prior to committing.</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>590</width>
-     <height>26</height>
+     <width>700</width>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuRepository" >
@@ -460,7 +460,7 @@ retrieve the latest commit message prior to committing.</string>
     <addaction name="exportPatches" />
     <addaction name="cherryPick" />
     <addaction name="separator" />
-    <addaction name="getCommitMessage" />
+    <addaction name="setCommitMessage" />
     <addaction name="showDiffstat" />
    </widget>
    <widget class="QMenu" name="menuEdit" >
@@ -468,7 +468,7 @@ retrieve the latest commit message prior to committing.</string>
      <string>Edit</string>
     </property>
     <addaction name="undo" />
-    <addaction name="actionRedo" />
+    <addaction name="redo" />
     <addaction name="separator" />
     <addaction name="cut" />
     <addaction name="copy" />
@@ -479,8 +479,28 @@ retrieve the latest commit message prior to committing.</string>
     <addaction name="separator" />
     <addaction name="options" />
    </widget>
-   <addaction name="menuRepository" />
+   <widget class="QMenu" name="menuFile" >
+    <property name="title" >
+     <string>File</string>
+    </property>
+    <addaction name="loadCommit" />
+    <addaction name="separator" />
+    <addaction name="quit" />
+   </widget>
+   <widget class="QMenu" name="menuBranch" >
+    <property name="title" >
+     <string>Branch</string>
+    </property>
+    <addaction name="createBranch" />
+    <addaction name="checkoutBranch" />
+    <addaction name="rebaseBranch" />
+    <addaction name="renameBranch" />
+    <addaction name="deleteBranch" />
+   </widget>
+   <addaction name="menuFile" />
    <addaction name="menuEdit" />
+   <addaction name="menuRepository" />
+   <addaction name="menuBranch" />
    <addaction name="menuCommit" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
@@ -488,16 +508,10 @@ retrieve the latest commit message prior to committing.</string>
    <property name="text" >
     <string>Browse master</string>
    </property>
-   <property name="shortcut" >
-    <string>Ctrl+B</string>
-   </property>
   </action>
   <action name="browseOtherBranch" >
    <property name="text" >
-    <string>Browse Branch...</string>
-   </property>
-   <property name="shortcut" >
-    <string>Alt+B</string>
+    <string>Browse Other Branch...</string>
    </property>
   </action>
   <action name="unstageSelected" >
@@ -506,6 +520,9 @@ retrieve the latest commit message prior to committing.</string>
    </property>
   </action>
   <action name="rebase" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="text" >
     <string>Fetch and Rebase</string>
    </property>
@@ -599,6 +616,9 @@ retrieve the latest commit message prior to committing.</string>
    </property>
   </action>
   <action name="options" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="text" >
     <string>Options...</string>
    </property>
@@ -622,7 +642,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+Z</string>
    </property>
   </action>
-  <action name="actionRedo" >
+  <action name="redo" >
    <property name="text" >
     <string>Redo</string>
    </property>
@@ -654,7 +674,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="getCommitMessage" >
+  <action name="setCommitMessage" >
    <property name="text" >
     <string>Get Latest Commit Message</string>
    </property>
@@ -670,6 +690,65 @@ retrieve the latest commit message prior to committing.</string>
   <action name="unstageAll" >
    <property name="text" >
     <string>Unstage All</string>
+   </property>
+  </action>
+  <action name="quit" >
+   <property name="text" >
+    <string>Quit</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="loadCommit" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Load Commit Message...</string>
+   </property>
+  </action>
+  <action name="createBranch" >
+   <property name="text" >
+    <string>Create...</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+B</string>
+   </property>
+  </action>
+  <action name="checkoutBranch" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Checkout...</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+B</string>
+   </property>
+  </action>
+  <action name="rebaseBranch" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Rebase...</string>
+   </property>
+  </action>
+  <action name="renameBranch" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Rename...</string>
+   </property>
+  </action>
+  <action name="deleteBranch" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Delete...</string>
    </property>
   </action>
  </widget>
@@ -690,7 +769,24 @@ retrieve the latest commit message prior to committing.</string>
   <tabstop>displayText</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>quit</sender>
+   <signal>triggered()</signal>
+   <receiver>Window</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>294</x>
+     <y>209</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <designerdata>
   <property name="gridDeltaX" >
    <number>4</number>

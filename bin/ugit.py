@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# Copyright (C) 2007, David Aguilar <davvid@gmail.com>
+# License: GPL v2 or later
 import sys
 from PyQt4 import QtCore, QtGui
 from ugitlibs.models import GitModel
