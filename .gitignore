@@ -1,4 +1,7 @@
+/Makefile
 /build
-/install
+/installroot
 /.lock-wscript
+*.pyo
+*.pyc
 *.swp

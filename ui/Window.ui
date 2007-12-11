@@ -1,0 +1,711 @@
+<ui version="4.0" >
+ <author>David Aguilar</author>
+ <class>Window</class>
+ <widget class="QMainWindow" name="Window" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>590</width>
+    <height>420</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>ugit</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <layout class="QHBoxLayout" >
+    <item>
+     <widget class="QSplitter" name="splitter_3" >
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="handleWidth" >
+       <number>4</number>
+      </property>
+      <widget class="QSplitter" name="splitter_2" >
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="handleWidth" >
+        <number>4</number>
+       </property>
+       <widget class="QSplitter" name="splitter" >
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="handleWidth" >
+         <number>4</number>
+        </property>
+        <widget class="QWidget" name="layoutWidget" >
+         <layout class="QVBoxLayout" >
+          <property name="spacing" >
+           <number>0</number>
+          </property>
+          <property name="leftMargin" >
+           <number>1</number>
+          </property>
+          <property name="topMargin" >
+           <number>1</number>
+          </property>
+          <property name="rightMargin" >
+           <number>1</number>
+          </property>
+          <property name="bottomMargin" >
+           <number>1</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" >
+            <item>
+             <widget class="QLabel" name="label_2" >
+              <property name="text" >
+               <string>Files to Commit</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="commitAllCheckBox" >
+              <property name="toolTip" >
+               <string>Whether to commit all staged files.
+Disabling this causes ugit to only commit the
+selected files in the "Files to Commit" list.</string>
+              </property>
+              <property name="text" >
+               <string>Commit All</string>
+              </property>
+              <property name="checked" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QListWidget" name="stagedList" >
+            <property name="font" >
+             <font>
+              <family>Monospace</family>
+              <pointsize>11</pointsize>
+             </font>
+            </property>
+            <property name="toolTip" >
+             <string>A list of all staged changes for the next commit.</string>
+            </property>
+            <property name="alternatingRowColors" >
+             <bool>true</bool>
+            </property>
+            <property name="selectionMode" >
+             <enum>QAbstractItemView::ExtendedSelection</enum>
+            </property>
+            <property name="viewMode" >
+             <enum>QListView::ListMode</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="layoutWidget" >
+         <layout class="QVBoxLayout" >
+          <property name="spacing" >
+           <number>0</number>
+          </property>
+          <property name="leftMargin" >
+           <number>1</number>
+          </property>
+          <property name="topMargin" >
+           <number>1</number>
+          </property>
+          <property name="rightMargin" >
+           <number>1</number>
+          </property>
+          <property name="bottomMargin" >
+           <number>1</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" >
+            <item>
+             <widget class="QLabel" name="label_3" >
+              <property name="text" >
+               <string>Unstaged Changes</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="untrackedCheckBox" >
+              <property name="toolTip" >
+               <string>Includes untracked files in the unstaged changes list.
+Disabling this causes ugit to only display files known to git
+in the unstaged changes list.</string>
+              </property>
+              <property name="text" >
+               <string>Show Untracked Files</string>
+              </property>
+              <property name="checked" >
+               <bool>true</bool>
+              </property>
+              <property name="tristate" >
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QListWidget" name="unstagedList" >
+            <property name="font" >
+             <font>
+              <family>Monospace</family>
+              <pointsize>11</pointsize>
+             </font>
+            </property>
+            <property name="toolTip" >
+             <string>A list of all the unstaged changes.
+This list includes those files known to git and can optionally
+include untracked files if "Show Untracked Files" is checked.</string>
+            </property>
+            <property name="alternatingRowColors" >
+             <bool>true</bool>
+            </property>
+            <property name="selectionMode" >
+             <enum>QAbstractItemView::ExtendedSelection</enum>
+            </property>
+            <property name="viewMode" >
+             <enum>QListView::ListMode</enum>
+            </property>
+            <property name="uniformItemSizes" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="layoutWidget" >
+        <layout class="QHBoxLayout" >
+         <property name="spacing" >
+          <number>0</number>
+         </property>
+         <property name="leftMargin" >
+          <number>1</number>
+         </property>
+         <property name="topMargin" >
+          <number>1</number>
+         </property>
+         <property name="rightMargin" >
+          <number>1</number>
+         </property>
+         <property name="bottomMargin" >
+          <number>1</number>
+         </property>
+         <item>
+          <layout class="QVBoxLayout" >
+           <property name="spacing" >
+            <number>1</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="rescanButton" >
+             <property name="toolTip" >
+              <string>Rescan tells ugit to rescan for changes to the git repository.</string>
+             </property>
+             <property name="text" >
+              <string>Rescan</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="stageButton" >
+             <property name="toolTip" >
+              <string>Invokes "git add" to stage the selected items
+from the "Unstaged Changes" list.</string>
+             </property>
+             <property name="text" >
+              <string>Stage</string>
+             </property>
+             <property name="flat" >
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="signOffButton" >
+             <property name="toolTip" >
+              <string>"Sign Off" appends the standard "Signed-Off by: ..."
+message to the current commit message.</string>
+             </property>
+             <property name="text" >
+              <string>Sign Off</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="commitButton" >
+             <property name="toolTip" >
+              <string>Invokes a git commit.
+This commits the files listed in the "Files to Commit" list.
+If "Commit All" is checked, all listed items will be committed,
+otherwise only the selected items will be committed.</string>
+             </property>
+             <property name="text" >
+              <string>Commit</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton" >
+             <property name="enabled" >
+              <bool>false</bool>
+             </property>
+             <property name="text" >
+              <string>Push</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" >
+           <property name="spacing" >
+            <number>0</number>
+           </property>
+           <property name="leftMargin" >
+            <number>4</number>
+           </property>
+           <item>
+            <layout class="QHBoxLayout" >
+             <item>
+              <widget class="QLabel" name="label" >
+               <property name="text" >
+                <string>Commit Message:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer>
+               <property name="orientation" >
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" >
+                <size>
+                 <width>281</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="newCommitRadio" >
+               <property name="toolTip" >
+                <string>Causes the next commit to create a new commit object.</string>
+               </property>
+               <property name="text" >
+                <string>New Commit</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="amendRadio" >
+               <property name="toolTip" >
+                <string>Causes git to reuse the latest commit object.
+"git commit" will be supplied with the "--amend" option so that
+the most recent commit is amended with contents of the next commit.</string>
+               </property>
+               <property name="text" >
+                <string>Amend</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" >
+             <item>
+              <widget class="QTextEdit" name="commitText" >
+               <property name="font" >
+                <font>
+                 <family>Monospace</family>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+               <property name="toolTip" >
+                <string>The commit message for the next commit.
+If you are going to amend a commit you can use the
+"Commit -> Get Latest Comit Message" menu action to
+retrieve the latest commit message prior to committing.</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QTextEdit" name="displayText" >
+       <property name="palette" >
+        <palette>
+         <active>
+          <colorrole role="Text" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>200</red>
+             <green>200</green>
+             <blue>200</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="Text" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>200</red>
+             <green>200</green>
+             <blue>200</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="Text" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>96</red>
+             <green>96</green>
+             <blue>96</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base" >
+           <brush brushstyle="SolidPattern" >
+            <color alpha="255" >
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="font" >
+        <font>
+         <family>Monospace</family>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="readOnly" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>590</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuRepository" >
+    <property name="title" >
+     <string>Repository</string>
+    </property>
+    <addaction name="browseBranch" />
+    <addaction name="browseOtherBranch" />
+    <addaction name="separator" />
+    <addaction name="rebase" />
+    <addaction name="separator" />
+    <addaction name="visualizeCurrent" />
+    <addaction name="visualizeAll" />
+   </widget>
+   <widget class="QMenu" name="menuCommit" >
+    <property name="title" >
+     <string>Commit</string>
+    </property>
+    <addaction name="rescan" />
+    <addaction name="separator" />
+    <addaction name="stageChanged" />
+    <addaction name="stageUntracked" />
+    <addaction name="stageSelected" />
+    <addaction name="separator" />
+    <addaction name="unstageAll" />
+    <addaction name="unstageSelected" />
+    <addaction name="separator" />
+    <addaction name="commitAll" />
+    <addaction name="commitSelected" />
+    <addaction name="separator" />
+    <addaction name="exportPatches" />
+    <addaction name="cherryPick" />
+    <addaction name="separator" />
+    <addaction name="getCommitMessage" />
+    <addaction name="showDiffstat" />
+   </widget>
+   <widget class="QMenu" name="menuEdit" >
+    <property name="title" >
+     <string>Edit</string>
+    </property>
+    <addaction name="undo" />
+    <addaction name="actionRedo" />
+    <addaction name="separator" />
+    <addaction name="cut" />
+    <addaction name="copy" />
+    <addaction name="paste" />
+    <addaction name="delete" />
+    <addaction name="separator" />
+    <addaction name="selectAll" />
+    <addaction name="separator" />
+    <addaction name="options" />
+   </widget>
+   <addaction name="menuRepository" />
+   <addaction name="menuEdit" />
+   <addaction name="menuCommit" />
+  </widget>
+  <widget class="QStatusBar" name="statusbar" />
+  <action name="browseBranch" >
+   <property name="text" >
+    <string>Browse master</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+B</string>
+   </property>
+  </action>
+  <action name="browseOtherBranch" >
+   <property name="text" >
+    <string>Browse Branch...</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+B</string>
+   </property>
+  </action>
+  <action name="unstageSelected" >
+   <property name="text" >
+    <string>Unstage Selected</string>
+   </property>
+  </action>
+  <action name="rebase" >
+   <property name="text" >
+    <string>Fetch and Rebase</string>
+   </property>
+  </action>
+  <action name="visualizeCurrent" >
+   <property name="text" >
+    <string>Visualize Current Branch</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+V</string>
+   </property>
+  </action>
+  <action name="visualizeAll" >
+   <property name="text" >
+    <string>Visualize Entire History</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+H</string>
+   </property>
+  </action>
+  <action name="showDiffstat" >
+   <property name="text" >
+    <string>Show Latest Diffstat</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="stageChanged" >
+   <property name="text" >
+    <string>Stage All Changed</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+A</string>
+   </property>
+  </action>
+  <action name="stageUntracked" >
+   <property name="text" >
+    <string>Stage All Untracked</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+U</string>
+   </property>
+  </action>
+  <action name="stageSelected" >
+   <property name="text" >
+    <string>Stage Selected</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+T</string>
+   </property>
+  </action>
+  <action name="exportPatches" >
+   <property name="text" >
+    <string>Export Patches...</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="cut" >
+   <property name="text" >
+    <string>Cut</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="copy" >
+   <property name="text" >
+    <string>Copy</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="paste" >
+   <property name="text" >
+    <string>Paste</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="selectAll" >
+   <property name="text" >
+    <string>Select All</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="options" >
+   <property name="text" >
+    <string>Options...</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="delete" >
+   <property name="text" >
+    <string>Delete</string>
+   </property>
+   <property name="shortcut" >
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="undo" >
+   <property name="text" >
+    <string>Undo</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo" >
+   <property name="text" >
+    <string>Redo</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+Z</string>
+   </property>
+  </action>
+  <action name="rescan" >
+   <property name="text" >
+    <string>Rescan</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="commitSelected" >
+   <property name="text" >
+    <string>Commit Selected</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+S</string>
+   </property>
+  </action>
+  <action name="commitAll" >
+   <property name="text" >
+    <string>Commit All</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="getCommitMessage" >
+   <property name="text" >
+    <string>Get Latest Commit Message</string>
+   </property>
+  </action>
+  <action name="cherryPick" >
+   <property name="text" >
+    <string>Cherry-Pick Commits...</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="unstageAll" >
+   <property name="text" >
+    <string>Unstage All</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="2" margin="2" />
+ <tabstops>
+  <tabstop>commitText</tabstop>
+  <tabstop>stagedList</tabstop>
+  <tabstop>unstagedList</tabstop>
+  <tabstop>rescanButton</tabstop>
+  <tabstop>stageButton</tabstop>
+  <tabstop>signOffButton</tabstop>
+  <tabstop>commitButton</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>commitAllCheckBox</tabstop>
+  <tabstop>untrackedCheckBox</tabstop>
+  <tabstop>newCommitRadio</tabstop>
+  <tabstop>amendRadio</tabstop>
+  <tabstop>displayText</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+ <designerdata>
+  <property name="gridDeltaX" >
+   <number>4</number>
+  </property>
+  <property name="gridDeltaY" >
+   <number>4</number>
+  </property>
+  <property name="gridSnapX" >
+   <bool>true</bool>
+  </property>
+  <property name="gridSnapY" >
+   <bool>true</bool>
+  </property>
+  <property name="gridVisible" >
+   <bool>false</bool>
+  </property>
+ </designerdata>
+</ui>

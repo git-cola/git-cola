@@ -1,0 +1,199 @@
+<ui version="4.0" >
+ <class>CommandDialog</class>
+ <widget class="QDialog" name="CommandDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>590</width>
+    <height>420</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Git Command Output</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <item>
+    <widget class="QTextEdit" name="commandText" >
+     <property name="palette" >
+      <palette>
+       <active>
+        <colorrole role="Text" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>170</red>
+           <green>170</green>
+           <blue>127</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Base" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>0</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Highlight" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>0</red>
+           <green>255</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="HighlightedText" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>0</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </active>
+       <inactive>
+        <colorrole role="Text" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>170</red>
+           <green>170</green>
+           <blue>127</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Base" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>0</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Highlight" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>0</red>
+           <green>255</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="HighlightedText" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>0</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </inactive>
+       <disabled>
+        <colorrole role="Text" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>96</red>
+           <green>96</green>
+           <blue>96</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Base" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>255</red>
+           <green>255</green>
+           <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Highlight" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>68</red>
+           <green>68</green>
+           <blue>68</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="HighlightedText" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>0</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </disabled>
+      </palette>
+     </property>
+     <property name="font" >
+      <font>
+       <family>Monospace</family>
+       <pointsize>13</pointsize>
+      </font>
+     </property>
+     <property name="acceptDrops" >
+      <bool>false</bool>
+     </property>
+     <property name="readOnly" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>261</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="okButton" >
+       <property name="text" >
+        <string>OK</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>okButton</tabstop>
+  <tabstop>commandText</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>okButton</sender>
+   <signal>clicked()</signal>
+   <receiver>CommandDialog</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>352</x>
+     <y>277</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
