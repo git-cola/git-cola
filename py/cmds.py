@@ -119,8 +119,8 @@ def git_create_branch (name, base, track=False):
 	'''Creates a branch starting from base.  Pass track=True
 	to create a remote tracking branch.'''
 	cmd = 'git branch'
-	if track: cmd += ' --track '
-	cmd += '%s %s' % ( utils.shell_quote (name),
+	if track: cmd += ' --track'
+	cmd += ' %s %s' % ( utils.shell_quote (name),
 			utils.shell_quote (base))
 	return commands.getoutput (cmd)
 
