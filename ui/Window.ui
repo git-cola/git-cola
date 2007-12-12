@@ -37,7 +37,7 @@
         <property name="handleWidth" >
          <number>2</number>
         </property>
-        <widget class="QWidget" name="" >
+        <widget class="QWidget" name="layoutWidget" >
          <layout class="QVBoxLayout" >
           <property name="spacing" >
            <number>0</number>
@@ -103,7 +103,7 @@ include untracked files if "Show Untracked Files" is checked.</string>
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="" >
+        <widget class="QWidget" name="layoutWidget" >
          <layout class="QVBoxLayout" >
           <property name="spacing" >
            <number>0</number>
@@ -415,7 +415,6 @@ retrieve the latest commit message prior to committing.</string>
     <addaction name="createBranch" />
     <addaction name="checkoutBranch" />
     <addaction name="rebaseBranch" />
-    <addaction name="renameBranch" />
     <addaction name="deleteBranch" />
    </widget>
    <addaction name="menuFile" />
@@ -638,9 +637,6 @@ retrieve the latest commit message prior to committing.</string>
    </property>
   </action>
   <action name="checkoutBranch" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
    <property name="text" >
     <string>Checkout...</string>
    </property>
@@ -649,9 +645,6 @@ retrieve the latest commit message prior to committing.</string>
    </property>
   </action>
   <action name="rebaseBranch" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
    <property name="text" >
     <string>Rebase...</string>
    </property>
@@ -665,9 +658,6 @@ retrieve the latest commit message prior to committing.</string>
    </property>
   </action>
   <action name="deleteBranch" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
    <property name="text" >
     <string>Delete...</string>
    </property>

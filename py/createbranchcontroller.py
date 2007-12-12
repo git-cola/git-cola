@@ -96,7 +96,7 @@ class GitCreateBranchController (QObserver):
 		reset = self.view.resetRadio.isChecked()
 
 		output = cmds.git_create_branch (branch, revision, track=track)
-		qtutils.show_command_output (self.view, output)
+		qtutils.show_command (self.view, output)
 		self.view.accept()
 
 	def cb_item_changed (self, model):

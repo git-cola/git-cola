@@ -45,6 +45,9 @@ class GitController (QObserver):
 		self.add_signals ('triggered()',
 				view.rescan,
 				view.createBranch,
+				view.checkoutBranch,
+				view.rebaseBranch,
+				view.deleteBranch,
 				view.commitAll,
 				view.commitSelected,
 				view.setCommitMessage,
@@ -96,6 +99,9 @@ class GitController (QObserver):
 				# Menu Actions
 				'rescan': self.cb_rescan,
 				'createBranch': self.cb_branch_create,
+				'deleteBranch': self.cb_branch_delete,
+				'checkoutBranch': self.cb_checkout_branch,
+				'rebaseBranch': self.cb_rebase,
 				'commitAll': self.cb_commit_all,
 				'commitSelected': self.cb_commit_selected,
 				'setCommitMessage':
@@ -161,6 +167,14 @@ class GitController (QObserver):
 		if result == QDialog.Accepted:
 			self.cb_rescan (ugit_model)
 
+	def cb_branch_delete (self, model):
+		dlg = GitBranchDialog(self.view, branches=cmds.git_branch())
+		branch = dlg.getSelectedBranch()
+		if not branch: return
+		qtutils.show_command (self.view,
+				cmds.git_branch(name=branch, delete=True))
+
+
 	def cb_browse_current (self, model):
 		self.__browse_branch (cmds.git_current_branch())
 
@@ -168,14 +182,18 @@ class GitController (QObserver):
 		# Prompt for a branch to browse
 		branches = (cmds.git_branch (remote=False)
 				+ cmds.git_branch (remote=True))
-		dialog = GitBranchDialog (self.view)
-		dialog.addBranches (branches)
-		dialog.show()
-		result = dialog.exec_()
-		if result != QDialog.Accepted: return
+
+		dialog = GitBranchDialog (self.view, branches=branches)
 
 		# Launch the repobrowser
 		self.__browse_branch (dialog.getSelectedBranch())
+
+	def cb_checkout_branch (self, model):
+		dlg = GitBranchDialog (self.view, cmds.git_branch())
+		branch = dlg.getSelectedBranch()
+		if not branch: return
+		qtutils.show_command (self.view, cmds.git_checkout(branch))
+		self.cb_rescan (model)
 
 	def cb_cherry_pick (self, model):
 		'''Starts a cherry-picking session.'''
@@ -184,7 +202,7 @@ class GitController (QObserver):
 		if not selection: return
 
 		output = cmds.git_cherry_pick (selection)
-		self.__show_command_output (output, model)
+		self.__show_command (output, model)
 
 	def cb_commit (self, model):
 		'''Sets up data and calls cmds.commit.'''
@@ -192,7 +210,7 @@ class GitController (QObserver):
 		msg = model.get_commitmsg()
 		if not msg:
 			error_msg = 'ERROR: No commit message was provided.'
-			self.__show_command_output (error_msg)
+			self.__show_command (error_msg)
 			return
 
 		amend = self.view.amendRadio.isChecked()
@@ -210,7 +228,7 @@ class GitController (QObserver):
 
 		# Reset commitmsg and rescan
 		model.set_commitmsg ('')
-		self.__show_command_output (output, model)
+		self.__show_command (output, model)
 
 	def cb_commit_all (self, model):
 		'''Sets the commit-all checkbox and runs cb_commit.'''
@@ -319,10 +337,17 @@ class GitController (QObserver):
 		export_range = len (idxs) > 1 and idxs == selected_range
 
 		output = cmds.git_format_patch (selection, export_range)
-		self.__show_command_output (output)
+		self.__show_command (output)
 
 	def cb_get_commit_msg (self, model):
 		model.retrieve_latest_commitmsg()
+
+	def cb_rebase (self, model):
+		dlg = GitBranchDialog(self.view, cmds.git_branch())
+		dlg.setWindowTitle ("Select the current branch's new root")
+		branch = dlg.getSelectedBranch()
+		if not branch: return
+		qtutils.show_command (self.view, cmds.git_rebase (branch))
 
 	def cb_rescan (self, model, *args):
 		'''Populates view widgets with results from "git status."'''
@@ -388,12 +413,12 @@ class GitController (QObserver):
 	def cb_show_diffstat (self, model):
 		'''Show the diffstat from the latest commit.'''
 		output = utils.ansi_to_html (cmds.git_diff_stat())
-		self.__show_command_output (output, rescan=False)
+		self.__show_command (output, rescan=False)
 
 	def cb_stage_changed (self, model):
 		'''Stage all changed files for commit.'''
 		output = cmds.git_add (model.get_unstaged())
-		self.__show_command_output (output, model)
+		self.__show_command (output, model)
 
 	def cb_stage_selected (self, model):
 		'''Use "git add" to add items to the git index.
@@ -406,12 +431,12 @@ class GitController (QObserver):
 	def cb_stage_untracked (self, model):
 		'''Stage all untracked files for commit.'''
 		output = cmds.git_add (model.get_untracked())
-		self.__show_command_output (output, model)
+		self.__show_command (output, model)
 
 	def cb_unstage_all (self, model):
 		'''Use "git reset" to remove all items from the git index.'''
 		output = cmds.git_reset (model.get_staged())
-		self.__show_command_output (output, model)
+		self.__show_command (output, model)
 
 	def cb_unstage_selected (self, model):
 		'''Use "git reset" to remove items from the git index.
@@ -442,9 +467,10 @@ class GitController (QObserver):
 		and calls cb_rescan to pickup changes.'''
 		apply_items = qtutils.get_selection_from_list (widget, items)
 		output = command (apply_items)
-		self.__show_command_output (output, model)
+		self.__show_command (output, model)
 
 	def __browse_branch (self, branch):
+		if not branch: return
 		model = GitRepoBrowserModel (branch)
 		view = GitCommitBrowser()
 		controller = GitRepoBrowserController(model, view)
@@ -469,7 +495,7 @@ class GitController (QObserver):
 		'''Use the GitCommitBrowser to select commits from a list.'''
 		if not summaries:
 			msg = 'ERROR: No commits exist in this branch.'''
-			self.__show_command_output (output=msg)
+			self.__show_command (output=msg)
 			return ([],[])
 
 		browser = GitCommitBrowser (self.view)
@@ -505,9 +531,9 @@ class GitController (QObserver):
 		status_text = 'Current branch: ' + current_branch
 		self.view.statusBar().showMessage (status_text)
 
-	def __show_command_output (self, output, model=None, rescan=True):
+	def __show_command (self, output, model=None, rescan=True):
 		'''Shows output and optionally rescans for changes.'''
-		qtutils.show_command_output (self.view, output)
+		qtutils.show_command (self.view, output)
 		if rescan and model: self.cb_rescan (model)
 
 	def __update_list_widget (self, list_widget, items,

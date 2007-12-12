@@ -17,8 +17,7 @@ def git_add (to_add):
 		argv.append (utils.shell_quote (filename))
 
 	cmd = ' '.join (argv)
-	return 'Running:\t%s\n%s\n%s added successfully' % (
-			cmd, commands.getoutput (cmd), ', '.join (to_add) )
+	return 'Running:\t%s\n\n%s' % (cmd, commands.getoutput (cmd))
 
 def git_add_or_remove (to_process):
 	'''Invokes 'git add' to index the filenames in to_process that exist
@@ -50,13 +49,15 @@ def git_add_or_remove (to_process):
 	cmd = ' '.join (argv)
 	return output + 'Running: %s\n%s' % ( cmd, commands.getoutput (cmd) )
 
-def git_branch (remote=False):
-	'''Returns a list of git branches.
-	Pass "remote=True" to list remote branches.'''
+def git_branch (name=None, remote=False, delete=False):
 	cmd = 'git branch'
-	if remote: cmd += ' -r'
-	branches = commands.getoutput (cmd).split ('\n')
-	return map (lambda (x): x.lstrip ('* '), branches)
+	if delete and name:
+		cmd += ' -D ' + name
+		return commands.getoutput (cmd)
+	else:
+		if remote: cmd += ' -r'
+		branches = commands.getoutput (cmd).split ('\n')
+		return map (lambda (x): x.lstrip ('* '), branches)
 
 def git_cat_file (objtype, sha1, target_file=None):
 	cmd = 'git cat-file %s %s' % ( objtype, sha1 )
@@ -77,6 +78,10 @@ def git_cherry_pick (revs, commit=False):
 		output.append (commands.getoutput (cmd + rev))
 		output.append ('')
 	return '\n'.join (output)
+
+def git_checkout(rev):
+	if not rev: return
+	return commands.getoutput('git checkout '+rev)
 
 def git_commit (msg, amend, files):
 	'''Creates a git commit.  'commit_all' triggers the -a
@@ -229,6 +234,10 @@ def git_ls_tree (rev):
 			filename = match.group (4)
 			output.append ( (mode, objtype, sha1, filename,) )
 	return output
+
+def git_rebase (newbase):
+	if not newbase: return
+	return commands.getoutput ('git rebase '+newbase)
 
 def git_reset (to_unstage):
 	'''Use 'git reset' to unstage files from the index.'''

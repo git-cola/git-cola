@@ -1,6 +1,7 @@
 import os
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import SIGNAL
+from PyQt4.QtGui import QDialog
 from Window import Ui_Window
 from CommandDialog import Ui_CommandDialog
 from CommitBrowser import Ui_CommitBrowser
@@ -28,11 +29,12 @@ class GitCommandDialog (Ui_CommandDialog, QtGui.QDialog):
 
 class GitBranchDialog (Ui_BranchDialog, QtGui.QDialog):
 	'''A dialog to display available branches.'''
-	def __init__ (self, parent=None):
+	def __init__ (self, parent=None, branches=None):
 		QtGui.QDialog.__init__ (self, parent)
 		Ui_BranchDialog.__init__ (self)
 		self.setupUi (self)
 		self.reset()
+		if branches: self.addBranches (branches)
 
 	def reset (self):
 		self.branches = []
@@ -44,7 +46,11 @@ class GitBranchDialog (Ui_BranchDialog, QtGui.QDialog):
 			self.comboBox.addItem (branch)
 
 	def getSelectedBranch (self):
-		return self.branches [ self.comboBox.currentIndex() ]
+		self.show()
+		if self.exec_() == QDialog.Accepted:
+			return self.branches [ self.comboBox.currentIndex() ]
+		else:
+			return None
 
 class GitCommitBrowser (Ui_CommitBrowser, QtGui.QDialog):
 	'''A dialog to display commits in for selection.'''

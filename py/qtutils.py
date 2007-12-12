@@ -56,7 +56,7 @@ def set_clipboard (text):
 	QtGui.qApp.clipboard().setText (text, QClipboard.Clipboard)
 	QtGui.qApp.clipboard().setText (text, QClipboard.Selection)
 
-def show_command_output (parent, output):
+def show_command (parent, output):
 	dialog = GitCommandDialog (parent, output=output)
 	dialog.show()
 	dialog.exec_()
