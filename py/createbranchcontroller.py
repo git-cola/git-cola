@@ -89,7 +89,7 @@ class GitCreateBranchController (QObserver):
 
 			if not result: return
 
-		# Settings for git branch
+		# TODO: Settings for git branch
 		track = self.view.remoteBranchRadio.isChecked()
 		fetch = self.view.fetchCheckBox.isChecked()
 		ffwd = self.view.fastForwardUpdateRadio.isChecked()

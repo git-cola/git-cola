@@ -1,0 +1,4 @@
+- Add ability to stage/unstage specific hunks
+- inotify support
+- The diff display can be rather slow on large diffs
+- Options dialog + save/restore
