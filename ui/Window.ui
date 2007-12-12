@@ -20,18 +20,33 @@
       <property name="orientation" >
        <enum>Qt::Vertical</enum>
       </property>
+      <property name="handleWidth" >
+       <number>2</number>
+      </property>
       <widget class="QSplitter" name="splitter_2" >
        <property name="orientation" >
         <enum>Qt::Vertical</enum>
+       </property>
+       <property name="handleWidth" >
+        <number>2</number>
        </property>
        <widget class="QSplitter" name="splitter" >
         <property name="orientation" >
          <enum>Qt::Horizontal</enum>
         </property>
-        <widget class="QWidget" name="layoutWidget" >
+        <property name="handleWidth" >
+         <number>2</number>
+        </property>
+        <widget class="QWidget" name="" >
          <layout class="QVBoxLayout" >
+          <property name="spacing" >
+           <number>0</number>
+          </property>
           <item>
            <layout class="QHBoxLayout" >
+            <property name="spacing" >
+             <number>0</number>
+            </property>
             <item>
              <widget class="QLabel" name="label_3" >
               <property name="text" >
@@ -88,10 +103,16 @@ include untracked files if "Show Untracked Files" is checked.</string>
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="layoutWidget" >
+        <widget class="QWidget" name="" >
          <layout class="QVBoxLayout" >
+          <property name="spacing" >
+           <number>0</number>
+          </property>
           <item>
            <layout class="QHBoxLayout" >
+            <property name="spacing" >
+             <number>0</number>
+            </property>
             <item>
              <widget class="QLabel" name="label_2" >
               <property name="text" >
@@ -147,16 +168,16 @@ selected files in the "Files to Commit" list.</string>
           <number>0</number>
          </property>
          <property name="leftMargin" >
-          <number>1</number>
+          <number>0</number>
          </property>
          <property name="topMargin" >
-          <number>1</number>
+          <number>0</number>
          </property>
          <property name="rightMargin" >
-          <number>1</number>
+          <number>0</number>
          </property>
          <property name="bottomMargin" >
-          <number>1</number>
+          <number>0</number>
          </property>
          <item>
           <layout class="QVBoxLayout" >
@@ -233,6 +254,9 @@ otherwise only the selected items will be committed.</string>
            </property>
            <item>
             <layout class="QHBoxLayout" >
+             <property name="spacing" >
+              <number>0</number>
+             </property>
              <item>
               <widget class="QLabel" name="label" >
                <property name="text" >
