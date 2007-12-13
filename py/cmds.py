@@ -3,6 +3,7 @@ import re
 import time
 import commands
 import utils
+from cStringIO import StringIO
 
 # A regex for matching the output of git (log|rev-list) --pretty=oneline
 REV_LIST_PATTERN = '([0-9a-f]+)\W(.*)'
@@ -154,7 +155,7 @@ def git_diff (filename, staged=True):
 	diff = commands.getoutput (' '.join (argv))
 	diff_lines = diff.split ('\n')
 
-	output = []
+	output = StringIO()
 	start = False
 	del_tag = 'deleted file mode '
 
@@ -162,8 +163,8 @@ def git_diff (filename, staged=True):
 		if not start and '@@ ' in line and ' @@' in line:
 			start = True
 		if start or (deleted and del_tag in line):
-			output.append (line)
-	return '\n'.join (output)
+			output.write (line+'\n')
+	return output.getvalue()
 
 def git_diff_stat ():
 	'''Returns the latest diffstat.'''
