@@ -219,6 +219,9 @@ def git_log (oneline=True, all=False):
 			summaries.append (match.group (2))
 	return ( revs, summaries )
 
+def git_ls_files ():
+	return commands.getoutput ('git ls-files').split ('\n')
+
 def git_ls_tree (rev):
 	'''Returns a list of (mode, type, sha1, path) tuples.'''
 	regex = re.compile ('^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')

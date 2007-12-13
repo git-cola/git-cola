@@ -35,6 +35,7 @@ def get_selection_from_list (list_widget, items):
 			selected.append (items[idx])
 	return selected
 
+def qapp (): return QtGui.qApp
 
 def question (parent, title, message, default=True):
 	'''Launches a QMessageBox question with the provided title and message.
@@ -53,8 +54,8 @@ def question (parent, title, message, default=True):
 	return result == QMessageBox.Yes
 
 def set_clipboard (text):
-	QtGui.qApp.clipboard().setText (text, QClipboard.Clipboard)
-	QtGui.qApp.clipboard().setText (text, QClipboard.Selection)
+	qapp().clipboard().setText (text, QClipboard.Clipboard)
+	qapp().clipboard().setText (text, QClipboard.Selection)
 
 def show_command (parent, output):
 	dialog = GitCommandDialog (parent, output=output)

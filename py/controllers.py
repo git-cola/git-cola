@@ -13,6 +13,7 @@ from views import GitBranchDialog
 from views import GitCreateBranchDialog
 from repobrowsercontroller import GitRepoBrowserController
 from createbranchcontroller import GitCreateBranchController
+from inotify import GitNotifier
 
 class GitController (QObserver):
 	'''The controller is a mediator between the model and view.
@@ -36,7 +37,6 @@ class GitController (QObserver):
 		self.add_signals ('stateChanged(int)', view.untrackedCheckBox)
 
 		self.add_signals ('released()',
-				view.rescanButton,
 				view.stageButton,
 				view.commitButton,
 				view.pushButton,
@@ -68,6 +68,11 @@ class GitController (QObserver):
 				view.stagedList,
 				view.unstagedList,)
 
+		# App cleanup
+		self.connect ( qtutils.qapp(),
+				'lastWindowClosed()',
+				self.cb_last_window_closed )
+
 		# Handle double-clicks in the staged/unstaged lists.
 		# These are vanilla signal/slots since the qobserver
 		# signal routing is already handling these lists' signals.
@@ -87,7 +92,6 @@ class GitController (QObserver):
 		# isn't used at the moment.
 		self.add_callbacks (model, {
 				# Push Buttons
-				'rescanButton': self.cb_rescan,
 				'stageButton': self.cb_stage_selected,
 				'signOffButton': lambda(m): m.add_signoff(),
 				'commitButton': self.cb_commit,
@@ -128,7 +132,11 @@ class GitController (QObserver):
 		# Default to creating a new commit (i.e. not an amend commit)
 		view.newCommitRadio.setChecked (True)
 
+		# Initialize the GUI
 		self.cb_rescan (model)
+
+		# Setup the inotify server
+		self.__start_inotify_thread (model)
 
 	#####################################################################
 	# MODEL ACTIONS
@@ -342,6 +350,14 @@ class GitController (QObserver):
 	def cb_get_commit_msg (self, model):
 		model.retrieve_latest_commitmsg()
 
+	def cb_last_window_closed (self):
+		'''Cleanup the inotify thread if it exists.'''
+		if not self.inotify_thread: return
+		if not self.inotify_thread.isRunning(): return
+		self.inotify_thread.abort = True
+		self.inotify_thread.quit()
+		self.inotify_thread.wait()
+
 	def cb_rebase (self, model):
 		dlg = GitBranchDialog(self.view, cmds.git_branch())
 		dlg.setWindowTitle ("Select the current branch's new root")
@@ -530,6 +546,22 @@ class GitController (QObserver):
 
 		status_text = 'Current branch: ' + current_branch
 		self.view.statusBar().showMessage (status_text)
+
+	def __start_inotify_thread (self, model):
+		# Do we have inotify?
+		# If not, return peacefully
+		self.inotify_thread = None
+		try:
+			import pyinotify
+		except:
+			return
+
+		self.inotify_thread = GitNotifier (os.getcwd())
+		self.connect ( self.inotify_thread, 'timeForRescan()',
+			lambda: self.cb_rescan (model) )
+
+		# Start the notification thread
+		self.inotify_thread.start()
 
 	def __show_command (self, output, model=None, rescan=True):
 		'''Shows output and optionally rescans for changes.'''

@@ -185,16 +185,6 @@ selected files in the "Files to Commit" list.</string>
             <number>1</number>
            </property>
            <item>
-            <widget class="QPushButton" name="rescanButton" >
-             <property name="toolTip" >
-              <string>Rescan tells ugit to rescan for changes to the git repository.</string>
-             </property>
-             <property name="text" >
-              <string>Rescan</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QPushButton" name="stageButton" >
              <property name="toolTip" >
               <string>Invokes "git add" to stage the selected items
@@ -662,13 +652,17 @@ retrieve the latest commit message prior to committing.</string>
     <string>Delete...</string>
    </property>
   </action>
+  <action name="rescan_2" >
+   <property name="text" >
+    <string>Rescan</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="2" margin="2" />
  <tabstops>
   <tabstop>commitText</tabstop>
   <tabstop>stagedList</tabstop>
   <tabstop>unstagedList</tabstop>
-  <tabstop>rescanButton</tabstop>
   <tabstop>stageButton</tabstop>
   <tabstop>signOffButton</tabstop>
   <tabstop>commitButton</tabstop>
