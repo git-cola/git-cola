@@ -652,11 +652,6 @@ retrieve the latest commit message prior to committing.</string>
     <string>Delete...</string>
    </property>
   </action>
-  <action name="rescan_2" >
-   <property name="text" >
-    <string>Rescan</string>
-   </property>
-  </action>
  </widget>
  <layoutdefault spacing="2" margin="2" />
  <tabstops>
