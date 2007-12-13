@@ -91,10 +91,10 @@ def shell_quote (*inputs):
 
 			input = "'%s'" % input
 			if input.startswith ("''"):
-				input = input.lstrip ("''")
+				input = input[2:]
 
 			if input.endswith ("''"):
-				input = input.rstrip ("''")
+				input = input[:-2]
 		ret.append (input)
 	return ' '.join (ret)
 
