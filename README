@@ -14,25 +14,47 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-ABOUT UGIT:
-=============================================================================
-
-ugit: A PyQt-based git gui
+               ugit: A PyQt-based git gui
 
 ugit started out as a PyQt re-implementation of git-gui.
 It has an evolving feature set and aims to be a full-featured
 companion to the existing git uis.
 
 
-DEPENDENCIES:
-=============================================================================
-	python 2.4.x
-	pyqt 4.3.x
+REQUIREMENTS:
+
+python 2.4.x
+pyqt 4.3.x
+
+
+RUNNING UGIT:
+
+./configure defaults to --prefix=/usr/local
+
+Assuming python is version 2.4, "make install" installs ugit here:
+
+	/usr/local/bin/ugit.py
+	/usr/local/lib/python2.4/site-packages/ugitlibs/*
+
+
+To find ugit.py, add /usr/local/bin to your PATH.
+Unless python is configured to look there, you will
+need to add /usr/local/lib/python2.4/site-packages to
+PYTHONPATH.
+
+PATH=/usr/local/bin
+PYTHONPATH=/usr/local/lib/python2.4/site-packages
+export PATH PYTHON
+
+If you install ugit elsewhere (such as with --prefix=$HOME/ugit)
+then these same instructions apply--just substitute $HOME/ugit
+for /usr/local.
+
+That is typically not required when --prefix=/usr
+
 
 
 ABOUT THE ICONS:
-=============================================================================
-
 staged.png was blatanly stolen from the "slick" KDE icon set.
 All other icons were blatanly stolen from the Apache httpd server icon set.
 Those icons are covered by the following license:
