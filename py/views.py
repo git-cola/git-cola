@@ -8,6 +8,8 @@ from CommitBrowser import Ui_CommitBrowser
 from BranchDialog import Ui_BranchDialog
 from CreateBranchDialog import Ui_CreateBranchDialog
 
+from syntax import GitSyntaxHighlighter
+
 class GitView (Ui_Window, QtGui.QMainWindow):
 	'''The main ugit interface.'''
 	def __init__ (self, parent=None):
@@ -15,6 +17,7 @@ class GitView (Ui_Window, QtGui.QMainWindow):
 		Ui_Window.__init__ (self)
 		self.setupUi (self)
 		self.display_splitter.setSizes ([ 300, 400 ])
+		GitSyntaxHighlighter (self.displayText.document())
 
 class GitCommandDialog (Ui_CommandDialog, QtGui.QDialog):
 	'''A simple dialog to display command output.'''
@@ -22,10 +25,10 @@ class GitCommandDialog (Ui_CommandDialog, QtGui.QDialog):
 		QtGui.QDialog.__init__ (self, parent)
 		Ui_CommandDialog.__init__ (self)
 		self.setupUi (self)
-		if output: self.set_command_output (output)
+		if output: self.set_command (output)
 
-	def set_command_output (self, output):
-		self.commandText.setHtml (output)
+	def set_command (self, output):
+		self.commandText.setText (output)
 
 class GitBranchDialog (Ui_BranchDialog, QtGui.QDialog):
 	'''A dialog to display available branches.'''
@@ -60,6 +63,7 @@ class GitCommitBrowser (Ui_CommitBrowser, QtGui.QDialog):
 		self.setupUi (self)
 		# Make the list widget slighty larger
 		self.splitter.setSizes ([ 50, 200 ])
+		GitSyntaxHighlighter (self.commitText.document())
 
 class GitCreateBranchDialog (Ui_CreateBranchDialog, QtGui.QDialog):
 	'''A dialog for creating or updating branches.'''

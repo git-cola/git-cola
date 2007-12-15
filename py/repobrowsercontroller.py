@@ -64,19 +64,17 @@ class GitRepoBrowserController (QObserver):
 			if dirent != '..':
 				# This is a real directory for which
 				# we have child entries
-				msg = 'Directory: ' + dirent
-				header = utils.html_header (msg)
+				msg = utils.header ('Directory:' + dirent)
 				entries = directory_entries[dirent]
 			else:
 				# This is '..' which is a special case
 				# since it doesn't really exist
-				msg = 'Parent Directory'
-				header = utils.html_header (msg)
+				msg = utils.header ('Parent Directory')
 				entries = []
 
-			contents = '<pre>%s</pre>' % '\n'.join (entries)
+			contents = '\n'.join (entries)
 
-			self.view.commitText.setHtml (header + contents)
+			self.view.commitText.setText (msg + contents)
 			self.view.revisionLine.setText ('')
 		else:
 			# This is a file entry.  The current row is absolute,
@@ -93,10 +91,10 @@ class GitRepoBrowserController (QObserver):
 			filename = item_names[idx]
 
 			guts = cmds.git_cat_file (objtype, sha1)
-			header = utils.html_header ('File: ' + filename)
-			contents = '<pre>%s</pre>' % utils.html_encode (guts)
+			header = utils.header ('File: ' + filename)
+			contents = guts
 
-			self.view.commitText.setHtml (header + contents)
+			self.view.commitText.setText (header + contents)
 
 			self.view.revisionLine.setText (sha1)
 			self.view.revisionLine.selectAll()

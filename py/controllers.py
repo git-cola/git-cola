@@ -2,6 +2,7 @@ import os
 import commands
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import QMenu
 from qobserver import QObserver
 import cmds
 import utils
@@ -128,6 +129,11 @@ class GitController (QObserver):
 		# to being able to properly use the git porcelain.
 		cdup = cmds.git_show_cdup()
 		if cdup: os.chdir (cdup)
+
+		# The diff-display context menu
+		self.__menu = None
+		view.displayText.controller = self
+		view.displayText.contextMenuEvent = self.__menu_event
 
 		# Default to creating a new commit (i.e. not an amend commit)
 		view.newCommitRadio.setChecked (True)
@@ -268,12 +274,14 @@ class GitController (QObserver):
 		browser.revisionLine.selectAll()
 
 		# Lookup the info for that sha1 and display it
-		commit_info = cmds.git_show (sha1, color=True)
-		html = utils.ansi_to_html (commit_info)
-		browser.commitText.setHtml (html)
+		commit_diff = cmds.git_show (sha1)
+		browser.commitText.setText (commit_diff)
 
 		# Copy the sha1 into the clipboard
 		qtutils.set_clipboard (sha1)
+
+	def cb_copy (self):
+		self.view.displayText.copy()
 
 	def cb_diff_staged (self, model):
 		list_widget = self.view.stagedList
@@ -285,14 +293,13 @@ class GitController (QObserver):
 
 		filename = model.get_staged()[row]
 		diff = cmds.git_diff (filename, staged=True)
-		html = utils.ansi_to_html (diff)
 
 		if os.path.exists (filename):
-			pre = utils.html_header ('Staged for commit')
+			pre = utils.header ('Staged for commit')
 		else:
-			pre = utils.html_header ('Staged for removal')
+			pre = utils.header ('Staged for removal')
 
-		self.view.displayText.setHtml (pre + html)
+		self.view.displayText.setText (pre + diff)
 
 	def cb_diff_unstaged (self, model):
 		list_widget = self.view.unstagedList
@@ -302,34 +309,33 @@ class GitController (QObserver):
 			return
 		filename = (model.get_unstaged() + model.get_untracked())[row]
 		if os.path.isdir (filename):
-			pre = utils.html_header ('Untracked directory')
+			pre = utils.header ('Untracked directory')
 			cmd = 'ls -la %s' % utils.shell_quote (filename)
-			html = '<pre>%s</pre>' % commands.getoutput (cmd)
-			self.view.displayText.setHtml ( pre + html )
+			output = commands.getoutput (cmd)
+			self.view.displayText.setText ( pre + output )
 			return
 
 		if filename in model.get_unstaged():
 			diff = cmds.git_diff (filename, staged=False)
-			pre = utils.html_header ('Modified, unstaged')
-			html = utils.ansi_to_html (diff)
+			msg = utils.header ('Modified, unstaged') + diff
 		else:
 			# untracked file
 			cmd = 'file -b %s' % utils.shell_quote (filename)
 			file_type = commands.getoutput (cmd)
+
 			if 'binary' in file_type or 'data' in file_type:
 				sq_filename = utils.shell_quote (filename)
 				cmd = 'hexdump -C %s' % sq_filename
 				contents = commands.getoutput (cmd)
 			else:
 				file = open (filename, 'r')
-				contents = utils.html_encode (file.read())
+				contents = file.read()
 				file.close()
 
-			header = 'Untracked file: ' + file_type
-			pre = utils.html_header (header)
-			html = '<pre>%s</pre>' % contents
+			msg = (utils.header ('Untracked file: ' + file_type)
+				+ contents)
 
-		self.view.displayText.setHtml (pre + html)
+		self.view.displayText.setText (msg)
 
 	def cb_export_patches (self, model):
 		'''Launches the commit browser and exports the selected
@@ -428,13 +434,15 @@ class GitController (QObserver):
 
 	def cb_show_diffstat (self, model):
 		'''Show the diffstat from the latest commit.'''
-		output = utils.ansi_to_html (cmds.git_diff_stat())
-		self.__show_command (output, rescan=False)
+		self.__show_command (cmds.git_diff_stat(), rescan=False)
 
 	def cb_stage_changed (self, model):
 		'''Stage all changed files for commit.'''
 		output = cmds.git_add (model.get_unstaged())
 		self.__show_command (output, model)
+
+	def cb_stage_hunk (self):
+		print "STAGING HUNK"
 
 	def cb_stage_selected (self, model):
 		'''Use "git add" to add items to the git index.
@@ -492,6 +500,28 @@ class GitController (QObserver):
 		controller = GitRepoBrowserController(model, view)
 		view.show()
 		view.exec_()
+
+	def __menu_about_to_show (self):
+		self.__stage_hunk_action.setEnabled (True)
+
+	def __menu_event (self, event):
+		self.__menu_setup()
+		textedit = self.view.displayText
+		self.__menu.exec_ (textedit.mapToGlobal (event.pos()))
+
+	def __menu_setup (self):
+		if self.__menu: return
+
+		menu = QMenu (self.view)
+		stage = menu.addAction ('Stage Hunk', self.cb_stage_hunk)
+		copy = menu.addAction ('Copy', self.cb_copy)
+
+		self.connect (menu, 'aboutToShow()', self.__menu_about_to_show)
+
+		self.__stage_hunk_action = stage
+		self.__copy_action = copy
+		self.__menu = menu
+
 
 	def __file_to_widget_item (self, filename, staged, untracked=False):
 		'''Given a filename, return a QListWidgetItem suitable

@@ -1,6 +1,5 @@
 import os
 import re
-import time
 import commands
 import utils
 from cStringIO import StringIO
@@ -18,7 +17,7 @@ def git_add (to_add):
 		argv.append (utils.shell_quote (filename))
 
 	cmd = ' '.join (argv)
-	return 'Running:\t%s\n\n%s' % (cmd, commands.getoutput (cmd))
+	return 'Running:\t\n\n' + commands.getoutput (cmd)
 
 def git_add_or_remove (to_process):
 	'''Invokes 'git add' to index the filenames in to_process that exist
@@ -48,7 +47,8 @@ def git_add_or_remove (to_process):
 			argv.append (utils.shell_quote (filename))
 
 	cmd = ' '.join (argv)
-	return output + 'Running: %s\n%s' % ( cmd, commands.getoutput (cmd) )
+	return (output  + 'Running:\t' + cmd + '\n'
+			+ commands.getoutput (cmd))
 
 def git_branch (name=None, remote=False, delete=False):
 	cmd = 'git branch'
@@ -57,7 +57,7 @@ def git_branch (name=None, remote=False, delete=False):
 		return commands.getoutput (cmd)
 	else:
 		if remote: cmd += ' -r'
-		branches = commands.getoutput (cmd).split ('\n')
+		branches = commands.getoutput (cmd).splitlines()
 		return map (lambda (x): x.lstrip ('* '), branches)
 
 def git_cat_file (objtype, sha1, target_file=None):
@@ -89,15 +89,10 @@ def git_commit (msg, amend, files):
 	flag to 'git commit.'  'amend' triggers --amend.
 	'files' is a list of files to use for commits without -a.'''
 
-	# Allow TMPDIR/TMP with a fallback to /tmp
-	tmpdir = os.getenv ('TMPDIR', os.getenv ('TMP', '/tmp'))
-
 	# Sure, this is a potential "security risk," but if someone
 	# is trying to intercept/re-write commit messages on your system,
 	# then you probably have bigger problems to worry about.
-	tmpfile = os.path.join (tmpdir,
-			'ugit.%s.%s' % ( os.getuid(), time.time() ))
-
+	tmpfile = utils.get_tmp_filename()
 	argv = [ 'git', 'commit', '-F', tmpfile ]
 
 	if amend: argv.append ('--amend')
@@ -119,7 +114,7 @@ def git_commit (msg, amend, files):
 	output = commands.getoutput (cmd)
 	os.unlink (tmpfile)
 
-	return 'Running:\t%s\n%s' % (cmd, output)
+	return 'Running:\t' + cmd + '\n' + output
 
 def git_create_branch (name, base, track=False):
 	'''Creates a branch starting from base.  Pass track=True
@@ -133,18 +128,21 @@ def git_create_branch (name, base, track=False):
 
 def git_current_branch():
 	'''Parses 'git branch' to find the current branch.'''
-	branches = commands.getoutput ('git branch').split ('\n')
+	branches = commands.getoutput ('git branch').splitlines()
 	for branch in branches:
 		if branch.startswith ('* '):
 			return branch.lstrip ('* ')
 	raise Exception, 'No current branch.  Detached HEAD?'
 
-def git_diff (filename, staged=True):
+def git_diff (filename, staged=True, color=False):
 	'''Invokes git_diff on filename.  Passing staged=True adds
 	diffs the index against HEAD (i.e. --cached).'''
 
 	deleted = False
-	argv = [ 'git', 'diff', '--color']
+	argv = [ 'git', 'diff']
+	if color:
+		argv.append ('--color')
+
 	if staged:
 		deleted = not os.path.exists (filename)
 		argv.append ('--cached')
@@ -153,7 +151,7 @@ def git_diff (filename, staged=True):
 	argv.append (utils.shell_quote (filename))
 
 	diff = commands.getoutput (' '.join (argv))
-	diff_lines = diff.split ('\n')
+	diff_lines = diff.splitlines()
 
 	output = StringIO()
 	start = False
@@ -163,7 +161,7 @@ def git_diff (filename, staged=True):
 		if not start and '@@ ' in line and ' @@' in line:
 			start = True
 		if start or (deleted and del_tag in line):
-			output.write (line+'\n')
+			output.write (line + '\n')
 	return output.getvalue()
 
 def git_diff_stat ():
@@ -213,7 +211,7 @@ def git_log (oneline=True, all=False):
 	summaries = []
 	regex = re.compile (REV_LIST_PATTERN)
 	output = commands.getoutput (' '.join (argv))
-	for line in output.split ('\n'):
+	for line in output.splitlines():
 		match = regex.match (line)
 		if match:
 			revs.append (match.group (1))
@@ -221,13 +219,13 @@ def git_log (oneline=True, all=False):
 	return ( revs, summaries )
 
 def git_ls_files ():
-	return commands.getoutput ('git ls-files').split ('\n')
+	return commands.getoutput ('git ls-files').splitlines()
 
 def git_ls_tree (rev):
 	'''Returns a list of (mode, type, sha1, path) tuples.'''
 	regex = re.compile ('^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
 	sh_rev = utils.shell_quote (rev)
-	lines = commands.getoutput ('git ls-tree -r ' + sh_rev).split ('\n')
+	lines = commands.getoutput ('git ls-tree -r ' + sh_rev).splitlines()
 	output = []
 	for line in lines:
 		match = regex.match (line)
@@ -253,14 +251,14 @@ def git_reset (to_unstage):
 		argv.append (utils.shell_quote (filename))
 
 	cmd = ' '.join (argv)
-	return 'Running:\t%s\n%s' % ( cmd, commands.getoutput (cmd) )
+	return 'Running:\t' + cmd + '\n' + commands.getoutput (cmd)
 
 def git_rev_list_range (rev_start, rev_end):
 	cmd = ('git rev-list --pretty=oneline %s..%s'
 		% (utils.shell_quote (rev_start), utils.shell_quote(rev_end)))
 
 	revs = []
-	raw_revs = commands.getoutput (cmd).split ('\n')
+	raw_revs = commands.getoutput (cmd).splitlines()
 	regex = re.compile (REV_LIST_PATTERN)
 	for line in raw_revs:
 		match = regex.match (line)
@@ -284,7 +282,7 @@ def git_status():
 	'''RETURNS: A tuple of staged, unstaged and untracked files.
 	( array(staged), array(unstaged), array(untracked) )'''
 
-	status_lines = commands.getoutput ('git status').split ('\n')
+	status_lines = commands.getoutput ('git status').splitlines()
 
 	unstaged_header_seen = False
 	untracked_header_seen = False
@@ -340,4 +338,4 @@ def git_status():
 	return ( staged, unstaged, untracked )
 
 def git_tag ():
-	return commands.getoutput ('git tag').split ('\n')
+	return commands.getoutput ('git tag').splitlines()
