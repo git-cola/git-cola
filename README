@@ -1,3 +1,10 @@
+ugit: A PyQt-based git gui
+
+ugit began as a PyQt re-implementation of git-gui.
+It has an evolving feature set and aims to be a full-featured
+companion to the existing git uis.
+
+
 ugit is Copyright (C) 2007 David Aguilar
 
 This program is free software: you can redistribute it and/or modify
@@ -14,50 +21,38 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-               ugit: A PyQt-based git gui
-
-ugit started out as a PyQt re-implementation of git-gui.
-It has an evolving feature set and aims to be a full-featured
-companion to the existing git uis.
-
-
 REQUIREMENTS:
 
-python 2.4.x
-pyqt 4.3.x
+python >= 2.4
+pyqt   >= 4.3
 
 
-RUNNING UGIT:
+INSTALLING UGIT:
 
-./configure defaults to --prefix=/usr/local
+	./configure --prefix=/usr
+	make && sudo make install
+
 
 Assuming python is version 2.4, "make install" installs ugit here:
 
-	/usr/local/bin/ugit.py
-	/usr/local/lib/python2.4/site-packages/ugitlibs/*
+	/usr/local/bin/ugit linked to ugit.py
+	/usr/local/lib/python2.4/site-packages/ugitlibs/
 
 
-To find ugit.py, add /usr/local/bin to your PATH.
-Unless python is configured to look there, you will
-need to add /usr/local/lib/python2.4/site-packages to
-PYTHONPATH.
+For example:
 
-PATH=/usr/local/bin
+If for some reason ugit.py is unable to locate its
+libraries, add the site-packages directory to your $PYTHONPATH.
+
 PYTHONPATH=/usr/local/lib/python2.4/site-packages
-export PATH PYTHON
-
-If you install ugit elsewhere (such as with --prefix=$HOME/ugit)
-then these same instructions apply--just substitute $HOME/ugit
-for /usr/local.
-
-That is typically not required when --prefix=/usr
+export PYTHON
 
 
+ICON ACKNOWLEDGEMENTS:
 
-ABOUT THE ICONS:
-staged.png was blatanly stolen from the "slick" KDE icon set.
-All other icons were blatanly stolen from the Apache httpd server icon set.
-Those icons are covered by the following license:
+staged.png is from the "slick" KDE icon set.
+All other icons are from the Apache httpd server icon set.
+These icons carry the following license:
 
                                  Apache License
                            Version 2.0, January 2004

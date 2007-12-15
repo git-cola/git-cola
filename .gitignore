@@ -1,7 +1,8 @@
-/Makefile
 /build
 /installroot
 /.lock-wscript
+/Makefile
+/ugit-patches
 *.pyo
 *.pyc
 *.swp
