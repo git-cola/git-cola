@@ -8,7 +8,18 @@ from cStringIO import StringIO
 REV_LIST_PATTERN = '([0-9a-f]+)\W(.*)'
 
 def run_cmd (cmd):
-	return commands.getoutput (cmd)
+	from PyQt4.QtCore import QProcess
+	child = QProcess()
+	child.start (cmd)
+	if (not child.waitForStarted()):
+		raise "failed to start child"
+
+	if (not child.waitForFinished()):
+		raise "failed to start child"
+
+	result = child.readAll()
+	result = str(result).rstrip("\n")
+	return result
 
 def git_add (to_add):
 	'''Invokes 'git add' to index the filenames in to_add.'''
