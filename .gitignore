@@ -2,6 +2,7 @@
 /installroot
 /.lock-wscript
 /Makefile
+/releases
 /ugit-patches
 *.pyo
 *.pyc
