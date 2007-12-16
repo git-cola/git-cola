@@ -7,6 +7,9 @@ from cStringIO import StringIO
 # A regex for matching the output of git (log|rev-list) --pretty=oneline
 REV_LIST_PATTERN = '([0-9a-f]+)\W(.*)'
 
+def run_cmd (cmd):
+	return commands.getoutput (cmd)
+
 def git_add (to_add):
 	'''Invokes 'git add' to index the filenames in to_add.'''
 
@@ -17,7 +20,7 @@ def git_add (to_add):
 		argv.append (utils.shell_quote (filename))
 
 	cmd = ' '.join (argv)
-	return 'Running:\t\n\n' + commands.getoutput (cmd)
+	return 'Running:\t\n\n' + run_cmd (cmd)
 
 def git_add_or_remove (to_process):
 	'''Invokes 'git add' to index the filenames in to_process that exist
@@ -48,23 +51,23 @@ def git_add_or_remove (to_process):
 
 	cmd = ' '.join (argv)
 	return (output  + 'Running:\t' + cmd + '\n'
-			+ commands.getoutput (cmd))
+			+ run_cmd (cmd))
 
 def git_branch (name=None, remote=False, delete=False):
 	cmd = 'git branch'
 	if delete and name:
 		cmd += ' -D ' + name
-		return commands.getoutput (cmd)
+		return run_cmd (cmd)
 	else:
 		if remote: cmd += ' -r'
-		branches = commands.getoutput (cmd).splitlines()
+		branches = run_cmd (cmd).splitlines()
 		return map (lambda (x): x.lstrip ('* '), branches)
 
 def git_cat_file (objtype, sha1, target_file=None):
 	cmd = 'git cat-file %s %s' % ( objtype, sha1 )
 	if target_file:
 		cmd += '> %s' % utils.shell_quote (target_file)
-	return commands.getoutput (cmd)
+	return run_cmd (cmd)
 
 def git_cherry_pick (revs, commit=False):
 	'''Cherry-picks each revision into the current branch.'''
@@ -76,13 +79,13 @@ def git_cherry_pick (revs, commit=False):
 	output = []
 	for rev in revs:
 		output.append ('Cherry-picking: ' + rev)
-		output.append (commands.getoutput (cmd + rev))
+		output.append (run_cmd (cmd + rev))
 		output.append ('')
 	return '\n'.join (output)
 
 def git_checkout(rev):
 	if not rev: return
-	return commands.getoutput('git checkout '+rev)
+	return run_cmd('git checkout '+rev)
 
 def git_commit (msg, amend, files):
 	'''Creates a git commit.  'commit_all' triggers the -a
@@ -111,7 +114,7 @@ def git_commit (msg, amend, files):
 	
 	# Run 'git commit'
 	cmd = ' '.join (argv)
-	output = commands.getoutput (cmd)
+	output = run_cmd (cmd)
 	os.unlink (tmpfile)
 
 	return 'Running:\t' + cmd + '\n' + output
@@ -123,12 +126,12 @@ def git_create_branch (name, base, track=False):
 	if track: cmd += ' --track'
 	cmd += ' %s %s' % ( utils.shell_quote (name),
 			utils.shell_quote (base))
-	return commands.getoutput (cmd)
+	return run_cmd (cmd)
 
 
 def git_current_branch():
 	'''Parses 'git branch' to find the current branch.'''
-	branches = commands.getoutput ('git branch').splitlines()
+	branches = run_cmd ('git branch').splitlines()
 	for branch in branches:
 		if branch.startswith ('* '):
 			return branch.lstrip ('* ')
@@ -150,7 +153,7 @@ def git_diff (filename, staged=True, color=False):
 	argv.append ('--')
 	argv.append (utils.shell_quote (filename))
 
-	diff = commands.getoutput (' '.join (argv))
+	diff = run_cmd (' '.join (argv))
 	diff_lines = diff.splitlines()
 
 	output = StringIO()
@@ -166,7 +169,7 @@ def git_diff (filename, staged=True, color=False):
 
 def git_diff_stat ():
 	'''Returns the latest diffstat.'''
-	return commands.getoutput ('git diff --color --stat HEAD^')
+	return run_cmd ('git diff --color --stat HEAD^')
 
 def git_format_patch (revs, use_range):
 	'''Exports patches revs in the 'ugit-patches' subdirectory.
@@ -179,14 +182,14 @@ def git_format_patch (revs, use_range):
 
 	if use_range:
 		rev_range = '%s^..%s' % ( revs[-1], revs[0] )
-		return header + '\n' + commands.getoutput (cmd + rev_range)
+		return header + '\n' + run_cmd (cmd + rev_range)
 
 	output = [ header ]
 	num_patches = 1
 	for idx, rev in enumerate (revs):
 		real_idx = idx + num_patches
 		revcmd = cmd + '-1 --start-number %d %s' % (real_idx, rev)
-		output.append (commands.getoutput (revcmd))
+		output.append (run_cmd (revcmd))
 		num_patches += output[-1].count ('\n')
 	return '\n'.join (output)
 
@@ -197,9 +200,9 @@ def git_config(key, value=None):
 	k = utils.shell_quote (key)
 	if value is not None:
 		v = utils.shell_quote (value)
-		return commands.getoutput ('git config --set %s %s' % (k, v))
+		return run_cmd ('git config --set %s %s' % (k, v))
 	else:
-		return commands.getoutput ('git config --get %s' % k)
+		return run_cmd ('git config --get %s' % k)
 
 def git_log (oneline=True, all=False):
 	'''Returns a pair of parallel arrays listing the revision sha1's
@@ -210,7 +213,7 @@ def git_log (oneline=True, all=False):
 	revs = []
 	summaries = []
 	regex = re.compile (REV_LIST_PATTERN)
-	output = commands.getoutput (' '.join (argv))
+	output = run_cmd (' '.join (argv))
 	for line in output.splitlines():
 		match = regex.match (line)
 		if match:
@@ -219,13 +222,13 @@ def git_log (oneline=True, all=False):
 	return ( revs, summaries )
 
 def git_ls_files ():
-	return commands.getoutput ('git ls-files').splitlines()
+	return run_cmd ('git ls-files').splitlines()
 
 def git_ls_tree (rev):
 	'''Returns a list of (mode, type, sha1, path) tuples.'''
 	regex = re.compile ('^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
 	sh_rev = utils.shell_quote (rev)
-	lines = commands.getoutput ('git ls-tree -r ' + sh_rev).splitlines()
+	lines = run_cmd ('git ls-tree -r ' + sh_rev).splitlines()
 	output = []
 	for line in lines:
 		match = regex.match (line)
@@ -239,7 +242,7 @@ def git_ls_tree (rev):
 
 def git_rebase (newbase):
 	if not newbase: return
-	return commands.getoutput ('git rebase '+newbase)
+	return run_cmd ('git rebase '+newbase)
 
 def git_reset (to_unstage):
 	'''Use 'git reset' to unstage files from the index.'''
@@ -251,14 +254,14 @@ def git_reset (to_unstage):
 		argv.append (utils.shell_quote (filename))
 
 	cmd = ' '.join (argv)
-	return 'Running:\t' + cmd + '\n' + commands.getoutput (cmd)
+	return 'Running:\t' + cmd + '\n' + run_cmd (cmd)
 
 def git_rev_list_range (rev_start, rev_end):
 	cmd = ('git rev-list --pretty=oneline %s..%s'
 		% (utils.shell_quote (rev_start), utils.shell_quote(rev_end)))
 
 	revs = []
-	raw_revs = commands.getoutput (cmd).splitlines()
+	raw_revs = run_cmd (cmd).splitlines()
 	regex = re.compile (REV_LIST_PATTERN)
 	for line in raw_revs:
 		match = regex.match (line)
@@ -272,17 +275,17 @@ def git_rev_list_range (rev_start, rev_end):
 def git_show (sha1, color=False):
 	cmd = 'git show '
 	if color: cmd += '--color '
-	return commands.getoutput (cmd + sha1)
+	return run_cmd (cmd + sha1)
 
 def git_show_cdup():
 	'''Returns a relative path to the git project root.'''
-	return commands.getoutput ('git rev-parse --show-cdup')
+	return run_cmd ('git rev-parse --show-cdup')
 
 def git_status():
 	'''RETURNS: A tuple of staged, unstaged and untracked files.
 	( array(staged), array(unstaged), array(untracked) )'''
 
-	status_lines = commands.getoutput ('git status').splitlines()
+	status_lines = run_cmd ('git status').splitlines()
 
 	unstaged_header_seen = False
 	untracked_header_seen = False
@@ -338,4 +341,4 @@ def git_status():
 	return ( staged, unstaged, untracked )
 
 def git_tag ():
-	return commands.getoutput ('git tag').splitlines()
+	return run_cmd ('git tag').splitlines()
