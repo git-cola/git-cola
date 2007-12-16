@@ -585,6 +585,7 @@ class GitController (QObserver):
 		except:
 			return
 
+		from inotify import GitNotifier
 		self.inotify_thread = GitNotifier (os.getcwd())
 		self.connect ( self.inotify_thread, 'timeForRescan()',
 			lambda: self.cb_rescan (model) )
