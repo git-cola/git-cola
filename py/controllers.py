@@ -577,15 +577,26 @@ class GitController (QObserver):
 		self.view.statusBar().showMessage (status_text)
 
 	def __start_inotify_thread (self, model):
-		# Do we have inotify?
-		# If not, return peacefully
+		# Do we have inotify?  If not, return.
+		# Recommend installing inotify if we're on Linux.
 		self.inotify_thread = None
 		try:
-			import pyinotify
-		except:
+			from inotify import GitNotifier
+		except ImportError:
+			import platform
+			if platform.system() == 'Linux':
+				msg = ('ugit could not find python-inotify.'
+					+ '\nSupport for inotify is disabled.')
+
+				plat = platform.platform().lower()
+				if 'debian' in plat or 'ubuntu' in plat:
+					msg += '\n\nHint: sudo apt-get install python-pyinotify'
+
+				qtutils.information (self.view,
+					'inotify support disabled',
+					msg)
 			return
 
-		from inotify import GitNotifier
 		self.inotify_thread = GitNotifier (os.getcwd())
 		self.connect ( self.inotify_thread, 'timeForRescan()',
 			lambda: self.cb_rescan (model) )
