@@ -14,7 +14,6 @@ from views import GitBranchDialog
 from views import GitCreateBranchDialog
 from repobrowsercontroller import GitRepoBrowserController
 from createbranchcontroller import GitCreateBranchController
-from inotify import GitNotifier
 
 class GitController (QObserver):
 	'''The controller is a mediator between the model and view.
