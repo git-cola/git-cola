@@ -31,7 +31,7 @@ def git_add (to_add):
 		argv.append (utils.shell_quote (filename))
 
 	cmd = ' '.join (argv)
-	return 'Running:\t\n\n' + run_cmd (cmd)
+	return 'Running:\t' + cmd + '\n' + run_cmd (cmd)
 
 def git_add_or_remove (to_process):
 	'''Invokes 'git add' to index the filenames in to_process that exist
