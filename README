@@ -48,6 +48,13 @@ PYTHONPATH=/usr/local/lib/python2.4/site-packages
 export PYTHON
 
 
+WINDOWS SUPPORT
+
+Windows is not supported at the moment.  This is purely due to
+the author's unfamiliarity with win32.  If anybody is familiar
+with deploying PyQt4 apps on win32 your help would be greatly appreciated.
+
+
 ICON ACKNOWLEDGEMENTS:
 
 staged.png is from the "slick" KDE icon set.

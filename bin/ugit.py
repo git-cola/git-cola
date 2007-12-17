@@ -9,6 +9,7 @@ sys.path.insert (0, os.path.join(
 		os.path.dirname (os.path.dirname(__file__)),
 		'lib', 'python' + version[:3],
 		'site-packages'))
+sys.path.insert (0, os.path.dirname(__file__))
 
 from PyQt4 import QtCore, QtGui
 from ugitlibs.models import GitModel

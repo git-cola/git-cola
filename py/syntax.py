@@ -49,7 +49,7 @@ class GitSyntaxHighlighter (QSyntaxHighlighter):
 
 if __name__ == '__main__':
 	import sys
-	from PyQt4 import QtCore, QtGui, QTextEdit
+	from PyQt4 import QtCore, QtGui
 
 	class SyntaxTestDialog(QtGui.QDialog):
 		def __init__ (self, parent):
@@ -62,7 +62,7 @@ if __name__ == '__main__':
 			self.vboxlayout = QtGui.QVBoxLayout(CommandDialog)
 			self.vboxlayout.setObjectName("vboxlayout")
 
-			self.commandText = QTextEdit(CommandDialog)
+			self.commandText = QtGui.QTextEdit(CommandDialog)
 
 			font = QtGui.QFont()
 			font.setFamily("Monospace")
