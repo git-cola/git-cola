@@ -19,11 +19,12 @@ if [ -z $PYUIC4 ] || [ ! -x $PYUIC4 ]; then
 	echo
 fi
 
-rm -rf $PREFIX
 mkdir -p $UGITLIBS
+cp README $PREFIX/README.txt
 cp bin/ugit.py $PREFIX
 cp scripts/ugit-cygwin.sh $PREFIX
 cp py/* $UGITLIBS
+
 
 if [ -x $PYUIC4 ] && [ ! -z $PYUIC4 ]; then
 	for file in ui/*.ui; do

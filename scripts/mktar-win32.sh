@@ -1,6 +1,6 @@
 #!/bin/sh
 FILE="$1"-win32.tar.gz
-DIR=installroot/
+DIR=installroot
 
 if [ $# -lt 1 ]; then
 	echo "usage: mktar [BASENAME]"; exit -1

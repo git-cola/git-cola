@@ -50,9 +50,31 @@ export PYTHON
 
 WINDOWS SUPPORT
 
-Windows is not supported at the moment.  This is purely due to
-the author's unfamiliarity with win32.  If anybody is familiar
-with deploying PyQt4 apps on win32 your help would be greatly appreciated.
+Windows supported is experimental at the moment.
+As git's windows support improves, so will ugit's.
+
+The ugit gui itself has run successfully on win32.
+
+1) Get the Python2.5 installer:
+	http://python.org/download/
+
+2) Get the PyQt4 installer:
+	http://www.riverbankcomputing.co.uk/pyqt/download.php
+
+3) Get git:
+	I've only tested cygwin.
+	http://git.or.cz/
+	http://git.or.cz/gitwiki/WindowsInstall
+	http://en.wikipedia.org/wiki/Git_(software)#Portability
+
+4) Get ugit:
+	Download any of the win32 tarballs here:
+		http://ugit.justroots.com/
+	..and run the ugit-cygwin.sh script.
+	The script assumes the you have Python/PyQt4 installed in
+	C:\Python25.  If that is not the case, edit the script accordingly.
+
+	voila, ugit on Windows.
 
 
 ICON ACKNOWLEDGEMENTS:
