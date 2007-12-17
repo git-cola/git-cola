@@ -78,7 +78,7 @@ def shell_quote (*inputs):
 		# = does need quoting else in command position it's a
 		# program-local environment setting
 		match = regex.search (input)
-		if match:
+		if match and '=' not in input:
 			# ' -> '\''
 			input = input.replace ("'", "'\\''")
 

@@ -58,6 +58,7 @@ def set_clipboard (text):
 	qapp().clipboard().setText (text, QClipboard.Selection)
 
 def show_command (parent, output):
+	if not output: return
 	dialog = GitCommandDialog (parent, output=output)
 	dialog.show()
 	dialog.exec_()

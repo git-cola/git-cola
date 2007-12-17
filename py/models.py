@@ -91,7 +91,7 @@ class GitRepoBrowserModel (Model):
 		if self.directory: self.directories.append ('..')
 
 		dir_entries = self.directory_entries
-		dir_regex = re.compile ('([^' + os.sep + ']+)' + os.sep)
+		dir_regex = re.compile ('([^/]+)/')
 		dirs_seen = {}
 		subdirs_seen = {}
 
@@ -101,12 +101,12 @@ class GitRepoBrowserModel (Model):
 			if not orig_file.startswith (self.directory): continue
 			file = file[ len (self.directory): ]
 
-			if file.count (os.sep):
+			if file.count ('/'):
 				# This is a directory...
 				match = dir_regex.match (file)
 				if not match: continue
 
-				dirent = match.group (1) + os.sep
+				dirent = match.group (1) + '/'
 				if dirent not in self.directory_entries:
 					self.directory_entries[dirent] = []
 
@@ -117,7 +117,7 @@ class GitRepoBrowserModel (Model):
 				entry = file.replace (dirent, '')
 				entry_match = dir_regex.match (entry)
 				if entry_match:
-					subdir = entry_match.group (1) + os.sep
+					subdir = entry_match.group (1) + '/'
 					if subdir in subdirs_seen: continue
 					subdirs_seen[subdir] = True
 					dir_entries[dirent].append (subdir)

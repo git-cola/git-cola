@@ -5,33 +5,36 @@ import utils
 from cStringIO import StringIO
 
 # A regex for matching the output of git (log|rev-list) --pretty=oneline
-REV_LIST_PATTERN = '([0-9a-f]+)\W(.*)'
+REV_LIST_REGEX = re.compile ('([0-9a-f]+)\W(.*)')
 
-def run_cmd (cmd):
+def quote (argv):
+	return ' '.join ([ utils.shell_quote (arg) for arg in argv ])
+
+def run_cmd (cmd, *args):
+	# Handle cmd as either a string or an argv list
+	if type (cmd) is list:
+		cmd = quote (cmd + list (args))
+	elif args:
+		cmd += ' ' + quote (args)
+	
 	from PyQt4.QtCore import QProcess
 	child = QProcess()
+	child.setProcessChannelMode(QProcess.MergedChannels);
 	child.start (cmd)
 	if (not child.waitForStarted()):
-		raise "failed to start child"
+		raise Exception, "failed to start child"
 
 	if (not child.waitForFinished()):
-		raise "failed to start child"
+		raise Exception, "failed to start child"
 
-	result = child.readAll()
-	result = str(result).rstrip("\n")
-	return result
+	return str (child.readAll()).rstrip ('\n')
 
 def git_add (to_add):
 	'''Invokes 'git add' to index the filenames in to_add.'''
-
 	if not to_add: return 'ERROR: No files to add.'
-
 	argv = [ 'git', 'add' ]
-	for filename in to_add:
-		argv.append (utils.shell_quote (filename))
-
-	cmd = ' '.join (argv)
-	return 'Running:\t' + cmd + '\n' + run_cmd (cmd)
+	argv.extend (to_add)
+	return 'Running:\t' + quote (argv) + '\n' + run_cmd (argv)
 
 def git_add_or_remove (to_process):
 	'''Invokes 'git add' to index the filenames in to_process that exist
@@ -58,45 +61,44 @@ def git_add_or_remove (to_process):
 	argv = [ 'git', 'rm' ]
 	for filename in to_process:
 		if not os.path.exists (filename):
-			argv.append (utils.shell_quote (filename))
+			argv.append (filename)
 
-	cmd = ' '.join (argv)
-	return (output  + 'Running:\t' + cmd + '\n'
-			+ run_cmd (cmd))
+	return '%sRunning:\t%s\n%s' % ( output, quote (argv), run_cmd (argv) )
 
 def git_branch (name=None, remote=False, delete=False):
-	cmd = 'git branch'
+	argv = ['git', 'branch']
 	if delete and name:
-		cmd += ' -D ' + name
-		return run_cmd (cmd)
+		return run_cmd (argv, '-D', name)
 	else:
-		if remote: cmd += ' -r'
-		branches = run_cmd (cmd).splitlines()
+		if remote: argv.append ('-r')
+
+		branches = run_cmd (argv).splitlines()
 		return map (lambda (x): x.lstrip ('* '), branches)
 
 def git_cat_file (objtype, sha1, target_file=None):
 	cmd = 'git cat-file %s %s' % ( objtype, sha1 )
 	if target_file:
-		cmd += '> %s' % utils.shell_quote (target_file)
+		# build the string here to prevent run_cmd from quoting '>'
+		return run_cmd (cmd + ' > ' + utils.shell_quote (target_file))
 	return run_cmd (cmd)
 
 def git_cherry_pick (revs, commit=False):
 	'''Cherry-picks each revision into the current branch.'''
 	if not revs:
-		return 'ERROR: No revisions selected for cherry-picking.'''
+		return 'ERROR: No revisions selected for cherry-picking.'
 
-	cmd = 'git cherry-pick '
-	if not commit: cmd += '-n '
+	argv = [ 'git', 'cherry-pick' ]
+	if not commit: argv.append ('-n')
+
 	output = []
 	for rev in revs:
 		output.append ('Cherry-picking: ' + rev)
-		output.append (run_cmd (cmd + rev))
+		output.append (run_cmd (argv, rev))
 		output.append ('')
 	return '\n'.join (output)
 
 def git_checkout(rev):
-	if not rev: return
-	return run_cmd('git checkout '+rev)
+	return run_cmd('git','checkout', rev)
 
 def git_commit (msg, amend, files):
 	'''Creates a git commit.  'commit_all' triggers the -a
@@ -115,8 +117,7 @@ def git_commit (msg, amend, files):
 		return 'ERROR: No files selected for commit.'
 
 	argv.append ('--')
-	for file in files:
-		argv.append (utils.shell_quote (file))
+	argv.extend (files)
 
 	# Create the commit message file
 	file = open (tmpfile, 'w')
@@ -124,20 +125,17 @@ def git_commit (msg, amend, files):
 	file.close()
 	
 	# Run 'git commit'
-	cmd = ' '.join (argv)
-	output = run_cmd (cmd)
+	output = run_cmd (argv)
 	os.unlink (tmpfile)
 
-	return 'Running:\t' + cmd + '\n' + output
+	return 'Running:\t' + quote (argv) + '\n\n' + output
 
 def git_create_branch (name, base, track=False):
 	'''Creates a branch starting from base.  Pass track=True
 	to create a remote tracking branch.'''
-	cmd = 'git branch'
-	if track: cmd += ' --track'
-	cmd += ' %s %s' % ( utils.shell_quote (name),
-			utils.shell_quote (base))
-	return run_cmd (cmd)
+	argv = ['git','branch']
+	if track: argv.append ('--track')
+	return run_cmd (argv, name, base)
 
 
 def git_current_branch():
@@ -162,9 +160,9 @@ def git_diff (filename, staged=True, color=False):
 		argv.append ('--cached')
 
 	argv.append ('--')
-	argv.append (utils.shell_quote (filename))
+	argv.append (filename)
 
-	diff = run_cmd (' '.join (argv))
+	diff = run_cmd (argv)
 	diff_lines = diff.splitlines()
 
 	output = StringIO()
@@ -180,51 +178,55 @@ def git_diff (filename, staged=True, color=False):
 
 def git_diff_stat ():
 	'''Returns the latest diffstat.'''
-	return run_cmd ('git diff --color --stat HEAD^')
+	return run_cmd ('git diff --stat HEAD^')
 
 def git_format_patch (revs, use_range):
 	'''Exports patches revs in the 'ugit-patches' subdirectory.
 	If use_range is True, a commit range is passed to git format-patch.'''
 
-	cmd = 'git format-patch --thread --patch-with-stat -o ugit-patches '
-	header = 'Generated Patches:'
+	argv = ['git','format-patch','--thread','--patch-with-stat',
+		'-o','ugit-patches']
 	if len (revs) > 1:
-		cmd += '-n '
+		argv.append ('-n')
 
+	header = 'Generated Patches:'
 	if use_range:
 		rev_range = '%s^..%s' % ( revs[-1], revs[0] )
-		return header + '\n' + run_cmd (cmd + rev_range)
+		return (header + '\n'
+			+ run_cmd (argv, rev_range))
 
 	output = [ header ]
 	num_patches = 1
 	for idx, rev in enumerate (revs):
-		real_idx = idx + num_patches
-		revcmd = cmd + '-1 --start-number %d %s' % (real_idx, rev)
-		output.append (run_cmd (revcmd))
+		real_idx = str (idx + num_patches)
+		output.append (
+			run_cmd (argv, '-1', '--start-number', real_idx, rev))
+
 		num_patches += output[-1].count ('\n')
+
 	return '\n'.join (output)
 
 def git_config(key, value=None):
 	'''Gets or sets git config values.  If value is not None, then
 	the config key will be set.  Otherwise, the config value of the
 	config key is returned.'''
-	k = utils.shell_quote (key)
 	if value is not None:
-		v = utils.shell_quote (value)
-		return run_cmd ('git config --set %s %s' % (k, v))
+		return run_cmd ('git', 'config', key, value)
 	else:
-		return run_cmd ('git config --get %s' % k)
+		return run_cmd ('git', 'config', '--get', key)
 
 def git_log (oneline=True, all=False):
 	'''Returns a pair of parallel arrays listing the revision sha1's
 	and commit summaries.'''
 	argv = [ 'git', 'log' ]
-	if oneline: argv.append ('--pretty=oneline')
-	if all: argv.append ('--all')
+	if oneline:
+		argv.append ('--pretty=oneline')
+	if all:
+		argv.append ('--all')
 	revs = []
 	summaries = []
-	regex = re.compile (REV_LIST_PATTERN)
-	output = run_cmd (' '.join (argv))
+	regex = REV_LIST_REGEX
+	output = run_cmd (argv)
 	for line in output.splitlines():
 		match = regex.match (line)
 		if match:
@@ -237,10 +239,10 @@ def git_ls_files ():
 
 def git_ls_tree (rev):
 	'''Returns a list of (mode, type, sha1, path) tuples.'''
-	regex = re.compile ('^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
-	sh_rev = utils.shell_quote (rev)
-	lines = run_cmd ('git ls-tree -r ' + sh_rev).splitlines()
+
+	lines = run_cmd ('git', 'ls-tree', '-r', rev).splitlines()
 	output = []
+	regex = re.compile ('^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
 	for line in lines:
 		match = regex.match (line)
 		if match:
@@ -253,7 +255,7 @@ def git_ls_tree (rev):
 
 def git_rebase (newbase):
 	if not newbase: return
-	return run_cmd ('git rebase '+newbase)
+	return run_cmd ('git','rebase', newbase)
 
 def git_reset (to_unstage):
 	'''Use 'git reset' to unstage files from the index.'''
@@ -261,19 +263,17 @@ def git_reset (to_unstage):
 	if not to_unstage: return 'ERROR: No files to reset.'
 
 	argv = [ 'git', 'reset', '--' ]
-	for filename in to_unstage:
-		argv.append (utils.shell_quote (filename))
+	argv.extend (to_unstage)
 
-	cmd = ' '.join (argv)
-	return 'Running:\t' + cmd + '\n' + run_cmd (cmd)
+	return 'Running:\t' + quote (argv) + '\n' + run_cmd (argv)
 
-def git_rev_list_range (rev_start, rev_end):
-	cmd = ('git rev-list --pretty=oneline %s..%s'
-		% (utils.shell_quote (rev_start), utils.shell_quote(rev_end)))
+def git_rev_list_range (start, end):
 
+	argv = [ 'git', 'rev-list', '--pretty=oneline', start, end ]
+
+	raw_revs = run_cmd (argv).splitlines()
 	revs = []
-	raw_revs = run_cmd (cmd).splitlines()
-	regex = re.compile (REV_LIST_PATTERN)
+	regex = REV_LIST_REGEX
 	for line in raw_revs:
 		match = regex.match (line)
 		if match:
