@@ -22,6 +22,7 @@ fi
 rm -rf $PREFIX
 mkdir -p $UGITLIBS
 cp bin/ugit.py $PREFIX
+cp scripts/ugit-cygwin.sh $PREFIX
 cp py/* $UGITLIBS
 
 if [ -x $PYUIC4 ] && [ ! -z $PYUIC4 ]; then

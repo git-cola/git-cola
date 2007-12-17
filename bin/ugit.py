@@ -5,11 +5,12 @@ import os
 import sys
 import platform
 version = platform.python_version()
+ugit = os.path.realpath (__file__)
 sys.path.insert (0, os.path.join(
-		os.path.dirname (os.path.dirname(__file__)),
+		os.path.dirname (os.path.dirname(ugit)),
 		'lib', 'python' + version[:3],
 		'site-packages'))
-sys.path.insert (0, os.path.dirname(__file__))
+sys.path.insert (0, os.path.dirname(ugit))
 
 from PyQt4 import QtCore, QtGui
 from ugitlibs.models import GitModel
