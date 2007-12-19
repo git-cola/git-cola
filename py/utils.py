@@ -101,8 +101,7 @@ def shell_quote (*inputs):
 
 def get_tmp_filename():
 	# Allow TMPDIR/TMP with a fallback to /tmp
-	tmp = os.getenv ('TMPDIR', os.getenv ('TMP', '/tmp'))
-	return os.path.join (tmp, 'ugit.%s.%s' % ( os.getuid(), time.time() ))
+	return '.ugit.%s.%s' % ( os.getpid(), time.time() )
 
 def header (msg):
 	pad = (76 - len (msg))/2

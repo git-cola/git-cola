@@ -22,7 +22,7 @@ fi
 mkdir -p $UGITLIBS
 cp README $PREFIX/README.txt
 cp bin/ugit.py $PREFIX
-cp scripts/ugit-cygwin.sh $PREFIX
+cp scripts/ugit-*.sh $PREFIX
 cp py/* $UGITLIBS
 
 
