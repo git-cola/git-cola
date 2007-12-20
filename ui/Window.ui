@@ -78,7 +78,7 @@ in the unstaged changes list.</string>
            <widget class="QListWidget" name="unstagedList" >
             <property name="font" >
              <font>
-              <family>Monospace</family>
+              <family>Courier</family>
               <pointsize>11</pointsize>
              </font>
             </property>
@@ -141,7 +141,7 @@ selected files in the "Files to Commit" list.</string>
            <widget class="QListWidget" name="stagedList" >
             <property name="font" >
              <font>
-              <family>Monospace</family>
+              <family>Courier</family>
               <pointsize>11</pointsize>
              </font>
             </property>
@@ -259,9 +259,12 @@ otherwise only the selected items will be committed.</string>
                <property name="orientation" >
                 <enum>Qt::Horizontal</enum>
                </property>
+               <property name="sizeType" >
+                <enum>QSizePolicy::Preferred</enum>
+               </property>
                <property name="sizeHint" >
                 <size>
-                 <width>281</width>
+                 <width>267</width>
                  <height>20</height>
                 </size>
                </property>
@@ -297,7 +300,7 @@ the most recent commit is amended with contents of the next commit.</string>
               <widget class="QTextEdit" name="commitText" >
                <property name="font" >
                 <font>
-                 <family>Monospace</family>
+                 <family>Courier</family>
                  <pointsize>12</pointsize>
                 </font>
                </property>
@@ -319,7 +322,7 @@ retrieve the latest commit message prior to committing.</string>
       <widget class="QTextEdit" name="displayText" >
        <property name="font" >
         <font>
-         <family>Monospace</family>
+         <family>Courier</family>
          <pointsize>11</pointsize>
         </font>
        </property>
@@ -337,7 +340,7 @@ retrieve the latest commit message prior to committing.</string>
      <x>0</x>
      <y>0</y>
      <width>720</width>
-     <height>28</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuRepository" >

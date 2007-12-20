@@ -4,30 +4,40 @@ import commands
 import utils
 from cStringIO import StringIO
 
+from PyQt4.QtCore import QProcess
+
 # A regex for matching the output of git (log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile ('([0-9a-f]+)\W(.*)')
 
 def quote (argv):
 	return ' '.join ([ utils.shell_quote (arg) for arg in argv ])
 
-def run_cmd (cmd, *args):
+def run_cmd (cmd, *args, **kwargs):
 	# Handle cmd as either a string or an argv list
-	if type (cmd) is list:
-		cmd = quote (cmd + list (args))
-	elif args:
-		cmd += ' ' + quote (args)
-	
-	from PyQt4.QtCore import QProcess
+	if type (cmd) is str:
+		cmd = cmd.split (' ')
+		cmd += list (args)
+	else:
+		cmd = list (cmd + list (args))
+
 	child = QProcess()
 	child.setProcessChannelMode(QProcess.MergedChannels);
-	child.start (cmd)
+	child.start (cmd[0], cmd[1:])
+
 	if (not child.waitForStarted()):
 		raise Exception, "failed to start child"
 
 	if (not child.waitForFinished()):
 		raise Exception, "failed to start child"
 
-	return str (child.readAll()).rstrip ('\n')
+	output = str (child.readAll())
+
+	# Allow run_cmd (argv, raw=True) for when we
+	# want the full, raw output (e.g. git cat-file)
+	if 'raw' in kwargs and kwargs['raw']:
+		return output
+	else:
+		return output.rstrip()
 
 def git_add (to_add):
 	'''Invokes 'git add' to index the filenames in to_add.'''
@@ -40,7 +50,8 @@ def git_add_or_remove (to_process):
 	'''Invokes 'git add' to index the filenames in to_process that exist
 	and 'git rm' for those that do not exist.'''
 
-	if not to_process: return 'ERROR: No files to add or remove.'
+	if not to_process:
+		return 'ERROR: No files to add or remove.'
 
 	to_add = []
 	output = ''
@@ -75,12 +86,9 @@ def git_branch (name=None, remote=False, delete=False):
 		branches = run_cmd (argv).splitlines()
 		return map (lambda (x): x.lstrip ('* '), branches)
 
-def git_cat_file (objtype, sha1, target_file=None):
+def git_cat_file (objtype, sha1):
 	cmd = 'git cat-file %s %s' % ( objtype, sha1 )
-	if target_file:
-		# build the string here to prevent run_cmd from quoting '>'
-		return run_cmd (cmd + ' > ' + utils.shell_quote (target_file))
-	return run_cmd (cmd)
+	return run_cmd (cmd, raw=True)
 
 def git_cherry_pick (revs, commit=False):
 	'''Cherry-picks each revision into the current branch.'''

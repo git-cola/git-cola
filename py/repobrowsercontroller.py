@@ -132,7 +132,11 @@ class GitRepoBrowserController (QObserver):
 
 			filename = str (qstr_filename)
 			defaults.DIRECTORY = os.path.dirname (filename)
-			cmds.git_cat_file (objtype, sha1, filename)
+			contents = cmds.git_cat_file (objtype, sha1)
+
+			file = open (filename, 'w')
+			file.write (contents)
+			file.close()
 			return
 
 		dirent = directories[current]
