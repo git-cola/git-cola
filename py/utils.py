@@ -117,44 +117,73 @@ def header (msg):
 
 class DiffParser (object):
 	def __init__ (self, diff):
-		self.__diff_header = re.compile ('@@\s.*\s@@$')
+		self.__diff_header = re.compile ('^@@\s[^@]+\s@@.*')
 
 		self.__idx = -1
 		self.__diffs = []
+		self.__diff_spans = []
 		self.__diff_offsets = []
-		self.__diff_positions = []
 
 		self.parse_diff (diff)
 	
 	def get_diffs (self):
 		return self.__diffs
 	
+	def get_spans (self):
+		return self.__diff_spans
+	
 	def get_offsets (self):
 		return self.__diff_offsets
 	
-	def get_positions (self):
-		return self.__diff_positions
+	def get_diff_for_offset (self, offset):
+		for idx, diff_offset in enumerate (self.__diff_offsets):
+			if offset < diff_offset:
+				return os.linesep.join (self.__diffs[idx])
+		return None
+	
+	def get_diffs_for_range (self, start, end):
+		diffs = []
+		for idx, span in enumerate (self.__diff_spans):
+
+			has_end_of_diff = start >= span[0] and start < span[1]
+			has_all_of_diff = start <= span[0] and end >= span[1]
+			has_head_of_diff = end >= span[0] and end <= span[1]
+
+			selected_diff = (has_end_of_diff
+					or has_all_of_diff
+					or has_head_of_diff)
+
+			if selected_diff:
+				diff = os.linesep.join (self.__diffs[idx])
+				diffs.append (diff)
+
+
+		return diffs
 
 	def parse_diff (self, diff):
-		last_idx = -1
-
+		total_offset = 0
 		for idx, line in enumerate (diff.splitlines()):
 
 			if self.__diff_header.match (line):
 				self.__diffs.append ( [line] )
-				self.__diff_offsets.append ([idx, idx])
-				self.__diff_positions.append (len (line))
+
+				line_len = len (line) + 1
+				self.__diff_spans.append ([total_offset,
+						total_offset + line_len])
+
+				total_offset += line_len
+				self.__diff_offsets.append (total_offset)
+
 				self.__idx += 1
 			else:
-				# skip pre-diff output, if any
-				if self.__idx == -1: continue
+				if self.__idx < 0:
+					errmsg = 'Malformed diff?\n\n%s' % diff
+					raise AssertionError, errmsg
+
+				line_len = len (line) + 1
+				total_offset += line_len
+
 				self.__diffs[self.__idx].append (line)
-				self.__diff_offsets[-1][-1] = idx
-				self.__diff_positions[self.__idx] += len (line)
+				self.__diff_spans[-1][-1] += line_len
+				self.__diff_offsets[self.__idx] += line_len
 
-			last_idx = idx
-
-		if self.__idx >= 0 and last_idx >= 0:
-			self.__diff_offsets[-1][-1] = last_idx
-
-		return self.__diffs

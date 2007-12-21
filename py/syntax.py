@@ -20,6 +20,7 @@ class GitSyntaxHighlighter (QSyntaxHighlighter):
 		removal = self.__mkformat (QFont.Bold, Qt.red)
 		message = self.__mkformat (QFont.Bold, Qt.yellow, Qt.black)
 
+		# Catch trailing whitespace
 		bad_ws_format = self.__mkformat (QFont.Bold, Qt.black, Qt.red)
 		self._bad_ws_regex = re.compile ('(.*?)(\s+)$')
 		self._bad_ws_format = bad_ws_format
@@ -29,7 +30,6 @@ class GitSyntaxHighlighter (QSyntaxHighlighter):
 			( re.compile ('^\+'), addition ),
 			( re.compile ('^-'), removal ),
 			( re.compile ('^:'), message ),
-			( self._bad_ws_regex, bad_ws_format ),
 		)
 	
 	def getFormat (self, line):
@@ -43,15 +43,12 @@ class GitSyntaxHighlighter (QSyntaxHighlighter):
 		if not ascii: return
 		fmt = self.getFormat (ascii)
 		if fmt:
-			if fmt is not self._bad_ws_format:
-				match = self._bad_ws_regex.match (ascii)
-				if match and match.group (2):
-					start = len (match.group (1))
-					self.setFormat (0, start, fmt)
-					self.setFormat (start, len (ascii),
-							self._bad_ws_format)
-				else:
-					self.setFormat (0, len (ascii), fmt)
+			match = self._bad_ws_regex.match (ascii)
+			if match and match.group (2):
+				start = len (match.group (1))
+				self.setFormat (0, start, fmt)
+				self.setFormat (start, len (ascii),
+						self._bad_ws_format)
 			else:
 				self.setFormat (0, len (ascii), fmt)
 

@@ -76,6 +76,13 @@ def git_add_or_remove (to_process):
 
 	return '%sRunning:\t%s\n%s' % ( output, quote (argv), run_cmd (argv) )
 
+def git_apply (filename, indexonly=True):
+	argv = ['git', 'apply']
+	if indexonly:
+		argv.extend (['--index', '--cached'])
+	argv.append (filename)
+	return run_cmd (argv)
+
 def git_branch (name=None, remote=False, delete=False):
 	argv = ['git', 'branch']
 	if delete and name:
@@ -154,7 +161,7 @@ def git_current_branch():
 			return branch.lstrip ('* ')
 	raise Exception, 'No current branch.  Detached HEAD?'
 
-def git_diff (filename, staged=True, color=False):
+def git_diff (filename, staged=True, color=False, with_diff_header=False):
 	'''Invokes git_diff on filename.  Passing staged=True adds
 	diffs the index against HEAD (i.e. --cached).'''
 
@@ -177,12 +184,22 @@ def git_diff (filename, staged=True, color=False):
 	start = False
 	del_tag = 'deleted file mode '
 
+	headers = []
 	for line in diff_lines:
 		if not start and '@@ ' in line and ' @@' in line:
 			start = True
 		if start or (deleted and del_tag in line):
 			output.write (line + '\n')
-	return output.getvalue()
+		else:
+			headers.append (line)
+	
+	result = output.getvalue()
+	output.close()
+
+	if with_diff_header:
+		return (os.linesep.join (headers), result)
+	else:
+		return result
 
 def git_diff_stat ():
 	'''Returns the latest diffstat.'''

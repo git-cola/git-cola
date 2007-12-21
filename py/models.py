@@ -135,6 +135,9 @@ class GitModel(Model):
 		if signoff not in msg:
 			self.set_commitmsg (msg + '\n\n' + signoff)
 
+	def apply_diff (self, filename):
+		return cmds.git_apply (filename)
+
 	def get_uncommitted_item (self, row):
 		return (self.get_unstaged() + self.get_untracked())[row]
 	
@@ -151,6 +154,20 @@ class GitModel(Model):
 		msg = file.read()
 		file.close()
 		return msg
+
+	def set_latest_commitmsg (self):
+		'''Queries git for the latest commit message and sets it in
+		self.commitmsg.'''
+		commit_msg = []
+		commit_lines = cmds.git_show ('HEAD').split ('\n')
+		for idx, msg in enumerate (commit_lines):
+			if idx < 4: continue
+			msg = msg.lstrip()
+			if msg.startswith ('diff --git'):
+				commit_msg.pop()
+				break
+			commit_msg.append (msg)
+		self.set_commitmsg ('\n'.join (commit_msg).rstrip())
 
 	def update_status (self):
 		# This allows us to defer notification until the
@@ -188,17 +205,3 @@ class GitModel(Model):
 		# Re-enable notifications and emit changes
 		self.set_notify (notify_enabled)
 		self.notify_observers ('staged', 'unstaged')
-
-	def set_latest_commitmsg (self):
-		'''Queries git for the latest commit message and sets it in
-		self.commitmsg.'''
-		commit_msg = []
-		commit_lines = cmds.git_show ('HEAD').split ('\n')
-		for idx, msg in enumerate (commit_lines):
-			if idx < 4: continue
-			msg = msg.lstrip()
-			if msg.startswith ('diff --git'):
-				commit_msg.pop()
-				break
-			commit_msg.append (msg)
-		self.set_commitmsg ('\n'.join (commit_msg).rstrip())

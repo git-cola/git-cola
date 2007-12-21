@@ -1,5 +1,6 @@
 import os
 import commands
+from PyQt4 import QtGui
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QMessageBox
 from PyQt4.QtGui import QMenu
@@ -417,7 +418,11 @@ class GitController (QObserver):
 		row, selected = qtutils.get_selected_row (list_widget)
 		if not selected: return
 
+		model = self.model
 		filename = model.get_uncommitted_item (row)
+
+		if not os.path.exists (filename): return
+		if os.path.isdir (filename): return
 
 		cursor = self.view.displayText.textCursor()
 		offset = cursor.position()
@@ -427,18 +432,32 @@ class GitController (QObserver):
 		selection = cursor.selection().toPlainText()
 
 		num_selected_lines = selection.count (os.linesep)
-		has_selection = selection and nb_selected_lines > 0
+		has_selection = selection and num_selected_lines > 0
 
+		header, diff = cmds.git_diff (filename,
+					with_diff_header=True,
+					staged=False)
+
+		parser = utils.DiffParser (diff)
 
 		if has_selection:
-			print "\nNUM_LINES", num_selected_lines
-			print "SELECTION:\n", selection
+			start = diff.index (selection)
+			end = start + len (selection)
+			diffs = parser.get_diffs_for_range (start, end)
 		else:
-			print "SELECTION:\n", seleciton
+			diffs = [ parser.get_diff_for_offset (offset) ]
 
-		print 'POSITION:', cursor.position()
+		if not diffs: return
 
+		for diff in diffs:
+			tmpfile = utils.get_tmp_filename()
+			file = open (tmpfile, 'w')
+			file.write (header + os.linesep + diff + os.linesep)
+			file.close()
+			model.apply_diff (tmpfile)
+			os.unlink (tmpfile)
 
+		self.cb_rescan (model)
 
 	def cb_stage_selected (self, model):
 		'''Use "git add" to add items to the git index.
@@ -501,7 +520,11 @@ class GitController (QObserver):
 		view.exec_()
 
 	def __menu_about_to_show (self):
-		self.__stage_hunk_action.setEnabled (not self.__staged_diff_in_view)
+		cursor = self.view.displayText.textCursor()
+		allow_hunk_staging = ( not self.__staged_diff_in_view
+				and cursor.position() > utils.HEADER_LENGTH )
+
+		self.__stage_hunk_action.setEnabled (allow_hunk_staging)
 
 	def __menu_event (self, event):
 		self.__menu_setup()
@@ -512,7 +535,7 @@ class GitController (QObserver):
 		if self.__menu: return
 
 		menu = QMenu (self.view)
-		stage = menu.addAction ('Stage Hunk', self.cb_stage_hunk)
+		stage = menu.addAction ('Stage Hunk(s)', self.cb_stage_hunk)
 		copy = menu.addAction ('Copy', self.cb_copy)
 
 		self.connect (menu, 'aboutToShow()', self.__menu_about_to_show)
