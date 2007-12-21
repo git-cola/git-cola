@@ -114,3 +114,47 @@ def header (msg):
 		+ (' ' * (pad + extra))
 		+ '+:'
 		+ '\n')
+
+class DiffParser (object):
+	def __init__ (self, diff):
+		self.__diff_header = re.compile ('@@\s.*\s@@$')
+
+		self.__idx = -1
+		self.__diffs = []
+		self.__diff_offsets = []
+		self.__diff_positions = []
+
+		self.parse_diff (diff)
+	
+	def get_diffs (self):
+		return self.__diffs
+	
+	def get_offsets (self):
+		return self.__diff_offsets
+	
+	def get_positions (self):
+		return self.__diff_positions
+
+	def parse_diff (self, diff):
+		last_idx = -1
+
+		for idx, line in enumerate (diff.splitlines()):
+
+			if self.__diff_header.match (line):
+				self.__diffs.append ( [line] )
+				self.__diff_offsets.append ([idx, idx])
+				self.__diff_positions.append (len (line))
+				self.__idx += 1
+			else:
+				# skip pre-diff output, if any
+				if self.__idx == -1: continue
+				self.__diffs[self.__idx].append (line)
+				self.__diff_offsets[-1][-1] = idx
+				self.__diff_positions[self.__idx] += len (line)
+
+			last_idx = idx
+
+		if self.__idx >= 0 and last_idx >= 0:
+			self.__diff_offsets[-1][-1] = last_idx
+
+		return self.__diffs
