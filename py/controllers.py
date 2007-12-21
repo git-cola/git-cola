@@ -386,60 +386,21 @@ class GitController (QObserver):
 		# Scan for branch changes
 		self.__set_branch_ui_items()
 
-		# This allows us to defer notification until the
-		# we finish processing data
-		model.set_notify(False)
+		# Rescan for repo updates
+		model.update_status()
 
-		# Reset the staged and unstaged model lists
-		# NOTE: the model's unstaged list is used to
-		# hold both unstaged and untracked files.
-		model.staged = []
-		model.unstaged = []
-		model.untracked = []
+		if not model.has_squash_msg(): return
 
-		# Read git status items
-		( staged_items,
-		  unstaged_items,
-		  untracked_items ) = cmds.git_status()
-
-		# Gather items to be committed
-		for staged in staged_items:
-			if staged not in model.get_staged():
-				model.add_staged (staged)
-
-		# Gather unindexed items
-		for unstaged in unstaged_items:
-			if unstaged not in model.get_unstaged():
-				model.add_unstaged (unstaged)
-
-		# Gather untracked items
-		for untracked in untracked_items:
-			if untracked not in model.get_untracked():
-				model.add_untracked (untracked)
-
-		# Re-enable notifications and emit changes
-		model.set_notify(True)
-		model.notify_observers ('staged', 'unstaged')
-
-		squash_msg = os.path.join (os.getcwd(), '.git', 'SQUASH_MSG')
-		if not os.path.exists (squash_msg): return
-
-		msg = model.get_commitmsg()
-
-		if msg:
-			result = qtutils.question (self.view,
+		if model.get_commitmsg():
+			if not qtutils.question (self.view,
 					'Import Commit Message?',
 					('A commit message from a '
 					+ 'merge-in-progress was found.\n'
-					+ 'Do you want to import it?'))
-			if not result: return
-
-		file = open (squash_msg)
-		msg = file.read()
-		file.close()
+					+ 'Do you want to import it?')):
+				return
 
 		# Set the new commit message
-		model.set_commitmsg (msg)
+		model.set_commitmsg (model.get_squash_msg())
 
 	def cb_show_diffstat (self, model):
 		'''Show the diffstat from the latest commit.'''

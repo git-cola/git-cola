@@ -135,6 +135,60 @@ class GitModel(Model):
 		if signoff not in msg:
 			self.set_commitmsg (msg + '\n\n' + signoff)
 
+	def get_uncommitted_item (self, row):
+		return (self.get_unstaged() + self.get_untracked())[row]
+	
+	def __get_squash_msg_path (self):
+		return os.path.join (os.getcwd(), '.git', 'SQUASH_MSG')
+
+	def has_squash_msg (self):
+		squash_msg = self.__get_squash_msg_path()
+		return os.path.exists (squash_msg)
+
+	def get_squash_msg (self):
+		squash_msg = self.__get_squash_msg_path()
+		file = open (squash_msg)
+		msg = file.read()
+		file.close()
+		return msg
+
+	def update_status (self):
+		# This allows us to defer notification until the
+		# we finish processing data
+		notify_enabled = self.get_notify()
+		self.set_notify(False)
+
+		# Reset the staged and unstaged model lists
+		# NOTE: the model's unstaged list is used to
+		# hold both unstaged and untracked files.
+		self.staged = []
+		self.unstaged = []
+		self.untracked = []
+
+		# Read git status items
+		( staged_items,
+		  unstaged_items,
+		  untracked_items ) = cmds.git_status()
+
+		# Gather items to be committed
+		for staged in staged_items:
+			if staged not in self.get_staged():
+				self.add_staged (staged)
+
+		# Gather unindexed items
+		for unstaged in unstaged_items:
+			if unstaged not in self.get_unstaged():
+				self.add_unstaged (unstaged)
+
+		# Gather untracked items
+		for untracked in untracked_items:
+			if untracked not in self.get_untracked():
+				self.add_untracked (untracked)
+
+		# Re-enable notifications and emit changes
+		self.set_notify (notify_enabled)
+		self.notify_observers ('staged', 'unstaged')
+
 	def set_latest_commitmsg (self):
 		'''Queries git for the latest commit message and sets it in
 		self.commitmsg.'''
@@ -148,6 +202,3 @@ class GitModel(Model):
 				break
 			commit_msg.append (msg)
 		self.set_commitmsg ('\n'.join (commit_msg).rstrip())
-	
-	def get_uncommitted_item (self, row):
-		return (self.get_unstaged() + self.get_untracked())[row]
