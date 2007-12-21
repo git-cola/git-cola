@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>720</width>
+    <width>780</width>
     <height>512</height>
    </rect>
   </property>
@@ -310,6 +310,9 @@ If you are going to amend a commit you can use the
 "Commit -> Get Latest Comit Message" menu action to
 retrieve the latest commit message prior to committing.</string>
                </property>
+               <property name="acceptRichText" >
+                <bool>false</bool>
+               </property>
               </widget>
              </item>
             </layout>
@@ -326,8 +329,20 @@ retrieve the latest commit message prior to committing.</string>
          <pointsize>11</pointsize>
         </font>
        </property>
+       <property name="tabChangesFocus" >
+        <bool>true</bool>
+       </property>
        <property name="readOnly" >
         <bool>true</bool>
+       </property>
+       <property name="acceptRichText" >
+        <bool>false</bool>
+       </property>
+       <property name="cursorWidth" >
+        <number>8</number>
+       </property>
+       <property name="textInteractionFlags" >
+        <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::NoTextInteraction|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
        </property>
       </widget>
      </widget>
@@ -339,8 +354,8 @@ retrieve the latest commit message prior to committing.</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>720</width>
-     <height>22</height>
+     <width>780</width>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuRepository" >

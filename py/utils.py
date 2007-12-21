@@ -103,6 +103,14 @@ def get_tmp_filename():
 	# Allow TMPDIR/TMP with a fallback to /tmp
 	return '.ugit.%s.%s' % ( os.getpid(), time.time() )
 
+HEADER_LENGTH = 80
 def header (msg):
-	pad = (76 - len (msg))/2
-	return ':+' + ' ' * pad + msg + ' ' * pad + '+:' + '\n'
+	pad = HEADER_LENGTH - len (msg) - 4 # len (':+') + len ('+:')
+	extra = pad % 2
+	pad /= 2
+	return (':+'
+		+ (' ' * pad)
+		+ msg
+		+ (' ' * (pad + extra))
+		+ '+:'
+		+ '\n')
