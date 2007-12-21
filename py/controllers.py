@@ -241,7 +241,9 @@ class GitController (QObserver):
 		# Perform the commit
 		output = cmds.git_commit (msg, amend, files)
 
-		# Reset commitmsg and rescan
+		# Reset state
+		self.view.newCommitRadio.setChecked (True)
+		self.view.amendRadio.setChecked (False)
 		model.set_commitmsg ('')
 		self.__show_command (output, model)
 
@@ -528,7 +530,9 @@ class GitController (QObserver):
 
 	def __browse_branch (self, branch):
 		if not branch: return
-		model = self.model
+		# Clone the model to allow opening multiple browsers
+		# with different sets of data
+		model = self.model.clone()
 		model.set_branch (branch)
 		view = GitCommitBrowser()
 		controller = GitRepoBrowserController(model, view)

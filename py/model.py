@@ -47,6 +47,9 @@ class Model(Observable):
 		self.__attributes = list(attributes.keys() + defaults.keys())
 		self.__list_attrs = {}
 		self.__object_attrs = {}
+	
+	def clone (self):
+		return self.__class__().from_dict (self.to_dict())
 
 	def set_list_attrs(self, list_attrs):
 		self.__list_attrs.update(list_attrs)
