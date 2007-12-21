@@ -7,86 +7,82 @@ from model import Model
 class GitModel(Model):
 	def __init__ (self):
 		Model.__init__ (self, {
-				'commitmsg': '',
-				'staged': [],
-				'unstaged': [],
-				'untracked': [],
-				'name': cmds.git_config('user.name'),
-				'email': cmds.git_config('user.email'),
-				})
-	
-	def add_signoff (self):
-		'''Adds a standard Signed-off by: tag to the end
-		of the current commit message.'''
+			# ===========================================
+			# Used in various places
+			# ===========================================
+			'branch': '',
 
-		msg = self.get_commitmsg()
-		signoff = ('Signed-off by: %s <%s>'
-				% (self.get_name(), self.get_email()))
+			# ===========================================
+			# Used primarily by the main UI
+			# ===========================================
+			'name': cmds.git_config('user.name'),
+			'email': cmds.git_config('user.email'),
+			'commitmsg': '',
+			'staged': [],
+			'unstaged': [],
+			'untracked': [],
 
-		if signoff not in msg:
-			self.set_commitmsg (msg + '\n\n' + signoff)
+			# ===========================================
+			# Used by the create branch dialog
+			# ===========================================
+			'revision': '',
+			'local_branches': cmds.git_branch (remote=False),
+			'remote_branches': cmds.git_branch (remote=True),
+			'tags': cmds.git_tag(),
 
-	def set_latest_commitmsg (self):
-		'''Queries git for the latest commit message and sets it in
-		self.commitmsg.'''
-		commit_msg = []
-		commit_lines = cmds.git_show ('HEAD').split ('\n')
-		for idx, msg in enumerate (commit_lines):
-			if idx < 4: continue
-			msg = msg.lstrip()
-			if msg.startswith ('diff --git'):
-				commit_msg.pop()
-				break
-			commit_msg.append (msg)
-		self.set_commitmsg ('\n'.join (commit_msg).rstrip())
+			# ===========================================
+			# Used by the repo browser
+			# ===========================================
+			'directory': '',
 
-class GitRepoBrowserModel (Model):
-	def __init__ (self, branch=''):
-		Model.__init__ (self, {
-				'directory': '',
-				'branch': branch,
+			# These are parallel lists
+			'files': [],
+			'sha1s': [],
+			'types': [],
 
-				# These are parallel lists
-				'files': [],
-				'sha1s': [],
-				'types': [],
+			# All items below here are re-calculated in
+			# init_browser_data()
+			'directories': [],
+			'directory_entries': {},
 
-				# All items below here are re-calculated in
-				# setup_items()
-				'directories': [],
-				'directory_entries': {},
+			# These are also parallel lists
+			'item_names': [],
+			'item_sha1s': [],
+			'item_types': [],
+			})
+		
 
-				# These are also parallel lists
-				'item_names': [],
-				'item_sha1s': [],
-				'item_types': [],
-				})
-		self.reset()
-	
-	def reset (self):
-		# Collect data for the model
-		tree_info = cmds.git_ls_tree (self.get_branch())
+	def init_branch_data (self):
+		remote_branches = cmds.git_branch (remote=True)
+		local_branches = cmds.git_branch (remote=False)
+		tags = cmds.git_tag()
 
-		types = map ( lambda (x): x[1], tree_info )
-		sha1s = map ( lambda (x): x[2], tree_info )
-		files = map ( lambda (x): x[3], tree_info )
+		self.set_branch ('')
+		self.set_revision ('')
+		self.set_local_branches (local_branches)
+		self.set_remote_branches (remote_branches)
+		self.set_tags (tags)
 
-		self.add_types (*types)
-		self.add_files (*files)
-		self.add_sha1s (*sha1s)
-
-		self.reset_items()
-
-	def reset_items (self):
+	def init_browser_data (self):
 		'''This scans over self.(files, sha1s, types) to generate
 		directories, directory_entries, itmes, item_sha1s,
 		and item_types.'''
+
+		# Collect data for the model
+		if not self.get_branch(): return
 
 		self.item_names = []
 		self.item_sha1s = []
 		self.item_types = []
 		self.directories = []
 		self.directory_entries = {}
+
+		# Lookup the tree info
+		tree_info = cmds.git_ls_tree (self.get_branch())
+
+		self.set_types (map ( lambda (x): x[1], tree_info ))
+		self.set_sha1s (map ( lambda (x): x[2], tree_info ))
+		self.set_files (map ( lambda (x): x[3], tree_info ))
 
 		if self.directory: self.directories.append ('..')
 
@@ -128,24 +124,30 @@ class GitRepoBrowserModel (Model):
 				self.item_sha1s.append (self.sha1s[idx])
 				self.item_types.append (self.types[idx])
 
-class GitCreateBranchModel (Model):
-	def __init__ (self):
-		Model.__init__ (self, {
-				'branch': '',
-				'revision': '',
-				'local_branches': [],
-				'remote_branches': [],
-				'tags': [],
-				})
-		self.reset()
+	def add_signoff (self):
+		'''Adds a standard Signed-off by: tag to the end
+		of the current commit message.'''
 
-	def reset (self):
-		remote_branches = cmds.git_branch (remote=True)
-		local_branches = cmds.git_branch (remote=False)
-		tags = cmds.git_tag()
+		msg = self.get_commitmsg()
+		signoff = ('Signed-off by: %s <%s>'
+				% (self.get_name(), self.get_email()))
 
-		self.set_branch ('')
-		self.set_revision ('')
-		self.set_local_branches (local_branches)
-		self.set_remote_branches (remote_branches)
-		self.set_tags (tags)
+		if signoff not in msg:
+			self.set_commitmsg (msg + '\n\n' + signoff)
+
+	def set_latest_commitmsg (self):
+		'''Queries git for the latest commit message and sets it in
+		self.commitmsg.'''
+		commit_msg = []
+		commit_lines = cmds.git_show ('HEAD').split ('\n')
+		for idx, msg in enumerate (commit_lines):
+			if idx < 4: continue
+			msg = msg.lstrip()
+			if msg.startswith ('diff --git'):
+				commit_msg.pop()
+				break
+			commit_msg.append (msg)
+		self.set_commitmsg ('\n'.join (commit_msg).rstrip())
+	
+	def get_uncommitted_item (self, row):
+		return (self.get_unstaged() + self.get_untracked())[row]

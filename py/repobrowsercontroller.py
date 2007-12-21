@@ -27,7 +27,8 @@ class GitRepoBrowserController (QObserver):
 				'itemDoubleClicked(QListWidgetItem*)',
 				lambda(x): self.cb_item_double_clicked (model))
 
-		self.__display_items (model)
+		# Start at the root of the tree
+		model.set_directory('')
 
 	######################################################################
 	# ACTIONS
@@ -36,7 +37,7 @@ class GitRepoBrowserController (QObserver):
 	def action_directory_changed (self, model):
 		'''This is called in response to a change in the the
 		model's directory.'''
-		model.reset_items()
+		model.init_browser_data()
 		self.__display_items (model)
 
 	######################################################################

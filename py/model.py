@@ -11,13 +11,16 @@ class Observable(object):
 		return self.__notify
 	def set_notify(self, notify=True):
 		self.__notify = notify
-	def add_observer(self,observer):
-		self.__observers.append(observer)
+	def add_observer(self, observer):
+		if observer not in self.__observers:
+			self.__observers.append(observer)
+	def remove_observer(self, observer):
+		if observer in self.__observers:
+			self.__observers.remove (observer)
 	def notify_observers(self, *attr):
 		if not self.__notify: return
 		for observer in self.__observers:
 			observer.notify(*attr)
-
 
 class Model(Observable):
 	'''Creates a generic model object with attributes specified

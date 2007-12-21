@@ -19,6 +19,15 @@ class QObserver (Observer, QObject):
 		self.__callbacks = {}
 		self.__model_to_view = {}
 		self.__view_to_model = {}
+	
+	def __del__ (self):
+		self.model.remove_observer (self)
+		self.model = None
+		self.view = None
+
+		del self.__actions
+		del self.__model_to_view
+		del self.__view_to_model
 
 	def connect (self, obj, signal_str, *args):
 		'''Convenience function so that subclasses do not have

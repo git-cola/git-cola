@@ -7,8 +7,6 @@ from qobserver import QObserver
 import cmds
 import utils
 import qtutils
-from models import GitRepoBrowserModel
-from models import GitCreateBranchModel
 from views import GitCommitBrowser
 from views import GitBranchDialog
 from views import GitCreateBranchDialog
@@ -21,6 +19,22 @@ class GitController (QObserver):
 
 	def __init__ (self, model, view):
 		QObserver.__init__ (self, model, view)
+
+		# chdir to the root of the git tree.  This is critical
+		# to being able to properly use the git porcelain.
+		cdup = cmds.git_show_cdup()
+		if cdup: os.chdir (cdup)
+
+		# The diff-display context menu
+		self.__menu = None
+		self.__staged_diff_in_view = True
+
+		# Diff display context menu
+		view.displayText.controller = self
+		view.displayText.contextMenuEvent = self.__menu_event
+
+		# Default to creating a new commit (i.e. not an amend commit)
+		view.newCommitRadio.setChecked (True)
 
 		# Binds a specific model attribute to a view widget,
 		# and vice versa.
@@ -64,9 +78,11 @@ class GitController (QObserver):
 				view.exportPatches,
 				view.cherryPick,)
 
+		self.add_signals ('itemClicked (QListWidgetItem *)',
+				view.stagedList, view.unstagedList,)
+
 		self.add_signals ('itemSelectionChanged()',
-				view.stagedList,
-				view.unstagedList,)
+				view.stagedList, view.unstagedList,)
 
 		# App cleanup
 		self.connect ( qtutils.qapp(),
@@ -124,19 +140,6 @@ class GitController (QObserver):
 				'cherryPick': self.cb_cherry_pick,
 				})
 
-		# chdir to the root of the git tree.  This is critical
-		# to being able to properly use the git porcelain.
-		cdup = cmds.git_show_cdup()
-		if cdup: os.chdir (cdup)
-
-		# The diff-display context menu
-		self.__menu = None
-		view.displayText.controller = self
-		view.displayText.contextMenuEvent = self.__menu_event
-
-		# Default to creating a new commit (i.e. not an amend commit)
-		view.newCommitRadio.setChecked (True)
-
 		# Initialize the GUI
 		self.cb_rescan (model)
 
@@ -171,14 +174,13 @@ class GitController (QObserver):
 	# CALLBACKS
 	#####################################################################
 
-	def cb_branch_create (self, ugit_model):
-		model = GitCreateBranchModel()
+	def cb_branch_create (self, model):
 		view = GitCreateBranchDialog (self.view)
 		controller = GitCreateBranchController (model, view)
 		view.show()
 		result = view.exec_()
 		if result == QDialog.Accepted:
-			self.cb_rescan (ugit_model)
+			self.cb_rescan (model)
 
 	def cb_branch_delete (self, model):
 		dlg = GitBranchDialog(self.view, branches=cmds.git_branch())
@@ -280,9 +282,13 @@ class GitController (QObserver):
 		qtutils.set_clipboard (sha1)
 
 	def cb_copy (self):
-		self.view.displayText.copy()
+		cursor = self.view.displayText.textCursor()
+		selection = cursor.selection().toPlainText()
+		qtutils.set_clipboard (selection)
 
-	def cb_diff_staged (self, model):
+	# use *args to handle being called from different signals
+	def cb_diff_staged (self, model, *args):
+		self.__staged_diff_in_view = True
 		list_widget = self.view.stagedList
 		row, selected = qtutils.get_selected_row (list_widget)
 
@@ -300,7 +306,9 @@ class GitController (QObserver):
 
 		self.view.displayText.setText (pre + diff)
 
-	def cb_diff_unstaged (self, model):
+	# use *args to handle being called from different signals
+	def cb_diff_unstaged (self, model, *args):
+		self.__staged_diff_in_view = False
 		list_widget = self.view.unstagedList
 		row, selected = qtutils.get_selected_row (list_widget)
 		if not selected:
@@ -441,7 +449,33 @@ class GitController (QObserver):
 		self.__show_command (output, model)
 
 	def cb_stage_hunk (self):
-		print "STAGING HUNK"
+
+		list_widget = self.view.unstagedList
+		row, selected = qtutils.get_selected_row (list_widget)
+		if not selected: return
+
+		filename = model.get_uncommitted_item (row)
+
+		cursor = self.view.displayText.textCursor()
+		offset = cursor.position()
+		offset -= utils.HEADER_LENGTH + 1
+		if offset < 0: return
+
+		selection = cursor.selection().toPlainText()
+
+		num_selected_lines = selection.count (os.linesep)
+		has_selection = selection and nb_selected_lines > 0
+
+
+		if has_selection:
+			print "\nNUM_LINES", num_selected_lines
+			print "SELECTION:\n", selection
+		else:
+			print "SELECTION:\n", seleciton
+
+		print 'POSITION:', cursor.position()
+
+
 
 	def cb_stage_selected (self, model):
 		'''Use "git add" to add items to the git index.
@@ -494,14 +528,15 @@ class GitController (QObserver):
 
 	def __browse_branch (self, branch):
 		if not branch: return
-		model = GitRepoBrowserModel (branch)
+		model = self.model
+		model.set_branch (branch)
 		view = GitCommitBrowser()
 		controller = GitRepoBrowserController(model, view)
 		view.show()
 		view.exec_()
 
 	def __menu_about_to_show (self):
-		self.__stage_hunk_action.setEnabled (True)
+		self.__stage_hunk_action.setEnabled (not self.__staged_diff_in_view)
 
 	def __menu_event (self, event):
 		self.__menu_setup()

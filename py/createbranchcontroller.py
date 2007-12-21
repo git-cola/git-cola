@@ -36,6 +36,7 @@ class GitCreateBranchController (QObserver):
 					lambda(m): self.__display_model (m),
 				})
 
+		model.init_branch_data()
 		self.__display_model (model)
 	
 	######################################################################
