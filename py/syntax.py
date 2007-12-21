@@ -15,16 +15,21 @@ class GitSyntaxHighlighter (QSyntaxHighlighter):
 	def __init__ (self, doc):
 		QSyntaxHighlighter.__init__ (self, doc)
 
-		begin = self._mkformat (QFont.Bold, Qt.cyan)
-		addition = self._mkformat (QFont.Bold, Qt.green)
-		removal = self._mkformat (QFont.Bold, Qt.red)
-		message = self._mkformat (QFont.Bold, Qt.yellow, Qt.black)
+		begin = self.__mkformat (QFont.Bold, Qt.cyan)
+		addition = self.__mkformat (QFont.Bold, Qt.green)
+		removal = self.__mkformat (QFont.Bold, Qt.red)
+		message = self.__mkformat (QFont.Bold, Qt.yellow, Qt.black)
+
+		bad_ws_format = self.__mkformat (QFont.Bold, Qt.black, Qt.red)
+		self._bad_ws_regex = re.compile ('(.*?)(\s+)$')
+		self._bad_ws_format = bad_ws_format
 
 		self._rules = (
 			( re.compile ('^(@@|\+\+\+|---)'), begin ),
 			( re.compile ('^\+'), addition ),
 			( re.compile ('^-'), removal ),
 			( re.compile ('^:'), message ),
+			( self._bad_ws_regex, bad_ws_format ),
 		)
 	
 	def getFormat (self, line):
@@ -36,10 +41,21 @@ class GitSyntaxHighlighter (QSyntaxHighlighter):
 	def highlightBlock (self, qstr):
 		ascii = qstr.toAscii().data()
 		if not ascii: return
-		format = self.getFormat (ascii)
-		if format: self.setFormat (0, len (ascii), format)
+		fmt = self.getFormat (ascii)
+		if fmt:
+			if fmt is not self._bad_ws_format:
+				match = self._bad_ws_regex.match (ascii)
+				if match and match.group (2):
+					start = len (match.group (1))
+					self.setFormat (0, start, fmt)
+					self.setFormat (start, len (ascii),
+							self._bad_ws_format)
+				else:
+					self.setFormat (0, len (ascii), fmt)
+			else:
+				self.setFormat (0, len (ascii), fmt)
 
-	def _mkformat (self, weight, color, bgcolor=None):
+	def __mkformat (self, weight, color, bgcolor=None):
 		format = QTextCharFormat()
 		format.setFontWeight (weight)
 		format.setForeground (color)
