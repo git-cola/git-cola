@@ -7,15 +7,23 @@ from model import Model
 
 class GitModel(Model):
 	def __init__(self):
-		Model.__init__(self, {
-			# ===========================================
-			# Used in various places
-			# ===========================================
-			'branch': '',
 
-			# ===========================================
+		# chdir to the root of the git tree.  This is critical
+		# to being able to properly use the git porcelain.
+		cdup = cmds.git_show_cdup()
+		if cdup: os.chdir(cdup)
+
+		Model.__init__(self, {
+			#####################################################
+			# Used in various places
+			'remotes': cmds.git_remote(),
+			'remote': '',
+			'local_branch': '',
+			'remote_branch': '',
+
+			#####################################################
 			# Used primarily by the main UI
-			# ===========================================
+			'project': os.path.basename(os.getcwd()),
 			'name': cmds.git_config('user.name'),
 			'email': cmds.git_config('user.email'),
 			'commitmsg': '',
@@ -23,17 +31,15 @@ class GitModel(Model):
 			'unstaged': [],
 			'untracked': [],
 
-			# ===========================================
+			#####################################################
 			# Used by the create branch dialog
-			# ===========================================
 			'revision': '',
 			'local_branches': cmds.git_branch(remote=False),
 			'remote_branches': cmds.git_branch(remote=True),
 			'tags': cmds.git_tag(),
 
-			# ===========================================
+			#####################################################
 			# Used by the repo browser
-			# ===========================================
 			'directory': '',
 
 			# These are parallel lists
@@ -58,14 +64,17 @@ class GitModel(Model):
 			+ self.get_remote_branches())
 
 	def init_branch_data(self):
+		remotes = cmds.git_remote()
 		remote_branches = cmds.git_branch(remote=True)
 		local_branches = cmds.git_branch(remote=False)
 		tags = cmds.git_tag()
 
-		self.set_branch('')
 		self.set_revision('')
-		self.set_local_branches(local_branches)
+		self.set_local_branch('')
+		self.set_remote_branch('')
+		self.set_remotes(remotes)
 		self.set_remote_branches(remote_branches)
+		self.set_local_branches(local_branches)
 		self.set_tags(tags)
 
 	def init_browser_data(self):

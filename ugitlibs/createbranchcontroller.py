@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import os
-import re
 import cmds
 import qtutils
 from qobserver import QObserver
@@ -10,11 +9,11 @@ class GitCreateBranchController(QObserver):
 		QObserver.__init__(self, model, view)
 
 		self.model_to_view(model, 'revision', 'revisionLine')
-		self.model_to_view(model, 'branch', 'branchNameLine')
+		self.model_to_view(model, 'local_branch', 'branchLine')
 
 		self.add_signals('textChanged(const QString&)',
 				view.revisionLine,
-				view.branchNameLine)
+				view.branchLine)
 
 		self.add_signals('itemSelectionChanged()',
 				view.branchRootList)
@@ -26,29 +25,25 @@ class GitCreateBranchController(QObserver):
 				view.tagRadio)
 
 		self.add_callbacks(model, {
-				'branchRootList': self.cb_item_changed,
-				'createBranchButton': self.cb_create_branch,
-				'localBranchRadio':
-					lambda(m): self.__display_model(m),
-				'remoteBranchRadio':
-					lambda(m): self.__display_model(m),
-				'tagRadio':
-					lambda(m): self.__display_model(m),
+				'branchRootList': self.item_changed,
+				'createBranchButton': self.create_branch,
+				'localBranchRadio': self.__display_model,
+				'remoteBranchRadio': self.__display_model,
+				'tagRadio': self.__display_model,
 				})
 
 		model.init_branch_data()
 		self.__display_model(model)
 	
 	######################################################################
-	# CALLBACKS
-	######################################################################
+	# Qt callbacks
 
-	def cb_create_branch(self, model):
+	def create_branch(self, *rest):
 		'''This callback is called when the "Create Branch"
 		button is called.'''
 
-		revision = model.get_revision()
-		branch = model.get_branch()
+		revision = self.model.get_revision()
+		branch = self.model.get_local_branch()
 		existing_branches = cmds.git_branch()
 
 		if not branch or not revision:
@@ -100,7 +95,7 @@ class GitCreateBranchController(QObserver):
 		qtutils.show_command(self.view, output)
 		self.view.accept()
 
-	def cb_item_changed(self, model):
+	def item_changed(self, *rest):
 		'''This callback is called when the item selection changes
 		in the branchRootList.'''
 
@@ -108,11 +103,11 @@ class GitCreateBranchController(QObserver):
 		( row, selected ) = qtutils.get_selected_row(qlist)
 		if not selected: return
 
-		sources = self.__get_branch_sources(model)
+		sources = self.__get_branch_sources()
 		rev = sources[row]
 
 		# Update the model with the selection
-		model.set_revision(rev)
+		self.model.set_revision(rev)
 
 		# Only set the branch name field if we're
 		# branching from a remote branch.
@@ -122,33 +117,28 @@ class GitCreateBranchController(QObserver):
 		if not self.view.remoteBranchRadio.isChecked():
 			return
 
-		base_regex = re.compile('(.*?/)?([^/]+)$')
-		match = base_regex.match(rev)
-		if match:
-			branch = match.group(2)
-			#branch = os.path.basename(rev)
-			if branch == 'HEAD': return
-			model.set_branch(branch)
+		branch = utils.basename(rev)
+		#branch = os.path.basename(rev)
+		if branch == 'HEAD': return
+		self.model.set_local_branch(branch)
 
 	######################################################################
-	# PRIVATE HELPER METHODS
-	######################################################################
 
-	def __display_model(self, model):
+	def __display_model(self, *rest):
 		'''Visualize the current state of the model.'''
-		branch_sources = self.__get_branch_sources(model)
+		branch_sources = self.__get_branch_sources()
 		self.view.branchRootList.clear()
 		for branch_source in branch_sources:
 			self.view.branchRootList.addItem(branch_source)
 	
-	def __get_branch_sources(self, model):
+	def __get_branch_sources(self):
 		'''Get the list of items for populating the branch root list.'''
 
 		if self.view.localBranchRadio.isChecked():
-			return model.get_local_branches()
+			return self.model.get_local_branches()
 
 		elif self.view.remoteBranchRadio.isChecked():
-			return model.get_remote_branches()
+			return self.model.get_remote_branches()
 
 		elif self.view.tagRadio.isChecked():
-			return model.get_tags()
+			return self.model.get_tags()

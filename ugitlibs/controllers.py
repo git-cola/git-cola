@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import commands
 from PyQt4 import QtGui
@@ -9,11 +10,13 @@ import cmds
 import utils
 import qtutils
 import defaults
-from views import GitCommitBrowser
+from views import GitPushDialog
 from views import GitBranchDialog
 from views import GitCreateBranchDialog
+from views import GitCommitBrowser
 from repobrowsercontroller import GitRepoBrowserController
 from createbranchcontroller import GitCreateBranchController
+from pushcontroller import GitPushController
 
 class GitController(QObserver):
 	'''The controller is a mediator between the model and view.
@@ -21,11 +24,6 @@ class GitController(QObserver):
 
 	def __init__(self, model, view):
 		QObserver.__init__(self, model, view)
-
-		# chdir to the root of the git tree.  This is critical
-		# to being able to properly use the git porcelain.
-		cdup = cmds.git_show_cdup()
-		if cdup: os.chdir(cdup)
 
 		# The diff-display context menu
 		self.__menu = None
@@ -105,6 +103,7 @@ class GitController(QObserver):
 				# Push Buttons
 				'stageButton': self.stage_selected,
 				'commitButton': self.commit,
+				'pushButton': self.push,
 				# List Widgets
 				'stagedList': self.diff_staged,
 				'unstagedList': self.diff_unstaged,
@@ -286,7 +285,7 @@ class GitController(QObserver):
 		selection = cursor.selection().toPlainText()
 		qtutils.set_clipboard(selection)
 
-	# use *args to handle being called from different signals
+	# use *rest to handle being called from different signals
 	def diff_staged(self, *rest):
 		self.__staged_diff_in_view = True
 		list_widget = self.view.stagedList
@@ -306,7 +305,7 @@ class GitController(QObserver):
 
 		self.view.displayText.setText(pre + diff)
 
-	# use *args to handle being called from different signals
+	# use *rest to handle being called from different signals
 	def diff_unstaged(self,*rest):
 		self.__staged_diff_in_view = False
 		list_widget = self.view.unstagedList
@@ -372,7 +371,7 @@ class GitController(QObserver):
 		self.inotify_thread.quit()
 		self.inotify_thread.wait()
 
-	def load_commitmsg(self,*args):
+	def load_commitmsg(self,*rest):
 		file = qtutils.open_dialog(self.view,
 			'Load Commit Message...',
 			defaults.DIRECTORY)
@@ -390,7 +389,7 @@ class GitController(QObserver):
 		if not branch: return
 		qtutils.show_command(self.view, cmds.git_rebase(branch))
 
-	def rescan(self, *args):
+	def rescan(self, *rest):
 		'''Populates view widgets with results from "git status."'''
 		# Scan for branch changes
 		self.__set_branch_ui_items()
@@ -410,6 +409,13 @@ class GitController(QObserver):
 
 		# Set the new commit message
 		self.model.set_commitmsg(self.model.get_squash_msg())
+	
+	def push(self,*rest):
+		model = self.model.clone()
+		view = GitPushDialog(self.view)
+		controller = GitPushController(model,view)
+		view.show()
+		view.exec_()
 
 	def show_diffstat(self,*rest):
 		'''Show the diffstat from the latest commit.'''
@@ -478,7 +484,7 @@ class GitController(QObserver):
 		items = self.model.get_unstaged() + self.model.get_untracked()
 		self.__apply_to_list(command, widget, items)
 
-	def unstage_selected(self, *args):
+	def unstage_selected(self, *rest):
 		'''Use "git reset" to remove items from the git index.
 		This is a thin wrapper around __apply_to_list.'''
 		command = cmds.git_reset
@@ -596,12 +602,16 @@ class GitController(QObserver):
 
 	def __set_branch_ui_items(self):
 		'''Sets up items that mention the current branch name.'''
-		current_branch = cmds.git_current_branch()
-		menu_text = 'Browse ' + current_branch + ' branch'
+		branch = cmds.git_current_branch()
+		menu_text = 'Browse ' + branch + ' branch'
 		self.view.browseBranch.setText(menu_text)
 
-		status_text = 'Current branch: ' + current_branch
+		status_text = 'Current branch: ' + branch
 		self.view.statusBar().showMessage(status_text)
+
+		project = self.model.get_project()
+		title = 'ugit: %s (%s branch)' % ( project, branch )
+		self.view.setWindowTitle(title)
 
 	def __start_inotify_thread(self):
 		# Do we have inotify?  If not, return.

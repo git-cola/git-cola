@@ -7,6 +7,7 @@ from CommandDialog import Ui_CommandDialog
 from CommitBrowser import Ui_CommitBrowser
 from BranchDialog import Ui_BranchDialog
 from CreateBranchDialog import Ui_CreateBranchDialog
+from PushDialog import Ui_PushDialog
 
 from syntax import GitSyntaxHighlighter
 
@@ -70,4 +71,11 @@ class GitCreateBranchDialog(Ui_CreateBranchDialog, QtGui.QDialog):
 	def __init__(self, parent=None):
 		QtGui.QDialog.__init__(self, parent)
 		Ui_CreateBranchDialog.__init__(self)
+		self.setupUi(self)
+
+class GitPushDialog(Ui_PushDialog, QtGui.QDialog):
+	'''A dialog for pushing branches.'''
+	def __init__(self, parent=None):
+		QtGui.QDialog.__init__(self, parent)
+		Ui_PushDialog.__init__(self)
 		self.setupUi(self)

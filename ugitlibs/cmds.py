@@ -37,7 +37,10 @@ def run_cmd(cmd, *args, **kwargs):
 	if 'raw' in kwargs and kwargs['raw']:
 		return output
 	else:
-		return output.rstrip()
+		if 'with_status' in kwargs:
+			return child.exitCode(), output.rstrip()
+		else:
+			return output.rstrip()
 
 def git_add(to_add):
 	'''Invokes 'git add' to index the filenames in to_add.'''
@@ -159,7 +162,8 @@ def git_current_branch():
 	for branch in branches:
 		if branch.startswith('* '):
 			return branch.lstrip('* ')
-	raise Exception, 'No current branch.  Detached HEAD?'
+	# Detached head?
+	return '*no branch*'
 
 def git_diff(filename, staged=True, color=False, with_diff_header=False):
 	'''Invokes git_diff on filename.  Passing staged=True adds
@@ -278,9 +282,24 @@ def git_ls_tree(rev):
 			output.append((mode, objtype, sha1, filename,) )
 	return output
 
+def git_push(remote, local_branch, remote_branch, force=False):
+	argv = ['git', 'push', remote]
+	if local_branch == remote_branch:
+		argv.append(local_branch)
+	else:
+		if force and local_branch:
+			argv.append('+%s:%s' % ( local_branch, remote_branch ))
+		else:
+			argv.append('%s:%s' % ( local_branch, remote_branch ))
+
+	return run_cmd(argv, with_status=True)
+
 def git_rebase(newbase):
 	if not newbase: return
 	return run_cmd('git','rebase', newbase)
+
+def git_remote():
+	return run_cmd('git','remote').splitlines()
 
 def git_reset(to_unstage):
 	'''Use 'git reset' to unstage files from the index.'''

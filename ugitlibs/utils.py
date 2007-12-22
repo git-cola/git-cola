@@ -3,6 +3,7 @@ import os
 import re
 import time
 import commands
+import defaults
 from cStringIO import StringIO
 
 KNOWN_FILE_TYPES = {
@@ -56,6 +57,18 @@ def get_directory_icon():
 
 def get_file_icon():
 	return os.path.join(ICONSDIR, 'generic.png')
+
+def basename(path):
+	'''Avoid os.path.basename because we are explicitly
+	parsing git's output, which contains /'s regardless
+	of platform (a.t.m.)
+	'''
+	base_regex = re.compile('(.*?/)?([^/]+)$')
+	match = base_regex.match(path)
+	if match:
+		return match.group(2)
+	else:
+		return pathstr
 
 def shell_quote(*inputs):
 	'''Quote strings so that they can be suitably martialled
@@ -114,6 +127,9 @@ def header(msg):
 		+(' ' *(pad + extra))
 		+ '+:'
 		+ '\n')
+
+def project_name():
+	return os.path.basename(defaults.DIRECTORY)
 
 def slurp(path):
 	file = open(path)
