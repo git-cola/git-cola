@@ -5,45 +5,45 @@ import cmds
 import qtutils
 from qobserver import QObserver
 
-class GitCreateBranchController (QObserver):
-	def __init__ (self, model, view):
-		QObserver.__init__ (self, model, view)
+class GitCreateBranchController(QObserver):
+	def __init__(self, model, view):
+		QObserver.__init__(self, model, view)
 
-		self.model_to_view (model, 'revision', 'revisionLine')
-		self.model_to_view (model, 'branch', 'branchNameLine')
+		self.model_to_view(model, 'revision', 'revisionLine')
+		self.model_to_view(model, 'branch', 'branchNameLine')
 
-		self.add_signals ('textChanged (const QString&)',
+		self.add_signals('textChanged(const QString&)',
 				view.revisionLine,
 				view.branchNameLine)
 
-		self.add_signals ('itemSelectionChanged()',
+		self.add_signals('itemSelectionChanged()',
 				view.branchRootList)
 
-		self.add_signals ('released()',
+		self.add_signals('released()',
 				view.createBranchButton,
 				view.localBranchRadio,
 				view.remoteBranchRadio,
 				view.tagRadio)
 
-		self.add_callbacks (model, {
+		self.add_callbacks(model, {
 				'branchRootList': self.cb_item_changed,
 				'createBranchButton': self.cb_create_branch,
 				'localBranchRadio':
-					lambda(m): self.__display_model (m),
+					lambda(m): self.__display_model(m),
 				'remoteBranchRadio':
-					lambda(m): self.__display_model (m),
+					lambda(m): self.__display_model(m),
 				'tagRadio':
-					lambda(m): self.__display_model (m),
+					lambda(m): self.__display_model(m),
 				})
 
 		model.init_branch_data()
-		self.__display_model (model)
+		self.__display_model(model)
 	
 	######################################################################
 	# CALLBACKS
 	######################################################################
 
-	def cb_create_branch (self, model):
+	def cb_create_branch(self, model):
 		'''This callback is called when the "Create Branch"
 		button is called.'''
 
@@ -52,7 +52,7 @@ class GitCreateBranchController (QObserver):
 		existing_branches = cmds.git_branch()
 
 		if not branch or not revision:
-			qtutils.information (self.view,
+			qtutils.information(self.view,
 				'Missing Data',
 				('Please provide both a branch name and '
 				+ 'revision expression.' ))
@@ -62,7 +62,7 @@ class GitCreateBranchController (QObserver):
 		if branch in existing_branches:
 
 			if self.view.noUpdateRadio.isChecked():
-				qtutils.information (self.view,
+				qtutils.information(self.view,
 					'Warning: Branch Already Exists...',
 					('The "' + branch + '"'
 					+ ' branch already exists and '
@@ -70,17 +70,17 @@ class GitCreateBranchController (QObserver):
 				return
 
 			# Whether we should prompt the user for lost commits
-			commits = cmds.git_rev_list_range (revision, branch)
-			check_branch = bool (commits)
+			commits = cmds.git_rev_list_range(revision, branch)
+			check_branch = bool(commits)
 
 		if check_branch:
 			lines = []
 			for commit in commits:
-				lines.append (commit[0][:8] +'\t'+ commit[1])
+				lines.append(commit[0][:8] +'\t'+ commit[1])
 
-			lost_commits = '\n\t'.join (lines)
+			lost_commits = '\n\t'.join(lines)
 
-			result = qtutils.question (self.view,
+			result = qtutils.question(self.view,
 					'Warning: Commits Will Be Lost...',
 					('Updating the '
 					+ branch + ' branch will lose the '
@@ -96,23 +96,23 @@ class GitCreateBranchController (QObserver):
 		ffwd = self.view.fastForwardUpdateRadio.isChecked()
 		reset = self.view.resetRadio.isChecked()
 
-		output = cmds.git_create_branch (branch, revision, track=track)
-		qtutils.show_command (self.view, output)
+		output = cmds.git_create_branch(branch, revision, track=track)
+		qtutils.show_command(self.view, output)
 		self.view.accept()
 
-	def cb_item_changed (self, model):
+	def cb_item_changed(self, model):
 		'''This callback is called when the item selection changes
 		in the branchRootList.'''
 
 		qlist = self.view.branchRootList
-		( row, selected ) = qtutils.get_selected_row (qlist)
+		( row, selected ) = qtutils.get_selected_row(qlist)
 		if not selected: return
 
-		sources = self.__get_branch_sources (model)
+		sources = self.__get_branch_sources(model)
 		rev = sources[row]
 
 		# Update the model with the selection
-		model.set_revision (rev)
+		model.set_revision(rev)
 
 		# Only set the branch name field if we're
 		# branching from a remote branch.
@@ -122,26 +122,26 @@ class GitCreateBranchController (QObserver):
 		if not self.view.remoteBranchRadio.isChecked():
 			return
 
-		base_regex = re.compile ('(.*?/)?([^/]+)$')
-		match = base_regex.match (rev)
+		base_regex = re.compile('(.*?/)?([^/]+)$')
+		match = base_regex.match(rev)
 		if match:
-			branch = match.group (2)
-			#branch = os.path.basename (rev)
+			branch = match.group(2)
+			#branch = os.path.basename(rev)
 			if branch == 'HEAD': return
-			model.set_branch (branch)
+			model.set_branch(branch)
 
 	######################################################################
 	# PRIVATE HELPER METHODS
 	######################################################################
 
-	def __display_model (self, model):
+	def __display_model(self, model):
 		'''Visualize the current state of the model.'''
-		branch_sources = self.__get_branch_sources (model)
+		branch_sources = self.__get_branch_sources(model)
 		self.view.branchRootList.clear()
 		for branch_source in branch_sources:
-			self.view.branchRootList.addItem (branch_source)
+			self.view.branchRootList.addItem(branch_source)
 	
-	def __get_branch_sources (self, model):
+	def __get_branch_sources(self, model):
 		'''Get the list of items for populating the branch root list.'''
 
 		if self.view.localBranchRadio.isChecked():

@@ -16,7 +16,7 @@ class Observable(object):
 			self.__observers.append(observer)
 	def remove_observer(self, observer):
 		if observer in self.__observers:
-			self.__observers.remove (observer)
+			self.__observers.remove(observer)
 	def notify_observers(self, *attr):
 		if not self.__notify: return
 		for observer in self.__observers:
@@ -48,8 +48,8 @@ class Model(Observable):
 		self.__list_attrs = {}
 		self.__object_attrs = {}
 	
-	def clone (self):
-		return self.__class__().from_dict (self.to_dict())
+	def clone(self):
+		return self.__class__().from_dict(self.to_dict())
 
 	def set_list_attrs(self, list_attrs):
 		self.__list_attrs.update(list_attrs)
@@ -93,7 +93,7 @@ class Model(Observable):
 			return self.__append
 
 		errmsg  = "%s object has no attribute '%s'" \
-			% ( self.__class__, attr )
+			%( self.__class__, attr )
 
 		raise AttributeError, errmsg
 
@@ -117,7 +117,7 @@ class Model(Observable):
 
 		if array is None:
 			errmsg = "%s object has no attribute '%s'" \
-				% ( self.__class__, attr )
+				%( self.__class__, attr )
 			raise AttributeError, errmsg
 
 		for value in values:
@@ -145,7 +145,7 @@ class Model(Observable):
 		    cls = module.__dict__[classname]
 		else:
 		    cls = Model
-		    warning = 'WARNING: %s not found in %s\n' % (
+		    warning = 'WARNING: %s not found in %s\n' %(
 					modname, classname )
 		    sys.stderr.write(warning)
 
@@ -253,11 +253,11 @@ class Model(Observable):
 
 			if type(value) == ListType:
 
-				indent = " " * (Model.__INDENT__ + 4)
+				indent = " " *(Model.__INDENT__ + 4)
 				strings.append(inner + "[")
 				for val in value:
 					stringval = indent + str(val)
-					strings.append (stringval)
+					strings.append(stringval)
 
 				indent = " " * Model.__INDENT__
 				strings.append(indent + "]")
@@ -270,18 +270,18 @@ class Model(Observable):
 		return "\n".join(strings)
 
 
-def is_list(item): return type(item) is ListType or type(item) is TupleType
-def is_dict(item): return type(item) is DictType
+def is_dict(item):
+	return type(item) is DictType
+def is_list(item):
+	return type(item) is ListType or type(item) is TupleType
 def is_atom(item):
-	return (
-		   type(item) in StringTypes
+	return(type(item) in StringTypes
 		or type(item) is BooleanType
 		or type(item) is IntType
 		or type(item) is LongType
 		or type(item) is FloatType
-		or type(item) is ComplexType
-	)
+		or type(item) is ComplexType)
 
 def is_instance(item):
-	return ( issubclass(item.__class__, Model)
+	return( issubclass(item.__class__, Model)
 		or type(item) is InstanceType )

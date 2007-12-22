@@ -3,4 +3,3 @@ def build(bld):
 	pyqt = bld.create_obj('py')
 	pyqt.inst_var = 'PYMODS_UGIT'
 	pyqt.find_sources_in_dirs('.')
-

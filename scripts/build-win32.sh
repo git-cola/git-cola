@@ -23,7 +23,7 @@ mkdir -p $UGITLIBS
 cp README $PREFIX/README.txt
 cp bin/ugit.py $PREFIX
 cp scripts/ugit-*.sh $PREFIX
-cp py/* $UGITLIBS
+cp ugitlibs/* $UGITLIBS
 
 
 if [ -x $PYUIC4 ] && [ ! -z $PYUIC4 ]; then

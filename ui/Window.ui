@@ -412,7 +412,7 @@ retrieve the latest commit message prior to committing.</string>
     <property name="title" >
      <string>File</string>
     </property>
-    <addaction name="loadCommit" />
+    <addaction name="loadCommitMsg" />
     <addaction name="separator" />
     <addaction name="quit" />
    </widget>
@@ -628,10 +628,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="loadCommit" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
+  <action name="loadCommitMsg" >
    <property name="text" >
     <string>Load Commit Message...</string>
    </property>
