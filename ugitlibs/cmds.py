@@ -282,12 +282,16 @@ def git_ls_tree(rev):
 			output.append((mode, objtype, sha1, filename,) )
 	return output
 
-def git_push(remote, local_branch, remote_branch, force=False):
-	argv = ['git', 'push', remote]
+def git_push(remote, local_branch, remote_branch, nonff=False, tags=False):
+	argv = ['git', 'push']
+	if tags:
+		argv.append('--tags')
+	argv.append(remote)
+
 	if local_branch == remote_branch:
 		argv.append(local_branch)
 	else:
-		if force and local_branch:
+		if nonff and local_branch:
 			argv.append('+%s:%s' % ( local_branch, remote_branch ))
 		else:
 			argv.append('%s:%s' % ( local_branch, remote_branch ))

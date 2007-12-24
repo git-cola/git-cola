@@ -79,14 +79,21 @@
       </widget>
      </item>
      <item>
+      <widget class="QCheckBox" name="tagsCheckBox" >
+       <property name="text" >
+        <string>Send Tags</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer>
        <property name="orientation" >
         <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeHint" >
         <size>
-         <width>91</width>
-         <height>26</height>
+         <width>40</width>
+         <height>20</height>
         </size>
        </property>
       </spacer>
