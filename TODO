@@ -1,4 +1,11 @@
-- Add ability to stage/unstage specific hunks
-- inotify support
-- The diff display can be rather slow on large diffs
-- Options dialog + save/restore
+- Options dialog + save/restore (started)
+Status: window positions are currently stored in the
+git repo's config.  Will we ever need a .ugitrc?  Maybe not.
+Otherwise, in progress.
+
+- Allow more fine-grained patch hunk selection.
+Currently, the granularity is per-hunk.
+Most hunks span multiple lines.  Partial-hunk or per-line
+granularity would be a nice option.
+
+- Merge stuff

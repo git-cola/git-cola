@@ -69,13 +69,20 @@ class GitModel(Model):
 		local_branches = cmds.git_branch(remote=False)
 		tags = cmds.git_tag()
 
-		self.set_revision('')
-		self.set_local_branch('')
-		self.set_remote_branch('')
 		self.set_remotes(remotes)
 		self.set_remote_branches(remote_branches)
 		self.set_local_branches(local_branches)
 		self.set_tags(tags)
+		self.set_revision('')
+		self.set_local_branch('')
+		self.set_remote_branch('')
+
+	def set_remote(self,remote):
+		if not remote: return
+		self.set('remote',remote)
+		branches = utils.grep('%s/\S+$' % remote,
+				cmds.git_branch(remote=True))
+		self.set_remote_branches(branches)
 
 	def init_browser_data(self):
 		'''This scans over self.(names, sha1s, types) to generate

@@ -6,10 +6,16 @@ class Observer(object):
 	subjects whenever new data arrives.  This notify() message signifies
 	that an observer should update its internal state/view.'''
 
-	def __init__(self):
+	def __init__(self, model):
+		self.model = model
+		self.model.add_observer(self)
+
 		self.__attribute_adapter = {}
-		self.__subjects = {}
+		self.__subjects = []
 		self.__debug = False
+
+	def __del__(self):
+		self.model.remove_observer(self)
 
 	def set_debug(self, enabled):
 		self.__debug = enabled
@@ -21,40 +27,34 @@ class Observer(object):
 
 			if attr not in self.__subjects: continue
 
-			# The model corresponding to attribute
-			model = self.__subjects[attr]
-
 			# The new value for updating
+			model = self.model
+			notify = model.get_notify()
+			model.set_notify(False)
 			value = model.getattr(attr)
 
-			# Allow mapping from model to observer attributes
+			# Allow lazy model to observer attributes renames
 			if attr in self.__attribute_adapter:
 				attr = self.__attribute_adapter[attr]
 
 			# Call the concrete observer's notification method
-			notify = model.get_notify()
-			model.set_notify(False)
-
-			self.subject_changed(model, attr, value)
+			self.subject_changed(attr, value)
 
 			model.set_notify(notify)
 
 			if not self.__debug: continue
+			print("Objserver::notify("+ pformat(attributes) +"):")
+			print model
 
-			print("Objserver::notify("
-					+ pformat(attributes) + "):")
-			print model, "\n"
-
-
-	def subject_changed(self, model, attr, value):
+	def subject_changed(self, attr, value):
 		'''This method handles updating of the observer/UI.
 		This must be implemented in each concrete observer class.'''
 
 		msg = 'Concrete Observers must override subject_changed().'
 		raise NotImplementedError, msg
 
-	def add_subject(self, model, model_attr):
-		self.__subjects[model_attr] = model
+	def add_subject(self, model_attr):
+		self.__subjects.append(model_attr)
 	
 	def add_attribute_adapter(self, model_attr, observer_attr):
 		self.__attribute_adapter[model_attr] = observer_attr

@@ -82,7 +82,7 @@ class Model(Observable):
 
 		elif realattr.startswith('set'):
 			realattr = self.__translate(attr, 'set')
-			return lambda(value): self.set_and_notify(realattr, value)
+			return lambda(value): self.set(realattr, value)
 
 		elif realattr.startswith('add'):
 			self.__array = self.__translate(attr, 'add')
@@ -97,16 +97,12 @@ class Model(Observable):
 
 		raise AttributeError, errmsg
 
-	def set(self, attr, value):
+	def set(self, attr, value, notify=True):
 		'''Sets a model attribute.'''
 		setattr(self, attr, value)
 		if attr not in self.__attributes:
 		    self.__attributes.append(attr)
-
-	def set_and_notify(self, attr, value):
-		'''Sets an attribute and notifies observers.'''
-		self.set(attr, value)
-		self.notify_observers(attr)
+		if notify: self.notify_observers(attr)
 
 	def __append(self, *values):
 		'''Appends an arbitrary number of values to

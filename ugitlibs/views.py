@@ -1,14 +1,12 @@
 import os
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import QDialog
 from Window import Ui_Window
 from CommandDialog import Ui_CommandDialog
 from CommitBrowser import Ui_CommitBrowser
 from BranchDialog import Ui_BranchDialog
 from CreateBranchDialog import Ui_CreateBranchDialog
 from PushDialog import Ui_PushDialog
-
 from syntax import GitSyntaxHighlighter
 
 class GitView(Ui_Window, QtGui.QMainWindow):
@@ -50,7 +48,7 @@ class GitBranchDialog(Ui_BranchDialog, QtGui.QDialog):
 
 	def getSelectedBranch(self):
 		self.show()
-		if self.exec_() == QDialog.Accepted:
+		if self.exec_() == QtGui.QDialog.Accepted:
 			return self.branches [ self.comboBox.currentIndex() ]
 		else:
 			return None

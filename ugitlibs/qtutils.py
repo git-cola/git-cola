@@ -26,7 +26,7 @@ def get_selected_row(list_widget):
 	selected = item is not None and item.isSelected()
 	return(row, selected)
 
-def get_selection_from_list(list_widget, items):
+def get_selection_list(list_widget, items):
 	'''Returns an array of model items that correspond to
 	the selected QListWidget indices.'''
 	selected = []
@@ -35,6 +35,11 @@ def get_selection_from_list(list_widget, items):
 		if item.isSelected():
 			selected.append(items[idx])
 	return selected
+
+def get_selected_item(list_widget, items):
+	selected = get_selection_list(list_widget, items)
+	if not selected: return None
+	return selected[0]
 
 def open_dialog(parent, title, filename=None):
 	qstr = QFileDialog.getOpenFileName(

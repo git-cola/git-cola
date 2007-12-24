@@ -58,20 +58,23 @@ def get_directory_icon():
 def get_file_icon():
 	return os.path.join(ICONSDIR, 'generic.png')
 
-def grep(pattern, items, indices=[1]):
+def grep(pattern, items, squash=True):
 	regex = re.compile(pattern)
 	matched = []
 	for item in items:
 		match = regex.match(item)
 		if not match: continue
-		if len(indices) == 1:
-			subitems = match.group(indices[0])
+		groups = match.groups()
+		if not groups:
+			subitems = match.group(0)
 		else:
-			subitems = []
-			for idx in indices:
-				subitems.append(match.group(idx))
+			if len(groups) == 1:
+				subitems = groups[0]
+			else:
+				subitems = list(groups)
 		matched.append(subitems)
-	if len(matched) == 1:
+
+	if squash and len(matched) == 1:
 		return matched[0]
 	else:
 		return matched

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import cmds
+import utils
 import qtutils
 from qobserver import QObserver
 
@@ -8,23 +9,18 @@ class GitCreateBranchController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self, model, view)
 
-		self.model_to_view(model, 'revision', 'revisionLine')
-		self.model_to_view(model, 'local_branch', 'branchLine')
-
+		self.model_to_view('revision', 'revisionLine')
+		self.model_to_view('local_branch', 'branchLine')
 		self.add_signals('textChanged(const QString&)',
-				view.revisionLine,
-				view.branchLine)
+				view.revisionLine, view.branchLine)
 
-		self.add_signals('itemSelectionChanged()',
-				view.branchRootList)
-
+		self.add_signals('itemSelectionChanged()', view.branchRootList)
 		self.add_signals('released()',
 				view.createBranchButton,
-				view.localBranchRadio,
-				view.remoteBranchRadio,
+				view.localBranchRadio, view.remoteBranchRadio,
 				view.tagRadio)
 
-		self.add_callbacks(model, {
+		self.add_callbacks({
 				'branchRootList': self.item_changed,
 				'createBranchButton': self.create_branch,
 				'localBranchRadio': self.__display_model,
@@ -33,12 +29,12 @@ class GitCreateBranchController(QObserver):
 				})
 
 		model.init_branch_data()
-		self.__display_model(model)
-	
+		self.__display_model()
+
 	######################################################################
 	# Qt callbacks
 
-	def create_branch(self, *rest):
+	def create_branch(self):
 		'''This callback is called when the "Create Branch"
 		button is called.'''
 
@@ -95,7 +91,7 @@ class GitCreateBranchController(QObserver):
 		qtutils.show_command(self.view, output)
 		self.view.accept()
 
-	def item_changed(self, *rest):
+	def item_changed(self):
 		'''This callback is called when the item selection changes
 		in the branchRootList.'''
 
@@ -111,20 +107,17 @@ class GitCreateBranchController(QObserver):
 
 		# Only set the branch name field if we're
 		# branching from a remote branch.
-		# Assume that we only want to use
-		# the last part of the branch name so that "origin/master"
-		# becomes just "master."  Avoid creating branches named HEAD.
 		if not self.view.remoteBranchRadio.isChecked():
 			return
 
 		branch = utils.basename(rev)
-		#branch = os.path.basename(rev)
 		if branch == 'HEAD': return
+
 		self.model.set_local_branch(branch)
 
 	######################################################################
 
-	def __display_model(self, *rest):
+	def __display_model(self):
 		'''Visualize the current state of the model.'''
 		branch_sources = self.__get_branch_sources()
 		self.view.branchRootList.clear()

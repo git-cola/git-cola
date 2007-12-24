@@ -11,20 +11,12 @@ class GitRepoBrowserController(QObserver):
 		QObserver.__init__(self, model, view)
 
 		view.setWindowTitle('Git Repo Browser')
-
-		self.add_signals('itemSelectionChanged()',
-				view.commitList,)
-
-		self.add_actions(model, 'directory',
-				self.action_directory_changed)
-
-		self.add_callbacks(model, {
-				'commitList': self.item_changed,
-				})
-
-		self.connect(view.commitList,
-				'itemDoubleClicked(QListWidgetItem*)',
-				self.item_double_clicked)
+		self.add_signals('itemSelectionChanged()', view.commitList,)
+		self.add_actions('directory', self.action_directory_changed)
+		self.add_callbacks({ 'commitList': self.item_changed, })
+		self.connect(
+			view.commitList, 'itemDoubleClicked(QListWidgetItem*)',
+			self.item_double_clicked)
 
 		# Start at the root of the tree
 		model.set_directory('')
@@ -32,7 +24,7 @@ class GitRepoBrowserController(QObserver):
 	######################################################################
 	# Actions
 
-	def action_directory_changed(self,*rest):
+	def action_directory_changed(self):
 		'''This is called in response to a change in the the
 		model's directory.'''
 		self.model.init_browser_data()
@@ -141,7 +133,7 @@ class GitRepoBrowserController(QObserver):
 
 	######################################################################
 
-	def __display_items(self,*rest):
+	def __display_items(self):
 		'''This method populates the commitList(aka item list)
 		with the current directories and items.  Directories are
 		always listed first.'''
