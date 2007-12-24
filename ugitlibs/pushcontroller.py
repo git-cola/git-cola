@@ -108,8 +108,12 @@ class GitPushController(QObserver):
 
 	def remotes(self,*rest):
 		widget = self.view.remoteList
-		remotes = self.model.get_remotes()
-		qtutils.set_items(widget,remotes)
+		displayed = []
+		for remote in self.model.get_remotes():
+			url = cmds.git_remote_url(remote)
+			display = '%s (Remote URL: %s)' % (remote, url)
+			displayed.append(display)
+		qtutils.set_items(widget,displayed)
 
 	def remote_branches(self,*rest):
 		widget = self.view.remoteBranchList

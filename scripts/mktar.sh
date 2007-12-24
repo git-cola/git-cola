@@ -8,6 +8,9 @@ DIR=installroot
 if [ -d $DIR ]; then
 	mv $DIR $DIR.old."$$"
 fi
+if [ -e .lock-wscript ]; then
+	mv .lock-wscript .lock-wscript.old
+fi
 ./configure --prefix=$DIR --blddir="$BLD" \
 && make && make install \
 && rsync -avr $DIR/ "$1/" \
@@ -16,6 +19,9 @@ fi
 
 if [ -d $DIR.old.$$ ]; then
 	mv -v $DIR.old.$$ $DIR
+fi
+if [ -e .lock-wscript.old ]; then
+	mv .lock-wscript.old .lock-wscript
 fi
 if [ -e $HOME/htdocs/ugit ]; then
 	mv -v "$FILE" $HOME/htdocs/ugit

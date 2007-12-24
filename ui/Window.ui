@@ -16,14 +16,14 @@
   <widget class="QWidget" name="centralwidget" >
    <layout class="QHBoxLayout" >
     <item>
-     <widget class="QSplitter" name="display_splitter" >
+     <widget class="QSplitter" name="splitter_top" >
       <property name="orientation" >
        <enum>Qt::Vertical</enum>
       </property>
       <property name="handleWidth" >
        <number>2</number>
       </property>
-      <widget class="QSplitter" name="splitter_2" >
+      <widget class="QSplitter" name="splitter_bottom" >
        <property name="orientation" >
         <enum>Qt::Vertical</enum>
        </property>
@@ -319,28 +319,53 @@ retrieve the latest commit message prior to committing.</string>
         </layout>
        </widget>
       </widget>
-      <widget class="QTextEdit" name="displayText" >
-       <property name="font" >
-        <font>
-         <family>Courier</family>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="tabChangesFocus" >
-        <bool>true</bool>
-       </property>
-       <property name="readOnly" >
-        <bool>true</bool>
-       </property>
-       <property name="acceptRichText" >
-        <bool>false</bool>
-       </property>
-       <property name="cursorWidth" >
-        <number>8</number>
-       </property>
-       <property name="textInteractionFlags" >
-        <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::NoTextInteraction|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-       </property>
+      <widget class="QWidget" name="layoutWidget" >
+       <layout class="QVBoxLayout" >
+        <property name="spacing" >
+         <number>2</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="displayLabel" >
+          <property name="frameShape" >
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow" >
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="text" >
+           <string/>
+          </property>
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="displayText" >
+          <property name="font" >
+           <font>
+            <family>Courier</family>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
+          <property name="tabChangesFocus" >
+           <bool>true</bool>
+          </property>
+          <property name="readOnly" >
+           <bool>true</bool>
+          </property>
+          <property name="acceptRichText" >
+           <bool>false</bool>
+          </property>
+          <property name="cursorWidth" >
+           <number>8</number>
+          </property>
+          <property name="textInteractionFlags" >
+           <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::NoTextInteraction|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -361,8 +386,6 @@ retrieve the latest commit message prior to committing.</string>
     </property>
     <addaction name="browseBranch" />
     <addaction name="browseOtherBranch" />
-    <addaction name="separator" />
-    <addaction name="rebase" />
     <addaction name="separator" />
     <addaction name="visualizeCurrent" />
     <addaction name="visualizeAll" />
@@ -442,14 +465,6 @@ retrieve the latest commit message prior to committing.</string>
   <action name="unstageSelected" >
    <property name="text" >
     <string>Unstage Selected</string>
-   </property>
-  </action>
-  <action name="rebase" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
-   <property name="text" >
-    <string>Fetch and Rebase</string>
    </property>
   </action>
   <action name="visualizeCurrent" >

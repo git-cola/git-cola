@@ -77,13 +77,23 @@ class GitController(QObserver):
 				view.visualizeCurrent,
 				view.exportPatches,
 				view.cherryPick,
-				view.loadCommitMsg,)
+				view.loadCommitMsg,
+				view.cut,
+				view.copy,
+				view.paste,
+				view.delete,
+				view.selectAll,
+				view.undo,
+				view.redo,)
 
 		self.add_signals('itemClicked(QListWidgetItem *)',
 				view.stagedList, view.unstagedList,)
 
 		self.add_signals('itemSelectionChanged()',
 				view.stagedList, view.unstagedList,)
+
+		self.add_signals('splitterMoved(int,int)',
+				view.splitter_top, view.splitter_bottom)
 
 		# App cleanup
 		self.connect(qtutils.qapp(),
@@ -129,6 +139,16 @@ class GitController(QObserver):
 				'exportPatches': self.export_patches,
 				'cherryPick': self.cherry_pick,
 				'loadCommitMsg': self.load_commitmsg,
+				'cut': self.cut,
+				'copy': self.copy,
+				'paste': self.paste,
+				'delete': self.delete,
+				'selectAll': self.select_all,
+				'undo': self.undo,
+				'redo': self.redo,
+				# Splitters
+				'splitter_top': self.splitter_top_moved,
+				'splitter_bottom': self.splitter_bottom_moved,
 				})
 
 		# Handle double-clicks in the staged/unstaged lists.
@@ -142,7 +162,12 @@ class GitController(QObserver):
 				'itemDoubleClicked(QListWidgetItem*)',
 				self.unstage_selected )
 
+		# Delegate window move events here
+		self.view.moveEvent = self.move_event
+		self.view.resizeEvent = self.resize_event
+
 		# Initialize the GUI
+		self.__read_config_settings()
 		self.rescan()
 
 		# Setup the inotify server
@@ -280,11 +305,6 @@ class GitController(QObserver):
 		# Copy the sha1 into the clipboard
 		qtutils.set_clipboard(sha1)
 
-	def copy(self):
-		cursor = self.view.displayText.textCursor()
-		selection = cursor.selection().toPlainText()
-		qtutils.set_clipboard(selection)
-
 	# use *rest to handle being called from different signals
 	def diff_staged(self, *rest):
 		self.__staged_diff_in_view = True
@@ -292,18 +312,18 @@ class GitController(QObserver):
 		row, selected = qtutils.get_selected_row(list_widget)
 
 		if not selected:
-			self.view.displayText.setText('')
+			self.__reset_display()
 			return
 
 		filename = self.model.get_staged()[row]
 		diff = cmds.git_diff(filename, staged=True)
 
 		if os.path.exists(filename):
-			pre = utils.header('Staged for commit')
+			self.__set_info('Staged for commit')
 		else:
-			pre = utils.header('Staged for removal')
+			self.__set_info('Staged for removal')
 
-		self.view.displayText.setText(pre + diff)
+		self.view.displayText.setText(diff)
 
 	# use *rest to handle being called from different signals
 	def diff_unstaged(self,*rest):
@@ -311,20 +331,21 @@ class GitController(QObserver):
 		list_widget = self.view.unstagedList
 		row, selected = qtutils.get_selected_row(list_widget)
 		if not selected:
-			self.view.displayText.setText('')
+			self.__reset_display()
 			return
 		filename =(self.model.get_unstaged()
 			+ self.model.get_untracked())[row]
 		if os.path.isdir(filename):
-			pre = utils.header('Untracked directory')
+			self.__set_info('Untracked directory')
 			cmd = 'ls -la %s' % utils.shell_quote(filename)
 			output = commands.getoutput(cmd)
-			self.view.displayText.setText(pre + output )
+			self.view.displayText.setText(output )
 			return
 
 		if filename in self.model.get_unstaged():
 			diff = cmds.git_diff(filename, staged=False)
-			msg = utils.header('Modified, unstaged') + diff
+			msg = diff
+			self.__set_info('Modified, unstaged')
 		else:
 			# untracked file
 			cmd = 'file -b %s' % utils.shell_quote(filename)
@@ -339,10 +360,15 @@ class GitController(QObserver):
 				contents = file.read()
 				file.close()
 
-			msg =(utils.header('Untracked file: ' + file_type)
-				+ contents)
+			self.__set_info('Untracked file: ' + file_type)
+			msg = contents
 
 		self.view.displayText.setText(msg)
+
+	def display_copy(self):
+		cursor = self.view.displayText.textCursor()
+		selection = cursor.selection().toPlainText()
+		qtutils.set_clipboard(selection)
 
 	def export_patches(self,*rest):
 		'''Launches the commit browser and exports the selected
@@ -364,9 +390,13 @@ class GitController(QObserver):
 		self.model.retrieve_latest_commitmsg()
 
 	def last_window_closed(self):
-		'''Cleanup the inotify thread if it exists.'''
+		'''Save config settings and cleanup the any inotify threads.'''
+
+		self.__save_config_settings()
+
 		if not self.inotify_thread: return
 		if not self.inotify_thread.isRunning(): return
+
 		self.inotify_thread.abort = True
 		self.inotify_thread.quit()
 		self.inotify_thread.wait()
@@ -417,7 +447,31 @@ class GitController(QObserver):
 		view.show()
 		view.exec_()
 
-	def show_diffstat(self,*rest):
+	def cut(self,*rest):
+		self.copy()
+		self.delete()
+
+	def copy(self,*rest):
+		cursor = self.view.commitText.textCursor()
+		selection = cursor.selection().toPlainText()
+		qtutils.set_clipboard(selection)
+
+	def delete(self,*rest):
+		self.view.commitText.textCursor().removeSelectedText()
+
+	def paste(self,*rest):
+		self.view.commitText.paste()
+
+	def undo(self,*rest):
+		self.view.commitText.undo()
+
+	def redo(self,*rest):
+		self.view.commitText.redo()
+
+	def select_all(self,*rest):
+		self.view.commitText.selectAll()
+
+	def show_diffstat(self):
 		'''Show the diffstat from the latest commit.'''
 		self.__show_command(cmds.git_diff_stat(), rescan=False)
 
@@ -439,8 +493,6 @@ class GitController(QObserver):
 
 		cursor = self.view.displayText.textCursor()
 		offset = cursor.position()
-		offset -= utils.HEADER_LENGTH + 1
-		if offset < 0: return
 
 		selection = cursor.selection().toPlainText()
 		header, diff = cmds.git_diff(filename,
@@ -506,6 +558,25 @@ class GitController(QObserver):
 		branch = cmds.git_current_branch()
 		os.system('gitk %s &' % utils.shell_quote(branch))
 
+	# These actions monitor window resizes, splitter changes, etc.
+	def move_event(self, event):
+		defaults.X = event.pos().x()
+		defaults.Y = event.pos().y()
+
+	def resize_event(self, event):
+		defaults.WIDTH = event.size().width()
+		defaults.HEIGHT = event.size().height()
+
+	def splitter_top_moved(self,*rest):
+		sizes = self.view.splitter_top.sizes()
+		defaults.SPLITTER_TOP_0 = sizes[0]
+		defaults.SPLITTER_TOP_1 = sizes[1]
+
+	def splitter_bottom_moved(self,*rest):
+		sizes = self.view.splitter_bottom.sizes()
+		defaults.SPLITTER_BOTTOM_0 = sizes[0]
+		defaults.SPLITTER_BOTTOM_1 = sizes[1]
+
 	#####################################################################
 	#
 
@@ -531,9 +602,7 @@ class GitController(QObserver):
 
 	def __menu_about_to_show(self):
 		cursor = self.view.displayText.textCursor()
-		allow_hunk_staging =(not self.__staged_diff_in_view
-				and cursor.position() > utils.HEADER_LENGTH )
-
+		allow_hunk_staging = not self.__staged_diff_in_view
 		self.__stage_hunk_action.setEnabled(allow_hunk_staging)
 
 	def __menu_event(self, event):
@@ -546,7 +615,7 @@ class GitController(QObserver):
 
 		menu = QMenu(self.view)
 		stage = menu.addAction('Stage Hunk(s)', self.stage_hunk)
-		copy = menu.addAction('Copy', self.copy)
+		copy = menu.addAction('Copy', self.display_copy)
 
 		self.connect(menu, 'aboutToShow()', self.__menu_about_to_show)
 
@@ -568,6 +637,18 @@ class GitController(QObserver):
 			icon_file = utils.get_icon(filename)
 
 		return qtutils.create_listwidget_item(filename, icon_file)
+
+	def __read_config_settings(self):
+		(w,h,x,y,
+		st0,st1,
+		sb0,sb1) = utils.parse_geom(cmds.git_config('ugit.geometry'))
+		self.view.resize(w,h)
+		self.view.move(x,y)
+		self.view.splitter_top.setSizes([st0,st1])
+		self.view.splitter_bottom.setSizes([sb0,sb1])
+
+	def __save_config_settings(self):
+		cmds.git_config('ugit.geometry', utils.get_geom())
 
 	def __select_commits(self, revs, summaries):
 		'''Use the GitCommitBrowser to select commits from a list.'''
@@ -612,6 +693,13 @@ class GitController(QObserver):
 		project = self.model.get_project()
 		title = 'ugit: %s (%s branch)' % ( project, branch )
 		self.view.setWindowTitle(title)
+
+	def __reset_display(self):
+		self.view.displayText.setText('')
+		self.__set_info('')
+
+	def __set_info(self,text):
+		self.view.displayLabel.setText(text)
 
 	def __start_inotify_thread(self):
 		# Do we have inotify?  If not, return.

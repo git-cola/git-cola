@@ -298,8 +298,17 @@ def git_rebase(newbase):
 	if not newbase: return
 	return run_cmd('git','rebase', newbase)
 
-def git_remote():
-	return run_cmd('git','remote').splitlines()
+def git_remote(*args):
+	return run_cmd('git','remote',*args).splitlines()
+
+def git_remote_show(remote):
+	info = []
+	for line in git_remote('show',remote):
+		info.append(line.strip())
+	return info
+
+def git_remote_url(remote):
+	return utils.grep('^URL:\s+(.*)', git_remote_show(remote))
 
 def git_reset(to_unstage):
 	'''Use 'git reset' to unstage files from the index.'''

@@ -17,7 +17,6 @@ class GitView(Ui_Window, QtGui.QMainWindow):
 		QtGui.QMainWindow.__init__(self, parent)
 		Ui_Window.__init__(self)
 		self.setupUi(self)
-		self.display_splitter.setSizes([ 300, 400 ])
 		GitSyntaxHighlighter(self.displayText.document())
 
 class GitCommandDialog(Ui_CommandDialog, QtGui.QDialog):

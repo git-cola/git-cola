@@ -58,6 +58,24 @@ def get_directory_icon():
 def get_file_icon():
 	return os.path.join(ICONSDIR, 'generic.png')
 
+def grep(pattern, items, indices=[1]):
+	regex = re.compile(pattern)
+	matched = []
+	for item in items:
+		match = regex.match(item)
+		if not match: continue
+		if len(indices) == 1:
+			subitems = match.group(indices[0])
+		else:
+			subitems = []
+			for idx in indices:
+				subitems.append(match.group(idx))
+		matched.append(subitems)
+	if len(matched) == 1:
+		return matched[0]
+	else:
+		return matched
+
 def basename(path):
 	'''Avoid os.path.basename because we are explicitly
 	parsing git's output, which contains /'s regardless
@@ -127,6 +145,31 @@ def header(msg):
 		+(' ' *(pad + extra))
 		+ '+:'
 		+ '\n')
+
+def parse_geom(geomstr):
+	regex = re.compile('^(\d+)x(\d+)\+(\d+),(\d+) (\d+),(\d+) (\d+),(\d+)')
+	match = regex.match(geomstr)
+	if match:
+		defaults.WIDTH = int(match.group(1))
+		defaults.HEIGHT = int(match.group(2))
+		defaults.X = int(match.group(3))
+		defaults.Y = int(match.group(4))
+		defaults.SPLITTER_TOP_0 = int(match.group(5))
+		defaults.SPLITTER_TOP_1 = int(match.group(6))
+		defaults.SPLITTER_BOTTOM_0 = int(match.group(7))
+		defaults.SPLITTER_BOTTOM_1 = int(match.group(8))
+
+	return (defaults.WIDTH, defaults.HEIGHT,
+		defaults.X, defaults.Y,
+		defaults.SPLITTER_TOP_0, defaults.SPLITTER_TOP_1,
+		defaults.SPLITTER_BOTTOM_0, defaults.SPLITTER_BOTTOM_1)
+
+def get_geom():
+	return '%dx%d+%d,%d %d,%d %d,%d' % (
+		defaults.WIDTH, defaults.HEIGHT,
+		defaults.X, defaults.Y,
+		defaults.SPLITTER_TOP_0, defaults.SPLITTER_TOP_1,
+		defaults.SPLITTER_BOTTOM_0, defaults.SPLITTER_BOTTOM_1)
 
 def project_name():
 	return os.path.basename(defaults.DIRECTORY)

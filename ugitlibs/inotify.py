@@ -19,7 +19,8 @@ class GitNotifier(QThread):
 		self.abort = False
 
 	def notify(self):
-		self.emit( SIGNAL('timeForRescan()') )
+		if not self.abort:
+			self.emit( SIGNAL('timeForRescan()') )
 
 	def run(self):
 		# Only capture those events that git cares about
@@ -46,6 +47,7 @@ class GitNotifier(QThread):
 						wm.add_watch(directory, mask)
 						dirs_seen[directory] = True
 				added_flag = True
+
 			notifier.process_events()
 
 			if notifier.check_events():
