@@ -21,31 +21,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-REQUIREMENTS:
-
-python >= 2.4
-pyqt   >= 4.3
-
-
-INSTALLING UGIT:
-
-	./configure --prefix=/usr
-	make && sudo make install
+Requirements:
+Python 2.4 or newer
+PyQt 4.3 or newer
 
 
-Assuming python is version 2.4, "make install" installs ugit here:
+INSTALLATION
 
-	/usr/local/bin/ugit linked to ugit.py
-	/usr/local/lib/python2.4/site-packages/ugitlibs/
-
-
-For example:
-
-If for some reason ugit.py is unable to locate its
-libraries, add the site-packages directory to your $PYTHONPATH.
-
-PYTHONPATH=/usr/local/lib/python2.4/site-packages
-export PYTHON
+./configure --prefix=/usr
+make && sudo make install
 
 
 WINDOWS SUPPORT
@@ -61,16 +45,18 @@ The ugit gui itself has run successfully on win32.
 2) Get the PyQt4 installer:
 	http://www.riverbankcomputing.co.uk/pyqt/download.php
 
-3) Get git:
-	I've only tested cygwin.
+3) Get git/msysgit:
 	http://git.or.cz/
 	http://git.or.cz/gitwiki/WindowsInstall
 	http://en.wikipedia.org/wiki/Git_(software)#Portability
 
+	NOTE: I've had better results with msysgit than with cygwin+git.  YMMV.
+
 4) Get ugit:
-	Download any of the win32 tarballs here:
-		http://ugit.justroots.com/
-	..and run the ugit-cygwin.sh script.
+	Download the most recent -win32 build:
+	http://ugit.justroots.com/
+
+5) Run the ugit-cygwin.sh or ugit-msysgit.sh scripts
 	The script assumes the you have Python/PyQt4 installed in
 	C:\Python25.  If that is not the case, edit the script accordingly.
 

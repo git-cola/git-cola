@@ -12,8 +12,26 @@ if [ -e .lock-wscript ]; then
 	mv .lock-wscript .lock-wscript.old
 fi
 ./configure --prefix=$DIR --blddir="$BLD" \
-&& make && make install \
-&& rsync -avr $DIR/ "$1/" \
+&& make && make install
+
+if [ $? != 0 ]; then
+	echo "error: $?"
+	exit
+fi
+
+find $DIR -name '*.py[co]' | xargs rm
+PYTHONVER=`python -c 'import sys; sys.stdout.write(sys.version[:3])'`
+
+(
+	cd $DIR/lib;
+	for i in 2.4 2.5; do
+		if [ ! -e python$i ]; then
+			ln -s python$PYTHONVER python$i
+		fi
+	done
+)
+
+rsync -avr $DIR/ "$1/" \
 && tar czf "$FILE" "$1/" \
 && rm -rf $DIR "$1" "$BLD"
 
