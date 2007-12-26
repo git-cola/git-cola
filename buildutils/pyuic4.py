@@ -51,7 +51,7 @@ def setup(env):
 	'''Creates a python hook and registers it with the environment.'''
 	# create the hook action
         cmd_template = '${PYUIC4} ${PYUIC4_FLAGS} ${SRC} -o ${TGT}'
-	Action.simple_action('pyuic4', cmd_template, 'BLUE')
+	Action.simple_action('pyuic4', cmd_template, 'GREEN')
 
 	# register .ui for use with python
 	env.hook('py', 'PYUIC4_EXT', create_pyuic4_tasks)

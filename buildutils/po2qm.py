@@ -15,7 +15,6 @@ class po2qm_obj(Object.genobj):
 	def __init__(self):
 		Object.genobj.__init__(self, 'other')
 		self.inst_var = 'QMDIR'
-		self.prio = 101
 		self.inst_dir = ''
 		self.chmod = 0644
 	
