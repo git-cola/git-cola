@@ -25,7 +25,7 @@ python.pyobj.s_default_ext.append('.ui')
 def set_options(opt):
 	'''Adds the --pyuic4 build option.'''
 	opt.add_option( '--pyuic4', type='string', dest='pyuic4',
-			default='', help='path to the pyuic4 binary')
+			default='', help='path to pyuic4')
 
 def create_pyuic4_tasks(self, node):
 	'''Creates the tasks to generate python files.
@@ -51,8 +51,7 @@ def setup(env):
 	'''Creates a python hook and registers it with the environment.'''
 	# create the hook action
         cmd_template = '${PYUIC4} ${PYUIC4_FLAGS} ${SRC} -o ${TGT}'
-        cmd_color = 'BLUE'
-	Action.simple_action('pyuic4', cmd_template, cmd_color)
+	Action.simple_action('pyuic4', cmd_template, 'BLUE')
 
 	# register .ui for use with python
 	env.hook('py', 'PYUIC4_EXT', create_pyuic4_tasks)
