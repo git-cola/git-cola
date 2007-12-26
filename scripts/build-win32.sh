@@ -1,16 +1,12 @@
 #!/bin/sh
 PYUIC4=`which pyuic4`
 PREFIX=installroot
+BINDIR=$PREFIX/bin
 UGITLIBS=$PREFIX/ugitlibs
+ICONDIR=$PREFIX/share/ugit/icons
+QMDIR=$PREFIX/share/ugit/qm
 cd `dirname $0`
 cd ..
-
-echo
-echo "This is not for mass consumption."
-echo "To create files for distribution, use:"
-echo
-echo "./configure --prefix=/usr --destdir=/my/destdir for that."
-echo
 
 if [ -z $PYUIC4 ] || [ ! -x $PYUIC4 ]; then
 	echo
@@ -20,10 +16,13 @@ if [ -z $PYUIC4 ] || [ ! -x $PYUIC4 ]; then
 fi
 
 mkdir -p $UGITLIBS
+mkdir -p $ICONDIR
+mkdir -p $QMDIR
+
 cp README $PREFIX/README.txt
-cp bin/ugit.py $PREFIX
-cp scripts/ugit-*.sh $PREFIX
+cp bin/* scripts/ugit-*.sh $BINDIR
 cp ugitlibs/* $UGITLIBS
+cp icons/* $ICONDIR
 
 
 if [ -x $PYUIC4 ] && [ ! -z $PYUIC4 ]; then
@@ -32,5 +31,6 @@ if [ -x $PYUIC4 ] && [ ! -z $PYUIC4 ]; then
 	done
 fi
 
-echo "Done building."
-echo "Run 'python $PREFIX/ugit.py' to launch ugit"
+for file in po/*.po; do
+	msgfmt --qt -o $QMDIR/`basename $file .po`.qm $file
+done

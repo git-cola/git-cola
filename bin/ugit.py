@@ -10,7 +10,7 @@ from PyQt4 import QtCore
 
 version = platform.python_version()
 ugit = os.path.realpath(__file__)
-sys.path.insert(0, os.path.dirname(ugit))
+sys.path.insert(0, os.path.dirname(os.path.dirname(ugit)))
 sys.path.insert(0, os.path.join(
 		os.path.dirname(os.path.dirname(ugit)),
 		'lib', 'python' + version[:3],
