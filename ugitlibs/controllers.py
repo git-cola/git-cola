@@ -224,8 +224,6 @@ class GitController(QObserver):
 		'''Starts a cherry-picking session.'''
 		(revs, summaries) = cmds.git_log(all=True)
 		selection, idxs = self.__select_commits(revs, summaries)
-		if not selection: return
-
 		output = cmds.git_cherry_pick(selection)
 		self.__show_command(output)
 
@@ -351,9 +349,12 @@ class GitController(QObserver):
 				cmd = 'hexdump -C %s' % sq_filename
 				contents = commands.getoutput(cmd)
 			else:
-				file = open(filename, 'r')
-				contents = file.read()
-				file.close()
+				if os.path.exists(filename):
+					file = open(filename, 'r')
+					contents = file.read()
+					file.close()
+
+				else: contents = ''
 
 			self.__set_info(self.tr('Untracked, not staged')
 					+ ': ' + file_type)
@@ -399,7 +400,7 @@ class GitController(QObserver):
 
 	def load_commitmsg(self):
 		file = qtutils.open_dialog(self.view,
-			'Load Commit Message...',
+			self.tr('Load Commit Message...'),
 			defaults.DIRECTORY)
 
 		if file:
@@ -431,12 +432,12 @@ class GitController(QObserver):
 		if not self.model.has_squash_msg(): return
 
 		if self.model.get_commitmsg():
-			if not qtutils.question(self.view,
-					'Import Commit Message?',
-					('A commit message from a '
-					+ 'merge-in-progress was found.\n'
-					+ 'Do you want to import it?')):
-				return
+			answer = qtutils.question(self.view,
+				self.tr('Import Commit Message?'),
+				self.tr('A commit message from an in-progress'
+				+ ' merge was found.\nImport it?'))
+
+			if not answer: return
 
 		# Set the new commit message
 		self.model.set_commitmsg(self.model.get_squash_msg())
@@ -528,7 +529,8 @@ class GitController(QObserver):
 		command = cmds.git_add_or_remove
 		widget = self.view.unstagedList
 		items = self.model.get_unstaged() + self.model.get_untracked()
-		self.__apply_to_list(command, widget, items)
+		self.__show_command(
+			self.__apply_to_list(command, widget, items))
 
 	# use *rest to handle being called from different signals
 	def unstage_selected(self, *rest):
@@ -537,7 +539,7 @@ class GitController(QObserver):
 		command = cmds.git_reset
 		widget = self.view.stagedList
 		items = self.model.get_staged()
-		self.__apply_to_list(command, widget, items)
+		self.__show_command(self.__apply_to_list(command, widget, items))
 
 	def unstage_all(self):
 		'''Use "git reset" to remove all items from the git index.'''
@@ -581,8 +583,9 @@ class GitController(QObserver):
 		displays a dialog showing the output of that command,
 		and calls rescan to pickup changes.'''
 		apply_items = qtutils.get_selection_list(widget, items)
-		command(apply_items)
+		output = command(apply_items)
 		self.rescan()
+		return output
 
 	def __browse_branch(self, branch):
 		if not branch: return
@@ -681,8 +684,7 @@ class GitController(QObserver):
 		'''Sets up items that mention the current branch name.'''
 		branch = cmds.git_current_branch()
 
-		status_text = self.tr('Current Branch:')
-		status_text += QtCore.QString(' ' + branch)
+		status_text = self.tr('Current Branch:') + ' ' + branch
 		self.view.statusBar().showMessage(status_text)
 
 		project = self.model.get_project()
@@ -706,15 +708,19 @@ class GitController(QObserver):
 		except ImportError:
 			import platform
 			if platform.system() == 'Linux':
-				msg =('ugit could not find python-inotify.'
-					+ '\nSupport for inotify is disabled.')
+				msg =(self.tr('Unable import pyinotify.\n'
+						+ 'inotify support has been'
+						+ 'disabled.')
+					+ '\n\n')
 
 				plat = platform.platform().lower()
 				if 'debian' in plat or 'ubuntu' in plat:
-					msg += '\n\nHint: sudo apt-get install python-pyinotify'
+					msg += (self.tr('Hint:')
+						+ 'sudo apt-get install'
+						+ ' python-pyinotify')
 
 				qtutils.information(self.view,
-					'inotify support disabled', msg)
+					self.tr('inotify disabled'), msg)
 			return
 
 		self.inotify_thread = GitNotifier(os.getcwd())

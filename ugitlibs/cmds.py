@@ -5,6 +5,10 @@ import utils
 from cStringIO import StringIO
 
 from PyQt4.QtCore import QProcess
+from PyQt4.QtCore import QObject
+import PyQt4.QtGui
+
+_ = PyQt4.QtGui.qApp.tr
 
 # A regex for matching the output of git(log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile('([0-9a-f]+)\W(.*)')
@@ -25,10 +29,10 @@ def run_cmd(cmd, *args, **kwargs):
 	child.start(cmd[0], cmd[1:])
 
 	if(not child.waitForStarted()):
-		raise Exception, "failed to start child"
+		raise Exception, _("failed to start child")
 
 	if(not child.waitForFinished()):
-		raise Exception, "failed to start child"
+		raise Exception, _("failed to start child")
 
 	output = str(child.readAll())
 
@@ -44,17 +48,17 @@ def run_cmd(cmd, *args, **kwargs):
 
 def git_add(to_add):
 	'''Invokes 'git add' to index the filenames in to_add.'''
-	if not to_add: return 'No files to add.'
+	if not to_add: return _('No files to add.')
 	argv = [ 'git', 'add' ]
 	argv.extend(to_add)
-	return 'Running:\t' + quote(argv) + '\n' + run_cmd(argv)
+	return quote(argv) + '\n' + run_cmd(argv)
 
 def git_add_or_remove(to_process):
 	'''Invokes 'git add' to index the filenames in to_process that exist
 	and 'git rm' for those that do not exist.'''
 
 	if not to_process:
-		return 'No files to add or remove.'
+		return _('No files to add or remove.')
 
 	to_add = []
 	output = ''
@@ -63,21 +67,21 @@ def git_add_or_remove(to_process):
 		if os.path.exists(filename):
 			to_add.append(filename)
 	
-	if to_add:
-		output += git_add(to_add) + '\n\n'
+	git_add(to_add)
 
 	if len(to_add) == len(to_process):
 		# to_process only contained unremoved files --
 		# short-circuit the removal checks
-		return output
+		return None
 
-	# Process files to add
+	# Process files to remote
 	argv = [ 'git', 'rm' ]
 	for filename in to_process:
 		if not os.path.exists(filename):
 			argv.append(filename)
 
-	return '%sRunning:\t%s\n%s' %( output, quote(argv), run_cmd(argv) )
+	run_cmd(argv)
+	return None
 
 def git_apply(filename, indexonly=True):
 	argv = ['git', 'apply']
@@ -103,14 +107,14 @@ def git_cat_file(objtype, sha1):
 def git_cherry_pick(revs, commit=False):
 	'''Cherry-picks each revision into the current branch.'''
 	if not revs:
-		return 'No revisions selected.'
+		return _('No revision selected.')
 
 	argv = [ 'git', 'cherry-pick' ]
 	if not commit: argv.append('-n')
 
 	output = []
 	for rev in revs:
-		output.append('Cherry-picking: ' + rev)
+		output.append(_('Cherry picking:') + ' '+ rev)
 		output.append(run_cmd(argv, rev))
 		output.append('')
 	return '\n'.join(output)
@@ -132,7 +136,7 @@ def git_commit(msg, amend, files):
 	if amend: argv.append('--amend')
 	
 	if not files:
-		return 'No files selected for commit.'
+		return _('No files selected.')
 
 	argv.append('--')
 	argv.extend(files)
@@ -146,7 +150,7 @@ def git_commit(msg, amend, files):
 	output = run_cmd(argv)
 	os.unlink(tmpfile)
 
-	return 'Running:\t' + quote(argv) + '\n\n' + output
+	return quote(argv) + '\n\n' + output
 
 def git_create_branch(name, base, track=False):
 	'''Creates a branch starting from base.  Pass track=True
@@ -163,7 +167,7 @@ def git_current_branch():
 		if branch.startswith('* '):
 			return branch.lstrip('* ')
 	# Detached head?
-	return '*no branch*'
+	return _('Detached HEAD')
 
 def git_diff(filename, staged=True, color=False, with_diff_header=False):
 	'''Invokes git_diff on filename.  Passing staged=True adds
@@ -317,12 +321,13 @@ def git_remote_url(remote):
 def git_reset(to_unstage):
 	'''Use 'git reset' to unstage files from the index.'''
 
-	if not to_unstage: return 'No files to reset.'
+	if not to_unstage:
+		return _('No files to reset.')
 
 	argv = [ 'git', 'reset', '--' ]
 	argv.extend(to_unstage)
 
-	return 'Running:\t' + quote(argv) + '\n' + run_cmd(argv)
+	return quote(argv) + '\n' + run_cmd(argv)
 
 def git_rev_list_range(start, end):
 
