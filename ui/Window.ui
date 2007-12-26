@@ -116,7 +116,7 @@ include untracked files if "Show Untracked Files" is checked.</string>
             <item>
              <widget class="QLabel" name="label_2" >
               <property name="text" >
-               <string>Files to Commit</string>
+               <string>Staged Changes (Will Commit)</string>
               </property>
              </widget>
             </item>
@@ -191,7 +191,7 @@ selected files in the "Files to Commit" list.</string>
 from the "Unstaged Changes" list.</string>
              </property>
              <property name="text" >
-              <string>Stage</string>
+              <string>Stage Changed</string>
              </property>
              <property name="flat" >
               <bool>false</bool>
@@ -285,7 +285,7 @@ otherwise only the selected items will be committed.</string>
 the most recent commit is amended with contents of the next commit.</string>
                </property>
                <property name="text" >
-                <string>Amend</string>
+                <string>Amend Last Commit</string>
                </property>
               </widget>
              </item>
@@ -454,22 +454,22 @@ retrieve the latest commit message prior to committing.</string>
   <widget class="QStatusBar" name="statusbar" />
   <action name="browseBranch" >
    <property name="text" >
-    <string>Browse master</string>
+    <string>Browse Current Branch's Files</string>
    </property>
   </action>
   <action name="browseOtherBranch" >
    <property name="text" >
-    <string>Browse Other Branch...</string>
+    <string>Browse Branch Files</string>
    </property>
   </action>
   <action name="unstageSelected" >
    <property name="text" >
-    <string>Unstage Selected</string>
+    <string>Unstage From Commit</string>
    </property>
   </action>
   <action name="visualizeCurrent" >
    <property name="text" >
-    <string>Visualize Current Branch</string>
+    <string>Visualize Current Branch's History</string>
    </property>
    <property name="shortcut" >
     <string>Alt+V</string>
@@ -477,7 +477,7 @@ retrieve the latest commit message prior to committing.</string>
   </action>
   <action name="visualizeAll" >
    <property name="text" >
-    <string>Visualize Entire History</string>
+    <string>Visualize All Branch History</string>
    </property>
    <property name="shortcut" >
     <string>Alt+H</string>
@@ -493,7 +493,7 @@ retrieve the latest commit message prior to committing.</string>
   </action>
   <action name="stageChanged" >
    <property name="text" >
-    <string>Stage All Changed</string>
+    <string>Stage Changed Files To Commit</string>
    </property>
    <property name="shortcut" >
     <string>Alt+A</string>

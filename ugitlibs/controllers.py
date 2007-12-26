@@ -2,6 +2,7 @@
 import os
 import commands
 from PyQt4 import QtGui
+from PyQt4 import QtCore
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QMessageBox
 from PyQt4.QtGui import QMenu
@@ -82,8 +83,7 @@ class GitController(QObserver):
 				view.splitter_top, view.splitter_bottom)
 
 		# App cleanup
-		self.connect(qtutils.qapp(),
-				'lastWindowClosed()',
+		self.connect(QtGui.qApp, 'lastWindowClosed()',
 				self.last_window_closed)
 
 		# These callbacks are called in response to the signals
@@ -157,7 +157,7 @@ class GitController(QObserver):
 		self.__read_config_settings()
 		self.rescan()
 
-		# Setup the inotify server
+		# Setup the inotify watchdog
 		self.__start_inotify_thread()
 
 	#####################################################################
@@ -233,8 +233,16 @@ class GitController(QObserver):
 		'''Sets up data and calls cmds.commit.'''
 		msg = self.model.get_commitmsg()
 		if not msg:
-			error_msg = 'ERROR: No commit message was provided.'
-			self.__show_command(error_msg)
+			error_msg = (""
+				+ "Please supply a commit message.\n"
+				+ "\n"
+				+ "A good commit message has the following format:\n"
+				+ "\n"
+				+ "- First line: Describe in one sentence what you did.\n"
+				+ "- Second line: Blank\n"
+				+ "- Remaining lines: Describe why this change is good.\n")
+
+			self.__show_command(self.tr(error_msg))
 			return
 
 		amend = self.view.amendRadio.isChecked()
@@ -306,9 +314,9 @@ class GitController(QObserver):
 		diff = cmds.git_diff(filename, staged=True)
 
 		if os.path.exists(filename):
-			self.__set_info('Staged for commit')
+			self.__set_info(self.tr('Staged for commit'))
 		else:
-			self.__set_info('Staged for removal')
+			self.__set_info(self.tr('Staged for removal'))
 
 		self.view.displayText.setText(diff)
 
@@ -332,7 +340,7 @@ class GitController(QObserver):
 		if filename in self.model.get_unstaged():
 			diff = cmds.git_diff(filename, staged=False)
 			msg = diff
-			self.__set_info('Modified, unstaged')
+			self.__set_info(self.tr('Modified, not staged'))
 		else:
 			# untracked file
 			cmd = 'file -b %s' % utils.shell_quote(filename)
@@ -347,7 +355,8 @@ class GitController(QObserver):
 				contents = file.read()
 				file.close()
 
-			self.__set_info('Untracked file: ' + file_type)
+			self.__set_info(self.tr('Untracked, not staged')
+					+ ': ' + file_type)
 			msg = contents
 
 		self.view.displayText.setText(msg)
@@ -409,11 +418,15 @@ class GitController(QObserver):
 	# use *rest to handle being called from the checkbox signal
 	def rescan(self, *rest):
 		'''Populates view widgets with results from "git status."'''
-		# Scan for branch changes
-		self.__set_branch_ui_items()
+
+		self.view.statusBar().showMessage(
+			self.tr('Scanning for modified files ...'))
 
 		# Rescan for repo updates
 		self.model.update_status()
+
+		# Scan for branch changes
+		self.__set_branch_ui_items()
 
 		if not self.model.has_squash_msg(): return
 
@@ -427,7 +440,7 @@ class GitController(QObserver):
 
 		# Set the new commit message
 		self.model.set_commitmsg(self.model.get_squash_msg())
-	
+
 	def push(self):
 		model = self.model.clone()
 		view = GitPushDialog(self.view)
@@ -596,8 +609,9 @@ class GitController(QObserver):
 		if self.__menu: return
 
 		menu = QMenu(self.view)
-		stage = menu.addAction('Stage Hunk(s)', self.stage_hunk)
-		copy = menu.addAction('Copy', self.display_copy)
+		stage = menu.addAction(self.tr('Stage Hunk For Commit'),
+				self.stage_hunk)
+		copy = menu.addAction(self.tr('Copy'), self.display_copy)
 
 		self.connect(menu, 'aboutToShow()', self.__menu_about_to_show)
 
@@ -636,7 +650,7 @@ class GitController(QObserver):
 		'''Use the GitCommitBrowser to select commits from a list.'''
 		if not summaries:
 			msg = 'ERROR: No commits exist in this branch.'''
-			self.__show_command(output=msg)
+			self.__show_command(self.tr(msg))
 			return([],[])
 
 		browser = GitCommitBrowser(self.view)
@@ -666,14 +680,14 @@ class GitController(QObserver):
 	def __set_branch_ui_items(self):
 		'''Sets up items that mention the current branch name.'''
 		branch = cmds.git_current_branch()
-		menu_text = 'Browse ' + branch + ' branch'
-		self.view.browseBranch.setText(menu_text)
 
-		status_text = 'Current branch: ' + branch
+		status_text = self.tr('Current Branch:')
+		status_text += QtCore.QString(' ' + branch)
 		self.view.statusBar().showMessage(status_text)
 
 		project = self.model.get_project()
-		title = 'ugit: %s (%s branch)' % ( project, branch )
+		title = '%s [%s]' % ( project, branch )
+
 		self.view.setWindowTitle(title)
 
 	def __reset_display(self):

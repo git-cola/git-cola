@@ -25,7 +25,7 @@ def configure(conf):
 	env = conf.env
 	env['PYMODS'] = pymod(env['PREFIX'])
 	env['PYMODS_UGIT'] = os.path.join(env['PYMODS'], 'ugitlibs')
-	env['ICONS'] = os.path.join(env['PYMODS_UGIT'], 'icons')
+	env['ICONS'] = os.path.join(env['PREFIX'], 'share', 'ugit', 'icons')
 	env['BIN'] = os.path.join(env['PREFIX'], 'bin')
 
 	if not conf.check_tool('python'):

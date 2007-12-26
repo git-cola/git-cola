@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 import os
 import re
 import time
@@ -19,7 +20,19 @@ KNOWN_FILE_TYPES = {
 	'image':     'image.png',
 }
 
-ICONSDIR = os.path.join(os.path.dirname(__file__), 'icons')
+PREFIX = os.path.realpath(os.path.dirname(os.path.dirname(sys.argv[0])))
+ICONSDIR = os.path.join(PREFIX, 'share', 'ugit', 'icons')
+QMDIR = os.path.join(PREFIX, 'share', 'ugit', 'qm')
+
+def get_qm_for_locale(locale):
+	regex = re.compile(r'([^\.])+\..*$')
+	match = regex.match(locale)
+	if match:
+		locale = match.group(1)
+
+	basename = locale.split('_')[0]
+
+	return os.path.join(QMDIR, basename +'.qm')
 
 def ident_file_type(filename):
 	'''Returns an icon based on the contents of filename.'''
@@ -132,6 +145,7 @@ def shell_quote(*inputs):
 				input = input[:-2]
 		ret.append(input)
 	return ' '.join(ret)
+
 
 def get_tmp_filename():
 	# Allow TMPDIR/TMP with a fallback to /tmp

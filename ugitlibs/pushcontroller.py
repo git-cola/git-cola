@@ -58,12 +58,12 @@ class GitPushController(QObserver):
 		remote = self.model.get_remote()
 		local_branch = self.model.get_local_branch()
 		remote_branch = self.model.get_remote_branch()
-		nonff = self.view.allowNonFFCheckBox.isChecked()
+		ffwd = self.view.allowFFOnlyCheckBox.isChecked()
 		tags = self.view.tagsCheckBox.isChecked()
 
 		status, output = cmds.git_push(remote,
 					local_branch, remote_branch,
-					nonff=nonff, tags=tags)
+					ffwd=ffwd, tags=tags)
 
 		qtutils.show_command(self.view, output)
 		if not status:

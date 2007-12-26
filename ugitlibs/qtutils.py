@@ -56,8 +56,6 @@ def dir_dialog(parent, title, directory):
 			parent, title, directory)
 	return str(directory)
 
-def qapp(): return QtGui.qApp
-
 def question(parent, title, message, default=True):
 	'''Launches a QMessageBox question with the provided title and message.
 	Passing "default=False" will make "No" the default choice.'''
@@ -75,8 +73,8 @@ def question(parent, title, message, default=True):
 	return result == QMessageBox.Yes
 
 def set_clipboard(text):
-	qapp().clipboard().setText(text, QClipboard.Clipboard)
-	qapp().clipboard().setText(text, QClipboard.Selection)
+	QtGui.qApp.clipboard().setText(text, QClipboard.Clipboard)
+	QtGui.qApp.clipboard().setText(text, QClipboard.Selection)
 
 def set_items(widget, items):
 	widget.clear()

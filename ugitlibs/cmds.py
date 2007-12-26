@@ -44,7 +44,7 @@ def run_cmd(cmd, *args, **kwargs):
 
 def git_add(to_add):
 	'''Invokes 'git add' to index the filenames in to_add.'''
-	if not to_add: return 'ERROR: No files to add.'
+	if not to_add: return 'No files to add.'
 	argv = [ 'git', 'add' ]
 	argv.extend(to_add)
 	return 'Running:\t' + quote(argv) + '\n' + run_cmd(argv)
@@ -54,7 +54,7 @@ def git_add_or_remove(to_process):
 	and 'git rm' for those that do not exist.'''
 
 	if not to_process:
-		return 'ERROR: No files to add or remove.'
+		return 'No files to add or remove.'
 
 	to_add = []
 	output = ''
@@ -103,7 +103,7 @@ def git_cat_file(objtype, sha1):
 def git_cherry_pick(revs, commit=False):
 	'''Cherry-picks each revision into the current branch.'''
 	if not revs:
-		return 'ERROR: No revisions selected for cherry-picking.'
+		return 'No revisions selected.'
 
 	argv = [ 'git', 'cherry-pick' ]
 	if not commit: argv.append('-n')
@@ -132,7 +132,7 @@ def git_commit(msg, amend, files):
 	if amend: argv.append('--amend')
 	
 	if not files:
-		return 'ERROR: No files selected for commit.'
+		return 'No files selected for commit.'
 
 	argv.append('--')
 	argv.extend(files)
@@ -282,7 +282,7 @@ def git_ls_tree(rev):
 			output.append((mode, objtype, sha1, filename,) )
 	return output
 
-def git_push(remote, local_branch, remote_branch, nonff=False, tags=False):
+def git_push(remote, local_branch, remote_branch, ffwd=True, tags=False):
 	argv = ['git', 'push']
 	if tags:
 		argv.append('--tags')
@@ -291,7 +291,7 @@ def git_push(remote, local_branch, remote_branch, nonff=False, tags=False):
 	if local_branch == remote_branch:
 		argv.append(local_branch)
 	else:
-		if nonff and local_branch:
+		if not ffwd and local_branch:
 			argv.append('+%s:%s' % ( local_branch, remote_branch ))
 		else:
 			argv.append('%s:%s' % ( local_branch, remote_branch ))
@@ -317,7 +317,7 @@ def git_remote_url(remote):
 def git_reset(to_unstage):
 	'''Use 'git reset' to unstage files from the index.'''
 
-	if not to_unstage: return 'ERROR: No files to reset.'
+	if not to_unstage: return 'No files to reset.'
 
 	argv = [ 'git', 'reset', '--' ]
 	argv.extend(to_unstage)

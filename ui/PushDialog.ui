@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Git Push</string>
+   <string>Push</string>
   </property>
   <layout class="QVBoxLayout" >
    <item>
@@ -18,7 +18,7 @@
      <item>
       <widget class="QLabel" name="label" >
        <property name="text" >
-        <string>Remote</string>
+        <string>Remote:</string>
        </property>
       </widget>
      </item>
@@ -72,16 +72,16 @@
    <item>
     <layout class="QHBoxLayout" >
      <item>
-      <widget class="QCheckBox" name="allowNonFFCheckBox" >
+      <widget class="QCheckBox" name="allowFFOnlyCheckBox" >
        <property name="text" >
-        <string>Allow Non-Fastforward Push</string>
+        <string>Fast Forward Only</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QCheckBox" name="tagsCheckBox" >
        <property name="text" >
-        <string>Send Tags</string>
+        <string>Include tags</string>
        </property>
       </widget>
      </item>

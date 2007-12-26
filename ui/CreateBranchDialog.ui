@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Create Branch...</string>
+   <string>Create Branch</string>
   </property>
   <layout class="QVBoxLayout" >
    <property name="spacing" >
@@ -45,7 +45,7 @@
    <item>
     <widget class="QGroupBox" name="branchRootGroupBox" >
      <property name="title" >
-      <string>Branch Root</string>
+      <string>Starting Revision</string>
      </property>
      <layout class="QVBoxLayout" >
       <property name="spacing" >
@@ -92,7 +92,7 @@
         <item>
          <widget class="QRadioButton" name="remoteBranchRadio" >
           <property name="text" >
-           <string>Remote Tracking Branch</string>
+           <string>Tracking Branch</string>
           </property>
          </widget>
         </item>
@@ -167,7 +167,7 @@
           <item>
            <widget class="QLabel" name="label_2" >
             <property name="text" >
-             <string>Update Existing Branch?</string>
+             <string>Update Existing Branch:</string>
             </property>
            </widget>
           </item>
