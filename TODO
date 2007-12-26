@@ -1,11 +1,18 @@
-- Options dialog + save/restore (started)
-Status: window positions are currently stored in the
-git repo's config.  Will we ever need a .ugitrc?  Maybe not.
++ Add unstage selected hunk(s)
+
+Allow fine-grained patch hunk selection.
+Patches contain multiple hunks.  The current
+to-stage/to-unstage selection granularity is
+per-hunk.  Most hunks span multiple lines,
+so having line granularity would be a nice option.
+
++ Merge guis
+
++ Font stuff
+
++ Options dialog + save/restore (started)
+
+Window positions are currently stored in the
+git repo's config.
+Will we ever need a .ugitrc?  Maybe not.
 Otherwise, in progress.
-
-- Allow more fine-grained patch hunk selection.
-Currently, the granularity is per-hunk.
-Most hunks span multiple lines.  Partial-hunk or per-line
-granularity would be a nice option.
-
-- Merge stuff
