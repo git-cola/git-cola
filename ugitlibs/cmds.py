@@ -81,10 +81,10 @@ def git_add_or_remove(to_process):
 	run_cmd(argv)
 	return None
 
-def git_apply(filename, indexonly=True):
+def git_apply(filename, indexonly=True, reverse=False):
 	argv = ['git', 'apply']
-	if indexonly:
-		argv.extend(['--index', '--cached'])
+	if reverse: argv.append('--reverse')
+	if indexonly: argv.extend(['--index', '--cached'])
 	argv.append(filename)
 	return run_cmd(argv)
 
@@ -120,7 +120,7 @@ def git_cherry_pick(revs, commit=False):
 def git_checkout(rev):
 	return run_cmd('git','checkout', rev)
 
-def git_commit(msg, amend, files):
+def git_commit(msg, amend=False):
 	'''Creates a git commit.  'commit_all' triggers the -a
 	flag to 'git commit.'  'amend' triggers --amend.
 	'files' is a list of files to use for commits without -a.'''
@@ -130,15 +130,8 @@ def git_commit(msg, amend, files):
 	# then you probably have bigger problems to worry about.
 	tmpfile = utils.get_tmp_filename()
 	argv = [ 'git', 'commit', '-F', tmpfile ]
-
 	if amend: argv.append('--amend')
 	
-	if not files:
-		return 'No files selected.'
-
-	argv.append('--')
-	argv.extend(files)
-
 	# Create the commit message file
 	file = open(tmpfile, 'w')
 	file.write(msg)
@@ -167,18 +160,17 @@ def git_current_branch():
 	# Detached head?
 	return 'Detached HEAD'
 
-def git_diff(filename, staged=True, color=False, with_diff_header=False):
-	'''Invokes git_diff on filename.  Passing staged=True adds
-	diffs the index against HEAD(i.e. --cached).'''
+def git_diff(filename, color=False,
+		cached=True, with_diff_header=False,
+		reverse=False):
+	"Invokes git_diff on a filepath."
 
-	deleted = False
 	argv = [ 'git', 'diff']
-	if color:
-		argv.append('--color')
+	if reverse: argv.append('-R')
+	if color: argv.append('--color')
+	if cached: argv.append('--cached')
 
-	if staged:
-		deleted = not os.path.exists(filename)
-		argv.append('--cached')
+	deleted = cached and not os.path.exists(filename)
 
 	argv.append('--')
 	argv.append(filename)

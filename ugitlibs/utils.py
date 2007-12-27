@@ -7,6 +7,21 @@ import commands
 import defaults
 from cStringIO import StringIO
 
+PREFIX = os.path.realpath(os.path.dirname(os.path.dirname(sys.argv[0])))
+QMDIR = os.path.join(PREFIX, 'share', 'ugit', 'qm')
+
+def get_qm_for_locale(locale):
+	regex = re.compile(r'([^\.])+\..*$')
+	match = regex.match(locale)
+	if match:
+		locale = match.group(1)
+
+	basename = locale.split('_')[0]
+
+	return os.path.join(QMDIR, basename +'.qm')
+
+
+ICONSDIR = os.path.join(PREFIX, 'share', 'ugit', 'icons')
 KNOWN_FILE_TYPES = {
 	'ascii c':   'c.png',
 	'python':    'script.png',
@@ -19,20 +34,6 @@ KNOWN_FILE_TYPES = {
 	'byte':      'binary.png',
 	'image':     'image.png',
 }
-
-PREFIX = os.path.realpath(os.path.dirname(os.path.dirname(sys.argv[0])))
-ICONSDIR = os.path.join(PREFIX, 'share', 'ugit', 'icons')
-QMDIR = os.path.join(PREFIX, 'share', 'ugit', 'qm')
-
-def get_qm_for_locale(locale):
-	regex = re.compile(r'([^\.])+\..*$')
-	match = regex.match(locale)
-	if match:
-		locale = match.group(1)
-
-	basename = locale.split('_')[0]
-
-	return os.path.join(QMDIR, basename +'.qm')
 
 def ident_file_type(filename):
 	'''Returns an icon based on the contents of filename.'''
@@ -209,7 +210,7 @@ def write(path, contents):
 
 
 class DiffParser(object):
-	def __init__(self, diff):
+	def __init__(self, header, diff):
 		self.__diff_header = re.compile('^@@\s[^@]+\s@@.*')
 
 		self.__idx = -1
@@ -217,8 +218,16 @@ class DiffParser(object):
 		self.__diff_spans = []
 		self.__diff_offsets = []
 
+		self.diffs = []
+		self.header = header
 		self.parse_diff(diff)
 	
+	def write(self,filename,which):
+		diff = self.diffs[which]
+		file = open(filename,'w')
+		file.write(self.header + os.linesep + diff + os.linesep)
+		file.close()
+
 	def get_diffs(self):
 		return self.__diffs
 	
@@ -228,6 +237,12 @@ class DiffParser(object):
 	def get_offsets(self):
 		return self.__diff_offsets
 	
+	def set_diff_to_offset(self, offset):
+		self.diffs = [ self.get_diff_for_offset(offset) ]
+
+	def set_diffs_to_range(self, start, end):
+		self.diffs = self.get_diffs_for_range(start,end)
+
 	def get_diff_for_offset(self, offset):
 		for idx, diff_offset in enumerate(self.__diff_offsets):
 			if offset < diff_offset:
@@ -237,7 +252,6 @@ class DiffParser(object):
 	def get_diffs_for_range(self, start, end):
 		diffs = []
 		for idx, span in enumerate(self.__diff_spans):
-
 			has_end_of_diff = start >= span[0] and start < span[1]
 			has_all_of_diff = start <= span[0] and end >= span[1]
 			has_head_of_diff = end >= span[0] and end <= span[1]
@@ -249,8 +263,6 @@ class DiffParser(object):
 			if selected_diff:
 				diff = os.linesep.join(self.__diffs[idx])
 				diffs.append(diff)
-
-
 		return diffs
 
 	def parse_diff(self, diff):

@@ -321,7 +321,7 @@ class GitController(QObserver):
 			return
 
 		if filename in self.model.get_unstaged():
-			diff = cmds.git_diff(filename, staged=False)
+			diff = cmds.git_diff(filename, cached=False)
 			msg = diff
 			self.__set_info(self.tr('Modified, not staged'))
 		else:
@@ -454,53 +454,52 @@ class GitController(QObserver):
 		'''Show the diffstat from the latest commit.'''
 		self.__show_command(cmds.git_diff_stat(), rescan=False)
 
+	def __has_selection(self):
+		cursor = self.view.displayText.textCursor()
+		offset = cursor.position()
+		selection = cursor.selection().toPlainText()
+		num_selected_lines = selection.count(os.linesep)
+		has_selection = (selection and selection.count(os.linesep) > 0)
+		return offset, has_selection, selection
+
+	def process_diff_selection(self,items,widget,cached=True):
+		filename = qtutils.get_selected_item(widget, items)
+		if not filename: return
+		header, diff = cmds.git_diff(filename,
+					with_diff_header=True,
+					cached=cached,
+					reverse=cached)
+		parser = utils.DiffParser(header,diff)
+		offset, has_selection, selection = self.__has_selection()
+		if has_selection:
+			start = diff.index(selection)
+			end = start + len(selection)
+			parser.set_diffs_to_range(start, end)
+		else:
+			parser.set_diff_to_offset(offset)
+		if not parser.diffs: return
+		output = ''
+		for idx, diff in enumerate(parser.diffs):
+			tmpfile = utils.get_tmp_filename()
+			parser.write(tmpfile,idx)
+			output += self.model.apply_diff(tmpfile)
+			os.unlink(tmpfile)
+		self.rescan()
+
+	def unstage_hunk(self, cached=True):
+		self.process_diff_selection(
+				self.model.get_staged(),
+				self.view.stagedList, cached=True)
+
+	def stage_hunk(self):
+		self.process_diff_selection(
+				self.model.get_unstaged(),
+				self.view.unstagedList, cached=False)
+
 	def stage_changed(self):
 		'''Stage all changed files for commit.'''
 		output = cmds.git_add(self.model.get_unstaged())
 		self.__show_command(output)
-
-	def stage_hunk(self):
-
-		list_widget = self.view.unstagedList
-		row, selected = qtutils.get_selected_row(list_widget)
-		if not selected: return
-
-		filename = self.model.get_uncommitted_item(row)
-
-		if not os.path.exists(filename): return
-		if os.path.isdir(filename): return
-
-		cursor = self.view.displayText.textCursor()
-		offset = cursor.position()
-
-		selection = cursor.selection().toPlainText()
-		header, diff = cmds.git_diff(filename,
-					with_diff_header=True,
-					staged=False)
-		parser = utils.DiffParser(diff)
-
-		num_selected_lines = selection.count(os.linesep)
-		has_selection =(selection
-				and selection.count(os.linesep) > 0)
-
-		if has_selection:
-			start = diff.index(selection)
-			end = start + len(selection)
-			diffs = parser.get_diffs_for_range(start, end)
-		else:
-			diffs = [ parser.get_diff_for_offset(offset) ]
-
-		if not diffs: return
-
-		for diff in diffs:
-			tmpfile = utils.get_tmp_filename()
-			file = open(tmpfile, 'w')
-			file.write(header + os.linesep + diff + os.linesep)
-			file.close()
-			self.model.apply_diff(tmpfile)
-			os.unlink(tmpfile)
-
-		self.rescan()
 
 	def stage_untracked(self):
 		'''Stage all untracked files for commit.'''
@@ -513,9 +512,8 @@ class GitController(QObserver):
 		This is a thin wrapper around __apply_to_list.'''
 		command = cmds.git_add_or_remove
 		widget = self.view.unstagedList
-		items = self.model.get_unstaged() + self.model.get_untracked()
-		self.__show_command(
-			self.__apply_to_list(command, widget, items))
+		items = self.model.get_all_unstaged()
+		self.__show_command(self.__apply_to_list(command,widget,items))
 
 	# use *rest to handle being called from different signals
 	def unstage_selected(self, *rest):
@@ -583,9 +581,15 @@ class GitController(QObserver):
 		view.exec_()
 
 	def __menu_about_to_show(self):
-		cursor = self.view.displayText.textCursor()
+		item = qtutils.get_selected_item(self.view.unstagedList,
+				self.model.get_all_unstaged())
+		is_tracked = item not in self.model.get_untracked()
+
 		allow_hunk_staging = not self.__staged_diff_in_view
-		self.__stage_hunk_action.setEnabled(allow_hunk_staging)
+		self.__stage_hunk_action.setEnabled(
+				allow_hunk_staging and is_tracked)
+
+		self.__unstage_hunk_action.setEnabled(self.__staged_diff_in_view)
 
 	def __menu_event(self, event):
 		self.__menu_setup()
@@ -598,11 +602,14 @@ class GitController(QObserver):
 		menu = QMenu(self.view)
 		stage = menu.addAction(self.tr('Stage Hunk For Commit'),
 				self.stage_hunk)
+		unstage = menu.addAction(self.tr('Unstage Hunk From Commit'),
+				self.unstage_hunk)
 		copy = menu.addAction(self.tr('Copy'), self.display_copy)
 
 		self.connect(menu, 'aboutToShow()', self.__menu_about_to_show)
 
 		self.__stage_hunk_action = stage
+		self.__unstage_hunk_action = unstage
 		self.__copy_action = copy
 		self.__menu = menu
 

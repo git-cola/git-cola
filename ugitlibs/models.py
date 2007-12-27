@@ -168,9 +168,6 @@ class GitModel(Model):
 	def apply_diff(self, filename):
 		return cmds.git_apply(filename)
 
-	def get_uncommitted_item(self, row):
-		return(self.get_unstaged() + self.get_untracked())[row]
-	
 	def __get_squash_msg_path(self):
 		return os.path.join(os.getcwd(), '.git', 'SQUASH_MSG')
 
