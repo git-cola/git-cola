@@ -4,13 +4,18 @@ import cmds
 from PyQt4.QtCore import QThread, SIGNAL
 from pyinotify import ProcessEvent
 from pyinotify import WatchManager, Notifier, EventsCodes
+import time
 
 class FileSysEvent(ProcessEvent):
 	def __init__(self, parent):
 		ProcessEvent.__init__(self)
 		self.parent = parent
+		self.last_event_time = time.time()
 	def process_default(self, event):
-		self.parent.notify()
+		# Prevent notificaiton floods
+		if time.time() - self.last_event_time >= 1.0:
+			self.parent.notify()
+		self.last_event_time = time.time()
 
 class GitNotifier(QThread):
 	def __init__(self, path):
