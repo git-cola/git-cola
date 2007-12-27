@@ -220,13 +220,13 @@ class GitController(QObserver):
 		(revs, summaries) = cmds.git_log(all=True)
 		selection, idxs = self.__select_commits(revs, summaries)
 		output = cmds.git_cherry_pick(selection)
-		self.__show_command(output)
+		self.__show_command(self.tr(output))
 
 	def commit(self):
 		'''Sets up data and calls cmds.commit.'''
 		msg = self.model.get_commitmsg()
 		if not msg:
-			error_msg = (""
+			error_msg = self.tr(""
 				+ "Please supply a commit message.\n"
 				+ "\n"
 				+ "A good commit message has the following format:\n"
@@ -235,7 +235,7 @@ class GitController(QObserver):
 				+ "- Second line: Blank\n"
 				+ "- Remaining lines: Describe why this change is good.\n")
 
-			self.__show_command(self.tr(error_msg))
+			self.__show_command(error_msg)
 			return
 
 		amend = self.view.amendRadio.isChecked()
@@ -337,7 +337,7 @@ class GitController(QObserver):
 		filename =(self.model.get_unstaged()
 			+ self.model.get_untracked())[row]
 		if os.path.isdir(filename):
-			self.__set_info('Untracked directory')
+			self.__set_info(self.tr('Untracked directory'))
 			cmd = 'ls -la %s' % utils.shell_quote(filename)
 			output = commands.getoutput(cmd)
 			self.view.displayText.setText(output )
@@ -660,8 +660,8 @@ class GitController(QObserver):
 	def __select_commits(self, revs, summaries):
 		'''Use the GitCommitBrowser to select commits from a list.'''
 		if not summaries:
-			msg = 'ERROR: No commits exist in this branch.'''
-			self.__show_command(self.tr(msg))
+			msg = self.tr('ERROR: No commits exist in this branch.')
+			self.__show_command(msg)
 			return([],[])
 
 		browser = GitCommitBrowser(self.view)

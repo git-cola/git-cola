@@ -8,8 +8,6 @@ from PyQt4.QtCore import QProcess
 from PyQt4.QtCore import QObject
 import PyQt4.QtGui
 
-_ = PyQt4.QtGui.qApp.tr
-
 # A regex for matching the output of git(log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile('([0-9a-f]+)\W(.*)')
 
@@ -29,10 +27,10 @@ def run_cmd(cmd, *args, **kwargs):
 	child.start(cmd[0], cmd[1:])
 
 	if(not child.waitForStarted()):
-		raise Exception, _("failed to start child")
+		raise Exception("failed to start child")
 
 	if(not child.waitForFinished()):
-		raise Exception, _("failed to start child")
+		raise Exception("failed to start child")
 
 	output = str(child.readAll())
 
@@ -48,7 +46,7 @@ def run_cmd(cmd, *args, **kwargs):
 
 def git_add(to_add):
 	'''Invokes 'git add' to index the filenames in to_add.'''
-	if not to_add: return _('No files to add.')
+	if not to_add: return 'No files to add.'
 	argv = [ 'git', 'add' ]
 	argv.extend(to_add)
 	return quote(argv) + '\n' + run_cmd(argv)
@@ -58,7 +56,7 @@ def git_add_or_remove(to_process):
 	and 'git rm' for those that do not exist.'''
 
 	if not to_process:
-		return _('No files to add or remove.')
+		return 'No files to add or remove.'
 
 	to_add = []
 	output = ''
@@ -107,14 +105,14 @@ def git_cat_file(objtype, sha1):
 def git_cherry_pick(revs, commit=False):
 	'''Cherry-picks each revision into the current branch.'''
 	if not revs:
-		return _('No revision selected.')
+		return 'No revision selected.'
 
 	argv = [ 'git', 'cherry-pick' ]
 	if not commit: argv.append('-n')
 
 	output = []
 	for rev in revs:
-		output.append(_('Cherry picking:') + ' '+ rev)
+		output.append('Cherry picking:' + ' '+ rev)
 		output.append(run_cmd(argv, rev))
 		output.append('')
 	return '\n'.join(output)
@@ -136,7 +134,7 @@ def git_commit(msg, amend, files):
 	if amend: argv.append('--amend')
 	
 	if not files:
-		return _('No files selected.')
+		return 'No files selected.'
 
 	argv.append('--')
 	argv.extend(files)
@@ -167,7 +165,7 @@ def git_current_branch():
 		if branch.startswith('* '):
 			return branch.lstrip('* ')
 	# Detached head?
-	return _('Detached HEAD')
+	return 'Detached HEAD'
 
 def git_diff(filename, staged=True, color=False, with_diff_header=False):
 	'''Invokes git_diff on filename.  Passing staged=True adds
@@ -322,7 +320,7 @@ def git_reset(to_unstage):
 	'''Use 'git reset' to unstage files from the index.'''
 
 	if not to_unstage:
-		return _('No files to reset.')
+		return 'No files to reset.'
 
 	argv = [ 'git', 'reset', '--' ]
 	argv.extend(to_unstage)

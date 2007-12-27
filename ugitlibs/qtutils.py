@@ -1,3 +1,4 @@
+from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtGui import QClipboard
 from PyQt4.QtGui import QFileDialog
@@ -86,8 +87,8 @@ def show_command(parent, output):
 	dialog.show()
 	dialog.exec_()
 
-def tr(text):
-	trtext = unicode(QtGui.qApp.tr(text))
+def tr(txt):
+	trtext = unicode(QtGui.qApp.tr(txt))
 	if trtext.endswith('@@verb'):
 		trtext = trtext.replace('@@verb','')
 	if trtext.endswith('@@noun'):
