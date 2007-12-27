@@ -10,7 +10,7 @@ class GitRepoBrowserController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self, model, view)
 
-		view.setWindowTitle('Git Repo Browser')
+		view.setWindowTitle('File Browser')
 		self.add_signals('itemSelectionChanged()', view.commitList,)
 		self.add_actions('directory', self.action_directory_changed)
 		self.add_callbacks({ 'commitList': self.item_changed, })
@@ -109,7 +109,7 @@ class GitRepoBrowserController(QObserver):
 			nameguess = os.path.join(defaults.DIRECTORY, name)
 
 			filename = qtutils.save_dialog(self.view,
-					'Git File Export', nameguess)
+					self.tr('Save'), nameguess)
 			if not filename: return
 
 			defaults.DIRECTORY = os.path.dirname(filename)

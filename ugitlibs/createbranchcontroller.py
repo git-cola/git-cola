@@ -44,20 +44,19 @@ class GitCreateBranchController(QObserver):
 
 		if not branch or not revision:
 			qtutils.information(self.view,
-				'Missing Data',
-				('Please provide both a branch name and '
-				+ 'revision expression.' ))
+				self.tr('Missing Data'),
+				self.tr('Please provide both a branch'
+					+ ' name and revision expression.' ))
 			return
 
 		check_branch = False
 		if branch in existing_branches:
 
 			if self.view.noUpdateRadio.isChecked():
+				msg = self.tr("Branch '%s' already exists.")
+				msg = unicode(msg) % branch
 				qtutils.information(self.view,
-					'Warning: Branch Already Exists...',
-					('The "' + branch + '"'
-					+ ' branch already exists and '
-					+ '"Update Existing Branch?" = "No."'))
+						self.tr('warning'), msg)
 				return
 
 			# Whether we should prompt the user for lost commits
@@ -65,19 +64,27 @@ class GitCreateBranchController(QObserver):
 			check_branch = bool(commits)
 
 		if check_branch:
-			lines = []
-			for commit in commits:
-				lines.append(commit[0][:8] +'\t'+ commit[1])
+			msg = self.tr("Resetting '%s' to '%s' will lose the following commits:")
+			lines = [ unicode(msg) % (branch, revision) ]
 
-			lost_commits = '\n\t'.join(lines)
+			for idx, commit in enumerate(commits):
+				subject = commit[1][0:min(len(commit[1]),16)]
+				if len(subject) < len(commit[1]):
+					subject += '...'
+				lines.append('\t' + commit[0][:8]
+						+'\t' + subject)
+				if idx >= 5:
+					skip = len(commits) - 5
+					lines.append('\t(%d skipped)' % skip)
+					break
+
+			lines.extend([
+				unicode(self.tr("Recovering lost commits may not be easy.")),
+				unicode(self.tr("Reset '%s'?")) % branch
+				])
 
 			result = qtutils.question(self.view,
-					'Warning: Commits Will Be Lost...',
-					('Updating the '
-					+ branch + ' branch will lose the '
-					+ 'following commits:\n\n\t'
-					+ lost_commits + '\n\n'
-					+ 'Continue anyways?'))
+					self.tr('warning'), '\n'.join(lines))
 
 			if not result: return
 
