@@ -30,6 +30,7 @@ class GitModel(Model):
 			'staged': [],
 			'unstaged': [],
 			'untracked': [],
+			'all_unstaged': [], # unstaged+untracked
 
 			#####################################################
 			# Used by the create branch dialog
@@ -227,6 +228,9 @@ class GitModel(Model):
 			if untracked not in self.get_untracked():
 				self.add_untracked(untracked)
 
+		# Provide a convenient representation of the unstaged list
+		self.set_all_unstaged(self.get_unstaged() + self.get_untracked())
+
 		# Re-enable notifications and emit changes
 		self.set_notify(notify_enabled)
-		self.notify_observers('staged', 'unstaged')
+		self.notify_observers('all_unstaged', 'staged')

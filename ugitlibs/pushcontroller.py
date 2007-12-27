@@ -10,6 +10,7 @@ class GitPushController(QObserver):
 		QObserver.__init__(self,model,view)
 
 		self.model_to_view('remote',  'remoteText')
+		self.model_to_view('remotes',  'remoteList')
 		self.model_to_view('local_branch', 'localBranchText')
 		self.model_to_view('remote_branch', 'remoteBranchText')
 		self.model_to_view('local_branches', 'localBranchList')
@@ -69,12 +70,12 @@ class GitPushController(QObserver):
 		if not status:
 			self.view.accept()
 
-	def remotes(self):
-		widget = self.view.remoteList
+	def remotes(self, widget):
 		displayed = []
 		for remote in self.model.get_remotes():
 			url = cmds.git_remote_url(remote)
-			display = '%s (Remote URL: %s)' % (remote, url)
+			display = '%s\t(%s %s)' \
+				% (remote, unicode(self.tr('URL:')), url)
 			displayed.append(display)
 		qtutils.set_items(widget,displayed)
 

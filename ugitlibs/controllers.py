@@ -40,12 +40,12 @@ class GitController(QObserver):
 		# Binds a specific model attribute to a view widget,
 		# and vice versa.
 		self.model_to_view('commitmsg', 'commitText')
-		self.model_to_view('unstaged_list', 'unstagedList')
+		self.model_to_view('staged', 'stagedList')
+		self.model_to_view('all_unstaged', 'unstagedList')
 
 		# When a model attribute changes, this runs a specific action
 		self.add_actions('staged', self.action_staged)
-		self.add_actions('unstaged', self.action_unstaged)
-		self.add_actions('untracked', self.action_unstaged)
+		self.add_actions('all_unstaged', self.action_all_unstaged)
 
 		# Routes signals for multiple widgets to our callbacks
 		# defined below.
@@ -162,24 +162,19 @@ class GitController(QObserver):
 
 	#####################################################################
 	# Actions
+	# Notify callbacks from the model
 
-	def action_staged(self):
-		'''This action is called when the model's staged list
-		changes.  This is a thin wrapper around update_list_widget.'''
-		list_widget = self.view.stagedList
-		staged = self.model.get_staged()
-		self.__update_list_widget(list_widget, staged, True)
+	def action_staged(self, widget):
+		self.__update_listwidget(widget,
+				self.model.get_staged(), staged=True)
 
-	def action_unstaged(self):
-		'''This action is called when the model's unstaged list
-		changes.  This is a thin wrapper around update_list_widget.'''
-		list_widget = self.view.unstagedList
-		unstaged = self.model.get_unstaged()
-		self.__update_list_widget(list_widget, unstaged, False)
+	def action_all_unstaged(self, widget):
+		self.__update_listwidget(widget,
+				self.model.get_unstaged(), staged=False)
 
 		if self.view.untrackedCheckBox.isChecked():
-			untracked = self.model.get_untracked()
-			self.__update_list_widget(list_widget, untracked,
+			self.__update_listwidget(widget,
+					self.model.get_untracked(),
 					append=True,
 					staged=False,
 					untracked=True)
@@ -249,10 +244,21 @@ class GitController(QObserver):
 		files = []
 		if commit_all:
 			files = self.model.get_staged()
+			if not files:
+				errmsg = self.tr(""
+					+ "No changes to commit.\n"
+					+ "\n"
+					+ "You must stage at least 1 file before you can commit.\n")
+				self.__show_command(errmsg)
+				return
 		else:
 			wlist = self.view.stagedList
 			mlist = self.model.get_staged()
 			files = qtutils.get_selection_list(wlist, mlist)
+			if not files:
+				errmsg = self.tr('No files selected.')
+				self.__show_command(errmsg)
+				return
 		# Perform the commit
 		output = cmds.git_commit(msg, amend, files)
 
@@ -301,8 +307,8 @@ class GitController(QObserver):
 	# use *rest to handle being called from different signals
 	def diff_staged(self, *rest):
 		self.__staged_diff_in_view = True
-		list_widget = self.view.stagedList
-		row, selected = qtutils.get_selected_row(list_widget)
+		widget = self.view.stagedList
+		row, selected = qtutils.get_selected_row(widget)
 
 		if not selected:
 			self.__reset_display()
@@ -321,11 +327,13 @@ class GitController(QObserver):
 	# use *rest to handle being called from different signals
 	def diff_unstaged(self,*rest):
 		self.__staged_diff_in_view = False
-		list_widget = self.view.unstagedList
-		row, selected = qtutils.get_selected_row(list_widget)
+		widget = self.view.unstagedList
+
+		row, selected = qtutils.get_selected_row(widget)
 		if not selected:
 			self.__reset_display()
 			return
+
 		filename =(self.model.get_unstaged()
 			+ self.model.get_untracked())[row]
 		if os.path.isdir(filename):
@@ -735,13 +743,13 @@ class GitController(QObserver):
 		qtutils.show_command(self.view, output)
 		if rescan: self.rescan()
 
-	def __update_list_widget(self, list_widget, items,
+	def __update_listwidget(self, widget, items,
 			staged, untracked=False, append=False):
 		'''A helper method to populate a QListWidget with the
 		contents of modelitems.'''
 		if not append:
-			list_widget.clear()
+			widget.clear()
 		for item in items:
 			qitem = self.__file_to_widget_item(item,
 					staged, untracked)
-			list_widget.addItem(qitem)
+			widget.addItem(qitem)
