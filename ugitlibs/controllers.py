@@ -453,6 +453,10 @@ class GitController(QObserver):
 		'''Show the diffstat from the latest commit.'''
 		self.__show_command(cmds.git_diff_stat(), rescan=False)
 
+
+	#####################################################################
+	# diff gui
+
 	def __diff_selection(self):
 		cursor = self.view.displayText.textCursor()
 		offset = cursor.position()
@@ -507,9 +511,6 @@ class GitController(QObserver):
 					os.unlink(tmpfile)
 		self.rescan()
 
-	#####################################################################
-	# diff gui
-
 	def stage_hunk(self):
 		self.process_diff_selection(
 				self.model.get_unstaged(),
@@ -536,6 +537,8 @@ class GitController(QObserver):
 				cached=True,
 				selected=True)
 
+	# #######################################################################
+	# end diff gui
 
 	def stage_changed(self):
 		'''Stage all changed files for commit.'''

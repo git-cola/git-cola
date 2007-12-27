@@ -219,8 +219,6 @@ class DiffParser(object):
 		self.__diffs = []
 		self.__diff_spans = []
 		self.__diff_offsets = []
-		self.__adds = []
-		self.__deletes = []
 
 		self.start = None
 		self.end = None
