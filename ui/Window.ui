@@ -72,6 +72,22 @@ in the unstaged changes list.</string>
               </property>
              </widget>
             </item>
+            <item>
+             <spacer>
+              <property name="orientation" >
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeType" >
+               <enum>QSizePolicy::MinimumExpanding</enum>
+              </property>
+              <property name="sizeHint" >
+               <size>
+                <width>20</width>
+                <height>21</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
            </layout>
           </item>
           <item>
@@ -113,27 +129,37 @@ include untracked files if "Show Untracked Files" is checked.</string>
             <property name="spacing" >
              <number>0</number>
             </property>
+            <property name="bottomMargin" >
+             <number>0</number>
+            </property>
             <item>
              <widget class="QLabel" name="label_2" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text" >
                <string>Staged Changes (Will Commit)</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="commitAllCheckBox" >
-              <property name="toolTip" >
-               <string>Whether to commit all staged files.
-Disabling this causes ugit to only commit the
-selected files in the "Files to Commit" list.</string>
+             <spacer>
+              <property name="orientation" >
+               <enum>Qt::Vertical</enum>
               </property>
-              <property name="text" >
-               <string>Commit All</string>
+              <property name="sizeType" >
+               <enum>QSizePolicy::MinimumExpanding</enum>
               </property>
-              <property name="checked" >
-               <bool>true</bool>
+              <property name="sizeHint" >
+               <size>
+                <width>20</width>
+                <height>21</height>
+               </size>
               </property>
-             </widget>
+             </spacer>
             </item>
            </layout>
           </item>
@@ -322,7 +348,7 @@ retrieve the latest commit message prior to committing.</string>
       <widget class="QWidget" name="layoutWidget" >
        <layout class="QVBoxLayout" >
         <property name="spacing" >
-         <number>2</number>
+         <number>0</number>
         </property>
         <item>
          <widget class="QLabel" name="displayLabel" >
@@ -403,8 +429,7 @@ retrieve the latest commit message prior to committing.</string>
     <addaction name="unstageAll" />
     <addaction name="unstageSelected" />
     <addaction name="separator" />
-    <addaction name="commitAll" />
-    <addaction name="commitSelected" />
+    <addaction name="commit" />
     <addaction name="separator" />
     <addaction name="exportPatches" />
     <addaction name="cherryPick" />
@@ -598,20 +623,12 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+R</string>
    </property>
   </action>
-  <action name="commitSelected" >
+  <action name="commit" >
    <property name="text" >
-    <string>Commit Selected</string>
+    <string>Commit</string>
    </property>
    <property name="shortcut" >
     <string>Alt+S</string>
-   </property>
-  </action>
-  <action name="commitAll" >
-   <property name="text" >
-    <string>Commit All</string>
-   </property>
-   <property name="shortcut" >
-    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="setCommitMessage" >
@@ -689,7 +706,6 @@ retrieve the latest commit message prior to committing.</string>
   <tabstop>signOffButton</tabstop>
   <tabstop>commitButton</tabstop>
   <tabstop>pushButton</tabstop>
-  <tabstop>commitAllCheckBox</tabstop>
   <tabstop>untrackedCheckBox</tabstop>
   <tabstop>newCommitRadio</tabstop>
   <tabstop>amendRadio</tabstop>

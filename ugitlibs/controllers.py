@@ -60,8 +60,7 @@ class GitController(QObserver):
 				view.rescan,
 				view.createBranch, view.checkoutBranch,
 				view.rebaseBranch, view.deleteBranch,
-				view.commitAll, view.commitSelected,
-				view.setCommitMessage,
+				view.setCommitMessage, view.commit,
 				view.stageChanged, view.stageUntracked,
 				view.stageSelected, view.unstageAll,
 				view.unstageSelected,
@@ -111,8 +110,7 @@ class GitController(QObserver):
 				'deleteBranch': self.branch_delete,
 				'checkoutBranch': self.checkout_branch,
 				'rebaseBranch': self.rebase,
-				'commitAll': self.commit_all,
-				'commitSelected': self.commit_selected,
+				'commit': self.commit,
 				'stageChanged': self.stage_changed,
 				'stageUntracked': self.stage_untracked,
 				'stageSelected': self.stage_selected,
@@ -238,45 +236,24 @@ class GitController(QObserver):
 			self.__show_command(error_msg)
 			return
 
-		amend = self.view.amendRadio.isChecked()
-		commit_all = self.view.commitAllCheckBox.isChecked()
+		files = self.model.get_staged()
+		if not files:
+			errmsg = self.tr(""
+				+ "No changes to commit.\n"
+				+ "\n"
+				+ "You must stage at least 1 file before you can commit.\n")
+			self.__show_command(errmsg)
+			return
 
-		files = []
-		if commit_all:
-			files = self.model.get_staged()
-			if not files:
-				errmsg = self.tr(""
-					+ "No changes to commit.\n"
-					+ "\n"
-					+ "You must stage at least 1 file before you can commit.\n")
-				self.__show_command(errmsg)
-				return
-		else:
-			wlist = self.view.stagedList
-			mlist = self.model.get_staged()
-			files = qtutils.get_selection_list(wlist, mlist)
-			if not files:
-				errmsg = self.tr('No files selected.')
-				self.__show_command(errmsg)
-				return
 		# Perform the commit
-		output = cmds.git_commit(msg, amend, files)
+		output = cmds.git_commit(msg,
+				amend=self.view.amendRadio.isChecked())
 
 		# Reset state
 		self.view.newCommitRadio.setChecked(True)
 		self.view.amendRadio.setChecked(False)
 		self.model.set_commitmsg('')
 		self.__show_command(output)
-
-	def commit_all(self):
-		'''Sets the commit-all checkbox and runs commit.'''
-		self.view.commitAllCheckBox.setChecked(True)
-		self.commit()
-
-	def commit_selected(self):
-		'''Unsets the commit-all checkbox and runs commit.'''
-		self.view.commitAllCheckBox.setChecked(False)
-		self.commit()
 
 	def commit_sha1_selected(self, browser, revs):
 		'''This callback is called when a commit browser's
@@ -315,7 +292,7 @@ class GitController(QObserver):
 			return
 
 		filename = self.model.get_staged()[row]
-		diff = cmds.git_diff(filename, staged=True)
+		diff = cmds.git_diff(filename, cached=True)
 
 		if os.path.exists(filename):
 			self.__set_info(self.tr('Staged for commit'))
