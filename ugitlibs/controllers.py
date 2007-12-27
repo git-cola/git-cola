@@ -132,8 +132,8 @@ class GitController(QObserver):
 				'undo': self.view.commitText.undo,
 				'redo': self.redo,
 				# Splitters
-				'splitter_top': self.splitter_top_moved,
-				'splitter_bottom': self.splitter_bottom_moved,
+				'splitter_top': self.splitter_top_event,
+				'splitter_bottom': self.splitter_bottom_event,
 				})
 
 		# Handle double-clicks in the staged/unstaged lists.
@@ -546,12 +546,12 @@ class GitController(QObserver):
 		defaults.WIDTH = event.size().width()
 		defaults.HEIGHT = event.size().height()
 
-	def splitter_top_moved(self,*rest):
+	def splitter_top_event(self,*rest):
 		sizes = self.view.splitter_top.sizes()
 		defaults.SPLITTER_TOP_0 = sizes[0]
 		defaults.SPLITTER_TOP_1 = sizes[1]
 
-	def splitter_bottom_moved(self,*rest):
+	def splitter_bottom_event(self,*rest):
 		sizes = self.view.splitter_bottom.sizes()
 		defaults.SPLITTER_BOTTOM_0 = sizes[0]
 		defaults.SPLITTER_BOTTOM_1 = sizes[1]
