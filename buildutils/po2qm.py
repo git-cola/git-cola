@@ -45,6 +45,7 @@ def setup(env):
 
 def detect(conf):
 	if not conf.find_program('msgfmt', var='MSGFMT'):
+		Params.fatal('Error: missing msgfmt executable.')
 		return False
 	conf.env['MSGFMT_FLAGS'] = '--qt'
 	conf.env['MSGFMT_EXT'] = ['.po']

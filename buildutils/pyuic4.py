@@ -17,6 +17,7 @@ NOTES:
 import os
 
 import Action
+import Object
 import Params
 
 import python
@@ -54,7 +55,7 @@ def setup(env):
 	Action.simple_action('pyuic4', cmd_template, 'GREEN')
 
 	# register .ui for use with python
-	env.hook('py', 'PYUIC4_EXT', create_pyuic4_tasks)
+	Object.hook('py', 'PYUIC4_EXT', create_pyuic4_tasks)
 
 def detect(conf):
 	env = conf.env
@@ -80,6 +81,7 @@ def detect(conf):
 
 	if not pyuic4:
 		conf.check_message('pyuic4 binary', '(not found)', 0)
+		Params.fatal('Error: missing PyQt4 development tools.')
 		return False
 
 	# Set the path to pyuic4

@@ -28,14 +28,9 @@ def configure(conf):
 	env['ICONS'] = os.path.join(env['PREFIX'], 'share', 'ugit', 'icons')
 	env['BIN'] = os.path.join(env['PREFIX'], 'bin')
 
-	if not conf.check_tool('python'):
-		Params.fatal('Error: could not find Python.')
-
-	if not conf.check_tool('pyuic4', 'buildutils'):
-		Params.fatal('Error: missing PyQt4 development tools.')
-
-	if not conf.check_tool('po2qm', 'buildutils'):
-		Params.fatal('Error: missing msgfmt executable.')
+	conf.check_tool('python')
+	conf.check_tool('pyuic4', 'buildutils')
+	conf.check_tool('po2qm', 'buildutils')
 
 #############################################################################
 # Build
