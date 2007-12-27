@@ -8,6 +8,7 @@ from BranchDialog import Ui_BranchDialog
 from CreateBranchDialog import Ui_CreateBranchDialog
 from PushDialog import Ui_PushDialog
 from syntax import GitSyntaxHighlighter
+import qtutils
 
 class GitView(Ui_Window, QtGui.QMainWindow):
 	'''The main ugit interface.'''
@@ -16,6 +17,9 @@ class GitView(Ui_Window, QtGui.QMainWindow):
 		Ui_Window.__init__(self)
 		self.setupUi(self)
 		GitSyntaxHighlighter(self.displayText.document())
+		# Qt does not handle noun/verb support
+		self.commitButton.setText(qtutils.tr('Commit@@verb'))
+		self.menuCommit.setTitle(qtutils.tr('Commit@@verb'))
 
 class GitCommandDialog(Ui_CommandDialog, QtGui.QDialog):
 	'''A simple dialog to display command output.'''
