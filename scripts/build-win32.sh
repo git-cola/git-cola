@@ -15,6 +15,7 @@ if [ -z $PYUIC4 ] || [ ! -x $PYUIC4 ]; then
 	echo
 fi
 
+mkdir -p $BINDIR
 mkdir -p $UGITLIBS
 mkdir -p $ICONDIR
 mkdir -p $QMDIR
