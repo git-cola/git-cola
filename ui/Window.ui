@@ -83,7 +83,7 @@ in the unstaged changes list.</string>
               <property name="sizeHint" >
                <size>
                 <width>20</width>
-                <height>21</height>
+                <height>22</height>
                </size>
               </property>
              </spacer>
@@ -156,7 +156,7 @@ include untracked files if "Show Untracked Files" is checked.</string>
               <property name="sizeHint" >
                <size>
                 <width>20</width>
-                <height>21</height>
+                <height>22</height>
                </size>
               </property>
              </spacer>
