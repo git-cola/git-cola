@@ -5,11 +5,6 @@ from PyQt4.QtGui import QFont
 from PyQt4.QtGui import QSyntaxHighlighter
 from PyQt4.QtGui import QTextCharFormat
 
-BEGIN = 0
-ADD = 1
-REMOVE = 2
-TEXT = 3
-
 class GitSyntaxHighlighter(QSyntaxHighlighter):
 
 	def __init__(self, doc):
