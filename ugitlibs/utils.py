@@ -71,6 +71,11 @@ def get_directory_icon():
 def get_file_icon():
 	return os.path.join(ICONSDIR, 'generic.png')
 
+def fork(*argv):
+	pid = os.fork()
+	if pid: return
+	os.execlp(*argv)
+
 def grep(pattern, items, squash=True):
 	regex = re.compile(pattern)
 	matched = []

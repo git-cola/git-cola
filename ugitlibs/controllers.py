@@ -556,12 +556,11 @@ class GitController(QObserver):
 
 	def viz_all(self):
 		'''Visualizes the entire git history using gitk.'''
-		os.system('gitk --all &')
+		utils.fork('gitk','--all')
 
 	def viz_current(self):
 		'''Visualizes the current branch's history using gitk.'''
-		branch = cmds.git_current_branch()
-		os.system('gitk %s &' % utils.shell_quote(branch))
+		utils.fork('gitk', cmds.git_current_branch())
 
 	# These actions monitor window resizes, splitter changes, etc.
 	def move_event(self, event):
