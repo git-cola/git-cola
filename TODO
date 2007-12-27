@@ -1,11 +1,3 @@
-+ Add unstage selected hunk(s)
-
-Allow fine-grained patch hunk selection.
-Patches contain multiple hunks.  The current
-to-stage/to-unstage selection granularity is
-per-hunk.  Most hunks span multiple lines,
-so having line granularity would be a nice option.
-
 + Merge guis
 
 + Font stuff

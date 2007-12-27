@@ -211,25 +211,102 @@ def write(path, contents):
 
 class DiffParser(object):
 	def __init__(self, header, diff):
-		self.__diff_header = re.compile('^@@\s[^@]+\s@@.*')
+
+		self.__header_pattern = re.compile('^@@ -(\d+),(\d+) \+(\d+),(\d+) @@.*')
+		self.__headers = []
 
 		self.__idx = -1
 		self.__diffs = []
 		self.__diff_spans = []
 		self.__diff_offsets = []
+		self.__adds = []
+		self.__deletes = []
 
+		self.start = None
+		self.end = None
+		self.offset = None
 		self.diffs = []
+		self.selected = []
 		self.header = header
 		self.parse_diff(diff)
-	
-	def write(self,filename,which):
-		diff = self.diffs[which]
-		file = open(filename,'w')
-		file.write(self.header + os.linesep + diff + os.linesep)
-		file.close()
+
+	def write_diff(self,filename,which,selected=False,noop=False):
+		if not noop and which < len(self.diffs):
+			diff = self.diffs[which]
+			write(filename, self.header + os.linesep + diff + os.linesep)
+			return True
+		else:
+			return False
 
 	def get_diffs(self):
 		return self.__diffs
+
+	def get_diff_subset(self, diff, start, end):
+		newdiff = []
+		diffguts = os.linesep.join(self.__diffs[diff])
+
+		offset = self.__diff_spans[diff][0]
+
+		local_offset = 0
+
+		adds = 0
+		deletes = 0
+
+		for line in self.__diffs[diff]:
+
+			line_start = offset + local_offset
+			local_offset += len(line) + 1
+			line_end = offset + local_offset
+
+			# |line1 |line2 |line3|
+			#   |selection----|
+			#   '-start   '-end
+
+			# selection has head of diff (line3)
+			if start < line_start and end > line_start and end < line_end:
+				newdiff.append(line)
+				if line.startswith('+'):
+					adds += 1
+				if line.startswith('-'):
+					deletes += 1
+			# selection has all of diff (line2)
+			elif start <= line_start and end >= line_end:
+				newdiff.append(line)
+				if line.startswith('+'):
+					adds += 1
+				if line.startswith('-'):
+					deletes += 1
+			# selection has tail of diff (line1)
+			elif start >= line_start and start < line_end:
+				newdiff.append(line)
+				if line.startswith('+'):
+					adds += 1
+				if line.startswith('-'):
+					deletes += 1
+			else:
+				# Don't add new lines unless selected
+				if line.startswith('+'):
+					continue
+				elif line.startswith('-'):
+					# Don't remove lines unless selected
+					newdiff.append(' ' + line[1:])
+				else:
+					newdiff.append(line)
+
+		new_count = self.__headers[diff][1] + adds - deletes
+
+		if new_count != self.__headers[diff][3]:
+			header = '@@ -%d,%d +%d,%d @@' % (
+							self.__headers[diff][0],
+							self.__headers[diff][1],
+							self.__headers[diff][2],
+							new_count)
+			newdiff[0] = header
+
+		return (self.header
+				+ os.linesep
+				+ os.linesep.join(newdiff)
+				+ os.linesep)
 	
 	def get_spans(self):
 		return self.__diff_spans
@@ -238,19 +315,24 @@ class DiffParser(object):
 		return self.__diff_offsets
 	
 	def set_diff_to_offset(self, offset):
-		self.diffs = [ self.get_diff_for_offset(offset) ]
+		self.offset = offset
+		self.diffs, self.selected = self.get_diff_for_offset(offset)
 
 	def set_diffs_to_range(self, start, end):
-		self.diffs = self.get_diffs_for_range(start,end)
+		self.start = start
+		self.end = end
+		self.diffs, self.selected = self.get_diffs_for_range(start,end)
 
 	def get_diff_for_offset(self, offset):
 		for idx, diff_offset in enumerate(self.__diff_offsets):
 			if offset < diff_offset:
-				return os.linesep.join(self.__diffs[idx])
-		return None
+				return ([os.linesep.join(self.__diffs[idx])],
+						[idx])
+		return ([],[])
 	
 	def get_diffs_for_range(self, start, end):
 		diffs = []
+		indices = []
 		for idx, span in enumerate(self.__diff_spans):
 			has_end_of_diff = start >= span[0] and start < span[1]
 			has_all_of_diff = start <= span[0] and end >= span[1]
@@ -263,13 +345,25 @@ class DiffParser(object):
 			if selected_diff:
 				diff = os.linesep.join(self.__diffs[idx])
 				diffs.append(diff)
-		return diffs
+				indices.append(idx)
+		return diffs, indices
 
 	def parse_diff(self, diff):
 		total_offset = 0
+		self.__idx = -1
+		self.__headers = []
+
 		for idx, line in enumerate(diff.splitlines()):
 
-			if self.__diff_header.match(line):
+			match = self.__header_pattern.match(line)
+			if match:
+				self.__headers.append([
+						int(match.group(1)),
+						int(match.group(2)),
+						int(match.group(3)),
+						int(match.group(4))
+						])
+
 				self.__diffs.append( [line] )
 
 				line_len = len(line) + 1
@@ -291,4 +385,3 @@ class DiffParser(object):
 				self.__diffs[self.__idx].append(line)
 				self.__diff_spans[-1][-1] += line_len
 				self.__diff_offsets[self.__idx] += line_len
-

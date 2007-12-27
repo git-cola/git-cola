@@ -159,8 +159,7 @@ class GitController(QObserver):
 		self.__start_inotify_thread()
 
 	#####################################################################
-	# Actions
-	# Notify callbacks from the model
+	# Actions triggered during model updates
 
 	def action_staged(self, widget):
 		self.__update_listwidget(widget,
@@ -347,7 +346,7 @@ class GitController(QObserver):
 
 		self.view.displayText.setText(msg)
 
-	def display_copy(self):
+	def copy_display(self):
 		cursor = self.view.displayText.textCursor()
 		selection = cursor.selection().toPlainText()
 		qtutils.set_clipboard(selection)
@@ -454,47 +453,89 @@ class GitController(QObserver):
 		'''Show the diffstat from the latest commit.'''
 		self.__show_command(cmds.git_diff_stat(), rescan=False)
 
-	def __has_selection(self):
+	def __diff_selection(self):
 		cursor = self.view.displayText.textCursor()
 		offset = cursor.position()
 		selection = cursor.selection().toPlainText()
 		num_selected_lines = selection.count(os.linesep)
-		has_selection = (selection and selection.count(os.linesep) > 0)
-		return offset, has_selection, selection
+		return offset, selection
 
-	def process_diff_selection(self,items,widget,cached=True):
+	def process_diff_selection(self,
+			items, widget,
+			cached=True,
+			selected=False,
+			reverse=True,
+			noop=False):
 		filename = qtutils.get_selected_item(widget, items)
 		if not filename: return
+
 		header, diff = cmds.git_diff(filename,
 					with_diff_header=True,
 					cached=cached,
 					reverse=cached)
+
 		parser = utils.DiffParser(header,diff)
-		offset, has_selection, selection = self.__has_selection()
-		if has_selection:
-			start = diff.index(selection)
+
+		header_fwd, diff_fwd = cmds.git_diff(filename,
+					with_diff_header=True,
+					cached=cached,
+					reverse=False)
+
+		offset, selection = self.__diff_selection()
+		if selection:
+			start = diff_fwd.index(selection)
 			end = start + len(selection)
 			parser.set_diffs_to_range(start, end)
 		else:
 			parser.set_diff_to_offset(offset)
+			selected = False
+
 		if not parser.diffs: return
-		output = ''
-		for idx, diff in enumerate(parser.diffs):
-			tmpfile = utils.get_tmp_filename()
-			parser.write(tmpfile,idx)
-			output += self.model.apply_diff(tmpfile)
-			os.unlink(tmpfile)
+
+		if selected:
+			for diff in parser.selected:
+				contents = parser.get_diff_subset(diff, start, end)
+				if contents:
+					tmpfile = utils.get_tmp_filename()
+					utils.write(tmpfile, contents)
+					os.unlink(tmpfile)
+		else:
+			for idx, diff in enumerate(parser.diffs):
+				tmpfile = utils.get_tmp_filename()
+				if parser.write_diff(tmpfile,idx):
+					self.model.apply_diff(tmpfile)
+					os.unlink(tmpfile)
 		self.rescan()
 
-	def unstage_hunk(self, cached=True):
-		self.process_diff_selection(
-				self.model.get_staged(),
-				self.view.stagedList, cached=True)
+	#####################################################################
+	# diff gui
 
 	def stage_hunk(self):
 		self.process_diff_selection(
 				self.model.get_unstaged(),
-				self.view.unstagedList, cached=False)
+				self.view.unstagedList,
+				cached=False)
+
+	def stage_hunks(self):
+		self.process_diff_selection(
+				self.model.get_unstaged(),
+				self.view.unstagedList,
+				cached=False,
+				selected=True)
+
+	def unstage_hunk(self, cached=True):
+		self.process_diff_selection(
+				self.model.get_staged(),
+				self.view.stagedList,
+				cached=True)
+
+	def unstage_hunks(self):
+		self.process_diff_selection(
+				self.model.get_staged(),
+				self.view.stagedList,
+				cached=True,
+				selected=True)
+
 
 	def stage_changed(self):
 		'''Stage all changed files for commit.'''
@@ -581,15 +622,29 @@ class GitController(QObserver):
 		view.exec_()
 
 	def __menu_about_to_show(self):
-		item = qtutils.get_selected_item(self.view.unstagedList,
+
+		unstaged_item = qtutils.get_selected_item(
+				self.view.unstagedList,
 				self.model.get_all_unstaged())
-		is_tracked = item not in self.model.get_untracked()
 
-		allow_hunk_staging = not self.__staged_diff_in_view
-		self.__stage_hunk_action.setEnabled(
-				allow_hunk_staging and is_tracked)
+		is_tracked= unstaged_item not in self.model.get_untracked()
 
-		self.__unstage_hunk_action.setEnabled(self.__staged_diff_in_view)
+		enable_staged= (
+				unstaged_item and
+				not self.__staged_diff_in_view
+				and is_tracked)
+
+		enable_unstaged= (
+				self.__staged_diff_in_view
+				and qtutils.get_selected_item(
+						self.view.stagedList,
+						self.model.get_staged()))
+
+		self.__stage_hunk_action.setEnabled(bool(enable_staged))
+		self.__stage_hunks_action.setEnabled(bool(enable_staged))
+
+		self.__unstage_hunk_action.setEnabled(bool(enable_unstaged))
+		self.__unstage_hunks_action.setEnabled(bool(enable_unstaged))
 
 	def __menu_event(self, event):
 		self.__menu_setup()
@@ -599,20 +654,28 @@ class GitController(QObserver):
 	def __menu_setup(self):
 		if self.__menu: return
 
-		menu = QMenu(self.view)
-		stage = menu.addAction(self.tr('Stage Hunk For Commit'),
-				self.stage_hunk)
-		unstage = menu.addAction(self.tr('Unstage Hunk From Commit'),
-				self.unstage_hunk)
-		copy = menu.addAction(self.tr('Copy'), self.display_copy)
+		menu = self.__menu = QMenu(self.view)
+		self.__stage_hunk_action = menu.addAction(
+			self.tr('Stage Hunk For Commit'),
+			self.stage_hunk)
 
-		self.connect(menu, 'aboutToShow()', self.__menu_about_to_show)
+		self.__stage_hunks_action = menu.addAction(
+			self.tr('Stage Selected Lines'),
+			self.stage_hunks)
 
-		self.__stage_hunk_action = stage
-		self.__unstage_hunk_action = unstage
-		self.__copy_action = copy
-		self.__menu = menu
+		self.__unstage_hunk_action = menu.addAction(
+			self.tr('Unstage Hunk From Commit'),
+			self.unstage_hunk)
 
+		self.__unstage_hunks_action = menu.addAction(
+			self.tr('Unstage Selected Lines'),
+			self.unstage_hunks)
+
+		self.__copy_action = menu.addAction(
+			self.tr('Copy'),
+			self.copy_display)
+
+		self.connect(self.__menu, 'aboutToShow()', self.__menu_about_to_show)
 
 	def __file_to_widget_item(self, filename, staged, untracked=False):
 		'''Given a filename, return a QListWidgetItem suitable
