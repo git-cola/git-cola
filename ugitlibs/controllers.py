@@ -502,6 +502,7 @@ class GitController(QObserver):
 				if contents:
 					tmpfile = utils.get_tmp_filename()
 					utils.write(tmpfile, contents)
+					self.model.apply_diff(tmpfile)
 					os.unlink(tmpfile)
 		else:
 			for idx, diff in enumerate(parser.diffs):
