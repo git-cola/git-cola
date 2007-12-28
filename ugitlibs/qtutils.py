@@ -77,9 +77,12 @@ def set_clipboard(text):
 	QtGui.qApp.clipboard().setText(text, QClipboard.Clipboard)
 	QtGui.qApp.clipboard().setText(text, QClipboard.Selection)
 
+def add_items(widget, items):
+	for item in items: widget.addItem(item)
+
 def set_items(widget, items):
 	widget.clear()
-	for item in items: widget.addItem(item)
+	add_items(widget, items)
 
 def show_command(parent, output):
 	if not output: return

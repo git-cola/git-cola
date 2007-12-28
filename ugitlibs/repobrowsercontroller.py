@@ -138,17 +138,16 @@ class GitRepoBrowserController(QObserver):
 		with the current directories and items.  Directories are
 		always listed first.'''
 
-		self.view.commitList.clear()
 		self.view.commitText.setText('')
 		self.view.revisionLine.setText('')
 
 		dir_icon = utils.get_directory_icon()
 		file_icon = utils.get_file_icon()
 
-		for entry in self.model.get_directories():
-			item = qtutils.create_listwidget_item(entry, dir_icon)
-			self.view.commitList.addItem(item)
+		qtutils.set_items(self.view.commitList,
+				map(lambda d: qtutils.create_listwidget_item(d, dir_icon),
+						self.model.get_directories()))
 
-		for entry in self.model.get_subtree_names():
-			item = qtutils.create_listwidget_item(entry, file_icon)
-			self.view.commitList.addItem(item)
+		qtutils.add_items(self.view.commitList,
+				map(lambda s: qtutils.create_listwidget_item(s, file_icon),
+						self.model.get_subtree_names()))

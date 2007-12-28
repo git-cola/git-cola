@@ -125,12 +125,9 @@ class GitCreateBranchController(QObserver):
 	######################################################################
 
 	def __display_model(self):
-		'''Visualize the current state of the model.'''
-		branch_sources = self.__get_branch_sources()
-		self.view.branchRootList.clear()
-		for branch_source in branch_sources:
-			self.view.branchRootList.addItem(branch_source)
-	
+		branches = self.__get_branch_sources()
+		qtutils.set_items(self.view.branchRootList, branches)
+
 	def __get_branch_sources(self):
 		'''Get the list of items for populating the branch root list.'''
 

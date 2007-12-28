@@ -9,25 +9,29 @@ class GitPushController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self,model,view)
 
-		self.model_to_view('remote',  'remoteText')
-		self.model_to_view('remotes',  'remoteList')
+		self.model_to_view('remote', 'remoteText')
+		self.model_to_view('remotes', 'remoteList')
 		self.model_to_view('local_branch', 'localBranchText')
 		self.model_to_view('remote_branch', 'remoteBranchText')
 		self.model_to_view('local_branches', 'localBranchList')
 		self.model_to_view('remote_branches', 'remoteBranchList')
 
-		self.add_signals('textChanged(const QString&)', view.remoteText,
-				view.localBranchText, view.remoteBranchText)
+		self.add_signals('textChanged(const QString&)',
+				view.remoteText,
+				view.localBranchText,
+				view.remoteBranchText)
 
-		self.add_signals( 'itemSelectionChanged()', view.remoteList,
-				view.localBranchList, view.remoteBranchList)
+		self.add_signals('itemSelectionChanged()',
+				view.remoteList,
+				view.localBranchList,
+				view.remoteBranchList)
 
 		self.add_signals('released()',
-				view.pushButton, view.cancelButton)
-
-		self.connect(view.cancelButton, 'clicked()', view.reject)
+				view.pushButton,
+				view.cancelButton)
 
 		self.add_actions('remotes', self.remotes)
+
 		self.add_callbacks({
 			'remoteList': self.remote_list,
 			'localBranchList': self.local_branch_list,

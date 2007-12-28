@@ -719,8 +719,7 @@ class GitController(QObserver):
 				lambda: self.commit_sha1_selected(
 						browser, revs) )
 
-		for summary in summaries:
-			browser.commitList.addItem(summary)
+		qtutils.set_items(browser.commitList, summaries)
 
 		browser.show()
 		result = browser.exec_()
@@ -794,11 +793,8 @@ class GitController(QObserver):
 
 	def __update_listwidget(self, widget, items,
 			staged, untracked=False, append=False):
-		'''A helper method to populate a QListWidget with the
-		contents of modelitems.'''
-		if not append:
-			widget.clear()
-		for item in items:
-			qitem = self.__file_to_widget_item(item,
-					staged, untracked)
-			widget.addItem(qitem)
+		'''Populate a QListWidget with the custom icon items.'''
+		if not append: widget.clear()
+		qtutils.add_items( widget,
+				[ self.__file_to_widget_item(i, staged, untracked)
+						for i in items ])
