@@ -58,7 +58,7 @@
      <item>
       <widget class="QLabel" name="label" >
        <property name="text" >
-        <string>Object ID</string>
+        <string>Revision Expression:</string>
        </property>
       </widget>
      </item>

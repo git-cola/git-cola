@@ -35,25 +35,26 @@ class GitPushController(QObserver):
 			'pushButton': self.push,
 		})
 
+		self.connect(view.cancelButton, 'released()', view.reject)
+
 		model.init_branch_data()
 
 	def push(self):
 		if not self.model.get_remote():
-			errmsg = 'ERROR: Please specify a remote.'
+			errmsg = self.tr('No repository selected.')
 			qtutils.show_command(self.view, errmsg)
 			return
 
 		if not self.model.get_remote_branch():
-			errmsg = 'ERROR: Please specify a remote branch.'
+			errmsg = self.tr('Please supply a branch name.')
 			qtutils.show_command(self.view, errmsg)
 			return
 
 		if not self.model.get_local_branch():
-			msg = ('Pushing with an empty local branch '
+			msg = self.tr('Pushing with an empty local branch '
 				+ 'will remove the remote branch.\n'
 				+ 'Continue?')
-			if not qtutils.question(self.view,
-				'WARNING', msg):
+			if not qtutils.question(self.view, self.tr('warning'), msg):
 				return
 
 		remote = self.model.get_remote()
