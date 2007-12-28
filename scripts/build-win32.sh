@@ -5,6 +5,7 @@ BINDIR=$PREFIX/bin
 UGITLIBS=$PREFIX/ugitlibs
 ICONDIR=$PREFIX/share/ugit/icons
 QMDIR=$PREFIX/share/ugit/qm
+DOCDIR=$PREFIX/share/doc/ugit
 cd `dirname $0`
 cd ..
 
@@ -19,8 +20,9 @@ mkdir -p $BINDIR
 mkdir -p $UGITLIBS
 mkdir -p $ICONDIR
 mkdir -p $QMDIR
+mkdir -p $DOCDIR
 
-cp README $PREFIX/README.txt
+cp README $DOCDIR/README.txt
 cp bin/* scripts/ugit-*.sh $BINDIR
 cp ugitlibs/* $UGITLIBS
 cp icons/* $ICONDIR
