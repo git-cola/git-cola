@@ -567,12 +567,11 @@ class GitController(QObserver):
 		command = cmds.git_reset
 		widget = self.view.stagedList
 		items = self.model.get_staged()
-		self.__show_command(self.__apply_to_list(command, widget, items))
+		self.__apply_to_list(command, widget, items)
 
 	def unstage_all(self):
 		'''Use "git reset" to remove all items from the git index.'''
-		output = cmds.git_reset(self.model.get_staged())
-		self.__show_command(output)
+		cmds.git_reset(self.model.get_staged())
 
 	def viz_all(self):
 		'''Visualizes the entire git history using gitk.'''

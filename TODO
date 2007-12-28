@@ -8,3 +8,5 @@ Window positions are currently stored in the
 git repo's config.
 Will we ever need a .ugitrc?  Maybe not.
 Otherwise, in progress.
+
++ Output log window
