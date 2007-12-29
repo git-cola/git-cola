@@ -7,62 +7,62 @@ from model import Model
 
 class GitModel(Model):
 	def __init__(self):
+		Model.__init__(self)
 
 		# chdir to the root of the git tree.  This is critical
 		# to being able to properly use the git porcelain.
 		cdup = cmds.git_show_cdup()
 		if cdup: os.chdir(cdup)
 
-		Model.__init__(self, {
+		self.create(
 			#####################################################
 			# Used in various places
-			'remotes': cmds.git_remote(),
-			'remote': '',
-			'local_branch': '',
-			'remote_branch': '',
+			remotes = cmds.git_remote(),
+			remote = '',
+			local_branch ='',
+			remote_branch = '',
 
 			#####################################################
 			# Used primarily by the main UI
-			'project': os.path.basename(os.getcwd()),
-			'name': cmds.git_config('user.name'),
-			'email': cmds.git_config('user.email'),
-			'commitmsg': '',
-			'staged': [],
-			'unstaged': [],
-			'untracked': [],
-			'all_unstaged': [], # unstaged+untracked
+			project = os.path.basename(os.getcwd()),
+			name = cmds.git_config('user.name'),
+			email = cmds.git_config('user.email'),
+			commitmsg = '',
+			staged = [],
+			unstaged = [],
+			untracked = [],
+			all_unstaged = [], # unstaged+untracked
 
 			#####################################################
 			# Used by the create branch dialog
-			'revision': '',
-			'local_branches': cmds.git_branch(remote=False),
-			'remote_branches': cmds.git_branch(remote=True),
-			'tags': cmds.git_tag(),
+			revision = '',
+			local_branches = cmds.git_branch(remote=False),
+			remote_branches = cmds.git_branch(remote=True),
+			tags = cmds.git_tag(),
 
 			#####################################################
 			# Used by the repo browser
-			'directory': '',
+			directory = '',
 
 			# These are parallel lists
-			'types': [],
-			'sha1s': [],
-			'names': [],
+			types = [],
+			sha1s = [],
+			names = [],
 
 			# All items below here are re-calculated in
 			# init_browser_data()
-			'directories': [],
-			'directory_entries': {},
+			directories = [],
+			directory_entries = {},
 
 			# These are also parallel lists
-			'subtree_types': [],
-			'subtree_sha1s': [],
-			'subtree_names': [],
-			})
+			subtree_types = [],
+			subtree_sha1s = [],
+			subtree_names = [],
+			)
 		
 
 	def all_branches(self):
-		return (self.get_local_branches()
-			+ self.get_remote_branches())
+		return (self.get_local_branches() + self.get_remote_branches())
 
 	def init_branch_data(self):
 		remotes = cmds.git_remote()
