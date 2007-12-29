@@ -275,7 +275,7 @@ class DiffParser(object):
 				if line.startswith('-'):
 					deletes += 1
 			# selection has tail of diff (line1)
-			elif start >= line_start and start < line_end:
+			elif start >= line_start and start < line_end - 1:
 				newdiff.append(line)
 				if line.startswith('+'):
 					adds += 1

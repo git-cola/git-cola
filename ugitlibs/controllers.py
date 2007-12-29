@@ -291,7 +291,7 @@ class GitController(QObserver):
 			return
 
 		filename = self.model.get_staged()[row]
-		diff = cmds.git_diff(filename, cached=True)
+		diff = cmds.git_diff(filename=filename, cached=True)
 
 		if os.path.exists(filename):
 			self.__set_info(self.tr('Staged for commit'))
@@ -320,7 +320,7 @@ class GitController(QObserver):
 			return
 
 		if filename in self.model.get_unstaged():
-			diff = cmds.git_diff(filename, cached=False)
+			diff = cmds.git_diff(filename=filename, cached=False)
 			msg = diff
 			self.__set_info(self.tr('Modified, not staged'))
 		else:
@@ -473,21 +473,18 @@ class GitController(QObserver):
 		filename = qtutils.get_selected_item(widget, items)
 		if not filename: return
 
-		header, diff = cmds.git_diff(filename,
-					with_diff_header=True,
-					cached=cached,
-					reverse=cached)
+		parser = utils.DiffParser(
+			*cmds.git_diff(filename=filename, with_diff_header=True,
+					cached=cached, reverse=cached))
 
-		parser = utils.DiffParser(header,diff)
-
-		header_fwd, diff_fwd = cmds.git_diff(filename,
-					with_diff_header=True,
-					cached=cached,
-					reverse=False)
+		# Always index into the non-reversed diff
+		header, diff = \
+			cmds.git_diff(filename=filename, with_diff_header=True,
+					cached=cached, reverse=False)
 
 		offset, selection = self.__diff_selection()
 		if selection:
-			start = diff_fwd.index(selection)
+			start = diff.index(selection)
 			end = start + len(selection)
 			parser.set_diffs_to_range(start, end)
 		else:
@@ -496,14 +493,17 @@ class GitController(QObserver):
 
 		if not parser.diffs: return
 
+		# Process diff selection only
 		if selected:
-			for diff in parser.selected:
-				contents = parser.get_diff_subset(diff, start, end)
+			for idx in parser.selected:
+				contents = parser.get_diff_subset(idx, start, end)
 				if contents:
 					tmpfile = utils.get_tmp_filename()
 					utils.write(tmpfile, contents)
 					self.model.apply_diff(tmpfile)
 					os.unlink(tmpfile)
+
+		# Process a complete hunk
 		else:
 			for idx, diff in enumerate(parser.diffs):
 				tmpfile = utils.get_tmp_filename()

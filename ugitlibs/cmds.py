@@ -1,5 +1,7 @@
+'''TODO: "import stgit"'''
 import os
 import re
+import types
 import commands
 import utils
 from cStringIO import StringIO
@@ -13,6 +15,9 @@ REV_LIST_REGEX = re.compile('([0-9a-f]+)\W(.*)')
 
 def quote(argv):
 	return ' '.join([ utils.shell_quote(arg) for arg in argv ])
+
+def git(*args,**kwargs):
+	return run_cmd('git', *args, **kwargs)
 
 def run_cmd(cmd, *args, **kwargs):
 	# Handle cmd as either a string or an argv list
@@ -160,22 +165,26 @@ def git_current_branch():
 	# Detached head?
 	return 'Detached HEAD'
 
-def git_diff(filename, color=False,
+def git_diff(commit=None,filename=None, color=False,
 		cached=True, with_diff_header=False,
 		reverse=False):
 	"Invokes git_diff on a filepath."
 
-	argv = [ 'git', 'diff']
+	argv = [ 'diff']
 	if reverse: argv.append('-R')
 	if color: argv.append('--color')
 	if cached: argv.append('--cached')
 
 	deleted = cached and not os.path.exists(filename)
 
-	argv.append('--')
-	argv.append(filename)
+	if filename:
+		argv.append('--')
+		argv.append(filename)
 
-	diff = run_cmd(argv)
+	if commit:
+		argv.append('%s^..%s' % (commit,commit))
+
+	diff = git(*argv)
 	diff_lines = diff.splitlines()
 
 	output = StringIO()
