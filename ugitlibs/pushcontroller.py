@@ -41,7 +41,7 @@ class PushController(QObserver):
 
 		self.connect(view.cancelButton, 'released()', view.reject)
 
-		model.init_branch_data()
+		model.notify_observers('remotes','local_branches','remote_branches')
 
 	def push(self):
 		if not self.model.get_remote():

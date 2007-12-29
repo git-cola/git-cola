@@ -28,7 +28,6 @@ class CreateBranchController(QObserver):
 				'tagRadio': self.__display_model,
 				})
 
-		model.init_branch_data()
 		self.__display_model()
 
 	######################################################################
@@ -40,7 +39,7 @@ class CreateBranchController(QObserver):
 
 		revision = self.model.get_revision()
 		branch = self.model.get_local_branch()
-		existing_branches = cmds.git_branch()
+		existing_branches = self.model.get_local_branches()
 
 		if not branch or not revision:
 			qtutils.information(self.view,

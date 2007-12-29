@@ -64,18 +64,15 @@ class Model(model.Model):
 		return (self.get_local_branches() + self.get_remote_branches())
 
 	def init_branch_data(self):
-		remotes = cmds.git_remote()
-		remote_branches = cmds.git_branch(remote=True)
-		local_branches = cmds.git_branch(remote=False)
-		tags = cmds.git_tag()
-
-		self.set_remotes(remotes)
-		self.set_remote_branches(remote_branches)
-		self.set_local_branches(local_branches)
-		self.set_tags(tags)
+		self.set_remotes(cmds.git_remote())
+		self.set_remote_branches(cmds.git_branch(remote=True))
+		self.set_local_branches(cmds.git_branch(remote=False))
+		self.set_tags(cmds.git_tag())
 		self.set_revision('')
 		self.set_local_branch('')
 		self.set_remote_branch('')
+		self.notify_observers('revision', 'remote', 'remotes',
+				'local_branches','remote_branches', 'tags')
 
 	def set_remote(self,remote):
 		if not remote: return
@@ -230,3 +227,5 @@ class Model(model.Model):
 		# Re-enable notifications and emit changes
 		self.set_notify(notify_enabled)
 		self.notify_observers('all_unstaged', 'staged')
+
+		self.init_branch_data()
