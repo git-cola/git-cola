@@ -6,7 +6,7 @@ import utils
 import qtutils
 import defaults
 
-class GitRepoBrowserController(QObserver):
+class RepoBrowserController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self, model, view)
 
@@ -108,8 +108,7 @@ class GitRepoBrowserController(QObserver):
 
 			nameguess = os.path.join(defaults.DIRECTORY, name)
 
-			filename = qtutils.save_dialog(self.view,
-					self.tr('Save'), nameguess)
+			filename = qtutils.save_dialog(self.view, 'Save', nameguess)
 			if not filename: return
 
 			defaults.DIRECTORY = os.path.dirname(filename)

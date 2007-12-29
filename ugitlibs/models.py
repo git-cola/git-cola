@@ -3,11 +3,11 @@ import re
 import commands
 import cmds
 import utils
-from model import Model
+import model
 
-class GitModel(Model):
+class Model(model.Model):
 	def __init__(self):
-		Model.__init__(self)
+		model.Model.__init__(self)
 
 		# chdir to the root of the git tree.  This is critical
 		# to being able to properly use the git porcelain.
@@ -59,9 +59,8 @@ class GitModel(Model):
 			subtree_sha1s = [],
 			subtree_names = [],
 			)
-		
 
-	def all_branches(self):
+	def get_all_branches(self):
 		return (self.get_local_branches() + self.get_remote_branches())
 
 	def init_branch_data(self):

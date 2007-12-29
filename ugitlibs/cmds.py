@@ -38,7 +38,7 @@ def run_cmd(cmd, *args, **kwargs):
 
 	# Allow run_cmd(argv, raw=True) for when we
 	# want the full, raw output(e.g. git cat-file)
-	if 'raw' in kwargs and kwargs['raw']:
+	if 'raw' in kwargs:
 		return output
 	else:
 		if 'with_status' in kwargs:

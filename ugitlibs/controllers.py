@@ -11,15 +11,15 @@ import cmds
 import utils
 import qtutils
 import defaults
-from views import GitPushDialog
-from views import GitBranchDialog
-from views import GitCreateBranchDialog
-from views import GitCommitBrowser
-from repobrowsercontroller import GitRepoBrowserController
-from createbranchcontroller import GitCreateBranchController
-from pushcontroller import GitPushController
+from views import PushDialog
+from views import BranchDialog
+from views import CreateBranchDialog
+from views import CommitBrowser
+from repobrowsercontroller import RepoBrowserController
+from createbranchcontroller import CreateBranchController
+from pushcontroller import PushController
 
-class GitController(QObserver):
+class Controller(QObserver):
 	'''The controller is a mediator between the model and view.
 	It allows for a clean decoupling between view and model classes.'''
 
@@ -180,16 +180,15 @@ class GitController(QObserver):
 	# Qt callbacks
 
 	def branch_create(self):
-		view = GitCreateBranchDialog(self.view)
-		controller = GitCreateBranchController(self.model, view)
+		view = CreateBranchDialog(self.view)
+		controller = CreateBranchController(self.model, view)
 		view.show()
 		result = view.exec_()
-		if result == QDialog.Accepted:
-			self.rescan()
+		if result == QDialog.Accepted: self.rescan()
 
 	def branch_delete(self):
-		dlg = GitBranchDialog(self.view, branches=cmds.git_branch())
-		branch = dlg.getSelectedBranch()
+		branch = BranchDialog.choose('Delete Branch',
+				self.view, self.model.get_local_branches())
 		if not branch: return
 		qtutils.show_command(self.view,
 				cmds.git_branch(name=branch, delete=True))
@@ -199,15 +198,15 @@ class GitController(QObserver):
 
 	def browse_other(self):
 		# Prompt for a branch to browse
-		branches = self.model.all_branches()
-		dialog = GitBranchDialog(self.view, branches=branches)
-
+		branch = BranchDialog.choose('Browse Branch Files',
+				self.view, self.model.get_all_branches())
+		if not branch: return
 		# Launch the repobrowser
-		self.__browse_branch(dialog.getSelectedBranch())
+		self.__browse_branch(branch)
 
 	def checkout_branch(self):
-		dlg = GitBranchDialog(self.view, cmds.git_branch())
-		branch = dlg.getSelectedBranch()
+		branch = BranchDialog.choose('Checkout Branch',
+				self.view, self.model.get_local_branches())
 		if not branch: return
 		qtutils.show_command(self.view, cmds.git_checkout(branch))
 		self.rescan()
@@ -384,8 +383,7 @@ class GitController(QObserver):
 
 	def load_commitmsg(self):
 		file = qtutils.open_dialog(self.view,
-			self.tr('Load Commit Message...'),
-			defaults.DIRECTORY)
+				'Load Commit Message...', defaults.DIRECTORY)
 
 		if file:
 			defaults.DIRECTORY = os.path.dirname(file)
@@ -393,9 +391,8 @@ class GitController(QObserver):
 			self.model.set_commitmsg(slushy)
 
 	def rebase(self):
-		dlg = GitBranchDialog(self.view, cmds.git_branch())
-		dlg.setWindowTitle("Select the current branch's new root")
-		branch = dlg.getSelectedBranch()
+		branch = BranchDialog.choose('Rebase Branch',
+				self.view, self.model.get_local_branches())
 		if not branch: return
 		qtutils.show_command(self.view, cmds.git_rebase(branch))
 
@@ -427,8 +424,8 @@ class GitController(QObserver):
 
 	def push(self):
 		model = self.model.clone()
-		view = GitPushDialog(self.view)
-		controller = GitPushController(model,view)
+		view = PushDialog(self.view)
+		controller = PushController(model,view)
 		view.show()
 		view.exec_()
 
@@ -619,8 +616,8 @@ class GitController(QObserver):
 		# with different sets of data
 		model = self.model.clone()
 		model.set_branch(branch)
-		view = GitCommitBrowser()
-		controller = GitRepoBrowserController(model, view)
+		view = CommitBrowser()
+		controller = RepoBrowserController(model, view)
 		view.show()
 		view.exec_()
 
@@ -680,19 +677,6 @@ class GitController(QObserver):
 
 		self.connect(self.__menu, 'aboutToShow()', self.__menu_about_to_show)
 
-	def __file_to_widget_item(self, filename, staged, untracked=False):
-		'''Given a filename, return a QListWidgetItem suitable
-		for adding to a QListWidget.  "staged" controls whether
-		to use icons for the staged or unstaged list widget.'''
-		if staged:
-			icon_file = utils.get_staged_icon(filename)
-		elif untracked:
-			icon_file = utils.get_untracked_icon()
-		else:
-			icon_file = utils.get_icon(filename)
-
-		return qtutils.create_listwidget_item(filename, icon_file)
-
 	def __read_config_settings(self):
 		(w,h,x,y,
 		st0,st1,
@@ -708,7 +692,7 @@ class GitController(QObserver):
 	def __select_commits(self, revs, summaries):
 		'''Use the GitCommitBrowser to select commits from a list.'''
 		if not summaries:
-			msg = self.tr('ERROR: No commits exist in this branch.')
+			msg = self.tr('No commits exist in this branch.')
 			self.__show_command(msg)
 			return([],[])
 
@@ -795,5 +779,5 @@ class GitController(QObserver):
 		'''Populate a QListWidget with the custom icon items.'''
 		if not append: widget.clear()
 		qtutils.add_items( widget,
-				[ self.__file_to_widget_item(i, staged, untracked)
+				[ qtutils.create_item(i, staged, untracked)
 						for i in items ])

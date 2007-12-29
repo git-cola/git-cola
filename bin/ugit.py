@@ -17,9 +17,9 @@ sys.path.insert(0, os.path.join(
 		'site-packages'))
 sys.path.insert(0, os.path.dirname(ugit))
 
-from ugitlibs.models import GitModel
-from ugitlibs.views import GitView
-from ugitlibs.controllers import GitController
+from ugitlibs.models import Model
+from ugitlibs.views import View
+from ugitlibs.controllers import Controller
 from ugitlibs import utils
 
 if __name__ == "__main__":
@@ -30,8 +30,8 @@ if __name__ == "__main__":
 		translator = QtCore.QTranslator()
 		translator.load(qmfile)
 		app.installTranslator(translator)
-	model = GitModel()
-	view = GitView(app.activeWindow())
-	ctl = GitController(model, view)
+	model = Model()
+	view = View(app.activeWindow())
+	ctl = Controller(model, view)
 	view.show()
 	sys.exit(app.exec_())

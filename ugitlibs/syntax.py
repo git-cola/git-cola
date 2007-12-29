@@ -5,7 +5,7 @@ from PyQt4.QtGui import QFont
 from PyQt4.QtGui import QSyntaxHighlighter
 from PyQt4.QtGui import QTextCharFormat
 
-class GitSyntaxHighlighter(QSyntaxHighlighter):
+class DiffSyntaxHighlighter(QSyntaxHighlighter):
 
 	def __init__(self, doc):
 		QSyntaxHighlighter.__init__(self, doc)
@@ -80,7 +80,7 @@ if __name__ == '__main__':
 			#self.commandText.setReadOnly(True)
 			self.vboxlayout.addWidget(self.commandText)
 
-			GitSyntaxHighlighter(self.commandText.document())
+			DiffSyntaxHighlighter(self.commandText.document())
 
 	
 	app = QtGui.QApplication(sys.argv)

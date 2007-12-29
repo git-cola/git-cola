@@ -6,7 +6,9 @@ from PyQt4.QtGui import QIcon
 from PyQt4.QtGui import QListWidgetItem
 from PyQt4.QtGui import QMessageBox
 from PyQt4.QtGui import QPixmap
+
 import views
+import utils
 
 def create_listwidget_item(text, filename):
 	icon = QIcon(QPixmap(filename))
@@ -44,12 +46,12 @@ def get_selected_item(list_widget, items):
 
 def open_dialog(parent, title, filename=None):
 	qstr = QFileDialog.getOpenFileName(
-			parent, title, filename)
+			parent, parent.tr(title), filename)
 	return unicode(qstr)
 
 def save_dialog(parent, title, filename=None):
 	qstr = QFileDialog.getSaveFileName(
-			parent, title, filename)
+			parent, parent.tr(title), filename)
 	return unicode(qstr)
 
 def dir_dialog(parent, title, directory):
@@ -86,7 +88,7 @@ def set_items(widget, items):
 
 def show_command(parent, output):
 	if not output: return
-	dialog = views.GitCommandDialog(parent, output=output)
+	dialog = views.CommandDialog(parent, output=output)
 	dialog.show()
 	dialog.exec_()
 
@@ -97,3 +99,16 @@ def tr(txt):
 	if trtext.endswith('@@noun'):
 		trtext = trtext.replace('@@noun','')
 	return trtext
+
+def create_item(filename, staged, untracked=False):
+	'''Given a filename, return a QListWidgetItem suitable
+	for adding to a QListWidget.  "staged" controls whether
+	to use icons for the staged or unstaged list widget.'''
+	if staged:
+		icon_file = utils.get_staged_icon(filename)
+	elif untracked:
+		icon_file = utils.get_untracked_icon()
+	else:
+		icon_file = utils.get_icon(filename)
+
+	return create_listwidget_item(filename, icon_file)

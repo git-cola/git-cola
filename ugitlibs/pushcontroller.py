@@ -5,7 +5,7 @@ import cmds
 import utils
 import qtutils
 
-class GitPushController(QObserver):
+class PushController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self,model,view)
 

@@ -5,7 +5,7 @@ import utils
 import qtutils
 from qobserver import QObserver
 
-class GitCreateBranchController(QObserver):
+class CreateBranchController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self, model, view)
 
