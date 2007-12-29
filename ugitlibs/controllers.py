@@ -572,6 +572,7 @@ class GitController(QObserver):
 	def unstage_all(self):
 		'''Use "git reset" to remove all items from the git index.'''
 		cmds.git_reset(self.model.get_staged())
+		self.rescan()
 
 	def viz_all(self):
 		'''Visualizes the entire git history using gitk.'''
@@ -633,8 +634,8 @@ class GitController(QObserver):
 		is_tracked= unstaged_item not in self.model.get_untracked()
 
 		enable_staged= (
-				unstaged_item and
-				not self.__staged_diff_in_view
+				unstaged_item
+				and not self.__staged_diff_in_view
 				and is_tracked)
 
 		enable_unstaged= (
@@ -684,7 +685,6 @@ class GitController(QObserver):
 		'''Given a filename, return a QListWidgetItem suitable
 		for adding to a QListWidget.  "staged" controls whether
 		to use icons for the staged or unstaged list widget.'''
-
 		if staged:
 			icon_file = utils.get_staged_icon(filename)
 		elif untracked:
