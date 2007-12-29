@@ -18,7 +18,24 @@
      <item>
       <widget class="QLabel" name="label" >
        <property name="text" >
-        <string>Remote:</string>
+        <string>Local Branches</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="localBranchText" />
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QListWidget" name="localBranchList" />
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <item>
+      <widget class="QLabel" name="label_2" >
+       <property name="text" >
+        <string>Remote</string>
        </property>
       </widget>
      </item>
@@ -29,28 +46,6 @@
    </item>
    <item>
     <widget class="QListWidget" name="remoteList" />
-   </item>
-   <item>
-    <layout class="QHBoxLayout" >
-     <item>
-      <widget class="QLabel" name="label_2" >
-       <property name="text" >
-        <string>Local Branch
-(leave blank to delete remote branch)</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="localBranchText" >
-       <property name="text" >
-        <string/>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QListWidget" name="localBranchList" />
    </item>
    <item>
     <layout class="QHBoxLayout" >
