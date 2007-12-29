@@ -315,9 +315,8 @@ class GitController(QObserver):
 			+ self.model.get_untracked())[row]
 		if os.path.isdir(filename):
 			self.__set_info(self.tr('Untracked directory'))
-			cmd = 'ls -la %s' % utils.shell_quote(filename)
-			output = commands.getoutput(cmd)
-			self.view.displayText.setText(output )
+			output = os.linesep.join(os.listdir(filename))
+			self.view.displayText.setText(output)
 			return
 
 		if filename in self.model.get_unstaged():
@@ -392,7 +391,6 @@ class GitController(QObserver):
 			defaults.DIRECTORY = os.path.dirname(file)
 			slushy = utils.slurp(file)
 			self.model.set_commitmsg(slushy)
-
 
 	def rebase(self):
 		dlg = GitBranchDialog(self.view, cmds.git_branch())
