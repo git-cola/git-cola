@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import os
-import cmds
 import utils
 import qtutils
 from qobserver import QObserver
@@ -59,7 +58,7 @@ class CreateBranchController(QObserver):
 				return
 
 			# Whether we should prompt the user for lost commits
-			commits = cmds.git_rev_list_range(revision, branch)
+			commits = self.model.rev_list_range(revision, branch)
 			check_branch = bool(commits)
 
 		if check_branch:
@@ -93,8 +92,8 @@ class CreateBranchController(QObserver):
 		ffwd = self.view.fastForwardUpdateRadio.isChecked()
 		reset = self.view.resetRadio.isChecked()
 
-		output = cmds.git_create_branch(branch, revision, track=track)
-		qtutils.show_command(self.view, output)
+		output = self.model.create_branch(branch, revision, track=track)
+		qtutils.show_output(self.view, output)
 		self.view.accept()
 
 	def item_changed(self):

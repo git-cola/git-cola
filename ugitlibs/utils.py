@@ -210,8 +210,8 @@ def write(path, contents):
 
 
 class DiffParser(object):
-	def __init__(self, header, diff):
-
+	def __init__(self, model,
+				filename='', cached=True):
 		self.__header_pattern = re.compile('^@@ -(\d+),(\d+) \+(\d+),(\d+) @@.*')
 		self.__headers = []
 
@@ -225,8 +225,20 @@ class DiffParser(object):
 		self.offset = None
 		self.diffs = []
 		self.selected = []
+
+		(header, diff) = \
+			model.diff(filename=filename, with_diff_header=True,
+				cached=cached, reverse=cached)
+
+		self.model = model
+		self.diff = diff
 		self.header = header
 		self.parse_diff(diff)
+
+		# Always index into the non-reversed diff
+		self.fwd_header, self.fwd_diff = \
+			model.diff(filename=filename, with_diff_header=True,
+					cached=cached, reverse=False)
 
 	def write_diff(self,filename,which,selected=False,noop=False):
 		if not noop and which < len(self.diffs):
@@ -383,3 +395,29 @@ class DiffParser(object):
 				self.__diffs[self.__idx].append(line)
 				self.__diff_spans[-1][-1] += line_len
 				self.__diff_offsets[self.__idx] += line_len
+
+	def process_diff_selection(self, selected, offset, selection):
+		if selection:
+			start = self.fwd_diff.index(selection)
+			end = start + len(selection)
+			self.set_diffs_to_range(start, end)
+		else:
+			self.set_diff_to_offset(offset)
+			selected = False
+
+		# Process diff selection only
+		if selected:
+			for idx in self.selected:
+				contents = self.get_diff_subset(idx, start, end)
+				if contents:
+					tmpfile = get_tmp_filename()
+					write(tmpfile, contents)
+					self.model.apply_diff(tmpfile)
+					os.unlink(tmpfile)
+		# Process a complete hunk
+		else:
+			for idx, diff in enumerate(self.diffs):
+				tmpfile = get_tmp_filename()
+				if self.write_diff(tmpfile,idx):
+					self.model.apply_diff(tmpfile)
+					os.unlink(tmpfile)

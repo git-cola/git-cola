@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import os
 from qobserver import QObserver
-import cmds
 import utils
 import qtutils
 import defaults
@@ -77,7 +76,7 @@ class RepoBrowserController(QObserver):
 			objtype, sha1, name = \
 				self.model.get_subtree_node(idx)
 
-			guts = cmds.git_cat_file(objtype, sha1)
+			guts = self.model.cat_file(objtype, sha1)
 			header = utils.header('File: ' + name)
 			contents = guts
 
@@ -112,7 +111,7 @@ class RepoBrowserController(QObserver):
 			if not filename: return
 
 			defaults.DIRECTORY = os.path.dirname(filename)
-			contents = cmds.git_cat_file(objtype, sha1)
+			contents = self.model.cat_file(objtype, sha1)
 
 			utils.write(filename, contents)
 			return

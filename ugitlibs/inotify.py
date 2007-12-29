@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os
-import cmds
+import git
 from PyQt4.QtCore import QThread, SIGNAL
 from pyinotify import ProcessEvent
 from pyinotify import WatchManager, Notifier, EventsCodes
@@ -45,7 +45,7 @@ class GitNotifier(QThread):
 			if not added_flag:
 				wm.add_watch(self.path, mask)
 				# Register files/directories known to git
-				for file in cmds.git_ls_files():
+				for file in git.ls_files():
 					wm.add_watch(file, mask)
 					directory = os.path.dirname(file)
 					if directory not in dirs_seen:

@@ -21,6 +21,43 @@ class View(Ui_Window, QtGui.QMainWindow):
 		self.commitButton.setText(qtutils.tr('Commit@@verb'))
 		self.menuCommit.setTitle(qtutils.tr('Commit@@verb'))
 
+		self.set_display = self.displayText.setText
+		self.set_info = self.displayLabel.setText
+
+		self.action_undo = self.commitText.undo
+		self.action_redo = self.commitText.redo
+		self.action_paste = self.commitText.paste
+		self.action_select_all = self.commitText.selectAll
+
+	def action_cut(self):
+		self.action_copy()
+		self.action_delete()
+
+	def action_copy(self):
+		cursor = self.commitText.textCursor()
+		selection = cursor.selection().toPlainText()
+		qtutils.set_clipboard(selection)
+
+	def action_delete(self):
+		self.commitText.textCursor().removeSelectedText()
+
+	def reset_display(self):
+		self.set_display('')
+		self.set_info('')
+
+	def copy_display(self):
+		cursor = self.displayText.textCursor()
+		selection = cursor.selection().toPlainText()
+		qtutils.set_clipboard(selection)
+
+	def diff_selection(self):
+		cursor = self.displayText.textCursor()
+		offset = cursor.position()
+		selection = cursor.selection().toPlainText()
+		num_selected_lines = selection.count(os.linesep)
+		return offset, selection
+
+
 class CommandDialog(Ui_CommandDialog, QtGui.QDialog):
 	'''A simple dialog to display command output.'''
 	def __init__(self, parent=None, output=None):
@@ -39,18 +76,18 @@ class BranchDialog(Ui_BranchDialog, QtGui.QDialog):
 		Ui_BranchDialog.__init__(self)
 		self.setupUi(self)
 		self.reset()
-		if branches: self.addBranches(branches)
+		if branches: self.add(branches)
 
 	def reset(self):
 		self.branches = []
 		self.comboBox.clear()
 
-	def addBranches(self, branches):
+	def add(self, branches):
 		for branch in branches:
 			self.branches.append(branch)
 			self.comboBox.addItem(branch)
 
-	def getSelectedBranch(self):
+	def get_selected(self):
 		self.show()
 		if self.exec_() == QtGui.QDialog.Accepted:
 			return self.branches [ self.comboBox.currentIndex() ]
@@ -61,7 +98,7 @@ class BranchDialog(Ui_BranchDialog, QtGui.QDialog):
 	def choose(title, parent, branches):
 		dlg = BranchDialog(parent,branches)
 		dlg.setWindowTitle(dlg.tr(title))
-		return dlg.getSelectedBranch()
+		return dlg.get_selected()
 
 class CommitBrowser(Ui_CommitBrowser, QtGui.QDialog):
 	'''A dialog to display commits in for selection.'''

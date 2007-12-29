@@ -7,7 +7,6 @@ from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QMessageBox
 from PyQt4.QtGui import QMenu
 from qobserver import QObserver
-import cmds
 import utils
 import qtutils
 import defaults
@@ -95,6 +94,17 @@ class Controller(QObserver):
 				# Actions that delegate directly to the model
 				'signOffButton': model.add_signoff,
 				'setCommitMessage': model.get_prev_commitmsg,
+				'stageChanged': self.model.stage_changed,
+				'stageUntracked': self.model.stage_untracked,
+				'unstageAll': self.model.unstage_all,
+				# Actions that delegate direclty to the view
+				'cut': view.action_cut,
+				'copy': view.action_copy,
+				'paste': view.action_paste,
+				'delete': view.action_delete,
+				'selectAll': view.action_select_all,
+				'undo': view.action_undo,
+				'redo': view.action_redo,
 				# Push Buttons
 				'stageButton': self.stage_selected,
 				'commitButton': self.commit,
@@ -111,10 +121,7 @@ class Controller(QObserver):
 				'checkoutBranch': self.checkout_branch,
 				'rebaseBranch': self.rebase,
 				'commit': self.commit,
-				'stageChanged': self.stage_changed,
-				'stageUntracked': self.stage_untracked,
 				'stageSelected': self.stage_selected,
-				'unstageAll': self.unstage_all,
 				'unstageSelected': self.unstage_selected,
 				'showDiffstat': self.show_diffstat,
 				'browseBranch': self.browse_current,
@@ -124,13 +131,6 @@ class Controller(QObserver):
 				'exportPatches': self.export_patches,
 				'cherryPick': self.cherry_pick,
 				'loadCommitMsg': self.load_commitmsg,
-				'cut': self.cut,
-				'copy': self.copy,
-				'paste': self.paste,
-				'delete': self.delete,
-				'selectAll': self.select_all,
-				'undo': self.view.commitText.undo,
-				'redo': self.redo,
 				# Splitters
 				'splitter_top': self.splitter_top_event,
 				'splitter_bottom': self.splitter_bottom_event,
@@ -152,7 +152,7 @@ class Controller(QObserver):
 		self.view.resizeEvent = self.resize_event
 
 		# Initialize the GUI
-		self.__read_config_settings()
+		self.load_window_settings()
 		self.rescan()
 
 		# Setup the inotify watchdog
@@ -162,18 +162,18 @@ class Controller(QObserver):
 	# Actions triggered during model updates
 
 	def action_staged(self, widget):
-		self.__update_listwidget(widget,
+		qtutils.update_listwidget(widget,
 				self.model.get_staged(), staged=True)
 
 	def action_all_unstaged(self, widget):
-		self.__update_listwidget(widget,
+		qtutils.update_listwidget(widget,
 				self.model.get_unstaged(), staged=False)
 
 		if self.view.untrackedCheckBox.isChecked():
-			self.__update_listwidget(widget,
+			qtutils.update_listwidget(widget,
 					self.model.get_untracked(),
-					append=True,
 					staged=False,
+					append=True,
 					untracked=True)
 
 	#####################################################################
@@ -190,11 +190,10 @@ class Controller(QObserver):
 		branch = BranchDialog.choose('Delete Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
-		qtutils.show_command(self.view,
-				cmds.git_branch(name=branch, delete=True))
+		self.show_output(self.model.delete_branch(branch))
 
 	def browse_current(self):
-		self.__browse_branch(cmds.git_current_branch())
+		self.__browse_branch(self.model.get_branch())
 
 	def browse_other(self):
 		# Prompt for a branch to browse
@@ -208,19 +207,17 @@ class Controller(QObserver):
 		branch = BranchDialog.choose('Checkout Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
-		qtutils.show_command(self.view, cmds.git_checkout(branch))
-		self.rescan()
+		self.show_output(self.model.checkout(branch))
 
 	def cherry_pick(self):
 		'''Starts a cherry-picking session.'''
-		(revs, summaries) = cmds.git_log(all=True)
+		(revs, summaries) = self.model.log(all=True)
 		selection, idxs = self.__select_commits(revs, summaries)
 		if not selection: return
-		output = cmds.git_cherry_pick(selection)
-		self.__show_command(self.tr(output))
+		output = self.model.cherry_pick(selection)
+		self.show_output(self.tr(output))
 
 	def commit(self):
-		'''Sets up data and calls cmds.commit.'''
 		msg = self.model.get_commitmsg()
 		if not msg:
 			error_msg = self.tr(""
@@ -232,7 +229,7 @@ class Controller(QObserver):
 				+ "- Second line: Blank\n"
 				+ "- Remaining lines: Describe why this change is good.\n")
 
-			self.__show_command(error_msg)
+			self.show_output(error_msg)
 			return
 
 		files = self.model.get_staged()
@@ -241,18 +238,17 @@ class Controller(QObserver):
 				+ "No changes to commit.\n"
 				+ "\n"
 				+ "You must stage at least 1 file before you can commit.\n")
-			self.__show_command(errmsg)
+			self.show_output(errmsg)
 			return
 
 		# Perform the commit
-		output = cmds.git_commit(msg,
-				amend=self.view.amendRadio.isChecked())
+		output = self.model.commit(msg, amend=self.view.amendRadio.isChecked())
 
 		# Reset state
 		self.view.newCommitRadio.setChecked(True)
 		self.view.amendRadio.setChecked(False)
 		self.model.set_commitmsg('')
-		self.__show_command(output)
+		self.show_output(output)
 
 	def commit_sha1_selected(self, browser, revs):
 		'''This callback is called when a commit browser's
@@ -274,87 +270,41 @@ class Controller(QObserver):
 		browser.revisionLine.selectAll()
 
 		# Lookup the sha1's commit
-		commit_diff = cmds.git_diff(commit=sha1,cached=False)
+		commit_diff = self.model.diff(commit=sha1,cached=False)
 		browser.commitText.setText(commit_diff)
 
 		# Copy the sha1 into the clipboard
 		qtutils.set_clipboard(sha1)
 
+	def view_diff(self, staged=True):
+		self.__staged_diff_in_view = staged
+		if self.__staged_diff_in_view:
+			widget = self.view.stagedList
+		else:
+			widget = self.view.unstagedList
+		row, selected = qtutils.get_selected_row(widget)
+		if not selected:
+			self.view.reset_display()
+			return
+		(diff,
+		status) = self.model.get_diff_and_status(row, staged=staged)
+
+		self.view.set_display(diff)
+		self.view.set_info(self.tr(status))
+
 	# use *rest to handle being called from different signals
 	def diff_staged(self, *rest):
-		self.__staged_diff_in_view = True
-		widget = self.view.stagedList
-		row, selected = qtutils.get_selected_row(widget)
-
-		if not selected:
-			self.__reset_display()
-			return
-
-		filename = self.model.get_staged()[row]
-		diff = cmds.git_diff(filename=filename, cached=True)
-
-		if os.path.exists(filename):
-			self.__set_info(self.tr('Staged for commit'))
-		else:
-			self.__set_info(self.tr('Staged for removal'))
-
-		self.view.displayText.setText(diff)
+		self.view_diff(staged=True)
 
 	# use *rest to handle being called from different signals
 	def diff_unstaged(self,*rest):
-		self.__staged_diff_in_view = False
-		widget = self.view.unstagedList
-
-		row, selected = qtutils.get_selected_row(widget)
-		if not selected:
-			self.__reset_display()
-			return
-
-		filename =(self.model.get_unstaged()
-			+ self.model.get_untracked())[row]
-		if os.path.isdir(filename):
-			self.__set_info(self.tr('Untracked directory'))
-			output = os.linesep.join(os.listdir(filename))
-			self.view.displayText.setText(output)
-			return
-
-		if filename in self.model.get_unstaged():
-			diff = cmds.git_diff(filename=filename, cached=False)
-			msg = diff
-			self.__set_info(self.tr('Modified, not staged'))
-		else:
-			# untracked file
-			cmd = 'file -b %s' % utils.shell_quote(filename)
-			file_type = commands.getoutput(cmd)
-
-			if 'binary' in file_type or 'data' in file_type:
-				sq_filename = utils.shell_quote(filename)
-				cmd = 'hexdump -C %s' % sq_filename
-				contents = commands.getoutput(cmd)
-			else:
-				if os.path.exists(filename):
-					file = open(filename, 'r')
-					contents = file.read()
-					file.close()
-
-				else: contents = ''
-
-			self.__set_info(self.tr('Untracked, not staged')
-					+ ': ' + file_type)
-			msg = contents
-
-		self.view.displayText.setText(msg)
-
-	def copy_display(self):
-		cursor = self.view.displayText.textCursor()
-		selection = cursor.selection().toPlainText()
-		qtutils.set_clipboard(selection)
+		self.view_diff(staged=False)
 
 	def export_patches(self):
 		'''Launches the commit browser and exports the selected
 		patches.'''
 
-		(revs, summaries) = cmds.git_log()
+		(revs, summaries) = self.model.log()
 		selection, idxs = self.__select_commits(revs, summaries)
 		if not selection: return
 
@@ -362,17 +312,13 @@ class Controller(QObserver):
 		# a range of consecutive commits were selected
 		selected_range = range(idxs[0], idxs[-1] + 1)
 		export_range = len(idxs) > 1 and idxs == selected_range
-
-		output = cmds.git_format_patch(selection, export_range)
-		self.__show_command(output)
-
-	def get_commit_msg(self):
-		self.model.retrieve_latest_commitmsg()
+		output = self.model.format_patch(selection, export_range)
+		self.show_output(output)
 
 	def last_window_closed(self):
 		'''Save config settings and cleanup the any inotify threads.'''
 
-		self.__save_config_settings()
+		self.model.save_window_geom()
 
 		if not self.inotify_thread: return
 		if not self.inotify_thread.isRunning(): return
@@ -388,13 +334,13 @@ class Controller(QObserver):
 		if file:
 			defaults.DIRECTORY = os.path.dirname(file)
 			slushy = utils.slurp(file)
-			self.model.set_commitmsg(slushy)
+			if slushy: self.model.set_commitmsg(slushy)
 
 	def rebase(self):
 		branch = BranchDialog.choose('Rebase Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
-		qtutils.show_command(self.view, cmds.git_rebase(branch))
+		self.show_output(self.model.rebase(branch))
 
 	# use *rest to handle being called from the checkbox signal
 	def rescan(self, *rest):
@@ -403,11 +349,14 @@ class Controller(QObserver):
 		self.view.statusBar().showMessage(
 			self.tr('Scanning for modified files ...'))
 
-		# Rescan for repo updates
 		self.model.update_status()
 
-		# Scan for branch changes
-		self.__set_branch_ui_items()
+		branch = self.model.get_branch()
+		status_text = self.tr('Current Branch:') + ' ' + branch
+		self.view.statusBar().showMessage(status_text)
+
+		title = '%s [%s]' % (self.model.get_project(), branch)
+		self.view.setWindowTitle(title)
 
 		if not self.model.has_squash_msg(): return
 
@@ -420,7 +369,7 @@ class Controller(QObserver):
 			if not answer: return
 
 		# Set the new commit message
-		self.model.set_commitmsg(self.model.get_squash_msg())
+		self.model.set_squash_msg()
 
 	def push(self):
 		model = self.model.clone()
@@ -429,83 +378,23 @@ class Controller(QObserver):
 		view.show()
 		view.exec_()
 
-	def cut(self):
-		self.copy()
-		self.delete()
-
-	def copy(self):
-		cursor = self.view.commitText.textCursor()
-		selection = cursor.selection().toPlainText()
-		qtutils.set_clipboard(selection)
-
-	def paste(self): self.view.commitText.paste()
-	def undo(self): self.view.commitText.undo()
-	def redo(self): self.view.commitText.redo()
-	def select_all(self): self.view.commitText.selectAll()
-	def delete(self):
-		self.view.commitText.textCursor().removeSelectedText()
-
 	def show_diffstat(self):
 		'''Show the diffstat from the latest commit.'''
-		self.__show_command(cmds.git_diff_stat(), rescan=False)
-
+		self.show_output(self.model.diff_stat(), rescan=False)
 
 	#####################################################################
 	# diff gui
 
-	def __diff_selection(self):
-		cursor = self.view.displayText.textCursor()
-		offset = cursor.position()
-		selection = cursor.selection().toPlainText()
-		num_selected_lines = selection.count(os.linesep)
-		return offset, selection
+	def process_diff_selection(self, items, widget,
+			cached=True, selected=False, reverse=True, noop=False):
 
-	def process_diff_selection(self,
-			items, widget,
-			cached=True,
-			selected=False,
-			reverse=True,
-			noop=False):
 		filename = qtutils.get_selected_item(widget, items)
 		if not filename: return
+		parser = utils.DiffParser(self.model, filename=filename,
+				cached=cached)
 
-		parser = utils.DiffParser(
-			*cmds.git_diff(filename=filename, with_diff_header=True,
-					cached=cached, reverse=cached))
-
-		# Always index into the non-reversed diff
-		header, diff = \
-			cmds.git_diff(filename=filename, with_diff_header=True,
-					cached=cached, reverse=False)
-
-		offset, selection = self.__diff_selection()
-		if selection:
-			start = diff.index(selection)
-			end = start + len(selection)
-			parser.set_diffs_to_range(start, end)
-		else:
-			parser.set_diff_to_offset(offset)
-			selected = False
-
-		if not parser.diffs: return
-
-		# Process diff selection only
-		if selected:
-			for idx in parser.selected:
-				contents = parser.get_diff_subset(idx, start, end)
-				if contents:
-					tmpfile = utils.get_tmp_filename()
-					utils.write(tmpfile, contents)
-					self.model.apply_diff(tmpfile)
-					os.unlink(tmpfile)
-
-		# Process a complete hunk
-		else:
-			for idx, diff in enumerate(parser.diffs):
-				tmpfile = utils.get_tmp_filename()
-				if parser.write_diff(tmpfile,idx):
-					self.model.apply_diff(tmpfile)
-					os.unlink(tmpfile)
+		offset, selection = self.view.diff_selection()
+		parser.process_diff_selection(selected, offset, selection)
 		self.rescan()
 
 	def stage_hunk(self):
@@ -537,38 +426,23 @@ class Controller(QObserver):
 	# #######################################################################
 	# end diff gui
 
-	def stage_changed(self):
-		'''Stage all changed files for commit.'''
-		output = cmds.git_add(self.model.get_unstaged())
-		self.__show_command(output)
-
-	def stage_untracked(self):
-		'''Stage all untracked files for commit.'''
-		output = cmds.git_add(self.model.get_untracked())
-		self.__show_command(output)
-
 	# use *rest to handle being called from different signals
 	def stage_selected(self,*rest):
 		'''Use "git add" to add items to the git index.
 		This is a thin wrapper around __apply_to_list.'''
-		command = cmds.git_add_or_remove
+		command = self.model.add_or_remove
 		widget = self.view.unstagedList
 		items = self.model.get_all_unstaged()
-		self.__show_command(self.__apply_to_list(command,widget,items))
+		self.__apply_to_list(command,widget,items)
 
 	# use *rest to handle being called from different signals
 	def unstage_selected(self, *rest):
 		'''Use "git reset" to remove items from the git index.
 		This is a thin wrapper around __apply_to_list.'''
-		command = cmds.git_reset
+		command = self.model.reset
 		widget = self.view.stagedList
 		items = self.model.get_staged()
 		self.__apply_to_list(command, widget, items)
-
-	def unstage_all(self):
-		'''Use "git reset" to remove all items from the git index.'''
-		cmds.git_reset(self.model.get_staged())
-		self.rescan()
 
 	def viz_all(self):
 		'''Visualizes the entire git history using gitk.'''
@@ -576,7 +450,7 @@ class Controller(QObserver):
 
 	def viz_current(self):
 		'''Visualizes the current branch's history using gitk.'''
-		utils.fork('gitk', cmds.git_current_branch())
+		utils.fork('gitk', self.model.get_branch())
 
 	# These actions monitor window resizes, splitter changes, etc.
 	def move_event(self, event):
@@ -596,6 +470,20 @@ class Controller(QObserver):
 		sizes = self.view.splitter_bottom.sizes()
 		defaults.SPLITTER_BOTTOM_0 = sizes[0]
 		defaults.SPLITTER_BOTTOM_1 = sizes[1]
+
+	def load_window_settings(self):
+		(w,h,x,y,
+		st0,st1,
+		sb0,sb1) = self.model.get_window_geom()
+		self.view.resize(w,h)
+		self.view.move(x,y)
+		self.view.splitter_top.setSizes([st0,st1])
+		self.view.splitter_bottom.setSizes([sb0,sb1])
+
+	def show_output(self, output, rescan=True):
+		'''Shows output and optionally rescans for changes.'''
+		qtutils.show_output(self.view, output)
+		self.rescan()
 
 	#####################################################################
 	#
@@ -673,30 +561,18 @@ class Controller(QObserver):
 
 		self.__copy_action = menu.addAction(
 			self.tr('Copy'),
-			self.copy_display)
+			self.view.copy_display)
 
 		self.connect(self.__menu, 'aboutToShow()', self.__menu_about_to_show)
 
-	def __read_config_settings(self):
-		(w,h,x,y,
-		st0,st1,
-		sb0,sb1) = utils.parse_geom(cmds.git_config('ugit.geometry'))
-		self.view.resize(w,h)
-		self.view.move(x,y)
-		self.view.splitter_top.setSizes([st0,st1])
-		self.view.splitter_bottom.setSizes([sb0,sb1])
-
-	def __save_config_settings(self):
-		cmds.git_config('ugit.geometry', utils.get_geom())
-
 	def __select_commits(self, revs, summaries):
-		'''Use the GitCommitBrowser to select commits from a list.'''
+		'''Use the CommitBrowser to select commits from a list.'''
 		if not summaries:
 			msg = self.tr('No commits exist in this branch.')
-			self.__show_command(msg)
+			self.show_output(msg)
 			return([],[])
 
-		browser = GitCommitBrowser(self.view)
+		browser = CommitBrowser(self.view)
 		self.connect(browser.commitList,
 				'itemSelectionChanged()',
 				lambda: self.commit_sha1_selected(
@@ -718,25 +594,6 @@ class Controller(QObserver):
 		idxs = qtutils.get_selection_list(list_widget, index_nums)
 
 		return(selection, idxs)
-
-	def __set_branch_ui_items(self):
-		'''Sets up items that mention the current branch name.'''
-		branch = cmds.git_current_branch()
-
-		status_text = self.tr('Current Branch:') + ' ' + branch
-		self.view.statusBar().showMessage(status_text)
-
-		project = self.model.get_project()
-		title = '%s [%s]' % ( project, branch )
-
-		self.view.setWindowTitle(title)
-
-	def __reset_display(self):
-		self.view.displayText.setText('')
-		self.__set_info('')
-
-	def __set_info(self,text):
-		self.view.displayLabel.setText(text)
 
 	def __start_inotify_thread(self):
 		# Do we have inotify?  If not, return.
@@ -768,16 +625,3 @@ class Controller(QObserver):
 
 		# Start the notification thread
 		self.inotify_thread.start()
-
-	def __show_command(self, output, rescan=True):
-		'''Shows output and optionally rescans for changes.'''
-		qtutils.show_command(self.view, output)
-		if rescan: self.rescan()
-
-	def __update_listwidget(self, widget, items,
-			staged, untracked=False, append=False):
-		'''Populate a QListWidget with the custom icon items.'''
-		if not append: widget.clear()
-		qtutils.add_items( widget,
-				[ qtutils.create_item(i, staged, untracked)
-						for i in items ])

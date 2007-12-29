@@ -2,7 +2,6 @@
 import os
 import re
 import types
-import commands
 import utils
 from cStringIO import StringIO
 
@@ -31,8 +30,8 @@ def run_cmd(cmd, *args, **kwargs):
 	child.setProcessChannelMode(QProcess.MergedChannels);
 	child.start(cmd[0], cmd[1:])
 
-	if(not child.waitForStarted()): raise Exception("failed to start child")
-	if(not child.waitForFinished()): raise Exception("failed to start child")
+	if not child.waitForStarted(): raise Exception("failed to start child")
+	if not child.waitForFinished(): raise Exception("failed to start child")
 
 	output = str(child.readAll())
 
@@ -46,12 +45,12 @@ def run_cmd(cmd, *args, **kwargs):
 		else:
 			return output.rstrip()
 
-def git_add(to_add):
+def add(to_add):
 	'''Invokes 'git add' to index the filenames in to_add.'''
 	if not to_add: return 'No files to add.'
 	return git('add', *to_add)
 
-def git_add_or_remove(to_process):
+def add_or_remove(to_process):
 	'''Invokes 'git add' to index the filenames in to_process that exist
 	and 'git rm' for those that do not exist.'''
 
@@ -66,7 +65,7 @@ def git_add_or_remove(to_process):
 		if os.path.exists(filename):
 			to_add.append(filename)
 	
-	git_add(to_add)
+	add(to_add)
 
 	if len(to_add) == len(to_process):
 		# to_process only contained unremoved files --
@@ -79,14 +78,14 @@ def git_add_or_remove(to_process):
 			to_remove.append(filename)
 	git('rm',*to_remove)
 
-def git_apply(filename, indexonly=True, reverse=False):
+def apply(filename, indexonly=True, reverse=False):
 	argv = ['apply']
 	if reverse: argv.append('--reverse')
 	if indexonly: argv.extend(['--index', '--cached'])
 	argv.append(filename)
 	return git(*argv)
 
-def git_branch(name=None, remote=False, delete=False):
+def branch(name=None, remote=False, delete=False):
 	if delete and name:
 		return git('branch', '-D', name)
 	else:
@@ -96,10 +95,10 @@ def git_branch(name=None, remote=False, delete=False):
 		branches = git(*argv).splitlines()
 		return map(lambda(x): x.lstrip('* '), branches)
 
-def git_cat_file(objtype, sha1):
+def cat_file(objtype, sha1):
 	return git('cat-file', objtype, sha1, raw=True)
 
-def git_cherry_pick(revs, commit=False):
+def cherry_pick(revs, commit=False):
 	'''Cherry-picks each revision into the current branch.'''
 	if not revs:
 		return 'No revision selected.'
@@ -113,13 +112,14 @@ def git_cherry_pick(revs, commit=False):
 
 	return os.linesep.join(cherries)
 
-def git_checkout(rev):
+def checkout(rev):
 	return git('checkout', rev)
 
-def git_commit(msg, amend=False):
-	'''Creates a git commit.  'commit_all' triggers the -a
-	flag to 'git commit.'  'amend' triggers --amend.
-	'files' is a list of files to use for commits without -a.'''
+def commit(msg, amend=False):
+	'''Creates a git commit.'''
+
+	if not msg.endswith(os.linesep):
+		msg += os.linesep
 
 	# Sure, this is a potential "security risk," but if someone
 	# is trying to intercept/re-write commit messages on your system,
@@ -140,15 +140,15 @@ def git_commit(msg, amend=False):
 
 	return quote(argv) + os.linesep*2 + output
 
-def git_create_branch(name, base, track=False):
+def create_branch(name, base, track=False):
 	'''Creates a branch starting from base.  Pass track=True
 	to create a remote tracking branch.'''
 	if track:
-		return git('branch','--track',name,base)
+		return git('branch', '--track', name, base)
 	else:
 		return git('branch', name, base)
 
-def git_current_branch():
+def current_branch():
 	'''Parses 'git branch' to find the current branch.'''
 	branches = git('branch').splitlines()
 	for branch in branches:
@@ -156,10 +156,10 @@ def git_current_branch():
 			return branch.lstrip('* ')
 	return 'Detached HEAD'
 
-def git_diff(commit=None,filename=None, color=False,
+def diff(commit=None,filename=None, color=False,
 		cached=True, with_diff_header=False,
 		reverse=False):
-	"Invokes git_diff on a filepath."
+	"Invokes git diff on a filepath."
 
 	argv = [ 'diff']
 	if reverse: argv.append('-R')
@@ -199,11 +199,11 @@ def git_diff(commit=None,filename=None, color=False,
 	else:
 		return result
 
-def git_diff_stat():
+def diff_stat():
 	'''Returns the latest diffstat.'''
 	return git('diff','--stat','HEAD^')
 
-def git_format_patch(revs, use_range):
+def format_patch(revs, use_range):
 	'''Exports patches revs in the 'ugit-patches' subdirectory.
 	If use_range is True, a commit range is passed to git format-patch.'''
 
@@ -225,7 +225,7 @@ def git_format_patch(revs, use_range):
 		num_patches += output[-1].count(os.linesep)
 	return os.linesep.join(output)
 
-def git_config(key, value=None):
+def config(key, value=None):
 	'''Gets or sets git config values.  If value is not None, then
 	the config key will be set.  Otherwise, the config value of the
 	config key is returned.'''
@@ -234,7 +234,7 @@ def git_config(key, value=None):
 	else:
 		return git('config', '--get', key)
 
-def git_log(oneline=True, all=False):
+def log(oneline=True, all=False):
 	'''Returns a pair of parallel arrays listing the revision sha1's
 	and commit summaries.'''
 	argv = [ 'log' ]
@@ -253,10 +253,10 @@ def git_log(oneline=True, all=False):
 			summaries.append(match.group(2))
 	return( revs, summaries )
 
-def git_ls_files():
+def ls_files():
 	return git('ls-files').splitlines()
 
-def git_ls_tree(rev):
+def ls_tree(rev):
 	'''Returns a list of(mode, type, sha1, path) tuples.'''
 
 	lines = git('ls-tree', '-r', rev).splitlines()
@@ -272,7 +272,7 @@ def git_ls_tree(rev):
 			output.append((mode, objtype, sha1, filename,) )
 	return output
 
-def git_push(remote, local_branch, remote_branch, ffwd=True, tags=False):
+def push(remote, local_branch, remote_branch, ffwd=True, tags=False):
 	argv = ['push']
 	if tags:
 		argv.append('--tags')
@@ -288,21 +288,21 @@ def git_push(remote, local_branch, remote_branch, ffwd=True, tags=False):
 
 	return git(with_status=True, *argv)
 
-def git_rebase(newbase):
+def rebase(newbase):
 	if not newbase: return
 	return git('rebase', newbase)
 
-def git_remote(*args):
+def remote(*args):
 	argv = ['remote'] + list(args)
 	return git(*argv).splitlines()
 
-def git_remote_show(remote):
-	return [ line.strip() for line in git_remote('show',remote) ]
+def remote_show(name):
+	return [ line.strip() for line in remote('show', name) ]
 
-def git_remote_url(remote):
-	return utils.grep('^URL:\s+(.*)', git_remote_show(remote))
+def remote_url(name):
+	return utils.grep('^URL:\s+(.*)', remote_show(name))
 
-def git_reset(to_unstage):
+def reset(to_unstage):
 	'''Use 'git reset' to unstage files from the index.'''
 	if not to_unstage:
 		return 'No files to reset.'
@@ -312,32 +312,28 @@ def git_reset(to_unstage):
 
 	return git(*argv)
 
-def git_rev_list_range(start, end):
-
+def rev_list_range(start, end):
 	argv = [ 'rev-list', '--pretty=oneline', start, end ]
-
 	raw_revs = git(*argv).splitlines()
 	revs = []
-	regex = REV_LIST_REGEX
 	for line in raw_revs:
-		match = regex.match(line)
+		match = REV_LIST_REGEX.match(line)
 		if match:
 			rev_id = match.group(1)
 			summary = match.group(2)
 			revs.append((rev_id, summary,) )
-	
 	return revs
 
-def git_show(sha1, color=False):
+def show(sha1, color=False):
 	cmd = 'git show '
 	if color: cmd += '--color '
 	return run_cmd(cmd + sha1)
 
-def git_show_cdup():
+def show_cdup():
 	'''Returns a relative path to the git project root.'''
 	return git('rev-parse','--show-cdup')
 
-def git_status():
+def status():
 	'''RETURNS: A tuple of staged, unstaged and untracked files.
 	( array(staged), array(unstaged), array(untracked) )'''
 
@@ -396,5 +392,5 @@ def git_status():
 
 	return( staged, unstaged, untracked )
 
-def git_tag():
+def tag():
 	return git('tag').splitlines()

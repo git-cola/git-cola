@@ -65,12 +65,10 @@ def question(parent, title, message, default=True):
 	yes = QMessageBox.Yes
 	no = QMessageBox.No
 	buttons = yes | no
-
 	if default:
 		default = yes
 	else:
 		default = no
-
 	result = QMessageBox.question(parent,
 			title, message, buttons, default)
 	return result == QMessageBox.Yes
@@ -86,7 +84,7 @@ def set_items(widget, items):
 	widget.clear()
 	add_items(widget, items)
 
-def show_command(parent, output):
+def show_output(parent, output):
 	if not output: return
 	dialog = views.CommandDialog(parent, output=output)
 	dialog.show()
@@ -110,5 +108,10 @@ def create_item(filename, staged, untracked=False):
 		icon_file = utils.get_untracked_icon()
 	else:
 		icon_file = utils.get_icon(filename)
-
 	return create_listwidget_item(filename, icon_file)
+
+def update_listwidget(widget, items, staged=True,
+			untracked=False, append=False):
+	'''Populate a QListWidget with custom icon items.'''
+	if not append: widget.clear()
+	add_items( widget, [ create_item(i, staged, untracked) for i in items ])

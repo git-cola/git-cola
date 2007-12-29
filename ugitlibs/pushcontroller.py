@@ -1,7 +1,6 @@
 import os
 
 from qobserver import QObserver
-import cmds
 import utils
 import qtutils
 
@@ -40,18 +39,17 @@ class PushController(QObserver):
 		})
 
 		self.connect(view.cancelButton, 'released()', view.reject)
-
 		model.notify_observers('remotes','local_branches','remote_branches')
 
 	def push(self):
 		if not self.model.get_remote():
 			errmsg = self.tr('No repository selected.')
-			qtutils.show_command(self.view, errmsg)
+			qtutils.show_output(self.view, errmsg)
 			return
 
 		if not self.model.get_remote_branch():
 			errmsg = self.tr('Please supply a branch name.')
-			qtutils.show_command(self.view, errmsg)
+			qtutils.show_output(self.view, errmsg)
 			return
 
 		if not self.model.get_local_branch():
@@ -67,18 +65,18 @@ class PushController(QObserver):
 		ffwd = self.view.allowFFOnlyCheckBox.isChecked()
 		tags = self.view.tagsCheckBox.isChecked()
 
-		status, output = cmds.git_push(remote,
+		status, output = self.model.push(remote,
 					local_branch, remote_branch,
 					ffwd=ffwd, tags=tags)
 
-		qtutils.show_command(self.view, output)
+		qtutils.show_output(self.view, output)
 		if not status:
 			self.view.accept()
 
 	def remotes(self, widget):
 		displayed = []
 		for remote in self.model.get_remotes():
-			url = cmds.git_remote_url(remote)
+			url = self.model.remote_url(remote)
 			display = '%s\t(%s %s)' \
 				% (remote, unicode(self.tr('URL:')), url)
 			displayed.append(display)
