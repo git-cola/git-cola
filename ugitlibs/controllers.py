@@ -216,6 +216,7 @@ class GitController(QObserver):
 		'''Starts a cherry-picking session.'''
 		(revs, summaries) = cmds.git_log(all=True)
 		selection, idxs = self.__select_commits(revs, summaries)
+		if not selection: return
 		output = cmds.git_cherry_pick(selection)
 		self.__show_command(self.tr(output))
 
@@ -268,13 +269,13 @@ class GitController(QObserver):
 			browser.revisionLine.setText('')
 			return
 
-		# Get the commit's sha1 and put it in the revision line
+		# Get the sha1 and put it in the revision line
 		sha1 = revs[current]
 		browser.revisionLine.setText(sha1)
 		browser.revisionLine.selectAll()
 
-		# Lookup the info for that sha1 and display it
-		commit_diff = cmds.git_show(sha1)
+		# Lookup the sha1's commit
+		commit_diff = cmds.git_diff(commit=sha1,cached=False)
 		browser.commitText.setText(commit_diff)
 
 		# Copy the sha1 into the clipboard
