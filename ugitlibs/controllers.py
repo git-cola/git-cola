@@ -273,17 +273,10 @@ class Controller(QObserver):
 	def export_patches(self):
 		'''Launches the commit browser and exports the selected
 		patches.'''
-
 		(revs, summaries) = self.model.log()
 		selection, idxs = self.select_commits_gui(revs, summaries)
 		if not selection: return
-
-		# now get the selected indices to determine whether
-		# a range of consecutive commits were selected
-		selected_range = range(idxs[0], idxs[-1] + 1)
-		export_range = len(idxs) > 1 and idxs == selected_range
-		output = self.model.format_patch(selection, export_range)
-		self.show_output(output)
+		self.show_output(self.model.format_patch(selection))
 
 	def last_window_closed(self):
 		'''Save config settings and cleanup the any inotify threads.'''

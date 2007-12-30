@@ -174,35 +174,24 @@ def diff(commit=None,filename=None, color=False,
 		return result
 
 def diff_stat():
-	'''Returns the latest diffstat.'''
 	return git('diff','--stat','HEAD^')
 
-def format_patch(revs, use_range):
-	'''Exports patches revs in the 'ugit-patches' subdirectory.
-	If use_range is True, a commit range is passed to git format-patch.'''
-
-	argv = ['format-patch','--thread','--patch-with-stat',
-		'-o','ugit-patches']
+def format_patch(revs):
+	'''writes patches named by revs to the "patches" directory.'''
+	num_patches = 1
+	output = []
+	argv = ['format-patch','--thread','--patch-with-stat', '-o','patches']
 	if len(revs) > 1:
 		argv.append('-n')
-	header = 'Generated Patches:'
-	if use_range:
-		new_argv = argv + ['%s^..%s' %( revs[-1], revs[0] )]
-		return git(*new_argv)
-
-	output = [ header ]
-	num_patches = 1
 	for idx, rev in enumerate(revs):
 		real_idx = str(idx + num_patches)
-		new_argv = argv + ['-1', '--start-number', real_idx, rev]
+		new_argv = argv + ['--start-number', real_idx,
+				'%s^..%s'%(rev,rev)]
 		output.append(git(*new_argv))
 		num_patches += output[-1].count(os.linesep)
 	return os.linesep.join(output)
 
 def config(key, value=None):
-	'''Gets or sets git config values.  If value is not None, then
-	the config key will be set.  Otherwise, the config value of the
-	config key is returned.'''
 	if value is not None:
 		return git('config', key, value)
 	else:
@@ -232,7 +221,6 @@ def ls_files():
 
 def ls_tree(rev):
 	'''Returns a list of(mode, type, sha1, path) tuples.'''
-
 	lines = git('ls-tree', '-r', rev).splitlines()
 	output = []
 	regex = re.compile('^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
@@ -251,7 +239,6 @@ def push(remote, local_branch, remote_branch, ffwd=True, tags=False):
 	if tags:
 		argv.append('--tags')
 	argv.append(remote)
-
 	if local_branch == remote_branch:
 		argv.append(local_branch)
 	else:
@@ -259,7 +246,6 @@ def push(remote, local_branch, remote_branch, ffwd=True, tags=False):
 			argv.append('+%s:%s' % ( local_branch, remote_branch ))
 		else:
 			argv.append('%s:%s' % ( local_branch, remote_branch ))
-
 	return git(with_status=True, *argv)
 
 def rebase(newbase):
@@ -267,8 +253,7 @@ def rebase(newbase):
 	return git('rebase', newbase)
 
 def remote(*args):
-	argv = ['remote'] + list(args)
-	return git(*argv).splitlines()
+	return git('remote',*args).splitlines()
 
 def remote_url(name):
 	return config('remote.%s.url' % name)

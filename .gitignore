@@ -3,7 +3,8 @@
 /.lock-wscript
 /Makefile
 /releases
-/ugit-patches
+/patches
 *.pyo
 *.pyc
 *.swp
+*~
