@@ -247,6 +247,17 @@ class Model(model.Model):
 	def get_revision_sha1(self, idx):
 		return self.get_revisions()[idx]
 
+	def get_commit_diff(self, sha1):
+		commit = self.show(sha1)
+		first_newline = commit.index(os.linesep)
+		merge = commit[first_newline+1:].startswith('Merge:')
+		if merge:
+			return (commit + os.linesep*2
+				+ self.diff(commit=sha1, cached=False,
+					suppress_header=False))
+		else:
+			return commit
+
 	def get_unstaged_item(self, idx):
 		return self.get_all_unstaged()[idx]
 

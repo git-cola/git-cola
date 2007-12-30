@@ -127,7 +127,7 @@ def current_branch():
 
 def diff(commit=None,filename=None, color=False,
 		cached=True, with_diff_header=False,
-		reverse=False):
+		suppress_header=True, reverse=False):
 	"Invokes git diff on a filepath."
 
 	argv = [ 'diff']
@@ -156,9 +156,14 @@ def diff(commit=None,filename=None, color=False,
 		if not start and '@@ ' in line and ' @@' in line:
 			start = True
 		if start or(deleted and del_tag in line):
-			output.write(line + '\n')
+			output.write(line)
+			output.write(os.linesep)
 		else:
-			headers.append(line)
+			if with_diff_header:
+				headers.append(line)
+			elif not suppress_header:
+				output.write(line)
+				output.write(os.linesep)
 	
 	result = output.getvalue()
 	output.close()

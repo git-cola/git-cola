@@ -62,7 +62,7 @@ class SelectCommitsController(QObserver):
 		self.view.revisionLine.selectAll()
 
 		# Lookup the sha1's commit
-		commit_diff = self.model.diff(commit=sha1,cached=False)
+		commit_diff = self.model.get_commit_diff(sha1)
 		self.view.commitText.setText(commit_diff)
 
 		# Copy the sha1 into the clipboard
