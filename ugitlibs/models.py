@@ -6,13 +6,21 @@ import utils
 import model
 
 class Model(model.Model):
-	def __init__(self):
+	def __init__(self, init=True):
 		model.Model.__init__(self)
+
+		# These methods are best left implemented in git.py
+		for attr in ('add', 'add_or_remove', 'cat_file', 'checkout',
+					'create_branch', 'cherry_pick', 'commit', 'diff',
+					'diff_stat', 'format_patch', 'push', 'show','log',
+					'rebase', 'remote_url', 'rev_list_range'):
+			setattr(self, attr, getattr(git,attr))
 
 		# chdir to the root of the git tree.  This is critical
 		# to being able to properly use the git porcelain.
 		cdup = git.show_cdup()
 		if cdup: os.chdir(cdup)
+		if not init: return
 
 		self.create(
 			#####################################################
@@ -43,8 +51,10 @@ class Model(model.Model):
 			tags = git.tag(),
 
 			#####################################################
-			# Used by the repo browser
+			# Used by the commit/repo browser
 			directory = '',
+			revisions = [],
+			summaries = [],
 
 			# These are parallel lists
 			types = [],
@@ -61,13 +71,6 @@ class Model(model.Model):
 			subtree_sha1s = [],
 			subtree_names = [],
 			)
-
-		# These methods are best left implemented in git.py
-		for attr in ('add', 'add_or_remove', 'cat_file', 'checkout',
-					'create_branch', 'cherry_pick', 'commit', 'diff',
-					'diff_stat', 'format_patch', 'push', 'show','log',
-					'rebase', 'remote_url', 'rev_list_range'):
-			setattr(self, attr, getattr(git,attr))
 
 	def init_browser_data(self):
 		'''This scans over self.(names, sha1s, types) to generate
@@ -241,6 +244,9 @@ class Model(model.Model):
 	def delete_branch(self, branch):
 		return git.branch(name=branch, delete=True)
 
+	def get_revision_sha1(self, idx):
+		return self.get_revisions()[idx]
+
 	def get_unstaged_item(self, idx):
 		return self.get_all_unstaged()[idx]
 
@@ -263,9 +269,9 @@ class Model(model.Model):
 			else:
 				status = 'Untracked, not staged'
 
-				file_type = git.run_cmd('file','-b',filename)
+				file_type = utils.run_cmd('file','-b',filename)
 				if 'binary' in file_type or 'data' in file_type:
-					diff = git.run_cmd('hexdump','-C',filename)
+					diff = utils.run_cmd('hexdump','-C',filename)
 				else:
 					if os.path.exists(filename):
 						file = open(filename, 'r')

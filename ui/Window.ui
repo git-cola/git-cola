@@ -510,7 +510,7 @@ retrieve the latest commit message prior to committing.</string>
   </action>
   <action name="showDiffstat" >
    <property name="text" >
-    <string>Show Latest Diffstat</string>
+    <string>Show Diffstat</string>
    </property>
    <property name="shortcut" >
     <string>Ctrl+D</string>

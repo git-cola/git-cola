@@ -1,6 +1,6 @@
 import os
-from PyQt4 import QtGui
-from PyQt4.QtCore import SIGNAL
+from PyQt4.QtGui import QDialog
+from PyQt4.QtGui import QMainWindow
 from Window import Ui_Window
 from CommandDialog import Ui_CommandDialog
 from CommitBrowser import Ui_CommitBrowser
@@ -10,13 +10,15 @@ from PushDialog import Ui_PushDialog
 from syntax import DiffSyntaxHighlighter
 import qtutils
 
-class View(Ui_Window, QtGui.QMainWindow):
+class View(Ui_Window, QMainWindow):
 	'''The main ugit interface.'''
 	def __init__(self, parent=None):
-		QtGui.QMainWindow.__init__(self, parent)
+		QMainWindow.__init__(self, parent)
 		Ui_Window.__init__(self)
 		self.setupUi(self)
+
 		DiffSyntaxHighlighter(self.displayText.document())
+
 		# Qt does not handle noun/verb support
 		self.commitButton.setText(qtutils.tr('Commit@@verb'))
 		self.menuCommit.setTitle(qtutils.tr('Commit@@verb'))
@@ -58,21 +60,22 @@ class View(Ui_Window, QtGui.QMainWindow):
 		return offset, selection
 
 
-class CommandDialog(Ui_CommandDialog, QtGui.QDialog):
+class CommandDialog(Ui_CommandDialog, QDialog):
 	'''A simple dialog to display command output.'''
 	def __init__(self, parent=None, output=None):
-		QtGui.QDialog.__init__(self, parent)
+		QDialog.__init__(self, parent)
 		Ui_CommandDialog.__init__(self)
 		self.setupUi(self)
-		if output: self.set_command(output)
+		if output: self.set_output(output)
 
-	def set_command(self, output):
+	def set_output(self, output):
 		self.commandText.setText(output)
 
-class BranchDialog(Ui_BranchDialog, QtGui.QDialog):
-	'''A dialog to display available branches.'''
-	def __init__(self, parent, branches):
-		QtGui.QDialog.__init__(self, parent)
+class BranchDialog(Ui_BranchDialog, QDialog):
+	'''A dialog for choosing branches.'''
+
+	def __init__(self, parent=None, branches=None):
+		QDialog.__init__(self, parent)
 		Ui_BranchDialog.__init__(self)
 		self.setupUi(self)
 		self.reset()
@@ -89,37 +92,31 @@ class BranchDialog(Ui_BranchDialog, QtGui.QDialog):
 
 	def get_selected(self):
 		self.show()
-		if self.exec_() == QtGui.QDialog.Accepted:
+		if self.exec_() == QDialog.Accepted:
 			return self.branches [ self.comboBox.currentIndex() ]
 		else:
 			return None
 
-	@staticmethod
-	def choose(title, parent, branches):
-		dlg = BranchDialog(parent,branches)
-		dlg.setWindowTitle(dlg.tr(title))
-		return dlg.get_selected()
-
-class CommitBrowser(Ui_CommitBrowser, QtGui.QDialog):
-	'''A dialog to display commits in for selection.'''
+class CommitBrowser(Ui_CommitBrowser, QDialog):
+	'''A dialog to display commits for selection.'''
 	def __init__(self, parent=None):
-		QtGui.QDialog.__init__(self, parent)
+		QDialog.__init__(self, parent)
 		Ui_CommitBrowser.__init__(self)
 		self.setupUi(self)
 		# Make the list widget slighty larger
 		self.splitter.setSizes([ 50, 200 ])
 		DiffSyntaxHighlighter(self.commitText.document())
 
-class CreateBranchDialog(Ui_CreateBranchDialog, QtGui.QDialog):
+class CreateBranchDialog(Ui_CreateBranchDialog, QDialog):
 	'''A dialog for creating or updating branches.'''
 	def __init__(self, parent=None):
-		QtGui.QDialog.__init__(self, parent)
+		QDialog.__init__(self, parent)
 		Ui_CreateBranchDialog.__init__(self)
 		self.setupUi(self)
 
-class PushDialog(Ui_PushDialog, QtGui.QDialog):
+class PushDialog(Ui_PushDialog, QDialog):
 	'''A dialog for pushing branches.'''
 	def __init__(self, parent=None):
-		QtGui.QDialog.__init__(self, parent)
+		QDialog.__init__(self, parent)
 		Ui_PushDialog.__init__(self)
 		self.setupUi(self)

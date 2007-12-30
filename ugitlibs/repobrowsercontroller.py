@@ -1,9 +1,22 @@
 #!/usr/bin/env python
 import os
+from PyQt4.QtGui import QDialog
 from qobserver import QObserver
 import utils
 import qtutils
 import defaults
+from views import CommitBrowser
+
+def browse_git_branch(model, parent, branch):
+		if not branch: return
+		# Clone the model to allow opening multiple browsers
+		# with different sets of data
+		model = model.clone(init=False)
+		model.set_branch(branch)
+		view = CommitBrowser(parent)
+		controller = RepoBrowserController(model, view)
+		view.show()
+		return view.exec_() == QDialog.Accepted
 
 class RepoBrowserController(QObserver):
 	def __init__(self, model, view):

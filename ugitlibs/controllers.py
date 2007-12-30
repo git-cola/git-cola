@@ -1,22 +1,20 @@
 #!/usr/bin/env python
 import os
-import commands
+
 from PyQt4 import QtGui
-from PyQt4 import QtCore
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QMessageBox
 from PyQt4.QtGui import QMenu
-from qobserver import QObserver
+
 import utils
 import qtutils
 import defaults
-from views import PushDialog
-from views import BranchDialog
-from views import CreateBranchDialog
-from views import CommitBrowser
-from repobrowsercontroller import RepoBrowserController
-from createbranchcontroller import CreateBranchController
-from pushcontroller import PushController
+from qobserver import QObserver
+from repobrowsercontroller import browse_git_branch
+from createbranchcontroller import create_new_branch
+from pushcontroller import push_branches
+from utilcontroller import choose_branch
+from utilcontroller import select_commits
 
 class Controller(QObserver):
 	'''The controller is a mediator between the model and view.
@@ -180,31 +178,29 @@ class Controller(QObserver):
 	# Qt callbacks
 
 	def branch_create(self):
-		view = CreateBranchDialog(self.view)
-		controller = CreateBranchController(self.model, view)
-		view.show()
-		result = view.exec_()
-		if result == QDialog.Accepted: self.rescan()
+		if create_new_branch(self.view, self.model):
+			self.rescan()
 
 	def branch_delete(self):
-		branch = BranchDialog.choose('Delete Branch',
+		branch = choose_branch('Delete Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
 		self.show_output(self.model.delete_branch(branch))
 
 	def browse_current(self):
-		self.__browse_branch(self.model.get_branch())
+		branch = self.model.get_branch()
+		browse_git_branch(self.model, self.view, branch)
 
 	def browse_other(self):
 		# Prompt for a branch to browse
-		branch = BranchDialog.choose('Browse Branch Files',
+		branch = choose_branch('Browse Branch Files',
 				self.view, self.model.get_all_branches())
 		if not branch: return
 		# Launch the repobrowser
-		self.__browse_branch(branch)
+		browse_git_branch(self.model, self.view, branch)
 
 	def checkout_branch(self):
-		branch = BranchDialog.choose('Checkout Branch',
+		branch = choose_branch('Checkout Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
 		self.show_output(self.model.checkout(branch))
@@ -212,7 +208,7 @@ class Controller(QObserver):
 	def cherry_pick(self):
 		'''Starts a cherry-picking session.'''
 		(revs, summaries) = self.model.log(all=True)
-		selection, idxs = self.__select_commits(revs, summaries)
+		selection, idxs = self.select_commits_gui(revs, summaries)
 		if not selection: return
 		output = self.model.cherry_pick(selection)
 		self.show_output(self.tr(output))
@@ -250,32 +246,6 @@ class Controller(QObserver):
 		self.model.set_commitmsg('')
 		self.show_output(output)
 
-	def commit_sha1_selected(self, browser, revs):
-		'''This callback is called when a commit browser's
-		item is selected.  This callback puts the current
-		revision sha1 into the commitText field.
-		This callback also puts shows the commit in the
-		browser's commit textedit and copies it into
-		the global clipboard/selection.'''
-		current = browser.commitList.currentRow()
-		item = browser.commitList.item(current)
-		if not item.isSelected():
-			browser.commitText.setText('')
-			browser.revisionLine.setText('')
-			return
-
-		# Get the sha1 and put it in the revision line
-		sha1 = revs[current]
-		browser.revisionLine.setText(sha1)
-		browser.revisionLine.selectAll()
-
-		# Lookup the sha1's commit
-		commit_diff = self.model.diff(commit=sha1,cached=False)
-		browser.commitText.setText(commit_diff)
-
-		# Copy the sha1 into the clipboard
-		qtutils.set_clipboard(sha1)
-
 	def view_diff(self, staged=True):
 		self.__staged_diff_in_view = staged
 		if self.__staged_diff_in_view:
@@ -305,7 +275,7 @@ class Controller(QObserver):
 		patches.'''
 
 		(revs, summaries) = self.model.log()
-		selection, idxs = self.__select_commits(revs, summaries)
+		selection, idxs = self.select_commits_gui(revs, summaries)
 		if not selection: return
 
 		# now get the selected indices to determine whether
@@ -337,7 +307,7 @@ class Controller(QObserver):
 			if slushy: self.model.set_commitmsg(slushy)
 
 	def rebase(self):
-		branch = BranchDialog.choose('Rebase Branch',
+		branch = choose_branch('Rebase Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
 		self.show_output(self.model.rebase(branch))
@@ -372,11 +342,7 @@ class Controller(QObserver):
 		self.model.set_squash_msg()
 
 	def push(self):
-		model = self.model.clone()
-		view = PushDialog(self.view)
-		controller = PushController(model,view)
-		view.show()
-		view.exec_()
+		push_branches(self.model, self.view)
 
 	def show_diffstat(self):
 		'''Show the diffstat from the latest commit.'''
@@ -498,17 +464,6 @@ class Controller(QObserver):
 		self.rescan()
 		return output
 
-	def __browse_branch(self, branch):
-		if not branch: return
-		# Clone the model to allow opening multiple browsers
-		# with different sets of data
-		model = self.model.clone()
-		model.set_branch(branch)
-		view = CommitBrowser()
-		controller = RepoBrowserController(model, view)
-		view.show()
-		view.exec_()
-
 	def __menu_about_to_show(self):
 
 		unstaged_item = qtutils.get_selected_item(
@@ -565,35 +520,8 @@ class Controller(QObserver):
 
 		self.connect(self.__menu, 'aboutToShow()', self.__menu_about_to_show)
 
-	def __select_commits(self, revs, summaries):
-		'''Use the CommitBrowser to select commits from a list.'''
-		if not summaries:
-			msg = self.tr('No commits exist in this branch.')
-			self.show_output(msg)
-			return([],[])
-
-		browser = CommitBrowser(self.view)
-		self.connect(browser.commitList,
-				'itemSelectionChanged()',
-				lambda: self.commit_sha1_selected(
-						browser, revs) )
-
-		qtutils.set_items(browser.commitList, summaries)
-
-		browser.show()
-		result = browser.exec_()
-		if result != QDialog.Accepted:
-			return([],[])
-
-		list_widget = browser.commitList
-		selection = qtutils.get_selection_list(list_widget, revs)
-		if not selection: return([],[])
-
-		# also return the selected index numbers
-		index_nums = range(len(revs))
-		idxs = qtutils.get_selection_list(list_widget, index_nums)
-
-		return(selection, idxs)
+	def select_commits_gui(self, revs, summaries):
+		return select_commits(self.model, self.view, revs, summaries)
 
 	def __start_inotify_thread(self):
 		# Do we have inotify?  If not, return.

@@ -3,9 +3,11 @@ import sys
 import os
 import re
 import time
-import commands
-import defaults
 from cStringIO import StringIO
+
+from PyQt4.QtCore import QProcess
+
+import defaults
 
 PREFIX = os.path.realpath(os.path.dirname(os.path.dirname(sys.argv[0])))
 QMDIR = os.path.join(PREFIX, 'share', 'ugit', 'qm')
@@ -38,8 +40,7 @@ KNOWN_FILE_TYPES = {
 def ident_file_type(filename):
 	'''Returns an icon based on the contents of filename.'''
 	if os.path.exists(filename):
-		quoted_filename = shell_quote(filename)
-		fileinfo = commands.getoutput('file -b %s' % quoted_filename)
+		fileinfo = run_cmd('file','-b',filename)
 		for filetype, iconname in KNOWN_FILE_TYPES.iteritems():
 			if filetype in fileinfo.lower():
 				return iconname
@@ -72,13 +73,44 @@ def get_directory_icon():
 def get_file_icon():
 	return os.path.join(ICONSDIR, 'generic.png')
 
+def run_cmd(cmd, *args, **kwargs):
+	# Handle cmd as either a string or an argv list
+	if type(cmd) is str:
+		cmd = cmd.split(' ')
+		cmd += list(args)
+	else:
+		cmd = list(cmd + list(args))
+
+	child = QProcess()
+	child.setProcessChannelMode(QProcess.MergedChannels);
+	child.start(cmd[0], cmd[1:])
+
+	if not child.waitForStarted(): raise Exception("failed to start child")
+	if not child.waitForFinished(): raise Exception("failed to start child")
+
+	output = str(child.readAll())
+
+	# Allow run_cmd(argv, raw=True) for when we
+	# want the full, raw output(e.g. git cat-file)
+	if 'raw' in kwargs:
+		return output
+	else:
+		if 'with_status' in kwargs:
+			return child.exitCode(), output.rstrip()
+		else:
+			return output.rstrip()
+
 def fork(*argv):
 	pid = os.fork()
 	if pid: return
 	os.execlp(*argv)
 
+__grep_cache = {}
 def grep(pattern, items, squash=True):
-	regex = re.compile(pattern)
+	if pattern in __grep_cache:
+		regex = __grep_cache[pattern]
+	else:
+		regex = __grep_cache[pattern] = re.compile(pattern)
 	matched = []
 	for item in items:
 		match = regex.match(item)

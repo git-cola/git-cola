@@ -1,8 +1,17 @@
 import os
+from PyQt4.QtGui import QDialog
 
-from qobserver import QObserver
 import utils
 import qtutils
+from qobserver import QObserver
+from views import PushDialog
+
+def push_branches(model, parent):
+	model = model.clone(init=False)
+	view = PushDialog(parent)
+	controller = PushController(model,view)
+	view.show()
+	return view.exec_() == QDialog.Accepted
 
 class PushController(QObserver):
 	def __init__(self, model, view):
@@ -11,9 +20,11 @@ class PushController(QObserver):
 		self.model_to_view('remote', 'remoteText')
 		self.model_to_view('remotes', 'remoteList')
 		self.model_to_view('local_branch', 'localBranchText')
-		self.model_to_view('remote_branch', 'remoteBranchText')
 		self.model_to_view('local_branches', 'localBranchList')
+		self.model_to_view('remote_branch', 'remoteBranchText')
 		self.model_to_view('remote_branches', 'remoteBranchList')
+
+		self.add_actions('remotes', self.remotes)
 
 		self.add_signals('textChanged(const QString&)',
 				view.remoteText,
@@ -29,8 +40,6 @@ class PushController(QObserver):
 				view.pushButton,
 				view.cancelButton)
 
-		self.add_actions('remotes', self.remotes)
-
 		self.add_callbacks({
 			'remoteList': self.remote_list,
 			'localBranchList': self.local_branch_list,
@@ -39,7 +48,8 @@ class PushController(QObserver):
 		})
 
 		self.connect(view.cancelButton, 'released()', view.reject)
-		model.notify_observers('remotes','local_branches','remote_branches')
+		model.notify_observers(
+				'remotes','local_branches','remote_branches')
 
 	def push(self):
 		if not self.model.get_remote():

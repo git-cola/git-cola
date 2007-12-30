@@ -51,8 +51,8 @@ class Model(Observable):
 	def create(self,**kwargs):
 		return self.from_dict(kwargs)
 
-	def clone(self):
-		return self.__class__().from_dict(self.to_dict())
+	def clone(self, *args, **kwargs):
+		return self.__class__(*args, **kwargs).from_dict(self.to_dict())
 
 	def set_list_attrs(self, list_attrs):
 		self.__list_attrs.update(list_attrs)

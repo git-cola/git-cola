@@ -5,10 +5,6 @@ import types
 import utils
 from cStringIO import StringIO
 
-from PyQt4.QtCore import QProcess
-from PyQt4.QtCore import QObject
-import PyQt4.QtGui
-
 # A regex for matching the output of git(log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile('([0-9a-f]+)\W(.*)')
 
@@ -16,34 +12,7 @@ def quote(argv):
 	return ' '.join([ utils.shell_quote(arg) for arg in argv ])
 
 def git(*args,**kwargs):
-	return run_cmd('git', *args, **kwargs)
-
-def run_cmd(cmd, *args, **kwargs):
-	# Handle cmd as either a string or an argv list
-	if type(cmd) is str:
-		cmd = cmd.split(' ')
-		cmd += list(args)
-	else:
-		cmd = list(cmd + list(args))
-
-	child = QProcess()
-	child.setProcessChannelMode(QProcess.MergedChannels);
-	child.start(cmd[0], cmd[1:])
-
-	if not child.waitForStarted(): raise Exception("failed to start child")
-	if not child.waitForFinished(): raise Exception("failed to start child")
-
-	output = str(child.readAll())
-
-	# Allow run_cmd(argv, raw=True) for when we
-	# want the full, raw output(e.g. git cat-file)
-	if 'raw' in kwargs:
-		return output
-	else:
-		if 'with_status' in kwargs:
-			return child.exitCode(), output.rstrip()
-		else:
-			return output.rstrip()
+	return utils.run_cmd('git', *args, **kwargs)
 
 def add(to_add):
 	'''Invokes 'git add' to index the filenames in to_add.'''
@@ -296,11 +265,8 @@ def remote(*args):
 	argv = ['remote'] + list(args)
 	return git(*argv).splitlines()
 
-def remote_show(name):
-	return [ line.strip() for line in remote('show', name) ]
-
 def remote_url(name):
-	return utils.grep('^URL:\s+(.*)', remote_show(name))
+	return config('remote.%s.url' % name)
 
 def reset(to_unstage):
 	'''Use 'git reset' to unstage files from the index.'''
@@ -324,10 +290,8 @@ def rev_list_range(start, end):
 			revs.append((rev_id, summary,) )
 	return revs
 
-def show(sha1, color=False):
-	cmd = 'git show '
-	if color: cmd += '--color '
-	return run_cmd(cmd + sha1)
+def show(sha1):
+	return git('show',sha1)
 
 def show_cdup():
 	'''Returns a relative path to the git project root.'''
