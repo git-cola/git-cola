@@ -1,5 +1,5 @@
 #!/bin/sh
-FILE="$1"-win32.tar.gz
+FILE="$1".tar.gz
 DIR=installroot
 
 if [ $# -lt 1 ]; then
