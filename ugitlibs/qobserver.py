@@ -57,7 +57,7 @@ class QObserver(Observer, QObject):
 		for obj in objects:
 			self.connect(obj, signal_str, self.SLOT)
 
-	def add_callbacks(self, callbacks):
+	def add_callbacks(self, **callbacks):
 		'''Registers callbacks that are called in response to GUI events.'''
 		for sender, callback in callbacks.iteritems():
 			self.__callbacks[sender] = callback

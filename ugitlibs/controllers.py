@@ -89,52 +89,58 @@ class Controller(QObserver):
 		# argument to the callback.  This allows for a single
 		# controller to manage multiple models, though this
 		# isn't used at the moment.
-		self.add_callbacks({
-				# Actions that delegate directly to the model
-				'signOffButton': model.add_signoff,
-				'setCommitMessage': model.get_prev_commitmsg,
-				'stageChanged': self.model.stage_changed,
-				'stageUntracked': self.model.stage_untracked,
-				'unstageAll': self.model.unstage_all,
-				# Actions that delegate direclty to the view
-				'cut': view.action_cut,
-				'copy': view.action_copy,
-				'paste': view.action_paste,
-				'delete': view.action_delete,
-				'selectAll': view.action_select_all,
-				'undo': view.action_undo,
-				'redo': view.action_redo,
-				# Push Buttons
-				'stageButton': self.stage_selected,
-				'commitButton': self.commit,
-				'pushButton': self.push,
-				# List Widgets
-				'stagedList': self.diff_staged,
-				'unstagedList': self.diff_unstaged,
-				# Checkboxes
-				'untrackedCheckBox': self.rescan,
-				# Menu Actions
-				'options': self.options,
-				'rescan': self.rescan,
-				'createBranch': self.branch_create,
-				'deleteBranch': self.branch_delete,
-				'checkoutBranch': self.checkout_branch,
-				'rebaseBranch': self.rebase,
-				'commit': self.commit,
-				'stageSelected': self.stage_selected,
-				'unstageSelected': self.unstage_selected,
-				'showDiffstat': self.show_diffstat,
-				'browseBranch': self.browse_current,
-				'browseOtherBranch': self.browse_other,
-				'visualizeCurrent': self.viz_current,
-				'visualizeAll': self.viz_all,
-				'exportPatches': self.export_patches,
-				'cherryPick': self.cherry_pick,
-				'loadCommitMsg': self.load_commitmsg,
-				# Splitters
-				'splitter_top': self.splitter_top_event,
-				'splitter_bottom': self.splitter_bottom_event,
-				})
+		self.add_callbacks(
+			# Actions that delegate directly to the model
+			signOffButton = model.add_signoff,
+			setCommitMessage = model.get_prev_commitmsg,
+			stageChanged = self.model.stage_changed,
+			stageUntracked = self.model.stage_untracked,
+			unstageAll = self.model.unstage_all,
+
+			# Actions that delegate direclty to the view
+			cut = view.action_cut,
+			copy = view.action_copy,
+			paste = view.action_paste,
+			delete = view.action_delete,
+			selectAll = view.action_select_all,
+			undo = view.action_undo,
+			redo = view.action_redo,
+
+			# Push Buttons
+			stageButton = self.stage_selected,
+			commitButton = self.commit,
+			pushButton = self.push,
+
+			# List Widgets
+			stagedList = self.diff_staged,
+			unstagedList = self.diff_unstaged,
+
+			# Checkboxes
+			untrackedCheckBox = self.rescan,
+
+			# Menu Actions
+			options = self.options,
+			rescan = self.rescan,
+			createBranch = self.branch_create,
+			deleteBranch = self.branch_delete,
+			checkoutBranch = self.checkout_branch,
+			rebaseBranch = self.rebase,
+			commit = self.commit,
+			stageSelected = self.stage_selected,
+			unstageSelected = self.unstage_selected,
+			showDiffstat = self.show_diffstat,
+			browseBranch = self.browse_current,
+			browseOtherBranch = self.browse_other,
+			visualizeCurrent = self.viz_current,
+			visualizeAll = self.viz_all,
+			exportPatches = self.export_patches,
+			cherryPick = self.cherry_pick,
+			loadCommitMsg = self.load_commitmsg,
+
+			# Splitters
+			splitter_top = self.splitter_top_event,
+			splitter_bottom = self.splitter_bottom_event,
+			)
 
 		# Handle double-clicks in the staged/unstaged lists.
 		# These are vanilla signal/slots since the qobserver

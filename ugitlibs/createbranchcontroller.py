@@ -29,13 +29,13 @@ class CreateBranchController(QObserver):
 				view.localBranchRadio, view.remoteBranchRadio,
 				view.tagRadio)
 
-		self.add_callbacks({
-				'branchRootList': self.item_changed,
-				'createBranchButton': self.create_branch,
-				'localBranchRadio': self.__display_model,
-				'remoteBranchRadio': self.__display_model,
-				'tagRadio': self.__display_model,
-				})
+		self.add_callbacks(
+				branchRootList = self.item_changed,
+				createBranchButton = self.create_branch,
+				localBranchRadio = self.__display_model,
+				remoteBranchRadio = self.__display_model,
+				tagRadio = self.__display_model,
+				)
 
 		self.__display_model()
 

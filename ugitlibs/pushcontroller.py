@@ -40,12 +40,12 @@ class PushController(QObserver):
 				view.pushButton,
 				view.cancelButton)
 
-		self.add_callbacks({
-			'remoteList': self.remote_list,
-			'localBranchList': self.local_branch_list,
-			'remoteBranchList': self.remote_branch_list,
-			'pushButton': self.push,
-		})
+		self.add_callbacks(
+			remoteList = self.remote_list,
+			localBranchList = self.local_branch_list,
+			remoteBranchList = self.remote_branch_list,
+			pushButton = self.push,
+		)
 
 		self.connect(view.cancelButton, 'released()', view.reject)
 		model.notify_observers(
