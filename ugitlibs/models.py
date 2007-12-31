@@ -35,8 +35,10 @@ class Model(model.Model):
 			# Used primarily by the main UI
 			window_geom = utils.parse_geom(git.config('ugit.geometry')),
 			project = os.path.basename(os.getcwd()),
-			name = git.config('user.name'),
-			email = git.config('user.email'),
+			local_name = git.config('user.name'),
+			local_email = git.config('user.email'),
+			global_name = git.config('user.name', local=False),
+			global_email = git.config('user.email', local=False),
 			commitmsg = '',
 			staged = [],
 			unstaged = [],
@@ -156,10 +158,10 @@ class Model(model.Model):
 
 		msg = self.get_commitmsg()
 		signoff =('Signed-off by: %s <%s>'
-				%(self.get_name(), self.get_email()))
+			% (self.get_local_name(), self.get_local_email()))
 
 		if signoff not in msg:
-			self.set_commitmsg(msg + '\n\n' + signoff)
+			self.set_commitmsg(msg + os.linesep*2 + signoff)
 
 	def apply_diff(self, filename):
 		return git.apply(filename)

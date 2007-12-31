@@ -2,6 +2,8 @@
 import os
 import re
 import types
+
+import defaults
 import utils
 from cStringIO import StringIO
 
@@ -130,7 +132,7 @@ def diff(commit=None,filename=None, color=False,
 		suppress_header=True, reverse=False):
 	"Invokes git diff on a filepath."
 
-	argv = [ 'diff']
+	argv = [ 'diff', '--unified='+str(defaults.DIFF_CONTEXT), '--patch-with-raw']
 	if reverse: argv.append('-R')
 	if color: argv.append('--color')
 	if cached: argv.append('--cached')
@@ -191,11 +193,17 @@ def format_patch(revs):
 		num_patches += output[-1].count(os.linesep)
 	return os.linesep.join(output)
 
-def config(key, value=None):
-	if value is not None:
-		return git('config', key, value)
+def config(key, value=None, local=True):
+	argv = ['config']
+	if not local:
+		argv.append('--global')
+	if value is None:
+		argv.append('--get')
+		argv.append(key)
 	else:
-		return git('config', '--get', key)
+		argv.append(key)
+		argv.append(value)
+	return git(*argv)
 
 def log(oneline=True, all=False):
 	'''Returns a pair of parallel arrays listing the revision sha1's
