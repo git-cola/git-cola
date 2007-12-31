@@ -10,18 +10,43 @@ class Model(model.Model):
 		model.Model.__init__(self)
 
 		# These methods are best left implemented in git.py
-		for attr in ('add', 'add_or_remove', 'cat_file', 'checkout',
-					'create_branch', 'cherry_pick', 'commit', 'diff',
-					'diff_stat', 'format_patch', 'push', 'show','log',
-					'rebase', 'remote_url', 'rev_list_range'):
+		git_attrs=(
+				'add',
+				'add_or_remove',
+				'cat_file',
+				'checkout',
+				'create_branch',
+				'cherry_pick',
+				'commit',
+				'diff',
+				'diff_stat',
+				'format_patch',
+				'push',
+				'show',
+				'log',
+				'rebase',
+				'remote_url',
+				'rev_list_range',
+				)
+
+		for attr in git_attrs:
 			setattr(self, attr, getattr(git,attr))
 
 		# chdir to the root of the git tree.  This is critical
 		# to being able to properly use the git porcelain.
 		cdup = git.show_cdup()
 		if cdup: os.chdir(cdup)
+
+		self.__config_types = {
+			'merge.verbosity':'int',
+			'gui.diffcontext':'int',
+			'gui.pruneduringfetch':'bool',
+			'merge.summary':'bool',
+		}
+
 		if not init: return
 
+		self.read_configs()
 		self.create(
 			#####################################################
 			# Used in various places
@@ -35,10 +60,6 @@ class Model(model.Model):
 			# Used primarily by the main UI
 			window_geom = utils.parse_geom(git.config('ugit.geometry')),
 			project = os.path.basename(os.getcwd()),
-			local_name = git.config('user.name'),
-			local_email = git.config('user.email'),
-			global_name = git.config('user.name', local=False),
-			global_email = git.config('user.email', local=False),
 			commitmsg = '',
 			staged = [],
 			unstaged = [],
@@ -73,6 +94,37 @@ class Model(model.Model):
 			subtree_sha1s = [],
 			subtree_names = [],
 			)
+
+	def get_config(self,key,local=True):
+		if local:
+			config = self.get_local_config()
+		else:
+			config = self.get_global_config()
+		try:
+			return config[key]
+		except:
+			return None
+
+	def read_configs(self):
+		def config_to_dict(config):
+			newdict = {}
+			for line in config.splitlines():
+				k, v = line.split('=')
+				try:
+					linetype = self.__config_types[k]
+					if linetype == 'int':
+						v = int(v)
+					elif linetype == 'bool':
+						v = bool(eval(v[0].upper()+v[1:]))
+				except: pass
+				newdict[k]=v
+			return newdict
+
+		local_config = git.git('config','--global','--list')
+		global_config = git.git('config','--list')
+
+		self.set('local_config', config_to_dict(local_config))
+		self.set('global_config', config_to_dict(global_config))
 
 	def init_browser_data(self):
 		'''This scans over self.(names, sha1s, types) to generate
@@ -157,8 +209,9 @@ class Model(model.Model):
 		of the current commit message.'''
 
 		msg = self.get_commitmsg()
-		signoff =('Signed-off by: %s <%s>'
-			% (self.get_local_name(), self.get_local_email()))
+		signoff =('Signed-off by: %s <%s>' % (
+				self.get_config('user.name'),
+				self.get_config('user.email')))
 
 		if signoff not in msg:
 			self.set_commitmsg(msg + os.linesep*2 + signoff)
@@ -235,6 +288,8 @@ class Model(model.Model):
 		self.set_revision('')
 		self.set_local_branch('')
 		self.set_remote_branch('')
+
+		self.read_configs()
 
 		# Re-enable notifications and emit changes
 		self.set_notify(notify_enabled)

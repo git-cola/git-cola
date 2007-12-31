@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 import imp
 from types import *
+from cStringIO import StringIO
 
 class Observable(object):
 	'''Handles subject/observer notifications.'''
-	def __init__(self, notify=True):
+	def __init__(self,*args,**kwargs):
 		self.__observers = []
-		self.__notify = notify
+		self.__notify = True
 	def get_notify(self):
 		return self.__notify
 	def set_notify(self, notify=True):
@@ -29,22 +30,14 @@ class Model(Observable):
 	get_name() and set_name(value) are created automatically
 	for any of the specified attributes.'''
 
-	def __init__(self, attributes = {}, defaults = {}, notify=True):
+	def __init__(self):
 		'''Initializes all attributes and default attribute
 		values.  By default we do not call notify unless explicitly
 		told to do so.'''
-
-		Observable.__init__(self, notify)
-
-		for attr, value in attributes.iteritems():
-			setattr(self, attr, value)
-
-		for attr, value in defaults.iteritems():
-			if not hasattr(self, attr):
-				setattr(self, attr, value)
+		Observable.__init__(self)
 
 		# For meta-programmability
-		self.__attributes = list(attributes.keys() + defaults.keys())
+		self.__attributes = []
 		self.__list_attrs = {}
 		self.__object_attrs = {}
 	
@@ -66,7 +59,6 @@ class Model(Observable):
 	def get_attributes(self):
 		return self.__attributes
 
-
 	def __getattr__(self, attr):
 		'''Provides automatic get/set/add/append methods.'''
 
@@ -80,12 +72,12 @@ class Model(Observable):
 			return getattr(self, realattr)
 
 		if realattr.startswith('get'):
-			realattr = self.__translate(attr, 'get')
-			return lambda: getattr(self, realattr)
+			attr = self.__translate(attr, 'get')
+			return lambda: getattr(self, attr)
 
 		elif realattr.startswith('set'):
-			realattr = self.__translate(attr, 'set')
-			return lambda(value): self.set(realattr, value)
+			attr = self.__translate(attr, 'set')
+			return lambda v: self.set(attr, v, check_attrs=True)
 
 		elif realattr.startswith('add'):
 			self.__array = self.__translate(attr, 'add')
@@ -100,11 +92,14 @@ class Model(Observable):
 
 		raise AttributeError, errmsg
 
-	def set(self, attr, value, notify=True):
+	def set(self, attr, value, notify=True, check_attrs=False):
 		'''Sets a model attribute.'''
+		if check_attrs and attr not in self.__attributes:
+			raise Exception("Attribute '%s' not available for %s"
+				% (attr, self.__class__.__name__))
+		else:
+			self.__attributes.append(attr)
 		setattr(self, attr, value)
-		if attr not in self.__attributes:
-		    self.__attributes.append(attr)
 		if notify: self.notify_observers(attr)
 
 	def __append(self, *values):
@@ -121,7 +116,6 @@ class Model(Observable):
 
 		for value in values:
 			array.append(value)
-
 
 	def __translate(self, attr, prefix='', sep='_'):
 		'''Translates an attribute name from the external name
@@ -141,14 +135,14 @@ class Model(Observable):
 				modfile[0], modfile[1], modfile[2])
 
 		if classname in module.__dict__:
-		    cls = module.__dict__[classname]
+			cls = module.__dict__[classname]
 		else:
-		    cls = Model
-		    warning = 'WARNING: %s not found in %s\n' %(
-					modname, classname )
-		    sys.stderr.write(warning)
+			cls = Model
+			warning = ('WARNING: %s not found in %s\n'
+					%(modname, classname))
+			sys.stderr.write(warning)
 
-                modfile[0].close()
+		modfile[0].close()
 		return cls
 
 	def save(self, filename):
@@ -168,11 +162,9 @@ class Model(Observable):
 		'''Import a complex model from a dictionary.  The import/export
 		is clued as to nested Model-objects by setting the
 		__list_attrs or __object_attrs object specifications.'''
-
 		for attr,val in model.iteritems():
-			setattr(self, attr, self.__attr_from_dict(attr,val))
-			if attr not in self.__attributes:
-				    self.__attributes.append(attr)
+			self.set(attr, self.__attr_from_dict(attr,val),
+				notify=False)
 		return self
 	
 	def __attr_from_dict(self,attr,val):
@@ -244,7 +236,7 @@ class Model(Observable):
 		Model.__INDENT__ += 4
 
 		strings = ['']
-		for attr in self.__dict__:
+		for attr in self.__attributes:
 			if attr.startswith('_'): continue
 			inner = " " * Model.__INDENT__ + attr + ":  "
 
