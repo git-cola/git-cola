@@ -85,13 +85,12 @@ def run_cmd(cmd, *args, **kwargs):
 	child.setProcessChannelMode(QProcess.MergedChannels);
 	child.start(cmd[0], cmd[1:])
 
-	if not child.waitForStarted(): raise Exception("failed to start child")
-	if not child.waitForFinished(): raise Exception("failed to start child")
+	if not child.waitForStarted(): return ''
+	if not child.waitForFinished(): return ''
 
 	output = str(child.readAll())
 
-	# Allow run_cmd(argv, raw=True) for when we
-	# want the full, raw output(e.g. git cat-file)
+	# run_cmd(argv, raw=True) if we want the full, raw output
 	if 'raw' in kwargs:
 		return output
 	else:
