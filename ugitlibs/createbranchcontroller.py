@@ -23,7 +23,10 @@ class CreateBranchController(QObserver):
 		self.add_signals('textChanged(const QString&)',
 				view.revisionLine, view.branchLine)
 
-		self.add_signals('itemSelectionChanged()', view.branchRootList)
+		self.add_signals('itemSelectionChanged()',
+				view.branchRootList)
+		self.add_signals('itemClicked(QListWidgetItem *)',
+				view.branchRootList)
 		self.add_signals('released()',
 				view.createBranchButton,
 				view.localBranchRadio, view.remoteBranchRadio,
@@ -106,7 +109,7 @@ class CreateBranchController(QObserver):
 		qtutils.show_output(self.view, output)
 		self.view.accept()
 
-	def item_changed(self):
+	def item_changed(self, *rest):
 		'''This callback is called when the item selection changes
 		in the branchRootList.'''
 
@@ -138,12 +141,9 @@ class CreateBranchController(QObserver):
 
 	def __get_branch_sources(self):
 		'''Get the list of items for populating the branch root list.'''
-
 		if self.view.localBranchRadio.isChecked():
 			return self.model.get_local_branches()
-
 		elif self.view.remoteBranchRadio.isChecked():
 			return self.model.get_remote_branches()
-
 		elif self.view.tagRadio.isChecked():
 			return self.model.get_tags()

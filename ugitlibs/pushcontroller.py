@@ -30,12 +30,14 @@ class PushController(QObserver):
 				view.remoteText,
 				view.localBranchText,
 				view.remoteBranchText)
-
+		self.add_signals('itemClicked(QListWidgetItem *)',
+				view.remoteList,
+				view.localBranchList,
+				view.remoteBranchList)
 		self.add_signals('itemSelectionChanged()',
 				view.remoteList,
 				view.localBranchList,
 				view.remoteBranchList)
-
 		self.add_signals('released()',
 				view.pushButton,
 				view.cancelButton)
@@ -92,7 +94,7 @@ class PushController(QObserver):
 			displayed.append(display)
 		qtutils.set_items(widget,displayed)
 
-	def remote_list(self):
+	def remote_list(self,*rest):
 		widget = self.view.remoteList
 		remotes = self.model.get_remotes()
 		selection = qtutils.get_selected_item(widget,remotes)
@@ -100,7 +102,7 @@ class PushController(QObserver):
 		self.model.set_remote(selection)
 		self.view.remoteText.selectAll()
 
-	def local_branch_list(self):
+	def local_branch_list(self,*rest):
 		branches = self.model.get_local_branches()
 		widget = self.view.localBranchList
 		selection = qtutils.get_selected_item(widget,branches)
@@ -112,7 +114,7 @@ class PushController(QObserver):
 		self.view.localBranchText.selectAll()
 		self.view.remoteBranchText.selectAll()
 
-	def remote_branch_list(self):
+	def remote_branch_list(self,*rest):
 		widget = self.view.remoteBranchList
 		branches = self.model.get_remote_branches()
 		selection = qtutils.get_selected_item(widget,branches)
