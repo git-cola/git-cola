@@ -9,9 +9,6 @@ class Observer(object):
 	def __init__(self, model):
 		self.model = model
 		self.model.add_observer(self)
-
-		self.__attribute_adapter = {}
-		self.__subjects = []
 		self.__debug = False
 
 	def __del__(self):
@@ -23,28 +20,15 @@ class Observer(object):
 	def notify(self, *attributes):
 		'''Called by the model to notify Observers about changes.'''
 		# We can be notified about multiple attribute changes at once
+		model = self.model
 		for attr in attributes:
-
-			if attr not in self.__subjects: continue
-
-			# The new value for updating
-			model = self.model
 			notify = model.get_notify()
-			model.set_notify(False)
-			value = model.getattr(attr)
+			model.set_notify(False) # NOTIFY OFF
 
-			# Allow lazy model to observer attributes renames
-			if attr in self.__attribute_adapter:
-				attr = self.__attribute_adapter[attr]
-
-			# Call the concrete observer's notification method
+			value = model.get_param(attr)
 			self.subject_changed(attr, value)
 
-			model.set_notify(notify)
-
-			if not self.__debug: continue
-			print("Objserver::notify("+ pformat(attributes) +"):")
-			print model
+			model.set_notify(notify) # NOTIFY ON
 
 	def subject_changed(self, attr, value):
 		'''This method handles updating of the observer/UI.
@@ -52,9 +36,3 @@ class Observer(object):
 
 		msg = 'Concrete Observers must override subject_changed().'
 		raise NotImplementedError, msg
-
-	def add_subject(self, model_attr):
-		self.__subjects.append(model_attr)
-	
-	def add_attribute_adapter(self, model_attr, observer_attr):
-		self.__attribute_adapter[model_attr] = observer_attr

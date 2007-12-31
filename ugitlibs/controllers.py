@@ -32,7 +32,6 @@ class Controller(QObserver):
 		self.__staged_diff_in_view = True
 
 		# Diff display context menu
-		view.displayText.controller = self
 		view.displayText.contextMenuEvent = self.diff_context_menu_event
 
 		# Default to creating a new commit(i.e. not an amend commit)

@@ -45,10 +45,10 @@ class QObserver(Observer, QObject):
 			model_param = self.__view_to_model[sender]
 			if isinstance(widget, QTextEdit):
 				value = str(widget.toPlainText())
-				model.set(model_param, value, notify=False)
+				model.set_param(model_param, value, notify=False)
 			elif isinstance(widget, QLineEdit):
 				value = str(widget.text())
-				model.set(model_param, value, notify=False)
+				model.set_param(model_param, value, notify=False)
 			else:
 				print("SLOT(): Unknown widget:", sender, widget)
 
@@ -64,7 +64,6 @@ class QObserver(Observer, QObject):
 
 	def model_to_view(self, model_param, *widget_names):
 		'''Binds model params to qt widgets(model->view)'''
-		self.add_subject(model_param)
 		self.__model_to_view[model_param] = widget_names
 		for widget_name in widget_names:
 			self.__view_to_model[widget_name] = model_param
@@ -72,7 +71,6 @@ class QObserver(Observer, QObject):
 	def add_actions(self, model_param, callback):
 		'''Register view actions that are called in response to
 		view changes.(view->model)'''
-		self.add_subject(model_param)
 		self.__actions[model_param] = callback
 
 	def subject_changed(self, param, value):
@@ -107,6 +105,6 @@ class QObserver(Observer, QObject):
 		self.__actions[param](*widgets)
 
 	def update_view(self):
-		for param in self.model.get_parameters():
-			for param in self.__model_to_view[param]:
+		for param in self.model.get_param_names():
+			if param in self.__model_to_view[param]:
 				self.model.notify_observers(param)
