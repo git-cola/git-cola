@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import time
 
 from PyQt4 import QtGui
 from PyQt4.QtGui import QDialog
@@ -24,13 +25,15 @@ class Controller(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self, model, view)
 
+		self.__last_inotify_event = time.time()
+
 		# The diff-display context menu
 		self.__menu = None
 		self.__staged_diff_in_view = True
 
 		# Diff display context menu
 		view.displayText.controller = self
-		view.displayText.contextMenuEvent = self.__menu_event
+		view.displayText.contextMenuEvent = self.menu_event
 
 		# Default to creating a new commit(i.e. not an amend commit)
 		view.newCommitRadio.setChecked(True)
@@ -162,7 +165,19 @@ class Controller(QObserver):
 		self.rescan()
 
 		# Setup the inotify watchdog
-		self.__start_inotify_thread()
+		self.start_inotify_thread()
+
+	#####################################################################
+	# event() is called in response to messages from the inotify thread
+
+	def event(self, msg):
+		if msg.type() == defaults.INOTIFY_EVENT:
+			if 1.0 < time.time() - self.__last_inotify_event:
+				self.rescan()
+			self.__last_inotify_event = time.time()
+			return True
+		else:
+			return False
 
 	#####################################################################
 	# Actions triggered during model updates
@@ -293,7 +308,7 @@ class Controller(QObserver):
 		if not self.inotify_thread.isRunning(): return
 
 		self.inotify_thread.abort = True
-		self.inotify_thread.quit()
+		self.inotify_thread.terminate()
 		self.inotify_thread.wait()
 
 	def load_commitmsg(self):
@@ -394,20 +409,20 @@ class Controller(QObserver):
 	# use *rest to handle being called from different signals
 	def stage_selected(self,*rest):
 		'''Use "git add" to add items to the git index.
-		This is a thin wrapper around __apply_to_list.'''
+		This is a thin wrapper around apply_to_list.'''
 		command = self.model.add_or_remove
 		widget = self.view.unstagedList
 		items = self.model.get_all_unstaged()
-		self.__apply_to_list(command,widget,items)
+		self.apply_to_list(command,widget,items)
 
 	# use *rest to handle being called from different signals
 	def unstage_selected(self, *rest):
 		'''Use "git reset" to remove items from the git index.
-		This is a thin wrapper around __apply_to_list.'''
+		This is a thin wrapper around apply_to_list.'''
 		command = self.model.reset
 		widget = self.view.stagedList
 		items = self.model.get_staged()
-		self.__apply_to_list(command, widget, items)
+		self.apply_to_list(command, widget, items)
 
 	def viz_all(self):
 		'''Visualizes the entire git history using gitk.'''
@@ -453,7 +468,7 @@ class Controller(QObserver):
 	#####################################################################
 	#
 
-	def __apply_to_list(self, command, widget, items):
+	def apply_to_list(self, command, widget, items):
 		'''This is a helper method that retrieves the current
 		selection list, applies a command to that list,
 		displays a dialog showing the output of that command,
@@ -463,7 +478,7 @@ class Controller(QObserver):
 		self.rescan()
 		return output
 
-	def __menu_about_to_show(self):
+	def menu_about_to_show(self):
 
 		unstaged_item = qtutils.get_selected_item(
 				self.view.unstagedList,
@@ -488,41 +503,37 @@ class Controller(QObserver):
 		self.__unstage_hunk_action.setEnabled(bool(enable_unstaged))
 		self.__unstage_hunks_action.setEnabled(bool(enable_unstaged))
 
-	def __menu_event(self, event):
-		self.__menu_setup()
+	def menu_event(self, event):
+		self.menu_setup()
 		textedit = self.view.displayText
-		self.__menu.exec_(textedit.mapToGlobal(event.pos()))
+		self.menu.exec_(textedit.mapToGlobal(event.pos()))
 
-	def __menu_setup(self):
+	def menu_setup(self):
 		if self.__menu: return
 
 		menu = self.__menu = QMenu(self.view)
 		self.__stage_hunk_action = menu.addAction(
-			self.tr('Stage Hunk For Commit'),
-			self.stage_hunk)
+			self.tr('Stage Hunk For Commit'), self.stage_hunk)
 
 		self.__stage_hunks_action = menu.addAction(
-			self.tr('Stage Selected Lines'),
-			self.stage_hunks)
+			self.tr('Stage Selected Lines'), self.stage_hunks)
 
 		self.__unstage_hunk_action = menu.addAction(
-			self.tr('Unstage Hunk From Commit'),
-			self.unstage_hunk)
+			self.tr('Unstage Hunk From Commit'), self.unstage_hunk)
 
 		self.__unstage_hunks_action = menu.addAction(
-			self.tr('Unstage Selected Lines'),
-			self.unstage_hunks)
+			self.tr('Unstage Selected Lines'), self.unstage_hunks)
 
 		self.__copy_action = menu.addAction(
-			self.tr('Copy'),
-			self.view.copy_display)
+			self.tr('Copy'), self.view.copy_display)
 
-		self.connect(self.__menu, 'aboutToShow()', self.__menu_about_to_show)
+		self.connect(self.__menu,
+				'aboutToShow()', self.menu_about_to_show)
 
 	def select_commits_gui(self, revs, summaries):
 		return select_commits(self.model, self.view, revs, summaries)
 
-	def __start_inotify_thread(self):
+	def start_inotify_thread(self):
 		# Do we have inotify?  If not, return.
 		# Recommend installing inotify if we're on Linux.
 		self.inotify_thread = None
@@ -545,10 +556,6 @@ class Controller(QObserver):
 				qtutils.information(self.view,
 					self.tr('inotify disabled'), msg)
 			return
-
-		self.inotify_thread = GitNotifier(os.getcwd())
-		self.connect(self.inotify_thread,
-				'timeForRescan()', self.rescan)
-
 		# Start the notification thread
+		self.inotify_thread = GitNotifier(self, os.getcwd())
 		self.inotify_thread.start()

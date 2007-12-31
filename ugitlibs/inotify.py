@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 import os
-import git
-from PyQt4.QtCore import QThread, SIGNAL
+import time
+from PyQt4.QtCore import QCoreApplication
+from PyQt4.QtCore import QThread
+from PyQt4.QtCore import QEvent
+from PyQt4.QtCore import SIGNAL
 from pyinotify import ProcessEvent
 from pyinotify import WatchManager, Notifier, EventsCodes
-import time
+
+import git
+import defaults
 
 class FileSysEvent(ProcessEvent):
 	def __init__(self, parent):
@@ -18,14 +23,17 @@ class FileSysEvent(ProcessEvent):
 		self.last_event_time = time.time()
 
 class GitNotifier(QThread):
-	def __init__(self, path):
+	def __init__(self, receiver, path):
 		QThread.__init__(self)
+		self.receiver = receiver
 		self.path = path
 		self.abort = False
 
 	def notify(self):
 		if not self.abort:
-			self.emit( SIGNAL('timeForRescan()') )
+			event_type = QEvent.Type(defaults.INOTIFY_EVENT)
+			event = QEvent(event_type)
+			QCoreApplication.postEvent(self.receiver, event)
 
 	def run(self):
 		# Only capture those events that git cares about
