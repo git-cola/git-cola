@@ -1,6 +1,9 @@
 <ui version="4.0" >
  <class>branchgui</class>
  <widget class="QDialog" name="branchgui" >
+  <property name="windowModality" >
+   <enum>Qt::ApplicationModal</enum>
+  </property>
   <property name="geometry" >
    <rect>
     <x>0</x>
