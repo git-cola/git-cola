@@ -33,7 +33,7 @@ class Controller(QObserver):
 
 		# Diff display context menu
 		view.displayText.controller = self
-		view.displayText.contextMenuEvent = self.menu_event
+		view.displayText.contextMenuEvent = self.diff_context_menu_event
 
 		# Default to creating a new commit(i.e. not an amend commit)
 		view.newCommitRadio.setChecked(True)
@@ -478,8 +478,7 @@ class Controller(QObserver):
 		self.rescan()
 		return output
 
-	def menu_about_to_show(self):
-
+	def diff_context_menu_about_to_show(self):
 		unstaged_item = qtutils.get_selected_item(
 				self.view.unstagedList,
 				self.model.get_all_unstaged())
@@ -503,12 +502,12 @@ class Controller(QObserver):
 		self.__unstage_hunk_action.setEnabled(bool(enable_unstaged))
 		self.__unstage_hunks_action.setEnabled(bool(enable_unstaged))
 
-	def menu_event(self, event):
-		self.menu_setup()
+	def diff_context_menu_event(self, event):
+		self.diff_context_menu_setup()
 		textedit = self.view.displayText
-		self.menu.exec_(textedit.mapToGlobal(event.pos()))
+		self.__menu.exec_(textedit.mapToGlobal(event.pos()))
 
-	def menu_setup(self):
+	def diff_context_menu_setup(self):
 		if self.__menu: return
 
 		menu = self.__menu = QMenu(self.view)
@@ -527,8 +526,8 @@ class Controller(QObserver):
 		self.__copy_action = menu.addAction(
 			self.tr('Copy'), self.view.copy_display)
 
-		self.connect(self.__menu,
-				'aboutToShow()', self.menu_about_to_show)
+		self.connect(self.__menu, 'aboutToShow()',
+			self.diff_context_menu_about_to_show)
 
 	def select_commits_gui(self, revs, summaries):
 		return select_commits(self.model, self.view, revs, summaries)
