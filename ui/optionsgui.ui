@@ -5,95 +5,249 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>404</width>
-    <height>321</height>
+    <width>543</width>
+    <height>313</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Options</string>
   </property>
-  <widget class="QSpinBox" name="diffContextSpin" >
-   <property name="geometry" >
-    <rect>
-     <x>280</x>
-     <y>20</y>
-     <width>50</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="minimum" >
-    <number>2</number>
-   </property>
-   <property name="value" >
-    <number>4</number>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label" >
-   <property name="geometry" >
-    <rect>
-     <x>90</x>
-     <y>30</y>
-     <width>151</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text" >
-    <string>Diff Context Lines</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="summarizeMerges" >
-   <property name="geometry" >
-    <rect>
-     <x>30</x>
-     <y>140</y>
-     <width>211</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text" >
-    <string>Summarize Merge Commits</string>
-   </property>
-  </widget>
-  <widget class="QFontComboBox" name="diffFontCombo" >
-   <property name="geometry" >
-    <rect>
-     <x>60</x>
-     <y>220</y>
-     <width>179</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="diffFontSpin" >
-   <property name="geometry" >
-    <rect>
-     <x>250</x>
-     <y>220</y>
-     <width>50</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="minimum" >
-    <number>8</number>
-   </property>
-   <property name="value" >
-    <number>12</number>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="okButton" >
-   <property name="geometry" >
-    <rect>
-     <x>300</x>
-     <y>280</y>
-     <width>75</width>
-     <height>26</height>
-    </rect>
-   </property>
-   <property name="text" >
-    <string>Done</string>
-   </property>
-  </widget>
+  <layout class="QGridLayout" >
+   <item row="0" column="0" >
+    <widget class="QLabel" name="label_2" >
+     <property name="text" >
+      <string>Main Font</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" >
+    <widget class="QSpinBox" name="mainFontSpin" >
+     <property name="minimum" >
+      <number>8</number>
+     </property>
+     <property name="value" >
+      <number>12</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2" colspan="2" >
+    <widget class="QFontComboBox" name="mainFontCombo" />
+   </item>
+   <item row="1" column="0" >
+    <widget class="QLabel" name="label_3" >
+     <property name="text" >
+      <string>Diff/Console Font</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" >
+    <widget class="QSpinBox" name="diffFontSpin" >
+     <property name="minimum" >
+      <number>8</number>
+     </property>
+     <property name="value" >
+      <number>12</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2" colspan="2" >
+    <widget class="QFontComboBox" name="diffFontCombo" >
+     <property name="currentFont" >
+      <font>
+       <family>Bitstream Vera Sans Mono</family>
+      </font>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3" >
+    <widget class="QGroupBox" name="localGroupBox" >
+     <property name="title" >
+      <string>Local Repository</string>
+     </property>
+     <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <widget class="QLabel" name="label_4" >
+        <property name="text" >
+         <string>User Name:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2" >
+       <widget class="QLineEdit" name="localNameLine" />
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="label_5" >
+        <property name="text" >
+         <string>Email Address:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2" >
+       <widget class="QLineEdit" name="localEmailLine" />
+      </item>
+      <item row="2" column="0" colspan="2" >
+       <widget class="QCheckBox" name="localSummarizeCheckBox" >
+        <property name="text" >
+         <string>Summarize Merge Commits</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="3" >
+       <widget class="QCheckBox" name="localShowDiffstatCheckBox" >
+        <property name="text" >
+         <string>Show Diffstat After Merge</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2" >
+       <widget class="QLabel" name="label_6" >
+        <property name="text" >
+         <string>Merge Verbosity:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2" >
+       <widget class="QSpinBox" name="localDiffFontSpin" >
+        <property name="minimum" >
+         <number>0</number>
+        </property>
+        <property name="maximum" >
+         <number>5</number>
+        </property>
+        <property name="value" >
+         <number>5</number>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="2" >
+       <widget class="QLabel" name="label" >
+        <property name="text" >
+         <string>Number of Diff Context Lines:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2" >
+       <widget class="QSpinBox" name="localDiffContextSpin" >
+        <property name="minimum" >
+         <number>2</number>
+        </property>
+        <property name="value" >
+         <number>5</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="3" >
+    <widget class="QGroupBox" name="globalGroupBox" >
+     <property name="title" >
+      <string>Global (All Repositories)</string>
+     </property>
+     <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <widget class="QLabel" name="label_7" >
+        <property name="text" >
+         <string>User Name:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2" >
+       <widget class="QLineEdit" name="globalNameLine" />
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="label_8" >
+        <property name="text" >
+         <string>Email Address:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2" >
+       <widget class="QLineEdit" name="globalEmailLine" />
+      </item>
+      <item row="2" column="0" colspan="2" >
+       <widget class="QCheckBox" name="globalSummarizeCheckBox" >
+        <property name="text" >
+         <string>Summarize Merge Commits</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="3" >
+       <widget class="QCheckBox" name="globalShowDiffstatCheckBox" >
+        <property name="text" >
+         <string>Show Diffstat After Merge</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2" >
+       <widget class="QLabel" name="label_10" >
+        <property name="text" >
+         <string>Merge Verbosity:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2" >
+       <widget class="QSpinBox" name="globalVerbositySpin" >
+        <property name="minimum" >
+         <number>0</number>
+        </property>
+        <property name="maximum" >
+         <number>5</number>
+        </property>
+        <property name="value" >
+         <number>5</number>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="2" >
+       <widget class="QLabel" name="label_9" >
+        <property name="text" >
+         <string>Number of Diff Context Lines:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2" >
+       <widget class="QSpinBox" name="globalDiffContextSpin" >
+        <property name="minimum" >
+         <number>2</number>
+        </property>
+        <property name="value" >
+         <number>5</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="4" >
+    <widget class="QDialogButtonBox" name="buttonBox" >
+     <property name="layoutDirection" >
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>optionsgui</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>179</x>
+     <y>392</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>295</x>
+     <y>218</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
