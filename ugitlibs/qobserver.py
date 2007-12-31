@@ -42,13 +42,13 @@ class QObserver(Observer, QObject):
 
 		elif sender in self.__view_to_model:
 			model = self.model
-			model_attr = self.__view_to_model[sender]
+			model_param = self.__view_to_model[sender]
 			if isinstance(widget, QTextEdit):
 				value = str(widget.toPlainText())
-				model.set(model_attr, value, notify=False)
+				model.set(model_param, value, notify=False)
 			elif isinstance(widget, QLineEdit):
 				value = str(widget.text())
-				model.set(model_attr, value, notify=False)
+				model.set(model_param, value, notify=False)
 			else:
 				print("SLOT(): Unknown widget:", sender, widget)
 
@@ -62,23 +62,23 @@ class QObserver(Observer, QObject):
 		for sender, callback in callbacks.iteritems():
 			self.__callbacks[sender] = callback
 
-	def model_to_view(self, model_attr, *widget_names):
-		'''Binds model attributes to qt widgets(model->view)'''
-		self.add_subject(model_attr)
-		self.__model_to_view[model_attr] = widget_names
+	def model_to_view(self, model_param, *widget_names):
+		'''Binds model params to qt widgets(model->view)'''
+		self.add_subject(model_param)
+		self.__model_to_view[model_param] = widget_names
 		for widget_name in widget_names:
-			self.__view_to_model[widget_name] = model_attr
+			self.__view_to_model[widget_name] = model_param
 
-	def add_actions(self, model_attr, callback):
+	def add_actions(self, model_param, callback):
 		'''Register view actions that are called in response to
 		view changes.(view->model)'''
-		self.add_subject(model_attr)
-		self.__actions[model_attr] = callback
+		self.add_subject(model_param)
+		self.__actions[model_param] = callback
 
-	def subject_changed(self, attr, value):
-		'''Sends a model attribute to the view(model->view)'''
-		if attr in self.__model_to_view:
-			for widget_name in self.__model_to_view[attr]:
+	def subject_changed(self, param, value):
+		'''Sends a model param to the view(model->view)'''
+		if param in self.__model_to_view:
+			for widget_name in self.__model_to_view[param]:
 				widget = getattr(self.view, widget_name)
 				if isinstance(widget, QSpinBox):
 					widget.setValue(value)
@@ -96,12 +96,17 @@ class QObserver(Observer, QObject):
 						+ 'Unknown widget:',
 						widget_name, widget)
 
-		if attr not in self.__actions:
+		if param not in self.__actions:
 			return
 		widgets = []
-		if attr in self.__model_to_view:
-			for widget_name in self.__model_to_view[attr]:
+		if param in self.__model_to_view:
+			for widget_name in self.__model_to_view[param]:
 				widget = getattr(self.view, widget_name)
 				widgets.append(widget)
 		# Call the model callback w/ the view's widgets as the args
-		self.__actions[attr](*widgets)
+		self.__actions[param](*widgets)
+
+	def update_view(self):
+		for param in self.model.get_parameters():
+			for param in self.__model_to_view[param]:
+				self.model.notify_observers(param)
