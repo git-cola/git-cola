@@ -106,5 +106,6 @@ class QObserver(Observer, QObject):
 
 	def update_view(self):
 		for param in self.model.get_param_names():
+			import pprint; pprint.pprint(self.__model_to_view)
 			if param in self.__model_to_view[param]:
 				self.model.notify_observers(param)

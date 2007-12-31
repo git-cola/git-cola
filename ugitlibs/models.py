@@ -36,14 +36,7 @@ class Model(model.Model):
 		# to being able to properly use the git porcelain.
 		cdup = git.show_cdup()
 		if cdup: os.chdir(cdup)
-
-		self.__config_types = {
-			'merge.verbosity':'int',
-			'gui.diffcontext':'int',
-			'gui.pruneduringfetch':'bool',
-			'merge.summary':'bool',
-		}
-
+		self.__config_types = None
 		if not init: return
 
 		self.read_configs()
@@ -95,17 +88,15 @@ class Model(model.Model):
 			subtree_names = [],
 			)
 
-	def get_config(self,key,local=True):
-		if local:
-			config = self.get_local_config()
-		else:
-			config = self.get_global_config()
-		try:
-			return config[key]
-		except:
-			return None
-
 	def read_configs(self):
+		if self.__config_types is None:
+			self.__config_types = {
+				'merge.verbosity':'int',
+				'gui.diffcontext':'int',
+				'gui.pruneduringfetch':'bool',
+				'merge.summary':'bool',
+			}
+
 		def config_to_dict(config):
 			newdict = {}
 			for line in config.splitlines():
@@ -120,11 +111,13 @@ class Model(model.Model):
 				newdict[k]=v
 			return newdict
 
-		local_config = git.git('config','--global','--list')
-		global_config = git.git('config','--list')
+		local_dict = config_to_dict(git.git('config','--global','--list'))
+		global_dict = config_to_dict(git.git('config','--list'))
 
-		self.set('local_config', config_to_dict(local_config))
-		self.set('global_config', config_to_dict(global_config))
+		for k,v in local_dict.iteritems():
+			self.set_param('local.'+k,v)
+		for k,v in global_dict.iteritems():
+			self.set_param('global.'+k,v)
 
 	def init_browser_data(self):
 		'''This scans over self.(names, sha1s, types) to generate
@@ -200,7 +193,7 @@ class Model(model.Model):
 
 	def set_remote(self,remote):
 		if not remote: return
-		self.set('remote',remote)
+		self.set_param('remote',remote)
 		branches = utils.grep( '%s/\S+$' % remote, git.branch(remote=True))
 		self.set_remote_branches(branches)
 
@@ -210,8 +203,8 @@ class Model(model.Model):
 
 		msg = self.get_commitmsg()
 		signoff =('Signed-off by: %s <%s>' % (
-				self.get_config('user.name'),
-				self.get_config('user.email')))
+				self.get_param('local.user.name'),
+				self.get_param('local.user.email')))
 
 		if signoff not in msg:
 			self.set_commitmsg(msg + os.linesep*2 + signoff)
@@ -288,15 +281,15 @@ class Model(model.Model):
 		self.set_revision('')
 		self.set_local_branch('')
 		self.set_remote_branch('')
-
 		self.read_configs()
-
 		# Re-enable notifications and emit changes
 		self.set_notify(notify_enabled)
 		self.notify_observers(
+				'local.user.name','local.user.email',
 				'branch', 'all_unstaged', 'staged',
 				'revision', 'remote', 'remotes',
 				'local_branches','remote_branches', 'tags')
+		#self.notify_all()
 
 	def delete_branch(self, branch):
 		return git.branch(name=branch, delete=True)

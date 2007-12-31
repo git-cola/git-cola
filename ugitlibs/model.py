@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import imp
+from cStringIO import StringIO
 from types import DictType
 from types import ListType
 from types import TupleType
@@ -11,7 +12,6 @@ from types import LongType
 from types import FloatType
 from types import ComplexType
 from types import InstanceType
-from cStringIO import StringIO
 
 class Observable(object):
 	'''Handles subject/observer notifications.'''
@@ -42,15 +42,17 @@ class Model(Observable):
 
 	def __init__(self, *args, **kwargs):
 		Observable.__init__(self)
-		# For meta-programmability
 		self.__params = []
 		self.__list_params = {}
 		self.__object_params = {}
-
+		# For meta-programmability
 		self.from_dict(kwargs)
 
-	def get_parameters(self):
+	def get_param_names(self):
 		return tuple(self.__params)
+
+	def notify_all(self):
+		self.notify_observers(*self.get_param_names())
 
 	def create(self,**kwargs):
 		return self.from_dict(kwargs)
@@ -64,7 +66,7 @@ class Model(Observable):
 	def set_object_params(self, **obj_params):
 		self.__object_params.update(obj_params)
 
-	def getattr(self, param):
+	def get_param(self,param):
 		return getattr(self, param)
 
 	def __getattr__(self, param):
@@ -85,7 +87,8 @@ class Model(Observable):
 
 		elif realparam.startswith('set'):
 			param = self.__translate(param, 'set')
-			return lambda v: self.set(param, v, check_params=True)
+			return lambda v: self.set_param(param, v,
+					check_params=True)
 
 		elif realparam.startswith('add'):
 			self.__array = self.__translate(param, 'add')
@@ -95,12 +98,12 @@ class Model(Observable):
 			self.__array = self.__translate(param, 'append')
 			return self.__append
 
-		errmsg  = "%s object has no parameter '%s'" \
-			% (self.__class__.__name__, param)
+		errmsg  = ("%s object has no parameter '%s'"
+				% (self.__class__.__name__, param))
 
 		raise AttributeError(errmsg)
 
-	def set(self, param, value, notify=True, check_params=False):
+	def set_param(self, param, value, notify=True, check_params=False):
 		'''Sets a model param with optional notification
 		and validity checking.'''
 		param = param.lower()
@@ -168,7 +171,7 @@ class Model(Observable):
 		is clued as to nested Model-objects by setting the
 		__list_params or __object_params object specifications.'''
 		for param,val in source_dict.iteritems():
-			self.set(param, self.__param_from_dict(param, val),
+			self.set_param(param, self.__param_from_dict(param, val),
 				notify=False)
 		return self
 	

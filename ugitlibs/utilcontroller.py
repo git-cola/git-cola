@@ -66,7 +66,28 @@ def update_options(model, parent):
 	return view.exec_() == QDialog.Accepted
 
 class OptionsController(QObserver):
-	def __init__(self,model,parent):
-		QObserver.__init__(self,model,parent)
-		self.parent_model = self.model
-		self.model = self.model.clone(init=False)
+	def __init__(self,model,view):
+
+		self.original_model = model
+		model = model.clone(init=False)
+
+		QObserver.__init__(self,model,view)
+
+		model_to_view = {
+			'local.user.email': 'localEmailLine',
+			'global.user.email': 'globalEmailLine',
+			'local.user.name': 'localNameLine',
+			'global.user.name': 'globalNameLine',
+		}
+
+		for m,v in model_to_view.iteritems():
+			self.model_to_view(m,v)
+
+		self.add_signals('textChanged()',
+				view.localNameLine, view.globalNameLine,
+				view.localEmailLine,view.globalEmailLine)
+
+		self.refresh_gui()
+
+	def refresh_gui(self):
+		self.model.notify_all()
