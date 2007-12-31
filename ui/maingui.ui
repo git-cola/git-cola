@@ -1,7 +1,7 @@
 <ui version="4.0" >
  <author>David Aguilar</author>
- <class>Window</class>
- <widget class="QMainWindow" name="Window" >
+ <class>maingui</class>
+ <widget class="QMainWindow" name="maingui" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -590,9 +590,6 @@ retrieve the latest commit message prior to committing.</string>
    </property>
   </action>
   <action name="options" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
    <property name="text" >
     <string>Options...</string>
    </property>
@@ -725,7 +722,7 @@ retrieve the latest commit message prior to committing.</string>
   <connection>
    <sender>quit</sender>
    <signal>triggered()</signal>
-   <receiver>Window</receiver>
+   <receiver>maingui</receiver>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel" >

@@ -86,7 +86,7 @@ def set_items(widget, items):
 
 def show_output(parent, output):
 	if not output: return
-	dialog = views.CommandDialog(parent, output=output)
+	dialog = views.OutputGUI(parent, output=output)
 	dialog.show()
 	dialog.exec_()
 

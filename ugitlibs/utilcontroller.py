@@ -2,11 +2,12 @@
 from PyQt4.QtGui import QDialog
 import qtutils
 from qobserver import QObserver
-from views import BranchDialog
-from views import CommitBrowser
+from views import BranchGUI
+from views import CommitGUI
+from views import OptionsGUI
 
 def choose_branch(title, parent, branches):
-		dlg = BranchDialog(parent,branches)
+		dlg = BranchGUI(parent,branches)
 		dlg.setWindowTitle(dlg.tr(title))
 		return dlg.get_selected()
 
@@ -15,7 +16,7 @@ def select_commits(model, parent, revs, summaries):
 	model = model.clone(init=False)
 	model.set_revisions(revs)
 	model.set_summaries(summaries)
-	view = CommitBrowser(parent)
+	view = CommitGUI(parent)
 	ctl = SelectCommitsController(model, view)
 	return ctl.select_commits()
 
@@ -30,24 +31,14 @@ class SelectCommitsController(QObserver):
 		if not summaries:
 			msg = self.tr('No commits exist in this branch.')
 			self.show_output(msg)
-			return([],[])
-
+			return []
 		qtutils.set_items(self.view.commitList, summaries)
-
 		self.view.show()
-		result = self.view.exec_()
-		if result != QDialog.Accepted: return([],[])
-
+		if self.view.exec_() != QDialog.Accepted:
+			return []
 		revs = self.model.get_revisions()
 		list_widget = self.view.commitList
-		selection = qtutils.get_selection_list(list_widget, revs)
-		if not selection: return([],[])
-
-		# also return the selected index numbers
-		index_nums = range(len(revs))
-		idxs = qtutils.get_selection_list(list_widget, index_nums)
-
-		return(selection, idxs)
+		return qtutils.get_selection_list(list_widget, revs)
 
 	def commit_sha1_selected(self):
 		row, selected = qtutils.get_selected_row(self.view.commitList)
@@ -67,3 +58,15 @@ class SelectCommitsController(QObserver):
 
 		# Copy the sha1 into the clipboard
 		qtutils.set_clipboard(sha1)
+
+def update_options(model, parent):
+	view = OptionsGUI(parent)
+	ctl = OptionsController(model,view)
+	view.show()
+	return view.exec_() == QDialog.Accepted
+
+class OptionsController(QObserver):
+	def __init__(self,model,parent):
+		QObserver.__init__(self,model,parent)
+		self.parent_model = self.model
+		self.model = self.model.clone(init=False)

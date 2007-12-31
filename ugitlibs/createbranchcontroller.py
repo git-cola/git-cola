@@ -5,11 +5,11 @@ from PyQt4.QtGui import QDialog
 import utils
 import qtutils
 from qobserver import QObserver
-from views import CreateBranchDialog
+from views import CreateBranchGUI
 
 def create_new_branch(parent,model):
 	model = model.clone(init=False)
-	view = CreateBranchDialog(parent)
+	view = CreateBranchGUI(parent)
 	ctl = CreateBranchController(model,view)
 	view.show()
 	return view.exec_() == QDialog.Accepted

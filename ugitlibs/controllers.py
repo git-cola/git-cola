@@ -15,6 +15,7 @@ from createbranchcontroller import create_new_branch
 from pushcontroller import push_branches
 from utilcontroller import choose_branch
 from utilcontroller import select_commits
+from utilcontroller import update_options
 
 class Controller(QObserver):
 	'''The controller is a mediator between the model and view.
@@ -54,7 +55,7 @@ class Controller(QObserver):
 				view.pushButton, view.signOffButton,)
 
 		self.add_signals('triggered()',
-				view.rescan,
+				view.rescan, view.options,
 				view.createBranch, view.checkoutBranch,
 				view.rebaseBranch, view.deleteBranch,
 				view.setCommitMessage, view.commit,
@@ -113,6 +114,7 @@ class Controller(QObserver):
 				# Checkboxes
 				'untrackedCheckBox': self.rescan,
 				# Menu Actions
+				'options': self.options,
 				'rescan': self.rescan,
 				'createBranch': self.branch_create,
 				'deleteBranch': self.branch_delete,
@@ -177,6 +179,9 @@ class Controller(QObserver):
 	#####################################################################
 	# Qt callbacks
 
+	def options(self):
+		update_options(self.view, self.model)
+
 	def branch_create(self):
 		if create_new_branch(self.view, self.model):
 			self.rescan()
@@ -206,12 +211,9 @@ class Controller(QObserver):
 		self.show_output(self.model.checkout(branch))
 
 	def cherry_pick(self):
-		'''Starts a cherry-picking session.'''
-		(revs, summaries) = self.model.log(all=True)
-		selection, idxs = self.select_commits_gui(revs, summaries)
-		if not selection: return
-		output = self.model.cherry_pick(selection)
-		self.show_output(self.tr(output))
+		commits = self.select_commits_gui(*self.model.log(all=True))
+		if not commits: return
+		self.show_output(self.model.cherry_pick(commits))
 
 	def commit(self):
 		msg = self.model.get_commitmsg()
@@ -271,15 +273,13 @@ class Controller(QObserver):
 		self.view_diff(staged=False)
 
 	def export_patches(self):
-		'''Launches the commit browser and exports the selected
-		patches.'''
 		(revs, summaries) = self.model.log()
-		selection, idxs = self.select_commits_gui(revs, summaries)
-		if not selection: return
-		self.show_output(self.model.format_patch(selection))
+		commits = self.select_commits_gui(revs, summaries)
+		if not commits: return
+		self.show_output(self.model.format_patch(commits))
 
 	def last_window_closed(self):
-		'''Save config settings and cleanup the any inotify threads.'''
+		'''Save config settings and cleanup any inotify threads.'''
 
 		self.model.save_window_geom()
 

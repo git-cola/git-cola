@@ -5,7 +5,7 @@ from qobserver import QObserver
 import utils
 import qtutils
 import defaults
-from views import CommitBrowser
+from views import CommitGUI
 
 def browse_git_branch(model, parent, branch):
 		if not branch: return
@@ -13,7 +13,7 @@ def browse_git_branch(model, parent, branch):
 		# with different sets of data
 		model = model.clone(init=False)
 		model.set_branch(branch)
-		view = CommitBrowser(parent)
+		view = CommitGUI(parent)
 		controller = RepoBrowserController(model, view)
 		view.show()
 		return view.exec_() == QDialog.Accepted

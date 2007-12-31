@@ -4,11 +4,11 @@ from PyQt4.QtGui import QDialog
 import utils
 import qtutils
 from qobserver import QObserver
-from views import PushDialog
+from views import PushGUI
 
 def push_branches(model, parent):
 	model = model.clone(init=False)
-	view = PushDialog(parent)
+	view = PushGUI(parent)
 	controller = PushController(model,view)
 	view.show()
 	return view.exec_() == QDialog.Accepted

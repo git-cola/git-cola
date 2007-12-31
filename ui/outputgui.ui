@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>CommandDialog</class>
- <widget class="QDialog" name="CommandDialog" >
+ <class>outputgui</class>
+ <widget class="QDialog" name="outputgui" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -10,11 +10,11 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Git Command Output</string>
+   <string>Command Output</string>
   </property>
   <layout class="QVBoxLayout" >
    <item>
-    <widget class="QTextEdit" name="commandText" >
+    <widget class="QTextEdit" name="outputText" >
      <property name="font" >
       <font>
        <family>Monospace</family>
@@ -57,14 +57,14 @@
  </widget>
  <tabstops>
   <tabstop>okButton</tabstop>
-  <tabstop>commandText</tabstop>
+  <tabstop>outputText</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
    <sender>okButton</sender>
    <signal>clicked()</signal>
-   <receiver>CommandDialog</receiver>
+   <receiver>outputgui</receiver>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel" >

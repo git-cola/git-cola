@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>BranchDialog</class>
- <widget class="QDialog" name="BranchDialog" >
+ <class>branchgui</class>
+ <widget class="QDialog" name="branchgui" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -37,7 +37,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>BranchDialog</receiver>
+   <receiver>branchgui</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -53,7 +53,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>BranchDialog</receiver>
+   <receiver>branchgui</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >

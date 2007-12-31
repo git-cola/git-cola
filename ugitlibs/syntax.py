@@ -6,7 +6,6 @@ from PyQt4.QtGui import QSyntaxHighlighter
 from PyQt4.QtGui import QTextCharFormat
 
 class DiffSyntaxHighlighter(QSyntaxHighlighter):
-
 	def __init__(self, doc):
 		QSyntaxHighlighter.__init__(self, doc)
 
@@ -58,31 +57,22 @@ class DiffSyntaxHighlighter(QSyntaxHighlighter):
 if __name__ == '__main__':
 	import sys
 	from PyQt4 import QtCore, QtGui
-
 	class SyntaxTestDialog(QtGui.QDialog):
 		def __init__(self, parent):
 			QtGui.QDialog.__init__(self, parent)
 			self.setupUi(self)
-	
-		def setupUi(self, CommandDialog):
-			CommandDialog.resize(QtCore.QSize(QtCore.QRect(0,0,720,512).size()).expandedTo(CommandDialog.minimumSizeHint()))
-
-			self.vboxlayout = QtGui.QVBoxLayout(CommandDialog)
+		def setupUi(self, dialog):
+			dialog.resize(QtCore.QSize(QtCore.QRect(0,0,720,512).size()).expandedTo(dialog.minimumSizeHint()))
+			self.vboxlayout = QtGui.QVBoxLayout(dialog)
 			self.vboxlayout.setObjectName("vboxlayout")
-
-			self.commandText = QtGui.QTextEdit(CommandDialog)
-
+			self.outputText = QtGui.QTextEdit(dialog)
 			font = QtGui.QFont()
 			font.setFamily("Monospace")
 			font.setPointSize(13)
-			self.commandText.setFont(font)
-			self.commandText.setAcceptDrops(False)
-			#self.commandText.setReadOnly(True)
-			self.vboxlayout.addWidget(self.commandText)
-
-			DiffSyntaxHighlighter(self.commandText.document())
-
-	
+			self.outputText.setFont(font)
+			self.outputText.setAcceptDrops(False)
+			self.vboxlayout.addWidget(self.outputText)
+			DiffSyntaxHighlighter(self.outputText.document())
 	app = QtGui.QApplication(sys.argv)
 	dialog = SyntaxTestDialog(app.activeWindow())
 	dialog.show()
