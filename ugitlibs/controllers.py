@@ -172,9 +172,7 @@ class Controller(QObserver):
 
 	def event(self, msg):
 		if msg.type() == defaults.INOTIFY_EVENT:
-			if 1.0 < time.time() - self.__last_inotify_event:
-				self.rescan()
-			self.__last_inotify_event = time.time()
+			self.rescan()
 			return True
 		else:
 			return False

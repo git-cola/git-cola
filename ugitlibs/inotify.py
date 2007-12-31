@@ -18,7 +18,7 @@ class FileSysEvent(ProcessEvent):
 		self.last_event_time = time.time()
 	def process_default(self, event):
 		# Prevent notificaiton floods
-		if time.time() - self.last_event_time >= 1.0:
+		if time.time() - self.last_event_time > 1.0:
 			self.parent.notify()
 		self.last_event_time = time.time()
 
@@ -37,19 +37,16 @@ class GitNotifier(QThread):
 
 	def run(self):
 		# Only capture those events that git cares about
-		mask =( EventsCodes.IN_CREATE
+		mask =  ( EventsCodes.IN_CREATE
 			| EventsCodes.IN_DELETE
-			| EventsCodes.IN_MOVED_TO
-			| EventsCodes.IN_MODIFY )
-
+			| EventsCodes.IN_MODIFY
+			| EventsCodes.IN_MOVED_TO)
 		wm = WatchManager()
 		notifier = Notifier(wm, FileSysEvent(self))
 		self.notifier = notifier
-
 		dirs_seen = {}
 		added_flag = False
 		while not self.abort:
-
 			if not added_flag:
 				wm.add_watch(self.path, mask)
 				# Register files/directories known to git
@@ -60,12 +57,7 @@ class GitNotifier(QThread):
 						wm.add_watch(directory, mask)
 						dirs_seen[directory] = True
 				added_flag = True
-
 			notifier.process_events()
-
 			if notifier.check_events():
 				notifier.read_events()
-
-			self.msleep(200)
-
 		notifier.stop()
