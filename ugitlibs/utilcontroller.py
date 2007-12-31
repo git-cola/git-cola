@@ -73,6 +73,9 @@ class OptionsController(QObserver):
 
 		QObserver.__init__(self,model,view)
 
+		view.localGroupBox.setTitle(
+			unicode(self.tr('%s Repository')) % model.get_project())
+
 		model_to_view = {
 			'local.user.email': 'localEmailLine',
 			'global.user.email': 'globalEmailLine',
