@@ -7,7 +7,7 @@ import qtutils
 from qobserver import QObserver
 from views import CreateBranchGUI
 
-def create_new_branch(parent,model):
+def create_new_branch(model,parent):
 	model = model.clone(init=False)
 	view = CreateBranchGUI(parent)
 	ctl = CreateBranchController(model,view)

@@ -189,7 +189,7 @@ class Model(model.Model):
 				commit_msg.pop()
 				break
 			commit_msg.append(msg)
-		self.set_commitmsg('\n'.join(commit_msg).rstrip())
+		self.set_commitmsg(os.linesep.join(commit_msg).rstrip())
 
 	def update_status(self):
 		# This allows us to defer notification until the

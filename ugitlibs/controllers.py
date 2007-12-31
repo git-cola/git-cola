@@ -180,10 +180,10 @@ class Controller(QObserver):
 	# Qt callbacks
 
 	def options(self):
-		update_options(self.view, self.model)
+		update_options(self.model, self.view)
 
 	def branch_create(self):
-		if create_new_branch(self.view, self.model):
+		if create_new_branch(self.model, self.view):
 			self.rescan()
 
 	def branch_delete(self):
