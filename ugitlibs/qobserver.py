@@ -6,6 +6,7 @@ from PyQt4.QtGui import QPixmap
 from PyQt4.QtGui import QTextEdit
 from PyQt4.QtGui import QLineEdit
 from PyQt4.QtGui import QListWidget
+from PyQt4.QtGui import QCheckBox
 
 from observer import Observer
 
@@ -49,6 +50,10 @@ class QObserver(Observer, QObject):
 			elif isinstance(widget, QLineEdit):
 				value = str(widget.text())
 				model.set_param(model_param, value, notify=False)
+			elif isinstance(widget, QCheckBox):
+				model.set_param(model_param, widget.isChecked())
+			elif isinstance(widget, QSpinBox):
+				model.set_param(model_param, widget.value())
 			else:
 				print("SLOT(): Unknown widget:", sender, widget)
 
@@ -89,10 +94,12 @@ class QObserver(Observer, QObject):
 				elif isinstance(widget, QListWidget):
 					widget.clear()
 					for i in value: widget.addItem(i)
+				elif isinstance(widget, QCheckBox):
+					widget.setChecked(value)
 				else:
 					print('subject_changed(): '
 						+ 'Unknown widget:',
-						widget_name, widget)
+						widget_name, widget, value)
 
 		if param not in self.__actions:
 			return
@@ -104,8 +111,5 @@ class QObserver(Observer, QObject):
 		# Call the model callback w/ the view's widgets as the args
 		self.__actions[param](*widgets)
 
-	def update_view(self):
-		for param in self.model.get_param_names():
-			import pprint; pprint.pprint(self.__model_to_view)
-			if param in self.__model_to_view[param]:
-				self.model.notify_observers(param)
+	def refresh_view(self):
+		self.model.notify_observers(*self.__model_to_view.keys())

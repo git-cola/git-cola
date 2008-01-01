@@ -82,7 +82,10 @@ def run_cmd(cmd, *args, **kwargs):
 		cmd = list(cmd + list(args))
 
 	child = QProcess()
-	child.setProcessChannelMode(QProcess.MergedChannels);
+
+	if 'stderr' not in kwargs:
+		child.setProcessChannelMode(QProcess.MergedChannels);
+
 	child.start(cmd[0], cmd[1:])
 
 	if not child.waitForStarted(): return ''

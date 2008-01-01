@@ -36,10 +36,8 @@ class Model(model.Model):
 		# to being able to properly use the git porcelain.
 		cdup = git.show_cdup()
 		if cdup: os.chdir(cdup)
-		self.__config_types = None
 		if not init: return
-
-		self.read_configs()
+		self.init_config_data()
 		self.create(
 			#####################################################
 			# Used in various places
@@ -51,7 +49,7 @@ class Model(model.Model):
 
 			#####################################################
 			# Used primarily by the main UI
-			window_geom = utils.parse_geom(git.config('ugit.geometry')),
+			window_geom = utils.parse_geom(self.get_param('global.ugit.geometry')),
 			project = os.path.basename(os.getcwd()),
 			commitmsg = '',
 			staged = [],
@@ -88,14 +86,25 @@ class Model(model.Model):
 			subtree_names = [],
 			)
 
-	def read_configs(self):
-		if self.__config_types is None:
-			self.__config_types = {
-				'merge.verbosity':'int',
-				'gui.diffcontext':'int',
-				'gui.pruneduringfetch':'bool',
-				'merge.summary':'bool',
+	def init_config_data(self):
+		self.__config_types = {}
+		self.__config_defaults = {
+			'merge.summary': False,
+			'merge.diffstat': True,
+			'merge.verbosity': 2,
+			'gui.diffcontext': 5,
+			'gui.pruneduringfetch': False,
+			'gui.fontui':'',
+			'gui.fontdiff':'',
+			'ugit.geometry':'',
 			}
+		default_dict = self.__config_defaults
+		if self.__config_types: return
+		for k,v in default_dict.iteritems():
+			if type(v) is int:
+				self.__config_types[k] = 'int'
+			elif type(v) is bool:
+				self.__config_types[k] = 'bool'
 
 		def config_to_dict(config):
 			newdict = {}
@@ -106,18 +115,26 @@ class Model(model.Model):
 					if linetype == 'int':
 						v = int(v)
 					elif linetype == 'bool':
-						v = bool(eval(v[0].upper()+v[1:]))
+						v = bool(eval(v.title()))
 				except: pass
 				newdict[k]=v
 			return newdict
 
-		local_dict = config_to_dict(git.git('config','--global','--list'))
-		global_dict = config_to_dict(git.git('config','--list'))
+		local_conf = git.git('config', '--list')
+		global_conf = git.git('config', '--global', '--list')
+		local_dict = config_to_dict(local_conf)
+		global_dict = config_to_dict(global_conf)
 
 		for k,v in local_dict.iteritems():
-			self.set_param('local.'+k,v)
+			self.set_param('local.'+k, v)
 		for k,v in global_dict.iteritems():
-			self.set_param('global.'+k,v)
+			self.set_param('global.'+k, v)
+		# Load defaults for all undefined items
+		for k,v in default_dict.iteritems():
+			if k not in local_dict:
+				self.set_param('local.'+k, v)
+			if k not in global_dict:
+				self.set_param('global.'+k, v)
 
 	def init_browser_data(self):
 		'''This scans over self.(names, sha1s, types) to generate
@@ -281,15 +298,9 @@ class Model(model.Model):
 		self.set_revision('')
 		self.set_local_branch('')
 		self.set_remote_branch('')
-		self.read_configs()
 		# Re-enable notifications and emit changes
 		self.set_notify(notify_enabled)
-		self.notify_observers(
-				'local.user.name','local.user.email',
-				'branch', 'all_unstaged', 'staged',
-				'revision', 'remote', 'remotes',
-				'local_branches','remote_branches', 'tags')
-		#self.notify_all()
+		self.notify_observers('all_unstaged', 'staged')
 
 	def delete_branch(self, branch):
 		return git.branch(name=branch, delete=True)

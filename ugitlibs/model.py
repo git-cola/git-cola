@@ -104,14 +104,15 @@ class Model(Observable):
 		raise AttributeError(errmsg)
 
 	def set_param(self, param, value, notify=True, check_params=False):
-		'''Sets a model param with optional notification
-		and validity checking.'''
+		'''Set param with optional notification and validity checks.'''
+
 		param = param.lower()
 		if check_params and param not in self.__params:
 			raise Exception("Parameter '%s' not available for %s"
-				% (param, self.__class__.__name__))
-		else:
+					% (param, self.__class__.__name__))
+		elif param not in self.__params:
 			self.__params.append(param)
+
 		setattr(self, param, value)
 		if notify: self.notify_observers(param)
 
@@ -235,29 +236,32 @@ class Model(Observable):
 		else:
 			raise NotImplementedError, 'Unknown type:' + str(type(item))
 
+	__INDENT__ = 0
 
-	__INDENT__ = 0 # Used by __str__
+	@staticmethod
+	def INDENT(i=None):
+		if i is not None:
+			Model.__INDENT__ += i
+		return '\t' * Model.__INDENT__
 
 	def __str__(self):
 		'''A convenient, recursively-defined stringification method.'''
 
 		io = StringIO()
-		io.write(" " * Model.__INDENT__)
+		io.write(Model.INDENT())
 		io.write(self.__class__.__name__ + '(')
 
-		Model.__INDENT__ += 4
+		Model.INDENT(1)
 
 		for param in self.__params:
 			if param.startswith('_'): continue
 			io.write(os.linesep)
 
-			inner = " " * Model.__INDENT__ + param + " = "
+			inner = Model.INDENT() + param + " = "
 			value = getattr(self, param)
 
 			if type(value) == ListType:
-
-				Model.__INDENT__ += 4
-				indent = " " *(Model.__INDENT__)
+				indent = Model.INDENT(1)
 				io.write(inner + "[" + os.linesep)
 				for val in value:
 					if is_model(val):
@@ -269,19 +273,15 @@ class Model(Observable):
 						io.write(',')
 						io.write(os.linesep)
 
-				Model.__INDENT__ -= 4
-
-				io.write(" " * Model.__INDENT__)
+				io.write(Model.INDENT(-1))
 				io.write('],')
 			else:
 				io.write(inner)
 				io.write(str(value))
 				io.write(',')
 
-		Model.__INDENT__ -= 4
-
 		io.write(os.linesep)
-		io.write(" "*Model.__INDENT__)
+		io.write(Model.INDENT(-1))
 		io.write(')')
 
 		value = io.getvalue()

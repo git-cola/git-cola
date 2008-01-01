@@ -44,6 +44,10 @@ def get_selected_item(list_widget, items):
 	if not selected: return None
 	return selected[0]
 
+def get_font():
+	font = QtGui.qApp.font()
+	return font
+
 def open_dialog(parent, title, filename=None):
 	qstr = QFileDialog.getOpenFileName(
 			parent, parent.tr(title), filename)

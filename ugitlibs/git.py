@@ -261,7 +261,7 @@ def rebase(newbase):
 	return git('rebase', newbase)
 
 def remote(*args):
-	return git('remote',*args).splitlines()
+	return git('remote', stderr=False, *args).splitlines()
 
 def remote_url(name):
 	return config('remote.%s.url' % name)

@@ -70,27 +70,61 @@ class OptionsController(QObserver):
 
 		self.original_model = model
 		model = model.clone(init=False)
-
 		QObserver.__init__(self,model,view)
 
-		view.localGroupBox.setTitle(
-			unicode(self.tr('%s Repository')) % model.get_project())
+		# daa
+		print str(qtutils.get_font().toString())
 
 		model_to_view = {
-			'local.user.email': 'localEmailLine',
-			'global.user.email': 'globalEmailLine',
-			'local.user.name': 'localNameLine',
-			'global.user.name': 'globalNameLine',
+			'local.user.email': 'localEmailText',
+			'global.user.email': 'globalEmailText',
+
+			'local.user.name':  'localNameText',
+			'global.user.name':  'globalNameText',
+
+			'local.merge.summary': 'localSummarizeCheckBox',
+			'global.merge.summary': 'globalSummarizeCheckBox',
+
+			'local.merge.diffstat': 'localShowDiffstatCheckBox',
+			'global.merge.diffstat': 'globalShowDiffstatCheckBox',
+
+			'local.gui.diffcontext': 'localDiffContextSpin',
+			'global.gui.diffcontext': 'globalDiffContextSpin',
+
+			'local.merge.verbosity': 'localVerbositySpin',
+			'global.merge.verbosity': 'globalVerbositySpin',
 		}
 
 		for m,v in model_to_view.iteritems():
 			self.model_to_view(m,v)
 
-		self.add_signals('textChanged()',
-				view.localNameLine, view.globalNameLine,
-				view.localEmailLine,view.globalEmailLine)
+		self.add_signals('textChanged(const QString&)',
+				view.localNameText,
+				view.globalNameText,
+				view.localEmailText,
+				view.globalEmailText)
 
-		self.refresh_gui()
+		self.add_signals('stateChanged(int)',
+				view.localSummarizeCheckBox)
 
-	def refresh_gui(self):
-		self.model.notify_all()
+		self.add_signals('valueChanged(int)',
+				view.localDiffContextSpin,
+				view.globalDiffContextSpin,
+				view.localVerbositySpin,
+				view.globalVerbositySpin)
+
+		self.add_signals('released()', view.saveButton)
+		self.add_callbacks(saveButton = self.save)
+		view.localGroupBox.setTitle(
+			unicode(self.tr('%s Repository')) % model.get_project())
+		self.refresh_view()
+
+	def save(self):
+		print self.model
+		print self.model.get_param('local.merge.summary')
+		print self.model.get_param('local.merge.diffstat')
+		print self.model.get_param('local.gui.diffcontext')
+		#print self.model.get_param('global.merge.summary')
+		#print self.model.get_param('global.merge.diffstat')
+		#daa
+		#self.view.done(QDialog.Accepted)
