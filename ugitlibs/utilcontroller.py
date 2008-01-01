@@ -68,8 +68,13 @@ def update_options(model, parent):
 class OptionsController(QObserver):
 	def __init__(self,model,view):
 
+		# used for telling about interactive font changes
 		self.original_model = model
+		# used when "cancel" is clicked
+		self.backup_model = model.clone(init=False)
+
 		model = model.clone(init=False)
+
 		QObserver.__init__(self,model,view)
 
 		model_to_view = {
@@ -122,28 +127,64 @@ class OptionsController(QObserver):
 				view.mainFontCombo,
 				view.diffFontCombo)
 
-		self.add_signals('released()', view.saveButton)
-		self.add_actions('global.ugit.fontdiff.size', self.update_all)
+		self.add_signals('released()',
+				view.saveButton,
+				view.cancelButton)
 
-		self.add_callbacks(saveButton = self.save)
+		self.add_actions('global.ugit.fontdiff.size', self.update_all_sizes)
+		self.add_actions('global.ugit.fontui.size', self.update_all_sizes)
+		self.add_actions('global.ugit.fontdiff', self.update_all_fonts)
+		self.add_actions('global.ugit.fontui', self.update_all_fonts)
+
+		self.add_callbacks(saveButton = self.save_settings)
+		self.add_callbacks(cancelButton = self.restore_settings)
+
 		view.localGroupBox.setTitle(
 			unicode(self.tr('%s Repository')) % model.get_project())
+
 		self.refresh_view()
 
-	def save(self):
-		print self.model
-		print self.model.get_param('global.ugit.fontdiff')
-		print self.model.get_param('global.ugit.fontui')
-		#daa
-		#self.view.done(QDialog.Accepted)
+	def save_settings(self):
+		self.tell_parent_model()
 
-	def update_all(self, *rest):
-		comboui = self.view.mainFontCombo
-		combodiff = self.view.diffFontCombo
-		paramui = 'global.ugit.fontui'
-		paramdiff = 'global.ugit.fontdiff'
+	def restore_settings(self):
+		print self.model
+		self.view.reject()
+
+	def tell_parent_model(self):
+		self.original_model.set_param('global.ugit.fontdiff',
+				self.model.get_param('global.ugit.fontdiff'))
+		self.original_model.set_param('global.ugit.fontui',
+				self.model.get_param('global.ugit.fontui'))
+
+	def update_all_fonts(self, *rest):
+		if self.sender().objectName() == 'mainFontCombo':
+			combo = self.view.mainFontCombo
+			spin = self.view.mainFontSpin
+			param = 'global.ugit.fontui.size'
+		else:
+			combo = self.view.diffFontCombo
+			spin = self.view.diffFontSpin
+			param = 'global.ugit.fontdiff.size'
+		self.update_font(combo, spin, param)
+
+	def update_font(self, combo, spin, param):
+		new_font = str(combo.currentFont().toString())
+		new_size = int(new_font.split(',')[1])
+		self.model.set_param(param, new_size)
+		spin.setValue(new_size)
+		self.tell_parent_model()
+
+	def update_all_sizes(self, *rest):
+		if self.sender().objectName() == 'mainFontSpin':
+			comboui = self.view.mainFontCombo
+			paramui = 'global.ugit.fontui'
+		else:
+			comboui = self.view.diffFontCombo
+			paramui = 'global.ugit.fontdiff'
+
 		self.update_size(comboui, paramui)
-		self.update_size(combodiff, paramdiff)
+		self.tell_parent_model()
 
 	def update_size(self, combo, param):
 

@@ -34,7 +34,13 @@
     </widget>
    </item>
    <item row="0" column="2" colspan="4" >
-    <widget class="QFontComboBox" name="mainFontCombo" />
+    <widget class="QFontComboBox" name="mainFontCombo" >
+     <property name="currentFont" >
+      <font>
+       <family>Bitstream Vera Sans</family>
+      </font>
+     </property>
+    </widget>
    </item>
    <item row="1" column="0" >
     <widget class="QLabel" name="label_3" >
@@ -258,22 +264,4 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>cancelButton</sender>
-   <signal>released()</signal>
-   <receiver>optionsgui</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>494</x>
-     <y>290</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>271</x>
-     <y>156</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
 </ui>

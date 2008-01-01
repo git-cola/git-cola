@@ -6,6 +6,7 @@ from PyQt4 import QtGui
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QMessageBox
 from PyQt4.QtGui import QMenu
+from PyQt4.QtGui import QFont
 
 import utils
 import qtutils
@@ -46,6 +47,8 @@ class Controller(QObserver):
 		# When a model attribute changes, this runs a specific action
 		self.add_actions('staged', self.action_staged)
 		self.add_actions('all_unstaged', self.action_all_unstaged)
+		self.add_actions('global.ugit.fontdiff', self.update_diff_font)
+		self.add_actions('global.ugit.fontui', self.update_ui_font)
 
 		# Routes signals for multiple widgets to our callbacks
 		# defined below.
@@ -528,6 +531,20 @@ class Controller(QObserver):
 
 	def select_commits_gui(self, revs, summaries):
 		return select_commits(self.model, self.view, revs, summaries)
+
+	def update_diff_font(self):
+		font = self.model.get_param('global.ugit.fontdiff')
+		if not font: return
+		qfont = QFont()
+		qfont.fromString(font)
+		self.view.displayText.setFont(qfont)
+
+	def update_ui_font(self):
+		font = self.model.get_param('global.ugit.fontui')
+		if not font: return
+		qfont = QFont()
+		qfont.fromString(font)
+		QtGui.qApp.setFont(qfont)
 
 	def start_inotify_thread(self):
 		# Do we have inotify?  If not, return.
