@@ -27,6 +27,9 @@ class View(Ui_maingui, QMainWindow):
 		# Qt does not support noun/verbs
 		self.commitButton.setText(qtutils.tr('Commit@@verb'))
 		self.menuCommit.setTitle(qtutils.tr('Commit@@verb'))
+		# Default to creating a new commit(i.e. not an amend commit)
+		self.newCommitRadio.setChecked(True)
+
 	def action_cut(self):
 		self.action_copy()
 		self.action_delete()

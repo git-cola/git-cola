@@ -35,9 +35,6 @@ class Controller(QObserver):
 		# Diff display context menu
 		view.displayText.contextMenuEvent = self.diff_context_menu_event
 
-		# Default to creating a new commit(i.e. not an amend commit)
-		view.newCommitRadio.setChecked(True)
-
 		# Binds a specific model attribute to a view widget,
 		# and vice versa.
 		self.model_to_view('commitmsg', 'commitText')
@@ -164,10 +161,12 @@ class Controller(QObserver):
 
 		# Initialize the GUI
 		self.load_window_settings()
-		self.rescan()
 
 		# Setup the inotify watchdog
 		self.start_inotify_thread()
+		self.refresh_view()
+
+		self.rescan()
 
 	#####################################################################
 	# event() is called in response to messages from the inotify thread

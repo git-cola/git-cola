@@ -66,6 +66,9 @@ class Model(Observable):
 	def set_object_params(self, **obj_params):
 		self.__object_params.update(obj_params)
 
+	def has_param(self,param):
+		return param in self.__params
+
 	def get_param(self,param):
 		return getattr(self, param)
 
@@ -116,6 +119,12 @@ class Model(Observable):
 		setattr(self, param, value)
 		if notify: self.notify_observers(param)
 
+	def copy_params(self, model, params=None):
+		if params is None:
+			params = self.get_param_names()
+		for param in params:
+			self.set_param(param, model.get_param(param))
+
 	def __append(self, *values):
 		'''Appends an arbitrary number of values to
 		an array atribute.'''
@@ -157,7 +166,7 @@ class Model(Observable):
 	def save(self, filename):
 		import simplejson
 		file = open(filename, 'w')
-		simplejson.dump( self.to_dict(), file, indent=4 )
+		simplejson.dump(self.to_dict(), file, indent=4)
 		file.close()
 
 	def load(self, filename):
@@ -200,11 +209,9 @@ class Model(Observable):
 		# Atoms and uninteresting hashes/dictionaries
 		return val
 
-
 	def to_dict(self):
 		'''Exports a model to a dictionary.
 		This simplifies serialization.'''
-
 		params = {}
 		for param in self.__params:
 			params[param] = self.__param_to_dict(param)

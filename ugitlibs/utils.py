@@ -107,13 +107,23 @@ def fork(*argv):
 	if pid: return
 	os.execlp(*argv)
 
+# c = a - b
+def sublist(a,b):
+	c = []
+	for item in a:
+		if item not in b:
+			c.append(item)
+	return c
+
 __grep_cache = {}
 def grep(pattern, items, squash=True):
+	isdict = type(items) is dict
 	if pattern in __grep_cache:
 		regex = __grep_cache[pattern]
 	else:
 		regex = __grep_cache[pattern] = re.compile(pattern)
 	matched = []
+	matchdict = {}
 	for item in items:
 		match = regex.match(item)
 		if not match: continue
@@ -125,12 +135,18 @@ def grep(pattern, items, squash=True):
 				subitems = groups[0]
 			else:
 				subitems = list(groups)
-		matched.append(subitems)
+		if isdict:
+			matchdict[item] = items[item]
+		else:
+			matched.append(subitems)
 
-	if squash and len(matched) == 1:
-		return matched[0]
+	if isdict:
+		return matchdict
 	else:
-		return matched
+		if squash and len(matched) == 1:
+			return matched[0]
+		else:
+			return matched
 
 def basename(path):
 	'''Avoid os.path.basename because we are explicitly

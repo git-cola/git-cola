@@ -120,4 +120,7 @@ class QObserver(Observer, QObject):
 		self.__actions[param](*widgets)
 
 	def refresh_view(self):
-		self.model.notify_observers(*self.__model_to_view.keys())
+		params = list(self.__model_to_view.keys())
+		for param in self.__actions.keys():
+			if param not in params: params.append(param)
+		self.model.notify_observers(*params)

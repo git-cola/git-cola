@@ -1,12 +1,3 @@
 + Merge guis
 
-+ Font stuff
-
-+ Options dialog + save/restore (started)
-
-Window positions are currently stored in the
-git repo's config.
-Will we ever need a .ugitrc?  Maybe not.
-Otherwise, in progress.
-
 + Output log window

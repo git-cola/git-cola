@@ -11,7 +11,7 @@ def browse_git_branch(model, parent, branch):
 		if not branch: return
 		# Clone the model to allow opening multiple browsers
 		# with different sets of data
-		model = model.clone(init=False)
+		model = model.clone()
 		model.set_branch(branch)
 		view = CommitGUI(parent)
 		controller = RepoBrowserController(model, view)
@@ -64,17 +64,12 @@ class RepoBrowserController(QObserver):
 			if dirent != '..':
 				# This is a real directory for which
 				# we have child entries
-				msg = utils.header('Directory:' + dirent)
 				entries = directory_entries[dirent]
 			else:
 				# This is '..' which is a special case
 				# since it doesn't really exist
-				msg = utils.header('Parent Directory')
 				entries = []
-
-			contents = '\n'.join(entries)
-
-			self.view.commitText.setText(msg + contents)
+			self.view.commitText.setText(os.linesep.join(entries))
 			self.view.revisionLine.setText('')
 		else:
 			# This is a file entry.  The current row is absolute,
@@ -89,11 +84,8 @@ class RepoBrowserController(QObserver):
 			objtype, sha1, name = \
 				self.model.get_subtree_node(idx)
 
-			guts = self.model.cat_file(objtype, sha1)
-			header = utils.header('File: ' + name)
-			contents = guts
-
-			self.view.commitText.setText(header + contents)
+			catguts = self.model.cat_file(objtype, sha1)
+			self.view.commitText.setText(catguts)
 
 			self.view.revisionLine.setText(sha1)
 			self.view.revisionLine.selectAll()

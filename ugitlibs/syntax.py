@@ -9,10 +9,10 @@ class DiffSyntaxHighlighter(QSyntaxHighlighter):
 	def __init__(self, doc):
 		QSyntaxHighlighter.__init__(self, doc)
 
-		begin = self.__mkformat(QFont.Bold, Qt.cyan)
+		begin = self.__mkformat(QFont.Bold, Qt.darkCyan)
+		diffhead = self.__mkformat(QFont.Bold, Qt.darkYellow)
 		addition = self.__mkformat(QFont.Bold, Qt.green)
 		removal = self.__mkformat(QFont.Bold, Qt.red)
-		message = self.__mkformat(QFont.Bold, Qt.yellow, Qt.black)
 
 		# Catch trailing whitespace
 		bad_ws_format = self.__mkformat(QFont.Bold, Qt.black, Qt.red)
@@ -23,7 +23,8 @@ class DiffSyntaxHighlighter(QSyntaxHighlighter):
 			( re.compile('^(@@|\+\+\+|---)'), begin ),
 			( re.compile('^\+'), addition ),
 			( re.compile('^-'), removal ),
-			( re.compile('^:'), message ),
+			( re.compile('^(diff --git|index \S+\.\.\S+|new file mode)'),
+					diffhead ),
 		)
 	
 	def getFormat(self, line):
@@ -52,7 +53,6 @@ class DiffSyntaxHighlighter(QSyntaxHighlighter):
 		format.setForeground(color)
 		if bgcolor: format.setBackground(bgcolor)
 		return format
-
 
 if __name__ == '__main__':
 	import sys

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 from PyQt4.QtGui import QDialog
+from PyQt4.QtGui import QFont
+import utils
 import qtutils
 from qobserver import QObserver
 from views import BranchGUI
@@ -13,7 +15,7 @@ def choose_branch(title, parent, branches):
 
 def select_commits(model, parent, revs, summaries):
 	'''Use the CommitBrowser to select commits from a list.'''
-	model = model.clone(init=False)
+	model = model.clone()
 	model.set_revisions(revs)
 	model.set_summaries(summaries)
 	view = CommitGUI(parent)
@@ -25,6 +27,13 @@ class SelectCommitsController(QObserver):
 		QObserver.__init__(self, model, view)
 		self.connect(view.commitList, 'itemSelectionChanged()',
 				self.commit_sha1_selected )
+
+		if model.has_param('global.ugit.fontdiff'):
+			font = model.get_param('global.ugit.fontdiff')
+			if font:
+				qf = QFont()
+				qf.fromString(font)
+				self.view.commitText.setFont(qf)
 
 	def select_commits(self):
 		summaries = self.model.get_summaries()
@@ -70,10 +79,7 @@ class OptionsController(QObserver):
 
 		# used for telling about interactive font changes
 		self.original_model = model
-		# used when "cancel" is clicked
-		self.backup_model = model.clone(init=False)
-
-		model = model.clone(init=False)
+		model = model.clone()
 
 		QObserver.__init__(self,model,view)
 
@@ -113,7 +119,10 @@ class OptionsController(QObserver):
 				view.globalEmailText)
 
 		self.add_signals('stateChanged(int)',
-				view.localSummarizeCheckBox)
+				view.localSummarizeCheckBox,
+				view.globalSummarizeCheckBox,
+				view.localShowDiffstatCheckBox,
+				view.globalShowDiffstatCheckBox)
 
 		self.add_signals('valueChanged(int)',
 				view.mainFontSpin,
@@ -131,10 +140,10 @@ class OptionsController(QObserver):
 				view.saveButton,
 				view.cancelButton)
 
-		self.add_actions('global.ugit.fontdiff.size', self.update_all_sizes)
-		self.add_actions('global.ugit.fontui.size', self.update_all_sizes)
-		self.add_actions('global.ugit.fontdiff', self.update_all_fonts)
-		self.add_actions('global.ugit.fontui', self.update_all_fonts)
+		self.add_actions('global.ugit.fontdiff.size', self.update_size)
+		self.add_actions('global.ugit.fontui.size', self.update_size)
+		self.add_actions('global.ugit.fontdiff', self.update_font)
+		self.add_actions('global.ugit.fontui', self.update_font)
 
 		self.add_callbacks(saveButton = self.save_settings)
 		self.add_callbacks(cancelButton = self.restore_settings)
@@ -143,58 +152,74 @@ class OptionsController(QObserver):
 			unicode(self.tr('%s Repository')) % model.get_project())
 
 		self.refresh_view()
+		self.backup_model = self.model.clone()
+
+	def refresh_view(self):
+
+		font = self.model.get_param('global.ugit.fontui')
+		if font:
+			size = int(font.split(',')[1])
+			self.view.mainFontSpin.setValue(size)
+			self.model.set_param('global.ugit.fontui.size', size)
+			ui_font = QFont()
+			ui_font.fromString(font)
+			self.view.mainFontCombo.setCurrentFont(ui_font)
+
+		font = self.model.get_param('global.ugit.fontdiff')
+		if font:
+			size = int(font.split(',')[1])
+			self.view.diffFontSpin.setValue(size)
+			self.model.set_param('global.ugit.fontdiff.size', size)
+			diff_font = QFont()
+			diff_font.fromString(font)
+			self.view.diffFontCombo.setCurrentFont(diff_font)
+
+		QObserver.refresh_view(self)
+
 
 	def save_settings(self):
-		self.tell_parent_model()
+		params_to_save = []
+		params = self.model.get_config_params()
+		for param in params:
+			value = self.model.get_param(param)
+			backup = self.backup_model.get_param(param)
+			if value != backup:
+				params_to_save.append(param)
+
+		for param in params_to_save:
+			self.model.save_config_param(param)
+
+		self.original_model.copy_params(self.model, params_to_save)
+
+		self.view.done(QDialog.Accepted)
 
 	def restore_settings(self):
-		print self.model
+		params = self.backup_model.get_config_params()
+		self.model.copy_params(self.backup_model, params)
+		self.tell_parent_model()
 		self.view.reject()
 
 	def tell_parent_model(self):
-		self.original_model.set_param('global.ugit.fontdiff',
-				self.model.get_param('global.ugit.fontdiff'))
-		self.original_model.set_param('global.ugit.fontui',
-				self.model.get_param('global.ugit.fontui'))
+		for param in (
+				'global.ugit.fontdiff',
+				'global.ugit.fontui',
+				'global.ugit.fontdiff.size',
+				'global.ugit.fontui.size'):
+			self.original_model.set_param(param,
+					self.model.get_param(param))
 
-	def update_all_fonts(self, *rest):
-		if self.sender().objectName() == 'mainFontCombo':
-			combo = self.view.mainFontCombo
-			spin = self.view.mainFontSpin
-			param = 'global.ugit.fontui.size'
-		else:
-			combo = self.view.diffFontCombo
-			spin = self.view.diffFontSpin
-			param = 'global.ugit.fontdiff.size'
-		self.update_font(combo, spin, param)
-
-	def update_font(self, combo, spin, param):
-		new_font = str(combo.currentFont().toString())
-		new_size = int(new_font.split(',')[1])
-		self.model.set_param(param, new_size)
-		spin.setValue(new_size)
+	def update_font(self, *rest):
 		self.tell_parent_model()
+		return
 
-	def update_all_sizes(self, *rest):
-		if self.sender().objectName() == 'mainFontSpin':
-			comboui = self.view.mainFontCombo
-			paramui = 'global.ugit.fontui'
-		else:
-			comboui = self.view.diffFontCombo
-			paramui = 'global.ugit.fontdiff'
+	def update_size(self, *rest):
+		combo = self.view.mainFontCombo
+		param = 'global.ugit.fontui'
+		default = str(combo.currentFont().toString())
+		self.model.apply_font_size(param, default)
 
-		self.update_size(comboui, paramui)
+		combo = self.view.diffFontCombo
+		param = 'global.ugit.fontdiff'
+		default = str(combo.currentFont().toString())
+		self.model.apply_font_size(param, default)
 		self.tell_parent_model()
-
-	def update_size(self, combo, param):
-
-		old_font = self.model.get_param(param)
-		if not old_font:
-			old_font = str(combo.currentFont().toString())
-
-		size = self.model.get_param(param+'.size')
-		props = old_font.split(',')
-		props[1] = str(size)
-		new_font = ','.join(props)
-
-		self.model.set_param(param, new_font)

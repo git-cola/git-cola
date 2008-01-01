@@ -7,7 +7,7 @@ from qobserver import QObserver
 from views import PushGUI
 
 def push_branches(model, parent):
-	model = model.clone(init=False)
+	model = model.clone()
 	view = PushGUI(parent)
 	controller = PushController(model,view)
 	view.show()

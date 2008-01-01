@@ -6,7 +6,7 @@ import utils
 import model
 
 class Model(model.Model):
-	def __init__(self, init=True):
+	def __init__(self):
 		model.Model.__init__(self)
 
 		# These methods are best left implemented in git.py
@@ -36,7 +36,6 @@ class Model(model.Model):
 		# to being able to properly use the git porcelain.
 		cdup = git.show_cdup()
 		if cdup: os.chdir(cdup)
-		if not init: return
 		self.init_config_data()
 		self.create(
 			#####################################################
@@ -49,7 +48,8 @@ class Model(model.Model):
 
 			#####################################################
 			# Used primarily by the main UI
-			window_geom = utils.parse_geom(self.get_param('global.ugit.geometry')),
+			window_geom = utils.parse_geom(
+					self.get_param('global.ugit.geometry')),
 			project = os.path.basename(os.getcwd()),
 			commitmsg = '',
 			staged = [],
@@ -87,22 +87,36 @@ class Model(model.Model):
 			)
 
 	def init_config_data(self):
+		self.__allowed_params = [
+			'user.name',
+			'user.email',
+			'merge.summary',
+			'merge.diffstat',
+			'merge.verbosity',
+			'gui.diffcontext',
+			'gui.pruneduringfetch',
+			'ugit.geometry',
+			'ugit.fontui',
+			'ugit.fontdiff',
+		]
 		self.__config_types = {}
 		self.__config_defaults = {
+			'user.name': '',
+			'user.email': '',
 			'merge.summary': False,
 			'merge.diffstat': True,
 			'merge.verbosity': 2,
 			'gui.diffcontext': 5,
 			'gui.pruneduringfetch': False,
-
+			}
+		self.__global_defaults = {
 			'ugit.geometry':'',
 			'ugit.fontui': '',
 			'ugit.fontui.size':12,
-			'ugit.fontui.name':'',
 			'ugit.fontdiff': '',
 			'ugit.fontdiff.size':12,
-			'ugit.fontdiff.name':'',
 			}
+
 		default_dict = self.__config_defaults
 		if self.__config_types: return
 		for k,v in default_dict.iteritems():
@@ -134,12 +148,48 @@ class Model(model.Model):
 			self.set_param('local.'+k, v)
 		for k,v in global_dict.iteritems():
 			self.set_param('global.'+k, v)
+			if k not in local_dict:
+				local_dict[k]=v
+				self.set_param('local.'+k, v)
+
+		# internal bootstrap variables
+		for param in ('global.ugit.fontui',
+				'global.ugit.fontdiff'):
+			if hasattr(self, param):
+				font = self.get_param(param)
+				if font:
+					size = int(font.split(',')[1])
+					self.set_param(param+'.size', size)
+					param = param[len('global.'):]
+					global_dict[param] = font
+					global_dict[param+'.size'] = size
+
 		# Load defaults for all undefined items
 		for k,v in default_dict.iteritems():
 			if k not in local_dict:
 				self.set_param('local.'+k, v)
 			if k not in global_dict:
 				self.set_param('global.'+k, v)
+
+		for k,v in self.__global_defaults.iteritems():
+			if k not in global_dict:
+				self.set_param('global.'+k, v)
+
+	def save_config_param(self,param):
+		value = self.get_param(param)
+		old_param = param
+		if param.startswith('local.'):
+			param = param[len('local.'):]
+			is_local = True
+		elif param.startswith('global.'):
+			param = param[len('global.'):]
+			is_local = False
+		if param not in self.__allowed_params:
+			return
+		git.config(param, value, local=is_local)
+		if old_param == 'local.gui.diffcontext':
+			git.DIFF_CONTEXT = \
+				self.get_param('local.gui.diffcontext')
 
 	def init_browser_data(self):
 		'''This scans over self.(names, sha1s, types) to generate
@@ -216,7 +266,8 @@ class Model(model.Model):
 	def set_remote(self,remote):
 		if not remote: return
 		self.set_param('remote',remote)
-		branches = utils.grep( '%s/\S+$' % remote, git.branch(remote=True))
+		branches = utils.grep( '%s/\S+$' % remote,
+				git.branch(remote=True), squash=False)
 		self.set_remote_branches(branches)
 
 	def add_signoff(self,*rest):
@@ -245,7 +296,7 @@ class Model(model.Model):
 		return utils.slurp(self.__get_squash_msg_path())
 
 	def set_squash_msg(self):
-		self.model.set_commitmsg(self.model.get_squash_msg())
+		self.set_commitmsg(self.get_squash_msg())
 
 	def get_prev_commitmsg(self,*rest):
 		'''Queries git for the latest commit message and sets it in
@@ -313,6 +364,38 @@ class Model(model.Model):
 	def get_revision_sha1(self, idx):
 		return self.get_revisions()[idx]
 
+	def set_local_config(self, param, val):
+		self.set_param(self, 'local.'+param, val)
+
+	def set_global_config(self, param, val):
+		self.set_param(self, 'global.'+param, val)
+
+	def get_config_params(self):
+		params = []
+		params.extend(map(lambda x: 'local.' + x,
+				self.__config_defaults.keys()))
+		params.extend(map(lambda x: 'global.' + x,
+				self.__config_defaults.keys()))
+		params.extend(map(lambda x: 'global.' + x,
+				self.__global_defaults.keys()))
+		return params
+
+	def apply_font_size(self, param, default):
+		old_font = self.get_param(param)
+		if not old_font:
+			old_font = default
+
+		size = self.get_param(param+'.size')
+		props = old_font.split(',')
+		props[1] = str(size)
+		new_font = ','.join(props)
+
+		self.set_param(param, new_font)
+
+	def read_font_size(self, param, new_font):
+		new_size = int(new_font.split(',')[1])
+		self.set_param(param, new_size)
+
 	def get_commit_diff(self, sha1):
 		commit = self.show(sha1)
 		first_newline = commit.index(os.linesep)
@@ -375,4 +458,4 @@ class Model(model.Model):
 		self.update_status()
 
 	def save_window_geom(self):
-		git.config('ugit.geometry', utils.get_geom())
+		git.config('ugit.geometry', utils.get_geom(), local=False)

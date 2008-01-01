@@ -2,13 +2,12 @@
 import os
 import re
 import types
-
-import defaults
 import utils
 from cStringIO import StringIO
 
 # A regex for matching the output of git(log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile('([0-9a-f]+)\W(.*)')
+DIFF_CONTEXT = 5
 
 def quote(argv):
 	return ' '.join([ utils.shell_quote(arg) for arg in argv ])
@@ -132,7 +131,7 @@ def diff(commit=None,filename=None, color=False,
 		suppress_header=True, reverse=False):
 	"Invokes git diff on a filepath."
 
-	argv = [ 'diff', '--unified='+str(defaults.DIFF_CONTEXT), '--patch-with-raw']
+	argv = [ 'diff', '--unified='+str(DIFF_CONTEXT), '--patch-with-raw']
 	if reverse: argv.append('-R')
 	if color: argv.append('--color')
 	if cached: argv.append('--cached')
@@ -202,7 +201,9 @@ def config(key, value=None, local=True):
 		argv.append(key)
 	else:
 		argv.append(key)
-		argv.append(value)
+		if type(value) is bool:
+			value = str(value).lower()
+		argv.append(str(value))
 	return git(*argv)
 
 def log(oneline=True, all=False):
