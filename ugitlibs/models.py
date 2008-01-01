@@ -94,9 +94,14 @@ class Model(model.Model):
 			'merge.verbosity': 2,
 			'gui.diffcontext': 5,
 			'gui.pruneduringfetch': False,
-			'gui.fontui':'',
-			'gui.fontdiff':'',
+
 			'ugit.geometry':'',
+			'ugit.fontui': '',
+			'ugit.fontui.size':12,
+			'ugit.fontui.name':'',
+			'ugit.fontdiff': '',
+			'ugit.fontdiff.size':12,
+			'ugit.fontdiff.name':'',
 			}
 		default_dict = self.__config_defaults
 		if self.__config_types: return

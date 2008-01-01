@@ -380,7 +380,7 @@ retrieve the latest commit message prior to committing.</string>
           <property name="font" >
            <font>
             <family>Courier</family>
-            <pointsize>11</pointsize>
+            <pointsize>12</pointsize>
            </font>
           </property>
           <property name="tabChangesFocus" >

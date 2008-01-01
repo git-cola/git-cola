@@ -72,9 +72,6 @@ class OptionsController(QObserver):
 		model = model.clone(init=False)
 		QObserver.__init__(self,model,view)
 
-		# daa
-		print str(qtutils.get_font().toString())
-
 		model_to_view = {
 			'local.user.email': 'localEmailText',
 			'global.user.email': 'globalEmailText',
@@ -93,6 +90,12 @@ class OptionsController(QObserver):
 
 			'local.merge.verbosity': 'localVerbositySpin',
 			'global.merge.verbosity': 'globalVerbositySpin',
+
+			'global.ugit.fontdiff.size': 'diffFontSpin',
+			'global.ugit.fontdiff':  'diffFontCombo',
+
+			'global.ugit.fontui.size': 'mainFontSpin',
+			'global.ugit.fontui': 'mainFontCombo',
 		}
 
 		for m,v in model_to_view.iteritems():
@@ -108,12 +111,20 @@ class OptionsController(QObserver):
 				view.localSummarizeCheckBox)
 
 		self.add_signals('valueChanged(int)',
+				view.mainFontSpin,
+				view.diffFontSpin,
 				view.localDiffContextSpin,
 				view.globalDiffContextSpin,
 				view.localVerbositySpin,
 				view.globalVerbositySpin)
+	
+		self.add_signals('currentFontChanged(const QFont&)',
+				view.mainFontCombo,
+				view.diffFontCombo)
 
 		self.add_signals('released()', view.saveButton)
+		self.add_actions('global.ugit.fontdiff.size', self.update_all)
+
 		self.add_callbacks(saveButton = self.save)
 		view.localGroupBox.setTitle(
 			unicode(self.tr('%s Repository')) % model.get_project())
@@ -121,10 +132,28 @@ class OptionsController(QObserver):
 
 	def save(self):
 		print self.model
-		print self.model.get_param('local.merge.summary')
-		print self.model.get_param('local.merge.diffstat')
-		print self.model.get_param('local.gui.diffcontext')
-		#print self.model.get_param('global.merge.summary')
-		#print self.model.get_param('global.merge.diffstat')
+		print self.model.get_param('global.ugit.fontdiff')
+		print self.model.get_param('global.ugit.fontui')
 		#daa
 		#self.view.done(QDialog.Accepted)
+
+	def update_all(self, *rest):
+		comboui = self.view.mainFontCombo
+		combodiff = self.view.diffFontCombo
+		paramui = 'global.ugit.fontui'
+		paramdiff = 'global.ugit.fontdiff'
+		self.update_size(comboui, paramui)
+		self.update_size(combodiff, paramdiff)
+
+	def update_size(self, combo, param):
+
+		old_font = self.model.get_param(param)
+		if not old_font:
+			old_font = str(combo.currentFont().toString())
+
+		size = self.model.get_param(param+'.size')
+		props = old_font.split(',')
+		props[1] = str(size)
+		new_font = ','.join(props)
+
+		self.model.set_param(param, new_font)

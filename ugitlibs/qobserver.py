@@ -7,6 +7,8 @@ from PyQt4.QtGui import QTextEdit
 from PyQt4.QtGui import QLineEdit
 from PyQt4.QtGui import QListWidget
 from PyQt4.QtGui import QCheckBox
+from PyQt4.QtGui import QFont
+from PyQt4.QtGui import QFontComboBox
 
 from observer import Observer
 
@@ -54,6 +56,9 @@ class QObserver(Observer, QObject):
 				model.set_param(model_param, widget.isChecked())
 			elif isinstance(widget, QSpinBox):
 				model.set_param(model_param, widget.value())
+			elif isinstance(widget, QFontComboBox):
+				model.set_param(model_param,
+					str(widget.currentFont().toString()))
 			else:
 				print("SLOT(): Unknown widget:", sender, widget)
 
@@ -96,6 +101,9 @@ class QObserver(Observer, QObject):
 					for i in value: widget.addItem(i)
 				elif isinstance(widget, QCheckBox):
 					widget.setChecked(value)
+				elif isinstance(widget, QFontComboBox):
+					font = widget.currentFont()
+					font.fromString(value)
 				else:
 					print('subject_changed(): '
 						+ 'Unknown widget:',

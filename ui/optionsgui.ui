@@ -34,13 +34,7 @@
     </widget>
    </item>
    <item row="0" column="2" colspan="4" >
-    <widget class="QFontComboBox" name="mainFontCombo" >
-     <property name="currentFont" >
-      <font>
-       <family>Bitstream Vera Sans</family>
-      </font>
-     </property>
-    </widget>
+    <widget class="QFontComboBox" name="mainFontCombo" />
    </item>
    <item row="1" column="0" >
     <widget class="QLabel" name="label_3" >
