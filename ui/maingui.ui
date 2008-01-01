@@ -296,7 +296,7 @@ otherwise only the selected items will be committed.</string>
                </property>
                <property name="sizeHint" >
                 <size>
-                 <width>100</width>
+                 <width>20</width>
                  <height>20</height>
                 </size>
                </property>

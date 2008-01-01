@@ -8,8 +8,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>780</width>
-    <height>512</height>
+    <width>621</width>
+    <height>402</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -68,15 +68,40 @@
       </property>
       <item>
        <layout class="QHBoxLayout" >
+        <property name="spacing" >
+         <number>4</number>
+        </property>
         <item>
          <widget class="QLabel" name="label_3" >
+          <property name="windowModality" >
+           <enum>Qt::NonModal</enum>
+          </property>
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text" >
            <string>Revision Expression:</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="revisionLine" />
+         <widget class="QLineEdit" name="revisionLine" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -84,6 +109,12 @@
        <layout class="QHBoxLayout" >
         <item>
          <widget class="QRadioButton" name="localBranchRadio" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text" >
            <string>Local Branch</string>
           </property>
@@ -94,6 +125,12 @@
         </item>
         <item>
          <widget class="QRadioButton" name="remoteBranchRadio" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text" >
            <string>Tracking Branch</string>
           </property>
@@ -101,6 +138,12 @@
         </item>
         <item>
          <widget class="QRadioButton" name="tagRadio" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text" >
            <string>Tag</string>
           </property>
@@ -176,6 +219,12 @@
           </item>
           <item>
            <widget class="QRadioButton" name="noUpdateRadio" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text" >
              <string>No</string>
             </property>
@@ -183,6 +232,12 @@
           </item>
           <item>
            <widget class="QRadioButton" name="fastForwardUpdateRadio" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text" >
              <string>Fast Forward Only</string>
             </property>
@@ -193,6 +248,12 @@
           </item>
           <item>
            <widget class="QRadioButton" name="resetRadio" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text" >
              <string>Reset</string>
             </property>
