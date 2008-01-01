@@ -8,7 +8,7 @@ from qobserver import QObserver
 from views import CreateBranchGUI
 
 def create_new_branch(model,parent):
-	model = model.clone(init=False)
+	model = model.clone()
 	view = CreateBranchGUI(parent)
 	ctl = CreateBranchController(model,view)
 	view.show()
