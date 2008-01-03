@@ -24,14 +24,6 @@ class QObserver(Observer, QObject):
 		self.__callbacks = {}
 		self.__model_to_view = {}
 		self.__view_to_model = {}
-	
-	def connect(self, obj, signal_str, *args):
-		'''Convenience function so that subclasses do not have
-		to import QtCore.SIGNAL.'''
-		signal = signal_str
-		if type(signal) is str:
-			signal = SIGNAL(signal)
-		return QObject.connect(obj, signal, *args)
 
 	def SLOT(self, *args):
 		'''Default slot to handle all Qt callbacks.
@@ -48,19 +40,32 @@ class QObserver(Observer, QObject):
 			model_param = self.__view_to_model[sender]
 			if isinstance(widget, QTextEdit):
 				value = str(widget.toPlainText())
-				model.set_param(model_param, value, notify=False)
+				model.set_param(model_param, value,
+						notify=False)
 			elif isinstance(widget, QLineEdit):
 				value = str(widget.text())
-				model.set_param(model_param, value, notify=False)
+				model.set_param(model_param, value,
+						notify=False)
 			elif isinstance(widget, QCheckBox):
-				model.set_param(model_param, widget.isChecked())
+				model.set_param(model_param, widget.isChecked(),
+						notify=False)
 			elif isinstance(widget, QSpinBox):
-				model.set_param(model_param, widget.value())
+				model.set_param(model_param, widget.value(),
+						notify=False)
 			elif isinstance(widget, QFontComboBox):
-				model.set_param(model_param,
-					str(widget.currentFont().toString()))
+				value = unicode(widget.currentFont().toString())
+				model.set_param(model_param, value,
+						notify=False)
 			else:
 				print("SLOT(): Unknown widget:", sender, widget)
+
+	def connect(self, obj, signal_str, *args):
+		'''Convenience function so that subclasses do not have
+		to import QtCore.SIGNAL.'''
+		signal = signal_str
+		if type(signal) is str:
+			signal = SIGNAL(signal)
+		return QObject.connect(obj, signal, *args)
 
 	def add_signals(self, signal_str, *objects):
 		'''Connects object's signal to the QObserver.'''

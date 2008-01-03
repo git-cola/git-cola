@@ -17,174 +17,168 @@
       <property name="orientation" >
        <enum>Qt::Vertical</enum>
       </property>
-      <property name="handleWidth" >
-       <number>2</number>
-      </property>
-      <widget class="QSplitter" name="splitter_bottom" >
+      <widget class="QSplitter" name="splitter" >
        <property name="orientation" >
-        <enum>Qt::Vertical</enum>
+        <enum>Qt::Horizontal</enum>
        </property>
        <property name="handleWidth" >
         <number>2</number>
        </property>
-       <widget class="QSplitter" name="splitter" >
-        <property name="orientation" >
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="handleWidth" >
-         <number>2</number>
-        </property>
-        <widget class="QWidget" name="layoutWidget" >
-         <layout class="QVBoxLayout" >
-          <property name="spacing" >
-           <number>0</number>
-          </property>
-          <item>
-           <layout class="QHBoxLayout" >
-            <property name="spacing" >
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="label_3" >
-              <property name="text" >
-               <string>Unstaged Changes</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="untracked_checkbox" >
-              <property name="toolTip" >
-               <string>Includes untracked files in the unstaged changes list.
+       <widget class="QWidget" name="layoutWidget" >
+        <layout class="QVBoxLayout" >
+         <property name="spacing" >
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QHBoxLayout" >
+           <property name="spacing" >
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="label_3" >
+             <property name="text" >
+              <string>Unstaged Changes</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="untracked_checkbox" >
+             <property name="toolTip" >
+              <string>Includes untracked files in the unstaged changes list.
 Disabling this causes ugit to only display files known to git
 in the unstaged changes list.</string>
-              </property>
-              <property name="text" >
-               <string>Show Untracked Files</string>
-              </property>
-              <property name="checked" >
-               <bool>true</bool>
-              </property>
-              <property name="tristate" >
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer>
-              <property name="orientation" >
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeType" >
-               <enum>QSizePolicy::MinimumExpanding</enum>
-              </property>
-              <property name="sizeHint" >
-               <size>
-                <width>20</width>
-                <height>22</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="QListWidget" name="unstaged_list" >
-            <property name="font" >
-             <font>
-              <family>Courier</family>
-              <pointsize>11</pointsize>
-             </font>
-            </property>
-            <property name="toolTip" >
-             <string>A list of all the unstaged changes.
+             </property>
+             <property name="text" >
+              <string>Show Untracked Files</string>
+             </property>
+             <property name="checked" >
+              <bool>true</bool>
+             </property>
+             <property name="tristate" >
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::MinimumExpanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>20</width>
+               <height>22</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QListWidget" name="unstaged_list" >
+           <property name="font" >
+            <font>
+             <family>Courier</family>
+             <pointsize>11</pointsize>
+            </font>
+           </property>
+           <property name="toolTip" >
+            <string>A list of all the unstaged changes.
 This list includes those files known to git and can optionally
 include untracked files if "Show Untracked Files" is checked.</string>
-            </property>
-            <property name="alternatingRowColors" >
-             <bool>true</bool>
-            </property>
-            <property name="selectionMode" >
-             <enum>QAbstractItemView::ExtendedSelection</enum>
-            </property>
-            <property name="viewMode" >
-             <enum>QListView::ListMode</enum>
-            </property>
-            <property name="uniformItemSizes" >
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="layoutWidget" >
-         <layout class="QVBoxLayout" >
-          <property name="spacing" >
-           <number>0</number>
-          </property>
-          <item>
-           <layout class="QHBoxLayout" >
-            <property name="spacing" >
-             <number>0</number>
-            </property>
-            <property name="bottomMargin" >
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="label_2" >
-              <property name="sizePolicy" >
-               <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text" >
-               <string>Staged Changes (Will Commit)</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer>
-              <property name="orientation" >
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeType" >
-               <enum>QSizePolicy::MinimumExpanding</enum>
-              </property>
-              <property name="sizeHint" >
-               <size>
-                <width>20</width>
-                <height>22</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="QListWidget" name="staged_list" >
-            <property name="font" >
-             <font>
-              <family>Courier</family>
-              <pointsize>11</pointsize>
-             </font>
-            </property>
-            <property name="toolTip" >
-             <string>A list of all staged changes for the next commit.</string>
-            </property>
-            <property name="alternatingRowColors" >
-             <bool>true</bool>
-            </property>
-            <property name="selectionMode" >
-             <enum>QAbstractItemView::ExtendedSelection</enum>
-            </property>
-            <property name="viewMode" >
-             <enum>QListView::ListMode</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
+           </property>
+           <property name="alternatingRowColors" >
+            <bool>true</bool>
+           </property>
+           <property name="selectionMode" >
+            <enum>QAbstractItemView::ExtendedSelection</enum>
+           </property>
+           <property name="viewMode" >
+            <enum>QListView::ListMode</enum>
+           </property>
+           <property name="uniformItemSizes" >
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
+       <widget class="QWidget" name="layoutWidget" >
+        <layout class="QVBoxLayout" >
+         <property name="spacing" >
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QHBoxLayout" >
+           <property name="spacing" >
+            <number>0</number>
+           </property>
+           <property name="bottomMargin" >
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="label_2" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text" >
+              <string>Staged Changes (Will Commit)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::MinimumExpanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>20</width>
+               <height>22</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QListWidget" name="staged_list" >
+           <property name="font" >
+            <font>
+             <family>Courier</family>
+             <pointsize>11</pointsize>
+            </font>
+           </property>
+           <property name="toolTip" >
+            <string>A list of all staged changes for the next commit.</string>
+           </property>
+           <property name="alternatingRowColors" >
+            <bool>true</bool>
+           </property>
+           <property name="selectionMode" >
+            <enum>QAbstractItemView::ExtendedSelection</enum>
+           </property>
+           <property name="viewMode" >
+            <enum>QListView::ListMode</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QSplitter" name="splitter_bottom" >
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
        <widget class="QWidget" name="layoutWidget" >
         <layout class="QHBoxLayout" >
          <property name="spacing" >
@@ -350,57 +344,57 @@ retrieve the latest commit message prior to committing.</string>
          </item>
         </layout>
        </widget>
-      </widget>
-      <widget class="QWidget" name="layoutWidget" >
-       <layout class="QVBoxLayout" >
-        <property name="spacing" >
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QLabel" name="displayLabel" >
-          <property name="frameShape" >
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow" >
-           <enum>QFrame::Plain</enum>
-          </property>
-          <property name="text" >
-           <string/>
-          </property>
-          <property name="alignment" >
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTextEdit" name="display_text" >
-          <property name="font" >
-           <font>
-            <family>Courier</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-          <property name="tabChangesFocus" >
-           <bool>true</bool>
-          </property>
-          <property name="lineWrapMode" >
-           <enum>QTextEdit::NoWrap</enum>
-          </property>
-          <property name="readOnly" >
-           <bool>true</bool>
-          </property>
-          <property name="acceptRichText" >
-           <bool>false</bool>
-          </property>
-          <property name="cursorWidth" >
-           <number>2</number>
-          </property>
-          <property name="textInteractionFlags" >
-           <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::NoTextInteraction|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QWidget" name="layoutWidget" >
+        <layout class="QVBoxLayout" >
+         <property name="spacing" >
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="displayLabel" >
+           <property name="frameShape" >
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow" >
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="text" >
+            <string/>
+           </property>
+           <property name="alignment" >
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTextEdit" name="display_text" >
+           <property name="font" >
+            <font>
+             <family>Courier</family>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="tabChangesFocus" >
+            <bool>true</bool>
+           </property>
+           <property name="lineWrapMode" >
+            <enum>QTextEdit::NoWrap</enum>
+           </property>
+           <property name="readOnly" >
+            <bool>true</bool>
+           </property>
+           <property name="acceptRichText" >
+            <bool>false</bool>
+           </property>
+           <property name="cursorWidth" >
+            <number>2</number>
+           </property>
+           <property name="textInteractionFlags" >
+            <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::NoTextInteraction|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -412,7 +406,7 @@ retrieve the latest commit message prior to committing.</string>
      <x>0</x>
      <y>0</y>
      <width>780</width>
-     <height>26</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="repository_menu" >

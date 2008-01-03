@@ -27,6 +27,9 @@ class Controller(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self, model, view)
 
+		# parent-less log window
+		qtutils.LOGGER = log_window(model, QtGui.qApp.activeWindow())
+
 		self.__last_inotify_event = time.time()
 
 		# The diff-display context menu
@@ -188,9 +191,6 @@ class Controller(QObserver):
 		# Setup the inotify watchdog
 		self.start_inotify_thread()
 		self.refresh_view()
-
-		# parent-less log window
-		qtutils.LOGGER = log_window(model, None)
 
 		self.init_log()
 		self.rescan()

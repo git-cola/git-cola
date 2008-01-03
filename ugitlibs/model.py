@@ -192,8 +192,7 @@ class Model(Observable):
 			if param in self.__list_params:
 				# A list of Model-derived objects
 				listparam = []
-				objspec = self.__list_params[param]
-				cls = self.__get_class(objspec)
+				cls = self.__list_params[param]
 				for item in val:
 					listparam.append(cls().from_dict(item))
 				return listparam
@@ -202,8 +201,7 @@ class Model(Observable):
 		elif is_dict(val):
 			if param in self.__object_params:
 				# "module.submodule:ClassName"
-				objectspec = self.__object_params[param]
-				cls = self.__get_class(objectspec)
+				cls = self.__object_params[param]
 				return cls().from_dict(val)
 
 		# Atoms and uninteresting hashes/dictionaries

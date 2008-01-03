@@ -3,32 +3,30 @@ import unittest
 from testmodel import TestModel
 
 class ModelTest(unittest.TestCase):
-
 	def setUp(self):
 		self.model = TestModel()
-
 	def tearDown(self):
 		del self.model
+
+	def testCreate(self):
+		self.model.create(foo='bar')
+		self.failUnless(self.model.get_foo()=='bar')
 	
 	def testRegularAttributes(self):
 		'''Test accessing attribute via model.attribute.'''
 		self.failUnless( self.model.attribute == 'value' )
 
-	def testUppercaseAttributes(self):
-		'''Test accessing attribute via model.ATTRIBUTE.'''
-		self.failUnless( self.model.ATTRIBUTE == 'value' )
-	
 	def testMixedcaseAttributes(self):
 		'''Test accessing attribute via model.Attribute.'''
-		self.failUnless( self.model.Attribute == 'value' )
+		self.failUnless( self.model.AtTrIbUte == 'value' )
 	
 	def testExplicitAttr(self):
-		'''Test accessing an explicit attribute.'''
+		'''Test accessing an explicit attribute. Just in case we f** up getattr'''
 		self.failUnless( self.model.hello == 'world' )
 	
 	def testRealMethod(self):
 		'''Test calling a concrete model method.'''
-		self.failUnless( self.model.realMethod() == 'real' )
+		self.failUnless( self.model.testMethod() == 'test' )
 	
 	def testGetter(self):
 		'''Test calling using the get* method.'''
@@ -36,7 +34,7 @@ class ModelTest(unittest.TestCase):
 	
 	def testSetter(self):
 		'''Test using the set* method.'''
-		self.model.set('newAttribute','baz')
+		self.model.set_param('newAttribute','baz')
 		self.failUnless( self.model.newattribute == 'baz' )
 		self.failUnless( self.model.getNewAttribute() == 'baz' )
 

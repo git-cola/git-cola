@@ -177,7 +177,7 @@ class OptionsController(QObserver):
 
 		QObserver.refresh_view(self)
 
-
+	# save button
 	def save_settings(self):
 		params_to_save = []
 		params = self.model.get_config_params()
@@ -194,6 +194,7 @@ class OptionsController(QObserver):
 
 		self.view.done(QDialog.Accepted)
 
+	# cancel button, undo changes
 	def restore_settings(self):
 		params = self.backup_model.get_config_params()
 		self.model.copy_params(self.backup_model, params)
@@ -227,6 +228,7 @@ class OptionsController(QObserver):
 
 def log_window(model, parent):
 	model = model.clone()
+	model.create(search_text='')
 	view = OutputGUI(parent)
 	ctl = LogWindowController(model,view)
 	return view
@@ -236,48 +238,60 @@ class LogWindowController(QObserver):
 		QObserver.__init__(self, model, view)
 
 		self.model_to_view('search_text', 'search_line')
-		self.add_signals('textChanged(const QString&)',
-				self.view.search_line)
+		self.add_signals('textChanged(const QString&)', self.view.search_line)
+
+		self.connect(self.view.search_line,
+			'textChanged(const QString&)', self.insta_search)
 
 		self.connect(self.view.clear_button, 'released()', self.clear)
 		self.connect(self.view.next_button, 'released()', self.next)
 		self.connect(self.view.prev_button, 'released()', self.prev)
-		self.connect(self.view.output_text, 'cursorPositionChanged()',
-				self.cursor_position_changed)
-
+		self.connect(self.view.output_text,
+			'cursorPositionChanged()', self.cursor_position_changed)
 		self.reset()
 
 	def clear(self):
 		self.view.output_text.clear()
 		self.reset()
 
+	def insta_search(self,*rest):
+		self.search_offset = 0
+		txt = self.model.get_search_text().lower()
+		if len(txt.strip())>2: self.next()
+
 	def reset(self):
 		self.search_offset = 0
 
 	def next(self):
-		text = self.model.get_search_text()
+		text = self.model.get_search_text().lower().strip()
 		if not text: return
 		output = str(self.view.output_text.toPlainText())
 		if self.search_offset + len(text) > len(output):
 			if qtutils.question(
-				self.view,
-				unicode(self.tr("%s not found")) % text,
-				unicode(self.tr("Could not find '%s'.\n"
+					self.view,
+					unicode(self.tr("%s not found")) % text,
+					unicode(self.tr(
+						"Could not find '%s'.\n"
 						"Search from the beginning?"
-						)) % text):
+						)) % text,
+					default=False):
 				self.search_offset = 0
+			else:
+				return
 
-		find_in = output[self.search_offset:]
+		find_in = output[self.search_offset:].lower()
 		try:
 			index = find_in.index(text)
 		except:
 			self.search_offset = 0
 			if qtutils.question(
-				self.view,
-				unicode(self.tr("%s not found")) % text,
-				unicode(self.tr("Could not find '%s'.\n"
+					self.view,
+					unicode(self.tr("%s not found")) % text,
+					unicode(self.tr(
+						"Could not find '%s'.\n"
 						"Search from the beginning?"
-						)) % text):
+						)) % text,
+					default=False):
 				self.next()
 			return
 		cursor = self.view.output_text.textCursor()
@@ -291,13 +305,13 @@ class LogWindowController(QObserver):
 		self.search_offset = new_offset
 
 	def prev(self):
-		text = self.model.get_search_text()
+		text = self.model.get_search_text().lower().strip()
 		if not text: return
 		output = str(self.view.output_text.toPlainText())
 		if self.search_offset == 0:
 			self.search_offset = len(output)
 
-		find_in = output[:self.search_offset]
+		find_in = output[:self.search_offset].lower()
 		try:
 			offset = find_in.rindex(text)
 		except:

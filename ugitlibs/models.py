@@ -8,9 +8,14 @@ import model
 class Model(model.Model):
 	def __init__(self):
 		model.Model.__init__(self)
+		self.init_config_data()
+		# chdir to the root of the git tree.
+		# This keeps paths relative.
+		cdup = git.show_cdup()
+		if cdup: os.chdir(cdup)
 
 		# These methods are best left implemented in git.py
-		git_attrs=(
+		for cmd in (
 				'add',
 				'add_or_remove',
 				'cat_file',
@@ -27,16 +32,9 @@ class Model(model.Model):
 				'rebase',
 				'remote_url',
 				'rev_list_range',
-				)
+				):
+			setattr(self, cmd, getattr(git,cmd))
 
-		for attr in git_attrs:
-			setattr(self, attr, getattr(git,attr))
-
-		# chdir to the root of the git tree.  This is critical
-		# to being able to properly use the git porcelain.
-		cdup = git.show_cdup()
-		if cdup: os.chdir(cdup)
-		self.init_config_data()
 		self.create(
 			#####################################################
 			# Used in various places
