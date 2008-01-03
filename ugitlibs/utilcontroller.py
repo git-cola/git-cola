@@ -109,7 +109,7 @@ class OptionsController(QObserver):
 			'global.ugit.fontui.size': 'main_font_spinbox',
 			'global.ugit.fontui': 'main_font_combo',
 
-			'global.ugit.history_browser_line': 'history_browser_line',
+			'global.ugit.historybrowser': 'history_browser_line',
 		}
 
 		for m,v in model_to_view.iteritems():
@@ -177,6 +177,10 @@ class OptionsController(QObserver):
 			diff_font = QFont()
 			diff_font.fromString(font)
 			self.view.diff_font_combo.setCurrentFont(diff_font)
+
+		browser = self.model.get_param('global.ugit.historybrowser')
+		if browser:
+			self.view.history_browser_line.setText(browser)
 
 		QObserver.refresh_view(self)
 
