@@ -18,26 +18,28 @@ class CreateBranchController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self, model, view)
 
-		self.model_to_view('revision', 'revisionLine')
-		self.model_to_view('local_branch', 'branchLine')
-		self.add_signals('textChanged(const QString&)',
-				view.revisionLine, view.branchLine)
+		self.model_to_view('revision', 'revision_line')
+		self.model_to_view('local_branch', 'branch_line')
 
+		self.add_signals('textChanged(const QString&)',
+				view.revision_line,
+				view.branch_line)
 		self.add_signals('itemSelectionChanged()',
-				view.branchRootList)
+				view.branch_list)
 		self.add_signals('itemClicked(QListWidgetItem *)',
-				view.branchRootList)
+				view.branch_list)
 		self.add_signals('released()',
-				view.createBranchButton,
-				view.localBranchRadio, view.remoteBranchRadio,
-				view.tagRadio)
+				view.create_button,
+				view.local_radio,
+				view.remote_radio,
+				view.tag_radio)
 
 		self.add_callbacks(
-				branchRootList = self.item_changed,
-				createBranchButton = self.create_branch,
-				localBranchRadio = self.__display_model,
-				remoteBranchRadio = self.__display_model,
-				tagRadio = self.__display_model,
+				branch_list = self.item_changed,
+				create_button = self.create_branch,
+				local_radio = self.__display_model,
+				remote_radio = self.__display_model,
+				tag_radio = self.__display_model,
 				)
 
 		self.__display_model()
@@ -63,7 +65,7 @@ class CreateBranchController(QObserver):
 		check_branch = False
 		if branch in existing_branches:
 
-			if self.view.noUpdateRadio.isChecked():
+			if self.view.no_update_radio.isChecked():
 				msg = self.tr("Branch '%s' already exists.")
 				msg = unicode(msg) % branch
 				qtutils.information(self.view,
@@ -100,20 +102,20 @@ class CreateBranchController(QObserver):
 			if not result: return
 
 		# TODO: Settings for git branch
-		track = self.view.remoteBranchRadio.isChecked()
-		fetch = self.view.fetchCheckBox.isChecked()
-		ffwd = self.view.fastForwardUpdateRadio.isChecked()
-		reset = self.view.resetRadio.isChecked()
+		track = self.view.remote_radio.isChecked()
+		fetch = self.view.fetch_checkbox.isChecked()
+		ffwd = self.view.ffwd_only_radio.isChecked()
+		reset = self.view.reset_radio.isChecked()
 
 		output = self.model.create_branch(branch, revision, track=track)
-		qtutils.show_output(self.view, output)
+		qtutils.show_output(output)
 		self.view.accept()
 
 	def item_changed(self, *rest):
 		'''This callback is called when the item selection changes
-		in the branchRootList.'''
+		in the branch_list.'''
 
-		qlist = self.view.branchRootList
+		qlist = self.view.branch_list
 		( row, selected ) = qtutils.get_selected_row(qlist)
 		if not selected: return
 
@@ -125,7 +127,7 @@ class CreateBranchController(QObserver):
 
 		# Only set the branch name field if we're
 		# branching from a remote branch.
-		if not self.view.remoteBranchRadio.isChecked():
+		if not self.view.remote_radio.isChecked():
 			return
 
 		branch = utils.basename(rev)
@@ -137,13 +139,13 @@ class CreateBranchController(QObserver):
 
 	def __display_model(self):
 		branches = self.__get_branch_sources()
-		qtutils.set_items(self.view.branchRootList, branches)
+		qtutils.set_items(self.view.branch_list, branches)
 
 	def __get_branch_sources(self):
 		'''Get the list of items for populating the branch root list.'''
-		if self.view.localBranchRadio.isChecked():
+		if self.view.local_radio.isChecked():
 			return self.model.get_local_branches()
-		elif self.view.remoteBranchRadio.isChecked():
+		elif self.view.remote_radio.isChecked():
 			return self.model.get_remote_branches()
-		elif self.view.tagRadio.isChecked():
+		elif self.view.tag_radio.isChecked():
 			return self.model.get_tags()

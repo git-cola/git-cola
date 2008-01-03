@@ -1,9 +1,6 @@
 <ui version="4.0" >
  <class>pushgui</class>
  <widget class="QDialog" name="pushgui" >
-  <property name="windowModality" >
-   <enum>Qt::ApplicationModal</enum>
-  </property>
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -26,12 +23,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="localBranchText" />
+      <widget class="QLineEdit" name="local_branch_line" />
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QListWidget" name="localBranchList" />
+    <widget class="QListWidget" name="local_branch_list" />
    </item>
    <item>
     <layout class="QHBoxLayout" >
@@ -43,12 +40,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="remoteText" />
+      <widget class="QLineEdit" name="remote_line" />
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QListWidget" name="remoteList" />
+    <widget class="QListWidget" name="remote_list" />
    </item>
    <item>
     <layout class="QHBoxLayout" >
@@ -60,27 +57,27 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="remoteBranchText" />
+      <widget class="QLineEdit" name="remote_branch_line" />
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QListWidget" name="remoteBranchList" />
+    <widget class="QListWidget" name="remote_branch_list" />
    </item>
    <item>
     <layout class="QHBoxLayout" >
      <item>
-      <widget class="QCheckBox" name="allowFFOnlyCheckBox" >
+      <widget class="QCheckBox" name="ffwd_only_checkbox" >
        <property name="text" >
         <string>Fast Forward Only</string>
        </property>
-       <property name="checked">
+       <property name="checked" >
         <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="tagsCheckBox" >
+      <widget class="QCheckBox" name="tags_checkbox" >
        <property name="text" >
         <string>Include tags</string>
        </property>
@@ -100,14 +97,14 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton" >
+      <widget class="QPushButton" name="push_button" >
        <property name="text" >
         <string>Push</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="cancelButton" >
+      <widget class="QPushButton" name="cancel_button" >
        <property name="text" >
         <string>Cancel</string>
        </property>
@@ -118,5 +115,22 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>cancel_button</sender>
+   <signal>released()</signal>
+   <receiver>pushgui</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>502</x>
+     <y>489</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>274</x>
+     <y>255</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

@@ -49,29 +49,14 @@ def ident_file_type(filename):
 	# Fallback for modified files of an unknown type
 	return 'generic.png'
 
-def get_icon(filename):
+def get_file_icon(filename):
 	'''Returns the full path to an icon file corresponding to
 	filename's contents.'''
 	icon_file = ident_file_type(filename)
+	return get_icon(icon_file)
+
+def get_icon(icon_file):
 	return os.path.join(ICONSDIR, icon_file)
-
-def get_staged_icon(filename):
-	'''Special-case method for staged items.  These are only
-	ever 'staged' and 'removed' items in the staged list.'''
-
-	if os.path.exists(filename):
-		return os.path.join(ICONSDIR, 'staged.png')
-	else:
-		return os.path.join(ICONSDIR, 'removed.png')
-
-def get_untracked_icon():
-	return os.path.join(ICONSDIR, 'untracked.png')
-
-def get_directory_icon():
-	return os.path.join(ICONSDIR, 'dir.png')
-
-def get_file_icon():
-	return os.path.join(ICONSDIR, 'generic.png')
 
 def run_cmd(cmd, *args, **kwargs):
 	# Handle cmd as either a string or an argv list

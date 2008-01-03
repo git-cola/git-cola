@@ -3,6 +3,7 @@
 import os
 from PyQt4.QtCore import QEvent
 
+VERSION = '0.8.0'
 DIRECTORY = os.getcwd()
 
 WIDTH = 780

@@ -37,9 +37,11 @@ export PYTHON
 
 BUILDING FROM SOURCE
 
-./configure --prefix=/usr
-make && sudo make install
-
+You will need the PyQt development tools (v4.3 or greater):
+	sudo apt-get install pyqt4-dev-tools
+	git clone http://repo.or.cz/w/ugit.git
+	cd ugit && ./configure --prefix=/usr && make && sudo make install
+	/usr/bin/ugit
 
 WINDOWS SUPPORT
 

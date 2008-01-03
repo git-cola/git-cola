@@ -1,3 +1,4 @@
+import os
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtGui import QClipboard
@@ -5,13 +6,33 @@ from PyQt4.QtGui import QFileDialog
 from PyQt4.QtGui import QIcon
 from PyQt4.QtGui import QListWidgetItem
 from PyQt4.QtGui import QMessageBox
-from PyQt4.QtGui import QPixmap
 
 import views
 import utils
 
+LOGGER = None
+
+def log_output(output, alert=False):
+	if not LOGGER: return
+	LOGGER.log(output)
+	if alert:
+		LOGGER.show()
+		LOGGER.raise_()
+
+def show_output(output):
+	if not output: return
+	log_output(output, alert=True)
+
+def toggle_log_window():
+	if not LOGGER: return
+	if LOGGER.isVisible():
+		LOGGER.hide()
+	else:
+		LOGGER.show()
+		LOGGER.raise_()
+
 def create_listwidget_item(text, filename):
-	icon = QIcon(QPixmap(filename))
+	icon = QIcon(filename)
 	item = QListWidgetItem()
 	item.setIcon(icon)
 	item.setText(text)
@@ -44,10 +65,6 @@ def get_selected_item(list_widget, items):
 	if not selected: return None
 	return selected[0]
 
-def get_font():
-	font = QtGui.qApp.font()
-	return font
-
 def open_dialog(parent, title, filename=None):
 	qstr = QFileDialog.getOpenFileName(
 			parent, parent.tr(title), filename)
@@ -62,6 +79,10 @@ def dir_dialog(parent, title, directory):
 	directory = QFileDialog.getExistingDirectory(
 			parent, title, directory)
 	return unicode(directory)
+
+def get_qicon(filename):
+	icon = utils.get_icon(filename)
+	return QIcon(icon)
 
 def question(parent, title, message, default=True):
 	'''Launches a QMessageBox question with the provided title and message.
@@ -88,12 +109,6 @@ def set_items(widget, items):
 	widget.clear()
 	add_items(widget, items)
 
-def show_output(parent, output):
-	if not output: return
-	dialog = views.OutputGUI(parent, output=output)
-	dialog.show()
-	dialog.exec_()
-
 def tr(txt):
 	trtext = unicode(QtGui.qApp.tr(txt))
 	if trtext.endswith('@@verb'):
@@ -107,11 +122,14 @@ def create_item(filename, staged, untracked=False):
 	for adding to a QListWidget.  "staged" controls whether
 	to use icons for the staged or unstaged list widget.'''
 	if staged:
-		icon_file = utils.get_staged_icon(filename)
+		if os.path.exists(filename):
+			icon_file = utils.get_icon('staged.png')
+		else:
+			icon_file = utils.get_icon('removed.png')
 	elif untracked:
-		icon_file = utils.get_untracked_icon()
+		icon_file = utils.get_icon('untracked.png')
 	else:
-		icon_file = utils.get_icon(filename)
+		icon_file = utils.get_file_icon(filename)
 	return create_listwidget_item(filename, icon_file)
 
 def update_listwidget(widget, items, staged=True,

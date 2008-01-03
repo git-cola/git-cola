@@ -1,9 +1,6 @@
 <ui version="4.0" >
  <class>commitgui</class>
  <widget class="QDialog" name="commitgui" >
-  <property name="windowModality" >
-   <enum>Qt::ApplicationModal</enum>
-  </property>
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -24,7 +21,7 @@
      <property name="handleWidth" >
       <number>4</number>
      </property>
-     <widget class="QListWidget" name="commitList" >
+     <widget class="QListWidget" name="commit_list" >
       <property name="font" >
        <font>
         <family>Monospace</family>
@@ -37,7 +34,7 @@
        <enum>QAbstractItemView::ExtendedSelection</enum>
       </property>
      </widget>
-     <widget class="QTextEdit" name="commitText" >
+     <widget class="QTextEdit" name="commit_text" >
       <property name="font" >
        <font>
         <family>Monospace</family>
@@ -66,12 +63,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="revisionLine" />
+      <widget class="QLineEdit" name="revision_line" />
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox" >
+    <widget class="QDialogButtonBox" name="button_box" >
      <property name="standardButtons" >
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
      </property>
@@ -80,15 +77,15 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>buttonBox</tabstop>
-  <tabstop>commitList</tabstop>
-  <tabstop>revisionLine</tabstop>
-  <tabstop>commitText</tabstop>
+  <tabstop>button_box</tabstop>
+  <tabstop>commit_list</tabstop>
+  <tabstop>revision_line</tabstop>
+  <tabstop>commit_text</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>button_box</sender>
    <signal>accepted()</signal>
    <receiver>commitgui</receiver>
    <slot>accept()</slot>
@@ -104,7 +101,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>button_box</sender>
    <signal>rejected()</signal>
    <receiver>commitgui</receiver>
    <slot>reject()</slot>

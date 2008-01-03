@@ -23,11 +23,12 @@ class RepoBrowserController(QObserver):
 		QObserver.__init__(self, model, view)
 
 		view.setWindowTitle('File Browser')
-		self.add_signals('itemSelectionChanged()', view.commitList,)
+		self.add_signals('itemSelectionChanged()', view.commit_list,)
 		self.add_actions('directory', self.action_directory_changed)
-		self.add_callbacks(commitList = self.item_changed)
+		self.add_callbacks(commit_list = self.item_changed)
 		self.connect(
-			view.commitList, 'itemDoubleClicked(QListWidgetItem*)',
+			view.commit_list,
+			'itemDoubleClicked(QListWidgetItem*)',
 			self.item_double_clicked)
 
 		# Start at the root of the tree
@@ -47,12 +48,12 @@ class RepoBrowserController(QObserver):
 
 	def item_changed(self,*rest):
 		'''This is called when the current item changes in the
-		file/directory list(aka the commitList).'''
-		current = self.view.commitList.currentRow()
-		item = self.view.commitList.item(current)
+		file/directory list(aka the commit_list).'''
+		current = self.view.commit_list.currentRow()
+		item = self.view.commit_list.item(current)
 		if item is None or not item.isSelected():
-			self.view.revisionLine.setText('')
-			self.view.commitText.setText('')
+			self.view.revision_line.setText('')
+			self.view.commit_text.setText('')
 			return
 
 		directories = self.model.get_directories()
@@ -69,8 +70,8 @@ class RepoBrowserController(QObserver):
 				# This is '..' which is a special case
 				# since it doesn't really exist
 				entries = []
-			self.view.commitText.setText(os.linesep.join(entries))
-			self.view.revisionLine.setText('')
+			self.view.commit_text.setText(os.linesep.join(entries))
+			self.view.revision_line.setText('')
 		else:
 			# This is a file entry.  The current row is absolute,
 			# so get a relative index by subtracting the number
@@ -85,10 +86,10 @@ class RepoBrowserController(QObserver):
 				self.model.get_subtree_node(idx)
 
 			catguts = self.model.cat_file(objtype, sha1)
-			self.view.commitText.setText(catguts)
+			self.view.commit_text.setText(catguts)
 
-			self.view.revisionLine.setText(sha1)
-			self.view.revisionLine.selectAll()
+			self.view.revision_line.setText(sha1)
+			self.view.revision_line.selectAll()
 
 			# Copy the sha1 into the clipboard
 			qtutils.set_clipboard(sha1)
@@ -99,7 +100,7 @@ class RepoBrowserController(QObserver):
 		invoked on a directory item.  When invoked on a file
 		it allows the file to be saved.'''
 
-		current = self.view.commitList.currentRow()
+		current = self.view.commit_list.currentRow()
 		directories = self.model.get_directories()
 
 		# A file item was double-clicked.
@@ -137,20 +138,20 @@ class RepoBrowserController(QObserver):
 	######################################################################
 
 	def __display_items(self):
-		'''This method populates the commitList(aka item list)
+		'''This method populates the commit_list(aka item list)
 		with the current directories and items.  Directories are
 		always listed first.'''
 
-		self.view.commitText.setText('')
-		self.view.revisionLine.setText('')
+		self.view.commit_text.setText('')
+		self.view.revision_line.setText('')
 
-		dir_icon = utils.get_directory_icon()
-		file_icon = utils.get_file_icon()
+		dir_icon = utils.get_icon('dir.png')
+		file_icon = utils.get_icon('generic.png')
 
-		qtutils.set_items(self.view.commitList,
+		qtutils.set_items(self.view.commit_list,
 				map(lambda d: qtutils.create_listwidget_item(d, dir_icon),
 						self.model.get_directories()))
 
-		qtutils.add_items(self.view.commitList,
+		qtutils.add_items(self.view.commit_list,
 				map(lambda s: qtutils.create_listwidget_item(s, file_icon),
 						self.model.get_subtree_names()))

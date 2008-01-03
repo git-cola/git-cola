@@ -24,7 +24,7 @@
     </widget>
    </item>
    <item row="0" column="1" >
-    <widget class="QSpinBox" name="mainFontSpin" >
+    <widget class="QSpinBox" name="main_font_spinbox" >
      <property name="minimum" >
       <number>8</number>
      </property>
@@ -34,7 +34,7 @@
     </widget>
    </item>
    <item row="0" column="2" colspan="4" >
-    <widget class="QFontComboBox" name="mainFontCombo" >
+    <widget class="QFontComboBox" name="main_font_combo" >
      <property name="currentFont" >
       <font>
        <family>Bitstream Vera Sans</family>
@@ -50,7 +50,7 @@
     </widget>
    </item>
    <item row="1" column="1" >
-    <widget class="QSpinBox" name="diffFontSpin" >
+    <widget class="QSpinBox" name="diff_font_spinbox" >
      <property name="minimum" >
       <number>8</number>
      </property>
@@ -60,7 +60,7 @@
     </widget>
    </item>
    <item row="1" column="2" colspan="4" >
-    <widget class="QFontComboBox" name="diffFontCombo" >
+    <widget class="QFontComboBox" name="diff_font_combo" >
      <property name="fontFilters" >
       <set>QFontComboBox::MonospacedFonts</set>
      </property>
@@ -72,7 +72,7 @@
     </widget>
    </item>
    <item row="2" column="0" colspan="3" >
-    <widget class="QGroupBox" name="localGroupBox" >
+    <widget class="QGroupBox" name="local_groupbox" >
      <property name="title" >
       <string>Local Repository</string>
      </property>
@@ -85,7 +85,7 @@
        </widget>
       </item>
       <item row="0" column="1" colspan="2" >
-       <widget class="QLineEdit" name="localNameText" />
+       <widget class="QLineEdit" name="local_name_line" />
       </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="label_5" >
@@ -95,17 +95,17 @@
        </widget>
       </item>
       <item row="1" column="1" colspan="2" >
-       <widget class="QLineEdit" name="localEmailText" />
+       <widget class="QLineEdit" name="local_email_line" />
       </item>
       <item row="2" column="0" colspan="2" >
-       <widget class="QCheckBox" name="localSummarizeCheckBox" >
+       <widget class="QCheckBox" name="local_summary_checkbox" >
         <property name="text" >
          <string>Summarize Merge Commits</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0" colspan="3" >
-       <widget class="QCheckBox" name="localShowDiffstatCheckBox" >
+       <widget class="QCheckBox" name="local_diffstat_checkbox" >
         <property name="text" >
          <string>Show Diffstat After Merge</string>
         </property>
@@ -119,7 +119,7 @@
        </widget>
       </item>
       <item row="4" column="2" >
-       <widget class="QSpinBox" name="localVerbositySpin" >
+       <widget class="QSpinBox" name="local_verbosity_spinbox" >
         <property name="minimum" >
          <number>0</number>
         </property>
@@ -139,7 +139,7 @@
        </widget>
       </item>
       <item row="5" column="2" >
-       <widget class="QSpinBox" name="localDiffContextSpin" >
+       <widget class="QSpinBox" name="local_diffcontext_spinbox" >
         <property name="minimum" >
          <number>2</number>
         </property>
@@ -165,7 +165,7 @@
        </widget>
       </item>
       <item row="0" column="1" colspan="2" >
-       <widget class="QLineEdit" name="globalNameText" />
+       <widget class="QLineEdit" name="global_name_line" />
       </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="label_8" >
@@ -175,17 +175,17 @@
        </widget>
       </item>
       <item row="1" column="1" colspan="2" >
-       <widget class="QLineEdit" name="globalEmailText" />
+       <widget class="QLineEdit" name="global_email_line" />
       </item>
       <item row="2" column="0" colspan="2" >
-       <widget class="QCheckBox" name="globalSummarizeCheckBox" >
+       <widget class="QCheckBox" name="global_summary_checkbox" >
         <property name="text" >
          <string>Summarize Merge Commits</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0" colspan="3" >
-       <widget class="QCheckBox" name="globalShowDiffstatCheckBox" >
+       <widget class="QCheckBox" name="global_diffstat_checkbox" >
         <property name="text" >
          <string>Show Diffstat After Merge</string>
         </property>
@@ -199,7 +199,7 @@
        </widget>
       </item>
       <item row="4" column="2" >
-       <widget class="QSpinBox" name="globalVerbositySpin" >
+       <widget class="QSpinBox" name="global_verbosity_spinbox" >
         <property name="minimum" >
          <number>0</number>
         </property>
@@ -219,7 +219,7 @@
        </widget>
       </item>
       <item row="5" column="2" >
-       <widget class="QSpinBox" name="globalDiffContextSpin" >
+       <widget class="QSpinBox" name="global_diffcontext_spinbox" >
         <property name="minimum" >
          <number>2</number>
         </property>
@@ -245,7 +245,7 @@
     </spacer>
    </item>
    <item row="3" column="4" >
-    <widget class="QPushButton" name="saveButton" >
+    <widget class="QPushButton" name="save_button" >
      <property name="text" >
       <string>Save</string>
      </property>
@@ -255,7 +255,7 @@
     </widget>
    </item>
    <item row="3" column="5" >
-    <widget class="QPushButton" name="cancelButton" >
+    <widget class="QPushButton" name="cancel_button" >
      <property name="text" >
       <string>Cancel</string>
      </property>

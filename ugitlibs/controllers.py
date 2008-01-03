@@ -18,6 +18,7 @@ from pushcontroller import push_branches
 from utilcontroller import choose_branch
 from utilcontroller import select_commits
 from utilcontroller import update_options
+from utilcontroller import log_window
 
 class Controller(QObserver):
 	'''The controller is a mediator between the model and view.
@@ -33,13 +34,13 @@ class Controller(QObserver):
 		self.__staged_diff_in_view = True
 
 		# Diff display context menu
-		view.displayText.contextMenuEvent = self.diff_context_menu_event
+		view.display_text.contextMenuEvent = self.diff_context_menu_event
 
 		# Binds a specific model attribute to a view widget,
 		# and vice versa.
-		self.model_to_view('commitmsg', 'commitText')
-		self.model_to_view('staged', 'stagedList')
-		self.model_to_view('all_unstaged', 'unstagedList')
+		self.model_to_view('commitmsg', 'commit_text')
+		self.model_to_view('staged', 'staged_list')
+		self.model_to_view('all_unstaged', 'unstaged_list')
 
 		# When a model attribute changes, this runs a specific action
 		self.add_actions('staged', self.action_staged)
@@ -49,37 +50,59 @@ class Controller(QObserver):
 
 		# Routes signals for multiple widgets to our callbacks
 		# defined below.
-		self.add_signals('textChanged()', view.commitText)
-		self.add_signals('stateChanged(int)', view.untrackedCheckBox)
+		self.add_signals('textChanged()', view.commit_text)
+		self.add_signals('stateChanged(int)', view.untracked_checkbox)
 
 		self.add_signals('released()',
-				view.stageButton, view.commitButton,
-				view.pushButton, view.signOffButton,)
+				view.stage_button,
+				view.commit_button,
+				view.push_button,
+				view.signoff_button,)
 
 		self.add_signals('triggered()',
-				view.rescan, view.options,
-				view.createBranch, view.checkoutBranch,
-				view.rebaseBranch, view.deleteBranch,
-				view.setCommitMessage, view.commit,
-				view.stageChanged, view.stageUntracked,
-				view.stageSelected, view.unstageAll,
-				view.unstageSelected,
-				view.showDiffstat,
-				view.browseBranch, view.browseOtherBranch,
-				view.visualizeAll, view.visualizeCurrent,
-				view.exportPatches, view.cherryPick,
-				view.loadCommitMsg,
-				view.cut, view.copy, view.paste, view.delete,
-				view.selectAll, view.undo, view.redo,)
+				view.menu_rescan,
+				view.menu_options,
+				view.menu_create_branch,
+				view.menu_checkout_branch,
+				view.menu_rebase_branch,
+				view.menu_delete_branch,
+				view.menu_get_prev_commitmsg,
+				view.menu_commit,
+				view.menu_stage_changed,
+				view.menu_stage_untracked,
+				view.menu_stage_selected,
+				view.menu_unstage_all,
+				view.menu_unstage_selected,
+				view.menu_show_diffstat,
+				view.menu_browse_branch,
+				view.menu_browse_other_branch,
+				view.menu_visualize_all,
+				view.menu_visualize_current,
+				view.menu_export_patches,
+				view.menu_cherry_pick,
+				view.menu_load_commitmsg,
+				view.menu_cut,
+				view.menu_copy,
+				view.menu_paste,
+				view.menu_delete,
+				view.menu_select_all,
+				view.menu_undo,
+				view.menu_redo)
 
 		self.add_signals('itemClicked(QListWidgetItem *)',
-				view.stagedList, view.unstagedList,)
+				view.staged_list,
+				view.unstaged_list)
 
 		self.add_signals('itemSelectionChanged()',
-				view.stagedList, view.unstagedList,)
+				view.staged_list,
+				view.unstaged_list)
 
 		self.add_signals('splitterMoved(int,int)',
 				view.splitter_top, view.splitter_bottom)
+
+		# Vanilla signal/slots
+		self.connect(self.view.toolbar_show_log,
+				'triggered()', self.show_log)
 
 		# App cleanup
 		self.connect(QtGui.qApp, 'lastWindowClosed()',
@@ -93,51 +116,51 @@ class Controller(QObserver):
 		# isn't used at the moment.
 		self.add_callbacks(
 			# Actions that delegate directly to the model
-			signOffButton = model.add_signoff,
-			setCommitMessage = model.get_prev_commitmsg,
-			stageChanged = self.model.stage_changed,
-			stageUntracked = self.model.stage_untracked,
-			unstageAll = self.model.unstage_all,
+			signoff_button = model.add_signoff,
+			menu_get_prev_commitmsg = model.get_prev_commitmsg,
+			menu_stage_changed = self.model.stage_changed,
+			menu_stage_untracked = self.model.stage_untracked,
+			menu_unstage_all = self.model.unstage_all,
 
 			# Actions that delegate direclty to the view
-			cut = view.action_cut,
-			copy = view.action_copy,
-			paste = view.action_paste,
-			delete = view.action_delete,
-			selectAll = view.action_select_all,
-			undo = view.action_undo,
-			redo = view.action_redo,
+			menu_cut = view.action_cut,
+			menu_copy = view.action_copy,
+			menu_paste = view.action_paste,
+			menu_delete = view.action_delete,
+			menu_select_all = view.action_select_all,
+			menu_undo = view.action_undo,
+			menu_redo = view.action_redo,
 
 			# Push Buttons
-			stageButton = self.stage_selected,
-			commitButton = self.commit,
-			pushButton = self.push,
+			stage_button = self.stage_selected,
+			commit_button = self.commit,
+			push_button = self.push,
 
 			# List Widgets
-			stagedList = self.diff_staged,
-			unstagedList = self.diff_unstaged,
+			staged_list = self.diff_staged,
+			unstaged_list = self.diff_unstaged,
 
 			# Checkboxes
-			untrackedCheckBox = self.rescan,
+			untracked_checkbox = self.rescan,
 
 			# Menu Actions
-			options = self.options,
-			rescan = self.rescan,
-			createBranch = self.branch_create,
-			deleteBranch = self.branch_delete,
-			checkoutBranch = self.checkout_branch,
-			rebaseBranch = self.rebase,
-			commit = self.commit,
-			stageSelected = self.stage_selected,
-			unstageSelected = self.unstage_selected,
-			showDiffstat = self.show_diffstat,
-			browseBranch = self.browse_current,
-			browseOtherBranch = self.browse_other,
-			visualizeCurrent = self.viz_current,
-			visualizeAll = self.viz_all,
-			exportPatches = self.export_patches,
-			cherryPick = self.cherry_pick,
-			loadCommitMsg = self.load_commitmsg,
+			menu_options = self.options,
+			menu_rescan = self.rescan,
+			menu_create_branch = self.branch_create,
+			menu_delete_branch = self.branch_delete,
+			menu_checkout_branch = self.checkout_branch,
+			menu_rebase_branch = self.rebase,
+			menu_commit = self.commit,
+			menu_stage_selected = self.stage_selected,
+			menu_unstage_selected = self.unstage_selected,
+			menu_show_diffstat = self.show_diffstat,
+			menu_browse_branch = self.browse_current,
+			menu_browse_other_branch = self.browse_other,
+			menu_visualize_current = self.viz_current,
+			menu_visualize_all = self.viz_all,
+			menu_export_patches = self.export_patches,
+			menu_cherry_pick = self.cherry_pick,
+			menu_load_commitmsg = self.load_commitmsg,
 
 			# Splitters
 			splitter_top = self.splitter_top_event,
@@ -147,17 +170,17 @@ class Controller(QObserver):
 		# Handle double-clicks in the staged/unstaged lists.
 		# These are vanilla signal/slots since the qobserver
 		# signal routing is already handling these lists' signals.
-		self.connect(view.unstagedList,
+		self.connect(view.unstaged_list,
 				'itemDoubleClicked(QListWidgetItem*)',
 				self.stage_selected)
 
-		self.connect(view.stagedList,
+		self.connect(view.staged_list,
 				'itemDoubleClicked(QListWidgetItem*)',
 				self.unstage_selected )
 
 		# Delegate window move events here
-		self.view.moveEvent = self.move_event
-		self.view.resizeEvent = self.resize_event
+		view.moveEvent = self.move_event
+		view.resizeEvent = self.resize_event
 
 		# Initialize the GUI
 		self.load_window_settings()
@@ -166,6 +189,10 @@ class Controller(QObserver):
 		self.start_inotify_thread()
 		self.refresh_view()
 
+		# parent-less log window
+		qtutils.LOGGER = log_window(model, None)
+
+		self.init_log()
 		self.rescan()
 
 	#####################################################################
@@ -189,7 +216,7 @@ class Controller(QObserver):
 		qtutils.update_listwidget(widget,
 				self.model.get_unstaged(), staged=False)
 
-		if self.view.untrackedCheckBox.isChecked():
+		if self.view.untracked_checkbox.isChecked():
 			qtutils.update_listwidget(widget,
 					self.model.get_untracked(),
 					staged=False,
@@ -198,6 +225,9 @@ class Controller(QObserver):
 
 	#####################################################################
 	# Qt callbacks
+
+	def show_log(self, *rest):
+		qtutils.toggle_log_window()
 
 	def options(self):
 		update_options(self.model, self.view)
@@ -210,7 +240,7 @@ class Controller(QObserver):
 		branch = choose_branch('Delete Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
-		self.show_output(self.model.delete_branch(branch))
+		self.log_output(self.model.delete_branch(branch))
 
 	def browse_current(self):
 		branch = self.model.get_branch()
@@ -228,12 +258,12 @@ class Controller(QObserver):
 		branch = choose_branch('Checkout Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
-		self.show_output(self.model.checkout(branch))
+		self.log_output(self.model.checkout(branch))
 
 	def cherry_pick(self):
 		commits = self.select_commits_gui(*self.model.log(all=True))
 		if not commits: return
-		self.show_output(self.model.cherry_pick(commits))
+		self.log_output(self.model.cherry_pick(commits))
 
 	def commit(self):
 		msg = self.model.get_commitmsg()
@@ -246,34 +276,34 @@ class Controller(QObserver):
 				+ "- First line: Describe in one sentence what you did.\n"
 				+ "- Second line: Blank\n"
 				+ "- Remaining lines: Describe why this change is good.\n")
-
-			self.show_output(error_msg)
+			qtutils.show_output(error_msg)
 			return
 
 		files = self.model.get_staged()
 		if not files:
-			errmsg = self.tr(""
+			error_msg = self.tr(""
 				+ "No changes to commit.\n"
 				+ "\n"
 				+ "You must stage at least 1 file before you can commit.\n")
-			self.show_output(errmsg)
+			qtutils.show_output(error_msg)
 			return
 
 		# Perform the commit
-		output = self.model.commit(msg, amend=self.view.amendRadio.isChecked())
+		output = self.model.commit(
+				msg, amend=self.view.amend_radio.isChecked())
 
 		# Reset state
-		self.view.newCommitRadio.setChecked(True)
-		self.view.amendRadio.setChecked(False)
+		self.view.new_commit_radio.setChecked(True)
+		self.view.amend_radio.setChecked(False)
 		self.model.set_commitmsg('')
-		self.show_output(output)
+		self.log_output(output, alert=True)
 
 	def view_diff(self, staged=True):
 		self.__staged_diff_in_view = staged
 		if self.__staged_diff_in_view:
-			widget = self.view.stagedList
+			widget = self.view.staged_list
 		else:
-			widget = self.view.unstagedList
+			widget = self.view.unstaged_list
 		row, selected = qtutils.get_selected_row(widget)
 		if not selected:
 			self.view.reset_display()
@@ -296,7 +326,7 @@ class Controller(QObserver):
 		(revs, summaries) = self.model.log()
 		commits = self.select_commits_gui(revs, summaries)
 		if not commits: return
-		self.show_output(self.model.format_patch(commits))
+		qtutils.show_output(self.model.format_patch(commits))
 
 	def last_window_closed(self):
 		'''Save config settings and cleanup any inotify threads.'''
@@ -323,23 +353,15 @@ class Controller(QObserver):
 		branch = choose_branch('Rebase Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
-		self.show_output(self.model.rebase(branch))
+		self.log_output(self.model.rebase(branch))
 
 	# use *rest to handle being called from the checkbox signal
 	def rescan(self, *rest):
 		'''Populates view widgets with results from "git status."'''
-
-		self.view.statusBar().showMessage(
-			self.tr('Scanning for modified files ...'))
-
 		self.model.update_status()
-
-		branch = self.model.get_branch()
-		status_text = self.tr('Current Branch:') + ' ' + branch
-		self.view.statusBar().showMessage(status_text)
-
-		title = '%s [%s]' % (self.model.get_project(), branch)
-		self.view.setWindowTitle(title)
+		self.view.setWindowTitle('%s [%s]' % (
+				self.model.get_project(),
+				self.model.get_branch()))
 
 		if not self.model.has_squash_msg(): return
 
@@ -359,11 +381,10 @@ class Controller(QObserver):
 
 	def show_diffstat(self):
 		'''Show the diffstat from the latest commit.'''
-		self.show_output(self.model.diff_stat(), rescan=False)
+		qtutils.show_output(self.model.diff_stat())
 
 	#####################################################################
 	# diff gui
-
 	def process_diff_selection(self, items, widget,
 			cached=True, selected=False, reverse=True, noop=False):
 
@@ -371,34 +392,29 @@ class Controller(QObserver):
 		if not filename: return
 		parser = utils.DiffParser(self.model, filename=filename,
 				cached=cached)
-
 		offset, selection = self.view.diff_selection()
 		parser.process_diff_selection(selected, offset, selection)
 		self.rescan()
-
 	def stage_hunk(self):
 		self.process_diff_selection(
 				self.model.get_unstaged(),
-				self.view.unstagedList,
+				self.view.unstaged_list,
 				cached=False)
-
-	def stage_hunks(self):
+	def stage_hunk_selection(self):
 		self.process_diff_selection(
 				self.model.get_unstaged(),
-				self.view.unstagedList,
+				self.view.unstaged_list,
 				cached=False,
 				selected=True)
-
 	def unstage_hunk(self, cached=True):
 		self.process_diff_selection(
 				self.model.get_staged(),
-				self.view.stagedList,
+				self.view.staged_list,
 				cached=True)
-
-	def unstage_hunks(self):
+	def unstage_hunk_selection(self):
 		self.process_diff_selection(
 				self.model.get_staged(),
-				self.view.stagedList,
+				self.view.staged_list,
 				cached=True,
 				selected=True)
 
@@ -410,7 +426,7 @@ class Controller(QObserver):
 		'''Use "git add" to add items to the git index.
 		This is a thin wrapper around apply_to_list.'''
 		command = self.model.add_or_remove
-		widget = self.view.unstagedList
+		widget = self.view.unstaged_list
 		items = self.model.get_all_unstaged()
 		self.apply_to_list(command,widget,items)
 
@@ -419,7 +435,7 @@ class Controller(QObserver):
 		'''Use "git reset" to remove items from the git index.
 		This is a thin wrapper around apply_to_list.'''
 		command = self.model.reset
-		widget = self.view.stagedList
+		widget = self.view.staged_list
 		items = self.model.get_staged()
 		self.apply_to_list(command, widget, items)
 
@@ -459,10 +475,10 @@ class Controller(QObserver):
 		self.view.splitter_top.setSizes([st0,st1])
 		self.view.splitter_bottom.setSizes([sb0,sb1])
 
-	def show_output(self, output, rescan=True):
-		'''Shows output and optionally rescans for changes.'''
-		qtutils.show_output(self.view, output)
-		self.rescan()
+	def log_output(self, output, rescan=True, alert=False):
+		'''Logs output and optionally rescans for changes.'''
+		if rescan: self.rescan()
+		qtutils.log_output(output, alert=alert)
 
 	#####################################################################
 	#
@@ -479,7 +495,7 @@ class Controller(QObserver):
 
 	def diff_context_menu_about_to_show(self):
 		unstaged_item = qtutils.get_selected_item(
-				self.view.unstagedList,
+				self.view.unstaged_list,
 				self.model.get_all_unstaged())
 
 		is_tracked= unstaged_item not in self.model.get_untracked()
@@ -492,18 +508,18 @@ class Controller(QObserver):
 		enable_unstaged= (
 				self.__staged_diff_in_view
 				and qtutils.get_selected_item(
-						self.view.stagedList,
+						self.view.staged_list,
 						self.model.get_staged()))
 
 		self.__stage_hunk_action.setEnabled(bool(enable_staged))
-		self.__stage_hunks_action.setEnabled(bool(enable_staged))
+		self.__stage_hunk_selection_action.setEnabled(bool(enable_staged))
 
 		self.__unstage_hunk_action.setEnabled(bool(enable_unstaged))
-		self.__unstage_hunks_action.setEnabled(bool(enable_unstaged))
+		self.__unstage_hunk_selection_action.setEnabled(bool(enable_unstaged))
 
 	def diff_context_menu_event(self, event):
 		self.diff_context_menu_setup()
-		textedit = self.view.displayText
+		textedit = self.view.display_text
 		self.__menu.exec_(textedit.mapToGlobal(event.pos()))
 
 	def diff_context_menu_setup(self):
@@ -513,14 +529,17 @@ class Controller(QObserver):
 		self.__stage_hunk_action = menu.addAction(
 			self.tr('Stage Hunk For Commit'), self.stage_hunk)
 
-		self.__stage_hunks_action = menu.addAction(
-			self.tr('Stage Selected Lines'), self.stage_hunks)
+		self.__stage_hunk_selection_action = menu.addAction(
+			self.tr('Stage Selected Lines'),
+			self.stage_hunk_selection)
 
 		self.__unstage_hunk_action = menu.addAction(
-			self.tr('Unstage Hunk From Commit'), self.unstage_hunk)
+			self.tr('Unstage Hunk From Commit'),
+			self.unstage_hunk)
 
-		self.__unstage_hunks_action = menu.addAction(
-			self.tr('Unstage Selected Lines'), self.unstage_hunks)
+		self.__unstage_hunk_selection_action = menu.addAction(
+			self.tr('Unstage Selected Lines'),
+			self.unstage_hunk_selection)
 
 		self.__copy_action = menu.addAction(
 			self.tr('Copy'), self.view.copy_display)
@@ -536,7 +555,7 @@ class Controller(QObserver):
 		if not font: return
 		qfont = QFont()
 		qfont.fromString(font)
-		self.view.displayText.setFont(qfont)
+		self.view.display_text.setFont(qfont)
 
 	def update_ui_font(self):
 		font = self.model.get_param('global.ugit.fontui')
@@ -544,6 +563,13 @@ class Controller(QObserver):
 		qfont = QFont()
 		qfont.fromString(font)
 		QtGui.qApp.setFont(qfont)
+
+	def init_log(self):
+		qtutils.log_output(self.model.get_git_version()
+				+ os.linesep
+				+ 'ugit version ' + defaults.VERSION
+				+ os.linesep
+				+ 'Current Branch: ' + self.model.get_branch())
 
 	def start_inotify_thread(self):
 		# Do we have inotify?  If not, return.

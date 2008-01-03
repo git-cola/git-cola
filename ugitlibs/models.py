@@ -45,6 +45,8 @@ class Model(model.Model):
 			remote = '',
 			local_branch = '',
 			remote_branch = '',
+			search_text = '',
+			git_version = git.git('--version'),
 
 			#####################################################
 			# Used primarily by the main UI

@@ -10,9 +10,6 @@
     <height>512</height>
    </rect>
   </property>
-  <property name="windowTitle" >
-   <string>ugit</string>
-  </property>
   <widget class="QWidget" name="centralwidget" >
    <layout class="QVBoxLayout" >
     <item>
@@ -55,7 +52,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="untrackedCheckBox" >
+             <widget class="QCheckBox" name="untracked_checkbox" >
               <property name="toolTip" >
                <string>Includes untracked files in the unstaged changes list.
 Disabling this causes ugit to only display files known to git
@@ -91,7 +88,7 @@ in the unstaged changes list.</string>
            </layout>
           </item>
           <item>
-           <widget class="QListWidget" name="unstagedList" >
+           <widget class="QListWidget" name="unstaged_list" >
             <property name="font" >
              <font>
               <family>Courier</family>
@@ -164,7 +161,7 @@ include untracked files if "Show Untracked Files" is checked.</string>
            </layout>
           </item>
           <item>
-           <widget class="QListWidget" name="stagedList" >
+           <widget class="QListWidget" name="staged_list" >
             <property name="font" >
              <font>
               <family>Courier</family>
@@ -214,7 +211,7 @@ include untracked files if "Show Untracked Files" is checked.</string>
             <number>8</number>
            </property>
            <item>
-            <widget class="QPushButton" name="stageButton" >
+            <widget class="QPushButton" name="stage_button" >
              <property name="toolTip" >
               <string>Invokes "git add" to stage the selected items
 from the "Unstaged Changes" list.</string>
@@ -228,7 +225,7 @@ from the "Unstaged Changes" list.</string>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="signOffButton" >
+            <widget class="QPushButton" name="signoff_button" >
              <property name="toolTip" >
               <string>"Sign Off" appends the standard "Signed-Off by: ..."
 message to the current commit message.</string>
@@ -239,7 +236,7 @@ message to the current commit message.</string>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="commitButton" >
+            <widget class="QPushButton" name="commit_button" >
              <property name="toolTip" >
               <string>Invokes a git commit.
 This commits the files listed in the "Files to Commit" list.
@@ -252,7 +249,7 @@ otherwise only the selected items will be committed.</string>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton" >
+            <widget class="QPushButton" name="push_button" >
              <property name="text" >
               <string>Push</string>
              </property>
@@ -303,7 +300,7 @@ otherwise only the selected items will be committed.</string>
               </spacer>
              </item>
              <item>
-              <widget class="QRadioButton" name="newCommitRadio" >
+              <widget class="QRadioButton" name="new_commit_radio" >
                <property name="toolTip" >
                 <string>Causes the next commit to create a new commit object.</string>
                </property>
@@ -313,7 +310,7 @@ otherwise only the selected items will be committed.</string>
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="amendRadio" >
+              <widget class="QRadioButton" name="amend_radio" >
                <property name="toolTip" >
                 <string>Causes git to reuse the latest commit object.
 "git commit" will be supplied with the "--amend" option so that
@@ -329,7 +326,7 @@ the most recent commit is amended with contents of the next commit.</string>
            <item>
             <layout class="QVBoxLayout" >
              <item>
-              <widget class="QTextEdit" name="commitText" >
+              <widget class="QTextEdit" name="commit_text" >
                <property name="font" >
                 <font>
                  <family>Courier</family>
@@ -376,7 +373,7 @@ retrieve the latest commit message prior to committing.</string>
          </widget>
         </item>
         <item>
-         <widget class="QTextEdit" name="displayText" >
+         <widget class="QTextEdit" name="display_text" >
           <property name="font" >
            <font>
             <family>Courier</family>
@@ -386,6 +383,9 @@ retrieve the latest commit message prior to committing.</string>
           <property name="tabChangesFocus" >
            <bool>true</bool>
           </property>
+          <property name="lineWrapMode" >
+           <enum>QTextEdit::NoWrap</enum>
+          </property>
           <property name="readOnly" >
            <bool>true</bool>
           </property>
@@ -393,7 +393,7 @@ retrieve the latest commit message prior to committing.</string>
            <bool>false</bool>
           </property>
           <property name="cursorWidth" >
-           <number>8</number>
+           <number>2</number>
           </property>
           <property name="textInteractionFlags" >
            <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::NoTextInteraction|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -412,96 +412,121 @@ retrieve the latest commit message prior to committing.</string>
      <x>0</x>
      <y>0</y>
      <width>780</width>
-     <height>28</height>
+     <height>26</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuRepository" >
+   <widget class="QMenu" name="repository_menu" >
     <property name="title" >
      <string>Repository</string>
     </property>
-    <addaction name="browseBranch" />
-    <addaction name="browseOtherBranch" />
+    <addaction name="menu_browse_branch" />
+    <addaction name="menu_browse_other_branch" />
     <addaction name="separator" />
-    <addaction name="visualizeCurrent" />
-    <addaction name="visualizeAll" />
+    <addaction name="menu_visualize_current" />
+    <addaction name="menu_visualize_all" />
    </widget>
-   <widget class="QMenu" name="menuCommit" >
+   <widget class="QMenu" name="commit_menu" >
     <property name="title" >
      <string>Commit</string>
     </property>
-    <addaction name="rescan" />
+    <addaction name="menu_rescan" />
     <addaction name="separator" />
-    <addaction name="stageChanged" />
-    <addaction name="stageUntracked" />
-    <addaction name="stageSelected" />
+    <addaction name="menu_stage_changed" />
+    <addaction name="menu_stage_untracked" />
+    <addaction name="menu_stage_selected" />
     <addaction name="separator" />
-    <addaction name="unstageAll" />
-    <addaction name="unstageSelected" />
+    <addaction name="menu_unstage_all" />
+    <addaction name="menu_unstage_selected" />
     <addaction name="separator" />
-    <addaction name="commit" />
+    <addaction name="menu_commit" />
     <addaction name="separator" />
-    <addaction name="exportPatches" />
-    <addaction name="cherryPick" />
+    <addaction name="menu_export_patches" />
+    <addaction name="menu_cherry_pick" />
     <addaction name="separator" />
-    <addaction name="setCommitMessage" />
-    <addaction name="showDiffstat" />
+    <addaction name="menu_get_prev_commitmsg" />
+    <addaction name="menu_show_diffstat" />
    </widget>
-   <widget class="QMenu" name="menuEdit" >
+   <widget class="QMenu" name="edit_menu" >
     <property name="title" >
      <string>Edit</string>
     </property>
-    <addaction name="undo" />
-    <addaction name="redo" />
+    <addaction name="menu_undo" />
+    <addaction name="menu_redo" />
     <addaction name="separator" />
-    <addaction name="cut" />
-    <addaction name="copy" />
-    <addaction name="paste" />
-    <addaction name="delete" />
+    <addaction name="menu_cut" />
+    <addaction name="menu_copy" />
+    <addaction name="menu_paste" />
+    <addaction name="menu_delete" />
     <addaction name="separator" />
-    <addaction name="selectAll" />
+    <addaction name="menu_select_all" />
     <addaction name="separator" />
-    <addaction name="options" />
+    <addaction name="menu_options" />
    </widget>
-   <widget class="QMenu" name="menuFile" >
+   <widget class="QMenu" name="file_menu" >
     <property name="title" >
      <string>File</string>
     </property>
-    <addaction name="loadCommitMsg" />
+    <addaction name="menu_load_commitmsg" />
     <addaction name="separator" />
-    <addaction name="quit" />
+    <addaction name="menu_quit" />
    </widget>
-   <widget class="QMenu" name="menuBranch" >
+   <widget class="QMenu" name="branch_menu" >
     <property name="title" >
      <string>Branch</string>
     </property>
-    <addaction name="createBranch" />
-    <addaction name="checkoutBranch" />
-    <addaction name="rebaseBranch" />
-    <addaction name="deleteBranch" />
+    <addaction name="menu_create_branch" />
+    <addaction name="menu_checkout_branch" />
+    <addaction name="menu_rebase_branch" />
+    <addaction name="menu_delete_branch" />
    </widget>
-   <addaction name="menuFile" />
-   <addaction name="menuEdit" />
-   <addaction name="menuRepository" />
-   <addaction name="menuBranch" />
-   <addaction name="menuCommit" />
+   <addaction name="file_menu" />
+   <addaction name="edit_menu" />
+   <addaction name="repository_menu" />
+   <addaction name="branch_menu" />
+   <addaction name="commit_menu" />
   </widget>
-  <widget class="QStatusBar" name="statusbar" />
-  <action name="browseBranch" >
+  <widget class="QToolBar" name="toolbar" >
+   <property name="windowTitle" >
+    <string>toolbar</string>
+   </property>
+   <property name="movable" >
+    <bool>true</bool>
+   </property>
+   <property name="allowedAreas" >
+    <set>Qt::BottomToolBarArea|Qt::NoToolBarArea|Qt::TopToolBarArea</set>
+   </property>
+   <property name="iconSize" >
+    <size>
+     <width>24</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="floatable" >
+    <bool>true</bool>
+   </property>
+   <attribute name="toolBarArea" >
+    <enum>BottomToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="menu_browse_branch" >
    <property name="text" >
     <string>Browse Current Branch's Files</string>
    </property>
   </action>
-  <action name="browseOtherBranch" >
+  <action name="menu_browse_other_branch" >
    <property name="text" >
     <string>Browse Branch Files</string>
    </property>
   </action>
-  <action name="unstageSelected" >
+  <action name="menu_unstage_selected" >
    <property name="text" >
     <string>Unstage From Commit</string>
    </property>
   </action>
-  <action name="visualizeCurrent" >
+  <action name="menu_visualize_current" >
    <property name="text" >
     <string>Visualize Current Branch's History</string>
    </property>
@@ -509,7 +534,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Alt+V</string>
    </property>
   </action>
-  <action name="visualizeAll" >
+  <action name="menu_visualize_all" >
    <property name="text" >
     <string>Visualize All Branch History</string>
    </property>
@@ -517,7 +542,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Alt+H</string>
    </property>
   </action>
-  <action name="showDiffstat" >
+  <action name="menu_show_diffstat" >
    <property name="text" >
     <string>Show Diffstat</string>
    </property>
@@ -525,7 +550,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+D</string>
    </property>
   </action>
-  <action name="stageChanged" >
+  <action name="menu_stage_changed" >
    <property name="text" >
     <string>Stage Changed Files To Commit</string>
    </property>
@@ -533,7 +558,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Alt+A</string>
    </property>
   </action>
-  <action name="stageUntracked" >
+  <action name="menu_stage_untracked" >
    <property name="text" >
     <string>Stage All Untracked</string>
    </property>
@@ -541,7 +566,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Alt+U</string>
    </property>
   </action>
-  <action name="stageSelected" >
+  <action name="menu_stage_selected" >
    <property name="text" >
     <string>Stage Selected</string>
    </property>
@@ -549,7 +574,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Alt+T</string>
    </property>
   </action>
-  <action name="exportPatches" >
+  <action name="menu_export_patches" >
    <property name="text" >
     <string>Export Patches...</string>
    </property>
@@ -557,7 +582,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+E</string>
    </property>
   </action>
-  <action name="cut" >
+  <action name="menu_cut" >
    <property name="text" >
     <string>Cut</string>
    </property>
@@ -565,7 +590,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+X</string>
    </property>
   </action>
-  <action name="copy" >
+  <action name="menu_copy" >
    <property name="text" >
     <string>Copy</string>
    </property>
@@ -573,7 +598,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+C</string>
    </property>
   </action>
-  <action name="paste" >
+  <action name="menu_paste" >
    <property name="text" >
     <string>Paste</string>
    </property>
@@ -581,7 +606,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+V</string>
    </property>
   </action>
-  <action name="selectAll" >
+  <action name="menu_select_all" >
    <property name="text" >
     <string>Select All</string>
    </property>
@@ -589,7 +614,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+A</string>
    </property>
   </action>
-  <action name="options" >
+  <action name="menu_options" >
    <property name="text" >
     <string>Options...</string>
    </property>
@@ -597,7 +622,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="delete" >
+  <action name="menu_delete" >
    <property name="text" >
     <string>Delete</string>
    </property>
@@ -605,7 +630,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Del</string>
    </property>
   </action>
-  <action name="undo" >
+  <action name="menu_undo" >
    <property name="text" >
     <string>Undo</string>
    </property>
@@ -613,7 +638,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+Z</string>
    </property>
   </action>
-  <action name="redo" >
+  <action name="menu_redo" >
    <property name="text" >
     <string>Redo</string>
    </property>
@@ -621,7 +646,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+Shift+Z</string>
    </property>
   </action>
-  <action name="rescan" >
+  <action name="menu_rescan" >
    <property name="text" >
     <string>Rescan</string>
    </property>
@@ -629,7 +654,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+R</string>
    </property>
   </action>
-  <action name="commit" >
+  <action name="menu_commit" >
    <property name="text" >
     <string>Commit</string>
    </property>
@@ -637,12 +662,12 @@ retrieve the latest commit message prior to committing.</string>
     <string>Alt+S</string>
    </property>
   </action>
-  <action name="setCommitMessage" >
+  <action name="menu_get_prev_commitmsg" >
    <property name="text" >
     <string>Get Latest Commit Message</string>
    </property>
   </action>
-  <action name="cherryPick" >
+  <action name="menu_cherry_pick" >
    <property name="text" >
     <string>Cherry-Pick Commits...</string>
    </property>
@@ -650,12 +675,12 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+P</string>
    </property>
   </action>
-  <action name="unstageAll" >
+  <action name="menu_unstage_all" >
    <property name="text" >
     <string>Unstage All</string>
    </property>
   </action>
-  <action name="quit" >
+  <action name="menu_quit" >
    <property name="text" >
     <string>Quit</string>
    </property>
@@ -663,12 +688,12 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="loadCommitMsg" >
+  <action name="menu_load_commitmsg" >
    <property name="text" >
     <string>Load Commit Message...</string>
    </property>
   </action>
-  <action name="createBranch" >
+  <action name="menu_create_branch" >
    <property name="text" >
     <string>Create...</string>
    </property>
@@ -676,7 +701,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Ctrl+B</string>
    </property>
   </action>
-  <action name="checkoutBranch" >
+  <action name="menu_checkout_branch" >
    <property name="text" >
     <string>Checkout...</string>
    </property>
@@ -684,12 +709,12 @@ retrieve the latest commit message prior to committing.</string>
     <string>Alt+B</string>
    </property>
   </action>
-  <action name="rebaseBranch" >
+  <action name="menu_rebase_branch" >
    <property name="text" >
     <string>Rebase...</string>
    </property>
   </action>
-  <action name="renameBranch" >
+  <action name="menu_rename_branch" >
    <property name="enabled" >
     <bool>false</bool>
    </property>
@@ -697,30 +722,35 @@ retrieve the latest commit message prior to committing.</string>
     <string>Rename...</string>
    </property>
   </action>
-  <action name="deleteBranch" >
+  <action name="menu_delete_branch" >
    <property name="text" >
     <string>Delete...</string>
+   </property>
+  </action>
+  <action name="menu_open" >
+   <property name="text" >
+    <string>Open...</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="2" margin="2" />
  <tabstops>
-  <tabstop>commitText</tabstop>
-  <tabstop>stagedList</tabstop>
-  <tabstop>unstagedList</tabstop>
-  <tabstop>stageButton</tabstop>
-  <tabstop>signOffButton</tabstop>
-  <tabstop>commitButton</tabstop>
-  <tabstop>pushButton</tabstop>
-  <tabstop>untrackedCheckBox</tabstop>
-  <tabstop>newCommitRadio</tabstop>
-  <tabstop>amendRadio</tabstop>
-  <tabstop>displayText</tabstop>
+  <tabstop>commit_text</tabstop>
+  <tabstop>staged_list</tabstop>
+  <tabstop>unstaged_list</tabstop>
+  <tabstop>stage_button</tabstop>
+  <tabstop>signoff_button</tabstop>
+  <tabstop>commit_button</tabstop>
+  <tabstop>push_button</tabstop>
+  <tabstop>untracked_checkbox</tabstop>
+  <tabstop>new_commit_radio</tabstop>
+  <tabstop>amend_radio</tabstop>
+  <tabstop>display_text</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>quit</sender>
+   <sender>menu_quit</sender>
    <signal>triggered()</signal>
    <receiver>maingui</receiver>
    <slot>close()</slot>

@@ -5,16 +5,34 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>780</width>
-    <height>512</height>
+    <width>830</width>
+    <height>390</height>
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Command Output</string>
+   <string/>
   </property>
-  <layout class="QVBoxLayout" >
-   <item>
-    <widget class="QTextEdit" name="outputText" >
+  <layout class="QGridLayout" >
+   <property name="leftMargin" >
+    <number>4</number>
+   </property>
+   <property name="topMargin" >
+    <number>4</number>
+   </property>
+   <property name="rightMargin" >
+    <number>4</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>4</number>
+   </property>
+   <property name="horizontalSpacing" >
+    <number>4</number>
+   </property>
+   <property name="verticalSpacing" >
+    <number>0</number>
+   </property>
+   <item row="0" column="0" colspan="4" >
+    <widget class="QTextEdit" name="output_text" >
      <property name="font" >
       <font>
        <family>Monospace</family>
@@ -24,46 +42,102 @@
      <property name="acceptDrops" >
       <bool>false</bool>
      </property>
+     <property name="tabChangesFocus" >
+      <bool>true</bool>
+     </property>
+     <property name="undoRedoEnabled" >
+      <bool>false</bool>
+     </property>
      <property name="readOnly" >
       <bool>true</bool>
      </property>
+     <property name="acceptRichText" >
+      <bool>false</bool>
+     </property>
+     <property name="textInteractionFlags" >
+      <set>Qt::NoTextInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+     </property>
     </widget>
    </item>
-   <item>
-    <layout class="QHBoxLayout" >
-     <item>
-      <spacer>
-       <property name="orientation" >
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" >
-        <size>
-         <width>261</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="okButton" >
-       <property name="text" >
-        <string>OK</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+   <item row="1" column="0" >
+    <widget class="QGroupBox" name="groupBox" >
+     <property name="title" >
+      <string>Search</string>
+     </property>
+     <layout class="QHBoxLayout" >
+      <property name="spacing" >
+       <number>4</number>
+      </property>
+      <property name="leftMargin" >
+       <number>8</number>
+      </property>
+      <property name="topMargin" >
+       <number>0</number>
+      </property>
+      <property name="rightMargin" >
+       <number>8</number>
+      </property>
+      <property name="bottomMargin" >
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="QLineEdit" name="search_line" />
+      </item>
+      <item>
+       <widget class="QPushButton" name="next_button" >
+        <property name="text" >
+         <string>Next</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="prev_button" >
+        <property name="text" >
+         <string>Previous</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>217</width>
+       <height>24</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="2" >
+    <widget class="QPushButton" name="clear_button" >
+     <property name="text" >
+      <string>Clear</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3" >
+    <widget class="QPushButton" name="close_button" >
+     <property name="text" >
+      <string>Close</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
  <tabstops>
-  <tabstop>okButton</tabstop>
-  <tabstop>outputText</tabstop>
+  <tabstop>close_button</tabstop>
+  <tabstop>output_text</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>okButton</sender>
-   <signal>clicked()</signal>
+   <sender>close_button</sender>
+   <signal>released()</signal>
    <receiver>outputgui</receiver>
    <slot>close()</slot>
    <hints>

@@ -1,9 +1,6 @@
 <ui version="4.0" >
  <class>createbranchgui</class>
  <widget class="QDialog" name="createbranchgui" >
-  <property name="windowModality" >
-   <enum>Qt::ApplicationModal</enum>
-  </property>
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -41,12 +38,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="branchLine" />
+      <widget class="QLineEdit" name="branch_line" />
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QGroupBox" name="branchRootGroupBox" >
+    <widget class="QGroupBox" name="branch_groupbox" >
      <property name="title" >
       <string>Starting Revision</string>
      </property>
@@ -73,48 +70,20 @@
         </property>
         <item>
          <widget class="QLabel" name="label_3" >
-          <property name="windowModality" >
-           <enum>Qt::NonModal</enum>
-          </property>
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <property name="text" >
            <string>Revision Expression:</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="revisionLine" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-         </widget>
+         <widget class="QLineEdit" name="revision_line" />
         </item>
        </layout>
       </item>
       <item>
        <layout class="QHBoxLayout" >
         <item>
-         <widget class="QRadioButton" name="localBranchRadio" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
+         <widget class="QRadioButton" name="local_radio" >
           <property name="text" >
            <string>Local Branch</string>
           </property>
@@ -124,26 +93,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="remoteBranchRadio" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
+         <widget class="QRadioButton" name="remote_radio" >
           <property name="text" >
            <string>Tracking Branch</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="tagRadio" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
+         <widget class="QRadioButton" name="tag_radio" >
           <property name="text" >
            <string>Tag</string>
           </property>
@@ -165,7 +122,7 @@
        </layout>
       </item>
       <item>
-       <widget class="QListWidget" name="branchRootList" />
+       <widget class="QListWidget" name="branch_list" />
       </item>
      </layout>
     </widget>
@@ -188,7 +145,7 @@
       <number>4</number>
      </property>
      <item>
-      <widget class="QGroupBox" name="optionsGroupBox" >
+      <widget class="QGroupBox" name="options_groupbox" >
        <property name="title" >
         <string>Options</string>
        </property>
@@ -218,26 +175,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="noUpdateRadio" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
+           <widget class="QRadioButton" name="no_update_radio" >
             <property name="text" >
              <string>No</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="fastForwardUpdateRadio" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
+           <widget class="QRadioButton" name="ffwd_only_radio" >
             <property name="text" >
              <string>Fast Forward Only</string>
             </property>
@@ -247,13 +192,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="resetRadio" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
+           <widget class="QRadioButton" name="reset_radio" >
             <property name="text" >
              <string>Reset</string>
             </property>
@@ -266,7 +205,7 @@
           <item>
            <layout class="QVBoxLayout" >
             <item>
-             <widget class="QCheckBox" name="fetchCheckBox" >
+             <widget class="QCheckBox" name="fetch_checkbox" >
               <property name="text" >
                <string>Fetch Tracking Branch</string>
               </property>
@@ -276,7 +215,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="checkBox" >
+             <widget class="QCheckBox" name="checkout_checkbox" >
               <property name="text" >
                <string>Checkout After Creation</string>
               </property>
@@ -323,7 +262,7 @@
         <number>4</number>
        </property>
        <item>
-        <widget class="QPushButton" name="createBranchButton" >
+        <widget class="QPushButton" name="create_button" >
          <property name="text" >
           <string>Create Branch</string>
          </property>
@@ -333,7 +272,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="cancelButton" >
+        <widget class="QPushButton" name="cancel_button" >
          <property name="text" >
           <string>Cancel</string>
          </property>
@@ -348,7 +287,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>cancelButton</sender>
+   <sender>cancel_button</sender>
    <signal>pressed()</signal>
    <receiver>createbranchgui</receiver>
    <slot>reject()</slot>
