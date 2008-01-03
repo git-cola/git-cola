@@ -78,9 +78,9 @@ class PushController(QObserver):
 		status, output = self.model.push(remote,
 					local_branch, remote_branch,
 					ffwd=ffwd, tags=tags)
+		qtutils.show_output(output)
 		if not status:
 			self.view.accept()
-		qtutils.show_output(output)
 
 	def remotes(self, widget):
 		displayed = []

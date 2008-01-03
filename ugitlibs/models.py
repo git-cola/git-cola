@@ -442,16 +442,19 @@ class Model(model.Model):
 		return diff, status
 
 	def stage_changed(self):
-		git.add(self.get_unstaged())
+		output = git.add(self.get_unstaged())
 		self.update_status()
+		return output
 
 	def stage_untracked(self):
-		git.add(self.get_untracked())
+		output = git.add(self.get_untracked())
 		self.update_status()
+		return output
 
 	def reset(self, items):
-		git.reset(items)
+		output = git.reset(items)
 		self.update_status()
+		return output
 
 	def unstage_all(self):
 		git.reset(self.get_staged())

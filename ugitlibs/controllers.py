@@ -121,9 +121,12 @@ class Controller(QObserver):
 			# Actions that delegate directly to the model
 			signoff_button = model.add_signoff,
 			menu_get_prev_commitmsg = model.get_prev_commitmsg,
-			menu_stage_changed = self.model.stage_changed,
-			menu_stage_untracked = self.model.stage_untracked,
-			menu_unstage_all = self.model.unstage_all,
+			menu_stage_changed =
+				lambda: self.log_output(self.model.stage_changed()),
+			menu_stage_untracked =
+				lambda: self.log_output(self.model.stage_untracked()),
+			menu_unstage_all =
+				lambda: sellf.log_output(self.model.unstage_all()),
 
 			# Actions that delegate direclty to the view
 			menu_cut = view.action_cut,
@@ -276,7 +279,7 @@ class Controller(QObserver):
 				+ "- First line: Describe in one sentence what you did.\n"
 				+ "- Second line: Blank\n"
 				+ "- Remaining lines: Describe why this change is good.\n")
-			qtutils.show_output(error_msg)
+			self.log_output(error_msg)
 			return
 
 		files = self.model.get_staged()
@@ -285,7 +288,7 @@ class Controller(QObserver):
 				+ "No changes to commit.\n"
 				+ "\n"
 				+ "You must stage at least 1 file before you can commit.\n")
-			qtutils.show_output(error_msg)
+			self.log_output(error_msg)
 			return
 
 		# Perform the commit
@@ -296,7 +299,7 @@ class Controller(QObserver):
 		self.view.new_commit_radio.setChecked(True)
 		self.view.amend_radio.setChecked(False)
 		self.model.set_commitmsg('')
-		self.log_output(output, alert=True)
+		self.log_output(output)
 
 	def view_diff(self, staged=True):
 		self.__staged_diff_in_view = staged
@@ -326,7 +329,7 @@ class Controller(QObserver):
 		(revs, summaries) = self.model.log()
 		commits = self.select_commits_gui(revs, summaries)
 		if not commits: return
-		qtutils.show_output(self.model.format_patch(commits))
+		self.log_output(self.model.format_patch(commits))
 
 	def last_window_closed(self):
 		'''Save config settings and cleanup any inotify threads.'''
@@ -381,7 +384,7 @@ class Controller(QObserver):
 
 	def show_diffstat(self):
 		'''Show the diffstat from the latest commit.'''
-		qtutils.show_output(self.model.diff_stat())
+		self.log_output(self.model.diff_stat())
 
 	#####################################################################
 	# diff gui
@@ -475,10 +478,10 @@ class Controller(QObserver):
 		self.view.splitter_top.setSizes([st0,st1])
 		self.view.splitter_bottom.setSizes([sb0,sb1])
 
-	def log_output(self, output, rescan=True, alert=False):
+	def log_output(self, output, rescan=True, quiet=False):
 		'''Logs output and optionally rescans for changes.'''
+		qtutils.log(output, quiet=quiet, doraise=False)
 		if rescan: self.rescan()
-		qtutils.log_output(output, alert=alert)
 
 	#####################################################################
 	#
@@ -490,8 +493,7 @@ class Controller(QObserver):
 		and calls rescan to pickup changes.'''
 		apply_items = qtutils.get_selection_list(widget, items)
 		output = command(apply_items)
-		self.rescan()
-		return output
+		self.log_output(output, quiet=True)
 
 	def diff_context_menu_about_to_show(self):
 		unstaged_item = qtutils.get_selected_item(
@@ -565,7 +567,7 @@ class Controller(QObserver):
 		QtGui.qApp.setFont(qfont)
 
 	def init_log(self):
-		qtutils.log_output(self.model.get_git_version()
+		qtutils.log(self.model.get_git_version()
 				+ os.linesep
 				+ 'ugit version ' + defaults.VERSION
 				+ os.linesep

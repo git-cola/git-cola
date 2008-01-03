@@ -73,14 +73,15 @@ class GenericSyntaxHighligher(QSyntaxHighlighter):
 				start += length
 
 class DiffSyntaxHighlighter(GenericSyntaxHighligher):
-	def __init__(self, doc):
+	def __init__(self, doc,whitespace=True):
 		GenericSyntaxHighligher.__init__(self,doc)
 
 		begin = self.mkformat(Qt.darkCyan, bold=True)
 		diffhead = self.mkformat(Qt.darkYellow)
 		addition = self.mkformat(Qt.darkGreen)
 		removal = self.mkformat(Qt.red)
-		bad_ws = self.mkformat(Qt.black, Qt.red)
+		if whitespace:
+			bad_ws = self.mkformat(Qt.black, Qt.red)
 
 		# We specify the whitespace rule last so that it is
 		# applied after the diff addition/removal rules.
@@ -92,8 +93,9 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
 			self.final('^new file mode'), diffhead,
 			'^\+', addition,
 			'^-', removal,
-			'(.+)(\s+)$', (None, bad_ws,),
 			)
+		if whitespace:
+			self.create_rules('(.+)(\s+)$', (None, bad_ws,))
 
 class LogSyntaxHighlighter(GenericSyntaxHighligher):
 	def __init__(self, doc):

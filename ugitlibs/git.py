@@ -18,7 +18,7 @@ def git(*args,**kwargs):
 def add(to_add):
 	'''Invokes 'git add' to index the filenames in to_add.'''
 	if not to_add: return 'No files to add.'
-	return git('add', *to_add)
+	return git('add', '-v', *to_add)
 
 def add_or_remove(to_process):
 	'''Invokes 'git add' to index the filenames in to_process that exist
@@ -29,24 +29,23 @@ def add_or_remove(to_process):
 
 	to_add = []
 	to_remove = []
-	output = ''
 
 	for filename in to_process:
 		if os.path.exists(filename):
 			to_add.append(filename)
-	
-	add(to_add)
+
+	output = add(to_add)
 
 	if len(to_add) == len(to_process):
 		# to_process only contained unremoved files --
 		# short-circuit the removal checks
-		return
+		return output
 
 	# Process files to remote
 	for filename in to_process:
 		if not os.path.exists(filename):
 			to_remove.append(filename)
-	git('rm',*to_remove)
+	output + os.linesep*2 + git('rm',*to_remove)
 
 def apply(filename, indexonly=True, reverse=False):
 	argv = ['apply']
@@ -258,7 +257,7 @@ def push(remote, local_branch, remote_branch, ffwd=True, tags=False):
 	return git(with_status=True, *argv)
 
 def rebase(newbase):
-	if not newbase: return
+	if not newbase: return 'No base branch specified to rebase.'
 	return git('rebase', newbase)
 
 def remote(*args):
@@ -274,7 +273,6 @@ def reset(to_unstage):
 
 	argv = [ 'reset', '--' ]
 	argv.extend(to_unstage)
-
 	return git(*argv)
 
 def rev_list_range(start, end):

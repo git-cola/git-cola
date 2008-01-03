@@ -12,16 +12,17 @@ import utils
 
 LOGGER = None
 
-def log_output(output, alert=False):
+def log(output, quiet=True, doraise=False):
 	if not LOGGER: return
 	LOGGER.log(output)
-	if alert:
-		LOGGER.show()
-		LOGGER.raise_()
+	if quiet: return
+	LOGGER.show()
+	if not doraise: return
+	LOGGER.raise_()
 
 def show_output(output):
 	if not output: return
-	log_output(output, alert=True)
+	log(output, quiet=False)
 
 def toggle_log_window():
 	if not LOGGER: return

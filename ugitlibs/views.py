@@ -118,7 +118,8 @@ class CommitGUI(Ui_commitgui, QDialog):
 		self.setupUi(self)
 		# Make the list widget slighty larger
 		self.splitter.setSizes([ 50, 200 ])
-		DiffSyntaxHighlighter(self.commit_text.document())
+		DiffSyntaxHighlighter(self.commit_text.document(),
+				whitespace=False)
 
 class CreateBranchGUI(Ui_createbranchgui, QDialog):
 	def __init__(self, parent=None):
