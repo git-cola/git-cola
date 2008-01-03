@@ -86,7 +86,7 @@ class OutputGUI(Ui_outputgui, QDialog):
 			cursor.insertText(line)
 			cursor.insertText(os.linesep)
 		cursor.insertText(os.linesep)
-		cursor.movePosition(cursor.Start)
+		cursor.movePosition(cursor.End)
 		text.setTextCursor(cursor)
 
 class BranchGUI(Ui_branchgui, QDialog):
