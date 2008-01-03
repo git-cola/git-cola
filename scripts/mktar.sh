@@ -41,6 +41,6 @@ fi
 if [ -e .lock-wscript.old ]; then
 	mv .lock-wscript.old .lock-wscript
 fi
-if [ -e $HOME/htdocs/ugit ]; then
-	mv -v "$FILE" $HOME/htdocs/ugit
+if [ -d $HOME/htdocs/ugit/releases ]; then
+	mv -v "$FILE" $HOME/htdocs/ugit/releases
 fi

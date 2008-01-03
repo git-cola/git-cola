@@ -21,6 +21,6 @@ rm -rf $DIR "$1"
 if [ -d $DIR.old.$$ ]; then
 	mv -v $DIR.old.$$ $DIR
 fi
-if [ -e $HOME/htdocs/ugit ]; then
-	mv -v "$FILE" $HOME/htdocs/ugit
+if [ -e $HOME/htdocs/ugit/releases ]; then
+	mv -v "$FILE" $HOME/htdocs/ugit/releases
 fi
