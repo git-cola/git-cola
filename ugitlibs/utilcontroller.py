@@ -108,12 +108,15 @@ class OptionsController(QObserver):
 
 			'global.ugit.fontui.size': 'main_font_spinbox',
 			'global.ugit.fontui': 'main_font_combo',
+
+			'global.ugit.history_browser_line': 'history_browser_line',
 		}
 
 		for m,v in model_to_view.iteritems():
 			self.model_to_view(m,v)
 
 		self.add_signals('textChanged(const QString&)',
+				view.history_browser_line,
 				view.local_name_line,
 				view.global_name_line,
 				view.local_email_line,
@@ -132,7 +135,7 @@ class OptionsController(QObserver):
 				view.global_diffcontext_spinbox,
 				view.local_verbosity_spinbox,
 				view.global_verbosity_spinbox)
-	
+
 		self.add_signals('currentFontChanged(const QFont&)',
 				view.main_font_combo,
 				view.diff_font_combo)

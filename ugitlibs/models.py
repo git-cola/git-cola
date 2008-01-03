@@ -115,6 +115,7 @@ class Model(model.Model):
 			'ugit.fontui.size':12,
 			'ugit.fontdiff': '',
 			'ugit.fontdiff.size':12,
+			'ugit.history_browser_line': 'gitk',
 			}
 
 		default_dict = self.__config_defaults
@@ -249,7 +250,10 @@ class Model(model.Model):
 				self.subtree_types.append(self.types[idx])
 				self.subtree_sha1s.append(self.sha1s[idx])
 				self.subtree_names.append(name)
-	
+
+	def get_history_browser(self):
+		return self.get_param('global.ugit.history_browser_line')
+
 	def get_tree_node(self, idx):
 		return (self.get_types()[idx],
 			self.get_sha1s()[idx],
