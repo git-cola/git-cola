@@ -12,6 +12,7 @@ from PyQt4.QtGui import QFontComboBox
 
 from observer import Observer
 
+
 class QObserver(Observer, QObject):
 
 	def __init__(self, model, view):
@@ -44,18 +45,14 @@ class QObserver(Observer, QObject):
 						notify=False)
 			elif isinstance(widget, QLineEdit):
 				value = str(widget.text())
-				model.set_param(model_param, value,
-						notify=False)
+				model.set_param(model_param, value)
 			elif isinstance(widget, QCheckBox):
-				model.set_param(model_param, widget.isChecked(),
-						notify=False)
+				model.set_param(model_param, widget.isChecked())
 			elif isinstance(widget, QSpinBox):
-				model.set_param(model_param, widget.value(),
-						notify=False)
+				model.set_param(model_param, widget.value())
 			elif isinstance(widget, QFontComboBox):
 				value = unicode(widget.currentFont().toString())
-				model.set_param(model_param, value,
-						notify=False)
+				model.set_param(model_param, value)
 			else:
 				print("SLOT(): Unknown widget:", sender, widget)
 
@@ -90,6 +87,9 @@ class QObserver(Observer, QObject):
 
 	def subject_changed(self, param, value):
 		'''Sends a model param to the view(model->view)'''
+
+		notify = self.model.get_notify()
+		self.model.set_notify(False)
 		if param in self.__model_to_view:
 			for widget_name in self.__model_to_view[param]:
 				widget = getattr(self.view, widget_name)
@@ -113,6 +113,7 @@ class QObserver(Observer, QObject):
 					print('subject_changed(): '
 						+ 'Unknown widget:',
 						widget_name, widget, value)
+		self.model.set_notify(notify)
 
 		if param not in self.__actions:
 			return

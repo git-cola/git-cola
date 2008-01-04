@@ -146,8 +146,8 @@ class OptionsController(QObserver):
 
 		self.add_actions('global.ugit.fontdiff.size', self.update_size)
 		self.add_actions('global.ugit.fontui.size', self.update_size)
-		self.add_actions('global.ugit.fontdiff', self.update_font)
-		self.add_actions('global.ugit.fontui', self.update_font)
+		self.add_actions('global.ugit.fontdiff', self.tell_parent_model)
+		self.add_actions('global.ugit.fontui', self.tell_parent_model)
 
 		self.add_callbacks(save_button = self.save_settings)
 		self.add_callbacks(cancel_button = self.restore_settings)
@@ -159,7 +159,6 @@ class OptionsController(QObserver):
 		self.backup_model = self.model.clone()
 
 	def refresh_view(self):
-
 		font = self.model.get_param('global.ugit.fontui')
 		if font:
 			size = int(font.split(',')[1])
@@ -177,11 +176,6 @@ class OptionsController(QObserver):
 			diff_font = QFont()
 			diff_font.fromString(font)
 			self.view.diff_font_combo.setCurrentFont(diff_font)
-
-		browser = self.model.get_param('global.ugit.historybrowser')
-		if browser:
-			self.view.history_browser_line.setText(browser)
-
 		QObserver.refresh_view(self)
 
 	# save button
@@ -198,7 +192,6 @@ class OptionsController(QObserver):
 			self.model.save_config_param(param)
 
 		self.original_model.copy_params(self.model, params_to_save)
-
 		self.view.done(QDialog.Accepted)
 
 	# cancel button, undo changes
@@ -208,7 +201,7 @@ class OptionsController(QObserver):
 		self.tell_parent_model()
 		self.view.reject()
 
-	def tell_parent_model(self):
+	def tell_parent_model(self,*rest):
 		for param in (
 				'global.ugit.fontdiff',
 				'global.ugit.fontui',
