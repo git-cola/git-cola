@@ -118,5 +118,6 @@ class PushController(QObserver):
 		if not selection: return
 
 		branch = utils.basename(selection)
+		if branch == 'HEAD': return
 		self.model.set_remote_branch(branch)
 		self.view.remote_branch_line.selectAll()
