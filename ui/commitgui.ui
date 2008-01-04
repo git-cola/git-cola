@@ -9,9 +9,6 @@
     <height>512</height>
    </rect>
   </property>
-  <property name="windowTitle" >
-   <string>Git Commit GUI</string>
-  </property>
   <layout class="QVBoxLayout" >
    <item>
     <widget class="QSplitter" name="splitter" >

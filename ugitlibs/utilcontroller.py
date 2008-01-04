@@ -14,12 +14,12 @@ def choose_branch(title, parent, branches):
 	dlg.setWindowTitle(dlg.tr(title))
 	return dlg.get_selected()
 
-def select_commits(model, parent, revs, summaries):
+def select_commits(model, parent, title, revs, summaries):
 	'''Use the CommitBrowser to select commits from a list.'''
 	model = model.clone()
 	model.set_revisions(revs)
 	model.set_summaries(summaries)
-	view = CommitGUI(parent)
+	view = CommitGUI(parent, title)
 	ctl = SelectCommitsController(model, view)
 	return ctl.select_commits()
 

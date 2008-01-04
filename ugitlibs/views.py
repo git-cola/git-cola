@@ -112,10 +112,11 @@ class BranchGUI(Ui_branchgui, QDialog):
 			return None
 
 class CommitGUI(Ui_commitgui, QDialog):
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, title=None):
 		QDialog.__init__(self, parent)
 		Ui_commitgui.__init__(self)
 		self.setupUi(self)
+		if title: self.setWindowTitle(title)
 		# Make the list widget slighty larger
 		self.splitter.setSizes([ 50, 200 ])
 		DiffSyntaxHighlighter(self.commit_text.document(),

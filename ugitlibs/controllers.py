@@ -81,6 +81,7 @@ class Controller(QObserver):
 				view.menu_browse_other_branch,
 				view.menu_visualize_all,
 				view.menu_visualize_current,
+				view.menu_browse_commits,
 				view.menu_export_patches,
 				view.menu_cherry_pick,
 				view.menu_load_commitmsg,
@@ -164,6 +165,7 @@ class Controller(QObserver):
 			menu_browse_other_branch = self.browse_other,
 			menu_visualize_current = self.viz_current,
 			menu_visualize_all = self.viz_all,
+			menu_browse_commits = self.browse_commits,
 			menu_export_patches = self.export_patches,
 			menu_cherry_pick = self.cherry_pick,
 			menu_load_commitmsg = self.load_commitmsg,
@@ -263,8 +265,13 @@ class Controller(QObserver):
 		if not branch: return
 		self.log_output(self.model.checkout(branch))
 
+	def browse_commits(self):
+		self.select_commits_gui(self.tr('Browse Commits'),
+				*self.model.log(all=True))
+
 	def cherry_pick(self):
-		commits = self.select_commits_gui(*self.model.log(all=True))
+		commits = self.select_commits_gui(self.tr('Cherry-Pick Commits'),
+				*self.model.log(all=True))
 		if not commits: return
 		self.log_output(self.model.cherry_pick(commits))
 
@@ -327,7 +334,8 @@ class Controller(QObserver):
 
 	def export_patches(self):
 		(revs, summaries) = self.model.log()
-		commits = self.select_commits_gui(revs, summaries)
+		commits = self.select_commits_gui(self.tr('Export Patches'),
+				revs, summaries)
 		if not commits: return
 		self.log_output(self.model.format_patch(commits))
 
@@ -551,8 +559,8 @@ class Controller(QObserver):
 		self.connect(self.__menu, 'aboutToShow()',
 			self.diff_context_menu_about_to_show)
 
-	def select_commits_gui(self, revs, summaries):
-		return select_commits(self.model, self.view, revs, summaries)
+	def select_commits_gui(self, title, revs, summaries):
+		return select_commits(self.model, self.view, title, revs, summaries)
 
 	def update_diff_font(self):
 		font = self.model.get_param('global.ugit.fontdiff')
