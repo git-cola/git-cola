@@ -68,6 +68,7 @@ class OutputGUI(Ui_outputgui, QDialog):
 		QDialog.__init__(self, parent)
 		Ui_outputgui.__init__(self)
 		self.setupUi(self)
+		self.setWindowTitle(self.tr('Git Command Output'))
 		# Syntax highlight the log window
 		LogSyntaxHighlighter(self.output_text.document())
 		if output: self.set_output(output)

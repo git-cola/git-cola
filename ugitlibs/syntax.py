@@ -102,6 +102,7 @@ class LogSyntaxHighlighter(GenericSyntaxHighligher):
 		GenericSyntaxHighligher.__init__(self,doc)
 
 		dark_cyan = self.mkformat(Qt.darkCyan, bold=True)
+		green = self.mkformat(Qt.darkGreen, bold=True)
 		blue = self.mkformat(Qt.blue, bold=True)
 
 		self.create_rules(
@@ -109,7 +110,7 @@ class LogSyntaxHighlighter(GenericSyntaxHighligher):
 					'[:0-9]+\W+\d{4}$'),
 			dark_cyan,
 			'^([^:]+:)(.*)$',
-			(blue, dark_cyan),
+			(blue, green),
 			)
 
 if __name__ == '__main__':

@@ -127,7 +127,7 @@ class Controller(QObserver):
 			menu_stage_untracked =
 				lambda: self.log_output(self.model.stage_untracked()),
 			menu_unstage_all =
-				lambda: sellf.log_output(self.model.unstage_all()),
+				lambda: self.log_output(self.model.unstage_all()),
 
 			# Actions that delegate direclty to the view
 			menu_cut = view.action_cut,
