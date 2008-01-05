@@ -594,7 +594,7 @@ class Controller(QObserver):
 			if platform.system() == 'Linux':
 				msg =(self.tr('Unable import pyinotify.\n'
 						+ 'inotify support has been'
-						+ 'disabled.')
+						+ ' disabled.')
 					+ '\n\n')
 
 				plat = platform.platform().lower()
