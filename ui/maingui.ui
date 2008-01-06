@@ -443,6 +443,12 @@ retrieve the latest commit message prior to committing.</string>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimumSize" >
+         <size>
+          <width>111</width>
+          <height>50</height>
+         </size>
+        </property>
         <layout class="QVBoxLayout" >
          <property name="spacing" >
           <number>0</number>
