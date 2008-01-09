@@ -60,9 +60,15 @@ def branch(name=None, remote=False, delete=False):
 	else:
 		argv = ['branch']
 		if remote: argv.append('-r')
-
-		branches = git(*argv).splitlines()
-		return map(lambda(x): x.lstrip('* '), branches)
+		branches = map(lambda x: x.lstrip('* '),
+				git(*argv).splitlines())
+		if remote:
+			remotes = []
+			for branch in branches:
+				if branch.endswith('/HEAD'): continue
+				remotes.append(branch)
+			return remotes
+		return branches
 
 def cat_file(objtype, sha1):
 	return git('cat-file', objtype, sha1, raw=True)
