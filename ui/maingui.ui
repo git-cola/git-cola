@@ -429,6 +429,9 @@ If you are going to amend a commit you can use the
 "Commit -> Get Latest Comit Message" menu action to
 retrieve the latest commit message prior to committing.</string>
               </property>
+              <property name="lineWrapMode" >
+               <enum>QTextEdit::NoWrap</enum>
+              </property>
               <property name="acceptRichText" >
                <bool>false</bool>
               </property>
