@@ -577,11 +577,10 @@ class Controller(QObserver):
 		QtGui.qApp.setFont(qfont)
 
 	def init_log(self):
+		branch, version = self.model.get_branch(), defaults.VERSION
 		qtutils.log(self.model.get_git_version()
-				+ os.linesep
-				+ 'ugit version ' + defaults.VERSION
-				+ os.linesep
-				+ 'Current Branch: ' + self.model.get_branch())
+				+ '\nugit version '+ version
+				+ '\nCurrent Branch: '+ branch)
 
 	def start_inotify_thread(self):
 		# Do we have inotify?  If not, return.
@@ -592,11 +591,8 @@ class Controller(QObserver):
 		except ImportError:
 			import platform
 			if platform.system() == 'Linux':
-				msg =(self.tr('Unable import pyinotify.\n'
-						+ 'inotify support has been'
-						+ ' disabled.')
-					+ '\n\n')
-
+				msg = self.tr('Unable import pyinotify.\n'
+					+ 'inotify support is disabled.\n\n') 
 				plat = platform.platform().lower()
 				if 'debian' in plat or 'ubuntu' in plat:
 					msg += (self.tr('Hint:')

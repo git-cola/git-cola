@@ -45,7 +45,7 @@ def add_or_remove(to_process):
 	for filename in to_process:
 		if not os.path.exists(filename):
 			to_remove.append(filename)
-	output + os.linesep*2 + git('rm',*to_remove)
+	output + '\n\n' + git('rm',*to_remove)
 
 def apply(filename, indexonly=True, reverse=False):
 	argv = ['apply']
@@ -79,7 +79,7 @@ def cherry_pick(revs, commit=False):
 		new_argv = argv + [rev]
 		cherries.append(git(*new_argv))
 
-	return os.linesep.join(cherries)
+	return '\n'.join(cherries)
 
 def checkout(rev):
 	return git('checkout', rev)
@@ -87,8 +87,8 @@ def checkout(rev):
 def commit(msg, amend=False):
 	'''Creates a git commit.'''
 
-	if not msg.endswith(os.linesep):
-		msg += os.linesep
+	if not msg.endswith('\n'):
+		msg += '\n'
 
 	# Sure, this is a potential "security risk," but if someone
 	# is trying to intercept/re-write commit messages on your system,
@@ -97,25 +97,23 @@ def commit(msg, amend=False):
 	argv = [ 'commit', '-F', tmpfile ]
 	if amend:
 		argv.append('--amend')
-	
+
 	# Create the commit message file
 	file = open(tmpfile, 'w')
 	file.write(msg)
 	file.close()
-	
+
 	# Run 'git commit'
 	output = git(*argv)
 	os.unlink(tmpfile)
 
-	return quote(argv) + os.linesep*2 + output
+	return 'git ' + quote(argv) + '\n\n' + output
 
 def create_branch(name, base, track=False):
 	'''Creates a branch starting from base.  Pass track=True
 	to create a remote tracking branch.'''
-	if track:
-		return git('branch', '--track', name, base)
-	else:
-		return git('branch', name, base)
+	if track: return git('branch', '--track', name, base)
+	else: return git('branch', name, base)
 
 def current_branch():
 	'''Parses 'git branch' to find the current branch.'''
@@ -156,20 +154,18 @@ def diff(commit=None,filename=None, color=False,
 		if not start and '@@ ' in line and ' @@' in line:
 			start = True
 		if start or(deleted and del_tag in line):
-			output.write(line)
-			output.write(os.linesep)
+			output.write(line + '\n')
 		else:
 			if with_diff_header:
 				headers.append(line)
 			elif not suppress_header:
-				output.write(line)
-				output.write(os.linesep)
-	
+				output.write(line + '\n')
+
 	result = output.getvalue()
 	output.close()
 
 	if with_diff_header:
-		return(os.linesep.join(headers), result)
+		return('\n'.join(headers), result)
 	else:
 		return result
 
@@ -188,8 +184,8 @@ def format_patch(revs):
 		new_argv = argv + ['--start-number', real_idx,
 				'%s^..%s'%(rev,rev)]
 		output.append(git(*new_argv))
-		num_patches += output[-1].count(os.linesep)
-	return os.linesep.join(output)
+		num_patches += output[-1].count('\n')
+	return '\n'.join(output)
 
 def config(key, value=None, local=True):
 	argv = ['config']

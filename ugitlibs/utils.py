@@ -4,25 +4,12 @@ import os
 import re
 import time
 from cStringIO import StringIO
-
 from PyQt4.QtCore import QProcess
 
 import defaults
 
 PREFIX = os.path.realpath(os.path.dirname(os.path.dirname(sys.argv[0])))
 QMDIR = os.path.join(PREFIX, 'share', 'ugit', 'qm')
-
-def get_qm_for_locale(locale):
-	regex = re.compile(r'([^\.])+\..*$')
-	match = regex.match(locale)
-	if match:
-		locale = match.group(1)
-
-	basename = locale.split('_')[0]
-
-	return os.path.join(QMDIR, basename +'.qm')
-
-
 ICONSDIR = os.path.join(PREFIX, 'share', 'ugit', 'icons')
 KNOWN_FILE_TYPES = {
 	'ascii c':   'c.png',
@@ -36,6 +23,16 @@ KNOWN_FILE_TYPES = {
 	'byte':      'binary.png',
 	'image':     'image.png',
 }
+
+def get_qm_for_locale(locale):
+	regex = re.compile(r'([^\.])+\..*$')
+	match = regex.match(locale)
+	if match:
+		locale = match.group(1)
+
+	basename = locale.split('_')[0]
+
+	return os.path.join(QMDIR, basename +'.qm')
 
 def ident_file_type(filename):
 	'''Returns an icon based on the contents of filename.'''
@@ -243,7 +240,6 @@ def write(path, contents):
 	file.write(contents)
 	file.close()
 
-
 class DiffParser(object):
 	def __init__(self, model,
 				filename='', cached=True):
@@ -278,7 +274,7 @@ class DiffParser(object):
 	def write_diff(self,filename,which,selected=False,noop=False):
 		if not noop and which < len(self.diffs):
 			diff = self.diffs[which]
-			write(filename, self.header + os.linesep + diff + os.linesep)
+			write(filename, self.header + '\n' + diff + '\n')
 			return True
 		else:
 			return False
@@ -287,26 +283,20 @@ class DiffParser(object):
 		return self.__diffs
 
 	def get_diff_subset(self, diff, start, end):
-		newdiff = []
-		diffguts = os.linesep.join(self.__diffs[diff])
-
-		offset = self.__diff_spans[diff][0]
-
-		local_offset = 0
-
 		adds = 0
 		deletes = 0
+		newdiff = []
+		local_offset = 0
+		offset = self.__diff_spans[diff][0]
+		diffguts = '\n'.join(self.__diffs[diff])
 
 		for line in self.__diffs[diff]:
-
 			line_start = offset + local_offset
-			local_offset += len(line) + 1
+			local_offset += len(line) + 1 #\n
 			line_end = offset + local_offset
-
-			# |line1 |line2 |line3|
-			#   |selection----|
-			#   '-start   '-end
-
+			# |line1 |line2 |line3 |
+			#   |--selection--|
+			#   '-start       '-end
 			# selection has head of diff (line3)
 			if start < line_start and end > line_start and end < line_end:
 				newdiff.append(line)
@@ -339,7 +329,6 @@ class DiffParser(object):
 					newdiff.append(line)
 
 		new_count = self.__headers[diff][1] + adds - deletes
-
 		if new_count != self.__headers[diff][3]:
 			header = '@@ -%d,%d +%d,%d @@' % (
 							self.__headers[diff][0],
@@ -348,17 +337,14 @@ class DiffParser(object):
 							new_count)
 			newdiff[0] = header
 
-		return (self.header
-				+ os.linesep
-				+ os.linesep.join(newdiff)
-				+ os.linesep)
-	
+		return (self.header + '\n' + '\n'.join(newdiff) + '\n')
+
 	def get_spans(self):
 		return self.__diff_spans
-	
+
 	def get_offsets(self):
 		return self.__diff_offsets
-	
+
 	def set_diff_to_offset(self, offset):
 		self.offset = offset
 		self.diffs, self.selected = self.get_diff_for_offset(offset)
@@ -371,10 +357,9 @@ class DiffParser(object):
 	def get_diff_for_offset(self, offset):
 		for idx, diff_offset in enumerate(self.__diff_offsets):
 			if offset < diff_offset:
-				return ([os.linesep.join(self.__diffs[idx])],
-						[idx])
+				return (['\n'.join(self.__diffs[idx])], [idx])
 		return ([],[])
-	
+
 	def get_diffs_for_range(self, start, end):
 		diffs = []
 		indices = []
@@ -386,9 +371,8 @@ class DiffParser(object):
 			selected_diff =(has_end_of_diff
 					or has_all_of_diff
 					or has_head_of_diff)
-
 			if selected_diff:
-				diff = os.linesep.join(self.__diffs[idx])
+				diff = '\n'.join(self.__diffs[idx])
 				diffs.append(diff)
 				indices.append(idx)
 		return diffs, indices
@@ -399,7 +383,6 @@ class DiffParser(object):
 		self.__headers = []
 
 		for idx, line in enumerate(diff.splitlines()):
-
 			match = self.__header_pattern.match(line)
 			if match:
 				self.__headers.append([
@@ -408,22 +391,18 @@ class DiffParser(object):
 						int(match.group(3)),
 						int(match.group(4))
 						])
-
 				self.__diffs.append( [line] )
 
-				line_len = len(line) + 1
+				line_len = len(line) + 1 #\n
 				self.__diff_spans.append([total_offset,
 						total_offset + line_len])
-
 				total_offset += line_len
 				self.__diff_offsets.append(total_offset)
-
 				self.__idx += 1
 			else:
 				if self.__idx < 0:
 					errmsg = 'Malformed diff?\n\n%s' % diff
 					raise AssertionError, errmsg
-
 				line_len = len(line) + 1
 				total_offset += line_len
 
@@ -439,7 +418,6 @@ class DiffParser(object):
 		else:
 			self.set_diff_to_offset(offset)
 			selected = False
-
 		# Process diff selection only
 		if selected:
 			for idx in self.selected:

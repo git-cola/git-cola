@@ -59,7 +59,7 @@ class View(Ui_maingui, QMainWindow):
 		cursor = self.display_text.textCursor()
 		offset = cursor.position()
 		selection = cursor.selection().toPlainText()
-		num_selected_lines = selection.count(os.linesep)
+		num_selected_lines = selection.count('\n')
 		return offset, selection
 
 class OutputGUI(Ui_outputgui, QDialog):
@@ -81,12 +81,10 @@ class OutputGUI(Ui_outputgui, QDialog):
 		cursor = self.output_text.textCursor()
 		cursor.movePosition(cursor.End)
 		text = self.output_text
-		cursor.insertText(time.asctime())
-		cursor.insertText(os.linesep)
+		cursor.insertText(time.asctime() + '\n')
 		for line in unicode(output).splitlines():
-			cursor.insertText(line)
-			cursor.insertText(os.linesep)
-		cursor.insertText(os.linesep)
+			cursor.insertText(line + '\n')
+		cursor.insertText('\n')
 		cursor.movePosition(cursor.End)
 		text.setTextCursor(cursor)
 

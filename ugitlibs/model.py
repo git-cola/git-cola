@@ -260,23 +260,21 @@ class Model(Observable):
 
 		for param in self.__params:
 			if param.startswith('_'): continue
-			io.write(os.linesep)
+			io.write('\n')
 
 			inner = Model.INDENT() + param + " = "
 			value = getattr(self, param)
 
 			if type(value) == ListType:
 				indent = Model.INDENT(1)
-				io.write(inner + "[" + os.linesep)
+				io.write(inner + "[\n")
 				for val in value:
 					if is_model(val):
-						io.write(str(val))
-						io.write(os.linesep)
+						io.write(val+'\n')
 					else:
 						io.write(indent)
 						io.write(str(val))
-						io.write(',')
-						io.write(os.linesep)
+						io.write(",\n")
 
 				io.write(Model.INDENT(-1))
 				io.write('],')
@@ -285,16 +283,14 @@ class Model(Observable):
 				io.write(str(value))
 				io.write(',')
 
-		io.write(os.linesep)
-		io.write(Model.INDENT(-1))
-		io.write(')')
-
+		io.write('\n' + Model.INDENT(-1) + ')')
 		value = io.getvalue()
 		io.close()
 		return value
 
 #############################################################################
 #
+def is_model(item): return issubclass(item.__class__, Model)
 def is_dict(item):
 	return type(item) is DictType
 def is_list(item):
@@ -306,7 +302,6 @@ def is_atom(item):
 		or type(item) is LongType
 		or type(item) is FloatType
 		or type(item) is ComplexType)
-def is_model(item): return issubclass(item.__class__, Model)
 def is_instance(item):
 	return(is_model(item)
 		or type(item) is InstanceType)

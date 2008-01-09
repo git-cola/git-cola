@@ -280,12 +280,12 @@ class Model(model.Model):
 		of the current commit message.'''
 
 		msg = self.get_commitmsg()
-		signoff =('Signed-off by: %s <%s>' % (
+		signoff =('\n\nSigned-off by: %s <%s>\n' % (
 				self.get_param('local.user.name'),
 				self.get_param('local.user.email')))
 
 		if signoff not in msg:
-			self.set_commitmsg(msg + os.linesep*2 + signoff)
+			self.set_commitmsg(msg + signoff)
 
 	def apply_diff(self, filename):
 		return git.apply(filename)
@@ -315,7 +315,7 @@ class Model(model.Model):
 				commit_msg.pop()
 				break
 			commit_msg.append(msg)
-		self.set_commitmsg(os.linesep.join(commit_msg).rstrip())
+		self.set_commitmsg('\n'.join(commit_msg).rstrip())
 
 	def update_status(self):
 		# This allows us to defer notification until the
@@ -402,11 +402,10 @@ class Model(model.Model):
 		self.set_param(param, new_size)
 
 	def get_commit_diff(self, sha1):
-		commit = self.show(sha1)
-		first_newline = commit.index(os.linesep)
-		merge = commit[first_newline+1:].startswith('Merge:')
-		if merge:
-			return (commit + os.linesep*2
+		commit = git.show(sha1)
+		first_newline = commit.index('\n')
+		if commit[first_newline+1:].startswith('Merge:'):
+			return (commit + '\n\n'
 				+ self.diff(commit=sha1, cached=False,
 					suppress_header=False))
 		else:
@@ -427,7 +426,7 @@ class Model(model.Model):
 			filename = self.get_all_unstaged()[idx]
 			if os.path.isdir(filename):
 				status = 'Untracked directory'
-				diff = os.linesep.join(os.listdir(filename))
+				diff = '\n'.join(os.listdir(filename))
 			elif filename in self.get_unstaged():
 				status = 'Modified, not staged'
 				diff = self.diff(filename=filename, cached=False)

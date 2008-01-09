@@ -70,7 +70,7 @@ class RepoBrowserController(QObserver):
 				# This is '..' which is a special case
 				# since it doesn't really exist
 				entries = []
-			self.view.commit_text.setText(os.linesep.join(entries))
+			self.view.commit_text.setText('\n'.join(entries))
 			self.view.revision_line.setText('')
 		else:
 			# This is a file entry.  The current row is absolute,
