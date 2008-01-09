@@ -330,6 +330,9 @@ otherwise only the selected items will be committed.</string>
             </sizepolicy>
            </property>
            <layout class="QVBoxLayout" >
+            <property name="spacing" >
+             <number>0</number>
+            </property>
             <property name="leftMargin" >
              <number>0</number>
             </property>
@@ -541,10 +544,11 @@ retrieve the latest commit message prior to committing.</string>
     <property name="title" >
      <string>Repository</string>
     </property>
-    <addaction name="menu_browse_commits" />
-    <addaction name="separator" />
     <addaction name="menu_visualize_current" />
     <addaction name="menu_visualize_all" />
+    <addaction name="separator" />
+    <addaction name="menu_show_revision" />
+    <addaction name="menu_browse_commits" />
     <addaction name="separator" />
     <addaction name="menu_browse_branch" />
     <addaction name="menu_browse_other_branch" />
@@ -859,6 +863,11 @@ retrieve the latest commit message prior to committing.</string>
   <action name="menu_browse_commits" >
    <property name="text" >
     <string>Browse Commits</string>
+   </property>
+  </action>
+  <action name="menu_show_revision" >
+   <property name="text" >
+    <string>Show Revision</string>
    </property>
   </action>
  </widget>

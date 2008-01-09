@@ -40,11 +40,11 @@ class QObserver(Observer, QObject):
 			model = self.model
 			model_param = self.__view_to_model[sender]
 			if isinstance(widget, QTextEdit):
-				value = str(widget.toPlainText())
+				value = unicode(widget.toPlainText())
 				model.set_param(model_param, value,
 						notify=False)
 			elif isinstance(widget, QLineEdit):
-				value = str(widget.text())
+				value = unicode(widget.text())
 				model.set_param(model_param, value)
 			elif isinstance(widget, QCheckBox):
 				model.set_param(model_param, widget.isChecked())

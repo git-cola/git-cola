@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import time
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QFont
 import utils
@@ -9,13 +10,21 @@ from views import CommitGUI
 from views import OptionsGUI
 from views import OutputGUI
 
+def set_diff_font(model, widget):
+	if model.has_param('global.ugit.fontdiff'):
+		font = model.get_param('global.ugit.fontdiff')
+		if not font: return
+		qf = QFont()
+		qf.fromString(font)
+		widget.setFont(qf)
+
 def choose_branch(title, parent, branches):
 	dlg = BranchGUI(parent,branches)
 	dlg.setWindowTitle(dlg.tr(title))
 	return dlg.get_selected()
 
 def select_commits(model, parent, title, revs, summaries):
-	'''Use the CommitBrowser to select commits from a list.'''
+	'''Use the CommitGUI to select commits from a list.'''
 	model = model.clone()
 	model.set_revisions(revs)
 	model.set_summaries(summaries)
@@ -26,15 +35,9 @@ def select_commits(model, parent, title, revs, summaries):
 class SelectCommitsController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self, model, view)
+		set_diff_font(model, self.view.commit_text)
 		self.connect(view.commit_list, 'itemSelectionChanged()',
 				self.commit_sha1_selected )
-
-		if model.has_param('global.ugit.fontdiff'):
-			font = model.get_param('global.ugit.fontdiff')
-			if font:
-				qf = QFont()
-				qf.fromString(font)
-				self.view.commit_text.setFont(qf)
 
 	def select_commits(self):
 		summaries = self.model.get_summaries()
@@ -68,6 +71,69 @@ class SelectCommitsController(QObserver):
 
 		# Copy the sha1 into the clipboard
 		qtutils.set_clipboard(sha1)
+
+def find_revisions(model, parent):
+	model = model.clone()
+	view = CommitGUI(parent, 'Revision')
+	ctl = FindRevisionsController(model,view)
+	view.show()
+	view.revision_line.setFocus()
+	return view.exec_() == QDialog.Accepted
+
+class FindRevisionsController(QObserver):
+	def __init__(self, model, view):
+		QObserver.__init__(self,model,view)
+		set_diff_font(model, self.view.commit_text)
+		self.connect(view.revision_line, 'textChanged(const QString&)',
+				self.find_revision)
+		self.connect(view.commit_list, 'itemSelectionChanged()',
+				self.select_summary)
+		self.connect(view.commit_text, 'cursorPositionChanged()',
+				self.select_summary)
+
+		self.sha1 = None
+		self.last_time = time.time()
+		self.updates_enabled = True
+		(self.revisions, self.summaries) = self.model.log(all=True)
+
+	def find_revision(self, *rest):
+		if time.time() - self.last_time < 0.2:
+			self.last_time = time.time()
+			return
+		revision = str(self.view.revision_line.text())
+		if len(revision) < 2: return
+		for idx, rev in enumerate(self.revisions):
+			if rev.startswith(revision):
+				self.show_revision(idx)
+				return
+		self.updates_enabled = False
+
+		self.view.commit_list.clear()
+		blob = self.model.show(revision)
+		self.view.commit_text.setText(blob)
+
+		self.updates_enabled = True
+
+	def show_revision(self, idx):
+		summary = self.summaries[idx]
+		revision = self.revisions[idx]
+		if self.sha1 and self.sha1 == revision:
+			return
+		self.view.commit_list.clear()
+		self.view.commit_list.addItem(summary)
+		qtutils.set_clipboard(revision)
+		diff = self.model.get_commit_diff(revision)
+		self.sha1 = revision
+		self.updates_enabled = False
+		self.view.commit_text.setText(diff)
+		self.updates_enabled = True
+
+	def select_summary(self,*args):
+		if not self.updates_enabled: return
+		if not self.sha1: return
+		self.view.revision_line.setText(self.sha1)
+		self.view.revision_line.selectAll()
+		qtutils.set_clipboard(self.sha1)
 
 def update_options(model, parent):
 	view = OptionsGUI(parent)
@@ -239,7 +305,6 @@ class LogWindowController(QObserver):
 
 		self.model_to_view('search_text', 'search_line')
 		self.add_signals('textChanged(const QString&)', self.view.search_line)
-
 		self.connect(self.view.search_line,
 			'textChanged(const QString&)', self.insta_search)
 

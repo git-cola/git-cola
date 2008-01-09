@@ -12,13 +12,31 @@
   <layout class="QVBoxLayout" >
    <item>
     <widget class="QSplitter" name="splitter" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
      <property name="handleWidth" >
-      <number>4</number>
+      <number>2</number>
      </property>
      <widget class="QListWidget" name="commit_list" >
+      <property name="sizePolicy" >
+       <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>0</width>
+        <height>20</height>
+       </size>
+      </property>
       <property name="font" >
        <font>
         <family>Monospace</family>
@@ -32,6 +50,18 @@
       </property>
      </widget>
      <widget class="QTextEdit" name="commit_text" >
+      <property name="sizePolicy" >
+       <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
       <property name="font" >
        <font>
         <family>Monospace</family>

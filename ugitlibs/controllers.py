@@ -17,6 +17,7 @@ from createbranchcontroller import create_new_branch
 from pushcontroller import push_branches
 from utilcontroller import choose_branch
 from utilcontroller import select_commits
+from utilcontroller import find_revisions
 from utilcontroller import update_options
 from utilcontroller import log_window
 
@@ -63,13 +64,21 @@ class Controller(QObserver):
 				view.signoff_button,)
 
 		self.add_signals('triggered()',
-				view.menu_rescan,
-				view.menu_options,
+				# repository
+				view.menu_visualize_all,
+				view.menu_visualize_current,
+				view.menu_show_revision,
+				view.menu_browse_commits,
+				view.menu_browse_branch,
+				view.menu_browse_other_branch,
+				# branch
 				view.menu_create_branch,
 				view.menu_checkout_branch,
 				view.menu_rebase_branch,
 				view.menu_delete_branch,
 				view.menu_get_prev_commitmsg,
+				# commit
+				view.menu_rescan,
 				view.menu_commit,
 				view.menu_stage_changed,
 				view.menu_stage_untracked,
@@ -77,14 +86,11 @@ class Controller(QObserver):
 				view.menu_unstage_all,
 				view.menu_unstage_selected,
 				view.menu_show_diffstat,
-				view.menu_browse_branch,
-				view.menu_browse_other_branch,
-				view.menu_visualize_all,
-				view.menu_visualize_current,
-				view.menu_browse_commits,
 				view.menu_export_patches,
 				view.menu_cherry_pick,
 				view.menu_load_commitmsg,
+				# edit
+				view.menu_options,
 				view.menu_cut,
 				view.menu_copy,
 				view.menu_paste,
@@ -150,8 +156,15 @@ class Controller(QObserver):
 			# Checkboxes
 			untracked_checkbox = self.rescan,
 
-			# Menu Actions
-			menu_options = self.options,
+			# Repository Menu
+			menu_visualize_current = self.viz_current,
+			menu_visualize_all = self.viz_all,
+			menu_show_revision = self.show_revision,
+			menu_browse_commits = self.browse_commits,
+			menu_browse_branch = self.browse_current,
+			menu_browse_other_branch = self.browse_other,
+
+			# Commit Menu
 			menu_rescan = self.rescan,
 			menu_create_branch = self.branch_create,
 			menu_delete_branch = self.branch_delete,
@@ -161,14 +174,11 @@ class Controller(QObserver):
 			menu_stage_selected = self.stage_selected,
 			menu_unstage_selected = self.unstage_selected,
 			menu_show_diffstat = self.show_diffstat,
-			menu_browse_branch = self.browse_current,
-			menu_browse_other_branch = self.browse_other,
-			menu_visualize_current = self.viz_current,
-			menu_visualize_all = self.viz_all,
-			menu_browse_commits = self.browse_commits,
 			menu_export_patches = self.export_patches,
 			menu_cherry_pick = self.cherry_pick,
 			menu_load_commitmsg = self.load_commitmsg,
+			# Edit Menu
+			menu_options = self.options,
 
 			# Splitters
 			splitter_top = self.splitter_top_event,
@@ -268,6 +278,9 @@ class Controller(QObserver):
 	def browse_commits(self):
 		self.select_commits_gui(self.tr('Browse Commits'),
 				*self.model.log(all=True))
+
+	def show_revision(self):
+		find_revisions(self.model, self.view)
 
 	def cherry_pick(self):
 		commits = self.select_commits_gui(self.tr('Cherry-Pick Commits'),
