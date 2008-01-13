@@ -601,20 +601,26 @@ class Controller(QObserver):
 		self.inotify_thread = None
 		try:
 			from inotify import GitNotifier
+			qtutils.log('inotify support: enabled')
 		except ImportError:
 			import platform
 			if platform.system() == 'Linux':
-				msg = self.tr('Unable import pyinotify.\n'
-					+ 'inotify support is disabled.\n\n') 
-				plat = platform.platform().lower()
-				if 'debian' in plat or 'ubuntu' in plat:
-					msg += (self.tr('Hint:')
-						+ 'sudo apt-get install'
-						+ ' python-pyinotify')
 
-				qtutils.information(self.view,
-					self.tr('inotify disabled'), msg)
+				msg = self.tr(
+					'inotify: disabled\n'
+					'Note: To enable inotify, '
+					'install python-pyinotify.\n')
+
+				plat = platform.platform()
+				if 'debian' in plat or 'ubuntu' in plat:
+					msg += self.tr(
+						'On Debian or Ubuntu systems, '
+						'try: sudo apt-get install '
+						'python-pyinotify')
+				qtutils.log(msg)
+
 			return
+
 		# Start the notification thread
 		self.inotify_thread = GitNotifier(self, os.getcwd())
 		self.inotify_thread.start()
