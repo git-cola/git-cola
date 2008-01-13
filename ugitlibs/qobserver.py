@@ -7,11 +7,9 @@ from PyQt4.QtGui import QTextEdit
 from PyQt4.QtGui import QLineEdit
 from PyQt4.QtGui import QListWidget
 from PyQt4.QtGui import QCheckBox
-from PyQt4.QtGui import QFont
 from PyQt4.QtGui import QFontComboBox
 
 from observer import Observer
-
 
 class QObserver(Observer, QObject):
 
@@ -88,9 +86,9 @@ class QObserver(Observer, QObject):
 	def subject_changed(self, param, value):
 		'''Sends a model param to the view(model->view)'''
 
-		notify = self.model.get_notify()
-		self.model.set_notify(False)
 		if param in self.__model_to_view:
+			notify = self.model.get_notify()
+			self.model.set_notify(False)
 			for widget_name in self.__model_to_view[param]:
 				widget = getattr(self.view, widget_name)
 				if isinstance(widget, QSpinBox):
@@ -113,10 +111,9 @@ class QObserver(Observer, QObject):
 					print('subject_changed(): '
 						+ 'Unknown widget:',
 						widget_name, widget, value)
-		self.model.set_notify(notify)
+			self.model.set_notify(notify)
 
-		if param not in self.__actions:
-			return
+		if param not in self.__actions: return
 		widgets = []
 		if param in self.__model_to_view:
 			for widget_name in self.__model_to_view[param]:
@@ -126,7 +123,10 @@ class QObserver(Observer, QObject):
 		self.__actions[param](*widgets)
 
 	def refresh_view(self):
-		params = list(self.__model_to_view.keys())
-		for param in self.__actions.keys():
-			if param not in params: params.append(param)
-		self.model.notify_observers(*params)
+		params= list(self.__model_to_view.keys()
+				+ self.__actions.keys())
+		notified = []
+		for param in params:
+			if param not in notified:
+				notified.append(param)
+		self.model.notify_observers(*notified)

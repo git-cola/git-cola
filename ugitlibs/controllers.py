@@ -22,8 +22,7 @@ from utilcontroller import update_options
 from utilcontroller import log_window
 
 class Controller(QObserver):
-	'''The controller is a mediator between the model and view.
-	It allows for a clean decoupling between view and model classes.'''
+	'''Controller manages the interaction between the model and views.'''
 
 	def __init__(self, model, view):
 		QObserver.__init__(self, model, view)
@@ -203,16 +202,18 @@ class Controller(QObserver):
 		# Initialize the GUI
 		self.load_window_settings()
 
+		# Initialize the log window
+		self.init_log()
+
 		# Setup the inotify watchdog
 		self.start_inotify_thread()
-		self.refresh_view()
 
-		self.init_log()
+
 		self.rescan()
+		self.refresh_view()
 
 	#####################################################################
 	# event() is called in response to messages from the inotify thread
-
 	def event(self, msg):
 		if msg.type() == defaults.INOTIFY_EVENT:
 			self.rescan()
