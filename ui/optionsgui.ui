@@ -37,7 +37,7 @@
     <widget class="QFontComboBox" name="main_font_combo" >
      <property name="currentFont" >
       <font>
-       <family>Bitstream Vera Sans</family>
+       <family>Helvetica</family>
       </font>
      </property>
     </widget>
@@ -66,7 +66,7 @@
      </property>
      <property name="currentFont" >
       <font>
-       <family>DejaVu Sans Mono</family>
+       <family>Andale Mono</family>
       </font>
      </property>
     </widget>
