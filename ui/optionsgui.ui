@@ -8,8 +8,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>598</width>
-    <height>399</height>
+    <width>613</width>
+    <height>342</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -66,7 +66,7 @@
      </property>
      <property name="currentFont" >
       <font>
-       <family>Liberation Mono</family>
+       <family>DejaVu Sans Mono</family>
       </font>
      </property>
     </widget>

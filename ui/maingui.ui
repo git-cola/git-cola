@@ -105,12 +105,6 @@ in the unstaged changes list.</string>
              <height>20</height>
             </size>
            </property>
-           <property name="font" >
-            <font>
-             <family>Courier</family>
-             <pointsize>11</pointsize>
-            </font>
-           </property>
            <property name="toolTip" >
             <string>A list of all the unstaged changes.
 This list includes those files known to git and can optionally
@@ -182,12 +176,6 @@ include untracked files if "Show Untracked Files" is checked.</string>
              <width>10</width>
              <height>20</height>
             </size>
-           </property>
-           <property name="font" >
-            <font>
-             <family>Courier</family>
-             <pointsize>11</pointsize>
-            </font>
            </property>
            <property name="toolTip" >
             <string>A list of all staged changes for the next commit.</string>
