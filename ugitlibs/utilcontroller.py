@@ -83,9 +83,16 @@ def find_revisions(model, parent):
 class FindRevisionsController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self,model,view)
+
 		set_diff_font(model, self.view.commit_text)
-		self.connect(view.revision_line, 'textChanged(const QString&)',
-				self.find_revision)
+
+		self.model_to_view('revision', 'revision_line')
+
+		self.add_signals('textChanged(const QString&)',
+				view.revision_line)
+
+		self.add_actions('revision', self.find_revision)
+
 		self.connect(view.commit_list, 'itemSelectionChanged()',
 				self.select_summary)
 		self.connect(view.commit_text, 'cursorPositionChanged()',
@@ -100,7 +107,7 @@ class FindRevisionsController(QObserver):
 		if time.time() - self.last_time < 0.2:
 			self.last_time = time.time()
 			return
-		revision = str(self.view.revision_line.text())
+		revision = self.model.get_revision()
 		if len(revision) < 2: return
 		for idx, rev in enumerate(self.revisions):
 			if rev.startswith(revision):
@@ -301,28 +308,43 @@ class LogWindowController(QObserver):
 		QObserver.__init__(self, model, view)
 
 		self.model_to_view('search_text', 'search_line')
-		self.add_signals('textChanged(const QString&)', self.view.search_line)
-		self.connect(self.view.search_line,
-			'textChanged(const QString&)', self.insta_search)
 
-		self.connect(self.view.clear_button, 'released()', self.clear)
-		self.connect(self.view.next_button, 'released()', self.next)
-		self.connect(self.view.prev_button, 'released()', self.prev)
+		self.add_actions('search_text', self.insta_search)
+
+		self.add_signals('textChanged(const QString&)',
+				view.search_line)
+
+		self.add_signals('released()',
+				view.clear_button,
+				view.next_button,
+				view.prev_button)
+
+		self.add_callbacks(
+				clear_button = self.clear,
+				next_button = self.next,
+				prev_button = self.prev)
+
 		self.connect(self.view.output_text,
 			'cursorPositionChanged()', self.cursor_position_changed)
-		self.reset()
 
-	def clear(self):
-		self.view.output_text.clear()
 		self.reset()
 
 	def insta_search(self,*rest):
 		self.search_offset = 0
 		txt = self.model.get_search_text().lower()
-		if len(txt.strip())>2: self.next()
+		if len(txt.strip()):
+			self.next()
+		else:
+			cursor = self.view.output_text.textCursor()
+			cursor.clearSelection()
+			self.view.output_text.setTextCursor(cursor)
 
 	def reset(self):
 		self.search_offset = 0
+
+	def clear(self):
+		self.view.output_text.clear()
+		self.reset()
 
 	def next(self):
 		text = self.model.get_search_text().lower().strip()
