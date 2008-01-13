@@ -206,9 +206,8 @@ class OptionsController(QObserver):
 				view.main_font_combo,
 				view.diff_font_combo)
 
-		self.add_signals('released()',
-				view.save_button,
-				view.cancel_button)
+		self.add_signals('released()', view.save_button)
+		self.add_signals('rejected()', view)
 
 		self.add_actions('global.ugit.fontdiff.size', self.update_size)
 		self.add_actions('global.ugit.fontui.size', self.update_size)
@@ -216,7 +215,7 @@ class OptionsController(QObserver):
 		self.add_actions('global.ugit.fontui', self.tell_parent_model)
 
 		self.add_callbacks(save_button = self.save_settings)
-		self.add_callbacks(cancel_button = self.restore_settings)
+		self.add_callbacks(optionsgui = self.restore_settings)
 
 		view.local_groupbox.setTitle(
 			unicode(self.tr('%s Repository')) % model.get_project())
@@ -260,14 +259,15 @@ class OptionsController(QObserver):
 		self.original_model.copy_params(self.model, params_to_save)
 		self.view.done(QDialog.Accepted)
 
-	# cancel button, undo changes
+	# cancel button -> undo changes
 	def restore_settings(self):
 		params = self.backup_model.get_config_params()
 		self.model.copy_params(self.backup_model, params)
 		self.tell_parent_model()
-		self.view.reject()
 
 	def tell_parent_model(self,*rest):
+		notify = self.original_model.get_notify()
+		self.original_model.set_notify(True)
 		for param in (
 				'global.ugit.fontdiff',
 				'global.ugit.fontui',
@@ -275,10 +275,7 @@ class OptionsController(QObserver):
 				'global.ugit.fontui.size'):
 			self.original_model.set_param(param,
 					self.model.get_param(param))
-
-	def update_font(self, *rest):
-		self.tell_parent_model()
-		return
+		self.original_model.set_notify(notify)
 
 	def update_size(self, *rest):
 		combo = self.view.main_font_combo
