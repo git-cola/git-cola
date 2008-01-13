@@ -101,16 +101,16 @@ class LogSyntaxHighlighter(GenericSyntaxHighligher):
 	def __init__(self, doc):
 		GenericSyntaxHighligher.__init__(self,doc)
 
-		dark_cyan = self.mkformat(Qt.darkCyan, bold=True)
-		green = self.mkformat(Qt.darkGreen, bold=True)
+		black = self.mkformat(Qt.black, bold=True)
 		blue = self.mkformat(Qt.blue, bold=True)
+		dark_cyan = self.mkformat(Qt.darkCyan, bold=True)
 
 		self.create_rules(
 			self.final('^\w{3}\W+\w{3}\W+\d+\W+'
 					'[:0-9]+\W+\d{4}$'),
 			dark_cyan,
 			'^([^:]+:)(.*)$',
-			(blue, green),
+			(blue, black),
 			)
 
 if __name__ == '__main__':
