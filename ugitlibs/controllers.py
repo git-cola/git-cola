@@ -581,6 +581,7 @@ class Controller(QObserver):
 		qfont = QFont()
 		qfont.fromString(font)
 		self.view.display_text.setFont(qfont)
+		self.view.commit_text.setFont(qfont)
 
 	def update_ui_font(self):
 		font = self.model.get_param('global.ugit.fontui')
