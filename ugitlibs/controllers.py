@@ -89,6 +89,10 @@ class Controller(QObserver):
 			# Checkboxes
 			untracked_checkbox = self.rescan,
 
+			# File Menu
+			menu_load_commitmsg = self.load_commitmsg,
+			menu_quit = self.quit_app,
+
 			# Repository Menu
 			menu_visualize_current = self.viz_current,
 			menu_visualize_all = self.viz_all,
@@ -135,9 +139,10 @@ class Controller(QObserver):
 		self.connect(QtGui.qApp, 'lastWindowClosed()',
 				self.last_window_closed)
 
-		# Delegate window move events here
+		# Delegate window events here
 		view.moveEvent = self.move_event
 		view.resizeEvent = self.resize_event
+		view.closeEvent = self.quit_app
 
 		# Initialize the GUI
 		self.load_window_settings()
@@ -292,10 +297,12 @@ class Controller(QObserver):
 		if not commits: return
 		self.log_output(self.model.format_patch(commits))
 
-	def last_window_closed(self):
+	def quit_app(self,*rest):
 		'''Save config settings and cleanup any inotify threads.'''
 
 		self.model.save_window_geom()
+		qtutils.close_log_window()
+		self.view.hide()
 
 		if not self.inotify_thread: return
 		if not self.inotify_thread.isRunning(): return
@@ -432,7 +439,7 @@ class Controller(QObserver):
 		defaults.SPLITTER_BOTTOM_0 = sizes[0]
 		defaults.SPLITTER_BOTTOM_1 = sizes[1]
 
-	def load_window_settings(self):
+	def load_window_geom(self):
 		(w,h,x,y,
 		st0,st1,
 		sb0,sb1) = self.model.get_window_geom()

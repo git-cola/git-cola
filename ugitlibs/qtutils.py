@@ -20,6 +20,10 @@ def log(output, quiet=True, doraise=False):
 	if not doraise: return
 	LOGGER.raise_()
 
+def close_log_window():
+	LOGGER.hide()
+	LOGGER.done(0)
+
 def show_output(output):
 	if not output: return
 	log(output, quiet=False)
