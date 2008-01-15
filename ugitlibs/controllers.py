@@ -35,6 +35,7 @@ class Controller(QObserver):
 		# The diff-display context menu
 		self.__menu = None
 		self.__staged_diff_in_view = True
+		self.__diffgui_enabled = True
 
 		# Diff display context menu
 		view.display_text.contextMenuEvent = self.diff_context_menu_event
@@ -259,12 +260,14 @@ class Controller(QObserver):
 		row, selected = qtutils.get_selected_row(widget)
 		if not selected:
 			self.view.reset_display()
+			self.__diffgui_enabled = False
 			return
 		(diff,
 		status) = self.model.get_diff_and_status(row, staged=staged)
 
 		self.view.set_display(diff)
 		self.view.set_info(self.tr(status))
+		self.__diffgui_enabled = True
 
 	# use *rest to handle being called from different signals
 	def diff_staged(self, *rest):
@@ -336,10 +339,12 @@ class Controller(QObserver):
 
 	def show_diffstat(self):
 		'''Show the diffstat from the latest commit.'''
+		self.__diffgui_enabled = False
 		self.view.set_info(self.tr('Diffstat'))
 		self.view.set_display(self.model.diffstat())
 
 	def show_index(self):
+		self.__diffgui_enabled = False
 		self.view.set_info(self.tr('Index'))
 		self.view.set_display(self.model.diffindex())
 
@@ -462,12 +467,14 @@ class Controller(QObserver):
 		is_tracked= unstaged_item not in self.model.get_untracked()
 
 		enable_staged= (
-				unstaged_item
+				self.__diffgui_enabled
+				and unstaged_item
 				and not self.__staged_diff_in_view
 				and is_tracked)
 
 		enable_unstaged= (
-				self.__staged_diff_in_view
+				self.__diffgui_enabled
+				and self.__staged_diff_in_view
 				and qtutils.get_selected_item(
 						self.view.staged_list,
 						self.model.get_staged()))
