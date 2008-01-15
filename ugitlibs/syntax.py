@@ -65,6 +65,8 @@ class GenericSyntaxHighligher(QSyntaxHighlighter):
 
 			# Groups exist, rule is a tuple corresponding to group
 			for grpidx, group in enumerate(groups):
+				# allow empty matches
+				if not group: continue
 				# allow None as a no-op format
 				length = len(group)
 				if fmts[grpidx]:
@@ -76,10 +78,15 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
 	def __init__(self, doc,whitespace=True):
 		GenericSyntaxHighligher.__init__(self,doc)
 
-		begin = self.mkformat(Qt.darkCyan, bold=True)
-		diffhead = self.mkformat(Qt.darkYellow)
-		addition = self.mkformat(Qt.darkGreen)
-		removal = self.mkformat(Qt.red)
+		diffstat = self.mkformat(Qt.blue, bold=True)
+		diffstat_add = self.mkformat(Qt.darkGreen, bold=True)
+		diffstat_remove = self.mkformat(Qt.red, bold=True)
+
+		diff_begin = self.mkformat(Qt.darkCyan, bold=True)
+		diff_head = self.mkformat(Qt.darkYellow)
+		diff_add = self.mkformat(Qt.darkGreen)
+		diff_remove = self.mkformat(Qt.red)
+
 		if whitespace:
 			bad_ws = self.mkformat(Qt.black, Qt.red)
 
@@ -87,12 +94,20 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
 		# applied after the diff addition/removal rules.
 		# The rules for the header
 		self.create_rules(
-			self.final('^@@|^\+\+\+|^---'), begin,
-			self.final('^diff --git'), diffhead,
-			self.final('^index \S+\.\.\S+'), diffhead,
-			self.final('^new file mode'), diffhead,
-			'^\+', addition,
-			'^-', removal,
+			self.final('^@@|^\+\+\+|^---'), diff_begin,
+			self.final('^diff --git'), diff_head,
+			self.final('^index \S+\.\.\S+'), diff_head,
+			self.final('^new file mode'), diff_head,
+			self.final('^\+'), diff_add,
+			self.final('^-'), diff_remove,
+
+			'(.+\|.+?)(\d+)(.+?)([\+]*?)([-]*?)$',
+			(None, diffstat, None, diffstat_add, diffstat_remove),
+
+			'(\s+\d+ files changed[^\d]*)'
+			'(:?\d+ insertions[^\d]*)'
+			'(:?\d+ deletions.*)$',
+			(diffstat, diffstat_add, diffstat_remove),
 			)
 		if whitespace:
 			self.create_rules('(.+)(\s+)$', (None, bad_ws,))
