@@ -24,6 +24,7 @@ from ugitlibs import utils
 
 if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)
+	app.setWindowIcon(QtGui.QIcon(utils.get_icon('git.png')))
 	locale = str(QtCore.QLocale().system().name())
 	qmfile = utils.get_qm_for_locale(locale)
 	if os.path.exists(qmfile):
