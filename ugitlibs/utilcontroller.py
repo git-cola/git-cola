@@ -87,10 +87,6 @@ class FindRevisionsController(QObserver):
 		set_diff_font(model, self.view.commit_text)
 
 		self.model_to_view('revision', 'revision_line')
-
-		self.add_signals('textChanged(const QString&)',
-				view.revision_line)
-
 		self.add_actions('revision', self.find_revision)
 
 		self.connect(view.commit_list, 'itemSelectionChanged()',
@@ -188,44 +184,12 @@ class OptionsController(QObserver):
 		for m,v in model_to_view.iteritems():
 			self.model_to_view(m,v)
 
-		self.add_signals('textChanged(const QString&)',
-				view.history_browser_line,
-				view.local_name_line,
-				view.global_name_line,
-				view.local_email_line,
-				view.global_email_line)
-
-		self.add_signals('stateChanged(int)',
-				view.local_summary_checkbox,
-				view.global_summary_checkbox,
-				view.local_diffstat_checkbox,
-				view.global_diffstat_checkbox)
-
-		self.add_signals('valueChanged(int)',
-				view.main_font_spinbox,
-				view.diff_font_spinbox,
-				view.local_diffcontext_spinbox,
-				view.global_diffcontext_spinbox,
-				view.local_verbosity_spinbox,
-				view.global_verbosity_spinbox)
-
-		self.add_signals('currentFontChanged(const QFont&)',
-				view.main_font_combo,
-				view.diff_font_combo)
-
-		self.add_signals('released()', view.save_button)
-		self.add_signals('rejected()', view)
-
 		self.add_actions('global.ugit.fontdiff.size', self.update_size)
 		self.add_actions('global.ugit.fontui.size', self.update_size)
 		self.add_actions('global.ugit.fontdiff', self.tell_parent_model)
 		self.add_actions('global.ugit.fontui', self.tell_parent_model)
-
 		self.add_callbacks(save_button = self.save_settings)
-		self.add_callbacks(optionsgui = self.restore_settings)
-
-		view.local_groupbox.setTitle(
-			unicode(self.tr('%s Repository')) % model.get_project())
+		self.connect(self.view, 'rejected()', self.restore_settings)
 
 		self.refresh_view()
 		self.backup_model = self.model.clone()
@@ -248,6 +212,11 @@ class OptionsController(QObserver):
 			diff_font = QFont()
 			diff_font.fromString(font)
 			self.view.diff_font_combo.setCurrentFont(diff_font)
+
+		self.view.local_groupbox.setTitle(
+			unicode(self.tr('%s Repository'))
+					% self.model.get_project())
+
 		QObserver.refresh_view(self)
 
 	# save button
@@ -308,16 +277,7 @@ class LogWindowController(QObserver):
 		QObserver.__init__(self, model, view)
 
 		self.model_to_view('search_text', 'search_line')
-
 		self.add_actions('search_text', self.insta_search)
-
-		self.add_signals('textChanged(const QString&)',
-				view.search_line)
-
-		self.add_signals('released()',
-				view.clear_button,
-				view.next_button,
-				view.prev_button)
 
 		self.add_callbacks(
 				clear_button = self.clear,

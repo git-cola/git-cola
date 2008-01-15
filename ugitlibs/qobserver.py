@@ -8,6 +8,9 @@ from PyQt4.QtGui import QLineEdit
 from PyQt4.QtGui import QListWidget
 from PyQt4.QtGui import QCheckBox
 from PyQt4.QtGui import QFontComboBox
+from PyQt4.QtGui import QAbstractButton
+from PyQt4.QtGui import QSplitter
+from PyQt4.QtGui import QAction
 
 from observer import Observer
 
@@ -23,6 +26,7 @@ class QObserver(Observer, QObject):
 		self.__callbacks = {}
 		self.__model_to_view = {}
 		self.__view_to_model = {}
+		self.__connected = []
 
 	def SLOT(self, *args):
 		'''Default slot to handle all Qt callbacks.
@@ -71,12 +75,62 @@ class QObserver(Observer, QObject):
 		'''Registers callbacks that are called in response to GUI events.'''
 		for sender, callback in callbacks.iteritems():
 			self.__callbacks[sender] = callback
+			self.autoconnect(getattr(self.view, sender))
 
 	def model_to_view(self, model_param, *widget_names):
 		'''Binds model params to qt widgets(model->view)'''
 		self.__model_to_view[model_param] = widget_names
 		for widget_name in widget_names:
 			self.__view_to_model[widget_name] = model_param
+			self.__autoconnect(getattr(self.view, widget_name))
+
+	def __autoconnect(self, widget):
+		'''Automatically connects widgets registered using
+		model_to_view to QObserver.SLOT'''
+
+		if widget in self.__connected: return
+		self.__connected.append(widget)
+
+		if isinstance(widget, QTextEdit):
+			self.add_signals(
+				'textChanged()', widget)
+		elif isinstance(widget, QLineEdit):
+			self.add_signals(
+				'textChanged(const QString&)', widget)
+		elif isinstance(widget, QListWidget):
+			self.add_signals(
+				'itemSelectionChanged()', widget)
+			self.add_signals(
+				'itemClicked(QListWidgetItem *)', widget)
+			self.add_signals(
+				'itemDoubleClicked(QListWidgetItem*)', widget)
+		elif isinstance(widget, QAbstractButton):
+			self.add_signals(
+				'released()', widget)
+		elif isinstance(widget, QAction):
+			self.add_signals(
+				'triggered()', widget)
+		elif isinstance(widget, QCheckBox):
+			self.add_signals(
+				'stateChanged(int)', widget)
+		elif isinstance(widget, QSpinBox):
+			self.add_signals(
+				'valueChanged(int)', widget)
+		elif isinstance(widget, QFontComboBox):
+			self.add_signals(
+				'currentFontChanged(const QFont&)', widget)
+		elif isinstance(widget, QSplitter):
+			self.add_signals(
+				'splitterMoved(int,int)', widget)
+		else:
+			raise Exception(
+				"Asked to connect unknown widget:\n\t"
+				"%s => %s" %( type(widget),
+						str(widget.objectName()) ))
+
+	def autoconnect(self, *widgets):
+		for widget in widgets:
+			self.__autoconnect(widget)
 
 	def add_actions(self, model_param, callback):
 		'''Register view actions that are called in response to

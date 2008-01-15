@@ -24,34 +24,25 @@ class PushController(QObserver):
 		self.model_to_view('remote_branch', 'remote_branch_line')
 		self.model_to_view('remote_branches', 'remote_branch_list')
 
-		self.add_actions('remotes', self.remotes)
-
-		self.add_signals('textChanged(const QString&)',
-				view.remote_line,
-				view.local_branch_line,
-				view.remote_branch_line)
-		self.add_signals('itemClicked(QListWidgetItem *)',
-				view.remote_list,
-				view.local_branch_list,
-				view.remote_branch_list)
-		self.add_signals('itemSelectionChanged()',
-				view.remote_list,
-				view.local_branch_list,
-				view.remote_branch_list)
-		self.add_signals('released()',
-				view.push_button)
-
+		self.add_actions('remotes', self.display_remotes)
 		self.add_callbacks(
-			remote_list = self.remote_list,
-			local_branch_list = self.local_branch_list,
-			remote_branch_list = self.remote_branch_list,
-			push_button = self.push,
-		)
+			remote_list = self.update_remote_list,
+			local_branch_list = self.update_local_branch_list,
+			remote_branch_list = self.update_remote_branch_list,
+			push_button = self.push_to_remote_branch)
 
-		model.notify_observers(
-				'remotes','local_branches','remote_branches')
+		self.refresh_view()
 
-	def push(self):
+	def display_remotes(self, widget):
+		displayed = []
+		for remote in self.model.get_remotes():
+			url = self.model.remote_url(remote)
+			display = '%s\t(%s %s)' \
+				% (remote, unicode(self.tr('URL:')), url)
+			displayed.append(display)
+		qtutils.set_items(widget,displayed)
+
+	def push_to_remote_branch(self):
 		if not self.model.get_remote():
 			errmsg = self.tr('No repository selected.')
 			qtutils.show_output(errmsg)
@@ -82,16 +73,7 @@ class PushController(QObserver):
 		if not status:
 			self.view.accept()
 
-	def remotes(self, widget):
-		displayed = []
-		for remote in self.model.get_remotes():
-			url = self.model.remote_url(remote)
-			display = '%s\t(%s %s)' \
-				% (remote, unicode(self.tr('URL:')), url)
-			displayed.append(display)
-		qtutils.set_items(widget,displayed)
-
-	def remote_list(self,*rest):
+	def update_remote_list(self,*rest):
 		widget = self.view.remote_list
 		remotes = self.model.get_remotes()
 		selection = qtutils.get_selected_item(widget,remotes)
@@ -99,7 +81,7 @@ class PushController(QObserver):
 		self.model.set_remote(selection)
 		self.view.remote_line.selectAll()
 
-	def local_branch_list(self,*rest):
+	def update_local_branch_list(self,*rest):
 		branches = self.model.get_local_branches()
 		widget = self.view.local_branch_list
 		selection = qtutils.get_selected_item(widget,branches)
@@ -111,7 +93,7 @@ class PushController(QObserver):
 		self.view.local_branch_line.selectAll()
 		self.view.remote_branch_line.selectAll()
 
-	def remote_branch_list(self,*rest):
+	def update_remote_branch_list(self,*rest):
 		widget = self.view.remote_branch_list
 		branches = self.model.get_remote_branches()
 		selection = qtutils.get_selected_item(widget,branches)

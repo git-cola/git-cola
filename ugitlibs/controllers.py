@@ -51,72 +51,6 @@ class Controller(QObserver):
 		self.add_actions('global.ugit.fontdiff', self.update_diff_font)
 		self.add_actions('global.ugit.fontui', self.update_ui_font)
 
-		# Routes signals for multiple widgets to our callbacks
-		# defined below.
-		self.add_signals('textChanged()', view.commit_text)
-		self.add_signals('stateChanged(int)', view.untracked_checkbox)
-
-		self.add_signals('released()',
-				view.stage_button,
-				view.commit_button,
-				view.push_button,
-				view.signoff_button,)
-
-		self.add_signals('triggered()',
-				# repository
-				view.menu_visualize_all,
-				view.menu_visualize_current,
-				view.menu_show_revision,
-				view.menu_browse_commits,
-				view.menu_browse_branch,
-				view.menu_browse_other_branch,
-				# branch
-				view.menu_create_branch,
-				view.menu_checkout_branch,
-				view.menu_rebase_branch,
-				view.menu_delete_branch,
-				view.menu_get_prev_commitmsg,
-				# commit
-				view.menu_rescan,
-				view.menu_commit,
-				view.menu_stage_changed,
-				view.menu_stage_untracked,
-				view.menu_stage_selected,
-				view.menu_unstage_all,
-				view.menu_unstage_selected,
-				view.menu_show_diffstat,
-				view.menu_export_patches,
-				view.menu_cherry_pick,
-				view.menu_load_commitmsg,
-				# edit
-				view.menu_options,
-				view.menu_cut,
-				view.menu_copy,
-				view.menu_paste,
-				view.menu_delete,
-				view.menu_select_all,
-				view.menu_undo,
-				view.menu_redo)
-
-		self.add_signals('itemClicked(QListWidgetItem *)',
-				view.staged_list,
-				view.unstaged_list)
-
-		self.add_signals('itemSelectionChanged()',
-				view.staged_list,
-				view.unstaged_list)
-
-		self.add_signals('splitterMoved(int,int)',
-				view.splitter_top, view.splitter_bottom)
-
-		# Vanilla signal/slots
-		self.connect(self.view.toolbar_show_log,
-				'triggered()', self.show_log)
-
-		# App cleanup
-		self.connect(QtGui.qApp, 'lastWindowClosed()',
-				self.last_window_closed)
-
 		# These callbacks are called in response to the signals
 		# defined above.  One property of the QObserver callback
 		# mechanism is that the model is passed in as the first
@@ -181,8 +115,7 @@ class Controller(QObserver):
 
 			# Splitters
 			splitter_top = self.splitter_top_event,
-			splitter_bottom = self.splitter_bottom_event,
-			)
+			splitter_bottom = self.splitter_bottom_event)
 
 		# Handle double-clicks in the staged/unstaged lists.
 		# These are vanilla signal/slots since the qobserver
@@ -193,7 +126,14 @@ class Controller(QObserver):
 
 		self.connect(view.staged_list,
 				'itemDoubleClicked(QListWidgetItem*)',
-				self.unstage_selected )
+				self.unstage_selected)
+
+		# Toolbar log button
+		self.connect(self.view.toolbar_show_log,
+				'triggered()', self.show_log)
+		# App cleanup
+		self.connect(QtGui.qApp, 'lastWindowClosed()',
+				self.last_window_closed)
 
 		# Delegate window move events here
 		view.moveEvent = self.move_event
@@ -207,7 +147,6 @@ class Controller(QObserver):
 
 		# Setup the inotify watchdog
 		self.start_inotify_thread()
-
 
 		self.rescan()
 		self.refresh_view()

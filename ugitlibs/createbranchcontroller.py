@@ -21,26 +21,12 @@ class CreateBranchController(QObserver):
 		self.model_to_view('revision', 'revision_line')
 		self.model_to_view('local_branch', 'branch_line')
 
-		self.add_signals('textChanged(const QString&)',
-				view.revision_line,
-				view.branch_line)
-		self.add_signals('itemSelectionChanged()',
-				view.branch_list)
-		self.add_signals('itemClicked(QListWidgetItem *)',
-				view.branch_list)
-		self.add_signals('released()',
-				view.create_button,
-				view.local_radio,
-				view.remote_radio,
-				view.tag_radio)
-
 		self.add_callbacks(
 				branch_list = self.item_changed,
 				create_button = self.create_branch,
 				local_radio = self.__display_model,
 				remote_radio = self.__display_model,
-				tag_radio = self.__display_model,
-				)
+				tag_radio = self.__display_model)
 
 		self.__display_model()
 

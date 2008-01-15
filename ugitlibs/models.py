@@ -87,7 +87,7 @@ class Model(model.Model):
 			)
 
 	def init_config_data(self):
-		self.__allowed_params = [
+		self.__saved_params = [
 			'user.name',
 			'user.email',
 			'merge.summary',
@@ -179,19 +179,20 @@ class Model(model.Model):
 
 	def save_config_param(self,param):
 		value = self.get_param(param)
-		old_param = param
+		if param == 'local.gui.diffcontext':
+			git.DIFF_CONTEXT = value
 		if param.startswith('local.'):
 			param = param[len('local.'):]
 			is_local = True
 		elif param.startswith('global.'):
 			param = param[len('global.'):]
 			is_local = False
-		if param not in self.__allowed_params:
+		else:
+			raise Exception("Invalid param '%s' passed to " % param
+					+ "save_config_param()")
+		if param not in self.__saved_params:
 			return
 		git.config(param, value, local=is_local)
-		if old_param == 'local.gui.diffcontext':
-			git.DIFF_CONTEXT = \
-				self.get_param('local.gui.diffcontext')
 
 	def init_browser_data(self):
 		'''This scans over self.(names, sha1s, types) to generate
