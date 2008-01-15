@@ -550,6 +550,9 @@ retrieve the latest commit message prior to committing.</string>
     </property>
     <addaction name="menu_rescan" />
     <addaction name="separator" />
+    <addaction name="menu_show_index" />
+    <addaction name="menu_show_diffstat" />
+    <addaction name="separator" />
     <addaction name="menu_stage_changed" />
     <addaction name="menu_stage_untracked" />
     <addaction name="menu_stage_selected" />
@@ -563,7 +566,6 @@ retrieve the latest commit message prior to committing.</string>
     <addaction name="menu_cherry_pick" />
     <addaction name="separator" />
     <addaction name="menu_get_prev_commitmsg" />
-    <addaction name="menu_show_diffstat" />
    </widget>
    <widget class="QMenu" name="edit_menu" >
     <property name="title" >
@@ -667,6 +669,11 @@ retrieve the latest commit message prior to committing.</string>
    </property>
    <property name="shortcut" >
     <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="menu_show_index" >
+   <property name="text" >
+    <string>Show Index</string>
    </property>
   </action>
   <action name="menu_stage_changed" >
@@ -877,24 +884,6 @@ retrieve the latest commit message prior to committing.</string>
   <tabstop>display_text</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>menu_quit</sender>
-   <signal>triggered()</signal>
-   <receiver>maingui</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>294</x>
-     <y>209</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
  <designerdata>
   <property name="gridDeltaX" >
    <number>4</number>

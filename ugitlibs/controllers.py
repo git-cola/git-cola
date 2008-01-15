@@ -51,12 +51,6 @@ class Controller(QObserver):
 		self.add_actions('global.ugit.fontdiff', self.update_diff_font)
 		self.add_actions('global.ugit.fontui', self.update_ui_font)
 
-		# These callbacks are called in response to the signals
-		# defined above.  One property of the QObserver callback
-		# mechanism is that the model is passed in as the first
-		# argument to the callback.  This allows for a single
-		# controller to manage multiple models, though this
-		# isn't used at the moment.
 		self.add_callbacks(
 			# Actions that delegate directly to the model
 			signoff_button = model.add_signoff,
@@ -111,9 +105,9 @@ class Controller(QObserver):
 			menu_stage_selected = self.stage_selected,
 			menu_unstage_selected = self.unstage_selected,
 			menu_show_diffstat = self.show_diffstat,
+			menu_show_index = self.show_index,
 			menu_export_patches = self.export_patches,
 			menu_cherry_pick = self.cherry_pick,
-			menu_load_commitmsg = self.load_commitmsg,
 			# Edit Menu
 			menu_options = self.options,
 
@@ -121,9 +115,8 @@ class Controller(QObserver):
 			splitter_top = self.splitter_top_event,
 			splitter_bottom = self.splitter_bottom_event)
 
-		# Handle double-clicks in the staged/unstaged lists.
-		# These are vanilla signal/slots since the qobserver
-		# signal routing is already handling these lists' signals.
+		# These are vanilla signal/slots since QObserver
+		# is already handling these signals.
 		self.connect(view.unstaged_list,
 				'itemDoubleClicked(QListWidgetItem*)',
 				self.stage_selected)
@@ -135,24 +128,15 @@ class Controller(QObserver):
 		# Toolbar log button
 		self.connect(self.view.toolbar_show_log,
 				'triggered()', self.show_log)
-		# App cleanup
-		self.connect(QtGui.qApp, 'lastWindowClosed()',
-				self.last_window_closed)
 
 		# Delegate window events here
 		view.moveEvent = self.move_event
 		view.resizeEvent = self.resize_event
 		view.closeEvent = self.quit_app
 
-		# Initialize the GUI
-		self.load_window_settings()
-
-		# Initialize the log window
-		self.init_log()
-
-		# Setup the inotify watchdog
+		self.load_window_geom()
+		self.init_log_window()
 		self.start_inotify_thread()
-
 		self.rescan()
 		self.refresh_view()
 
@@ -352,7 +336,12 @@ class Controller(QObserver):
 
 	def show_diffstat(self):
 		'''Show the diffstat from the latest commit.'''
-		self.log_output(self.model.diff_stat())
+		self.view.set_info(self.tr('Diffstat'))
+		self.view.set_display(self.model.diffstat())
+
+	def show_index(self):
+		self.view.set_info(self.tr('Index'))
+		self.view.set_display(self.model.diffindex())
 
 	#####################################################################
 	# diff gui
@@ -537,7 +526,7 @@ class Controller(QObserver):
 		qfont.fromString(font)
 		QtGui.qApp.setFont(qfont)
 
-	def init_log(self):
+	def init_log_window(self):
 		branch, version = self.model.get_branch(), defaults.VERSION
 		qtutils.log(self.model.get_git_version()
 				+ '\nugit version '+ version
