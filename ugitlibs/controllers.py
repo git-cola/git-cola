@@ -30,6 +30,7 @@ class Controller(QObserver):
 		# parent-less log window
 		qtutils.LOGGER = log_window(model, QtGui.qApp.activeWindow())
 
+		# Avoids inotify floods from e.g. make
 		self.__last_inotify_event = time.time()
 
 		# The diff-display context menu
@@ -57,11 +58,11 @@ class Controller(QObserver):
 			signoff_button = model.add_signoff,
 			menu_get_prev_commitmsg = model.get_prev_commitmsg,
 			menu_stage_changed =
-				lambda: self.log_output(self.model.stage_changed()),
+				lambda: self.log(self.model.stage_changed()),
 			menu_stage_untracked =
-				lambda: self.log_output(self.model.stage_untracked()),
+				lambda: self.log(self.model.stage_untracked()),
 			menu_unstage_all =
-				lambda: self.log_output(self.model.unstage_all()),
+				lambda: self.log(self.model.unstage_all()),
 
 			# Actions that delegate direclty to the view
 			menu_cut = view.action_cut,
@@ -185,7 +186,7 @@ class Controller(QObserver):
 		branch = choose_branch('Delete Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
-		self.log_output(self.model.delete_branch(branch))
+		self.log(self.model.delete_branch(branch))
 
 	def browse_current(self):
 		branch = self.model.get_branch()
@@ -203,7 +204,7 @@ class Controller(QObserver):
 		branch = choose_branch('Checkout Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
-		self.log_output(self.model.checkout(branch))
+		self.log(self.model.checkout(branch))
 
 	def browse_commits(self):
 		self.select_commits_gui(self.tr('Browse Commits'),
@@ -216,7 +217,7 @@ class Controller(QObserver):
 		commits = self.select_commits_gui(self.tr('Cherry-Pick Commits'),
 				*self.model.log(all=True))
 		if not commits: return
-		self.log_output(self.model.cherry_pick(commits))
+		self.log(self.model.cherry_pick(commits))
 
 	def commit(self):
 		msg = self.model.get_commitmsg()
@@ -229,7 +230,7 @@ class Controller(QObserver):
 				+ "- First line: Describe in one sentence what you did.\n"
 				+ "- Second line: Blank\n"
 				+ "- Remaining lines: Describe why this change is good.\n")
-			self.log_output(error_msg)
+			self.log(error_msg)
 			return
 
 		files = self.model.get_staged()
@@ -238,7 +239,7 @@ class Controller(QObserver):
 				+ "No changes to commit.\n"
 				+ "\n"
 				+ "You must stage at least 1 file before you can commit.\n")
-			self.log_output(error_msg)
+			self.log(error_msg)
 			return
 
 		# Perform the commit
@@ -249,7 +250,7 @@ class Controller(QObserver):
 		self.view.new_commit_radio.setChecked(True)
 		self.view.amend_radio.setChecked(False)
 		self.model.set_commitmsg('')
-		self.log_output(output)
+		self.log(output)
 
 	def view_diff(self, staged=True):
 		self.__staged_diff_in_view = staged
@@ -282,7 +283,7 @@ class Controller(QObserver):
 		commits = self.select_commits_gui(self.tr('Export Patches'),
 				revs, summaries)
 		if not commits: return
-		self.log_output(self.model.format_patch(commits))
+		self.log(self.model.format_patch(commits))
 
 	def quit_app(self,*rest):
 		'''Save config settings and cleanup any inotify threads.'''
@@ -311,7 +312,7 @@ class Controller(QObserver):
 		branch = choose_branch('Rebase Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
-		self.log_output(self.model.rebase(branch))
+		self.log(self.model.rebase(branch))
 
 	# use *rest to handle being called from the checkbox signal
 	def rescan(self, *rest):
@@ -442,7 +443,7 @@ class Controller(QObserver):
 		self.view.splitter_top.setSizes([st0,st1])
 		self.view.splitter_bottom.setSizes([sb0,sb1])
 
-	def log_output(self, output, rescan=True, quiet=False):
+	def log(self, output, rescan=True, quiet=False):
 		'''Logs output and optionally rescans for changes.'''
 		qtutils.log(output, quiet=quiet, doraise=False)
 		if rescan: self.rescan()
@@ -457,7 +458,7 @@ class Controller(QObserver):
 		and calls rescan to pickup changes.'''
 		apply_items = qtutils.get_selection_list(widget, items)
 		output = command(apply_items)
-		self.log_output(output, quiet=True)
+		self.log(output, quiet=True)
 
 	def diff_context_menu_about_to_show(self):
 		unstaged_item = qtutils.get_selected_item(
@@ -545,7 +546,7 @@ class Controller(QObserver):
 		self.inotify_thread = None
 		try:
 			from inotify import GitNotifier
-			qtutils.log('inotify support: enabled')
+			qtutils.log(self.tr('inotify support: enabled'))
 		except ImportError:
 			import platform
 			if platform.system() == 'Linux':
@@ -555,7 +556,7 @@ class Controller(QObserver):
 					'Note: To enable inotify, '
 					'install python-pyinotify.\n')
 
-				plat = platform.platform()
+				plat = platform.platform().lower()
 				if 'debian' in plat or 'ubuntu' in plat:
 					msg += self.tr(
 						'On Debian or Ubuntu systems, '
