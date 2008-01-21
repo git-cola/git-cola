@@ -38,7 +38,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="branch_line" />
+      <widget class="QLineEdit" name="local_branch" />
      </item>
     </layout>
    </item>
@@ -76,7 +76,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="revision_line" />
+         <widget class="QLineEdit" name="revision" />
         </item>
        </layout>
       </item>

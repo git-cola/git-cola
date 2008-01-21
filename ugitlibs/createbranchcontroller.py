@@ -17,18 +17,15 @@ def create_new_branch(model,parent):
 class CreateBranchController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self, model, view)
-
-		self.model_to_view('revision', 'revision_line')
-		self.model_to_view('local_branch', 'branch_line')
-
+		self.add_observables('revision', 'local_branch')
 		self.add_callbacks(
 				branch_list = self.item_changed,
 				create_button = self.create_branch,
-				local_radio = self.__display_model,
-				remote_radio = self.__display_model,
-				tag_radio = self.__display_model)
-
-		self.__display_model()
+				local_radio = self.display_model,
+				remote_radio = self.display_model,
+				tag_radio = self.display_model,
+				)
+		self.display_model()
 
 	######################################################################
 	# Qt callbacks
@@ -63,7 +60,8 @@ class CreateBranchController(QObserver):
 			check_branch = bool(commits)
 
 		if check_branch:
-			msg = self.tr("Resetting '%s' to '%s' will lose the following commits:")
+			msg = self.tr("Resetting '%s' to '%s' will "
+					"lose the following commits:")
 			lines = [ unicode(msg) % (branch, revision) ]
 
 			for idx, commit in enumerate(commits):
@@ -78,7 +76,8 @@ class CreateBranchController(QObserver):
 					break
 
 			lines.extend([
-				unicode(self.tr("Recovering lost commits may not be easy.")),
+				unicode(self.tr("Recovering lost commits may "
+						"not be easy.")),
 				unicode(self.tr("Reset '%s'?")) % branch
 				])
 
@@ -123,7 +122,7 @@ class CreateBranchController(QObserver):
 
 	######################################################################
 
-	def __display_model(self):
+	def display_model(self):
 		branches = self.__get_branch_sources()
 		qtutils.set_items(self.view.branch_list, branches)
 

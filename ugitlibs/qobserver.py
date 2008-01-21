@@ -77,16 +77,26 @@ class QObserver(Observer, QObject):
 			self.__callbacks[sender] = callback
 			self.autoconnect(getattr(self.view, sender))
 
-	def model_to_view(self, model_param, *widget_names):
+	def add_observables(self, *params):
+		'''This method assumes that widgets and model params
+		share the same name.'''
+		for param in params:
+			self.model_to_view(param, getattr(self.view, param))
+
+	def model_to_view(self, model_param, *widgets):
 		'''Binds model params to qt widgets(model->view)'''
-		self.__model_to_view[model_param] = widget_names
-		for widget_name in widget_names:
-			self.__view_to_model[widget_name] = model_param
-			self.__autoconnect(getattr(self.view, widget_name))
+		self.__model_to_view[model_param] = widgets
+		for w in widgets:
+			view = str(w.objectName())
+			self.__view_to_model[view] = model_param
+			self.__autoconnect(w)
+
+	def autoconnect(self, *widgets):
+		for w in widgets:
+			self.__autoconnect(w)
 
 	def __autoconnect(self, widget):
-		'''Automatically connects widgets registered using
-		model_to_view to QObserver.SLOT'''
+		'''Automagically connects Qt widgets to QObserver.SLOT'''
 
 		if widget in self.__connected: return
 		self.__connected.append(widget)
@@ -128,10 +138,6 @@ class QObserver(Observer, QObject):
 				"%s => %s" %( type(widget),
 						str(widget.objectName()) ))
 
-	def autoconnect(self, *widgets):
-		for widget in widgets:
-			self.__autoconnect(widget)
-
 	def add_actions(self, model_param, callback):
 		'''Register view actions that are called in response to
 		view changes.(view->model)'''
@@ -143,8 +149,7 @@ class QObserver(Observer, QObject):
 		if param in self.__model_to_view:
 			notify = self.model.get_notify()
 			self.model.set_notify(False)
-			for widget_name in self.__model_to_view[param]:
-				widget = getattr(self.view, widget_name)
+			for widget in self.__model_to_view[param]:
 				if isinstance(widget, QSpinBox):
 					widget.setValue(value)
 				elif isinstance(widget, QPixmap):
@@ -170,8 +175,7 @@ class QObserver(Observer, QObject):
 		if param not in self.__actions: return
 		widgets = []
 		if param in self.__model_to_view:
-			for widget_name in self.__model_to_view[param]:
-				widget = getattr(self.view, widget_name)
+			for widget in self.__model_to_view[param]:
 				widgets.append(widget)
 		# Call the model callback w/ the view's widgets as the args
 		self.__actions[param](*widgets)

@@ -41,17 +41,14 @@ class Controller(QObserver):
 		# Diff display context menu
 		view.display_text.contextMenuEvent = self.diff_context_menu_event
 
-		# Binds a specific model attribute to a view widget,
-		# and vice versa.
-		self.model_to_view('commitmsg', 'commit_text')
-		self.model_to_view('staged', 'staged_list')
-		self.model_to_view('all_unstaged', 'unstaged_list')
+		# Binds model params to their equivalent view widget
+		self.add_observables('commitmsg', 'staged', 'unstaged')
 
 		# When a model attribute changes, this runs a specific action
 		self.add_actions('staged', self.action_staged)
-		self.add_actions('all_unstaged', self.action_all_unstaged)
-		self.add_actions('global.ugit.fontdiff', self.update_diff_font)
-		self.add_actions('global.ugit.fontui', self.update_ui_font)
+		self.add_actions('unstaged', self.action_unstaged)
+		self.add_actions('global_ugit_fontdiff', self.update_diff_font)
+		self.add_actions('global_ugit_fontui', self.update_ui_font)
 
 		self.add_callbacks(
 			# Actions that delegate directly to the model
@@ -79,8 +76,8 @@ class Controller(QObserver):
 			push_button = self.push,
 
 			# List Widgets
-			staged_list = self.diff_staged,
-			unstaged_list = self.diff_unstaged,
+			staged = self.diff_staged,
+			unstaged = self.diff_unstaged,
 
 			# Checkboxes
 			untracked_checkbox = self.rescan,
@@ -115,15 +112,16 @@ class Controller(QObserver):
 
 			# Splitters
 			splitter_top = self.splitter_top_event,
-			splitter_bottom = self.splitter_bottom_event)
+			splitter_bottom = self.splitter_bottom_event,
+			)
 
 		# These are vanilla signal/slots since QObserver
 		# is already handling these signals.
-		self.connect(view.unstaged_list,
+		self.connect(view.unstaged,
 				'itemDoubleClicked(QListWidgetItem*)',
 				self.stage_selected)
 
-		self.connect(view.staged_list,
+		self.connect(view.staged,
 				'itemDoubleClicked(QListWidgetItem*)',
 				self.unstage_selected)
 
@@ -158,9 +156,9 @@ class Controller(QObserver):
 		qtutils.update_listwidget(widget,
 				self.model.get_staged(), staged=True)
 
-	def action_all_unstaged(self, widget):
+	def action_unstaged(self, widget):
 		qtutils.update_listwidget(widget,
-				self.model.get_unstaged(), staged=False)
+				self.model.get_changed(), staged=False)
 
 		if self.view.untracked_checkbox.isChecked():
 			qtutils.update_listwidget(widget,
@@ -255,9 +253,9 @@ class Controller(QObserver):
 	def view_diff(self, staged=True):
 		self.__staged_diff_in_view = staged
 		if self.__staged_diff_in_view:
-			widget = self.view.staged_list
+			widget = self.view.staged
 		else:
-			widget = self.view.unstaged_list
+			widget = self.view.unstaged
 		row, selected = qtutils.get_selected_row(widget)
 		if not selected:
 			self.view.reset_display()
@@ -364,23 +362,23 @@ class Controller(QObserver):
 	def stage_hunk(self):
 		self.process_diff_selection(
 				self.model.get_unstaged(),
-				self.view.unstaged_list,
+				self.view.unstaged,
 				cached=False)
 	def stage_hunk_selection(self):
 		self.process_diff_selection(
 				self.model.get_unstaged(),
-				self.view.unstaged_list,
+				self.view.unstaged,
 				cached=False,
 				selected=True)
 	def unstage_hunk(self, cached=True):
 		self.process_diff_selection(
 				self.model.get_staged(),
-				self.view.staged_list,
+				self.view.staged,
 				cached=True)
 	def unstage_hunk_selection(self):
 		self.process_diff_selection(
 				self.model.get_staged(),
-				self.view.staged_list,
+				self.view.staged,
 				cached=True,
 				selected=True)
 
@@ -392,8 +390,8 @@ class Controller(QObserver):
 		'''Use "git add" to add items to the git index.
 		This is a thin wrapper around apply_to_list.'''
 		command = self.model.add_or_remove
-		widget = self.view.unstaged_list
-		items = self.model.get_all_unstaged()
+		widget = self.view.unstaged
+		items = self.model.get_unstaged()
 		self.apply_to_list(command,widget,items)
 
 	# use *rest to handle being called from different signals
@@ -401,18 +399,18 @@ class Controller(QObserver):
 		'''Use "git reset" to remove items from the git index.
 		This is a thin wrapper around apply_to_list.'''
 		command = self.model.reset
-		widget = self.view.staged_list
+		widget = self.view.staged
 		items = self.model.get_staged()
 		self.apply_to_list(command, widget, items)
 
 	def viz_all(self):
 		'''Visualizes the entire git history using gitk.'''
-		browser = self.model.get_history_browser()
+		browser = self.model.get_global_ugit_historybrowser()
 		utils.fork(browser,'--all')
 
 	def viz_current(self):
 		'''Visualizes the current branch's history using gitk.'''
-		browser = self.model.get_history_browser()
+		browser = self.model.get_global_ugit_historybrowser()
 		utils.fork(browser, self.model.get_branch())
 
 	# These actions monitor window resizes, splitter changes, etc.
@@ -462,8 +460,8 @@ class Controller(QObserver):
 
 	def diff_context_menu_about_to_show(self):
 		unstaged_item = qtutils.get_selected_item(
-				self.view.unstaged_list,
-				self.model.get_all_unstaged())
+				self.view.unstaged,
+				self.model.get_unstaged())
 
 		is_tracked= unstaged_item not in self.model.get_untracked()
 
@@ -477,7 +475,7 @@ class Controller(QObserver):
 				self.__diffgui_enabled
 				and self.__staged_diff_in_view
 				and qtutils.get_selected_item(
-						self.view.staged_list,
+						self.view.staged,
 						self.model.get_staged()))
 
 		self.__stage_hunk_action.setEnabled(bool(enable_staged))
@@ -520,15 +518,15 @@ class Controller(QObserver):
 		return select_commits(self.model, self.view, title, revs, summaries)
 
 	def update_diff_font(self):
-		font = self.model.get_param('global.ugit.fontdiff')
+		font = self.model.get_global_ugit_fontdiff()
 		if not font: return
 		qfont = QFont()
 		qfont.fromString(font)
 		self.view.display_text.setFont(qfont)
-		self.view.commit_text.setFont(qfont)
+		self.view.commitmsg.setFont(qfont)
 
 	def update_ui_font(self):
-		font = self.model.get_param('global.ugit.fontui')
+		font = self.model.get_global_ugit_fontui()
 		if not font: return
 		qfont = QFont()
 		qfont.fromString(font)

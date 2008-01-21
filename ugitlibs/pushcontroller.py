@@ -17,20 +17,22 @@ class PushController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self,model,view)
 
-		self.model_to_view('remote', 'remote_line')
-		self.model_to_view('remotes', 'remote_list')
-		self.model_to_view('local_branch', 'local_branch_line')
-		self.model_to_view('local_branches', 'local_branch_list')
-		self.model_to_view('remote_branch', 'remote_branch_line')
-		self.model_to_view('remote_branches', 'remote_branch_list')
+		self.add_observables(
+				'remote',
+				'remotes',
+				'local_branch',
+				'local_branches',
+				'remote_branch',
+				'remote_branches',
+				)
 
 		self.add_actions('remotes', self.display_remotes)
 		self.add_callbacks(
-			remote_list = self.update_remote_list,
-			local_branch_list = self.update_local_branch_list,
-			remote_branch_list = self.update_remote_branch_list,
-			push_button = self.push_to_remote_branch)
-
+			remotes = self.update_remotes,
+			local_branches = self.update_local_branches,
+			remote_branches = self.update_remote_branches,
+			push_button = self.push_to_remote_branch,
+			)
 		self.refresh_view()
 
 	def display_remotes(self, widget):
@@ -73,28 +75,28 @@ class PushController(QObserver):
 		if not status:
 			self.view.accept()
 
-	def update_remote_list(self,*rest):
-		widget = self.view.remote_list
+	def update_remotes(self,*rest):
+		widget = self.view.remotes
 		remotes = self.model.get_remotes()
 		selection = qtutils.get_selected_item(widget,remotes)
 		if not selection: return
 		self.model.set_remote(selection)
-		self.view.remote_line.selectAll()
+		self.view.remote.selectAll()
 
-	def update_local_branch_list(self,*rest):
+	def update_local_branches(self,*rest):
 		branches = self.model.get_local_branches()
-		widget = self.view.local_branch_list
+		widget = self.view.local_branches
 		selection = qtutils.get_selected_item(widget,branches)
 		if not selection: return
 
 		self.model.set_local_branch(selection)
 		self.model.set_remote_branch(selection)
 
-		self.view.local_branch_line.selectAll()
-		self.view.remote_branch_line.selectAll()
+		self.view.local_branch.selectAll()
+		self.view.remote_branch.selectAll()
 
-	def update_remote_branch_list(self,*rest):
-		widget = self.view.remote_branch_list
+	def update_remote_branches(self,*rest):
+		widget = self.view.remote_branches
 		branches = self.model.get_remote_branches()
 		selection = qtutils.get_selected_item(widget,branches)
 		if not selection: return
@@ -102,4 +104,4 @@ class PushController(QObserver):
 		branch = utils.basename(selection)
 		if branch == 'HEAD': return
 		self.model.set_remote_branch(branch)
-		self.view.remote_branch_line.selectAll()
+		self.view.remote_branch.selectAll()

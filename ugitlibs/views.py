@@ -22,10 +22,10 @@ class View(Ui_maingui, QMainWindow):
 		self.setupUi(self)
 		self.set_display = self.display_text.setText
 		self.set_info = self.displayLabel.setText
-		self.action_undo = self.commit_text.undo
-		self.action_redo = self.commit_text.redo
-		self.action_paste = self.commit_text.paste
-		self.action_select_all = self.commit_text.selectAll
+		self.action_undo = self.commitmsg.undo
+		self.action_redo = self.commitmsg.redo
+		self.action_paste = self.commitmsg.paste
+		self.action_select_all = self.commitmsg.selectAll
 		# Qt does not support noun/verbs
 		self.commit_button.setText(qtutils.tr('Commit@@verb'))
 		self.commit_menu.setTitle(qtutils.tr('Commit@@verb'))
@@ -43,11 +43,11 @@ class View(Ui_maingui, QMainWindow):
 		self.action_copy()
 		self.action_delete()
 	def action_copy(self):
-		cursor = self.commit_text.textCursor()
+		cursor = self.commitmsg.textCursor()
 		selection = cursor.selection().toPlainText()
 		qtutils.set_clipboard(selection)
 	def action_delete(self):
-		self.commit_text.textCursor().removeSelectedText()
+		self.commitmsg.textCursor().removeSelectedText()
 	def reset_display(self):
 		self.set_display('')
 		self.set_info('')

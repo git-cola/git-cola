@@ -23,12 +23,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="local_branch_line" />
+      <widget class="QLineEdit" name="local_branch" />
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QListWidget" name="local_branch_list" />
+    <widget class="QListWidget" name="local_branches" />
    </item>
    <item>
     <layout class="QHBoxLayout" >
@@ -40,12 +40,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="remote_line" />
+      <widget class="QLineEdit" name="remote" />
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QListWidget" name="remote_list" />
+    <widget class="QListWidget" name="remotes" />
    </item>
    <item>
     <layout class="QHBoxLayout" >
@@ -57,12 +57,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="remote_branch_line" />
+      <widget class="QLineEdit" name="remote_branch" />
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QListWidget" name="remote_branch_list" />
+    <widget class="QListWidget" name="remote_branches" />
    </item>
    <item>
     <layout class="QHBoxLayout" >

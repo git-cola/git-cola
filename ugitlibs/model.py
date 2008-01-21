@@ -270,7 +270,7 @@ class Model(Observable):
 				io.write(inner + "[\n")
 				for val in value:
 					if is_model(val):
-						io.write(val+'\n')
+						io.write(str(val)+'\n')
 					else:
 						io.write(indent)
 						io.write(str(val))

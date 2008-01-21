@@ -11,8 +11,8 @@ from views import OptionsGUI
 from views import OutputGUI
 
 def set_diff_font(model, widget):
-	if model.has_param('global.ugit.fontdiff'):
-		font = model.get_param('global.ugit.fontdiff')
+	if model.has_param('global_ugit_fontdiff'):
+		font = model.get_param('global_ugit_fontdiff')
 		if not font: return
 		qf = QFont()
 		qf.fromString(font)
@@ -57,13 +57,13 @@ class SelectCommitsController(QObserver):
 		row, selected = qtutils.get_selected_row(self.view.commit_list)
 		if not selected:
 			self.view.commit_text.setText('')
-			self.view.revision_line.setText('')
+			self.view.revision.setText('')
 			return
 
 		# Get the sha1 and put it in the revision line
 		sha1 = self.model.get_revision_sha1(row)
-		self.view.revision_line.setText(sha1)
-		self.view.revision_line.selectAll()
+		self.view.revision.setText(sha1)
+		self.view.revision.selectAll()
 
 		# Lookup the sha1's commit
 		commit_diff = self.model.get_commit_diff(sha1)
@@ -77,23 +77,20 @@ def find_revisions(model, parent):
 	view = CommitGUI(parent, 'Revision')
 	ctl = FindRevisionsController(model,view)
 	view.show()
-	view.revision_line.setFocus()
+	view.revision.setFocus()
 	return view.exec_() == QDialog.Accepted
 
 class FindRevisionsController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self,model,view)
-
 		set_diff_font(model, self.view.commit_text)
 
-		self.model_to_view('revision', 'revision_line')
+		self.add_observables('revision')
 		self.add_actions('revision', self.find_revision)
-
 		self.connect(view.commit_list, 'itemSelectionChanged()',
 				self.select_summary)
 		self.connect(view.commit_text, 'cursorPositionChanged()',
 				self.select_summary)
-
 		self.sha1 = None
 		self.last_time = time.time()
 		self.updates_enabled = True
@@ -134,8 +131,8 @@ class FindRevisionsController(QObserver):
 	def select_summary(self,*args):
 		if not self.updates_enabled: return
 		if not self.sha1: return
-		self.view.revision_line.setText(self.sha1)
-		self.view.revision_line.selectAll()
+		self.view.revision.setText(self.sha1)
+		self.view.revision.selectAll()
 		qtutils.set_clipboard(self.sha1)
 
 def update_options(model, parent):
@@ -145,6 +142,10 @@ def update_options(model, parent):
 	return view.exec_() == QDialog.Accepted
 
 class OptionsController(QObserver):
+	'''ASSUMPTIONS:
+	This controller assumes that the view's widgets are named
+	the same as the model parameters.'''
+
 	def __init__(self,model,view):
 
 		# used for telling about interactive font changes
@@ -152,42 +153,29 @@ class OptionsController(QObserver):
 		model = model.clone()
 
 		QObserver.__init__(self,model,view)
-
-		model_to_view = {
-			'local.user.email': 'local_email_line',
-			'global.user.email': 'global_email_line',
-
-			'local.user.name':  'local_name_line',
-			'global.user.name':  'global_name_line',
-
-			'local.merge.summary': 'local_summary_checkbox',
-			'global.merge.summary': 'global_summary_checkbox',
-
-			'local.merge.diffstat': 'local_diffstat_checkbox',
-			'global.merge.diffstat': 'global_diffstat_checkbox',
-
-			'local.gui.diffcontext': 'local_diffcontext_spinbox',
-			'global.gui.diffcontext': 'global_diffcontext_spinbox',
-
-			'local.merge.verbosity': 'local_verbosity_spinbox',
-			'global.merge.verbosity': 'global_verbosity_spinbox',
-
-			'global.ugit.fontdiff.size': 'diff_font_spinbox',
-			'global.ugit.fontdiff':  'diff_font_combo',
-
-			'global.ugit.fontui.size': 'main_font_spinbox',
-			'global.ugit.fontui': 'main_font_combo',
-
-			'global.ugit.historybrowser': 'history_browser_line',
-		}
-
-		for m,v in model_to_view.iteritems():
-			self.model_to_view(m,v)
-
-		self.add_actions('global.ugit.fontdiff.size', self.update_size)
-		self.add_actions('global.ugit.fontui.size', self.update_size)
-		self.add_actions('global.ugit.fontdiff', self.tell_parent_model)
-		self.add_actions('global.ugit.fontui', self.tell_parent_model)
+		self.add_observables(
+			'local_user_email',
+			'local_user_name',
+			'local_merge_summary',
+			'local_merge_diffstat',
+			'local_merge_verbosity',
+			'local_gui_diffcontext',
+			'global_user_email',
+			'global_user_name',
+			'global_merge_summary',
+			'global_merge_diffstat',
+			'global_merge_verbosity',
+			'global_gui_diffcontext',
+			'global_ugit_fontdiff_size',
+			'global_ugit_fontdiff',
+			'global_ugit_fontui_size',
+			'global_ugit_fontui',
+			'global_ugit_historybrowser',
+			)
+		self.add_actions('global_ugit_fontdiff_size', self.update_size)
+		self.add_actions('global_ugit_fontui_size', self.update_size)
+		self.add_actions('global_ugit_fontdiff', self.tell_parent_model)
+		self.add_actions('global_ugit_fontui', self.tell_parent_model)
 		self.add_callbacks(save_button = self.save_settings)
 		self.connect(self.view, 'rejected()', self.restore_settings)
 
@@ -195,28 +183,27 @@ class OptionsController(QObserver):
 		self.backup_model = self.model.clone()
 
 	def refresh_view(self):
-		font = self.model.get_param('global.ugit.fontui')
+		font = self.model.get_param('global_ugit_fontui')
 		if font:
 			size = int(font.split(',')[1])
-			self.view.main_font_spinbox.setValue(size)
-			self.model.set_param('global.ugit.fontui.size', size)
-			ui_font = QFont()
-			ui_font.fromString(font)
-			self.view.main_font_combo.setCurrentFont(ui_font)
+			self.view.global_ugit_fontui_size.setValue(size)
+			self.model.set_global_ugit_fontui_size(size)
+			fontui = QFont()
+			fontui.fromString(font)
+			self.view.global_ugit_fontui.setCurrentFont(fontui)
 
-		font = self.model.get_param('global.ugit.fontdiff')
+		font = self.model.get_global_ugit_fontdiff()
 		if font:
 			size = int(font.split(',')[1])
-			self.view.diff_font_spinbox.setValue(size)
-			self.model.set_param('global.ugit.fontdiff.size', size)
-			diff_font = QFont()
-			diff_font.fromString(font)
-			self.view.diff_font_combo.setCurrentFont(diff_font)
+			self.view.global_ugit_fontdiff_size.setValue(size)
+			self.model.set_global_ugit_fontdiff_size(size)
+			fontdiff = QFont()
+			fontdiff.fromString(font)
+			self.view.global_ugit_fontdiff.setCurrentFont(fontdiff)
 
 		self.view.local_groupbox.setTitle(
 			unicode(self.tr('%s Repository'))
 					% self.model.get_project())
-
 		QObserver.refresh_view(self)
 
 	# save button
@@ -228,7 +215,6 @@ class OptionsController(QObserver):
 			backup = self.backup_model.get_param(param)
 			if value != backup:
 				params_to_save.append(param)
-
 		for param in params_to_save:
 			self.model.save_config_param(param)
 
@@ -242,27 +228,27 @@ class OptionsController(QObserver):
 		self.tell_parent_model()
 
 	def tell_parent_model(self,*rest):
-		notify = self.original_model.get_notify()
-		self.original_model.set_notify(True)
-		for param in (
-				'global.ugit.fontdiff',
-				'global.ugit.fontui',
-				'global.ugit.fontdiff.size',
-				'global.ugit.fontui.size'):
-			self.original_model.set_param(param,
-					self.model.get_param(param))
-		self.original_model.set_notify(notify)
+		params= (
+				'global_ugit_fontdiff',
+				'global_ugit_fontui',
+				'global_ugit_fontdiff_size',
+				'global_ugit_fontui_size',
+			)
+		for param in params:
+			self.original_model.set_param(
+				param, self.model.get_param(param))
 
 	def update_size(self, *rest):
-		combo = self.view.main_font_combo
-		param = 'global.ugit.fontui'
+		combo = self.view.global_ugit_fontui
+		param = str(combo.objectName())
 		default = str(combo.currentFont().toString())
 		self.model.apply_font_size(param, default)
 
-		combo = self.view.diff_font_combo
-		param = 'global.ugit.fontdiff'
+		combo = self.view.global_ugit_fontdiff
+		param = str(combo.objectName())
 		default = str(combo.currentFont().toString())
 		self.model.apply_font_size(param, default)
+
 		self.tell_parent_model()
 
 def log_window(model, parent):
@@ -276,18 +262,17 @@ class LogWindowController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self, model, view)
 
-		self.model_to_view('search_text', 'search_line')
+		self.add_observables('search_text')
 		self.add_actions('search_text', self.insta_search)
-
 		self.add_callbacks(
 				clear_button = self.clear,
 				next_button = self.next,
-				prev_button = self.prev)
-
+				prev_button = self.prev,
+				)
 		self.connect(self.view.output_text,
-			'cursorPositionChanged()', self.cursor_position_changed)
-
-		self.reset()
+				'cursorPositionChanged()',
+				self.cursor_position_changed)
+		self.search_offset = 0
 
 	def insta_search(self,*rest):
 		self.search_offset = 0
@@ -299,26 +284,25 @@ class LogWindowController(QObserver):
 			cursor.clearSelection()
 			self.view.output_text.setTextCursor(cursor)
 
-	def reset(self):
-		self.search_offset = 0
-
 	def clear(self):
 		self.view.output_text.clear()
-		self.reset()
+		self.search_offset = 0
 
 	def next(self):
 		text = self.model.get_search_text().lower().strip()
 		if not text: return
 		output = str(self.view.output_text.toPlainText())
 		if self.search_offset + len(text) > len(output):
-			if qtutils.question(
+			answer = qtutils.question(
 					self.view,
 					unicode(self.tr("%s not found")) % text,
 					unicode(self.tr(
 						"Could not find '%s'.\n"
 						"Search from the beginning?"
-						)) % text,
-					default=False):
+					)) % text,
+					default=False)
+			
+			if answer:
 				self.search_offset = 0
 			else:
 				return
@@ -328,14 +312,15 @@ class LogWindowController(QObserver):
 			index = find_in.index(text)
 		except:
 			self.search_offset = 0
-			if qtutils.question(
+			answer = qtutils.question(
 					self.view,
 					unicode(self.tr("%s not found")) % text,
 					unicode(self.tr(
 						"Could not find '%s'.\n"
 						"Search from the beginning?"
 						)) % text,
-					default=False):
+					default=False)
+			if answer:
 				self.next()
 			return
 		cursor = self.view.output_text.textCursor()

@@ -52,7 +52,7 @@ class RepoBrowserController(QObserver):
 		current = self.view.commit_list.currentRow()
 		item = self.view.commit_list.item(current)
 		if item is None or not item.isSelected():
-			self.view.revision_line.setText('')
+			self.view.revision.setText('')
 			self.view.commit_text.setText('')
 			return
 
@@ -71,7 +71,7 @@ class RepoBrowserController(QObserver):
 				# since it doesn't really exist
 				entries = []
 			self.view.commit_text.setText('\n'.join(entries))
-			self.view.revision_line.setText('')
+			self.view.revision.setText('')
 		else:
 			# This is a file entry.  The current row is absolute,
 			# so get a relative index by subtracting the number
@@ -82,14 +82,13 @@ class RepoBrowserController(QObserver):
 				# This can happen when changing directories
 				return
 
-			objtype, sha1, name = \
-				self.model.get_subtree_node(idx)
+			objtype, sha1, name = self.model.get_subtree_node(idx)
 
 			catguts = self.model.cat_file(objtype, sha1)
 			self.view.commit_text.setText(catguts)
 
-			self.view.revision_line.setText(sha1)
-			self.view.revision_line.selectAll()
+			self.view.revision.setText(sha1)
+			self.view.revision.selectAll()
 
 			# Copy the sha1 into the clipboard
 			qtutils.set_clipboard(sha1)
@@ -143,7 +142,7 @@ class RepoBrowserController(QObserver):
 		always listed first.'''
 
 		self.view.commit_text.setText('')
-		self.view.revision_line.setText('')
+		self.view.revision.setText('')
 
 		dir_icon = utils.get_icon('dir.png')
 		file_icon = utils.get_icon('generic.png')

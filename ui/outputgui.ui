@@ -81,7 +81,7 @@
        <number>4</number>
       </property>
       <item>
-       <widget class="QLineEdit" name="search_line" />
+       <widget class="QLineEdit" name="search_text" />
       </item>
       <item>
        <widget class="QPushButton" name="next_button" >

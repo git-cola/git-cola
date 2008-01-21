@@ -49,14 +49,14 @@ class Model(model.Model):
 
 			#####################################################
 			# Used primarily by the main UI
-			window_geom = utils.parse_geom(
-					self.get_param('global.ugit.geometry')),
 			project = os.path.basename(os.getcwd()),
 			commitmsg = '',
+			changed = [],
 			staged = [],
 			unstaged = [],
 			untracked = [],
-			all_unstaged = [], # unstaged+untracked
+			window_geom = utils.parse_geom(
+					self.get_global_ugit_geometry()),
 
 			#####################################################
 			# Used by the create branch dialog
@@ -89,35 +89,35 @@ class Model(model.Model):
 
 	def init_config_data(self):
 		self.__saved_params = [
-			'user.name',
-			'user.email',
-			'merge.summary',
-			'merge.diffstat',
-			'merge.verbosity',
-			'gui.diffcontext',
-			'gui.pruneduringfetch',
-			'ugit.geometry',
-			'ugit.fontui',
-			'ugit.fontdiff',
-			'ugit.historybrowser',
+			'user_name',
+			'user_email',
+			'merge_summary',
+			'merge_diffstat',
+			'merge_verbosity',
+			'gui_diffcontext',
+			'gui_pruneduringfetch',
+			'ugit_geometry',
+			'ugit_fontui',
+			'ugit_fontdiff',
+			'ugit_historybrowser',
 		]
 		self.__config_types = {}
 		self.__config_defaults = {
-			'user.name': '',
-			'user.email': '',
-			'merge.summary': False,
-			'merge.diffstat': True,
-			'merge.verbosity': 2,
-			'gui.diffcontext': 5,
-			'gui.pruneduringfetch': False,
+			'user_name': '',
+			'user_email': '',
+			'merge_summary': False,
+			'merge_diffstat': True,
+			'merge_verbosity': 2,
+			'gui_diffcontext': 5,
+			'gui_pruneduringfetch': False,
 			}
 		self.__global_defaults = {
-			'ugit.geometry':'',
-			'ugit.fontui': '',
-			'ugit.fontui.size':12,
-			'ugit.fontdiff': '',
-			'ugit.fontdiff.size':12,
-			'ugit.historybrowser': 'gitk',
+			'ugit_geometry':'',
+			'ugit_fontui': '',
+			'ugit_fontui_size':12,
+			'ugit_fontdiff': '',
+			'ugit_fontdiff_size':12,
+			'ugit_historybrowser': 'gitk',
 			}
 
 		default_dict = self.__config_defaults
@@ -132,6 +132,7 @@ class Model(model.Model):
 			newdict = {}
 			for line in config.splitlines():
 				k, v = line.split('=')
+				k = k.replace('.','_') # git -> model
 				try:
 					linetype = self.__config_types[k]
 					if linetype == 'int':
@@ -148,51 +149,51 @@ class Model(model.Model):
 		global_dict = config_to_dict(global_conf)
 
 		for k,v in local_dict.iteritems():
-			self.set_param('local.'+k, v)
+			self.set_param('local_'+k, v)
 		for k,v in global_dict.iteritems():
-			self.set_param('global.'+k, v)
+			self.set_param('global_'+k, v)
 			if k not in local_dict:
 				local_dict[k]=v
-				self.set_param('local.'+k, v)
+				self.set_param('local_'+k, v)
 
-		# internal bootstrap variables
-		for param in ('global.ugit.fontui',
-				'global.ugit.fontdiff'):
+		# Bootstrap the internal font*_size variables
+		for param in ('global_ugit_fontui', 'global_ugit_fontdiff'):
 			if hasattr(self, param):
 				font = self.get_param(param)
 				if font:
 					size = int(font.split(',')[1])
-					self.set_param(param+'.size', size)
-					param = param[len('global.'):]
+					self.set_param(param+'_size', size)
+					param = param[len('global_'):]
 					global_dict[param] = font
-					global_dict[param+'.size'] = size
+					global_dict[param+'_size'] = size
 
 		# Load defaults for all undefined items
 		for k,v in default_dict.iteritems():
 			if k not in local_dict:
-				self.set_param('local.'+k, v)
+				self.set_param('local_'+k, v)
 			if k not in global_dict:
-				self.set_param('global.'+k, v)
+				self.set_param('global_'+k, v)
 
 		for k,v in self.__global_defaults.iteritems():
 			if k not in global_dict:
-				self.set_param('global.'+k, v)
+				self.set_param('global_'+k, v)
 
 	def save_config_param(self,param):
 		value = self.get_param(param)
-		if param == 'local.gui.diffcontext':
+		if param == 'local_gui_diffcontext':
 			git.DIFF_CONTEXT = value
-		if param.startswith('local.'):
-			param = param[len('local.'):]
+		if param.startswith('local_'):
+			param = param[len('local_'):]
 			is_local = True
-		elif param.startswith('global.'):
-			param = param[len('global.'):]
+		elif param.startswith('global_'):
+			param = param[len('global_'):]
 			is_local = False
 		else:
 			raise Exception("Invalid param '%s' passed to " % param
 					+ "save_config_param()")
 		if param not in self.__saved_params:
 			return
+		param = param.replace('_','.') # model -> git
 		git.config(param, value, local=is_local)
 
 	def init_browser_data(self):
@@ -255,7 +256,7 @@ class Model(model.Model):
 				self.subtree_names.append(name)
 
 	def get_history_browser(self):
-		return self.get_param('global.ugit.historybrowser')
+		return self.get_param('global_ugit_historybrowser')
 
 	def get_tree_node(self, idx):
 		return (self.get_types()[idx],
@@ -283,8 +284,8 @@ class Model(model.Model):
 
 		msg = self.get_commitmsg()
 		signoff =('\n\nSigned-off by: %s <%s>\n' % (
-				self.get_param('local.user.name'),
-				self.get_param('local.user.email')))
+				self.get_local_user_name(),
+				self.get_local_user_email()))
 
 		if signoff not in msg:
 			self.set_commitmsg(msg + signoff)
@@ -327,14 +328,14 @@ class Model(model.Model):
 
 		# Reset the staged and unstaged model lists
 		# NOTE: the model's unstaged list is used to
-		# hold both unstaged and untracked files.
+		# hold both changed and untracked files.
 		self.staged = []
-		self.unstaged = []
+		self.changed = []
 		self.untracked = []
 
 		# Read git status items
 		( staged_items,
-		  unstaged_items,
+		  changed_items,
 		  untracked_items ) = git.status()
 
 		# Gather items to be committed
@@ -343,9 +344,9 @@ class Model(model.Model):
 				self.add_staged(staged)
 
 		# Gather unindexed items
-		for unstaged in unstaged_items:
-			if unstaged not in self.get_unstaged():
-				self.add_unstaged(unstaged)
+		for changed in changed_items:
+			if changed not in self.get_changed():
+				self.add_changed(changed)
 
 		# Gather untracked items
 		for untracked in untracked_items:
@@ -353,7 +354,7 @@ class Model(model.Model):
 				self.add_untracked(untracked)
 
 		self.set_branch(git.current_branch())
-		self.set_all_unstaged(self.get_unstaged() + self.get_untracked())
+		self.set_unstaged(self.get_changed() + self.get_untracked())
 		self.set_remotes(git.remote())
 		self.set_remote_branches(git.branch(remote=True))
 		self.set_local_branches(git.branch(remote=False))
@@ -363,7 +364,7 @@ class Model(model.Model):
 		self.set_remote_branch('')
 		# Re-enable notifications and emit changes
 		self.set_notify(notify_enabled)
-		self.notify_observers('all_unstaged', 'staged')
+		self.notify_observers('staged','unstaged')
 
 	def delete_branch(self, branch):
 		return git.branch(name=branch, delete=True)
@@ -371,19 +372,13 @@ class Model(model.Model):
 	def get_revision_sha1(self, idx):
 		return self.get_revisions()[idx]
 
-	def set_local_config(self, param, val):
-		self.set_param(self, 'local.'+param, val)
-
-	def set_global_config(self, param, val):
-		self.set_param(self, 'global.'+param, val)
-
 	def get_config_params(self):
 		params = []
-		params.extend(map(lambda x: 'local.' + x,
+		params.extend(map(lambda x: 'local_' + x,
 				self.__config_defaults.keys()))
-		params.extend(map(lambda x: 'global.' + x,
+		params.extend(map(lambda x: 'global_' + x,
 				self.__config_defaults.keys()))
-		params.extend(map(lambda x: 'global.' + x,
+		params.extend(map(lambda x: 'global_' + x,
 				self.__global_defaults.keys()))
 		return params
 
@@ -392,7 +387,7 @@ class Model(model.Model):
 		if not old_font:
 			old_font = default
 
-		size = self.get_param(param+'.size')
+		size = self.get_param(param+'_size')
 		props = old_font.split(',')
 		props[1] = str(size)
 		new_font = ','.join(props)
@@ -413,9 +408,6 @@ class Model(model.Model):
 		else:
 			return commit
 
-	def get_unstaged_item(self, idx):
-		return self.get_all_unstaged()[idx]
-
 	def get_diff_and_status(self, idx, staged=True):
 		if staged:
 			filename = self.get_staged()[idx]
@@ -425,11 +417,11 @@ class Model(model.Model):
 				status = 'Staged for removal'
 			diff = self.diff(filename=filename, cached=True)
 		else:
-			filename = self.get_all_unstaged()[idx]
+			filename = self.get_unstaged()[idx]
 			if os.path.isdir(filename):
 				status = 'Untracked directory'
 				diff = '\n'.join(os.listdir(filename))
-			elif filename in self.get_unstaged():
+			elif filename in self.get_changed():
 				status = 'Modified, not staged'
 				diff = self.diff(filename=filename, cached=False)
 			else:
@@ -448,7 +440,7 @@ class Model(model.Model):
 		return diff, status
 
 	def stage_changed(self):
-		output = git.add(self.get_unstaged())
+		output = git.add(self.get_changed())
 		self.update_status()
 		return output
 

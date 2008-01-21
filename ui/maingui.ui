@@ -92,7 +92,7 @@ in the unstaged changes list.</string>
           </layout>
          </item>
          <item>
-          <widget class="QListWidget" name="unstaged_list" >
+          <widget class="QListWidget" name="unstaged" >
            <property name="sizePolicy" >
             <sizepolicy vsizetype="MinimumExpanding" hsizetype="Preferred" >
              <horstretch>0</horstretch>
@@ -164,7 +164,7 @@ include untracked files if "Show Untracked Files" is checked.</string>
           </layout>
          </item>
          <item>
-          <widget class="QListWidget" name="staged_list" >
+          <widget class="QListWidget" name="staged" >
            <property name="sizePolicy" >
             <sizepolicy vsizetype="MinimumExpanding" hsizetype="Preferred" >
              <horstretch>0</horstretch>
@@ -392,7 +392,7 @@ the most recent commit is amended with contents of the next commit.</string>
              </layout>
             </item>
             <item>
-             <widget class="QTextEdit" name="commit_text" >
+             <widget class="QTextEdit" name="commitmsg" >
               <property name="sizePolicy" >
                <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
                 <horstretch>0</horstretch>
@@ -871,9 +871,9 @@ retrieve the latest commit message prior to committing.</string>
  </widget>
  <layoutdefault spacing="2" margin="2" />
  <tabstops>
-  <tabstop>commit_text</tabstop>
-  <tabstop>staged_list</tabstop>
-  <tabstop>unstaged_list</tabstop>
+  <tabstop>commitmsg</tabstop>
+  <tabstop>staged</tabstop>
+  <tabstop>unstaged</tabstop>
   <tabstop>stage_button</tabstop>
   <tabstop>signoff_button</tabstop>
   <tabstop>commit_button</tabstop>
