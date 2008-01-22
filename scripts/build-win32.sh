@@ -1,5 +1,4 @@
 #!/bin/sh
-PYUIC4=`which pyuic4`
 PREFIX=installroot
 BINDIR=$PREFIX/bin
 UGITLIBS=$PREFIX/ugitlibs
@@ -9,13 +8,6 @@ DOCDIR=$PREFIX/share/doc/ugit
 cd `dirname $0`
 cd ..
 
-if [ -z $PYUIC4 ] || [ ! -x $PYUIC4 ]; then
-	echo
-	echo "Could not find pyuic4."
-	echo "You need the pyqt4 developer tools in order to build ugit."
-	echo
-fi
-
 mkdir -p $BINDIR
 mkdir -p $UGITLIBS
 mkdir -p $ICONDIR
@@ -23,17 +15,35 @@ mkdir -p $QMDIR
 mkdir -p $DOCDIR
 
 cp README $DOCDIR/README.txt
-cp bin/* scripts/ugit-*.sh $BINDIR
+cp bin/* $BINDIR
+cp scripts/ugit-win32.sh $BINDIR
+cp scripts/py2exe-* $BINDIR
 cp ugitlibs/* $UGITLIBS
 cp icons/* $ICONDIR
 
-
-if [ -x $PYUIC4 ] && [ ! -z $PYUIC4 ]; then
+PYUIC4=$(which pyuic4)
+if [ -z $PYUIC4 ] || [ ! -x $PYUIC4 ]; then
+	echo
+	echo "Could not find pyuic4."
+	echo "You need the pyqt4 developer tools in order to build ugit."
+	echo
+else
 	for file in ui/*.ui; do
-			pyuic4 -x $file -o $UGITLIBS/`basename $file .ui`.py
+		BASENAME=$(basename $file .ui)
+		$PYUIC4 -x $file -o $UGITLIBS/$BASENAME.py
 	done
 fi
 
-for file in po/*.po; do
-	msgfmt --qt -o $QMDIR/`basename $file .po`.qm $file
-done
+MSGFMT=$(which msgfmt)
+if [ -z $MSGFMT ] || [ ! -x $MSGFMT ]; then
+	echo
+	echo "Could not find msgfmt."
+	echo "You need the msgfmt from GNU gettext in order to create"
+	echo "the translation files for ugit."
+	echo
+else
+	for file in po/*.po; do
+		BASENAME=$(basename $file .po)
+		$MSGFMT --qt -o $QMDIR/$BASENAME.qm $file
+	done
+fi

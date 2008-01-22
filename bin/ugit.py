@@ -9,7 +9,12 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 
 version = platform.python_version()
-ugit = os.path.realpath(__file__)
+
+try:
+	ugit = os.path.realpath(__file__)
+except:
+	ugit = os.getcwd()
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(ugit)))
 sys.path.insert(0, os.path.join(
 		os.path.dirname(os.path.dirname(ugit)),
