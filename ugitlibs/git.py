@@ -311,8 +311,8 @@ def status():
 
 	modified_header = '# Changed but not updated:'
 	modified_regex = re.compile('(#\tmodified:\W{3}'
-			+ '|#\tnew file:\W{3}'
-			+ '|#\tdeleted:\W{4})')
+			'|#\tnew file:\W{1}'
+			'|#\tdeleted:\W{4})')
 
 	renamed_regex = re.compile('(#\trenamed:\W{4})(.*?)\W->\W(.*)')
 
