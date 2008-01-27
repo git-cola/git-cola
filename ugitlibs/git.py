@@ -310,11 +310,11 @@ def status():
 	untracked_header_seen = False
 
 	modified_header = '# Changed but not updated:'
-	modified_regex = re.compile('(#\tmodified:\W{3}'
-			'|#\tnew file:\W{1}'
-			'|#\tdeleted:\W{4})')
+	modified_regex = re.compile('(#\tmodified:\s+'
+			'|#\tnew file:\s+'
+			'|#\tdeleted:\s+)')
 
-	renamed_regex = re.compile('(#\trenamed:\W{4})(.*?)\W->\W(.*)')
+	renamed_regex = re.compile('(#\trenamed:\s+)(.*?)\s->\s(.*)')
 
 	untracked_header = '# Untracked files:'
 	untracked_regex = re.compile('#\t(.+)')
