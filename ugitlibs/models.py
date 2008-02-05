@@ -283,7 +283,7 @@ class Model(model.Model):
 		of the current commit message.'''
 
 		msg = self.get_commitmsg()
-		signoff =('\n\nSigned-off by: %s <%s>\n' % (
+		signoff =('\n\nSigned-off-by: %s <%s>\n' % (
 				self.get_local_user_name(),
 				self.get_local_user_email()))
 
