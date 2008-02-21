@@ -1,4 +1,4 @@
-/build
+/obj
 /installroot
 /.lock-wscript
 /Makefile

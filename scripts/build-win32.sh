@@ -5,7 +5,7 @@ UGITLIBS=$PREFIX/ugitlibs
 ICONDIR=$PREFIX/share/ugit/icons
 QMDIR=$PREFIX/share/ugit/qm
 DOCDIR=$PREFIX/share/doc/ugit
-cd `dirname $0`
+cd $(dirname $0)
 cd ..
 
 mkdir -p $BINDIR

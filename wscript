@@ -8,15 +8,15 @@ import Common
 #############################################################################
 # Mandatory variables
 APPNAME = 'ugit'
-VERSION = '0.7.0'
+VERSION = '0.8.5'
 srcdir = '.'
-blddir = 'build'
+blddir = 'obj'
 
 #############################################################################
 # Options
 def set_options(opt):
 	opt.tool_options('python')
-	opt.tool_options('pyuic4', 'buildutils')
+	opt.tool_options('pyuic4', 'build')
 	pass
 
 #############################################################################
@@ -29,8 +29,8 @@ def configure(conf):
 	env['BIN'] = os.path.join(env['PREFIX'], 'bin')
 
 	conf.check_tool('python')
-	conf.check_tool('pyuic4', 'buildutils')
-	conf.check_tool('po2qm', 'buildutils')
+	conf.check_tool('pyuic4', 'build')
+	conf.check_tool('po2qm', 'build')
 
 #############################################################################
 # Build

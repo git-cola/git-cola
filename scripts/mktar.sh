@@ -1,17 +1,18 @@
 #!/bin/sh
-if [ $# -lt 1 ]; then
-	echo "usage: mktar [BASENAME]"; exit -1
-fi
-FILE="$1".tar.gz
-BLD="$1".bld
+cd $(dirname $0)
+cd ..
+VERSION=$(scripts/version.sh)
+BASENAME=ugit-$VERSION
+FILE=$BASENAME.tar.gz
+BLD=$BASENAME.bld
 DIR=installroot
 if [ -d $DIR ]; then
-	mv $DIR $DIR.old."$$"
+	mv $DIR $DIR.old.$$
 fi
 if [ -e .lock-wscript ]; then
 	mv .lock-wscript .lock-wscript.old
 fi
-./configure --prefix=$DIR --blddir="$BLD" \
+./configure --prefix=$DIR --blddir=$BLD \
 && make && make install
 
 if [ $? != 0 ]; then
@@ -20,7 +21,7 @@ if [ $? != 0 ]; then
 fi
 
 find $DIR -name '*.py[co]' | xargs rm
-PYTHONVER=`python -c 'import sys; sys.stdout.write(sys.version[:3])'`
+PYTHONVER=$(python -c 'import sys; sys.stdout.write(sys.version[:3])')
 
 (
 	cd $DIR/lib;
@@ -31,9 +32,9 @@ PYTHONVER=`python -c 'import sys; sys.stdout.write(sys.version[:3])'`
 	done
 )
 
-rsync -avr $DIR/ "$1/" \
-&& tar czf "$FILE" "$1/" \
-&& rm -rf $DIR "$1" "$BLD"
+rsync -avr $DIR/ $BASENAME/ \
+&& tar czf $FILE $BASENAME/ \
+&& rm -rf $DIR $BASENAME $BLD
 
 if [ -d $DIR.old.$$ ]; then
 	mv -v $DIR.old.$$ $DIR
@@ -42,5 +43,5 @@ if [ -e .lock-wscript.old ]; then
 	mv .lock-wscript.old .lock-wscript
 fi
 if [ -d $HOME/htdocs/ugit/releases ]; then
-	mv -v "$FILE" $HOME/htdocs/ugit/releases
+	mv -v $FILE $HOME/htdocs/ugit/releases
 fi
