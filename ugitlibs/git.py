@@ -178,6 +178,7 @@ def diff(commit=None,filename=None, color=False,
 def diffstat():
 	return git('diff','--unified='+str(defaults.DIFF_CONTEXT),
 			'--stat', 'HEAD^')
+
 def diffindex():
 	return git('diff', '--unified='+str(defaults.DIFF_CONTEXT),
 			'--stat', '--cached')
@@ -249,17 +250,16 @@ def ls_tree(rev):
 	return output
 
 def push(remote, local_branch, remote_branch, ffwd=True, tags=False):
+	if ffwd:
+		branch_arg = '%s:%s' % ( local_branch, remote_branch )
+	else:
+		branch_arg = '+%s:%s' % ( local_branch, remote_branch )
 	argv = ['push']
 	if tags:
 		argv.append('--tags')
 	argv.append(remote)
-	if local_branch == remote_branch:
-		argv.append(local_branch)
-	else:
-		if not ffwd and local_branch:
-			argv.append('+%s:%s' % ( local_branch, remote_branch ))
-		else:
-			argv.append('%s:%s' % ( local_branch, remote_branch ))
+	argv.append(branch_arg)
+
 	return git(with_status=True, *argv)
 
 def rebase(newbase):
