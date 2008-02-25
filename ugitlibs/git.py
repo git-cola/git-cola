@@ -87,8 +87,8 @@ def cherry_pick(revs, commit=False):
 
 	return '\n'.join(cherries)
 
-def checkout(rev):
-	return git('checkout', rev)
+def checkout(*args):
+	return git('checkout', *args)
 
 def commit(msg, amend=False):
 	'''Creates a git commit.'''
