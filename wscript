@@ -8,7 +8,7 @@ import Common
 #############################################################################
 # Mandatory variables
 APPNAME = 'ugit'
-VERSION = '0.8.5'
+VERSION = '0.8.6'
 srcdir = '.'
 blddir = 'obj'
 
