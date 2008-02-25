@@ -33,10 +33,16 @@ class Controller(QObserver):
 		# Avoids inotify floods from e.g. make
 		self.__last_inotify_event = time.time()
 
+		# The unstaged list context menu
+		self.__unstaged_menu = None
+
 		# The diff-display context menu
-		self.__menu = None
+		self.__diff_menu = None
 		self.__staged_diff_in_view = True
 		self.__diffgui_enabled = True
+
+		# Unstaged changes context menu
+		view.unstaged.contextMenuEvent = self.unstaged_context_menu_event
 
 		# Diff display context menu
 		view.display_text.contextMenuEvent = self.diff_context_menu_event
@@ -403,6 +409,34 @@ class Controller(QObserver):
 		items = self.model.get_staged()
 		self.apply_to_list(command, widget, items)
 
+	def undo_changes(self):
+		"""Reverts local changes back to whatever's in HEAD."""
+		widget = self.view.unstaged
+		items = self.model.get_unstaged()
+		potential_items = qtutils.get_selection_list(widget, items)
+		items_to_undo = []
+		untracked = self.model.get_untracked()
+		for item in potential_items:
+			if item not in untracked:
+				items_to_undo.append(item)
+		if items_to_undo:
+			answer = qtutils.question(self.view,
+				self.tr('Destroy Local Changes?'),
+				self.tr('This operation will drop all '
+				+ ' uncommitted changes.  Continue?'),
+				default=False)
+
+			if not answer: return
+
+			output = self.model.checkout('HEAD', '--',
+					*items_to_undo)
+			self.log('git checkout HEAD -- '
+					+ ' '.join(items_to_undo)
+					+ '\n' + output)
+		else:
+			msg = 'No files selected for checkout from HEAD.'
+			self.log(self.tr(msg))
+
 	def viz_all(self):
 		'''Visualizes the entire git history using gitk.'''
 		browser = self.model.get_global_ugit_historybrowser()
@@ -458,6 +492,36 @@ class Controller(QObserver):
 		output = command(apply_items)
 		self.log(output, quiet=True)
 
+	def unstaged_context_menu_event(self, event):
+		self.unstaged_context_menu_setup()
+		unstaged = self.view.unstaged
+		self.__unstaged_menu.exec_(unstaged.mapToGlobal(event.pos()))
+
+	def unstaged_context_menu_setup(self):
+		if self.__unstaged_menu: return
+
+		menu = self.__unstaged_menu = QMenu(self.view)
+		self.__stage_selected_action = menu.addAction(
+			self.tr('Stage Selected'), self.stage_selected)
+		self.__undo_changes_action = menu.addAction(
+			self.tr('Undo Local Changes'), self.undo_changes)
+		self.connect(self.__unstaged_menu, 'aboutToShow()',
+			self.unstaged_context_menu_about_to_show)
+
+	def unstaged_context_menu_about_to_show(self):
+		unstaged_item = qtutils.get_selected_item(
+				self.view.unstaged,
+				self.model.get_unstaged())
+
+		is_tracked = unstaged_item not in self.model.get_untracked()
+
+		enable_staging = bool(self.__diffgui_enabled
+					and unstaged_item)
+		enable_undo = enable_staging and is_tracked
+
+		self.__stage_selected_action.setEnabled(enable_staging)
+		self.__undo_changes_action.setEnabled(enable_undo)
+
 	def diff_context_menu_about_to_show(self):
 		unstaged_item = qtutils.get_selected_item(
 				self.view.unstaged,
@@ -487,12 +551,12 @@ class Controller(QObserver):
 	def diff_context_menu_event(self, event):
 		self.diff_context_menu_setup()
 		textedit = self.view.display_text
-		self.__menu.exec_(textedit.mapToGlobal(event.pos()))
+		self.__diff_menu.exec_(textedit.mapToGlobal(event.pos()))
 
 	def diff_context_menu_setup(self):
-		if self.__menu: return
+		if self.__diff_menu: return
 
-		menu = self.__menu = QMenu(self.view)
+		menu = self.__diff_menu = QMenu(self.view)
 		self.__stage_hunk_action = menu.addAction(
 			self.tr('Stage Hunk For Commit'), self.stage_hunk)
 
@@ -511,7 +575,7 @@ class Controller(QObserver):
 		self.__copy_action = menu.addAction(
 			self.tr('Copy'), self.view.copy_display)
 
-		self.connect(self.__menu, 'aboutToShow()',
+		self.connect(self.__diff_menu, 'aboutToShow()',
 			self.diff_context_menu_about_to_show)
 
 	def select_commits_gui(self, title, revs, summaries):
