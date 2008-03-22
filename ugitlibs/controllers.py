@@ -343,23 +343,87 @@ class Controller(QObserver):
 	# use *rest to handle being called from the checkbox signal
 	def rescan(self, *rest):
 		'''Populates view widgets with results from "git status."'''
+
+		# save entire selection
+		changed = qtutils.get_selection_list(
+				self.view.unstaged,
+				self.model.get_changed())
+		staged = qtutils.get_selection_list(
+				self.view.staged,
+				self.model.get_staged())
+
+		scrollbar = self.view.display_text.verticalScrollBar()
+		scrollvalue = scrollbar.value()
+
+		# save selected item
+		changeditem = qtutils.get_selected_item(
+				self.view.unstaged,
+				self.model.get_changed())
+
+		stageditem = qtutils.get_selected_item(
+				self.view.staged,
+				self.model.get_staged())
+
+		# get new values
 		self.model.update_status()
+
+		# restore selection
+		update_staged = False
+		update_changed = False
+		updated_changed = self.model.get_changed()
+		updated_staged = self.model.get_staged()
+
+		for item in changed:
+			if item in updated_changed:
+				idx = updated_changed.index(item)
+				listitem = self.view.unstaged.item(idx)
+				if listitem:
+					listitem.setSelected(True)
+					self.view.unstaged\
+						.setItemSelected(listitem, True)
+					update_changed = True
+					self.view.unstaged.update()
+		for item in staged:
+			if item in updated_staged:
+				idx = updated_staged.index(item)
+				listitem = self.view.staged.item(idx)
+				if listitem:
+					listitem.setSelected(True)
+					self.view.staged\
+						.setItemSelected(listitem, True)
+					update_staged = True
+
+		# restore selected item
+		if update_staged and stageditem:
+			idx = updated_staged.index(stageditem)
+			item = self.view.staged.item(idx)
+			self.view.staged.setCurrentItem(item)
+			self.view_diff(True)
+			scrollbar.setValue(scrollvalue)
+
+		elif update_changed and changeditem:
+			idx = updated_changed.index(changeditem)
+			item = self.view.unstaged.item(idx)
+			self.view.unstaged.setCurrentItem(item)
+			self.view_diff(False)
+			scrollbar.setValue(scrollvalue)
+
 		self.view.setWindowTitle('%s [%s]' % (
 				self.model.get_project(),
 				self.model.get_branch()))
 
-		if not self.model.has_squash_msg(): return
+		if self.model.has_squash_msg():
+			if self.model.get_commitmsg():
+				answer = qtutils.question(self.view,
+					self.tr('Import Commit Message?'),
+					self.tr('A commit message from an in-progress'
+					+ ' merge was found.\nImport it?'))
 
-		if self.model.get_commitmsg():
-			answer = qtutils.question(self.view,
-				self.tr('Import Commit Message?'),
-				self.tr('A commit message from an in-progress'
-				+ ' merge was found.\nImport it?'))
-
-			if not answer: return
-
-		# Set the new commit message
-		self.model.set_squash_msg()
+				if answer:
+					self.model.set_squash_msg()
+			else:
+				# Set the new commit message
+				self.model.set_squash_msg()
 
 	def push(self):
 		push_branches(self.model, self.view)
@@ -387,22 +451,26 @@ class Controller(QObserver):
 		offset, selection = self.view.diff_selection()
 		parser.process_diff_selection(selected, offset, selection)
 		self.rescan()
+
 	def stage_hunk(self):
 		self.process_diff_selection(
 				self.model.get_unstaged(),
 				self.view.unstaged,
 				cached=False)
+
 	def stage_hunk_selection(self):
 		self.process_diff_selection(
 				self.model.get_unstaged(),
 				self.view.unstaged,
 				cached=False,
 				selected=True)
+
 	def unstage_hunk(self, cached=True):
 		self.process_diff_selection(
 				self.model.get_staged(),
 				self.view.staged,
 				cached=True)
+
 	def unstage_hunk_selection(self):
 		self.process_diff_selection(
 				self.model.get_staged(),
