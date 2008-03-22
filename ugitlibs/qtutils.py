@@ -124,8 +124,8 @@ def tr(txt):
 
 def create_item(filename, staged, untracked=False):
 	'''Given a filename, return a QListWidgetItem suitable
-	for adding to a QListWidget.  "staged" controls whether
-	to use icons for the staged or unstaged list widget.'''
+	for adding to a QListWidget.  "staged" and "untracked"
+	controls whether to use the appropriate icons.'''
 	if staged:
 		if os.path.exists(filename):
 			icon_file = utils.get_icon('staged.png')

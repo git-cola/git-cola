@@ -126,7 +126,6 @@ class Controller(QObserver):
 		self.connect(view.unstaged,
 				'itemDoubleClicked(QListWidgetItem*)',
 				self.stage_selected)
-
 		self.connect(view.staged,
 				'itemDoubleClicked(QListWidgetItem*)',
 				self.unstage_selected)
@@ -134,17 +133,40 @@ class Controller(QObserver):
 		# Toolbar log button
 		self.connect(self.view.toolbar_show_log,
 				'triggered()', self.show_log)
-
 		# Delegate window events here
 		view.moveEvent = self.move_event
 		view.resizeEvent = self.resize_event
 		view.closeEvent = self.quit_app
+		view.staged.mousePressEvent = self.click_staged
+		view.unstaged.mousePressEvent = self.click_unstaged
 
 		self.load_window_geom()
 		self.init_log_window()
 		self.start_inotify_thread()
 		self.rescan()
 		self.refresh_view()
+
+	#####################################################################
+	# handle when list item icons are clicked
+	def click_event(self, widget, action_callback, event):
+			result = QtGui.QListWidget.mousePressEvent(widget, event)
+			xpos = event.pos().x()
+			if xpos > 5 and xpos < 20:
+				action_callback()
+			return result
+
+	def click_staged(self, event):
+		return self.click_event(
+				self.view.staged,
+				self.unstage_selected,
+				event)
+
+	def click_unstaged(self, event):
+		return self.click_event(
+				self.view.unstaged,
+				self.stage_selected,
+				event)
+
 
 	#####################################################################
 	# event() is called in response to messages from the inotify thread
