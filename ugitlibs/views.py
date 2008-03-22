@@ -20,6 +20,8 @@ class View(Ui_maingui, QMainWindow):
 		QMainWindow.__init__(self, parent)
 		Ui_maingui.__init__(self)
 		self.setupUi(self)
+		self.staged.setAlternatingRowColors(True)
+		self.unstaged.setAlternatingRowColors(True)
 		self.set_display = self.display_text.setText
 		self.set_info = self.displayLabel.setText
 		self.action_undo = self.commitmsg.undo
