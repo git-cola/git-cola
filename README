@@ -38,19 +38,21 @@ export PYTHON
 BUILDING FROM SOURCE
 
 You will need the PyQt development tools (v4.3 or greater):
+
 	sudo apt-get install pyqt4-dev-tools
-	git clone http://repo.or.cz/w/ugit.git
-	cd ugit && ./configure --prefix=/usr && make && sudo make install
-	/usr/bin/ugit
+
+	git clone git://repo.or.cz/ugit.git
+	cd ugit
+	./configure --prefix=/usr && make && sudo make install
+	ugit
 
 WINDOWS SUPPORT
 
-Windows supported is experimental at its the worst, and
-o.k. at its best.  This is purely because Linux is the
-author's primary platform.  Any help is greatly appreciated,
-especially with bugs/troubleshooting.
+Windows support once was quite experimental with git.
+These days it's actually quite good and only getting better
+everyday.  As git's windows support improves, so does ugit's.
 
-The following is the combination that "works for me"(TM)
+The following is the combination that "works for me" (TM)
 as of late 2007:
 
 1) Install the native Python2.5 and PyQt4 installers (in that order):
@@ -63,12 +65,12 @@ as of late 2007:
 	http://git.or.cz/gitwiki/WindowsInstall
 
 4) Download and unpack ugit:
-	http://ugit.justroots.com/
+	http://ugit.sf.net/releases/
 
-Grab the latest -win32 tarball and run either ugit-msysgit.sh or ugit-cygwin.sh
-from within an msysgit (or cygwin) shell.
+Grab the latest -win32 tarball and run ugit-win32.sh from
+within an msysgit or cygwin shell.
 
-The script assumes the you have Python/PyQt4 installed in C:\Python25.
+The script assumes the you have Python/PyQt4 installed in C:/Python25.
 If this is not the case, edit the script accordingly.
 
 voila, ugit on Windows.
