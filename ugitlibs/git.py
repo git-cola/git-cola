@@ -223,10 +223,10 @@ def format_patch(revs):
 def config(key, value=None, local=True):
 	argv = ['config', key]
 	kwargs = {
-		'global': not local,
-		'get': value is not None,
+		'global': local is False,
+		'get': value is None,
 	}
-	if kwargs['get']:
+	if not kwargs['get']:
 		# git config category.key value
 		if type(value) is bool:
 			value = str(value).lower()
