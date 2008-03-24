@@ -60,8 +60,8 @@ class Controller(QObserver):
 			# Actions that delegate directly to the model
 			signoff_button = model.add_signoff,
 			menu_get_prev_commitmsg = model.get_prev_commitmsg,
-			menu_stage_changed =
-				lambda: self.log(self.model.stage_changed()),
+			menu_stage_modified =
+				lambda: self.log(self.model.stage_modified()),
 			menu_stage_untracked =
 				lambda: self.log(self.model.stage_untracked()),
 			menu_unstage_all =
@@ -186,7 +186,7 @@ class Controller(QObserver):
 
 	def action_unstaged(self, widget):
 		qtutils.update_listwidget(widget,
-				self.model.get_changed(), staged=False)
+				self.model.get_modified(), staged=False)
 
 		if self.view.untracked_checkbox.isChecked():
 			qtutils.update_listwidget(widget,

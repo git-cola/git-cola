@@ -51,7 +51,7 @@ class Model(model.Model):
 			# Used primarily by the main UI
 			project = os.path.basename(os.getcwd()),
 			commitmsg = '',
-			changed = [],
+			modified = [],
 			staged = [],
 			unstaged = [],
 			untracked = [],
@@ -328,14 +328,14 @@ class Model(model.Model):
 
 		# Reset the staged and unstaged model lists
 		# NOTE: the model's unstaged list is used to
-		# hold both changed and untracked files.
+		# hold both modified and untracked files.
 		self.staged = []
-		self.changed = []
+		self.modified = []
 		self.untracked = []
 
 		# Read git status items
 		( staged_items,
-		  changed_items,
+		  modified_items,
 		  untracked_items ) = git.status()
 
 		# Gather items to be committed
@@ -344,9 +344,9 @@ class Model(model.Model):
 				self.add_staged(staged)
 
 		# Gather unindexed items
-		for changed in changed_items:
-			if changed not in self.get_changed():
-				self.add_changed(changed)
+		for modified in modified_items:
+			if modified not in self.get_modified():
+				self.add_modified(modified)
 
 		# Gather untracked items
 		for untracked in untracked_items:
@@ -354,7 +354,7 @@ class Model(model.Model):
 				self.add_untracked(untracked)
 
 		self.set_branch(git.current_branch())
-		self.set_unstaged(self.get_changed() + self.get_untracked())
+		self.set_unstaged(self.get_modified() + self.get_untracked())
 		self.set_remotes(git.remote())
 		self.set_remote_branches(git.branch(remote=True))
 		self.set_local_branches(git.branch(remote=False))
@@ -421,7 +421,7 @@ class Model(model.Model):
 			if os.path.isdir(filename):
 				status = 'Untracked directory'
 				diff = '\n'.join(os.listdir(filename))
-			elif filename in self.get_changed():
+			elif filename in self.get_modified():
 				status = 'Modified, not staged'
 				diff = self.diff(filename=filename, cached=False)
 			else:
@@ -439,8 +439,8 @@ class Model(model.Model):
 						diff = ''
 		return diff, status
 
-	def stage_changed(self):
-		output = git.add(self.get_changed())
+	def stage_modified(self):
+		output = git.add(self.get_modified())
 		self.update_status()
 		return output
 

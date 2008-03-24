@@ -553,7 +553,7 @@ retrieve the latest commit message prior to committing.</string>
     <addaction name="menu_show_index" />
     <addaction name="menu_show_diffstat" />
     <addaction name="separator" />
-    <addaction name="menu_stage_changed" />
+    <addaction name="menu_stage_modified" />
     <addaction name="menu_stage_untracked" />
     <addaction name="menu_stage_selected" />
     <addaction name="separator" />
@@ -676,7 +676,7 @@ retrieve the latest commit message prior to committing.</string>
     <string>Show Index</string>
    </property>
   </action>
-  <action name="menu_stage_changed" >
+  <action name="menu_stage_modified" >
    <property name="text" >
     <string>Stage Changed Files To Commit</string>
    </property>

@@ -271,16 +271,15 @@ def ls_tree(rev):
 	return output
 
 def push(remote, local_branch, remote_branch, ffwd=True, tags=False):
-	argv = []
+	argv = [ 'push', 'remote' ]
 	kwargs = {}
 	if ffwd:
 		branch_arg = '%s:%s' % ( local_branch, remote_branch )
 	else:
 		branch_arg = '+%s:%s' % ( local_branch, remote_branch )
-	argv.append(remote)
 	argv.append(branch_arg)
 
-	return git('push', with_status=True, tags=tags, *argv)
+	return git(with_status=True, tags=tags, *argv)
 
 def rebase(newbase):
 	if not newbase:
