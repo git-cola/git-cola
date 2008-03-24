@@ -77,7 +77,7 @@ def run_cmd(cmd, *args, **kwargs):
 	"""
 	raw = pop_key(kwargs, 'raw')
 	with_status = pop_key(kwargs,'with_status')
-	with_stderr = pop_key(kwargs,'with_stderr')
+	with_stderr = not pop_key(kwargs,'without_stderr')
 	kwarglist = []
 	for k,v in kwargs.iteritems():
 		if len(k) > 1:

@@ -61,12 +61,10 @@ def apply(filename, indexonly=True, reverse=False):
 
 def branch(name=None, remote=False, delete=False):
 	if delete and name:
-		return git('branch', '-D', name)
+		return git('branch', name, D=True)
 	else:
-		argv = ['branch']
-		if remote: argv.append('-r')
 		branches = map(lambda x: x.lstrip('* '),
-				git(*argv).splitlines())
+				git('branch', r=remote).splitlines())
 		if remote:
 			remotes = []
 			for branch in branches:
@@ -128,12 +126,9 @@ def commit(msg, amend=False):
 		% ( tmpfile, amend, output ))
 
 def create_branch(name, base, track=False):
-	'''Creates a branch starting from base.  Pass track=True
-	to create a remote tracking branch.'''
-	if track:
-		return git('branch', base, track=name)
-	else:
-		return git('branch', name, base)
+	"""Creates a branch starting from base.  Pass track=True
+	to create a remote tracking branch."""
+	return git('branch', name, base, track=track)
 
 def current_branch():
 	'''Parses 'git branch' to find the current branch.'''
@@ -148,9 +143,10 @@ def diff(commit=None,filename=None, color=False,
 		suppress_header=True, reverse=False):
 	"Invokes git diff on a filepath."
 
-	argv = [ 'diff' ]
+	argv = []
 	if commit:
-		argv.append('%s^..%s' % (commit,commit))
+		argv.append('%s^..%s' % (commit, commit))
+
 	if filename:
 		argv.append('--')
 		if type(filename) is list:
@@ -163,8 +159,13 @@ def diff(commit=None,filename=None, color=False,
 		'unified': defaults.DIFF_CONTEXT,
 	}
 
-	diff = git(R=reverse, color=color, cached=cached,
-			*argv, **kwargs)
+	diff = git('diff',
+	           R=reverse,
+	           color=color,
+	           cached=cached,
+	           *argv,
+	           **kwargs)
+
 	diff_lines = diff.splitlines()
 
 	output = StringIO()
@@ -205,31 +206,28 @@ def format_patch(revs):
 	'''writes patches named by revs to the "patches" directory.'''
 	num_patches = 1
 	output = []
-	argv = ['format-patch']
 	kwargs = {
 		'o': 'patches',
+		'n': len(revs) > 1,
 		'thread': True,
 		'patch-with-stat': True,
 	}
-	if len(revs) > 1:
-		kwargs['n'] = True
 	for idx, rev in enumerate(revs):
 		real_idx = idx + num_patches
 		kwargs['start-number'] = real_idx
-		new_argv = argv + ['%s^..%s'%(rev,rev)]
-		output.append(git(*new_argv, **kwargs))
+		revarg = '%s^..%s'%(rev,rev)
+		output.append(git('format-patch', revarg, **kwargs))
 		num_patches += output[-1].count('\n')
 	return '\n'.join(output)
 
 def config(key, value=None, local=True):
-	argv = ['config']
-	kwargs = {}
-	if not local:
-		kwargs['global'] = True
-	if value is None:
-		kwargs['get'] = key
-	else:
-		argv.append(key)
+	argv = ['config', key]
+	kwargs = {
+		'global': not local,
+		'get': value is not None,
+	}
+	if kwargs['get']:
+		# git config category.key value
 		if type(value) is bool:
 			value = str(value).lower()
 		argv.append(str(value))
@@ -271,15 +269,11 @@ def ls_tree(rev):
 	return output
 
 def push(remote, local_branch, remote_branch, ffwd=True, tags=False):
-	argv = [ 'push', 'remote' ]
-	kwargs = {}
 	if ffwd:
 		branch_arg = '%s:%s' % ( local_branch, remote_branch )
 	else:
 		branch_arg = '+%s:%s' % ( local_branch, remote_branch )
-	argv.append(branch_arg)
-
-	return git(with_status=True, tags=tags, *argv)
+	return git('push', remote, branch_arg, with_status=True, tags=tags)
 
 def rebase(newbase):
 	if not newbase:
@@ -287,7 +281,7 @@ def rebase(newbase):
 	return git('rebase', newbase)
 
 def remote(*args):
-	return git('remote', with_stderr=True, *args).splitlines()
+	return git('remote', without_stderr=True, *args).splitlines()
 
 def remote_url(name):
 	return config('remote.%s.url' % name)

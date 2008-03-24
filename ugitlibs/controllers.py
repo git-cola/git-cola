@@ -301,7 +301,7 @@ class Controller(QObserver):
 		self.view_diff(staged=True)
 
 	# use *rest to handle being called from different signals
-	def diff_unstaged(self,*rest):
+	def diff_unstaged(self, *rest):
 		self.view_diff(staged=False)
 
 	def export_patches(self):
