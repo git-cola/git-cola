@@ -13,12 +13,14 @@ def quote(argv):
 	return ' '.join([ utils.shell_quote(arg) for arg in argv ])
 
 def git(*args,**kwargs):
-	return utils.run_cmd('git', *args, **kwargs)
+	gitcmd = 'git %s' % args[0]
+	return utils.run_cmd(gitcmd, *args[1:], **kwargs)
 
-def add(to_add):
+def add(to_add, verbose=True):
 	'''Invokes 'git add' to index the filenames in to_add.'''
-	if not to_add: return 'No files to add.'
-	return git('add', '-v', *to_add)
+	if not to_add:
+		return 'No files to add.'
+	return git('add', verbose=verbose, *to_add)
 
 def add_or_remove(to_process):
 	'''Invokes 'git add' to index the filenames in to_process that exist
@@ -48,11 +50,14 @@ def add_or_remove(to_process):
 	output + '\n\n' + git('rm',*to_remove)
 
 def apply(filename, indexonly=True, reverse=False):
-	argv = ['apply']
-	if reverse: argv.append('--reverse')
-	if indexonly: argv.extend(['--index', '--cached'])
-	argv.append(filename)
-	return git(*argv)
+	kwargs = {}
+	if reverse:
+		kwargs['reverse'] = True
+	if indexonly:
+		kwargs['index'] = True
+		kwargs['cached'] = True
+	argv = ['apply', filename]
+	return git(*argv, **kwargs)
 
 def branch(name=None, remote=False, delete=False):
 	if delete and name:
@@ -65,7 +70,8 @@ def branch(name=None, remote=False, delete=False):
 		if remote:
 			remotes = []
 			for branch in branches:
-				if branch.endswith('/HEAD'): continue
+				if branch.endswith('/HEAD'):
+					continue
 				remotes.append(branch)
 			return remotes
 		return branches
@@ -74,16 +80,20 @@ def cat_file(objtype, sha1):
 	return git('cat-file', objtype, sha1, raw=True)
 
 def cherry_pick(revs, commit=False):
-	'''Cherry-picks each revision into the current branch.'''
-	if not revs:
-		return 'No revision selected.'
+	"""Cherry-picks each revision into the current branch.
+	Returns a list of command output strings (1 per cherry pick)"""
+
+	if not revs: return []
+
 	argv = [ 'cherry-pick' ]
-	if not commit: argv.append('-n')
+	kwargs = {}
+	if not commit:
+		kwargs['n'] = True
 
 	cherries = []
 	for rev in revs:
 		new_argv = argv + [rev]
-		cherries.append(git(*new_argv))
+		cherries.append(git(*new_argv, **kwargs))
 
 	return '\n'.join(cherries)
 
@@ -100,9 +110,10 @@ def commit(msg, amend=False):
 	# is trying to intercept/re-write commit messages on your system,
 	# then you probably have bigger problems to worry about.
 	tmpfile = utils.get_tmp_filename()
-	argv = [ 'commit', '-F', tmpfile ]
-	if amend:
-		argv.append('--amend')
+	kwargs = {
+		'F': tmpfile,
+		'amend': amend,
+	}
 
 	# Create the commit message file
 	file = open(tmpfile, 'w')
@@ -110,16 +121,19 @@ def commit(msg, amend=False):
 	file.close()
 
 	# Run 'git commit'
-	output = git(*argv)
+	output = git('commit', F=tmpfile, amend=amend)
 	os.unlink(tmpfile)
 
-	return 'git ' + quote(argv) + '\n\n' + output
+	return ('git commit -F %s --amend %s\n\n%s'
+		% ( tmpfile, amend, output ))
 
 def create_branch(name, base, track=False):
 	'''Creates a branch starting from base.  Pass track=True
 	to create a remote tracking branch.'''
-	if track: return git('branch', '--track', name, base)
-	else: return git('branch', name, base)
+	if track:
+		return git('branch', base, track=name)
+	else:
+		return git('branch', name, base)
 
 def current_branch():
 	'''Parses 'git branch' to find the current branch.'''
@@ -134,21 +148,23 @@ def diff(commit=None,filename=None, color=False,
 		suppress_header=True, reverse=False):
 	"Invokes git diff on a filepath."
 
-	argv = [ 'diff', '--unified='+str(defaults.DIFF_CONTEXT), '--patch-with-raw']
-	if reverse: argv.append('-R')
-	if color: argv.append('--color')
-	if cached: argv.append('--cached')
-
-	deleted = cached and not os.path.exists(filename)
-
-	if filename:
-		argv.append('--')
-		argv.append(filename)
-
+	argv = [ 'diff' ]
 	if commit:
 		argv.append('%s^..%s' % (commit,commit))
+	if filename:
+		argv.append('--')
+		if type(filename) is list:
+			argv.extend(filename)
+		else:
+			argv.append(filename)
 
-	diff = git(*argv)
+	kwargs = {
+		'patch-with-raw': True,
+		'unified': defaults.DIFF_CONTEXT,
+	}
+
+	diff = git(R=reverse, color=color, cached=cached,
+			*argv, **kwargs)
 	diff_lines = diff.splitlines()
 
 	output = StringIO()
@@ -156,6 +172,7 @@ def diff(commit=None,filename=None, color=False,
 	del_tag = 'deleted file mode '
 
 	headers = []
+	deleted = cached and not os.path.exists(filename)
 	for line in diff_lines:
 		if not start and '@@ ' in line and ' @@' in line:
 			start = True
@@ -166,64 +183,68 @@ def diff(commit=None,filename=None, color=False,
 				headers.append(line)
 			elif not suppress_header:
 				output.write(line + '\n')
-
 	result = output.getvalue()
 	output.close()
-
 	if with_diff_header:
 		return('\n'.join(headers), result)
 	else:
 		return result
 
 def diffstat():
-	return git('diff','--unified='+str(defaults.DIFF_CONTEXT),
-			'--stat', 'HEAD^')
+	return git('diff', 'HEAD^',
+	           unified=defaults.DIFF_CONTEXT,
+	           stat=True)
 
 def diffindex():
-	return git('diff', '--unified='+str(defaults.DIFF_CONTEXT),
-			'--stat', '--cached')
+	return git('diff',
+	           unified=defaults.DIFF_CONTEXT,
+	           stat=True,
+	           cached=True)
 
 def format_patch(revs):
 	'''writes patches named by revs to the "patches" directory.'''
 	num_patches = 1
 	output = []
-	argv = ['format-patch','--thread','--patch-with-stat', '-o','patches']
+	argv = ['format-patch']
+	kwargs = {
+		'o': 'patches',
+		'thread': True,
+		'patch-with-stat': True,
+	}
 	if len(revs) > 1:
-		argv.append('-n')
+		kwargs['n'] = True
 	for idx, rev in enumerate(revs):
-		real_idx = str(idx + num_patches)
-		new_argv = argv + ['--start-number', real_idx,
-				'%s^..%s'%(rev,rev)]
-		output.append(git(*new_argv))
+		real_idx = idx + num_patches
+		kwargs['start-number'] = real_idx
+		new_argv = argv + ['%s^..%s'%(rev,rev)]
+		output.append(git(*new_argv, **kwargs))
 		num_patches += output[-1].count('\n')
 	return '\n'.join(output)
 
 def config(key, value=None, local=True):
 	argv = ['config']
+	kwargs = {}
 	if not local:
-		argv.append('--global')
+		kwargs['global'] = True
 	if value is None:
-		argv.append('--get')
-		argv.append(key)
+		kwargs['get'] = key
 	else:
 		argv.append(key)
 		if type(value) is bool:
 			value = str(value).lower()
 		argv.append(str(value))
-	return git(*argv)
+	return git(*argv, **kwargs)
 
 def log(oneline=True, all=False):
 	'''Returns a pair of parallel arrays listing the revision sha1's
 	and commit summaries.'''
-	argv = [ 'log' ]
+	kwargs = {}
 	if oneline:
-		argv.append('--pretty=oneline')
-	if all:
-		argv.append('--all')
+		kwargs['pretty'] = 'oneline'
 	revs = []
 	summaries = []
 	regex = REV_LIST_REGEX
-	output = git(*argv)
+	output = git('log', all=all, **kwargs)
 	for line in output.splitlines():
 		match = regex.match(line)
 		if match:
@@ -250,24 +271,24 @@ def ls_tree(rev):
 	return output
 
 def push(remote, local_branch, remote_branch, ffwd=True, tags=False):
+	argv = []
+	kwargs = {}
 	if ffwd:
 		branch_arg = '%s:%s' % ( local_branch, remote_branch )
 	else:
 		branch_arg = '+%s:%s' % ( local_branch, remote_branch )
-	argv = ['push']
-	if tags:
-		argv.append('--tags')
 	argv.append(remote)
 	argv.append(branch_arg)
 
-	return git(with_status=True, *argv)
+	return git('push', with_status=True, tags=tags, *argv)
 
 def rebase(newbase):
-	if not newbase: return 'No base branch specified to rebase.'
+	if not newbase:
+		return 'No base branch specified to rebase.'
 	return git('rebase', newbase)
 
 def remote(*args):
-	return git('remote', stderr=False, *args).splitlines()
+	return git('remote', with_stderr=True, *args).splitlines()
 
 def remote_url(name):
 	return config('remote.%s.url' % name)

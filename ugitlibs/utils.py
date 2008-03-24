@@ -55,34 +55,72 @@ def get_file_icon(filename):
 def get_icon(icon_file):
 	return os.path.join(ICONSDIR, icon_file)
 
+def pop_key(d, key):
+	val = d.get(key)
+	try: del d[key]
+	except: pass
+	return val
+	
 def run_cmd(cmd, *args, **kwargs):
+	"""
+	Returns an array of strings from the command's output.
+	defaults:
+		raw: off -> passing raw=True returns a string instead of a list of strings.
+		with_status: off -> passing with_status=True returns
+				tuple(status,output) instead of just output
+
+	run_command(foo fi, bar, buzz, baz=value, q=None)
+	Produces:
+		argv=[foo fi -q --baz=value bar buzz]
+
+	run_command
+	"""
+	raw = pop_key(kwargs, 'raw')
+	with_status = pop_key(kwargs,'with_status')
+	with_stderr = pop_key(kwargs,'with_stderr')
+	kwarglist = []
+	for k,v in kwargs.iteritems():
+		if len(k) > 1:
+			if v is True:
+				kwarglist.append("--%s" % k)
+			elif type(v) is not bool:
+				kwarglist.append("--%s=%s" % (k,v))
+		else:
+			if v is True:
+				kwarglist.append("-%s" % k)
+			elif type(v) is not bool:
+				kwarglist.append("-%s" % k)
+				kwarglist.append(str(v))
 	# Handle cmd as either a string or an argv list
 	if type(cmd) is str:
+		# we only call run_cmd(str) with str='git command'
+		# or other simple commands
 		cmd = cmd.split(' ')
+		cmd += kwarglist
 		cmd += list(args)
 	else:
-		cmd = list(cmd + list(args))
+		cmd = list(cmd + kwarglist + list(args))
 
 	child = QProcess()
-
-	if 'stderr' not in kwargs:
+	if with_stderr:
 		child.setProcessChannelMode(QProcess.MergedChannels);
 
 	child.start(cmd[0], cmd[1:])
-
-	if not child.waitForStarted(): return ''
-	if not child.waitForFinished(): return ''
-
+	if not (child.waitForStarted() and child.waitForFinished()):
+		return ''
 	output = str(child.readAll())
-
-	# run_cmd(argv, raw=True) if we want the full, raw output
-	if 'raw' in kwargs:
-		return output
-	else:
-		if 'with_status' in kwargs:
-			return child.exitCode(), output.rstrip()
+	# run_cmd('cmd', *args, raw=True) if we want the full, raw output
+	if raw:
+		if with_status:
+			return (child.exitCode(), output)
 		else:
-			return output.rstrip()
+			return output
+	else:
+		# simplify parsing by removing trailing \n from commands
+		if with_status:
+			return child.exitCode(), output[:-1]
+		else:
+			return output[:-1]
 
 def fork(*argv):
 	pid = os.fork()
@@ -183,7 +221,6 @@ def shell_quote(*inputs):
 				input = input[:-2]
 		ret.append(input)
 	return ' '.join(ret)
-
 
 def get_tmp_filename():
 	# Allow TMPDIR/TMP with a fallback to /tmp

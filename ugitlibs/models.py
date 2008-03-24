@@ -110,7 +110,7 @@ class Model(model.Model):
 			'merge_verbosity': 2,
 			'gui_diffcontext': 5,
 			'gui_pruneduringfetch': False,
-			}
+		}
 		self.__global_defaults = {
 			'ugit_geometry':'',
 			'ugit_fontui': '',
@@ -118,7 +118,7 @@ class Model(model.Model):
 			'ugit_fontdiff': '',
 			'ugit_fontdiff_size':12,
 			'ugit_historybrowser': 'gitk',
-			}
+		}
 
 		default_dict = self.__config_defaults
 		if self.__config_types: return
