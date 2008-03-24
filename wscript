@@ -5,10 +5,24 @@ import glob
 import Params
 import Common
 
+# Release versioning
+def get_version():
+	"""Searches defaults.py for the VERSION field and returns it."""
+	defaults = os.path.join(os.getcwd(), 'ugitlibs', 'defaults.py')
+	file = open(defaults, 'r')
+	contents = file.read()
+	file.close()
+	for line in contents.splitlines():
+		if line.startswith('VERSION = '):
+			version = line.replace('VERSION = ', '')
+			return version.strip("'")
+	raise Exception("Could not find VERSION field in %s" % defaults)
+
 #############################################################################
 # Mandatory variables
 APPNAME = 'ugit'
-VERSION = '0.8.7'
+VERSION = get_version()
+
 srcdir = '.'
 blddir = 'obj'
 
@@ -53,7 +67,7 @@ def build(bld):
 #############################################################################
 # Other
 def pymod(prefix):
-	'''Returns a lib/python2.x/site-packages path relative to prefix'''
+	"""Returns a lib/python2.x/site-packages path relative to prefix"""
 	api_version = sys.version[:3]
 	python_api = 'python' + api_version
 	return os.path.join(prefix, 'lib', python_api, 'site-packages')
