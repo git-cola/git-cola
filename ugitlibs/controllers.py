@@ -115,10 +115,6 @@ class Controller(QObserver):
 			menu_cherry_pick = self.cherry_pick,
 			# Edit Menu
 			menu_options = self.options,
-
-			# Splitters
-			splitter_top = self.splitter_top_event,
-			splitter_bottom = self.splitter_bottom_event,
 			)
 
 		# These are vanilla signal/slots since QObserver
@@ -314,7 +310,6 @@ class Controller(QObserver):
 	def quit_app(self,*rest):
 		'''Save config settings and cleanup any inotify threads.'''
 
-		self.model.save_window_geom()
 		qtutils.close_log_window()
 		self.view.hide()
 
@@ -562,8 +557,6 @@ class Controller(QObserver):
 		sb0,sb1) = self.model.get_window_geom()
 		self.view.resize(w,h)
 		self.view.move(x,y)
-		self.view.splitter_top.setSizes([st0,st1])
-		self.view.splitter_bottom.setSizes([sb0,sb1])
 
 	def log(self, output, rescan=True, quiet=False):
 		'''Logs output and optionally rescans for changes.'''
