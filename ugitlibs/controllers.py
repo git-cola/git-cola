@@ -345,9 +345,9 @@ class Controller(QObserver):
 		'''Populates view widgets with results from "git status."'''
 
 		# save entire selection
-		changed = qtutils.get_selection_list(
+		unstaged = qtutils.get_selection_list(
 				self.view.unstaged,
-				self.model.get_changed())
+				self.model.get_unstaged())
 		staged = qtutils.get_selection_list(
 				self.view.staged,
 				self.model.get_staged())
@@ -356,9 +356,9 @@ class Controller(QObserver):
 		scrollvalue = scrollbar.value()
 
 		# save selected item
-		changeditem = qtutils.get_selected_item(
+		unstageditem = qtutils.get_selected_item(
 				self.view.unstaged,
-				self.model.get_changed())
+				self.model.get_unstaged())
 
 		stageditem = qtutils.get_selected_item(
 				self.view.staged,
@@ -369,19 +369,19 @@ class Controller(QObserver):
 
 		# restore selection
 		update_staged = False
-		update_changed = False
-		updated_changed = self.model.get_changed()
+		update_unstaged = False
+		updated_unstaged = self.model.get_unstaged()
 		updated_staged = self.model.get_staged()
 
-		for item in changed:
-			if item in updated_changed:
-				idx = updated_changed.index(item)
+		for item in unstaged:
+			if item in updated_unstaged:
+				idx = updated_unstaged.index(item)
 				listitem = self.view.unstaged.item(idx)
 				if listitem:
 					listitem.setSelected(True)
 					self.view.unstaged\
 						.setItemSelected(listitem, True)
-					update_changed = True
+					update_unstaged = True
 					self.view.unstaged.update()
 		for item in staged:
 			if item in updated_staged:
@@ -401,8 +401,8 @@ class Controller(QObserver):
 			self.view_diff(True)
 			scrollbar.setValue(scrollvalue)
 
-		elif update_changed and changeditem:
-			idx = updated_changed.index(changeditem)
+		elif update_unstaged and unstageditem:
+			idx = updated_unstaged.index(unstageditem)
 			item = self.view.unstaged.item(idx)
 			self.view.unstaged.setCurrentItem(item)
 			self.view_diff(False)
