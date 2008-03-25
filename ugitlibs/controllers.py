@@ -2,6 +2,7 @@
 import os
 import time
 
+from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QMessageBox
@@ -142,6 +143,25 @@ class Controller(QObserver):
 
 		self.refresh_view()
 		self.start_inotify_thread()
+
+		self.connect(view.diff_dock,
+				'topLevelChanged(bool)',
+				lambda(b): self.setwindow(view.diff_dock, b))
+
+		self.connect(view.editor_dock,
+				'topLevelChanged(bool)',
+				lambda(b): self.setwindow(view.editor_dock, b))
+
+		self.connect(view.status_dock,
+				'topLevelChanged(bool)',
+				lambda(b): self.setwindow(view.status_dock, b))
+	
+	def setwindow(self, dock, isfloating):
+		if isfloating:
+			flags = ( QtCore.Qt.Window
+				| QtCore.Qt.FramelessWindowHint )
+			dock.setWindowFlags( flags )
+			dock.show()
 
 	#####################################################################
 	# handle when the listitem icons are clicked
