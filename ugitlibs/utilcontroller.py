@@ -171,6 +171,8 @@ class OptionsController(QObserver):
 			'global_ugit_fontui_size',
 			'global_ugit_fontui',
 			'global_ugit_historybrowser',
+			'global_ugit_savewindowsettings',
+			'global_ugit_saveatexit',
 			)
 		self.add_actions('global_ugit_fontdiff_size', self.update_size)
 		self.add_actions('global_ugit_fontui_size', self.update_size)

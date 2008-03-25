@@ -83,12 +83,12 @@ def run_cmd(cmd, *args, **kwargs):
 		if len(k) > 1:
 			if v is True:
 				kwarglist.append("--%s" % k)
-			elif type(v) is not bool:
+			elif v is not None and type(v) is not bool:
 				kwarglist.append("--%s=%s" % (k,v))
 		else:
 			if v is True:
 				kwarglist.append("-%s" % k)
-			elif type(v) is not bool:
+			elif v is not None and type(v) is not bool:
 				kwarglist.append("-%s" % k)
 				kwarglist.append(str(v))
 	# Handle cmd as either a string or an argv list

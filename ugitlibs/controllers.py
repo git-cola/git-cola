@@ -136,14 +136,15 @@ class Controller(QObserver):
 		view.staged.mousePressEvent = self.click_staged
 		view.unstaged.mousePressEvent = self.click_unstaged
 
-		self.load_window_geom()
 		self.init_log_window()
-		self.start_inotify_thread()
 		self.rescan()
+		self.load_gui_settings()
+
 		self.refresh_view()
+		self.start_inotify_thread()
 
 	#####################################################################
-	# handle when list item icons are clicked
+	# handle when the listitem icons are clicked
 	def click_event(self, widget, action_callback, event):
 			result = QtGui.QListWidget.mousePressEvent(widget, event)
 			xpos = event.pos().x()
@@ -310,6 +311,8 @@ class Controller(QObserver):
 	def quit_app(self,*rest):
 		'''Save config settings and cleanup any inotify threads.'''
 
+		if self.model.save_at_exit():
+			self.model.save_gui_settings()
 		qtutils.close_log_window()
 		self.view.hide()
 
@@ -551,7 +554,9 @@ class Controller(QObserver):
 		defaults.SPLITTER_BOTTOM_0 = sizes[0]
 		defaults.SPLITTER_BOTTOM_1 = sizes[1]
 
-	def load_window_geom(self):
+	def load_gui_settings(self):
+		if not self.model.remember_gui_settings():
+			return
 		(w,h,x,y,
 		st0,st1,
 		sb0,sb1) = self.model.get_window_geom()

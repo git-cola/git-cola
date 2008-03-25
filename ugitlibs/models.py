@@ -6,13 +6,24 @@ import utils
 import model
 
 class Model(model.Model):
+	"""Provides a friendly wrapper for doing commit git operations."""
+
 	def __init__(self):
+		"""Reads git repository settings and sets severl methods
+		so that they refer to the git module.  This object is
+		encapsulates ugit's interaction with git.
+		The git module itself should know nothing about ugit
+		whatsoever."""
+
 		model.Model.__init__(self)
-		self.init_config_data()
 		# chdir to the root of the git tree.
 		# This keeps paths relative.
 		cdup = git.show_cdup()
-		if cdup: os.chdir(cdup)
+		if cdup:
+			os.chdir(cdup)
+
+		# Read git config
+		self.init_config_data()
 
 		# These methods are best left implemented in git.py
 		for cmd in (
@@ -87,22 +98,16 @@ class Model(model.Model):
 			subtree_names = [],
 			)
 
+
 	def init_config_data(self):
-		self.__saved_params = [
-			'user_name',
-			'user_email',
-			'merge_summary',
-			'merge_diffstat',
-			'merge_verbosity',
-			'gui_diffcontext',
-			'gui_pruneduringfetch',
-			'ugit_geometry',
-			'ugit_fontui',
-			'ugit_fontdiff',
-			'ugit_historybrowser',
-		]
-		self.__config_types = {}
-		self.__config_defaults = {
+		"""Reads git config --list and creates parameters
+		for each setting."""
+		# These parameters are saved in .gitconfig,
+		# so ideally these should be as short as possible.
+
+		# config items that are controllable globally
+		# and per-repository
+		self.__local_and_global_defaults = {
 			'user_name': '',
 			'user_email': '',
 			'merge_summary': False,
@@ -111,6 +116,7 @@ class Model(model.Model):
 			'gui_diffcontext': 5,
 			'gui_pruneduringfetch': False,
 		}
+		# config items that are purely git config --global settings
 		self.__global_defaults = {
 			'ugit_geometry':'',
 			'ugit_fontui': '',
@@ -118,35 +124,12 @@ class Model(model.Model):
 			'ugit_fontdiff': '',
 			'ugit_fontdiff_size':12,
 			'ugit_historybrowser': 'gitk',
+			'ugit_savewindowsettings': False,
+			'ugit_saveatexit': False,
 		}
 
-		default_dict = self.__config_defaults
-		if self.__config_types: return
-		for k,v in default_dict.iteritems():
-			if type(v) is int:
-				self.__config_types[k] = 'int'
-			elif type(v) is bool:
-				self.__config_types[k] = 'bool'
-
-		def config_to_dict(config):
-			newdict = {}
-			for line in config.splitlines():
-				k, v = line.split('=')
-				k = k.replace('.','_') # git -> model
-				try:
-					linetype = self.__config_types[k]
-					if linetype == 'int':
-						v = int(v)
-					elif linetype == 'bool':
-						v = bool(eval(v.title()))
-				except: pass
-				newdict[k]=v
-			return newdict
-
-		local_conf = git.git('config', '--list')
-		global_conf = git.git('config', '--global', '--list')
-		local_dict = config_to_dict(local_conf)
-		global_dict = config_to_dict(global_conf)
+		local_dict = git.config(local=True, asdict=True)
+		global_dict = git.config(local=False, asdict=True)
 
 		for k,v in local_dict.iteritems():
 			self.set_param('local_'+k, v)
@@ -168,13 +151,15 @@ class Model(model.Model):
 					global_dict[param+'_size'] = size
 
 		# Load defaults for all undefined items
-		for k,v in default_dict.iteritems():
+		local_and_global_defaults = self.__local_and_global_defaults
+		for k,v in local_and_global_defaults.iteritems():
 			if k not in local_dict:
 				self.set_param('local_'+k, v)
 			if k not in global_dict:
 				self.set_param('global_'+k, v)
 
-		for k,v in self.__global_defaults.iteritems():
+		global_defaults = self.__global_defaults
+		for k,v in global_defaults.iteritems():
 			if k not in global_dict:
 				self.set_param('global_'+k, v)
 
@@ -191,10 +176,10 @@ class Model(model.Model):
 		else:
 			raise Exception("Invalid param '%s' passed to " % param
 					+ "save_config_param()")
-		if param not in self.__saved_params:
+		if param not in self.get_config_params():
 			return
 		param = param.replace('_','.') # model -> git
-		git.config(param, value, local=is_local)
+		return git.config(param, value, local=is_local)
 
 	def init_browser_data(self):
 		'''This scans over self.(names, sha1s, types) to generate
@@ -257,6 +242,12 @@ class Model(model.Model):
 
 	def get_history_browser(self):
 		return self.get_param('global_ugit_historybrowser')
+
+	def remember_gui_settings(self):
+		return self.get_param('global_ugit_savewindowsettings')
+
+	def save_at_exit(self):
+		return self.get_param('global_ugit_saveatexit')
 
 	def get_tree_node(self, idx):
 		return (self.get_types()[idx],
@@ -375,9 +366,9 @@ class Model(model.Model):
 	def get_config_params(self):
 		params = []
 		params.extend(map(lambda x: 'local_' + x,
-				self.__config_defaults.keys()))
+				self.__local_and_global_defaults.keys()))
 		params.extend(map(lambda x: 'global_' + x,
-				self.__config_defaults.keys()))
+				self.__local_and_global_defaults.keys()))
 		params.extend(map(lambda x: 'global_' + x,
 				self.__global_defaults.keys()))
 		return params
@@ -458,5 +449,5 @@ class Model(model.Model):
 		git.reset(self.get_staged())
 		self.update_status()
 
-	def save_window_geom(self):
+	def save_gui_settings(self):
 		git.config('ugit.geometry', utils.get_geom(), local=False)

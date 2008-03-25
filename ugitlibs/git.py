@@ -220,18 +220,51 @@ def format_patch(revs):
 		num_patches += output[-1].count('\n')
 	return '\n'.join(output)
 
-def config(key, value=None, local=True):
-	argv = ['config', key]
+def config(key=None, value=None, local=False, asdict=False):
+	if key:
+		argv = ['config', key]
+	else:
+		argv = ['config']
+
 	kwargs = {
 		'global': local is False,
-		'get': value is None,
+		'get': key and value is None,
+		'list': asdict,
 	}
-	if not kwargs['get']:
+
+	if asdict:
+		return config_to_dict(git('config', **kwargs).splitlines())
+
+	elif kwargs['get']:
+		return git('config', key, **kwargs)
+
+	elif key and value is not None:
 		# git config category.key value
+		strval = str(value)
 		if type(value) is bool:
-			value = str(value).lower()
-		argv.append(str(value))
-	return git(*argv, **kwargs)
+			# git uses "true" and "false"
+			strval = strval.lower()
+		return git('config', key, strval, **kwargs)
+	else:
+		msg = "oops in git.config(key=%s,value=%s,local=%s,asdict=%s"
+		raise Exception(msg % (key, value, local, asdict))
+
+
+def config_to_dict(config_lines):
+	"""parses the lines from git config --list into a dictionary"""
+
+	newdict = {}
+	for line in config_lines:
+		k, v = line.split('=')
+		k = k.replace('.','_') # git -> model
+		if v == 'true' or v == 'false':
+			v = bool(eval(v.title()))
+		try:
+			v = int(eval(v))
+		except:
+			pass
+		newdict[k]=v
+	return newdict
 
 def log(oneline=True, all=False):
 	'''Returns a pair of parallel arrays listing the revision sha1's
@@ -251,11 +284,12 @@ def log(oneline=True, all=False):
 	return( revs, summaries )
 
 def ls_files():
+	"""git ls-files as a list"""
 	return git('ls-files').splitlines()
 
 def ls_tree(rev):
-	'''Returns a list of(mode, type, sha1, path) tuples.'''
-	lines = git('ls-tree', '-r', rev).splitlines()
+	"""Returns a list of(mode, type, sha1, path) tuples."""
+	lines = git('ls-tree', rev, r=True).splitlines()
 	output = []
 	regex = re.compile('^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
 	for line in lines:
@@ -284,7 +318,7 @@ def remote(*args):
 	return git('remote', without_stderr=True, *args).splitlines()
 
 def remote_url(name):
-	return config('remote.%s.url' % name)
+	return config('remote.%s.url' % name, local=True)
 
 def reset(to_unstage):
 	'''Use 'git reset' to unstage files from the index.'''
