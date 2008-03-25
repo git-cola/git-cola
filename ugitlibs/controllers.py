@@ -130,6 +130,10 @@ class Controller(QObserver):
 		# Toolbar log button
 		self.connect(self.view.toolbar_show_log,
 				'triggered()', self.show_log)
+
+		self.connect(self.view.horizontal_checkbox,
+				'stateChanged(int)', self.flip_status)
+
 		# Delegate window events here
 		view.moveEvent = self.move_event
 		view.resizeEvent = self.resize_event
@@ -162,6 +166,13 @@ class Controller(QObserver):
 				| QtCore.Qt.FramelessWindowHint )
 			dock.setWindowFlags( flags )
 			dock.show()
+
+	def flip_status(self, value):
+		splitter = self.view.splitter
+		if value:
+			splitter.setOrientation(QtCore.Qt.Horizontal)
+		else:
+			splitter.setOrientation(QtCore.Qt.Vertical)
 
 	#####################################################################
 	# handle when the listitem icons are clicked
@@ -499,7 +510,7 @@ class Controller(QObserver):
 	# #######################################################################
 	# end diff gui
 
-	# use *rest to handle being called from different signals
+	# *rest handles being called from different signals
 	def stage_selected(self,*rest):
 		'''Use "git add" to add items to the git index.
 		This is a thin wrapper around apply_to_list.'''
@@ -508,7 +519,7 @@ class Controller(QObserver):
 		items = self.model.get_unstaged()
 		self.apply_to_list(command,widget,items)
 
-	# use *rest to handle being called from different signals
+	# *rest handles being called from different signals
 	def unstage_selected(self, *rest):
 		'''Use "git reset" to remove items from the git index.
 		This is a thin wrapper around apply_to_list.'''
@@ -555,7 +566,6 @@ class Controller(QObserver):
 		browser = self.model.get_global_ugit_historybrowser()
 		utils.fork(browser, self.model.get_branch())
 
-	# These actions monitor window resizes, splitter changes, etc.
 	def move_event(self, event):
 		defaults.X = event.pos().x()
 		defaults.Y = event.pos().y()
@@ -563,16 +573,6 @@ class Controller(QObserver):
 	def resize_event(self, event):
 		defaults.WIDTH = event.size().width()
 		defaults.HEIGHT = event.size().height()
-
-	def splitter_top_event(self,*rest):
-		sizes = self.view.splitter_top.sizes()
-		defaults.SPLITTER_TOP_0 = sizes[0]
-		defaults.SPLITTER_TOP_1 = sizes[1]
-
-	def splitter_bottom_event(self,*rest):
-		sizes = self.view.splitter_bottom.sizes()
-		defaults.SPLITTER_BOTTOM_0 = sizes[0]
-		defaults.SPLITTER_BOTTOM_1 = sizes[1]
 
 	def load_gui_settings(self):
 		if not self.model.remember_gui_settings():
@@ -587,9 +587,6 @@ class Controller(QObserver):
 		'''Logs output and optionally rescans for changes.'''
 		qtutils.log(output, quiet=quiet, doraise=False)
 		if rescan: self.rescan()
-
-	#####################################################################
-	#
 
 	def apply_to_list(self, command, widget, items):
 		'''This is a helper method that retrieves the current

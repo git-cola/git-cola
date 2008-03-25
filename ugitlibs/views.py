@@ -3,6 +3,7 @@ import time
 from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QMainWindow
+from PyQt4.QtGui import QCheckBox
 from maingui import Ui_maingui
 from outputgui import Ui_outputgui
 from optionsgui import Ui_optionsgui
@@ -38,6 +39,12 @@ class View(Ui_maingui, QMainWindow):
 				'Show/Hide Log Window')
 		self.toolbar_show_log.setEnabled(True)
 		self.addToolBar(Qt.BottomToolBarArea, self.toolbar)
+
+		checkbox = QCheckBox(self)
+		checkbox.setText(self.tr("Horizontal Status"))
+		self.action_vertical = self.toolbar.addWidget(checkbox)
+		self.horizontal_checkbox = checkbox
+
 		# Diff/patch syntax highlighter
 		DiffSyntaxHighlighter(self.display_text.document())
 

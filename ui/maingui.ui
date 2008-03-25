@@ -2,43 +2,29 @@
  <author>David Aguilar</author>
  <class>maingui</class>
  <widget class="QMainWindow" name="maingui" >
+  <property name="enabled" >
+   <bool>true</bool>
+  </property>
   <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>622</width>
-    <height>543</height>
+    <width>853</width>
+    <height>537</height>
    </rect>
-  </property>
-  <property name="dockNestingEnabled" >
-   <bool>true</bool>
   </property>
   <property name="dockOptions" >
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralwidget" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
-   <property name="sizePolicy" >
-    <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="minimumSize" >
-    <size>
-     <width>0</width>
-     <height>1</height>
-    </size>
-   </property>
+   <layout class="QVBoxLayout" />
   </widget>
   <widget class="QMenuBar" name="menubar" >
    <property name="geometry" >
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>622</width>
+     <width>853</width>
      <height>26</height>
     </rect>
    </property>
@@ -125,6 +111,9 @@
    <addaction name="edit_menu" />
   </widget>
   <widget class="QToolBar" name="toolbar" >
+   <property name="enabled" >
+    <bool>true</bool>
+   </property>
    <property name="windowTitle" >
     <string>toolbar</string>
    </property>
@@ -150,283 +139,13 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <widget class="QDockWidget" name="editor_dock" >
+  <widget class="QDockWidget" name="status_dock" >
+   <property name="floating" >
+    <bool>false</bool>
+   </property>
    <property name="allowedAreas" >
     <set>Qt::AllDockWidgetAreas</set>
    </property>
-   <property name="windowTitle" >
-    <string>Commit Message Editor</string>
-   </property>
-   <attribute name="dockWidgetArea" >
-    <number>4</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_2" >
-    <layout class="QVBoxLayout" >
-     <property name="spacing" >
-      <number>0</number>
-     </property>
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QWidget" native="1" name="widget_2" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Minimum" hsizetype="MinimumExpanding" >
-         <horstretch>0</horstretch>
-         <verstretch>1</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize" >
-        <size>
-         <width>10</width>
-         <height>100</height>
-        </size>
-       </property>
-       <layout class="QHBoxLayout" >
-        <property name="spacing" >
-         <number>0</number>
-        </property>
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QWidget" native="1" name="widget_4" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>10</height>
-           </size>
-          </property>
-          <layout class="QVBoxLayout" >
-           <property name="spacing" >
-            <number>2</number>
-           </property>
-           <property name="leftMargin" >
-            <number>0</number>
-           </property>
-           <property name="topMargin" >
-            <number>0</number>
-           </property>
-           <property name="rightMargin" >
-            <number>4</number>
-           </property>
-           <property name="bottomMargin" >
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QPushButton" name="stage_button" >
-             <property name="toolTip" >
-              <string>Invokes "git add" to stage the selected items
-from the "Unstaged Changes" list.</string>
-             </property>
-             <property name="text" >
-              <string>Stage Changed</string>
-             </property>
-             <property name="flat" >
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="signoff_button" >
-             <property name="toolTip" >
-              <string>"Sign Off" appends the standard "Signed-Off by: ..."
-message to the current commit message.</string>
-             </property>
-             <property name="text" >
-              <string>Sign Off</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="commit_button" >
-             <property name="toolTip" >
-              <string>Invokes a git commit.
-This commits the files listed in the "Files to Commit" list.
-If "Commit All" is checked, all listed items will be committed,
-otherwise only the selected items will be committed.</string>
-             </property>
-             <property name="text" >
-              <string>Commit</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="push_button" >
-             <property name="text" >
-              <string>Push</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::MinimumExpanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>50</width>
-               <height>1</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QWidget" native="1" name="widget_3" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Minimum" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <layout class="QVBoxLayout" >
-           <property name="spacing" >
-            <number>0</number>
-           </property>
-           <property name="leftMargin" >
-            <number>0</number>
-           </property>
-           <property name="topMargin" >
-            <number>0</number>
-           </property>
-           <property name="rightMargin" >
-            <number>0</number>
-           </property>
-           <property name="bottomMargin" >
-            <number>0</number>
-           </property>
-           <item>
-            <layout class="QHBoxLayout" >
-             <property name="spacing" >
-              <number>0</number>
-             </property>
-             <property name="leftMargin" >
-              <number>4</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="label" >
-               <property name="text" >
-                <string>Commit Message:</string>
-               </property>
-               <property name="textFormat" >
-                <enum>Qt::PlainText</enum>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer>
-               <property name="orientation" >
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType" >
-                <enum>QSizePolicy::Preferred</enum>
-               </property>
-               <property name="sizeHint" >
-                <size>
-                 <width>20</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="new_commit_radio" >
-               <property name="toolTip" >
-                <string>Causes the next commit to create a new commit object.</string>
-               </property>
-               <property name="text" >
-                <string>New Commit</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="amend_radio" >
-               <property name="toolTip" >
-                <string>Causes git to reuse the latest commit object.
-"git commit" will be supplied with the "--amend" option so that
-the most recent commit is amended with contents of the next commit.</string>
-               </property>
-               <property name="text" >
-                <string>Amend Last Commit</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <widget class="QTextEdit" name="commitmsg" >
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Minimum" hsizetype="MinimumExpanding" >
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>20</height>
-              </size>
-             </property>
-             <property name="font" >
-              <font>
-               <family>Courier</family>
-               <pointsize>12</pointsize>
-              </font>
-             </property>
-             <property name="toolTip" >
-              <string>The commit message for the next commit.
-If you are going to amend a commit you can use the
-"Commit -> Get Latest Comit Message" menu action to
-retrieve the latest commit message prior to committing.</string>
-             </property>
-             <property name="lineWrapMode" >
-              <enum>QTextEdit::NoWrap</enum>
-             </property>
-             <property name="acceptRichText" >
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="status_dock" >
    <property name="windowTitle" >
     <string>Status View</string>
    </property>
@@ -630,11 +349,20 @@ include untracked files if "Show Untracked Files" is checked.</string>
    </widget>
   </widget>
   <widget class="QDockWidget" name="diff_dock" >
+   <property name="layoutDirection" >
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="floating" >
+    <bool>false</bool>
+   </property>
+   <property name="allowedAreas" >
+    <set>Qt::AllDockWidgetAreas</set>
+   </property>
    <property name="windowTitle" >
     <string>Diff View</string>
    </property>
    <attribute name="dockWidgetArea" >
-    <number>8</number>
+    <number>4</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3" >
     <property name="sizePolicy" >
@@ -644,21 +372,6 @@ include untracked files if "Show Untracked Files" is checked.</string>
      </sizepolicy>
     </property>
     <layout class="QVBoxLayout" >
-     <property name="spacing" >
-      <number>0</number>
-     </property>
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
-      <number>0</number>
-     </property>
      <item>
       <widget class="QWidget" native="1" name="widget" >
        <property name="sizePolicy" >
@@ -689,6 +402,22 @@ include untracked files if "Show Untracked Files" is checked.</string>
         <property name="bottomMargin" >
          <number>0</number>
         </property>
+        <item>
+         <spacer>
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType" >
+           <enum>QSizePolicy::MinimumExpanding</enum>
+          </property>
+          <property name="sizeHint" >
+           <size>
+            <width>40</width>
+            <height>0</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
         <item>
          <widget class="QLabel" name="displayLabel" >
           <property name="frameShape" >
@@ -737,6 +466,285 @@ include untracked files if "Show Untracked Files" is checked.</string>
           <property name="textInteractionFlags" >
            <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::NoTextInteraction|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
           </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="editor_dock" >
+   <property name="floating" >
+    <bool>false</bool>
+   </property>
+   <property name="allowedAreas" >
+    <set>Qt::AllDockWidgetAreas</set>
+   </property>
+   <property name="windowTitle" >
+    <string>Commit Message Editor</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2" >
+    <layout class="QVBoxLayout" >
+     <property name="spacing" >
+      <number>0</number>
+     </property>
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QWidget" native="1" name="widget_2" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Minimum" hsizetype="MinimumExpanding" >
+         <horstretch>0</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>10</width>
+         <height>100</height>
+        </size>
+       </property>
+       <layout class="QHBoxLayout" >
+        <property name="spacing" >
+         <number>0</number>
+        </property>
+        <property name="leftMargin" >
+         <number>0</number>
+        </property>
+        <property name="topMargin" >
+         <number>0</number>
+        </property>
+        <property name="rightMargin" >
+         <number>0</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QWidget" native="1" name="widget_4" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>10</height>
+           </size>
+          </property>
+          <layout class="QVBoxLayout" >
+           <property name="spacing" >
+            <number>2</number>
+           </property>
+           <property name="leftMargin" >
+            <number>0</number>
+           </property>
+           <property name="topMargin" >
+            <number>0</number>
+           </property>
+           <property name="rightMargin" >
+            <number>0</number>
+           </property>
+           <property name="bottomMargin" >
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="stage_button" >
+             <property name="toolTip" >
+              <string>Invokes "git add" to stage the selected items
+from the "Unstaged Changes" list.</string>
+             </property>
+             <property name="text" >
+              <string>Stage Changed</string>
+             </property>
+             <property name="flat" >
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="signoff_button" >
+             <property name="toolTip" >
+              <string>"Sign Off" appends the standard "Signed-Off by: ..."
+message to the current commit message.</string>
+             </property>
+             <property name="text" >
+              <string>Sign Off</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="commit_button" >
+             <property name="toolTip" >
+              <string>Invokes a git commit.
+This commits the files listed in the "Files to Commit" list.
+If "Commit All" is checked, all listed items will be committed,
+otherwise only the selected items will be committed.</string>
+             </property>
+             <property name="text" >
+              <string>Commit</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="push_button" >
+             <property name="text" >
+              <string>Push</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::MinimumExpanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>50</width>
+               <height>1</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" native="1" name="widget_3" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Minimum" hsizetype="MinimumExpanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <layout class="QVBoxLayout" >
+           <property name="spacing" >
+            <number>0</number>
+           </property>
+           <property name="leftMargin" >
+            <number>0</number>
+           </property>
+           <property name="topMargin" >
+            <number>0</number>
+           </property>
+           <property name="rightMargin" >
+            <number>0</number>
+           </property>
+           <property name="bottomMargin" >
+            <number>0</number>
+           </property>
+           <item>
+            <layout class="QHBoxLayout" >
+             <property name="spacing" >
+              <number>0</number>
+             </property>
+             <property name="leftMargin" >
+              <number>4</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label" >
+               <property name="text" >
+                <string>Commit Message:</string>
+               </property>
+               <property name="textFormat" >
+                <enum>Qt::PlainText</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer>
+               <property name="orientation" >
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType" >
+                <enum>QSizePolicy::Preferred</enum>
+               </property>
+               <property name="sizeHint" >
+                <size>
+                 <width>20</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="new_commit_radio" >
+               <property name="toolTip" >
+                <string>Causes the next commit to create a new commit object.</string>
+               </property>
+               <property name="text" >
+                <string>New Commit</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="amend_radio" >
+               <property name="toolTip" >
+                <string>Causes git to reuse the latest commit object.
+"git commit" will be supplied with the "--amend" option so that
+the most recent commit is amended with contents of the next commit.</string>
+               </property>
+               <property name="text" >
+                <string>Amend Last Commit</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QTextEdit" name="commitmsg" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Minimum" hsizetype="MinimumExpanding" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="font" >
+              <font>
+               <family>Courier</family>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="toolTip" >
+              <string>The commit message for the next commit.
+If you are going to amend a commit you can use the
+"Commit -> Get Latest Comit Message" menu action to
+retrieve the latest commit message prior to committing.</string>
+             </property>
+             <property name="lineWrapMode" >
+              <enum>QTextEdit::NoWrap</enum>
+             </property>
+             <property name="acceptRichText" >
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
