@@ -26,10 +26,10 @@ EXIT_BUG=10
 CUR_DIR=$PWD
 
 #possible relative path
-WORKINGDIR=`dirname $0`
+WORKINGDIR=$(dirname $0)
 cd $WORKINGDIR
 #abs path
-WORKINGDIR=`pwd`
+WORKINGDIR=$(pwd)
 cd $CUR_DIR
 
 # We store waf under build/
@@ -42,7 +42,7 @@ export PATH
 checkPython()
 {
 	if [ -z "$PYTHON" ] ; then
-		PYTHON=`which python 2>/dev/null`
+		PYTHON=$(which python 2>/dev/null)
 	fi
 	printf "Checking for Python\t\t\t:  "
 	if [ ! -x "$PYTHON" ] ; then
