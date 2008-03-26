@@ -1,7 +1,7 @@
 #!/bin/sh
 PREFIX=installroot
 BINDIR=$PREFIX/bin
-UGITLIBS=$PREFIX/ugitlibs
+UGIT=$PREFIX/ugit
 ICONDIR=$PREFIX/share/ugit/icons
 QMDIR=$PREFIX/share/ugit/qm
 DOCDIR=$PREFIX/share/doc/ugit
@@ -9,7 +9,7 @@ cd $(dirname $0)
 cd ..
 
 mkdir -p $BINDIR
-mkdir -p $UGITLIBS
+mkdir -p $UGIT
 mkdir -p $ICONDIR
 mkdir -p $QMDIR
 mkdir -p $DOCDIR
@@ -18,7 +18,7 @@ cp README $DOCDIR/README.txt
 cp bin/* $BINDIR
 cp scripts/ugit-win32.sh $BINDIR
 cp scripts/py2exe-* $BINDIR
-cp ugit/* $UGITLIBS
+cp ugit/* $UGIT
 cp icons/* $ICONDIR
 
 PYUIC4=$(which pyuic4)
@@ -30,7 +30,7 @@ if [ -z $PYUIC4 ] || [ ! -x $PYUIC4 ]; then
 else
 	for file in ui/*.ui; do
 		BASENAME=$(basename $file .ui)
-		$PYUIC4 -x $file -o $UGITLIBS/$BASENAME.py
+		$PYUIC4 -x $file -o $UGIT/$BASENAME.py
 	done
 fi
 
