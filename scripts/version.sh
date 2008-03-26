@@ -1,3 +1,3 @@
 #!/bin/sh
-VERSION="1.8.9"
+VERSION="0.8.10"
 echo $VERSION
