@@ -164,6 +164,8 @@ class Model(model.Model):
 				self.set_param('global_'+k, v)
 
 	def save_config_param(self,param):
+		if param not in self.get_config_params():
+			return
 		value = self.get_param(param)
 		if param == 'local_gui_diffcontext':
 			git.DIFF_CONTEXT = value
@@ -176,8 +178,6 @@ class Model(model.Model):
 		else:
 			raise Exception("Invalid param '%s' passed to " % param
 					+ "save_config_param()")
-		if param not in self.get_config_params():
-			return
 		param = param.replace('_','.') # model -> git
 		return git.config(param, value, local=is_local)
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from ugitlibs.model import Model
+from ugit.model import Model
 
 class TestModel(Model):
 	def __init__(self):

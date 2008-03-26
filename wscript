@@ -8,15 +8,11 @@ import Common
 # Release versioning
 def get_version():
 	"""Searches defaults.py for the VERSION field and returns it."""
-	defaults = os.path.join(os.getcwd(), 'ugitlibs', 'defaults.py')
-	file = open(defaults, 'r')
-	contents = file.read()
-	file.close()
-	for line in contents.splitlines():
-		if line.startswith('VERSION = '):
-			version = line.replace('VERSION = ', '')
-			return version.strip("'")
-	raise Exception("Could not find VERSION field in %s" % defaults)
+	cmd = os.path.join(os.getcwd(), 'scripts', 'version.sh')
+	pipe = os.popen(cmd)
+	version = pipe.read()
+	pipe.close()
+	return version.strip()
 
 #############################################################################
 # Mandatory variables
@@ -38,7 +34,7 @@ def set_options(opt):
 def configure(conf):
 	env = conf.env
 	env['PYMODS'] = pymod(env['PREFIX'])
-	env['PYMODS_UGIT'] = os.path.join(env['PYMODS'], 'ugitlibs')
+	env['PYMODS_UGIT'] = os.path.join(env['PYMODS'], 'ugit')
 	env['ICONS'] = os.path.join(env['PREFIX'], 'share', 'ugit', 'icons')
 	env['BIN'] = os.path.join(env['PREFIX'], 'bin')
 
@@ -49,7 +45,7 @@ def configure(conf):
 #############################################################################
 # Build
 def build(bld):
-	bld.add_subdirs('ui ugitlibs')
+	bld.add_subdirs('ui ugit')
 
 	bin = bld.create_obj('py')
 	bin.inst_var = 'BIN'
@@ -62,7 +58,7 @@ def build(bld):
 	for icon in glob.glob('icons/*.png'):
 		Common.install_files('ICONS', '', icon)
 	
-	Common.symlink_as('BIN', 'ugit.py', 'ugit')
+	Common.symlink_as('BIN', 'git-ugit.py', 'ugit')
 
 #############################################################################
 # Other

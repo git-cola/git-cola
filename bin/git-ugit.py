@@ -11,21 +11,21 @@ from PyQt4 import QtCore
 version = platform.python_version()
 
 try:
-	ugit = os.path.realpath(__file__)
+	thisfile = os.path.realpath(__file__)
+	sys.path.insert(0, os.path.dirname(os.path.dirname(thisfile)))
+	sys.path.insert(0, os.path.join(
+			os.path.dirname(os.path.dirname(thisfile)),
+			'lib', 'python' + version[:3],
+			'site-packages'))
+	sys.path.insert(0, os.path.dirname(thisfile))
 except:
-	ugit = os.getcwd()
+	sys.path.insert(0, os.getcwd())
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(ugit)))
-sys.path.insert(0, os.path.join(
-		os.path.dirname(os.path.dirname(ugit)),
-		'lib', 'python' + version[:3],
-		'site-packages'))
-sys.path.insert(0, os.path.dirname(ugit))
 
-from ugitlibs.models import Model
-from ugitlibs.views import View
-from ugitlibs.controllers import Controller
-from ugitlibs import utils
+from ugit.models import Model
+from ugit.views import View
+from ugit.controllers import Controller
+from ugit import utils
 
 if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)

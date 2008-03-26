@@ -18,7 +18,7 @@ cp README $DOCDIR/README.txt
 cp bin/* $BINDIR
 cp scripts/ugit-win32.sh $BINDIR
 cp scripts/py2exe-* $BINDIR
-cp ugitlibs/* $UGITLIBS
+cp ugit/* $UGITLIBS
 cp icons/* $ICONDIR
 
 PYUIC4=$(which pyuic4)
