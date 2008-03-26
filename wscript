@@ -7,7 +7,7 @@ import Common
 
 # Release versioning
 def get_version():
-	"""Searches defaults.py for the VERSION field and returns it."""
+	"""Runs version.sh and returns the output."""
 	cmd = os.path.join(os.getcwd(), 'scripts', 'version.sh')
 	pipe = os.popen(cmd)
 	version = pipe.read()
@@ -38,6 +38,7 @@ def configure(conf):
 	env['ICONS'] = os.path.join(env['PREFIX'], 'share', 'ugit', 'icons')
 	env['BIN'] = os.path.join(env['PREFIX'], 'bin')
 
+	conf.check_tool('misc')
 	conf.check_tool('python')
 	conf.check_tool('pyuic4', 'build')
 	conf.check_tool('po2qm', 'build')
@@ -45,7 +46,7 @@ def configure(conf):
 #############################################################################
 # Build
 def build(bld):
-	bld.add_subdirs('ui ugit')
+	bld.add_subdirs('scripts ui ugit')
 
 	bin = bld.create_obj('py')
 	bin.inst_var = 'BIN'

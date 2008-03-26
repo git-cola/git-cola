@@ -2,8 +2,9 @@
 
 import os
 from PyQt4.QtCore import QEvent
+from ugit import version
 
-VERSION = '0.8.9'
+VERSION = version.VERSION
 DIRECTORY = os.getcwd()
 
 WIDTH = 780
