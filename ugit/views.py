@@ -45,6 +45,9 @@ class View(Ui_maingui, QMainWindow):
 		self.action_vertical = self.toolbar.addWidget(checkbox)
 		self.horizontal_checkbox = checkbox
 
+		self.tabifyDockWidget(self.diff_dock, self.editor_dock)
+		self.addDockWidget(Qt.TopDockWidgetArea, self.status_dock)
+
 		# Diff/patch syntax highlighter
 		DiffSyntaxHighlighter(self.display_text.document())
 

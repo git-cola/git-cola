@@ -2,9 +2,6 @@
  <author>David Aguilar</author>
  <class>maingui</class>
  <widget class="QMainWindow" name="maingui" >
-  <property name="enabled" >
-   <bool>true</bool>
-  </property>
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -17,7 +14,29 @@
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralwidget" >
-   <layout class="QVBoxLayout" />
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+     <horstretch>1</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QVBoxLayout" >
+    <property name="spacing" >
+     <number>0</number>
+    </property>
+    <property name="leftMargin" >
+     <number>0</number>
+    </property>
+    <property name="topMargin" >
+     <number>0</number>
+    </property>
+    <property name="rightMargin" >
+     <number>0</number>
+    </property>
+    <property name="bottomMargin" >
+     <number>0</number>
+    </property>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar" >
    <property name="geometry" >
@@ -90,7 +109,9 @@
     <addaction name="menu_show_revision" />
     <addaction name="actionBy_Revision_Range" />
     <addaction name="separator" />
+    <addaction name="actionBy_Commit_Message" />
     <addaction name="actionCommits_Touching_Path" />
+    <addaction name="actionCommits_Adding_or_Removing_String" />
     <addaction name="separator" />
     <addaction name="actionCommits_Since_Date" />
     <addaction name="actionCommits_in_Date_Range" />
@@ -372,6 +393,21 @@ include untracked files if "Show Untracked Files" is checked.</string>
      </sizepolicy>
     </property>
     <layout class="QVBoxLayout" >
+     <property name="spacing" >
+      <number>0</number>
+     </property>
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
+     </property>
      <item>
       <widget class="QWidget" native="1" name="widget" >
        <property name="sizePolicy" >
@@ -1007,6 +1043,16 @@ retrieve the latest commit message prior to committing.</string>
   <action name="actionCommits_in_Date_Range" >
    <property name="text" >
     <string>Commits within Date Range...</string>
+   </property>
+  </action>
+  <action name="actionBy_Commit_Message" >
+   <property name="text" >
+    <string>Commit Messages...</string>
+   </property>
+  </action>
+  <action name="actionCommits_Adding_or_Removing_String" >
+   <property name="text" >
+    <string>Commits Adding or Removing String...</string>
    </property>
   </action>
  </widget>
