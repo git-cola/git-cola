@@ -235,6 +235,8 @@ class OptionsController(QObserver):
 				'global_ugit_fontui',
 				'global_ugit_fontdiff_size',
 				'global_ugit_fontui_size',
+				'global_ugit_savewindowsettings',
+				'global_ugit_saveatexit',
 			)
 		for param in params:
 			self.original_model.set_param(

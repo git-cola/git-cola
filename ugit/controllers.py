@@ -90,7 +90,6 @@ class Controller(QObserver):
 			untracked_checkbox = self.rescan,
 
 			# File Menu
-			menu_load_commitmsg = self.load_commitmsg,
 			menu_quit = self.quit_app,
 
 			# Repository Menu
@@ -113,7 +112,9 @@ class Controller(QObserver):
 			menu_show_diffstat = self.show_diffstat,
 			menu_show_index = self.show_index,
 			menu_export_patches = self.export_patches,
+			menu_load_commitmsg = self.load_commitmsg,
 			menu_cherry_pick = self.cherry_pick,
+
 			# Edit Menu
 			menu_options = self.options,
 			)
