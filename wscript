@@ -48,18 +48,11 @@ def configure(conf):
 def build(bld):
 	bld.add_subdirs('scripts ui ugit')
 
-	bin = bld.create_obj('py')
-	bin.inst_var = 'BIN'
-	bin.chmod = 0755
-	bin.find_sources_in_dirs('bin')
-
 	qm = bld.create_obj('po2qm')
 	qm.find_sources_in_dirs('po')
 
 	for icon in glob.glob('icons/*.png'):
 		Common.install_files('ICONS', '', icon)
-	
-	Common.symlink_as('BIN', 'git-ugit.py', 'ugit')
 
 #############################################################################
 # Other

@@ -15,10 +15,10 @@ mkdir -p $QMDIR
 mkdir -p $DOCDIR
 
 cp README $DOCDIR/README.txt
-cp bin/* $BINDIR
 cp scripts/ugit-win32.sh $BINDIR
 cp scripts/py2exe-* $BINDIR
-cp ugit/* $UGIT
+cp ugit/git-ugit $BINDIR
+cp ugit/*.py $UGIT
 cp icons/* $ICONDIR
 
 PYUIC4=$(which pyuic4)
