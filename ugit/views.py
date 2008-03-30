@@ -1,9 +1,10 @@
 import os
 import time
-from PyQt4.QtCore import Qt
+from PyQt4 import QtCore
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QMainWindow
 from PyQt4.QtGui import QCheckBox
+from PyQt4.QtGui import QSplitter
 from maingui import Ui_maingui
 from outputgui import Ui_outputgui
 from optionsgui import Ui_optionsgui
@@ -29,6 +30,10 @@ class View(Ui_maingui, QMainWindow):
 		self.action_redo = self.commitmsg.redo
 		self.action_paste = self.commitmsg.paste
 		self.action_select_all = self.commitmsg.selectAll
+
+		# Handle automatically setting the horizontal/vertical orientation
+		self.splitter.resizeEvent = self.splitter_resize_event
+
 		# Qt does not support noun/verbs
 		self.commit_button.setText(qtutils.tr('Commit@@verb'))
 		self.commit_menu.setTitle(qtutils.tr('Commit@@verb'))
@@ -38,18 +43,27 @@ class View(Ui_maingui, QMainWindow):
 				qtutils.get_qicon('git.png'),
 				'Show/Hide Log Window')
 		self.toolbar_show_log.setEnabled(True)
-		self.addToolBar(Qt.BottomToolBarArea, self.toolbar)
 
-		checkbox = QCheckBox(self)
-		checkbox.setText(self.tr("Horizontal Status"))
-		self.action_vertical = self.toolbar.addWidget(checkbox)
-		self.horizontal_checkbox = checkbox
-
+		# Setup the default dock layout
 		self.tabifyDockWidget(self.diff_dock, self.editor_dock)
-		self.addDockWidget(Qt.TopDockWidgetArea, self.status_dock)
+
+		dock_area = QtCore.Qt.TopDockWidgetArea
+		self.addDockWidget(dock_area, self.status_dock)
+
+		toolbar_area = QtCore.Qt.BottomToolBarArea
+		self.addToolBar(toolbar_area, self.toolbar)
 
 		# Diff/patch syntax highlighter
 		DiffSyntaxHighlighter(self.display_text.document())
+
+	def splitter_resize_event(self, event):
+		width = self.splitter.width()
+		height = self.splitter.height()
+		if width > height:
+			self.splitter.setOrientation(QtCore.Qt.Horizontal)
+		else:
+			self.splitter.setOrientation(QtCore.Qt.Vertical)
+		QSplitter.resizeEvent(self.splitter, event)
 
 	def action_cut(self):
 		self.action_copy()

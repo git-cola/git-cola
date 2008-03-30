@@ -131,9 +131,6 @@ class Controller(QObserver):
 		self.connect(self.view.toolbar_show_log,
 				'triggered()', self.show_log)
 
-		self.connect(self.view.horizontal_checkbox,
-				'stateChanged(int)', self.flip_status)
-
 		# Delegate window events here
 		view.moveEvent = self.move_event
 		view.resizeEvent = self.resize_event
@@ -166,13 +163,6 @@ class Controller(QObserver):
 				| QtCore.Qt.FramelessWindowHint )
 			dock.setWindowFlags( flags )
 			dock.show()
-
-	def flip_status(self, value):
-		splitter = self.view.splitter
-		if value:
-			splitter.setOrientation(QtCore.Qt.Horizontal)
-		else:
-			splitter.setOrientation(QtCore.Qt.Vertical)
 
 	#####################################################################
 	# handle when the listitem icons are clicked
