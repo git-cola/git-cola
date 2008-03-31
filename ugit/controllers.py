@@ -313,6 +313,7 @@ class Controller(QObserver):
 
 		self.view.set_display(diff)
 		self.view.set_info(self.tr(status))
+		self.view.diff_dock.raise_()
 		self.__diffgui_enabled = True
 
 	# use *rest to handle being called from different signals
