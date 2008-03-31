@@ -94,21 +94,33 @@ class FindRevisionsController(QObserver):
 		self.sha1 = None
 		self.last_time = time.time()
 		self.updates_enabled = True
+		self.found = []
 		(self.revisions, self.summaries) = self.model.log(all=True)
 
 	def find_revision(self, *rest):
 		if time.time() - self.last_time < 0.2:
 			self.last_time = time.time()
 			return
+		if not self.updates_enabled:
+			return
+		found = False
+		self.found = []
 		revision = self.model.get_revision()
 		if len(revision) < 2: return
 		for idx, rev in enumerate(self.revisions):
 			if rev.startswith(revision):
-				self.show_revision(idx)
-				return
-		self.updates_enabled = False
+				if not found:
+					self.show_revision(idx)
+					found = True
+				self.found.append((idx, rev))
 
 		self.view.commit_list.clear()
+		for idx, rev in self.found:
+			summary = self.summaries[idx]
+			self.view.commit_list.addItem(summary)
+
+		self.updates_enabled = False
+
 		blob = self.model.show(revision)
 		self.view.commit_text.setText(blob)
 
@@ -119,8 +131,6 @@ class FindRevisionsController(QObserver):
 		revision = self.revisions[idx]
 		if self.sha1 and self.sha1 == revision:
 			return
-		self.view.commit_list.clear()
-		self.view.commit_list.addItem(summary)
 		qtutils.set_clipboard(revision)
 		diff = self.model.get_commit_diff(revision)
 		self.sha1 = revision
@@ -131,9 +141,15 @@ class FindRevisionsController(QObserver):
 	def select_summary(self,*args):
 		if not self.updates_enabled: return
 		if not self.sha1: return
+		# Inhibit doing a new search when we set the revision field
+		self.updates_enabled = False
 		self.view.revision.setText(self.sha1)
+		self.updates_enabled = True
 		self.view.revision.selectAll()
-		qtutils.set_clipboard(self.sha1)
+		row, selected = qtutils.get_selected_row(
+						self.view.commit_list)
+		if selected:
+			self.show_revision(row)
 
 def update_options(model, parent):
 	view = OptionsGUI(parent)
