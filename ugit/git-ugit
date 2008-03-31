@@ -4,30 +4,65 @@
 import os
 import sys
 import platform
+import optparse
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
+def setup_environment():
+	"""Prepends sys.path with ugit's module path."""
+	version = platform.python_version()
+	try:
+		thisfile = os.path.realpath(__file__)
+		sys.path.insert(0, os.path.dirname(os.path.dirname(thisfile)))
+		sys.path.insert(0, os.path.join(
+				os.path.dirname(os.path.dirname(thisfile)),
+				'lib', 'python' + version[:3],
+				'site-packages'))
 
-version = platform.python_version()
+		ugitmodules = os.path.dirname(thisfile)
+		if ugitmodules not in sys.path:
+			sys.path.insert(0, os.path.dirname(thisfile))
+	except:
+		sys.path.insert(0, os.getcwd())
 
-try:
-	thisfile = os.path.realpath(__file__)
-	sys.path.insert(0, os.path.dirname(os.path.dirname(thisfile)))
-	sys.path.insert(0, os.path.join(
-			os.path.dirname(os.path.dirname(thisfile)),
-			'lib', 'python' + version[:3],
-			'site-packages'))
-	sys.path.insert(0, os.path.dirname(thisfile))
-except:
-	sys.path.insert(0, os.getcwd())
+def ugit_main():
+	try:
+		from PyQt4 import QtCore
+		from PyQt4 import QtGui
+	except ImportError:
+		print "Sorry, you do not seem to have PyQt4 installed."
+		print "Please install it before using ugit."
+		print "e.g.:    sudo apt-get install python-qt4"
+		sys.exit(-1)
 
+	parser = optparse.OptionParser(usage='usage: %prog [options]')
+	parser.add_option('-p', '--project',
+			help='Path to a git repository',
+			metavar='PROJECT',
+			dest='project',
+			default=None)
 
-from ugit.models import Model
-from ugit.views import View
-from ugit.controllers import Controller
-from ugit import utils
+	parser.add_option('-v', '--version',
+			help='Show ugit version',
+			dest='version',
+			default=False,
+			action='store_true')
+	opts, args = parser.parse_args()
 
-if __name__ == "__main__":
+	if opts.project and os.path.isdir(opts.project):
+		os.chdir(opts.project)
+
+	# This sets up sys.path so that the ugit modules can be found.
+	setup_environment()
+
+	from ugit.models import Model
+	from ugit.views import View
+	from ugit.controllers import Controller
+	from ugit import utils
+
+	if opts.version:
+		from ugit.version import VERSION
+		print "ugit version", VERSION
+		sys.exit(0)
+
 	app = QtGui.QApplication(sys.argv)
 	app.setWindowIcon(QtGui.QIcon(utils.get_icon('git.png')))
 	locale = str(QtCore.QLocale().system().name())
@@ -41,3 +76,6 @@ if __name__ == "__main__":
 	ctl = Controller(model, view)
 	view.show()
 	sys.exit(app.exec_())
+
+if __name__ == "__main__":
+	ugit_main()
