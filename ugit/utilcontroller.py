@@ -108,26 +108,24 @@ class FindRevisionsController(QObserver):
 		self.found = []
 		revision = self.model.get_revision()
 		if len(revision) < 2: return
+		num_found = 0
 		for idx, rev in enumerate(self.revisions):
 			if rev.startswith(revision):
-				if not found:
-					self.show_revision(idx)
-					found = True
-				self.found.append((idx, rev))
+				self.found.append(idx)
 
 		self.view.commit_list.clear()
-		for idx, rev in self.found:
+		for idx in self.found:
 			summary = self.summaries[idx]
 			self.view.commit_list.addItem(summary)
 
-		self.updates_enabled = False
+		if self.found:
+			self.show_revision(0)
+			found = True
 
-		blob = self.model.show(revision)
-		self.view.commit_text.setText(blob)
-
-		self.updates_enabled = True
-
-	def show_revision(self, idx):
+	def show_revision(self, gui_idx):
+		if not self.found:
+			return
+		idx = self.found[gui_idx]
 		summary = self.summaries[idx]
 		revision = self.revisions[idx]
 		if self.sha1 and self.sha1 == revision:
@@ -147,9 +145,10 @@ class FindRevisionsController(QObserver):
 		self.view.revision.setText(self.sha1)
 		self.updates_enabled = True
 		self.view.revision.selectAll()
+		self.view.revision.setFocus()
 		row, selected = qtutils.get_selected_row(
 						self.view.commit_list)
-		if selected:
+		if selected and row < len(self.found):
 			self.show_revision(row)
 
 def update_options(model, parent):
