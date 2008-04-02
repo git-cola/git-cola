@@ -180,9 +180,10 @@ class QObserver(Observer, QObject):
 		# Call the model callback w/ the view's widgets as the args
 		self.__actions[param](*widgets)
 
-	def refresh_view(self):
-		params= list(self.__model_to_view.keys()
-				+ self.__actions.keys())
+	def refresh_view(self, *params):
+		if not params:
+			params= tuple(self.__model_to_view.keys()
+					+ self.__actions.keys())
 		notified = []
 		for param in params:
 			if param not in notified:

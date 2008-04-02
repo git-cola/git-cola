@@ -29,7 +29,7 @@ class Controller(QObserver):
 		QObserver.__init__(self, model, view)
 
 		# parent-less log window
-		qtutils.LOGGER = log_window(model, QtGui.qApp.activeWindow())
+		qtutils.LOGGER = log_window(QtGui.qApp.activeWindow())
 
 		# Avoids inotify floods from e.g. make
 		self.__last_inotify_event = time.time()
@@ -119,6 +119,13 @@ class Controller(QObserver):
 			menu_options = self.options,
 			)
 
+		# Delegate window events here
+		view.moveEvent = self.move_event
+		view.resizeEvent = self.resize_event
+		view.closeEvent = self.quit_app
+		view.staged.mousePressEvent = self.click_staged
+		view.unstaged.mousePressEvent = self.click_unstaged
+
 		# These are vanilla signal/slots since QObserver
 		# is already handling these signals.
 		self.connect(view.unstaged,
@@ -132,20 +139,6 @@ class Controller(QObserver):
 		self.connect(self.view.toolbar_show_log,
 				'triggered()', self.show_log)
 
-		# Delegate window events here
-		view.moveEvent = self.move_event
-		view.resizeEvent = self.resize_event
-		view.closeEvent = self.quit_app
-		view.staged.mousePressEvent = self.click_staged
-		view.unstaged.mousePressEvent = self.click_unstaged
-
-		self.init_log_window()
-		self.rescan()
-		self.load_gui_settings()
-
-		self.refresh_view()
-		self.start_inotify_thread()
-
 		self.connect(view.diff_dock,
 				'topLevelChanged(bool)',
 				lambda(b): self.setwindow(view.diff_dock, b))
@@ -157,6 +150,15 @@ class Controller(QObserver):
 		self.connect(view.status_dock,
 				'topLevelChanged(bool)',
 				lambda(b): self.setwindow(view.status_dock, b))
+
+		self.init_log_window()
+		self.load_gui_settings()
+		self.rescan()
+		self.refresh_view(
+				'global_ugit_fontdiff',
+				'global_ugit_fontui',
+				)
+		self.start_inotify_thread()
 	
 	def setwindow(self, dock, isfloating):
 		if isfloating:

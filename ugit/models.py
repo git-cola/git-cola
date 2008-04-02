@@ -50,8 +50,8 @@ class Model(model.Model):
 		self.create(
 			#####################################################
 			# Used in various places
-			branch = git.current_branch(),
-			remotes = git.remote(),
+			branch = '',
+			remotes = [],
 			remote = '',
 			local_branch = '',
 			remote_branch = '',
@@ -72,9 +72,9 @@ class Model(model.Model):
 			#####################################################
 			# Used by the create branch dialog
 			revision = '',
-			local_branches = git.branch(remote=False),
-			remote_branches = git.branch(remote=True),
-			tags = git.tag(),
+			local_branches = [],
+			remote_branches = [],
+			tags = [],
 
 			#####################################################
 			# Used by the commit/repo browser

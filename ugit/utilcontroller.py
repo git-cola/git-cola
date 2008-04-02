@@ -9,6 +9,7 @@ from views import BranchGUI
 from views import CommitGUI
 from views import OptionsGUI
 from views import OutputGUI
+from model import Model
 
 def set_diff_font(model, widget):
 	if model.has_param('global_ugit_fontdiff'):
@@ -271,9 +272,8 @@ class OptionsController(QObserver):
 
 		self.tell_parent_model()
 
-def log_window(model, parent):
-	model = model.clone()
-	model.create(search_text='')
+def log_window(parent):
+	model = Model( search_text = '' )
 	view = OutputGUI(parent)
 	ctl = LogWindowController(model,view)
 	return view
