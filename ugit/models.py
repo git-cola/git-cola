@@ -18,7 +18,7 @@ class Model(model.Model):
 		model.Model.__init__(self)
 		# chdir to the root of the git tree.
 		# This keeps paths relative.
-		cdup = git.show_cdup()
+		cdup = git.rev_parse(show_cdup=True)
 		if cdup:
 			os.chdir(cdup)
 
@@ -349,7 +349,7 @@ class Model(model.Model):
 		self.set_remotes(git.remote())
 		self.set_remote_branches(git.branch(remote=True))
 		self.set_local_branches(git.branch(remote=False))
-		self.set_tags(git.tag())
+		self.set_tags(git.tag().splitlines())
 		self.set_revision('')
 		self.set_local_branch('')
 		self.set_remote_branch('')

@@ -1,6 +1,6 @@
-'''TODO: "import stgit"'''
 import os
 import re
+import sys
 import types
 import utils
 import defaults
@@ -341,13 +341,6 @@ def rev_list_range(start, end):
 			revs.append((rev_id, summary,) )
 	return revs
 
-def show(sha1):
-	return git('show',sha1)
-
-def show_cdup():
-	'''Returns a relative path to the git project root.'''
-	return git('rev-parse','--show-cdup')
-
 def status():
 	'''RETURNS: A tuple of staged, unstaged and untracked files.
 	( array(staged), array(unstaged), array(untracked) )'''
@@ -407,5 +400,19 @@ def status():
 
 	return( staged, unstaged, untracked )
 
-def tag():
-	return git('tag').splitlines()
+
+class GitModuleDispatcher(object):
+	"""This class wraps the git.py so that arbitrary git commands
+	can be supported at runtime."""
+
+	def __init__(self, module):
+		self.module = module 
+
+	def __getattr__(self, name):
+		if hasattr(self.module, name):
+			return getattr(self.module, name)
+		def run_git_cmd(*args, **kwargs):
+			return git(name.replace('_','-'), *args, **kwargs)
+		return run_git_cmd
+
+sys.modules[__name__] = GitModuleDispatcher(sys.modules[__name__])

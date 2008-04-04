@@ -81,6 +81,7 @@ def run_cmd(cmd, *args, **kwargs):
 	kwarglist = []
 	for k,v in kwargs.iteritems():
 		if len(k) > 1:
+			k = k.replace('_','-')
 			if v is True:
 				kwarglist.append("--%s" % k)
 			elif v is not None and type(v) is not bool:
