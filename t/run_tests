@@ -1,0 +1,12 @@
+#!/bin/sh
+
+cd $(dirname $0)
+
+for unittest in t*.py; do
+	echo "Running test: $unittest"
+	./$unittest
+	if [ $? -ne 0 ]; then
+		echo "Test failed with exit code $?"
+		exit -1
+	fi
+done

@@ -71,7 +71,6 @@ class ModelTest(unittest.TestCase):
 			'test_list': [ 'foo', 'bar' ],
 			'test_str': 'foo',
 		})
-		print self.model
 		self.failUnless( self.model.get_test_dict()['hello'] == 'world' )
 		self.failUnless( self.model.get_test_list()[1] == 'bar' )
 
