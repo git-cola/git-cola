@@ -6,15 +6,36 @@ import utils
 import defaults
 from cStringIO import StringIO
 
+def git(*args,**kwargs):
+	"""This is a convenience wrapper around run_cmd that
+	sets things up so that commands are run in the canonical
+	'git command [options] [args]' form."""
+	cmd = 'git %s' % args[0]
+	return utils.run_cmd(cmd, *args[1:], **kwargs)
+
+class GitCommand(object):
+	"""This class wraps this module so that arbitrary git commands
+	can be dynamically called at runtime."""
+	def __init__(self, module):
+		self.module = module
+	def __getattr__(self, name):
+		def git_cmd(*args, **kwargs):
+			return git(name.replace('_','-'), *args, **kwargs)
+		try:
+			return getattr(self.module, name)
+		except AttributeError:
+			return git_cmd
+
+# At import we replace this module with a GitCommand singleton.
+gitcmd = GitCommand(sys.modules[__name__])
+sys.modules[__name__] = gitcmd
+
+
 # A regex for matching the output of git(log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile('([0-9a-f]+)\W(.*)')
 
 def quote(argv):
 	return ' '.join([ utils.shell_quote(arg) for arg in argv ])
-
-def git(*args,**kwargs):
-	gitcmd = 'git %s' % args[0]
-	return utils.run_cmd(gitcmd, *args[1:], **kwargs)
 
 def add(to_add, verbose=True):
 	'''Invokes 'git add' to index the filenames in to_add.'''
@@ -400,19 +421,3 @@ def status():
 
 	return( staged, unstaged, untracked )
 
-
-class GitModuleDispatcher(object):
-	"""This class wraps the git.py so that arbitrary git commands
-	can be supported at runtime."""
-
-	def __init__(self, module):
-		self.module = module 
-
-	def __getattr__(self, name):
-		if hasattr(self.module, name):
-			return getattr(self.module, name)
-		def run_git_cmd(*args, **kwargs):
-			return git(name.replace('_','-'), *args, **kwargs)
-		return run_git_cmd
-
-sys.modules[__name__] = GitModuleDispatcher(sys.modules[__name__])
