@@ -31,21 +31,22 @@ gitcmd = GitCommand(sys.modules[__name__])
 sys.modules[__name__] = gitcmd
 
 
-# A regex for matching the output of git(log|rev-list) --pretty=oneline
+#+-------------------------------------------------------------------------
+#+ A regex for matching the output of git(log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile('([0-9a-f]+)\W(.*)')
 
 def quote(argv):
 	return ' '.join([ utils.shell_quote(arg) for arg in argv ])
 
 def add(to_add, verbose=True):
-	'''Invokes 'git add' to index the filenames in to_add.'''
+	"""Invokes 'git add' to index the filenames in to_add."""
 	if not to_add:
 		return 'No files to add.'
 	return git('add', verbose=verbose, *to_add)
 
 def add_or_remove(to_process):
-	'''Invokes 'git add' to index the filenames in to_process that exist
-	and 'git rm' for those that do not exist.'''
+	"""Invokes 'git add' to index the filenames in to_process that exist
+	and 'git rm' for those that do not exist."""
 
 	if not to_process:
 		return 'No files to add or remove.'
@@ -120,7 +121,7 @@ def checkout(*args):
 	return git('checkout', *args)
 
 def commit(msg, amend=False):
-	'''Creates a git commit.'''
+	"""Creates a git commit."""
 
 	if not msg.endswith('\n'):
 		msg += '\n'
@@ -152,7 +153,7 @@ def create_branch(name, base, track=False):
 	return git('branch', name, base, track=track)
 
 def current_branch():
-	'''Parses 'git branch' to find the current branch.'''
+	"""Parses 'git branch' to find the current branch."""
 	branches = git('branch').splitlines()
 	for branch in branches:
 		if branch.startswith('* '):
@@ -224,7 +225,7 @@ def diffindex():
 	           cached=True)
 
 def format_patch(revs):
-	'''writes patches named by revs to the "patches" directory.'''
+	"""writes patches named by revs to the "patches" directory."""
 	num_patches = 1
 	output = []
 	kwargs = {
@@ -288,8 +289,8 @@ def config_to_dict(config_lines):
 	return newdict
 
 def log(oneline=True, all=False):
-	'''Returns a pair of parallel arrays listing the revision sha1's
-	and commit summaries.'''
+	"""Returns a pair of parallel arrays listing the revision sha1's
+	and commit summaries."""
 	kwargs = {}
 	if oneline:
 		kwargs['pretty'] = 'oneline'
@@ -342,7 +343,7 @@ def remote_url(name):
 	return config('remote.%s.url' % name, local=True)
 
 def reset(to_unstage):
-	'''Use 'git reset' to unstage files from the index.'''
+	"""Use 'git reset' to unstage files from the index."""
 	if not to_unstage:
 		return 'No files to reset.'
 
