@@ -362,62 +362,62 @@ def rev_list_range(start, end):
 			revs.append((rev_id, summary,) )
 	return revs
 
-def status():
-	'''RETURNS: A tuple of staged, unstaged and untracked files.
-	( array(staged), array(unstaged), array(untracked) )'''
+def parsed_status():
+	"""RETURNS: A tuple of staged, unstaged and untracked file lists."""
 
-	status_lines = git('status').splitlines()
+	MODIFIED_TAG = '# Changed but not updated:'
+	UNTRACKED_TAG = '# Untracked files:'
 
-	unstaged_header_seen = False
-	untracked_header_seen = False
+	RGX_RENAMED = re.compile(
+				'(#\trenamed:\s+)'
+				'(.*?)\s->\s(.*)'
+				)
 
-	modified_header = '# Changed but not updated:'
-	modified_regex = re.compile('(#\tmodified:\s+'
-			'|#\tnew file:\s+'
-			'|#\tdeleted:\s+)')
-
-	renamed_regex = re.compile('(#\trenamed:\s+)(.*?)\s->\s(.*)')
-
-	untracked_header = '# Untracked files:'
-	untracked_regex = re.compile('#\t(.+)')
-
+	RGX_MODIFIED = re.compile(
+				'(#\tmodified:\s+'
+				'|#\tnew file:\s+'
+				'|#\tdeleted:\s+)'
+				)
 	staged = []
 	unstaged = []
 	untracked = []
 
-	# Untracked files
-	for status_line in status_lines:
-		if untracked_header in status_line:
-			untracked_header_seen = True
-			continue
-		if not untracked_header_seen:
-			continue
-		match = untracked_regex.match(status_line)
-		if match:
-			filename = match.group(1)
-			untracked.append(filename)
+	STAGED_MODE = 0
+	UNSTAGED_MODE = 1
+	UNTRACKED_MODE = 2
 
-	# Staged, unstaged, and renamed files
-	for status_line in status_lines:
-		if modified_header in status_line:
-			unstaged_header_seen = True
+	mode = STAGED_MODE
+	current_dest = staged
+
+	for status_line in gitcmd.status().splitlines():
+		if status_line == MODIFIED_TAG:
+			mode = UNSTAGED_MODE
+			current_dest = unstaged
 			continue
-		match = modified_regex.match(status_line)
-		if match:
-			tag = match.group(0)
-			filename = status_line.replace(tag, '')
-			if unstaged_header_seen:
-				unstaged.append(filename)
-			else:
-				staged.append(filename)
+
+		elif status_line == UNTRACKED_TAG:
+			mode = UNTRACKED_MODE
+			current_dest = untracked
 			continue
-		# Renamed files
-		match = renamed_regex.match(status_line)
-		if match:
-			oldname = match.group(2)
-			newname = match.group(3)
-			staged.append(oldname)
-			staged.append(newname)
+
+		# Staged/unstaged modified/renamed/deleted files
+		if mode == STAGED_MODE or mode == UNSTAGED_MODE:
+			match = RGX_MODIFIED.match(status_line)
+			if match:
+				tag = match.group(0)
+				filename = status_line.replace(tag, '')
+				current_dest.append(filename)
+				continue
+			match = RGX_RENAMED.match(status_line)
+			if match:
+				oldname = match.group(2)
+				newname = match.group(3)
+				current_dest.append(oldname)
+				current_dest.append(newname)
+				continue
+		# Untracked files
+		elif mode is UNTRACKED_MODE:
+			if status_line.startswith('#\t'):
+				current_dest.append(status_line[2:])
 
 	return( staged, unstaged, untracked )
-

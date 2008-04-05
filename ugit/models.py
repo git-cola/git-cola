@@ -327,7 +327,7 @@ class Model(model.Model):
 		# Read git status items
 		( staged_items,
 		  modified_items,
-		  untracked_items ) = git.status()
+		  untracked_items ) = git.parsed_status()
 
 		# Gather items to be committed
 		for staged in staged_items:
