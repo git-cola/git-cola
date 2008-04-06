@@ -264,7 +264,7 @@ class Controller(QObserver):
 		commits = self.select_commits_gui(self.tr('Cherry-Pick Commits'),
 				*self.model.log(all=True))
 		if not commits: return
-		self.log(self.model.cherry_pick(commits))
+		self.log(self.model.cherry_pick_list(commits))
 
 	def commit(self):
 		msg = self.model.get_commitmsg()

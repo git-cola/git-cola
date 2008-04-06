@@ -79,22 +79,14 @@ def branch(name=None, remote=False, delete=False):
 			return remotes
 		return branches
 
-def cherry_pick(revs, commit=False):
+def cherry_pick_list(revs, **kwargs):
 	"""Cherry-picks each revision into the current branch.
 	Returns a list of command output strings (1 per cherry pick)"""
-
-	if not revs: return []
-
-	argv = [ 'cherry-pick' ]
-	kwargs = {}
-	if not commit:
-		kwargs['n'] = True
-
+	if not revs:
+		return []
 	cherries = []
 	for rev in revs:
-		new_argv = argv + [rev]
-		cherries.append(git(*new_argv, **kwargs))
-
+		cherries.append(gitcmd.cherry_pick(rev, **kwargs))
 	return '\n'.join(cherries)
 
 def commit_with_msg(msg, amend=False):
