@@ -37,13 +37,7 @@ REV_LIST_REGEX = re.compile('([0-9a-f]+)\W(.*)')
 def quote(argv):
 	return ' '.join([ utils.shell_quote(arg) for arg in argv ])
 
-def add(to_add, verbose=True):
-	"""Invokes 'git add' to index the filenames in to_add."""
-	if not to_add:
-		return 'No files to add.'
-	return git('add', verbose=verbose, *to_add)
-
-def add_or_remove(to_process):
+def add_or_remove(*to_process):
 	"""Invokes 'git add' to index the filenames in to_process that exist
 	and 'git rm' for those that do not exist."""
 
@@ -57,7 +51,7 @@ def add_or_remove(to_process):
 		if os.path.exists(filename):
 			to_add.append(filename)
 
-	output = add(to_add)
+	output = gitcmd.add(verbose=True, *to_add)
 
 	if len(to_add) == len(to_process):
 		# to_process only contained unremoved files --
@@ -68,7 +62,7 @@ def add_or_remove(to_process):
 	for filename in to_process:
 		if not os.path.exists(filename):
 			to_remove.append(filename)
-	output + '\n\n' + git('rm',*to_remove)
+	output + '\n\n' + gitcmd.rm(*to_remove)
 
 def apply(filename, indexonly=True, reverse=False):
 	kwargs = {}
@@ -265,7 +259,6 @@ def config_set(key=None, value=None, local=True):
 		msg = "oops in git.config_set(key=%s,value=%s,local=%s"
 		raise Exception(msg % (key, value, local))
 
-
 def config_to_dict(config_lines):
 	"""parses the lines from git config --list into a dictionary"""
 
@@ -325,24 +318,11 @@ def push(remote, local_branch, remote_branch, ffwd=True, tags=False):
 		branch_arg = '+%s:%s' % ( local_branch, remote_branch )
 	return git('push', remote, branch_arg, with_status=True, tags=tags)
 
-def rebase(newbase):
-	if not newbase:
-		return 'No base branch specified to rebase.'
-	return git('rebase', newbase)
-
 def remote(*args):
 	return git('remote', without_stderr=True, *args).splitlines()
 
 def remote_url(name):
 	return gitcmd.config('remote.%s.url' % name, get=True)
-
-def reset(to_unstage):
-	"""Use 'git reset' to unstage files from the index."""
-	if not to_unstage:
-		return 'No files to reset.'
-	argv = [ 'reset', '--' ]
-	argv.extend(to_unstage)
-	return git(*argv)
 
 def rev_list_range(start, end):
 	range = '%s..%s' % ( start, end )

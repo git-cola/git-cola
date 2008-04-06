@@ -440,13 +440,13 @@ class Model(model.Model):
 		self.update_status()
 		return output
 
-	def reset(self, items):
-		output = git.reset(items)
+	def reset(self, *items):
+		output = git.reset('--', *items)
 		self.update_status()
 		return output
 
 	def unstage_all(self):
-		git.reset(self.get_staged())
+		git.reset('--', *self.get_staged())
 		self.update_status()
 
 	def save_gui_settings(self):

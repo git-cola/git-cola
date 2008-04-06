@@ -23,7 +23,7 @@ from utilcontroller import update_options
 from utilcontroller import log_window
 
 class Controller(QObserver):
-	'''Controller manages the interaction between the model and views.'''
+	"""Controller manages the interaction between the model and views."""
 
 	def __init__(self, model, view):
 		QObserver.__init__(self, model, view)
@@ -334,7 +334,7 @@ class Controller(QObserver):
 		self.log(self.model.format_patch(commits))
 
 	def quit_app(self,*rest):
-		'''Save config settings and cleanup any inotify threads.'''
+		"""Save config settings and cleanup any inotify threads."""
 
 		if self.model.save_at_exit():
 			self.model.save_gui_settings()
@@ -452,7 +452,7 @@ class Controller(QObserver):
 		push_branches(self.model, self.view)
 
 	def show_diffstat(self):
-		'''Show the diffstat from the latest commit.'''
+		"""Show the diffstat from the latest commit."""
 		self.__diffgui_enabled = False
 		self.view.set_info(self.tr('Diffstat'))
 		self.view.set_display(self.model.diffstat())
@@ -506,21 +506,21 @@ class Controller(QObserver):
 
 	# *rest handles being called from different signals
 	def stage_selected(self,*rest):
-		'''Use "git add" to add items to the git index.
-		This is a thin wrapper around apply_to_list.'''
+		"""Use "git add" to add items to the git index.
+		This is a thin wrapper around map_to_listwidget."""
 		command = self.model.add_or_remove
 		widget = self.view.unstaged
 		items = self.model.get_unstaged()
-		self.apply_to_list(command,widget,items)
+		self.map_to_listwidget(command, widget, items)
 
 	# *rest handles being called from different signals
 	def unstage_selected(self, *rest):
-		'''Use "git reset" to remove items from the git index.
-		This is a thin wrapper around apply_to_list.'''
+		"""Use "git reset" to remove items from the git index.
+		This is a thin wrapper around map_to_listwidget."""
 		command = self.model.reset
 		widget = self.view.staged
 		items = self.model.get_staged()
-		self.apply_to_list(command, widget, items)
+		self.map_to_listwidget(command, widget, items)
 
 	def undo_changes(self):
 		"""Reverts local changes back to whatever's in HEAD."""
@@ -551,12 +551,12 @@ class Controller(QObserver):
 			self.log(self.tr(msg))
 
 	def viz_all(self):
-		'''Visualizes the entire git history using gitk.'''
+		"""Visualizes the entire git history using gitk."""
 		browser = self.model.get_global_ugit_historybrowser()
 		utils.fork(browser,'--all')
 
 	def viz_current(self):
-		'''Visualizes the current branch's history using gitk.'''
+		"""Visualizes the current branch's history using gitk."""
 		browser = self.model.get_global_ugit_historybrowser()
 		utils.fork(browser, self.model.get_branch())
 
@@ -578,17 +578,17 @@ class Controller(QObserver):
 		self.view.move(x,y)
 
 	def log(self, output, rescan=True, quiet=False):
-		'''Logs output and optionally rescans for changes.'''
+		"""Logs output and optionally rescans for changes."""
 		qtutils.log(output, quiet=quiet, doraise=False)
 		if rescan: self.rescan()
 
-	def apply_to_list(self, command, widget, items):
-		'''This is a helper method that retrieves the current
+	def map_to_listwidget(self, command, widget, items):
+		"""This is a helper method that retrieves the current
 		selection list, applies a command to that list,
 		displays a dialog showing the output of that command,
-		and calls rescan to pickup changes.'''
+		and calls rescan to pickup changes."""
 		apply_items = qtutils.get_selection_list(widget, items)
-		output = command(apply_items)
+		output = command(*apply_items)
 		self.log(output, quiet=True)
 
 	def unstaged_context_menu_event(self, event):
