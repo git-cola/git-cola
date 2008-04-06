@@ -120,7 +120,7 @@ def cherry_pick(revs, commit=False):
 def checkout(*args):
 	return git('checkout', *args)
 
-def commit(msg, amend=False):
+def commit_with_msg(msg, amend=False):
 	"""Creates a git commit."""
 
 	if not msg.endswith('\n'):
@@ -141,7 +141,7 @@ def commit(msg, amend=False):
 	file.close()
 
 	# Run 'git commit'
-	output = git('commit', F=tmpfile, amend=amend)
+	output = gitcmd.commit(F=tmpfile, amend=amend)
 	os.unlink(tmpfile)
 
 	return ('git commit -F %s --amend %s\n\n%s'

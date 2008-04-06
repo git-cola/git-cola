@@ -33,7 +33,7 @@ class Model(model.Model):
 				'checkout',
 				'create_branch',
 				'cherry_pick',
-				'commit',
+				'commit_with_msg',
 				'diff',
 				'diffstat',
 				'diffindex',

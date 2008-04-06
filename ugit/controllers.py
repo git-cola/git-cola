@@ -290,7 +290,7 @@ class Controller(QObserver):
 			return
 
 		# Perform the commit
-		output = self.model.commit(
+		output = self.model.commit_with_msg(
 				msg, amend=self.view.amend_radio.isChecked())
 
 		# Reset state
