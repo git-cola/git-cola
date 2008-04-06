@@ -255,14 +255,14 @@ class Controller(QObserver):
 
 	def browse_commits(self):
 		self.select_commits_gui(self.tr('Browse Commits'),
-				*self.model.log(all=True))
+				*self.model.log_helper(all=True))
 
 	def show_revision(self):
 		find_revisions(self.model, self.view)
 
 	def cherry_pick(self):
 		commits = self.select_commits_gui(self.tr('Cherry-Pick Commits'),
-				*self.model.log(all=True))
+				*self.model.log_helper(all=True))
 		if not commits: return
 		self.log(self.model.cherry_pick_list(commits))
 
@@ -327,7 +327,7 @@ class Controller(QObserver):
 		self.view_diff(staged=False)
 
 	def export_patches(self):
-		(revs, summaries) = self.model.log()
+		(revs, summaries) = self.model.log_helper()
 		commits = self.select_commits_gui(self.tr('Export Patches'),
 				revs, summaries)
 		if not commits: return

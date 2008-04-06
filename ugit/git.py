@@ -253,16 +253,13 @@ def config_to_dict(config_lines):
 		newdict[k]=v
 	return newdict
 
-def log(oneline=True, all=False):
+def log_helper(all=False):
 	"""Returns a pair of parallel arrays listing the revision sha1's
 	and commit summaries."""
-	kwargs = {}
-	if oneline:
-		kwargs['pretty'] = 'oneline'
 	revs = []
 	summaries = []
 	regex = REV_LIST_REGEX
-	output = git('log', all=all, **kwargs)
+	output = gitcmd.log(pretty='oneline', all=all)
 	for line in output.splitlines():
 		match = regex.match(line)
 		if match:

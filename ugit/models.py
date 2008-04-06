@@ -44,6 +44,7 @@ class Model(model.Model):
 				'push',
 				'show',
 				'log',
+				'log_helper',
 				'rebase',
 				'remote_url',
 				'rev_list_range',
