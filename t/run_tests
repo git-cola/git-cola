@@ -2,7 +2,7 @@
 
 cd $(dirname $0)
 
-for unittest in t*.py; do
+for unittest in t[0-9]*.py; do
 	echo "Running test: $unittest"
 	./$unittest
 	if [ $? -ne 0 ]; then

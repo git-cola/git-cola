@@ -30,6 +30,7 @@ WORKINGDIR=$(dirname $0)
 cd $WORKINGDIR
 #abs path
 WORKINGDIR=$(pwd)
+TESTDIR="$WORKINGDIR/t"
 cd $CUR_DIR
 
 # We store waf under build/
@@ -124,6 +125,9 @@ check:
 
 dist:
 	@$WAF dist
+
+test:
+	@$TESTDIR/run_tests
 
 EOF
 }
