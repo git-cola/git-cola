@@ -200,7 +200,7 @@ class Model(model.Model):
 		self.directory_entries = {}
 
 		# Lookup the tree info
-		tree_info = git.ls_tree(self.get_branch())
+		tree_info = git.parse_ls_tree(self.get_branch())
 
 		self.set_types(map( lambda(x): x[1], tree_info ))
 		self.set_sha1s(map( lambda(x): x[2], tree_info ))
@@ -332,7 +332,7 @@ class Model(model.Model):
 		# Read git status items
 		( staged_items,
 		  modified_items,
-		  untracked_items ) = git.parsed_status()
+		  untracked_items ) = git.parse_status()
 
 		# Gather items to be committed
 		for staged in staged_items:

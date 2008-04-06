@@ -267,9 +267,9 @@ def log_helper(all=False):
 			summaries.append(match.group(2))
 	return( revs, summaries )
 
-def ls_tree(rev):
+def parse_ls_tree(rev):
 	"""Returns a list of(mode, type, sha1, path) tuples."""
-	lines = git('ls-tree', rev, r=True).splitlines()
+	lines = gitcmd.ls_tree(rev, r=True).splitlines()
 	output = []
 	regex = re.compile('^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
 	for line in lines:
@@ -304,7 +304,7 @@ def rev_list_range(start, end):
 			revs.append((rev_id, summary,) )
 	return revs
 
-def parsed_status():
+def parse_status():
 	"""RETURNS: A tuple of staged, unstaged and untracked file lists."""
 
 	MODIFIED_TAG = '# Changed but not updated:'
