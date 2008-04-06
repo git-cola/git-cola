@@ -283,7 +283,7 @@ class Model(model.Model):
 			self.set_commitmsg(msg + signoff)
 
 	def apply_diff(self, filename):
-		return git.apply(filename)
+		return git.apply(filename, index=True, cached=True)
 
 	def __get_squash_msg_path(self):
 		return os.path.join(os.getcwd(), '.git', 'SQUASH_MSG')

@@ -64,16 +64,6 @@ def add_or_remove(*to_process):
 			to_remove.append(filename)
 	output + '\n\n' + gitcmd.rm(*to_remove)
 
-def apply(filename, indexonly=True, reverse=False):
-	kwargs = {}
-	if reverse:
-		kwargs['reverse'] = True
-	if indexonly:
-		kwargs['index'] = True
-		kwargs['cached'] = True
-	argv = ['apply', filename]
-	return git(*argv, **kwargs)
-
 def branch(name=None, remote=False, delete=False):
 	if delete and name:
 		return git('branch', name, D=True)
