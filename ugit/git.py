@@ -150,9 +150,13 @@ def current_branch():
 			return branch.lstrip('* ')
 	return 'Detached HEAD'
 
-def diff(commit=None,filename=None, color=False,
-		cached=True, with_diff_header=False,
-		suppress_header=True, reverse=False):
+def diff_helper(commit=None,
+		filename=None,
+		color=False,
+		cached=True,
+		with_diff_header=False,
+		suppress_header=True,
+		reverse=False):
 	"Invokes git diff on a filepath."
 
 	argv = []
@@ -166,19 +170,14 @@ def diff(commit=None,filename=None, color=False,
 		else:
 			argv.append(filename)
 
-	kwargs = {
-		'patch-with-raw': True,
-		'unified': defaults.DIFF_CONTEXT,
-	}
-
-	diff = git('diff',
-	           R=reverse,
-	           color=color,
-	           cached=cached,
-	           *argv,
-	           **kwargs)
-
-	diff_lines = diff.splitlines()
+	diff = gitcmd.diff(
+			R=reverse,
+			color=color,
+			cached=cached,
+			patch_with_raw=True,
+			unified = defaults.DIFF_CONTEXT,
+			*argv
+		).splitlines()
 
 	output = StringIO()
 	start = False
@@ -186,7 +185,7 @@ def diff(commit=None,filename=None, color=False,
 
 	headers = []
 	deleted = cached and not os.path.exists(filename)
-	for line in diff_lines:
+	for line in diff:
 		if not start and '@@ ' in line and ' @@' in line:
 			start = True
 		if start or(deleted and del_tag in line):
@@ -204,15 +203,16 @@ def diff(commit=None,filename=None, color=False,
 		return result
 
 def diffstat():
-	return git('diff', 'HEAD^',
-	           unified=defaults.DIFF_CONTEXT,
-	           stat=True)
+	return gitcmd.diff(
+			'HEAD^',
+			unified=defaults.DIFF_CONTEXT,
+			stat=True)
 
 def diffindex():
-	return git('diff',
-	           unified=defaults.DIFF_CONTEXT,
-	           stat=True,
-	           cached=True)
+	return gitcmd.diff(
+			unified=defaults.DIFF_CONTEXT,
+			stat=True,
+			cached=True)
 
 def format_patch(revs):
 	"""writes patches named by revs to the "patches" directory."""

@@ -35,6 +35,7 @@ class Model(model.Model):
 				'cherry_pick',
 				'commit_with_msg',
 				'diff',
+				'diff_helper',
 				'diffstat',
 				'diffindex',
 				'format_patch',
@@ -393,9 +394,14 @@ class Model(model.Model):
 		commit = git.show(sha1)
 		first_newline = commit.index('\n')
 		if commit[first_newline+1:].startswith('Merge:'):
-			return (commit + '\n\n'
-				+ self.diff(commit=sha1, cached=False,
-					suppress_header=False))
+			return (commit
+				+ '\n\n'
+				+ self.diff_helper(
+					commit=sha1,
+					cached=False,
+					suppress_header=False,
+					)
+				)
 		else:
 			return commit
 
@@ -406,7 +412,10 @@ class Model(model.Model):
 				status = 'Staged for commit'
 			else:
 				status = 'Staged for removal'
-			diff = self.diff(filename=filename, cached=True)
+			diff = self.diff_helper(
+					filename=filename,
+					cached=True,
+					)
 		else:
 			filename = self.get_unstaged()[idx]
 			if os.path.isdir(filename):
@@ -414,7 +423,10 @@ class Model(model.Model):
 				diff = '\n'.join(os.listdir(filename))
 			elif filename in self.get_modified():
 				status = 'Modified, not staged'
-				diff = self.diff(filename=filename, cached=False)
+				diff = self.diff_helper(
+						filename=filename,
+						cached=False,
+						)
 			else:
 				status = 'Untracked, not staged'
 

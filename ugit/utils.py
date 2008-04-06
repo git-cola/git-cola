@@ -296,8 +296,11 @@ class DiffParser(object):
 		self.selected = []
 
 		(header, diff) = \
-			model.diff(filename=filename, with_diff_header=True,
-				cached=cached, reverse=cached)
+			model.diff_helper(
+				filename=filename,
+				with_diff_header=True,
+				cached=cached,
+				reverse=cached)
 
 		self.model = model
 		self.diff = diff
@@ -306,8 +309,12 @@ class DiffParser(object):
 
 		# Always index into the non-reversed diff
 		self.fwd_header, self.fwd_diff = \
-			model.diff(filename=filename, with_diff_header=True,
-					cached=cached, reverse=False)
+			model.diff_helper(
+				filename=filename,
+				with_diff_header=True,
+				cached=cached,
+				reverse=False,
+				)
 
 	def write_diff(self,filename,which,selected=False,noop=False):
 		if not noop and which < len(self.diffs):
