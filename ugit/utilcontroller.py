@@ -96,7 +96,8 @@ class FindRevisionsController(QObserver):
 		self.last_time = time.time()
 		self.updates_enabled = True
 		self.found = []
-		(self.revisions, self.summaries) = self.model.log(all=True)
+		(self.revisions, self.summaries) = \
+			self.model.log_helper(all=True)
 
 	def find_revision(self, *rest):
 		if time.time() - self.last_time < 0.2:
