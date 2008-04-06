@@ -42,6 +42,7 @@ class Model(model.Model):
 				'format_patch',
 				'format_patch_helper',
 				'push',
+				'push_helper',
 				'show',
 				'log',
 				'log_helper',

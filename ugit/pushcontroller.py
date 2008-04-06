@@ -68,9 +68,13 @@ class PushController(QObserver):
 		ffwd = self.view.ffwd_only_checkbox.isChecked()
 		tags = self.view.tags_checkbox.isChecked()
 
-		status, output = self.model.push(remote,
-					local_branch, remote_branch,
-					ffwd=ffwd, tags=tags)
+		status, output = self.model.push_helper(
+					remote,
+					local_branch,
+					remote_branch,
+					ffwd=ffwd,
+					tags=tags
+					)
 		qtutils.show_output(output)
 		if not status:
 			self.view.accept()

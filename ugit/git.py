@@ -282,12 +282,12 @@ def ls_tree(rev):
 			output.append((mode, objtype, sha1, filename,) )
 	return output
 
-def push(remote, local_branch, remote_branch, ffwd=True, tags=False):
+def push_helper(remote, local_branch, remote_branch, ffwd=True, tags=False):
 	if ffwd:
 		branch_arg = '%s:%s' % ( local_branch, remote_branch )
 	else:
 		branch_arg = '+%s:%s' % ( local_branch, remote_branch )
-	return git('push', remote, branch_arg, with_status=True, tags=tags)
+	return gitcmd.push(remote, branch_arg, with_status=True, tags=tags)
 
 def remote_url(name):
 	return gitcmd.config('remote.%s.url' % name, get=True)
