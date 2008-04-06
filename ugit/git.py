@@ -97,9 +97,6 @@ def cherry_pick(revs, commit=False):
 
 	return '\n'.join(cherries)
 
-def checkout(*args):
-	return git('checkout', *args)
-
 def commit_with_msg(msg, amend=False):
 	"""Creates a git commit."""
 
@@ -300,9 +297,6 @@ def push(remote, local_branch, remote_branch, ffwd=True, tags=False):
 	else:
 		branch_arg = '+%s:%s' % ( local_branch, remote_branch )
 	return git('push', remote, branch_arg, with_status=True, tags=tags)
-
-def remote(*args):
-	return git('remote', without_stderr=True, *args).splitlines()
 
 def remote_url(name):
 	return gitcmd.config('remote.%s.url' % name, get=True)

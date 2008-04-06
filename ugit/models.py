@@ -263,9 +263,9 @@ class Model(model.Model):
 	def get_all_branches(self):
 		return (self.get_local_branches() + self.get_remote_branches())
 
-	def set_remote(self,remote):
+	def set_remote(self, remote):
 		if not remote: return
-		self.set_param('remote',remote)
+		self.set_param('remote', remote)
 		branches = utils.grep( '%s/\S+$' % remote,
 				git.branch(remote=True), squash=False)
 		self.set_remote_branches(branches)
@@ -347,7 +347,7 @@ class Model(model.Model):
 
 		self.set_branch(git.current_branch())
 		self.set_unstaged(self.get_modified() + self.get_untracked())
-		self.set_remotes(git.remote())
+		self.set_remotes(git.remote().splitlines())
 		self.set_remote_branches(git.branch(remote=True))
 		self.set_local_branches(git.branch(remote=False))
 		self.set_tags(git.tag().splitlines())
