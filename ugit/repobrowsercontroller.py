@@ -84,7 +84,7 @@ class RepoBrowserController(QObserver):
 
 			objtype, sha1, name = self.model.get_subtree_node(idx)
 
-			catguts = self.model.cat_file(objtype, sha1)
+			catguts = self.model.cat_file(objtype, sha1, raw=True)
 			self.view.commit_text.setText(catguts)
 
 			self.view.revision.setText(sha1)
@@ -116,7 +116,7 @@ class RepoBrowserController(QObserver):
 			if not filename: return
 
 			defaults.DIRECTORY = os.path.dirname(filename)
-			contents = self.model.cat_file(objtype, sha1)
+			contents = self.model.cat_file(objtype, sha1, raw=True)
 
 			utils.write(filename, contents)
 			return

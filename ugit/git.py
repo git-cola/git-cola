@@ -89,9 +89,6 @@ def branch(name=None, remote=False, delete=False):
 			return remotes
 		return branches
 
-def cat_file(objtype, sha1):
-	return git('cat-file', objtype, sha1, raw=True)
-
 def cherry_pick(revs, commit=False):
 	"""Cherry-picks each revision into the current branch.
 	Returns a list of command output strings (1 per cherry pick)"""
