@@ -346,14 +346,13 @@ def reset(to_unstage):
 	"""Use 'git reset' to unstage files from the index."""
 	if not to_unstage:
 		return 'No files to reset.'
-
 	argv = [ 'reset', '--' ]
 	argv.extend(to_unstage)
 	return git(*argv)
 
 def rev_list_range(start, end):
-	argv = [ 'rev-list', '--pretty=oneline', start, end ]
-	raw_revs = git(*argv).splitlines()
+	range = '%s..%s' % ( start, end )
+	raw_revs = gitcmd.rev_list(range, pretty='oneline').splitlines()
 	revs = []
 	for line in raw_revs:
 		match = REV_LIST_REGEX.match(line)
