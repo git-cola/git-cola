@@ -56,7 +56,7 @@ class Model(model.Model):
 			local_branch = '',
 			remote_branch = '',
 			search_text = '',
-			git_version = git.git('--version'),
+			git_version = git.version(),
 
 			#####################################################
 			# Used primarily by the main UI
@@ -128,8 +128,8 @@ class Model(model.Model):
 			'ugit_saveatexit': False,
 		}
 
-		local_dict = git.config(local=True, asdict=True)
-		global_dict = git.config(local=False, asdict=True)
+		local_dict = git.config_dict(local=True)
+		global_dict = git.config_dict(local=False)
 
 		for k,v in local_dict.iteritems():
 			self.set_param('local_'+k, v)
@@ -163,7 +163,7 @@ class Model(model.Model):
 			if k not in global_dict:
 				self.set_param('global_'+k, v)
 
-	def save_config_param(self,param):
+	def save_config_param(self, param):
 		if param not in self.get_config_params():
 			return
 		value = self.get_param(param)
@@ -179,7 +179,7 @@ class Model(model.Model):
 			raise Exception("Invalid param '%s' passed to " % param
 					+ "save_config_param()")
 		param = param.replace('_','.') # model -> git
-		return git.config(param, value, local=is_local)
+		return git.config_set(param, value, local=is_local)
 
 	def init_browser_data(self):
 		'''This scans over self.(names, sha1s, types) to generate
@@ -450,4 +450,4 @@ class Model(model.Model):
 		self.update_status()
 
 	def save_gui_settings(self):
-		git.config('ugit.geometry', utils.get_geom(), local=False)
+		git.config_set('ugit.geometry', utils.get_geom(), local=False)

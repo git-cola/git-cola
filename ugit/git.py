@@ -19,12 +19,11 @@ class GitCommand(object):
 	def __init__(self, module):
 		self.module = module
 	def __getattr__(self, name):
+		if hasattr(self.module, name):
+			return getattr(self.module, name)
 		def git_cmd(*args, **kwargs):
 			return git(name.replace('_','-'), *args, **kwargs)
-		try:
-			return getattr(self.module, name)
-		except AttributeError:
-			return git_cmd
+		return git_cmd
 
 # At import we replace this module with a GitCommand singleton.
 gitcmd = GitCommand(sys.modules[__name__])
@@ -242,34 +241,29 @@ def format_patch(revs):
 		num_patches += output[-1].count('\n')
 	return '\n'.join(output)
 
-def config(key=None, value=None, local=False, asdict=False):
-	if key:
-		argv = ['config', key]
+def config_dict(local=True):
+	if local:
+		argv = [ '--list' ]
 	else:
-		argv = ['config']
+		argv = ['--global', '--list' ]
+	return config_to_dict(
+		gitcmd.config(*argv).splitlines())
 
-	kwargs = {
-		'global': local is False,
-		'get': key and value is None,
-		'list': asdict,
-	}
-
-	if asdict:
-		return config_to_dict(git('config', **kwargs).splitlines())
-
-	elif kwargs['get']:
-		return git('config', key, **kwargs)
-
-	elif key and value is not None:
+def config_set(key=None, value=None, local=True):
+	if key and value is not None:
 		# git config category.key value
 		strval = str(value)
 		if type(value) is bool:
 			# git uses "true" and "false"
 			strval = strval.lower()
-		return git('config', key, strval, **kwargs)
+		if local:
+			argv = [ key, strval ]
+		else:
+			argv = [ '--global', key, strval ]
+		return gitcmd.config(*argv)
 	else:
-		msg = "oops in git.config(key=%s,value=%s,local=%s,asdict=%s"
-		raise Exception(msg % (key, value, local, asdict))
+		msg = "oops in git.config_set(key=%s,value=%s,local=%s"
+		raise Exception(msg % (key, value, local))
 
 
 def config_to_dict(config_lines):
@@ -340,7 +334,7 @@ def remote(*args):
 	return git('remote', without_stderr=True, *args).splitlines()
 
 def remote_url(name):
-	return config('remote.%s.url' % name, local=True)
+	return gitcmd.config('remote.%s.url' % name, get=True)
 
 def reset(to_unstage):
 	"""Use 'git reset' to unstage files from the index."""
