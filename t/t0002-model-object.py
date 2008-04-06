@@ -74,4 +74,5 @@ class ModelTest(unittest.TestCase):
 		self.failUnless( self.model.get_test_dict()['hello'] == 'world' )
 		self.failUnless( self.model.get_test_list()[1] == 'bar' )
 
-if __name__ == '__main__': unittest.main()
+if __name__ == '__main__':
+	unittest.main()

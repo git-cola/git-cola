@@ -1,5 +1,8 @@
 #!/usr/bin/env python
+import os
 import unittest
+
+import testutils
 from testmodel import TestModel
 
 from ugit import git
@@ -14,6 +17,7 @@ class GitCommandTest(unittest.TestCase):
 		self.failUnless( 'ugit-0.0' in tags )
 
 	def testGitShowCdUp(self):
+		os.chdir(testutils.TEST_SCRIPT_DIR)
 		cdup = git.rev_parse(show_cdup=True)
 		self.failUnless( cdup == '../' )
 
@@ -24,7 +28,4 @@ class GitCommandTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-	import os
-	dir = os.path.dirname(__file__)
-	os.chdir(dir)
 	unittest.main()
