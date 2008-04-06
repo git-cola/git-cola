@@ -292,10 +292,6 @@ def log(oneline=True, all=False):
 			summaries.append(match.group(2))
 	return( revs, summaries )
 
-def ls_files():
-	"""git ls-files as a list"""
-	return git('ls-files').splitlines()
-
 def ls_tree(rev):
 	"""Returns a list of(mode, type, sha1, path) tuples."""
 	lines = git('ls-tree', rev, r=True).splitlines()
