@@ -331,7 +331,7 @@ class Controller(QObserver):
 		commits = self.select_commits_gui(self.tr('Export Patches'),
 				revs, summaries)
 		if not commits: return
-		self.log(self.model.format_patch(commits))
+		self.log(self.model.format_patch_helper(commits))
 
 	def quit_app(self,*rest):
 		"""Save config settings and cleanup any inotify threads."""

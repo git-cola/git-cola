@@ -201,21 +201,23 @@ def diffindex():
 			stat=True,
 			cached=True)
 
-def format_patch(revs):
+def format_patch_helper(revs):
 	"""writes patches named by revs to the "patches" directory."""
 	num_patches = 1
 	output = []
-	kwargs = {
-		'o': 'patches',
-		'n': len(revs) > 1,
-		'thread': True,
-		'patch-with-stat': True,
-	}
 	for idx, rev in enumerate(revs):
 		real_idx = idx + num_patches
-		kwargs['start-number'] = real_idx
-		revarg = '%s^..%s'%(rev,rev)
-		output.append(git('format-patch', revarg, **kwargs))
+		revarg = '%s^..%s' % (rev,rev)
+		output.append(
+			gitcmd.format_patch(
+				revarg,
+				o='patches',
+				start_number=real_idx,
+				n=len(revs) > 1,
+				thread=True,
+				patch_with_stat=True
+				)
+			)
 		num_patches += output[-1].count('\n')
 	return '\n'.join(output)
 

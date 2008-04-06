@@ -39,6 +39,7 @@ class Model(model.Model):
 				'diffstat',
 				'diffindex',
 				'format_patch',
+				'format_patch_helper',
 				'push',
 				'show',
 				'log',
