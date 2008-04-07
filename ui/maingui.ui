@@ -106,15 +106,15 @@
      <string>Search</string>
     </property>
     <addaction name="separator" />
-    <addaction name="menu_show_revision" />
-    <addaction name="actionBy_Revision_Range" />
+    <addaction name="menu_search_revision" />
+    <addaction name="menu_search_revision_range" />
     <addaction name="separator" />
-    <addaction name="actionBy_Commit_Message" />
-    <addaction name="actionCommits_Touching_Path" />
-    <addaction name="actionCommits_Adding_or_Removing_String" />
+    <addaction name="menu_search_messages" />
+    <addaction name="menu_search_paths" />
+    <addaction name="menu_search_diffs" />
     <addaction name="separator" />
-    <addaction name="actionCommits_Since_Date" />
-    <addaction name="actionCommits_in_Date_Range" />
+    <addaction name="menu_search_date" />
+    <addaction name="menu_seach_date_range" />
    </widget>
    <widget class="QMenu" name="branch_menu" >
     <property name="title" >
@@ -1020,37 +1020,37 @@ retrieve the latest commit message prior to committing.</string>
     <string>Browse Commits</string>
    </property>
   </action>
-  <action name="menu_show_revision" >
+  <action name="menu_search_revision" >
    <property name="text" >
     <string>By Revision...</string>
    </property>
   </action>
-  <action name="actionCommits_Touching_Path" >
+  <action name="menu_search_paths" >
    <property name="text" >
     <string>Commits Touching Path...</string>
    </property>
   </action>
-  <action name="actionBy_Revision_Range" >
+  <action name="menu_search_revision_range" >
    <property name="text" >
     <string>By Revision Range...</string>
    </property>
   </action>
-  <action name="actionCommits_Since_Date" >
+  <action name="menu_search_date" >
    <property name="text" >
     <string>Commits Since Date...</string>
    </property>
   </action>
-  <action name="actionCommits_in_Date_Range" >
+  <action name="menu_seach_date_range" >
    <property name="text" >
     <string>Commits within Date Range...</string>
    </property>
   </action>
-  <action name="actionBy_Commit_Message" >
+  <action name="menu_search_messages" >
    <property name="text" >
     <string>Commit Messages...</string>
    </property>
   </action>
-  <action name="actionCommits_Adding_or_Removing_String" >
+  <action name="menu_search_diffs" >
    <property name="text" >
     <string>Commits Adding or Removing String...</string>
    </property>
