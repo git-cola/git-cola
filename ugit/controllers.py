@@ -18,7 +18,7 @@ from createbranchcontroller import create_new_branch
 from pushcontroller import push_branches
 from utilcontroller import choose_branch
 from utilcontroller import select_commits
-from utilcontroller import find_revisions
+from utilcontroller import search_revisions
 from utilcontroller import update_options
 from utilcontroller import log_window
 
@@ -268,7 +268,7 @@ class Controller(QObserver):
 				*self.model.log_helper(all=True))
 
 	def search_revision(self):
-		find_revisions(self.model, self.view)
+		search_revisions(self.model, self.view)
 
 	def cherry_pick(self):
 		commits = self.select_commits_gui(self.tr('Cherry-Pick Commits'),

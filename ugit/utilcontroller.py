@@ -73,21 +73,21 @@ class SelectCommitsController(QObserver):
 		# Copy the sha1 into the clipboard
 		qtutils.set_clipboard(sha1)
 
-def find_revisions(model, parent):
+def search_revisions(model, parent):
 	model = model.clone()
-	view = CommitGUI(parent, 'Revision')
-	ctl = FindRevisionsController(model,view)
+	view = CommitGUI(parent, 'Search Revisions')
+	ctl = SearchRevisionsController(model, view)
 	view.show()
 	view.revision.setFocus()
 	return view.exec_() == QDialog.Accepted
 
-class FindRevisionsController(QObserver):
+class SearchRevisionsController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self,model,view)
 		set_diff_font(model, self.view.commit_text)
 
 		self.add_observables('revision')
-		self.add_actions('revision', self.find_revision)
+		self.add_actions('revision', self.search_revisions)
 		self.connect(view.commit_list, 'itemSelectionChanged()',
 				self.select_summary)
 		self.connect(view.commit_text, 'cursorPositionChanged()',
@@ -101,7 +101,7 @@ class FindRevisionsController(QObserver):
 		(self.revisions, self.summaries) = \
 			self.model.log_helper(all=True)
 
-	def find_revision(self, *rest):
+	def search_revisions(self, *rest):
 		if time.time() - self.last_time < 0.2:
 			self.last_time = time.time()
 			return
