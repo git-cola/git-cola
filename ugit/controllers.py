@@ -91,11 +91,21 @@ class Controller(QObserver):
 
 			# File Menu
 			menu_quit = self.quit_app,
+			# menu_load_bookmark = self.load_bookmark,
+			# menu_save_bookmark = self.save_bookmark,
+			# menu_manage_bookmarks = self.manage_bookmarks,
+
+			# Seaarch Menu
+			menu_search_revision = self.search_revision,
+			# menu_search_revision_range = self.search_revision_range,
+			# menu_search_messages = self.search_messages,
+			# menu_search_date = self.search_date,
+			# menu_search_date_range = self.search_date_range,
+			# menu_search_diffs = self.search_diffs,
 
 			# Repository Menu
 			menu_visualize_current = self.viz_current,
 			menu_visualize_all = self.viz_all,
-			menu_show_revision = self.show_revision,
 			menu_browse_commits = self.browse_commits,
 			menu_browse_branch = self.browse_current,
 			menu_browse_other_branch = self.browse_other,
@@ -257,7 +267,7 @@ class Controller(QObserver):
 		self.select_commits_gui(self.tr('Browse Commits'),
 				*self.model.log_helper(all=True))
 
-	def show_revision(self):
+	def search_revision(self):
 		find_revisions(self.model, self.view)
 
 	def cherry_pick(self):
@@ -331,7 +341,7 @@ class Controller(QObserver):
 		commits = self.select_commits_gui(self.tr('Export Patches'),
 				revs, summaries)
 		if not commits: return
-		self.log(self.model.format_patch_helper(commits))
+		self.log(self.model.format_patch_helper(*commits))
 
 	def quit_app(self,*rest):
 		"""Save config settings and cleanup any inotify threads."""

@@ -193,7 +193,7 @@ def diffindex():
 			stat=True,
 			cached=True)
 
-def format_patch_helper(revs):
+def format_patch_helper(*revs):
 	"""writes patches named by revs to the "patches" directory."""
 	num_patches = 1
 	output = []

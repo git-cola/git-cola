@@ -92,7 +92,9 @@ class FindRevisionsController(QObserver):
 				self.select_summary)
 		self.connect(view.commit_text, 'cursorPositionChanged()',
 				self.select_summary)
-		self.sha1 = None
+		self.connect(view.commit_list,
+			'itemDoubleClicked(QListWidgetItem*)',
+			self.doubleclick_format_patch)
 		self.last_time = time.time()
 		self.updates_enabled = True
 		self.found = []
@@ -119,38 +121,48 @@ class FindRevisionsController(QObserver):
 			summary = self.summaries[idx]
 			self.view.commit_list.addItem(summary)
 
-		if self.found:
-			self.show_revision(0)
-			found = True
-
-	def show_revision(self, gui_idx):
+	def _get_sha1_from_gui_index(self, gui_idx):
 		if not self.found:
-			return
+			return None
 		idx = self.found[gui_idx]
 		summary = self.summaries[idx]
 		revision = self.revisions[idx]
-		if self.sha1 and self.sha1 == revision:
-			return
+		return revision
+
+	def show_revision(self, gui_idx):
+		revision = self._get_sha1_from_gui_index(gui_idx)
 		qtutils.set_clipboard(revision)
 		diff = self.model.get_commit_diff(revision)
-		self.sha1 = revision
 		self.updates_enabled = False
 		self.view.commit_text.setText(diff)
 		self.updates_enabled = True
 
 	def select_summary(self,*args):
 		if not self.updates_enabled: return
-		if not self.sha1: return
-		# Inhibit doing a new search when we set the revision field
-		self.updates_enabled = False
-		self.view.revision.setText(self.sha1)
-		self.updates_enabled = True
-		self.view.revision.selectAll()
-		self.view.revision.setFocus()
 		row, selected = qtutils.get_selected_row(
 						self.view.commit_list)
-		if selected and row < len(self.found):
+		if not selected or row >= len(self.found):
+			return
+		revision = self._get_sha1_from_gui_index(row)
+		if not revision:
+			return
+		# Inhibit doing a new search when we set the revision field
+		#+++ Disable updates
+		self.updates_enabled = False
+		if revision:
+			self.view.revision.setText(revision)
+			self.view.revision.selectAll()
+			self.view.revision.setFocus()
 			self.show_revision(row)
+		#+++ Enable updates
+		self.updates_enabled = True
+
+	def doubleclick_format_patch(self, item):
+		row = self.view.commit_list.row(item)
+		idx = self.found[row]
+		revision = self.revisions[idx]
+		output = self.model.format_patch_helper(revision)
+		qtutils.log(output, quiet=False, doraise=True)
 
 def update_options(model, parent):
 	view = OptionsGUI(parent)
