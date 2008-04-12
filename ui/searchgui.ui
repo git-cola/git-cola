@@ -172,14 +172,14 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1" >
+     <item row="0" column="2" >
       <widget class="QPushButton" name="button_cherrypick" >
        <property name="text" >
         <string>Cherry Pick</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="2" >
+     <item row="0" column="3" >
       <spacer>
        <property name="orientation" >
         <enum>Qt::Horizontal</enum>
@@ -192,10 +192,17 @@
        </property>
       </spacer>
      </item>
-     <item row="0" column="3" >
+     <item row="0" column="4" >
       <widget class="QPushButton" name="button_close" >
        <property name="text" >
         <string>Close</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" >
+      <widget class="QPushButton" name="button_merge" >
+       <property name="text" >
+        <string>Merge</string>
        </property>
       </widget>
      </item>
