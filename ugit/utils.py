@@ -69,11 +69,9 @@ def run_cmd(cmd, *args, **kwargs):
 		with_status: off -> passing with_status=True returns
 				tuple(status,output) instead of just output
 
-	run_command(foo fi, bar, buzz, baz=value, q=None)
-	Produces:
-		argv=[foo fi -q --baz=value bar buzz]
-
-	run_command
+	run_command("git foo", bar, buzz, baz=value, q=True)
+	implies:
+		argv=["git","foo","-q","--baz=value","bar","buzz"]
 	"""
 	raw = pop_key(kwargs, 'raw')
 	with_status = pop_key(kwargs,'with_status')
