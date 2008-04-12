@@ -1,7 +1,7 @@
 <ui version="4.0" >
  <author>David Aguilar</author>
- <class>maingui</class>
- <widget class="QMainWindow" name="maingui" >
+ <class>main</class>
+ <widget class="QMainWindow" name="main" >
   <property name="geometry" >
    <rect>
     <x>0</x>

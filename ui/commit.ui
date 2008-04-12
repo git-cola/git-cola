@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>commitgui</class>
- <widget class="QDialog" name="commitgui" >
+ <class>commit</class>
+ <widget class="QDialog" name="commit" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -114,7 +114,7 @@
   <connection>
    <sender>button_box</sender>
    <signal>accepted()</signal>
-   <receiver>commitgui</receiver>
+   <receiver>commit</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -130,7 +130,7 @@
   <connection>
    <sender>button_box</sender>
    <signal>rejected()</signal>
-   <receiver>commitgui</receiver>
+   <receiver>commit</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >

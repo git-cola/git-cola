@@ -6,10 +6,10 @@ from PyQt4.QtGui import QFont
 from ugit import utils
 from ugit import qtutils
 from ugit.model import Model
-from ugit.views import BranchGUI
-from ugit.views import CommitGUI
-from ugit.views import OptionsGUI
-from ugit.views import OutputGUI
+from ugit.views import BranchView
+from ugit.views import CommitView
+from ugit.views import OptionsView
+from ugit.views import LogView
 from ugit.qobserver import QObserver
 
 def set_diff_font(model, widget):
@@ -21,16 +21,16 @@ def set_diff_font(model, widget):
 		widget.setFont(qf)
 
 def choose_branch(title, parent, branches):
-	dlg = BranchGUI(parent,branches)
+	dlg = BranchView(parent,branches)
 	dlg.setWindowTitle(dlg.tr(title))
 	return dlg.get_selected()
 
 def select_commits(model, parent, title, revs, summaries):
-	'''Use the CommitGUI to select commits from a list.'''
+	'''Use the CommitView to select commits from a list.'''
 	model = model.clone()
 	model.set_revisions(revs)
 	model.set_summaries(summaries)
-	view = CommitGUI(parent, title)
+	view = CommitView(parent, title)
 	ctl = SelectCommitsController(model, view)
 	return ctl.select_commits()
 
@@ -76,7 +76,7 @@ class SelectCommitsController(QObserver):
 
 def search_revisions(model, parent):
 	model = model.clone()
-	view = CommitGUI(parent, 'Search Revisions')
+	view = CommitView(parent, 'Search Revisions')
 	ctl = SearchRevisionsController(model, view)
 	view.show()
 	view.revision.setFocus()
@@ -166,7 +166,7 @@ class SearchRevisionsController(QObserver):
 		qtutils.log(output, quiet=False, doraise=True)
 
 def update_options(model, parent):
-	view = OptionsGUI(parent)
+	view = OptionsView(parent)
 	ctl = OptionsController(model,view)
 	view.show()
 	return view.exec_() == QDialog.Accepted
@@ -285,13 +285,13 @@ class OptionsController(QObserver):
 
 		self.tell_parent_model()
 
-def log_window(parent):
+def logger(parent):
 	model = Model( search_text = '' )
-	view = OutputGUI(parent)
-	ctl = LogWindowController(model,view)
+	view = LogView(parent)
+	ctl = LogController(model,view)
 	return view
 
-class LogWindowController(QObserver):
+class LogController(QObserver):
 	def __init__(self, model, view):
 		QObserver.__init__(self, model, view)
 

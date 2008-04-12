@@ -19,7 +19,7 @@ from util import choose_branch
 from util import select_commits
 from util import search_revisions
 from util import update_options
-from util import log_window
+from util import logger
 from repobrowser import browse_git_branch
 from createbranch import create_new_branch
 
@@ -30,7 +30,7 @@ class Controller(QObserver):
 		QObserver.__init__(self, model, view)
 
 		# parent-less log window
-		qtutils.LOGGER = log_window(QtGui.qApp.activeWindow())
+		qtutils.LOGGER = logger(QtGui.qApp.activeWindow())
 
 		# Avoids inotify floods from e.g. make
 		self.__last_inotify_event = time.time()

@@ -10,19 +10,20 @@ from ugit import qtutils
 from ugit.syntax import DiffSyntaxHighlighter
 from ugit.syntax import LogSyntaxHighlighter
 
-from maingui import Ui_maingui
-from outputgui import Ui_outputgui
-from optionsgui import Ui_optionsgui
-from branchgui import Ui_branchgui
-from commitgui import Ui_commitgui
-from createbranchgui import Ui_createbranchgui
-from pushgui import Ui_pushgui
+from main import Ui_main
+from push import Ui_push
+from branch import Ui_branch
+from commit import Ui_commit
+from logger import Ui_logger
+from search import Ui_search
+from options import Ui_options
+from createbranch import Ui_createbranch
 
-class View(Ui_maingui, QMainWindow):
+class View(Ui_main, QMainWindow):
 	'''The main ugit interface.'''
 	def __init__(self, parent=None):
 		QMainWindow.__init__(self, parent)
-		Ui_maingui.__init__(self)
+		Ui_main.__init__(self)
 		self.setupUi(self)
 		self.staged.setAlternatingRowColors(True)
 		self.unstaged.setAlternatingRowColors(True)
@@ -90,13 +91,13 @@ class View(Ui_maingui, QMainWindow):
 		num_selected_lines = selection.count('\n')
 		return offset, selection
 
-class OutputGUI(Ui_outputgui, QDialog):
-	'''A simple dialog to display command output.'''
+class LogView(Ui_logger, QDialog):
+	'''A simple dialog to display command logs.'''
 	def __init__(self, parent=None, output=None):
 		QDialog.__init__(self, parent)
-		Ui_outputgui.__init__(self)
+		Ui_logger.__init__(self)
 		self.setupUi(self)
-		self.setWindowTitle(self.tr('Git Command Output'))
+		self.setWindowTitle(self.tr('Git Command Log'))
 		# Syntax highlight the log window
 		LogSyntaxHighlighter(self.output_text.document())
 		if output: self.set_output(output)
@@ -116,11 +117,11 @@ class OutputGUI(Ui_outputgui, QDialog):
 		cursor.movePosition(cursor.End)
 		text.setTextCursor(cursor)
 
-class BranchGUI(Ui_branchgui, QDialog):
+class BranchView(Ui_branch, QDialog):
 	'''A dialog for choosing branches.'''
 	def __init__(self, parent=None, branches=None):
 		QDialog.__init__(self, parent)
-		Ui_branchgui.__init__(self)
+		Ui_branch.__init__(self)
 		self.setupUi(self)
 		self.reset()
 		if branches: self.add(branches)
@@ -138,10 +139,10 @@ class BranchGUI(Ui_branchgui, QDialog):
 		else:
 			return None
 
-class CommitGUI(Ui_commitgui, QDialog):
+class CommitView(Ui_commit, QDialog):
 	def __init__(self, parent=None, title=None):
 		QDialog.__init__(self, parent)
-		Ui_commitgui.__init__(self)
+		Ui_commit.__init__(self)
 		self.setupUi(self)
 		if title: self.setWindowTitle(title)
 		# Make the list widget slighty larger
@@ -149,20 +150,26 @@ class CommitGUI(Ui_commitgui, QDialog):
 		DiffSyntaxHighlighter(self.commit_text.document(),
 				whitespace=False)
 
-class CreateBranchGUI(Ui_createbranchgui, QDialog):
+class CreateBranchView(Ui_createbranch, QDialog):
 	def __init__(self, parent=None):
 		QDialog.__init__(self, parent)
-		Ui_createbranchgui.__init__(self)
+		Ui_createbranch.__init__(self)
 		self.setupUi(self)
 
-class PushGUI(Ui_pushgui, QDialog):
+class PushView(Ui_push, QDialog):
 	def __init__(self, parent=None):
 		QDialog.__init__(self, parent)
-		Ui_pushgui.__init__(self)
+		Ui_push.__init__(self)
 		self.setupUi(self)
 
-class OptionsGUI(Ui_optionsgui, QDialog):
+class OptionsView(Ui_options, QDialog):
 	def __init__(self, parent=None):
 		QDialog.__init__(self, parent)
-		Ui_optionsgui.__init__(self)
+		Ui_options.__init__(self)
+		self.setupUi(self)
+
+class SearchView(Ui_search, QDialog):
+	def __init__(self, parent=None):
+		QDialog.__init__(self, parent)
+		Ui_search.__init__(self)
 		self.setupUi(self)

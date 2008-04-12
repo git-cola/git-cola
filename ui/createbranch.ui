@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>createbranchgui</class>
- <widget class="QDialog" name="createbranchgui" >
+ <class>createbranch</class>
+ <widget class="QDialog" name="createbranch" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -289,7 +289,7 @@
   <connection>
    <sender>cancel_button</sender>
    <signal>pressed()</signal>
-   <receiver>createbranchgui</receiver>
+   <receiver>createbranch</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >

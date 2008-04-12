@@ -5,7 +5,7 @@ from PyQt4.QtGui import QDialog
 from ugit import utils
 from ugit import qtutils
 from ugit import defaults
-from ugit.views import CommitGUI
+from ugit.views import CommitView
 from ugit.qobserver import QObserver
 
 def browse_git_branch(model, parent, branch):
@@ -14,7 +14,7 @@ def browse_git_branch(model, parent, branch):
 		# with different sets of data
 		model = model.clone()
 		model.set_branch(branch)
-		view = CommitGUI(parent)
+		view = CommitView(parent)
 		controller = RepoBrowserController(model, view)
 		view.show()
 		return view.exec_() == QDialog.Accepted

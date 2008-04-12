@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>pushgui</class>
- <widget class="QDialog" name="pushgui" >
+ <class>push</class>
+ <widget class="QDialog" name="push" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -119,7 +119,7 @@
   <connection>
    <sender>cancel_button</sender>
    <signal>released()</signal>
-   <receiver>pushgui</receiver>
+   <receiver>push</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >

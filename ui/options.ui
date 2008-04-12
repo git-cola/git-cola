@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>optionsgui</class>
- <widget class="QDialog" name="optionsgui" >
+ <class>options</class>
+ <widget class="QDialog" name="options" >
   <property name="windowModality" >
    <enum>Qt::ApplicationModal</enum>
   </property>
@@ -296,7 +296,7 @@
   <connection>
    <sender>cancel_button</sender>
    <signal>released()</signal>
-   <receiver>optionsgui</receiver>
+   <receiver>options</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >

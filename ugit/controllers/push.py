@@ -3,13 +3,13 @@ from PyQt4.QtGui import QDialog
 
 from ugit import utils
 from ugit import qtutils
-from ugit.views import PushGUI
+from ugit.views import PushView
 from ugit.qobserver import QObserver
 
 def push_branches(model, parent):
 	model = model.clone()
-	view = PushGUI(parent)
-	controller = PushController(model,view)
+	view = PushView(parent)
+	controller = PushController(model, view)
 	view.show()
 	return view.exec_() == QDialog.Accepted
 

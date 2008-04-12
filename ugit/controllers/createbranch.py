@@ -4,13 +4,13 @@ from PyQt4.QtGui import QDialog
 
 from ugit import utils
 from ugit import qtutils
-from ugit.views import CreateBranchGUI
+from ugit.views import CreateBranchView
 from ugit.qobserver import QObserver
 
 def create_new_branch(model,parent):
 	model = model.clone()
-	view = CreateBranchGUI(parent)
-	ctl = CreateBranchController(model,view)
+	view = CreateBranchView(parent)
+	ctl = CreateBranchController(model, view)
 	view.show()
 	return view.exec_() == QDialog.Accepted
 
