@@ -1,10 +1,10 @@
 import os
 from PyQt4.QtGui import QDialog
 
-import utils
-import qtutils
-from qobserver import QObserver
-from views import PushGUI
+from ugit import utils
+from ugit import qtutils
+from ugit.views import PushGUI
+from ugit.qobserver import QObserver
 
 def push_branches(model, parent):
 	model = model.clone()

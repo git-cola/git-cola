@@ -2,14 +2,15 @@
 import time
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QFont
-import utils
-import qtutils
-from qobserver import QObserver
-from views import BranchGUI
-from views import CommitGUI
-from views import OptionsGUI
-from views import OutputGUI
-from model import Model
+
+from ugit import utils
+from ugit import qtutils
+from ugit.model import Model
+from ugit.views import BranchGUI
+from ugit.views import CommitGUI
+from ugit.views import OptionsGUI
+from ugit.views import OutputGUI
+from ugit.qobserver import QObserver
 
 def set_diff_font(model, widget):
 	if model.has_param('global_ugit_fontdiff'):

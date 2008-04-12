@@ -9,18 +9,19 @@ from PyQt4.QtGui import QMessageBox
 from PyQt4.QtGui import QMenu
 from PyQt4.QtGui import QFont
 
-import utils
-import qtutils
-import defaults
-from qobserver import QObserver
-from repobrowsercontroller import browse_git_branch
-from createbranchcontroller import create_new_branch
-from pushcontroller import push_branches
-from utilcontroller import choose_branch
-from utilcontroller import select_commits
-from utilcontroller import search_revisions
-from utilcontroller import update_options
-from utilcontroller import log_window
+from ugit import utils
+from ugit import qtutils
+from ugit import defaults
+from ugit.qobserver import QObserver
+
+from push import push_branches
+from util import choose_branch
+from util import select_commits
+from util import search_revisions
+from util import update_options
+from util import log_window
+from repobrowser import browse_git_branch
+from createbranch import create_new_branch
 
 class Controller(QObserver):
 	"""Controller manages the interaction between the model and views."""

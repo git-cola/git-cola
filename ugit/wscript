@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 import Common
 def build(bld):
+	# Compile the controllers
+	bld.add_subdirs('views controllers')
 	# Compile the ugit support modules
 	pyqt = bld.create_obj('py')
-	pyqt.inst_var = 'PYMODS_UGIT'
+	pyqt.inst_var = 'UGIT_MODULES'
 	pyqt.find_sources_in_dirs('.')
 
 	# Install the git-ugit launcher
-	Common.install_files('BIN', '', 'git-ugit', chmod=0755)
-	Common.symlink_as('BIN', 'git-ugit', 'ugit')
+	Common.install_files('UGIT_BINDIR', '', 'git-ugit', chmod=0755)
+	Common.symlink_as('UGIT_BINDIR', 'git-ugit', 'ugit')

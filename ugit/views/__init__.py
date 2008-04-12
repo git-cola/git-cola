@@ -5,6 +5,11 @@ from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QMainWindow
 from PyQt4.QtGui import QCheckBox
 from PyQt4.QtGui import QSplitter
+
+from ugit import qtutils
+from ugit.syntax import DiffSyntaxHighlighter
+from ugit.syntax import LogSyntaxHighlighter
+
 from maingui import Ui_maingui
 from outputgui import Ui_outputgui
 from optionsgui import Ui_optionsgui
@@ -12,9 +17,6 @@ from branchgui import Ui_branchgui
 from commitgui import Ui_commitgui
 from createbranchgui import Ui_createbranchgui
 from pushgui import Ui_pushgui
-from syntax import DiffSyntaxHighlighter
-from syntax import LogSyntaxHighlighter
-import qtutils
 
 class View(Ui_maingui, QMainWindow):
 	'''The main ugit interface.'''

@@ -2,10 +2,10 @@
 import os
 from PyQt4.QtGui import QDialog
 
-import utils
-import qtutils
-from qobserver import QObserver
-from views import CreateBranchGUI
+from ugit import utils
+from ugit import qtutils
+from ugit.views import CreateBranchGUI
+from ugit.qobserver import QObserver
 
 def create_new_branch(model,parent):
 	model = model.clone()

@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 import os
 from PyQt4.QtGui import QDialog
-from qobserver import QObserver
-import utils
-import qtutils
-import defaults
-from views import CommitGUI
+
+from ugit import utils
+from ugit import qtutils
+from ugit import defaults
+from ugit.views import CommitGUI
+from ugit.qobserver import QObserver
 
 def browse_git_branch(model, parent, branch):
 		if not branch: return

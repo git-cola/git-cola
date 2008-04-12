@@ -3,7 +3,7 @@ import Common
 
 def gen_install(path):
 	def install():
-		Common.install_files('PYMODS_UGIT', '', path)
+		Common.install_files('UGIT_MODULES', '', path)
 	return install
 
 def build(bld):
@@ -17,4 +17,4 @@ def build(bld):
 	vgen.command = 'gitversion.sh'
 	vgen.stdin = 'gitversion.sh'
 	vgen.stdout = 'version.py'
-	vgen.install = gen_install('scripts/version.py')
+	vgen.install = gen_install('../scripts/version.py')

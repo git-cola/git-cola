@@ -4,11 +4,13 @@ import sys
 import glob
 import Params
 import Common
+from os.path import join
+from distutils.sysconfig import get_python_version
 
 # Release versioning
 def get_version():
 	"""Runs version.sh and returns the output."""
-	cmd = os.path.join(os.getcwd(), 'scripts', 'version.sh')
+	cmd = join(os.getcwd(), 'scripts', 'version.sh')
 	pipe = os.popen(cmd)
 	version = pipe.read()
 	pipe.close()
@@ -33,10 +35,19 @@ def set_options(opt):
 # Configure
 def configure(conf):
 	env = conf.env
-	env['PYMODS'] = pymod(env['PREFIX'])
-	env['PYMODS_UGIT'] = os.path.join(env['PYMODS'], 'ugit')
-	env['ICONS'] = os.path.join(env['PREFIX'], 'share', 'ugit', 'icons')
-	env['BIN'] = os.path.join(env['PREFIX'], 'bin')
+	prefix = env['PREFIX']
+	bindir = join(prefix, 'bin')
+	sitepackages = pymod(prefix)
+	modules = join(sitepackages, 'ugit')
+	views = join(modules, 'views')
+	controllers = join(modules, 'controllers')
+	icons = join(prefix, 'share', 'ugit', 'icons')
+
+	env['UGIT_BINDIR'] = bindir
+	env['UGIT_MODULES'] = modules
+	env['UGIT_VIEWS'] = views
+	env['UGIT_CONTROLLERS'] = controllers
+	env['UGIT_ICONS'] = icons
 
 	conf.check_tool('misc')
 	conf.check_tool('python')
@@ -52,12 +63,11 @@ def build(bld):
 	qm.find_sources_in_dirs('po')
 
 	for icon in glob.glob('icons/*.png'):
-		Common.install_files('ICONS', '', icon)
+		Common.install_files('UGIT_ICONS', '', icon)
 
 #############################################################################
 # Other
 def pymod(prefix):
 	"""Returns a lib/python2.x/site-packages path relative to prefix"""
-	api_version = sys.version[:3]
-	python_api = 'python' + api_version
-	return os.path.join(prefix, 'lib', python_api, 'site-packages')
+	python_api = 'python' + get_python_version()
+	return join(prefix, 'lib', python_api, 'site-packages')
