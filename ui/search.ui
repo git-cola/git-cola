@@ -16,21 +16,21 @@
    <item>
     <layout class="QGridLayout" >
      <item row="0" column="0" colspan="2" >
-      <widget class="QRadioButton" name="revision_radio" >
+      <widget class="QRadioButton" name="radio_revision" >
        <property name="text" >
         <string>Revision ID</string>
        </property>
       </widget>
      </item>
      <item row="0" column="2" >
-      <widget class="QRadioButton" name="paths_radio" >
+      <widget class="QRadioButton" name="radio_paths" >
        <property name="text" >
         <string>Commits Touching Paths</string>
        </property>
       </widget>
      </item>
      <item row="0" column="3" >
-      <widget class="QRadioButton" name="date_radio" >
+      <widget class="QRadioButton" name="radio_date" >
        <property name="text" >
         <string>Date</string>
        </property>
@@ -40,21 +40,21 @@
       <widget class="QDateEdit" name="date" />
      </item>
      <item row="1" column="0" colspan="2" >
-      <widget class="QRadioButton" name="range_radio" >
+      <widget class="QRadioButton" name="radio_range" >
        <property name="text" >
         <string>Revision Range Expression</string>
        </property>
       </widget>
      </item>
      <item row="1" column="2" >
-      <widget class="QRadioButton" name="messages_radio" >
+      <widget class="QRadioButton" name="radio_messages" >
        <property name="text" >
         <string>Commit Messages</string>
        </property>
       </widget>
      </item>
      <item row="1" column="3" colspan="2" >
-      <widget class="QRadioButton" name="daterange_radio" >
+      <widget class="QRadioButton" name="radio_daterange" >
        <property name="text" >
         <string>Date Range (Start / End)</string>
        </property>
@@ -84,7 +84,7 @@
       </widget>
      </item>
      <item row="2" column="2" >
-      <widget class="QRadioButton" name="diffs_radio" >
+      <widget class="QRadioButton" name="radio_diffs" >
        <property name="text" >
         <string>Search Diffs</string>
        </property>
@@ -211,5 +211,22 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>button_close</sender>
+   <signal>clicked()</signal>
+   <receiver>search</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>552</x>
+     <y>527</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>299</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

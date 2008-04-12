@@ -48,7 +48,9 @@ class Model(model.Model):
 				'log_helper',
 				'rebase',
 				'remote_url',
+				'rev_list',
 				'rev_list_range',
+				'parsed_rev_range',
 				):
 			setattr(self, cmd, getattr(git,cmd))
 

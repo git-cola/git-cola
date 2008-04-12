@@ -173,3 +173,6 @@ class SearchView(Ui_search, QDialog):
 		QDialog.__init__(self, parent)
 		Ui_search.__init__(self)
 		self.setupUi(self)
+		self.input.setFocus()
+		DiffSyntaxHighlighter(self.commit_text.document(),
+				whitespace=False)

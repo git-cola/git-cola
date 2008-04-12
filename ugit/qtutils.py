@@ -140,8 +140,17 @@ def create_item(filename, staged, untracked=False):
 		icon_file = utils.get_file_icon(filename)
 	return create_listwidget_item(filename, icon_file)
 
+def create_txt_item(txt):
+	item = QListWidgetItem()
+	item.setText(txt)
+	return item
+
 def update_listwidget(widget, items, staged=True,
 			untracked=False, append=False):
 	'''Populate a QListWidget with custom icon items.'''
 	if not append: widget.clear()
 	add_items( widget, [ create_item(i, staged, untracked) for i in items ])
+
+def set_listwidget_strings(widget, items):
+	widget.clear()
+	add_items( widget, [ create_txt_item(i) for i in items ])

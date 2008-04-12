@@ -294,15 +294,21 @@ def remote_url(name):
 
 def rev_list_range(start, end):
 	range = '%s..%s' % ( start, end )
-	raw_revs = gitcmd.rev_list(range, pretty='oneline').splitlines()
+	raw_revs = gitcmd.rev_list(range, pretty='oneline')
+	return parse_rev_list(raw_revs)
+
+def parse_rev_list(raw_revs):
 	revs = []
-	for line in raw_revs:
+	for line in raw_revs.splitlines():
 		match = REV_LIST_REGEX.match(line)
 		if match:
 			rev_id = match.group(1)
 			summary = match.group(2)
 			revs.append((rev_id, summary,) )
 	return revs
+
+def parsed_rev_range(revrange):
+	return parse_rev_list(gitcmd.rev_list(revrange, pretty='oneline'))
 
 def parse_status():
 	"""RETURNS: A tuple of staged, unstaged and untracked file lists."""
