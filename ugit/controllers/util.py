@@ -88,7 +88,7 @@ class SearchRevisionsController(QObserver):
 		set_diff_font(model, self.view.commit_text)
 
 		self.add_observables('revision')
-		self.add_actions('revision', self.search_revisions)
+		self.add_actions(revision = self.search_revisions)
 		self.connect(view.commit_list, 'itemSelectionChanged()',
 				self.select_summary)
 		self.connect(view.commit_text, 'cursorPositionChanged()',
@@ -204,10 +204,10 @@ class OptionsController(QObserver):
 			'global_ugit_savewindowsettings',
 			'global_ugit_saveatexit',
 			)
-		self.add_actions('global_ugit_fontdiff_size', self.update_size)
-		self.add_actions('global_ugit_fontui_size', self.update_size)
-		self.add_actions('global_ugit_fontdiff', self.tell_parent_model)
-		self.add_actions('global_ugit_fontui', self.tell_parent_model)
+		self.add_actions(global_ugit_fontdiff_size = self.update_size)
+		self.add_actions(global_ugit_fontui_size = self.update_size)
+		self.add_actions(global_ugit_fontdiff = self.tell_parent_model)
+		self.add_actions(global_ugit_fontui = self.tell_parent_model)
 		self.add_callbacks(save_button = self.save_settings)
 		self.connect(self.view, 'rejected()', self.restore_settings)
 
@@ -296,7 +296,7 @@ class LogController(QObserver):
 		QObserver.__init__(self, model, view)
 
 		self.add_observables('search_text')
-		self.add_actions('search_text', self.insta_search)
+		self.add_actions(search_text = self.insta_search)
 		self.add_callbacks(
 				clear_button = self.clear,
 				next_button = self.next,

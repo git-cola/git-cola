@@ -7,8 +7,7 @@ from PyQt4.QtGui import QIcon
 from PyQt4.QtGui import QListWidgetItem
 from PyQt4.QtGui import QMessageBox
 
-import views
-import utils
+from ugit import utils
 
 LOGGER = None
 

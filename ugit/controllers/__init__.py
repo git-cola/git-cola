@@ -14,14 +14,16 @@ from ugit import qtutils
 from ugit import defaults
 from ugit.qobserver import QObserver
 
+from util import logger
 from push import push_branches
 from util import choose_branch
 from util import select_commits
 from util import search_revisions
 from util import update_options
-from util import logger
 from repobrowser import browse_git_branch
 from createbranch import create_new_branch
+from search import search_commits
+import search
 
 class Controller(QObserver):
 	"""Controller manages the interaction between the model and views."""
@@ -53,10 +55,10 @@ class Controller(QObserver):
 		self.add_observables('commitmsg', 'staged', 'unstaged')
 
 		# When a model attribute changes, this runs a specific action
-		self.add_actions('staged', self.action_staged)
-		self.add_actions('unstaged', self.action_unstaged)
-		self.add_actions('global_ugit_fontdiff', self.update_diff_font)
-		self.add_actions('global_ugit_fontui', self.update_ui_font)
+		self.add_actions(staged = self.action_staged)
+		self.add_actions(unstaged = self.action_unstaged)
+		self.add_actions(global_ugit_fontdiff = self.update_diff_font)
+		self.add_actions(global_ugit_fontui = self.update_ui_font)
 
 		self.add_callbacks(
 			# Actions that delegate directly to the model
@@ -98,7 +100,7 @@ class Controller(QObserver):
 
 			# Seaarch Menu
 			menu_search_revision = self.search_revision,
-			# menu_search_revision_range = self.search_revision_range,
+			menu_search_revision_range = self.search_revision_range,
 			# menu_search_messages = self.search_messages,
 			# menu_search_date = self.search_date,
 			# menu_search_date_range = self.search_date_range,
@@ -229,6 +231,9 @@ class Controller(QObserver):
 
 	#####################################################################
 	# Qt callbacks
+
+	def search_revision_range(self):
+		search_commits(self.model, self.view, search.REVISION_RANGE)
 
 	def show_log(self, *rest):
 		qtutils.toggle_log_window()
@@ -717,7 +722,7 @@ class Controller(QObserver):
 		# Recommend installing inotify if we're on Linux.
 		self.inotify_thread = None
 		try:
-			from inotify import GitNotifier
+			from ugit.inotify import GitNotifier
 			qtutils.log(self.tr('inotify support: enabled'))
 		except ImportError:
 			import platform

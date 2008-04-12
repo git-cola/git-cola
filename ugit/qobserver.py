@@ -12,7 +12,7 @@ from PyQt4.QtGui import QAbstractButton
 from PyQt4.QtGui import QSplitter
 from PyQt4.QtGui import QAction
 
-from observer import Observer
+from ugit.observer import Observer
 
 class QObserver(Observer, QObject):
 
@@ -138,10 +138,14 @@ class QObserver(Observer, QObject):
 				"%s => %s" %( type(widget),
 						str(widget.objectName()) ))
 
-	def add_actions(self, model_param, callback):
+	def add_actions(self, **kwargs):
 		'''Register view actions that are called in response to
 		view changes.(view->model)'''
-		self.__actions[model_param] = callback
+		for model_param, callback in kwargs.iteritems():
+			if type(callback) is list:
+				self.__actions[model_param] = callback
+			else:
+				self.__actions[model_param] = [callback]
 
 	def subject_changed(self, param, value):
 		'''Sends a model param to the view(model->view)'''
@@ -172,13 +176,15 @@ class QObserver(Observer, QObject):
 						widget_name, widget, value)
 			self.model.set_notify(notify)
 
-		if param not in self.__actions: return
+		if param not in self.__actions:
+			return
 		widgets = []
 		if param in self.__model_to_view:
 			for widget in self.__model_to_view[param]:
 				widgets.append(widget)
 		# Call the model callback w/ the view's widgets as the args
-		self.__actions[param](*widgets)
+		for action in self.__actions[param]:
+			action(*widgets)
 
 	def refresh_view(self, *params):
 		if not params:

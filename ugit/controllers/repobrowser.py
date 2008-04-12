@@ -25,7 +25,7 @@ class RepoBrowserController(QObserver):
 
 		view.setWindowTitle('File Browser')
 		self.add_signals('itemSelectionChanged()', view.commit_list,)
-		self.add_actions('directory', self.action_directory_changed)
+		self.add_actions(directory = self.action_directory_changed)
 		self.add_callbacks(commit_list = self.item_changed)
 		self.connect(
 			view.commit_list,

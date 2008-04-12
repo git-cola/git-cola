@@ -1,9 +1,9 @@
 import os
 import re
 
-import git
-import utils
-import model
+from ugit import git
+from ugit import utils
+from ugit import model
 
 class Model(model.Model):
 	"""Provides a friendly wrapper for doing commit git operations."""
