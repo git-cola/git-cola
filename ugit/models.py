@@ -25,35 +25,9 @@ class Model(model.Model):
 		# Read git config
 		self.init_config_data()
 
-		# These methods are best left implemented in git.py
-		for cmd in (
-				'add',
-				'add_or_remove',
-				'cat_file',
-				'checkout',
-				'create_branch',
-				'cherry_pick',
-				'cherry_pick_list',
-				'commit_with_msg',
-				'diff',
-				'diff_helper',
-				'diffstat',
-				'diffindex',
-				'format_patch',
-				'format_patch_helper',
-				'push',
-				'push_helper',
-				'show',
-				'log',
-				'log_helper',
-				'rebase',
-				'remote_url',
-				'rev_list',
-				'rev_list_range',
-				'parse_rev_list',
-				'parsed_rev_range',
-				):
-			setattr(self, cmd, getattr(git,cmd))
+		# Import all git commands from git.py
+		for name, cmd in git.commands.iteritems():
+			setattr(self, name, cmd)
 
 		self.create(
 			#####################################################
@@ -274,7 +248,7 @@ class Model(model.Model):
 		if not remote: return
 		self.set_param('remote', remote)
 		branches = utils.grep( '%s/\S+$' % remote,
-				git.branch(remote=True), squash=False)
+				git.branch_list(remote=True), squash=False)
 		self.set_remote_branches(branches)
 
 	def add_signoff(self,*rest):
@@ -355,8 +329,8 @@ class Model(model.Model):
 		self.set_branch(git.current_branch())
 		self.set_unstaged(self.get_modified() + self.get_untracked())
 		self.set_remotes(git.remote().splitlines())
-		self.set_remote_branches(git.branch(remote=True))
-		self.set_local_branches(git.branch(remote=False))
+		self.set_remote_branches(git.branch_list(remote=True))
+		self.set_local_branches(git.branch_list(remote=False))
 		self.set_tags(git.tag().splitlines())
 		self.set_revision('')
 		self.set_local_branch('')
@@ -366,7 +340,7 @@ class Model(model.Model):
 		self.notify_observers('staged','unstaged')
 
 	def delete_branch(self, branch):
-		return git.branch(name=branch, delete=True)
+		return git.branch(branch, D=True)
 
 	def get_revision_sha1(self, idx):
 		return self.get_revisions()[idx]

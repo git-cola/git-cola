@@ -6,8 +6,10 @@ import utils
 import defaults
 from cStringIO import StringIO
 
+# union of functions in this file and dynamic functions
+# defined in the git command string list below
 def git(*args,**kwargs):
-	"""This is a convenience wrapper around run_cmd that
+	"""This is a convenience wrapper around utils.run_cmd that
 	sets things up so that commands are run in the canonical
 	'git command [options] [args]' form."""
 	cmd = 'git %s' % args[0]
@@ -18,17 +20,43 @@ class GitCommand(object):
 	can be dynamically called at runtime."""
 	def __init__(self, module):
 		self.module = module
+		self.commands = {}
+
+		# This creates git.foo() methods dynamically for each of the
+		# following names at import-time.  Any names not listed here
+		# are generated at runtime and thus not available during
+		# import.
+		for cmd in """
+			add apply branch checkout cherry_pick commit diff
+			fetch format_patch grep log ls_tree merge pull push
+			rebase remote reset rm show status tag
+		""".split():
+			getattr(self, cmd)
+	
+	def setup_commands(self):
+		# Import the functions from the module
+		for name, val in self.module.__dict__.iteritems():
+			if type(val) is types.FunctionType:
+				setattr(self, name, val)
+		# Import dynamic functions and those from the module
+		# functions into self.commands
+		for name, val in self.__dict__.iteritems():
+			if type(val) is types.FunctionType:
+				self.commands[name] = val
+
 	def __getattr__(self, name):
 		if hasattr(self.module, name):
-			return getattr(self.module, name)
+			value = getattr(self.module, name)
+			setattr(self, name, value)
+			return value
 		def git_cmd(*args, **kwargs):
 			return git(name.replace('_','-'), *args, **kwargs)
+		setattr(self, name, git_cmd)
 		return git_cmd
 
-# At import we replace this module with a GitCommand singleton.
+# core git wrapper for use in this module
 gitcmd = GitCommand(sys.modules[__name__])
 sys.modules[__name__] = gitcmd
-
 
 #+-------------------------------------------------------------------------
 #+ A regex for matching the output of git(log|rev-list) --pretty=oneline
@@ -64,20 +92,17 @@ def add_or_remove(*to_process):
 			to_remove.append(filename)
 	output + '\n\n' + gitcmd.rm(*to_remove)
 
-def branch(name=None, remote=False, delete=False):
-	if delete and name:
-		return git('branch', name, D=True)
-	else:
-		branches = map(lambda x: x.lstrip('* '),
-				git('branch', r=remote).splitlines())
-		if remote:
-			remotes = []
-			for branch in branches:
-				if branch.endswith('/HEAD'):
-					continue
-				remotes.append(branch)
-			return remotes
-		return branches
+def branch_list(remote=False):
+	branches = map(lambda x: x.lstrip('* '),
+			gitcmd.branch(r=remote).splitlines())
+	if remote:
+		remotes = []
+		for branch in branches:
+			if branch.endswith('/HEAD'):
+				continue
+			remotes.append(branch)
+		return remotes
+	return branches
 
 def cherry_pick_list(revs, **kwargs):
 	"""Cherry-picks each revision into the current branch.
@@ -123,6 +148,7 @@ def create_branch(name, base, track=False):
 
 def current_branch():
 	"""Parses 'git branch' to find the current branch."""
+
 	branches = git('branch').splitlines()
 	for branch in branches:
 		if branch.startswith('* '):
@@ -366,3 +392,6 @@ def parse_status():
 				current_dest.append(status_line[2:])
 
 	return( staged, unstaged, untracked )
+
+# Must be last
+gitcmd.setup_commands()
