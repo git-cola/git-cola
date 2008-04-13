@@ -24,27 +24,27 @@ PyQt 4.3 or newer
 
 INSTALLATION
 
-If you downloaded a tarball, run:
-/path/to/ugit-x.y.z/bin/ugit.py
+If you downloaded a tarball, add /path/to/ugit/bin
+to your $PATH and type:
 
-If for some reason ugit.py is unable to locate its
-libraries, add its site-packages directory to your $PYTHONPATH:
-
-PYTHONPATH=/path/to/ugit-x.y.z/lib/python2.4/site-packages
-export PYTHON
-/path/to/ugit-x.y.z/bin/ugit.py
+	git ugit
 
 
 BUILDING FROM SOURCE
 
 You will need the PyQt development tools (v4.3 or greater):
 
+Synopsis:
 	sudo apt-get install pyqt4-dev-tools
 
 	git clone git://repo.or.cz/ugit.git
 	cd ugit
-	./configure --prefix=/usr && make && sudo make install
-	ugit
+		./configure --prefix=/usr
+		make
+		sudo make install
+
+	cd my/git/repo
+		git ugit
 
 WINDOWS SUPPORT
 
@@ -67,7 +67,7 @@ as of late 2007:
 4) Download and unpack ugit:
 	http://ugit.sf.net/releases/
 
-Grab the latest -win32 tarball and run ugit-win32.sh from
+Grab the latest win32 tarball and run ugit-win32.sh from
 within an msysgit or cygwin shell.
 
 The script assumes the you have Python/PyQt4 installed in C:/Python25.
