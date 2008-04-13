@@ -14,6 +14,8 @@ from ugit import qtutils
 from ugit import defaults
 from ugit.qobserver import QObserver
 
+# controllers namespace
+import search
 from util import logger
 from push import push_branches
 from util import choose_branch
@@ -22,7 +24,6 @@ from util import update_options
 from repobrowser import browse_git_branch
 from createbranch import create_new_branch
 from search import search_commits
-import search
 
 class Controller(QObserver):
 	"""Controller manages the interaction between the model and views."""
@@ -69,7 +70,6 @@ class Controller(QObserver):
 				lambda: self.log(self.model.stage_untracked()),
 			menu_unstage_all =
 				lambda: self.log(self.model.unstage_all()),
-
 			# Actions that delegate direclty to the view
 			menu_cut = view.action_cut,
 			menu_copy = view.action_copy,
@@ -78,19 +78,15 @@ class Controller(QObserver):
 			menu_select_all = view.action_select_all,
 			menu_undo = view.action_undo,
 			menu_redo = view.action_redo,
-
 			# Push Buttons
 			stage_button = self.stage_selected,
 			commit_button = self.commit,
 			push_button = self.push,
-
 			# List Widgets
 			staged = self.diff_staged,
 			unstaged = self.diff_unstaged,
-
 			# Checkboxes
 			untracked_checkbox = self.rescan,
-
 			# File Menu
 			menu_quit = self.quit_app,
 			# menu_load_bookmark = self.load_bookmark,
@@ -100,7 +96,8 @@ class Controller(QObserver):
 			# Edit Menu
 			menu_options = self.options,
 
-			# Seaarch Menu
+			# Search Menu
+			menu_search_grep = self.grep,
 			menu_search_revision =
 				self.gen_search(search.REVISION_ID),
 			menu_search_revision_range =
@@ -244,6 +241,13 @@ class Controller(QObserver):
 		def search_handler():
 			search_commits(self.model, searchtype, browse)
 		return search_handler
+
+	def grep(self):
+		txt, ok = qtutils.input("grep")
+		if not ok: return
+		stuff = self.model.grep(txt)
+		self.view.display_text.setText(stuff)
+		self.view.diff_dock.raise_()
 
 	def show_log(self, *rest):
 		qtutils.toggle_log_window()

@@ -104,6 +104,8 @@
      <string>Search</string>
     </property>
     <addaction name="separator" />
+    <addaction name="menu_search_grep" />
+    <addaction name="separator" />
     <addaction name="menu_search_revision" />
     <addaction name="menu_search_revision_range" />
     <addaction name="separator" />
@@ -138,9 +140,9 @@
    <addaction name="menuFile" />
    <addaction name="edit_menu" />
    <addaction name="search_menu" />
-   <addaction name="repository_menu" />
-   <addaction name="branch_menu" />
    <addaction name="commit_menu" />
+   <addaction name="branch_menu" />
+   <addaction name="repository_menu" />
   </widget>
   <widget class="QToolBar" name="toolbar" >
    <property name="enabled" >
@@ -1089,6 +1091,11 @@ retrieve the latest commit message prior to committing.</string>
   <action name="menu_manage_bookmarks" >
    <property name="text" >
     <string>Manage Bookmarks...</string>
+   </property>
+  </action>
+  <action name="menu_search_grep" >
+   <property name="text" >
+    <string>grep</string>
    </property>
   </action>
  </widget>
