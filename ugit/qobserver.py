@@ -1,6 +1,9 @@
 #!/usr/bin/env python
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import QObject
 from PyQt4.QtCore import SIGNAL
+from PyQt4.QtCore import QDate
+from PyQt4.QtGui import QDateEdit
 from PyQt4.QtGui import QSpinBox
 from PyQt4.QtGui import QPixmap
 from PyQt4.QtGui import QTextEdit
@@ -54,6 +57,10 @@ class QObserver(Observer, QObject):
 				model.set_param(model_param, widget.value())
 			elif isinstance(widget, QFontComboBox):
 				value = unicode(widget.currentFont().toString())
+				model.set_param(model_param, value)
+			elif isinstance(widget, QDateEdit):
+				fmt = Qt.ISODate
+				value = str(widget.date().toString(fmt))
 				model.set_param(model_param, value)
 			else:
 				print("SLOT(): Unknown widget:", sender, widget)
@@ -132,6 +139,9 @@ class QObserver(Observer, QObject):
 		elif isinstance(widget, QSplitter):
 			self.add_signals(
 				'splitterMoved(int,int)', widget)
+		elif isinstance(widget, QDateEdit):
+			self.add_signals(
+				'dateChanged(const QDate&)', widget)
 		else:
 			raise Exception(
 				"Asked to connect unknown widget:\n\t"
@@ -164,16 +174,24 @@ class QObserver(Observer, QObject):
 					widget.setText(value)
 				elif isinstance(widget, QListWidget):
 					widget.clear()
-					for i in value: widget.addItem(i)
+					for i in value:
+						widget.addItem(i)
 				elif isinstance(widget, QCheckBox):
 					widget.setChecked(value)
 				elif isinstance(widget, QFontComboBox):
 					font = widget.currentFont()
 					font.fromString(value)
+				elif isinstance(widget, QDateEdit):
+					if not value: return
+					fmt = Qt.ISODate
+					date = QDate.fromString(value, fmt)
+					if date:
+						widget.setDate(date)
 				else:
 					print('subject_changed(): '
 						+ 'Unknown widget:',
-						widget_name, widget, value)
+						str(widget.objectName()),
+						widget, value)
 			self.model.set_notify(notify)
 
 		if param not in self.__actions:
