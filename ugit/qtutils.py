@@ -19,6 +19,13 @@ def log(output, quiet=True, doraise=False):
 	if not doraise: return
 	LOGGER.raise_()
 
+def input(msg, title=None):
+	if title is None:
+		title = msg
+	parent = QtGui.qApp.activeWindow()
+	result = QtGui.QInputDialog.getText(parent, msg, title)
+	return (unicode(result[0]), result[1])
+
 def close_log_window():
 	LOGGER.hide()
 	LOGGER.done(0)
