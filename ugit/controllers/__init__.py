@@ -18,7 +18,6 @@ from util import logger
 from push import push_branches
 from util import choose_branch
 from util import select_commits
-from util import search_revisions
 from util import update_options
 from repobrowser import browse_git_branch
 from createbranch import create_new_branch
@@ -116,6 +115,8 @@ class Controller(QObserver):
 				self.gen_search(search.DIFF),
 			menu_search_author =
 				self.gen_search(search.AUTHOR),
+			menu_search_committer =
+				self.gen_search(search.COMMITTER),
 
 			# Repository Menu
 			menu_visualize_current = self.viz_current,
@@ -281,9 +282,6 @@ class Controller(QObserver):
 	def browse_commits(self):
 		self.select_commits_gui(self.tr('Browse Commits'),
 				*self.model.log_helper(all=True))
-
-	def search_revision(self):
-		search_revisions(self.model, self.view)
 
 	def cherry_pick(self):
 		commits = self.select_commits_gui(self.tr('Cherry-Pick Commits'),
