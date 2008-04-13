@@ -114,6 +114,8 @@ class Controller(QObserver):
 				self.gen_search(search.DATE_RANGE),
 			menu_search_diff =
 				self.gen_search(search.DIFF),
+			menu_search_author =
+				self.gen_search(search.AUTHOR),
 
 			# Repository Menu
 			menu_visualize_current = self.viz_current,

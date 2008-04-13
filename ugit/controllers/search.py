@@ -60,6 +60,12 @@ class MessageSearch(SearchEngine):
 		return self.parse(
 			self.model.rev_list(grep=input, all=True, **args))
 
+class AuthorSearch(SearchEngine):
+	def get_results(self):
+		input, args = self.get_common_args()
+		return self.parse(
+			self.model.rev_list(author=input, all=True, **args))
+
 class DiffSearch(SearchEngine):
 	def get_results(self):
 		input, args = self.get_common_args()
@@ -86,6 +92,7 @@ REVISION_RANGE = 'radio_range'
 PATH           = 'radio_path'
 MESSAGE        = 'radio_message'
 DIFF           = 'radio_diff'
+AUTHOR         = 'radio_author'
 DATE_RANGE     = 'radio_daterange'
 
 # Each search type is handled by a distinct SearchEngine subclass
@@ -95,6 +102,7 @@ SEARCH_ENGINES = {
 	PATH:           PathSearch,
 	MESSAGE:        MessageSearch,
 	DIFF:           DiffSearch,
+	AUTHOR:         AuthorSearch,
 	DATE_RANGE:     DateRangeSearch,
 }
 
@@ -124,6 +132,7 @@ class SearchController(QObserver):
 			radio_message = self.search_callback,
 			radio_path = self.search_callback,
 			radio_diff = self.search_callback,
+			radio_author = self.search_callback,
 			radio_daterange = self.search_callback,
 			)
 		self.set_mode(mode)
