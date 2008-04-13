@@ -29,10 +29,10 @@ class GitCommand(object):
 		for cmd in """
 			add apply branch checkout cherry_pick commit diff
 			fetch format_patch grep log ls_tree merge pull push
-			rebase remote reset rm show status tag
+			rebase remote reset rev_list rm show status tag
 		""".split():
 			getattr(self, cmd)
-	
+
 	def setup_commands(self):
 		# Import the functions from the module
 		for name, val in self.module.__dict__.iteritems():
