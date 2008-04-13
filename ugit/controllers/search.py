@@ -48,15 +48,23 @@ class RevisionRangeSearch(SearchEngine):
 		input, args = self.get_common_args()
 		return self.parse(self.model.rev_list(input, **args))
 
+class MessageSearch(SearchEngine):
+	def get_results(self):
+		input, args = self.get_common_args()
+		return self.parse(
+			self.model.rev_list(grep=input, all=True, **args))
+
 # Modes for this controller.
 # Note: names correspond to radio button names for convenience
 REVISION_ID    = 'radio_revision'
 REVISION_RANGE = 'radio_range'
+MESSAGE        = 'radio_message'
 
 # Each search type is handled by a distinct SearchEngine subclass
 SEARCH_ENGINES = {
 	REVISION_ID:    RevisionSearch,
 	REVISION_RANGE: RevisionRangeSearch,
+	MESSAGE:        MessageSearch,
 }
 
 class SearchController(QObserver):
@@ -81,6 +89,7 @@ class SearchController(QObserver):
 			# Radio buttons trigger a search
 			radio_revision = self.search_callback,
 			radio_range = self.search_callback,
+			radio_message = self.search_callback,
 			)
 		self.set_mode(mode)
 		self.update_fonts()
