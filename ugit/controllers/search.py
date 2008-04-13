@@ -51,10 +51,12 @@ class RevisionRangeSearch(SearchEngine):
 # Modes for this controller.
 # Note: names correspond to radio button names for convenience
 REVISION_ID    = 'radio_revision'
+REVISION_RANGE = 'radio_range'
 
 # Each search type is handled by a distinct SearchEngine subclass
 SEARCH_ENGINES = {
 	REVISION_ID:    RevisionSearch,
+	REVISION_RANGE: RevisionRangeSearch,
 }
 
 class SearchController(QObserver):
@@ -78,6 +80,7 @@ class SearchController(QObserver):
 			commit_list = self.display_callback,
 			# Radio buttons trigger a search
 			radio_revision = self.search_callback,
+			radio_range = self.search_callback,
 			)
 		self.set_mode(mode)
 		self.update_fonts()

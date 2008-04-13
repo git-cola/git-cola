@@ -101,13 +101,14 @@ class Controller(QObserver):
 			# Edit Menu
 			menu_options = self.options,
 			# Seaarch Menu
-			menu_search_revision_range = self.search_revision_range,
 			# menu_search_messages = self.search_messages,
 			# menu_search_date = self.search_date,
 			# menu_search_date_range = self.search_date_range,
 			# menu_search_diffs = self.search_diffs,
 			menu_search_revision =
 				self.gen_search(search.REVISION_ID),
+			menu_search_revision_range =
+				self.gen_search(search.REVISION_RANGE),
 
 			# Repository Menu
 			menu_visualize_current = self.viz_current,
