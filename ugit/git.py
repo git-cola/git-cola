@@ -307,9 +307,6 @@ def parse_rev_list(raw_revs):
 			revs.append((rev_id, summary,) )
 	return revs
 
-def parsed_rev_range(revrange):
-	return parse_rev_list(gitcmd.rev_list(revrange, pretty='oneline'))
-
 def parse_status():
 	"""RETURNS: A tuple of staged, unstaged and untracked file lists."""
 

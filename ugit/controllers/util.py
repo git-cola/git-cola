@@ -25,6 +25,8 @@ def choose_branch(title, parent, branches):
 	dlg.setWindowTitle(dlg.tr(title))
 	return dlg.get_selected()
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+ The Commit Browser GUI Controller
 def select_commits(model, parent, title, revs, summaries):
 	'''Use the CommitView to select commits from a list.'''
 	model = model.clone()
@@ -165,6 +167,8 @@ class SearchRevisionsController(QObserver):
 		output = self.model.format_patch_helper(revision)
 		qtutils.log(output, quiet=False, doraise=True)
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+ The Options GUI Controller
 def update_options(model, parent):
 	view = OptionsView(parent)
 	ctl = OptionsController(model,view)
@@ -285,9 +289,11 @@ class OptionsController(QObserver):
 
 		self.tell_parent_model()
 
-def logger(parent):
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+ The Log GUI Controller
+def logger():
 	model = Model( search_text = '' )
-	view = LogView(parent)
+	view = LogView(None)
 	ctl = LogController(model,view)
 	return view
 

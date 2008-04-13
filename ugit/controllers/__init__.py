@@ -32,7 +32,7 @@ class Controller(QObserver):
 		QObserver.__init__(self, model, view)
 
 		# parent-less log window
-		qtutils.LOGGER = logger(QtGui.qApp.activeWindow())
+		qtutils.LOGGER = logger()
 
 		# Avoids inotify floods from e.g. make
 		self.__last_inotify_event = time.time()
@@ -98,13 +98,16 @@ class Controller(QObserver):
 			# menu_save_bookmark = self.save_bookmark,
 			# menu_manage_bookmarks = self.manage_bookmarks,
 
+			# Edit Menu
+			menu_options = self.options,
 			# Seaarch Menu
-			menu_search_revision = self.search_revision,
 			menu_search_revision_range = self.search_revision_range,
 			# menu_search_messages = self.search_messages,
 			# menu_search_date = self.search_date,
 			# menu_search_date_range = self.search_date_range,
 			# menu_search_diffs = self.search_diffs,
+			menu_search_revision =
+				self.gen_search(search.REVISION_ID),
 
 			# Repository Menu
 			menu_visualize_current = self.viz_current,
@@ -127,9 +130,6 @@ class Controller(QObserver):
 			menu_export_patches = self.export_patches,
 			menu_load_commitmsg = self.load_commitmsg,
 			menu_cherry_pick = self.cherry_pick,
-
-			# Edit Menu
-			menu_options = self.options,
 			)
 
 		# Delegate window events here
@@ -231,9 +231,10 @@ class Controller(QObserver):
 
 	#####################################################################
 	# Qt callbacks
-
-	def search_revision_range(self):
-		search_commits(self.model, self.view, search.REVISION_RANGE)
+	def gen_search(self, searchtype, browse=False):
+		def search_handler():
+			search_commits(self.model, searchtype, browse)
+		return search_handler
 
 	def show_log(self, *rest):
 		qtutils.toggle_log_window()

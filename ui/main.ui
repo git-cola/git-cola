@@ -98,8 +98,6 @@
     <addaction name="menu_select_all" />
     <addaction name="separator" />
     <addaction name="menu_options" />
-    <addaction name="separator" />
-    <addaction name="menu_quit" />
    </widget>
    <widget class="QMenu" name="search_menu" >
     <property name="title" >
@@ -109,12 +107,14 @@
     <addaction name="menu_search_revision" />
     <addaction name="menu_search_revision_range" />
     <addaction name="separator" />
-    <addaction name="menu_search_messages" />
-    <addaction name="menu_search_paths" />
-    <addaction name="menu_search_diffs" />
+    <addaction name="menu_search_message" />
+    <addaction name="menu_search_path" />
+    <addaction name="menu_search_diff" />
     <addaction name="separator" />
-    <addaction name="menu_search_date" />
-    <addaction name="menu_seach_date_range" />
+    <addaction name="menu_search_date_range" />
+    <addaction name="separator" />
+    <addaction name="menu_search_author" />
+    <addaction name="menu_search_committer" />
    </widget>
    <widget class="QMenu" name="branch_menu" >
     <property name="title" >
@@ -125,11 +125,22 @@
     <addaction name="menu_rebase_branch" />
     <addaction name="menu_delete_branch" />
    </widget>
+   <widget class="QMenu" name="menuFile" >
+    <property name="title" >
+     <string>File</string>
+    </property>
+    <addaction name="menu_load_bookmark" />
+    <addaction name="menu_save_bookmark" />
+    <addaction name="menu_manage_bookmarks" />
+    <addaction name="separator" />
+    <addaction name="menu_quit" />
+   </widget>
+   <addaction name="menuFile" />
+   <addaction name="edit_menu" />
    <addaction name="search_menu" />
    <addaction name="repository_menu" />
    <addaction name="branch_menu" />
    <addaction name="commit_menu" />
-   <addaction name="edit_menu" />
   </widget>
   <widget class="QToolBar" name="toolbar" >
    <property name="enabled" >
@@ -1025,9 +1036,9 @@ retrieve the latest commit message prior to committing.</string>
     <string>By Revision...</string>
    </property>
   </action>
-  <action name="menu_search_paths" >
+  <action name="menu_search_path" >
    <property name="text" >
-    <string>Commits Touching Path...</string>
+    <string>Commits Touching Path(s)...</string>
    </property>
   </action>
   <action name="menu_search_revision_range" >
@@ -1040,19 +1051,44 @@ retrieve the latest commit message prior to committing.</string>
     <string>Commits Since Date...</string>
    </property>
   </action>
-  <action name="menu_seach_date_range" >
+  <action name="menu_search_date_range" >
    <property name="text" >
     <string>Commits within Date Range...</string>
    </property>
   </action>
-  <action name="menu_search_messages" >
+  <action name="menu_search_message" >
    <property name="text" >
     <string>Commit Messages...</string>
    </property>
   </action>
-  <action name="menu_search_diffs" >
+  <action name="menu_search_diff" >
    <property name="text" >
-    <string>Commits Adding or Removing String...</string>
+    <string>Commits Diffs...</string>
+   </property>
+  </action>
+  <action name="menu_search_author" >
+   <property name="text" >
+    <string>Commits By Author...</string>
+   </property>
+  </action>
+  <action name="menu_search_committer" >
+   <property name="text" >
+    <string>Commits By Committer...</string>
+   </property>
+  </action>
+  <action name="menu_load_bookmark" >
+   <property name="text" >
+    <string>Load Bookmark...</string>
+   </property>
+  </action>
+  <action name="menu_save_bookmark" >
+   <property name="text" >
+    <string>Save Bookmark...</string>
+   </property>
+  </action>
+  <action name="menu_manage_bookmarks" >
+   <property name="text" >
+    <string>Manage Bookmarks...</string>
    </property>
   </action>
  </widget>

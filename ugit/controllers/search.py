@@ -1,5 +1,7 @@
 #!/usr/bin/env python
+import os
 import re
+import time
 from PyQt4 import QtGui
 
 from ugit.observer import Observer
@@ -7,85 +9,106 @@ from ugit.qobserver import QObserver
 from ugit import qtutils
 from ugit.views import SearchView
 
-REVISION_ID       = 'Search Revision'
-REVISION_RANGE    = 'Search Revision Range'
-COMMIT_PATHS      = 'Search Paths'
-COMMIT_MESSAGES   = 'Search Messages'
-COMMIT_DIFFS      = 'Search Diffs'
-DATE              = 'Search Date'
-DATE_RANGE        = 'Search Date Range'
 
-class SearchEngine(Observer):
+class SearchEngine(object):
 	def __init__(self, model):
 		self.model = model
+		self.parse = self.model.parse_rev_list
 		self.init()
 	def init(self):
 		pass
-	def validate(self, input):
-		return False
-	def get_results(self, text):
-		pass
+	def get_rev_args(self):
+		max = self.model.get_max_results()
+		return { "max-count": max, "pretty": "oneline" }
+	def get_common_args(self):
+		return (self.model.get_input(),
+			self.get_rev_args())
 	def search(self):
-		input = self.model.get_input()
-		if not self.validate(input):
+		if not self.validate():
 			return
-		return self.get_results(input)
+		return self.get_results()
+	def validate(self):
+		return len(self.model.get_input()) > 1
+	def get_results(self):
+		pass
 
-class RevisionRangeSearchEngine(SearchEngine):
+class RevisionSearch(SearchEngine):
+	def get_results(self):
+		input, args = self.get_common_args()
+		expr = re.compile(input)
+		revs = self.parse(self.model.rev_list(all=True, **args))
+		return [ r for r in revs if expr.match(r[0]) ]
+
+class RevisionRangeSearch(SearchEngine):
 	def init(self):
-		self.RE = re.compile(r'\w+\.\.\w+')
-	def validate(self, input):
-		return bool(self.RE.match(input))
-	def get_results(self, input):
-		return self.model.parsed_rev_range(input)
-	
+		self.RE = re.compile(r'[^.]+\.\..+')
+	def validate(self):
+		return bool(self.RE.match(self.model.get_input()))
+	def get_results(self):
+		input, args = self.get_common_args()
+		return self.parse(self.model.rev_list(input, **args))
 
-ENGINES = {
-	REVISION_ID:    SearchEngine,
-	REVISION_RANGE: RevisionRangeSearchEngine,
+# Modes for this controller.
+# Note: names correspond to radio button names for convenience
+REVISION_ID    = 'radio_revision'
+
+# Each search type is handled by a distinct SearchEngine subclass
+SEARCH_ENGINES = {
+	REVISION_ID:    RevisionSearch,
 }
 
 class SearchController(QObserver):
 	def __init__(self, model, view, mode):
 		QObserver.__init__(self, model, view)
-		self.add_actions(input = self.search)
-		self.add_callbacks(
-			button_search = self.search,
-			commit_list = self.display_commit
+		self.add_observables(
+			'input',
+			'max_results',
+			'start_date',
+			'end_date',
 			)
-		self.add_observables('input')
-		self.radio_buttons = {
-			REVISION_RANGE: self.view.radio_range,
-		}
-		button = self.get_radio_button(mode)
-		button.setChecked(True)
-
+		self.add_actions(
+			input = self.search_callback,
+			max_results = self.search_callback,
+			start_date = self.search_callback,
+			end_date = self.search_callback,
+			)
+		self.add_callbacks(
+			# Standard buttons
+			button_search = self.search_callback,
+			commit_list = self.display_callback,
+			# Radio buttons trigger a search
+			radio_revision = self.search_callback,
+			)
+		self.set_mode(mode)
 		self.update_fonts()
 
 	def update_fonts(self):
+		font = self.model.get_global_ugit_fontui()
+		if font:
+			qfont = QtGui.QFont()
+			qfont.fromString(font)
+			self.view.commit_list.setFont(qfont)
 		font = self.model.get_global_ugit_fontdiff()
-		if not font:
-			return
-		qfont = QtGui.QFont()
-		qfont.fromString(font)
-		self.view.commit_text.setFont(qfont)
+		if font:
+			qfont = QtGui.QFont()
+			qfont.fromString(font)
+			self.view.commit_text.setFont(qfont)
 
-	def get_radio_button(self, mode):
-		return self.radio_buttons.get(mode)
-	
+	def set_mode(self, mode):
+		radio = getattr(self.view, mode)
+		radio.setChecked(True)
+
 	def radio_to_mode(self, radio_button):
-		for mode, radio in self.radio_buttons.iteritems():
-			if radio == radio_button:
-				return mode
-	
-	def get_mode(self):
-		for name, attr in self.view.__dict__.iteritems():
-			if isinstance(attr, QtGui.QRadioButton):
-				if attr.isChecked():
-					return self.radio_to_mode(attr)
+		return str(radio_button.objectName())
 
-	def search(self, *args):
-		engineclass = ENGINES.get(self.get_mode())
+	def get_mode(self):
+		for name in SEARCH_ENGINES:
+			radiobutton = getattr(self.view, name)
+			if radiobutton.isChecked():
+				return name
+
+	def search_callback(self, *args):
+		engineclass = SEARCH_ENGINES.get(self.get_mode())
 		if not engineclass:
 			print ("mode: '%s' is currently unimplemented"
 				% self.get_mode())
@@ -93,6 +116,9 @@ class SearchController(QObserver):
 		self.results = engineclass(self.model).search()
 		if self.results:
 			self.display_results()
+		else:
+			self.view.commit_list.clear()
+			self.view.commit_text.setText('')
 
 	def display_results(self):
 		commit_list = map(lambda x: x[1], self.results)
@@ -101,7 +127,7 @@ class SearchController(QObserver):
 			self.view.commit_list,
 			commit_list)
 
-	def display_commit(self, *args):
+	def display_callback(self, *args):
 		widget = self.view.commit_list
 		row, selected = qtutils.get_selected_row(widget)
 		if not selected or len(self.results) < row:
@@ -111,9 +137,22 @@ class SearchController(QObserver):
 		diff = self.model.get_commit_diff(revision)
 		self.view.commit_text.setText(diff)
 
-def search_commits(model, parent, mode):
+def search_commits(model, mode, browse):
+	def get_date(timespec):
+		return '%04d-%02d-%02d' % time.localtime(timespec)[:3]
+
 	model = model.clone()
-	model.create(input='', commit_list=[])
-	view = SearchView(parent)
+	model.create(
+		input='',
+		max_results=500,
+		start_date='',
+		end_date='',
+		commit_list=None,
+		)
+	view = SearchView(None)
 	ctl = SearchController(model, view, mode)
+	model.set_start_date(get_date(time.time()-(87640*7)))
+	model.set_end_date(get_date(time.time()+87640))
 	view.show()
+	if browse:
+		ctl.browse_callback()

@@ -50,6 +50,7 @@ class Model(model.Model):
 				'remote_url',
 				'rev_list',
 				'rev_list_range',
+				'parse_rev_list',
 				'parsed_rev_range',
 				):
 			setattr(self, cmd, getattr(git,cmd))

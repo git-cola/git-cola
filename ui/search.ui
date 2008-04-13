@@ -16,38 +16,42 @@
    <item>
     <layout class="QGridLayout" >
      <item row="0" column="0" colspan="2" >
-      <widget class="QRadioButton" name="radio_revision" >
-       <property name="text" >
-        <string>Revision ID</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2" >
-      <widget class="QRadioButton" name="radio_paths" >
-       <property name="text" >
-        <string>Commits Touching Paths</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3" >
-      <widget class="QRadioButton" name="radio_date" >
-       <property name="text" >
-        <string>Date</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="4" >
-      <widget class="QDateEdit" name="date" />
-     </item>
-     <item row="1" column="0" colspan="2" >
       <widget class="QRadioButton" name="radio_range" >
        <property name="text" >
         <string>Revision Range Expression</string>
        </property>
       </widget>
      </item>
+     <item row="0" column="2" >
+      <widget class="QRadioButton" name="radio_path" >
+       <property name="text" >
+        <string>Commits Touching Paths</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3" >
+      <widget class="QRadioButton" name="radio_author" >
+       <property name="text" >
+        <string>Author</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4" >
+      <widget class="QRadioButton" name="radio_committer" >
+       <property name="text" >
+        <string>Committer</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="2" >
+      <widget class="QRadioButton" name="radio_revision" >
+       <property name="text" >
+        <string>Revision ID</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="2" >
-      <widget class="QRadioButton" name="radio_messages" >
+      <widget class="QRadioButton" name="radio_message" >
        <property name="text" >
         <string>Commit Messages</string>
        </property>
@@ -79,19 +83,25 @@
         <number>5</number>
        </property>
        <property name="value" >
-        <number>20</number>
+        <number>500</number>
        </property>
       </widget>
      </item>
      <item row="2" column="2" >
-      <widget class="QRadioButton" name="radio_diffs" >
+      <widget class="QRadioButton" name="radio_diff" >
        <property name="text" >
-        <string>Search Diffs</string>
+        <string>Diff Content</string>
        </property>
       </widget>
      </item>
      <item row="2" column="3" >
       <widget class="QDateEdit" name="start_date" >
+       <property name="currentSection" >
+        <enum>QDateTimeEdit::DaySection</enum>
+       </property>
+       <property name="displayFormat" >
+        <string>yyyy-MM-dd</string>
+       </property>
        <property name="calendarPopup" >
         <bool>true</bool>
        </property>
@@ -99,6 +109,12 @@
      </item>
      <item row="2" column="4" >
       <widget class="QDateEdit" name="end_date" >
+       <property name="currentSection" >
+        <enum>QDateTimeEdit::DaySection</enum>
+       </property>
+       <property name="displayFormat" >
+        <string>yyyy-MM-dd</string>
+       </property>
        <property name="calendarPopup" >
         <bool>true</bool>
        </property>
@@ -111,8 +127,15 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1" colspan="4" >
+     <item row="3" column="1" colspan="3" >
       <widget class="QLineEdit" name="input" />
+     </item>
+     <item row="3" column="4" >
+      <widget class="QPushButton" name="button_browse" >
+       <property name="text" >
+        <string>Browse</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -136,6 +159,12 @@
         <width>50</width>
         <height>50</height>
        </size>
+      </property>
+      <property name="alternatingRowColors" >
+       <bool>true</bool>
+      </property>
+      <property name="selectionMode" >
+       <enum>QAbstractItemView::ExtendedSelection</enum>
       </property>
      </widget>
      <widget class="QTextEdit" name="commit_text" >
