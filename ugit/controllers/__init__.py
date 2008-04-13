@@ -100,6 +100,7 @@ class Controller(QObserver):
 
 			# Edit Menu
 			menu_options = self.options,
+
 			# Seaarch Menu
 			menu_search_revision =
 				self.gen_search(search.REVISION_ID),
@@ -107,6 +108,8 @@ class Controller(QObserver):
 				self.gen_search(search.REVISION_RANGE),
 			menu_search_message =
 				self.gen_search(search.MESSAGE),
+			menu_search_path =
+				self.gen_search(search.PATH, True),
 			menu_search_date_range =
 				self.gen_search(search.DATE_RANGE),
 			menu_search_diff =

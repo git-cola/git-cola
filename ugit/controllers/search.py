@@ -48,6 +48,12 @@ class RevisionRangeSearch(SearchEngine):
 		input, args = self.get_common_args()
 		return self.parse(self.model.rev_list(input, **args))
 
+class PathSearch(SearchEngine):
+	def get_results(self):
+		input, args = self.get_common_args()
+		paths = ['--'] + input.split(':')
+		return self.parse(self.model.rev_list(all=True,*paths,**args))
+
 class MessageSearch(SearchEngine):
 	def get_results(self):
 		input, args = self.get_common_args()
@@ -77,6 +83,7 @@ class DateRangeSearch(SearchEngine):
 # Note: names correspond to radio button names for convenience
 REVISION_ID    = 'radio_revision'
 REVISION_RANGE = 'radio_range'
+PATH           = 'radio_path'
 MESSAGE        = 'radio_message'
 DIFF           = 'radio_diff'
 DATE_RANGE     = 'radio_daterange'
@@ -85,6 +92,7 @@ DATE_RANGE     = 'radio_daterange'
 SEARCH_ENGINES = {
 	REVISION_ID:    RevisionSearch,
 	REVISION_RANGE: RevisionRangeSearch,
+	PATH:           PathSearch,
 	MESSAGE:        MessageSearch,
 	DIFF:           DiffSearch,
 	DATE_RANGE:     DateRangeSearch,
@@ -108,11 +116,13 @@ class SearchController(QObserver):
 		self.add_callbacks(
 			# Standard buttons
 			button_search = self.search_callback,
+			button_browse = self.browse_callback,
 			commit_list = self.display_callback,
 			# Radio buttons trigger a search
 			radio_revision = self.search_callback,
 			radio_range = self.search_callback,
 			radio_message = self.search_callback,
+			radio_path = self.search_callback,
 			radio_diff = self.search_callback,
 			radio_daterange = self.search_callback,
 			)
@@ -156,6 +166,23 @@ class SearchController(QObserver):
 		else:
 			self.view.commit_list.clear()
 			self.view.commit_text.setText('')
+
+	def browse_callback(self):
+		paths = QtGui.QFileDialog.getOpenFileNames(
+				self.view,
+				self.tr("Choose Path(s)"))
+		if not paths:
+			return
+		filepaths = []
+		lenprefix = len(os.getcwd()) + 1
+		for path in map(lambda x: unicode(x), paths):
+			if not path.startswith(os.getcwd()):
+				continue
+			filepaths.append(path[lenprefix:])
+		input = ':'.join(filepaths)
+		self.model.set_input('')
+		self.set_mode(PATH)
+		self.model.set_input(input)
 
 	def display_results(self):
 		commit_list = map(lambda x: x[1], self.results)
