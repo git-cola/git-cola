@@ -21,17 +21,34 @@ class GitCommand(object):
 	def __init__(self, module):
 		self.module = module
 		self.commands = {}
-
 		# This creates git.foo() methods dynamically for each of the
-		# following names at import-time.  Any names not listed here
-		# are generated at runtime and thus not available during
-		# import.
+		# following names at import-time.
 		for cmd in """
-			add apply branch checkout cherry_pick commit diff
-			fetch format_patch grep log ls_tree merge pull push
-			rebase remote reset rev_list rm show status tag
-		""".split():
-			getattr(self, cmd)
+			add
+			apply
+			branch
+			checkout
+			cherry_pick
+			commit
+			diff
+			fetch
+			format_patch
+			grep
+			log
+			ls_tree
+			merge
+			pull
+			push
+			rebase
+			remote
+			reset
+			read_tree
+			rev_list
+			rm
+			show
+			status
+			tag
+		""".split(): getattr(self, cmd)
 
 	def setup_commands(self):
 		# Import the functions from the module
@@ -64,6 +81,9 @@ REV_LIST_REGEX = re.compile('([0-9a-f]+)\W(.*)')
 
 def quote(argv):
 	return ' '.join([ utils.shell_quote(arg) for arg in argv ])
+
+def abort_merge():
+	return gitcmd.read_tree("HEAD", reset=True, u=True, v=True)
 
 def add_or_remove(*to_process):
 	"""Invokes 'git add' to index the filenames in to_process that exist
@@ -119,7 +139,6 @@ def commit_with_msg(msg, amend=False):
 
 	if not msg.endswith('\n'):
 		msg += '\n'
-
 	# Sure, this is a potential "security risk," but if someone
 	# is trying to intercept/re-write commit messages on your system,
 	# then you probably have bigger problems to worry about.
@@ -128,7 +147,6 @@ def commit_with_msg(msg, amend=False):
 		'F': tmpfile,
 		'amend': amend,
 	}
-
 	# Create the commit message file
 	file = open(tmpfile, 'w')
 	file.write(msg)
@@ -144,12 +162,12 @@ def commit_with_msg(msg, amend=False):
 def create_branch(name, base, track=False):
 	"""Creates a branch starting from base.  Pass track=True
 	to create a remote tracking branch."""
-	return git('branch', name, base, track=track)
+	return gitcmd.branch(name, base, track=track)
 
 def current_branch():
 	"""Parses 'git branch' to find the current branch."""
 
-	branches = git('branch').splitlines()
+	branches = gitcmd.branch().splitlines()
 	for branch in branches:
 		if branch.startswith('* '):
 			return branch.lstrip('* ')
@@ -396,5 +414,5 @@ def parse_status():
 
 	return( staged, unstaged, untracked )
 
-# Must be last
+# Must be executed after all functions are defined
 gitcmd.setup_commands()

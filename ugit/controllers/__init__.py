@@ -106,6 +106,10 @@ class Controller(QObserver):
 			menu_search_committer =
 				self.gen_search( search.COMMITTER ),
 
+			# Merge Menu
+			menu_merge_abort =
+				lambda: self.log( self.model.abort_merge() ),
+
 			# Repository Menu
 			menu_visualize_current = self.viz_current,
 			menu_visualize_all = self.viz_all,
