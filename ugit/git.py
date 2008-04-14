@@ -323,6 +323,9 @@ def rev_list_range(start, end):
 	raw_revs = gitcmd.rev_list(range, pretty='oneline')
 	return parse_rev_list(raw_revs)
 
+def reset_helper(*args, **kwargs):
+	return gitcmd.reset('--', *args, **kwargs)
+
 def parse_rev_list(raw_revs):
 	revs = []
 	for line in raw_revs.splitlines():

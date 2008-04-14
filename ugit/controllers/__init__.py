@@ -544,7 +544,7 @@ class Controller(QObserver):
 	def unstage_selected(self, *rest):
 		"""Use "git reset" to remove items from the git index.
 		This is a thin wrapper around map_to_listwidget."""
-		command = self.model.reset
+		command = self.model.reset_helper
 		widget = self.view.staged
 		items = self.model.get_staged()
 		self.map_to_listwidget(command, widget, items)
