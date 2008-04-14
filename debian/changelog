@@ -2,9 +2,5 @@ ugit (0.8.13-1) unstable; urgency=low
 
   * Debianized on 04/14/2008
 
-  ugit's debian/rules file skips the configure and build targets.
-  The install target configures, builds and installs for both
-  Python 2.4 and 2.5.
-
  -- David Aguilar <davvid@gmail.com>  Sun, 13 Apr 2008 18:28:41 -0700
 
