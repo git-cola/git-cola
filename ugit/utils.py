@@ -238,29 +238,24 @@ def header(msg):
 		+ '\n')
 
 def parse_geom(geomstr):
-	regex = re.compile('^(\d+)x(\d+)\+(\d+),(\d+) (\d+),(\d+) (\d+),(\d+)')
+	regex = re.compile('^(\d+)x(\d+)\+(\d+),(\d+)')
 	match = regex.match(geomstr)
 	if match:
 		defaults.WIDTH = int(match.group(1))
 		defaults.HEIGHT = int(match.group(2))
 		defaults.X = int(match.group(3))
 		defaults.Y = int(match.group(4))
-		defaults.SPLITTER_TOP_0 = int(match.group(5))
-		defaults.SPLITTER_TOP_1 = int(match.group(6))
-		defaults.SPLITTER_BOTTOM_0 = int(match.group(7))
-		defaults.SPLITTER_BOTTOM_1 = int(match.group(8))
 
 	return (defaults.WIDTH, defaults.HEIGHT,
-		defaults.X, defaults.Y,
-		defaults.SPLITTER_TOP_0, defaults.SPLITTER_TOP_1,
-		defaults.SPLITTER_BOTTOM_0, defaults.SPLITTER_BOTTOM_1)
+		defaults.X, defaults.Y)
 
 def get_geom():
-	return '%dx%d+%d,%d %d,%d %d,%d' % (
-		defaults.WIDTH, defaults.HEIGHT,
-		defaults.X, defaults.Y,
-		defaults.SPLITTER_TOP_0, defaults.SPLITTER_TOP_1,
-		defaults.SPLITTER_BOTTOM_0, defaults.SPLITTER_BOTTOM_1)
+	return '%dx%d+%d,%d' % (
+			defaults.WIDTH,
+			defaults.HEIGHT,
+			defaults.X,
+			defaults.Y,
+			)
 
 def project_name():
 	return os.path.basename(defaults.DIRECTORY)

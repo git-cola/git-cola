@@ -15,8 +15,7 @@ def create_new_branch(model,parent):
 	return view.exec_() == QDialog.Accepted
 
 class CreateBranchController(QObserver):
-	def __init__(self, model, view):
-		QObserver.__init__(self, model, view)
+	def init(self, model, view):
 		self.add_observables('revision', 'local_branch')
 		self.add_callbacks(
 				branch_list = self.item_changed,
@@ -27,9 +26,8 @@ class CreateBranchController(QObserver):
 				)
 		self.display_model()
 
-	######################################################################
-	# Qt callbacks
-
+	#+--------------------------------------------------------------------
+	#+ Qt callbacks
 	def create_branch(self):
 		'''This callback is called when the "Create Branch"
 		button is called.'''

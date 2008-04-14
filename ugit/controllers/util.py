@@ -25,7 +25,7 @@ def choose_branch(title, parent, branches):
 	dlg.setWindowTitle(dlg.tr(title))
 	return dlg.get_selected()
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+-------------------------------------------------------------
 #+ The Commit Browser GUI Controller
 def select_commits(model, parent, title, revs, summaries):
 	'''Use the CommitView to select commits from a list.'''
@@ -37,10 +37,9 @@ def select_commits(model, parent, title, revs, summaries):
 	return ctl.select_commits()
 
 class SelectCommitsController(QObserver):
-	def __init__(self, model, view):
-		QObserver.__init__(self, model, view)
-		set_diff_font(model, self.view.commit_text)
-		self.connect(view.commit_list, 'itemSelectionChanged()',
+	def init(self, model, view):
+		set_diff_font( model, view.commit_text )
+		self.connect( view.commit_list, 'itemSelectionChanged()',
 				self.commit_sha1_selected )
 
 	def select_commits(self):
@@ -90,8 +89,7 @@ class OptionsController(QObserver):
 	This controller assumes that the view's widgets are named
 	the same as the model parameters.'''
 
-	def __init__(self,model,view):
-
+	def init(self,model,view):
 		# used for telling about interactive font changes
 		self.original_model = model
 		model = model.clone()
@@ -208,9 +206,7 @@ def logger():
 	return view
 
 class LogController(QObserver):
-	def __init__(self, model, view):
-		QObserver.__init__(self, model, view)
-
+	def init(self, model, view):
 		self.add_observables('search_text')
 		self.add_actions(search_text = self.insta_search)
 		self.add_callbacks(

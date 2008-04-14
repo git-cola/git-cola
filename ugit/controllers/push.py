@@ -14,9 +14,7 @@ def push_branches(model, parent):
 	return view.exec_() == QDialog.Accepted
 
 class PushController(QObserver):
-	def __init__(self, model, view):
-		QObserver.__init__(self,model,view)
-
+	def init(self, model, view):
 		self.add_observables(
 				'remote',
 				'remotes',
@@ -25,8 +23,7 @@ class PushController(QObserver):
 				'remote_branch',
 				'remote_branches',
 				)
-
-		self.add_actions(remotes = self.display_remotes)
+		self.add_actions( remotes = self.display_remotes )
 		self.add_callbacks(
 			remotes = self.update_remotes,
 			local_branches = self.update_local_branches,

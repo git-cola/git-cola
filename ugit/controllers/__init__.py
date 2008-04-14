@@ -24,13 +24,12 @@ from util import update_options
 from repobrowser import browse_git_branch
 from createbranch import create_new_branch
 from search import search_commits
+from merge import merge_local
 
 class Controller(QObserver):
-	"""Controller manages the interaction between the model and views."""
+	"""Manages the interaction between models and views."""
 
-	def __init__(self, model, view):
-		QObserver.__init__(self, model, view)
-
+	def init(self, model, view):
 		# parent-less log window
 		qtutils.LOGGER = logger()
 
@@ -61,24 +60,8 @@ class Controller(QObserver):
 		self.add_actions(global_ugit_fontui = self.update_ui_font)
 
 		self.add_callbacks(
-			# Actions that delegate directly to the model
-			signoff_button = model.add_signoff,
-			menu_get_prev_commitmsg = model.get_prev_commitmsg,
-			menu_stage_modified =
-				lambda: self.log(self.model.stage_modified()),
-			menu_stage_untracked =
-				lambda: self.log(self.model.stage_untracked()),
-			menu_unstage_all =
-				lambda: self.log(self.model.unstage_all()),
-			# Actions that delegate direclty to the view
-			menu_cut = view.action_cut,
-			menu_copy = view.action_copy,
-			menu_paste = view.action_paste,
-			menu_delete = view.action_delete,
-			menu_select_all = view.action_select_all,
-			menu_undo = view.action_undo,
-			menu_redo = view.action_redo,
 			# Push Buttons
+			signoff_button = self.model.add_signoff,
 			stage_button = self.stage_selected,
 			commit_button = self.commit,
 			push_button = self.push,
@@ -87,6 +70,7 @@ class Controller(QObserver):
 			unstaged = self.diff_unstaged,
 			# Checkboxes
 			untracked_checkbox = self.rescan,
+
 			# File Menu
 			menu_quit = self.quit_app,
 			# menu_load_bookmark = self.load_bookmark,
@@ -95,25 +79,32 @@ class Controller(QObserver):
 
 			# Edit Menu
 			menu_options = self.options,
+			menu_cut = self.view.action_cut,
+			menu_copy = self.view.action_copy,
+			menu_paste = self.view.action_paste,
+			menu_delete = self.view.action_delete,
+			menu_select_all = self.view.action_select_all,
+			menu_undo = self.view.action_undo,
+			menu_redo = self.view.action_redo,
 
 			# Search Menu
 			menu_search_grep = self.grep,
 			menu_search_revision =
-				self.gen_search(search.REVISION_ID),
+				self.gen_search( search.REVISION_ID ),
 			menu_search_revision_range =
-				self.gen_search(search.REVISION_RANGE),
+				self.gen_search( search.REVISION_RANGE ),
 			menu_search_message =
-				self.gen_search(search.MESSAGE),
+				self.gen_search( search.MESSAGE ),
 			menu_search_path =
-				self.gen_search(search.PATH, True),
+				self.gen_search( search.PATH, True ),
 			menu_search_date_range =
-				self.gen_search(search.DATE_RANGE),
+				self.gen_search( search.DATE_RANGE ),
 			menu_search_diff =
-				self.gen_search(search.DIFF),
+				self.gen_search( search.DIFF ),
 			menu_search_author =
-				self.gen_search(search.AUTHOR),
+				self.gen_search( search.AUTHOR ),
 			menu_search_committer =
-				self.gen_search(search.COMMITTER),
+				self.gen_search( search.COMMITTER ),
 
 			# Repository Menu
 			menu_visualize_current = self.viz_current,
@@ -136,6 +127,13 @@ class Controller(QObserver):
 			menu_export_patches = self.export_patches,
 			menu_load_commitmsg = self.load_commitmsg,
 			menu_cherry_pick = self.cherry_pick,
+			menu_get_prev_commitmsg = model.get_prev_commitmsg,
+			menu_stage_modified =
+				lambda: self.log(self.model.stage_modified()),
+			menu_stage_untracked =
+				lambda: self.log(self.model.stage_untracked()),
+			menu_unstage_all =
+				lambda: self.log(self.model.unstage_all()),
 			)
 
 		# Delegate window events here
@@ -155,7 +153,7 @@ class Controller(QObserver):
 				self.unstage_selected)
 
 		# Toolbar log button
-		self.connect(self.view.toolbar_show_log,
+		self.connect(view.toolbar_show_log,
 				'triggered()', self.show_log)
 
 		self.connect(view.diff_dock,

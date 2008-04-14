@@ -115,8 +115,7 @@ SEARCH_ENGINES = {
 }
 
 class SearchController(QObserver):
-	def __init__(self, model, view, mode):
-		QObserver.__init__(self, model, view)
+	def init(self, model, view, mode):
 		self.add_observables(
 			'input',
 			'max_results',

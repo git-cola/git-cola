@@ -30,6 +30,11 @@ class QObserver(Observer, QObject):
 		self.__model_to_view = {}
 		self.__view_to_model = {}
 		self.__connected = []
+		# Call user-defined startup routine
+		self.init(model, view)
+
+	def init(self, model, view):
+		pass
 
 	def SLOT(self, *args):
 		'''Default slot to handle all Qt callbacks.

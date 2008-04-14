@@ -20,9 +20,7 @@ def browse_git_branch(model, parent, branch):
 		return view.exec_() == QDialog.Accepted
 
 class RepoBrowserController(QObserver):
-	def __init__(self, model, view):
-		QObserver.__init__(self, model, view)
-
+	def init(self, model, view):
 		view.setWindowTitle('File Browser')
 		self.add_signals('itemSelectionChanged()', view.commit_list,)
 		self.add_actions(directory = self.action_directory_changed)
