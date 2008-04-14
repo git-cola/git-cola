@@ -8,7 +8,8 @@ FILE=$BASENAME.tar.gz
 DIR=installroot
 
 if [ -d $DIR ]; then
-	mv $DIR $DIR.old.$$
+	echo "ERROR: '$DIR' already exists."
+	exit -1
 fi
 
 scripts/build-win32.sh
@@ -20,9 +21,6 @@ fi
 rsync -avr $DIR/ $BASENAME/
 tar czf $FILE $BASENAME/
 rm -rf $DIR $BASENAME
-if [ -d $DIR.old.$$ ]; then
-	mv -v $DIR.old.$$ $DIR
-fi
 if [ -e $HOME/htdocs/ugit/releases ]; then
 	mv -v $FILE $HOME/htdocs/ugit/releases
 fi
