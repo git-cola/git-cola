@@ -1,7 +1,12 @@
+*.deb
 *.pyc
 *.pyo
+*.rpm
 *.swp
 *~
+/debian/files
+/debian/bld
+/debian/ugit
 /installroot
 /.lock-wscript
 /obj

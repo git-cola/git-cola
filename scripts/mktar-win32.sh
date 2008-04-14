@@ -1,6 +1,5 @@
 #!/bin/sh
-cd $(dirname $0)
-cd ..
+. $(dirname $0)/common.sh
 
 VERSION=$(scripts/version.sh)
 BASENAME=ugit-win32-$VERSION

@@ -42,17 +42,19 @@ def configure(conf):
 	env = conf.env
 	prefix = env['PREFIX']
 	bindir = join(prefix, 'bin')
-	sitepackages = pymod(env)
+	sitepackages = join(prefix, 'share')
 	modules = join(sitepackages, 'ugit')
 	views = join(modules, 'views')
 	controllers = join(modules, 'controllers')
 	icons = join(prefix, 'share', 'ugit', 'icons')
+	apps = join(prefix, 'share', 'applications')
 
 	env['UGIT_BINDIR'] = bindir
 	env['UGIT_MODULES'] = modules
 	env['UGIT_VIEWS'] = views
 	env['UGIT_CONTROLLERS'] = controllers
 	env['UGIT_ICONS'] = icons
+	env['UGIT_APPS'] = apps
 
 
 #############################################################################

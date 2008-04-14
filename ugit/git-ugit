@@ -5,23 +5,21 @@ import os
 import sys
 import platform
 import optparse
+from os.path import join
+from os.path import dirname
 
 def setup_environment():
 	"""Prepends sys.path with ugit's module path."""
 	version = platform.python_version()
 	try:
 		thisfile = os.path.realpath(__file__)
-		sys.path.insert(0, os.path.dirname(os.path.dirname(thisfile)))
-		sys.path.insert(0, os.path.join(
-				os.path.dirname(os.path.dirname(thisfile)),
-				'lib', 'python' + version[:3],
-				'site-packages'))
-
-		ugitmodules = os.path.dirname(thisfile)
-		if ugitmodules not in sys.path:
-			sys.path.insert(0, os.path.dirname(thisfile))
+		rootdir = dirname(dirname(thisfile))
+		sys.path.insert(0, join(rootdir, 'share'))
 	except:
+		rootdir = dirname(os.getcwd())
 		sys.path.insert(0, os.getcwd())
+		sys.path.insert(0, rootdir)
+		sys.path.insert(0, join(rootdir, 'share'))
 
 def ugit_main():
 	try:

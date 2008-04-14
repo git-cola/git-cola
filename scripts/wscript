@@ -18,3 +18,5 @@ def build(bld):
 	vgen.stdin = 'gitversion.sh'
 	vgen.stdout = 'version.py'
 	vgen.install = gen_install('../scripts/version.py')
+
+	Common.install_files('UGIT_APPS', '', 'ugit.desktop')

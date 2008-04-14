@@ -17,7 +17,10 @@ waf_restore()
 try_python()
 {
 	waf_backup
-		env PYTHON="$1" ./configure --prefix="$2" --blddir="$PWD/tmp.$$" &&
+		env PYTHON="$1" \
+			./configure \
+				--prefix="$2" \
+				--blddir="$PWD/tmp.$$" &&
 		make &&
 		make install
 		status=$?
