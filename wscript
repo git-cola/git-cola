@@ -34,10 +34,15 @@ def set_options(opt):
 #############################################################################
 # Configure
 def configure(conf):
+	conf.check_tool('misc')
+	conf.check_tool('python')
+	conf.check_tool('pyuic4', 'build')
+	conf.check_tool('po2qm', 'build')
+
 	env = conf.env
 	prefix = env['PREFIX']
 	bindir = join(prefix, 'bin')
-	sitepackages = pymod(prefix)
+	sitepackages = pymod(env)
 	modules = join(sitepackages, 'ugit')
 	views = join(modules, 'views')
 	controllers = join(modules, 'controllers')
@@ -49,10 +54,6 @@ def configure(conf):
 	env['UGIT_CONTROLLERS'] = controllers
 	env['UGIT_ICONS'] = icons
 
-	conf.check_tool('misc')
-	conf.check_tool('python')
-	conf.check_tool('pyuic4', 'build')
-	conf.check_tool('po2qm', 'build')
 
 #############################################################################
 # Build
@@ -67,7 +68,9 @@ def build(bld):
 
 #############################################################################
 # Other
-def pymod(prefix):
+def pymod(env):
 	"""Returns a lib/python2.x/site-packages path relative to prefix"""
-	python_api = 'python' + get_python_version()
-	return join(prefix, 'lib', python_api, 'site-packages')
+	python_api = os.path.basename(env['PYTHON'])
+	if python_api == 'python':
+		python_api += get_python_version()
+	return join(env['PREFIX'], 'lib', python_api, 'site-packages')

@@ -1,24 +1,14 @@
 #!/bin/sh
-cd $(dirname $0)
-cd ..
-VERSION=$(scripts/version.sh)
+. $(dirname $0)/common.sh
 BASENAME=ugit-$VERSION
 FILE=$BASENAME.tar.gz
-BLD=$BASENAME.bld
 DIR=installroot
 if [ -d $DIR ]; then
-	mv $DIR $DIR.old.$$
+	echo "ERROR: '$DIR' already exists"
+	exit -1
 fi
-if [ -e .lock-wscript ]; then
-	mv .lock-wscript .lock-wscript.old
-fi
-./configure --prefix=$DIR --blddir=$BLD \
-&& make && make install
 
-if [ $? != 0 ]; then
-	echo "error: $?"
-	exit
-fi
+try_python "$(which python)" "$DIR"
 
 find $DIR -name '*.py[co]' | xargs rm
 PYTHONVER=$(python -c 'import sys; sys.stdout.write(sys.version[:3])')
@@ -32,16 +22,10 @@ PYTHONVER=$(python -c 'import sys; sys.stdout.write(sys.version[:3])')
 	done
 )
 
-rsync -avr $DIR/ $BASENAME/ \
-&& tar czf $FILE $BASENAME/ \
-&& rm -rf $DIR $BASENAME $BLD
+rsync -avr $DIR/ $BASENAME/ &&
+tar czf $FILE $BASENAME/ &&
+rm -rf $DIR $BASENAME
 
-if [ -d $DIR.old.$$ ]; then
-	mv -v $DIR.old.$$ $DIR
-fi
-if [ -e .lock-wscript.old ]; then
-	mv .lock-wscript.old .lock-wscript
-fi
 if [ -d $HOME/htdocs/ugit/releases ]; then
 	mv -v $FILE $HOME/htdocs/ugit/releases
 fi
