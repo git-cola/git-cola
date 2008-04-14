@@ -24,7 +24,8 @@ from util import update_options
 from repobrowser import browse_git_branch
 from createbranch import create_new_branch
 from search import search_commits
-from merge import merge_local
+from merge import local_merge
+from merge import abort_merge
 
 class Controller(QObserver):
 	"""Manages the interaction between models and views."""
@@ -107,8 +108,10 @@ class Controller(QObserver):
 				self.gen_search( search.COMMITTER ),
 
 			# Merge Menu
+			menu_merge_local =
+				lambda: local_merge( self.model, self.view ),
 			menu_merge_abort =
-				lambda: self.log( self.model.abort_merge() ),
+				lambda: abort_merge( self.model, self.view ),
 
 			# Repository Menu
 			menu_visualize_current = self.viz_current,
@@ -268,7 +271,7 @@ class Controller(QObserver):
 		self.log(self.model.delete_branch(branch))
 
 	def browse_current(self):
-		branch = self.model.get_branch()
+		branch = self.model.get_currentbranch()
 		browse_git_branch(self.model, self.view, branch)
 
 	def browse_other(self):
@@ -462,7 +465,7 @@ class Controller(QObserver):
 
 		self.view.setWindowTitle('%s [%s]' % (
 				self.model.get_project(),
-				self.model.get_branch()))
+				self.model.get_currentbranch()))
 
 		if self.model.has_squash_msg():
 			if self.model.get_commitmsg():
@@ -587,7 +590,7 @@ class Controller(QObserver):
 	def viz_current(self):
 		"""Visualizes the current branch's history using gitk."""
 		browser = self.model.get_global_ugit_historybrowser()
-		utils.fork(browser, self.model.get_branch())
+		utils.fork(browser, self.model.get_currentbranch())
 
 	def move_event(self, event):
 		defaults.X = event.pos().x()
@@ -725,7 +728,8 @@ class Controller(QObserver):
 		QtGui.qApp.setFont(qfont)
 
 	def init_log_window(self):
-		branch, version = self.model.get_branch(), defaults.VERSION
+		branch = self.model.get_currentbranch()
+		version = defaults.VERSION
 		qtutils.log(self.model.get_git_version()
 				+ '\nugit version '+ version
 				+ '\nCurrent Branch: '+ branch)

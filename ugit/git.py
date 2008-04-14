@@ -257,6 +257,12 @@ def format_patch_helper(*revs):
 		num_patches += output[-1].count('\n')
 	return '\n'.join(output)
 
+def gitpath(name):
+	return os.path.join('.git', name)
+
+def get_merge_message():
+	return gitcmd.fmt_merge_msg('--file', gitpath('FETCH_HEAD'))
+
 def config_dict(local=True):
 	if local:
 		argv = [ '--list' ]

@@ -13,7 +13,7 @@ def browse_git_branch(model, parent, branch):
 		# Clone the model to allow opening multiple browsers
 		# with different sets of data
 		model = model.clone()
-		model.set_branch(branch)
+		model.set_currentbranch(branch)
 		view = CommitView(parent)
 		controller = RepoBrowserController(model, view)
 		view.show()

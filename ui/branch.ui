@@ -1,6 +1,6 @@
 <ui version="4.0" >
  <class>branch</class>
- <widget class="QDialog" name="branch" >
+ <widget class="QDialog" name="currentbranch" >
   <property name="geometry" >
    <rect>
     <x>0</x>

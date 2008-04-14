@@ -18,6 +18,7 @@ from logger import Ui_logger
 from search import Ui_search
 from options import Ui_options
 from createbranch import Ui_createbranch
+from merge import Ui_merge
 
 class View(Ui_main, QMainWindow):
 	'''The main ugit interface.'''
@@ -176,3 +177,10 @@ class SearchView(Ui_search, QDialog):
 		self.input.setFocus()
 		DiffSyntaxHighlighter(self.commit_text.document(),
 				whitespace=False)
+
+class MergeView(Ui_merge, QDialog):
+	def __init__(self, parent=None):
+		QDialog.__init__(self, parent)
+		Ui_search.__init__(self)
+		self.setupUi(self)
+		self.revision.setFocus()

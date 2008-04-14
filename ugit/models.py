@@ -32,7 +32,7 @@ class Model(model.Model):
 		self.create(
 			#####################################################
 			# Used in various places
-			branch = '',
+			currentbranch = '',
 			remotes = [],
 			remote = '',
 			local_branch = '',
@@ -168,7 +168,7 @@ class Model(model.Model):
 		directories, directory_entries, and subtree_*'''
 
 		# Collect data for the model
-		if not self.get_branch(): return
+		if not self.get_currentbranch(): return
 
 		self.subtree_types = []
 		self.subtree_sha1s = []
@@ -177,7 +177,7 @@ class Model(model.Model):
 		self.directory_entries = {}
 
 		# Lookup the tree info
-		tree_info = git.parse_ls_tree(self.get_branch())
+		tree_info = git.parse_ls_tree(self.get_currentbranch())
 
 		self.set_types(map( lambda(x): x[1], tree_info ))
 		self.set_sha1s(map( lambda(x): x[2], tree_info ))
@@ -326,7 +326,7 @@ class Model(model.Model):
 			if untracked not in self.get_untracked():
 				self.add_untracked(untracked)
 
-		self.set_branch(git.current_branch())
+		self.set_currentbranch(git.current_branch())
 		self.set_unstaged(self.get_modified() + self.get_untracked())
 		self.set_remotes(git.remote().splitlines())
 		self.set_remote_branches(git.branch_list(remote=True))

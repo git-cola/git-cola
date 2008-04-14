@@ -67,6 +67,8 @@ class QObserver(Observer, QObject):
 				fmt = Qt.ISODate
 				value = str(widget.date().toString(fmt))
 				model.set_param(model_param, value)
+			elif isinstance(widget, QListWidget):
+				pass
 			else:
 				print("SLOT(): Unknown widget:", sender, widget)
 
