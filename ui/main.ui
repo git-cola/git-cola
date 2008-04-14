@@ -127,7 +127,7 @@
     <addaction name="menu_rebase_branch" />
     <addaction name="menu_delete_branch" />
    </widget>
-   <widget class="QMenu" name="menuFile" >
+   <widget class="QMenu" name="file_menu" >
     <property name="title" >
      <string>File</string>
     </property>
@@ -137,11 +137,19 @@
     <addaction name="separator" />
     <addaction name="menu_quit" />
    </widget>
-   <addaction name="menuFile" />
+   <widget class="QMenu" name="merge_menu" >
+    <property name="title" >
+     <string>Merge</string>
+    </property>
+    <addaction name="menu_merge_local" />
+    <addaction name="menu_merge_abort" />
+   </widget>
+   <addaction name="file_menu" />
    <addaction name="edit_menu" />
    <addaction name="search_menu" />
    <addaction name="commit_menu" />
    <addaction name="branch_menu" />
+   <addaction name="merge_menu" />
    <addaction name="repository_menu" />
   </widget>
   <widget class="QToolBar" name="toolbar" >
@@ -1096,6 +1104,16 @@ retrieve the latest commit message prior to committing.</string>
   <action name="menu_search_grep" >
    <property name="text" >
     <string>grep</string>
+   </property>
+  </action>
+  <action name="menu_merge_local" >
+   <property name="text" >
+    <string>Local Merge...</string>
+   </property>
+  </action>
+  <action name="menu_merge_abort" >
+   <property name="text" >
+    <string>Abort Merge...</string>
    </property>
   </action>
  </widget>
