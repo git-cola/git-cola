@@ -69,6 +69,7 @@ class MergeController(QObserver):
 				"You must specify a revision to merge")
 			return
 
+		no_commit = not(self.view.checkbox_commit.isChecked())
 		squash = self.view.checkbox_squash.isChecked()
 		msg = self.model.get_merge_message()
 		qtutils.log(
@@ -76,7 +77,7 @@ class MergeController(QObserver):
 				'-m'+msg,
 				revision,
 				strategy='recursive',
-				no_commit=squash,
+				no_commit=no_commit,
 				squash=squash
 				),
 			quiet=False,
