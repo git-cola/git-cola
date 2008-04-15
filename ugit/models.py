@@ -266,18 +266,11 @@ class Model(model.Model):
 	def apply_diff(self, filename):
 		return git.apply(filename, index=True, cached=True)
 
-	def __get_squash_msg_path(self):
-		return os.path.join(os.getcwd(), '.git', 'SQUASH_MSG')
-
-	def has_squash_msg(self):
-		squash_msg = self.__get_squash_msg_path()
-		return os.path.exists(squash_msg)
-
-	def get_squash_msg(self):
-		return utils.slurp(self.__get_squash_msg_path())
-
-	def set_squash_msg(self):
-		self.set_commitmsg(self.get_squash_msg())
+	def load_commitmsg(self, path):
+		file = open(path, 'r')
+		contents = file.read()
+		file.close()
+		self.set_commitmsg(contents)
 
 	def get_prev_commitmsg(self,*rest):
 		'''Queries git for the latest commit message and sets it in

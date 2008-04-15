@@ -83,7 +83,17 @@ def quote(argv):
 	return ' '.join([ utils.shell_quote(arg) for arg in argv ])
 
 def abort_merge():
-	return gitcmd.read_tree("HEAD", reset=True, u=True, v=True)
+	# Reset the worktree
+	output = gitcmd.read_tree("HEAD", reset=True, u=True, v=True)
+	# remove MERGE_HEAD
+	merge_head = git_repo_path('MERGE_HEAD')
+	if os.path.exists(merge_head):
+		os.unlink(merge_head)
+	# remove MERGE_MESSAGE, etc.
+	merge_msg_path = get_merge_message_path()
+	while merge_msg_path is not None:
+		os.unlink(merge_msg_path)
+		merge_msg_path = get_merge_message_path()
 
 def add_or_remove(*to_process):
 	"""Invokes 'git add' to index the filenames in to_process that exist
@@ -257,11 +267,8 @@ def format_patch_helper(*revs):
 		num_patches += output[-1].count('\n')
 	return '\n'.join(output)
 
-def gitpath(name):
-	return os.path.join('.git', name)
-
 def get_merge_message():
-	return gitcmd.fmt_merge_msg('--file', gitpath('FETCH_HEAD'))
+	return gitcmd.fmt_merge_msg('--file', git_repo_path('FETCH_HEAD'))
 
 def config_dict(local=True):
 	if local:
@@ -346,6 +353,18 @@ def rev_list_range(start, end):
 	range = '%s..%s' % ( start, end )
 	raw_revs = gitcmd.rev_list(range, pretty='oneline')
 	return parse_rev_list(raw_revs)
+
+def git_repo_path(*subpaths):
+	paths = [ gitcmd.rev_parse(git_dir=True) ]
+	paths.extend(subpaths)
+	return os.path.realpath(os.path.join(*paths))
+
+def get_merge_message_path():
+	for file in ('MERGE_MSG', 'SQUASH_MSG'):
+		path = git_repo_path(file)
+		if os.path.exists(path):
+			return path
+	return None
 
 def reset_helper(*args, **kwargs):
 	return gitcmd.reset('--', *args, **kwargs)

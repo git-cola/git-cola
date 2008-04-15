@@ -463,22 +463,35 @@ class Controller(QObserver):
 			self.view_diff(False)
 			scrollbar.setValue(scrollvalue)
 
+		# Update the title with the current branch
 		self.view.setWindowTitle('%s [%s]' % (
 				self.model.get_project(),
 				self.model.get_currentbranch()))
 
-		if self.model.has_squash_msg():
-			if self.model.get_commitmsg():
-				answer = qtutils.question(self.view,
-					self.tr('Import Commit Message?'),
-					self.tr('A commit message from an in-progress'
+		# Check if there's a message file in .git/
+		merge_msg_path = self.model.get_merge_message_path()
+		if merge_msg_path is None:
+			return
+
+		# A merge message file exists.  
+		set_msg = False
+		if self.model.get_commitmsg():
+			# The commit message editor contains data.
+			# Prompt before overwriting the commit message
+			# with the contents of the merge message.
+			answer = qtutils.question(self.view,
+				self.tr('Import Commit Message?'),
+				self.tr('A commit message from an in-progress'
 					+ ' merge was found.\nImport it?'))
 
-				if answer:
-					self.model.set_squash_msg()
-			else:
-				# Set the new commit message
-				self.model.set_squash_msg()
+			if answer:
+				set_msg = True
+		else:
+			set_msg = True
+		# Set the new commit message
+		if set_msg:
+			self.model.load_commitmsg(merge_msg_path)
+			self.view.editor_dock.raise_()
 
 	def push(self):
 		push_branches(self.model, self.view)
