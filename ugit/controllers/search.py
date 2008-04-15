@@ -115,7 +115,7 @@ SEARCH_ENGINES = {
 }
 
 class SearchController(QObserver):
-	def init(self, model, view, mode):
+	def init(self, model, view):
 		self.add_observables(
 			'input',
 			'max_results',
@@ -143,7 +143,6 @@ class SearchController(QObserver):
 			radio_committer = self.search_callback,
 			radio_daterange = self.search_callback,
 			)
-		self.set_mode(mode)
 		self.update_fonts()
 
 	def update_fonts(self):
@@ -231,7 +230,8 @@ def search_commits(model, mode, browse):
 		commit_list=None,
 		)
 	view = SearchView(None)
-	ctl = SearchController(model, view, mode)
+	ctl = SearchController(model, view)
+	ctl.set_mode(mode)
 	model.set_start_date(get_date(time.time()-(87640*7)))
 	model.set_end_date(get_date(time.time()+87640))
 	view.show()
