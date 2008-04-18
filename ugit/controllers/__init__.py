@@ -228,6 +228,7 @@ class Controller(QObserver):
 	def action_staged(self, widget):
 		qtutils.update_listwidget(widget,
 				self.model.get_staged(), staged=True)
+		self.view.editor_dock.raise_()
 
 	def action_unstaged(self, widget):
 		qtutils.update_listwidget(widget,
