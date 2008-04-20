@@ -69,10 +69,11 @@ def build(bld):
 		Common.install_files('UGIT_ICONS', '', icon)
 
 #############################################################################
-# Other
-def pymod(env):
-	"""Returns a lib/python2.x/site-packages path relative to prefix"""
-	python_api = os.path.basename(env['PYTHON'])
-	if python_api == 'python':
-		python_api += get_python_version()
-	return join(env['PREFIX'], 'lib', python_api, 'site-packages')
+# Shutdown
+def shutdown():
+	# always re-create the version.py file
+	for variant in Params.g_build.m_allenvs:
+		version_file = join(Params.g_build.m_bdir,
+					variant, 'scripts', 'version.py')
+		if os.path.exists(version_file):
+			os.unlink(version_file)

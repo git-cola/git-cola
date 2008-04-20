@@ -1,14 +1,13 @@
 #!/bin/sh
-unset CDPATH #just in case
-cd $(dirname $0)
-. ./version.sh >/dev/null
-VN=$(git rev-parse HEAD 2>/dev/null | cut -c1-7)
+VN=$(git describe HEAD 2>/dev/null)
+VN=$(echo "$VN" | sed -e 's/-/./g')
 LF='
 '
 case "$VN" in
 *$LF*) (exit 1) ;;
-[0-9]*)
+v[0-9]*)
 	test -z "$(git diff-index --name-only HEAD)" ||
 		VN="$VN-dirty" ;;
 esac
-echo "VERSION='$VERSION.$VN'"
+VN=$(expr "$VN" : v*'\(.*\)')
+echo "VERSION='$VN'"
