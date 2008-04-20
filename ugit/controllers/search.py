@@ -123,7 +123,6 @@ class SearchController(QObserver):
 			'end_date',
 			)
 		self.add_actions(
-			input = self.search_callback,
 			max_results = self.search_callback,
 			start_date = self.search_callback,
 			end_date = self.search_callback,
