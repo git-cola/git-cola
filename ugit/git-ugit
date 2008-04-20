@@ -3,23 +3,21 @@
 # License: GPL v2 or later
 import os
 import sys
-import platform
 import optparse
 from os.path import join
 from os.path import dirname
+from os.path import realpath
 
 def setup_environment():
 	"""Prepends sys.path with ugit's module path."""
-	version = platform.python_version()
-	try:
-		thisfile = os.path.realpath(__file__)
-		rootdir = dirname(dirname(thisfile))
-		sys.path.insert(0, join(rootdir, 'share'))
-	except:
-		rootdir = dirname(os.getcwd())
-		sys.path.insert(0, os.getcwd())
-		sys.path.insert(0, rootdir)
-		sys.path.insert(0, join(rootdir, 'share'))
+	# ex: sys.path = [ ..., /usr/share ]
+	#     from ugit import git
+	# implies: git = /usr/share/ugit/git.py
+	ugit   = realpath(sys.argv[0])
+	bin    = dirname(ugit)
+	prefix = dirname(bin)
+	share  = join(prefix,'share')
+	sys.path.append(share)
 
 def ugit_main():
 	try:
@@ -54,7 +52,8 @@ def ugit_main():
 	from ugit.models import Model
 	from ugit.views import View
 	from ugit.controllers import Controller
-	from ugit import utils
+	from ugit.utils import get_icon
+	from ugit.utils import get_qm_for_locale
 
 	if opts.version:
 		from ugit.version import VERSION
@@ -62,9 +61,9 @@ def ugit_main():
 		sys.exit(0)
 
 	app = QtGui.QApplication(sys.argv)
-	app.setWindowIcon(QtGui.QIcon(utils.get_icon('git.png')))
+	app.setWindowIcon(QtGui.QIcon( get_icon('git.png')) )
 	locale = str(QtCore.QLocale().system().name())
-	qmfile = utils.get_qm_for_locale(locale)
+	qmfile = get_qm_for_locale( locale )
 	if os.path.exists(qmfile):
 		translator = QtCore.QTranslator()
 		translator.load(qmfile)
