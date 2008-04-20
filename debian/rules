@@ -41,7 +41,7 @@ clean:
 	dh_testdir
 	dh_testroot
 	dh_clean 
-	rm -f $(BUILD)
+	rm -rf $(BUILD)
 
 install: build
 
