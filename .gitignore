@@ -11,6 +11,7 @@
 /.lock-wscript
 /obj
 /Makefile
+/meta
 /patches
 /releases
 /tmp
