@@ -314,7 +314,7 @@ class Controller(QObserver):
 			return
 
 		files = self.model.get_staged()
-		if not files:
+		if not files and not self.view.amend_radio.isChecked():
 			error_msg = self.tr(""
 				+ "No changes to commit.\n"
 				+ "\n"
