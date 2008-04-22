@@ -17,7 +17,7 @@ def setup_environment():
 	bin    = dirname(ugit)
 	prefix = dirname(bin)
 	share  = join(prefix,'share')
-	sys.path.append(share)
+	sys.path.insert(0, share)
 
 def main():
 	# cmdline
