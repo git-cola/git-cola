@@ -236,3 +236,4 @@ def search_commits(model, mode, browse):
 	view.show()
 	if browse:
 		ctl.browse_callback()
+	view.exec_()

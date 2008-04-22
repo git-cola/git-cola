@@ -64,7 +64,6 @@ class MergeController(QObserver):
 		revision = self.model.get_revision()
 		if not revision:
 			qtutils.information(
-				self.view,
 				"No Revision Specified",
 				"You must specify a revision to merge")
 			return

@@ -49,10 +49,12 @@ def create_listwidget_item(text, filename):
 	item.setText(text)
 	return item
 
-def information(parent, title, message):
+def information(title, message=None):
 	'''Launches a QMessageBox information with the
 	provided title and message.'''
-	QMessageBox.information(parent, title, message)
+	if message is None:
+		message = title
+	QMessageBox.information(QtGui.qApp.activeWindow(), title, message)
 
 def get_selected_row(list_widget):
 	'''Returns a(row_number, is_selected) tuple for a QListWidget.'''
