@@ -47,15 +47,19 @@ class Model(Observable):
 		self.__object_params = {}
 		# For meta-programmability
 		self.from_dict(kwargs)
+		self.init()
+
+	# for subclasses
+	def init(self): pass
+
+	def create(self,**kwargs):
+		return self.from_dict(kwargs)
 
 	def get_param_names(self):
 		return tuple(self.__params)
 
 	def notify_all(self):
 		self.notify_observers(*self.get_param_names())
-
-	def create(self,**kwargs):
-		return self.from_dict(kwargs)
 
 	def clone(self, *args, **kwargs):
 		return self.__class__(*args, **kwargs).from_dict(self.to_dict())
@@ -164,13 +168,25 @@ class Model(Observable):
 		return cls
 
 	def save(self, filename):
-		import simplejson
+		try:
+			import simplejson
+		except ImportError:
+			print "Unable to save."
+			print "You do not have simplejson installed."
+			print "try: sudo apt-get install simplejson"
+			return
 		file = open(filename, 'w')
 		simplejson.dump(self.to_dict(), file, indent=4)
 		file.close()
 
 	def load(self, filename):
-		import simplejson
+		try:
+			import simplejson
+		except ImportError:
+			print "Unable to load."
+			print "You do not have simplejson installed."
+			print "try: sudo apt-get install simplejson"
+			return
 		file = open(filename, 'r')
 		dict = simplejson.load(file)
 		file.close()
