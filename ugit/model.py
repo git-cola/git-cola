@@ -97,13 +97,26 @@ class Model(Observable):
 			return lambda v: self.set_param(param, v,
 					check_params=True)
 
-		elif realparam.startswith('add'):
-			self.__array = self.__translate(param, 'add')
-			return self.__append
+		elif (realparam.startswith('add')
+				or realparam.startswith('append')):
 
-		elif realparam.startswith('append'):
-			self.__array = self.__translate(param, 'append')
-			return self.__append
+			if realparam.startswith('add'):
+				param = self.__translate(realparam, 'add')
+			else:
+				param = self.__translate(realparam, 'append')
+
+			def array_append(*values):
+				array = getattr(self, param)
+				if array is None:
+					classnm = self.__class__.__name__
+					errmsg = ("%s object has no array named '%s'"
+							%( classnm, param ))
+					raise AttributeError(errmsg)
+				else:
+					array.extend(values)
+			# Cache the function definition
+			setattr(self, realparam, array_append)
+			return array_append
 
 		errmsg  = ("%s object has no parameter '%s'"
 				% (self.__class__.__name__, param))
@@ -129,43 +142,12 @@ class Model(Observable):
 		for param in params:
 			self.set_param(param, model.get_param(param))
 
-	def __append(self, *values):
-		'''Appends an arbitrary number of values to
-		an array atribute.'''
-		array = getattr(self, self.__array)
-		if array is None:
-			errmsg = "%s object has no parameter '%s'" \
-				%( self.__class__.__name__, self.__array )
-			raise AttributeError(errmsg)
-		else:
-			array.extend(values)
-
 	def __translate(self, param, prefix='', sep='_'):
 		'''Translates an param name from the external name
 		used in methods to those used internally.  The default
 		settings strip off '_' so that both get_foo() and getFoo()
 		are valid incantations.'''
 		return param.lstrip(prefix).lstrip(sep).lower()
-
-	def __get_class(self, objspec):
-		'''Loads a class from a module and returns the class.'''
-
-		# str("module.submodule:ClassName")
-		( modname, classname ) = objspec.split(':')
-		modfile = imp.find_module(modname)
-		module = imp.load_module(modname,
-				modfile[0], modfile[1], modfile[2])
-
-		if classname in module.__dict__:
-			cls = module.__dict__[classname]
-		else:
-			cls = Model
-			warning = ('WARNING: %s not found in %s\n'
-					%(modname, classname))
-			sys.stderr.write(warning)
-
-		modfile[0].close()
-		return cls
 
 	def save(self, filename):
 		try:
@@ -196,13 +178,22 @@ class Model(Observable):
 		'''Import a complex model from a dictionary.  The import/export
 		is clued as to nested Model-objects by setting the
 		__list_params or __object_params object specifications.'''
-		for param,val in source_dict.iteritems():
-			self.set_param(param, self.__param_from_dict(param, val),
-				notify=False)
-		return self
-	
-	def __param_from_dict(self,param,val):
 
+		if '__META__' in source_dict:
+			metadict = source_dict['__META__']
+			for param, clstr in metadict.iteritems():
+				cls = Model.str_to_class(clstr)
+				self.set_object_param(param, cls)
+
+		for param, val in source_dict.iteritems():
+			self.set_param(
+				param,
+				self.__param_from_dict(param, val),
+				notify=False)
+		self.__params.sort()
+		return self
+
+	def __param_from_dict(self,param,val):
 		# A list of Model-objects
 		if is_list(val):
 			if param in self.__list_params:
@@ -229,15 +220,20 @@ class Model(Observable):
 		params = {}
 		for param in self.__params:
 			params[param] = self.__param_to_dict(param)
+			value = getattr(self, param)
+			if is_instance(value):
+				clstr = Model.class_to_str(value)
+				params.setdefault('__META__', {})
+				params['__META__'][param] = clstr
 		return params
 
 	def __param_to_dict(self, param):
 		item = getattr(self, param)
 		return self.__item_to_dict(item)
-	
-	def __item_to_dict(self, item):
 
-		if is_atom(item): return item
+	def __item_to_dict(self, item):
+		if is_atom(item):
+			return item
 
 		elif is_list(item):
 			newlist = []
@@ -258,18 +254,28 @@ class Model(Observable):
 			raise NotImplementedError, 'Unknown type:' + str(type(item))
 
 	__INDENT__ = 0
+	__PREINDENT__ = True
+	__STRSTACK__ = []
 
 	@staticmethod
-	def INDENT(i=None):
-		if i is not None:
-			Model.__INDENT__ += i
+	def INDENT(i=0):
+		Model.__INDENT__ += i
 		return '\t' * Model.__INDENT__
 
 	def __str__(self):
 		'''A convenient, recursively-defined stringification method.'''
 
+		# This avoid infinite recursion on cyclical structures
+		if self in Model.__STRSTACK__:
+			return 'REFERENCE'
+		else:
+			Model.__STRSTACK__.append(self)
+
 		io = StringIO()
-		io.write(Model.INDENT())
+
+		if Model.__PREINDENT__:
+			io.write(Model.INDENT())
+
 		io.write(self.__class__.__name__ + '(')
 
 		Model.INDENT(1)
@@ -295,17 +301,48 @@ class Model(Observable):
 				io.write(Model.INDENT(-1))
 				io.write('],')
 			else:
+				Model.__PREINDENT__ = False
 				io.write(inner)
 				io.write(str(value))
 				io.write(',')
+				Model.__PREINDENT__ = True
 
 		io.write('\n' + Model.INDENT(-1) + ')')
 		value = io.getvalue()
 		io.close()
+
+		Model.__STRSTACK__.remove(self)
 		return value
 
+	@staticmethod
+	def str_to_class(clstr):
+		items = clstr.split('.')
+		modules = items[:-1]
+		classname = items[-1]
+		path = None
+		module = None
+		for mod in modules:
+			search = imp.find_module(mod, path)
+			try:
+				module = imp.load_module(mod, *search)
+				if hasattr(module, '__path__'):
+					path = module.__path__
+			finally:
+				if search and search[0]:
+					search[0].close()
+		if module:
+			return getattr(module, classname)
+		else:
+			raise Exception("No class found for: %s" % clstr)
+
+	@staticmethod
+	def class_to_str(instance):
+		modname = instance.__module__
+		classname = instance.__class__.__name__
+		return '%s.%s' % (modname, classname)
+
+
 #############################################################################
-#
 def is_model(item): return issubclass(item.__class__, Model)
 def is_dict(item):
 	return type(item) is DictType
