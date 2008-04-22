@@ -1,4 +1,5 @@
 import os
+import sys
 import re
 
 from ugit import git
@@ -20,6 +21,10 @@ class Model(model.Model):
 		# This keeps paths relative.
 		cdup = git.rev_parse(show_cdup=True)
 		if cdup:
+			if cdup.startswith('fatal:'):
+				# this is not a git repo
+				sys.stderr.write(cdup+"\n")
+				sys.exit(-1)
 			os.chdir(cdup)
 
 		# Read git config
