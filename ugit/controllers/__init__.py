@@ -27,6 +27,9 @@ from createbranch import create_new_branch
 from search import search_commits
 from merge import local_merge
 from merge import abort_merge
+from bookmark import save_bookmark
+from bookmark import manage_bookmarks
+
 
 class Controller(QObserver):
 	"""Manages the interaction between models and views."""
@@ -76,8 +79,8 @@ class Controller(QObserver):
 			# File Menu
 			menu_quit = self.quit_app,
 			menu_open_repo = self.open_repo,
-			# menu_load_bookmark = self.load_bookmark,
-			# menu_save_bookmark = self.save_bookmark,
+			menu_manage_bookmarks = manage_bookmarks,
+			menu_save_bookmark = save_bookmark,
 
 			# Edit Menu
 			menu_options = self.options,
@@ -251,7 +254,8 @@ class Controller(QObserver):
 
 	def grep(self):
 		txt, ok = qtutils.input("grep")
-		if not ok: return
+		if not ok:
+			return
 		stuff = self.model.grep(txt)
 		self.view.display_text.setText(stuff)
 		self.view.diff_dock.raise_()
@@ -375,7 +379,7 @@ class Controller(QObserver):
 		if dirname:
 			utils.fork(sys.argv[0], dirname)
 
-	def quit_app(self):
+	def quit_app(self, *args):
 		"""Save config settings and cleanup any inotify threads."""
 
 		if self.model.save_at_exit():

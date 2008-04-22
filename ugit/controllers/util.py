@@ -92,8 +92,6 @@ class OptionsController(QObserver):
 		# used for telling about interactive font changes
 		self.original_model = model
 		model = model.clone()
-
-		QObserver.__init__(self,model,view)
 		self.add_observables(
 			'local_user_email',
 			'local_user_name',

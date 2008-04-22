@@ -123,8 +123,10 @@ def run_cmd(cmd, *args, **kwargs):
 
 def fork(*argv):
 	pid = os.fork()
-	if pid: return
-	os.execlp(argv[0], *argv)
+	if pid:
+		time.sleep(0.1)
+	else:
+		os.execlp(argv[0], *argv)
 
 # c = a - b
 def sublist(a,b):

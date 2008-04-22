@@ -9,14 +9,13 @@ from ugit import model
 class Model(model.Model):
 	"""Provides a friendly wrapper for doing commit git operations."""
 
-	def __init__(self):
+	def init(self):
 		"""Reads git repository settings and sets severl methods
 		so that they refer to the git module.  This object is
 		encapsulates ugit's interaction with git.
 		The git module itself should know nothing about ugit
 		whatsoever."""
 
-		model.Model.__init__(self)
 		# chdir to the root of the git tree.
 		# This keeps paths relative.
 		cdup = git.rev_parse(show_cdup=True)

@@ -133,7 +133,7 @@
     </property>
     <addaction name="menu_open_repo" />
     <addaction name="separator" />
-    <addaction name="menu_load_bookmark" />
+    <addaction name="menu_manage_bookmarks_2" />
     <addaction name="menu_save_bookmark" />
     <addaction name="separator" />
     <addaction name="menu_quit" />
@@ -1087,14 +1087,14 @@ retrieve the latest commit message prior to committing.</string>
     <string>Commits By Committer...</string>
    </property>
   </action>
-  <action name="menu_load_bookmark" >
+  <action name="menu_manage_bookmarks_2" >
    <property name="text" >
-    <string>Open Bookmark...</string>
+    <string>Open / Manage Bookmarks...</string>
    </property>
   </action>
   <action name="menu_save_bookmark" >
    <property name="text" >
-    <string>Save Bookmark...</string>
+    <string>Bookmark Current...</string>
    </property>
   </action>
   <action name="menu_manage_bookmarks" >
