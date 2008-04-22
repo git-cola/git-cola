@@ -26,7 +26,6 @@ def choose_branch(title, parent, branches):
 	return dlg.get_selected()
 
 #+-------------------------------------------------------------
-#+ The Commit Browser GUI Controller
 def select_commits(model, parent, title, revs, summaries):
 	'''Use the CommitView to select commits from a list.'''
 	model = model.clone()

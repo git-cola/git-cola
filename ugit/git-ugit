@@ -21,8 +21,10 @@ def setup_environment():
 
 def main():
 	# cmdline
-	parser = optparse.OptionParser(usage='%prog /git/repo/path*'+
-			'\n\n*the current directory is used when no path is specified.')
+	parser = optparse.OptionParser(
+			usage='%prog /repo/path-1 ... /repo/path-N*\n\n'
+			+'*the current directory is used when no '
+			+'paths are specified.''')
 	parser.add_option('-v', '--version',
 			help='Show ugit version',
 			dest='version',
@@ -42,15 +44,22 @@ def main():
 		print "ugit version", VERSION
 		sys.exit(0)
 
+	# allow "git ugit /repo/path-1 .. /repo/path-N
+	if args[1:]:
+		for repo in [ os.path.realpath(r) for r in args[1:] ]:
+			from ugit.utils import fork
+			fork( sys.argv[0], repo )
+
+
 	from ugit.models import Model
+	from ugit import utils
 	from ugit.views import View
 	from ugit.controllers import Controller
-	from ugit.utils import get_icon
-	from ugit.utils import get_qm_for_locale
 
 	# load the model right away so that we can bail out if
 	# when no git repo exists
 	model = Model()
+
 
 	# qt
 	try:
@@ -63,9 +72,9 @@ def main():
 		sys.exit(-1)
 
 	app = QtGui.QApplication(sys.argv)
-	app.setWindowIcon(QtGui.QIcon( get_icon('git.png')) )
+	app.setWindowIcon(QtGui.QIcon( utils.get_icon('git.png')) )
 	locale = str(QtCore.QLocale().system().name())
-	qmfile = get_qm_for_locale( locale )
+	qmfile = utils.get_qm_for_locale( locale )
 	if os.path.exists(qmfile):
 		translator = QtCore.QTranslator()
 		translator.load(qmfile)
