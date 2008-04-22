@@ -85,6 +85,12 @@ def open_dialog(parent, title, filename=None):
 			parent, parent.tr(title), filename)
 	return unicode(qstr)
 
+def opendir_dialog(parent, title, directory):
+	qstr = QFileDialog.getExistingDirectory(
+			parent, directory, parent.tr(title),
+			QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
+	return unicode(qstr)
+
 def save_dialog(parent, title, filename=None):
 	qstr = QFileDialog.getSaveFileName(
 			parent, parent.tr(title), filename)

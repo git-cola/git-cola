@@ -131,9 +131,10 @@
     <property name="title" >
      <string>File</string>
     </property>
+    <addaction name="menu_open_repo" />
+    <addaction name="separator" />
     <addaction name="menu_load_bookmark" />
     <addaction name="menu_save_bookmark" />
-    <addaction name="menu_manage_bookmarks" />
     <addaction name="separator" />
     <addaction name="menu_quit" />
    </widget>
@@ -1088,7 +1089,7 @@ retrieve the latest commit message prior to committing.</string>
   </action>
   <action name="menu_load_bookmark" >
    <property name="text" >
-    <string>Load Bookmark...</string>
+    <string>Open Bookmark...</string>
    </property>
   </action>
   <action name="menu_save_bookmark" >
@@ -1114,6 +1115,11 @@ retrieve the latest commit message prior to committing.</string>
   <action name="menu_merge_abort" >
    <property name="text" >
     <string>Abort Merge...</string>
+   </property>
+  </action>
+  <action name="menu_open_repo" >
+   <property name="text" >
+    <string>Open Repository...</string>
    </property>
   </action>
  </widget>

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import sys
 import time
 
 from PyQt4 import QtCore
@@ -74,9 +75,9 @@ class Controller(QObserver):
 
 			# File Menu
 			menu_quit = self.quit_app,
+			menu_open_repo = self.open_repo,
 			# menu_load_bookmark = self.load_bookmark,
 			# menu_save_bookmark = self.save_bookmark,
-			# menu_manage_bookmarks = self.manage_bookmarks,
 
 			# Edit Menu
 			menu_options = self.options,
@@ -366,7 +367,15 @@ class Controller(QObserver):
 		if not commits: return
 		self.log(self.model.format_patch_helper(*commits))
 
-	def quit_app(self,*rest):
+	def open_repo(self):
+		"""Spawns a new ugit session"""
+		dirname = qtutils.opendir_dialog(self.view,
+				'Open Git Repository...',
+				os.getcwd())
+		if dirname:
+			utils.fork(sys.argv[0], dirname)
+
+	def quit_app(self):
 		"""Save config settings and cleanup any inotify threads."""
 
 		if self.model.save_at_exit():
