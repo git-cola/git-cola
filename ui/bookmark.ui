@@ -14,7 +14,14 @@
   </property>
   <layout class="QVBoxLayout" >
    <item>
-    <widget class="QListWidget" name="bookmarks" />
+    <widget class="QListWidget" name="bookmarks" >
+     <property name="alternatingRowColors" >
+      <bool>true</bool>
+     </property>
+     <property name="selectionMode" >
+      <enum>QAbstractItemView::ExtendedSelection</enum>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" >
