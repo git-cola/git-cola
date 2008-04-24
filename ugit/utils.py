@@ -121,12 +121,19 @@ def run_cmd(cmd, *args, **kwargs):
 		else:
 			return output[:-1]
 
-def fork(*argv):
-	pid = os.fork()
-	if pid:
-		time.sleep(0.1)
-	else:
-		os.execlp(argv[0], *argv)
+def fork(program, *args):
+	# find executable
+	for path in os.getenv("PATH").split(os.pathsep):
+		file = os.path.join(path, program)
+		if not os.path.exists(file):
+			file = os.path.join(path, program) + ".exe"
+		if not os.path.exists(file):
+			continue
+		try:
+			return os.spawnv(os.P_NOWAIT, file, (file,) + args)
+		except os.error:
+			pass
+	raise os.error, "cannot find executable"
 
 # c = a - b
 def sublist(a,b):

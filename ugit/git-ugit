@@ -45,16 +45,14 @@ def main():
 		sys.exit(0)
 
 	# allow "git ugit /repo/path-1 .. /repo/path-N
-	if args[1:]:
-		for repo in [ os.path.realpath(r) for r in args[1:] ]:
-			from ugit.utils import fork
-			fork( sys.argv[0], repo )
-
-
 	from ugit.models import Model
 	from ugit import utils
 	from ugit.views import View
 	from ugit.controllers import Controller
+
+	if args[1:]:
+		for repo in [ os.path.realpath(r) for r in args[1:] ]:
+			utils.fork("git", "ugit", repo)
 
 	# load the model right away so that we can bail out if
 	# when no git repo exists

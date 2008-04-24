@@ -43,7 +43,7 @@ class BookmarkController(QObserver):
 		if not selection:
 			return
 		for item in selection:
-			utils.fork(sys.argv[0], item)
+			utils.fork("git", "ugit", item)
 
 	def delete(self):
 		selection = qtutils.get_selection_list(
