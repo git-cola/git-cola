@@ -29,6 +29,12 @@ class GitNotifier(QThread):
 		self.path = path
 		self.abort = False
 		self.dirs_seen = {}
+		self.mask =  (
+			EventsCodes.IN_CREATE |
+			EventsCodes.IN_DELETE |
+			EventsCodes.IN_MODIFY |
+			EventsCodes.IN_MOVED_TO
+			)
 
 	def notify(self):
 		if not self.abort:
@@ -39,15 +45,11 @@ class GitNotifier(QThread):
 	def watch_directory(self, directory):
 		directory = os.path.realpath(directory)
 		if directory not in self.dirs_seen:
-			self.wm.add_watch(directory, mask)
+			self.wm.add_watch(directory, self.mask)
 			self.dirs_seen[directory] = True
 
 	def run(self):
 		# Only capture those events that git cares about
-		mask =  ( EventsCodes.IN_CREATE
-			| EventsCodes.IN_DELETE
-			| EventsCodes.IN_MODIFY
-			| EventsCodes.IN_MOVED_TO)
 		self.wm = WatchManager()
 		notifier = Notifier(self.wm, FileSysEvent(self))
 		self.notifier = notifier
