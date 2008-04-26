@@ -2,6 +2,19 @@
 
 cd $(dirname $0)
 
+ERROR=''
+UGIT=$(which ugit)
+test -z "$UGIT" && ERROR=1
+
+if [ $ERROR ]; then
+	echo "ugit must be in your path in order to call run_tests directly."
+	exit -1
+fi
+BINDIR=$(dirname $UGIT)
+PREFIX=$(dirname $BINDIR)
+PYTHONPATH="$PREFIX"/share:"$PYTHONPATH"
+export PYTHONPATH
+
 for unittest in t[0-9]*.py; do
 	echo "Running test: $unittest"
 	./$unittest

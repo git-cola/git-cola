@@ -14,7 +14,7 @@ class GitCommandTest(unittest.TestCase):
 
 	def testGitTag(self):
 		tags = git.tag().splitlines()
-		self.failUnless( 'ugit-0.0' in tags )
+		self.failUnless( 'v0.0' in tags )
 
 	def testGitShowCdUp(self):
 		os.chdir(testutils.TEST_SCRIPT_DIR)

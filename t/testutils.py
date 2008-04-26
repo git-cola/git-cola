@@ -66,3 +66,5 @@ class TestCase(unittest.TestCase):
 	def shell(self, cmd):
 		result = shell(cmd)
 		self.failIf(result != 0)
+	def testDir(self):
+		return test_dir()

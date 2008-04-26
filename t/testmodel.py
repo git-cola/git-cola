@@ -2,14 +2,15 @@
 from ugit.model import Model
 
 class TestModel(Model):
-	def __init__(self):
+	def init(self):
 		duck = Model().create(sound='quack',name='ducky')
 		goose = Model().create(sound='cluck',name='goose')
 
-		Model.__init__(self, attribute = 'value',
-				mylist=[duck,duck,goose])
+		self.create(
+			attribute = 'value',
+			mylist=[duck,duck,goose]
+			)
 		self.hello = 'world'
-		self.set_list_params(mylist=Model)
 		self.set_mylist([duck,duck,goose, 'meow', 'caboose',42])
 
 	def testMethod(self): return 'test'
