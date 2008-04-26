@@ -1,3 +1,27 @@
+ugit (0.9.1-1) unstable; urgency=low
+
+  updated version script
+  tests: add a test-case for recursive structures
+  model: improve the core model to allow recursive object structures
+  tests: update tests for the new installation layout
+  inotify: simplify the code a bit
+  inotify: only watch directories
+  use "git ugit" when spawning ugit sessions
+  bookmarks: fix menu action names
+  controllers: implement a bookmarks manager
+  views: add a bookmarks view
+  qtutils: simplify qtutils.information()
+  model: rework model save/restore
+  git-ugit: put ugit module path first in sys.path
+  model: fail gracefully when simplejson is not installed
+  ugit: implement file->open repository
+  git-ugit: allow multiple repositories on the command line
+  git-ugit: improve ugit's command line interface
+  git model: bail out immediately when we're not in a git repo
+  release: update version.sh to better handle tags
+
+ -- David Aguilar <davvid@gmail.com>  Sat, 26 Apr 2008 14:02:42 -0700
+
 ugit (0.9.0-1) unstable; urgency=low
 
   debian: update build dependencies
@@ -16,8 +40,7 @@ ugit (0.9.0-1) unstable; urgency=low
   controllers: implement abort merge
   controllers: simplified qobserver startup
 
- -- David Aguilar <davvid@gmail.com>  Sun, 20 Apr 2008 18:34:41 -0700
-
+ -- David Aguilar <davvid@gmail.com>  Sun, 20 Apr 2008 12:18:42 -0700
 
 ugit (0.8.13-1) unstable; urgency=low
 
