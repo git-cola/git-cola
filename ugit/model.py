@@ -14,7 +14,7 @@ from types import ComplexType
 from types import InstanceType
 
 class Observable(object):
-	'''Handles subject/observer notifications.'''
+	"""Handles subject/observer notifications."""
 	def __init__(self,*args,**kwargs):
 		self.__observers = []
 		self.__notify = True
@@ -34,17 +34,15 @@ class Observable(object):
 			observer.notify(*param)
 
 class Model(Observable):
-	'''Creates a generic model object with params specified
+	"""Creates a generic model object with params specified
 	as a name:value dictionary.
 
 	get_name() and set_name(value) are created automatically
-	for any of the parameters specified in the **kwargs'''
+	for any of the parameters specified in the **kwargs"""
 
 	def __init__(self, *args, **kwargs):
 		Observable.__init__(self)
 		self.__params = []
-		self.__list_params = {}
-		self.__object_params = {}
 		# For meta-programmability
 		self.from_dict(kwargs)
 		self.init()
@@ -64,12 +62,6 @@ class Model(Observable):
 	def clone(self, *args, **kwargs):
 		return self.__class__(*args, **kwargs).from_dict(self.to_dict())
 
-	def set_list_params(self, **list_params):
-		self.__list_params.update(list_params)
-
-	def set_object_params(self, **obj_params):
-		self.__object_params.update(obj_params)
-
 	def has_param(self,param):
 		return param in self.__params
 
@@ -77,7 +69,7 @@ class Model(Observable):
 		return getattr(self, param)
 
 	def __getattr__(self, param):
-		'''Provides automatic get/set/add/append methods.'''
+		"""Provides automatic get/set/add/append methods."""
 
 		# Base case: we actually have this param
 		if param in self.__dict__:
@@ -88,22 +80,22 @@ class Model(Observable):
 		if realparam in self.__dict__:
 			return getattr(self, realparam)
 
-		if realparam.startswith('get'):
-			param = self.__translate(param, 'get')
+		if realparam.startswith("get"):
+			param = self.__translate(param, "get")
 			return lambda: getattr(self, param)
 
-		elif realparam.startswith('set'):
-			param = self.__translate(param, 'set')
+		elif realparam.startswith("set"):
+			param = self.__translate(param, "set")
 			return lambda v: self.set_param(param, v,
 					check_params=True)
 
-		elif (realparam.startswith('add')
-				or realparam.startswith('append')):
+		elif (realparam.startswith("add")
+				or realparam.startswith("append")):
 
-			if realparam.startswith('add'):
-				param = self.__translate(realparam, 'add')
+			if realparam.startswith("add"):
+				param = self.__translate(realparam, "add")
 			else:
-				param = self.__translate(realparam, 'append')
+				param = self.__translate(realparam, "append")
 
 			def array_append(*values):
 				array = getattr(self, param)
@@ -124,7 +116,7 @@ class Model(Observable):
 		raise AttributeError(errmsg)
 
 	def set_param(self, param, value, notify=True, check_params=False):
-		'''Set param with optional notification and validity checks.'''
+		"""Set param with optional notification and validity checks."""
 
 		param = param.lower()
 		if check_params and param not in self.__params:
@@ -143,115 +135,118 @@ class Model(Observable):
 			self.set_param(param, model.get_param(param))
 
 	def __translate(self, param, prefix='', sep='_'):
-		'''Translates an param name from the external name
+		"""Translates an param name from the external name
 		used in methods to those used internally.  The default
 		settings strip off '_' so that both get_foo() and getFoo()
-		are valid incantations.'''
-		return param.lstrip(prefix).lstrip(sep).lower()
+		are valid incantations."""
+		return param[len(prefix):].lstrip(sep).lower()
 
 	def save(self, filename):
-		try:
-			import simplejson
-		except ImportError:
-			print "Unable to save."
-			print "You do not have simplejson installed."
-			print "try: sudo apt-get install simplejson"
+		if not try_json():
 			return
+		import simplejson
 		file = open(filename, 'w')
 		simplejson.dump(self.to_dict(), file, indent=4)
 		file.close()
 
 	def load(self, filename):
-		try:
-			import simplejson
-		except ImportError:
-			print "Unable to load."
-			print "You do not have simplejson installed."
-			print "try: sudo apt-get install simplejson"
+		if try_json():
 			return
+		import simplejson
 		file = open(filename, 'r')
-		dict = simplejson.load(file)
+		ddict = simplejson.load(file)
 		file.close()
-		self.from_dict(dict)
+		return self.from_dict(ddict)
+
+	@staticmethod
+	def load(filename):
+		if not try_json():
+			return
+		import simplejson
+		file = open(filename, 'r')
+		ddict = simplejson.load(file)
+		file.close()
+
+		if "__class__" in ddict:
+			cls = Model.str_to_class(ddict["__class__"])
+			del ddict["__class__"]
+			return cls().from_dict(ddict)
+		else:
+			raise Exception("Cannot Model.load() without __class__!")
+
 
 	def from_dict(self, source_dict):
-		'''Import a complex model from a dictionary.  The import/export
-		is clued as to nested Model-objects by setting the
-		__list_params or __object_params object specifications.'''
+		"""Import a complex model from a dictionary.
+		We store class information in the __class__ and __params__ variables.
+		It looks like a duck, it's a duck."""
 
-		if '__META__' in source_dict:
-			metadict = source_dict['__META__']
-			for param, clstr in metadict.iteritems():
-				cls = Model.str_to_class(clstr)
-				self.set_object_param(param, cls)
+		if "__class__" in source_dict:
+			clsstr = source_dict["__class__"]
+			del source_dict["__class__"]
+			cls = Model.str_to_class(clsstr)
+			return cls().from_dict(source_dict)
 
 		for param, val in source_dict.iteritems():
 			self.set_param(
 				param,
-				self.__param_from_dict(param, val),
+				self.__obj_from_value(val),
 				notify=False)
 		self.__params.sort()
 		return self
 
-	def __param_from_dict(self,param,val):
-		# A list of Model-objects
-		if is_list(val):
-			if param in self.__list_params:
-				# A list of Model-derived objects
-				listparam = []
-				cls = self.__list_params[param]
-				for item in val:
-					listparam.append(cls().from_dict(item))
-				return listparam
+	def __obj_from_value(self, val):
+		# Atoms
+		if is_atom(val):
+			return val
 
-		# A param that maps to a Model-object
+		# Possibly nested lists
+		elif is_list(val):
+			return [ self.__obj_from_value(v) for v in val ]
+
 		elif is_dict(val):
-			if param in self.__object_params:
-				# "module.submodule:ClassName"
-				cls = self.__object_params[param]
+			# A param that maps to a Model-object
+			if "__class__" in val:
+				clsstr = val["__class__"]
+				cls = Model.str_to_class(clsstr)
+				del val["__class__"]
 				return cls().from_dict(val)
+			newdict = {}
+			for k, v in val.iteritems():
+				newdict[k] = self.__obj_from_value(v)
+			return newdict
 
-		# Atoms and uninteresting hashes/dictionaries
+		# All others
 		return val
 
+
 	def to_dict(self):
-		'''Exports a model to a dictionary.
-		This simplifies serialization.'''
-		params = {}
+		"""Exports a model to a dictionary.
+		This simplifies serialization."""
+		params = {"__class__": Model.class_to_str(self)}
 		for param in self.__params:
-			params[param] = self.__param_to_dict(param)
-			value = getattr(self, param)
-			if is_instance(value):
-				clstr = Model.class_to_str(value)
-				params.setdefault('__META__', {})
-				params['__META__'][param] = clstr
+			params[param] =\
+				self.__obj_to_value(getattr(self, param))
 		return params
 
-	def __param_to_dict(self, param):
-		item = getattr(self, param)
-		return self.__item_to_dict(item)
-
-	def __item_to_dict(self, item):
+	def __obj_to_value(self, item):
 		if is_atom(item):
 			return item
 
 		elif is_list(item):
-			newlist = []
-			for i in item:
-				newlist.append(self.__item_to_dict(i))
+			newlist = [ self.__obj_to_value(i) for i in item ]
 			return newlist
 
 		elif is_dict(item):
 			newdict = {}
 			for k,v in item.iteritems():
-				newdict[k] = self.__item_to_dict(v)
+				newdict[k] = self.__obj_to_value(v)
 			return newdict
 
 		elif is_instance(item):
 			return item.to_dict()
 
 		else:
-			raise NotImplementedError, 'Unknown type:' + str(type(item))
+			raise NotImplementedError("Unknown type:" + str(type(item)))
 
 	__INDENT__ = 0
 	__PREINDENT__ = True
@@ -263,11 +258,11 @@ class Model(Observable):
 		return '\t' * Model.__INDENT__
 
 	def __str__(self):
-		'''A convenient, recursively-defined stringification method.'''
+		"""A convenient, recursively-defined stringification method."""
 
 		# This avoid infinite recursion on cyclical structures
 		if self in Model.__STRSTACK__:
-			return 'REFERENCE'
+			return "REFERENCE"
 		else:
 			Model.__STRSTACK__.append(self)
 
@@ -299,7 +294,7 @@ class Model(Observable):
 						io.write(",\n")
 
 				io.write(Model.INDENT(-1))
-				io.write('],')
+				io.write("],")
 			else:
 				Model.__PREINDENT__ = False
 				io.write(inner)
@@ -325,7 +320,7 @@ class Model(Observable):
 			search = imp.find_module(mod, path)
 			try:
 				module = imp.load_module(mod, *search)
-				if hasattr(module, '__path__'):
+				if hasattr(module, "__path__"):
 					path = module.__path__
 			finally:
 				if search and search[0]:
@@ -339,8 +334,19 @@ class Model(Observable):
 	def class_to_str(instance):
 		modname = instance.__module__
 		classname = instance.__class__.__name__
-		return '%s.%s' % (modname, classname)
+		return "%s.%s" % (modname, classname)
 
+
+#############################################################################
+def try_json():
+	try:
+		import simplejson
+		return True
+	except ImportError:
+		print "Unable to import simplejson." % action
+		print "You do not have simplejson installed."
+		print "try: sudo apt-get install simplejson"
+		return False
 
 #############################################################################
 def is_model(item): return issubclass(item.__class__, Model)
