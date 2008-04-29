@@ -17,6 +17,13 @@ waf_restore()
 try_python()
 {
 	waf_backup
+		echo "+------------------------------------------------"
+		echo "+ PYTHON=$1"
+		echo "+------------------------------------------------"
+		if [ ! -x "$1" ]; then
+			echo "$1 is not executable."
+			exit -1
+		fi
 		env PYTHON="$1" \
 			./configure \
 				--prefix="$2" \

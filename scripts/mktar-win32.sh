@@ -11,7 +11,7 @@ if [ -d $DIR ]; then
 	exit -1
 fi
 
-scripts/build-win32.sh
+scripts/build-win32.sh || exit -1
 
 if [ -e $BASENAME ]; then
 	echo "error: $BASENAME exists"
