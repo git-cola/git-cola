@@ -299,7 +299,7 @@ def config_to_dict(config_lines):
 
 	newdict = {}
 	for line in config_lines:
-		k, v = line.split('=')
+		k, v = line.split('=', 1)
 		k = k.replace('.','_') # git -> model
 		if v == 'true' or v == 'false':
 			v = bool(eval(v.title()))
