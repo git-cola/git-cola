@@ -150,35 +150,37 @@ class Model(Observable):
 		file.close()
 
 	def load(self, filename):
-		if try_json():
-			return
-		import simplejson
-		file = open(filename, 'r')
-		ddict = simplejson.load(file)
-		file.close()
-		return self.from_dict(ddict)
-
-	@staticmethod
-	def load(filename):
 		if not try_json():
 			return
 		import simplejson
 		file = open(filename, 'r')
 		ddict = simplejson.load(file)
 		file.close()
+		if "__class__" in ddict:
+			# load params in-place.
+			del ddict["__class__"]
+		return self.from_dict(ddict)
 
+	@staticmethod
+	def instance(filename):
+		if not try_json():
+			return
+		import simplejson
+		file = open(filename, 'r')
+		ddict = simplejson.load(file)
+		file.close()
 		if "__class__" in ddict:
 			cls = Model.str_to_class(ddict["__class__"])
 			del ddict["__class__"]
 			return cls().from_dict(ddict)
 		else:
-			raise Exception("Cannot Model.load() without __class__!")
+			return Model().from_dict(ddict)
 
 
 	def from_dict(self, source_dict):
 		"""Import a complex model from a dictionary.
-		We store class information in the __class__ and __params__ variables.
-		It looks like a duck, it's a duck."""
+		We store class information in the __class__ variable.
+		If it looks like a duck, it's a duck."""
 
 		if "__class__" in source_dict:
 			clsstr = source_dict["__class__"]
@@ -186,6 +188,7 @@ class Model(Observable):
 			cls = Model.str_to_class(clsstr)
 			return cls().from_dict(source_dict)
 
+		# Not initiating a clone: load parameters in-place
 		for param, val in source_dict.iteritems():
 			self.set_param(
 				param,
