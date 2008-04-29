@@ -12,7 +12,7 @@ if [ $ERROR ]; then
 fi
 BINDIR=$(dirname $UGIT)
 PREFIX=$(dirname $BINDIR)
-PYTHONPATH="$PREFIX"/share:"$PYTHONPATH"
+PYTHONPATH="$PREFIX"/share:"$PREFIX"/share/ugit:"$PYTHONPATH"
 export PYTHONPATH
 
 for unittest in t[0-9]*.py; do

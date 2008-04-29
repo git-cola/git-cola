@@ -9,7 +9,6 @@ from testmodel import NestedModel
 
 from ugit.model import Model
 
-
 class SaveRestoreTest(testutils.TestCase):
 
 	def setUp(self):
@@ -18,7 +17,7 @@ class SaveRestoreTest(testutils.TestCase):
 		path = os.path.join(self.testDir(), 'test.data')
 		self.nested.save(path)
 		# reconstitute
-		self.clone = Model.load(path)
+		self.clone = Model.instance(path)
 
 	def testCloneToClass(self):
 		self.failUnless( str(NestedModel) ==
