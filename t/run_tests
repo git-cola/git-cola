@@ -15,11 +15,64 @@ PREFIX=$(dirname $BINDIR)
 PYTHONPATH="$PREFIX"/share:"$PREFIX"/share/ugit:"$PYTHONPATH"
 export PYTHONPATH
 
-for unittest in t[0-9]*.py; do
-	echo "Running test: $unittest"
-	./$unittest
-	if [ $? -ne 0 ]; then
-		echo "Test failed with exit code $?"
-		exit -1
-	fi
-done
+(
+	for unittest in t[0-9]*.py; do
+		echo
+		echo -n "$unittest "
+		./$unittest
+		if [ $? -ne 0 ] && [ -z "$RUN_ALL" ]; then
+			echo "$unittest failed with exit code $?"
+			exit -1
+		fi
+	done
+
+) 2>&1 | perl -e '
+
+use Time::HiRes qw(gettimeofday);
+
+my ($start_sec, $start_ms) = gettimeofday();
+
+my $count = 0;
+my @fail = ();
+while(<>) {
+	print;
+	if ( /(\d+) tests/ ) {
+		$count += $1;
+	}
+	elsif ( /(.*) failed/ ) {
+		push @fail, $1;
+	}
+}
+
+my ($end_sec, $end_ms) = gettimeofday();
+
+my $min = 0;
+my $sec = $end_sec - $start_sec;
+my $secfrac = ( $end_ms - $start_ms ) * 100;
+
+while ( $secfrac < 0.0 ) {
+	$secfrac += 1000 * 100;
+}
+ 
+$secfrac = substr("$secfrac", 0, 2);
+
+while ( $sec > 60 ) {
+	$sec -= 60;
+	$min++;
+}
+
+if ( @fail ) {
+	print "\n";
+	print "The following test FAILED:\n";
+	print "-"x70 ."\n\t";
+	print join("\n\t", @fail);
+	print "\n";
+}
+
+print "\n";
+print `../scripts/gitversion.sh`;
+print "-"x70 ."\n";
+print "$count tests total\n";
+print "$min min $sec.$secfrac sec total runtime\n\n";
+'
+exit 0
