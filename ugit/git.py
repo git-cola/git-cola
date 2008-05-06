@@ -1,19 +1,96 @@
+import subprocess
 import os
 import re
 import sys
+import time
 import types
-import utils
-import defaults
 from cStringIO import StringIO
+DIFF_CONTEXT = 3
+
+def set_diff_context(ctxt):
+	global DIFF_CONTEXT
+	DIFF_CONTEXT = ctxt
+
+def get_tmp_filename():
+	# Allow TMPDIR/TMP with a fallback to /tmp
+	env = os.environ
+	return os.path.join(env.get('TMP', env.get('TMPDIR', '/tmp')),
+		'.git.%s.%s' % ( os.getpid(), time.time()))
+
+def run_cmd(cmd, *args, **kwargs):
+	"""
+	Returns an array of strings from the command's output.
+	defaults:
+		raw: off -> passing raw=True returns a string instead of a list of strings.
+		with_status: off -> passing with_status=True returns
+				tuple(status,output) instead of just output
+
+	run_command("git foo", bar, buzz, baz=value, q=True)
+	implies:
+		argv=["git","foo","-q","--baz=value","bar","buzz"]
+	"""
+	kwarglist = []
+	for k,v in kwargs.iteritems():
+		if len(k) > 1:
+			k = k.replace('_','-')
+			if v is True:
+				kwarglist.append("--%s" % k)
+			elif v is not None and type(v) is not bool:
+				kwarglist.append("--%s=%s" % (k,v))
+		else:
+			if v is True:
+				kwarglist.append("-%s" % k)
+			elif v is not None and type(v) is not bool:
+				kwarglist.append("-%s" % k)
+				kwarglist.append(str(v))
+	# Handle cmd as either a string or an argv list
+	if type(cmd) is str:
+		# we only call run_cmd(str) with str='git command'
+		# or other simple commands
+		cmd = cmd.split(' ')
+		cmd += kwarglist
+		cmd += tuple(args)
+	else:
+		cmd = tuple(cmd + kwarglist + list(args))
+
+	def pop_key(d, key):
+		val = d.get(key)
+		try: del d[key]
+		except: pass
+		return val
+	raw = pop_key(kwargs, 'raw')
+	with_status = pop_key(kwargs,'with_status')
+	with_stderr = not pop_key(kwargs,'without_stderr')
+	cwd = os.getcwd()
+	stderr = None 
+	if with_stderr:
+		stderr = subprocess.STDOUT
+	# start the process
+	proc = subprocess.Popen(cmd, cwd=cwd,
+			stdout=subprocess.PIPE,
+			stderr=stderr,
+			stdin=None)
+	# Wait for the process to return
+	output, err = proc.communicate()
+	# conveniently strip off trailing newlines
+	if not raw:
+		output = output.rstrip()
+	if err:
+		raise RuntimeError("%s return exit status %d"
+				% ( str(cmd), err ))
+	if with_status:
+		return (err, output)
+	else:
+		return output
 
 # union of functions in this file and dynamic functions
 # defined in the git command string list below
 def git(*args,**kwargs):
-	"""This is a convenience wrapper around utils.run_cmd that
+	"""This is a convenience wrapper around run_cmd that
 	sets things up so that commands are run in the canonical
 	'git command [options] [args]' form."""
 	cmd = 'git %s' % args[0]
-	return utils.run_cmd(cmd, *args[1:], **kwargs)
+	return run_cmd(cmd, *args[1:], **kwargs)
 
 class GitCommand(object):
 	"""This class wraps this module so that arbitrary git commands
@@ -78,9 +155,6 @@ sys.modules[__name__] = gitcmd
 #+-------------------------------------------------------------------------
 #+ A regex for matching the output of git(log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile('([0-9a-f]+)\W(.*)')
-
-def quote(argv):
-	return ' '.join([ utils.shell_quote(arg) for arg in argv ])
 
 def abort_merge():
 	# Reset the worktree
@@ -152,7 +226,7 @@ def commit_with_msg(msg, amend=False):
 	# Sure, this is a potential "security risk," but if someone
 	# is trying to intercept/re-write commit messages on your system,
 	# then you probably have bigger problems to worry about.
-	tmpfile = utils.get_tmp_filename()
+	tmpfile = get_tmp_filename()
 	kwargs = {
 		'F': tmpfile,
 		'amend': amend,
@@ -208,7 +282,7 @@ def diff_helper(commit=None,
 			color=color,
 			cached=cached,
 			patch_with_raw=True,
-			unified = defaults.DIFF_CONTEXT,
+			unified=DIFF_CONTEXT,
 			*argv
 		).splitlines()
 
@@ -238,12 +312,12 @@ def diff_helper(commit=None,
 def diffstat():
 	return gitcmd.diff(
 			'HEAD^',
-			unified=defaults.DIFF_CONTEXT,
+			unified=DIFF_CONTEXT,
 			stat=True)
 
 def diffindex():
 	return gitcmd.diff(
-			unified=defaults.DIFF_CONTEXT,
+			unified=DIFF_CONTEXT,
 			stat=True,
 			cached=True)
 
