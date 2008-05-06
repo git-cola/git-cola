@@ -391,8 +391,8 @@ class Controller(QObserver):
 		if not self.inotify_thread.isRunning(): return
 
 		self.inotify_thread.abort = True
-		self.inotify_thread.terminate()
 		self.inotify_thread.wait()
+		sys.exit(0)
 
 	def load_commitmsg(self):
 		file = qtutils.open_dialog(self.view,

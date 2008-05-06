@@ -47,7 +47,7 @@ class GitNotifier(QThread):
 		if directory not in self.dirs_seen:
 			self.wm.add_watch(directory, self.mask)
 			self.dirs_seen[directory] = True
-
+	
 	def run(self):
 		# Only capture those events that git cares about
 		self.wm = WatchManager()
@@ -64,6 +64,6 @@ class GitNotifier(QThread):
 					self.watch_directory(directory)
 				added_flag = True
 			notifier.process_events()
-			if notifier.check_events():
+			if notifier.check_events(timeout=250):
 				notifier.read_events()
 		notifier.stop()
