@@ -2,7 +2,8 @@ import os
 import sys
 import re
 
-from ugit import git
+import git
+
 from ugit import utils
 from ugit import model
 

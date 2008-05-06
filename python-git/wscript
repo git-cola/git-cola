@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+import os
+from distutils.sysconfig import get_python_version
+
+# Python site-packages helper
+def get_site_packages(prefix):
+	python_api = 'python' + get_python_version()
+	return os.path.join(prefix, 'lib', python_api, 'site-packages')
+
+def configure(conf):
+	conf.check_tool('python')
+	prefix = conf.env['PREFIX']
+	conf.env['PYTHON_SITE_PACKAGES'] = get_site_packages(prefix)
+
+def build(bld):
+	# Compile all Python modules
+	pyqt = bld.create_obj('py')
+	pyqt.inst_var = 'PYTHON_SITE_PACKAGES'
+	pyqt.find_sources_in_dirs('.')

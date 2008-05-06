@@ -11,8 +11,8 @@ from os.path import realpath
 def setup_environment():
 	"""Prepends sys.path with ugit's module path."""
 	# ex: sys.path = [ ..., /usr/share ]
-	#     from ugit import git
-	# implies: git = /usr/share/ugit/git.py
+	#     from ugit import utils
+	# implies: utils = /usr/share/ugit/utils.py
 	ugit   = realpath(sys.argv[0])
 	bin    = dirname(ugit)
 	prefix = dirname(bin)

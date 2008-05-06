@@ -5,7 +5,6 @@ import glob
 import Params
 import Common
 from os.path import join
-from distutils.sysconfig import get_python_version
 
 # Release versioning
 def get_version():
@@ -39,11 +38,13 @@ def configure(conf):
 	conf.check_tool('pyuic4', 'build')
 	conf.check_tool('po2qm', 'build')
 
+	conf.sub_config('python-git')
+
 	env = conf.env
 	prefix = env['PREFIX']
 	bindir = join(prefix, 'bin')
-	sitepackages = join(prefix, 'share')
-	modules = join(sitepackages, 'ugit')
+	share = join(prefix, 'share')
+	modules = join(share, 'ugit')
 	views = join(modules, 'views')
 	controllers = join(modules, 'controllers')
 	icons = join(prefix, 'share', 'ugit', 'icons')
@@ -56,11 +57,15 @@ def configure(conf):
 	env['UGIT_ICONS'] = icons
 	env['UGIT_APPS'] = apps
 
-
 #############################################################################
 # Build
 def build(bld):
-	bld.add_subdirs('scripts ui ugit')
+	bld.add_subdirs("""
+		python-git
+		scripts
+		ui
+		ugit
+	""")
 
 	qm = bld.create_obj('po2qm')
 	qm.find_sources_in_dirs('po')
