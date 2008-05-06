@@ -1,3 +1,16 @@
+ugit (0.9.2-1) unstable; urgency=low
+
+  python: make git.py globally accessible
+  models: set the global diff context during startup
+  inotify: add a timeout to the inotify watcher
+  utils: remove QProcess usage
+  git.py: remove all external dependencies
+  tests: add a test summary to "make test"
+  Use the maxsplit argument to str.split when parsing config files.
+  build: gracefully handle a missing python installation
+  tests: add an import test, update the model api in model-save-restore
+  model: load() should import parameters in-place
+
 ugit (0.9.1-1) unstable; urgency=low
 
   updated version script
