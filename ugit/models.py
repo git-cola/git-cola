@@ -99,7 +99,7 @@ class Model(model.Model):
 			'merge_summary': False,
 			'merge_diffstat': True,
 			'merge_verbosity': 2,
-			'gui_diffcontext': 5,
+			'gui_diffcontext': 3,
 			'gui_pruneduringfetch': False,
 		}
 		# config items that are purely git config --global settings
@@ -148,6 +148,9 @@ class Model(model.Model):
 		for k,v in global_defaults.iteritems():
 			if k not in global_dict:
 				self.set_param('global_'+k, v)
+
+		# Load the diff context
+		git.set_diff_context( self.local_gui_diffcontext )
 
 	def save_config_param(self, param):
 		if param not in self.get_config_params():
@@ -227,13 +230,13 @@ class Model(model.Model):
 				self.subtree_names.append(name)
 
 	def get_history_browser(self):
-		return self.get_param('global_ugit_historybrowser')
+		return self.global_ugit_historybrowser
 
 	def remember_gui_settings(self):
-		return self.get_param('global_ugit_savewindowsettings')
+		return self.global_ugit_savewindowsettings
 
 	def save_at_exit(self):
-		return self.get_param('global_ugit_saveatexit')
+		return self.global_ugit_saveatexit
 
 	def get_tree_node(self, idx):
 		return (self.get_types()[idx],
