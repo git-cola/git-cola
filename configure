@@ -97,34 +97,34 @@ generateMakefile()
 WAF_HOME=$CUR_DIR
 
 all:
-	@$WAF build
+	@$PYTHON $WAF build
 
 all_debug:
-	@$WAF -v build
+	@$PYTHON $WAF -v build
 
 all_progress:
-	@$WAF -p build
+	@$PYTHON $WAF -p build
 
 install:
-	@$WAF install
+	@$PYTHON $WAF install
 
 uninstall:
-	@$WAF uninstall
+	@$PYTHON $WAF uninstall
 
 clean:
-	@$WAF clean
+	@$PYTHON $WAF clean
 
 distclean:
-	@$WAF distclean
+	@$PYTHON $WAF distclean
 	@-rm -rf cache/
 	@-rm -rf _build_
 	@-rm -f Makefile
 
 check:
-	@$WAF check
+	@$PYTHON $WAF check
 
 dist:
-	@$WAF dist
+	@$PYTHON $WAF dist
 
 test:
 	@$TESTDIR/run_tests
