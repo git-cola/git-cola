@@ -140,10 +140,6 @@ $WAF configure $* || exit $EXIT_ERROR
 
 #create a Makefile if waf configure succeeds
 if [ -f "${WORKINGDIR}/.lock-wscript" ] ; then
-	if [ -f "Makefile" ] ; then
-		echo ""
-	else
-		generateMakefile
-	fi
+	generateMakefile
 fi
 exit $EXIT_SUCCESS
