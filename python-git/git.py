@@ -467,6 +467,13 @@ def parse_rev_list(raw_revs):
 def parse_status():
 	"""RETURNS: A tuple of staged, unstaged and untracked file lists."""
 
+	def eval_path(path):
+		"""handles quoted paths."""
+		if path.startswith('"') and path.endswith('"'):
+			return eval(path)
+		else:
+			return path
+
 	MODIFIED_TAG = '# Changed but not updated:'
 	UNTRACKED_TAG = '# Untracked files:'
 
@@ -508,19 +515,19 @@ def parse_status():
 			if match:
 				tag = match.group(0)
 				filename = status_line.replace(tag, '')
-				current_dest.append(filename)
+				current_dest.append(eval_path(filename))
 				continue
 			match = RGX_RENAMED.match(status_line)
 			if match:
 				oldname = match.group(2)
 				newname = match.group(3)
-				current_dest.append(oldname)
-				current_dest.append(newname)
+				current_dest.append(eval_path(oldname))
+				current_dest.append(eval_path(newname))
 				continue
 		# Untracked files
 		elif mode is UNTRACKED_MODE:
 			if status_line.startswith('#\t'):
-				current_dest.append(status_line[2:])
+				current_dest.append(eval_path(status_line[2:]))
 
 	return( staged, unstaged, untracked )
 
