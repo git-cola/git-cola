@@ -152,6 +152,16 @@ class Model(model.Model):
 		# Load the diff context
 		git.set_diff_context( self.local_gui_diffcontext )
 
+	def get_config_params(self):
+		params = []
+		params.extend(map(lambda x: 'local_' + x,
+				self.__local_and_global_defaults.keys()))
+		params.extend(map(lambda x: 'global_' + x,
+				self.__local_and_global_defaults.keys()))
+		params.extend(map(lambda x: 'global_' + x,
+				self.__global_defaults.keys()))
+		return params
+
 	def save_config_param(self, param):
 		if param not in self.get_config_params():
 			return
@@ -344,16 +354,6 @@ class Model(model.Model):
 
 	def get_revision_sha1(self, idx):
 		return self.get_revisions()[idx]
-
-	def get_config_params(self):
-		params = []
-		params.extend(map(lambda x: 'local_' + x,
-				self.__local_and_global_defaults.keys()))
-		params.extend(map(lambda x: 'global_' + x,
-				self.__local_and_global_defaults.keys()))
-		params.extend(map(lambda x: 'global_' + x,
-				self.__global_defaults.keys()))
-		return params
 
 	def apply_font_size(self, param, default):
 		old_font = self.get_param(param)
