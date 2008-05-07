@@ -151,14 +151,20 @@ class GitCommand(object):
 			if type(val) is types.FunctionType:
 				self.commands[name] = val
 
-	def __getattr__(self, name):
-		if hasattr(self.module, name):
-			value = getattr(self.module, name)
-			setattr(self, name, value)
+	def __getattr__(self, cmd):
+		if hasattr(self.module, cmd):
+			value = getattr(self.module, cmd)
+			setattr(self, cmd, value)
 			return value
 		def git_cmd(*args, **kwargs):
-			return git(name.replace('_','-'), *args, **kwargs)
-		setattr(self, name, git_cmd)
+			"""Runs "git <cmd> [options] [args]"
+			The output is returned as a string.
+			Pass with_stauts=True to merge stderr's into stdout.
+			Pass raw=True to avoid stripping git's output.
+			Finally, pass with_status=True to
+			return a (status, output) tuple."""
+			return git(cmd.replace('_','-'), *args, **kwargs)
+		setattr(self, cmd, git_cmd)
 		return git_cmd
 
 # core git wrapper for use in this module
