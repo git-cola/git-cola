@@ -1,6 +1,6 @@
 ugit: A PyQt-based git gui
 
-Copyright (C) 2007 David Aguilar
+Copyright (C) 2008 David Aguilar
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,10 +24,28 @@ PyQt 4.3 or newer
 
 INSTALLATION
 
-If you downloaded a tarball, add /path/to/ugit/bin
-to your $PATH and type:
+Debian and RPM users can download freshly built binaries here:
+
+	http://ugit.sf.net/
+
+	sudo dpkg -i ugit_*.deb
+	sudo rpm -ivh ugit-*.rpm
+
+
+If you downloaded a tarball, make sure /path/to/ugit/bin is in your $PATH.
+
+
+HOW TO RUN
+
+Take your pick--any of the following incantations work from the command line:
 
 	git ugit
+	git-ugit
+	ugit
+
+Launching ugit on repositories outside your $CWD:
+
+	git ugit /repo/path-1 /repo/path-2 .. /repo/path-N
 
 
 BUILDING FROM SOURCE
@@ -43,8 +61,6 @@ Synopsis:
 		make
 		sudo make install
 
-	cd my/git/repo
-		git ugit
 
 WINDOWS SUPPORT
 
@@ -65,12 +81,17 @@ as of late 2007:
 	http://git.or.cz/gitwiki/WindowsInstall
 
 4) Download and unpack ugit:
+
 	http://ugit.sf.net/releases/
 
 Grab the latest win32 tarball and run ugit-win32.sh from
 within an msysgit or cygwin shell.
 
 The script assumes the you have Python/PyQt4 installed in C:/Python25.
-If this is not the case, edit the script accordingly.
+If this is not the case simply edit the script accordingly.
 
 voila, ugit on Windows.
+
+
+NOTE: Windows is not the developer's primary platform.
+Patches are always greatly appreciated.
