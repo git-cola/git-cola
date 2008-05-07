@@ -5,10 +5,13 @@ from distutils.sysconfig import get_python_version
 
 # Python site-packages helper
 def get_site_packages(env):
-	python_api = 'python' + get_python_version()
+	python_version = get_python_version()
+	python_api = 'python' + python_version
+	# Allow "env PYTHON=/usr/bin/python2.4 waf ..." overrides
 	python = env['PYTHON']
-	if re.match(r'\d+\.\d+', python[-3:]):
-		python_api = os.path.basename(python)
+	if python[-3:] != python_version:
+		if re.match(r'\d+\.\d+', python[-3:]):
+			python_api = os.path.basename(python)
 	return os.path.join(env['PREFIX'], 'lib', python_api, 'site-packages')
 
 def configure(conf):
