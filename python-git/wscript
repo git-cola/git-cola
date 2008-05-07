@@ -1,16 +1,19 @@
 #!/usr/bin/env python
+import re
 import os
 from distutils.sysconfig import get_python_version
 
 # Python site-packages helper
-def get_site_packages(prefix):
+def get_site_packages(env):
 	python_api = 'python' + get_python_version()
-	return os.path.join(prefix, 'lib', python_api, 'site-packages')
+	python = env['PYTHON']
+	if re.match(r'\d+\.\d+', python[-3:]):
+		python_api = os.path.basename(python)
+	return os.path.join(env['PREFIX'], 'lib', python_api, 'site-packages')
 
 def configure(conf):
 	conf.check_tool('python')
-	prefix = conf.env['PREFIX']
-	conf.env['PYTHON_SITE_PACKAGES'] = get_site_packages(prefix)
+	conf.env['PYTHON_SITE_PACKAGES'] = get_site_packages(conf.env)
 
 def build(bld):
 	# Compile all Python modules
