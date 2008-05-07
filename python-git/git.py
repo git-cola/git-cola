@@ -20,14 +20,25 @@ def get_tmp_filename():
 def run_cmd(cmd, *args, **kwargs):
 	"""
 	Returns an array of strings from the command's output.
-	defaults:
-		raw: off -> passing raw=True returns a string instead of a list of strings.
-		with_status: off -> passing with_status=True returns
-				tuple(status,output) instead of just output
 
-	run_command("git foo", bar, buzz, baz=value, q=True)
-	implies:
-		argv=["git","foo","-q","--baz=value","bar","buzz"]
+	DEFAULTS:
+		raw=False
+
+	Passing raw=True prevents the output from being striped.
+
+		with_status = False
+	
+	Passing with_status=True returns tuple(status,output)
+	instead of just the command's output.
+
+	run_command("git foo", bar, buzz,
+		baz=value, bar=True, q=True, f='foo')
+
+	Implies:
+		argv = ["git", "foo",
+			"-q", "-ffoo",
+			"--bar", "--baz=value",
+			"bar","buzz" ]
 	"""
 	kwarglist = []
 	for k,v in kwargs.iteritems():
