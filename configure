@@ -95,36 +95,37 @@ generateMakefile()
 # Waf Makefile wrapper
 # http://www.freehackers.org/~tnagy/waf.html
 WAF_HOME=$CUR_DIR
+PYTHON=$PYTHON
 
 all:
-	@$PYTHON $WAF build
+	@\$(PYTHON) $WAF build
 
 all_debug:
-	@$PYTHON $WAF -v build
+	@\$(PYTHON) $WAF -v build
 
 all_progress:
-	@$PYTHON $WAF -p build
+	@\$(PYTHON) $WAF -p build
 
 install:
-	@$PYTHON $WAF install
+	@\$(PYTHON) $WAF install
 
 uninstall:
-	@$PYTHON $WAF uninstall
+	@\$(PYTHON) $WAF uninstall
 
 clean:
-	@$PYTHON $WAF clean
+	@\$(PYTHON) $WAF clean
 
 distclean:
-	@$PYTHON $WAF distclean
+	@\$(PYTHON) $WAF distclean
 	@-rm -rf cache/
 	@-rm -rf _build_
 	@-rm -f Makefile
 
 check:
-	@$PYTHON $WAF check
+	@\$(PYTHON) $WAF check
 
 dist:
-	@$PYTHON $WAF dist
+	@\$(PYTHON) $WAF dist
 
 test:
 	@$TESTDIR/run_tests
