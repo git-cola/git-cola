@@ -2,6 +2,7 @@ import os
 import sys
 import re
 
+#The git module itself knows nothing about ugit whatsoever
 import git
 
 from ugit import utils
@@ -11,11 +12,9 @@ class Model(model.Model):
 	"""Provides a friendly wrapper for doing commit git operations."""
 
 	def init(self):
-		"""Reads git repository settings and sets severl methods
+		"""Reads git repository settings and sets several methods
 		so that they refer to the git module.  This object is
-		encapsulates ugit's interaction with git.
-		The git module itself should know nothing about ugit
-		whatsoever."""
+		encapsulates ugit's interaction with git."""
 
 		# chdir to the root of the git tree.
 		# This keeps paths relative.
