@@ -40,6 +40,17 @@ def run_cmd(cmd, *args, **kwargs):
 			"--bar", "--baz=value",
 			"bar","buzz" ]
 	"""
+
+	def pop_key(d, key):
+		val = d.get(key)
+		try: del d[key]
+		except: pass
+		return val
+	raw = pop_key(kwargs, 'raw')
+	with_status = pop_key(kwargs,'with_status')
+	with_stderr = not pop_key(kwargs,'without_stderr')
+	cwd = os.getcwd()
+
 	kwarglist = []
 	for k,v in kwargs.iteritems():
 		if len(k) > 1:
@@ -64,16 +75,7 @@ def run_cmd(cmd, *args, **kwargs):
 	else:
 		cmd = tuple(cmd + kwarglist + list(args))
 
-	def pop_key(d, key):
-		val = d.get(key)
-		try: del d[key]
-		except: pass
-		return val
-	raw = pop_key(kwargs, 'raw')
-	with_status = pop_key(kwargs,'with_status')
-	with_stderr = not pop_key(kwargs,'without_stderr')
-	cwd = os.getcwd()
-	stderr = None 
+	stderr = None
 	if with_stderr:
 		stderr = subprocess.STDOUT
 	# start the process
