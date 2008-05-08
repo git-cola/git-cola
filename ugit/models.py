@@ -31,6 +31,8 @@ class Model(model.Model):
 
 		# Import all git commands from git.py
 		for name, cmd in git.commands.iteritems():
+			# We still want clone from the core Model
+			if name == 'clone': continue
 			setattr(self, name, cmd)
 
 		self.create(
