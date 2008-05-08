@@ -40,7 +40,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="remote" />
+      <widget class="QLineEdit" name="remotename" />
      </item>
     </layout>
    </item>

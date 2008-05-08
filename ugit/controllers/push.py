@@ -8,6 +8,7 @@ from ugit.qobserver import QObserver
 
 def push_branches(model, parent):
 	model = model.clone()
+	model.create( remotename='' )
 	view = PushView(parent)
 	controller = PushController(model, view)
 	view.show()
@@ -16,7 +17,7 @@ def push_branches(model, parent):
 class PushController(QObserver):
 	def init(self, model, view):
 		self.add_observables(
-				'remote',
+				'remotename',
 				'remotes',
 				'local_branch',
 				'local_branches',
@@ -34,15 +35,15 @@ class PushController(QObserver):
 
 	def display_remotes(self, widget):
 		displayed = []
-		for remote in self.model.get_remotes():
-			url = self.model.remote_url(remote)
+		for remotename in self.model.get_remotes():
+			url = self.model.remote_url(remotename)
 			display = '%s\t(%s %s)' \
-				% (remote, unicode(self.tr('URL:')), url)
+				% (remotename, unicode(self.tr('URL:')), url)
 			displayed.append(display)
 		qtutils.set_items(widget,displayed)
 
 	def push_to_remote_branch(self):
-		if not self.model.get_remote():
+		if not self.model.get_remotename():
 			errmsg = self.tr('No repository selected.')
 			qtutils.show_output(errmsg)
 			return
@@ -59,14 +60,14 @@ class PushController(QObserver):
 			if not qtutils.question(self.view, self.tr('warning'), msg):
 				return
 
-		remote = self.model.get_remote()
+		remotename = self.model.get_remotename()
 		local_branch = self.model.get_local_branch()
 		remote_branch = self.model.get_remote_branch()
 		ffwd = self.view.ffwd_only_checkbox.isChecked()
 		tags = self.view.tags_checkbox.isChecked()
 
 		status, output = self.model.push_helper(
-					remote,
+					remotename,
 					local_branch,
 					remote_branch,
 					ffwd=ffwd,
@@ -81,8 +82,8 @@ class PushController(QObserver):
 		remotes = self.model.get_remotes()
 		selection = qtutils.get_selected_item(widget,remotes)
 		if not selection: return
-		self.model.set_remote(selection)
-		self.view.remote.selectAll()
+		self.model.set_remotename(selection)
+		self.view.remotename.selectAll()
 
 	def update_local_branches(self,*rest):
 		branches = self.model.get_local_branches()

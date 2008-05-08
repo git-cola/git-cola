@@ -38,7 +38,7 @@ class Model(model.Model):
 			# Used in various places
 			currentbranch = '',
 			remotes = [],
-			remote = '',
+			remotename = '',
 			local_branch = '',
 			remote_branch = '',
 			search_text = '',
