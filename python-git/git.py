@@ -115,29 +115,74 @@ class GitCommand(object):
 		# following names at import-time.
 		for cmd in """
 			add
+			am
+			annotate
 			apply
+			archive
+			archive_recursive
+			bisect
+			blame
 			branch
+			bundle
 			checkout
+			checkout_index
+			cherry
 			cherry_pick
+			citool
+			clean
+			clone
 			commit
+			config
+			count_objects
+			describe
 			diff
+			fast_export
 			fetch
+			filter_branch
 			format_patch
+			fsck
+			gc
+			get_tar_commit_id
 			grep
+			gui
+			hard_repack
+			imap_send
+			init
+			instaweb
 			log
+			lost_found
+			ls_files
+			ls_remote
 			ls_tree
 			merge
+			mergetool
+			mv
+			name_rev
 			pull
 			push
-			rebase
-			remote
-			reset
 			read_tree
+			rebase
+			relink
+			remote
+			repack
+			request_pull
+			reset
+			revert
 			rev_list
 			rm
+			send_email
+			shortlog
 			show
+			show_branch
+			show_ref
+			stash
 			status
+			submodule
+			svn
 			tag
+			var
+			verify_pack
+			whatchanged
 		""".split(): getattr(self, cmd)
 
 	def setup_commands(self):
@@ -340,8 +385,8 @@ def diffindex():
 			stat=True,
 			cached=True)
 
-def format_patch_helper(*revs):
-	"""writes patches named by revs to the "patches" directory."""
+def format_patch_helper(output='patches', *revs):
+	"""writes patches named by revs to the output directory."""
 	num_patches = 1
 	output = []
 	for idx, rev in enumerate(revs):
@@ -350,7 +395,7 @@ def format_patch_helper(*revs):
 		output.append(
 			gitcmd.format_patch(
 				revarg,
-				o='patches',
+				o=output,
 				start_number=real_idx,
 				n=len(revs) > 1,
 				thread=True,
@@ -362,14 +407,6 @@ def format_patch_helper(*revs):
 
 def get_merge_message():
 	return gitcmd.fmt_merge_msg('--file', git_repo_path('FETCH_HEAD'))
-
-def config_dict(local=True):
-	if local:
-		argv = [ '--list' ]
-	else:
-		argv = ['--global', '--list' ]
-	return config_to_dict(
-		gitcmd.config(*argv).splitlines())
 
 def config_set(key=None, value=None, local=True):
 	if key and value is not None:
@@ -386,6 +423,14 @@ def config_set(key=None, value=None, local=True):
 	else:
 		msg = "oops in git.config_set(key=%s,value=%s,local=%s"
 		raise Exception(msg % (key, value, local))
+
+def config_dict(local=True):
+	if local:
+		argv = [ '--list' ]
+	else:
+		argv = ['--global', '--list' ]
+	return config_to_dict(
+		gitcmd.config(*argv).splitlines())
 
 def config_to_dict(config_lines):
 	"""parses the lines from git config --list into a dictionary"""
@@ -473,8 +518,8 @@ def parse_rev_list(raw_revs):
 	return revs
 
 def parse_status():
-	"""RETURNS: A tuple of staged, unstaged and untracked file lists."""
-
+	"""RETURNS: A tuple of staged, unstaged and untracked file lists.
+	"""
 	def eval_path(path):
 		"""handles quoted paths."""
 		if path.startswith('"') and path.endswith('"'):
@@ -484,12 +529,10 @@ def parse_status():
 
 	MODIFIED_TAG = '# Changed but not updated:'
 	UNTRACKED_TAG = '# Untracked files:'
-
 	RGX_RENAMED = re.compile(
 				'(#\trenamed:\s+)'
 				'(.*?)\s->\s(.*)'
 				)
-
 	RGX_MODIFIED = re.compile(
 				'(#\tmodified:\s+'
 				'|#\tnew file:\s+'
@@ -503,22 +546,20 @@ def parse_status():
 	UNSTAGED_MODE = 1
 	UNTRACKED_MODE = 2
 
-	mode = STAGED_MODE
 	current_dest = staged
+	mode = STAGED_MODE
 
 	for status_line in gitcmd.status().splitlines():
 		if status_line == MODIFIED_TAG:
 			mode = UNSTAGED_MODE
 			current_dest = unstaged
 			continue
-
 		elif status_line == UNTRACKED_TAG:
 			mode = UNTRACKED_MODE
 			current_dest = untracked
 			continue
-
 		# Staged/unstaged modified/renamed/deleted files
-		if mode == STAGED_MODE or mode == UNSTAGED_MODE:
+		if mode is STAGED_MODE or mode is UNSTAGED_MODE:
 			match = RGX_MODIFIED.match(status_line)
 			if match:
 				tag = match.group(0)
