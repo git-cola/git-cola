@@ -385,8 +385,9 @@ def diffindex():
 			stat=True,
 			cached=True)
 
-def format_patch_helper(output='patches', *revs):
+def format_patch_helper(*revs, **kwargs):
 	"""writes patches named by revs to the output directory."""
+	output = kwargs.get("output", "patches")
 	num_patches = 1
 	lines = []
 	for idx, rev in enumerate(revs):
