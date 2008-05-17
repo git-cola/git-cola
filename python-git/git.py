@@ -388,11 +388,11 @@ def diffindex():
 def format_patch_helper(output='patches', *revs):
 	"""writes patches named by revs to the output directory."""
 	num_patches = 1
-	output = []
+	lines = []
 	for idx, rev in enumerate(revs):
 		real_idx = idx + num_patches
 		revarg = '%s^..%s' % (rev,rev)
-		output.append(
+		lines.append(
 			gitcmd.format_patch(
 				revarg,
 				o=output,
@@ -402,8 +402,8 @@ def format_patch_helper(output='patches', *revs):
 				patch_with_stat=True
 				)
 			)
-		num_patches += output[-1].count('\n')
-	return '\n'.join(output)
+		num_patches += lines[-1].count('\n')
+	return '\n'.join(lines)
 
 def get_merge_message():
 	return gitcmd.fmt_merge_msg('--file', git_repo_path('FETCH_HEAD'))
