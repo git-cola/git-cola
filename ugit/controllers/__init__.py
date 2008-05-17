@@ -369,7 +369,8 @@ class Controller(QObserver):
 		commits = self.select_commits_gui(self.tr('Export Patches'),
 				revs, summaries)
 		if not commits: return
-		self.log(self.model.format_patch_helper(*commits))
+		self.log( self.model.format_patch_helper(
+				output='patches', *commits) )
 
 	def open_repo(self):
 		"""Spawns a new ugit session"""
