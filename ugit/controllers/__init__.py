@@ -366,11 +366,14 @@ class Controller(QObserver):
 
 	def export_patches(self):
 		(revs, summaries) = self.model.log_helper()
-		commits = self.select_commits_gui(self.tr('Export Patches'),
+		to_export = self.select_commits_gui(self.tr('Export Patches'),
 				revs, summaries)
-		if not commits: return
-		self.log( self.model.format_patch_helper(
-				output='patches', *commits) )
+		if not to_export:
+			return
+		to_export.reverse()
+		revs.reverse()
+		self.log(self.model.format_patch_helper(
+				to_export, revs, output='patches'))
 
 	def open_repo(self):
 		"""Spawns a new ugit session"""
