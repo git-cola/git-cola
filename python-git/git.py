@@ -385,26 +385,43 @@ def diffindex():
 			stat=True,
 			cached=True)
 
-def format_patch_helper(*revs, **kwargs):
-	"""writes patches named by revs to the output directory."""
-	output = kwargs.get("output", "patches")
-	num_patches = 1
-	lines = []
-	for idx, rev in enumerate(revs):
-		real_idx = idx + num_patches
-		revarg = '%s^..%s' % (rev,rev)
-		lines.append(
+def format_patch_helper(to_export, revs, output='patches'):
+	"""writes patches named by to_export to the output directory."""
+
+	outlines = []
+
+	cur_rev = to_export[0]
+	cur_master_idx = revs.index(cur_rev)
+
+	patches_to_export = [ [cur_rev] ]
+	patchset_idx = 0
+
+	for idx, rev in enumerate(to_export[1:]):
+		# Limit the search to the current neighborhood for efficiency
+		master_idx = revs[ cur_master_idx: ].index(rev)
+		master_idx += cur_master_idx
+		if master_idx == cur_master_idx + 1:
+			patches_to_export[ patchset_idx ].append(rev)
+			cur_master_idx += 1
+			continue
+		else:
+			patches_to_export.append([ rev ])
+			cur_master_idx = master_idx
+			patchset_idx += 1
+
+	for patchset in patches_to_export:
+		revarg = '%s^..%s' % (patchset[0], patchset[-1])
+		outlines.append(
 			gitcmd.format_patch(
 				revarg,
 				o=output,
-				start_number=real_idx,
-				n=len(revs) > 1,
+				n=len(patchset) > 1,
 				thread=True,
 				patch_with_stat=True
 				)
 			)
-		num_patches += lines[-1].count('\n')
-	return '\n'.join(lines)
+
+	return '\n'.join(outlines)
 
 def get_merge_message():
 	return gitcmd.fmt_merge_msg('--file', git_repo_path('FETCH_HEAD'))
