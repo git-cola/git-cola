@@ -389,14 +389,14 @@ class Controller(QObserver):
 		if self.model.save_at_exit():
 			self.model.save_gui_settings()
 		qtutils.close_log_window()
-		self.view.hide()
 
-		if not self.inotify_thread: return
-		if not self.inotify_thread.isRunning(): return
+		if (self.inotify_thread and
+				self.inotify_thread.isRunning()):
 
-		self.inotify_thread.abort = True
-		self.inotify_thread.wait()
-		sys.exit(0)
+			self.inotify_thread.abort = True
+			self.inotify_thread.wait()
+
+		self.view.close()
 
 	def load_commitmsg(self):
 		file = qtutils.open_dialog(self.view,
