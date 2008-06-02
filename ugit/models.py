@@ -471,7 +471,7 @@ class Model(model.Model):
 			else:
 				status = 'Untracked, not staged'
 
-				file_type = utils.run_cmd('file',filename, b=True)
+				file_type = utils.run_cmd('file', '-b', filename)
 				if 'binary' in file_type or 'data' in file_type:
 					diff = utils.run_cmd('hexdump', '-C', filename)
 				else:
