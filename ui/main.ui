@@ -76,6 +76,7 @@
     <addaction name="menu_unstage_selected" />
     <addaction name="separator" />
     <addaction name="menu_commit" />
+    <addaction name="menu_stash" />
     <addaction name="separator" />
     <addaction name="menu_export_patches" />
     <addaction name="menu_cherry_pick" />
