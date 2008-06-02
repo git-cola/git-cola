@@ -11,14 +11,9 @@
 DEBIAN=$(CURDIR)/debian
 BUILD=$(DEBIAN)/bld
 
-# We generate a site-packages directory for python2.4 and python2.5
-PYTHON24=/usr/bin/python2.4
-PYTHON25=/usr/bin/python2.5
-PYTHON25_MODS=$(DEBIAN)/ugit/usr/lib/python2.5/site-packages
-
 configure: $(BUILD)/configure-stamp
 $(BUILD)/configure-stamp:
-	env PYTHON=$(PYTHON24) ./configure \
+	./configure \
 		--prefix=/usr \
 		--blddir=$(BUILD) \
 		--destdir=$(DEBIAN)/ugit
@@ -26,7 +21,7 @@ $(BUILD)/configure-stamp:
 
 build: $(BUILD)/build-stamp
 $(BUILD)/build-stamp: $(BUILD)/configure-stamp
-	env PYTHON=$(PYTHON24) $(MAKE)
+	$(MAKE)
 	touch $(BUILD)/build-stamp
 
 clean:
@@ -43,15 +38,7 @@ binary-indep: build install
 	dh_testroot
 	dh_clean -k
 	dh_installdirs
-	env PYTHON=$(PYTHON24) $(MAKE) DESTDIR=$(DEBIAN)/ugit install
-	mkdir -p $(PYTHON25_MODS)
-	cp python-git/git.py $(PYTHON25_MODS)
-	# Build a compile .pyc
-	env PYTHON=$(PYTHON25) PYTHONOPTIMIZE=  \
-		$(PYTHON25) scripts/pycompile $(PYTHON25_MODS)/git.py
-	# Build an optimized .pyo
-	env PYTHON=$(PYTHON25) PYTHONOPTIMIZE=1 \
-		$(PYTHON25) scripts/pycompile $(PYTHON25_MODS)/git.py
+	$(MAKE) DESTDIR=$(DEBIAN)/ugit install
 	dh_fixperms
 	dh_installdeb
 	dh_gencontrol

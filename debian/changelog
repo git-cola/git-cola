@@ -1,9 +1,40 @@
+ugit (0.9.3-0) unstable; urgency=low
+
+  ugit: now uses GitPython http://gitorious.org/projects/git-python
+
+ -- David Aguilar <davvid@gmail.com>  Sun, 01 Jun 2008 12:00:00 -0700
+
 ugit (0.9.2-3) unstable; urgency=low
 
+  controllers: fix hang on exit bug
+  export-patches: use the updated format_patch_helper
+  python-git: make format_patch_helper better
+  git.py: make "output" a keyword argument
+  controllers: fix format_patch_helper usage
+  git.py: fix format_patch_helper
+  debian: update the changelog
+  gitmodel: ensure we use Model.clone() instead of clone from git.py
+  git.py: add the "rest" of the git commands
+  push: rename model params to avoid conflicting with git.py
+  git.py: add a docstring to the git_cmd closure
+  configure: allow $PYTHON to be overridden in the generated Makefile
+  README: update usage and mention the deb/rpms
+  wscript: only check env['PYTHON'] when python versions do not match
+  git-ugit: setup sys.path for git.py
+  python-git: fixed a bug in run_cmd
+  python-git: handle filenames with embedded quotes in their names
+  models: move the config functions closer to each other
+  models: add a comment, fix a typo
+  configure: allow fine-grained control over python versions
+  configure: always regenerate the Makefile
+  git.py: update docstring for run_cmd
+  debian: install git.py for both python2.4 and python2.5
+  build: add a pycompile shell script
+  debian: update changelog with proper signature
   gitmodel: ensure we use Model.clone() instead of clone from git.py
   git.py: add the "rest" of the git commands
 
- -- David Aguilar <davvid@gmail.com>  Wed, 07 May 2008 12:00:00 -0700
+ -- David Aguilar <davvid@gmail.com>  Sat, 31 May 2008 12:00:00 -0700
 
 ugit (0.9.2-2) unstable; urgency=low
 
