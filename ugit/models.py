@@ -846,3 +846,11 @@ class Model(model.Model):
 		for rev in revs:
 			cherries.append(self.git.cherry_pick(rev, **kwargs))
 		return '\n'.join(cherries)
+
+	def parse_stash_list(self, revids=False):
+		"""Parses "git stash list" and returns a list of stashes."""
+		stashes = self.stash("list").splitlines()
+		if revids:
+			return [ s[:s.index(':')] for s in stashes ]
+		else:
+			return [ s[s.index(':')+1:] for s in stashes ]
