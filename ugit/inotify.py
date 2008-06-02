@@ -25,6 +25,7 @@ class FileSysEvent(ProcessEvent):
 class GitNotifier(QThread):
 	def __init__(self, receiver, path):
 		QThread.__init__(self)
+		self.git = git.Git()
 		self.receiver = receiver
 		self.path = path
 		self.abort = False
@@ -59,7 +60,7 @@ class GitNotifier(QThread):
 			if not added_flag:
 				self.watch_directory(self.path)
 				# Register files/directories known to git
-				for file in git.ls_files().splitlines():
+				for file in self.git.ls_files().splitlines():
 					directory = os.path.dirname(file)
 					self.watch_directory(directory)
 				added_flag = True
