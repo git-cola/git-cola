@@ -20,13 +20,25 @@ from options import Ui_options
 from createbranch import Ui_createbranch
 from merge import Ui_merge
 from bookmark import Ui_bookmark
+from stash import Ui_stash
 
-class View(Ui_main, QMainWindow):
+def CreateStandardView(uiclass, qtclass):
+	"""CreateStandardView returns a class closure of uiclass and qtclass.
+	This class performs the standard setup common to all view classes."""
+	class StandardView(uiclass, qtclass):
+		def __init__(self, parent=None, *args, **kwargs):
+			qtclass.__init__(self, parent)
+			uiclass.__init__(self)
+			self.parent_view = parent
+			self.setupUi(self)
+			self.init(parent, *args, **kwargs)
+		def init(self, parent, *args, **kwargs):
+			pass
+	return StandardView
+
+class View(CreateStandardView(Ui_main, QMainWindow)):
 	'''The main ugit interface.'''
-	def __init__(self, parent=None):
-		QMainWindow.__init__(self, parent)
-		Ui_main.__init__(self)
-		self.setupUi(self)
+	def init(self, parent=None):
 		self.staged.setAlternatingRowColors(True)
 		self.unstaged.setAlternatingRowColors(True)
 		self.set_display = self.display_text.setText
@@ -92,17 +104,17 @@ class View(Ui_main, QMainWindow):
 		selection = cursor.selection().toPlainText()
 		num_selected_lines = selection.count('\n')
 		return offset, selection
+	def display(self, text):
+		self.set_display(text)
+		self.diff_dock.raise_()
 
-class LogView(Ui_logger, QDialog):
+class LogView(CreateStandardView(Ui_logger, QDialog)):
 	'''A simple dialog to display command logs.'''
-	def __init__(self, parent=None, output=None):
-		QDialog.__init__(self, parent)
-		Ui_logger.__init__(self)
-		self.setupUi(self)
+	def init(self, parent=None, output=None):
 		self.setWindowTitle(self.tr('Git Command Log'))
-		# Syntax highlight the log window
 		LogSyntaxHighlighter(self.output_text.document())
-		if output: self.set_output(output)
+		if output:
+			self.set_output(output)
 	def clear(self):
 		self.output_text.clear()
 	def set_output(self, output):
@@ -119,14 +131,12 @@ class LogView(Ui_logger, QDialog):
 		cursor.movePosition(cursor.End)
 		text.setTextCursor(cursor)
 
-class BranchView(Ui_branch, QDialog):
+class BranchView(CreateStandardView(Ui_branch, QDialog)):
 	'''A dialog for choosing branches.'''
-	def __init__(self, parent=None, branches=None):
-		QDialog.__init__(self, parent)
-		Ui_branch.__init__(self)
-		self.setupUi(self)
+	def init(self, parent, branch):
 		self.reset()
-		if branches: self.add(branches)
+		if branches:
+			self.add(branches)
 	def reset(self):
 		self.branches = []
 		self.branch_combo.clear()
@@ -141,53 +151,27 @@ class BranchView(Ui_branch, QDialog):
 		else:
 			return None
 
-class CommitView(Ui_commit, QDialog):
-	def __init__(self, parent=None, title=None):
-		QDialog.__init__(self, parent)
-		Ui_commit.__init__(self)
-		self.setupUi(self)
-		if title: self.setWindowTitle(title)
-		# Make the list widget slighty larger
-		self.splitter.setSizes([ 50, 200 ])
-		DiffSyntaxHighlighter(self.commit_text.document(),
-				whitespace=False)
+class CommitView(CreateStandardView(Ui_commit, QDialog)):
+	def init(self, parent=None, title=None):
+ 		if title: self.setWindowTitle(title)
+ 		# Make the list widget slighty larger
+ 		self.splitter.setSizes([ 50, 200 ])
+ 		DiffSyntaxHighlighter(self.commit_text.document(),
+ 				whitespace=False)
 
-class CreateBranchView(Ui_createbranch, QDialog):
-	def __init__(self, parent=None):
-		QDialog.__init__(self, parent)
-		Ui_createbranch.__init__(self)
-		self.setupUi(self)
-
-class PushView(Ui_push, QDialog):
-	def __init__(self, parent=None):
-		QDialog.__init__(self, parent)
-		Ui_push.__init__(self)
-		self.setupUi(self)
-
-class OptionsView(Ui_options, QDialog):
-	def __init__(self, parent=None):
-		QDialog.__init__(self, parent)
-		Ui_options.__init__(self)
-		self.setupUi(self)
-
-class SearchView(Ui_search, QDialog):
-	def __init__(self, parent=None):
-		QDialog.__init__(self, parent)
-		Ui_search.__init__(self)
-		self.setupUi(self)
+class SearchView(CreateStandardView(Ui_search, QDialog)):
+	def init(self, parent=None):
 		self.input.setFocus()
 		DiffSyntaxHighlighter(self.commit_text.document(),
 				whitespace=False)
 
-class MergeView(Ui_merge, QDialog):
-	def __init__(self, parent=None):
-		QDialog.__init__(self, parent)
-		Ui_merge.__init__(self)
-		self.setupUi(self)
+class MergeView(CreateStandardView(Ui_merge, QDialog)):
+	def init(self, parent=None):
 		self.revision.setFocus()
 
-class BookmarkView(Ui_bookmark, QDialog):
-	def __init__(self, parent=None):
-		QDialog.__init__(self, parent)
-		Ui_bookmark.__init__(self)
-		self.setupUi(self)
+# These are views that do not contain any custom methods
+CreateBranchView = CreateStandardView(Ui_createbranch, QDialog)
+PushView = CreateStandardView(Ui_push, QDialog)
+OptionsView = CreateStandardView(Ui_options, QDialog)
+BookmarkView = CreateStandardView(Ui_bookmark, QDialog)
+StashView = CreateStandardView(Ui_stash, QDialog)
