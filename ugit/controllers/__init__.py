@@ -29,6 +29,7 @@ from merge import local_merge
 from merge import abort_merge
 from bookmark import save_bookmark
 from bookmark import manage_bookmarks
+from stash import stash
 
 
 class Controller(QObserver):
@@ -136,6 +137,8 @@ class Controller(QObserver):
 			menu_show_diffstat = self.show_diffstat,
 			menu_show_index = self.show_index,
 			menu_export_patches = self.export_patches,
+			menu_stash =
+				lambda: stash( self.model, self.view ),
 			menu_load_commitmsg = self.load_commitmsg,
 			menu_cherry_pick = self.cherry_pick,
 			menu_get_prev_commitmsg = model.get_prev_commitmsg,
