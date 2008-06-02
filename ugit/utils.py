@@ -6,8 +6,6 @@ import subprocess
 from cStringIO import StringIO
 
 import defaults
-from git import run_cmd
-from git import get_tmp_filename
 
 PREFIX = os.path.realpath(os.path.dirname(os.path.dirname(sys.argv[0])))
 QMDIR = os.path.join(PREFIX, 'share', 'ugit', 'qm')
@@ -24,6 +22,27 @@ KNOWN_FILE_TYPES = {
 	'byte':      'binary.png',
 	'image':     'image.png',
 }
+
+def run_cmd(*command):
+	"""Runs a *command argument list and returns the output.
+	e.g. run_cmd("echo", "hello", "world")
+	"""
+	# Start the process
+	proc = subprocess.Popen(
+			command,
+			stderr = subprocess.PIPE,
+			stdout = subprocess.PIPE,
+			)
+
+	# Wait for the process to return
+	stdout_value = proc.stdout.read()
+	status = proc.wait()
+	proc.stdout.close()
+	status = proc.poll()
+
+	# Strip off trailing whitespace by default
+	return stdout_value.rstrip()
+
 
 def get_qm_for_locale(locale):
 	regex = re.compile(r'([^\.])+\..*$')
@@ -201,9 +220,11 @@ def write(path, contents):
 	file.close()
 
 class DiffParser(object):
-	def __init__(self, model,
-				filename='', cached=True):
-		self.__header_pattern = re.compile('^@@ -(\d+),(\d+) \+(\d+),(\d+) @@.*')
+	def __init__( self, model,
+				filename='',
+				cached=True
+				):
+		self.__header_re = re.compile('^@@ -(\d+),(\d+) \+(\d+),(\d+) @@.*')
 		self.__headers = []
 
 		self.__idx = -1
@@ -350,7 +371,7 @@ class DiffParser(object):
 		self.__headers = []
 
 		for idx, line in enumerate(diff.splitlines()):
-			match = self.__header_pattern.match(line)
+			match = self.__header_re.match(line)
 			if match:
 				self.__headers.append([
 						int(match.group(1)),
@@ -390,14 +411,14 @@ class DiffParser(object):
 			for idx in self.selected:
 				contents = self.get_diff_subset(idx, start, end)
 				if contents:
-					tmpfile = get_tmp_filename()
+					tmpfile = self.model.get_tmp_filename()
 					write(tmpfile, contents)
 					self.model.apply_diff(tmpfile)
 					os.unlink(tmpfile)
 		# Process a complete hunk
 		else:
 			for idx, diff in enumerate(self.diffs):
-				tmpfile = get_tmp_filename()
+				tmpfile = self.model.get_tmp_filename()
 				if self.write_diff(tmpfile,idx):
 					self.model.apply_diff(tmpfile)
 					os.unlink(tmpfile)
