@@ -1117,6 +1117,14 @@ retrieve the latest commit message prior to committing.</string>
     <string>Open Repository...</string>
    </property>
   </action>
+  <action name="menu_stash" >
+   <property name="text" >
+    <string>Stash...</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+Shift+S</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="2" margin="2" />
  <tabstops>
