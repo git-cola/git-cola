@@ -814,8 +814,8 @@ class Model(model.Model):
 			revarg = '%s^..%s' % (patchset[0], patchset[-1])
 			outlines.append(
 				self.git.format_patch(
+					"-o", output,
 					revarg,
-					o=output,
 					n=len(patchset) > 1,
 					thread=True,
 					patch_with_stat=True
