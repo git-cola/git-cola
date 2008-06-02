@@ -1033,11 +1033,6 @@ retrieve the latest commit message prior to committing.</string>
     <string>Delete...</string>
    </property>
   </action>
-  <action name="menu_open" >
-   <property name="text" >
-    <string>Open...</string>
-   </property>
-  </action>
   <action name="menu_browse_commits" >
    <property name="text" >
     <string>Browse Commits</string>
@@ -1056,11 +1051,6 @@ retrieve the latest commit message prior to committing.</string>
   <action name="menu_search_revision_range" >
    <property name="text" >
     <string>By Revision Range...</string>
-   </property>
-  </action>
-  <action name="menu_search_date" >
-   <property name="text" >
-    <string>Commits Since Date...</string>
    </property>
   </action>
   <action name="menu_search_date_range" >
