@@ -422,3 +422,8 @@ class DiffParser(object):
 				if self.write_diff(tmpfile,idx):
 					self.model.apply_diff(tmpfile)
 					os.unlink(tmpfile)
+
+def sanitize_input(input):
+	for c in """ \t!@#$%^&*()\\;,<>"'[]{}~|""":
+		input = input.replace(c, '_')
+	return input
