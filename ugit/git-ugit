@@ -7,11 +7,10 @@ import optparse
 from os.path import join
 from os.path import dirname
 from os.path import realpath
-from distutils.sysconfig import get_python_version
 
 def setup_environment():
 	"""Prepends sys.path with ugit's module path."""
-	# ex: sys.path = [ ..., /usr/share ]
+	# ex: sys.path = [ /usr/share, ... ]
 	#     from ugit import utils
 	# implies: utils = /usr/share/ugit/utils.py
 	ugit   = realpath(sys.argv[0])
@@ -20,25 +19,12 @@ def setup_environment():
 	share  = join(prefix,'share')
 	sys.path.insert(0, share)
 
-	# Look in both 2.4 and 2.5 directories but give preference to
-	# the currently running version.
-	sitepackages24 = join(prefix, 'lib', 'python2.4', 'site-packages')
-	sitepackages25 = join(prefix, 'lib', 'python2.5', 'site-packages')
-
-	python_version = get_python_version()
-	if python_version == '2.5':
-		sys.path.insert(0, sitepackages24)
-		sys.path.insert(0, sitepackages25)
-	else:
-		sys.path.insert(0, sitepackages25)
-		sys.path.insert(0, sitepackages24)
-
 def main():
-	# cmdline
 	parser = optparse.OptionParser(
 			usage='%prog /repo/path-1 ... /repo/path-N*\n\n'
 			+'*the current directory is used when no '
 			+'paths are specified.''')
+
 	parser.add_option('-v', '--version',
 			help='Show ugit version',
 			dest='version',
@@ -68,11 +54,11 @@ def main():
 		for repo in [ os.path.realpath(r) for r in args[1:] ]:
 			utils.fork("git", "ugit", repo)
 
-	# load the model right away so that we can bail out if
-	# when no git repo exists
+	# load the model right away so that we can bail out when
+	# no git repo exists
 	model = Model()
 
-	# qt
+	# PyQt4
 	try:
 		from PyQt4 import QtCore
 		from PyQt4 import QtGui
