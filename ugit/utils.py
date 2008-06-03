@@ -28,16 +28,12 @@ def run_cmd(*command):
 	e.g. run_cmd("echo", "hello", "world")
 	"""
 	# Start the process
-	proc = subprocess.Popen(
-			command,
-			stderr = subprocess.PIPE,
-			stdout = subprocess.PIPE,
-			)
+	proc = subprocess.Popen(command, stdout = subprocess.PIPE)
 
 	# Wait for the process to return
 	stdout_value = proc.stdout.read()
-	status = proc.wait()
 	proc.stdout.close()
+	proc.wait()
 	status = proc.poll()
 
 	# Strip off trailing whitespace by default

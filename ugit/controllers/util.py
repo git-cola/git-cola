@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import os
 import time
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QFont
@@ -104,12 +105,14 @@ class OptionsController(QObserver):
 			'global_merge_summary',
 			'global_merge_diffstat',
 			'global_merge_verbosity',
+			'global_gui_editor',
+			'global_gui_diffeditor',
 			'global_gui_diffcontext',
+			'global_gui_historybrowser',
 			'global_ugit_fontdiff_size',
 			'global_ugit_fontdiff',
 			'global_ugit_fontui_size',
 			'global_ugit_fontui',
-			'global_ugit_historybrowser',
 			'global_ugit_savewindowsettings',
 			'global_ugit_saveatexit',
 			)
