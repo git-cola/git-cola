@@ -2,10 +2,10 @@ Source: cola
 Section: devel
 Priority: extra
 Maintainer: David Aguilar <davvid@gmail.com>
-Build-Depends: debhelper (>= 5), git-core (>= 1.5), python-all-dev, python-git (>= 0.3), gettext, pyqt4-dev-tools
+Build-Depends: debhelper (>= 5), git-core (>= 1.5), python-all-dev, gettext, pyqt4-dev-tools
 Standards-Version: 3.7.2
 
 Package: cola
 Architecture: all
-Depends: python (>= 2.4), python-qt4 (>= 4.3), git-core (>= 1.5), python-git (>= 0.3)
+Depends: python (>= 2.4), python-qt4 (>= 4.3), git-core (>= 1.5)
 Description: a highly caffeinated git gui
