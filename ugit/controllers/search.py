@@ -132,6 +132,8 @@ class SearchController(QObserver):
 			button_search = self.search_callback,
 			button_browse = self.browse_callback,
 			commit_list = self.display_callback,
+			button_export = self.export_patch,
+			button_cherrypick = self.cherry_pick,
 			# Radio buttons trigger a search
 			radio_revision = self.search_callback,
 			radio_range = self.search_callback,
@@ -215,6 +217,24 @@ class SearchController(QObserver):
 		qtutils.set_clipboard(revision)
 		diff = self.model.get_commit_diff(revision)
 		self.view.commit_text.setText(diff)
+
+	def export_patch(self):
+		widget = self.view.commit_list
+		row, selected = qtutils.get_selected_row(widget)
+		if not selected or len(self.results) < row:
+			return
+		revision = self.results[row][0]
+		qtutils.log(self.model.export_patchset(revision, revision),
+				doraise=True, quiet=False)
+
+	def cherry_pick(self):
+		widget = self.view.commit_list
+		row, selected = qtutils.get_selected_row(widget)
+		if not selected or len(self.results) < row:
+			return
+		revision = self.results[row][0]
+		qtutils.log(self.model.cherry_pick(revision),
+				doraise=True, quiet=False)
 
 def search_commits(model, mode, browse):
 	def get_date(timespec):
