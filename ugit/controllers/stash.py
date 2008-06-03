@@ -114,9 +114,5 @@ class StashController(QObserver):
 					'Continue?'))
 		if not answer:
 			return
-		qtutils.log(
-			self.model.stash("clear"),
-			quiet=False,
-			doraise=True
-			)
-		self.view.accept()
+		self.model.stash("clear"),
+		self.update_model()
