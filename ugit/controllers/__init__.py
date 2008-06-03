@@ -359,6 +359,21 @@ class Controller(QObserver):
 		self.view.diff_dock.raise_()
 		self.__diffgui_enabled = True
 
+	def edit_file(self, staged=True):
+		self.__staged_diff_in_view = staged
+		if self.__staged_diff_in_view:
+			widget = self.view.staged
+		else:
+			widget = self.view.unstaged
+		row, selected = qtutils.get_selected_row(widget)
+		if not selected:
+			return
+		if staged:
+			basename = self.model.get_staged()[row]
+		else:
+			basename = self.model.get_unstaged()[row]
+		utils.fork(self.model.get_editor(), basename)
+
 	def edit_diff(self, staged=True):
 		self.__staged_diff_in_view = staged
 		if self.__staged_diff_in_view:
@@ -700,6 +715,8 @@ class Controller(QObserver):
 			self.tr('Stage Selected'), self.stage_selected)
 		self.__undo_changes_action = menu.addAction(
 			self.tr('Undo Local Changes'), self.undo_changes)
+		self.__edit_file = menu.addAction(
+			self.tr('Launch Editor'), lambda: self.edit_file(staged=False))
 		self.__edit_diff = menu.addAction(
 			self.tr('Launch Diff Editor'), lambda: self.edit_diff(staged=False))
 
