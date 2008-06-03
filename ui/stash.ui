@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>763</width>
-    <height>204</height>
+    <width>683</width>
+    <height>201</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -17,14 +17,7 @@
     <widget class="QListWidget" name="stash_list" />
    </item>
    <item>
-    <layout class="QHBoxLayout" >
-     <item>
-      <widget class="QPushButton" name="button_stash_save" >
-       <property name="text" >
-        <string>Save</string>
-       </property>
-      </widget>
-     </item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2" >
      <item>
       <widget class="QPushButton" name="button_stash_show" >
        <property name="toolTip" >
@@ -36,12 +29,30 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="button_stash_save" >
+       <property name="text" >
+        <string>Save</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="button_stash_apply" >
        <property name="toolTip" >
         <string>Apply the selected stash</string>
        </property>
        <property name="text" >
         <string>Apply</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout" >
+     <item>
+      <widget class="QPushButton" name="button_stash_done" >
+       <property name="text" >
+        <string>Done</string>
        </property>
       </widget>
      </item>
@@ -62,13 +73,6 @@
        </property>
        <property name="text" >
         <string>Remove All</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="button_stash_done" >
-       <property name="text" >
-        <string>Done</string>
        </property>
       </widget>
      </item>
