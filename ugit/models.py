@@ -130,9 +130,11 @@ class Model(model.Model):
 			'ugit_fontui_size':12,
 			'ugit_fontdiff': '',
 			'ugit_fontdiff_size':12,
-			'ugit_historybrowser': 'gitk',
 			'ugit_savewindowsettings': False,
 			'ugit_saveatexit': False,
+			'gui_editor': 'gvim',
+			'gui_diffeditor': 'xxdiff',
+			'gui_historybrowser': 'gitk',
 		}
 
 		local_dict = self.config_dict(local=True)
@@ -169,6 +171,10 @@ class Model(model.Model):
 		for k,v in global_defaults.iteritems():
 			if k not in global_dict:
 				self.set_param('global_'+k, v)
+
+		# Allow EDITOR/DIFF_EDITOR environment variable overrides
+		self.global_gui_editor = os.getenv("GUI_EDITOR", self.global_gui_editor)
+		self.global_gui_diffeditor = os.getenv("DIFF_EDITOR", self.global_gui_diffeditor)
 
 		# Load the diff context
 		self.diff_context = self.local_gui_diffcontext
@@ -299,8 +305,14 @@ class Model(model.Model):
 				to_remove.append(filename)
 		output + '\n\n' + self.git.rm(*to_remove)
 
+	def get_editor(self):
+		return self.global_gui_editor
+
+	def get_diffeditor(self):
+		return self.global_gui_diffeditor
+
 	def get_history_browser(self):
-		return self.global_ugit_historybrowser
+		return self.global_gui_historybrowser
 
 	def remember_gui_settings(self):
 		return self.global_ugit_savewindowsettings
