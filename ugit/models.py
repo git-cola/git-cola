@@ -809,6 +809,7 @@ class Model(model.Model):
 		patches_to_export = [ [cur_rev] ]
 		patchset_idx = 0
 
+		# Group the patches into continuous sets
 		for idx, rev in enumerate(to_export[1:]):
 			# Limit the search to the current neighborhood for efficiency
 			master_idx = revs[ cur_master_idx: ].index(rev)
@@ -822,19 +823,22 @@ class Model(model.Model):
 				cur_master_idx = master_idx
 				patchset_idx += 1
 
+		# Export each patchsets
 		for patchset in patches_to_export:
-			revarg = '%s^..%s' % (patchset[0], patchset[-1])
-			outlines.append(
-				self.git.format_patch(
-					"-o", output,
-					revarg,
+			cmdoutput = self.export_patchset(
+					patchset[0],
+					patchset[-1],
+					output="patches",
 					n=len(patchset) > 1,
 					thread=True,
-					patch_with_stat=True
+					patch_with_stat=True,
 					)
-				)
-
+			outlines.append(cmdoutput)
 		return '\n'.join(outlines)
+
+	def export_patchset(self, start, end, output="patches", **kwargs):
+			revarg = '%s^..%s' % (start, end)
+			return self.git.format_patch("-o", output, revarg, **kwargs)
 
 	def current_branch(self):
 		"""Parses 'git branch' to find the current branch."""
