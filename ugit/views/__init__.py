@@ -133,7 +133,7 @@ class LogView(CreateStandardView(Ui_logger, QDialog)):
 
 class BranchView(CreateStandardView(Ui_branch, QDialog)):
 	'''A dialog for choosing branches.'''
-	def init(self, parent, branch):
+	def init(self, parent, branches):
 		self.reset()
 		if branches:
 			self.add(branches)
