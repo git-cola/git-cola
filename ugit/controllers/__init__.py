@@ -359,6 +359,36 @@ class Controller(QObserver):
 		self.view.diff_dock.raise_()
 		self.__diffgui_enabled = True
 
+	def edit_diff(self, staged=True):
+		self.__staged_diff_in_view = staged
+		if self.__staged_diff_in_view:
+			widget = self.view.staged
+		else:
+			widget = self.view.unstaged
+		row, selected = qtutils.get_selected_row(widget)
+		diff, status = self.model.get_diff_and_status(row, staged=staged)
+		if not selected:
+			return
+
+		if staged:
+			basename = self.model.get_staged()[row]
+		else:
+			basename = self.model.get_unstaged()[row]
+
+		contents = self.model.show("HEAD:"+basename, with_raw_output=True)
+		tmpfile = self.model.get_tmp_filename()
+		fh = open(tmpfile, 'w')
+		fh.write(contents)
+		fh.close()
+
+		pid = os.fork()
+		if pid:
+			return
+		else:
+			utils.run_cmd(self.model.get_diffeditor(), basename, tmpfile)
+			os.unlink(tmpfile)
+			sys.exit(0)
+
 	# use *rest to handle being called from different signals
 	def diff_staged(self, *rest):
 		self.view_diff(staged=True)
@@ -670,6 +700,9 @@ class Controller(QObserver):
 			self.tr('Stage Selected'), self.stage_selected)
 		self.__undo_changes_action = menu.addAction(
 			self.tr('Undo Local Changes'), self.undo_changes)
+		self.__edit_diff = menu.addAction(
+			self.tr('Launch Diff Editor'), lambda: self.edit_diff(staged=False))
+
 		self.connect(self.__unstaged_menu, 'aboutToShow()',
 			self.unstaged_context_menu_about_to_show)
 
