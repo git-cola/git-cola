@@ -773,15 +773,49 @@ class Model(model.Model):
 	def remote_url(self, name):
 		return self.git.config('remote.%s.url' % name, get=True)
 
-	def push_helper(self, remote, local_branch, remote_branch,
+	def get_remote_args(self, remote,
+			local_branch='', remote_branch='',
 			ffwd=True, tags=False):
 		if ffwd:
-			branch_arg = '%s:%s' % ( local_branch, remote_branch )
+			branch_arg = '%s:%s' % ( remote_branch, local_branch )
 		else:
-			branch_arg = '+%s:%s' % ( local_branch, remote_branch )
-		return self.git.push(remote, branch_arg,
-				with_status=True, tags=tags
-				)
+			branch_arg = '+%s:%s' % ( remote_branch, local_branch )
+		args = [remote]
+		if local_branch and remote_branch:
+			args.append(branch_arg)
+		kwargs = { "with_stderr": True, "with_status": True, "tags": tags }
+		return (args, kwargs)
+
+	def fetch_helper(self, *args, **kwargs):
+		"""
+		Fetches remote_branch to local_branch only if
+		remote_branch and local_branch are both supplied.
+		If either is ommitted, "git fetch <remote>" is performed instead.
+		Returns (status,output)
+		"""
+		args, kwargs = self.get_remote_args(*args, **kwargs)
+		return self.git.fetch(v=True, *args, **kwargs)
+
+	def push_helper(self, *args, **kwargs):
+		"""
+		Pushes local_branch to remote's remote_branch only if
+		remote_branch and local_branch both are supplied.
+		If either is ommitted, "git push <remote>" is performed instead.
+		Returns (status,output)
+		"""
+		args, kwargs = self.get_remote_args(*args, **kwargs)
+		return self.git.push(*args, **kwargs)
+
+	def pull_helper(self, *args, **kwargs):
+		"""
+		Pushes branches.  If local_branch or remote_branch is ommitted,
+		"git pull <remote>" is performed instead of
+		"git pull <remote> <remote_branch>:<local_branch>
+		Returns (status,output)
+		"""
+		args, kwargs = self.get_remote_args(*args, **kwargs)
+		return self.git.pull(*args, **kwargs)
+
 
 	def parse_ls_tree(self, rev):
 		"""Returns a list of(mode, type, sha1, path) tuples."""
