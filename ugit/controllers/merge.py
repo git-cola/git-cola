@@ -85,5 +85,5 @@ class MergeController(QObserver):
 
 	def viz_revision(self):
 		revision = self.model.get_revision()
-		browser = self.model.get_global_ugit_historybrowser()
+		browser = self.model.get_history_browser()
 		utils.fork(browser, revision)

@@ -663,12 +663,12 @@ class Controller(QObserver):
 
 	def viz_all(self):
 		"""Visualizes the entire git history using gitk."""
-		browser = self.model.get_global_ugit_historybrowser()
+		browser = self.model.get_history_browser()
 		utils.fork(browser,'--all')
 
 	def viz_current(self):
 		"""Visualizes the current branch's history using gitk."""
-		browser = self.model.get_global_ugit_historybrowser()
+		browser = self.model.get_history_browser()
 		utils.fork(browser, self.model.get_currentbranch())
 
 	def move_event(self, event):
