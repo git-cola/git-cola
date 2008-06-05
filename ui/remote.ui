@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>push</class>
- <widget class="QDialog" name="push" >
+ <class>remote</class>
+ <widget class="QDialog" name="remote" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -97,7 +97,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="push_button" >
+      <widget class="QPushButton" name="action_button" >
        <property name="text" >
         <string>Push</string>
        </property>
@@ -119,7 +119,7 @@
   <connection>
    <sender>cancel_button</sender>
    <signal>released()</signal>
-   <receiver>push</receiver>
+   <receiver>remote</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >
