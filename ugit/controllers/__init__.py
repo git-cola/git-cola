@@ -18,7 +18,7 @@ from ugit.qobserver import QObserver
 # controllers namespace
 import search
 from util import logger
-from push import push_branches
+from remote import remote_action
 from util import choose_branch
 from util import select_commits
 from util import update_options
@@ -70,7 +70,9 @@ class Controller(QObserver):
 			signoff_button = self.model.add_signoff,
 			stage_button = self.stage_selected,
 			commit_button = self.commit,
+			fetch_button = self.fetch,
 			push_button = self.push,
+			pull_button = self.pull,
 			# List Widgets
 			staged = self.diff_staged,
 			unstaged = self.diff_unstaged,
@@ -559,8 +561,14 @@ class Controller(QObserver):
 			self.model.load_commitmsg(merge_msg_path)
 			self.view.editor_dock.raise_()
 
+	def fetch(self):
+		remote_action(self.model, self.view, "Fetch")
+
 	def push(self):
-		push_branches(self.model, self.view)
+		remote_action(self.model, self.view, "Push")
+
+	def pull(self):
+		remote_action(self.model, self.view, "Pull")
 
 	def show_diffstat(self):
 		"""Show the diffstat from the latest commit."""
