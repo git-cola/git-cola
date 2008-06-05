@@ -19,7 +19,7 @@ from ugit.observer import Observer
 
 class QObserver(Observer, QObject):
 
-	def __init__(self, model, view):
+	def __init__(self, model, view, *args, **kwargs):
 		Observer.__init__(self, model)
 		QObject.__init__(self)
 
@@ -31,9 +31,9 @@ class QObserver(Observer, QObject):
 		self.__view_to_model = {}
 		self.__connected = []
 		# Call user-defined startup routine
-		self.init(model, view)
+		self.init(model, view, *args, **kwargs)
 
-	def init(self, model, view):
+	def init(self, model, view, *args, **kwargs):
 		pass
 
 	def SLOT(self, *args):
