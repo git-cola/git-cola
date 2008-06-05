@@ -13,7 +13,7 @@ def remote_action(model, parent, action):
 		tags_checkbox=False,
 		ffwd_only_checkbox=True,
 		)
-	if action == "Fetch" or action == "Pull":
+	if action == "Fetch":
 		model.set_tags_checkbox(True)
 	view = RemoteView(parent, action)
 	controller = RemoteController(model, view, action)
@@ -110,8 +110,8 @@ class RemoteController(QObserver):
 		)
 
 	def show_results(self, status, output):
+		qtutils.show_output(output)
 		if not status:
-			qtutils.log(output)
 			self.view.accept()
 		else:
 			qtutils.raise_logger()

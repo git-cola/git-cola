@@ -814,7 +814,7 @@ class Model(model.Model):
 		Returns (status,output)
 		"""
 		args, kwargs = self.get_remote_args(*args, **kwargs)
-		return self.git.pull(*args, **kwargs)
+		return self.git.pull(v=True, *args, **kwargs)
 
 
 	def parse_ls_tree(self, rev):
