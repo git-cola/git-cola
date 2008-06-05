@@ -11,7 +11,7 @@ from ugit.syntax import DiffSyntaxHighlighter
 from ugit.syntax import LogSyntaxHighlighter
 
 from main import Ui_main
-from push import Ui_push
+from remote import Ui_remote
 from branch import Ui_branch
 from commit import Ui_commit
 from logger import Ui_logger
@@ -169,9 +169,23 @@ class MergeView(CreateStandardView(Ui_merge, QDialog)):
 	def init(self, parent=None):
 		self.revision.setFocus()
 
+class RemoteView(CreateStandardView(Ui_remote, QDialog)):
+	def init(self, parent=None, button_text=''):
+		if button_text:
+			self.action_button.setText(button_text)
+			self.setWindowTitle(button_text)
+	def select_first_remote(self):
+		item = self.remotes.item(0)
+		if item:
+			self.remotes.setItemSelected(item, True)
+			self.remotes.setCurrentItem(item)
+			self.remotename.setText(item.text())
+			return True
+		else:
+			return False
+
 # These are views that do not contain any custom methods
 CreateBranchView = CreateStandardView(Ui_createbranch, QDialog)
-PushView = CreateStandardView(Ui_push, QDialog)
 OptionsView = CreateStandardView(Ui_options, QDialog)
 BookmarkView = CreateStandardView(Ui_bookmark, QDialog)
 StashView = CreateStandardView(Ui_stash, QDialog)
