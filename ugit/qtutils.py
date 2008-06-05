@@ -17,6 +17,9 @@ def log(output, quiet=True, doraise=False):
 	if quiet: return
 	LOGGER.show()
 	if not doraise: return
+	raise_logger()
+
+def raise_logger():
 	LOGGER.raise_()
 
 def input(msg, title=None):
@@ -30,7 +33,7 @@ def close_log_window():
 	LOGGER.hide()
 	LOGGER.done(0)
 
-def show_output(output):
+def show_output(output, **kwargs):
 	if not output: return
 	log(output, quiet=False)
 
