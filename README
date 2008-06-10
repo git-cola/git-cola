@@ -1,4 +1,7 @@
-ugit: A PyQt-based git gui
+git-cola: a highly caffeinated git gui
+
+Cola is a sweet, carbonated git gui known for its
+sugary flavour and caffeine-inspired features.
 
 Copyright (C) 2008 David Aguilar
 
@@ -32,26 +35,26 @@ INSTALLATION
 
 Debian and RPM users can download freshly built binaries here:
 
-	http://ugit.sf.net/
+	http://gitcola.tuxfamily.org/
 
-	sudo dpkg -i ugit_*.deb
-	sudo rpm -ivh ugit-*.rpm
+	sudo dpkg -i cola_*.deb
+	sudo rpm -ivh cola-*.rpm
 
 
-If you downloaded a tarball, make sure /path/to/ugit/bin is in your $PATH.
+If you downloaded a tarball, make sure /path/to/cola/bin is in your $PATH.
 
 
 HOW TO RUN
 
 Take your pick--any of the following incantations work from the command line:
 
-	git ugit
-	git-ugit
-	ugit
+	git cola
+	git-cola
+	cola
 
-Launching ugit on repositories outside your $CWD:
+Launching cola on repositories outside your $CWD:
 
-	git ugit /repo/path-1 /repo/path-2 .. /repo/path-N
+	git cola /repo/path-1 /repo/path-2 .. /repo/path-N
 
 
 BUILDING FROM SOURCE
@@ -61,8 +64,8 @@ You will need the PyQt development tools (v4.3 or greater):
 Synopsis:
 	sudo apt-get install pyqt4-dev-tools
 
-	git clone git://repo.or.cz/ugit.git
-	cd ugit
+	git clone git://github.com/davvid/git-cola.git
+	cd cola
 		./configure --prefix=/usr
 		make
 		sudo make install
@@ -72,7 +75,7 @@ WINDOWS SUPPORT
 
 Windows support once was quite experimental with git.
 These days it's actually quite good and only getting better
-everyday.  As git's windows support improves, so does ugit's.
+everyday.  As git's windows support improves, so does cola's.
 
 The following is the combination that "works for me" (TM)
 as of late 2007:
@@ -86,17 +89,17 @@ as of late 2007:
 
 	http://git.or.cz/gitwiki/WindowsInstall
 
-4) Download and unpack ugit:
+4) Download and unpack cola:
 
-	http://ugit.sf.net/releases/
+	http://gitcola.tuxfamily.org/releases/
 
-Grab the latest win32 tarball and run ugit-win32.sh from
+Grab the latest win32 tarball and run cola-win32.sh from
 within an msysgit or cygwin shell.
 
 The script assumes the you have Python/PyQt4 installed in C:/Python25.
 If this is not the case simply edit the script accordingly.
 
-voila, ugit on Windows.
+voila, cola on Windows.
 
 
 NOTE: Windows is not the developer's primary platform.

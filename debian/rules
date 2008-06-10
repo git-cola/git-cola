@@ -16,7 +16,7 @@ $(BUILD)/configure-stamp:
 	./configure \
 		--prefix=/usr \
 		--blddir=$(BUILD) \
-		--destdir=$(DEBIAN)/ugit
+		--destdir=$(DEBIAN)/cola
 	touch $(BUILD)/configure-stamp
 
 build: $(BUILD)/build-stamp
@@ -38,7 +38,7 @@ binary-indep: build install
 	dh_testroot
 	dh_clean -k
 	dh_installdirs
-	$(MAKE) DESTDIR=$(DEBIAN)/ugit install
+	$(MAKE) DESTDIR=$(DEBIAN)/cola install
 	dh_fixperms
 	dh_installdeb
 	dh_gencontrol

@@ -1,9 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=ugit
-Comment=ugit: the pythonic git gui
-Exec=git ugit
-Icon=/usr/share/ugit/icons/git.png
+Name=cola
+Comment=cola: a highly caffeinated git gui
+Exec=git cola
+Icon=/usr/share/cola/icons/git.png
 StartupNotify=true
 Terminal=false
 Type=Application

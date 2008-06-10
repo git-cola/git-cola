@@ -8,8 +8,8 @@ from cStringIO import StringIO
 # GitPython http://gitorious.org/projects/git-python
 import git
 
-from ugit import utils
-from ugit import model
+from cola import utils
+from cola import model
 
 #+-------------------------------------------------------------------------
 #+ A regex for matching the output of git(log|rev-list) --pretty=oneline
@@ -41,7 +41,7 @@ class Model(model.Model):
 	def init(self):
 		"""Reads git repository settings and sets several methods
 		so that they refer to the git module.  This object is
-		encapsulates ugit's interaction with git."""
+		encapsulates cola's interaction with git."""
 
 		# chdir to the root of the git tree.
 		# This keeps paths relative.
@@ -75,7 +75,7 @@ class Model(model.Model):
 			unstaged = [],
 			untracked = [],
 			window_geom = utils.parse_geom(
-					self.get_global_ugit_geometry()),
+					self.get_global_cola_geometry()),
 
 			#####################################################
 			# Used by the create branch dialog
@@ -125,13 +125,13 @@ class Model(model.Model):
 		}
 		# config items that are purely git config --global settings
 		self.__global_defaults = {
-			'ugit_geometry':'',
-			'ugit_fontui': '',
-			'ugit_fontui_size':12,
-			'ugit_fontdiff': '',
-			'ugit_fontdiff_size':12,
-			'ugit_savewindowsettings': False,
-			'ugit_saveatexit': False,
+			'cola_geometry':'',
+			'cola_fontui': '',
+			'cola_fontui_size':12,
+			'cola_fontdiff': '',
+			'cola_fontdiff_size':12,
+			'cola_savewindowsettings': False,
+			'cola_saveatexit': False,
 			'gui_editor': 'gvim',
 			'gui_diffeditor': 'xxdiff',
 			'gui_historybrowser': 'gitk',
@@ -149,7 +149,7 @@ class Model(model.Model):
 				self.set_param('local_'+k, v)
 
 		# Bootstrap the internal font*_size variables
-		for param in ('global_ugit_fontui', 'global_ugit_fontdiff'):
+		for param in ('global_cola_fontui', 'global_cola_fontdiff'):
 			if hasattr(self, param):
 				font = self.get_param(param)
 				if font:
@@ -315,10 +315,10 @@ class Model(model.Model):
 		return self.global_gui_historybrowser
 
 	def remember_gui_settings(self):
-		return self.global_ugit_savewindowsettings
+		return self.global_cola_savewindowsettings
 
 	def save_at_exit(self):
-		return self.global_ugit_saveatexit
+		return self.global_cola_saveatexit
 
 	def get_tree_node(self, idx):
 		return (self.get_types()[idx],
@@ -515,7 +515,7 @@ class Model(model.Model):
 		self.update_status()
 
 	def save_gui_settings(self):
-		self.config_set('ugit.geometry', utils.get_geom(), local=False)
+		self.config_set('cola.geometry', utils.get_geom(), local=False)
 
 	def config_set(self, key=None, value=None, local=True):
 		if key and value is not None:

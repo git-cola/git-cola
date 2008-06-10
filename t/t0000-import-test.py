@@ -6,20 +6,17 @@ import imp
 from testutils import *
 from testmodel import *
 
-from ugit import git
-
 class ImportTest(TestCase):
 	pass
 
 def setup_tests():
 	for module in """
-		ugit.git
-		ugit.model
-		ugit.models
-		ugit.qobserver
-		ugit.controllers
-		ugit.utils
-		ugit.qtutils
+		cola.model
+		cola.models
+		cola.qobserver
+		cola.controllers
+		cola.utils
+		cola.qtutils
 	""".split():
 		def import_test(self):
 			modinfo = None

@@ -7,7 +7,7 @@ import testutils
 from testmodel import InnerModel
 from testmodel import NestedModel
 
-from ugit.model import Model
+from cola.model import Model
 
 class SaveRestoreTest(testutils.TestCase):
 

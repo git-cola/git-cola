@@ -3,4 +3,4 @@
 # from python.org and the default PyQt4 binary package
 # from Riverbank.  Adjust accordingly.
 DIR=$(dirname "$0")
-c:/Python25/python.exe "$DIR"/git-ugit
+c:/Python25/python.exe "$DIR"/git-cola

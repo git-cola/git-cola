@@ -269,7 +269,7 @@
              </property>
              <property name="toolTip" >
               <string>Includes untracked files in the unstaged changes list.
-Disabling this causes ugit to only display files known to git
+Disabling this causes cola to only display files known to git
 in the unstaged changes list.</string>
              </property>
              <property name="text" >

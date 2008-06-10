@@ -6,9 +6,9 @@ from PyQt4.QtGui import QMainWindow
 from PyQt4.QtGui import QCheckBox
 from PyQt4.QtGui import QSplitter
 
-from ugit import qtutils
-from ugit.syntax import DiffSyntaxHighlighter
-from ugit.syntax import LogSyntaxHighlighter
+from cola import qtutils
+from cola.syntax import DiffSyntaxHighlighter
+from cola.syntax import LogSyntaxHighlighter
 
 from main import Ui_main
 from remote import Ui_remote
@@ -37,7 +37,7 @@ def CreateStandardView(uiclass, qtclass):
 	return StandardView
 
 class View(CreateStandardView(Ui_main, QMainWindow)):
-	'''The main ugit interface.'''
+	'''The main cola interface.'''
 	def init(self, parent=None):
 		self.staged.setAlternatingRowColors(True)
 		self.unstaged.setAlternatingRowColors(True)

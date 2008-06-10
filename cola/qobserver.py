@@ -15,7 +15,7 @@ from PyQt4.QtGui import QAbstractButton
 from PyQt4.QtGui import QSplitter
 from PyQt4.QtGui import QAction
 
-from ugit.observer import Observer
+from cola.observer import Observer
 
 class QObserver(Observer, QObject):
 

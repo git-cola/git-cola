@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-from ugit import utils
-from ugit import qtutils
-from ugit.qobserver import QObserver
-from ugit.views import MergeView
+from cola import utils
+from cola import qtutils
+from cola.qobserver import QObserver
+from cola.views import MergeView
 
 def abort_merge(model, parent):
 	txt = parent.tr("Abort merge?\n"

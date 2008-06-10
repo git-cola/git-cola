@@ -3,7 +3,7 @@ import py2exe
 
 setup(
 	windows = [
-		{"script" : "git-ugit"},
+		{"script" : "git-cola"},
 	],
 	options = {
 		"py2exe" : {

@@ -17,7 +17,7 @@ def get_version():
 
 #############################################################################
 # Mandatory variables
-APPNAME = 'ugit'
+APPNAME = 'cola'
 VERSION = get_version()
 
 srcdir = '.'
@@ -42,18 +42,18 @@ def configure(conf):
 	prefix = env['PREFIX']
 	bindir = join(prefix, 'bin')
 	share = join(prefix, 'share')
-	modules = join(share, 'ugit')
+	modules = join(share, 'cola')
 	views = join(modules, 'views')
 	controllers = join(modules, 'controllers')
-	icons = join(prefix, 'share', 'ugit', 'icons')
+	icons = join(prefix, 'share', 'cola', 'icons')
 	apps = join(prefix, 'share', 'applications')
 
-	env['UGIT_BINDIR'] = bindir
-	env['UGIT_MODULES'] = modules
-	env['UGIT_VIEWS'] = views
-	env['UGIT_CONTROLLERS'] = controllers
-	env['UGIT_ICONS'] = icons
-	env['UGIT_APPS'] = apps
+	env['COLA_BINDIR'] = bindir
+	env['COLA_MODULES'] = modules
+	env['COLA_VIEWS'] = views
+	env['COLA_CONTROLLERS'] = controllers
+	env['COLA_ICONS'] = icons
+	env['COLA_APPS'] = apps
 
 	try:
 		import git
@@ -79,14 +79,14 @@ def build(bld):
 	bld.add_subdirs("""
 		scripts
 		ui
-		ugit
+		cola
 	""")
 
 	qm = bld.create_obj('po2qm')
 	qm.find_sources_in_dirs('po')
 
 	for icon in glob.glob('icons/*.png'):
-		Common.install_files('UGIT_ICONS', '', icon)
+		Common.install_files('COLA_ICONS', '', icon)
 
 #############################################################################
 # Shutdown

@@ -4,10 +4,10 @@ import re
 import time
 from PyQt4 import QtGui
 
-from ugit.observer import Observer
-from ugit.qobserver import QObserver
-from ugit import qtutils
-from ugit.views import SearchView
+from cola.observer import Observer
+from cola.qobserver import QObserver
+from cola.views import SearchView
+from cola import qtutils
 
 
 class SearchEngine(object):
@@ -147,12 +147,12 @@ class SearchController(QObserver):
 		self.update_fonts()
 
 	def update_fonts(self):
-		font = self.model.get_global_ugit_fontui()
+		font = self.model.get_global_cola_fontui()
 		if font:
 			qfont = QtGui.QFont()
 			qfont.fromString(font)
 			self.view.commit_list.setFont(qfont)
-		font = self.model.get_global_ugit_fontdiff()
+		font = self.model.get_global_cola_fontdiff()
 		if font:
 			qfont = QtGui.QFont()
 			qfont.fromString(font)

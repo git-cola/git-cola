@@ -4,11 +4,11 @@ import sys
 
 from PyQt4 import QtGui
 
-from ugit import utils
-from ugit import qtutils
-from ugit.qobserver import QObserver
-from ugit.ugitrc import SettingsModel
-from ugit.views import BookmarkView
+from cola import utils
+from cola import qtutils
+from cola.qobserver import QObserver
+from cola.settings import SettingsModel
+from cola.views import BookmarkView
 
 def save_bookmark():
 	model = SettingsModel()
@@ -43,7 +43,7 @@ class BookmarkController(QObserver):
 		if not selection:
 			return
 		for item in selection:
-			utils.fork("git", "ugit", item)
+			utils.fork("git", "cola", item)
 
 	def delete(self):
 		selection = qtutils.get_selection_list(

@@ -2,7 +2,7 @@
 . $(dirname $0)/common.sh
 
 VERSION=$(scripts/version.sh)
-BASENAME=ugit-win32-$VERSION
+BASENAME=cola-win32-$VERSION
 FILE=$BASENAME.tar.gz
 DIR=installroot
 
@@ -20,6 +20,6 @@ fi
 rsync -avr $DIR/ $BASENAME/
 tar czf $FILE $BASENAME/
 rm -rf $DIR $BASENAME
-if [ -e $HOME/htdocs/ugit/releases ]; then
-	mv -v $FILE $HOME/htdocs/ugit/releases
+if [ -e $HOME/htdocs/cola/releases ]; then
+	mv -v $FILE $HOME/htdocs/cola/releases
 fi

@@ -8,7 +8,7 @@ except ImportError:
 
 import os
 import user
-from ugit.model import Model
+from cola.model import Model
 
 class SettingsModel(Model):
 
@@ -16,12 +16,12 @@ class SettingsModel(Model):
 		self.create( bookmarks = [] )
 		if not HAS_SIMPLEJSON:
 			return
-		ugitrc = self.path()
-		if os.path.exists(ugitrc):
-			self.load(ugitrc)
+		settings = self.path()
+		if os.path.exists(settings):
+			self.load(settings)
 
 	def path(self):
-		return os.path.join(user.home, '.ugitrc')
+		return os.path.join(user.home, '.cola')
 	
 	def save_all_settings(self):
 		if not HAS_SIMPLEJSON:

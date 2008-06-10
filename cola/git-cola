@@ -9,12 +9,12 @@ from os.path import dirname
 from os.path import realpath
 
 def setup_environment():
-	"""Prepends sys.path with ugit's module path."""
+	"""Prepends sys.path with cola's module path."""
 	# ex: sys.path = [ /usr/share, ... ]
-	#     from ugit import utils
-	# implies: utils = /usr/share/ugit/utils.py
-	ugit   = realpath(sys.argv[0])
-	bin    = dirname(ugit)
+	#     from cola import utils
+	# implies: utils = /usr/share/cola/utils.py
+	cola   = realpath(sys.argv[0])
+	bin    = dirname(cola)
 	prefix = dirname(bin)
 	share  = join(prefix,'share')
 	sys.path.insert(0, share)
@@ -26,33 +26,33 @@ def main():
 			+'paths are specified.''')
 
 	parser.add_option('-v', '--version',
-			help='Show ugit version',
+			help='Show cola version',
 			dest='version',
 			default=False,
 			action='store_true')
 	opts, args = parser.parse_args()
 
-	# allow "git ugit /path/to/repo"
+	# allow "git cola /path/to/repo"
 	if args:
 		os.chdir(os.path.realpath(args[0]))
 
-	# This sets up sys.path so that the ugit modules can be found.
+	# This sets up sys.path so that the cola modules can be found.
 	setup_environment()
 
 	if opts.version:
-		from ugit.version import VERSION
-		print "ugit version", VERSION
+		from cola.version import VERSION
+		print "cola version", VERSION
 		sys.exit(0)
 
-	# allow "git ugit /repo/path-1 .. /repo/path-N
-	from ugit.models import Model
-	from ugit import utils
-	from ugit.views import View
-	from ugit.controllers import Controller
+	# allow "git cola /repo/path-1 .. /repo/path-N
+	from cola.models import Model
+	from cola import utils
+	from cola.views import View
+	from cola.controllers import Controller
 
 	if args[1:]:
 		for repo in [ os.path.realpath(r) for r in args[1:] ]:
-			utils.fork("git", "ugit", repo)
+			utils.fork("git", "cola", repo)
 
 	# load the model right away so that we can bail out when
 	# no git repo exists
@@ -64,7 +64,7 @@ def main():
 		from PyQt4 import QtGui
 	except ImportError:
 		print "Sorry, you do not seem to have PyQt4 installed."
-		print "Please install it before using ugit."
+		print "Please install it before using cola."
 		print "e.g.:    sudo apt-get install python-qt4"
 		sys.exit(-1)
 

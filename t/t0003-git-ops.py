@@ -5,7 +5,7 @@ import unittest
 import testutils
 from testutils import pipe
 
-from ugit import models
+from cola import models
 
 class GitOpsTest(testutils.TestCase):
 

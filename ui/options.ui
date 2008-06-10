@@ -26,7 +26,7 @@
       </widget>
      </item>
      <item row="0" column="1" >
-      <widget class="QSpinBox" name="global_ugit_fontui_size" >
+      <widget class="QSpinBox" name="global_cola_fontui_size" >
        <property name="minimum" >
         <number>8</number>
        </property>
@@ -36,7 +36,7 @@
       </widget>
      </item>
      <item row="0" column="2" colspan="3" >
-      <widget class="QFontComboBox" name="global_ugit_fontui" >
+      <widget class="QFontComboBox" name="global_cola_fontui" >
        <property name="currentFont" >
         <font>
          <family>Helvetica</family>
@@ -52,7 +52,7 @@
       </widget>
      </item>
      <item row="1" column="1" >
-      <widget class="QSpinBox" name="global_ugit_fontdiff_size" >
+      <widget class="QSpinBox" name="global_cola_fontdiff_size" >
        <property name="minimum" >
         <number>8</number>
        </property>
@@ -62,7 +62,7 @@
       </widget>
      </item>
      <item row="1" column="2" colspan="3" >
-      <widget class="QFontComboBox" name="global_ugit_fontdiff" >
+      <widget class="QFontComboBox" name="global_cola_fontdiff" >
        <property name="fontFilters" >
         <set>QFontComboBox::MonospacedFonts</set>
        </property>
@@ -116,14 +116,14 @@
       </widget>
      </item>
      <item row="3" column="2" colspan="2" >
-      <widget class="QCheckBox" name="global_ugit_savewindowsettings" >
+      <widget class="QCheckBox" name="global_cola_savewindowsettings" >
        <property name="text" >
         <string>Remember Window Settings</string>
        </property>
       </widget>
      </item>
      <item row="3" column="4" >
-      <widget class="QCheckBox" name="global_ugit_saveatexit" >
+      <widget class="QCheckBox" name="global_cola_saveatexit" >
        <property name="text" >
         <string>Save Window Settings At Exit</string>
        </property>

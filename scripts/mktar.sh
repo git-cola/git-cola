@@ -1,6 +1,6 @@
 #!/bin/sh
 . $(dirname $0)/common.sh
-BASENAME=ugit-$VERSION
+BASENAME=cola-$VERSION
 FILE=$BASENAME.tar.gz
 DIR=installroot
 if [ -d $DIR ]; then
@@ -14,6 +14,6 @@ rsync -avr $DIR/ $BASENAME/ &&
 tar czf $FILE $BASENAME/ &&
 rm -rf $DIR $BASENAME
 
-if [ -d $HOME/htdocs/ugit/releases ]; then
-	mv -v $FILE $HOME/htdocs/ugit/releases
+if [ -d $HOME/htdocs/cola/releases ]; then
+	mv -v $FILE $HOME/htdocs/cola/releases
 fi

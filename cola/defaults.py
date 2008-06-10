@@ -2,7 +2,7 @@
 
 import os
 from PyQt4.QtCore import QEvent
-from ugit import version
+from cola import version
 VERSION = version.VERSION
 DIRECTORY = os.getcwd()
 

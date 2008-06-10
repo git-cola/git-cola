@@ -6,7 +6,7 @@
 *~
 /debian/files
 /debian/bld
-/debian/ugit
+/debian/cola
 /installroot
 /.lock-wscript
 /obj

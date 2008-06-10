@@ -5,13 +5,13 @@ waf_backup
 waf_restore
 
 rm -rf debian/bld
-rm -rf debian/ugit
-rm ../ugit_*.changes
-mv ../ugit_*.deb .
+rm -rf debian/cola
+rm ../cola_*.changes
+mv ../cola_*.deb .
 
-alien --to-rpm ugit_*.deb
+alien --to-rpm cola_*.deb
 
-if [ -d $HOME/htdocs/ugit/releases ];
+if [ -d $HOME/htdocs/cola/releases ];
 then
-	mv ugit_*.deb ugit-*.rpm $HOME/htdocs/ugit/releases
+	mv cola_*.deb cola-*.rpm $HOME/htdocs/cola/releases
 fi

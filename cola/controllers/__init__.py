@@ -10,10 +10,10 @@ from PyQt4.QtGui import QMessageBox
 from PyQt4.QtGui import QMenu
 from PyQt4.QtGui import QFont
 
-from ugit import utils
-from ugit import qtutils
-from ugit import defaults
-from ugit.qobserver import QObserver
+from cola import utils
+from cola import qtutils
+from cola import defaults
+from cola.qobserver import QObserver
 
 # controllers namespace
 import search
@@ -62,8 +62,8 @@ class Controller(QObserver):
 		# When a model attribute changes, this runs a specific action
 		self.add_actions(staged = self.action_staged)
 		self.add_actions(unstaged = self.action_unstaged)
-		self.add_actions(global_ugit_fontdiff = self.update_diff_font)
-		self.add_actions(global_ugit_fontui = self.update_ui_font)
+		self.add_actions(global_cola_fontdiff = self.update_diff_font)
+		self.add_actions(global_cola_fontui = self.update_ui_font)
 
 		self.add_callbacks(
 			# Push Buttons
@@ -188,8 +188,8 @@ class Controller(QObserver):
 		self.load_gui_settings()
 		self.rescan()
 		self.refresh_view(
-				'global_ugit_fontdiff',
-				'global_ugit_fontui',
+				'global_cola_fontdiff',
+				'global_cola_fontui',
 				)
 		self.start_inotify_thread()
 	
@@ -426,7 +426,7 @@ class Controller(QObserver):
 				to_export, revs, output='patches'))
 
 	def open_repo(self):
-		"""Spawns a new ugit session"""
+		"""Spawns a new cola session"""
 		dirname = qtutils.opendir_dialog(self.view,
 				'Open Git Repository...',
 				os.getcwd())
@@ -805,7 +805,7 @@ class Controller(QObserver):
 		return select_commits(self.model, self.view, title, revs, summaries)
 
 	def update_diff_font(self):
-		font = self.model.get_global_ugit_fontdiff()
+		font = self.model.get_global_cola_fontdiff()
 		if not font: return
 		qfont = QFont()
 		qfont.fromString(font)
@@ -813,7 +813,7 @@ class Controller(QObserver):
 		self.view.commitmsg.setFont(qfont)
 
 	def update_ui_font(self):
-		font = self.model.get_global_ugit_fontui()
+		font = self.model.get_global_cola_fontui()
 		if not font: return
 		qfont = QFont()
 		qfont.fromString(font)
@@ -823,7 +823,7 @@ class Controller(QObserver):
 		branch = self.model.get_currentbranch()
 		version = defaults.VERSION
 		qtutils.log(self.model.get_git_version()
-				+ '\nugit version '+ version
+				+ '\ncola version '+ version
 				+ '\nCurrent Branch: '+ branch)
 
 	def start_inotify_thread(self):
@@ -831,7 +831,7 @@ class Controller(QObserver):
 		# Recommend installing inotify if we're on Linux.
 		self.inotify_thread = None
 		try:
-			from ugit.inotify import GitNotifier
+			from cola.inotify import GitNotifier
 			qtutils.log(self.tr('inotify support: enabled'))
 		except ImportError:
 			import platform

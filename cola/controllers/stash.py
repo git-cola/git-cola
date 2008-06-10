@@ -1,9 +1,9 @@
 import os
 
-from ugit import utils
-from ugit import qtutils
-from ugit.qobserver import QObserver
-from ugit.views import StashView
+from cola import utils
+from cola import qtutils
+from cola.qobserver import QObserver
+from cola.views import StashView
 
 def stash(model, parent):
 	model = model.clone()

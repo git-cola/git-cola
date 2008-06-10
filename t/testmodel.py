@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os
-from ugit.model import Model
+from cola.model import Model
 
 class TestModel(Model):
 	def init(self):

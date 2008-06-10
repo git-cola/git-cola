@@ -4,18 +4,18 @@ import time
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QFont
 
-from ugit import utils
-from ugit import qtutils
-from ugit.model import Model
-from ugit.views import BranchView
-from ugit.views import CommitView
-from ugit.views import OptionsView
-from ugit.views import LogView
-from ugit.qobserver import QObserver
+from cola import utils
+from cola import qtutils
+from cola.model import Model
+from cola.views import BranchView
+from cola.views import CommitView
+from cola.views import OptionsView
+from cola.views import LogView
+from cola.qobserver import QObserver
 
 def set_diff_font(model, widget):
-	if model.has_param('global_ugit_fontdiff'):
-		font = model.get_param('global_ugit_fontdiff')
+	if model.has_param('global_cola_fontdiff'):
+		font = model.get_param('global_cola_fontdiff')
 		if not font: return
 		qf = QFont()
 		qf.fromString(font)
@@ -109,17 +109,17 @@ class OptionsController(QObserver):
 			'global_gui_diffeditor',
 			'global_gui_diffcontext',
 			'global_gui_historybrowser',
-			'global_ugit_fontdiff_size',
-			'global_ugit_fontdiff',
-			'global_ugit_fontui_size',
-			'global_ugit_fontui',
-			'global_ugit_savewindowsettings',
-			'global_ugit_saveatexit',
+			'global_cola_fontdiff_size',
+			'global_cola_fontdiff',
+			'global_cola_fontui_size',
+			'global_cola_fontui',
+			'global_cola_savewindowsettings',
+			'global_cola_saveatexit',
 			)
-		self.add_actions(global_ugit_fontdiff_size = self.update_size)
-		self.add_actions(global_ugit_fontui_size = self.update_size)
-		self.add_actions(global_ugit_fontdiff = self.tell_parent_model)
-		self.add_actions(global_ugit_fontui = self.tell_parent_model)
+		self.add_actions(global_cola_fontdiff_size = self.update_size)
+		self.add_actions(global_cola_fontui_size = self.update_size)
+		self.add_actions(global_cola_fontdiff = self.tell_parent_model)
+		self.add_actions(global_cola_fontui = self.tell_parent_model)
 		self.add_callbacks(save_button = self.save_settings)
 		self.connect(self.view, 'rejected()', self.restore_settings)
 
@@ -127,23 +127,23 @@ class OptionsController(QObserver):
 		self.backup_model = self.model.clone()
 
 	def refresh_view(self):
-		font = self.model.get_param('global_ugit_fontui')
+		font = self.model.get_param('global_cola_fontui')
 		if font:
 			size = int(font.split(',')[1])
-			self.view.global_ugit_fontui_size.setValue(size)
-			self.model.set_global_ugit_fontui_size(size)
+			self.view.global_cola_fontui_size.setValue(size)
+			self.model.set_global_cola_fontui_size(size)
 			fontui = QFont()
 			fontui.fromString(font)
-			self.view.global_ugit_fontui.setCurrentFont(fontui)
+			self.view.global_cola_fontui.setCurrentFont(fontui)
 
-		font = self.model.get_global_ugit_fontdiff()
+		font = self.model.get_global_cola_fontdiff()
 		if font:
 			size = int(font.split(',')[1])
-			self.view.global_ugit_fontdiff_size.setValue(size)
-			self.model.set_global_ugit_fontdiff_size(size)
+			self.view.global_cola_fontdiff_size.setValue(size)
+			self.model.set_global_cola_fontdiff_size(size)
 			fontdiff = QFont()
 			fontdiff.fromString(font)
-			self.view.global_ugit_fontdiff.setCurrentFont(fontdiff)
+			self.view.global_cola_fontdiff.setCurrentFont(fontdiff)
 
 		self.view.local_groupbox.setTitle(
 			unicode(self.tr('%s Repository'))
@@ -173,24 +173,24 @@ class OptionsController(QObserver):
 
 	def tell_parent_model(self,*rest):
 		params= (
-				'global_ugit_fontdiff',
-				'global_ugit_fontui',
-				'global_ugit_fontdiff_size',
-				'global_ugit_fontui_size',
-				'global_ugit_savewindowsettings',
-				'global_ugit_saveatexit',
+				'global_cola_fontdiff',
+				'global_cola_fontui',
+				'global_cola_fontdiff_size',
+				'global_cola_fontui_size',
+				'global_cola_savewindowsettings',
+				'global_cola_saveatexit',
 			)
 		for param in params:
 			self.original_model.set_param(
 				param, self.model.get_param(param))
 
 	def update_size(self, *rest):
-		combo = self.view.global_ugit_fontui
+		combo = self.view.global_cola_fontui
 		param = str(combo.objectName())
 		default = str(combo.currentFont().toString())
 		self.model.apply_font_size(param, default)
 
-		combo = self.view.global_ugit_fontdiff
+		combo = self.view.global_cola_fontdiff
 		param = str(combo.objectName())
 		default = str(combo.currentFont().toString())
 		self.model.apply_font_size(param, default)

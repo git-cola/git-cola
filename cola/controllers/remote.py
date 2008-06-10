@@ -1,10 +1,10 @@
 import os
 from PyQt4.QtGui import QDialog
 
-from ugit import utils
-from ugit import qtutils
-from ugit.views import RemoteView
-from ugit.qobserver import QObserver
+from cola import utils
+from cola import qtutils
+from cola.views import RemoteView
+from cola.qobserver import QObserver
 
 def remote_action(model, parent, action):
 	model = model.clone()

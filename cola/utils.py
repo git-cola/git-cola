@@ -8,8 +8,8 @@ from cStringIO import StringIO
 import defaults
 
 PREFIX = os.path.realpath(os.path.dirname(os.path.dirname(sys.argv[0])))
-QMDIR = os.path.join(PREFIX, 'share', 'ugit', 'qm')
-ICONSDIR = os.path.join(PREFIX, 'share', 'ugit', 'icons')
+QMDIR = os.path.join(PREFIX, 'share', 'cola', 'qm')
+ICONSDIR = os.path.join(PREFIX, 'share', 'cola', 'icons')
 KNOWN_FILE_TYPES = {
 	'ascii c':   'c.png',
 	'python':    'script.png',

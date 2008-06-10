@@ -7,7 +7,7 @@ from os.path import join
 
 def gen_install(path):
 	def install():
-		Common.install_files('UGIT_MODULES', '', path)
+		Common.install_files('COLA_MODULES', '', path)
 	return install
 
 def build(bld):
@@ -16,4 +16,4 @@ def build(bld):
 	vgen.stdin = 'gitversion.sh'
 	vgen.stdout = 'version.py'
 	vgen.install = gen_install('../scripts/version.py')
-	Common.install_files('UGIT_APPS', '', 'ugit.desktop')
+	Common.install_files('COLA_APPS', '', 'cola.desktop')
