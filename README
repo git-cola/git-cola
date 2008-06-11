@@ -89,18 +89,33 @@ as of late 2007:
 
 	http://git.or.cz/gitwiki/WindowsInstall
 
-4) Download and unpack cola:
+4) Install GitPython
+	http://gitorious.org/projects/git-python/
 
-	http://gitcola.tuxfamily.org/releases/
+5) Download and unpack cola:
 
-Grab the latest win32 tarball and run cola-win32.sh from
-within an msysgit or cygwin shell.
+	http://cola.tuxfamily.org/releases/
 
-The script assumes the you have Python/PyQt4 installed in C:/Python25.
-If this is not the case simply edit the script accordingly.
+6) Install cola:
+
+Copy the cola modules to the Python directory (from a git bash):
+
+	cp -r cola-win32-x.x.x/share/cola /c/Python25/Lib/site-packages
+
+Put the cola script somewhere permanent:
+
+	cp cola-win32-x.x.x/bin/git-cola /c/Git/bin
+
+(Optional) Create a batch file to run cola in your path:
+	echo 'c:\\Python25\\python.exe c:\\Git\\bin\\git-cola' \
+	> /c/Windows/System32/cola.bat
+
+(Optional) Create a git bash script to run cola:
+	echo '/c/Python25/python.exe /c/Git/bin/git-cola' > /usr/bin/cola
+
 
 voila, cola on Windows.
 
 
 NOTE: Windows is not the developer's primary platform.
-Patches are always greatly appreciated.
+Patches are greatly appreciated.
