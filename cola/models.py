@@ -46,7 +46,9 @@ class Model(model.Model):
 		# chdir to the root of the git tree.
 		# This keeps paths relative.
 		self.git = git.Git()
-		os.chdir( self.git.git_dir )
+		work_dir = self.git.get_work_tree()
+		if work_dir:
+			os.chdir(work_dir)
 
 		# Read git config
 		self.__init_config_data()
@@ -674,7 +676,7 @@ class Model(model.Model):
 			return result
 
 	def git_repo_path(self, *subpaths):
-		paths = [ self.git.rev_parse(git_dir=True) ]
+		paths = [ self.git.get_git_dir() ]
 		paths.extend(subpaths)
 		return os.path.realpath(os.path.join(*paths))
 
