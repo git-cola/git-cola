@@ -292,7 +292,7 @@ class Model(model.Model):
 			if os.path.exists(filename):
 				to_add.append(filename)
 
-		output = self.git.add(verbose=True, *to_add)
+		output = self.git.add(v=True, *to_add)
 
 		if len(to_add) == len(to_process):
 			# to_process only contained unremoved files --
