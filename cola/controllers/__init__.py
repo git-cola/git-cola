@@ -2,6 +2,7 @@
 import os
 import sys
 import time
+import platform
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui
@@ -192,12 +193,13 @@ class Controller(QObserver):
 				'global_cola_fontui',
 				)
 		self.start_inotify_thread()
-	
+
 	def setwindow(self, dock, isfloating):
 		if isfloating:
-			flags = ( QtCore.Qt.Window
-				| QtCore.Qt.FramelessWindowHint )
-			dock.setWindowFlags( flags )
+			if platform.system() != 'Windows':
+				flags = ( QtCore.Qt.Window
+					| QtCore.Qt.FramelessWindowHint )
+				dock.setWindowFlags( flags )
 			dock.show()
 
 	#####################################################################
