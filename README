@@ -70,47 +70,44 @@ Synopsis:
 	sudo make install
 
 
-WINDOWS SUPPORT
-
-Windows support once was quite experimental with git.
-These days it's actually quite good and only getting better
-everyday.  As git's windows support improves, so does cola's.
-
-The following is the combination that "works for me" (TM)
-as of late 2007:
+WINDOWS INSTALLATION
 
 1) Install the native Python2.5 and PyQt4 installers (in that order):
 
 	http://python.org/download/
 	http://www.riverbankcomputing.co.uk/pyqt/download.php
 
-3) Install git (the author had the best luck with msysgit):
+3) Install msysgit:
 
 	http://git.or.cz/gitwiki/WindowsInstall
 
 4) Install GitPython
+
 	http://gitorious.org/projects/git-python/
 
-5) Download and unpack cola:
+5) Install the GnuWin32 'file' command:
+
+	http://gnuwin32.sourceforge.net/packages/file.htm
+
+	Add the installed directory (default: c:\GnuWin32\bin) to your path.
+
+5) Download cola:
 
 	http://cola.tuxfamily.org/releases/
 
-6) Install cola:
+6) Install cola (from a Git Bash):
 
-Copy the cola modules to the Python directory (from a git bash):
+	cd /c/Python25/Lib/site-packages
+	tar xvfz /path/to/cola-win32-*.tar.gz
+	mv cola-win32-* cola
 
-	cp -r cola-win32-x.x.x/share/cola /c/Python25/Lib/site-packages
+7) Create an executable in your path for bash, cmd.exe, or both:
 
-Put the cola script somewhere permanent:
+	echo '/c/Python25/python.exe /c/Python25/Lib/site-packages/cola/bin/git-cola' >> /usr/bin/cola
+	echo 'c:\\Python25\\python.exe c:\\Python25\\Lib\\site-packages\\bin\\git-cola' > /c/Windows/System32/cola.bat
 
-	cp cola-win32-x.x.x/bin/git-cola /c/Git/bin
-
-(Optional) Create a batch file to run cola in your path:
-	echo 'c:\\Python25\\python.exe c:\\Git\\bin\\git-cola' \
-	> /c/Windows/System32/cola.bat
-
-(Optional) Create a git bash script to run cola:
-	echo '/c/Python25/python.exe /c/Git/bin/git-cola' > /usr/bin/cola
+This assumes the you have Python/PyQt4 installed in C:/Python25.
+If this is not the case simply edit the commands accordingly.
 
 voila, cola on Windows.
 
