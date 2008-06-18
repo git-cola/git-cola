@@ -30,6 +30,8 @@ GitPython
 PyQt 4.3 or newer
 	http://www.riverbankcomputing.co.uk/software/pyqt/intro
 
+simplejson
+	http://pypi.python.org/pypi/simplejson
 
 INSTALLATION
 
@@ -91,17 +93,21 @@ WINDOWS INSTALLATION
 
 	Add the installed directory (default: c:\GnuWin32\bin) to your path.
 
-5) Download cola:
+6) Install simplejson
+
+	http://pypi.python.org/pypi/simplejson
+
+7) Download cola:
 
 	http://cola.tuxfamily.org/releases/
 
-6) Install cola (from a Git Bash):
+8) Install cola (from a Git Bash):
 
 	cd /c/Python25/Lib/site-packages
 	tar xvfz /path/to/cola-win32-*.tar.gz
 	mv cola-win32-* cola
 
-7) Create an executable in your path for bash, cmd.exe, or both:
+9) Create an executable in your path for bash, cmd.exe, or both:
 
 	echo '/c/Python25/python.exe /c/Python25/Lib/site-packages/cola/bin/git-cola' >> /usr/bin/cola
 	echo 'c:\\Python25\\python.exe c:\\Python25\\Lib\\site-packages\\bin\\git-cola' > /c/Windows/System32/cola.bat
