@@ -624,6 +624,7 @@ class Model(model.Model):
 
 	def diff_helper(self,
 			commit=None,
+			branch=None,
 			filename=None,
 			color=False,
 			cached=True,
@@ -635,6 +636,8 @@ class Model(model.Model):
 		argv = []
 		if commit:
 			argv.append('%s^..%s' % (commit, commit))
+		elif branch:
+			argv.append(branch)
 
 		if filename:
 			argv.append('--')
