@@ -218,7 +218,8 @@ def write(path, contents):
 class DiffParser(object):
 	def __init__( self, model,
 				filename='',
-				cached=True
+				cached=True,
+				branch=None,
 				):
 		self.__header_re = re.compile('^@@ -(\d+),(\d+) \+(\d+),(\d+) @@.*')
 		self.__headers = []
@@ -237,6 +238,7 @@ class DiffParser(object):
 		(header, diff) = \
 			model.diff_helper(
 				filename=filename,
+				branch=branch,
 				with_diff_header=True,
 				cached=cached,
 				reverse=cached)
@@ -250,9 +252,10 @@ class DiffParser(object):
 		self.fwd_header, self.fwd_diff = \
 			model.diff_helper(
 				filename=filename,
+				branch=branch,
 				with_diff_header=True,
 				cached=cached,
-				reverse=False,
+				reverse=bool(branch),
 				)
 
 	def write_diff(self,filename,which,selected=False,noop=False):
