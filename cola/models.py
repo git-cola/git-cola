@@ -365,6 +365,9 @@ class Model(model.Model):
 	def apply_diff(self, filename):
 		return self.git.apply(filename, index=True, cached=True)
 
+	def apply_diff_to_worktree(self, filename):
+		return self.git.apply(filename)
+
 	def load_commitmsg(self, path):
 		file = open(path, 'r')
 		contents = file.read()
