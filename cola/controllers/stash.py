@@ -81,8 +81,10 @@ class StashController(QObserver):
 		selection = self.get_selected_stash()
 		if not selection:
 			return
+		(status, stdout, stderr) =\
+			self.model.stash("pop", selection, with_extended_output=True)
 		qtutils.log(
-			self.model.stash("pop", selection, with_stderr=True),
+			stdout + stderr,
 			quiet=False,
 			doraise=True
 			)
