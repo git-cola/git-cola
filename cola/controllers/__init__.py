@@ -36,20 +36,24 @@ from stash import stash
 class Controller(QObserver):
 	"""Manages the interaction between models and views."""
 
+	MODE_NONE = 0
+	MODE_WORKTREE = 1
+	MODE_INDEX = 2
+	MODE_BRANCH = 3
+
 	def init(self, model, view):
+		"""
+		State machine:
+		Modes are:
+			none -> do nothing, disables most context menus
+			branch -> diff against another branch and selectively choose changes
+			worktree -> selectively add working changes to the index
+			index  -> selectively remove changes from the index
+		"""
+		self.mode = Controller.MODE_NONE
+
 		# parent-less log window
 		qtutils.LOGGER = logger()
-
-		# Avoids inotify floods from e.g. make
-		self.__last_inotify_event = time.time()
-
-		# The unstaged list context menu
-		self.__unstaged_menu = None
-
-		# The diff-display context menu
-		self.__diff_menu = None
-		self.__staged_diff_in_view = True
-		self.__diffgui_enabled = True
 
 		# Unstaged changes context menu
 		view.unstaged.contextMenuEvent = self.unstaged_context_menu_event
@@ -128,11 +132,14 @@ class Controller(QObserver):
 			menu_browse_branch = self.browse_current,
 			menu_browse_other_branch = self.browse_other,
 
+			# Branch Menu
+			menu_create_branch = self.branch_create,
+			menu_checkout_branch = self.checkout_branch,
+			menu_diff_branch = self.diff_branch,
+
 			# Commit Menu
 			menu_rescan = self.rescan,
-			menu_create_branch = self.branch_create,
 			menu_delete_branch = self.branch_delete,
-			menu_checkout_branch = self.checkout_branch,
 			menu_rebase_branch = self.rebase,
 			menu_commit = self.commit,
 			menu_stage_selected = self.stage_selected,
@@ -345,15 +352,16 @@ class Controller(QObserver):
 		self.log(output)
 
 	def view_diff(self, staged=True):
-		self.__staged_diff_in_view = staged
-		if self.__staged_diff_in_view:
+		if staged:
+			self.mode = Controller.MODE_INDEX
 			widget = self.view.staged
 		else:
+			self.mode = Controller.MODE_WORKTREE
 			widget = self.view.unstaged
 		row, selected = qtutils.get_selected_row(widget)
 		if not selected:
+			self.mode = Controller.MODE_NONE
 			self.view.reset_display()
-			self.__diffgui_enabled = False
 			return
 		(diff,
 		status) = self.model.get_diff_and_status(row, staged=staged)
@@ -361,11 +369,9 @@ class Controller(QObserver):
 		self.view.set_display(diff)
 		self.view.set_info(self.tr(status))
 		self.view.diff_dock.raise_()
-		self.__diffgui_enabled = True
 
 	def edit_file(self, staged=True):
-		self.__staged_diff_in_view = staged
-		if self.__staged_diff_in_view:
+		if staged:
 			widget = self.view.staged
 		else:
 			widget = self.view.unstaged
@@ -379,8 +385,7 @@ class Controller(QObserver):
 		utils.fork(self.model.get_editor(), basename)
 
 	def edit_diff(self, staged=True):
-		self.__staged_diff_in_view = staged
-		if self.__staged_diff_in_view:
+		if staged:
 			widget = self.view.staged
 		else:
 			widget = self.view.unstaged
@@ -574,27 +579,67 @@ class Controller(QObserver):
 
 	def show_diffstat(self):
 		"""Show the diffstat from the latest commit."""
-		self.__diffgui_enabled = False
+		self.mode = Controller.MODE_NONE
 		self.view.set_info(self.tr('Diffstat'))
 		self.view.set_display(self.model.diffstat())
 
 	def show_index(self):
-		self.__diffgui_enabled = False
+		self.mode = Controller.MODE_NONE
 		self.view.set_info(self.tr('Index'))
 		self.view.set_display(self.model.diffindex())
 
 	#####################################################################
 	# diff gui
-	def process_diff_selection(self, items, widget,
-			cached=True, selected=False, reverse=True, noop=False):
+	def diff_branch(self):
+		branch = choose_branch('Select Branch',
+				self.view, self.model.get_all_branches())
+		if not branch:
+			return
+		zfiles_str = self.model.diff(branch, name_only=True, z=True)
+		files = zfiles_str.split('\0')
+		filename = choose_branch('Select File', self.view, files)
+		if not filename:
+			return
 
-		filename = qtutils.get_selected_item(widget, items)
-		if not filename: return
-		parser = utils.DiffParser(self.model, filename=filename,
-				cached=cached)
-		offset, selection = self.view.diff_selection()
-		parser.process_diff_selection(selected, offset, selection)
-		self.rescan()
+		status = 'Diff of "%s" between the work tree and %s' % (filename, branch)
+
+		diff = self.model.diff_helper(
+						filename=filename,
+						cached=False,
+						reverse=True,
+						branch=branch,
+						)
+
+		self.view.set_display(diff)
+		self.view.set_info(self.tr(status))
+		self.view.diff_dock.raise_()
+
+		# Set state machine to branch mode
+		self.mode = Controller.MODE_BRANCH
+		self.branch = branch
+		self.filename = filename
+
+	def process_diff_selection(self, items, widget,
+			cached=True, selected=False, reverse=True):
+
+		if self.mode == Controller.MODE_BRANCH:
+			branch = self.branch
+			filename = self.filename
+			parser = utils.DiffParser(
+					self.model, filename=filename,
+					cached=False, branch=branch)
+			offset, selection = self.view.diff_selection()
+			parser.process_diff_selection(selected, offset, selection, branch=True)
+			self.rescan()
+		else:
+			filename = qtutils.get_selected_item(widget, items)
+			if not filename:
+				return
+			parser = utils.DiffParser(self.model, filename=filename,
+					cached=cached)
+			offset, selection = self.view.diff_selection()
+			parser.process_diff_selection(selected, offset, selection)
+			self.rescan()
 
 	def stage_hunk(self):
 		self.process_diff_selection(
@@ -713,95 +758,72 @@ class Controller(QObserver):
 		self.log(output, quiet=True)
 
 	def unstaged_context_menu_event(self, event):
-		self.unstaged_context_menu_setup()
+		menu = self.unstaged_context_menu_setup()
 		unstaged = self.view.unstaged
-		self.__unstaged_menu.exec_(unstaged.mapToGlobal(event.pos()))
+		menu.exec_(unstaged.mapToGlobal(event.pos()))
 
 	def unstaged_context_menu_setup(self):
-		if self.__unstaged_menu: return
-
-		menu = self.__unstaged_menu = QMenu(self.view)
-		self.__stage_selected_action = menu.addAction(
-			self.tr('Stage Selected'), self.stage_selected)
-		self.__undo_changes_action = menu.addAction(
-			self.tr('Undo Local Changes'), self.undo_changes)
-		self.__edit_file = menu.addAction(
-			self.tr('Launch Editor'), lambda: self.edit_file(staged=False))
-		self.__edit_diff = menu.addAction(
-			self.tr('Launch Diff Editor'), lambda: self.edit_diff(staged=False))
-
-		self.connect(self.__unstaged_menu, 'aboutToShow()',
-			self.unstaged_context_menu_about_to_show)
-
-	def unstaged_context_menu_about_to_show(self):
 		unstaged_item = qtutils.get_selected_item(
 				self.view.unstaged,
 				self.model.get_unstaged())
-
 		is_tracked = unstaged_item not in self.model.get_untracked()
-
-		enable_staging = bool(self.__diffgui_enabled
-					and unstaged_item)
+		enable_staging = self.mode == Controller.MODE_WORKTREE
 		enable_undo = enable_staging and is_tracked
 
-		self.__stage_selected_action.setEnabled(enable_staging)
-		self.__undo_changes_action.setEnabled(enable_undo)
+		menu = QMenu(self.view)
 
-	def diff_context_menu_about_to_show(self):
-		unstaged_item = qtutils.get_selected_item(
-				self.view.unstaged,
-				self.model.get_unstaged())
-
-		is_tracked= unstaged_item not in self.model.get_untracked()
-
-		enable_staged= (
-				self.__diffgui_enabled
-				and unstaged_item
-				and not self.__staged_diff_in_view
-				and is_tracked)
-
-		enable_unstaged= (
-				self.__diffgui_enabled
-				and self.__staged_diff_in_view
-				and qtutils.get_selected_item(
-						self.view.staged,
-						self.model.get_staged()))
-
-		self.__stage_hunk_action.setEnabled(bool(enable_staged))
-		self.__stage_hunk_selection_action.setEnabled(bool(enable_staged))
-
-		self.__unstage_hunk_action.setEnabled(bool(enable_unstaged))
-		self.__unstage_hunk_selection_action.setEnabled(bool(enable_unstaged))
+		if enable_staging:
+			menu.addAction(self.tr('Stage Selected'), self.stage_selected)
+		if enable_undo:
+			menu.addAction(self.tr('Undo Local Changes'), self.undo_changes)
+		menu.addAction(
+				self.tr('Launch Editor'),
+				lambda: self.edit_file(staged=False))
+		if enable_staging:
+			menu.addAction(
+				self.tr('Launch Diff Editor'),
+				lambda: self.edit_diff(staged=False))
+		return menu
 
 	def diff_context_menu_event(self, event):
-		self.diff_context_menu_setup()
+		menu = self.diff_context_menu_setup()
 		textedit = self.view.display_text
-		self.__diff_menu.exec_(textedit.mapToGlobal(event.pos()))
+		menu.exec_(textedit.mapToGlobal(event.pos()))
 
 	def diff_context_menu_setup(self):
-		if self.__diff_menu: return
 
-		menu = self.__diff_menu = QMenu(self.view)
-		self.__stage_hunk_action = menu.addAction(
-			self.tr('Stage Hunk For Commit'), self.stage_hunk)
+		menu = QMenu(self.view)
+		if self.mode == Controller.MODE_WORKTREE:
+			unstaged_item = qtutils.get_selected_item(
+					self.view.unstaged,
+					self.model.get_unstaged())
+			is_tracked= unstaged_item and unstaged_item not in self.model.get_untracked()
+			if is_tracked:
+				menu.addAction(
+					self.tr('Stage Hunk For Commit'),
+					self.stage_hunk)
+				menu.addAction(
+					self.tr('Stage Selected Lines'),
+					self.stage_hunk_selection)
 
-		self.__stage_hunk_selection_action = menu.addAction(
-			self.tr('Stage Selected Lines'),
-			self.stage_hunk_selection)
+		elif self.mode == Controller.MODE_INDEX:
+			menu.addAction(
+				self.tr('Unstage Hunk From Commit'),
+				self.unstage_hunk)
+			menu.addAction(
+				self.tr('Unstage Selected Lines'),
+				self.unstage_hunk_selection)
 
-		self.__unstage_hunk_action = menu.addAction(
-			self.tr('Unstage Hunk From Commit'),
-			self.unstage_hunk)
+		elif self.mode == Controller.MODE_BRANCH:
+			menu.addAction(
+				self.tr('Apply Diff To Work Tree'),
+				self.stage_hunk)
+			menu.addAction(
+				self.tr('Apply Diff Selection To Work Tree'),
+				self.stage_hunk_selection)
 
-		self.__unstage_hunk_selection_action = menu.addAction(
-			self.tr('Unstage Selected Lines'),
-			self.unstage_hunk_selection)
-
-		self.__copy_action = menu.addAction(
-			self.tr('Copy'), self.view.copy_display)
-
-		self.connect(self.__diff_menu, 'aboutToShow()',
-			self.diff_context_menu_about_to_show)
+		menu.addAction(self.tr('Copy'), self.view.copy_display)
+		return menu
 
 	def select_commits_gui(self, title, revs, summaries):
 		return select_commits(self.model, self.view, title, revs, summaries)

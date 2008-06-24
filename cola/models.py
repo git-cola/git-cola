@@ -35,6 +35,14 @@ GIT_COMMANDS = """
 	tag var verify_pack whatchanged
 """.split()
 
+class GitCola(git.Git):
+	"""GitPython throws exceptions by default.
+	We suppress exceptions in favor of return values.
+	"""
+	def execute(*args, **kwargs):
+		kwargs['with_exceptions'] = False
+		return git.Git.execute(*args, **kwargs)
+
 class Model(model.Model):
 	"""Provides a friendly wrapper for doing commit git operations."""
 
@@ -45,8 +53,10 @@ class Model(model.Model):
 
 		# chdir to the root of the git tree.
 		# This keeps paths relative.
-		self.git = git.Git()
-		os.chdir( self.git.git_dir )
+		self.git = GitCola()
+		work_dir = self.git.get_work_tree()
+		if work_dir:
+			os.chdir(work_dir)
 
 		# Read git config
 		self.__init_config_data()
@@ -355,6 +365,9 @@ class Model(model.Model):
 	def apply_diff(self, filename):
 		return self.git.apply(filename, index=True, cached=True)
 
+	def apply_diff_to_worktree(self, filename):
+		return self.git.apply(filename)
+
 	def load_commitmsg(self, path):
 		file = open(path, 'r')
 		contents = file.read()
@@ -622,6 +635,7 @@ class Model(model.Model):
 
 	def diff_helper(self,
 			commit=None,
+			branch=None,
 			filename=None,
 			color=False,
 			cached=True,
@@ -633,6 +647,8 @@ class Model(model.Model):
 		argv = []
 		if commit:
 			argv.append('%s^..%s' % (commit, commit))
+		elif branch:
+			argv.append(branch)
 
 		if filename:
 			argv.append('--')
@@ -647,6 +663,7 @@ class Model(model.Model):
 				cached=cached,
 				patch_with_raw=True,
 				unified=self.diff_context,
+				with_raw_output=True,
 				*argv
 			).splitlines()
 
@@ -674,7 +691,7 @@ class Model(model.Model):
 			return result
 
 	def git_repo_path(self, *subpaths):
-		paths = [ self.git.rev_parse(git_dir=True) ]
+		paths = [ self.git.get_git_dir() ]
 		paths.extend(subpaths)
 		return os.path.realpath(os.path.join(*paths))
 
@@ -783,7 +800,10 @@ class Model(model.Model):
 		args = [remote]
 		if local_branch and remote_branch:
 			args.append(branch_arg)
-		kwargs = { "with_stderr": True, "with_status": True, "tags": tags }
+		kwargs = {
+			"with_extended_output": True,
+			"tags": tags
+			}
 		return (args, kwargs)
 
 	def fetch_helper(self, *args, **kwargs):
@@ -794,7 +814,8 @@ class Model(model.Model):
 		Returns (status,output)
 		"""
 		args, kwargs = self.get_remote_args(*args, **kwargs)
-		return self.git.fetch(v=True, *args, **kwargs)
+		(status, stdout, stderr) =  self.git.fetch(v=True, *args, **kwargs)
+		return stdout + stderr
 
 	def push_helper(self, *args, **kwargs):
 		"""
@@ -804,7 +825,8 @@ class Model(model.Model):
 		Returns (status,output)
 		"""
 		args, kwargs = self.get_remote_args(*args, **kwargs)
-		return self.git.push(*args, **kwargs)
+		(status, stdout, stderr) = self.git.push(*args, **kwargs)
+		return stdout + stderr
 
 	def pull_helper(self, *args, **kwargs):
 		"""
@@ -814,7 +836,8 @@ class Model(model.Model):
 		Returns (status,output)
 		"""
 		args, kwargs = self.get_remote_args(*args, **kwargs)
-		return self.git.pull(v=True, *args, **kwargs)
+		(status, stdout, stderr) = self.git.pull(v=True, *args, **kwargs)
+		return stdout + stderr
 
 
 	def parse_ls_tree(self, rev):

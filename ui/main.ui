@@ -1146,6 +1146,11 @@ retrieve the latest commit message prior to committing.</string>
     <string>Alt+Shift+S</string>
    </property>
   </action>
+  <action name="menu_diff_branch" >
+   <property name="text" >
+    <string>Apply Diffs From...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="2" margin="2" />
  <tabstops>
