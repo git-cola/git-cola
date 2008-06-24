@@ -127,6 +127,8 @@
     <addaction name="menu_checkout_branch" />
     <addaction name="menu_rebase_branch" />
     <addaction name="menu_delete_branch" />
+    <addaction name="separator" />
+    <addaction name="menu_diff_branch" />
    </widget>
    <widget class="QMenu" name="file_menu" >
     <property name="title" >
