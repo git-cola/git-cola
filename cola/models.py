@@ -35,6 +35,14 @@ GIT_COMMANDS = """
 	tag var verify_pack whatchanged
 """.split()
 
+class GitCola(git.Git):
+	"""GitPython throws exceptions by default.
+	We suppress exceptions in favor of return values.
+	"""
+	def execute(*args, **kwargs):
+		kwargs['with_exceptions'] = False
+		return git.Git.execute(*args, **kwargs)
+
 class Model(model.Model):
 	"""Provides a friendly wrapper for doing commit git operations."""
 
@@ -45,7 +53,7 @@ class Model(model.Model):
 
 		# chdir to the root of the git tree.
 		# This keeps paths relative.
-		self.git = git.Git()
+		self.git = GitCola()
 		work_dir = self.git.get_work_tree()
 		if work_dir:
 			os.chdir(work_dir)
@@ -652,6 +660,7 @@ class Model(model.Model):
 				cached=cached,
 				patch_with_raw=True,
 				unified=self.diff_context,
+				with_raw_output=True,
 				*argv
 			).splitlines()
 
@@ -788,7 +797,10 @@ class Model(model.Model):
 		args = [remote]
 		if local_branch and remote_branch:
 			args.append(branch_arg)
-		kwargs = { "with_stderr": True, "with_status": True, "tags": tags }
+		kwargs = {
+			"with_extended_output": True,
+			"tags": tags
+			}
 		return (args, kwargs)
 
 	def fetch_helper(self, *args, **kwargs):
@@ -799,7 +811,8 @@ class Model(model.Model):
 		Returns (status,output)
 		"""
 		args, kwargs = self.get_remote_args(*args, **kwargs)
-		return self.git.fetch(v=True, *args, **kwargs)
+		(status, stdout, stderr) =  self.git.fetch(v=True, *args, **kwargs)
+		return stdout + stderr
 
 	def push_helper(self, *args, **kwargs):
 		"""
@@ -809,7 +822,8 @@ class Model(model.Model):
 		Returns (status,output)
 		"""
 		args, kwargs = self.get_remote_args(*args, **kwargs)
-		return self.git.push(*args, **kwargs)
+		(status, stdout, stderr) = self.git.push(*args, **kwargs)
+		return stdout + stderr
 
 	def pull_helper(self, *args, **kwargs):
 		"""
@@ -819,7 +833,8 @@ class Model(model.Model):
 		Returns (status,output)
 		"""
 		args, kwargs = self.get_remote_args(*args, **kwargs)
-		return self.git.pull(v=True, *args, **kwargs)
+		(status, stdout, stderr) = self.git.pull(v=True, *args, **kwargs)
+		return stdout + stderr
 
 
 	def parse_ls_tree(self, rev):
