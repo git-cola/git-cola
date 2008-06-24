@@ -240,8 +240,8 @@ class DiffParser(object):
 				filename=filename,
 				branch=branch,
 				with_diff_header=True,
-				cached=cached,
-				reverse=cached)
+				cached=cached and not bool(branch),
+				reverse=cached or bool(branch))
 
 		self.model = model
 		self.diff = diff
@@ -254,7 +254,7 @@ class DiffParser(object):
 				filename=filename,
 				branch=branch,
 				with_diff_header=True,
-				cached=cached,
+				cached=cached and not bool(branch),
 				reverse=bool(branch),
 				)
 
@@ -397,7 +397,7 @@ class DiffParser(object):
 				self.__diff_spans[-1][-1] += line_len
 				self.__diff_offsets[self.__idx] += line_len
 
-	def process_diff_selection(self, selected, offset, selection):
+	def process_diff_selection(self, selected, offset, selection, branch=False):
 		if selection:
 			start = self.fwd_diff.index(selection)
 			end = start + len(selection)
@@ -412,14 +412,20 @@ class DiffParser(object):
 				if contents:
 					tmpfile = self.model.get_tmp_filename()
 					write(tmpfile, contents)
-					self.model.apply_diff(tmpfile)
+					if branch:
+						self.model.apply_diff_to_worktree(tmpfile)
+					else:
+						self.model.apply_diff(tmpfile)
 					os.unlink(tmpfile)
 		# Process a complete hunk
 		else:
 			for idx, diff in enumerate(self.diffs):
 				tmpfile = self.model.get_tmp_filename()
 				if self.write_diff(tmpfile,idx):
-					self.model.apply_diff(tmpfile)
+					if branch:
+						self.model.apply_diff_to_worktree(tmpfile)
+					else:
+						self.model.apply_diff(tmpfile)
 					os.unlink(tmpfile)
 
 def sanitize_input(input):
