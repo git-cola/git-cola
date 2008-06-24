@@ -20,6 +20,6 @@ fi
 rsync -avr $DIR/ $BASENAME/
 tar czf $FILE $BASENAME/
 rm -rf $DIR $BASENAME
-if [ -e $HOME/htdocs/cola/releases ]; then
-	mv -v $FILE $HOME/htdocs/cola/releases
+if [ -e $HOME/htdocs/cola/releases/win32 ]; then
+	mv -v $FILE $HOME/htdocs/cola/releases/win32
 fi
