@@ -1,3 +1,9 @@
+cola (1.0.1-3) unstable; urgency=low
+
+  models: update to the latest GitPython API (again)
+
+ -- David Aguilar <davvid@gmail.com>  Wed, 25 Jun 2008 00:00:42 -0700
+
 cola (1.0.1-1) unstable; urgency=low
 
   controllers: generalized the diff gui for 'Apply Diff From Branch'
