@@ -39,9 +39,57 @@ class GitCola(git.Git):
 	"""GitPython throws exceptions by default.
 	We suppress exceptions in favor of return values.
 	"""
+	def __init__(self):
+		self._git_dir = None
+		self._work_tree = None
+		git_dir = self.get_git_dir()
+		work_tree = self.get_work_tree()
+		if work_tree:
+			os.chdir(work_tree)
+		else:
+			print "Sorry, git-cola requires a work tree"
+			sys.exit(-1)
+		git.Git.__init__(self, work_tree)
 	def execute(*args, **kwargs):
 		kwargs['with_exceptions'] = False
 		return git.Git.execute(*args, **kwargs)
+	def get_work_tree(self):
+		if not self._work_tree:
+			self._work_tree = os.getenv('GIT_WORK_TREE')
+			if not self._work_tree or not os.path.isdir(self._work_tree):
+				self._work_tree = os.path.abspath(
+						os.path.join(self._git_dir, '..'))
+		return self._work_tree
+	def get_git_dir(self):
+		if not self._git_dir:
+			self._git_dir = os.getenv('GIT_DIR')
+			if self._git_dir and self._is_git_dir(self._git_dir):
+				return self._git_dir
+			curpath = os.getcwd()
+			while curpath:
+				if self._is_git_dir(curpath):
+					self._git_dir = curpath
+					break
+				gitpath = os.path.join(curpath, '.git')
+				if self._is_git_dir(gitpath):
+					self._git_dir = gitpath
+					break
+				curpath, dummy = os.path.split(curpath)
+				if not dummy:
+					break
+		return self._git_dir
+
+	def _is_git_dir(self, d):
+		""" This is taken from the git setup.c:is_git_directory
+			function."""
+		if (os.path.isdir(d)
+				and os.path.isdir(os.path.join(d, 'objects'))
+				and os.path.isdir(os.path.join(d, 'refs'))):
+			headref = os.path.join(d, 'HEAD')
+			return (os.path.isfile(headref)
+					or (os.path.islink(headref)
+					and os.readlink(headref).startswith('refs')))
+		return False
 
 class Model(model.Model):
 	"""Provides a friendly wrapper for doing commit git operations."""
@@ -54,9 +102,6 @@ class Model(model.Model):
 		# chdir to the root of the git tree.
 		# This keeps paths relative.
 		self.git = GitCola()
-		work_dir = self.git.get_work_tree()
-		if work_dir:
-			os.chdir(work_dir)
 
 		# Read git config
 		self.__init_config_data()

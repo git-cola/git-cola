@@ -8,7 +8,7 @@ from PyQt4.QtCore import SIGNAL
 from pyinotify import ProcessEvent
 from pyinotify import WatchManager, Notifier, EventsCodes
 
-import git
+from models import GitCola
 import defaults
 
 class FileSysEvent(ProcessEvent):
@@ -25,7 +25,7 @@ class FileSysEvent(ProcessEvent):
 class GitNotifier(QThread):
 	def __init__(self, receiver, path):
 		QThread.__init__(self)
-		self.git = git.Git()
+		self.git = GitCola()
 		self.receiver = receiver
 		self.path = path
 		self.abort = False
