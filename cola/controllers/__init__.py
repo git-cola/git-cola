@@ -138,6 +138,7 @@ class Controller(QObserver):
 			menu_create_branch = self.branch_create,
 			menu_checkout_branch = self.checkout_branch,
 			menu_diff_branch = self.diff_branch,
+			menu_diffedit_branch = self.diffedit_branch,
 
 			# Commit Menu
 			menu_rescan = self.rescan,
@@ -584,6 +585,27 @@ class Controller(QObserver):
 		self.mode = Controller.MODE_NONE
 		self.view.set_info(self.tr('Index'))
 		self.view.set_display(self.model.diffindex())
+
+	#####################################################################
+	def diffedit_branch(self):
+		branch = choose_from_combo('Select Branch',
+				self.view, self.model.get_all_branches())
+		if not branch:
+			return
+		zfiles_str = self.model.diff(branch, name_only=True, z=True)
+		files = zfiles_str.split('\0')
+		filename = choose_from_list('Select File', self.view, files)
+		if not filename:
+			return
+		contents = self.model.show('%s:%s' % (branch, filename), with_raw_output=True)
+		tmpfile = self.model.get_tmp_filename(filename)
+		fh = open(tmpfile, 'w')
+		fh.write(contents)
+		fh.close()
+		utils.fork(self.model.get_diffeditor(), filename, tmpfile)
+
+		# Set state machine to branch mode
+		self.mode = Controller.MODE_NONE
 
 	#####################################################################
 	# diff gui
