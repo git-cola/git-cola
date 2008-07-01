@@ -783,7 +783,7 @@ class Model(model.Model):
 		MODIFIED_TAG = '# Changed but not updated:'
 		UNTRACKED_TAG = '# Untracked files:'
 		RGX_RENAMED = re.compile(
-					'(#\trenamed:\s+)'
+					'(#\trenamed:\s+|#\tcopied:\s+)'
 					'(.*?)\s->\s(.*)'
 					)
 		RGX_MODIFIED = re.compile(
