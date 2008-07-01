@@ -1,6 +1,7 @@
 import os
 import time
 from PyQt4 import QtCore
+from PyQt4.QtGui import qApp
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QMainWindow
 from PyQt4.QtGui import QCheckBox
@@ -11,8 +12,9 @@ from cola.syntax import DiffSyntaxHighlighter
 from cola.syntax import LogSyntaxHighlighter
 
 from main import Ui_main
+from combo import Ui_combo
+from items import Ui_items
 from remote import Ui_remote
-from branch import Ui_branch
 from commit import Ui_commit
 from logger import Ui_logger
 from search import Ui_search
@@ -22,7 +24,7 @@ from merge import Ui_merge
 from bookmark import Ui_bookmark
 from stash import Ui_stash
 
-def CreateStandardView(uiclass, qtclass):
+def CreateStandardView(uiclass, qtclass, *classes):
 	"""CreateStandardView returns a class closure of uiclass and qtclass.
 	This class performs the standard setup common to all view classes."""
 	class StandardView(uiclass, qtclass):
@@ -32,6 +34,8 @@ def CreateStandardView(uiclass, qtclass):
 			self.parent_view = parent
 			self.setupUi(self)
 			self.init(parent, *args, **kwargs)
+			for cls in classes:
+				cls.init(self, parent, *args, **kwargs)
 		def init(self, parent, *args, **kwargs):
 			pass
 	return StandardView
@@ -131,25 +135,35 @@ class LogView(CreateStandardView(Ui_logger, QDialog)):
 		cursor.movePosition(cursor.End)
 		text.setTextCursor(cursor)
 
-class BranchView(CreateStandardView(Ui_branch, QDialog)):
-	'''A dialog for choosing branches.'''
-	def init(self, parent, branches):
-		self.reset()
-		if branches:
-			self.add(branches)
-	def reset(self):
-		self.branches = []
-		self.branch_combo.clear()
-	def add(self, branches):
-		for branch in branches:
-			self.branches.append(branch)
-			self.branch_combo.addItem(branch)
+class ItemView(object):
+	def init(self, parent, title="", items=[]):
+		self.setWindowTitle(title)
+		self.items = []
+		self.items.extend(items)
+		self.items_widget.addItems(items)
+	def idx(self):
+		return 0
 	def get_selected(self):
+		geom = qApp.desktop().screenGeometry()
+		width = geom.width()
+		height = geom.height()
+		self.move(self.parent_view.x() + self.parent_view.width()/2 - self.width()/2,
+				self.parent_view.y() + self.parent_view.height()/3 - self.height()/2)
 		self.show()
 		if self.exec_() == QDialog.Accepted:
-			return self.branches[self.branch_combo.currentIndex()]
+			return self.items[self.idx()]
 		else:
 			return None
+
+class ComboView(CreateStandardView(Ui_combo, QDialog, ItemView), ItemView):
+	'''A dialog for choosing branches.'''
+	def idx(self):
+		return self.items_widget.currentIndex()
+
+class ListView(CreateStandardView(Ui_items, QDialog, ItemView), ItemView):
+	'''A dialog for an item from a list.'''
+	def idx(self):
+		return self.items_widget.currentRow()
 
 class CommitView(CreateStandardView(Ui_commit, QDialog)):
 	def init(self, parent=None, title=None):

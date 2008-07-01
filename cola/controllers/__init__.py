@@ -21,7 +21,8 @@ from cola.qobserver import QObserver
 import search
 from util import logger
 from remote import remote_action
-from util import choose_branch
+from util import choose_from_list
+from util import choose_from_combo
 from util import select_commits
 from util import update_options
 from repobrowser import browse_git_branch
@@ -286,7 +287,7 @@ class Controller(QObserver):
 			self.rescan()
 
 	def branch_delete(self):
-		branch = choose_branch('Delete Branch',
+		branch = choose_from_combo('Delete Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
 		self.log(self.model.delete_branch(branch))
@@ -297,14 +298,14 @@ class Controller(QObserver):
 
 	def browse_other(self):
 		# Prompt for a branch to browse
-		branch = choose_branch('Browse Branch Files',
+		branch = choose_from_combo('Browse Branch Files',
 				self.view, self.model.get_all_branches())
 		if not branch: return
 		# Launch the repobrowser
 		browse_git_branch(self.model, self.view, branch)
 
 	def checkout_branch(self):
-		branch = choose_branch('Checkout Branch',
+		branch = choose_from_combo('Checkout Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
 		self.log(self.model.checkout(branch))
@@ -462,7 +463,7 @@ class Controller(QObserver):
 			if slushy: self.model.set_commitmsg(slushy)
 
 	def rebase(self):
-		branch = choose_branch('Rebase Branch',
+		branch = choose_from_combo('Rebase Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
 		self.log(self.model.rebase(branch))
@@ -588,13 +589,13 @@ class Controller(QObserver):
 	#####################################################################
 	# diff gui
 	def diff_branch(self):
-		branch = choose_branch('Select Branch',
+		branch = choose_from_combo('Select Branch',
 				self.view, self.model.get_all_branches())
 		if not branch:
 			return
 		zfiles_str = self.model.diff(branch, name_only=True, z=True)
 		files = zfiles_str.split('\0')
-		filename = choose_branch('Select File', self.view, files)
+		filename = choose_from_list('Select File', self.view, files)
 		if not filename:
 			return
 

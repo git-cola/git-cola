@@ -7,7 +7,8 @@ from PyQt4.QtGui import QFont
 from cola import utils
 from cola import qtutils
 from cola.model import Model
-from cola.views import BranchView
+from cola.views import ListView
+from cola.views import ComboView
 from cola.views import CommitView
 from cola.views import OptionsView
 from cola.views import LogView
@@ -21,10 +22,11 @@ def set_diff_font(model, widget):
 		qf.fromString(font)
 		widget.setFont(qf)
 
-def choose_branch(title, parent, branches):
-	dlg = BranchView(parent,branches)
-	dlg.setWindowTitle(dlg.tr(title))
-	return dlg.get_selected()
+def choose_from_combo(title, parent, branches):
+	return ComboView(parent, title, branches).get_selected()
+
+def choose_from_list(title, parent, items=[]):
+	return ListView(parent, title, items).get_selected()
 
 #+-------------------------------------------------------------
 def select_commits(model, parent, title, revs, summaries):
