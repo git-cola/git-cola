@@ -2,6 +2,7 @@
 import os
 import sys
 import time
+import glob
 import platform
 
 from PyQt4 import QtCore
@@ -379,10 +380,10 @@ class Controller(QObserver):
 		if not selected:
 			return
 		if staged:
-			basename = self.model.get_staged()[row]
+			filename = self.model.get_staged()[row]
 		else:
-			basename = self.model.get_unstaged()[row]
-		utils.fork(self.model.get_editor(), basename)
+			filename = self.model.get_unstaged()[row]
+		utils.fork(self.model.get_editor(), filename)
 
 	def edit_diff(self, staged=True):
 		if staged:
@@ -395,23 +396,16 @@ class Controller(QObserver):
 			return
 
 		if staged:
-			basename = self.model.get_staged()[row]
+			filename = self.model.get_staged()[row]
 		else:
-			basename = self.model.get_unstaged()[row]
+			filename = self.model.get_unstaged()[row]
 
-		contents = self.model.show("HEAD:"+basename, with_raw_output=True)
-		tmpfile = self.model.get_tmp_filename()
+		contents = self.model.show("HEAD:"+filename, with_raw_output=True)
+		tmpfile = self.model.get_tmp_filename(filename)
 		fh = open(tmpfile, 'w')
 		fh.write(contents)
 		fh.close()
-
-		pid = os.fork()
-		if pid:
-			return
-		else:
-			utils.run_cmd(self.model.get_diffeditor(), basename, tmpfile)
-			os.unlink(tmpfile)
-			sys.exit(0)
+		utils.fork(self.model.get_diffeditor(), filename, tmpfile)
 
 	# use *rest to handle being called from different signals
 	def diff_staged(self, *rest):
@@ -446,6 +440,9 @@ class Controller(QObserver):
 		if self.model.save_at_exit():
 			self.model.save_gui_settings()
 		qtutils.close_log_window()
+		pattern = self.model.get_tmp_file_pattern()
+		for filename in glob.glob(pattern):
+			os.unlink(filename)
 
 		if (self.inotify_thread and
 				self.inotify_thread.isRunning()):

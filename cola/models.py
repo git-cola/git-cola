@@ -642,12 +642,16 @@ class Model(model.Model):
 				cached=True
 				)
 
-	def get_tmp_filename(self):
+	def get_tmp_dir(self):
+		return os.environ.get('TMP', os.environ.get('TMPDIR', '/tmp'))
+
+	def get_tmp_file_pattern(self):
+		return os.path.join(self.get_tmp_dir(), '*.git.%s.*' % os.getpid())
+
+	def get_tmp_filename(self, prefix=''):
 		# Allow TMPDIR/TMP with a fallback to /tmp
-		env = os.environ
-		basename = '.git.%s.%s' % ( os.getpid(), time.time() )
-		tmpdir = env.get('TMP', env.get('TMPDIR', '/tmp'))
-		return os.path.join( tmpdir, basename )
+		basename = (prefix+'.git.%s.%s' % ( os.getpid(), time.time() )).replace(os.sep, '-')
+		return os.path.join(self.get_tmp_dir(), basename)
 
 	def log_helper(self, all=False):
 		"""Returns a pair of parallel arrays listing the revision sha1's
