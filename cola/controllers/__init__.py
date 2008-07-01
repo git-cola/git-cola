@@ -522,18 +522,17 @@ class Controller(QObserver):
 					update_staged = True
 
 		# restore selected item
-		if update_staged and stageditem:
-			idx = updated_staged.index(stageditem)
-			item = self.view.staged.item(idx)
-			self.view.staged.setCurrentItem(item)
-			self.view_diff(True)
-			scrollbar.setValue(scrollvalue)
-
-		elif update_unstaged and unstageditem:
+		if update_unstaged and unstageditem:
 			idx = updated_unstaged.index(unstageditem)
 			item = self.view.unstaged.item(idx)
 			self.view.unstaged.setCurrentItem(item)
 			self.view_diff(False)
+			scrollbar.setValue(scrollvalue)
+		elif update_staged and stageditem:
+			idx = updated_staged.index(stageditem)
+			item = self.view.staged.item(idx)
+			self.view.staged.setCurrentItem(item)
+			self.view_diff(True)
 			scrollbar.setValue(scrollvalue)
 
 		# Update the title with the current branch
