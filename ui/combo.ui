@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>branch</class>
- <widget class="QDialog" name="currentbranch" >
+ <class>combo</class>
+ <widget class="QDialog" name="combo" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -14,7 +14,7 @@
   </property>
   <layout class="QVBoxLayout" >
    <item>
-    <widget class="QComboBox" name="branch_combo" />
+    <widget class="QComboBox" name="items_widget" />
    </item>
    <item>
     <widget class="QDialogButtonBox" name="button_box" >
@@ -29,7 +29,7 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>branch_combo</tabstop>
+  <tabstop>items_widget</tabstop>
   <tabstop>button_box</tabstop>
  </tabstops>
  <resources/>
@@ -37,7 +37,7 @@
   <connection>
    <sender>button_box</sender>
    <signal>accepted()</signal>
-   <receiver>branch</receiver>
+   <receiver>combo</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -53,7 +53,7 @@
   <connection>
    <sender>button_box</sender>
    <signal>rejected()</signal>
-   <receiver>branch</receiver>
+   <receiver>combo</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >

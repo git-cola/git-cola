@@ -129,6 +129,7 @@
     <addaction name="menu_delete_branch" />
     <addaction name="separator" />
     <addaction name="menu_diff_branch" />
+    <addaction name="menu_diffedit_branch" />
    </widget>
    <widget class="QMenu" name="file_menu" >
     <property name="title" >
@@ -1150,7 +1151,12 @@ retrieve the latest commit message prior to committing.</string>
   </action>
   <action name="menu_diff_branch" >
    <property name="text" >
-    <string>Apply Diffs From...</string>
+    <string>Compare Against...</string>
+   </property>
+  </action>
+  <action name="menu_diffedit_branch" >
+   <property name="text" >
+    <string>Launch Diff Editor Against...</string>
    </property>
   </action>
  </widget>

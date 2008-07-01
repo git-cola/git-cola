@@ -2,6 +2,7 @@
 import os
 import sys
 import time
+import glob
 import platform
 
 from PyQt4 import QtCore
@@ -20,7 +21,8 @@ from cola.qobserver import QObserver
 import search
 from util import logger
 from remote import remote_action
-from util import choose_branch
+from util import choose_from_list
+from util import choose_from_combo
 from util import select_commits
 from util import update_options
 from repobrowser import browse_git_branch
@@ -136,6 +138,7 @@ class Controller(QObserver):
 			menu_create_branch = self.branch_create,
 			menu_checkout_branch = self.checkout_branch,
 			menu_diff_branch = self.diff_branch,
+			menu_diffedit_branch = self.diffedit_branch,
 
 			# Commit Menu
 			menu_rescan = self.rescan,
@@ -285,7 +288,7 @@ class Controller(QObserver):
 			self.rescan()
 
 	def branch_delete(self):
-		branch = choose_branch('Delete Branch',
+		branch = choose_from_combo('Delete Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
 		self.log(self.model.delete_branch(branch))
@@ -296,14 +299,14 @@ class Controller(QObserver):
 
 	def browse_other(self):
 		# Prompt for a branch to browse
-		branch = choose_branch('Browse Branch Files',
+		branch = choose_from_combo('Browse Branch Files',
 				self.view, self.model.get_all_branches())
 		if not branch: return
 		# Launch the repobrowser
 		browse_git_branch(self.model, self.view, branch)
 
 	def checkout_branch(self):
-		branch = choose_branch('Checkout Branch',
+		branch = choose_from_combo('Checkout Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
 		self.log(self.model.checkout(branch))
@@ -379,10 +382,10 @@ class Controller(QObserver):
 		if not selected:
 			return
 		if staged:
-			basename = self.model.get_staged()[row]
+			filename = self.model.get_staged()[row]
 		else:
-			basename = self.model.get_unstaged()[row]
-		utils.fork(self.model.get_editor(), basename)
+			filename = self.model.get_unstaged()[row]
+		utils.fork(self.model.get_editor(), filename)
 
 	def edit_diff(self, staged=True):
 		if staged:
@@ -395,23 +398,16 @@ class Controller(QObserver):
 			return
 
 		if staged:
-			basename = self.model.get_staged()[row]
+			filename = self.model.get_staged()[row]
 		else:
-			basename = self.model.get_unstaged()[row]
+			filename = self.model.get_unstaged()[row]
 
-		contents = self.model.show("HEAD:"+basename, with_raw_output=True)
-		tmpfile = self.model.get_tmp_filename()
+		contents = self.model.show("HEAD:"+filename, with_raw_output=True)
+		tmpfile = self.model.get_tmp_filename(filename)
 		fh = open(tmpfile, 'w')
 		fh.write(contents)
 		fh.close()
-
-		pid = os.fork()
-		if pid:
-			return
-		else:
-			utils.run_cmd(self.model.get_diffeditor(), basename, tmpfile)
-			os.unlink(tmpfile)
-			sys.exit(0)
+		utils.fork(self.model.get_diffeditor(), filename, tmpfile)
 
 	# use *rest to handle being called from different signals
 	def diff_staged(self, *rest):
@@ -446,6 +442,9 @@ class Controller(QObserver):
 		if self.model.save_at_exit():
 			self.model.save_gui_settings()
 		qtutils.close_log_window()
+		pattern = self.model.get_tmp_file_pattern()
+		for filename in glob.glob(pattern):
+			os.unlink(filename)
 
 		if (self.inotify_thread and
 				self.inotify_thread.isRunning()):
@@ -465,7 +464,7 @@ class Controller(QObserver):
 			if slushy: self.model.set_commitmsg(slushy)
 
 	def rebase(self):
-		branch = choose_branch('Rebase Branch',
+		branch = choose_from_combo('Rebase Branch',
 				self.view, self.model.get_local_branches())
 		if not branch: return
 		self.log(self.model.rebase(branch))
@@ -524,18 +523,17 @@ class Controller(QObserver):
 					update_staged = True
 
 		# restore selected item
-		if update_staged and stageditem:
-			idx = updated_staged.index(stageditem)
-			item = self.view.staged.item(idx)
-			self.view.staged.setCurrentItem(item)
-			self.view_diff(True)
-			scrollbar.setValue(scrollvalue)
-
-		elif update_unstaged and unstageditem:
+		if update_unstaged and unstageditem:
 			idx = updated_unstaged.index(unstageditem)
 			item = self.view.unstaged.item(idx)
 			self.view.unstaged.setCurrentItem(item)
 			self.view_diff(False)
+			scrollbar.setValue(scrollvalue)
+		elif update_staged and stageditem:
+			idx = updated_staged.index(stageditem)
+			item = self.view.staged.item(idx)
+			self.view.staged.setCurrentItem(item)
+			self.view_diff(True)
 			scrollbar.setValue(scrollvalue)
 
 		# Update the title with the current branch
@@ -589,15 +587,36 @@ class Controller(QObserver):
 		self.view.set_display(self.model.diffindex())
 
 	#####################################################################
-	# diff gui
-	def diff_branch(self):
-		branch = choose_branch('Select Branch',
+	def diffedit_branch(self):
+		branch = choose_from_combo('Select Branch',
 				self.view, self.model.get_all_branches())
 		if not branch:
 			return
 		zfiles_str = self.model.diff(branch, name_only=True, z=True)
 		files = zfiles_str.split('\0')
-		filename = choose_branch('Select File', self.view, files)
+		filename = choose_from_list('Select File', self.view, files)
+		if not filename:
+			return
+		contents = self.model.show('%s:%s' % (branch, filename), with_raw_output=True)
+		tmpfile = self.model.get_tmp_filename(filename)
+		fh = open(tmpfile, 'w')
+		fh.write(contents)
+		fh.close()
+		utils.fork(self.model.get_diffeditor(), filename, tmpfile)
+
+		# Set state machine to branch mode
+		self.mode = Controller.MODE_NONE
+
+	#####################################################################
+	# diff gui
+	def diff_branch(self):
+		branch = choose_from_combo('Select Branch',
+				self.view, self.model.get_all_branches())
+		if not branch:
+			return
+		zfiles_str = self.model.diff(branch, name_only=True, z=True)
+		files = zfiles_str.split('\0')
+		filename = choose_from_list('Select File', self.view, files)
 		if not filename:
 			return
 
