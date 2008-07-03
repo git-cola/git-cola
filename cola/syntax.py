@@ -4,6 +4,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QFont
 from PyQt4.QtGui import QSyntaxHighlighter
 from PyQt4.QtGui import QTextCharFormat
+from PyQt4.QtGui import QColor
 
 class GenericSyntaxHighligher(QSyntaxHighlighter):
 
@@ -40,11 +41,11 @@ class GenericSyntaxHighligher(QSyntaxHighlighter):
 				if terminal: return matched
 		return matched
 
-	def mkformat(self, fg, bg=None, bold=False):
+	def mkformat(self, fg=None, bg=None, bold=False):
 		format = QTextCharFormat()
-		if bold: format.setFontWeight(QFont.Bold)
-		format.setForeground(fg)
+		if fg: format.setForeground(fg)
 		if bg: format.setBackground(bg)
+		if bold: format.setFontWeight(QFont.Bold)
 		return format
 
 	def highlightBlock(self, qstr):
@@ -82,10 +83,19 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
 		diffstat_add = self.mkformat(Qt.darkGreen, bold=True)
 		diffstat_remove = self.mkformat(Qt.red, bold=True)
 
-		diff_begin = self.mkformat(Qt.darkCyan, bold=True)
+		bg_green = QColor(Qt.green)
+		bg_green.setAlpha(128)
+
+		bg_red = QColor(Qt.red)
+		bg_red.setAlpha(128)
+
+		bg_blue = QColor(Qt.darkCyan)
+		bg_blue.setAlpha(128)
+
+		diff_begin = self.mkformat(bg=bg_blue)
 		diff_head = self.mkformat(Qt.darkYellow)
-		diff_add = self.mkformat(Qt.darkGreen)
-		diff_remove = self.mkformat(Qt.red)
+		diff_add = self.mkformat(bg=bg_green)
+		diff_remove = self.mkformat(bg=bg_red)
 
 		if whitespace:
 			bad_ws = self.mkformat(Qt.black, Qt.red)
