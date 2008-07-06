@@ -22,25 +22,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 REQUIREMENTS
 
 Python 2.4 or newer
-	http://python.org/
+    http://python.org/
 
 GitPython
-	http://gitorious.org/projects/git-python/
+    http://gitorious.org/projects/git-python/
 
 PyQt 4.3 or newer
-	http://www.riverbankcomputing.co.uk/software/pyqt/intro
+    http://www.riverbankcomputing.co.uk/software/pyqt/intro
 
 simplejson
-	http://pypi.python.org/pypi/simplejson
+    http://pypi.python.org/pypi/simplejson
 
 INSTALLATION
 
 Debian and RPM users can download freshly built binaries here:
 
-	http://cola.tuxfamily.org/
+    http://cola.tuxfamily.org/
 
-	sudo dpkg -i cola_*.deb
-	sudo rpm -ivh cola-*.rpm
+    sudo dpkg -i cola_*.deb
+    sudo rpm -ivh cola-*.rpm
 
 
 If you downloaded a tarball, make sure /path/to/cola/bin is in your $PATH.
@@ -50,13 +50,13 @@ HOW TO RUN
 
 Take your pick--any of the following incantations work from the command line:
 
-	git cola
-	git-cola
-	cola
+    git cola
+    git-cola
+    cola
 
 Launching cola on repositories outside your $CWD:
 
-	git cola /repo/path-1 /repo/path-2 .. /repo/path-N
+    git cola /repo/path-1 /repo/path-2 .. /repo/path-N
 
 
 BUILDING FROM SOURCE
@@ -64,53 +64,53 @@ BUILDING FROM SOURCE
 You will need the PyQt development tools (v4.3 or greater):
 
 Synopsis:
-	sudo apt-get install pyqt4-dev-tools
-	git clone git://gitorious.org/git-cola/mainline.git cola
-	cd cola
-	./configure --prefix=/usr
-	make
-	sudo make install
+    sudo apt-get install pyqt4-dev-tools
+    git clone git://gitorious.org/git-cola/mainline.git cola
+    cd cola
+    ./configure --prefix=/usr
+    make
+    sudo make install
 
 
 WINDOWS INSTALLATION
 
 1) Install the native Python2.5 and PyQt4 installers (in that order):
 
-	http://python.org/download/
-	http://www.riverbankcomputing.co.uk/pyqt/download.php
+    http://python.org/download/
+    http://www.riverbankcomputing.co.uk/pyqt/download.php
 
 3) Install msysgit:
 
-	http://git.or.cz/gitwiki/WindowsInstall
+    http://git.or.cz/gitwiki/WindowsInstall
 
 4) Install GitPython
 
-	http://gitorious.org/projects/git-python/
+    http://gitorious.org/projects/git-python/
 
 5) Install the GnuWin32 'file' command:
 
-	http://gnuwin32.sourceforge.net/packages/file.htm
+    http://gnuwin32.sourceforge.net/packages/file.htm
 
-	Add the installed directory (default: c:\GnuWin32\bin) to your path.
+    Add the installed directory (default: c:\GnuWin32\bin) to your path.
 
 6) Install simplejson
 
-	http://pypi.python.org/pypi/simplejson
+    http://pypi.python.org/pypi/simplejson
 
 7) Download cola:
 
-	http://cola.tuxfamily.org/releases/
+    http://cola.tuxfamily.org/releases/
 
 8) Install cola (from a Git Bash):
 
-	cd /c/Python25/Lib/site-packages
-	tar xvfz /path/to/cola-win32-*.tar.gz
-	mv cola-win32-* cola
+    cd /c/Python25/Lib/site-packages
+    tar xvfz /path/to/cola-win32-*.tar.gz
+    mv cola-win32-* cola
 
 9) Create an executable in your path for bash, cmd.exe, or both:
 
-	echo '/c/Python25/python.exe /c/Python25/Lib/site-packages/cola/bin/git-cola' >> /usr/bin/cola
-	echo 'c:\\Python25\\python.exe c:\\Python25\\Lib\\site-packages\\bin\\git-cola' > /c/Windows/System32/cola.bat
+    echo '/c/Python25/python.exe /c/Python25/Lib/site-packages/cola/bin/git-cola' >> /usr/bin/cola
+    echo 'c:\\Python25\\python.exe c:\\Python25\\Lib\\site-packages\\bin\\git-cola' > /c/Windows/System32/cola.bat
 
 This assumes the you have Python/PyQt4 installed in C:/Python25.
 If this is not the case simply edit the commands accordingly.

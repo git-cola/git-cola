@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 import Common
 def build(bld):
-	# Compile the controllers
-	bld.add_subdirs('views controllers')
-	# Compile the cola support modules
-	pyqt = bld.create_obj('py')
-	pyqt.inst_var = 'COLA_MODULES'
-	pyqt.find_sources_in_dirs('.')
+    # Compile the controllers
+    bld.add_subdirs('views controllers')
+    # Compile the cola support modules
+    pyqt = bld.create_obj('py')
+    pyqt.inst_var = 'COLA_MODULES'
+    pyqt.find_sources_in_dirs('.')
 
-	# Install the git-cola launcher
-	Common.install_files('COLA_BINDIR', '', 'git-cola', chmod=0755)
-	Common.symlink_as('COLA_BINDIR', 'git-cola', 'cola')
+    # Install the git-cola launcher
+    Common.install_files('COLA_BINDIR', '', 'git-cola', chmod=0755)
+    Common.symlink_as('COLA_BINDIR', 'git-cola', 'cola')
