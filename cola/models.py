@@ -849,7 +849,7 @@ class Model(model.Model):
         """
         args, kwargs = self.get_remote_args(*args, **kwargs)
         (status, stdout, stderr) = self.git.fetch(v=True, *args, **kwargs)
-        return stdout + stderr
+        return (status, stdout + stderr)
 
     def push_helper(self, *args, **kwargs):
         """
@@ -860,7 +860,7 @@ class Model(model.Model):
         """
         args, kwargs = self.get_remote_args(*args, **kwargs)
         (status, stdout, stderr) = self.git.push(*args, **kwargs)
-        return stdout + stderr
+        return (status, stdout + stderr)
 
     def pull_helper(self, *args, **kwargs):
         """
@@ -871,7 +871,7 @@ class Model(model.Model):
         """
         args, kwargs = self.get_remote_args(*args, **kwargs)
         (status, stdout, stderr) = self.git.pull(v=True, *args, **kwargs)
-        return stdout + stderr
+        return (status, stdout + stderr)
 
     def parse_ls_tree(self, rev):
         """Returns a list of(mode, type, sha1, path) tuples."""
