@@ -75,7 +75,17 @@ def get_icon(icon_file):
     return os.path.join(ICONSDIR, icon_file)
 
 def fork(*args):
-    return subprocess.Popen(args).pid
+    if os.name in ('nt', 'dos'):
+        for path in os.pathsep.split(os.environ["PATH"]):
+            file = os.path.join(path, args[0]) + ".exe"
+            try:
+                return os.spawnv(os.P_NOWAIT, file, (file,) + args[1:])
+            except os.error:
+                pass
+        raise IOError('cannot find executable: %s' % program)
+    else:
+        argv = map(shell_quote, args)
+        return os.system(' '.join(argv) + '&')
 
 # c = a - b
 def sublist(a,b):
