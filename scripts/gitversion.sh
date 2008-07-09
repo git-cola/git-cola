@@ -6,8 +6,8 @@ LF='
 case "$VN" in
 *$LF*) (exit 1) ;;
 v[0-9]*)
-	test -z "$(git diff-index --name-only HEAD)" ||
-		VN="$VN-dirty" ;;
+    test -z "$(git diff-index --name-only HEAD)" ||
+        VN="$VN-dirty" ;;
 esac
 VN=$(expr "$VN" : v*'\(.*\)')
 echo "VERSION='$VN'"

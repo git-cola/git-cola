@@ -3,5 +3,4 @@ import os
 import sys
 import py_compile
 for filename in sys.argv[1:]:
-	py_compile.compile(filename, doraise=True)
-	py_compile.compile(filename, doraise=True)
+    py_compile.compile(filename, doraise=True)

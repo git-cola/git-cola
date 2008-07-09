@@ -4,8 +4,8 @@ BASENAME=cola-$VERSION
 FILE=$BASENAME.tar.gz
 DIR=installroot
 if [ -d $DIR ]; then
-	echo "ERROR: '$DIR' already exists"
-	exit -1
+    echo "ERROR: '$DIR' already exists"
+    exit -1
 fi
 
 try_python "$(which python)" "$DIR"
@@ -15,5 +15,5 @@ tar czf $FILE $BASENAME/ &&
 rm -rf $DIR $BASENAME
 
 if [ -d $HOME/htdocs/cola/releases ]; then
-	mv -v $FILE $HOME/htdocs/cola/releases
+    mv -v $FILE $HOME/htdocs/cola/releases
 fi
