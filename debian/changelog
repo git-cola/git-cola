@@ -1,3 +1,14 @@
+cola (1.1.0-1) stable; urgency=low
+
+  README: update the build instructions to mention GitPython
+  build: teach the build scripts about the bundled GitPython
+  tests: use the interal git module
+  cola: switch to using the internal git module
+  cola: include GitPython to make installation simpler for users
+  syntax: improve the whitespace checker
+
+ -- David Aguilar <davvid@gmail.com>  Mon, 14 Jul 2008 00:00:42 -0700
+
 cola (1.0.1-7) unstable; urgency=low
 
   utils: rework fork()
