@@ -5,9 +5,7 @@ import time
 import subprocess
 from cStringIO import StringIO
 
-# GitPython http://gitorious.org/projects/git-python
-import git
-
+from cola import git
 from cola import utils
 from cola import model
 

@@ -18,20 +18,23 @@ GNU General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 REQUIREMENTS
 
 Python 2.4 or newer
     http://python.org/
-
-GitPython
-    http://gitorious.org/projects/git-python/
 
 PyQt 4.3 or newer
     http://www.riverbankcomputing.co.uk/software/pyqt/intro
 
 simplejson
     http://pypi.python.org/pypi/simplejson
+
+
+ACKNOWLEDGEMENTS
+
+git-cola includes a copy of the GitPython module:
+    http://gitorious.org/projects/git-python/
+
 
 INSTALLATION
 
@@ -83,31 +86,27 @@ WINDOWS INSTALLATION
 
     http://git.or.cz/gitwiki/WindowsInstall
 
-4) Install GitPython
-
-    http://gitorious.org/projects/git-python/
-
-5) Install the GnuWin32 'file' command:
+4) Install the GnuWin32 'file' command:
 
     http://gnuwin32.sourceforge.net/packages/file.htm
 
     Add the installed directory (default: c:\GnuWin32\bin) to your path.
 
-6) Install simplejson
+5) Install simplejson
 
     http://pypi.python.org/pypi/simplejson
 
-7) Download cola:
+6) Download cola:
 
     http://cola.tuxfamily.org/releases/
 
-8) Install cola (from a Git Bash):
+7) Install cola (from a Git Bash):
 
     cd /c/Python25/Lib/site-packages
     tar xvfz /path/to/cola-win32-*.tar.gz
     mv cola-win32-* cola
 
-9) Create an executable in your path for bash, cmd.exe, or both:
+8) Create an executable in your path for bash, cmd.exe, or both:
 
     echo '/c/Python25/python.exe /c/Python25/Lib/site-packages/cola/bin/git-cola' >> /usr/bin/cola
     echo 'c:\\Python25\\python.exe c:\\Python25\\Lib\\site-packages\\bin\\git-cola' > /c/Windows/System32/cola.bat

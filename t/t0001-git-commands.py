@@ -5,7 +5,7 @@ import unittest
 import testutils
 from testmodel import TestModel
 
-import git
+from cola import git
 
 class GitCommandTest(unittest.TestCase):
     def setUp(self):

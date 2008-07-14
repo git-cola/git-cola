@@ -55,23 +55,7 @@ def configure(conf):
     env['COLA_ICONS'] = icons
     env['COLA_APPS'] = apps
 
-    try:
-        import git
-    except ImportError:
-        print """
-ERROR: could not "import git"
-
-Please install the python-git package
-or grab GitPython from the cheeseshop:
-
-    http://pypi.python.org/pypi/GitPython
-
-
-GitPython's git repository can be cloned from gitorious:
-
-    http://gitorious.org/projects/git-python
-"""
-        return False
+    return True
 
 #############################################################################
 # Build
