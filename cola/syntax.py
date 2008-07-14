@@ -127,7 +127,7 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
                                              diffstat_add,
                                              diffstat_remove))
         if whitespace:
-            self.create_rules('(.+)(\s+)$', (None, bad_ws))
+            self.create_rules('(..*?)(\s+)$', (None, bad_ws))
 
 class LogSyntaxHighlighter(GenericSyntaxHighligher):
     def __init__(self, doc):
