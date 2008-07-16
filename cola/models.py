@@ -183,6 +183,7 @@ class Model(model.Model):
             'cola_fontdiff': '',
             'cola_fontdiff_size':12,
             'cola_savewindowsettings': False,
+            'cola_editdiffreverse': False,
             'cola_saveatexit': False,
             'gui_editor': 'gvim',
             'gui_diffeditor': 'xxdiff',

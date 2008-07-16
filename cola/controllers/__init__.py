@@ -386,6 +386,12 @@ class Controller(QObserver):
             filename = self.model.get_unstaged()[row]
         utils.fork(self.model.get_editor(), filename)
 
+    def launch_diffeditor(self, filename, tmpfile):
+        if self.model.get_cola_config('editdiffreverse'):
+            utils.fork(self.model.get_diffeditor(), tmpfile, filename)
+        else:
+            utils.fork(self.model.get_diffeditor(), filename, tmpfile)
+
     def edit_diff(self, staged=True):
         if staged:
             widget = self.view.staged
@@ -406,7 +412,7 @@ class Controller(QObserver):
         fh = open(tmpfile, 'w')
         fh.write(contents)
         fh.close()
-        utils.fork(self.model.get_diffeditor(), filename, tmpfile)
+        self.launch_diffeditor(filename, tmpfile)
 
     # use *rest to handle being called from different signals
     def diff_staged(self, *rest):
@@ -595,7 +601,7 @@ class Controller(QObserver):
         fh = open(tmpfile, 'w')
         fh.write(contents)
         fh.close()
-        utils.fork(self.model.get_diffeditor(), filename, tmpfile)
+        self.launch_diffeditor(filename, tmpfile)
 
         # Set state machine to branch mode
         self.mode = Controller.MODE_NONE
