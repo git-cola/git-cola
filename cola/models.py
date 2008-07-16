@@ -232,6 +232,12 @@ class Model(model.Model):
         # Load the diff context
         self.diff_context = self.local_gui_diffcontext
 
+    def get_cola_config(self, key):
+        return getattr(self, 'global_cola_'+key)
+
+    def get_gui_config(self, key):
+        return getattr(self, 'global_gui_'+key)
+
     def branch_list(self, remote=False):
         branches = map(lambda x: x.lstrip('* '),
                 self.git.branch(r=remote).splitlines())
@@ -359,19 +365,19 @@ class Model(model.Model):
         output + '\n\n' + self.git.rm(*to_remove)
 
     def get_editor(self):
-        return self.global_gui_editor
+        return self.get_gui_config('editor')
 
     def get_diffeditor(self):
-        return self.global_gui_diffeditor
+        return self.get_gui_config('diffeditor')
 
     def get_history_browser(self):
-        return self.global_gui_historybrowser
+        return self.get_gui_config('historybrowser')
 
     def remember_gui_settings(self):
-        return self.global_cola_savewindowsettings
+        return self.get_cola_config('savewindowsettings')
 
     def save_at_exit(self):
-        return self.global_cola_saveatexit
+        return self.get_cola_config('saveatexit')
 
     def get_tree_node(self, idx):
         return (self.get_types()[idx],
