@@ -516,7 +516,7 @@ class Model(model.Model):
         else:
             return commit
 
-    def get_diff_and_status(self, idx, staged=True):
+    def get_diff_details(self, idx, staged=True):
         if staged:
             filename = self.get_staged()[idx]
             if os.path.exists(filename):
@@ -547,7 +547,7 @@ class Model(model.Model):
                         file.close()
                     else:
                         diff = ''
-        return diff, status
+        return diff, status, filename
 
     def stage_modified(self):
         output = self.git.add(self.get_modified())

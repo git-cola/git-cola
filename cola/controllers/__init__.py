@@ -366,11 +366,11 @@ class Controller(QObserver):
             self.mode = Controller.MODE_NONE
             self.view.reset_display()
             return
-        (diff, status) = self.model.get_diff_and_status(row, staged=staged)
-
+        diff, status, filename = self.model.get_diff_details(row, staged=staged)
         self.view.set_display(diff)
         self.view.set_info(self.tr(status))
         self.view.diff_dock.raise_()
+        qtutils.set_clipboard(filename)
 
     def edit_file(self, staged=True):
         if staged:
@@ -398,15 +398,9 @@ class Controller(QObserver):
         else:
             widget = self.view.unstaged
         row, selected = qtutils.get_selected_row(widget)
-        diff, status = self.model.get_diff_and_status(row, staged=staged)
+        diff, status, filename = self.model.get_diff_details(row, staged=staged)
         if not selected:
             return
-
-        if staged:
-            filename = self.model.get_staged()[row]
-        else:
-            filename = self.model.get_unstaged()[row]
-
         contents = self.model.show("HEAD:"+filename, with_raw_output=True)
         tmpfile = self.model.get_tmp_filename(filename)
         fh = open(tmpfile, 'w')
