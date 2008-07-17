@@ -94,7 +94,7 @@ class Model(model.Model):
 
     def init(self):
         """Reads git repository settings and sets several methods
-        so that they refer to the git module.  This object is
+        so that they refer to the git module.  This object
         encapsulates cola's interaction with git."""
 
         # chdir to the root of the git tree.
@@ -226,9 +226,9 @@ class Model(model.Model):
                 self.set_param('global_'+k, v)
 
         # Allow EDITOR/DIFF_EDITOR environment variable overrides
-        self.global_gui_editor = os.getenv('GUI_EDITOR',
+        self.global_gui_editor = os.getenv('COLA_EDITOR',
                                            self.global_gui_editor)
-        self.global_gui_diffeditor = os.getenv('DIFF_EDITOR',
+        self.global_gui_diffeditor = os.getenv('COLA_DIFFEDITOR',
                                                self.global_gui_diffeditor)
         # Load the diff context
         self.diff_context = self.local_gui_diffcontext
