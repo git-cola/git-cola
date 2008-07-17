@@ -1,33 +1,20 @@
-"""
-This module is from http://gitorious.org/projects/git-python/
-and is included here for convenience.
-"""
+# cmd.py
+# Copyright (C) 2008 Michael Trier (mtrier@gmail.com) and contributors
+#
+# This module is part of GitPython and is released under
+# the BSD License: http://www.opensource.org/licenses/bsd-license.php
 
 import os
 import subprocess
-
 def dashify(string):
     return string.replace('_', '-')
-
 class MethodMissingMixin(object):
-    """
-    A Mixin' to implement the 'method_missing' Ruby-like protocol.
-
-    This was `taken from a blog post <http://blog.iffy.us/?p=43>`_
-    """
+    def method_missing(self, attr, *args, **kwargs):
+        raise NotImplementedError("Missing method %s called." % attr)
     def __getattr__(self, attr):
-        class MethodMissing(object):
-            def __init__(self, wrapped, method):
-                self.__wrapped__ = wrapped
-                self.__method__ = method
-            def __call__(self, *args, **kwargs):
-                return self.__wrapped__.method_missing(self.__method__, *args, **kwargs)
-        return MethodMissing(self, attr)
-
-    def method_missing(self, *args, **kwargs):
-        """ This method should be overridden in the derived class. """
-        raise NotImplementedError(str(self.__wrapped__) + " 'method_missing' method has not been implemented.")
-
+        def callable(*args, **kwargs):
+            return self.method_missing(attr, *args, **kwargs)
+        return callable
 
 # Enables debugging of GitPython's git commands
 GIT_PYTHON_TRACE = os.environ.get("GIT_PYTHON_TRACE", False)
