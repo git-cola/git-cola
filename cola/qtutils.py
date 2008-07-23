@@ -133,12 +133,7 @@ def set_items(widget, items):
     add_items(widget, items)
 
 def tr(txt):
-    trtext = unicode(QtGui.qApp.tr(txt))
-    if trtext.endswith('@@verb'):
-        trtext = trtext.replace('@@verb','')
-    if trtext.endswith('@@noun'):
-        trtext = trtext.replace('@@noun','')
-    return trtext
+    return unicode(QtGui.qApp.translate('', txt))
 
 def create_item(filename, staged, untracked=False):
     """Given a filename, return a QListWidgetItem suitable

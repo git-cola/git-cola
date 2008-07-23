@@ -62,7 +62,19 @@ def main():
         print 'Please install it before using cola.'
         print 'e.g.:    sudo apt-get install python-qt4'
         sys.exit(-1)
-    app = QtGui.QApplication(sys.argv)
+
+    class ColaApplication(QtGui.QApplication):
+        """This makes translation work by throwing out the context."""
+        wrapped = QtGui.QApplication.translate
+        def translate(*args):
+            trtxt = unicode(ColaApplication.wrapped('', *args[2:]))
+            if trtxt.endswith('@@verb') or trtxt.endswith('@@noun'):
+                trtxt = trtxt[:-6]
+            return trtxt
+
+    app = ColaApplication(sys.argv)
+    app.wrapped = QtGui.QApplication.translate
+    QtGui.QApplication.translate = app.translate
     app.setWindowIcon(QtGui.QIcon( utils.get_icon('git.png')) )
     locale = str(QtCore.QLocale().system().name())
     qmfile = utils.get_qm_for_locale(locale)

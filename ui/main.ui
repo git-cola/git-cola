@@ -660,7 +660,7 @@ If "Commit All" is checked, all listed items will be committed,
 otherwise only the selected items will be committed.</string>
              </property>
              <property name="text" >
-              <string>Commit</string>
+              <string>Commit@@verb</string>
              </property>
             </widget>
            </item>

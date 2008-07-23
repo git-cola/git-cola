@@ -145,7 +145,7 @@
         <item row="1" column="0" >
          <widget class="QLabel" name="label_5" >
           <property name="text" >
-           <string>Email Address:</string>
+           <string>Email Address</string>
           </property>
          </widget>
         </item>
@@ -169,7 +169,7 @@
         <item row="4" column="0" colspan="2" >
          <widget class="QLabel" name="label_6" >
           <property name="text" >
-           <string>Merge Verbosity:</string>
+           <string>Merge Verbosity</string>
           </property>
          </widget>
         </item>
@@ -189,7 +189,7 @@
         <item row="5" column="0" colspan="2" >
          <widget class="QLabel" name="label" >
           <property name="text" >
-           <string>Number of Diff Context Lines:</string>
+           <string>Number of Diff Context Lines</string>
           </property>
          </widget>
         </item>
@@ -206,7 +206,7 @@
         <item row="0" column="0" >
          <widget class="QLabel" name="label_4" >
           <property name="text" >
-           <string>User Name:</string>
+           <string>User Name</string>
           </property>
          </widget>
         </item>
@@ -232,7 +232,7 @@
         <item row="0" column="0" >
          <widget class="QLabel" name="label_7" >
           <property name="text" >
-           <string>User Name:</string>
+           <string>User Name</string>
           </property>
          </widget>
         </item>
@@ -242,7 +242,7 @@
         <item row="1" column="0" >
          <widget class="QLabel" name="label_8" >
           <property name="text" >
-           <string>Email Address:</string>
+           <string>Email Address</string>
           </property>
          </widget>
         </item>
@@ -266,7 +266,7 @@
         <item row="4" column="0" colspan="2" >
          <widget class="QLabel" name="label_10" >
           <property name="text" >
-           <string>Merge Verbosity:</string>
+           <string>Merge Verbosity</string>
           </property>
          </widget>
         </item>
@@ -286,7 +286,7 @@
         <item row="5" column="0" colspan="2" >
          <widget class="QLabel" name="label_9" >
           <property name="text" >
-           <string>Number of Diff Context Lines:</string>
+           <string>Number of Diff Context Lines</string>
           </property>
          </widget>
         </item>
