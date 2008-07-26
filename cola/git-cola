@@ -73,7 +73,6 @@ def main():
             return trtxt
 
     app = ColaApplication(sys.argv)
-    app.wrapped = QtGui.QApplication.translate
     QtGui.QApplication.translate = app.translate
     app.setWindowIcon(QtGui.QIcon( utils.get_icon('git.png')) )
     locale = str(QtCore.QLocale().system().name())
