@@ -203,7 +203,7 @@ class Controller(QObserver):
 
     def setwindow(self, dock, isfloating):
         if isfloating:
-            if platform.system() != 'Windows':
+            if platform.system() != 'Windows' and 'Macintosh' not in platform.platform():
                 flags = ( QtCore.Qt.Window
                     | QtCore.Qt.FramelessWindowHint )
                 dock.setWindowFlags( flags )
