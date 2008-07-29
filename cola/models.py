@@ -179,9 +179,9 @@ class Model(model.Model):
         self.__global_defaults = {
             'cola_geometry':'',
             'cola_fontui': '',
-            'cola_fontui_size':12,
+            'cola_fontuisize': 12,
             'cola_fontdiff': '',
-            'cola_fontdiff_size':12,
+            'cola_fontdiffsize': 12,
             'cola_savewindowsettings': False,
             'cola_editdiffreverse': False,
             'cola_saveatexit': False,
@@ -201,16 +201,18 @@ class Model(model.Model):
                 local_dict[k]=v
                 self.set_param('local_'+k, v)
 
-        # Bootstrap the internal font*_size variables
+        # Bootstrap the internal font*size variables
         for param in ('global_cola_fontui', 'global_cola_fontdiff'):
+            setdefault = True
             if hasattr(self, param):
                 font = self.get_param(param)
                 if font:
+                    setdefault = False
                     size = int(font.split(',')[1])
-                    self.set_param(param+'_size', size)
+                    self.set_param(param+'size', size)
                     param = param[len('global_'):]
                     global_dict[param] = font
-                    global_dict[param+'_size'] = size
+                    global_dict[param+'size'] = size
 
         # Load defaults for all undefined items
         local_and_global_defaults = self.__local_and_global_defaults
@@ -259,7 +261,7 @@ class Model(model.Model):
                           self.__local_and_global_defaults.keys()))
         params.extend(map(lambda x: 'global_' + x,
                           self.__global_defaults.keys()))
-        return params
+        return [ p for p in params if not p.endswith('size') ]
 
     def save_config_param(self, param):
         if param not in self.get_config_params():
@@ -493,17 +495,12 @@ class Model(model.Model):
         old_font = self.get_param(param)
         if not old_font:
             old_font = default
-
-        size = self.get_param(param+'_size')
+        size = self.get_param(param+'size')
         props = old_font.split(',')
         props[1] = str(size)
         new_font = ','.join(props)
 
         self.set_param(param, new_font)
-
-    def read_font_size(self, param, new_font):
-        new_size = int(new_font.split(',')[1])
-        self.set_param(param, new_size)
 
     def get_commit_diff(self, sha1):
         commit = self.git.show(sha1)

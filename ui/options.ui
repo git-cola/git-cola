@@ -26,7 +26,7 @@
       </widget>
      </item>
      <item row="0" column="1" >
-      <widget class="QSpinBox" name="global_cola_fontui_size" >
+      <widget class="QSpinBox" name="global_cola_fontuisize" >
        <property name="minimum" >
         <number>8</number>
        </property>
@@ -52,7 +52,7 @@
       </widget>
      </item>
      <item row="1" column="1" >
-      <widget class="QSpinBox" name="global_cola_fontdiff_size" >
+      <widget class="QSpinBox" name="global_cola_fontdiffsize" >
        <property name="minimum" >
         <number>8</number>
        </property>

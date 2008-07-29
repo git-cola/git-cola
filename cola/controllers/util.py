@@ -110,14 +110,14 @@ class OptionsController(QObserver):
                              'global_gui_diffeditor',
                              'global_gui_diffcontext',
                              'global_gui_historybrowser',
-                             'global_cola_fontdiff_size',
+                             'global_cola_fontdiffsize',
                              'global_cola_fontdiff',
-                             'global_cola_fontui_size',
+                             'global_cola_fontuisize',
                              'global_cola_fontui',
                              'global_cola_savewindowsettings',
                              'global_cola_saveatexit')
-        self.add_actions(global_cola_fontdiff_size = self.update_size)
-        self.add_actions(global_cola_fontui_size = self.update_size)
+        self.add_actions(global_cola_fontdiffsize = self.update_size)
+        self.add_actions(global_cola_fontuisize = self.update_size)
         self.add_actions(global_cola_fontdiff = self.tell_parent_model)
         self.add_actions(global_cola_fontui = self.tell_parent_model)
         self.add_callbacks(save_button = self.save_settings)
@@ -130,8 +130,8 @@ class OptionsController(QObserver):
         font = self.model.get_param('global_cola_fontui')
         if font:
             size = int(font.split(',')[1])
-            self.view.global_cola_fontui_size.setValue(size)
-            self.model.set_global_cola_fontui_size(size)
+            self.view.global_cola_fontuisize.setValue(size)
+            self.model.set_global_cola_fontuisize(size)
             fontui = QFont()
             fontui.fromString(font)
             self.view.global_cola_fontui.setCurrentFont(fontui)
@@ -139,8 +139,8 @@ class OptionsController(QObserver):
         font = self.model.get_global_cola_fontdiff()
         if font:
             size = int(font.split(',')[1])
-            self.view.global_cola_fontdiff_size.setValue(size)
-            self.model.set_global_cola_fontdiff_size(size)
+            self.view.global_cola_fontdiffsize.setValue(size)
+            self.model.set_global_cola_fontdiffsize(size)
             fontdiff = QFont()
             fontdiff.fromString(font)
             self.view.global_cola_fontdiff.setCurrentFont(fontdiff)
@@ -173,8 +173,8 @@ class OptionsController(QObserver):
     def tell_parent_model(self,*rest):
         params= ('global_cola_fontdiff',
                  'global_cola_fontui',
-                 'global_cola_fontdiff_size',
-                 'global_cola_fontui_size',
+                 'global_cola_fontdiffsize',
+                 'global_cola_fontuisize',
                  'global_cola_savewindowsettings',
                  'global_cola_saveatexit')
         for param in params:
