@@ -203,7 +203,7 @@ class Controller(QObserver):
 
     def setwindow(self, dock, isfloating):
         if isfloating:
-            if platform.system() != 'Windows' and 'Macintosh' not in platform.platform():
+            if not utils.is_broken():
                 flags = ( QtCore.Qt.Window
                     | QtCore.Qt.FramelessWindowHint )
                 dock.setWindowFlags( flags )
@@ -371,6 +371,15 @@ class Controller(QObserver):
         self.view.set_info(self.tr(status))
         self.view.diff_dock.raise_()
         qtutils.set_clipboard(filename)
+
+    def mergetool(self):
+        widget = self.view.unstaged
+        row, selected = qtutils.get_selected_row(widget)
+        filename = self.model.get_unstaged()[row]
+        if filename not in self.model.get_unmerged():
+            return
+        utils.fork('xterm', '-e', 'git', 'mergetool', '-t',
+                   self.model.get_diffeditor(), filename)
 
     def edit_file(self, staged=True):
         if staged:
@@ -773,6 +782,7 @@ class Controller(QObserver):
         unstaged_item = qtutils.get_selected_item(self.view.unstaged,
                                                   self.model.get_unstaged())
         is_tracked = unstaged_item not in self.model.get_untracked()
+        is_unmerged = unstaged_item in self.model.get_unmerged()
         enable_staging = self.mode == Controller.MODE_WORKTREE
         enable_undo = enable_staging and is_tracked
 
@@ -787,6 +797,8 @@ class Controller(QObserver):
         if enable_staging:
             menu.addAction(self.tr('Launch Diff Editor'),
                            lambda: self.edit_diff(staged=False))
+        if is_unmerged and not utils.is_broken():
+            menu.addAction(self.tr('Launch Mergetool'), self.mergetool)
         return menu
 
     def diff_context_menu_event(self, event):
@@ -858,15 +870,13 @@ class Controller(QObserver):
             from cola.inotify import GitNotifier
             qtutils.log(self.tr('inotify support: enabled'))
         except ImportError:
-            import platform
-            if platform.system() == 'Linux':
+            if utils.is_linux():
                 msg = self.tr('inotify: disabled\n'
                               'Note: To enable inotify, '
                               'install python-pyinotify.\n')
 
-                plat = platform.platform().lower()
-                if 'debian' in plat or 'ubuntu' in plat:
-                    msg += self.tr('On Debian or Ubuntu systems, '
+                if utils.is_debian():
+                    msg += self.tr('On Debian systems, '
                                    'try: sudo apt-get install '
                                    'python-pyinotify')
                 qtutils.log(msg)

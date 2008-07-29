@@ -2,6 +2,7 @@
 import sys
 import os
 import re
+import platform
 import subprocess
 from cStringIO import StringIO
 
@@ -438,3 +439,13 @@ def sanitize_input(input):
     for c in """ \t!@#$%^&*()\\;,<>"'[]{}~|""":
         input = input.replace(c, '_')
     return input
+
+def is_linux():
+    return platform.system() == 'Linux'
+
+def is_debian():
+    return os.path.exists('/usr/bin/apt-get')
+
+def is_broken():
+    return (platform.system() == 'Windows'
+            or 'Macintosh' in platform.platform())

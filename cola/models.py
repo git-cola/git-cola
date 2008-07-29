@@ -127,6 +127,7 @@ class Model(model.Model):
             staged = [],
             unstaged = [],
             untracked = [],
+            unmerged = [],
             window_geom = utils.parse_geom(self.get_global_cola_geometry()),
 
             #####################################################
@@ -455,7 +456,8 @@ class Model(model.Model):
         # Read git status items
         (staged_items,
          modified_items,
-         untracked_items) = self.parse_status()
+         untracked_items,
+         unmerged_items) = self.parse_status()
 
         # Gather items to be committed
         for staged in staged_items:
@@ -472,8 +474,13 @@ class Model(model.Model):
             if untracked not in self.get_untracked():
                 self.add_untracked(untracked)
 
+        # Gather unmerged items
+        for unmerged in unmerged_items:
+            if unmerged not in self.get_unmerged():
+                self.add_unmerged(unmerged)
+
         self.set_currentbranch(self.current_branch())
-        self.set_unstaged(self.get_modified() + self.get_untracked())
+        self.set_unstaged(self.get_modified() + self.get_untracked() + self.get_unmerged())
         self.set_remotes(self.git.remote().splitlines())
         self.set_remote_branches(self.branch_list(remote=True))
         self.set_local_branches(self.branch_list(remote=False))
@@ -778,9 +785,12 @@ class Model(model.Model):
         RGX_MODIFIED = re.compile('(#\tmodified:\s+'
                                   '|#\tnew file:\s+'
                                   '|#\tdeleted:\s+)')
+        RGX_UNMERGED = re.compile('(#\tunmerged:\s+)')
+
         staged = []
         unstaged = []
         untracked = []
+        unmerged = []
 
         STAGED_MODE = 0
         UNSTAGED_MODE = 1
@@ -813,12 +823,19 @@ class Model(model.Model):
                     current_dest.append(eval_path(oldname))
                     current_dest.append(eval_path(newname))
                     continue
+                match = RGX_UNMERGED.match(status_line)
+                if match:
+                    tag = match.group(0)
+                    filename = status_line.replace(tag, '')
+                    unmerged.append(eval_path(filename))
+                    unstaged.append(eval_path(filename))
+                    continue
             # Untracked files
             elif mode is UNTRACKED_MODE:
                 if status_line.startswith('#\t'):
                     current_dest.append(eval_path(status_line[2:]))
 
-        return( staged, unstaged, untracked )
+        return(staged, unstaged, untracked, unmerged)
 
     def reset_helper(self, *args, **kwargs):
         return self.git.reset('--', *args, **kwargs)
