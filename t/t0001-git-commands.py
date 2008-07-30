@@ -9,7 +9,7 @@ from cola import git
 
 class GitCommandTest(unittest.TestCase):
     def setUp(self):
-        self.git = git.Git()
+        self.git = git.Git(os.getcwd())
 
     def testGitVersion(self):
         version = self.git.version()

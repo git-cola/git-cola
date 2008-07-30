@@ -203,7 +203,7 @@ class Controller(QObserver):
 
     def setwindow(self, dock, isfloating):
         if isfloating:
-            if platform.system() != 'Windows':
+            if not utils.is_broken():
                 flags = ( QtCore.Qt.Window
                     | QtCore.Qt.FramelessWindowHint )
                 dock.setWindowFlags( flags )
@@ -366,11 +366,20 @@ class Controller(QObserver):
             self.mode = Controller.MODE_NONE
             self.view.reset_display()
             return
-        (diff, status) = self.model.get_diff_and_status(row, staged=staged)
-
+        diff, status, filename = self.model.get_diff_details(row, staged=staged)
         self.view.set_display(diff)
         self.view.set_info(self.tr(status))
         self.view.diff_dock.raise_()
+        qtutils.set_clipboard(filename)
+
+    def mergetool(self):
+        widget = self.view.unstaged
+        row, selected = qtutils.get_selected_row(widget)
+        filename = self.model.get_unstaged()[row]
+        if filename not in self.model.get_unmerged():
+            return
+        utils.fork('xterm', '-e', 'git', 'mergetool', '-t',
+                   self.model.get_diffeditor(), filename)
 
     def edit_file(self, staged=True):
         if staged:
@@ -386,27 +395,27 @@ class Controller(QObserver):
             filename = self.model.get_unstaged()[row]
         utils.fork(self.model.get_editor(), filename)
 
+    def launch_diffeditor(self, filename, tmpfile):
+        if self.model.get_cola_config('editdiffreverse'):
+            utils.fork(self.model.get_diffeditor(), tmpfile, filename)
+        else:
+            utils.fork(self.model.get_diffeditor(), filename, tmpfile)
+
     def edit_diff(self, staged=True):
         if staged:
             widget = self.view.staged
         else:
             widget = self.view.unstaged
         row, selected = qtutils.get_selected_row(widget)
-        diff, status = self.model.get_diff_and_status(row, staged=staged)
+        diff, status, filename = self.model.get_diff_details(row, staged=staged)
         if not selected:
             return
-
-        if staged:
-            filename = self.model.get_staged()[row]
-        else:
-            filename = self.model.get_unstaged()[row]
-
         contents = self.model.show("HEAD:"+filename, with_raw_output=True)
         tmpfile = self.model.get_tmp_filename(filename)
         fh = open(tmpfile, 'w')
         fh.write(contents)
         fh.close()
-        utils.fork(self.model.get_diffeditor(), filename, tmpfile)
+        self.launch_diffeditor(filename, tmpfile)
 
     # use *rest to handle being called from different signals
     def diff_staged(self, *rest):
@@ -595,7 +604,7 @@ class Controller(QObserver):
         fh = open(tmpfile, 'w')
         fh.write(contents)
         fh.close()
-        utils.fork(self.model.get_diffeditor(), filename, tmpfile)
+        self.launch_diffeditor(filename, tmpfile)
 
         # Set state machine to branch mode
         self.mode = Controller.MODE_NONE
@@ -773,6 +782,7 @@ class Controller(QObserver):
         unstaged_item = qtutils.get_selected_item(self.view.unstaged,
                                                   self.model.get_unstaged())
         is_tracked = unstaged_item not in self.model.get_untracked()
+        is_unmerged = unstaged_item in self.model.get_unmerged()
         enable_staging = self.mode == Controller.MODE_WORKTREE
         enable_undo = enable_staging and is_tracked
 
@@ -787,6 +797,8 @@ class Controller(QObserver):
         if enable_staging:
             menu.addAction(self.tr('Launch Diff Editor'),
                            lambda: self.edit_diff(staged=False))
+        if is_unmerged and not utils.is_broken():
+            menu.addAction(self.tr('Launch Mergetool'), self.mergetool)
         return menu
 
     def diff_context_menu_event(self, event):
@@ -858,15 +870,13 @@ class Controller(QObserver):
             from cola.inotify import GitNotifier
             qtutils.log(self.tr('inotify support: enabled'))
         except ImportError:
-            import platform
-            if platform.system() == 'Linux':
+            if utils.is_linux():
                 msg = self.tr('inotify: disabled\n'
                               'Note: To enable inotify, '
                               'install python-pyinotify.\n')
 
-                plat = platform.platform().lower()
-                if 'debian' in plat or 'ubuntu' in plat:
-                    msg += self.tr('On Debian or Ubuntu systems, '
+                if utils.is_debian():
+                    msg += self.tr('On Debian systems, '
                                    'try: sudo apt-get install '
                                    'python-pyinotify')
                 qtutils.log(msg)

@@ -1,3 +1,26 @@
+cola (1.1.1-1) stable; urgency=low
+
+  configure: update the url to the waf buildsystem
+  models: gracefully handle various repo types
+  configure: generate better Makefile vars
+  cola: add mergetool support
+  cola: use better config values for the font size params
+  Fix disconnected widgets on macosx
+  git-cola: remove some dead code
+  cola: make i18n/l10n work again
+  git-python: removed method_missing
+  updated readme/license
+  Added a COPYRIGHT file and renamed COPYING to LICENSE
+  git: include the GitPython copyright notice
+  tests: oops, I forgot to update the gitpython test
+  cola: update cola environment variable names
+  debian: remove the python-git dependency
+  cola: copy selected filenames to the clipboard
+  config: add a cola.editdiffreverse setting
+  model: add config helper functions for cola+gui items
+
+ -- David Aguilar <davvid@gmail.com>  Wed, 30 Jul 2008 07:00:00 -0700
+
 cola (1.1.0-1) stable; urgency=low
 
   README: update the build instructions to mention GitPython

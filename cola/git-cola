@@ -37,7 +37,6 @@ def main():
 
     # This sets up sys.path so that the cola modules can be found.
     setup_environment()
-
     if opts.version:
         from cola.version import VERSION
         print "cola version", VERSION
@@ -48,31 +47,38 @@ def main():
     from cola import utils
     from cola.views import View
     from cola.controllers import Controller
-
     if args[1:]:
         for repo in [ os.path.realpath(r) for r in args[1:] ]:
-            utils.fork("git", "cola", repo)
-
+            utils.fork('git', 'cola', repo)
     # load the model right away so that we can bail out when
     # no git repo exists
     model = Model()
-
     # PyQt4
     try:
         from PyQt4 import QtCore
         from PyQt4 import QtGui
     except ImportError:
-        print "Sorry, you do not seem to have PyQt4 installed."
-        print "Please install it before using cola."
-        print "e.g.:    sudo apt-get install python-qt4"
+        print 'Sorry, you do not seem to have PyQt4 installed.'
+        print 'Please install it before using cola.'
+        print 'e.g.:    sudo apt-get install python-qt4'
         sys.exit(-1)
 
-    app = QtGui.QApplication(sys.argv)
+    class ColaApplication(QtGui.QApplication):
+        """This makes translation work by throwing out the context."""
+        wrapped = QtGui.QApplication.translate
+        def translate(*args):
+            trtxt = unicode(ColaApplication.wrapped('', *args[2:]))
+            if trtxt.endswith('@@verb') or trtxt.endswith('@@noun'):
+                trtxt = trtxt[:-6]
+            return trtxt
+
+    app = ColaApplication(sys.argv)
+    QtGui.QApplication.translate = app.translate
     app.setWindowIcon(QtGui.QIcon( utils.get_icon('git.png')) )
     locale = str(QtCore.QLocale().system().name())
-    qmfile = utils.get_qm_for_locale( locale )
+    qmfile = utils.get_qm_for_locale(locale)
     if os.path.exists(qmfile):
-        translator = QtCore.QTranslator()
+        translator = QtCore.QTranslator(app)
         translator.load(qmfile)
         app.installTranslator(translator)
     # simple mvc
@@ -80,6 +86,5 @@ def main():
     ctl = Controller(model, view)
     view.show()
     sys.exit(app.exec_())
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

@@ -1,7 +1,8 @@
-"""
-This module is from http://gitorious.org/projects/git-python/
-and is included here for convenience.
-"""
+# cmd.py
+# Copyright (C) 2008 Michael Trier (mtrier@gmail.com) and contributors
+#
+# This module is part of GitPython and is released under
+# the BSD License: http://www.opensource.org/licenses/bsd-license.php
 
 import os
 import subprocess
@@ -9,39 +10,24 @@ import subprocess
 def dashify(string):
     return string.replace('_', '-')
 
-class MethodMissingMixin(object):
-    """
-    A Mixin' to implement the 'method_missing' Ruby-like protocol.
-
-    This was `taken from a blog post <http://blog.iffy.us/?p=43>`_
-    """
-    def __getattr__(self, attr):
-        class MethodMissing(object):
-            def __init__(self, wrapped, method):
-                self.__wrapped__ = wrapped
-                self.__method__ = method
-            def __call__(self, *args, **kwargs):
-                return self.__wrapped__.method_missing(self.__method__, *args, **kwargs)
-        return MethodMissing(self, attr)
-
-    def method_missing(self, *args, **kwargs):
-        """ This method should be overridden in the derived class. """
-        raise NotImplementedError(str(self.__wrapped__) + " 'method_missing' method has not been implemented.")
-
-
 # Enables debugging of GitPython's git commands
 GIT_PYTHON_TRACE = os.environ.get("GIT_PYTHON_TRACE", False)
 
 execute_kwargs = ('istream', 'with_keep_cwd', 'with_extended_output',
                   'with_exceptions', 'with_raw_output')
 
-class Git(MethodMissingMixin):
+class Git(object):
     """
     The Git class manages communication with the Git binary
     """
     def __init__(self, git_dir):
         super(Git, self).__init__()
         self.git_dir = git_dir
+
+    def __getattr__(self, name):
+        if name[:1] == '_':
+            raise AttributeError(name)
+        return lambda *args, **kwargs: self._call_process(name, *args, **kwargs)
 
     @property
     def get_dir(self):
@@ -149,7 +135,7 @@ class Git(MethodMissingMixin):
                     args.append("--%s=%s" % (dashify(k), v))
         return args
 
-    def method_missing(self, method, *args, **kwargs):
+    def _call_process(self, method, *args, **kwargs):
         """
         Run the given git command with the specified arguments and return
         the result as a String

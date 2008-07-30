@@ -40,41 +40,53 @@ class GitCola(git.Git):
     def __init__(self):
         self._git_dir = None
         self._work_tree = None
+        self._has_worktree = True
         git_dir = self.get_git_dir()
         work_tree = self.get_work_tree()
         if work_tree:
             os.chdir(work_tree)
-        else:
-            print "Sorry, git-cola requires a work tree"
-            sys.exit(-1)
         git.Git.__init__(self, work_tree)
     def execute(*args, **kwargs):
         kwargs['with_exceptions'] = False
         return git.Git.execute(*args, **kwargs)
     def get_work_tree(self):
-        if not self._work_tree:
-            self._work_tree = os.getenv('GIT_WORK_TREE')
-            if not self._work_tree or not os.path.isdir(self._work_tree):
-                self._work_tree = os.path.abspath(
-                        os.path.join(self._git_dir, '..'))
+        if self._work_tree or not self._has_worktree:
+            return self._work_tree
+        if not self._git_dir:
+            self._git_dir = self.get_git_dir()
+        # Handle bare repositories
+        if (len(os.path.basename(self._git_dir)) > 4
+                and self._git_dir.endswith('.git')):
+            self._has_worktree = False
+            return self._work_tree
+        self._work_tree = os.getenv('GIT_WORK_TREE')
+        if not self._work_tree or not os.path.isdir(self._work_tree):
+            self._work_tree = os.path.abspath(
+                    os.path.join(os.path.abspath(self._git_dir), '..'))
         return self._work_tree
     def get_git_dir(self):
+        if self._git_dir:
+            return self._git_dir
+        self._git_dir = os.getenv('GIT_DIR')
+        if self._git_dir and self._is_git_dir(self._git_dir):
+            return self._git_dir
+        curpath = os.path.abspath(os.getcwd())
+        # Search for a .git directory
+        while curpath:
+            if self._is_git_dir(curpath):
+                self._git_dir = curpath
+                break
+            gitpath = os.path.join(curpath, '.git')
+            if self._is_git_dir(gitpath):
+                self._git_dir = gitpath
+                break
+            curpath, dummy = os.path.split(curpath)
+            if not dummy:
+                break
         if not self._git_dir:
-            self._git_dir = os.getenv('GIT_DIR')
-            if self._git_dir and self._is_git_dir(self._git_dir):
-                return self._git_dir
-            curpath = os.getcwd()
-            while curpath:
-                if self._is_git_dir(curpath):
-                    self._git_dir = curpath
-                    break
-                gitpath = os.path.join(curpath, '.git')
-                if self._is_git_dir(gitpath):
-                    self._git_dir = gitpath
-                    break
-                curpath, dummy = os.path.split(curpath)
-                if not dummy:
-                    break
+            sys.stderr.write("oops, %s is not a git project.\n"
+                            % os.getcwd() )
+            sys.exit(-1)
         return self._git_dir
 
     def _is_git_dir(self, d):
@@ -94,7 +106,7 @@ class Model(model.Model):
 
     def init(self):
         """Reads git repository settings and sets several methods
-        so that they refer to the git module.  This object is
+        so that they refer to the git module.  This object
         encapsulates cola's interaction with git."""
 
         # chdir to the root of the git tree.
@@ -127,6 +139,7 @@ class Model(model.Model):
             staged = [],
             unstaged = [],
             untracked = [],
+            unmerged = [],
             window_geom = utils.parse_geom(self.get_global_cola_geometry()),
 
             #####################################################
@@ -179,10 +192,11 @@ class Model(model.Model):
         self.__global_defaults = {
             'cola_geometry':'',
             'cola_fontui': '',
-            'cola_fontui_size':12,
+            'cola_fontuisize': 12,
             'cola_fontdiff': '',
-            'cola_fontdiff_size':12,
+            'cola_fontdiffsize': 12,
             'cola_savewindowsettings': False,
+            'cola_editdiffreverse': False,
             'cola_saveatexit': False,
             'gui_editor': 'gvim',
             'gui_diffeditor': 'xxdiff',
@@ -200,16 +214,18 @@ class Model(model.Model):
                 local_dict[k]=v
                 self.set_param('local_'+k, v)
 
-        # Bootstrap the internal font*_size variables
+        # Bootstrap the internal font*size variables
         for param in ('global_cola_fontui', 'global_cola_fontdiff'):
+            setdefault = True
             if hasattr(self, param):
                 font = self.get_param(param)
                 if font:
+                    setdefault = False
                     size = int(font.split(',')[1])
-                    self.set_param(param+'_size', size)
+                    self.set_param(param+'size', size)
                     param = param[len('global_'):]
                     global_dict[param] = font
-                    global_dict[param+'_size'] = size
+                    global_dict[param+'size'] = size
 
         # Load defaults for all undefined items
         local_and_global_defaults = self.__local_and_global_defaults
@@ -225,12 +241,18 @@ class Model(model.Model):
                 self.set_param('global_'+k, v)
 
         # Allow EDITOR/DIFF_EDITOR environment variable overrides
-        self.global_gui_editor = os.getenv('GUI_EDITOR',
+        self.global_gui_editor = os.getenv('COLA_EDITOR',
                                            self.global_gui_editor)
-        self.global_gui_diffeditor = os.getenv('DIFF_EDITOR',
+        self.global_gui_diffeditor = os.getenv('COLA_DIFFEDITOR',
                                                self.global_gui_diffeditor)
         # Load the diff context
         self.diff_context = self.local_gui_diffcontext
+
+    def get_cola_config(self, key):
+        return getattr(self, 'global_cola_'+key)
+
+    def get_gui_config(self, key):
+        return getattr(self, 'global_gui_'+key)
 
     def branch_list(self, remote=False):
         branches = map(lambda x: x.lstrip('* '),
@@ -252,7 +274,7 @@ class Model(model.Model):
                           self.__local_and_global_defaults.keys()))
         params.extend(map(lambda x: 'global_' + x,
                           self.__global_defaults.keys()))
-        return params
+        return [ p for p in params if not p.endswith('size') ]
 
     def save_config_param(self, param):
         if param not in self.get_config_params():
@@ -359,19 +381,19 @@ class Model(model.Model):
         output + '\n\n' + self.git.rm(*to_remove)
 
     def get_editor(self):
-        return self.global_gui_editor
+        return self.get_gui_config('editor')
 
     def get_diffeditor(self):
-        return self.global_gui_diffeditor
+        return self.get_gui_config('diffeditor')
 
     def get_history_browser(self):
-        return self.global_gui_historybrowser
+        return self.get_gui_config('historybrowser')
 
     def remember_gui_settings(self):
-        return self.global_cola_savewindowsettings
+        return self.get_cola_config('savewindowsettings')
 
     def save_at_exit(self):
-        return self.global_cola_saveatexit
+        return self.get_cola_config('saveatexit')
 
     def get_tree_node(self, idx):
         return (self.get_types()[idx],
@@ -446,7 +468,8 @@ class Model(model.Model):
         # Read git status items
         (staged_items,
          modified_items,
-         untracked_items) = self.parse_status()
+         untracked_items,
+         unmerged_items) = self.parse_status()
 
         # Gather items to be committed
         for staged in staged_items:
@@ -463,8 +486,13 @@ class Model(model.Model):
             if untracked not in self.get_untracked():
                 self.add_untracked(untracked)
 
+        # Gather unmerged items
+        for unmerged in unmerged_items:
+            if unmerged not in self.get_unmerged():
+                self.add_unmerged(unmerged)
+
         self.set_currentbranch(self.current_branch())
-        self.set_unstaged(self.get_modified() + self.get_untracked())
+        self.set_unstaged(self.get_modified() + self.get_untracked() + self.get_unmerged())
         self.set_remotes(self.git.remote().splitlines())
         self.set_remote_branches(self.branch_list(remote=True))
         self.set_local_branches(self.branch_list(remote=False))
@@ -486,17 +514,12 @@ class Model(model.Model):
         old_font = self.get_param(param)
         if not old_font:
             old_font = default
-
-        size = self.get_param(param+'_size')
+        size = self.get_param(param+'size')
         props = old_font.split(',')
         props[1] = str(size)
         new_font = ','.join(props)
 
         self.set_param(param, new_font)
-
-    def read_font_size(self, param, new_font):
-        new_size = int(new_font.split(',')[1])
-        self.set_param(param, new_size)
 
     def get_commit_diff(self, sha1):
         commit = self.git.show(sha1)
@@ -509,7 +532,7 @@ class Model(model.Model):
         else:
             return commit
 
-    def get_diff_and_status(self, idx, staged=True):
+    def get_diff_details(self, idx, staged=True):
         if staged:
             filename = self.get_staged()[idx]
             if os.path.exists(filename):
@@ -540,7 +563,7 @@ class Model(model.Model):
                         file.close()
                     else:
                         diff = ''
-        return diff, status
+        return diff, status, filename
 
     def stage_modified(self):
         output = self.git.add(self.get_modified())
@@ -774,9 +797,12 @@ class Model(model.Model):
         RGX_MODIFIED = re.compile('(#\tmodified:\s+'
                                   '|#\tnew file:\s+'
                                   '|#\tdeleted:\s+)')
+        RGX_UNMERGED = re.compile('(#\tunmerged:\s+)')
+
         staged = []
         unstaged = []
         untracked = []
+        unmerged = []
 
         STAGED_MODE = 0
         UNSTAGED_MODE = 1
@@ -809,12 +835,19 @@ class Model(model.Model):
                     current_dest.append(eval_path(oldname))
                     current_dest.append(eval_path(newname))
                     continue
+                match = RGX_UNMERGED.match(status_line)
+                if match:
+                    tag = match.group(0)
+                    filename = status_line.replace(tag, '')
+                    unmerged.append(eval_path(filename))
+                    unstaged.append(eval_path(filename))
+                    continue
             # Untracked files
             elif mode is UNTRACKED_MODE:
                 if status_line.startswith('#\t'):
                     current_dest.append(eval_path(status_line[2:]))
 
-        return( staged, unstaged, untracked )
+        return(staged, unstaged, untracked, unmerged)
 
     def reset_helper(self, *args, **kwargs):
         return self.git.reset('--', *args, **kwargs)
