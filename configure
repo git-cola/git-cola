@@ -90,7 +90,7 @@ generateMakefile()
 #!/usr/bin/make -f
 
 # Waf Makefile wrapper
-# http://www.freehackers.org/~tnagy/waf.html
+# http://code.google.com/p/waf/
 PYTHON=$PYTHON
 WAF=$WAFPATH
 
