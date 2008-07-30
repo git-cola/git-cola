@@ -40,41 +40,53 @@ class GitCola(git.Git):
     def __init__(self):
         self._git_dir = None
         self._work_tree = None
+        self._has_worktree = True
         git_dir = self.get_git_dir()
         work_tree = self.get_work_tree()
         if work_tree:
             os.chdir(work_tree)
-        else:
-            print "Sorry, git-cola requires a work tree"
-            sys.exit(-1)
         git.Git.__init__(self, work_tree)
     def execute(*args, **kwargs):
         kwargs['with_exceptions'] = False
         return git.Git.execute(*args, **kwargs)
     def get_work_tree(self):
-        if not self._work_tree:
-            self._work_tree = os.getenv('GIT_WORK_TREE')
-            if not self._work_tree or not os.path.isdir(self._work_tree):
-                self._work_tree = os.path.abspath(
-                        os.path.join(self._git_dir, '..'))
+        if self._work_tree or not self._has_worktree:
+            return self._work_tree
+        if not self._git_dir:
+            self._git_dir = self.get_git_dir()
+        # Handle bare repositories
+        if (len(os.path.basename(self._git_dir)) > 4
+                and self._git_dir.endswith('.git')):
+            self._has_worktree = False
+            return self._work_tree
+        self._work_tree = os.getenv('GIT_WORK_TREE')
+        if not self._work_tree or not os.path.isdir(self._work_tree):
+            self._work_tree = os.path.abspath(
+                    os.path.join(os.path.abspath(self._git_dir), '..'))
         return self._work_tree
     def get_git_dir(self):
+        if self._git_dir:
+            return self._git_dir
+        self._git_dir = os.getenv('GIT_DIR')
+        if self._git_dir and self._is_git_dir(self._git_dir):
+            return self._git_dir
+        curpath = os.path.abspath(os.getcwd())
+        # Search for a .git directory
+        while curpath:
+            if self._is_git_dir(curpath):
+                self._git_dir = curpath
+                break
+            gitpath = os.path.join(curpath, '.git')
+            if self._is_git_dir(gitpath):
+                self._git_dir = gitpath
+                break
+            curpath, dummy = os.path.split(curpath)
+            if not dummy:
+                break
         if not self._git_dir:
-            self._git_dir = os.getenv('GIT_DIR')
-            if self._git_dir and self._is_git_dir(self._git_dir):
-                return self._git_dir
-            curpath = os.getcwd()
-            while curpath:
-                if self._is_git_dir(curpath):
-                    self._git_dir = curpath
-                    break
-                gitpath = os.path.join(curpath, '.git')
-                if self._is_git_dir(gitpath):
-                    self._git_dir = gitpath
-                    break
-                curpath, dummy = os.path.split(curpath)
-                if not dummy:
-                    break
+            sys.stderr.write("oops, %s is not a git project.\n"
+                            % os.getcwd() )
+            sys.exit(-1)
         return self._git_dir
 
     def _is_git_dir(self, d):
