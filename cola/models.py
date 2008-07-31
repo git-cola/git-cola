@@ -640,11 +640,13 @@ class Model(model.Model):
         file.close()
 
         # Run 'git commit'
-        output = self.git.commit(F=tmpfile, amend=amend)
+        (status, stdout, stderr) = self.git.commit(v=True,
+                                                   F=tmpfile,
+                                                   amend=amend,
+                                                   with_extended_output=True)
         os.unlink(tmpfile)
 
-        return ('git commit -F %s --amend %s\n\n%s'
-                % ( tmpfile, amend, output ))
+        return (status, stdout+stderr)
 
 
     def diffindex(self):

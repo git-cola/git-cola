@@ -195,9 +195,9 @@ class Controller(QObserver):
                      'topLevelChanged(bool)',
                      lambda(b): self.setwindow(view.status_dock, b))
 
-        self.init_log_window()
         self.load_gui_settings()
         self.rescan()
+        self.init_log_window()
         self.refresh_view('global_cola_fontdiff', 'global_cola_fontui')
         self.start_inotify_thread()
 
@@ -346,12 +346,13 @@ class Controller(QObserver):
 
         # Perform the commit
         amend = self.view.amend_radio.isChecked()
-        output = self.model.commit_with_msg(msg, amend=amend)
+        status, output = self.model.commit_with_msg(msg, amend=amend)
 
-        # Reset state
-        self.view.new_commit_radio.setChecked(True)
-        self.view.amend_radio.setChecked(False)
-        self.model.set_commitmsg('')
+        if status == 0:
+            # Reset state
+            self.view.new_commit_radio.setChecked(True)
+            self.view.amend_radio.setChecked(False)
+            self.model.set_commitmsg('')
         self.log(output)
 
     def view_diff(self, staged=True):
