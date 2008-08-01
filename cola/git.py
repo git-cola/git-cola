@@ -91,6 +91,10 @@ class Git(object):
             stdout_value = proc.stdout.read()
             stderr_value = proc.stderr.read()
             status = proc.wait()
+        except:
+            status = 255
+            stdout_value = ''
+            stderr_value = ''
         finally:
             proc.stdout.close()
             proc.stderr.close()
