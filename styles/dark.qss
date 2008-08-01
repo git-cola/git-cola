@@ -1,0 +1,256 @@
+QWidget {
+   color: #DFDFDF;
+   background-color: #202020;
+   selection-background-color:  #8C3500; /*qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 #8C3500, stop:1 #9D4611);*/
+   selection-color: #FFFFFF; 
+   alternate-background-color: #262626;
+}
+
+QWidget:disabled {
+   color: #444444;
+   selection-background-color: #808080; 
+}
+
+QPushButton:!flat {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 #323232, stop:1 #222222);
+    border: 1px solid #323232;
+    border-radius: 3px;
+    padding: 2px;
+}
+QPushButton:hover:!flat {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 #383838, stop:1 #242424);
+}
+QPushButton:pressed:!flat {
+    background-color: #141414;
+}
+
+QToolButton {
+    background-color: #202020;
+    border: 1px solid #202020;
+    padding: 1px;
+}
+QToolButton:hover {
+    background-color: #262626;
+    border: 1px solid #262626;
+    border-radius: 3px;
+}
+
+QAbstractScrollArea {
+    background-color: #242424;
+    border: 1px solid #303030;
+}
+
+QTextEdit, QLineEdit {
+    background-color: #282828;
+}
+
+
+QMenuBar, QStatusBar {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 #343434, stop:1 #202020);
+    border: 0px;
+}
+QMenu {
+    background-color: #303030;
+    border: 1px solid #484848;
+    border-radius: 5px;
+}
+QStatusBar::item {
+    border: 0px;
+    border-radius: 3px;
+}
+QMenu::item:disabled {
+    color: #444444;
+    background-color: transparent;
+}
+QMenu::separator {
+    background-color: #262626;
+    height: 1px;
+    margin-left: 15px;
+    margin-right:15px;
+}
+QSizeGrip {
+    image: url(images:size_grip.png);
+    background: transparent;
+}
+
+QToolTip {
+    background-color: #5D2300;
+    border: 1px;
+}
+
+
+QHeaderView {
+    background-color: #343434;
+}
+QHeaderView::down-arrow {
+    image: url(images:arrow-down.png);
+}
+QHeaderView::up-arrow {
+    image: url(images:arrow-up.png);
+}
+
+
+QSlider::handle:horizontal {
+    image: url(images:arrow-down.png);
+}
+
+
+QProgressBar {
+    border: 2px solid grey;
+    border-radius: 5px;
+}
+QProgressBar::chunk {
+    background-color: #05B8CC;
+    width: 20px;
+}
+
+
+QCheckBox:indicator {
+    width: 14px;
+    height: 16px;
+}
+QCheckBox:indicator:checked {
+    image: url(images:checkbox_checked.png);
+}
+QCheckBox:indicator:unchecked {
+    image: url(images:checkbox_unchecked.png);
+}
+
+
+/* Vertical Scrollbar */
+QScrollBar::handle:vertical {
+    background-image: url(images:scrollbar_vertical.png);
+    background-repeat: repeat-y;
+    background-position: center;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-image: url(images:scrollbar_vertical_hover.png);
+    background-repeat: repeat-y;
+    background-position: center;
+}
+
+QScrollBar:vertical {
+    border: 1px solid;
+    width: 16px;
+    margin: 12px 0px 12px 0px;
+    background: black;
+}
+
+QScrollBar::add-line:vertical {
+    image: url(images:scrollbar_vertical_subline.png);
+    
+    subcontrol-position: bottom center;
+    subcontrol-origin: margin;
+
+    padding: 0px;
+}
+
+QScrollBar::add-line:vertical:hover {
+    image: url(images:scrollbar_vertical_subline_hover.png);
+}
+
+QScrollBar::sub-line:vertical:hover {
+    image: url(images:scrollbar_vertical_addline_hover.png);
+}
+
+QScrollBar::sub-line:vertical {
+    image: url(images:scrollbar_vertical_addline.png);
+
+    subcontrol-position: top center;
+    subcontrol-origin: margin;
+
+    padding: 0px;
+}
+
+QScrollBar:up-arrow:vertical, QScrollBar::down-arrow:vertical {
+    background: none;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: black;
+}
+
+
+/* Horizontal Scrollbars */
+QScrollBar::handle:horizontal {
+    background-image: url(images:scrollbar_horizontal.png);
+    background-repeat: repeat-x;
+    background-position: center;
+    min-width: 20px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background-image: url(images:scrollbar_horizontal_hover.png);
+    background-repeat: repeat-x;
+    background-position: center;
+}
+
+QScrollBar:horizontal {
+    border: 1px solid;
+    height: 16px;
+    margin: 0px 12px 0px 12px;
+    background: black;
+}
+
+QScrollBar::add-line:horizontal {
+    image: url(images:scrollbar_horizontal_addline.png);
+
+    subcontrol-position: right;
+    subcontrol-origin: margin;
+
+    padding: 0px;
+}
+
+QScrollBar::sub-line:horizontal {
+    image: url(images:scrollbar_horizontal_subline.png);
+
+    subcontrol-position: left;
+    subcontrol-origin: margin;
+
+    padding: 0px;
+}
+
+QScrollBar::add-line:horizontal:hover {
+    image: url(images:scrollbar_horizontal_addline_hover.png);
+}
+
+QScrollBar::sub-line:horizontal:hover {
+    image: url(images:scrollbar_horizontal_subline_hover.png);
+}
+
+QScrollBar:left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
+    background: none;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { 
+    background: black;
+}
+
+/* 
+
+RED: c83232
+DARK GREY: 323232
+BUTTON: 2a2a2a
+WINDOW: 0a0a0a
+
+
+HIGHLIGHT: 8c3500
+HIGHLIGHT TEXT: FFFFFF
+
+DISABLED HIGHLIGHT TEXT: 808080
+BASE, WINDOW: 202020
+
+LIGHT: 282828
+MIDLIGHT: 373737
+DARK: 555555
+MID: 464646
+
+SHADOW: 646464
+
+*/
