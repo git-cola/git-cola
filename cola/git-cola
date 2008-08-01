@@ -30,9 +30,9 @@ def main():
                       default=False,
                       action='store_true')
 
-    parser.add_option('-s', '--stylesheet',
+    parser.add_option('-s', '--style',
                       help='Applies a stylesheet',
-                      dest='stylesheet',
+                      dest='style',
                       metavar='STYLESHEET',
                       default='')
 
@@ -91,8 +91,12 @@ def main():
 
     # Add the images resource path for the stylesheets
     QtCore.QDir.setSearchPaths("images", [utils.get_image_dir()])
-    if opts.stylesheet:
-        filename = utils.get_stylesheet(opts.stylesheet)
+    if opts.style:
+        # Allow absolute and relative paths to a stylesheet
+        if os.path.isabs(opts.style) or os.path.exists(opts.style):
+            filename = opts.style
+        else:
+            filename = utils.get_stylesheet(opts.style)
         if filename:
             stylesheet = open(filename, 'r')
             style = stylesheet.read()

@@ -76,6 +76,24 @@ Synopsis:
     sudo make install
 
 
+STYLESHEETS
+
+    git cola ships with an alternative stylesheet called "dark".
+    You can use this stylesheet by running:
+
+        git cola --style=dark
+
+
+    You can also skin git cola by providing your own Qt stylesheet:
+
+        git cola --style=/path/to/my/style.qss
+
+
+    An example stylesheet is provided in:
+
+        $PREFIX/share/cola/styles/dark.qss
+
+
 WINDOWS INSTALLATION
 
 1) Install the native Python2.5 and PyQt4 installers (in that order):
