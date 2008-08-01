@@ -29,6 +29,13 @@ def main():
                       dest='version',
                       default=False,
                       action='store_true')
+
+    parser.add_option('-s', '--stylesheet',
+                      help='Applies a stylesheet',
+                      dest='stylesheet',
+                      metavar='STYLESHEET',
+                      default='')
+
     opts, args = parser.parse_args()
 
     # allow "git cola /path/to/repo"
@@ -81,6 +88,17 @@ def main():
         translator = QtCore.QTranslator(app)
         translator.load(qmfile)
         app.installTranslator(translator)
+
+    # Add the images resource path for the stylesheets
+    QtCore.QDir.setSearchPaths("images", [utils.get_image_dir()])
+    if opts.stylesheet:
+        filename = utils.get_stylesheet(opts.stylesheet)
+        if filename:
+            stylesheet = open(filename, 'r')
+            style = stylesheet.read()
+            stylesheet.close()
+            app.setStyleSheet(style)
+
     # simple mvc
     view = View(app.activeWindow())
     ctl = Controller(model, view)

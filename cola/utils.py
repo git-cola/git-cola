@@ -11,6 +11,8 @@ import defaults
 PREFIX = os.path.realpath(os.path.dirname(os.path.dirname(sys.argv[0])))
 QMDIR = os.path.join(PREFIX, 'share', 'cola', 'qm')
 ICONSDIR = os.path.join(PREFIX, 'share', 'cola', 'icons')
+STYLEDIR = os.path.join(PREFIX, 'share', 'cola', 'styles')
+
 KNOWN_FILE_TYPES = {
     'ascii c':   'c.png',
     'python':    'script.png',
@@ -51,6 +53,16 @@ def get_qm_for_locale(locale):
     basename = locale.split('_')[0]
 
     return os.path.join(QMDIR, basename +'.qm')
+
+def get_image_dir():
+    return os.path.join(STYLEDIR, 'images')
+
+def get_stylesheet(name):
+    stylesheet = os.path.join(STYLEDIR, name+'.qss')
+    if os.path.exists(stylesheet):
+        return stylesheet
+    else:
+        return None
 
 def ident_file_type(filename):
     """Returns an icon based on the contents of filename."""
