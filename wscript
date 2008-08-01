@@ -43,6 +43,8 @@ def configure(conf):
     bindir = join(prefix, 'bin')
     share = join(prefix, 'share')
     modules = join(share, 'cola')
+    styles = join(modules, 'styles')
+    images = join(styles, 'images')
     views = join(modules, 'views')
     controllers = join(modules, 'controllers')
     icons = join(prefix, 'share', 'cola', 'icons')
@@ -50,6 +52,8 @@ def configure(conf):
 
     env['COLA_BINDIR'] = bindir
     env['COLA_MODULES'] = modules
+    env['COLA_STYLES'] = styles
+    env['COLA_IMAGES'] = images
     env['COLA_VIEWS'] = views
     env['COLA_CONTROLLERS'] = controllers
     env['COLA_ICONS'] = icons
@@ -71,6 +75,12 @@ def build(bld):
 
     for icon in glob.glob('icons/*.png'):
         Common.install_files('COLA_ICONS', '', icon)
+
+    for style in glob.glob('styles/*.qss'):
+        Common.install_files('COLA_STYLES', '', style)
+
+    for image in glob.glob('styles/images/*.png'):
+        Common.install_files('COLA_IMAGES', '', image)
 
 #############################################################################
 # Shutdown
