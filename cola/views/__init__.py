@@ -46,7 +46,6 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
         self.staged.setAlternatingRowColors(True)
         self.unstaged.setAlternatingRowColors(True)
         self.set_display = self.display_text.setText
-        self.set_info = self.displayLabel.setText
         self.action_undo = self.commitmsg.undo
         self.action_redo = self.commitmsg.redo
         self.action_paste = self.commitmsg.paste
@@ -76,6 +75,9 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
 
         # Diff/patch syntax highlighter
         DiffSyntaxHighlighter(self.display_text.document())
+
+    def set_info(self, txt):
+        self.displayLabel.setText(self.tr(txt))
 
     def splitter_resize_event(self, event):
         width = self.splitter.width()

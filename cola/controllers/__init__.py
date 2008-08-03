@@ -311,11 +311,11 @@ class Controller(QObserver):
         self.log(self.model.checkout(branch))
 
     def browse_commits(self):
-        self.select_commits_gui(self.tr('Browse Commits'),
+        self.select_commits_gui('Browse Commits',
                                 *self.model.log_helper(all=True))
 
     def cherry_pick(self):
-        commits = self.select_commits_gui(self.tr('Cherry-Pick Commits'),
+        commits = self.select_commits_gui('Cherry-Pick Commits',
                                           *self.model.log_helper(all=True))
         if not commits:
             return
@@ -428,8 +428,7 @@ class Controller(QObserver):
 
     def export_patches(self):
         (revs, summaries) = self.model.log_helper()
-        to_export = self.select_commits_gui(self.tr('Export Patches'),
-                                            revs, summaries)
+        to_export = self.select_commits_gui('Export Patches', revs, summaries)
         if not to_export:
             return
         to_export.reverse()
@@ -556,9 +555,10 @@ class Controller(QObserver):
             # Prompt before overwriting the commit message
             # with the contents of the merge message.
             answer = qtutils.question(self.view,
-                self.tr('Import Commit Message?'),
-                self.tr('A commit message from an in-progress'
-                       +' merge was found.\nImport it?'))
+                                      'Import Commit Message?',
+                                      'A commit message from an in-progress'
+                                      ' merge was found.\n'
+                                      'Import it?')
             if answer:
                 set_msg = True
         else:
@@ -631,7 +631,7 @@ class Controller(QObserver):
                                       reverse=True,
                                       branch=branch)
         self.view.set_display(diff)
-        self.view.set_info(self.tr(status))
+        self.view.set_info(status)
         self.view.diff_dock.raise_()
 
         # Set state machine to branch mode
@@ -719,10 +719,10 @@ class Controller(QObserver):
                 items_to_undo.append(item)
         if items_to_undo:
             if not qtutils.question(self.view,
-                                    self.tr('Destroy Local Changes?'),
-                                    self.tr('This operation will drop all '
-                                           +'uncommitted changes.  '
-                                           +'Continue?'),
+                                    'Destroy Local Changes?',
+                                    'This operation will drop all '
+                                    'uncommitted changes.\n'
+                                    'Continue?',
                                     default=False):
                 return
 
@@ -837,7 +837,8 @@ class Controller(QObserver):
         return menu
 
     def select_commits_gui(self, title, revs, summaries):
-        return select_commits(self.model, self.view, title, revs, summaries)
+        return select_commits(self.model, self.view,
+                              self.tr(title), revs, summaries)
 
     def update_diff_font(self):
         font = self.model.get_global_cola_fontdiff()
