@@ -14,6 +14,14 @@
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralwidget" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>490</y>
+     <width>853</width>
+     <height>32</height>
+    </rect>
+   </property>
    <property name="sizePolicy" >
     <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
      <horstretch>1</horstretch>
@@ -24,16 +32,7 @@
     <property name="spacing" >
      <number>0</number>
     </property>
-    <property name="leftMargin" >
-     <number>0</number>
-    </property>
-    <property name="topMargin" >
-     <number>0</number>
-    </property>
-    <property name="rightMargin" >
-     <number>0</number>
-    </property>
-    <property name="bottomMargin" >
+    <property name="margin" >
      <number>0</number>
     </property>
    </layout>
@@ -136,6 +135,7 @@
      <string>File</string>
     </property>
     <addaction name="menu_open_repo" />
+    <addaction name="menu_clone_repo" />
     <addaction name="separator" />
     <addaction name="menu_manage_bookmarks" />
     <addaction name="menu_save_bookmark" />
@@ -161,6 +161,14 @@
    <property name="enabled" >
     <bool>true</bool>
    </property>
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>522</y>
+     <width>853</width>
+     <height>15</height>
+    </rect>
+   </property>
    <property name="windowTitle" >
     <string>toolbar</string>
    </property>
@@ -168,7 +176,7 @@
     <bool>true</bool>
    </property>
    <property name="allowedAreas" >
-    <set>Qt::BottomToolBarArea|Qt::NoToolBarArea|Qt::TopToolBarArea</set>
+    <set>Qt::BottomToolBarArea|Qt::TopToolBarArea</set>
    </property>
    <property name="iconSize" >
     <size>
@@ -187,6 +195,14 @@
    </attribute>
   </widget>
   <widget class="QDockWidget" name="status_dock" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>26</y>
+     <width>238</width>
+     <height>458</height>
+    </rect>
+   </property>
    <property name="floating" >
     <bool>false</bool>
    </property>
@@ -200,20 +216,19 @@
     <number>4</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>20</y>
+      <width>238</width>
+      <height>438</height>
+     </rect>
+    </property>
     <layout class="QVBoxLayout" >
      <property name="spacing" >
       <number>0</number>
      </property>
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="margin" >
       <number>0</number>
      </property>
      <item>
@@ -396,6 +411,14 @@ include untracked files if "Show Untracked Files" is checked.</string>
    </widget>
   </widget>
   <widget class="QDockWidget" name="diff_dock" >
+   <property name="geometry" >
+    <rect>
+     <x>244</x>
+     <y>26</y>
+     <width>236</width>
+     <height>458</height>
+    </rect>
+   </property>
    <property name="layoutDirection" >
     <enum>Qt::LeftToRight</enum>
    </property>
@@ -412,6 +435,14 @@ include untracked files if "Show Untracked Files" is checked.</string>
     <number>4</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>20</y>
+      <width>236</width>
+      <height>438</height>
+     </rect>
+    </property>
     <property name="sizePolicy" >
      <sizepolicy vsizetype="MinimumExpanding" hsizetype="Preferred" >
       <horstretch>0</horstretch>
@@ -422,16 +453,7 @@ include untracked files if "Show Untracked Files" is checked.</string>
      <property name="spacing" >
       <number>0</number>
      </property>
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="margin" >
       <number>0</number>
      </property>
      <item>
@@ -452,16 +474,7 @@ include untracked files if "Show Untracked Files" is checked.</string>
         <property name="spacing" >
          <number>0</number>
         </property>
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
         <item>
@@ -472,7 +485,7 @@ include untracked files if "Show Untracked Files" is checked.</string>
           <property name="sizeType" >
            <enum>QSizePolicy::MinimumExpanding</enum>
           </property>
-          <property name="sizeHint" >
+          <property name="sizeHint" stdset="0" >
            <size>
             <width>40</width>
             <height>0</height>
@@ -526,7 +539,7 @@ include untracked files if "Show Untracked Files" is checked.</string>
            <number>2</number>
           </property>
           <property name="textInteractionFlags" >
-           <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::NoTextInteraction|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+           <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
           </property>
          </widget>
         </item>
@@ -537,6 +550,14 @@ include untracked files if "Show Untracked Files" is checked.</string>
    </widget>
   </widget>
   <widget class="QDockWidget" name="editor_dock" >
+   <property name="geometry" >
+    <rect>
+     <x>486</x>
+     <y>26</y>
+     <width>367</width>
+     <height>458</height>
+    </rect>
+   </property>
    <property name="floating" >
     <bool>false</bool>
    </property>
@@ -550,20 +571,19 @@ include untracked files if "Show Untracked Files" is checked.</string>
     <number>4</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>20</y>
+      <width>367</width>
+      <height>438</height>
+     </rect>
+    </property>
     <layout class="QVBoxLayout" >
      <property name="spacing" >
       <number>0</number>
      </property>
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="margin" >
       <number>0</number>
      </property>
      <item>
@@ -584,16 +604,7 @@ include untracked files if "Show Untracked Files" is checked.</string>
         <property name="spacing" >
          <number>0</number>
         </property>
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
         <item>
@@ -614,16 +625,7 @@ include untracked files if "Show Untracked Files" is checked.</string>
            <property name="spacing" >
             <number>2</number>
            </property>
-           <property name="leftMargin" >
-            <number>0</number>
-           </property>
-           <property name="topMargin" >
-            <number>0</number>
-           </property>
-           <property name="rightMargin" >
-            <number>0</number>
-           </property>
-           <property name="bottomMargin" >
+           <property name="margin" >
             <number>0</number>
            </property>
            <item>
@@ -709,7 +711,7 @@ otherwise only the selected items will be committed.</string>
              <property name="sizeType" >
               <enum>QSizePolicy::MinimumExpanding</enum>
              </property>
-             <property name="sizeHint" >
+             <property name="sizeHint" stdset="0" >
               <size>
                <width>20</width>
                <height>40</height>
@@ -732,16 +734,7 @@ otherwise only the selected items will be committed.</string>
            <property name="spacing" >
             <number>0</number>
            </property>
-           <property name="leftMargin" >
-            <number>0</number>
-           </property>
-           <property name="topMargin" >
-            <number>0</number>
-           </property>
-           <property name="rightMargin" >
-            <number>0</number>
-           </property>
-           <property name="bottomMargin" >
+           <property name="margin" >
             <number>0</number>
            </property>
            <item>
@@ -770,7 +763,7 @@ otherwise only the selected items will be committed.</string>
                <property name="sizeType" >
                 <enum>QSizePolicy::Preferred</enum>
                </property>
-               <property name="sizeHint" >
+               <property name="sizeHint" stdset="0" >
                 <size>
                  <width>20</width>
                  <height>20</height>
@@ -1113,7 +1106,7 @@ retrieve the latest commit message prior to committing.</string>
   </action>
   <action name="menu_manage_bookmarks" >
    <property name="text" >
-    <string>Open / Manage Bookmarks...</string>
+    <string>Bookmarks...</string>
    </property>
   </action>
   <action name="menu_save_bookmark" >
@@ -1138,7 +1131,7 @@ retrieve the latest commit message prior to committing.</string>
   </action>
   <action name="menu_open_repo" >
    <property name="text" >
-    <string>Open Repository...</string>
+    <string>Open...</string>
    </property>
   </action>
   <action name="menu_stash" >
@@ -1157,6 +1150,11 @@ retrieve the latest commit message prior to committing.</string>
   <action name="menu_diffedit_branch" >
    <property name="text" >
     <string>Launch Diff Editor Against...</string>
+   </property>
+  </action>
+  <action name="menu_clone_repo" >
+   <property name="text" >
+    <string>Clone...</string>
    </property>
   </action>
  </widget>

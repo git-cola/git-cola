@@ -89,6 +89,7 @@ class Controller(QObserver):
             # File Menu
             menu_quit = self.quit_app,
             menu_open_repo = self.open_repo,
+            menu_clone_repo = self.clone_repo,
             menu_manage_bookmarks = manage_bookmarks,
             menu_save_bookmark = save_bookmark,
 
@@ -444,6 +445,23 @@ class Controller(QObserver):
                                          os.getcwd())
         if dirname:
             utils.fork(sys.argv[0], dirname)
+
+    def clone_repo(self):
+        """Clones a git repository"""
+        url, ok = qtutils.input("Path or URL to clone (Env. $VARS okay)")
+        if not ok or not url:
+            return
+        url = os.path.expandvars(url)
+        msg = 'Enter a directory name for the new repository'
+        dirname = qtutils.new_dir_dialog(self.view, msg)
+        while dirname and os.path.exists(dirname):
+            qtutils.information('Directory Exists',
+                                'Please enter a non-existent path name.')
+            dirname = qtutils.new_dir_dialog(self.view, msg)
+        if not dirname:
+            return
+        self.log(self.model.git.clone(url, dirname))
+        utils.fork(sys.argv[0], dirname)
 
     def quit_app(self, *args):
         """Save config settings and cleanup any inotify threads."""

@@ -96,12 +96,20 @@ def opendir_dialog(parent, title, directory):
                                             flags)
     return unicode(qstr)
 
-def save_dialog(parent, title, filename=None):
-    qstr = QFileDialog.getSaveFileName(parent, parent.tr(title), filename)
-    return unicode(qstr)
+def save_dialog(parent, title, filename=''):
+    return unicode(QFileDialog.getSaveFileName(parent,
+                                               parent.tr(title),
+                                               filename))
+
+def new_dir_dialog(parent, title, filename=''):
+    return unicode(QFileDialog.getSaveFileName(parent,
+                                               parent.tr(title),
+                                               filename,
+                                               os.getcwd(),
+                                               parent.tr('New Directory ()')))
 
 def dir_dialog(parent, title, directory):
-    directory = QFileDialog.getExistingDirectory(parent, title, directory)
+    directory = QFileDialog.getExistingDirectory(parent, parent.tr(title), directory)
     return unicode(directory)
 
 def get_qicon(filename):
