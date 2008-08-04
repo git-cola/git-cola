@@ -120,6 +120,17 @@ QCheckBox:indicator:unchecked {
     image: url(images:checkbox_unchecked.png);
 }
 
+QRadioButton:indicator {
+    width: 14px;
+    height: 16px;
+}
+QRadioButton:indicator:checked {
+    image: url(images:checkbox_checked.png);
+}
+QRadioButton:indicator:unchecked {
+    image: url(images:checkbox_unchecked.png);
+}
+
 
 /* Vertical Scrollbar */
 QScrollBar::handle:vertical {
