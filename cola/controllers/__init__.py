@@ -59,6 +59,7 @@ class Controller(QObserver):
 
         # Unstaged changes context menu
         view.unstaged.contextMenuEvent = self.unstaged_context_menu_event
+        view.staged.contextMenuEvent = self.staged_context_menu_event
 
         # Diff display context menu
         view.display_text.contextMenuEvent = self.diff_context_menu_event
@@ -757,6 +758,23 @@ class Controller(QObserver):
         output = command(*apply_items)
         self.log(output, quiet=True)
 
+    def staged_context_menu_event(self, event):
+        menu = self.staged_context_menu_setup()
+        staged = self.view.staged
+        menu.exec_(staged.mapToGlobal(event.pos()))
+
+    def staged_context_menu_setup(self):
+        staged_item = qtutils.get_selected_item(self.view.staged,
+                                                self.model.get_staged())
+        menu = QMenu(self.view)
+        menu.addAction(self.tr('Unstage Selected'), self.unstage_selected)
+        menu.addSeparator()
+        menu.addAction(self.tr('Launch Editor'),
+                       lambda: self.edit_file(staged=True))
+        menu.addAction(self.tr('Launch Diff Editor'),
+                       lambda: self.edit_diff(staged=True))
+        return menu
+
     def unstaged_context_menu_event(self, event):
         menu = self.unstaged_context_menu_setup()
         unstaged = self.view.unstaged
@@ -771,18 +789,20 @@ class Controller(QObserver):
         enable_undo = enable_staging and is_tracked
 
         menu = QMenu(self.view)
-
         if enable_staging:
             menu.addAction(self.tr('Stage Selected'), self.stage_selected)
-        if enable_undo:
-            menu.addAction(self.tr('Undo Local Changes'), self.undo_changes)
+            menu.addSeparator()
+        if is_unmerged and not utils.is_broken():
+            menu.addAction(self.tr('Launch Mergetool'), self.mergetool)
+
         menu.addAction(self.tr('Launch Editor'),
                        lambda: self.edit_file(staged=False))
         if enable_staging:
             menu.addAction(self.tr('Launch Diff Editor'),
                            lambda: self.edit_diff(staged=False))
-        if is_unmerged and not utils.is_broken():
-            menu.addAction(self.tr('Launch Mergetool'), self.mergetool)
+        if enable_undo:
+            menu.addSeparator()
+            menu.addAction(self.tr('Undo All Changes'), self.undo_changes)
         return menu
 
     def diff_context_menu_event(self, event):

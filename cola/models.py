@@ -550,7 +550,8 @@ class Model(model.Model):
             elif filename in self.get_unmerged():
                 status = 'Unmerged'
                 diff = self.diff_helper(filename=filename,
-                                        cached=False)
+                                        cached=False,
+                                        patch_with_raw=False)
             elif filename in self.get_modified():
                 status = 'Modified, not staged'
                 diff = self.diff_helper(filename=filename,
@@ -700,7 +701,8 @@ class Model(model.Model):
                     cached=True,
                     with_diff_header=False,
                     suppress_header=True,
-                    reverse=False):
+                    reverse=False,
+                    patch_with_raw=True):
         "Invokes git diff on a filepath."
 
         argv = []
@@ -719,7 +721,7 @@ class Model(model.Model):
         diffoutput = self.git.diff(R=reverse,
                                    color=color,
                                    cached=cached,
-                                   p=True,
+                                   patch_with_raw=patch_with_raw,
                                    unified=self.diff_context,
                                    with_raw_output=True,
                                    *argv)
