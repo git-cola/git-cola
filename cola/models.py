@@ -546,23 +546,18 @@ class Model(model.Model):
             if os.path.isdir(filename):
                 status = 'Untracked directory'
                 diff = '\n'.join(os.listdir(filename))
+
+            elif filename in self.get_unmerged():
+                status = 'Unmerged'
+                diff = self.diff_helper(filename=filename,
+                                        cached=False)
             elif filename in self.get_modified():
                 status = 'Modified, not staged'
                 diff = self.diff_helper(filename=filename,
                                         cached=False)
             else:
                 status = 'Untracked, not staged'
-
-                file_type = utils.run_cmd('file', '-b', filename)
-                if 'binary' in file_type or 'data' in file_type:
-                    diff = utils.run_cmd('hexdump', '-C', filename)
-                else:
-                    if os.path.exists(filename):
-                        file = open(filename, 'r')
-                        diff = file.read()
-                        file.close()
-                    else:
-                        diff = ''
+                diff = 'SHA1: ' + self.git.hash_object(filename)
         return diff, status, filename
 
     def stage_modified(self):
@@ -724,7 +719,7 @@ class Model(model.Model):
         diffoutput = self.git.diff(R=reverse,
                                    color=color,
                                    cached=cached,
-                                   patch_with_raw=True,
+                                   p=True,
                                    unified=self.diff_context,
                                    with_raw_output=True,
                                    *argv)
