@@ -624,7 +624,9 @@ class Controller(QObserver):
         self.filename = filename
 
     def process_diff_selection(self, items, widget,
-                               cached=True, selected=False, reverse=True):
+                               cached=True, selected=False,
+                               apply_to_worktree=False,
+                               reverse=False):
 
         if self.mode == Controller.MODE_BRANCH:
             branch = self.branch
@@ -635,7 +637,7 @@ class Controller(QObserver):
                                       branch=branch)
             offset, selection = self.view.diff_selection()
             parser.process_diff_selection(selected, offset, selection,
-                                          branch=True)
+                                          apply_to_worktree=True)
             self.rescan()
         else:
             filename = qtutils.get_selected_item(widget, items)
@@ -643,10 +645,41 @@ class Controller(QObserver):
                 return
             parser = utils.DiffParser(self.model,
                                       filename=filename,
-                                      cached=cached)
+                                      cached=cached,
+                                      reverse=apply_to_worktree)
             offset, selection = self.view.diff_selection()
-            parser.process_diff_selection(selected, offset, selection)
+            parser.process_diff_selection(selected, offset, selection,
+                                          apply_to_worktree=apply_to_worktree)
             self.rescan()
+
+    def undo_hunk(self):
+        if not qtutils.question(self.view,
+                                'Destroy Local Changes?',
+                                'This operation will drop '
+                                'uncommitted changes.\n'
+                                'Continue?',
+                                default=False):
+            return
+        self.process_diff_selection(self.model.get_unstaged(),
+                                    self.view.unstaged,
+                                    apply_to_worktree=True,
+                                    cached=False,
+                                    reverse=True)
+
+    def undo_selection(self):
+        if not qtutils.question(self.view,
+                                'Destroy Local Changes?',
+                                'This operation will drop '
+                                'uncommitted changes.\n'
+                                'Continue?',
+                                default=False):
+            return
+        self.process_diff_selection(self.model.get_unstaged(),
+                                    self.view.unstaged,
+                                    apply_to_worktree=True,
+                                    cached=False,
+                                    reverse=True,
+                                    selected=True)
 
     def stage_hunk(self):
         self.process_diff_selection(self.model.get_unstaged(),
@@ -704,7 +737,7 @@ class Controller(QObserver):
         if items_to_undo:
             if not qtutils.question(self.view,
                                     'Destroy Local Changes?',
-                                    'This operation will drop all '
+                                    'This operation will drop '
                                     'uncommitted changes.\n'
                                     'Continue?',
                                     default=False):
@@ -812,31 +845,34 @@ class Controller(QObserver):
 
     def diff_context_menu_setup(self):
         menu = QMenu(self.view)
+
         if self.mode == Controller.MODE_WORKTREE:
-            unstaged_item = qtutils.get_selected_item(self.view.unstaged,
-                                                      self.model.get_unstaged())
+            unstaged_item =\
+                qtutils.get_selected_item(self.view.unstaged,
+                                          self.model.get_unstaged())
             is_tracked= (unstaged_item
                          and unstaged_item not in self.model.get_untracked())
-            if is_tracked:
+            is_unmerged = (unstaged_item
+                           and unstaged_item in self.model.get_unmerged())
+            if is_tracked and not is_unmerged:
                 menu.addAction(self.tr('Stage Hunk For Commit'),
                                self.stage_hunk)
                 menu.addAction(self.tr('Stage Selected Lines'),
                                self.stage_hunk_selection)
+                menu.addSeparator()
+                menu.addAction(self.tr('Undo Hunk'), self.undo_hunk)
+                menu.addAction(self.tr('Undo Selection'), self.undo_selection)
 
         elif self.mode == Controller.MODE_INDEX:
-            menu.addAction(self.tr('Unstage Hunk From Commit'),
-                           self.unstage_hunk)
-            menu.addAction(self.tr('Unstage Selected Lines'),
-                           self.unstage_hunk_selection)
+            menu.addAction(self.tr('Unstage Hunk From Commit'), self.unstage_hunk)
+            menu.addAction(self.tr('Unstage Selected Lines'), self.unstage_hunk_selection)
 
         elif self.mode == Controller.MODE_BRANCH:
-            menu.addAction(self.tr('Apply Diff To Work Tree'),
-                           self.stage_hunk)
-            menu.addAction(self.tr('Apply Diff Selection To Work Tree'),
-                           self.stage_hunk_selection)
+            menu.addAction(self.tr('Apply Diff To Work Tree'), self.stage_hunk)
+            menu.addAction(self.tr('Apply Diff Selection To Work Tree'), self.stage_hunk_selection)
 
-        menu.addAction(self.tr('Copy'),
-                       self.view.copy_display)
+        menu.addSeparator()
+        menu.addAction(self.tr('Copy'), self.view.copy_display)
         return menu
 
     def select_commits_gui(self, title, revs, summaries):

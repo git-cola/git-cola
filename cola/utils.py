@@ -243,7 +243,8 @@ def write(path, contents):
     file.close()
 
 class DiffParser(object):
-    def __init__(self, model, filename='', cached=True, branch=None):
+    def __init__(self, model, filename='',
+                 cached=True, branch=None, reverse=False):
 
         self.__header_re = re.compile('^@@ -(\d+),(\d+) \+(\d+),(\d+) @@.*')
         self.__headers = []
@@ -263,7 +264,7 @@ class DiffParser(object):
                                            branch=branch,
                                            with_diff_header=True,
                                            cached=cached and not bool(branch),
-                                           reverse=cached or bool(branch))
+                                           reverse=cached or bool(branch) or reverse)
         self.model = model
         self.diff = diff
         self.header = header
@@ -416,7 +417,8 @@ class DiffParser(object):
                 self.__diff_spans[-1][-1] += line_len
                 self.__diff_offsets[self.__idx] += line_len
 
-    def process_diff_selection(self, selected, offset, selection, branch=False):
+    def process_diff_selection(self, selected, offset, selection,
+                               apply_to_worktree=False):
         if selection:
             start = self.fwd_diff.index(selection)
             end = start + len(selection)
@@ -431,7 +433,7 @@ class DiffParser(object):
                 if contents:
                     tmpfile = self.model.get_tmp_filename()
                     write(tmpfile, contents)
-                    if branch:
+                    if apply_to_worktree:
                         self.model.apply_diff_to_worktree(tmpfile)
                     else:
                         self.model.apply_diff(tmpfile)
@@ -441,7 +443,7 @@ class DiffParser(object):
             for idx, diff in enumerate(self.diffs):
                 tmpfile = self.model.get_tmp_filename()
                 if self.write_diff(tmpfile,idx):
-                    if branch:
+                    if apply_to_worktree:
                         self.model.apply_diff_to_worktree(tmpfile)
                     else:
                         self.model.apply_diff(tmpfile)
