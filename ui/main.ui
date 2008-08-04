@@ -186,6 +186,16 @@ include untracked files if "Show Untracked Files" is checked.</string>
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QCheckBox" name="vertical_checkbox" >
+            <property name="text" >
+             <string>Vertical</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>

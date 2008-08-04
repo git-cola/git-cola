@@ -51,12 +51,11 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
         self.action_paste = self.commitmsg.paste
         self.action_select_all = self.commitmsg.selectAll
 
-        # Handle automatically setting the horizontal/vertical orientation
-        self.splitter.resizeEvent = self.splitter_resize_event
-
         # Qt does not support noun/verbs
         self.commit_button.setText(qtutils.tr('Commit@@verb'))
         self.commit_menu.setTitle(qtutils.tr('Commit@@verb'))
+
+        self.tabifyDockWidget(self.diff_dock, self.editor_dock)
 
         # Default to creating a new commit(i.e. not an amend commit)
         self.new_commit_radio.setChecked(True)
@@ -65,26 +64,25 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
                                    'Show/Hide Log Window')
         self.toolbar_show_log.setEnabled(True)
 
-        self.tabifyDockWidget(self.diff_dock, self.editor_dock)
-
         # Diff/patch syntax highlighter
         DiffSyntaxHighlighter(self.display_text.document())
 
+        # Handle the vertical checkbox action
+        self.connect(self.vertical_checkbox,
+                     QtCore.SIGNAL('clicked(bool)'),
+                     self.handle_vertical_checkbox)
+
+
+    def handle_vertical_checkbox(self, checked):
+        if checked:
+            self.splitter.setOrientation(QtCore.Qt.Vertical)
+        else:
+            self.splitter.setOrientation(QtCore.Qt.Horizontal)
+
     def set_info(self, txt):
         self.statusBar().showMessage(self.tr(txt))
-
-    def splitter_resize_event(self, event):
-        width = self.splitter.width()
-        height = self.splitter.height()
-        if width > height:
-            self.splitter.setOrientation(QtCore.Qt.Horizontal)
-        else:
-            self.splitter.setOrientation(QtCore.Qt.Vertical)
-        QSplitter.resizeEvent(self.splitter, event)
-
     def show_editor(self):
         self.editor_dock.raise_()
-
     def show_diff(self):
         self.diff_dock.raise_()
 
