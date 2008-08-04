@@ -184,31 +184,11 @@ class Controller(QObserver):
         self.connect(view.toolbar_show_log,
                      'triggered()', self.show_log)
 
-        self.connect(view.diff_dock,
-                     'topLevelChanged(bool)',
-                     lambda(b): self.setwindow(view.diff_dock, b))
-
-        self.connect(view.editor_dock,
-                     'topLevelChanged(bool)',
-                     lambda(b): self.setwindow(view.editor_dock, b))
-
-        self.connect(view.status_dock,
-                     'topLevelChanged(bool)',
-                     lambda(b): self.setwindow(view.status_dock, b))
-
         self.load_gui_settings()
         self.rescan()
         self.init_log_window()
         self.refresh_view('global_cola_fontdiff', 'global_cola_fontui')
         self.start_inotify_thread()
-
-    def setwindow(self, dock, isfloating):
-        if isfloating:
-            if not utils.is_broken():
-                flags = ( QtCore.Qt.Window
-                    | QtCore.Qt.FramelessWindowHint )
-                dock.setWindowFlags( flags )
-            dock.show()
 
     #####################################################################
     # handle when the listitem icons are clicked
@@ -243,7 +223,7 @@ class Controller(QObserver):
         qtutils.update_listwidget(widget,
                                   self.model.get_staged(),
                                   staged=True)
-        self.view.editor_dock.raise_()
+        self.view.show_editor()
 
     def action_unstaged(self, widget):
         qtutils.update_listwidget(widget,
@@ -269,7 +249,7 @@ class Controller(QObserver):
             return
         stuff = self.model.grep(txt)
         self.view.display_text.setText(stuff)
-        self.view.diff_dock.raise_()
+        self.view.show_diff()
 
     def show_log(self, *rest):
         qtutils.toggle_log_window()
@@ -371,7 +351,7 @@ class Controller(QObserver):
         diff, status, filename = self.model.get_diff_details(row, staged=staged)
         self.view.set_display(diff)
         self.view.set_info(self.tr(status))
-        self.view.diff_dock.raise_()
+        self.view.show_diff()
         qtutils.set_clipboard(filename)
 
     def mergetool(self):
@@ -584,7 +564,6 @@ class Controller(QObserver):
         # Set the new commit message
         if set_msg:
             self.model.load_commitmsg(merge_msg_path)
-            self.view.editor_dock.raise_()
 
     def fetch(self):
         remote_action(self.model, self.view, "Fetch")
@@ -650,7 +629,7 @@ class Controller(QObserver):
                                       branch=branch)
         self.view.set_display(diff)
         self.view.set_info(status)
-        self.view.diff_dock.raise_()
+        self.view.show_diff()
 
         # Set state machine to branch mode
         self.mode = Controller.MODE_BRANCH

@@ -57,6 +57,7 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
         # Qt does not support noun/verbs
         self.commit_button.setText(qtutils.tr('Commit@@verb'))
         self.commit_menu.setTitle(qtutils.tr('Commit@@verb'))
+
         # Default to creating a new commit(i.e. not an amend commit)
         self.new_commit_radio.setChecked(True)
         self.toolbar_show_log =\
@@ -64,20 +65,13 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
                                    'Show/Hide Log Window')
         self.toolbar_show_log.setEnabled(True)
 
-        # Setup the default dock layout
         self.tabifyDockWidget(self.diff_dock, self.editor_dock)
-
-        dock_area = QtCore.Qt.TopDockWidgetArea
-        self.addDockWidget(dock_area, self.status_dock)
-
-        toolbar_area = QtCore.Qt.BottomToolBarArea
-        self.addToolBar(toolbar_area, self.toolbar)
 
         # Diff/patch syntax highlighter
         DiffSyntaxHighlighter(self.display_text.document())
 
     def set_info(self, txt):
-        self.displayLabel.setText(self.tr(txt))
+        self.statusBar().showMessage(self.tr(txt))
 
     def splitter_resize_event(self, event):
         width = self.splitter.width()
@@ -87,6 +81,12 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
         else:
             self.splitter.setOrientation(QtCore.Qt.Vertical)
         QSplitter.resizeEvent(self.splitter, event)
+
+    def show_editor(self):
+        self.editor_dock.raise_()
+
+    def show_diff(self):
+        self.diff_dock.raise_()
 
     def action_cut(self):
         self.action_copy()

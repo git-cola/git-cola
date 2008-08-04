@@ -6,35 +6,220 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>853</width>
-    <height>537</height>
+    <width>619</width>
+    <height>479</height>
    </rect>
   </property>
   <property name="dockOptions" >
-   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
+   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
   <widget class="QWidget" name="centralwidget" >
    <property name="geometry" >
     <rect>
-     <x>0</x>
-     <y>490</y>
-     <width>853</width>
-     <height>32</height>
+     <x>361</x>
+     <y>26</y>
+     <width>258</width>
+     <height>438</height>
     </rect>
    </property>
    <property name="sizePolicy" >
-    <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+    <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
      <horstretch>1</horstretch>
-     <verstretch>0</verstretch>
+     <verstretch>1</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QVBoxLayout" >
+   <layout class="QHBoxLayout" name="horizontalLayout_3" >
     <property name="spacing" >
      <number>0</number>
     </property>
     <property name="margin" >
      <number>0</number>
     </property>
+    <item>
+     <widget class="QSplitter" name="splitter" >
+      <property name="sizePolicy" >
+       <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+        <horstretch>0</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>1</width>
+        <height>1</height>
+       </size>
+      </property>
+      <property name="frameShape" >
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow" >
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="opaqueResize" >
+       <bool>false</bool>
+      </property>
+      <property name="handleWidth" >
+       <number>2</number>
+      </property>
+      <widget class="QWidget" name="layoutWidget" >
+       <layout class="QVBoxLayout" name="_7" >
+        <property name="spacing" >
+         <number>0</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="_8" >
+          <item>
+           <widget class="QLabel" name="label_3" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize" >
+             <size>
+              <width>0</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="text" >
+             <string>Unstaged Changes</string>
+            </property>
+            <property name="textFormat" >
+             <enum>Qt::PlainText</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="untracked_checkbox" >
+            <property name="minimumSize" >
+             <size>
+              <width>0</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="toolTip" >
+             <string>Includes untracked files in the unstaged changes list.
+Disabling this causes cola to only display files known to git
+in the unstaged changes list.</string>
+            </property>
+            <property name="text" >
+             <string>Show Untracked Files</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+            <property name="tristate" >
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QListWidget" name="unstaged" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize" >
+           <size>
+            <width>1</width>
+            <height>1</height>
+           </size>
+          </property>
+          <property name="toolTip" >
+           <string>A list of all the unstaged changes.
+This list includes those files known to git and can optionally
+include untracked files if "Show Untracked Files" is checked.</string>
+          </property>
+          <property name="alternatingRowColors" >
+           <bool>true</bool>
+          </property>
+          <property name="selectionMode" >
+           <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
+          <property name="viewMode" >
+           <enum>QListView::ListMode</enum>
+          </property>
+          <property name="uniformItemSizes" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="layoutWidget_2" >
+       <layout class="QVBoxLayout" name="_9" >
+        <property name="spacing" >
+         <number>0</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="_10" >
+          <property name="bottomMargin" >
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_2" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize" >
+             <size>
+              <width>0</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="text" >
+             <string>Staged Changes (Will Commit)</string>
+            </property>
+            <property name="textFormat" >
+             <enum>Qt::PlainText</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QListWidget" name="staged" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize" >
+           <size>
+            <width>1</width>
+            <height>1</height>
+           </size>
+          </property>
+          <property name="toolTip" >
+           <string>A list of all staged changes for the next commit.</string>
+          </property>
+          <property name="alternatingRowColors" >
+           <bool>true</bool>
+          </property>
+          <property name="selectionMode" >
+           <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
+          <property name="viewMode" >
+           <enum>QListView::ListMode</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar" >
@@ -42,22 +227,10 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>853</width>
+     <width>619</width>
      <height>26</height>
     </rect>
    </property>
-   <widget class="QMenu" name="repository_menu" >
-    <property name="title" >
-     <string>Repository</string>
-    </property>
-    <addaction name="menu_visualize_current" />
-    <addaction name="menu_visualize_all" />
-    <addaction name="separator" />
-    <addaction name="menu_browse_commits" />
-    <addaction name="separator" />
-    <addaction name="menu_browse_branch" />
-    <addaction name="menu_browse_other_branch" />
-   </widget>
    <widget class="QMenu" name="commit_menu" >
     <property name="title" >
      <string>Commit</string>
@@ -155,306 +328,64 @@
    <addaction name="commit_menu" />
    <addaction name="branch_menu" />
    <addaction name="merge_menu" />
-   <addaction name="repository_menu" />
-  </widget>
-  <widget class="QToolBar" name="toolbar" >
-   <property name="enabled" >
-    <bool>true</bool>
-   </property>
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>522</y>
-     <width>853</width>
-     <height>15</height>
-    </rect>
-   </property>
-   <property name="windowTitle" >
-    <string>toolbar</string>
-   </property>
-   <property name="movable" >
-    <bool>true</bool>
-   </property>
-   <property name="allowedAreas" >
-    <set>Qt::BottomToolBarArea|Qt::TopToolBarArea</set>
-   </property>
-   <property name="iconSize" >
-    <size>
-     <width>24</width>
-     <height>16</height>
-    </size>
-   </property>
-   <property name="floatable" >
-    <bool>true</bool>
-   </property>
-   <attribute name="toolBarArea" >
-    <enum>BottomToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak" >
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QDockWidget" name="status_dock" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>26</y>
-     <width>238</width>
-     <height>458</height>
-    </rect>
-   </property>
-   <property name="floating" >
-    <bool>false</bool>
-   </property>
-   <property name="allowedAreas" >
-    <set>Qt::AllDockWidgetAreas</set>
-   </property>
-   <property name="windowTitle" >
-    <string>Status View</string>
-   </property>
-   <attribute name="dockWidgetArea" >
-    <number>4</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>20</y>
-      <width>238</width>
-      <height>438</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" >
-     <property name="spacing" >
-      <number>0</number>
-     </property>
-     <property name="margin" >
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QSplitter" name="splitter" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="MinimumExpanding" hsizetype="Expanding" >
-         <horstretch>0</horstretch>
-         <verstretch>1</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize" >
-        <size>
-         <width>16</width>
-         <height>96</height>
-        </size>
-       </property>
-       <property name="orientation" >
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="handleWidth" >
-        <number>2</number>
-       </property>
-       <widget class="QWidget" name="layoutWidget" >
-        <layout class="QVBoxLayout" >
-         <property name="spacing" >
-          <number>0</number>
-         </property>
-         <item>
-          <layout class="QHBoxLayout" >
-           <property name="spacing" >
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QLabel" name="label_3" >
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>22</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>Unstaged Changes</string>
-             </property>
-             <property name="textFormat" >
-              <enum>Qt::PlainText</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="untracked_checkbox" >
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>22</height>
-              </size>
-             </property>
-             <property name="toolTip" >
-              <string>Includes untracked files in the unstaged changes list.
-Disabling this causes cola to only display files known to git
-in the unstaged changes list.</string>
-             </property>
-             <property name="text" >
-              <string>Show Untracked Files</string>
-             </property>
-             <property name="checked" >
-              <bool>true</bool>
-             </property>
-             <property name="tristate" >
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QListWidget" name="unstaged" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="MinimumExpanding" hsizetype="Preferred" >
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize" >
-            <size>
-             <width>10</width>
-             <height>20</height>
-            </size>
-           </property>
-           <property name="toolTip" >
-            <string>A list of all the unstaged changes.
-This list includes those files known to git and can optionally
-include untracked files if "Show Untracked Files" is checked.</string>
-           </property>
-           <property name="alternatingRowColors" >
-            <bool>true</bool>
-           </property>
-           <property name="selectionMode" >
-            <enum>QAbstractItemView::ExtendedSelection</enum>
-           </property>
-           <property name="viewMode" >
-            <enum>QListView::ListMode</enum>
-           </property>
-           <property name="uniformItemSizes" >
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="layoutWidget" >
-        <layout class="QVBoxLayout" >
-         <property name="spacing" >
-          <number>0</number>
-         </property>
-         <item>
-          <layout class="QHBoxLayout" >
-           <property name="spacing" >
-            <number>0</number>
-           </property>
-           <property name="bottomMargin" >
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QLabel" name="label_2" >
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>22</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>Staged Changes (Will Commit)</string>
-             </property>
-             <property name="textFormat" >
-              <enum>Qt::PlainText</enum>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QListWidget" name="staged" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="MinimumExpanding" hsizetype="Preferred" >
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize" >
-            <size>
-             <width>10</width>
-             <height>20</height>
-            </size>
-           </property>
-           <property name="toolTip" >
-            <string>A list of all staged changes for the next commit.</string>
-           </property>
-           <property name="alternatingRowColors" >
-            <bool>true</bool>
-           </property>
-           <property name="selectionMode" >
-            <enum>QAbstractItemView::ExtendedSelection</enum>
-           </property>
-           <property name="viewMode" >
-            <enum>QListView::ListMode</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </widget>
-     </item>
-    </layout>
-   </widget>
   </widget>
   <widget class="QDockWidget" name="diff_dock" >
    <property name="geometry" >
     <rect>
-     <x>244</x>
+     <x>0</x>
      <y>26</y>
-     <width>236</width>
-     <height>458</height>
+     <width>355</width>
+     <height>194</height>
     </rect>
    </property>
-   <property name="layoutDirection" >
-    <enum>Qt::LeftToRight</enum>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize" >
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
    </property>
    <property name="floating" >
     <bool>false</bool>
-   </property>
-   <property name="allowedAreas" >
-    <set>Qt::AllDockWidgetAreas</set>
    </property>
    <property name="windowTitle" >
     <string>Diff View</string>
    </property>
    <attribute name="dockWidgetArea" >
-    <number>4</number>
+    <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_3" >
+   <widget class="QWidget" name="dockWidgetContents_2" >
     <property name="geometry" >
      <rect>
       <x>0</x>
       <y>20</y>
-      <width>236</width>
-      <height>438</height>
+      <width>355</width>
+      <height>174</height>
      </rect>
     </property>
-    <property name="sizePolicy" >
-     <sizepolicy vsizetype="MinimumExpanding" hsizetype="Preferred" >
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <layout class="QVBoxLayout" >
+    <layout class="QHBoxLayout" name="horizontalLayout" >
      <property name="spacing" >
       <number>0</number>
      </property>
-     <property name="margin" >
+     <property name="sizeConstraint" >
+      <enum>QLayout::SetNoConstraint</enum>
+     </property>
+     <property name="leftMargin" >
+      <number>4</number>
+     </property>
+     <property name="topMargin" >
       <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>4</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>4</number>
      </property>
      <item>
       <widget class="QWidget" native="1" name="widget" >
@@ -470,45 +401,13 @@ include untracked files if "Show Untracked Files" is checked.</string>
          <height>50</height>
         </size>
        </property>
-       <layout class="QVBoxLayout" >
+       <layout class="QVBoxLayout" name="_6" >
         <property name="spacing" >
          <number>0</number>
         </property>
         <property name="margin" >
          <number>0</number>
         </property>
-        <item>
-         <spacer>
-          <property name="orientation" >
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType" >
-           <enum>QSizePolicy::MinimumExpanding</enum>
-          </property>
-          <property name="sizeHint" stdset="0" >
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="displayLabel" >
-          <property name="frameShape" >
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow" >
-           <enum>QFrame::Plain</enum>
-          </property>
-          <property name="text" >
-           <string/>
-          </property>
-          <property name="alignment" >
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
         <item>
          <widget class="QTextEdit" name="display_text" >
           <property name="sizePolicy" >
@@ -519,8 +418,8 @@ include untracked files if "Show Untracked Files" is checked.</string>
           </property>
           <property name="minimumSize" >
            <size>
-            <width>10</width>
-            <height>20</height>
+            <width>1</width>
+            <height>1</height>
            </size>
           </property>
           <property name="tabChangesFocus" >
@@ -552,39 +451,60 @@ include untracked files if "Show Untracked Files" is checked.</string>
   <widget class="QDockWidget" name="editor_dock" >
    <property name="geometry" >
     <rect>
-     <x>486</x>
-     <y>26</y>
-     <width>367</width>
-     <height>458</height>
+     <x>0</x>
+     <y>226</y>
+     <width>355</width>
+     <height>238</height>
     </rect>
+   </property>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
    <property name="floating" >
     <bool>false</bool>
    </property>
-   <property name="allowedAreas" >
-    <set>Qt::AllDockWidgetAreas</set>
-   </property>
    <property name="windowTitle" >
-    <string>Commit Message Editor</string>
+    <string>Commit Message</string>
    </property>
    <attribute name="dockWidgetArea" >
-    <number>4</number>
+    <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_2" >
+   <widget class="QWidget" name="dockWidgetContents_3" >
     <property name="geometry" >
      <rect>
       <x>0</x>
       <y>20</y>
-      <width>367</width>
-      <height>438</height>
+      <width>355</width>
+      <height>218</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" >
+    <property name="sizePolicy" >
+     <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2" >
      <property name="spacing" >
       <number>0</number>
      </property>
-     <property name="margin" >
+     <property name="sizeConstraint" >
+      <enum>QLayout::SetNoConstraint</enum>
+     </property>
+     <property name="leftMargin" >
+      <number>4</number>
+     </property>
+     <property name="topMargin" >
       <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>4</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>4</number>
      </property>
      <item>
       <widget class="QWidget" native="1" name="widget_2" >
@@ -600,9 +520,9 @@ include untracked files if "Show Untracked Files" is checked.</string>
          <height>100</height>
         </size>
        </property>
-       <layout class="QHBoxLayout" >
+       <layout class="QHBoxLayout" name="_2" >
         <property name="spacing" >
-         <number>0</number>
+         <number>2</number>
         </property>
         <property name="margin" >
          <number>0</number>
@@ -621,15 +541,30 @@ include untracked files if "Show Untracked Files" is checked.</string>
             <height>10</height>
            </size>
           </property>
-          <layout class="QVBoxLayout" >
+          <layout class="QVBoxLayout" name="_3" >
            <property name="spacing" >
             <number>2</number>
+           </property>
+           <property name="sizeConstraint" >
+            <enum>QLayout::SetNoConstraint</enum>
            </property>
            <property name="margin" >
             <number>0</number>
            </property>
            <item>
             <widget class="QPushButton" name="stage_button" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>22</height>
+              </size>
+             </property>
              <property name="toolTip" >
               <string>Invokes "git add" to stage the selected items
 from the "Unstaged Changes" list.</string>
@@ -644,6 +579,18 @@ from the "Unstaged Changes" list.</string>
            </item>
            <item>
             <widget class="QPushButton" name="signoff_button" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>22</height>
+              </size>
+             </property>
              <property name="toolTip" >
               <string>"Sign Off" appends the standard "Signed-Off by: ..."
 message to the current commit message.</string>
@@ -655,6 +602,18 @@ message to the current commit message.</string>
            </item>
            <item>
             <widget class="QPushButton" name="commit_button" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="sizeIncrement" >
+              <size>
+               <width>0</width>
+               <height>22</height>
+              </size>
+             </property>
              <property name="toolTip" >
               <string>Invokes a git commit.
 This commits the files listed in the "Files to Commit" list.
@@ -676,14 +635,26 @@ otherwise only the selected items will be committed.</string>
              </property>
              <property name="sizeHint" stdset="0" >
               <size>
-               <width>20</width>
-               <height>10</height>
+               <width>1</width>
+               <height>4</height>
               </size>
              </property>
             </spacer>
            </item>
            <item>
             <widget class="QPushButton" name="fetch_button" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="sizeIncrement" >
+              <size>
+               <width>0</width>
+               <height>22</height>
+              </size>
+             </property>
              <property name="text" >
               <string>Fetch</string>
              </property>
@@ -691,6 +662,18 @@ otherwise only the selected items will be committed.</string>
            </item>
            <item>
             <widget class="QPushButton" name="push_button" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>22</height>
+              </size>
+             </property>
              <property name="text" >
               <string>Push</string>
              </property>
@@ -698,6 +681,18 @@ otherwise only the selected items will be committed.</string>
            </item>
            <item>
             <widget class="QPushButton" name="pull_button" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>22</height>
+              </size>
+             </property>
              <property name="text" >
               <string>Pull</string>
              </property>
@@ -713,8 +708,8 @@ otherwise only the selected items will be committed.</string>
              </property>
              <property name="sizeHint" stdset="0" >
               <size>
-               <width>20</width>
-               <height>40</height>
+               <width>1</width>
+               <height>4</height>
               </size>
              </property>
             </spacer>
@@ -730,47 +725,24 @@ otherwise only the selected items will be committed.</string>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <layout class="QVBoxLayout" >
+          <layout class="QVBoxLayout" name="_4" >
            <property name="spacing" >
             <number>0</number>
+           </property>
+           <property name="sizeConstraint" >
+            <enum>QLayout::SetNoConstraint</enum>
            </property>
            <property name="margin" >
             <number>0</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" >
+            <layout class="QHBoxLayout" name="_5" >
              <property name="spacing" >
               <number>0</number>
              </property>
              <property name="leftMargin" >
               <number>4</number>
              </property>
-             <item>
-              <widget class="QLabel" name="label" >
-               <property name="text" >
-                <string>Commit Message:</string>
-               </property>
-               <property name="textFormat" >
-                <enum>Qt::PlainText</enum>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer>
-               <property name="orientation" >
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType" >
-                <enum>QSizePolicy::Preferred</enum>
-               </property>
-               <property name="sizeHint" stdset="0" >
-                <size>
-                 <width>20</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
              <item>
               <widget class="QRadioButton" name="new_commit_radio" >
                <property name="toolTip" >
@@ -793,27 +765,37 @@ the most recent commit is amended with contents of the next commit.</string>
                </property>
               </widget>
              </item>
+             <item>
+              <spacer name="horizontalSpacer" >
+               <property name="orientation" >
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType" >
+                <enum>QSizePolicy::MinimumExpanding</enum>
+               </property>
+               <property name="sizeHint" stdset="0" >
+                <size>
+                 <width>1</width>
+                 <height>1</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
             </layout>
            </item>
            <item>
             <widget class="QTextEdit" name="commitmsg" >
              <property name="sizePolicy" >
-              <sizepolicy vsizetype="Minimum" hsizetype="MinimumExpanding" >
+              <sizepolicy vsizetype="MinimumExpanding" hsizetype="Minimum" >
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
              <property name="minimumSize" >
               <size>
-               <width>0</width>
-               <height>20</height>
+               <width>1</width>
+               <height>1</height>
               </size>
-             </property>
-             <property name="font" >
-              <font>
-               <family>Courier</family>
-               <pointsize>12</pointsize>
-              </font>
              </property>
              <property name="toolTip" >
               <string>The commit message for the next commit.
@@ -837,6 +819,43 @@ retrieve the latest commit message prior to committing.</string>
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QToolBar" name="toolbar" >
+   <property name="enabled" >
+    <bool>true</bool>
+   </property>
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>464</y>
+     <width>619</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>toolbar</string>
+   </property>
+   <property name="movable" >
+    <bool>true</bool>
+   </property>
+   <property name="allowedAreas" >
+    <set>Qt::BottomToolBarArea|Qt::TopToolBarArea</set>
+   </property>
+   <property name="iconSize" >
+    <size>
+     <width>24</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="floatable" >
+    <bool>true</bool>
+   </property>
+   <attribute name="toolBarArea" >
+    <enum>BottomToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
   </widget>
   <action name="menu_browse_branch" >
    <property name="text" >
@@ -1159,19 +1178,6 @@ retrieve the latest commit message prior to committing.</string>
   </action>
  </widget>
  <layoutdefault spacing="2" margin="2" />
- <tabstops>
-  <tabstop>commitmsg</tabstop>
-  <tabstop>staged</tabstop>
-  <tabstop>unstaged</tabstop>
-  <tabstop>stage_button</tabstop>
-  <tabstop>signoff_button</tabstop>
-  <tabstop>commit_button</tabstop>
-  <tabstop>push_button</tabstop>
-  <tabstop>untracked_checkbox</tabstop>
-  <tabstop>new_commit_radio</tabstop>
-  <tabstop>amend_radio</tabstop>
-  <tabstop>display_text</tabstop>
- </tabstops>
  <resources/>
  <connections/>
  <designerdata>
