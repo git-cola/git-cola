@@ -184,6 +184,7 @@ class Controller(QObserver):
         self.connect(view.toolbar_show_log,
                      'triggered()', self.show_log)
 
+        self.merge_msg_imported = False
         self.load_gui_settings()
         self.rescan()
         self.init_log_window()
@@ -540,30 +541,15 @@ class Controller(QObserver):
         self.view.setWindowTitle('%s [%s]' % (
                 self.model.get_project(),
                 self.model.get_currentbranch()))
-
         # Check if there's a message file in .git/
+        if self.merge_msg_imported:
+            return
         merge_msg_path = self.model.get_merge_message_path()
         if merge_msg_path is None:
             return
-
-        # A merge message file exists.  
-        set_msg = False
-        if self.model.get_commitmsg():
-            # The commit message editor contains data.
-            # Prompt before overwriting the commit message
-            # with the contents of the merge message.
-            answer = qtutils.question(self.view,
-                                      'Import Commit Message?',
-                                      'A commit message from an in-progress'
-                                      ' merge was found.\n'
-                                      'Import it?')
-            if answer:
-                set_msg = True
-        else:
-            set_msg = True
-        # Set the new commit message
-        if set_msg:
-            self.model.load_commitmsg(merge_msg_path)
+        self.merge_msg_imported = True
+        self.model.load_commitmsg(merge_msg_path)
+        self.view.show_editor()
 
     def fetch(self):
         remote_action(self.model, self.view, "Fetch")
