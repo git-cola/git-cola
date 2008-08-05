@@ -1,6 +1,6 @@
 import os
 import time
-from PyQt4 import QtCore
+from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import qApp
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QMainWindow
@@ -8,6 +8,7 @@ from PyQt4.QtGui import QCheckBox
 from PyQt4.QtGui import QSplitter
 
 from cola import qtutils
+from cola import syntax
 from cola.syntax import DiffSyntaxHighlighter
 from cola.syntax import LogSyntaxHighlighter
 
@@ -32,12 +33,24 @@ def CreateStandardView(uiclass, qtclass, *classes):
             qtclass.__init__(self, parent)
             uiclass.__init__(self)
             self.parent_view = parent
+            syntax.set_theme_properties(self)
             self.setupUi(self)
             self.init(parent, *args, **kwargs)
             for cls in classes:
                 cls.init(self, parent, *args, **kwargs)
         def init(self, parent, *args, **kwargs):
             pass
+        def get_properties(self):
+            # user-definable color properties
+            props = {}
+            for name in syntax.default_colors:
+                props[name] = getattr(self, '_'+name)
+            return props
+        def reset_syntax(self):
+            if hasattr(self, 'syntax') and self.syntax:
+                self.syntax.set_colors(self.get_properties())
+                self.syntax.reset()
+    syntax.install_theme_properties(StandardView)
     return StandardView
 
 class View(CreateStandardView(Ui_main, QMainWindow)):
@@ -65,19 +78,18 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
         self.toolbar_show_log.setEnabled(True)
 
         # Diff/patch syntax highlighter
-        DiffSyntaxHighlighter(self.display_text.document())
+        self.syntax = DiffSyntaxHighlighter(self.display_text.document())
 
         # Handle the vertical checkbox action
         self.connect(self.vertical_checkbox,
-                     QtCore.SIGNAL('clicked(bool)'),
+                     SIGNAL('clicked(bool)'),
                      self.handle_vertical_checkbox)
-
 
     def handle_vertical_checkbox(self, checked):
         if checked:
-            self.splitter.setOrientation(QtCore.Qt.Vertical)
+            self.splitter.setOrientation(Qt.Vertical)
         else:
-            self.splitter.setOrientation(QtCore.Qt.Horizontal)
+            self.splitter.setOrientation(Qt.Horizontal)
 
     def set_info(self, txt):
         self.statusBar().showMessage(self.tr(txt))
@@ -116,7 +128,7 @@ class LogView(CreateStandardView(Ui_logger, QDialog)):
     """A simple dialog to display command logs."""
     def init(self, parent=None, output=None):
         self.setWindowTitle(self.tr('Git Command Log'))
-        LogSyntaxHighlighter(self.output_text.document())
+        self.syntax = LogSyntaxHighlighter(self.output_text.document())
         if output:
             self.set_output(output)
     def clear(self):
@@ -171,14 +183,14 @@ class CommitView(CreateStandardView(Ui_commit, QDialog)):
         if title: self.setWindowTitle(title)
         # Make the list widget slighty larger
         self.splitter.setSizes([ 50, 200 ])
-        DiffSyntaxHighlighter(self.commit_text.document(),
-                whitespace=False)
+        self.syntax = DiffSyntaxHighlighter(self.commit_text.document(),
+                                            whitespace=False)
 
 class SearchView(CreateStandardView(Ui_search, QDialog)):
     def init(self, parent=None):
         self.input.setFocus()
-        DiffSyntaxHighlighter(self.commit_text.document(),
-                whitespace=False)
+        self.syntax = DiffSyntaxHighlighter(self.commit_text.document(),
+                                            whitespace=False)
 
 class MergeView(CreateStandardView(Ui_merge, QDialog)):
     def init(self, parent=None):

@@ -1,25 +1,62 @@
 #!/usr/bin/python
 import re
 from PyQt4.QtCore import Qt
+from PyQt4.QtCore import pyqtProperty
+from PyQt4.QtCore import QVariant
 from PyQt4.QtGui import QFont
 from PyQt4.QtGui import QSyntaxHighlighter
 from PyQt4.QtGui import QTextCharFormat
 from PyQt4.QtGui import QColor
 
+def TERMINAL(pattern):
+    """
+    Denotes that a pattern is the final pattern that should
+    be matched.  If this pattern matches no other formats
+    will be applied, even if they would have matched.
+    """
+    return '__TERMINAL__:%s' % pattern
+
+# Cache the results of re.compile so that we don't keep
+# rebuilding the same regexes whenever stylesheets change
+_RGX_CACHE = {}
+
+default_colors = {}
+def _install_default_colors():
+    def color(c, a=255):
+        qc = QColor(c)
+        qc.setAlpha(a)
+        return qc
+    default_colors.update({
+        'color_add':            color(Qt.green, 128),
+        'color_remove':         color(Qt.red,   128),
+        'color_begin':          color(Qt.darkCyan),
+        'color_header':         color(Qt.darkYellow),
+        'color_stat_add':       color(QColor(32, 255, 32)),
+        'color_stat_info':      color(QColor(32, 32, 255)),
+        'color_stat_remove':    color(QColor(255, 32, 32)),
+        'color_emphasis':       color(Qt.black),
+        'color_info':           color(Qt.blue),
+        'color_date':           color(Qt.darkCyan),
+    })
+_install_default_colors()
+
 class GenericSyntaxHighligher(QSyntaxHighlighter):
-
-    def __init__(self, doc):
+    def __init__(self, doc, *args, **kwargs):
         QSyntaxHighlighter.__init__(self, doc)
-        self.__rules = []
+        for attr, val in default_colors.items():
+            setattr(self, attr, val)
+        self.init(doc, *args, **kwargs)
+        self.reset()
 
-    FINAL_STR = '__FINAL__:'
-    def final(self, pattern=''):
-        """
-        Denotes that a pattern is the final pattern that should
-        be matched.  If this pattern matches no other formats
-        will be applied, even if they would have matched.
-        """
-        return GenericSyntaxHighligher.FINAL_STR + pattern
+    def init(self, *args, **kwargs):
+        pass
+
+    def reset(self):
+        self._rules = []
+        self.generate_rules()
+
+    def generate_rules(self):
+        pass
 
     def create_rules(self, *rules):
         if len(rules) % 2:
@@ -29,19 +66,24 @@ class GenericSyntaxHighligher(QSyntaxHighlighter):
             if idx % 2:
                 continue
             formats = rules[idx+1]
-            terminal = rule.startswith(self.final())
+            terminal = rule.startswith(TERMINAL(''))
             if terminal:
-                rule = rule[len(self.final()):]
-            regex = re.compile(rule)
-            self.__rules.append((regex, formats, terminal,))
+                rule = rule[len(TERMINAL('')):]
+            if rule in _RGX_CACHE:
+                regex = _RGX_CACHE[rule]
+            else:
+                regex = re.compile(rule)
+                _RGX_CACHE[rule] = regex
+            self._rules.append((regex, formats, terminal,))
 
     def get_formats(self, line):
         matched = []
-        for regex, fmts, terminal in self.__rules:
+        for regex, fmts, terminal in self._rules:
             match = regex.match(line)
             if match:
                 matched.append([match, fmts])
-                if terminal: return matched
+                if terminal:
+                    return matched
         return matched
 
     def mkformat(self, fg=None, bg=None, bold=False):
@@ -78,37 +120,37 @@ class GenericSyntaxHighligher(QSyntaxHighlighter):
                             fmts[grpidx])
                 start += length
 
+    def set_colors(self, colordict):
+        for attr, val in colordict.items():
+            setattr(self, attr, val)
+
 class DiffSyntaxHighlighter(GenericSyntaxHighligher):
-    def __init__(self, doc,whitespace=True):
-        GenericSyntaxHighligher.__init__(self,doc)
+    def init(self, doc, whitespace=True):
+        self.whitespace = whitespace
+        GenericSyntaxHighligher.init(self, doc)
 
-        diffstat = self.mkformat(Qt.blue, bold=True)
-        diffstat_add = self.mkformat(Qt.darkGreen, bold=True)
-        diffstat_remove = self.mkformat(Qt.red, bold=True)
+    def generate_rules(self):
+        diff_begin = self.mkformat(self.color_begin, bold=True)
+        diff_head = self.mkformat(self.color_header)
+        diff_add = self.mkformat(bg=self.color_add)
+        diff_remove = self.mkformat(bg=self.color_remove)
 
-        bg_green = QColor(Qt.green)
-        bg_green.setAlpha(128)
+        diffstat_info = self.mkformat(self.color_stat_info, bold=True)
+        diffstat_add = self.mkformat(self.color_stat_add, bold=True)
+        diffstat_remove = self.mkformat(self.color_stat_remove, bold=True)
 
-        bg_red = QColor(Qt.red)
-        bg_red.setAlpha(128)
-
-        diff_begin = self.mkformat(Qt.darkCyan, bold=True)
-        diff_head = self.mkformat(Qt.darkYellow)
-        diff_add = self.mkformat(bg=bg_green)
-        diff_remove = self.mkformat(bg=bg_red)
-
-        if whitespace:
+        if self.whitespace:
             bad_ws = self.mkformat(Qt.black, Qt.red)
 
         # We specify the whitespace rule last so that it is
         # applied after the diff addition/removal rules.
         # The rules for the header
-        diff_bgn_rgx = self.final('^@@|^\+\+\+|^---')
-        diff_hd1_rgx = self.final('^diff --git')
-        diff_hd2_rgx = self.final('^index \S+\.\.\S+')
-        diff_hd3_rgx = self.final('^new file mode')
-        diff_add_rgx = self.final('^\+')
-        diff_rmv_rgx = self.final('^-')
+        diff_bgn_rgx = TERMINAL('^@@|^\+\+\+|^---')
+        diff_hd1_rgx = TERMINAL('^diff --git')
+        diff_hd2_rgx = TERMINAL('^index \S+\.\.\S+')
+        diff_hd3_rgx = TERMINAL('^new file mode')
+        diff_add_rgx = TERMINAL('^\+')
+        diff_rmv_rgx = TERMINAL('^-')
         diff_sts_rgx = ('(.+\|.+?)(\d+)(.+?)([\+]*?)([-]*?)$')
         diff_sum_rgx = ('(\s+\d+ files changed[^\d]*)'
                         '(:?\d+ insertions[^\d]*)'
@@ -120,29 +162,49 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
                           diff_hd3_rgx,     diff_head,
                           diff_add_rgx,     diff_add,
                           diff_rmv_rgx,     diff_remove,
-                          diff_sts_rgx,     (None, diffstat,
+                          diff_sts_rgx,     (None, diffstat_info,
                                              None, diffstat_add,
                                              diffstat_remove),
-                          diff_sum_rgx,     (diffstat,
+                          diff_sum_rgx,     (diffstat_info,
                                              diffstat_add,
                                              diffstat_remove))
-        if whitespace:
+        if self.whitespace:
             self.create_rules('(..*?)(\s+)$', (None, bad_ws))
 
 class LogSyntaxHighlighter(GenericSyntaxHighligher):
-    def __init__(self, doc):
-        GenericSyntaxHighligher.__init__(self,doc)
+    def generate_rules(self):
+        info = self.mkformat(self.color_info, bold=True)
+        emphasis = self.mkformat(self.color_emphasis, bold=True)
+        date = self.mkformat(self.color_date, bold=True)
 
-        blue = self.mkformat(Qt.blue, bold=True)
-        black = self.mkformat(Qt.black, bold=True)
-        dark_cyan = self.mkformat(Qt.darkCyan, bold=True)
+        info_rgx = '^([^:]+:)(.*)$'
+        date_rgx = TERMINAL('^\w{3}\W+\w{3}\W+\d+\W+[:0-9]+\W+\d{4}$')
 
-        blue_black_rgx = '^([^:]+:)(.*)$'
-        dark_cyan_rgx = self.final('^\w{3}\W+\w{3}\W+\d+\W+'
-                                   '[:0-9]+\W+\d{4}$')
+        self.create_rules(date_rgx, date,
+                          info_rgx, (info, emphasis))
 
-        self.create_rules(dark_cyan_rgx,    dark_cyan,
-                          blue_black_rgx,   (blue, black))
+# This is used as a mixin to generate property callbacks
+def accessors(attr):
+    private_attr = '_'+attr
+    def getter(self):
+        if private_attr in self.__dict__:
+            return self.__dict__[private_attr]
+        else:
+            return None
+    def setter(self, value):
+        self.__dict__[private_attr] = value
+        self.reset_syntax()
+    return (getter, setter)
+
+def install_theme_properties(cls):
+    # Diff GUI colors -- this is controllable via the style sheet
+    for name in default_colors:
+        setattr(cls, name, pyqtProperty('QColor', *accessors(name)))
+
+def set_theme_properties(widget):
+    for name, color in default_colors.items():
+        widget.setProperty(name, QVariant(color))
+
 
 if __name__ == '__main__':
     import sys
@@ -162,7 +224,8 @@ if __name__ == '__main__':
             self.output_text.setFont(font)
             self.output_text.setAcceptDrops(False)
             self.vboxlayout.addWidget(self.output_text)
-            DiffSyntaxHighlighter(self.output_text.document())
+            self.syntax = DiffSyntaxHighlighter(self.output_text.document())
+
     app = QtGui.QApplication(sys.argv)
     dialog = SyntaxTestDialog(app.activeWindow())
     dialog.show()

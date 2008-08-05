@@ -1,3 +1,18 @@
+/* Colors for use by the syntax highlighters */
+StandardView {
+    qproperty-color_add:            rgba(0,   255, 0,   64);
+    qproperty-color_remove:         rgba(255, 0,   0,   64);
+    qproperty-color_begin:          rgba(0,   128, 255, 255);
+    qproperty-color_header:         rgba(255, 255, 64,  255);
+    qproperty-color_stat_info:      rgba(255, 128, 0,   255);
+    qproperty-color_stat_add:       rgba(32,  255, 32,  255);
+    qproperty-color_stat_info:      rgba(32,  32,  255, 255);
+    qproperty-color_stat_remove:    rgba(255, 32,  32,  255);
+    qproperty-color_emphasis:       rgba(255, 255, 0,   255);
+    qproperty-color_info:           rgba(255,   0, 255, 255);
+    qproperty-color_date:           rgba(0,   128, 255, 255);
+}
+
 QWidget {
    color: #DFDFDF;
    background-color: #202020;

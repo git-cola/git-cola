@@ -988,3 +988,9 @@ class Model(model.Model):
             return [ s[:s.index(':')] for s in stashes ]
         else:
             return [ s[s.index(':')+1:] for s in stashes ]
+
+    def diffstat(self):
+        return self.git.diff(
+                'HEAD^',
+                unified=self.diff_context,
+                stat=True)

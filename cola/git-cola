@@ -77,7 +77,7 @@ def main():
 
     app = ColaApplication(sys.argv)
     QtGui.QApplication.translate = app.translate
-    app.setWindowIcon(QtGui.QIcon( utils.get_icon('git.png')) )
+    app.setWindowIcon(QtGui.QIcon(utils.get_icon('git.png')))
     locale = str(QtCore.QLocale().system().name())
     qmfile = utils.get_qm_for_locale(locale)
     if os.path.exists(qmfile):
