@@ -93,7 +93,11 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
             self.splitter.setOrientation(Qt.Horizontal)
 
     def set_info(self, txt):
-        self.statusBar().showMessage(self.tr(unicode(txt)))
+        try:
+            translated = self.tr(unicode(txt))
+        except:
+            translated = unicode(txt)
+        self.statusBar().showMessage(translated)
     def show_editor(self):
         self.editor_dock.raise_()
     def show_diff(self):
