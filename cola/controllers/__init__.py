@@ -246,7 +246,7 @@ class Controller(QObserver):
         return search_handler
 
     def grep(self):
-        txt, ok = qtutils.input("grep")
+        txt, ok = qtutils.input('grep')
         if not ok:
             return
         stuff = self.model.grep(txt)
@@ -307,23 +307,20 @@ class Controller(QObserver):
     def commit(self):
         msg = self.model.get_commitmsg()
         if not msg:
-            error_msg = self.tr(""
-                + "Please supply a commit message.\n"
-                + "\n"
-                + "A good commit message has the following format:\n"
-                + "\n"
-                + "- First line: Describe in one sentence what you did.\n"
-                + "- Second line: Blank\n"
-                + "- Remaining lines: Describe why this change is good.\n")
+            error_msg = self.tr(''
+                'Please supply a commit message.\n\n'
+                'A good commit message has the following format:\n\n'
+                '- First line: Describe in one sentence what you did.\n'
+                '- Second line: Blank\n'
+                '- Remaining lines: Describe why this change is good.\n')
             self.log(error_msg)
             return
 
         files = self.model.get_staged()
         if not files and not self.view.amend_radio.isChecked():
-            error_msg = self.tr(""
-                + "No changes to commit.\n"
-                + "\n"
-                + "You must stage at least 1 file before you can commit.\n")
+            error_msg = self.tr(''
+                'No changes to commit.\n\n'
+                'You must stage at least 1 file before you can commit.\n')
             self.log(error_msg)
             return
 
@@ -394,7 +391,7 @@ class Controller(QObserver):
         diff, status, filename = self.model.get_diff_details(row, staged=staged)
         if not selected:
             return
-        contents = self.model.show("HEAD:"+filename, with_raw_output=True)
+        contents = self.model.show('HEAD:'+filename, with_raw_output=True)
         tmpfile = self.model.get_tmp_filename(filename)
         fh = open(tmpfile, 'w')
         fh.write(contents)
@@ -430,7 +427,7 @@ class Controller(QObserver):
 
     def clone_repo(self):
         """Clones a git repository"""
-        url, ok = qtutils.input("Path or URL to clone (Env. $VARS okay)")
+        url, ok = qtutils.input('Path or URL to clone (Env. $VARS okay)')
         if not ok or not url:
             return
         url = os.path.expandvars(url)
@@ -553,13 +550,13 @@ class Controller(QObserver):
         self.view.show_editor()
 
     def fetch(self):
-        remote_action(self.model, self.view, "Fetch")
+        remote_action(self.model, self.view, 'Fetch')
 
     def push(self):
-        remote_action(self.model, self.view, "Push")
+        remote_action(self.model, self.view, 'Push')
 
     def pull(self):
-        remote_action(self.model, self.view, "Pull")
+        remote_action(self.model, self.view, 'Pull')
 
     def show_diffstat(self):
         """Show the diffstat from the latest commit."""
