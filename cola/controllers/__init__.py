@@ -352,7 +352,7 @@ class Controller(QObserver):
             return
         diff, status, filename = self.model.get_diff_details(row, staged=staged)
         self.view.set_display(diff)
-        self.view.set_info(self.tr(status))
+        self.view.set_info(status)
         self.view.show_diff()
         qtutils.set_clipboard(filename)
 
@@ -564,12 +564,12 @@ class Controller(QObserver):
     def show_diffstat(self):
         """Show the diffstat from the latest commit."""
         self.mode = Controller.MODE_NONE
-        self.view.set_info(self.tr('Diffstat'))
+        self.view.set_info('Diffstat')
         self.view.set_display(self.model.diffstat())
 
     def show_index(self):
         self.mode = Controller.MODE_NONE
-        self.view.set_info(self.tr('Index'))
+        self.view.set_info('Index')
         self.view.set_display(self.model.diffindex())
 
     #####################################################################
