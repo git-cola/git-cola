@@ -79,12 +79,6 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="minimumSize" >
-             <size>
-              <width>0</width>
-              <height>22</height>
-             </size>
-            </property>
             <property name="text" >
              <string>Unstaged Changes</string>
             </property>
@@ -95,17 +89,6 @@
           </item>
           <item>
            <widget class="QCheckBox" name="untracked_checkbox" >
-            <property name="minimumSize" >
-             <size>
-              <width>0</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="toolTip" >
-             <string>Includes untracked files in the unstaged changes list.
-Disabling this causes cola to only display files known to git
-in the unstaged changes list.</string>
-            </property>
             <property name="text" >
              <string>Show Untracked Files</string>
             </property>
@@ -126,17 +109,6 @@ in the unstaged changes list.</string>
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-          <property name="minimumSize" >
-           <size>
-            <width>1</width>
-            <height>1</height>
-           </size>
-          </property>
-          <property name="toolTip" >
-           <string>A list of all the unstaged changes.
-This list includes those files known to git and can optionally
-include untracked files if "Show Untracked Files" is checked.</string>
           </property>
           <property name="alternatingRowColors" >
            <bool>true</bool>
@@ -172,12 +144,6 @@ include untracked files if "Show Untracked Files" is checked.</string>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="minimumSize" >
-             <size>
-              <width>0</width>
-              <height>22</height>
-             </size>
-            </property>
             <property name="text" >
              <string>Staged Changes (Will Commit)</string>
             </property>
@@ -205,15 +171,6 @@ include untracked files if "Show Untracked Files" is checked.</string>
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-          <property name="minimumSize" >
-           <size>
-            <width>1</width>
-            <height>1</height>
-           </size>
-          </property>
-          <property name="toolTip" >
-           <string>A list of all staged changes for the next commit.</string>
           </property>
           <property name="alternatingRowColors" >
            <bool>true</bool>
@@ -624,12 +581,6 @@ message to the current commit message.</string>
                <height>22</height>
               </size>
              </property>
-             <property name="toolTip" >
-              <string>Invokes a git commit.
-This commits the files listed in the "Files to Commit" list.
-If "Commit All" is checked, all listed items will be committed,
-otherwise only the selected items will be committed.</string>
-             </property>
              <property name="text" >
               <string>Commit@@verb</string>
              </property>
@@ -755,9 +706,6 @@ otherwise only the selected items will be committed.</string>
              </property>
              <item>
               <widget class="QRadioButton" name="new_commit_radio" >
-               <property name="toolTip" >
-                <string>Causes the next commit to create a new commit object.</string>
-               </property>
                <property name="text" >
                 <string>New Commit</string>
                </property>
@@ -765,11 +713,6 @@ otherwise only the selected items will be committed.</string>
              </item>
              <item>
               <widget class="QRadioButton" name="amend_radio" >
-               <property name="toolTip" >
-                <string>Causes git to reuse the latest commit object.
-"git commit" will be supplied with the "--amend" option so that
-the most recent commit is amended with contents of the next commit.</string>
-               </property>
                <property name="text" >
                 <string>Amend Last Commit</string>
                </property>
@@ -800,18 +743,6 @@ the most recent commit is amended with contents of the next commit.</string>
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
-             </property>
-             <property name="minimumSize" >
-              <size>
-               <width>1</width>
-               <height>1</height>
-              </size>
-             </property>
-             <property name="toolTip" >
-              <string>The commit message for the next commit.
-If you are going to amend a commit you can use the
-"Commit -> Get Latest Comit Message" menu action to
-retrieve the latest commit message prior to committing.</string>
              </property>
              <property name="lineWrapMode" >
               <enum>QTextEdit::NoWrap</enum>

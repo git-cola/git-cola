@@ -1,5 +1,6 @@
 import os
 import time
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import qApp
 from PyQt4.QtGui import QDialog
