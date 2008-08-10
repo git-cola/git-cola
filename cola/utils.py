@@ -209,24 +209,18 @@ def header(msg):
           + '\n')
 
 def parse_geom(geomstr):
-    regex = re.compile('^(\d+)x(\d+)\+(\d+),(\d+)')
+    regex = re.compile('^(\d+)x(\d+)\+(\d+),(\d+).*?')
     match = regex.match(geomstr)
     if match:
         defaults.WIDTH = int(match.group(1))
         defaults.HEIGHT = int(match.group(2))
         defaults.X = int(match.group(3))
         defaults.Y = int(match.group(4))
-
-    return (defaults.WIDTH,
-            defaults.HEIGHT,
-            defaults.X,
-            defaults.Y)
+    return (defaults.WIDTH, defaults.HEIGHT, defaults.X, defaults.Y)
 
 def get_geom():
-    return '%dx%d+%d,%d' % (defaults.WIDTH,
-                            defaults.HEIGHT,
-                            defaults.X,
-                            defaults.Y)
+    return ('%dx%d+%d,%d'
+            % (defaults.WIDTH, defaults.HEIGHT, defaults.X, defaults.Y))
 
 def project_name():
     return os.path.basename(defaults.DIRECTORY)

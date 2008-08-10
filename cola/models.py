@@ -140,7 +140,7 @@ class Model(model.Model):
             unstaged = [],
             untracked = [],
             unmerged = [],
-            window_geom = utils.parse_geom(self.get_global_cola_geometry()),
+            window_geom = utils.parse_geom(self.get_cola_config('geometry')),
 
             #####################################################
             # Used by the create branch dialog

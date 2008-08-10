@@ -769,7 +769,7 @@ class Controller(QObserver):
     def load_gui_settings(self):
         if not self.model.remember_gui_settings():
             return
-        (w,h,x,y,st0,st1,sb0,sb1) = self.model.get_window_geom()
+        (w,h,x,y) = self.model.get_window_geom()
         self.view.resize(w,h)
         self.view.move(x,y)
 
