@@ -4,6 +4,7 @@
 *.rpm
 *.swp
 *~
+/debian/*.log
 /debian/files
 /debian/bld
 /debian/cola
