@@ -16,6 +16,10 @@ GIT_PYTHON_TRACE = os.environ.get("GIT_PYTHON_TRACE", False)
 execute_kwargs = ('istream', 'with_keep_cwd', 'with_extended_output',
                   'with_exceptions', 'with_raw_output')
 
+extra = {}
+if sys.platform == 'win32':
+    extra = {'shell': True}
+
 class Git(object):
     """
     The Git class manages communication with the Git binary
@@ -83,7 +87,8 @@ class Git(object):
                                 cwd=cwd,
                                 stdin=istream,
                                 stderr=subprocess.PIPE,
-                                stdout=subprocess.PIPE
+                                stdout=subprocess.PIPE,
+                                **extra
                                 )
 
         # Wait for the process to return
