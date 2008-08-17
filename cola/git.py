@@ -5,6 +5,7 @@
 # the BSD License: http://www.opensource.org/licenses/bsd-license.php
 
 import os
+import sys
 import subprocess
 
 def dashify(string):
