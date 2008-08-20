@@ -15,6 +15,7 @@ from PyQt4.QtGui import QFont
 from cola import utils
 from cola import qtutils
 from cola import defaults
+from cola import version
 from cola.qobserver import QObserver
 
 # controllers namespace
@@ -895,9 +896,8 @@ class Controller(QObserver):
 
     def init_log_window(self):
         branch = self.model.get_currentbranch()
-        version = defaults.VERSION
         qtutils.log(self.model.get_git_version()
-                   +'\ncola version '+ version
+                   +'\ncola version '+ version.version
                    +'\nCurrent Branch: '+ branch)
 
     def start_inotify_thread(self):

@@ -1,17 +1,33 @@
-#!/usr/bin/env python
-# Copyright(C) 2007, David Aguilar <davvid@gmail.com>
+# Copyright(C) 2008, David Aguilar <davvid@gmail.com>
+
 import optparse
 import sys
 import os
-from os.path import join, dirname, realpath
 
-# Prepend sys.path with cola's module path.
-prefix = dirname(dirname(realpath(sys.argv[0])))
-sys.path.insert(0, join(prefix, 'share'))
+# PyQt4
+try:
+    from PyQt4 import QtCore
+    from PyQt4 import QtGui
+except ImportError:
+    print >> sys.stderr, 'Sorry, you do not seem to have PyQt4 installed.'
+    print >> sys.stderr, 'Please install it before using cola.'
+    print >> sys.stderr, 'e.g.:    sudo apt-get install python-qt4'
+    sys.exit(-1)
 
 from cola import utils
+from cola import version
 from cola.models import Model
-from cola.version import VERSION
+from cola.views import View
+from cola.controllers import Controller
+
+class ColaApplication(QtGui.QApplication):
+    """This makes translation work by throwing out the context."""
+    wrapped = QtGui.QApplication.translate
+    def translate(*args):
+        trtxt = unicode(ColaApplication.wrapped('', *args[2:]))
+        if trtxt[-6:-4] == '@@': # handle @@verb / @@noun
+            trtxt = trtxt[:-6]
+        return trtxt
 
 def main():
     parser = optparse.OptionParser(
@@ -35,11 +51,11 @@ def main():
 
     # This sets up sys.path so that the cola modules can be found.
     if opts.version or 'version' in args:
-        print "cola version", VERSION
+        print "cola version", version.version
         sys.exit(0)
 
     # allow "git cola /repo/path-1 .. /repo/path-N
-    for repo in [ realpath(r) for r in args ]:
+    for repo in [ os.path.realpath(r) for r in args ]:
         if os.path.exists(repo):
             os.chdir(repo)
             utils.fork('git', 'cola')
@@ -53,27 +69,6 @@ def main():
     # load the model right away so that we can bail out when
     # no git repo exists
     model = Model()
-
-    # PyQt4
-    try:
-        from PyQt4 import QtCore
-        from PyQt4 import QtGui
-        from cola.views import View
-        from cola.controllers import Controller
-    except ImportError:
-        print 'Sorry, you do not seem to have PyQt4 installed.'
-        print 'Please install it before using cola.'
-        print 'e.g.:    sudo apt-get install python-qt4'
-        sys.exit(-1)
-
-    class ColaApplication(QtGui.QApplication):
-        """This makes translation work by throwing out the context."""
-        wrapped = QtGui.QApplication.translate
-        def translate(*args):
-            trtxt = unicode(ColaApplication.wrapped('', *args[2:]))
-            if trtxt.endswith('@@verb') or trtxt.endswith('@@noun'):
-                trtxt = trtxt[:-6]
-            return trtxt
 
     app = ColaApplication(sys.argv)
     QtGui.QApplication.translate = app.translate
@@ -104,5 +99,3 @@ def main():
     ctl = Controller(model, view)
     view.show()
     sys.exit(app.exec_())
-if __name__ == '__main__':
-    main()

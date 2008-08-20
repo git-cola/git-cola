@@ -1,4 +1,4 @@
-git-cola: a highly caffeinated git gui
+git cola: a highly caffeinated git gui
 
 Cola is a sweet, carbonated git gui known for its
 sugary flavour and caffeine-inspired features.
@@ -23,28 +23,41 @@ REQUIREMENTS
 
 Python 2.4 or newer
     http://python.org/
+    apt-get install python
 
 PyQt 4.3 or newer
     http://www.riverbankcomputing.co.uk/software/pyqt/intro
+    apt-get install pyqt4-dev-tools
 
-simplejson
+
+ADDITIONAL REQUIREMENTS (optional)
+
+pyinotify (enables inotify support on Linux)
+    http://pyinotify.sourceforge.net/
+    apt-get install python-pyinotify
+
+simplejson (enables bookmarks)
     http://pypi.python.org/pypi/simplejson
+    apt-get install python-simplejson
 
 
 ACKNOWLEDGEMENTS
 
-git-cola includes a copy of the GitPython module:
+git cola includes a copy of the GitPython module:
     http://gitorious.org/projects/git-python/
+
+
+BUILDING FROM SOURCE
+
+    git clone git://gitorious.org/git-cola/mainline.git cola
+    make prefix=/usr install
 
 
 INSTALLATION
 
 Debian and RPM users can download freshly built binaries here:
 
-    http://cola.tuxfamily.org/
-
-    sudo dpkg -i cola_*.deb
-    sudo rpm -ivh cola-*.rpm
+    http://cola.tuxfamily.org/releases/
 
 
 If you downloaded a tarball, make sure /path/to/cola/bin is in your $PATH.
@@ -61,19 +74,6 @@ Take your pick--any of the following incantations work from the command line:
 Launching cola on repositories outside your $CWD:
 
     git cola /repo/path-1 /repo/path-2 .. /repo/path-N
-
-
-BUILDING FROM SOURCE
-
-You will need the PyQt development tools (v4.3 or greater):
-
-Synopsis:
-    sudo apt-get install pyqt4-dev-tools
-    git clone git://gitorious.org/git-cola/mainline.git cola
-    cd cola
-    ./configure --prefix=/usr
-    make
-    sudo make install
 
 
 STYLESHEETS

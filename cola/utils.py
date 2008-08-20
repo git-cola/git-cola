@@ -6,7 +6,8 @@ import platform
 import subprocess
 from cStringIO import StringIO
 
-import defaults
+from cola import defaults
+from cola.exception import ColaException
 
 PREFIX = os.path.realpath(os.path.dirname(os.path.dirname(sys.argv[0])))
 QMDIR = os.path.join(PREFIX, 'share', 'cola', 'qm')
@@ -26,22 +27,30 @@ KNOWN_FILE_TYPES = {
     'image':     'image.png',
 }
 
+class RunCommandException(ColaException):
+    """Thrown when something bad happened when we tried to run the
+    subprocess."""
+    pass
+
 def run_cmd(*command):
     """
     Runs a *command argument list and returns the output.
     e.g. run_cmd("echo", "hello", "world")
     """
     # Start the process
-    proc = subprocess.Popen(command, stdout = subprocess.PIPE)
+    try:
+        proc = subprocess.Popen(command, stdout=subprocess.PIPE)
 
-    # Wait for the process to return
-    stdout_value = proc.stdout.read()
-    proc.stdout.close()
-    proc.wait()
-    status = proc.poll()
+        # Wait for the process to return
+        stdout_value = proc.stdout.read()
+        proc.stdout.close()
+        proc.wait()
+        status = proc.poll()
 
-    # Strip off trailing whitespace by default
-    return stdout_value.rstrip()
+        # Strip off trailing whitespace by default
+        return stdout_value.rstrip()
+    except:
+        raise RunCommandException('ERROR Running: [%s]' % ' '.join(command))
 
 
 def get_qm_for_locale(locale):
@@ -442,6 +451,12 @@ class DiffParser(object):
                     else:
                         self.model.apply_diff(tmpfile)
                     os.unlink(tmpfile)
+
+def strip_prefix(prefix, string):
+    """Return string, without the prefix. Blow up if string doesn't
+    start with prefix."""
+    assert string.startswith(prefix)
+    return string[len(prefix):]
 
 def sanitize_input(input):
     for c in """ \t!@#$%^&*()\\;,<>"'[]{}~|""":

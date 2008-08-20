@@ -1,28 +1,28 @@
 #!/bin/sh
-
 cd $(dirname $0)
 
-ERROR=''
+RUN_ALL=''
 COLA=$(which cola)
-test -z "$COLA" && ERROR=1
 
-if [ $ERROR ]; then
+if ! test -x "$COLA"; then
     echo "cola must be in your path in order to call run_tests directly."
     exit -1
 fi
 BINDIR=$(dirname $COLA)
 PREFIX=$(dirname $BINDIR)
-PYTHONPATH="$PREFIX"/share:"$PREFIX"/share/cola:"$PYTHONPATH"
+PYTHONPATH="$PREFIX"/lib/python2.4/site-packages:"$PREFIX"/lib/python2.5/site-packages:"$PYTHONPATH"
 export PYTHONPATH
 
 (
     for unittest in t[0-9]*.py; do
-        echo
-        echo -n "$unittest "
-        ./$unittest
-        if [ $? -ne 0 ] && [ -z "$RUN_ALL" ]; then
-            echo "$unittest failed with exit code $?"
+        echo -n "$unittest"
+        ./"$unittest"
+        status=$?
+        if ! test "$status" = "0" && test -z "$RUN_ALL"; then
+            echo " failed with exit code $?"
             exit -1
+        else
+            echo
         fi
     done
 
@@ -39,7 +39,7 @@ while(<>) {
     if ( /(\d+) tests/ ) {
         $count += $1;
     }
-    elsif ( /(.*) failed/ ) {
+    elsif ( /failed/ ) {
         push @fail, $1;
     }
 }
@@ -70,7 +70,7 @@ if ( @fail ) {
 }
 
 print "\n";
-print `../scripts/gitversion.sh`;
+print `git cola --version`;
 print "-"x70 ."\n";
 print "$count tests total\n";
 print "$min min $sec.$secfrac sec total runtime\n\n";

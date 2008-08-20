@@ -4,14 +4,15 @@
 *.rpm
 *.swp
 *~
+/build
+/build-stamp
+/configure-stamp
 /debian/*.log
 /debian/files
 /debian/bld
 /debian/cola
 /installroot
 /.lock-wscript
-/obj
-/Makefile
 /meta
 /patches
 /releases
