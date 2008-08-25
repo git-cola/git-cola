@@ -696,6 +696,8 @@ class Model(model.Model):
     def diff_helper(self,
                     commit=None,
                     branch=None,
+                    ref = None,
+                    endref = None,
                     filename=None,
                     color=False,
                     cached=True,
@@ -704,10 +706,13 @@ class Model(model.Model):
                     reverse=False,
                     patch_with_raw=True):
         "Invokes git diff on a filepath."
-
-        argv = []
         if commit:
-            argv.append('%s^..%s' % (commit, commit))
+            ref, endref = commit+'^', commit
+        argv = []
+        if ref and endref:
+            argv.append('%s..%s' % (ref, endref))
+        elif ref:
+            argv.append(ref)
         elif branch:
             argv.append(branch)
 
@@ -734,7 +739,7 @@ class Model(model.Model):
         headers = []
         deleted = cached and not os.path.exists(filename)
         for line in diff:
-            if not start and '@@ ' in line and ' @@' in line:
+            if not start and '@@ ' == line[:3] and ' @@' in line:
                 start = True
             if start or(deleted and del_tag in line):
                 output.write(line + '\n')
