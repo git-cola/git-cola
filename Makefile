@@ -12,14 +12,14 @@ install:
 ## # TODO: doc, install-doc, install-html
 ## doc:
 ## 	cd Documentation && $(MAKE) all
-## 
+##
 ## install-doc:
 ## 	$(MAKE) -C Documentation install
-## 
+##
 ## install-html:
 ## 	$(MAKE) -C Documentation install-html
 
-test:
+test: all
 	cd t && $(MAKE) all
 
 clean:
