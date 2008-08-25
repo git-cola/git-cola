@@ -95,9 +95,6 @@
             <property name="checked" >
              <bool>true</bool>
             </property>
-            <property name="tristate" >
-             <bool>false</bool>
-            </property>
            </widget>
           </item>
          </layout>
@@ -133,9 +130,6 @@
         </property>
         <item>
          <layout class="QHBoxLayout" name="_10" >
-          <property name="bottomMargin" >
-           <number>0</number>
-          </property>
           <item>
            <widget class="QLabel" name="label_2" >
             <property name="sizePolicy" >
@@ -180,6 +174,9 @@
           </property>
           <property name="viewMode" >
            <enum>QListView::ListMode</enum>
+          </property>
+          <property name="uniformItemSizes" >
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -532,10 +529,6 @@
                <height>22</height>
               </size>
              </property>
-             <property name="toolTip" >
-              <string>Invokes "git add" to stage the selected items
-from the "Unstaged Changes" list.</string>
-             </property>
              <property name="text" >
               <string>Stage Changed</string>
              </property>
@@ -557,10 +550,6 @@ from the "Unstaged Changes" list.</string>
                <width>0</width>
                <height>22</height>
               </size>
-             </property>
-             <property name="toolTip" >
-              <string>"Sign Off" appends the standard "Signed-Off by: ..."
-message to the current commit message.</string>
              </property>
              <property name="text" >
               <string>Sign Off</string>
