@@ -452,7 +452,7 @@ class Model(model.Model):
             commit_msg.append(msg)
         self.set_commitmsg('\n'.join(commit_msg).rstrip())
 
-    def update_status(self):
+    def update_status(self, amend=False):
         # This allows us to defer notification until the
         # we finish processing data
         notify_enabled = self.get_notify()
@@ -469,7 +469,7 @@ class Model(model.Model):
         (staged_items,
          modified_items,
          untracked_items,
-         unmerged_items) = self.parse_status()
+         unmerged_items) = self.parse_status(amend=amend)
 
         # Gather items to be committed
         for staged in staged_items:
@@ -532,7 +532,7 @@ class Model(model.Model):
         else:
             return commit
 
-    def get_diff_details(self, idx, staged=True):
+    def get_diff_details(self, idx, ref, staged=True):
         if staged:
             filename = self.get_staged()[idx]
             if os.path.exists(filename):
@@ -540,6 +540,7 @@ class Model(model.Model):
             else:
                 status = 'Staged for removal'
             diff = self.diff_helper(filename=filename,
+                                    ref=ref,
                                     cached=True)
         else:
             filename = self.get_unstaged()[idx]
@@ -784,7 +785,7 @@ class Model(model.Model):
             os.unlink(merge_msg_path)
             merge_msg_path = self.get_merge_message_path()
 
-    def parse_status(self):
+    def parse_status(self, amend=False):
         """RETURNS: A tuple of staged, unstaged and untracked file lists.
         """
         def eval_path(path):
@@ -815,7 +816,7 @@ class Model(model.Model):
         current_dest = staged
         mode = STAGED_MODE
 
-        for status_line in self.git.status().splitlines():
+        for status_line in self.git.status(amend=amend).splitlines():
             if status_line == MODIFIED_TAG:
                 mode = UNSTAGED_MODE
                 current_dest = unstaged

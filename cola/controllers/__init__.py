@@ -42,7 +42,8 @@ class Controller(QObserver):
     MODE_NONE = 0
     MODE_WORKTREE = 1
     MODE_INDEX = 2
-    MODE_BRANCH = 3
+    MODE_AMEND = 3
+    MODE_BRANCH = 4
 
     def init(self, model, view):
         """
@@ -53,7 +54,7 @@ class Controller(QObserver):
             worktree -> selectively add working changes to the index
             index  -> selectively remove changes from the index
         """
-        self.mode = Controller.MODE_NONE
+        self.reset_mode()
 
         # parent-less log window
         qtutils.LOGGER = logger()
@@ -87,6 +88,8 @@ class Controller(QObserver):
             unstaged = self.diff_unstaged,
             # Checkboxes
             untracked_checkbox = self.rescan,
+            amend_radio = self.load_prev_msg_and_rescan,
+            new_commit_radio = self.clear_and_rescan,
 
             # File Menu
             menu_quit = self.quit_app,
@@ -306,6 +309,7 @@ class Controller(QObserver):
         self.log(self.model.cherry_pick_list(commits))
 
     def commit(self):
+        self.reset_mode()
         msg = self.model.get_commitmsg()
         if not msg:
             error_msg = self.tr(''
@@ -318,7 +322,7 @@ class Controller(QObserver):
             return
 
         files = self.model.get_staged()
-        if not files and not self.view.amend_radio.isChecked():
+        if not files and not self.view.amend_is_checked():
             error_msg = self.tr(''
                 'No changes to commit.\n\n'
                 'You must stage at least 1 file before you can commit.\n')
@@ -326,29 +330,39 @@ class Controller(QObserver):
             return
 
         # Perform the commit
-        amend = self.view.amend_radio.isChecked()
+        amend = self.view.amend_is_checked()
         status, output = self.model.commit_with_msg(msg, amend=amend)
 
         if status == 0:
-            # Reset state
-            self.view.new_commit_radio.setChecked(True)
-            self.view.amend_radio.setChecked(False)
+            self.view.reset_checkboxes()
             self.model.set_commitmsg('')
         self.log(output)
 
+    def get_diff_ref(self):
+        amend = self.view.amend_is_checked()
+        if amend:
+            return 'HEAD^'
+        else:
+            return 'HEAD'
+
     def view_diff(self, staged=True):
         if staged:
-            self.mode = Controller.MODE_INDEX
+            if self.view.amend_is_checked():
+                self.mode = Controller.MODE_AMEND
+            else:
+                self.mode = Controller.MODE_INDEX
             widget = self.view.staged
         else:
             self.mode = Controller.MODE_WORKTREE
             widget = self.view.unstaged
         row, selected = qtutils.get_selected_row(widget)
         if not selected:
-            self.mode = Controller.MODE_NONE
+            self.reset_mode()
             self.view.reset_display()
             return
-        diff, status, filename = self.model.get_diff_details(row, staged=staged)
+        ref = self.get_diff_ref()
+        diff, status, filename = self.model.get_diff_details(row, ref,
+                                                             staged=staged)
         self.view.set_display(diff)
         self.view.set_info(status)
         self.view.show_diff()
@@ -389,10 +403,13 @@ class Controller(QObserver):
         else:
             widget = self.view.unstaged
         row, selected = qtutils.get_selected_row(widget)
-        diff, status, filename = self.model.get_diff_details(row, staged=staged)
         if not selected:
             return
-        contents = self.model.show('HEAD:'+filename, with_raw_output=True)
+        ref = self.get_diff_ref()
+        diff, status, filename = self.model.get_diff_details(row, ref,
+                                                             staged=staged)
+        refpath = '%s:%s' % (ref, filename)
+        contents = self.model.show(refpath, with_raw_output=True)
         tmpfile = self.model.get_tmp_filename(filename)
         fh = open(tmpfile, 'w')
         fh.write(contents)
@@ -475,6 +492,31 @@ class Controller(QObserver):
             return
         self.log(self.model.rebase(branch))
 
+    def reset_mode(self):
+        """Sets the mode to the default NONE mode."""
+        self.mode = Controller.MODE_NONE
+
+    def clear_and_rescan(self, *rest):
+        """Clears the current commit message and rescans.
+        This is called when the "new commit" radio button is clicked."""
+        self.reset_mode()
+        self.model.set_commitmsg('')
+        self.rescan()
+
+    def load_prev_msg_and_rescan(self, *rest):
+        """Gets the previous commit message and rescans.
+        This is called when the "amend commit" radio button is clicked."""
+        # You can't do this in the middle of a merge
+        if os.path.exists(self.model.git_repo_path('MERGE_HEAD')):
+            self.view.reset_checkboxes()
+            qtutils.information('Oops! Unmerged',
+                                'You are in the middle of a merge.\n'
+                                'You cannot amend while merging.')
+        else:
+            self.reset_mode()
+            self.model.get_prev_commitmsg()
+            self.rescan()
+
     # use *rest to handle being called from the checkbox signal
     def rescan(self, *rest):
         """Populates view widgets with results from 'git status.'"""
@@ -487,68 +529,53 @@ class Controller(QObserver):
 
         scrollbar = self.view.display_text.verticalScrollBar()
         scrollvalue = scrollbar.value()
-
-        # save selected item
-        unstageditem = qtutils.get_selected_item(self.view.unstaged,
-                                                 self.model.get_unstaged())
-
-        stageditem = qtutils.get_selected_item(self.view.staged,
-                                               self.model.get_staged())
+        mode = self.mode
 
         # get new values
-        self.model.update_status()
+        self.model.update_status(amend=self.view.amend_is_checked())
 
         # restore selection
-        update_staged = False
-        update_unstaged = False
         updated_unstaged = self.model.get_unstaged()
         updated_staged = self.model.get_staged()
 
-        for item in unstaged:
-            if item in updated_unstaged:
-                idx = updated_unstaged.index(item)
-                listitem = self.view.unstaged.item(idx)
-                if listitem:
-                    listitem.setSelected(True)
-                    self.view.unstaged.setItemSelected(listitem, True)
-                    update_unstaged = True
-                    self.view.unstaged.update()
-        for item in staged:
-            if item in updated_staged:
-                idx = updated_staged.index(item)
-                listitem = self.view.staged.item(idx)
-                if listitem:
-                    listitem.setSelected(True)
-                    self.view.staged.setItemSelected(listitem, True)
-                    update_staged = True
+        if mode == Controller.MODE_WORKTREE:
+            for item in unstaged:
+                if item in updated_unstaged:
+                    idx = updated_unstaged.index(item)
+                    item = self.view.unstaged.item(idx)
+                    if item:
+                        item.setSelected(True)
+                        self.view.unstaged.setItemSelected(item, True)
+                        self.view.unstaged.setCurrentItem(item)
+                        self.view_diff(False)
+                        scrollbar.setValue(scrollvalue)
 
-        # restore selected item
-        if update_unstaged and unstageditem:
-            idx = updated_unstaged.index(unstageditem)
-            item = self.view.unstaged.item(idx)
-            self.view.unstaged.setCurrentItem(item)
-            self.view_diff(False)
-            scrollbar.setValue(scrollvalue)
-        elif update_staged and stageditem:
-            idx = updated_staged.index(stageditem)
-            item = self.view.staged.item(idx)
-            self.view.staged.setCurrentItem(item)
-            self.view_diff(True)
-            scrollbar.setValue(scrollvalue)
+        elif mode in (Controller.MODE_INDEX, Controller.MODE_AMEND):
+            for item in staged:
+                if item in updated_staged:
+                    idx = updated_staged.index(item)
+                    item = self.view.staged.item(idx)
+                    if item:
+                        item.setSelected(True)
+                        self.view.staged.setItemSelected(item, True)
+                        self.view.staged.setCurrentItem(item)
+                        self.view_diff(True)
+                        scrollbar.setValue(scrollvalue)
 
         # Update the title with the current branch
         self.view.setWindowTitle('%s [%s]' % (
                 self.model.get_project(),
                 self.model.get_currentbranch()))
-        # Check if there's a message file in .git/
-        if self.merge_msg_imported:
-            return
-        merge_msg_path = self.model.get_merge_message_path()
-        if merge_msg_path is None:
-            return
-        self.merge_msg_imported = True
-        self.model.load_commitmsg(merge_msg_path)
-        self.view.show_editor()
+
+        if not self.view.amend_is_checked():
+            # Check if there's a message file in .git/
+            if self.merge_msg_imported:
+                return
+            self.merge_msg_imported = True
+            merge_msg_path = self.model.get_merge_message_path()
+            if merge_msg_path is None:
+                return
+            self.model.load_commitmsg(merge_msg_path)
 
     def fetch(self):
         remote_action(self.model, self.view, 'Fetch')
@@ -561,17 +588,18 @@ class Controller(QObserver):
 
     def show_diffstat(self):
         """Show the diffstat from the latest commit."""
-        self.mode = Controller.MODE_NONE
+        self.reset_mode()
         self.view.set_info('Diffstat')
         self.view.set_display(self.model.diffstat())
 
     def show_index(self):
-        self.mode = Controller.MODE_NONE
+        self.reset_mode()
         self.view.set_info('Index')
         self.view.set_display(self.model.diffindex())
 
     #####################################################################
     def diffedit_branch(self):
+        self.reset_mode()
         branch = choose_from_combo('Select Branch',
                                    self.view,
                                    self.model.get_all_branches())
@@ -588,9 +616,6 @@ class Controller(QObserver):
         fh.write(contents)
         fh.close()
         self.launch_diffeditor(filename, tmpfile)
-
-        # Set state machine to branch mode
-        self.mode = Controller.MODE_NONE
 
     #####################################################################
     # diff gui
