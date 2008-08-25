@@ -60,6 +60,7 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
         self.staged.setAlternatingRowColors(True)
         self.unstaged.setAlternatingRowColors(True)
         self.set_display = self.display_text.setText
+        self.amend_is_checked = self.amend_radio.isChecked
         self.action_undo = self.commitmsg.undo
         self.action_redo = self.commitmsg.redo
         self.action_paste = self.commitmsg.paste
@@ -112,6 +113,9 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
         qtutils.set_clipboard(selection)
     def action_delete(self):
         self.commitmsg.textCursor().removeSelectedText()
+    def reset_checkboxes(self):
+        self.new_commit_radio.setChecked(True)
+        self.amend_radio.setChecked(False)
     def reset_display(self):
         self.set_display('')
         self.set_info('')
