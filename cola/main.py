@@ -4,30 +4,9 @@ import optparse
 import sys
 import os
 
-# PyQt4
-try:
-    from PyQt4 import QtCore
-    from PyQt4 import QtGui
-except ImportError:
-    print >> sys.stderr, 'Sorry, you do not seem to have PyQt4 installed.'
-    print >> sys.stderr, 'Please install it before using cola.'
-    print >> sys.stderr, 'e.g.:    sudo apt-get install python-qt4'
-    sys.exit(-1)
-
 from cola import utils
 from cola import version
 from cola.models import Model
-from cola.views import View
-from cola.controllers import Controller
-
-class ColaApplication(QtGui.QApplication):
-    """This makes translation work by throwing out the context."""
-    wrapped = QtGui.QApplication.translate
-    def translate(*args):
-        trtxt = unicode(ColaApplication.wrapped('', *args[2:]))
-        if trtxt[-6:-4] == '@@': # handle @@verb / @@noun
-            trtxt = trtxt[:-6]
-        return trtxt
 
 def main():
     parser = optparse.OptionParser(
@@ -70,6 +49,25 @@ def main():
     # no git repo exists
     model = Model()
 
+    # PyQt4 -- defer this to allow git cola --version
+    try:
+        from PyQt4 import QtCore
+        from PyQt4 import QtGui
+    except ImportError:
+        print >> sys.stderr, 'Sorry, you do not seem to have PyQt4 installed.'
+        print >> sys.stderr, 'Please install it before using cola.'
+        print >> sys.stderr, 'e.g.:    sudo apt-get install python-qt4'
+        sys.exit(-1)
+
+    class ColaApplication(QtGui.QApplication):
+        """This makes translation work by throwing out the context."""
+        wrapped = QtGui.QApplication.translate
+        def translate(*args):
+            trtxt = unicode(ColaApplication.wrapped('', *args[2:]))
+            if trtxt[-6:-4] == '@@': # handle @@verb / @@noun
+                trtxt = trtxt[:-6]
+            return trtxt
+
     app = ColaApplication(sys.argv)
     QtGui.QApplication.translate = app.translate
     app.setWindowIcon(QtGui.QIcon(utils.get_icon('git.png')))
@@ -95,6 +93,9 @@ def main():
             app.setStyleSheet(style)
 
     # simple mvc
+    from cola.views import View
+    from cola.controllers import Controller
+
     view = View(app.activeWindow())
     ctl = Controller(model, view)
     view.show()

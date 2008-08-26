@@ -33,10 +33,9 @@ if bin == 'bin' and prefix != sys.prefix:
 
     major, minor = sys.version_info[0:2]
     local_path = [os.getcwd(),
-                  os.path.join(prefix, 'lib', 'python'),
-                  os.path.join(prefix, 'lib', 'python%s.%s' % (major, minor)),
                   os.path.join(prefix, 'lib', 'python%s.%s' % (major, minor),
-                               'site-packages')]
+                               'site-packages')
+                  ]
     sys.path = local_path + sys.path
 
 from cola.main import main

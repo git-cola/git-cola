@@ -24,12 +24,12 @@ def gen_import_test(module):
 
 def setup_tests():
     for module in """
+        cola.git
         cola.model
-        cola.models
-        cola.qobserver
-        cola.controllers
-        cola.utils
-        cola.qtutils
+        cola.observer
+        cola.exception
+        cola.defaults
+        cola.settings
     """.split():
         setattr(ImportTest,
                 "test" + module.title().replace('.', ''),

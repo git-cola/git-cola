@@ -19,7 +19,7 @@ install:
 ## install-html:
 ## 	$(MAKE) -C Documentation install-html
 
-test: all
+test:
 	cd t && $(MAKE) all
 
 clean:
@@ -29,7 +29,7 @@ clean:
 	rm -rf build tmp
 	find cola t -name '*.py[co]' -print0 | xargs -0 rm -f
 	find cola/views -name '[^_]*.py' -print0 | xargs -0 rm -f
-	find po -name '*.qm' -print0 | xargs -0 rm -f
+	find share -name '*.qm' -print0 | xargs -0 rm -f
 	rm -f tags
 
 tags:

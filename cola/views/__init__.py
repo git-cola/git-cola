@@ -1,5 +1,7 @@
 import os
 import time
+import sys
+
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import qApp
@@ -13,18 +15,23 @@ from cola import syntax
 from cola.syntax import DiffSyntaxHighlighter
 from cola.syntax import LogSyntaxHighlighter
 
-from main import Ui_main
-from combo import Ui_combo
-from items import Ui_items
-from remote import Ui_remote
-from commit import Ui_commit
-from logger import Ui_logger
-from search import Ui_search
-from options import Ui_options
-from createbranch import Ui_createbranch
-from merge import Ui_merge
-from bookmark import Ui_bookmark
-from stash import Ui_stash
+try:
+    from main import Ui_main
+    from combo import Ui_combo
+    from items import Ui_items
+    from remote import Ui_remote
+    from commit import Ui_commit
+    from logger import Ui_logger
+    from search import Ui_search
+    from options import Ui_options
+    from createbranch import Ui_createbranch
+    from merge import Ui_merge
+    from bookmark import Ui_bookmark
+    from stash import Ui_stash
+except ImportError:
+    sys.stderr.write('\nThe cola UI modules have not been built.\n'
+                     'Try running "make" in the cola source tree.\n')
+    sys.exit(-1)
 
 def CreateStandardView(uiclass, qtclass, *classes):
     """CreateStandardView returns a class closure of uiclass and qtclass.

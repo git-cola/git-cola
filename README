@@ -50,7 +50,10 @@ git cola includes a copy of the GitPython module:
 BUILDING FROM SOURCE
 
     git clone git://gitorious.org/git-cola/mainline.git cola
-    make prefix=/usr install
+
+    make && bin/git-cola --style=dark # devcut test drive
+    make prefix=/usr install          # global installation
+    git cola                          # daily usage
 
 
 INSTALLATION

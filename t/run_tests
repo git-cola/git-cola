@@ -2,16 +2,8 @@
 cd $(dirname $0)/..
 rootdir=$(pwd)
 RUN_ALL=
-! test -d "$rootdir"/build/lib && {
-	echo
-	echo "ERROR: build/lib doesn't exist." 2>&1
-	echo "Please build git cola first." 2>&1
-	echo
-	exit 42
-}
-
-PATH="$rootdir":"$PATH"
-PYTHONPATH="$rootdir"/build/lib:"$PYTHONPATH"
+PATH="$rootdir"/bin:"$PATH"
+PYTHONPATH="$rootdir":"$PYTHONPATH"
 export PATH
 export PYTHONPATH
 (
