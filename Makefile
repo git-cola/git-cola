@@ -1,20 +1,13 @@
 prefix	?= $(HOME)
-DESTDIR	?=
-SLASH	?= $(DESTDIR)/
+DESTDIR	?= /
 PYTHON	?= python
 
 all:
 	$(PYTHON) setup.py build
 
 install:
-# Allows for relative paths in both DESTDIR and prefix
-ifeq ($(SLASH), /)
 	$(PYTHON) setup.py install --prefix=$(prefix) --root=$(DESTDIR) --force
-	cd $(prefix)/bin && rm -f cola && ln -s git-cola cola
-else
-	$(PYTHON) setup.py install --prefix=$(prefix) --root=$(SLASH) --force
-	cd $(SLASH)$(prefix)/bin && rm -f cola && ln -s git-cola cola
-endif
+	cd $(DESTDIR)$(prefix)/bin && rm -f cola && ln -s git-cola cola
 
 ## # TODO: doc, install-doc, install-html
 ## doc:
