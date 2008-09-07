@@ -35,7 +35,7 @@ def __run_setup():
           url = 'http://cola.tuxfamily.org/',
           description = 'GIT Cola',
           long_description = 'A highly caffeinated GIT GUI',
-          scripts = ['bin/git-cola'],
+          scripts = ['bin/git-cola', 'bin/git-difftool'],
           packages = ['cola', 'cola.views', 'cola.controllers'],
           data_files = [
             __app_path('share/cola/qm', '*.qm'),
