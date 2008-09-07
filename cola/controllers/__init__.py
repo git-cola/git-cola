@@ -376,18 +376,14 @@ class Controller(QObserver):
         self.view.show_diff()
         qtutils.set_clipboard(filename)
 
-    def spawn_xterm(self, *args):
-        utils.fork('xterm', '-e', *args)
-
     def mergetool(self):
-        widget = self.view.unstaged
-        row, selected = qtutils.get_selected_row(widget)
-        filename = self.model.get_unstaged()[row]
-        if filename not in self.model.get_unmerged():
+        filename = self.get_selected_filename(staged=False)
+        if not filename or filename not in self.model.get_unmerged():
             return
-        self.spawn_xterm('git', 'mergetool',
-                         '-t', self.model.get_mergetool(),
-                         '--', filename)
+        utils.fork('xterm', '-e',
+                   'git', 'mergetool',
+                   '-t', self.model.get_mergetool(),
+                   '--', filename)
 
     def edit_file(self, staged=True):
         filename = self.get_selected_filename(staged=staged)
@@ -397,9 +393,9 @@ class Controller(QObserver):
     def edit_diff(self, staged=True):
         filename = self.get_selected_filename(staged=staged)
         if filename:
-            self.spawn_xterm('git', 'difftool',
-                             '-t', self.model.get_mergetool(),
-                             '--', filename)
+            utils.fork('git', 'difftool', '--no-prompt',
+                       '-t', self.model.get_mergetool(),
+                       '--', filename)
 
     # use *rest to handle being called from different signals
     def diff_staged(self, *rest):
@@ -600,10 +596,10 @@ class Controller(QObserver):
         filename = choose_from_list('Select File', self.view, files)
         if not filename:
             return
-        self.spawn_xterm('git', 'difftool',
-                         '-t', self.model.get_mergetool(),
-                         '-r', branch,
-                         '--', filename)
+        utils.fork('git', 'difftool', '--no-prompt',
+                   '-t', self.model.get_mergetool(),
+                   '-r', branch,
+                   '--', filename)
 
     #####################################################################
     # diff gui
@@ -840,7 +836,7 @@ class Controller(QObserver):
             menu.addAction(self.tr('Stage Selected'), self.stage_selected)
             menu.addSeparator()
         if is_unmerged and not utils.is_broken():
-            menu.addAction(self.tr('Launch Mergetool'), self.mergetool)
+            menu.addAction(self.tr('Resolve Merge'), self.mergetool)
 
         menu.addAction(self.tr('Launch Editor'),
                        lambda: self.edit_file(staged=False))
