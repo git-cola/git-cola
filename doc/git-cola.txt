@@ -1,0 +1,131 @@
+git-cola(1)
+===========
+
+NAME
+----
+git-cola - a highly caffeinated git gui
+
+SYNOPSIS
+--------
+'git cola' [options]
+
+DESCRIPTION
+-----------
+'git-cola' is a git gui optimized for working with the git index.
+See below for a full list of options and usage information.
+
+OPTIONS
+-------
+
+--repo=<path>::
+	Run 'git-cola' on the git repository in <path>.
+
+--style=<style>::
+	Launch 'git-cola' with a different stylesheet.
+	'git-cola' currently ships with a built-in "dark" style.
+	To use it, specify `--style=dark`.
+
+CONFIG VARIABLES
+----------------
+
+cola.savewindowsettings::
+	Whether 'git-cola' should remember its window settings.
+
+cola.geometry::
+	Specifies information about 'git-cola''s window size and position.
+
+cola.fontui::
+	Specifies the font to use for the main 'git-cola' interface.
+
+cola.fontdiff::
+	Specifies the font to use for 'git-cola''s diff display.
+
+gui.diffcontext::
+	The number of diff context lines used and displayed by 'git-cola'
+
+gui.editor::
+	The default text editor is controlled by gui.editor.
+	This config variable overrides the EDITOR environment variable.
+
+gui.historybrowser::
+	Specifies the history browser to use when visualizing history.
+
+merge.tool::
+	The default merge tool to use.
+	This config variable overrides the MERGETOOL environment variable.
+
+user.email::
+	Your email address to be recorded in any newly created commits.
+	Can be overridden by the 'GIT_AUTHOR_EMAIL', 'GIT_COMMITTER_EMAIL', and
+	'EMAIL' environment variables.  See linkgit:git-commit-tree[1].
+
+user.name::
+	Your full name to be recorded in any newly created commits.
+	Can be overridden by the 'GIT_AUTHOR_NAME' and 'GIT_COMMITTER_NAME'
+	environment variables.  See linkgit:git-commit-tree[1].
+
+
+See linkgit:git-config[7] for more details.
+
+
+ENVIRONMENT VARIABLES
+---------------------
+
+EDITOR::
+	Specifies the default editor to use.
+	This is ignored when the git config variable `gui.editor` is defined.
+
+MERGETOOL::
+	Specifies the default merge tool to use.
+	This is ignored when the git config variable `merge.tool` is defined.
+
+
+SOURCE
+------
+
+A 'git-cola' development repository can be obtained via git:
+
+	git clone git://gitorious.org/git-cola/mainline.git cola
+
+
+STYLESHEETS
+-----------
+
+git cola ships with an alternative stylesheet called 'dark'.
+You can use this stylesheet by running `git cola --style=dark`.
+
+You can also skin git cola by providing your own Qt stylesheet.
+E.g. `git cola --style=/path/to/style.qss`.
+
+Built-in styles can be found in `/usr/share/cola/styles`.
+
+
+LINKS
+-----
+'git-cola' homepage::
+	http://cola.tuxfamily.org/
+
+'git-cola' sources on gitorious.org::
+	http://gitorious.org/projects/git-cola/
+
+
+SEE ALSO
+--------
+linkcola:git-difftool[1]::
+	'git-cola' includes a custom git command called 'git-difftool'
+	that allows you to stage changes using the standard git merge tools.
+
+linkgit:gitk[1]::
+	The git repository browser.  Shows branches, commit history
+	and file differences.  gitk is the utility started by
+	'git-cola''s Repository Visualize actions.
+
+GIT
+---
+'git-cola' is independently developed from the linkgit:git[7] suite,
+but you can use it just like any other git command, e.g. `git cola`.
+
+AUTHOR
+------
+Written by David Aguilar <davvid@gmail.com>.
+

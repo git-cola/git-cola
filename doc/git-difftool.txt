@@ -1,0 +1,116 @@
+git-difftool(1)
+===============
+
+NAME
+----
+git-difftool - stage changes using the standard git merge tools
+
+SYNOPSIS
+--------
+'git difftool' [--tool=<tool>] [--ref=<ref>] [--no-prompt] [<file>]...
+
+DESCRIPTION
+-----------
+'git-difftool' is a git command that allows you to compare and edit
+files against arbitrary revisions using the standard git merge tools.
+
+OPTIONS
+-------
+
+-t or --tool=<tool>::
+	Use the merge resolution program specified by <tool>.
+	Valid merge tools are:
+	kdiff3, tkdiff, meld, xxdiff, emerge, vimdiff, gvimdiff, ecmerge, and opendiff
++
+If a merge resolution program is not specified, 'git-difftool'
+will use the configuration variable `merge.tool`.  If the
+configuration variable `merge.tool` is not set, 'git-difftool'
+will pick a suitable default.
++
+You can explicitly provide a full path to the tool by setting the
+configuration variable `mergetool.<tool>.path`. For example, you
+can configure the absolute path to kdiff3 by setting
+`mergetool.kdiff3.path`. Otherwise, 'git-difftool' assumes the
+tool is available in PATH.
++
+Instead of running one of the known merge tool programs
+'git-difftool' can be customized to run an alternative program
+by specifying the command line to invoke in a configuration
+variable `mergetool.<tool>.cmd`.
++
+When 'git-difftool' is invoked with this tool (either through the
+`-t` or `--tool` option or the `merge.tool` configuration
+variable) the configured command line will be invoked with `$BASE`
+set to the name of a temporary file containing the common base for
+the merge, if available; `$LOCAL` set to the name of a temporary
+file containing the contents of the file on the current branch;
+`$REMOTE` set to the name of a temporary file containing the
+contents of the file to be merged, and `$MERGED` set to the name
+of the file to which the merge tool should write the result of the
+merge resolution.
++
+If the custom merge tool correctly indicates the success of a
+merge resolution with its exit code then the configuration
+variable `mergetool.<tool>.trustExitCode` can be set to `true`.
+Otherwise, 'git-difftool' will prompt the user to indicate the
+success of the resolution after the custom tool has exited.
+
+-r or --ref=<ref>::
+	Specifies a commit-ish reference to compare against.
+	'git-difftool' compares against the index by default.
+
+--no-prompt::
+	Do not prompt before and after launching a merge tool.
+
+CONFIG VARIABLES
+----------------
+
+merge.tool::
+	The default merge tool to use.
+	See the `--tool=<tool>` option above for valid values.
+
+mergetool.<tool>.path::
+	Override the path for the given tool.  This is useful in case
+	your tool is not in the PATH.
+
+mergetool.<tool>.cmd::
+	Specify the command to invoke the specified merge tool.  The
+	specified command is evaluated in shell with the following
+	variables available: 'BASE' is the name of a temporary file
+	containing the contents of the file from the index.
+	'LOCAL' is the name of a temporary file containing the contents of
+	the file on the current branch; 'REMOTE' is the name of a temporary
+	file containing the contents of the file from the branch or ref being
+	merged; 'MERGED' contains the name of the file to which the merge
+	tool should write the results of a successful merge.
+
+mergetool.<tool>.trustExitCode::
+	For a custom merge command, specify whether the exit code of
+	the merge command can be used to determine whether the merge was
+	successful.  If this is not set to true then the merge target file
+	timestamp is checked and the merge assumed to have been successful
+	if the file has been updated, otherwise the user is prompted to
+	indicate the success of the merge.
+
+mergetool.keepBackup::
+	After performing a merge, the original file with conflict markers
+	can be saved as a file with a `.orig` extension.  If this variable
+	is set to `false` then this file is not preserved.  Defaults to
+	`true` (i.e. keep the backup files).
+
+See linkgit:git-config[7] for more details.
+
+
+SEE ALSO
+--------
+linkcola:git-cola[1]::
+	'git-difftool' is part of the 'git-cola' project.
+
+linkgit:git-mergetool[1]::
+	'git-difftool' uses many of the same concepts as the core
+	'git-mergetool' command.
+
+AUTHOR
+------
+Written by David Aguilar <davvid@gmail.com>.
+

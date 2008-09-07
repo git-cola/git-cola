@@ -1,0 +1,86 @@
+INSTALLATION
+------------
+
+Debian and RPM users can download freshly built binaries here:
+
+    http://cola.tuxfamily.org/releases/
+
+If you downloaded a tarball add /path/to/cola/bin to your $PATH.
+
+
+REQUIREMENTS
+
+Python 2.4 or newer
+    http://python.org/
+    apt-get install python
+
+PyQt 4.3 or newer
+    http://www.riverbankcomputing.co.uk/software/pyqt/intro
+    apt-get install pyqt4-dev-tools
+
+
+ADDITIONAL REQUIREMENTS (optional)
+
+pyinotify (enables inotify support on Linux -- highly recommended)
+    http://pyinotify.sourceforge.net/
+    apt-get install python-pyinotify
+
+simplejson (enables bookmarks)
+    http://pypi.python.org/pypi/simplejson
+    apt-get install python-simplejson
+
+
+BUILDING FROM SOURCE
+
+Normally you can just do "make" followed by "make install", and that
+will install the git programs in your own ~/bin/ directory.  If you want
+to do a global install, you can do
+
+    $ make
+    # make prefix=/usr install
+
+
+WINDOWS INSTALLATION
+
+1) Install the native Python2.5 and PyQt4 installers (in that order):
+
+    http://python.org/download/
+    http://www.riverbankcomputing.co.uk/pyqt/download.php
+
+3) Install msysgit:
+
+    http://git.or.cz/gitwiki/WindowsInstall
+
+4) Install the GnuWin32 'file' command:
+
+    http://gnuwin32.sourceforge.net/packages/file.htm
+
+    Add the installed directory (default: c:\GnuWin32\bin) to your path.
+
+5) Install simplejson
+
+    http://pypi.python.org/pypi/simplejson
+
+6) Download cola:
+
+    http://cola.tuxfamily.org/releases/
+
+7) Install cola (from a Git Bash):
+
+    cd /c/Python25/Lib/site-packages
+    tar xvfz /path/to/cola-win32-*.tar.gz
+    mv cola-win32-* cola
+
+8) Create an executable in your path for bash, cmd.exe, or both:
+
+    echo '/c/Python25/python.exe /c/Python25/Lib/site-packages/cola/bin/git-cola' >> /usr/bin/cola
+    echo 'c:\\Python25\\python.exe c:\\Python25\\Lib\\site-packages\\bin\\git-cola' > /c/Windows/System32/cola.bat
+
+This assumes the you have Python/PyQt4 installed in C:/Python25.
+If this is not the case simply edit the commands accordingly.
+
+voila, cola on Windows.
+
+
+NOTE: Windows is not the developer's primary platform.
+Patches are greatly appreciated.

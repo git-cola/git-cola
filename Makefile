@@ -9,27 +9,26 @@ install:
 	$(PYTHON) setup.py install --prefix=$(prefix) --root=$(DESTDIR) --force
 	cd $(DESTDIR)$(prefix)/bin && rm -f cola && ln -s git-cola cola
 
-## # TODO: doc, install-doc, install-html
-## doc:
-## 	cd Documentation && $(MAKE) all
-##
-## install-doc:
-## 	$(MAKE) -C Documentation install
-##
-## install-html:
-## 	$(MAKE) -C Documentation install-html
+doc:
+	cd doc && $(MAKE) all
+
+install-doc:
+	$(MAKE) -C doc install
+
+install-html:
+	$(MAKE) -C doc install-html
 
 test:
 	cd t && $(MAKE) all
 
 clean:
-## 	for dir in Documentation t; do \
-## 		(cd $$dir && $(MAKE) clean); \
-## 	done
-	rm -rf build tmp
-	find cola t -name '*.py[co]' -print0 | xargs -0 rm -f
+	for dir in doc t; do \
+		(cd $$dir && $(MAKE) clean); \
+	done
+	find cola -name '*.py[co]' -print0 | xargs -0 rm -f
 	find cola/views -name '[^_]*.py' -print0 | xargs -0 rm -f
 	find share -name '*.qm' -print0 | xargs -0 rm -f
+	rm -rf build tmp
 	rm -f tags
 
 tags:
