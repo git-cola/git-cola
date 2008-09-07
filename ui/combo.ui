@@ -14,7 +14,11 @@
   </property>
   <layout class="QVBoxLayout" >
    <item>
-    <widget class="QComboBox" name="items_widget" />
+    <widget class="QComboBox" name="items_widget" >
+     <property name="editable" >
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="button_box" >
@@ -22,7 +26,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons" >
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>

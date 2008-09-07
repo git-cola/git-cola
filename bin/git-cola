@@ -23,6 +23,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 import os
 import sys
 
+# Put sys.path[0] in our path so that we can find our custom git-* commands
+path_entries = os.getenv('PATH', '').split(os.pathsep)
+if sys.path[0] not in path_entries:
+    path_entries.append(sys.path[0])
+    path = os.pathsep.join(path_entries)
+    os.environ['PATH'] = path
+
 # Try to detect where it is run from and set prefix and the search path.
 # It is assumed that the user installed Cola using the --prefix= option
 prefix, bin = os.path.split(sys.path[0])

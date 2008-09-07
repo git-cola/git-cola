@@ -196,10 +196,8 @@ class Model(model.Model):
             'cola_fontdiff': '',
             'cola_fontdiffsize': 12,
             'cola_savewindowsettings': False,
-            'cola_editdiffreverse': False,
-            'cola_saveatexit': False,
-            'gui_editor': 'gvim',
-            'gui_diffeditor': 'xxdiff',
+            'merge_tool': os.getenv('MERGETOOL', 'xxdiff'),
+            'gui_editor': os.getenv('EDITOR', 'gvim'),
             'gui_historybrowser': 'gitk',
         }
 
@@ -240,13 +238,11 @@ class Model(model.Model):
             if k not in global_dict:
                 self.set_param('global_'+k, v)
 
-        # Allow EDITOR/DIFF_EDITOR environment variable overrides
-        self.global_gui_editor = os.getenv('COLA_EDITOR',
-                                           self.global_gui_editor)
-        self.global_gui_diffeditor = os.getenv('COLA_DIFFEDITOR',
-                                               self.global_gui_diffeditor)
         # Load the diff context
         self.diff_context = self.local_gui_diffcontext
+
+    def get_global_config(self, key):
+        return getattr(self, 'global_'+key.replace('.', '_'))
 
     def get_cola_config(self, key):
         return getattr(self, 'global_cola_'+key)
@@ -383,8 +379,8 @@ class Model(model.Model):
     def get_editor(self):
         return self.get_gui_config('editor')
 
-    def get_diffeditor(self):
-        return self.get_gui_config('diffeditor')
+    def get_mergetool(self):
+        return self.get_global_config('merge.tool')
 
     def get_history_browser(self):
         return self.get_gui_config('historybrowser')
@@ -532,9 +528,20 @@ class Model(model.Model):
         else:
             return commit
 
+    def get_filename(self, idx, staged=True):
+        try:
+            if staged:
+                return self.get_staged()[idx]
+            else:
+                return self.get_unstaged()[idx]
+        except IndexError:
+            return None
+
     def get_diff_details(self, idx, ref, staged=True):
+        filename = self.get_filename(idx, staged=staged)
+        if not filename:
+            return (None, None, None)
         if staged:
-            filename = self.get_staged()[idx]
             if os.path.exists(filename):
                 status = 'Staged for commit'
             else:
@@ -543,7 +550,6 @@ class Model(model.Model):
                                     ref=ref,
                                     cached=True)
         else:
-            filename = self.get_unstaged()[idx]
             if os.path.isdir(filename):
                 status = 'Untracked directory'
                 diff = '\n'.join(os.listdir(filename))

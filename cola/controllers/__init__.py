@@ -144,7 +144,7 @@ class Controller(QObserver):
             menu_create_branch = self.branch_create,
             menu_checkout_branch = self.checkout_branch,
             menu_diff_branch = self.diff_branch,
-            menu_diffedit_branch = self.diffedit_branch,
+            menu_difftool_branch = self.difftool_branch,
 
             # Commit Menu
             menu_rescan = self.rescan,
@@ -332,18 +332,26 @@ class Controller(QObserver):
         # Perform the commit
         amend = self.view.amend_is_checked()
         status, output = self.model.commit_with_msg(msg, amend=amend)
-
         if status == 0:
             self.view.reset_checkboxes()
             self.model.set_commitmsg('')
         self.log(output)
 
     def get_diff_ref(self):
-        amend = self.view.amend_is_checked()
-        if amend:
+        if self.view.amend_is_checked():
             return 'HEAD^'
         else:
             return 'HEAD'
+
+    def get_selected_filename(self, staged=False):
+        if staged:
+            widget = self.view.staged
+        else:
+            widget = self.view.unstaged
+        idx, selected = qtutils.get_selected_row(widget)
+        if not selected:
+            return None
+        return self.model.get_filename(idx, staged=staged)
 
     def view_diff(self, staged=True):
         if staged:
@@ -368,53 +376,30 @@ class Controller(QObserver):
         self.view.show_diff()
         qtutils.set_clipboard(filename)
 
+    def spawn_xterm(self, *args):
+        utils.fork('xterm', '-e', *args)
+
     def mergetool(self):
         widget = self.view.unstaged
         row, selected = qtutils.get_selected_row(widget)
         filename = self.model.get_unstaged()[row]
         if filename not in self.model.get_unmerged():
             return
-        utils.fork('xterm', '-e', 'git', 'mergetool', '-t',
-                   self.model.get_diffeditor(), filename)
+        self.spawn_xterm('git', 'mergetool',
+                         '-t', self.model.get_mergetool(),
+                         '--', filename)
 
     def edit_file(self, staged=True):
-        if staged:
-            widget = self.view.staged
-        else:
-            widget = self.view.unstaged
-        row, selected = qtutils.get_selected_row(widget)
-        if not selected:
-            return
-        if staged:
-            filename = self.model.get_staged()[row]
-        else:
-            filename = self.model.get_unstaged()[row]
-        utils.fork(self.model.get_editor(), filename)
-
-    def launch_diffeditor(self, filename, tmpfile):
-        if self.model.get_cola_config('editdiffreverse'):
-            utils.fork(self.model.get_diffeditor(), tmpfile, filename)
-        else:
-            utils.fork(self.model.get_diffeditor(), filename, tmpfile)
+        filename = self.get_selected_filename(staged=staged)
+        if filename:
+            utils.fork(self.model.get_editor(), filename)
 
     def edit_diff(self, staged=True):
-        if staged:
-            widget = self.view.staged
-        else:
-            widget = self.view.unstaged
-        row, selected = qtutils.get_selected_row(widget)
-        if not selected:
-            return
-        ref = self.get_diff_ref()
-        diff, status, filename = self.model.get_diff_details(row, ref,
-                                                             staged=staged)
-        refpath = '%s:%s' % (ref, filename)
-        contents = self.model.show(refpath, with_raw_output=True)
-        tmpfile = self.model.get_tmp_filename(filename)
-        fh = open(tmpfile, 'w')
-        fh.write(contents)
-        fh.close()
-        self.launch_diffeditor(filename, tmpfile)
+        filename = self.get_selected_filename(staged=staged)
+        if filename:
+            self.spawn_xterm('git', 'difftool',
+                             '-t', self.model.get_mergetool(),
+                             '--', filename)
 
     # use *rest to handle being called from different signals
     def diff_staged(self, *rest):
@@ -598,31 +583,36 @@ class Controller(QObserver):
         self.view.set_display(self.model.diffindex())
 
     #####################################################################
-    def diffedit_branch(self):
+    def difftool_branch(self):
         self.reset_mode()
-        branch = choose_from_combo('Select Branch',
+        branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
                                    self.view,
-                                   self.model.get_all_branches())
+                                   ['HEAD^']
+                                   + self.model.get_all_branches()
+                                   + self.model.get_tags())
         if not branch:
             return
         zfiles_str = self.model.diff(branch, name_only=True, z=True)
+        if not zfiles_str:
+            qtutils.information('Nothing to do',
+                                'git-cola did not find any changes.')
         files = zfiles_str.split('\0')
         filename = choose_from_list('Select File', self.view, files)
         if not filename:
             return
-        contents = self.model.show('%s:%s' % (branch, filename), with_raw_output=True)
-        tmpfile = self.model.get_tmp_filename(filename)
-        fh = open(tmpfile, 'w')
-        fh.write(contents)
-        fh.close()
-        self.launch_diffeditor(filename, tmpfile)
+        self.spawn_xterm('git', 'difftool',
+                         '-t', self.model.get_mergetool(),
+                         '-r', branch,
+                         '--', filename)
 
     #####################################################################
     # diff gui
     def diff_branch(self):
-        branch = choose_from_combo('Select Branch',
+        branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
                                    self.view,
-                                   self.model.get_all_branches())
+                                   ['HEAD^']
+                                   + self.model.get_all_branches()
+                                   + self.model.get_tags())
         if not branch:
             return
         zfiles_str = self.model.diff(branch, name_only=True, z=True)
@@ -827,7 +817,7 @@ class Controller(QObserver):
         menu.addSeparator()
         menu.addAction(self.tr('Launch Editor'),
                        lambda: self.edit_file(staged=True))
-        menu.addAction(self.tr('Launch Diff Editor'),
+        menu.addAction(self.tr('Launch Merge Tool'),
                        lambda: self.edit_diff(staged=True))
         return menu
 
@@ -854,7 +844,7 @@ class Controller(QObserver):
         menu.addAction(self.tr('Launch Editor'),
                        lambda: self.edit_file(staged=False))
         if enable_staging:
-            menu.addAction(self.tr('Launch Diff Editor'),
+            menu.addAction(self.tr('Launch Merge Tool'),
                            lambda: self.edit_diff(staged=False))
         if enable_undo:
             menu.addSeparator()

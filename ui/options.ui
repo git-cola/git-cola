@@ -104,12 +104,12 @@
      <item row="3" column="0" >
       <widget class="QLabel" name="label_12" >
        <property name="text" >
-        <string>Diff Editor</string>
+        <string>Merge Tool</string>
        </property>
       </widget>
      </item>
      <item row="3" column="1" >
-      <widget class="QLineEdit" name="global_gui_diffeditor" >
+      <widget class="QLineEdit" name="global_merge_tool" >
        <property name="text" >
         <string/>
        </property>
