@@ -388,9 +388,6 @@ class Model(model.Model):
     def remember_gui_settings(self):
         return self.get_cola_config('savewindowsettings')
 
-    def save_at_exit(self):
-        return self.get_cola_config('saveatexit')
-
     def get_tree_node(self, idx):
         return (self.get_types()[idx],
                 self.get_sha1s()[idx],

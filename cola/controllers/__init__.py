@@ -448,7 +448,7 @@ class Controller(QObserver):
     def quit_app(self, *args):
         """Save config settings and cleanup any inotify threads."""
 
-        if self.model.save_at_exit():
+        if self.model.remember_gui_settings():
             self.model.save_gui_settings()
         qtutils.close_log_window()
         pattern = self.model.get_tmp_file_pattern()
@@ -783,11 +783,12 @@ class Controller(QObserver):
         defaults.HEIGHT = event.size().height()
 
     def load_gui_settings(self):
-        if not self.model.remember_gui_settings():
-            return
-        (w,h,x,y) = self.model.get_window_geom()
-        self.view.resize(w,h)
-        self.view.move(x,y)
+        try:
+            (w,h,x,y) = self.model.get_window_geom()
+            self.view.resize(w,h)
+            self.view.move(x,y)
+        except:
+            pass
 
     def log(self, output, rescan=True, quiet=False):
         """Logs output and optionally rescans for changes."""
