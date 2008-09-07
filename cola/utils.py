@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-import sys
 import os
 import re
+import sys
 import platform
 import subprocess
+from glob import glob
 from cStringIO import StringIO
 
 from cola import defaults
@@ -63,8 +64,8 @@ def get_qm_for_locale(locale):
 
     return os.path.join(QMDIR, basename +'.qm')
 
-def get_image_dir():
-    return os.path.join(STYLEDIR, 'images')
+def get_resource_dirs(styledir):
+    return [ r for r in glob(styledir+ '/*') if os.path.isdir(r) ]
 
 def get_stylesheet(name):
     stylesheet = os.path.join(STYLEDIR, name+'.qss')

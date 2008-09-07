@@ -9,48 +9,41 @@ from cola import version
 from cola.models import Model
 
 def main():
-    parser = optparse.OptionParser(
-                        usage='%prog /repo/path-1 ... /repo/path-N*\n\n'
-                              '*the current directory is used when no '
-                              'paths are specified.')
+    parser = optparse.OptionParser(usage='%prog [options]')
 
     parser.add_option('-v', '--version',
                       help='Show cola version',
                       dest='version',
                       default=False,
                       action='store_true')
-
     parser.add_option('-s', '--style',
-                      help='Applies a stylesheet',
+                      help='Applies an alternate stylesheet.  '
+                           'The allowed values are: "dark" or a file path.',
                       dest='style',
-                      metavar='STYLESHEET',
+                      metavar='PATH or STYLE',
                       default='')
-
+    parser.add_option('-r', '--repo',
+                      help='Specifies the path to a git repository.',
+                      dest='repo',
+                      metavar='PATH',
+                      default=os.getcwd())
     opts, args = parser.parse_args()
 
-    # This sets up sys.path so that the cola modules can be found.
     if opts.version or 'version' in args:
         print "cola version", version.version
         sys.exit(0)
 
-    # allow "git cola /repo/path-1 .. /repo/path-N
-    for repo in [ os.path.realpath(r) for r in args ]:
-        if os.path.exists(repo):
-            os.chdir(repo)
-            utils.fork('git', 'cola')
-        else:
-            sys.stderr.write("cola: failed to open '%s': " +
-                             "No such file or directory.\n" % r)
-    # We launched cola so bail out
-    if args:
-        sys.exit(0)
+    repo = os.path.realpath(opts.repo)
+    if not os.path.isdir(repo):
+        print >> sys.stderr, "fatal: '%s' is not a directory.  Consider supplying -r <path>.\n" % repo
+        sys.exit(-1)
 
     # load the model right away so that we can bail out when
     # no git repo exists
+    os.chdir(repo)
     model = Model()
-
-    # PyQt4 -- defer this to allow git cola --version
     try:
+        # Defer these imports to allow git cola --version without pyqt installed
         from PyQt4 import QtCore
         from PyQt4 import QtGui
     except ImportError:
@@ -78,24 +71,34 @@ def main():
         translator.load(qmfile)
         app.installTranslator(translator)
 
-    # Add the images resource path for the stylesheets
-    QtCore.QDir.setSearchPaths("images", [utils.get_image_dir()])
     if opts.style:
-        # Allow absolute and relative paths to a stylesheet
-        if os.path.isabs(opts.style) or os.path.exists(opts.style):
+        # This loads the built-in and user-specified stylesheets.
+        # We allows absolute and relative paths to a stylesheet
+        # by assuming that non-file arguments refer to a built-in style.
+        if os.path.isabs(opts.style) or os.path.isfile(opts.style):
             filename = opts.style
         else:
             filename = utils.get_stylesheet(opts.style)
-        if filename:
+
+        try:
+            # Automatically register each subdirectory in the style dir
+            # as a Qt resource directory.
+            dirname = os.path.dirname(filename)
+            resource_paths = []
+            resource_paths.extend(utils.get_resource_dirs(dirname))
+            for r in resource_paths:
+                basename = os.path.basename(r)
+                QtCore.QDir.setSearchPaths(basename, [r])
             stylesheet = open(filename, 'r')
             style = stylesheet.read()
             stylesheet.close()
             app.setStyleSheet(style)
-
+        except:
+            print >> sys.stderr, ("warn: '%s' is not a valid style."
+                                  % opts.style)
     # simple mvc
     from cola.views import View
     from cola.controllers import Controller
-
     view = View(app.activeWindow())
     ctl = Controller(model, view)
     view.show()
