@@ -8,7 +8,7 @@
 # at the discretion of Junio C Hamano.
 #
 
-USAGE='[--tool=tool] [file to merge] ...'
+USAGE='[--tool=tool] [--no-prompt] [file to merge] ...'
 SUBDIRECTORY_OK=Yes
 OPTIONS_SPEC=
 . git-sh-setup
@@ -25,6 +25,10 @@ modified_present () {
 
 commitish_present () {
 	test -n "$commitish"
+}
+
+should_prompt () {
+	! test -n "$no_prompt"
 }
 
 
@@ -59,16 +63,19 @@ check_unchanged ()
 	if test "$MERGED" -nt "$BACKUP"; then
 		status=0
 	else
-		while true
-		do
-			echo "$MERGED seems unchanged."
-			printf "Was the merge successful? [y/n] "
-			read answer < /dev/tty
-			case "$answer" in
-			y*|Y*) status=0; break ;;
-			n*|N*) status=1; break ;;
-			esac
-		done
+		status=1
+		if should_prompt; then
+			while true
+			do
+				printf "\n$MERGED seems unchanged."
+				printf "Was the merge successful? [y/n] "
+				read answer < /dev/tty
+				case "$answer" in
+				y*|Y*) status=0; break ;;
+				n*|N*) status=1; break ;;
+				esac
+			done
+		fi
 	fi
 }
 
@@ -105,9 +112,11 @@ merge_file ()
 	git checkout-index --prefix=.index- "$MERGED"
 	mv .index-"$MERGED" "$BASE"
 
-	printf "Editing '$MERGED':\n"
-	printf "Hit return to start merge tool (%s): " "$merge_tool"
-	read ans
+	if should_prompt; then
+		printf "\nEditing '$MERGED':\n"
+		printf "Hit return to start merge tool (%s): " "$merge_tool"
+		read ans
+	fi
 
 	case "$merge_tool" in
 	kdiff3)
@@ -228,7 +237,9 @@ merge_file ()
 	esac
 
 	if test "$status" -ne 0; then
-		echo "merge of $MERGED failed" 1>&2
+		if should_prompt; then
+			echo "merge of $MERGED failed" 1>&2
+		fi
 		mv -- "$BACKUP" "$MERGED"
 		cleanup_temp_files
 		exit 1
@@ -272,6 +283,10 @@ do
 			shift
 			;;
 		esac
+		;;
+	--no-prompt)
+		no_prompt=true
+		shift
 		;;
 	--)
 		shift
@@ -404,21 +419,18 @@ if test $# -eq 0; then
 		modified_files |
 		while IFS= read i
 		do
-			printf "\n"
 			merge_file "$i" < /dev/tty > /dev/tty
 		done
 	else
 		staged_files |
 		while IFS= read i
 		do
-			printf "\n"
 			merge_file "$i" < /dev/tty > /dev/tty
 		done
 	fi
 else
 	while test $# -gt 0
 	do
-		printf "\n"
 		merge_file "$1"
 		shift
 	done
