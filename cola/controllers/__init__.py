@@ -44,6 +44,7 @@ class Controller(QObserver):
     MODE_INDEX = 2
     MODE_AMEND = 3
     MODE_BRANCH = 4
+    MODE_GREP = 5
 
     def init(self, model, view):
         """
@@ -111,27 +112,27 @@ class Controller(QObserver):
             # Search Menu
             menu_search_grep = self.grep,
             menu_search_revision =
-                self.gen_search( search.REVISION_ID ),
+                self.gen_search(search.REVISION_ID),
             menu_search_revision_range =
-                self.gen_search( search.REVISION_RANGE ),
+                self.gen_search(search.REVISION_RANGE),
             menu_search_message =
-                self.gen_search( search.MESSAGE ),
+                self.gen_search(search.MESSAGE),
             menu_search_path =
-                self.gen_search( search.PATH, True ),
+                self.gen_search(search.PATH, True),
             menu_search_date_range =
-                self.gen_search( search.DATE_RANGE ),
+                self.gen_search(search.DATE_RANGE),
             menu_search_diff =
-                self.gen_search( search.DIFF ),
+                self.gen_search(search.DIFF),
             menu_search_author =
-                self.gen_search( search.AUTHOR ),
+                self.gen_search(search.AUTHOR),
             menu_search_committer =
-                self.gen_search( search.COMMITTER ),
+                self.gen_search(search.COMMITTER),
 
             # Merge Menu
             menu_merge_local =
-                lambda: local_merge( self.model, self.view ),
+                lambda: local_merge(self.model, self.view),
             menu_merge_abort =
-                lambda: abort_merge( self.model, self.view ),
+                lambda: abort_merge(self.model, self.view),
 
             # Repository Menu
             menu_visualize_current = self.viz_current,
@@ -157,7 +158,7 @@ class Controller(QObserver):
             menu_show_index = self.show_index,
             menu_export_patches = self.export_patches,
             menu_stash =
-                lambda: stash( self.model, self.view ),
+                lambda: stash(self.model, self.view),
             menu_load_commitmsg = self.load_commitmsg,
             menu_cherry_pick = self.cherry_pick,
             menu_get_prev_commitmsg = model.get_prev_commitmsg,
@@ -257,7 +258,8 @@ class Controller(QObserver):
         txt, ok = qtutils.input('grep')
         if not ok:
             return
-        stuff = self.model.grep(txt)
+        self.mode = Controller.MODE_GREP
+        stuff = self.model.git.grep(txt, n=True)
         self.view.display_text.setText(stuff)
         self.view.show_diff()
 
@@ -299,7 +301,7 @@ class Controller(QObserver):
                                    self.model.get_local_branches())
         if not branch:
             return
-        self.log(self.model.checkout(branch))
+        self.log(self.model.git.checkout(branch))
 
     def browse_commits(self):
         self.select_commits_gui('Browse Commits',
@@ -475,7 +477,7 @@ class Controller(QObserver):
                                    self.model.get_local_branches())
         if not branch:
             return
-        self.log(self.model.rebase(branch))
+        self.log(self.model.git.rebase(branch))
 
     def reset_mode(self):
         """Sets the mode to the default NONE mode."""
@@ -592,7 +594,7 @@ class Controller(QObserver):
                                    + self.model.get_tags())
         if not branch:
             return
-        zfiles_str = self.model.diff(branch, name_only=True, z=True)
+        zfiles_str = self.model.git.diff(branch, name_only=True, z=True)
         if not zfiles_str:
             qtutils.information('Nothing to do',
                                 'git-cola did not find any changes.')
@@ -615,7 +617,7 @@ class Controller(QObserver):
                                    + self.model.get_tags())
         if not branch:
             return
-        zfiles_str = self.model.diff(branch, name_only=True, z=True)
+        zfiles_str = self.model.git.diff(branch, name_only=True, z=True)
         files = zfiles_str.split('\0')
         filename = choose_from_list('Select File', self.view, files)
         if not filename:
@@ -756,7 +758,7 @@ class Controller(QObserver):
                                     default=False):
                 return
 
-            output = self.model.checkout('HEAD', '--', *items_to_undo)
+            output = self.model.git.checkout('HEAD', '--', *items_to_undo)
             self.log('git checkout HEAD -- '
                     +' '.join(items_to_undo)
                     +'\n' + output)
@@ -767,7 +769,7 @@ class Controller(QObserver):
     def viz_all(self):
         """Visualizes the entire git history using gitk."""
         browser = self.model.get_history_browser()
-        utils.fork(browser,'--all')
+        utils.fork(browser, '--all')
 
     def viz_current(self):
         """Visualizes the current branch's history using gitk."""
@@ -894,7 +896,7 @@ class Controller(QObserver):
                               self.tr(title), revs, summaries)
 
     def update_diff_font(self):
-        font = self.model.get_global_cola_fontdiff()
+        font = self.model.get_cola_config('fontdiff')
         if not font:
             return
         qfont = QFont()
@@ -903,7 +905,7 @@ class Controller(QObserver):
         self.view.commitmsg.setFont(qfont)
 
     def update_ui_font(self):
-        font = self.model.get_global_cola_fontui()
+        font = self.model.get_cola_config('fontui')
         if not font:
             return
         qfont = QFont()

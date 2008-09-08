@@ -13,26 +13,6 @@ from cola import model
 #+ A regex for matching the output of git(log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile('([0-9a-f]+)\W(.*)')
 
-#+-------------------------------------------------------------------------
-# List of functions available directly through model.command_name()
-GIT_COMMANDS = """
-    am annotate apply archive archive_recursive
-    bisect blame branch bundle
-    checkout checkout_index cherry cherry_pick citool
-    clean commit config count_objects
-    describe diff
-    fast_export fetch filter_branch format_patch fsck
-    gc get_tar_commit_id grep gui
-    hard_repack imap_send init instaweb
-    log lost_found ls_files ls_remote ls_tree
-    merge mergetool mv name_rev pull push
-    read_tree rebase relink remote repack
-    request_pull reset revert rev_list rm
-    send_email shortlog show show_branch
-    show_ref stash status submodule svn
-    tag var verify_pack whatchanged
-""".split()
-
 class GitCola(git.Git):
     """GitPython throws exceptions by default.
     We suppress exceptions in favor of return values.
@@ -109,16 +89,11 @@ class Model(model.Model):
         so that they refer to the git module.  This object
         encapsulates cola's interaction with git."""
 
-        # chdir to the root of the git tree.
-        # This keeps paths relative.
+        # Initialize the git command object
         self.git = GitCola()
 
         # Read git config
         self.__init_config_data()
-
-        # Import all git commands from git.py
-        for cmd in GIT_COMMANDS:
-            setattr(self, cmd, getattr(self.git, cmd))
 
         self.create(
             #####################################################
@@ -402,7 +377,8 @@ class Model(model.Model):
         return (self.get_local_branches() + self.get_remote_branches())
 
     def set_remote(self, remote):
-        if not remote: return
+        if not remote:
+            return
         self.set_param('remote', remote)
         branches = utils.grep('%s/\S+$' % remote,
                               self.branch_list(remote=True),
@@ -992,7 +968,7 @@ class Model(model.Model):
 
     def parse_stash_list(self, revids=False):
         """Parses "git stash list" and returns a list of stashes."""
-        stashes = self.stash("list").splitlines()
+        stashes = self.git.stash("list").splitlines()
         if revids:
             return [ s[:s.index(':')] for s in stashes ]
         else:

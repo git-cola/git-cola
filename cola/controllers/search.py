@@ -13,7 +13,6 @@ from cola import qtutils
 class SearchEngine(object):
     def __init__(self, model):
         self.model = model
-        self.parse = self.model.parse_rev_list
         self.init()
     def init(self):
         pass
@@ -28,6 +27,9 @@ class SearchEngine(object):
         return self.get_results()
     def validate(self):
         return len(self.model.get_input()) > 1
+    def get_revisions(self, *args, **kwargs):
+        revlist = self.model.git.rev_list(*args, **kwargs)
+        return self.model.parse_rev_list(revlist)
     def get_results(self):
         pass
 
@@ -35,7 +37,7 @@ class RevisionSearch(SearchEngine):
     def get_results(self):
         input, args = self.get_common_args()
         expr = re.compile(input)
-        revs = self.parse(self.model.rev_list(all=True, **args))
+        revs = self.get_revisions(all=True, **args)
         return [ r for r in revs if expr.match(r[0]) ]
 
 class RevisionRangeSearch(SearchEngine):
@@ -44,51 +46,48 @@ class RevisionRangeSearch(SearchEngine):
     def validate(self):
         return bool(self.RE.match(self.model.get_input()))
     def get_results(self):
-        input, args = self.get_common_args()
-        return self.parse(self.model.rev_list(input, **args))
+        input, kwargs = self.get_common_args()
+        return self.get_revisions(input, **kwargs)
 
 class PathSearch(SearchEngine):
     def get_results(self):
         input, args = self.get_common_args()
         paths = ['--'] + input.split(':')
-        return self.parse(self.model.rev_list(all=True, *paths, **args))
+        return self.get_revisions(all=True, *paths, **args)
 
 class MessageSearch(SearchEngine):
     def get_results(self):
-        input, args = self.get_common_args()
-        return self.parse(
-            self.model.rev_list(grep=input, all=True, **args))
+        input, kwargs = self.get_common_args()
+        return self.get_revisions(all=True, grep=input, **kwargs)
 
 class AuthorSearch(SearchEngine):
     def get_results(self):
-        input, args = self.get_common_args()
-        return self.parse(
-            self.model.rev_list(author=input, all=True, **args))
+        input, kwargs = self.get_common_args()
+        return self.get_revisions(all=True, author=input, **kwargs)
 
 class CommitterSearch(SearchEngine):
     def get_results(self):
-        input, args = self.get_common_args()
-        return self.parse(
-            self.model.rev_list(committer=input, all=True, **args))
+        input, kwargs = self.get_common_args()
+        return self.get_revisions(all=True, committer=input, **kwargs)
 
 class DiffSearch(SearchEngine):
     def get_results(self):
-        input, args = self.get_common_args()
-        return self.parse(
-            self.model.log('-S'+input, all=True, **args))
+        input, kwargs = self.get_common_args()
+        return self.model.parse_rev_list(
+            self.model.git.log('-S'+input, all=True, **kwargs))
 
 class DateRangeSearch(SearchEngine):
     def validate(self):
         return True
     def get_results(self):
-        args = self.get_rev_args()
+        kwargs = self.get_rev_args()
         start_date = self.model.get_start_date()
         end_date = self.model.get_end_date()
-        return self.parse(self.model.rev_list(date='iso',
-                                              after=start_date,
-                                              before=end_date,
-                                              all=True,
-                                              **args))
+        return self.get_revisions(date='iso',
+                                  all=True,
+                                  after=start_date,
+                                  before=end_date,
+                                  **kwargs)
 
 # Modes for this controller.
 # Note: names correspond to radio button names for convenience
@@ -143,12 +142,12 @@ class SearchController(QObserver):
         self.update_fonts()
 
     def update_fonts(self):
-        font = self.model.get_global_cola_fontui()
+        font = self.model.get_cola_config('fontui')
         if font:
             qfont = QtGui.QFont()
             qfont.fromString(font)
             self.view.commit_list.setFont(qfont)
-        font = self.model.get_global_cola_fontdiff()
+        font = self.model.get_cola_config('fontdiff')
         if font:
             qfont = QtGui.QFont()
             qfont.fromString(font)
@@ -227,7 +226,7 @@ class SearchController(QObserver):
         if not selected or len(self.results) < row:
             return
         revision = self.results[row][0]
-        qtutils.log(self.model.cherry_pick(revision),
+        qtutils.log(self.model.git.cherry_pick(revision),
                     doraise=True,
                     quiet=False)
 

@@ -77,8 +77,8 @@ class RepoBrowserController(QObserver):
                 return
             objtype, sha1, name = self.model.get_subtree_node(idx)
 
-            catguts = self.model.cat_file(objtype, sha1,
-                                          with_raw_output=True)
+            catguts = self.model.git.cat_file(objtype, sha1,
+                                              with_raw_output=True)
             self.view.commit_text.setText(catguts)
 
             self.view.revision.setText(sha1)

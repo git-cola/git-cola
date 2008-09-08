@@ -91,7 +91,7 @@ class OptionsController(QObserver):
     This controller assumes that the view's widgets are named
     the same as the model parameters."""
 
-    def init(self,model,view):
+    def init(self, model, view):
         # used for telling about interactive font changes
         self.original_model = model
         model = model.clone()
@@ -127,7 +127,7 @@ class OptionsController(QObserver):
         self.backup_model = self.model.clone()
 
     def refresh_view(self):
-        font = self.model.get_param('global_cola_fontui')
+        font = self.model.get_cola_config('fontui')
         if font:
             size = int(font.split(',')[1])
             self.view.global_cola_fontuisize.setValue(size)
@@ -136,7 +136,7 @@ class OptionsController(QObserver):
             fontui.fromString(font)
             self.view.global_cola_fontui.setCurrentFont(fontui)
 
-        font = self.model.get_global_cola_fontdiff()
+        font = self.model.get_cola_config('fontdiff')
         if font:
             size = int(font.split(',')[1])
             self.view.global_cola_fontdiffsize.setValue(size)

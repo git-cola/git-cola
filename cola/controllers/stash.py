@@ -56,7 +56,7 @@ class StashController(QObserver):
 
         # Sanitize our input, just in case
         stash_name = utils.sanitize_input(stash_name)
-        qtutils.log(self.model.stash('save', stash_name),
+        qtutils.log(self.model.git.stash('save', stash_name),
                     quiet=False,
                     doraise=True)
         self.view.accept()
@@ -66,7 +66,7 @@ class StashController(QObserver):
         selection = self.get_selected_stash()
         if not selection:
             return
-        diffstat = self.model.stash('show', selection)
+        diffstat = self.model.git.stash('show', selection)
         diff = self.model.stash('show', '-p', selection)
         self.view.parent_view.display('%s\n\n%s' % (diffstat, diff))
 
@@ -74,8 +74,9 @@ class StashController(QObserver):
         selection = self.get_selected_stash()
         if not selection:
             return
-        (status, stdout, stderr) = self.model.stash('pop', selection,
-                                                    with_extended_output=True)
+        (status, stdout, stderr) =\
+            self.model.git.stash('apply', selection,
+                                 with_extended_output=True)
         qtutils.log(stdout + stderr,
                     quiet=False,
                     doraise=True)
@@ -93,7 +94,7 @@ class StashController(QObserver):
                                         'be possible.\n\n'
                                         'Continue?')):
             return
-        qtutils.log(self.model.stash('drop', selection),
+        qtutils.log(self.model.git.stash('drop', selection),
                     quiet=False,
                     doraise=True)
         self.update_model()
@@ -107,5 +108,5 @@ class StashController(QObserver):
                                         'be possible.\n\n'
                                         'Continue?')):
             return
-        self.model.stash('clear'),
+        self.model.git.stash('clear'),
         self.update_model()
