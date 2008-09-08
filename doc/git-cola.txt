@@ -65,7 +65,7 @@ user.name::
 	environment variables.  See linkgit:git-commit-tree[1].
 
 
-See linkgit:git-config[7] for more details.
+See linkgit:git-config[1] for more details.
 
 
 ENVIRONMENT VARIABLES

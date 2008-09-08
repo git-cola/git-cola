@@ -40,10 +40,17 @@ variable `mergetool.<tool>.cmd`.
 +
 When 'git-difftool' is invoked with this tool (either through the
 `-t` or `--tool` option or the `merge.tool` configuration
-variable) the configured command line will be invoked with `$BASE`
-set to the name of a temporary file containing the common base for
-the merge, if available; `$LOCAL` set to the name of a temporary
-file containing the contents of the file on the current branch;
+variable) the configured command line will be invoked with 
+with the following variables available: 'BASE' is the name of a
+temporary file containing the contents of the file from the index.
+'LOCAL' is the name of a temporary file containing the contents of
+the file as it appears in the work tree; 'REMOTE' is the name of a
+temporary file containing the contents of the file from the reference
+being merged; 'MERGED' contains the name of the file to which the
+merge tool should write the results of a successful merge.
+set to the name of a temporary file containing the contents of
+the index; `$LOCAL` set to the name of a temporary file containing
+the contents of the file as it appears in the work tree;
 `$REMOTE` set to the name of a temporary file containing the
 contents of the file to be merged, and `$MERGED` set to the name
 of the file to which the merge tool should write the result of the
@@ -67,22 +74,17 @@ CONFIG VARIABLES
 
 merge.tool::
 	The default merge tool to use.
-	See the `--tool=<tool>` option above for valid values.
++
+See the `--tool=<tool>` option above for more details.
 
 mergetool.<tool>.path::
 	Override the path for the given tool.  This is useful in case
 	your tool is not in the PATH.
 
 mergetool.<tool>.cmd::
-	Specify the command to invoke the specified merge tool.  The
-	specified command is evaluated in shell with the following
-	variables available: 'BASE' is the name of a temporary file
-	containing the contents of the file from the index.
-	'LOCAL' is the name of a temporary file containing the contents of
-	the file on the current branch; 'REMOTE' is the name of a temporary
-	file containing the contents of the file from the branch or ref being
-	merged; 'MERGED' contains the name of the file to which the merge
-	tool should write the results of a successful merge.
+	Specify the command to invoke the specified merge tool.
++
+See the `--tool=<tool>` option above for more details.
 
 mergetool.<tool>.trustExitCode::
 	For a custom merge command, specify whether the exit code of
@@ -98,8 +100,6 @@ mergetool.keepBackup::
 	is set to `false` then this file is not preserved.  Defaults to
 	`true` (i.e. keep the backup files).
 
-See linkgit:git-config[7] for more details.
-
 
 SEE ALSO
 --------
@@ -109,6 +109,9 @@ linkcola:git-cola[1]::
 linkgit:git-mergetool[1]::
 	'git-difftool' uses many of the same concepts as the core
 	'git-mergetool' command.
+
+linkgit:git-config[7]::
+	 Get and set repository or global options.
 
 AUTHOR
 ------
