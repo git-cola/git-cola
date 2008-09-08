@@ -43,10 +43,14 @@ def __run_setup():
             __app_path('share/cola/styles', '*.qss'),
             __app_path('share/cola/styles/images', '*.png'),
             __app_path('share/applications', '*.desktop'),
+            __app_path('share/doc/cola', 'doc/*.txt'),
           ])
 
 def __app_path(dirname, entry):
-    return (dirname, glob(os.path.join(dirname, entry)))
+    if '/' in entry:
+        return (dirname, glob(entry))
+    else:
+        return (dirname, glob(os.path.join(dirname, entry)))
 
 def __version_to_list(version):
     """Convert a version string to a list of numbers or strings
