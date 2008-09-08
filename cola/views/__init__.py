@@ -94,6 +94,11 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
                      SIGNAL('clicked(bool)'),
                      self.handle_vertical_checkbox)
 
+        # Display the current column
+        self.connect(self.commitmsg,
+                     SIGNAL('cursorPositionChanged()'),
+                     self.show_current_column)
+
     def handle_vertical_checkbox(self, checked):
         if checked:
             self.splitter.setOrientation(Qt.Vertical)
@@ -145,10 +150,13 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
             offset -= 1
         line, rest = contents[offset:].split('\n', 1)
         return line
-
     def display(self, text):
         self.set_display(text)
         self.diff_dock.raise_()
+    def show_current_column(self):
+        cursor = self.commitmsg.textCursor()
+        colnum = cursor.columnNumber()
+        self.column_label.setText('Column: %02d' % colnum)
 
 class LogView(CreateStandardView(Ui_logger, QDialog)):
     """A simple dialog to display command logs."""
