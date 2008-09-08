@@ -41,11 +41,7 @@ modified_files () {
 }
 
 staged_files() {
-	if commitish_present; then
-		git diff --name-only --cached "$commitish" "$@"
-	else
-		git diff --name-only --cached "$@"
-	fi
+	git diff --name-only --cached "$@"
 }
 
 cleanup_temp_files ()
@@ -67,7 +63,7 @@ check_unchanged ()
 		if should_prompt; then
 			while true
 			do
-				printf "\n$MERGED seems unchanged."
+				printf "\n$MERGED seems unchanged.\n"
 				printf "Was the merge successful? [y/n] "
 				read answer < /dev/tty
 				case "$answer" in
