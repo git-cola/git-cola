@@ -286,12 +286,19 @@
     <addaction name="menu_merge_local" />
     <addaction name="menu_merge_abort" />
    </widget>
+   <widget class="QMenu" name="help_menu" >
+    <property name="title" >
+     <string>Help</string>
+    </property>
+    <addaction name="menu_help_docs" />
+   </widget>
    <addaction name="file_menu" />
    <addaction name="edit_menu" />
    <addaction name="search_menu" />
    <addaction name="commit_menu" />
    <addaction name="branch_menu" />
    <addaction name="merge_menu" />
+   <addaction name="help_menu" />
   </widget>
   <widget class="QDockWidget" name="diff_dock" >
    <property name="geometry" >
@@ -1104,6 +1111,14 @@
   <action name="menu_clone_repo" >
    <property name="text" >
     <string>Clone...</string>
+   </property>
+  </action>
+  <action name="menu_help_docs" >
+   <property name="text" >
+    <string>Documentation</string>
+   </property>
+   <property name="shortcut" >
+    <string>F1</string>
    </property>
   </action>
  </widget>

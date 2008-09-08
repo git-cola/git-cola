@@ -14,6 +14,7 @@ PREFIX = os.path.realpath(os.path.dirname(os.path.dirname(sys.argv[0])))
 QMDIR = os.path.join(PREFIX, 'share', 'cola', 'qm')
 ICONSDIR = os.path.join(PREFIX, 'share', 'cola', 'icons')
 STYLEDIR = os.path.join(PREFIX, 'share', 'cola', 'styles')
+DOCDIR = os.path.join(PREFIX, 'share', 'doc', 'cola')
 
 KNOWN_FILE_TYPES = {
     'ascii c':   'c.png',
@@ -73,6 +74,9 @@ def get_stylesheet(name):
         return stylesheet
     else:
         return None
+
+def get_htmldocs():
+    return os.path.join(DOCDIR, 'git-cola.html')
 
 def ident_file_type(filename):
     """Returns an icon based on the contents of filename."""

@@ -167,6 +167,10 @@ class Controller(QObserver):
                 lambda: self.log(self.model.stage_untracked()),
             menu_unstage_all =
                 lambda: self.log(self.model.unstage_all()),
+
+            # Help Menu
+            menu_help_docs =
+                lambda: self.model.git.web__browse(utils.get_htmldocs()),
             )
 
         # Delegate window events here
