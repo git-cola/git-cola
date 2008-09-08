@@ -11,7 +11,7 @@ class VersionUnavailable(ColaException):
 def git_describe_version():
     path = sys.path[0]
     try:
-        v = utils.run_cmd('git', 'describe', '--tags', '--abbrev=4')
+        v = utils.run_cmd('git', 'describe', '--tags', '--abbrev=4', 'master')
     except utils.RunCommandException, e:
         raise VersionUnavailable(str(e))
     if not re.match(r'^v[0-9]', v):
