@@ -6,7 +6,9 @@
 *~
 /build
 /build-stamp
+/ChangeLog
 /configure-stamp
+/dist
 /debian/*.log
 /debian/files
 /debian/bld

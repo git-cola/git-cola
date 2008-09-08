@@ -10,19 +10,19 @@ install:
 	cd $(DESTDIR)$(prefix)/bin && rm -f cola && ln -s git-cola cola
 
 doc:
-	cd doc && $(MAKE) all
+	cd share/doc/cola && $(MAKE) all
 
 install-doc:
-	$(MAKE) -C doc install
+	$(MAKE) -C share/doc/cola install
 
 install-html:
-	$(MAKE) -C doc install-html
+	$(MAKE) -C share/doc/cola install-html
 
 test:
 	cd t && $(MAKE) all
 
 clean:
-	for dir in doc t; do \
+	for dir in share/doc/cola t; do \
 		(cd $$dir && $(MAKE) clean); \
 	done
 	find cola -name '*.py[co]' -print0 | xargs -0 rm -f

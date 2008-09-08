@@ -43,7 +43,7 @@ def __run_setup():
             __app_path('share/cola/styles', '*.qss'),
             __app_path('share/cola/styles/images', '*.png'),
             __app_path('share/applications', '*.desktop'),
-            __app_path('share/doc/cola', 'doc/*.txt'),
+            __app_path('share/doc/cola', '*.txt'),
           ])
 
 def __app_path(dirname, entry):
