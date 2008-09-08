@@ -249,6 +249,17 @@ class Controller(QObserver):
 
     #####################################################################
     # Qt callbacks
+    def goto_grep(self):
+        line = self.view.selected_line()
+        filename, lineno, contents = line.split(':', 2)
+        if not os.path.exists(filename):
+            return
+        editor = self.model.get_editor()
+        if 'vi' in editor:
+            utils.fork(self.model.get_editor(), filename, '+'+lineno)
+        else:
+            utils.fork(self.model.get_editor(), filename)
+
     def gen_search(self, searchtype, browse=False):
         def search_handler():
             search_commits(self.model, searchtype, browse)
@@ -884,8 +895,11 @@ class Controller(QObserver):
             menu.addAction(self.tr('Unstage Selected Lines'), self.unstage_hunk_selection)
 
         elif self.mode == Controller.MODE_BRANCH:
-            menu.addAction(self.tr('Apply Diff To Work Tree'), self.stage_hunk)
-            menu.addAction(self.tr('Apply Diff Selection To Work Tree'), self.stage_hunk_selection)
+            menu.addAction(self.tr('Apply Diff to Work Tree'), self.stage_hunk)
+            menu.addAction(self.tr('Apply Diff Selection to Work Tree'), self.stage_hunk_selection)
+
+        elif self.mode == Controller.MODE_GREP:
+            menu.addAction(self.tr('Go Here'), self.goto_grep)
 
         menu.addSeparator()
         menu.addAction(self.tr('Copy'), self.view.copy_display)
