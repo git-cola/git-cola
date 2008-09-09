@@ -99,6 +99,9 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
                      SIGNAL('cursorPositionChanged()'),
                      self.show_current_column)
 
+        # Initialize the GUI to show 'Column: 00'
+        self.show_current_column()
+
     def handle_vertical_checkbox(self, checked):
         if checked:
             self.splitter.setOrientation(Qt.Vertical)
