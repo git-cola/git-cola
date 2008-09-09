@@ -144,11 +144,15 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
         cursor = self.display_text.textCursor()
         offset = cursor.position()
         contents = unicode(self.display_text.toPlainText())
-        while (offset > 1
+        while (offset >= 1
                 and contents[offset-1]
                 and contents[offset-1] != '\n'):
             offset -= 1
-        line, rest = contents[offset:].split('\n', 1)
+        data = contents[offset:]
+        if '\n' in data:
+            line, rest = data.split('\n', 1)
+        else:
+            line = data
         return line
     def display(self, text):
         self.set_display(text)
