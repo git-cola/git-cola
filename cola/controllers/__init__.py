@@ -34,6 +34,7 @@ from merge import abort_merge
 from bookmark import save_bookmark
 from bookmark import manage_bookmarks
 from stash import stash
+from compare import compare
 
 
 class Controller(QObserver):
@@ -98,6 +99,7 @@ class Controller(QObserver):
             menu_clone_repo = self.clone_repo,
             menu_manage_bookmarks = manage_bookmarks,
             menu_save_bookmark = save_bookmark,
+            menu_load_commitmsg = self.load_commitmsg,
 
             # Edit Menu
             menu_options = self.options,
@@ -157,11 +159,12 @@ class Controller(QObserver):
             menu_show_diffstat = self.show_diffstat,
             menu_show_index = self.show_index,
             menu_export_patches = self.export_patches,
-            menu_stash =
-                lambda: stash(self.model, self.view),
-            menu_load_commitmsg = self.load_commitmsg,
             menu_cherry_pick = self.cherry_pick,
             menu_get_prev_commitmsg = model.get_prev_commitmsg,
+            menu_stash =
+                lambda: stash(self.model, self.view),
+            menu_compare =
+                lambda: compare(self.model, self.view),
             menu_stage_modified =
                 lambda: self.log(self.model.stage_modified()),
             menu_stage_untracked =
@@ -609,6 +612,7 @@ class Controller(QObserver):
         if not zfiles_str:
             qtutils.information('Nothing to do',
                                 'git-cola did not find any changes.')
+            return
         files = zfiles_str.split('\0')
         filename = choose_from_list('Select File', self.view, files)
         if not filename:

@@ -43,12 +43,12 @@ class Model(Observable):
     def __init__(self, *args, **kwargs):
         Observable.__init__(self)
         self.__params = []
-        # For meta-programmability
         self.from_dict(kwargs)
         self.init()
 
-    # for subclasses
     def init(self):
+        """init() is called by the built-in constructor.
+        Subclasses should implement this if necessary."""
         pass
 
     def create(self,**kwargs):
@@ -119,8 +119,8 @@ class Model(Observable):
 
         param = param.lower()
         if check_params and param not in self.__params:
-            raise Exception("Parameter '%s' not available for %s"
-                            % (param, self.__class__.__name__))
+            raise AttributeError("Parameter '%s' not available for %s"
+                                 % (param, self.__class__.__name__))
         elif param not in self.__params:
             self.__params.append(param)
 

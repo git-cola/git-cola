@@ -217,8 +217,8 @@
     <addaction name="menu_export_patches" />
     <addaction name="menu_cherry_pick" />
     <addaction name="separator" />
+    <addaction name="menu_compare" />
     <addaction name="menu_get_prev_commitmsg" />
-    <addaction name="menu_load_commitmsg" />
    </widget>
    <widget class="QMenu" name="edit_menu" >
     <property name="title" >
@@ -276,6 +276,8 @@
     <addaction name="separator" />
     <addaction name="menu_manage_bookmarks" />
     <addaction name="menu_save_bookmark" />
+    <addaction name="separator" />
+    <addaction name="menu_load_commitmsg" />
     <addaction name="separator" />
     <addaction name="menu_quit" />
    </widget>
@@ -1129,6 +1131,11 @@
    </property>
    <property name="shortcut" >
     <string>F1</string>
+   </property>
+  </action>
+  <action name="menu_compare" >
+   <property name="text" >
+    <string>Compare Commits...</string>
    </property>
   </action>
  </widget>
