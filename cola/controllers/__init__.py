@@ -100,6 +100,7 @@ class Controller(QObserver):
             menu_manage_bookmarks = manage_bookmarks,
             menu_save_bookmark = save_bookmark,
             menu_load_commitmsg = self.load_commitmsg,
+            menu_get_prev_commitmsg = model.get_prev_commitmsg,
 
             # Edit Menu
             menu_options = self.options,
@@ -160,7 +161,6 @@ class Controller(QObserver):
             menu_show_index = self.show_index,
             menu_export_patches = self.export_patches,
             menu_cherry_pick = self.cherry_pick,
-            menu_get_prev_commitmsg = model.get_prev_commitmsg,
             menu_stash =
                 lambda: stash(self.model, self.view),
             menu_compare =

@@ -218,7 +218,6 @@
     <addaction name="menu_cherry_pick" />
     <addaction name="separator" />
     <addaction name="menu_compare" />
-    <addaction name="menu_get_prev_commitmsg" />
    </widget>
    <widget class="QMenu" name="edit_menu" >
     <property name="title" >
@@ -278,6 +277,7 @@
     <addaction name="menu_save_bookmark" />
     <addaction name="separator" />
     <addaction name="menu_load_commitmsg" />
+    <addaction name="menu_get_prev_commitmsg" />
     <addaction name="separator" />
     <addaction name="menu_quit" />
    </widget>
