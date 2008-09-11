@@ -57,8 +57,11 @@ class Controller(QObserver):
             index  -> selectively remove changes from the index
         """
         self.reset_mode()
-
-        # parent-less log window
+        # Load window settings
+        settings = QtCore.QSettings('git', 'cola');
+        geom = settings.value('geometry').toByteArray()
+        self.view.restoreState(geom)
+        # Parent-less log window
         qtutils.LOGGER = logger()
 
         # Unstaged changes context menu
@@ -463,9 +466,11 @@ class Controller(QObserver):
 
     def quit_app(self, *args):
         """Save config settings and cleanup any inotify threads."""
-
         if self.model.remember_gui_settings():
             self.model.save_gui_settings()
+            settings = QtCore.QSettings('git', 'cola');
+            settings.setValue('geometry',
+                              QtCore.QVariant(self.view.saveState()));
         qtutils.close_log_window()
         pattern = self.model.get_tmp_file_pattern()
         for filename in glob.glob(pattern):
