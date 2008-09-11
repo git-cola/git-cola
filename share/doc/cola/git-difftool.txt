@@ -3,11 +3,14 @@ git-difftool(1)
 
 NAME
 ----
-git-difftool - stage changes using the standard git merge tools
+git-difftool - stage and compare changes using the standard git merge tools
 
 SYNOPSIS
 --------
-'git difftool' [--tool=<tool>] [--ref=<ref>] [--no-prompt] [<file>]...
+'git difftool' [--tool=<tool>]
+               [--commit=<ref> | --start=<ref> --end=<ref>]
+               [--no-prompt]
+               [--] [<file>]...
 
 DESCRIPTION
 -----------
@@ -33,28 +36,28 @@ can configure the absolute path to kdiff3 by setting
 `mergetool.kdiff3.path`. Otherwise, 'git-difftool' assumes the
 tool is available in PATH.
 +
-Instead of running one of the known merge tool programs
+Instead of running one of the known merge tool programs,
 'git-difftool' can be customized to run an alternative program
 by specifying the command line to invoke in a configuration
 variable `mergetool.<tool>.cmd`.
 +
 When 'git-difftool' is invoked with this tool (either through the
-`-t` or `--tool` option or the `merge.tool` configuration
-variable) the configured command line will be invoked with 
-with the following variables available: 'BASE' is the name of a
-temporary file containing the contents of the file from the index.
-'LOCAL' is the name of a temporary file containing the contents of
-the file as it appears in the work tree; 'REMOTE' is the name of a
-temporary file containing the contents of the file from the reference
-being merged; 'MERGED' contains the name of the file to which the
-merge tool should write the results of a successful merge.
-set to the name of a temporary file containing the contents of
-the index; `$LOCAL` set to the name of a temporary file containing
-the contents of the file as it appears in the work tree;
-`$REMOTE` set to the name of a temporary file containing the
-contents of the file to be merged, and `$MERGED` set to the name
-of the file to which the merge tool should write the result of the
-merge resolution.
+`-t` or `--tool` option or the `merge.tool` configuration variable)
+the configured command line will be invoked with the following
+variables available: `$BASE` is set to the name of a temporary file
+containing the contents of the index; `$LOCAL` set to the name of a
+temporary file containing the contents of the file as it appears in
+the work tree; `$REMOTE` set to the name of a temporary file
+containing the contents of the file to be merged, and `$MERGED` set
+to the name of the file to which the merge tool should write the
+result of the merge resolution.
++
+When `--start=<ref>` and `--end=<ref>` are specified
+`$LOCAL` contains the contents of the file from the
+starting revision and `$REMOTE` contains the contents
+of the file in the ending revision.  `$BASE` contains
+the contents of the file in the work tree if it exists,
+and the starting revision otherwise.
 +
 If the custom merge tool correctly indicates the success of a
 merge resolution with its exit code then the configuration
@@ -62,12 +65,16 @@ variable `mergetool.<tool>.trustExitCode` can be set to `true`.
 Otherwise, 'git-difftool' will prompt the user to indicate the
 success of the resolution after the custom tool has exited.
 
--r or --ref=<ref>::
-	Specifies a commit-ish reference to compare against.
+-c or --commit=<ref>::
+	Specifies a commit reference for comparing against.
 	'git-difftool' compares against the index by default.
 
 --no-prompt::
 	Do not prompt before and after launching a merge tool.
+
+-s or --start=<ref> and -e or --end=<ref>::
+	See changes between commits start and end.
+	This example shows the latest commit: `--start=HEAD^^ --end=HEAD`.
 
 CONFIG VARIABLES
 ----------------

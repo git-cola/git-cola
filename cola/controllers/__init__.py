@@ -615,7 +615,7 @@ class Controller(QObserver):
             return
         utils.fork('git', 'difftool', '--no-prompt',
                    '-t', self.model.get_mergetool(),
-                   '-r', branch,
+                   '-c', branch,
                    '--', filename)
 
     #####################################################################
