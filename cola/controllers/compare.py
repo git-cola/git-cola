@@ -71,6 +71,7 @@ class CompareController(QObserver):
 
         diff = self.model.get_commit_diff(revision)
         self.model.set_display_text(diff)
+        qtutils.set_clipboard(self.model.get_param(revision_param))
 
     def compare_revisions(self):
         start = self.model.get_revision_start()
@@ -88,7 +89,12 @@ class CompareController(QObserver):
         filename = choose_from_list('Select File', self.view, files)
         if not filename:
             return
-        utils.fork('git', 'difftool', '--no-prompt',
-                   '-t', self.model.get_mergetool(),
-                   '--start', start, '--end', end,
-                   '--', filename)
+        git = self.model.git
+        status, output, err = git.difftool('--', filename,
+                                           no_prompt=True,
+                                           tool=self.model.get_mergetool(),
+                                           start=start, end=end,
+                                           with_extended_output=True)
+        qtutils.log(output+os.linesep+err)
+        if status != 0:
+            qtutils.information('Oops!', output)

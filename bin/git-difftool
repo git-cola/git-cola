@@ -7,12 +7,12 @@
 # This file is licensed under the GPL v2, or a later version
 # at the discretion of Junio C Hamano.
 #
-
 USAGE='[--tool=tool] [--commit=ref] [--start=ref --end=ref] [--no-prompt] [file to merge] ...'
 SUBDIRECTORY_OK=Yes
 OPTIONS_SPEC=
 . git-sh-setup
 require_work_tree
+dirname=
 
 parse_arg () {
 	expr "z$1" : 'z-[^=]*=\(.*\)'
@@ -36,6 +36,10 @@ should_prompt () {
 
 use_rev_range () {
 	test -n "$start" && test -n "$end"
+}
+
+handle_dir () {
+	test -n "$non_existant_dir"
 }
 
 merge_three () {
@@ -63,6 +67,7 @@ cleanup_temp_files () {
 	else
 		rm -f -- "$LOCAL" "$REMOTE" "$BASE" "$BACKUP"
 	fi
+	handle_dir && rmdir -p "$dirname"
 }
 
 check_unchanged () {
@@ -104,24 +109,35 @@ merge_file ()
 		exit 1
 	fi
 
-	ext="$$$(expr "$MERGED" : '.*\(\.[^/]*\)$')"
-	BACKUP="./$MERGED.BACKUP.$ext"
-	LOCAL="./$MERGED.LOCAL.$ext"
-	REMOTE="./$MERGED.HEAD.$ext"
-	BASE="./$MERGED.INDEX.$ext"
+	dirname=$(dirname "$MERGED")
+	test -d "$dirname" || non_existant_dir=true
+	handle_dir && mkdir -p "$dirname"
 
+	ext="$$$(expr "$MERGED" : '.*\(\.[^/]*\)$')"
 	test -f "$MERGED" && cp -- "$MERGED" "$BACKUP"
 
 	if use_rev_range; then
-		base=current
+		base=local
 		local=start
 		remote=end
+		BACKUP="./$MERGED.BACKUP.$ext"
+		LOCAL="./$MERGED.START.$ext"
+		REMOTE="./$MERGED.END.$ext"
+		BASE="./$MERGED.LOCAL.$ext"
 		if ! git show "$start":"$MERGED" > "$LOCAL" 2>/dev/null; then
 			cleanup_temp_files;
+			if ! should_prompt; then
+				echo "$MERGED does not exist at $start"
+				exit 1
+			fi
 			return
 		fi
 		if ! git show "$end":"$MERGED" > "$REMOTE" 2>/dev/null; then
 			cleanup_temp_files;
+			if ! should_prompt; then
+				echo "$MERGED does not exist at $end"
+				exit 1
+			fi
 			return
 		fi
 
@@ -133,8 +149,12 @@ merge_file ()
 		fi
 	else
 		base=index
-		local=current
+		local=local
 		remote=${commitish-HEAD}
+		BACKUP="./$MERGED.BACKUP.$ext"
+		LOCAL="./$MERGED.LOCAL.$ext"
+		REMOTE="./$MERGED.HEAD.$ext"
+		BASE="./$MERGED.INDEX.$ext"
 		cp -- "$MERGED" "$LOCAL"
 		git show "$remote":"$MERGED" > "$REMOTE"
 		# If changes are present in the index use them as $BASE
@@ -496,4 +516,4 @@ else
 		shift
 	done
 fi
-exit 0
+exit $status

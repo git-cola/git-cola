@@ -80,20 +80,6 @@
       <number>4</number>
      </property>
      <item>
-      <widget class="QPushButton" name="button_compare" >
-       <property name="text" >
-        <string>Compare</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="button_close" >
-       <property name="text" >
-        <string>Close</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <spacer name="horizontalSpacer" >
        <property name="orientation" >
         <enum>Qt::Horizontal</enum>
@@ -123,6 +109,20 @@
        </property>
        <property name="value" >
         <number>200</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_compare" >
+       <property name="text" >
+        <string>Compare</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_close" >
+       <property name="text" >
+        <string>Close</string>
        </property>
       </widget>
      </item>
