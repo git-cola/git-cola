@@ -28,6 +28,7 @@ try:
     from merge import Ui_merge
     from bookmark import Ui_bookmark
     from stash import Ui_stash
+    from compare import Ui_compare
 except ImportError:
     sys.stderr.write('\nThe cola UI modules have not been built.\n'
                      'Try running "make" in the cola source tree.\n')
@@ -251,6 +252,10 @@ class RemoteView(CreateStandardView(Ui_remote, QDialog)):
             return True
         else:
             return False
+
+class CompareView(CreateStandardView(Ui_compare, QDialog)):
+    def init(self, parent=None):
+        self.syntax = DiffSyntaxHighlighter(self.display_text.document())
 
 # These are views that do not contain any custom methods
 CreateBranchView = CreateStandardView(Ui_createbranch, QDialog)
