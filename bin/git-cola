@@ -26,7 +26,7 @@ import sys
 # Put sys.path[0] in our path so that we can find our custom git-* commands
 path_entries = os.getenv('PATH', '').split(os.pathsep)
 if sys.path[0] not in path_entries:
-    path_entries.append(sys.path[0])
+    path_entries.insert(0, sys.path[0])
     path = os.pathsep.join(path_entries)
     os.environ['PATH'] = path
 
