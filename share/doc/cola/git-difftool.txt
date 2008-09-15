@@ -3,7 +3,7 @@ git-difftool(1)
 
 NAME
 ----
-git-difftool - stage and compare changes using the standard git merge tools
+git-difftool - stage and compare changes using git merge tools
 
 SYNOPSIS
 --------
@@ -15,7 +15,7 @@ SYNOPSIS
 DESCRIPTION
 -----------
 'git-difftool' is a git command that allows you to compare and edit
-files against arbitrary revisions using the standard git merge tools.
+files between revisions using standard git merge tools.
 
 OPTIONS
 -------
@@ -74,7 +74,7 @@ success of the resolution after the custom tool has exited.
 
 -s or --start=<ref> and -e or --end=<ref>::
 	See changes between commits start and end.
-	This example shows the latest commit: `--start=HEAD^^ --end=HEAD`.
+	This example shows the latest commit: `--start=HEAD^ --end=HEAD`.
 
 CONFIG VARIABLES
 ----------------

@@ -114,16 +114,17 @@ merge_file ()
 	handle_dir && mkdir -p "$dirname"
 
 	ext="$$$(expr "$MERGED" : '.*\(\.[^/]*\)$')"
+	BACKUP="./$MERGED.BACKUP.$ext"
 	test -f "$MERGED" && cp -- "$MERGED" "$BACKUP"
 
 	if use_rev_range; then
+		BASE="./$MERGED.LOCAL.$ext"
+		LOCAL="./$MERGED.START.$ext"
+		REMOTE="./$MERGED.END.$ext"
 		base=local
 		local=start
 		remote=end
-		BACKUP="./$MERGED.BACKUP.$ext"
-		LOCAL="./$MERGED.START.$ext"
-		REMOTE="./$MERGED.END.$ext"
-		BASE="./$MERGED.LOCAL.$ext"
+
 		if ! git show "$start":"$MERGED" > "$LOCAL" 2>/dev/null; then
 			cleanup_temp_files;
 			if ! should_prompt; then
@@ -141,17 +142,22 @@ merge_file ()
 			return
 		fi
 
-		# $BASE might be needed by custom mergetool commands
+		# $BASE could be used by custom mergetool commands, so provide it.
+		# $MERGED might not exist in the worktree, start or end so commit
+		# so check in that order.
 		if test -f "$MERGED"; then
 			cp -- "$MERGED" "$BASE"
-		else
+		elif test -f "$REMOTE"; then
+			cp -- "$REMOTE" "$BASE"
+		elif test -f "$LOCAL"; then
 			cp -- "$LOCAL" "$BASE"
+		else
+			touch "$BASE"
 		fi
 	else
 		base=index
 		local=local
 		remote=${commitish-HEAD}
-		BACKUP="./$MERGED.BACKUP.$ext"
 		LOCAL="./$MERGED.LOCAL.$ext"
 		REMOTE="./$MERGED.HEAD.$ext"
 		BASE="./$MERGED.INDEX.$ext"
