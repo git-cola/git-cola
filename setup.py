@@ -1,10 +1,13 @@
 #!/usr/bin/env python
-
+import re
 import os
 import sys
 import stat
 from glob import glob
+
 from distutils.core import setup
+from distutils.command import build_scripts
+build_scripts.first_line_re = re.compile('^should not match$')
 
 from cola import version
 from cola import utils
