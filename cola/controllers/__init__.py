@@ -840,7 +840,7 @@ class Controller(QObserver):
         menu.addSeparator()
         menu.addAction(self.tr('Launch Editor'),
                        lambda: self.edit_file(staged=True))
-        menu.addAction(self.tr('Launch Merge Tool'),
+        menu.addAction(self.tr('Launch Diff Tool'),
                        lambda: self.edit_diff(staged=True))
         return menu
 
@@ -862,12 +862,12 @@ class Controller(QObserver):
             menu.addAction(self.tr('Stage Selected'), self.stage_selected)
             menu.addSeparator()
         if is_unmerged and not utils.is_broken():
-            menu.addAction(self.tr('Resolve Merge'), self.mergetool)
+            menu.addAction(self.tr('Launch Merge Tool'), self.mergetool)
 
         menu.addAction(self.tr('Launch Editor'),
                        lambda: self.edit_file(staged=False))
-        if enable_staging:
-            menu.addAction(self.tr('Launch Merge Tool'),
+        if enable_staging and not is_unmerged:
+            menu.addAction(self.tr('Launch Diff Tool'),
                            lambda: self.edit_diff(staged=False))
         if enable_undo:
             menu.addSeparator()
