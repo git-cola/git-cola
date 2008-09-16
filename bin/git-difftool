@@ -1,8 +1,11 @@
 #!/bin/sh
 #
-# This program uses mergetools to stage commits
+# This program uses merge tools to stage and compare commits
 #
 # Copyright (c) 2008 David Aguilar
+#
+# Adapted from git-mergetool.sh
+# Copyright (c) 2006 Theodore Y. Ts'o
 #
 # This file is licensed under the GPL v2, or a later version
 # at the discretion of Junio C Hamano.
@@ -12,7 +15,13 @@ SUBDIRECTORY_OK=Yes
 OPTIONS_SPEC=
 . git-sh-setup
 require_work_tree
+cd_to_toplevel
 dirname=
+keep_backup_mode="$(git config --bool mergetool.keepBackup || echo true)"
+
+keep_backup () {
+	test "$keep_backup_mode" = "true"
+}
 
 parse_arg () {
 	expr "z$1" : 'z-[^=]*=\(.*\)'
@@ -61,8 +70,8 @@ staged_files() {
 }
 
 cleanup_temp_files () {
-	if test "$1" = --save-backup; then
-		mv -- "$BACKUP" "$MERGED.orig"
+	if keep_backup && test "$MERGED" -nt "$BACKUP"; then
+		test -f "$BACKUP" && mv -- "$BACKUP" "$MERGED.orig"
 		rm -f -- "$LOCAL" "$REMOTE" "$BASE"
 	else
 		rm -f -- "$LOCAL" "$REMOTE" "$BASE" "$BACKUP"
@@ -71,11 +80,12 @@ cleanup_temp_files () {
 }
 
 check_unchanged () {
-	if use_rev_range || test "$MERGED" -nt "$BACKUP"; then
+	if test "$MERGED" -nt "$BACKUP"; then
 		status=0
 	else
 		status=1
-		if should_prompt; then
+		use_rev_range && status=0 # we don't 'git add' in rev-range mode
+		if ! use_rev_range && should_prompt; then
 			while true
 			do
 				printf "\n$MERGED seems unchanged.\n"
@@ -101,7 +111,7 @@ merge_file ()
 		echo "$MERGED: no changes between '$start' and '$end'."
 		exit 1
 	elif ! modified_present && ! index_present; then
-		if test ! -f "$MERGED"; then
+		if ! test -f "$MERGED"; then
 			echo "$MERGED: file not found"
 		else
 			echo "$MERGED: file is unchanged."
@@ -115,7 +125,10 @@ merge_file ()
 
 	ext="$$$(expr "$MERGED" : '.*\(\.[^/]*\)$')"
 	BACKUP="./$MERGED.BACKUP.$ext"
-	test -f "$MERGED" && cp -- "$MERGED" "$BACKUP"
+
+	test -f "$MERGED" &&
+	mv -- "$MERGED" "$BACKUP" &&
+	cp -- "$BACKUP" "$MERGED"
 
 	if use_rev_range; then
 		BASE="./$MERGED.LOCAL.$ext"
@@ -162,7 +175,7 @@ merge_file ()
 		REMOTE="./$MERGED.HEAD.$ext"
 		BASE="./$MERGED.INDEX.$ext"
 		cp -- "$MERGED" "$LOCAL"
-		git show "$remote":"$MERGED" > "$REMOTE"
+		git show "$remote":"$MERGED" > "$REMOTE" 2>&1
 		# If changes are present in the index use them as $BASE
 		git checkout-index --prefix=.index- "$MERGED"
 		mv -- .index-"$MERGED" "$BASE"
@@ -292,7 +305,6 @@ merge_file ()
 			if should_prompt; then
 				echo "merge of $MERGED failed" 1>&2
 			fi
-			mv -- "$BACKUP" "$MERGED"
 			cleanup_temp_files
 			exit 1
 		fi
