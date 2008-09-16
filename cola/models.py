@@ -171,6 +171,7 @@ class Model(model.Model):
             'cola_fontdiff': '',
             'cola_fontdiffsize': 12,
             'cola_savewindowsettings': False,
+            'merge_keepBackup': True,
             'merge_tool': os.getenv('MERGETOOL', 'xxdiff'),
             'gui_editor': os.getenv('EDITOR', 'gvim'),
             'gui_historybrowser': 'gitk',
