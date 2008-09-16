@@ -14,6 +14,14 @@
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
   <widget class="QWidget" name="centralwidget" >
+   <property name="geometry" >
+    <rect>
+     <x>361</x>
+     <y>26</y>
+     <width>355</width>
+     <height>438</height>
+    </rect>
+   </property>
    <property name="sizePolicy" >
     <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
      <horstretch>1</horstretch>
@@ -24,16 +32,7 @@
     <property name="spacing" >
      <number>0</number>
     </property>
-    <property name="leftMargin" >
-     <number>0</number>
-    </property>
-    <property name="topMargin" >
-     <number>0</number>
-    </property>
-    <property name="rightMargin" >
-     <number>0</number>
-    </property>
-    <property name="bottomMargin" >
+    <property name="margin" >
      <number>0</number>
     </property>
     <item>
@@ -193,7 +192,7 @@
      <x>0</x>
      <y>0</y>
      <width>716</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="commit_menu" >
@@ -215,6 +214,7 @@
     <addaction name="menu_commit" />
     <addaction name="menu_stash" />
     <addaction name="separator" />
+    <addaction name="menu_browse_commits" />
     <addaction name="menu_export_patches" />
     <addaction name="menu_cherry_pick" />
     <addaction name="separator" />
@@ -264,6 +264,12 @@
     <addaction name="menu_rebase_branch" />
     <addaction name="menu_delete_branch" />
     <addaction name="separator" />
+    <addaction name="menu_browse_branch" />
+    <addaction name="menu_browse_other_branch" />
+    <addaction name="separator" />
+    <addaction name="menu_visualize_current" />
+    <addaction name="menu_visualize_all" />
+    <addaction name="separator" />
     <addaction name="menu_diff_branch" />
     <addaction name="menu_difftool_branch" />
    </widget>
@@ -304,6 +310,14 @@
    <addaction name="help_menu" />
   </widget>
   <widget class="QDockWidget" name="diff_dock" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>26</y>
+     <width>355</width>
+     <height>188</height>
+    </rect>
+   </property>
    <property name="sizePolicy" >
     <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
      <horstretch>0</horstretch>
@@ -326,6 +340,14 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>20</y>
+      <width>355</width>
+      <height>168</height>
+     </rect>
+    </property>
     <layout class="QHBoxLayout" >
      <property name="spacing" >
       <number>0</number>
@@ -363,16 +385,7 @@
         <property name="spacing" >
          <number>0</number>
         </property>
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
         <item>
@@ -405,7 +418,7 @@
            <number>2</number>
           </property>
           <property name="textInteractionFlags" >
-           <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::NoTextInteraction|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+           <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
           </property>
          </widget>
         </item>
@@ -416,6 +429,14 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="editor_dock" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>220</y>
+     <width>355</width>
+     <height>244</height>
+    </rect>
+   </property>
    <property name="sizePolicy" >
     <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
      <horstretch>0</horstretch>
@@ -432,6 +453,14 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>20</y>
+      <width>355</width>
+      <height>224</height>
+     </rect>
+    </property>
     <property name="sizePolicy" >
      <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
       <horstretch>0</horstretch>
@@ -475,16 +504,7 @@
         <property name="spacing" >
          <number>2</number>
         </property>
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
         <item>
@@ -505,16 +525,7 @@
            <property name="sizeConstraint" >
             <enum>QLayout::SetNoConstraint</enum>
            </property>
-           <property name="leftMargin" >
-            <number>0</number>
-           </property>
-           <property name="topMargin" >
-            <number>0</number>
-           </property>
-           <property name="rightMargin" >
-            <number>0</number>
-           </property>
-           <property name="bottomMargin" >
+           <property name="margin" >
             <number>0</number>
            </property>
            <item>
@@ -585,7 +596,7 @@
              <property name="sizeType" >
               <enum>QSizePolicy::Minimum</enum>
              </property>
-             <property name="sizeHint" >
+             <property name="sizeHint" stdset="0" >
               <size>
                <width>20</width>
                <height>10</height>
@@ -658,7 +669,7 @@
              <property name="sizeType" >
               <enum>QSizePolicy::MinimumExpanding</enum>
              </property>
-             <property name="sizeHint" >
+             <property name="sizeHint" stdset="0" >
               <size>
                <width>1</width>
                <height>4</height>
@@ -694,16 +705,7 @@
            <property name="sizeConstraint" >
             <enum>QLayout::SetNoConstraint</enum>
            </property>
-           <property name="leftMargin" >
-            <number>0</number>
-           </property>
-           <property name="topMargin" >
-            <number>0</number>
-           </property>
-           <property name="rightMargin" >
-            <number>0</number>
-           </property>
-           <property name="bottomMargin" >
+           <property name="margin" >
             <number>0</number>
            </property>
            <item>
@@ -736,7 +738,7 @@
                <property name="sizeType" >
                 <enum>QSizePolicy::MinimumExpanding</enum>
                </property>
-               <property name="sizeHint" >
+               <property name="sizeHint" stdset="0" >
                 <size>
                  <width>1</width>
                  <height>1</height>
@@ -775,6 +777,14 @@
    <property name="enabled" >
     <bool>true</bool>
    </property>
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>464</y>
+     <width>716</width>
+     <height>15</height>
+    </rect>
+   </property>
    <property name="windowTitle" >
     <string>toolbar</string>
    </property>
@@ -782,7 +792,7 @@
     <bool>true</bool>
    </property>
    <property name="allowedAreas" >
-    <set>Qt::BottomToolBarArea|Qt::NoToolBarArea|Qt::TopToolBarArea</set>
+    <set>Qt::BottomToolBarArea|Qt::TopToolBarArea</set>
    </property>
    <property name="iconSize" >
     <size>
@@ -800,35 +810,9 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <action name="menu_browse_branch" >
-   <property name="text" >
-    <string>Browse Current Branch's Files</string>
-   </property>
-  </action>
-  <action name="menu_browse_other_branch" >
-   <property name="text" >
-    <string>Browse Branch Files</string>
-   </property>
-  </action>
   <action name="menu_unstage_selected" >
    <property name="text" >
     <string>Unstage From Commit</string>
-   </property>
-  </action>
-  <action name="menu_visualize_current" >
-   <property name="text" >
-    <string>Visualize Current Branch's History</string>
-   </property>
-   <property name="shortcut" >
-    <string>Alt+V</string>
-   </property>
-  </action>
-  <action name="menu_visualize_all" >
-   <property name="text" >
-    <string>Visualize All Branch History</string>
-   </property>
-   <property name="shortcut" >
-    <string>Alt+H</string>
    </property>
   </action>
   <action name="menu_show_diffstat" >
@@ -1008,22 +992,9 @@
     <string>Rebase...</string>
    </property>
   </action>
-  <action name="menu_rename_branch" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
-   <property name="text" >
-    <string>Rename...</string>
-   </property>
-  </action>
   <action name="menu_delete_branch" >
    <property name="text" >
     <string>Delete...</string>
-   </property>
-  </action>
-  <action name="menu_browse_commits" >
-   <property name="text" >
-    <string>Browse Commits</string>
    </property>
   </action>
   <action name="menu_search_revision" >
@@ -1130,6 +1101,31 @@
   <action name="menu_compare" >
    <property name="text" >
     <string>Compare Commits...</string>
+   </property>
+  </action>
+  <action name="menu_visualize_current" >
+   <property name="text" >
+    <string>Visualize Current Branch...</string>
+   </property>
+  </action>
+  <action name="menu_visualize_all" >
+   <property name="text" >
+    <string>Visualize All Branches...</string>
+   </property>
+  </action>
+  <action name="menu_browse_commits" >
+   <property name="text" >
+    <string>Browse Commits...</string>
+   </property>
+  </action>
+  <action name="menu_browse_branch" >
+   <property name="text" >
+    <string>Browse Current Branch...</string>
+   </property>
+  </action>
+  <action name="menu_browse_other_branch" >
+   <property name="text" >
+    <string>Browse Other Branch...</string>
    </property>
   </action>
  </widget>
