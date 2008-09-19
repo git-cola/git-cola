@@ -19,10 +19,10 @@ install-html:
 	$(MAKE) -C share/doc/cola install-html
 
 test:
-	cd t && $(MAKE) all
+	@env PYTHONPATH=$(CURDIR):$(CURDIR)/build/lib:$(PYTHONPATH) nosetests
 
 clean:
-	for dir in share/doc/cola t; do \
+	for dir in share/doc/cola test; do \
 		(cd $$dir && $(MAKE) clean); \
 	done
 	find cola -name '*.py[co]' -print0 | xargs -0 rm -f

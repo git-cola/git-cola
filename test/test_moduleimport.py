@@ -3,13 +3,12 @@ import os
 import imp
 import unittest
 
-from testutils import *
-from testmodel import *
+import testlib
 
-class ImportTest(TestCase):
+class ImportTest(testlib.TestCase):
     pass
 
-def gen_import_test(module):
+def gen_class(module):
     def import_test(self):
         modinfo = None
         for idx, path in enumerate(module.split('.')):
@@ -22,7 +21,7 @@ def gen_import_test(module):
             self.failUnless(mod)
     return import_test
 
-def setup_tests():
+def __create_tests():
     for module in """
         cola.git
         cola.model
@@ -33,7 +32,8 @@ def setup_tests():
     """.split():
         setattr(ImportTest,
                 "test" + module.title().replace('.', ''),
-                gen_import_test(module))
+                gen_class(module))
+__create_tests()
 
-setup_tests()
-unittest.main()
+if __name__ == '__main__':
+    unittest.main()

@@ -2,12 +2,10 @@
 import os
 import unittest
 
-import testutils
-from testutils import pipe
-
+import testlib
 from cola import models
 
-class GitOpsTest(testutils.TestCase):
+class GitOpsTest(testlib.TestCase):
 
     def testCommit(self):
         self.shell("""
@@ -19,7 +17,7 @@ class GitOpsTest(testutils.TestCase):
 
         model = models.Model()
         model.git.commit(m="commit test")
-        log = pipe("git log --pretty=oneline | wc -l")
+        log = testlib.pipe("git log --pretty=oneline | wc -l")
 
         self.failUnless('1' == log)
 

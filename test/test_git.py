@@ -2,9 +2,6 @@
 import os
 import unittest
 
-import testutils
-from testmodel import TestModel
-
 from cola import git
 
 class GitCommandTest(unittest.TestCase):

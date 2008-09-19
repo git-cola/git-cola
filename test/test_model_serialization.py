@@ -2,22 +2,26 @@
 import os
 import unittest
 
-import testutils
-
-from testmodel import InnerModel
-from testmodel import NestedModel
+import testlib
+from testlib import InnerModel
+from testlib import NestedModel
 
 from cola.model import Model
 
-class SaveRestoreTest(testutils.TestCase):
-
+class TestSaveRestore(unittest.TestCase):
     def setUp(self):
-        testutils.TestCase.setUp(self)
+        testlib.create_test_dir()
+
         self.nested = NestedModel()
-        path = os.path.join(self.testDir(), 'test.data')
+        path = os.path.join(testlib.get_test_dir(), 'test.data')
+        # save & reconstitute
         self.nested.save(path)
-        # reconstitute
         self.clone = Model.instance(path)
+
+    def tearDown(self):
+        testdir = testlib.get_test_dir()
+        if os.path.exists(testdir):
+            testlib.remove_test_dir()
 
     def testCloneToClass(self):
         self.failUnless( str(NestedModel) ==

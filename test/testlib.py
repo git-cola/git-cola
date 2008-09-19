@@ -7,11 +7,14 @@ from os.path import join
 from os.path import dirname
 from os.path import basename
 
+import os
+from cola.model import Model
+
+DEBUG_MODE = os.getenv('DEBUG','')
+LAST_IDX = 0
 TEST_SCRIPT_DIR = dirname(__file__)
 ROOT_TMP_DIR = join( dirname(TEST_SCRIPT_DIR), 'tmp' )
 TEST_TMP_DIR = join( ROOT_TMP_DIR, basename(sys.argv[0]) )
-
-DEBUG_MODE = os.getenv("DEBUG",'')
 
 def setup_dir(dir):
     newdir = dir
@@ -21,16 +24,14 @@ def setup_dir(dir):
     if not os.path.isdir(newdir):
         os.mkdir(newdir)
 
-LAST_IDX = -1
-
-def test_dir():
+def get_test_dir():
     global LAST_IDX
     return '%s-%d.%04d' % (TEST_TMP_DIR, os.getpid(), LAST_IDX)
 
 def create_test_dir():
     global LAST_IDX
     LAST_IDX += 1
-    newdir = test_dir()
+    newdir = get_test_dir()
     setup_dir(newdir)
     os.chdir(newdir)
     return newdir
@@ -42,7 +43,7 @@ def remove_dir(dir):
 
 def remove_test_dir():
     global LAST_IDX
-    testdir = test_dir()
+    testdir = get_test_dir()
     remove_dir(testdir)
     LAST_IDX -= 1
 
@@ -56,8 +57,7 @@ def pipe(cmd):
     p.close()
     return out
 
-# All tests that operate on temporary data
-# derive from testutils.TestCase
+# All tests that operate on temporary data derive from testlib.TestCase
 class TestCase(unittest.TestCase):
     def setUp(self):
         create_test_dir()
@@ -66,5 +66,33 @@ class TestCase(unittest.TestCase):
     def shell(self, cmd):
         result = shell(cmd)
         self.failIf(result != 0)
-    def testDir(self):
-        return test_dir()
+    def get_test_dir(self):
+        return get_test_dir()
+
+class DuckModel(Model):
+    def init(self):
+        duck = Model().create(sound='quack',name='ducky')
+        goose = Model().create(sound='cluck',name='goose')
+
+        self.create(attribute = 'value',
+                    mylist=[duck,duck,goose])
+        self.hello = 'world'
+        self.set_mylist([duck,duck,goose, 'meow', 'caboose',42])
+
+    def duckMethod(self):
+        return 'duck'
+
+class InnerModel(Model):
+    def init(self):
+        self.create(foo = 'bar')
+
+class NestedModel(Model):
+    def init(self):
+        self.create(inner = InnerModel(),
+                    innerList = [],
+                    normaList = [ 1,2,3, [4,5, [6,7,8], 9]])
+        self.innerList.append(InnerModel())
+        self.innerList.append([InnerModel()])
+        self.innerList.append([[InnerModel()]])
+        self.innerList.append([[[InnerModel(),InnerModel()]]])
+        self.innerList.append({"foo": InnerModel()})

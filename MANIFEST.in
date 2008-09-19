@@ -10,9 +10,8 @@ include share/doc/cola/Makefile
 include share/doc/cola/build-docdep.perl
 include share/doc/cola/callouts.xsl
 include ui/*.ui
-include t/t*.py
-include t/Makefile
-include t/run_tests
+include test/*.py
+include test/Makefile
 include README
 include ChangeLog
 include Makefile

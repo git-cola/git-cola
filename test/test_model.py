@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import unittest
-from testmodel import TestModel
+import testlib
 
 class ModelTest(unittest.TestCase):
     def setUp(self):
-        self.model = TestModel()
+        self.model = testlib.DuckModel()
     def tearDown(self):
         del self.model
 
@@ -26,7 +26,7 @@ class ModelTest(unittest.TestCase):
     
     def testRealMethod(self):
         """Test calling a concrete model method."""
-        self.failUnless( self.model.testMethod() == 'test' )
+        self.failUnless( self.model.duckMethod() == 'duck' )
     
     def testGetter(self):
         """Test calling using the get* method."""
