@@ -103,7 +103,7 @@ def get_icon(icon_file):
 
 def fork(*args):
     if os.name in ('nt', 'dos'):
-        for path in os.pathsep.split(os.environ["PATH"]):
+        for path in os.environ['PATH'].split(os.pathsep):
             file = os.path.join(path, args[0]) + ".exe"
             try:
                 return os.spawnv(os.P_NOWAIT, file, (file,) + args[1:])
