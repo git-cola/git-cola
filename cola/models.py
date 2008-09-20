@@ -1,3 +1,4 @@
+# Copyright (c) 2008 David Aguilar
 import os
 import sys
 import re

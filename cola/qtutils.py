@@ -1,3 +1,4 @@
+# Copyright (c) 2008 David Aguilar
 import os
 from PyQt4 import QtCore
 from PyQt4 import QtGui

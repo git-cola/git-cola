@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# Copyright (c) 2008 David Aguilar
 import re
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import pyqtProperty

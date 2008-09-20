@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Copyright (c) 2008 David Aguilar
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import QObject
 from PyQt4.QtCore import SIGNAL

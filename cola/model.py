@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Copyright (c) 2008 David Aguilar
 import os
 import imp
 from cStringIO import StringIO
