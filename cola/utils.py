@@ -42,7 +42,9 @@ def run_cmd(*command):
     """
     # Start the process
     try:
-        proc = subprocess.Popen(command, stdout=subprocess.PIPE)
+        proc = subprocess.Popen(command,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
 
         # Wait for the process to return
         stdout_value = proc.stdout.read()
