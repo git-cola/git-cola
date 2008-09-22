@@ -32,11 +32,10 @@ simplejson (enables bookmarks)
 
 BUILDING FROM SOURCE
 
-Normally you can just do "make" followed by "make install", and that
-will install the git programs in your own ~/bin/ directory.  If you want
-to do a global install, you can do
+Normally you can just do "make install" to install git-cola
+in your $HOME directory ($HOME/bin, $HOME/lib, etc).
+If you want to do a global install you can do
 
-    $ make
     # make prefix=/usr install
 
 
@@ -68,13 +67,13 @@ WINDOWS INSTALLATION
 7) Install cola (from a Git Bash):
 
     cd /c/Python25/Lib/site-packages
-    tar xvfz /path/to/cola-win32-*.tar.gz
-    mv cola-win32-* cola
+    tar xvfz /path/to/cola-*-win32.tar.gz
+    mv cola-*-win32 cola
 
 8) Create an executable in your path for bash, cmd.exe, or both:
 
     echo '/c/Python25/python.exe /c/Python25/Lib/site-packages/cola/bin/git-cola' >> /usr/bin/cola
-    echo 'c:\\Python25\\python.exe c:\\Python25\\Lib\\site-packages\\bin\\git-cola' > /c/Windows/System32/cola.bat
+    echo 'c:\\Python25\\python.exe c:\\Python25\\Lib\\site-packages\\cola\\bin\\git-cola' > /c/Windows/System32/cola.bat
 
 This assumes the you have Python/PyQt4 installed in C:/Python25.
 If this is not the case simply edit the commands accordingly.
