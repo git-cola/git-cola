@@ -219,6 +219,7 @@
     <addaction name="menu_cherry_pick" />
     <addaction name="separator" />
     <addaction name="menu_compare" />
+    <addaction name="menu_compare_file" />
    </widget>
    <widget class="QMenu" name="edit_menu" >
     <property name="title" >
@@ -1126,6 +1127,11 @@
   <action name="menu_browse_other_branch" >
    <property name="text" >
     <string>Browse Other Branch...</string>
+   </property>
+  </action>
+  <action name="menu_compare_file" >
+   <property name="text" >
+    <string>Compare File Across Commits...</string>
    </property>
   </action>
  </widget>

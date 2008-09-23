@@ -8,6 +8,18 @@ from cola import defaults
 from cola.views import CommitView
 from cola.qobserver import QObserver
 
+def select_file_from_repo(model, parent):
+    model = model.clone()
+    view = CommitView(parent)
+    controller = RepoBrowserController(model, view,
+                                       title='Select File',
+                                       get_file=True)
+    view.show()
+    if view.exec_() == QDialog.Accepted:
+        return controller.filename
+    else:
+        return None
+
 def browse_git_branch(model, parent, branch):
     if not branch:
         return
@@ -21,8 +33,10 @@ def browse_git_branch(model, parent, branch):
     return view.exec_() == QDialog.Accepted
 
 class RepoBrowserController(QObserver):
-    def init(self, model, view):
-        view.setWindowTitle('File Browser')
+    def init(self, model, view, title='File Browser', get_file=False):
+        self.get_file = get_file
+        self.filename = None
+        view.setWindowTitle(title)
         self.add_signals('itemSelectionChanged()', view.commit_list,)
         self.add_actions(directory = self.action_directory_changed)
         self.add_callbacks(commit_list = self.item_changed)
@@ -102,6 +116,12 @@ class RepoBrowserController(QObserver):
             idx = current - len(directories)
 
             objtype, sha1, name = self.model.get_subtree_node(idx)
+
+            if self.get_file:
+                self.filename = name
+                self.view.accept()
+                return
+
             nameguess = os.path.join(defaults.DIRECTORY, name)
 
             filename = qtutils.save_dialog(self.view, 'Save', nameguess)

@@ -255,7 +255,8 @@ class RemoteView(CreateStandardView(Ui_remote, QDialog)):
 
 class CompareView(CreateStandardView(Ui_compare, QDialog)):
     def init(self, parent=None):
-        self.syntax = DiffSyntaxHighlighter(self.display_text.document())
+        self.syntax = DiffSyntaxHighlighter(self.display_text.document(),
+                                            whitespace=False)
 
 # These are views that do not contain any custom methods
 CreateBranchView = CreateStandardView(Ui_createbranch, QDialog)
