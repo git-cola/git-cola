@@ -16,7 +16,7 @@ OPTIONS_SPEC=
 require_work_tree
 cd_to_toplevel
 dirname=
-keep_backup_mode="$(git config --bool mergetool.keepBackup || echo true)"
+keep_backup_mode="$(git config --bool merge.keepBackup || echo true)"
 
 keep_backup () {
 	test "$keep_backup_mode" = "true"
