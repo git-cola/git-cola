@@ -163,7 +163,7 @@ QScrollBar::handle:vertical:hover {
 
 QScrollBar:vertical {
     border: 1px solid;
-    width: 16px;
+    width: 13px;
     margin: 12px 0px 12px 0px;
     background: black;
 }
@@ -219,7 +219,7 @@ QScrollBar::handle:horizontal:hover {
 
 QScrollBar:horizontal {
     border: 1px solid;
-    height: 16px;
+    height: 13px;
     margin: 0px 12px 0px 12px;
     background: black;
 }
