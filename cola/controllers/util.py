@@ -103,7 +103,7 @@ class OptionsController(QObserver):
                              'local_gui_diffcontext',
                              'global_user_email',
                              'global_user_name',
-                             'global_merge_keepBackup',
+                             'global_merge_keepbackup',
                              'global_merge_summary',
                              'global_merge_diffstat',
                              'global_merge_verbosity',
