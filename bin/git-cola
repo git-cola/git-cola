@@ -39,9 +39,10 @@ if bin == 'bin' and prefix != sys.prefix:
     sys.exec_prefix = prefix
 
     major, minor = sys.version_info[0:2]
-    local_path = [os.getcwd(),
-                  os.path.join(prefix, 'lib', 'python%s.%s' % (major, minor),
-                               'site-packages')
+    local_path = [os.path.join(prefix, 'lib', 'python%s.%s' % (major, minor),
+                               'site-packages'),
+                  prefix,
+                  os.getcwd(),
                   ]
     sys.path = local_path + sys.path
 
