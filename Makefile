@@ -26,7 +26,7 @@ clean:
 		(cd $$dir && $(MAKE) clean); \
 	done
 	find cola -name '*.py[co]' -print0 | xargs -0 rm -f
-	find cola/views -name '[^_]*.py' -print0 | xargs -0 rm -f
+	find cola/gui -name '[^_]*.py' -print0 | xargs -0 rm -f
 	find share -name '*.qm' -print0 | xargs -0 rm -f
 	rm -rf build tmp
 	rm -f tags

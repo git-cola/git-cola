@@ -1,4 +1,6 @@
 include share/cola/qm/.gitignore
+include share/cola/gui/.gitignore
+include share/cola/views/*.py
 include share/cola/po/*.po
 include share/cola/icons/*.png
 include share/cola/styles/*.qss

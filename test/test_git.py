@@ -14,7 +14,7 @@ class GitCommandTest(unittest.TestCase):
 
     def testGitTag(self):
         tags = self.git.tag().splitlines()
-        self.failUnless( 'v0.0' in tags )
+        self.failUnless( 'v1.0.0' in tags )
 
     def testGitShow(self):
         id = '1b9742bda5d26a4f250fa64657f66ed20624a084'

@@ -110,7 +110,7 @@ def __dirty(src, dst):
 
 def __build_views():
     print 'running build_views'
-    views = os.path.join('cola', 'views')
+    views = os.path.join('cola', 'gui')
     sources = glob('ui/*.ui')
     for src in sources:
         dst = os.path.join(views, os.path.basename(src)[:-3] + '.py')
