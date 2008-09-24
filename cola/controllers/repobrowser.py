@@ -118,7 +118,11 @@ class RepoBrowserController(QObserver):
             objtype, sha1, name = self.model.get_subtree_node(idx)
 
             if self.get_file:
-                self.filename = name
+                if self.model.get_directory():
+                    curdir = self.model.get_directory()
+                    self.filename = os.path.join(curdir, name)
+                else:
+                    self.filename = name
                 self.view.accept()
                 return
 
