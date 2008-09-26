@@ -981,3 +981,39 @@ class Model(model.Model):
                 'HEAD^',
                 unified=self.diff_context,
                 stat=True)
+
+    def pad(self, pstr, num=22):
+        topad = num-len(pstr)
+        if topad > 0:
+            return pstr + ' '*topad
+        else:
+            return pstr
+
+    def describe(self, revid, descr):
+        version = self.git.describe(revid, tags=True, always=True,
+                                    abbrev=4)
+        return version + ' - ' + descr
+
+    def update_revision_lists(self, filename=None, show_versions=False):
+        num_results = self.get_num_results()
+        if filename:
+            rev_list = self.git.log('--', filename,
+                                    max_count=num_results,
+                                    pretty='oneline')
+        else:
+            rev_list = self.git.log(max_count=num_results,
+                                    pretty='oneline', all=True)
+
+        commit_list = self.parse_rev_list(rev_list)
+        commits = map(lambda x: x[0], commit_list)
+        descriptions = map(lambda x: x[1], commit_list)
+        if show_versions:
+            fancy_descr_list = map(lambda x: self.describe(*x), commit_list)
+            self.set_descriptions_start(fancy_descr_list)
+            self.set_descriptions_end(fancy_descr_list)
+        else:
+            self.set_descriptions_start(descriptions)
+            self.set_descriptions_end(descriptions)
+
+        self.set_revisions_start(commits)
+        self.set_revisions_end(commits)

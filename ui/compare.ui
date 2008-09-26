@@ -93,6 +93,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="QCheckBox" name="show_versions" >
+       <property name="text" >
+        <string>Show Versions</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLabel" name="label" >
        <property name="text" >
         <string>Num Results</string>
@@ -108,7 +115,7 @@
         <number>9999</number>
        </property>
        <property name="value" >
-        <number>200</number>
+        <number>96</number>
        </property>
       </widget>
      </item>
