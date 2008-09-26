@@ -43,7 +43,6 @@ class RepoBrowserController(QObserver):
         self.connect(view.commit_list,
                      'itemDoubleClicked(QListWidgetItem*)',
                      self.item_double_clicked)
-
         # Start at the root of the tree
         model.set_directory('')
 
@@ -70,6 +69,7 @@ class RepoBrowserController(QObserver):
         directory_entries = self.model.get_directory_entries()
         if current < len(directories):
             # This is a directory...
+            self.filename = None
             dirent = directories[current]
             if dirent != '..':
                 # This is a real directory for which
@@ -88,8 +88,15 @@ class RepoBrowserController(QObserver):
             idx = current - len(directories)
             if idx >= len(self.model.get_subtree_sha1s()):
                 # This can happen when changing directories
+                self.filename = None
                 return
             objtype, sha1, name = self.model.get_subtree_node(idx)
+
+            curdir = self.model.get_directory()
+            if curdir:
+                self.filename = os.path.join(curdir, name)
+            else:
+                self.filename = name
 
             catguts = self.model.git.cat_file(objtype, sha1,
                                               with_raw_output=True)
@@ -111,7 +118,8 @@ class RepoBrowserController(QObserver):
         directories = self.model.get_directories()
 
         # A file item was double-clicked.
-        # Create a save-as dialog and export the file.
+        # Create a save-as dialog and export the file,
+        # or if in get_file mode, grab the filename and finish the dialog.
         if current >= len(directories):
             idx = current - len(directories)
 
