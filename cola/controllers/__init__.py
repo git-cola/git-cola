@@ -238,7 +238,6 @@ class Controller(QObserver):
 
     #####################################################################
     # Actions triggered during model updates
-
     def action_staged(self, widget):
         qtutils.update_listwidget(widget,
                                   self.model.get_staged(),
@@ -258,6 +257,8 @@ class Controller(QObserver):
 
     #####################################################################
     # Qt callbacks
+    def tr(self, fortr):
+        return qtutils.tr(fortr)
     def goto_grep(self):
         line = self.view.selected_line()
         filename, lineno, contents = line.split(':', 2)
@@ -400,7 +401,7 @@ class Controller(QObserver):
         diff, status, filename = self.model.get_diff_details(row, ref,
                                                              staged=staged)
         self.view.set_display(diff)
-        self.view.set_info(status)
+        self.view.set_info(self.tr(status))
         self.view.show_diff()
         qtutils.set_clipboard(filename)
 

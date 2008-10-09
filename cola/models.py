@@ -613,9 +613,9 @@ class Model(model.Model):
         tmpfile = self.get_tmp_filename()
 
         # Create the commit message file
-        file = open(tmpfile, 'w')
-        file.write(msg)
-        file.close()
+        fh = open(tmpfile, 'w')
+        fh.write(msg)
+        fh.close()
 
         # Run 'git commit'
         (status, stdout, stderr) = self.git.commit(v=True,
