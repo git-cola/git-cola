@@ -307,7 +307,6 @@ merge_file ()
 			cleanup_temp_files
 			exit 1
 		fi
-		git add -- "$MERGED"
 	fi
 	cleanup_temp_files
 }

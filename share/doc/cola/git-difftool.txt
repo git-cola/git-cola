@@ -3,7 +3,7 @@ git-difftool(1)
 
 NAME
 ----
-git-difftool - stage and compare changes using git merge tools
+git-difftool - compare changes using standard git merge tools
 
 SYNOPSIS
 --------
@@ -22,9 +22,7 @@ the index.
 
 'git-difftool' shows differences between the work tree and the index by
 default but can also show differences between arbitrary commits by using
-the --start and --end options.  When operating on the index, saving the
-merged file from within the merge tool (and a successful exit code) will
-instruct 'git-difftool' to stage the new content for commit.
+the --start and --end options.
 
 OPTIONS
 -------
