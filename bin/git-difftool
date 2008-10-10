@@ -18,6 +18,7 @@ cd_to_toplevel
 
 keep_backup_mode="$(git config --bool merge.keepBackup || echo true)"
 PREFIX=.git-difftool."$$"."$(date +%N)".
+FILEDIR=
 
 keep_backup () {
 	# whether to keep the .orig file
@@ -54,7 +55,7 @@ use_rev_range () {
 	test -n "$start" && test -n "$end"
 }
 
-handle_dir () {
+merge_dir_missing () {
 	# does dirname($MERGED) exist in the work tree?
 	test -n "$non_existant_dir"
 }
@@ -89,16 +90,13 @@ cleanup_temp_files () {
 		else
 			rm -f -- "$LOCAL" "$REMOTE" "$BASE" "$BACKUP"
 		fi
+		test -n "$MERGEDIR" && rmdir -p "$MERGEDIR"
 	fi
 }
 
 sigint_handler () {
 	cleanup_temp_files
-	exit -1
-}
-
-trap_cleanup () {
-	trap sigint_handler SIGINT
+	exit 1
 }
 
 merge_file () {
@@ -120,9 +118,15 @@ merge_file () {
 		exit 1
 	fi
 
-	dirname=$(dirname "$MERGED")
-	test -d "$dirname" || non_existant_dir=true
-	handle_dir && mkdir -p "$dirname"
+	# handle comparing a file that doesn't exist in the current checkout
+	MERGEDIR=$(dirname "$MERGED")
+	non_existant_dir=
+	test -d "$MERGEDIR" || non_existant_dir=true
+	if merge_dir_missing; then
+		mkdir -p -- "$MERGEDIR"
+	else
+		MERGEDIR=
+	fi
 
 	ext="$$$(expr "$MERGED" : '.*\(\.[^/]*\)$')"
 	BACKUP="./$MERGED.BACKUP.$ext"
@@ -177,16 +181,24 @@ merge_file () {
 		LOCAL="./$MERGED.LOCAL.$ext"
 		REMOTE="./$MERGED.$HEAD.$ext"
 		BASE="./$MERGED.INDEX.$ext"
-		cp -- "$MERGED" "$LOCAL"
 		git show "$remote":"$MERGED" > "$REMOTE" 2>&1
 		# If changes are present in the index use them as $BASE
-		git checkout-index --prefix="$PREFIX" "$MERGED"
-		mv -- "$PREFIX""$MERGED" "$BASE"
-		tmpdir=$(dirname "$PREFIX""$MERGED")
-		test -d "$tmpdir" && rmdir -p "$tmpdir"
+		if test -f "$MERGED"; then
+			cp -- "$MERGED" "$LOCAL"
+			git checkout-index --prefix="$PREFIX" "$MERGED"
+			mv -- "$PREFIX""$MERGED" "$BASE"
+			tmpdir=$(dirname "$PREFIX""$MERGED")
+			test -d "$tmpdir" && rmdir -p "$tmpdir"
+		else
+			# $MERGED doesn't exist here...
+			touch "$LOCAL"
+			touch "$BASE"
+		fi
 	fi
 
-	trap_cleanup
+	# ensure that we clean up after ourselves
+	trap sigint_handler SIGINT
+
 	if should_prompt; then
 		printf "\nEditing '$MERGED':\n"
 		printf "Hit return to launch '%s': " "$merge_tool"
@@ -490,7 +502,7 @@ if test $# -eq 0; then
 
 	if test -z "$files"; then
 		echo "No modified files exist."
-		exit 0
+		exit 1
 	fi
 
 
