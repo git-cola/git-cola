@@ -285,6 +285,7 @@
     <addaction name="separator" />
     <addaction name="menu_load_commitmsg" />
     <addaction name="menu_get_prev_commitmsg" />
+    <addaction name="menu_load_commitmsg_template" />
     <addaction name="separator" />
     <addaction name="menu_quit" />
    </widget>
@@ -1113,6 +1114,11 @@
   <action name="menu_browse_other_branch" >
    <property name="text" >
     <string>Browse Other Branch...</string>
+   </property>
+  </action>
+  <action name="menu_load_commitmsg_template" >
+   <property name="text" >
+    <string>Get Commit Message Template</string>
    </property>
   </action>
  </widget>

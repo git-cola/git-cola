@@ -423,6 +423,13 @@ class Model(model.Model):
             commit_msg.append(msg)
         self.set_commitmsg('\n'.join(commit_msg).rstrip())
 
+    def load_commitmsg_template(self):
+        try:
+            template = self.get_global_config('commit.template')
+        except AttributeError:
+            return
+        self.load_commitmsg(template)
+
     def update_status(self, amend=False):
         # This allows us to defer notification until the
         # we finish processing data
