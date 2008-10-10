@@ -20,42 +20,52 @@ keep_backup_mode="$(git config --bool merge.keepBackup || echo true)"
 PREFIX=.git-difftool."$$"."$(date +%N)".
 
 keep_backup () {
+	# whether to keep the .orig file
 	test "$keep_backup_mode" = "true"
 }
 
 parse_arg () {
+	 # parses --foo=BAR
 	expr "z$1" : 'z-[^=]*=\(.*\)'
 }
 
 index_present () {
+	#  does the index contain staged changes?
 	test -n "$index_mode"
 }
 
 modified_present () {
+	# are there changes in the requested comparison?
 	test -n "$modified_mode"
 }
 
 commitish_present () {
+	# are we comparing against an arbitrary commit?
 	test -n "$commitish"
 }
 
 should_prompt () {
+	# are we running interactively?
 	! test -n "$no_prompt"
 }
 
 use_rev_range () {
+	# are we using --start=REF and --end=REF
 	test -n "$start" && test -n "$end"
 }
 
 handle_dir () {
+	# does dirname($MERGED) exist in the work tree?
 	test -n "$non_existant_dir"
 }
 
 merge_three () {
+	# whether we have 3 things to compare (index, worktree, other)
 	index_present && modified_present && ! use_rev_range
 }
 
 modified_files () {
+	# returns the appopriate list of differences based on the mode
 	if use_rev_range; then
 		git diff --name-only "$start".."$end" -- "$@" 2>/dev/null
 	elif commitish_present; then
@@ -66,10 +76,12 @@ modified_files () {
 }
 
 staged_files() {
+	# returns any staged changes
 	git diff --name-only --cached "$@" 2>/dev/null
 }
 
 cleanup_temp_files () {
+	# removes temporary files
 	if test -n "$MERGED"; then
 		if keep_backup && test "$MERGED" -nt "$BACKUP"; then
 			test -f "$BACKUP" && mv -- "$BACKUP" "$MERGED.orig"
@@ -90,6 +102,7 @@ trap_cleanup () {
 }
 
 merge_file () {
+	# prepares temporary files and launches the appropriate merge tool
 	MERGED="$1"
 
 	modified_mode=$(modified_files "$MERGED")
@@ -116,6 +129,7 @@ merge_file () {
 	test -f "$MERGED" && cp -- "$MERGED" "$BACKUP"
 
 	if use_rev_range; then
+		# we're comparing two arbitrary commits
 		BASE="./$MERGED.LOCAL.$ext"
 		LOCAL="./$MERGED.START.$ext"
 		REMOTE="./$MERGED.END.$ext"
@@ -153,6 +167,8 @@ merge_file () {
 			touch "$BASE"
 		fi
 	else
+		# we're either comparing against the index or an
+		# arbitrary commit
 		base=index
 		local=local
 		remote=${commitish-HEAD}
