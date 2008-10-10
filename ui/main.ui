@@ -1070,7 +1070,7 @@
   </action>
   <action name="menu_difftool_branch" >
    <property name="text" >
-    <string>Launch Merge Tool Against...</string>
+    <string>Launch Diff Tool Against...</string>
    </property>
   </action>
   <action name="menu_clone_repo" >
