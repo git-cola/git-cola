@@ -142,11 +142,19 @@ merge_file () {
 		local=start
 		remote=end
 
-		if ! git show "$start":"$MERGED" > "$LOCAL" 2>/dev/null; then
+		# detects renames.. sweet!
+		oldname=$(git diff --follow "$start".."$end" -- "$MERGED" |
+			head -n9 |
+			grep '^rename from' |
+			sed -e 's/rename from //')
+		startname="$MERGED"
+		test -n "$oldname" && startname="$oldname"
+
+		if ! git show "$start":"$startname" > "$LOCAL" 2>/dev/null; then
 			if should_prompt; then
 				echo
 				echo -n "Warning: "
-				echo -n "'$MERGED' does not exist at $start."
+				echo -n "'$startname' does not exist at $start."
 			fi
 			touch "$LOCAL"
 		fi
