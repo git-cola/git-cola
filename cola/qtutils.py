@@ -6,6 +6,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QClipboard
 from PyQt4.QtGui import QFileDialog
 from PyQt4.QtGui import QIcon
+from PyQt4.QtGui import QTreeWidget
 from PyQt4.QtGui import QListWidgetItem
 from PyQt4.QtGui import QMessageBox
 
@@ -144,6 +145,13 @@ def question(parent, title, message, default=True):
 def set_clipboard(text):
     QtGui.qApp.clipboard().setText(text, QClipboard.Clipboard)
     QtGui.qApp.clipboard().setText(text, QClipboard.Selection)
+
+def set_selected_item(widget, idx):
+    if type(widget) is QTreeWidget:
+        item = widget.topLevelItem(idx)
+        if item:
+            widget.setItemSelected(item, True)
+            widget.setCurrentItem(item)
 
 def add_items(widget, items):
     for item in items: widget.addItem(item)

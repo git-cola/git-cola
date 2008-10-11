@@ -56,11 +56,44 @@ class CompareController(QObserver):
             self.view.descriptions_end.setCurrentItem(enditem)
             self.view.descriptions_end.setItemSelected(enditem, True)
 
+    def get_distance_from_end(self, tree_widget):
+        item_id, item_selected = qtutils.get_selected_treeitem(tree_widget)
+        if item_selected:
+            item_count = tree_widget.topLevelItemCount()
+            item_delta = item_count - item_id
+            return (item_selected, item_delta)
+        else:
+            return (item_selected, 0)
+
+    def select_nth_item_from_end(self, tree_widget, delta):
+        """selects an item relative to the end of the treeitem list.
+        We select from the end to properly handle changes in the number of
+        displayed commits."""
+        count = self.view.descriptions_start.topLevelItemCount()
+        idx = count - delta
+        qtutils.set_selected_item(tree_widget, idx)
+
     def update_results(self, *args):
+
+        tree_widget = self.view.descriptions_start
+        start_selected, start_delta = self.get_distance_from_end(tree_widget)
+
+        tree_widget = self.view.descriptions_end
+        end_selected, end_delta = self.get_distance_from_end(tree_widget)
+
         self.model.set_notify(True)
         show_versions = self.model.get_show_versions()
-        self.model.update_revision_lists(filename=self.filename,
-                                         show_versions=show_versions)
+        revs = self.model.update_revision_lists(filename=self.filename,
+                                                show_versions=show_versions)
+        if start_selected:
+            tree_widget = self.view.descriptions_start
+            self.select_nth_item_from_end(tree_widget, start_delta)
+
+        if end_selected:
+            tree_widget = self.view.descriptions_end
+            self.select_nth_item_from_end(tree_widget, end_delta)
+
+        return revs
 
     def gen_update_widgets(self, left=True):
         def update(*args):
