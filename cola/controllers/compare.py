@@ -70,21 +70,20 @@ class CompareController(QObserver):
         revision = self.model.get_param(revisions_param)[id_num]
         self.model.set_param(revision_param, revision)
 
-        if self.filename:
-            revrange = '%s^..%s' % (revision, revision)
-            log = self.model.git.log(revrange) + '\n\n'
-            diff = log + self.model.git.diff(revrange, '--', self.filename)
-        else:
-            diff = self.model.get_commit_diff(revision)
-
+        # get the changed files list
         start = self.model.get_revision_start()
         end = self.model.get_revision_end()
-        zfiles_str = self.model.git.diff('%s..%s' % (start, end),
-                                         name_only=True, z=True)
-        zfiles_str = zfiles_str.strip('\0')
-        files = zfiles_str.split('\0')
-        self.model.set_compare_files(files)
+        files = self.model.get_changed_files(start, end)
 
+        # get the old name of any renamed files, and prune them
+        # from the changes list
+        renamed_files = self.model.get_renamed_files(start, end)
+        for renamed in renamed_files:
+            try:
+                files.remove(renamed)
+            except:
+                pass
+        self.model.set_compare_files(files)
         qtutils.set_clipboard(self.model.get_param(revision_param))
 
     def compare_selected_file(self):

@@ -1024,3 +1024,18 @@ class Model(model.Model):
 
         self.set_revisions_start(commits)
         self.set_revisions_end(commits)
+
+    def get_changed_files(self, start, end):
+        zfiles_str = self.git.diff('%s..%s' % (start, end),
+                                   name_only=True, z=True)
+        zfiles_str = zfiles_str.strip('\0')
+        files = zfiles_str.split('\0')
+        return files
+
+    def get_renamed_files(self, start, end):
+        files = []
+        difflines = self.git.diff('%s..%s' % (start, end), M=True).splitlines()
+        for line in difflines:
+            if line.startswith('rename from '):
+                files.append(line[12:].rstrip())
+        return files
