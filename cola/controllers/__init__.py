@@ -615,6 +615,7 @@ class Controller(QObserver):
 
     def difftool_branch(self):
         self.reset_mode()
+        self.__difftool_launched = False
         branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
                                    self.view,
                                    ['HEAD^']
@@ -631,11 +632,12 @@ class Controller(QObserver):
         callback = self.difftool_branch_dblclick(branch)
         filename = choose_from_list('Select File', self.view,
                                     files, dblclick=callback)
-        if not filename:
+        if not filename or self.__difftool_launched:
             return
         self.__difftool_branch(branch, filename)
 
     def __difftool_branch(self, branch, filename):
+        self.__difftool_launched = True
         utils.fork('git', 'difftool', '--no-prompt',
                    '-t', self.model.get_mergetool(),
                    '-c', branch,
