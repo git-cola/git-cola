@@ -95,6 +95,7 @@ cleanup_temp_files () {
 }
 
 sigint_handler () {
+	echo
 	cleanup_temp_files
 	exit 1
 }
@@ -142,25 +143,25 @@ merge_file () {
 		remote=end
 
 		if ! git show "$start":"$MERGED" > "$LOCAL" 2>/dev/null; then
-			cleanup_temp_files;
-			if ! should_prompt; then
-				echo "$MERGED does not exist at $start"
-				exit 1
+			if should_prompt; then
+				echo
+				echo -n "Warning: "
+				echo -n "'$MERGED' does not exist at $start."
 			fi
-			return
+			touch "$LOCAL"
 		fi
 		if ! git show "$end":"$MERGED" > "$REMOTE" 2>/dev/null; then
-			cleanup_temp_files;
-			if ! should_prompt; then
-				echo "$MERGED does not exist at $end"
-				exit 1
+			if should_prompt; then
+				echo
+				echo -n "Warning: "
+				echo -n "'$MERGED' does not exist at $end."
 			fi
-			return
+			touch "$REMOTE"
 		fi
 
-		# $BASE could be used by custom mergetool commands, so provide it.
-		# $MERGED might not exist in the worktree, start or end so commit
-		# so check in that order.
+		# $BASE could be used by custom mergetool commands, so provide
+		# it. $MERGED might not exist in the worktree, start or end so
+		# commit so check in that order.
 		if test -f "$MERGED"; then
 			cp -- "$MERGED" "$BASE"
 		elif test -f "$REMOTE"; then
@@ -200,7 +201,7 @@ merge_file () {
 	trap sigint_handler SIGINT
 
 	if should_prompt; then
-		printf "\nEditing '$MERGED':\n"
+		printf "\nEditing: '$MERGED'\n"
 		printf "Hit return to launch '%s': " "$merge_tool"
 		read ans
 	fi
