@@ -2,7 +2,9 @@ import sys
 import time
 
 from PyQt4.QtGui import QDialog
+from PyQt4.QtGui import QListWidget
 from PyQt4.QtGui import qApp
+from PyQt4.QtCore import SIGNAL
 
 from cola.syntax import DiffSyntaxHighlighter
 from cola.syntax import LogSyntaxHighlighter
@@ -57,11 +59,15 @@ class LogView(CreateStandardView(Ui_logger, QDialog)):
         text.setTextCursor(cursor)
 
 class ItemView(object):
-    def init(self, parent, title="", items=[]):
+    def init(self, parent, title="", items=[], dblclick=None):
         self.setWindowTitle(title)
         self.items = []
         self.items.extend(items)
         self.items_widget.addItems(items)
+        if dblclick and type(self.items_widget) is QListWidget:
+            self.connect(self.items_widget,
+                         SIGNAL('itemDoubleClicked(QListWidgetItem*)'),
+                         dblclick)
     def idx(self):
         return 0
     def get_selected(self):

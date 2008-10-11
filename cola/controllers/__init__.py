@@ -607,6 +607,12 @@ class Controller(QObserver):
         self.view.set_display(self.model.diffindex())
 
     #####################################################################
+    def difftool_branch_dblclick(self, branch):
+        def handle_dblclick(item):
+            filename = str(item.text().toAscii())
+            self.__difftool_branch(branch, filename)
+        return handle_dblclick
+
     def difftool_branch(self):
         self.reset_mode()
         branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
@@ -622,9 +628,14 @@ class Controller(QObserver):
                                 'git-cola did not find any changes.')
             return
         files = zfiles_str.split('\0')
-        filename = choose_from_list('Select File', self.view, files)
+        callback = self.difftool_branch_dblclick(branch)
+        filename = choose_from_list('Select File', self.view,
+                                    files, dblclick=callback)
         if not filename:
             return
+        self.__difftool_branch(branch, filename)
+
+    def __difftool_branch(self, branch, filename):
         utils.fork('git', 'difftool', '--no-prompt',
                    '-t', self.model.get_mergetool(),
                    '-c', branch,

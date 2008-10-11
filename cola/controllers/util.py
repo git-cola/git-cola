@@ -23,11 +23,16 @@ def set_diff_font(model, widget):
         qf.fromString(font)
         widget.setFont(qf)
 
-def choose_from_combo(title, parent, branches):
-    return ComboView(parent, title, branches).get_selected()
+def choose_from_combo(title, parent, items):
+    return ComboView(parent,
+                     title=title,
+                     items=items).get_selected()
 
-def choose_from_list(title, parent, items=[]):
-    return ListView(parent, title, items).get_selected()
+def choose_from_list(title, parent, items=[], dblclick=None):
+    return ListView(parent,
+                    title=title,
+                    items=items,
+                    dblclick=dblclick).get_selected()
 
 #+-------------------------------------------------------------
 def select_commits(model, parent, title, revs, summaries):
