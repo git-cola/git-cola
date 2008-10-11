@@ -15,6 +15,9 @@ from PyQt4.QtGui import QFontComboBox
 from PyQt4.QtGui import QAbstractButton
 from PyQt4.QtGui import QSplitter
 from PyQt4.QtGui import QAction
+from PyQt4.QtGui import QTreeWidget
+from PyQt4.QtGui import QTreeWidgetItem
+from PyQt4.QtCore import QVariant
 
 from cola.observer import Observer
 
@@ -71,6 +74,8 @@ class QObserver(Observer, QObject):
                 model.set_param(model_param, value)
             elif isinstance(widget, QListWidget):
                 pass
+            elif isinstance(widget, QTreeWidget):
+                pass
             else:
                 print("SLOT(): Unknown widget:", sender, widget)
 
@@ -125,6 +130,10 @@ class QObserver(Observer, QObject):
             self.add_signals('itemSelectionChanged()', widget)
             self.add_signals('itemClicked(QListWidgetItem *)', widget)
             self.add_signals('itemDoubleClicked(QListWidgetItem*)', widget)
+        elif isinstance(widget, QTreeWidget):
+            self.add_signals('itemSelectionChanged()', widget)
+            self.add_signals('itemClicked(QTreeWidgetItem *, int)', widget)
+            self.add_signals('itemDoubleClicked(QTreeWidgetItem *, int)', widget)
         elif isinstance(widget, QAbstractButton):
             self.add_signals('released()', widget)
         elif isinstance(widget, QAction):
@@ -171,6 +180,13 @@ class QObserver(Observer, QObject):
                     widget.clear()
                     for i in value:
                         widget.addItem(i)
+                elif isinstance(widget, QTreeWidget):
+                    widget.clear()
+                    for i in value:
+                        item = QTreeWidgetItem([i])
+                        item.setData(0, Qt.UserRole,
+                                     QVariant(widget.topLevelItemCount()))
+                        widget.addTopLevelItem(item)
                 elif isinstance(widget, QCheckBox):
                     widget.setChecked(value)
                 elif isinstance(widget, QFontComboBox):

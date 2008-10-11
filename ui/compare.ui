@@ -10,68 +10,90 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Compare Revisions</string>
+   <string>Compare Commits</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3" >
-   <property name="spacing" >
-    <number>4</number>
-   </property>
-   <property name="margin" >
-    <number>4</number>
-   </property>
    <item>
-    <widget class="QLabel" name="label_2" >
-     <property name="text" >
-      <string>Choose Start and End Revisions</string>
-     </property>
-     <property name="alignment" >
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout_2" >
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout" >
+       <property name="spacing" >
+        <number>1</number>
+       </property>
+       <item>
+        <widget class="QTreeWidget" name="descriptions_start" >
+         <property name="rootIsDecorated" >
+          <bool>false</bool>
+         </property>
+         <property name="sortingEnabled" >
+          <bool>false</bool>
+         </property>
+         <property name="allColumnsShowFocus" >
+          <bool>true</bool>
+         </property>
+         <column>
+          <property name="text" >
+           <string>Start Commit</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="revision_start" >
+         <property name="readOnly" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_2" >
+       <property name="spacing" >
+        <number>1</number>
+       </property>
+       <item>
+        <widget class="QTreeWidget" name="descriptions_end" >
+         <property name="rootIsDecorated" >
+          <bool>false</bool>
+         </property>
+         <property name="allColumnsShowFocus" >
+          <bool>true</bool>
+         </property>
+         <column>
+          <property name="text" >
+           <string>End Commit</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="revision_end" >
+         <property name="readOnly" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </item>
    <item>
-    <widget class="QSplitter" name="splitter_2" >
-     <property name="orientation" >
-      <enum>Qt::Vertical</enum>
+    <widget class="QTreeWidget" name="compare_files" >
+     <property name="alternatingRowColors" >
+      <bool>true</bool>
      </property>
-     <property name="handleWidth" >
-      <number>2</number>
+     <property name="rootIsDecorated" >
+      <bool>false</bool>
      </property>
-     <widget class="QSplitter" name="splitter" >
-      <property name="orientation" >
-       <enum>Qt::Horizontal</enum>
+     <property name="allColumnsShowFocus" >
+      <bool>true</bool>
+     </property>
+     <column>
+      <property name="text" >
+       <string>File Differences</string>
       </property>
-      <property name="handleWidth" >
-       <number>2</number>
-      </property>
-      <widget class="QWidget" name="layoutWidget" >
-       <layout class="QVBoxLayout" name="verticalLayout" >
-        <property name="spacing" >
-         <number>2</number>
-        </property>
-        <item>
-         <widget class="QListWidget" name="descriptions_start" />
-        </item>
-        <item>
-         <widget class="QLineEdit" name="revision_start" />
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="layoutWidget" >
-       <layout class="QVBoxLayout" name="verticalLayout_2" >
-        <property name="spacing" >
-         <number>2</number>
-        </property>
-        <item>
-         <widget class="QListWidget" name="descriptions_end" />
-        </item>
-        <item>
-         <widget class="QLineEdit" name="revision_end" />
-        </item>
-       </layout>
-      </widget>
-     </widget>
-     <widget class="QTextEdit" name="display_text" />
+     </column>
     </widget>
    </item>
    <item>
@@ -79,19 +101,6 @@
      <property name="spacing" >
       <number>4</number>
      </property>
-     <item>
-      <spacer name="horizontalSpacer" >
-       <property name="orientation" >
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0" >
-        <size>
-         <width>128</width>
-         <height>14</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
      <item>
       <widget class="QCheckBox" name="show_versions" >
        <property name="text" >
@@ -115,9 +124,22 @@
         <number>9999</number>
        </property>
        <property name="value" >
-        <number>96</number>
+        <number>100</number>
        </property>
       </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer" >
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>128</width>
+         <height>14</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item>
       <widget class="QPushButton" name="button_compare" >

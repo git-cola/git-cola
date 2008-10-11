@@ -7,18 +7,12 @@ from cola.views import CompareView
 from cola.controllers.repobrowser import select_file_from_repo
 from cola.controllers.util import choose_from_list
 
-def compare_file(model, parent):
-    filename = select_file_from_repo(model, parent)
-    if not filename:
-        return
-    compare(model, parent, filename)
-
 def compare(model, parent, filename=None):
     model = model.clone()
     model.create(descriptions_start=[], descriptions_end=[],
                  revisions_start=[], revisions_end=[],
                  revision_start='', revision_end='',
-                 display_text='', num_results=96,
+                 compare_files=[], num_results=100,
                  show_versions=False)
     view = CompareView(parent)
     ctl = CompareController(model, view, filename)
@@ -29,17 +23,23 @@ class CompareController(QObserver):
         self.filename = filename
         self.add_observables('descriptions_start', 'descriptions_end',
                              'revision_start', 'revision_end',
-                             'display_text', 'num_results',
+                             'compare_files', 'num_results',
                              'show_versions')
 
         self.add_actions(num_results = self.update_results)
         self.add_actions(show_versions = self.update_results)
 
-        self.add_callbacks(button_compare = self.compare_revisions,
-                           descriptions_start =
+        self.add_callbacks(descriptions_start =
                                 self.gen_update_widgets(True),
                            descriptions_end =
-                                self.gen_update_widgets(False))
+                                self.gen_update_widgets(False),
+                           button_compare =
+                                self.compare_selected_file)
+
+        self.connect(self.view.compare_files,
+                     'itemDoubleClicked(QTreeWidgetItem *, int)',
+                     self.compare_revisions)
+
         self.refresh_view()
         self.update_results()
 
@@ -56,17 +56,18 @@ class CompareController(QObserver):
 
     def update_widgets(self, left=True):
         if left:
-            list_widget = self.view.descriptions_start
+            tree_widget = self.view.descriptions_start
             revisions_param = 'revisions_start'
             revision_param = 'revision_start'
         else:
-            list_widget = self.view.descriptions_end
+            tree_widget = self.view.descriptions_end
             revisions_param = 'revisions_end'
             revision_param = 'revision_end'
-        row, selected = qtutils.get_selected_row(list_widget)
+
+        id_num, selected = qtutils.get_selected_treeitem(tree_widget)
         if not selected:
             return
-        revision = self.model.get_param(revisions_param)[row]
+        revision = self.model.get_param(revisions_param)[id_num]
         self.model.set_param(revision_param, revision)
 
         if self.filename:
@@ -76,36 +77,36 @@ class CompareController(QObserver):
         else:
             diff = self.model.get_commit_diff(revision)
 
-        self.model.set_display_text(diff)
+        start = self.model.get_revision_start()
+        end = self.model.get_revision_end()
+        zfiles_str = self.model.git.diff('%s..%s' % (start, end),
+                                         name_only=True, z=True)
+        zfiles_str = zfiles_str.strip('\0')
+        files = zfiles_str.split('\0')
+        self.model.set_compare_files(files)
+
         qtutils.set_clipboard(self.model.get_param(revision_param))
 
-    def compare_revisions(self):
-        model = self.model
-        git = model.git
-        start = model.get_revision_start()
-        end = model.get_revision_end()
-        if not start or not end:
-            qtutils.information('Error: Please select two revisions.')
+    def compare_selected_file(self):
+        tree_widget = self.view.compare_files
+        id_num, selected = qtutils.get_selected_treeitem(tree_widget)
+        if not selected:
+            qtutils.information('Oops!', 'Please select a file to compare')
             return
-        zfiles_str = model.git.diff('%s..%s' % (start, end),
-                                    name_only=True, z=True)
-        if not zfiles_str:
-            qtutils.information('Nothing to do',
-                                'git-cola did not find any changes.')
-            return
+        filename = self.model.get_compare_files()[id_num]
+        self.__compare_file(filename)
 
-        if self.filename:
-            filename = self.filename
-        else:
-            files = zfiles_str.split('\0')
-            filename = choose_from_list('Select File', self.view, files)
-            if not filename:
-                return
+    def compare_revisions(self, tree_item, column):
+        filename = tree_item.text(0).toAscii().data()
+        self.__compare_file(filename)
 
-        args = (['git', 'difftool']
-                + git.transform_kwargs(no_prompt=True,
-                                       tool=self.model.get_mergetool(),
-                                       start=start, end=end)
-                + ['--', filename])
-
+    def __compare_file(self, filename):
+        git = self.model.git
+        start = self.model.get_revision_start()
+        end = self.model.get_revision_end()
+        kwargs = git.transform_kwargs(no_prompt=True,
+                                      tool=self.model.get_mergetool(),
+                                      start=start,
+                                      end=end)
+        args = (['git', 'difftool'] + kwargs + ['--', filename])
         utils.fork(*args)

@@ -2,6 +2,7 @@
 import os
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QClipboard
 from PyQt4.QtGui import QFileDialog
 from PyQt4.QtGui import QIcon
@@ -59,6 +60,16 @@ def information(title, message=None):
     if message is None:
         message = title
     QMessageBox.information(QtGui.qApp.activeWindow(), title, message)
+
+def get_selected_treeitem(tree_widget):
+    """Returns a(id_number, is_selected) for a QTreeWidget."""
+    id_number = None
+    selected = False
+    item = tree_widget.currentItem()
+    if item:
+        id_number = item.data(0, Qt.UserRole).toInt()[0]
+        selected = True
+    return(id_number, selected)
 
 def get_selected_row(list_widget):
     """Returns a(row_number, is_selected) tuple for a QListWidget."""

@@ -31,6 +31,7 @@ OptionsView = CreateStandardView(Ui_options, QDialog)
 CreateBranchView = CreateStandardView(Ui_createbranch, QDialog)
 BookmarkView = CreateStandardView(Ui_bookmark, QDialog)
 StashView = CreateStandardView(Ui_stash, QDialog)
+CompareView = CreateStandardView(Ui_compare, QDialog)
 
 class LogView(CreateStandardView(Ui_logger, QDialog)):
     """A simple dialog to display command logs."""
@@ -118,8 +119,3 @@ class RemoteView(CreateStandardView(Ui_remote, QDialog)):
             return True
         else:
             return False
-
-class CompareView(CreateStandardView(Ui_compare, QDialog)):
-    def init(self, parent=None):
-        self.syntax = DiffSyntaxHighlighter(self.display_text.document(),
-                                            whitespace=False)

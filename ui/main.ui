@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>716</width>
-    <height>479</height>
+    <height>485</height>
    </rect>
   </property>
   <property name="dockOptions" >
@@ -19,7 +19,7 @@
      <x>363</x>
      <y>26</y>
      <width>353</width>
-     <height>438</height>
+     <height>444</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -219,7 +219,6 @@
     <addaction name="menu_cherry_pick" />
     <addaction name="separator" />
     <addaction name="menu_compare" />
-    <addaction name="menu_compare_file" />
    </widget>
    <widget class="QMenu" name="edit_menu" >
     <property name="title" >
@@ -316,7 +315,7 @@
      <x>0</x>
      <y>26</y>
      <width>357</width>
-     <height>188</height>
+     <height>200</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -346,7 +345,7 @@
       <x>0</x>
       <y>20</y>
       <width>357</width>
-      <height>168</height>
+      <height>180</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" >
@@ -433,9 +432,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>220</y>
+     <y>232</y>
      <width>357</width>
-     <height>244</height>
+     <height>238</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -459,7 +458,7 @@
       <x>0</x>
       <y>20</y>
       <width>357</width>
-      <height>224</height>
+      <height>218</height>
      </rect>
     </property>
     <property name="sizePolicy" >
@@ -768,7 +767,7 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>464</y>
+     <y>470</y>
      <width>716</width>
      <height>15</height>
     </rect>
@@ -1114,11 +1113,6 @@
   <action name="menu_browse_other_branch" >
    <property name="text" >
     <string>Browse Other Branch...</string>
-   </property>
-  </action>
-  <action name="menu_compare_file" >
-   <property name="text" >
-    <string>Compare File Across Commits...</string>
    </property>
   </action>
  </widget>
