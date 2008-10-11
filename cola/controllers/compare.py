@@ -130,6 +130,10 @@ class CompareController(QObserver):
             except:
                 pass
         self.model.set_compare_files(files)
+        icon = qtutils.get_icon('script.png')
+        for idx in xrange(0, self.view.compare_files.topLevelItemCount()):
+            item = self.view.compare_files.topLevelItem(idx)
+            item.setIcon(0, icon)
         qtutils.set_clipboard(self.model.get_param(revision_param))
 
     def compare_selected_file(self):

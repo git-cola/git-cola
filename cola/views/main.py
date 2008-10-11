@@ -56,7 +56,7 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
         # Default to creating a new commit(i.e. not an amend commit)
         self.new_commit_radio.setChecked(True)
         self.toolbar_show_log =\
-            self.toolbar.addAction(qtutils.get_qicon('git.png'),
+            self.toolbar.addAction(qtutils.get_icon('git.png'),
                                    'Show/Hide Log Window')
         self.toolbar_show_log.setEnabled(True)
 

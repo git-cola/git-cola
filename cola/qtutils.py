@@ -125,7 +125,7 @@ def dir_dialog(parent, title, directory):
     directory = QFileDialog.getExistingDirectory(parent, parent.tr(title), directory)
     return unicode(directory)
 
-def get_qicon(filename):
+def get_icon(filename):
     icon = utils.get_icon(filename)
     return QIcon(icon)
 
