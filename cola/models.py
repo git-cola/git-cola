@@ -551,7 +551,7 @@ class Model(model.Model):
         return diff, status, filename
 
     def stage_modified(self):
-        output = self.git.add(self.get_modified())
+        output = self.git.add(v=True, *self.get_modified())
         self.update_status()
         return output
 
