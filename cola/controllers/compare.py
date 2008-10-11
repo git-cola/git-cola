@@ -41,7 +41,20 @@ class CompareController(QObserver):
                      self.compare_revisions)
 
         self.refresh_view()
-        self.update_results()
+        revisions = self.update_results()
+        last = len(revisions)
+        # if we can, preselect the latest commit
+        if (last > 1
+                and self.view.descriptions_start.topLevelItemCount() > last-1
+                and self.view.descriptions_end  .topLevelItemCount() > last-1):
+            # select the 2nd item on the left treewidget
+            startitem = self.view.descriptions_start.topLevelItem(last-2)
+            self.view.descriptions_start.setCurrentItem(startitem)
+            self.view.descriptions_start.setItemSelected(startitem, True)
+            # select the 1st item on the right treewidget
+            enditem = self.view.descriptions_end.topLevelItem(last-1)
+            self.view.descriptions_end.setCurrentItem(enditem)
+            self.view.descriptions_end.setItemSelected(enditem, True)
 
     def update_results(self, *args):
         self.model.set_notify(True)
@@ -96,7 +109,8 @@ class CompareController(QObserver):
         self.__compare_file(filename)
 
     def compare_revisions(self, tree_item, column):
-        filename = tree_item.text(0).toAscii().data()
+        idx = self.view.compare_files.indexOfTopLevelItem(tree_item)
+        filename = self.model.get_compare_files()[idx]
         self.__compare_file(filename)
 
     def __compare_file(self, filename):

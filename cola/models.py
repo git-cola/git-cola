@@ -1012,6 +1012,7 @@ class Model(model.Model):
                                     pretty='oneline', all=True)
 
         commit_list = self.parse_rev_list(rev_list)
+        commit_list.reverse()
         commits = map(lambda x: x[0], commit_list)
         descriptions = map(lambda x: x[1], commit_list)
         if show_versions:
@@ -1024,6 +1025,8 @@ class Model(model.Model):
 
         self.set_revisions_start(commits)
         self.set_revisions_end(commits)
+
+        return commits
 
     def get_changed_files(self, start, end):
         zfiles_str = self.git.diff('%s..%s' % (start, end),
