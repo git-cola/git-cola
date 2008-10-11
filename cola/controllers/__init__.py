@@ -158,7 +158,6 @@ class Controller(QObserver):
             menu_rescan = self.rescan,
             menu_delete_branch = self.branch_delete,
             menu_rebase_branch = self.rebase,
-            menu_commit = self.commit,
             menu_stage_selected = self.stage_selected,
             menu_unstage_selected = self.unstage_selected,
             menu_show_diffstat = self.show_diffstat,

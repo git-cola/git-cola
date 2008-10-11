@@ -199,26 +199,40 @@
     <property name="title" >
      <string>Commit</string>
     </property>
-    <addaction name="menu_rescan" />
-    <addaction name="separator" />
-    <addaction name="menu_show_index" />
-    <addaction name="menu_show_diffstat" />
-    <addaction name="separator" />
-    <addaction name="menu_stage_modified" />
-    <addaction name="menu_stage_untracked" />
-    <addaction name="menu_stage_selected" />
-    <addaction name="separator" />
-    <addaction name="menu_unstage_all" />
-    <addaction name="menu_unstage_selected" />
-    <addaction name="separator" />
-    <addaction name="menu_commit" />
-    <addaction name="menu_stash" />
-    <addaction name="separator" />
-    <addaction name="menu_browse_commits" />
-    <addaction name="menu_export_patches" />
-    <addaction name="menu_cherry_pick" />
+    <widget class="QMenu" name="menuShow" >
+     <property name="title" >
+      <string>View</string>
+     </property>
+     <addaction name="menu_browse_commits" />
+     <addaction name="menu_show_index" />
+     <addaction name="menu_show_diffstat" />
+    </widget>
+    <widget class="QMenu" name="menuPrepare" >
+     <property name="title" >
+      <string>Prepare</string>
+     </property>
+     <addaction name="menu_stage_modified" />
+     <addaction name="menu_stage_untracked" />
+     <addaction name="menu_stage_selected" />
+     <addaction name="separator" />
+     <addaction name="menu_unstage_all" />
+     <addaction name="menu_unstage_selected" />
+    </widget>
+    <widget class="QMenu" name="menuAdvanced_2" >
+     <property name="title" >
+      <string>Advanced</string>
+     </property>
+     <addaction name="menu_cherry_pick" />
+    </widget>
+    <addaction name="menuShow" />
+    <addaction name="menuPrepare" />
     <addaction name="separator" />
     <addaction name="menu_compare" />
+    <addaction name="separator" />
+    <addaction name="menu_stash" />
+    <addaction name="menu_export_patches" />
+    <addaction name="separator" />
+    <addaction name="menuAdvanced_2" />
    </widget>
    <widget class="QMenu" name="edit_menu" >
     <property name="title" >
@@ -240,7 +254,6 @@
     <property name="title" >
      <string>Search</string>
     </property>
-    <addaction name="separator" />
     <addaction name="menu_search_grep" />
     <addaction name="separator" />
     <addaction name="menu_search_revision" />
@@ -259,19 +272,32 @@
     <property name="title" >
      <string>Branch</string>
     </property>
+    <widget class="QMenu" name="menuView" >
+     <property name="title" >
+      <string>View</string>
+     </property>
+     <addaction name="menu_browse_branch" />
+     <addaction name="menu_browse_other_branch" />
+     <addaction name="separator" />
+     <addaction name="menu_visualize_current" />
+     <addaction name="menu_visualize_all" />
+    </widget>
+    <widget class="QMenu" name="menuAdvanced" >
+     <property name="title" >
+      <string>Advanced</string>
+     </property>
+     <addaction name="menu_diff_branch" />
+     <addaction name="menu_rebase_branch" />
+    </widget>
+    <addaction name="menuView" />
+    <addaction name="separator" />
+    <addaction name="menu_difftool_branch" />
+    <addaction name="separator" />
     <addaction name="menu_create_branch" />
     <addaction name="menu_checkout_branch" />
-    <addaction name="menu_rebase_branch" />
     <addaction name="menu_delete_branch" />
     <addaction name="separator" />
-    <addaction name="menu_browse_branch" />
-    <addaction name="menu_browse_other_branch" />
-    <addaction name="separator" />
-    <addaction name="menu_visualize_current" />
-    <addaction name="menu_visualize_all" />
-    <addaction name="separator" />
-    <addaction name="menu_diff_branch" />
-    <addaction name="menu_difftool_branch" />
+    <addaction name="menuAdvanced" />
    </widget>
    <widget class="QMenu" name="file_menu" >
     <property name="title" >
@@ -279,6 +305,8 @@
     </property>
     <addaction name="menu_open_repo" />
     <addaction name="menu_clone_repo" />
+    <addaction name="separator" />
+    <addaction name="menu_rescan" />
     <addaction name="separator" />
     <addaction name="menu_manage_bookmarks" />
     <addaction name="menu_save_bookmark" />
@@ -805,7 +833,7 @@
   </action>
   <action name="menu_show_diffstat" >
    <property name="text" >
-    <string>Show Diffstat</string>
+    <string>Diffstat</string>
    </property>
    <property name="shortcut" >
     <string>Ctrl+D</string>
@@ -813,7 +841,7 @@
   </action>
   <action name="menu_show_index" >
    <property name="text" >
-    <string>Show Index</string>
+    <string>Index</string>
    </property>
   </action>
   <action name="menu_stage_modified" >
@@ -920,14 +948,6 @@
     <string>Ctrl+R</string>
    </property>
   </action>
-  <action name="menu_commit" >
-   <property name="text" >
-    <string>Commit</string>
-   </property>
-   <property name="shortcut" >
-    <string>Alt+S</string>
-   </property>
-  </action>
   <action name="menu_get_prev_commitmsg" >
    <property name="text" >
     <string>Get Latest Commit Message</string>
@@ -935,7 +955,7 @@
   </action>
   <action name="menu_cherry_pick" >
    <property name="text" >
-    <string>Cherry-Pick Commits...</string>
+    <string>Cherry-Pick...</string>
    </property>
    <property name="shortcut" >
     <string>Ctrl+P</string>
@@ -1065,12 +1085,12 @@
   </action>
   <action name="menu_diff_branch" >
    <property name="text" >
-    <string>Compare Against...</string>
+    <string>Apply Changes From...</string>
    </property>
   </action>
   <action name="menu_difftool_branch" >
    <property name="text" >
-    <string>Launch Diff Tool Against...</string>
+    <string>Compare To...</string>
    </property>
   </action>
   <action name="menu_clone_repo" >
@@ -1103,7 +1123,7 @@
   </action>
   <action name="menu_browse_commits" >
    <property name="text" >
-    <string>Browse Commits...</string>
+    <string>Commits...</string>
    </property>
   </action>
   <action name="menu_browse_branch" >
