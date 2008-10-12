@@ -89,13 +89,12 @@ class Git(object):
                                 stdin=istream,
                                 stderr=subprocess.PIPE,
                                 stdout=subprocess.PIPE,
-                                **extra
-                                )
+                                **extra)
 
         # Wait for the process to return
         try:
-            stdout_value = proc.stdout.read()
-            stderr_value = proc.stderr.read()
+            stdout_value = proc.stdout.read().decode('utf-8')
+            stderr_value = proc.stderr.read().decode('utf-8')
             status = proc.wait()
             proc.stdout.close()
             proc.stderr.close()
@@ -178,7 +177,7 @@ class Git(object):
 
         # Prepare the argument list
         opt_args = self.transform_kwargs(**kwargs)
-        ext_args = map(str, args)
+        ext_args = [a.encode('utf-8') for a in args]
         args = opt_args + ext_args
 
         call = ["git", dashify(method)]

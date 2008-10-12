@@ -47,7 +47,8 @@ class LogView(CreateStandardView(Ui_logger, QDialog)):
     def set_output(self, output):
         self.output_text.setText(output)
     def log(self, output):
-        if not output: return
+        if not output:
+            return
         cursor = self.output_text.textCursor()
         cursor.movePosition(cursor.End)
         text = self.output_text

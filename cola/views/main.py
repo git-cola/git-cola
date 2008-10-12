@@ -115,7 +115,7 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
     def diff_selection(self):
         cursor = self.display_text.textCursor()
         offset = cursor.position()
-        selection = cursor.selection().toPlainText()
+        selection = unicode(cursor.selection().toPlainText())
         return offset, selection
     def selected_line(self):
         cursor = self.display_text.textCursor()

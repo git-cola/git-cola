@@ -337,7 +337,8 @@ class Model(model.Model):
         to_remove = []
 
         for filename in to_process:
-            if os.path.exists(filename):
+            encfilename = filename.encode('utf-8')
+            if os.path.exists(encfilename):
                 to_add.append(filename)
 
         output = self.git.add(v=True, *to_add)
@@ -390,7 +391,6 @@ class Model(model.Model):
     def add_signoff(self,*rest):
         """Adds a standard Signed-off by: tag to the end
         of the current commit message."""
-
         msg = self.get_commitmsg()
         signoff =('\n\nSigned-off-by: %s <%s>\n'
                   % (self.get_local_user_name(), self.get_local_user_email()))
@@ -405,7 +405,7 @@ class Model(model.Model):
 
     def load_commitmsg(self, path):
         file = open(path, 'r')
-        contents = file.read()
+        contents = file.read().decode('utf-8')
         file.close()
         self.set_commitmsg(contents)
 
@@ -451,8 +451,8 @@ class Model(model.Model):
 
         # Gather items to be committed
         for staged in staged_items:
-            if staged not in self.get_staged():
-                self.add_staged(staged)
+            if staged.decode('utf-8') not in self.get_staged():
+                self.add_staged(staged.decode('utf-8'))
 
         # Gather unindexed items
         for modified in modified_items:
@@ -523,8 +523,9 @@ class Model(model.Model):
         filename = self.get_filename(idx, staged=staged)
         if not filename:
             return (None, None, None)
+        encfilename = filename.encode('utf-8')
         if staged:
-            if os.path.exists(filename):
+            if os.path.exists(encfilename):
                 status = 'Staged for commit'
             else:
                 status = 'Staged for removal'
@@ -532,7 +533,7 @@ class Model(model.Model):
                                     ref=ref,
                                     cached=True)
         else:
-            if os.path.isdir(filename):
+            if os.path.isdir(encfilename):
                 status = 'Untracked directory'
                 diff = '\n'.join(os.listdir(filename))
 
@@ -575,7 +576,7 @@ class Model(model.Model):
     def config_set(self, key=None, value=None, local=True):
         if key and value is not None:
             # git config category.key value
-            strval = str(value)
+            strval = unicode(value).encode('utf-8')
             if type(value) is bool:
                 # git uses "true" and "false"
                 strval = strval.lower()
@@ -726,8 +727,9 @@ class Model(model.Model):
         del_tag = 'deleted file mode '
 
         headers = []
-        deleted = cached and not os.path.exists(filename)
+        deleted = cached and not os.path.exists(filename.encode('utf-8'))
         for line in diff:
+            line = unicode(line).encode('utf-8')
             if not start and '@@ ' == line[:3] and ' @@' in line:
                 start = True
             if start or(deleted and del_tag in line):
@@ -737,7 +739,7 @@ class Model(model.Model):
                     headers.append(line)
                 elif not suppress_header:
                     output.write(line + '\n')
-        result = output.getvalue()
+        result = output.getvalue().decode('utf-8')
         output.close()
         if with_diff_header:
             return('\n'.join(headers), result)
@@ -838,7 +840,7 @@ class Model(model.Model):
             # Untracked files
             elif mode is UNTRACKED_MODE:
                 if status_line.startswith('#\t'):
-                    current_dest.append(eval_path(status_line[2:]))
+                    current_dest.append(eval_path(status_line[2:]).decode('utf-8'))
 
         return(staged, unstaged, untracked, unmerged)
 

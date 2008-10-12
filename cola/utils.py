@@ -246,11 +246,11 @@ def slurp(path):
     file = open(path)
     slushy = file.read()
     file.close()
-    return slushy
+    return slushy.decode('utf-8')
 
 def write(path, contents):
     file = open(path, 'w')
-    file.write(contents)
+    file.write(contents.encode('utf-8'))
     file.close()
 
 class DiffParser(object):

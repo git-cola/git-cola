@@ -15,11 +15,14 @@ from cola import utils
 LOGGER = None
 
 def log(output, quiet=True, doraise=False):
-    if not LOGGER: return
+    if not LOGGER:
+        return
     LOGGER.log(output)
-    if quiet: return
+    if quiet:
+        return
     LOGGER.show()
-    if not doraise: return
+    if not doraise:
+        return
     raise_logger()
 
 def raise_logger():
@@ -168,7 +171,7 @@ def create_item(filename, staged, untracked=False):
     for adding to a QListWidget.  "staged" and "untracked"
     controls whether to use the appropriate icons."""
     if staged:
-        if os.path.exists(filename):
+        if os.path.exists(filename.encode('utf-8')):
             icon_file = utils.get_icon('staged.png')
         else:
             icon_file = utils.get_icon('removed.png')

@@ -346,7 +346,6 @@ class Controller(QObserver):
                 '- Remaining lines: Describe why this change is good.\n')
             self.log(error_msg)
             return
-
         files = self.model.get_staged()
         if not files and not self.view.amend_is_checked():
             error_msg = self.tr(''
@@ -357,7 +356,8 @@ class Controller(QObserver):
 
         # Perform the commit
         amend = self.view.amend_is_checked()
-        status, output = self.model.commit_with_msg(msg, amend=amend)
+        umsg = msg.encode('utf-8')
+        status, output = self.model.commit_with_msg(umsg, amend=amend)
         if status == 0:
             self.view.reset_checkboxes()
             self.model.set_commitmsg('')
