@@ -198,7 +198,7 @@ merge_file () {
 			if test -f "$PREFIX""$MERGED"; then
 				mv -- "$PREFIX""$MERGED" "$BASE"
 				tmpdir=$(dirname "$PREFIX""$MERGED")
-				test -d "$tmpdir" && rmdir -p "$tmpdir"
+				test -d "$tmpdir" && test "$tmpdir" != "." && rmdir -p "$tmpdir"
 			else
 				index_mode=
 				touch "$BASE"
