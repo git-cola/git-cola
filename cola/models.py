@@ -451,8 +451,8 @@ class Model(model.Model):
 
         # Gather items to be committed
         for staged in staged_items:
-            if staged.decode('utf-8') not in self.get_staged():
-                self.add_staged(staged.decode('utf-8'))
+            if staged not in self.get_staged():
+                self.add_staged(staged)
 
         # Gather unindexed items
         for modified in modified_items:
@@ -776,12 +776,13 @@ class Model(model.Model):
             merge_msg_path = self.get_merge_message_path()
 
     def parse_status(self, amend=False):
-        """RETURNS: A tuple of staged, unstaged and untracked file lists.
+        """RETURNS: A tuple of staged, unstaged and unmerged, and untracked
+        file lists.
         """
         def eval_path(path):
             """handles quoted paths."""
             if path.startswith('"') and path.endswith('"'):
-                return eval(path)
+                return eval(path).decode('utf-8')
             else:
                 return path
 
@@ -840,7 +841,7 @@ class Model(model.Model):
             # Untracked files
             elif mode is UNTRACKED_MODE:
                 if status_line.startswith('#\t'):
-                    current_dest.append(eval_path(status_line[2:]).decode('utf-8'))
+                    current_dest.append(eval_path(status_line[2:]))
 
         return(staged, unstaged, untracked, unmerged)
 
