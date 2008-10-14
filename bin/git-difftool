@@ -195,9 +195,14 @@ merge_file () {
 		if test -f "$MERGED"; then
 			cp -- "$MERGED" "$LOCAL"
 			git checkout-index --prefix="$PREFIX" "$MERGED"
-			mv -- "$PREFIX""$MERGED" "$BASE"
-			tmpdir=$(dirname "$PREFIX""$MERGED")
-			test -d "$tmpdir" && rmdir -p "$tmpdir"
+			if test -f "$PREFIX""$MERGED"; then
+				mv -- "$PREFIX""$MERGED" "$BASE"
+				tmpdir=$(dirname "$PREFIX""$MERGED")
+				test -d "$tmpdir" && rmdir -p "$tmpdir"
+			else
+				index_mode=
+				touch "$BASE"
+			fi
 		else
 			# $MERGED doesn't exist here...
 			touch "$LOCAL"
