@@ -409,7 +409,7 @@ class Controller(QObserver):
         utils.fork('xterm', '-e',
                    'git', 'mergetool',
                    '-t', self.model.get_mergetool(),
-                   '--', filename)
+                   filename)
 
     def edit_file(self, staged=True):
         filename = self.get_selected_filename(staged=staged)
@@ -874,7 +874,7 @@ class Controller(QObserver):
         enable_undo = enable_staging and is_tracked
 
         menu = QMenu(self.view)
-        if enable_staging:
+        if enable_staging and not is_unmerged:
             menu.addAction(self.tr('Stage Selected'), self.stage_selected)
             menu.addSeparator()
         if is_unmerged and not utils.is_broken():
@@ -885,7 +885,7 @@ class Controller(QObserver):
         if enable_staging and not is_unmerged:
             menu.addAction(self.tr('Launch Diff Tool'),
                            lambda: self.edit_diff(staged=False))
-        if enable_undo:
+        if enable_undo and not is_unmerged:
             menu.addSeparator()
             menu.addAction(self.tr('Undo All Changes'), self.undo_changes)
         return menu
