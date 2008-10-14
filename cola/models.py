@@ -447,7 +447,7 @@ class Model(model.Model):
         (staged_items,
          modified_items,
          untracked_items,
-         unmerged_items) = self.parse_status(amend=amend)
+         unmerged_items) = self.get_workdir_state(amend=amend)
 
         # Gather items to be committed
         for staged in staged_items:
@@ -539,7 +539,11 @@ class Model(model.Model):
 
             elif filename in self.get_unmerged():
                 status = 'Unmerged'
-                diff = self.diff_helper(filename=filename,
+                diff = ('@@@+-+-+-+-+-+-+-+-+-+-+  UNMERGED  +-+-+-+-+-+-+-+-+-+-+@@@\n\n'
+                        '>>> %s is unmerged.\n' % filename +
+                        'Right-click on the filename '
+                        'to launch "git mergetool".\n\n\n')
+                diff += self.diff_helper(filename=filename,
                                         cached=False,
                                         patch_with_raw=False)
             elif filename in self.get_modified():
@@ -689,7 +693,6 @@ class Model(model.Model):
                     ref = None,
                     endref = None,
                     filename=None,
-                    color=False,
                     cached=True,
                     with_diff_header=False,
                     suppress_header=True,
@@ -713,24 +716,23 @@ class Model(model.Model):
             else:
                 argv.append(filename)
 
-        diffoutput = self.git.diff(R=reverse,
-                                   color=color,
-                                   cached=cached,
-                                   patch_with_raw=patch_with_raw,
-                                   unified=self.diff_context,
-                                   with_raw_output=True,
-                                   *argv)
-        diff = diffoutput.splitlines()
-
         output = StringIO()
         start = False
         del_tag = 'deleted file mode '
 
         headers = []
         deleted = cached and not os.path.exists(filename.encode('utf-8'))
+
+        diffoutput = self.git.diff(R=reverse,
+                                   cached=cached,
+                                   patch_with_raw=patch_with_raw,
+                                   unified=self.diff_context,
+                                   with_raw_output=True,
+                                   *argv)
+        diff = diffoutput.splitlines()
         for line in diff:
             line = unicode(line).encode('utf-8')
-            if not start and '@@ ' == line[:3] and ' @@' in line:
+            if not start and '@@' == line[:2] and '@@' in line[2:]:
                 start = True
             if start or(deleted and del_tag in line):
                 output.write(line + '\n')
@@ -739,8 +741,10 @@ class Model(model.Model):
                     headers.append(line)
                 elif not suppress_header:
                     output.write(line + '\n')
+
         result = output.getvalue().decode('utf-8')
         output.close()
+
         if with_diff_header:
             return('\n'.join(headers), result)
         else:
@@ -775,8 +779,8 @@ class Model(model.Model):
             os.unlink(merge_msg_path)
             merge_msg_path = self.get_merge_message_path()
 
-    def parse_status(self, amend=False):
-        """RETURNS: A tuple of staged, unstaged and unmerged, and untracked
+    def get_workdir_state(self, amend=False):
+        """RETURNS: A tuple of staged, unstaged untracked, and unmerged
         file lists.
         """
         def eval_path(path):
@@ -786,64 +790,43 @@ class Model(model.Model):
             else:
                 return path
 
-        MODIFIED_TAG = '# Changed but not updated:'
-        UNTRACKED_TAG = '# Untracked files:'
-        RGX_RENAMED = re.compile('(#\trenamed:\s+|#\tcopied:\s+)'
-                                 '(.*?)\s->\s(.*)')
-        RGX_MODIFIED = re.compile('(#\tmodified:\s+'
-                                  '|#\tnew file:\s+'
-                                  '|#\tdeleted:\s+)')
-        RGX_UNMERGED = re.compile('(#\tunmerged:\s+)')
+        head = 'HEAD'
+        if amend:
+            head = 'HEAD^'
+        (staged, unstaged, unmerged, untracked) = ([], [], [], [])
 
-        staged = []
-        unstaged = []
-        untracked = []
-        unmerged = []
+        for idx, line in enumerate(self.git.diff_index(head).splitlines()):
+            rest, name = line.split('\t')
+            status = rest[-1]
+            name = eval_path(name)
+            if status == 'M' or status == 'D':
+                unstaged.append(name)
 
-        STAGED_MODE = 0
-        UNSTAGED_MODE = 1
-        UNTRACKED_MODE = 2
+        for idx, line in enumerate(self.git.diff_index(head, cached=True)
+                                                    .splitlines()):
+            rest, name = line.split('\t')
+            status = rest[-1]
+            name = eval_path(name)
+            if status  == 'M':
+                staged.append(name)
+                # is this file partially staged?
+                diff = self.git.diff('--', name, name_only=True, z=True)
+                if not diff.strip():
+                    unstaged.remove(name)
+            elif status == 'A':
+                staged.append(name)
+            elif status == 'D':
+                staged.append(name)
+                unstaged.remove(name)
+            elif status == 'U':
+                unmerged.append(name)
 
-        current_dest = staged
-        mode = STAGED_MODE
+        for line in self.git.ls_files(others=True, exclude_standard=True,
+                                      z=True).split('\0'):
+            if line:
+                untracked.append(line)
 
-        for status_line in self.git.status(amend=amend).splitlines():
-            if status_line == MODIFIED_TAG:
-                mode = UNSTAGED_MODE
-                current_dest = unstaged
-                continue
-            elif status_line == UNTRACKED_TAG:
-                mode = UNTRACKED_MODE
-                current_dest = untracked
-                continue
-            # Staged/unstaged modified/renamed/deleted files
-            if mode is STAGED_MODE or mode is UNSTAGED_MODE:
-                match = RGX_MODIFIED.match(status_line)
-                if match:
-                    tag = match.group(0)
-                    filename = status_line.replace(tag, '')
-                    current_dest.append(eval_path(filename))
-                    continue
-                match = RGX_RENAMED.match(status_line)
-                if match:
-                    oldname = match.group(2)
-                    newname = match.group(3)
-                    current_dest.append(eval_path(oldname))
-                    current_dest.append(eval_path(newname))
-                    continue
-                match = RGX_UNMERGED.match(status_line)
-                if match:
-                    tag = match.group(0)
-                    filename = status_line.replace(tag, '')
-                    unmerged.append(eval_path(filename))
-                    unstaged.append(eval_path(filename))
-                    continue
-            # Untracked files
-            elif mode is UNTRACKED_MODE:
-                if status_line.startswith('#\t'):
-                    current_dest.append(eval_path(status_line[2:]))
-
-        return(staged, unstaged, untracked, unmerged)
+        return (staged, unstaged, untracked, unmerged)
 
     def reset_helper(self, *args, **kwargs):
         return self.git.reset('--', *args, **kwargs)
