@@ -419,9 +419,14 @@ class Controller(QObserver):
     def edit_diff(self, staged=True):
         filename = self.get_selected_filename(staged=staged)
         if filename:
-            utils.fork('git', 'difftool', '--no-prompt',
-                       '-t', self.model.get_mergetool(),
-                       '--', filename)
+            args = ['git', 'difftool', '--no-prompt',
+                    '-t', self.model.get_mergetool()]
+            if (self.view.amend_is_checked()
+                    or (staged and
+                        filename not in self.model.partially_staged)):
+                args.extend(['-c', 'HEAD^'])
+            args.extend(['--', filename])
+            utils.fork(*args)
 
     # use *rest to handle being called from different signals
     def diff_staged(self, *rest):

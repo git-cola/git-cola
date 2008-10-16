@@ -92,6 +92,7 @@ class Model(model.Model):
 
         # Initialize the git command object
         self.git = GitCola()
+        self.partially_staged = set()
 
         # Read git config
         self.__init_config_data()
@@ -790,6 +791,7 @@ class Model(model.Model):
             else:
                 return path
 
+        self.partially_staged = set()
         head = 'HEAD'
         if amend:
             head = 'HEAD^'
@@ -813,6 +815,8 @@ class Model(model.Model):
                 diff = self.git.diff('--', name, name_only=True, z=True)
                 if not diff.strip():
                     unstaged.remove(name)
+                else:
+                    self.partially_staged.add(name)
             elif status == 'A':
                 staged.append(name)
             elif status == 'D':
