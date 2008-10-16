@@ -136,11 +136,11 @@ merge_file () {
 	if use_rev_range; then
 		# we're comparing two arbitrary commits
 		BASE="./$MERGED.LOCAL.$ext"
-		LOCAL="./$MERGED.START.$ext"
-		REMOTE="./$MERGED.END.$ext"
+		REMOTE="./$MERGED.START.$ext"
+		LOCAL="./$MERGED.END.$ext"
 		base=local
-		local=start
-		remote=end
+		remote=start
+		local=end
 
 		# detects renames.. sweet!
 		oldname=$(git diff --follow "$start".."$end" -- "$MERGED" |
@@ -150,21 +150,21 @@ merge_file () {
 		startname="$MERGED"
 		test -n "$oldname" && startname="$oldname"
 
-		if ! git show "$start":"$startname" > "$LOCAL" 2>/dev/null; then
+		if ! git show "$start":"$startname" > "$REMOTE" 2>/dev/null; then
 			if should_prompt; then
 				echo
 				echo -n "Warning: "
 				echo -n "'$startname' does not exist at $start."
 			fi
-			touch "$LOCAL"
+			touch "$REMOTE"
 		fi
-		if ! git show "$end":"$MERGED" > "$REMOTE" 2>/dev/null; then
+		if ! git show "$end":"$MERGED" > "$LOCAL" 2>/dev/null; then
 			if should_prompt; then
 				echo
 				echo -n "Warning: "
 				echo -n "'$MERGED' does not exist at $end."
 			fi
-			touch "$REMOTE"
+			touch "$LOCAL"
 		fi
 
 		# $BASE could be used by custom mergetool commands, so provide
@@ -225,18 +225,18 @@ merge_file () {
 		if merge_three; then
 		(
 			"$merge_tool_path" --auto \
-				--L1 "[$base] $basename" \
-				--L2 "[$local] $basename" \
-				--L3 "[$remote] $basename" \
-				-o "$MERGED" "$BASE" "$LOCAL" "$REMOTE" \
+				--L1 "[$remote] $basename" \
+				--L2 "[$base] $basename" \
+				--L3 "[$local] $basename" \
+				-o "$MERGED" "$REMOTE" "$BASE" "$LOCAL" \
 				> /dev/null 2>&1
 		)
 		else
 		(
 			"$merge_tool_path" --auto \
-				--L1 "[$local] $basename" \
-				--L2 "[$remote] $basename" \
-				-o "$MERGED" "$LOCAL" "$REMOTE" \
+				--L1 "[$remote] $basename" \
+				--L2 "[$local] $basename" \
+				-o "$MERGED" "$REMOTE" "$LOCAL" \
 				> /dev/null 2>&1
 		)
 		fi
@@ -246,19 +246,19 @@ merge_file () {
 		if merge_three; then
 			"$merge_tool_path" \
 				-a "$BASE" \
-				-o "$MERGED" "$LOCAL" "$REMOTE"
+				-o "$MERGED" "$REMOTE" "$LOCAL"
 		else
 			"$merge_tool_path" \
-				-o "$MERGED" "$LOCAL" "$REMOTE"
+				-o "$MERGED" "$REMOTE" "$LOCAL"
 		fi
 		;;
 
 	meld|vimdiff)
-		"$merge_tool_path" "$LOCAL" "$MERGED" "$REMOTE"
+		"$merge_tool_path" "$REMOTE" "$MERGED" "$LOCAL"
 		;;
 
 	gvimdiff)
-		"$merge_tool_path" -f "$LOCAL" "$MERGED" "$REMOTE"
+		"$merge_tool_path" -f "$REMOTE" "$MERGED" "$LOCAL"
 		;;
 
 	xxdiff)
@@ -268,34 +268,34 @@ merge_file () {
 				-R 'Accel.Search: "Ctrl+F"' \
 				-R 'Accel.SearchForward: "Ctrl-G"' \
 				--merged-file "$MERGED" \
-				"$LOCAL" "$BASE" "$REMOTE"
+				"$REMOTE" "$BASE" "$LOCAL"
 		else
 			"$merge_tool_path" -X --show-merged-pane \
 				-R 'Accel.SaveAsMerged: "Ctrl-S"' \
 				-R 'Accel.Search: "Ctrl+F"' \
 				-R 'Accel.SearchForward: "Ctrl-G"' \
 				--merged-file "$MERGED" \
-				"$LOCAL" "$REMOTE"
+				"$REMOTE" "$LOCAL"
 		fi
 		;;
 
 	opendiff)
 		if merge_three; then
-			"$merge_tool_path" "$LOCAL" "$REMOTE" \
-				-ancestor "$BASE" \
+			"$merge_tool_path" "$BASE" "$LOCAL" \
+				-ancestor "$REMOTE" \
 				-merge "$MERGED" | cat
 		else
-			"$merge_tool_path" "$LOCAL" "$REMOTE" \
+			"$merge_tool_path" "$REMOTE" "$LOCAL" \
 				-merge "$MERGED" | cat
 		fi
 		;;
 
 	ecmerge)
 		if merge_three; then
-			"$merge_tool_path" "$BASE" "$LOCAL" "$REMOTE" \
+			"$merge_tool_path" "$REMOTE" "$BASE" "$LOCAL" \
 				--default --mode=merge3 --to="$MERGED"
 		else
-			"$merge_tool_path" "$LOCAL" "$REMOTE" \
+			"$merge_tool_path" "$REMOTE" "$LOCAL" \
 				--default --mode=merge2 --to="$MERGED"
 		fi
 		;;
@@ -304,11 +304,11 @@ merge_file () {
 		if merge_three; then
 			"$merge_tool_path" \
 				-f emerge-files-with-ancestor-command \
-				"$LOCAL" "$REMOTE" "$BASE" \
+				"$REMOTE" "$BASE" "$LOCAL" \
 				"$(basename "$MERGED")"
 		else
 			"$merge_tool_path" -f emerge-files-command \
-				"$LOCAL" "$REMOTE" "$(basename "$MERGED")"
+				"$REMOTE" "$LOCAL" "$(basename "$MERGED")"
 		fi
 		;;
 	*)
