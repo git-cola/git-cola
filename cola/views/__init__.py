@@ -53,7 +53,7 @@ class LogView(CreateStandardView(Ui_logger, QDialog)):
         cursor.movePosition(cursor.End)
         text = self.output_text
         cursor.insertText(time.asctime() + '\n')
-        for line in unicode(output).splitlines():
+        for line in unicode(output.decode('utf-8')).splitlines():
             cursor.insertText(line + '\n')
         cursor.insertText('\n')
         cursor.movePosition(cursor.End)

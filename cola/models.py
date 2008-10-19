@@ -758,16 +758,16 @@ class Model(model.Model):
                                    *argv)
         diff = diffoutput.splitlines()
         for line in diff:
-            line = unicode(line).encode('utf-8')
+            line = unicode(line.decode('utf-8'))
             if not start and '@@' == line[:2] and '@@' in line[2:]:
                 start = True
             if start or(deleted and del_tag in line):
-                output.write(line + '\n')
+                output.write(line.encode('utf-8') + '\n')
             else:
                 if with_diff_header:
                     headers.append(line)
                 elif not suppress_header:
-                    output.write(line + '\n')
+                    output.write(line.encode('utf-8') + '\n')
 
         result = output.getvalue().decode('utf-8')
         output.close()
@@ -854,7 +854,7 @@ class Model(model.Model):
         for line in self.git.ls_files(others=True, exclude_standard=True,
                                       z=True).split('\0'):
             if line:
-                untracked.append(line)
+                untracked.append(line.decode('utf-8'))
 
         return (staged, unstaged, untracked, unmerged)
 
