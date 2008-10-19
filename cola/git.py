@@ -7,6 +7,8 @@
 import os
 import sys
 import subprocess
+from cola import utils
+from cola.exception import GitCommandError
 
 def dashify(string):
     return string.replace('_', '-')
@@ -17,34 +19,27 @@ GIT_PYTHON_TRACE = os.environ.get("GIT_PYTHON_TRACE", False)
 execute_kwargs = ('istream', 'with_keep_cwd', 'with_extended_output',
                   'with_exceptions', 'with_raw_output')
 
-extra = {}
-if sys.platform == 'win32':
-    extra = {'shell': True}
-
 class Git(object):
     """
     The Git class manages communication with the Git binary
     """
-    def __init__(self, git_dir):
-        super(Git, self).__init__()
-        self.git_dir = git_dir
+    def __init__(self):
+        self._git_cwd = None
+
+    def set_cwd(self, path):
+        self._git_cwd = path
 
     def __getattr__(self, name):
-        if name[:1] == '_':
+        if name[0] == '_':
             raise AttributeError(name)
         return lambda *args, **kwargs: self._call_process(name, *args, **kwargs)
-
-    @property
-    def get_dir(self):
-        return self.git_dir
 
     def execute(self, command,
                 istream=None,
                 with_keep_cwd=False,
                 with_extended_output=False,
                 with_exceptions=True,
-                with_raw_output=False,
-                ):
+                with_raw_output=False):
         """
         Handles executing the command on the shell and consumes and returns
         the returned information (stdout)
@@ -57,8 +52,7 @@ class Git(object):
 
         ``with_keep_cwd``
             Whether to use the current working directory from os.getcwd().
-            GitPython uses get_work_tree() as its working directory by
-            default and get_git_dir() for bare repositories.
+            GitPython uses the cwd set by set_cwd() by default.
 
         ``with_extended_output``
             Whether to return a (status, stdout, stderr) tuple.
@@ -78,37 +72,35 @@ class Git(object):
             print ' '.join(command)
 
         # Allow the user to have the command executed in their working dir.
-        if with_keep_cwd or self.git_dir is None:
+        if with_keep_cwd or not self._git_cwd:
           cwd = os.getcwd()
         else:
-          cwd=self.git_dir
+          cwd=self._git_cwd
 
         # Start the process
+        if sys.platform == 'win32':
+            command = utils.shell_quote(*command)
+
         proc = subprocess.Popen(command,
                                 cwd=cwd,
+                                shell=sys.platform == 'win32',
                                 stdin=istream,
                                 stderr=subprocess.PIPE,
-                                stdout=subprocess.PIPE,
-                                **extra)
-
+                                stdout=subprocess.PIPE)
         # Wait for the process to return
-        try:
-            stdout_value = proc.stdout.read().decode('utf-8')
-            stderr_value = proc.stderr.read().decode('utf-8')
-            status = proc.wait()
-            proc.stdout.close()
-            proc.stderr.close()
-        except:
-            status = 255
+        stdout_value, stderr_value = proc.communicate()
+        if not stdout_value:
             stdout_value = ''
+        if not stderr_value:
             stderr_value = ''
+        status = proc.returncode
 
         # Strip off trailing whitespace by default
         if not with_raw_output:
             stdout_value = stdout_value.rstrip()
             stderr_value = stderr_value.rstrip()
 
-        if with_exceptions and status != 0:
+        if with_exceptions and status:
             raise GitCommandError(command, status, stderr_value)
 
         if GIT_PYTHON_TRACE == 'full':
@@ -123,7 +115,12 @@ class Git(object):
         if with_extended_output:
             return (status, stdout_value, stderr_value)
         else:
-            return stdout_value
+            if stdout_value and stderr_value:
+                return stderr_value + '\n' + stdout_value
+            elif stdout_value:
+                return stdout_value
+            else:
+                return stderr_value
 
     def transform_kwargs(self, **kwargs):
         """
@@ -180,7 +177,7 @@ class Git(object):
         ext_args = [a.encode('utf-8') for a in args]
         args = opt_args + ext_args
 
-        call = ["git", dashify(method)]
+        call = ['git', dashify(method)]
         call.extend(args)
 
         return self.execute(call, **_kwargs)

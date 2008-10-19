@@ -19,39 +19,55 @@ class GitCola(git.Git):
     We suppress exceptions in favor of return values.
     """
     def __init__(self):
-        self._git_dir = None
+        git.Git.__init__(self)
+        self.load_worktree(os.getcwd())
+
+    def load_worktree(self, path):
+        self._git_dir = path
         self._work_tree = None
-        self._has_worktree = True
-        git_dir = self.get_git_dir()
-        work_tree = self.get_work_tree()
-        if work_tree:
-            os.chdir(work_tree)
-        git.Git.__init__(self, work_tree)
+        self.get_work_tree()
+
     def execute(*args, **kwargs):
         kwargs['with_exceptions'] = False
         return git.Git.execute(*args, **kwargs)
+
     def get_work_tree(self):
-        if self._work_tree or not self._has_worktree:
+        if self._work_tree:
             return self._work_tree
-        if not self._git_dir:
-            self._git_dir = self.get_git_dir()
-        # Handle bare repositories
-        if (len(os.path.basename(self._git_dir)) > 4
-                and self._git_dir.endswith('.git')):
-            self._has_worktree = False
-            return self._work_tree
-        self._work_tree = os.getenv('GIT_WORK_TREE')
-        if not self._work_tree or not os.path.isdir(self._work_tree):
-            self._work_tree = os.path.abspath(
-                    os.path.join(os.path.abspath(self._git_dir), '..'))
-        return self._work_tree
-    def get_git_dir(self):
+        self.get_git_dir()
         if self._git_dir:
+            curdir = self._git_dir
+        else:
+            curdir = os.getcwd()
+
+        if self._is_git_dir(os.path.join(curdir, '.git')):
+            return curdir
+
+        # Handle bare repositories
+        if (len(os.path.basename(curdir)) > 4
+                and curdir.endswith('.git')):
+            return curdir
+        if 'GIT_WORK_TREE' in os.environ:
+            self._work_tree = os.getenv('GIT_WORK_TREE')
+        if not self._work_tree or not os.path.isdir(self._work_tree):
+            if self._git_dir:
+                gitparent = os.path.join(os.path.abspath(self._git_dir), '..')
+                self._work_tree = os.path.abspath(gitparent)
+                self.set_cwd(self._work_tree)
+        return self._work_tree
+
+    def is_valid(self):
+        return self._git_dir and self._is_git_dir(self._git_dir)
+
+    def get_git_dir(self):
+        if self.is_valid():
             return self._git_dir
-        self._git_dir = os.getenv('GIT_DIR')
-        if self._git_dir and self._is_git_dir(self._git_dir):
-            return self._git_dir
-        curpath = os.path.abspath(os.getcwd())
+        if 'GIT_DIR' in os.environ:
+            self._git_dir = os.getenv('GIT_DIR')
+        if self._git_dir:
+            curpath = os.path.abspath(self._git_dir)
+        else:
+            curpath = os.path.abspath(os.getcwd())
         # Search for a .git directory
         while curpath:
             if self._is_git_dir(curpath):
@@ -64,10 +80,6 @@ class GitCola(git.Git):
             curpath, dummy = os.path.split(curpath)
             if not dummy:
                 break
-        if not self._git_dir:
-            sys.stderr.write("oops, %s is not a git project.\n"
-                            % os.getcwd() )
-            sys.exit(-1)
         return self._git_dir
 
     def _is_git_dir(self, d):
@@ -84,6 +96,19 @@ class GitCola(git.Git):
 
 class Model(model.Model):
     """Provides a friendly wrapper for doing commit git operations."""
+
+    def clone(self):
+        worktree = self.git.get_work_tree()
+        clone = model.Model.clone(self)
+        clone.use_worktree(worktree)
+        return clone
+
+    def use_worktree(self, worktree):
+        self.git.load_worktree(worktree)
+        is_valid = self.git.is_valid()
+        if is_valid:
+            self.__init_config_data()
+        return is_valid
 
     def init(self):
         """Reads git repository settings and sets several methods
@@ -106,18 +131,15 @@ class Model(model.Model):
             local_branch = '',
             remote_branch = '',
             search_text = '',
-            git_version = self.git.version(),
 
             #####################################################
             # Used primarily by the main UI
-            project = os.path.basename(os.getcwd()),
             commitmsg = '',
             modified = [],
             staged = [],
             unstaged = [],
             untracked = [],
             unmerged = [],
-            window_geom = utils.parse_geom(self.get_cola_config('geometry')),
 
             #####################################################
             # Used by the create branch dialog
@@ -599,7 +621,7 @@ class Model(model.Model):
 
         kwargs = {
             'list': True,
-            'global': not local,
+            'global': not local, # global is a python keyword
         }
         config_lines = self.git.config(**kwargs).splitlines()
         newdict = {}

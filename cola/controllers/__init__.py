@@ -56,6 +56,12 @@ class Controller(QObserver):
             worktree -> selectively add working changes to the index
             index  -> selectively remove changes from the index
         """
+        model.create(
+            project = os.path.basename(model.git.get_work_tree()),
+            window_geom = utils.parse_geom(model.get_cola_config('geometry')),
+            git_version = model.git.version(),
+        )
+
         self.reset_mode()
         # Load window settings
         settings = QtCore.QSettings('git', 'cola');
@@ -983,5 +989,5 @@ class Controller(QObserver):
             return
 
         # Start the notification thread
-        self.inotify_thread = GitNotifier(self, os.getcwd())
+        self.inotify_thread = GitNotifier(self, self.model.git)
         self.inotify_thread.start()
