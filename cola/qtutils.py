@@ -107,8 +107,8 @@ def open_dialog(parent, title, filename=None):
 
 def opendir_dialog(parent, title, directory):
     flags = QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks
-    qstr = QFileDialog.getExistingDirectory(parent, directory,
-                                            parent.tr(title),
+    qstr = QFileDialog.getExistingDirectory(parent, parent.tr(title),
+                                            directory,
                                             flags)
     return unicode(qstr)
 

@@ -6,7 +6,6 @@ import os
 
 from cola import utils
 from cola import version
-from cola.models import Model
 
 def main():
     parser = optparse.OptionParser(usage='%prog [options]')
@@ -37,11 +36,8 @@ def main():
     if not os.path.isdir(repo):
         print >> sys.stderr, "fatal: '%s' is not a directory.  Consider supplying -r <path>.\n" % repo
         sys.exit(-1)
+    os.chdir(opts.repo)
 
-    # load the model right away so that we can bail out when
-    # no git repo exists
-    os.chdir(repo)
-    model = Model()
     try:
         # Defer these imports to allow git cola --version without pyqt installed
         from PyQt4 import QtCore
@@ -51,6 +47,7 @@ def main():
         print >> sys.stderr, 'Please install it before using cola.'
         print >> sys.stderr, 'e.g.:    sudo apt-get install python-qt4'
         sys.exit(-1)
+    from cola import qtutils
 
     class ColaApplication(QtGui.QApplication):
         """This makes translation work by throwing out the context."""
@@ -96,10 +93,22 @@ def main():
         except:
             print >> sys.stderr, ("warn: '%s' is not a valid style."
                                   % opts.style)
-    # simple mvc
+
+    from cola.models import Model
     from cola.views import View
     from cola.controllers import Controller
+
+    model = Model()
     view = View(app.activeWindow())
+
+    valid = model.use_worktree(repo)
+    while not valid:
+        gitdir = qtutils.opendir_dialog(view, 'Open Git Repository...', os.getcwd())
+        if not gitdir:
+            sys.exit(-1)
+        valid = model.use_worktree(gitdir)
+
+    os.chdir(model.git.get_work_tree())
     ctl = Controller(model, view)
     view.show()
     sys.exit(app.exec_())
