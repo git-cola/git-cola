@@ -11,9 +11,11 @@ def remote_action(model, parent, action):
     model.create(remotename='',
                  tags_checkbox=False,
                  ffwd_only_checkbox=True)
-    if action == "Fetch":
-        model.set_tags_checkbox(True)
     view = RemoteView(parent, action)
+    if action == 'Fetch' or action == 'Pull':
+        model.set_tags_checkbox(False)
+    if action == 'Pull':
+        view.tags_checkbox.hide()
     controller = RemoteController(model, view, action)
     view.show()
     return view.exec_() == QDialog.Accepted
@@ -29,10 +31,10 @@ class RemoteController(QObserver):
                              'tags_checkbox',
                              'ffwd_only_checkbox')
         self.action_method = {
-            "Fetch": self.fetch_action,
-            "Push": self.push_action,
-            "Pull": self.pull_action,
-        }[action]
+            'Fetch': self.gen_remote_callback(self.model.fetch_helper),
+            'Push': self.gen_remote_callback(self.model.push_helper),
+            'Pull': self.gen_remote_callback(self.model.pull_helper),
+        }   [action]
 
         self.add_actions(remotes = self.display_remotes)
         self.add_callbacks(action_button = self.action_method,
@@ -95,37 +97,30 @@ class RemoteController(QObserver):
             return True
 
     def get_common_args(self):
-        return ((self.model.get_remotename(),),
+        return (self.model.get_remotename(),
                 {
-                    "local_branch": self.model.get_local_branch(),
-                    "remote_branch": self.model.get_remote_branch(),
-                    "ffwd": self.model.get_ffwd_only_checkbox(),
-                    "tags": self.model.get_tags_checkbox(),
+                    'local_branch': self.model.get_local_branch(),
+                    'remote_branch': self.model.get_remote_branch(),
+                    'ffwd': self.model.get_ffwd_only_checkbox(),
+                    'tags': self.model.get_tags_checkbox(),
                 })
 
-    def show_results(self, status, output):
+    def show_results(self, output):
         qtutils.show_output(output)
-        if not status:
-            self.view.accept()
-        else:
-            qtutils.raise_logger()
+        self.view.accept()
+        qtutils.raise_logger()
 
     #+-------------------------------------------------------------
     #+ Actions
-    def fetch_action(self):
-        if not self.check_remote():
-            return
-        args, kwargs = self.get_common_args()
-        self.show_results(*self.model.fetch_helper(*args, **kwargs))
-    
-    def pull_action(self):
-        if not self.check_remote():
-            return
-        args, kwargs = self.get_common_args()
-        self.show_results(*self.model.pull_helper(*args, **kwargs))
-
-    def push_action(self):
-        if not self.check_remote():
-            return
-        args, kwargs = self.get_common_args()
-        self.show_results(*self.model.push_helper(*args, **kwargs))
+    def gen_remote_callback(self, modelaction):
+        """Generates a Qt callback for fetch/push/pull.
+        """
+        def remote_callback():
+            if not self.check_remote():
+                return
+            remote, kwargs = self.get_common_args()
+            output = modelaction(remote, **kwargs)
+            if not output: # git fetch --tags --verbose doesn't print anything...
+                output = self.tr('Already up-to-date.')
+            self.show_results(output)
+        return remote_callback

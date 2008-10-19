@@ -119,8 +119,9 @@ class Model(model.Model):
         self.git = GitCola()
         self.partially_staged = set()
 
-        # Read git config
-        self.__init_config_data()
+        self.fetch_helper = self.gen_remote_helper(self.git.fetch)
+        self.push_helper = self.gen_remote_helper(self.git.push)
+        self.pull_helper = self.gen_remote_helper(self.git.pull)
 
         self.create(
             #####################################################
@@ -364,7 +365,10 @@ class Model(model.Model):
             if os.path.exists(encfilename):
                 to_add.append(filename)
 
-        output = self.git.add(v=True, *to_add)
+        if to_add:
+            output = self.git.add(v=True, *to_add)
+        else:
+            output = ''
 
         if len(to_add) == len(to_process):
             # to_process only contained unremoved files --
@@ -861,8 +865,8 @@ class Model(model.Model):
         return self.git.config('remote.%s.url' % name, get=True)
 
     def get_remote_args(self, remote,
-            local_branch='', remote_branch='',
-            ffwd=True, tags=False):
+                        local_branch='', remote_branch='',
+                        ffwd=True, tags=False):
         if ffwd:
             branch_arg = '%s:%s' % ( remote_branch, local_branch )
         else:
@@ -871,43 +875,18 @@ class Model(model.Model):
         if local_branch and remote_branch:
             args.append(branch_arg)
         kwargs = {
-            "with_extended_output": True,
-            "tags": tags
+            'verbose': True,
+            'tags': tags,
         }
         return (args, kwargs)
 
-    def fetch_helper(self, *args, **kwargs):
+    def gen_remote_helper(self, gitaction):
+        """Generates a closure that calls git fetch, push or pull
         """
-        Fetches remote_branch to local_branch only if
-        remote_branch and local_branch are both supplied.
-        If either is ommitted, "git fetch <remote>" is performed instead.
-        Returns (status,output)
-        """
-        args, kwargs = self.get_remote_args(*args, **kwargs)
-        (status, stdout, stderr) = self.git.fetch(v=True, *args, **kwargs)
-        return (status, stdout + stderr)
-
-    def push_helper(self, *args, **kwargs):
-        """
-        Pushes local_branch to remote's remote_branch only if
-        remote_branch and local_branch both are supplied.
-        If either is ommitted, "git push <remote>" is performed instead.
-        Returns (status,output)
-        """
-        args, kwargs = self.get_remote_args(*args, **kwargs)
-        (status, stdout, stderr) = self.git.push(*args, **kwargs)
-        return (status, stdout + stderr)
-
-    def pull_helper(self, *args, **kwargs):
-        """
-        Pushes branches.  If local_branch or remote_branch is ommitted,
-        "git pull <remote>" is performed instead of
-        "git pull <remote> <remote_branch>:<local_branch>
-        Returns (status,output)
-        """
-        args, kwargs = self.get_remote_args(*args, **kwargs)
-        (status, stdout, stderr) = self.git.pull(v=True, *args, **kwargs)
-        return (status, stdout + stderr)
+        def remote_helper(remote, **kwargs):
+            args, kwargs = self.get_remote_args(remote, **kwargs)
+            return gitaction(*args, **kwargs)
+        return remote_helper
 
     def parse_ls_tree(self, rev):
         """Returns a list of(mode, type, sha1, path) tuples."""
