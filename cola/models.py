@@ -94,6 +94,13 @@ class GitCola(git.Git):
                     and os.readlink(headref).startswith('refs')))
         return False
 
+def eval_path(path):
+    """handles quoted paths."""
+    if path.startswith('"') and path.endswith('"'):
+        return eval(path).decode('utf-8')
+    else:
+        return path
+
 class Model(model.Model):
     """Provides a friendly wrapper for doing commit git operations."""
 
@@ -835,13 +842,6 @@ class Model(model.Model):
         """RETURNS: A tuple of staged, unstaged untracked, and unmerged
         file lists.
         """
-        def eval_path(path):
-            """handles quoted paths."""
-            if path.startswith('"') and path.endswith('"'):
-                return eval(path).decode('utf-8')
-            else:
-                return path
-
         self.partially_staged = set()
         head = 'HEAD'
         if amend:
@@ -1046,15 +1046,12 @@ class Model(model.Model):
 
     def get_changed_files(self, start, end):
         zfiles_str = self.git.diff('%s..%s' % (start, end),
-                                   name_only=True, z=True)
-        zfiles_str = zfiles_str.strip('\0')
-        files = zfiles_str.split('\0')
-        return files
+                                   name_only=True, z=True).strip('\0')
+        return [ enc.decode('utf-8')
+                    for enc in zfiles_str.split('\0') if enc ]
 
     def get_renamed_files(self, start, end):
         files = []
         difflines = self.git.diff('%s..%s' % (start, end), M=True).splitlines()
-        for line in difflines:
-            if line.startswith('rename from '):
-                files.append(line[12:].rstrip())
-        return files
+        return [ eval_path(r[12:].rstrip())
+                    for r in difflines if r.startswith('rename from ') ]
