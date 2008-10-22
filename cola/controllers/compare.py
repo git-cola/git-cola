@@ -145,7 +145,7 @@ class CompareController(QObserver):
         filename = self.model.get_compare_files()[id_num]
         self.__compare_file(filename)
 
-    def compare_revisions(self, tree_item, column):
+    def compare_files_doubleclick(self, tree_item, column):
         idx = self.view.compare_files.indexOfTopLevelItem(tree_item)
         filename = self.model.get_compare_files()[idx]
         self.__compare_file(filename)

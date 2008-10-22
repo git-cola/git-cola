@@ -33,7 +33,7 @@ class QObserver(Observer, QObject):
         self.__callbacks = {}
         self.__model_to_view = {}
         self.__view_to_model = {}
-        self.__connected = []
+        self.__connected = set()
 
         # Call the subclass's startup routine
         self.init(model, view, *args, **kwargs)
@@ -119,8 +119,9 @@ class QObserver(Observer, QObject):
     def __autoconnect(self, widget):
         """Automagically connects Qt widgets to QObserver.SLOT"""
 
-        if widget in self.__connected: return
-        self.__connected.append(widget)
+        if widget in self.__connected:
+            return
+        self.__connected.add(widget)
 
         if isinstance(widget, QTextEdit):
             self.add_signals('textChanged()', widget)
@@ -129,11 +130,18 @@ class QObserver(Observer, QObject):
         elif isinstance(widget, QListWidget):
             self.add_signals('itemSelectionChanged()', widget)
             self.add_signals('itemClicked(QListWidgetItem *)', widget)
-            self.add_signals('itemDoubleClicked(QListWidgetItem*)', widget)
+            doubleclick = str(widget.objectName())+'_doubleclick'
+            if hasattr(self, doubleclick):
+                self.connect(widget, 'itemDoubleClicked(QListWidgetItem *)',
+                             getattr(self, doubleclick))
         elif isinstance(widget, QTreeWidget):
             self.add_signals('itemSelectionChanged()', widget)
             self.add_signals('itemClicked(QTreeWidgetItem *, int)', widget)
-            self.add_signals('itemDoubleClicked(QTreeWidgetItem *, int)', widget)
+            doubleclick = str(widget.objectName())+'_doubleclick'
+            if hasattr(self, doubleclick):
+                self.connect(widget, 'itemDoubleClicked(QTreeWidgetItem *, int)',
+                             getattr(self, doubleclick))
+
         elif isinstance(widget, QAbstractButton):
             self.add_signals('released()', widget)
         elif isinstance(widget, QAction):

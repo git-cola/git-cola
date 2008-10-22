@@ -40,9 +40,6 @@ class RepoBrowserController(QObserver):
         self.add_signals('itemSelectionChanged()', view.commit_list,)
         self.add_actions(directory = self.action_directory_changed)
         self.add_callbacks(commit_list = self.item_changed)
-        self.connect(view.commit_list,
-                     'itemDoubleClicked(QListWidgetItem*)',
-                     self.item_double_clicked)
         # Start at the root of the tree
         model.set_directory('')
 
@@ -108,7 +105,8 @@ class RepoBrowserController(QObserver):
             # Copy the sha1 into the clipboard
             qtutils.set_clipboard(sha1)
 
-    def item_double_clicked(self,*rest):
+    # automatically called by qobserver
+    def commit_list_doubleclick(self,*rest):
         """This is called when an entry is double-clicked.
         This callback changes the model's directory when
         invoked on a directory item.  When invoked on a file

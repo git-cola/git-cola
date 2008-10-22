@@ -70,6 +70,10 @@ class Controller(QObserver):
         # Parent-less log window
         qtutils.LOGGER = logger()
 
+        # double-click callbacks
+        self.unstaged_doubleclick = self.stage_selected
+        self.staged_doubleclick = self.unstage_selected
+
         # Unstaged changes context menu
         view.unstaged.contextMenuEvent = self.unstaged_context_menu_event
         view.staged.contextMenuEvent = self.staged_context_menu_event
@@ -193,15 +197,6 @@ class Controller(QObserver):
         view.closeEvent = self.quit_app
         view.staged.mousePressEvent = self.click_staged
         view.unstaged.mousePressEvent = self.click_unstaged
-
-        # These are vanilla signal/slots since QObserver
-        # is already handling these signals.
-        self.connect(view.unstaged,
-                     'itemDoubleClicked(QListWidgetItem*)',
-                     self.stage_selected)
-        self.connect(view.staged,
-                     'itemDoubleClicked(QListWidgetItem*)',
-                     self.unstage_selected)
 
         # Toolbar log button
         self.connect(view.toolbar_show_log,
@@ -381,13 +376,9 @@ class Controller(QObserver):
 
     def get_selected_filename(self, staged=False):
         if staged:
-            widget = self.view.staged
+            return self.model.get_staged_item()
         else:
-            widget = self.view.unstaged
-        idx, selected = qtutils.get_selected_row(widget)
-        if not selected:
-            return None
-        return self.model.get_filename(idx, staged=staged)
+            return self.model.get_unstaged_item()
 
     def view_diff(self, staged=True):
         if staged:
