@@ -166,10 +166,7 @@ def set_items(widget, items):
 def tr(txt):
     return unicode(QtGui.qApp.translate('', txt))
 
-def create_item(filename, staged, untracked=False):
-    """Given a filename, return a QListWidgetItem suitable
-    for adding to a QListWidget.  "staged" and "untracked"
-    controls whether to use the appropriate icons."""
+def get_icon_file(filename, staged, untracked):
     if staged:
         if os.path.exists(filename.encode('utf-8')):
             icon_file = utils.get_icon('staged.png')
@@ -179,6 +176,17 @@ def create_item(filename, staged, untracked=False):
         icon_file = utils.get_icon('untracked.png')
     else:
         icon_file = utils.get_file_icon(filename)
+    return icon_file
+
+def get_icon_for_file(filename, staged, untracked):
+    icon_file = get_icon_file(filename, staged, untracked)
+    return get_icon(icon_file)
+
+def create_item(filename, staged, untracked=False):
+    """Given a filename, return a QListWidgetItem suitable
+    for adding to a QListWidget.  "staged" and "untracked"
+    controls whether to use the appropriate icons."""
+    icon_file = get_icon_file(filename, staged, untracked)
     return create_listwidget_item(filename, icon_file)
 
 def create_txt_item(txt):
@@ -186,10 +194,19 @@ def create_txt_item(txt):
     item.setText(txt)
     return item
 
+def update_file_icons(widget, items, staged=True,
+            untracked=False, offset=0):
+    """Populate a QListWidget with custom icon items."""
+    for idx, model_item in enumerate(items):
+        item = widget.item(idx+offset)
+        if item:
+            item.setIcon(get_icon_for_file(model_item, staged, untracked))
+
 def update_listwidget(widget, items, staged=True,
             untracked=False, append=False):
     """Populate a QListWidget with custom icon items."""
-    if not append: widget.clear()
+    if not append:
+        widget.clear()
     add_items(widget, [ create_item(i, staged, untracked) for i in items ])
 
 def set_listwidget_strings(widget, items):

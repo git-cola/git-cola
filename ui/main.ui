@@ -91,7 +91,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="untracked_checkbox" >
+           <widget class="QCheckBox" name="show_untracked" >
             <property name="text" >
              <string>Show Untracked Files</string>
             </property>
@@ -227,7 +227,7 @@
     <addaction name="menuShow" />
     <addaction name="menuPrepare" />
     <addaction name="separator" />
-    <addaction name="menu_compare" />
+    <addaction name="menu_commit_compare" />
     <addaction name="separator" />
     <addaction name="menu_stash" />
     <addaction name="menu_export_patches" />
@@ -291,7 +291,7 @@
     </widget>
     <addaction name="menuView" />
     <addaction name="separator" />
-    <addaction name="menu_difftool_branch" />
+    <addaction name="menu_branch_compare" />
     <addaction name="separator" />
     <addaction name="menu_create_branch" />
     <addaction name="menu_checkout_branch" />
@@ -1088,9 +1088,9 @@
     <string>Apply Changes From...</string>
    </property>
   </action>
-  <action name="menu_difftool_branch" >
+  <action name="menu_branch_compare" >
    <property name="text" >
-    <string>Compare To...</string>
+    <string>Compare...</string>
    </property>
   </action>
   <action name="menu_clone_repo" >
@@ -1106,9 +1106,9 @@
     <string>F1</string>
    </property>
   </action>
-  <action name="menu_compare" >
+  <action name="menu_commit_compare" >
    <property name="text" >
-    <string>Compare Commits...</string>
+    <string>Compare...</string>
    </property>
   </action>
   <action name="menu_visualize_current" >

@@ -148,6 +148,7 @@ class Model(model.Model):
             unstaged = [],
             untracked = [],
             unmerged = [],
+            show_untracked = True,
 
             #####################################################
             # Used by the create branch dialog
@@ -529,7 +530,11 @@ class Model(model.Model):
                 self.add_unmerged(unmerged)
 
         self.set_currentbranch(self.current_branch())
-        self.set_unstaged(self.get_modified() + self.get_untracked() + self.get_unmerged())
+        if self.get_show_untracked():
+            self.set_unstaged(self.get_modified() + self.get_unmerged() +
+                              self.get_untracked())
+        else:
+            self.set_unstaged(self.get_modified() + self.get_unmerged())
         self.set_remotes(self.git.remote().splitlines())
         self.set_remote_branches(self.branch_list(remote=True))
         self.set_local_branches(self.branch_list(remote=False))

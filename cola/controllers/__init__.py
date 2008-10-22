@@ -78,7 +78,8 @@ class Controller(QObserver):
         view.display_text.contextMenuEvent = self.diff_context_menu_event
 
         # Binds model params to their equivalent view widget
-        self.add_observables('commitmsg', 'staged', 'unstaged')
+        self.add_observables('commitmsg', 'staged', 'unstaged',
+                             'show_untracked')
 
         # When a model attribute changes, this runs a specific action
         self.add_actions(staged = self.action_staged)
@@ -98,7 +99,7 @@ class Controller(QObserver):
             staged = self.diff_staged,
             unstaged = self.diff_unstaged,
             # Checkboxes
-            untracked_checkbox = self.rescan,
+            show_untracked = self.rescan,
             amend_radio = self.load_prev_msg_and_rescan,
             new_commit_radio = self.clear_and_rescan,
 
@@ -242,21 +243,24 @@ class Controller(QObserver):
     #####################################################################
     # Actions triggered during model updates
     def action_staged(self, widget):
-        qtutils.update_listwidget(widget,
+        qtutils.update_file_icons(widget,
                                   self.model.get_staged(),
                                   staged=True)
         self.view.show_editor()
 
     def action_unstaged(self, widget):
-        qtutils.update_listwidget(widget,
-                                  self.model.get_modified(),
+        modified = self.model.get_modified()
+        unmerged = self.model.get_unmerged()
+        unstaged = modified + unmerged
+        qtutils.update_file_icons(widget,
+                                  unstaged,
                                   staged=False)
-        if self.view.untracked_checkbox.isChecked():
-            qtutils.update_listwidget(widget,
+        if self.model.get_show_untracked():
+            qtutils.update_file_icons(widget,
                                       self.model.get_untracked(),
                                       staged=False,
-                                      append=True,
-                                      untracked=True)
+                                      untracked=True,
+                                      offset=len(unstaged))
 
     #####################################################################
     # Qt callbacks
@@ -860,8 +864,6 @@ class Controller(QObserver):
         menu.exec_(staged.mapToGlobal(event.pos()))
 
     def staged_context_menu_setup(self):
-        staged_item = qtutils.get_selected_item(self.view.staged,
-                                                self.model.get_staged())
         menu = QMenu(self.view)
         menu.addAction(self.tr('Unstage Selected'), self.unstage_selected)
         menu.addSeparator()
