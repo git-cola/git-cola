@@ -645,7 +645,7 @@ class Model(model.Model):
     def config_set(self, key=None, value=None, local=True):
         if key and value is not None:
             # git config category.key value
-            strval = unicode(value).encode('utf-8')
+            strval = unicode(value)
             if type(value) is bool:
                 # git uses "true" and "false"
                 strval = strval.lower()
@@ -669,6 +669,7 @@ class Model(model.Model):
         newdict = {}
         for line in config_lines:
             k, v = line.split('=', 1)
+            v = v.decode('utf-8')
             k = k.replace('.','_') # git -> model
             if v == 'true' or v == 'false':
                 v = bool(eval(v.title()))
