@@ -12,6 +12,7 @@ try:
     from main import View
     from main import CreateStandardView
     from cola.gui.bookmark import Ui_bookmark
+    from cola.gui.branchview import Ui_branchview
     from cola.gui.combo import Ui_combo
     from cola.gui.commit import Ui_commit
     from cola.gui.compare import Ui_compare
@@ -30,6 +31,7 @@ except ImportError:
 
 # These are views that do not contain any custom methods
 OptionsView = CreateStandardView(Ui_options, QDialog)
+BranchCompareView = CreateStandardView(Ui_branchview, QDialog)
 CreateBranchView = CreateStandardView(Ui_createbranch, QDialog)
 BookmarkView = CreateStandardView(Ui_bookmark, QDialog)
 StashView = CreateStandardView(Ui_stash, QDialog)
