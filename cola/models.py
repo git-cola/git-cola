@@ -473,9 +473,10 @@ class Model(model.Model):
         """Queries git for the latest commit message and sets it in
         self.commitmsg."""
         commit_msg = []
-        commit_lines = self.git.show('HEAD').split('\n')
+        commit_lines = self.git.show('HEAD').decode('utf-8').split('\n')
         for idx, msg in enumerate(commit_lines):
-            if idx < 4: continue
+            if idx < 4:
+                continue
             msg = msg.lstrip()
             if msg.startswith('diff --git'):
                 commit_msg.pop()
