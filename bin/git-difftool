@@ -202,7 +202,7 @@ merge_file () {
 		if ! git show "$base":"$MERGED" > "$BASE" 2>&1; then
 			echo
 			echo -n "Warning: "
-			echo -n "'$MERGED' does not exist at $base."
+			echo "'$MERGED' does not exist at $base."
 		else
 			cp "$BASE" "$LOCAL"
 			if commitish_present; then
