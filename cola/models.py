@@ -1036,7 +1036,7 @@ class Model(model.Model):
         commit_list = self.parse_rev_list(rev_list)
         commit_list.reverse()
         commits = map(lambda x: x[0], commit_list)
-        descriptions = map(lambda x: x[1], commit_list)
+        descriptions = map(lambda x: x[1].decode('utf-8'), commit_list)
         if show_versions:
             fancy_descr_list = map(lambda x: self.describe(*x), commit_list)
             self.set_descriptions_start(fancy_descr_list)

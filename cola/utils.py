@@ -105,6 +105,7 @@ def get_icon(icon_file):
     return os.path.join(ICONSDIR, icon_file)
 
 def fork(*args):
+    args = [ a.encode('utf-8') for a in args ]
     if os.name in ('nt', 'dos'):
         for path in os.environ['PATH'].split(os.pathsep):
             file = os.path.join(path, args[0]) + ".exe"
