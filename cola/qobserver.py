@@ -4,6 +4,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import QObject
 from PyQt4.QtCore import SIGNAL
 from PyQt4.QtCore import QDate
+from PyQt4.QtGui import QComboBox
 from PyQt4.QtGui import QDateEdit
 from PyQt4.QtGui import QSpinBox
 from PyQt4.QtGui import QPixmap
@@ -48,10 +49,7 @@ class QObserver(Observer, QObject):
         widget = self.sender()
         sender = str(widget.objectName())
 
-        if sender in self.__callbacks:
-            self.__callbacks[sender](*args)
-
-        elif sender in self.__view_to_model:
+        if sender in self.__view_to_model:
             model = self.model
             model_param = self.__view_to_model[sender]
             if isinstance(widget, QTextEdit):
@@ -73,11 +71,48 @@ class QObserver(Observer, QObject):
                 value = str(widget.date().toString(fmt))
                 model.set_param(model_param, value)
             elif isinstance(widget, QListWidget):
-                pass
+                row = widget.currentRow()
+                item = widget.item(row)
+                if item:
+                    selected = item.isSelected()
+                else:
+                    selected = False
+                model.set_param(model_param+'_selected', selected)
+                model.set_param(model_param+'_index', row)
+                if selected and row != -1:
+                    model.set_param(model_param+'_item',
+                                    model.get_param(model_param)[row])
+                else:
+                    model.set_param(model_param+'_item', '')
             elif isinstance(widget, QTreeWidget):
-                pass
+                item = widget.currentItem()
+                if item:
+                    selected = item.isSelected()
+                    row = widget.indexOfTopLevelItem(item)
+                else:
+                    selected = False
+                    row = -1
+                model.set_param(model_param+'_selected', selected)
+                model.set_param(model_param+'_index', row)
+                items = model.get_param(model_param)
+                if selected and row != -1 and row < len(items):
+                    model.set_param(model_param+'_item', items[row])
+                else:
+                    model.set_param(model_param+'_item', '')
+            elif isinstance(widget, QComboBox):
+                idx = widget.currentIndex()
+                model.set_param(model_param+'_index', idx)
+                if idx != -1 and model.get_param(model_param):
+                    model.set_param(model_param+'_item',
+                                   model.get_param(model_param)[idx])
+                else:
+                    model.set_param(model_param+'_item', '')
+                                   
             else:
                 print("SLOT(): Unknown widget:", sender, widget)
+
+        if sender in self.__callbacks:
+            self.__callbacks[sender](*args)
 
     def connect(self, obj, signal_str, *args):
         """Convenience function so that subclasses do not have
@@ -156,6 +191,8 @@ class QObserver(Observer, QObject):
             self.add_signals('splitterMoved(int,int)', widget)
         elif isinstance(widget, QDateEdit):
             self.add_signals('dateChanged(const QDate&)', widget)
+        elif isinstance(widget, QComboBox):
+            self.add_signals('currentIndexChanged(int)', widget)
         else:
             raise Exception('Asked to connect unknown widget:\n\t%s => %s'
                             % (type(widget), str(widget.objectName())))
@@ -176,6 +213,7 @@ class QObserver(Observer, QObject):
             notify = self.model.get_notify()
             self.model.set_notify(False)
             for widget in self.__model_to_view[param]:
+                sender = str(widget.objectName())
                 if isinstance(widget, QSpinBox):
                     widget.setValue(value)
                 elif isinstance(widget, QPixmap):
@@ -185,27 +223,68 @@ class QObserver(Observer, QObject):
                 elif isinstance(widget, QLineEdit):
                     widget.setText(value)
                 elif isinstance(widget, QListWidget):
+                    self.model.set_param(param+'_item', '')
                     widget.clear()
                     for i in value:
                         widget.addItem(i)
+                    if self.model.has_param(param+'_index'):
+                        idx = self.model.get_param(param+'_index')
+                        if idx != -1 and idx < len(value):
+                            item = widget.item(idx)
+                            widget.setCurrentItem(item)
+                            widget.setItemSelected(item, True)
+                            self.model.set_param(param+'_item', value[idx])
+                            if sender in self.__callbacks:
+                                self.model.set_notify(True)
+                                self.__callbacks[sender]()
+                                self.model.set_notify(False)
+                        else:
+                            self.model.set_param(param+'_item', '')
                 elif isinstance(widget, QTreeWidget):
+                    self.model.set_param(param+'_item', '')
                     widget.clear()
                     for i in value:
                         item = QTreeWidgetItem([i])
                         item.setData(0, Qt.UserRole,
                                      QVariant(widget.topLevelItemCount()))
                         widget.addTopLevelItem(item)
+                    if self.model.has_param(param+'_index'):
+                        idx = self.model.get_param(param+'_index')
+                        if idx != -1 and idx < len(value):
+                            item = widget.topLevelItem(idx)
+                            widget.setCurrentItem(item)
+                            widget.setItemSelected(item, True)
+                            val = value[idx]
+                            self.model.set_param(param+'_item', val)
+                            if sender in self.__callbacks:
+                                self.model.set_notify(True)
+                                self.__callbacks[sender]()
+                                self.model.set_notify(False)
+                        else:
+                            self.model.set_param(param+'_item', '')
+
                 elif isinstance(widget, QCheckBox):
                     widget.setChecked(value)
                 elif isinstance(widget, QFontComboBox):
                     font = widget.currentFont()
                     font.fromString(value)
                 elif isinstance(widget, QDateEdit):
-                    if not value: return
+                    if not value:
+                        return
                     fmt = Qt.ISODate
                     date = QDate.fromString(value, fmt)
                     if date:
                         widget.setDate(date)
+                elif isinstance(widget, QComboBox):
+                    self.model.set_param(param+'_item', '')
+                    widget.clear()
+                    for item in value:
+                        widget.addItem(item)
+                    if self.model.has_param(param+'_index'):
+                        idx = self.model.get_param(param+'_index')
+                        if idx != -1 and idx < len(value):
+                            widget.setCurrentIndex(idx)
+                            self.model.set_param(param+'_item', value[idx])
                 else:
                     print('subject_changed(): Unknown widget:',
                           str(widget.objectName()), widget, value)
