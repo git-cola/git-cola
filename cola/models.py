@@ -251,6 +251,31 @@ class Model(model.Model):
     def get_gui_config(self, key):
         return getattr(self, 'global_gui_'+key)
 
+    def get_default_remote(self):
+        branch = self.get_currentbranch()
+        branchconfig = 'local_branch_%s_remote' % branch
+        if branchconfig in self.get_param_names():
+            remote = self.get_param(branchconfig)
+        else:
+            remote = 'origin'
+        return remote
+
+    def get_corresponding_remote_ref(self):
+        remote = self.get_default_remote()
+        branch = self.get_currentbranch()
+        best_match = '%s/%s' % (remote, branch)
+        remote_branches = self.get_remote_branches()
+        if not remote_branches:
+            return remote
+        for rb in remote_branches:
+            if rb == best_match:
+                return rb
+        return remote_branches[0]
+
+    def get_diff_filenames(self, arg):
+        diff_zstr = self.git.diff(arg, name_only=True, z=True).rstrip('\0')
+        return [ f.decode('utf-8') for f in diff_zstr.split('\0') if f ]
+
     def branch_list(self, remote=False):
         branches = map(lambda x: x.lstrip('* '),
                 self.git.branch(r=remote).splitlines())
