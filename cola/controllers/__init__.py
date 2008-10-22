@@ -35,6 +35,7 @@ from bookmark import save_bookmark
 from bookmark import manage_bookmarks
 from stash import stash
 from compare import compare
+from compare import branch_compare
 
 
 class Controller(QObserver):
@@ -163,7 +164,7 @@ class Controller(QObserver):
             menu_create_branch = self.branch_create,
             menu_checkout_branch = self.checkout_branch,
             menu_diff_branch = self.diff_branch,
-            menu_difftool_branch = self.difftool_branch,
+            menu_branch_compare = self.branch_compare,
 
             # Commit Menu
             menu_rescan = self.rescan,
@@ -177,7 +178,7 @@ class Controller(QObserver):
             menu_cherry_pick = self.cherry_pick,
             menu_stash =
                 lambda: stash(self.model, self.view),
-            menu_compare =
+            menu_commit_compare =
                 lambda: compare(self.model, self.view),
             menu_stage_modified =
                 lambda: self.log(self.model.stage_modified()),
@@ -613,41 +614,9 @@ class Controller(QObserver):
         self.view.set_display(self.model.diffindex())
 
     #####################################################################
-    def difftool_branch_dblclick(self, branch):
-        def handle_dblclick(item):
-            filename = str(item.text().toAscii())
-            self.__difftool_branch(branch, filename)
-        return handle_dblclick
-
-    def difftool_branch(self):
+    def branch_compare(self):
         self.reset_mode()
-        self.__difftool_launched = False
-        branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
-                                   self.view,
-                                   ['HEAD^']
-                                   + self.model.get_all_branches()
-                                   + self.model.get_tags())
-        if not branch:
-            return
-        zfiles_str = self.model.git.diff(branch, name_only=True, z=True)
-        if not zfiles_str:
-            qtutils.information('Nothing to do',
-                                'git-cola did not find any changes.')
-            return
-        files = zfiles_str.split('\0')
-        callback = self.difftool_branch_dblclick(branch)
-        filename = choose_from_list('Select File', self.view,
-                                    files, dblclick=callback)
-        if not filename or self.__difftool_launched:
-            return
-        self.__difftool_branch(branch, filename)
-
-    def __difftool_branch(self, branch, filename):
-        self.__difftool_launched = True
-        utils.fork('git', 'difftool', '--no-prompt',
-                   '-t', self.model.get_mergetool(),
-                   '-c', branch,
-                   '--', filename)
+        branch_compare(self.model, self.view)
 
     #####################################################################
     # diff gui
@@ -659,7 +628,8 @@ class Controller(QObserver):
                                    + self.model.get_tags())
         if not branch:
             return
-        zfiles_str = self.model.git.diff(branch, name_only=True, z=True)
+        zfiles_str = self.model.git.diff(branch, name_only=True,
+                                         z=True).rstrip('\0')
         files = zfiles_str.split('\0')
         filename = choose_from_list('Select File', self.view, files)
         if not filename:

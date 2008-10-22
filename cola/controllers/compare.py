@@ -4,10 +4,11 @@ from cola import utils
 from cola import qtutils
 from cola.qobserver import QObserver
 from cola.views import CompareView
+from cola.views import BranchCompareView
 from cola.controllers.repobrowser import select_file_from_repo
 from cola.controllers.util import choose_from_list
 
-def compare(model, parent, filename=None):
+def compare(model, parent):
     model = model.clone()
     model.create(descriptions_start=[], descriptions_end=[],
                  revisions_start=[], revisions_end=[],
@@ -15,12 +16,163 @@ def compare(model, parent, filename=None):
                  compare_files=[], num_results=100,
                  show_versions=False)
     view = CompareView(parent)
-    ctl = CompareController(model, view, filename)
+    ctl = CompareController(model, view)
     view.show()
 
+def branch_compare(model, parent):
+    model = model.clone()
+    model.create(left_combo=['Local', 'Remote'],
+                 right_combo=['Local', 'Remote'],
+                 left_combo_index=0,
+                 right_combo_index=1,
+                 left_list=[],
+                 right_list=[],
+                 left_list_index=-1,
+                 right_list_index=-1,
+                 left_list_selected=False,
+                 right_list_selected=False,
+                 diff_files=[])
+    view = BranchCompareView(parent)
+    ctl = BranchCompareController(model, view)
+    view.show()
+
+class BranchCompareController(QObserver):
+    BRANCH_POINT = '*** Branch Point ***'
+    SANDBOX      = '*** Sandbox ***'
+
+    def init(self, model, view):
+        self.add_observables('left_combo', 'right_combo',
+                             'left_list', 'right_list',
+                             'diff_files')
+
+        self.add_callbacks(button_compare =
+                                self.diff_files_doubleclick,
+                           left_combo =
+                                self.gen_update_combo_boxes(left=True),
+                           right_combo =
+                                self.gen_update_combo_boxes(left=False),
+                           left_list =
+                                self.update_diff_files,
+                           right_list =
+                                self.update_diff_files)
+        self.refresh_view()
+
+        # Pre-select the 0th elements
+        self.view.right_combo.setCurrentIndex(1)
+        item = self.view.left_list.item(0)
+        self.view.left_list.setCurrentItem(item)
+        self.view.left_list.setItemSelected(item, True)
+
+        item = self.view.right_list.item(0)
+        self.view.right_list.setCurrentItem(item)
+        self.view.right_list.setItemSelected(item, True)
+
+    def update_diff_files(self, *rest):
+        if (not self.model.has_param('left_list_item') or
+                not self.model.has_param('right_list_item')):
+            return
+        left_item = self.model.get_left_list_item()
+        right_item = self.model.get_right_list_item()
+        if (not left_item or not right_item or
+                left_item == right_item):
+            self.model.set_diff_files([])
+            return
+        left_item = self.get_remote_ref(left_item)
+        right_item = self.get_remote_ref(right_item)
+
+        if (left_item == BranchCompareController.SANDBOX or
+                right_item == BranchCompareController.SANDBOX):
+            self.use_sandbox = True
+            if left_item == BranchCompareController.SANDBOX:
+                self.diff_arg = right_item
+            else:
+                self.diff_arg = left_item
+        else:
+            self.diff_arg = '%s..%s' % (left_item, right_item)
+            self.use_sandbox = False
+
+        self.start = left_item
+        self.end = right_item
+
+        files = self.model.get_diff_filenames(self.diff_arg)
+        self.model.set_diff_files(files)
+        icon = qtutils.get_icon('script.png')
+        for idx in xrange(0, self.view.diff_files.topLevelItemCount()):
+            item = self.view.diff_files.topLevelItem(idx)
+            item.setIcon(0, icon)
+
+    def get_diff_arg(self, start, end):
+        if start == BranchCompareController.SANDBOX:
+            return end
+        elif end == BranchCompareController.SANDBOX:
+            return start
+        else:
+            return '%s..%s' % (start, end)
+
+    def get_remote_ref(self, branch):
+        if branch == BranchCompareController.BRANCH_POINT:
+            # Compare against the branch point so find the merge-base
+            branch = self.model.get_currentbranch()
+            remote = self.model.get_default_remote()
+            return self.model.git.merge_base(branch, remote)
+        else:
+            # Compare against the remote branch
+            return branch
+
+
+    def gen_update_combo_boxes(self, left=False):
+        """Returns a closure which modifies the listwidgets based on the
+        combobox selection.
+        """
+        def update_combo_boxes(notused):
+            if left:
+                which = self.model.get_left_combo_item()
+                param = 'left_list'
+            else:
+                which = self.model.get_right_combo_item()
+                param = 'right_list'
+            if not which:
+                return
+            if which == 'Local':
+                new_list = ([BranchCompareController.SANDBOX]+
+                            self.model.get_local_branches())
+            else:
+                new_list = ([BranchCompareController.BRANCH_POINT] +
+                            self.model.get_remote_branches())
+            # Update the list widget
+            self.model.set_notify(True)
+            self.model.set_param(param, new_list)
+
+        return update_combo_boxes
+
+    def diff_files_doubleclick(self):
+        tree_widget = self.view.diff_files
+        id_num, selected = qtutils.get_selected_treeitem(tree_widget)
+        if not selected:
+            qtutils.information('Oops!', 'Please select a file to compare')
+            return
+        filename = self.model.get_diff_files()[id_num]
+        self.__compare_file(filename)
+
+    def __compare_file(self, filename):
+        git = self.model.git
+        if self.use_sandbox:
+            kwargs = git.transform_kwargs(no_prompt=True,
+                                          tool=self.model.get_mergetool(),
+                                          commit=self.diff_arg)
+        else:
+            kwargs = git.transform_kwargs(no_prompt=True,
+                                          tool=self.model.get_mergetool(),
+                                          start=self.start,
+                                          end=self.end)
+        args = (['git', 'difftool'] + kwargs + ['--', filename])
+        utils.fork(*args)
+
+
 class CompareController(QObserver):
-    def init (self, model, view, filename=None):
-        self.filename = filename
+    """Drives the Commit->Compare Commits dialog.
+    """
+    def init (self, model, view):
         self.add_observables('descriptions_start', 'descriptions_end',
                              'revision_start', 'revision_end',
                              'compare_files', 'num_results',
@@ -35,11 +187,6 @@ class CompareController(QObserver):
                                 self.gen_update_widgets(False),
                            button_compare =
                                 self.compare_selected_file)
-
-        self.connect(self.view.compare_files,
-                     'itemDoubleClicked(QTreeWidgetItem *, int)',
-                     self.compare_revisions)
-
         self.refresh_view()
         revisions = self.update_results()
         last = len(revisions)
@@ -83,8 +230,7 @@ class CompareController(QObserver):
 
         self.model.set_notify(True)
         show_versions = self.model.get_show_versions()
-        revs = self.model.update_revision_lists(filename=self.filename,
-                                                show_versions=show_versions)
+        revs = self.model.update_revision_lists(show_versions=show_versions)
         if start_selected:
             tree_widget = self.view.descriptions_start
             self.select_nth_item_from_end(tree_widget, start_delta)
