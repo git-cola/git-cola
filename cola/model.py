@@ -13,6 +13,7 @@ from types import LongType
 from types import FloatType
 from types import ComplexType
 from types import InstanceType
+from types import FunctionType
 
 class Observable(object):
     """Handles subject/observer notifications."""
@@ -43,7 +44,6 @@ class Model(Observable):
 
     def __init__(self, *args, **kwargs):
         Observable.__init__(self)
-        self.__params = []
         self.from_dict(kwargs)
         self.init()
 
@@ -56,7 +56,14 @@ class Model(Observable):
         return self.from_dict(kwargs)
 
     def get_param_names(self):
-        return tuple(self.__params)
+        names = []
+        for k, v in self.__dict__.iteritems():
+            if k[0] == '_' or is_function(v):
+                continue
+            if is_atom(v) or is_list(v) or is_dict(v) or is_model(v):
+                names.append(k)
+        names.sort()
+        return names
 
     def notify_all(self):
         self.notify_observers(*self.get_param_names())
@@ -65,7 +72,7 @@ class Model(Observable):
         return self.__class__(*args, **kwargs).from_dict(self.to_dict())
 
     def has_param(self,param):
-        return param in self.__params
+        return param in self.get_param_names()
 
     def get_param(self,param):
         return getattr(self, param)
@@ -119,11 +126,9 @@ class Model(Observable):
         """Set param with optional notification and validity checks."""
 
         param = param.lower()
-        if check_params and param not in self.__params:
+        if check_params and param not in self.get_param_names():
             raise AttributeError("Parameter '%s' not available for %s"
                                  % (param, self.__class__.__name__))
-        elif param not in self.__params:
-            self.__params.append(param)
 
         setattr(self, param, value)
         if notify:
@@ -193,7 +198,6 @@ class Model(Observable):
             self.set_param(param,
                            self.__obj_from_value(val),
                            notify=False)
-        self.__params.sort()
         return self
 
     def __obj_from_value(self, val):
@@ -226,7 +230,7 @@ class Model(Observable):
         This simplifies serialization.
         """
         params = {"__class__": Model.class_to_str(self)}
-        for param in self.__params:
+        for param in self.get_param_names():
             params[param] = self.__obj_to_value(getattr(self, param))
         return params
 
@@ -244,7 +248,7 @@ class Model(Observable):
                 newdict[k] = self.__obj_to_value(v)
             return newdict
 
-        elif is_instance(item):
+        elif is_model(item):
             return item.to_dict()
 
         else:
@@ -277,7 +281,7 @@ class Model(Observable):
 
         Model.INDENT(1)
 
-        for param in self.__params:
+        for param in self.get_param_names():
             if param.startswith('_'):
                 continue
             io.write('\n')
@@ -365,5 +369,5 @@ def is_atom(item):
         or type(item) is LongType
         or type(item) is FloatType
         or type(item) is ComplexType)
-def is_instance(item):
-    return(is_model(item) or type(item) is InstanceType)
+def is_function(item):
+    return type(item) is FunctionType
