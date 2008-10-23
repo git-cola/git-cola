@@ -113,7 +113,7 @@ class BranchCompareController(QObserver):
         if branch == BranchCompareController.BRANCH_POINT:
             # Compare against the branch point so find the merge-base
             branch = self.model.get_currentbranch()
-            remote = self.model.get_default_remote()
+            remote = self.model.get_corresponding_remote_ref()
             return self.model.git.merge_base(branch, remote)
         else:
             # Compare against the remote branch
