@@ -3,11 +3,10 @@
 #
 # This module is part of GitPython and is released under
 # the BSD License: http://www.opensource.org/licenses/bsd-license.php
-
+import re
 import os
 import sys
 import subprocess
-from cola import utils
 from cola.exception import GitCommandError
 
 def dashify(string):
@@ -34,7 +33,9 @@ class Git(object):
             raise AttributeError(name)
         return lambda *args, **kwargs: self._call_process(name, *args, **kwargs)
 
-    def execute(self, command,
+    @staticmethod
+    def execute(command,
+                cwd=None,
                 istream=None,
                 with_keep_cwd=False,
                 with_extended_output=False,
@@ -72,36 +73,41 @@ class Git(object):
             print ' '.join(command)
 
         # Allow the user to have the command executed in their working dir.
-        if with_keep_cwd or not self._git_cwd:
+        if with_keep_cwd or not cwd:
           cwd = os.getcwd()
-        else:
-          cwd=self._git_cwd
 
         # Start the process
-        if sys.platform == 'win32':
-            command = utils.shell_quote(*command)
+        wanky = sys.platform in ('win32',)
+        if wanky:
+            command = shell_quote(*command)
 
         proc = subprocess.Popen(command,
                                 cwd=cwd,
-                                shell=sys.platform == 'win32',
+                                shell=wanky,
                                 stdin=istream,
                                 stderr=subprocess.PIPE,
                                 stdout=subprocess.PIPE)
-        # Wait for the process to return
-        stdout_value, stderr_value = proc.communicate()
+        count = 0
+        stdout_value = None
+        stderr_value = None
+        while count < 4: # osx interrupts system calls
+            count += 1
+            try:
+                stdout_value, stderr_value = proc.communicate()
+                break
+            except:
+                pass
+        status = proc.returncode
+        if with_exceptions and status:
+            raise GitCommandError(command, status, stderr_value)
+
         if not stdout_value:
             stdout_value = ''
         if not stderr_value:
             stderr_value = ''
-        status = proc.returncode
-
-        # Strip off trailing whitespace by default
         if not with_raw_output:
-            stdout_value = stdout_value.rstrip()
-            stderr_value = stderr_value.rstrip()
-
-        if with_exceptions and status:
-            raise GitCommandError(command, status, stderr_value)
+            stdout_value = stdout_value.strip()
+            stderr_value = stderr_value.strip()
 
         if GIT_PYTHON_TRACE == 'full':
             if stderr_value:
@@ -165,7 +171,7 @@ class Git(object):
 
         # Handle optional arguments prior to calling transform_kwargs
         # otherwise these'll end up in args, which is bad.
-        _kwargs = {}
+        _kwargs = dict(cwd=self._git_cwd)
         for kwarg in execute_kwargs:
             try:
                 _kwargs[kwarg] = kwargs.pop(kwarg)
@@ -180,4 +186,49 @@ class Git(object):
         call = ['git', dashify(method)]
         call.extend(args)
 
-        return self.execute(call, **_kwargs)
+        return Git.execute(call, **_kwargs)
+
+
+def shell_quote(*inputs):
+    """
+    Quote strings so that they can be suitably martialled
+    off to the shell.  This method supports POSIX sh syntax.
+    This is crucial to properly handle command line arguments
+    with spaces, quotes, double-quotes, etc. on darwin/win32...
+    """
+
+    regex = re.compile('[^\w!%+,\-./:@^]')
+    quote_regex = re.compile("((?:'\\''){2,})")
+
+    ret = []
+    for input in inputs:
+        if not input:
+            continue
+
+        if '\x00' in input:
+            raise AssertionError,('No way to quote strings '
+                                  'containing null(\\000) bytes')
+
+        # = does need quoting else in command position it's a
+        # program-local environment setting
+        match = regex.search(input)
+        if match and '=' not in input:
+            # ' -> '\''
+            input = input.replace("'", "'\\''")
+
+            # make multiple ' in a row look simpler
+            # '\'''\'''\'' -> '"'''"'
+            quote_match = quote_regex.match(input)
+            if quote_match:
+                quotes = match.group(1)
+                input.replace(quotes, ("'" *(len(quotes)/4)) + "\"'")
+
+            input = "'%s'" % input
+            if input.startswith("''"):
+                input = input[2:]
+
+            if input.endswith("''"):
+                input = input[:-2]
+        ret.append(input)
+    return ' '.join(ret)
+

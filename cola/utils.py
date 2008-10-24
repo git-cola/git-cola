@@ -9,6 +9,8 @@ from glob import glob
 from cStringIO import StringIO
 
 from cola import defaults
+from cola import git
+from cola.git import shell_quote
 from cola.exception import ColaException
 
 PREFIX = os.path.realpath(os.path.dirname(os.path.dirname(sys.argv[0])))
@@ -30,33 +32,12 @@ KNOWN_FILE_TYPES = {
     'image':     'image.png',
 }
 
-class RunCommandException(ColaException):
-    """Thrown when something bad happened when we tried to run the
-    subprocess."""
-    pass
-
 def run_cmd(*command):
     """
     Runs a *command argument list and returns the output.
     e.g. run_cmd("echo", "hello", "world")
     """
-    # Start the process
-    try:
-        proc = subprocess.Popen(command,
-                                stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE)
-
-        # Wait for the process to return
-        stdout_value = proc.stdout.read()
-        proc.stdout.close()
-        proc.wait()
-        status = proc.poll()
-
-        # Strip off trailing whitespace by default
-        return stdout_value.rstrip()
-    except:
-        raise RunCommandException('ERROR Running: [%s]' % ' '.join(command))
-
+    return git.Git.execute(command)
 
 def get_qm_for_locale(locale):
     regex = re.compile(r'([^\.])+\..*$')
@@ -170,49 +151,6 @@ def basename(path):
         return match.group(2)
     else:
         return pathstr
-
-def shell_quote(*inputs):
-    """
-    Quote strings so that they can be suitably martialled
-    off to the shell.  This method supports POSIX sh syntax.
-    This is crucial to properly handle command line arguments
-    with spaces, quotes, double-quotes, etc.
-    """
-
-    regex = re.compile('[^\w!%+,\-./:@^]')
-    quote_regex = re.compile("((?:'\\''){2,})")
-
-    ret = []
-    for input in inputs:
-        if not input:
-            continue
-
-        if '\x00' in input:
-            raise AssertionError,('No way to quote strings '
-                                  'containing null(\\000) bytes')
-
-        # = does need quoting else in command position it's a
-        # program-local environment setting
-        match = regex.search(input)
-        if match and '=' not in input:
-            # ' -> '\''
-            input = input.replace("'", "'\\''")
-
-            # make multiple ' in a row look simpler
-            # '\'''\'''\'' -> '"'''"'
-            quote_match = quote_regex.match(input)
-            if quote_match:
-                quotes = match.group(1)
-                input.replace(quotes, ("'" *(len(quotes)/4)) + "\"'")
-
-            input = "'%s'" % input
-            if input.startswith("''"):
-                input = input[2:]
-
-            if input.endswith("''"):
-                input = input[:-2]
-        ret.append(input)
-    return ' '.join(ret)
 
 HEADER_LENGTH = 80
 def header(msg):
