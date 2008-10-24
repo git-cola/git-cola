@@ -35,6 +35,21 @@ class Observable(object):
         for observer in self.__observers:
             observer.notify(*param)
 
+class ModelIterator(object):
+    """Provides an iterator over model (key, value) pairs.
+    """
+    def __init__(self, model):
+        self.model = model
+        self.params = model.get_param_names()
+        self.idx = -1
+    def next(self):
+        try:
+            self.idx += 1
+            name = self.params[self.idx]
+            return (name, self.model[name])
+        except IndexError:
+            raise StopIteration
+
 class Model(Observable):
     """Creates a generic model object with params specified
     as a name:value dictionary.
@@ -52,10 +67,27 @@ class Model(Observable):
         Subclasses should implement this if necessary."""
         pass
 
+    def __getitem__(self, item):
+        return self.__dict__[item]
+
+    def __iter__(self):
+        return ModelIterator(self)
+
+    def items(self):
+        d = self.to_dict()
+        d.pop('__class__', None)
+        return d.items()
+
+    def iteritems(self):
+        d = self.to_dict()
+        d.pop('__class__', None)
+        return d.iteritems()
+
     def create(self,**kwargs):
         return self.from_dict(kwargs)
 
     def get_param_names(self):
+        """Returns a list of serializable attribute names."""
         names = []
         for k, v in self.__dict__.iteritems():
             if k[0] == '_' or is_function(v):
@@ -129,7 +161,6 @@ class Model(Observable):
         if check_params and param not in self.get_param_names():
             raise AttributeError("Parameter '%s' not available for %s"
                                  % (param, self.__class__.__name__))
-
         setattr(self, param, value)
         if notify:
             self.notify_observers(param)
@@ -261,14 +292,14 @@ class Model(Observable):
     @staticmethod
     def INDENT(i=0):
         Model.__INDENT__ += i
-        return '\t' * Model.__INDENT__
+        return '    ' * Model.__INDENT__
 
     def __str__(self):
         """A convenient, recursively-defined stringification method."""
 
         # This avoid infinite recursion on cyclical structures
         if self in Model.__STRSTACK__:
-            return 'REFERENCE' # TODO: implement references?
+            return 'REFERENCE' # TODO: implement references?  This ain't lisp.
         else:
             Model.__STRSTACK__.append(self)
 
