@@ -138,7 +138,8 @@ class RepoBrowserController(QObserver):
             if not filename:
                 return
             defaults.DIRECTORY = os.path.dirname(filename)
-            contents = self.model.git.cat_file(objtype, sha1, raw=True)
+            contents = self.model.git.cat_file(objtype, sha1,
+                                               with_raw_output=True)
             utils.write(filename, contents)
             return
 
