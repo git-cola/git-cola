@@ -4,6 +4,7 @@ import os
 import sys
 
 from cola.exception import ColaException
+from cola import git
 from cola import utils
 
 class VersionUnavailable(ColaException):
@@ -12,15 +13,15 @@ class VersionUnavailable(ColaException):
 def git_describe_version():
     path = sys.path[0]
     try:
-        v = utils.run_cmd('git', 'describe', '--tags', '--abbrev=4', 'master')
-    except utils.RunCommandException, e:
+        v = git.Git.execute(['git', 'describe', '--tags', '--abbrev=4', 'master'])
+    except git.GitCommandError, e:
         raise VersionUnavailable(str(e))
     if not re.match(r'^v[0-9]', v):
         raise VersionUnavailable('%s: bad version' % v)
     try:
-        utils.run_cmd('git', 'update-index', '--refresh')
-        dirty = utils.run_cmd('git', 'diff-index', '--name-only', 'HEAD')
-    except utils.RunCommandException, e:
+        git.Git.execute(['git', 'update-index', '--refresh'])
+        dirty = git.Git.execute(['git', 'diff-index', '--name-only', 'HEAD'])
+    except git.GitCommandError, e:
         raise VersionUnavailable(str(e))
     if dirty:
         v += '-dirty'
