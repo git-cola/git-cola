@@ -34,13 +34,14 @@ if sys.path[0] not in path_entries:
 # It is assumed that the user installed Cola using the --prefix= option
 prefix, bin = os.path.split(sys.path[0])
 
-if bin == 'bin' and prefix != sys.prefix:
+if bin in ('bin', 'Scripts') and prefix != sys.prefix:
     sys.prefix = prefix
     sys.exec_prefix = prefix
 
     major, minor = sys.version_info[0:2]
     local_path = [os.path.join(prefix, 'lib', 'python%s.%s' % (major, minor),
                                'site-packages'),
+                  os.path.join(prefix, 'Lib', 'site-packages'),
                   prefix,
                   os.getcwd(),
                   ]
