@@ -77,7 +77,9 @@ class Git(object):
           cwd = os.getcwd()
 
         # Start the process
-        use_shell = sys.platform in ('win32', 'darwin')
+        use_shell = sys.platform in ('win32')
+        if use_shell and sys.platform == 'darwin':
+            command = shell_quote(*command)
         proc = subprocess.Popen(command,
                                 cwd=cwd,
                                 shell=use_shell,
