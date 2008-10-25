@@ -39,7 +39,7 @@ class Git(object):
                 istream=None,
                 with_keep_cwd=False,
                 with_extended_output=False,
-                with_exceptions=True,
+                with_exceptions=False,
                 with_raw_output=False):
         """
         Handles executing the command on the shell and consumes and returns
@@ -77,27 +77,28 @@ class Git(object):
           cwd = os.getcwd()
 
         # Start the process
-        wanky = sys.platform in ('win32',)
-        if wanky:
+        use_shell = sys.platform in ('win32', 'darwin')
+
+        if use_shell:
             command = shell_quote(*command)
 
         proc = subprocess.Popen(command,
                                 cwd=cwd,
-                                shell=wanky,
+                                shell=use_shell,
                                 stdin=istream,
                                 stderr=subprocess.PIPE,
                                 stdout=subprocess.PIPE)
         count = 0
         stdout_value = None
         stderr_value = None
-        while count < 4: # osx interrupts system calls
-            count += 1
-            try:
-                stdout_value, stderr_value = proc.communicate()
-                break
-            except:
-                pass
-        status = proc.returncode
+
+        try:
+            stdout_value = proc.stdout.read()
+            stderr_value = proc.stderr.read()
+            status = proc.wait()
+        except:
+            status = 42
+
         if with_exceptions and status:
             raise GitCommandError(command, status, stderr_value)
 

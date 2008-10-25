@@ -27,10 +27,6 @@ class GitCola(git.Git):
         self._work_tree = None
         self.get_work_tree()
 
-    def execute(*args, **kwargs):
-        kwargs['with_exceptions'] = False
-        return git.Git.execute(*args, **kwargs)
-
     def get_work_tree(self):
         if self._work_tree:
             return self._work_tree
@@ -696,8 +692,8 @@ class Model(model.Model):
         fh.close()
 
         # Run 'git commit'
-        (status, stdout, stderr) = self.git.commit(v=True,
-                                                   F=tmpfile,
+        (status, stdout, stderr) = self.git.commit('-F', tmpfile,
+                                                   v=True,
                                                    amend=amend,
                                                    with_extended_output=True)
         os.unlink(tmpfile)
@@ -720,7 +716,7 @@ class Model(model.Model):
         # Allow TMPDIR/TMP with a fallback to /tmp
         basename = (prefix+'.git.%s.%s'
                     % (os.getpid(), time.time())).replace(os.sep, '-')
-        return os.path.join(self.get_tmp_dir(), basename)
+        return basename
 
     def log_helper(self, all=False):
         """
