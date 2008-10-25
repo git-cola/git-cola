@@ -692,7 +692,7 @@ class Model(model.Model):
         fh.close()
 
         # Run 'git commit'
-        (status, stdout, stderr) = self.git.commit('-F', tmpfile,
+        (status, stdout, stderr) = self.git.commit(F=tmpfile,
                                                    v=True,
                                                    amend=amend,
                                                    with_extended_output=True)
@@ -707,16 +707,19 @@ class Model(model.Model):
                              cached=True)
 
     def get_tmp_dir(self):
+        # Allow TMPDIR/TMP with a fallback to /tmp
         return os.environ.get('TMP', os.environ.get('TMPDIR', '/tmp'))
 
     def get_tmp_file_pattern(self):
-        return os.path.join(self.get_tmp_dir(), '*.git.%s.*' % os.getpid())
+        return os.path.join(self.get_tmp_dir(), '*.git-cola.%s.*' % os.getpid())
 
     def get_tmp_filename(self, prefix=''):
-        # Allow TMPDIR/TMP with a fallback to /tmp
-        basename = (prefix+'.git.%s.%s'
-                    % (os.getpid(), time.time())).replace(os.sep, '-')
-        return basename
+        basename = ((prefix+'.git-cola.%s.%s'
+                    % (os.getpid(), time.time())))
+        basename = basename.replace('/', '-')
+        basename = basename.replace('\\', '-')
+        tmpdir = self.get_tmp_dir()
+        return os.path.join(tmpdir, basename)
 
     def log_helper(self, all=False):
         """

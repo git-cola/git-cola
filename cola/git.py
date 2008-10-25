@@ -78,10 +78,6 @@ class Git(object):
 
         # Start the process
         use_shell = sys.platform in ('win32', 'darwin')
-
-        if use_shell:
-            command = shell_quote(*command)
-
         proc = subprocess.Popen(command,
                                 cwd=cwd,
                                 shell=use_shell,
