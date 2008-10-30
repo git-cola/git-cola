@@ -87,15 +87,19 @@ class Git(object):
                                 stderr=subprocess.PIPE,
                                 stdout=subprocess.PIPE)
         count = 0
-        stdout_value = None
-        stderr_value = None
-
-        try:
-            stdout_value = proc.stdout.read()
-            stderr_value = proc.stderr.read()
-            status = proc.wait()
-        except:
-            status = 42
+        max_count = 4
+        while count < max_count:
+            count += 1
+            try:
+                stdout_value = proc.stdout.read()
+                stderr_value = proc.stderr.read()
+                status = proc.wait()
+                count = max_count
+                break
+            except:
+                stdout_value = None
+                stderr_value = None
+                status = 42
 
         if with_exceptions and status:
             raise GitCommandError(command, status, stderr_value)
