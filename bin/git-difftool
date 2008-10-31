@@ -158,18 +158,16 @@ merge_file () {
 
 		if ! git show "$start":"$startname" > "$LOCAL" 2>/dev/null; then
 			if should_prompt; then
-				echo
-				echo -n "Warning: "
-				echo -n "'$startname' does not exist at $start."
+				printf "\nWarning: "
+				printf "'$startname' does not exist at $start.\n"
 			fi
 		else
 			cp -- "$LOCAL" "$BASE"
 		fi
 		if ! git show "$end":"$MERGED" > "$REMOTE" 2>/dev/null; then
 			if should_prompt; then
-				echo
-				echo -n "Warning: "
-				echo -n "'$MERGED' does not exist at $end."
+				printf "\nWarning: "
+				printf "'$MERGED' does not exist at $end.\n"
 			fi
 		else
 			! test -f "$BASE" && cp -- "$REMOTE" "$BASE"
@@ -200,9 +198,8 @@ merge_file () {
 		touch "$LOCAL"
 		touch "$REMOTE"
 		if ! git show "$base":"$MERGED" > "$BASE" 2>&1; then
-			echo
-			echo -n "Warning: "
-			echo "'$MERGED' does not exist at $base."
+			printf "\nWarning: "
+			printf "'$MERGED' does not exist at $base.\n"
 		else
 			cp "$BASE" "$LOCAL"
 			if commitish_present; then
