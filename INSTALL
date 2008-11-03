@@ -38,6 +38,17 @@ If you want to do a global install you can do
 
     # make prefix=/usr install
 
+To build cola on windows you'll need to add the following
+shell script to a directory in your path and name it 'pyuic4':
+
+#+-------------------------------------------------------------
+
+#!/bin/sh
+/c/Python25/python.exe \
+/c/Python25/Lib/site-packages/PyQt4/uic/pyuic.py "$@"
+
+#+-------------------------------------------------------------
+
 
 WINDOWS INSTALLATION
 
