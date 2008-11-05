@@ -82,9 +82,15 @@ class CreateBranchController(QObserver):
         fetch = self.view.fetch_checkbox.isChecked()
         ffwd = self.view.ffwd_only_radio.isChecked()
         reset = self.view.reset_radio.isChecked()
+        chkout = self.view.checkout_checkbox.isChecked()
 
         output = self.model.create_branch(branch, revision, track=track)
         qtutils.show_output(output)
+        if chkout:
+            status, out, err = self.model.git.checkout(branch,
+                                                       with_extended_output=True)
+            qtutils.show_output(out+err)
+
         self.view.accept()
 
     def item_changed(self, *rest):
