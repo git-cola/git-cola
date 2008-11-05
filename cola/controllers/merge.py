@@ -1,9 +1,10 @@
 #!/usr/bin/env python
+from PyQt4.Qt import Qt
+
 from cola import utils
 from cola import qtutils
 from cola.qobserver import QObserver
 from cola.views import MergeView
-from PyQt4.Qt import *
 
 def abort_merge(model, parent):
     txt = parent.tr('Abort merge?\n'
@@ -85,14 +86,15 @@ class MergeController(QObserver):
 
     def squash_update(self):
         if self.view.checkbox_squash.isChecked():
-            self.old_commit_checkbox_state = self.view.checkbox_commit.checkState()
+            self.old_commit_checkbox_state =\
+                self.view.checkbox_commit.checkState()
             self.view.checkbox_commit.setCheckState(Qt.Unchecked)
             self.view.checkbox_commit.setDisabled(True)
         else:
             self.view.checkbox_commit.setDisabled(False)
             try:
-                self.view.checkbox_commit.setCheckState(self.old_commit_checkbox_state)
+                oldstate = self.old_commit_checkbox_state
+                self.view.checkbox_commit.setCheckState(oldstate)
             except AttributeError:
                 # no problem
-                NOP
-
+                pass
