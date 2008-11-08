@@ -975,12 +975,13 @@ class Model(model.Model):
         return self.git.format_patch("-o", output, revarg, **kwargs)
 
     def current_branch(self):
-        """Parses 'git branch' to find the current branch."""
-        branches = self.git.branch().splitlines()
-        for branch in branches:
-            if branch.startswith('* '):
-                return branch.lstrip('* ')
-        return 'Detached HEAD'
+        """Parses 'git symbolic-ref' to find the current branch."""
+        headref = self.git.symbolic_ref('HEAD')
+        if headref.startswith('refs/heads/'):
+            return headref[11:]
+        elif headref.startswith('fatal: '):
+            return 'Not currently on any branch'
+        return headref
 
     def create_branch(self, name, base, track=False):
         """Creates a branch starting from base.  Pass track=True
