@@ -889,8 +889,23 @@ class Model(model.Model):
 
         return (staged, unstaged, untracked, unmerged)
 
-    def reset_helper(self, *args, **kwargs):
-        return self.git.reset('--', *args, **kwargs)
+    def reset_helper(self, *args):
+        """Removes files from the index.
+        This handles the git init case, which is why it's not
+        just git.reset(name).
+        For the git init case this fall back to git rm --cached.
+        """
+        output = self.git.reset('--', *args)
+        # handle git init -- we have to rm --cached them
+        state = self.get_workdir_state()
+        staged = state[0]
+        newargs = []
+        for arg in args:
+            if arg in staged:
+                newargs.append(arg)
+        if newargs:
+            output = self.git.rm('--', cached=True, *newargs)
+        return output
 
     def remote_url(self, name):
         return self.git.config('remote.%s.url' % name, get=True)
