@@ -853,39 +853,51 @@ class Model(model.Model):
         if amend:
             head = 'HEAD^'
         (staged, unstaged, unmerged, untracked) = ([], [], [], [])
+        try:
+            for name in self.git.diff_index(head).splitlines():
+                rest, name = name.split('\t')
+                status = rest[-1]
+                name = eval_path(name)
+                if status == 'M' or status == 'D':
+                    unstaged.append(name)
+        except:
+            # handle git init
+            for name in (self.git.ls_files(modified=True, z=True)
+                                 .split('\0')):
+                if name:
+                    unstaged.append(name.decode('utf-8'))
 
-        for idx, line in enumerate(self.git.diff_index(head).splitlines()):
-            rest, name = line.split('\t')
-            status = rest[-1]
-            name = eval_path(name)
-            if status == 'M' or status == 'D':
-                unstaged.append(name)
-
-        for idx, line in enumerate(self.git.diff_index(head, cached=True)
-                                                    .splitlines()):
-            rest, name = line.split('\t')
-            status = rest[-1]
-            name = eval_path(name)
-            if status  == 'M':
-                staged.append(name)
-                # is this file partially staged?
-                diff = self.git.diff('--', name, name_only=True, z=True)
-                if not diff.strip():
+        try:
+            for name in (self.git.diff_index(head, cached=True)
+                                 .splitlines()):
+                rest, name = name.split('\t')
+                status = rest[-1]
+                name = eval_path(name)
+                if status  == 'M':
+                    staged.append(name)
+                    # is this file partially staged?
+                    diff = self.git.diff('--', name, name_only=True, z=True)
+                    if not diff.strip():
+                        unstaged.remove(name)
+                    else:
+                        self.partially_staged.add(name)
+                elif status == 'A':
+                    staged.append(name)
+                elif status == 'D':
+                    staged.append(name)
                     unstaged.remove(name)
-                else:
-                    self.partially_staged.add(name)
-            elif status == 'A':
-                staged.append(name)
-            elif status == 'D':
-                staged.append(name)
-                unstaged.remove(name)
-            elif status == 'U':
-                unmerged.append(name)
+                elif status == 'U':
+                    unmerged.append(name)
+        except:
+            # handle git init
+            for name in self.git.ls_files(z=True).strip('\0').split('\0'):
+                if name:
+                    staged.append(name.decode('utf-8'))
 
-        for line in self.git.ls_files(others=True, exclude_standard=True,
+        for name in self.git.ls_files(others=True, exclude_standard=True,
                                       z=True).split('\0'):
-            if line:
-                untracked.append(line.decode('utf-8'))
+            if name:
+                untracked.append(name.decode('utf-8'))
 
         return (staged, unstaged, untracked, unmerged)
 
