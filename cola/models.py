@@ -379,7 +379,7 @@ class Model(model.Model):
                 self.subtree_sha1s.append(self.sha1s[idx])
                 self.subtree_names.append(name)
 
-    def add_or_remove(self, *to_process):
+    def add_or_remove(self, to_process):
         """Invokes 'git add' to index the filenames in to_process that exist
         and 'git rm' for those that do not exist."""
 
@@ -622,7 +622,7 @@ class Model(model.Model):
         return output
 
     def stage_untracked(self):
-        output = self.git.add(self.get_untracked())
+        output = self.git.add(*self.get_untracked())
         self.update_status()
         return output
 
@@ -632,8 +632,14 @@ class Model(model.Model):
         return output
 
     def unstage_all(self):
-        self.git.reset('--', *self.get_staged())
+        output = self.git.reset()
         self.update_status()
+        return output
+
+    def stage_all(self):
+        output = self.git.add(v=True,u=True)
+        self.update_status()
+        return output
 
     def save_gui_settings(self):
         self.config_set('cola.geometry', utils.get_geom(), local=False)
@@ -901,7 +907,7 @@ class Model(model.Model):
 
         return (staged, unstaged, untracked, unmerged)
 
-    def reset_helper(self, *args):
+    def reset_helper(self, args):
         """Removes files from the index.
         This handles the git init case, which is why it's not
         just git.reset(name).

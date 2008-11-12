@@ -8,6 +8,7 @@ from PyQt4.QtGui import QFileDialog
 from PyQt4.QtGui import QIcon
 from PyQt4.QtGui import QTreeWidget
 from PyQt4.QtGui import QListWidgetItem
+from PyQt4.QtGui import QTreeWidgetItem
 from PyQt4.QtGui import QMessageBox
 
 from cola import utils
@@ -58,6 +59,13 @@ def create_listwidget_item(text, filename):
     item.setText(text)
     return item
 
+def create_treewidget_item(text, filename):
+    icon = QIcon(filename)
+    item = QTreeWidgetItem()
+    item.setIcon(0, icon)
+    item.setText(0, text)
+    return item
+
 def information(title, message=None):
     """Launches a QMessageBox information with the
     provided title and message."""
@@ -90,6 +98,18 @@ def get_selection_list(listwidget, items):
     widgetitems = [ listwidget.item(idx) for idx in range(itemcount) ]
 
     for item, widgetitem in zip(items, widgetitems):
+        if widgetitem.isSelected():
+            selected.append(item)
+    return selected
+
+def get_tree_selection(treeitem, items):
+    """Returns an array of model items that correspond to
+    the selected QListWidget indices."""
+    selected = []
+    itemcount = treeitem.childCount()
+    widgetitems = [ treeitem.child(idx) for idx in range(itemcount) ]
+
+    for item, widgetitem in zip(items[:len(widgetitems)], widgetitems):
         if widgetitem.isSelected():
             selected.append(item)
     return selected
@@ -166,7 +186,7 @@ def set_items(widget, items):
 def tr(txt):
     return unicode(QtGui.qApp.translate('', txt))
 
-def get_icon_file(filename, staged, untracked):
+def get_icon_file(filename, staged=False, untracked=False):
     if staged:
         if os.path.exists(filename.encode('utf-8')):
             icon_file = utils.get_icon('staged.png')
@@ -178,16 +198,24 @@ def get_icon_file(filename, staged, untracked):
         icon_file = utils.get_file_icon(filename)
     return icon_file
 
-def get_icon_for_file(filename, staged, untracked):
-    icon_file = get_icon_file(filename, staged, untracked)
+def get_icon_for_file(filename, staged=False, untracked=False):
+    icon_file = get_icon_file(filename, staged=staged, untracked=untracked)
     return get_icon(icon_file)
 
-def create_item(filename, staged, untracked=False):
+def create_listitem(filename, staged=False, untracked=False):
     """Given a filename, return a QListWidgetItem suitable
     for adding to a QListWidget.  "staged" and "untracked"
     controls whether to use the appropriate icons."""
     icon_file = get_icon_file(filename, staged, untracked)
     return create_listwidget_item(filename, icon_file)
+
+def create_treeitem(filename, staged=False, untracked=False):
+    """Given a filename, return a QListWidgetItem suitable
+    for adding to a QListWidget.  "staged" and "untracked"
+    controls whether to use the appropriate icons."""
+    icon_file = get_icon_file(filename, staged=staged, untracked=untracked)
+    return create_treewidget_item(filename, icon_file)
+
 
 def create_txt_item(txt):
     item = QListWidgetItem()
@@ -207,7 +235,7 @@ def update_listwidget(widget, items, staged=True,
     """Populate a QListWidget with custom icon items."""
     if not append:
         widget.clear()
-    add_items(widget, [ create_item(i, staged, untracked) for i in items ])
+    add_items(widget, [ create_listitem(i, staged, untracked) for i in items ])
 
 def set_listwidget_strings(widget, items):
     widget.clear()

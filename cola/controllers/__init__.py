@@ -71,24 +71,17 @@ class Controller(QObserver):
         # Parent-less log window
         qtutils.LOGGER = logger()
 
-        # double-click callbacks
-        self.unstaged_doubleclick = self.stage_selected
-        self.staged_doubleclick = self.unstage_selected
-
         # Unstaged changes context menu
-        view.unstaged.contextMenuEvent = self.unstaged_context_menu_event
-        view.staged.contextMenuEvent = self.staged_context_menu_event
+        view.status_tree.contextMenuEvent = self.tree_context_menu_event
 
         # Diff display context menu
         view.display_text.contextMenuEvent = self.diff_context_menu_event
 
         # Binds model params to their equivalent view widget
-        self.add_observables('commitmsg', 'staged', 'unstaged',
-                             'show_untracked')
+        self.add_observables('commitmsg')#, 'staged', 'unstaged',
+                             #'show_untracked')
 
         # When a model attribute changes, this runs a specific action
-        self.add_actions(staged = self.action_staged)
-        self.add_actions(unstaged = self.action_unstaged)
         self.add_actions(global_cola_fontdiff = self.update_diff_font)
         self.add_actions(global_cola_fontui = self.update_ui_font)
 
@@ -100,11 +93,7 @@ class Controller(QObserver):
             fetch_button = self.fetch,
             push_button = self.push,
             pull_button = self.pull,
-            # List Widgets
-            staged = self.diff_staged,
-            unstaged = self.diff_unstaged,
             # Checkboxes
-            show_untracked = self.rescan,
             amend_radio = self.load_prev_msg_and_rescan,
             new_commit_radio = self.clear_and_rescan,
 
@@ -196,8 +185,11 @@ class Controller(QObserver):
         view.moveEvent = self.move_event
         view.resizeEvent = self.resize_event
         view.closeEvent = self.quit_app
-        view.staged.mousePressEvent = self.click_staged
-        view.unstaged.mousePressEvent = self.click_unstaged
+
+        view.status_tree.mousePressEvent = self.click_tree
+        self.connect(view.status_tree,
+                     'itemDoubleClicked(QTreeWidgetItem*, int)',
+                     self.doubleclick_tree)
 
         # Toolbar log button
         self.connect(view.toolbar_show_log,
@@ -211,21 +203,117 @@ class Controller(QObserver):
         self.start_inotify_thread()
 
     #####################################################################
-    # handle when the listitem icons are clicked
-    def click_event(self, widget, action_callback, event):
-        result = QtGui.QListWidget.mousePressEvent(widget, event)
+    # handle when the status tree is clicked
+    def get_staged_item(self):
+        staged = self.model.get_staged()
+        staged = self.view.get_staged(staged)
+        if staged:
+            return staged[0]
+        else:
+            return None
+
+    def get_unstaged_item(self):
+        unstaged = self.model.get_unstaged()
+        unstaged = self.view.get_unstaged(unstaged)
+        if unstaged:
+            return unstaged[0]
+        else:
+            return None
+
+    def get_selection(self):
+        staged = self.model.get_staged()
+        staged = self.view.get_staged(staged)
+        modified = self.model.get_modified()
+        modified = self.view.get_modified(modified)
+        unmerged = self.model.get_unmerged()
+        unmerged = self.view.get_unmerged(unmerged)
+        untracked = self.model.get_untracked()
+        untracked = self.view.get_untracked(untracked)
+        return (staged, modified, unmerged, untracked)
+
+    def get_single_selection(self):
+        """Scans across staged, modified, etc. and returns only a single item.
+        """
+        staged, modified, unmerged, untracked = self.get_selection()
+        s = None
+        m = None
+        um = None
+        ut = None
+        if staged:
+            s = staged[0]
+        elif modified:
+            m = modified[0]
+        elif unmerged:
+            um = unmerged[0]
+        elif untracked:
+            ut = untracked[0]
+        return s, m, um, ut
+
+    def doubleclick_tree(self, item, column):
+        staged, modified, unmerged, untracked = self.get_selection()
+        if staged:
+            self.model.reset_helper(staged)
+        elif modified:
+            self.model.add_or_remove(modified)
+        elif untracked:
+            self.model.add_or_remove(untracked)
+        self.rescan()
+
+    def click_tree(self, event):
+        tree = self.view.status_tree
+        result = QtGui.QTreeWidget.mousePressEvent(tree, event)
+        item = tree.itemAt(event.pos())
+        if not item:
+            self.reset_mode()
+            self.view.reset_display()
+            items = self.view.status_tree.selectedItems()
+            for i in items:
+                i.setSelected(False)
+            return result
+        parent = item.parent()
+        if not parent:
+            idx = self.view.status_tree.indexOfTopLevelItem(item)
+            diff = 'no diff'
+            if idx == self.view.IDX_STAGED:
+                diff = (self.model.git.diff(cached=True, stat=True,
+                                            with_raw_output=True) + '\n\n' +
+                        self.model.git.diff(cached=True))
+            elif idx == self.view.IDX_MODIFIED:
+                diff = (self.model.git.diff(stat=True,
+                                            with_raw_output=True) + '\n\n' +
+                        self.model.git.diff())
+            elif idx == self.view.IDX_UNMERGED:
+                diff = '%s unmerged file(s)' % len(self.model.get_unmerged())
+            elif idx == self.view.IDX_UNTRACKED:
+                untracked = self.model.get_untracked()
+                diff = '%s untracked file(s)' % len(untracked)
+                if untracked:
+                    diff += '\n\n'
+                    diff += 'possible .gitignore rule(s):\n'
+                    diff += '-' * 78
+                    diff += '\n'
+                    for u in untracked:
+                        diff += '/'+ u + '\n'
+                    diff + '\n'
+            self.view.set_display(diff)
+            return result
+        staged, idx = self.view.get_index_for_item(item)
+        if idx == -1:
+            return result
+        self.view_diff_for_row(idx, staged)
+        # handle when the icons are clicked
         xpos = event.pos().x()
-        if xpos > 5 and xpos < 20:
-            action_callback()
+        if xpos > 42 and xpos < 58:
+            if staged:
+                items = self.model.get_staged()
+                selected = self.view.get_staged(items)
+                self.model.reset_helper(selected)
+            else:
+                items = self.model.get_unstaged()
+                selected = self.view.get_unstaged(items)
+                self.model.add_or_remove(selected)
+            self.rescan()
         return result
-
-    def click_staged(self, event):
-        return self.click_event(self.view.staged,
-                                self.unstage_selected, event)
-
-    def click_unstaged(self, event):
-        return self.click_event(self.view.unstaged,
-                                self.stage_selected, event)
 
     #####################################################################
     # event() is called in response to messages from the inotify thread
@@ -377,27 +465,31 @@ class Controller(QObserver):
 
     def get_selected_filename(self, staged=False):
         if staged:
-            return self.model.get_staged_item()
+            return self.get_staged_item()
         else:
-            return self.model.get_unstaged_item()
+            return self.get_unstaged_item()
 
-    def view_diff(self, staged=True):
+    def set_mode(self, staged):
         if staged:
             if self.view.amend_is_checked():
                 self.mode = Controller.MODE_AMEND
             else:
                 self.mode = Controller.MODE_INDEX
-            widget = self.view.staged
         else:
             self.mode = Controller.MODE_WORKTREE
-            widget = self.view.unstaged
-        row, selected = qtutils.get_selected_row(widget)
+
+    def view_diff(self, staged=True):
+        idx, selected = self.view.get_selection()
         if not selected:
             self.reset_mode()
             self.view.reset_display()
             return
+        self.view_diff_for_row(idx, staged)
+
+    def view_diff_for_row(self, idx, staged):
+        self.set_mode(staged)
         ref = self.get_diff_ref()
-        diff, status, filename = self.model.get_diff_details(row, ref,
+        diff, status, filename = self.model.get_diff_details(idx, ref,
                                                              staged=staged)
         self.view.set_display(diff)
         self.view.set_info(self.tr(status))
@@ -538,10 +630,13 @@ class Controller(QObserver):
         """Populates view widgets with results from 'git status.'"""
 
         # save entire selection
-        unstaged = qtutils.get_selection_list(self.view.unstaged,
-                                              self.model.get_unstaged())
-        staged = qtutils.get_selection_list(self.view.staged,
-                                            self.model.get_staged())
+        staged = self.view.get_staged(self.model.get_staged())
+        modified = self.view.get_modified(self.model.get_modified())
+        unmerged = self.view.get_unmerged(self.model.get_unmerged())
+        untracked = self.view.get_untracked(self.model.get_untracked())
+
+        # unstaged is an aggregate
+        unstaged = modified + unmerged + untracked
 
         scrollbar = self.view.display_text.verticalScrollBar()
         scrollvalue = scrollbar.value()
@@ -550,33 +645,57 @@ class Controller(QObserver):
         # get new values
         self.model.update_status(amend=self.view.amend_is_checked())
 
-        # restore selection
-        updated_unstaged = self.model.get_unstaged()
-        updated_staged = self.model.get_staged()
+        # Setup initial tree items
+        self.view.set_staged(self.model.get_staged())
+        self.view.set_modified(self.model.get_modified())
+        self.view.set_unmerged(self.model.get_unmerged())
+        self.view.set_untracked(self.model.get_untracked())
 
+        # restore selection
+        updated_staged = self.model.get_staged()
+        updated_modified = self.model.get_modified()
+        updated_unmerged = self.model.get_unmerged()
+        updated_untracked = self.model.get_untracked()
+        # unstaged is an aggregate
+        updated_unstaged = (updated_modified +
+                            updated_unmerged +
+                            updated_untracked)
+        showdiff = False
         if mode == Controller.MODE_WORKTREE:
-            for item in unstaged:
-                if item in updated_unstaged:
-                    idx = updated_unstaged.index(item)
-                    item = self.view.unstaged.item(idx)
-                    if item:
-                        item.setSelected(True)
-                        self.view.unstaged.setItemSelected(item, True)
-                        self.view.unstaged.setCurrentItem(item)
-                        self.view_diff(False)
-                        scrollbar.setValue(scrollvalue)
+            if unstaged:
+                for item in unstaged:
+                    if item in updated_unstaged:
+                        idx = updated_unstaged.index(item)
+                        item = self.view.get_unstaged_item(idx)
+                        if item:
+                            showdiff = True
+                            item.setSelected(True)
+                            self.view.status_tree.setCurrentItem(item)
+                            self.view.status_tree.setItemSelected(item, True)
+                            scrollbar.setValue(scrollvalue)
+                if showdiff:
+                    self.view_diff(False)
+                else:
+                    self.reset_mode()
+                    self.view.reset_display()
 
         elif mode in (Controller.MODE_INDEX, Controller.MODE_AMEND):
-            for item in staged:
-                if item in updated_staged:
-                    idx = updated_staged.index(item)
-                    item = self.view.staged.item(idx)
-                    if item:
-                        item.setSelected(True)
-                        self.view.staged.setItemSelected(item, True)
-                        self.view.staged.setCurrentItem(item)
-                        self.view_diff(True)
-                        scrollbar.setValue(scrollvalue)
+            if staged:
+                for item in staged:
+                    if item in updated_staged:
+                        idx = updated_staged.index(item)
+                        item = self.view.get_staged_item(idx)
+                        if item:
+                            showdiff = True
+                            item.setSelected(True)
+                            self.view.status_tree.setCurrentItem(item)
+                            self.view.status_tree.setItemSelected(item, True)
+                            scrollbar.setValue(scrollvalue)
+                if showdiff:
+                    self.view_diff(True)
+                else:
+                    self.reset_mode()
+                    self.view.reset_display()
 
         # Update the title with the current branch
         self.view.setWindowTitle('%s [%s]' % (
@@ -651,9 +770,8 @@ class Controller(QObserver):
         self.branch = branch
         self.filename = filename
 
-    def process_diff_selection(self, items, widget,
-                               cached=True, selected=False,
-                               apply_to_worktree=False,
+    def process_diff_selection(self, selected=False,
+                               staged=True, apply_to_worktree=False,
                                reverse=False):
 
         if self.mode == Controller.MODE_BRANCH:
@@ -668,12 +786,12 @@ class Controller(QObserver):
                                           apply_to_worktree=True)
             self.rescan()
         else:
-            filename = qtutils.get_selected_item(widget, items)
+            filename = self.get_selected_filename(staged)
             if not filename:
                 return
             parser = utils.DiffParser(self.model,
                                       filename=filename,
-                                      cached=cached,
+                                      cached=staged,
                                       reverse=apply_to_worktree)
             offset, selection = self.view.diff_selection()
             parser.process_diff_selection(selected, offset, selection,
@@ -688,10 +806,7 @@ class Controller(QObserver):
                                 'Continue?',
                                 default=False):
             return
-        self.process_diff_selection(self.model.get_unstaged(),
-                                    self.view.unstaged,
-                                    apply_to_worktree=True,
-                                    cached=False,
+        self.process_diff_selection(staged=False, apply_to_worktree=True,
                                     reverse=True)
 
     def undo_selection(self):
@@ -702,34 +817,20 @@ class Controller(QObserver):
                                 'Continue?',
                                 default=False):
             return
-        self.process_diff_selection(self.model.get_unstaged(),
-                                    self.view.unstaged,
-                                    apply_to_worktree=True,
-                                    cached=False,
-                                    reverse=True,
-                                    selected=True)
+        self.process_diff_selection(staged=False, apply_to_worktree=True,
+                                    reverse=True, selected=True)
 
     def stage_hunk(self):
-        self.process_diff_selection(self.model.get_unstaged(),
-                                    self.view.unstaged,
-                                    cached=False)
+        self.process_diff_selection(staged=False)
 
     def stage_hunk_selection(self):
-        self.process_diff_selection(self.model.get_unstaged(),
-                                    self.view.unstaged,
-                                    cached=False,
-                                    selected=True)
+        self.process_diff_selection(staged=False, selected=True)
 
     def unstage_hunk(self, cached=True):
-        self.process_diff_selection(self.model.get_staged(),
-                                    self.view.staged,
-                                    cached=True)
+        self.process_diff_selection(staged=True)
 
     def unstage_hunk_selection(self):
-        self.process_diff_selection(self.model.get_staged(),
-                                    self.view.staged,
-                                    cached=True,
-                                    selected=True)
+        self.process_diff_selection(staged=True, selected=True)
 
     # #######################################################################
     # end diff gui
@@ -738,30 +839,24 @@ class Controller(QObserver):
     def stage_selected(self,*rest):
         """Use "git add" to add items to the git index.
         This is a thin wrapper around map_to_listwidget."""
-        command = self.model.add_or_remove
-        widget = self.view.unstaged
-        items = self.model.get_unstaged()
-        self.map_to_listwidget(command, widget, items)
+        unstaged = self.model.get_unstaged()
+        selected = self.view.get_unstaged(unstaged)
+        if not selected:
+            return
+        self.log(self.model.add_or_remove(selected), quiet=True)
 
     # *rest handles being called from different signals
     def unstage_selected(self, *rest):
         """Use "git reset" to remove items from the git index.
         This is a thin wrapper around map_to_listwidget."""
-        command = self.model.reset_helper
-        widget = self.view.staged
-        items = self.model.get_staged()
-        self.map_to_listwidget(command, widget, items)
+        staged = self.model.get_staged()
+        selected = self.view.get_staged(staged)
+        self.log(self.model.reset_helper(selected), quiet=True)
 
     def undo_changes(self):
         """Reverts local changes back to whatever's in HEAD."""
-        widget = self.view.unstaged
-        items = self.model.get_unstaged()
-        potential_items = qtutils.get_selection_list(widget, items)
-        items_to_undo = []
-        untracked = self.model.get_untracked()
-        for item in potential_items:
-            if item not in untracked:
-                items_to_undo.append(item)
+        modified = self.model.get_modified()
+        items_to_undo = self.view.get_modified(modified)
         if items_to_undo:
             if not qtutils.question(self.view,
                                     'Destroy Local Changes?',
@@ -820,47 +915,41 @@ class Controller(QObserver):
         output = command(*apply_items)
         self.log(output, quiet=True)
 
-    def staged_context_menu_event(self, event):
-        menu = self.staged_context_menu_setup()
-        staged = self.view.staged
-        menu.exec_(staged.mapToGlobal(event.pos()))
+    def tree_context_menu_event(self, event):
+        menu = self.tree_context_menu_setup()
+        menu.exec_(self.view.status_tree.mapToGlobal(event.pos()))
 
-    def staged_context_menu_setup(self):
+    def tree_context_menu_setup(self):
+        staged, modified, unmerged, untracked = self.get_single_selection()
+
         menu = QMenu(self.view)
-        menu.addAction(self.tr('Unstage Selected'), self.unstage_selected)
-        menu.addSeparator()
-        menu.addAction(self.tr('Launch Editor'),
-                       lambda: self.edit_file(staged=True))
-        menu.addAction(self.tr('Launch Diff Tool'),
-                       lambda: self.edit_diff(staged=True))
-        return menu
 
-    def unstaged_context_menu_event(self, event):
-        menu = self.unstaged_context_menu_setup()
-        unstaged = self.view.unstaged
-        menu.exec_(unstaged.mapToGlobal(event.pos()))
+        if staged:
+            menu.addAction(self.tr('Unstage Selected'), self.unstage_selected)
+            menu.addSeparator()
+            menu.addAction(self.tr('Launch Editor'),
+                           lambda: self.edit_file(staged=True))
+            menu.addAction(self.tr('Launch Diff Tool'),
+                           lambda: self.edit_diff(staged=True))
+            return menu
 
-    def unstaged_context_menu_setup(self):
-        unstaged_item = qtutils.get_selected_item(self.view.unstaged,
-                                                  self.model.get_unstaged())
-        is_tracked = unstaged_item not in self.model.get_untracked()
-        is_unmerged = unstaged_item in self.model.get_unmerged()
         enable_staging = self.mode == Controller.MODE_WORKTREE
-        enable_undo = enable_staging and is_tracked
 
-        menu = QMenu(self.view)
-        if enable_staging and not is_unmerged:
+        if (modified or unmerged or untracked) and enable_staging:
             menu.addAction(self.tr('Stage Selected'), self.stage_selected)
             menu.addSeparator()
-        if is_unmerged and not utils.is_broken():
+
+        if unmerged and not utils.is_broken():
             menu.addAction(self.tr('Launch Merge Tool'), self.mergetool)
 
         menu.addAction(self.tr('Launch Editor'),
                        lambda: self.edit_file(staged=False))
-        if enable_staging and not is_unmerged:
+
+        if (modified or untracked) and enable_staging:
             menu.addAction(self.tr('Launch Diff Tool'),
                            lambda: self.edit_diff(staged=False))
-        if enable_undo and not is_unmerged:
+
+        if modified and enable_staging:
             menu.addSeparator()
             menu.addAction(self.tr('Undo All Changes'), self.undo_changes)
         return menu
@@ -872,16 +961,10 @@ class Controller(QObserver):
 
     def diff_context_menu_setup(self):
         menu = QMenu(self.view)
+        staged, modified, unmerged, untracked = self.get_single_selection()
 
         if self.mode == Controller.MODE_WORKTREE:
-            unstaged_item =\
-                qtutils.get_selected_item(self.view.unstaged,
-                                          self.model.get_unstaged())
-            is_tracked= (unstaged_item
-                         and unstaged_item not in self.model.get_untracked())
-            is_unmerged = (unstaged_item
-                           and unstaged_item in self.model.get_unmerged())
-            if is_tracked and not is_unmerged:
+            if modified:
                 menu.addAction(self.tr('Stage Hunk For Commit'),
                                self.stage_hunk)
                 menu.addAction(self.tr('Stage Selected Lines'),

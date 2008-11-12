@@ -109,6 +109,6 @@ def main():
         valid = model.use_worktree(gitdir)
 
     os.chdir(model.git.get_work_tree())
-    ctl = Controller(model, view)
     view.show()
+    ctl = Controller(model, view)
     sys.exit(app.exec_())
