@@ -64,8 +64,6 @@ class LogView(CreateStandardView(Ui_logger, QDialog)):
 class ItemView(object):
     def init(self, parent, title="", items=[], dblclick=None):
         self.setWindowTitle(title)
-        self.items = []
-        self.items.extend(items)
         self.items_widget.addItems(items)
         if dblclick and type(self.items_widget) is QListWidget:
             self.connect(self.items_widget,
@@ -82,7 +80,7 @@ class ItemView(object):
         self.move(x, y)
         self.show()
         if self.exec_() == QDialog.Accepted:
-            return self.items[self.idx()]
+            return self.value()
         else:
             return None
 
@@ -90,11 +88,18 @@ class ComboView(CreateStandardView(Ui_combo, QDialog, ItemView), ItemView):
     """A dialog for choosing branches."""
     def idx(self):
         return self.items_widget.currentIndex()
+    def value(self):
+        return str(self.items_widget.currentText())
 
 class ListView(CreateStandardView(Ui_items, QDialog, ItemView), ItemView):
     """A dialog for an item from a list."""
     def idx(self):
         return self.items_widget.currentRow()
+    def value(self):
+        item = self.items_widget.currentItem()
+        if not item:
+            return None
+        return str(item.text())
 
 class CommitView(CreateStandardView(Ui_commit, QDialog)):
     def init(self, parent=None, title=None):
