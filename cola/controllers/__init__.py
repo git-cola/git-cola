@@ -203,7 +203,7 @@ class Controller(QObserver):
         self.connect(view.toolbar_show_log,
                      'triggered()', self.show_log)
 
-        self.merge_msg_imported = False
+        self.merge_msg_hash = ''
         self.load_gui_settings()
         self.rescan()
         self.init_log_window()
@@ -585,12 +585,13 @@ class Controller(QObserver):
 
         if not self.view.amend_is_checked():
             # Check if there's a message file in .git/
-            if self.merge_msg_imported:
-                return
-            self.merge_msg_imported = True
             merge_msg_path = self.model.get_merge_message_path()
             if merge_msg_path is None:
                 return
+            merge_msg_hash = self.model.git.hash_object(merge_msg_path)
+            if merge_msg_hash == self.merge_msg_hash:
+                return
+            self.merge_msg_hash = merge_msg_hash
             self.model.load_commitmsg(merge_msg_path)
 
     def fetch(self):
