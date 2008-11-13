@@ -522,6 +522,16 @@ class Controller(QObserver):
             args.extend(['--', filename])
             utils.fork(*args)
 
+    def delete_file(self, staged=False):
+        filename = self.get_selected_filename(staged=staged)
+        if filename:
+            try:
+                os.remove(filename)
+            except Exception:
+                self.log("Error deleting file " + filename)
+            else:
+                self.rescan()
+
     # use *rest to handle being called from different signals
     def diff_staged(self, *rest):
         self.view_diff(staged=True)
@@ -952,6 +962,11 @@ class Controller(QObserver):
         if modified and enable_staging:
             menu.addSeparator()
             menu.addAction(self.tr('Undo All Changes'), self.undo_changes)
+
+        if untracked:
+            menu.addAction(self.tr('Delete File'),
+                           lambda: self.delete_file(staged=False))
+
         return menu
 
     def diff_context_menu_event(self, event):
