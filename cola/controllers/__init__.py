@@ -261,6 +261,8 @@ class Controller(QObserver):
             self.model.add_or_remove(modified)
         elif untracked:
             self.model.add_or_remove(untracked)
+        else:
+            return
         self.rescan()
 
     def click_tree(self, event):
@@ -312,11 +314,16 @@ class Controller(QObserver):
                 items = self.model.get_staged()
                 selected = self.view.get_staged(items)
                 self.model.reset_helper(selected)
+                self.rescan()
             else:
                 items = self.model.get_unstaged()
                 selected = self.view.get_unstaged(items)
-                self.model.add_or_remove(selected)
-            self.rescan()
+                for unmerged in self.model.get_unmerged():
+                    if unmerged in selected:
+                        selected.remove(unmerged)
+                if selected:
+                    self.model.add_or_remove(selected)
+                    self.rescan()
         return result
 
     #####################################################################
