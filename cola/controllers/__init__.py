@@ -212,6 +212,10 @@ class Controller(QObserver):
         else:
             return None
 
+    def get_untracked_items(self):
+        items = self.model.get_untracked()
+        return self.view.get_untracked(items)
+
     def get_unstaged_item(self):
         unstaged = self.model.get_unstaged()
         unstaged = self.view.get_unstaged(unstaged)
@@ -522,15 +526,16 @@ class Controller(QObserver):
             args.extend(['--', filename])
             utils.fork(*args)
 
-    def delete_file(self, staged=False):
-        filename = self.get_selected_filename(staged=staged)
-        if filename:
-            try:
-                os.remove(filename)
-            except Exception:
-                self.log("Error deleting file " + filename)
-            else:
-                self.rescan()
+    def delete_files(self, staged=False):
+        filenames = self.get_untracked_items()
+        for filename in filenames:
+            if filename:
+                try:
+                    os.remove(filename)
+                except Exception:
+                    self.log("Error deleting file " + filename)
+                else:
+                    self.rescan()
 
     # use *rest to handle being called from different signals
     def diff_staged(self, *rest):
@@ -964,8 +969,8 @@ class Controller(QObserver):
             menu.addAction(self.tr('Undo All Changes'), self.undo_changes)
 
         if untracked:
-            menu.addAction(self.tr('Delete File'),
-                           lambda: self.delete_file(staged=False))
+            menu.addAction(self.tr('Delete File(s)'),
+                           lambda: self.delete_files(staged=False))
 
         return menu
 
