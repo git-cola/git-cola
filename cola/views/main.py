@@ -148,9 +148,9 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
         parent = item.parent()
         if not parent:
             return -1, False
+        idx = parent.indexOfChild(item)
         pidx = tree.indexOfTopLevelItem(parent)
         if pidx == View.IDX_STAGED or pidx == View.IDX_MODIFIED:
-            idx = parent.indexOfChild(item)
             return idx, tree.isItemSelected(item)
         elif pidx == View.IDX_UNMERGED:
             num_modified = tree.topLevelItem(View.IDX_MODIFIED).childCount()
