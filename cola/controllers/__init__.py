@@ -955,27 +955,31 @@ class Controller(QObserver):
                            lambda: self.edit_diff(staged=True))
             return menu
 
-        enable_staging = self.mode == Controller.MODE_WORKTREE
+        if unmerged:
+            if not utils.is_broken():
+                menu.addAction(self.tr('Launch Merge Tool'), self.mergetool)
+            menu.addAction(self.tr('Launch Editor'),
+                           lambda: self.edit_file(staged=False))
+            menu.addSeparator()
+            menu.addAction(self.tr('Stage Selected'), self.stage_selected)
+            return menu
 
-        if (modified or unmerged or untracked) and enable_staging:
+        enable_staging = self.mode == Controller.MODE_WORKTREE
+        if enable_staging:
             menu.addAction(self.tr('Stage Selected'), self.stage_selected)
             menu.addSeparator()
-
-        if unmerged and not utils.is_broken():
-            menu.addAction(self.tr('Launch Merge Tool'), self.mergetool)
 
         menu.addAction(self.tr('Launch Editor'),
                        lambda: self.edit_file(staged=False))
 
-        if (modified or untracked) and enable_staging:
+        if modified and enable_staging:
             menu.addAction(self.tr('Launch Diff Tool'),
                            lambda: self.edit_diff(staged=False))
-
-        if modified and enable_staging:
             menu.addSeparator()
             menu.addAction(self.tr('Undo All Changes'), self.undo_changes)
 
         if untracked:
+            menu.addSeparator()
             menu.addAction(self.tr('Delete File(s)'),
                            lambda: self.delete_files(staged=False))
 
