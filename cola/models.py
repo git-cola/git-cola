@@ -498,6 +498,7 @@ class Model(model.Model):
         # hold both modified and untracked files.
         self.staged = []
         self.modified = []
+        self.unmerged = []
         self.untracked = []
 
         # Read git status items
