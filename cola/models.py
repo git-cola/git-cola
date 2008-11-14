@@ -144,7 +144,6 @@ class Model(model.Model):
             unstaged = [],
             untracked = [],
             unmerged = [],
-            show_untracked = True,
 
             #####################################################
             # Used by the create branch dialog
@@ -493,46 +492,14 @@ class Model(model.Model):
         notify_enabled = self.get_notify()
         self.set_notify(False)
 
-        # Reset the staged and unstaged model lists
-        # NOTE: the model's unstaged list is used to
-        # hold both modified and untracked files.
-        self.staged = []
-        self.modified = []
-        self.unmerged = []
-        self.untracked = []
-
-        # Read git status items
-        (staged_items,
-         modified_items,
-         untracked_items,
-         unmerged_items) = self.get_workdir_state(amend=amend)
-
-        # Gather items to be committed
-        for staged in staged_items:
-            if staged not in self.get_staged():
-                self.add_staged(staged)
-
-        # Gather unindexed items
-        for modified in modified_items:
-            if modified not in self.get_modified():
-                self.add_modified(modified)
-
-        # Gather untracked items
-        for untracked in untracked_items:
-            if untracked not in self.get_untracked():
-                self.add_untracked(untracked)
-
-        # Gather unmerged items
-        for unmerged in unmerged_items:
-            if unmerged not in self.get_unmerged():
-                self.add_unmerged(unmerged)
-
+        (self.staged,
+         self.modified,
+         self.unmerged,
+         self.untracked) = self.get_workdir_state(amend=amend)
+        # NOTE: the model's unstaged list holds an aggregate of the
+        # the modified, unmerged, and untracked file lists.
+        self.set_unstaged(self.modified + self.unmerged + self.untracked)
         self.set_currentbranch(self.current_branch())
-        if self.get_show_untracked():
-            self.set_unstaged(self.get_modified() + self.get_unmerged() +
-                              self.get_untracked())
-        else:
-            self.set_unstaged(self.get_modified() + self.get_unmerged())
         self.set_remotes(self.git.remote().splitlines())
         self.set_remote_branches(self.branch_list(remote=True))
         self.set_local_branches(self.branch_list(remote=False))
@@ -859,20 +826,20 @@ class Model(model.Model):
         head = 'HEAD'
         if amend:
             head = 'HEAD^'
-        (staged, unstaged, unmerged, untracked) = ([], [], [], [])
+        (staged, modified, unmerged, untracked) = ([], [], [], [])
         try:
             for name in self.git.diff_index(head).splitlines():
                 rest, name = name.split('\t')
                 status = rest[-1]
                 name = eval_path(name)
                 if status == 'M' or status == 'D':
-                    unstaged.append(name)
+                    modified.append(name)
         except:
             # handle git init
             for name in (self.git.ls_files(modified=True, z=True)
                                  .split('\0')):
                 if name:
-                    unstaged.append(name.decode('utf-8'))
+                    modified.append(name.decode('utf-8'))
 
         try:
             for name in (self.git.diff_index(head, cached=True)
@@ -885,14 +852,14 @@ class Model(model.Model):
                     # is this file partially staged?
                     diff = self.git.diff('--', name, name_only=True, z=True)
                     if not diff.strip():
-                        unstaged.remove(name)
+                        modified.remove(name)
                     else:
                         self.partially_staged.add(name)
                 elif status == 'A':
                     staged.append(name)
                 elif status == 'D':
                     staged.append(name)
-                    unstaged.remove(name)
+                    modified.remove(name)
                 elif status == 'U':
                     unmerged.append(name)
         except:
@@ -906,7 +873,12 @@ class Model(model.Model):
             if name:
                 untracked.append(name.decode('utf-8'))
 
-        return (staged, unstaged, untracked, unmerged)
+        # remove duplicate merged and modified entries
+        for u in unmerged:
+            if u in modified:
+                modified.remove(u)
+
+        return (staged, modified, unmerged, untracked)
 
     def reset_helper(self, args):
         """Removes files from the index.
