@@ -25,9 +25,6 @@
          <property name="rootIsDecorated" >
           <bool>false</bool>
          </property>
-         <property name="sortingEnabled" >
-          <bool>false</bool>
-         </property>
          <property name="allColumnsShowFocus" >
           <bool>true</bool>
          </property>
