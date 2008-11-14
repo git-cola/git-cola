@@ -534,6 +534,7 @@ class Controller(QObserver):
             utils.fork(*args)
 
     def delete_files(self, staged=False):
+        rescan=False
         filenames = self.get_untracked_items()
         for filename in filenames:
             if filename:
@@ -542,7 +543,9 @@ class Controller(QObserver):
                 except Exception:
                     self.log("Error deleting file " + filename)
                 else:
-                    self.rescan()
+                    rescan=True
+        if rescan:
+            self.rescan()
 
     # use *rest to handle being called from different signals
     def diff_staged(self, *rest):
