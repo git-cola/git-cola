@@ -769,17 +769,27 @@ class Model(model.Model):
                                    with_raw_output=True,
                                    *argv)
         diff = diffoutput.splitlines()
+        # Some files are not in UTF-8; some other aren't in any codification.
+        # Remember that GIT doesn't care about encodings (saves binary data)
+        encoding_tests = ["utf8","iso-8859-15","windows1252","ascii"] # <- add here your encodings
+
         for line in diff:
-            line = unicode(line.decode('utf-8'))
+            for encoding in encoding_tests:
+                try:
+                    line = unicode(line.decode(encoding))
+                    break;
+                except:
+                    pass
+
             if not start and '@@' == line[:2] and '@@' in line[2:]:
                 start = True
             if start or(deleted and del_tag in line):
-                output.write(line.encode('utf-8') + '\n')
+                output.write(line.encode('utf-8','replace') + '\n')
             else:
                 if with_diff_header:
                     headers.append(line)
                 elif not suppress_header:
-                    output.write(line.encode('utf-8') + '\n')
+                    output.write(line.encode('utf-8','replace') + '\n')
 
         result = output.getvalue().decode('utf-8')
         output.close()
