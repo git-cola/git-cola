@@ -9,6 +9,7 @@ from cStringIO import StringIO
 from cola import git
 from cola import utils
 from cola import model
+from cola.core import encode, decode
 
 #+-------------------------------------------------------------------------
 #+ A regex for matching the output of git(log|rev-list) --pretty=oneline
@@ -93,7 +94,7 @@ class GitCola(git.Git):
 def eval_path(path):
     """handles quoted paths."""
     if path.startswith('"') and path.endswith('"'):
-        return eval(path).decode('utf-8')
+        return decode(eval(path))
     else:
         return path
 
@@ -277,7 +278,7 @@ class Model(model.Model):
 
     def get_diff_filenames(self, arg):
         diff_zstr = self.git.diff(arg, name_only=True, z=True).rstrip('\0')
-        return [ f.decode('utf-8') for f in diff_zstr.split('\0') if f ]
+        return [ decode(f) for f in diff_zstr.split('\0') if f ]
 
     def branch_list(self, remote=False):
         branches = map(lambda x: x.lstrip('* '),
@@ -389,7 +390,7 @@ class Model(model.Model):
         to_remove = []
 
         for filename in to_process:
-            encfilename = filename.encode('utf-8')
+            encfilename = encode(filename)
             if os.path.exists(encfilename):
                 to_add.append(filename)
 
@@ -460,7 +461,7 @@ class Model(model.Model):
 
     def load_commitmsg(self, path):
         file = open(path, 'r')
-        contents = file.read().decode('utf-8')
+        contents = decode(file.read())
         file.close()
         self.set_commitmsg(contents)
 
@@ -468,7 +469,7 @@ class Model(model.Model):
         """Queries git for the latest commit message and sets it in
         self.commitmsg."""
         commit_msg = []
-        commit_lines = self.git.show('HEAD').decode('utf-8').split('\n')
+        commit_lines = decode(self.git.show('HEAD')).split('\n')
         for idx, msg in enumerate(commit_lines):
             if idx < 4:
                 continue
@@ -552,7 +553,7 @@ class Model(model.Model):
         filename = self.get_filename(idx, staged=staged)
         if not filename:
             return (None, None, None)
-        encfilename = filename.encode('utf-8')
+        encfilename = encode(filename)
         if staged:
             if os.path.exists(encfilename):
                 status = 'Staged for commit'
@@ -639,7 +640,7 @@ class Model(model.Model):
         newdict = {}
         for line in config_lines:
             k, v = line.split('=', 1)
-            v = v.decode('utf-8')
+            v = decode(v)
             k = k.replace('.','_') # git -> model
             if v == 'true' or v == 'false':
                 v = bool(eval(v.title()))
@@ -760,7 +761,7 @@ class Model(model.Model):
         del_tag = 'deleted file mode '
 
         headers = []
-        deleted = cached and not os.path.exists(filename.encode('utf-8'))
+        deleted = cached and not os.path.exists(encode(filename))
 
         diffoutput = self.git.diff(R=reverse,
                                    cached=cached,
@@ -769,29 +770,18 @@ class Model(model.Model):
                                    with_raw_output=True,
                                    *argv)
         diff = diffoutput.splitlines()
-        # Some files are not in UTF-8; some other aren't in any codification.
-        # Remember that GIT doesn't care about encodings (saves binary data)
-        encoding_tests = ["utf8","iso-8859-15","windows1252","ascii"] # <- add here your encodings
-
-        for line in diff:
-            for encoding in encoding_tests:
-                try:
-                    line = unicode(line.decode(encoding))
-                    break;
-                except:
-                    pass
-
+        for line in map(decode, diff):
             if not start and '@@' == line[:2] and '@@' in line[2:]:
                 start = True
             if start or(deleted and del_tag in line):
-                output.write(line.encode('utf-8','replace') + '\n')
+                output.write(encode(line) + '\n')
             else:
                 if with_diff_header:
                     headers.append(line)
                 elif not suppress_header:
-                    output.write(line.encode('utf-8','replace') + '\n')
+                    output.write(encode(line) + '\n')
 
-        result = output.getvalue().decode('utf-8')
+        result = decode(output.getvalue())
         output.close()
 
         if with_diff_header:
@@ -849,7 +839,7 @@ class Model(model.Model):
             for name in (self.git.ls_files(modified=True, z=True)
                                  .split('\0')):
                 if name:
-                    modified.append(name.decode('utf-8'))
+                    modified.append(decode(name))
 
         try:
             for name in (self.git.diff_index(head, cached=True)
@@ -876,12 +866,12 @@ class Model(model.Model):
             # handle git init
             for name in self.git.ls_files(z=True).strip('\0').split('\0'):
                 if name:
-                    staged.append(name.decode('utf-8'))
+                    staged.append(decode(name))
 
         for name in self.git.ls_files(others=True, exclude_standard=True,
                                       z=True).split('\0'):
             if name:
-                untracked.append(name.decode('utf-8'))
+                untracked.append(decode(name))
 
         # remove duplicate merged and modified entries
         for u in unmerged:
@@ -1053,7 +1043,7 @@ class Model(model.Model):
         commit_list = self.parse_rev_list(rev_list)
         commit_list.reverse()
         commits = map(lambda x: x[0], commit_list)
-        descriptions = map(lambda x: x[1].decode('utf-8'), commit_list)
+        descriptions = map(lambda x: decode(x[1]), commit_list)
         if show_versions:
             fancy_descr_list = map(lambda x: self.describe(*x), commit_list)
             self.set_descriptions_start(fancy_descr_list)
@@ -1070,8 +1060,7 @@ class Model(model.Model):
     def get_changed_files(self, start, end):
         zfiles_str = self.git.diff('%s..%s' % (start, end),
                                    name_only=True, z=True).strip('\0')
-        return [ enc.decode('utf-8')
-                    for enc in zfiles_str.split('\0') if enc ]
+        return [ decode(enc) for enc in zfiles_str.split('\0') if enc ]
 
     def get_renamed_files(self, start, end):
         files = []

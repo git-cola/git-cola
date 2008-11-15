@@ -12,6 +12,7 @@ from PyQt4.QtGui import QTreeWidgetItem
 from PyQt4.QtGui import QMessageBox
 
 from cola import utils
+from cola.core import encode
 
 LOGGER = None
 
@@ -188,7 +189,7 @@ def tr(txt):
 
 def get_icon_file(filename, staged=False, untracked=False):
     if staged:
-        if os.path.exists(filename.encode('utf-8')):
+        if os.path.exists(encode(filename)):
             icon_file = utils.get_icon('staged.png')
         else:
             icon_file = utils.get_icon('removed.png')

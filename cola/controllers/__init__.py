@@ -16,6 +16,7 @@ from cola import utils
 from cola import qtutils
 from cola import defaults
 from cola import version
+from cola.core import encode
 from cola.qobserver import QObserver
 
 # controllers namespace
@@ -461,7 +462,7 @@ class Controller(QObserver):
 
         # Perform the commit
         amend = self.view.amend_is_checked()
-        umsg = msg.encode('utf-8')
+        umsg = encode(msg)
         status, output = self.model.commit_with_msg(umsg, amend=amend)
         if status == 0:
             self.view.reset_checkboxes()

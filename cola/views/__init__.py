@@ -8,6 +8,8 @@ from PyQt4.QtCore import SIGNAL
 
 from cola.syntax import DiffSyntaxHighlighter
 from cola.syntax import LogSyntaxHighlighter
+from cola.core import decode
+
 try:
     from main import View
     from main import CreateStandardView
@@ -55,7 +57,7 @@ class LogView(CreateStandardView(Ui_logger, QDialog)):
         cursor.movePosition(cursor.End)
         text = self.output_text
         cursor.insertText(time.asctime() + '\n')
-        for line in unicode(output.decode('utf-8')).splitlines():
+        for line in unicode(decode(output)).splitlines():
             cursor.insertText(line + '\n')
         cursor.insertText('\n')
         cursor.movePosition(cursor.End)

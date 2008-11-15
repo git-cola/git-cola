@@ -9,6 +9,7 @@ import sys
 import subprocess
 import errno
 from cola.exception import GitCommandError
+from cola.core import encode
 
 def dashify(string):
     return string.replace('_', '-')
@@ -187,7 +188,7 @@ class Git(object):
 
         # Prepare the argument list
         opt_args = self.transform_kwargs(**kwargs)
-        ext_args = [a.encode('utf-8') for a in args]
+        ext_args = map(encode, args)
         args = opt_args + ext_args
 
         call = ['git', dashify(method)]
