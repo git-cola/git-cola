@@ -18,6 +18,16 @@ install-doc:
 install-html:
 	$(MAKE) -C share/doc/cola install-html
 
+uninstall:
+	rm -rf  "$(DESTDIR)$(prefix)"/bin/git-cola \
+		"$(DESTDIR)$(prefix)"/bin/git-difftool \
+		"$(DESTDIR)$(prefix)"/bin/cola \
+		"$(DESTDIR)$(prefix)"/share/doc/cola \
+		"$(DESTDIR)$(prefix)"/share/cola \
+		"$(DESTDIR)$(prefix)"/share/applications/cola.desktop \
+		"$(DESTDIR)$(prefix)"/lib/python2.*/site-packages/cola \
+		"$(DESTDIR)$(prefix)"/lib/python2.*/site-packages/cola-*
+
 test:
 	@env PYTHONPATH=$(CURDIR):$(CURDIR)/build/lib:$(PYTHONPATH) nosetests
 
