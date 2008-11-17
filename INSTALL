@@ -38,6 +38,45 @@ If you want to do a global install you can do
 
     # make prefix=/usr install
 
+You can also run git-cola without installing it.
+It is designed to run directly out of the source tree
+This is the best way to run git-cola when you're
+modifying the code.
+
+    $ make
+    $ bin/git-cola
+
+
+BUILD ISSUES
+
+Some systems have pyuic4 scripts that are missing the shebang line.
+If your version of $(wich pyuic4) looks like:
+
+exec python /path/to/pyuic4.py ...
+
+Then simply add this line to the top of the file:
+
+#!/bin/sh
+
+That will fix the build by making pyuic4 a proper shell script.
+
+
+PYQT4 ISSUES
+
+An older version of pyuic4 generated code that could not be
+run by PyQt4.  This problem has been fixed in the latest
+versions of PyQt4 (4.4.x), but you might encounter it if
+you are not running the latest version of PyQt4.
+
+If you try to run git-cola and see error messages
+about "setSortingEnabled(..)" then your pyuic4/PyQt4
+version is affected. There's a simple workaround, though:
+remove the line of code listed in the traceback and
+everything should work fine.
+
+
+PYUIC4 AND WINDOWS
+
 To build cola on windows you'll need to add the following
 shell script to a directory in your path and name it 'pyuic4':
 
