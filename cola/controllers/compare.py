@@ -1,3 +1,5 @@
+"""This controller handles the compare commits dialog."""
+
 import os
 
 from cola import utils

@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # Copyright (c) 2008 David Aguilar
+"""This handles saving complex settings such as bookmarks, etc.
+"""
+
 HAS_SIMPLEJSON = False
 try:
     import simplejson
@@ -12,7 +15,6 @@ import user
 from cola.model import Model
 
 class SettingsModel(Model):
-
     def init(self):
         self.create( bookmarks = [] )
         if not HAS_SIMPLEJSON:

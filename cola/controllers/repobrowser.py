@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+"""This controller handles the repository file browser."""
+
+
 import os
 from PyQt4.QtGui import QDialog
 

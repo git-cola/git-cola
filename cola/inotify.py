@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 # Copyright (c) 2008 David Aguilar
+"""This module provides an inotify plugin for Linux and other systems
+which provide the pyinotify module.
+
+"""
+
 import os
 import time
 from PyQt4.QtCore import QCoreApplication

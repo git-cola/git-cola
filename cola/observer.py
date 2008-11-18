@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Copyright (c) 2008 David Aguilar
-from pprint import pformat
+"""This module provides the Observer design pattern.
+"""
 
 class Observer(object):
     """

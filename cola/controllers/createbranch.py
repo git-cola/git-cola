@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+"""This controller handles the create branch dialog."""
+
+
 import os
 from PyQt4.QtGui import QDialog
 

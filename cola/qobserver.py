@@ -1,5 +1,18 @@
 #!/usr/bin/env python
 # Copyright (c) 2008 David Aguilar
+"""This module provides the QObserver class which allows for simple
+correspondancies between model parameters and Qt widgets.
+
+The QObserver class handles receiving notifications from
+model classes and updating Qt widgets accordingly.
+
+Qt signals are also relayed back to the model so that changes
+are always available in the model without having to worry about the
+different ways to query Qt widgets.
+
+"""
+
+
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import QObject
 from PyQt4.QtCore import SIGNAL
@@ -21,6 +34,7 @@ from PyQt4.QtGui import QTreeWidgetItem
 from PyQt4.QtCore import QVariant
 
 from cola.observer import Observer
+
 
 class QObserver(Observer, QObject):
 
@@ -301,6 +315,7 @@ class QObserver(Observer, QObject):
             action(*widgets)
 
     def refresh_view(self, *params):
+        """Sends a notification message for each known model parameter."""
         if not params:
             params= tuple(self.__model_to_view.keys()
                          +self.__actions.keys())

@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+"""This controller handles the search dialog."""
+
+
 import os
 import re
 import time

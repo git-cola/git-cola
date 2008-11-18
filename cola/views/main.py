@@ -1,3 +1,6 @@
+"""This view provides the main git-cola user interface.
+"""
+
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import QMainWindow

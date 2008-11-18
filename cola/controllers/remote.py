@@ -1,3 +1,6 @@
+"""This controller handles the remote dialog."""
+
+
 import os
 from PyQt4.QtGui import QDialog
 

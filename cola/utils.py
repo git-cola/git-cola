@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # Copyright (c) 2008 David Aguilar
+"""This module provides miscellaneous utility functions."""
+
 import os
 import re
 import sys
@@ -41,6 +43,7 @@ def run_cmd(*command):
     return git.Git.execute(command)
 
 def get_qm_for_locale(locale):
+    """Returns the .qm file for a particular $LANG values."""
     regex = re.compile(r'([^\.])+\..*$')
     match = regex.match(locale)
     if match:
@@ -51,9 +54,11 @@ def get_qm_for_locale(locale):
     return os.path.join(QMDIR, basename +'.qm')
 
 def get_resource_dirs(styledir):
+    """Returns all directories underneath the share/cola/styles directory."""
     return [ r for r in glob(styledir+ '/*') if os.path.isdir(r) ]
 
 def get_stylesheet(name):
+    """Returns the path to a stylesheet within the cola install tree."""
     stylesheet = os.path.join(STYLEDIR, name+'.qss')
     if os.path.exists(stylesheet):
         return stylesheet
@@ -61,6 +66,7 @@ def get_stylesheet(name):
         return None
 
 def get_htmldocs():
+    """Returns the path to the cola html documentation."""
     return os.path.join(DOCDIR, 'git-cola.html')
 
 def ident_file_type(filename):
@@ -84,9 +90,11 @@ def get_file_icon(filename):
     return get_icon(icon_file)
 
 def get_icon(icon_file):
+    """Returns the full path to an icon file given a basename."""
     return os.path.join(ICONSDIR, icon_file)
 
 def fork(*args):
+    """Launches a command in the background."""
     args = tuple([ encode(a) for a in args ])
     if os.name in ('nt', 'dos'):
         for path in os.environ['PATH'].split(os.pathsep):
@@ -101,8 +109,9 @@ def fork(*args):
         argv = map(shell_quote, args)
         return os.system(' '.join(argv) + '&')
 
-# c = a - b
 def sublist(a,b):
+    """Subtracts list b from list a and returns the resulting list."""
+    # conceptually, c = a - b
     c = []
     for item in a:
         if item not in b:
@@ -111,6 +120,9 @@ def sublist(a,b):
 
 __grep_cache = {}
 def grep(pattern, items, squash=True):
+    """Greps a list for items that match a pattern and return a list of
+    matching items.  If only one item matches, return just that item.
+    """
     isdict = type(items) is dict
     if pattern in __grep_cache:
         regex = __grep_cache[pattern]
@@ -184,17 +196,20 @@ def project_name():
     return os.path.basename(defaults.DIRECTORY)
 
 def slurp(path):
+    """Slurps a filepath into a string."""
     file = open(path)
     slushy = file.read()
     file.close()
     return decode(slushy)
 
 def write(path, contents):
+    """Writes a string to a file."""
     file = open(path, 'w')
     file.write(encode(contents))
     file.close()
 
 class DiffParser(object):
+    """Handles parsing diff for use by the interactive index editor."""
     def __init__(self, model, filename='',
                  cached=True, branch=None, reverse=False):
 
@@ -231,6 +246,7 @@ class DiffParser(object):
                               reverse=bool(branch))
 
     def write_diff(self,filename,which,selected=False,noop=False):
+        """Writes a new diff corresponding to the user's selection."""
         if not noop and which < len(self.diffs):
             diff = self.diffs[which]
             write(filename, self.header + '\n' + diff + '\n')
@@ -239,9 +255,12 @@ class DiffParser(object):
             return False
 
     def get_diffs(self):
+        """Returns the list of diffs."""
         return self.__diffs
 
     def get_diff_subset(self, diff, start, end):
+        """Processes the diffs and returns a selected subset from that diff.
+        """
         adds = 0
         deletes = 0
         newdiff = []
@@ -299,27 +318,33 @@ class DiffParser(object):
         return (self.header + '\n' + '\n'.join(newdiff) + '\n')
 
     def get_spans(self):
+        """Returns the line spans of each hunk."""
         return self.__diff_spans
 
     def get_offsets(self):
+        """Returns the offsets."""
         return self.__diff_offsets
 
     def set_diff_to_offset(self, offset):
+        """Sets the diff selection to be the hunk at a particular offset."""
         self.offset = offset
         self.diffs, self.selected = self.get_diff_for_offset(offset)
 
     def set_diffs_to_range(self, start, end):
+        """Sets the diff selection to be a range of hunks."""
         self.start = start
         self.end = end
         self.diffs, self.selected = self.get_diffs_for_range(start,end)
 
     def get_diff_for_offset(self, offset):
+        """Returns the hunks for a particular offset."""
         for idx, diff_offset in enumerate(self.__diff_offsets):
             if offset < diff_offset:
                 return (['\n'.join(self.__diffs[idx])], [idx])
         return ([],[])
 
     def get_diffs_for_range(self, start, end):
+        """Returns the hunks for a selected range."""
         diffs = []
         indices = []
         for idx, span in enumerate(self.__diff_spans):
@@ -337,6 +362,8 @@ class DiffParser(object):
         return diffs, indices
 
     def parse_diff(self, diff):
+        """Parses a diff and extracts headers, offsets, hunks, etc.
+        """
         total_offset = 0
         self.__idx = -1
         self.__headers = []
@@ -371,6 +398,8 @@ class DiffParser(object):
 
     def process_diff_selection(self, selected, offset, selection,
                                apply_to_worktree=False):
+        """Processes a diff selection and applies changes to the work tree
+        or index."""
         if selection:
             start = self.fwd_diff.index(selection)
             end = start + len(selection)
@@ -408,16 +437,20 @@ def strip_prefix(prefix, string):
     return string[len(prefix):]
 
 def sanitize_input(input):
+    """Removes shell metacharacters from a string."""
     for c in """ \t!@#$%^&*()\\;,<>"'[]{}~|""":
         input = input.replace(c, '_')
     return input
 
 def is_linux():
+    """Is this a linux machine?"""
     return platform.system() == 'Linux'
 
 def is_debian():
+    """Is it debian?"""
     return os.path.exists('/usr/bin/apt-get')
 
 def is_broken():
+    """Is it windows or mac? (e.g. is running git-mergetool non-trivial?)"""
     return (platform.system() == 'Windows'
             or 'Macintosh' in platform.platform())

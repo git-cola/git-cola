@@ -1,4 +1,7 @@
 # Copyright (c) 2008 David Aguilar
+"""This module provides the cola model class.
+"""
+
 import os
 import sys
 import re

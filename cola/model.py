@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # Copyright (c) 2008 David Aguilar
+"""This module provides the Model class, an observable and serializable
+data model.
+"""
+
 import os
 import imp
 from cStringIO import StringIO

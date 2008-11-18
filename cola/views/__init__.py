@@ -1,3 +1,8 @@
+"""This module creates simple wrapper classes around the auto-generated
+.ui classes.
+"""
+
+
 import sys
 import time
 

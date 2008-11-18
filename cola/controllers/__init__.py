@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""This module provides access to the application controllers."""
+
 import os
 import sys
 import time
@@ -14,10 +16,14 @@ from PyQt4.QtGui import QFont
 
 from cola import utils
 from cola import qtutils
-from cola import defaults
 from cola import version
 from cola.core import encode
 from cola.qobserver import QObserver
+
+try: # linux-only
+    from cola import inotify
+except ImportError:
+    pass
 
 # controllers namespace
 import search
@@ -60,15 +66,11 @@ class Controller(QObserver):
         """
         model.create(
             project = os.path.basename(model.git.get_work_tree()),
-            window_geom = utils.parse_geom(model.get_cola_config('geometry')),
             git_version = model.git.version(),
         )
 
         self.reset_mode()
-        # Load window settings
-        settings = QtCore.QSettings('git', 'cola');
-        geom = settings.value('geometry').toByteArray()
-        self.view.restoreState(geom)
+
         # Parent-less log window
         qtutils.LOGGER = logger()
 
@@ -80,7 +82,6 @@ class Controller(QObserver):
 
         # Binds model params to their equivalent view widget
         self.add_observables('commitmsg')#, 'staged', 'unstaged',
-                             #'show_untracked')
 
         # When a model attribute changes, this runs a specific action
         self.add_actions(global_cola_fontdiff = self.update_diff_font)
@@ -183,8 +184,6 @@ class Controller(QObserver):
             )
 
         # Delegate window events here
-        view.moveEvent = self.move_event
-        view.resizeEvent = self.resize_event
         view.closeEvent = self.quit_app
 
         view.status_tree.mousePressEvent = self.click_tree
@@ -330,7 +329,7 @@ class Controller(QObserver):
     #####################################################################
     # event() is called in response to messages from the inotify thread
     def event(self, msg):
-        if msg.type() == defaults.INOTIFY_EVENT:
+        if msg.type() == inotify.INOTIFY_EVENT:
             self.rescan()
             return True
         else:
@@ -595,10 +594,8 @@ class Controller(QObserver):
     def quit_app(self, *args):
         """Save config settings and cleanup any inotify threads."""
         if self.model.remember_gui_settings():
-            self.model.save_gui_settings()
-            settings = QtCore.QSettings('git', 'cola');
-            settings.setValue('geometry',
-                              QtCore.QVariant(self.view.saveState()));
+            self.model.set_window_geom(self.view.width(), self.view.height(),
+                                       self.view.x(), self.view.y())
         qtutils.close_log_window()
         pattern = self.model.get_tmp_file_pattern()
         for filename in glob.glob(pattern):
@@ -611,9 +608,9 @@ class Controller(QObserver):
     def load_commitmsg(self):
         file = qtutils.open_dialog(self.view,
                                    'Load Commit Message...',
-                                   defaults.DIRECTORY)
+                                   self.model.get_directory())
         if file:
-            defaults.DIRECTORY = os.path.dirname(file)
+            self.model.set_directory(os.path.dirname(file))
             slushy = utils.slurp(file)
             if slushy:
                 self.model.set_commitmsg(slushy)
@@ -909,14 +906,6 @@ class Controller(QObserver):
         """Visualizes the current branch's history using gitk."""
         browser = self.model.get_history_browser()
         utils.fork(browser, self.model.get_currentbranch())
-
-    def move_event(self, event):
-        defaults.X = event.pos().x()
-        defaults.Y = event.pos().y()
-
-    def resize_event(self, event):
-        defaults.WIDTH = event.size().width()
-        defaults.HEIGHT = event.size().height()
 
     def load_gui_settings(self):
         try:

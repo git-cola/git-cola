@@ -1,5 +1,11 @@
 #!/usr/bin/python
 # Copyright (c) 2008 David Aguilar
+"""This module provides SyntaxHighlighter classes.
+These classes are installed onto specific cola widgets and
+implement the diff syntax highlighting.
+
+"""
+
 import re
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import pyqtProperty

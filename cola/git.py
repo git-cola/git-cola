@@ -25,12 +25,15 @@ class Git(object):
     The Git class manages communication with the Git binary
     """
     def __init__(self):
-        self._git_cwd = None
+        """Constructs a Git command object."""
+        self._git_cwd = None #: The working directory used by execute()
 
     def set_cwd(self, path):
+        """Sets the current directory."""
         self._git_cwd = path
 
     def __getattr__(self, name):
+        """Handles the self.git_command(..) dispatching."""
         if name[0] == '_':
             raise AttributeError(name)
         return lambda *args, **kwargs: self._call_process(name, *args, **kwargs)

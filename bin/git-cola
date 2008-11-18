@@ -34,6 +34,7 @@ if sys.path[0] not in path_entries:
 # It is assumed that the user installed Cola using the --prefix= option
 prefix, bin = os.path.split(sys.path[0])
 
+# Scripts is win32
 if bin in ('bin', 'Scripts') and prefix != sys.prefix:
     sys.prefix = prefix
     sys.exec_prefix = prefix

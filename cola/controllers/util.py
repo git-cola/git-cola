@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+"""This module provides utility controllers.
+"""
+
+
 import os
 import time
 from PyQt4.QtGui import QDialog

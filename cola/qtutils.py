@@ -1,4 +1,7 @@
 # Copyright (c) 2008 David Aguilar
+"""This module provides miscellaneous Qt utility functions.
+"""
+
 import os
 from PyQt4 import QtCore
 from PyQt4 import QtGui
@@ -17,6 +20,8 @@ from cola.core import encode
 LOGGER = None
 
 def log(output, quiet=True, doraise=False):
+    """Sends messages to the log window.
+    """
     if not LOGGER:
         return
     LOGGER.log(output)
@@ -28,9 +33,11 @@ def log(output, quiet=True, doraise=False):
     raise_logger()
 
 def raise_logger():
+    """Raises the log window."""
     LOGGER.raise_()
 
 def input(msg, title=None):
+    """Presents the user with an input widget and returns the input."""
     if title is None:
         title = msg
     parent = QtGui.qApp.activeWindow()
@@ -38,15 +45,20 @@ def input(msg, title=None):
     return (unicode(result[0]), result[1])
 
 def close_log_window():
+    """Closes the log window."""
     LOGGER.hide()
     LOGGER.done(0)
 
 def show_output(output, **kwargs):
-    if not output: return
+    """Sends output to the log window."""
+    if not output:
+        return
     log(output, quiet=False)
 
 def toggle_log_window():
-    if not LOGGER: return
+    """Shows/hides the log window."""
+    if not LOGGER:
+        return
     if LOGGER.isVisible():
         LOGGER.hide()
     else:
@@ -54,16 +66,16 @@ def toggle_log_window():
         LOGGER.raise_()
 
 def create_listwidget_item(text, filename):
-    icon = QIcon(filename)
+    """Creates a QListWidgetItem with text and the icon at filename."""
     item = QListWidgetItem()
-    item.setIcon(icon)
+    item.setIcon(QIcon(filename))
     item.setText(text)
     return item
 
 def create_treewidget_item(text, filename):
-    icon = QIcon(filename)
+    """Creates a QTreeWidgetItem with text and the icon at filename."""
     item = QTreeWidgetItem()
-    item.setIcon(0, icon)
+    item.setIcon(0, QIcon(filename))
     item.setText(0, text)
     return item
 
@@ -116,6 +128,7 @@ def get_tree_selection(treeitem, items):
     return selected
 
 def get_selected_item(list_widget, items):
+    """Returns the selected item in a QListWidget."""
     row, selected = get_selected_row(list_widget)
     if selected and row < len(items):
         return items[row]
@@ -123,35 +136,33 @@ def get_selected_item(list_widget, items):
         return None
 
 def open_dialog(parent, title, filename=None):
-    qstr = QFileDialog.getOpenFileName(parent, parent.tr(title), filename)
-    return unicode(qstr)
+    """Creates an Open File dialog and returns a filename."""
+    return unicode(QFileDialog.getOpenFileName(parent, parent.tr(title),
+                                               filename))
 
 def opendir_dialog(parent, title, directory):
+    """Creates an Open Directory dialog and returns the file path."""
     flags = QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks
-    qstr = QFileDialog.getExistingDirectory(parent, parent.tr(title),
-                                            directory,
-                                            flags)
-    return unicode(qstr)
+    return unicode(QFileDialog.getExistingDirectory(parent, parent.tr(title),
+                                                    directory, flags))
 
 def save_dialog(parent, title, filename=''):
+    """Creates a Save File dialog and returns a filename."""
     return unicode(QFileDialog.getSaveFileName(parent,
                                                parent.tr(title),
                                                filename))
 
 def new_dir_dialog(parent, title, filename=''):
+    """Creates a New Directory dialog and returns the file path."""
     return unicode(QFileDialog.getSaveFileName(parent,
                                                parent.tr(title),
                                                filename,
                                                os.getcwd(),
                                                parent.tr('New Directory ()')))
 
-def dir_dialog(parent, title, directory):
-    directory = QFileDialog.getExistingDirectory(parent, parent.tr(title), directory)
-    return unicode(directory)
-
 def get_icon(filename):
-    icon = utils.get_icon(filename)
-    return QIcon(icon)
+    """Given a basename returns a QIcon from the corresponding cola icon."""
+    return QIcon(utils.get_icon(filename))
 
 def question(parent, title, message, default=True):
     """Launches a QMessageBox question with the provided title and message.
@@ -167,10 +178,12 @@ def question(parent, title, message, default=True):
     return result == QMessageBox.Yes
 
 def set_clipboard(text):
+    """Sets the copy/paste buffer to text."""
     QtGui.qApp.clipboard().setText(text, QClipboard.Clipboard)
     QtGui.qApp.clipboard().setText(text, QClipboard.Selection)
 
 def set_selected_item(widget, idx):
+    """Sets a the currently selected item to the item at index idx."""
     if type(widget) is QTreeWidget:
         item = widget.topLevelItem(idx)
         if item:
@@ -178,16 +191,21 @@ def set_selected_item(widget, idx):
             widget.setCurrentItem(item)
 
 def add_items(widget, items):
-    for item in items: widget.addItem(item)
+    """Adds items to a widget."""
+    for item in items:
+        widget.addItem(item)
 
 def set_items(widget, items):
+    """Clear the existing widget contents and set the new items."""
     widget.clear()
     add_items(widget, items)
 
 def tr(txt):
+    """Translate a string into a local language."""
     return unicode(QtGui.qApp.translate('', txt))
 
 def get_icon_file(filename, staged=False, untracked=False):
+    """Returns a file path representing a corresponding file path."""
     if staged:
         if os.path.exists(encode(filename)):
             icon_file = utils.get_icon('staged.png')
@@ -200,6 +218,7 @@ def get_icon_file(filename, staged=False, untracked=False):
     return icon_file
 
 def get_icon_for_file(filename, staged=False, untracked=False):
+    """Returns a QIcon for a particular file path."""
     icon_file = get_icon_file(filename, staged=staged, untracked=untracked)
     return get_icon(icon_file)
 
@@ -218,11 +237,6 @@ def create_treeitem(filename, staged=False, untracked=False):
     return create_treewidget_item(filename, icon_file)
 
 
-def create_txt_item(txt):
-    item = QListWidgetItem()
-    item.setText(txt)
-    return item
-
 def update_file_icons(widget, items, staged=True,
             untracked=False, offset=0):
     """Populate a QListWidget with custom icon items."""
@@ -239,5 +253,6 @@ def update_listwidget(widget, items, staged=True,
     add_items(widget, [ create_listitem(i, staged, untracked) for i in items ])
 
 def set_listwidget_strings(widget, items):
+    """Sets a list widget to the strings passed in items."""
     widget.clear()
-    add_items(widget, [ create_txt_item(i) for i in items ])
+    add_items(widget, [ QListWidgetItem(i) for i in items ])

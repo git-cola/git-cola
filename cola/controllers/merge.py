@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+"""This controller handles the merge dialog."""
+
+
 from PyQt4.Qt import Qt
 
 from cola import utils

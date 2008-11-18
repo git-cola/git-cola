@@ -1,3 +1,6 @@
+"""This controller handles the stash dialog."""
+
+
 import os
 
 from cola import utils
