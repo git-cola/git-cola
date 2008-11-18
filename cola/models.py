@@ -134,6 +134,7 @@ class Model(model.Model):
             #####################################################
             # Used in various places
             currentbranch = '',
+            directory = '',
             remotes = [],
             remotename = '',
             local_branch = '',
@@ -158,7 +159,6 @@ class Model(model.Model):
 
             #####################################################
             # Used by the commit/repo browser
-            directory = '',
             revisions = [],
             summaries = [],
 
@@ -613,8 +613,27 @@ class Model(model.Model):
         self.update_status()
         return output
 
-    def save_gui_settings(self):
-        self.config_set('cola.geometry', utils.get_geom(), local=False)
+    def get_window_geom(self):
+        return self.parse_geom_str(self.get_cola_config('geometry'))
+
+    def set_window_geom(self, w, h, x, y):
+        self._w = w
+        self._h = h
+        self._x = x
+        self._y = y
+        self.config_set('cola.geometry', '%dx%d+%d,%d' % self.window_geom(),
+                        local=False)
+
+    def window_geom(self):
+        return (self._w, self._h, self._x, self._y)
+
+    def parse_geom_str(self, geomstr):
+        regex = re.compile('^(\d+)x(\d+)\+(\d+),(\d+).*?')
+        match = regex.match(geomstr)
+        if match:
+            self.set_window_geom(int(match.group(1)), int(match.group(2)),
+                                 int(match.group(3)), int(match.group(4)))
+        return self.window_geom()
 
     def config_set(self, key=None, value=None, local=True):
         if key and value is not None:

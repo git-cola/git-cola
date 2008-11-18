@@ -10,7 +10,6 @@ import subprocess
 from glob import glob
 from cStringIO import StringIO
 
-from cola import defaults
 from cola import git
 from cola.git import shell_quote
 from cola.core import encode, decode
@@ -132,7 +131,8 @@ def grep(pattern, items, squash=True):
     matchdict = {}
     for item in items:
         match = regex.match(item)
-        if not match: continue
+        if not match:
+            continue
         groups = match.groups()
         if not groups:
             subitems = match.group(0)
@@ -166,34 +166,6 @@ def basename(path):
     else:
         return pathstr
 
-HEADER_LENGTH = 80
-def header(msg):
-    pad = HEADER_LENGTH - len(msg) - 4 # len(':+') + len('+:')
-    extra = pad % 2
-    pad /= 2
-    return(':+'
-          +(' ' * pad)
-          + msg
-          +(' ' * (pad + extra))
-          + '+:'
-          + '\n')
-
-def parse_geom(geomstr):
-    regex = re.compile('^(\d+)x(\d+)\+(\d+),(\d+).*?')
-    match = regex.match(geomstr)
-    if match:
-        defaults.WIDTH = int(match.group(1))
-        defaults.HEIGHT = int(match.group(2))
-        defaults.X = int(match.group(3))
-        defaults.Y = int(match.group(4))
-    return (defaults.WIDTH, defaults.HEIGHT, defaults.X, defaults.Y)
-
-def get_geom():
-    return ('%dx%d+%d,%d'
-            % (defaults.WIDTH, defaults.HEIGHT, defaults.X, defaults.Y))
-
-def project_name():
-    return os.path.basename(defaults.DIRECTORY)
 
 def slurp(path):
     """Slurps a filepath into a string."""

@@ -7,7 +7,6 @@ from PyQt4.QtGui import QDialog
 
 from cola import utils
 from cola import qtutils
-from cola import defaults
 from cola.views import CommitView
 from cola.qobserver import QObserver
 
@@ -135,12 +134,11 @@ class RepoBrowserController(QObserver):
                 self.view.accept()
                 return
 
-            nameguess = os.path.join(defaults.DIRECTORY, name)
-
+            nameguess = os.path.join(self.model.get_directory(), name)
             filename = qtutils.save_dialog(self.view, 'Save', nameguess)
             if not filename:
                 return
-            defaults.DIRECTORY = os.path.dirname(filename)
+            self.model.set_directory(os.path.dirname(filename))
             contents = self.model.git.cat_file(objtype, sha1,
                                                with_raw_output=True)
             utils.write(filename, contents)
