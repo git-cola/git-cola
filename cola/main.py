@@ -8,7 +8,7 @@ import sys
 import os
 
 from cola import utils
-from cola import version
+
 
 def main():
     """Parses the command-line arguments and starts git-cola.
@@ -34,6 +34,9 @@ def main():
     opts, args = parser.parse_args()
 
     if opts.version or 'version' in args:
+        from cola import git
+        git.Git.execute(['git', 'update-index', '--refresh'])
+        from cola import version
         print "cola version", version.version
         sys.exit(0)
 
