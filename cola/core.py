@@ -17,9 +17,11 @@ def decode(enc):
             return unicode(enc.decode(encoding))
         except:
             pass
-    raise Exception('error encoding %s' % enc)
+    # this shouldn't ever happen... FIXME
+    return unicode(enc)
 
 def encode(unenc):
     """encode(unencoded_string) returns a string encoded in utf-8
     """
+    # FIXME is utf-8 the right thing here?
     return unenc.encode('utf-8', 'replace')
