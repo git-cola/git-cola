@@ -19,7 +19,6 @@ def git_describe_version():
     if not re.match(r'^v[0-9]', v):
         raise VersionUnavailable('%s: bad version' % v)
     try:
-        git.Git.execute(['git', 'update-index', '--refresh'])
         dirty = git.Git.execute(['git', 'diff-index', '--name-only', 'HEAD'])
     except git.GitCommandError, e:
         raise VersionUnavailable(str(e))
