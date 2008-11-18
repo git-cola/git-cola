@@ -8,8 +8,11 @@ import os
 import sys
 import subprocess
 import errno
-from cola.exception import GitCommandError
 from cola.core import encode
+
+class GitCommandError(Exception):
+    """Exception class for failed commands."""
+    pass
 
 def dashify(string):
     return string.replace('_', '-')

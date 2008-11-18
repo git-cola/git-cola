@@ -2,6 +2,3 @@
 class ColaException(Exception):
     """Base class for all Cola exceptions."""
     pass
-
-class GitCommandError(Exception):
-    pass
