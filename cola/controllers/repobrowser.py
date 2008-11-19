@@ -4,6 +4,7 @@
 
 import os
 from PyQt4.QtGui import QDialog
+from PyQt4.QtGui import QMenu
 
 from cola import utils
 from cola import qtutils
@@ -42,8 +43,36 @@ class RepoBrowserController(QObserver):
         self.add_signals('itemSelectionChanged()', view.commit_list,)
         self.add_actions(directory = self.action_directory_changed)
         self.add_callbacks(commit_list = self.item_changed)
+        view.commit_list.contextMenuEvent = self.context_menu_event
         # Start at the root of the tree
         model.set_directory('')
+
+    def context_menu_event(self, event):
+        menu = QMenu(self.view);
+        menu.addAction(self.tr('Blame'), self.blame)
+        menu.exec_(self.view.commit_list.mapToGlobal(event.pos()))
+
+    def blame(self):
+        current = self.view.commit_list.currentRow()
+        item = self.view.commit_list.item(current)
+        if item is None or not item.isSelected():
+            return
+        directories = self.model.get_directories()
+        directory_entries = self.model.get_directory_entries()
+        if current < len(directories):
+            # ignore directories
+            return
+        idx = current - len(directories)
+        if idx >= len(self.model.get_subtree_sha1s()):
+            return
+        objtype, sha1, name = self.model.get_subtree_node(idx)
+        curdir = self.model.get_directory()
+        if curdir:
+            filename = os.path.join(curdir, name)
+        else:
+            filename = name
+        blame = self.model.git.blame(self.model.get_currentbranch(), filename)
+        self.view.commit_text.setText(blame)
 
     ######################################################################
     # Actions
