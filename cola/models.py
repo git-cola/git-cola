@@ -856,6 +856,8 @@ class Model(model.Model):
                 name = eval_path(name)
                 if status == 'M' or status == 'D':
                     modified.append(name)
+                elif status == 'A':
+                    unmerged.append(name)
         except:
             # handle git init
             for name in (self.git.ls_files(modified=True, z=True)
@@ -879,6 +881,8 @@ class Model(model.Model):
                         self.partially_staged.add(name)
                 elif status == 'A':
                     staged.append(name)
+                    if name in unmerged:
+                        unmerged.remove(name)
                 elif status == 'D':
                     staged.append(name)
                     modified.remove(name)
