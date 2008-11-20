@@ -242,7 +242,7 @@ def search_commits(model, mode, browse):
                  max_results=500,
                  start_date='',
                  end_date='',
-                 commit_list=None)
+                 commit_list=[])
     view = SearchView(None)
     ctl = SearchController(model, view)
     ctl.set_mode(mode)
