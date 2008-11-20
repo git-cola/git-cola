@@ -50,7 +50,7 @@ modifying the code.
 BUILD ISSUES
 
 Some systems have pyuic4 scripts that are missing the shebang line.
-If your version of $(wich pyuic4) looks like:
+If your version of $(which pyuic4) looks like:
 
 exec python /path/to/pyuic4.py ...
 
