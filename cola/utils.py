@@ -340,7 +340,7 @@ class DiffParser(object):
         self.__idx = -1
         self.__headers = []
 
-        for idx, line in enumerate(diff.splitlines()):
+        for idx, line in enumerate(diff.split('\n')):
             match = self.__header_re.match(line)
             if match:
                 self.__headers.append([
@@ -373,6 +373,14 @@ class DiffParser(object):
         """Processes a diff selection and applies changes to the work tree
         or index."""
         if selection:
+            # qt destroys \r\n and makes it \n with no way of going back.
+            # boo!  we work around that here
+            if selection not in self.fwd_diff:
+                special_selection = selection.replace('\n', '\r\n')
+                if special_selection in self.fwd_diff:
+                    selection = special_selection
+                else:
+                    return
             start = self.fwd_diff.index(selection)
             end = start + len(selection)
             self.set_diffs_to_range(start, end)

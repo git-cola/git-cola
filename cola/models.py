@@ -791,15 +791,15 @@ class Model(model.Model):
                                    unified=self.diff_context,
                                    with_raw_output=True,
                                    *argv)
-        diff = diffoutput.splitlines()
+        diff = diffoutput.split('\n')
         for line in map(decode, diff):
             if not start and '@@' == line[:2] and '@@' in line[2:]:
                 start = True
-            if start or(deleted and del_tag in line):
+            if start or (deleted and del_tag in line):
                 output.write(encode(line) + '\n')
             else:
                 if with_diff_header:
-                    headers.append(line)
+                    headers.append(encode(line))
                 elif not suppress_header:
                     output.write(encode(line) + '\n')
 
