@@ -589,7 +589,7 @@ class Controller(QObserver):
         if not dirname:
             return
         self.log(self.model.git.clone(url, dirname))
-        utils.fork(sys.argv[0], dirname)
+        utils.fork(sys.argv[0], '--repo', dirname)
 
     def quit_app(self, *args):
         """Save config settings and cleanup any inotify threads."""
