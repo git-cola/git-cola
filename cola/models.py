@@ -661,7 +661,11 @@ class Model(model.Model):
         config_lines = self.git.config(**kwargs).splitlines()
         newdict = {}
         for line in config_lines:
-            k, v = line.split('=', 1)
+            try:
+                k, v = line.split('=', 1)
+            except:
+                # the user has an invalid entry in their git config
+                continue
             v = decode(v)
             k = k.replace('.','_') # git -> model
             if v == 'true' or v == 'false':
