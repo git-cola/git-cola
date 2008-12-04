@@ -142,7 +142,7 @@ def open_dialog(parent, title, filename=None):
 
 def opendir_dialog(parent, title, directory):
     """Creates an Open Directory dialog and returns the file path."""
-    flags = QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks
+    flags = QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks
     return unicode(QFileDialog.getExistingDirectory(parent, parent.tr(title),
                                                     directory, flags))
 
@@ -151,14 +151,6 @@ def save_dialog(parent, title, filename=''):
     return unicode(QFileDialog.getSaveFileName(parent,
                                                parent.tr(title),
                                                filename))
-
-def new_dir_dialog(parent, title, filename=''):
-    """Creates a New Directory dialog and returns the file path."""
-    return unicode(QFileDialog.getSaveFileName(parent,
-                                               parent.tr(title),
-                                               filename,
-                                               os.getcwd(),
-                                               parent.tr('New Directory ()')))
 
 def get_icon(filename):
     """Given a basename returns a QIcon from the corresponding cola icon."""

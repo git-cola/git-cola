@@ -577,19 +577,32 @@ class Controller(QObserver):
     def clone_repo(self):
         """Clones a git repository"""
         url, ok = qtutils.input('Path or URL to clone (Env. $VARS okay)')
+        url = os.path.expandvars(url)
         if not ok or not url:
             return
-        url = os.path.expandvars(url)
-        msg = 'Enter a directory name for the new repository'
-        dirname = qtutils.new_dir_dialog(self.view, msg)
-        while dirname and os.path.exists(dirname):
-            qtutils.information('Directory Exists',
-                                'Please enter a non-existent path name.')
-            dirname = qtutils.new_dir_dialog(self.view, msg)
+        try:
+            default = url.replace('\\', '/').rsplit('/', 1)[-1]
+        except:
+            self.log('Oops, could not parse git url: "%s"' % url)
+            return
+
+        msg = 'Select a parent directory for the new clone'
+        dirname = qtutils.opendir_dialog(self.view, msg, os.getcwd())
         if not dirname:
             return
-        self.log(self.model.git.clone(url, dirname))
-        utils.fork(sys.argv[0], '--repo', dirname)
+        count = 1
+        destdir = os.path.join(dirname, default)
+        olddestdir = destdir
+        if os.path.exists(destdir):
+            qtutils.information(destdir + ' already exists, cola will '
+                                'create a new directory')
+
+        while os.path.exists(destdir):
+            destdir = olddestdir + str(count)
+            count += 1
+
+        self.log(self.model.git.clone(url, destdir))
+        utils.fork(sys.argv[0], '--repo', destdir)
 
     def quit_app(self, *args):
         """Save config settings and cleanup any inotify threads."""
