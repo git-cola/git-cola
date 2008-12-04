@@ -581,7 +581,14 @@ class Controller(QObserver):
         if not ok or not url:
             return
         try:
-            default = url.replace('\\', '/').rsplit('/', 1)[-1]
+            newurl = url.replace('\\', '/')
+            default = newurl.rsplit('/', 1)[-1]
+            if default == '.git':
+                default = os.path.basename(os.path.dirname(newurl))
+            if default.endswith('.git'):
+                default = default[:-4]
+            if not default:
+                raise
         except:
             self.log('Oops, could not parse git url: "%s"' % url)
             return
