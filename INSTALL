@@ -100,11 +100,12 @@ WINDOWS INSTALLATION
 
     http://git.or.cz/gitwiki/WindowsInstall
 
-4) Install the GnuWin32 'file' command:
+4) Install 'file.exe' and 'dirname.exe':
 
-    http://gnuwin32.sourceforge.net/packages/file.htm
+    Download the Windows binaries for file.exe and dirname:
+        http://cola.tuxfamily.org/releases/win32
 
-    Add the installed directory (default: c:\GnuWin32\bin) to your path.
+    Copy them to /bin or anywhere in your $PATH.
 
 5) Install simplejson
 
