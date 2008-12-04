@@ -572,7 +572,7 @@ class Controller(QObserver):
                                          'Open Git Repository...',
                                          os.getcwd())
         if dirname:
-            utils.fork(sys.argv[0], dirname)
+            utils.fork(sys.argv[0], '--repo', dirname)
 
     def clone_repo(self):
         """Clones a git repository"""
