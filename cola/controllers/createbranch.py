@@ -19,6 +19,7 @@ def create_new_branch(model,parent):
 
 class CreateBranchController(QObserver):
     def init(self, model, view):
+        self._remoteclicked = False
         self.add_observables('revision', 'local_branch')
         self.add_callbacks(branch_list   = self.item_changed,
                            create_button = self.create_branch,
@@ -26,6 +27,16 @@ class CreateBranchController(QObserver):
                            remote_radio  = self.display_model,
                            tag_radio     = self.display_model)
         self.display_model()
+
+    def subject_changed(self, param, value):
+        """We intercept subject_changed so that we don't
+        reset user input when typing in the branch name.
+        """
+        # We do want to capture when remote branches are clicked,
+        # so we flag that with _remoteclicked
+        if param == 'local_branch' and not self._remoteclicked:
+            return
+        QObserver.subject_changed(self, param, value)
 
     #+--------------------------------------------------------------------
     #+ Qt callbacks
@@ -117,7 +128,10 @@ class CreateBranchController(QObserver):
         branch = utils.basename(rev)
         if branch == 'HEAD':
             return
+        # Signal that we've clicked on a remote branch
+        self._remoteclicked = True
         self.model.set_local_branch(branch)
+        self._remoteclicked = False
 
     ######################################################################
 
