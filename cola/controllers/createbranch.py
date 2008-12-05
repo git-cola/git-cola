@@ -28,16 +28,6 @@ class CreateBranchController(QObserver):
                            tag_radio     = self.display_model)
         self.display_model()
 
-    def subject_changed(self, param, value):
-        """We intercept subject_changed so that we don't
-        reset user input when typing in the branch name.
-        """
-        # We do want to capture when remote branches are clicked,
-        # so we flag that with _remoteclicked
-        if param == 'local_branch' and not self._remoteclicked:
-            return
-        QObserver.subject_changed(self, param, value)
-
     #+--------------------------------------------------------------------
     #+ Qt callbacks
     def create_branch(self):

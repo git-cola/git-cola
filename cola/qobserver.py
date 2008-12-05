@@ -49,6 +49,8 @@ class QObserver(Observer, QObject):
         self.__model_to_view = {}
         self.__view_to_model = {}
         self.__connected = set()
+        self.__in_slot = False
+        self.__in_callback = False
 
         # Call the subclass's startup routine
         self.init(model, view, *args, **kwargs)
@@ -59,6 +61,8 @@ class QObserver(Observer, QObject):
     def SLOT(self, *args):
         """Default slot to handle all Qt callbacks.
         This method delegates to callbacks from add_signals."""
+
+        self.__in_slot = True
 
         widget = self.sender()
         sender = str(widget.objectName())
@@ -121,12 +125,15 @@ class QObserver(Observer, QObject):
                                    model.get_param(model_param)[idx])
                 else:
                     model.set_param(model_param+'_item', '')
-                                   
+
             else:
                 print("SLOT(): Unknown widget:", sender, widget)
 
+        self.__in_callback = True
         if sender in self.__callbacks:
             self.__callbacks[sender](*args)
+        self.__in_callback = False
+        self.__in_slot = False
 
     def connect(self, obj, signal_str, *args):
         """Convenience function so that subclasses do not have
@@ -222,6 +229,12 @@ class QObserver(Observer, QObject):
 
     def subject_changed(self, param, value):
         """Sends a model param to the view(model->view)"""
+
+        if self.__in_slot and not self.__in_callback:
+            # A slot has changed the model and we're not in
+            # a user callback.  In this case the event is causing
+            # a feedback loop so skip redundant work and return.
+            return
 
         if param in self.__model_to_view:
             notify = self.model.get_notify()
