@@ -536,12 +536,12 @@ class Model(model.Model):
         commit = self.git.show(sha1)
         first_newline = commit.index('\n')
         if commit[first_newline+1:].startswith('Merge:'):
-            return (commit + '\n\n'
-                    + self.diff_helper(commit=sha1,
-                                       cached=False,
-                                       suppress_header=False))
+            return (decode(commit) + '\n\n' +
+                    decode(self.diff_helper(commit=sha1,
+                                            cached=False,
+                                            suppress_header=False)))
         else:
-            return commit
+            return decode(commit)
 
     def get_filename(self, idx, staged=True):
         try:
@@ -731,7 +731,7 @@ class Model(model.Model):
         summaries = []
         regex = REV_LIST_REGEX
         output = self.git.log(pretty='oneline', all=all)
-        for line in output.splitlines():
+        for line in map(decode, output.splitlines()):
             match = regex.match(line)
             if match:
                 revs.append(match.group(1))
@@ -740,7 +740,7 @@ class Model(model.Model):
 
     def parse_rev_list(self, raw_revs):
         revs = []
-        for line in raw_revs.splitlines():
+        for line in map(decode, raw_revs.splitlines()):
             match = REV_LIST_REGEX.match(line)
             if match:
                 rev_id = match.group(1)
