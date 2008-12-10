@@ -7,6 +7,8 @@ import re
 import sys
 import platform
 import subprocess
+import mimetypes
+
 from glob import glob
 from cStringIO import StringIO
 
@@ -21,17 +23,23 @@ ICONSDIR = os.path.join(PREFIX, 'share', 'cola', 'icons')
 STYLEDIR = os.path.join(PREFIX, 'share', 'cola', 'styles')
 DOCDIR = os.path.join(PREFIX, 'share', 'doc', 'cola')
 
-KNOWN_FILE_TYPES = {
-    'ascii c':   'c.png',
+KNOWN_FILE_MIME_TYPES = {
+    'text':      'script.png',
+    'image':     'image.png',
     'python':    'script.png',
     'ruby':      'script.png',
     'shell':     'script.png',
     'perl':      'script.png',
-    'java':      'script.png',
-    'assembler': 'binary.png',
-    'binary':    'binary.png',
-    'byte':      'binary.png',
-    'image':     'image.png',
+    'octet':     'binary.png',
+}
+
+KNOWN_FILE_EXTENSION = {
+    '.java':    'script.png',
+    '.groovy':  'script.png',
+    '.cpp':     'script.png',
+    '.c':       'script.png',
+    '.h':       'script.png',
+    '.cxx':     'script.png',
 }
 
 def run_cmd(*command):
@@ -71,10 +79,16 @@ def get_htmldocs():
 def ident_file_type(filename):
     """Returns an icon based on the contents of filename."""
     if os.path.exists(filename):
-        fileinfo = run_cmd('file','-b',filename)
-        for filetype, iconname in KNOWN_FILE_TYPES.iteritems():
-            if filetype in fileinfo.lower():
+        filemimetype = mimetypes.guess_type(filename)
+        if filemimetype[0] != None:
+            for filetype, iconname in KNOWN_FILE_MIME_TYPES.iteritems():
+                if filetype in filemimetype[0].lower():
+                    return iconname
+        filename = filename.lower()
+        for fileext, iconname in KNOWN_FILE_EXTENSION.iteritems():
+            if filename.endswith(fileext):
                 return iconname
+        return 'generic.png'
     else:
         return 'removed.png'
     # Fallback for modified files of an unknown type
