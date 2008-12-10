@@ -70,7 +70,7 @@ class StashController(QObserver):
         if not selection:
             return
         diffstat = self.model.git.stash('show', selection)
-        diff = self.model.stash('show', '-p', selection)
+        diff = self.model.git.stash('show', '-p', selection)
         self.view.parent_view.display('%s\n\n%s' % (diffstat, diff))
 
     def stash_apply(self):
