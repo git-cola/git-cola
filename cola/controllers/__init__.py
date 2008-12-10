@@ -492,13 +492,16 @@ class Controller(QObserver):
         else:
             self.mode = Controller.MODE_WORKTREE
 
-    def view_diff(self, staged=True):
+    def view_diff(self, staged=True, scrollvalue=None):
         idx, selected = self.view.get_selection()
         if not selected:
             self.reset_mode()
             self.view.reset_display()
             return
         self.view_diff_for_row(idx, staged)
+        if scrollvalue is not None:
+            scrollbar = self.view.display_text.verticalScrollBar()
+            scrollbar.setValue(scrollvalue)
 
     def view_diff_for_row(self, idx, staged):
         self.set_mode(staged)
@@ -718,9 +721,8 @@ class Controller(QObserver):
                             item.setSelected(True)
                             self.view.status_tree.setCurrentItem(item)
                             self.view.status_tree.setItemSelected(item, True)
-                            scrollbar.setValue(scrollvalue)
                 if showdiff:
-                    self.view_diff(False)
+                    self.view_diff(staged=False, scrollvalue=scrollvalue)
                 else:
                     self.reset_mode()
                     self.view.reset_display()
@@ -736,9 +738,8 @@ class Controller(QObserver):
                             item.setSelected(True)
                             self.view.status_tree.setCurrentItem(item)
                             self.view.status_tree.setItemSelected(item, True)
-                            scrollbar.setValue(scrollvalue)
                 if showdiff:
-                    self.view_diff(True)
+                    self.view_diff(staged=True, scroll=scroll)
                 else:
                     self.reset_mode()
                     self.view.reset_display()
