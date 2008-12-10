@@ -10,7 +10,13 @@ from cola.views import BranchCompareView
 from cola.controllers.repobrowser import select_file_from_repo
 from cola.controllers.util import choose_from_list
 
-def compare(model, parent):
+def compare_file(model, parent):
+    filename = select_file_from_repo(model, parent)
+    if not filename:
+        return
+    compare(model, parent, filename)
+
+def compare(model, parent, filename=None):
     model = model.clone()
     model.create(descriptions_start=[], descriptions_end=[],
                  revisions_start=[], revisions_end=[],
@@ -18,7 +24,7 @@ def compare(model, parent):
                  compare_files=[], num_results=100,
                  show_versions=False)
     view = CompareView(parent)
-    ctl = CompareController(model, view)
+    ctl = CompareController(model, view, filename)
     view.show()
 
 def branch_compare(model, parent):
@@ -174,7 +180,8 @@ class BranchCompareController(QObserver):
 class CompareController(QObserver):
     """Drives the Commit->Compare Commits dialog.
     """
-    def init (self, model, view):
+    def init (self, model, view, filename=None):
+        self.filename = filename
         self.add_observables('descriptions_start', 'descriptions_end',
                              'revision_start', 'revision_end',
                              'compare_files', 'num_results',
@@ -232,7 +239,8 @@ class CompareController(QObserver):
 
         self.model.set_notify(True)
         show_versions = self.model.get_show_versions()
-        revs = self.model.update_revision_lists(show_versions=show_versions)
+        revs = self.model.update_revision_lists(filename=self.filename,
+                                                show_versions=show_versions)
         if start_selected:
             tree_widget = self.view.descriptions_start
             self.select_nth_item_from_end(tree_widget, start_delta)

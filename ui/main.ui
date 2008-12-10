@@ -461,6 +461,7 @@
     <addaction name="menuPrepare" />
     <addaction name="separator" />
     <addaction name="menu_commit_compare" />
+    <addaction name="menu_commit_compare_file" />
     <addaction name="separator" />
     <addaction name="menu_stash" />
     <addaction name="menu_export_patches" />
@@ -913,6 +914,11 @@
   <action name="menu_load_commitmsg_template" >
    <property name="text" >
     <string>Get Commit Message Template</string>
+   </property>
+  </action>
+  <action name="menu_commit_compare_file" >
+   <property name="text" >
+    <string>Compare File...</string>
    </property>
   </action>
  </widget>

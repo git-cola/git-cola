@@ -42,6 +42,7 @@ from bookmark import save_bookmark
 from bookmark import manage_bookmarks
 from stash import stash
 from compare import compare
+from compare import compare_file
 from compare import branch_compare
 
 
@@ -171,6 +172,8 @@ class Controller(QObserver):
                 lambda: stash(self.model, self.view),
             menu_commit_compare =
                 lambda: compare(self.model, self.view),
+            menu_commit_compare_file =
+                lambda: compare_file(self.model, self.view),
             menu_stage_modified =
                 lambda: self.log(self.model.stage_modified()),
             menu_stage_untracked =
