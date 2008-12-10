@@ -239,7 +239,7 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
             translated = unicode(txt)
         self.statusBar().showMessage(translated)
     def show_editor(self):
-        self.editor_dock.raise_()
+        self.tabwidget.setCurrentIndex(1)
     def show_diff(self):
         self.tabwidget.setCurrentIndex(0)
     def action_cut(self):
@@ -282,7 +282,7 @@ class View(CreateStandardView(Ui_main, QMainWindow)):
         return line
     def display(self, text):
         self.set_display(text)
-        self.diff_dock.raise_()
+        self.show_diff()
     def show_current_column(self):
         cursor = self.commitmsg.textCursor()
         colnum = cursor.columnNumber()
