@@ -704,6 +704,7 @@ class Model(model.Model):
 
     def diffindex(self):
         return self.git.diff(unified=self.diff_context,
+                             no_color=True,
                              stat=True,
                              cached=True)
 
@@ -790,6 +791,7 @@ class Model(model.Model):
         deleted = cached and not os.path.exists(encode(filename))
 
         diffoutput = self.git.diff(R=reverse,
+                                   no_color=True,
                                    cached=cached,
                                    patch_with_raw=patch_with_raw,
                                    unified=self.diff_context,
@@ -1046,6 +1048,7 @@ class Model(model.Model):
         return self.git.diff(
                 'HEAD^',
                 unified=self.diff_context,
+                no_color=True,
                 stat=True)
 
     def pad(self, pstr, num=22):
@@ -1094,6 +1097,8 @@ class Model(model.Model):
 
     def get_renamed_files(self, start, end):
         files = []
-        difflines = self.git.diff('%s..%s' % (start, end), M=True).splitlines()
+        difflines = self.git.diff('%s..%s' % (start, end),
+                                  no_color=True,
+                                  M=True).splitlines()
         return [ eval_path(r[12:].rstrip())
                     for r in difflines if r.startswith('rename from ') ]

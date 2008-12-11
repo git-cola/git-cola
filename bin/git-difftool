@@ -149,7 +149,7 @@ merge_file () {
 		touch "$REMOTE"
 
 		# detects renames.. sweet!
-		oldname=$(git diff --follow "$start".."$end" -- "$MERGED" |
+		oldname=$(git diff --no-color --follow "$start".."$end" -- "$MERGED" |
 			head -n9 |
 			grep '^rename from' |
 			sed -e 's/rename from //')

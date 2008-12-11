@@ -285,12 +285,14 @@ class Controller(QObserver):
             diff = 'no diff'
             if idx == self.view.IDX_STAGED:
                 diff = (self.model.git.diff(cached=True, stat=True,
+                                            no_color=True,
                                             with_raw_output=True) + '\n\n' +
                         self.model.git.diff(cached=True))
             elif idx == self.view.IDX_MODIFIED:
                 diff = (self.model.git.diff(stat=True,
+                                            no_color=True,
                                             with_raw_output=True) + '\n\n' +
-                        self.model.git.diff())
+                        self.model.git.diff(no_color=True))
             elif idx == self.view.IDX_UNMERGED:
                 diff = '%s unmerged file(s)' % len(self.model.get_unmerged())
             elif idx == self.view.IDX_UNTRACKED:
@@ -796,6 +798,7 @@ class Controller(QObserver):
         if not branch:
             return
         zfiles_str = self.model.git.diff(branch, name_only=True,
+                                         no_color=True,
                                          z=True).rstrip('\0')
         files = zfiles_str.split('\0')
         filename = choose_from_list('Select File', self.view, files)
