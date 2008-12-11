@@ -10,10 +10,11 @@ from cola import qtutils
 from cola.views import CreateBranchView
 from cola.qobserver import QObserver
 
-def create_new_branch(model,parent):
+def create_new_branch(model,parent,revision=''):
     model = model.clone()
     view = CreateBranchView(parent)
     ctl = CreateBranchController(model, view)
+    model.set_revision(revision)
     view.show()
     return view.exec_() == QDialog.Accepted
 
