@@ -741,7 +741,7 @@ class Controller(QObserver):
                             self.view.status_tree.setCurrentItem(item)
                             self.view.status_tree.setItemSelected(item, True)
                 if showdiff:
-                    self.view_diff(staged=True, scroll=scroll)
+                    self.view_diff(staged=True, scrollvalue=scrollvalue)
                 else:
                     self.reset_mode()
                     self.view.reset_display()
