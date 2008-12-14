@@ -269,8 +269,11 @@ class CompareController(QObserver):
         id_num, selected = qtutils.get_selected_treeitem(tree_widget)
         if not selected:
             return
-        revision = self.model.get_param(revisions_param)[id_num]
-        self.model.set_param(revision_param, revision)
+
+        revisionlist = self.model.get_param(revisions_param)
+        if id_num < len(revisionlist):
+            revision = self.model.get_param(revisions_param)[id_num]
+            self.model.set_param(revision_param, revision)
 
         # get the changed files list
         start = self.model.get_revision_start()
