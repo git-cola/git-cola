@@ -199,9 +199,9 @@ class Model(model.Model):
         self.__global_defaults = {
             'cola_geometry':'',
             'cola_fontui': '',
-            'cola_fontuisize': 12,
+            'cola_fontui_size': 12,
             'cola_fontdiff': '',
-            'cola_fontdiffsize': 12,
+            'cola_fontdiff_size': 12,
             'cola_savewindowsettings': False,
             'merge_keepbackup': True,
             'merge_tool': os.getenv('MERGETOOL', 'xxdiff'),
@@ -228,10 +228,10 @@ class Model(model.Model):
                 if font:
                     setdefault = False
                     size = int(font.split(',')[1])
-                    self.set_param(param+'size', size)
+                    self.set_param(param+'_size', size)
                     param = param[len('global_'):]
                     global_dict[param] = font
-                    global_dict[param+'size'] = size
+                    global_dict[param+'_size'] = size
 
         # Load defaults for all undefined items
         local_and_global_defaults = self.__local_and_global_defaults
@@ -303,7 +303,7 @@ class Model(model.Model):
                           self.__local_and_global_defaults.keys()))
         params.extend(map(lambda x: 'global_' + x,
                           self.__global_defaults.keys()))
-        return [ p for p in params if not p.endswith('size') ]
+        return [ p for p in params if not p.endswith('_size') ]
 
     def save_config_param(self, param):
         if param not in self.get_config_params():
@@ -525,7 +525,7 @@ class Model(model.Model):
         old_font = self.get_param(param)
         if not old_font:
             old_font = default
-        size = self.get_param(param+'size')
+        size = self.get_param(param+'_size')
         props = old_font.split(',')
         props[1] = str(size)
         new_font = ','.join(props)

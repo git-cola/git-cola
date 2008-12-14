@@ -49,7 +49,7 @@ class QObserver(Observer, QObject):
         self.__model_to_view = {}
         self.__view_to_model = {}
         self.__connected = set()
-        self.__in_slot = False
+        self.__in_textfield = False
         self.__in_callback = False
 
         # Call the subclass's startup routine
@@ -62,7 +62,7 @@ class QObserver(Observer, QObject):
         """Default slot to handle all Qt callbacks.
         This method delegates to callbacks from add_signals."""
 
-        self.__in_slot = True
+        self.__in_textfield = False
 
         widget = self.sender()
         sender = str(widget.objectName())
@@ -71,10 +71,12 @@ class QObserver(Observer, QObject):
             model = self.model
             model_param = self.__view_to_model[sender]
             if isinstance(widget, QTextEdit):
+                self.__in_textfield = True
                 value = unicode(widget.toPlainText())
                 model.set_param(model_param, value,
                                 notify=False)
             elif isinstance(widget, QLineEdit):
+                self.__in_textfield = True
                 value = unicode(widget.text())
                 model.set_param(model_param, value)
             elif isinstance(widget, QCheckBox):
@@ -83,6 +85,11 @@ class QObserver(Observer, QObject):
                 model.set_param(model_param, widget.value())
             elif isinstance(widget, QFontComboBox):
                 value = unicode(widget.currentFont().toString())
+                if model.has_param(model_param+'_size'):
+                    size = model.get_param(model_param+'_size')
+                    props = value.split(',')
+                    props[1] = str(size)
+                    value = ','.join(props)
                 model.set_param(model_param, value)
             elif isinstance(widget, QDateEdit):
                 fmt = Qt.ISODate
@@ -133,7 +140,7 @@ class QObserver(Observer, QObject):
         if sender in self.__callbacks:
             self.__callbacks[sender](*args)
         self.__in_callback = False
-        self.__in_slot = False
+        self.__in_textfield = False
 
     def connect(self, obj, signal_str, *args):
         """Convenience function so that subclasses do not have
@@ -230,7 +237,7 @@ class QObserver(Observer, QObject):
     def subject_changed(self, param, value):
         """Sends a model param to the view(model->view)"""
 
-        if self.__in_slot and not self.__in_callback:
+        if self.__in_textfield and not self.__in_callback:
             # A slot has changed the model and we're not in
             # a user callback.  In this case the event is causing
             # a feedback loop so skip redundant work and return.
