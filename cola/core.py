@@ -3,7 +3,7 @@
 # Some files are not in UTF-8; some other aren't in any codification.
 # Remember that GIT doesn't care about encodings (saves binary data)
 _encoding_tests = [
-        "utf8",
+        "utf-8",
         "iso-8859-15",
         "windows1252",
         "ascii",
