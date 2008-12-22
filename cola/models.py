@@ -850,6 +850,7 @@ class Model(model.Model):
         """RETURNS: A tuple of staged, unstaged untracked, and unmerged
         file lists.
         """
+        self.git.update_index(refresh=True)
         self.partially_staged = set()
         head = 'HEAD'
         if amend:
