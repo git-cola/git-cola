@@ -646,7 +646,7 @@ class Controller(QObserver):
     def rebase(self):
         branch = choose_from_combo('Rebase Branch',
                                    self.view,
-                                   self.model.get_local_branches())
+                                   self.model.get_all_branches())
         if not branch:
             return
         self.log(self.model.git.rebase(branch))
