@@ -100,9 +100,9 @@ WINDOWS INSTALLATION
 
     http://git.or.cz/gitwiki/WindowsInstall
 
-4) Install 'file.exe' and 'dirname.exe':
+4) Install 'dirname.exe':
 
-    Download the Windows binaries for file.exe and dirname:
+    Download the Windows binary for dirname:
         http://cola.tuxfamily.org/releases/win32
 
     Copy them to /bin or anywhere in your $PATH.
