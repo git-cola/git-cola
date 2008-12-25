@@ -84,6 +84,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QCheckBox" name="rebase_checkbox" >
+       <property name="text" >
+        <string>Rebase</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer>
        <property name="orientation" >
         <enum>Qt::Horizontal</enum>

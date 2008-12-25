@@ -13,12 +13,15 @@ def remote_action(model, parent, action):
     model = model.clone()
     model.create(remotename='',
                  tags_checkbox=False,
+                 rebase_checkbox=False,
                  ffwd_only_checkbox=True)
     view = RemoteView(parent, action)
     if action == 'Fetch' or action == 'Pull':
         model.set_tags_checkbox(False)
     if action == 'Pull':
         view.tags_checkbox.hide()
+    if action != 'Pull':
+        view.rebase_checkbox.hide()
     controller = RemoteController(model, view, action)
     view.show()
     return view.exec_() == QDialog.Accepted
@@ -32,6 +35,7 @@ class RemoteController(QObserver):
                              'remote_branch',
                              'remote_branches',
                              'tags_checkbox',
+                             'rebase_checkbox',
                              'ffwd_only_checkbox')
         self.action_method = {
             'Fetch': self.gen_remote_callback(self.model.fetch_helper),
@@ -106,6 +110,7 @@ class RemoteController(QObserver):
                     'remote_branch': self.model.get_remote_branch(),
                     'ffwd': self.model.get_ffwd_only_checkbox(),
                     'tags': self.model.get_tags_checkbox(),
+                    'rebase': self.model.get_rebase_checkbox(),
                 })
 
     def show_results(self, output):

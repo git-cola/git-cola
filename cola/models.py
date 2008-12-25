@@ -935,8 +935,11 @@ class Model(model.Model):
         return self.git.config('remote.%s.url' % name, get=True)
 
     def get_remote_args(self, remote,
-                        local_branch='', remote_branch='',
-                        ffwd=True, tags=False):
+                        local_branch='',
+                        remote_branch='',
+                        ffwd=True,
+                        tags=False,
+                        rebase=False):
         if ffwd:
             branch_arg = '%s:%s' % ( remote_branch, local_branch )
         else:
@@ -947,6 +950,7 @@ class Model(model.Model):
         kwargs = {
             'verbose': True,
             'tags': tags,
+            'rebase': rebase,
         }
         return (args, kwargs)
 
