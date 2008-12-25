@@ -113,7 +113,7 @@ WINDOWS INSTALLATION
 6) Install the cola shell script and batch file:
 
     $ cp cola/bin/cola      /usr/bin
-    $ cp cola/bin/cola.bat  $WINDDIR/System32/cola.bat
+    $ cp cola/bin/cola.bat  $WINDIR/System32/cola.bat
 
     Both of these scripts are available in the win32/ directory
     of the cola source tree.  These are also available for download
