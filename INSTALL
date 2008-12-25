@@ -77,60 +77,54 @@ everything should work fine.
 
 PYUIC4 AND WINDOWS
 
-To build cola on windows you'll need to add the following
-shell script to a directory in your path and name it 'pyuic4':
+To build cola on windows you'll need to copy the win32/pyuic4
+shell script to a directory in your path.
 
-#+-------------------------------------------------------------
-
-#!/bin/sh
-/c/Python25/python.exe \
-/c/Python25/Lib/site-packages/PyQt4/uic/pyuic.py "$@"
-
-#+-------------------------------------------------------------
-
+    $ cp win32/pyuic4 /usr/bin
 
 WINDOWS INSTALLATION
 
 1) Install the native Python2.5 and PyQt4 installers (in that order):
-
     http://python.org/download/
     http://www.riverbankcomputing.co.uk/pyqt/download.php
 
-3) Install msysgit:
-
+2) Install msysgit:
     http://git.or.cz/gitwiki/WindowsInstall
 
-4) Install 'dirname.exe':
-
-    Download the Windows binary for dirname:
-        http://cola.tuxfamily.org/releases/win32
-
-    Copy them to /bin or anywhere in your $PATH.
-
-5) Install simplejson
-
+3) Install simplejson:
     http://pypi.python.org/pypi/simplejson
 
-6) Download cola:
+4) Install dirname:
+    http://cola.tuxfamily.org/releases/win32
 
-    http://cola.tuxfamily.org/releases/
+    You can either download the provided Windows dirname binary
+    or you can use the 'dirname' script from the win32/
+    directory of the cola source tree.
 
-7) Install cola (from a Git Bash):
+    Copy either of these to /usr/bin or anywhere else in your $PATH.
 
-    cd /c/Python25/Lib/site-packages
-    tar xvfz /path/to/cola-*-win32.tar.gz
-    mv cola-*-win32 cola
+5) Download and Install cola:
+    http://cola.tuxfamily.org/releases/win32/
 
-8) Create an executable in your path for bash, cmd.exe, or both:
+    $ cd /c/Python25/Lib/site-packages
+    $ tar xvfz /path/to/cola-*-win32.tar.gz
 
-    echo '/c/Python25/python.exe /c/Python25/Lib/site-packages/cola/bin/git-cola' >> /usr/bin/cola
-    echo 'c:\\Python25\\python.exe c:\\Python25\\Lib\\site-packages\\cola\\bin\\git-cola' > /c/Windows/System32/cola.bat
 
-This assumes the you have Python/PyQt4 installed in C:/Python25.
-If this is not the case simply edit the commands accordingly.
+6) Install the cola shell script and batch file:
+
+    $ cp cola/bin/cola      /usr/bin
+    $ cp cola/bin/cola.bat  $WINDDIR/System32/cola.bat
+
+    Both of these scripts are available in the win32/ directory
+    of the cola source tree.  These are also available for download
+    from http://cola.tuxfamily.org/releases/win32/
+
+    You should now be able to launch cola by simply typing 'cola'
+    from either a 'Git Bash' or 'cmd.exe' shell.
+
 
 voila, cola on Windows.
 
 
 NOTE: Windows is not the developer's primary platform.
-Patches are greatly appreciated.
+Patches are greatly appreciated.  An installer would be awesome.

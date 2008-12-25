@@ -1,0 +1,3 @@
+#!/bin/sh
+/c/Python25/python.exe \
+/c/Python25/Lib/site-packages/PyQt4/uic/pyuic.py "$@"

@@ -1,0 +1,22 @@
+#!/bin/sh
+""":"
+exec python $0 ${1+"$@"}; exit
+"""
+# msysgit does not include dirname.exe, so this simple python
+# script should do the trick.
+import sys
+if len(sys.argv) > 1:
+    item = sys.argv[1]
+    if '\\' in item:
+        joinchar = '\\' # allow win32..
+    else:
+        joinchar = '/'  # but assume unix
+    item = item.rstrip(joinchar)
+    while joinchar+joinchar in item:
+        item = item.replace(joinchar+joinchar, joinchar)
+    items = item.split(joinchar)
+    dirname = joinchar.join(items[:-1])
+    print dirname or '.'
+    sys.exit(0)
+else:
+    sys.exit(1)
