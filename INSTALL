@@ -47,21 +47,8 @@ modifying the code.
     $ bin/git-cola
 
 
-BUILD ISSUES
 
-Some systems have pyuic4 scripts that are missing the shebang line.
-If your version of $(which pyuic4) looks like:
-
-exec python /path/to/pyuic4.py ...
-
-Then simply add this line to the top of the file:
-
-#!/bin/sh
-
-That will fix the build by making pyuic4 a proper shell script.
-
-
-PYQT4 ISSUES
+PYUIC4 ISSUES
 
 An older version of pyuic4 generated code that could not be
 run by PyQt4.  This problem has been fixed in the latest
