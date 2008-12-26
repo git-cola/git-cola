@@ -61,6 +61,9 @@ version is affected. There's a simple workaround, though:
 remove the line of code listed in the traceback and
 everything should work fine.
 
+Update: setup.py currently works around this pyuic4 bug.
+A bug report has been issued upstream.
+
 
 PYUIC4 AND WINDOWS
 

@@ -113,15 +113,29 @@ def __dirty(src, dst):
     dststat = os.stat(dst)
     return srcstat[stat.ST_MTIME] > dststat[stat.ST_MTIME]
 
+def __workaround_pyuic4(src, dst):
+    fh = open(src, 'r')
+    contents = fh.read()
+    fh.close()
+    fh = open(dst, 'w')
+    for line in contents.splitlines():
+        if 'sortingenabled' in line.lower():
+            continue
+        fh.write(line+os.linesep)
+    fh.close()
+    os.unlink(src)
+
 def __build_views():
     print 'running build_views'
     views = os.path.join('cola', 'gui')
     sources = glob('ui/*.ui')
     for src in sources:
         dst = os.path.join(views, os.path.basename(src)[:-3] + '.py')
+        dsttmp = dst + '.tmp'
         if __dirty(src, dst):
-            print '\tpyuic4 -x %s -o %s' % (src, dst)
-            utils.run_cmd('pyuic4', '-x', src, '-o', dst)
+            print '\tpyuic4 -x %s -o %s' % (src, dsttmp)
+            utils.run_cmd('pyuic4', '-x', src, '-o', dsttmp)
+            __workaround_pyuic4(dsttmp, dst)
 
 def __build_translations():
     print 'running build_translations'
