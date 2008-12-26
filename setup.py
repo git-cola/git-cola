@@ -95,8 +95,13 @@ def __check_git_version():
 def __check_pyqt_version():
     """Check the minimum PYQT version
     """
-    pyqtver = utils.run_cmd('pyuic4', '--version').split()[-1]
-    if not __check_min_version(version.pyqt_min_ver, pyqtver):
+    fail = False
+    try:
+        pyqtver = __run_cmd('pyuic4', '--version').split()[-1]
+    except IndexError:
+        pyqtver = 'nothing'
+        fail = True
+    if fail or not __check_min_version(version.pyqt_min_ver, pyqtver):
         print >> sys.stderr, 'PYQT version %s or newer required. Found %s' \
               % (version.pyqt_min_ver, pyqtver)
         sys.exit(1)
@@ -127,5 +132,13 @@ def __build_translations():
         if __dirty(src, dst):
             print '\tmsgfmt --qt %s -o %s' % (src, dst)
             utils.run_cmd('msgfmt', '--qt', src, '-o', dst)
+
+def __run_cmd(*args):
+    argstr = utils.shell_quote(*args)
+    pipe = os.popen(argstr)
+    contents = pipe.read().strip()
+    pipe.close()
+    return contents
+
 
 main()
