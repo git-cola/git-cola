@@ -924,12 +924,12 @@ class Controller(QObserver):
     def viz_all(self):
         """Visualizes the entire git history using gitk."""
         browser = self.model.get_history_browser()
-        utils.fork(browser, '--all')
+        utils.fork('sh', '-c', browser, '--all')
 
     def viz_current(self):
         """Visualizes the current branch's history using gitk."""
         browser = self.model.get_history_browser()
-        utils.fork(browser, self.model.get_currentbranch())
+        utils.fork('sh', '-c', browser, self.model.get_currentbranch())
 
     def load_gui_settings(self):
         try:

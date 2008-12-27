@@ -117,7 +117,7 @@ def fork(*args):
                     return os.spawnv(os.P_NOWAIT, filename, args)
                 except os.error:
                     pass
-        raise IOError('cannot find executable: %s' % program)
+        raise IOError('cannot find executable: %s' % args[0])
     else:
         argv = map(shell_quote, args)
         return os.system(' '.join(argv) + '&')
