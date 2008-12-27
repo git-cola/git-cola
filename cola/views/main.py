@@ -8,37 +8,11 @@ from PyQt4.QtGui import QMainWindow
 from cola import qtutils
 from cola import syntax
 from cola.syntax import DiffSyntaxHighlighter
+from cola.views.standard import create_standard_view
 from cola.gui.main import Ui_main
 
-def CreateStandardView(uiclass, qtclass, *classes):
-    """CreateStandardView returns a class closure of uiclass and qtclass.
-    This class performs the standard setup common to all view classes."""
-    class StandardView(uiclass, qtclass):
-        def __init__(self, parent=None, *args, **kwargs):
-            qtclass.__init__(self, parent)
-            uiclass.__init__(self)
-            self.parent_view = parent
-            syntax.set_theme_properties(self)
-            self.setupUi(self)
-            self.init(parent, *args, **kwargs)
-            for cls in classes:
-                cls.init(self, parent, *args, **kwargs)
-        def init(self, parent, *args, **kwargs):
-            pass
-        def get_properties(self):
-            # user-definable color properties
-            props = {}
-            for name in syntax.default_colors:
-                props[name] = getattr(self, '_'+name)
-            return props
-        def reset_syntax(self):
-            if hasattr(self, 'syntax') and self.syntax:
-                self.syntax.set_colors(self.get_properties())
-                self.syntax.reset()
-    syntax.install_theme_properties(StandardView)
-    return StandardView
 
-class View(CreateStandardView(Ui_main, QMainWindow)):
+class View(create_standard_view(Ui_main, QMainWindow)):
     """The main cola interface."""
     IDX_STAGED = 0
     IDX_MODIFIED = 1

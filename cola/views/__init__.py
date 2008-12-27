@@ -6,6 +6,7 @@
 import sys
 import time
 
+from PyQt4 import QtCore
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QListWidget
 from PyQt4.QtGui import qApp
@@ -13,11 +14,11 @@ from PyQt4.QtCore import SIGNAL
 
 from cola.syntax import DiffSyntaxHighlighter
 from cola.syntax import LogSyntaxHighlighter
+from cola.views.standard import create_standard_view
 from cola.core import decode
 
 try:
     from main import View
-    from main import CreateStandardView
     from cola.gui.bookmark import Ui_bookmark
     from cola.gui.branchview import Ui_branchview
     from cola.gui.combo import Ui_combo
@@ -37,14 +38,14 @@ except ImportError:
     sys.exit(-1)
 
 # These are views that do not contain any custom methods
-OptionsView = CreateStandardView(Ui_options, QDialog)
-BranchCompareView = CreateStandardView(Ui_branchview, QDialog)
-CreateBranchView = CreateStandardView(Ui_createbranch, QDialog)
-BookmarkView = CreateStandardView(Ui_bookmark, QDialog)
-StashView = CreateStandardView(Ui_stash, QDialog)
-CompareView = CreateStandardView(Ui_compare, QDialog)
+OptionsView = create_standard_view(Ui_options, QDialog)
+BranchCompareView = create_standard_view(Ui_branchview, QDialog)
+CreateBranchView = create_standard_view(Ui_createbranch, QDialog)
+BookmarkView = create_standard_view(Ui_bookmark, QDialog)
+StashView = create_standard_view(Ui_stash, QDialog)
+CompareView = create_standard_view(Ui_compare, QDialog)
 
-class LogView(CreateStandardView(Ui_logger, QDialog)):
+class LogView(create_standard_view(Ui_logger, QDialog)):
     """A simple dialog to display command logs."""
     def init(self, parent=None, output=None):
         self.setWindowTitle(self.tr('Git Command Log'))
@@ -91,14 +92,14 @@ class ItemView(object):
         else:
             return None
 
-class ComboView(CreateStandardView(Ui_combo, QDialog, ItemView), ItemView):
+class ComboView(create_standard_view(Ui_combo, QDialog, ItemView), ItemView):
     """A dialog for choosing branches."""
     def idx(self):
         return self.items_widget.currentIndex()
     def value(self):
         return str(self.items_widget.currentText())
 
-class ListView(CreateStandardView(Ui_items, QDialog, ItemView), ItemView):
+class ListView(create_standard_view(Ui_items, QDialog, ItemView), ItemView):
     """A dialog for an item from a list."""
     def idx(self):
         return self.items_widget.currentRow()
@@ -108,7 +109,7 @@ class ListView(CreateStandardView(Ui_items, QDialog, ItemView), ItemView):
             return None
         return str(item.text())
 
-class CommitView(CreateStandardView(Ui_commit, QDialog)):
+class CommitView(create_standard_view(Ui_commit, QDialog)):
     def init(self, parent=None, title=None):
         if title: self.setWindowTitle(title)
         # Make the list widget slighty larger
@@ -116,17 +117,17 @@ class CommitView(CreateStandardView(Ui_commit, QDialog)):
         self.syntax = DiffSyntaxHighlighter(self.commit_text.document(),
                                             whitespace=False)
 
-class SearchView(CreateStandardView(Ui_search, QDialog)):
+class SearchView(create_standard_view(Ui_search, QDialog)):
     def init(self, parent=None):
         self.input.setFocus()
         self.syntax = DiffSyntaxHighlighter(self.commit_text.document(),
                                             whitespace=False)
 
-class MergeView(CreateStandardView(Ui_merge, QDialog)):
+class MergeView(create_standard_view(Ui_merge, QDialog)):
     def init(self, parent=None):
         self.revision.setFocus()
 
-class RemoteView(CreateStandardView(Ui_remote, QDialog)):
+class RemoteView(create_standard_view(Ui_remote, QDialog)):
     def init(self, parent=None, button_text=''):
         if button_text:
             self.action_button.setText(button_text)
