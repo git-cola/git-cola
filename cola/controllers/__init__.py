@@ -379,7 +379,7 @@ class Controller(QObserver):
 
     def gen_search(self, searchtype, browse=False):
         def search_handler():
-            search_commits(self.model, searchtype, browse)
+            search_commits(self.model, self.view, searchtype, browse)
         return search_handler
 
     def grep(self):
