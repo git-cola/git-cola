@@ -30,10 +30,11 @@ def log(output, quiet=True, doraise=False):
     LOGGER.show()
     if not doraise:
         return
-    raise_logger()
+    LOGGER.raise_()
 
-def raise_logger():
+def show_logger():
     """Raises the log window."""
+    LOGGER.show()
     LOGGER.raise_()
 
 def input(msg, title=None):

@@ -180,6 +180,7 @@ class Controller(QObserver):
                 lambda: self.log(self.model.stage_untracked()),
             menu_unstage_all =
                 lambda: self.log(self.model.unstage_all()),
+            menu_view_log = self.view_log,
 
             # Help Menu
             menu_help_docs =
@@ -193,10 +194,6 @@ class Controller(QObserver):
         self.connect(view.status_tree,
                      'itemDoubleClicked(QTreeWidgetItem*, int)',
                      self.doubleclick_tree)
-
-        # Toolbar log button
-        self.connect(view.toolbar_show_log,
-                     'triggered()', self.show_log)
 
         self.merge_msg_hash = ''
         self.load_gui_settings()
@@ -391,8 +388,8 @@ class Controller(QObserver):
         self.view.display_text.setText(stuff)
         self.view.show_diff()
 
-    def show_log(self, *rest):
-        qtutils.toggle_log_window()
+    def view_log(self, *rest):
+        qtutils.show_logger()
 
     def options(self):
         update_options(self.model, self.view)

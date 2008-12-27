@@ -541,6 +541,7 @@
     <addaction name="menu_clone_repo" />
     <addaction name="separator" />
     <addaction name="menu_rescan" />
+    <addaction name="menu_view_log" />
     <addaction name="separator" />
     <addaction name="menu_manage_bookmarks" />
     <addaction name="menu_save_bookmark" />
@@ -571,35 +572,6 @@
    <addaction name="branch_menu" />
    <addaction name="merge_menu" />
    <addaction name="help_menu" />
-  </widget>
-  <widget class="QToolBar" name="toolbar" >
-   <property name="enabled" >
-    <bool>true</bool>
-   </property>
-   <property name="windowTitle" >
-    <string>toolbar</string>
-   </property>
-   <property name="movable" >
-    <bool>true</bool>
-   </property>
-   <property name="allowedAreas" >
-    <set>Qt::BottomToolBarArea|Qt::TopToolBarArea</set>
-   </property>
-   <property name="iconSize" >
-    <size>
-     <width>24</width>
-     <height>16</height>
-    </size>
-   </property>
-   <property name="floatable" >
-    <bool>true</bool>
-   </property>
-   <attribute name="toolBarArea" >
-    <enum>BottomToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak" >
-    <bool>false</bool>
-   </attribute>
   </widget>
   <action name="menu_unstage_selected" >
    <property name="text" >
@@ -919,6 +891,11 @@
   <action name="menu_commit_compare_file" >
    <property name="text" >
     <string>Compare File...</string>
+   </property>
+  </action>
+  <action name="menu_view_log" >
+   <property name="text" >
+    <string>VIew Log</string>
    </property>
   </action>
  </widget>

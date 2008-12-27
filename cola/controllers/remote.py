@@ -115,7 +115,7 @@ class RemoteController(QObserver):
     def show_results(self, output):
         qtutils.show_output(output)
         self.view.accept()
-        qtutils.raise_logger()
+        qtutils.show_logger()
 
     #+-------------------------------------------------------------
     #+ Actions
