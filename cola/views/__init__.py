@@ -12,9 +12,9 @@ from PyQt4.QtGui import QListWidget
 from PyQt4.QtGui import qApp
 from PyQt4.QtCore import SIGNAL
 
-from cola.syntax import DiffSyntaxHighlighter
-from cola.syntax import LogSyntaxHighlighter
 from cola.views.standard import create_standard_view
+from cola.views.syntax import DiffSyntaxHighlighter
+from cola.views.syntax import LogSyntaxHighlighter
 from cola.core import decode
 
 try:

@@ -6,9 +6,8 @@ from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import QMainWindow
 
 from cola import qtutils
-from cola import syntax
-from cola.syntax import DiffSyntaxHighlighter
 from cola.views.standard import create_standard_view
+from cola.views.syntax import DiffSyntaxHighlighter
 from cola.gui.main import Ui_main
 
 
