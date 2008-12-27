@@ -16,6 +16,7 @@ def main():
     # ensure readable files
     old_mask = os.umask(0022)
     if sys.argv[1] in ['install', 'build']:
+        __setup_environment()
         __check_python_version()
         __check_git_version()
         __check_pyqt_version()
@@ -29,7 +30,22 @@ def main():
     # restore the old mask
     os.umask(old_mask)
 
+def __setup_environment():
+    if sys.platform != 'win32':
+        return
+    path = os.environ['PATH']
+    win32 = os.path.join(os.path.dirname(__file__), 'win32')
+    os.environ['PATH'] = win32 + os.pathsep + path
+
 def __run_setup():
+
+    scripts = ['bin/git-cola', 'bin/git-difftool']
+    if sys.platform == 'win32':
+        scripts.append('win32/cola')
+        scripts.append('win32/dirname')
+        scripts.append('win32/py2exe-setup.py')
+        scripts.append('win32/py2exe-setup.cmd')
+
     setup(name = 'cola',
           version = version.version,
           license = 'GPLv2',
@@ -38,7 +54,7 @@ def __run_setup():
           url = 'http://cola.tuxfamily.org/',
           description = 'GIT Cola',
           long_description = 'A highly caffeinated GIT GUI',
-          scripts = ['bin/git-cola', 'bin/git-difftool'],
+          scripts = scripts,
           packages = ['cola', 'cola.gui', 'cola.views', 'cola.controllers'],
           data_files = [
             __app_path('share/cola/qm', '*.qm'),

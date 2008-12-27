@@ -39,13 +39,14 @@ if bin in ('bin', 'Scripts') and prefix != sys.prefix:
     sys.prefix = prefix
     sys.exec_prefix = prefix
 
-    major, minor = sys.version_info[0:2]
-    local_path = [os.path.join(prefix, 'lib', 'python%s.%s' % (major, minor),
-                               'site-packages'),
-                  os.path.join(prefix, 'Lib', 'site-packages'),
-                  prefix,
-                  os.getcwd(),
-                  ]
+    paths_to_try = [
+        os.path.join(prefix, 'lib', 'python2.6', 'site-packages'),
+        os.path.join(prefix, 'lib', 'python2.5', 'site-packages'),
+        os.path.join(prefix, 'lib', 'python2.4', 'site-packages'),
+        os.getcwd(),
+        ]
+
+    local_path = [p for p in paths_to_try if os.path.exists(p)]
     sys.path = local_path + sys.path
 
 from cola.main import main

@@ -9,28 +9,28 @@ If you downloaded a tarball add /path/to/cola/bin to your $PATH.
 
 
 REQUIREMENTS
+    # apt-get install git-core python python-qt4
 
 Python 2.4 or newer
     http://python.org/
-    apt-get install python
 
 PyQt 4.3 or newer
     http://www.riverbankcomputing.co.uk/software/pyqt/intro
-    apt-get install pyqt4-dev-tools
 
 
 ADDITIONAL REQUIREMENTS (optional)
+    # apt-get install python-pyinotify simplejson
 
 pyinotify (enables inotify support on Linux -- highly recommended)
     http://pyinotify.sourceforge.net/
-    apt-get install python-pyinotify
 
 simplejson (enables bookmarks)
     http://pypi.python.org/pypi/simplejson
-    apt-get install python-simplejson
+
 
 
 BUILDING FROM SOURCE
+    # apt-get install pyqt4-dev-tools
 
 Normally you can just do "make install" to install git-cola
 in your $HOME directory ($HOME/bin, $HOME/lib, etc).
@@ -46,75 +46,34 @@ modifying the code.
     $ make
     $ bin/git-cola
 
+If you're developing cola on windows then you can do:
 
+    $ python setup.py build
+    $ win32/cola
 
-PYUIC4 ISSUES
-
-An older version of pyuic4 generated code that could not be
-run by PyQt4.  This problem has been fixed in the latest
-versions of PyQt4 (4.4.x), but you might encounter it if
-you are not running the latest version of PyQt4.
-
-If you try to run git-cola and see error messages
-about "setSortingEnabled(..)" then your pyuic4/PyQt4
-version is affected. There's a simple workaround, though:
-remove the line of code listed in the traceback and
-everything should work fine.
-
-Update: setup.py currently works around this pyuic4 bug.
-A bug report has been issued upstream.
-
-
-PYUIC4 AND WINDOWS
-
-To build cola on windows you'll need to copy the win32/pyuic4
-shell script to a directory in your path.
-
-    $ cp win32/pyuic4 /usr/bin
 
 WINDOWS INSTALLATION
 
-1) Install the native Python2.5 and PyQt4 installers (in that order):
+Install Git, Python, and PyQt4
+    http://git.or.cz/gitwiki/WindowsInstall
     http://python.org/download/
     http://www.riverbankcomputing.co.uk/pyqt/download.php
 
-2) Install msysgit:
-    http://git.or.cz/gitwiki/WindowsInstall
-
-3) Install simplejson:
+Install simplejson (optional)
     http://pypi.python.org/pypi/simplejson
 
-4) Install dirname:
-    http://cola.tuxfamily.org/releases/win32
-
-    You can either download the provided Windows dirname binary
-    or you can use the 'dirname' script from the win32/
-    directory of the cola source tree.
-
-    Copy either of these to /usr/bin or anywhere else in your $PATH.
-
-5) Download and Install cola:
+Install and run cola from a Git bash:
     http://cola.tuxfamily.org/releases/win32/
 
-    $ cd /c/Python25/Lib/site-packages
-    $ tar xvfz /path/to/cola-*-win32.tar.gz
+    $ tar xvfz cola-*.tar.gz
+    $ cola-*/bin/cola
 
-
-6) Install the cola shell script and batch file:
-
-    $ cp cola/bin/cola      /usr/bin
-    $ cp cola/bin/cola.bat  $WINDIR/System32/cola.bat
-
-    Both of these scripts are available in the win32/ directory
-    of the cola source tree.  These are also available for download
-    from http://cola.tuxfamily.org/releases/win32/
-
-    You should now be able to launch cola by simply typing 'cola'
-    from either a 'Git Bash' or 'cmd.exe' shell.
+    If you add the cola-*/bin directory to your $PATH then
+    you can launch cola by simply typing 'cola'.
 
 
 voila, cola on Windows.
 
 
 NOTE: Windows is not the developer's primary platform.
-Patches are greatly appreciated.  An installer would be awesome.
+Patches are greatly appreciated.

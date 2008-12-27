@@ -1,6 +1,18 @@
 #!/bin/sh
-# This should work if used with both the default Python2.5
-# from python.org and the default PyQt4 binary package
-# from Riverbank.  Adjust accordingly.
-/c/Python25/python.exe \
-/c/Python25/Lib/site-packages/cola/bin/git-cola
+# This should work with either Python2.5 or Python2.6.
+
+dirname() {
+    dir=$(echo "$1" | perl -pe 's,(.*)/[^/]+,\1,')
+    test "$dir" = "$1" && dir=.
+    echo "$dir"
+}
+
+mydir="$(dirname $0)"
+parentdir="$(dirname $mydir)"
+
+for python in /c/Python26 /c/Python25; do
+    if test -d "$python"; then
+        exec $python/python.exe "$parentdir"/bin/git-cola
+    fi
+done
+exit 1
