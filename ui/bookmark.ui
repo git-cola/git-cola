@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>531</width>
-    <height>513</height>
+    <width>494</width>
+    <height>238</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -44,7 +44,7 @@
        <property name="orientation" >
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeHint" >
+       <property name="sizeHint" stdset="0" >
         <size>
          <width>91</width>
          <height>20</height>
@@ -72,22 +72,6 @@
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>button_save</sender>
-   <signal>clicked()</signal>
-   <receiver>bookmark</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>398</x>
-     <y>490</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>265</x>
-     <y>256</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>button_cancel</sender>
    <signal>clicked()</signal>

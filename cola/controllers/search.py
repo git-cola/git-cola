@@ -233,7 +233,7 @@ class SearchController(QObserver):
                     doraise=True,
                     quiet=False)
 
-def search_commits(model, view, mode, browse):
+def search_commits(model, parent, mode, browse):
     def get_date(timespec):
         return '%04d-%02d-%02d' % time.localtime(timespec)[:3]
 
@@ -243,12 +243,11 @@ def search_commits(model, view, mode, browse):
                  start_date='',
                  end_date='',
                  commit_list=[])
-    searchview = SearchView(view)
-    ctl = SearchController(model, searchview)
+    view = SearchView(parent)
+    ctl = SearchController(model, view)
     ctl.set_mode(mode)
     model.set_start_date(get_date(time.time()-(87640*7)))
     model.set_end_date(get_date(time.time()+87640))
-    searchview.show()
+    view.show()
     if browse:
         ctl.browse_callback()
-    searchview.exec_()

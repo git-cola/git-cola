@@ -25,15 +25,18 @@ def manage_bookmarks():
     view = BookmarkView(QtGui.qApp.activeWindow())
     ctl = BookmarkController(model, view)
     view.show()
-    if view.exec_() == QtGui.QDialog.Accepted:
-        model.save_all_settings()
 
 class BookmarkController(QObserver):
     def init(self, model, view):
         self.add_observables( 'bookmarks' )
         self.add_callbacks(button_open   = self.open,
-                           button_delete = self.delete)
+                           button_delete = self.delete,
+                           button_save = self.save)
         self.refresh_view()
+
+    def save(self):
+        self.model.save_all_settings()
+        self.view.accept()
     
     def open(self):
         selection = qtutils.get_selection_list(self.view.bookmarks,

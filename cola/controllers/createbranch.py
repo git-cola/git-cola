@@ -16,7 +16,6 @@ def create_new_branch(model,parent,revision=''):
     ctl = CreateBranchController(model, view)
     model.set_revision(revision)
     view.show()
-    return view.exec_() == QDialog.Accepted
 
 class CreateBranchController(QObserver):
     def init(self, model, view):

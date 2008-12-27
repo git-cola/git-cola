@@ -24,7 +24,6 @@ def remote_action(model, parent, action):
         view.rebase_checkbox.hide()
     controller = RemoteController(model, view, action)
     view.show()
-    return view.exec_() == QDialog.Accepted
 
 class RemoteController(QObserver):
     def init(self, model, view, action):
