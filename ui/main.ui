@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>621</width>
-    <height>281</height>
+    <width>630</width>
+    <height>289</height>
    </rect>
   </property>
   <property name="dockOptions" >
@@ -424,8 +424,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>621</width>
-     <height>22</height>
+     <width>630</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="commit_menu" >

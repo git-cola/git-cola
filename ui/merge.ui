@@ -41,10 +41,7 @@
       <property name="bottomMargin" >
        <number>5</number>
       </property>
-      <property name="horizontalSpacing" >
-       <number>0</number>
-      </property>
-      <property name="verticalSpacing" >
+      <property name="spacing" >
        <number>0</number>
       </property>
       <item row="0" column="0" >
@@ -102,7 +99,7 @@
        <property name="orientation" >
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeHint" >
+       <property name="sizeHint" stdset="0" >
         <size>
          <width>231</width>
          <height>24</height>

@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>621</width>
-    <height>402</height>
+    <width>527</width>
+    <height>304</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -16,16 +16,7 @@
    <property name="spacing" >
     <number>2</number>
    </property>
-   <property name="leftMargin" >
-    <number>4</number>
-   </property>
-   <property name="topMargin" >
-    <number>4</number>
-   </property>
-   <property name="rightMargin" >
-    <number>4</number>
-   </property>
-   <property name="bottomMargin" >
+   <property name="margin" >
     <number>4</number>
    </property>
    <item>
@@ -51,16 +42,7 @@
       <property name="spacing" >
        <number>2</number>
       </property>
-      <property name="leftMargin" >
-       <number>4</number>
-      </property>
-      <property name="topMargin" >
-       <number>4</number>
-      </property>
-      <property name="rightMargin" >
-       <number>4</number>
-      </property>
-      <property name="bottomMargin" >
+      <property name="margin" >
        <number>4</number>
       </property>
       <item>
@@ -111,7 +93,7 @@
           <property name="orientation" >
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" >
+          <property name="sizeHint" stdset="0" >
            <size>
             <width>201</width>
             <height>20</height>
@@ -132,16 +114,7 @@
      <property name="spacing" >
       <number>2</number>
      </property>
-     <property name="leftMargin" >
-      <number>4</number>
-     </property>
-     <property name="topMargin" >
-      <number>4</number>
-     </property>
-     <property name="rightMargin" >
-      <number>4</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="margin" >
       <number>4</number>
      </property>
      <item>
@@ -153,16 +126,7 @@
         <property name="spacing" >
          <number>2</number>
         </property>
-        <property name="leftMargin" >
-         <number>4</number>
-        </property>
-        <property name="topMargin" >
-         <number>4</number>
-        </property>
-        <property name="rightMargin" >
-         <number>4</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>4</number>
         </property>
         <item>
@@ -231,7 +195,7 @@
             <property name="orientation" >
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>328</width>
               <height>46</height>
@@ -249,16 +213,7 @@
        <property name="spacing" >
         <number>2</number>
        </property>
-       <property name="leftMargin" >
-        <number>4</number>
-       </property>
-       <property name="topMargin" >
-        <number>4</number>
-       </property>
-       <property name="rightMargin" >
-        <number>4</number>
-       </property>
-       <property name="bottomMargin" >
+       <property name="margin" >
         <number>4</number>
        </property>
        <item>

@@ -97,7 +97,7 @@
      <item row="2" column="3" >
       <widget class="QDateEdit" name="start_date" >
        <property name="currentSection" >
-        <enum>QDateTimeEdit::DaySection</enum>
+        <enum>QDateTimeEdit::YearSection</enum>
        </property>
        <property name="displayFormat" >
         <string>yyyy-MM-dd</string>
@@ -110,7 +110,7 @@
      <item row="2" column="4" >
       <widget class="QDateEdit" name="end_date" >
        <property name="currentSection" >
-        <enum>QDateTimeEdit::DaySection</enum>
+        <enum>QDateTimeEdit::YearSection</enum>
        </property>
        <property name="displayFormat" >
         <string>yyyy-MM-dd</string>
@@ -216,7 +216,7 @@
        <property name="orientation" >
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeHint" >
+       <property name="sizeHint" stdset="0" >
         <size>
          <width>111</width>
          <height>20</height>
