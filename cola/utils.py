@@ -125,8 +125,7 @@ def fork(*args):
             filename = os.path.join(path, args[0]) + ".exe"
             if os.path.exists(filename):
                 try:
-                    return os.spawnv(os.P_NOWAIT, filename,
-                                     map(shell_quote, args))
+                    return os.spawnv(os.P_NOWAIT, filename, args)
                 except os.error:
                     pass
         raise IOError('cannot find executable: %s' % args[0])

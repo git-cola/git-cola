@@ -584,13 +584,20 @@ class Controller(QObserver):
                                                 revs,
                                                 output='patches'))
 
+    def _quote_repopath(self, repopath):
+        if os.name in ('nt', 'dos'):
+            repopath = '"%s"' % repopath
+        return repopath
+
     def open_repo(self):
         """Spawns a new cola session"""
         dirname = qtutils.opendir_dialog(self.view,
                                          'Open Git Repository...',
                                          os.getcwd())
-        if dirname:
-            utils.fork(sys.argv[0], '--repo', dirname)
+        if not dirname:
+            return
+        utils.fork('python', sys.argv[0],
+                   '--repo', self._quote_repopath(dirname))
 
     def clone_repo(self):
         """Clones a git repository"""
@@ -605,6 +612,8 @@ class Controller(QObserver):
                 default = os.path.basename(os.path.dirname(newurl))
             if default.endswith('.git'):
                 default = default[:-4]
+            if url == '.':
+                default = os.path.basename(os.getcwd())
             if not default:
                 raise
         except:
@@ -627,7 +636,8 @@ class Controller(QObserver):
             count += 1
 
         self.log(self.model.git.clone(url, destdir))
-        utils.fork(sys.argv[0], '--repo', destdir)
+        utils.fork('python', sys.argv[0],
+                   '--repo', self._quote_repopath(destdir))
 
     def has_inotify(self):
         return self.inotify_thread and self.inotify_thread.isRunning()
