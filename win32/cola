@@ -12,6 +12,7 @@ parentdir="$(dirname $mydir)"
 
 for python in /c/Python26 /c/Python25; do
     if test -d "$python"; then
+        PATH="$PATH":$python
         exec $python/python.exe "$parentdir"/bin/git-cola "$@"
     fi
 done
