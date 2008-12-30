@@ -31,6 +31,11 @@ def main():
                       dest='repo',
                       metavar='PATH',
                       default=os.getcwd())
+    parser.add_option('-g', '--git-path',
+                      help='Specifies the path to the git binary',
+                      dest='git',
+                      metavar='PATH',
+                      default='')
     opts, args = parser.parse_args()
 
     if opts.version or 'version' in args:
@@ -39,6 +44,11 @@ def main():
         from cola import version
         print "cola version", version.version
         sys.exit(0)
+
+    if opts.git:
+        path_entries = os.environ.get('PATH', '').split(os.pathsep)
+        path_entries.insert(0, os.path.dirname(opts.git))
+        os.environ['PATH'] = os.pathsep.join(path_entries)
 
     repo = os.path.realpath(opts.repo)
     if not os.path.isdir(repo):
