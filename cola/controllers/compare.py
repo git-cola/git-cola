@@ -171,7 +171,8 @@ class BranchCompareController(QObserver):
         else:
             args.append('%s..%s' % (self.start, self.end))
 
-        command = ['git', 'difftool'] + args + ['--', filename]
+        command = (['perl', utils.get_libexec('git-difftool')] +
+                   args + ['--', filename])
         utils.fork(*command)
 
 
@@ -314,5 +315,6 @@ class CompareController(QObserver):
         args = git.transform_kwargs(no_prompt=True,
                                     tool=self.model.get_mergetool())
         args.append('%s..%s' % (start, end))
-        command = ['git', 'difftool'] + args + ['--', filename]
+        command = (['perl', utils.get_libexec('git-difftool')] +
+                   args + ['--', filename])
         utils.fork(*command)

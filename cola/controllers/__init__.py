@@ -544,8 +544,8 @@ class Controller(QObserver):
     def edit_diff(self, staged=True):
         filename = self.get_selected_filename(staged=staged)
         if filename:
-            args = ['git', 'difftool', '--no-prompt',
-                    '-t', self.model.get_mergetool()]
+            args = ['perl', utils.get_libexec('git-difftool'),
+                    '--no-prompt', '-t', self.model.get_mergetool()]
             if staged:
                 args.append('--cached')
             if self.view.amend_is_checked():

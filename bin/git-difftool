@@ -9,7 +9,11 @@
 
 use strict;
 use warnings;
+use Cwd qw(abs_path);
 use File::Basename qw(dirname);
+
+my $DIR = abs_path(dirname($0));
+
 
 sub usage
 {
@@ -22,14 +26,25 @@ USAGE
 
 sub setup_environment
 {
-	$ENV{PATH} = dirname($0).":$ENV{PATH}";
+	$ENV{PATH} = "$DIR:$ENV{PATH}";
 	$ENV{GIT_PAGER} = '';
 	$ENV{GIT_EXTERNAL_DIFF} = 'git-difftool-helper';
 }
 
+sub exe
+{
+	my $exe = shift;
+	return $exe unless defined $ENV{COMSPEC};
+	for my $path (split(':', $ENV{PATH})) {
+		my $cmd = "$path/$exe.exe";
+		return $cmd if -x $cmd;
+	}
+	die "Could not find $exe.exe in PATH\n";
+}
+
 sub generate_command
 {
-	my @command = ('git', 'diff');
+	my @command = (exe('git'), 'diff');
 	my $skip_next = 0;
 	my $idx = -1;
 	for my $arg (@ARGV) {
