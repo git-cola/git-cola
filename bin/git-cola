@@ -43,6 +43,7 @@ if bin in ('bin', 'Scripts') and prefix != sys.prefix:
         os.path.join(prefix, 'lib', 'python2.6', 'site-packages'),
         os.path.join(prefix, 'lib', 'python2.5', 'site-packages'),
         os.path.join(prefix, 'lib', 'python2.4', 'site-packages'),
+        prefix,
         os.getcwd(),
         ]
 
