@@ -34,12 +34,7 @@ sub setup_environment
 sub exe
 {
 	my $exe = shift;
-	return $exe unless defined $ENV{COMSPEC};
-	for my $path (split(':', $ENV{PATH})) {
-		my $cmd = "$path/$exe.exe";
-		return $cmd if -x $cmd;
-	}
-	die "Could not find $exe.exe in PATH\n";
+	return defined $ENV{COMSPEC} ? "$exe.exe" : $exe;
 }
 
 sub generate_command
