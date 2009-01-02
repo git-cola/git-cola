@@ -531,10 +531,10 @@ class Controller(QObserver):
         if filename:
             args = ['git', 'difftool', '--no-prompt',
                     '-t', self.model.get_mergetool()]
-            if (self.view.amend_is_checked()
-                    or (staged and
-                        filename not in self.model.partially_staged)):
-                args.extend(['-c', 'HEAD^'])
+            if staged:
+                args.append('--cached')
+            if self.view.amend_is_checked():
+                args.append('HEAD^')
             args.extend(['--', filename])
             utils.fork(*args)
 

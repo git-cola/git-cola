@@ -39,7 +39,7 @@ def __setup_environment():
 
 def __run_setup():
 
-    scripts = ['bin/git-cola', 'bin/git-difftool']
+    scripts = ['bin/git-cola', 'bin/git-difftool', 'bin/git-difftool-helper']
     if sys.platform == 'win32':
         scripts.append('win32/cola')
         scripts.append('win32/dirname')
