@@ -85,7 +85,7 @@ SOURCE
 
 A 'git-cola' development repository can be obtained via git:
 
-	git clone git://gitorious.org/git-cola/mainline.git cola
+	git clone git://github.com/davvid/git-cola.git
 
 
 STYLESHEETS
@@ -105,8 +105,8 @@ LINKS
 'git-cola' homepage::
 	http://cola.tuxfamily.org/
 
-'git-cola' sources on gitorious.org::
-	http://gitorious.org/projects/git-cola/
+'git-cola' sources on github::
+	http://github.com/davvid/git-cola/tree/master
 
 
 SEE ALSO
