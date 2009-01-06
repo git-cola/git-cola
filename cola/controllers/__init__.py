@@ -93,6 +93,7 @@ class Controller(QObserver):
             rescan_button = self.rescan,
             signoff_button = self.model.add_signoff,
             stage_button = self.stage_selected,
+            stash_button = lambda: stash(self.model, self.view),
             commit_button = self.commit,
             fetch_button = self.fetch,
             push_button = self.push,

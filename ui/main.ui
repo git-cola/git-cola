@@ -279,6 +279,13 @@
              </widget>
             </item>
             <item>
+             <widget class="QPushButton" name="stash_button" >
+              <property name="text" >
+               <string>Stash</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <spacer>
               <property name="orientation" >
                <enum>Qt::Vertical</enum>
