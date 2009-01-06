@@ -164,6 +164,7 @@ class OptionsController(QObserver):
                              'global_cola_fontui_size',
                              'global_cola_fontui',
                              'global_cola_savewindowsettings',
+                             'global_cola_tabwidth',
                              )
         self.add_actions(global_cola_fontdiff = self.tell_parent_model)
         self.add_actions(global_cola_fontui = self.tell_parent_model)
@@ -219,6 +220,7 @@ class OptionsController(QObserver):
                  'global_cola_fontdiff_size',
                  'global_cola_fontui_size',
                  'global_cola_savewindowsettings',
+                 'global_cola_tabwidth',
                  )
         for param in params:
             self.original_model.set_param(

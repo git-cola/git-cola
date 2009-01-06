@@ -87,6 +87,7 @@ class Controller(QObserver):
         # When a model attribute changes, this runs a specific action
         self.add_actions(global_cola_fontdiff = self.update_diff_font)
         self.add_actions(global_cola_fontui = self.update_ui_font)
+        self.add_actions(global_cola_tabwidth = self.update_tab_width)
 
         self.add_callbacks(
             # Push Buttons
@@ -1063,6 +1064,12 @@ class Controller(QObserver):
         qfont = QFont()
         qfont.fromString(font)
         QtGui.qApp.setFont(qfont)
+
+    def update_tab_width(self):
+        tab_width = self.model.get_cola_config('tabwidth')
+        display_font = self.view.display_text.font()
+        space_width = QtGui.QFontMetrics(display_font).width(' ')
+        self.view.display_text.setTabStopWidth(tab_width * space_width)
 
     def init_log_window(self):
         branch = self.model.get_currentbranch()

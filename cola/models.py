@@ -203,6 +203,7 @@ class Model(model.Model):
             'cola_fontdiff': '',
             'cola_fontdiff_size': 12,
             'cola_savewindowsettings': False,
+            'cola_tabwidth': 8,
             'merge_keepbackup': True,
             'merge_tool': os.getenv('MERGETOOL', 'xxdiff'),
             'gui_editor': os.getenv('EDITOR', 'gvim'),
