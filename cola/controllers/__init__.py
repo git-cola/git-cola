@@ -90,6 +90,7 @@ class Controller(QObserver):
 
         self.add_callbacks(
             # Push Buttons
+            rescan_button = self.rescan,
             signoff_button = self.model.add_signoff,
             stage_button = self.stage_selected,
             commit_button = self.commit,
@@ -201,6 +202,8 @@ class Controller(QObserver):
         self.init_log_window()
         self.refresh_view('global_cola_fontdiff', 'global_cola_fontui')
         self.start_inotify_thread()
+        if self.has_inotify():
+            self.view.rescan_button.hide()
 
     #####################################################################
     # handle when the status tree is clicked
@@ -616,6 +619,9 @@ class Controller(QObserver):
         self.log(self.model.git.clone(url, destdir))
         utils.fork(sys.argv[0], '--repo', destdir)
 
+    def has_inotify(self):
+        return self.inotify_thread and self.inotify_thread.isRunning()
+
     def quit_app(self, *args):
         """Save config settings and cleanup any inotify threads."""
         if self.model.remember_gui_settings():
@@ -625,7 +631,7 @@ class Controller(QObserver):
         pattern = self.model.get_tmp_file_pattern()
         for filename in glob.glob(pattern):
             os.unlink(filename)
-        if self.inotify_thread and self.inotify_thread.isRunning():
+        if self.has_inotify():
             self.inotify_thread.abort = True
             self.inotify_thread.wait()
         self.view.close()

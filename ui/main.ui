@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>630</width>
-    <height>289</height>
+    <height>295</height>
    </rect>
   </property>
   <property name="dockOptions" >
@@ -52,7 +52,7 @@
         </sizepolicy>
        </property>
        <property name="currentIndex" >
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="diffwidget" >
         <attribute name="title" >
@@ -154,6 +154,13 @@
             <property name="margin" >
              <number>0</number>
             </property>
+            <item>
+             <widget class="QPushButton" name="rescan_button" >
+              <property name="text" >
+               <string>Rescan</string>
+              </property>
+             </widget>
+            </item>
             <item>
              <widget class="QPushButton" name="stage_button" >
               <property name="sizePolicy" >
@@ -298,14 +305,6 @@
              </widget>
             </item>
            </layout>
-           <zorder>stage_button</zorder>
-           <zorder>signoff_button</zorder>
-           <zorder>commit_button</zorder>
-           <zorder>fetch_button</zorder>
-           <zorder>push_button</zorder>
-           <zorder>pull_button</zorder>
-           <zorder>column_label</zorder>
-           <zorder></zorder>
           </widget>
          </item>
          <item>
