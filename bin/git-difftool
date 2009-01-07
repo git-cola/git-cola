@@ -39,16 +39,13 @@ sub generate_command
 			next;
 		}
 		if ($arg eq '-t' or $arg eq '--tool') {
-			if ( scalar(@ARGV) <= $idx + 1 ) {
-				usage();
-			}
-			$skip_next = 1;
+			usage() if $#ARGV <= $idx;
 			$ENV{GIT_MERGE_TOOL} = $ARGV[$idx + 1];
+			$skip_next = 1;
 			next;
 		}
 		if ($arg =~ /^--tool=/) {
-			$arg = substr($arg, 7);
-			$ENV{GIT_MERGE_TOOL} = $arg;
+			$ENV{GIT_MERGE_TOOL} = substr($arg, 7);
 			next;
 		}
 		if ($arg eq '--no-prompt') {
