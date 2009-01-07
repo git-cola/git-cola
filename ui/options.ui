@@ -8,30 +8,35 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>653</width>
-    <height>397</height>
+    <width>469</width>
+    <height>384</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Options</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
-   <item>
-    <layout class="QGridLayout" name="gridLayout_2" >
+  <layout class="QGridLayout" name="gridLayout_4" >
+   <property name="leftMargin" >
+    <number>8</number>
+   </property>
+   <property name="topMargin" >
+    <number>4</number>
+   </property>
+   <property name="rightMargin" >
+    <number>8</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>4</number>
+   </property>
+   <property name="spacing" >
+    <number>4</number>
+   </property>
+   <item row="0" column="0" >
+    <layout class="QGridLayout" name="gridLayout" >
      <item row="0" column="0" >
       <widget class="QLabel" name="label_2" >
        <property name="text" >
         <string>Main Font</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1" >
-      <widget class="QSpinBox" name="global_cola_fontui_size" >
-       <property name="minimum" >
-        <number>8</number>
-       </property>
-       <property name="value" >
-        <number>12</number>
        </property>
       </widget>
      </item>
@@ -74,69 +79,13 @@
       </widget>
      </item>
      <item row="2" column="0" >
-      <widget class="QLabel" name="label_13" >
-       <property name="text" >
-        <string>Editor</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1" >
-      <widget class="QLineEdit" name="global_gui_editor" >
-       <property name="text" >
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2" >
-      <widget class="QLabel" name="label_11" >
-       <property name="text" >
-        <string>History browser</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3" >
-      <widget class="QLineEdit" name="global_gui_historybrowser" >
-       <property name="text" >
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0" >
-      <widget class="QLabel" name="label_12" >
-       <property name="text" >
-        <string>Merge Tool</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1" >
-      <widget class="QLineEdit" name="global_merge_tool" >
-       <property name="text" >
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="2" colspan="2" >
-      <widget class="QCheckBox" name="global_merge_keepbackup" >
-       <property name="text" >
-        <string>Save *.orig Merge Backups</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2" colspan="2" >
-      <widget class="QCheckBox" name="global_cola_savewindowsettings" >
-       <property name="text" >
-        <string>Save GUI Settings</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0" >
       <widget class="QLabel" name="label_14" >
        <property name="text" >
         <string>Tab Width</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="1" >
+     <item row="2" column="1" >
       <widget class="QSpinBox" name="global_cola_tabwidth" >
        <property name="wrapping" >
         <bool>true</bool>
@@ -149,16 +98,92 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="2" >
+      <widget class="QCheckBox" name="global_cola_savewindowsettings" >
+       <property name="text" >
+        <string>Save GUI Settings</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3" >
+      <widget class="QCheckBox" name="global_merge_keepbackup" >
+       <property name="text" >
+        <string>Save *.orig Merge Backups</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" >
+      <widget class="QLabel" name="label_13" >
+       <property name="text" >
+        <string>Editor</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1" colspan="3" >
+      <widget class="QLineEdit" name="global_gui_editor" >
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0" >
+      <widget class="QLabel" name="label_11" >
+       <property name="text" >
+        <string>History Browser</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1" colspan="3" >
+      <widget class="QLineEdit" name="global_gui_historybrowser" >
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0" >
+      <widget class="QLabel" name="label_12" >
+       <property name="text" >
+        <string>Merge Tool</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1" colspan="3" >
+      <widget class="QLineEdit" name="global_merge_tool" >
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" >
+      <widget class="QSpinBox" name="global_cola_fontui_size" >
+       <property name="minimum" >
+        <number>8</number>
+       </property>
+       <property name="value" >
+        <number>12</number>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_8" >
+   <item row="1" column="0" >
+    <layout class="QHBoxLayout" name="horizontalLayout" >
+     <property name="spacing" >
+      <number>4</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="local_groupbox" >
        <property name="title" >
         <string>Local Repository</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout" >
+       <layout class="QGridLayout" name="gridLayout_2" >
+        <item row="0" column="0" >
+         <widget class="QLabel" name="label_4" >
+          <property name="text" >
+           <string>User Name</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="1" colspan="2" >
          <widget class="QLineEdit" name="local_user_name" />
         </item>
@@ -173,27 +198,13 @@
          <widget class="QLineEdit" name="local_user_email" />
         </item>
         <item row="2" column="0" colspan="2" >
-         <widget class="QCheckBox" name="local_merge_summary" >
-          <property name="text" >
-           <string>Summarize Merge Commits</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0" colspan="3" >
-         <widget class="QCheckBox" name="local_merge_diffstat" >
-          <property name="text" >
-           <string>Show Diffstat After Merge</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0" colspan="2" >
          <widget class="QLabel" name="label_6" >
           <property name="text" >
            <string>Merge Verbosity</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="2" >
+        <item row="2" column="2" >
          <widget class="QSpinBox" name="local_merge_verbosity" >
           <property name="minimum" >
            <number>0</number>
@@ -206,14 +217,14 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="0" colspan="2" >
+        <item row="3" column="0" >
          <widget class="QLabel" name="label" >
           <property name="text" >
            <string>Number of Diff Context Lines</string>
           </property>
          </widget>
         </item>
-        <item row="5" column="2" >
+        <item row="3" column="2" >
          <widget class="QSpinBox" name="local_gui_diffcontext" >
           <property name="minimum" >
            <number>2</number>
@@ -223,10 +234,17 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="0" >
-         <widget class="QLabel" name="label_4" >
+        <item row="4" column="0" colspan="2" >
+         <widget class="QCheckBox" name="local_merge_summary" >
           <property name="text" >
-           <string>User Name</string>
+           <string>Summarize Merge Commits</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0" colspan="2" >
+         <widget class="QCheckBox" name="local_merge_diffstat" >
+          <property name="text" >
+           <string>Show Diffstat After Merge</string>
           </property>
          </widget>
         </item>
@@ -238,7 +256,7 @@
        <property name="title" >
         <string>Global (All Repositories)</string>
        </property>
-       <layout class="QGridLayout" >
+       <layout class="QGridLayout" name="gridLayout_3" >
         <item row="0" column="0" >
          <widget class="QLabel" name="label_7" >
           <property name="text" >
@@ -260,27 +278,13 @@
          <widget class="QLineEdit" name="global_user_email" />
         </item>
         <item row="2" column="0" colspan="2" >
-         <widget class="QCheckBox" name="global_merge_summary" >
-          <property name="text" >
-           <string>Summarize Merge Commits</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0" colspan="3" >
-         <widget class="QCheckBox" name="global_merge_diffstat" >
-          <property name="text" >
-           <string>Show Diffstat After Merge</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0" colspan="2" >
          <widget class="QLabel" name="label_10" >
           <property name="text" >
            <string>Merge Verbosity</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="2" >
+        <item row="2" column="2" >
          <widget class="QSpinBox" name="global_merge_verbosity" >
           <property name="minimum" >
            <number>0</number>
@@ -293,14 +297,14 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="0" colspan="2" >
+        <item row="3" column="0" colspan="2" >
          <widget class="QLabel" name="label_9" >
           <property name="text" >
            <string>Number of Diff Context Lines</string>
           </property>
          </widget>
         </item>
-        <item row="5" column="2" >
+        <item row="3" column="2" >
          <widget class="QSpinBox" name="global_gui_diffcontext" >
           <property name="minimum" >
            <number>2</number>
@@ -310,12 +314,26 @@
           </property>
          </widget>
         </item>
+        <item row="4" column="0" colspan="2" >
+         <widget class="QCheckBox" name="global_merge_summary" >
+          <property name="text" >
+           <string>Summarize Merge Commits</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0" colspan="2" >
+         <widget class="QCheckBox" name="global_merge_diffstat" >
+          <property name="text" >
+           <string>Show Diffstat After Merge</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
     </layout>
    </item>
-   <item>
+   <item row="2" column="0" >
     <layout class="QHBoxLayout" name="horizontalLayout_9" >
      <item>
       <spacer name="horizontalSpacer" >
