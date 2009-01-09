@@ -7,7 +7,7 @@ all:
 
 install:
 	$(PYTHON) setup.py install --prefix=$(prefix) --root=$(DESTDIR) --force
-	cd $(DESTDIR)$(prefix)/bin && ! test -e cola && ln -s git-cola cola
+	cd $(DESTDIR)$(prefix)/bin && ((! test -e cola && ln -s git-cola cola) || true)
 
 doc:
 	cd share/doc/cola && $(MAKE) all
