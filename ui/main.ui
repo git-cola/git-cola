@@ -570,6 +570,7 @@
      <string>Help</string>
     </property>
     <addaction name="menu_help_docs" />
+    <addaction name="menu_help_about" />
    </widget>
    <addaction name="file_menu" />
    <addaction name="edit_menu" />
@@ -902,6 +903,11 @@
   <action name="menu_view_log" >
    <property name="text" >
     <string>VIew Log</string>
+   </property>
+  </action>
+  <action name="menu_help_about" >
+   <property name="text" >
+    <string>About</string>
    </property>
   </action>
  </widget>

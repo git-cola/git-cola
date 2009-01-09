@@ -79,6 +79,7 @@ def main():
         translator.load(qmfile)
         app.installTranslator(translator)
 
+    style = None
     if opts.style:
         # This loads the built-in and user-specified stylesheets.
         # We allows absolute and relative paths to a stylesheet
@@ -92,11 +93,7 @@ def main():
             # Automatically register each subdirectory in the style dir
             # as a Qt resource directory.
             dirname = os.path.dirname(filename)
-            resource_paths = []
-            resource_paths.extend(utils.get_resource_dirs(dirname))
-            for r in resource_paths:
-                basename = os.path.basename(r)
-                QtCore.QDir.setSearchPaths(basename, [r])
+            setup_resource_dir(dirname)
             stylesheet = open(filename, 'r')
             style = stylesheet.read()
             stylesheet.close()
@@ -104,6 +101,9 @@ def main():
         except:
             print >> sys.stderr, ("warn: '%s' is not a valid style."
                                   % opts.style)
+    else:
+        setup_resource_dir(utils.get_style_dir())
+
 
     # Initialize the model/view/controller framework
     from cola.models import Model
@@ -127,3 +127,11 @@ def main():
     view.show()
     ctl = Controller(model, view)
     sys.exit(app.exec_())
+
+
+def setup_resource_dir(dirname):
+    from PyQt4 import QtCore
+    resource_paths = utils.get_resource_dirs(dirname)
+    for r in resource_paths:
+        basename = os.path.basename(r)
+        QtCore.QDir.setSearchPaths(basename, [r])

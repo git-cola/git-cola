@@ -44,7 +44,7 @@ from stash import stash
 from compare import compare
 from compare import compare_file
 from compare import branch_compare
-
+from cola.views import AboutView
 
 class Controller(QObserver):
     """Manages the interaction between models and views."""
@@ -186,6 +186,7 @@ class Controller(QObserver):
             menu_view_log = self.view_log,
 
             # Help Menu
+            menu_help_about = self.about,
             menu_help_docs =
                 lambda: self.model.git.web__browse(utils.get_htmldocs()),
             )
@@ -366,8 +367,17 @@ class Controller(QObserver):
 
     #####################################################################
     # Qt callbacks
+    def about(self):
+        view = AboutView(self.view)
+        style = QtGui.QApplication.instance().styleSheet()
+        if style:
+            view.setStyleSheet(style)
+        view.show()
+        view.set_version(version.version)
+
     def tr(self, fortr):
         return qtutils.tr(fortr)
+
     def goto_grep(self):
         line = self.view.selected_line()
         filename, lineno, contents = line.split(':', 2)

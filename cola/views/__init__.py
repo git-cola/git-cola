@@ -19,6 +19,7 @@ from cola.core import decode
 
 try:
     from main import View
+    from cola.gui.about import Ui_about
     from cola.gui.bookmark import Ui_bookmark
     from cola.gui.branchview import Ui_branchview
     from cola.gui.combo import Ui_combo
@@ -37,7 +38,14 @@ except ImportError:
                      'Try running "make" in the cola source tree.\n')
     sys.exit(-1)
 
-# These are views that do not contain any custom methods
+class AboutView(Ui_about, QDialog):
+    def __init__(self, parent):
+        QDialog.__init__(self, parent)
+        Ui_about.__init__(self)
+        self.setupUi(self)
+    def set_version(self, version):
+        self.spam.setText(self.spam.text().replace('$VERSION', version))
+
 OptionsView = create_standard_view(Ui_options, QDialog)
 BranchCompareView = create_standard_view(Ui_branchview, QDialog)
 CreateBranchView = create_standard_view(Ui_createbranch, QDialog)

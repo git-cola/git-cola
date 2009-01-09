@@ -72,6 +72,10 @@ def get_stylesheet(name):
     else:
         return None
 
+def get_style_dir():
+    """Returns the path to the style dir within the cola install tree."""
+    return STYLEDIR
+
 def get_htmldocs():
     """Returns the path to the cola html documentation."""
     return os.path.join(DOCDIR, 'git-cola.html')
