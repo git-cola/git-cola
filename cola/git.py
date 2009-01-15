@@ -96,8 +96,8 @@ class Git(object):
                                 stdout=subprocess.PIPE)
         while True:
             try:
-                stdout_value = proc.stdout.read()
                 stderr_value = proc.stderr.read()
+                stdout_value = proc.stdout.read()
                 status = proc.wait()
                 break
             except IOError, e:
