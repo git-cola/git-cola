@@ -11,6 +11,8 @@ from PyQt4.QtCore import QCoreApplication
 from PyQt4.QtCore import QThread
 from PyQt4.QtCore import QEvent
 from PyQt4.QtCore import SIGNAL
+
+import pyinotify
 from pyinotify import ProcessEvent
 from pyinotify import WatchManager, Notifier, EventsCodes
 
@@ -44,10 +46,12 @@ class GitNotifier(QThread):
         self.git = git # A: git command object
         self.path = git.get_work_tree() #: Path to monitor
         self.abort = False #: Whether to abort (using during destruction)
-        self.dirs_seen = {} #: Directories we're watching
+        self.dirs_seen = set() #: Directories we're watching
         #: Events we capture
-        self.mask = (EventsCodes.IN_CREATE | EventsCodes.IN_DELETE |
-                     EventsCodes.IN_MODIFY | EventsCodes.IN_MOVED_TO)
+        self.mask = (EventsCodes.ALL_FLAGS['IN_CREATE'] |
+                     EventsCodes.ALL_FLAGS['IN_DELETE'] |
+                     EventsCodes.ALL_FLAGS['IN_MODIFY'] |
+                     EventsCodes.ALL_FLAGS['IN_MOVED_TO'])
 
     def notify(self):
         """Posts a Qt event in response to inotify updates.
@@ -63,15 +67,27 @@ class GitNotifier(QThread):
         directory = os.path.realpath(directory)
         if directory not in self.dirs_seen:
             self.wm.add_watch(directory, self.mask)
-            self.dirs_seen[directory] = True
+            self.dirs_seen.add(directory)
+
+    def _is_pyinotify_08x(self):
+        """The pyinotify API changed between 0.7.x and 0.8.x.
+        This allows us to maintain backwards compatibility.
+        """
+        if hasattr(pyinotify, '__version__'):
+            if pyinotify.__version__[:3] == '0.8':
+                return True
+        return False
 
     def run(self):
         """This creates the inotify WatchManager and generates
         FileSysEvents."""
         # Only capture those events that git cares about
         self.wm = WatchManager()
-        notifier = Notifier(self.wm, FileSysEvent(self))
-        dirs_seen = {}
+        if self._is_pyinotify_08x():
+            notifier = Notifier(self.wm, FileSysEvent(self), timeout=250)
+        else:
+            notifier = Notifier(self.wm, FileSysEvent(self))
+        dirs_seen = set()
         added_flag = False
         # self.abort signals app termination.  The timeout is a tradeoff
         # between fast notification response and waiting too long to exit.
@@ -84,6 +100,10 @@ class GitNotifier(QThread):
                     self.watch_directory(directory)
                 added_flag = True
             notifier.process_events()
-            if notifier.check_events(timeout=250):
+            if self._is_pyinotify_08x():
+                check = notifier.check_events()
+            else:
+                check = notifier.check_events(timeout=250)
+            if check:
                 notifier.read_events()
         notifier.stop()
