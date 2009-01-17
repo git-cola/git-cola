@@ -854,14 +854,13 @@ class Model(model.Model):
             head = 'HEAD^'
         (staged, modified, unmerged, untracked) = ([], [], [], [])
         try:
-            for name in self.git.diff_index(head).splitlines():
-                rest, name = name.split('\t')
+            for line in self.git.diff_index(head).splitlines():
+                rest, name = line.split('\t')
                 status = rest[-1]
-                name = eval_path(name)
                 if status == 'M' or status == 'D':
-                    modified.append(name)
+                    modified.append(eval_path(name))
                 elif status == 'A':
-                    unmerged.append(name)
+                    unmerged.append(eval_path(name))
         except:
             # handle git init
             for name in (self.git.ls_files(modified=True, z=True)
@@ -870,16 +869,18 @@ class Model(model.Model):
                     modified.append(decode(name))
 
         try:
-            for name in (self.git.diff_index(head, cached=True)
+            for line in (self.git.diff_index(head, cached=True)
                                  .splitlines()):
-                rest, name = name.split('\t')
+                rest, name = line.split('\t')
                 status = rest[-1]
                 name = eval_path(name)
                 if status  == 'M':
                     staged.append(name)
                     # is this file partially staged?
-                    diff = self.git.diff('--', name, name_only=True, z=True)
-                    if not diff.strip():
+                    status, out = self.git.diff('--', name,
+                                                name_only=True, exit_code=True,
+                                                with_extended_output=True)
+                    if status == 0:
                         modified.remove(name)
                     else:
                         self.partially_staged.add(name)
@@ -892,6 +893,7 @@ class Model(model.Model):
                     modified.remove(name)
                 elif status == 'U':
                     unmerged.append(name)
+                    modified.remove(name)
         except:
             # handle git init
             for name in self.git.ls_files(z=True).strip('\0').split('\0'):
@@ -902,11 +904,6 @@ class Model(model.Model):
                                       z=True).split('\0'):
             if name:
                 untracked.append(decode(name))
-
-        # remove duplicate merged and modified entries
-        for u in unmerged:
-            if u in modified:
-                modified.remove(u)
 
         return (staged, modified, unmerged, untracked)
 
