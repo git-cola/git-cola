@@ -20,7 +20,7 @@ def dashify(string):
 # Enables debugging of GitPython's git commands
 GIT_PYTHON_TRACE = os.environ.get("GIT_PYTHON_TRACE", False)
 
-execute_kwargs = ('istream', 'with_keep_cwd', 'with_extended_output',
+execute_kwargs = ('istream', 'with_keep_cwd', 'with_extended_output', 'with_stderr',
                   'with_exceptions', 'with_raw_output')
 
 class Git(object):
@@ -47,6 +47,7 @@ class Git(object):
                 istream=None,
                 with_keep_cwd=False,
                 with_extended_output=False,
+                with_stderr=False,
                 with_exceptions=False,
                 with_raw_output=False):
         """
@@ -59,14 +60,17 @@ class Git(object):
         ``istream``
             Standard input filehandle passed to subprocess.Popen.
 
+        The following option all default to False.
+
         ``with_keep_cwd``
             Whether to use the current working directory from os.getcwd().
             GitPython uses the cwd set by set_cwd() by default.
 
         ``with_extended_output``
             Whether to return a (status, output) tuple.
-            This also includes stderr in the output stream.
-            By default stderr is ignored.
+
+        ``with_stderr``
+            Whether to include stderr in the output.
 
         ``with_exceptions``
             Whether to raise an exception when git returns a non-zero status.
@@ -84,11 +88,11 @@ class Git(object):
 
         # Allow the user to have the command executed in their working dir.
         if with_keep_cwd or not cwd:
-          cwd = os.getcwd()
+            cwd = os.getcwd()
 
         # Ignore stderr unless with_extended_output is provided
         stderr = None
-        if with_extended_output:
+        if with_stderr:
             stderr = subprocess.STDOUT
 
         # Start the process
@@ -104,6 +108,7 @@ class Git(object):
         while True:
             try:
                 stdout_value = proc.stdout.read()
+                proc.stdout.close()
                 status = proc.wait()
                 break
             except IOError, e:
