@@ -8,17 +8,10 @@ import testlib
 class ImportTest(testlib.TestCase):
     pass
 
-def gen_class(module):
+def gen_class(themodule):
     def import_test(self):
-        modinfo = None
-        for idx, path in enumerate(module.split('.')):
-            if idx == 0:
-                modinfo = imp.find_module(path)
-                mod = imp.load_module(module, *modinfo)
-            else:
-                modinfo = imp.find_module('cola/'+path, modinfo[0])
-                mod = imp.load_module(path, *modinfo)
-            self.failUnless(mod)
+        mod = __import__(themodule)
+        self.failUnless(mod)
     return import_test
 
 def __create_tests():
