@@ -5,6 +5,7 @@ data model.
 """
 
 import os
+import sys
 import imp
 from cStringIO import StringIO
 from types import DictType
@@ -357,20 +358,11 @@ class Model(Observable):
         modules = items[:-1]
         classname = items[-1]
         path = None
-        module = None
-        for mod in modules:
-            search = imp.find_module(mod, path)
-            try:
-                module = imp.load_module(mod, *search)
-                if hasattr(module, "__path__"):
-                    path = module.__path__
-            finally:
-                if search and search[0]:
-                    search[0].close()
+        module = __import__('.'.join(modules))
+        for mod in modules[1:]:
+            module = getattr(module, mod)
         if module:
             return getattr(module, classname)
-        else:
-            raise Exception("No class found for: %s" % clstr)
 
     @staticmethod
     def class_to_str(instance):
@@ -385,9 +377,6 @@ def has_json():
         import simplejson
         return True
     except ImportError:
-        print "Unable to import simplejson." % action
-        print "You do not have simplejson installed."
-        print "try: sudo apt-get install simplejson"
         return False
 
 #############################################################################
