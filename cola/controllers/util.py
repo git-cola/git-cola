@@ -86,8 +86,8 @@ class SelectCommitsController(QObserver):
         row, selected = qtutils.get_selected_row(self.view.commit_list)
         if not selected:
             return
-        status, out = self.model.git.checkout(self.model.get_revision_sha1(row),
-                                              with_extended_output=True)
+        sha1 = self.model.get_revision_sha1(row)
+        out = self.model.git.checkout(sha1, with_stderr=True)
         qtutils.show_output(out)
 
     def create_branch_at(self):
@@ -102,8 +102,7 @@ class SelectCommitsController(QObserver):
         if not selected:
             return
         sha1 = self.model.get_revision_sha1(row)
-        status, out = self.model.git.cherry_pick(sha1,
-                                                 with_extended_output=True)
+        out = self.model.git.cherry_pick(sha1, with_stderr=True)
         qtutils.show_output(out)
 
     def commit_sha1_selected(self):

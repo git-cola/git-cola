@@ -91,10 +91,8 @@ class CreateBranchController(QObserver):
         output = self.model.create_branch(branch, revision, track=track)
         qtutils.show_output(output)
         if chkout:
-            status, out = self.model.git.checkout(branch,
-                                                  with_extended_output=True)
-            qtutils.show_output(out)
-
+            qtutils.show_output(self.model.git.checkout(branch,
+                                                        with_stderr=True))
         self.view.accept()
 
     def item_changed(self, *rest):

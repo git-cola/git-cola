@@ -695,7 +695,8 @@ class Model(model.Model):
 
         # Run 'git commit'
         status, out = self.git.commit(F=tmpfile, v=True, amend=amend,
-                                      with_extended_output=True)
+                                      with_extended_output=True,
+                                      with_stderr=True)
         os.unlink(tmpfile)
         return status, out
 
@@ -945,7 +946,7 @@ class Model(model.Model):
             'verbose': True,
             'tags': tags,
             'rebase': rebase,
-            'with_extended_output': True,
+            'with_stderr': True,
         }
         return (args, kwargs)
 
@@ -954,8 +955,7 @@ class Model(model.Model):
         """
         def remote_helper(remote, **kwargs):
             args, kwargs = self.get_remote_args(remote, **kwargs)
-            status, out = gitaction(*args, **kwargs)
-            return out
+            return gitaction(*args, **kwargs)
         return remote_helper
 
     def parse_ls_tree(self, rev):

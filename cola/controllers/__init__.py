@@ -441,9 +441,7 @@ class Controller(QObserver):
                                    self.model.get_local_branches())
         if not branch:
             return
-        status, out = self.model.git.checkout(branch,
-                                              with_extended_output=True)
-        self.log(out)
+        self.log(self.model.git.checkout(branch, with_stderr=True))
 
     def browse_commits(self):
         self.select_commits_gui('Browse Commits',
