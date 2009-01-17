@@ -694,14 +694,10 @@ class Model(model.Model):
         fh.close()
 
         # Run 'git commit'
-        (status, stdout, stderr) = self.git.commit(F=tmpfile,
-                                                   v=True,
-                                                   amend=amend,
-                                                   with_extended_output=True)
+        status, out = self.git.commit(F=tmpfile, v=True, amend=amend,
+                                      with_extended_output=True)
         os.unlink(tmpfile)
-
-        return (status, stdout+stderr)
-
+        return status, out
 
     def diffindex(self):
         return self.git.diff(unified=self.diff_context,
@@ -952,6 +948,7 @@ class Model(model.Model):
             'verbose': True,
             'tags': tags,
             'rebase': rebase,
+            'with_extended_output': True,
         }
         return (args, kwargs)
 
@@ -960,7 +957,8 @@ class Model(model.Model):
         """
         def remote_helper(remote, **kwargs):
             args, kwargs = self.get_remote_args(remote, **kwargs)
-            return gitaction(*args, **kwargs)
+            status, out = gitaction(*args, **kwargs)
+            return out
         return remote_helper
 
     def parse_ls_tree(self, rev):

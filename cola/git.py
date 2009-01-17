@@ -64,7 +64,9 @@ class Git(object):
             GitPython uses the cwd set by set_cwd() by default.
 
         ``with_extended_output``
-            Whether to return a (status, stdout, stderr) tuple.
+            Whether to return a (status, output) tuple.
+            This also includes stderr in the output stream.
+            By default stderr is ignored.
 
         ``with_exceptions``
             Whether to raise an exception when git returns a non-zero status.
@@ -84,6 +86,11 @@ class Git(object):
         if with_keep_cwd or not cwd:
           cwd = os.getcwd()
 
+        # Ignore stderr unless with_extended_output is provided
+        stderr = None
+        if with_extended_output:
+            stderr = subprocess.STDOUT
+
         # Start the process
         use_shell = sys.platform in ('win32')
         if use_shell and sys.platform == 'darwin':
@@ -92,11 +99,10 @@ class Git(object):
                                 cwd=cwd,
                                 shell=use_shell,
                                 stdin=istream,
-                                stderr=subprocess.PIPE,
+                                stderr=stderr,
                                 stdout=subprocess.PIPE)
         while True:
             try:
-                stderr_value = proc.stderr.read()
                 stdout_value = proc.stdout.read()
                 status = proc.wait()
                 break
@@ -107,40 +113,24 @@ class Git(object):
                 if e.errno == errno.EINTR:
                     continue
                 else:
-                    stdout_value = None
-                    stderr_value = None
+                    stdout_value = ''
                     status = 42
                     break
 
         if with_exceptions and status:
-            raise GitCommandError(command, status, stderr_value)
+            raise GitCommandError(command, status, stdout_value)
 
-        if not stdout_value:
-            stdout_value = ''
-        if not stderr_value:
-            stderr_value = ''
         if not with_raw_output:
             stdout_value = stdout_value.strip()
-            stderr_value = stderr_value.strip()
 
         if GIT_PYTHON_TRACE == 'full':
-            if stderr_value:
-              print "%s -> %d: '%s' !! '%s'" % (command, status, stdout_value, stderr_value)
-            elif stdout_value:
-              print "%s -> %d: '%s'" % (command, status, stdout_value)
-            else:
-              print "%s -> %d" % (command, status)
+            print "%s -> %d: '%s'" % (command, status, stdout_value)
 
         # Allow access to the command's status code
         if with_extended_output:
-            return (status, stdout_value, stderr_value)
+            return status, stdout_value
         else:
-            if stdout_value and stderr_value:
-                return stderr_value + '\n' + stdout_value
-            elif stdout_value:
-                return stdout_value
-            else:
-                return stderr_value
+            return stdout_value
 
     def transform_kwargs(self, **kwargs):
         """

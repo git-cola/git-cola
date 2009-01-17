@@ -77,12 +77,9 @@ class StashController(QObserver):
         selection = self.get_selected_stash()
         if not selection:
             return
-        (status, stdout, stderr) =\
-            self.model.git.stash('apply', '--index', selection,
-                                 with_extended_output=True)
-        qtutils.log(stdout + stderr,
-                    quiet=False,
-                    doraise=True)
+        status, out = self.model.git.stash('apply', '--index', selection,
+                                           with_extended_output=True)
+        qtutils.log(out, quiet=False, doraise=True)
         self.view.accept()
 
     def stash_drop(self):
