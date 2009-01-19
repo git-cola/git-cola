@@ -1,16 +1,13 @@
 #!/bin/sh
+# git-difftool-helper is a GIT_EXTERNAL_DIFF-compatible diff tool launcher.
+# It supports kdiff3, tkdiff, xxdiff, meld, opendiff, emerge, ecmerge,
+# vimdiff, gvimdiff, and custom user-configurable tools.
+# This script is typically launched by using the 'git difftool'
+# convenience command.
 #
-# git-difftool-helper:
-#    invoked via 'git difftool' to view diffs using external diff viewers.
-#
-# Copyright (c) 2009 David Aguilar.
-#
-# You can use this script directly with the following settings:
-#   export GIT_PAGER=''
-#   export GIT_EXTERNAL_DIFF=git-difftool-helper
-#   git diff ...
+# Copyright (c) 2009 David Aguilar
 
-# Should we prompt before viewing each file?
+# Set GIT_DIFFTOOL_NO_PROMPT to bypass the per-file prompt.
 should_prompt () {
 	! test -n "$GIT_DIFFTOOL_NO_PROMPT"
 }
@@ -33,7 +30,7 @@ cleanup_temp_files () {
 	fi
 }
 
-# This is called when users Ctrl-C out of git-difftool-helper.
+# This is called when users Ctrl-C out of git-difftool-helper
 sigint_handler () {
 	echo
 	cleanup_temp_files
@@ -81,12 +78,16 @@ launch_merge_tool () {
 		"$merge_tool_path" -o "$MERGED" "$LOCAL" "$REMOTE"
 		;;
 
-	meld|vimdiff)
+	meld)
 		"$merge_tool_path" "$LOCAL" "$REMOTE"
 		;;
 
+	vimdiff)
+		"$merge_tool_path" -c "wincmd r" "$LOCAL" "$REMOTE"
+		;;
+
 	gvimdiff)
-		"$merge_tool_path" -f "$LOCAL" "$REMOTE"
+		"$merge_tool_path" -c "wincmd r" -f "$LOCAL" "$REMOTE"
 		;;
 
 	xxdiff)
@@ -235,7 +236,7 @@ else
 fi
 
 
-# Launch the merge tool helper on each path passed to us by 'git diff'
+# Launch the merge tool on each path provided by 'git diff'
 while test $# -gt 6
 do
 	launch_merge_tool "$1" "$2" "$5"
