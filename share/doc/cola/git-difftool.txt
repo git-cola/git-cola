@@ -86,15 +86,6 @@ linkgit:git-diff[1]::
 
 linkcola:git-cola[1]::
 	'git-difftool' is part of the 'git-cola' project.
-+
-NOTE: Patches to add 'git-difftool' to git.git's contrib area
-have been sent to the git mailing list.  If difftool makes it in
-then packagers are encouraged to use git.git's contrib/difftool/
-scripts instead of the one provided here.
-+
-If git.git makes difftool part of the core command set then
-cola will conditionally install difftool based on the user's
-git version.
 
 linkgit:git-mergetool[1]::
 	Run merge conflict resolution tools to resolve merge conflicts
@@ -114,3 +105,11 @@ Documentation by David Aguilar and the git-list <git@vger.kernel.org>.
 GIT
 ---
 Part of the linkgit:git[1] suite
+
+
+NOTE: Patches to add 'git-difftool' to git.git's contrib area
+have been sent to the git mailing list.  Packagers are encouraged
+to use git.git's contrib/difftool/ scripts instead of the ones
+distributed with cola.  If git decides to make difftool part of
+its core command set then cola will promptly add build rules to
+conditionally install difftool based on the user's git version.
