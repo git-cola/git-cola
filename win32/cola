@@ -1,19 +1,26 @@
 #!/bin/sh
 # This should work with either Python2.5 or Python2.6.
 
+# Windows doesn't have the 'dirname' command, so fake it
 dirname() {
-    dir=$(echo "$1" | perl -pe 's,(.*)/[^/]+,\1,')
+    dir=$(echo "$@" | perl -pe 's,(.*)/[^/]+,\1,')
     test "$dir" = "$1" && dir=.
     echo "$dir"
 }
-
 mydir="$(dirname $0)"
 parentdir="$(dirname $mydir)"
 
+# Windows uses 'git-cola.pyw' instead of 'git-cola'
+COLA="$parentdir"/bin/git-cola
+if test -f "$COLA".pyw; then
+    COLA="$COLA".pyw
+fi
+
+# Find a suitable Python and use it to run cola
 for python in /c/Python26 /c/Python25; do
     if test -d "$python"; then
         PATH="$PATH":$python
-        exec $python/python.exe "$parentdir"/bin/git-cola "$@"
+        exec $python/python.exe "$COLA" "$@"
     fi
 done
 exit 1
