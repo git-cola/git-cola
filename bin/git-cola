@@ -47,6 +47,9 @@ if bin in ('bin', 'Scripts') and prefix != sys.prefix:
         os.getcwd(),
         ]
 
+    if os.name in ('nt', 'dos'):
+        paths_to_try.insert(0, os.path.join(prefix, 'lib', 'site-packages'))
+
     local_path = [p for p in paths_to_try if os.path.exists(p)]
     sys.path = local_path + sys.path
 
