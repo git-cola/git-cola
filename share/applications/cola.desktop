@@ -6,5 +6,5 @@ Icon=/usr/share/cola/icons/git.png
 StartupNotify=true
 Terminal=false
 Type=Application
-Categories=Development;
+Categories=Development;RevisionControl;
 X-KDE-SubstituteUID=false
