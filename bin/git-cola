@@ -20,6 +20,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 """
 
+from os.path import join
 import os
 import sys
 
@@ -39,19 +40,18 @@ if bin in ('bin', 'Scripts') and prefix != sys.prefix:
     sys.prefix = prefix
     sys.exec_prefix = prefix
 
-    paths_to_try = [
-        os.path.join(prefix, 'lib', 'python2.6', 'site-packages'),
-        os.path.join(prefix, 'lib', 'python2.5', 'site-packages'),
-        os.path.join(prefix, 'lib', 'python2.4', 'site-packages'),
-        prefix,
-        os.getcwd(),
-        ]
+    paths_to_try = [ join(prefix, 'lib', 'python2.6', 'site-packages'),
+                     join(prefix, 'lib', 'python2.5', 'site-packages'),
+                     join(prefix, 'lib', 'python2.4', 'site-packages'),
+                     join(prefix, 'build', 'lib', 'cola'),
+                     prefix, os.getcwd() ]
 
     if os.name in ('nt', 'dos'):
         paths_to_try.insert(0, os.path.join(prefix, 'lib', 'site-packages'))
 
     local_path = [p for p in paths_to_try if os.path.exists(p)]
     sys.path = local_path + sys.path
+
 
 from cola.main import main
 
