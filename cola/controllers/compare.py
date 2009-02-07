@@ -181,6 +181,9 @@ class CompareController(QObserver):
     """
     def init (self, model, view, filename=None):
         self.filename = filename
+        if self.filename:
+            self.view.compare_files.hide()
+
         self.add_observables('descriptions_start', 'descriptions_end',
                              'revision_start', 'revision_end',
                              'compare_files', 'num_results',
@@ -297,10 +300,10 @@ class CompareController(QObserver):
     def compare_selected_file(self):
         tree_widget = self.view.compare_files
         id_num, selected = qtutils.get_selected_treeitem(tree_widget)
-        if not selected:
+        if not selected and not self.filename:
             qtutils.information('Oops!', 'Please select a file to compare')
             return
-        filename = self.model.get_compare_files()[id_num]
+        filename = self.filename or self.model.get_compare_files()[id_num]
         self.__compare_file(filename)
 
     def compare_files_doubleclick(self, tree_item, column):
