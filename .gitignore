@@ -4,6 +4,7 @@
 *.rpm
 *.swp
 *~
+.noseids
 /build
 /build-stamp
 /ChangeLog

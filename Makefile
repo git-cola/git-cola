@@ -29,7 +29,8 @@ uninstall:
 		"$(DESTDIR)$(prefix)"/lib/python2.*/site-packages/cola-*
 
 test:
-	@env PYTHONPATH=$(CURDIR):$(CURDIR)/build/lib:$(PYTHONPATH) nosetests
+	@env PYTHONPATH=$(CURDIR):$(CURDIR)/build/lib:$(PYTHONPATH) \
+		nosetests --verbose --with-doctest --with-id
 
 clean:
 	for dir in share/doc/cola test; do \
