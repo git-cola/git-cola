@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 import unittest
-import testlib
+import helper
 
 class ModelTest(unittest.TestCase):
     def setUp(self):
-        self.model = testlib.DuckModel()
+        self.model = helper.DuckModel()
     def tearDown(self):
         del self.model
 
     def testCreate(self):
         self.model.create(foo='bar')
         self.failUnless(self.model.get_foo()=='bar')
-    
+
     def testRegularAttributes(self):
         """Test accessing attribute via model.attribute."""
         self.failUnless( self.model.attribute == 'value' )
@@ -19,19 +19,19 @@ class ModelTest(unittest.TestCase):
     def testMixedcaseAttributes(self):
         """Test accessing attribute via model.Attribute."""
         self.failUnless( self.model.AtTrIbUte == 'value' )
-    
+
     def testExplicitAttr(self):
         """Test accessing an explicit attribute. Just in case we f** up getattr"""
         self.failUnless( self.model.hello == 'world' )
-    
+
     def testRealMethod(self):
         """Test calling a concrete model method."""
         self.failUnless( self.model.duckMethod() == 'duck' )
-    
+
     def testGetter(self):
         """Test calling using the get* method."""
         self.failUnless( self.model.getAttribute() == 'value' )
-    
+
     def testSetter(self):
         """Test using the set* method."""
         self.model.set_param('newAttribute','baz')
@@ -57,7 +57,7 @@ class ModelTest(unittest.TestCase):
         self.model.appendArray('baz','quux')
         self.failUnless( self.model.array[1] == 'baz' )
         self.failUnless( self.model.array[2] == 'quux' )
-    
+
     def testDict(self):
         """Test setting dictionary/dictionary values."""
         self.model.dict = { 'hello': 'world' }

@@ -3,9 +3,10 @@ import os
 import imp
 import unittest
 
-import testlib
+import helper
 
-class ImportTest(testlib.TestCase):
+
+class ImportTest(helper.TestCase):
     pass
 
 def gen_class(themodule):
