@@ -30,7 +30,8 @@ uninstall:
 
 test:
 	@env PYTHONPATH=$(CURDIR):$(CURDIR)/build/lib:$(PYTHONPATH) \
-		nosetests --verbose --with-doctest --with-id
+		nosetests --verbose --with-doctest --with-id \
+		--exclude=jsonpickle --exclude=json
 
 clean:
 	for dir in share/doc/cola test; do \

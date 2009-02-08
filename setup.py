@@ -55,7 +55,8 @@ def __run_setup():
           description = 'GIT Cola',
           long_description = 'A highly caffeinated GIT GUI',
           scripts = scripts,
-          packages = ['cola', 'cola.gui', 'cola.views', 'cola.controllers'],
+          packages = ['cola', 'cola.gui', 'cola.views', 'cola.controllers',
+                      'cola.json', 'cola.jsonpickle'],
           data_files = [
             __app_path('share/cola/qm', '*.qm'),
             __app_path('share/cola/icons', '*.png'),
