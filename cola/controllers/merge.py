@@ -26,7 +26,8 @@ def local_merge(model, parent):
     view.show()
 
 class MergeController(QObserver):
-    def init(self, model, view):
+    def __init__(self, model, view):
+        QObserver.__init__(self, model, view)
         # Set the current branch label
         branch = self.model.get_currentbranch()
         title = unicode(self.tr('Merge Into %s')) %  branch

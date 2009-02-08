@@ -52,12 +52,6 @@ class QObserver(Observer, QObject):
         self.__in_textfield = False
         self.__in_callback = False
 
-        # Call the subclass's startup routine
-        self.init(model, view, *args, **kwargs)
-
-    def init(self, model, view, *args, **kwargs):
-        pass
-
     def SLOT(self, *args):
         """Default slot to handle all Qt callbacks.
         This method delegates to callbacks from add_signals."""

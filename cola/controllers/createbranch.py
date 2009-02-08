@@ -18,7 +18,8 @@ def create_new_branch(model,parent,revision=''):
     view.show()
 
 class CreateBranchController(QObserver):
-    def init(self, model, view):
+    def __init__(self, model, view):
+        QObserver.__init__(self, model, view)
         self._remoteclicked = False
         self.add_observables('revision', 'local_branch')
         self.add_callbacks(branch_list   = self.item_changed,

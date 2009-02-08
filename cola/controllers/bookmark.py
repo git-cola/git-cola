@@ -27,7 +27,8 @@ def manage_bookmarks():
     view.show()
 
 class BookmarkController(QObserver):
-    def init(self, model, view):
+    def __init__(self, model, view):
+        QObserver.__init__(self, model, view)
         self.add_observables( 'bookmarks' )
         self.add_callbacks(button_open   = self.open,
                            button_delete = self.delete,

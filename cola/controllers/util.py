@@ -54,7 +54,8 @@ def select_commits(model, parent, title, revs, summaries):
     return ctl.select_commits()
 
 class SelectCommitsController(QObserver):
-    def init(self, model, view):
+    def __init__(self, model, view):
+        QObserver.__init__(self, model, view)
         set_diff_font(model, view.commit_text)
         self.connect(view.commit_list,
                      'itemSelectionChanged()',
@@ -136,10 +137,11 @@ class OptionsController(QObserver):
     This controller assumes that the view's widgets are named
     the same as the model parameters."""
 
-    def init(self, model, view):
+    def __init__(self, model, view):
         # used for telling about interactive font changes
         self.original_model = model
         model = model.clone()
+        QObserver.__init__(self, model, view)
         self.add_observables('local_user_email',
                              'local_user_name',
                              'local_merge_summary',
@@ -245,7 +247,8 @@ def logger():
     return view
 
 class LogController(QObserver):
-    def init(self, model, view):
+    def __init__(self, model, view):
+        QObserver.__init__(self, model, view)
         self.add_observables('search_text')
         self.add_actions(search_text = self.insta_search)
         self.add_callbacks(clear_button = self.clear,

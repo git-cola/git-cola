@@ -56,7 +56,7 @@ class Controller(QObserver):
     MODE_BRANCH = 4
     MODE_GREP = 5
 
-    def init(self, model, view):
+    def __init__(self, model, view):
         """
         State machine:
         Modes are:
@@ -69,6 +69,7 @@ class Controller(QObserver):
             project = os.path.basename(model.git.get_work_tree()),
             git_version = model.git.version(),
         )
+        QObserver.__init__(self, model, view)
 
         self.reset_mode()
 
@@ -82,7 +83,7 @@ class Controller(QObserver):
         view.display_text.contextMenuEvent = self.diff_context_menu_event
 
         # Binds model params to their equivalent view widget
-        self.add_observables('commitmsg')#, 'staged', 'unstaged',
+        self.add_observables('commitmsg')
 
         # When a model attribute changes, this runs a specific action
         self.add_actions(global_cola_fontdiff = self.update_diff_font)

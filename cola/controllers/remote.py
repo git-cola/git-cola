@@ -26,7 +26,8 @@ def remote_action(model, parent, action):
     view.show()
 
 class RemoteController(QObserver):
-    def init(self, model, view, action):
+    def __init__(self, model, view, action):
+        QObserver.__init__(self, model, view)
         self.add_observables('remotename',
                              'remotes',
                              'local_branch',

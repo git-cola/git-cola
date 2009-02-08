@@ -16,7 +16,8 @@ def stash(model, parent):
     view.show()
 
 class StashController(QObserver):
-    def init (self, model, view):
+    def __init__(self, model, view):
+        QObserver.__init__(self, model, view)
         self.add_observables('stash_list')
         self.add_callbacks(button_stash_show  = self.stash_show,
                            button_stash_apply = self.stash_apply,

@@ -48,7 +48,8 @@ class BranchCompareController(QObserver):
     BRANCH_POINT = '*** Branch Point ***'
     SANDBOX      = '*** Sandbox ***'
 
-    def init(self, model, view):
+    def __init__(self, model, view):
+        QObserver.__init__(self, model, view)
         self.add_observables('left_combo', 'right_combo',
                              'left_list', 'right_list',
                              'diff_files')
@@ -179,7 +180,8 @@ class BranchCompareController(QObserver):
 class CompareController(QObserver):
     """Drives the Commit->Compare Commits dialog.
     """
-    def init (self, model, view, filename=None):
+    def __init__(self, model, view, filename=None):
+        QObserver.__init__(self, model, view)
         self.filename = filename
         if self.filename:
             self.view.compare_files.hide()

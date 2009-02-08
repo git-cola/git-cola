@@ -36,7 +36,9 @@ def browse_git_branch(model, parent, branch):
     return view.exec_() == QDialog.Accepted
 
 class RepoBrowserController(QObserver):
-    def init(self, model, view, title='File Browser', get_file=False):
+    def __init__(self, model, view,
+                 title='File Browser', get_file=False):
+        QObserver.__init__(self, model, view)
         self.get_file = get_file
         self.filename = None
         view.setWindowTitle(title)
@@ -46,6 +48,7 @@ class RepoBrowserController(QObserver):
         view.commit_list.contextMenuEvent = self.context_menu_event
         # Start at the root of the tree
         model.set_directory('')
+        self.refresh_view()
 
     def context_menu_event(self, event):
         menu = QMenu(self.view);
