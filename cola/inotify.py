@@ -26,9 +26,9 @@ class FileSysEvent(ProcessEvent):
         """FileSysEvent keeps a reference to the Qt parent and remembers
         the last event time to avoid event floods.
         """
+        self.last_event_time = time.time()
         ProcessEvent.__init__(self)
         self.parent = parent
-        self.last_event_time = time.time()
     def process_default(self, event):
         """Notifies the Qt parent when actions occur."""
         # Prevent notificaiton floods
@@ -40,10 +40,11 @@ class GitNotifier(QThread):
     """This polls inotify for changes and generates FileSysEvents
     in response to updates.
     """
-    def __init__(self, receiver, git):
+    def __init__(self, receiver, git, timeout=250):
         QThread.__init__(self)
         self.receiver = receiver #: The Qt receiver of the event
-        self.git = git # A: git command object
+        self.git = git #: git command object
+        self.timeout = timeout #: used by pyinotify
         self.path = git.get_work_tree() #: Path to monitor
         self.abort = False #: Whether to abort (using during destruction)
         self.dirs_seen = set() #: Directories we're watching
@@ -84,7 +85,7 @@ class GitNotifier(QThread):
         # Only capture those events that git cares about
         self.wm = WatchManager()
         if self._is_pyinotify_08x():
-            notifier = Notifier(self.wm, FileSysEvent(self), timeout=250)
+            notifier = Notifier(self.wm, FileSysEvent(self), timeout=self.timeout)
         else:
             notifier = Notifier(self.wm, FileSysEvent(self))
         dirs_seen = set()
@@ -103,7 +104,7 @@ class GitNotifier(QThread):
             if self._is_pyinotify_08x():
                 check = notifier.check_events()
             else:
-                check = notifier.check_events(timeout=250)
+                check = notifier.check_events(timeout=self.timeout)
             if check:
                 notifier.read_events()
         notifier.stop()
