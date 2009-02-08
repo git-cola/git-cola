@@ -12,7 +12,7 @@ def create_standard_view(uiclass, qtclass, *classes):
 
     """
     class StandardView(uiclass, qtclass):
-        def __init__(self, parent=None, *args, **kwargs):
+        def __init__(self, parent, *args, **kwargs):
             qtclass.__init__(self, parent)
             uiclass.__init__(self)
             self.__qtclass = qtclass
@@ -20,11 +20,8 @@ def create_standard_view(uiclass, qtclass, *classes):
             self.parent_view = parent
             syntax.set_theme_properties(self)
             self.setupUi(self)
-            self.init(parent, *args, **kwargs)
             for cls in classes:
-                cls.init(self, parent, *args, **kwargs)
-        def init(self, parent, *args, **kwargs):
-            pass
+                cls.__init__(self, parent, *args, **kwargs)
 
         def show(self):
             """Automatically centers dialogs relative to their

@@ -53,9 +53,11 @@ BookmarkView = create_standard_view(Ui_bookmark, QDialog)
 StashView = create_standard_view(Ui_stash, QDialog)
 CompareView = create_standard_view(Ui_compare, QDialog)
 
-class LogView(create_standard_view(Ui_logger, QDialog)):
+LogViewBase = create_standard_view(Ui_logger, QDialog)
+class LogView(LogViewBase):
     """A simple dialog to display command logs."""
-    def init(self, parent=None, output=None):
+    def __init__(self, parent=None, output=None):
+        LogViewBase.__init__(self, parent)
         self.setWindowTitle(self.tr('Git Command Log'))
         self.syntax = LogSyntaxHighlighter(self.output_text.document())
         if output:
@@ -78,7 +80,7 @@ class LogView(create_standard_view(Ui_logger, QDialog)):
         text.setTextCursor(cursor)
 
 class ItemView(object):
-    def init(self, parent, title="", items=[], dblclick=None):
+    def __init__(self, parent, title="", items=[], dblclick=None):
         self.setWindowTitle(title)
         self.items_widget.addItems(items)
         if dblclick and type(self.items_widget) is QListWidget:
@@ -100,14 +102,16 @@ class ItemView(object):
         else:
             return None
 
-class ComboView(create_standard_view(Ui_combo, QDialog, ItemView), ItemView):
+ComboViewBase = create_standard_view(Ui_combo, QDialog, ItemView)
+class ComboView(ComboViewBase, ItemView):
     """A dialog for choosing branches."""
     def idx(self):
         return self.items_widget.currentIndex()
     def value(self):
         return str(self.items_widget.currentText())
 
-class ListView(create_standard_view(Ui_items, QDialog, ItemView), ItemView):
+ListViewBase = create_standard_view(Ui_items, QDialog, ItemView)
+class ListView(ListViewBase, ItemView):
     """A dialog for an item from a list."""
     def idx(self):
         return self.items_widget.currentRow()
@@ -117,26 +121,35 @@ class ListView(create_standard_view(Ui_items, QDialog, ItemView), ItemView):
             return None
         return str(item.text())
 
-class CommitView(create_standard_view(Ui_commit, QDialog)):
-    def init(self, parent=None, title=None):
-        if title: self.setWindowTitle(title)
+CommitViewBase = create_standard_view(Ui_commit, QDialog)
+class CommitView(CommitViewBase):
+    def __init__(self, parent=None, title=None):
+        CommitViewBase.__init__(self, parent)
+        if title:
+            self.setWindowTitle(title)
         # Make the list widget slighty larger
         self.splitter.setSizes([ 50, 200 ])
         self.syntax = DiffSyntaxHighlighter(self.commit_text.document(),
                                             whitespace=False)
 
-class SearchView(create_standard_view(Ui_search, QDialog)):
-    def init(self, parent=None):
+SearchViewBase = create_standard_view(Ui_search, QDialog)
+class SearchView(SearchViewBase):
+    def __init__(self, parent=None):
+        SearchViewBase.__init__(self, parent)
         self.input.setFocus()
         self.syntax = DiffSyntaxHighlighter(self.commit_text.document(),
                                             whitespace=False)
 
-class MergeView(create_standard_view(Ui_merge, QDialog)):
-    def init(self, parent=None):
+MergeViewBase = create_standard_view(Ui_merge, QDialog)
+class MergeView(MergeViewBase):
+    def __init__(self, parent=None):
+        MergeViewBase.__init__(self, parent)
         self.revision.setFocus()
 
-class RemoteView(create_standard_view(Ui_remote, QDialog)):
-    def init(self, parent=None, button_text=''):
+RemoteViewBase = create_standard_view(Ui_remote, QDialog)
+class RemoteView(RemoteViewBase):
+    def __init__(self, parent=None, button_text=''):
+        RemoteViewBase.__init__(self, parent)
         if button_text:
             self.action_button.setText(button_text)
             self.setWindowTitle(button_text)

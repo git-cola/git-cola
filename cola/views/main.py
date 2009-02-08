@@ -11,7 +11,8 @@ from cola.views.syntax import DiffSyntaxHighlighter
 from cola.gui.main import Ui_main
 
 
-class View(create_standard_view(Ui_main, QMainWindow)):
+ViewBase = create_standard_view(Ui_main, QMainWindow)
+class View(ViewBase):
     """The main cola interface."""
     IDX_STAGED = 0
     IDX_MODIFIED = 1
@@ -19,7 +20,8 @@ class View(create_standard_view(Ui_main, QMainWindow)):
     IDX_UNTRACKED = 3
     IDX_END = 4
 
-    def init(self, parent=None):
+    def __init__(self, parent=None):
+        ViewBase.__init__(self, parent)
         self.set_display = self.display_text.setText
         self.amend_is_checked = self.amend_radio.isChecked
         self.action_undo = self.commitmsg.undo
