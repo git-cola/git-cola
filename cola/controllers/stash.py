@@ -10,7 +10,8 @@ from cola.views import StashView
 
 def stash(model, parent):
     model = model.clone()
-    model.create( stash_list=[], stash_revids=[] )
+    model.stash_list = []
+    model.stash_revids = []
     view = StashView(parent)
     ctl = StashController(model, view)
     view.show()

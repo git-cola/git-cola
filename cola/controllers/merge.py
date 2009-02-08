@@ -19,8 +19,10 @@ def abort_merge(model, parent):
         model.abort_merge()
 
 def local_merge(model, parent):
+    # TODO: subclass model
     model = model.clone()
-    model.create(revision='', revision_list=[])
+    model.revision = ''
+    model.revision_list = []
     view = MergeView(parent)
     ctl = MergeController(model, view)
     view.show()

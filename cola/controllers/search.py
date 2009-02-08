@@ -236,12 +236,14 @@ def search_commits(model, parent, mode, browse):
     def get_date(timespec):
         return '%04d-%02d-%02d' % time.localtime(timespec)[:3]
 
+    # TODO subclass model for search only
     model = model.clone()
-    model.create(input='',
-                 max_results=500,
-                 start_date='',
-                 end_date='',
-                 commit_list=[])
+    model.input = ''
+    model.max_results = 500
+    model.start_date = ''
+    model.end_date = ''
+    model.commit_list = []
+
     view = SearchView(parent)
     ctl = SearchController(model, view)
     ctl.set_mode(mode)

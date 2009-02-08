@@ -9,7 +9,7 @@ class ModelTest(unittest.TestCase):
         del self.model
 
     def testCreate(self):
-        self.model.create(foo='bar')
+        self.model.foo = 'bar'
         self.failUnless(self.model.get_foo()=='bar')
 
     def testRegularAttributes(self):

@@ -17,29 +17,36 @@ def compare_file(model, parent):
     compare(model, parent, filename)
 
 def compare(model, parent, filename=None):
+    # TODO! subclass model
     model = model.clone()
-    model.create(descriptions_start=[], descriptions_end=[],
-                 revisions_start=[], revisions_end=[],
-                 revision_start='', revision_end='',
-                 compare_files=[], num_results=100,
-                 show_versions=False)
+    model.descriptions_start = []
+    model.descriptions_end = []
+    model.revisions_start = []
+    model.revisions_end = []
+    model.revision_start = ''
+    model.revision_end = ''
+    model.compare_files = []
+    model.num_results = 100
+    model.show_versions=False
     view = CompareView(parent)
     ctl = CompareController(model, view, filename)
     view.show()
 
 def branch_compare(model, parent):
+
     model = model.clone()
-    model.create(left_combo=['Local', 'Remote'],
-                 right_combo=['Local', 'Remote'],
-                 left_combo_index=0,
-                 right_combo_index=1,
-                 left_list=[],
-                 right_list=[],
-                 left_list_index=-1,
-                 right_list_index=-1,
-                 left_list_selected=False,
-                 right_list_selected=False,
-                 diff_files=[])
+    model.left_combo = ['Local', 'Remote']
+    model.right_combo = ['Local', 'Remote']
+    model.left_combo_index = 0
+    model.right_combo_index = 1
+    model.left_list = []
+    model.right_list = []
+    model.left_list_index = -1
+    model.right_list_index = -1
+    model.left_list_selected = False
+    model.right_list_selected = False
+    model.diff_files = []
+
     view = BranchCompareView(parent)
     ctl = BranchCompareController(model, view)
     view.show()

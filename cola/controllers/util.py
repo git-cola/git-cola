@@ -241,7 +241,9 @@ class OptionsController(QObserver):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+ The Log GUI Controller
 def logger():
-    model = Model(search_text = '')
+    # TODO: subclass model
+    model = Model()
+    model.search_text = ''
     view = LogView(None)
     ctl = LogController(model,view)
     return view

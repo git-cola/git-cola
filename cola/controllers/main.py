@@ -65,11 +65,11 @@ class Controller(QObserver):
             worktree -> selectively add working changes to the index
             index  -> selectively remove changes from the index
         """
-        model.create(
-            project = os.path.basename(model.git.get_work_tree()),
-            git_version = model.git.version(),
-        )
         QObserver.__init__(self, model, view)
+
+        # TODO: subclass model
+        model.project = os.path.basename(model.git.get_work_tree())
+        model.git_version = model.git.version()
 
         self.reset_mode()
 

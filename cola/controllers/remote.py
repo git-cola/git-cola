@@ -10,11 +10,14 @@ from cola.views import RemoteView
 from cola.qobserver import QObserver
 
 def remote_action(model, parent, action):
+    # TODO: subclass model
     model = model.clone()
-    model.create(remotename='',
-                 tags_checkbox=False,
-                 rebase_checkbox=False,
-                 ffwd_only_checkbox=True)
+    model.generate_remote_helpers()
+    model.remotename = ''
+    model.tags_checkbox = False
+    model.rebase_checkbox = False
+    model.ffwd_only_checkbox = True
+
     view = RemoteView(parent, action)
     if action == 'Fetch' or action == 'Pull':
         model.set_tags_checkbox(False)
