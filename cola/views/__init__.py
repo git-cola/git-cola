@@ -141,7 +141,9 @@ class RemoteView(create_standard_view(Ui_remote, QDialog)):
             self.action_button.setText(button_text)
             self.setWindowTitle(button_text)
     def select_first_remote(self):
-        item = self.remotes.item(0)
+        return self.select_remote(0)
+    def select_remote(self, idx):
+        item = self.remotes.item(idx)
         if item:
             self.remotes.setItemSelected(item, True)
             self.remotes.setCurrentItem(item)

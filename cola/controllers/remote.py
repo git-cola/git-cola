@@ -48,8 +48,15 @@ class RemoteController(QObserver):
                            local_branches = self.update_local_branches,
                            remote_branches = self.update_remote_branches)
         self.refresh_view()
-        if self.view.select_first_remote():
-            self.model.set_remotename(self.model.get_remotes()[0])
+        remotes = self.model.get_remotes()
+        if 'origin' in remotes:
+            idx = remotes.index('origin')
+            if self.view.select_remote(idx):
+                self.model.set_remotename('origin')
+        else:
+            if self.view.select_first_remote():
+                self.model.set_remotename(remotes[0])
+
 
     def display_remotes(self, widget):
         displayed = []
