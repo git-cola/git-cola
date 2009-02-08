@@ -12,13 +12,10 @@ PyQt 4.3 or newer
 
 
 ADDITIVES
-    # apt-get install python-pyinotify simplejson
+    # apt-get install python-pyinotify
 
 pyinotify enables inotify support on Linux
     ~ http://pyinotify.sourceforge.net/
-
-simplejson enables bookmarks
-    ~ http://pypi.python.org/pypi/simplejson
 
 
 BREWING INSTRUCTIONS
