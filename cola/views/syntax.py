@@ -52,11 +52,9 @@ class GenericSyntaxHighligher(QSyntaxHighlighter):
         QSyntaxHighlighter.__init__(self, doc)
         for attr, val in default_colors.items():
             setattr(self, attr, val)
-        self.init(doc, *args, **kwargs)
+        self._rules = []
+        self.generate_rules()
         self.reset()
-
-    def init(self, *args, **kwargs):
-        pass
 
     def reset(self):
         self._rules = []
@@ -132,9 +130,9 @@ class GenericSyntaxHighligher(QSyntaxHighlighter):
             setattr(self, attr, val)
 
 class DiffSyntaxHighlighter(GenericSyntaxHighligher):
-    def init(self, doc, whitespace=True):
+    def __init__(self, doc, whitespace=True):
         self.whitespace = whitespace
-        GenericSyntaxHighligher.init(self, doc)
+        GenericSyntaxHighligher.__init__(self, doc)
 
     def generate_rules(self):
         diff_begin = self.mkformat(self.color_begin, bold=True)
