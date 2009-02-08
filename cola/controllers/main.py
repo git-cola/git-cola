@@ -26,24 +26,24 @@ except ImportError:
     pass
 
 # controllers namespace
-import search
-from util import logger
-from remote import remote_action
-from util import choose_from_list
-from util import choose_from_combo
-from util import select_commits
-from util import update_options
-from repobrowser import browse_git_branch
-from createbranch import create_new_branch
-from search import search_commits
-from merge import local_merge
-from merge import abort_merge
-from bookmark import save_bookmark
-from bookmark import manage_bookmarks
-from stash import stash
-from compare import compare
-from compare import compare_file
-from compare import branch_compare
+from cola.controllers import search
+from cola.controllers.remote import remote_action
+from cola.controllers.util import logger
+from cola.controllers.util import choose_from_list
+from cola.controllers.util import choose_from_combo
+from cola.controllers.util import select_commits
+from cola.controllers.util import update_options
+from cola.controllers.repobrowser import browse_git_branch
+from cola.controllers.createbranch import create_new_branch
+from cola.controllers.search import search_commits
+from cola.controllers.merge import local_merge
+from cola.controllers.merge import abort_merge
+from cola.controllers.bookmark import save_bookmark
+from cola.controllers.bookmark import manage_bookmarks
+from cola.controllers.stash import stash
+from cola.controllers.compare import compare
+from cola.controllers.compare import compare_file
+from cola.controllers.compare import branch_compare
 from cola.views import AboutView
 
 class Controller(QObserver):

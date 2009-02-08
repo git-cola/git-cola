@@ -1,1 +1,1 @@
-from main import Controller
+from cola.controllers.main import Controller
