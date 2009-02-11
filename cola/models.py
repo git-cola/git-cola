@@ -845,6 +845,12 @@ class Model(model.Model):
             os.unlink(merge_msg_path)
             merge_msg_path = self.get_merge_message_path()
 
+    def _is_modified(self, name):
+        status, out = self.git.diff('--', name,
+                                    name_only=True, exit_code=True,
+                                    with_extended_output=True)
+        return status != 0
+
     def get_workdir_state(self, amend=False):
         """RETURNS: A tuple of staged, unstaged untracked, and unmerged
         file lists.
@@ -858,11 +864,14 @@ class Model(model.Model):
         try:
             for line in self.git.diff_index(head).splitlines():
                 rest, name = line.split('\t')
+                name = eval_path(name)
                 status = rest[-1]
                 if status == 'M' or status == 'D':
                     modified.append(eval_path(name))
                 elif status == 'A':
-                    unmerged.append(eval_path(name))
+                    # newly-added yet modified
+                    if self._is_modified(name):
+                        modified.append(name)
         except:
             # handle git init
             for name in (self.git.ls_files(modified=True, z=True)
@@ -879,17 +888,12 @@ class Model(model.Model):
                 if status  == 'M':
                     staged.append(name)
                     # is this file partially staged?
-                    status, out = self.git.diff('--', name,
-                                                name_only=True, exit_code=True,
-                                                with_extended_output=True)
-                    if status == 0:
-                        modified.remove(name)
-                    else:
+                    if self._is_modified(name):
                         self.partially_staged.add(name)
+                    else:
+                        modified.remove(name)
                 elif status == 'A':
                     staged.append(name)
-                    if name in unmerged:
-                        unmerged.remove(name)
                 elif status == 'D':
                     staged.append(name)
                     modified.remove(name)
