@@ -530,10 +530,7 @@ class Controller(QObserver):
         filename = self.get_selected_filename(staged=False)
         if not filename or filename not in self.model.get_unmerged():
             return
-        utils.fork('xterm', '-e',
-                   'git', 'mergetool',
-                   '-t', self.model.get_mergetool(),
-                   filename)
+        utils.fork('xterm', '-e', 'git', 'mergetool', filename)
 
     def edit_file(self, staged=True):
         filename = self.get_selected_filename(staged=staged)
@@ -543,8 +540,7 @@ class Controller(QObserver):
     def edit_diff(self, staged=True):
         filename = self.get_selected_filename(staged=staged)
         if filename:
-            args = ['perl', utils.get_libexec('git-difftool'),
-                    '--no-prompt', '-t', self.model.get_mergetool()]
+            args = ['perl', utils.get_libexec('git-difftool'), '--no-prompt']
             if staged:
                 args.append('--cached')
             if self.view.amend_is_checked():

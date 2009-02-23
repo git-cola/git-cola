@@ -8,8 +8,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>469</width>
-    <height>384</height>
+    <width>497</width>
+    <height>413</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -37,6 +37,16 @@
       <widget class="QLabel" name="label_2" >
        <property name="text" >
         <string>Main Font</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" >
+      <widget class="QSpinBox" name="global_cola_fontui_size" >
+       <property name="minimum" >
+        <number>8</number>
+       </property>
+       <property name="value" >
+        <number>12</number>
        </property>
       </widget>
      </item>
@@ -98,20 +108,6 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="2" >
-      <widget class="QCheckBox" name="global_cola_savewindowsettings" >
-       <property name="text" >
-        <string>Save GUI Settings</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3" >
-      <widget class="QCheckBox" name="global_merge_keepbackup" >
-       <property name="text" >
-        <string>Save *.orig Merge Backups</string>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="0" >
       <widget class="QLabel" name="label_13" >
        <property name="text" >
@@ -119,8 +115,22 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1" colspan="3" >
+     <item row="3" column="1" >
       <widget class="QLineEdit" name="global_gui_editor" >
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2" >
+      <widget class="QLabel" name="label_12" >
+       <property name="text" >
+        <string>Diff Tool</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3" >
+      <widget class="QLineEdit" name="global_diff_tool" >
        <property name="text" >
         <string/>
        </property>
@@ -133,34 +143,38 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1" colspan="3" >
+     <item row="4" column="1" >
       <widget class="QLineEdit" name="global_gui_historybrowser" >
        <property name="text" >
         <string/>
        </property>
       </widget>
      </item>
-     <item row="5" column="0" >
-      <widget class="QLabel" name="label_12" >
+     <item row="4" column="2" >
+      <widget class="QLabel" name="label_15" >
        <property name="text" >
         <string>Merge Tool</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="1" colspan="3" >
+     <item row="4" column="3" >
       <widget class="QLineEdit" name="global_merge_tool" >
        <property name="text" >
         <string/>
        </property>
       </widget>
      </item>
-     <item row="0" column="1" >
-      <widget class="QSpinBox" name="global_cola_fontui_size" >
-       <property name="minimum" >
-        <number>8</number>
+     <item row="2" column="2" >
+      <widget class="QCheckBox" name="global_cola_savewindowsettings" >
+       <property name="text" >
+        <string>Save GUI Settings</string>
        </property>
-       <property name="value" >
-        <number>12</number>
+      </widget>
+     </item>
+     <item row="2" column="3" >
+      <widget class="QCheckBox" name="global_merge_keepbackup" >
+       <property name="text" >
+        <string>Save *.orig Merge Backups</string>
        </property>
       </widget>
      </item>
@@ -342,7 +356,7 @@
        </property>
        <property name="sizeHint" stdset="0" >
         <size>
-         <width>478</width>
+         <width>318</width>
          <height>20</height>
         </size>
        </property>

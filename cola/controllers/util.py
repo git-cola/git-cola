@@ -156,6 +156,7 @@ class OptionsController(QObserver):
                              'global_merge_verbosity',
                              'global_gui_editor',
                              'global_merge_tool',
+                             'global_diff_tool',
                              'global_gui_diffcontext',
                              'global_gui_historybrowser',
                              'global_cola_fontdiff_size',

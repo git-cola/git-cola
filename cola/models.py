@@ -205,7 +205,8 @@ class Model(model.Model):
             'cola_savewindowsettings': False,
             'cola_tabwidth': 8,
             'merge_keepbackup': True,
-            'merge_tool': os.getenv('MERGETOOL', 'xxdiff'),
+            'diff_tool': os.getenv('GIT_DIFF_TOOL', 'xxdiff'),
+            'merge_tool': os.getenv('GIT_MERGE_TOOL', 'xxdiff'),
             'gui_editor': os.getenv('EDITOR', 'gvim'),
             'gui_historybrowser': 'gitk',
         }
@@ -417,9 +418,6 @@ class Model(model.Model):
 
     def get_editor(self):
         return self.get_gui_config('editor')
-
-    def get_mergetool(self):
-        return self.get_global_config('merge.tool')
 
     def get_history_browser(self):
         return self.get_gui_config('historybrowser')
