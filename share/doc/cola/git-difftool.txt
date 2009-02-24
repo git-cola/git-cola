@@ -50,10 +50,10 @@ variable `difftool.<tool>.cmd`.
 When 'git-difftool' is invoked with this tool (either through the
 `-t` or `--tool` option or the `diff.tool` configuration variable)
 the configured command line will be invoked with the following
-variables available: `$PRE` is set to the name of the temporary
-file containing the contents of the diff pre-image and `$POST`
+variables available: `$LOCAL` is set to the name of the temporary
+file containing the contents of the diff pre-image and `$REMOTE`
 is set to the name of the temporary file containing the contents
-of the diff post-image.  `$FILENAME` is set to the file name.
+of the diff post-image.  `$MERGED` is set to the file name.
 
 --no-prompt::
 	Do not prompt before launching a diff tool.

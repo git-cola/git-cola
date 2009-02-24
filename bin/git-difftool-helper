@@ -19,11 +19,11 @@ keep_backup () {
 }
 
 # This function manages the backup .orig file.
-# A backup $FILENAME.orig file is created if changes are detected.
+# A backup $MERGED.orig file is created if changes are detected.
 cleanup_temp_files () {
-	if test -n "$FILENAME"; then
-		if keep_backup && test "$FILENAME" -nt "$BACKUP"; then
-			test -f "$BACKUP" && mv -- "$BACKUP" "$FILENAME.orig"
+	if test -n "$MERGED"; then
+		if keep_backup && test "$MERGED" -nt "$BACKUP"; then
+			test -f "$BACKUP" && mv -- "$BACKUP" "$MERGED.orig"
 		else
 			rm -f -- "$BACKUP"
 		fi
@@ -37,85 +37,90 @@ sigint_handler () {
 }
 
 # This function prepares temporary files and launches the appropriate
-# diff tool.
-launch_diff_tool () {
-	FILENAME="$1" # FILENAME is the relative path from git
-	PRE="$2"      # PRE contains /a/filename
-	POST="$3"     # POST contains /b/filename
-	ext="$$$(expr "$FILENAME" : '.*\(\.[^/]*\)$')"
-	BACKUP="$FILENAME.BACKUP.$ext"
+# merge tool.
+launch_merge_tool () {
+	# Merged is the filename as it appears in the work tree
+	# Local is the contents of a/filename
+	# Remote is the contents of b/filename
+	# Custom merge tool commands might use $BASE so we provide it
+	MERGED="$1"
+	LOCAL="$2"
+	REMOTE="$3"
+	BASE="$1"
+	ext="$$$(expr "$MERGED" : '.*\(\.[^/]*\)$')"
+	BACKUP="$MERGED.BACKUP.$ext"
 
 	# Create and ensure that we clean up $BACKUP
-	test -f "$FILENAME" && cp -- "$FILENAME" "$BACKUP"
-	trap sigint_handler SIGINT
+	test -f "$MERGED" && cp -- "$MERGED" "$BACKUP"
+	trap sigint_handler INT
 
-	# $PRE and $POST can be temporary files so prompt
-	# the user with the real name before launching $diff_tool.
+	# $LOCAL and $REMOTE are temporary files so prompt
+	# the user with the real $MERGED name before launching $merge_tool.
 	if should_prompt; then
-		printf "\nViewing: '$FILENAME'\n"
-		printf "Hit return to launch '%s': " "$diff_tool"
+		printf "\nViewing: '$MERGED'\n"
+		printf "Hit return to launch '%s': " "$merge_tool"
 		read ans
 	fi
 
-	# Run the appropriate diff tool command
-	case "$diff_tool" in
+	# Run the appropriate merge tool command
+	case "$merge_tool" in
 	kdiff3)
-		basename=$(basename "$FILENAME")
-		"$diff_tool_path" --auto \
+		basename=$(basename "$MERGED")
+		"$merge_tool_path" --auto \
 			--L1 "$basename (A)" \
 			--L2 "$basename (B)" \
-			-o "$FILENAME" "$PRE" "$POST" \
+			-o "$MERGED" "$LOCAL" "$REMOTE" \
 			> /dev/null 2>&1
 		;;
 
 	kompare)
-		"$diff_tool_path" "$PRE" "$POST"
+		"$merge_tool_path" "$LOCAL" "$REMOTE"
 		;;
 
 	tkdiff)
-		"$diff_tool_path" -o "$FILENAME" "$PRE" "$POST"
+		"$merge_tool_path" -o "$MERGED" "$LOCAL" "$REMOTE"
 		;;
 
 	meld)
-		"$diff_tool_path" "$PRE" "$POST"
+		"$merge_tool_path" "$LOCAL" "$REMOTE"
 		;;
 
 	vimdiff)
-		"$diff_tool_path" -c "wincmd r" "$PRE" "$POST"
+		"$merge_tool_path" -c "wincmd r" "$LOCAL" "$REMOTE"
 		;;
 
 	gvimdiff)
-		"$diff_tool_path" -c "wincmd r" -f "$PRE" "$POST"
+		"$merge_tool_path" -c "wincmd r" -f "$LOCAL" "$REMOTE"
 		;;
 
 	xxdiff)
-		"$diff_tool_path" \
+		"$merge_tool_path" \
 			-X \
 			-R 'Accel.SaveAsMerged: "Ctrl-S"' \
 			-R 'Accel.Search: "Ctrl+F"' \
 			-R 'Accel.SearchForward: "Ctrl-G"' \
-			--merged-file "$FILENAME" \
-			"$PRE" "$POST"
+			--merged-file "$MERGED" \
+			"$LOCAL" "$REMOTE"
 		;;
 
 	opendiff)
-		"$diff_tool_path" "$PRE" "$POST" \
-			-merge "$FILENAME" | cat
+		"$merge_tool_path" "$LOCAL" "$REMOTE" \
+			-merge "$MERGED" | cat
 		;;
 
 	ecmerge)
-		"$diff_tool_path" "$PRE" "$POST" \
-			--default --mode=merge2 --to="$FILENAME"
+		"$merge_tool_path" "$LOCAL" "$REMOTE" \
+			--default --mode=merge2 --to="$MERGED"
 		;;
 
 	emerge)
-		"$diff_tool_path" -f emerge-files-command \
-			"$PRE" "$POST" "$(basename "$FILENAME")"
+		"$merge_tool_path" -f emerge-files-command \
+			"$LOCAL" "$REMOTE" "$(basename "$MERGED")"
 		;;
 
 	*)
-		if test -n "$diff_tool_cmd"; then
-			( eval $diff_tool_cmd )
+		if test -n "$merge_tool_cmd"; then
+			( eval $merge_tool_cmd )
 		fi
 		;;
 	esac
@@ -123,14 +128,16 @@ launch_diff_tool () {
 	cleanup_temp_files
 }
 
-# Verifies that difftool.<tool>.cmd exists
+# Verifies that (difftool|mergetool).<tool>.cmd exists
 valid_custom_tool() {
-	diff_tool_cmd="$(git config difftool.$1.cmd)"
-	test -n "$diff_tool_cmd"
+	merge_tool_cmd="$(git config difftool.$1.cmd)"
+	test -z "$merge_tool_cmd" &&
+	merge_tool_cmd="$(git config mergetool.$1.cmd)"
+	test -n "$merge_tool_cmd"
 }
 
-# Verifies that the chosen diff tool is properly setup.
-# Built-in diff tools are always valid.
+# Verifies that the chosen merge tool is properly setup.
+# Built-in merge tools are always valid.
 valid_tool() {
 	case "$1" in
 	kdiff3 | kompare | tkdiff | xxdiff | meld | opendiff | emerge | vimdiff | gvimdiff | ecmerge)
@@ -144,94 +151,99 @@ valid_tool() {
 	esac
 }
 
-# Sets up the diff_tool_path variable.
+# Sets up the merge_tool_path variable.
 # This handles the difftool.<tool>.path configuration.
-init_diff_tool_path() {
-	diff_tool_path=$(git config difftool."$1".path)
-	if test -z "$diff_tool_path"; then
+# This also falls back to mergetool defaults.
+init_merge_tool_path() {
+	merge_tool_path=$(git config difftool."$1".path)
+	test -z "$merge_tool_path" &&
+	merge_tool_path=$(git config mergetool."$1".path)
+	if test -z "$merge_tool_path"; then
 		case "$1" in
 		emerge)
-			diff_tool_path=emacs
+			merge_tool_path=emacs
 			;;
 		*)
-			diff_tool_path="$1"
+			merge_tool_path="$1"
 			;;
 		esac
 	fi
 }
 
-# Allow the GIT_DIFF_TOOL variable to provide a default value
-test -n "$GIT_DIFF_TOOL" && diff_tool="$GIT_DIFF_TOOL"
+# Allow GIT_DIFF_TOOL and GIT_MERGE_TOOL to provide default values
+test -n "$GIT_MERGE_TOOL" && merge_tool="$GIT_DIFF_TOOL"
+test -n "$GIT_DIFF_TOOL" && merge_tool="$GIT_DIFF_TOOL"
 
-# If no diff tool was specified then use the diff.tool
-# configuration variable.  If that's invalid then reset diff_tool.
-if test -z "$diff_tool"; then
-	diff_tool=$(git config diff.tool)
-	# if diff.tool is unset then try merge.tool
-	test -z "$diff_tool" && diff_tool=$(git config merge.tool)
-	if test -n "$diff_tool" && ! valid_tool "$diff_tool"; then
-		echo >&2 "git config option diff.tool set to unknown tool: $diff_tool"
+# If merge tool was not specified then use the diff.tool
+# configuration variable.  If that's invalid then reset merge_tool.
+# Fallback to merge.tool.
+if test -z "$merge_tool"; then
+	merge_tool=$(git config diff.tool)
+	test -z "$merge_tool" &&
+	merge_tool=$(git config merge.tool)
+	if test -n "$merge_tool" && ! valid_tool "$merge_tool"; then
+		echo >&2 "git config option diff.tool set to unknown tool: $merge_tool"
 		echo >&2 "Resetting to default..."
-		unset diff_tool
+		unset merge_tool
 	fi
 fi
 
-# Try to guess an appropriate diff tool if no tool has been set.
-if test -z "$diff_tool"; then
-	# We have a $DISPLAY so try some common UNIX diff tools
+# Try to guess an appropriate merge tool if no tool has been set.
+if test -z "$merge_tool"; then
+	# We have a $DISPLAY so try some common UNIX merge tools
 	if test -n "$DISPLAY"; then
 		# If gnome then prefer meld, otherwise, prefer kdiff3 or kompare
 		if test -n "$GNOME_DESKTOP_SESSION_ID" ; then
-			diff_tool_candidates="meld kdiff3 kompare tkdiff xxdiff gvimdiff"
+			merge_tool_candidates="meld kdiff3 kompare tkdiff xxdiff gvimdiff"
 		else
-			diff_tool_candidates="kdiff3 kompare tkdiff xxdiff meld gvimdiff"
+			merge_tool_candidates="kdiff3 kompare tkdiff xxdiff meld gvimdiff"
 		fi
 	fi
 	if echo "${VISUAL:-$EDITOR}" | grep 'emacs' > /dev/null 2>&1; then
 		# $EDITOR is emacs so add emerge as a candidate
-		diff_tool_candidates="$diff_tool_candidates emerge opendiff vimdiff"
+		merge_tool_candidates="$merge_tool_candidates emerge opendiff vimdiff"
 	elif echo "${VISUAL:-$EDITOR}" | grep 'vim' > /dev/null 2>&1; then
 		# $EDITOR is vim so add vimdiff as a candidate
-		diff_tool_candidates="$diff_tool_candidates vimdiff opendiff emerge"
+		merge_tool_candidates="$merge_tool_candidates vimdiff opendiff emerge"
 	else
-		diff_tool_candidates="$diff_tool_candidates opendiff emerge vimdiff"
+		merge_tool_candidates="$merge_tool_candidates opendiff emerge vimdiff"
 	fi
-	echo "diff tool candidates: $diff_tool_candidates"
+	echo "merge tool candidates: $merge_tool_candidates"
 
-	# Loop over each candidate and stop when a valid diff tool is found.
-	for i in $diff_tool_candidates
+	# Loop over each candidate and stop when a valid merge tool is found.
+	for i in $merge_tool_candidates
 	do
-		init_diff_tool_path $i
-		if type "$diff_tool_path" > /dev/null 2>&1; then
-			diff_tool=$i
+		init_merge_tool_path $i
+		if type "$merge_tool_path" > /dev/null 2>&1; then
+			merge_tool=$i
 			break
 		fi
 	done
 
-	if test -z "$diff_tool" ; then
-		echo "No known diff program available."
+	if test -z "$merge_tool" ; then
+		echo "No known merge resolution program available."
 		exit 1
 	fi
 
 else
-	# A diff tool has been set, so verify that it's valid.
-	if ! valid_tool "$diff_tool"; then
-		echo >&2 "Unknown diff tool $diff_tool"
+	# A merge tool has been set, so verify that it's valid.
+	if ! valid_tool "$merge_tool"; then
+		echo >&2 "Unknown merge tool $merge_tool"
 		exit 1
 	fi
 
-	init_diff_tool_path "$diff_tool"
+	init_merge_tool_path "$merge_tool"
 
-	if test -z "$diff_tool_cmd" && ! type "$diff_tool_path" > /dev/null 2>&1; then
-		echo "The diff tool $diff_tool is not available as '$diff_tool_path'"
+	if test -z "$merge_tool_cmd" && ! type "$merge_tool_path" > /dev/null 2>&1; then
+		echo "The merge tool $merge_tool is not available as '$merge_tool_path'"
 		exit 1
 	fi
 fi
 
 
-# Launch the diff tool on each path provided by 'git diff'
+# Launch the merge tool on each path provided by 'git diff'
 while test $# -gt 6
 do
-	launch_diff_tool "$1" "$2" "$5"
+	launch_merge_tool "$1" "$2" "$5"
 	shift 7
 done
