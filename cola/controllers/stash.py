@@ -9,6 +9,8 @@ from cola.qobserver import QObserver
 from cola.views import StashView
 
 def stash(model, parent):
+    """Launches a stash dialog using the provided model + view
+    """
     model = model.clone()
     model.stash_list = []
     model.stash_revids = []
@@ -17,6 +19,8 @@ def stash(model, parent):
     view.show()
 
 class StashController(QObserver):
+    """The StashController is the brains behind the 'Stash' dialog
+    """
     def __init__(self, model, view):
         QObserver.__init__(self, model, view)
         self.add_observables('stash_list')
@@ -28,16 +32,25 @@ class StashController(QObserver):
         self.update_model()
 
     def update_model(self):
+        """Initiates git queries on the model and updates the view
+        """
         self.model.set_stash_list(self.model.parse_stash_list())
         self.model.set_stash_revids(self.model.parse_stash_list(revids=True))
         self.refresh_view()
 
     def get_selected_stash(self):
+        """Returns the stash name of the currently selected stash
+        """
         list_widget = self.view.stash_list
         stash_list = self.model.get_stash_revids()
         return qtutils.get_selected_item(list_widget, stash_list)
 
     def stash_save(self):
+        """Saves the worktree in a stash
+
+        This prompts the user for a stash name and creates
+        a git stash named accordingly.
+        """
         if not qtutils.question(self.view,
                                 self.tr('Stash Changes?'),
                                 self.tr('This will stash your current '
@@ -76,6 +89,8 @@ class StashController(QObserver):
         self.view.parent_view.display('%s\n\n%s' % (diffstat, diff))
 
     def stash_apply(self):
+        """Applies the currently selected stash
+        """
         selection = self.get_selected_stash()
         if not selection:
             return
@@ -85,6 +100,8 @@ class StashController(QObserver):
         self.view.accept()
 
     def stash_drop(self):
+        """Drops the currently selected stash
+        """
         selection = self.get_selected_stash()
         if not selection:
             return
@@ -102,6 +119,8 @@ class StashController(QObserver):
         self.update_model()
 
     def stash_clear(self):
+        """Clears all stashes
+        """
         if not qtutils.question(self.view,
                                 self.tr('Drop All Stashes?'),
                                 self.tr('This will permanently remove '
