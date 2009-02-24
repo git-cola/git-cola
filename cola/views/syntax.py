@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Copyright (c) 2008 David Aguilar
 """This module provides SyntaxHighlighter classes.
 These classes are installed onto specific cola widgets and

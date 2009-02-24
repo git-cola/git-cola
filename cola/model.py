@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright (c) 2009 David Aguilar
 """
 This module provides the Model class, a generic, serializable

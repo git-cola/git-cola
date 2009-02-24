@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright (c) 2008 David Aguilar
 """This module provides the QObserver class which allows for simple
 correspondancies between model parameters and Qt widgets.

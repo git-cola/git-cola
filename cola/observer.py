@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright (c) 2008 David Aguilar
 """This module provides the Observer design pattern.
 """

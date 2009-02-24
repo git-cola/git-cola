@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """This controller handles the merge dialog."""
 
 

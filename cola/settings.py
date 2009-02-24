@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright (c) 2008 David Aguilar
 """This handles saving complex settings such as bookmarks, etc.
 """
