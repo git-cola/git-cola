@@ -171,7 +171,7 @@ init_merge_tool_path() {
 }
 
 # Allow GIT_DIFF_TOOL and GIT_MERGE_TOOL to provide default values
-test -n "$GIT_MERGE_TOOL" && merge_tool="$GIT_DIFF_TOOL"
+test -n "$GIT_MERGE_TOOL" && merge_tool="$GIT_MERGE_TOOL"
 test -n "$GIT_DIFF_TOOL" && merge_tool="$GIT_DIFF_TOOL"
 
 # If merge tool was not specified then use the diff.tool
