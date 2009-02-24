@@ -12,6 +12,7 @@ def stash(model, parent):
     """Launches a stash dialog using the provided model + view
     """
     model = model.clone()
+    model.keep_index = True
     model.stash_list = []
     model.stash_revids = []
     view = StashView(parent)
@@ -23,7 +24,7 @@ class StashController(QObserver):
     """
     def __init__(self, model, view):
         QObserver.__init__(self, model, view)
-        self.add_observables('stash_list')
+        self.add_observables('stash_list', 'keep_index')
         self.add_callbacks(button_stash_show  = self.stash_show,
                            button_stash_apply = self.stash_apply,
                            button_stash_drop  = self.stash_drop,
@@ -65,7 +66,8 @@ class StashController(QObserver):
             qtutils.information(self.tr("Oops!"),
                                 self.tr('That name already exists.  '
                                         'Please enter another name.'))
-            stash_name, ok = qtutils.input(self.tr("Enter a name for this stash"))
+            stash_name, ok = qtutils.input(self.tr('Enter a name for '
+                                                   'this stash'))
             if not ok:
                 return
 
@@ -74,7 +76,12 @@ class StashController(QObserver):
 
         # Sanitize our input, just in case
         stash_name = utils.sanitize_input(stash_name)
-        qtutils.log(self.model.git.stash('save', stash_name),
+        args = []
+        if self.model.get_keep_index():
+            args.append('--keep-index')
+        args.append(stash_name)
+
+        qtutils.log(self.model.git.stash('save', *args),
                     quiet=False,
                     doraise=True)
         self.view.accept()

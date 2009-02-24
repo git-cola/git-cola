@@ -5,78 +5,93 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>683</width>
-    <height>201</height>
+    <width>497</width>
+    <height>292</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Stash</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
-   <item>
+  <layout class="QGridLayout" name="gridLayout" >
+   <item row="0" column="0" colspan="4" >
     <widget class="QListWidget" name="stash_list" />
    </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2" >
-     <item>
-      <widget class="QPushButton" name="button_stash_show" >
-       <property name="toolTip" >
-        <string>Show the changes recorded in the selected stash stash as a diff</string>
-       </property>
-       <property name="text" >
-        <string>Show</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="button_stash_save" >
-       <property name="text" >
-        <string>Save</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="button_stash_apply" >
-       <property name="toolTip" >
-        <string>Apply the selected stash</string>
-       </property>
-       <property name="text" >
-        <string>Apply</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+   <item row="1" column="0" >
+    <widget class="QPushButton" name="button_stash_show" >
+     <property name="toolTip" >
+      <string>Show the changes recorded in the selected stash stash as a diff</string>
+     </property>
+     <property name="text" >
+      <string>Show</string>
+     </property>
+    </widget>
    </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" >
-     <item>
-      <widget class="QPushButton" name="button_stash_done" >
-       <property name="text" >
-        <string>Done</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="button_stash_drop" >
-       <property name="toolTip" >
-        <string>Remove the selected stash</string>
-       </property>
-       <property name="text" >
-        <string>Remove</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="button_stash_clear" >
-       <property name="toolTip" >
-        <string>Remove all stashed states</string>
-       </property>
-       <property name="text" >
-        <string>Remove All</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+   <item row="1" column="1" >
+    <widget class="QPushButton" name="button_stash_apply" >
+     <property name="toolTip" >
+      <string>Apply the selected stash</string>
+     </property>
+     <property name="text" >
+      <string>Apply</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2" >
+    <widget class="QPushButton" name="button_stash_save" >
+     <property name="text" >
+      <string>Save</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" >
+    <widget class="QPushButton" name="button_stash_drop" >
+     <property name="toolTip" >
+      <string>Remove the selected stash</string>
+     </property>
+     <property name="text" >
+      <string>Remove</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" >
+    <widget class="QPushButton" name="button_stash_clear" >
+     <property name="toolTip" >
+      <string>Remove all stashed states</string>
+     </property>
+     <property name="text" >
+      <string>Remove All</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2" >
+    <widget class="QPushButton" name="button_stash_done" >
+     <property name="text" >
+      <string>Done</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="3" >
+    <spacer name="horizontalSpacer" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>221</width>
+       <height>24</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="3" >
+    <widget class="QCheckBox" name="keep_index" >
+     <property name="text" >
+      <string>Keep Index</string>
+     </property>
+     <property name="checked" >
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -86,7 +101,6 @@
   <tabstop>button_stash_apply</tabstop>
   <tabstop>button_stash_drop</tabstop>
   <tabstop>button_stash_clear</tabstop>
-  <tabstop>button_stash_done</tabstop>
  </tabstops>
  <resources/>
  <connections>
