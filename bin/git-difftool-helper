@@ -86,11 +86,11 @@ launch_merge_tool () {
 		;;
 
 	vimdiff)
-		"$merge_tool_path" -c "wincmd r" "$LOCAL" "$REMOTE"
+		"$merge_tool_path" -c "wincmd l" "$LOCAL" "$REMOTE"
 		;;
 
 	gvimdiff)
-		"$merge_tool_path" -c "wincmd r" -f "$LOCAL" "$REMOTE"
+		"$merge_tool_path" -c "wincmd l" -f "$LOCAL" "$REMOTE"
 		;;
 
 	xxdiff)
