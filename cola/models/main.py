@@ -104,6 +104,10 @@ class MainModel(ObservableModel):
         if cwd:
             self.use_worktree(cwd)
 
+        #####################################################
+        # Dag
+        self._commits = []
+
     def read_only(self):
         return self.mode in self.modes_read_only
 
@@ -594,3 +598,37 @@ class MainModel(ObservableModel):
         if self.directory:
             return self.directory
         return os.getcwd()
+
+    def commits(self, max_count=None):
+        if self._commits:
+            return self._commits
+        log = self.git.log(all=True,
+                           topo_order=True,
+                           pretty='format:%h:%p:%d',
+                           max_count=max_count)
+        self._commits = [Commit(log_entry=line)
+                         for line in log.splitlines()]
+        return self._commits
+
+
+class Commit(object):
+    def __init__(self, sha1='', log_entry=''):
+        self.sha1 = sha1
+        self.subject = ''
+        self.parents = []
+        self.labels = set()
+        if log_entry:
+            self.parse(log_entry)
+    def parse(self, log_entry):
+        self.sha1, parents, labels = log_entry.split(':', 2)
+        if parents:
+            for parent in parents.split(' '):
+                self.parents.append(parent)
+        if labels:
+            for label in labels[2:-1].split(', '):
+                if label.startswith('tag: '):
+                    label = label[10:] # tag: refs/
+                else:
+                    label = label[5:] # refs/
+                self.labels.add(label)
+        return self

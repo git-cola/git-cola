@@ -160,6 +160,8 @@ class Git(object):
         """
         args = []
         for k, v in kwargs.items():
+            if v is None:
+                continue
             if len(k) == 1:
                 if v is True:
                     args.append("-%s" % k)
