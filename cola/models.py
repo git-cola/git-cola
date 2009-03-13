@@ -251,8 +251,9 @@ class Model(model.Model):
         # Load the diff context
         self.diff_context = self.local_gui_diffcontext
 
-    def get_global_config(self, key):
-        return getattr(self, 'global_'+key.replace('.', '_'))
+    def get_global_config(self, key, default=None):
+        return self.get_param('global_'+key.replace('.', '_'),
+                              default=default)
 
     def get_cola_config(self, key):
         return getattr(self, 'global_cola_'+key)
@@ -484,11 +485,9 @@ class Model(model.Model):
         self.set_commitmsg('\n'.join(commit_msg).rstrip())
 
     def load_commitmsg_template(self):
-        try:
-            template = self.get_global_config('commit.template')
-        except AttributeError:
-            return
-        self.load_commitmsg(template)
+        template = self.get_global_config('commit.template')
+        if template:
+            self.load_commitmsg(template)
 
     def update_status(self, amend=False):
         # This allows us to defer notification until the
