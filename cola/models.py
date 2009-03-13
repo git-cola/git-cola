@@ -1018,11 +1018,11 @@ class Model(model.Model):
 
     def current_branch(self):
         """Parses 'git symbolic-ref' to find the current branch."""
-        headref = self.git.symbolic_ref('HEAD')
+        headref = self.git.symbolic_ref('HEAD', with_stderr=True)
         if headref.startswith('refs/heads/'):
             return headref[11:]
         elif headref.startswith('fatal: '):
-            return 'Not currently on any branch'
+            return ''
         return headref
 
     def create_branch(self, name, base, track=False):
