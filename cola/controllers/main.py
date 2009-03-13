@@ -473,9 +473,17 @@ class Controller(QObserver):
                 'You must stage at least 1 file before you can commit.\n')
             self.log(error_msg)
             return
-
-        # Perform the commit
         amend = self.view.amend_is_checked()
+        if (amend and self.model.is_commit_published() and
+            not qtutils.question(self.view,
+                                 'Rewrite Published Commit?',
+                                 'This commit has already been published.\n'
+                                 'You are rewriting published history.\n'
+                                 'You probably don\'t want to do this.\n\n'
+                                 'Continue?',
+                                 default=False)):
+            return
+        # Perform the commit
         umsg = encode(msg)
         status, output = self.model.commit_with_msg(umsg, amend=amend)
         if status == 0:
