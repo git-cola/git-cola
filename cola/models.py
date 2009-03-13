@@ -249,10 +249,14 @@ class Model(model.Model):
                 self.set_param('global_'+k, v)
 
         # Load the diff context
-        self.diff_context = self.local_gui_diffcontext
+        self.diff_context = self.get_local_config('gui.diffcontext', 3)
 
     def get_global_config(self, key, default=None):
         return self.get_param('global_'+key.replace('.', '_'),
+                              default=default)
+
+    def get_local_config(self, key, default=None):
+        return self.get_param('local_'+key.replace('.', '_'),
                               default=default)
 
     def get_cola_config(self, key):
@@ -263,12 +267,8 @@ class Model(model.Model):
 
     def get_default_remote(self):
         branch = self.get_currentbranch()
-        branchconfig = 'local_branch_%s_remote' % branch
-        if branchconfig in self.get_param_names():
-            remote = self.get_param(branchconfig)
-        else:
-            remote = 'origin'
-        return remote
+        branchconfig = 'branch.%s.remote' % branch
+        return self.get_local_config(branchconfig, 'origin')
 
     def get_corresponding_remote_ref(self):
         remote = self.get_default_remote()
