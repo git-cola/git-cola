@@ -1104,3 +1104,7 @@ class Model(model.Model):
                                   M=True).splitlines()
         return [ eval_path(r[12:].rstrip())
                     for r in difflines if r.startswith('rename from ') ]
+
+    def is_commit_published(self):
+        head = self.git.rev_parse('HEAD')
+        return bool(self.git.branch(r=True, contains=head))
