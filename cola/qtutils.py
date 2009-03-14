@@ -14,20 +14,9 @@ LOGGER = None
 def log(output, quiet=True, doraise=False):
     """Sends messages to the log window.
     """
-    if not LOGGER:
+    if not LOGGER or not output:
         return
     LOGGER.log(output)
-    if quiet:
-        return
-    LOGGER.show()
-    if not doraise:
-        return
-    LOGGER.raise_()
-
-def show_logger():
-    """Raises the log window."""
-    LOGGER.show()
-    LOGGER.raise_()
 
 def input(msg, title=None):
     """Presents the user with an input widget and returns the input."""
@@ -36,27 +25,6 @@ def input(msg, title=None):
     parent = QtGui.qApp.activeWindow()
     result = QtGui.QInputDialog.getText(parent, msg, title)
     return (unicode(result[0]), result[1])
-
-def close_log_window():
-    """Closes the log window."""
-    LOGGER.hide()
-    LOGGER.done(0)
-
-def show_output(output, **kwargs):
-    """Sends output to the log window."""
-    if not output:
-        return
-    log(output, quiet=False)
-
-def toggle_log_window():
-    """Shows/hides the log window."""
-    if not LOGGER:
-        return
-    if LOGGER.isVisible():
-        LOGGER.hide()
-    else:
-        LOGGER.show()
-        LOGGER.raise_()
 
 def create_listwidget_item(text, filename):
     """Creates a QListWidgetItem with text and the icon at filename."""

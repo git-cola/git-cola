@@ -3,15 +3,15 @@
 
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import QMainWindow
 
 from cola import qtutils
 from cola.views.standard import create_standard_view
 from cola.views.syntax import DiffSyntaxHighlighter
+from cola.views.drawerwidgets import DrawerMainWindow
 from cola.gui.main import Ui_main
 
 
-ViewBase = create_standard_view(Ui_main, QMainWindow)
+ViewBase = create_standard_view(Ui_main, DrawerMainWindow)
 class View(ViewBase):
     """The main cola interface."""
     IDX_STAGED = 0
@@ -209,34 +209,44 @@ class View(ViewBase):
         except:
             translated = unicode(txt)
         self.statusBar().showMessage(translated)
+
     def show_editor(self):
         self.tabwidget.setCurrentIndex(1)
+
     def show_diff(self):
         self.tabwidget.setCurrentIndex(0)
+
     def action_cut(self):
         self.action_copy()
         self.action_delete()
+
     def action_copy(self):
         cursor = self.commitmsg.textCursor()
         selection = cursor.selection().toPlainText()
         qtutils.set_clipboard(selection)
+
     def action_delete(self):
         self.commitmsg.textCursor().removeSelectedText()
+
     def reset_checkboxes(self):
         self.new_commit_radio.setChecked(True)
         self.amend_radio.setChecked(False)
+
     def reset_display(self):
         self.set_display('')
         self.set_info('')
+
     def copy_display(self):
         cursor = self.display_text.textCursor()
         selection = cursor.selection().toPlainText()
         qtutils.set_clipboard(selection)
+
     def diff_selection(self):
         cursor = self.display_text.textCursor()
         offset = cursor.position()
         selection = unicode(cursor.selection().toPlainText())
         return offset, selection
+
     def selected_line(self):
         cursor = self.display_text.textCursor()
         offset = cursor.position()
@@ -251,11 +261,15 @@ class View(ViewBase):
         else:
             line = data
         return line
+
     def display(self, text):
         self.set_display(text)
         self.show_diff()
+
     def show_current_column(self):
         cursor = self.commitmsg.textCursor()
         colnum = cursor.columnNumber()
         self.column_label.setText('Column: %02d' % colnum)
 
+    def display_log(self):
+        self.open_drawer(self.LOCATION_BOTTOM, opened=True)

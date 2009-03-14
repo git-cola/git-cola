@@ -58,7 +58,6 @@ class LogView(LogViewBase):
     """A simple dialog to display command logs."""
     def __init__(self, parent=None, output=None):
         LogViewBase.__init__(self, parent)
-        self.setWindowTitle(self.tr('Git Command Log'))
         self.syntax = LogSyntaxHighlighter(self.output_text.document())
         if output:
             self.set_output(output)

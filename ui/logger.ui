@@ -1,6 +1,6 @@
 <ui version="4.0" >
  <class>logger</class>
- <widget class="QDialog" name="logger" >
+ <widget class="QWidget" name="logger" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -12,17 +12,23 @@
   <property name="windowTitle" >
    <string/>
   </property>
-  <layout class="QGridLayout" >
-   <property name="horizontalSpacing" >
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <property name="spacing" >
+    <number>2</number>
+   </property>
+   <property name="leftMargin" >
+    <number>6</number>
+   </property>
+   <property name="topMargin" >
     <number>4</number>
    </property>
-   <property name="verticalSpacing" >
-    <number>0</number>
+   <property name="rightMargin" >
+    <number>6</number>
    </property>
-   <property name="margin" >
-    <number>4</number>
+   <property name="bottomMargin" >
+    <number>2</number>
    </property>
-   <item row="0" column="0" colspan="4" >
+   <item>
     <widget class="QTextEdit" name="output_text" >
      <property name="font" >
       <font>
@@ -50,97 +56,72 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" >
-    <widget class="QGroupBox" name="groupBox" >
-     <property name="title" >
-      <string>Search</string>
-     </property>
-     <layout class="QHBoxLayout" >
-      <property name="spacing" >
-       <number>4</number>
-      </property>
-      <property name="leftMargin" >
-       <number>8</number>
-      </property>
-      <property name="topMargin" >
-       <number>0</number>
-      </property>
-      <property name="rightMargin" >
-       <number>8</number>
-      </property>
-      <property name="bottomMargin" >
-       <number>4</number>
-      </property>
-      <item>
-       <widget class="QLineEdit" name="search_text" />
-      </item>
-      <item>
-       <widget class="QPushButton" name="next_button" >
-        <property name="text" >
-         <string>Next</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="prev_button" >
-        <property name="text" >
-         <string>Previous</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="1" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0" >
-      <size>
-       <width>217</width>
-       <height>24</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="1" column="2" >
-    <widget class="QPushButton" name="clear_button" >
-     <property name="text" >
-      <string>Clear</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="3" >
-    <widget class="QPushButton" name="close_button" >
-     <property name="text" >
-      <string>Close</string>
-     </property>
-    </widget>
+   <item>
+    <layout class="QHBoxLayout" name="search_layout" >
+     <item>
+      <widget class="QLabel" name="label" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text" >
+        <string>Search</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="search_text" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer" >
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="next_button" >
+       <property name="text" >
+        <string>Next</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="prev_button" >
+       <property name="text" >
+        <string>Previous</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="clear_button" >
+       <property name="text" >
+        <string>Clear</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
  <tabstops>
-  <tabstop>close_button</tabstop>
   <tabstop>output_text</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>close_button</sender>
-   <signal>released()</signal>
-   <receiver>logger</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>352</x>
-     <y>277</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

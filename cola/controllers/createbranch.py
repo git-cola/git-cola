@@ -89,10 +89,12 @@ class CreateBranchController(QObserver):
         chkout = self.view.checkout_checkbox.isChecked()
 
         output = self.model.create_branch(branch, revision, track=track)
-        qtutils.show_output(output)
+        qtutils.log(output)
         if chkout:
-            qtutils.show_output(self.model.git.checkout(branch,
-                                                        with_stderr=True))
+            qtutils.log(self.model.git.checkout(branch,
+                                                with_stderr=True))
+        if self.model.get_cola_config('showoutput'):
+            self.view.parent().display_log()
         self.view.accept()
 
     def item_changed(self, *rest):

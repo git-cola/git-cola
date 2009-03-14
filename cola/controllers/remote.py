@@ -7,6 +7,7 @@ from PyQt4.QtGui import QDialog
 from cola import utils
 from cola import qtutils
 from cola.views import RemoteView
+from cola.views.drawer import Drawer
 from cola.qobserver import QObserver
 
 def remote_action(model, parent, action):
@@ -108,7 +109,7 @@ class RemoteController(QObserver):
     def check_remote(self):
         if not self.model.get_remotename():
             errmsg = self.tr('No repository selected.')
-            qtutils.show_output(errmsg)
+            self.log_and_display(errmsg)
             return False
         else:
             return True
@@ -123,10 +124,10 @@ class RemoteController(QObserver):
                     'rebase': self.model.get_rebase_checkbox(),
                 })
 
-    def show_results(self, output):
-        qtutils.show_output(output)
-        self.view.accept()
-        qtutils.show_logger()
+    def log_and_display(self, output):
+        qtutils.log(output)
+        if self.model.get_cola_config('showoutput'):
+            self.view.parent().display_log()
 
     #+-------------------------------------------------------------
     #+ Actions
@@ -140,5 +141,6 @@ class RemoteController(QObserver):
             output = modelaction(remote, **kwargs)
             if not output: # git fetch --tags --verbose doesn't print anything...
                 output = self.tr('Already up-to-date.')
-            self.show_results(output)
+            self.log_and_display(output)
+            self.view.accept()
         return remote_callback

@@ -12,6 +12,7 @@ from cola import qtutils
 from cola import version
 from cola.qobserver import QObserver
 from cola.views import AboutView
+from cola.views.drawer import Drawer
 
 # controllers namespace
 from cola.controllers.bookmark import save_bookmark
@@ -61,7 +62,8 @@ class Controller(QObserver):
         self.reset_mode()
 
         # Parent-less log window
-        qtutils.LOGGER = logger()
+        qtutils.LOGGER = logger(view)
+        view.add_drawer(Drawer.LOCATION_BOTTOM, qtutils.LOGGER)
 
         # Unstaged changes context menu
         view.status_tree.contextMenuEvent = self.tree_context_menu_event
@@ -171,7 +173,7 @@ class Controller(QObserver):
                 lambda: self.log(self.model.stage_untracked()),
             menu_unstage_all =
                 lambda: self.log(self.model.unstage_all()),
-            menu_view_log = self.view_log,
+            menu_view_log = self.view.display_log,
 
             # Help Menu
             menu_help_about = self.about,
@@ -394,9 +396,6 @@ class Controller(QObserver):
         stuff = self.model.git.grep(txt, n=True)
         self.view.display_text.setText(stuff)
         self.view.show_diff()
-
-    def view_log(self, *rest):
-        qtutils.show_logger()
 
     def options(self):
         update_options(self.model, self.view)
@@ -643,7 +642,6 @@ class Controller(QObserver):
         if self.model.remember_gui_settings():
             self.model.set_window_geom(self.view.width(), self.view.height(),
                                        self.view.x(), self.view.y())
-        qtutils.close_log_window()
         pattern = self.model.get_tmp_file_pattern()
         for filename in glob.glob(pattern):
             os.unlink(filename)

@@ -197,12 +197,13 @@ class Model(model.Model):
         }
         # config items that are purely git config --global settings
         self.__global_defaults = {
-            'cola_geometry':'',
+            'cola_geometry': '',
             'cola_fontui': '',
             'cola_fontui_size': 12,
             'cola_fontdiff': '',
             'cola_fontdiff_size': 12,
             'cola_savewindowsettings': False,
+            'cola_showoutput': 'errors',
             'cola_tabwidth': 8,
             'merge_keepbackup': True,
             'diff_tool': os.getenv('GIT_DIFF_TOOL', 'xxdiff'),
