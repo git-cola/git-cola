@@ -129,26 +129,56 @@ class JSONPluginMgr(object):
         try:
             ## Load the JSON backend
             mod = __import__(name)
+        except ImportError:
+            return
+
+        try:
             ## Handle submodules, e.g. django.utils.simplejson
             components = name.split('.')
             for comp in components[1:]:
                 mod = getattr(mod, comp)
-            ## We loaded a JSON backend, so setup our internal state
-            self._verified = True
+        except AttributeError:
+            return
+
+        try:
+            ## Setup the backend's encode/decode methods
             self._encoders[name] = getattr(mod, encode_name)
             self._decoders[name] = getattr(mod, decode_name)
-            ## Add this backend to the list of candidate backends
-            self._backend_names.append(name)
-            ## Setup the default args and kwargs for this encoder
-            self._encoder_options[name] = ([], {})
+        except AttributeError:
+            self._remove_backend(name)
+            return
+
+        try:
             if type(decode_exc) is str:
                 ## This backend's decoder exception is part of the backend
                 self._decoder_exceptions[name] = getattr(mod, decode_exc)
             else:
                 ## simplejson uses the ValueError exception
                 self._decoder_exceptions[name] = decode_exc
-        except ImportError:
-            pass
+        except AttributeError:
+            self._remove_backend(name)
+            return
+
+        ## Setup the default args and kwargs for this encoder
+        self._encoder_options[name] = ([], {})
+
+        ## Add this backend to the list of candidate backends
+        self._backend_names.append(name)
+
+        ## Indicate that we successfully loaded a JSON backend
+        self._verified = True
+
+    def _remove_backend(self, name):
+        """Removes all entries for a particular backend
+
+        """
+        self._encoders.pop(name, None)
+        self._decoders.pop(name, None)
+        self._decoder_exceptions.pop(name, None)
+        self._encoder_options.pop(name, None)
+        if name in self._backend_names:
+            self._backend_names.remove(name)
+        self._verified = bool(self._backend_names)
 
     def encode(self, obj):
         """Attempts to encode an object into JSON.
