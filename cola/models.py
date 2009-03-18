@@ -558,20 +558,14 @@ class Model(model.Model):
             return (None, None, None)
         encfilename = core.encode(filename)
         if staged:
-            if os.path.exists(encfilename):
-                status = 'Staged for commit'
-            else:
-                status = 'Staged for removal'
             diff = self.diff_helper(filename=filename,
                                     ref=ref,
                                     cached=True)
         else:
             if os.path.isdir(encfilename):
-                status = 'Untracked directory'
                 diff = '\n'.join(os.listdir(filename))
 
             elif filename in self.get_unmerged():
-                status = 'Unmerged'
                 diff = ('@@@+-+-+-+-+-+-+-+-+-+-+  UNMERGED  +-+-+-+-+-+-+-+-+-+-+@@@\n\n'
                         '>>> %s is unmerged.\n' % filename +
                         'Right-click on the filename '
@@ -580,13 +574,11 @@ class Model(model.Model):
                                         cached=False,
                                         patch_with_raw=False)
             elif filename in self.get_modified():
-                status = 'Modified, not staged'
                 diff = self.diff_helper(filename=filename,
                                         cached=False)
             else:
-                status = 'Untracked, not staged'
                 diff = 'SHA1: ' + self.git.hash_object(filename)
-        return diff, status, filename
+        return (diff, filename)
 
     def stage_modified(self):
         output = self.git.add(v=True, *self.get_modified())

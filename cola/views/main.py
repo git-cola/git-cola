@@ -203,13 +203,6 @@ class View(ViewBase):
         untracked = self.status_tree.topLevelItem(View.IDX_UNTRACKED)
         untracked.setIcon(0, qtutils.get_icon('untracked.png'))
 
-    def set_info(self, txt):
-        try:
-            translated = self.tr(unicode(txt))
-        except:
-            translated = unicode(txt)
-        self.statusBar().showMessage(translated)
-
     def show_editor(self):
         self.tabwidget.setCurrentIndex(1)
 
@@ -234,7 +227,6 @@ class View(ViewBase):
 
     def reset_display(self):
         self.set_display('')
-        self.set_info('')
 
     def copy_display(self):
         cursor = self.display_text.textCursor()

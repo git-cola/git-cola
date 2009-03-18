@@ -517,10 +517,8 @@ class Controller(QObserver):
     def view_diff_for_row(self, idx, staged):
         self.set_mode(staged)
         ref = self.get_diff_ref()
-        diff, status, filename = self.model.get_diff_details(idx, ref,
-                                                             staged=staged)
+        diff, filename = self.model.get_diff_details(idx, ref, staged=staged)
         self.view.set_display(diff)
-        self.view.set_info(self.tr(status))
         self.view.show_diff()
         qtutils.set_clipboard(filename)
 
@@ -791,12 +789,10 @@ class Controller(QObserver):
     def show_diffstat(self):
         """Show the diffstat from the latest commit."""
         self.reset_mode()
-        self.view.set_info('Diffstat')
         self.view.set_display(self.model.diffstat())
 
     def show_index(self):
         self.reset_mode()
-        self.view.set_info('Index')
         self.view.set_display(self.model.diffindex())
 
     #####################################################################
@@ -829,7 +825,6 @@ class Controller(QObserver):
                                       reverse=True,
                                       branch=branch)
         self.view.set_display(diff)
-        self.view.set_info(status)
         self.view.show_diff()
 
         # Set state machine to branch mode
@@ -964,15 +959,6 @@ class Controller(QObserver):
         qtutils.log(output, quiet=quiet, doraise=False)
         if rescan:
             self.rescan()
-
-    def map_to_listwidget(self, command, widget, items):
-        """This is a helper method that retrieves the current
-        selection list, applies a command to that list,
-        displays a dialog showing the output of that command,
-        and calls rescan to pickup changes."""
-        apply_items = qtutils.get_selection_list(widget, items)
-        output = command(*apply_items)
-        self.log(output, quiet=True)
 
     def tree_context_menu_event(self, event):
         menu = self.tree_context_menu_setup()
