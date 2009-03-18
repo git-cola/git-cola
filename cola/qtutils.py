@@ -11,12 +11,12 @@ from cola import utils
 
 LOGGER = None
 
-def log(output, quiet=True, doraise=False):
+def log(status, output):
     """Sends messages to the log window.
     """
     if not LOGGER or not output:
         return
-    LOGGER.log(output)
+    LOGGER.log(status, output)
 
 def input(msg, title=None):
     """Presents the user with an input widget and returns the input."""

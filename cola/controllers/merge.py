@@ -75,13 +75,13 @@ class MergeController(QObserver):
         no_commit = not(self.view.checkbox_commit.isChecked())
         squash = self.view.checkbox_squash.isChecked()
         msg = self.model.get_merge_message()
-        qtutils.log(self.model.git.merge('-m'+msg,
+        qtutils.log(*self.model.git.merge('-m'+msg,
                                          revision,
                                          strategy='recursive',
                                          no_commit=no_commit,
-                                         squash=squash),
-                    quiet=False,
-                    doraise=True)
+                                         squash=squash,
+                                         with_stderr=True,
+                                         with_extended_output=True))
         self.view.accept()
 
     def viz_revision(self):

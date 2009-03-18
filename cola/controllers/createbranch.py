@@ -21,7 +21,7 @@ class CreateBranchController(QObserver):
         QObserver.__init__(self, model, view)
         self._remoteclicked = False
         self.add_observables('revision', 'local_branch')
-        self.add_callbacks(branch_list   = self.item_changed,
+        self.add_callbacks(branch_list   = self.branch_item_changed,
                            create_button = self.create_branch,
                            local_radio   = self.display_model,
                            remote_radio  = self.display_model,
@@ -31,8 +31,7 @@ class CreateBranchController(QObserver):
     #+--------------------------------------------------------------------
     #+ Qt callbacks
     def create_branch(self):
-        """This callback is called when the "Create Branch"
-        button is called."""
+        """Called by the "Create Branch" button"""
 
         revision = self.model.get_revision()
         branch = self.model.get_local_branch()
@@ -88,18 +87,17 @@ class CreateBranchController(QObserver):
         reset = self.view.reset_radio.isChecked()
         chkout = self.view.checkout_checkbox.isChecked()
 
-        output = self.model.create_branch(branch, revision, track=track)
-        qtutils.log(output)
-        if chkout:
-            qtutils.log(self.model.git.checkout(branch,
-                                                with_stderr=True))
-        if self.model.get_cola_config('showoutput'):
-            self.view.parent().display_log()
+        status, output = self.model.create_branch(branch, revision, track=track)
+        qtutils.log(status, output)
+        if status == 0 and chkout:
+            status, output = self.model.git.checkout(branch,
+                                                     with_extended_output=True,
+                                                     with_stderr=True)
+            qtutils.log(status, output)
         self.view.accept()
 
-    def item_changed(self, *rest):
-        """This callback is called when the item selection changes
-        in the branch_list."""
+    def branch_item_changed(self, *rest):
+        """This callback is called when the branch list selection changes"""
 
         qlist = self.view.branch_list
         ( row, selected ) = qtutils.get_selected_row(qlist)

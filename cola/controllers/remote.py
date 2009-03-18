@@ -109,7 +109,7 @@ class RemoteController(QObserver):
     def check_remote(self):
         if not self.model.get_remotename():
             errmsg = self.tr('No repository selected.')
-            self.log_and_display(errmsg)
+            qtutils.log(1, errmsg)
             return False
         else:
             return True
@@ -124,11 +124,6 @@ class RemoteController(QObserver):
                     'rebase': self.model.get_rebase_checkbox(),
                 })
 
-    def log_and_display(self, output):
-        qtutils.log(output)
-        if self.model.get_cola_config('showoutput'):
-            self.view.parent().display_log()
-
     #+-------------------------------------------------------------
     #+ Actions
     def gen_remote_callback(self, modelaction):
@@ -138,9 +133,9 @@ class RemoteController(QObserver):
             if not self.check_remote():
                 return
             remote, kwargs = self.get_common_args()
-            output = modelaction(remote, **kwargs)
+            status, output = modelaction(remote, **kwargs)
             if not output: # git fetch --tags --verbose doesn't print anything...
                 output = self.tr('Already up-to-date.')
-            self.log_and_display(output)
+            qtutils.log(status, output)
             self.view.accept()
         return remote_callback

@@ -81,9 +81,10 @@ class StashController(QObserver):
             args.append('--keep-index')
         args.append(stash_name)
 
-        qtutils.log(self.model.git.stash('save', *args),
-                    quiet=False,
-                    doraise=True)
+        qtutils.log(*self.model.git.stash('save',
+                                          with_stderr=True,
+                                          with_extended_output=True,
+                                          *args))
         self.view.accept()
 
     def stash_show(self):
@@ -101,9 +102,9 @@ class StashController(QObserver):
         selection = self.get_selected_stash()
         if not selection:
             return
-        out = self.model.git.stash('apply', '--index', selection,
-                                   with_stderr=True)
-        qtutils.log(out, quiet=False, doraise=True)
+        qtutils.log(*self.model.git.stash('apply', '--index', selection,
+                                          with_stderr=True,
+                                          with_extended_output=True))
         self.view.accept()
 
     def stash_drop(self):
@@ -120,9 +121,9 @@ class StashController(QObserver):
                                         'be possible.\n\n'
                                         'Continue?')):
             return
-        qtutils.log(self.model.git.stash('drop', selection),
-                    quiet=False,
-                    doraise=True)
+        qtutils.log(*self.model.git.stash('drop', selection,
+                                          with_stderr=True,
+                                          with_extended_output=True))
         self.update_model()
 
     def stash_clear(self):

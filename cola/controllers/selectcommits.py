@@ -42,16 +42,11 @@ class SelectCommitsController(QObserver):
         qf.fromString(font)
         self.view.commit_text.setFont(qf)
 
-    def log_and_display(self, msg):
-        qtutils.log(output)
-        if self.model.get_cola_config('showoutput'):
-            self.view.parent().display_log()
-
     def select_commits(self):
         summaries = self.model.get_summaries()
         if not summaries:
             msg = self.tr('No commits exist in this branch.')
-            self.log_and_display(msg)
+            qtutils.log(1, msg)
             return []
         qtutils.set_items(self.view.commit_list, summaries)
         self.view.show()
@@ -73,8 +68,9 @@ class SelectCommitsController(QObserver):
         if not selected:
             return
         sha1 = self.model.get_revision_sha1(row)
-        out = self.model.git.checkout(sha1, with_stderr=True)
-        self.log_and_display(out)
+        qtutils.log(*self.model.git.checkout(sha1,
+                                             with_stderr=True,
+                                             with_extended_output=True))
 
     def create_branch_at(self):
         row, selected = qtutils.get_selected_row(self.view.commit_list)
@@ -88,8 +84,9 @@ class SelectCommitsController(QObserver):
         if not selected:
             return
         sha1 = self.model.get_revision_sha1(row)
-        out = self.model.git.cherry_pick(sha1, with_stderr=True)
-        self.log_and_display(out)
+        qtutils.log(*self.model.git.cherry_pick(sha1,
+                                                with_stderr=True,
+                                                with_extended_output=True))
 
     def commit_sha1_selected(self):
         row, selected = qtutils.get_selected_row(self.view.commit_list)

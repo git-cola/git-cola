@@ -217,9 +217,7 @@ class SearchController(QObserver):
         if not selected or len(self.results) < row:
             return
         revision = self.results[row][0]
-        qtutils.log(self.model.export_patchset(revision, revision),
-                    doraise=True,
-                    quiet=False)
+        qtutils.log(*self.model.export_patchset(revision, revision))
 
     def cherry_pick(self):
         widget = self.view.commit_list
@@ -227,9 +225,9 @@ class SearchController(QObserver):
         if not selected or len(self.results) < row:
             return
         revision = self.results[row][0]
-        qtutils.log(self.model.git.cherry_pick(revision),
-                    doraise=True,
-                    quiet=False)
+        qtutils.log(*self.model.git.cherry_pick(revision,
+                                                with_stderr=True,
+                                                with_extended_output=True))
 
 def search_commits(model, parent, mode, browse):
     def get_date(timespec):
