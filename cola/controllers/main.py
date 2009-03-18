@@ -2,48 +2,36 @@
 
 import os
 import sys
-import time
 import glob
-import platform
 
-from PyQt4 import QtCore
 from PyQt4 import QtGui
-from PyQt4.QtGui import QDialog
-from PyQt4.QtGui import QMessageBox
-from PyQt4.QtGui import QMenu
-from PyQt4.QtGui import QFont
 
 from cola import core
 from cola import utils
 from cola import qtutils
 from cola import version
 from cola.qobserver import QObserver
-
-try: # linux-only
-    from cola import inotify
-except ImportError:
-    pass
+from cola.views import AboutView
 
 # controllers namespace
-from cola.controllers import search
-from cola.controllers.remote import remote_action
-from cola.controllers.util import logger
-from cola.controllers.util import choose_from_list
-from cola.controllers.util import choose_from_combo
-from cola.controllers.util import select_commits
-from cola.controllers.util import update_options
-from cola.controllers.repobrowser import browse_git_branch
-from cola.controllers.createbranch import create_new_branch
-from cola.controllers.search import search_commits
-from cola.controllers.merge import local_merge
-from cola.controllers.merge import abort_merge
 from cola.controllers.bookmark import save_bookmark
 from cola.controllers.bookmark import manage_bookmarks
-from cola.controllers.stash import stash
 from cola.controllers.compare import compare
 from cola.controllers.compare import compare_file
 from cola.controllers.compare import branch_compare
-from cola.views import AboutView
+from cola.controllers.createbranch import create_new_branch
+from cola.controllers.log import logger
+from cola.controllers.merge import local_merge
+from cola.controllers.merge import abort_merge
+from cola.controllers.options import update_options
+from cola.controllers.remote import remote_action
+from cola.controllers.repobrowser import browse_git_branch
+from cola.controllers import search
+from cola.controllers.search import search_commits
+from cola.controllers.selectcommits import select_commits
+from cola.controllers.stash import stash
+from cola.controllers.util import choose_from_list
+from cola.controllers.util import choose_from_combo
 
 class Controller(QObserver):
     """Manages the interaction between models and views."""
@@ -337,7 +325,11 @@ class Controller(QObserver):
     #####################################################################
     # event() is called in response to messages from the inotify thread
     def event(self, msg):
-        if msg.type() == inotify.INOTIFY_EVENT:
+        try:
+            import cola.inotify
+        except ImportError:
+            return
+        if msg.type() == cola.inotify.INOTIFY_EVENT:
             self.rescan()
             return True
         else:
@@ -991,7 +983,7 @@ class Controller(QObserver):
     def tree_context_menu_setup(self):
         staged, modified, unmerged, untracked = self.get_single_selection()
 
-        menu = QMenu(self.view)
+        menu = QtGui.QMenu(self.view)
 
         if staged:
             menu.addAction(self.tr('Unstage Selected'), self.unstage_selected)
@@ -1038,7 +1030,7 @@ class Controller(QObserver):
         menu.exec_(textedit.mapToGlobal(event.pos()))
 
     def diff_context_menu_setup(self):
-        menu = QMenu(self.view)
+        menu = QtGui.QMenu(self.view)
         staged, modified, unmerged, untracked = self.get_single_selection()
 
         if self.mode == Controller.MODE_WORKTREE:
@@ -1074,7 +1066,7 @@ class Controller(QObserver):
         font = self.model.get_cola_config('fontdiff')
         if not font:
             return
-        qfont = QFont()
+        qfont = QtGui.QFont()
         qfont.fromString(font)
         self.view.display_text.setFont(qfont)
         self.view.commitmsg.setFont(qfont)
@@ -1083,7 +1075,7 @@ class Controller(QObserver):
         font = self.model.get_cola_config('fontui')
         if not font:
             return
-        qfont = QFont()
+        qfont = QtGui.QFont()
         qfont.fromString(font)
         QtGui.qApp.setFont(qfont)
 
@@ -1107,16 +1099,17 @@ class Controller(QObserver):
             from cola.inotify import GitNotifier
             qtutils.log(self.tr('inotify support: enabled'))
         except ImportError:
-            if utils.is_linux():
-                msg = self.tr('inotify: disabled\n'
-                              'Note: To enable inotify, '
-                              'install python-pyinotify.\n')
+            if not utils.is_linux():
+                return
+            msg = self.tr('inotify: disabled\n'
+                          'Note: To enable inotify, '
+                          'install python-pyinotify.\n')
 
-                if utils.is_debian():
-                    msg += self.tr('On Debian systems, '
-                                   'try: sudo apt-get install '
-                                   'python-pyinotify')
-                qtutils.log(msg)
+            if utils.is_debian():
+                msg += self.tr('On Debian systems, '
+                               'try: sudo apt-get install '
+                               'python-pyinotify')
+            qtutils.log(msg)
             return
 
         # Start the notification thread
