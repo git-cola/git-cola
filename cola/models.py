@@ -10,9 +10,9 @@ import subprocess
 from cStringIO import StringIO
 
 from cola import git
+from cola import core
 from cola import utils
 from cola import model
-from cola.core import encode, decode
 
 #+-------------------------------------------------------------------------
 #+ A regex for matching the output of git(log|rev-list) --pretty=oneline
@@ -97,7 +97,7 @@ class GitCola(git.Git):
 def eval_path(path):
     """handles quoted paths."""
     if path.startswith('"') and path.endswith('"'):
-        return decode(eval(path))
+        return core.decode(eval(path))
     else:
         return path
 
@@ -284,7 +284,7 @@ class Model(model.Model):
 
     def get_diff_filenames(self, arg):
         diff_zstr = self.git.diff(arg, name_only=True, z=True).rstrip('\0')
-        return [ decode(f) for f in diff_zstr.split('\0') if f ]
+        return [core.decode(f) for f in diff_zstr.split('\0') if f]
 
     def branch_list(self, remote=False):
         branches = map(lambda x: x.lstrip('* '),
@@ -397,7 +397,7 @@ class Model(model.Model):
         to_remove = []
 
         for filename in to_process:
-            encfilename = encode(filename)
+            encfilename = core.encode(filename)
             if os.path.exists(encfilename):
                 to_add.append(filename)
 
@@ -465,7 +465,7 @@ class Model(model.Model):
 
     def load_commitmsg(self, path):
         file = open(path, 'r')
-        contents = decode(file.read())
+        contents = core.decode(file.read())
         file.close()
         self.set_commitmsg(contents)
 
@@ -473,7 +473,7 @@ class Model(model.Model):
         """Queries git for the latest commit message and sets it in
         self.commitmsg."""
         commit_msg = []
-        commit_lines = decode(self.git.show('HEAD')).split('\n')
+        commit_lines = core.decode(self.git.show('HEAD')).split('\n')
         for idx, msg in enumerate(commit_lines):
             if idx < 4:
                 continue
@@ -535,12 +535,12 @@ class Model(model.Model):
         commit = self.git.show(sha1)
         first_newline = commit.index('\n')
         if commit[first_newline+1:].startswith('Merge:'):
-            return (decode(commit) + '\n\n' +
-                    decode(self.diff_helper(commit=sha1,
-                                            cached=False,
-                                            suppress_header=False)))
+            return (core.decode(commit) + '\n\n' +
+                    core.decode(self.diff_helper(commit=sha1,
+                                                 cached=False,
+                                                 suppress_header=False)))
         else:
-            return decode(commit)
+            return core.decode(commit)
 
     def get_filename(self, idx, staged=True):
         try:
@@ -555,7 +555,7 @@ class Model(model.Model):
         filename = self.get_filename(idx, staged=staged)
         if not filename:
             return (None, None, None)
-        encfilename = encode(filename)
+        encfilename = core.encode(filename)
         if staged:
             if os.path.exists(encfilename):
                 status = 'Staged for commit'
@@ -665,7 +665,7 @@ class Model(model.Model):
             except:
                 # the user has an invalid entry in their git config
                 continue
-            v = decode(v)
+            v = core.decode(v)
             k = k.replace('.','_') # git -> model
             if v == 'true' or v == 'false':
                 v = bool(eval(v.title()))
@@ -728,7 +728,7 @@ class Model(model.Model):
         summaries = []
         regex = REV_LIST_REGEX
         output = self.git.log(pretty='oneline', all=all)
-        for line in map(decode, output.splitlines()):
+        for line in map(core.decode, output.splitlines()):
             match = regex.match(line)
             if match:
                 revs.append(match.group(1))
@@ -737,7 +737,7 @@ class Model(model.Model):
 
     def parse_rev_list(self, raw_revs):
         revs = []
-        for line in map(decode, raw_revs.splitlines()):
+        for line in map(core.decode, raw_revs.splitlines()):
             match = REV_LIST_REGEX.match(line)
             if match:
                 rev_id = match.group(1)
@@ -784,7 +784,7 @@ class Model(model.Model):
         del_tag = 'deleted file mode '
 
         headers = []
-        deleted = cached and not os.path.exists(encode(filename))
+        deleted = cached and not os.path.exists(core.encode(filename))
 
         diffoutput = self.git.diff(R=reverse,
                                    no_color=True,
@@ -794,18 +794,18 @@ class Model(model.Model):
                                    with_raw_output=True,
                                    *argv)
         diff = diffoutput.split('\n')
-        for line in map(decode, diff):
+        for line in map(core.decode, diff):
             if not start and '@@' == line[:2] and '@@' in line[2:]:
                 start = True
             if start or (deleted and del_tag in line):
-                output.write(encode(line) + '\n')
+                output.write(core.encode(line) + '\n')
             else:
                 if with_diff_header:
-                    headers.append(encode(line))
+                    headers.append(core.encode(line))
                 elif not suppress_header:
-                    output.write(encode(line) + '\n')
+                    output.write(core.encode(line) + '\n')
 
-        result = decode(output.getvalue())
+        result = core.decode(output.getvalue())
         output.close()
 
         if with_diff_header:
@@ -874,7 +874,7 @@ class Model(model.Model):
             for name in (self.git.ls_files(modified=True, z=True)
                                  .split('\0')):
                 if name:
-                    modified.append(decode(name))
+                    modified.append(core.decode(name))
 
         try:
             for line in (self.git.diff_index(head, cached=True)
@@ -901,12 +901,12 @@ class Model(model.Model):
             # handle git init
             for name in self.git.ls_files(z=True).strip('\0').split('\0'):
                 if name:
-                    staged.append(decode(name))
+                    staged.append(core.decode(name))
 
         for name in self.git.ls_files(others=True, exclude_standard=True,
                                       z=True).split('\0'):
             if name:
-                untracked.append(decode(name))
+                untracked.append(core.decode(name))
 
         return (staged, modified, unmerged, untracked)
 
@@ -1079,7 +1079,7 @@ class Model(model.Model):
         commit_list = self.parse_rev_list(rev_list)
         commit_list.reverse()
         commits = map(lambda x: x[0], commit_list)
-        descriptions = map(lambda x: decode(x[1]), commit_list)
+        descriptions = map(lambda x: core.decode(x[1]), commit_list)
         if show_versions:
             fancy_descr_list = map(lambda x: self.describe(*x), commit_list)
             self.set_descriptions_start(fancy_descr_list)
@@ -1096,7 +1096,7 @@ class Model(model.Model):
     def get_changed_files(self, start, end):
         zfiles_str = self.git.diff('%s..%s' % (start, end),
                                    name_only=True, z=True).strip('\0')
-        return [ decode(enc) for enc in zfiles_str.split('\0') if enc ]
+        return [core.decode(enc) for enc in zfiles_str.split('\0') if enc]
 
     def get_renamed_files(self, start, end):
         difflines = self.git.diff('%s..%s' % (start, end),

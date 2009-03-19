@@ -12,8 +12,8 @@ from glob import glob
 from cStringIO import StringIO
 
 from cola import git
+from cola import core
 from cola.git import shell_quote
-from cola.core import encode, decode
 from cola.exception import ColaException
 
 PREFIX = os.path.realpath(os.path.dirname(os.path.dirname(sys.argv[0])))
@@ -118,7 +118,7 @@ def get_icon(icon_file):
 
 def fork(*args):
     """Launches a command in the background."""
-    args = tuple([ encode(a) for a in args ])
+    args = tuple([core.encode(a) for a in args])
     if os.name in ('nt', 'dos'):
         for path in os.environ['PATH'].split(os.pathsep):
             filename = os.path.join(path, args[0]) + ".exe"
@@ -196,12 +196,12 @@ def slurp(path):
     file = open(path)
     slushy = file.read()
     file.close()
-    return decode(slushy)
+    return core.decode(slushy)
 
 def write(path, contents):
     """Writes a string to a file."""
     file = open(path, 'w')
-    file.write(encode(contents))
+    file.write(core.encode(contents))
     file.close()
 
 class DiffParser(object):

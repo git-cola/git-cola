@@ -12,10 +12,10 @@ from PyQt4.QtGui import QListWidget
 from PyQt4.QtGui import qApp
 from PyQt4.QtCore import SIGNAL
 
+from cola import core
 from cola.views.standard import create_standard_view
 from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.syntax import LogSyntaxHighlighter
-from cola.core import decode
 
 try:
     from main import View
@@ -73,7 +73,7 @@ class LogView(LogViewBase):
         cursor.movePosition(cursor.End)
         text = self.output_text
         cursor.insertText(time.asctime() + '\n')
-        for line in unicode(decode(output)).splitlines():
+        for line in unicode(core.decode(output)).splitlines():
             cursor.insertText(line + '\n')
         cursor.insertText('\n')
         cursor.movePosition(cursor.End)

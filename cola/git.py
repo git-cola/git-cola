@@ -8,7 +8,9 @@ import os
 import sys
 import subprocess
 import errno
-from cola.core import encode
+
+from cola import core
+
 
 class GitCommandError(Exception):
     """Exception class for failed commands."""
@@ -189,7 +191,7 @@ class Git(object):
 
         # Prepare the argument list
         opt_args = self.transform_kwargs(**kwargs)
-        ext_args = map(encode, args)
+        ext_args = map(core.encode, args)
         args = opt_args + ext_args
 
         call = ['git', dashify(method)]

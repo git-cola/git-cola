@@ -14,8 +14,8 @@ from PyQt4.QtGui import QListWidgetItem
 from PyQt4.QtGui import QTreeWidgetItem
 from PyQt4.QtGui import QMessageBox
 
+from cola import core
 from cola import utils
-from cola.core import encode
 
 LOGGER = None
 
@@ -200,7 +200,7 @@ def tr(txt):
 def get_icon_file(filename, staged=False, untracked=False):
     """Returns a file path representing a corresponding file path."""
     if staged:
-        if os.path.exists(encode(filename)):
+        if os.path.exists(core.encode(filename)):
             icon_file = utils.get_icon('staged.png')
         else:
             icon_file = utils.get_icon('removed.png')

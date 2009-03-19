@@ -23,5 +23,4 @@ def decode(enc):
 def encode(unenc):
     """encode(unencoded_string) returns a string encoded in utf-8
     """
-    # FIXME is utf-8 the right thing here?
     return unenc.encode('utf-8', 'replace')

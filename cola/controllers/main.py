@@ -13,10 +13,10 @@ from PyQt4.QtGui import QMessageBox
 from PyQt4.QtGui import QMenu
 from PyQt4.QtGui import QFont
 
+from cola import core
 from cola import utils
 from cola import qtutils
 from cola import version
-from cola.core import encode
 from cola.qobserver import QObserver
 
 try: # linux-only
@@ -484,7 +484,7 @@ class Controller(QObserver):
                                  default=False)):
             return
         # Perform the commit
-        umsg = encode(msg)
+        umsg = core.encode(msg)
         status, output = self.model.commit_with_msg(umsg, amend=amend)
         if status == 0:
             self.view.reset_checkboxes()
