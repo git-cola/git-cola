@@ -7,7 +7,7 @@ git-difftool - compare changes using common merge tools
 
 SYNOPSIS
 --------
-'git difftool' [--tool=<tool>] [--no-prompt] ['git diff' options]
+'git difftool' [--tool=<tool>] [-y|--no-prompt] [<'git diff' options>]
 
 DESCRIPTION
 -----------
@@ -24,6 +24,10 @@ See linkgit:git-diff[1] for the full list of supported options.
 
 OPTIONS
 -------
+-y::
+--no-prompt::
+	Do not prompt before launching a diff tool.
+
 -t <tool>::
 --tool=<tool>::
 	Use the merge resolution program specified by <tool>.
@@ -55,9 +59,6 @@ file containing the contents of the diff pre-image and `$REMOTE`
 is set to the name of the temporary file containing the contents
 of the diff post-image.  `$BASE` is provided for compatibility
 with custom merge tool commands and has the same value as `$LOCAL`.
-
---no-prompt::
-	Do not prompt before launching a diff tool.
 
 CONFIG VARIABLES
 ----------------
