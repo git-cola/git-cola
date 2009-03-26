@@ -147,11 +147,19 @@ class MergeView(MergeViewBase):
 
 RemoteViewBase = create_standard_view(Ui_remote, QDialog)
 class RemoteView(RemoteViewBase):
-    def __init__(self, parent=None, button_text=''):
+    def __init__(self, parent, action): 
         RemoteViewBase.__init__(self, parent)
-        if button_text:
-            self.action_button.setText(button_text)
-            self.setWindowTitle(button_text)
+        if action:
+            self.action_button.setText(action.title())
+            self.setWindowTitle(action.title())
+        if action == 'pull':
+            self.tags_checkbox.hide()
+            self.ffwd_only_checkbox.hide()
+            self.local_label.hide()
+            self.local_branch.hide()
+            self.local_branches.hide()
+        if action != 'pull':
+            self.rebase_checkbox.hide()
     def select_first_remote(self):
         return self.select_remote(0)
     def select_remote(self, idx):
