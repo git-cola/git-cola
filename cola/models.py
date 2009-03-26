@@ -1002,6 +1002,10 @@ class Model(model.Model):
         args = [remote]
         if local_branch and remote_branch:
             args.append(branch_arg)
+        elif local_branch:
+            args.append(local_branch)
+        elif remote_branch:
+            args.append(remote_branch)
         kwargs = {
             'verbose': True,
             'tags': tags,
