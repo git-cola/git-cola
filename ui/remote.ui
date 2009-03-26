@@ -16,7 +16,7 @@
    <item>
     <layout class="QHBoxLayout" >
      <item>
-      <widget class="QLabel" name="label" >
+      <widget class="QLabel" name="local_label" >
        <property name="text" >
         <string>Local Branches</string>
        </property>
@@ -50,9 +50,9 @@
    <item>
     <layout class="QHBoxLayout" >
      <item>
-      <widget class="QLabel" name="label_3" >
+      <widget class="QLabel" name="remote_label" >
        <property name="text" >
-        <string>Destination Branch</string>
+        <string>Remote Branch</string>
        </property>
       </widget>
      </item>
