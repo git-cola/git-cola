@@ -782,13 +782,13 @@ class Controller(QObserver):
             self.model.load_commitmsg(merge_msg_path)
 
     def fetch(self):
-        remote_action(self.model, self.view, 'Fetch')
+        remote_action(self.model, self.view, 'fetch')
 
     def push(self):
-        remote_action(self.model, self.view, 'Push')
+        remote_action(self.model, self.view, 'push')
 
     def pull(self):
-        remote_action(self.model, self.view, 'Pull')
+        remote_action(self.model, self.view, 'pull')
 
     def show_diffstat(self):
         """Show the diffstat from the latest commit."""
