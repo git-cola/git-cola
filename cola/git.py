@@ -101,12 +101,22 @@ class Git(object):
         use_shell = sys.platform in ('win32')
         if use_shell and sys.platform == 'darwin':
             command = shell_quote(*command)
-        proc = subprocess.Popen(command,
-                                cwd=cwd,
-                                shell=use_shell,
-                                stdin=istream,
-                                stderr=stderr,
-                                stdout=subprocess.PIPE)
+        while True:
+            try:
+                proc = subprocess.Popen(command,
+                                        cwd=cwd,
+                                        shell=use_shell,
+                                        stdin=istream,
+                                        stderr=stderr,
+                                        stdout=subprocess.PIPE)
+            except OSError, e:
+                # Some systems interrupt system calls and throw OSError
+                if e.errno == errno.EINTR:
+                    continue
+                else:
+                    raise e
+            break
+
         while True:
             try:
                 stdout_value = proc.stdout.read()
@@ -120,9 +130,7 @@ class Git(object):
                 if e.errno == errno.EINTR:
                     continue
                 else:
-                    stdout_value = ''
-                    status = 42
-                    break
+                    raise e
 
         if with_exceptions and status:
             raise GitCommandError(command, status, stdout_value)
