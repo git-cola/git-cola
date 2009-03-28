@@ -10,6 +10,7 @@ from cola import core
 from cola import utils
 from cola import qtutils
 from cola import version
+from cola import inotify
 from cola.qobserver import QObserver
 from cola.views import AboutView
 from cola.views.drawer import Drawer
@@ -327,11 +328,9 @@ class Controller(QObserver):
     #####################################################################
     # event() is called in response to messages from the inotify thread
     def event(self, msg):
-        try:
-            import cola.inotify
-        except ImportError:
+        if not inotify.AVAILABLE:
             return
-        if msg.type() == cola.inotify.INOTIFY_EVENT:
+        if msg.type() == inotify.INOTIFY_EVENT:
             self.rescan()
             return True
         else:
@@ -1081,10 +1080,7 @@ class Controller(QObserver):
         # Do we have inotify?  If not, return.
         # Recommend installing inotify if we're on Linux.
         self.inotify_thread = None
-        try:
-            from cola.inotify import GitNotifier
-            qtutils.log(0, self.tr('inotify support: enabled'))
-        except ImportError:
+        if not inotify.AVAILABLE:
             if not utils.is_linux():
                 return
             msg = self.tr('inotify: disabled\n'
@@ -1099,5 +1095,6 @@ class Controller(QObserver):
             return
 
         # Start the notification thread
-        self.inotify_thread = GitNotifier(self, self.model.git)
+        qtutils.log(0, self.tr('inotify support: enabled'))
+        self.inotify_thread = inotify.GitNotifier(self, self.model.git)
         self.inotify_thread.start()

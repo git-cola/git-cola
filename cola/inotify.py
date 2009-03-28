@@ -11,9 +11,17 @@ from PyQt4.QtCore import QThread
 from PyQt4.QtCore import QEvent
 from PyQt4.QtCore import SIGNAL
 
-import pyinotify
-from pyinotify import ProcessEvent
-from pyinotify import WatchManager, Notifier, EventsCodes
+try:
+    import pyinotify
+    from pyinotify import ProcessEvent
+    from pyinotify import WatchManager
+    from pyinotify import Notifier
+    from pyinotify import EventsCodes
+    AVAILABLE = True
+except ImportError:
+    ProcessEvent = object
+    AVAILABLE = False
+    pass
 
 INOTIFY_EVENT = QEvent.User + 0
 
