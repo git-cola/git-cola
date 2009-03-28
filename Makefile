@@ -29,8 +29,15 @@ uninstall:
 		"$(DESTDIR)$(prefix)"/lib/python2.*/site-packages/cola-*
 
 test:
-	@env PYTHONPATH=$(CURDIR):$(CURDIR)/build/lib:$(PYTHONPATH) \
+	@env PYTHONPATH=$(CURDIR):$(PYTHONPATH) \
 		nosetests --verbose --with-doctest --with-id \
+		--exclude=jsonpickle --exclude=json
+
+coverage:
+	@env PYTHONPATH=$(CURDIR):$(PYTHONPATH) \
+		nosetests --verbose --with-doctest --with-id --with-coverage \
+		--cover-package=cola \
+		--exclude=cola.jsonpickle --exclude=cola.json \
 		--exclude=jsonpickle --exclude=json
 
 clean:
