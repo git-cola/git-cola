@@ -117,13 +117,13 @@ class OptionsController(QObserver):
         """Updates fonts whenever font sizes change"""
 
         combo = self.view.global_cola_fontui
-        param = str(combo.objectName())
-        default = str(combo.currentFont().toString())
+        param = unicode(combo.objectName())
+        default = unicode(combo.currentFont().toString())
         self.model.apply_font_size(param, default)
 
         combo = self.view.global_cola_fontdiff
-        param = str(combo.objectName())
-        default = str(combo.currentFont().toString())
+        param = unicode(combo.objectName())
+        default = unicode(combo.currentFont().toString())
         self.model.apply_font_size(param, default)
 
         self.tell_parent_model()
