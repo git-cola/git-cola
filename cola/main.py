@@ -4,6 +4,7 @@ git-cola launcher script.
 """
 
 import optparse
+import signal
 import sys
 import os
 
@@ -75,6 +76,9 @@ def main():
             if trtxt[-6:-4] == '@@': # handle @@verb / @@noun
                 trtxt = trtxt[:-6]
             return trtxt
+
+    # Allow Ctrl-C to exit
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     # Initialize the ap
     app = ColaApplication(sys.argv)
