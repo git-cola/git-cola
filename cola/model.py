@@ -20,6 +20,7 @@ from types import ComplexType
 from types import InstanceType
 from types import FunctionType
 
+from cola import core
 from cola import jsonpickle
 from cola import observable
 
@@ -347,7 +348,7 @@ class Model(observable.Observable):
         """Loads model state from a file.
         """
         fh = open(filename, 'r')
-        contents = fh.read()
+        contents = core.read_nointr(fh)
         fh.close()
         try:
             ddict = jsonpickle.decode(contents)
@@ -361,7 +362,7 @@ class Model(observable.Observable):
         """Instances a model from a filename.
         """
         fh = open(filename, 'r')
-        contents = fh.read()
+        contents = core.read_nointr(fh)
         fh.close()
         obj = jsonpickle.decode(contents)
         if is_dict(obj):

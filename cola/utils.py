@@ -194,16 +194,16 @@ def basename(path):
 
 def slurp(path):
     """Slurps a filepath into a string."""
-    file = open(path)
-    slushy = file.read()
-    file.close()
+    fh = open(path)
+    slushy = core.read_nointr(fh)
+    fh.close()
     return core.decode(slushy)
 
 def write(path, contents):
     """Writes a string to a file."""
-    file = open(path, 'w')
-    file.write(core.encode(contents))
-    file.close()
+    fh = open(path, 'w')
+    core.write_nointr(fh, core.encode(contents))
+    fh.close()
 
 class DiffParser(object):
     """Handles parsing diff for use by the interactive index editor."""

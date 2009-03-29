@@ -11,6 +11,7 @@ build_scripts.first_line_re = re.compile('^should not match$')
 
 from cola import version
 from cola import utils
+from cola import core
 
 def main():
     # ensure readable files
@@ -110,35 +111,35 @@ def __check_git_version():
         sys.exit(1)
 
 def __check_pyqt_version():
-    """Check the minimum PYQT version
+    """Check the minimum PyQt version
     """
-    fail = False
+    failed = False
     try:
-        pyqtver = __run_cmd('pyuic4', '--version').split()[-1]
+        pyqtver = _run_cmd('pyuic4', '--version').split()[-1]
     except IndexError:
         pyqtver = 'nothing'
-        fail = True
-    if fail or not __check_min_version(version.pyqt_min_ver, pyqtver):
+        failed = True
+    if failed or not __check_min_version(version.pyqt_min_ver, pyqtver):
         print >> sys.stderr, 'PYQT version %s or newer required. Found %s' \
               % (version.pyqt_min_ver, pyqtver)
         sys.exit(1)
 
-def __dirty(src, dst):
+def _dirty(src, dst):
     if not os.path.exists(dst):
         return True
     srcstat = os.stat(src)
     dststat = os.stat(dst)
     return srcstat[stat.ST_MTIME] > dststat[stat.ST_MTIME]
 
-def __workaround_pyuic4(src, dst):
+def _workaround_pyuic4(src, dst):
     fh = open(src, 'r')
-    contents = fh.read()
+    contents = core.read_nointr(fh)
     fh.close()
     fh = open(dst, 'w')
     for line in contents.splitlines():
         if 'sortingenabled' in line.lower():
             continue
-        fh.write(line+os.linesep)
+        core.write_nointr(fh, line+os.linesep)
     fh.close()
     os.unlink(src)
 
@@ -149,10 +150,10 @@ def __build_views():
     for src in sources:
         dst = os.path.join(views, os.path.basename(src)[:-3] + '.py')
         dsttmp = dst + '.tmp'
-        if __dirty(src, dst):
+        if _dirty(src, dst):
             print '\tpyuic4 -x %s -o %s' % (src, dsttmp)
             utils.run_cmd('pyuic4', '-x', src, '-o', dsttmp)
-            __workaround_pyuic4(dsttmp, dst)
+            _workaround_pyuic4(dsttmp, dst)
 
 def __build_translations():
     print 'running build_translations'
@@ -160,14 +161,15 @@ def __build_translations():
     for src in sources:
         dst = os.path.join('share', 'cola', 'qm',
                            os.path.basename(src)[:-3] + '.qm')
-        if __dirty(src, dst):
+        if _dirty(src, dst):
             print '\tmsgfmt --qt %s -o %s' % (src, dst)
             utils.run_cmd('msgfmt', '--qt', src, '-o', dst)
 
-def __run_cmd(*args):
+def _run_cmd(*args):
+    """Runs a command and returns its output"""
     argstr = utils.shell_quote(*args)
     pipe = os.popen(argstr)
-    contents = pipe.read().strip()
+    contents = core.read_nointr(pipe).strip()
     pipe.close()
     return contents
 

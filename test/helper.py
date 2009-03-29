@@ -6,8 +6,9 @@ from os.path import join
 from os.path import dirname
 from os.path import basename
 
-import os
+from cola import core
 from cola.model import Model
+
 
 DEBUG_MODE = os.getenv('DEBUG','')
 
@@ -57,7 +58,7 @@ def shell(cmd):
 
 def pipe(cmd):
     p = os.popen(cmd)
-    out = p.read().strip()
+    out = core.read_nointr(p).strip()
     p.close()
     return out
 

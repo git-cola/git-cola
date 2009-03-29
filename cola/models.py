@@ -492,9 +492,9 @@ class Model(model.Model):
         return self.git.apply(filename)
 
     def load_commitmsg(self, path):
-        file = open(path, 'r')
-        contents = core.decode(file.read())
-        file.close()
+        fh = open(path, 'r')
+        contents = core.decode(core.read_nointr(fh))
+        fh.close()
         self.set_commitmsg(contents)
 
     def get_prev_commitmsg(self,*rest):

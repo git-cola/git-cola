@@ -7,6 +7,7 @@ import sys
 import os
 
 from cola import utils
+from cola import core
 
 
 def main():
@@ -93,7 +94,7 @@ def main():
             # as a Qt resource directory.
             _setup_resource_dir(os.path.dirname(filename))
             stylesheet = open(filename, 'r')
-            style = stylesheet.read()
+            style = core.read_nointr(stylesheet)
             stylesheet.close()
             app.setStyleSheet(style)
         else:
