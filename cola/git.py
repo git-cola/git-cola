@@ -53,8 +53,7 @@ class Git(object):
                 with_exceptions=False,
                 with_raw_output=False):
         """
-        Handles executing the command on the shell and consumes and returns
-        the returned information (stdout)
+        Handles executing a command on the shell and returns its output
 
         ``command``
             The command argument list to execute
@@ -62,7 +61,7 @@ class Git(object):
         ``istream``
             Standard input filehandle passed to subprocess.Popen.
 
-        The following option all default to False.
+        The following options all default to False.
 
         ``with_keep_cwd``
             Whether to use the current working directory from os.getcwd().
@@ -101,6 +100,7 @@ class Git(object):
         use_shell = sys.platform in ('win32')
         if use_shell and sys.platform == 'darwin':
             command = shell_quote(*command)
+
         while True:
             try:
                 proc = subprocess.Popen(command,
@@ -116,38 +116,25 @@ class Git(object):
                     continue
                 raise e
 
-        while True:
-            try:
-                stdout_value = proc.stdout.read()
-                proc.stdout.close()
-                status = proc.wait()
-                break
-            except IOError, e:
-                # OSX and others are known to interrupt system calls
-                # http://en.wikipedia.org/wiki/PCLSRing
-                # http://en.wikipedia.org/wiki/Unix_philosophy#Worse_is_better
-                if e.errno == errno.EINTR:
-                    continue
-                raise e
-            except OSError, e:
-                if e.errno == errno.EINTR:
-                    continue
-                raise e
+        # Read the command's output and status
+        output = core.read_nointr(proc.stdout)
+        proc.stdout.close()
+        status = core.wait_nointr(proc)
 
         if with_exceptions and status:
             raise GitCommandError(command, status, stdout_value)
 
         if not with_raw_output:
-            stdout_value = stdout_value.strip()
+            output = output.strip()
 
         if GIT_PYTHON_TRACE == 'full':
-            print "%s -> %d: '%s'" % (command, status, stdout_value)
+            print "%s -> %d: '%s'" % (command, status, output)
 
         # Allow access to the command's status code
         if with_extended_output:
-            return status, stdout_value
+            return (status, output)
         else:
-            return stdout_value
+            return output
 
     def transform_kwargs(self, **kwargs):
         """
