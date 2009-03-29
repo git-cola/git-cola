@@ -109,13 +109,12 @@ class Git(object):
                                         stdin=istream,
                                         stderr=stderr,
                                         stdout=subprocess.PIPE)
+                break
             except OSError, e:
                 # Some systems interrupt system calls and throw OSError
                 if e.errno == errno.EINTR:
                     continue
-                else:
-                    raise e
-            break
+                raise e
 
         while True:
             try:
@@ -129,8 +128,11 @@ class Git(object):
                 # http://en.wikipedia.org/wiki/Unix_philosophy#Worse_is_better
                 if e.errno == errno.EINTR:
                     continue
-                else:
-                    raise e
+                raise e
+            except OSError, e:
+                if e.errno == errno.EINTR:
+                    continue
+                raise e
 
         if with_exceptions and status:
             raise GitCommandError(command, status, stdout_value)
