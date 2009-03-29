@@ -13,10 +13,11 @@ from cStringIO import StringIO
 
 from cola import git
 from cola import core
+from cola import resources
 from cola.git import shell_quote
 from cola.exception import ColaException
 
-PREFIX = os.path.realpath(os.path.dirname(os.path.dirname(sys.argv[0])))
+PREFIX = resources.path()
 QMDIR = os.path.join(PREFIX, 'share', 'cola', 'qm')
 ICONSDIR = os.path.join(PREFIX, 'share', 'cola', 'icons')
 STYLEDIR = os.path.join(PREFIX, 'share', 'cola', 'styles')
