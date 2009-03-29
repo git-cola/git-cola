@@ -1,7 +1,5 @@
-# Copyright(C) 2008, David Aguilar <davvid@gmail.com>
-"""This module provides the main() routine used by the
-git-cola launcher script.
-"""
+# Copyright (C) 2009, David Aguilar <davvid@gmail.com>
+"""Provides the main() routine used by the git-cola script"""
 
 import optparse
 import signal
@@ -12,7 +10,7 @@ from cola import utils
 
 
 def main():
-    """Parses the command-line arguments and starts git-cola.
+    """Parses the command-line arguments and starts git-cola
     """
     parser = optparse.OptionParser(usage='%prog [options]')
 
@@ -66,32 +64,19 @@ def main():
         print >> sys.stderr, 'Please install it before using cola.'
         print >> sys.stderr, 'e.g.:    sudo apt-get install python-qt4'
         sys.exit(-1)
-    from cola import qtutils
 
-    class ColaApplication(QtGui.QApplication):
-        """This makes translation work by throwing out the context."""
-        wrapped = QtGui.QApplication.translate
-        def translate(*args):
-            trtxt = unicode(ColaApplication.wrapped('', *args[2:]))
-            if trtxt[-6:-4] == '@@': # handle @@verb / @@noun
-                trtxt = trtxt[:-6]
-            return trtxt
+    # Import cola modules
+    from cola.models import Model
+    from cola.views import View
+    from cola.controllers import Controller
+    from cola.app import ColaApplication
+    from cola import qtutils
 
     # Allow Ctrl-C to exit
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    # Initialize the ap
+    # Initialize the app
     app = ColaApplication(sys.argv)
-    app.setWindowIcon(QtGui.QIcon(utils.get_icon('git.png')))
-
-    # Handle i18n -- load translation files and install a translator
-    QtGui.QApplication.translate = app.translate
-    locale = str(QtCore.QLocale().system().name())
-    qmfile = utils.get_qm_for_locale(locale)
-    if os.path.exists(qmfile):
-        translator = QtCore.QTranslator(app)
-        translator.load(qmfile)
-        app.installTranslator(translator)
 
     style = None
     if opts.style:
@@ -103,27 +88,23 @@ def main():
         else:
             filename = utils.get_stylesheet(opts.style)
 
-        try:
+        if filename and os.path.exists(filename):
             # Automatically register each subdirectory in the style dir
             # as a Qt resource directory.
-            dirname = os.path.dirname(filename)
-            setup_resource_dir(dirname)
+            _setup_resource_dir(os.path.dirname(filename))
             stylesheet = open(filename, 'r')
             style = stylesheet.read()
             stylesheet.close()
             app.setStyleSheet(style)
-        except:
+        else:
+            _setup_resource_dir(utils.get_style_dir())
             print >> sys.stderr, ("warn: '%s' is not a valid style."
                                   % opts.style)
     else:
-        setup_resource_dir(utils.get_style_dir())
-
+        # Add the default style dir so that we find our icons
+        _setup_resource_dir(utils.get_style_dir())
 
     # Initialize the model/view/controller framework
-    from cola.models import Model
-    from cola.views import View
-    from cola.controllers import Controller
-
     model = Model()
     view = View(app.activeWindow())
 
@@ -131,7 +112,9 @@ def main():
     # If not, try to find one.  When found, chdir there.
     valid = model.use_worktree(repo)
     while not valid:
-        gitdir = qtutils.opendir_dialog(view, 'Open Git Repository...', os.getcwd())
+        gitdir = qtutils.opendir_dialog(view,
+                                        'Open Git Repository...',
+                                        os.getcwd())
         if not gitdir:
             sys.exit(-1)
         valid = model.use_worktree(gitdir)
@@ -143,7 +126,7 @@ def main():
     sys.exit(app.exec_())
 
 
-def setup_resource_dir(dirname):
+def _setup_resource_dir(dirname):
     from PyQt4 import QtCore
     resource_paths = utils.get_resource_dirs(dirname)
     for r in resource_paths:
