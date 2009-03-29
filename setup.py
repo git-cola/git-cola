@@ -17,28 +17,28 @@ def main():
     # ensure readable files
     old_mask = os.umask(0022)
     if sys.argv[1] in ['install', 'build']:
-        __setup_environment()
-        __check_python_version()
-        __check_git_version()
-        __check_pyqt_version()
-        __build_views()             # pyuic4: .ui -> .py
-        __build_translations()      # msgfmt: .po -> .qm
+        _setup_environment()
+        _check_python_version()
+        _check_git_version()
+        _check_pyqt_version()
+        _build_views()             # pyuic4: .ui -> .py
+        _build_translations()      # msgfmt: .po -> .qm
     try:
         version.write_builtin_version()
-        __run_setup()
+        _run_setup()
     finally:
         version.delete_builtin_version()
     # restore the old mask
     os.umask(old_mask)
 
-def __setup_environment():
+def _setup_environment():
     if sys.platform != 'win32':
         return
     path = os.environ['PATH']
     win32 = os.path.join(os.path.dirname(__file__), 'win32')
     os.environ['PATH'] = win32 + os.pathsep + path
 
-def __run_setup():
+def _run_setup():
 
     scripts = ['bin/git-cola', 'bin/git-difftool', 'bin/git-difftool-helper']
     if sys.platform == 'win32':
@@ -59,21 +59,21 @@ def __run_setup():
           packages = ['cola', 'cola.gui', 'cola.views', 'cola.controllers',
                       'cola.json', 'cola.jsonpickle'],
           data_files = [
-            __app_path('share/cola/qm', '*.qm'),
-            __app_path('share/cola/icons', '*.png'),
-            __app_path('share/cola/styles', '*.qss'),
-            __app_path('share/cola/styles/images', '*.png'),
-            __app_path('share/applications', '*.desktop'),
-            __app_path('share/doc/cola', '*.txt'),
+            _app_path('share/cola/qm', '*.qm'),
+            _app_path('share/cola/icons', '*.png'),
+            _app_path('share/cola/styles', '*.qss'),
+            _app_path('share/cola/styles/images', '*.png'),
+            _app_path('share/applications', '*.desktop'),
+            _app_path('share/doc/cola', '*.txt'),
           ])
 
-def __app_path(dirname, entry):
+def _app_path(dirname, entry):
     if '/' in entry:
         return (dirname, glob(entry))
     else:
         return (dirname, glob(os.path.join(dirname, entry)))
 
-def __version_to_list(version):
+def _version_to_list(version):
     """Convert a version string to a list of numbers or strings
     """
     ver_list = []
@@ -85,32 +85,32 @@ def __version_to_list(version):
         ver_list.append(n)
     return ver_list
 
-def __check_min_version(min_ver, ver):
+def _check_min_version(min_ver, ver):
     """Check whether ver is greater or equal to min_ver
     """
-    min_ver_list = __version_to_list(min_ver)
-    ver_list = __version_to_list(ver)
+    min_ver_list = _version_to_list(min_ver)
+    ver_list = _version_to_list(ver)
     return min_ver_list <= ver_list
 
-def __check_python_version():
+def _check_python_version():
     """Check the minimum Python version
     """
     pyver = '.'.join(map(lambda x: str(x), sys.version_info))
-    if not __check_min_version(version.python_min_ver, pyver):
+    if not _check_min_version(version.python_min_ver, pyver):
         print >> sys.stderr, 'Python version %s or newer required. Found %s' \
               % (version.python_min_ver, pyver)
         sys.exit(1)
 
-def __check_git_version():
+def _check_git_version():
     """Check the minimum GIT version
     """
     gitver = utils.run_cmd('git', '--version').split()[2]
-    if not __check_min_version(version.git_min_ver, gitver):
+    if not _check_min_version(version.git_min_ver, gitver):
         print >> sys.stderr, 'GIT version %s or newer required. Found %s' \
               % (version.git_min_ver, gitver)
         sys.exit(1)
 
-def __check_pyqt_version():
+def _check_pyqt_version():
     """Check the minimum PyQt version
     """
     failed = False
@@ -119,7 +119,7 @@ def __check_pyqt_version():
     except IndexError:
         pyqtver = 'nothing'
         failed = True
-    if failed or not __check_min_version(version.pyqt_min_ver, pyqtver):
+    if failed or not _check_min_version(version.pyqt_min_ver, pyqtver):
         print >> sys.stderr, 'PYQT version %s or newer required. Found %s' \
               % (version.pyqt_min_ver, pyqtver)
         sys.exit(1)
@@ -143,7 +143,7 @@ def _workaround_pyuic4(src, dst):
     fh.close()
     os.unlink(src)
 
-def __build_views():
+def _build_views():
     print 'running build_views'
     views = os.path.join('cola', 'gui')
     sources = glob('ui/*.ui')
@@ -155,7 +155,7 @@ def __build_views():
             utils.run_cmd('pyuic4', '-x', src, '-o', dsttmp)
             _workaround_pyuic4(dsttmp, dst)
 
-def __build_translations():
+def _build_translations():
     print 'running build_translations'
     sources = glob('share/cola/po/*.po')
     for src in sources:

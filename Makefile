@@ -37,7 +37,6 @@ coverage:
 	@env PYTHONPATH=$(CURDIR):$(PYTHONPATH) \
 		nosetests --verbose --with-doctest --with-id --with-coverage \
 		--cover-package=cola \
-		--exclude=cola.jsonpickle --exclude=cola.json \
 		--exclude=jsonpickle --exclude=json
 
 clean:
