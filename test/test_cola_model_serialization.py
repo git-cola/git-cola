@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""Tests model serialization methods"""
 import os
 import sys
 import unittest
@@ -13,6 +14,7 @@ from cola.model import Model
 
 class TestSaveRestore(unittest.TestCase):
     def setUp(self):
+        """Create a nested model for testing"""
         helper.create_dir()
         self.nested = NestedModel()
         path = os.path.join(helper.get_dir(), 'test.data')
@@ -21,41 +23,50 @@ class TestSaveRestore(unittest.TestCase):
         self.clone = Model.instance(path)
 
     def tearDown(self):
+        """Remove test directories"""
         testdir = helper.get_dir()
         if os.path.exists(testdir):
             helper.remove_dir()
 
-    def testCloneToClass(self):
+    def test_cloned_class(self):
+        """Test equality for __class__"""
         self.failUnless( str(NestedModel) ==
                          str(self.clone.__class__) )
 
-    def testClonedInnerToClass(self):
+    def test_inner_cloned_class(self):
+        """Test an inner clone's __class__"""
         self.failUnless( str(InnerModel) ==
                          str(self.clone.inner.__class__) )
 
-    def testClonedListAndParam(self):
+    def test_cloned_list_item(self):
+        """Test a list item's __class__"""
         self.failUnless( str(self.clone.inner.__class__) ==
-                         str(self.clone.innerList[0].__class__) )
+                         str(self.clone.innerlist[0].__class__) )
 
-    def testList(self):
+    def test_list_2deep(self):
+        """Test a list-inside-a-list"""
         self.failUnless( str(InnerModel) ==
-                         str(self.clone.innerList[1][0].__class__) )
+                         str(self.clone.innerlist[1][0].__class__) )
 
-    def testListInList(self):
+    def test_list_3deep(self):
+        """Test a 3-deep nested list"""
         self.failUnless( str(InnerModel) ==
-                         str(self.clone.innerList[2][0][0].__class__))
+                         str(self.clone.innerlist[2][0][0].__class__))
 
-    def testListInListInList(self):
+    def test_list_4deep(self):
+        """Test a 4-deep nested list"""
         self.failUnless( str(InnerModel) ==
-                         str(self.clone.innerList[3][0][0][0].__class__))
+                         str(self.clone.innerlist[3][0][0][0].__class__))
 
-    def testDictInList(self):
+    def test_dict_in_list(self):
+        """Test a dict inside a list"""
         self.failUnless( str(dict) ==
-                         str(self.clone.innerList[4].__class__))
+                         str(self.clone.innerlist[4].__class__))
 
-    def testObjectInDictInList(self):
+    def test_obj_in_dict_in_list(self):
+        """Test an object instance inside a dict inside a list"""
         self.failUnless( str(InnerModel) ==
-                         str(self.clone.innerList[-1]["foo"].__class__))
+                         str(self.clone.innerlist[-1]["foo"].__class__))
 
 if __name__ == '__main__':
     unittest.main()

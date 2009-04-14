@@ -1,13 +1,15 @@
 #!/usr/bin/env python
+"""Tests basic git operations: commit, log, config"""
 import os
 import unittest
 
 import helper
 from cola import models
 
-class GitOpsTest(helper.TestCase):
+class ColaBasicGitTestCase(helper.TestCase):
 
-    def testCommit(self):
+    def test_git_commit(self):
+        """Test running 'git commit' via cola.git"""
         self.shell("""
             echo A > A
             echo B > B
@@ -21,7 +23,8 @@ class GitOpsTest(helper.TestCase):
 
         self.failUnless('1' == log)
 
-    def testConfig(self):
+    def test_git_config(self):
+        """Test cola.git.config()"""
         self.shell("""
             git init 2>&1 >/dev/null
             git config section.key value
@@ -41,8 +44,8 @@ class GitOpsTest(helper.TestCase):
         # Test config_dict
         config_dict = model.config_dict(local=True)
 
-        self.failUnless( config_dict['section_key'] == 'value' )
-        self.failUnless( config_dict['section_bool'] == False )
+        self.failUnless(config_dict['section_key'] == 'value')
+        self.failUnless(config_dict['section_bool'] == False)
 
         # Test config_dict --global
         global_dict = model.config_dict(local=False)
