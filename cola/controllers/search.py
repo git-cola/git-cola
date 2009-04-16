@@ -227,7 +227,7 @@ class SearchController(QObserver):
         revision = self.results[row][0]
         qtutils.log(*self.model.git.cherry_pick(revision,
                                                 with_stderr=True,
-                                                with_extended_output=True))
+                                                with_status=True))
 
 def search_commits(model, parent, mode, browse):
     def get_date(timespec):

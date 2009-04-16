@@ -15,7 +15,6 @@ from cola import git
 from cola import core
 from cola import resources
 from cola.git import shell_quote
-from cola.exception import ColaException
 
 PREFIX = resources.path()
 QMDIR = os.path.join(PREFIX, 'share', 'cola', 'qm')

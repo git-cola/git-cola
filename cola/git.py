@@ -1,20 +1,18 @@
 # cmd.py
-# Copyright (C) 2008 Michael Trier (mtrier@gmail.com) and contributors
+# Copyright (C) 2008, 2009 Michael Trier (mtrier@gmail.com) and contributors
 #
 # This module is part of GitPython and is released under
 # the BSD License: http://www.opensource.org/licenses/bsd-license.php
+
 import re
 import os
 import sys
-import subprocess
 import errno
+import subprocess
 
 from cola import core
+from cola import errors
 
-
-class GitCommandError(Exception):
-    """Exception class for failed commands."""
-    pass
 
 def dashify(string):
     return string.replace('_', '-')
@@ -22,15 +20,22 @@ def dashify(string):
 # Enables debugging of GitPython's git commands
 GIT_PYTHON_TRACE = os.environ.get("GIT_PYTHON_TRACE", False)
 
-execute_kwargs = ('istream', 'with_keep_cwd', 'with_extended_output', 'with_stderr',
-                  'with_exceptions', 'with_raw_output')
+execute_kwargs = ('cwd',
+                  'istream',
+                  'with_exceptions',
+                  'with_raw_output',
+                  'with_status',
+                  'with_stderr')
+
+extra = {}
+if sys.platform == 'win32':
+    extra = {'shell': True}
 
 class Git(object):
     """
     The Git class manages communication with the Git binary
     """
     def __init__(self):
-        """Constructs a Git command object."""
         self._git_cwd = None #: The working directory used by execute()
 
     def set_cwd(self, path):
@@ -38,8 +43,7 @@ class Git(object):
         self._git_cwd = path
 
     def __getattr__(self, name):
-        """Handles the self.git_command(..) dispatching."""
-        if name[0] == '_':
+        if name[:1] == '_':
             raise AttributeError(name)
         return lambda *args, **kwargs: self._call_process(name, *args, **kwargs)
 
@@ -47,13 +51,12 @@ class Git(object):
     def execute(command,
                 cwd=None,
                 istream=None,
-                with_keep_cwd=False,
-                with_extended_output=False,
-                with_stderr=False,
                 with_exceptions=False,
-                with_raw_output=False):
+                with_raw_output=False,
+                with_status=False,
+                with_stderr=False):
         """
-        Handles executing a command on the shell and returns its output
+        Execute a command and returns its output
 
         ``command``
             The command argument list to execute
@@ -61,17 +64,15 @@ class Git(object):
         ``istream``
             Standard input filehandle passed to subprocess.Popen.
 
-        The following options all default to False.
+        ``cwd``
+            The working directory when running commands.
+            Default: os.getcwd()
 
-        ``with_keep_cwd``
-            Whether to use the current working directory from os.getcwd().
-            GitPython uses the cwd set by set_cwd() by default.
-
-        ``with_extended_output``
-            Whether to return a (status, output) tuple.
+        ``with_status``
+            Whether to return a (status, unicode(output)) tuple.
 
         ``with_stderr``
-            Whether to include stderr in the output.
+            Whether to include stderr in the output stream
 
         ``with_exceptions``
             Whether to raise an exception when git returns a non-zero status.
@@ -80,35 +81,32 @@ class Git(object):
             Whether to avoid stripping off trailing whitespace.
 
         Returns
-            str(output)                     # extended_output = False (Default)
-            tuple(int(status), str(output)) # extended_output = True
+            unicode(stdout)                     # Default
+            unicode(stdout+stderr)              # with_stderr=True
+            tuple(int(status), unicode(output)) # with_status=True
         """
 
         if GIT_PYTHON_TRACE and not GIT_PYTHON_TRACE == 'full':
             print ' '.join(command)
 
         # Allow the user to have the command executed in their working dir.
-        if with_keep_cwd or not cwd:
+        if not cwd:
             cwd = os.getcwd()
 
-        # Ignore stderr unless with_extended_output is provided
-        stderr = None
         if with_stderr:
             stderr = subprocess.STDOUT
+        else:
+            stderr = None
 
         # Start the process
-        use_shell = sys.platform in ('win32')
-        if use_shell and sys.platform == 'darwin':
-            command = shell_quote(*command)
-
         while True:
             try:
                 proc = subprocess.Popen(command,
                                         cwd=cwd,
-                                        shell=use_shell,
                                         stdin=istream,
                                         stderr=stderr,
-                                        stdout=subprocess.PIPE)
+                                        stdout=subprocess.PIPE,
+                                        **extra)
                 break
             except OSError, e:
                 # Some systems interrupt system calls and throw OSError
@@ -116,22 +114,25 @@ class Git(object):
                     continue
                 raise e
 
-        # Read the command's output and status
+        # Wait for the process to return
         output = core.read_nointr(proc.stdout)
         proc.stdout.close()
         status = core.wait_nointr(proc)
 
-        if with_exceptions and status:
-            raise GitCommandError(command, status, stdout_value)
+        if with_exceptions and status != 0:
+            raise errors.GitCommandError(command, status, output)
 
         if not with_raw_output:
-            output = output.strip()
+            output = output.rstrip()
 
         if GIT_PYTHON_TRACE == 'full':
-            print "%s -> %d: '%s'" % (command, status, output)
+            if output:
+                print "%s -> %d: '%s'" % (command, status, output)
+            else:
+                print "%s -> %d" % (command, status)
 
         # Allow access to the command's status code
-        if with_extended_output:
+        if with_status:
             return (status, output)
         else:
             return output
@@ -178,13 +179,11 @@ class Git(object):
         """
 
         # Handle optional arguments prior to calling transform_kwargs
-        # otherwise these'll end up in args, which is bad.
+        # otherwise they'll end up in args, which is bad.
         _kwargs = dict(cwd=self._git_cwd)
         for kwarg in execute_kwargs:
-            try:
+            if kwarg in kwargs:
                 _kwargs[kwarg] = kwargs.pop(kwarg)
-            except KeyError:
-                pass
 
         # Prepare the argument list
         opt_args = self.transform_kwargs(**kwargs)
@@ -194,7 +193,7 @@ class Git(object):
         call = ['git', dashify(method)]
         call.extend(args)
 
-        return Git.execute(call, **_kwargs)
+        return self.execute(call, **_kwargs)
 
 
 def shell_quote(*inputs):

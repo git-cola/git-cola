@@ -91,7 +91,7 @@ class CreateBranchController(QObserver):
         qtutils.log(status, output)
         if status == 0 and chkout:
             status, output = self.model.git.checkout(branch,
-                                                     with_extended_output=True,
+                                                     with_status=True,
                                                      with_stderr=True)
             qtutils.log(status, output)
         self.view.accept()

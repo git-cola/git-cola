@@ -81,7 +81,7 @@ class MergeController(QObserver):
                                          no_commit=no_commit,
                                          squash=squash,
                                          with_stderr=True,
-                                         with_extended_output=True))
+                                         with_status=True))
         self.view.accept()
 
     def viz_revision(self):

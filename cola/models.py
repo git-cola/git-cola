@@ -406,7 +406,7 @@ class Model(model.Model):
         if to_add:
             newstatus, output = self.git.add(v=True,
                                              with_stderr=True,
-                                             with_extended_output=True,
+                                             with_status=True,
                                              *to_add)
             status += newstatus
         else:
@@ -422,7 +422,7 @@ class Model(model.Model):
             if not os.path.exists(filename):
                 to_remove.append(filename)
         newstatus, out = self.git.rm(with_stderr=True,
-                                     with_extended_output=True,
+                                     with_status=True,
                                      *to_remove)
         if status == 0:
             status += newstatus
@@ -546,7 +546,7 @@ class Model(model.Model):
         return self.git.branch(branch,
                                D=True,
                                with_stderr=True,
-                               with_extended_output=True)
+                               with_status=True)
 
     def get_revision_sha1(self, idx):
         return self.get_revisions()[idx]
@@ -613,7 +613,7 @@ class Model(model.Model):
     def stage_modified(self):
         status, output = self.git.add(v=True,
                                       with_stderr=True,
-                                      with_extended_output=True,
+                                      with_status=True,
                                       *self.get_modified())
         self.update_status()
         return (status, output)
@@ -621,7 +621,7 @@ class Model(model.Model):
     def stage_untracked(self):
         status, output = self.git.add(v=True,
                                       with_stderr=True,
-                                      with_extended_output=True,
+                                      with_status=True,
                                       *self.get_untracked())
         self.update_status()
         return (status, output)
@@ -629,14 +629,14 @@ class Model(model.Model):
     def reset(self, *items):
         status, output = self.git.reset('--',
                                         with_stderr=True,
-                                        with_extended_output=True,
+                                        with_status=True,
                                         *items)
         self.update_status()
         return (status, output)
 
     def unstage_all(self):
         status, output = self.git.reset(with_stderr=True,
-                                        with_extended_output=True)
+                                        with_status=True)
         self.update_status()
         return (status, output)
 
@@ -644,7 +644,7 @@ class Model(model.Model):
         status, output = self.git.add(v=True,
                                       u=True,
                                       with_stderr=True,
-                                      with_extended_output=True)
+                                      with_status=True)
         self.update_status()
         return (status, output)
 
@@ -729,7 +729,7 @@ class Model(model.Model):
 
         # Run 'git commit'
         status, out = self.git.commit(F=tmpfile, v=True, amend=amend,
-                                      with_extended_output=True,
+                                      with_status=True,
                                       with_stderr=True)
         os.unlink(tmpfile)
         return (status, out)
@@ -892,7 +892,7 @@ class Model(model.Model):
         status, out = self.git.diff('--', name,
                                     name_only=True,
                                     exit_code=True,
-                                    with_extended_output=True)
+                                    with_status=True)
         return status != 0
 
     def get_workdir_state(self, amend=False):
@@ -1011,7 +1011,7 @@ class Model(model.Model):
             'tags': tags,
             'rebase': rebase,
             'with_stderr': True,
-            'with_extended_output': True,
+            'with_status': True,
         }
         return (args, kwargs)
 
@@ -1081,7 +1081,7 @@ class Model(model.Model):
         revarg = '%s^..%s' % (start, end)
         return self.git.format_patch('-o', output, revarg,
                                      with_stderr=True,
-                                     with_extended_output=True,
+                                     with_status=True,
                                      **kwargs)
 
     def current_branch(self):
@@ -1100,7 +1100,7 @@ class Model(model.Model):
         """
         return self.git.branch(name, base, track=track,
                                with_stderr=True,
-                               with_extended_output=True)
+                               with_status=True)
 
     def cherry_pick_list(self, revs, **kwargs):
         """Cherry-picks each revision into the current branch.
@@ -1112,7 +1112,7 @@ class Model(model.Model):
         for rev in revs:
             newstatus, out = self.git.cherry_pick(rev,
                                                   with_stderr=True,
-                                                  with_extended_output=True)
+                                                  with_status=True)
             if status == 0:
                 status += newstatus
             cherries.append(out)

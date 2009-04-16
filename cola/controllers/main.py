@@ -432,7 +432,7 @@ class Controller(QObserver):
             return
         self.log(*self.model.git.checkout(branch,
                                           with_stderr=True,
-                                          with_extended_output=True))
+                                          with_status=True))
 
     def browse_commits(self):
         self.select_commits_gui('Browse Commits',
@@ -629,7 +629,7 @@ class Controller(QObserver):
 
         qtutils.log(*self.model.git.clone(url, destdir,
                                           with_stderr=True,
-                                          with_extended_output=True))
+                                          with_status=True))
         utils.fork('python', sys.argv[0],
                    '--repo', self._quote_repopath(destdir))
 
@@ -667,7 +667,7 @@ class Controller(QObserver):
             return
         self.log(*self.model.git.rebase(branch,
                                         with_stderr=True,
-                                        with_extended_output=True))
+                                        with_status=True))
 
     def reset_mode(self):
         """Sets the mode to the default NONE mode."""
@@ -931,7 +931,7 @@ class Controller(QObserver):
 
             self.log(*self.model.git.checkout('HEAD', '--',
                                               with_stderr=True,
-                                              with_extended_output=True,
+                                              with_status=True,
                                               *items_to_undo))
         else:
             qtutils.log(1, self.tr('No files selected for '

@@ -36,7 +36,7 @@ class GitCommandTest(unittest.TestCase):
     def test_stdout(self):
         """Test overflowing the stdout buffer"""
         status, out = git.Git.execute([helper.fixture('stdout.py'), '8192'],
-                                      with_extended_output=True,
+                                      with_status=True,
                                       with_raw_output=True)
         self.assertEqual(status, 0)
         self.assertEqual(len(out), 8192)
@@ -44,7 +44,7 @@ class GitCommandTest(unittest.TestCase):
     def test_stderr_empty(self):
         """Test that stderr is ignored by execute() without with_stderr"""
         status, out = git.Git.execute([helper.fixture('stderr.py'), '8192'],
-                                      with_extended_output=True,
+                                      with_status=True,
                                       with_raw_output=True)
         self.assertEqual(status, 0)
         self.assertEqual(len(out), 0)
@@ -52,7 +52,7 @@ class GitCommandTest(unittest.TestCase):
     def test_stderr_nonempty_with_stderr(self):
         """Test that with_stderr makes execute() see stderr"""
         status, out = git.Git.execute([helper.fixture('stderr.py'), '8192'],
-                                      with_extended_output=True,
+                                      with_status=True,
                                       with_stderr=True,
                                       with_raw_output=True)
         self.assertEqual(status, 0)
@@ -63,7 +63,7 @@ class GitCommandTest(unittest.TestCase):
         status, out = git.Git.execute([helper.fixture('stdout_and_stderr.py'),
                                        '8192',
                                        'stdout'], # otherwise, same as below
-                                      with_extended_output=True,
+                                      with_status=True,
                                       with_raw_output=True)
         self.assertEqual(status, 0)
         self.assertEqual(len(out), 8192)
@@ -75,7 +75,7 @@ class GitCommandTest(unittest.TestCase):
         status, out = git.Git.execute([helper.fixture('stdout_and_stderr.py'),
                                        '8192',
                                        'stderr'], # otherwise, same as above
-                                      with_extended_output=True,
+                                      with_status=True,
                                       with_raw_output=True)
         self.assertEqual(status, 0)
         self.assertEqual(len(out), 8192)
@@ -85,7 +85,7 @@ class GitCommandTest(unittest.TestCase):
         status, out = git.Git.execute([helper.fixture('stdout_and_stderr.py'),
                                        '8192',
                                        'stdout'], # otherwise, same as below
-                                      with_extended_output=True,
+                                      with_status=True,
                                       with_stderr=True,
                                       with_raw_output=True)
         self.assertEqual(status, 0)
@@ -98,7 +98,7 @@ class GitCommandTest(unittest.TestCase):
         status, out = git.Git.execute([helper.fixture('stdout_and_stderr.py'),
                                        '8192',
                                        'stderr'], # otherwise, same as above
-                                      with_extended_output=True,
+                                      with_status=True,
                                       with_stderr=True,
                                       with_raw_output=True)
         self.assertEqual(status, 0)

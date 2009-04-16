@@ -20,7 +20,6 @@ def __create_tests():
         cola.git
         cola.model
         cola.observer
-        cola.exception
         cola.settings
     """.split():
         setattr(ImportTest,
