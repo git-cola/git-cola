@@ -15,22 +15,29 @@ def main():
     """
     parser = optparse.OptionParser(usage='%prog [options]')
 
+    # We also accept 'git cola version'
     parser.add_option('-v', '--version',
                       help='Show cola version',
                       dest='version',
                       default=False,
                       action='store_true')
+
+    # Accept --style=/path/to/style.qss or --style=dark for built-in styles
     parser.add_option('-s', '--style',
                       help='Applies an alternate stylesheet.  '
                            'The allowed values are: "dark" or a file path.',
                       dest='style',
                       metavar='PATH or STYLE',
                       default='')
+
+    # Specifies a git repository to open
     parser.add_option('-r', '--repo',
                       help='Specifies the path to a git repository.',
                       dest='repo',
                       metavar='PATH',
                       default=os.getcwd())
+
+    # Used on Windows for adding 'git' to the path
     parser.add_option('-g', '--git-path',
                       help='Specifies the path to the git binary',
                       dest='git',
@@ -39,6 +46,7 @@ def main():
     opts, args = parser.parse_args()
 
     if opts.version or 'version' in args:
+        # Accept 'git cola --version' or 'git cola version'
         from cola import git
         git.Git.execute(['git', 'update-index', '--refresh'])
         from cola import version
@@ -46,14 +54,18 @@ def main():
         sys.exit(0)
 
     if opts.git:
+        # Adds git to the PATH.  This is needed on Windows.
         path_entries = os.environ.get('PATH', '').split(os.pathsep)
         path_entries.insert(0, os.path.dirname(opts.git))
         os.environ['PATH'] = os.pathsep.join(path_entries)
 
+    # Bail out if --repo is not a directory
     repo = os.path.realpath(opts.repo)
     if not os.path.isdir(repo):
         print >> sys.stderr, "fatal: '%s' is not a directory.  Consider supplying -r <path>.\n" % repo
         sys.exit(-1)
+
+    # We do everything relative to the repo root
     os.chdir(opts.repo)
 
     try:
@@ -119,6 +131,8 @@ def main():
         if not gitdir:
             sys.exit(-1)
         valid = model.use_worktree(gitdir)
+
+    # Finally, go to the root of the git repo
     os.chdir(model.git.get_work_tree())
 
     # Show the GUI and start the event loop
@@ -128,6 +142,7 @@ def main():
 
 
 def _setup_resource_dir(dirname):
+    """Adds resource directories to Qt's search path"""
     from PyQt4 import QtCore
     resource_paths = utils.get_resource_dirs(dirname)
     for r in resource_paths:
