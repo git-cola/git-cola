@@ -6,19 +6,8 @@ data container.
 
 import os
 import imp
-import __builtin__
+import types
 from cStringIO import StringIO
-from types import DictType
-from types import ListType
-from types import TupleType
-from types import StringTypes
-from types import BooleanType
-from types import IntType
-from types import LongType
-from types import FloatType
-from types import ComplexType
-from types import InstanceType
-from types import FunctionType
 
 from cola import core
 from cola import jsonpickle
@@ -93,11 +82,13 @@ class Model(observable.Observable):
         {'a': 1}
 
         """
-        filtered = {}
+        # Create a set of (key, value) pairs
         included = set([(k, v) for k, v in dct.iteritems()
-                                   if k[0] != '_' and
-                                      k[-1] != '_' and
-                                      not k.startswith('py/')])
+                                    if not k.startswith('_') and
+                                       not k.endswith('_') and
+                                       not k.startswith('py/')])
+        # Anything left over passed the filter
+        filtered = {}
         for k, v in included:
             filtered[k] = v
         return filtered
@@ -146,9 +137,8 @@ class Model(observable.Observable):
         """
         names = []
         for k, v in self.__dict__.iteritems():
-            if k[0] == '_' and not export:
-                continue
-            if k.startswith('py/') and not export:
+            if not export and (k.startswith('_') or k.endswith('_') or
+                               k.startswith('py/')):
                 continue
             if is_function(v):
                 continue
@@ -170,6 +160,7 @@ class Model(observable.Observable):
         <class 'cola.model.Model'>
 
         """
+        # Go in and out of jsonpickle to create a clone
         observers = self.get_observers()
         self.set_observers([])
         clone = jsonpickle.decode(jsonpickle.encode(self))
@@ -254,22 +245,27 @@ class Model(observable.Observable):
         if realparam in self.__dict__:
             return getattr(self, realparam)
 
+        # Attribute getter
         if realparam.startswith('get'):
             param = self.__translate(param, 'get')
             return lambda: getattr(self, param)
 
+        # Attribute setter
         elif realparam.startswith('set'):
             param = self.__translate(param, 'set')
             return lambda v: self.set_param(param, v,
                                             check_params=True)
 
+        # List add or append
         elif (realparam.startswith('add') or realparam.startswith('append')):
             if realparam[1] == 'd': # add
                 param = self.__translate(param, 'add')
             else:
                 param = self.__translate(param, 'append')
 
+            # Return a closure over the parameter name
             def array_append_closure(*values):
+                """This closure appends to an array"""
                 array = self.get_param(param, None)
                 if array is None:
                     classname = self.__class__.__name__
@@ -280,9 +276,9 @@ class Model(observable.Observable):
                     array.extend(values)
             return array_append_closure
 
-        errmsg  = ("%s object has no parameter '%s'"
+        # Unknown attribute
+        errmsg  = ("%s object has no attribute '%s'"
                    % (self.__class__.__name__, param))
-
         raise AttributeError(errmsg)
 
     def set_param(self, param, value, notify=True, check_params=False):
@@ -295,11 +291,18 @@ class Model(observable.Observable):
         42
 
         """
+        # We're case insensitive
         param = param.lower()
         if check_params and param not in self.get_param_names():
-            raise AttributeError("Parameter '%s' not available for %s"
-                                 % (param, self.__class__.__name__))
+            # Unknown attribute
+            errmsg  = ("%s object has no attribute '%s'"
+                       % (self.__class__.__name__, param))
+            raise AttributeError(errmsg)
+
+        # Set the value
         setattr(self, param, value)
+
+        # Perform notifications
         if notify:
             self.notify_observers(param)
 
@@ -318,14 +321,17 @@ class Model(observable.Observable):
         42
 
         """
+        # Loop over all attributes and copy them over
         for k in params_to_copy or model.get_param_names(export=True):
             self[k] = model.get_param(k)
 
     def __translate(self, param, prefix='', sep='_'):
-        """Translates an param name from the external name
-        used in methods to those used internally.  The default
-        settings strip off '_' so that both get_foo() and getFoo()
-        are valid incantations.
+        """Translate attribute names into their internal name
+
+        This translates attribute names from those used in methods
+        into the real names used internally.  The default settings
+        strip off '_' so that both get_foo() and getFoo() are valid
+        incantations.
 
         >>> m = Model()
         >>> m._Model__translate('set_QUESTION', 'set')
@@ -339,7 +345,7 @@ class Model(observable.Observable):
         """
         fh = open(filename, 'w')
         try:
-            fh.write(jsonpickle.encode(self))
+            core.write_nointr(fh, jsonpickle.encode(self))
         except:
             pass
         fh.close()
@@ -400,7 +406,7 @@ class Model(observable.Observable):
 
     __indent__ = 0
     __preindent__ = True
-    __strstack__ = __builtin__.set()
+    __strstack__ = set()
 
     @staticmethod
     def __indent(i=0):
@@ -414,45 +420,58 @@ class Model(observable.Observable):
             return 'self' # TODO: implement references?  This ain't lisp.
         else:
             Model.__strstack__.add(self)
+        # IO object for output
         io = StringIO()
+        # Handle indentation
         if Model.__preindent__:
             io.write(Model.__indent())
+
+        # Class name and opening parenthesis
         io.write(self.__class__.__name__ + '(')
 
+        # Go one level deeper
         Model.__indent(1)
 
+        # Output each attribute
         for param in self.get_param_names():
-            if param.startswith('_'):
+            if param.startswith('_') or param.endswith('_'):
                 continue
+            # Go to the next line
             io.write('\n')
 
+            # e.g. foo = bar
             inner = Model.__indent() + param + " = "
             value = self[param]
 
-            if type(value) == ListType:
+            # Lists use a new line for each item
+            if type(value) == types.ListType:
                 indent = Model.__indent(1)
                 io.write(inner + "[\n")
                 for val in value:
+                    # Nested models need special treatment
                     if is_model(val):
                         io.write(str(val)+'\n')
                     else:
                         io.write(indent)
                         io.write(str(val))
                         io.write(",\n")
-
+                # Unindent, closing bracket
                 io.write(Model.__indent(-1))
                 io.write("],")
             else:
+                # It's not a list, so just output its str() representation
                 Model.__preindent__ = False
                 io.write(inner)
                 io.write(str(value))
                 io.write(',')
                 Model.__preindent__ = True
 
+        # Finish this item, closing parenthesis
         io.write('\n' + Model.__indent(-1) + ')')
         value = io.getvalue()
         io.close()
 
+        # Remove ourselves from the recursion-avoidance stack
         Model.__strstack__.remove(self)
         return value
 
@@ -476,17 +495,26 @@ class ModelIterator(object):
 
 #############################################################################
 def is_model(item):
-    return issubclass(item.__class__, Model)
+    """Is this an instance of a Model-like object?"""
+    return isinstance(item, Model)
+
 def is_dict(item):
-    return type(item) is DictType
+    """Is this an instance of a dictionary?"""
+    return type(item) is types.DictType
+
 def is_list(item):
-    return type(item) is ListType or type(item) is TupleType
+    """Is this a list?"""
+    return type(item) is types.ListType or type(item) is types.TupleType
+
 def is_atom(item):
-    return(type(item) in StringTypes
-        or type(item) is BooleanType
-        or type(item) is IntType
-        or type(item) is LongType
-        or type(item) is FloatType
-        or type(item) is ComplexType)
+    """Is this an atom?"""
+    return(type(item) in types.StringTypes
+        or type(item) is types.BooleanType
+        or type(item) is types.IntType
+        or type(item) is types.LongType
+        or type(item) is types.FloatType
+        or type(item) is types.ComplexType)
+
 def is_function(item):
-    return type(item) is FunctionType
+    """Is this a function?"""
+    return type(item) is types.FunctionType
