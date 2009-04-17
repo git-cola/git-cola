@@ -3,22 +3,14 @@
 """
 
 class Observer(object):
-    """
-    Observers receive notify(*attributes) messages from their
-    subjects whenever new data arrives.  This notify() message signifies
-    that an observer should update its internal state/view.
-    """
+    """Implements the Observer pattern for a single subject"""
 
     def __init__(self, model):
         self.model = model
         self.model.add_observer(self)
-        self.__debug = False
 
     def __del__(self):
         self.model.remove_observer(self)
-
-    def set_debug(self, enabled):
-        self.__debug = enabled
 
     def notify(self, *attributes):
         """Called by the model to notify Observers about changes."""
@@ -34,8 +26,11 @@ class Observer(object):
             model.set_notify(notify) # NOTIFY ON
 
     def subject_changed(self, attr, value):
-        """This method handles updating of the observer/UI.
-        This must be implemented in each concrete observer class."""
+        """
+        Updates the observer/view
+
+        This must be implemented by concrete observers class.
+        """
 
         msg = 'Concrete Observers must override subject_changed().'
-        raise NotImplementedError, msg
+        raise NotImplementedError(msg)
