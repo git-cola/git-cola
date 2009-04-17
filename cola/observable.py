@@ -4,24 +4,38 @@
 class Observable(object):
     """Handles subject/observer notifications."""
     def __init__(self):
-        self.__observers = []
-        self.__notify = True
+        self._observers = []
+        self._notify = True
+
     def get_observers(self):
-        return self.__observers
+        """Returns the observer list"""
+        return self._observers
+
     def set_observers(self, observers):
-        self.__observers = observers
+        """Sets the observer list"""
+        self._observers = observers
+
     def get_notify(self):
-        return self.__notify
+        """Returns True if notification is enabled"""
+        return self._notify
+
     def set_notify(self, notify=True):
-        self.__notify = notify
+        """Sets the notification state (bool)"""
+        self._notify = notify
+
     def add_observer(self, observer):
-        if observer not in self.__observers:
-            self.__observers.append(observer)
+        """Adds an observer to this model"""
+        if observer not in self._observers:
+            self._observers.append(observer)
+
     def remove_observer(self, observer):
-        if observer in self.__observers:
-            self.__observers.remove(observer)
+        """Removes an observer"""
+        if observer in self._observers:
+            self._observers.remove(observer)
+
     def notify_observers(self, *param):
-        if not self.__notify:
+        """Notifies observers about attribute changes"""
+        if not self._notify:
             return
-        for observer in self.__observers:
+        for observer in self._observers:
             observer.notify(*param)

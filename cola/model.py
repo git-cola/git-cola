@@ -132,7 +132,7 @@ class Model(observable.Observable):
         ['answer']
 
         >>> m.get_param_names(export=True)
-        ['_Observable__notify', '_Observable__observers', '_question', 'answer']
+        ['_notify', '_observers', '_question', 'answer']
 
         """
         names = []
