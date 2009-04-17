@@ -596,10 +596,10 @@ class Model(model.Model):
                 diff = '\n'.join(os.listdir(filename))
 
             elif filename in self.get_unmerged():
-                diff = ('@@@+-+-+-+-+-+-+-+-+-+-+  UNMERGED  +-+-+-+-+-+-+-+-+-+-+@@@\n\n'
-                        '>>> %s is unmerged.\n' % filename +
-                        'Right-click on the filename '
-                        'to launch "git mergetool".\n\n\n')
+                diff = ('@@@ Unmerged @@@\n'
+                        '- %s is unmerged.\n+ ' % filename +
+                        'Right-click the file to launch "git mergetool".\n'
+                        '@@@ Unmerged @@@\n\n')
                 diff += self.diff_helper(filename=filename,
                                         cached=False,
                                         patch_with_raw=False)
@@ -683,7 +683,7 @@ class Model(model.Model):
                 argv = [ '--global', key, strval ]
             return self.git.config(*argv)
         else:
-            msg = "oops in config_set(key=%s,value=%s,local=%s"
+            msg = "oops in config_set(key=%s,value=%s,local=%s)"
             raise Exception(msg % (key, value, local))
 
     def config_dict(self, local=True):
@@ -724,7 +724,7 @@ class Model(model.Model):
 
         # Create the commit message file
         fh = open(tmpfile, 'w')
-        fh.write(msg)
+        core.write_nointr(fh, msg)
         fh.close()
 
         # Run 'git commit'
