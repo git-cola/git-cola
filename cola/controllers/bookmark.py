@@ -16,7 +16,7 @@ def save_bookmark():
     bookmark = os.getcwd()
     if bookmark not in model.bookmarks:
         model.add_bookmarks(bookmark)
-    model.save_all_settings()
+    model.save_settings()
     qtutils.information("Bookmark Saved")
 
 def manage_bookmarks():
@@ -35,7 +35,7 @@ class BookmarkController(QObserver):
         self.refresh_view()
 
     def save(self):
-        self.model.save_all_settings()
+        self.model.save_settings()
         self.view.accept()
     
     def open(self):
