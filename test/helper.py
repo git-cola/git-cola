@@ -13,7 +13,7 @@ from cola.model import Model
 DEBUG_MODE = os.getenv('DEBUG','')
 
 TEST_SCRIPT_DIR = dirname(__file__)
-ROOT_TMP_DIR = join(dirname(TEST_SCRIPT_DIR), 'tmp')
+ROOT_TMP_DIR = join(TEST_SCRIPT_DIR, 'tmp')
 TEST_TMP_DIR = join(ROOT_TMP_DIR, basename(sys.argv[0]))
 
 LAST_IDX = 0
