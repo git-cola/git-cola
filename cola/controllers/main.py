@@ -366,7 +366,7 @@ class Controller(QObserver):
         if style:
             view.setStyleSheet(style)
         view.show()
-        view.set_version(version.version)
+        view.set_version(version.get_version())
 
     def tr(self, fortr):
         return qtutils.tr(fortr)
@@ -1073,8 +1073,8 @@ class Controller(QObserver):
     def init_log_window(self):
         branch = self.model.get_currentbranch()
         qtutils.log(0, self.model.get_git_version()
-                       +'\ncola version '+ version.version
-                       +'\nCurrent Branch: '+ branch)
+                       +'\ncola version ' + version.get_version()
+                       +'\nCurrent Branch: ' + branch)
 
     def start_inotify_thread(self):
         # Do we have inotify?  If not, return.

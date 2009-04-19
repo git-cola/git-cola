@@ -47,14 +47,14 @@ def _run_setup():
         scripts.append('win32/py2exe-setup.py')
         scripts.append('win32/py2exe-setup.cmd')
 
-    setup(name = 'cola',
-          version = version.version,
+    setup(name = 'git-cola',
+          version = version.get_version(),
           license = 'GPLv2',
           author = 'David Aguilar',
           author_email = 'davvid@gmail.com',
           url = 'http://cola.tuxfamily.org/',
-          description = 'GIT Cola',
-          long_description = 'A highly caffeinated GIT GUI',
+          description = 'git-cola',
+          long_description = 'A highly caffeinated git gui',
           scripts = scripts,
           packages = ['cola', 'cola.gui', 'cola.views', 'cola.controllers',
                       'cola.json', 'cola.jsonpickle'],

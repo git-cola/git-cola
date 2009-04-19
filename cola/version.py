@@ -1,6 +1,9 @@
 # Copyright (c) 2008 David Aguilar
-"""This module inspects the cola repository and calculates
-cola version numbers.
+"""Provides the current cola version number
+
+    >>> from cola import version
+    >>> print version.get_version()
+
 """
 
 import re
@@ -62,16 +65,24 @@ def delete_builtin_version():
         if os.path.exists(fn):
             os.remove(fn)
 
+# cached to avoid recalculation
+_version = None
+
 def get_version():
     """Returns the builtin version or calculates the current version."""
+    global _version
+    if _version:
+        return _version
     for v in [builtin_version, git_describe_version]:
         try:
-            return v()
+            _version = v()
         except VersionUnavailable:
             pass
-    return 'unknown-version'
+    if not _version:
+        _version = 'unknown-version'
+    return _version
 
-version = get_version()
+
 
 git_min_ver = '1.5.2' #: minimum git version
 python_min_ver = '2.4' #: minimum python version
