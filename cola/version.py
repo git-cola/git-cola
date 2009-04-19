@@ -1,10 +1,5 @@
 # Copyright (c) 2008 David Aguilar
-"""Provides the current cola version number
-
-    >>> from cola import version
-    >>> print version.get_version()
-
-"""
+"""Provides the current cola version number"""
 
 import re
 import os
