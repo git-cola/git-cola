@@ -83,7 +83,10 @@ def get_version():
     return _version
 
 
+# minimum version requirements
+git_min_ver = '1.5.2'
+python_min_ver = '2.4'
+pyqt_min_ver = '4.3'
 
-git_min_ver = '1.5.2' #: minimum git version
-python_min_ver = '2.4' #: minimum python version
-pyqt_min_ver = '4.3' #: minimum PyQt version
+# git-difftool moved out of contrib in git 1.6.3
+git_difftool_min_ver = '1.6.3'

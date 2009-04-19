@@ -16,16 +16,17 @@ from cola import core
 def main():
     # ensure readable files
     old_mask = os.umask(0022)
+    git_version = _get_git_version()
     if sys.argv[1] in ['install', 'build']:
         _setup_environment()
         _check_python_version()
-        _check_git_version()
+        _check_git_version(git_version)
         _check_pyqt_version()
         _build_views()             # pyuic4: .ui -> .py
         _build_translations()      # msgfmt: .po -> .qm
     try:
         version.write_builtin_version()
-        _run_setup()
+        _run_setup(git_version)
     finally:
         version.delete_builtin_version()
     # restore the old mask
@@ -38,9 +39,18 @@ def _setup_environment():
     win32 = os.path.join(os.path.dirname(__file__), 'win32')
     os.environ['PATH'] = win32 + os.pathsep + path
 
-def _run_setup():
+def _run_setup(git_version):
+    """Runs distutils.setup()"""
 
-    scripts = ['bin/git-cola', 'bin/git-difftool', 'bin/git-difftool-helper']
+    scripts = ['bin/git-cola']
+
+    # git-difftool first moved out of git.git's contrib area in git 1.6.3
+    if (os.environ.get('INSTALL_GIT_DIFFTOOL', '') or
+            not _check_min_version(version.git_difftool_min_ver,
+                                   git_version)):
+        scripts.append('bin/difftool/git-difftool')
+        scripts.append('bin/difftool/git-difftool-helper')
+
     if sys.platform == 'win32':
         scripts.append('win32/cola')
         scripts.append('win32/dirname')
@@ -101,13 +111,16 @@ def _check_python_version():
               % (version.python_min_ver, pyver)
         sys.exit(1)
 
-def _check_git_version():
+def _get_git_version():
+    """Returns the current GIT version"""
+    return utils.run_cmd('git', '--version').split()[2]
+
+def _check_git_version(git_ver):
     """Check the minimum GIT version
     """
-    gitver = utils.run_cmd('git', '--version').split()[2]
-    if not _check_min_version(version.git_min_ver, gitver):
+    if not _check_min_version(version.git_min_ver, git_ver):
         print >> sys.stderr, 'GIT version %s or newer required. Found %s' \
-              % (version.git_min_ver, gitver)
+              % (version.git_min_ver, git_ver)
         sys.exit(1)
 
 def _check_pyqt_version():
