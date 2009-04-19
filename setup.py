@@ -16,7 +16,7 @@ from cola import core
 def main():
     # ensure readable files
     old_mask = os.umask(0022)
-    git_version = _get_git_version()
+    git_version = version.get_git_version()
     if sys.argv[1] in ['install', 'build']:
         _setup_environment()
         _check_python_version()
@@ -33,6 +33,7 @@ def main():
     os.umask(old_mask)
 
 def _setup_environment():
+    """Adds win32/ to our path for windows only"""
     if sys.platform != 'win32':
         return
     path = os.environ['PATH']
@@ -46,8 +47,7 @@ def _run_setup(git_version):
 
     # git-difftool first moved out of git.git's contrib area in git 1.6.3
     if (os.environ.get('INSTALL_GIT_DIFFTOOL', '') or
-            not _check_min_version(version.git_difftool_min_ver,
-                                   git_version)):
+            not version.check('difftool-builtin', git_version)):
         scripts.append('bin/difftool/git-difftool')
         scripts.append('bin/difftool/git-difftool-helper')
 
@@ -60,14 +60,13 @@ def _run_setup(git_version):
     setup(name = 'git-cola',
           version = version.get_version(),
           license = 'GPLv2',
-          author = 'David Aguilar',
+          author = 'David Aguilar and contributors',
           author_email = 'davvid@gmail.com',
           url = 'http://cola.tuxfamily.org/',
           description = 'git-cola',
           long_description = 'A highly caffeinated git gui',
           scripts = scripts,
-          packages = ['cola', 'cola.gui', 'cola.views', 'cola.controllers',
-                      'cola.json', 'cola.jsonpickle'],
+          packages = [],
           data_files = [
             _app_path('share/cola/qm', '*.qm'),
             _app_path('share/cola/icons', '*.png'),
@@ -75,52 +74,41 @@ def _run_setup(git_version):
             _app_path('share/cola/styles/images', '*.png'),
             _app_path('share/applications', '*.desktop'),
             _app_path('share/doc/cola', '*.txt'),
+            _lib_path('cola/*.py'),
+            _lib_path('cola/controllers/*.py'),
+            _lib_path('cola/gui/*.py'),
+            _lib_path('cola/views/*.py'),
+            _lib_path('jsonpickle/*.py'),
+            _lib_path('simplejson/*.py'),
           ])
 
+
+def _lib_path(entry):
+    dirname = os.path.dirname(entry)
+    app_dir = os.path.join('share/cola/lib', dirname)
+    return (app_dir, glob(entry))
+
+
 def _app_path(dirname, entry):
-    if '/' in entry:
-        return (dirname, glob(entry))
-    else:
-        return (dirname, glob(os.path.join(dirname, entry)))
+    return (dirname, glob(os.path.join(dirname, entry)))
 
-def _version_to_list(version):
-    """Convert a version string to a list of numbers or strings
-    """
-    ver_list = []
-    for p in version.split('.'):
-        try:
-            n = int(p)
-        except ValueError:
-            n = p
-        ver_list.append(n)
-    return ver_list
-
-def _check_min_version(min_ver, ver):
-    """Check whether ver is greater or equal to min_ver
-    """
-    min_ver_list = _version_to_list(min_ver)
-    ver_list = _version_to_list(ver)
-    return min_ver_list <= ver_list
 
 def _check_python_version():
     """Check the minimum Python version
     """
     pyver = '.'.join(map(lambda x: str(x), sys.version_info))
-    if not _check_min_version(version.python_min_ver, pyver):
-        print >> sys.stderr, 'Python version %s or newer required. Found %s' \
-              % (version.python_min_ver, pyver)
+    if not version.check('python', pyver):
+        print >> sys.stderr, ('Python version %s or newer required.  '
+                              'Found %s' % (version.get('python'), pyver))
         sys.exit(1)
 
-def _get_git_version():
-    """Returns the current GIT version"""
-    return utils.run_cmd('git', '--version').split()[2]
 
 def _check_git_version(git_ver):
     """Check the minimum GIT version
     """
-    if not _check_min_version(version.git_min_ver, git_ver):
-        print >> sys.stderr, 'GIT version %s or newer required. Found %s' \
-              % (version.git_min_ver, git_ver)
+    if not version.check('git', git_ver):
+        print >> sys.stderr, ('GIT version %s or newer required.  '
+                              'Found %s' % (version.get('git'), git_ver))
         sys.exit(1)
 
 def _check_pyqt_version():
@@ -128,14 +116,15 @@ def _check_pyqt_version():
     """
     failed = False
     try:
-        pyqtver = _run_cmd('pyuic4', '--version').split()[-1]
+        pyqtver = _run_cmd(['pyuic4', '--version']).split()[-1]
     except IndexError:
         pyqtver = 'nothing'
         failed = True
-    if failed or not _check_min_version(version.pyqt_min_ver, pyqtver):
-        print >> sys.stderr, 'PYQT version %s or newer required. Found %s' \
-              % (version.pyqt_min_ver, pyqtver)
+    if failed or not version.check('pyqt', pyqtver):
+        print >> sys.stderr, ('PYQT version %s or newer required.  '
+                              'Found %s' % (version.get('pyqt'), pyqtver))
         sys.exit(1)
+
 
 def _dirty(src, dst):
     if not os.path.exists(dst):
@@ -143,6 +132,7 @@ def _dirty(src, dst):
     srcstat = os.stat(src)
     dststat = os.stat(dst)
     return srcstat[stat.ST_MTIME] > dststat[stat.ST_MTIME]
+
 
 def _workaround_pyuic4(src, dst):
     fh = open(src, 'r')
@@ -156,6 +146,7 @@ def _workaround_pyuic4(src, dst):
     fh.close()
     os.unlink(src)
 
+
 def _build_views():
     print 'running build_views'
     views = os.path.join('cola', 'gui')
@@ -168,6 +159,7 @@ def _build_views():
             utils.run_cmd('pyuic4', '-x', src, '-o', dsttmp)
             _workaround_pyuic4(dsttmp, dst)
 
+
 def _build_translations():
     print 'running build_translations'
     sources = glob('share/cola/po/*.po')
@@ -178,7 +170,7 @@ def _build_translations():
             print '\tmsgfmt --qt %s -o %s' % (src, dst)
             utils.run_cmd('msgfmt', '--qt', src, '-o', dst)
 
-def _run_cmd(*args):
+def _run_cmd(args):
     """Runs a command and returns its output"""
     argstr = utils.shell_quote(*args)
     pipe = os.popen(argstr)

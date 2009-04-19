@@ -7,8 +7,8 @@
 # you should have received as part of this distribution.
 
 import sys
-from cola.jsonpickle import util
-from cola.jsonpickle import tags
+import jsonpickle.util as util
+import jsonpickle.tags as tags
 
 
 class Unpickler(object):
@@ -42,9 +42,9 @@ class Unpickler(object):
 
     def restore(self, obj):
         """Restores a flattened object to its original python state.
-        
+
         Simply returns any of the basic builtin types
-        
+
         >>> u = Unpickler()
         >>> u.restore('hello world')
         'hello world'
@@ -80,7 +80,7 @@ class Unpickler(object):
                     # fail gracefully if the constructor requires arguments
                     self._mkref(obj)
                     return self._pop(obj)
-            
+
             # keep a obj->name mapping for use in the _isobjref() case
             self._mkref(instance)
 
@@ -147,13 +147,13 @@ class Unpickler(object):
 
     def _mkref(self, obj):
         """
-        >>> from cola.jsonpickle.tests.classes import Thing
+        >>> from jsonpickle.tests.classes import Thing
         >>> thing = Thing('referenced-thing')
         >>> u = Unpickler()
         >>> u._mkref(thing)
         '/'
         >>> u._namedict['/']
-        cola.jsonpickle.tests.classes.Thing("referenced-thing")
+        jsonpickle.tests.classes.Thing("referenced-thing")
 
         """
         name = self._refname()
@@ -163,15 +163,15 @@ class Unpickler(object):
 
 def loadclass(module_and_name):
     """Loads the module and returns the class.
-    
-    >>> loadclass('cola.jsonpickle.tests.classes.Thing')
-    <class 'cola.jsonpickle.tests.classes.Thing'>
+
+    >>> loadclass('jsonpickle.tests.classes.Thing')
+    <class 'jsonpickle.tests.classes.Thing'>
 
     >>> loadclass('example.module.does.not.exist.Missing')
-    
 
-    >>> loadclass('cola.jsonpickle.tests.classes.MissingThing')
-    
+
+    >>> loadclass('jsonpickle.tests.classes.MissingThing')
+
 
     """
     try:
@@ -182,12 +182,12 @@ def loadclass(module_and_name):
         return None
 
 def loadrepr(reprstr):
-    """Returns an instance of the object from the object's repr() string. It
-    involves the dynamic specification of code.
-    
-    >>> from cola.jsonpickle import tags
-    >>> loadrepr('cola.jsonpickle.tests.classes/cola.jsonpickle.tests.classes.Thing("json")')
-    cola.jsonpickle.tests.classes.Thing("json")
+    """Returns an instance of the object from the object's repr() string.
+    It involves the dynamic specification of code.
+
+    >>> from jsonpickle import tags
+    >>> loadrepr('jsonpickle.tests.classes/jsonpickle.tests.classes.Thing("json")')
+    jsonpickle.tests.classes.Thing("json")
 
     """
     module, evalstr = reprstr.split('/')

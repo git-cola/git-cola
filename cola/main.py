@@ -50,7 +50,7 @@ def main():
         from cola import git
         git.Git.execute(['git', 'update-index', '--refresh'])
         from cola import version
-        print "cola version", version.version
+        print "cola version", version.get_version()
         sys.exit(0)
 
     if opts.git:

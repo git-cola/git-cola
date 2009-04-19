@@ -6,16 +6,16 @@
 # This software is licensed as described in the file COPYING, which
 # you should have received as part of this distribution.
 import types
-from cola.jsonpickle import util
-from cola.jsonpickle import tags
+import jsonpickle.util as util
+import jsonpickle.tags as tags
 
 
 class Pickler(object):
     """Converts a Python object to a JSON representation.
-    
+
     Setting unpicklable to False removes the ability to regenerate
-    the objects into object types beyond what the standard simplejson
-    library supports.
+    the objects into object types beyond what the standard
+    simplejson library supports.
 
     Setting max_depth to a negative number means there is no
     limit to the depth jsonpickle should recurse into an
@@ -26,7 +26,7 @@ class Pickler(object):
     >>> p.flatten('hello world')
     'hello world'
     """
-    
+
     def __init__(self, unpicklable=True, max_depth=None):
         self.unpicklable = unpicklable
         ## The current recursion depth
@@ -68,9 +68,9 @@ class Pickler(object):
 
     def flatten(self, obj):
         """Takes an object and returns a JSON-safe representation of it.
-        
+
         Simply returns any of the basic builtin datatypes
-        
+
         >>> p = Pickler()
         >>> p.flatten('hello world')
         'hello world'
@@ -98,7 +98,7 @@ class Pickler(object):
         """
 
         self._push()
-        
+
         if self._depth == self._max_depth:
             return self._pop(repr(obj))
 
@@ -157,8 +157,7 @@ class Pickler(object):
         # else, what else? (methods, functions, old style classes...)
 
     def _flatten_dict_obj(self, obj, data):
-        """_flatten_dict_obj recursively calls to flatten() on a dictionary's values.
-        and places them into data.
+        """Recursively call flatten() and return json-friendly dict
         """
         for k, v in obj.iteritems():
             if util.is_function(v):
@@ -174,9 +173,9 @@ class Pickler(object):
         return data
 
 def _mktyperef(obj):
-    """Returns a typeref dictionary.  This is used to implement referencing.
+    """Return a typeref dictionary.  Used for references.
 
-    >>> from cola.jsonpickle import tags
+    >>> from jsonpickle import tags
     >>> _mktyperef(AssertionError)[tags.TYPE].rsplit('.', 1)[0]
     'exceptions'
 
@@ -187,10 +186,10 @@ def _mktyperef(obj):
 
 def _getclassdetail(obj):
     """Helper class to return the class of an object.
-    
-    >>> class Klass(object): pass
-    >>> _getclassdetail(Klass())
-    ('cola.jsonpickle.pickler', 'Klass')
+
+    >>> class Example(object): pass
+    >>> _getclassdetail(Example())
+    ('jsonpickle.pickler', 'Example')
     >>> _getclassdetail(25)
     ('__builtin__', 'int')
     >>> _getclassdetail(None)

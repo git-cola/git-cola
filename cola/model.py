@@ -9,8 +9,9 @@ import imp
 import types
 from cStringIO import StringIO
 
+import jsonpickle
+
 from cola import core
-from cola import jsonpickle
 from cola import observable
 
 

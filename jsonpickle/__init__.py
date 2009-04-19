@@ -6,10 +6,10 @@
 # This software is licensed as described in the file COPYING, which
 # you should have received as part of this distribution.
 
-"""Python library for serializing any arbitrary object graph into 
+"""Python library for serializing any arbitrary object graph into
 `JSON <http://www.json.org/>`_.  It can take almost any Python object and turn
 the object into JSON.  Additionally, it can reconstitute the object back into
-Python. 
+Python.
 
     >>> import jsonpickle
     >>> from jsonpickle.tests.classes import Thing
@@ -21,13 +21,13 @@ Create an object.
     A String
 
 Use jsonpickle to transform the object into a JSON string.
-    
+
     >>> pickled = jsonpickle.encode(obj)
     >>> print pickled
     {"py/object": "jsonpickle.tests.classes.Thing", "name": "A String", "child": null}
 
 Use jsonpickle to recreate a Python object from a JSON string
-    
+
     >>> unpickled = jsonpickle.decode(pickled)
     >>> str(unpickled.name)
     'A String'
@@ -35,11 +35,11 @@ Use jsonpickle to recreate a Python object from a JSON string
 .. warning::
 
     Loading a JSON string from an untrusted source represents a potential
-    security vulnerability.  jsonpickle makes no attempt to sanitize the input. 
+    security vulnerability.  jsonpickle makes no attempt to sanitize the input.
 
-The new object has the same type and data, but essentially is now a copy of 
+The new object has the same type and data, but essentially is now a copy of
 the original.
-    
+
     >>> obj == unpickled
     False
     >>> obj.name == unpickled.name
@@ -50,15 +50,15 @@ the original.
 If you will never need to load (regenerate the Python class from JSON), you can
 pass in the keyword unpicklable=False to prevent extra information from being
 added to JSON.
-    
+
     >>> oneway = jsonpickle.encode(obj, unpicklable=False)
     >>> print oneway
     {"name": "A String", "child": null}
 
 """
 
-from cola.jsonpickle.pickler import Pickler
-from cola.jsonpickle.unpickler import Unpickler
+from jsonpickle.pickler import Pickler
+from jsonpickle.unpickler import Unpickler
 
 __version__ = '0.2.0'
 __all__ = ('encode', 'decode')
@@ -97,16 +97,15 @@ class JSONPluginMgr(object):
         self.load_backend('json', 'dumps', 'loads', ValueError)
         self.load_backend('simplejson', 'dumps', 'loads', ValueError)
         self.load_backend('demjson', 'encode', 'decode', 'JSONDecodeError')
-        self.load_backend('cola.json', 'dumps', 'loads', ValueError)
 
     def _verify(self):
         """Ensures that we've loaded at least one JSON backend.
         """
-        if not self._verified:
-            raise AssertionError(
-                    'jsonpickle requires at least one of the following:\n'
-                    '    cjson, json (new in python2.6), simplejson, demjson'
-                    )
+        if self._verified:
+            return
+        raise AssertionError('jsonpickle requires at least one of the '
+                             'following:\n'
+                             '    cjson, python2.6, simplejson, or demjson')
 
     def load_backend(self, name, encode_name, decode_name, decode_exc):
         """Loads a backend by name.
@@ -145,7 +144,7 @@ class JSONPluginMgr(object):
             self._encoders[name] = getattr(mod, encode_name)
             self._decoders[name] = getattr(mod, decode_name)
         except AttributeError:
-            self._remove_backend(name)
+            self.remove_backend(name)
             return
 
         try:
@@ -156,7 +155,7 @@ class JSONPluginMgr(object):
                 ## simplejson uses the ValueError exception
                 self._decoder_exceptions[name] = decode_exc
         except AttributeError:
-            self._remove_backend(name)
+            self.remove_backend(name)
             return
 
         ## Setup the default args and kwargs for this encoder
@@ -168,9 +167,8 @@ class JSONPluginMgr(object):
         ## Indicate that we successfully loaded a JSON backend
         self._verified = True
 
-    def _remove_backend(self, name):
-        """Removes all entries for a particular backend
-
+    def remove_backend(self, name):
+        """Removes all entries for a particular backend.
         """
         self._encoders.pop(name, None)
         self._decoders.pop(name, None)
@@ -206,9 +204,11 @@ class JSONPluginMgr(object):
         for idx, name in enumerate(self._backend_names):
             try:
                 return self._decoders[name](string)
-            except self._decoder_exceptions[name]:
+            except self._decoder_exceptions[name], e:
                 if idx == len(self._backend_names) - 1:
-                    raise
+                    raise e
+                else:
+                    pass # and try a more forgiving encoder, e.g. demjson
 
     def set_preferred_backend(self, name):
         """Sets the preferred json backend.
@@ -254,6 +254,7 @@ json = JSONPluginMgr()
 set_preferred_backend = json.set_preferred_backend
 set_encoder_options = json.set_encoder_options
 load_backend = json.load_backend
+remove_backend = json.remove_backend
 
 
 def encode(value, unpicklable=True, max_depth=None, **kwargs):

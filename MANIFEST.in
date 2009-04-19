@@ -3,6 +3,16 @@ include share/cola/gui/.gitignore
 include share/cola/views/*.py
 include share/cola/po/*.po
 include share/cola/icons/*.png
+include cola/*.py
+include cola/controllers/*.py
+include cola/gui/*.py
+include cola/views/*.py
+include jsonpickle/LICENSE
+include jsonpickle/*.py
+include jsonpickle/tests/*.py
+include simplejson/LICENSE
+include simplejson/*.py
+include simplejson/tests/*.py
 include share/cola/styles/*.qss
 include share/cola/styles/images/*.png
 include share/applications/*.desktop

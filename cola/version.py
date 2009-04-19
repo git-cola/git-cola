@@ -9,12 +9,30 @@ from cola import git
 from cola import errors
 from cola import utils
 
+# minimum version requirements
+_versions = {
+    'git': '1.5.2',
+    'python': '2.4',
+    'pyqt': '4.3',
+    # git-difftool moved out of contrib in git 1.6.3
+    'difftool-builtin': '1.6.3',
+    # git-mergetool learned --no-prompt in 1.6.2
+    'mergetool-no-prompt': '1.6.2',
+}
+
+def get(key):
+    """Returns an entry from the known versions table"""
+    return _versions.get(key)
+
+# cached to avoid recalculation
+_version = None
+
 class VersionUnavailable(Exception):
     pass
 
+
 def git_describe_version():
     """Inspect the cola git repository and return the current version."""
-    path = sys.path[0]
     try:
         v = git.Git.execute(['git', 'describe', '--tags', '--abbrev=4'],
                             with_stderr=True)
@@ -30,6 +48,7 @@ def git_describe_version():
         v += '-dirty'
     return re.sub('-', '.', utils.strip_prefix('v', v))
 
+
 def builtin_version():
     """Return the builtin version or calculate it as needed."""
     try:
@@ -39,9 +58,11 @@ def builtin_version():
     else:
         return bv.version
 
+
 def _builtin_version_file(ext = 'py'):
     """Returns the path to cola/builtin_version.py."""
     return os.path.join(sys.path[0], 'cola', 'builtin_version.%s' % ext)
+
 
 def write_builtin_version():
     """Writes cola/builtin_version.py."""
@@ -55,13 +76,11 @@ def write_builtin_version():
 
 def delete_builtin_version():
     """Deletes cola/builtin_version.py."""
-    for ext in ['py', 'pyc', 'pyo']:
+    for ext in ('py', 'pyc', 'pyo'):
         fn = _builtin_version_file(ext)
         if os.path.exists(fn):
             os.remove(fn)
 
-# cached to avoid recalculation
-_version = None
 
 def get_version():
     """Returns the builtin version or calculates the current version."""
@@ -78,10 +97,34 @@ def get_version():
     return _version
 
 
-# minimum version requirements
-git_min_ver = '1.5.2'
-python_min_ver = '2.4'
-pyqt_min_ver = '4.3'
+def check_version(min_ver, ver):
+    """Check whether ver is greater or equal to min_ver
+    """
+    min_ver_list = version_to_list(min_ver)
+    ver_list = version_to_list(ver)
+    return min_ver_list <= ver_list
 
-# git-difftool moved out of contrib in git 1.6.3
-git_difftool_min_ver = '1.6.3'
+
+def check(key, ver):
+    """Checks if a version is greater than the known version for <what>"""
+    return check_version(get(key), ver)
+
+
+def version_to_list(version):
+    """Convert a version string to a list of numbers or strings
+    """
+    ver_list = []
+    for p in version.split('.'):
+        try:
+            n = int(p)
+        except ValueError:
+            n = p
+        ver_list.append(n)
+    return ver_list
+
+
+def get_git_version():
+    """Returns the current GIT version"""
+    return utils.run_cmd('git', '--version').split()[2]
+
+
