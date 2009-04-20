@@ -284,7 +284,7 @@ class QObserver(observer.Observer, QtCore.QObject):
                     date = QtCore.QDate.fromString(value, fmt)
                     if date:
                         widget.setDate(date)
-                elif isinstance(widget, QtCore.QComboBox):
+                elif isinstance(widget, QtGui.QComboBox):
                     self.model.set_param(param+'_item', '')
                     widget.clear()
                     for item in value:
