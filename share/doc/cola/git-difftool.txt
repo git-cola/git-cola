@@ -30,8 +30,8 @@ OPTIONS
 --tool=<tool>::
 	Use the diff tool specified by <tool>.
 	Valid merge tools are:
-	kdiff3, kompare, tkdiff, meld, xxdiff, emerge,
-	vimdiff, gvimdiff, ecmerge, and opendiff
+	kdiff3, kompare, tkdiff, meld, xxdiff, emerge, vimdiff, gvimdiff,
+	ecmerge, diffuse and opendiff
 +
 If a diff tool is not specified, 'git-difftool'
 will use the configuration variable `diff.tool`.  If the
@@ -85,9 +85,6 @@ SEE ALSO
 linkgit:git-diff[1]::
 	 Show changes between commits, commit and working tree, etc
 
-linkcola:git-cola[1]::
-	'git-difftool' is part of the 'git-cola' project.
-
 linkgit:git-mergetool[1]::
 	Run merge conflict resolution tools to resolve merge conflicts
 
@@ -108,9 +105,6 @@ GIT
 Part of the linkgit:git[1] suite
 
 
-NOTE: Patches to add 'git-difftool' to git.git's contrib area
-have been sent to the git mailing list.  Packagers are encouraged
-to use git.git's contrib/difftool/ scripts instead of the ones
-distributed with cola.  If git decides to make difftool part of
-its core command set then cola will promptly add build rules to
-conditionally install difftool based on the user's git version.
+NOTE: git-difftool is an official git command of git-1.6.3.
+git-cola keeps a version around for compatibility with older
+versions of git only.

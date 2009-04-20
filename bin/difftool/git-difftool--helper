@@ -1,7 +1,5 @@
 #!/bin/sh
-# git-difftool-helper is a GIT_EXTERNAL_DIFF-compatible diff tool launcher.
-# It supports kdiff3, kompare, tkdiff, xxdiff, meld, opendiff,
-# emerge, ecmerge, vimdiff, gvimdiff, and custom user-configurable tools.
+# git-difftool--helper is a GIT_EXTERNAL_DIFF-compatible diff tool launcher.
 # This script is typically launched by using the 'git difftool'
 # convenience command.
 #
@@ -45,7 +43,7 @@ launch_merge_tool () {
 		"$merge_tool_path" --auto \
 			--L1 "$basename (A)" \
 			--L2 "$basename (B)" \
-			-o "$MERGED" "$LOCAL" "$REMOTE" \
+			"$LOCAL" "$REMOTE" \
 			> /dev/null 2>&1
 		;;
 
@@ -54,34 +52,34 @@ launch_merge_tool () {
 		;;
 
 	tkdiff)
-		"$merge_tool_path" -o "$MERGED" "$LOCAL" "$REMOTE"
+		"$merge_tool_path" "$LOCAL" "$REMOTE"
 		;;
 
 	meld)
 		"$merge_tool_path" "$LOCAL" "$REMOTE"
 		;;
 
+	diffuse)
+		"$merge_tool_path" "$LOCAL" "$REMOTE" | cat
+		;;
+
 	vimdiff)
-		"$merge_tool_path" -c "wincmd l" "$LOCAL" "$REMOTE"
+		"$merge_tool_path" -d -c "wincmd l" "$LOCAL" "$REMOTE"
 		;;
 
 	gvimdiff)
-		"$merge_tool_path" -c "wincmd l" -f "$LOCAL" "$REMOTE"
+		"$merge_tool_path" -d -c "wincmd l" -f "$LOCAL" "$REMOTE"
 		;;
 
 	xxdiff)
 		"$merge_tool_path" \
-			-X \
-			-R 'Accel.SaveAsMerged: "Ctrl-S"' \
 			-R 'Accel.Search: "Ctrl+F"' \
 			-R 'Accel.SearchForward: "Ctrl-G"' \
-			--merged-file "$MERGED" \
 			"$LOCAL" "$REMOTE"
 		;;
 
 	opendiff)
-		"$merge_tool_path" "$LOCAL" "$REMOTE" \
-			-merge "$MERGED" | cat
+		"$merge_tool_path" "$LOCAL" "$REMOTE" | cat
 		;;
 
 	ecmerge)
@@ -134,6 +132,12 @@ init_merge_tool_path() {
 	merge_tool_path=$(git config mergetool."$1".path)
 	if test -z "$merge_tool_path"; then
 		case "$1" in
+		vimdiff)
+			merge_tool_path=vim
+			;;
+		gvimdiff)
+			merge_tool_path=gvim
+			;;
 		emerge)
 			merge_tool_path=emacs
 			;;
@@ -168,9 +172,9 @@ if test -z "$merge_tool"; then
 	if test -n "$DISPLAY"; then
 		# If gnome then prefer meld, otherwise, prefer kdiff3 or kompare
 		if test -n "$GNOME_DESKTOP_SESSION_ID" ; then
-			merge_tool_candidates="meld kdiff3 kompare tkdiff xxdiff gvimdiff"
+			merge_tool_candidates="meld kdiff3 kompare tkdiff xxdiff gvimdiff diffuse"
 		else
-			merge_tool_candidates="kdiff3 kompare tkdiff xxdiff meld gvimdiff"
+			merge_tool_candidates="kdiff3 kompare tkdiff xxdiff meld gvimdiff diffuse"
 		fi
 	fi
 	if echo "${VISUAL:-$EDITOR}" | grep 'emacs' > /dev/null 2>&1; then
