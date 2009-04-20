@@ -36,10 +36,8 @@ echo "Building installer for git-cola v$VERSION"
 python setup.py --quiet install \
 	--root="$ROOT" \
 	--prefix='.' \
-	--install-scripts=bin ||
-echo "Error building cola" && exit 1
-
-rm -rf "$ROOT"/lib build
+	--install-scripts=bin
+rm -rf "$ROOT"/lib "$ROOT"/Lib build
 
 mv $BASENAME/bin/git-cola $BASENAME/bin/git-cola.pyw
 mkdir -p $ETC 2>/dev/null
