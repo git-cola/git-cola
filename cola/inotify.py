@@ -46,6 +46,7 @@ class GitNotifier(QtCore.QThread):
     def __init__(self, receiver, git, timeout=250):
         """Set up the pyinotify thread"""
         QtCore.QThread.__init__(self)
+        self.setTerminationEnabled(True)
 
         ## QApplication receiver of Qt events
         self._receiver = receiver

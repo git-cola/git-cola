@@ -652,6 +652,7 @@ class Controller(QObserver):
             os.unlink(filename)
         if self.has_inotify():
             self.inotify_thread.abort = True
+            self.inotify_thread.terminate()
             self.inotify_thread.wait()
         self.view.close()
 
