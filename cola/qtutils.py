@@ -22,7 +22,7 @@ def input(msg, title=None):
     """Presents the user with an input widget and returns the input."""
     if title is None:
         title = msg
-    parent = QtGui.qApp.activeWindow()
+    parent = QtGui.QApplication.instance().activeWindow()
     result = QtGui.QInputDialog.getText(parent, msg, title)
     return (unicode(result[0]), result[1])
 
@@ -139,8 +139,9 @@ def question(parent, title, message, default=True):
 
 def set_clipboard(text):
     """Sets the copy/paste buffer to text."""
-    QtGui.qApp.clipboard().setText(text, QtGui.QClipboard.Clipboard)
-    QtGui.qApp.clipboard().setText(text, QtGui.QClipboard.Selection)
+    clipboard = QtGui.QApplication.instance().clipboard()
+    clipboard.setText(text, QtGui.QClipboard.Clipboard)
+    clipboard.setText(text, QtGui.QClipboard.Selection)
 
 def set_selected_item(widget, idx):
     """Sets a the currently selected item to the item at index idx."""
@@ -162,7 +163,7 @@ def set_items(widget, items):
 
 def tr(txt):
     """Translate a string into a local language."""
-    return unicode(QtGui.qApp.translate('', txt))
+    return unicode(QtGui.QApplication.instance().translate('', txt))
 
 def get_icon_file(filename, staged=False, untracked=False):
     """Returns a file path representing a corresponding file path."""
