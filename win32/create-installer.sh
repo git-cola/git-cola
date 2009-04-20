@@ -33,7 +33,12 @@ TARGET="$ROOT".exe
 
 echo "Building installer for git-cola v$VERSION"
 
-python setup.py --quiet install --prefix="$ROOT" --install-scripts=bin
+python setup.py --quiet install \
+	--root="$ROOT" \
+	--prefix='.' \
+	--install-scripts=bin ||
+echo "Error building cola" && exit 1
+
 rm -rf "$ROOT"/lib build
 
 mv $BASENAME/bin/git-cola $BASENAME/bin/git-cola.pyw

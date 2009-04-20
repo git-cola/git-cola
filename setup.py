@@ -49,7 +49,7 @@ def _run_setup(git_version):
     if (os.environ.get('INSTALL_GIT_DIFFTOOL', '') or
             not version.check('difftool-builtin', git_version)):
         scripts.append('bin/difftool/git-difftool')
-        scripts.append('bin/difftool/git-difftool-helper')
+        scripts.append('bin/difftool/git-difftool--helper')
 
     if sys.platform == 'win32':
         scripts.append('win32/cola')

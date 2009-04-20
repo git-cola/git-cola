@@ -6,7 +6,7 @@ all:
 	$(PYTHON) setup.py build && rm -rf build
 
 install:
-	$(PYTHON) setup.py install \
+	$(PYTHON) setup.py --quiet install \
 		--prefix=$(prefix) \
 		--root=$(DESTDIR) \
 		--force && \
