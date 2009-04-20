@@ -116,7 +116,7 @@ def get_icon(icon_file):
     """Returns the full path to an icon file given a basename."""
     return os.path.join(ICONSDIR, icon_file)
 
-def fork(*args):
+def fork(args):
     """Launches a command in the background."""
     args = tuple([core.encode(a) for a in args])
     if os.name in ('nt', 'dos'):

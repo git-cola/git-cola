@@ -87,7 +87,7 @@ class MergeController(QObserver):
     def viz_revision(self):
         revision = self.model.get_revision()
         browser = self.model.get_history_browser()
-        utils.fork(browser, revision)
+        utils.fork([browser, revision])
 
     def squash_update(self):
         if self.view.checkbox_squash.isChecked():

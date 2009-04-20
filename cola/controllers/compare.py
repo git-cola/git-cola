@@ -4,6 +4,7 @@ import os
 
 from cola import utils
 from cola import qtutils
+from cola import difftool
 from cola.qobserver import QObserver
 from cola.views import CompareView
 from cola.views import BranchCompareView
@@ -176,10 +177,7 @@ class BranchCompareController(QObserver):
             arg = self.diff_arg
         else:
             arg = '%s..%s' % (self.start, self.end)
-
-        command = ['perl', utils.get_libexec('git-difftool'),
-                   '--no-prompt', arg, '--', filename]
-        utils.fork(*command)
+        difftool.launch([arg, '--', filename])
 
 
 class CompareController(QObserver):
@@ -323,6 +321,4 @@ class CompareController(QObserver):
         start = self.model.get_revision_start()
         end = self.model.get_revision_end()
         arg = '%s..%s' % (start, end)
-        command = ['perl', utils.get_libexec('git-difftool'),
-                   '--no-prompt', arg, '--', filename]
-        utils.fork(*command)
+        difftool.launch([arg, '--', filename])

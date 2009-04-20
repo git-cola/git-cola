@@ -11,6 +11,7 @@ from cola import utils
 from cola import qtutils
 from cola import version
 from cola import inotify
+from cola import difftool
 from cola.qobserver import QObserver
 from cola.views import AboutView
 from cola.views.drawer import Drawer
@@ -378,9 +379,9 @@ class Controller(QObserver):
             return
         editor = self.model.get_editor()
         if 'vi' in editor:
-            utils.fork(self.model.get_editor(), filename, '+'+lineno)
+            utils.fork([self.model.get_editor(), filename, '+'+lineno])
         else:
-            utils.fork(self.model.get_editor(), filename)
+            utils.fork([self.model.get_editor(), filename])
 
     def gen_search(self, searchtype, browse=False):
         def search_handler():
@@ -523,26 +524,31 @@ class Controller(QObserver):
         qtutils.set_clipboard(filename)
 
     def mergetool(self):
+        """Launches git-mergetool on a file path"""
         filename = self.get_selected_filename(staged=False)
         if not filename or filename not in self.model.get_unmerged():
             return
-        utils.fork('xterm', '-e', 'git', 'mergetool', filename)
+        if version.check('mergetool-no-prompt',
+                         self.model.git.version().split()[2]):
+            utils.fork(['git', 'mergetool', '--no-prompt', '--', filename])
+        else:
+            utils.fork(['xterm', '-e', 'git', 'mergetool', '--', filename])
 
     def edit_file(self, staged=True):
         filename = self.get_selected_filename(staged=staged)
         if filename:
-            utils.fork(self.model.get_editor(), filename)
+            utils.fork([self.model.get_editor(), filename])
 
     def edit_diff(self, staged=True):
         filename = self.get_selected_filename(staged=staged)
         if filename:
-            args = ['perl', utils.get_libexec('git-difftool'), '--no-prompt']
+            args = []
             if staged:
                 args.append('--cached')
             if self.view.amend_is_checked():
                 args.append('HEAD^')
             args.extend(['--', filename])
-            utils.fork(*args)
+            difftool.launch(args)
 
     def delete_files(self, staged=False):
         rescan=False
@@ -588,8 +594,8 @@ class Controller(QObserver):
                                          os.getcwd())
         if not dirname:
             return
-        utils.fork('python', sys.argv[0],
-                   '--repo', self._quote_repopath(dirname))
+        utils.fork(['python', sys.argv[0],
+                    '--repo', self._quote_repopath(dirname)])
 
     def clone_repo(self):
         """Clones a git repository"""
@@ -630,8 +636,8 @@ class Controller(QObserver):
         qtutils.log(*self.model.git.clone(url, destdir,
                                           with_stderr=True,
                                           with_status=True))
-        utils.fork('python', sys.argv[0],
-                   '--repo', self._quote_repopath(destdir))
+        utils.fork(['python', sys.argv[0],
+                    '--repo', self._quote_repopath(destdir)])
 
     def has_inotify(self):
         return self.inotify_thread and self.inotify_thread.isRunning()
@@ -940,12 +946,12 @@ class Controller(QObserver):
     def viz_all(self):
         """Visualizes the entire git history using gitk."""
         browser = self.model.get_history_browser()
-        utils.fork('sh', '-c', browser, '--all')
+        utils.fork(['sh', '-c', browser, '--all'])
 
     def viz_current(self):
         """Visualizes the current branch's history using gitk."""
         browser = self.model.get_history_browser()
-        utils.fork('sh', '-c', browser, self.model.get_currentbranch())
+        utils.fork(['sh', '-c', browser, self.model.get_currentbranch()])
 
     def load_gui_settings(self):
         try:
