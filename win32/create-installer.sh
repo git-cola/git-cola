@@ -36,7 +36,6 @@ echo "Building installer for git-cola v$VERSION"
 python setup.py --quiet install --prefix="$ROOT" --install-scripts=bin
 rm -rf "$ROOT"/lib build
 
-find $BASENAME -name '*.py[co]' -print0 | xargs -0 rm
 mv $BASENAME/bin/git-cola $BASENAME/bin/git-cola.pyw
 mkdir -p $ETC 2>/dev/null
 cp win32/git.bmp win32/gpl-2.0.rtf win32/git.ico $ETC
