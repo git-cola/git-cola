@@ -3,13 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to git-cola's documentation!
-====================================
+git-cola documentation
+======================
 
-Contents:
+API Reference:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 5
+
+   models
+   views
+   controllers
 
 Indices and tables
 ==================
