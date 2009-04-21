@@ -46,6 +46,7 @@ class Controller(QObserver):
     MODE_AMEND = 3
     MODE_BRANCH = 4
     MODE_GREP = 5
+    MODE_COMPARE = 6
 
     def __init__(self, model, view):
         """
@@ -73,6 +74,9 @@ class Controller(QObserver):
 
         # Diff display context menu
         view.display_text.contextMenuEvent = self.diff_context_menu_event
+
+        # What to compare against by default
+        self.head = 'HEAD'
 
         # Binds model params to their equivalent view widget
         self.add_observables('commitmsg')
@@ -153,6 +157,7 @@ class Controller(QObserver):
             menu_checkout_branch = self.checkout_branch,
             menu_diff_branch = self.diff_branch,
             menu_branch_compare = self.branch_compare,
+            menu_branch_diff = self.diff_arbitrary,
 
             # Commit Menu
             menu_rescan = self.rescan,
@@ -449,6 +454,7 @@ class Controller(QObserver):
 
     def commit(self):
         self.reset_mode()
+        self.head = 'HEAD'
         msg = self.model.get_commitmsg()
         if not msg:
             error_msg = self.tr(''
@@ -484,12 +490,6 @@ class Controller(QObserver):
             self.model.set_commitmsg('')
         self.log(status, output)
 
-    def get_diff_ref(self):
-        if self.view.amend_is_checked():
-            return 'HEAD^'
-        else:
-            return 'HEAD'
-
     def get_selected_filename(self, staged=False):
         if staged:
             return self.get_staged_item()
@@ -517,8 +517,8 @@ class Controller(QObserver):
             scrollbar.setValue(scrollvalue)
 
     def view_diff_for_row(self, idx, staged):
+        ref = self.head
         self.set_mode(staged)
-        ref = self.get_diff_ref()
         diff, filename = self.model.get_diff_details(idx, ref, staged=staged)
         self.view.set_display(diff)
         self.view.show_diff()
@@ -546,9 +546,7 @@ class Controller(QObserver):
             args = []
             if staged:
                 args.append('--cached')
-            if self.view.amend_is_checked():
-                args.append('HEAD^')
-            args.extend(['--', filename])
+            args.extend([self.head, '--', filename])
             difftool.launch(args)
 
     def delete_files(self, staged=False):
@@ -685,6 +683,7 @@ class Controller(QObserver):
         """Clears the current commit message and rescans.
         This is called when the "new commit" radio button is clicked."""
         self.reset_mode()
+        self.head = 'HEAD'
         self.model.set_commitmsg('')
         self.rescan()
 
@@ -699,6 +698,7 @@ class Controller(QObserver):
                                 'You cannot amend while merging.')
         else:
             self.reset_mode()
+            self.head = 'HEAD^'
             self.model.get_prev_commitmsg()
             self.rescan()
 
@@ -720,7 +720,7 @@ class Controller(QObserver):
         mode = self.mode
 
         # get new values
-        self.model.update_status(amend=self.view.amend_is_checked())
+        self.model.update_status(head=self.head)
 
         # Setup initial tree items
         self.view.set_staged(self.model.get_staged())
@@ -813,6 +813,19 @@ class Controller(QObserver):
 
     #####################################################################
     # diff gui
+    def diff_arbitrary(self):
+        """Diff against an arbitrary revision, branch, tag, etc"""
+        branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
+                                   self.view,
+                                   ['HEAD^']
+                                   + self.model.get_all_branches()
+                                   + self.model.get_tags())
+        if not branch:
+            return
+        self.mode = Controller.MODE_COMPARE
+        self.head = branch
+        self.rescan()
+
     def diff_branch(self):
         branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
                                    self.view,
@@ -828,9 +841,6 @@ class Controller(QObserver):
         filename = choose_from_list('Select File', self.view, files)
         if not filename:
             return
-        status = ('Diff of "%s" between the work tree and %s'
-                  % (filename, branch))
-
         diff = self.model.diff_helper(filename=filename,
                                       cached=False,
                                       reverse=True,
@@ -925,7 +935,7 @@ class Controller(QObserver):
         self.log(*self.model.reset_helper(selected))
 
     def undo_changes(self):
-        """Reverts local changes back to whatever's in HEAD."""
+        """Reverts local changes back to whatever's in self.head."""
         modified = self.model.get_modified()
         items_to_undo = self.view.get_modified(modified)
         if items_to_undo:
@@ -937,7 +947,7 @@ class Controller(QObserver):
                                     default=False):
                 return
 
-            self.log(*self.model.git.checkout('HEAD', '--',
+            self.log(*self.model.git.checkout(self.head, '--',
                                               with_stderr=True,
                                               with_status=True,
                                               *items_to_undo))

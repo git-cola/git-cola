@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>632</width>
+    <width>684</width>
     <height>327</height>
    </rect>
   </property>
@@ -430,8 +430,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>632</width>
-     <height>29</height>
+     <width>684</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="commit_menu" >
@@ -532,6 +532,7 @@
      <addaction name="menu_diff_branch" />
     </widget>
     <addaction name="menuView" />
+    <addaction name="menu_branch_diff" />
     <addaction name="menu_branch_compare" />
     <addaction name="separator" />
     <addaction name="menu_create_branch" />
@@ -910,6 +911,11 @@
   <action name="menu_help_about" >
    <property name="text" >
     <string>About</string>
+   </property>
+  </action>
+  <action name="menu_branch_diff" >
+   <property name="text" >
+    <string>Diff...</string>
    </property>
   </action>
  </widget>

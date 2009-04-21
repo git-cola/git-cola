@@ -517,7 +517,7 @@ class Model(model.Model):
         if template:
             self.load_commitmsg(template)
 
-    def update_status(self, amend=False):
+    def update_status(self, head='HEAD'):
         # This allows us to defer notification until the
         # we finish processing data
         notify_enabled = self.get_notify()
@@ -526,7 +526,7 @@ class Model(model.Model):
         (self.staged,
          self.modified,
          self.unmerged,
-         self.untracked) = self.get_workdir_state(amend=amend)
+         self.untracked) = self.get_workdir_state(head=head)
         # NOTE: the model's unstaged list holds an aggregate of the
         # the modified, unmerged, and untracked file lists.
         self.set_unstaged(self.modified + self.unmerged + self.untracked)
@@ -895,14 +895,11 @@ class Model(model.Model):
                                     with_status=True)
         return status != 0
 
-    def get_workdir_state(self, amend=False):
+    def get_workdir_state(self, head='HEAD'):
         """Returns a tuple of staged, unstaged, untracked, and unmerged files
         """
         self.git.update_index(refresh=True)
         self.partially_staged = set()
-        head = 'HEAD'
-        if amend:
-            head = 'HEAD^'
         (staged, modified, unmerged, untracked) = ([], [], [], [])
         try:
             output = self.git.diff_index(head, with_stderr=True)
