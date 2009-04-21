@@ -166,7 +166,7 @@ def _build_translations():
     sources = glob(resources.share('po', '*.po'))
     sources = glob('share/git-cola/po/*.po')
     for src in sources:
-        dst = resources.qm(os.path.basename(src)[:-3] + '.qm')
+        dst = resources.qm(os.path.basename(src)[:-3])
         if _dirty(src, dst):
             print '\tmsgfmt --qt %s -o %s' % (src, dst)
             utils.run_cmd('msgfmt', '--qt', src, '-o', dst)
