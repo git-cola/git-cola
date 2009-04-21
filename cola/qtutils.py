@@ -8,6 +8,7 @@ from PyQt4 import QtGui
 
 from cola import core
 from cola import utils
+from cola import resources
 
 LOGGER = None
 
@@ -119,9 +120,9 @@ def save_dialog(parent, title, filename=''):
     return unicode(QtGui.QFileDialog
                         .getSaveFileName(parent, title_tr, filename))
 
-def get_icon(filename):
+def get_icon(basename):
     """Given a basename returns a QIcon from the corresponding cola icon."""
-    return QtGui.QIcon(utils.get_icon(filename))
+    return QtGui.QIcon(resources.icon(basename))
 
 def question(parent, title, message, default=True):
     """Launches a QMessageBox question with the provided title and message.
@@ -169,11 +170,11 @@ def get_icon_file(filename, staged=False, untracked=False):
     """Returns a file path representing a corresponding file path."""
     if staged:
         if os.path.exists(core.encode(filename)):
-            icon_file = utils.get_icon('staged.png')
+            icon_file = resources.icon('staged.png')
         else:
-            icon_file = utils.get_icon('removed.png')
+            icon_file = resources.icon('removed.png')
     elif untracked:
-        icon_file = utils.get_icon('untracked.png')
+        icon_file = resources.icon('untracked.png')
     else:
         icon_file = utils.get_file_icon(filename)
     return icon_file

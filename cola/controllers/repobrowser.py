@@ -6,6 +6,7 @@ from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QMenu
 
 from cola import utils
+from cola import resources
 from cola import qtutils
 from cola.views import CommitView
 from cola.qobserver import QObserver
@@ -198,8 +199,8 @@ class RepoBrowserController(QObserver):
         self.view.commit_text.setText('')
         self.view.revision.setText('')
 
-        dir_icon = utils.get_icon('dir.png')
-        file_icon = utils.get_icon('generic.png')
+        dir_icon = resources.icon('dir.png')
+        file_icon = resources.icon('generic.png')
         creator = qtutils.create_listwidget_item
 
         qtutils.set_items(self.view.commit_list,

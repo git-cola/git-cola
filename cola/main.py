@@ -6,6 +6,7 @@ import signal
 import sys
 import os
 
+from cola import resources
 from cola import utils
 from cola import core
 
@@ -99,7 +100,7 @@ def main():
         if os.path.isabs(opts.style) or os.path.isfile(opts.style):
             filename = opts.style
         else:
-            filename = utils.get_stylesheet(opts.style)
+            filename = resources.stylesheet(opts.style)
 
         if filename and os.path.exists(filename):
             # Automatically register each subdirectory in the style dir
@@ -110,12 +111,12 @@ def main():
             stylesheet.close()
             app.setStyleSheet(style)
         else:
-            _setup_resource_dir(utils.get_style_dir())
+            _setup_resource_dir(resources.style_dir())
             print >> sys.stderr, ("warn: '%s' is not a valid style."
                                   % opts.style)
     else:
         # Add the default style dir so that we find our icons
-        _setup_resource_dir(utils.get_style_dir())
+        _setup_resource_dir(resources.style_dir())
 
     # Initialize the model/view/controller framework
     model = Model()
@@ -144,7 +145,7 @@ def main():
 def _setup_resource_dir(dirname):
     """Adds resource directories to Qt's search path"""
     from PyQt4 import QtCore
-    resource_paths = utils.get_resource_dirs(dirname)
+    resource_paths = resources.resource_dirs(dirname)
     for r in resource_paths:
         basename = os.path.basename(r)
         QtCore.QDir.setSearchPaths(basename, [r])

@@ -12,6 +12,7 @@ from cola import qtutils
 from cola import version
 from cola import inotify
 from cola import difftool
+from cola import resources
 from cola.qobserver import QObserver
 from cola.views import AboutView
 from cola.views.drawer import Drawer
@@ -180,7 +181,7 @@ class Controller(QObserver):
             # Help Menu
             menu_help_about = self.about,
             menu_help_docs =
-                lambda: self.model.git.web__browse(utils.get_htmldocs()),
+                lambda: self.model.git.web__browse(resources.html_docs()),
             )
 
         # Delegate window events here

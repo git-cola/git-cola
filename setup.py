@@ -11,6 +11,7 @@ build_scripts.first_line_re = re.compile('^should not match$')
 
 from cola import version
 from cola import utils
+from cola import resources
 from cola import core
 
 def main():
@@ -68,12 +69,12 @@ def _run_setup(git_version):
           scripts = scripts,
           packages = [],
           data_files = [
-            _app_path('share/cola/qm', '*.qm'),
-            _app_path('share/cola/icons', '*.png'),
-            _app_path('share/cola/styles', '*.qss'),
-            _app_path('share/cola/styles/images', '*.png'),
+            _app_path('share/git-cola/qm', '*.qm'),
+            _app_path('share/git-cola/icons', '*.png'),
+            _app_path('share/git-cola/styles', '*.qss'),
+            _app_path('share/git-cola/styles/images', '*.png'),
             _app_path('share/applications', '*.desktop'),
-            _app_path('share/doc/cola', '*.txt'),
+            _app_path('share/doc/git-cola', '*.txt'),
             _lib_path('cola/*.py'),
             _lib_path('cola/controllers/*.py'),
             _lib_path('cola/gui/*.py'),
@@ -85,7 +86,7 @@ def _run_setup(git_version):
 
 def _lib_path(entry):
     dirname = os.path.dirname(entry)
-    app_dir = os.path.join('share/cola/lib', dirname)
+    app_dir = os.path.join('share/git-cola/lib', dirname)
     return (app_dir, glob(entry))
 
 
@@ -162,10 +163,10 @@ def _build_views():
 
 def _build_translations():
     print 'running build_translations'
-    sources = glob('share/cola/po/*.po')
+    sources = glob(resources.share('po', '*.po'))
+    sources = glob('share/git-cola/po/*.po')
     for src in sources:
-        dst = os.path.join('share', 'cola', 'qm',
-                           os.path.basename(src)[:-3] + '.qm')
+        dst = resources.qm(os.path.basename(src)[:-3] + '.qm')
         if _dirty(src, dst):
             print '\tmsgfmt --qt %s -o %s' % (src, dst)
             utils.run_cmd('msgfmt', '--qt', src, '-o', dst)

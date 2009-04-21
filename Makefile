@@ -16,21 +16,21 @@ install:
 	rm -rf build
 
 doc:
-	cd share/doc/cola && $(MAKE) all
+	cd share/doc/git-cola && $(MAKE) all
 
 install-doc:
-	$(MAKE) -C share/doc/cola install
+	$(MAKE) -C share/doc/git-cola install
 
 install-html:
-	$(MAKE) -C share/doc/cola install-html
+	$(MAKE) -C share/doc/git-cola install-html
 
 uninstall:
 	rm -rf  "$(DESTDIR)$(prefix)"/bin/git-cola \
 		"$(DESTDIR)$(prefix)"/bin/git-difftool* \
 		"$(DESTDIR)$(prefix)"/bin/cola \
 		"$(DESTDIR)$(prefix)"/share/applications/cola.desktop \
-		"$(DESTDIR)$(prefix)"/share/cola \
-		"$(DESTDIR)$(prefix)"/share/doc/cola
+		"$(DESTDIR)$(prefix)"/share/git-cola \
+		"$(DESTDIR)$(prefix)"/share/doc/git-cola
 
 test:
 	@env PYTHONPATH=$(CURDIR):$(PYTHONPATH) \
@@ -42,7 +42,7 @@ coverage:
 		--cover-package=cola
 
 clean:
-	for dir in share/doc/cola test; do \
+	for dir in share/doc/git-cola test; do \
 		(cd $$dir && $(MAKE) clean); \
 	done
 	find cola -name '*.py[co]' -print0 | xargs -0 rm -f

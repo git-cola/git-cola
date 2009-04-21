@@ -2,7 +2,7 @@
 Name=Cola
 Comment=Highly caffeinated git gui
 Exec=git-cola
-Icon=/usr/share/cola/icons/git.png
+Icon=/usr/share/git-cola/icons/git.png
 StartupNotify=true
 Terminal=false
 Type=Application

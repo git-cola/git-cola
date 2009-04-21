@@ -8,6 +8,7 @@ import sys
 from cola import git
 from cola import errors
 from cola import utils
+from cola import resources
 
 # minimum version requirements
 _versions = {
@@ -50,7 +51,7 @@ def git_describe_version():
 
 
 def builtin_version():
-    """Return the builtin version or calculate it as needed."""
+    """Return the builtin version or throw a VersionUnavailable exception"""
     try:
         import builtin_version as bv
     except ImportError:
@@ -60,8 +61,9 @@ def builtin_version():
 
 
 def _builtin_version_file(ext = 'py'):
-    """Returns the path to cola/builtin_version.py."""
-    return os.path.join(sys.path[0], 'cola', 'builtin_version.%s' % ext)
+    """Returns the path to cola's builtin_version.py."""
+    dirname = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(dirname, 'builtin_version.%s' % ext)
 
 
 def write_builtin_version():

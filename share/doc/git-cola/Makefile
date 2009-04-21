@@ -13,7 +13,7 @@ DOC_PDF += $(patsubst %,%.pdf,$(ARTICLES) $(SP_ARTICLES))
 DOC_MAN1=$(patsubst %.txt,%.1,$(MAN1_TXT))
 
 prefix?=$(HOME)
-htmldir?=$(prefix)/share/doc/cola
+htmldir?=$(prefix)/share/doc/git-cola
 mandir?=$(prefix)/share/man
 man1dir=$(mandir)/man1
 # DESTDIR=

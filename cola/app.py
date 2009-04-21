@@ -8,6 +8,7 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 
 from cola import utils
+from cola import resources
 
 class ColaApplication(object):
     """The main cola application
@@ -21,7 +22,7 @@ class ColaApplication(object):
         # monkey-patch Qt's app translate() to handle .po files
         if gui:
             self._app = QtGui.QApplication(argv)
-            self._app.setWindowIcon(QtGui.QIcon(utils.get_icon('git.png')))
+            self._app.setWindowIcon(QtGui.QIcon(resources.icon('git.png')))
             self._translate_base = QtGui.QApplication.translate
             QtGui.QApplication.translate = self.translate
         else:

@@ -16,12 +16,6 @@ from cola import core
 from cola import resources
 from cola.git import shell_quote
 
-PREFIX = resources.path()
-QMDIR = os.path.join(PREFIX, 'share', 'cola', 'qm')
-ICONSDIR = os.path.join(PREFIX, 'share', 'cola', 'icons')
-STYLEDIR = os.path.join(PREFIX, 'share', 'cola', 'styles')
-DOCDIR = os.path.join(PREFIX, 'share', 'doc', 'cola')
-
 KNOWN_FILE_MIME_TYPES = {
     'text':      'script.png',
     'image':     'image.png',
@@ -54,22 +48,7 @@ def get_qm_for_locale(locale):
     match = regex.match(locale)
     if match:
         locale = match.group(1)
-
-    basename = locale.split('_')[0]
-
-    return os.path.join(QMDIR, basename +'.qm')
-
-def get_resource_dirs(styledir):
-    """Returns all directories underneath the share/cola/styles directory."""
-    return [ r for r in glob(styledir+ '/*') if os.path.isdir(r) ]
-
-def get_stylesheet(name):
-    """Returns the path to a stylesheet within the cola install tree."""
-    stylesheet = os.path.join(STYLEDIR, name+'.qss')
-    if os.path.exists(stylesheet):
-        return stylesheet
-    else:
-        return None
+    return resources.qm(locale.split('_')[0])
 
 def get_libexec(*args):
     """Returns the path to the libexec scripts dir.
@@ -77,14 +56,6 @@ def get_libexec(*args):
     """
     libexec = os.path.dirname(os.path.abspath(sys.argv[0]))
     return os.path.join(libexec, *args)
-
-def get_style_dir():
-    """Returns the path to the style dir within the cola install tree."""
-    return STYLEDIR
-
-def get_htmldocs():
-    """Returns the path to the cola html documentation."""
-    return os.path.join(DOCDIR, 'git-cola.html')
 
 def ident_file_type(filename):
     """Returns an icon based on the contents of filename."""
@@ -109,12 +80,7 @@ def get_file_icon(filename):
     Returns the full path to an icon file corresponding to
     filename"s contents.
     """
-    icon_file = ident_file_type(filename)
-    return get_icon(icon_file)
-
-def get_icon(icon_file):
-    """Returns the full path to an icon file given a basename."""
-    return os.path.join(ICONSDIR, icon_file)
+    return resources.icon(ident_file_type(filename))
 
 def fork(args):
     """Launches a command in the background."""

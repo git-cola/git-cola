@@ -97,7 +97,7 @@ You can use this stylesheet by running `git cola --style=dark`.
 You can also skin git cola by providing your own Qt stylesheet.
 E.g. `git cola --style=/path/to/style.qss`.
 
-Built-in styles can be found in `/usr/share/cola/styles`.
+Built-in styles can be found in `/usr/share/git-cola/styles`.
 
 
 LINKS
@@ -111,9 +111,9 @@ LINKS
 
 SEE ALSO
 --------
-linkcola:git-difftool[1]::
-	'git-cola' includes a custom git command called 'git-difftool'
-	that allows you to stage changes using the standard git merge tools.
+linkgit:git-difftool[1]::
+	Compare changes using common merge tools.
+	(New in git-1.6.3).
 
 linkgit:gitk[1]::
 	The git repository browser.  Shows branches, commit history

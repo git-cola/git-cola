@@ -30,13 +30,13 @@ def cola_init():
     prefix = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     # Look for modules in the source and install trees
-    paths_to_try = [prefix, os.path.join(prefix, 'share', 'cola', 'lib')]
+    paths_to_try = [prefix, os.path.join(prefix, 'share', 'git-cola', 'lib')]
     actual_paths = [p for p in paths_to_try if os.path.exists(p)]
     sys.path = actual_paths + sys.path
 
     import cola.resources
 
-    difftool = cola.resources.path('bin', 'git-difftool')
+    difftool = cola.resources.prefix('bin', 'git-difftool')
     if os.path.exists(difftool):
         path_entries = os.environ.get('PATH').split(os.pathsep)
         bindir = os.path.dirname(difftool)
