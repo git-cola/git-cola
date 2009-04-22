@@ -139,6 +139,7 @@ class RemoteController(QObserver):
             status, output = modelaction(remote, **kwargs)
             if not output: # git fetch --tags --verbose doesn't print anything...
                 output = self.tr('Already up-to-date.')
-            qtutils.log(status, output)
+            # Force the status to 1 so that we always display the log
+            qtutils.log(1, output)
             self.view.accept()
         return remote_callback
