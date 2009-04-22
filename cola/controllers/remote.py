@@ -57,6 +57,16 @@ class RemoteController(QObserver):
             if self.view.select_first_remote():
                 self.model.set_remotename(remotes[0])
 
+        # Select the current branch by default for push
+        if action != 'push':
+            return
+        branches = self.model.get_local_branches()
+        branch = self.model.get_currentbranch()
+        if branch not in branches:
+            return
+        idx = branches.index(branch)
+        if self.view.select_local_branch(idx):
+            self.model.set_local_branch(branch)
 
     def display_remotes(self, widget):
         displayed = []

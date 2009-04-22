@@ -147,7 +147,11 @@ class MergeView(MergeViewBase):
 
 RemoteViewBase = create_standard_view(Ui_remote, QDialog)
 class RemoteView(RemoteViewBase):
-    def __init__(self, parent, action): 
+    """Dialog used by Fetch, Push and Pull"""
+
+    def __init__(self, parent, action):
+        """Customizes the dialog based on the remote action
+        """
         RemoteViewBase.__init__(self, parent)
         if action:
             self.action_button.setText(action.title())
@@ -160,9 +164,13 @@ class RemoteView(RemoteViewBase):
             self.local_branches.hide()
         if action != 'pull':
             self.rebase_checkbox.hide()
+
     def select_first_remote(self):
+        """Selects the first remote in the list view"""
         return self.select_remote(0)
+
     def select_remote(self, idx):
+        """Selects a remote by index"""
         item = self.remotes.item(idx)
         if item:
             self.remotes.setItemSelected(item, True)
@@ -171,3 +179,13 @@ class RemoteView(RemoteViewBase):
             return True
         else:
             return False
+
+    def select_local_branch(self, idx):
+        """Selects a local branch by index in the list view"""
+        item = self.local_branches.item(idx)
+        if not item:
+            return False
+        self.local_branches.setItemSelected(item, True)
+        self.local_branches.setCurrentItem(item)
+        self.local_branch.setText(item.text())
+        return True
