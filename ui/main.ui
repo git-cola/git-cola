@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>684</width>
-    <height>327</height>
+    <height>357</height>
    </rect>
   </property>
   <property name="dockOptions" >
@@ -286,6 +286,13 @@
              </widget>
             </item>
             <item>
+             <widget class="QPushButton" name="alt_button" >
+              <property name="text" >
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item>
              <spacer>
               <property name="orientation" >
                <enum>Qt::Vertical</enum>
@@ -431,7 +438,7 @@
      <x>0</x>
      <y>0</y>
      <width>684</width>
-     <height>22</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="commit_menu" >
@@ -532,6 +539,7 @@
      <addaction name="menu_diff_branch" />
     </widget>
     <addaction name="menuView" />
+    <addaction name="menu_branch_review" />
     <addaction name="menu_branch_diff" />
     <addaction name="menu_branch_compare" />
     <addaction name="separator" />
@@ -916,6 +924,11 @@
   <action name="menu_branch_diff" >
    <property name="text" >
     <string>Diff...</string>
+   </property>
+  </action>
+  <action name="menu_branch_review" >
+   <property name="text" >
+    <string>Review...</string>
    </property>
   </action>
  </widget>

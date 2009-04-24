@@ -47,6 +47,12 @@ class Controller(QObserver):
     MODE_BRANCH = 4
     MODE_GREP = 5
     MODE_COMPARE = 6
+    MODE_REVIEW = 7
+
+    MODES_READ_ONLY = (MODE_BRANCH, MODE_GREP,
+                       MODE_COMPARE, MODE_REVIEW)
+
+    MODES_UNDOABLE = (MODE_NONE, MODE_INDEX, MODE_WORKTREE)
 
     def __init__(self, model, view):
         """
@@ -96,6 +102,7 @@ class Controller(QObserver):
             fetch_button = self.fetch,
             push_button = self.push,
             pull_button = self.pull,
+            alt_button = self.alt_action,
             # Checkboxes
             amend_radio = self.load_prev_msg_and_rescan,
             new_commit_radio = self.clear_and_rescan,
@@ -157,7 +164,8 @@ class Controller(QObserver):
             menu_checkout_branch = self.checkout_branch,
             menu_diff_branch = self.diff_branch,
             menu_branch_compare = self.branch_compare,
-            menu_branch_diff = self.diff_arbitrary,
+            menu_branch_diff = self.branch_diff,
+            menu_branch_review = self.branch_review,
 
             # Commit Menu
             menu_rescan = self.rescan,
@@ -258,6 +266,8 @@ class Controller(QObserver):
         return s, m, um, ut
 
     def doubleclick_tree(self, item, column):
+        if self.read_only():
+            return
         staged, modified, unmerged, untracked = self.get_selection()
         if staged:
             self.log(*self.model.reset_helper(staged))
@@ -274,7 +284,8 @@ class Controller(QObserver):
         result = QtGui.QTreeWidget.mousePressEvent(tree, event)
         item = tree.itemAt(event.pos())
         if not item:
-            self.reset_mode()
+            if not self.read_only():
+                self.reset_mode()
             self.view.reset_display()
             items = self.view.status_tree.selectedItems()
             for i in items:
@@ -284,7 +295,14 @@ class Controller(QObserver):
         if not parent:
             idx = self.view.status_tree.indexOfTopLevelItem(item)
             diff = 'no diff'
-            if idx == self.view.IDX_STAGED:
+            if (self.mode == Controller.MODE_REVIEW and
+                      idx == self.view.IDX_STAGED):
+                diff = (self.model.git.diff(self.head,
+                                            no_color=True, stat=True,
+                                            with_raw_output=True) +
+                        '\n\n' +
+                        self.model.git.diff(self.head, no_color=True))
+            elif idx == self.view.IDX_STAGED:
                 diff = (self.model.git.diff(cached=True, stat=True,
                                             no_color=True,
                                             with_raw_output=True) + '\n\n' +
@@ -313,6 +331,8 @@ class Controller(QObserver):
         if idx == -1:
             return result
         self.view_diff_for_row(idx, staged)
+        if self.read_only():
+            return result
         # handle when the icons are clicked
         xpos = event.pos().x()
         if xpos > 42 and xpos < 58:
@@ -377,6 +397,12 @@ class Controller(QObserver):
 
     def tr(self, fortr):
         return qtutils.tr(fortr)
+
+    def read_only(self):
+        return self.mode in self.MODES_READ_ONLY
+
+    def undoable(self):
+        return self.mode in self.MODES_UNDOABLE
 
     def goto_grep(self):
         line = self.view.selected_line()
@@ -497,6 +523,8 @@ class Controller(QObserver):
             return self.get_unstaged_item()
 
     def set_mode(self, staged):
+        if self.read_only():
+            return
         if staged:
             if self.view.amend_is_checked():
                 self.mode = Controller.MODE_AMEND
@@ -517,8 +545,8 @@ class Controller(QObserver):
             scrollbar.setValue(scrollvalue)
 
     def view_diff_for_row(self, idx, staged):
-        ref = self.head
         self.set_mode(staged)
+        ref = self.head
         diff, filename = self.model.get_diff_details(idx, ref, staged=staged)
         self.view.set_display(diff)
         self.view.show_diff()
@@ -544,9 +572,10 @@ class Controller(QObserver):
         filename = self.get_selected_filename(staged=staged)
         if filename:
             args = []
-            if staged:
+            if staged and not self.read_only():
                 args.append('--cached')
             args.extend([self.head, '--', filename])
+            print args
             difftool.launch(args)
 
     def delete_files(self, staged=False):
@@ -685,6 +714,7 @@ class Controller(QObserver):
         self.reset_mode()
         self.head = 'HEAD'
         self.model.set_commitmsg('')
+        self.view.alt_button.hide()
         self.rescan()
 
     def load_prev_msg_and_rescan(self, *rest):
@@ -788,6 +818,10 @@ class Controller(QObserver):
             self.merge_msg_hash = merge_msg_hash
             self.model.load_commitmsg(merge_msg_path)
 
+    def alt_action(self):
+        if self.mode in Controller.MODES_READ_ONLY:
+            self.clear_and_rescan()
+
     def fetch(self):
         remote_action(self.model, self.view, 'fetch')
 
@@ -813,7 +847,7 @@ class Controller(QObserver):
 
     #####################################################################
     # diff gui
-    def diff_arbitrary(self):
+    def branch_diff(self):
         """Diff against an arbitrary revision, branch, tag, etc"""
         branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
                                    self.view,
@@ -824,6 +858,22 @@ class Controller(QObserver):
             return
         self.mode = Controller.MODE_COMPARE
         self.head = branch
+        self.view.alt_button.setText(self.tr('End Diff'))
+        self.view.alt_button.show()
+        self.rescan()
+
+    def branch_review(self):
+        """Diff against an arbitrary revision, branch, tag, etc"""
+        branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
+                                   self.view,
+                                   self.model.get_all_branches()
+                                   + self.model.get_tags())
+        if not branch:
+            return
+        self.mode = Controller.MODE_REVIEW
+        self.head = '...'+branch
+        self.view.alt_button.setText(self.tr('End Review'))
+        self.view.alt_button.show()
         self.rescan()
 
     def diff_branch(self):
@@ -921,6 +971,8 @@ class Controller(QObserver):
     # *rest handles being called from different signals
     def stage_selected(self,*rest):
         """Use 'git add/rm' to add or remove content from the index"""
+        if self.read_only():
+            return
         unstaged = self.model.get_unstaged()
         selected = self.view.get_unstaged(unstaged)
         if not selected:
@@ -930,12 +982,16 @@ class Controller(QObserver):
     # *rest handles being called from different signals
     def unstage_selected(self, *rest):
         """Use 'git reset/rm' to remove content from the index"""
+        if self.read_only():
+            return
         staged = self.model.get_staged()
         selected = self.view.get_staged(staged)
         self.log(*self.model.reset_helper(selected))
 
     def undo_changes(self):
-        """Reverts local changes back to whatever's in self.head."""
+        """Reverts local changes back to whatever's in HEAD."""
+        if not self.undoable():
+            return
         modified = self.model.get_modified()
         items_to_undo = self.view.get_modified(modified)
         if items_to_undo:

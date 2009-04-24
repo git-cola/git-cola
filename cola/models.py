@@ -585,12 +585,12 @@ class Model(model.Model):
     def get_diff_details(self, idx, ref, staged=True):
         filename = self.get_filename(idx, staged=staged)
         if not filename:
-            return (None, None, None)
+            return (None, None)
         encfilename = core.encode(filename)
         if staged:
             diff = self.diff_helper(filename=filename,
                                     ref=ref,
-                                    cached=True)
+                                    cached=ref.startswith('HEAD'))
         else:
             if os.path.isdir(encfilename):
                 diff = '\n'.join(os.listdir(filename))
@@ -805,6 +805,8 @@ class Model(model.Model):
             argv.append('%s..%s' % (ref, endref))
         elif ref:
             argv.append(ref)
+            if not ref.startswith('HEAD'):
+                cached = False
         elif branch:
             argv.append(branch)
 
@@ -822,6 +824,7 @@ class Model(model.Model):
         deleted = cached and not os.path.exists(core.encode(filename))
 
         diffoutput = self.git.diff(R=reverse,
+                                   M=True,
                                    no_color=True,
                                    cached=cached,
                                    patch_with_raw=patch_with_raw,
@@ -895,14 +898,40 @@ class Model(model.Model):
                                     with_status=True)
         return status != 0
 
+
+    def _get_branch_status(self, branch):
+        """Returns a tuple of staged, unstaged, untracked, and unmerged files
+
+        This shows only the changes that were introduced in branch
+        """
+        status, output = self.git.diff(branch,
+                                       name_only=True,
+                                       M=True, z=True,
+                                       with_stderr=True,
+                                       with_status=True)
+        if status != 0:
+            return ([], [], [], [])
+        staged = []
+        for name in output.strip('\0').split('\0'):
+            if not name:
+                continue
+            staged.append(core.decode(name))
+
+        return (staged, [], [], [])
+
+
     def get_workdir_state(self, head='HEAD'):
         """Returns a tuple of staged, unstaged, untracked, and unmerged files
         """
         self.git.update_index(refresh=True)
         self.partially_staged = set()
+
+        if not head.startswith('HEAD'):
+            return self._get_branch_status(head)
+
         (staged, modified, unmerged, untracked) = ([], [], [], [])
         try:
-            output = self.git.diff_index(head, with_stderr=True)
+            output = self.git.diff_index(head, M=True, with_stderr=True)
             if output.startswith('fatal:'):
                 raise Exception('git init')
             for line in output.splitlines():
@@ -925,6 +954,7 @@ class Model(model.Model):
         try:
 
             output = self.git.diff_index(head,
+                                         M=True,
                                          cached=True,
                                          with_stderr=True)
             if output.startswith('fatal:'):

@@ -53,6 +53,9 @@ class View(ViewBase):
         # Initialize the GUI to show 'Column: 00'
         self.show_current_column()
 
+        # Hide the alternate button by default
+        self.alt_button.hide()
+
     def set_staged(self, items):
         """Adds items to the 'Staged' subtree."""
         self._set_subtree(items, View.IDX_STAGED, staged=True)
