@@ -34,10 +34,15 @@ def create_listwidget_item(text, filename):
     item.setText(text)
     return item
 
+_icon_cache = {}
 def create_treewidget_item(text, filename):
     """Creates a QTreeWidgetItem with text and the icon at filename."""
+    global _icon_cache
+    if filename not in _icon_cache:
+        _icon_cache[filename] = QtGui.QIcon(filename)
+    icon = _icon_cache[filename]
     item = QtGui.QTreeWidgetItem()
-    item.setIcon(0, QtGui.QIcon(filename))
+    item.setIcon(0, icon)
     item.setText(0, text)
     return item
 
@@ -191,11 +196,14 @@ def create_listitem(filename, staged=False, untracked=False):
     icon_file = get_icon_file(filename, staged, untracked)
     return create_listwidget_item(filename, icon_file)
 
-def create_treeitem(filename, staged=False, untracked=False):
+def create_treeitem(filename, staged=False, untracked=False, check=True):
     """Given a filename, return a QListWidgetItem suitable
     for adding to a QListWidget.  "staged" and "untracked"
     controls whether to use the appropriate icons."""
-    icon_file = get_icon_file(filename, staged=staged, untracked=untracked)
+    if check:
+        icon_file = get_icon_file(filename, staged=staged, untracked=untracked)
+    else:
+        icon_file = resources.icon('staged.png')
     return create_treewidget_item(filename, icon_file)
 
 

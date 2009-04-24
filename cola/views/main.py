@@ -56,9 +56,9 @@ class View(ViewBase):
         # Hide the alternate button by default
         self.alt_button.hide()
 
-    def set_staged(self, items):
+    def set_staged(self, items, check=True):
         """Adds items to the 'Staged' subtree."""
-        self._set_subtree(items, View.IDX_STAGED, staged=True)
+        self._set_subtree(items, View.IDX_STAGED, staged=True, check=check)
 
     def set_modified(self, items):
         """Adds items to the 'Modified' subtree."""
@@ -72,12 +72,14 @@ class View(ViewBase):
         """Adds items to the 'Untracked' subtree."""
         self._set_subtree(items, View.IDX_UNTRACKED)
 
-    def _set_subtree(self, items, idx, staged=False, untracked=False):
+    def _set_subtree(self, items, idx,
+                     staged=False, untracked=False, check=True):
         parent = self.status_tree.topLevelItem(idx)
         parent.takeChildren()
         for item in items:
             treeitem = qtutils.create_treeitem(item,
                                                staged=staged,
+                                               check=check,
                                                untracked=untracked)
             parent.addChild(treeitem)
         if idx not in self._seen_indexes and items:

@@ -753,10 +753,16 @@ class Controller(QObserver):
         self.model.update_status(head=self.head)
 
         # Setup initial tree items
-        self.view.set_staged(self.model.get_staged())
-        self.view.set_modified(self.model.get_modified())
-        self.view.set_unmerged(self.model.get_unmerged())
-        self.view.set_untracked(self.model.get_untracked())
+        if self.read_only():
+            self.view.set_staged(self.model.get_staged(), check=False)
+            self.view.set_modified([])
+            self.view.set_unmerged([])
+            self.view.set_untracked([])
+        else:
+            self.view.set_staged(self.model.get_staged())
+            self.view.set_modified(self.model.get_modified())
+            self.view.set_unmerged(self.model.get_unmerged())
+            self.view.set_untracked(self.model.get_untracked())
 
         # restore selection
         updated_staged = self.model.get_staged()
@@ -858,7 +864,7 @@ class Controller(QObserver):
             return
         self.mode = Controller.MODE_COMPARE
         self.head = branch
-        self.view.alt_button.setText(self.tr('End Diff'))
+        self.view.alt_button.setText(self.tr('Exit Diff Mode'))
         self.view.alt_button.show()
         self.rescan()
 
@@ -872,7 +878,7 @@ class Controller(QObserver):
             return
         self.mode = Controller.MODE_REVIEW
         self.head = '...'+branch
-        self.view.alt_button.setText(self.tr('End Review'))
+        self.view.alt_button.setText(self.tr('Exit Review Mode'))
         self.view.alt_button.show()
         self.rescan()
 
