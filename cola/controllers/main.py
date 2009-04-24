@@ -46,11 +46,11 @@ class Controller(QObserver):
     MODE_AMEND = 3
     MODE_BRANCH = 4
     MODE_GREP = 5
-    MODE_COMPARE = 6
+    MODE_DIFF = 6
     MODE_REVIEW = 7
 
     MODES_READ_ONLY = (MODE_BRANCH, MODE_GREP,
-                       MODE_COMPARE, MODE_REVIEW)
+                       MODE_DIFF, MODE_REVIEW)
 
     MODES_UNDOABLE = (MODE_NONE, MODE_INDEX, MODE_WORKTREE)
 
@@ -809,9 +809,7 @@ class Controller(QObserver):
                     self.view.reset_display()
 
         # Update the title with the current branch
-        self.view.setWindowTitle('%s [%s]' % (
-                self.model.get_project(),
-                self.model.get_currentbranch()))
+        self._update_window_title()
 
         if not self.view.amend_is_checked():
             # Check if there's a message file in .git/
@@ -823,6 +821,16 @@ class Controller(QObserver):
                 return
             self.merge_msg_hash = merge_msg_hash
             self.model.load_commitmsg(merge_msg_path)
+
+    def _update_window_title(self):
+        """Updates the title with the current branch and other info"""
+        title = '%s [%s]' % (self.model.get_project(),
+                             self.model.get_currentbranch())
+        if self.mode == Controller.MODE_DIFF:
+            title += ' *** diff mode***'
+        if self.mode == Controller.MODE_REVIEW:
+            title += ' *** review mode***'
+        self.view.setWindowTitle(title)
 
     def alt_action(self):
         if self.mode in Controller.MODES_READ_ONLY:
@@ -862,7 +870,7 @@ class Controller(QObserver):
                                    + self.model.get_tags())
         if not branch:
             return
-        self.mode = Controller.MODE_COMPARE
+        self.mode = Controller.MODE_DIFF
         self.head = branch
         self.view.alt_button.setText(self.tr('Exit Diff Mode'))
         self.view.alt_button.show()
