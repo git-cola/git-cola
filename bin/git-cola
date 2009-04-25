@@ -36,13 +36,13 @@ def cola_init():
 
     import cola.resources
 
-    difftool = cola.resources.prefix('bin', 'git-difftool')
-    if os.path.exists(difftool):
-        path_entries = os.environ.get('PATH').split(os.pathsep)
-        bindir = os.path.dirname(difftool)
-        path_entries.insert(0, bindir)
-        path = os.pathsep.join(path_entries)
-        os.environ['PATH'] = path
+    # Setup the path so that git finds us when we run 'git cola'
+    path_entries = os.environ.get('PATH').split(os.pathsep)
+    bindir = os.path.dirname(os.path.abspath(__file__))
+    path_entries.insert(0, bindir)
+    path = os.pathsep.join(path_entries)
+    os.environ['PATH'] = path
+    os.putenv('PATH', path)
 
 
 if __name__ == '__main__':
