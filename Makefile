@@ -1,6 +1,7 @@
 prefix	?= $(HOME)
 DESTDIR	?= /
 PYTHON	?= python
+PYTHON_VERSION	?= $(shell python -c 'import platform; print platform.python_version()[:3]')
 
 all:
 	$(PYTHON) setup.py build && rm -rf build
@@ -10,7 +11,13 @@ install:
 		--prefix=$(prefix) \
 		--root=$(DESTDIR) \
 		--force && \
-	rm -rf $(DESTDIR)$(prefix)/lib && \
+	rm -rf $(DESTDIR)$(prefix)/lib/python$(PYTHON_VERSION)/site-packages/*cola* && \
+	((test -d $(DESTDIR)$(prefix)/lib/python$(PYTHON_VERSION)/site-packages && \
+	  rmdir $(DESTDIR)$(prefix)/lib/python$(PYTHON_VERSION)/site-packages || true) && \
+	 (test -d $(DESTDIR)$(prefix)/lib/python$(PYTHON_VERSION) && \
+	  rmdir $(DESTDIR)$(prefix)/lib/python$(PYTHON_VERSION) || true) && \
+	 (test -d $(DESTDIR)$(prefix)/lib && \
+	  rmdir $(DESTDIR)$(prefix)/lib || true)) && \
 	cd $(DESTDIR)$(prefix)/bin && \
 	((! test -e cola && ln -s git-cola cola) || true) && \
 	rm -rf build
