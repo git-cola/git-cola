@@ -8,20 +8,18 @@ from PyQt4 import QtGui
 from cola import utils
 from cola import qtutils
 from cola.qobserver import QObserver
-from cola.settings import SettingsModel
+from cola import settings
 from cola.views import BookmarkView
 
 def save_bookmark():
-    model = SettingsModel()
-    bookmark = os.getcwd()
-    if bookmark not in model.bookmarks:
-        model.add_bookmarks(bookmark)
+    model = settings.SettingsManager.settings()
+    model.add_bookmark(os.getcwd())
     model.save()
     qtutils.information("Bookmark Saved")
 
 def manage_bookmarks():
-    model = SettingsModel()
-    view = BookmarkView(QtGui.qApp.activeWindow())
+    model = settings.SettingsManager.settings()
+    view = BookmarkView(QtGui.QApplication.instance().activeWindow())
     ctl = BookmarkController(model, view)
     view.show()
 
@@ -52,5 +50,5 @@ class BookmarkController(QObserver):
         if not selection:
             return
         for item in selection:
-            self.model.bookmarks.remove(item)
+            self.model.remove_bookmark(item)
         self.refresh_view()

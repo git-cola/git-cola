@@ -13,6 +13,7 @@ from cola import version
 from cola import inotify
 from cola import difftool
 from cola import resources
+from cola import settings
 from cola.qobserver import QObserver
 from cola.views import AboutView
 from cola.views.drawer import Drawer
@@ -206,9 +207,9 @@ class Controller(QObserver):
                      self.doubleclick_tree)
 
         self.merge_msg_hash = ''
-        self.load_gui_settings()
+        self._load_gui_state()
         self.rescan()
-        self.init_log_window()
+        self._init_log_window()
         self.refresh_view('global_cola_fontdiff', 'global_cola_fontui')
         self.start_inotify_thread()
         if self.has_inotify():
@@ -673,11 +674,14 @@ class Controller(QObserver):
     def quit_app(self, *args):
         """Save config settings and cleanup any inotify threads."""
         if self.model.remember_gui_settings():
-            self.model.set_window_geom(self.view.width(), self.view.height(),
-                                       self.view.x(), self.view.y())
+            settings.SettingsManager.save_gui_state(self.view)
+
+        # Remove any cola temp files
         pattern = self.model.get_tmp_file_pattern()
         for filename in glob.glob(pattern):
             os.unlink(filename)
+
+        # Stop inotify threads
         if self.has_inotify():
             self.inotify_thread.abort = True
             self.inotify_thread.terminate()
@@ -1035,13 +1039,10 @@ class Controller(QObserver):
         browser = self.model.get_history_browser()
         utils.fork(['sh', '-c', browser, self.model.get_currentbranch()])
 
-    def load_gui_settings(self):
-        try:
-            (w,h,x,y) = self.model.get_window_geom()
-            self.view.resize(w,h)
-            self.view.move(x,y)
-        except:
-            pass
+    def _load_gui_state(self):
+        """Loads gui state and applies it to our views"""
+        state = settings.SettingsManager.get_gui_state(self.view)
+        self.view.import_state(state)
 
     def log(self, status, output, rescan=True):
         """Logs output and optionally rescans for changes."""
@@ -1158,7 +1159,7 @@ class Controller(QObserver):
         space_width = QtGui.QFontMetrics(display_font).width(' ')
         self.view.display_text.setTabStopWidth(tab_width * space_width)
 
-    def init_log_window(self):
+    def _init_log_window(self):
         branch = self.model.get_currentbranch()
         qtutils.log(0, self.model.get_git_version()
                        +'\ncola version ' + version.get_version()
