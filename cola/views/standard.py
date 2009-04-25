@@ -39,7 +39,37 @@ def create_standard_view(uiclass, qtclass, *classes):
                 self.move(x, y)
             # Call the base Qt show()
             self.__qtclass.show(self)
-        def get_properties(self):
+
+        def name(self):
+            """Returns the name of the view class"""
+            return self.__class__.__name__.lower()
+
+        def import_state(self, settings):
+            """Imports data for view save/restore"""
+            if 'width' in settings and 'height' in settings:
+                w = settings.get('width')
+                h = settings.get('height')
+                try:
+                    self.resize(w,h)
+                except:
+                    pass
+
+            if 'x' in settings and 'y' in settings:
+                x = settings.get('x')
+                y = settings.get('y')
+                try:
+                    self.move(x,y)
+                except:
+                    pass
+
+        def export_state(self):
+            """Exports data for view save/restore"""
+            state = {}
+            for funcname in ('width', 'height', 'x', 'y'):
+                state[funcname] = getattr(self, funcname)()
+            return state
+
+        def style_properties(self):
             # user-definable color properties
             props = {}
             for name in syntax.default_colors:
@@ -47,7 +77,7 @@ def create_standard_view(uiclass, qtclass, *classes):
             return props
         def reset_syntax(self):
             if hasattr(self, 'syntax') and self.syntax:
-                self.syntax.set_colors(self.get_properties())
+                self.syntax.set_colors(self.style_properties())
                 self.syntax.reset()
-    syntax.install_theme_properties(StandardView)
+    syntax.install_style_properties(StandardView)
     return StandardView

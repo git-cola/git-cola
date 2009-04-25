@@ -270,3 +270,20 @@ class View(ViewBase):
 
     def display_log(self):
         self.open_drawer(self.LOCATION_BOTTOM, opened=True)
+
+    def import_state(self, state):
+        """Imports data for save/restore"""
+        ViewBase.import_state(self, state)
+        if 'splitter_sizes' in state:
+            sizes = state['splitter_sizes']
+            try:
+                self.splitter.setSizes(sizes)
+            except:
+                pass
+
+    def export_state(self):
+        """Exports data for save/restore"""
+        state = ViewBase.export_state(self)
+        # Save the splitter size
+        state['splitter_sizes'] = map(int, self.splitter.sizes())
+        return state

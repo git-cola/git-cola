@@ -200,7 +200,7 @@ def accessors(attr):
         self.reset_syntax()
     return (getter, setter)
 
-def install_theme_properties(cls):
+def install_style_properties(cls):
     # Diff GUI colors -- this is controllable via the style sheet
     for name in default_colors:
         setattr(cls, name, pyqtProperty('QColor', *accessors(name)))
