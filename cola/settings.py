@@ -4,25 +4,39 @@
 
 import os
 import user
-from cola.model import Model
 
-class SettingsModel(Model):
+from cola.model import Model
+from cola import observable
+
+class SettingsModel(Model, observable.Observable):
     def __init__(self):
         """Load existing settings if they exist"""
         Model.__init__(self)
+        observable.Observable.__init__(self)
         self.bookmarks = []
-        self.load_settings()
+        self.load()
 
     def path(self):
         """Path to the model's on-disk representation"""
         return os.path.join(user.home, '.cola')
 
-    def load_settings(self):
+    def load(self):
         """Loads settings if they exist"""
         settings = self.path()
         if os.path.exists(settings):
-            self.load(settings)
+            Model.load(self, settings)
 
-    def save_settings(self):
+    def save(self):
         """Saves settings to the .cola file"""
-        self.save(self.path())
+        notify = self.get_notify()
+        observers = self.get_observers()
+
+        del self._notify
+        del self._observers
+
+        # Call the base method
+        Model.save(self, self.path())
+
+        # Restore properties
+        self.set_notify(notify)
+        self.set_observers(observers)

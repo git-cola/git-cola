@@ -13,6 +13,7 @@ from cola import git
 from cola import core
 from cola import utils
 from cola import model
+from cola import observable
 
 #+-------------------------------------------------------------------------
 #+ A regex for matching the output of git(log|rev-list) --pretty=oneline
@@ -101,7 +102,7 @@ def eval_path(path):
     else:
         return path
 
-class Model(model.Model):
+class Model(model.Model, observable.Observable):
     """Provides a friendly wrapper for doing commit git operations."""
 
     def __init__(self):
@@ -109,6 +110,7 @@ class Model(model.Model):
         so that they refer to the git module.  This object
         encapsulates cola's interaction with git."""
         model.Model.__init__(self)
+        observable.Observable.__init__(self)
 
         # Initialize the git command object
         self.git = GitCola()
@@ -164,6 +166,22 @@ class Model(model.Model):
         self.push_helper = None
         self.pull_helper = None
         self.generate_remote_helpers()
+
+    def clone(self):
+        """Override Model.clone() to handle observers"""
+        # Go in and out of jsonpickle to create a clone
+        observers = self.get_observers()
+        self.set_observers([])
+        clone = Model.clone(self)
+        self.set_observers(observers)
+        return clone
+
+    def set_param(self, param, value, notify=True, check_params=False):
+        """Override Model.set_param() to handle notification"""
+        model.Model.set_param(self, param, value, check_params=check_params)
+        # Perform notifications
+        if notify:
+            self.notify_observers(param)
 
     def generate_remote_helpers(self):
         """Generates helper methods for fetch, push and pull"""

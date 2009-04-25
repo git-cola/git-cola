@@ -12,17 +12,13 @@ from cStringIO import StringIO
 import jsonpickle
 
 from cola import core
-from cola import observable
 
 
-class Model(observable.Observable):
+class Model(object):
     """
     Model is a base class that implements convenient
     serialization methods.
     """
-    def __init__(self):
-        observable.Observable.__init__(self)
-
     def __getitem__(self, item):
         """Adds support for retrieving a parameter via model['param'].
 
@@ -133,7 +129,7 @@ class Model(observable.Observable):
         ['answer']
 
         >>> m.get_param_names(export=True)
-        ['_notify', '_observers', '_question', 'answer']
+        ['_question', 'answer']
 
         """
         names = []
@@ -162,11 +158,7 @@ class Model(observable.Observable):
 
         """
         # Go in and out of jsonpickle to create a clone
-        observers = self.get_observers()
-        self.set_observers([])
-        clone = jsonpickle.decode(jsonpickle.encode(self))
-        self.set_observers(observers)
-        return clone
+        return jsonpickle.decode(jsonpickle.encode(self))
 
     def has_param(self,param):
         """Returns true if a parameter exists in a model.
@@ -282,7 +274,7 @@ class Model(observable.Observable):
                    % (self.__class__.__name__, param))
         raise AttributeError(errmsg)
 
-    def set_param(self, param, value, notify=True, check_params=False):
+    def set_param(self, param, value, check_params=False):
         """Set attributes with optional validity checks.
 
         >>> m = Model()
@@ -302,10 +294,6 @@ class Model(observable.Observable):
 
         # Set the value
         setattr(self, param, value)
-
-        # Perform notifications
-        if notify:
-            self.notify_observers(param)
 
     def copy_params(self, model, params_to_copy=None):
         """Copies params from one model to another.
@@ -345,11 +333,13 @@ class Model(observable.Observable):
         """Saves a model to a file.
         """
         fh = open(filename, 'w')
+        jsonpickle.set_encoder_options('simplejson', indent=4)
         try:
             core.write_nointr(fh, jsonpickle.encode(self))
         except:
             pass
         fh.close()
+        jsonpickle.set_encoder_options('simplejson', indent=None)
 
     def load(self, filename):
         """Loads model state from a file.
