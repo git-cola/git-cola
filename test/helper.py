@@ -18,6 +18,9 @@ TEST_TMP_DIR = join(ROOT_TMP_DIR, basename(sys.argv[0]))
 
 LAST_IDX = 0
 
+def tmp_path(*paths):
+    """Returns a path relative to the test/tmp directory"""
+    return join(TEST_SCRIPT_DIR, 'tmp', *paths)
 
 def fixture(*paths):
     return join(TEST_SCRIPT_DIR, 'fixtures', *paths)
