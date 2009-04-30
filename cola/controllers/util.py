@@ -2,7 +2,6 @@
 """
 
 from cola import qtutils
-from cola.model import Model
 from cola.views import ListView
 from cola.views import ComboView
 from cola.views import LogView
