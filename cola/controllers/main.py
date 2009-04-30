@@ -760,7 +760,7 @@ class MainController(QObserver):
         mode = self.mode
 
         # get new values
-        self.model.update_status(head=self.head)
+        self.model.update_status(head=self.head, staged_only=self.read_only())
 
         # Setup initial tree items
         if self.read_only():

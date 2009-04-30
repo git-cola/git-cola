@@ -116,7 +116,6 @@ class MainModel(ObservableModel):
 
         # Initialize the git command object
         self.git = GitCola()
-        self.partially_staged = set()
 
         #####################################################
         # Used in various places
@@ -521,7 +520,7 @@ class MainModel(ObservableModel):
         if template:
             self.load_commitmsg(template)
 
-    def update_status(self, head='HEAD'):
+    def update_status(self, head='HEAD', staged_only=False):
         # This allows us to defer notification until the
         # we finish processing data
         notify_enabled = self.get_notify()
@@ -530,7 +529,8 @@ class MainModel(ObservableModel):
         (self.staged,
          self.modified,
          self.unmerged,
-         self.untracked) = self.get_workdir_state(head=head)
+         self.untracked) = self.get_workdir_state(head=head,
+                                                  staged_only=staged_only)
         # NOTE: the model's unstaged list holds an aggregate of the
         # the modified, unmerged, and untracked file lists.
         self.set_unstaged(self.modified + self.unmerged + self.untracked)
@@ -902,41 +902,18 @@ class MainModel(ObservableModel):
         return (staged, [], [], [])
 
 
-    def get_workdir_state(self, head='HEAD'):
+    def get_workdir_state(self, head='HEAD', staged_only=False):
         """Returns a tuple of staged, unstaged, untracked, and unmerged files
         """
         self.git.update_index(refresh=True)
-        self.partially_staged = set()
 
         if not head.startswith('HEAD'):
             return self._get_branch_status(head)
 
+        staged_set = set()
+        modified_set = set()
+
         (staged, modified, unmerged, untracked) = ([], [], [], [])
-        try:
-            output = self.git.diff_index(head, M=True, with_stderr=True)
-            if output.startswith('fatal:'):
-                raise GitInitError('git init')
-            for line in output.splitlines():
-                info, name = line.split('\t', 1)
-                status = info.split()[-1]
-                if status == 'M' or status == 'D':
-                    modified.append(eval_path(name))
-                elif status == 'A':
-                    # newly-added yet modified
-                    if self._is_modified(eval_path(name)):
-                        modified.append(eval_path(name))
-                elif status[:1] == 'R':
-                    # Rename
-                    old, new = name.split('\t')
-                    staged.append(eval_path(old))
-
-        except GitInitError:
-            # handle git init
-            for name in (self.git.ls_files(modified=True, z=True)
-                                 .split('\0')):
-                if name:
-                    modified.append(core.decode(name))
-
         try:
 
             output = self.git.diff_index(head,
@@ -951,24 +928,60 @@ class MainModel(ObservableModel):
                 name = eval_path(name)
                 if status  == 'M':
                     staged.append(name)
-                    # is this file partially staged?
-                    if self._is_modified(name):
-                        self.partially_staged.add(name)
-                    else:
-                        modified.remove(name)
+                    staged_set.add(name)
+                    # This file will also show up as 'M' without --cached
+                    # so by default don't consider it modified unless
+                    # it's truly modified
+                    modified_set.add(name)
+                    if not staged_only and self._is_modified(name):
+                        modified.append(name)
                 elif status == 'A':
                     staged.append(name)
+                    staged_set.add(name)
                 elif status == 'D':
                     staged.append(name)
-                    modified.remove(name)
+                    staged_set.add(name)
                 elif status == 'U':
                     unmerged.append(name)
-                    modified.remove(name)
+                    modified_set.add(name)
+
         except GitInitError:
             # handle git init
             for name in self.git.ls_files(z=True).strip('\0').split('\0'):
                 if name:
                     staged.append(core.decode(name))
+
+        try:
+            output = self.git.diff_index(head, M=True, with_stderr=True)
+            if output.startswith('fatal:'):
+                raise GitInitError('git init')
+            for line in output.splitlines():
+                info, name = line.split('\t', 1)
+                status = info.split()[-1]
+                if status == 'M' or status == 'D':
+                    name = eval_path(name)
+                    if name not in modified_set:
+                        modified.append(name)
+                elif status == 'A':
+                    name = eval_path(name)
+                    # newly-added yet modified
+                    if (name not in modified_set and not staged_only and
+                            self._is_modified(name)):
+                        modified.append(name)
+                elif status[:1] == 'R':
+                    # Rename
+                    old, new = name.split('\t')
+                    name = eval_path(old)
+                    if name not in staged_set:
+                        staged.append(name)
+                        staged_set.add(name)
+
+        except GitInitError:
+            # handle git init
+            for name in (self.git.ls_files(modified=True, z=True)
+                                 .split('\0')):
+                if name:
+                    modified.append(core.decode(name))
 
         for name in self.git.ls_files(others=True, exclude_standard=True,
                                       z=True).split('\0'):
