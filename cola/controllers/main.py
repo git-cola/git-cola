@@ -276,6 +276,8 @@ class MainController(QObserver):
             self.log(*self.model.add_or_remove(modified))
         elif untracked:
             self.log(*self.model.add_or_remove(untracked))
+        elif unmerged:
+            self.log(*self.model.add_or_remove(unmerged))
         else:
             return
         self.rescan()
@@ -348,12 +350,13 @@ class MainController(QObserver):
             else:
                 items = self.model.get_unstaged()
                 selected = self.view.get_unstaged(items)
-                for unmerged in self.model.get_unmerged():
-                    if unmerged in selected:
-                        selected.remove(unmerged)
                 if selected:
                     self.log(*self.model.add_or_remove(selected))
-                    self.rescan()
+                items = self.model.get_unmerged()
+                selected = self.view.get_unmerged(items)
+                if selected:
+                    self.log(*self.model.add_or_remove(selected))
+                self.rescan()
         return result
 
     #####################################################################
