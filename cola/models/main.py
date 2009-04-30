@@ -12,12 +12,15 @@ from cStringIO import StringIO
 from cola import git
 from cola import core
 from cola import utils
-from cola import model
-from cola import observable
+from cola import errors
+from cola.models.observable import ObservableModel
 
 #+-------------------------------------------------------------------------
 #+ A regex for matching the output of git(log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile('([0-9a-f]+)\W(.*)')
+
+class GitInitError(errors.ColaError):
+    pass
 
 class GitCola(git.Git):
     """GitPython throws exceptions by default.
@@ -102,15 +105,14 @@ def eval_path(path):
     else:
         return path
 
-class Model(model.Model, observable.Observable):
-    """Provides a friendly wrapper for doing commit git operations."""
+class MainModel(ObservableModel):
+    """Provides a friendly wrapper for doing common git operations."""
 
     def __init__(self):
         """Reads git repository settings and sets several methods
         so that they refer to the git module.  This object
         encapsulates cola's interaction with git."""
-        model.Model.__init__(self)
-        observable.Observable.__init__(self)
+        ObservableModel.__init__(self)
 
         # Initialize the git command object
         self.git = GitCola()
@@ -166,22 +168,6 @@ class Model(model.Model, observable.Observable):
         self.push_helper = None
         self.pull_helper = None
         self.generate_remote_helpers()
-
-    def clone(self):
-        """Override Model.clone() to handle observers"""
-        # Go in and out of jsonpickle to create a clone
-        observers = self.get_observers()
-        self.set_observers([])
-        clone = Model.clone(self)
-        self.set_observers(observers)
-        return clone
-
-    def set_param(self, param, value, notify=True, check_params=False):
-        """Override Model.set_param() to handle notification"""
-        model.Model.set_param(self, param, value, check_params=check_params)
-        # Perform notifications
-        if notify:
-            self.notify_observers(param)
 
     def generate_remote_helpers(self):
         """Generates helper methods for fetch, push and pull"""
@@ -929,18 +915,22 @@ class Model(model.Model, observable.Observable):
         try:
             output = self.git.diff_index(head, M=True, with_stderr=True)
             if output.startswith('fatal:'):
-                raise Exception('git init')
+                raise GitInitError('git init')
             for line in output.splitlines():
-                rest, name = line.split('\t')
-                name = eval_path(name)
-                status = rest[-1]
+                info, name = line.split('\t', 1)
+                status = info.split()[-1]
                 if status == 'M' or status == 'D':
                     modified.append(eval_path(name))
                 elif status == 'A':
                     # newly-added yet modified
-                    if self._is_modified(name):
-                        modified.append(name)
-        except:
+                    if self._is_modified(eval_path(name)):
+                        modified.append(eval_path(name))
+                elif status[:1] == 'R':
+                    # Rename
+                    old, new = name.split('\t')
+                    staged.append(eval_path(old))
+
+        except GitInitError:
             # handle git init
             for name in (self.git.ls_files(modified=True, z=True)
                                  .split('\0')):
@@ -954,9 +944,9 @@ class Model(model.Model, observable.Observable):
                                          cached=True,
                                          with_stderr=True)
             if output.startswith('fatal:'):
-                raise Exception('git init')
+                raise GitInitError('git init')
             for line in output.splitlines():
-                rest, name = line.split('\t')
+                rest, name = line.split('\t', 1)
                 status = rest[-1]
                 name = eval_path(name)
                 if status  == 'M':
@@ -974,7 +964,7 @@ class Model(model.Model, observable.Observable):
                 elif status == 'U':
                     unmerged.append(name)
                     modified.remove(name)
-        except:
+        except GitInitError:
             # handle git init
             for name in self.git.ls_files(z=True).strip('\0').split('\0'):
                 if name:
@@ -984,6 +974,12 @@ class Model(model.Model, observable.Observable):
                                       z=True).split('\0'):
             if name:
                 untracked.append(core.decode(name))
+
+        # Keep stuff sorted
+        staged.sort()
+        modified.sort()
+        unmerged.sort()
+        untracked.sort()
 
         return (staged, modified, unmerged, untracked)
 

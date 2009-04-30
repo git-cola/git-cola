@@ -80,9 +80,9 @@ def main():
         sys.exit(-1)
 
     # Import cola modules
-    from cola.models import Model
-    from cola.views import View
-    from cola.controllers import Controller
+    from cola.models.main import MainModel
+    from cola.views.main import MainView
+    from cola.controllers.main import MainController
     from cola.app import ColaApplication
     from cola import qtutils
 
@@ -119,8 +119,8 @@ def main():
         _setup_resource_dir(resources.style_dir())
 
     # Initialize the model/view/controller framework
-    model = Model()
-    view = View(app.activeWindow())
+    model = MainModel()
+    view = MainView(app.activeWindow())
 
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
@@ -138,7 +138,7 @@ def main():
 
     # Show the GUI and start the event loop
     view.show()
-    ctl = Controller(model, view)
+    ctl = MainController(model, view)
     sys.exit(app.exec_())
 
 

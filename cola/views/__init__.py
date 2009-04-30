@@ -18,7 +18,6 @@ from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.syntax import LogSyntaxHighlighter
 
 try:
-    from main import View
     from cola.gui.about import Ui_about
     from cola.gui.bookmark import Ui_bookmark
     from cola.gui.branchview import Ui_branchview

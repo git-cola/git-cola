@@ -6,7 +6,6 @@ import re
 import time
 from PyQt4 import QtGui
 
-from cola.observer import Observer
 from cola.qobserver import QObserver
 from cola.views import SearchView
 from cola import qtutils

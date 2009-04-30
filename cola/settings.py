@@ -5,14 +5,12 @@
 import os
 import user
 
-from cola.model import Model
-from cola import observable
+from cola.models.observable import ObservableModel
 
-class SettingsModel(Model, observable.Observable):
+class SettingsModel(ObservableModel):
     def __init__(self):
         """Load existing settings if they exist"""
-        Model.__init__(self)
-        observable.Observable.__init__(self)
+        ObservableModel.__init__(self)
         self.bookmarks = []
         self.gui_state = {}
         self.load()
@@ -25,22 +23,13 @@ class SettingsModel(Model, observable.Observable):
         """Loads settings if they exist"""
         settings = self.path()
         if os.path.exists(settings):
-            Model.load(self, settings)
+            ObservableModel.load(self, settings)
 
     def save(self):
         """Saves settings to the .cola file"""
-        notify = self.get_notify()
-        observers = self.get_observers()
-
-        del self._notify
-        del self._observers
-
         # Call the base method
-        Model.save(self, self.path())
+        ObservableModel.save(self, self.path())
 
-        # Restore properties
-        self.set_notify(notify)
-        self.set_observers(observers)
 
     def set_gui_state(self, name, state):
         """Sets GUI state for a view"""

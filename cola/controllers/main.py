@@ -38,7 +38,7 @@ from cola.controllers.stash import stash
 from cola.controllers.util import choose_from_list
 from cola.controllers.util import choose_from_combo
 
-class Controller(QObserver):
+class MainController(QObserver):
     """Manages the interaction between models and views."""
 
     MODE_NONE = 0
@@ -296,20 +296,23 @@ class Controller(QObserver):
         if not parent:
             idx = self.view.status_tree.indexOfTopLevelItem(item)
             diff = 'no diff'
-            if (self.mode == Controller.MODE_REVIEW and
+            if (self.mode == self.MODE_REVIEW and
                       idx == self.view.IDX_STAGED):
                 diff = (self.model.git.diff(self.head,
                                             no_color=True, stat=True,
+                                            M=True,
                                             with_raw_output=True) +
                         '\n\n' +
                         self.model.git.diff(self.head, no_color=True))
             elif idx == self.view.IDX_STAGED:
                 diff = (self.model.git.diff(cached=True, stat=True,
+                                            M=True,
                                             no_color=True,
                                             with_raw_output=True) + '\n\n' +
                         self.model.git.diff(cached=True))
             elif idx == self.view.IDX_MODIFIED:
                 diff = (self.model.git.diff(stat=True,
+                                            M=True,
                                             no_color=True,
                                             with_raw_output=True) + '\n\n' +
                         self.model.git.diff(no_color=True))
@@ -425,7 +428,7 @@ class Controller(QObserver):
         txt, ok = qtutils.input('grep')
         if not ok:
             return
-        self.mode = Controller.MODE_GREP
+        self.mode = self.MODE_GREP
         stuff = self.model.git.grep(txt, n=True)
         self.view.display_text.setText(stuff)
         self.view.show_diff()
@@ -528,11 +531,11 @@ class Controller(QObserver):
             return
         if staged:
             if self.view.amend_is_checked():
-                self.mode = Controller.MODE_AMEND
+                self.mode = self.MODE_AMEND
             else:
-                self.mode = Controller.MODE_INDEX
+                self.mode = self.MODE_INDEX
         else:
-            self.mode = Controller.MODE_WORKTREE
+            self.mode = self.MODE_WORKTREE
 
     def view_diff(self, staged=True, scrollvalue=None):
         idx, selected = self.view.get_selection()
@@ -710,7 +713,7 @@ class Controller(QObserver):
 
     def reset_mode(self):
         """Sets the mode to the default NONE mode."""
-        self.mode = Controller.MODE_NONE
+        self.mode = self.MODE_NONE
 
     def clear_and_rescan(self, *rest):
         """Clears the current commit message and rescans.
@@ -778,7 +781,7 @@ class Controller(QObserver):
                             updated_unmerged +
                             updated_untracked)
         showdiff = False
-        if mode == Controller.MODE_WORKTREE:
+        if mode == self.MODE_WORKTREE:
             if unstaged:
                 for item in unstaged:
                     if item in updated_unstaged:
@@ -795,7 +798,7 @@ class Controller(QObserver):
                     self.reset_mode()
                     self.view.reset_display()
 
-        elif mode in (Controller.MODE_INDEX, Controller.MODE_AMEND):
+        elif mode in (self.MODE_INDEX, self.MODE_AMEND):
             if staged:
                 for item in staged:
                     if item in updated_staged:
@@ -830,14 +833,14 @@ class Controller(QObserver):
         """Updates the title with the current branch and other info"""
         title = '%s [%s]' % (self.model.get_project(),
                              self.model.get_currentbranch())
-        if self.mode == Controller.MODE_DIFF:
+        if self.mode == self.MODE_DIFF:
             title += ' *** diff mode***'
-        if self.mode == Controller.MODE_REVIEW:
+        if self.mode == self.MODE_REVIEW:
             title += ' *** review mode***'
         self.view.setWindowTitle(title)
 
     def alt_action(self):
-        if self.mode in Controller.MODES_READ_ONLY:
+        if self.mode in self.MODES_READ_ONLY:
             self.clear_and_rescan()
 
     def fetch(self):
@@ -874,7 +877,7 @@ class Controller(QObserver):
                                    + self.model.get_tags())
         if not branch:
             return
-        self.mode = Controller.MODE_DIFF
+        self.mode = self.MODE_DIFF
         self.head = branch
         self.view.alt_button.setText(self.tr('Exit Diff Mode'))
         self.view.alt_button.show()
@@ -888,7 +891,7 @@ class Controller(QObserver):
                                    + self.model.get_tags())
         if not branch:
             return
-        self.mode = Controller.MODE_REVIEW
+        self.mode = self.MODE_REVIEW
         self.head = '...'+branch
         self.view.alt_button.setText(self.tr('Exit Review Mode'))
         self.view.alt_button.show()
@@ -917,7 +920,7 @@ class Controller(QObserver):
         self.view.show_diff()
 
         # Set state machine to branch mode
-        self.mode = Controller.MODE_BRANCH
+        self.mode = self.MODE_BRANCH
         self.branch = branch
         self.filename = filename
 
@@ -925,7 +928,7 @@ class Controller(QObserver):
                                staged=True, apply_to_worktree=False,
                                reverse=False):
 
-        if self.mode == Controller.MODE_BRANCH:
+        if self.mode == self.MODE_BRANCH:
             branch = self.branch
             filename = self.filename
             parser = utils.DiffParser(self.model,
@@ -1077,7 +1080,7 @@ class Controller(QObserver):
             menu.addAction(self.tr('Stage Selected'), self.stage_selected)
             return menu
 
-        enable_staging = self.mode == Controller.MODE_WORKTREE
+        enable_staging = self.mode == self.MODE_WORKTREE
         if enable_staging:
             menu.addAction(self.tr('Stage Selected'), self.stage_selected)
             menu.addSeparator()
@@ -1107,7 +1110,7 @@ class Controller(QObserver):
         menu = QtGui.QMenu(self.view)
         staged, modified, unmerged, untracked = self.get_single_selection()
 
-        if self.mode == Controller.MODE_WORKTREE:
+        if self.mode == self.MODE_WORKTREE:
             if modified:
                 menu.addAction(self.tr('Stage Hunk For Commit'),
                                self.stage_hunk)
@@ -1117,15 +1120,15 @@ class Controller(QObserver):
                 menu.addAction(self.tr('Undo Hunk'), self.undo_hunk)
                 menu.addAction(self.tr('Undo Selection'), self.undo_selection)
 
-        elif self.mode == Controller.MODE_INDEX:
+        elif self.mode == self.MODE_INDEX:
             menu.addAction(self.tr('Unstage Hunk From Commit'), self.unstage_hunk)
             menu.addAction(self.tr('Unstage Selected Lines'), self.unstage_hunk_selection)
 
-        elif self.mode == Controller.MODE_BRANCH:
+        elif self.mode == self.MODE_BRANCH:
             menu.addAction(self.tr('Apply Diff to Work Tree'), self.stage_hunk)
             menu.addAction(self.tr('Apply Diff Selection to Work Tree'), self.stage_hunk_selection)
 
-        elif self.mode == Controller.MODE_GREP:
+        elif self.mode == self.MODE_GREP:
             menu.addAction(self.tr('Go Here'), self.goto_grep)
 
         menu.addSeparator()

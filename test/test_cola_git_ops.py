@@ -4,7 +4,7 @@ import os
 import unittest
 
 import helper
-from cola import models
+from cola.models import main
 
 class ColaBasicGitTestCase(helper.TestCase):
 
@@ -17,7 +17,7 @@ class ColaBasicGitTestCase(helper.TestCase):
             git add A B
             """)
 
-        model = models.Model()
+        model = main.MainModel()
         model.git.commit(m="commit test")
         log = helper.pipe('git log --pretty=oneline | wc -l')
 
@@ -29,7 +29,7 @@ class ColaBasicGitTestCase(helper.TestCase):
             git init 2>&1 >/dev/null
             git config section.key value
         """)
-        model = models.Model()
+        model = main.MainModel()
         value = model.git.config('section.key', get=True)
 
         self.failUnless(value == 'value')
