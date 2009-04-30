@@ -12,19 +12,29 @@ from cola import settings
 from cola.views import BookmarkView
 
 def save_bookmark():
+    """
+    Adds the current directory to the saved bookmarks
+
+    In practice, the current directory is the git worktree.
+
+    """
     model = settings.SettingsManager.settings()
     model.add_bookmark(os.getcwd())
     model.save()
     qtutils.information("Bookmark Saved")
 
 def manage_bookmarks():
+    """Launches the bookmarks manager dialog"""
     model = settings.SettingsManager.settings()
     view = BookmarkView(QtGui.QApplication.instance().activeWindow())
     ctl = BookmarkController(model, view)
     view.show()
 
 class BookmarkController(QObserver):
+    """Handles interactions with the bookmarks dialog
+    """
     def __init__(self, model, view):
+        """Sets up notifications and callbacks"""
         QObserver.__init__(self, model, view)
         self.add_observables('bookmarks')
         self.add_callbacks(button_open   = self.open,
@@ -33,10 +43,12 @@ class BookmarkController(QObserver):
         self.refresh_view()
 
     def save(self):
+        """Saves the bookmarks settings and exits"""
         self.model.save()
         self.view.accept()
 
     def open(self):
+        """Opens a new git cola session on a bookmark"""
         selection = qtutils.get_selection_list(self.view.bookmarks,
                                                self.model.bookmarks)
         if not selection:
@@ -45,6 +57,7 @@ class BookmarkController(QObserver):
             utils.fork(['git', 'cola', item])
 
     def delete(self):
+        """Removes a bookmark from the bookmarks list"""
         selection = qtutils.get_selection_list(self.view.bookmarks,
                                                self.model.bookmarks)
         if not selection:
