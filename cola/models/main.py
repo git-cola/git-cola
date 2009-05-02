@@ -168,6 +168,11 @@ class MainModel(ObservableModel):
         self.pull_helper = None
         self.generate_remote_helpers()
 
+    def all_files(self):
+        """Returns the names of all files in the repository"""
+        return [f for f in self.git.ls_files(z=True)
+                                   .strip('\0').split('\0') if f]
+
     def generate_remote_helpers(self):
         """Generates helper methods for fetch, push and pull"""
         self.fetch_helper = self.gen_remote_helper(self.git.fetch)
@@ -948,7 +953,7 @@ class MainModel(ObservableModel):
 
         except GitInitError:
             # handle git init
-            for name in self.git.ls_files(z=True).strip('\0').split('\0'):
+            for name in self.all_files():
                 if name:
                     staged.append(core.decode(name))
 
