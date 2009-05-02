@@ -72,34 +72,35 @@ class DrawerCentralWidget(QtGui.QWidget):
         self._layout.addWidget(self._drawerbottom)
         self._layout.setStretchFactor(self._drawerbottom, 0)
 
+    def add_bottom_drawer(self, widget):
+        """Add a widget to the bottom drawer"""
+        location = self.LOCATION_BOTTOM
+        self.add_drawer(location, widget)
 
     def add_drawer(self, location, widget, opened=False):
         """Add a widget to one of the supported regions
 
         'location' refers to the enumeration in DrawerCentralWidget.
         This opens the drawer in the region when opened is True.
-
         """
-
-        if location == DrawerCentralWidget.LOCATION_TOP:
+        if location == self.LOCATION_TOP:
             self._drawertop.add_widget(widget, opened)
             self._drawertop.show()
 
-        elif location == DrawerCentralWidget.LOCATION_BOTTOM:
+        elif location == self.LOCATION_BOTTOM:
             self._drawerbottom.add_widget(widget, opened)
             self._drawerbottom.show()
 
-        elif location == DrawerCentralWidget.LOCATION_LEFT:
+        elif location == self.LOCATION_LEFT:
             self._drawerleft.add_widget(widget, opened)
             self._drawerleft.show()
         
-        elif location == DrawerCentralWidget.LOCATION_RIGHT:
+        elif location == self.LOCATION_RIGHT:
             self._drawerright.add_widget(widget, opened)
             self._drawerright.show()
         else:
             raise Exception("Invalid drawer location: '%s'" % str(location))
 
-            
     def setCentralWidget(self, widget):
         """Makes widget the center widget with the four surrounding drawers"""
 
@@ -120,16 +121,16 @@ class DrawerCentralWidget(QtGui.QWidget):
     def open_drawer(self, location, opened=True):
         """Opens a drawer"""
 
-        if location == DrawerCentralWidget.LOCATION_TOP:
+        if location == self.LOCATION_TOP:
             self._drawertop.close(not opened)
 
-        elif location == DrawerCentralWidget.LOCATION_BOTTOM:
+        elif location == self.LOCATION_BOTTOM:
             self._drawerbottom.close(not opened)
 
-        elif location == DrawerCentralWidget.LOCATION_LEFT:
+        elif location == self.LOCATION_LEFT:
             self._drawerleft.close(not opened)
         
-        elif location == DrawerCentralWidget.LOCATION_RIGHT:
+        elif location == self.LOCATION_RIGHT:
             self._drawerright.close(not opened)
 
 

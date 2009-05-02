@@ -86,7 +86,7 @@ class MainController(QObserver):
 
         # Parent-less log window
         qtutils.LOGGER = logger(model, view)
-        view.add_drawer(Drawer.LOCATION_BOTTOM, qtutils.LOGGER.view)
+        view.centralWidget().add_bottom_drawer(qtutils.LOGGER.view)
 
         # Unstaged changes context menu
         view.status_tree.contextMenuEvent = self.tree_context_menu_event
