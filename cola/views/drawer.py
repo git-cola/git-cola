@@ -167,9 +167,6 @@ class Drawer(QtGui.QWidget):
         widget.show()
         self.close(not openmode)
 
-    def isOpen(self):
-        return not self._drawer.closed()
-
 
 class DrawerHandle(QtGui.QWidget):
     '''DrawerHandle is the 'button'/'handle' of a Drawer

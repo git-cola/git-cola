@@ -15,8 +15,8 @@ from cola import difftool
 from cola import resources
 from cola import settings
 from cola.qobserver import QObserver
-from cola.views import AboutView
-from cola.views.drawer import Drawer
+from cola.views import about
+from cola.views import drawer
 
 # controllers namespace
 from cola.controllers.bookmark import save_bookmark
@@ -205,7 +205,7 @@ class MainController(QObserver):
             menu_view_log = self.view.display_log,
 
             # Help Menu
-            menu_help_about = self.about,
+            menu_help_about = lambda: about.launch_about_dialog(self.view),
             menu_help_docs =
                 lambda: self.model.git.web__browse(resources.html_docs()),
             )
@@ -441,15 +441,6 @@ class MainController(QObserver):
 
     #####################################################################
     # Qt callbacks
-    def about(self):
-        """The Help -> About dialog"""
-        view = AboutView(self.view)
-        style = QtGui.QApplication.instance().styleSheet()
-        if style:
-            view.setStyleSheet(style)
-        view.show()
-        view.set_version(version.get_version())
-
     def tr(self, fortr):
         """Translates strings"""
         return qtutils.tr(fortr)
