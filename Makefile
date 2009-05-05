@@ -7,6 +7,10 @@ PYTHON_SITE	?= $(DESTDIR)$(prefix)/lib/python$(PYTHON_VER)/site-packages
 all:
 	$(PYTHON) setup.py build && rm -rf build
 
+macapp: all
+	rm -rf dist
+	$(PYTHON) darwin/py2app-setup.py py2app
+
 install:
 	$(PYTHON) setup.py --quiet install \
 		--prefix=$(prefix) \

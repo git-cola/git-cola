@@ -1,0 +1,10 @@
+To build Mac OSX installers you need to setup your build environment
+first.  MacPorts can be used for this.
+
+The macports-setup-dev-env.sh script sets up your build environment.
+It'll take a long time to run.
+
+Once it's complete, running this from the command-prompt
+should generate a dist/git-cola.app file:
+
+	$ python darwin/py2app-setup.py py2app
