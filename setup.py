@@ -76,6 +76,7 @@ def _run_setup(git_version):
             _app_path('share/applications', '*.desktop'),
             _app_path('share/doc/git-cola', '*.txt'),
             _lib_path('cola/*.py'),
+            _lib_path('cola/models/*.py'),
             _lib_path('cola/controllers/*.py'),
             _lib_path('cola/gui/*.py'),
             _lib_path('cola/views/*.py'),
