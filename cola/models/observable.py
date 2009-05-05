@@ -22,6 +22,8 @@ class ObservableModel(Model, Observable):
         notify, observers = self._remove_internals()
         clone = Model.clone(self)
         self._restore_internals(notify, observers)
+        clone.set_observers([])
+        clone.set_notify(True)
         return clone
 
     def set_param(self, param, value, notify=True, check_params=False):
