@@ -22,8 +22,11 @@ OPTIONS
 
 --style=<style>::
 	Launch 'git-cola' with a different stylesheet.
-	'git-cola' currently ships with a built-in "dark" style.
-	To use it, specify `--style=dark`.
+
+GUI STYLES
+----------
+'git-cola' ships with an alternate "dark" stylesheet.
+Specify `--style=dark` or provide an external stylesheet with `--style=PATH`.
 
 CONFIG VARIABLES
 ----------------
@@ -45,14 +48,18 @@ gui.diffcontext::
 
 gui.editor::
 	The default text editor is controlled by gui.editor.
-	This config variable overrides the EDITOR environment variable.
+	The config variable overrides the EDITOR environment variable.
 
 gui.historybrowser::
 	Specifies the history browser to use when visualizing history.
 
+diff.tool::
+	The default diff tool to use.
+	The config variable overrides the GIT_DIFF_TOOL environment variable.
+
 merge.tool::
 	The default merge tool to use.
-	This config variable overrides the MERGETOOL environment variable.
+	The config variable overrides the GIT_MERGE_TOOL environment variable.
 
 user.email::
 	Your email address to be recorded in any newly created commits.
@@ -75,7 +82,11 @@ EDITOR::
 	Specifies the default editor to use.
 	This is ignored when the git config variable `gui.editor` is defined.
 
-MERGETOOL::
+GIT_DIFF_TOOL::
+	Specifies the default diff tool to use.
+	This is ignored when the git config variable `diff.tool` is defined.
+
+GIT_MERGE_TOOL::
 	Specifies the default merge tool to use.
 	This is ignored when the git config variable `merge.tool` is defined.
 
