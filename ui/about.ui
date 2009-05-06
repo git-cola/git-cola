@@ -28,7 +28,7 @@
    </size>
   </property>
   <property name="windowTitle" >
-   <string>about git cola</string>
+   <string>about git-cola</string>
   </property>
   <property name="styleSheet" >
    <string notr="true" >QWidget { background-color: white; color: #666; }</string>
@@ -67,7 +67,7 @@
     </font>
    </property>
    <property name="text" >
-    <string>git cola: a highly caffeinated git gui v$VERSION
+    <string>git-cola: a highly caffeinated git gui v$VERSION
 
 cola is a sweet, carbonated git gui known for its
 sugary flavour and caffeine-inspired features.

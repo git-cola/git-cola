@@ -1,4 +1,4 @@
-git cola: a highly caffeinated git gui
+git-cola: a highly caffeinated git gui
 
 cola is a sweet, carbonated git gui known for its
 sugary flavour and caffeine-inspired features.
@@ -27,5 +27,8 @@ See the 'INSTALL' file for more details.
 
 ACKNOWLEDGEMENTS
 
-git cola includes a copy of the GitPython module:
-    http://gitorious.org/projects/git-python/
+git-cola includes a copy of the following modules:
+
+GitPython ~ http://gitorious.org/projects/git-python/
+jsonpickle ~ http://code.google.com/p/jsonpickle/
+simplejson ~ http://code.google.com/p/simplejson/

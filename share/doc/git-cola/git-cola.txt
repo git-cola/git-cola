@@ -102,10 +102,10 @@ A 'git-cola' development repository can be obtained via git:
 STYLESHEETS
 -----------
 
-git cola ships with an alternative stylesheet called 'dark'.
+git-cola ships with an alternative stylesheet called 'dark'.
 You can use this stylesheet by running `git cola --style=dark`.
 
-You can also skin git cola by providing your own Qt stylesheet.
+You can also skin git-cola by providing your own Qt stylesheet.
 E.g. `git cola --style=/path/to/style.qss`.
 
 Built-in styles can be found in `/usr/share/git-cola/styles`.

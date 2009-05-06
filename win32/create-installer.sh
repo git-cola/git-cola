@@ -45,7 +45,7 @@ cp win32/git.bmp win32/gpl-2.0.rtf win32/git.ico $ETC
 
 NOTES=$ETC/ReleaseNotes.txt
 
-printf "git cola: v$VERSION\nBottled-on: $(date)\n\n\n" > $NOTES
+printf "git-cola: v$VERSION\nBottled-on: $(date)\n\n\n" > $NOTES
 printf "To run cola, just type 'cola' from a Git Bash session.\n\n\n" >> $NOTES
 if test -f meta/ReleaseNotes; then
 	cat meta/ReleaseNotes  >> $NOTES
