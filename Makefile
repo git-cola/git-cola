@@ -3,7 +3,7 @@ DESTDIR	?= /
 PYTHON	?= python
 PYTHON_VER	?= $(shell $(PYTHON) -c 'import platform; print platform.python_version()[:3]')
 PYTHON_SITE	?= $(DESTDIR)$(prefix)/lib/python$(PYTHON_VER)/site-packages
-COLA_VER	?= $(shell git describe --match 'v*.*')
+COLA_VER	?= $(shell git describe --abbrev=4 --match='v*.*')
 
 all:
 	$(PYTHON) setup.py build && rm -rf build
@@ -17,6 +17,7 @@ git-cola.app: darwin
 	mv dist/git-cola.app $(CURDIR)
 	find git-cola.app -name '*_debug*' | xargs rm -f
 	tar cjf git-cola-$(COLA_VER).app.tar.bz2 git-cola.app
+	rm -rf build dist
 
 install:
 	$(PYTHON) setup.py --quiet install \
