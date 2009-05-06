@@ -74,6 +74,7 @@ def _run_setup(git_version):
 def cola_data_files():
     return [_app_path('share/git-cola/qm', '*.qm'),
             _app_path('share/git-cola/icons', '*.png'),
+            _app_path('share/git-cola/icons', '*.svg'),
             _app_path('share/git-cola/styles', '*.qss'),
             _app_path('share/git-cola/styles/images', '*.png'),
             _app_path('share/applications', '*.desktop'),

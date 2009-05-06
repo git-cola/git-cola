@@ -22,7 +22,7 @@ class ColaApplication(object):
         # monkey-patch Qt's app translate() to handle .po files
         if gui:
             self._app = QtGui.QApplication(argv)
-            self._app.setWindowIcon(QtGui.QIcon(resources.icon('git.png')))
+            self._app.setWindowIcon(QtGui.QIcon(resources.icon('git.svg')))
             self._translate_base = QtGui.QApplication.translate
             QtGui.QApplication.translate = self.translate
         else:
