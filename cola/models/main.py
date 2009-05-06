@@ -941,6 +941,7 @@ class MainModel(ObservableModel):
                 elif status == 'D':
                     staged.append(name)
                     staged_set.add(name)
+                    modified_set.add(name)
                 elif status == 'U':
                     unmerged.append(name)
                     modified_set.add(name)
