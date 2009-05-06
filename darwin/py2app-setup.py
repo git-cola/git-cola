@@ -26,6 +26,7 @@ try:
                      data_files=cola_data_files(),
                      options={'py2app': {'argv_emulation': True,
                                          'argv_inject': '--repo',
+                                         'iconfile': 'darwin/git-cola.icns',
                                          'includes': ['sip', 'PyQt4._qt']}},
                      setup_requires=['py2app'])
 finally:

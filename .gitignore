@@ -4,6 +4,7 @@
 *.rpm
 *.swp
 *~
+.DS_Store
 .noseids
 /build
 /build-stamp
