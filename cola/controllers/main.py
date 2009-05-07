@@ -766,8 +766,8 @@ class MainController(QObserver):
 
         # Stop inotify threads
         if self.has_inotify():
-            self.inotify_thread.abort = True
-            self.inotify_thread.terminate()
+            self.inotify_thread.set_abort(True)
+            self.inotify_thread.quit()
             self.inotify_thread.wait()
         self.view.close()
 

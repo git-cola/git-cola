@@ -68,6 +68,10 @@ class GitNotifier(QtCore.QThread):
                       EventsCodes.ALL_FLAGS['IN_MODIFY'] |
                       EventsCodes.ALL_FLAGS['IN_MOVED_TO'])
 
+    def set_abort(self, abort):
+        """Tells the GitNotifier to abort"""
+        self._abort = abort
+
     def notify(self):
         """Post a Qt event in response to inotify updates"""
         if not self._abort:
