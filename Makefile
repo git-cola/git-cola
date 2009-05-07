@@ -4,6 +4,8 @@ PYTHON	?= python
 PYTHON_VER	?= $(shell $(PYTHON) -c 'import platform; print platform.python_version()[:3]')
 PYTHON_SITE	?= $(DESTDIR)$(prefix)/lib/python$(PYTHON_VER)/site-packages
 COLA_VER	?= $(shell git describe --abbrev=4 --match='v*.*')
+APP	?= git-cola.app
+APPZIP	?= git-cola-$(COLA_VER).app.tar.bz2
 
 all:
 	$(PYTHON) setup.py build && rm -rf build
@@ -12,12 +14,13 @@ darwin: all
 	rm -rf dist
 	$(PYTHON) darwin/py2app-setup.py py2app
 
-git-cola.app: darwin
-	rm -rf git-cola.app
-	mv dist/git-cola.app $(CURDIR)
-	find git-cola.app -name '*_debug*' | xargs rm -f
-	tar cjf git-cola-$(COLA_VER).app.tar.bz2 git-cola.app
+$(APP): darwin
+	rm -rf $(APP)
+	mv dist/$(APP) $(CURDIR)
+	find $(APP) -name '*_debug*' | xargs rm -f
+	tar cjf $(APPZIP) $(APP)
 	rm -rf build dist
+	mv $(APPZIP) $(shell darwin/name-tarball.py $(APPZIP))
 
 install:
 	$(PYTHON) setup.py --quiet install \

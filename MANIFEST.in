@@ -4,6 +4,7 @@ include cola/models/*.py
 include cola/gui/*.py
 include cola/controllers/*.py
 include cola/views/*.py
+include darwin/*
 include jsonpickle/LICENSE
 include jsonpickle/*.py
 include jsonpickle/tests/*.py
@@ -32,3 +33,4 @@ include share/git-cola/po/*.po
 include share/git-cola/icons/*.png
 include share/git-cola/styles/*.qss
 include share/git-cola/styles/images/*.png
+include win32/*
