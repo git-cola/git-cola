@@ -50,7 +50,7 @@ uninstall:
 		"$(DESTDIR)$(prefix)"/share/git-cola \
 		"$(DESTDIR)$(prefix)"/share/doc/git-cola
 
-test:
+test: all
 	@env PYTHONPATH=$(CURDIR):$(PYTHONPATH) \
 		nosetests --verbose --with-doctest --with-id
 
