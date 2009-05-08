@@ -116,12 +116,6 @@ def _argv_inject(argv):
 _argv_inject(['--repo'])
 
 
-def _chdir_resource():
-    import os
-    os.chdir(os.environ['RESOURCEPATH'])
-_chdir_resource()
-
-
 def _disable_linecache():
     import linecache
     def fake_getline(*args, **kwargs):
