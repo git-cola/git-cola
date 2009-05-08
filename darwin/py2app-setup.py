@@ -3,6 +3,7 @@ import os
 import sys
 import glob
 import shutil
+import platform
 
 # Find the root of the source tree
 sourcedir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,10 +23,12 @@ shutil.copy(src, dst)
 # does this unconditionally, even when there are no
 # arguments to process.
 try:
+    prefer_ppc = platform.processor() == 'powerpc'
     setuptools.setup(app=['darwin/git-cola.py'],
                      data_files=cola_data_files(),
                      options={'py2app': {'argv_emulation': True,
                                          'argv_inject': '--repo',
+                                         'prefer_ppc': prefer_ppc,
                                          'iconfile': 'darwin/git-cola.icns',
                                          'includes': ['sip', 'PyQt4._qt']}},
                      setup_requires=['py2app'])
