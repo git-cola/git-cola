@@ -1,19 +1,20 @@
 #!/bin/sh
-pinstall() {
-    sudo port -v install "$@"
+# as root
+if test -d /opt/local/bin; then
+	PATH=/opt/local/bin:"$PATH"
+	export PATH
+fi
+getport() {
+    port -v install "$@"
 }
 
-pinstall autoconf
-pinstall gettext
-pinstall zlib
-pinstall qt4-mac
-pinstall python25
-pinstall python_select
+getport qt4-mac
+getport python25
+getport python_select
 
-sudo python_select python25
+python_select python25
 
-pinstall py25-macholib-devel
-pinstall py25-sip
-pinstall py25-pyqt4
-pinstall py25-py2app-devel
-pinstall py25-nose
+getport subversion
+getport py25-py2app-devel
+getport py25-nose
+getport py25-pyqt4
