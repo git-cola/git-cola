@@ -10,6 +10,7 @@ from cola.views import CreateBranchView
 from cola.qobserver import QObserver
 
 def create_new_branch(model,parent,revision=''):
+    """Launches a dialog for creating a new branch"""
     model = model.clone()
     view = CreateBranchView(parent)
     ctl = CreateBranchController(model, view)
@@ -17,6 +18,7 @@ def create_new_branch(model,parent,revision=''):
     view.show()
 
 class CreateBranchController(QObserver):
+    """Provides control for the "create branch" dialog"""
     def __init__(self, model, view):
         QObserver.__init__(self, model, view)
         self._remoteclicked = False
@@ -31,7 +33,7 @@ class CreateBranchController(QObserver):
     #+--------------------------------------------------------------------
     #+ Qt callbacks
     def create_branch(self):
-        """Called by the "Create Branch" button"""
+        """Creates a branch; called by the "Create Branch" button"""
 
         revision = self.model.get_revision()
         branch = self.model.get_local_branch()
@@ -81,6 +83,7 @@ class CreateBranchController(QObserver):
             if not result:
                 return
 
+        # TODO handle fetch
         track = self.view.remote_radio.isChecked()
         fetch = self.view.fetch_checkbox.isChecked()
         ffwd = self.view.ffwd_only_radio.isChecked()
@@ -97,13 +100,16 @@ class CreateBranchController(QObserver):
         self.view.accept()
 
     def branch_item_changed(self, *rest):
-        """This callback is called when the branch list selection changes"""
+        """This callback is called when the branch selection changes"""
 
+        # When the branch selection changes then we should update
+        # the "Revision Expression" accordingly.
         qlist = self.view.branch_list
-        ( row, selected ) = qtutils.get_selected_row(qlist)
-        if not selected: return
+        (row, selected) = qtutils.get_selected_row(qlist)
+        if not selected:
+            return
 
-        sources = self.__get_branch_sources()
+        sources = self._get_branch_sources()
         rev = sources[row]
 
         # Update the model with the selection
@@ -121,14 +127,15 @@ class CreateBranchController(QObserver):
         self.model.set_local_branch(branch)
         self._remoteclicked = False
 
-    ######################################################################
-
     def display_model(self):
-        branches = self.__get_branch_sources()
+        """Sets the branch list to the available branches
+        """
+        branches = self._get_branch_sources()
         qtutils.set_items(self.view.branch_list, branches)
 
-    def __get_branch_sources(self):
-        """Get the list of items for populating the branch root list."""
+    def _get_branch_sources(self):
+        """Get the list of items for populating the branch root list.
+        """
         if self.view.local_radio.isChecked():
             return self.model.get_local_branches()
         elif self.view.remote_radio.isChecked():
