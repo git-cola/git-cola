@@ -24,10 +24,7 @@ def create_standard_view(uiclass, qtclass, *classes):
                 cls.__init__(self, parent, *args, **kwargs)
 
         def show(self):
-            """Automatically centers dialogs relative to their
-            parent window.
-
-            """
+            """Automatically centers and raises dialogs"""
             if self.parent_view:
                 left = self.parent_view.x()
                 width = self.parent_view.width()
@@ -39,6 +36,7 @@ def create_standard_view(uiclass, qtclass, *classes):
                 self.move(x, y)
             # Call the base Qt show()
             self.__qtclass.show(self)
+            self.raise_()
 
         def name(self):
             """Returns the name of the view class"""
