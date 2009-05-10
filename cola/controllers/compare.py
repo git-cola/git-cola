@@ -59,6 +59,7 @@ class BranchCompareController(QObserver):
 
     BRANCH_POINT = '*** Branch Point ***'
     SANDBOX      = '*** Sandbox ***'
+    LOCAL        = 'Local'
 
     def __init__(self, model, view):
         QObserver.__init__(self, model, view)
@@ -71,9 +72,9 @@ class BranchCompareController(QObserver):
         self.add_callbacks(button_compare =
                                 self.diff_files_doubleclick,
                            left_combo =
-                                self.gen_update_combo_boxes(left=True),
+                               lambda x: self.update_combo_boxes(left=True),
                            right_combo =
-                                self.gen_update_combo_boxes(left=False),
+                                lambda x: self.update_combo_boxes(left=False),
                            left_list =
                                 self.update_diff_files,
                            right_list =
@@ -155,30 +156,32 @@ class BranchCompareController(QObserver):
             return branch
 
 
-    def gen_update_combo_boxes(self, left=False):
-        """Returns a closure which modifies the listwidgets based on the
-        combobox selection.
-        """
-        def update_combo_boxes(notused):
-            if left:
-                which = self.model.get_left_combo_item()
-                param = 'left_list'
-            else:
-                which = self.model.get_right_combo_item()
-                param = 'right_list'
-            if not which:
-                return
-            if which == 'Local':
-                new_list = ([BranchCompareController.SANDBOX]+
-                            self.model.get_local_branches())
-            else:
-                new_list = ([BranchCompareController.BRANCH_POINT] +
-                            self.model.get_remote_branches())
-            # Update the list widget
-            self.model.set_notify(True)
-            self.model.set_param(param, new_list)
+    def update_combo_boxes(self, left=False):
+        """Update listwidgets from the combobox selection
 
-        return update_combo_boxes
+        Returns a closure to update either the left or right listwidgets
+        to reflect the available items.
+        """
+        if left:
+            which = self.model.get_left_combo_item()
+            param = 'left_list'
+        else:
+            which = self.model.get_right_combo_item()
+            param = 'right_list'
+        if not which:
+            return
+        # If we're looking at "local" stuff then provide the
+        # sandbox as a valid choice.  If we're looking at
+        # "remote" stuff then also include the branch point.
+        if which == self.LOCAL:
+            new_list = ([BranchCompareController.SANDBOX]+
+                        self.model.get_local_branches())
+        else:
+            new_list = ([BranchCompareController.BRANCH_POINT] +
+                        self.model.get_remote_branches())
+        # Update the list widget
+        self.model.set_notify(True)
+        self.model.set_param(param, new_list)
 
     def diff_files_doubleclick(self):
         """Shows the diff for a specific file
@@ -189,9 +192,10 @@ class BranchCompareController(QObserver):
             qtutils.information('Oops!', 'Please select a file to compare')
             return
         filename = self.model.get_diff_files()[id_num]
-        self.__compare_file(filename)
+        self._compare_file(filename)
 
-    def __compare_file(self, filename):
+    def _compare_file(self, filename):
+        """Initiates the difftool session"""
         git = self.model.git
         if self.use_sandbox:
             arg = self.diff_arg
@@ -225,9 +229,9 @@ class CompareController(QObserver):
         # "changed files".  Clicking on the "Compare" button should
         # initiate a difftool session.
         self.add_callbacks(descriptions_start =
-                                self.gen_update_widgets(True),
+                                lambda *x: self.update_widgets(left=True),
                            descriptions_end =
-                                self.gen_update_widgets(False),
+                                lambda *x: self.update_widgets(left=False),
                            button_compare =
                                 self.compare_selected_file)
         self.refresh_view()
@@ -296,11 +300,6 @@ class CompareController(QObserver):
 
         return revs
 
-    def gen_update_widgets(self, left=True):
-        def update(*args):
-            self.update_widgets(left=left)
-        return update
-
     def update_widgets(self, left=True):
         """Updates the list of available revisions for comparison
         """
@@ -354,13 +353,19 @@ class CompareController(QObserver):
     def compare_selected_file(self):
         """Compares the currently selected file
         """
+        # When a filename was provided in the constructor then we
+        # simply compare that file
+        if self.filename:
+            self._compare_file(self.filename)
+            return
+        # Otherwise, use the selection to choose the compared file
         tree_widget = self.view.compare_files
         id_num, selected = qtutils.get_selected_treeitem(tree_widget)
-        if not selected and not self.filename:
+        if not selected:
             qtutils.information('Oops!', 'Please select a file to compare')
             return
-        filename = self.filename or self.model.get_compare_files()[id_num]
-        self.__compare_file(filename)
+        filename = self.model.get_compare_files()[id_num]
+        self._compare_file(filename)
 
     def compare_files_doubleclick(self, tree_item, column):
         """Compares a file when it is double-clicked
@@ -368,9 +373,9 @@ class CompareController(QObserver):
         # Assumes the listwidget's indexes matches the model's index
         idx = self.view.compare_files.indexOfTopLevelItem(tree_item)
         filename = self.model.get_compare_files()[idx]
-        self.__compare_file(filename)
+        self._compare_file(filename)
 
-    def __compare_file(self, filename):
+    def _compare_file(self, filename):
         """Initiates a difftool session for a single file
         """
         git = self.model.git
