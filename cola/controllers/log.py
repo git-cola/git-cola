@@ -8,11 +8,11 @@ from cola.views import LogView
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def logger(model, parent):
-    """Returns an instance of a log controller"""
+    """Returns an instance of a log controller."""
     return LogController(model, parent)
 
 class LogController(object):
-    """The output log controller"""
+    """The output log controller."""
 
     def __init__(self, model, parent):
         self.model = model
@@ -20,9 +20,11 @@ class LogController(object):
         self.parent = parent
 
     def clear(self):
+        """Clears the log."""
         self.view.output_text.clear()
 
     def log(self, status, output):
+        """Appends output into the log window"""
         if not output:
             return
         self.view.log(output)

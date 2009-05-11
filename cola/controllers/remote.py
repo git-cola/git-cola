@@ -11,6 +11,7 @@ from cola.views.drawer import Drawer
 from cola.qobserver import QObserver
 
 def remote_action(model, parent, action):
+    """Launches fetch/push/pull dialogs."""
     # TODO: subclass model
     model = model.clone()
     model.generate_remote_helpers()
@@ -24,6 +25,7 @@ def remote_action(model, parent, action):
     view.show()
 
 class RemoteController(QObserver):
+    """Provides control for the remote-action dialog."""
     def __init__(self, model, view, action):
         QObserver.__init__(self, model, view)
         self.add_observables('remotename',
@@ -36,11 +38,14 @@ class RemoteController(QObserver):
                              'rebase_checkbox',
                              'ffwd_only_checkbox')
         self.action = action
+        """The current mode; one of fetch/push/pull"""
+
         self.action_method = {
             'fetch': self.gen_remote_callback(self.model.fetch_helper),
             'push': self.gen_remote_callback(self.model.push_helper),
             'pull': self.gen_remote_callback(self.model.pull_helper),
         }   [action]
+        """Callbacks corresponding to the 3 (fetch/push/pull) modes"""
 
         self.add_actions(remotes = self.display_remotes)
         self.add_callbacks(action_button = self.action_method,
@@ -69,6 +74,7 @@ class RemoteController(QObserver):
             self.model.set_local_branch(branch)
 
     def display_remotes(self, widget):
+        """Display the available remotes in a listwidget"""
         displayed = []
         for remotename in self.model.get_remotes():
             url = self.model.remote_url(remotename)
@@ -78,6 +84,7 @@ class RemoteController(QObserver):
         qtutils.set_items(widget,displayed)
 
     def update_remotes(self,*rest):
+        """Update the remote name when a remote from the list is selected"""
         widget = self.view.remotes
         remotes = self.model.get_remotes()
         selection = qtutils.get_selected_item(widget, remotes)
@@ -87,6 +94,7 @@ class RemoteController(QObserver):
         self.view.remotename.selectAll()
 
     def update_local_branches(self,*rest):
+        """Update the local/remote branch names when a branch is selected"""
         branches = self.model.get_local_branches()
         widget = self.view.local_branches
         selection = qtutils.get_selected_item(widget, branches)
@@ -100,6 +108,7 @@ class RemoteController(QObserver):
         self.view.remote_branch.selectAll()
 
     def update_remote_branches(self,*rest):
+        """Update the remote branch name when a branch is selected"""
         widget = self.view.remote_branches
         branches = self.model.get_remote_branches()
         selection = qtutils.get_selected_item(widget,branches)
@@ -112,6 +121,8 @@ class RemoteController(QObserver):
         self.view.remote_branch.selectAll()
 
     def get_common_args(self):
+        """Returns git arguments common to fetch/push/pulll"""
+        # TODO move to model
         return (self.model.get_remotename(),
                 {
                     'local_branch': self.model.get_local_branch(),

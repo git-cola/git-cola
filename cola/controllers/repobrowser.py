@@ -12,6 +12,7 @@ from cola.views import CommitView
 from cola.qobserver import QObserver
 
 def select_file_from_repo(model, parent):
+    """Launche a dialog to selecting a filename from a branch."""
     model = model.clone()
     view = CommitView(parent)
     controller = RepoBrowserController(model, view,
@@ -24,6 +25,7 @@ def select_file_from_repo(model, parent):
         return None
 
 def browse_git_branch(model, parent, branch):
+    """Launch a dialog to browse files in a specific branch."""
     if not branch:
         return
     # Clone the model to allow opening multiple browsers
@@ -36,11 +38,17 @@ def browse_git_branch(model, parent, branch):
     return view.exec_() == QDialog.Accepted
 
 class RepoBrowserController(QObserver):
+    """Provides control to the Repository Browser."""
     def __init__(self, model, view,
                  title='File Browser', get_file=False):
         QObserver.__init__(self, model, view)
+
         self.get_file = get_file
+        """Whether we should returns a selected file"""
+
         self.filename = None
+        """The last selected filename"""
+
         view.setWindowTitle(title)
         self.add_signals('itemSelectionChanged()', view.commit_list,)
         self.add_actions(directory = self.action_directory_changed)
@@ -51,11 +59,13 @@ class RepoBrowserController(QObserver):
         self.refresh_view()
 
     def context_menu_event(self, event):
+        """Generate a context menu for the repository browser."""
         menu = QMenu(self.view);
         menu.addAction(self.tr('Blame'), self.blame)
         menu.exec_(self.view.commit_list.mapToGlobal(event.pos()))
 
     def blame(self):
+        """Show git-blame output for a file path."""
         current = self.view.commit_list.currentRow()
         item = self.view.commit_list.item(current)
         if item is None or not item.isSelected():
@@ -80,16 +90,14 @@ class RepoBrowserController(QObserver):
     ######################################################################
     # Actions
     def action_directory_changed(self):
-        """This is called in response to a change in the the
-        model's directory."""
+        """Called in response to a change in the model's directory."""
         self.model.init_browser_data()
-        self.__display_items()
+        self._display_items()
 
     ######################################################################
     # Qt callbacks
     def item_changed(self,*rest):
-        """This is called when the current item changes in the
-        file/directory list(aka the commit_list)."""
+        """Called when the current item changes"""
         current = self.view.commit_list.currentRow()
         item = self.view.commit_list.item(current)
         if item is None or not item.isSelected():
@@ -141,11 +149,14 @@ class RepoBrowserController(QObserver):
 
     # automatically called by qobserver
     def commit_list_doubleclick(self,*rest):
-        """This is called when an entry is double-clicked.
+        """
+        Called when an entry is double-clicked.
+
         This callback changes the model's directory when
         invoked on a directory item.  When invoked on a file
-        it allows the file to be saved."""
-
+        it allows the file to be saved.
+        
+        """
         current = self.view.commit_list.currentRow()
         directories = self.model.get_directories()
 
@@ -179,6 +190,7 @@ class RepoBrowserController(QObserver):
         dirent = directories[current]
         curdir = self.model.get_directory()
 
+        # "change directories"
         # '..' is a special case--it doesn't really exist...
         if dirent == '..':
             newdir = os.path.dirname(os.path.dirname(curdir))
@@ -189,24 +201,28 @@ class RepoBrowserController(QObserver):
         else:
             self.model.set_directory(curdir + dirent)
 
-    ######################################################################
+    def _display_items(self):
+        """
+        Populate the commit_list with the current directories and items
 
-    def __display_items(self):
-        """This method populates the commit_list(aka item list)
-        with the current directories and items.  Directories are
-        always listed first."""
+        Directories are always listed first.
+        
+        """
 
+        # Clear commit/revision fields
         self.view.commit_text.setText('')
         self.view.revision.setText('')
 
         dir_icon = resources.icon('dir.png')
         file_icon = resources.icon('generic.png')
+        # Factory method for creating items
         creator = qtutils.create_listwidget_item
 
+        # First the directories,
         qtutils.set_items(self.view.commit_list,
                           map(lambda d: creator(d, dir_icon),
                               self.model.get_directories()))
-
+        # and now the filenames
         qtutils.add_items(self.view.commit_list,
                           map(lambda s: creator(s, file_icon),
                               self.model.get_subtree_names()))

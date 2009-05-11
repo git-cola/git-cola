@@ -9,6 +9,8 @@ from cola.qobserver import QObserver
 from cola.views import MergeView
 
 def abort_merge(model, parent):
+    """Prompts before aborting a merge in progress
+    """
     txt = parent.tr('Abort merge?\n'
                     'Aborting the current merge will cause '
                     '*ALL* uncommitted changes to be lost.\n\n'
@@ -18,6 +20,7 @@ def abort_merge(model, parent):
         model.abort_merge()
 
 def local_merge(model, parent):
+    """Provides a dialog for merging branches"""
     # TODO: subclass model
     model = model.clone()
     model.revision = ''
@@ -27,6 +30,7 @@ def local_merge(model, parent):
     view.show()
 
 class MergeController(QObserver):
+    """Provide control to the merge dialog"""
     def __init__(self, model, view):
         QObserver.__init__(self, model, view)
         # Set the current branch label
@@ -43,8 +47,9 @@ class MergeController(QObserver):
                            checkbox_squash = self.squash_update)
         self.model.set_revision_list(self.model.get_local_branches())
         self.view.radio_local.setChecked(True)
-    
+
     def get_revision_list(self):
+        """Retrieve candidate items to merge"""
         if self.view.radio_local.isChecked():
             return self.model.get_local_branches()
         elif self.view.radio_remote.isChecked():
@@ -54,6 +59,7 @@ class MergeController(QObserver):
         return []
 
     def revision_selected(self, *args):
+        """Update the revision field when a list item is selected"""
         revlist = self.get_revision_list()
         widget = self.view.revision_list
         row, selected = qtutils.get_selected_row(widget)
@@ -62,10 +68,12 @@ class MergeController(QObserver):
             self.model.set_revision(revision)
 
     def radio_callback(self):
+        """Update the revision list whenever a radio button is clicked"""
         revlist = self.get_revision_list()
         self.model.set_revision_list(revlist)
 
     def merge_revision(self):
+        """Merge the selected revision/branch"""
         revision = self.model.get_revision()
         if not revision:
             qtutils.information('No Revision Specified',
@@ -85,11 +93,14 @@ class MergeController(QObserver):
         self.view.accept()
 
     def viz_revision(self):
+        """Launch a gitk-like viewer on the selection revision"""
         revision = self.model.get_revision()
         browser = self.model.get_history_browser()
         utils.fork([browser, revision])
 
     def squash_update(self):
+        """Enables/disables widgets when the 'squash' radio is clicked"""
+        # TODO move this code into the view
         if self.view.checkbox_squash.isChecked():
             self.old_commit_checkbox_state =\
                 self.view.checkbox_commit.checkState()

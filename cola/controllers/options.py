@@ -9,8 +9,7 @@ from cola.qobserver import QObserver
 
 
 def update_options(model, parent):
-    """Launch the options window given a model and parent widget
-    """
+    """Launch the options window given a model and parent widget."""
     view = OptionsView(parent)
     ctl = OptionsController(model, view)
     view.show()
@@ -18,7 +17,7 @@ def update_options(model, parent):
 
 
 class OptionsController(QObserver):
-    """The Options GUI Controller"""
+    """Provides control to the options dialog."""
 
     def __init__(self, model, view):
         ## operate on a clone of the original model
@@ -65,24 +64,27 @@ class OptionsController(QObserver):
         self.refresh_view()
 
     def refresh_view(self):
+        """Apply the configured font and update widgets."""
+        # The main application font
         font = self.model.get_cola_config('fontui')
         if font:
             fontui = QtGui.QFont()
             fontui.fromString(font)
             self.view.global_cola_fontui.setCurrentFont(fontui)
-
+        # The fixed-width console font
         font = self.model.get_cola_config('fontdiff')
         if font:
             fontdiff = QtGui.QFont()
             fontdiff.fromString(font)
             self.view.global_cola_fontdiff.setCurrentFont(fontdiff)
-
+        # Label the group box around the local repository
         self.view.local_groupbox.setTitle(unicode(self.tr('%s Repository'))
                                           % self.model.get_project())
         QObserver.refresh_view(self)
 
     # save button
     def save_settings(self):
+        """Save updated config variables back to git."""
         params_to_save = []
         params = self.model.get_config_params()
         for param in params:
@@ -92,17 +94,19 @@ class OptionsController(QObserver):
                 params_to_save.append(param)
         for param in params_to_save:
             self.model.save_config_param(param)
-
+        # Update the main model with any changed parameters
         self._orig_model.copy_params(self.model, params_to_save)
         self.view.done(QtGui.QDialog.Accepted)
 
     # cancel button -> undo changes
     def restore_settings(self):
+        """Reverts any changes done in the Options dialog."""
         params = self._backup_model.get_config_params()
         self.model.copy_params(self._backup_model, params)
         self.tell_parent_model()
 
     def tell_parent_model(self,*rest):
+        """Notifies the main app's model about changed parameters"""
         params= ('global_cola_fontdiff',
                  'global_cola_fontui',
                  'global_cola_fontdiff_size',
@@ -115,12 +119,13 @@ class OptionsController(QObserver):
 
     def update_size(self, *rest):
         """Updates fonts whenever font sizes change"""
-
+        # The main app font combobox
         combo = self.view.global_cola_fontui
         param = unicode(combo.objectName())
         default = unicode(combo.currentFont().toString())
         self.model.apply_font_size(param, default)
 
+        # The fixed-width console font combobox
         combo = self.view.global_cola_fontdiff
         param = unicode(combo.objectName())
         default = unicode(combo.currentFont().toString())
