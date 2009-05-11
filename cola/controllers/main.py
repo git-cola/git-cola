@@ -647,7 +647,7 @@ class MainController(QObserver):
             args.extend([self.head, '--', filename])
             difftool.launch(args)
 
-    def delete_files(self, staged=False):
+    def delete_files(self):
         """Deletes files when called by an untracked file's context menu"""
         rescan=False
         filenames = self.get_untracked_items()
@@ -1197,8 +1197,7 @@ class MainController(QObserver):
 
         if untracked:
             menu.addSeparator()
-            menu.addAction(self.tr('Delete File(s)'),
-                           lambda: self.delete_files(staged=False))
+            menu.addAction(self.tr('Delete File(s)'), self.delete_files)
 
         return menu
 
