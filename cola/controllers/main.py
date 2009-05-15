@@ -62,12 +62,15 @@ class MainController(QObserver):
     # Diffing against an arbitrary branch
     MODE_DIFF = 6
 
+    # Diffing using arbitrary expression
+    MODE_DIFF_EXPR = 7
+
     # Reviewing a branch
-    MODE_REVIEW = 7
+    MODE_REVIEW = 8
 
     # Modes where we don't do anything like staging, etc.
     MODES_READ_ONLY = (MODE_BRANCH, MODE_GREP,
-                       MODE_DIFF, MODE_REVIEW)
+                       MODE_DIFF, MODE_DIFF_EXPR, MODE_REVIEW)
 
     # Modes where we can checkout files from the $head
     MODES_UNDOABLE = (MODE_NONE, MODE_INDEX, MODE_WORKTREE)
@@ -170,13 +173,16 @@ class MainController(QObserver):
             menu_browse_branch = self.browse_current,
             menu_browse_other_branch = self.browse_other,
 
+            # Diff Menu
+            menu_diff_expression = self.diff_expression,
+            menu_branch_diff = self.branch_diff,
+            menu_branch_review = self.branch_review,
+            menu_diff_branch = self.diff_branch,
+
             # Branch Menu
             menu_create_branch = self.branch_create,
             menu_checkout_branch = self.checkout_branch,
-            menu_diff_branch = self.diff_branch,
             menu_branch_compare = self.branch_compare,
-            menu_branch_diff = self.branch_diff,
-            menu_branch_review = self.branch_review,
 
             # Commit Menu
             menu_rescan = self.rescan,
@@ -334,7 +340,9 @@ class MainController(QObserver):
             # We clicked on a heading such as 'Staged'
             idx = self.view.status_tree.indexOfTopLevelItem(item)
             diff = 'no diff'
-            if (self.mode == self.MODE_REVIEW and idx == self.view.IDX_STAGED):
+            if (self.mode == self.MODE_DIFF_EXPR or
+                (self.mode == self.MODE_REVIEW and
+                    idx == self.view.IDX_STAGED)):
                 # Run diff without --cached when in review mode
                 diff = (self.model.git.diff(self.head,
                                             no_color=True, stat=True,
@@ -915,7 +923,7 @@ class MainController(QObserver):
         """Update the title with the current branch and directory name."""
         title = '%s [%s]' % (self.model.get_project(),
                              self.model.get_currentbranch())
-        if self.mode == self.MODE_DIFF:
+        if self.mode == self.MODE_DIFF or self.mode == self.MODE_DIFF_EXPR:
             title += ' *** diff mode***'
         if self.mode == self.MODE_REVIEW:
             title += ' *** review mode***'
@@ -966,6 +974,20 @@ class MainController(QObserver):
         if not branch:
             return
         self.mode = self.MODE_DIFF
+        self.head = branch
+        self.view.alt_button.setText(self.tr('Exit Diff Mode'))
+        self.view.alt_button.show()
+        self.rescan()
+
+    def diff_expression(self):
+        """Diff using an arbitrary expression."""
+        branch = choose_from_combo('Enter Diff Expression',
+                                   self.view,
+                                   self.model.get_all_branches()
+                                   + self.model.get_tags())
+        if not branch:
+            return
+        self.mode = self.MODE_DIFF_EXPR
         self.head = branch
         self.view.alt_button.setText(self.tr('Exit Diff Mode'))
         self.view.alt_button.show()
