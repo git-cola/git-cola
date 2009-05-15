@@ -473,9 +473,6 @@
     <addaction name="menuShow" />
     <addaction name="menuPrepare" />
     <addaction name="separator" />
-    <addaction name="menu_commit_compare" />
-    <addaction name="menu_commit_compare_file" />
-    <addaction name="separator" />
     <addaction name="menu_stash" />
     <addaction name="menu_export_patches" />
     <addaction name="separator" />
@@ -538,16 +535,14 @@
      </property>
      <addaction name="menu_diff_branch" />
     </widget>
-    <addaction name="menuView" />
     <addaction name="menu_branch_review" />
-    <addaction name="menu_branch_diff" />
-    <addaction name="menu_branch_compare" />
     <addaction name="separator" />
     <addaction name="menu_create_branch" />
     <addaction name="menu_checkout_branch" />
     <addaction name="menu_rebase_branch" />
     <addaction name="menu_delete_branch" />
     <addaction name="separator" />
+    <addaction name="menuView" />
     <addaction name="menuAdvanced" />
    </widget>
    <widget class="QMenu" name="file_menu" >
@@ -583,12 +578,24 @@
     <addaction name="menu_help_docs" />
     <addaction name="menu_help_about" />
    </widget>
+   <widget class="QMenu" name="diff_menu" >
+    <property name="title" >
+     <string>Diff</string>
+    </property>
+    <addaction name="menu_branch_diff" />
+    <addaction name="menu_diff_expression" />
+    <addaction name="separator" />
+    <addaction name="menu_branch_compare" />
+    <addaction name="menu_commit_compare" />
+    <addaction name="menu_commit_compare_file" />
+   </widget>
    <addaction name="file_menu" />
    <addaction name="edit_menu" />
    <addaction name="search_menu" />
    <addaction name="commit_menu" />
    <addaction name="branch_menu" />
    <addaction name="merge_menu" />
+   <addaction name="diff_menu" />
    <addaction name="help_menu" />
   </widget>
   <action name="menu_unstage_selected" >
@@ -855,7 +862,7 @@
   </action>
   <action name="menu_branch_compare" >
    <property name="text" >
-    <string>Compare...</string>
+    <string>Branches...</string>
    </property>
   </action>
   <action name="menu_clone_repo" >
@@ -873,7 +880,7 @@
   </action>
   <action name="menu_commit_compare" >
    <property name="text" >
-    <string>Compare...</string>
+    <string>Commits...</string>
    </property>
   </action>
   <action name="menu_visualize_current" >
@@ -908,7 +915,7 @@
   </action>
   <action name="menu_commit_compare_file" >
    <property name="text" >
-    <string>Compare File...</string>
+    <string>Commits Touching File...</string>
    </property>
   </action>
   <action name="menu_view_log" >
@@ -923,12 +930,17 @@
   </action>
   <action name="menu_branch_diff" >
    <property name="text" >
-    <string>Diff...</string>
+    <string>SHA-1...</string>
    </property>
   </action>
   <action name="menu_branch_review" >
    <property name="text" >
     <string>Review...</string>
+   </property>
+  </action>
+  <action name="menu_diff_expression" >
+   <property name="text" >
+    <string>Expression...</string>
    </property>
   </action>
  </widget>
