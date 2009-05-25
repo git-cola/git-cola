@@ -5,6 +5,7 @@ import sys
 import glob
 
 from PyQt4 import QtGui
+from PyQt4 import QtCore
 
 from cola import core
 from cola import utils
@@ -94,6 +95,9 @@ class MainController(QObserver):
 
         # Diff display context menu
         view.display_text.contextMenuEvent = self.diff_context_menu_event
+
+        # Install diff shortcut keys for stage/unstage
+        view.display_text.keyPressEvent = self.diff_key_press_event
 
         # What to compare against by default
         self.head = 'HEAD'
@@ -1234,17 +1238,17 @@ class MainController(QObserver):
 
         if self.mode == self.MODE_WORKTREE:
             if modified:
-                menu.addAction(self.tr('Stage Hunk For Commit'),
+                menu.addAction(self.tr('Stage &Hunk For Commit'),
                                self.stage_hunk)
-                menu.addAction(self.tr('Stage Selected Lines'),
+                menu.addAction(self.tr('Stage &Selected Lines'),
                                self.stage_hunk_selection)
                 menu.addSeparator()
                 menu.addAction(self.tr('Undo Hunk'), self.undo_hunk)
                 menu.addAction(self.tr('Undo Selection'), self.undo_selection)
 
         elif self.mode == self.MODE_INDEX:
-            menu.addAction(self.tr('Unstage Hunk From Commit'), self.unstage_hunk)
-            menu.addAction(self.tr('Unstage Selected Lines'), self.unstage_hunk_selection)
+            menu.addAction(self.tr('Unstage &Hunk From Commit'), self.unstage_hunk)
+            menu.addAction(self.tr('Unstage &Selected Lines'), self.unstage_hunk_selection)
 
         elif self.mode == self.MODE_BRANCH:
             menu.addAction(self.tr('Apply Diff to Work Tree'), self.stage_hunk)
@@ -1256,6 +1260,23 @@ class MainController(QObserver):
         menu.addSeparator()
         menu.addAction(self.tr('Copy'), self.view.copy_display)
         return menu
+
+    def diff_key_press_event(self, event):
+        """Handle shortcut keys in the diff view."""
+        if event.key() != QtCore.Qt.Key_H and event.key() != QtCore.Qt.Key_S:
+            event.ignore()
+            return
+        staged, modified, unmerged, untracked = self.get_single_selection()
+        if event.key() == QtCore.Qt.Key_H:
+            if self.mode == self.MODE_WORKTREE and modified:
+                self.stage_hunk()
+            elif self.mode == self.MODE_INDEX:
+                self.unstage_hunk()
+        elif event.key() == QtCore.Qt.Key_S:
+            if self.mode == self.MODE_WORKTREE and modified:
+                self.stage_hunk_selection()
+            elif self.mode == self.MODE_INDEX:
+                self.unstage_hunk_selection()
 
     def select_commits_gui(self, title, revs, summaries):
         """Launch a gui for selecting commits."""
