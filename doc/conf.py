@@ -13,6 +13,10 @@
 
 import sys, os
 
+# Add the cola source directory to sys.path
+srcdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, srcdir)
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
