@@ -1,0 +1,6 @@
+Models
+======
+.. toctree::
+
+    main
+    observable
