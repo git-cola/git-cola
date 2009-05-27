@@ -6,3 +6,4 @@ Base Classes
     observable
     observer
     qobserver
+    errors
