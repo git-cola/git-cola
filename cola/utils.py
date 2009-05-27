@@ -37,7 +37,8 @@ KNOWN_FILE_EXTENSION = {
 
 def run_cmd(*command):
     """
-    Runs a *command argument list and returns the output.
+    Run arguments as a command and return output.
+
     e.g. run_cmd("echo", "hello", "world")
     """
     return git.Git.execute(command)
