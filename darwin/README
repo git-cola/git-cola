@@ -8,3 +8,13 @@ Once it's complete, running this from the command-prompt
 generates git-cola.app:
 
 	$ make git-cola.app
+
+
+If you're using macports then you'll have to add
+/opt/local/Library/Frameworks/Python.Framework/Versions/Current/bin
+to your $PATH so that you can build and run cola from its source tree.
+
+	$ cola=$PWD
+	$ make
+	$ cd $there
+	$ $cola/bin/git-cola
