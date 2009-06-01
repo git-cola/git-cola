@@ -1,5 +1,0 @@
-User Guide
-==========
-.. toctree::
-    
-    tutorial

@@ -1,79 +1,107 @@
-MAN1_TXT=$(wildcard *.txt)
-
-DOC_HTML=$(patsubst %.txt,%.html,$(MAN1_TXT))
-
-ARTICLES = 
-
-# with their own formatting rules.
-SP_ARTICLES =
-
-DOC_HTML += $(patsubst %,%.html,$(ARTICLES) $(SP_ARTICLES))
-DOC_PDF += $(patsubst %,%.pdf,$(ARTICLES) $(SP_ARTICLES))
-
-DOC_MAN1=$(patsubst %.txt,%.1,$(MAN1_TXT))
-
-prefix?=$(HOME)
-htmldir?=$(prefix)/share/doc/git-cola
-mandir?=$(prefix)/share/man
-man1dir=$(mandir)/man1
-# DESTDIR=
-
-ASCIIDOC=asciidoc --unsafe
-ASCIIDOC_EXTRA =
-INSTALL?=install
-
-#
-# Please note that there is a minor bug in asciidoc.
-# The version after 6.0.3 _will_ include the patch found here:
-#   http://marc.theaimsgroup.com/?l=git&m=111558757202243&w=2
-#
-# Until that version is released you may have to apply the patch
-# yourself - yes, all 6 characters of it!
+prefix ?= $(CURDIR)
+DESTDIR ?= /
+docdir ?= $(DESTDIR)$(prefix)/share/doc/git-cola
+htmldir ?= $(docdir)/html
+RSYNC ?= rsync
+# Makefile for Sphinx documentation
 #
 
-all: html man
+# You can set these variables from the command line.
+SPHINXOPTS    =
+SPHINXBUILD   = sphinx-build
+PAPER         =
 
-html: $(DOC_HTML)
-pdf: $(DOC_PDF)
+# Internal variables.
+PAPEROPT_a4     = -D latex_paper_size=a4
+PAPEROPT_letter = -D latex_paper_size=letter
+ALLSPHINXOPTS   = -d _build/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
-$(DOC_HTML) $(DOC_MAN1): asciidoc.conf
+.PHONY: help clean html dirhtml pickle json htmlhelp qthelp latex changes linkcheck doctest
 
-man: man1
-man1: $(DOC_MAN1)
-install: man
-	$(INSTALL) -d -m755 $(DESTDIR)$(man1dir)
-	$(INSTALL) -m644 $(DOC_MAN1) $(DESTDIR)$(man1dir)
-
-install-html: html
-	$(INSTALL) -d -m755 $(DESTDIR)$(htmldir)
-	$(INSTALL) -m644 $(DOC_HTML) $(DESTDIR)$(htmldir)
-#
-# Determine "include::" file references in asciidoc files.
-#
-doc.dep : $(wildcard *.txt) build-docdep.perl
-	rm -f $@+ $@
-	perl ./build-docdep.perl >$@+
-	mv $@+ $@
-
--include doc.dep
+help:
+	@echo "Please use \`make <target>' where <target> is one of"
+	@echo "  html      to make standalone HTML files"
+	@echo "  dirhtml   to make HTML files named index.html in directories"
+	@echo "  pickle    to make pickle files"
+	@echo "  json      to make JSON files"
+	@echo "  htmlhelp  to make HTML files and a HTML help project"
+	@echo "  qthelp    to make HTML files and a qthelp project"
+	@echo "  latex     to make LaTeX files, you can set PAPER=a4 or PAPER=letter"
+	@echo "  changes   to make an overview of all changed/added/deprecated items"
+	@echo "  linkcheck to check all external links for integrity"
+	@echo "  doctest   to run all doctests embedded in the documentation (if enabled)"
 
 clean:
-	rm -f *.xml *.html *.pdf *.1 doc.dep
+	-rm -rf _build/*
 
-%.html : %.txt
-	$(ASCIIDOC) -b xhtml11 -d manpage -f asciidoc.conf $(ASCIIDOC_EXTRA) $<
+html:
+	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) _build/html
+	@echo
+	@echo "Build finished. The HTML pages are in _build/html."
 
-%.1 : %.xml
-	xmlto -m callouts.xsl man $<
+dirhtml:
+	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) _build/dirhtml
+	@echo
+	@echo "Build finished. The HTML pages are in _build/dirhtml."
 
-%.xml : %.txt
-	$(ASCIIDOC) -b docbook -d manpage -f asciidoc.conf $<
+pickle:
+	$(SPHINXBUILD) -b pickle $(ALLSPHINXOPTS) _build/pickle
+	@echo
+	@echo "Build finished; now you can process the pickle files."
 
-%.pdf: %.xml
-	xmlto pdf $<
+json:
+	$(SPHINXBUILD) -b json $(ALLSPHINXOPTS) _build/json
+	@echo
+	@echo "Build finished; now you can process the JSON files."
 
-# special formatting rules
-## tutorial.html : %.html : %.txt
-## 	$(ASCIIDOC) -b xhtml11 -d article -f tutorial.conf $(ASCIIDOC_EXTRA) $<
-## tutorial.xml : %.xml : %.txt
-## 	$(ASCIIDOC) -b docbook -d article -f tutorial.conf $<
+htmlhelp:
+	$(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) _build/htmlhelp
+	@echo
+	@echo "Build finished; now you can run HTML Help Workshop with the" \
+	      ".hhp project file in _build/htmlhelp."
+
+qthelp:
+	$(SPHINXBUILD) -b qthelp $(ALLSPHINXOPTS) _build/qthelp
+	@echo
+	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
+	      ".qhcp project file in _build/qthelp, like this:"
+	@echo "# qcollectiongenerator _build/qthelp/git-cola.qhcp"
+	@echo "To view the help file:"
+	@echo "# assistant -collectionFile _build/qthelp/git-cola.qhc"
+
+latex:
+	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) _build/latex
+	@echo
+	@echo "Build finished; the LaTeX files are in _build/latex."
+	@echo "Run \`make all-pdf' or \`make all-ps' in that directory to" \
+	      "run these through (pdf)latex."
+
+changes:
+	$(SPHINXBUILD) -b changes $(ALLSPHINXOPTS) _build/changes
+	@echo
+	@echo "The overview file is in _build/changes."
+
+linkcheck:
+	$(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) _build/linkcheck
+	@echo
+	@echo "Link check complete; look for any errors in the above output " \
+	      "or in _build/linkcheck/output.txt."
+
+doctest:
+	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) _build/doctest
+	@echo "Testing of doctests in the sources finished, look at the " \
+	      "results in _build/doctest/output.txt."
+
+all: html
+	$(MAKE) -f Makefile.asciidoc all
+
+install: install-html install-man
+	cp git-cola.txt $(docdir)
+
+install-html: html
+	test  -d $(htmldir) || mkdir -p $(htmldir)
+	$(RSYNC) -ar --progress _build/html/ $(htmldir)/
+	$(MAKE) -f Makefile.asciidoc install-html
+
+install-man:
+	$(MAKE) -f Makefile.asciidoc install

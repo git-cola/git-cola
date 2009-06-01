@@ -33,20 +33,23 @@ install:
 	rm -rf build
 
 doc:
-	cd share/doc/git-cola && $(MAKE) all
+	$(MAKE) -C share/doc/git-cola all
 
-install-doc:
+html:
+	$(MAKE) -C share/doc/git-cola html
+
+install-doc: install-html
 	$(MAKE) -C share/doc/git-cola install
 
 install-html:
 	$(MAKE) -C share/doc/git-cola install-html
 
 uninstall:
-	rm -rf  "$(DESTDIR)$(prefix)"/bin/git-cola \
-		"$(DESTDIR)$(prefix)"/bin/cola \
-		"$(DESTDIR)$(prefix)"/share/applications/cola.desktop \
-		"$(DESTDIR)$(prefix)"/share/git-cola \
-		"$(DESTDIR)$(prefix)"/share/doc/git-cola
+	rm -rf  $(DESTDIR)$(prefix)/bin/git-cola \
+		$(DESTDIR)$(prefix)/bin/cola \
+		$(DESTDIR)$(prefix)/share/applications/cola.desktop \
+		$(DESTDIR)$(prefix)/share/git-cola \
+		$(DESTDIR)$(prefix)/share/doc/git-cola
 
 test: all
 	@env PYTHONPATH=$(CURDIR):$(PYTHONPATH) \
