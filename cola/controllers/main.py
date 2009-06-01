@@ -1,4 +1,4 @@
-"""This module provides access to the application controllers."""
+"""Provides the main application controller."""
 
 import os
 import sys
@@ -40,7 +40,7 @@ from cola.controllers.util import choose_from_list
 from cola.controllers.util import choose_from_combo
 
 class MainController(QObserver):
-    """Manages the interaction between models and views."""
+    """Manage interactions between models and views."""
 
     # Default: nothing's happened, do nothing
     MODE_NONE = 0
