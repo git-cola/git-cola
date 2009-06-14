@@ -14,6 +14,7 @@ from cola.gui.main import Ui_main
 ViewBase = create_standard_view(Ui_main, DrawerMainWindow)
 class MainView(ViewBase):
     """The main cola interface."""
+    IDX_HEADER = -1
     IDX_STAGED = 0
     IDX_MODIFIED = 1
     IDX_UNMERGED = 2
@@ -124,6 +125,8 @@ class MainView(ViewBase):
     def get_selection(self):
         tree = self.status_tree
         item = tree.currentItem()
+        if not item:
+            return -1, False
         parent = item.parent()
         if not parent:
             return -1, False
@@ -243,6 +246,19 @@ class MainView(ViewBase):
         offset = cursor.position()
         selection = unicode(cursor.selection().toPlainText())
         return offset, selection
+
+    def tree_selection(self):
+        """Returns a list of (category, row) representing the tree selection."""
+        selected = self.status_tree.selectedIndexes()
+        result = []
+        for idx in selected:
+            if idx.parent().isValid():
+                parent_idx = idx.parent()
+                entry = (parent_idx.row(), idx.row())
+            else:
+                entry = (-1, idx.row())
+            result.append(entry)
+        return result
 
     def selected_line(self):
         cursor = self.display_text.textCursor()

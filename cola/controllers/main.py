@@ -225,6 +225,9 @@ class MainController(QObserver):
                      'itemDoubleClicked(QTreeWidgetItem*, int)',
                      self.doubleclick_tree)
 
+        self.connect(view.status_tree, 'itemSelectionChanged()',
+                     self.display_tree_selection)
+
         # A hash of the merge message so we don't keep prompting to import it
         self.merge_msg_hash = ''
 
@@ -336,61 +339,20 @@ class MainController(QObserver):
                 self.reset_mode()
             self.view.reset_display()
             items = self.view.status_tree.selectedItems()
+            tree.blockSignals(True)
             for i in items:
                 i.setSelected(False)
+            tree.blockSignals(False)
             return result
-        parent = item.parent()
-        if not parent:
-            # We clicked on a heading such as 'Staged'
-            idx = self.view.status_tree.indexOfTopLevelItem(item)
-            diff = 'no diff'
-            if (self.mode == self.MODE_DIFF_EXPR or
-                (self.mode == self.MODE_REVIEW and
-                    idx == self.view.IDX_STAGED)):
-                # Run diff without --cached when in review mode
-                diff = (self.model.git.diff(self.head,
-                                            no_color=True, stat=True,
-                                            M=True,
-                                            with_raw_output=True) +
-                        '\n\n' +
-                        self.model.git.diff(self.head, no_color=True))
-            elif idx == self.view.IDX_STAGED:
-                # Show a diffstat when clicking on the 'Staged' heading
-                diff = (self.model.git.diff(cached=True, stat=True,
-                                            M=True,
-                                            no_color=True,
-                                            with_raw_output=True) + '\n\n' +
-                        self.model.git.diff(cached=True))
-            elif idx == self.view.IDX_MODIFIED:
-                # Show a diffstat when clicking on the 'Modified' heading
-                diff = (self.model.git.diff(stat=True,
-                                            M=True,
-                                            no_color=True,
-                                            with_raw_output=True) + '\n\n' +
-                        self.model.git.diff(no_color=True))
-            elif idx == self.view.IDX_UNMERGED:
-                # List unmerged files when clicking on the 'Unmerged' heading
-                diff = '%s unmerged file(s)' % len(self.model.get_unmerged())
-            elif idx == self.view.IDX_UNTRACKED:
-                # We click on the untracked heading so helpfully list
-                # possible .gitignore rules
-                untracked = self.model.get_untracked()
-                suffix = len(untracked) > 1 and '(s)' or ''
-                diff = '# %s untracked file%s\n' % (len(untracked), suffix)
-                if untracked:
-                    diff += '# possible .gitignore rule%s:\n' % suffix
-                    for u in untracked:
-                        diff += '/'+ u + '\n'
-                    diff + '\n'
-            self.view.set_display(diff)
-            return result
-        # An item was clicked -- show a diff or other information about it
+
+        # An item was clicked -- get its index in the model
         staged, idx = self.view.get_index_for_item(item)
-        if idx == -1:
+        if idx == self.view.IDX_HEADER:
             return result
-        self._view_diff_for_row(idx, staged)
+
         if self.read_only():
             return result
+
         # handle when the icons are clicked
         xpos = event.pos().x()
         if xpos > 42 and xpos < 58:
@@ -670,15 +632,78 @@ class MainController(QObserver):
         if rescan:
             self.rescan()
 
-    # use *rest to handle being called from different signals
-    def diff_staged(self, *rest):
-        """Show the diff for a staged item."""
-        self.view_diff(staged=True)
+    def display_tree_selection(self):
+        """Show a data for the selected item."""
+        selection = self.view.tree_selection()
+        if not selection:
+            return
+        category, idx = selection[0]
 
-    # use *rest to handle being called from different signals
-    def diff_unstaged(self, *rest):
-        """Show the diff for an unstaged item."""
-        self.view_diff(staged=False)
+        # A header item e.g. 'Staged', 'Modified', etc.
+        if category == self.view.IDX_HEADER:
+            diff = self.generate_header_data(idx)
+            self.view.set_display(diff)
+
+        # A staged file
+        elif category == self.view.IDX_STAGED:
+            self.view_diff(staged=True)
+
+        # A modified file
+        elif category in (self.view.IDX_MODIFIED,
+                          self.view.IDX_UNMERGED,
+                          self.view.IDX_UNTRACKED):
+            self.view_diff(staged=False)
+
+        # Bring the diff view to the front
+        self.view.show_diff()
+
+    def generate_header_data(self, idx):
+        """Generate data for a header item such as 'Staged'."""
+        diff = 'no diff'
+        if (self.mode == self.MODE_DIFF_EXPR or
+            (self.mode == self.MODE_REVIEW and
+                idx == self.view.IDX_STAGED)):
+            # Run diff without --cached when in review mode
+            diff = (self.model.git.diff(self.head,
+                                        no_color=True, stat=True,
+                                        M=True,
+                                        with_raw_output=True) +
+                    '\n\n' +
+                    self.model.git.diff(self.head, no_color=True))
+
+        elif idx == self.view.IDX_STAGED:
+            # Show a diffstat when clicking on the 'Staged' heading
+            diff = (self.model.git.diff(cached=True, stat=True,
+                                        M=True,
+                                        no_color=True,
+                                        with_raw_output=True) + '\n\n' +
+                    self.model.git.diff(cached=True))
+
+        elif idx == self.view.IDX_MODIFIED:
+            # Show a diffstat when clicking on the 'Modified' heading
+            diff = (self.model.git.diff(stat=True,
+                                        M=True,
+                                        no_color=True,
+                                        with_raw_output=True) + '\n\n' +
+                    self.model.git.diff(no_color=True))
+
+        elif idx == self.view.IDX_UNMERGED:
+            # List unmerged files when clicking on the 'Unmerged' heading
+            diff = '%s unmerged file(s)' % len(self.model.get_unmerged())
+
+        elif idx == self.view.IDX_UNTRACKED:
+            # We click on the untracked heading so helpfully list
+            # possible .gitignore rules
+            untracked = self.model.get_untracked()
+            suffix = len(untracked) > 1 and '(s)' or ''
+            diff = '# %s untracked file%s\n' % (len(untracked), suffix)
+            if untracked:
+                diff += '# possible .gitignore rule%s:\n' % suffix
+                for u in untracked:
+                    diff += '/'+ u + '\n'
+                diff + '\n'
+
+        return diff
 
     def export_patches(self):
         """Run 'git format-patch' on a list of commits."""
