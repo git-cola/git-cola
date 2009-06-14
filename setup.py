@@ -120,7 +120,10 @@ def _check_pyqt_version():
     """
     failed = False
     try:
-        pyqtver = _run_cmd(['pyuic4', '--version']).split()[-1]
+        # We avoid utils.run_cmd() because older versions of
+        # pyuic4 were implemented as a shell script with a missing
+        # #!/bin/sh line.
+        pyqtver = _run_cmd('sh -c "pyuic4 --version"').split()[-1]
     except IndexError:
         pyqtver = 'nothing'
         failed = True
@@ -174,10 +177,9 @@ def _build_translations():
             print '\tmsgfmt --qt %s -o %s' % (src, dst)
             utils.run_cmd('msgfmt', '--qt', src, '-o', dst)
 
-def _run_cmd(args):
-    """Runs a command and returns its output"""
-    argstr = utils.shell_quote(*args)
-    pipe = os.popen(argstr)
+def _run_cmd(cmd):
+    """Runs a command and returns its output."""
+    pipe = os.popen(cmd)
     contents = core.read_nointr(pipe).strip()
     pipe.close()
     return contents
