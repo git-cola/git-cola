@@ -11,7 +11,7 @@ class GitDirModel(QtCore.QAbstractItemModel):
     def __init__(self, model):
         QtCore.QAbstractItemModel.__init__(self)
         self._model = model
-        self._root = GitDirEntry(name='Name', status='Status')
+        self._root = GitDirEntry(path='Name', status='Status')
         self._initialize()
 
     def parent(self, child):
@@ -67,7 +67,7 @@ class GitDirModel(QtCore.QAbstractItemModel):
         return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
 
     def root(self):
-        """Returns the mode's root item"""
+        """Returns the model's root item"""
         return self._root
 
     def columnCount(self, parent=None):
@@ -94,15 +94,15 @@ class GitDirModel(QtCore.QAbstractItemModel):
 
     def _initialize(self):
         direntries = {'': self.root()}
-        for name in self._model.all_files():
-            dirname = os.path.dirname(name)
+        for path in self._model.all_files():
+            dirname = os.path.dirname(path)
             if dirname in direntries:
                 parent = direntries[dirname]
             else:
                 parent = self._create_dir_entry(dirname, direntries)
                 direntries[dirname] = parent
 
-            entry = GitDirEntry(os.path.basename(name), parent=parent)
+            entry = GitDirEntry(path=path, parent=parent)
             parent.add_file(entry)
 
     def _create_dir_entry(self, dirname, direntries):
@@ -117,7 +117,7 @@ class GitDirModel(QtCore.QAbstractItemModel):
             else:
                 grandparent = parent
                 parent_path = '/'.join(curdir[:-1])
-                parent = GitDirEntry(os.path.basename(path), parent=parent)
+                parent = GitDirEntry(path=path, parent=parent)
                 direntries[path] = parent
                 grandparent.add_directory(parent)
         return parent
@@ -127,12 +127,15 @@ class GitDirModel(QtCore.QAbstractItemModel):
 class GitDirEntry(object):
     """Represents an entry in the GitDirModel
     """
-    def __init__(self, name='', status='', parent=None):
+    def __init__(self, path='', status='', parent=None):
         self._parent = parent
         self._children = []
-        self._name = name
+        self._path = path
         self._status = status
+        self._name = os.path.basename(path)
         self._dirindex = 0
+
+    path = property(lambda self: self._path)
 
     def add_file(self, child):
         """Add a file to this entry.
