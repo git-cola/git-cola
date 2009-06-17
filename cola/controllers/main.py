@@ -1172,7 +1172,7 @@ class MainController(QObserver):
                                     default=False):
                 return
 
-            self.log(*self.model.git.checkout(self.head, '--',
+            self.log(*self.model.git.checkout('HEAD', '--',
                                               with_stderr=True,
                                               with_status=True,
                                               *items_to_undo))
