@@ -791,8 +791,8 @@ class MainModel(ObservableModel):
     def diff_helper(self,
                     commit=None,
                     branch=None,
-                    ref = None,
-                    endref = None,
+                    ref=None,
+                    endref=None,
                     filename=None,
                     cached=True,
                     with_diff_header=False,
@@ -806,9 +806,8 @@ class MainModel(ObservableModel):
         if ref and endref:
             argv.append('%s..%s' % (ref, endref))
         elif ref:
-            argv.append(ref)
-            if not ref.startswith('HEAD'):
-                cached = False
+            for r in ref.strip().split():
+                argv.append(r)
         elif branch:
             argv.append(branch)
 
@@ -902,15 +901,17 @@ class MainModel(ObservableModel):
 
 
     def _get_branch_status(self, branch):
-        """Returns a tuple of staged, unstaged, untracked, and unmerged files
+        """
+        Returns a tuple of staged, unstaged, untracked, and unmerged files
 
         This shows only the changes that were introduced in branch
+
         """
-        status, output = self.git.diff(branch,
-                                       name_only=True,
+        status, output = self.git.diff(name_only=True,
                                        M=True, z=True,
                                        with_stderr=True,
-                                       with_status=True)
+                                       with_status=True,
+                                       *branch.strip().split())
         if status != 0:
             return ([], [], [], [])
         staged = []
