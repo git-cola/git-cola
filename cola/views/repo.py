@@ -4,6 +4,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 class RepoTreeView(QtGui.QTreeView):
+    """Provides a filesystem-like view of a git repository."""
     def __init__(self, parent=None):
         QtGui.QTreeView.__init__(self, parent)
         self.setWindowTitle(self.tr('classic'))
@@ -41,8 +42,8 @@ class RepoTreeView(QtGui.QTreeView):
 
     def selected_paths(self):
         """Return the selected paths."""
-        return map(lambda x: x.internalPointer().path,
-                   self.selectedIndexes())
+        items = map(self.model().itemFromIndex, self.selectedIndexes())
+        return [i.path for i in items if i.type() > 0]
 
     def view_history(self):
         """Signal that we should view history for paths."""

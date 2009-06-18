@@ -4,8 +4,8 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
 import cola.utils
-from cola.models.gitdirmodel import GitDirModel
-from cola.models.gitdirmodel import GitDirEntry
+from cola.models.gitrepo import GitRepoModel
+from cola.models.gitrepo import GitRepoItem
 
 class ClassicController(QtCore.QObject):
     def __init__(self, model, view=None):
@@ -32,10 +32,9 @@ if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     model = main.MainModel()
     model.use_worktree(os.getcwd())
-    dirmodel = GitDirModel(model)
 
     view = repo.RepoTreeView()
-    view.setModel(dirmodel)
+    view.setModel(GitRepoModel(view, model))
     view.resize(720, 300)
 
     controller = ClassicController(model, view)
