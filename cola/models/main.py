@@ -586,7 +586,17 @@ class MainModel(ObservableModel):
         except IndexError:
             return None
 
+    def _simple_ref(self, ref):
+        return ref in ('HEAD', 'HEAD^')
+
     def get_diff_details(self, idx, ref, staged=True):
+        """
+        Returns a "diff" for an entry by index relative to ref.
+
+        `staged` indicates whether we should consider this as a
+        staged or unstaged entry.
+
+        """
         filename = self.get_filename(idx, staged=staged)
         if not filename:
             return (None, None)
@@ -594,7 +604,7 @@ class MainModel(ObservableModel):
         if staged:
             diff = self.diff_helper(filename=filename,
                                     ref=ref,
-                                    cached=ref.startswith('HEAD'))
+                                    cached=self._simple_ref(ref))
         else:
             if os.path.isdir(encfilename):
                 diff = '\n'.join(os.listdir(filename))
@@ -907,7 +917,7 @@ class MainModel(ObservableModel):
         """
         self.git.update_index(refresh=True)
 
-        if not head.startswith('HEAD'):
+        if not self._simple_ref(head):
             return self._get_branch_status(head)
 
         staged_set = set()
