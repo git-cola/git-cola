@@ -568,6 +568,7 @@ class MainController(QObserver):
                 self.mode = self.MODE_INDEX
         else:
             self.mode = self.MODE_WORKTREE
+        self.view.exit_diff_mode()
 
     def view_diff(self, staged=True, scrollvalue=None):
         """View the diff for a clicked-on item."""
@@ -834,13 +835,13 @@ class MainController(QObserver):
     def reset_mode(self):
         """Set the mode to the default NONE mode."""
         self.mode = self.MODE_NONE
+        self.view.exit_diff_mode()
 
     def clear_and_rescan(self, *rest):
         """Clear the commit message and rescan."""
         self.reset_mode()
         self.head = 'HEAD'
         self.model.set_commitmsg('')
-        self.view.alt_button.hide()
         self.rescan()
 
     def load_prev_msg_and_rescan(self, *rest):
@@ -963,7 +964,7 @@ class MainController(QObserver):
         self.view.setWindowTitle(title)
 
     def alt_action(self):
-        """Clear and rescan when not read-only."""
+        """Clear and rescan when read-only."""
         if self.mode in self.MODES_READ_ONLY:
             self.clear_and_rescan()
 
@@ -1008,8 +1009,7 @@ class MainController(QObserver):
             return
         self.mode = self.MODE_DIFF
         self.head = branch
-        self.view.alt_button.setText(self.tr('Exit Diff Mode'))
-        self.view.alt_button.show()
+        self.view.enter_diff_mode('Exit Diff Mode')
         self.rescan()
 
     def diff_expression(self):
@@ -1022,8 +1022,7 @@ class MainController(QObserver):
             return
         self.mode = self.MODE_DIFF_EXPR
         self.head = branch
-        self.view.alt_button.setText(self.tr('Exit Diff Mode'))
-        self.view.alt_button.show()
+        self.view.enter_diff_mode('Exit Diff Mode')
         self.rescan()
 
     def branch_review(self):
@@ -1036,8 +1035,7 @@ class MainController(QObserver):
             return
         self.mode = self.MODE_REVIEW
         self.head = self.model.merge_base_to(branch)
-        self.view.alt_button.setText(self.tr('Exit Review Mode'))
-        self.view.alt_button.show()
+        self.view.enter_diff_mode('Exit Review Mode')
         self.rescan()
 
     def diff_branch(self):

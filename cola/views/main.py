@@ -211,6 +211,30 @@ class MainView(ViewBase):
         untracked = self.status_tree.topLevelItem(self.IDX_UNTRACKED)
         untracked.setIcon(0, qtutils.get_icon('untracked.png'))
 
+    def enter_diff_mode(self, text):
+        """
+        Enter diff mode; changes the 'Staged' header to 'Changed'.
+
+        This also enables the 'Exit <Mode> Mode' button.
+        `text` is the message displayed on the button.
+
+        """
+        staged = self.status_tree.topLevelItem(self.IDX_STAGED)
+        staged.setText(0, self.tr('Changed'))
+        self.alt_button.setText(self.tr(text))
+        self.alt_button.show()
+
+    def exit_diff_mode(self):
+        """
+        Exit diff mode; changes the 'Changed' header to 'Staged'.
+
+        This also hides the 'Exit Diff Mode' button.
+
+        """
+        staged = self.status_tree.topLevelItem(self.IDX_STAGED)
+        staged.setText(0, self.tr('Staged'))
+        self.alt_button.hide()
+
     def show_editor(self):
         self.tabwidget.setCurrentIndex(1)
 
