@@ -14,7 +14,7 @@ PyQt 4.3 or newer
 ADDITIVES
     # apt-get install python-pyinotify
 
-pyinotify enables inotify support on Linux
+pyinotify >= 0.7.1 enables inotify support on Linux
     ~ http://pyinotify.sourceforge.net/
 
 
