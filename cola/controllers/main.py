@@ -585,7 +585,11 @@ class MainController(QObserver):
         """View the diff for a specific row."""
         self.set_mode(staged)
         ref = self.head
-        diff, filename = self.model.get_diff_details(idx, ref, staged=staged)
+        if self.read_only():
+            diff, filename = self.model.get_diff_for_expr(idx, ref)
+        else:
+            diff, filename = self.model.get_diff_details(idx, ref,
+                                                         staged=staged)
         self.view.set_display(diff)
         self.view.show_diff()
         qtutils.set_clipboard(filename)

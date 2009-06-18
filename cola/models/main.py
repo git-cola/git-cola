@@ -586,12 +586,9 @@ class MainModel(ObservableModel):
         except IndexError:
             return None
 
-    def _simple_ref(self, ref):
-        return ref in ('HEAD', 'HEAD^')
-
     def get_diff_details(self, idx, ref, staged=True):
         """
-        Returns a "diff" for an entry by index relative to ref.
+        Return a "diff" for an entry by index relative to ref.
 
         `staged` indicates whether we should consider this as a
         staged or unstaged entry.
@@ -604,7 +601,7 @@ class MainModel(ObservableModel):
         if staged:
             diff = self.diff_helper(filename=filename,
                                     ref=ref,
-                                    cached=self._simple_ref(ref))
+                                    cached=True)
         else:
             if os.path.isdir(encfilename):
                 diff = '\n'.join(os.listdir(filename))
@@ -622,6 +619,19 @@ class MainModel(ObservableModel):
                                         cached=False)
             else:
                 diff = 'SHA1: ' + self.git.hash_object(filename)
+        return (diff, filename)
+
+    def get_diff_for_expr(self, idx, expr):
+        """
+        Return a diff for an arbitrary diff expression.
+
+        `idx` is the index of the entry in the staged files list.
+
+        """
+        filename = self.get_filename(idx, staged=True)
+        if not filename:
+            return (None, None)
+        diff = self.diff_helper(filename=filename, ref=expr, cached=False)
         return (diff, filename)
 
     def stage_modified(self):
@@ -911,13 +921,11 @@ class MainModel(ObservableModel):
 
         return (staged, [], [], [])
 
-
     def get_workdir_state(self, head='HEAD', staged_only=False):
         """Returns a tuple of staged, unstaged, untracked, and unmerged files
         """
         self.git.update_index(refresh=True)
-
-        if not self._simple_ref(head):
+        if staged_only:
             return self._get_branch_status(head)
 
         staged_set = set()
