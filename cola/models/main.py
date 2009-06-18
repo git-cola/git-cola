@@ -1220,3 +1220,8 @@ class MainModel(ObservableModel):
     def is_commit_published(self):
         head = self.git.rev_parse('HEAD')
         return bool(self.git.branch(r=True, contains=head))
+
+    def merge_base_to(self, ref):
+        """Given `ref`, return $(git merge-base ref HEAD)..ref."""
+        base = self.git.merge_base('HEAD', ref)
+        return '%s..%s' % (base, ref)

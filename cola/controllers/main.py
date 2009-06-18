@@ -1031,7 +1031,7 @@ class MainController(QObserver):
         if not branch:
             return
         self.mode = self.MODE_REVIEW
-        self.head = '...'+branch
+        self.head = self.model.merge_base_to(branch)
         self.view.alt_button.setText(self.tr('Exit Review Mode'))
         self.view.alt_button.show()
         self.rescan()
