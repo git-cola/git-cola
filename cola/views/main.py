@@ -234,6 +234,7 @@ class MainView(ViewBase):
         staged = self.status_tree.topLevelItem(self.IDX_STAGED)
         staged.setText(0, self.tr('Staged'))
         self.alt_button.hide()
+        self.reset_display()
 
     def show_editor(self):
         self.tabwidget.setCurrentIndex(1)
