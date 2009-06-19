@@ -5,6 +5,8 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 
+from cola import qtutils
+
 class GitRepoModel(QtGui.QStandardItemModel):
     """Provides an interface into a git repository for browsing purposes."""
     def __init__(self, parent, model):
@@ -22,6 +24,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
     def add_file(self, parent, path):
         """Add a file entry to the model."""
         file_entry = GitRepoItem(path=path, parent=parent)
+        file_entry.setIcon(qtutils.file_icon())
         status_entry = GitRepoStatusItem(path=path, parent=parent)
         nb_rows = parent.rowCount()
         parent.setChild(nb_rows, 0, file_entry)
@@ -30,6 +33,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
     def add_directory(self, parent, path):
         """Add a directory entry to the model."""
         entry = GitRepoItem(path=path, parent=parent)
+        entry.setIcon(qtutils.dir_icon())
         dir_index = self._dir_indexes.setdefault(parent, 0)
         parent.setChild(dir_index, 0, entry)
         parent.setChild(dir_index, 1, QtGui.QStandardItem())
