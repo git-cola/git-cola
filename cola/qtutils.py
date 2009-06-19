@@ -226,3 +226,19 @@ def set_listwidget_strings(widget, items):
     """Sets a list widget to the strings passed in items."""
     widget.clear()
     add_items(widget, [ QtGui.QListWidgetItem(i) for i in items ])
+
+_icon_cache = {}
+def cached_icon(key):
+    """Maintain a cache of standard icons and return cache entries."""
+    if key not in _icon_cache:
+        style = QtGui.QApplication.instance().style()
+        _icon_cache[key] = style.standardIcon(key)
+    return _icon_cache[key]
+
+def dir_icon():
+    """Return a standard icon for a directory."""
+    return cached_icon(QtGui.QStyle.SP_DirIcon)
+
+def file_icon():
+    """Return a standard icon for a file."""
+    return cached_icon(QtGui.QStyle.SP_FileIcon)
