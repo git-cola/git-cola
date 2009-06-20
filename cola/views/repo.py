@@ -11,8 +11,13 @@ class RepoTreeView(QtGui.QTreeView):
         self.setSortingEnabled(False)
         self.setAllColumnsShowFocus(True)
         self.setAlternatingRowColors(True)
+        self.setAnimated(True)
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
-        self.connect(self, SIGNAL("expanded(QModelIndex)"),
+
+        self.connect(self, SIGNAL('expanded(QModelIndex)'),
+                     lambda: self.resizeColumnToContents(0))
+
+        self.connect(self, SIGNAL('collapsed(QModelIndex)'),
                      lambda: self.resizeColumnToContents(0))
 
         self.action_history = QtGui.QAction('View History...', self)
