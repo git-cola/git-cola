@@ -5,6 +5,7 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 
+from cola import core
 from cola import qtutils
 
 
@@ -186,6 +187,7 @@ class GitRepoInfoTask(QtCore.QRunnable):
                                               M=True,
                                               all=True,
                                               pretty='format:%ar/%s/%an')
+            log_line = core.decode(log_line)
             date, rest = log_line.split('/', 1)
             message, author = rest.rsplit('/', 1)
             self._data['date'] = date
