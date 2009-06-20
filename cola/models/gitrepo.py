@@ -22,7 +22,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
     def __init__(self, parent, model):
         QtGui.QStandardItem.__init__(self, parent)
         self.app_model = model
-        self._dir_indexes = {}
+        self._dir_rows = {}
         self._headers = ('Name', 'Status', 'Message', 'Last Modified')
         self.setColumnCount(len(self._headers))
         for idx, header in enumerate(self._headers):
@@ -46,7 +46,9 @@ class GitRepoModel(QtGui.QStandardItemModel):
         # Use a standard file icon for the name field
         name_entry.setIcon(qtutils.file_icon())
 
+        # Add file paths at the end of the list
         row = parent.rowCount()
+
         parent.setChild(row, 0, name_entry)
         parent.setChild(row, 1, status_entry)
         parent.setChild(row, 2, message_entry)
@@ -59,21 +61,29 @@ class GitRepoModel(QtGui.QStandardItemModel):
     def add_directory(self, parent, path):
         """Add a directory entry to the model."""
         # Create a GitRepoItem for the directory entry
-        dir_entry = self._create_item(path, GitRepoSignals.Name)
+        name_entry = self._create_item(path, GitRepoSignals.Name)
+        status_entry = self._create_item(path, GitRepoSignals.Status)
+        message_entry = self._create_item(path, GitRepoSignals.Message)
+        modified_entry = self._create_item(path, GitRepoSignals.Modified)
+
         # Use a standard directory icon
-        dir_entry.setIcon(qtutils.dir_icon())
+        name_entry.setIcon(qtutils.dir_icon())
 
         # Insert directories before file paths
-        dir_index = self._dir_indexes.setdefault(parent, 0)
-        parent.setChild(dir_index, 0, dir_entry)
-        parent.setChild(dir_index, 1, QtGui.QStandardItem())
-        self._dir_indexes[parent] += 1
+        row = self._dir_rows.setdefault(parent, 0)
+
+        parent.setChild(row, 0, name_entry)
+        parent.setChild(row, 1, status_entry)
+        parent.setChild(row, 2, message_entry)
+        parent.setChild(row, 3, modified_entry)
+
+        self._dir_rows[parent] += 1
 
         # Start the QRunnable task for this entry
         entry = GitRepoEntryManager.entry(path, self.app_model)
-        entry.update()
+        entry.update_name()
 
-        return dir_entry
+        return name_entry
 
     def _initialize(self):
         """Iterate over the cola model and create GitRepoItems."""
