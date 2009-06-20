@@ -45,6 +45,11 @@ class RepoTreeView(QtGui.QTreeView):
         QtGui.QTreeView.setModel(self, model)
         self.resizeColumnToContents(0)
 
+    def item_from_index(self, model_index):
+        """Return the item corresponding to the model index."""
+        index = model_index.sibling(model_index.row(), 0)
+        return self.model().itemFromIndex(index)
+
     def selected_paths(self):
         """Return the selected paths."""
         items = map(self.model().itemFromIndex, self.selectedIndexes())
