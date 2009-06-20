@@ -56,7 +56,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
         # Start the QRunnable task
         entry = GitRepoEntryManager.entry(path, self.app_model)
-        entry.update()
+        entry.update_name()
 
     def add_directory(self, parent, path):
         """Add a directory entry to the model."""
@@ -160,10 +160,15 @@ class GitRepoEntry(QtCore.QObject):
         self.path = path
         self.app_model = app_model
 
-    def update(self):
-        """Starts a GitRepoInfoTask to calculate info for entries."""
+    def update_name(self):
+        """Emits a signal corresponding to the entry's name."""
         # 'name' is cheap to calculate so simply emit a signal
         self.emit(QtCore.SIGNAL('name(QString)'), os.path.basename(self.path))
+        if '/' not in self.path:
+            self.update()
+
+    def update(self):
+        """Starts a GitRepoInfoTask to calculate info for entries."""
         # GitRepoInfoTask handles expensive lookups
         threadpool = QtCore.QThreadPool.globalInstance()
         task = GitRepoInfoTask(self, self.path, self.app_model)
@@ -218,7 +223,7 @@ class GitRepoInfoTask(QtCore.QRunnable):
             return 'Modified'
         if self.path in data['staged']:
             return 'Staged'
-        return '..'
+        return '-'
 
 
     def message(self):
