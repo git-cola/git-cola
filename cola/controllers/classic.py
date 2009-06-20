@@ -4,8 +4,6 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
 import cola.utils
-from cola.models.gitrepo import GitRepoModel
-from cola.models.gitrepo import GitRepoItem
 
 class ClassicController(QtCore.QObject):
     def __init__(self, model, view=None):
@@ -14,7 +12,6 @@ class ClassicController(QtCore.QObject):
         self.view = view
         self.connect(view, SIGNAL('history(QStringList)'),
                      self._view_history)
-
 
     def _view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
@@ -25,13 +22,18 @@ class ClassicController(QtCore.QObject):
 
 if __name__ == '__main__':
     import sys
+
     from PyQt4 import QtGui
+
     from cola.models import main
+    from cola.models.gitrepo import GitRepoModel
+
     from cola.views import repo
 
     app = QtGui.QApplication(sys.argv)
     model = main.MainModel()
     model.use_worktree(os.getcwd())
+    model.update_status()
 
     view = repo.RepoTreeView()
     view.setModel(GitRepoModel(view, model))
