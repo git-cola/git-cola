@@ -176,7 +176,7 @@ class GitRepoInfoTask(QtCore.QRunnable):
 
     def data(self, key):
         """
-        Return git data a path.
+        Return git data for a path.
 
         Supported keys are 'date', 'message', and 'author'
 
@@ -185,7 +185,6 @@ class GitRepoInfoTask(QtCore.QRunnable):
             log_line = self.app_model.git.log('-1', '--', self.path,
                                               M=True,
                                               all=True,
-                                              no_merges=True,
                                               pretty='format:%ar/%s/%an')
             date, rest = log_line.split('/', 1)
             message, author = rest.rsplit('/', 1)
