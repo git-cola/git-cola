@@ -135,13 +135,24 @@ class GitRepoEntryManager(object):
             cls.static_entries[path] = GitRepoEntry(path, app_model)
         return cls.static_entries[path]
 
+    @staticmethod
+    def add_parents(path_entry_set):
+        """Iterate over each item in the set and add its parent directories."""
+        for path in list(path_entry_set):
+            if '/' in path:
+                parent_dir = utils.dirname(path)
+                while parent_dir and parent_dir not in path_entry_set:
+                    path_entry_set.add(parent_dir)
+                    parent_dir = utils.dirname(parent_dir)
+        return path_entry_set
+
     @classmethod
     def data(cls, app_model):
         """Return a static instance of git data."""
         if app_model not in cls.static_data:
             cls.static_data[app_model] = {
-                'staged': set(app_model.staged),
-                'modified': set(app_model.modified),
+                'staged': cls.add_parents(set(app_model.staged)),
+                'modified': cls.add_parents(set(app_model.modified)),
             }
         return cls.static_data[app_model]
 
