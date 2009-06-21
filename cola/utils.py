@@ -88,12 +88,14 @@ def fork(args):
     args = tuple([core.encode(a) for a in args])
     if os.name in ('nt', 'dos'):
         for path in os.environ['PATH'].split(os.pathsep):
-            filename = os.path.join(path, args[0]) + ".exe"
-            if os.path.exists(filename):
-                try:
-                    return os.spawnv(os.P_NOWAIT, filename, args)
-                except os.error:
-                    pass
+            filenames = (os.path.join(path, args[0]),
+                         os.path.join(path, args[0]) + ".exe")
+            for filename in filenames:
+                if os.path.exists(filename):
+                    try:
+                        return os.spawnv(os.P_NOWAIT, filename, args)
+                    except os.error:
+                        pass
         raise IOError('cannot find executable: %s' % args[0])
     else:
         argv = map(shell_quote, args)
