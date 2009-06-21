@@ -24,18 +24,15 @@ class ClassicController(QtCore.QObject):
         cola.utils.fork(cmd + entries)
 
     def _query_model(self, model_index):
+        """Update information about a directory as it is expanded."""
         item = self.view.item_from_index(model_index)
         path = item.path
         if path in self.updated:
             return
         self.updated.add(path)
-
         item.entry.update()
         for row in xrange(item.rowCount()):
-            for col in xrange(self.view.model().columnCount()):
-                child = item.child(row, col)
-                child.entry.update()
-
+            item.child(row, 0).entry.update()
 
 if __name__ == '__main__':
     import sys
