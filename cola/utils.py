@@ -146,17 +146,29 @@ def grep(pattern, items, squash=True):
             return matched
 
 def basename(path):
-    """Avoid os.path.basename because we are explicitly
-    parsing git"s output, which contains /"s regardless
-    of platform (a.t.m.)
     """
-    base_regex = re.compile('(.*?/)?([^/]+)$')
-    match = base_regex.match(path)
-    if match:
-        return match.group(2)
-    else:
-        return pathstr
+    An os.path.basename() implementation that always uses '/'
 
+    Avoid os.path.basename because git's output always
+    uses '/' regardless of platform.
+
+    """
+    return path.rsplit('/', 1)[-1]
+
+def dirname(path):
+    """
+    An os.path.dirname() implementation that always uses '/'
+
+    Avoid os.path.dirname because git's output always
+    uses '/' regardless of platform.
+
+    """
+    while '//' in path:
+        path = path.replace('//', '/')
+    path_dirname = path.rsplit('/', 1)[0]
+    if path_dirname == path:
+        return ''
+    return path.rsplit('/', 1)[0]
 
 def slurp(path):
     """Slurps a filepath into a string."""
