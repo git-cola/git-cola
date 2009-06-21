@@ -6,6 +6,7 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 
 from cola import core
+from cola import utils
 from cola import qtutils
 
 
@@ -89,7 +90,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         """Iterate over the cola model and create GitRepoItems."""
         direntries = {'': self.invisibleRootItem()}
         for path in self.app_model.all_files():
-            dirname = os.path.dirname(path)
+            dirname = utils.dirname(path)
             if dirname in direntries:
                 parent = direntries[dirname]
             else:
@@ -163,7 +164,7 @@ class GitRepoEntry(QtCore.QObject):
     def update_name(self):
         """Emits a signal corresponding to the entry's name."""
         # 'name' is cheap to calculate so simply emit a signal
-        self.emit(QtCore.SIGNAL('name(QString)'), os.path.basename(self.path))
+        self.emit(QtCore.SIGNAL('name(QString)'), utils.basename(self.path))
         if '/' not in self.path:
             self.update()
 
@@ -212,7 +213,7 @@ class GitRepoInfoTask(QtCore.QRunnable):
 
     def name(self):
         """Calculate the name for an entry."""
-        return os.path.basename(self.path)
+        return utils.basename(self.path)
 
     def status(self):
         """Calculates the status for an entry."""
