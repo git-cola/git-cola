@@ -84,6 +84,7 @@ class Git(object):
             unicode(stdout)                     # Default
             unicode(stdout+stderr)              # with_stderr=True
             tuple(int(status), unicode(output)) # with_status=True
+
         """
 
         if GIT_PYTHON_TRACE and not GIT_PYTHON_TRACE == 'full':
@@ -97,6 +98,9 @@ class Git(object):
             stderr = subprocess.STDOUT
         else:
             stderr = None
+
+        if sys.platform == 'win32':
+            command = map(replace_carot, command)
 
         # Start the process
         while True:
@@ -194,6 +198,20 @@ class Git(object):
         call.extend(args)
 
         return self.execute(call, **_kwargs)
+
+
+def replace_carot(cmd_arg):
+    """
+    Guard against the windows command shell.
+
+    In the Windows shell, a carat character (^) may be used for
+    line continuation.  To guard against this, escape the carat
+    by using two of them.
+
+    http://technet.microsoft.com/en-us/library/cc723564.aspx
+
+    """
+    return cmd_arg.replace('^', '^^')
 
 
 def shell_quote(*inputs):
