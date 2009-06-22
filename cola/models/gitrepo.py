@@ -120,12 +120,11 @@ class GitRepoModel(QtGui.QStandardItemModel):
                 direntries[path] = parent
         return parent
 
+
 class GitRepoEntryManager(object):
     """
     Provides access to static instances of GitRepoEntry and model data.
     """
-    static_instance = None
-    static_data = {}
     static_entries = {}
 
     @classmethod
@@ -135,26 +134,6 @@ class GitRepoEntryManager(object):
             cls.static_entries[path] = GitRepoEntry(path, app_model)
         return cls.static_entries[path]
 
-    @staticmethod
-    def add_parents(path_entry_set):
-        """Iterate over each item in the set and add its parent directories."""
-        for path in list(path_entry_set):
-            if '/' in path:
-                parent_dir = utils.dirname(path)
-                while parent_dir and parent_dir not in path_entry_set:
-                    path_entry_set.add(parent_dir)
-                    parent_dir = utils.dirname(parent_dir)
-        return path_entry_set
-
-    @classmethod
-    def data(cls, app_model):
-        """Return a static instance of git data."""
-        if app_model not in cls.static_data:
-            cls.static_data[app_model] = {
-                'staged': cls.add_parents(set(app_model.staged)),
-                'modified': cls.add_parents(set(app_model.modified)),
-            }
-        return cls.static_data[app_model]
 
 class GitRepoEntry(QtCore.QObject):
     """
@@ -226,17 +205,32 @@ class GitRepoInfoTask(QtCore.QRunnable):
         """Calculate the name for an entry."""
         return utils.basename(self.path)
 
+    def _add_parents(self, path_entry_set):
+        """Iterate over each item in the set and add its parent directories."""
+        for path in list(path_entry_set):
+            if '/' in path:
+                parent_dir = utils.dirname(path)
+                while parent_dir and parent_dir not in path_entry_set:
+                    path_entry_set.add(parent_dir)
+                    parent_dir = utils.dirname(parent_dir)
+        return path_entry_set
+
     def status(self):
-        """Calculates the status for an entry."""
-        data = GitRepoEntryManager.data(self.app_model)
-        if self.path in data['modified'] and self.path in data['staged']:
+        """Return the status for the entry's path."""
+
+        unmerged = self._add_parents(set(self.app_model.unmerged))
+        modified = self._add_parents(set(self.app_model.modified))
+        staged = self._add_parents(set(self.app_model.staged))
+
+        if self.path in unmerged:
+            return 'Unmerged'
+        if self.path in modified and self.path in staged:
             return 'Partially Staged'
-        if self.path in data['modified']:
+        if self.path in modified:
             return 'Modified'
-        if self.path in data['staged']:
+        if self.path in staged:
             return 'Staged'
         return '-'
-
 
     def message(self):
         return self.data('message')
@@ -254,12 +248,14 @@ class GitRepoInfoTask(QtCore.QRunnable):
         app.postEvent(self.entry,
                       GitRepoInfoEvent('modified(QString)', self.modified()))
 
+
 class GitRepoInfoEvent(QtCore.QEvent):
     """Transport mechanism for communicating from a GitRepoInfoTask."""
     def __init__(self, *data):
         QtCore.QEvent.__init__(self, QtCore.QEvent.User + 1)
         self.signal = data[0]
         self.data = data[1:]
+
 
 class GitRepoItem(QtGui.QStandardItem):
     """
