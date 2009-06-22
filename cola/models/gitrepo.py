@@ -278,13 +278,14 @@ class GitRepoItem(QtGui.QStandardItem):
         self.signal = signal
         self.setEditable(False)
         self.setDragEnabled(False)
-        self.connect(signal)
+        self.connect()
 
-    def connect(self, signal):
+    def connect(self):
         """Connect a signal from entry to our setText method."""
         QtCore.QObject.connect(self.entry,
-                               QtCore.SIGNAL('%s(QString)' % signal),
+                               QtCore.SIGNAL('%s(QString)' % self.signal),
                                self.setText)
+
     def type(self):
         """
         Indicate that this item is of a special user-defined type.
