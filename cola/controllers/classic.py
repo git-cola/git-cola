@@ -58,4 +58,6 @@ if __name__ == '__main__':
     view.show()
     view.raise_()
 
-    sys.exit(app.exec_())
+    result = app.exec_()
+    QtCore.QThreadPool.globalInstance().waitForDone()
+    sys.exit(result)
