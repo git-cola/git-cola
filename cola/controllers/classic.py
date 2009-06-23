@@ -16,6 +16,8 @@ class ClassicController(QtCore.QObject):
                      self._view_history)
         self.connect(view, SIGNAL('expanded(QModelIndex)'),
                      self._query_model)
+        self.connect(view, SIGNAL('stage(QStringList)'),
+                     self._stage)
 
     def _view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
@@ -33,6 +35,17 @@ class ClassicController(QtCore.QObject):
         item.entry.update()
         for row in xrange(item.rowCount()):
             item.child(row, 0).entry.update()
+
+    def _stage(self, qstrings):
+        """Stage files for commit."""
+        paths = map(unicode, qstrings)
+        self.model.git.add('--', *paths)
+        self.model.update_status()
+        for path in paths:
+            gitrepo.GitRepoEntryManager.entry(path, self.model).update()
+            while path and '/' in path:
+                path = cola.utils.dirname(path)
+                gitrepo.GitRepoEntryManager.entry(path, self.model).update()
 
 if __name__ == '__main__':
     import sys
