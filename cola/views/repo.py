@@ -20,13 +20,10 @@ class RepoTreeView(QtGui.QTreeView):
         self.connect(self, SIGNAL('collapsed(QModelIndex)'),
                      lambda: self.resizeColumnToContents(0))
 
-        self.action_history = QtGui.QAction('View History...', self)
-        self.action_history.setShortcut(Qt.Key_H)
-        self.action_history.setShortcutContext(Qt.WidgetWithChildrenShortcut)
-        self.action_history.setStatusTip('Launch a history view for this path.')
-        self.addAction(self.action_history)
-        self.connect(self.action_history, SIGNAL('triggered()'),
-                     self.view_history)
+        self.action_history = self._create_action('View History...',
+                                                  'View history limited to selected path(s).',
+                                                  self.view_history,
+                                                  Qt.Key_H)
 
     def update_actions(self):
         """Enable/disable actions."""
@@ -58,3 +55,12 @@ class RepoTreeView(QtGui.QTreeView):
     def view_history(self):
         """Signal that we should view history for paths."""
         self.emit(SIGNAL('history(QStringList)'), self.selected_paths())
+    def _create_action(self, name, tooltip, slot, shortcut):
+        """Create an action with a shortcut, tooltip, and callback slot."""
+        action = QtGui.QAction(self.tr(name), self)
+        action.setStatusTip(self.tr(tooltip))
+        action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
+        action.setShortcut(shortcut)
+        self.addAction(action)
+        self.connect(action, SIGNAL('triggered()'), slot)
+        return action
