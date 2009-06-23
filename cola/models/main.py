@@ -528,8 +528,8 @@ class MainModel(ObservableModel):
     def update_status(self, head='HEAD', staged_only=False):
         # This allows us to defer notification until the
         # we finish processing data
-        notify_enabled = self.get_notify()
-        self.set_notify(False)
+        notify_enabled = self.notification_enabled
+        self.notification_enabled = False
 
         (self.staged,
          self.modified,
@@ -548,7 +548,7 @@ class MainModel(ObservableModel):
         self.set_local_branch('')
         self.set_remote_branch('')
         # Re-enable notifications and emit changes
-        self.set_notify(notify_enabled)
+        self.notification_enabled = notify_enabled
         self.notify_observers('staged','unstaged')
 
     def delete_branch(self, branch):

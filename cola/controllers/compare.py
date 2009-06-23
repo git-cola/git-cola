@@ -180,7 +180,7 @@ class BranchCompareController(QObserver):
             new_list = ([BranchCompareController.BRANCH_POINT] +
                         self.model.get_remote_branches())
         # Update the list widget
-        self.model.set_notify(True)
+        self.model.notification_enabled = True
         self.model.set_param(param, new_list)
 
     def diff_files_doubleclick(self):
@@ -284,7 +284,7 @@ class CompareController(QObserver):
 
         # Notificaiton is disabled when inside action callbacks
         # TODO use setBlockSignals(True) on widgets instead?
-        self.model.set_notify(True)
+        self.model.notification_enabled = True
 
         show_versions = self.model.get_show_versions()
         revs = self.model.update_revision_lists(filename=self.filename,

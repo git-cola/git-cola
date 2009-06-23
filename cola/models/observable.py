@@ -22,8 +22,8 @@ class ObservableModel(Model, Observable):
         notify, observers = self._remove_internals()
         clone = Model.clone(self)
         self._restore_internals(notify, observers)
-        clone.set_observers([])
-        clone.set_notify(self.get_notify())
+        clone.observers = []
+        clone.notification_enabled = self.notification_enabled
         return clone
 
     def set_param(self, param, value, notify=True, check_params=False):
@@ -34,13 +34,13 @@ class ObservableModel(Model, Observable):
             self.notify_observers(param)
 
     def _remove_internals(self):
-        notify = self.get_notify()
-        observers = self.get_observers()
-        del self._notify
-        del self._observers
+        notify = self.notification_enabled
+        observers = self.observers
+        del self.notification_enabled
+        del self.observers
         return notify, observers
 
     def _restore_internals(self, notify, observers):
         # Restore properties
-        self.set_notify(notify)
-        self.set_observers(observers)
+        self.notification_enabled = notify
+        self.observers = observers

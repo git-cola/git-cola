@@ -218,8 +218,8 @@ class QObserver(observer.Observer, QtCore.QObject):
             return
 
         if param in self._model_to_view:
-            notify = self.model.get_notify()
-            self.model.set_notify(False)
+            notify = self.model.notification_enabled
+            self.model.notification_enabled = False
             for widget in self._model_to_view[param]:
                 sender = str(widget.objectName())
                 if isinstance(widget, QtGui.QSpinBox):
@@ -243,9 +243,9 @@ class QObserver(observer.Observer, QtCore.QObject):
                             widget.setItemSelected(item, True)
                             self.model.set_param(param+'_item', value[idx])
                             if sender in self._callbacks:
-                                self.model.set_notify(True)
+                                self.model.notification_enabled = True
                                 self._callbacks[sender]()
-                                self.model.set_notify(False)
+                                self.model.notification_enabled = False
                         else:
                             self.model.set_param(param+'_item', '')
                 elif isinstance(widget, QtGui.QTreeWidget):
@@ -266,9 +266,9 @@ class QObserver(observer.Observer, QtCore.QObject):
                             val = value[idx]
                             self.model.set_param(param+'_item', val)
                             if sender in self._callbacks:
-                                self.model.set_notify(True)
+                                self.model.notification_enabled = True
                                 self._callbacks[sender]()
-                                self.model.set_notify(False)
+                                self.model.notification_enabled = False
                         else:
                             self.model.set_param(param+'_item', '')
 
@@ -297,7 +297,7 @@ class QObserver(observer.Observer, QtCore.QObject):
                 else:
                     print('subject_changed(): Unknown widget:',
                           str(widget.objectName()), widget, value)
-            self.model.set_notify(notify)
+            self.model.notification_enabled = notify
 
         if param not in self._actions:
             return
