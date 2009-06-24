@@ -96,6 +96,12 @@ class RepoTreeView(QtGui.QTreeView):
 
         return result
 
+    def selectionChanged(self, old_selection, new_selection):
+        """Override selectionChanged to update available actions."""
+        result = QtGui.QTreeView.selectionChanged(self, old_selection, new_selection)
+        self.update_actions()
+        return result
+
     def setModel(self, model):
         """Set the concrete QDirModel instance."""
         QtGui.QTreeView.setModel(self, model)
