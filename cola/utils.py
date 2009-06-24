@@ -35,6 +35,22 @@ KNOWN_FILE_EXTENSION = {
     '.cxx':     'script.png',
 }
 
+
+def add_parents(path_entry_set):
+    """Iterate over each item in the set and add its parent directories."""
+    for path in list(path_entry_set):
+        while '//' in path:
+            path = path.replace('//', '/')
+        if path not in path_entry_set:
+            path_entry_set.add(path)
+        if '/' in path:
+            parent_dir = dirname(path)
+            while parent_dir and parent_dir not in path_entry_set:
+                path_entry_set.add(parent_dir)
+                parent_dir = dirname(parent_dir)
+    return path_entry_set
+
+
 def run_cmd(*command):
     """
     Run arguments as a command and return output.
