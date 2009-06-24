@@ -3,6 +3,8 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+import cola.utils
+
 class RepoTreeView(QtGui.QTreeView):
     """Provides a filesystem-like view of a git repository."""
     def __init__(self, parent=None):
@@ -48,6 +50,9 @@ class RepoTreeView(QtGui.QTreeView):
         """Set the concrete QDirModel instance."""
         QtGui.QTreeView.setModel(self, model)
         self.resizeColumnToContents(0)
+        app_model = model.app_model
+        app_model.add_message_observer(app_model.paths_staged_message,
+                                       self._paths_staged)
 
     def item_from_index(self, model_index):
         """Return the item corresponding to the model index."""
@@ -77,3 +82,10 @@ class RepoTreeView(QtGui.QTreeView):
         """Signal that we should stage selected paths."""
         self.emit(SIGNAL('stage(QStringList)'), self.selected_paths())
 
+    def _paths_staged(self, model, message, paths=None):
+        """Observes paths that are staged and reacts accordingly."""
+        for path in paths:
+            self.model().entry(path).update()
+            while path and '/' in path:
+                path = cola.utils.dirname(path)
+                self.model().entry(path).update()

@@ -39,28 +39,20 @@ class ClassicController(QtCore.QObject):
     def _stage(self, qstrings):
         """Stage files for commit."""
         paths = map(unicode, qstrings)
-        self.model.git.add('--', *paths)
-        self.model.update_status()
-        for path in paths:
-            gitrepo.GitRepoEntryManager.entry(path, self.model).update()
-            while path and '/' in path:
-                path = cola.utils.dirname(path)
-                gitrepo.GitRepoEntryManager.entry(path, self.model).update()
+        self.model.stage_paths(paths)
 
 if __name__ == '__main__':
     import sys
 
     from PyQt4 import QtGui
 
-    from cola.models import main
+    from cola.models.classic import ClassicModel
     from cola.models.gitrepo import GitRepoModel
 
     from cola.views import repo
 
     app = QtGui.QApplication(sys.argv)
-    model = main.MainModel()
-    model.use_worktree(os.getcwd())
-    model.update_status()
+    model = ClassicModel()
 
     view = repo.RepoTreeView()
     view.setModel(GitRepoModel(view, model))
