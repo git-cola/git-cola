@@ -170,8 +170,9 @@ class MainModel(ObservableModel):
 
     def all_files(self):
         """Returns the names of all files in the repository"""
-        return [f for f in self.git.ls_files(z=True)
-                                   .strip('\0').split('\0') if f]
+        return [core.decode(f)
+                for f in self.git.ls_files(z=True)
+                                 .strip('\0').split('\0') if f]
 
     def generate_remote_helpers(self):
         """Generates helper methods for fetch, push and pull"""
@@ -953,9 +954,7 @@ class MainModel(ObservableModel):
 
         except GitInitError:
             # handle git init
-            for name in self.all_files():
-                if name:
-                    staged.append(core.decode(name))
+            staged.extend(self.all_files())
 
         try:
             output = self.git.diff_index(head, M=True, with_stderr=True)
