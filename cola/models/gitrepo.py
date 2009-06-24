@@ -56,8 +56,8 @@ class GitRepoModel(QtGui.QStandardItemModel):
         # Add file paths at the end of the list
         parent.appendRow(row_items)
 
-        # Start the QRunnable task
-        entry = GitRepoEntryManager.entry(path, self.app_model)
+        # Update the name column
+        entry = self.entry(path)
         entry.update_name()
 
     def add_directory(self, parent, path):
@@ -74,8 +74,8 @@ class GitRepoModel(QtGui.QStandardItemModel):
         parent.insertRow(row, row_items)
         self._dir_rows[parent] += 1
 
-        # Start the QRunnable task for this entry
-        entry = GitRepoEntryManager.entry(path, self.app_model)
+        # Update the 'name' column for this entry
+        entry = self.entry(path)
         entry.update_name()
 
         return row_items[0]
@@ -113,6 +113,10 @@ class GitRepoModel(QtGui.QStandardItemModel):
                 parent = self.add_directory(grandparent, path)
                 direntries[path] = parent
         return parent
+
+    def entry(self, path):
+        """Return the GitRepoEntry for a path."""
+        return GitRepoEntryManager.entry(path, self.app_model)
 
 
 class GitRepoEntryManager(object):
