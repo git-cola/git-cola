@@ -65,7 +65,6 @@ class ClassicModelTestCase(helper.TestCase):
         self.assertTrue('foo/bar/baz' in observer.paths)
 
         self.shell('echo change >> foo/bar/baz')
-        model.update_status()
 
         model.stage_paths(['foo/bar/baz'])
 

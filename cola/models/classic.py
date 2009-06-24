@@ -15,6 +15,7 @@ class ClassicModel(MainModel):
 
     def stage_paths(self, paths):
         """Adds paths to git and notifies observers."""
+        self.update_status()
         self.git.add('--', *paths)
 
         paths = set(paths)
