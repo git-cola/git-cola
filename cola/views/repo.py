@@ -20,15 +20,17 @@ class RepoTreeView(QtGui.QTreeView):
         self.connect(self, SIGNAL('collapsed(QModelIndex)'),
                      lambda: self.resizeColumnToContents(0))
 
-        self.action_history = self._create_action('View History...',
-                                                  'View history limited to selected path(s).',
-                                                  self.view_history,
-                                                  Qt.Key_H)
+        self.action_history =\
+                self._create_action('View History...',
+                                    'View history for selected path(s).',
+                                    self.view_history,
+                                    Qt.Key_H)
 
-        self.action_stage = self._create_action('Stage Selected...',
-                                                'Stage selected path(s) for commit.',
-                                                self.stage_selected,
-                                                Qt.Key_S)
+        self.action_stage =\
+                self._create_action('Stage Selected...',
+                                    'Stage selected path(s) for commit.',
+                                    self.stage_selected,
+                                    Qt.Key_S)
 
     def update_actions(self):
         """Enable/disable actions."""
@@ -57,14 +59,6 @@ class RepoTreeView(QtGui.QTreeView):
         items = map(self.model().itemFromIndex, self.selectedIndexes())
         return [i.path for i in items if i.type() > 0]
 
-    def view_history(self):
-        """Signal that we should view history for paths."""
-        self.emit(SIGNAL('history(QStringList)'), self.selected_paths())
-
-    def stage_selected(self):
-        """Signal that we should stage selected paths."""
-        self.emit(SIGNAL('stage(QStringList)'), self.selected_paths())
-
     def _create_action(self, name, tooltip, slot, shortcut):
         """Create an action with a shortcut, tooltip, and callback slot."""
         action = QtGui.QAction(self.tr(name), self)
@@ -74,3 +68,12 @@ class RepoTreeView(QtGui.QTreeView):
         self.addAction(action)
         self.connect(action, SIGNAL('triggered()'), slot)
         return action
+
+    def view_history(self):
+        """Signal that we should view history for paths."""
+        self.emit(SIGNAL('history(QStringList)'), self.selected_paths())
+
+    def stage_selected(self):
+        """Signal that we should stage selected paths."""
+        self.emit(SIGNAL('stage(QStringList)'), self.selected_paths())
+
