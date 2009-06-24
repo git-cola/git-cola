@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui
@@ -83,7 +84,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
     def _initialize(self):
         """Iterate over the cola model and create GitRepoItems."""
         direntries = {'': self.invisibleRootItem()}
-        for path in self.app_model.all_files():
+        for path in self.app_model.everything():
             dirname = utils.dirname(path)
             if dirname in direntries:
                 parent = direntries[dirname]
@@ -191,18 +192,41 @@ class GitRepoInfoTask(QtCore.QRunnable):
                                               M=True,
                                               all=True,
                                               pretty='format:%ar/%s/%an')
-            log_line = core.decode(log_line)
-            date, rest = log_line.split('/', 1)
-            message, author = rest.rsplit('/', 1)
-            self._data['date'] = date
-            self._data['message'] = message
-            self._data['author'] = author
+            if log_line:
+                log_line = core.decode(log_line)
+                date, rest = log_line.split('/', 1)
+                message, author = rest.rsplit('/', 1)
+                self._data['date'] = date
+                self._data['message'] = message
+                self._data['author'] = author
+            else:
+                self._data['date'] = self.date()
+                self._data['message'] = '-'
+                self._data['author'] = self.app_model.local_user_name
         return self._data[key]
 
     def name(self):
         """Calculate the name for an entry."""
         return utils.basename(self.path)
 
+    def date(self):
+        """
+        Returns a relative date for a file path.
+
+        This is typically used for new entries that do not have
+        'git log' information.
+
+        """
+        encpath = core.encode(self.path)
+        st = os.stat(encpath)
+        elapsed = time.time() - st.st_mtime
+        minutes = int(elapsed / 60.)
+        if minutes < 60:
+            return '%d minutes ago' % minutes
+        hours = int(elapsed / 60. / 60.)
+        if hours < 24:
+            return '%d hours ago' % hours
+        return '%d days ago' % int(elapsed / 60. / 60. / 24.)
 
     def status(self):
         """Return the status for the entry's path."""
@@ -210,6 +234,7 @@ class GitRepoInfoTask(QtCore.QRunnable):
         unmerged = utils.add_parents(set(self.app_model.unmerged))
         modified = utils.add_parents(set(self.app_model.modified))
         staged = utils.add_parents(set(self.app_model.staged))
+        untracked = utils.add_parents(set(self.app_model.untracked))
 
         if self.path in unmerged:
             return qtutils.tr('Unmerged')
@@ -219,6 +244,8 @@ class GitRepoInfoTask(QtCore.QRunnable):
             return qtutils.tr('Modified')
         if self.path in staged:
             return qtutils.tr('Staged')
+        if self.path in untracked:
+            return qtutils.tr('Untracked')
         return '-'
 
     def message(self):
