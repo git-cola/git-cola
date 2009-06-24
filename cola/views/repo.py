@@ -37,12 +37,17 @@ class RepoTreeView(QtGui.QTreeView):
     def update_actions(self):
         """Enable/disable actions."""
         selection = self.selected_paths()
+        unstaged = self.selected_unstaged_paths(selection=selection)
+
         self.action_history.setEnabled(bool(selection))
+        self.action_stage.setEnabled(bool(unstaged))
 
     def contextMenuEvent(self, event):
         """Create a context menu."""
         self.update_actions()
         menu = QtGui.QMenu(self)
+        menu.addAction(self.action_stage)
+        menu.addSeparator()
         menu.addAction(self.action_history)
         menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -51,8 +56,8 @@ class RepoTreeView(QtGui.QTreeView):
         QtGui.QTreeView.setModel(self, model)
         self.resizeColumnToContents(0)
         app_model = model.app_model
-        app_model.add_message_observer(app_model.paths_staged_message,
-                                       self._paths_staged)
+        app_model.add_message_observer(app_model.message_paths_staged,
+                                       self._paths_updated)
 
     def item_from_index(self, model_index):
         """Return the item corresponding to the model index."""
@@ -63,6 +68,16 @@ class RepoTreeView(QtGui.QTreeView):
         """Return the selected paths."""
         items = map(self.model().itemFromIndex, self.selectedIndexes())
         return [i.path for i in items if i.type() > 0]
+
+    def selected_unstaged_paths(self, selection=None):
+        """Return selected unstaged paths."""
+        if not selection:
+            selection = self.selected_paths()
+        model = self.model().app_model
+        modified = cola.utils.add_parents(set(model.modified))
+        untracked = cola.utils.add_parents(set(model.untracked))
+        unstaged = modified.union(untracked)
+        return [p for p in selection if p in unstaged]
 
     def _create_action(self, name, tooltip, slot, shortcut):
         """Create an action with a shortcut, tooltip, and callback slot."""
@@ -80,9 +95,10 @@ class RepoTreeView(QtGui.QTreeView):
 
     def stage_selected(self):
         """Signal that we should stage selected paths."""
-        self.emit(SIGNAL('stage(QStringList)'), self.selected_paths())
+        self.emit(SIGNAL('stage(QStringList)'), self.selected_unstaged_paths())
 
-    def _paths_staged(self, model, message, paths=None):
+
+    def _paths_updated(self, model, message, paths=None):
         """Observes paths that are staged and reacts accordingly."""
         for path in paths:
             self.model().entry(path).update()
