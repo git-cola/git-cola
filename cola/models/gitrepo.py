@@ -24,7 +24,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         QtGui.QStandardItem.__init__(self, parent)
         self.app_model = model
         self._dir_rows = {}
-        self._headers = ('Name', 'Status', 'Message', 'Last Modified')
+        self._headers = map(qtutils.tr, ('Name', 'Status', 'Message', 'Last Modified'))
         self.setColumnCount(len(self._headers))
         for idx, header in enumerate(self._headers):
             self.setHeaderData(idx, Qt.Horizontal,
@@ -214,13 +214,13 @@ class GitRepoInfoTask(QtCore.QRunnable):
         staged = utils.add_parents(set(self.app_model.staged))
 
         if self.path in unmerged:
-            return 'Unmerged'
+            return qtutils.tr('Unmerged')
         if self.path in modified and self.path in staged:
-            return 'Partially Staged'
+            return qtutils.tr('Partially Staged')
         if self.path in modified:
-            return 'Modified'
+            return qtutils.tr('Modified')
         if self.path in staged:
-            return 'Staged'
+            return qtutils.tr('Staged')
         return '-'
 
     def message(self):
