@@ -6,9 +6,10 @@ class ClassicModelObserver(object):
     """Helper class for observing changes to the model."""
     def __init__(self, model):
         self.paths = None
-        model.add_message_observer(model.paths_staged_message,
-                                   self.paths_staged)
-    def paths_staged(self, model, message, paths=None):
+        model.add_message_observer(model.message_paths_staged,
+                                   self.observe_paths)
+
+    def observe_paths(self, model, message, paths=None):
         """React to the 'paths_staged' message."""
         self.paths = paths
 

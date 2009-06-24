@@ -6,7 +6,7 @@ from cola.models.main import MainModel
 
 class ClassicModel(MainModel):
     """Defines data used by the classic view."""
-    paths_staged_message = 'paths_staged'
+    message_paths_staged   = 'paths_staged'
 
     def __init__(self):
         MainModel.__init__(self)
@@ -33,7 +33,7 @@ class ClassicModel(MainModel):
         for path in newly_staged:
             paths.add(path)
 
-        self.notify_message_observers(self.paths_staged_message, paths=paths)
+        self.notify_message_observers(self.message_paths_staged, paths=paths)
 
     def everything(self):
         """Returns a sorted list of all files, including untracked files."""
