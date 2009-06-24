@@ -26,6 +26,15 @@ class ClassicModelTestCase(helper.TestCase):
         if commit:
             self.shell("git commit -s -m'Initial commit' >/dev/null")
 
+    def test_everything(self):
+        """Test the ClassicModel.everything() method."""
+        self.setup_baseline_repo()
+        self.shell('touch other-file')
+        model = ClassicModel()
+        everything = model.everything()
+        self.assertTrue('the-file' in everything)
+        self.assertTrue('other-file' in everything)
+
     def test_stage_paths(self):
         """Test a simple usage of ClassicModel.stage_paths."""
         self.setup_baseline_repo()

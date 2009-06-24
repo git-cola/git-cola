@@ -33,3 +33,9 @@ class ClassicModel(MainModel):
             paths.add(path)
 
         self.notify_message_observers(self.paths_staged_message, paths=paths)
+
+    def everything(self):
+        """Returns a sorted list of all files, including untracked files."""
+        files = self.all_files() + self.untracked
+        files.sort()
+        return files
