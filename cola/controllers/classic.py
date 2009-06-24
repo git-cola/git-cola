@@ -4,6 +4,7 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
 import cola.utils
+import cola.difftool
 from cola.models import gitrepo
 
 class ClassicController(QtCore.QObject):
@@ -20,6 +21,8 @@ class ClassicController(QtCore.QObject):
                      self._stage)
         self.connect(view, SIGNAL('unstage(QStringList)'),
                      self._unstage)
+        self.connect(view, SIGNAL('difftool(QString)'),
+                     self._difftool)
 
     def _view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
@@ -47,6 +50,12 @@ class ClassicController(QtCore.QObject):
         """Unstage files for commit."""
         paths = map(unicode, qstrings)
         self.model.unstage_paths(paths)
+
+    def _difftool(self, qstring):
+        """Launch difftool on a path."""
+        path = unicode(qstring)
+        cola.difftool.launch(['HEAD', '--', path])
+
 
 if __name__ == '__main__':
     import sys

@@ -41,6 +41,12 @@ class RepoTreeView(QtGui.QTreeView):
                                     self.unstage_selected,
                                     Qt.Key_U)
 
+        self.action_difftool =\
+                self._create_action('View Diff...',
+                                    'Launch git-difftool on the current path.',
+                                    self.difftool,
+                                    Qt.Key_D)
+
     def update_actions(self):
         """Enable/disable actions."""
         selection = self.selected_paths()
@@ -50,6 +56,7 @@ class RepoTreeView(QtGui.QTreeView):
         self.action_history.setEnabled(bool(selection))
         self.action_stage.setEnabled(bool(unstaged))
         self.action_unstage.setEnabled(bool(staged))
+        self.action_difftool.setEnabled(bool(staged) or bool(unstaged))
 
     def contextMenuEvent(self, event):
         """Create a context menu."""
@@ -58,6 +65,7 @@ class RepoTreeView(QtGui.QTreeView):
         menu.addAction(self.action_stage)
         menu.addAction(self.action_unstage)
         menu.addSeparator()
+        menu.addAction(self.action_difftool)
         menu.addAction(self.action_history)
         menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -160,6 +168,14 @@ class RepoTreeView(QtGui.QTreeView):
     def unstage_selected(self):
         """Signal that we should stage selected paths."""
         self.emit(SIGNAL('unstage(QStringList)'), self.selected_staged_paths())
+
+    def difftool(self):
+        """Signal that we should launch difftool on a path."""
+        index = self.currentIndex()
+        if not index.isValid():
+            return
+        item = self.item_from_index(index)
+        self.emit(SIGNAL('difftool(QString)'), item.path)
 
     def _paths_updated(self, model, message, paths=None):
         """Observes paths that are staged and reacts accordingly."""
