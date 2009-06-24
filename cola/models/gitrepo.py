@@ -35,25 +35,26 @@ class GitRepoModel(QtGui.QStandardItemModel):
         """Create a GitRepoItem for the GitRepoItemModel."""
         return GitRepoItem(path, self.app_model, signal)
 
+    def _create_row(self, path):
+        """Return a list of items representing a row."""
+        return [
+            self._create_item(path, GitRepoSignals.Name),
+            self._create_item(path, GitRepoSignals.Status),
+            self._create_item(path, GitRepoSignals.Message),
+            self._create_item(path, GitRepoSignals.Modified),
+        ]
+
     def add_file(self, parent, path):
         """Add a file entry to the model."""
 
         # Create model items
-        name_entry = self._create_item(path, GitRepoSignals.Name)
-        status_entry = self._create_item(path, GitRepoSignals.Status)
-        message_entry = self._create_item(path, GitRepoSignals.Message)
-        modified_entry = self._create_item(path, GitRepoSignals.Modified)
+        row_items = self._create_row(path)
 
         # Use a standard file icon for the name field
-        name_entry.setIcon(qtutils.file_icon())
+        row_items[0].setIcon(qtutils.file_icon())
 
         # Add file paths at the end of the list
-        row = parent.rowCount()
-
-        parent.setChild(row, 0, name_entry)
-        parent.setChild(row, 1, status_entry)
-        parent.setChild(row, 2, message_entry)
-        parent.setChild(row, 3, modified_entry)
+        parent.appendRow(row_items)
 
         # Start the QRunnable task
         entry = GitRepoEntryManager.entry(path, self.app_model)
@@ -61,30 +62,23 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def add_directory(self, parent, path):
         """Add a directory entry to the model."""
-        # Create a GitRepoItem for the directory entry
-        name_entry = self._create_item(path, GitRepoSignals.Name)
-        status_entry = self._create_item(path, GitRepoSignals.Status)
-        message_entry = self._create_item(path, GitRepoSignals.Message)
-        modified_entry = self._create_item(path, GitRepoSignals.Modified)
+
+        # Create model items
+        row_items = self._create_row(path)
 
         # Use a standard directory icon
-        name_entry.setIcon(qtutils.dir_icon())
+        row_items[0].setIcon(qtutils.dir_icon())
 
         # Insert directories before file paths
         row = self._dir_rows.setdefault(parent, 0)
-
-        parent.setChild(row, 0, name_entry)
-        parent.setChild(row, 1, status_entry)
-        parent.setChild(row, 2, message_entry)
-        parent.setChild(row, 3, modified_entry)
-
+        parent.insertRow(row, row_items)
         self._dir_rows[parent] += 1
 
         # Start the QRunnable task for this entry
         entry = GitRepoEntryManager.entry(path, self.app_model)
         entry.update_name()
 
-        return name_entry
+        return row_items[0]
 
     def _initialize(self):
         """Iterate over the cola model and create GitRepoItems."""
