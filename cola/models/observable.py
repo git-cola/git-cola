@@ -1,5 +1,12 @@
+import copy
+
 from cola.model import Model
 from cola.observable import Observable
+
+_unserializable_attributes = {
+    'observers': [],
+    'notification_enabled': True,
+}
 
 class ObservableModel(Model, Observable):
     """Combines serialization from Model with the Observer pattern"""
@@ -12,18 +19,18 @@ class ObservableModel(Model, Observable):
 
         Hides internal observable attributes when serializing.
         """
-        notify, observers = self._remove_internals()
+        attributes = self.remove_unserializable_attributes()
         Model.save(self, path)
-        self._restore_internals(notify, observers)
+        self.restore_unserializable_attributes(attributes)
 
     def clone(self):
         """Override Model.clone() to handle observers"""
         # Go in and out of jsonpickle to create a clone
-        notify, observers = self._remove_internals()
+        attributes = self.remove_unserializable_attributes()
         clone = Model.clone(self)
-        self._restore_internals(notify, observers)
-        clone.observers = []
-        clone.notification_enabled = self.notification_enabled
+        unserializable_copy = copy.deepcopy(_unserializable_attributes)
+        clone.restore_unserializable_attributes(unserializable_copy)
+        self.restore_unserializable_attributes(attributes)
         return clone
 
     def set_param(self, param, value, notify=True, check_params=False):
@@ -33,14 +40,23 @@ class ObservableModel(Model, Observable):
         if notify:
             self.notify_observers(param)
 
-    def _remove_internals(self):
-        notify = self.notification_enabled
-        observers = self.observers
-        del self.notification_enabled
-        del self.observers
-        return notify, observers
+    def remove_unserializable_attributes(self):
+        """Remove unserializable instance attributes."""
+        attributes = {}
+        for attribute in _unserializable_attributes:
+            attributes[attribute] = self.__dict__.pop(attribute)
+        return attributes
 
-    def _restore_internals(self, notify, observers):
+    def restore_unserializable_attributes(self, attributes):
+        """Restores unserializable instance attributes."""
         # Restore properties
-        self.notification_enabled = notify
-        self.observers = observers
+        self.__dict__.update(attributes)
+
+    @staticmethod
+    def instance(path):
+        """Override Model.instance() to account for unserializable data."""
+        obj = Model.instance(path)
+        if isinstance(obj, ObservableModel):
+            unserializable_copy = copy.deepcopy(_unserializable_attributes)
+            obj.restore_unserializable_attributes(unserializable_copy)
+        return obj
