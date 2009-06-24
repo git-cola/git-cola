@@ -18,6 +18,8 @@ class ClassicController(QtCore.QObject):
                      self._query_model)
         self.connect(view, SIGNAL('stage(QStringList)'),
                      self._stage)
+        self.connect(view, SIGNAL('unstage(QStringList)'),
+                     self._unstage)
 
     def _view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
@@ -40,6 +42,11 @@ class ClassicController(QtCore.QObject):
         """Stage files for commit."""
         paths = map(unicode, qstrings)
         self.model.stage_paths(paths)
+
+    def _unstage(self, qstrings):
+        """Unstage files for commit."""
+        paths = map(unicode, qstrings)
+        self.model.unstage_paths(paths)
 
 if __name__ == '__main__':
     import sys

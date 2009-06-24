@@ -34,19 +34,29 @@ class RepoTreeView(QtGui.QTreeView):
                                     self.stage_selected,
                                     Qt.Key_S)
 
+        self.action_unstage =\
+                self._create_action('Unstage Selected...',
+                                    'Remove selected path(s) from '
+                                    'the staging area.',
+                                    self.unstage_selected,
+                                    Qt.Key_U)
+
     def update_actions(self):
         """Enable/disable actions."""
         selection = self.selected_paths()
+        staged = self.selected_staged_paths(selection=selection)
         unstaged = self.selected_unstaged_paths(selection=selection)
 
         self.action_history.setEnabled(bool(selection))
         self.action_stage.setEnabled(bool(unstaged))
+        self.action_unstage.setEnabled(bool(staged))
 
     def contextMenuEvent(self, event):
         """Create a context menu."""
         self.update_actions()
         menu = QtGui.QMenu(self)
         menu.addAction(self.action_stage)
+        menu.addAction(self.action_unstage)
         menu.addSeparator()
         menu.addAction(self.action_history)
         menu.exec_(self.mapToGlobal(event.pos()))
@@ -58,6 +68,8 @@ class RepoTreeView(QtGui.QTreeView):
         app_model = model.app_model
         app_model.add_message_observer(app_model.message_paths_staged,
                                        self._paths_updated)
+        app_model.add_message_observer(app_model.message_paths_unstaged,
+                                       self._paths_updated)
 
     def item_from_index(self, model_index):
         """Return the item corresponding to the model index."""
@@ -68,6 +80,13 @@ class RepoTreeView(QtGui.QTreeView):
         """Return the selected paths."""
         items = map(self.model().itemFromIndex, self.selectedIndexes())
         return [i.path for i in items if i.type() > 0]
+
+    def selected_staged_paths(self, selection=None):
+        """Return selected staged paths."""
+        if not selection:
+            selection = self.selected_paths()
+        staged = cola.utils.add_parents(set(self.model().app_model.staged))
+        return [p for p in selection if p in staged]
 
     def selected_unstaged_paths(self, selection=None):
         """Return selected unstaged paths."""
@@ -97,6 +116,9 @@ class RepoTreeView(QtGui.QTreeView):
         """Signal that we should stage selected paths."""
         self.emit(SIGNAL('stage(QStringList)'), self.selected_unstaged_paths())
 
+    def unstage_selected(self):
+        """Signal that we should stage selected paths."""
+        self.emit(SIGNAL('unstage(QStringList)'), self.selected_staged_paths())
 
     def _paths_updated(self, model, message, paths=None):
         """Observes paths that are staged and reacts accordingly."""
