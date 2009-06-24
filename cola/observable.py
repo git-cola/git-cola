@@ -4,18 +4,26 @@
 class Observable(object):
     """Handles subject/observer notifications."""
     def __init__(self):
-        self.observers = []
+        self.observers = set()
+        self.message_observers = {}
         self.notification_enabled = True
 
     def add_observer(self, observer):
         """Adds an observer to this model"""
-        if observer not in self.observers:
-            self.observers.append(observer)
+        self.observers.add(observer)
+
+    def add_message_observer(self, message, observer):
+        """Add an observer for a specific message."""
+        observers = self.message_observers.setdefault(message, set())
+        observers.add(observer)
 
     def remove_observer(self, observer):
         """Removes an observer"""
         if observer in self.observers:
             self.observers.remove(observer)
+        for message, observers in self.message_observers.items():
+            if observer in observers:
+                observers.remove(observer)
 
     def notify_observers(self, *param):
         """Notifies observers about attribute changes"""
@@ -23,3 +31,11 @@ class Observable(object):
             return
         for observer in self.observers:
             observer.notify(*param)
+
+    def notify_message_observers(self, message, **opts):
+        """Notifies message observers."""
+        if not self.notification_enabled:
+            return
+        observers = self.message_observers[message]
+        for method in observers:
+            method(self, message, **opts)

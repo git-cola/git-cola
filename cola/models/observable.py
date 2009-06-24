@@ -4,7 +4,8 @@ from cola.model import Model
 from cola.observable import Observable
 
 _unserializable_attributes = {
-    'observers': [],
+    'observers': set(),
+    'message_observers': {},
     'notification_enabled': True,
 }
 
