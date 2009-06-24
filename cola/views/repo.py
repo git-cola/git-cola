@@ -61,6 +61,41 @@ class RepoTreeView(QtGui.QTreeView):
         menu.addAction(self.action_history)
         menu.exec_(self.mapToGlobal(event.pos()))
 
+    def keyPressEvent(self, event):
+        """
+        Override keyPressEvent to allow LeftArrow to work on non-directories.
+
+        When LeftArrow is pressed on a file entry or an unexpanded directory,
+        then move the current index to the parent directory.
+
+        This simplifies navigation using the keyboard.
+
+        """
+        # Check whether the item is expanded before calling the base class
+        # keyPressEvent otherwise we end up collapsing and changing the
+        # current index in one shot, which we don't want to do.
+        index = self.currentIndex()
+        is_expanded = index.isValid() and self.isExpanded(index)
+
+        # Process the keyPressEvent before changing the current index
+        # otherwise the event will affect the new index set here
+        # instead of the original index.
+        result = QtGui.QTreeView.keyPressEvent(self, event)
+
+        # Process non-root entries with valid parents only.
+        if (index.isValid() and event.key() == QtCore.Qt.Key_Left and
+                index.parent() and index.parent().isValid()):
+
+            # File entries have rowCount() == 0
+            if self.item_from_index(index).rowCount() == 0:
+                self.setCurrentIndex(index.parent())
+
+            # Otherwise, only add this behavior for collapsed directories
+            elif not is_expanded:
+                self.setCurrentIndex(index.parent())
+
+        return result
+
     def setModel(self, model):
         """Set the concrete QDirModel instance."""
         QtGui.QTreeView.setModel(self, model)
