@@ -205,22 +205,13 @@ class GitRepoInfoTask(QtCore.QRunnable):
         """Calculate the name for an entry."""
         return utils.basename(self.path)
 
-    def _add_parents(self, path_entry_set):
-        """Iterate over each item in the set and add its parent directories."""
-        for path in list(path_entry_set):
-            if '/' in path:
-                parent_dir = utils.dirname(path)
-                while parent_dir and parent_dir not in path_entry_set:
-                    path_entry_set.add(parent_dir)
-                    parent_dir = utils.dirname(parent_dir)
-        return path_entry_set
 
     def status(self):
         """Return the status for the entry's path."""
 
-        unmerged = self._add_parents(set(self.app_model.unmerged))
-        modified = self._add_parents(set(self.app_model.modified))
-        staged = self._add_parents(set(self.app_model.staged))
+        unmerged = utils.add_parents(set(self.app_model.unmerged))
+        modified = utils.add_parents(set(self.app_model.modified))
+        staged = utils.add_parents(set(self.app_model.staged))
 
         if self.path in unmerged:
             return 'Unmerged'
