@@ -29,13 +29,13 @@ class RepoTreeView(QtGui.QTreeView):
                                     Qt.Key_H)
 
         self.action_stage =\
-                self._create_action('Stage Selected...',
+                self._create_action('Stage Selected',
                                     'Stage selected path(s) for commit.',
                                     self.stage_selected,
                                     Qt.Key_S)
 
         self.action_unstage =\
-                self._create_action('Unstage Selected...',
+                self._create_action('Unstage Selected',
                                     'Remove selected path(s) from '
                                     'the staging area.',
                                     self.unstage_selected,
