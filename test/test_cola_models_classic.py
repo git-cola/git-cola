@@ -72,3 +72,22 @@ class ClassicModelTestCase(helper.TestCase):
         self.assertTrue('foo/bar/baz' in observer.paths)
         self.assertTrue('foo/bar' in observer.paths)
         self.assertTrue('foo' in observer.paths)
+
+    def test_stage_paths_untracked(self):
+        """Test ClassicModel.stage_paths with an untracked file."""
+        self.setup_baseline_repo()
+        self.shell("""
+            mkdir -p foo/bar &&
+            touch foo/bar/baz
+        """)
+
+        model = ClassicModel()
+        observer = ClassicModelObserver(model)
+        model.stage_paths(['foo'])
+
+        self.assertTrue('foo' in observer.paths)
+        self.assertTrue('foo/bar' in observer.paths)
+        self.assertTrue('foo/bar/baz' in observer.paths)
+        self.assertTrue('foo/bar/baz' in model.staged)
+        self.assertTrue('foo/bar/baz' not in model.modified)
+        self.assertTrue('foo/bar/baz' not in model.untracked)

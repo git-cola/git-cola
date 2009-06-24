@@ -20,17 +20,22 @@ class ClassicModel(MainModel):
 
         paths = set(paths)
 
-        # Grab the old list of modified files
+        # Grab the old lists of untracked + modified files
         old_modified = set(self.modified)
+        old_untracked = set(self.untracked)
 
         # Rescan for new changes
         self.update_status()
 
-        # Handle 'git add' on a directory
+        # Grab the new lists of untracked + modified files
         new_modified = set(self.modified)
-        newly_staged = utils.add_parents(old_modified - new_modified)
+        new_untracked = set(self.untracked)
 
-        for path in newly_staged:
+        # Handle 'git add' on a directory
+        newly_not_modified = utils.add_parents(old_modified - new_modified)
+        newly_not_untracked = utils.add_parents(old_untracked - new_untracked)
+
+        for path in newly_not_modified.union(newly_not_untracked):
             paths.add(path)
 
         self.notify_message_observers(self.message_paths_staged, paths=paths)
