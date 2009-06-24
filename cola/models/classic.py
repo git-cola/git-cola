@@ -7,6 +7,7 @@ from cola.models.main import MainModel
 class ClassicModel(MainModel):
     """Defines data used by the classic view."""
     message_paths_staged   = 'paths_staged'
+    message_paths_unstaged = 'paths_unstaged'
 
     def __init__(self):
         MainModel.__init__(self)
@@ -39,6 +40,31 @@ class ClassicModel(MainModel):
             paths.add(path)
 
         self.notify_message_observers(self.message_paths_staged, paths=paths)
+
+    def unstage_paths(self, paths):
+        """Unstages paths from the staging area and notifies observers."""
+        self.update_status()
+        self.reset_helper(paths)
+
+        paths = set(paths)
+
+        # Grab the old list of staged files
+        old_staged = set(self.staged)
+
+        # Rescan for new changes
+        self.update_status()
+
+        # Grab the new list of staged file
+        new_staged = set(self.staged)
+
+        # Handle 'git reset' on a directory
+        newly_unstaged = utils.add_parents(old_staged - new_staged)
+
+        for path in newly_unstaged:
+            paths.add(path)
+
+        self.notify_message_observers(self.message_paths_unstaged, paths=paths)
+
 
     def everything(self):
         """Returns a sorted list of all files, including untracked files."""
