@@ -31,7 +31,7 @@ class RepoTreeView(QtGui.QTreeView):
                 self._create_action('View History...',
                                     'View history for selected path(s).',
                                     self.view_history,
-                                    'Ctrl+H')
+                                    'Shift+Ctrl+H')
 
         self.action_stage =\
                 self._create_action('Stage Selected',
