@@ -255,6 +255,7 @@ class RepoTreeView(QtGui.QTreeView):
             while path and '/' in path:
                 path = cola.utils.dirname(path)
                 self.model().entry(path).update()
+        self.update_actions()
 
     def current_path(self):
         """Return the path for the current item."""
