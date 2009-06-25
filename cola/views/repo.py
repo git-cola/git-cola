@@ -171,11 +171,7 @@ class RepoTreeView(QtGui.QTreeView):
 
     def difftool(self):
         """Signal that we should launch difftool on a path."""
-        index = self.currentIndex()
-        if not index.isValid():
-            return
-        item = self.item_from_index(index)
-        self.emit(SIGNAL('difftool(QString)'), item.path)
+        self.emit(SIGNAL('difftool(QString)'), self.current_path())
 
     def _paths_updated(self, model, message, paths=None):
         """Observes paths that are staged and reacts accordingly."""
@@ -184,3 +180,10 @@ class RepoTreeView(QtGui.QTreeView):
             while path and '/' in path:
                 path = cola.utils.dirname(path)
                 self.model().entry(path).update()
+
+    def current_path(self):
+        """Return the path for the current item."""
+        index = self.currentIndex()
+        if not index.isValid():
+            return None
+        return self.item_from_index(index).path
