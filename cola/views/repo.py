@@ -21,6 +21,9 @@ class RepoTreeView(QtGui.QTreeView):
         self.setAnimated(True)
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 
+        # The non-Qt cola application model
+        self.app_model = None
+
         self.connect(self, SIGNAL('expanded(QModelIndex)'),
                      lambda: self.resizeColumnToContents(0))
 
@@ -178,10 +181,10 @@ class RepoTreeView(QtGui.QTreeView):
         return result
 
     def setModel(self, model):
-        """Set the concrete QDirModel instance."""
+        """Set the concrete QAbstractItemModel instance."""
         QtGui.QTreeView.setModel(self, model)
         self.resizeColumnToContents(0)
-        app_model = model.app_model
+        self.app_model = app_model = model.app_model
         app_model.add_message_observer(app_model.message_paths_staged,
                                        self._paths_updated)
         app_model.add_message_observer(app_model.message_paths_unstaged,
@@ -203,14 +206,14 @@ class RepoTreeView(QtGui.QTreeView):
         """Return selected staged paths."""
         if not selection:
             selection = self.selected_paths()
-        staged = cola.utils.add_parents(set(self.model().app_model.staged))
+        staged = cola.utils.add_parents(set(self.app_model.staged))
         return [p for p in selection if p in staged]
 
     def selected_modified_paths(self, selection=None):
         """Return selected modified paths."""
         if not selection:
             selection = self.selected_paths()
-        model = self.model().app_model
+        model = self.app_model
         modified = cola.utils.add_parents(set(model.modified))
         return [p for p in selection if p in modified]
 
@@ -218,7 +221,7 @@ class RepoTreeView(QtGui.QTreeView):
         """Return selected unstaged paths."""
         if not selection:
             selection = self.selected_paths()
-        model = self.model().app_model
+        model = self.app_model
         modified = cola.utils.add_parents(set(model.modified))
         untracked = cola.utils.add_parents(set(model.untracked))
         unstaged = modified.union(untracked)
@@ -228,7 +231,7 @@ class RepoTreeView(QtGui.QTreeView):
         """Return selected tracked paths."""
         if not selection:
             selection = self.selected_paths()
-        model = self.model().app_model
+        model = self.app_model
         staged = set(self.selected_staged_paths())
         modified = set(self.selected_modified_paths())
         untracked = cola.utils.add_parents(set(model.untracked))
@@ -267,8 +270,8 @@ class RepoTreeView(QtGui.QTreeView):
         """Diff paths against previous versions."""
         paths = self.selected_tracked_paths()
         args = ['--'] + paths
-        revs, summaries = self.model().app_model.log_helper(all=True, extra_args=args)
-        commits = select_commits(self.model().app_model, self,
+        revs, summaries = self.app_model.log_helper(all=True, extra_args=args)
+        commits = select_commits(self.app_model, self,
                                  'Select Previous Version',
                                  revs, summaries, multiselect=False)
         if not commits:
