@@ -114,6 +114,12 @@ class RepoTreeView(QtGui.QTreeView):
             elif not is_expanded:
                 self.setCurrentIndex(index.parent())
 
+        # Automatically select the first entry when expanding a directory
+        if (index.isValid() and event.key() == QtCore.Qt.Key_Right and
+                index.child(0, 0) and index.child(0, 0).isValid() and
+                not is_expanded and self.isExpanded(index)):
+            self.setCurrentIndex(index.child(0, 0))
+
         return result
 
     def selectionChanged(self, old_selection, new_selection):
