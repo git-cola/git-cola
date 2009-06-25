@@ -68,13 +68,14 @@ class RepoTreeView(QtGui.QTreeView):
         selection = self.selected_paths()
         selected = bool(selection)
         staged = bool(self.selected_staged_paths(selection=selection))
+        modified = bool(self.selected_modified_paths(selection=selection))
         unstaged = bool(self.selected_unstaged_paths(selection=selection))
         tracked = bool(self.selected_tracked_paths())
 
         self.action_history.setEnabled(selected)
         self.action_stage.setEnabled(unstaged)
         self.action_unstage.setEnabled(staged)
-        self.action_difftool.setEnabled(tracked)
+        self.action_difftool.setEnabled(staged or modified)
         self.action_diffpred.setEnabled(tracked)
         self.action_revert.setEnabled(tracked)
 
@@ -190,10 +191,13 @@ class RepoTreeView(QtGui.QTreeView):
         """Return selected tracked paths."""
         if not selection:
             selection = self.selected_paths()
+        model = self.model().app_model
         staged = set(self.selected_staged_paths())
         modified = set(self.selected_modified_paths())
+        untracked = cola.utils.add_parents(set(model.untracked))
         tracked = staged.union(modified)
-        return list(tracked)
+        return [p for p in selection
+                if p not in untracked or p in staged or p in modified]
 
     def _create_action(self, name, tooltip, slot, shortcut):
         """Create an action with a shortcut, tooltip, and callback slot."""
