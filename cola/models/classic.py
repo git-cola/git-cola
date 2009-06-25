@@ -8,6 +8,7 @@ class ClassicModel(MainModel):
     """Defines data used by the classic view."""
     message_paths_staged   = 'paths_staged'
     message_paths_unstaged = 'paths_unstaged'
+    message_paths_reverted = 'paths_reverted'
 
     def __init__(self):
         MainModel.__init__(self)
@@ -65,6 +66,33 @@ class ClassicModel(MainModel):
 
         self.notify_message_observers(self.message_paths_unstaged, paths=paths)
 
+    def revert_paths(self, paths):
+        """Revert paths to the content from HEAD."""
+        self.update_status()
+        self.git.checkout('HEAD', '--', *paths)
+
+        paths = set(paths)
+
+        # Grab the old set of changed files
+        old_modified = set(self.modified)
+        old_staged = set(self.staged)
+        old_changed = old_modified.union(old_staged)
+
+        # Rescan for new changes
+        self.update_status()
+
+        # Grab the new set of changed files
+        new_modified = set(self.modified)
+        new_staged = set(self.staged)
+        new_changed = new_modified.union(new_staged)
+
+        # Handle 'git checkout' on a directory
+        newly_reverted = utils.add_parents(old_changed - new_changed)
+
+        for path in newly_reverted:
+            paths.add(path)
+
+        self.notify_message_observers(self.message_paths_reverted, paths=paths)
 
     def everything(self):
         """Returns a sorted list of all files, including untracked files."""
