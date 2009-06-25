@@ -50,13 +50,16 @@ class RepoTreeView(QtGui.QTreeView):
     def update_actions(self):
         """Enable/disable actions."""
         selection = self.selected_paths()
-        staged = self.selected_staged_paths(selection=selection)
-        unstaged = self.selected_unstaged_paths(selection=selection)
+        selected = bool(selection)
+        staged = bool(self.selected_staged_paths(selection=selection))
+        modified = bool(self.selected_modified_paths(selection=selection))
+        unstaged = bool(self.selected_unstaged_paths(selection=selection))
+        diffable = staged or modified
 
-        self.action_history.setEnabled(bool(selection))
-        self.action_stage.setEnabled(bool(unstaged))
-        self.action_unstage.setEnabled(bool(staged))
-        self.action_difftool.setEnabled(bool(staged) or bool(unstaged))
+        self.action_history.setEnabled(selected)
+        self.action_stage.setEnabled(unstaged)
+        self.action_unstage.setEnabled(staged)
+        self.action_difftool.setEnabled(diffable)
 
     def contextMenuEvent(self, event):
         """Create a context menu."""
@@ -136,6 +139,14 @@ class RepoTreeView(QtGui.QTreeView):
             selection = self.selected_paths()
         staged = cola.utils.add_parents(set(self.model().app_model.staged))
         return [p for p in selection if p in staged]
+
+    def selected_modified_paths(self, selection=None):
+        """Return selected modified paths."""
+        if not selection:
+            selection = self.selected_paths()
+        model = self.model().app_model
+        modified = cola.utils.add_parents(set(model.modified))
+        return [p for p in selection if p in modified]
 
     def selected_unstaged_paths(self, selection=None):
         """Return selected unstaged paths."""
