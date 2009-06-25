@@ -21,7 +21,7 @@ class ClassicController(QtCore.QObject):
                      self._stage)
         self.connect(view, SIGNAL('unstage(QStringList)'),
                      self._unstage)
-        self.connect(view, SIGNAL('difftool(QString)'),
+        self.connect(view, SIGNAL('difftool(QStringList)'),
                      self._difftool)
 
     def _view_history(self, entries):
@@ -51,10 +51,10 @@ class ClassicController(QtCore.QObject):
         paths = map(unicode, qstrings)
         self.model.unstage_paths(paths)
 
-    def _difftool(self, qstring):
+    def _difftool(self, qstrings):
         """Launch difftool on a path."""
-        path = unicode(qstring)
-        cola.difftool.launch(['HEAD', '--', path])
+        paths = map(unicode, qstrings)
+        cola.difftool.launch(['HEAD', '--'] + paths)
 
 
 if __name__ == '__main__':

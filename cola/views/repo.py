@@ -52,14 +52,13 @@ class RepoTreeView(QtGui.QTreeView):
         selection = self.selected_paths()
         selected = bool(selection)
         staged = bool(self.selected_staged_paths(selection=selection))
-        modified = bool(self.selected_modified_paths(selection=selection))
         unstaged = bool(self.selected_unstaged_paths(selection=selection))
-        diffable = staged or modified
+        tracked = bool(self.selected_tracked_paths())
 
         self.action_history.setEnabled(selected)
         self.action_stage.setEnabled(unstaged)
         self.action_unstage.setEnabled(staged)
-        self.action_difftool.setEnabled(diffable)
+        self.action_difftool.setEnabled(tracked)
 
     def contextMenuEvent(self, event):
         """Create a context menu."""
@@ -158,6 +157,15 @@ class RepoTreeView(QtGui.QTreeView):
         unstaged = modified.union(untracked)
         return [p for p in selection if p in unstaged]
 
+    def selected_tracked_paths(self, selection=None):
+        """Return selected tracked paths."""
+        if not selection:
+            selection = self.selected_paths()
+        staged = set(self.selected_staged_paths())
+        modified = set(self.selected_modified_paths())
+        tracked = staged.union(modified)
+        return list(tracked)
+
     def _create_action(self, name, tooltip, slot, shortcut):
         """Create an action with a shortcut, tooltip, and callback slot."""
         action = QtGui.QAction(self.tr(name), self)
@@ -182,7 +190,8 @@ class RepoTreeView(QtGui.QTreeView):
 
     def difftool(self):
         """Signal that we should launch difftool on a path."""
-        self.emit(SIGNAL('difftool(QString)'), self.current_path())
+        paths = self.selected_tracked_paths()
+        self.emit(SIGNAL('difftool(QStringList)'), paths)
 
     def _paths_updated(self, model, message, paths=None):
         """Observes paths that are staged and reacts accordingly."""
