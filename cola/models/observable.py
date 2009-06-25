@@ -16,9 +16,11 @@ class ObservableModel(Model, Observable):
         Observable.__init__(self)
 
     def save(self, path):
-        """Saves state to a file.  Overrides the base method
+        """
+        Saves state to a file.  Overrides the base method.
 
         Hides internal observable attributes when serializing.
+
         """
         attributes = self.remove_unserializable_attributes()
         Model.save(self, path)
@@ -30,8 +32,9 @@ class ObservableModel(Model, Observable):
         attributes = self.remove_unserializable_attributes()
         clone = Model.clone(self)
         unserializable_copy = copy.deepcopy(_unserializable_attributes)
-        clone.restore_unserializable_attributes(unserializable_copy)
         self.restore_unserializable_attributes(attributes)
+        clone.restore_unserializable_attributes(unserializable_copy)
+        clone.register_messages(messages=self.message_observers)
         return clone
 
     def set_param(self, param, value, notify=True, check_params=False):
@@ -60,4 +63,5 @@ class ObservableModel(Model, Observable):
         if isinstance(obj, ObservableModel):
             unserializable_copy = copy.deepcopy(_unserializable_attributes)
             obj.restore_unserializable_attributes(unserializable_copy)
+            obj.register_messages()
         return obj

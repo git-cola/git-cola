@@ -6,17 +6,17 @@ from cola.models.observable import ObservableModel
 
 class ConcreteModel(ObservableModel):
     """A concrete model for testing."""
-    copy_message = 'copy'
+    message_copy = 'copy'
     def copy(self, **opts):
         """Send notification from the model."""
-        self.notify_message_observers(self.copy_message, **opts)
+        self.notify_message_observers(self.message_copy, **opts)
 
 class ConcreteObserver(object):
     """A concrete observer for testing."""
     def __init__(self, model):
         self.opts = None
         self.model = None
-        model.add_message_observer(ConcreteModel.copy_message,
+        model.add_message_observer(ConcreteModel.message_copy,
                                    self.receive_message)
 
     def reset(self):
@@ -42,6 +42,13 @@ class ObservableModelTestCase(unittest.TestCase):
         self.assertEqual(self.observer.opts, {'hello': 'world'})
         self.assertEqual(self.observer.model, self.model)
 
+    def test_notify_message_observers_bogus_message(self):
+        """Test that bogus messages are ignored."""
+        self.assertRaises(ValueError, self.model.notify_message_observers,
+                          'this-is-a-bogus-message')
+        self.assertEqual(self.observer.opts, None)
+        self.assertEqual(self.observer.model, None)
+
     def test_observing_multiple_models(self):
         """Test that we can attach to multiple models."""
         self.model.copy(foo='bar')
@@ -49,7 +56,8 @@ class ObservableModelTestCase(unittest.TestCase):
         self.assertEqual(self.observer.model, self.model)
 
         model = ConcreteModel()
-        model.add_message_observer(model.copy_message, self.observer.receive_message)
+        model.add_message_observer(model.message_copy,
+                                   self.observer.receive_message)
         model.copy(baz='quux')
 
         self.assertEqual(self.observer.opts, {'baz': 'quux'})
