@@ -23,6 +23,8 @@ class ClassicController(QtCore.QObject):
                      self._unstage)
         self.connect(view, SIGNAL('difftool(QStringList)'),
                      self._difftool)
+        self.connect(view, SIGNAL('revert(QStringList)'),
+                     self._revert)
 
     def _view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
@@ -55,6 +57,11 @@ class ClassicController(QtCore.QObject):
         """Launch difftool on a path."""
         paths = map(unicode, qstrings)
         cola.difftool.launch(['HEAD', '--'] + paths)
+
+    def _revert(self, qstrings):
+        """Revert paths to HEAD."""
+        paths = map(unicode, qstrings)
+        self.model.revert_paths(paths)
 
 
 if __name__ == '__main__':

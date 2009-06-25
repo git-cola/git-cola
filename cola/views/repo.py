@@ -4,6 +4,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola.utils
+import cola.qtutils
 
 class RepoTreeView(QtGui.QTreeView):
     """Provides a filesystem-like view of a git repository."""
@@ -47,6 +48,12 @@ class RepoTreeView(QtGui.QTreeView):
                                     self.difftool,
                                     Qt.Key_D)
 
+        self.action_revert =\
+                self._create_action('Revert Uncommitted Changes...',
+                                    'Revert changes to selected path(s).',
+                                    self.revert,
+                                    'Ctrl+Z')
+
     def update_actions(self):
         """Enable/disable actions."""
         selection = self.selected_paths()
@@ -59,6 +66,7 @@ class RepoTreeView(QtGui.QTreeView):
         self.action_stage.setEnabled(unstaged)
         self.action_unstage.setEnabled(staged)
         self.action_difftool.setEnabled(tracked)
+        self.action_revert.setEnabled(tracked)
 
     def contextMenuEvent(self, event):
         """Create a context menu."""
@@ -69,6 +77,8 @@ class RepoTreeView(QtGui.QTreeView):
         menu.addSeparator()
         menu.addAction(self.action_difftool)
         menu.addAction(self.action_history)
+        menu.addSeparator()
+        menu.addAction(self.action_revert)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def keyPressEvent(self, event):
@@ -120,6 +130,8 @@ class RepoTreeView(QtGui.QTreeView):
         app_model.add_message_observer(app_model.message_paths_staged,
                                        self._paths_updated)
         app_model.add_message_observer(app_model.message_paths_unstaged,
+                                       self._paths_updated)
+        app_model.add_message_observer(app_model.message_paths_reverted,
                                        self._paths_updated)
 
     def item_from_index(self, model_index):
@@ -192,6 +204,19 @@ class RepoTreeView(QtGui.QTreeView):
         """Signal that we should launch difftool on a path."""
         paths = self.selected_tracked_paths()
         self.emit(SIGNAL('difftool(QStringList)'), paths)
+
+    def revert(self):
+        """Signal that we should revert changes to a path."""
+        if not cola.qtutils.question(self,
+                                     'Revert Local Changes?',
+                                     'This operation will drop '
+                                     'uncommitted changes.\n'
+                                     'This cannot be undone.\n'
+                                     'Continue?',
+                                     default=False):
+            return
+        paths = self.selected_tracked_paths()
+        self.emit(SIGNAL('revert(QStringList)'), paths)
 
     def _paths_updated(self, model, message, paths=None):
         """Observes paths that are staged and reacts accordingly."""
