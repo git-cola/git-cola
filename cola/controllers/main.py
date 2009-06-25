@@ -504,6 +504,7 @@ class MainController(QObserver):
     def cherry_pick(self):
         """Launch the 'Cherry-Pick' dialog."""
         commits = self.select_commits_gui('Cherry-Pick Commits',
+                                          multiselect=False,
                                           *self.model.log_helper(all=True))
         if not commits:
             return
@@ -1303,10 +1304,11 @@ class MainController(QObserver):
             elif self.mode == self.MODE_INDEX:
                 self.unstage_hunk_selection()
 
-    def select_commits_gui(self, title, revs, summaries):
+    def select_commits_gui(self, title, revs, summaries, multiselect=True):
         """Launch a gui for selecting commits."""
         return select_commits(self.model, self.view,
-                              self.tr(title), revs, summaries)
+                              self.tr(title), revs, summaries,
+                              multiselect=multiselect)
 
     def update_diff_font(self):
         """Updates the diff font based on the configured value."""

@@ -7,6 +7,7 @@ import sys
 import time
 
 from PyQt4 import QtCore
+from PyQt4 import QtGui
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QListWidget
 from PyQt4.QtGui import qApp
@@ -113,12 +114,16 @@ class ListView(ListViewBase, ItemView):
 
 CommitViewBase = create_standard_view(Ui_commit, QDialog)
 class CommitView(CommitViewBase):
-    def __init__(self, parent=None, title=None):
+    def __init__(self, parent=None, title=None, multiselect=True):
         CommitViewBase.__init__(self, parent)
         if title:
             self.setWindowTitle(title)
+        # Allow disabling multi-select
+        if not multiselect:
+            mode = QtGui.QAbstractItemView.SingleSelection
+            self.commit_list.setSelectionMode(mode)
         # Make the list widget slighty larger
-        self.splitter.setSizes([ 50, 200 ])
+        self.splitter.setSizes([100, 150])
         self.syntax = DiffSyntaxHighlighter(self.commit_text.document(),
                                             whitespace=False)
 

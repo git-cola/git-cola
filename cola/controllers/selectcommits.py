@@ -9,10 +9,10 @@ from cola.qobserver import QObserver
 from cola.controllers.createbranch import create_new_branch
 
 #+-------------------------------------------------------------
-def select_commits(model, parent, title, revs, summaries):
+def select_commits(model, parent, title, revs, summaries, multiselect=True):
     """Use the CommitView to select commits from a list."""
 
-    view = CommitView(parent, title)
+    view = CommitView(parent, title, multiselect=multiselect)
     ctl = SelectCommitsController(model, view, revs, summaries)
     return ctl.select_commits()
 
