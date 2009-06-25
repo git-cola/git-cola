@@ -17,6 +17,7 @@ class RepoTreeView(QtGui.QTreeView):
         self.setSortingEnabled(False)
         self.setAllColumnsShowFocus(True)
         self.setAlternatingRowColors(True)
+        self.setUniformRowHeights(True)
         self.setAnimated(True)
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 
