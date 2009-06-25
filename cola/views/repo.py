@@ -30,32 +30,32 @@ class RepoTreeView(QtGui.QTreeView):
                 self._create_action('View History...',
                                     'View history for selected path(s).',
                                     self.view_history,
-                                    Qt.Key_H)
+                                    'Ctrl+H')
 
         self.action_stage =\
                 self._create_action('Stage Selected',
                                     'Stage selected path(s) for commit.',
                                     self.stage_selected,
-                                    Qt.Key_S)
+                                    'Ctrl+S')
 
         self.action_unstage =\
                 self._create_action('Unstage Selected',
                                     'Remove selected path(s) from '
                                     'the staging area.',
                                     self.unstage_selected,
-                                    Qt.Key_U)
+                                    'Ctrl+U')
 
         self.action_difftool =\
                 self._create_action('View Diff...',
                                     'Launch git-difftool on the current path.',
                                     self.difftool,
-                                    Qt.Key_D)
+                                    'Ctrl+D')
 
         self.action_diffpred =\
                 self._create_action('Diff Against Predecessor...',
                                     'Launch git-difftool against previous versions.',
                                     self.diffpred,
-                                    'Ctrl+D')
+                                    'Shift+Ctrl+D')
 
         self.action_revert =\
                 self._create_action('Revert Uncommitted Changes...',
