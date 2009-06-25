@@ -743,7 +743,7 @@ class MainModel(ObservableModel):
         tmpdir = self.get_tmp_dir()
         return os.path.join(tmpdir, basename)
 
-    def log_helper(self, all=False):
+    def log_helper(self, all=False, extra_args=None):
         """
         Returns a pair of parallel arrays listing the revision sha1's
         and commit summaries.
@@ -751,7 +751,10 @@ class MainModel(ObservableModel):
         revs = []
         summaries = []
         regex = REV_LIST_REGEX
-        output = self.git.log(pretty='oneline', all=all)
+        args = []
+        if extra_args:
+            args = extra_args
+        output = self.git.log(pretty='oneline', all=all, *args)
         for line in map(core.decode, output.splitlines()):
             match = regex.match(line)
             if match:
