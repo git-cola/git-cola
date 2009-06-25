@@ -5,7 +5,10 @@ from PyQt4.QtCore import SIGNAL
 
 import cola.utils
 import cola.difftool
+
 from cola.models import gitrepo
+from cola.controllers.selectcommits import select_commits
+
 
 class ClassicController(QtCore.QObject):
     def __init__(self, model, view=None):
@@ -23,6 +26,8 @@ class ClassicController(QtCore.QObject):
                      self._unstage)
         self.connect(view, SIGNAL('difftool(QStringList)'),
                      self._difftool)
+        self.connect(view, SIGNAL('difftool_predecessor(QStringList)'),
+                     self._difftool_predecessor)
         self.connect(view, SIGNAL('revert(QStringList)'),
                      self._revert)
 
@@ -58,10 +63,24 @@ class ClassicController(QtCore.QObject):
         paths = map(unicode, qstrings)
         cola.difftool.launch(['HEAD', '--'] + paths)
 
+    def _difftool_predecessor(self, qstrings):
+        """Prompt for an older commit and launch difftool against it."""
+        paths = map(unicode, qstrings)
+        args = ['--'] + paths
+        revs, summaries = self.model.log_helper(all=True, extra_args=args)
+        commits = select_commits(self.model, self.view,
+                                 'Select Previous Version',
+                                 revs, summaries, multiselect=False)
+        if not commits:
+            return
+        commit = commits[0]
+        cola.difftool.launch([commit, '--'] + paths)
+
     def _revert(self, qstrings):
         """Revert paths to HEAD."""
         paths = map(unicode, qstrings)
         self.model.revert_paths(paths)
+
 
 
 if __name__ == '__main__':
