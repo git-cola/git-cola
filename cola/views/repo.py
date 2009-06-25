@@ -5,6 +5,9 @@ from PyQt4.QtCore import SIGNAL
 
 import cola.utils
 import cola.qtutils
+import cola.difftool
+
+from cola.controllers.selectcommits import select_commits
 
 class RepoTreeView(QtGui.QTreeView):
     """Provides a filesystem-like view of a git repository."""
@@ -48,6 +51,12 @@ class RepoTreeView(QtGui.QTreeView):
                                     self.difftool,
                                     Qt.Key_D)
 
+        self.action_diffpred =\
+                self._create_action('Diff Against Predecessor...',
+                                    'Launch git-difftool against previous versions.',
+                                    self.diffpred,
+                                    'Ctrl+D')
+
         self.action_revert =\
                 self._create_action('Revert Uncommitted Changes...',
                                     'Revert changes to selected path(s).',
@@ -66,6 +75,7 @@ class RepoTreeView(QtGui.QTreeView):
         self.action_stage.setEnabled(unstaged)
         self.action_unstage.setEnabled(staged)
         self.action_difftool.setEnabled(tracked)
+        self.action_diffpred.setEnabled(tracked)
         self.action_revert.setEnabled(tracked)
 
     def contextMenuEvent(self, event):
@@ -75,8 +85,9 @@ class RepoTreeView(QtGui.QTreeView):
         menu.addAction(self.action_stage)
         menu.addAction(self.action_unstage)
         menu.addSeparator()
-        menu.addAction(self.action_difftool)
         menu.addAction(self.action_history)
+        menu.addAction(self.action_difftool)
+        menu.addAction(self.action_diffpred)
         menu.addSeparator()
         menu.addAction(self.action_revert)
         menu.exec_(self.mapToGlobal(event.pos()))
@@ -210,6 +221,19 @@ class RepoTreeView(QtGui.QTreeView):
         """Signal that we should launch difftool on a path."""
         paths = self.selected_tracked_paths()
         self.emit(SIGNAL('difftool(QStringList)'), paths)
+
+    def diffpred(self):
+        """Diff paths against previous versions."""
+        paths = self.selected_tracked_paths()
+        args = ['--'] + paths
+        revs, summaries = self.model().app_model.log_helper(all=True, extra_args=args)
+        commits = select_commits(self.model().app_model, self,
+                                 'Select Previous Version',
+                                 revs, summaries, multiselect=False)
+        if not commits:
+            return
+        commit = commits[0]
+        cola.difftool.launch([commit, '--'] + paths)
 
     def revert(self):
         """Signal that we should revert changes to a path."""
