@@ -12,11 +12,18 @@ from cola import qtutils
 
 
 class GitRepoSignals:
-    """Defines signal names used in thread communication."""
-    Name = 'name'
-    Status = 'status'
-    Message = 'message'
-    Modified = 'modified'
+    """
+    Defines signal names used in thread communication.
+
+    A nice trick we use here is using the columns header as the
+    value for the class-variable constant.
+
+    """
+    Name = 'Name'
+    Status = 'Status'
+    Age = 'Age'
+    Message = 'Message'
+    Who = 'Who'
 
 
 class GitRepoModel(QtGui.QStandardItemModel):
@@ -25,25 +32,20 @@ class GitRepoModel(QtGui.QStandardItemModel):
         QtGui.QStandardItem.__init__(self, parent)
         self.app_model = model
         self._dir_rows = {}
-        self._headers = map(qtutils.tr, ('Name', 'Status', 'Message', 'Last Modified'))
+        self._headers = (GitRepoSignals.Name,
+                         GitRepoSignals.Status,
+                         GitRepoSignals.Age,
+                         GitRepoSignals.Message,
+                         GitRepoSignals.Who)
         self.setColumnCount(len(self._headers))
         for idx, header in enumerate(self._headers):
             self.setHeaderData(idx, Qt.Horizontal,
                                QtCore.QVariant(self.tr(header)))
         self._initialize()
 
-    def _create_item(self, path, signal):
-        """Create a GitRepoItem for the GitRepoItemModel."""
-        return GitRepoItem(path, self.app_model, signal)
-
     def _create_row(self, path):
         """Return a list of items representing a row."""
-        return [
-            self._create_item(path, GitRepoSignals.Name),
-            self._create_item(path, GitRepoSignals.Status),
-            self._create_item(path, GitRepoSignals.Message),
-            self._create_item(path, GitRepoSignals.Modified),
-        ]
+        return [GitRepoItem(path, self.app_model, i) for i in self._headers]
 
     def add_file(self, parent, path):
         """Add a file entry to the model."""
@@ -141,8 +143,9 @@ class GitRepoEntry(QtCore.QObject):
     Emits the following Qt Signals:
         name(QString)
         status(QString)
+        age(QString)
         message(QString)
-        modified(QString)
+        who(QString)
 
     """
     def __init__(self, path, app_model):
@@ -248,28 +251,24 @@ class GitRepoInfoTask(QtCore.QRunnable):
             return qtutils.tr('Untracked')
         return '-'
 
-    def message(self):
-        return self.data('message')
-
-    def modified(self):
-        return '%s [%s]' % (self.data('date'), self.data('author'))
-
     def run(self):
         """Perform expensive lookups and post corresponding events."""
         app = QtGui.QApplication.instance()
         app.postEvent(self.entry,
-                      GitRepoInfoEvent('status(QString)', self.status()))
+                GitRepoInfoEvent(GitRepoSignals.Message, self.data('message')))
         app.postEvent(self.entry,
-                      GitRepoInfoEvent('message(QString)', self.message()))
+                GitRepoInfoEvent(GitRepoSignals.Age, self.data('date')))
         app.postEvent(self.entry,
-                      GitRepoInfoEvent('modified(QString)', self.modified()))
+                GitRepoInfoEvent(GitRepoSignals.Who, self.data('author')))
+        app.postEvent(self.entry,
+                GitRepoInfoEvent(GitRepoSignals.Status, self.status()))
 
 
 class GitRepoInfoEvent(QtCore.QEvent):
     """Transport mechanism for communicating from a GitRepoInfoTask."""
     def __init__(self, *data):
         QtCore.QEvent.__init__(self, QtCore.QEvent.User + 1)
-        self.signal = data[0]
+        self.signal = '%s(QString)' % data[0].lower()
         self.data = data[1:]
 
 
@@ -279,7 +278,7 @@ class GitRepoItem(QtGui.QStandardItem):
 
     Many GitRepoItems map to a single repository path.
     Each GitRepoItem manages a different cell in the tree view.
-    One is created for each column -- Name, Status, Message, Modified, etc.
+    One is created for each column -- Name, Status, Age, etc.
 
     """
     def __init__(self, path, app_model, signal):
@@ -294,9 +293,8 @@ class GitRepoItem(QtGui.QStandardItem):
 
     def connect(self):
         """Connect a signal from entry to our setText method."""
-        QtCore.QObject.connect(self.entry,
-                               QtCore.SIGNAL('%s(QString)' % self.signal),
-                               self.setText)
+        signal = self.signal.lower() + '(QString)'
+        QtCore.QObject.connect(self.entry, QtCore.SIGNAL(signal), self.setText)
 
     def type(self):
         """
