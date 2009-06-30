@@ -21,49 +21,43 @@ class RepoTreeView(QtGui.QTreeView):
 
         # The non-Qt cola application model
         self.app_model = None
-
-        self.connect(self, SIGNAL('expanded(QModelIndex)'),
-                     lambda: self.resizeColumnToContents(0))
-
-        self.connect(self, SIGNAL('collapsed(QModelIndex)'),
-                     lambda: self.resizeColumnToContents(0))
-
+        self.connect(self, SIGNAL('expanded(QModelIndex)'), self.size_columns)
+        self.connect(self, SIGNAL('collapsed(QModelIndex)'), self.size_columns)
         self.action_history =\
                 self._create_action('View History...',
                                     'View history for selected path(s).',
                                     self.view_history,
                                     'Shift+Ctrl+H')
-
         self.action_stage =\
                 self._create_action('Stage Selected',
                                     'Stage selected path(s) for commit.',
                                     self.stage_selected,
                                     'Ctrl+S')
-
         self.action_unstage =\
                 self._create_action('Unstage Selected',
                                     'Remove selected path(s) from '
                                     'the staging area.',
                                     self.unstage_selected,
                                     'Ctrl+U')
-
         self.action_difftool =\
                 self._create_action('View Diff...',
                                     'Launch git-difftool on the current path.',
                                     self.difftool,
                                     'Ctrl+D')
-
         self.action_difftool_predecessor =\
                 self._create_action('Diff Against Predecessor...',
                                     'Launch git-difftool against previous versions.',
                                     self.difftool_predecessor,
                                     'Shift+Ctrl+D')
-
         self.action_revert =\
                 self._create_action('Revert Uncommitted Changes...',
                                     'Revert changes to selected path(s).',
                                     self.revert,
                                     'Ctrl+Z')
+
+    def size_columns(self):
+        """Set the column widths."""
+        self.resizeColumnToContents(0)
 
     def update_actions(self):
         """Enable/disable actions."""
@@ -180,8 +174,6 @@ class RepoTreeView(QtGui.QTreeView):
 
     def setModel(self, model):
         """Set the concrete QAbstractItemModel instance."""
-        QtGui.QTreeView.setModel(self, model)
-        self.resizeColumnToContents(0)
         self.app_model = app_model = model.app_model
         app_model.add_message_observer(app_model.message_paths_staged,
                                        self._paths_updated)
@@ -189,6 +181,8 @@ class RepoTreeView(QtGui.QTreeView):
                                        self._paths_updated)
         app_model.add_message_observer(app_model.message_paths_reverted,
                                        self._paths_updated)
+        QtGui.QTreeView.setModel(self, model)
+        self.size_columns()
 
     def item_from_index(self, model_index):
         """Return the item corresponding to the model index."""
