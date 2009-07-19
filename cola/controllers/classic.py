@@ -20,6 +20,8 @@ class ClassicController(QtCore.QObject):
                      self._view_history)
         self.connect(view, SIGNAL('expanded(QModelIndex)'),
                      self._query_model)
+        self.connect(view, SIGNAL('editor(QStringList)'),
+                     self._editor)
         self.connect(view, SIGNAL('stage(QStringList)'),
                      self._stage)
         self.connect(view, SIGNAL('unstage(QStringList)'),
@@ -47,6 +49,12 @@ class ClassicController(QtCore.QObject):
         item.entry.update()
         for row in xrange(item.rowCount()):
             item.child(row, 0).entry.update()
+
+    def _editor(self, qstrings):
+        """Launch an editor on the given QStrings."""
+        cmd = [self.model.get_editor()]
+        cmd.extend(map(unicode, qstrings))
+        cola.utils.fork(cmd)
 
     def _stage(self, qstrings):
         """Stage files for commit."""

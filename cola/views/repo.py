@@ -54,6 +54,11 @@ class RepoTreeView(QtGui.QTreeView):
                                     'Revert changes to selected path(s).',
                                     self.revert,
                                     'Ctrl+Z')
+        self.action_editor =\
+                self._create_action('Launch Editor',
+                                    'Edit selected path(s).',
+                                    self.editor,
+                                    'Ctrl+E')
 
     def size_columns(self):
         """Set the column widths."""
@@ -79,6 +84,7 @@ class RepoTreeView(QtGui.QTreeView):
         """Create a context menu."""
         self.update_actions()
         menu = QtGui.QMenu(self)
+        menu.addAction(self.action_editor)
         menu.addAction(self.action_stage)
         menu.addAction(self.action_unstage)
         menu.addSeparator()
@@ -275,6 +281,10 @@ class RepoTreeView(QtGui.QTreeView):
             return
         paths = self.selected_tracked_paths()
         self.emit(SIGNAL('revert(QStringList)'), paths)
+
+    def editor(self):
+        """Signal that we should edit selected paths using an external editor."""
+        self.emit(SIGNAL('editor(QStringList)'), self.selected_paths())
 
     def _paths_updated(self, model, message, paths=None):
         """Observes paths that are staged and reacts accordingly."""
