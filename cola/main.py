@@ -137,8 +137,9 @@ def main():
     os.chdir(model.git.get_work_tree())
 
     # Show the GUI and start the event loop
-    view.show()
     ctl = MainController(model, view)
+    view.raise_()
+    view.show()
     sys.exit(app.exec_())
 
 
