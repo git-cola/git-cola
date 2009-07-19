@@ -50,9 +50,13 @@ class ColaApplication(object):
         return trtxt
 
     def activeWindow(self):
-        """Wrapper around our QApp.activeWindow()"""
+        """Wrap activeWindow()"""
         return self._app.activeWindow()
 
     def exec_(self):
-        """Wrapper around our QApp.exec_()"""
+        """Wrap exec_()"""
         return self._app.exec_()
+
+    def setStyleSheet(self, txt):
+        """Wrap setStyleSheet(txt)"""
+        return self._app.setStyleSheet(txt)
