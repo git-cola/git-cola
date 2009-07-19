@@ -35,6 +35,22 @@ KNOWN_FILE_EXTENSION = {
     '.cxx':     'script.png',
 }
 
+
+def add_parents(path_entry_set):
+    """Iterate over each item in the set and add its parent directories."""
+    for path in list(path_entry_set):
+        while '//' in path:
+            path = path.replace('//', '/')
+        if path not in path_entry_set:
+            path_entry_set.add(path)
+        if '/' in path:
+            parent_dir = dirname(path)
+            while parent_dir and parent_dir not in path_entry_set:
+                path_entry_set.add(parent_dir)
+                parent_dir = dirname(parent_dir)
+    return path_entry_set
+
+
 def run_cmd(*command):
     """
     Run arguments as a command and return output.
@@ -148,17 +164,29 @@ def grep(pattern, items, squash=True):
             return matched
 
 def basename(path):
-    """Avoid os.path.basename because we are explicitly
-    parsing git"s output, which contains /"s regardless
-    of platform (a.t.m.)
     """
-    base_regex = re.compile('(.*?/)?([^/]+)$')
-    match = base_regex.match(path)
-    if match:
-        return match.group(2)
-    else:
-        return pathstr
+    An os.path.basename() implementation that always uses '/'
 
+    Avoid os.path.basename because git's output always
+    uses '/' regardless of platform.
+
+    """
+    return path.rsplit('/', 1)[-1]
+
+def dirname(path):
+    """
+    An os.path.dirname() implementation that always uses '/'
+
+    Avoid os.path.dirname because git's output always
+    uses '/' regardless of platform.
+
+    """
+    while '//' in path:
+        path = path.replace('//', '/')
+    path_dirname = path.rsplit('/', 1)[0]
+    if path_dirname == path:
+        return ''
+    return path.rsplit('/', 1)[0]
 
 def slurp(path):
     """Slurps a filepath into a string."""

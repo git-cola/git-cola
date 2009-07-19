@@ -8,19 +8,28 @@ import helper
 from helper import InnerModel
 from helper import NestedModel
 
-import cola.model
-from cola.model import Model
+from PyQt4 import QtCore
 
+import cola.model
+from cola.models.observable import ObservableModel
+from cola.observer import Observer
+
+class ModelObserver(Observer, QtCore.QObject):
+    def __init__(self, model):
+        Observer.__init__(self, model)
+        QtCore.QObject.__init__(self)
 
 class TestSaveRestore(unittest.TestCase):
     def setUp(self):
         """Create a nested model for testing"""
         helper.create_dir()
         self.nested = NestedModel()
+        self.nested_observer = ModelObserver(self.nested)
         path = os.path.join(helper.get_dir(), 'test.data')
         # save & reconstitute
         self.nested.save(path)
-        self.clone = Model.instance(path)
+        self.clone = ObservableModel.instance(path)
+        self.clone_observer = ModelObserver(self.clone)
 
     def tearDown(self):
         """Remove test directories"""
@@ -67,6 +76,13 @@ class TestSaveRestore(unittest.TestCase):
         """Test an object instance inside a dict inside a list"""
         self.failUnless( str(InnerModel) ==
                          str(self.clone.innerlist[-1]["foo"].__class__))
+
+    def test_clone_of_clone(self):
+        """Test cloning a reconstructed object with an attached observer."""
+        clone = self.clone.clone()
+        self.assertTrue(len(clone.observers) == 0)
+        self.assertTrue(clone.notification_enabled)
+        self.assertEqual(clone.__class__, self.clone.__class__)
 
 if __name__ == '__main__':
     unittest.main()

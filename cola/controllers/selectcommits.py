@@ -9,10 +9,10 @@ from cola.qobserver import QObserver
 from cola.controllers.createbranch import create_new_branch
 
 #+-------------------------------------------------------------
-def select_commits(model, parent, title, revs, summaries):
+def select_commits(model, parent, title, revs, summaries, multiselect=True):
     """Use the CommitView to select commits from a list."""
 
-    view = CommitView(parent, title)
+    view = CommitView(parent, title, multiselect=multiselect)
     ctl = SelectCommitsController(model, view, revs, summaries)
     return ctl.select_commits()
 
@@ -31,6 +31,7 @@ class SelectCommitsController(QObserver):
                      self.commit_sha1_selected)
         view.commit_list.contextMenuEvent = self.context_menu_event
         self.set_diff_font()
+        self.set_ui_font()
 
     def set_diff_font(self):
         if not self.model.has_param('global_cola_fontdiff'):
@@ -41,6 +42,16 @@ class SelectCommitsController(QObserver):
         qf = QtGui.QFont()
         qf.fromString(font)
         self.view.commit_text.setFont(qf)
+
+    def set_ui_font(self):
+        if not self.model.has_param('global_cola_fontui'):
+            return
+        font = self.model.get_param('global_cola_fontui')
+        if not font:
+            return
+        qf = QtGui.QFont()
+        qf.fromString(font)
+        self.view.commit_list.setFont(qf)
 
     def select_commits(self):
         summaries = self.model.get_summaries()

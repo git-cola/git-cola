@@ -17,13 +17,13 @@ class Observer(object):
         # We can be notified about multiple attribute changes at once
         model = self.model
         for attr in attributes:
-            notify = model.get_notify()
-            model.set_notify(False) # NOTIFY OFF
+            notify = model.notification_enabled
+            model.notification_enabled = False # NOTIFY OFF
 
             value = model.get_param(attr)
             self.subject_changed(attr, value)
 
-            model.set_notify(notify) # NOTIFY ON
+            model.notification_enabled = notify # NOTIFY ON
 
     def subject_changed(self, attr, value):
         """

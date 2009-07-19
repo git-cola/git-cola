@@ -168,6 +168,12 @@ class MainModel(ObservableModel):
         self.pull_helper = None
         self.generate_remote_helpers()
 
+    def all_files(self):
+        """Returns the names of all files in the repository"""
+        return [core.decode(f)
+                for f in self.git.ls_files(z=True)
+                                 .strip('\0').split('\0') if f]
+
     def generate_remote_helpers(self):
         """Generates helper methods for fetch, push and pull"""
         self.fetch_helper = self.gen_remote_helper(self.git.fetch)
@@ -523,8 +529,8 @@ class MainModel(ObservableModel):
     def update_status(self, head='HEAD', staged_only=False):
         # This allows us to defer notification until the
         # we finish processing data
-        notify_enabled = self.get_notify()
-        self.set_notify(False)
+        notify_enabled = self.notification_enabled
+        self.notification_enabled = False
 
         (self.staged,
          self.modified,
@@ -543,7 +549,7 @@ class MainModel(ObservableModel):
         self.set_local_branch('')
         self.set_remote_branch('')
         # Re-enable notifications and emit changes
-        self.set_notify(notify_enabled)
+        self.notification_enabled = notify_enabled
         self.notify_observers('staged','unstaged')
 
     def delete_branch(self, branch):
@@ -757,7 +763,7 @@ class MainModel(ObservableModel):
         tmpdir = self.get_tmp_dir()
         return os.path.join(tmpdir, basename)
 
-    def log_helper(self, all=False):
+    def log_helper(self, all=False, extra_args=None):
         """
         Returns a pair of parallel arrays listing the revision sha1's
         and commit summaries.
@@ -765,7 +771,10 @@ class MainModel(ObservableModel):
         revs = []
         summaries = []
         regex = REV_LIST_REGEX
-        output = self.git.log(pretty='oneline', all=all)
+        args = []
+        if extra_args:
+            args = extra_args
+        output = self.git.log(pretty='oneline', all=all, *args)
         for line in map(core.decode, output.splitlines()):
             match = regex.match(line)
             if match:
@@ -967,9 +976,7 @@ class MainModel(ObservableModel):
 
         except GitInitError:
             # handle git init
-            for name in self.git.ls_files(z=True).strip('\0').split('\0'):
-                if name:
-                    staged.append(core.decode(name))
+            staged.extend(self.all_files())
 
         try:
             output = self.git.diff_index(head, M=True, with_stderr=True)
