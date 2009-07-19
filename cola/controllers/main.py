@@ -22,6 +22,7 @@ from cola.views import drawer
 # controllers namespace
 from cola.controllers.bookmark import save_bookmark
 from cola.controllers.bookmark import manage_bookmarks
+from cola.controllers.classic import cola_classic
 from cola.controllers.compare import compare
 from cola.controllers.compare import compare_file
 from cola.controllers.compare import branch_compare
@@ -211,6 +212,9 @@ class MainController(QObserver):
             menu_unstage_all =
                 lambda: self.log(*self.model.unstage_all()),
             menu_view_log = self.view.display_log,
+
+            # Tools Menu
+            menu_tools_classic = cola_classic,
 
             # Help Menu
             menu_help_about = lambda: about.launch_about_dialog(self.view),
@@ -810,6 +814,7 @@ class MainController(QObserver):
             self.inotify_thread.quit()
             self.inotify_thread.wait()
         self.view.close()
+        QtCore.QThreadPool.globalInstance().waitForDone()
 
     def load_commitmsg(self):
         """Load a commit message from a file."""
