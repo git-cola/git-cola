@@ -9,6 +9,20 @@ import cola.difftool
 from cola.models import gitrepo
 from cola.controllers.selectcommits import select_commits
 
+from cola.models.classic import ClassicModel
+from cola.models.gitrepo import GitRepoModel
+from cola.views.repo import RepoTreeView
+
+def cola_classic():
+    """Launch a new cola classic session."""
+    view = RepoTreeView()
+    view.resize(720, 300)
+    view.raise_()
+
+    model = ClassicModel()
+    view.setModel(GitRepoModel(view, model))
+    controller = ClassicController(model, view)
+    view.show()
 
 class ClassicController(QtCore.QObject):
     def __init__(self, model, view=None):
@@ -93,26 +107,10 @@ class ClassicController(QtCore.QObject):
 
 if __name__ == '__main__':
     import sys
-
     from PyQt4 import QtGui
 
-    from cola.models.classic import ClassicModel
-    from cola.models.gitrepo import GitRepoModel
-
-    from cola.views import repo
-
     app = QtGui.QApplication(sys.argv)
-    model = ClassicModel()
-
-    view = repo.RepoTreeView()
-    view.setModel(GitRepoModel(view, model))
-    view.resize(720, 300)
-
-    controller = ClassicController(model, view)
-
-    view.show()
-    view.raise_()
-
+    cola_classic()
     result = app.exec_()
     QtCore.QThreadPool.globalInstance().waitForDone()
     sys.exit(result)
