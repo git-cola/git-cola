@@ -80,7 +80,7 @@ class GenericSyntaxHighligher(QSyntaxHighlighter):
                 _RGX_CACHE[rule] = regex
             self._rules.append((regex, formats, terminal,))
 
-    def get_formats(self, line):
+    def formats(self, line):
         matched = []
         for regex, fmts, terminal in self._rules:
             match = regex.match(line)
@@ -100,7 +100,7 @@ class GenericSyntaxHighligher(QSyntaxHighlighter):
     def highlightBlock(self, qstr):
         ascii = qstr.toAscii().data()
         if not ascii: return
-        formats = self.get_formats(ascii)
+        formats = self.formats(ascii)
         if not formats: return
         for match, fmts in formats:
             start = match.start()
