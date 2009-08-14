@@ -39,12 +39,12 @@ class StashController(QObserver):
         self.model.set_stash_revids(self.model.parse_stash_list(revids=True))
         self.refresh_view()
 
-    def get_selected_stash(self):
+    def selected_stash(self):
         """Returns the stash name of the currently selected stash
         """
         list_widget = self.view.stash_list
-        stash_list = self.model.get_stash_revids()
-        return qtutils.get_selected_item(list_widget, stash_list)
+        stash_list = self.model.stash_revids
+        return qtutils.selected_item(list_widget, stash_list)
 
     def stash_save(self):
         """Saves the worktree in a stash
@@ -62,7 +62,7 @@ class StashController(QObserver):
         stash_name, ok = qtutils.input(self.tr('Enter a name for this stash'))
         if not ok:
             return
-        while stash_name in self.model.get_stash_list():
+        while stash_name in self.model.stash_list:
             qtutils.information(self.tr("Oops!"),
                                 self.tr('That name already exists.  '
                                         'Please enter another name.'))
@@ -77,7 +77,7 @@ class StashController(QObserver):
         # Sanitize our input, just in case
         stash_name = utils.sanitize_input(stash_name)
         args = []
-        if self.model.get_keep_index():
+        if self.model.keep_index:
             args.append('--keep-index')
         args.append(stash_name)
 
@@ -89,7 +89,7 @@ class StashController(QObserver):
 
     def stash_show(self):
         """Shows the current stash in the main view."""
-        selection = self.get_selected_stash()
+        selection = self.selected_stash()
         if not selection:
             return
         diffstat = self.model.git.stash('show', selection)
@@ -99,7 +99,7 @@ class StashController(QObserver):
     def stash_apply(self):
         """Applies the currently selected stash
         """
-        selection = self.get_selected_stash()
+        selection = self.selected_stash()
         if not selection:
             return
         qtutils.log(*self.model.git.stash('apply', '--index', selection,
@@ -110,7 +110,7 @@ class StashController(QObserver):
     def stash_drop(self):
         """Drops the currently selected stash
         """
-        selection = self.get_selected_stash()
+        selection = self.selected_stash()
         if not selection:
             return
         if not qtutils.question(self.view,
