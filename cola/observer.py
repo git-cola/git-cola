@@ -20,7 +20,7 @@ class Observer(object):
             notify = model.notification_enabled
             model.notification_enabled = False # NOTIFY OFF
 
-            value = model.get_param(attr)
+            value = model.param(attr)
             self.subject_changed(attr, value)
 
             model.notification_enabled = notify # NOTIFY ON

@@ -37,9 +37,9 @@ class ObservableModel(Model, Observable):
         clone.register_messages(messages=self.message_observers)
         return clone
 
-    def set_param(self, param, value, notify=True, check_params=False):
+    def set_param(self, param, value, notify=True):
         """Override Model.set_param() to handle notification"""
-        Model.set_param(self, param, value, check_params=check_params)
+        Model.set_param(self, param, value)
         # Perform notifications
         if notify:
             self.notify_observers(param)

@@ -310,9 +310,9 @@ class CompareController(QObserver):
             return
 
         # Is this a valid revision?
-        revisionlist = self.model.get_param(revisions_param)
+        revisionlist = self.model.param(revisions_param)
         if id_num < len(revisionlist):
-            revision = self.model.get_param(revisions_param)[id_num]
+            revision = self.model.param(revisions_param)[id_num]
             self.model.set_param(revision_param, revision)
 
         # get the changed files list
@@ -337,7 +337,7 @@ class CompareController(QObserver):
             item = self.view.compare_files.topLevelItem(idx)
             item.setIcon(0, icon)
         # Throw the selected SHA-1 into the clipboard
-        qtutils.set_clipboard(self.model.get_param(revision_param))
+        qtutils.set_clipboard(self.model.param(revision_param))
 
     def compare_selected_file(self):
         """Compares the currently selected file

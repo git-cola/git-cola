@@ -262,12 +262,12 @@ class MainModel(ObservableModel):
         self.diff_context = self.local_config('gui.diffcontext', 3)
 
     def global_config(self, key, default=None):
-        return getattr(self, 'global_'+key.replace('.', '_'),
-                       default=default)
+        return self.param('global_'+key.replace('.', '_'),
+                          default=default)
 
     def local_config(self, key, default=None):
-        return getattr(self, 'local_'+key.replace('.', '_'),
-                       default=default)
+        return self.param('local_'+key.replace('.', '_'),
+                          default=default)
 
     def cola_config(self, key):
         return getattr(self, 'global_cola_'+key)

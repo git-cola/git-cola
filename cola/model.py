@@ -39,12 +39,6 @@ class Model(object):
         >>> m.answer
         42
 
-        >>> m.get_answer()
-        42
-
-        >>> m.getAnswer()
-        42
-
         """
         self.__dict__[item] = value
 
@@ -71,11 +65,11 @@ class Model(object):
         """
         return ModelIterator(self)
 
-    def __filter_dict(self, dct):
+    def _filter_dict(self, dct):
         """This method removes all items that begin with an underscore.
 
         >>> m = Model()
-        >>> m._Model__filter_dict({'a': 1, '_b': 2, 'c_': 3})
+        >>> m._filter_dict({'a': 1, '_b': 2, 'c_': 3})
         {'a': 1}
 
         """
@@ -102,7 +96,7 @@ class Model(object):
         """
         if raw:
             return self.to_dict().items()
-        return self.__filter_dict(self.to_dict()).items()
+        return self._filter_dict(self.to_dict()).items()
 
     def iteritems(self, raw=False):
         """Provides a dictionary-like iteritems() iterator.
@@ -116,19 +110,19 @@ class Model(object):
         """
         if raw:
             return self.to_dict().iteritems()
-        return self.__filter_dict(self.to_dict()).iteritems()
+        return self._filter_dict(self.to_dict()).iteritems()
 
-    def get_param_names(self, export=False):
+    def param_names(self, export=False):
         """Returns a list of serializable attribute names.
 
         >>> m = Model()
         >>> m._question = 'unknown'
         >>> m.answer = 42
 
-        >>> m.get_param_names()
+        >>> m.param_names()
         ['answer']
 
-        >>> m.get_param_names(export=True)
+        >>> m.param_names(export=True)
         ['_question', 'answer']
 
         """
@@ -174,15 +168,15 @@ class Model(object):
         """
         return param in self.__dict__
 
-    def get_param(self, param, default=None):
+    def param(self, param, default=None):
         """Returns the value of a model parameter.
 
         >>> m = Model()
         >>> m.answer = 42
-        >>> m.get_param('answer')
+        >>> m.param('answer')
         42
 
-        >>> m.get_param('another answer', 42)
+        >>> m.param('another answer', 42)
         42
         """
         return self.__dict__.get(param, default)
@@ -196,36 +190,12 @@ class Model(object):
 
         >>> m = Model()
         >>> m.answer = 42
-        >>> m.getAnswer()
+        >>> m.param('answer')
         42
 
-        >>> m.setAnswer(41)
+        >>> m.set_answer(41)
         >>> m.answer
         41
-
-        >>> m.get_answer()
-        41
-
-        >>> m.set_answer(42)
-        >>> m.get_ANSWER()
-        42
-
-        >>> m.list = []
-        >>> m.add_list(1)
-        >>> m.list
-        [1]
-
-        >>> m.addList(2)
-        >>> m.list
-        [1, 2]
-
-        >>> m.append_list(3)
-        >>> m.list
-        [1, 2, 3]
-
-        >>> m.appendList(4)
-        >>> m.list
-        [1, 2, 3, 4]
 
         """
 
@@ -234,48 +204,27 @@ class Model(object):
             return getattr(self, param)
 
         # Check for the translated variant of the param
-        realparam = self.__translate(param, sep='')
+        realparam = self._translate(param, sep='')
         if realparam in self.__dict__:
             return getattr(self, realparam)
 
         # Attribute getter
         if realparam.startswith('get'):
-            param = self.__translate(param, 'get')
+            param = self._translate(param, 'get')
             return lambda: getattr(self, param)
 
         # Attribute setter
         elif realparam.startswith('set'):
-            param = self.__translate(param, 'set')
-            return lambda v: self.set_param(param, v,
-                                            check_params=True)
-
-        # List add or append
-        elif (realparam.startswith('add') or realparam.startswith('append')):
-            if realparam[1] == 'd': # add
-                param = self.__translate(param, 'add')
-            else:
-                param = self.__translate(param, 'append')
-
-            # Return a closure over the parameter name
-            def array_append_closure(*values):
-                """This closure appends to an array"""
-                array = self.get_param(param, None)
-                if array is None:
-                    classname = self.__class__.__name__
-                    errmsg = ("%s object has no array named '%s'"
-                              % (classname, param))
-                    raise AttributeError(errmsg)
-                else:
-                    array.extend(values)
-            return array_append_closure
+            param = self._translate(param, 'set')
+            return lambda v: self.set_param(param, v)
 
         # Unknown attribute
         errmsg  = ("%s object has no attribute '%s'"
                    % (self.__class__.__name__, param))
         raise AttributeError(errmsg)
 
-    def set_param(self, param, value, check_params=False):
-        """Set attributes with optional validity checks.
+    def set_param(self, param, value):
+        """Wrapper around setattr()
 
         >>> m = Model()
         >>> m.answer = 41
@@ -284,15 +233,6 @@ class Model(object):
         42
 
         """
-        # We're case insensitive
-        param = param.lower()
-        if check_params and param not in self.get_param_names():
-            # Unknown attribute
-            errmsg  = ("%s object has no attribute '%s'"
-                       % (self.__class__.__name__, param))
-            raise AttributeError(errmsg)
-
-        # Set the value
         setattr(self, param, value)
 
     def copy_params(self, model, params_to_copy=None):
@@ -311,23 +251,21 @@ class Model(object):
 
         """
         # Loop over all attributes and copy them over
-        for k in params_to_copy or model.get_param_names(export=True):
-            self[k] = model.get_param(k)
+        for k in params_to_copy or model.param_names(export=True):
+            self[k] = model.param(k)
 
-    def __translate(self, param, prefix='', sep='_'):
+    def _translate(self, param, prefix='', sep='_'):
         """Translate attribute names into their internal name
 
         This translates attribute names from those used in methods
-        into the real names used internally.  The default settings
-        strip off '_' so that both get_foo() and getFoo() are valid
-        incantations.
+        into the real names used internally.
 
         >>> m = Model()
-        >>> m._Model__translate('set_QUESTION', 'set')
+        >>> m._translate('set_question', 'set')
         'question'
 
         """
-        return param[len(prefix):].lstrip(sep).lower()
+        return param[len(prefix):].lstrip(sep)
 
     def save(self, filename):
         """Saves a model to a file.
@@ -400,7 +338,7 @@ class Model(object):
     __strstack__ = set()
 
     @staticmethod
-    def __indent(i=0):
+    def _indent(i=0):
         Model.__indent__ += i
         return '    ' * Model.__indent__
 
@@ -415,28 +353,28 @@ class Model(object):
         io = StringIO()
         # Handle indentation
         if Model.__preindent__:
-            io.write(Model.__indent())
+            io.write(Model._indent())
 
         # Class name and opening parenthesis
         io.write(self.__class__.__name__ + '(')
 
         # Go one level deeper
-        Model.__indent(1)
+        Model._indent(1)
 
         # Output each attribute
-        for param in self.get_param_names():
+        for param in self.param_names():
             if param.startswith('_') or param.endswith('_'):
                 continue
             # Go to the next line
             io.write('\n')
 
             # e.g. foo = bar
-            inner = Model.__indent() + param + " = "
+            inner = Model._indent() + param + " = "
             value = self[param]
 
             # Lists use a new line for each item
             if type(value) == types.ListType:
-                indent = Model.__indent(1)
+                indent = Model._indent(1)
                 io.write(inner + "[\n")
                 for val in value:
                     # Nested models need special treatment
@@ -447,7 +385,7 @@ class Model(object):
                         io.write(str(val))
                         io.write(",\n")
                 # Unindent, closing bracket
-                io.write(Model.__indent(-1))
+                io.write(Model._indent(-1))
                 io.write("],")
             else:
                 # It's not a list, so just output its str() representation
@@ -458,7 +396,7 @@ class Model(object):
                 Model.__preindent__ = True
 
         # Finish this item, closing parenthesis
-        io.write('\n' + Model.__indent(-1) + ')')
+        io.write('\n' + Model._indent(-1) + ')')
         value = io.getvalue()
         io.close()
 
@@ -473,7 +411,7 @@ class ModelIterator(object):
     """
     def __init__(self, model):
         self.model = model
-        self.params = model.get_param_names()
+        self.params = model.param_names()
         self.idx = -1
     def next(self):
         try:
