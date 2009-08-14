@@ -14,28 +14,34 @@ from cola import qtutils
 class SearchEngine(object):
     def __init__(self, model):
         self.model = model
-    def get_rev_args(self):
-        max = self.model.get_max_results()
+
+    def rev_args(self):
+        max = self.model.max_results
         return { 'max-count': max, 'pretty': 'format:%H %aN - %s - %ar' }
-    def get_common_args(self):
-        return (self.model.get_input(), self.get_rev_args())
+
+    def common_args(self):
+        return (self.model.input, self.rev_args())
+
     def search(self):
         if not self.validate():
             return
-        return self.get_results()
+        return self.results()
+
     def validate(self):
-        return len(self.model.get_input()) > 1
-    def get_revisions(self, *args, **kwargs):
+        return len(self.model.input) > 1
+
+    def revisions(self, *args, **kwargs):
         revlist = self.model.git.log(*args, **kwargs)
         return self.model.parse_rev_list(revlist)
-    def get_results(self):
+
+    def results(self):
         pass
 
 class RevisionSearch(SearchEngine):
-    def get_results(self):
-        input, args = self.get_common_args()
+    def results(self):
+        input, args = self.common_args()
         expr = re.compile(input)
-        revs = self.get_revisions(all=True, **args)
+        revs = self.revisions(all=True, **args)
         return [ r for r in revs if expr.match(r[0]) ]
 
 class RevisionRangeSearch(SearchEngine):
@@ -43,50 +49,50 @@ class RevisionRangeSearch(SearchEngine):
         SearchEngine.__init__(self, model)
         self.RE = re.compile(r'[^.]*\.\..*')
     def validate(self):
-        return bool(self.RE.match(self.model.get_input()))
-    def get_results(self):
-        input, kwargs = self.get_common_args()
-        return self.get_revisions(input, **kwargs)
+        return bool(self.RE.match(self.model.input))
+    def results(self):
+        input, kwargs = self.common_args()
+        return self.revisions(input, **kwargs)
 
 class PathSearch(SearchEngine):
-    def get_results(self):
-        input, args = self.get_common_args()
+    def results(self):
+        input, args = self.common_args()
         paths = ['--'] + input.split(':')
-        return self.get_revisions(all=True, *paths, **args)
+        return self.revisions(all=True, *paths, **args)
 
 class MessageSearch(SearchEngine):
-    def get_results(self):
-        input, kwargs = self.get_common_args()
-        return self.get_revisions(all=True, grep=input, **kwargs)
+    def results(self):
+        input, kwargs = self.common_args()
+        return self.revisions(all=True, grep=input, **kwargs)
 
 class AuthorSearch(SearchEngine):
-    def get_results(self):
-        input, kwargs = self.get_common_args()
-        return self.get_revisions(all=True, author=input, **kwargs)
+    def results(self):
+        input, kwargs = self.common_args()
+        return self.revisions(all=True, author=input, **kwargs)
 
 class CommitterSearch(SearchEngine):
-    def get_results(self):
-        input, kwargs = self.get_common_args()
-        return self.get_revisions(all=True, committer=input, **kwargs)
+    def results(self):
+        input, kwargs = self.common_args()
+        return self.revisions(all=True, committer=input, **kwargs)
 
 class DiffSearch(SearchEngine):
-    def get_results(self):
-        input, kwargs = self.get_common_args()
+    def results(self):
+        input, kwargs = self.common_args()
         return self.model.parse_rev_list(
             self.model.git.log('-S'+input, all=True, **kwargs))
 
 class DateRangeSearch(SearchEngine):
     def validate(self):
         return True
-    def get_results(self):
-        kwargs = self.get_rev_args()
-        start_date = self.model.get_start_date()
-        end_date = self.model.get_end_date()
-        return self.get_revisions(date='iso',
-                                  all=True,
-                                  after=start_date,
-                                  before=end_date,
-                                  **kwargs)
+    def results(self):
+        kwargs = self.rev_args()
+        start_date = self.model.start_date
+        end_date = self.model.end_date
+        return self.revisions(date='iso',
+                              all=True,
+                              after=start_date,
+                              before=end_date,
+                              **kwargs)
 
 # Modes for this controller.
 # Note: names correspond to radio button names for convenience
@@ -142,12 +148,12 @@ class SearchController(QObserver):
         self.update_fonts()
 
     def update_fonts(self):
-        font = self.model.get_cola_config('fontui')
+        font = self.model.cola_config('fontui')
         if font:
             qfont = QtGui.QFont()
             qfont.fromString(font)
             self.view.commit_list.setFont(qfont)
-        font = self.model.get_cola_config('fontdiff')
+        font = self.model.cola_config('fontdiff')
         if font:
             qfont = QtGui.QFont()
             qfont.fromString(font)
@@ -160,17 +166,16 @@ class SearchController(QObserver):
     def radio_to_mode(self, radio_button):
         return str(radio_button.objectName())
 
-    def get_mode(self):
+    def mode(self):
         for name in SEARCH_ENGINES:
             radiobutton = getattr(self.view, name)
             if radiobutton.isChecked():
                 return name
 
     def search_callback(self, *args):
-        engineclass = SEARCH_ENGINES.get(self.get_mode())
+        engineclass = SEARCH_ENGINES.get(self.mode())
         if not engineclass:
-            print ("mode: '%s' is currently unimplemented"
-                   % self.get_mode())
+            print "mode: '%s' is currently unimplemented" % self.mode()
             return
         self.results = engineclass(self.model).search()
         if self.results:
@@ -202,17 +207,17 @@ class SearchController(QObserver):
 
     def display_callback(self, *args):
         widget = self.view.commit_list
-        row, selected = qtutils.get_selected_row(widget)
+        row, selected = qtutils.selected_row(widget)
         if not selected or len(self.results) < row:
             return
         revision = self.results[row][0]
         qtutils.set_clipboard(revision)
-        diff = self.model.get_commit_diff(revision)
+        diff = self.model.commit_diff(revision)
         self.view.commit_text.setText(diff)
 
     def export_patch(self):
         widget = self.view.commit_list
-        row, selected = qtutils.get_selected_row(widget)
+        row, selected = qtutils.selected_row(widget)
         if not selected or len(self.results) < row:
             return
         revision = self.results[row][0]
@@ -220,7 +225,7 @@ class SearchController(QObserver):
 
     def cherry_pick(self):
         widget = self.view.commit_list
-        row, selected = qtutils.get_selected_row(widget)
+        row, selected = qtutils.selected_row(widget)
         if not selected or len(self.results) < row:
             return
         revision = self.results[row][0]
@@ -229,7 +234,7 @@ class SearchController(QObserver):
                                                 with_status=True))
 
 def search_commits(model, parent, mode, browse):
-    def get_date(timespec):
+    def date(timespec):
         return '%04d-%02d-%02d' % time.localtime(timespec)[:3]
 
     # TODO subclass model for search only
@@ -243,8 +248,8 @@ def search_commits(model, parent, mode, browse):
     view = SearchView(parent)
     ctl = SearchController(model, view)
     ctl.set_mode(mode)
-    model.set_start_date(get_date(time.time()-(87640*7)))
-    model.set_end_date(get_date(time.time()+87640))
+    model.set_start_date(date(time.time()-(87640*7)))
+    model.set_end_date(date(time.time()+87640))
     view.show()
     if browse:
         ctl.browse_callback()
