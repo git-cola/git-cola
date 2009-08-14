@@ -4,6 +4,5 @@ Views
 
     main
     standard
-    drawer
     about
     misc

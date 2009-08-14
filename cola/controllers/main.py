@@ -17,7 +17,6 @@ from cola import resources
 from cola import settings
 from cola.qobserver import QObserver
 from cola.views import about
-from cola.views import drawer
 from cola.views import log
 
 # controllers namespace

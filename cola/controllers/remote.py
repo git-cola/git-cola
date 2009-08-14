@@ -7,7 +7,6 @@ from PyQt4.QtGui import QDialog
 from cola import utils
 from cola import qtutils
 from cola.views import RemoteView
-from cola.views.drawer import Drawer
 from cola.qobserver import QObserver
 
 def remote_action(model, parent, action):
