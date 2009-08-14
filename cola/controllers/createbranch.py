@@ -35,9 +35,9 @@ class CreateBranchController(QObserver):
     def create_branch(self):
         """Creates a branch; called by the "Create Branch" button"""
 
-        revision = self.model.get_revision()
-        branch = self.model.get_local_branch()
-        existing_branches = self.model.get_local_branches()
+        revision = self.model.revision
+        branch = self.model.local_branch
+        existing_branches = self.model.local_branches
 
         if not branch or not revision:
             qtutils.information(
@@ -109,7 +109,7 @@ class CreateBranchController(QObserver):
         if not selected:
             return
 
-        sources = self._get_branch_sources()
+        sources = self._branch_sources()
         rev = sources[row]
 
         # Update the model with the selection
@@ -130,15 +130,15 @@ class CreateBranchController(QObserver):
     def display_model(self):
         """Sets the branch list to the available branches
         """
-        branches = self._get_branch_sources()
+        branches = self._branch_sources()
         qtutils.set_items(self.view.branch_list, branches)
 
-    def _get_branch_sources(self):
+    def _branch_sources(self):
         """Get the list of items for populating the branch root list.
         """
         if self.view.local_radio.isChecked():
-            return self.model.get_local_branches()
+            return self.model.local_branches
         elif self.view.remote_radio.isChecked():
-            return self.model.get_remote_branches()
+            return self.model.remote_branches
         elif self.view.tag_radio.isChecked():
-            return self.model.get_tags()
+            return self.model.tags
