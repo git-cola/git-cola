@@ -128,20 +128,11 @@ class BranchCompareController(QObserver):
         # TODO leverage Qt's model/view architecture
         files = self.model.get_diff_filenames(self.diff_arg)
         self.model.set_diff_files(files)
-        icon = qtutils.get_icon('script.png')
+        icon = qtutils.icon('script.png')
         for idx in xrange(0, self.view.diff_files.topLevelItemCount()):
             item = self.view.diff_files.topLevelItem(idx)
             item.setIcon(0, icon)
 
-    def get_diff_arg(self, start, end):
-        """Provides the 'what' part for 'git diff [what]'"""
-        # TODO sandbox vs sandbox?
-        if start == BranchCompareController.SANDBOX:
-            return end
-        elif end == BranchCompareController.SANDBOX:
-            return start
-        else:
-            return '%s..%s' % (start, end)
 
     def get_remote_ref(self, branch):
         """Returns the remote ref for 'git diff [local] [remote]'
@@ -187,7 +178,7 @@ class BranchCompareController(QObserver):
         """Shows the diff for a specific file
         """
         tree_widget = self.view.diff_files
-        id_num, selected = qtutils.get_selected_treeitem(tree_widget)
+        id_num, selected = qtutils.selected_treeitem(tree_widget)
         if not selected:
             qtutils.information('Oops!', 'Please select a file to compare')
             return
@@ -196,7 +187,6 @@ class BranchCompareController(QObserver):
 
     def _compare_file(self, filename):
         """Initiates the difftool session"""
-        git = self.model.git
         if self.use_sandbox:
             arg = self.diff_arg
         else:
@@ -254,7 +244,7 @@ class CompareController(QObserver):
     def get_distance_from_end(self, tree_widget):
         """Returns  a (selected, end-index) tuple based on the selection
         """
-        item_id, item_selected = qtutils.get_selected_treeitem(tree_widget)
+        item_id, item_selected = qtutils.selected_treeitem(tree_widget)
         if item_selected:
             item_count = tree_widget.topLevelItemCount()
             item_delta = item_count - item_id
@@ -316,7 +306,7 @@ class CompareController(QObserver):
             revision_param = 'revision_end'
 
         # Is anything selected?
-        id_num, selected = qtutils.get_selected_treeitem(tree_widget)
+        id_num, selected = qtutils.selected_treeitem(tree_widget)
         if not selected:
             return
 
@@ -343,7 +333,7 @@ class CompareController(QObserver):
         self.model.set_compare_files(files)
 
         # Updates the listwidget's icons
-        icon = qtutils.get_icon('script.png')
+        icon = qtutils.icon('script.png')
         for idx in xrange(0, self.view.compare_files.topLevelItemCount()):
             item = self.view.compare_files.topLevelItem(idx)
             item.setIcon(0, icon)
@@ -360,7 +350,7 @@ class CompareController(QObserver):
             return
         # Otherwise, use the selection to choose the compared file
         tree_widget = self.view.compare_files
-        id_num, selected = qtutils.get_selected_treeitem(tree_widget)
+        id_num, selected = qtutils.selected_treeitem(tree_widget)
         if not selected:
             qtutils.information('Oops!', 'Please select a file to compare')
             return
@@ -378,7 +368,6 @@ class CompareController(QObserver):
     def _compare_file(self, filename):
         """Initiates a difftool session for a single file
         """
-        git = self.model.git
         start = self.model.get_revision_start()
         end = self.model.get_revision_end()
         arg = '%s..%s' % (start, end)

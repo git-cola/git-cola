@@ -75,7 +75,7 @@ class SelectCommitsController(QObserver):
         menu.exec_(self.view.commit_list.mapToGlobal(event.pos()))
 
     def checkout_commit(self):
-        row, selected = qtutils.get_selected_row(self.view.commit_list)
+        row, selected = qtutils.selected_row(self.view.commit_list)
         if not selected:
             return
         sha1 = self.model.get_revision_sha1(row)
@@ -84,14 +84,14 @@ class SelectCommitsController(QObserver):
                                              with_status=True))
 
     def create_branch_at(self):
-        row, selected = qtutils.get_selected_row(self.view.commit_list)
+        row, selected = qtutils.selected_row(self.view.commit_list)
         if not selected:
             return
         create_new_branch(self.orig_model, self.view,
                           revision=self.model.get_revision_sha1(row))
 
     def cherry_pick(self):
-        row, selected = qtutils.get_selected_row(self.view.commit_list)
+        row, selected = qtutils.selected_row(self.view.commit_list)
         if not selected:
             return
         sha1 = self.model.get_revision_sha1(row)
@@ -100,7 +100,7 @@ class SelectCommitsController(QObserver):
                                                 with_status=True))
 
     def commit_sha1_selected(self):
-        row, selected = qtutils.get_selected_row(self.view.commit_list)
+        row, selected = qtutils.selected_row(self.view.commit_list)
         if not selected:
             self.view.commit_text.setText('')
             self.view.revision.setText('')

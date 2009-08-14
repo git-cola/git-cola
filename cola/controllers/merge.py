@@ -62,7 +62,7 @@ class MergeController(QObserver):
         """Update the revision field when a list item is selected"""
         revlist = self.get_revision_list()
         widget = self.view.revision_list
-        row, selected = qtutils.get_selected_row(widget)
+        row, selected = qtutils.selected_row(widget)
         if selected and row < len(revlist):
             revision = revlist[row]
             self.model.set_revision(revision)

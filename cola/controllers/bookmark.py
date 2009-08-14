@@ -49,8 +49,8 @@ class BookmarkController(QObserver):
 
     def open(self):
         """Opens a new git-cola session on a bookmark"""
-        selection = qtutils.get_selection_list(self.view.bookmarks,
-                                               self.model.bookmarks)
+        selection = qtutils.selection_list(self.view.bookmarks,
+                                           self.model.bookmarks)
         if not selection:
             return
         for item in selection:
@@ -58,8 +58,8 @@ class BookmarkController(QObserver):
 
     def delete(self):
         """Removes a bookmark from the bookmarks list"""
-        selection = qtutils.get_selection_list(self.view.bookmarks,
-                                               self.model.bookmarks)
+        selection = qtutils.selection_list(self.view.bookmarks,
+                                           self.model.bookmarks)
         if not selection:
             return
         for item in selection:

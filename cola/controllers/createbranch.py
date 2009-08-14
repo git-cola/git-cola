@@ -105,7 +105,7 @@ class CreateBranchController(QObserver):
         # When the branch selection changes then we should update
         # the "Revision Expression" accordingly.
         qlist = self.view.branch_list
-        (row, selected) = qtutils.get_selected_row(qlist)
+        (row, selected) = qtutils.selected_row(qlist)
         if not selected:
             return
 

@@ -87,7 +87,7 @@ class RemoteController(QObserver):
         """Update the remote name when a remote from the list is selected"""
         widget = self.view.remotes
         remotes = self.model.get_remotes()
-        selection = qtutils.get_selected_item(widget, remotes)
+        selection = qtutils.selected_item(widget, remotes)
         if not selection:
             return
         self.model.set_remotename(selection)
@@ -97,7 +97,7 @@ class RemoteController(QObserver):
         """Update the local/remote branch names when a branch is selected"""
         branches = self.model.get_local_branches()
         widget = self.view.local_branches
-        selection = qtutils.get_selected_item(widget, branches)
+        selection = qtutils.selected_item(widget, branches)
         if not selection:
             return
 
@@ -111,7 +111,7 @@ class RemoteController(QObserver):
         """Update the remote branch name when a branch is selected"""
         widget = self.view.remote_branches
         branches = self.model.get_remote_branches()
-        selection = qtutils.get_selected_item(widget,branches)
+        selection = qtutils.selected_item(widget,branches)
         if not selection:
             return
         branch = utils.basename(selection)

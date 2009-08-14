@@ -196,20 +196,20 @@ class MainView(ViewBase):
 
     def _get_subtree_selection(self, idx, items):
         item = self.status_tree.topLevelItem(idx)
-        return qtutils.get_tree_selection(item, items)
+        return qtutils.tree_selection(item, items)
 
     def setup_icons(self):
         staged = self.status_tree.topLevelItem(self.IDX_STAGED)
-        staged.setIcon(0, qtutils.get_icon('plus.png'))
+        staged.setIcon(0, qtutils.icon('plus.png'))
 
         modified = self.status_tree.topLevelItem(self.IDX_MODIFIED)
-        modified.setIcon(0, qtutils.get_icon('modified.png'))
+        modified.setIcon(0, qtutils.icon('modified.png'))
 
         unmerged = self.status_tree.topLevelItem(self.IDX_UNMERGED)
-        unmerged.setIcon(0, qtutils.get_icon('unmerged.png'))
+        unmerged.setIcon(0, qtutils.icon('unmerged.png'))
 
         untracked = self.status_tree.topLevelItem(self.IDX_UNTRACKED)
-        untracked.setIcon(0, qtutils.get_icon('untracked.png'))
+        untracked.setIcon(0, qtutils.icon('untracked.png'))
 
     def enter_diff_mode(self, text):
         """
