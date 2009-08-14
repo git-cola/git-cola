@@ -16,7 +16,6 @@ from cola.views.repo import RepoTreeView
 def cola_classic():
     """Launch a new cola classic session."""
     view = RepoTreeView()
-    view.resize(720, 300)
     view.raise_()
 
     model = ClassicModel()

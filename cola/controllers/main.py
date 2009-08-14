@@ -786,7 +786,6 @@ class MainController(QObserver):
             self.inotify_thread.quit()
             self.inotify_thread.wait()
         self.view.close()
-        QtCore.QThreadPool.globalInstance().waitForDone()
 
     def load_commitmsg(self):
         """Load a commit message from a file."""

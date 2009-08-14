@@ -11,6 +11,7 @@ class RepoTreeView(QtGui.QTreeView):
     """Provides a filesystem-like view of a git repository."""
     def __init__(self, parent=None):
         QtGui.QTreeView.__init__(self, parent)
+        self.resize(720, 300)
         self.setWindowTitle(self.tr('classic'))
         self.setSortingEnabled(False)
         self.setAllColumnsShowFocus(True)

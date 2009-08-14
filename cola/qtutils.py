@@ -110,7 +110,7 @@ def selected_item(list_widget, items):
 
 def open_dialog(parent, title, filename=None):
     """Creates an Open File dialog and returns a filename."""
-    title_tr = parent.tr(title)
+    title_tr = tr(title)
     return unicode(QtGui.QFileDialog
                         .getOpenFileName(parent, title_tr, filename))
 
@@ -119,7 +119,7 @@ def opendir_dialog(parent, title, path):
 
     flags = (QtGui.QFileDialog.ShowDirsOnly |
              QtGui.QFileDialog.DontResolveSymlinks)
-    title_tr = parent.tr(title)
+    title_tr = tr(title)
     qstr = (QtGui.QFileDialog
                  .getExistingDirectory(parent, title_tr, path, flags))
     return unicode(qstr)
