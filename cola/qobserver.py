@@ -10,6 +10,8 @@ are always available in the model without having to worry about the
 different ways to query Qt widgets.
 
 """
+import types
+
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 
@@ -26,8 +28,9 @@ class QObserver(observer.Observer, QtCore.QObject):
 
         self._actions = {}
         self._callbacks = {}
+        self._widget_names = {}
         self._model_to_view = {}
-        self._view_to_model = {}
+        self._mapped_params = set()
         self._connected = set()
         self._in_textfield = False
         self._in_callback = False
@@ -39,36 +42,34 @@ class QObserver(observer.Observer, QtCore.QObject):
         self._in_textfield = False
 
         widget = self.sender()
-        sender = str(widget.objectName())
+        param = self._widget_names[widget]
 
-        if sender in self._view_to_model:
+        if param in self._mapped_params:
             model = self.model
-            model_param = self._view_to_model[sender]
             if isinstance(widget, QtGui.QTextEdit):
                 self._in_textfield = True
                 value = unicode(widget.toPlainText())
-                model.set_param(model_param, value,
-                                notify=False)
+                model.set_param(param, value, notify=False)
             elif isinstance(widget, QtGui.QLineEdit):
                 self._in_textfield = True
                 value = unicode(widget.text())
-                model.set_param(model_param, value)
+                model.set_param(param, value)
             elif isinstance(widget, QtGui.QCheckBox):
-                model.set_param(model_param, widget.isChecked())
+                model.set_param(param, widget.isChecked())
             elif isinstance(widget, QtGui.QSpinBox):
-                model.set_param(model_param, widget.value())
+                model.set_param(param, widget.value())
             elif isinstance(widget, QtGui.QFontComboBox):
                 value = unicode(widget.currentFont().toString())
-                if model.has_param(model_param+'_size'):
-                    size = model.get_param(model_param+'_size')
+                if model.has_param(param+'_size'):
+                    size = model.param(param+'_size')
                     props = value.split(',')
                     props[1] = str(size)
                     value = ','.join(props)
-                model.set_param(model_param, value)
+                model.set_param(param, value)
             elif isinstance(widget, QtGui.QDateEdit):
                 fmt = QtCore.Qt.ISODate
                 value = str(widget.date().toString(fmt))
-                model.set_param(model_param, value)
+                model.set_param(param, value)
             elif isinstance(widget, QtGui.QListWidget):
                 row = widget.currentRow()
                 item = widget.item(row)
@@ -76,13 +77,13 @@ class QObserver(observer.Observer, QtCore.QObject):
                     selected = item.isSelected()
                 else:
                     selected = False
-                model.set_param(model_param+'_selected', selected)
-                model.set_param(model_param+'_index', row)
+                model.set_param(param+'_selected', selected)
+                model.set_param(param+'_index', row)
                 if selected and row != -1:
-                    model.set_param(model_param+'_item',
-                                    model.get_param(model_param)[row])
+                    model.set_param(param+'_item',
+                                    model.param(param)[row])
                 else:
-                    model.set_param(model_param+'_item', '')
+                    model.set_param(param+'_item', '')
             elif isinstance(widget, QtGui.QTreeWidget):
                 item = widget.currentItem()
                 if item:
@@ -91,28 +92,28 @@ class QObserver(observer.Observer, QtCore.QObject):
                 else:
                     selected = False
                     row = -1
-                model.set_param(model_param+'_selected', selected)
-                model.set_param(model_param+'_index', row)
-                items = model.get_param(model_param)
+                model.set_param(param+'_selected', selected)
+                model.set_param(param+'_index', row)
+                items = model.param(param)
                 if selected and row != -1 and row < len(items):
-                    model.set_param(model_param+'_item', items[row])
+                    model.set_param(param+'_item', items[row])
                 else:
-                    model.set_param(model_param+'_item', '')
+                    model.set_param(param+'_item', '')
             elif isinstance(widget, QtGui.QComboBox):
                 idx = widget.currentIndex()
-                model.set_param(model_param+'_index', idx)
-                if idx != -1 and model.get_param(model_param):
-                    model.set_param(model_param+'_item',
-                                   model.get_param(model_param)[idx])
+                model.set_param(param+'_index', idx)
+                if idx != -1 and model.param(param):
+                    model.set_param(param+'_item',
+                                    model.param(param)[idx])
                 else:
-                    model.set_param(model_param+'_item', '')
+                    model.set_param(param+'_item', '')
 
             else:
-                print("SLOT(): Unknown widget:", sender, widget)
+                print("SLOT(): Unknown widget:", param, widget)
 
         self._in_callback = True
-        if sender in self._callbacks:
-            self._callbacks[sender](*args)
+        if param in self._callbacks:
+            self._callbacks[param](*args)
         self._in_callback = False
         self._in_textfield = False
 
@@ -133,25 +134,19 @@ class QObserver(observer.Observer, QtCore.QObject):
         """Registers callbacks that are called in response to GUI events."""
         for sender, callback in callbacks.iteritems():
             self._callbacks[sender] = callback
-            self.autoconnect(getattr(self.view, sender))
+            widget = getattr(self.view, sender)
+            self._widget_names[widget] = sender
+            self._autoconnect(widget)
 
     def add_observables(self, *params):
         """This method assumes that widgets and model params
         share the same name."""
         for param in params:
-            self.model_to_view(param, getattr(self.view, param))
-
-    def model_to_view(self, model_param, *widgets):
-        """Binds model params to qt widgets(model->view)"""
-        self._model_to_view[model_param] = widgets
-        for w in widgets:
-            view = str(w.objectName())
-            self._view_to_model[view] = model_param
-            self._autoconnect(w)
-
-    def autoconnect(self, *widgets):
-        for w in widgets:
-            self._autoconnect(w)
+            widget = getattr(self.view, param)
+            self._model_to_view[param] = widget
+            self._widget_names[widget] = param
+            self._mapped_params.add(param)
+            self._autoconnect(widget)
 
     def _autoconnect(self, widget):
         """Automagically connects Qt widgets to QObserver.SLOT"""
@@ -200,13 +195,17 @@ class QObserver(observer.Observer, QtCore.QObject):
                             % (type(widget), str(widget.objectName())))
 
     def add_actions(self, **kwargs):
-        """Register view actions that are called in response to
-        view changes.(view->model)"""
-        for model_param, callback in kwargs.iteritems():
+        """
+        Register view actions.
+        
+        Action are called in response to view changes.(view->model).
+        
+        """
+        for param, callback in kwargs.iteritems():
             if type(callback) is list:
-                self._actions[model_param] = callback
+                self._actions[param] = callback
             else:
-                self._actions[model_param] = [callback]
+                self._actions[param] = [callback]
 
     def subject_changed(self, param, value):
         """Sends a model param to the view(model->view)"""
@@ -218,93 +217,94 @@ class QObserver(observer.Observer, QtCore.QObject):
             return
 
         if param in self._model_to_view:
+            # Temporarily disable notification to avoid loop-backs
             notify = self.model.notification_enabled
             self.model.notification_enabled = False
-            for widget in self._model_to_view[param]:
-                sender = str(widget.objectName())
-                if isinstance(widget, QtGui.QSpinBox):
-                    widget.setValue(value)
-                elif isinstance(widget, QtGui.QPixmap):
-                    widget.load(value)
-                elif isinstance(widget, QtGui.QTextEdit):
-                    widget.setText(value)
-                elif isinstance(widget, QtGui.QLineEdit):
-                    widget.setText(value)
-                elif isinstance(widget, QtGui.QListWidget):
-                    self.model.set_param(param+'_item', '')
-                    widget.clear()
-                    for i in value:
-                        widget.addItem(i)
-                    if self.model.has_param(param+'_index'):
-                        idx = self.model.get_param(param+'_index')
-                        if idx != -1 and idx < len(value):
-                            item = widget.item(idx)
-                            widget.setCurrentItem(item)
-                            widget.setItemSelected(item, True)
-                            self.model.set_param(param+'_item', value[idx])
-                            if sender in self._callbacks:
-                                self.model.notification_enabled = True
-                                self._callbacks[sender]()
-                                self.model.notification_enabled = False
-                        else:
-                            self.model.set_param(param+'_item', '')
-                elif isinstance(widget, QtGui.QTreeWidget):
-                    self.model.set_param(param+'_item', '')
-                    widget.clear()
-                    for i in value:
-                        item = QtGui.QTreeWidgetItem([i])
-                        count = widget.topLevelItemCount()
-                        item.setData(0, QtCore.Qt.UserRole,
-                                     QtCore.QVariant(count))
-                        widget.addTopLevelItem(item)
-                    if self.model.has_param(param+'_index'):
-                        idx = self.model.get_param(param+'_index')
-                        if idx != -1 and idx < len(value):
-                            item = widget.topLevelItem(idx)
-                            widget.setCurrentItem(item)
-                            widget.setItemSelected(item, True)
-                            val = value[idx]
-                            self.model.set_param(param+'_item', val)
-                            if sender in self._callbacks:
-                                self.model.notification_enabled = True
-                                self._callbacks[sender]()
-                                self.model.notification_enabled = False
-                        else:
-                            self.model.set_param(param+'_item', '')
 
-                elif isinstance(widget, QtGui.QCheckBox):
-                    widget.setChecked(value)
-                elif isinstance(widget, QtGui.QFontComboBox):
-                    font = widget.currentFont()
-                    font.fromString(value)
-                elif isinstance(widget, QtGui.QDateEdit):
-                    if not value:
-                        return
-                    fmt = QtCore.Qt.ISODate
-                    date = QtCore.QDate.fromString(value, fmt)
-                    if date:
-                        widget.setDate(date)
-                elif isinstance(widget, QtGui.QComboBox):
-                    self.model.set_param(param+'_item', '')
-                    widget.clear()
-                    for item in value:
-                        widget.addItem(item)
-                    if self.model.has_param(param+'_index'):
-                        idx = self.model.get_param(param+'_index')
-                        if idx != -1 and idx < len(value):
-                            widget.setCurrentIndex(idx)
-                            self.model.set_param(param+'_item', value[idx])
-                else:
-                    print('subject_changed(): Unknown widget:',
-                          str(widget.objectName()), widget, value)
+            widget = self._model_to_view[param]
+            if isinstance(widget, QtGui.QSpinBox):
+                widget.setValue(value)
+            elif isinstance(widget, QtGui.QPixmap):
+                widget.load(value)
+            elif isinstance(widget, QtGui.QTextEdit):
+                widget.setText(value)
+            elif isinstance(widget, QtGui.QLineEdit):
+                widget.setText(value)
+            elif isinstance(widget, QtGui.QListWidget):
+                self.model.set_param(param+'_item', '')
+                widget.clear()
+                for i in value:
+                    widget.addItem(i)
+                if self.model.has_param(param+'_index'):
+                    idx = self.model.param(param+'_index')
+                    if idx != -1 and idx < len(value):
+                        item = widget.item(idx)
+                        widget.setCurrentItem(item)
+                        widget.setItemSelected(item, True)
+                        self.model.set_param(param+'_item', value[idx])
+                        if param in self._callbacks:
+                            self.model.notification_enabled = True
+                            self._callbacks[param]()
+                            self.model.notification_enabled = False
+                    else:
+                        self.model.set_param(param+'_item', '')
+            elif isinstance(widget, QtGui.QTreeWidget):
+                self.model.set_param(param+'_item', '')
+                widget.clear()
+                for i in value:
+                    item = QtGui.QTreeWidgetItem([i])
+                    count = widget.topLevelItemCount()
+                    item.setData(0, QtCore.Qt.UserRole,
+                                 QtCore.QVariant(count))
+                    widget.addTopLevelItem(item)
+                if self.model.has_param(param+'_index'):
+                    idx = self.model.param(param+'_index')
+                    if idx != -1 and idx < len(value):
+                        item = widget.topLevelItem(idx)
+                        widget.setCurrentItem(item)
+                        widget.setItemSelected(item, True)
+                        val = value[idx]
+                        self.model.set_param(param+'_item', val)
+                        if param in self._callbacks:
+                            self.model.notification_enabled = True
+                            self._callbacks[param]()
+                            self.model.notification_enabled = False
+                    else:
+                        self.model.set_param(param+'_item', '')
+
+            elif isinstance(widget, QtGui.QCheckBox):
+                widget.setChecked(value)
+            elif isinstance(widget, QtGui.QFontComboBox):
+                font = widget.currentFont()
+                font.fromString(value)
+            elif isinstance(widget, QtGui.QDateEdit):
+                if not value:
+                    return
+                fmt = QtCore.Qt.ISODate
+                date = QtCore.QDate.fromString(value, fmt)
+                if date:
+                    widget.setDate(date)
+            elif isinstance(widget, QtGui.QComboBox):
+                self.model.set_param(param+'_item', '')
+                widget.clear()
+                for item in value:
+                    widget.addItem(item)
+                if self.model.has_param(param+'_index'):
+                    idx = self.model.param(param+'_index')
+                    if idx != -1 and idx < len(value):
+                        widget.setCurrentIndex(idx)
+                        self.model.set_param(param+'_item', value[idx])
+            else:
+                print('subject_changed(): Unknown widget:',
+                      str(widget.objectName()), widget, value)
             self.model.notification_enabled = notify
 
         if param not in self._actions:
             return
         widgets = []
         if param in self._model_to_view:
-            for widget in self._model_to_view[param]:
-                widgets.append(widget)
+            widget = self._model_to_view[param]
+            widgets.append(widget)
         # Call the model callback w/ the view's widgets as the args
         for action in self._actions[param]:
             action(*widgets)
