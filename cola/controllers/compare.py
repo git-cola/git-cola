@@ -98,14 +98,14 @@ class BranchCompareController(QObserver):
                 not self.model.has_param('right_list_item')):
             return
         # Left and Right refer to the comparison pair (l,r)
-        left_item = self.model.get_left_list_item()
-        right_item = self.model.get_right_list_item()
+        left_item = self.model.left_list_item
+        right_item = self.model.right_list_item
         if (not left_item or not right_item or
                 left_item == right_item):
             self.model.set_diff_files([])
             return
-        left_item = self.get_remote_ref(left_item)
-        right_item = self.get_remote_ref(right_item)
+        left_item = self.remote_ref(left_item)
+        right_item = self.remote_ref(right_item)
 
         # If any of the selection includes sandbox then we
         # generate the same diff, regardless.  This means we don't
@@ -133,14 +133,13 @@ class BranchCompareController(QObserver):
             item = self.view.diff_files.topLevelItem(idx)
             item.setIcon(0, icon)
 
-
-    def get_remote_ref(self, branch):
+    def remote_ref(self, branch):
         """Returns the remote ref for 'git diff [local] [remote]'
         """
         if branch == BranchCompareController.BRANCH_POINT:
             # Compare against the branch point so find the merge-base
-            branch = self.model.get_currentbranch()
             remote = self.model.get_corresponding_remote_ref()
+            branch = self.model.currentbranch
             return self.model.git.merge_base(branch, remote)
         else:
             # Compare against the remote branch
@@ -154,10 +153,10 @@ class BranchCompareController(QObserver):
         to reflect the available items.
         """
         if left:
-            which = self.model.get_left_combo_item()
+            which = self.model.left_combo_item
             param = 'left_list'
         else:
-            which = self.model.get_right_combo_item()
+            which = self.model.right_combo_item
             param = 'right_list'
         if not which:
             return
@@ -166,10 +165,10 @@ class BranchCompareController(QObserver):
         # "remote" stuff then also include the branch point.
         if which == self.LOCAL:
             new_list = ([BranchCompareController.SANDBOX]+
-                        self.model.get_local_branches())
+                        self.model.local_branches)
         else:
             new_list = ([BranchCompareController.BRANCH_POINT] +
-                        self.model.get_remote_branches())
+                        self.model.remote_branches)
         # Update the list widget
         self.model.notification_enabled = True
         self.model.set_param(param, new_list)
@@ -182,7 +181,7 @@ class BranchCompareController(QObserver):
         if not selected:
             qtutils.information('Oops!', 'Please select a file to compare')
             return
-        filename = self.model.get_diff_files()[id_num]
+        filename = self.model.diff_files[id_num]
         self._compare_file(filename)
 
     def _compare_file(self, filename):
@@ -241,7 +240,7 @@ class CompareController(QObserver):
             self.view.descriptions_end.setCurrentItem(enditem)
             self.view.descriptions_end.setItemSelected(enditem, True)
 
-    def get_distance_from_end(self, tree_widget):
+    def distance_from_end(self, tree_widget):
         """Returns  a (selected, end-index) tuple based on the selection
         """
         item_id, item_selected = qtutils.selected_treeitem(tree_widget)
@@ -267,16 +266,16 @@ class CompareController(QObserver):
         """
         # We use "distance from end" since the number of entries can change
         tree_widget = self.view.descriptions_start
-        start_selected, start_delta = self.get_distance_from_end(tree_widget)
+        start_selected, start_delta = self.distance_from_end(tree_widget)
 
         tree_widget = self.view.descriptions_end
-        end_selected, end_delta = self.get_distance_from_end(tree_widget)
+        end_selected, end_delta = self.distance_from_end(tree_widget)
 
         # Notificaiton is disabled when inside action callbacks
         # TODO use setBlockSignals(True) on widgets instead?
         self.model.notification_enabled = True
 
-        show_versions = self.model.get_show_versions()
+        show_versions = self.model.show_versions
         revs = self.model.update_revision_lists(filename=self.filename,
                                                 show_versions=show_versions)
         # Restore the previous selection
@@ -317,9 +316,9 @@ class CompareController(QObserver):
             self.model.set_param(revision_param, revision)
 
         # get the changed files list
-        start = self.model.get_revision_start()
-        end = self.model.get_revision_end()
-        files = self.model.get_changed_files(start, end)
+        start = self.model.revision_start
+        end = self.model.revision_end
+        files = self.model.changed_files(start, end)
 
         # get the old name of any renamed files, and prune them
         # from the changes list
@@ -354,7 +353,7 @@ class CompareController(QObserver):
         if not selected:
             qtutils.information('Oops!', 'Please select a file to compare')
             return
-        filename = self.model.get_compare_files()[id_num]
+        filename = self.model.compare_files[id_num]
         self._compare_file(filename)
 
     def compare_files_doubleclick(self, tree_item, column):
@@ -362,13 +361,12 @@ class CompareController(QObserver):
         """
         # Assumes the listwidget's indexes matches the model's index
         idx = self.view.compare_files.indexOfTopLevelItem(tree_item)
-        filename = self.model.get_compare_files()[idx]
+        filename = self.model.compare_files[idx]
         self._compare_file(filename)
 
     def _compare_file(self, filename):
         """Initiates a difftool session for a single file
         """
-        start = self.model.get_revision_start()
-        end = self.model.get_revision_end()
-        arg = '%s..%s' % (start, end)
+        arg = '%s..%s' % (self.model.revision_start,
+                          self.model.revision_end)
         difftool.launch([arg, '--', filename])
