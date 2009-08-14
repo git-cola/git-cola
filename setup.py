@@ -163,7 +163,7 @@ def _build_views():
         dsttmp = dst + '.tmp'
         if _dirty(src, dst):
             print '\tpyuic4 -x %s -o %s' % (src, dsttmp)
-            utils.run_cmd('pyuic4', '-x', src, '-o', dsttmp)
+            utils.run_cmd(['pyuic4', '-x', src, '-o', dsttmp])
             _workaround_pyuic4(dsttmp, dst)
 
 
@@ -175,7 +175,7 @@ def _build_translations():
         dst = resources.qm(os.path.basename(src)[:-3])
         if _dirty(src, dst):
             print '\tmsgfmt --qt %s -o %s' % (src, dst)
-            utils.run_cmd('msgfmt', '--qt', src, '-o', dst)
+            utils.run_cmd(['msgfmt', '--qt', src, '-o', dst])
 
 def _run_cmd(cmd):
     """Runs a command and returns its output."""

@@ -51,11 +51,13 @@ def add_parents(path_entry_set):
     return path_entry_set
 
 
-def run_cmd(*command):
+def run_cmd(command):
     """
     Run arguments as a command and return output.
 
-    e.g. run_cmd("echo", "hello", "world")
+    >>> run_cmd(["echo", "hello", "world"])
+    'hello world'
+
     """
     return git.Git.execute(command)
 
