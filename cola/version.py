@@ -84,7 +84,7 @@ def delete_builtin_version():
             os.remove(fn)
 
 
-def get_version():
+def version():
     """Returns the builtin version or calculates the current version."""
     global _version
     if _version:
@@ -125,8 +125,8 @@ def version_to_list(version):
     return ver_list
 
 
-def get_git_version():
+def git_version():
     """Returns the current GIT version"""
-    return utils.run_cmd('git', '--version').split()[2]
+    return utils.run_cmd(['git', '--version']).split()[2]
 
 

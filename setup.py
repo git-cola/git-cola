@@ -17,7 +17,7 @@ from cola import core
 def main():
     # ensure readable files
     old_mask = os.umask(0022)
-    git_version = version.get_git_version()
+    git_version = version.git_version()
     if sys.argv[1] in ['install', 'build']:
         _setup_environment()
         _check_python_version()
@@ -59,7 +59,7 @@ def _run_setup(git_version):
         scripts.append('win32/py2exe-setup.cmd')
 
     setup(name = 'git-cola',
-          version = version.get_version(),
+          version = version.version(),
           license = 'GPLv2',
           author = 'David Aguilar and contributors',
           author_email = 'davvid@gmail.com',

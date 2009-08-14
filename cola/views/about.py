@@ -10,7 +10,7 @@ def launch_about_dialog(view):
     if style:
         view.setStyleSheet(style)
     view.show()
-    view.set_version(version.get_version())
+    view.set_version(version.version())
 
 
 class AboutView(Ui_about, QtGui.QDialog):
