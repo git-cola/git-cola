@@ -253,48 +253,38 @@ class MainController(QObserver):
 
     #####################################################################
     # handle when the status tree is clicked
-    def get_staged_item(self):
+    def staged_item(self):
         """Return a single selected staged item."""
-        staged = self.model.get_staged()
-        staged = self.view.get_staged(staged)
+        staged = self.view.staged(self.model.staged)
         if staged:
             return staged[0]
         else:
             return None
 
-    def get_untracked_items(self):
+    def untracked_items(self):
         """Return all selected untracked items."""
-        items = self.model.get_untracked()
-        return self.view.get_untracked(items)
+        return self.view.untracked(self.model.untracked)
 
-    def get_unstaged_item(self):
+    def unstaged_item(self):
         """Return a single selected unstaged item."""
-        unstaged = self.model.get_unstaged()
-        unstaged = self.view.get_unstaged(unstaged)
+        unstaged = self.view.unstaged(self.model.unstaged)
         if unstaged:
             return unstaged[0]
         else:
             return None
 
-    def get_selection(self):
+    def selection(self):
         """Return the current selection in the repo status tree."""
-        staged = self.model.get_staged()
-        staged = self.view.get_staged(staged)
-
-        modified = self.model.get_modified()
-        modified = self.view.get_modified(modified)
-
-        unmerged = self.model.get_unmerged()
-        unmerged = self.view.get_unmerged(unmerged)
-
-        untracked = self.model.get_untracked()
-        untracked = self.view.get_untracked(untracked)
+        staged = self.view.staged(self.model.staged)
+        modified = self.view.modified(self.model.modified)
+        unmerged = self.view.unmerged(self.model.unmerged)
+        untracked = self.view.untracked(self.model.untracked)
 
         return (staged, modified, unmerged, untracked)
 
-    def get_single_selection(self):
+    def single_selection(self):
         """Scan across staged, modified, etc. and return a single item."""
-        staged, modified, unmerged, untracked = self.get_selection()
+        staged, modified, unmerged, untracked = self.selection()
         s = None
         m = None
         um = None
@@ -313,7 +303,7 @@ class MainController(QObserver):
         """Called when an item is double-clicked in the repo status tree."""
         if self.read_only():
             return
-        staged, modified, unmerged, untracked = self.get_selection()
+        staged, modified, unmerged, untracked = self.selection()
         if staged:
             self.log(*self.model.reset_helper(staged))
         elif modified:
@@ -350,7 +340,7 @@ class MainController(QObserver):
             return result
 
         # An item was clicked -- get its index in the model
-        staged, idx = self.view.get_index_for_item(item)
+        staged, idx = self.view.index_for_item(item)
         if idx == self.view.IDX_HEADER:
             return result
 
@@ -362,18 +352,15 @@ class MainController(QObserver):
         if xpos > 42 and xpos < 58:
             if staged:
                 # A staged item was clicked
-                items = self.model.get_staged()
-                selected = self.view.get_staged(items)
+                selected = self.view.staged(self.model.staged)
                 self.log(*self.model.reset_helper(selected))
                 self.rescan()
             else:
                 # An unstaged item was clicked
-                items = self.model.get_unstaged()
-                selected = self.view.get_unstaged(items)
+                selected = self.view.unstaged(self.model.unstaged)
                 if selected:
                     self.log(*self.model.add_or_remove(selected))
-                items = self.model.get_unmerged()
-                selected = self.view.get_unmerged(items)
+                selected = self.view.unmerged(self.model.unmerged)
                 if selected:
                     self.log(*self.model.add_or_remove(selected))
                 self.rescan()
@@ -394,25 +381,22 @@ class MainController(QObserver):
     # Actions triggered during model updates
     def action_staged(self, widget):
         """Called when the 'staged' list changes."""
-        qtutils.update_file_icons(widget,
-                                  self.model.get_staged(),
-                                  staged=True)
+        qtutils.update_file_icons(widget, self.model.staged, staged=True)
         self.view.show_editor()
 
     def action_unstaged(self, widget):
         """Called when the 'unstaged' list changes."""
-        modified = self.model.get_modified()
-        unmerged = self.model.get_unmerged()
+        modified = self.model.modified
+        unmerged = self.model.unmerged
         unstaged = modified + unmerged
         qtutils.update_file_icons(widget,
                                   unstaged,
                                   staged=False)
-        if self.model.get_show_untracked():
-            qtutils.update_file_icons(widget,
-                                      self.model.get_untracked(),
-                                      staged=False,
-                                      untracked=True,
-                                      offset=len(unstaged))
+        qtutils.update_file_icons(widget,
+                                  self.model.untracked,
+                                  staged=False,
+                                  untracked=True,
+                                  offset=len(unstaged))
 
     #####################################################################
     # Qt callbacks
@@ -468,14 +452,14 @@ class MainController(QObserver):
         """Launch the 'Delete Branch' dialog."""
         branch = choose_from_combo('Delete Branch',
                                    self.view,
-                                   self.model.get_local_branches())
+                                   self.model.local_branches)
         if not branch:
             return
         self.log(*self.model.delete_branch(branch))
 
     def browse_current(self):
         """Launch the 'Browse Current Branch' dialog."""
-        branch = self.model.get_currentbranch()
+        branch = self.model.currentbranch
         browse_git_branch(self.model, self.view, branch)
 
     def browse_other(self):
@@ -483,7 +467,7 @@ class MainController(QObserver):
         # Prompt for a branch to browse
         branch = choose_from_combo('Browse Branch Files',
                                    self.view,
-                                   self.model.get_all_branches())
+                                   self.model.all_branches())
         if not branch:
             return
         # Launch the repobrowser
@@ -493,7 +477,7 @@ class MainController(QObserver):
         """Launch the 'Checkout Branch' dialog."""
         branch = choose_from_combo('Checkout Branch',
                                    self.view,
-                                   self.model.get_local_branches())
+                                   self.model.local_branches)
         if not branch:
             return
         self.log(*self.model.git.checkout(branch,
@@ -518,7 +502,7 @@ class MainController(QObserver):
         """Attempt to create a commit from the index and commit message."""
         self.reset_mode()
         self.head = 'HEAD'
-        msg = self.model.get_commitmsg()
+        msg = self.model.commitmsg
         if not msg:
             # Describe a good commit message
             error_msg = self.tr(''
@@ -529,7 +513,7 @@ class MainController(QObserver):
                 '- Remaining lines: Describe why this change is good.\n')
             qtutils.log(1, error_msg)
             return
-        files = self.model.get_staged()
+        files = self.model.staged
         if not files and not self.view.amend_is_checked():
             error_msg = self.tr(''
                 'No changes to commit.\n\n'
@@ -555,12 +539,12 @@ class MainController(QObserver):
             self.model.set_commitmsg('')
         self.log(status, output)
 
-    def get_selected_filename(self, staged=False):
+    def selected_filename(self, staged=False):
         """Return the selected staged or unstaged filename."""
         if staged:
-            return self.get_staged_item()
+            return self.staged_item()
         else:
-            return self.get_unstaged_item()
+            return self.unstaged_item()
 
     def set_mode(self, staged):
         """Set the appropriate mode based on the staged/amending state."""
@@ -577,7 +561,7 @@ class MainController(QObserver):
 
     def view_diff(self, staged=True, scrollvalue=None):
         """View the diff for a clicked-on item."""
-        idx, selected = self.view.get_selection()
+        idx, selected = self.view.selection()
         if not selected:
             self.reset_mode()
             self.view.reset_display()
@@ -592,18 +576,17 @@ class MainController(QObserver):
         self.set_mode(staged)
         ref = self.head
         if self.read_only():
-            diff, filename = self.model.get_diff_for_expr(idx, ref)
+            diff, filename = self.model.diff_for_expr(idx, ref)
         else:
-            diff, filename = self.model.get_diff_details(idx, ref,
-                                                         staged=staged)
+            diff, filename = self.model.diff_details(idx, ref, staged=staged)
         self.view.set_display(diff)
         self.view.show_diff()
         qtutils.set_clipboard(filename)
 
     def mergetool(self):
         """Launch git-mergetool on a file path."""
-        filename = self.get_selected_filename(staged=False)
-        if not filename or filename not in self.model.get_unmerged():
+        filename = self.selected_filename(staged=False)
+        if not filename or filename not in self.model.unmerged:
             return
         if version.check('mergetool-no-prompt',
                          self.model.git.version().split()[2]):
@@ -613,13 +596,13 @@ class MainController(QObserver):
 
     def edit_file(self, staged=True):
         """Launch $editor on a specific path."""
-        filename = self.get_selected_filename(staged=staged)
+        filename = self.selected_filename(staged=staged)
         if filename:
             utils.fork([self.model.editor(), filename])
 
     def edit_diff(self, staged=True):
         """Launches difftool on the specified paths."""
-        filename = self.get_selected_filename(staged=staged)
+        filename = self.selected_filename(staged=staged)
         if filename:
             args = []
             if staged and not self.read_only():
@@ -630,7 +613,7 @@ class MainController(QObserver):
     def delete_files(self):
         """Deletes files when called by an untracked file's context menu."""
         rescan=False
-        filenames = self.get_untracked_items()
+        filenames = self.untracked_items()
         for filename in filenames:
             if filename:
                 try:
@@ -699,12 +682,12 @@ class MainController(QObserver):
 
         elif idx == self.view.IDX_UNMERGED:
             # List unmerged files when clicking on the 'Unmerged' heading
-            diff = '%s unmerged file(s)' % len(self.model.get_unmerged())
+            diff = '%s unmerged file(s)' % len(self.model.unmerged)
 
         elif idx == self.view.IDX_UNTRACKED:
             # We click on the untracked heading so helpfully list
             # possible .gitignore rules
-            untracked = self.model.get_untracked()
+            untracked = self.model.untracked
             suffix = len(untracked) > 1 and '(s)' or ''
             diff = '# %s untracked file%s\n' % (len(untracked), suffix)
             if untracked:
@@ -804,7 +787,7 @@ class MainController(QObserver):
             settings.SettingsManager.save_gui_state(self.view)
 
         # Remove any cola temp files
-        pattern = self.model.get_tmp_file_pattern()
+        pattern = self.model.tmp_file_pattern()
         for filename in glob.glob(pattern):
             os.unlink(filename)
 
@@ -820,9 +803,9 @@ class MainController(QObserver):
         """Load a commit message from a file."""
         filename = qtutils.open_dialog(self.view,
                                        'Load Commit Message...',
-                                       self.model.get_directory())
+                                       self.model.directory)
         if filename:
-            self.model.set_directory(os.path.dirname(filename))
+            self.model.directory = os.path.dirname(filename)
             slushy = utils.slurp(filename)
             if slushy:
                 self.model.set_commitmsg(slushy)
@@ -831,7 +814,7 @@ class MainController(QObserver):
         """Rebase onto a branch."""
         branch = choose_from_combo('Rebase Branch',
                                    self.view,
-                                   self.model.get_all_branches())
+                                   self.model.all_branches())
         if not branch:
             return
         self.log(*self.model.git.rebase(branch,
@@ -869,10 +852,10 @@ class MainController(QObserver):
         """Populate view widgets with results from 'git status'."""
 
         # save entire selection
-        staged = self.view.get_staged(self.model.get_staged())
-        modified = self.view.get_modified(self.model.get_modified())
-        unmerged = self.view.get_unmerged(self.model.get_unmerged())
-        untracked = self.view.get_untracked(self.model.get_untracked())
+        staged = self.view.staged(self.model.staged)
+        modified = self.view.modified(self.model.modified)
+        unmerged = self.view.unmerged(self.model.unmerged)
+        untracked = self.view.untracked(self.model.untracked)
 
         # unstaged is an aggregate
         unstaged = modified + unmerged + untracked
@@ -886,21 +869,21 @@ class MainController(QObserver):
 
         # Setup initial tree items
         if self.read_only():
-            self.view.set_staged(self.model.get_staged(), check=False)
+            self.view.set_staged(self.model.staged, check=False)
             self.view.set_modified([])
             self.view.set_unmerged([])
             self.view.set_untracked([])
         else:
-            self.view.set_staged(self.model.get_staged())
-            self.view.set_modified(self.model.get_modified())
-            self.view.set_unmerged(self.model.get_unmerged())
-            self.view.set_untracked(self.model.get_untracked())
+            self.view.set_staged(self.model.staged)
+            self.view.set_modified(self.model.modified)
+            self.view.set_unmerged(self.model.unmerged)
+            self.view.set_untracked(self.model.untracked)
 
         # restore selection
-        updated_staged = self.model.get_staged()
-        updated_modified = self.model.get_modified()
-        updated_unmerged = self.model.get_unmerged()
-        updated_untracked = self.model.get_untracked()
+        updated_staged = self.model.staged
+        updated_modified = self.model.modified
+        updated_unmerged = self.model.unmerged
+        updated_untracked = self.model.untracked
         # unstaged is an aggregate
         updated_unstaged = (updated_modified +
                             updated_unmerged +
@@ -915,7 +898,7 @@ class MainController(QObserver):
                 for item in unstaged:
                     if item in updated_unstaged:
                         idx = updated_unstaged.index(item)
-                        item = self.view.get_unstaged_item(idx)
+                        item = self.view.unstaged_item(idx)
                         if item:
                             showdiff = True
                             item.setSelected(True)
@@ -933,7 +916,7 @@ class MainController(QObserver):
                 for item in staged:
                     if item in updated_staged:
                         idx = updated_staged.index(item)
-                        item = self.view.get_staged_item(idx)
+                        item = self.view.staged_item(idx)
                         if item:
                             showdiff = True
                             item.setSelected(True)
@@ -950,7 +933,7 @@ class MainController(QObserver):
 
         if not self.view.amend_is_checked():
             # Check if there's a message file in .git/
-            merge_msg_path = self.model.get_merge_message_path()
+            merge_msg_path = self.model.merge_message_path()
             if merge_msg_path is None:
                 return
             merge_msg_hash = self.model.git.hash_object(merge_msg_path)
@@ -961,8 +944,8 @@ class MainController(QObserver):
 
     def _update_window_title(self):
         """Update the title with the current branch and directory name."""
-        title = '%s [%s]' % (self.model.get_project(),
-                             self.model.get_currentbranch())
+        title = '%s [%s]' % (self.model.project,
+                             self.model.currentbranch)
         if self.mode == self.MODE_DIFF or self.mode == self.MODE_DIFF_EXPR:
             title += ' *** diff mode***'
         if self.mode == self.MODE_REVIEW:
@@ -1008,9 +991,9 @@ class MainController(QObserver):
         """Diff against an arbitrary revision, branch, tag, etc."""
         branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
                                    self.view,
-                                   ['HEAD^']
-                                   + self.model.get_all_branches()
-                                   + self.model.get_tags())
+                                   ['HEAD^'] +
+                                   self.model.all_branches() +
+                                   self.model.tags)
         if not branch:
             return
         self.mode = self.MODE_DIFF
@@ -1022,8 +1005,8 @@ class MainController(QObserver):
         """Diff using an arbitrary expression."""
         branch = choose_from_combo('Enter Diff Expression',
                                    self.view,
-                                   self.model.get_all_branches()
-                                   + self.model.get_tags())
+                                   self.model.all_branches() +
+                                   self.model.tags)
         if not branch:
             return
         self.mode = self.MODE_DIFF_EXPR
@@ -1035,8 +1018,8 @@ class MainController(QObserver):
         """Diff against an arbitrary revision, branch, tag, etc."""
         branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
                                    self.view,
-                                   self.model.get_all_branches()
-                                   + self.model.get_tags())
+                                   self.model.all_branches() +
+                                   self.model.tags)
         if not branch:
             return
         self.mode = self.MODE_REVIEW
@@ -1048,9 +1031,9 @@ class MainController(QObserver):
         """Launches a diff against a branch."""
         branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
                                    self.view,
-                                   ['HEAD^']
-                                   + self.model.get_all_branches()
-                                   + self.model.get_tags())
+                                   ['HEAD^'] +
+                                   self.model.all_branches() +
+                                   self.model.tags)
         if not branch:
             return
         zfiles_str = self.model.git.diff(branch, name_only=True,
@@ -1090,7 +1073,7 @@ class MainController(QObserver):
             self.rescan()
         else:
             # The normal worktree vs index scenario
-            filename = self.get_selected_filename(staged)
+            filename = self.selected_filename(staged)
             if not filename:
                 return
             parser = utils.DiffParser(self.model,
@@ -1150,8 +1133,7 @@ class MainController(QObserver):
         """Use 'git add/rm' to add or remove content from the index"""
         if self.read_only():
             return
-        unstaged = self.model.get_unstaged()
-        selected = self.view.get_unstaged(unstaged)
+        selected = self.view.unstaged(self.model.unstaged)
         if not selected:
             return
         self.log(*self.model.add_or_remove(selected))
@@ -1161,16 +1143,14 @@ class MainController(QObserver):
         """Use 'git reset/rm' to remove content from the index"""
         if self.read_only():
             return
-        staged = self.model.get_staged()
-        selected = self.view.get_staged(staged)
+        selected = self.view.staged(self.model.staged)
         self.log(*self.model.reset_helper(selected))
 
     def undo_changes(self):
         """Reverts local changes back to whatever's in HEAD."""
         if not self.undoable():
             return
-        modified = self.model.get_modified()
-        items_to_undo = self.view.get_modified(modified)
+        items_to_undo = self.view.modified(self.model.modified)
         if items_to_undo:
             if not qtutils.question(self.view,
                                     'Destroy Local Changes?',
@@ -1216,7 +1196,7 @@ class MainController(QObserver):
 
     def tree_context_menu_setup(self):
         """Set up the status menu for the repo status tree."""
-        staged, modified, unmerged, untracked = self.get_single_selection()
+        staged, modified, unmerged, untracked = self.single_selection()
 
         menu = QtGui.QMenu(self.view)
 
@@ -1267,7 +1247,7 @@ class MainController(QObserver):
     def diff_context_menu_setup(self):
         """Set up the context menu for the diff display."""
         menu = QtGui.QMenu(self.view)
-        staged, modified, unmerged, untracked = self.get_single_selection()
+        staged, modified, unmerged, untracked = self.single_selection()
 
         if self.mode == self.MODE_WORKTREE:
             if modified:
@@ -1299,7 +1279,7 @@ class MainController(QObserver):
         if event.key() != QtCore.Qt.Key_H and event.key() != QtCore.Qt.Key_S:
             event.ignore()
             return
-        staged, modified, unmerged, untracked = self.get_single_selection()
+        staged, modified, unmerged, untracked = self.single_selection()
         if event.key() == QtCore.Qt.Key_H:
             if self.mode == self.MODE_WORKTREE and modified:
                 self.stage_hunk()
@@ -1345,10 +1325,10 @@ class MainController(QObserver):
 
     def _init_log_window(self):
         """Initialize the logging subwindow."""
-        branch = self.model.get_currentbranch()
-        qtutils.log(0, self.model.get_git_version()
-                       +'\ncola version ' + version.get_version()
-                       +'\nCurrent Branch: ' + branch)
+        branch = self.model.currentbranch
+        qtutils.log(0, self.model.git_version +
+                    '\ncola version ' + version.version() +
+                    '\nCurrent Branch: ' + branch)
 
     def start_inotify_thread(self):
         """Start an inotify thread if pyinotify is installed."""

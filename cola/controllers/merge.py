@@ -34,7 +34,7 @@ class MergeController(QObserver):
     def __init__(self, model, view):
         QObserver.__init__(self, model, view)
         # Set the current branch label
-        branch = self.model.get_currentbranch()
+        branch = self.model.currentbranch
         title = unicode(self.tr('Merge Into %s')) %  branch
         self.view.label.setText(title)
         self.add_observables('revision', 'revision_list')
@@ -45,22 +45,22 @@ class MergeController(QObserver):
                            button_viz = self.viz_revision,
                            button_merge = self.merge_revision,
                            checkbox_squash = self.squash_update)
-        self.model.set_revision_list(self.model.get_local_branches())
+        self.model.set_revision_list(self.model.local_branches)
         self.view.radio_local.setChecked(True)
 
-    def get_revision_list(self):
+    def revision_list(self):
         """Retrieve candidate items to merge"""
         if self.view.radio_local.isChecked():
-            return self.model.get_local_branches()
+            return self.model.local_branches
         elif self.view.radio_remote.isChecked():
-            return self.model.get_remote_branches()
+            return self.model.remote_branches
         elif self.view.radio_tag.isChecked():
-            return self.model.get_tags()
+            return self.model.tags
         return []
 
     def revision_selected(self, *args):
         """Update the revision field when a list item is selected"""
-        revlist = self.get_revision_list()
+        revlist = self.revision_list()
         widget = self.view.revision_list
         row, selected = qtutils.selected_row(widget)
         if selected and row < len(revlist):
@@ -69,12 +69,12 @@ class MergeController(QObserver):
 
     def radio_callback(self):
         """Update the revision list whenever a radio button is clicked"""
-        revlist = self.get_revision_list()
+        revlist = self.revision_list()
         self.model.set_revision_list(revlist)
 
     def merge_revision(self):
         """Merge the selected revision/branch"""
-        revision = self.model.get_revision()
+        revision = self.model.revision
         if not revision:
             qtutils.information('No Revision Specified',
                                 'You must specify a revision to merge')
@@ -82,7 +82,7 @@ class MergeController(QObserver):
 
         no_commit = not(self.view.checkbox_commit.isChecked())
         squash = self.view.checkbox_squash.isChecked()
-        msg = self.model.get_merge_message()
+        msg = self.model.merge_message()
         qtutils.log(*self.model.git.merge('-m'+msg,
                                          revision,
                                          strategy='recursive',

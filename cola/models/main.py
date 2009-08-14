@@ -292,7 +292,7 @@ class MainModel(ObservableModel):
                 return rb
         return remote_branches[0]
 
-    def get_diff_filenames(self, arg):
+    def diff_filenames(self, arg):
         """Returns a list of filenames that have been modified"""
         diff_zstr = self.git.diff(arg, name_only=True, z=True).rstrip('\0')
         return [core.decode(f) for f in diff_zstr.split('\0') if f]
@@ -473,8 +473,8 @@ class MainModel(ObservableModel):
                 self.get_subtree_sha1s()[idx],
                 self.get_subtree_names()[idx] )
 
-    def get_all_branches(self):
-        return (self.get_local_branches() + self.get_remote_branches())
+    def all_branches(self):
+        return (self.local_branches + self.remote_branches)
 
     def set_remote(self, remote):
         if not remote:
@@ -583,16 +583,16 @@ class MainModel(ObservableModel):
         else:
             return core.decode(commit)
 
-    def get_filename(self, idx, staged=True):
+    def filename(self, idx, staged=True):
         try:
             if staged:
-                return self.get_staged()[idx]
+                return self.staged[idx]
             else:
-                return self.get_unstaged()[idx]
+                return self.unstaged[idx]
         except IndexError:
             return None
 
-    def get_diff_details(self, idx, ref, staged=True):
+    def diff_details(self, idx, ref, staged=True):
         """
         Return a "diff" for an entry by index relative to ref.
 
@@ -600,7 +600,7 @@ class MainModel(ObservableModel):
         staged or unstaged entry.
 
         """
-        filename = self.get_filename(idx, staged=staged)
+        filename = self.filename(idx, staged=staged)
         if not filename:
             return (None, None)
         encfilename = core.encode(filename)
@@ -627,14 +627,14 @@ class MainModel(ObservableModel):
                 diff = 'SHA1: ' + self.git.hash_object(filename)
         return (diff, filename)
 
-    def get_diff_for_expr(self, idx, expr):
+    def diff_for_expr(self, idx, expr):
         """
         Return a diff for an arbitrary diff expression.
 
         `idx` is the index of the entry in the staged files list.
 
         """
-        filename = self.get_filename(idx, staged=True)
+        filename = self.filename(idx, staged=True)
         if not filename:
             return (None, None)
         diff = self.diff_helper(filename=filename, ref=expr, cached=False)
@@ -728,7 +728,7 @@ class MainModel(ObservableModel):
         # Sure, this is a potential "security risk," but if someone
         # is trying to intercept/re-write commit messages on your system,
         # then you probably have bigger problems to worry about.
-        tmpfile = self.get_tmp_filename()
+        tmpfile = self.tmp_filename()
 
         # Create the commit message file
         fh = open(tmpfile, 'w')
@@ -748,19 +748,19 @@ class MainModel(ObservableModel):
                              stat=True,
                              cached=True)
 
-    def get_tmp_dir(self):
+    def tmp_dir(self):
         # Allow TMPDIR/TMP with a fallback to /tmp
         return os.environ.get('TMP', os.environ.get('TMPDIR', '/tmp'))
 
-    def get_tmp_file_pattern(self):
-        return os.path.join(self.get_tmp_dir(), '*.git-cola.%s.*' % os.getpid())
+    def tmp_file_pattern(self):
+        return os.path.join(self.tmp_dir(), '*.git-cola.%s.*' % os.getpid())
 
-    def get_tmp_filename(self, prefix=''):
+    def tmp_filename(self, prefix=''):
         basename = ((prefix+'.git-cola.%s.%s'
                     % (os.getpid(), time.time())))
         basename = basename.replace('/', '-')
         basename = basename.replace('\\', '-')
-        tmpdir = self.get_tmp_dir()
+        tmpdir = self.tmp_dir()
         return os.path.join(tmpdir, basename)
 
     def log_helper(self, all=False, extra_args=None):
@@ -877,14 +877,14 @@ class MainModel(ObservableModel):
         paths.extend(subpaths)
         return os.path.realpath(os.path.join(*paths))
 
-    def get_merge_message_path(self):
+    def merge_message_path(self):
         for file in ('MERGE_MSG', 'SQUASH_MSG'):
             path = self.git_repo_path(file)
             if os.path.exists(path):
                 return path
         return None
 
-    def get_merge_message(self):
+    def merge_message(self):
         return self.git.fmt_merge_msg('--file',
                                       self.git_repo_path('FETCH_HEAD'))
 
@@ -896,10 +896,10 @@ class MainModel(ObservableModel):
         if os.path.exists(merge_head):
             os.unlink(merge_head)
         # remove MERGE_MESSAGE, etc.
-        merge_msg_path = self.get_merge_message_path()
+        merge_msg_path = self.merge_message_path()
         while merge_msg_path:
             os.unlink(merge_msg_path)
-            merge_msg_path = self.get_merge_message_path()
+            merge_msg_path = self.merge_message_path()
 
     def _is_modified(self, name):
         status, out = self.git.diff('--', name,
@@ -909,7 +909,7 @@ class MainModel(ObservableModel):
         return status != 0
 
 
-    def _get_branch_status(self, branch):
+    def _branch_status(self, branch):
         """
         Returns a tuple of staged, unstaged, untracked, and unmerged files
 
@@ -936,7 +936,7 @@ class MainModel(ObservableModel):
         """
         self.git.update_index(refresh=True)
         if staged_only:
-            return self._get_branch_status(head)
+            return self._branch_status(head)
 
         staged_set = set()
         modified_set = set()

@@ -53,7 +53,7 @@ class RemoteController(QObserver):
                            local_branches = self.update_local_branches,
                            remote_branches = self.update_remote_branches)
         self.refresh_view()
-        remotes = self.model.get_remotes()
+        remotes = self.model.remotes
         if 'origin' in remotes:
             idx = remotes.index('origin')
             if self.view.select_remote(idx):
@@ -65,8 +65,8 @@ class RemoteController(QObserver):
         # Select the current branch by default for push
         if action != 'push':
             return
-        branches = self.model.get_local_branches()
-        branch = self.model.get_currentbranch()
+        branches = self.model.local_branches
+        branch = self.model.currentbranch
         if branch not in branches:
             return
         idx = branches.index(branch)
@@ -76,7 +76,7 @@ class RemoteController(QObserver):
     def display_remotes(self, widget):
         """Display the available remotes in a listwidget"""
         displayed = []
-        for remotename in self.model.get_remotes():
+        for remotename in self.model.remotes:
             url = self.model.remote_url(remotename)
             display = ('%s\t(%s %s)'
                        % (remotename, unicode(self.tr('URL:')), url))
@@ -86,7 +86,7 @@ class RemoteController(QObserver):
     def update_remotes(self,*rest):
         """Update the remote name when a remote from the list is selected"""
         widget = self.view.remotes
-        remotes = self.model.get_remotes()
+        remotes = self.model.remotes
         selection = qtutils.selected_item(widget, remotes)
         if not selection:
             return
@@ -95,7 +95,7 @@ class RemoteController(QObserver):
 
     def update_local_branches(self,*rest):
         """Update the local/remote branch names when a branch is selected"""
-        branches = self.model.get_local_branches()
+        branches = self.model.local_branches
         widget = self.view.local_branches
         selection = qtutils.selected_item(widget, branches)
         if not selection:
@@ -110,7 +110,7 @@ class RemoteController(QObserver):
     def update_remote_branches(self,*rest):
         """Update the remote branch name when a branch is selected"""
         widget = self.view.remote_branches
-        branches = self.model.get_remote_branches()
+        branches = self.model.remote_branches
         selection = qtutils.selected_item(widget,branches)
         if not selection:
             return
@@ -120,16 +120,16 @@ class RemoteController(QObserver):
         self.model.set_remote_branch(branch)
         self.view.remote_branch.selectAll()
 
-    def get_common_args(self):
+    def common_args(self):
         """Returns git arguments common to fetch/push/pulll"""
         # TODO move to model
-        return (self.model.get_remotename(),
+        return (self.model.remotename,
                 {
-                    'local_branch': self.model.get_local_branch(),
-                    'remote_branch': self.model.get_remote_branch(),
-                    'ffwd': self.model.get_ffwd_only_checkbox(),
-                    'tags': self.model.get_tags_checkbox(),
-                    'rebase': self.model.get_rebase_checkbox(),
+                    'local_branch': self.model.local_branch,
+                    'remote_branch': self.model.remote_branch,
+                    'ffwd': self.model.ffwd_only_checkbox,
+                    'tags': self.model.tags_checkbox,
+                    'rebase': self.model.rebase_checkbox,
                 })
 
     #+-------------------------------------------------------------
@@ -138,12 +138,12 @@ class RemoteController(QObserver):
         """Generates a Qt callback for fetch/push/pull.
         """
         def remote_callback():
-            if not self.model.get_remotename():
+            if not self.model.remotename:
                 errmsg = self.tr('No repository selected.')
                 qtutils.log(1, errmsg)
                 return
             action = self.action
-            if not self.model.get_ffwd_only_checkbox():
+            if not self.model.ffwd_only_checkbox:
                 if action == 'fetch':
                     msg = ('Non-fast-forward fetch overwrites local '
                            'history!\n\tContinue?')
@@ -156,7 +156,7 @@ class RemoteController(QObserver):
                 if not qtutils.question(self.view,
                         'Force %s?' % action.title(), msg, default=False):
                     return
-            remote, kwargs = self.get_common_args()
+            remote, kwargs = self.common_args()
             status, output = modelaction(remote, **kwargs)
             if not output: # git fetch --tags --verbose doesn't print anything...
                 output = self.tr('Already up-to-date.')
