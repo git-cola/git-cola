@@ -434,11 +434,11 @@ class MainController(QObserver):
         filename, lineno, contents = line.split(':', 2)
         if not os.path.exists(filename):
             return
-        editor = self.model.get_editor()
+        editor = self.model.editor()
         if 'vi' in editor:
-            utils.fork([self.model.get_editor(), filename, '+'+lineno])
+            utils.fork([editor, filename, '+'+lineno])
         else:
-            utils.fork([self.model.get_editor(), filename])
+            utils.fork([editor, filename])
 
     def gen_search(self, searchtype, browse=False):
         """Return a callback to handle various search actions."""
@@ -615,7 +615,7 @@ class MainController(QObserver):
         """Launch $editor on a specific path."""
         filename = self.get_selected_filename(staged=staged)
         if filename:
-            utils.fork([self.model.get_editor(), filename])
+            utils.fork([self.model.editor(), filename])
 
     def edit_diff(self, staged=True):
         """Launches difftool on the specified paths."""
@@ -1190,13 +1190,13 @@ class MainController(QObserver):
 
     def viz_all(self):
         """Visualizes the entire git history using gitk."""
-        browser = self.model.get_history_browser()
+        browser = self.model.history_browser()
         utils.fork(['sh', '-c', browser, '--all'])
 
     def viz_current(self):
         """Visualize the current branch's history using gitk."""
-        browser = self.model.get_history_browser()
-        utils.fork(['sh', '-c', browser, self.model.get_currentbranch()])
+        browser = self.model.history_browser()
+        utils.fork(['sh', '-c', browser, self.model.currentbranch])
 
     def _load_gui_state(self):
         """Load gui state and apply it to the views."""

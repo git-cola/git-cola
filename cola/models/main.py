@@ -438,11 +438,11 @@ class MainModel(ObservableModel):
         output + '\n\n' + out
         return (status, output)
 
-    def get_editor(self):
-        return self.get_gui_config('editor')
+    def editor(self):
+        return self.gui_config('editor')
 
-    def get_history_browser(self):
-        return self.get_gui_config('historybrowser')
+    def history_browser(self):
+        return self.gui_config('historybrowser')
 
     def remember_gui_settings(self):
         return self.get_cola_config('savewindowsettings')

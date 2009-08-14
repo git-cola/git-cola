@@ -94,8 +94,8 @@ class MergeController(QObserver):
 
     def viz_revision(self):
         """Launch a gitk-like viewer on the selection revision"""
-        revision = self.model.get_revision()
-        browser = self.model.get_history_browser()
+        revision = self.model.revision
+        browser = self.model.history_browser()
         utils.fork([browser, revision])
 
     def squash_update(self):

@@ -50,7 +50,7 @@ class ClassicController(QtCore.QObject):
     def _view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
         entries = map(unicode, entries)
-        cmd = [self.model.get_history_browser(), '--all', '--']
+        cmd = [self.model.history_browser(), '--all', '--']
         cola.utils.fork(cmd + entries)
 
     def _query_model(self, model_index):
@@ -66,7 +66,7 @@ class ClassicController(QtCore.QObject):
 
     def _editor(self, qstrings):
         """Launch an editor on the given QStrings."""
-        cmd = [self.model.get_editor()]
+        cmd = [self.model.editor()]
         cmd.extend(map(unicode, qstrings))
         cola.utils.fork(cmd)
 
