@@ -1,18 +1,16 @@
 """This view provides the main git-cola user interface.
 """
 
+from PyQt4 import QtGui
+from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import qtutils
-from cola.views.standard import create_standard_view
 from cola.views.syntax import DiffSyntaxHighlighter
-from cola.views.drawerwidgets import DrawerMainWindow
-from cola.gui.main import Ui_main
+from cola.views.mainwindow import MainWindow
 
-
-ViewBase = create_standard_view(Ui_main, DrawerMainWindow)
-class MainView(ViewBase):
+class MainView(MainWindow):
     """The main cola interface."""
     IDX_HEADER = -1
     IDX_STAGED = 0
@@ -22,7 +20,7 @@ class MainView(ViewBase):
     IDX_END = 4
 
     def __init__(self, parent=None):
-        ViewBase.__init__(self, parent)
+        MainWindow.__init__(self, parent)
         self.set_display = self.display_text.setText
         self.amend_is_checked = self.amend_radio.isChecked
         self.action_undo = self.commitmsg.undo
@@ -54,8 +52,9 @@ class MainView(ViewBase):
         # Initialize the GUI to show 'Column: 00'
         self.show_current_column()
 
-        # Hide the alternate button by default
-        self.alt_button.hide()
+        # Internal field used by import/export_state().
+        # Change this whenever dockwidgets are removed.
+        self._widget_version = 1
 
     def set_staged(self, items, check=True):
         """Adds items to the 'Staged' subtree."""
@@ -245,9 +244,6 @@ class MainView(ViewBase):
     def show_editor(self):
         self.tabwidget.setCurrentIndex(1)
 
-    def show_diff(self):
-        self.tabwidget.setCurrentIndex(0)
-
     def action_cut(self):
         self.action_copy()
         self.action_delete()
@@ -308,7 +304,6 @@ class MainView(ViewBase):
 
     def display(self, text):
         self.set_display(text)
-        self.show_diff()
 
     def show_current_column(self):
         cursor = self.commitmsg.textCursor()
@@ -317,17 +312,17 @@ class MainView(ViewBase):
 
     def import_state(self, state):
         """Imports data for save/restore"""
-        ViewBase.import_state(self, state)
-        if 'splitter_sizes' in state:
-            sizes = state['splitter_sizes']
-            try:
-                self.splitter.setSizes(sizes)
-            except:
-                pass
+        MainWindow.import_state(self, state)
+        # Restore the dockwidget, etc. window state
+        if 'windowstate' in state:
+            windowstate = state['windowstate']
+            self.restoreState(QtCore.QByteArray.fromBase64(windowstate),
+                              self._widget_version)
 
     def export_state(self):
         """Exports data for save/restore"""
-        state = ViewBase.export_state(self)
-        # Save the splitter size
-        state['splitter_sizes'] = map(int, self.splitter.sizes())
+        state = MainWindow.export_state(self)
+        # Save the window state
+        windowstate = self.saveState(self._widget_version)
+        state['windowstate'] = unicode(windowstate.toBase64().data())
         return state
