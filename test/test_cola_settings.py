@@ -24,10 +24,10 @@ class SettingsTestCase(unittest.TestCase):
     def test_gui_save_restore(self):
         """Test saving and restoring gui state"""
         model = self.model()
-        model.set_gui_state('test-gui', {'foo':'bar'})
+        model.gui_state['test-gui'] = {'foo':'bar'}
         model.save()
         model = self.model()
-        state = model.get_gui_state('test-gui')
+        state = model.gui_state.get('test-gui', {})
         self.assertTrue('foo' in state)
         self.assertEqual(state['foo'], 'bar')
 
@@ -37,12 +37,12 @@ class SettingsTestCase(unittest.TestCase):
         model.add_bookmark('test-bookmark')
         model.save()
         model = self.model()
-        bookmarks = model.get_bookmarks()
+        bookmarks = model.bookmarks
         self.assertEqual(len(bookmarks), 1)
         self.assertTrue('test-bookmark' in bookmarks)
 
         model.remove_bookmark('test-bookmark')
-        bookmarks = model.get_bookmarks()
+        bookmarks = model.bookmarks
         self.assertEqual(len(bookmarks), 0)
         self.assertFalse('test-bookmark' in bookmarks)
 

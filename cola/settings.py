@@ -30,15 +30,6 @@ class SettingsModel(ObservableModel):
         # Call the base method
         ObservableModel.save(self, self.path())
 
-
-    def set_gui_state(self, name, state):
-        """Sets GUI state for a view"""
-        self.gui_state[name] = state
-
-    def get_gui_state(self, name):
-        """Returns the state an gui"""
-        return self.gui_state.get(name, {})
-
     def add_bookmark(self, bookmark):
         """Adds a bookmark to the saved settings"""
         if bookmark not in self.bookmarks:
@@ -65,10 +56,10 @@ class SettingsManager(object):
         name = gui.name()
         state = gui.export_state()
         model = SettingsManager.settings()
-        model.set_gui_state(name, state)
+        model.gui_state[name] = state
         model.save()
 
     @staticmethod
-    def get_gui_state(gui):
+    def gui_state(gui):
         """Returns the state for a gui"""
-        return SettingsManager.settings().get_gui_state(gui.name())
+        return SettingsManager.settings().gui_state.get(gui.name(), {})

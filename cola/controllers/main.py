@@ -1180,7 +1180,7 @@ class MainController(QObserver):
 
     def _load_gui_state(self):
         """Load gui state and apply it to the views."""
-        state = settings.SettingsManager.get_gui_state(self.view)
+        state = settings.SettingsManager.gui_state(self.view)
         self.view.import_state(state)
 
     def log(self, status, output, rescan=True):
