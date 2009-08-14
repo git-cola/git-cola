@@ -18,6 +18,7 @@ from cola import settings
 from cola.qobserver import QObserver
 from cola.views import about
 from cola.views import drawer
+from cola.views import log
 
 # controllers namespace
 from cola.controllers.bookmark import save_bookmark
@@ -27,7 +28,6 @@ from cola.controllers.compare import compare
 from cola.controllers.compare import compare_file
 from cola.controllers.compare import branch_compare
 from cola.controllers.createbranch import create_new_branch
-from cola.controllers.log import logger
 from cola.controllers.merge import local_merge
 from cola.controllers.merge import abort_merge
 from cola.controllers.options import update_options
@@ -86,10 +86,6 @@ class MainController(QObserver):
         model.git_version = model.git.version()
 
         self.reset_mode()
-
-        # Parent-less log window
-        qtutils.LOGGER = logger(model, view)
-        view.centralWidget().add_bottom_drawer(qtutils.LOGGER.view)
 
         # Unstaged changes context menu
         view.status_tree.contextMenuEvent = self.tree_context_menu_event
@@ -211,7 +207,6 @@ class MainController(QObserver):
                 lambda: self.log(*self.model.stage_untracked()),
             menu_unstage_all =
                 lambda: self.log(*self.model.unstage_all()),
-            menu_view_log = self.view.display_log,
 
             # Tools Menu
             menu_tools_classic = cola_classic,
@@ -438,7 +433,6 @@ class MainController(QObserver):
         self.mode = self.MODE_GREP
         stuff = self.model.git.grep(txt, n=True)
         self.view.display_text.setText(stuff)
-        self.view.show_diff()
 
     def options(self):
         """Launch the options dialog"""
@@ -580,7 +574,6 @@ class MainController(QObserver):
         else:
             diff, filename = self.model.diff_details(idx, ref, staged=staged)
         self.view.set_display(diff)
-        self.view.show_diff()
         qtutils.set_clipboard(filename)
 
     def mergetool(self):
@@ -646,9 +639,6 @@ class MainController(QObserver):
                           self.view.IDX_UNMERGED,
                           self.view.IDX_UNTRACKED):
             self.view_diff(staged=False)
-
-        # Bring the diff view to the front
-        self.view.show_diff()
 
     def generate_header_data(self, idx):
         """Generate data for a header item such as 'Staged'."""
@@ -1048,7 +1038,6 @@ class MainController(QObserver):
                                       reverse=True,
                                       branch=branch)
         self.view.set_display(diff)
-        self.view.show_diff()
 
         # Set state machine to branch mode
         self.mode = self.MODE_BRANCH

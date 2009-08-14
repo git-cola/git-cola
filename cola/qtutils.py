@@ -9,15 +9,21 @@ from PyQt4 import QtGui
 from cola import core
 from cola import utils
 from cola import resources
+import cola.views.log
 
-LOGGER = None
+_logger = None
+def logger():
+    global _logger
+    if not _logger:
+        _logger = cola.views.log.LogView()
+    return _logger
 
 def log(status, output):
     """Sends messages to the log window.
     """
-    if not LOGGER or not output:
+    if not output:
         return
-    LOGGER.log(status, output)
+    logger().log(status, output)
 
 def input(msg, title=None):
     """Presents the user with an input widget and returns the input."""

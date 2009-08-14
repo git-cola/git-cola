@@ -315,9 +315,6 @@ class MainView(ViewBase):
         colnum = cursor.columnNumber()
         self.column_label.setText('Column: %02d' % colnum)
 
-    def display_log(self):
-        self.open_drawer(self.LOCATION_BOTTOM, opened=True)
-
     def import_state(self, state):
         """Imports data for save/restore"""
         ViewBase.import_state(self, state)

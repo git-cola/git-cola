@@ -4,7 +4,6 @@
 from cola import qtutils
 from cola.views import ListView
 from cola.views import ComboView
-from cola.views import LogView
 from cola.qobserver import QObserver
 
 

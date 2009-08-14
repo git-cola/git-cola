@@ -16,7 +16,6 @@ from PyQt4.QtCore import SIGNAL
 from cola import core
 from cola.views.standard import create_standard_view
 from cola.views.syntax import DiffSyntaxHighlighter
-from cola.views.syntax import LogSyntaxHighlighter
 
 try:
     from cola.gui.bookmark import Ui_bookmark
@@ -26,7 +25,6 @@ try:
     from cola.gui.compare import Ui_compare
     from cola.gui.createbranch import Ui_createbranch
     from cola.gui.items import Ui_items
-    from cola.gui.logger import Ui_logger
     from cola.gui.merge import Ui_merge
     from cola.gui.options import Ui_options
     from cola.gui.remote import Ui_remote
@@ -37,38 +35,12 @@ except ImportError:
                      'Try running "make" in the cola source tree.\n')
     sys.exit(-1)
 
-
 OptionsView = create_standard_view(Ui_options, QDialog)
 BranchCompareView = create_standard_view(Ui_branchview, QDialog)
 CreateBranchView = create_standard_view(Ui_createbranch, QDialog)
 BookmarkView = create_standard_view(Ui_bookmark, QDialog)
 StashView = create_standard_view(Ui_stash, QDialog)
 CompareView = create_standard_view(Ui_compare, QDialog)
-
-LogViewBase = create_standard_view(Ui_logger, QDialog)
-class LogView(LogViewBase):
-    """A simple dialog to display command logs."""
-    def __init__(self, parent=None, output=None):
-        LogViewBase.__init__(self, parent)
-        self.syntax = LogSyntaxHighlighter(self.output_text.document())
-        if output:
-            self.set_output(output)
-    def clear(self):
-        self.output_text.clear()
-    def set_output(self, output):
-        self.output_text.setText(output)
-    def log(self, output):
-        if not output:
-            return
-        cursor = self.output_text.textCursor()
-        cursor.movePosition(cursor.End)
-        text = self.output_text
-        cursor.insertText(time.asctime() + '\n')
-        for line in unicode(core.decode(output)).splitlines():
-            cursor.insertText(line + '\n')
-        cursor.insertText('\n')
-        cursor.movePosition(cursor.End)
-        text.setTextCursor(cursor)
 
 class ItemView(object):
     def __init__(self, parent, title="", items=[], dblclick=None):
