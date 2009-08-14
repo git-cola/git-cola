@@ -59,7 +59,8 @@ def run_cmd(*command):
     """
     return git.Git.execute(command)
 
-def get_qm_for_locale(locale):
+
+def qm_for_locale(locale):
     """Returns the .qm file for a particular $LANG values."""
     regex = re.compile(r'([^\.])+\..*$')
     match = regex.match(locale)
@@ -67,12 +68,6 @@ def get_qm_for_locale(locale):
         locale = match.group(1)
     return resources.qm(locale.split('_')[0])
 
-def get_libexec(*args):
-    """Returns the path to the libexec scripts dir.
-    This currently == 'bin' but it may change in the future.
-    """
-    libexec = os.path.dirname(os.path.abspath(sys.argv[0]))
-    return os.path.join(libexec, *args)
 
 def ident_file_type(filename):
     """Returns an icon based on the contents of filename."""
@@ -99,6 +94,7 @@ def get_file_icon(filename):
     """
     return resources.icon(ident_file_type(filename))
 
+
 def fork(args):
     """Launches a command in the background."""
     args = tuple([core.encode(a) for a in args])
@@ -117,6 +113,7 @@ def fork(args):
         argv = map(shell_quote, args)
         return os.system(' '.join(argv) + '&')
 
+
 def sublist(a,b):
     """Subtracts list b from list a and returns the resulting list."""
     # conceptually, c = a - b
@@ -125,6 +122,7 @@ def sublist(a,b):
         if item not in b:
             c.append(item)
     return c
+
 
 __grep_cache = {}
 def grep(pattern, items, squash=True):
@@ -163,6 +161,7 @@ def grep(pattern, items, squash=True):
         else:
             return matched
 
+
 def basename(path):
     """
     An os.path.basename() implementation that always uses '/'
@@ -172,6 +171,7 @@ def basename(path):
 
     """
     return path.rsplit('/', 1)[-1]
+
 
 def dirname(path):
     """
@@ -188,6 +188,7 @@ def dirname(path):
         return ''
     return path.rsplit('/', 1)[0]
 
+
 def slurp(path):
     """Slurps a filepath into a string."""
     fh = open(path)
@@ -195,11 +196,13 @@ def slurp(path):
     fh.close()
     return core.decode(slushy)
 
+
 def write(path, contents):
     """Writes a string to a file."""
     fh = open(path, 'w')
     core.write_nointr(fh, core.encode(contents))
     fh.close()
+
 
 class DiffParser(object):
     """Handles parsing diff for use by the interactive index editor."""

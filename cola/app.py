@@ -34,7 +34,7 @@ class ColaApplication(object):
         if not locale:
             locale = str(QtCore.QLocale().system().name())
 
-        qmfile = utils.get_qm_for_locale(locale)
+        qmfile = utils.qm_for_locale(locale)
         if os.path.exists(qmfile):
             translator = QtCore.QTranslator(self._app)
             translator.load(qmfile)
