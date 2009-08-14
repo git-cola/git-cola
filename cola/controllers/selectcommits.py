@@ -36,7 +36,7 @@ class SelectCommitsController(QObserver):
     def set_diff_font(self):
         if not self.model.has_param('global_cola_fontdiff'):
             return
-        font = self.model.get_param('global_cola_fontdiff')
+        font = self.model.param('global_cola_fontdiff')
         if not font:
             return
         qf = QtGui.QFont()
@@ -46,7 +46,7 @@ class SelectCommitsController(QObserver):
     def set_ui_font(self):
         if not self.model.has_param('global_cola_fontui'):
             return
-        font = self.model.get_param('global_cola_fontui')
+        font = self.model.param('global_cola_fontui')
         if not font:
             return
         qf = QtGui.QFont()
@@ -54,7 +54,7 @@ class SelectCommitsController(QObserver):
         self.view.commit_list.setFont(qf)
 
     def select_commits(self):
-        summaries = self.model.get_summaries()
+        summaries = self.model.summaries
         if not summaries:
             msg = self.tr('No commits exist in this branch.')
             qtutils.log(1, msg)
@@ -63,9 +63,9 @@ class SelectCommitsController(QObserver):
         self.view.show()
         if self.view.exec_() != QtGui.QDialog.Accepted:
             return []
-        revs = self.model.get_revisions()
+        revs = self.model.revisions
         list_widget = self.view.commit_list
-        return qtutils.get_selection_list(list_widget, revs)
+        return qtutils.selection_list(list_widget, revs)
 
     def context_menu_event(self, event):
         menu = QtGui.QMenu(self.view);
@@ -78,7 +78,7 @@ class SelectCommitsController(QObserver):
         row, selected = qtutils.selected_row(self.view.commit_list)
         if not selected:
             return
-        sha1 = self.model.get_revision_sha1(row)
+        sha1 = self.model.revision_sha1(row)
         qtutils.log(*self.model.git.checkout(sha1,
                                              with_stderr=True,
                                              with_status=True))
@@ -88,13 +88,13 @@ class SelectCommitsController(QObserver):
         if not selected:
             return
         create_new_branch(self.orig_model, self.view,
-                          revision=self.model.get_revision_sha1(row))
+                          revision=self.model.revision_sha1(row))
 
     def cherry_pick(self):
         row, selected = qtutils.selected_row(self.view.commit_list)
         if not selected:
             return
-        sha1 = self.model.get_revision_sha1(row)
+        sha1 = self.model.revision_sha1(row)
         qtutils.log(*self.model.git.cherry_pick(sha1,
                                                 with_stderr=True,
                                                 with_status=True))
@@ -106,12 +106,12 @@ class SelectCommitsController(QObserver):
             self.view.revision.setText('')
             return
         # Get the sha1 and put it in the revision line
-        sha1 = self.model.get_revision_sha1(row)
+        sha1 = self.model.revision_sha1(row)
         self.view.revision.setText(sha1)
         self.view.revision.selectAll()
 
         # Lookup the sha1's commit
-        commit_diff = self.model.get_commit_diff(sha1)
+        commit_diff = self.model.commit_diff(sha1)
         self.view.commit_text.setText(commit_diff)
 
         # Copy the sha1 into the clipboard
