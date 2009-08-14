@@ -70,21 +70,21 @@ class RepoBrowserController(QObserver):
         item = self.view.commit_list.item(current)
         if item is None or not item.isSelected():
             return
-        directories = self.model.get_directories()
-        directory_entries = self.model.get_directory_entries()
+        directories = self.model.directories
+        directory_entries = self.model.directory_entries
         if current < len(directories):
             # ignore directories
             return
         idx = current - len(directories)
-        if idx >= len(self.model.get_subtree_sha1s()):
+        if idx >= len(self.model.subtree_sha1s):
             return
-        objtype, sha1, name = self.model.get_subtree_node(idx)
-        curdir = self.model.get_directory()
+        objtype, sha1, name = self.model.subtree_node(idx)
+        curdir = self.model.directory
         if curdir:
             filename = os.path.join(curdir, name)
         else:
             filename = name
-        blame = self.model.git.blame(self.model.get_currentbranch(), filename)
+        blame = self.model.git.blame(self.model.currentbranch, filename)
         self.view.commit_text.setText(blame)
 
     ######################################################################
@@ -104,8 +104,8 @@ class RepoBrowserController(QObserver):
             self.view.revision.setText('')
             self.view.commit_text.setText('')
             return
-        directories = self.model.get_directories()
-        directory_entries = self.model.get_directory_entries()
+        directories = self.model.directories
+        directory_entries = self.model.directory_entries
         if current < len(directories):
             # This is a directory...
             self.filename = None
@@ -125,13 +125,13 @@ class RepoBrowserController(QObserver):
             # so get a relative index by subtracting the number
             # of directory entries
             idx = current - len(directories)
-            if idx >= len(self.model.get_subtree_sha1s()):
+            if idx >= len(self.model.subtree_sha1s):
                 # This can happen when changing directories
                 self.filename = None
                 return
-            objtype, sha1, name = self.model.get_subtree_node(idx)
+            objtype, sha1, name = self.model.subtree_node(idx)
 
-            curdir = self.model.get_directory()
+            curdir = self.model.directory
             if curdir:
                 self.filename = os.path.join(curdir, name)
             else:
@@ -155,10 +155,10 @@ class RepoBrowserController(QObserver):
         This callback changes the model's directory when
         invoked on a directory item.  When invoked on a file
         it allows the file to be saved.
-        
+
         """
         current = self.view.commit_list.currentRow()
-        directories = self.model.get_directories()
+        directories = self.model.directories
 
         # A file item was double-clicked.
         # Create a save-as dialog and export the file,
@@ -166,18 +166,18 @@ class RepoBrowserController(QObserver):
         if current >= len(directories):
             idx = current - len(directories)
 
-            objtype, sha1, name = self.model.get_subtree_node(idx)
+            objtype, sha1, name = self.model.subtree_node(idx)
 
             if self.get_file:
-                if self.model.get_directory():
-                    curdir = self.model.get_directory()
+                if self.model.directory:
+                    curdir = self.model.directory
                     self.filename = os.path.join(curdir, name)
                 else:
                     self.filename = name
                 self.view.accept()
                 return
 
-            nameguess = os.path.join(self.model.get_directory(), name)
+            nameguess = os.path.join(self.model.directory, name)
             filename = qtutils.save_dialog(self.view, 'Save', nameguess)
             if not filename:
                 return
@@ -188,7 +188,7 @@ class RepoBrowserController(QObserver):
             return
 
         dirent = directories[current]
-        curdir = self.model.get_directory()
+        curdir = self.model.directory
 
         # "change directories"
         # '..' is a special case--it doesn't really exist...
@@ -221,8 +221,8 @@ class RepoBrowserController(QObserver):
         # First the directories,
         qtutils.set_items(self.view.commit_list,
                           map(lambda d: creator(d, dir_icon),
-                              self.model.get_directories()))
+                              self.model.directories))
         # and now the filenames
         qtutils.add_items(self.view.commit_list,
                           map(lambda s: creator(s, file_icon),
-                              self.model.get_subtree_names()))
+                              self.model.subtree_names))
