@@ -80,7 +80,7 @@ class ItemView(object):
                          dblclick)
     def idx(self):
         return 0
-    def get_selected(self):
+    def selected(self):
         geom = qApp.desktop().screenGeometry()
         width = geom.width()
         height = geom.height()

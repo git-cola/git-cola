@@ -97,7 +97,7 @@ class MainView(ViewBase):
             if item:
                 self.status_tree.expandItem(item)
 
-    def get_index_for_item(self, item):
+    def index_for_item(self, item):
         """Given an item, returns the index of the item.
         The indexes for unstaged items are grouped such that
         the index of unmerged[1] = len(modified) + 1, etc.
@@ -117,12 +117,14 @@ class MainView(ViewBase):
         count = tree.topLevelItem(self.IDX_MODIFIED).childCount()
         if pidx == self.IDX_UNMERGED:
             return False, count + parent.indexOfChild(item)
+
         count += tree.topLevelItem(self.IDX_UNMERGED).childCount()
         if pidx == self.IDX_UNTRACKED:
             return False, count + parent.indexOfChild(item)
+
         return False, -1
 
-    def get_selection(self):
+    def selection(self):
         tree = self.status_tree
         item = tree.currentItem()
         if not item:
@@ -130,26 +132,30 @@ class MainView(ViewBase):
         parent = item.parent()
         if not parent:
             return -1, False
+
         idx = parent.indexOfChild(item)
         pidx = tree.indexOfTopLevelItem(parent)
+
         if pidx == self.IDX_STAGED or pidx == self.IDX_MODIFIED:
             return idx, tree.isItemSelected(item)
+
         elif pidx == self.IDX_UNMERGED:
             num_modified = tree.topLevelItem(self.IDX_MODIFIED).childCount()
             return idx + num_modified, tree.isItemSelected(item)
+
         elif pidx == self.IDX_UNTRACKED:
             num_modified = tree.topLevelItem(self.IDX_MODIFIED).childCount()
             num_unmerged = tree.topLevelItem(self.IDX_UNMERGED).childCount()
             return idx + num_modified + num_unmerged, tree.isItemSelected(item)
         return -1, False
 
-    def get_staged_item(self, itemidx):
-        return self._get_subtree_item(self.IDX_STAGED, itemidx)
+    def staged_item(self, itemidx):
+        return self._subtree_item(self.IDX_STAGED, itemidx)
 
-    def get_modified_item(self, itemidx):
-        return self._get_subtree_item(self.IDX_MODIFIED, itemidx)
+    def modified_item(self, itemidx):
+        return self._subtree_item(self.IDX_MODIFIED, itemidx)
 
-    def get_unstaged_item(self, itemidx):
+    def unstaged_item(self, itemidx):
         tree = self.status_tree
         # is it modified?
         item = tree.topLevelItem(self.IDX_MODIFIED)
@@ -169,32 +175,32 @@ class MainView(ViewBase):
         # Nope..
         return None
 
-    def _get_subtree_item(self, idx, itemidx):
+    def _subtree_item(self, idx, itemidx):
         parent = self.status_tree.topLevelItem(idx)
         return parent.child(itemidx)
 
-    def get_unstaged(self, items):
+    def unstaged(self, items):
         tree = self.status_tree
         num_modified = tree.topLevelItem(self.IDX_MODIFIED).childCount()
         num_unmerged = tree.topLevelItem(self.IDX_UNMERGED).childCount()
-        modified = self.get_modified(items)
-        unmerged = self.get_unmerged(items[num_modified:])
-        untracked = self.get_untracked(items[num_modified+num_unmerged:])
+        modified = self.modified(items)
+        unmerged = self.unmerged(items[num_modified:])
+        untracked = self.untracked(items[num_modified+num_unmerged:])
         return modified + unmerged + untracked
 
-    def get_staged(self, items):
-        return self._get_subtree_selection(self.IDX_STAGED, items)
+    def staged(self, items):
+        return self._subtree_selection(self.IDX_STAGED, items)
 
-    def get_modified(self, items):
-        return self._get_subtree_selection(self.IDX_MODIFIED, items)
+    def modified(self, items):
+        return self._subtree_selection(self.IDX_MODIFIED, items)
 
-    def get_unmerged(self, items):
-        return self._get_subtree_selection(self.IDX_UNMERGED, items)
+    def unmerged(self, items):
+        return self._subtree_selection(self.IDX_UNMERGED, items)
 
-    def get_untracked(self, items):
-        return self._get_subtree_selection(self.IDX_UNTRACKED, items)
+    def untracked(self, items):
+        return self._subtree_selection(self.IDX_UNTRACKED, items)
 
-    def _get_subtree_selection(self, idx, items):
+    def _subtree_selection(self, idx, items):
         item = self.status_tree.topLevelItem(idx)
         return qtutils.tree_selection(item, items)
 

@@ -138,8 +138,8 @@ class BranchCompareController(QObserver):
         """
         if branch == BranchCompareController.BRANCH_POINT:
             # Compare against the branch point so find the merge-base
-            remote = self.model.get_corresponding_remote_ref()
             branch = self.model.currentbranch
+            remote = self.model.corresponding_remote_ref()
             return self.model.git.merge_base(branch, remote)
         else:
             # Compare against the remote branch
@@ -322,7 +322,7 @@ class CompareController(QObserver):
 
         # get the old name of any renamed files, and prune them
         # from the changes list
-        renamed_files = self.model.get_renamed_files(start, end)
+        renamed_files = self.model.renamed_files(start, end)
         for renamed in renamed_files:
             try:
                 files.remove(renamed)

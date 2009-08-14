@@ -82,7 +82,7 @@ class MainController(QObserver):
         QObserver.__init__(self, model, view)
 
         # TODO: subclass model
-        model.project = os.path.basename(model.git.get_work_tree())
+        model.project = os.path.basename(model.git.worktree())
         model.git_version = model.git.version()
 
         self.reset_mode()
@@ -1299,7 +1299,7 @@ class MainController(QObserver):
 
     def update_diff_font(self):
         """Updates the diff font based on the configured value."""
-        font = self.model.get_cola_config('fontdiff')
+        font = self.model.cola_config('fontdiff')
         if not font:
             return
         qfont = QtGui.QFont()
@@ -1309,7 +1309,7 @@ class MainController(QObserver):
 
     def update_ui_font(self):
         """Updates the main UI font based on the configured value."""
-        font = self.model.get_cola_config('fontui')
+        font = self.model.cola_config('fontui')
         if not font:
             return
         qfont = QtGui.QFont()
@@ -1318,7 +1318,7 @@ class MainController(QObserver):
 
     def update_tab_width(self):
         """Implement the variable-tab-width setting."""
-        tab_width = self.model.get_cola_config('tabwidth')
+        tab_width = self.model.cola_config('tabwidth')
         display_font = self.view.display_text.font()
         space_width = QtGui.QFontMetrics(display_font).width(' ')
         self.view.display_text.setTabStopWidth(tab_width * space_width)

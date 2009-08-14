@@ -32,13 +32,13 @@ class GitCola(git.Git):
 
     def load_worktree(self, path):
         self._git_dir = path
-        self._work_tree = None
-        self.get_work_tree()
+        self._worktree = None
+        self.worktree()
 
-    def get_work_tree(self):
-        if self._work_tree:
-            return self._work_tree
-        self.get_git_dir()
+    def worktree(self):
+        if self._worktree:
+            return self._worktree
+        self.git_dir()
         if self._git_dir:
             curdir = self._git_dir
         else:
@@ -52,18 +52,18 @@ class GitCola(git.Git):
                 and curdir.endswith('.git')):
             return curdir
         if 'GIT_WORK_TREE' in os.environ:
-            self._work_tree = os.getenv('GIT_WORK_TREE')
-        if not self._work_tree or not os.path.isdir(self._work_tree):
+            self._worktree = os.getenv('GIT_WORK_TREE')
+        if not self._worktree or not os.path.isdir(self._worktree):
             if self._git_dir:
                 gitparent = os.path.join(os.path.abspath(self._git_dir), '..')
-                self._work_tree = os.path.abspath(gitparent)
-                self.set_cwd(self._work_tree)
-        return self._work_tree
+                self._worktree = os.path.abspath(gitparent)
+                self.set_cwd(self._worktree)
+        return self._worktree
 
     def is_valid(self):
         return self._git_dir and self._is_git_dir(self._git_dir)
 
-    def get_git_dir(self):
+    def git_dir(self):
         if self.is_valid():
             return self._git_dir
         if 'GIT_DIR' in os.environ:
@@ -184,10 +184,10 @@ class MainModel(ObservableModel):
         self.git.load_worktree(worktree)
         is_valid = self.git.is_valid()
         if is_valid:
-            self.__init_config_data()
+            self._init_config_data()
         return is_valid
 
-    def __init_config_data(self):
+    def _init_config_data(self):
         """Reads git config --list and creates parameters
         for each setting."""
         # These parameters are saved in .gitconfig,
@@ -195,7 +195,7 @@ class MainModel(ObservableModel):
 
         # config items that are controllable globally
         # and per-repository
-        self.__local_and_global_defaults = {
+        self._local_and_global_defaults = {
             'user_name': '',
             'user_email': '',
             'merge_summary': False,
@@ -236,7 +236,7 @@ class MainModel(ObservableModel):
         for param in ('global_cola_fontui', 'global_cola_fontdiff'):
             setdefault = True
             if hasattr(self, param):
-                font = self.get_param(param)
+                font = getattr(self, param)
                 if font:
                     setdefault = False
                     size = int(font.split(',')[1])
@@ -246,7 +246,7 @@ class MainModel(ObservableModel):
                     global_dict[param+'_size'] = size
 
         # Load defaults for all undefined items
-        local_and_global_defaults = self.__local_and_global_defaults
+        local_and_global_defaults = self._local_and_global_defaults
         for k,v in local_and_global_defaults.iteritems():
             if k not in local_dict:
                 self.set_param('local_'+k, v)
@@ -259,32 +259,32 @@ class MainModel(ObservableModel):
                 self.set_param('global_'+k, v)
 
         # Load the diff context
-        self.diff_context = self.get_local_config('gui.diffcontext', 3)
+        self.diff_context = self.local_config('gui.diffcontext', 3)
 
-    def get_global_config(self, key, default=None):
-        return self.get_param('global_'+key.replace('.', '_'),
-                              default=default)
+    def global_config(self, key, default=None):
+        return getattr(self, 'global_'+key.replace('.', '_'),
+                       default=default)
 
-    def get_local_config(self, key, default=None):
-        return self.get_param('local_'+key.replace('.', '_'),
-                              default=default)
+    def local_config(self, key, default=None):
+        return getattr(self, 'local_'+key.replace('.', '_'),
+                       default=default)
 
-    def get_cola_config(self, key):
+    def cola_config(self, key):
         return getattr(self, 'global_cola_'+key)
 
-    def get_gui_config(self, key):
+    def gui_config(self, key):
         return getattr(self, 'global_gui_'+key)
 
-    def get_default_remote(self):
-        branch = self.get_currentbranch()
+    def default_remote(self):
+        branch = self.currentbranch
         branchconfig = 'branch.%s.remote' % branch
-        return self.get_local_config(branchconfig, 'origin')
+        return self.local_config(branchconfig, 'origin')
 
-    def get_corresponding_remote_ref(self):
-        remote = self.get_default_remote()
-        branch = self.get_currentbranch()
+    def corresponding_remote_ref(self):
+        remote = self.default_remote()
+        branch = self.currentbranch
         best_match = '%s/%s' % (remote, branch)
-        remote_branches = self.get_remote_branches()
+        remote_branches = self.remote_branches
         if not remote_branches:
             return remote
         for rb in remote_branches:
@@ -308,20 +308,20 @@ class MainModel(ObservableModel):
             return [b for b in branches if b.find('/HEAD') == -1]
         return branches
 
-    def get_config_params(self):
+    def config_params(self):
         params = []
         params.extend(map(lambda x: 'local_' + x,
-                          self.__local_and_global_defaults.keys()))
+                          self._local_and_global_defaults.keys()))
         params.extend(map(lambda x: 'global_' + x,
-                          self.__local_and_global_defaults.keys()))
+                          self._local_and_global_defaults.keys()))
         params.extend(map(lambda x: 'global_' + x,
                           self.__global_defaults.keys()))
         return [ p for p in params if not p.endswith('_size') ]
 
     def save_config_param(self, param):
-        if param not in self.get_config_params():
+        if param not in self.config_params():
             return
-        value = self.get_param(param)
+        value = getattr(self, param)
         if param == 'local_gui_diffcontext':
             self.diff_context = value
         if param.startswith('local_'):
@@ -341,7 +341,7 @@ class MainModel(ObservableModel):
         directories, directory_entries, and subtree_*"""
 
         # Collect data for the model
-        if not self.get_currentbranch():
+        if not self.currentbranch:
             return
 
         self.subtree_types = []
@@ -351,7 +351,7 @@ class MainModel(ObservableModel):
         self.directory_entries = {}
 
         # Lookup the tree info
-        tree_info = self.parse_ls_tree(self.get_currentbranch())
+        tree_info = self.parse_ls_tree(self.currentbranch)
 
         self.set_types(map( lambda(x): x[1], tree_info ))
         self.set_sha1s(map( lambda(x): x[2], tree_info ))
@@ -445,33 +445,12 @@ class MainModel(ObservableModel):
         return self.gui_config('historybrowser')
 
     def remember_gui_settings(self):
-        return self.get_cola_config('savewindowsettings')
+        return self.cola_config('savewindowsettings')
 
-    def should_display_log(self, status):
-        """Returns whether we should display the log window
-
-        This implements the behavior of the cola.showoutput variable.
-            never = never open the log window
-            always = open it always
-            errors = only open it on error (handled implicitly)
-
-        """
-        conf = self.get_cola_config('showoutput')
-        if conf == 'never':
-            return False
-        if conf == 'always':
-            return True
-        return status != 0
-
-    def get_tree_node(self, idx):
-        return (self.get_types()[idx],
-                self.get_sha1s()[idx],
-                self.get_names()[idx] )
-
-    def get_subtree_node(self, idx):
-        return (self.get_subtree_types()[idx],
-                self.get_subtree_sha1s()[idx],
-                self.get_subtree_names()[idx] )
+    def subtree_node(self, idx):
+        return (self.subtree_types[idx],
+                self.subtree_sha1s[idx],
+                self.subtree_names[idx])
 
     def all_branches(self):
         return (self.local_branches + self.remote_branches)
@@ -488,9 +467,9 @@ class MainModel(ObservableModel):
     def add_signoff(self,*rest):
         """Adds a standard Signed-off by: tag to the end
         of the current commit message."""
-        msg = self.get_commitmsg()
+        msg = self.commitmsg
         signoff =('\n\nSigned-off-by: %s <%s>\n'
-                  % (self.get_local_user_name(), self.get_local_user_email()))
+                  % (self.local_user_name, self.local_user_email))
         if signoff not in msg:
             self.set_commitmsg(msg + signoff)
 
@@ -522,7 +501,7 @@ class MainModel(ObservableModel):
         self.set_commitmsg('\n'.join(commit_msg).rstrip())
 
     def load_commitmsg_template(self):
-        template = self.get_global_config('commit.template')
+        template = self.global_config('commit.template')
         if template:
             self.load_commitmsg(template)
 
@@ -535,8 +514,8 @@ class MainModel(ObservableModel):
         (self.staged,
          self.modified,
          self.unmerged,
-         self.untracked) = self.get_workdir_state(head=head,
-                                                  staged_only=staged_only)
+         self.untracked) = self.worktree_state(head=head,
+                                               staged_only=staged_only)
         # NOTE: the model's unstaged list holds an aggregate of the
         # the modified, unmerged, and untracked file lists.
         self.set_unstaged(self.modified + self.unmerged + self.untracked)
@@ -558,21 +537,21 @@ class MainModel(ObservableModel):
                                with_stderr=True,
                                with_status=True)
 
-    def get_revision_sha1(self, idx):
-        return self.get_revisions()[idx]
+    def revision_sha1(self, idx):
+        return self.revisions[idx]
 
     def apply_font_size(self, param, default):
-        old_font = self.get_param(param)
+        old_font = getattr(self, param)
         if not old_font:
             old_font = default
-        size = self.get_param(param+'_size')
+        size = getattr(self, param+'_size')
         props = old_font.split(',')
         props[1] = str(size)
         new_font = ','.join(props)
 
         self.set_param(param, new_font)
 
-    def get_commit_diff(self, sha1):
+    def commit_diff(self, sha1):
         commit = self.git.show(sha1)
         first_newline = commit.index('\n')
         if commit[first_newline+1:].startswith('Merge:'):
@@ -612,7 +591,7 @@ class MainModel(ObservableModel):
             if os.path.isdir(encfilename):
                 diff = '\n'.join(os.listdir(filename))
 
-            elif filename in self.get_unmerged():
+            elif filename in self.unmerged:
                 diff = ('@@@ Unmerged @@@\n'
                         '- %s is unmerged.\n+ ' % filename +
                         'Right-click the file to launch "git mergetool".\n'
@@ -620,7 +599,7 @@ class MainModel(ObservableModel):
                 diff += self.diff_helper(filename=filename,
                                         cached=False,
                                         patch_with_raw=False)
-            elif filename in self.get_modified():
+            elif filename in self.modified:
                 diff = self.diff_helper(filename=filename,
                                         cached=False)
             else:
@@ -644,7 +623,7 @@ class MainModel(ObservableModel):
         status, output = self.git.add(v=True,
                                       with_stderr=True,
                                       with_status=True,
-                                      *self.get_modified())
+                                      *self.modified)
         self.update_status()
         return (status, output)
 
@@ -652,7 +631,7 @@ class MainModel(ObservableModel):
         status, output = self.git.add(v=True,
                                       with_stderr=True,
                                       with_status=True,
-                                      *self.get_untracked())
+                                      *self.untracked)
         self.update_status()
         return (status, output)
 
@@ -873,7 +852,7 @@ class MainModel(ObservableModel):
             return result
 
     def git_repo_path(self, *subpaths):
-        paths = [ self.git.get_git_dir() ]
+        paths = [self.git.git_dir()]
         paths.extend(subpaths)
         return os.path.realpath(os.path.join(*paths))
 
@@ -931,7 +910,7 @@ class MainModel(ObservableModel):
 
         return (staged, [], [], [])
 
-    def get_workdir_state(self, head='HEAD', staged_only=False):
+    def worktree_state(self, head='HEAD', staged_only=False):
         """Returns a tuple of staged, unstaged, untracked, and unmerged files
         """
         self.git.update_index(refresh=True)
@@ -1037,7 +1016,7 @@ class MainModel(ObservableModel):
         output = self.git.reset('--', with_stderr=True, *args)
         # handle git init: we have to use 'git rm --cached'
         # detect this condition by checking if the file is still staged
-        state = self.get_workdir_state()
+        state = self.worktree_state()
         staged = state[0]
         rmargs = [a for a in args if a in staged]
         if not rmargs:
@@ -1048,12 +1027,12 @@ class MainModel(ObservableModel):
     def remote_url(self, name):
         return self.git.config('remote.%s.url' % name, get=True)
 
-    def get_remote_args(self, remote,
-                        local_branch='',
-                        remote_branch='',
-                        ffwd=True,
-                        tags=False,
-                        rebase=False):
+    def remote_args(self, remote,
+                    local_branch='',
+                    remote_branch='',
+                    ffwd=True,
+                    tags=False,
+                    rebase=False):
         if ffwd:
             branch_arg = '%s:%s' % ( remote_branch, local_branch )
         else:
@@ -1078,7 +1057,7 @@ class MainModel(ObservableModel):
         """Generates a closure that calls git fetch, push or pull
         """
         def remote_helper(remote, **kwargs):
-            args, kwargs = self.get_remote_args(remote, **kwargs)
+            args, kwargs = self.remote_args(remote, **kwargs)
             return gitaction(*args, **kwargs)
         return remote_helper
 
@@ -1205,7 +1184,7 @@ class MainModel(ObservableModel):
         return version + ' - ' + descr
 
     def update_revision_lists(self, filename=None, show_versions=False):
-        num_results = self.get_num_results()
+        num_results = self.num_results
         if filename:
             rev_list = self.git.log('--', filename,
                                     max_count=num_results,
@@ -1231,12 +1210,12 @@ class MainModel(ObservableModel):
 
         return commits
 
-    def get_changed_files(self, start, end):
+    def changed_files(self, start, end):
         zfiles_str = self.git.diff('%s..%s' % (start, end),
                                    name_only=True, z=True).strip('\0')
         return [core.decode(enc) for enc in zfiles_str.split('\0') if enc]
 
-    def get_renamed_files(self, start, end):
+    def renamed_files(self, start, end):
         difflines = self.git.diff('%s..%s' % (start, end),
                                   no_color=True,
                                   M=True).splitlines()

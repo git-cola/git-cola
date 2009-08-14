@@ -66,30 +66,30 @@ class OptionsController(QObserver):
     def refresh_view(self):
         """Apply the configured font and update widgets."""
         # The main application font
-        font = self.model.get_cola_config('fontui')
+        font = self.model.cola_config('fontui')
         if font:
             fontui = QtGui.QFont()
             fontui.fromString(font)
             self.view.global_cola_fontui.setCurrentFont(fontui)
         # The fixed-width console font
-        font = self.model.get_cola_config('fontdiff')
+        font = self.model.cola_config('fontdiff')
         if font:
             fontdiff = QtGui.QFont()
             fontdiff.fromString(font)
             self.view.global_cola_fontdiff.setCurrentFont(fontdiff)
         # Label the group box around the local repository
         self.view.local_groupbox.setTitle(unicode(self.tr('%s Repository'))
-                                          % self.model.get_project())
+                                          % self.model.project)
         QObserver.refresh_view(self)
 
     # save button
     def save_settings(self):
         """Save updated config variables back to git."""
         params_to_save = []
-        params = self.model.get_config_params()
+        params = self.model.config_params()
         for param in params:
-            value = self.model.get_param(param)
-            backup = self._backup_model.get_param(param)
+            value = self.model.param(param)
+            backup = self._backup_model.param(param)
             if value != backup:
                 params_to_save.append(param)
         for param in params_to_save:
@@ -101,7 +101,7 @@ class OptionsController(QObserver):
     # cancel button -> undo changes
     def restore_settings(self):
         """Reverts any changes done in the Options dialog."""
-        params = self._backup_model.get_config_params()
+        params = self._backup_model.config_params()
         self.model.copy_params(self._backup_model, params)
         self.tell_parent_model()
 
@@ -115,7 +115,7 @@ class OptionsController(QObserver):
                  'global_cola_tabwidth',
                  )
         for param in params:
-            self._orig_model.set_param(param, self.model.get_param(param))
+            self._orig_model.set_param(param, self.model.param(param))
 
     def update_size(self, *rest):
         """Updates fonts whenever font sizes change"""
