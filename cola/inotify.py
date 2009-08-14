@@ -55,7 +55,7 @@ class GitNotifier(QtCore.QThread):
         ## pyinotify timeout
         self._timeout = timeout
         ## Path to monitor
-        self._path = git.get_work_tree()
+        self._path = git.worktree()
         ## Signals thread termination
         self._abort = False
         ## Directories to watching

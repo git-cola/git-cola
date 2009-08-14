@@ -87,7 +87,8 @@ def ident_file_type(filename):
     # Fallback for modified files of an unknown type
     return 'generic.png'
 
-def get_file_icon(filename):
+
+def file_icon(filename):
     """
     Returns the full path to an icon file corresponding to
     filename"s contents.
@@ -250,11 +251,11 @@ class DiffParser(object):
         else:
             return False
 
-    def get_diffs(self):
+    def diffs(self):
         """Returns the list of diffs."""
         return self.__diffs
 
-    def get_diff_subset(self, diff, start, end):
+    def diff_subset(self, diff, start, end):
         """Processes the diffs and returns a selected subset from that diff.
         """
         adds = 0
@@ -313,33 +314,33 @@ class DiffParser(object):
 
         return (self.header + '\n' + '\n'.join(newdiff) + '\n')
 
-    def get_spans(self):
+    def spans(self):
         """Returns the line spans of each hunk."""
         return self.__diff_spans
 
-    def get_offsets(self):
+    def offsets(self):
         """Returns the offsets."""
         return self.__diff_offsets
 
     def set_diff_to_offset(self, offset):
         """Sets the diff selection to be the hunk at a particular offset."""
         self.offset = offset
-        self.diffs, self.selected = self.get_diff_for_offset(offset)
+        self.diffs, self.selected = self.diff_for_offset(offset)
 
     def set_diffs_to_range(self, start, end):
         """Sets the diff selection to be a range of hunks."""
         self.start = start
         self.end = end
-        self.diffs, self.selected = self.get_diffs_for_range(start,end)
+        self.diffs, self.selected = self.diffs_for_range(start,end)
 
-    def get_diff_for_offset(self, offset):
+    def diff_for_offset(self, offset):
         """Returns the hunks for a particular offset."""
         for idx, diff_offset in enumerate(self.__diff_offsets):
             if offset < diff_offset:
                 return (['\n'.join(self.__diffs[idx])], [idx])
         return ([],[])
 
-    def get_diffs_for_range(self, start, end):
+    def diffs_for_range(self, start, end):
         """Returns the hunks for a selected range."""
         diffs = []
         indices = []
@@ -414,9 +415,9 @@ class DiffParser(object):
         # Process diff selection only
         if selected:
             for idx in self.selected:
-                contents = self.get_diff_subset(idx, start, end)
+                contents = self.diff_subset(idx, start, end)
                 if contents:
-                    tmpfile = self.model.get_tmp_filename()
+                    tmpfile = self.model.tmp_filename()
                     write(tmpfile, contents)
                     if apply_to_worktree:
                         self.model.apply_diff_to_worktree(tmpfile)
@@ -426,7 +427,7 @@ class DiffParser(object):
         # Process a complete hunk
         else:
             for idx, diff in enumerate(self.diffs):
-                tmpfile = self.model.get_tmp_filename()
+                tmpfile = self.model.tmp_filename()
                 if self.write_diff(tmpfile,idx):
                     if apply_to_worktree:
                         self.model.apply_diff_to_worktree(tmpfile)

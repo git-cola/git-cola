@@ -134,7 +134,7 @@ def main():
         valid = model.use_worktree(gitdir)
 
     # Finally, go to the root of the git repo
-    os.chdir(model.git.get_work_tree())
+    os.chdir(model.git.worktree())
 
     # Show the GUI and start the event loop
     ctl = MainController(model, view)

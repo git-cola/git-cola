@@ -12,7 +12,7 @@ def choose_from_combo(title, parent, items):
     """Quickly choose an item from a list using a combo box"""
     return ComboView(parent,
                      title=title,
-                     items=items).get_selected()
+                     items=items).selected()
 
 
 def choose_from_list(title, parent, items=[], dblclick=None):
@@ -20,4 +20,4 @@ def choose_from_list(title, parent, items=[], dblclick=None):
     return ListView(parent,
                     title=title,
                     items=items,
-                    dblclick=dblclick).get_selected()
+                    dblclick=dblclick).selected()
