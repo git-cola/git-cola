@@ -7,3 +7,4 @@ Views
     drawer
     about
     misc
+    repo

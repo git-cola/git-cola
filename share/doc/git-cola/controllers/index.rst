@@ -6,6 +6,7 @@ Controllers
     bookmarks
     compare
     log
+    classic
     merge
     options
     remote
