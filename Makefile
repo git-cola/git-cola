@@ -52,8 +52,7 @@ uninstall:
 		$(DESTDIR)$(prefix)/share/doc/git-cola
 
 test: all
-	@env PYTHONPATH=$(CURDIR):$(PYTHONPATH) \
-		nosetests --verbose --with-doctest --with-id
+	$(MAKE) -C test all
 
 coverage:
 	@env PYTHONPATH=$(CURDIR):$(PYTHONPATH) \
