@@ -107,7 +107,7 @@ install: install-html install-man
 
 install-html: html
 	test  -d $(htmldir) || mkdir -p $(htmldir)
-	$(RSYNC) -ar --progress _build/html/ $(htmldir)/
+	$(RSYNC) -ar --delete _build/html/ $(htmldir)/
 	$(MAKE) -f Makefile.asciidoc install-html
 
 install-man:
