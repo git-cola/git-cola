@@ -36,7 +36,7 @@ help:
 clean:
 	-rm -rf _build/*
 
-conf.py: conf.py.in
+conf.py:
 	cp conf.py.in conf.py
 	perl -p -i -e s,{version},"$(COLA_VERSION)", conf.py
 	perl -p -i -e s,{release},"$(COLA_RELEASE)", conf.py
@@ -112,3 +112,5 @@ install-html: html
 
 install-man:
 	$(MAKE) -f Makefile.asciidoc install
+
+.PHONY: conf.py
