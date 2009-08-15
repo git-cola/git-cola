@@ -5,6 +5,7 @@ from cola import qtutils
 from cola.views import log
 from cola.qtutils import tr
 from cola.views.standard import create_standard_widget
+from cola.controllers import classic
 
 MainWindowBase = create_standard_widget(QtGui.QMainWindow)
 class MainWindow(MainWindowBase):
@@ -136,6 +137,10 @@ class MainWindow(MainWindowBase):
         self.logdockwidget = self.create_dock('Command Output')
         self.logdockwidget.setWidget(qtutils.logger())
 
+        # "Cola Classic" widget
+        self.classicdockwidget = self.create_dock('Cola Classic')
+        self.classicdockwidget.setWidget(classic.widget())
+
         # "Diff Viewer" widget
         self.diffdockwidget = self.create_dock('Diff Viewer')
         self.diffdockwidgetcontents = QtGui.QWidget()
@@ -217,7 +222,7 @@ class MainWindow(MainWindowBase):
         self.menu_show.addAction(self.menu_browse_commits)
         self.menu_show.addAction(self.menu_show_index)
         self.menu_show.addAction(self.menu_show_diffstat)
-        
+
         self.menu_prepare.addAction(self.menu_stage_modified)
         self.menu_prepare.addAction(self.menu_stage_untracked)
         self.menu_prepare.addAction(self.menu_stage_selected)
@@ -300,12 +305,14 @@ class MainWindow(MainWindowBase):
         self.diff_menu.addAction(self.menu_branch_compare)
         self.diff_menu.addAction(self.menu_commit_compare)
         self.diff_menu.addAction(self.menu_commit_compare_file)
-        self.menu_tools.addAction(self.menu_tools_classic)
+
+        self.menu_tools.addAction(self.classicdockwidget.toggleViewAction())
         self.menu_tools.addAction(self.diffdockwidget.toggleViewAction())
         self.menu_tools.addAction(self.actiondockwidget.toggleViewAction())
         self.menu_tools.addAction(self.commitdockwidget.toggleViewAction())
         self.menu_tools.addAction(self.statusdockwidget.toggleViewAction())
         self.menu_tools.addAction(self.logdockwidget.toggleViewAction())
+
         self.menubar.addAction(self.file_menu.menuAction())
         self.menubar.addAction(self.edit_menu.menuAction())
         self.menubar.addAction(self.search_menu.menuAction())
@@ -320,11 +327,16 @@ class MainWindow(MainWindowBase):
         bottom = QtCore.Qt.DockWidgetArea(8)
 
         self.addDockWidget(top, self.commitdockwidget)
-        self.addDockWidget(top, self.statusdockwidget)
+        self.addDockWidget(top, self.classicdockwidget)
+        self.tabifyDockWidget(self.classicdockwidget, self.statusdockwidget)
+
         self.addDockWidget(bottom, self.actiondockwidget)
         self.addDockWidget(bottom, self.logdockwidget)
         self.tabifyDockWidget(self.logdockwidget, self.diffdockwidget)
-    
+
+        # Hide the classic dock by default
+        self.classicdockwidget.toggleViewAction().trigger()
+
         # Translate
         self.status_tree.setAllColumnsShowFocus(True)
         self.status_tree.setSortingEnabled(False)
