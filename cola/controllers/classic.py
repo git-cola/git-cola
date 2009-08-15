@@ -13,15 +13,22 @@ from cola.models.classic import ClassicModel
 from cola.models.gitrepo import GitRepoModel
 from cola.views.repo import RepoTreeView
 
-def cola_classic():
-    """Launch a new cola classic session."""
-    view = RepoTreeView()
-    view.raise_()
 
+def widget():
+    """Return a widget for immediate use."""
+    view = RepoTreeView()
     model = ClassicModel()
     view.setModel(GitRepoModel(view, model))
     controller = ClassicController(model, view)
+    return view
+
+
+def cola_classic():
+    """Launch a new cola classic session."""
+    view = widget()
+    view.raise_()
     view.show()
+
 
 class ClassicController(QtCore.QObject):
     def __init__(self, model, view=None):
