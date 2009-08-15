@@ -25,7 +25,6 @@ try:
     from cola.gui.compare import Ui_compare
     from cola.gui.createbranch import Ui_createbranch
     from cola.gui.items import Ui_items
-    from cola.gui.merge import Ui_merge
     from cola.gui.options import Ui_options
     from cola.gui.remote import Ui_remote
     from cola.gui.search import Ui_search
@@ -107,11 +106,6 @@ class SearchView(SearchViewBase):
         self.syntax = DiffSyntaxHighlighter(self.commit_text.document(),
                                             whitespace=False)
 
-MergeViewBase = create_standard_view(Ui_merge, QDialog)
-class MergeView(MergeViewBase):
-    def __init__(self, parent=None):
-        MergeViewBase.__init__(self, parent)
-        self.revision.setFocus()
 
 RemoteViewBase = create_standard_view(Ui_remote, QDialog)
 class RemoteView(RemoteViewBase):

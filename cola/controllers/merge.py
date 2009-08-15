@@ -6,7 +6,7 @@ from PyQt4.Qt import Qt
 from cola import utils
 from cola import qtutils
 from cola.qobserver import QObserver
-from cola.views import MergeView
+from cola.views.merge import MergeView
 
 def abort_merge(model, parent):
     """Prompts before aborting a merge in progress
@@ -31,19 +31,15 @@ class MergeController(QObserver):
     def __init__(self, model, view):
         QObserver.__init__(self, model, view)
         # Set the current branch label
-        branch = self.model.currentbranch
-        title = unicode(self.tr('Merge Into %s')) %  branch
-        self.view.label.setText(title)
+        self.view.set_branch(self.model.currentbranch)
         self.add_observables('revision', 'revisions')
         self.add_callbacks(radio_local = self.radio_callback,
                            radio_remote = self.radio_callback,
                            radio_tag = self.radio_callback,
                            revisions = self.revision_selected,
                            button_viz = self.viz_revision,
-                           button_merge = self.merge_revision,
-                           checkbox_squash = self.squash_update)
+                           button_merge = self.merge_revision)
         self.model.set_revisions(self.model.local_branches)
-        self.view.radio_local.setChecked(True)
 
     def revisions(self):
         """Retrieve candidate items to merge"""
@@ -93,20 +89,3 @@ class MergeController(QObserver):
         revision = self.model.revision
         browser = self.model.history_browser()
         utils.fork([browser, revision])
-
-    def squash_update(self):
-        """Enables/disables widgets when the 'squash' radio is clicked"""
-        # TODO move this code into the view
-        if self.view.checkbox_squash.isChecked():
-            self.old_commit_checkbox_state =\
-                self.view.checkbox_commit.checkState()
-            self.view.checkbox_commit.setCheckState(Qt.Unchecked)
-            self.view.checkbox_commit.setDisabled(True)
-        else:
-            self.view.checkbox_commit.setDisabled(False)
-            try:
-                oldstate = self.old_commit_checkbox_state
-                self.view.checkbox_commit.setCheckState(oldstate)
-            except AttributeError:
-                # no problem
-                pass
