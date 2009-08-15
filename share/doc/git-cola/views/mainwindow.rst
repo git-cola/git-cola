@@ -1,5 +1,5 @@
-:mod:`cola.controllers.log` -- Log actions
+:mod:`cola.views.mainwindow` -- Main window base class
 ---------------------------------------------------------------
-.. automodule:: cola.controllers.log
+.. automodule:: cola.views.mainwindow
     :members:
     :undoc-members:

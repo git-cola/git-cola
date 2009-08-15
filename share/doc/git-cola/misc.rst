@@ -8,4 +8,5 @@ Miscellaneous Utility Modules
     resources
     settings
     utils
+    qtutils
     version
