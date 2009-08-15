@@ -21,10 +21,7 @@ def abort_merge(model, parent):
 
 def local_merge(model, parent):
     """Provides a dialog for merging branches"""
-    # TODO: subclass model
     model = model.clone()
-    model.revision = ''
-    model.revision_list = []
     view = MergeView(parent)
     ctl = MergeController(model, view)
     view.show()
@@ -37,18 +34,18 @@ class MergeController(QObserver):
         branch = self.model.currentbranch
         title = unicode(self.tr('Merge Into %s')) %  branch
         self.view.label.setText(title)
-        self.add_observables('revision', 'revision_list')
+        self.add_observables('revision', 'revisions')
         self.add_callbacks(radio_local = self.radio_callback,
                            radio_remote = self.radio_callback,
                            radio_tag = self.radio_callback,
-                           revision_list = self.revision_selected,
+                           revisions = self.revision_selected,
                            button_viz = self.viz_revision,
                            button_merge = self.merge_revision,
                            checkbox_squash = self.squash_update)
-        self.model.set_revision_list(self.model.local_branches)
+        self.model.set_revisions(self.model.local_branches)
         self.view.radio_local.setChecked(True)
 
-    def revision_list(self):
+    def revisions(self):
         """Retrieve candidate items to merge"""
         if self.view.radio_local.isChecked():
             return self.model.local_branches
@@ -60,8 +57,8 @@ class MergeController(QObserver):
 
     def revision_selected(self, *args):
         """Update the revision field when a list item is selected"""
-        revlist = self.revision_list()
-        widget = self.view.revision_list
+        revlist = self.revisions()
+        widget = self.view.revisions
         row, selected = qtutils.selected_row(widget)
         if selected and row < len(revlist):
             revision = revlist[row]
@@ -69,8 +66,7 @@ class MergeController(QObserver):
 
     def radio_callback(self):
         """Update the revision list whenever a radio button is clicked"""
-        revlist = self.revision_list()
-        self.model.set_revision_list(revlist)
+        self.model.set_revisions(self.revisions())
 
     def merge_revision(self):
         """Merge the selected revision/branch"""

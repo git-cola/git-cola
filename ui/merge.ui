@@ -76,7 +76,7 @@
        </widget>
       </item>
       <item row="2" column="0" colspan="3" >
-       <widget class="QListWidget" name="revision_list" >
+       <widget class="QListWidget" name="revisions" >
         <property name="alternatingRowColors" >
          <bool>true</bool>
         </property>
