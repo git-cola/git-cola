@@ -37,29 +37,29 @@ class ClassicController(QtCore.QObject):
         self.view = view
         self.updated = set()
         self.connect(view, SIGNAL('history(QStringList)'),
-                     self._view_history)
+                     self.view_history)
         self.connect(view, SIGNAL('expanded(QModelIndex)'),
-                     self._query_model)
+                     self.query_model)
         self.connect(view, SIGNAL('editor(QStringList)'),
-                     self._editor)
+                     self.editor)
         self.connect(view, SIGNAL('stage(QStringList)'),
-                     self._stage)
+                     self.stage)
         self.connect(view, SIGNAL('unstage(QStringList)'),
-                     self._unstage)
+                     self.unstage)
         self.connect(view, SIGNAL('difftool(QStringList)'),
-                     self._difftool)
+                     self.difftool)
         self.connect(view, SIGNAL('difftool_predecessor(QStringList)'),
-                     self._difftool_predecessor)
+                     self.difftool_predecessor)
         self.connect(view, SIGNAL('revert(QStringList)'),
-                     self._revert)
+                     self.revert)
 
-    def _view_history(self, entries):
+    def view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
         entries = map(unicode, entries)
         cmd = [self.model.history_browser(), '--all', '--']
         cola.utils.fork(cmd + entries)
 
-    def _query_model(self, model_index):
+    def query_model(self, model_index):
         """Update information about a directory as it is expanded."""
         item = self.view.item_from_index(model_index)
         path = item.path
@@ -70,28 +70,28 @@ class ClassicController(QtCore.QObject):
         for row in xrange(item.rowCount()):
             item.child(row, 0).entry.update()
 
-    def _editor(self, qstrings):
+    def editor(self, qstrings):
         """Launch an editor on the given QStrings."""
         cmd = [self.model.editor()]
         cmd.extend(map(unicode, qstrings))
         cola.utils.fork(cmd)
 
-    def _stage(self, qstrings):
+    def stage(self, qstrings):
         """Stage files for commit."""
         paths = map(unicode, qstrings)
         self.model.stage_paths(paths)
 
-    def _unstage(self, qstrings):
+    def unstage(self, qstrings):
         """Unstage files for commit."""
         paths = map(unicode, qstrings)
         self.model.unstage_paths(paths)
 
-    def _difftool(self, qstrings):
+    def difftool(self, qstrings):
         """Launch difftool on a path."""
         paths = map(unicode, qstrings)
         cola.difftool.launch(['HEAD', '--'] + paths)
 
-    def _difftool_predecessor(self, qstrings):
+    def difftool_predecessor(self, qstrings):
         """Prompt for an older commit and launch difftool against it."""
         paths = map(unicode, qstrings)
         args = ['--'] + paths
@@ -104,7 +104,7 @@ class ClassicController(QtCore.QObject):
         commit = commits[0]
         cola.difftool.launch([commit, '--'] + paths)
 
-    def _revert(self, qstrings):
+    def revert(self, qstrings):
         """Revert paths to HEAD."""
         paths = map(unicode, qstrings)
         self.model.revert_paths(paths)

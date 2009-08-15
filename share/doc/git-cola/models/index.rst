@@ -4,3 +4,5 @@ Models
 
     main
     observable
+    classic
+    gitrepo

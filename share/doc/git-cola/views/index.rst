@@ -6,3 +6,4 @@ Views
     standard
     about
     misc
+    repo
