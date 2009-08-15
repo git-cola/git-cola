@@ -80,10 +80,6 @@ class MainController(QObserver):
         """Initializes the MainController's internal data."""
         QObserver.__init__(self, model, view)
 
-        # TODO: subclass model
-        model.project = os.path.basename(model.git.worktree())
-        model.git_version = model.git.version()
-
         self.reset_mode()
 
         # Unstaged changes context menu

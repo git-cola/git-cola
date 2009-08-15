@@ -121,11 +121,14 @@ class MainModel(ObservableModel):
         # Used in various places
         self.currentbranch = ''
         self.directory = ''
+        self.git_version = self.git.version()
+        self.project = ''
         self.remotes = []
         self.remotename = ''
         self.local_branch = ''
         self.remote_branch = ''
         self.search_text = ''
+
 
         #####################################################
         # Used primarily by the main UI
@@ -185,6 +188,7 @@ class MainModel(ObservableModel):
         is_valid = self.git.is_valid()
         if is_valid:
             self._init_config_data()
+            self.project = os.path.basename(self.git.worktree())
         return is_valid
 
     def _init_config_data(self):
