@@ -3,6 +3,7 @@ Models
 .. toctree::
 
     main
+    gitrepo
     observable
     classic
-    gitrepo
+    compare

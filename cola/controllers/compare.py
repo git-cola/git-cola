@@ -6,6 +6,8 @@ from cola import utils
 from cola import qtutils
 from cola import difftool
 from cola.qobserver import QObserver
+from cola.models.compare import CompareModel
+from cola.models.compare import BranchCompareModel
 from cola.views import CompareView
 from cola.views import BranchCompareView
 from cola.controllers.repobrowser import select_file_from_repo
@@ -20,36 +22,14 @@ def compare_file(model, parent):
 
 def compare(model, parent, filename=None):
     """Launches a dialog for comparing a pair of commits"""
-    # TODO! subclass model
-    model = model.clone()
-    model.descriptions_start = []
-    model.descriptions_end = []
-    model.revisions_start = []
-    model.revisions_end = []
-    model.revision_start = ''
-    model.revision_end = ''
-    model.compare_files = []
-    model.num_results = 100
-    model.show_versions=False
+    model = CompareModel()
     view = CompareView(parent)
     ctl = CompareController(model, view, filename)
     view.show()
 
 def branch_compare(model, parent):
     """Launches a dialog for comparing a pair of branches"""
-    model = model.clone()
-    model.left_combo = ['Local', 'Remote']
-    model.right_combo = ['Local', 'Remote']
-    model.left_combo_index = 0
-    model.right_combo_index = 1
-    model.left_list = []
-    model.right_list = []
-    model.left_list_index = -1
-    model.right_list_index = -1
-    model.left_list_selected = False
-    model.right_list_selected = False
-    model.diff_files = []
-
+    model = BranchCompareModel()
     view = BranchCompareView(parent)
     ctl = BranchCompareController(model, view)
     view.show()
