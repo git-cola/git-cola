@@ -39,7 +39,7 @@ def create_standard_widget(qtclass):
                 center_x = left + width/2
 
                 x = center_x - self.width()/2
-                y = self.parent_view.y()
+                y = self.parent_view.y() + 22 # room for parent's titlebar
 
                 self.move(x, y)
             # Call the base Qt show()
