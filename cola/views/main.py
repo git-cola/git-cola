@@ -316,7 +316,7 @@ class MainView(MainWindow):
         # Restore the dockwidget, etc. window state
         if 'windowstate' in state:
             windowstate = state['windowstate']
-            self.restoreState(QtCore.QByteArray.fromBase64(windowstate),
+            self.restoreState(QtCore.QByteArray.fromBase64(str(windowstate)),
                               self._widget_version)
 
     def export_state(self):
