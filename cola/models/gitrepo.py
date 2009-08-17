@@ -238,6 +238,8 @@ class GitRepoInfoTask(QtCore.QRunnable):
         modified = utils.add_parents(set(self.app_model.modified))
         staged = utils.add_parents(set(self.app_model.staged))
         untracked = utils.add_parents(set(self.app_model.untracked))
+        upstream_changed = utils.add_parents(
+                set(self.app_model.upstream_changed))
 
         if self.path in unmerged:
             return qtutils.tr('Unmerged')
@@ -249,6 +251,8 @@ class GitRepoInfoTask(QtCore.QRunnable):
             return qtutils.tr('Staged')
         if self.path in untracked:
             return qtutils.tr('Untracked')
+        if self.path in upstream_changed:
+            return qtutils.tr('Changed Upstream')
         return '-'
 
     def run(self):

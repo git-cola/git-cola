@@ -120,6 +120,7 @@ class MainModel(ObservableModel):
         #####################################################
         # Used in various places
         self.currentbranch = ''
+        self.trackedbranch = ''
         self.directory = ''
         self.git_version = self.git.version()
         self.project = ''
@@ -138,6 +139,7 @@ class MainModel(ObservableModel):
         self.unstaged = []
         self.untracked = []
         self.unmerged = []
+        self.upstream_changed = []
 
         #####################################################
         # Used by the create branch dialog
@@ -515,22 +517,24 @@ class MainModel(ObservableModel):
         notify_enabled = self.notification_enabled
         self.notification_enabled = False
 
-        (self.staged,
-         self.modified,
-         self.unmerged,
-         self.untracked) = self.worktree_state(head=head,
-                                               staged_only=staged_only)
         # NOTE: the model's unstaged list holds an aggregate of the
         # the modified, unmerged, and untracked file lists.
         self.set_unstaged(self.modified + self.unmerged + self.untracked)
         self.set_currentbranch(self.current_branch())
         self.set_remotes(self.git.remote().splitlines())
         self.set_remote_branches(self.branch_list(remote=True))
+        self.set_trackedbranch(self.tracked_branch())
         self.set_local_branches(self.branch_list(remote=False))
         self.set_tags(self.git.tag().splitlines())
         self.set_revision('')
         self.set_local_branch('')
         self.set_remote_branch('')
+        (self.staged,
+         self.modified,
+         self.unmerged,
+         self.untracked,
+         self.upstream_changed) = self.worktree_state(head=head,
+                                               staged_only=staged_only)
         # Re-enable notifications and emit changes
         self.notification_enabled = notify_enabled
         self.notify_observers('staged','unstaged')
@@ -915,7 +919,11 @@ class MainModel(ObservableModel):
         return (staged, [], [], [])
 
     def worktree_state(self, head='HEAD', staged_only=False):
-        """Returns a tuple of staged, unstaged, untracked, and unmerged files
+        """Return a tuple of files in various states of being
+
+        Can be staged, unstaged, untracked, unmerged, or changed
+        upstream.
+
         """
         self.git.update_index(refresh=True)
         if staged_only:
@@ -923,8 +931,10 @@ class MainModel(ObservableModel):
 
         staged_set = set()
         modified_set = set()
+        upstream_changed_set = set()
 
-        (staged, modified, unmerged, untracked) = ([], [], [], [])
+        (staged, modified, unmerged, untracked, upstream_changed) = (
+                [], [], [], [], [])
         try:
 
             output = self.git.diff_index(head,
@@ -998,13 +1008,38 @@ class MainModel(ObservableModel):
             if name:
                 untracked.append(core.decode(name))
 
+        # Look for upstream modified files if this is a tracking branch
+        if self.trackedbranch:
+            try:
+                output = self.git.diff_index(self.trackedbranch,
+                                             M=True, with_stderr=True)
+                if output.startswith('fatal:'):
+                    raise GitInitError('git init')
+                for line in output.splitlines():
+                    info, name = line.split('\t', 1)
+                    status = info.split()[-1]
+                    # TODO
+                    # For now we'll just call anything here 'changed
+                    # upstream'.  Maybe one day we'll elaborate more on
+                    # what the change is.
+                    if status == 'M' or status == 'D':
+                        name = eval_path(name)
+                        if name not in upstream_changed_set:
+                            upstream_changed.append(name)
+                            upstream_changed_set.add(name)
+
+            except GitInitError:
+                # handle git init
+                pass
+
         # Keep stuff sorted
         staged.sort()
         modified.sort()
         unmerged.sort()
         untracked.sort()
+        upstream_changed.sort()
 
-        return (staged, modified, unmerged, untracked)
+        return (staged, modified, unmerged, untracked, upstream_changed)
 
     def reset_helper(self, args):
         """Removes files from the index
@@ -1134,6 +1169,19 @@ class MainModel(ObservableModel):
         elif headref.startswith('fatal:'):
             return ''
         return headref
+
+    def tracked_branch(self):
+        """The name of the branch that current branch is tracking"""
+        remote = self.git.config('branch.'+self.currentbranch+'.remote',
+                                 get=True, with_stderr=True)
+        if not remote:
+            return ''
+        headref = self.git.config('branch.'+self.currentbranch+'.merge',
+                                  get=True, with_stderr=True)
+        if headref.startswith('refs/heads/'):
+            tracked_branch = headref[11:]
+            return remote + '/' + tracked_branch
+        return ''
 
     def create_branch(self, name, base, track=False):
         """Create a branch named 'name' from revision 'base'
