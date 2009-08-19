@@ -85,7 +85,8 @@ class MainController(QObserver):
         model.project = os.path.basename(model.git.get_work_tree())
         model.git_version = model.git.version()
 
-        self.reset_mode()
+        # Initialize the mode
+        self.mode = self.MODE_NONE
 
         # Parent-less log window
         qtutils.LOGGER = logger(model, view)
