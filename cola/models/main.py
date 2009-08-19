@@ -618,8 +618,7 @@ class MainModel(ObservableModel):
                         'Right-click the file to launch "git mergetool".\n'
                         '@@@ Unmerged @@@\n\n')
                 diff += self.diff_helper(filename=filename,
-                                        cached=False,
-                                        patch_with_raw=False)
+                                        cached=False)
             elif filename in self.get_modified():
                 diff = self.diff_helper(filename=filename,
                                         cached=False)
@@ -806,8 +805,7 @@ class MainModel(ObservableModel):
                     cached=True,
                     with_diff_header=False,
                     suppress_header=True,
-                    reverse=False,
-                    patch_with_raw=True):
+                    reverse=False):
         "Invokes git diff on a filepath."
         if commit:
             ref, endref = commit+'^', commit
@@ -837,7 +835,6 @@ class MainModel(ObservableModel):
                                    M=True,
                                    no_color=True,
                                    cached=cached,
-                                   patch_with_raw=patch_with_raw,
                                    unified=self.diff_context,
                                    with_raw_output=True,
                                    with_stderr=True,
