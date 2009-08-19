@@ -23,7 +23,6 @@ class MainView(ViewBase):
 
     def __init__(self, parent=None):
         ViewBase.__init__(self, parent)
-        self.set_display = self.display_text.setText
         self.amend_is_checked = self.amend_radio.isChecked
         self.action_undo = self.commitmsg.undo
         self.action_redo = self.commitmsg.redo
@@ -90,6 +89,11 @@ class MainView(ViewBase):
             self.status_tree.setItemHidden(parent, False)
         else:
             self.status_tree.setItemHidden(parent, True)
+
+    def set_display(self, text):
+        """Set the diff text display."""
+        if text is not None:
+            self.display_text.setText(text)
 
     def expand_status(self):
         for idx in xrange(0, self.IDX_END):
