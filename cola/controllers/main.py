@@ -373,7 +373,6 @@ class MainController(QObserver):
     def action_staged(self, widget):
         """Called when the 'staged' list changes."""
         qtutils.update_file_icons(widget, self.model.staged, staged=True)
-        self.view.show_editor()
 
     def action_unstaged(self, widget):
         """Called when the 'unstaged' list changes."""

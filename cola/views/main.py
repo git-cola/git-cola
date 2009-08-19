@@ -245,9 +245,6 @@ class MainView(MainWindow):
         self.alt_button.hide()
         self.reset_display()
 
-    def show_editor(self):
-        self.tabwidget.setCurrentIndex(1)
-
     def action_cut(self):
         self.action_copy()
         self.action_delete()
