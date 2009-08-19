@@ -517,6 +517,12 @@ class MainModel(ObservableModel):
         notify_enabled = self.notification_enabled
         self.notification_enabled = False
 
+        (self.staged,
+         self.modified,
+         self.unmerged,
+         self.untracked,
+         self.upstream_changed) = self.worktree_state(head=head,
+                                                      staged_only=staged_only)
         # NOTE: the model's unstaged list holds an aggregate of the
         # the modified, unmerged, and untracked file lists.
         self.set_unstaged(self.modified + self.unmerged + self.untracked)
@@ -529,12 +535,6 @@ class MainModel(ObservableModel):
         self.set_revision('')
         self.set_local_branch('')
         self.set_remote_branch('')
-        (self.staged,
-         self.modified,
-         self.unmerged,
-         self.untracked,
-         self.upstream_changed) = self.worktree_state(head=head,
-                                               staged_only=staged_only)
         # Re-enable notifications and emit changes
         self.notification_enabled = notify_enabled
         self.notify_observers('staged','unstaged')
