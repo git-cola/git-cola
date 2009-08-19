@@ -605,8 +605,7 @@ class MainModel(ObservableModel):
                         'Right-click the file to launch "git mergetool".\n'
                         '@@@ Unmerged @@@\n\n')
                 diff += self.diff_helper(filename=filename,
-                                        cached=False,
-                                        patch_with_raw=False)
+                                        cached=False)
             elif filename in self.modified:
                 diff = self.diff_helper(filename=filename,
                                         cached=False)
@@ -793,8 +792,7 @@ class MainModel(ObservableModel):
                     cached=True,
                     with_diff_header=False,
                     suppress_header=True,
-                    reverse=False,
-                    patch_with_raw=True):
+                    reverse=False):
         "Invokes git diff on a filepath."
         if commit:
             ref, endref = commit+'^', commit
@@ -824,7 +822,6 @@ class MainModel(ObservableModel):
                                    M=True,
                                    no_color=True,
                                    cached=cached,
-                                   patch_with_raw=patch_with_raw,
                                    unified=self.diff_context,
                                    with_raw_output=True,
                                    with_stderr=True,
@@ -936,9 +933,7 @@ class MainModel(ObservableModel):
         (staged, modified, unmerged, untracked, upstream_changed) = (
                 [], [], [], [], [])
         try:
-
             output = self.git.diff_index(head,
-                                         M=True,
                                          cached=True,
                                          with_stderr=True)
             if output.startswith('fatal:'):
@@ -972,7 +967,7 @@ class MainModel(ObservableModel):
             staged.extend(self.all_files())
 
         try:
-            output = self.git.diff_index(head, M=True, with_stderr=True)
+            output = self.git.diff_index(head, with_stderr=True)
             if output.startswith('fatal:'):
                 raise GitInitError('git init')
             for line in output.splitlines():
@@ -988,13 +983,6 @@ class MainModel(ObservableModel):
                     if (name not in modified_set and not staged_only and
                             self._is_modified(name)):
                         modified.append(name)
-                elif status[:1] == 'R':
-                    # Rename
-                    old, new = name.split('\t')
-                    name = eval_path(old)
-                    if name not in staged_set:
-                        staged.append(name)
-                        staged_set.add(name)
 
         except GitInitError:
             # handle git init

@@ -80,7 +80,8 @@ class MainController(QObserver):
         """Initializes the MainController's internal data."""
         QObserver.__init__(self, model, view)
 
-        self.reset_mode()
+        # Initialize the mode
+        self.mode = self.MODE_NONE
 
         # Unstaged changes context menu
         view.status_tree.contextMenuEvent = self.tree_context_menu_event

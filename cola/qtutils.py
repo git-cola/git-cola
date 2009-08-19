@@ -151,6 +151,8 @@ def question(parent, title, message, default=True):
 
 def set_clipboard(text):
     """Sets the copy/paste buffer to text."""
+    if not text:
+        return
     clipboard = QtGui.QApplication.instance().clipboard()
     clipboard.setText(text, QtGui.QClipboard.Clipboard)
     clipboard.setText(text, QtGui.QClipboard.Selection)
