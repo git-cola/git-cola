@@ -940,9 +940,7 @@ class MainModel(ObservableModel):
 
         (staged, modified, unmerged, untracked) = ([], [], [], [])
         try:
-
             output = self.git.diff_index(head,
-                                         M=True,
                                          cached=True,
                                          with_stderr=True)
             if output.startswith('fatal:'):
@@ -976,7 +974,7 @@ class MainModel(ObservableModel):
             staged.extend(self.all_files())
 
         try:
-            output = self.git.diff_index(head, M=True, with_stderr=True)
+            output = self.git.diff_index(head, with_stderr=True)
             if output.startswith('fatal:'):
                 raise GitInitError('git init')
             for line in output.splitlines():
@@ -992,13 +990,6 @@ class MainModel(ObservableModel):
                     if (name not in modified_set and not staged_only and
                             self._is_modified(name)):
                         modified.append(name)
-                elif status[:1] == 'R':
-                    # Rename
-                    old, new = name.split('\t')
-                    name = eval_path(old)
-                    if name not in staged_set:
-                        staged.append(name)
-                        staged_set.add(name)
 
         except GitInitError:
             # handle git init
