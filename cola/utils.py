@@ -445,7 +445,13 @@ def sanitize_input(input):
 
 def is_linux():
     """Is this a linux machine?"""
-    return platform.system() == 'Linux'
+    while True:
+        try:
+            return platform.system() == 'Linux'
+        except IOError, e:
+            if e.errno == errno.EINTR:
+                continue
+            raise e
 
 def is_debian():
     """Is it debian?"""
@@ -453,5 +459,11 @@ def is_debian():
 
 def is_broken():
     """Is it windows or mac? (e.g. is running git-mergetool non-trivial?)"""
-    return (platform.system() == 'Windows'
-            or 'Macintosh' in platform.platform())
+    while True:
+        try:
+            return (platform.system() == 'Windows'
+                    or 'Macintosh' in platform.platform())
+        except IOError, e:
+            if e.errno == errno.EINTR:
+                continue
+            raise e
