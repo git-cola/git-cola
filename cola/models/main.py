@@ -1000,7 +1000,7 @@ class MainModel(ObservableModel):
         if self.trackedbranch:
             try:
                 output = self.git.diff_index(self.trackedbranch,
-                                             M=True, with_stderr=True)
+                                             with_stderr=True)
                 if output.startswith('fatal:'):
                     raise GitInitError('git init')
                 for line in output.splitlines():
