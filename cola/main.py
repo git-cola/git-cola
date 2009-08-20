@@ -140,6 +140,7 @@ def main():
     ctl = MainController(model, view)
     view.raise_()
     view.show()
+    view.expand_toplevel_items()
     sys.exit(app.exec_())
 
 
