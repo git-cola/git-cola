@@ -162,6 +162,8 @@ def main():
 
     # Show the view and start the main event loop
     view.show()
+    if not opts.classic:
+        view.expand_toplevel_items()
     result = app.exec_()
     QtCore.QThreadPool.globalInstance().waitForDone()
     sys.exit(result)

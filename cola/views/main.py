@@ -83,11 +83,16 @@ class MainView(MainWindow):
             parent.addChild(treeitem)
         if idx not in self._seen_indexes and items:
             self._seen_indexes.add(idx)
-            self.status_tree.expandItem(parent)
         if items:
             self.status_tree.setItemHidden(parent, False)
         else:
             self.status_tree.setItemHidden(parent, True)
+
+    def expand_toplevel_items(self):
+        """Expands top-level items of the status tree."""
+        for idx in xrange(4):
+            parent = self.status_tree.topLevelItem(idx)
+            self.status_tree.expandItem(parent)
 
     def set_display(self, text):
         """Set the diff text display."""
