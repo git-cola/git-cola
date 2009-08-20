@@ -181,8 +181,8 @@ class MainModel(ObservableModel):
 
     def generate_remote_helpers(self):
         """Generates helper methods for fetch, push and pull"""
+        self.push_helper = self.gen_remote_helper(self.git.push, push=True)
         self.fetch_helper = self.gen_remote_helper(self.git.fetch)
-        self.push_helper = self.gen_remote_helper(self.git.push)
         self.pull_helper = self.gen_remote_helper(self.git.pull)
 
     def use_worktree(self, worktree):
@@ -1059,7 +1059,13 @@ class MainModel(ObservableModel):
                     remote_branch='',
                     ffwd=True,
                     tags=False,
-                    rebase=False):
+                    rebase=False,
+                    push=False):
+        # Swap the branches in push mode (reverse of fetch)
+        if push:
+            tmp = local_branch
+            local_branch = remote_branch
+            remote_branch = tmp
         if ffwd:
             branch_arg = '%s:%s' % ( remote_branch, local_branch )
         else:
@@ -1080,11 +1086,11 @@ class MainModel(ObservableModel):
         }
         return (args, kwargs)
 
-    def gen_remote_helper(self, gitaction):
+    def gen_remote_helper(self, gitaction, push=False):
         """Generates a closure that calls git fetch, push or pull
         """
         def remote_helper(remote, **kwargs):
-            args, kwargs = self.remote_args(remote, **kwargs)
+            args, kwargs = self.remote_args(remote, push=push, **kwargs)
             return gitaction(*args, **kwargs)
         return remote_helper
 
