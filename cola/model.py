@@ -182,45 +182,30 @@ class Model(object):
         return self.__dict__.get(param, default)
 
     def __getattr__(self, param):
-        """Provides automatic get/set/add/append methods.
+        """Provides set_<attribute>(value) append methods.
 
         This provides automatic convenience methods for handling
-        get/set pushups.  This method generates closures for every
-        unimplemented get/set method encountered.
+        setattrs with notification.
 
         >>> m = Model()
         >>> m.answer = 42
-        >>> m.param('answer')
-        42
-
         >>> m.set_answer(41)
+        >>> # Observers are notified
         >>> m.answer
         41
 
         """
-
         # Base case: we actually have this param
         if param in self.__dict__:
             return getattr(self, param)
 
-        # Check for the translated variant of the param
-        realparam = self._translate(param, sep='')
-        if realparam in self.__dict__:
-            return getattr(self, realparam)
+        # Return a closure over param for calling set_param;
+        # Concrete classes subclass set_param to provide notification
+        if param.startswith('set_'):
+            return lambda v: self.set_param(param[4:], v)
 
-        # Attribute getter
-        if realparam.startswith('get'):
-            param = self._translate(param, 'get')
-            return lambda: getattr(self, param)
-
-        # Attribute setter
-        elif realparam.startswith('set'):
-            param = self._translate(param, 'set')
-            return lambda v: self.set_param(param, v)
-
-        # Unknown attribute
-        errmsg  = ("%s object has no attribute '%s'"
-                   % (self.__class__.__name__, param))
+        errmsg  = ("'%s' object has no attribute '%s'" %
+                    (self.__class__.__name__, param))
         raise AttributeError(errmsg)
 
     def set_param(self, param, value):
@@ -253,19 +238,6 @@ class Model(object):
         # Loop over all attributes and copy them over
         for k in params_to_copy or model.param_names(export=True):
             self[k] = model.param(k)
-
-    def _translate(self, param, prefix='', sep='_'):
-        """Translate attribute names into their internal name
-
-        This translates attribute names from those used in methods
-        into the real names used internally.
-
-        >>> m = Model()
-        >>> m._translate('set_question', 'set')
-        'question'
-
-        """
-        return param[len(prefix):].lstrip(sep)
 
     def save(self, filename):
         """Saves a model to a file.

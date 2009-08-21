@@ -17,9 +17,9 @@ class ModelTest(unittest.TestCase):
         """Test that arbitrary attributes provide set_* methods"""
         model = ExampleModel()
         model.set_foo('bar')
-        self.failUnless(model.foo =='bar')
+        self.assertEqual(model.foo, 'bar')
 
-    def test_regular_attribute(self):
+    def test_param(self):
         """Test attribute access in case we f*** up __getattr__"""
         model = ExampleModel()
         model.attribute = 'value'
