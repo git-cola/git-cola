@@ -152,6 +152,7 @@ class GitRepoEntry(QtCore.QObject):
         QtCore.QObject.__init__(self)
         self.path = path
         self.app_model = app_model
+        self.task = None
 
     def update_name(self):
         """Emits a signal corresponding to the entry's name."""
@@ -164,8 +165,8 @@ class GitRepoEntry(QtCore.QObject):
         """Starts a GitRepoInfoTask to calculate info for entries."""
         # GitRepoInfoTask handles expensive lookups
         threadpool = QtCore.QThreadPool.globalInstance()
-        task = GitRepoInfoTask(self, self.path, self.app_model)
-        threadpool.start(task)
+        self.task = GitRepoInfoTask(self, self.path, self.app_model)
+        threadpool.start(self.task)
 
     def event(self, e):
         """Receive GitRepoInfoEvents and emit corresponding Qt signals."""
