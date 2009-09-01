@@ -443,11 +443,11 @@ def strip_prefix(prefix, string):
     assert string.startswith(prefix)
     return string[len(prefix):]
 
-def sanitize_input(input):
+def sanitize(s):
     """Removes shell metacharacters from a string."""
     for c in """ \t!@#$%^&*()\\;,<>"'[]{}~|""":
-        input = input.replace(c, '_')
-    return input
+        s = s.replace(c, '_')
+    return s
 
 def is_linux():
     """Is this a linux machine?"""

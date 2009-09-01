@@ -74,8 +74,8 @@ class StashController(QObserver):
         if not stash_name:
             return
 
-        # Sanitize our input, just in case
-        stash_name = utils.sanitize_input(stash_name)
+        # Sanitize the stash name
+        stash_name = utils.sanitize(stash_name)
         args = []
         if self.model.keep_index:
             args.append('--keep-index')
