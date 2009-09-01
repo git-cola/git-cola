@@ -27,7 +27,6 @@ try:
     from cola.gui.items import Ui_items
     from cola.gui.options import Ui_options
     from cola.gui.remote import Ui_remote
-    from cola.gui.search import Ui_search
     from cola.gui.stash import Ui_stash
 except ImportError:
     sys.stderr.write('\nThe cola gui modules have not been built.\n'
@@ -97,15 +96,6 @@ class CommitView(CommitViewBase):
         self.splitter.setSizes([100, 150])
         self.syntax = DiffSyntaxHighlighter(self.commit_text.document(),
                                             whitespace=False)
-
-SearchViewBase = create_standard_view(Ui_search, QDialog)
-class SearchView(SearchViewBase):
-    def __init__(self, parent=None):
-        SearchViewBase.__init__(self, parent)
-        self.input.setFocus()
-        self.syntax = DiffSyntaxHighlighter(self.commit_text.document(),
-                                            whitespace=False)
-
 
 RemoteViewBase = create_standard_view(Ui_remote, QDialog)
 class RemoteView(RemoteViewBase):

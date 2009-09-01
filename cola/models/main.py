@@ -108,7 +108,7 @@ def eval_path(path):
 class MainModel(ObservableModel):
     """Provides a friendly wrapper for doing common git operations."""
 
-    def __init__(self):
+    def __init__(self, cwd=None):
         """Reads git repository settings and sets several methods
         so that they refer to the git module.  This object
         encapsulates cola's interaction with git."""
@@ -128,8 +128,6 @@ class MainModel(ObservableModel):
         self.remotename = ''
         self.local_branch = ''
         self.remote_branch = ''
-        self.search_text = ''
-
 
         #####################################################
         # Used primarily by the main UI
@@ -172,6 +170,8 @@ class MainModel(ObservableModel):
         self.push_helper = None
         self.pull_helper = None
         self.generate_remote_helpers()
+        if cwd:
+            self.use_worktree(cwd)
 
     def all_files(self):
         """Returns the names of all files in the repository"""

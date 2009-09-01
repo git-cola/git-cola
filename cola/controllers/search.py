@@ -6,9 +6,10 @@ import re
 import time
 from PyQt4 import QtGui
 
-from cola.qobserver import QObserver
-from cola.views import SearchView
 from cola import qtutils
+from cola.qobserver import QObserver
+from cola.models.search import SearchModel
+from cola.views.search import SearchView
 
 
 class SearchEngine(object):
@@ -20,7 +21,7 @@ class SearchEngine(object):
         return { 'max-count': max, 'pretty': 'format:%H %aN - %s - %ar' }
 
     def common_args(self):
-        return (self.model.input, self.rev_args())
+        return (self.model.query, self.rev_args())
 
     def search(self):
         if not self.validate():
@@ -28,7 +29,7 @@ class SearchEngine(object):
         return self.results()
 
     def validate(self):
-        return len(self.model.input) > 1
+        return len(self.model.query) > 1
 
     def revisions(self, *args, **kwargs):
         revlist = self.model.git.log(*args, **kwargs)
@@ -39,8 +40,8 @@ class SearchEngine(object):
 
 class RevisionSearch(SearchEngine):
     def results(self):
-        input, args = self.common_args()
-        expr = re.compile(input)
+        query, args = self.common_args()
+        expr = re.compile(query)
         revs = self.revisions(all=True, **args)
         return [ r for r in revs if expr.match(r[0]) ]
 
@@ -49,37 +50,37 @@ class RevisionRangeSearch(SearchEngine):
         SearchEngine.__init__(self, model)
         self.RE = re.compile(r'[^.]*\.\..*')
     def validate(self):
-        return bool(self.RE.match(self.model.input))
+        return bool(self.RE.match(self.model.query))
     def results(self):
-        input, kwargs = self.common_args()
-        return self.revisions(input, **kwargs)
+        query, kwargs = self.common_args()
+        return self.revisions(query, **kwargs)
 
 class PathSearch(SearchEngine):
     def results(self):
-        input, args = self.common_args()
-        paths = ['--'] + input.split(':')
+        query, args = self.common_args()
+        paths = ['--'] + query.split(':')
         return self.revisions(all=True, *paths, **args)
 
 class MessageSearch(SearchEngine):
     def results(self):
-        input, kwargs = self.common_args()
-        return self.revisions(all=True, grep=input, **kwargs)
+        query, kwargs = self.common_args()
+        return self.revisions(all=True, grep=query, **kwargs)
 
 class AuthorSearch(SearchEngine):
     def results(self):
-        input, kwargs = self.common_args()
-        return self.revisions(all=True, author=input, **kwargs)
+        query, kwargs = self.common_args()
+        return self.revisions(all=True, author=query, **kwargs)
 
 class CommitterSearch(SearchEngine):
     def results(self):
-        input, kwargs = self.common_args()
-        return self.revisions(all=True, committer=input, **kwargs)
+        query, kwargs = self.common_args()
+        return self.revisions(all=True, committer=query, **kwargs)
 
 class DiffSearch(SearchEngine):
     def results(self):
-        input, kwargs = self.common_args()
+        query, kwargs = self.common_args()
         return self.model.parse_rev_list(
-            self.model.git.log('-S'+input, all=True, **kwargs))
+            self.model.git.log('-S'+query, all=True, **kwargs))
 
 class DateRangeSearch(SearchEngine):
     def validate(self):
@@ -120,7 +121,7 @@ SEARCH_ENGINES = {
 class SearchController(QObserver):
     def __init__(self, model, view):
         QObserver.__init__(self, model, view)
-        self.add_observables('input',
+        self.add_observables('query',
                              'max_results',
                              'start_date',
                              'end_date')
@@ -195,10 +196,10 @@ class SearchController(QObserver):
             if not path.startswith(os.getcwd()):
                 continue
             filepaths.append(path[lenprefix:])
-        input = ':'.join(filepaths)
-        self.model.set_input('')
+        query = ':'.join(filepaths)
+        self.model.set_query('')
         self.set_mode(PATH)
-        self.model.set_input(input)
+        self.model.set_query(query)
 
     def display_results(self):
         commit_list = map(lambda x: x[1], self.results)
@@ -238,13 +239,7 @@ def search_commits(model, parent, mode, browse):
         return '%04d-%02d-%02d' % time.localtime(timespec)[:3]
 
     # TODO subclass model for search only
-    model = model.clone()
-    model.input = ''
-    model.max_results = 500
-    model.start_date = ''
-    model.end_date = ''
-    model.commit_list = []
-
+    model = SearchModel(cwd=model.git.worktree())
     view = SearchView(parent)
     ctl = SearchController(model, view)
     ctl.set_mode(mode)
