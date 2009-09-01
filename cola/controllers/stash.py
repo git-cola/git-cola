@@ -53,21 +53,20 @@ class StashController(QObserver):
         a git stash named accordingly.
         """
         if not qtutils.question(self.view,
-                                self.tr('Stash Changes?'),
-                                self.tr('This will stash your current '
-                                        'changes away for later use.\n'
-                                        'Continue?')):
+                                'Stash Changes?',
+                                'This will stash your current '
+                                'changes away for later use.\n'
+                                'Continue?'):
             return
 
         stash_name, ok = qtutils.prompt('Enter a name for this stash')
         if not ok:
             return
         while stash_name in self.model.stash_list:
-            qtutils.information(self.tr("Oops!"),
-                                self.tr('That name already exists.  '
-                                        'Please enter another name.'))
-            stash_name, ok = qtutils.input(self.tr('Enter a name for '
-                                                   'this stash'))
+            qtutils.information('Oops!',
+                                'That name already exists.  '
+                                'Please enter another name.')
+            stash_name, ok = qtutils.prompt('Enter a name for this stash')
             if not ok:
                 return
 
@@ -114,12 +113,12 @@ class StashController(QObserver):
         if not selection:
             return
         if not qtutils.question(self.view,
-                                self.tr('Drop Stash?'),
-                                self.tr('This will permanently remove the '
-                                        'selected stash.\n'
-                                        'Recovering these changes may not '
-                                        'be possible.\n\n'
-                                        'Continue?')):
+                                'Drop Stash?',
+                                'This will permanently remove the '
+                                'selected stash.\n'
+                                'Recovering these changes may not '
+                                'be possible.\n\n'
+                                'Continue?'):
             return
         qtutils.log(*self.model.git.stash('drop', selection,
                                           with_stderr=True,
@@ -130,12 +129,12 @@ class StashController(QObserver):
         """Clears all stashes
         """
         if not qtutils.question(self.view,
-                                self.tr('Drop All Stashes?'),
-                                self.tr('This will permanently remove '
-                                        'ALL stashed changes.\n'
-                                        'Recovering these changes may not '
-                                        'be possible.\n\n'
-                                        'Continue?')):
+                                'Drop All Stashes?',
+                                'This will permanently remove '
+                                'ALL stashed changes.\n'
+                                'Recovering these changes may not '
+                                'be possible.\n\n'
+                                'Continue?'):
             return
         self.model.git.stash('clear'),
         self.update_model()

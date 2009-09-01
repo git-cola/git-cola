@@ -40,10 +40,9 @@ class CreateBranchController(QObserver):
         existing_branches = self.model.local_branches
 
         if not branch or not revision:
-            qtutils.information(
-                self.tr('Missing Data'),
-                self.tr('Please provide both a branch'
-                       +' name and revision expression.'))
+            qtutils.information('Missing Data',
+                                'Please provide both a branch '
+                                'name and revision expression.')
             return
 
         check_branch = False
@@ -51,7 +50,7 @@ class CreateBranchController(QObserver):
             if self.view.no_update_radio.isChecked():
                 msg = self.tr("Branch '%s' already exists.")
                 msg = unicode(msg) % branch
-                qtutils.information( self.tr('warning'), msg )
+                qtutils.information('warning', msg)
                 return
             # Whether we should prompt the user for lost commits
             commits = self.model.rev_list_range(revision, branch)
@@ -78,8 +77,7 @@ class CreateBranchController(QObserver):
                 unicode(self.tr("Reset '%s'?")) % branch
                 ])
 
-            result = qtutils.question(self.view, self.tr('warning'),
-                                      '\n'.join(lines))
+            result = qtutils.question(self.view, 'warning', '\n'.join(lines))
             if not result:
                 return
 

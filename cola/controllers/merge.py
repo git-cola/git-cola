@@ -11,11 +11,11 @@ from cola.views.merge import MergeView
 def abort_merge(model, parent):
     """Prompts before aborting a merge in progress
     """
-    txt = parent.tr('Abort merge?\n'
-                    'Aborting the current merge will cause '
-                    '*ALL* uncommitted changes to be lost.\n\n'
-                    'Continue with aborting the current merge?')
-    answer = qtutils.question(parent, parent.tr('Abort Merge?'), txt)
+    txt = ('Abort merge?\n'
+           'Aborting the current merge will cause '
+           '*ALL* uncommitted changes to be lost.\n\n'
+           'Continue with aborting the current merge?')
+    answer = qtutils.question(parent, 'Abort Merge?', txt)
     if answer:
         model.abort_merge()
 

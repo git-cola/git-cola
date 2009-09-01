@@ -29,6 +29,8 @@ def prompt(msg, title=None):
     """Presents the user with an input widget and returns the input."""
     if title is None:
         title = msg
+    msg = tr(msg)
+    title = tr(title)
     parent = QtGui.QApplication.instance().activeWindow()
     result = QtGui.QInputDialog.getText(parent, msg, title)
     return (unicode(result[0]), result[1])
@@ -57,6 +59,8 @@ def information(title, message=None):
     provided title and message."""
     if message is None:
         message = title
+    title = tr(title)
+    message = tr(message)
     parent = QtGui.QApplication.instance().activeWindow()
     QtGui.QMessageBox.information(parent, title, message)
 
@@ -145,6 +149,8 @@ def question(parent, title, message, default=True):
         default = yes
     else:
         default = no
+    title = tr(title)
+    message = tr(message)
     result = QtGui.QMessageBox.question(parent, title, message,
                                         buttons, default)
     return result == QtGui.QMessageBox.Yes
