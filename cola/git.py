@@ -62,7 +62,7 @@ class Git(object):
             The command argument list to execute
 
         ``istream``
-            Standard input filehandle passed to subprocess.Popen.
+            Readable filehandle passed to subprocess.Popen.
 
         ``cwd``
             The working directory when running commands.
@@ -214,7 +214,7 @@ def replace_carot(cmd_arg):
     return cmd_arg.replace('^', '^^')
 
 
-def shell_quote(*inputs):
+def shell_quote(*strings):
     """
     Quote strings so that they can be suitably martialled
     off to the shell.  This method supports POSIX sh syntax.
@@ -226,34 +226,33 @@ def shell_quote(*inputs):
     quote_regex = re.compile("((?:'\\''){2,})")
 
     ret = []
-    for input in inputs:
-        if not input:
+    for s in strings:
+        if not s:
             continue
 
-        if '\x00' in input:
+        if '\x00' in s:
             raise AssertionError,('No way to quote strings '
                                   'containing null(\\000) bytes')
 
         # = does need quoting else in command position it's a
         # program-local environment setting
-        match = regex.search(input)
-        if match and '=' not in input:
+        match = regex.search(s)
+        if match and '=' not in s:
             # ' -> '\''
-            input = input.replace("'", "'\\''")
+            s = s.replace("'", "'\\''")
 
             # make multiple ' in a row look simpler
             # '\'''\'''\'' -> '"'''"'
-            quote_match = quote_regex.match(input)
+            quote_match = quote_regex.match(s)
             if quote_match:
                 quotes = match.group(1)
-                input.replace(quotes, ("'" *(len(quotes)/4)) + "\"'")
+                s.replace(quotes, ("'" *(len(quotes)/4)) + "\"'")
 
-            input = "'%s'" % input
-            if input.startswith("''"):
-                input = input[2:]
+            s = "'%s'" % s
+            if s.startswith("''"):
+                s = s[2:]
 
-            if input.endswith("''"):
-                input = input[:-2]
-        ret.append(input)
+            if s.endswith("''"):
+                s = s[:-2]
+        ret.append(s)
     return ' '.join(ret)
-
