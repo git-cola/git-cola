@@ -25,7 +25,7 @@ def log(status, output):
         return
     logger().log(status, output)
 
-def input(msg, title=None):
+def prompt(msg, title=None):
     """Presents the user with an input widget and returns the input."""
     if title is None:
         title = msg

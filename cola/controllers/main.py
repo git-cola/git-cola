@@ -421,8 +421,8 @@ class MainController(QObserver):
         return search_handler
 
     def grep(self):
-        """Prompt for input and use 'git grep' to find the content."""
-        txt, ok = qtutils.input('grep')
+        """Prompt and use 'git grep' to find the content."""
+        txt, ok = qtutils.prompt('grep')
         if not ok:
             return
         self.mode = self.MODE_GREP
@@ -713,7 +713,7 @@ class MainController(QObserver):
 
     def clone_repo(self):
         """Clone a git repository."""
-        url, ok = qtutils.input('Path or URL to clone (Env. $VARS okay)')
+        url, ok = qtutils.prompt('Path or URL to clone (Env. $VARS okay)')
         url = os.path.expandvars(url)
         if not ok or not url:
             return

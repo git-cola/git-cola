@@ -59,7 +59,7 @@ class StashController(QObserver):
                                         'Continue?')):
             return
 
-        stash_name, ok = qtutils.input(self.tr('Enter a name for this stash'))
+        stash_name, ok = qtutils.prompt('Enter a name for this stash')
         if not ok:
             return
         while stash_name in self.model.stash_list:
