@@ -4,15 +4,14 @@ import os
 import sys
 import unittest
 
+from PyQt4 import QtCore
+
+from cola.models.observable import ObservableModel
+from cola.observer import Observer
+
 import helper
 from helper import InnerModel
 from helper import NestedModel
-
-from PyQt4 import QtCore
-
-import cola.model
-from cola.models.observable import ObservableModel
-from cola.observer import Observer
 
 class ModelObserver(Observer, QtCore.QObject):
     def __init__(self, model):
