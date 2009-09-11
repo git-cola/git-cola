@@ -1,7 +1,7 @@
 import copy
 
-from cola.model import Model
 from cola.observable import Observable
+from cola.models.base import BaseModel as Model
 
 _unserializable_attributes = {
     'observers': set(),

@@ -19,12 +19,29 @@ def _gen_test_method(themodule):
     return import_test
 
 def __create_tests():
-    for module in """
-        cola.git
-        cola.model
-        cola.observer
-        cola.settings
-    """.split():
+    for module in """cola.git
+                     cola.observer
+                     cola.settings
+                     cola.controllers.bookmark
+                     cola.controllers.classic
+                     cola.controllers.compare
+                     cola.controllers.createbranch
+                     cola.controllers.main
+                     cola.controllers.merge
+                     cola.controllers.options
+                     cola.controllers.remote
+                     cola.controllers.repobrowser
+                     cola.controllers.search
+                     cola.controllers.selectcommits
+                     cola.controllers.stash
+                     cola.controllers.util
+                     cola.models.base
+                     cola.models.classic
+                     cola.models.compare
+                     cola.models.gitrepo
+                     cola.models.main
+                     cola.models.observable
+                     cola.models.search""".split():
         method = _gen_test_method(module)
         method.__doc__ = 'Test that we can import %s' % module
         methodname = "test_" + module.replace('.', '_')

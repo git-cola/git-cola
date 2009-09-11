@@ -7,7 +7,7 @@ from os.path import dirname
 from os.path import basename
 
 from cola import core
-from cola.model import Model
+from cola.models.base import BaseModel as Model
 from cola.models.observable import ObservableModel
 
 

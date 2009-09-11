@@ -2,9 +2,9 @@
 import unittest
 import helper
 
-from cola import model
+from cola.models.base import BaseModel
 
-class ExampleModel(model.Model):
+class ExampleModel(BaseModel):
     """An example model for use by these tests"""
     def pass_through(self, value):
         """Passes values through unmodified"""
