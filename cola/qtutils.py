@@ -42,13 +42,12 @@ def create_listwidget_item(text, filename):
     item.setText(text)
     return item
 
-_icon_cache = {}
+_tree_icon_cache = {}
 def create_treewidget_item(text, filename):
     """Creates a QTreeWidgetItem with text and the icon at filename."""
-    global _icon_cache
-    if filename not in _icon_cache:
-        _icon_cache[filename] = QtGui.QIcon(filename)
-    icon = _icon_cache[filename]
+    if filename not in _tree_icon_cache:
+        _tree_icon_cache[filename] = QtGui.QIcon(filename)
+    icon = _tree_icon_cache[filename]
     item = QtGui.QTreeWidgetItem()
     item.setIcon(0, icon)
     item.setText(0, text)
