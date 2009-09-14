@@ -149,11 +149,6 @@ class SearchController(QObserver):
         self.update_fonts()
 
     def update_fonts(self):
-        font = self.model.cola_config('fontui')
-        if font:
-            qfont = QtGui.QFont()
-            qfont.fromString(font)
-            self.view.commit_list.setFont(qfont)
         font = self.model.cola_config('fontdiff')
         if font:
             qfont = QtGui.QFont()

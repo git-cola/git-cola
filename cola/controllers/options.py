@@ -49,28 +49,18 @@ class OptionsController(QObserver):
                              'global_gui_historybrowser',
                              'global_cola_fontdiff_size',
                              'global_cola_fontdiff',
-                             'global_cola_fontui_size',
-                             'global_cola_fontui',
                              'global_cola_savewindowsettings',
                              'global_cola_tabwidth')
 
         self.add_actions(global_cola_fontdiff = self.tell_parent_model)
-        self.add_actions(global_cola_fontui = self.tell_parent_model)
         self.add_callbacks(save_button = self.save_settings)
         self.add_callbacks(global_cola_fontdiff_size = self.update_size)
-        self.add_callbacks(global_cola_fontui_size = self.update_size)
         self.connect(self.view, 'rejected()', self.restore_settings)
 
         self.refresh_view()
 
     def refresh_view(self):
         """Apply the configured font and update widgets."""
-        # The main application font
-        font = self.model.cola_config('fontui')
-        if font:
-            fontui = QtGui.QFont()
-            fontui.fromString(font)
-            self.view.global_cola_fontui.setCurrentFont(fontui)
         # The fixed-width console font
         font = self.model.cola_config('fontdiff')
         if font:
@@ -108,9 +98,7 @@ class OptionsController(QObserver):
     def tell_parent_model(self,*rest):
         """Notifies the main app's model about changed parameters"""
         params= ('global_cola_fontdiff',
-                 'global_cola_fontui',
                  'global_cola_fontdiff_size',
-                 'global_cola_fontui_size',
                  'global_cola_savewindowsettings',
                  'global_cola_tabwidth',
                  )
@@ -119,12 +107,6 @@ class OptionsController(QObserver):
 
     def update_size(self, *rest):
         """Updates fonts whenever font sizes change"""
-        # The main app font combobox
-        combo = self.view.global_cola_fontui
-        param = unicode(combo.objectName())
-        default = unicode(combo.currentFont().toString())
-        self.model.apply_font_size(param, default)
-
         # The fixed-width console font combobox
         combo = self.view.global_cola_fontdiff
         param = unicode(combo.objectName())

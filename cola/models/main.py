@@ -213,8 +213,6 @@ class MainModel(ObservableModel):
         # config items that are purely git config --global settings
         self.__global_defaults = {
             'cola_geometry': '',
-            'cola_fontui': '',
-            'cola_fontui_size': 12,
             'cola_fontdiff': '',
             'cola_fontdiff_size': 12,
             'cola_savewindowsettings': False,
@@ -239,7 +237,7 @@ class MainModel(ObservableModel):
                 self.set_param('local_'+k, v)
 
         # Bootstrap the internal font*size variables
-        for param in ('global_cola_fontui', 'global_cola_fontdiff'):
+        for param in ('global_cola_fontdiff'):
             setdefault = True
             if hasattr(self, param):
                 font = getattr(self, param)

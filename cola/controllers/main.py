@@ -100,7 +100,6 @@ class MainController(QObserver):
 
         # When a model attribute changes, this runs a specific action
         self.add_actions(global_cola_fontdiff = self.update_diff_font)
-        self.add_actions(global_cola_fontui = self.update_ui_font)
         self.add_actions(global_cola_tabwidth = self.update_tab_width)
 
         self.add_callbacks(
@@ -236,7 +235,7 @@ class MainController(QObserver):
         self._init_log_window()
 
         # Updates the main UI fonts
-        self.refresh_view('global_cola_fontdiff', 'global_cola_fontui')
+        self.refresh_view('global_cola_fontdiff')
 
         self.start_inotify_thread()
         if self.has_inotify():
@@ -1289,15 +1288,6 @@ class MainController(QObserver):
         qfont.fromString(font)
         self.view.display_text.setFont(qfont)
         self.view.commitmsg.setFont(qfont)
-
-    def update_ui_font(self):
-        """Updates the main UI font based on the configured value."""
-        font = self.model.cola_config('fontui')
-        if not font:
-            return
-        qfont = QtGui.QFont()
-        qfont.fromString(font)
-        QtGui.qApp.setFont(qfont)
 
     def update_tab_width(self):
         """Implement the variable-tab-width setting."""

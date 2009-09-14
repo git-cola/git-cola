@@ -37,9 +37,6 @@ cola.savewindowsettings::
 cola.geometry::
 	Specifies information about 'git-cola''s window size and position.
 
-cola.fontui::
-	Specifies the font to use for the main 'git-cola' interface.
-
 cola.fontdiff::
 	Specifies the font to use for 'git-cola''s diff display.
 

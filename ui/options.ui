@@ -1,263 +1,218 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>options</class>
- <widget class="QDialog" name="options" >
-  <property name="windowModality" >
+ <widget class="QDialog" name="options">
+  <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>
-  <property name="geometry" >
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>497</width>
-    <height>413</height>
+    <width>608</width>
+    <height>425</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Options</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_4" >
-   <property name="leftMargin" >
-    <number>8</number>
-   </property>
-   <property name="topMargin" >
-    <number>4</number>
-   </property>
-   <property name="rightMargin" >
-    <number>8</number>
-   </property>
-   <property name="bottomMargin" >
-    <number>4</number>
-   </property>
-   <property name="spacing" >
-    <number>4</number>
-   </property>
-   <item row="0" column="0" >
-    <layout class="QGridLayout" name="gridLayout" >
-     <item row="0" column="0" >
-      <widget class="QLabel" name="label_2" >
-       <property name="text" >
-        <string>Main Font</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1" >
-      <widget class="QSpinBox" name="global_cola_fontui_size" >
-       <property name="minimum" >
-        <number>8</number>
-       </property>
-       <property name="value" >
-        <number>12</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2" colspan="2" >
-      <widget class="QFontComboBox" name="global_cola_fontui" >
-       <property name="currentFont" >
-        <font>
-         <family>Helvetica</family>
-        </font>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0" >
-      <widget class="QLabel" name="label_3" >
-       <property name="text" >
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
         <string>Diff/Console Font</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1" >
-      <widget class="QSpinBox" name="global_cola_fontdiff_size" >
-       <property name="minimum" >
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="global_cola_fontdiff_size">
+       <property name="minimum">
         <number>8</number>
        </property>
-       <property name="value" >
+       <property name="value">
         <number>12</number>
        </property>
       </widget>
      </item>
-     <item row="1" column="2" colspan="2" >
-      <widget class="QFontComboBox" name="global_cola_fontdiff" >
-       <property name="fontFilters" >
+     <item row="0" column="2" colspan="2">
+      <widget class="QFontComboBox" name="global_cola_fontdiff">
+       <property name="fontFilters">
         <set>QFontComboBox::MonospacedFonts</set>
-       </property>
-       <property name="currentFont" >
-        <font>
-         <family>Bitstream Vera Sans Mono</family>
-        </font>
        </property>
       </widget>
      </item>
-     <item row="2" column="0" >
-      <widget class="QLabel" name="label_14" >
-       <property name="text" >
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_14">
+       <property name="text">
         <string>Tab Width</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1" >
-      <widget class="QSpinBox" name="global_cola_tabwidth" >
-       <property name="wrapping" >
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="global_cola_tabwidth">
+       <property name="wrapping">
         <bool>true</bool>
        </property>
-       <property name="maximum" >
+       <property name="maximum">
         <number>42</number>
        </property>
-       <property name="value" >
+       <property name="value">
         <number>8</number>
        </property>
       </widget>
      </item>
-     <item row="3" column="0" >
-      <widget class="QLabel" name="label_13" >
-       <property name="text" >
-        <string>Editor</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1" >
-      <widget class="QLineEdit" name="global_gui_editor" >
-       <property name="text" >
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2" >
-      <widget class="QLabel" name="label_12" >
-       <property name="text" >
-        <string>Diff Tool</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3" >
-      <widget class="QLineEdit" name="global_diff_tool" >
-       <property name="text" >
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0" >
-      <widget class="QLabel" name="label_11" >
-       <property name="text" >
-        <string>History Browser</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1" >
-      <widget class="QLineEdit" name="global_gui_historybrowser" >
-       <property name="text" >
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2" >
-      <widget class="QLabel" name="label_15" >
-       <property name="text" >
-        <string>Merge Tool</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="3" >
-      <widget class="QLineEdit" name="global_merge_tool" >
-       <property name="text" >
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2" >
-      <widget class="QCheckBox" name="global_cola_savewindowsettings" >
-       <property name="text" >
+     <item row="1" column="2">
+      <widget class="QCheckBox" name="global_cola_savewindowsettings">
+       <property name="text">
         <string>Save GUI Settings</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="3" >
-      <widget class="QCheckBox" name="global_merge_keepbackup" >
-       <property name="text" >
+     <item row="1" column="3">
+      <widget class="QCheckBox" name="global_merge_keepbackup">
+       <property name="text">
         <string>Save *.orig Merge Backups</string>
        </property>
       </widget>
      </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_13">
+       <property name="text">
+        <string>Editor</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="global_gui_editor">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="label_12">
+       <property name="text">
+        <string>Diff Tool</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QLineEdit" name="global_diff_tool">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_11">
+       <property name="text">
+        <string>History Browser</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="global_gui_historybrowser">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QLabel" name="label_15">
+       <property name="text">
+        <string>Merge Tool</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QLineEdit" name="global_merge_tool">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
-   <item row="1" column="0" >
-    <layout class="QHBoxLayout" name="horizontalLayout" >
-     <property name="spacing" >
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
       <number>4</number>
      </property>
      <item>
-      <widget class="QGroupBox" name="local_groupbox" >
-       <property name="title" >
+      <widget class="QGroupBox" name="local_groupbox">
+       <property name="title">
         <string>Local Repository</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout_2" >
-        <item row="0" column="0" >
-         <widget class="QLabel" name="label_4" >
-          <property name="text" >
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
            <string>User Name</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1" colspan="2" >
-         <widget class="QLineEdit" name="local_user_name" />
+        <item row="0" column="1" colspan="2">
+         <widget class="QLineEdit" name="local_user_name"/>
         </item>
-        <item row="1" column="0" >
-         <widget class="QLabel" name="label_5" >
-          <property name="text" >
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
            <string>Email Address</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="1" colspan="2" >
-         <widget class="QLineEdit" name="local_user_email" />
+        <item row="1" column="1" colspan="2">
+         <widget class="QLineEdit" name="local_user_email"/>
         </item>
-        <item row="2" column="0" colspan="2" >
-         <widget class="QLabel" name="label_6" >
-          <property name="text" >
+        <item row="2" column="0" colspan="2">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
            <string>Merge Verbosity</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="2" >
-         <widget class="QSpinBox" name="local_merge_verbosity" >
-          <property name="minimum" >
+        <item row="2" column="2">
+         <widget class="QSpinBox" name="local_merge_verbosity">
+          <property name="minimum">
            <number>0</number>
           </property>
-          <property name="maximum" >
+          <property name="maximum">
            <number>5</number>
           </property>
-          <property name="value" >
+          <property name="value">
            <number>5</number>
           </property>
          </widget>
         </item>
-        <item row="3" column="0" colspan="2" >
-         <widget class="QLabel" name="label" >
-          <property name="text" >
+        <item row="3" column="0" colspan="2">
+         <widget class="QLabel" name="label">
+          <property name="text">
            <string>Number of Diff Context Lines</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="2" >
-         <widget class="QSpinBox" name="local_gui_diffcontext" >
-          <property name="minimum" >
+        <item row="3" column="2">
+         <widget class="QSpinBox" name="local_gui_diffcontext">
+          <property name="minimum">
            <number>2</number>
           </property>
-          <property name="value" >
+          <property name="value">
            <number>5</number>
           </property>
          </widget>
         </item>
-        <item row="4" column="0" colspan="2" >
-         <widget class="QCheckBox" name="local_merge_summary" >
-          <property name="text" >
+        <item row="4" column="0" colspan="2">
+         <widget class="QCheckBox" name="local_merge_summary">
+          <property name="text">
            <string>Summarize Merge Commits</string>
           </property>
          </widget>
         </item>
-        <item row="5" column="0" colspan="2" >
-         <widget class="QCheckBox" name="local_merge_diffstat" >
-          <property name="text" >
+        <item row="5" column="0" colspan="2">
+         <widget class="QCheckBox" name="local_merge_diffstat">
+          <property name="text">
            <string>Show Diffstat After Merge</string>
           </property>
          </widget>
@@ -266,78 +221,78 @@
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="globalGroupBox" >
-       <property name="title" >
+      <widget class="QGroupBox" name="globalGroupBox">
+       <property name="title">
         <string>Global (All Repositories)</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout_3" >
-        <item row="0" column="0" >
-         <widget class="QLabel" name="label_7" >
-          <property name="text" >
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
            <string>User Name</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1" colspan="2" >
-         <widget class="QLineEdit" name="global_user_name" />
+        <item row="0" column="1" colspan="2">
+         <widget class="QLineEdit" name="global_user_name"/>
         </item>
-        <item row="1" column="0" >
-         <widget class="QLabel" name="label_8" >
-          <property name="text" >
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
            <string>Email Address</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="1" colspan="2" >
-         <widget class="QLineEdit" name="global_user_email" />
+        <item row="1" column="1" colspan="2">
+         <widget class="QLineEdit" name="global_user_email"/>
         </item>
-        <item row="2" column="0" colspan="2" >
-         <widget class="QLabel" name="label_10" >
-          <property name="text" >
+        <item row="2" column="0" colspan="2">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
            <string>Merge Verbosity</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="2" >
-         <widget class="QSpinBox" name="global_merge_verbosity" >
-          <property name="minimum" >
+        <item row="2" column="2">
+         <widget class="QSpinBox" name="global_merge_verbosity">
+          <property name="minimum">
            <number>0</number>
           </property>
-          <property name="maximum" >
+          <property name="maximum">
            <number>5</number>
           </property>
-          <property name="value" >
+          <property name="value">
            <number>5</number>
           </property>
          </widget>
         </item>
-        <item row="3" column="0" colspan="2" >
-         <widget class="QLabel" name="label_9" >
-          <property name="text" >
+        <item row="3" column="0" colspan="2">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
            <string>Number of Diff Context Lines</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="2" >
-         <widget class="QSpinBox" name="global_gui_diffcontext" >
-          <property name="minimum" >
+        <item row="3" column="2">
+         <widget class="QSpinBox" name="global_gui_diffcontext">
+          <property name="minimum">
            <number>2</number>
           </property>
-          <property name="value" >
+          <property name="value">
            <number>5</number>
           </property>
          </widget>
         </item>
-        <item row="4" column="0" colspan="2" >
-         <widget class="QCheckBox" name="global_merge_summary" >
-          <property name="text" >
+        <item row="4" column="0" colspan="2">
+         <widget class="QCheckBox" name="global_merge_summary">
+          <property name="text">
            <string>Summarize Merge Commits</string>
           </property>
          </widget>
         </item>
-        <item row="5" column="0" colspan="2" >
-         <widget class="QCheckBox" name="global_merge_diffstat" >
-          <property name="text" >
+        <item row="5" column="0" colspan="2">
+         <widget class="QCheckBox" name="global_merge_diffstat">
+          <property name="text">
            <string>Show Diffstat After Merge</string>
           </property>
          </widget>
@@ -347,14 +302,14 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="0" >
-    <layout class="QHBoxLayout" name="horizontalLayout_9" >
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_9">
      <item>
-      <spacer name="horizontalSpacer" >
-       <property name="orientation" >
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeHint" stdset="0" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>318</width>
          <height>20</height>
@@ -363,18 +318,18 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="save_button" >
-       <property name="text" >
+      <widget class="QPushButton" name="save_button">
+       <property name="text">
         <string>Save</string>
        </property>
-       <property name="default" >
+       <property name="default">
         <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="cancel_button" >
-       <property name="text" >
+      <widget class="QPushButton" name="cancel_button">
+       <property name="text">
         <string>Cancel</string>
        </property>
       </widget>
@@ -391,11 +346,11 @@
    <receiver>options</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>563</x>
      <y>319</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>306</x>
      <y>170</y>
     </hint>

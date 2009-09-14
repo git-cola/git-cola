@@ -31,7 +31,6 @@ class SelectCommitsController(QObserver):
                      self.commit_sha1_selected)
         view.commit_list.contextMenuEvent = self.context_menu_event
         self.set_diff_font()
-        self.set_ui_font()
 
     def set_diff_font(self):
         if not self.model.has_param('global_cola_fontdiff'):
@@ -42,16 +41,6 @@ class SelectCommitsController(QObserver):
         qf = QtGui.QFont()
         qf.fromString(font)
         self.view.commit_text.setFont(qf)
-
-    def set_ui_font(self):
-        if not self.model.has_param('global_cola_fontui'):
-            return
-        font = self.model.param('global_cola_fontui')
-        if not font:
-            return
-        qf = QtGui.QFont()
-        qf.fromString(font)
-        self.view.commit_list.setFont(qf)
 
     def select_commits(self):
         summaries = self.model.summaries
