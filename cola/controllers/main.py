@@ -430,7 +430,7 @@ class MainController(QObserver):
 
     def options(self):
         """Launch the options dialog"""
-        update_options(self.model, self.view)
+        update_options(self.view)
 
     def branch_create(self):
         """Launch the 'Create Branch' dialog."""
