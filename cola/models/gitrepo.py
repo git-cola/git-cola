@@ -6,6 +6,8 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 
+import cola
+
 from cola import core
 from cola import utils
 from cola import qtutils
@@ -28,9 +30,8 @@ class GitRepoSignals:
 
 class GitRepoModel(QtGui.QStandardItemModel):
     """Provides an interface into a git repository for browsing purposes."""
-    def __init__(self, parent, model):
+    def __init__(self, parent):
         QtGui.QStandardItem.__init__(self, parent)
-        self.app_model = model
         self._dir_rows = {}
         self._headers = (GitRepoSignals.Name,
                          GitRepoSignals.Status,
@@ -45,7 +46,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def _create_row(self, path):
         """Return a list of items representing a row."""
-        return [GitRepoItem(path, self.app_model, i) for i in self._headers]
+        return [GitRepoItem(path, i) for i in self._headers]
 
     def add_file(self, parent, path):
         """Add a file entry to the model."""
@@ -86,7 +87,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
     def _initialize(self):
         """Iterate over the cola model and create GitRepoItems."""
         direntries = {'': self.invisibleRootItem()}
-        for path in self.app_model.everything():
+        for path in cola.model().everything():
             dirname = utils.dirname(path)
             if dirname in direntries:
                 parent = direntries[dirname]
@@ -119,7 +120,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def entry(self, path):
         """Return the GitRepoEntry for a path."""
-        return GitRepoEntryManager.entry(path, self.app_model)
+        return GitRepoEntryManager.entry(path)
 
 
 class GitRepoEntryManager(object):
@@ -129,10 +130,10 @@ class GitRepoEntryManager(object):
     static_entries = {}
 
     @classmethod
-    def entry(cls, path, app_model):
+    def entry(cls, path):
         """Return a static instance of a GitRepoEntry."""
         if path not in cls.static_entries:
-            cls.static_entries[path] = GitRepoEntry(path, app_model)
+            cls.static_entries[path] = GitRepoEntry(path)
         return cls.static_entries[path]
 
 
@@ -148,10 +149,9 @@ class GitRepoEntry(QtCore.QObject):
         who(QString)
 
     """
-    def __init__(self, path, app_model):
+    def __init__(self, path):
         QtCore.QObject.__init__(self)
         self.path = path
-        self.app_model = app_model
         self.task = None
 
     def update_name(self):
@@ -165,7 +165,7 @@ class GitRepoEntry(QtCore.QObject):
         """Starts a GitRepoInfoTask to calculate info for entries."""
         # GitRepoInfoTask handles expensive lookups
         threadpool = QtCore.QThreadPool.globalInstance()
-        self.task = GitRepoInfoTask(self, self.path, self.app_model)
+        self.task = GitRepoInfoTask(self, self.path)
         threadpool.start(self.task)
 
     def event(self, e):
@@ -177,11 +177,10 @@ class GitRepoEntry(QtCore.QObject):
 
 class GitRepoInfoTask(QtCore.QRunnable):
     """Handles expensive git lookups for a path."""
-    def __init__(self, entry, path, app_model):
+    def __init__(self, entry, path):
         QtCore.QRunnable.__init__(self)
         self.entry = entry
         self.path = path
-        self.app_model = app_model
         self._data = {}
 
     def data(self, key):
@@ -192,10 +191,10 @@ class GitRepoInfoTask(QtCore.QRunnable):
 
         """
         if not self._data:
-            log_line = self.app_model.git.log('-1', '--', self.path,
-                                              M=True,
-                                              all=True,
-                                              pretty='format:%ar/%s/%an')
+            log_line = cola.model().git.log('-1', '--', self.path,
+                                            M=True,
+                                            all=True,
+                                            pretty='format:%ar/%s/%an')
             if log_line:
                 log_line = core.decode(log_line)
                 date, rest = log_line.split('/', 1)
@@ -206,7 +205,7 @@ class GitRepoInfoTask(QtCore.QRunnable):
             else:
                 self._data['date'] = self.date()
                 self._data['message'] = '-'
-                self._data['author'] = self.app_model.local_user_name
+                self._data['author'] = cola.model().local_user_name
         return self._data[key]
 
     def name(self):
@@ -235,12 +234,12 @@ class GitRepoInfoTask(QtCore.QRunnable):
     def status(self):
         """Return the status for the entry's path."""
 
-        unmerged = utils.add_parents(set(self.app_model.unmerged))
-        modified = utils.add_parents(set(self.app_model.modified))
-        staged = utils.add_parents(set(self.app_model.staged))
-        untracked = utils.add_parents(set(self.app_model.untracked))
-        upstream_changed = utils.add_parents(
-                set(self.app_model.upstream_changed))
+        model = cola.model()
+        unmerged = utils.add_parents(set(model.unmerged))
+        modified = utils.add_parents(set(model.modified))
+        staged = utils.add_parents(set(model.staged))
+        untracked = utils.add_parents(set(model.untracked))
+        upstream_changed = utils.add_parents(set(model.upstream_changed))
 
         if self.path in unmerged:
             return qtutils.tr('Unmerged')
@@ -286,10 +285,9 @@ class GitRepoItem(QtGui.QStandardItem):
     One is created for each column -- Name, Status, Age, etc.
 
     """
-    def __init__(self, path, app_model, signal):
+    def __init__(self, path, signal):
         QtGui.QStandardItem.__init__(self)
-        self.entry = GitRepoEntryManager.entry(path, app_model)
-        self.app_model = app_model
+        self.entry = GitRepoEntryManager.entry(path)
         self.path = path
         self.signal = signal
         self.setEditable(False)

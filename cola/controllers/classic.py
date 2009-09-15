@@ -6,10 +6,8 @@ from PyQt4.QtCore import SIGNAL
 import cola.utils
 import cola.difftool
 
-from cola.models import gitrepo
 from cola.controllers.selectcommits import select_commits
-
-from cola.models.classic import ClassicModel
+from cola.models import classic
 from cola.models.gitrepo import GitRepoModel
 from cola.views.repo import RepoTreeView
 
@@ -17,9 +15,8 @@ from cola.views.repo import RepoTreeView
 def widget():
     """Return a widget for immediate use."""
     view = RepoTreeView()
-    model = ClassicModel()
-    view.setModel(GitRepoModel(view, model))
-    controller = ClassicController(model, view)
+    view.setModel(GitRepoModel(view))
+    controller = ClassicController(view)
     return view
 
 
@@ -31,9 +28,9 @@ def cola_classic():
 
 
 class ClassicController(QtCore.QObject):
-    def __init__(self, model, view=None):
+    def __init__(self, view=None):
         QtCore.QObject.__init__(self, view)
-        self.model = model
+        self.model = classic.model()
         self.view = view
         self.updated = set()
         self.connect(view, SIGNAL('history(QStringList)'),

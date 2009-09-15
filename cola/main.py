@@ -87,8 +87,7 @@ def main():
         sys.exit(-1)
 
     # Import cola modules
-    from cola.models.main import MainModel
-    from cola.models.classic import ClassicModel
+    import cola
     from cola.models.gitrepo import GitRepoModel
     from cola.views.main import MainView
     from cola.views.repo import RepoTreeView
@@ -129,21 +128,13 @@ def main():
         # Add the default style dir so that we find our icons
         _setup_resource_dir(resources.style_dir())
 
-    # Initialize the model/view/controller framework
-    model = MainModel()
-    if opts.classic:
-        view = RepoTreeView()
-    else:
-        view = MainView(app.activeWindow())
-
-    # Make sure that we start out on top
-    view.raise_()
-
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
+    model = cola.model()
     valid = model.use_worktree(repo)
     while not valid:
-        gitdir = qtutils.opendir_dialog(view, 'Open Git Repository...',
+        gitdir = qtutils.opendir_dialog(app.activeWindow(),
+                                        'Open Git Repository...',
                                         os.getcwd())
         if not gitdir:
             sys.exit(-1)
@@ -154,11 +145,15 @@ def main():
 
     # Show the GUI and start the event loop
     if opts.classic:
-        model = ClassicModel()
-        view.setModel(GitRepoModel(view, model))
-        controller = ClassicController(model, view)
+        view = RepoTreeView()
+        view.setModel(GitRepoModel(view))
+        controller = ClassicController(view)
     else:
+        view = MainView()
         controller = MainController(model, view)
+
+    # Make sure that we start out on top
+    view.raise_()
 
     # Show the view and start the main event loop
     view.show()
