@@ -1281,13 +1281,8 @@ class MainController(QObserver):
 
     def update_diff_font(self):
         """Updates the diff font based on the configured value."""
-        font = self.model.cola_config('fontdiff')
-        if not font:
-            return
-        qfont = QtGui.QFont()
-        qfont.fromString(font)
-        self.view.display_text.setFont(qfont)
-        self.view.commitmsg.setFont(qfont)
+        qtutils.set_diff_font(self.view.display_text)
+        qtutils.set_diff_font(self.view.commitmsg)
 
     def update_tab_width(self):
         """Implement the variable-tab-width setting."""
