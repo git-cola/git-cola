@@ -202,13 +202,6 @@ def icon_for_file(filename, staged=False, untracked=False):
     ifile = icon_file(filename, staged=staged, untracked=untracked)
     return icon(ifile)
 
-def create_listitem(filename, staged=False, untracked=False):
-    """Given a filename, return a QListWidgetItem suitable
-    for adding to a QListWidget.  "staged" and "untracked"
-    controls whether to use the appropriate icons."""
-    ifile = icon_file(filename, staged, untracked)
-    return create_listwidget_item(filename, ifile)
-
 def create_treeitem(filename, staged=False, untracked=False, check=True):
     """Given a filename, return a QListWidgetItem suitable
     for adding to a QListWidget.  "staged" and "untracked"
@@ -227,13 +220,6 @@ def update_file_icons(widget, items, staged=True,
         item = widget.item(idx+offset)
         if item:
             item.setIcon(icon_for_file(model_item, staged, untracked))
-
-def update_listwidget(widget, items, staged=True,
-            untracked=False, append=False):
-    """Populate a QListWidget with custom icon items."""
-    if not append:
-        widget.clear()
-    add_items(widget, [ create_listitem(i, staged, untracked) for i in items ])
 
 def set_listwidget_strings(widget, items):
     """Sets a list widget to the strings passed in items."""
