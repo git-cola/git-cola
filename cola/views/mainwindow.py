@@ -134,8 +134,9 @@ class MainWindow(MainWindowBase):
         self.commitdockwidget.setWidget(self.commitdockwidgetcontents)
 
         # "Command Output" widget
+        logwidget = qtutils.logger()
         self.logdockwidget = self.create_dock('Command Output')
-        self.logdockwidget.setWidget(qtutils.logger())
+        self.logdockwidget.setWidget(logwidget)
 
         # "Cola Classic" widget
         self.classicdockwidget = self.create_dock('Cola Classic')

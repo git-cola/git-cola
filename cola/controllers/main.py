@@ -1281,6 +1281,7 @@ class MainController(QObserver):
 
     def update_diff_font(self):
         """Updates the diff font based on the configured value."""
+        qtutils.set_diff_font(qtutils.logger())
         qtutils.set_diff_font(self.view.display_text)
         qtutils.set_diff_font(self.view.commitmsg)
 
