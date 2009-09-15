@@ -120,6 +120,9 @@ def eval_path(path):
 class MainModel(ObservableModel):
     """Provides a friendly wrapper for doing common git operations."""
 
+    # Observable messages
+    message_updated = 'updated'
+    message_about_to_update = 'about_to_update'
     def __init__(self, cwd=None):
         """Reads git repository settings and sets several methods
         so that they refer to the git module.  This object
@@ -522,6 +525,8 @@ class MainModel(ObservableModel):
             self.load_commitmsg(template)
 
     def update_status(self, head='HEAD', staged_only=False):
+        # Give observers a chance to respond
+        self.notify_message_observers(self.message_about_to_update)
         # This allows us to defer notification until the
         # we finish processing data
         notify_enabled = self.notification_enabled
@@ -552,6 +557,8 @@ class MainModel(ObservableModel):
         self.read_font_sizes()
 
         self.notify_observers('staged','unstaged')
+        self.notify_message_observers(self.message_updated)
+
     def read_font_sizes(self):
         """Read font sizes from the configuration."""
         value = self.cola_config('fontdiff')
