@@ -42,9 +42,6 @@ class MainView(MainWindow):
                      SIGNAL('cursorPositionChanged()'),
                      self.show_current_column)
 
-        # Install default icons
-        self.setup_icons()
-
         # Initialize the seen tree widget indexes
         self._seen_indexes = set()
 
@@ -87,12 +84,6 @@ class MainView(MainWindow):
             self.status_tree.setItemHidden(parent, False)
         else:
             self.status_tree.setItemHidden(parent, True)
-
-    def expand_toplevel_items(self):
-        """Expands top-level items of the status tree."""
-        for idx in xrange(4):
-            parent = self.status_tree.topLevelItem(idx)
-            self.status_tree.expandItem(parent)
 
     def set_display(self, text):
         """Set the diff text display."""
@@ -212,7 +203,9 @@ class MainView(MainWindow):
         item = self.status_tree.topLevelItem(idx)
         return qtutils.tree_selection(item, items)
 
-    def setup_icons(self):
+    def show(self):
+        """Override base show to set icons and expand top-level items."""
+        result = MainWindow.show(self)
         staged = self.status_tree.topLevelItem(self.IDX_STAGED)
         staged.setIcon(0, qtutils.icon('plus.png'))
 
@@ -224,6 +217,12 @@ class MainView(MainWindow):
 
         untracked = self.status_tree.topLevelItem(self.IDX_UNTRACKED)
         untracked.setIcon(0, qtutils.icon('untracked.png'))
+
+        # Set the diff font
+        qtutils.set_diff_font(self.display_text)
+
+        self.status_tree.expandToDepth(0)
+        return result
 
     def enter_diff_mode(self, text):
         """
