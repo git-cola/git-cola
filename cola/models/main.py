@@ -547,7 +547,25 @@ class MainModel(ObservableModel):
         self.set_remote_branch('')
         # Re-enable notifications and emit changes
         self.notification_enabled = notify_enabled
+
+        # Read the font size by default
+        self.read_font_sizes()
+
         self.notify_observers('staged','unstaged')
+    def read_font_sizes(self):
+        """Read font sizes from the configuration."""
+        value = self.cola_config('fontdiff')
+        if not value:
+            return
+        items = value.split(',')
+        if len(items) < 2:
+            return
+        self.global_cola_fontdiff_size = int(items[1])
+
+    def set_diff_font(self, fontstr):
+        """Set the diff font string."""
+        self.global_cola_fontdiff = fontstr
+        self.read_font_sizes()
 
     def delete_branch(self, branch):
         return self.git.branch(branch,
@@ -558,16 +576,16 @@ class MainModel(ObservableModel):
     def revision_sha1(self, idx):
         return self.revisions[idx]
 
-    def apply_font_size(self, param, default):
-        old_font = getattr(self, param)
+    def apply_diff_font_size(self, default):
+        old_font = self.cola_config('fontdiff')
         if not old_font:
             old_font = default
-        size = getattr(self, param+'_size')
+        size = self.cola_config('fontdiff_size')
         props = old_font.split(',')
         props[1] = str(size)
         new_font = ','.join(props)
-
-        self.set_param(param, new_font)
+        self.global_cola_fontdiff = new_font
+        self.notify_observers('global_cola_fontdiff')
 
     def commit_diff(self, sha1):
         commit = self.git.show(sha1)
