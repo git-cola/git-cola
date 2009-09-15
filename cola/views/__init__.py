@@ -21,7 +21,6 @@ try:
     from cola.gui.bookmark import Ui_bookmark
     from cola.gui.branchview import Ui_branchview
     from cola.gui.combo import Ui_combo
-    from cola.gui.commit import Ui_commit
     from cola.gui.compare import Ui_compare
     from cola.gui.createbranch import Ui_createbranch
     from cola.gui.items import Ui_items
@@ -82,20 +81,6 @@ class ListView(ListViewBase, ItemView):
             return None
         return str(item.text())
 
-CommitViewBase = create_standard_view(Ui_commit, QDialog)
-class CommitView(CommitViewBase):
-    def __init__(self, parent=None, title=None, multiselect=True):
-        CommitViewBase.__init__(self, parent)
-        if title:
-            self.setWindowTitle(title)
-        # Allow disabling multi-select
-        if not multiselect:
-            mode = QtGui.QAbstractItemView.SingleSelection
-            self.commit_list.setSelectionMode(mode)
-        # Make the list widget slighty larger
-        self.splitter.setSizes([100, 150])
-        self.syntax = DiffSyntaxHighlighter(self.commit_text.document(),
-                                            whitespace=False)
 
 RemoteViewBase = create_standard_view(Ui_remote, QDialog)
 class RemoteView(RemoteViewBase):
