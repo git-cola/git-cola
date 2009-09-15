@@ -1,5 +1,5 @@
 # Copyright (c) 2008 David Aguilar
-"""This module provides the cola model class.
+"""This module provides the central cola model.
 """
 
 import os
@@ -18,6 +18,16 @@ from cola.models.observable import ObservableModel
 #+-------------------------------------------------------------------------
 #+ A regex for matching the output of git(log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile('([0-9a-f]+)\W(.*)')
+
+# Provides access to a global MainModel instance
+_instance = None
+def model():
+    """Returns the main model singleton"""
+    global _instance
+    if _instance:
+        return _instance
+    _instance = MainModel()
+    return _instance
 
 class GitInitError(errors.ColaError):
     pass
@@ -98,12 +108,14 @@ class GitCola(git.Git):
                     and os.readlink(headref).startswith('refs')))
         return False
 
+
 def eval_path(path):
     """handles quoted paths."""
     if path.startswith('"') and path.endswith('"'):
         return core.decode(eval(path))
     else:
         return path
+
 
 class MainModel(ObservableModel):
     """Provides a friendly wrapper for doing common git operations."""
