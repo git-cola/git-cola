@@ -464,12 +464,28 @@ def is_debian():
     """Is it debian?"""
     return os.path.exists('/usr/bin/apt-get')
 
-def is_broken():
-    """Is it windows or mac? (e.g. is running git-mergetool non-trivial?)"""
+
+def is_darwin():
+    """Return True on OSX."""
     while True:
         try:
-            return (platform.system() == 'Windows'
-                    or 'Macintosh' in platform.platform())
+            p = platform.platform()
+            break
+        except IOError, e:
+            if e.errno == errno.EINTR:
+                continue
+            raise e
+    p = p.lower()
+    return 'macintosh' in p or 'darwin' in p
+
+
+def is_broken():
+    """Is it windows or mac? (e.g. is running git-mergetool non-trivial?)"""
+    if is_darwin():
+        return True
+    while True:
+        try:
+            return platform.system() == 'Windows'
         except IOError, e:
             if e.errno == errno.EINTR:
                 continue
