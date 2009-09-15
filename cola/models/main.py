@@ -123,6 +123,24 @@ class MainModel(ObservableModel):
     # Observable messages
     message_updated = 'updated'
     message_about_to_update = 'about_to_update'
+
+    # States
+    mode_none = 'none' # Default: nothing's happened, do nothing
+    mode_worktree = 'worktree' # Comparing index to worktree
+    mode_index = 'index' # Comparing index to last commit
+    mode_amend = 'amend' # Amending a commit
+    mode_grep = 'grep' # We ran Search -> Grep
+    mode_branch = 'branch' # Applying changes from a branch
+    mode_diff = 'diff' # Diffing against an arbitrary branch
+    mode_diff_expr = 'diff_expr' # Diffing using arbitrary expression
+    mode_review = 'review' # Reviewing a branch
+
+    # Modes where we don't do anything like staging, etc.
+    modes_read_only = (mode_branch, mode_grep,
+                       mode_diff, mode_diff_expr, mode_review)
+    # Modes where we can checkout files from the $head
+    modes_undoable = (mode_none, mode_index, mode_worktree)
+
     def __init__(self, cwd=None):
         """Reads git repository settings and sets several methods
         so that they refer to the git module.  This object
