@@ -8,13 +8,13 @@ from PyQt4.QtGui import QMenu
 from cola import utils
 from cola import resources
 from cola import qtutils
-from cola.views import CommitView
+from cola.views.selectcommits import SelectCommitsView
 from cola.qobserver import QObserver
 
 def select_file_from_repo(model, parent):
     """Launche a dialog to selecting a filename from a branch."""
     model = model.clone()
-    view = CommitView(parent)
+    view = SelectCommitsView(parent, syntax=False)
     controller = RepoBrowserController(model, view,
                                        title='Select File',
                                        get_file=True)
@@ -32,7 +32,7 @@ def browse_git_branch(model, parent, branch):
     # with different sets of data
     model = model.clone()
     model.set_currentbranch(branch)
-    view = CommitView(parent)
+    view = SelectCommitsView(parent, syntax=False)
     controller = RepoBrowserController(model, view)
     view.show()
     return view.exec_() == QDialog.Accepted
