@@ -1286,3 +1286,9 @@ class MainModel(ObservableModel):
         """Given `ref`, return $(git merge-base ref HEAD)..ref."""
         base = self.git.merge_base('HEAD', ref)
         return '%s..%s' % (base, ref)
+
+    def everything(self):
+        """Returns a sorted list of all files, including untracked files."""
+        files = self.all_files() + self.untracked
+        files.sort()
+        return files
