@@ -275,8 +275,9 @@ class QObserver(observer.Observer, QtCore.QObject):
             elif isinstance(widget, QtGui.QCheckBox):
                 widget.setChecked(value)
             elif isinstance(widget, QtGui.QFontComboBox):
-                font = widget.currentFont()
+                font = QtGui.QFont()
                 font.fromString(value)
+                widget.setCurrentFont(font)
             elif isinstance(widget, QtGui.QDateEdit):
                 if not value:
                     return
