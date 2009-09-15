@@ -1052,22 +1052,16 @@ class MainModel(ObservableModel):
         # Look for upstream modified files if this is a tracking branch
         if self.trackedbranch:
             try:
-                output = self.git.diff_index(self.trackedbranch,
-                                             with_stderr=True)
+                output = self.git.diff('..'+self.trackedbranch,
+                                       name_only=True, z=True)
                 if output.startswith('fatal:'):
                     raise GitInitError('git init')
-                for line in output.splitlines():
-                    info, name = line.split('\t', 1)
-                    status = info.split()[-1]
-                    # TODO
-                    # For now we'll just call anything here 'changed
-                    # upstream'.  Maybe one day we'll elaborate more on
-                    # what the change is.
-                    if status == 'M' or status == 'D':
-                        name = eval_path(name)
-                        if name not in upstream_changed_set:
-                            upstream_changed.append(name)
-                            upstream_changed_set.add(name)
+                for name in output.split('\0'):
+                    if not name:
+                        continue
+                    name = core.decode(name)
+                    upstream_changed.append(name)
+                    upstream_changed_set.add(name)
 
             except GitInitError:
                 # handle git init
@@ -1232,7 +1226,7 @@ class MainModel(ObservableModel):
 
     def create_branch(self, name, base, track=False):
         """Create a branch named 'name' from revision 'base'
-        
+
         Pass track=True to create a local tracking branch.
         """
         return self.git.branch(name, base, track=track,
