@@ -80,6 +80,7 @@ class MainView(MainWindow):
             parent.addChild(treeitem)
         if idx not in self._seen_indexes and items:
             self._seen_indexes.add(idx)
+            self.expand_status()
         if items:
             self.status_tree.setItemHidden(parent, False)
         else:
