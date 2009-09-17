@@ -6,7 +6,8 @@ Views
     mainwindow
     standard
     about
-    misc
+    status
     repo
     syntax
     log
+    misc
