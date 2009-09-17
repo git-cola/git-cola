@@ -14,7 +14,13 @@ def widget(parent=None):
 
 
 class StatusWidget(QtGui.QDialog):
+    """
+    Provides a git-status-like repository widget.
 
+    This widget observes the main model and broadcasts
+    Qt signals.
+
+    """
     # Item categories
     idx_staged = 0
     idx_modified = 1
@@ -107,7 +113,7 @@ class StatusWidget(QtGui.QDialog):
         if idx in self._expanded_items:
             return
         self._expanded_items.add(idx)
-        for idx in xrange(0, self.idx_end):
+        for idx in xrange(self.idx_end):
             item = self.tree.topLevelItem(idx)
             if item:
                 self.tree.expandItem(item)
