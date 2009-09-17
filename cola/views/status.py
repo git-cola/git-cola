@@ -43,7 +43,7 @@ class StatusWidget(QtGui.QDialog):
         self.add_item('Unmerged', 'unmerged.png')
         self.add_item('Untracked', 'untracked.png')
 
-        self.seen_indexes = set()
+        self._expanded_items = set()
         self.model = cola.model()
         self.model.add_message_observer(self.model.message_updated,
                                         self.refresh)
@@ -89,15 +89,24 @@ class StatusWidget(QtGui.QDialog):
                                                check=check,
                                                untracked=untracked)
             parent.addChild(treeitem)
-        if idx not in self.seen_indexes and items:
-            self.seen_indexes.add(idx)
-            self.expand_items()
+        self.expand_items(idx, items)
         if items:
             self.tree.setItemHidden(parent, False)
         else:
             self.tree.setItemHidden(parent, True)
 
-    def expand_items(self):
+    def expand_items(self, idx, items):
+        """Expand the top-level category "folder" once and only once."""
+        # Don't do this if items is empty; this makes it so that we
+        # don't add the top-level index into the expanded_items set
+        # an item appears in a particular category.
+        if not items:
+            return
+        # Only run this once; we don't want to re-expand items that
+        # we've click on to re-collapse on refresh.
+        if idx in self._expanded_items:
+            return
+        self._expanded_items.add(idx)
         for idx in xrange(0, self.idx_end):
             item = self.tree.topLevelItem(idx)
             if item:
