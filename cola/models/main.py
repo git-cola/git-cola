@@ -959,14 +959,14 @@ class MainModel(ObservableModel):
                                        with_status=True,
                                        *branch.strip().split())
         if status != 0:
-            return ([], [], [], [])
+            return ([], [], [], [], [])
         staged = []
         for name in output.strip('\0').split('\0'):
             if not name:
                 continue
             staged.append(core.decode(name))
 
-        return (staged, [], [], [])
+        return (staged, [], [], [], staged)
 
     def worktree_state(self, head='HEAD', staged_only=False):
         """Return a tuple of files in various states of being
