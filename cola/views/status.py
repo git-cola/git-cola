@@ -1,3 +1,4 @@
+
 from PyQt4 import QtGui
 
 import cola
@@ -117,3 +118,18 @@ class StatusWidget(QtGui.QDialog):
             item = self.tree.topLevelItem(idx)
             if item:
                 self.tree.expandItem(item)
+    def staged(self):
+        return self._subtree_selection(self.idx_staged, self.model.staged)
+
+    def modified(self):
+        return self._subtree_selection(self.idx_modified, self.model.modified)
+
+    def unmerged(self, items):
+        return self._subtree_selection(self.idx_unmerged, self.model.unmerged)
+
+    def untracked(self, items):
+        return self._subtree_selection(self.idx_untracked, self.model.untracked)
+
+    def _subtree_selection(self, idx, items):
+        item = self.tree.topLevelItem(idx)
+        return qtutils.tree_selection(item, items)
