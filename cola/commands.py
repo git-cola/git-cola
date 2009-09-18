@@ -31,12 +31,16 @@ class Command(object):
 
 
 class Diffstat(Command):
+    """Perform a diffstat and set the model's current text."""
     def __init__(self):
         Command.__init__(self)
         self.old_text = self.model.current_text
 
     def do(self):
-        cola.notifier().broadcast(signals.text, self.model.diffstat())
+        self.model.set_current_text(self.model.diffstat())
+
+    def undo(self):
+        self.model.set_current_text(self.old_text)
 
     def is_undoable(self):
         return True

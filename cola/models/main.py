@@ -1185,12 +1185,10 @@ class MainModel(ObservableModel):
 
     def diffstat(self):
         """Perform a diffstat and return it.  Sets the current text."""
-        txt = self.git.diff(self.head,
+        return self.git.diff(self.head,
                             unified=self.diff_context,
                             no_color=True,
                             stat=True)
-        self.set_current_text(txt)
-        return txt
 
     def pad(self, pstr, num=22):
         topad = num-len(pstr)
