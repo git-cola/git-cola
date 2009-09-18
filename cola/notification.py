@@ -2,6 +2,7 @@ from PyQt4 import QtCore
 
 from cola import signals
 
+debug = False
 _instance = None
 def notifier():
     global _instance
@@ -13,6 +14,11 @@ def notifier():
 
 class QNotifier(QtCore.QObject):
     def broadcast(self, signal, *args, **kwargs):
-        print ('broadcast: %s(%s, %s)' %
-                (signals.name(signal), args or '<empty>', kwargs or '<empty>'))
+        if debug:
+            print ('broadcast: %s(%s, %s)' % (signals.name(signal),
+                                              args or '<empty>',
+                                              kwargs or '<empty>'))
         self.emit(signal, *args, **kwargs)
+
+    def listen(self, signal, callback):
+        self.connect(self, signal, callback)
