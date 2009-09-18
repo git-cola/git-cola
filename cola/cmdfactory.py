@@ -29,8 +29,10 @@ class CommandFactory(object):
         self.undostack = []
         self.redostack = []
         self.signal_to_command = {
+            signals.diff: commands.Diff,
             signals.diffstat: commands.Diffstat,
             signals.modified_summary: commands.Diffstat,
+            signals.reset_mode: commands.ResetMode
         }
 
         for signal in self.signal_to_command:
