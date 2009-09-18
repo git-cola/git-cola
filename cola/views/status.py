@@ -186,6 +186,23 @@ class StatusWidget(QtGui.QDialog):
 
         return menu
 
+    def single_selection(self):
+        """Scan across staged, modified, etc. and return a single item."""
+        staged, modified, unmerged, untracked = self.selection()
+        s = None
+        m = None
+        um = None
+        ut = None
+        if staged:
+            s = staged[0]
+        elif modified:
+            m = modified[0]
+        elif unmerged:
+            um = unmerged[0]
+        elif untracked:
+            ut = untracked[0]
+        return s, m, um, ut
+
     def selected_indexes(self):
         """Returns a list of (category, row) representing the tree selection."""
         selected = self.tree.selectedIndexes()
@@ -198,6 +215,12 @@ class StatusWidget(QtGui.QDialog):
                 entry = (-1, idx.row())
             result.append(entry)
         return result
+
+    def selection(self):
+        """Return the current selection in the repo status tree."""
+        return (self.staged(), self.modified(),
+                self.unmerged(), self.untracked())
+
     def staged(self):
         return self._subtree_selection(self.idx_staged, self.model.staged)
 
