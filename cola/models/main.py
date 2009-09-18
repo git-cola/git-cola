@@ -151,7 +151,9 @@ class MainModel(ObservableModel):
         self.git = GitCola()
 
         #####################################################
+        self.head = 'HEAD'
         self.mode = self.mode_none
+        self.current_text = ''
         self.currentbranch = ''
         self.trackedbranch = ''
         self.directory = ''
@@ -1261,11 +1263,13 @@ class MainModel(ObservableModel):
             return [ s[s.index(':')+1:] for s in stashes ]
 
     def diffstat(self):
-        return self.git.diff(
-                'HEAD^',
-                unified=self.diff_context,
-                no_color=True,
-                stat=True)
+        """Perform a diffstat and return it.  Sets the current text."""
+        txt = self.git.diff(self.head,
+                            unified=self.diff_context,
+                            no_color=True,
+                            stat=True)
+        self.set_current_text(txt)
+        return txt
 
     def pad(self, pstr, num=22):
         topad = num-len(pstr)
