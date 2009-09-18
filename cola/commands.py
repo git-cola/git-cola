@@ -3,18 +3,27 @@ from cola import signals
 
 
 class Command(object):
+    """Base class for all commands; provides the command pattern."""
     def __init__(self, model=None):
+        """Initialize the command and stash away values for use in do()"""
         if not model:
             model = cola.model()
         self.model = model
 
     def do(self):
+        """Perform the operation."""
         pass
 
     def is_undoable(self):
+        """Can this be undone?"""
         return False
 
+    def undo(self):
+        """Undo the operation."""
+        pass
+
     def name(self):
+        """Return this command's name."""
         return self.__class__.__name__
 
     def undo(self):
