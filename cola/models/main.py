@@ -995,7 +995,7 @@ class MainModel(ObservableModel):
                                          cached=True,
                                          with_stderr=True)
             if output.startswith('fatal:'):
-                raise GitInitError('git init')
+                raise errors.GitInitError('git init')
             for line in output.splitlines():
                 rest, name = line.split('\t', 1)
                 status = rest[-1]
@@ -1020,14 +1020,14 @@ class MainModel(ObservableModel):
                     unmerged.append(name)
                     modified_set.add(name)
 
-        except GitInitError:
+        except errors.GitInitError:
             # handle git init
             staged.extend(self.all_files())
 
         try:
             output = self.git.diff_index(head, with_stderr=True)
             if output.startswith('fatal:'):
-                raise GitInitError('git init')
+                raise errors.GitInitError('git init')
             for line in output.splitlines():
                 info, name = line.split('\t', 1)
                 status = info.split()[-1]
@@ -1042,7 +1042,7 @@ class MainModel(ObservableModel):
                             self._is_modified(name)):
                         modified.append(name)
 
-        except GitInitError:
+        except errors.GitInitError:
             # handle git init
             for name in (self.git.ls_files(modified=True, z=True)
                                  .split('\0')):
@@ -1060,7 +1060,7 @@ class MainModel(ObservableModel):
                 output = self.git.diff('..'+self.trackedbranch,
                                        name_only=True, z=True)
                 if output.startswith('fatal:'):
-                    raise GitInitError('git init')
+                    raise errors.GitInitError('git init')
                 for name in output.split('\0'):
                     if not name:
                         continue
@@ -1068,7 +1068,7 @@ class MainModel(ObservableModel):
                     upstream_changed.append(name)
                     upstream_changed_set.add(name)
 
-            except GitInitError:
+            except errors.GitInitError:
                 # handle git init
                 pass
 
