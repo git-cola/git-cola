@@ -26,6 +26,12 @@ def log(status, output):
         return
     logger().log(status, output)
 
+def SLOT(signal, *args):
+    """Returns a callback that broadcasts a message over the notifier."""
+    def broadcast():
+        cola.notifier().broadcast(signal, *args)
+    return broadcast
+
 def prompt(msg, title=None):
     """Presents the user with an input widget and returns the input."""
     if title is None:
