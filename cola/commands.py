@@ -45,5 +45,20 @@ class Diffstat(Command):
     def is_undoable(self):
         return True
 
+
+class ResetMode(Command):
+    def __init__(self, model=None):
+        Command.__init__(self, model=model)
+        self.old_mode = self.model.mode
+        self.old_text = self.model.current_text
+
+    def do(self):
+        self.model.set_mode(self.model.mode_none)
+        self.model.set_current_text('')
+
     def undo(self):
-        notifier().broadcast(signals.text, self.old_text)
+        self.model.set_mode(self.old_mode)
+        self.model.set_current_text(self.old_text)
+
+    def is_undoable(self):
+        return True
