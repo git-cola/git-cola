@@ -2,7 +2,9 @@
 from PyQt4 import QtGui
 
 import cola
+from cola import signals
 from cola import qtutils
+from cola.qtutils import SLOT
 
 
 _widget = None
@@ -23,11 +25,15 @@ class StatusWidget(QtGui.QDialog):
 
     """
     # Item categories
+    idx_header = -1
     idx_staged = 0
     idx_modified = 1
     idx_unmerged = 2
     idx_untracked = 3
     idx_end = 4
+
+    mode = property(lambda self: self.model.mode,
+                    lambda self, m: self.model.set_mode(m))
 
     def __init__(self, parent=None):
         QtGui.QDialog.__init__(self, parent)
@@ -50,10 +56,13 @@ class StatusWidget(QtGui.QDialog):
         self.add_item('Unmerged', 'unmerged.png')
         self.add_item('Untracked', 'untracked.png')
 
-        self._expanded_items = set()
+        self.expanded_items = set()
         self.model = cola.model()
         self.model.add_message_observer(self.model.message_updated,
                                         self.refresh)
+        # Handle these events here
+        self.tree.contextMenuEvent = self.tree_context_menu_event
+        self.tree.mousePressEvent = self.tree_click
 
     def add_item(self, txt, path):
         """Create a new top-level item in the status tree."""
@@ -62,6 +71,7 @@ class StatusWidget(QtGui.QDialog):
         item.setIcon(0, qtutils.icon(path))
 
     def refresh(self, subject, message):
+        """Update display from model data."""
         self.set_staged(self.model.staged)
         self.set_modified(self.model.modified)
         self.set_unmerged(self.model.unmerged)
@@ -111,25 +121,192 @@ class StatusWidget(QtGui.QDialog):
             return
         # Only run this once; we don't want to re-expand items that
         # we've click on to re-collapse on refresh.
-        if idx in self._expanded_items:
+        if idx in self.expanded_items:
             return
-        self._expanded_items.add(idx)
+        self.expanded_items.add(idx)
         for idx in xrange(self.idx_end):
             item = self.tree.topLevelItem(idx)
             if item:
                 self.tree.expandItem(item)
+
+    def tree_context_menu_event(self, event):
+        """Create context menus for the repo status tree."""
+        menu = self.tree_context_menu_setup()
+        menu.exec_(self.tree.mapToGlobal(event.pos()))
+
+    def tree_context_menu_setup(self):
+        """Set up the status menu for the repo status tree."""
+        staged, modified, unmerged, untracked = self.selection()
+        menu = QtGui.QMenu(self)
+
+        if staged:
+            menu.addAction(self.tr('Unstage Selected'),
+                           SLOT(signals.unstage, self.staged()))
+            menu.addSeparator()
+            menu.addAction(self.tr('Launch Editor'),
+                           SLOT(signals.edit, self.staged()))
+            menu.addAction(self.tr('Launch Diff Tool'),
+                           SLOT(signals.difftool, self.staged()))
+            return menu
+
+        if unmerged:
+            if not utils.is_broken():
+                menu.addAction(self.tr('Launch Merge Tool'),
+                               SLOT(signals.mergetool, self.unmerged()))
+            menu.addAction(self.tr('Launch Editor'),
+                           SLOT(signals.edit, self.unmerged()))
+            menu.addSeparator()
+            menu.addAction(self.tr('Stage Selected'),
+                           SLOT(signals.stage, self.unmerged()))
+            return menu
+
+        enable_staging = self.model.enable_staging()
+        if enable_staging:
+            menu.addAction(self.tr('Stage Selected'),
+                           SLOT(signals.stage, self.modified()))
+            menu.addSeparator()
+
+        menu.addAction(self.tr('Launch Editor'),
+                       SLOT(signals.edit, self.unstaged()))
+
+        if modified and enable_staging:
+            menu.addAction(self.tr('Launch Diff Tool'),
+                           SLOT(signals.difftool, self.modified()))
+            menu.addSeparator()
+            menu.addAction(self.tr('Undo All Changes'),
+                           SLOT(signals.checkout, self.modified()))
+
+        if untracked:
+            menu.addSeparator()
+            menu.addAction(self.tr('Delete File(s)'),
+                           SLOT(signals.delete, self.untracked()))
+
+        return menu
+
     def staged(self):
         return self._subtree_selection(self.idx_staged, self.model.staged)
+
+    def unstaged(self):
+        return self.modified() + self.unmerged() + self.untracked()
 
     def modified(self):
         return self._subtree_selection(self.idx_modified, self.model.modified)
 
-    def unmerged(self, items):
+    def unmerged(self):
         return self._subtree_selection(self.idx_unmerged, self.model.unmerged)
 
-    def untracked(self, items):
+    def untracked(self):
         return self._subtree_selection(self.idx_untracked, self.model.untracked)
 
     def _subtree_selection(self, idx, items):
         item = self.tree.topLevelItem(idx)
         return qtutils.tree_selection(item, items)
+
+    def tree_click(self, event):
+        """
+        Called when a repo status tree item is clicked.
+
+        This handles the behavior where clicking on the icon invokes
+        the same appropriate action.
+
+        """
+        # Get the item that was clicked
+        result = QtGui.QTreeWidget.mousePressEvent(self.tree, event)
+        item = self.tree.itemAt(event.pos())
+        if not item:
+            # Nothing was clicked -- reset the display and return
+            cola.notifier().broadcast(signals.reset_mode)
+            items = self.tree.selectedItems()
+            self.tree.blockSignals(True)
+            for i in items:
+                i.setSelected(False)
+            self.tree.blockSignals(False)
+            return result
+
+        # An item was clicked -- get its index in the model
+        staged, idx = self.index_for_item(item)
+        if idx == self.idx_header:
+            return result
+
+        if self.model.read_only():
+            return result
+
+        # handle when the icons are clicked
+        xpos = event.pos().x()
+        if xpos > 42 and xpos < 58:
+            if staged:
+                # A staged item was clicked
+                cola.notifier().broadcast(signals.unstage, self.staged())
+                #self.log(*self.model.reset_helper(selected))
+                #self.rescan()
+            else:
+                # An unstaged item was clicked
+                selected = self.unstaged()
+                if selected:
+                    cola.notifier().broadcast(signals.stage, selected)
+                    #self.log(*self.model.add_or_remove(selected))
+                    #self.rescan()
+        return result
+
+    def tree_selection(self):
+        """Show a data for the selected item."""
+        selection = self.selected_indexes()
+        if not selection:
+            return
+        category, idx = selection[0]
+        # A header item e.g. 'Staged', 'Modified', etc.
+        if category == self.idx_header:
+            signal = {
+                self.idx_staged: signals.staged_summary,
+                self.idx_modified: signals.modified_summary,
+                self.idx_unmerged: signals.unmerged_summary,
+                self.idx_untracked: signals.untracked_summary,
+            }.get(idx, signals.diffstat)
+            cola.notifier().broadcast(signal)
+            #diff = self.generate_header_data(idx)
+            #self.view.set_display(diff)
+        # A staged file
+        elif category == self.idx_staged:
+            #self.view_diff(staged=True)
+            cola.notifier().broadcast(signals.diff_staged, self.staged())
+
+        # A modified file
+        elif category == self.idx_modified:
+            cola.notifier().broadcast(signals.diff, self.modified())
+
+        elif category == self.idx_unmerged:
+            cola.notifier().broadcast(signals.diff, self.unmerged())
+
+        elif category == self.idx_untracked:
+            cola.notifier().broadcast(signals.show_untracked, self.unstaged())
+
+    def index_for_item(self, item):
+        """
+        Given an item, returns the index of the item.
+
+        The indexes for unstaged items are grouped such that
+        the index of unmerged[1] = len(modified) + 1, etc.
+
+        """
+        if not item:
+            return False, -1
+
+        parent = item.parent()
+        if not parent:
+            return False, -1
+
+        pidx = self.tree.indexOfTopLevelItem(parent)
+        if pidx == self.idx_staged:
+            return True, parent.indexOfChild(item)
+        elif pidx == self.idx_modified:
+            return False, parent.indexOfChild(item)
+
+        count = self.tree.topLevelItem(self.idx_modified).childCount()
+        if pidx == self.idx_unmerged:
+            return False, count + parent.indexOfChild(item)
+
+        count += self.tree.topLevelItem(self.idx_unmerged).childCount()
+        if pidx == self.idx_untracked:
+            return False, count + parent.indexOfChild(item)
+
+        return False, -1
