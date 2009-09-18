@@ -151,7 +151,7 @@ class MainModel(ObservableModel):
         self.git = GitCola()
 
         #####################################################
-        # Used in various places
+        self.mode = self.mode_none
         self.currentbranch = ''
         self.trackedbranch = ''
         self.directory = ''
@@ -163,7 +163,7 @@ class MainModel(ObservableModel):
         self.remote_branch = ''
 
         #####################################################
-        # Used primarily by the main UI
+        # Status info
         self.commitmsg = ''
         self.modified = []
         self.staged = []
@@ -173,28 +173,24 @@ class MainModel(ObservableModel):
         self.upstream_changed = []
 
         #####################################################
-        # Used by the create branch dialog
+        # Refs
         self.revision = ''
         self.local_branches = []
         self.remote_branches = []
         self.tags = []
-
-        #####################################################
-        # Used by the commit/repo browser
         self.revisions = []
         self.summaries = []
 
         # These are parallel lists
+        # ref^{tree}
         self.types = []
         self.sha1s = []
         self.names = []
 
-        # All items below here are re-calculated in
-        # init_browser_data()
         self.directories = []
         self.directory_entries = {}
 
-        # These are also parallel lists
+        # parallel lists
         self.subtree_types = []
         self.subtree_sha1s = []
         self.subtree_names = []
@@ -205,6 +201,13 @@ class MainModel(ObservableModel):
         self.generate_remote_helpers()
         if cwd:
             self.use_worktree(cwd)
+
+    def read_only(self):
+        return self.mode in self.modes_read_only
+
+    def enable_staging(self):
+        """Whether staging should be allowed."""
+        return self.mode == self.mode_worktree
 
     def all_files(self):
         """Returns the names of all files in the repository"""
@@ -390,9 +393,9 @@ class MainModel(ObservableModel):
         # Lookup the tree info
         tree_info = self.parse_ls_tree(self.currentbranch)
 
-        self.set_types(map( lambda(x): x[1], tree_info ))
-        self.set_sha1s(map( lambda(x): x[2], tree_info ))
-        self.set_names(map( lambda(x): x[3], tree_info ))
+        self.set_types(map(lambda(x): x[1], tree_info ))
+        self.set_sha1s(map(lambda(x): x[2], tree_info ))
+        self.set_names(map(lambda(x): x[3], tree_info ))
 
         if self.directory: self.directories.append('..')
 
