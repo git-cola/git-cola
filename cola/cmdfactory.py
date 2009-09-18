@@ -41,6 +41,28 @@ class CommandFactory(object):
         cola.notifier().listen(signals.undo, self.undo)
         cola.notifier().listen(signals.redo, self.redo)
 
+        self.model = cola.model()
+        self.model.add_observer(self)
+
+    def notify(self, *params):
+        """
+        Observe model changes to current_text.
+        
+        'current_text' is the model param that maps to the diff disply,
+        so broadcast notifier messages whenever it changes.
+
+        """
+        actions = {
+            'current_text':
+                lambda: cola.notifier()
+                            .broadcast(signals.text, self.model.current_text),
+                                                
+        }
+        for param in params:
+            action = actions.get(param, None)
+            if action:
+                action()
+
     def clear(self):
         self.undostack = []
         self.redostack = []
