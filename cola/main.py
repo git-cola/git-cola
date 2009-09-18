@@ -9,6 +9,8 @@ import os
 from cola import resources
 from cola import utils
 from cola import core
+from cola import git
+from cola import version
 
 
 def main():
@@ -55,10 +57,8 @@ def main():
 
     if opts.version or 'version' in args:
         # Accept 'git cola --version' or 'git cola version'
-        from cola import git
         git.Git.execute(['git', 'update-index', '--refresh'])
-        from cola import version
-        print "cola version", version.version()
+        print 'cola version', version.version()
         sys.exit(0)
 
     if opts.git:
@@ -95,12 +95,15 @@ def main():
     from cola.controllers.classic import ClassicController
     from cola.app import ColaApplication
     from cola import qtutils
+    from cola import cmdfactory
+
 
     # Allow Ctrl-C to exit
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     # Initialize the app
     app = ColaApplication(sys.argv)
+    factory = cmdfactory.factory()
 
     style = None
     if opts.style:
