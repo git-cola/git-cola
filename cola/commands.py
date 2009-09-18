@@ -26,8 +26,32 @@ class Command(object):
         """Return this command's name."""
         return self.__class__.__name__
 
+
+class Diff(Command):
+    """Perform a diff and set the model's current text."""
+    def __init__(self, filenames):
+        Command.__init__(self)
+        self.filenames = filenames 
+        self.old_mode = self.model.mode
+        self.old_text = self.model.current_text
+
+    def do(self):
+        if not self.filenames:
+            print 'no filenames:', self.filenames
+            return
+        self.model.set_mode(self.model.mode_worktree)
+        filename = self.filenames[0]
+        diff = self.model.diff_helper(filename=filename,
+                                      ref=self.model.head,
+                                      cached=False)
+        self.model.set_current_text(diff)
+
     def undo(self):
-        pass
+        self.model.set_mode(self.old_mode)
+        self.model.set_current_text(self.old_text)
+
+    def is_undoable(self):
+        return True
 
 
 class Diffstat(Command):
