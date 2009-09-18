@@ -1,5 +1,5 @@
-
 from PyQt4 import QtGui
+from PyQt4.QtCore import SIGNAL
 
 import cola
 from cola import signals
@@ -63,6 +63,9 @@ class StatusWidget(QtGui.QDialog):
         # Handle these events here
         self.tree.contextMenuEvent = self.tree_context_menu_event
         self.tree.mousePressEvent = self.tree_click
+
+        self.connect(self.tree, SIGNAL('itemSelectionChanged()'),
+                     self.tree_selection)
 
     def add_item(self, txt, path):
         """Create a new top-level item in the status tree."""
@@ -183,6 +186,18 @@ class StatusWidget(QtGui.QDialog):
 
         return menu
 
+    def selected_indexes(self):
+        """Returns a list of (category, row) representing the tree selection."""
+        selected = self.tree.selectedIndexes()
+        result = []
+        for idx in selected:
+            if idx.parent().isValid():
+                parent_idx = idx.parent()
+                entry = (parent_idx.row(), idx.row())
+            else:
+                entry = (-1, idx.row())
+            result.append(entry)
+        return result
     def staged(self):
         return self._subtree_selection(self.idx_staged, self.model.staged)
 
