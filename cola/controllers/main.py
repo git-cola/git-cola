@@ -124,7 +124,6 @@ class MainController(QObserver):
             menu_manage_bookmarks = manage_bookmarks,
             menu_save_bookmark = save_bookmark,
             menu_load_commitmsg = self.load_commitmsg,
-            menu_get_prev_commitmsg = model.get_prev_commitmsg,
             menu_load_commitmsg_template = model.load_commitmsg_template,
 
             # Edit Menu
