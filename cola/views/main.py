@@ -7,9 +7,9 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
-
 from cola import qtutils
 from cola import signals
+from cola.qtutils import SLOT
 from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.mainwindow import MainWindow
 
@@ -24,7 +24,7 @@ class MainView(MainWindow):
 
     def __init__(self, parent=None):
         MainWindow.__init__(self, parent)
-        self.amend_is_checked = self.amend_radio.isChecked
+        self.amend_is_checked = self.amend_checkbox.isChecked
         self.action_undo = self.commitmsg.undo
         self.action_redo = self.commitmsg.redo
         self.action_paste = self.commitmsg.paste
@@ -33,9 +33,6 @@ class MainView(MainWindow):
         # Qt does not support noun/verbs
         self.commit_button.setText(qtutils.tr('Commit@@verb'))
         self.commit_menu.setTitle(qtutils.tr('Commit@@verb'))
-
-        # Default to creating a new commit(i.e. not an amend commit)
-        self.new_commit_radio.setChecked(True)
 
         # Diff/patch syntax highlighter
         self.syntax = DiffSyntaxHighlighter(self.display_text.document())
@@ -58,18 +55,11 @@ class MainView(MainWindow):
         # Listen for text messages
         cola.notifier().listen(signals.text, self.set_display)
         cola.notifier().listen(signals.amend, self._amend_listener)
-        self.connect(self.amend_radio, SIGNAL('toggled(bool)'),
-                     self._amend_radio_toggled)
-
+        self.connect(self.amend_checkbox, SIGNAL('toggled(bool)'),
+                     SLOT(signals.amend_mode))
 
     def _amend_listener(self, value):
-        if value:
-            self.amend_radio.setChecked(True)
-        else:
-            self.new_commit_radio.setChecked(True)
-
-    def _amend_radio_toggled(self, checked):
-        cola.notifier().broadcast(signals.amend_mode, checked)
+        self.amend_checkbox.setChecked(value)
 
     def set_staged(self, items, check=True):
         """Adds items to the 'Staged' subtree."""
@@ -282,8 +272,7 @@ class MainView(MainWindow):
         self.commitmsg.textCursor().removeSelectedText()
 
     def reset_checkboxes(self):
-        self.new_commit_radio.setChecked(True)
-        self.amend_radio.setChecked(False)
+        self.amend_checkbox.setChecked(False)
 
     def reset_display(self):
         self.set_display('')

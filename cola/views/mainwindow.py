@@ -113,21 +113,20 @@ class MainWindow(MainWindowBase):
         self.vboxlayout.addWidget(self.commitmsg)
 
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setSpacing(0)
-        self.hboxlayout.setContentsMargins(0, -1, -1, -1)
+        self.hboxlayout.setSpacing(3)
 
+
+        # Spacer between position and amend
         self.spacer = QtGui.QSpacerItem(1, 1,
-                                        QtGui.QSizePolicy.Minimum,
+                                        QtGui.QSizePolicy.MinimumExpanding,
                                         QtGui.QSizePolicy.Minimum)
+
+        # Amend checkbox
+        self.amend_checkbox = QtGui.QCheckBox(self.commitdockwidgetcontents)
+        self.amend_checkbox.setText(tr('Amend Last Commit'))
+
         self.hboxlayout.addItem(self.spacer)
-
-        self.new_commit_radio = QtGui.QRadioButton(self.commitdockwidgetcontents)
-        self.new_commit_radio.setText(tr("New Commit"))
-        self.hboxlayout.addWidget(self.new_commit_radio)
-
-        self.amend_radio = QtGui.QRadioButton(self.commitdockwidgetcontents)
-        self.amend_radio.setText(tr("Amend Last Commit"))
-        self.hboxlayout.addWidget(self.amend_radio)
+        self.hboxlayout.addWidget(self.amend_checkbox)
 
         self.vboxlayout.addLayout(self.hboxlayout)
         self.commitdockwidgetlayout.addLayout(self.vboxlayout)
