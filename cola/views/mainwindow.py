@@ -58,10 +58,6 @@ class MainWindow(MainWindowBase):
         self.alt_button = self.create_button('...', self.actiondockwidgetcontents)
         self.alt_button.hide()
 
-        self.column_label = QtGui.QLabel(self.actiondockwidgetcontents)
-        self.column_label.setAlignment(QtCore.Qt.AlignCenter)
-        self.actiondockwidgetlayout.addWidget(self.column_label)
-
         self.action_spacer = QtGui.QSpacerItem(1, 1,
                                                QtGui.QSizePolicy.Minimum,
                                                QtGui.QSizePolicy.MinimumExpanding)
@@ -115,6 +111,10 @@ class MainWindow(MainWindowBase):
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setSpacing(3)
 
+        # Position display
+        self.position_label = QtGui.QLabel(self.actiondockwidgetcontents)
+        self.position_label.setAlignment(QtCore.Qt.AlignLeft)
+
 
         # Spacer between position and amend
         self.spacer = QtGui.QSpacerItem(1, 1,
@@ -125,6 +125,7 @@ class MainWindow(MainWindowBase):
         self.amend_checkbox = QtGui.QCheckBox(self.commitdockwidgetcontents)
         self.amend_checkbox.setText(tr('Amend Last Commit'))
 
+        self.hboxlayout.addWidget(self.position_label)
         self.hboxlayout.addItem(self.spacer)
         self.hboxlayout.addWidget(self.amend_checkbox)
 
@@ -382,9 +383,10 @@ class MainWindow(MainWindowBase):
         action.setText(tr(title))
         return action
 
-    def create_button(self, text, parent):
+    def create_button(self, text, parent=None):
         """Create a button, set its title, and add it to the parent."""
         button = QtGui.QPushButton(parent)
         button.setText(tr(text))
-        parent.layout().addWidget(button)
+        if parent:
+            parent.layout().addWidget(button)
         return button

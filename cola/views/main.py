@@ -40,13 +40,13 @@ class MainView(MainWindow):
         # Display the current column
         self.connect(self.commitmsg,
                      SIGNAL('cursorPositionChanged()'),
-                     self.show_current_column)
+                     self.show_cursor_position)
 
         # Initialize the seen tree widget indexes
         self._seen_indexes = set()
 
         # Initialize the GUI to show 'Column: 00'
-        self.show_current_column()
+        self.show_cursor_position()
 
         # Internal field used by import/export_state().
         # Change this whenever dockwidgets are removed.
@@ -319,10 +319,24 @@ class MainView(MainWindow):
     def display(self, text):
         self.set_display(text)
 
-    def show_current_column(self):
+    def show_cursor_position(self):
+        """Update the UI with the current row and column."""
         cursor = self.commitmsg.textCursor()
-        colnum = cursor.columnNumber()
-        self.column_label.setText('Column: %02d' % colnum)
+        position = cursor.position()
+        txt = unicode(self.commitmsg.toPlainText())
+        rows = txt[:position].count('\n')
+        cols = cursor.columnNumber()
+        display = ' %d,%d ' % (rows, cols)
+        if cols > 78:
+            display = ('<span style="background-color: red;">%s</span>' %
+                       display.replace(' ', '&nbsp;'))
+        elif cols > 72:
+            display = ('<span style="background-color: orange;">%s</span>' %
+                       display.replace(' ', '&nbsp;'))
+        elif cols > 64:
+            display = ('<span style="background-color: yellow;">%s</span>' %
+                       display.replace(' ', '&nbsp;'))
+        self.position_label.setText(display)
 
     def import_state(self, state):
         """Imports data for save/restore"""
