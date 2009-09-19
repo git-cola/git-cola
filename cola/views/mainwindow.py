@@ -49,8 +49,6 @@ class MainWindow(MainWindowBase):
 
         self.rescan_button = self.create_button('Rescan', self.actiondockwidgetcontents)
         self.stage_button = self.create_button('Stage Changed', self.actiondockwidgetcontents)
-        self.signoff_button = self.create_button('Sign Off', self.actiondockwidgetcontents)
-        self.commit_button = self.create_button('Commit@@verb', self.actiondockwidgetcontents)
         self.fetch_button = self.create_button('Fetch', self.actiondockwidgetcontents)
         self.push_button = self.create_button('Push', self.actiondockwidgetcontents)
         self.pull_button = self.create_button('Pull', self.actiondockwidgetcontents)
@@ -111,6 +109,10 @@ class MainWindow(MainWindowBase):
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setSpacing(3)
 
+        # Sign off and commit buttons
+        self.signoff_button = self.create_button('Sign Off')
+        self.commit_button = self.create_button('Commit@@verb')
+
         # Position display
         self.position_label = QtGui.QLabel(self.actiondockwidgetcontents)
         self.position_label.setAlignment(QtCore.Qt.AlignLeft)
@@ -125,6 +127,8 @@ class MainWindow(MainWindowBase):
         self.amend_checkbox = QtGui.QCheckBox(self.commitdockwidgetcontents)
         self.amend_checkbox.setText(tr('Amend Last Commit'))
 
+        self.hboxlayout.addWidget(self.signoff_button)
+        self.hboxlayout.addWidget(self.commit_button)
         self.hboxlayout.addWidget(self.position_label)
         self.hboxlayout.addItem(self.spacer)
         self.hboxlayout.addWidget(self.amend_checkbox)
