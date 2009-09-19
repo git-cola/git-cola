@@ -79,7 +79,6 @@ class MainModel(ObservableModel):
         self.trackedbranch = ''
         self.directory = ''
         self.git_version = self.git.version()
-        self.project = ''
         self.remotes = []
         self.remotename = ''
         self.local_branch = ''
@@ -149,7 +148,7 @@ class MainModel(ObservableModel):
         is_valid = self.git.is_valid()
         if is_valid:
             self._init_config_data()
-            self.project = os.path.basename(self.git.worktree())
+            self.set_project(os.path.basename(self.git.worktree()))
         return is_valid
 
     def _init_config_data(self):
@@ -448,31 +447,21 @@ class MainModel(ObservableModel):
         fh.close()
         self.set_commitmsg(contents)
 
-    def get_prev_commitmsg(self,*rest):
-        """Queries git for the latest commit message and sets it in
-        self.commitmsg."""
-        commit_msg = []
-        commit_lines = core.decode(self.git.show('HEAD')).split('\n')
-        for idx, msg in enumerate(commit_lines):
-            if idx < 4:
-                continue
-            msg = msg.lstrip()
-            if msg.startswith('diff --git'):
-                commit_msg.pop()
-                break
-            commit_msg.append(msg)
-        self.set_commitmsg('\n'.join(commit_msg).rstrip())
+    def prev_commitmsg(self):
+        """Queries git for the latest commit message."""
+        return core.decode(self.git.log('-1', pretty='format:%s%n%n%b'))
 
     def load_commitmsg_template(self):
         template = self.global_config('commit.template')
         if template:
             self.load_commitmsg(template)
 
-    def update_status(self, head='HEAD', staged_only=False):
+    def update_status(self, staged_only=False):
         # Give observers a chance to respond
         self.notify_message_observers(self.message_about_to_update)
         # This allows us to defer notification until the
         # we finish processing data
+        head = self.head
         notify_enabled = self.notification_enabled
         self.notification_enabled = False
 

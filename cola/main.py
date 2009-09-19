@@ -95,7 +95,7 @@ def main():
     from cola.controllers.classic import ClassicController
     from cola.app import ColaApplication
     from cola import qtutils
-    from cola import cmdfactory
+    from cola import commands
 
 
     # Allow Ctrl-C to exit
@@ -103,7 +103,9 @@ def main():
 
     # Initialize the app
     app = ColaApplication(sys.argv)
-    factory = cmdfactory.factory()
+
+    # Register commands
+    commands.register()
 
     style = None
     if opts.style:

@@ -1,5 +1,8 @@
+import os
+
 import cola
 from cola import signals
+from cola import cmdfactory
 
 
 class Command(object):
@@ -86,3 +89,22 @@ class ResetMode(Command):
 
     def is_undoable(self):
         return True
+
+def register():
+    """
+    Register signal mappings with the factory.
+
+    These commands are automatically created and run when
+    their corresponding signal is broadcast by the notifier.
+
+    """
+    signal_to_command_map = {
+        signals.diff: Diff,
+        signals.diffstat: Diffstat,
+        signals.modified_summary: Diffstat,
+        signals.reset_mode: ResetMode,
+    }
+
+    factory = cmdfactory.factory()
+    for signal, cmd in signal_to_command_map.iteritems():
+        factory.add_command(signal, cmd)
