@@ -19,7 +19,7 @@ class Command(object):
 
     def is_undoable(self):
         """Can this be undone?"""
-        return False
+        return True
 
     def undo(self):
         """Undo the operation."""
@@ -40,7 +40,6 @@ class Diff(Command):
 
     def do(self):
         if not self.filenames:
-            print 'no filenames:', self.filenames
             return
         self.model.set_mode(self.model.mode_worktree)
         filename = self.filenames[0]
@@ -52,9 +51,6 @@ class Diff(Command):
     def undo(self):
         self.model.set_mode(self.old_mode)
         self.model.set_current_text(self.old_text)
-
-    def is_undoable(self):
-        return True
 
 
 class Diffstat(Command):
@@ -68,9 +64,6 @@ class Diffstat(Command):
 
     def undo(self):
         self.model.set_current_text(self.old_text)
-
-    def is_undoable(self):
-        return True
 
 
 class ResetMode(Command):
@@ -87,8 +80,6 @@ class ResetMode(Command):
         self.model.set_mode(self.old_mode)
         self.model.set_current_text(self.old_text)
 
-    def is_undoable(self):
-        return True
 
 def register():
     """
