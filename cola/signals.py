@@ -1,12 +1,16 @@
 from PyQt4.QtCore import SIGNAL
 
-_signals = dict(edit = SIGNAL('edit'),
+_signals = dict(amend = SIGNAL('amend'),
+                amend_mode = SIGNAL('amend_mode'),
+                edit = SIGNAL('edit'),
                 checkout = SIGNAL('checkout'),
                 delete = SIGNAL('delete'),
                 diff = SIGNAL('diff'),
                 diff_staged = SIGNAL('diff_staged'),
                 diffstat = SIGNAL('diffstat'),
                 difftool = SIGNAL('difftool'),
+                information = SIGNAL('information'),
+                log_text = SIGNAL('log_text'),
                 mergetool = SIGNAL('mergetool'),
                 modified_summary = SIGNAL('modified_summary'),
                 redo = SIGNAL('redo'),
