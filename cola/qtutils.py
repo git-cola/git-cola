@@ -26,11 +26,21 @@ def log(status, output):
         return
     logger().log(status, output)
 
-def SLOT(signal, *args):
-    """Returns a callback that broadcasts a message over the notifier."""
-    def broadcast():
-        cola.notifier().broadcast(signal, *args)
+def SLOT(signal, *args, **opts):
+    """
+    Returns a callback that broadcasts a message over the notifier.
+    
+    If the caller of SLOT() provides args or opts then those are
+    used instead of the ones provided by the invoker of the callback.
+
+    """
+    def broadcast(*local_args, **local_opts):
+        if args or opts:
+            cola.notifier().broadcast(signal, *args, **opts)
+        else:
+            cola.notifier().broadcast(signal, *local_args, **local_opts)
     return broadcast
+
 
 def prompt(msg, title=None):
     """Presents the user with an input widget and returns the input."""
