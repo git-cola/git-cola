@@ -113,9 +113,6 @@ class MainController(QObserver):
             push_button = self.push,
             pull_button = self.pull,
             alt_button = self.alt_action,
-            # Checkboxes
-            amend_radio = self.load_prev_msg_and_rescan,
-            new_commit_radio = self.clear_and_rescan,
 
             # File Menu
             menu_quit = self.quit_app,
@@ -815,20 +812,6 @@ class MainController(QObserver):
         self.model.set_commitmsg('')
         self.rescan()
 
-    def load_prev_msg_and_rescan(self, *rest):
-        """Load the previous commit message and rescan."""
-        # You can't do this in the middle of a merge
-        if os.path.exists(self.model.git_repo_path('MERGE_HEAD')):
-            self.view.reset_checkboxes()
-            qtutils.information('Oops! Unmerged',
-                                'You are in the middle of a merge.\n'
-                                'You cannot amend while merging.')
-        else:
-            self.reset_mode()
-            self.head = 'HEAD^'
-            self.model.get_prev_commitmsg()
-            self.rescan()
-
     # use *rest to handle being called from the checkbox signal
     def rescan(self, *rest):
         """Populate view widgets with results from 'git status'."""
@@ -847,7 +830,8 @@ class MainController(QObserver):
         mode = self.mode
 
         # get new values
-        self.model.update_status(head=self.head, staged_only=self.read_only())
+        self.model.set_head(self.head)
+        self.model.update_status(staged_only=self.read_only())
 
         # Setup initial tree items
         if self.read_only():
