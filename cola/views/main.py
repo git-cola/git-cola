@@ -7,6 +7,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
+
 from cola import qtutils
 from cola import signals
 from cola.views.syntax import DiffSyntaxHighlighter
@@ -56,6 +57,19 @@ class MainView(MainWindow):
 
         # Listen for text messages
         cola.notifier().listen(signals.text, self.set_display)
+        cola.notifier().listen(signals.amend, self._amend_listener)
+        self.connect(self.amend_radio, SIGNAL('toggled(bool)'),
+                     self._amend_radio_toggled)
+
+
+    def _amend_listener(self, value):
+        if value:
+            self.amend_radio.setChecked(True)
+        else:
+            self.new_commit_radio.setChecked(True)
+
+    def _amend_radio_toggled(self, checked):
+        cola.notifier().broadcast(signals.amend_mode, checked)
 
     def set_staged(self, items, check=True):
         """Adds items to the 'Staged' subtree."""
