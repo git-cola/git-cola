@@ -245,6 +245,7 @@ class MainView(MainWindow):
         staged = self.status_tree.topLevelItem(self.IDX_STAGED)
         staged.setText(0, self.tr('Changed'))
         self.alt_button.setText(self.tr(text))
+        self.alt_button.setMinimumHeight(40)
         self.alt_button.show()
 
     def exit_diff_mode(self):
@@ -256,6 +257,7 @@ class MainView(MainWindow):
         """
         staged = self.status_tree.topLevelItem(self.IDX_STAGED)
         staged.setText(0, self.tr('Staged'))
+        self.alt_button.setMinimumHeight(1)
         self.alt_button.hide()
         self.reset_display()
 
