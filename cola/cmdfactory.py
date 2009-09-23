@@ -17,6 +17,7 @@ from cola import signals
 
 _factory = None
 def factory():
+    """Return a static instance of the command factory."""
     global _factory
     if _factory:
         return _factory
@@ -26,6 +27,7 @@ def factory():
 
 class CommandFactory(object):
     def __init__(self):
+        """Setup the undo/redo stacks and register for notifications."""
         self.undostack = []
         self.redostack = []
         self.signal_to_command = {}
@@ -44,10 +46,10 @@ class CommandFactory(object):
 
     def notify(self, *params):
         """
-        Observe model changes to current_text.
+        Observe model changes.
 
-        'current_text' is the model param that maps to the diff disply,
-        so broadcast notifier messages whenever it changes.
+        This captures model parameters and maps them to signals that
+        are observed by the UIs.
 
         """
         actions = {
@@ -60,15 +62,18 @@ class CommandFactory(object):
             action()
 
     def clear(self):
+        """Clear the undo and redo stacks."""
         self.undostack = []
         self.redostack = []
 
     def cmdrunner(self, signal):
+        """Return a function to create and run a signal's command."""
         def run(*args, **opts):
             return self.do(signal, *args, **opts)
         return run
 
     def do(self, signal, *args, **opts):
+        """Given a signal and arguments, run its corresponding command."""
         cmdclass = self.signal_to_command[signal]
         cmdobj = cmdclass(*args, **opts)
         if cmdobj.is_undoable():
@@ -76,6 +81,7 @@ class CommandFactory(object):
         return cmdobj.do()
 
     def undo(self):
+        """Undo the last command and add it to the redo stack."""
         if self.undostack:
             cmdobj = self.undostack.pop()
             cmdobj.undo()
@@ -84,6 +90,7 @@ class CommandFactory(object):
             print 'warning: undo stack is empty, doing nothing'
 
     def redo(self):
+        """Redo the last command and add it to the undo stack."""
         if self.redostack:
             cmdobj = self.redostack.pop()
             cmdobj.do()
@@ -92,7 +99,9 @@ class CommandFactory(object):
             print 'warning: redo stack is empty, doing nothing'
 
     def is_undoable(self):
+        """Does the undo stack contain any commands?"""
         return bool(self.undostack)
 
     def is_redoable(self):
+        """Does the redo stack contain any commands?"""
         return bool(self.redostack)
