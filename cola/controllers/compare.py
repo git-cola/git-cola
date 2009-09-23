@@ -4,6 +4,7 @@ import os
 
 from PyQt4 import QtGui
 
+import cola
 from cola import utils
 from cola import qtutils
 from cola import difftool
@@ -15,15 +16,18 @@ from cola.views import BranchCompareView
 from cola.controllers.repobrowser import select_file_from_repo
 from cola.controllers.util import choose_from_list
 
-def compare_file(model, parent):
+def compare_file():
     """Launches a dialog for comparing revisions touching a file path"""
+    model = cola.model()
+    parent = QtGui.QApplication.instance().activeWindow()
     filename = select_file_from_repo(model, parent)
     if not filename:
         return
-    compare(model, parent, filename)
+    compare(filename)
 
-def compare(model, parent, filename=None):
+def compare(filename=None):
     """Launches a dialog for comparing a pair of commits"""
+    parent = QtGui.QApplication.instance().activeWindow()
     model = CompareModel()
     view = CompareView(parent)
     ctl = CompareController(model, view, filename)

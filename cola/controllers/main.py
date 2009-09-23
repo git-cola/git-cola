@@ -21,8 +21,6 @@ from cola.views import log
 # controllers namespace
 from cola.controllers.bookmark import save_bookmark
 from cola.controllers.bookmark import manage_bookmarks
-from cola.controllers.compare import compare
-from cola.controllers.compare import compare_file
 from cola.controllers.createbranch import create_new_branch
 from cola.controllers.repobrowser import browse_git_branch
 from cola.controllers.selectcommits import select_commits
@@ -71,10 +69,6 @@ class MainController(QObserver):
             menu_rebase_branch = self.rebase,
             menu_export_patches = self.export_patches,
             menu_cherry_pick = self.cherry_pick,
-            menu_commit_compare =
-                lambda: compare(self.model, self.view),
-            menu_commit_compare_file =
-                lambda: compare_file(self.model, self.view),
             )
 
         # Route events here

@@ -97,6 +97,8 @@ class MainView(MainWindow):
             (self.menu_branch_compare, compare.branch_compare),
             (self.menu_branch_diff, self.branch_diff),
             (self.menu_branch_review, self.review_branch),
+            (self.menu_commit_compare, compare.compare),
+            (self.menu_commit_compare_file, compare.compare_file),
             (self.menu_diff_expression, self.diff_expression),
             (self.menu_diff_branch, self.diff_branch),
             (self.menu_help_about, about.launch_about_dialog),
