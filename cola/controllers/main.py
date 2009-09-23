@@ -80,8 +80,6 @@ class MainController(QObserver):
                 lambda: self.log(*self.model.stage_modified()),
             menu_stage_untracked =
                 lambda: self.log(*self.model.stage_untracked()),
-            menu_unstage_all =
-                lambda: self.log(*self.model.unstage_all()),
             )
 
         # Route events here

@@ -38,6 +38,7 @@ _signals = dict(add_signoff = SIGNAL('add_signoff'),
                 undo_diffs = SIGNAL('undo_diffs'),
                 unstage = SIGNAL('unstage'),
                 unstage_diffs = SIGNAL('unstage_diffs'),
+                unstage_all = SIGNAL('unstage_all'),
                 untracked_summary = SIGNAL('untracked_summary'))
 
 _signals_names = {}

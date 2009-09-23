@@ -119,6 +119,7 @@ class MainView(MainWindow):
             (self.menu_search_committer, smod.search(smod.COMMITTER)),
             (self.menu_show_diffstat, SLOT(signals.diffstat)),
             (self.menu_stash, stash),
+            (self.menu_unstage_all, SLOT(signals.unstage_all)),
             # TODO This edit menu stuff should/could be command objects
             (self.menu_cut, self.action_cut),
             (self.menu_copy, self.action_copy),

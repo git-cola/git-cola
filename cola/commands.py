@@ -406,6 +406,7 @@ class ShowUntracked(Command):
 
 
 class Stage(Command):
+    """Stage a set of paths."""
     def __init__(self, paths):
         Command.__init__(self)
         self.paths = paths
@@ -418,6 +419,7 @@ class Stage(Command):
 
 
 class Unstage(Command):
+    """Unstage a set of paths."""
     def __init__(self, paths):
         Command.__init__(self)
         self.paths = paths
@@ -427,6 +429,18 @@ class Unstage(Command):
 
     def is_undoable(self):
         return False
+
+
+class UnstageAll(Command):
+    """Unstage all files; resets the index."""
+    def __init__(self):
+        Command.__init__(self, update=True)
+
+    def is_undoable(self):
+        return False
+
+    def do(self):
+        self.model.unstage_all()
 
 
 class UntrackedSummary(Command):
@@ -475,6 +489,7 @@ def register():
         signals.stage: Stage,
         signals.staged_summary: DiffStagedSummary,
         signals.unstage: Unstage,
+        signals.unstage_all: UnstageAll,
         signals.untracked_summary: UntrackedSummary,
     }
 
