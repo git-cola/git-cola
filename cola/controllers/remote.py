@@ -4,16 +4,16 @@
 import os
 from PyQt4.QtGui import QDialog
 
+import cola
 from cola import utils
 from cola import qtutils
 from cola.views import RemoteView
 from cola.qobserver import QObserver
 
-def remote_action(model, parent, action):
+def remote_action(parent, action):
     """Launches fetch/push/pull dialogs."""
     # TODO: subclass model
-    model = model.clone()
-    model.generate_remote_helpers()
+    model = cola.model()
     model.remotename = ''
     model.tags_checkbox = False
     model.rebase_checkbox = False
