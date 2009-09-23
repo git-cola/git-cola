@@ -10,8 +10,9 @@ from cola.views import OptionsView
 from cola.qobserver import QObserver
 
 
-def update_options(parent):
+def update_options():
     """Launch the options window given a model and parent widget."""
+    parent = QtGui.QApplication.instance().activeWindow()
     view = OptionsView(parent)
     ctl = OptionsController(view)
     view.show()

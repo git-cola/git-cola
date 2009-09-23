@@ -20,6 +20,7 @@ from cola.controllers import compare
 from cola.controllers import search as smod
 from cola.controllers.merge import local_merge
 from cola.controllers.merge import abort_merge
+from cola.controllers.options import update_options
 from cola.controllers.util import choose_from_combo
 from cola.controllers.remote import remote_action
 from cola.controllers.stash import stash
@@ -101,6 +102,7 @@ class MainView(MainWindow):
             (self.menu_load_commitmsg_template, self.load_template),
             (self.menu_merge_local, local_merge),
             (self.menu_merge_abort, abort_merge),
+            (self.menu_options, update_options),
             (self.menu_rescan, SLOT(signals.rescan)),
             (self.menu_search_revision, smod.search(smod.REVISION_ID)),
             (self.menu_search_revision_range, smod.search(smod.REVISION_RANGE)),

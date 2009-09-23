@@ -27,7 +27,6 @@ from cola.controllers.classic import cola_classic
 from cola.controllers.compare import compare
 from cola.controllers.compare import compare_file
 from cola.controllers.createbranch import create_new_branch
-from cola.controllers.options import update_options
 from cola.controllers.repobrowser import browse_git_branch
 from cola.controllers.selectcommits import select_commits
 from cola.controllers.util import choose_from_list
@@ -56,9 +55,6 @@ class MainController(QObserver):
             menu_clone_repo = self.clone_repo,
             menu_manage_bookmarks = manage_bookmarks,
             menu_save_bookmark = save_bookmark,
-
-            # Edit Menu
-            menu_options = self.options,
 
             # Repository Menu
             menu_visualize_current = self.viz_current,
