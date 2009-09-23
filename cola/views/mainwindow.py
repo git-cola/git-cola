@@ -4,6 +4,7 @@ from PyQt4 import QtGui
 from cola import qtutils
 from cola.views import log
 from cola.qtutils import tr
+from cola.views import status
 from cola.views.standard import create_standard_widget
 from cola.controllers import classic
 
@@ -47,13 +48,16 @@ class MainWindow(MainWindowBase):
         self.actiondockwidgetlayout.setSpacing(3)
         self.actiondockwidgetlayout.setMargin(3)
 
-        self.rescan_button = self.create_button('Rescan', self.actiondockwidgetcontents)
-        self.stage_button = self.create_button('Stage Changed', self.actiondockwidgetcontents)
-        self.fetch_button = self.create_button('Fetch', self.actiondockwidgetcontents)
-        self.push_button = self.create_button('Push', self.actiondockwidgetcontents)
-        self.pull_button = self.create_button('Pull', self.actiondockwidgetcontents)
-        self.stash_button = self.create_button('Stash', self.actiondockwidgetcontents)
-        self.alt_button = self.create_button('...', self.actiondockwidgetcontents)
+        layout = self.actiondockwidgetlayout
+
+        self.rescan_button = self.create_button('Rescan', layout)
+        # TODO store selection in the model.
+        #self.stage_button = self.create_button('Stage Changed', layout)
+        self.fetch_button = self.create_button('Fetch', layout)
+        self.push_button = self.create_button('Push', layout)
+        self.pull_button = self.create_button('Pull', layout)
+        self.stash_button = self.create_button('Stash', layout)
+        self.alt_button = self.create_button('Exit Diff Mode', layout)
         self.alt_button.hide()
 
         self.action_spacer = QtGui.QSpacerItem(1, 1,
@@ -64,28 +68,7 @@ class MainWindow(MainWindowBase):
 
         # "Repository Status" widget
         self.statusdockwidget = self.create_dock('Repository Status')
-        self.statusdockwidgetcontents = QtGui.QWidget()
-        self.statusdockwidgetlayout = QtGui.QVBoxLayout(self.statusdockwidgetcontents)
-        self.statusdockwidgetlayout.setMargin(3)
-
-        self.status_tree = QtGui.QTreeWidget(self.statusdockwidgetcontents)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.status_tree.sizePolicy().hasHeightForWidth())
-
-        self.status_tree.setSizePolicy(sizePolicy)
-        self.status_tree.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
-        self.status_tree.setAnimated(True)
-        self.status_tree.setHeaderHidden(True)
-
-        item = QtGui.QTreeWidgetItem(self.status_tree)
-        item = QtGui.QTreeWidgetItem(self.status_tree)
-        item = QtGui.QTreeWidgetItem(self.status_tree)
-        item = QtGui.QTreeWidgetItem(self.status_tree)
-
-        self.statusdockwidgetlayout.addWidget(self.status_tree)
-        self.statusdockwidget.setWidget(self.statusdockwidgetcontents)
+        self.statusdockwidget.setWidget(status.widget())
 
         # "Commit Message Editor" widget
         self.commitdockwidget = self.create_dock('Commit Message Editor')
@@ -163,12 +146,11 @@ class MainWindow(MainWindowBase):
         self.diffdockwidgetlayout.addWidget(self.display_text)
         self.diffdockwidget.setWidget(self.diffdockwidgetcontents)
 
-        self.menu_unstage_selected = self.create_action('Unstage From Commit')
+        # TODO selection in model
+        #self.menu_unstage_selected = self.create_action('Unstage From Commit')
         self.menu_show_diffstat = self.create_action('Diffstat')
-        self.menu_show_index = self.create_action('Index')
         self.menu_stage_modified = self.create_action('Stage Changed Files To Commit')
         self.menu_stage_untracked = self.create_action('Stage All Untracked')
-        self.menu_stage_selected = self.create_action('Stage Selected')
         self.menu_export_patches = self.create_action('Export Patches...')
         self.menu_cut = self.create_action('Cut')
         self.menu_copy = self.create_action('Copy')
@@ -224,15 +206,14 @@ class MainWindow(MainWindowBase):
         self.menu_tools_classic = self.create_action('Cola Classic...')
 
         self.menu_show.addAction(self.menu_browse_commits)
-        self.menu_show.addAction(self.menu_show_index)
         self.menu_show.addAction(self.menu_show_diffstat)
 
         self.menu_prepare.addAction(self.menu_stage_modified)
         self.menu_prepare.addAction(self.menu_stage_untracked)
-        self.menu_prepare.addAction(self.menu_stage_selected)
         self.menu_prepare.addSeparator()
         self.menu_prepare.addAction(self.menu_unstage_all)
-        self.menu_prepare.addAction(self.menu_unstage_selected)
+        # TODO selection in model
+        #self.menu_prepare.addAction(self.menu_unstage_selected)
 
         self.menu_advanced.addAction(self.menu_cherry_pick)
 
@@ -341,32 +322,25 @@ class MainWindow(MainWindowBase):
         self.classicdockwidget.toggleViewAction().trigger()
 
         # Translate
-        self.status_tree.setAllColumnsShowFocus(True)
-        self.status_tree.setSortingEnabled(False)
-        self.status_tree.topLevelItem(0).setText(0, tr("Staged"))
-        self.status_tree.topLevelItem(1).setText(0, tr("Modified"))
-        self.status_tree.topLevelItem(2).setText(0, tr("Unmerged"))
-        self.status_tree.topLevelItem(3).setText(0, tr("Untracked"))
-        self.menu_show_diffstat.setShortcut(tr("Ctrl+D"))
-        self.menu_stage_modified.setShortcut(tr("Alt+A"))
-        self.menu_stage_untracked.setShortcut(tr("Alt+U"))
-        self.menu_stage_selected.setShortcut(tr("Alt+T"))
-        self.menu_export_patches.setShortcut(tr("Ctrl+E"))
-        self.menu_cut.setShortcut(tr("Ctrl+X"))
-        self.menu_copy.setShortcut(tr("Ctrl+C"))
-        self.menu_paste.setShortcut(tr("Ctrl+V"))
-        self.menu_select_all.setShortcut(tr("Ctrl+A"))
-        self.menu_options.setShortcut(tr("Ctrl+O"))
-        self.menu_delete.setShortcut(tr("Del"))
-        self.menu_undo.setShortcut(tr("Ctrl+Z"))
-        self.menu_redo.setShortcut(tr("Ctrl+Shift+Z"))
-        self.menu_rescan.setShortcut(tr("Ctrl+R"))
-        self.menu_cherry_pick.setShortcut(tr("Ctrl+P"))
-        self.menu_quit.setShortcut(tr("Ctrl+Q"))
-        self.menu_create_branch.setShortcut(tr("Ctrl+B"))
-        self.menu_checkout_branch.setShortcut(tr("Alt+B"))
-        self.menu_stash.setShortcut(tr("Alt+Shift+S"))
-        self.menu_help_docs.setShortcut(tr("F1"))
+        self.menu_show_diffstat.setShortcut(tr('Ctrl+D'))
+        self.menu_stage_modified.setShortcut(tr('Alt+A'))
+        self.menu_stage_untracked.setShortcut(tr('Alt+U'))
+        self.menu_export_patches.setShortcut(tr('Ctrl+E'))
+        self.menu_cut.setShortcut(tr('Ctrl+X'))
+        self.menu_copy.setShortcut(tr('Ctrl+C'))
+        self.menu_paste.setShortcut(tr('Ctrl+V'))
+        self.menu_select_all.setShortcut(tr('Ctrl+A'))
+        self.menu_options.setShortcut(tr('Ctrl+O'))
+        self.menu_delete.setShortcut(tr('Del'))
+        self.menu_undo.setShortcut(tr('Ctrl+Z'))
+        self.menu_redo.setShortcut(tr('Ctrl+Shift+Z'))
+        self.menu_rescan.setShortcut(tr('Ctrl+R'))
+        self.menu_cherry_pick.setShortcut(tr('Ctrl+P'))
+        self.menu_quit.setShortcut(tr('Ctrl+Q'))
+        self.menu_create_branch.setShortcut(tr('Ctrl+B'))
+        self.menu_checkout_branch.setShortcut(tr('Alt+B'))
+        self.menu_stash.setShortcut(tr('Alt+Shift+S'))
+        self.menu_help_docs.setShortcut(tr('F1'))
 
     def create_dock(self, title):
         """Create a dock widget and set it up accordingly."""
@@ -387,10 +361,10 @@ class MainWindow(MainWindowBase):
         action.setText(tr(title))
         return action
 
-    def create_button(self, text, parent=None):
+    def create_button(self, text, layout=None):
         """Create a button, set its title, and add it to the parent."""
-        button = QtGui.QPushButton(parent)
+        button = QtGui.QPushButton()
         button.setText(tr(text))
-        if parent:
-            parent.layout().addWidget(button)
+        if layout:
+            layout.addWidget(button)
         return button
