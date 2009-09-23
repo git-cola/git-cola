@@ -64,13 +64,6 @@ class MainController(QObserver):
 
             # Edit Menu
             menu_options = self.options,
-            menu_cut = self.view.action_cut,
-            menu_copy = self.view.action_copy,
-            menu_paste = self.view.action_paste,
-            menu_delete = self.view.action_delete,
-            menu_select_all = self.view.action_select_all,
-            menu_undo = self.view.action_undo,
-            menu_redo = self.view.action_redo,
 
             # Merge Menu
             menu_merge_local =

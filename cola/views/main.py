@@ -37,10 +37,6 @@ class MainView(MainWindow):
     def __init__(self, parent=None):
         MainWindow.__init__(self, parent)
         self.amend_is_checked = self.amend_checkbox.isChecked
-        self.action_undo = self.commitmsg.undo
-        self.action_redo = self.commitmsg.redo
-        self.action_paste = self.commitmsg.paste
-        self.action_select_all = self.commitmsg.selectAll
 
         # Qt does not support noun/verbs
         self.commit_button.setText(qtutils.tr('Commit@@verb'))
@@ -113,6 +109,14 @@ class MainView(MainWindow):
 
             (self.menu_show_diffstat, SLOT(signals.diffstat)),
             (self.menu_stash, stash),
+
+            (self.menu_cut, self.action_cut),
+            (self.menu_copy, self.action_copy),
+            (self.menu_paste, self.commitmsg.paste),
+            (self.menu_delete, self.action_delete),
+            (self.menu_select_all, self.commitmsg.selectAll),
+            (self.menu_undo, self.commitmsg.undo),
+            (self.menu_redo, self.commitmsg.redo),
         )
         for menu, callback in actions:
             self.connect(menu, SIGNAL('triggered()'), callback)
