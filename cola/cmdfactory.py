@@ -9,10 +9,10 @@ The factory itself is undoable in that it responds to
 the undo and redo signals and manages the undo/redo stack.
 
 """
-
 import cola
-from cola import qtutils
 from cola import signals
+from cola import qtutils
+from cola.qtutils import SLOT
 
 
 _factory = None
@@ -53,9 +53,9 @@ class CommandFactory(object):
 
         """
         actions = {
-        'current_text':
-            lambda: cola.notifier()
-                        .broadcast(signals.text, self.model.current_text),
+            'diff_text': SLOT(signals.diff_text, self.model.diff_text),
+            'commitmsg': SLOT(signals.editor_text, self.model.commitmsg),
+            'mode': SLOT(signals.mode, self.model.mode),
         }
         for param in params:
             action = actions.get(param, lambda: None)
