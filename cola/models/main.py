@@ -77,7 +77,8 @@ class MainModel(ObservableModel):
         #####################################################
         self.head = 'HEAD'
         self.mode = self.mode_none
-        self.current_text = ''
+        self.diff_text = ''
+        self.filename = None
         self.currentbranch = ''
         self.trackedbranch = ''
         self.directory = ''
@@ -433,15 +434,6 @@ class MainModel(ObservableModel):
                               squash=False)
         self.set_remote_branches(branches)
 
-    def add_signoff(self,*rest):
-        """Adds a standard Signed-off by: tag to the end
-        of the current commit message."""
-        msg = self.commitmsg
-        signoff =('\n\nSigned-off-by: %s <%s>\n'
-                  % (self.local_user_name, self.local_user_email))
-        if signoff not in msg:
-            self.set_commitmsg(msg + signoff)
-
     def apply_diff(self, filename):
         return self.git.apply(filename, index=True, cached=True)
 
@@ -587,19 +579,6 @@ class MainModel(ObservableModel):
                 diff = 'SHA1: ' + self.git.hash_object(filename)
         return (diff, filename)
 
-    def diff_for_expr(self, idx, expr):
-        """
-        Return a diff for an arbitrary diff expression.
-
-        `idx` is the index of the entry in the staged files list.
-
-        """
-        filename = self.filename(idx, staged=True)
-        if not filename:
-            return (None, None)
-        diff = self.diff_helper(filename=filename, ref=expr, cached=False)
-        return (diff, filename)
-
     def stage_modified(self):
         status, output = self.git.add(v=True,
                                       with_stderr=True,
@@ -701,12 +680,6 @@ class MainModel(ObservableModel):
                                       with_stderr=True)
         os.unlink(tmpfile)
         return (status, out)
-
-    def diffindex(self):
-        return self.git.diff(unified=self.diff_context,
-                             no_color=True,
-                             stat=True,
-                             cached=True)
 
     def tmp_dir(self):
         # Allow TMPDIR/TMP with a fallback to /tmp
@@ -1178,13 +1151,6 @@ class MainModel(ObservableModel):
         else:
             return [ s[s.index(':')+1:] for s in stashes ]
 
-    def diffstat(self):
-        """Perform a diffstat and return it.  Sets the current text."""
-        return self.git.diff(self.head,
-                            unified=self.diff_context,
-                            no_color=True,
-                            stat=True)
-
     def pad(self, pstr, num=22):
         topad = num-len(pstr)
         if topad > 0:
@@ -1329,3 +1295,8 @@ class MainModel(ObservableModel):
 
         self.notify_message_observers(self.message_paths_reverted, paths=paths)
 
+    def getcwd(self):
+        """If we've chosen a directory then use it, otherwise os.getcwd()."""
+        if self.directory:
+            return self.directory
+        return os.getcwd()
