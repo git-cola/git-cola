@@ -1,21 +1,42 @@
 import os
+import sys
+from cStringIO import StringIO
 
 import cola
+from cola import core
+from cola import utils
 from cola import signals
 from cola import cmdfactory
 
+_notifier = cola.notifier()
+_factory = cmdfactory.factory()
 
 class Command(object):
     """Base class for all commands; provides the command pattern."""
-    def __init__(self, model=None):
+    def __init__(self, update=False):
         """Initialize the command and stash away values for use in do()"""
-        if not model:
-            model = cola.model()
-        self.model = model
+        # These are commonly used so let's make it easier to write new commands.
+        self.model = cola.model()
+        self.update = update
+
+        self.old_diff_text = self.model.diff_text
+        self.old_filename = self.model.filename
+        self.old_mode = self.model.mode
+        self.old_head = self.model.head
+
+        self.new_diff_text = self.old_diff_text
+        self.new_filename = self.old_filename
+        self.new_head = self.old_head
+        self.new_mode = self.old_mode
 
     def do(self):
         """Perform the operation."""
-        pass
+        self.model.set_diff_text(self.new_diff_text)
+        self.model.set_filename(self.new_filename)
+        self.model.set_head(self.new_head)
+        self.model.set_mode(self.new_mode)
+        if self.update:
+            self.model.update_status()
 
     def is_undoable(self):
         """Can this be undone?"""
@@ -23,7 +44,12 @@ class Command(object):
 
     def undo(self):
         """Undo the operation."""
-        pass
+        self.model.set_diff_text(self.old_diff_text)
+        self.model.set_filename(self.old_filename)
+        self.model.set_head(self.old_head)
+        self.model.set_mode(self.old_mode)
+        if self.update:
+            self.model.update_status()
 
     def name(self):
         """Return this command's name."""
