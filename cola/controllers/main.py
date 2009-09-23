@@ -19,8 +19,6 @@ from cola.qobserver import QObserver
 from cola.views import log
 
 # controllers namespace
-from cola.controllers.bookmark import save_bookmark
-from cola.controllers.bookmark import manage_bookmarks
 from cola.controllers.createbranch import create_new_branch
 from cola.controllers.repobrowser import browse_git_branch
 from cola.controllers.selectcommits import select_commits
@@ -47,8 +45,6 @@ class MainController(QObserver):
 
             # File Menu TODO
             menu_quit = self.quit_app,
-            menu_manage_bookmarks = manage_bookmarks,
-            menu_save_bookmark = save_bookmark,
 
             # Repository Menu
             menu_browse_commits = self.browse_commits,

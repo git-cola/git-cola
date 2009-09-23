@@ -21,6 +21,8 @@ from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.mainwindow import MainWindow
 from cola.controllers import compare
 from cola.controllers import search as smod
+from cola.controllers.bookmark import manage_bookmarks
+from cola.controllers.bookmark import save_bookmark
 from cola.controllers.merge import local_merge
 from cola.controllers.merge import abort_merge
 from cola.controllers.options import update_options
@@ -108,6 +110,8 @@ class MainView(MainWindow):
                 lambda: self.model.git.web__browse(resources.html_docs())),
             (self.menu_load_commitmsg, self.load_commitmsg),
             (self.menu_load_commitmsg_template, self.load_template),
+            (self.menu_manage_bookmarks, manage_bookmarks),
+            (self.menu_save_bookmark, save_bookmark),
             (self.menu_merge_local, local_merge),
             (self.menu_merge_abort, abort_merge),
             (self.menu_open_repo, self.open_repo),
