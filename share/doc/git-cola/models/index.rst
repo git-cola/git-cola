@@ -6,5 +6,4 @@ Models
     main
     gitrepo
     observable
-    classic
     compare
