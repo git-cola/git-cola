@@ -3,6 +3,7 @@ from PyQt4.QtCore import SIGNAL
 _signals = dict(add_signoff = SIGNAL('add_signoff'),
                 amend = SIGNAL('amend'),
                 amend_mode = SIGNAL('amend_mode'),
+                apply_diff_selection = SIGNAL('apply_diff_selection'),
                 branch_mode = SIGNAL('branch_mode'),
                 commit = SIGNAL('commit'),
                 edit = SIGNAL('edit'),

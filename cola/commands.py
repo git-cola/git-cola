@@ -71,7 +71,6 @@ class AddSignoff(Command):
 
     def undo(self):
         self.model.set_commitmsg(self.old_commitmsg)
-                
 
 
 class AmendMode(Command):
@@ -129,6 +128,41 @@ class AmendMode(Command):
             return
         self.model.set_commitmsg(self.old_commitmsg)
         Command.undo(self)
+
+class ApplyDiffSelection(Command):
+    def __init__(self, staged, selected, offset, selection, apply_to_worktree):
+        Command.__init__(self, update=True)
+        self.staged = staged
+        self.selected = selected
+        self.offset = offset
+        self.selection = selection
+        self.apply_to_worktree = apply_to_worktree
+
+    def is_undoable(self):
+        return False
+
+    def do(self):
+        if self.model.mode == self.model.mode_branch:
+            # We're applying changes from a different branch!
+            parser = DiffParser(self.model,
+                                filename=self.model.filename,
+                                cached=False,
+                                branch=self.model.head)
+            parser.process_diff_selection(self.selected,
+                                          self.offset,
+                                          self.selection,
+                                          apply_to_worktree=True)
+        else:
+            # The normal worktree vs index scenario
+            parser = DiffParser(self.model,
+                                filename=self.model.filename,
+                                cached=self.staged,
+                                reverse=self.apply_to_worktree)
+            parser.process_diff_selection(self.selected,
+                                          self.offset,
+                                          self.selection,
+                                          apply_to_worktree=
+                                          self.apply_to_worktree)
 
 
 class HeadChangeCommand(Command):
@@ -393,6 +427,7 @@ def register():
     """
     signal_to_command_map = {
         signals.add_signoff: AddSignoff,
+        signals.apply_diff_selection: ApplyDiffSelection,
         signals.amend_mode: AmendMode,
         signals.branch_mode: BranchMode,
         signals.commit: Commit,
