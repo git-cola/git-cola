@@ -7,6 +7,7 @@ import glob
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
+import cola
 from cola import core
 from cola import utils
 from cola import qtutils
@@ -30,7 +31,6 @@ from cola.controllers.createbranch import create_new_branch
 from cola.controllers.merge import local_merge
 from cola.controllers.merge import abort_merge
 from cola.controllers.options import update_options
-from cola.controllers.remote import remote_action
 from cola.controllers.repobrowser import browse_git_branch
 from cola.controllers import search
 from cola.controllers.search import search_commits
@@ -42,58 +42,9 @@ from cola.controllers.util import choose_from_combo
 class MainController(QObserver):
     """Manage interactions between models and views."""
 
-    # Default: nothing's happened, do nothing
-    MODE_NONE = 0
-
-    # Comparing index to worktree
-    MODE_WORKTREE = 1
-
-    # Comparing index to last commit
-    MODE_INDEX = 2
-
-    # Amending a commit
-    MODE_AMEND = 3
-
-    # Applying changes from a branch
-    MODE_BRANCH = 4
-
-    # We ran Search -> Grep
-    MODE_GREP = 5
-
-    # Diffing against an arbitrary branch
-    MODE_DIFF = 6
-
-    # Diffing using arbitrary expression
-    MODE_DIFF_EXPR = 7
-
-    # Reviewing a branch
-    MODE_REVIEW = 8
-
-    # Modes where we don't do anything like staging, etc.
-    MODES_READ_ONLY = (MODE_BRANCH, MODE_GREP,
-                       MODE_DIFF, MODE_DIFF_EXPR, MODE_REVIEW)
-
-    # Modes where we can checkout files from the $head
-    MODES_UNDOABLE = (MODE_NONE, MODE_INDEX, MODE_WORKTREE)
-
     def __init__(self, model, view):
         """Initializes the MainController's internal data."""
         QObserver.__init__(self, model, view)
-
-        # Initialize the mode
-        self.mode = self.MODE_NONE
-
-        # Unstaged changes context menu
-        view.status_tree.contextMenuEvent = self.tree_context_menu_event
-
-        # Diff display context menu
-        view.display_text.contextMenuEvent = self.diff_context_menu_event
-
-        # Install diff shortcut keys for stage/unstage
-        view.display_text.keyPressEvent = self.diff_key_press_event
-
-        # What to compare against by default
-        self.head = 'HEAD'
 
         # Binds model params to their equivalent view widget
         self.add_observables('commitmsg')
@@ -103,25 +54,15 @@ class MainController(QObserver):
         self.add_actions(global_cola_tabwidth = self.update_tab_width)
 
         self.add_callbacks(
-            # Push Buttons
-            rescan_button = self.rescan,
-            signoff_button = self.model.add_signoff,
-            stage_button = self.stage_selected,
+            # Push Buttons TODO
+            #stage_button = self.stage_selected,
             stash_button = lambda: stash(self.model, self.view),
-            commit_button = self.commit,
-            fetch_button = self.fetch,
-            push_button = self.push,
-            pull_button = self.pull,
-            alt_button = self.alt_action,
 
-            # File Menu
+            # File Menu TODO
             menu_quit = self.quit_app,
-            menu_open_repo = self.open_repo,
             menu_clone_repo = self.clone_repo,
             menu_manage_bookmarks = manage_bookmarks,
             menu_save_bookmark = save_bookmark,
-            menu_load_commitmsg = self.load_commitmsg,
-            menu_load_commitmsg_template = model.load_commitmsg_template,
 
             # Edit Menu
             menu_options = self.options,
@@ -134,7 +75,6 @@ class MainController(QObserver):
             menu_redo = self.view.action_redo,
 
             # Search Menu
-            menu_search_grep = self.grep,
             menu_search_revision =
                 self.gen_search(search.REVISION_ID),
             menu_search_revision_range =
@@ -165,25 +105,16 @@ class MainController(QObserver):
             menu_browse_branch = self.browse_current,
             menu_browse_other_branch = self.browse_other,
 
-            # Diff Menu
-            menu_diff_expression = self.diff_expression,
-            menu_branch_diff = self.branch_diff,
-            menu_branch_review = self.branch_review,
-            menu_diff_branch = self.diff_branch,
-
+            # TODO REMOVE
             # Branch Menu
             menu_create_branch = self.branch_create,
             menu_checkout_branch = self.checkout_branch,
             menu_branch_compare = self.branch_compare,
 
             # Commit Menu
-            menu_rescan = self.rescan,
+            # TODO
             menu_delete_branch = self.branch_delete,
             menu_rebase_branch = self.rebase,
-            menu_stage_selected = self.stage_selected,
-            menu_unstage_selected = self.unstage_selected,
-            menu_show_diffstat = self.show_diffstat,
-            menu_show_index = self.show_index,
             menu_export_patches = self.export_patches,
             menu_cherry_pick = self.cherry_pick,
             menu_stash =
@@ -210,22 +141,6 @@ class MainController(QObserver):
 
         # Route events here
         view.closeEvent = self.quit_app
-        view.status_tree.mousePressEvent = self.click_tree
-        self.connect(view.status_tree,
-                     'itemDoubleClicked(QTreeWidgetItem*, int)',
-                     self.doubleclick_tree)
-
-        self.connect(view.status_tree, 'itemSelectionChanged()',
-                     self.display_tree_selection)
-
-        # A hash of the merge message so we don't keep prompting to import it
-        self.merge_msg_hash = ''
-
-        # Loads the saved gui state from .cola
-        self._load_gui_state()
-
-        # Do an initial scan to initialize the repo status tree
-        self.rescan()
 
         # Initializes the log subwindow
         self._init_log_window()
@@ -259,129 +174,16 @@ class MainController(QObserver):
         else:
             return None
 
-    def selection(self):
-        """Return the current selection in the repo status tree."""
-        staged = self.view.staged(self.model.staged)
-        modified = self.view.modified(self.model.modified)
-        unmerged = self.view.unmerged(self.model.unmerged)
-        untracked = self.view.untracked(self.model.untracked)
-
-        return (staged, modified, unmerged, untracked)
-
-    def single_selection(self):
-        """Scan across staged, modified, etc. and return a single item."""
-        staged, modified, unmerged, untracked = self.selection()
-        s = None
-        m = None
-        um = None
-        ut = None
-        if staged:
-            s = staged[0]
-        elif modified:
-            m = modified[0]
-        elif unmerged:
-            um = unmerged[0]
-        elif untracked:
-            ut = untracked[0]
-        return s, m, um, ut
-
-    def doubleclick_tree(self, item, column):
-        """Called when an item is double-clicked in the repo status tree."""
-        if self.read_only():
-            return
-        staged, modified, unmerged, untracked = self.selection()
-        if staged:
-            self.log(*self.model.reset_helper(staged))
-        elif modified:
-            self.log(*self.model.add_or_remove(modified))
-        elif untracked:
-            self.log(*self.model.add_or_remove(untracked))
-        elif unmerged:
-            self.log(*self.model.add_or_remove(unmerged))
-        else:
-            return
-        self.rescan()
-
-    def click_tree(self, event):
-        """
-        Called when a repo status tree item is clicked.
-
-        This handles the behavior where clicking on the icon invokes
-        the same appropriate action.
-        """
-        # Get the item that was clicked
-        tree = self.view.status_tree
-        result = QtGui.QTreeWidget.mousePressEvent(tree, event)
-        item = tree.itemAt(event.pos())
-        if not item:
-            # Nothing was clicked -- reset the display and return
-            if not self.read_only():
-                self.reset_mode()
-            self.view.reset_display()
-            items = self.view.status_tree.selectedItems()
-            tree.blockSignals(True)
-            for i in items:
-                i.setSelected(False)
-            tree.blockSignals(False)
-            return result
-
-        # An item was clicked -- get its index in the model
-        staged, idx = self.view.index_for_item(item)
-        if idx == self.view.IDX_HEADER:
-            return result
-
-        if self.read_only():
-            return result
-
-        # handle when the icons are clicked
-        xpos = event.pos().x()
-        if xpos > 42 and xpos < 58:
-            if staged:
-                # A staged item was clicked
-                selected = self.view.staged(self.model.staged)
-                self.log(*self.model.reset_helper(selected))
-                self.rescan()
-            else:
-                # An unstaged item was clicked
-                selected = self.view.unstaged(self.model.unstaged)
-                if selected:
-                    self.log(*self.model.add_or_remove(selected))
-                selected = self.view.unmerged(self.model.unmerged)
-                if selected:
-                    self.log(*self.model.add_or_remove(selected))
-                self.rescan()
-        return result
-
     #####################################################################
     def event(self, msg):
         """Overrides event() to handle custom inotify events."""
         if not inotify.AVAILABLE:
             return
         if msg.type() == inotify.INOTIFY_EVENT:
-            self.rescan()
+            cola.notifier().broadcast(signals.rescan)
             return True
         else:
             return False
-
-    #####################################################################
-    # Actions triggered during model updates
-    def action_staged(self, widget):
-        """Called when the 'staged' list changes."""
-        qtutils.update_file_icons(widget, self.model.staged, staged=True)
-
-    def action_unstaged(self, widget):
-        """Called when the 'unstaged' list changes."""
-        modified = self.model.modified
-        unmerged = self.model.unmerged
-        unstaged = modified + unmerged
-        qtutils.update_file_icons(widget,
-                                  unstaged,
-                                  staged=False)
-        qtutils.update_file_icons(widget,
-                                  self.model.untracked,
-                                  staged=False,
-                                  untracked=True,
-                                  offset=len(unstaged))
 
     #####################################################################
     # Qt callbacks
@@ -389,40 +191,11 @@ class MainController(QObserver):
         """Translates strings."""
         return qtutils.tr(fortr)
 
-    def read_only(self):
-        """Whether to inhibit all repo-modifying actions."""
-        return self.mode in self.MODES_READ_ONLY
-
-    def undoable(self):
-        """Whether we can checkout files from the $head."""
-        return self.mode in self.MODES_UNDOABLE
-
-    def goto_grep(self):
-        """Called when Search -> Grep's right-click 'goto' action."""
-        line = self.view.selected_line()
-        filename, lineno, contents = line.split(':', 2)
-        if not os.path.exists(filename):
-            return
-        editor = self.model.editor()
-        if 'vi' in editor:
-            utils.fork([editor, filename, '+'+lineno])
-        else:
-            utils.fork([editor, filename])
-
     def gen_search(self, searchtype, browse=False):
         """Return a callback to handle various search actions."""
         def search_handler():
             search_commits(self.model, self.view, searchtype, browse)
         return search_handler
-
-    def grep(self):
-        """Prompt and use 'git grep' to find the content."""
-        txt, ok = qtutils.prompt('grep')
-        if not ok:
-            return
-        self.mode = self.MODE_GREP
-        stuff = self.model.git.grep(txt, n=True)
-        self.view.display_text.setText(stuff)
 
     def options(self):
         """Launch the options dialog"""
@@ -482,92 +255,9 @@ class MainController(QObserver):
             return
         self.log(*self.model.cherry_pick_list(commits))
 
-    def commit(self):
-        """Attempt to create a commit from the index and commit message."""
-        self.reset_mode()
-        self.head = 'HEAD'
-        msg = self.model.commitmsg
-        if not msg:
-            # Describe a good commit message
-            error_msg = self.tr(''
-                'Please supply a commit message.\n\n'
-                'A good commit message has the following format:\n\n'
-                '- First line: Describe in one sentence what you did.\n'
-                '- Second line: Blank\n'
-                '- Remaining lines: Describe why this change is good.\n')
-            qtutils.log(1, error_msg)
-            return
-        files = self.model.staged
-        if not files and not self.view.amend_is_checked():
-            error_msg = self.tr(''
-                'No changes to commit.\n\n'
-                'You must stage at least 1 file before you can commit.\n')
-            qtutils.log(1, error_msg)
-            return
-        # Warn that amending published commits is generally bad
-        amend = self.view.amend_is_checked()
-        if (amend and self.model.is_commit_published() and
-            not qtutils.question(self.view,
-                                 'Rewrite Published Commit?',
-                                 'This commit has already been published.\n'
-                                 'You are rewriting published history.\n'
-                                 'You probably don\'t want to do this.\n\n'
-                                 'Continue?',
-                                 default=False)):
-            return
-        # Perform the commit
-        umsg = core.encode(msg)
-        status, output = self.model.commit_with_msg(umsg, amend=amend)
-        if status == 0:
-            self.view.reset_checkboxes()
-            self.model.set_commitmsg('')
-        self.log(status, output)
-
-    def selected_filename(self, staged=False):
-        """Return the selected staged or unstaged filename."""
-        if staged:
-            return self.staged_item()
-        else:
-            return self.unstaged_item()
-
-    def set_mode(self, staged):
-        """Set the appropriate mode based on the staged/amending state."""
-        if self.read_only():
-            return
-        if staged:
-            if self.view.amend_is_checked():
-                self.mode = self.MODE_AMEND
-            else:
-                self.mode = self.MODE_INDEX
-        else:
-            self.mode = self.MODE_WORKTREE
-        self.view.exit_diff_mode()
-
-    def view_diff(self, staged=True, scrollvalue=None):
-        """View the diff for a clicked-on item."""
-        idx, selected = self.view.selection()
-        if not selected:
-            self.reset_mode()
-            self.view.reset_display()
-            return
-        self._view_diff_for_row(idx, staged)
-        if scrollvalue is not None:
-            scrollbar = self.view.display_text.verticalScrollBar()
-            scrollbar.setValue(scrollvalue)
-
-    def _view_diff_for_row(self, idx, staged):
-        """View the diff for a specific row."""
-        self.set_mode(staged)
-        ref = self.head
-        if self.read_only():
-            diff, filename = self.model.diff_for_expr(idx, ref)
-        else:
-            diff, filename = self.model.diff_details(idx, ref, staged=staged)
-        self.view.set_display(diff)
-        qtutils.set_clipboard(filename)
-
     def mergetool(self):
         """Launch git-mergetool on a file path."""
+        return#TODO
         filename = self.selected_filename(staged=False)
         if not filename or filename not in self.model.unmerged:
             return
@@ -579,18 +269,20 @@ class MainController(QObserver):
 
     def edit_file(self, staged=True):
         """Launch $editor on a specific path."""
+        return# TODO
         filename = self.selected_filename(staged=staged)
         if filename:
             utils.fork([self.model.editor(), filename])
 
     def edit_diff(self, staged=True):
         """Launches difftool on the specified paths."""
+        return# TODO
         filename = self.selected_filename(staged=staged)
         if filename:
             args = []
-            if staged and not self.read_only():
+            if staged and not self.model.read_only():
                 args.append('--cached')
-            args.extend([self.head, '--', filename])
+            args.extend([self.model.head, '--', filename])
             difftool.launch(args)
 
     def delete_files(self):
@@ -605,78 +297,6 @@ class MainController(QObserver):
                     qtutils.log(1, self.tr('Error deleting "%s"') % filename)
                 else:
                     rescan=True
-        if rescan:
-            self.rescan()
-
-    def display_tree_selection(self):
-        """Show a data for the selected item."""
-        selection = self.view.tree_selection()
-        if not selection:
-            return
-        category, idx = selection[0]
-
-        # A header item e.g. 'Staged', 'Modified', etc.
-        if category == self.view.IDX_HEADER:
-            diff = self.generate_header_data(idx)
-            self.view.set_display(diff)
-
-        # A staged file
-        elif category == self.view.IDX_STAGED:
-            self.view_diff(staged=True)
-
-        # A modified file
-        elif category in (self.view.IDX_MODIFIED,
-                          self.view.IDX_UNMERGED,
-                          self.view.IDX_UNTRACKED):
-            self.view_diff(staged=False)
-
-    def generate_header_data(self, idx):
-        """Generate data for a header item such as 'Staged'."""
-        diff = 'no diff'
-        if (self.mode == self.MODE_DIFF_EXPR or
-            (self.mode == self.MODE_REVIEW and
-                idx == self.view.IDX_STAGED)):
-            # Run diff without --cached when in review mode
-            diff = (self.model.git.diff(self.head,
-                                        no_color=True, stat=True,
-                                        M=True,
-                                        with_raw_output=True) +
-                    '\n\n' +
-                    self.model.git.diff(self.head, no_color=True))
-
-        elif idx == self.view.IDX_STAGED:
-            # Show a diffstat when clicking on the 'Staged' heading
-            diff = (self.model.git.diff(cached=True, stat=True,
-                                        M=True,
-                                        no_color=True,
-                                        with_raw_output=True) + '\n\n' +
-                    self.model.git.diff(cached=True))
-
-        elif idx == self.view.IDX_MODIFIED:
-            # Show a diffstat when clicking on the 'Modified' heading
-            diff = (self.model.git.diff(stat=True,
-                                        M=True,
-                                        no_color=True,
-                                        with_raw_output=True) + '\n\n' +
-                    self.model.git.diff(no_color=True))
-
-        elif idx == self.view.IDX_UNMERGED:
-            # List unmerged files when clicking on the 'Unmerged' heading
-            diff = '%s unmerged file(s)' % len(self.model.unmerged)
-
-        elif idx == self.view.IDX_UNTRACKED:
-            # We click on the untracked heading so helpfully list
-            # possible .gitignore rules
-            untracked = self.model.untracked
-            suffix = len(untracked) > 1 and '(s)' or ''
-            diff = '# %s untracked file%s\n' % (len(untracked), suffix)
-            if untracked:
-                diff += '# possible .gitignore rule%s:\n' % suffix
-                for u in untracked:
-                    diff += '/'+ u + '\n'
-                diff + '\n'
-
-        return diff
 
     def export_patches(self):
         """Run 'git format-patch' on a list of commits."""
@@ -688,23 +308,6 @@ class MainController(QObserver):
         revs.reverse()
         qtutils.log(*self.model.format_patch_helper(to_export, revs,
                                                     output='patches'))
-
-    def _quote_repopath(self, repopath):
-        """Quote a path for nt/dos only."""
-        if os.name in ('nt', 'dos'):
-            repopath = '"%s"' % repopath
-        return repopath
-
-    def open_repo(self):
-        """Spawn a new cola session."""
-        # TODO libify
-        dirname = qtutils.opendir_dialog(self.view,
-                                         'Open Git Repository...',
-                                         os.getcwd())
-        if not dirname:
-            return
-        utils.fork(['python', sys.argv[0],
-                    '--repo', self._quote_repopath(dirname)])
 
     def clone_repo(self):
         """Clone a git repository."""
@@ -778,17 +381,6 @@ class MainController(QObserver):
             self.inotify_thread.wait()
         self.view.close()
 
-    def load_commitmsg(self):
-        """Load a commit message from a file."""
-        filename = qtutils.open_dialog(self.view,
-                                       'Load Commit Message...',
-                                       self.model.directory)
-        if filename:
-            self.model.directory = os.path.dirname(filename)
-            slushy = utils.slurp(filename)
-            if slushy:
-                self.model.set_commitmsg(slushy)
-
     def rebase(self):
         """Rebase onto a branch."""
         branch = choose_from_combo('Rebase Branch',
@@ -800,319 +392,23 @@ class MainController(QObserver):
                                         with_stderr=True,
                                         with_status=True))
 
-    def reset_mode(self):
-        """Set the mode to the default NONE mode."""
-        self.mode = self.MODE_NONE
-        self.view.exit_diff_mode()
-
-    def clear_and_rescan(self, *rest):
-        """Clear the commit message and rescan."""
-        self.reset_mode()
-        self.head = 'HEAD'
-        self.model.set_commitmsg('')
-        self.rescan()
-
     # use *rest to handle being called from the checkbox signal
     def rescan(self, *rest):
         """Populate view widgets with results from 'git status'."""
-
-        # save entire selection
-        staged = self.view.staged(self.model.staged)
-        modified = self.view.modified(self.model.modified)
-        unmerged = self.view.unmerged(self.model.unmerged)
-        untracked = self.view.untracked(self.model.untracked)
-
-        # unstaged is an aggregate
-        unstaged = modified + unmerged + untracked
-
+        # TODO
+        return
         scrollbar = self.view.display_text.verticalScrollBar()
         scrollvalue = scrollbar.value()
-        mode = self.mode
 
-        # get new values
-        self.model.set_head(self.head)
-        self.model.update_status(staged_only=self.read_only())
-
-        # Setup initial tree items
-        if self.read_only():
-            self.view.set_staged(self.model.staged, check=False)
-            self.view.set_modified([])
-            self.view.set_unmerged([])
-            self.view.set_untracked([])
-        else:
-            self.view.set_staged(self.model.staged)
-            self.view.set_modified(self.model.modified)
-            self.view.set_unmerged(self.model.unmerged)
-            self.view.set_untracked(self.model.untracked)
-
-        # restore selection
-        updated_staged = self.model.staged
-        updated_modified = self.model.modified
-        updated_unmerged = self.model.unmerged
-        updated_untracked = self.model.untracked
-        # unstaged is an aggregate
-        updated_unstaged = (updated_modified +
-                            updated_unmerged +
-                            updated_untracked)
-
-        # Updating the status resets the repo status tree so
-        # restore the selected items and re-run the diff
-        showdiff = False
-        if mode == self.MODE_WORKTREE:
-            # Update unstaged items
-            if unstaged:
-                for item in unstaged:
-                    if item in updated_unstaged:
-                        idx = updated_unstaged.index(item)
-                        item = self.view.unstaged_item(idx)
-                        if item:
-                            showdiff = True
-                            item.setSelected(True)
-                            self.view.status_tree.setCurrentItem(item)
-                            self.view.status_tree.setItemSelected(item, True)
-                if showdiff:
-                    self.view_diff(staged=False, scrollvalue=scrollvalue)
-                else:
-                    self.reset_mode()
-                    self.view.reset_display()
-
-        elif mode in (self.MODE_INDEX, self.MODE_AMEND):
-            # Ditto for staged items
-            if staged:
-                for item in staged:
-                    if item in updated_staged:
-                        idx = updated_staged.index(item)
-                        item = self.view.staged_item(idx)
-                        if item:
-                            showdiff = True
-                            item.setSelected(True)
-                            self.view.status_tree.setCurrentItem(item)
-                            self.view.status_tree.setItemSelected(item, True)
-                if showdiff:
-                    self.view_diff(staged=True, scrollvalue=scrollvalue)
-                else:
-                    self.reset_mode()
-                    self.view.reset_display()
-
-        # Update the title with the current branch
-        self._update_window_title()
-
-        if not self.view.amend_is_checked():
-            # Check if there's a message file in .git/
-            merge_msg_path = self.model.merge_message_path()
-            if merge_msg_path is None:
-                return
-            merge_msg_hash = self.model.git.hash_object(merge_msg_path)
-            if merge_msg_hash == self.merge_msg_hash:
-                return
-            self.merge_msg_hash = merge_msg_hash
-            self.model.load_commitmsg(merge_msg_path)
-
-    def _update_window_title(self):
-        """Update the title with the current branch and directory name."""
-        title = '%s [%s]' % (self.model.project,
-                             self.model.currentbranch)
-        if self.mode == self.MODE_DIFF or self.mode == self.MODE_DIFF_EXPR:
-            title += ' *** diff mode***'
-        if self.mode == self.MODE_REVIEW:
-            title += ' *** review mode***'
-        self.view.setWindowTitle(title)
-
-    def alt_action(self):
-        """Clear and rescan when read-only."""
-        if self.mode in self.MODES_READ_ONLY:
-            self.clear_and_rescan()
-
-    def fetch(self):
-        """Launch the 'fetch' remote dialog."""
-        remote_action(self.model, self.view, 'fetch')
-
-    def push(self):
-        """Launch the 'push' remote dialog."""
-        remote_action(self.model, self.view, 'push')
-
-    def pull(self):
-        """Launch the 'pull' remote dialog."""
-        remote_action(self.model, self.view, 'pull')
-
-    def show_diffstat(self):
-        """Show a diffstat for the latest commit."""
-        self.reset_mode()
-        self.view.set_display(self.model.diffstat())
-
-    def show_index(self):
-        """Shows a diffstat for the index."""
-        self.reset_mode()
-        self.view.set_display(self.model.diffindex())
-
-    #####################################################################
     def branch_compare(self):
         """Launch the Branch -> Compare dialog."""
-        self.reset_mode()
+        # TODO
+        #self.reset_mode()
         branch_compare(self.model, self.view)
-
-    #####################################################################
-    # diff gui
-    def branch_diff(self):
-        """Diff against an arbitrary revision, branch, tag, etc."""
-        branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
-                                   self.view,
-                                   ['HEAD^'] +
-                                   self.model.all_branches() +
-                                   self.model.tags)
-        if not branch:
-            return
-        self.mode = self.MODE_DIFF
-        self.head = branch
-        self.view.enter_diff_mode('Exit Diff Mode')
-        self.rescan()
-
-    def diff_expression(self):
-        """Diff using an arbitrary expression."""
-        branch = choose_from_combo('Enter Diff Expression',
-                                   self.view,
-                                   self.model.all_branches() +
-                                   self.model.tags)
-        if not branch:
-            return
-        self.mode = self.MODE_DIFF_EXPR
-        self.head = branch
-        self.view.enter_diff_mode('Exit Diff Mode')
-        self.rescan()
-
-    def branch_review(self):
-        """Diff against an arbitrary revision, branch, tag, etc."""
-        branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
-                                   self.view,
-                                   self.model.all_branches() +
-                                   self.model.tags)
-        if not branch:
-            return
-        self.mode = self.MODE_REVIEW
-        self.head = self.model.merge_base_to(branch)
-        self.view.enter_diff_mode('Exit Review Mode')
-        self.rescan()
-
-    def diff_branch(self):
-        """Launches a diff against a branch."""
-        branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
-                                   self.view,
-                                   ['HEAD^'] +
-                                   self.model.all_branches() +
-                                   self.model.tags)
-        if not branch:
-            return
-        zfiles_str = self.model.git.diff(branch, name_only=True,
-                                         no_color=True,
-                                         z=True).rstrip('\0')
-        files = zfiles_str.split('\0')
-        filename = choose_from_list('Select File', self.view, files)
-        if not filename:
-            return
-        diff = self.model.diff_helper(filename=filename,
-                                      cached=False,
-                                      reverse=True,
-                                      branch=branch)
-        self.view.set_display(diff)
-
-        # Set state machine to branch mode
-        self.mode = self.MODE_BRANCH
-        self.branch = branch
-        self.filename = filename
-
-    def process_diff_selection(self, selected=False,
-                               staged=True, apply_to_worktree=False,
-                               reverse=False):
-        """Implement un/staging of selected lines or hunks."""
-        if self.mode == self.MODE_BRANCH:
-            # We're applying changes from a different branch!
-            branch = self.branch
-            filename = self.filename
-            parser = utils.DiffParser(self.model,
-                                      filename=filename,
-                                      cached=False,
-                                      branch=branch)
-            offset, selection = self.view.diff_selection()
-            parser.process_diff_selection(selected, offset, selection,
-                                          apply_to_worktree=True)
-            self.rescan()
-        else:
-            # The normal worktree vs index scenario
-            filename = self.selected_filename(staged)
-            if not filename:
-                return
-            parser = utils.DiffParser(self.model,
-                                      filename=filename,
-                                      cached=staged,
-                                      reverse=apply_to_worktree)
-            offset, selection = self.view.diff_selection()
-            parser.process_diff_selection(selected, offset, selection,
-                                          apply_to_worktree=apply_to_worktree)
-            self.rescan()
-
-    def undo_hunk(self):
-        """Destructively remove a hunk from a worktree file."""
-        if not qtutils.question(self.view,
-                                'Destroy Local Changes?',
-                                'This operation will drop '
-                                'uncommitted changes.\n'
-                                'Continue?',
-                                default=False):
-            return
-        self.process_diff_selection(staged=False, apply_to_worktree=True,
-                                    reverse=True)
-
-    def undo_selection(self):
-        """Destructively check out content for the selected file from $head."""
-        if not qtutils.question(self.view,
-                                'Destroy Local Changes?',
-                                'This operation will drop '
-                                'uncommitted changes.\n'
-                                'Continue?',
-                                default=False):
-            return
-        self.process_diff_selection(staged=False, apply_to_worktree=True,
-                                    reverse=True, selected=True)
-
-    def stage_hunk(self):
-        """Stage a specific hunk."""
-        self.process_diff_selection(staged=False)
-
-    def stage_hunk_selection(self):
-        """Stage selected lines."""
-        self.process_diff_selection(staged=False, selected=True)
-
-    def unstage_hunk(self, cached=True):
-        """Unstage a hunk."""
-        self.process_diff_selection(staged=True)
-
-    def unstage_hunk_selection(self):
-        """Unstage selected lines."""
-        self.process_diff_selection(staged=True, selected=True)
-
-    # #######################################################################
-    # end diff gui
-
-    # *rest handles being called from different signals
-    def stage_selected(self,*rest):
-        """Use 'git add/rm' to add or remove content from the index"""
-        if self.read_only():
-            return
-        selected = self.view.unstaged(self.model.unstaged)
-        if not selected:
-            return
-        self.log(*self.model.add_or_remove(selected))
-
-    # *rest handles being called from different signals
-    def unstage_selected(self, *rest):
-        """Use 'git reset/rm' to remove content from the index"""
-        if self.read_only():
-            return
-        selected = self.view.staged(self.model.staged)
-        self.log(*self.model.reset_helper(selected))
 
     def undo_changes(self):
         """Reverts local changes back to whatever's in HEAD."""
+        return #TODO
         if not self.undoable():
             return
         items_to_undo = self.view.modified(self.model.modified)
@@ -1143,118 +439,9 @@ class MainController(QObserver):
         browser = self.model.history_browser()
         utils.fork(['sh', '-c', browser, self.model.currentbranch])
 
-    def _load_gui_state(self):
-        """Load gui state and apply it to the views."""
-        state = settings.SettingsManager.gui_state(self.view)
-        self.view.import_state(state)
-
-    def log(self, status, output, rescan=True):
+    def log(self, status, output):
         """Log output and optionally rescans for changes."""
         qtutils.log(status, output)
-        if rescan:
-            self.rescan()
-
-    def tree_context_menu_event(self, event):
-        """Create context menus for the repo status tree."""
-        menu = self.tree_context_menu_setup()
-        menu.exec_(self.view.status_tree.mapToGlobal(event.pos()))
-
-    def tree_context_menu_setup(self):
-        """Set up the status menu for the repo status tree."""
-        staged, modified, unmerged, untracked = self.single_selection()
-
-        menu = QtGui.QMenu(self.view)
-
-        if staged:
-            menu.addAction(self.tr('Unstage Selected'), self.unstage_selected)
-            menu.addSeparator()
-            menu.addAction(self.tr('Launch Editor'),
-                           lambda: self.edit_file(staged=True))
-            menu.addAction(self.tr('Launch Diff Tool'),
-                           lambda: self.edit_diff(staged=True))
-            return menu
-
-        if unmerged:
-            if not utils.is_broken():
-                menu.addAction(self.tr('Launch Merge Tool'), self.mergetool)
-            menu.addAction(self.tr('Launch Editor'),
-                           lambda: self.edit_file(staged=False))
-            menu.addSeparator()
-            menu.addAction(self.tr('Stage Selected'), self.stage_selected)
-            return menu
-
-        enable_staging = self.mode == self.MODE_WORKTREE
-        if enable_staging:
-            menu.addAction(self.tr('Stage Selected'), self.stage_selected)
-            menu.addSeparator()
-
-        menu.addAction(self.tr('Launch Editor'),
-                       lambda: self.edit_file(staged=False))
-
-        if modified and enable_staging:
-            menu.addAction(self.tr('Launch Diff Tool'),
-                           lambda: self.edit_diff(staged=False))
-            menu.addSeparator()
-            menu.addAction(self.tr('Undo All Changes'), self.undo_changes)
-
-        if untracked:
-            menu.addSeparator()
-            menu.addAction(self.tr('Delete File(s)'), self.delete_files)
-
-        return menu
-
-    def diff_context_menu_event(self, event):
-        """Create the context menu for the diff display."""
-        menu = self.diff_context_menu_setup()
-        textedit = self.view.display_text
-        menu.exec_(textedit.mapToGlobal(event.pos()))
-
-    def diff_context_menu_setup(self):
-        """Set up the context menu for the diff display."""
-        menu = QtGui.QMenu(self.view)
-        staged, modified, unmerged, untracked = self.single_selection()
-
-        if self.mode == self.MODE_WORKTREE:
-            if modified:
-                menu.addAction(self.tr('Stage &Hunk For Commit'),
-                               self.stage_hunk)
-                menu.addAction(self.tr('Stage &Selected Lines'),
-                               self.stage_hunk_selection)
-                menu.addSeparator()
-                menu.addAction(self.tr('Undo Hunk'), self.undo_hunk)
-                menu.addAction(self.tr('Undo Selection'), self.undo_selection)
-
-        elif self.mode == self.MODE_INDEX:
-            menu.addAction(self.tr('Unstage &Hunk From Commit'), self.unstage_hunk)
-            menu.addAction(self.tr('Unstage &Selected Lines'), self.unstage_hunk_selection)
-
-        elif self.mode == self.MODE_BRANCH:
-            menu.addAction(self.tr('Apply Diff to Work Tree'), self.stage_hunk)
-            menu.addAction(self.tr('Apply Diff Selection to Work Tree'), self.stage_hunk_selection)
-
-        elif self.mode == self.MODE_GREP:
-            menu.addAction(self.tr('Go Here'), self.goto_grep)
-
-        menu.addSeparator()
-        menu.addAction(self.tr('Copy'), self.view.copy_display)
-        return menu
-
-    def diff_key_press_event(self, event):
-        """Handle shortcut keys in the diff view."""
-        if event.key() != QtCore.Qt.Key_H and event.key() != QtCore.Qt.Key_S:
-            event.ignore()
-            return
-        staged, modified, unmerged, untracked = self.single_selection()
-        if event.key() == QtCore.Qt.Key_H:
-            if self.mode == self.MODE_WORKTREE and modified:
-                self.stage_hunk()
-            elif self.mode == self.MODE_INDEX:
-                self.unstage_hunk()
-        elif event.key() == QtCore.Qt.Key_S:
-            if self.mode == self.MODE_WORKTREE and modified:
-                self.stage_hunk_selection()
-            elif self.mode == self.MODE_INDEX:
-                self.unstage_hunk_selection()
 
     def select_commits_gui(self, title, revs, summaries, multiselect=True):
         """Launch a gui for selecting commits."""
@@ -1267,6 +454,7 @@ class MainController(QObserver):
         qtutils.set_diff_font(qtutils.logger())
         qtutils.set_diff_font(self.view.display_text)
         qtutils.set_diff_font(self.view.commitmsg)
+        self.update_tab_width()
 
     def update_tab_width(self):
         """Implement the variable-tab-width setting."""
