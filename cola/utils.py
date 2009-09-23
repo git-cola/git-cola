@@ -7,6 +7,7 @@ import sys
 import errno
 import platform
 import subprocess
+import hashlib
 import mimetypes
 
 from glob import glob
@@ -490,3 +491,18 @@ def is_broken():
             if e.errno == errno.EINTR:
                 continue
             raise e
+
+
+def checksum(path):
+    """Return a cheap md5 hexdigest for a path."""
+    contents = slurp(path)
+    md5 = hashlib.new('md5')
+    md5.add(contents)
+    return md5.hexdigest()
+
+
+def quote_repopath(repopath):
+    """Quote a path for nt/dos only."""
+    if os.name in ('nt', 'dos'):
+        repopath = '"%s"' % repopath
+    return repopath
