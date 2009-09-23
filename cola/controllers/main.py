@@ -42,12 +42,11 @@ class MainController(QObserver):
         self.add_actions(global_cola_tabwidth = self.update_tab_width)
 
         self.add_callbacks(
-            # Push Buttons TODO
+            # Push Buttons TODO move selection into the model
             #stage_button = self.stage_selected,
 
             # File Menu TODO
             menu_quit = self.quit_app,
-            menu_clone_repo = self.clone_repo,
             menu_manage_bookmarks = manage_bookmarks,
             menu_save_bookmark = save_bookmark,
 
@@ -191,57 +190,6 @@ class MainController(QObserver):
         revs.reverse()
         qtutils.log(*self.model.format_patch_helper(to_export, revs,
                                                     output='patches'))
-
-    def clone_repo(self):
-        """Clone a git repository."""
-        url, ok = qtutils.prompt('Path or URL to clone (Env. $VARS okay)')
-        url = os.path.expandvars(url)
-        if not ok or not url:
-            return
-        try:
-            # Pick a suitable basename by parsing the URL
-            newurl = url.replace('\\', '/')
-            default = newurl.rsplit('/', 1)[-1]
-            if default == '.git':
-                # The end of the URL is /.git, so assume it's a file path
-                default = os.path.basename(os.path.dirname(newurl))
-            if default.endswith('.git'):
-                # The URL points to a bare repo
-                default = default[:-4]
-            if url == '.':
-                # The URL is the current repo
-                default = os.path.basename(os.getcwd())
-            if not default:
-                raise
-        except:
-            qtutils.log(1, 'Oops, could not parse git url: "%s"' % url)
-            return
-
-        # Prompt the user for a directory to use as the parent directory
-        msg = 'Select a parent directory for the new clone'
-        dirname = qtutils.opendir_dialog(self.view, msg, os.getcwd())
-        if not dirname:
-            return
-        count = 1
-        destdir = os.path.join(dirname, default)
-        olddestdir = destdir
-        if os.path.exists(destdir):
-            # An existing path can be specified
-            qtutils.information(destdir + ' already exists, cola will '
-                                'create a new directory')
-
-        # Make sure the new destdir doesn't exist
-        while os.path.exists(destdir):
-            destdir = olddestdir + str(count)
-            count += 1
-
-        # Run 'git clone' into the destdir
-        qtutils.log(*self.model.git.clone(url, destdir,
-                                          with_stderr=True,
-                                          with_status=True))
-        # Run git-cola on the new repo
-        utils.fork(['python', sys.argv[0],
-                    '--repo', self._quote_repopath(destdir)])
 
     def has_inotify(self):
         """Return True if pyinotify is available."""

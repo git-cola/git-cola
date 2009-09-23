@@ -1,5 +1,6 @@
 """This view provides the main git-cola user interface.
 """
+import os
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -97,6 +98,7 @@ class MainView(MainWindow):
             (self.menu_branch_compare, compare.branch_compare),
             (self.menu_branch_diff, self.branch_diff),
             (self.menu_branch_review, self.review_branch),
+            (self.menu_clone_repo, self.clone_repo),
             (self.menu_commit_compare, compare.compare),
             (self.menu_commit_compare_file, compare.compare_file),
             (self.menu_diff_expression, self.diff_expression),
@@ -108,6 +110,7 @@ class MainView(MainWindow):
             (self.menu_load_commitmsg_template, self.load_template),
             (self.menu_merge_local, local_merge),
             (self.menu_merge_abort, abort_merge),
+            (self.menu_open_repo, self.open_repo),
             (self.menu_options, update_options),
             (self.menu_rescan, SLOT(signals.rescan)),
             (self.menu_search_grep, self.grep),
@@ -557,3 +560,52 @@ class MainView(MainWindow):
         if not dirname:
             return
         cola.notifier().broadcast(signals.open_repo, dirname)
+
+    def clone_repo(self):
+        """Clone a git repository."""
+        url, ok = qtutils.prompt('Path or URL to clone (Env. $VARS okay)')
+        url = os.path.expandvars(url)
+        if not ok or not url:
+            return
+        try:
+            # Pick a suitable basename by parsing the URL
+            newurl = url.replace('\\', '/')
+            default = newurl.rsplit('/', 1)[-1]
+            if default == '.git':
+                # The end of the URL is /.git, so assume it's a file path
+                default = os.path.basename(os.path.dirname(newurl))
+            if default.endswith('.git'):
+                # The URL points to a bare repo
+                default = default[:-4]
+            if url == '.':
+                # The URL is the current repo
+                default = os.path.basename(os.getcwd())
+            if not default:
+                raise
+        except:
+            cola.notifier().broadcast(signals.information,
+                                      'Error Cloning',
+                                      'Could not parse: "%s"' % url)
+            qtutils.log(1, 'Oops, could not parse git url: "%s"' % url)
+            return
+
+        # Prompt the user for a directory to use as the parent directory
+        msg = 'Select a parent directory for the new clone'
+        dirname = qtutils.opendir_dialog(self, msg, self.model.getcwd())
+        if not dirname:
+            return
+        count = 1
+        destdir = os.path.join(dirname, default)
+        olddestdir = destdir
+        if os.path.exists(destdir):
+            # An existing path can be specified
+            msg = ('"%s" already exists, cola will create a new directory' %
+                   destdir)
+            cola.notifier().broadcast(signals.information,
+                                      'Directory Exists', msg)
+
+        # Make sure the new destdir doesn't exist
+        while os.path.exists(destdir):
+            destdir = olddestdir + str(count)
+            count += 1
+        cola.notifier().broadcast(signals.clone, url, destdir)

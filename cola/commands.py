@@ -361,13 +361,31 @@ class LoadCommitMessage(Command):
 class OpenRepo(Command):
     """Launches git-cola on a repo."""
     def __init__(self, dirname):
-        self.dirname = utils.quote_repopath(dirname)
+        Command.__init__(self)
+        self.new_directory = utils.quote_repopath(dirname)
 
     def do(self):
-        utils.fork(['python', sys.argv[0], '--repo', self.dirname])
+        self.model.set_directory(self.new_directory)
+        utils.fork(['python', sys.argv[0], '--repo', self.new_directory])
 
     def is_undoable(self):
         return False
+
+
+class Clone(Command):
+    """Clones a repository and launches a new cola session."""
+    def __init__(self, url, destdir):
+        Command.__init__(self)
+        self.url = url
+        self.new_directory = utils.quote_repopath(destdir)
+
+    def is_undoable(self):
+        return False
+
+    def do(self):
+        self.model.git.clone(self.url, self.new_directory,
+                             with_stderr=True, with_status=True)
+        utils.fork(['python', sys.argv[0], '--repo', self.new_directory])
 
 
 class Rescan(Command):
@@ -505,6 +523,7 @@ def register():
         signals.apply_diff_selection: ApplyDiffSelection,
         signals.amend_mode: AmendMode,
         signals.branch_mode: BranchMode,
+        signals.clone: Clone,
         signals.commit: Commit,
         signals.delete: Delete,
         signals.diff: Diff,
