@@ -32,8 +32,8 @@ class StatusWidget(QtGui.QDialog):
     idx_untracked = 3
     idx_end = 4
 
-    mode = property(lambda self: self.model.mode,
-                    lambda self, m: self.model.set_mode(m))
+    # Read-only access to the mode state
+    mode = property(lambda self: self.model.mode)
 
     def __init__(self, parent=None):
         QtGui.QDialog.__init__(self, parent)
@@ -56,16 +56,19 @@ class StatusWidget(QtGui.QDialog):
         self.add_item('Unmerged', 'unmerged.png')
         self.add_item('Untracked', 'untracked.png')
 
-        self.expanded_items = set()
-        self.model = cola.model()
-        self.model.add_message_observer(self.model.message_updated,
-                                        self.refresh)
         # Handle these events here
         self.tree.contextMenuEvent = self.tree_context_menu_event
         self.tree.mousePressEvent = self.tree_click
 
+        self.expanded_items = set()
+        self.model = cola.model()
+        self.model.add_message_observer(self.model.message_updated,
+                                        self.refresh)
         self.connect(self.tree, SIGNAL('itemSelectionChanged()'),
                      self.tree_selection)
+        self.connect(self.tree,
+                     SIGNAL('itemDoubleClicked(QTreeWidgetItem*, int)'),
+                     self.tree_doubleclick)
 
     def add_item(self, txt, path):
         """Create a new top-level item in the status tree."""
@@ -73,16 +76,25 @@ class StatusWidget(QtGui.QDialog):
         item.setText(0, self.tr(txt))
         item.setIcon(0, qtutils.icon(path))
 
-    def refresh(self, subject, message):
+    def refresh(self):
         """Update display from model data."""
         self.set_staged(self.model.staged)
         self.set_modified(self.model.modified)
         self.set_unmerged(self.model.unmerged)
         self.set_untracked(self.model.untracked)
 
-    def set_staged(self, items, check=True):
+        if not self.model.staged:
+            return
+        staged = self.tree.topLevelItem(self.idx_staged)
+        if self.mode in self.model.modes_read_only:
+            staged.setText(0, self.tr('Changed'))
+        else:
+            staged.setText(0, self.tr('Staged'))
+
+    def set_staged(self, items):
         """Adds items to the 'Staged' subtree."""
-        self._set_subtree(items, self.idx_staged, staged=True, check=check)
+        self._set_subtree(items, self.idx_staged, staged=True,
+                          check=not self.model.read_only())
 
     def set_modified(self, items):
         """Adds items to the 'Modified' subtree."""
@@ -102,6 +114,10 @@ class StatusWidget(QtGui.QDialog):
                      check=True):
         """Add a list of items to a treewidget item."""
         parent = self.tree.topLevelItem(idx)
+        if items:
+            self.tree.setItemHidden(parent, False)
+        else:
+            self.tree.setItemHidden(parent, True)
         parent.takeChildren()
         for item in items:
             treeitem = qtutils.create_treeitem(item,
@@ -110,10 +126,6 @@ class StatusWidget(QtGui.QDialog):
                                                untracked=untracked)
             parent.addChild(treeitem)
         self.expand_items(idx, items)
-        if items:
-            self.tree.setItemHidden(parent, False)
-        else:
-            self.tree.setItemHidden(parent, True)
 
     def expand_items(self, idx, items):
         """Expand the top-level category "folder" once and only once."""
@@ -269,22 +281,29 @@ class StatusWidget(QtGui.QDialog):
         if self.model.read_only():
             return result
 
-        # handle when the icons are clicked
+        # Handle when the icons are clicked
+        # TODO query Qt for the event position relative to the icon.
         xpos = event.pos().x()
-        if xpos > 42 and xpos < 58:
+        if xpos > 45 and xpos < 59:
             if staged:
-                # A staged item was clicked
                 cola.notifier().broadcast(signals.unstage, self.staged())
-                #self.log(*self.model.reset_helper(selected))
-                #self.rescan()
             else:
-                # An unstaged item was clicked
-                selected = self.unstaged()
-                if selected:
-                    cola.notifier().broadcast(signals.stage, selected)
-                    #self.log(*self.model.add_or_remove(selected))
-                    #self.rescan()
+                cola.notifier().broadcast(signals.stage, self.unstaged())
         return result
+
+    def tree_doubleclick(self, item, column):
+        """Called when an item is double-clicked in the repo status tree."""
+        if self.model.read_only():
+            return
+        staged, modified, unmerged, untracked = self.selection()
+        if staged:
+            cola.notifier().broadcast(signals.unstage, [staged])
+        elif modified:
+            cola.notifier().broadcast(signals.stage, [modified])
+        elif untracked:
+            cola.notifier().broadcast(signals.stage, [untracked])
+        elif unmerged:
+            cola.notifier().broadcast(signals.stage, [unmerged])
 
     def tree_selection(self):
         """Show a data for the selected item."""
@@ -301,11 +320,8 @@ class StatusWidget(QtGui.QDialog):
                 self.idx_untracked: signals.untracked_summary,
             }.get(idx, signals.diffstat)
             cola.notifier().broadcast(signal)
-            #diff = self.generate_header_data(idx)
-            #self.view.set_display(diff)
         # A staged file
         elif category == self.idx_staged:
-            #self.view_diff(staged=True)
             cola.notifier().broadcast(signals.diff_staged, self.staged())
 
         # A modified file
