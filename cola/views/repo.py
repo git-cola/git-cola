@@ -6,7 +6,6 @@ from PyQt4.QtCore import SIGNAL
 import cola
 import cola.utils
 import cola.qtutils
-import cola.models.classic
 
 
 class RepoTreeView(QtGui.QTreeView):
@@ -14,7 +13,7 @@ class RepoTreeView(QtGui.QTreeView):
     def __init__(self, parent=None):
         QtGui.QTreeView.__init__(self, parent)
 
-        model = cola.models.classic.model()
+        model = cola.model()
         model.add_message_observer(model.message_paths_staged,
                                    self._paths_updated)
         model.add_message_observer(model.message_paths_unstaged,
@@ -290,7 +289,7 @@ class RepoTreeView(QtGui.QTreeView):
         """Signal that we should edit selected paths using an external editor."""
         self.emit(SIGNAL('editor(QStringList)'), self.selected_paths())
 
-    def _paths_updated(self, model, message, paths=None):
+    def _paths_updated(self, paths=None):
         """Observes paths that are staged and reacts accordingly."""
         for path in paths:
             self.model().entry(path).update()
