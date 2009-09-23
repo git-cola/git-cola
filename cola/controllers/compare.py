@@ -2,6 +2,8 @@
 
 import os
 
+from PyQt4 import QtGui
+
 from cola import utils
 from cola import qtutils
 from cola import difftool
@@ -27,10 +29,10 @@ def compare(model, parent, filename=None):
     ctl = CompareController(model, view, filename)
     view.show()
 
-def branch_compare(model, parent):
+def branch_compare():
     """Launches a dialog for comparing a pair of branches"""
     model = BranchCompareModel()
-    view = BranchCompareView(parent)
+    view = BranchCompareView(QtGui.QApplication.instance().activeWindow())
     ctl = BranchCompareController(model, view)
     view.show()
 

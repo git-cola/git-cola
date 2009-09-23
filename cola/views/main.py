@@ -16,11 +16,11 @@ from cola.qtutils import SLOT
 from cola.views import status
 from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.mainwindow import MainWindow
+from cola.controllers import compare
+from cola.controllers import search as smod
 from cola.controllers.util import choose_from_combo
 from cola.controllers.remote import remote_action
 from cola.controllers.stash import stash
-from cola.controllers import search as smod
-from cola.diffparse import DiffParser
 
 class MainView(MainWindow):
     """The main cola interface."""
@@ -92,6 +92,7 @@ class MainView(MainWindow):
 
         # Menu actions
         actions = (
+            (self.menu_branch_compare, compare.branch_compare),
             (self.menu_branch_diff, self.branch_diff),
             (self.menu_branch_review, self.review_branch),
             (self.menu_diff_expression, self.diff_expression),

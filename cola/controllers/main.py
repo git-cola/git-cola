@@ -89,7 +89,6 @@ class MainController(QObserver):
             # Branch Menu
             menu_create_branch = self.branch_create,
             menu_checkout_branch = self.checkout_branch,
-            menu_branch_compare = self.branch_compare,
 
             # Commit Menu
             # TODO

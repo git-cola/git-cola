@@ -1,3 +1,6 @@
+import os
+
+import cola
 from cola.models.main import MainModel
 
 class CompareModel(MainModel):
@@ -13,6 +16,7 @@ class CompareModel(MainModel):
         self.compare_files = []
         self.num_results = 100
         self.show_versions=False
+        self.copy_params(cola.model())
 
 class BranchCompareModel(MainModel):
     """Provides custom model data for BranchCompareController."""
@@ -29,3 +33,4 @@ class BranchCompareModel(MainModel):
         self.left_list_selected = False
         self.right_list_selected = False
         self.diff_files = []
+        self.copy_params(cola.model())
