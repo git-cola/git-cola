@@ -19,7 +19,7 @@ class Observable(object):
 
         1. Message names must be defined at class scope. e.g.:
 
-            class Foo(object):
+            class ObservableFoo(Observable):
                 message_foo = 'foo'
 
         2. Message name variables must begin with the string 'message_'
@@ -60,12 +60,12 @@ class Observable(object):
         for observer in self.observers:
             observer.notify(*param)
 
-    def notify_message_observers(self, message, **opts):
-        """Notifies message observers."""
+    def notify_message_observers(self, message, *args, **opts):
+        """Pythonic signals and slots."""
         if not self.notification_enabled:
             return
         if message not in self.message_observers:
             raise ValueError('%s is not a valid message name.' % message)
         observers = self.message_observers[message]
         for method in observers:
-            method(self, message, **opts)
+            method(*args, **opts)
