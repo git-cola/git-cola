@@ -157,6 +157,9 @@ def main():
         view = MainView()
         controller = MainController(model, view)
 
+    # Scan for the first time
+    model.update_status()
+
     # Make sure that we start out on top
     view.raise_()
 
