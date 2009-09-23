@@ -18,6 +18,7 @@ from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.mainwindow import MainWindow
 from cola.controllers.util import choose_from_combo
 from cola.controllers.remote import remote_action
+from cola.controllers.stash import stash
 from cola.diffparse import DiffParser
 
 class MainView(MainWindow):
@@ -86,6 +87,7 @@ class MainView(MainWindow):
         self._connect_button(self.fetch_button, self.fetch)
         self._connect_button(self.push_button, self.push)
         self._connect_button(self.pull_button, self.pull)
+        self._connect_button(self.stash_button, stash)
 
         # Menu actions
         actions = (
@@ -98,6 +100,7 @@ class MainView(MainWindow):
                     (self.menu_load_commitmsg_template, self.load_template),
                     (self.menu_rescan, SLOT(signals.rescan)),
                     (self.menu_show_diffstat, SLOT(signals.diffstat)),
+                    (self.menu_stash, stash),
                    )
         for menu, callback in actions:
             self.connect(menu, SIGNAL('triggered()'), callback)

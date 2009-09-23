@@ -35,7 +35,6 @@ from cola.controllers.repobrowser import browse_git_branch
 from cola.controllers import search
 from cola.controllers.search import search_commits
 from cola.controllers.selectcommits import select_commits
-from cola.controllers.stash import stash
 from cola.controllers.util import choose_from_list
 from cola.controllers.util import choose_from_combo
 
@@ -56,7 +55,6 @@ class MainController(QObserver):
         self.add_callbacks(
             # Push Buttons TODO
             #stage_button = self.stage_selected,
-            stash_button = lambda: stash(self.model, self.view),
 
             # File Menu TODO
             menu_quit = self.quit_app,
@@ -117,8 +115,6 @@ class MainController(QObserver):
             menu_rebase_branch = self.rebase,
             menu_export_patches = self.export_patches,
             menu_cherry_pick = self.cherry_pick,
-            menu_stash =
-                lambda: stash(self.model, self.view),
             menu_commit_compare =
                 lambda: compare(self.model, self.view),
             menu_commit_compare_file =

@@ -3,19 +3,22 @@
 
 import os
 
+from PyQt4 import QtGui
+
+import cola
 from cola import utils
 from cola import qtutils
 from cola.qobserver import QObserver
 from cola.views import StashView
 
-def stash(model, parent):
+def stash():
     """Launches a stash dialog using the provided model + view
     """
-    model = model.clone()
+    model = cola.model()
     model.keep_index = True
     model.stash_list = []
     model.stash_revids = []
-    view = StashView(parent)
+    view = StashView(QtGui.QApplication.instance().activeWindow())
     ctl = StashController(model, view)
     view.show()
 
