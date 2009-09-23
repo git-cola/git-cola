@@ -203,7 +203,6 @@ class MainWindow(MainWindowBase):
         self.menu_branch_diff = self.create_action('SHA-1...')
         self.menu_branch_review = self.create_action('Review...')
         self.menu_diff_expression = self.create_action('Expression...')
-        self.menu_tools_classic = self.create_action('Cola Classic...')
 
         self.menu_show.addAction(self.menu_browse_commits)
         self.menu_show.addAction(self.menu_show_diffstat)

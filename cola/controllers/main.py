@@ -21,7 +21,6 @@ from cola.views import log
 # controllers namespace
 from cola.controllers.bookmark import save_bookmark
 from cola.controllers.bookmark import manage_bookmarks
-from cola.controllers.classic import cola_classic
 from cola.controllers.compare import compare
 from cola.controllers.compare import compare_file
 from cola.controllers.createbranch import create_new_branch
@@ -83,9 +82,6 @@ class MainController(QObserver):
                 lambda: self.log(*self.model.stage_untracked()),
             menu_unstage_all =
                 lambda: self.log(*self.model.unstage_all()),
-
-            # Tools Menu
-            menu_tools_classic = cola_classic,
             )
 
         # Route events here
