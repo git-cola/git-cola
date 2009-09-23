@@ -18,6 +18,8 @@ from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.mainwindow import MainWindow
 from cola.controllers import compare
 from cola.controllers import search as smod
+from cola.controllers.merge import local_merge
+from cola.controllers.merge import abort_merge
 from cola.controllers.util import choose_from_combo
 from cola.controllers.remote import remote_action
 from cola.controllers.stash import stash
@@ -80,6 +82,7 @@ class MainView(MainWindow):
         self._relay_button(self.alt_button, signals.reset_mode)
         self._relay_button(self.rescan_button, signals.rescan)
         self._relay_button(self.signoff_button, signals.add_signoff)
+
         self._connect_button(self.commit_button, self.commit)
         self._connect_button(self.fetch_button, self.fetch)
         self._connect_button(self.push_button, self.push)
@@ -96,8 +99,9 @@ class MainView(MainWindow):
             (self.menu_search_grep, self.grep),
             (self.menu_load_commitmsg, self.load_commitmsg),
             (self.menu_load_commitmsg_template, self.load_template),
+            (self.menu_merge_local, local_merge),
+            (self.menu_merge_abort, abort_merge),
             (self.menu_rescan, SLOT(signals.rescan)),
-            # Search Menu
             (self.menu_search_revision, smod.search(smod.REVISION_ID)),
             (self.menu_search_revision_range, smod.search(smod.REVISION_RANGE)),
             (self.menu_search_message, smod.search(smod.MESSAGE)),
@@ -106,10 +110,9 @@ class MainView(MainWindow):
             (self.menu_search_diff, smod.search(smod.DIFF)),
             (self.menu_search_author, smod.search(smod.AUTHOR)),
             (self.menu_search_committer, smod.search(smod.COMMITTER)),
-
             (self.menu_show_diffstat, SLOT(signals.diffstat)),
             (self.menu_stash, stash),
-
+            # TODO This edit menu stuff should/could be command objects
             (self.menu_cut, self.action_cut),
             (self.menu_copy, self.action_copy),
             (self.menu_paste, self.commitmsg.paste),

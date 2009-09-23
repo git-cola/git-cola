@@ -1,27 +1,32 @@
 """This controller handles the merge dialog."""
 
 
+from PyQt4 import QtGui
 from PyQt4.Qt import Qt
 
+import cola
 from cola import utils
 from cola import qtutils
 from cola.qobserver import QObserver
 from cola.views.merge import MergeView
 
-def abort_merge(model, parent):
+def abort_merge():
     """Prompts before aborting a merge in progress
     """
     txt = ('Abort merge?\n'
            'Aborting the current merge will cause '
            '*ALL* uncommitted changes to be lost.\n\n'
            'Continue with aborting the current merge?')
+    parent = QtGui.QApplication.instance().activeWindow()
+    model = cola.model()
     answer = qtutils.question(parent, 'Abort Merge?', txt)
     if answer:
         model.abort_merge()
 
-def local_merge(model, parent):
+def local_merge():
     """Provides a dialog for merging branches"""
-    model = model.clone()
+    model = cola.model().clone()
+    parent = QtGui.QApplication.instance().activeWindow()
     view = MergeView(parent)
     ctl = MergeController(model, view)
     view.show()

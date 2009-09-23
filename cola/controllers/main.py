@@ -26,14 +26,9 @@ from cola.controllers.bookmark import manage_bookmarks
 from cola.controllers.classic import cola_classic
 from cola.controllers.compare import compare
 from cola.controllers.compare import compare_file
-from cola.controllers.compare import branch_compare
 from cola.controllers.createbranch import create_new_branch
-from cola.controllers.merge import local_merge
-from cola.controllers.merge import abort_merge
 from cola.controllers.options import update_options
 from cola.controllers.repobrowser import browse_git_branch
-from cola.controllers import search
-from cola.controllers.search import search_commits
 from cola.controllers.selectcommits import select_commits
 from cola.controllers.util import choose_from_list
 from cola.controllers.util import choose_from_combo
@@ -64,12 +59,6 @@ class MainController(QObserver):
 
             # Edit Menu
             menu_options = self.options,
-
-            # Merge Menu
-            menu_merge_local =
-                lambda: local_merge(self.model, self.view),
-            menu_merge_abort =
-                lambda: abort_merge(self.model, self.view),
 
             # Repository Menu
             menu_visualize_current = self.viz_current,
@@ -326,12 +315,6 @@ class MainController(QObserver):
         return
         scrollbar = self.view.display_text.verticalScrollBar()
         scrollvalue = scrollbar.value()
-
-    def branch_compare(self):
-        """Launch the Branch -> Compare dialog."""
-        # TODO
-        #self.reset_mode()
-        branch_compare(self.model, self.view)
 
     def undo_changes(self):
         """Reverts local changes back to whatever's in HEAD."""
