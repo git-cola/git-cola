@@ -472,6 +472,26 @@ class UntrackedSummary(Command):
         self.new_diff_text = io.getvalue()
 
 
+class VisualizeAll(Command):
+    """Visualize all branches."""
+    def is_undoable(self):
+        return False
+
+    def do(self):
+        browser = self.model.history_browser()
+        utils.fork(['sh', '-c', browser, '--all'])
+
+
+class VisualizeCurrent(Command):
+    """Visualize all branches."""
+    def is_undoable(self):
+        return False
+
+    def do(self):
+        browser = self.model.history_browser()
+        utils.fork(['sh', '-c', browser, self.model.currentbranch])
+
+
 def register():
     """
     Register signal mappings with the factory.
@@ -507,6 +527,8 @@ def register():
         signals.unstage: Unstage,
         signals.unstage_all: UnstageAll,
         signals.untracked_summary: UntrackedSummary,
+        signals.visualize_all: VisualizeAll,
+        signals.visualize_current: VisualizeCurrent,
     }
 
     for signal, cmd in signal_to_command_map.iteritems():

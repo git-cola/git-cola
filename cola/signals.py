@@ -41,7 +41,9 @@ _signals = dict(add_signoff = SIGNAL('add_signoff'),
                 unstage = SIGNAL('unstage'),
                 unstage_diffs = SIGNAL('unstage_diffs'),
                 unstage_all = SIGNAL('unstage_all'),
-                untracked_summary = SIGNAL('untracked_summary'))
+                untracked_summary = SIGNAL('untracked_summary'),
+                visualize_all = SIGNAL('visualize_all'),
+                visualize_current = SIGNAL('visualize_current'))
 
 _signals_names = {}
 for name, signal in _signals.iteritems():

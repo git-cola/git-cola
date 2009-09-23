@@ -124,6 +124,8 @@ class MainView(MainWindow):
             (self.menu_stage_modified, SLOT(signals.stage_modified)),
             (self.menu_stage_untracked, SLOT(signals.stage_untracked)),
             (self.menu_unstage_all, SLOT(signals.unstage_all)),
+            (self.menu_visualize_all, SLOT(signals.visualize_all)),
+            (self.menu_visualize_current, SLOT(signals.visualize_current)),
             # TODO This edit menu stuff should/could be command objects
             (self.menu_cut, self.action_cut),
             (self.menu_copy, self.action_copy),

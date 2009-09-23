@@ -52,8 +52,6 @@ class MainController(QObserver):
             menu_save_bookmark = save_bookmark,
 
             # Repository Menu
-            menu_visualize_current = self.viz_current,
-            menu_visualize_all = self.viz_all,
             menu_browse_commits = self.browse_commits,
             menu_browse_branch = self.browse_current,
             menu_browse_other_branch = self.browse_other,
@@ -307,16 +305,6 @@ class MainController(QObserver):
         else:
             qtutils.log(1, self.tr('No files selected for '
                                    'checkout from HEAD.'))
-
-    def viz_all(self):
-        """Visualizes the entire git history using gitk."""
-        browser = self.model.history_browser()
-        utils.fork(['sh', '-c', browser, '--all'])
-
-    def viz_current(self):
-        """Visualize the current branch's history using gitk."""
-        browser = self.model.history_browser()
-        utils.fork(['sh', '-c', browser, self.model.currentbranch])
 
     def log(self, status, output):
         """Log output and optionally rescans for changes."""
