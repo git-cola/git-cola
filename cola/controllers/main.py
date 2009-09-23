@@ -148,16 +148,6 @@ class MainController(QObserver):
         if self.has_inotify():
             self.view.rescan_button.hide()
 
-    #####################################################################
-    # handle when the status tree is clicked
-    def staged_item(self):
-        """Return a single selected staged item."""
-        staged = self.view.staged(self.model.staged)
-        if staged:
-            return staged[0]
-        else:
-            return None
-
     def untracked_items(self):
         """Return all selected untracked items."""
         return self.view.untracked(self.model.untracked)
@@ -280,19 +270,6 @@ class MainController(QObserver):
                 args.append('--cached')
             args.extend([self.model.head, '--', filename])
             difftool.launch(args)
-
-    def delete_files(self):
-        """Deletes files when called by an untracked file's context menu."""
-        rescan=False
-        filenames = self.untracked_items()
-        for filename in filenames:
-            if filename:
-                try:
-                    os.remove(filename)
-                except Exception:
-                    qtutils.log(1, self.tr('Error deleting "%s"') % filename)
-                else:
-                    rescan=True
 
     def export_patches(self):
         """Run 'git format-patch' on a list of commits."""

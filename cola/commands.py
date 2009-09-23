@@ -207,6 +207,32 @@ class Commit(Command):
         return False
 
 
+class Delete(Command):
+    """Simply delete files."""
+    def __init__(self, filenames):
+        Command.__init__(self)
+        self.filenames = filenames
+
+    def is_undoable(self):
+        # We could git-hash-object stuff and provide undo-ability
+        # as an option.  Heh.
+        return False
+
+    def do(self):
+        rescan = False
+        for filename in self.filenames:
+            if filename:
+                try:
+                    os.remove(filename)
+                    rescan=True
+                except:
+                    _notifier.broadcast(signals.information,
+                                        'Error'
+                                        'Deleting "%s" failed.' % filename)
+        if rescan:
+            self.model.update_status()
+
+
 class Diff(Command):
     """Perform a diff and set the model's current text."""
     def __init__(self, filenames, cached=False):
@@ -431,6 +457,7 @@ def register():
         signals.amend_mode: AmendMode,
         signals.branch_mode: BranchMode,
         signals.commit: Commit,
+        signals.delete: Delete,
         signals.diff: Diff,
         signals.diff_mode: DiffMode,
         signals.diff_expr_mode: DiffExprMode,
