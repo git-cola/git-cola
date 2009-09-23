@@ -7,20 +7,30 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
+from cola import core
+from cola import utils
 from cola import qtutils
+from cola import settings
 from cola import signals
 from cola.qtutils import SLOT
+from cola.views import status
 from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.mainwindow import MainWindow
+from cola.controllers.util import choose_from_combo
+from cola.controllers.remote import remote_action
+from cola.diffparse import DiffParser
 
 class MainView(MainWindow):
     """The main cola interface."""
-    IDX_HEADER = -1
-    IDX_STAGED = 0
-    IDX_MODIFIED = 1
-    IDX_UNMERGED = 2
-    IDX_UNTRACKED = 3
-    IDX_END = 4
+    idx_header = -1
+    idx_staged = 0
+    idx_modified = 1
+    idx_unmerged = 2
+    idx_untracked = 3
+    idx_end = 4
+
+    # Read-only mode property
+    mode = property(lambda self: self.model.mode)
 
     def __init__(self, parent=None):
         MainWindow.__init__(self, parent)
@@ -42,6 +52,9 @@ class MainView(MainWindow):
                      SIGNAL('cursorPositionChanged()'),
                      self.show_cursor_position)
 
+        # Keeps track of merge messages we've seen
+        self.merge_message_hash = ''
+
         # Initialize the seen tree widget indexes
         self._seen_indexes = set()
 
@@ -52,89 +65,95 @@ class MainView(MainWindow):
         # Change this whenever dockwidgets are removed.
         self._widget_version = 1
 
-        # Listen for text messages
-        cola.notifier().listen(signals.text, self.set_display)
-        cola.notifier().listen(signals.amend, self._amend_listener)
+        self.model = cola.model()
+        self.model.add_message_observer(self.model.message_updated,
+                                        self._update_view)
+
+        # Listen for text and amend messages
+        cola.notifier().listen(signals.diff_text, self.set_display)
+        cola.notifier().listen(signals.mode, self._mode_changed)
+        cola.notifier().listen(signals.amend, self.amend_checkbox.setChecked)
+
+        # Broadcast the amend mode
         self.connect(self.amend_checkbox, SIGNAL('toggled(bool)'),
                      SLOT(signals.amend_mode))
 
-    def _amend_listener(self, value):
-        self.amend_checkbox.setChecked(value)
+        # Add button callbacks
+        self._relay_button(self.alt_button, signals.reset_mode)
+        self._relay_button(self.rescan_button, signals.rescan)
+        self._relay_button(self.signoff_button, signals.add_signoff)
+        self._connect_button(self.commit_button, self.commit)
+        self._connect_button(self.fetch_button, self.fetch)
+        self._connect_button(self.push_button, self.push)
+        self._connect_button(self.pull_button, self.pull)
 
-    def set_staged(self, items, check=True):
-        """Adds items to the 'Staged' subtree."""
-        self._set_subtree(items, self.IDX_STAGED, staged=True, check=check)
+        # Menu actions
+        actions = (
+                    (self.menu_branch_diff, self.branch_diff),
+                    (self.menu_branch_review, self.review_branch),
+                    (self.menu_diff_expression, self.diff_expression),
+                    (self.menu_diff_branch, self.diff_branch),
+                    (self.menu_search_grep, self.grep),
+                    (self.menu_load_commitmsg, self.load_commitmsg),
+                    (self.menu_load_commitmsg_template, self.load_template),
+                    (self.menu_rescan, SLOT(signals.rescan)),
+                    (self.menu_show_diffstat, SLOT(signals.diffstat)),
+                   )
+        for menu, callback in actions:
+            self.connect(menu, SIGNAL('triggered()'), callback)
 
-    def set_modified(self, items):
-        """Adds items to the 'Modified' subtree."""
-        self._set_subtree(items, self.IDX_MODIFIED)
+        # Install diff shortcut keys for stage/unstage
+        self.display_text.keyPressEvent = self.diff_key_press_event
+        self.display_text.contextMenuEvent = self.diff_context_menu_event
 
-    def set_unmerged(self, items):
-        """Adds items to the 'Unmerged' subtree."""
-        self._set_subtree(items, self.IDX_UNMERGED)
+        # Restore saved settings
+        self._load_gui_state()
 
-    def set_untracked(self, items):
-        """Adds items to the 'Untracked' subtree."""
-        self._set_subtree(items, self.IDX_UNTRACKED)
+    def _relay_button(self, button, signal):
+        callback = SLOT(signal)
+        self._connect_button(button, callback)
 
-    def _set_subtree(self, items, idx,
-                     staged=False, untracked=False, check=True):
-        parent = self.status_tree.topLevelItem(idx)
-        parent.takeChildren()
-        for item in items:
-            treeitem = qtutils.create_treeitem(item,
-                                               staged=staged,
-                                               check=check,
-                                               untracked=untracked)
-            parent.addChild(treeitem)
-        if idx not in self._seen_indexes and items:
-            self._seen_indexes.add(idx)
-            self.expand_status()
-        if items:
-            self.status_tree.setItemHidden(parent, False)
+    def _connect_button(self, button, callback):
+        self.connect(button, SIGNAL('clicked()'), callback)
+
+    def _update_view(self):
+        """Update the title with the current branch and directory name."""
+        title = '%s [%s]' % (self.model.project,
+                             self.model.currentbranch)
+        if self.mode in (self.model.mode_diff, self.model.mode_diff_expr):
+            title += ' *** diff mode***'
+        elif self.mode == self.model.mode_review:
+            title += ' *** review mode***'
+        self.setWindowTitle(title)
+
+        if not self.model.read_only() and self.mode != self.model.mode_amend:
+            # Check if there's a message file in .git/
+            merge_msg_path = self.model.merge_message_path()
+            if merge_msg_path is None:
+                return
+            merge_msg_hash = utils.checksum(merge_message_path)
+            if merge_msg_hash == self.merge_msg_hash:
+                return
+            self.merge_msg_hash = merge_msg_hash
+            cola.notifier().broadcast(signals.load_commit_message,
+                                      merge_msg_path)
+
+    def _mode_changed(self, mode):
+        """React to mode changes; hide/show the "Exit Diff Mode" button."""
+        if mode in (self.model.mode_review, self.model.mode_diff):
+            self.alt_button.setMinimumHeight(40)
+            self.alt_button.show()
         else:
-            self.status_tree.setItemHidden(parent, True)
+            self.alt_button.setMinimumHeight(1)
+            self.alt_button.hide()
 
     def set_display(self, text):
         """Set the diff text display."""
         if text is not None:
             self.display_text.setText(text)
 
-    def expand_status(self):
-        for idx in xrange(0, self.IDX_END):
-            item = self.status_tree.topLevelItem(idx)
-            if item:
-                self.status_tree.expandItem(item)
-
-    def index_for_item(self, item):
-        """Given an item, returns the index of the item.
-        The indexes for unstaged items are grouped such that
-        the index of unmerged[1] = len(modified) + 1, etc.
-        """
-        if not item:
-            return False, -1
-        parent = item.parent()
-        if not parent:
-            return False, -1
-        tree = self.status_tree
-        pidx = tree.indexOfTopLevelItem(parent)
-        if pidx == self.IDX_STAGED:
-            return True, parent.indexOfChild(item)
-        elif pidx == self.IDX_MODIFIED:
-            return False, parent.indexOfChild(item)
-
-        count = tree.topLevelItem(self.IDX_MODIFIED).childCount()
-        if pidx == self.IDX_UNMERGED:
-            return False, count + parent.indexOfChild(item)
-
-        count += tree.topLevelItem(self.IDX_UNMERGED).childCount()
-        if pidx == self.IDX_UNTRACKED:
-            return False, count + parent.indexOfChild(item)
-
-        return False, -1
-
     def selection(self):
-        tree = self.status_tree
+        tree = status.widget().tree
         item = tree.currentItem()
         if not item:
             return -1, False
@@ -145,121 +164,36 @@ class MainView(MainWindow):
         idx = parent.indexOfChild(item)
         pidx = tree.indexOfTopLevelItem(parent)
 
-        if pidx == self.IDX_STAGED or pidx == self.IDX_MODIFIED:
+        if pidx == self.idx_staged or pidx == self.idx_modified:
             return idx, tree.isItemSelected(item)
 
-        elif pidx == self.IDX_UNMERGED:
-            num_modified = tree.topLevelItem(self.IDX_MODIFIED).childCount()
+        elif pidx == self.idx_unmerged:
+            num_modified = tree.topLevelItem(self.idx_modified).childCount()
             return idx + num_modified, tree.isItemSelected(item)
 
-        elif pidx == self.IDX_UNTRACKED:
-            num_modified = tree.topLevelItem(self.IDX_MODIFIED).childCount()
-            num_unmerged = tree.topLevelItem(self.IDX_UNMERGED).childCount()
+        elif pidx == self.idx_untracked:
+            num_modified = tree.topLevelItem(self.idx_modified).childCount()
+            num_unmerged = tree.topLevelItem(self.idx_unmerged).childCount()
             return idx + num_modified + num_unmerged, tree.isItemSelected(item)
         return -1, False
 
-    def staged_item(self, itemidx):
-        return self._subtree_item(self.IDX_STAGED, itemidx)
-
-    def modified_item(self, itemidx):
-        return self._subtree_item(self.IDX_MODIFIED, itemidx)
-
-    def unstaged_item(self, itemidx):
-        tree = self.status_tree
-        # is it modified?
-        item = tree.topLevelItem(self.IDX_MODIFIED)
-        count = item.childCount()
-        if itemidx < count:
-            return item.child(itemidx)
-        # is it unmerged?
-        item = tree.topLevelItem(self.IDX_UNMERGED)
-        count += item.childCount()
-        if itemidx < count:
-            return item.child(itemidx)
-        # is it untracked?
-        item = tree.topLevelItem(self.IDX_UNTRACKED)
-        count += item.childCount()
-        if itemidx < count:
-            return item.child(itemidx)
-        # Nope..
-        return None
-
-    def _subtree_item(self, idx, itemidx):
-        parent = self.status_tree.topLevelItem(idx)
-        return parent.child(itemidx)
-
-    def unstaged(self, items):
-        tree = self.status_tree
-        num_modified = tree.topLevelItem(self.IDX_MODIFIED).childCount()
-        num_unmerged = tree.topLevelItem(self.IDX_UNMERGED).childCount()
-        modified = self.modified(items)
-        unmerged = self.unmerged(items[num_modified:])
-        untracked = self.untracked(items[num_modified+num_unmerged:])
-        return modified + unmerged + untracked
-
-    def staged(self, items):
-        return self._subtree_selection(self.IDX_STAGED, items)
-
-    def modified(self, items):
-        return self._subtree_selection(self.IDX_MODIFIED, items)
-
-    def unmerged(self, items):
-        return self._subtree_selection(self.IDX_UNMERGED, items)
-
-    def untracked(self, items):
-        return self._subtree_selection(self.IDX_UNTRACKED, items)
-
-    def _subtree_selection(self, idx, items):
-        item = self.status_tree.topLevelItem(idx)
-        return qtutils.tree_selection(item, items)
-
-    def show(self):
-        """Override base show to set icons and expand top-level items."""
-        result = MainWindow.show(self)
-        staged = self.status_tree.topLevelItem(self.IDX_STAGED)
-        staged.setIcon(0, qtutils.icon('plus.png'))
-
-        modified = self.status_tree.topLevelItem(self.IDX_MODIFIED)
-        modified.setIcon(0, qtutils.icon('modified.png'))
-
-        unmerged = self.status_tree.topLevelItem(self.IDX_UNMERGED)
-        unmerged.setIcon(0, qtutils.icon('unmerged.png'))
-
-        untracked = self.status_tree.topLevelItem(self.IDX_UNTRACKED)
-        untracked.setIcon(0, qtutils.icon('untracked.png'))
-
-        # Set the diff font
-        qtutils.set_diff_font(self.display_text)
-
-        self.status_tree.expandToDepth(0)
-        return result
-
-    def enter_diff_mode(self, text):
-        """
-        Enter diff mode; changes the 'Staged' header to 'Changed'.
-
-        This also enables the 'Exit <Mode> Mode' button.
-        `text` is the message displayed on the button.
-
-        """
-        staged = self.status_tree.topLevelItem(self.IDX_STAGED)
-        staged.setText(0, self.tr('Changed'))
-        self.alt_button.setText(self.tr(text))
-        self.alt_button.setMinimumHeight(40)
-        self.alt_button.show()
-
-    def exit_diff_mode(self):
-        """
-        Exit diff mode; changes the 'Changed' header to 'Staged'.
-
-        This also hides the 'Exit Diff Mode' button.
-
-        """
-        staged = self.status_tree.topLevelItem(self.IDX_STAGED)
-        staged.setText(0, self.tr('Staged'))
-        self.alt_button.setMinimumHeight(1)
-        self.alt_button.hide()
-        self.reset_display()
+    def single_selection(self):
+        """Scan across staged, modified, etc. and return a single item."""
+        # TODO have selection in the model
+        staged, modified, unmerged, untracked = status.widget().selection()
+        s = None
+        m = None
+        um = None
+        ut = None
+        if staged:
+            s = staged[0]
+        elif modified:
+            m = modified[0]
+        elif unmerged:
+            um = unmerged[0]
+        elif untracked:
+            ut = untracked[0]
+        return s, m, um, ut
 
     def action_cut(self):
         self.action_copy()
@@ -273,12 +207,6 @@ class MainView(MainWindow):
     def action_delete(self):
         self.commitmsg.textCursor().removeSelectedText()
 
-    def reset_checkboxes(self):
-        self.amend_checkbox.setChecked(False)
-
-    def reset_display(self):
-        self.set_display('')
-
     def copy_display(self):
         cursor = self.display_text.textCursor()
         selection = cursor.selection().toPlainText()
@@ -289,19 +217,6 @@ class MainView(MainWindow):
         offset = cursor.position()
         selection = unicode(cursor.selection().toPlainText())
         return offset, selection
-
-    def tree_selection(self):
-        """Returns a list of (category, row) representing the tree selection."""
-        selected = self.status_tree.selectedIndexes()
-        result = []
-        for idx in selected:
-            if idx.parent().isValid():
-                parent_idx = idx.parent()
-                entry = (parent_idx.row(), idx.row())
-            else:
-                entry = (-1, idx.row())
-            result.append(entry)
-        return result
 
     def selected_line(self):
         cursor = self.display_text.textCursor()
@@ -317,9 +232,6 @@ class MainView(MainWindow):
         else:
             line = data
         return line
-
-    def display(self, text):
-        self.set_display(text)
 
     def show_cursor_position(self):
         """Update the UI with the current row and column."""
@@ -356,3 +268,267 @@ class MainView(MainWindow):
         windowstate = self.saveState(self._widget_version)
         state['windowstate'] = unicode(windowstate.toBase64().data())
         return state
+
+    def review_branch(self):
+        """Diff against an arbitrary revision, branch, tag, etc."""
+        branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
+                                   self,
+                                   self.model.all_branches() +
+                                   self.model.tags)
+        if not branch:
+            return
+        cola.notifier().broadcast(signals.review_branch_mode, branch)
+
+    def branch_diff(self):
+        """Diff against an arbitrary revision, branch, tag, etc."""
+        branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
+                                   self,
+                                   ['HEAD^'] +
+                                   self.model.all_branches() +
+                                   self.model.tags)
+        if not branch:
+            return
+        cola.notifier().broadcast(signals.diff_mode, branch)
+
+    def diff_expression(self):
+        """Diff using an arbitrary expression."""
+        expr = choose_from_combo('Enter Diff Expression',
+                                 self,
+                                 self.model.all_branches() +
+                                 self.model.tags)
+        if not expr:
+            return
+        cola.notifier().broadcast(signals.diff_expr_mode, expr)
+
+
+    def diff_branch(self):
+        """Launches a diff against a branch."""
+        branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
+                                   self,
+                                   ['HEAD^'] +
+                                   self.model.all_branches() +
+                                   self.model.tags)
+        if not branch:
+            return
+        zfiles_str = self.model.git.diff(branch, name_only=True,
+                                         no_color=True,
+                                         z=True).rstrip('\0')
+        files = zfiles_str.split('\0')
+        filename = choose_from_list('Select File', self, files)
+        if not filename:
+            return
+        cola.notifier().broadcast(signals.branch_mode, branch, filename)
+
+    def _load_gui_state(self):
+        """Restores the gui from the preferences file."""
+        state = settings.SettingsManager.gui_state(self)
+        self.import_state(state)
+
+    def load_commitmsg(self):
+        """Load a commit message from a file."""
+        filename = qtutils.open_dialog(self,
+                                       'Load Commit Message...',
+                                       self.model.getcwd())
+        if filename:
+            cola.notifier().broadcast(signals.load_commit_message, filename)
+
+
+    def load_template(self):
+        """Load the configured commit message template."""
+        template = self.model.global_config('commit.template')
+        if template:
+            cola.notifier().broadcast(signals.load_commit_message, template)
+
+
+    def diff_key_press_event(self, event):
+        """Handle shortcut keys in the diff view."""
+        if event.key() != QtCore.Qt.Key_H and event.key() != QtCore.Qt.Key_S:
+            event.ignore()
+            return
+        staged, modified, unmerged, untracked = self.single_selection()
+        if event.key() == QtCore.Qt.Key_H:
+            if self.mode == self.model.mode_worktree and modified:
+                self.stage_hunk()
+            elif self.mode == self.model.mode_index:
+                self.unstage_hunk()
+        elif event.key() == QtCore.Qt.Key_S:
+            if self.mode == self.model.mode_worktree and modified:
+                self.stage_hunk_selection()
+            elif self.mode == self.model.mode_index:
+                self.unstage_hunk_selection()
+
+    def process_diff_selection(self, selected=False,
+                               staged=True, apply_to_worktree=False,
+                               reverse=False):
+        """Implement un/staging of selected lines or hunks."""
+        filename = self.model.filename
+        if not filename:
+            return
+        if self.mode == self.model.mode_branch:
+            # We're applying changes from a different branch!
+            branch = self.model.head
+            parser = DiffParser(self.model,
+                                filename=filename,
+                                cached=False,
+                                branch=branch)
+            offset, selection = self.diff_selection()
+            parser.process_diff_selection(selected, offset, selection,
+                                          apply_to_worktree=True)
+        else:
+            # The normal worktree vs index scenario
+            parser = DiffParser(self.model,
+                                filename=filename,
+                                cached=staged,
+                                reverse=apply_to_worktree)
+            offset, selection = self.diff_selection()
+            parser.process_diff_selection(selected, offset, selection,
+                                          apply_to_worktree=apply_to_worktree)
+
+    def undo_hunk(self):
+        """Destructively remove a hunk from a worktree file."""
+        if not qtutils.question(self,
+                                'Destroy Local Changes?',
+                                'This operation will drop '
+                                'uncommitted changes.\n'
+                                'Continue?',
+                                default=False):
+            return
+        self.process_diff_selection(staged=False, apply_to_worktree=True,
+                                    reverse=True)
+
+    def undo_selection(self):
+        """Destructively check out content for the selected file from $head."""
+        if not qtutils.question(self,
+                                'Destroy Local Changes?',
+                                'This operation will drop '
+                                'uncommitted changes.\n'
+                                'Continue?',
+                                default=False):
+            return
+        self.process_diff_selection(staged=False, apply_to_worktree=True,
+                                    reverse=True, selected=True)
+
+    def stage_hunk(self):
+        """Stage a specific hunk."""
+        self.process_diff_selection(staged=False)
+
+    def stage_hunk_selection(self):
+        """Stage selected lines."""
+        self.process_diff_selection(staged=False, selected=True)
+
+    def unstage_hunk(self, cached=True):
+        """Unstage a hunk."""
+        self.process_diff_selection(staged=True)
+
+    def unstage_hunk_selection(self):
+        """Unstage selected lines."""
+        self.process_diff_selection(staged=True, selected=True)
+
+    def diff_context_menu_event(self, event):
+        """Create the context menu for the diff display."""
+        menu = self.diff_context_menu_setup()
+        textedit = self.display_text
+        menu.exec_(textedit.mapToGlobal(event.pos()))
+
+    def diff_context_menu_setup(self):
+        """Set up the context menu for the diff display."""
+        menu = QtGui.QMenu(self)
+        # TODO selection in the model
+        staged, modified, unmerged, untracked = status.widget().selection()
+
+        if self.mode == self.model.mode_worktree:
+            if modified:
+                menu.addAction(self.tr('Stage &Hunk For Commit'),
+                               self.stage_hunk)
+                menu.addAction(self.tr('Stage &Selected Lines'),
+                               self.stage_hunk_selection)
+                menu.addSeparator()
+                menu.addAction(self.tr('Undo Hunk'), self.undo_hunk)
+                menu.addAction(self.tr('Undo Selection'), self.undo_selection)
+
+        elif self.mode == self.model.mode_index:
+            menu.addAction(self.tr('Unstage &Hunk From Commit'), self.unstage_hunk)
+            menu.addAction(self.tr('Unstage &Selected Lines'), self.unstage_hunk_selection)
+
+        elif self.mode == self.model.mode_branch:
+            menu.addAction(self.tr('Apply Diff to Work Tree'), self.stage_hunk)
+            menu.addAction(self.tr('Apply Diff Selection to Work Tree'), self.stage_hunk_selection)
+
+        elif self.mode == self.model.mode_grep:
+            menu.addAction(self.tr('Go Here'), self.goto_grep)
+
+        menu.addSeparator()
+        menu.addAction(self.tr('Copy'), self.copy_display)
+        return menu
+
+    def fetch(self):
+        """Launch the 'fetch' remote dialog."""
+        remote_action(self, 'fetch')
+
+    def push(self):
+        """Launch the 'push' remote dialog."""
+        remote_action(self, 'push')
+
+    def pull(self):
+        """Launch the 'pull' remote dialog."""
+        remote_action(self, 'pull')
+
+    def commit(self):
+        """Attempt to create a commit from the index and commit message."""
+        #self.reset_mode()
+        msg = self.model.commitmsg
+        if not msg:
+            # Describe a good commit message
+            error_msg = self.tr(''
+                'Please supply a commit message.\n\n'
+                'A good commit message has the following format:\n\n'
+                '- First line: Describe in one sentence what you did.\n'
+                '- Second line: Blank\n'
+                '- Remaining lines: Describe why this change is good.\n')
+            qtutils.log(1, error_msg)
+            cola.notifier().broadcast(signals.information, error_msg)
+            return
+        if not self.model.staged:
+            error_msg = self.tr(''
+                'No changes to commit.\n\n'
+                'You must stage at least 1 file before you can commit.\n')
+            qtutils.log(1, error_msg)
+            cola.notifier().broadcast(signals.information, error_msg)
+            return
+        # Warn that amending published commits is generally bad
+        amend = self.amend_is_checked()
+        if (amend and self.model.is_commit_published() and
+            not qtutils.question(self,
+                                 'Rewrite Published Commit?',
+                                 'This commit has already been published.\n'
+                                 'You are rewriting published history.\n'
+                                 'You probably don\'t want to do this.\n\n'
+                                 'Continue?',
+                                 default=False)):
+            return
+        # Perform the commit
+        cola.notifier().broadcast(signals.commit, amend, msg)
+
+    def grep(self):
+        """Prompt and use 'git grep' to find the content."""
+        # This should be a command in cola.commands.
+        txt, ok = qtutils.prompt('grep')
+        if not ok:
+            return
+        cola.notifier().broadcast(signals.grep, txt)
+
+    def goto_grep(self):
+        """Called when Search -> Grep's right-click 'goto' action."""
+        line = self.selected_line()
+        filename, line_number, contents = line.split(':', 2)
+        filename = core.encode(filename)
+        cola.notifier().broadcast(signals.edit, [filename], line_number=line_number)
+
+    def open_repo(self):
+        """Spawn a new cola session."""
+        dirname = qtutils.opendir_dialog(self,
+                                         'Open Git Repository...',
+                                         self.model.getcwd())
+        if not dirname:
+            return
+        cola.notifier().broadcast(signals.open_repo, dirname)
