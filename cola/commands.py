@@ -418,6 +418,13 @@ class Stage(Command):
         return False
 
 
+class StageModified(Stage):
+    """Stage all modified files."""
+    def __init__(self):
+        Stage.__init__(self, None)
+        self.paths = self.model.modified
+
+
 class StageUntracked(Stage):
     """Stage all untracked files."""
     def __init__(self):
@@ -494,6 +501,7 @@ def register():
         signals.review_branch_mode: ReviewBranchMode,
         signals.show_untracked: ShowUntracked,
         signals.stage: Stage,
+        signals.stage_modified: StageModified,
         signals.stage_untracked: StageUntracked,
         signals.staged_summary: DiffStagedSummary,
         signals.unstage: Unstage,

@@ -75,9 +75,6 @@ class MainController(QObserver):
                 lambda: compare(self.model, self.view),
             menu_commit_compare_file =
                 lambda: compare_file(self.model, self.view),
-
-            menu_stage_modified =
-                lambda: self.log(*self.model.stage_modified()),
             )
 
         # Route events here
