@@ -7,6 +7,7 @@ from cola import core
 from cola import utils
 from cola import signals
 from cola import cmdfactory
+from cola.diffparse import DiffParser
 
 _notifier = cola.notifier()
 _factory = cmdfactory.factory()
