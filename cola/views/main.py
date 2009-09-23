@@ -268,7 +268,7 @@ class MainView(MainWindow):
         cursor = self.commitmsg.textCursor()
         position = cursor.position()
         txt = unicode(self.commitmsg.toPlainText())
-        rows = txt[:position].count('\n')
+        rows = txt[:position].count('\n') + 1
         cols = cursor.columnNumber()
         display = ' %d,%d ' % (rows, cols)
         if cols > 78:
