@@ -99,10 +99,6 @@ class MainController(QObserver):
         """Translates strings."""
         return qtutils.tr(fortr)
 
-    def options(self):
-        """Launch the options dialog"""
-        update_options(self.view)
-
     def branch_create(self):
         """Launch the 'Create Branch' dialog."""
         create_new_branch(self.model, self.view)

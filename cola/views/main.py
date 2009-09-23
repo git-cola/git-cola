@@ -505,14 +505,18 @@ class MainView(MainWindow):
                 '- Second line: Blank\n'
                 '- Remaining lines: Describe why this change is good.\n')
             qtutils.log(1, error_msg)
-            cola.notifier().broadcast(signals.information, error_msg)
+            cola.notifier().broadcast(signals.information,
+                                      'Missing Commit Message',
+                                      error_msg)
             return
         if not self.model.staged:
             error_msg = self.tr(''
                 'No changes to commit.\n\n'
                 'You must stage at least 1 file before you can commit.\n')
             qtutils.log(1, error_msg)
-            cola.notifier().broadcast(signals.information, error_msg)
+            cola.notifier().broadcast(signals.information,
+                                      'No Staged Changes',
+                                      error_msg)
             return
         # Warn that amending published commits is generally bad
         amend = self.amend_is_checked()
