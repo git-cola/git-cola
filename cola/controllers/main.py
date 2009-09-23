@@ -14,10 +14,8 @@ from cola import qtutils
 from cola import version
 from cola import inotify
 from cola import difftool
-from cola import resources
 from cola import settings
 from cola.qobserver import QObserver
-from cola.views import about
 from cola.views import log
 
 # controllers namespace
@@ -78,6 +76,7 @@ class MainController(QObserver):
                 lambda: compare(self.model, self.view),
             menu_commit_compare_file =
                 lambda: compare_file(self.model, self.view),
+
             menu_stage_modified =
                 lambda: self.log(*self.model.stage_modified()),
             menu_stage_untracked =
@@ -87,11 +86,6 @@ class MainController(QObserver):
 
             # Tools Menu
             menu_tools_classic = cola_classic,
-
-            # Help Menu
-            menu_help_about = lambda: about.launch_about_dialog(self.view),
-            menu_help_docs =
-                lambda: self.model.git.web__browse(resources.html_docs()),
             )
 
         # Route events here

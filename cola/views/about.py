@@ -3,10 +3,11 @@ from PyQt4 import QtGui
 from cola import version
 from cola.gui.about import Ui_about
 
-def launch_about_dialog(view):
+def launch_about_dialog():
     """Launches the Help -> About dialog"""
-    view = AboutView(view)
-    style = QtGui.QApplication.instance().styleSheet()
+    app = QtGui.QApplication.instance()
+    view = AboutView(app.activeWindow())
+    style = app.styleSheet()
     if style:
         view.setStyleSheet(style)
     view.show()

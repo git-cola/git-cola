@@ -12,7 +12,9 @@ from cola import utils
 from cola import qtutils
 from cola import settings
 from cola import signals
+from cola import resources
 from cola.qtutils import SLOT
+from cola.views import about
 from cola.views import status
 from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.mainwindow import MainWindow
@@ -97,13 +99,16 @@ class MainView(MainWindow):
             (self.menu_branch_review, self.review_branch),
             (self.menu_diff_expression, self.diff_expression),
             (self.menu_diff_branch, self.diff_branch),
-            (self.menu_search_grep, self.grep),
+            (self.menu_help_about, about.launch_about_dialog),
+            (self.menu_help_docs,
+                lambda: self.model.git.web__browse(resources.html_docs())),
             (self.menu_load_commitmsg, self.load_commitmsg),
             (self.menu_load_commitmsg_template, self.load_template),
             (self.menu_merge_local, local_merge),
             (self.menu_merge_abort, abort_merge),
             (self.menu_options, update_options),
             (self.menu_rescan, SLOT(signals.rescan)),
+            (self.menu_search_grep, self.grep),
             (self.menu_search_revision, smod.search(smod.REVISION_ID)),
             (self.menu_search_revision_range, smod.search(smod.REVISION_RANGE)),
             (self.menu_search_message, smod.search(smod.MESSAGE)),
