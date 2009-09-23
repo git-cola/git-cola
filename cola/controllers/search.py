@@ -6,10 +6,32 @@ import re
 import time
 from PyQt4 import QtGui
 
+import cola
 from cola import qtutils
 from cola.qobserver import QObserver
 from cola.models.search import SearchModel
 from cola.views.search import SearchView
+
+# Modes for this controller.
+# Note: names correspond to radio button names for convenience
+REVISION_ID    = 'radio_revision'
+REVISION_RANGE = 'radio_range'
+PATH           = 'radio_path'
+MESSAGE        = 'radio_message'
+DIFF           = 'radio_diff'
+AUTHOR         = 'radio_author'
+COMMITTER      = 'radio_committer'
+DATE_RANGE     = 'radio_daterange'
+
+
+def search(searchtype, browse=False):
+    """Return a callback to handle various search actions."""
+    def search_handler():
+        search_commits(cola.model(),
+                       QtGui.QApplication.instance().activeWindow(),
+                       searchtype,
+                       browse)
+    return search_handler
 
 
 class SearchEngine(object):
@@ -94,17 +116,6 @@ class DateRangeSearch(SearchEngine):
                               after=start_date,
                               before=end_date,
                               **kwargs)
-
-# Modes for this controller.
-# Note: names correspond to radio button names for convenience
-REVISION_ID    = 'radio_revision'
-REVISION_RANGE = 'radio_range'
-PATH           = 'radio_path'
-MESSAGE        = 'radio_message'
-DIFF           = 'radio_diff'
-AUTHOR         = 'radio_author'
-COMMITTER      = 'radio_committer'
-DATE_RANGE     = 'radio_daterange'
 
 # Each search type is handled by a distinct SearchEngine subclass
 SEARCH_ENGINES = {

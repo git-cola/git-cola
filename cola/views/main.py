@@ -19,6 +19,7 @@ from cola.views.mainwindow import MainWindow
 from cola.controllers.util import choose_from_combo
 from cola.controllers.remote import remote_action
 from cola.controllers.stash import stash
+from cola.controllers import search as smod
 from cola.diffparse import DiffParser
 
 class MainView(MainWindow):
@@ -91,17 +92,27 @@ class MainView(MainWindow):
 
         # Menu actions
         actions = (
-                    (self.menu_branch_diff, self.branch_diff),
-                    (self.menu_branch_review, self.review_branch),
-                    (self.menu_diff_expression, self.diff_expression),
-                    (self.menu_diff_branch, self.diff_branch),
-                    (self.menu_search_grep, self.grep),
-                    (self.menu_load_commitmsg, self.load_commitmsg),
-                    (self.menu_load_commitmsg_template, self.load_template),
-                    (self.menu_rescan, SLOT(signals.rescan)),
-                    (self.menu_show_diffstat, SLOT(signals.diffstat)),
-                    (self.menu_stash, stash),
-                   )
+            (self.menu_branch_diff, self.branch_diff),
+            (self.menu_branch_review, self.review_branch),
+            (self.menu_diff_expression, self.diff_expression),
+            (self.menu_diff_branch, self.diff_branch),
+            (self.menu_search_grep, self.grep),
+            (self.menu_load_commitmsg, self.load_commitmsg),
+            (self.menu_load_commitmsg_template, self.load_template),
+            (self.menu_rescan, SLOT(signals.rescan)),
+            # Search Menu
+            (self.menu_search_revision, smod.search(smod.REVISION_ID)),
+            (self.menu_search_revision_range, smod.search(smod.REVISION_RANGE)),
+            (self.menu_search_message, smod.search(smod.MESSAGE)),
+            (self.menu_search_path, smod.search(smod.PATH, True)),
+            (self.menu_search_date_range, smod.search(smod.DATE_RANGE)),
+            (self.menu_search_diff, smod.search(smod.DIFF)),
+            (self.menu_search_author, smod.search(smod.AUTHOR)),
+            (self.menu_search_committer, smod.search(smod.COMMITTER)),
+
+            (self.menu_show_diffstat, SLOT(signals.diffstat)),
+            (self.menu_stash, stash),
+        )
         for menu, callback in actions:
             self.connect(menu, SIGNAL('triggered()'), callback)
 

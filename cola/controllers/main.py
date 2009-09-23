@@ -72,24 +72,6 @@ class MainController(QObserver):
             menu_undo = self.view.action_undo,
             menu_redo = self.view.action_redo,
 
-            # Search Menu
-            menu_search_revision =
-                self.gen_search(search.REVISION_ID),
-            menu_search_revision_range =
-                self.gen_search(search.REVISION_RANGE),
-            menu_search_message =
-                self.gen_search(search.MESSAGE),
-            menu_search_path =
-                self.gen_search(search.PATH, True),
-            menu_search_date_range =
-                self.gen_search(search.DATE_RANGE),
-            menu_search_diff =
-                self.gen_search(search.DIFF),
-            menu_search_author =
-                self.gen_search(search.AUTHOR),
-            menu_search_committer =
-                self.gen_search(search.COMMITTER),
-
             # Merge Menu
             menu_merge_local =
                 lambda: local_merge(self.model, self.view),
@@ -148,19 +130,6 @@ class MainController(QObserver):
         if self.has_inotify():
             self.view.rescan_button.hide()
 
-    def untracked_items(self):
-        """Return all selected untracked items."""
-        return self.view.untracked(self.model.untracked)
-
-    def unstaged_item(self):
-        """Return a single selected unstaged item."""
-        unstaged = self.view.unstaged(self.model.unstaged)
-        if unstaged:
-            return unstaged[0]
-        else:
-            return None
-
-    #####################################################################
     def event(self, msg):
         """Overrides event() to handle custom inotify events."""
         if not inotify.AVAILABLE:
@@ -172,16 +141,9 @@ class MainController(QObserver):
             return False
 
     #####################################################################
-    # Qt callbacks
     def tr(self, fortr):
         """Translates strings."""
         return qtutils.tr(fortr)
-
-    def gen_search(self, searchtype, browse=False):
-        """Return a callback to handle various search actions."""
-        def search_handler():
-            search_commits(self.model, self.view, searchtype, browse)
-        return search_handler
 
     def options(self):
         """Launch the options dialog"""
