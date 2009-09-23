@@ -361,28 +361,13 @@ class MainView(MainWindow):
                                staged=True, apply_to_worktree=False,
                                reverse=False):
         """Implement un/staging of selected lines or hunks."""
-        filename = self.model.filename
-        if not filename:
-            return
-        if self.mode == self.model.mode_branch:
-            # We're applying changes from a different branch!
-            branch = self.model.head
-            parser = DiffParser(self.model,
-                                filename=filename,
-                                cached=False,
-                                branch=branch)
-            offset, selection = self.diff_selection()
-            parser.process_diff_selection(selected, offset, selection,
-                                          apply_to_worktree=True)
-        else:
-            # The normal worktree vs index scenario
-            parser = DiffParser(self.model,
-                                filename=filename,
-                                cached=staged,
-                                reverse=apply_to_worktree)
-            offset, selection = self.diff_selection()
-            parser.process_diff_selection(selected, offset, selection,
-                                          apply_to_worktree=apply_to_worktree)
+        offset, selection = self.diff_selection()
+        cola.notifier().broadcast(signals.apply_diff_selection,
+                                  staged,
+                                  selected,
+                                  offset,
+                                  selection,
+                                  apply_to_worktree)
 
     def undo_hunk(self):
         """Destructively remove a hunk from a worktree file."""
