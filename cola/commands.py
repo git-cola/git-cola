@@ -418,6 +418,13 @@ class Stage(Command):
         return False
 
 
+class StageUntracked(Stage):
+    """Stage all untracked files."""
+    def __init__(self):
+        Stage.__init__(self, None)
+        self.paths = self.model.untracked
+
+
 class Unstage(Command):
     """Unstage a set of paths."""
     def __init__(self, paths):
@@ -487,6 +494,7 @@ def register():
         signals.review_branch_mode: ReviewBranchMode,
         signals.show_untracked: ShowUntracked,
         signals.stage: Stage,
+        signals.stage_untracked: StageUntracked,
         signals.staged_summary: DiffStagedSummary,
         signals.unstage: Unstage,
         signals.unstage_all: UnstageAll,
