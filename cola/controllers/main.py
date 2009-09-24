@@ -18,10 +18,6 @@ from cola import settings
 from cola.qobserver import QObserver
 from cola.views import log
 
-# controllers namespace
-from cola.controllers.createbranch import create_new_branch
-from cola.controllers.selectcommits import select_commits
-from cola.controllers.util import choose_from_combo
 
 class MainController(QObserver):
     """Manage interactions between models and views."""
@@ -37,33 +33,15 @@ class MainController(QObserver):
         self.add_actions(global_cola_fontdiff = self.update_diff_font)
         self.add_actions(global_cola_tabwidth = self.update_tab_width)
 
-        self.add_callbacks(
-            # Push Buttons TODO move selection into the model
-            #stage_button = self.stage_selected,
-
-            # File Menu TODO
-            menu_quit = self.quit_app,
-
-            # TODO REMOVE
-            # Branch Menu
-            menu_create_branch = self.branch_create,
-            menu_checkout_branch = self.checkout_branch,
-
-            # Commit Menu
-            # TODO
-            menu_delete_branch = self.branch_delete,
-            menu_rebase_branch = self.rebase,
-            )
-
+        self.add_callbacks(#TODO factor out of this class
+                           menu_quit = self.quit_app,
+                           # TODO move selection into the model
+                           #stage_button = self.stage_selected,
+                           )
         # Route events here
         view.closeEvent = self.quit_app
-
-        # Initializes the log subwindow
         self._init_log_window()
-
-        # Updates the main UI fonts
-        self.refresh_view('global_cola_fontdiff')
-
+        self.refresh_view('global_cola_fontdiff') # Update the diff font
         self.start_inotify_thread()
         if self.has_inotify():
             self.view.rescan_button.hide()
@@ -82,28 +60,6 @@ class MainController(QObserver):
     def tr(self, fortr):
         """Translates strings."""
         return qtutils.tr(fortr)
-
-    def branch_create(self):
-        """Launch the 'Create Branch' dialog."""
-        create_new_branch(self.model, self.view)
-
-    def branch_delete(self):
-        """Launch the 'Delete Branch' dialog."""
-        branch = choose_from_combo('Delete Branch',
-                                   self.model.local_branches)
-        if not branch:
-            return
-        self.log(*self.model.delete_branch(branch))
-
-    def checkout_branch(self):
-        """Launch the 'Checkout Branch' dialog."""
-        branch = choose_from_combo('Checkout Branch',
-                                   self.model.local_branches)
-        if not branch:
-            return
-        self.log(*self.model.git.checkout(branch,
-                                          with_stderr=True,
-                                          with_status=True))
 
     def mergetool(self):
         """Launch git-mergetool on a file path."""
@@ -156,20 +112,10 @@ class MainController(QObserver):
             self.inotify_thread.wait()
         self.view.close()
 
-    def rebase(self):
-        """Rebase onto a branch."""
-        branch = choose_from_combo('Rebase Branch',
-                                   self.model.all_branches())
-        if not branch:
-            return
-        self.log(*self.model.git.rebase(branch,
-                                        with_stderr=True,
-                                        with_status=True))
-
     # use *rest to handle being called from the checkbox signal
     def rescan(self, *rest):
         """Populate view widgets with results from 'git status'."""
-        # TODO
+        # TODO preserve scrollbars, re-diff on rescan
         return
         scrollbar = self.view.display_text.verticalScrollBar()
         scrollvalue = scrollbar.value()

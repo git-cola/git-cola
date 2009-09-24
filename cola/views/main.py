@@ -23,6 +23,7 @@ from cola.controllers import compare
 from cola.controllers import search as smod
 from cola.controllers.bookmark import manage_bookmarks
 from cola.controllers.bookmark import save_bookmark
+from cola.controllers.createbranch import create_new_branch
 from cola.controllers.merge import local_merge
 from cola.controllers.merge import abort_merge
 from cola.controllers.options import update_options
@@ -106,6 +107,10 @@ class MainView(MainWindow):
             (self.menu_browse_branch, self.browse_current),
             (self.menu_browse_other_branch, self.browse_other),
             (self.menu_browse_commits, self.browse_commits),
+            (self.menu_create_branch, create_new_branch),
+            (self.menu_checkout_branch, self.checkout_branch),
+            (self.menu_delete_branch, self.branch_delete),
+            (self.menu_rebase_branch, self.rebase),
             (self.menu_clone_repo, self.clone_repo),
             (self.menu_commit_compare, compare.compare),
             (self.menu_commit_compare_file, compare.compare_file),
@@ -175,6 +180,8 @@ class MainView(MainWindow):
             title += ' *** diff mode***'
         elif self.mode == self.model.mode_review:
             title += ' *** review mode***'
+        elif self.mode == self.model.mode_amend:
+            title += ' *** amending ***'
         self.setWindowTitle(title)
 
         if not self.model.read_only() and self.mode != self.model.mode_amend:
@@ -657,3 +664,41 @@ class MainView(MainWindow):
             return
         # Launch the repobrowser
         browse_git_branch(branch)
+
+    def branch_create(self):
+        """Launch the 'Create Branch' dialog."""
+        create_new_branch()
+
+    def branch_delete(self):
+        """Launch the 'Delete Branch' dialog."""
+        branch = choose_from_combo('Delete Branch',
+                                   self.model.local_branches)
+        if not branch:
+            return
+        #TODO cmd
+        status, output = self.model.delete_branch(branch)
+        cola.notifier().broadcast(signals.log_cmd, status, output)
+
+    def checkout_branch(self):
+        """Launch the 'Checkout Branch' dialog."""
+        branch = choose_from_combo('Checkout Branch',
+                                   self.model.local_branches)
+        if not branch:
+            return
+        #TODO cmd
+        status, output = self.model.git.checkout(branch,
+                                                 with_stderr=True,
+                                                 with_status=True)
+        cola.notifier().broadcast(signals.log_cmd, status, output)
+
+    def rebase(self):
+        """Rebase onto a branch."""
+        branch = choose_from_combo('Rebase Branch',
+                                   self.model.all_branches())
+        if not branch:
+            return
+        #TODO cmd
+        status, output = self.model.git.rebase(branch,
+                                               with_stderr=True,
+                                               with_status=True)
+        cola.notifier().broadcast(signals.log_cmd, status, output)
