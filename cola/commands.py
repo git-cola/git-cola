@@ -254,6 +254,25 @@ class Delete(Command):
         if rescan:
             self.model.update_status()
 
+class DeleteBranch(Command):
+    def __init__(self, branch):
+        Command.__init__(self)
+        self.branch = branch
+
+    def is_undoable(self):
+        # We could git-hash-object stuff and provide undo-ability
+        # as an option.  Heh.
+        return False
+
+    def do(self):
+        status, output = self.model.delete_branch(self.branch)
+        title = ''
+        if output.startswith('error:'):
+            output = 'E' + output[1:]
+        else:
+            title = 'Info: '
+        _notifier.broadcast(signals.log_cmd, status, title + output)
+
 
 class Diff(Command):
     """Perform a diff and set the model's current text."""
@@ -563,6 +582,7 @@ def register():
         signals.cherry_pick: CherryPick,
         signals.commit: Commit,
         signals.delete: Delete,
+        signals.delete_branch: DeleteBranch,
         signals.diff: Diff,
         signals.diff_mode: DiffMode,
         signals.diff_expr_mode: DiffExprMode,

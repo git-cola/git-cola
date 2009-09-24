@@ -675,9 +675,7 @@ class MainView(MainWindow):
                                    self.model.local_branches)
         if not branch:
             return
-        #TODO cmd
-        status, output = self.model.delete_branch(branch)
-        qtutils.log(status, output)
+        cola.notifier().broadcast(signals.delete_branch, branch)
 
     def checkout_branch(self):
         """Launch the 'Checkout Branch' dialog."""
