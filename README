@@ -25,13 +25,10 @@ INSTALLATION
 See the 'INSTALL' file for more details.
 
 
-ACKNOWLEDGEMENTS
+THE WEBSITE
 
-git-cola includes a copy of the following modules:
-
-GitPython ~ http://gitorious.org/projects/git-python/
-jsonpickle ~ http://code.google.com/p/jsonpickle/
-simplejson ~ http://code.google.com/p/simplejson/
+Visit the git-cola home page:
+    ~ http://cola.tuxfamily.org/
 
 
 THE MAILING LIST
@@ -50,3 +47,12 @@ We use the github issue tracker.  It's simple and it works.
 
 We do prefer to discuss things on the mailing, though,
 so don't be shy.
+
+
+ACKNOWLEDGEMENTS
+
+git-cola includes a copy of the following modules:
+
+GitPython ~ http://gitorious.org/projects/git-python/
+jsonpickle ~ http://code.google.com/p/jsonpickle/
+simplejson ~ http://code.google.com/p/simplejson/
