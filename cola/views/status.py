@@ -56,14 +56,19 @@ class StatusWidget(QtGui.QDialog):
         self.add_item('Unmerged', 'unmerged.png')
         self.add_item('Untracked', 'untracked.png')
 
+        # Used to restore the selection
+        self.old_selection = None
+
         # Handle these events here
         self.tree.contextMenuEvent = self.tree_context_menu_event
         self.tree.mousePressEvent = self.tree_click
 
         self.expanded_items = set()
         self.model = cola.model()
+        self.model.add_message_observer(self.model.message_about_to_update,
+                                        self.about_to_update)
         self.model.add_message_observer(self.model.message_updated,
-                                        self.refresh)
+                                        self.updated)
         self.connect(self.tree, SIGNAL('itemSelectionChanged()'),
                      self.tree_selection)
         self.connect(self.tree,
@@ -76,12 +81,95 @@ class StatusWidget(QtGui.QDialog):
         item.setText(0, self.tr(txt))
         item.setIcon(0, qtutils.icon(path))
 
-    def refresh(self):
+    def restore_selection(self):
+        if not self.old_selection:
+            return
+        (staged, modified, unmerged, untracked) = self.old_selection
+
+        # unstaged is an aggregate
+        unstaged = modified + unmerged + untracked
+        # restore selection
+        updated_staged = self.model.staged
+        updated_modified = self.model.modified
+        updated_unmerged = self.model.unmerged
+        updated_untracked = self.model.untracked
+        # unstaged is an aggregate
+        updated_unstaged = (updated_modified +
+                            updated_unmerged +
+                            updated_untracked)
+
+        # Updating the status resets the repo status tree so
+        # restore the selected items and re-run the diff
+        showdiff = False
+        mode = self.mode
+        if mode == self.model.mode_worktree:
+            # Update unstaged items
+            if unstaged:
+                for item in unstaged:
+                    if item in updated_unstaged:
+                        idx = updated_unstaged.index(item)
+                        item = self.unstaged_item(idx)
+                        if item:
+                            showdiff = True
+                            item.setSelected(True)
+                            self.tree.setCurrentItem(item)
+                            self.tree.setItemSelected(item, True)
+
+        elif mode in (self.model.mode_index, self.model.mode_amend):
+            # Ditto for staged items
+            if staged:
+                for item in staged:
+                    if item in updated_staged:
+                        idx = updated_staged.index(item)
+                        item = self.staged_item(idx)
+                        if item:
+                            showdiff = True
+                            item.setSelected(True)
+                            self.tree.setCurrentItem(item)
+                            self.tree.setItemSelected(item, True)
+
+
+    def staged_item(self, itemidx):
+        return self._subtree_item(self.idx_staged, itemidx)
+
+    def modified_item(self, itemidx):
+        return self._subtree_item(self.idx_modified, itemidx)
+
+    def unstaged_item(self, itemidx):
+        tree = self.tree
+        # is it modified?
+        item = tree.topLevelItem(self.idx_modified)
+        count = item.childCount()
+        if itemidx < count:
+            return item.child(itemidx)
+        # is it unmerged?
+        item = tree.topLevelItem(self.idx_unmerged)
+        count += item.childCount()
+        if itemidx < count:
+            return item.child(itemidx)
+        # is it untracked?
+        item = tree.topLevelItem(self.idx_untracked)
+        count += item.childCount()
+        if itemidx < count:
+            return item.child(itemidx)
+        # Nope..
+        return None
+
+    def _subtree_item(self, idx, itemidx):
+        parent = self.tree.topLevelItem(idx)
+        return parent.child(itemidx)
+
+    def about_to_update(self):
+        self.old_selection = self.selection()
+
+    def updated(self):
         """Update display from model data."""
         self.set_staged(self.model.staged)
         self.set_modified(self.model.modified)
         self.set_unmerged(self.model.unmerged)
         self.set_untracked(self.model.untracked)
+
+        self.restore_selection()
 
         if not self.model.staged:
             return
@@ -135,7 +223,7 @@ class StatusWidget(QtGui.QDialog):
         if not items:
             return
         # Only run this once; we don't want to re-expand items that
-        # we've click on to re-collapse on refresh.
+        # we've click on to re-collapse on updated().
         if idx in self.expanded_items:
             return
         self.expanded_items.add(idx)
