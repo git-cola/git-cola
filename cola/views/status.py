@@ -249,7 +249,7 @@ class StatusWidget(QtGui.QDialog):
             menu.addAction(self.tr('Launch Editor'),
                            SLOT(signals.edit, self.staged()))
             menu.addAction(self.tr('Launch Diff Tool'),
-                           SLOT(signals.difftool, self.staged()))
+                           SLOT(signals.difftool, True, self.staged()))
             return menu
 
         if unmerged:
@@ -274,7 +274,7 @@ class StatusWidget(QtGui.QDialog):
 
         if modified and enable_staging:
             menu.addAction(self.tr('Launch Diff Tool'),
-                           SLOT(signals.difftool, self.modified()))
+                           SLOT(signals.difftool, False, self.modified()))
             menu.addSeparator()
             menu.addAction(self.tr('Undo All Changes'),
                            self._checkout_files)
