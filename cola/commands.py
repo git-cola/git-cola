@@ -8,6 +8,7 @@ from cola import core
 from cola import utils
 from cola import signals
 from cola import cmdfactory
+from cola import difftool
 from cola.diffparse import DiffParser
 
 _notifier = cola.notifier()
@@ -375,6 +376,27 @@ class DiffStagedSummary(Command):
             if self.model.mode != self.model.mode_amend:
                 self.new_mode = self.model.mode_index
 
+class Difftool(Command):
+    """Run git-difftool limited by path."""
+    def __init__(self, staged, filenames):
+        Command.__init__(self)
+        self.staged = staged
+        self.filenames = filenames
+
+    def is_undoable(self):
+        return False
+
+    def do(self):
+        if not self.filenames:
+            return
+        args = []
+        if self.staged and not self.model.read_only():
+            args.append('--cached')
+        args.extend([self.model.head, '--'])
+        args.extend(self.filenames)
+        difftool.launch(args)
+
+
 class Edit(Command):
     """Edit a file using the configured gui.editor."""
     def __init__(self, filenames, line_number=None):
@@ -394,6 +416,7 @@ class Edit(Command):
 
     def is_undoable(self):
         return False
+
 
 class FormatPatch(Command):
     """Output a patch series given all revisions and a selected subset."""
@@ -616,6 +639,7 @@ def register():
         signals.diff_expr_mode: DiffExprMode,
         signals.diff_staged: DiffStaged,
         signals.diffstat: Diffstat,
+        signals.difftool: Difftool,
         signals.edit: Edit,
         signals.format_patch: FormatPatch,
         signals.grep: GrepMode,
