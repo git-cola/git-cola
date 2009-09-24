@@ -72,13 +72,6 @@ class MainController(QObserver):
         else:
             utils.fork(['xterm', '-e', 'git', 'mergetool', '--', filename])
 
-    def edit_file(self, staged=True):
-        """Launch $editor on a specific path."""
-        return# TODO
-        filename = self.selected_filename(staged=staged)
-        if filename:
-            utils.fork([self.model.editor(), filename])
-
     def edit_diff(self, staged=True):
         """Launches difftool on the specified paths."""
         return# TODO
