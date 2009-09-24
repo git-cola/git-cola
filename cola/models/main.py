@@ -1221,6 +1221,7 @@ class MainModel(ObservableModel):
         """Adds paths to git and notifies observers."""
 
         # Grab the old lists of untracked + modified files
+        self.update_status()
         old_modified = set(self.modified)
         old_untracked = set(self.untracked)
 
@@ -1253,6 +1254,7 @@ class MainModel(ObservableModel):
         paths = set(paths)
 
         # Grab the old list of staged files
+        self.update_status()
         old_staged = set(self.staged)
 
         # Reset and scan for new changes
@@ -1274,6 +1276,7 @@ class MainModel(ObservableModel):
         paths = set(paths)
 
         # Grab the old set of changed files
+        self.update_status()
         old_modified = set(self.modified)
         old_staged = set(self.staged)
         old_changed = old_modified.union(old_staged)

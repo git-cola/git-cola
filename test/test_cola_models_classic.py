@@ -1,7 +1,7 @@
 """Covers interfaces used by the classic view."""
+import os
 
 import helper
-
 from cola.models.main import MainModel
 
 class MainModelObserver(object):
@@ -37,17 +37,20 @@ class ClassicModelTestCase(helper.TestCase):
         """Test the MainModel.everything() method."""
         self.setup_baseline_repo()
         self.shell('touch other-file')
-        model = MainModel()
+
+        model = MainModel(cwd=os.getcwd())
+        model.update_status()
+
         everything = model.everything()
         self.assertTrue('the-file' in everything)
         self.assertTrue('other-file' in everything)
 
     def test_stage_paths(self):
-        """Test a simple usage of MainModel.stage_paths."""
+        """Test a simple usage of stage_paths()."""
         self.setup_baseline_repo()
         self.shell('echo change > the-file')
 
-        model = MainModel()
+        model = MainModel(cwd=os.getcwd())
         observer = MainModelObserver(model)
         model.stage_paths(['the-file'])
 
@@ -63,8 +66,9 @@ class ClassicModelTestCase(helper.TestCase):
             echo change > foo/bar/baz
         """)
 
-        model = MainModel()
+        model = MainModel(cwd=os.getcwd())
         observer = MainModelObserver(model)
+
         model.stage_paths(['foo'])
 
         self.assertTrue('foo' in observer.paths)
@@ -87,8 +91,9 @@ class ClassicModelTestCase(helper.TestCase):
             touch foo/bar/baz
         """)
 
-        model = MainModel()
+        model = MainModel(cwd=os.getcwd())
         observer = MainModelObserver(model)
+
         model.stage_paths(['foo'])
 
         self.assertTrue('foo' in observer.paths)
@@ -106,7 +111,7 @@ class ClassicModelTestCase(helper.TestCase):
             git add the-file
         """)
 
-        model = MainModel()
+        model = MainModel(cwd=os.getcwd())
         observer = MainModelObserver(model)
         model.unstage_paths(['the-file'])
 
@@ -117,8 +122,10 @@ class ClassicModelTestCase(helper.TestCase):
     def test_unstage_paths_init(self):
         """Test unstage_paths() on the root commit."""
         self.setup_baseline_repo(commit=False)
-        model = MainModel()
+
+        model = MainModel(cwd=os.getcwd())
         observer = MainModelObserver(model)
+
         model.unstage_paths(['the-file'])
 
         self.assertTrue('the-file' in observer.paths)
@@ -134,8 +141,9 @@ class ClassicModelTestCase(helper.TestCase):
             git add foo/bar/baz
         """)
 
-        model = MainModel()
+        model = MainModel(os.getcwd())
         observer = MainModelObserver(model)
+
         model.unstage_paths(['foo'])
 
         self.assertTrue('foo' in observer.paths)
@@ -149,7 +157,7 @@ class ClassicModelTestCase(helper.TestCase):
         self.setup_baseline_repo()
         self.shell('echo change > the-file')
 
-        model = MainModel()
+        model = MainModel(cwd=os.getcwd())
         observer = MainModelObserver(model)
         model.revert_paths(['the-file'])
 
@@ -167,7 +175,7 @@ class ClassicModelTestCase(helper.TestCase):
             echo change > foo/bar/baz
         """)
 
-        model = MainModel()
+        model = MainModel(cwd=os.getcwd())
         observer = MainModelObserver(model)
         model.revert_paths(['foo'])
 
