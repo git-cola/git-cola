@@ -39,7 +39,7 @@ class ObservableModelTestCase(unittest.TestCase):
     def test_notify_message_observers(self):
         """Test that notifications are delivered."""
         self.model.copy(hello='world')
-        self.assertEqual(self.observer.args, (,))
+        self.assertEqual(self.observer.args, (),)
         self.assertEqual(self.observer.opts, {'hello': 'world'})
 
     def test_notify_message_observers_bogus_message(self):
@@ -63,7 +63,7 @@ class ObservableModelTestCase(unittest.TestCase):
         self.assertEqual(self.observer.opts, {'baz': 'quux'})
 
         self.model.copy(foo='bar')
-        self.assertEqual(self.observer.args, (,))
+        self.assertEqual(self.observer.args, (),)
         self.assertEqual(self.observer.opts, {'foo': 'bar'})
 
 
