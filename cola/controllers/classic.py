@@ -93,8 +93,7 @@ class ClassicController(QtCore.QObject):
         paths = map(unicode, qstrings)
         args = ['--'] + paths
         revs, summaries = self.model.log_helper(all=True, extra_args=args)
-        commits = select_commits(self.model, self.view,
-                                 'Select Previous Version',
+        commits = select_commits('Select Previous Version',
                                  revs, summaries, multiselect=False)
         if not commits:
             return

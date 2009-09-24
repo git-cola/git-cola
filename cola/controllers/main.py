@@ -256,8 +256,7 @@ class MainController(QObserver):
 
     def select_commits_gui(self, title, revs, summaries, multiselect=True):
         """Launch a gui for selecting commits."""
-        return select_commits(self.model, self.view,
-                              self.tr(title), revs, summaries,
+        return select_commits(self.tr(title), revs, summaries,
                               multiselect=multiselect)
 
     def update_diff_font(self):

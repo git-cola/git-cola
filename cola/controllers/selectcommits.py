@@ -3,15 +3,17 @@
 """
 from PyQt4 import QtGui
 
+import cola
 from cola import qtutils
 from cola.views.selectcommits import SelectCommitsView
 from cola.qobserver import QObserver
 from cola.controllers.createbranch import create_new_branch
 
 #+-------------------------------------------------------------
-def select_commits(model, parent, title, revs, summaries, multiselect=True):
+def select_commits(title, revs, summaries, multiselect=True):
     """Use the SelectCommitsView to select commits from a list."""
-
+    model = cola.model()
+    parent = QtGui.QApplication.instance().activeWindow()
     view = SelectCommitsView(parent, title, multiselect=multiselect)
     ctl = SelectCommitsController(model, view, revs, summaries)
     return ctl.select_commits()
