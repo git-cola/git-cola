@@ -93,6 +93,7 @@ class MainView(MainWindow):
         self._relay_button(self.rescan_button, signals.rescan)
         self._relay_button(self.signoff_button, signals.add_signoff)
 
+        self._connect_button(self.stage_button, self.stage)
         self._connect_button(self.commit_button, self.commit)
         self._connect_button(self.fetch_button, self.fetch)
         self._connect_button(self.push_button, self.push)
@@ -449,6 +450,15 @@ class MainView(MainWindow):
             return
         self.process_diff_selection(staged=False, apply_to_worktree=True,
                                     reverse=True, selected=True)
+
+    def stage(self):
+        """Stage selected files."""
+        # TODO move selection into the model so that we're widget-independent
+        paths = status.widget().unstaged()
+        if not paths:
+            cola.notifier().broadcast(signals.stage_modified)
+        else:
+            cola.notifier().broadcast(signals.stage, paths)
 
     def stage_hunk(self):
         """Stage a specific hunk."""

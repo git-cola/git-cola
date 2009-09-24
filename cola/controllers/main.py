@@ -33,11 +33,8 @@ class MainController(QObserver):
         self.add_actions(global_cola_fontdiff = self.update_diff_font)
         self.add_actions(global_cola_tabwidth = self.update_tab_width)
 
-        self.add_callbacks(#TODO factor out of this class
-                           menu_quit = self.quit_app,
-                           # TODO move selection into the model
-                           #stage_button = self.stage_selected,
-                           )
+        #TODO move thread shutdown out of this class
+        self.add_callbacks(menu_quit = self.quit_app)
         # Route events here
         view.closeEvent = self.quit_app
         self._init_log_window()

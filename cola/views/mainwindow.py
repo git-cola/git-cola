@@ -51,8 +51,7 @@ class MainWindow(MainWindowBase):
         layout = self.actiondockwidgetlayout
 
         self.rescan_button = self.create_button('Rescan', layout)
-        # TODO store selection in the model.
-        #self.stage_button = self.create_button('Stage Changed', layout)
+        self.stage_button = self.create_button('Stage', layout)
         self.fetch_button = self.create_button('Fetch', layout)
         self.push_button = self.create_button('Push', layout)
         self.pull_button = self.create_button('Pull', layout)
