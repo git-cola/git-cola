@@ -58,6 +58,7 @@ class OptionsController(QObserver):
         # Register actions
         self.add_actions(global_cola_fontdiff = self.tell_parent_model)
         self.add_callbacks(global_cola_fontdiff_size = self.update_size)
+        self.add_actions(global_cola_tabwidth = self.tell_parent_model)
         self.add_callbacks(save_button = self.save_settings)
         self.connect(self.view, 'rejected()', self.restore_settings)
 
