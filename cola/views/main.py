@@ -322,7 +322,6 @@ class MainView(MainWindow):
     def review_branch(self):
         """Diff against an arbitrary revision, branch, tag, etc."""
         branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
-                                   self,
                                    self.model.all_branches() +
                                    self.model.tags)
         if not branch:
@@ -332,7 +331,6 @@ class MainView(MainWindow):
     def branch_diff(self):
         """Diff against an arbitrary revision, branch, tag, etc."""
         branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
-                                   self,
                                    ['HEAD^'] +
                                    self.model.all_branches() +
                                    self.model.tags)
@@ -343,7 +341,6 @@ class MainView(MainWindow):
     def diff_expression(self):
         """Diff using an arbitrary expression."""
         expr = choose_from_combo('Enter Diff Expression',
-                                 self,
                                  self.model.all_branches() +
                                  self.model.tags)
         if not expr:
@@ -354,7 +351,6 @@ class MainView(MainWindow):
     def diff_branch(self):
         """Launches a diff against a branch."""
         branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
-                                   self,
                                    ['HEAD^'] +
                                    self.model.all_branches() +
                                    self.model.tags)

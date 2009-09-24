@@ -91,7 +91,6 @@ class MainController(QObserver):
     def branch_delete(self):
         """Launch the 'Delete Branch' dialog."""
         branch = choose_from_combo('Delete Branch',
-                                   self.view,
                                    self.model.local_branches)
         if not branch:
             return
@@ -100,7 +99,6 @@ class MainController(QObserver):
     def checkout_branch(self):
         """Launch the 'Checkout Branch' dialog."""
         branch = choose_from_combo('Checkout Branch',
-                                   self.view,
                                    self.model.local_branches)
         if not branch:
             return
@@ -162,7 +160,6 @@ class MainController(QObserver):
     def rebase(self):
         """Rebase onto a branch."""
         branch = choose_from_combo('Rebase Branch',
-                                   self.view,
                                    self.model.all_branches())
         if not branch:
             return
