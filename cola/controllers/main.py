@@ -60,18 +60,6 @@ class MainController(QObserver):
         """Translates strings."""
         return qtutils.tr(fortr)
 
-    def mergetool(self):
-        """Launch git-mergetool on a file path."""
-        return#TODO
-        filename = self.selected_filename(staged=False)
-        if not filename or filename not in self.model.unmerged:
-            return
-        if version.check('mergetool-no-prompt',
-                         self.model.git.version().split()[2]):
-            utils.fork(['git', 'mergetool', '--no-prompt', '--', filename])
-        else:
-            utils.fork(['xterm', '-e', 'git', 'mergetool', '--', filename])
-
     def has_inotify(self):
         """Return True if pyinotify is available."""
         return self.inotify_thread and self.inotify_thread.isRunning()

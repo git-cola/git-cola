@@ -9,6 +9,7 @@ from cola import utils
 from cola import signals
 from cola import cmdfactory
 from cola import difftool
+from cola import version
 from cola.diffparse import DiffParser
 
 _notifier = cola.notifier()
@@ -439,6 +440,22 @@ class LoadCommitMessage(Command):
         self.model.set_directory(self.old_directory)
 
 
+class Mergetool(Command):
+    """Launch git-mergetool on a list of paths."""
+    def __init__(self, paths):
+        Command.__init__(self)
+        self.paths = paths
+
+    def do(self):
+        if not self.paths:
+            return
+        if version.check('mergetool-no-prompt',
+                         self.model.git.version().split()[-1]):
+            utils.fork(['git', 'mergetool', '--no-prompt', '--'] + self.paths)
+        else:
+            utils.fork(['xterm', '-e', 'git', 'mergetool', '--'] + self.paths)
+
+
 class OpenRepo(Command):
     """Launches git-cola on a repo."""
     def __init__(self, dirname):
@@ -618,6 +635,7 @@ def register():
         signals.format_patch: FormatPatch,
         signals.grep: GrepMode,
         signals.modified_summary: Diffstat,
+        signals.mergetool: Mergetool,
         signals.open_repo: OpenRepo,
         signals.rescan: Rescan,
         signals.reset_mode: ResetMode,
