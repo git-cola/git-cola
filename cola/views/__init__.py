@@ -53,9 +53,10 @@ class ItemView(object):
         geom = qApp.desktop().screenGeometry()
         width = geom.width()
         height = geom.height()
-        x = self.parent().x() + self.parent().width()/2 - self.width()/2
-        y = self.parent().y() + self.parent().height()/3 - self.height()/2
-        self.move(x, y)
+        if self.parent():
+            x = self.parent().x() + self.parent().width()/2 - self.width()/2
+            y = self.parent().y() + self.parent().height()/3 - self.height()/2
+            self.move(x, y)
         self.show()
         if self.exec_() == QDialog.Accepted:
             return self.value()
