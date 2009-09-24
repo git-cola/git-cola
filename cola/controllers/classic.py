@@ -6,6 +6,7 @@ from PyQt4.QtCore import SIGNAL
 import cola.utils
 import cola.difftool
 
+from cola import signals
 from cola.controllers.selectcommits import select_commits
 from cola.models import classic
 from cola.models.gitrepo import GitRepoModel
@@ -53,8 +54,7 @@ class ClassicController(QtCore.QObject):
     def view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
         entries = map(unicode, entries)
-        cmd = [self.model.history_browser(), '--all', '--']
-        cola.utils.fork(cmd + entries)
+        cola.notifier().broadcast(signals.visualize_paths, entries)
 
     def query_model(self, model_index):
         """Update information about a directory as it is expanded."""
@@ -69,9 +69,8 @@ class ClassicController(QtCore.QObject):
 
     def editor(self, qstrings):
         """Launch an editor on the given QStrings."""
-        cmd = [self.model.editor()]
-        cmd.extend(map(unicode, qstrings))
-        cola.utils.fork(cmd)
+        paths = map(unicode, qstrings)
+        cola.notifier().broadcast(signals.edit, paths)
 
     def stage(self, qstrings):
         """Stage files for commit."""

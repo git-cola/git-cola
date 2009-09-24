@@ -72,17 +72,6 @@ class MainController(QObserver):
         else:
             utils.fork(['xterm', '-e', 'git', 'mergetool', '--', filename])
 
-    def edit_diff(self, staged=True):
-        """Launches difftool on the specified paths."""
-        return# TODO
-        filename = self.selected_filename(staged=staged)
-        if filename:
-            args = []
-            if staged and not self.model.read_only():
-                args.append('--cached')
-            args.extend([self.model.head, '--', filename])
-            difftool.launch(args)
-
     def has_inotify(self):
         """Return True if pyinotify is available."""
         return self.inotify_thread and self.inotify_thread.isRunning()
