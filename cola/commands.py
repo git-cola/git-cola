@@ -343,6 +343,17 @@ class Edit(Command):
     def is_undoable(self):
         return False
 
+class FormatPatch(Command):
+    """Output a patch series given all revisions and a selected subset."""
+    def __init__(self, to_export, revs):
+        Command.__init__(self)
+        self.to_export = to_export
+        self.revs = revs
+
+    def do(self):
+        self.model.format_patch_helper(self.to_export, self.revs,
+                                       output='patches')
+
 
 class GrepMode(Command):
     def __init__(self, txt):
@@ -547,6 +558,7 @@ def register():
         signals.diff_staged: DiffStaged,
         signals.diffstat: Diffstat,
         signals.edit: Edit,
+        signals.format_patch: FormatPatch,
         signals.grep: GrepMode,
         signals.modified_summary: Diffstat,
         signals.open_repo: OpenRepo,
