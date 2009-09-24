@@ -324,14 +324,6 @@ class Diff(Command):
         self.new_diff_text = self.model.diff_helper(filename=self.new_filename,
                                                     cached=cached, **opts)
 
-    def do(self):
-        self.model.set_filename(self.new_filename)
-        Command.do(self)
-
-    def undo(self):
-        self.model.set_filename(self.old_filename)
-        Command.undo(self)
-
 
 class DiffMode(HeadChangeCommand):
     """Enter diff mode and clear the model's diff text."""
