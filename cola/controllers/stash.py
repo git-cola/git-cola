@@ -96,7 +96,7 @@ class StashController(QObserver):
             return
         diffstat = self.model.git.stash('show', selection)
         diff = self.model.git.stash('show', '-p', selection)
-        self.view.parent_view.display('%s\n\n%s' % (diffstat, diff))
+        cola.notifier().broadcast(signals.diff_text, '%s\n\n%s' % (diffstat, diff))
 
     def stash_apply(self):
         """Applies the currently selected stash

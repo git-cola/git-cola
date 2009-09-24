@@ -26,20 +26,19 @@ def create_standard_widget(qtclass):
     class StandardWidget(qtclass):
         # Mix-in for standard view operations
         def __init__(self, parent=None):
-            self.parent_view = parent
             self._qtclass = qtclass
             self._qtclass.__init__(self, parent)
             syntax.set_theme_properties(self)
 
         def show(self):
             """Automatically centers and raises dialogs"""
-            if self.parent_view:
-                left = self.parent_view.x()
-                width = self.parent_view.width()
+            if self.parent():
+                left = self.parent().x()
+                width = self.parent().width()
                 center_x = left + width/2
 
                 x = center_x - self.width()/2
-                y = self.parent_view.y() + 22 # room for parent's titlebar
+                y = self.parent().y() + 22 # room for parent's titlebar
 
                 self.move(x, y)
             # Call the base Qt show()
