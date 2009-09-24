@@ -3,6 +3,7 @@ Miscellaneous Utility Modules
 .. toctree::
 
     core
+    diffparse
     difftool
     inotify
     resources
