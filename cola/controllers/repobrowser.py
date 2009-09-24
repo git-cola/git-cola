@@ -2,9 +2,8 @@
 
 
 import os
-from PyQt4.QtGui import QDialog
-from PyQt4.QtGui import QMenu
 
+from PyQt4 import QtGui
 from cola import utils
 from cola import resources
 from cola import qtutils
@@ -19,7 +18,7 @@ def select_file_from_repo(model, parent):
                                        title='Select File',
                                        get_file=True)
     view.show()
-    if view.exec_() == QDialog.Accepted:
+    if view.exec_() == QtGui.QDialog.Accepted:
         return controller.filename
     else:
         return None
@@ -35,7 +34,7 @@ def browse_git_branch(model, parent, branch):
     view = SelectCommitsView(parent, syntax=False)
     controller = RepoBrowserController(model, view)
     view.show()
-    return view.exec_() == QDialog.Accepted
+    return view.exec_() == QtGui.QDialog.Accepted
 
 class RepoBrowserController(QObserver):
     """Provides control to the Repository Browser."""
@@ -60,7 +59,7 @@ class RepoBrowserController(QObserver):
 
     def context_menu_event(self, event):
         """Generate a context menu for the repository browser."""
-        menu = QMenu(self.view);
+        menu = QtGui.QMenu(self.view);
         menu.addAction(self.tr('Blame'), self.blame)
         menu.exec_(self.view.commit_list.mapToGlobal(event.pos()))
 
