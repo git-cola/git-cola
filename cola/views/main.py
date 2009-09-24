@@ -29,6 +29,7 @@ from cola.controllers.options import update_options
 from cola.controllers.util import choose_from_combo
 from cola.controllers.remote import remote_action
 from cola.controllers.stash import stash
+from cola.controllers.selectcommits import select_commits
 
 class MainView(MainWindow):
     """The main cola interface."""
@@ -100,11 +101,14 @@ class MainView(MainWindow):
             (self.menu_branch_compare, compare.branch_compare),
             (self.menu_branch_diff, self.branch_diff),
             (self.menu_branch_review, self.review_branch),
+            (self.menu_browse_commits, self.browse_commits),
             (self.menu_clone_repo, self.clone_repo),
             (self.menu_commit_compare, compare.compare),
             (self.menu_commit_compare_file, compare.compare_file),
+            (self.menu_cherry_pick, self.cherry_pick),
             (self.menu_diff_expression, self.diff_expression),
             (self.menu_diff_branch, self.diff_branch),
+            (self.menu_export_patches, self.export_patches),
             (self.menu_help_about, about.launch_about_dialog),
             (self.menu_help_docs,
                 lambda: self.model.git.web__browse(resources.html_docs())),
@@ -613,3 +617,27 @@ class MainView(MainWindow):
             destdir = olddestdir + str(count)
             count += 1
         cola.notifier().broadcast(signals.clone, url, destdir)
+
+    def cherry_pick(self):
+        """Launch the 'Cherry-Pick' dialog."""
+        revs, summaries = self.model.log_helper(all=True)
+        commits = select_commits('Cherry-Pick Commit',
+                                 revs, summaries, multiselect=False)
+        if not commits:
+            return
+        cola.notifier().broadcast(signals.cherry_pick, commits)
+
+    def browse_commits(self):
+        """Launch the 'Browse Commits' dialog."""
+        revs, summaries = self.model.log_helper(all=True)
+        select_commits('Browse Commits', revs, summaries)
+
+    def export_patches(self):
+        """Run 'git format-patch' on a list of commits."""
+        revs, summaries = self.model.log_helper()
+        to_export = select_commits('Export Patches', revs, summaries)
+        if not to_export:
+            return
+        to_export.reverse()
+        revs.reverse()
+        cola.notifier().broadcast(signals.format_patch, to_export, revs)

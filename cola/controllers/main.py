@@ -47,7 +47,6 @@ class MainController(QObserver):
             menu_quit = self.quit_app,
 
             # Repository Menu
-            menu_browse_commits = self.browse_commits,
             menu_browse_branch = self.browse_current,
             menu_browse_other_branch = self.browse_other,
 
@@ -60,8 +59,6 @@ class MainController(QObserver):
             # TODO
             menu_delete_branch = self.branch_delete,
             menu_rebase_branch = self.rebase,
-            menu_export_patches = self.export_patches,
-            menu_cherry_pick = self.cherry_pick,
             )
 
         # Route events here
@@ -132,20 +129,6 @@ class MainController(QObserver):
                                           with_stderr=True,
                                           with_status=True))
 
-    def browse_commits(self):
-        """Launch the 'Browse Commits' dialog."""
-        self.select_commits_gui('Browse Commits',
-                                *self.model.log_helper(all=True))
-
-    def cherry_pick(self):
-        """Launch the 'Cherry-Pick' dialog."""
-        commits = self.select_commits_gui('Cherry-Pick Commits',
-                                          multiselect=False,
-                                          *self.model.log_helper(all=True))
-        if not commits:
-            return
-        self.log(*self.model.cherry_pick_list(commits))
-
     def mergetool(self):
         """Launch git-mergetool on a file path."""
         return#TODO
@@ -175,17 +158,6 @@ class MainController(QObserver):
                 args.append('--cached')
             args.extend([self.model.head, '--', filename])
             difftool.launch(args)
-
-    def export_patches(self):
-        """Run 'git format-patch' on a list of commits."""
-        revs, summaries = self.model.log_helper()
-        to_export = self.select_commits_gui('Export Patches', revs, summaries)
-        if not to_export:
-            return
-        to_export.reverse()
-        revs.reverse()
-        qtutils.log(*self.model.format_patch_helper(to_export, revs,
-                                                    output='patches'))
 
     def has_inotify(self):
         """Return True if pyinotify is available."""
@@ -253,11 +225,6 @@ class MainController(QObserver):
     def log(self, status, output):
         """Log output and optionally rescans for changes."""
         qtutils.log(status, output)
-
-    def select_commits_gui(self, title, revs, summaries, multiselect=True):
-        """Launch a gui for selecting commits."""
-        return select_commits(self.tr(title), revs, summaries,
-                              multiselect=multiselect)
 
     def update_diff_font(self):
         """Updates the diff font based on the configured value."""
