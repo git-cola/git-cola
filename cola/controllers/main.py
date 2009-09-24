@@ -56,7 +56,6 @@ class MainController(QObserver):
         else:
             return False
 
-    #####################################################################
     def tr(self, fortr):
         """Translates strings."""
         return qtutils.tr(fortr)
@@ -111,18 +110,6 @@ class MainController(QObserver):
             self.inotify_thread.quit()
             self.inotify_thread.wait()
         self.view.close()
-
-    # use *rest to handle being called from the checkbox signal
-    def rescan(self, *rest):
-        """Populate view widgets with results from 'git status'."""
-        # TODO preserve scrollbars, re-diff on rescan
-        return
-        scrollbar = self.view.display_text.verticalScrollBar()
-        scrollvalue = scrollbar.value()
-
-    def log(self, status, output):
-        """Log output and optionally rescans for changes."""
-        qtutils.log(status, output)
 
     def update_diff_font(self):
         """Updates the diff font based on the configured value."""
