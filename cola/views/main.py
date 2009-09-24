@@ -207,8 +207,11 @@ class MainView(MainWindow):
 
     def set_display(self, text):
         """Set the diff text display."""
+        scrollbar = self.display_text.verticalScrollBar()
+        scrollvalue = scrollbar.value()
         if text is not None:
             self.display_text.setText(text)
+            scrollbar.setValue(scrollvalue)
 
     def selection(self):
         tree = status.widget().tree
