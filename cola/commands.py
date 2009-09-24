@@ -186,6 +186,20 @@ class BranchMode(HeadChangeCommand):
                                                     reverse=True,
                                                     branch=treeish)
 
+
+class CherryPick(Command):
+    """Cherry pick commits into the current branch."""
+    def __init__(self, commits):
+        Command.__init__(self)
+        self.commits = commits
+
+    def is_undoable(self):
+        return False
+
+    def do(self):
+        self.model.cherry_pick_list(self.commits)
+
+
 class Commit(Command):
     """Attempt to create a new commit."""
     def __init__(self, amend, msg):
@@ -524,6 +538,7 @@ def register():
         signals.amend_mode: AmendMode,
         signals.branch_mode: BranchMode,
         signals.clone: Clone,
+        signals.cherry_pick: CherryPick,
         signals.commit: Commit,
         signals.delete: Delete,
         signals.diff: Diff,
