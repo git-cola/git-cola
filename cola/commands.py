@@ -20,6 +20,7 @@ class Command(object):
     def __init__(self, update=False):
         """Initialize the command and stash away values for use in do()"""
         # These are commonly used so let's make it easier to write new commands.
+        self.undoable = False
         self.model = cola.model()
         self.update = update
 
@@ -44,7 +45,7 @@ class Command(object):
 
     def is_undoable(self):
         """Can this be undone?"""
-        return True
+        return self.undoable
 
     def undo(self):
         """Undo the operation."""
@@ -59,10 +60,12 @@ class Command(object):
         """Return this command's name."""
         return self.__class__.__name__
 
+
 class AddSignoff(Command):
     """Add a signed-off-by to the commit message."""
     def __init__(self):
         Command.__init__(self)
+        self.undoable = True
         self.old_commitmsg = self.model.commitmsg
         self.new_commitmsg = self.old_commitmsg
         signoff = ('\nSigned-off-by: %s <%s>\n' %
@@ -76,11 +79,11 @@ class AddSignoff(Command):
     def undo(self):
         self.model.set_commitmsg(self.old_commitmsg)
 
-
 class AmendMode(Command):
     """Try to amend a commit."""
     def __init__(self, amend):
         Command.__init__(self, update=True)
+        self.undoable = True
         self.skip = False
         self.amending = amend
         self.old_commitmsg = self.model.commitmsg
@@ -133,6 +136,7 @@ class AmendMode(Command):
         self.model.set_commitmsg(self.old_commitmsg)
         Command.undo(self)
 
+
 class ApplyDiffSelection(Command):
     def __init__(self, staged, selected, offset, selection, apply_to_worktree):
         Command.__init__(self, update=True)
@@ -141,9 +145,6 @@ class ApplyDiffSelection(Command):
         self.offset = offset
         self.selection = selection
         self.apply_to_worktree = apply_to_worktree
-
-    def is_undoable(self):
-        return False
 
     def do(self):
         if self.model.mode == self.model.mode_branch:
@@ -206,9 +207,6 @@ class Checkout(Command):
         Command.__init__(self)
         self.argv = argv
 
-    def is_undoable(self):
-        return False
-
     def do(self):
         status, output = self.model.git.checkout(with_stderr=True,
                                                  with_status=True, *self.argv)
@@ -228,9 +226,6 @@ class CherryPick(Command):
     def __init__(self, commits):
         Command.__init__(self)
         self.commits = commits
-
-    def is_undoable(self):
-        return False
 
     def do(self):
         self.model.cherry_pick_list(self.commits)
@@ -260,21 +255,14 @@ class Commit(Command):
             title = 'Commit failed: '
         _notifier.broadcast(signals.log_cmd, status, title+output)
 
-    def is_undoable(self):
-        return False
-
 
 class Delete(Command):
     """Simply delete files."""
     def __init__(self, filenames):
         Command.__init__(self)
         self.filenames = filenames
-
-    def is_undoable(self):
         # We could git-hash-object stuff and provide undo-ability
         # as an option.  Heh.
-        return False
-
     def do(self):
         rescan = False
         for filename in self.filenames:
@@ -290,14 +278,10 @@ class Delete(Command):
             self.model.update_status()
 
 class DeleteBranch(Command):
+    """Delete a git branch."""
     def __init__(self, branch):
         Command.__init__(self)
         self.branch = branch
-
-    def is_undoable(self):
-        # We could git-hash-object stuff and provide undo-ability
-        # as an option.  Heh.
-        return False
 
     def do(self):
         status, output = self.model.delete_branch(self.branch)
@@ -383,9 +367,6 @@ class Difftool(Command):
         self.staged = staged
         self.filenames = filenames
 
-    def is_undoable(self):
-        return False
-
     def do(self):
         if not self.filenames:
             return
@@ -414,9 +395,6 @@ class Edit(Command):
         else:
             utils.fork([editor, filename])
 
-    def is_undoable(self):
-        return False
-
 
 class FormatPatch(Command):
     """Output a patch series given all revisions and a selected subset."""
@@ -442,6 +420,7 @@ class LoadCommitMessage(Command):
     """Loads a commit message from a path."""
     def __init__(self, path):
         Command.__init__(self)
+        self.undoable = True
         self.path = path
         self.old_commitmsg = self.model.commitmsg
         self.old_directory = self.model.directory
@@ -468,9 +447,6 @@ class OpenRepo(Command):
         self.model.set_directory(self.new_directory)
         utils.fork(['python', sys.argv[0], '--repo', self.new_directory])
 
-    def is_undoable(self):
-        return False
-
 
 class Clone(Command):
     """Clones a repository and launches a new cola session."""
@@ -478,9 +454,6 @@ class Clone(Command):
         Command.__init__(self)
         self.url = url
         self.new_directory = utils.quote_repopath(destdir)
-
-    def is_undoable(self):
-        return False
 
     def do(self):
         self.model.git.clone(self.url, self.new_directory,
@@ -534,9 +507,6 @@ class Stage(Command):
         _notifier.broadcast(signals.log_cmd, 0, msg)
         self.model.stage_paths(self.paths)
 
-    def is_undoable(self):
-        return False
-
 
 class StageModified(Stage):
     """Stage all modified files."""
@@ -563,17 +533,11 @@ class Unstage(Command):
         _notifier.broadcast(signals.log_cmd, 0, msg)
         self.model.unstage_paths(self.paths)
 
-    def is_undoable(self):
-        return False
-
 
 class UnstageAll(Command):
     """Unstage all files; resets the index."""
     def __init__(self):
         Command.__init__(self, update=True)
-
-    def is_undoable(self):
-        return False
 
     def do(self):
         self.model.unstage_all()
@@ -596,9 +560,6 @@ class UntrackedSummary(Command):
 
 class VisualizeAll(Command):
     """Visualize all branches."""
-    def is_undoable(self):
-        return False
-
     def do(self):
         browser = self.model.history_browser()
         utils.fork(['sh', '-c', browser, '--all'])
@@ -606,9 +567,6 @@ class VisualizeAll(Command):
 
 class VisualizeCurrent(Command):
     """Visualize all branches."""
-    def is_undoable(self):
-        return False
-
     def do(self):
         browser = self.model.history_browser()
         utils.fork(['sh', '-c', browser, self.model.currentbranch])
