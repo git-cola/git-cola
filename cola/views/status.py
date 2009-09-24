@@ -315,13 +315,13 @@ class StatusWidget(QtGui.QDialog):
             return
         staged, modified, unmerged, untracked = self.selection()
         if staged:
-            cola.notifier().broadcast(signals.unstage, [staged])
+            cola.notifier().broadcast(signals.unstage, staged)
         elif modified:
-            cola.notifier().broadcast(signals.stage, [modified])
+            cola.notifier().broadcast(signals.stage, modified)
         elif untracked:
-            cola.notifier().broadcast(signals.stage, [untracked])
+            cola.notifier().broadcast(signals.stage, untracked)
         elif unmerged:
-            cola.notifier().broadcast(signals.stage, [unmerged])
+            cola.notifier().broadcast(signals.stage, unmerged)
 
     def tree_selection(self):
         """Show a data for the selected item."""
