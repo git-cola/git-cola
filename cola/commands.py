@@ -186,6 +186,32 @@ class BranchMode(HeadChangeCommand):
                                                     cached=False,
                                                     reverse=True,
                                                     branch=treeish)
+class Checkout(Command):
+    """
+    A command object for git-checkout.
+
+    'argv' is handed off directly to git.
+    
+    """
+    def __init__(self, argv):
+        Command.__init__(self)
+        self.argv = argv
+
+    def is_undoable(self):
+        return False
+
+    def do(self):
+        status, output = self.model.git.checkout(with_stderr=True,
+                                                 with_status=True, *self.argv)
+        _notifier.broadcast(signals.log_cmd, status, output)
+        self.model.set_diff_text('')
+        self.model.update_status()
+        
+
+class CheckoutBranch(Checkout):
+    """Checkout a branch."""
+    def __init__(self, branch):
+        Checkout.__init__(self, [branch])
 
 
 class CherryPick(Command):
@@ -579,6 +605,8 @@ def register():
         signals.amend_mode: AmendMode,
         signals.branch_mode: BranchMode,
         signals.clone: Clone,
+        signals.checkout: Checkout,
+        signals.checkout_branch: CheckoutBranch,
         signals.cherry_pick: CherryPick,
         signals.commit: Commit,
         signals.delete: Delete,

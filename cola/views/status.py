@@ -189,7 +189,7 @@ class StatusWidget(QtGui.QDialog):
                            SLOT(signals.difftool, self.modified()))
             menu.addSeparator()
             menu.addAction(self.tr('Undo All Changes'),
-                           SLOT(signals.checkout, self.modified()))
+                           self._checkout_files)
 
         if untracked:
             menu.addSeparator()
@@ -197,6 +197,24 @@ class StatusWidget(QtGui.QDialog):
                            SLOT(signals.delete, self.untracked()))
 
         return menu
+
+    def _checkout_files(self):
+        if not self.model.undoable():
+            return
+        items_to_undo = self.modified()
+        if items_to_undo:
+            if not qtutils.question(self,
+                                    'Destroy Local Changes?',
+                                    'This operation will drop '
+                                    'uncommitted changes.\n'
+                                    'Continue?',
+                                    default=False):
+                return
+            cola.notifier().broadcast(signals.checkout,
+                                      ['HEAD', '--'] + items_to_undo)
+        else:
+            qtutils.log(1, self.tr('No files selected for '
+                                   'checkout from HEAD.'))
 
     def single_selection(self):
         """Scan across staged, modified, etc. and return a single item."""

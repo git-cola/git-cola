@@ -120,29 +120,6 @@ class MainController(QObserver):
         scrollbar = self.view.display_text.verticalScrollBar()
         scrollvalue = scrollbar.value()
 
-    def undo_changes(self):
-        """Reverts local changes back to whatever's in HEAD."""
-        return #TODO
-        if not self.undoable():
-            return
-        items_to_undo = self.view.modified(self.model.modified)
-        if items_to_undo:
-            if not qtutils.question(self.view,
-                                    'Destroy Local Changes?',
-                                    'This operation will drop '
-                                    'uncommitted changes.\n'
-                                    'Continue?',
-                                    default=False):
-                return
-
-            self.log(*self.model.git.checkout('HEAD', '--',
-                                              with_stderr=True,
-                                              with_status=True,
-                                              *items_to_undo))
-        else:
-            qtutils.log(1, self.tr('No files selected for '
-                                   'checkout from HEAD.'))
-
     def log(self, status, output):
         """Log output and optionally rescans for changes."""
         qtutils.log(status, output)

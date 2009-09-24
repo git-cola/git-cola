@@ -683,11 +683,7 @@ class MainView(MainWindow):
                                    self.model.local_branches)
         if not branch:
             return
-        #TODO cmd
-        status, output = self.model.git.checkout(branch,
-                                                 with_stderr=True,
-                                                 with_status=True)
-        qtutils.log(status, output)
+        cola.notifier().broadcast(signals.checkout_branch, branch)
 
     def rebase(self):
         """Rebase onto a branch."""
