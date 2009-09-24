@@ -79,6 +79,7 @@ class AddSignoff(Command):
     def undo(self):
         self.model.set_commitmsg(self.old_commitmsg)
 
+
 class AmendMode(Command):
     """Try to amend a commit."""
     def __init__(self, amend):
@@ -201,7 +202,7 @@ class Checkout(Command):
     A command object for git-checkout.
 
     'argv' is handed off directly to git.
-    
+
     """
     def __init__(self, argv):
         Command.__init__(self)
@@ -213,7 +214,7 @@ class Checkout(Command):
         _notifier.broadcast(signals.log_cmd, status, output)
         self.model.set_diff_text('')
         self.model.update_status()
-        
+
 
 class CheckoutBranch(Checkout):
     """Checkout a branch."""
@@ -359,6 +360,7 @@ class DiffStagedSummary(Command):
         if not self.model.read_only():
             if self.model.mode != self.model.mode_amend:
                 self.new_mode = self.model.mode_index
+
 
 class Difftool(Command):
     """Run git-difftool limited by path."""
@@ -562,14 +564,28 @@ class VisualizeAll(Command):
     """Visualize all branches."""
     def do(self):
         browser = self.model.history_browser()
-        utils.fork(['sh', '-c', browser, '--all'])
+        utils.fork([browser, '--all'])
 
 
 class VisualizeCurrent(Command):
     """Visualize all branches."""
     def do(self):
         browser = self.model.history_browser()
-        utils.fork(['sh', '-c', browser, self.model.currentbranch])
+        utils.fork([browser, self.model.currentbranch])
+
+
+class VisualizePaths(Command):
+    """Path-limited visualization."""
+    def __init__(self, paths):
+        Command.__init__(self)
+        browser = self.model.history_browser()
+        if paths:
+            self.argv = [browser] + paths
+        else:
+            self.argv = [browser]
+
+    def do(self):
+        utils.fork(self.argv)
 
 
 def register():
@@ -616,6 +632,7 @@ def register():
         signals.untracked_summary: UntrackedSummary,
         signals.visualize_all: VisualizeAll,
         signals.visualize_current: VisualizeCurrent,
+        signals.visualize_paths: VisualizePaths,
     }
 
     for signal, cmd in signal_to_command_map.iteritems():
