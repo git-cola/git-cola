@@ -13,9 +13,10 @@ from cola.views.selectcommits import SelectCommitsView
 from cola.qobserver import QObserver
 
 
-def select_file_from_repo(model, parent):
+def select_file_from_repo():
     """Launche a dialog to selecting a filename from a branch."""
-    model = model.clone()
+    model = cola.model().clone()
+    parent = QtGui.QApplication.instance().activeWindow()
     view = SelectCommitsView(parent, syntax=False)
     controller = RepoBrowserController(model, view,
                                        title='Select File',

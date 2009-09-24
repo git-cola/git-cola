@@ -19,7 +19,7 @@ def compare_file():
     """Launches a dialog for comparing revisions touching a file path"""
     model = cola.model()
     parent = QtGui.QApplication.instance().activeWindow()
-    filename = select_file_from_repo(model, parent)
+    filename = select_file_from_repo()
     if not filename:
         return
     compare(filename)
