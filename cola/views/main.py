@@ -677,7 +677,7 @@ class MainView(MainWindow):
             return
         #TODO cmd
         status, output = self.model.delete_branch(branch)
-        cola.notifier().broadcast(signals.log_cmd, status, output)
+        qtutils.log(status, output)
 
     def checkout_branch(self):
         """Launch the 'Checkout Branch' dialog."""
@@ -689,7 +689,7 @@ class MainView(MainWindow):
         status, output = self.model.git.checkout(branch,
                                                  with_stderr=True,
                                                  with_status=True)
-        cola.notifier().broadcast(signals.log_cmd, status, output)
+        qtutils.log(status, output)
 
     def rebase(self):
         """Rebase onto a branch."""
@@ -701,4 +701,4 @@ class MainView(MainWindow):
         status, output = self.model.git.rebase(branch,
                                                with_stderr=True,
                                                with_status=True)
-        cola.notifier().broadcast(signals.log_cmd, status, output)
+        qtutils.log(status, output)

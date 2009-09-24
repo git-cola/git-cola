@@ -219,10 +219,11 @@ class Commit(Command):
             self.model.set_commitmsg(self.new_commitmsg)
             self.model.set_diff_text(self.new_diff_text)
             self.model.update_status()
+            title = 'Commit: '
             _notifier.broadcast(signals.amend, False)
-            _notifier.broadcast(signals.log_cmd, 0, 'Commit: ' + output)
         else:
-            _notifier.broadcast(signals.log_cmd, 0, 'Commit failed: ' + output)
+            title = 'Commit failed: '
+        _notifier.broadcast(signals.log_cmd, status, title+output)
 
     def is_undoable(self):
         return False

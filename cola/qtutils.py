@@ -9,6 +9,7 @@ from PyQt4 import QtGui
 import cola
 from cola import core
 from cola import utils
+from cola import signals
 from cola import resources
 import cola.views.log
 
@@ -17,6 +18,7 @@ def logger():
     global _logger
     if not _logger:
         _logger = cola.views.log.LogView()
+        cola.notifier().listen(signals.log_cmd, _logger.log)
     return _logger
 
 def log(status, output):
@@ -24,7 +26,7 @@ def log(status, output):
     """
     if not output:
         return
-    logger().log(status, output)
+    cola.notifier().broadcast(signals.log_cmd, status, output)
 
 def SLOT(signal, *args, **opts):
     """
