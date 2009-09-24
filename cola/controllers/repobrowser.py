@@ -4,11 +4,14 @@
 import os
 
 from PyQt4 import QtGui
+
+import cola
 from cola import utils
 from cola import resources
 from cola import qtutils
 from cola.views.selectcommits import SelectCommitsView
 from cola.qobserver import QObserver
+
 
 def select_file_from_repo(model, parent):
     """Launche a dialog to selecting a filename from a branch."""
@@ -23,14 +26,15 @@ def select_file_from_repo(model, parent):
     else:
         return None
 
-def browse_git_branch(model, parent, branch):
+def browse_git_branch(branch):
     """Launch a dialog to browse files in a specific branch."""
     if not branch:
         return
     # Clone the model to allow opening multiple browsers
     # with different sets of data
-    model = model.clone()
+    model = cola.model().clone()
     model.set_currentbranch(branch)
+    parent = QtGui.QApplication.instance().activeWindow()
     view = SelectCommitsView(parent, syntax=False)
     controller = RepoBrowserController(model, view)
     view.show()

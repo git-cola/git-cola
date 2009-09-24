@@ -28,6 +28,7 @@ from cola.controllers.merge import abort_merge
 from cola.controllers.options import update_options
 from cola.controllers.util import choose_from_combo
 from cola.controllers.remote import remote_action
+from cola.controllers.repobrowser import browse_git_branch
 from cola.controllers.stash import stash
 from cola.controllers.selectcommits import select_commits
 
@@ -101,6 +102,8 @@ class MainView(MainWindow):
             (self.menu_branch_compare, compare.branch_compare),
             (self.menu_branch_diff, self.branch_diff),
             (self.menu_branch_review, self.review_branch),
+            (self.menu_browse_branch, self.browse_current),
+            (self.menu_browse_other_branch, self.browse_other),
             (self.menu_browse_commits, self.browse_commits),
             (self.menu_clone_repo, self.clone_repo),
             (self.menu_commit_compare, compare.compare),
@@ -641,3 +644,19 @@ class MainView(MainWindow):
         to_export.reverse()
         revs.reverse()
         cola.notifier().broadcast(signals.format_patch, to_export, revs)
+
+    def browse_current(self):
+        """Launch the 'Browse Current Branch' dialog."""
+        branch = self.model.currentbranch
+        browse_git_branch(branch)
+
+    def browse_other(self):
+        """Prompt for a branch and inspect content at that point in time."""
+        # Prompt for a branch to browse
+        branch = choose_from_combo('Browse Branch Files',
+                                   self.view,
+                                   self.model.all_branches())
+        if not branch:
+            return
+        # Launch the repobrowser
+        browse_git_branch(branch)

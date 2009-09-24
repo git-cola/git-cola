@@ -20,7 +20,6 @@ from cola.views import log
 
 # controllers namespace
 from cola.controllers.createbranch import create_new_branch
-from cola.controllers.repobrowser import browse_git_branch
 from cola.controllers.selectcommits import select_commits
 from cola.controllers.util import choose_from_list
 from cola.controllers.util import choose_from_combo
@@ -45,10 +44,6 @@ class MainController(QObserver):
 
             # File Menu TODO
             menu_quit = self.quit_app,
-
-            # Repository Menu
-            menu_browse_branch = self.browse_current,
-            menu_browse_other_branch = self.browse_other,
 
             # TODO REMOVE
             # Branch Menu
@@ -101,22 +96,6 @@ class MainController(QObserver):
         if not branch:
             return
         self.log(*self.model.delete_branch(branch))
-
-    def browse_current(self):
-        """Launch the 'Browse Current Branch' dialog."""
-        branch = self.model.currentbranch
-        browse_git_branch(self.model, self.view, branch)
-
-    def browse_other(self):
-        """Prompt for a branch and inspect content at that point in time."""
-        # Prompt for a branch to browse
-        branch = choose_from_combo('Browse Branch Files',
-                                   self.view,
-                                   self.model.all_branches())
-        if not branch:
-            return
-        # Launch the repobrowser
-        browse_git_branch(self.model, self.view, branch)
 
     def checkout_branch(self):
         """Launch the 'Checkout Branch' dialog."""
