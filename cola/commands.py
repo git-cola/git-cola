@@ -1,5 +1,6 @@
 import os
 import sys
+
 from cStringIO import StringIO
 
 import cola
@@ -219,6 +220,9 @@ class Commit(Command):
             self.model.set_diff_text(self.new_diff_text)
             self.model.update_status()
             _notifier.broadcast(signals.amend, False)
+            _notifier.broadcast(signals.log_cmd, 0, 'Commit: ' + output)
+        else:
+            _notifier.broadcast(signals.log_cmd, 0, 'Commit failed: ' + output)
 
     def is_undoable(self):
         return False
@@ -457,6 +461,8 @@ class Stage(Command):
         self.paths = paths
 
     def do(self):
+        msg = 'Staging: %s' % (', '.join(self.paths))
+        _notifier.broadcast(signals.log_cmd, 0, msg)
         self.model.stage_paths(self.paths)
 
     def is_undoable(self):
@@ -484,6 +490,8 @@ class Unstage(Command):
         self.paths = paths
 
     def do(self):
+        msg = 'Unstaging: %s' % (', '.join(self.paths))
+        _notifier.broadcast(signals.log_cmd, 0, msg)
         self.model.unstage_paths(self.paths)
 
     def is_undoable(self):
