@@ -27,6 +27,7 @@ from cola.controllers.merge import local_merge
 from cola.controllers.merge import abort_merge
 from cola.controllers.options import update_options
 from cola.controllers.util import choose_from_combo
+from cola.controllers.util import choose_from_list
 from cola.controllers.remote import remote_action
 from cola.controllers.repobrowser import browse_git_branch
 from cola.controllers.stash import stash
@@ -360,7 +361,7 @@ class MainView(MainWindow):
                                          no_color=True,
                                          z=True).rstrip('\0')
         files = zfiles_str.split('\0')
-        filename = choose_from_list('Select File', self, files)
+        filename = choose_from_list('Select File', files)
         if not filename:
             return
         cola.notifier().broadcast(signals.branch_mode, branch, filename)

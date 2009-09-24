@@ -14,7 +14,6 @@ from cola.models.compare import BranchCompareModel
 from cola.views import CompareView
 from cola.views import BranchCompareView
 from cola.controllers.repobrowser import select_file_from_repo
-from cola.controllers.util import choose_from_list
 
 def compare_file():
     """Launches a dialog for comparing revisions touching a file path"""

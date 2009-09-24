@@ -21,7 +21,6 @@ from cola.views import log
 # controllers namespace
 from cola.controllers.createbranch import create_new_branch
 from cola.controllers.selectcommits import select_commits
-from cola.controllers.util import choose_from_list
 from cola.controllers.util import choose_from_combo
 
 class MainController(QObserver):
