@@ -13,6 +13,7 @@ from cola.diffparse import DiffParser
 _notifier = cola.notifier()
 _factory = cmdfactory.factory()
 
+
 class Command(object):
     """Base class for all commands; provides the command pattern."""
     def __init__(self, update=False):
@@ -164,7 +165,14 @@ class ApplyDiffSelection(Command):
                                           self.offset,
                                           self.selection,
                                           apply_to_worktree=
-                                          self.apply_to_worktree)
+                                              self.apply_to_worktree)
+        # Redo the diff to show changes
+        if self.staged:
+            diffcmd = DiffStaged([self.model.filename])
+        else:
+            diffcmd = Diff([self.model.filename])
+        diffcmd.do()
+        self.model.update_status()
 
 
 class HeadChangeCommand(Command):
