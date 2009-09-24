@@ -209,12 +209,14 @@ class Commit(Command):
         self.old_commitmsg = self.model.commitmsg
         self.new_mode = self.model.mode_none
         self.new_commitmsg = ''
+        self.new_diff_text = ''
 
     def do(self):
         status, output = self.model.commit_with_msg(self.msg, amend=self.amend)
         if status == 0:
             self.model.set_mode(self.new_mode)
             self.model.set_commitmsg(self.new_commitmsg)
+            self.model.set_diff_text(self.new_diff_text)
             self.model.update_status()
             _notifier.broadcast(signals.amend, False)
 
