@@ -21,6 +21,7 @@ def logger():
         cola.notifier().listen(signals.log_cmd, _logger.log)
     return _logger
 
+
 def log(status, output):
     """Sends messages to the log window.
     """
@@ -81,6 +82,8 @@ def information(title, message=None):
     message = tr(message)
     parent = QtGui.QApplication.instance().activeWindow()
     QtGui.QMessageBox.information(parent, title, message)
+# Register globally with the notifier
+cola.notifier().listen(signals.information, information)
 
 def selected_treeitem(tree_widget):
     """Returns a(id_number, is_selected) for a QTreeWidget."""

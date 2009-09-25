@@ -11,8 +11,6 @@ the undo and redo signals and manages the undo/redo stack.
 """
 import cola
 from cola import signals
-from cola import qtutils
-from cola.qtutils import SLOT
 
 
 _factory = None
@@ -25,6 +23,16 @@ def factory():
     return _factory
 
 
+def SLOT(signal, *args, **opts):
+    """
+    Returns a callback that broadcasts a message over the notifier.
+    
+    """
+    def broadcast(*local_args, **opts):
+        cola.notifier().broadcast(signal, *args, **opts)
+    return broadcast
+
+
 class CommandFactory(object):
     def __init__(self):
         """Setup the undo/redo stacks and register for notifications."""
@@ -34,7 +42,6 @@ class CommandFactory(object):
 
         cola.notifier().listen(signals.undo, self.undo)
         cola.notifier().listen(signals.redo, self.redo)
-        cola.notifier().listen(signals.information, qtutils.information)
 
         self.model = cola.model()
         self.model.add_observer(self)
