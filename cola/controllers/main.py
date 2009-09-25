@@ -12,7 +12,6 @@ from cola import core
 from cola import utils
 from cola import qtutils
 from cola import version
-from cola import inotify
 from cola import difftool
 from cola import settings
 from cola import signals
@@ -40,30 +39,9 @@ class MainController(QObserver):
         view.closeEvent = self.quit_app
         self._init_log_window()
         self.refresh_view('global_cola_fontdiff') # Update the diff font
-        self.start_inotify_thread()
-        if self.has_inotify():
-            self.view.rescan_button.hide()
-
-    def event(self, msg):
-        """Overrides event() to handle custom inotify events."""
-        if not inotify.AVAILABLE:
-            return
-        if msg.type() == inotify.INOTIFY_EVENT:
-            cola.notifier().broadcast(signals.rescan)
-            return True
-        else:
-            return False
-
-    def tr(self, fortr):
-        """Translates strings."""
-        return qtutils.tr(fortr)
-
-    def has_inotify(self):
-        """Return True if pyinotify is available."""
-        return self.inotify_thread and self.inotify_thread.isRunning()
 
     def quit_app(self, *args):
-        """Save config settings and cleanup inotify threads."""
+        """Save config settings and cleanup temp files."""
         if self.model.remember_gui_settings():
             settings.SettingsManager.save_gui_state(self.view)
 
@@ -72,11 +50,6 @@ class MainController(QObserver):
         for filename in glob.glob(pattern):
             os.unlink(filename)
 
-        # Stop inotify threads
-        if self.has_inotify():
-            self.inotify_thread.set_abort(True)
-            self.inotify_thread.quit()
-            self.inotify_thread.wait()
         self.view.close()
 
     def update_diff_font(self):
@@ -99,27 +72,3 @@ class MainController(QObserver):
         qtutils.log(0, self.model.git_version +
                     '\ncola version ' + version.version() +
                     '\nCurrent Branch: ' + branch)
-
-    def start_inotify_thread(self):
-        """Start an inotify thread if pyinotify is installed."""
-        # Do we have inotify?  If not, return.
-        # Recommend installing inotify if we're on Linux.
-        self.inotify_thread = None
-        if not inotify.AVAILABLE:
-            if not utils.is_linux():
-                return
-            msg = self.tr('inotify: disabled\n'
-                          'Note: To enable inotify, '
-                          'install python-pyinotify.\n')
-
-            if utils.is_debian():
-                msg += self.tr('On Debian systems, '
-                               'try: sudo apt-get install '
-                               'python-pyinotify')
-            qtutils.log(0, msg)
-            return
-
-        # Start the notification thread
-        qtutils.log(0, self.tr('inotify support: enabled'))
-        self.inotify_thread = inotify.GitNotifier(self, self.model.git)
-        self.inotify_thread.start()

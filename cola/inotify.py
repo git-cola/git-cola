@@ -4,8 +4,6 @@
 import os
 import time
 
-from PyQt4 import QtCore
-
 try:
     import pyinotify
     from pyinotify import ProcessEvent
@@ -18,7 +16,60 @@ except ImportError:
     AVAILABLE = False
     pass
 
+from PyQt4 import QtCore
+
+import cola
+from cola import signals
+from cola import utils
+
 INOTIFY_EVENT = QtCore.QEvent.User + 0
+
+
+_thread = None
+def start():
+    global _thread
+    if not AVAILABLE:
+        if not utils.is_linux():
+            return
+        msg = ('inotify: disabled\n'
+               'Note: install python-pyinotify to enable inotify.\n')
+
+        if utils.is_debian():
+            msg += ('On Debian systems '
+                    'try: sudo aptitude install python-pyinotify')
+        cola.notifier().broadcast(signals.log_cmd, 0, msg)
+        return
+
+    # Start the notification thread
+    _thread = GitNotifier()
+    _thread.start()
+    msg = 'inotify support: enabled'
+    cola.notifier().broadcast(signals.log_cmd, 0, msg)
+
+
+def stop():
+    if not has_inotify():
+        return
+    _thread.set_abort(True)
+    _thread.quit()
+    _thread.wait()
+    
+
+def has_inotify():
+    """Return True if pyinotify is available."""
+    return AVAILABLE and _thread and _thread.isRunning()
+
+
+class EventReceiver(QtCore.QObject):
+    def event(self, msg):
+        """Overrides event() to handle custom inotify events."""
+        if not AVAILABLE:
+            return
+        if msg.type() == INOTIFY_EVENT:
+            cola.notifier().broadcast(signals.rescan)
+            return True
+        else:
+            return False
 
 
 class FileSysEvent(ProcessEvent):
@@ -43,19 +94,19 @@ class FileSysEvent(ProcessEvent):
 class GitNotifier(QtCore.QThread):
     """Polls inotify for changes and generates FileSysEvents"""
 
-    def __init__(self, receiver, git, timeout=250):
+    def __init__(self, timeout=250):
         """Set up the pyinotify thread"""
         QtCore.QThread.__init__(self)
         self.setTerminationEnabled(True)
 
         ## QApplication receiver of Qt events
-        self._receiver = receiver
+        self._receiver = EventReceiver()
         ## Git command object
-        self._git = git
+        self._git = cola.model().git
         ## pyinotify timeout
         self._timeout = timeout
         ## Path to monitor
-        self._path = git.worktree()
+        self._path = self._git.worktree()
         ## Signals thread termination
         self._abort = False
         ## Directories to watching

@@ -10,6 +10,7 @@ from cola import resources
 from cola import utils
 from cola import core
 from cola import git
+from cola import inotify
 from cola import version
 
 
@@ -160,13 +161,17 @@ def main():
     # Scan for the first time
     model.update_status()
 
+    # Start the inotify thread
+    inotify.start()
+
     # Make sure that we start out on top
     view.raise_()
 
     # Show the view and start the main event loop
     view.show()
-
     result = app.exec_()
+
+    inotify.stop()
     QtCore.QThreadPool.globalInstance().waitForDone()
     sys.exit(result)
 
