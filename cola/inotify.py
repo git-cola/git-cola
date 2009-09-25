@@ -45,6 +45,7 @@ def start():
     _thread.start()
     msg = 'inotify support: enabled'
     cola.notifier().broadcast(signals.log_cmd, 0, msg)
+    cola.notifier().broadcast(signals.inotify, True)
 
 
 def stop():
