@@ -36,6 +36,7 @@ def SLOT(signal, *args, **opts):
 class CommandFactory(object):
     def __init__(self):
         """Setup the undo/redo stacks and register for notifications."""
+        self.undoable = False
         self.undostack = []
         self.redostack = []
         self.signal_to_command = {}
@@ -83,7 +84,9 @@ class CommandFactory(object):
         """Given a signal and arguments, run its corresponding command."""
         cmdclass = self.signal_to_command[signal]
         cmdobj = cmdclass(*args, **opts)
-        if cmdobj.is_undoable():
+        # TODO we disable undo/redo for now; views just need to
+        # inspect the stack and add menu entries when we enable it.
+        if self.undoable and cmdobj.is_undoable():
             self.undostack.append(cmdobj)
         return cmdobj.do()
 
