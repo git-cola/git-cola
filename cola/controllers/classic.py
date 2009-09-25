@@ -3,12 +3,12 @@ import os
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
+import cola
 import cola.utils
 import cola.difftool
 
 from cola import signals
 from cola.controllers.selectcommits import select_commits
-from cola.models import classic
 from cola.models.gitrepo import GitRepoModel
 from cola.views.repo import RepoTreeView
 
@@ -31,7 +31,7 @@ def cola_classic():
 class ClassicController(QtCore.QObject):
     def __init__(self, view=None):
         QtCore.QObject.__init__(self, view)
-        self.model = classic.model()
+        self.model = cola.model()
         self.view = view
         self.updated = set()
         self.connect(view, SIGNAL('history(QStringList)'),
