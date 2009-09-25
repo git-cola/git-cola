@@ -15,6 +15,7 @@ from cola import version
 from cola import inotify
 from cola import difftool
 from cola import settings
+from cola import signals
 from cola.qobserver import QObserver
 from cola.views import log
 
