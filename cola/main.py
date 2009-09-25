@@ -104,9 +104,6 @@ def main():
     # Initialize the app
     app = ColaApplication(sys.argv)
 
-    # Register commands
-    commands.register()
-
     style = None
     if opts.style:
         # This loads the built-in and user-specified stylesheets.
@@ -147,6 +144,9 @@ def main():
 
     # Finally, go to the root of the git repo
     os.chdir(model.git.worktree())
+
+    # Register model commands
+    commands.register()
 
     # Show the GUI and start the event loop
     if opts.classic:
