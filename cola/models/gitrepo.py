@@ -5,6 +5,7 @@ import time
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
+from PyQt4.QtCore import SIGNAL
 
 import cola
 
@@ -17,15 +18,14 @@ class GitRepoSignals:
     """
     Defines signal names used in thread communication.
 
-    A nice trick we use here is using the columns header as the
-    value for the class-variable constant.
+    These are also the names used in the column headers.
 
     """
-    Name = 'Name'
-    Status = 'Status'
-    Age = 'Age'
-    Message = 'Message'
-    Who = 'Who'
+    NAME = 'name'
+    STATUS = 'status'
+    AGE = 'age'
+    MESSAGE = 'message'
+    WHO = 'who'
 
 
 class GitRepoModel(QtGui.QStandardItemModel):
@@ -33,15 +33,15 @@ class GitRepoModel(QtGui.QStandardItemModel):
     def __init__(self, parent):
         QtGui.QStandardItem.__init__(self, parent)
         self._dir_rows = {}
-        self._headers = (GitRepoSignals.Name,
-                         GitRepoSignals.Status,
-                         GitRepoSignals.Age,
-                         GitRepoSignals.Message,
-                         GitRepoSignals.Who)
+        self._headers = (GitRepoSignals.NAME,
+                         GitRepoSignals.STATUS,
+                         GitRepoSignals.AGE,
+                         GitRepoSignals.MESSAGE,
+                         GitRepoSignals.WHO)
         self.setColumnCount(len(self._headers))
         for idx, header in enumerate(self._headers):
             self.setHeaderData(idx, Qt.Horizontal,
-                               QtCore.QVariant(self.tr(header)))
+                               QtCore.QVariant(self.tr(header.title())))
         self._initialize()
 
     def _create_row(self, path):
@@ -142,11 +142,11 @@ class GitRepoEntry(QtCore.QObject):
     Provides asynchronous lookup of repository data for a path.
 
     Emits the following Qt Signals:
-        name(QString)
-        status(QString)
-        age(QString)
-        message(QString)
-        who(QString)
+        name
+        status
+        age
+        message
+        who
 
     """
     def __init__(self, path):
@@ -157,7 +157,7 @@ class GitRepoEntry(QtCore.QObject):
     def update_name(self):
         """Emits a signal corresponding to the entry's name."""
         # 'name' is cheap to calculate so simply emit a signal
-        self.emit(QtCore.SIGNAL('name(QString)'), utils.basename(self.path))
+        self.emit(SIGNAL(GitRepoSignals.NAME), utils.basename(self.path))
         if '/' not in self.path:
             self.update()
 
@@ -171,7 +171,7 @@ class GitRepoEntry(QtCore.QObject):
     def event(self, e):
         """Receive GitRepoInfoEvents and emit corresponding Qt signals."""
         e.accept()
-        self.emit(QtCore.SIGNAL(e.signal), *e.data)
+        self.emit(SIGNAL(e.signal), *e.data)
         return True
 
 
@@ -259,21 +259,21 @@ class GitRepoInfoTask(QtCore.QRunnable):
         """Perform expensive lookups and post corresponding events."""
         app = QtGui.QApplication.instance()
         app.postEvent(self.entry,
-                GitRepoInfoEvent(GitRepoSignals.Message, self.data('message')))
+                GitRepoInfoEvent(GitRepoSignals.MESSAGE, self.data('message')))
         app.postEvent(self.entry,
-                GitRepoInfoEvent(GitRepoSignals.Age, self.data('date')))
+                GitRepoInfoEvent(GitRepoSignals.AGE, self.data('date')))
         app.postEvent(self.entry,
-                GitRepoInfoEvent(GitRepoSignals.Who, self.data('author')))
+                GitRepoInfoEvent(GitRepoSignals.WHO, self.data('author')))
         app.postEvent(self.entry,
-                GitRepoInfoEvent(GitRepoSignals.Status, self.status()))
+                GitRepoInfoEvent(GitRepoSignals.STATUS, self.status()))
 
 
 class GitRepoInfoEvent(QtCore.QEvent):
     """Transport mechanism for communicating from a GitRepoInfoTask."""
-    def __init__(self, *data):
+    def __init__(self, signal, *data):
         QtCore.QEvent.__init__(self, QtCore.QEvent.User + 1)
-        self.signal = '%s(QString)' % data[0].lower()
-        self.data = data[1:]
+        self.signal = signal
+        self.data = data
 
 
 class GitRepoItem(QtGui.QStandardItem):
@@ -296,8 +296,7 @@ class GitRepoItem(QtGui.QStandardItem):
 
     def connect(self):
         """Connect a signal from entry to our setText method."""
-        signal = self.signal.lower() + '(QString)'
-        QtCore.QObject.connect(self.entry, QtCore.SIGNAL(signal), self.setText)
+        QtCore.QObject.connect(self.entry, SIGNAL(self.signal), self.setText)
 
     def type(self):
         """
@@ -308,6 +307,6 @@ class GitRepoItem(QtGui.QStandardItem):
         which paths are selected.
 
         """
-        if self.signal == GitRepoSignals.Name:
+        if self.signal == GitRepoSignals.NAME:
             return QtGui.QStandardItem.UserType + 1
         return QtGui.QStandardItem.type(self)
