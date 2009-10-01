@@ -231,8 +231,8 @@ def shell_quote(*strings):
             continue
 
         if '\x00' in s:
-            raise AssertionError,('No way to quote strings '
-                                  'containing null(\\000) bytes')
+            raise ValueError('No way to quote strings '
+                             'containing null(\\000) bytes')
 
         # = does need quoting else in command position it's a
         # program-local environment setting
