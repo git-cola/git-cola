@@ -38,18 +38,8 @@ class ClassicController(QtCore.QObject):
                      self.view_history)
         self.connect(view, SIGNAL('expanded(QModelIndex)'),
                      self.query_model)
-        self.connect(view, SIGNAL('editor(QStringList)'),
-                     self.editor)
-        self.connect(view, SIGNAL('stage(QStringList)'),
-                     self.stage)
-        self.connect(view, SIGNAL('unstage(QStringList)'),
-                     self.unstage)
-        self.connect(view, SIGNAL('difftool(QStringList)'),
-                     self.difftool)
-        self.connect(view, SIGNAL('difftool_predecessor(QStringList)'),
+        self.connect(view, SIGNAL('difftool_predecessor'),
                      self.difftool_predecessor)
-        self.connect(view, SIGNAL('revert(QStringList)'),
-                     self.revert)
 
     def view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
@@ -68,29 +58,8 @@ class ClassicController(QtCore.QObject):
             path = item.child(row, 0).path
             gitrepo.GitRepoEntryManager.entry(path).update()
 
-    def editor(self, qstrings):
-        """Launch an editor on the given QStrings."""
-        paths = map(unicode, qstrings)
-        cola.notifier().broadcast(signals.edit, paths)
-
-    def stage(self, qstrings):
-        """Stage files for commit."""
-        paths = map(unicode, qstrings)
-        self.model.stage_paths(paths)
-
-    def unstage(self, qstrings):
-        """Unstage files for commit."""
-        paths = map(unicode, qstrings)
-        self.model.unstage_paths(paths)
-
-    def difftool(self, qstrings):
-        """Launch difftool on a path."""
-        paths = map(unicode, qstrings)
-        cola.difftool.launch(['HEAD', '--'] + paths)
-
-    def difftool_predecessor(self, qstrings):
+    def difftool_predecessor(self, paths):
         """Prompt for an older commit and launch difftool against it."""
-        paths = map(unicode, qstrings)
         args = ['--'] + paths
         revs, summaries = self.model.log_helper(all=True, extra_args=args)
         commits = select_commits('Select Previous Version',
@@ -99,12 +68,6 @@ class ClassicController(QtCore.QObject):
             return
         commit = commits[0]
         cola.difftool.launch([commit, '--'] + paths)
-
-    def revert(self, qstrings):
-        """Revert paths to HEAD."""
-        paths = map(unicode, qstrings)
-        self.model.revert_paths(paths)
-
 
 
 if __name__ == '__main__':

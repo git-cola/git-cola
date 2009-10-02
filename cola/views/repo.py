@@ -6,6 +6,7 @@ from PyQt4.QtCore import SIGNAL
 import cola
 import cola.utils
 import cola.qtutils
+from cola import signals
 from cola.models import gitrepo
 
 
@@ -21,7 +22,6 @@ class RepoTreeView(QtGui.QTreeView):
                                    self._paths_updated)
         model.add_message_observer(model.message_paths_reverted,
                                    self._paths_updated)
-
         self.resize(720, 300)
         self.setWindowTitle(self.tr('classic'))
         self.setSortingEnabled(False)
@@ -258,21 +258,24 @@ class RepoTreeView(QtGui.QTreeView):
 
     def stage_selected(self):
         """Signal that we should stage selected paths."""
-        self.emit(SIGNAL('stage(QStringList)'), self.selected_unstaged_paths())
+        cola.notifier().broadcast(signals.stage,
+                                  self.selected_unstaged_paths())
 
     def unstage_selected(self):
         """Signal that we should stage selected paths."""
-        self.emit(SIGNAL('unstage(QStringList)'), self.selected_staged_paths())
+        cola.notifier().broadcast(signals.unstage,
+                                  self.selected_staged_paths())
 
     def difftool(self):
         """Signal that we should launch difftool on a path."""
-        paths = self.selected_tracked_paths()
-        self.emit(SIGNAL('difftool(QStringList)'), paths)
+        cola.notifier().broadcast(signals.difftool,
+                                  False,
+                                  self.selected_tracked_paths())
 
     def difftool_predecessor(self):
         """Diff paths against previous versions."""
         paths = self.selected_tracked_paths()
-        self.emit(SIGNAL('difftool_predecessor(QStringList)'), paths)
+        self.emit(SIGNAL('difftool_predecessor'), paths)
 
     def revert(self):
         """Signal that we should revert changes to a path."""
@@ -285,7 +288,8 @@ class RepoTreeView(QtGui.QTreeView):
                                      default=False):
             return
         paths = self.selected_tracked_paths()
-        self.emit(SIGNAL('revert(QStringList)'), paths)
+        cola.notifier().broadcast(signals.checkout,
+                                  ['HEAD', '--'] + paths)
 
     def editor(self):
         """Signal that we should edit selected paths using an external editor."""
