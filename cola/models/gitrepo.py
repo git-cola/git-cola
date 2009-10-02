@@ -8,24 +8,19 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
-
 from cola import core
 from cola import utils
 from cola import qtutils
 
 
-class GitRepoSignals:
-    """
-    Defines signal names used in thread communication.
-
-    These are also the names used in the column headers.
-
-    """
+class Columns(object):
+    """Defines columns in the classic view"""
     NAME = 'name'
     STATUS = 'status'
     AGE = 'age'
     MESSAGE = 'message'
     WHO = 'who'
+    ALL = (NAME, STATUS, AGE, MESSAGE, WHO)
 
 
 class GitRepoModel(QtGui.QStandardItemModel):
@@ -33,20 +28,23 @@ class GitRepoModel(QtGui.QStandardItemModel):
     def __init__(self, parent):
         QtGui.QStandardItem.__init__(self, parent)
         self._dir_rows = {}
-        self._headers = (GitRepoSignals.NAME,
-                         GitRepoSignals.STATUS,
-                         GitRepoSignals.AGE,
-                         GitRepoSignals.MESSAGE,
-                         GitRepoSignals.WHO)
-        self.setColumnCount(len(self._headers))
-        for idx, header in enumerate(self._headers):
+        self.setColumnCount(len(Columns.ALL))
+        for idx, header in enumerate(Columns.ALL):
             self.setHeaderData(idx, Qt.Horizontal,
                                QtCore.QVariant(self.tr(header.title())))
         self._initialize()
 
+    def _create_column(self, col, path):
+        """Creates a StandardItem for use in a treeview cell."""
+        # GitRepoNameItem is the only one that returns a custom type(),
+        # so we use to infer selections.
+        if col == Columns.NAME:
+            return GitRepoNameItem(path)
+        return GitRepoItem(col, path)
+
     def _create_row(self, path):
         """Return a list of items representing a row."""
-        return [GitRepoItem(path, i) for i in self._headers]
+        return [self._create_column(c, path) for c in Columns.ALL]
 
     def add_file(self, parent, path):
         """Add a file entry to the model."""
@@ -61,8 +59,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         parent.appendRow(row_items)
 
         # Update the name column
-        entry = self.entry(path)
-        entry.update_name()
+        self.entry(path).update_name()
 
     def add_directory(self, parent, path):
         """Add a directory entry to the model."""
@@ -79,8 +76,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         self._dir_rows[parent] += 1
 
         # Update the 'name' column for this entry
-        entry = self.entry(path)
-        entry.update_name()
+        self.entry(path).update_name()
 
         return row_items[0]
 
@@ -141,12 +137,7 @@ class GitRepoEntry(QtCore.QObject):
     """
     Provides asynchronous lookup of repository data for a path.
 
-    Emits the following Qt Signals:
-        name
-        status
-        age
-        message
-        who
+    Emits signal names matching those defined in Columns.
 
     """
     def __init__(self, path):
@@ -157,7 +148,7 @@ class GitRepoEntry(QtCore.QObject):
     def update_name(self):
         """Emits a signal corresponding to the entry's name."""
         # 'name' is cheap to calculate so simply emit a signal
-        self.emit(SIGNAL(GitRepoSignals.NAME), utils.basename(self.path))
+        self.emit(SIGNAL(Columns.NAME), utils.basename(self.path))
         if '/' not in self.path:
             self.update()
 
@@ -165,7 +156,7 @@ class GitRepoEntry(QtCore.QObject):
         """Starts a GitRepoInfoTask to calculate info for entries."""
         # GitRepoInfoTask handles expensive lookups
         threadpool = QtCore.QThreadPool.globalInstance()
-        self.task = GitRepoInfoTask(self, self.path)
+        self.task = GitRepoInfoTask(self.path)
         threadpool.start(self.task)
 
     def event(self, e):
@@ -177,9 +168,8 @@ class GitRepoEntry(QtCore.QObject):
 
 class GitRepoInfoTask(QtCore.QRunnable):
     """Handles expensive git lookups for a path."""
-    def __init__(self, entry, path):
+    def __init__(self, path):
         QtCore.QRunnable.__init__(self)
-        self.entry = entry
         self.path = path
         self._data = {}
 
@@ -258,14 +248,14 @@ class GitRepoInfoTask(QtCore.QRunnable):
     def run(self):
         """Perform expensive lookups and post corresponding events."""
         app = QtGui.QApplication.instance()
-        app.postEvent(self.entry,
-                GitRepoInfoEvent(GitRepoSignals.MESSAGE, self.data('message')))
-        app.postEvent(self.entry,
-                GitRepoInfoEvent(GitRepoSignals.AGE, self.data('date')))
-        app.postEvent(self.entry,
-                GitRepoInfoEvent(GitRepoSignals.WHO, self.data('author')))
-        app.postEvent(self.entry,
-                GitRepoInfoEvent(GitRepoSignals.STATUS, self.status()))
+        app.postEvent(GitRepoEntryManager.entry(self.path),
+                GitRepoInfoEvent(Columns.MESSAGE, self.data('message')))
+        app.postEvent(GitRepoEntryManager.entry(self.path),
+                GitRepoInfoEvent(Columns.AGE, self.data('date')))
+        app.postEvent(GitRepoEntryManager.entry(self.path),
+                GitRepoInfoEvent(Columns.WHO, self.data('author')))
+        app.postEvent(GitRepoEntryManager.entry(self.path),
+                GitRepoInfoEvent(Columns.STATUS, self.status()))
 
 
 class GitRepoInfoEvent(QtCore.QEvent):
@@ -285,18 +275,21 @@ class GitRepoItem(QtGui.QStandardItem):
     One is created for each column -- Name, Status, Age, etc.
 
     """
-    def __init__(self, path, signal):
+    def __init__(self, column, path):
         QtGui.QStandardItem.__init__(self)
-        self.entry = GitRepoEntryManager.entry(path)
-        self.path = path
-        self.signal = signal
         self.setEditable(False)
         self.setDragEnabled(False)
-        self.connect()
+        entry = GitRepoEntryManager.entry(path)
+        QtCore.QObject.connect(entry, SIGNAL(column), self.setText)
 
-    def connect(self):
-        """Connect a signal from entry to our setText method."""
-        QtCore.QObject.connect(self.entry, SIGNAL(self.signal), self.setText)
+
+class GitRepoNameItem(GitRepoItem):
+    """Subclass GitRepoItem to provide a custom type()."""
+    TYPE = QtGui.QStandardItem.UserType + 1
+
+    def __init__(self, path):
+        GitRepoItem.__init__(self, Columns.NAME, path)
+        self.path = path
 
     def type(self):
         """
@@ -307,6 +300,4 @@ class GitRepoItem(QtGui.QStandardItem):
         which paths are selected.
 
         """
-        if self.signal == GitRepoSignals.NAME:
-            return QtGui.QStandardItem.UserType + 1
-        return QtGui.QStandardItem.type(self)
+        return GitRepoNameItem.TYPE

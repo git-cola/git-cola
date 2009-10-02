@@ -6,6 +6,7 @@ from PyQt4.QtCore import SIGNAL
 import cola
 import cola.utils
 import cola.qtutils
+from cola.models import gitrepo
 
 
 class RepoTreeView(QtGui.QTreeView):
@@ -194,14 +195,15 @@ class RepoTreeView(QtGui.QTreeView):
         self.size_columns()
 
     def item_from_index(self, model_index):
-        """Return the item corresponding to the model index."""
+        """Return the name item corresponding to the model index."""
         index = model_index.sibling(model_index.row(), 0)
         return self.model().itemFromIndex(index)
 
     def selected_paths(self):
         """Return the selected paths."""
         items = map(self.model().itemFromIndex, self.selectedIndexes())
-        return [i.path for i in items if i.type() > 0]
+        return [i.path for i in items
+                    if i.type() == gitrepo.GitRepoNameItem.TYPE]
 
     def selected_staged_paths(self, selection=None):
         """Return selected staged paths."""

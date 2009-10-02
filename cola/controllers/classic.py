@@ -9,14 +9,14 @@ import cola.difftool
 
 from cola import signals
 from cola.controllers.selectcommits import select_commits
-from cola.models.gitrepo import GitRepoModel
-from cola.views.repo import RepoTreeView
+from cola.models import gitrepo
+from cola.views import repo
 
 
 def widget():
     """Return a widget for immediate use."""
-    view = RepoTreeView()
-    view.setModel(GitRepoModel(view))
+    view = repo.RepoTreeView()
+    view.setModel(gitrepo.GitRepoModel(view))
     controller = ClassicController(view)
     return view
 
@@ -63,9 +63,10 @@ class ClassicController(QtCore.QObject):
         if path in self.updated:
             return
         self.updated.add(path)
-        item.entry.update()
+        gitrepo.GitRepoEntryManager.entry(path).update()
         for row in xrange(item.rowCount()):
-            item.child(row, 0).entry.update()
+            path = item.child(row, 0).path
+            gitrepo.GitRepoEntryManager.entry(path).update()
 
     def editor(self, qstrings):
         """Launch an editor on the given QStrings."""
