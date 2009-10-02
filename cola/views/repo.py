@@ -15,13 +15,6 @@ class RepoTreeView(QtGui.QTreeView):
     def __init__(self, parent=None):
         QtGui.QTreeView.__init__(self, parent)
 
-        model = cola.model()
-        model.add_message_observer(model.message_paths_staged,
-                                   self._paths_updated)
-        model.add_message_observer(model.message_paths_unstaged,
-                                   self._paths_updated)
-        model.add_message_observer(model.message_paths_reverted,
-                                   self._paths_updated)
         self.resize(720, 300)
         self.setWindowTitle(self.tr('classic'))
         self.setSortingEnabled(False)
@@ -30,6 +23,11 @@ class RepoTreeView(QtGui.QTreeView):
         self.setUniformRowHeights(True)
         self.setAnimated(True)
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+
+        # Observe model updates
+        model = cola.model()
+        model.add_message_observer(model.message_updated,
+                                   self.update_actions)
 
         # The non-Qt cola application model
         self.connect(self, SIGNAL('expanded(QModelIndex)'), self.size_columns)
@@ -293,16 +291,7 @@ class RepoTreeView(QtGui.QTreeView):
 
     def editor(self):
         """Signal that we should edit selected paths using an external editor."""
-        self.emit(SIGNAL('editor(QStringList)'), self.selected_paths())
-
-    def _paths_updated(self, paths=None):
-        """Observes paths that are staged and reacts accordingly."""
-        for path in paths:
-            self.model().entry(path).update()
-            while path and '/' in path:
-                path = cola.utils.dirname(path)
-                self.model().entry(path).update()
-        self.update_actions()
+        cola.notifier().broadcast(signals.edit, self.selected_paths())
 
     def current_path(self):
         """Return the path for the current item."""

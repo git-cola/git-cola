@@ -27,11 +27,18 @@ class GitRepoModel(QtGui.QStandardItemModel):
     """Provides an interface into a git repository for browsing purposes."""
     def __init__(self, parent):
         QtGui.QStandardItem.__init__(self, parent)
+        self._interesting_paths = self._get_paths()
+        self._known_paths = set()
+        model = cola.model()
+        model.add_message_observer(model.message_updated,
+                                   self._model_updated)
         self._dir_rows = {}
         self.setColumnCount(len(Columns.ALL))
         for idx, header in enumerate(Columns.ALL):
             self.setHeaderData(idx, Qt.Horizontal,
                                QtCore.QVariant(self.tr(header.title())))
+
+        self._direntries = {'': self.invisibleRootItem()}
         self._initialize()
 
     def _create_column(self, col, path):
@@ -46,7 +53,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         """Return a list of items representing a row."""
         return [self._create_column(c, path) for c in Columns.ALL]
 
-    def add_file(self, parent, path):
+    def _add_file(self, parent, path, insert=False):
         """Add a file entry to the model."""
 
         # Create model items
@@ -55,11 +62,28 @@ class GitRepoModel(QtGui.QStandardItemModel):
         # Use a standard file icon for the name field
         row_items[0].setIcon(qtutils.file_icon())
 
-        # Add file paths at the end of the list
-        parent.appendRow(row_items)
+        if not insert:
+            # Add file paths at the end of the list
+            parent.appendRow(row_items)
+            self.entry(path).update_name()
+            self._known_paths.add(path)
+            return
+        # Entries exist so try to find an a good insertion point
+        done = False
+        for idx in xrange(parent.rowCount()):
+            child = parent.child(idx, 0)
+            if child.rowCount() > 0:
+                continue
+            if path < child.path:
+                parent.insertRow(idx, row_items)
+                done = True
+                break
 
-        # Update the name column
+        # No adequate place found so simply append
+        if not done:
+            parent.appendRow(row_items)
         self.entry(path).update_name()
+        self._known_paths.add(path)
 
     def add_directory(self, parent, path):
         """Add a directory entry to the model."""
@@ -77,20 +101,42 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
         # Update the 'name' column for this entry
         self.entry(path).update_name()
+        self._known_paths.add(path)
 
         return row_items[0]
 
+    def _get_paths(self):
+        """Return paths of interest; e.g. paths with a status."""
+        model = cola.model()
+        paths = set(model.staged + model.unstaged)
+        return cola.utils.add_parents(paths)
+
+    def _model_updated(self):
+        """Observes model changes and updates paths accordingly."""
+        old_paths = self._interesting_paths
+        new_paths = self._get_paths()
+        for path in new_paths - old_paths:
+            if path not in self._known_paths:
+                self.add_file(path, insert=True)
+        for path in new_paths.union(old_paths):
+            self.entry(path).update()
+
+        self._interesting_paths = new_paths
+
     def _initialize(self):
         """Iterate over the cola model and create GitRepoItems."""
-        direntries = {'': self.invisibleRootItem()}
         for path in cola.model().everything():
-            dirname = utils.dirname(path)
-            if dirname in direntries:
-                parent = direntries[dirname]
-            else:
-                parent = self._create_dir_entry(dirname, direntries)
-                direntries[dirname] = parent
-            self.add_file(parent, path)
+            self.add_file(path)
+
+    def add_file(self, path, insert=False):
+        """Add a file to the model."""
+        dirname = utils.dirname(path)
+        if dirname in self._direntries:
+            parent = self._direntries[dirname]
+        else:
+            parent = self._create_dir_entry(dirname, self._direntries)
+            self._direntries[dirname] = parent
+        self._add_file(parent, path, insert=insert)
 
     def _create_dir_entry(self, dirname, direntries):
         """
