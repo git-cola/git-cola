@@ -57,7 +57,6 @@ class MainController(QObserver):
         qtutils.set_diff_font(qtutils.logger())
         qtutils.set_diff_font(self.view.display_text)
         qtutils.set_diff_font(self.view.commitmsg)
-        self.update_tab_width()
 
     def update_tab_width(self):
         """Implement the variable-tab-width setting."""
@@ -70,5 +69,4 @@ class MainController(QObserver):
         """Initialize the logging subwindow."""
         branch = self.model.currentbranch
         qtutils.log(0, self.model.git_version +
-                    '\ncola version ' + version.version() +
-                    '\nCurrent Branch: ' + branch)
+                    '\ncola version ' + version.version())
