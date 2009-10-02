@@ -26,7 +26,7 @@ def factory():
 def SLOT(signal, *args, **opts):
     """
     Returns a callback that broadcasts a message over the notifier.
-    
+
     """
     def broadcast(*local_args, **opts):
         cola.notifier().broadcast(signal, *args, **opts)
@@ -36,7 +36,7 @@ def SLOT(signal, *args, **opts):
 class CommandFactory(object):
     def __init__(self):
         """Setup the undo/redo stacks and register for notifications."""
-        self.undoable = False
+        self.undoable = True
         self.undostack = []
         self.redostack = []
         self.signal_to_command = {}

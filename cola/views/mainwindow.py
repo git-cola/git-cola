@@ -44,6 +44,7 @@ class MainWindow(MainWindowBase):
         # "Actions" widget
         self.actiondockwidget = self.create_dock('Actions')
         self.actiondockwidgetcontents = QtGui.QWidget()
+        self.actiondockwidgetcontents.setContentsMargins(2, 2, 2, 2)
         self.actiondockwidgetlayout = QtGui.QVBoxLayout(self.actiondockwidgetcontents)
         self.actiondockwidgetlayout.setSpacing(3)
         self.actiondockwidgetlayout.setMargin(3)
