@@ -926,7 +926,8 @@ class MainModel(ObservableModel):
         # Look for upstream modified files if this is a tracking branch
         if self.trackedbranch:
             try:
-                output = self.git.diff('..'+self.trackedbranch,
+                diff_expr = self.merge_base_to(self.trackedbranch)
+                output = self.git.diff(diff_expr,
                                        name_only=True, z=True)
                 if output.startswith('fatal:'):
                     raise errors.GitInitError('git init')
