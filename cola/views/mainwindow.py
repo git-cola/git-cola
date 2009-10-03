@@ -148,8 +148,7 @@ class MainWindow(MainWindowBase):
         self.diffdockwidgetlayout.addWidget(self.display_text)
         self.diffdockwidget.setWidget(self.diffdockwidgetcontents)
 
-        # TODO selection in model
-        #self.menu_unstage_selected = self.create_action('Unstage From Commit')
+        self.menu_unstage_selected = self.create_action('Unstage From Commit')
         self.menu_show_diffstat = self.create_action('Diffstat')
         self.menu_stage_modified = self.create_action('Stage Changed Files To Commit')
         self.menu_stage_untracked = self.create_action('Stage All Untracked')
@@ -213,8 +212,7 @@ class MainWindow(MainWindowBase):
         self.menu_prepare.addAction(self.menu_stage_untracked)
         self.menu_prepare.addSeparator()
         self.menu_prepare.addAction(self.menu_unstage_all)
-        # TODO selection in model
-        #self.menu_prepare.addAction(self.menu_unstage_selected)
+        self.menu_prepare.addAction(self.menu_unstage_selected)
 
         self.menu_advanced.addAction(self.menu_cherry_pick)
 

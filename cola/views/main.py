@@ -145,6 +145,7 @@ class MainView(MainWindow):
             (self.menu_stash, stash),
             (self.menu_stage_modified, SLOT(signals.stage_modified)),
             (self.menu_stage_untracked, SLOT(signals.stage_untracked)),
+            (self.menu_unstage_selected, SLOT(signals.unstage_selected)),
             (self.menu_unstage_all, SLOT(signals.unstage_all)),
             (self.menu_visualize_all, SLOT(signals.visualize_all)),
             (self.menu_visualize_current, SLOT(signals.visualize_current)),

@@ -1211,11 +1211,12 @@ class MainModel(ObservableModel):
         for path in paths:
             # If a path doesn't exist then that means it should be removed
             # from the index.   We use `git add -u` for that.
-            # GITBUG: `git add -u` doesn't on untracked files.
+            # Note: `git add -u` doesn't on untracked files.
             if os.path.exists(core.encode(path)):
                 self.git.add('--', path)
             else:
                 self.git.add('--', path, u=True)
+
         self.update_status()
 
         # Grab the new lists of untracked + modified files
