@@ -55,6 +55,7 @@ class MainWindow(MainWindowBase):
 
         self.rescan_button = self.create_button('Rescan', layout)
         self.stage_button = self.create_button('Stage', layout)
+        self.unstage_button = self.create_button('Unstage', layout)
         self.fetch_button = self.create_button('Fetch', layout)
         self.push_button = self.create_button('Push', layout)
         self.pull_button = self.create_button('Pull', layout)

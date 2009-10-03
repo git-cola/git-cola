@@ -94,6 +94,7 @@ class MainView(MainWindow):
         self._relay_button(self.signoff_button, signals.add_signoff)
 
         self._connect_button(self.stage_button, self.stage)
+        self._connect_button(self.unstage_button, self.unstage)
         self._connect_button(self.commit_button, self.commit)
         self._connect_button(self.fetch_button, self.fetch)
         self._connect_button(self.push_button, self.push)
@@ -418,12 +419,20 @@ class MainView(MainWindow):
                                     reverse=True, selected=True)
 
     def stage(self):
-        """Stage selected files."""
+        """Stage selected files, or all files if no selection exists."""
         paths = cola.selection_model().unstaged
         if not paths:
             cola.notifier().broadcast(signals.stage_modified)
         else:
             cola.notifier().broadcast(signals.stage, paths)
+
+    def unstage(self):
+        """Unstage selected files, or all files if no selection exists."""
+        paths = cola.selection_model().staged
+        if not paths:
+            cola.notifier().broadcast(signals.unstage_all)
+        else:
+            cola.notifier().broadcast(signals.unstage, paths)
 
     def stage_hunk(self):
         """Stage a specific hunk."""
