@@ -448,6 +448,10 @@ class MainModel(ObservableModel):
         notify_enabled = self.notification_enabled
         self.notification_enabled = False
 
+        # Set these early since they are used to calculate 'upstream_changed'.
+        self.set_currentbranch(self.current_branch())
+        self.set_trackedbranch(self.tracked_branch())
+
         (self.staged,
          self.modified,
          self.unmerged,
@@ -457,10 +461,8 @@ class MainModel(ObservableModel):
         # NOTE: the model's unstaged list holds an aggregate of the
         # the modified, unmerged, and untracked file lists.
         self.set_unstaged(self.modified + self.unmerged + self.untracked)
-        self.set_currentbranch(self.current_branch())
         self.set_remotes(self.git.remote().splitlines())
         self.set_remote_branches(self.branch_list(remote=True))
-        self.set_trackedbranch(self.tracked_branch())
         self.set_local_branches(self.branch_list(remote=False))
         self.set_tags(self.git.tag().splitlines())
         self.set_revision('')
