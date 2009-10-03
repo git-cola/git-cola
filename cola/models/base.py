@@ -318,7 +318,7 @@ class BaseModel(object):
         """A convenient, recursively-defined stringification method."""
         # This avoid infinite recursion on cyclical structures
         if self in BaseModel.__strstack__:
-            return 'self' # TODO: implement references?  This ain't lisp.
+            return '__self__'
         else:
             BaseModel.__strstack__.add(self)
         # IO object for output
