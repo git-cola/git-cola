@@ -1,6 +1,7 @@
 """Provides commands and queries for Git."""
 
 import cola
+from cola import core
 
 
 def default_remote():
@@ -21,3 +22,9 @@ def corresponding_remote_ref():
         if rb == best_match:
             return rb
     return remote_branches[0]
+
+def diff_filenames(arg):
+    """Return a list of filenames that have been modified"""
+    model = cola.model()
+    diff_zstr = model.git.diff(arg, name_only=True, z=True).rstrip('\0')
+    return [core.decode(f) for f in diff_zstr.split('\0') if f]

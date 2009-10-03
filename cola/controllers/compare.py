@@ -112,7 +112,7 @@ class BranchCompareController(QObserver):
         self.end = right_item
 
         # TODO leverage Qt's model/view architecture
-        files = self.model.diff_filenames(self.diff_arg)
+        files = gitcmds.diff_filenames(self.diff_arg)
         self.model.set_diff_files(files)
         icon = qtutils.icon('script.png')
         for idx in xrange(0, self.view.diff_files.topLevelItemCount()):

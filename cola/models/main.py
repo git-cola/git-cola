@@ -245,11 +245,6 @@ class MainModel(ObservableModel):
     def gui_config(self, key):
         return getattr(self, 'global_gui_'+key)
 
-    def diff_filenames(self, arg):
-        """Returns a list of filenames that have been modified"""
-        diff_zstr = self.git.diff(arg, name_only=True, z=True).rstrip('\0')
-        return [core.decode(f) for f in diff_zstr.split('\0') if f]
-
     def branch_list(self, remote=False):
         """Returns a list of local or remote branches
 
