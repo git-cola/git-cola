@@ -8,6 +8,7 @@ import cola
 from cola import utils
 from cola import qtutils
 from cola import difftool
+from cola import gitcmds
 from cola.qobserver import QObserver
 from cola.models.compare import CompareModel
 from cola.models.compare import BranchCompareModel
@@ -124,7 +125,7 @@ class BranchCompareController(QObserver):
         if branch == BranchCompareController.BRANCH_POINT:
             # Compare against the branch point so find the merge-base
             branch = self.model.currentbranch
-            remote = self.model.corresponding_remote_ref()
+            remote = gitcmds.corresponding_remote_ref()
             return self.model.git.merge_base(branch, remote)
         else:
             # Compare against the remote branch

@@ -245,23 +245,6 @@ class MainModel(ObservableModel):
     def gui_config(self, key):
         return getattr(self, 'global_gui_'+key)
 
-    def default_remote(self):
-        branch = self.currentbranch
-        branchconfig = 'branch.%s.remote' % branch
-        return self.local_config(branchconfig, 'origin')
-
-    def corresponding_remote_ref(self):
-        remote = self.default_remote()
-        branch = self.currentbranch
-        best_match = '%s/%s' % (remote, branch)
-        remote_branches = self.remote_branches
-        if not remote_branches:
-            return remote
-        for rb in remote_branches:
-            if rb == best_match:
-                return rb
-        return remote_branches[0]
-
     def diff_filenames(self, arg):
         """Returns a list of filenames that have been modified"""
         diff_zstr = self.git.diff(arg, name_only=True, z=True).rstrip('\0')
@@ -269,7 +252,7 @@ class MainModel(ObservableModel):
 
     def branch_list(self, remote=False):
         """Returns a list of local or remote branches
-        
+
         This explicitly removes HEAD from the list of remote branches.
         """
         branches = map(lambda x: x.lstrip('* '),

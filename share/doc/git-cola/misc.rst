@@ -5,6 +5,7 @@ Miscellaneous Utility Modules
     core
     diffparse
     difftool
+    gitcmds
     inotify
     resources
     settings
