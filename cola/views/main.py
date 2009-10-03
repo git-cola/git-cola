@@ -223,31 +223,6 @@ class MainView(MainWindow):
             self.display_text.setText(text)
             scrollbar.setValue(scrollvalue)
 
-    def selection(self):
-        tree = status.widget().tree
-        item = tree.currentItem()
-        if not item:
-            return -1, False
-        parent = item.parent()
-        if not parent:
-            return -1, False
-
-        idx = parent.indexOfChild(item)
-        pidx = tree.indexOfTopLevelItem(parent)
-
-        if pidx == self.idx_staged or pidx == self.idx_modified:
-            return idx, tree.isItemSelected(item)
-
-        elif pidx == self.idx_unmerged:
-            num_modified = tree.topLevelItem(self.idx_modified).childCount()
-            return idx + num_modified, tree.isItemSelected(item)
-
-        elif pidx == self.idx_untracked:
-            num_modified = tree.topLevelItem(self.idx_modified).childCount()
-            num_unmerged = tree.topLevelItem(self.idx_unmerged).childCount()
-            return idx + num_modified + num_unmerged, tree.isItemSelected(item)
-        return -1, False
-
     def single_selection(self):
         """Scan across staged, modified, etc. and return a single item."""
         # TODO have selection in the model
