@@ -185,6 +185,11 @@ class RepoTreeView(QtGui.QTreeView):
         """Override selectionChanged to update available actions."""
         result = QtGui.QTreeView.selectionChanged(self, old_selection, new_selection)
         self.update_actions()
+
+        paths = self.selected_paths()
+        if paths:
+            cached = paths[0] in cola.model().staged
+            cola.notifier().broadcast(signals.diff, paths, cached)
         return result
 
     def setModel(self, model):
