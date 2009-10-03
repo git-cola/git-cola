@@ -562,6 +562,12 @@ class UnstageAll(Command):
         self.model.unstage_all()
 
 
+class UnstageSelected(Unstage):
+    """Unstage selected files."""
+    def __init__(self):
+        Unstage.__init__(self, cola.selection_model().staged)
+
+
 class UntrackedSummary(Command):
     """List possible .gitignore rules as the diff text."""
     def __init__(self):
@@ -647,6 +653,7 @@ def register():
         signals.staged_summary: DiffStagedSummary,
         signals.unstage: Unstage,
         signals.unstage_all: UnstageAll,
+        signals.unstage_selected: UnstageSelected,
         signals.untracked_summary: UntrackedSummary,
         signals.visualize_all: VisualizeAll,
         signals.visualize_current: VisualizeCurrent,
