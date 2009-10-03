@@ -16,7 +16,6 @@ from cola import signals
 from cola import resources
 from cola.qtutils import SLOT
 from cola.views import about
-from cola.views import status
 from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.mainwindow import MainWindow
 from cola.controllers import compare
@@ -223,24 +222,6 @@ class MainView(MainWindow):
             self.display_text.setText(text)
             scrollbar.setValue(scrollvalue)
 
-    def single_selection(self):
-        """Scan across staged, modified, etc. and return a single item."""
-        # TODO have selection in the model
-        staged, modified, unmerged, untracked = status.widget().selection()
-        s = None
-        m = None
-        um = None
-        ut = None
-        if staged:
-            s = staged[0]
-        elif modified:
-            m = modified[0]
-        elif unmerged:
-            um = unmerged[0]
-        elif untracked:
-            ut = untracked[0]
-        return s, m, um, ut
-
     def action_cut(self):
         self.action_copy()
         self.action_delete()
@@ -387,7 +368,7 @@ class MainView(MainWindow):
         if event.key() != QtCore.Qt.Key_H and event.key() != QtCore.Qt.Key_S:
             event.ignore()
             return
-        staged, modified, unmerged, untracked = self.single_selection()
+        staged, modified, unmerged, untracked = cola.single_selection()
         if event.key() == QtCore.Qt.Key_H:
             if self.mode == self.model.mode_worktree and modified:
                 self.stage_hunk()
@@ -437,8 +418,7 @@ class MainView(MainWindow):
 
     def stage(self):
         """Stage selected files."""
-        # TODO move selection into the model so that we're widget-independent
-        paths = status.widget().unstaged()
+        paths = cola.selection_model().unstaged
         if not paths:
             cola.notifier().broadcast(signals.stage_modified)
         else:
@@ -469,8 +449,7 @@ class MainView(MainWindow):
     def diff_context_menu_setup(self):
         """Set up the context menu for the diff display."""
         menu = QtGui.QMenu(self)
-        # TODO selection in the model
-        staged, modified, unmerged, untracked = status.widget().selection()
+        staged, modified, unmerged, untracked = cola.selection()
 
         if self.mode == self.model.mode_worktree:
             if modified:

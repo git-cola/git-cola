@@ -366,8 +366,13 @@ class StatusWidget(QtGui.QDialog):
         the same appropriate action.
 
         """
-        # Get the item that was clicked
         result = QtGui.QTreeWidget.mousePressEvent(self.tree, event)
+
+        # Sync the selection model
+        s, m, um, ut = self.selection()
+        cola.selection_model().set_selection(s, m, um, ut)
+
+        # Get the item that was clicked
         item = self.tree.itemAt(event.pos())
         if not item:
             # Nothing was clicked -- reset the display and return
@@ -413,6 +418,10 @@ class StatusWidget(QtGui.QDialog):
 
     def tree_selection(self):
         """Show a data for the selected item."""
+        # Sync the selection model
+        s, m, um, ut = self.selection()
+        cola.selection_model().set_selection(s, m, um, ut)
+
         selection = self.selected_indexes()
         if not selection:
             return

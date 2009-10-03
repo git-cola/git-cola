@@ -155,6 +155,9 @@ class RepoTreeView(QtGui.QTreeView):
         # instead of the original index.
         result = QtGui.QTreeView.keyPressEvent(self, event)
 
+        # Sync the selection model
+        self.sync_selection()
+
         # Try to select the first item if the model index is invalid
         if not index.isValid():
             index = self.model().index(0, 0, QtCore.QModelIndex())
@@ -181,12 +184,46 @@ class RepoTreeView(QtGui.QTreeView):
 
         return result
 
+    def mousePressEvent(self, event):
+        """Synchronize the selection on mouse-press."""
+        result = QtGui.QTreeView.mousePressEvent(self, event)
+        self.sync_selection()
+        return result
+
+    def sync_selection(self):
+        """Push selection into the selection model."""
+        staged = []
+        modified = []
+        unmerged = []
+        untracked = []
+        paths = self.selected_paths()
+
+        model = cola.model()
+        model_staged = set(model.staged)
+        model_modified = set(model.modified)
+        model_unmerged = set(model.unmerged)
+        model_untracked = set(model.untracked)
+
+        for path in paths:
+            if path in model_unmerged:
+                unmerged.append(path)
+            elif path in model_untracked:
+                untracked.append(path)
+            elif path in model_staged:
+                staged.append(path)
+            elif path in model_modified:
+                modified.append(path)
+        # Push the new selection into the model.
+        cola.selection_model().set_selection(staged, modified,
+                                             unmerged, untracked)
+        return paths
+
     def selectionChanged(self, old_selection, new_selection):
         """Override selectionChanged to update available actions."""
         result = QtGui.QTreeView.selectionChanged(self, old_selection, new_selection)
         self.update_actions()
+        paths = self.sync_selection()
 
-        paths = self.selected_paths()
         if paths and self.model().path_is_interesting(paths[0]):
             cached = paths[0] in cola.model().staged
             cola.notifier().broadcast(signals.diff, paths, cached)
