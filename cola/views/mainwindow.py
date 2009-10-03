@@ -1,6 +1,8 @@
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 
+import cola
+from cola import settings
 from cola import qtutils
 from cola.views import log
 from cola.qtutils import tr
@@ -367,3 +369,9 @@ class MainWindow(MainWindowBase):
         if layout:
             layout.addWidget(button)
         return button
+
+    def closeEvent(self, event):
+        """Save state in the settings manager."""
+        if cola.model().remember_gui_settings():
+            settings.SettingsManager.save_gui_state(self)
+        self.close()

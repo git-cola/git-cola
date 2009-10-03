@@ -3,6 +3,7 @@
 
 import optparse
 import signal
+import glob
 import sys
 import os
 
@@ -171,8 +172,13 @@ def main():
     view.show()
     result = app.exec_()
 
+    # All done, cleanup
     inotify.stop()
     QtCore.QThreadPool.globalInstance().waitForDone()
+
+    pattern = cola.model().tmp_file_pattern()
+    for filename in glob.glob(pattern):
+        os.unlink(filename)
     sys.exit(result)
 
 

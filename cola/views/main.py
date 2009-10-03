@@ -103,6 +103,7 @@ class MainView(MainWindow):
 
         # Menu actions
         actions = (
+            (self.menu_quit, self.close),
             (self.menu_branch_compare, compare.branch_compare),
             (self.menu_branch_diff, self.branch_diff),
             (self.menu_branch_review, self.review_branch),
