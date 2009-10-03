@@ -105,6 +105,10 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
         return row_items[0]
 
+    def path_is_interesting(self, path):
+        """Return True if path has a status."""
+        return path in self._interesting_paths
+
     def _get_paths(self):
         """Return paths of interest; e.g. paths with a status."""
         model = cola.model()

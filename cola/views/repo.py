@@ -187,7 +187,7 @@ class RepoTreeView(QtGui.QTreeView):
         self.update_actions()
 
         paths = self.selected_paths()
-        if paths:
+        if paths and self.model().path_is_interesting(paths[0]):
             cached = paths[0] in cola.model().staged
             cola.notifier().broadcast(signals.diff, paths, cached)
         return result
