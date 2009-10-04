@@ -20,7 +20,6 @@ from cola.views.option import OptionsView
 from cola.views.syntax import DiffSyntaxHighlighter
 
 try:
-    from cola.gui.combo import Ui_combo
     from cola.gui.createbranch import Ui_createbranch
     from cola.gui.items import Ui_items
     from cola.gui.remote import Ui_remote
@@ -33,6 +32,7 @@ except ImportError:
 
 from cola.views.compare import CompareView
 from cola.views.compare import BranchCompareView
+from cola.views.combo import ComboView
 CreateBranchView = create_standard_view(Ui_createbranch, QDialog)
 StashView = create_standard_view(Ui_stash, QDialog)
 
@@ -46,6 +46,7 @@ class ItemView(object):
                          dblclick)
     def idx(self):
         return 0
+
     def selected(self):
         geom = qApp.desktop().screenGeometry()
         width = geom.width()
@@ -60,13 +61,6 @@ class ItemView(object):
         else:
             return None
 
-ComboViewBase = create_standard_view(Ui_combo, QDialog, ItemView)
-class ComboView(ComboViewBase, ItemView):
-    """A dialog for choosing branches."""
-    def idx(self):
-        return self.items_widget.currentIndex()
-    def value(self):
-        return str(self.items_widget.currentText())
 
 ListViewBase = create_standard_view(Ui_items, QDialog, ItemView)
 class ListView(ListViewBase, ItemView):
