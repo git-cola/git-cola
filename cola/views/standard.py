@@ -1,4 +1,5 @@
 from PyQt4 import QtCore
+from PyQt4 import QtGui
 
 from cola.views import syntax
 
@@ -88,3 +89,7 @@ def create_standard_widget(qtclass):
 
     syntax.install_style_properties(StandardWidget)
     return StandardWidget
+
+
+# The base class for all cola QDialogs.
+StandardDialog = create_standard_widget(QtGui.QDialog)
