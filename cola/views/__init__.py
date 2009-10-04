@@ -15,6 +15,7 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import core
 from cola.views.standard import create_standard_view
+from cola.views.option import OptionsView
 from cola.views.syntax import DiffSyntaxHighlighter
 
 try:
@@ -24,7 +25,6 @@ try:
     from cola.gui.compare import Ui_compare
     from cola.gui.createbranch import Ui_createbranch
     from cola.gui.items import Ui_items
-    from cola.gui.options import Ui_options
     from cola.gui.remote import Ui_remote
     from cola.gui.stash import Ui_stash
 except ImportError:
@@ -32,7 +32,7 @@ except ImportError:
                      'Try running "make" in the cola source tree.\n')
     sys.exit(-1)
 
-OptionsView = create_standard_view(Ui_options, QDialog)
+
 BranchCompareView = create_standard_view(Ui_branchview, QDialog)
 CreateBranchView = create_standard_view(Ui_createbranch, QDialog)
 BookmarkView = create_standard_view(Ui_bookmark, QDialog)
