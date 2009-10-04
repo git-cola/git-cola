@@ -23,7 +23,8 @@ class CompareView(standard.StandardDialog):
         self.descriptions_start = QtGui.QTreeWidget(self)
         self.descriptions_start.setRootIsDecorated(False)
         self.descriptions_start.setAllColumnsShowFocus(True)
-        self.descriptions_start.headerItem().setText(0, self.tr('Start Commit'))
+        self.descriptions_start.headerItem().setText(0,
+                self.tr('Start Commit'))
         self._top_left_layt.addWidget(self.descriptions_start)
 
         # Exposed
@@ -81,18 +82,15 @@ class CompareView(standard.StandardDialog):
                                                 QtGui.QSizePolicy.Minimum)
         self._bottom_layt.addItem(self._bottom_spacer)
 
-        self.button_compare = QtGui.QPushButton(compare)
+        self.button_compare = QtGui.QPushButton(self)
         self._bottom_layt.addWidget(self.button_compare)
 
-        self.button_close = QtGui.QPushButton(compare)
+        self.button_close = QtGui.QPushButton(self)
         self._bottom_layt.addWidget(self.button_close)
 
         self._main_layt.addLayout(self._bottom_layt)
 
         self.connect(self.button_close, SIGNAL('clicked()'), self.accept)
-
-        self.button_compare.setText(QtGui.QApplication.translate("compare", "Compare", None, QtGui.QApplication.UnicodeUTF8))
-        self.button_close.setText(QtGui.QApplication.translate("compare", "Close", None, QtGui.QApplication.UnicodeUTF8))
 
 
 class BranchCompareView(standard.StandardDialog):
@@ -151,7 +149,7 @@ class BranchCompareView(standard.StandardDialog):
 
         # Exposed
         self.button_close = QtGui.QPushButton(self._bottom_widget)
-        self.button_close.setText(QtGui.QApplication.translate('branchview', 'Close', None, QtGui.QApplication.UnicodeUTF8))
+        self.button_close.setText(self.tr('Close'))
         self._bottom_grid_layt.addWidget(self.button_close, 1, 3, 1, 1)
 
         # Exposed
