@@ -16,7 +16,7 @@ def widget(parent=None):
     return _widget
 
 
-class StatusWidget(QtGui.QDialog):
+class StatusWidget(QtGui.QWidget):
     """
     Provides a git-status-like repository widget.
 
@@ -36,7 +36,7 @@ class StatusWidget(QtGui.QDialog):
     mode = property(lambda self: self.model.mode)
 
     def __init__(self, parent=None):
-        QtGui.QDialog.__init__(self, parent)
+        QtGui.QWidget.__init__(self, parent)
 
         self.layout = QtGui.QVBoxLayout(self)
         self.setLayout(self.layout)
