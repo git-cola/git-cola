@@ -20,7 +20,6 @@ from cola.views.option import OptionsView
 from cola.views.syntax import DiffSyntaxHighlighter
 
 try:
-    from cola.gui.branchview import Ui_branchview
     from cola.gui.combo import Ui_combo
     from cola.gui.compare import Ui_compare
     from cola.gui.createbranch import Ui_createbranch
@@ -33,7 +32,7 @@ except ImportError:
     sys.exit(-1)
 
 
-BranchCompareView = create_standard_view(Ui_branchview, QDialog)
+from cola.views.compare import BranchCompareView
 CreateBranchView = create_standard_view(Ui_createbranch, QDialog)
 StashView = create_standard_view(Ui_stash, QDialog)
 CompareView = create_standard_view(Ui_compare, QDialog)
