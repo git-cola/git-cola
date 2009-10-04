@@ -15,11 +15,11 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import core
 from cola.views.standard import create_standard_view
+from cola.views.bookmark import BookmarkView
 from cola.views.option import OptionsView
 from cola.views.syntax import DiffSyntaxHighlighter
 
 try:
-    from cola.gui.bookmark import Ui_bookmark
     from cola.gui.branchview import Ui_branchview
     from cola.gui.combo import Ui_combo
     from cola.gui.compare import Ui_compare
@@ -35,7 +35,6 @@ except ImportError:
 
 BranchCompareView = create_standard_view(Ui_branchview, QDialog)
 CreateBranchView = create_standard_view(Ui_createbranch, QDialog)
-BookmarkView = create_standard_view(Ui_bookmark, QDialog)
 StashView = create_standard_view(Ui_stash, QDialog)
 CompareView = create_standard_view(Ui_compare, QDialog)
 
