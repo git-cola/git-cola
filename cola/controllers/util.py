@@ -16,7 +16,7 @@ def choose_from_combo(title, items):
                      items=items).selected()
 
 
-def choose_from_list(title, items=[], dblclick=None):
+def choose_from_list(title, items=None, dblclick=None):
     """Quickly choose an item from a list using a list widget"""
     parent = QtGui.QApplication.instance().activeWindow()
     return ListView(parent,

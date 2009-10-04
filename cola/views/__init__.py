@@ -1,6 +1,4 @@
-"""This module creates simple wrapper classes around the auto-generated
-.ui classes.
-"""
+"""Provides access to view classes."""
 
 
 import sys
@@ -20,7 +18,6 @@ from cola.views.option import OptionsView
 from cola.views.syntax import DiffSyntaxHighlighter
 
 try:
-    from cola.gui.items import Ui_items
     from cola.gui.remote import Ui_remote
 except ImportError:
     sys.stderr.write('\nThe cola gui modules have not been built.\n'
@@ -33,44 +30,7 @@ from cola.views.compare import BranchCompareView
 from cola.views.combo import ComboView
 from cola.views.createbranch import CreateBranchView
 from cola.views.stash import StashView
-
-
-class ItemView(object):
-    def __init__(self, parent, title="", items=[], dblclick=None):
-        self.setWindowTitle(title)
-        self.items_widget.addItems(items)
-        if dblclick and type(self.items_widget) is QListWidget:
-            self.connect(self.items_widget,
-                         SIGNAL('itemDoubleClicked(QListWidgetItem*)'),
-                         dblclick)
-    def idx(self):
-        return 0
-
-    def selected(self):
-        geom = qApp.desktop().screenGeometry()
-        width = geom.width()
-        height = geom.height()
-        if self.parent():
-            x = self.parent().x() + self.parent().width()/2 - self.width()/2
-            y = self.parent().y() + self.parent().height()/3 - self.height()/2
-            self.move(x, y)
-        self.show()
-        if self.exec_() == QDialog.Accepted:
-            return self.value()
-        else:
-            return None
-
-
-ListViewBase = create_standard_view(Ui_items, QDialog, ItemView)
-class ListView(ListViewBase, ItemView):
-    """A dialog for an item from a list."""
-    def idx(self):
-        return self.items_widget.currentRow()
-    def value(self):
-        item = self.items_widget.currentItem()
-        if not item:
-            return None
-        return str(item.text())
+from cola.views.itemlist import ListView
 
 
 RemoteViewBase = create_standard_view(Ui_remote, QDialog)
