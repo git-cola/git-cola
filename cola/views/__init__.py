@@ -21,7 +21,6 @@ from cola.views.syntax import DiffSyntaxHighlighter
 
 try:
     from cola.gui.combo import Ui_combo
-    from cola.gui.compare import Ui_compare
     from cola.gui.createbranch import Ui_createbranch
     from cola.gui.items import Ui_items
     from cola.gui.remote import Ui_remote
@@ -32,10 +31,10 @@ except ImportError:
     sys.exit(-1)
 
 
+from cola.views.compare import CompareView
 from cola.views.compare import BranchCompareView
 CreateBranchView = create_standard_view(Ui_createbranch, QDialog)
 StashView = create_standard_view(Ui_stash, QDialog)
-CompareView = create_standard_view(Ui_compare, QDialog)
 
 class ItemView(object):
     def __init__(self, parent, title="", items=[], dblclick=None):
