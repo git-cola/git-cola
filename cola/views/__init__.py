@@ -22,7 +22,6 @@ from cola.views.syntax import DiffSyntaxHighlighter
 try:
     from cola.gui.items import Ui_items
     from cola.gui.remote import Ui_remote
-    from cola.gui.stash import Ui_stash
 except ImportError:
     sys.stderr.write('\nThe cola gui modules have not been built.\n'
                      'Try running "make" in the cola source tree.\n')
@@ -33,7 +32,8 @@ from cola.views.compare import CompareView
 from cola.views.compare import BranchCompareView
 from cola.views.combo import ComboView
 from cola.views.createbranch import CreateBranchView
-StashView = create_standard_view(Ui_stash, QDialog)
+from cola.views.stash import StashView
+
 
 class ItemView(object):
     def __init__(self, parent, title="", items=[], dblclick=None):
