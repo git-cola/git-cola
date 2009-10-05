@@ -14,7 +14,6 @@ class BookmarkView(standard.StandardDialog):
         self.setWindowTitle(self.tr('Bookmarks'))
         self.resize(494, 238)
         self._vboxlayt = QtGui.QVBoxLayout(self)
-
         # Exposed
         self.bookmarks = QtGui.QListWidget(self)
         self.bookmarks.setAlternatingRowColors(True)
@@ -23,12 +22,11 @@ class BookmarkView(standard.StandardDialog):
 
         self._vboxlayt.addWidget(self.bookmarks)
         self._hboxlayt = QtGui.QHBoxLayout()
-
         # Exposed
         self.button_open = QtGui.QPushButton(self)
         self.button_open.setText(self.tr('Open'))
         self._hboxlayt.addWidget(self.button_open)
-
+        # Exposed
         self.button_delete = QtGui.QPushButton(self)
         self.button_delete.setText(self.tr('Delete'))
         self._hboxlayt.addWidget(self.button_delete)
@@ -37,12 +35,11 @@ class BookmarkView(standard.StandardDialog):
                                           QtGui.QSizePolicy.Expanding,
                                           QtGui.QSizePolicy.Minimum)
         self._hboxlayt.addItem(self._button_spacer)
-
         # Exposed
         self.button_save = QtGui.QPushButton(self)
         self.button_save.setText(self.tr('Save'))
         self._hboxlayt.addWidget(self.button_save)
-
+        # Exposed
         self.button_cancel = QtGui.QPushButton(self)
         self.button_cancel.setText(self.tr('Cancel'))
         self._hboxlayt.addWidget(self.button_cancel)

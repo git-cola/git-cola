@@ -4,23 +4,6 @@ from PyQt4 import QtGui
 from cola.views import syntax
 
 
-def create_standard_view(uiclass, qtclass, *classes):
-    """Return a class closure of uiclass and qtclass.
-
-    This class performs the standard setup common to all view classes.
-
-    """
-    widgetbase = create_standard_widget(qtclass)
-    class StandardView(uiclass, widgetbase):
-        def __init__(self, parent, *args, **kwargs):
-            widgetbase.__init__(self, parent)
-            uiclass.__init__(self)
-            self.setupUi(self)
-            for cls in classes:
-                cls.__init__(self, parent, *args, **kwargs)
-    return StandardView
-
-
 def create_standard_widget(qtclass):
     """Create a standard widget derived from a qt class.
     """
@@ -39,7 +22,7 @@ def create_standard_widget(qtclass):
                 center_x = left + width/2
 
                 x = center_x - self.width()/2
-                y = self.parent().y() + 22 # room for parent's titlebar
+                y = self.parent().y()
 
                 self.move(x, y)
             # Call the base Qt show()
