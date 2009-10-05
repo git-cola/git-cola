@@ -271,14 +271,17 @@ class MainView(MainWindow):
         cols = cursor.columnNumber()
         display = ' %d,%d ' % (rows, cols)
         if cols > 78:
-            display = ('<span style="background-color: red;">%s</span>' %
-                       display.replace(' ', '&nbsp;'))
+            display = ('<span style="color: white; '
+                       '             background-color: red;"'
+                       '>%s</span>' % display.replace(' ', '&nbsp;'))
         elif cols > 72:
-            display = ('<span style="background-color: orange;">%s</span>' %
-                       display.replace(' ', '&nbsp;'))
+            display = ('<span style="color: black; '
+                       '             background-color: orange;"'
+                       '>%s</span>' % display.replace(' ', '&nbsp;'))
         elif cols > 64:
-            display = ('<span style="background-color: yellow;">%s</span>' %
-                       display.replace(' ', '&nbsp;'))
+            display = ('<span style="color: black; '
+                       '             background-color: yellow;"'
+                       '>%s</span>' % display.replace(' ', '&nbsp;'))
         self.position_label.setText(display)
 
     def import_state(self, state):
