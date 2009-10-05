@@ -6,14 +6,14 @@ from PyQt4 import QtGui
 
 import cola
 from cola import qtutils
-from cola.views import OptionsView
+from cola.views import option
 from cola.qobserver import QObserver
 
 
 def update_options():
     """Launch the options window given a model and parent widget."""
     parent = QtGui.QApplication.instance().activeWindow()
-    view = OptionsView(parent)
+    view = option.OptionsView(parent)
     ctl = OptionsController(view)
     view.show()
     return view.exec_() == QtGui.QDialog.Accepted

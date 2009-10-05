@@ -9,7 +9,7 @@ from cola import utils
 from cola import qtutils
 from cola.qobserver import QObserver
 from cola import settings
-from cola.views import BookmarkView
+from cola.views import bookmark
 
 def save_bookmark():
     """
@@ -26,7 +26,8 @@ def save_bookmark():
 def manage_bookmarks():
     """Launches the bookmarks manager dialog"""
     model = settings.SettingsManager.settings()
-    view = BookmarkView(QtGui.QApplication.instance().activeWindow())
+    parent = QtGui.QApplication.instance().activeWindow()
+    view = bookmark.BookmarkView(parent)
     ctl = BookmarkController(model, view)
     view.show()
 

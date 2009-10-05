@@ -9,7 +9,7 @@ import cola
 from cola import utils
 from cola import qtutils
 from cola.qobserver import QObserver
-from cola.views import StashView
+from cola.views import stash as stashmod
 
 def stash():
     """Launches a stash dialog using the provided model + view
@@ -18,9 +18,11 @@ def stash():
     model.keep_index = True
     model.stash_list = []
     model.stash_revids = []
-    view = StashView(QtGui.QApplication.instance().activeWindow())
+    parent = QtGui.QApplication.instance().activeWindow()
+    view = stashmod.StashView(parent)
     ctl = StashController(model, view)
     view.show()
+
 
 class StashController(QObserver):
     """The StashController is the brains behind the 'Stash' dialog

@@ -7,7 +7,7 @@ from PyQt4.QtGui import QDialog
 import cola
 from cola import utils
 from cola import qtutils
-from cola.views import RemoteView
+from cola.views import remote
 from cola.qobserver import QObserver
 
 def remote_action(parent, action):
@@ -19,7 +19,7 @@ def remote_action(parent, action):
     model.rebase_checkbox = False
     model.ffwd_only_checkbox = True
 
-    view = RemoteView(parent, action)
+    view = remote.RemoteView(parent, action)
     controller = RemoteController(model, view, action)
     view.show()
 
