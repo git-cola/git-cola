@@ -18,12 +18,11 @@ def main():
     # ensure readable files
     old_mask = os.umask(0022)
     git_version = version.git_version()
-    if sys.argv[1] in ['install', 'build']:
+    if sys.argv[1] in ('install', 'build'):
         _setup_environment()
         _check_python_version()
         _check_git_version(git_version)
         _check_pyqt_version()
-        _build_views()             # pyuic4: .ui -> .py
         _build_translations()      # msgfmt: .po -> .qm
     try:
         version.write_builtin_version()
@@ -82,7 +81,6 @@ def cola_data_files():
             _lib_path('cola/*.py'),
             _lib_path('cola/models/*.py'),
             _lib_path('cola/controllers/*.py'),
-            _lib_path('cola/gui/*.py'),
             _lib_path('cola/views/*.py'),
             _lib_path('jsonpickle/*.py'),
             _lib_path('simplejson/*.py')]
@@ -118,19 +116,18 @@ def _check_git_version(git_ver):
 def _check_pyqt_version():
     """Check the minimum PyQt version
     """
-    failed = False
+    has_pyqt = False
+    pyqtver = 'None'
     try:
-        # We avoid utils.run_cmd() because older versions of
-        # pyuic4 were implemented as a shell script with a missing
-        # #!/bin/sh line.
-        pyqtver = _run_cmd('sh -c "pyuic4 --version"').split()[-1]
-    except IndexError:
-        pyqtver = 'nothing'
-        failed = True
-    if failed or not version.check('pyqt', pyqtver):
-        print >> sys.stderr, ('PYQT version %s or newer required.  '
-                              'Found %s' % (version.get('pyqt'), pyqtver))
-        sys.exit(1)
+        from PyQt4 import QtCore
+        pyqtver = QtCore.PYQT_VERSION_STR
+        if version.check('pyqt', pyqtver):
+            return
+    except ImportError:
+        pass
+    print >> sys.stderr, ('PyQt4 version %s or newer required.  '
+                          'Found %s' % (version.get('pyqt'), pyqtver))
+    sys.exit(1)
 
 
 def _dirty(src, dst):
@@ -139,32 +136,6 @@ def _dirty(src, dst):
     srcstat = os.stat(src)
     dststat = os.stat(dst)
     return srcstat[stat.ST_MTIME] > dststat[stat.ST_MTIME]
-
-
-def _workaround_pyuic4(src, dst):
-    fh = open(src, 'r')
-    contents = core.read_nointr(fh)
-    fh.close()
-    fh = open(dst, 'w')
-    for line in contents.splitlines():
-        if 'sortingenabled' in line.lower():
-            continue
-        core.write_nointr(fh, line+os.linesep)
-    fh.close()
-    os.unlink(src)
-
-
-def _build_views():
-    print 'running build_views'
-    views = os.path.join('cola', 'gui')
-    sources = glob('ui/*.ui')
-    for src in sources:
-        dst = os.path.join(views, os.path.basename(src)[:-3] + '.py')
-        dsttmp = dst + '.tmp'
-        if _dirty(src, dst):
-            print '\tpyuic4 -x %s -o %s' % (src, dsttmp)
-            utils.run_cmd(['pyuic4', '-x', src, '-o', dsttmp])
-            _workaround_pyuic4(dsttmp, dst)
 
 
 def _build_translations():

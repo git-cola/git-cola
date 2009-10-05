@@ -128,5 +128,3 @@ def version_to_list(version):
 def git_version():
     """Returns the current GIT version"""
     return utils.run_cmd(['git', '--version']).split()[2]
-
-

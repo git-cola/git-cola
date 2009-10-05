@@ -1,8 +1,0 @@
-#!/bin/sh
-for python in /c/Python26 /c/Python25; do
-    if test -d "$python"; then
-        exec $python/python.exe \
-        $python/Lib/site-packages/PyQt4/uic/pyuic.py "$@"
-    fi
-done
-exit 1

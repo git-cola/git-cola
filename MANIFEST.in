@@ -1,7 +1,6 @@
 include bin/git-cola
 include bin/difftool/*
 include cola/models/*.py
-include cola/gui/*.py
 include cola/controllers/*.py
 include cola/views/*.py
 include darwin/*
@@ -11,7 +10,6 @@ include jsonpickle/tests/*.py
 include simplejson/LICENSE
 include simplejson/*.py
 include simplejson/tests/*.py
-include ui/*.ui
 include test/*.py
 include test/Makefile
 include README
@@ -27,8 +25,6 @@ include share/doc/git-cola/Makefile
 include share/doc/git-cola/build-docdep.perl
 include share/doc/git-cola/callouts.xsl
 include share/git-cola/qm/.gitignore
-include share/git-cola/gui/.gitignore
-include share/git-cola/views/*.py
 include share/git-cola/po/*.po
 include share/git-cola/icons/*.png
 include share/git-cola/styles/*.qss
