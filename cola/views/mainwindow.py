@@ -10,6 +10,7 @@ from cola.views import status
 from cola.views.standard import create_standard_widget
 from cola.controllers import classic
 
+
 MainWindowBase = create_standard_widget(QtGui.QMainWindow)
 class MainWindow(MainWindowBase):
     def __init__(self, parent=None):
@@ -19,40 +20,16 @@ class MainWindow(MainWindowBase):
         self.setDockOptions(QtGui.QMainWindow.AllowNestedDocks |
                             QtGui.QMainWindow.AllowTabbedDocks |
                             QtGui.QMainWindow.AnimatedDocks)
-
-        # Create the application menu
-        self.menubar = QtGui.QMenuBar(self)
-        self.edit_menu = self.create_menu('Edit', self.menubar)
-        self.file_menu = self.create_menu('File', self.menubar)
-        self.merge_menu = self.create_menu('Merge', self.menubar)
-        self.help_menu = self.create_menu('Help', self.menubar)
-        self.diff_menu = self.create_menu('Diff', self.menubar)
-        self.menu_tools = self.create_menu('Tools', self.menubar)
-
-        self.commit_menu = self.create_menu('Commit', self.menubar)
-        self.menu_show = self.create_menu('View', self.commit_menu)
-        self.menu_prepare = self.create_menu('Prepare', self.commit_menu)
-        self.menu_advanced = self.create_menu('Advanced', self.commit_menu)
-
-        self.search_menu = self.create_menu('Search', self.menubar)
-        self.menu_search_more = self.create_menu('More...', self.search_menu)
-
-        self.branch_menu = self.create_menu('Branch', self.menubar)
-        self.menu_branch_view = self.create_menu('View', self.branch_menu)
-        self.menu_branch_advanced = self.create_menu('Advanced', self.branch_menu)
-
-        self.setMenuBar(self.menubar)
-
         # "Actions" widget
         self.actiondockwidget = self.create_dock('Actions')
         self.actiondockwidgetcontents = QtGui.QWidget()
         self.actiondockwidgetcontents.setContentsMargins(2, 2, 2, 2)
-        self.actiondockwidgetlayout = QtGui.QVBoxLayout(self.actiondockwidgetcontents)
+        self.actiondockwidgetlayout =\
+                QtGui.QVBoxLayout(self.actiondockwidgetcontents)
         self.actiondockwidgetlayout.setSpacing(3)
         self.actiondockwidgetlayout.setMargin(3)
 
         layout = self.actiondockwidgetlayout
-
         self.rescan_button = self.create_button('Rescan', layout)
         self.stage_button = self.create_button('Stage', layout)
         self.unstage_button = self.create_button('Unstage', layout)
@@ -103,12 +80,10 @@ class MainWindow(MainWindowBase):
         self.position_label = QtGui.QLabel(self.actiondockwidgetcontents)
         self.position_label.setAlignment(QtCore.Qt.AlignLeft)
 
-
         # Spacer between position and amend
         self.spacer = QtGui.QSpacerItem(1, 1,
                                         QtGui.QSizePolicy.MinimumExpanding,
                                         QtGui.QSizePolicy.Minimum)
-
         # Amend checkbox
         self.amend_checkbox = QtGui.QCheckBox(self.commitdockwidgetcontents)
         self.amend_checkbox.setText(tr('Amend Last Commit'))
@@ -149,9 +124,11 @@ class MainWindow(MainWindowBase):
         self.diffdockwidgetlayout.addWidget(self.display_text)
         self.diffdockwidget.setWidget(self.diffdockwidgetcontents)
 
+        # All Actions
         self.menu_unstage_selected = self.create_action('Unstage From Commit')
         self.menu_show_diffstat = self.create_action('Diffstat')
-        self.menu_stage_modified = self.create_action('Stage Changed Files To Commit')
+        self.menu_stage_modified =\
+                self.create_action('Stage Changed Files To Commit')
         self.menu_stage_untracked = self.create_action('Stage All Untracked')
         self.menu_export_patches = self.create_action('Export Patches...')
         self.menu_cut = self.create_action('Cut')
@@ -165,108 +142,61 @@ class MainWindow(MainWindowBase):
         self.menu_rescan = self.create_action('Rescan')
         self.menu_cherry_pick = self.create_action('Cherry-Pick...')
         self.menu_unstage_all = self.create_action('Unstage All')
-        self.menu_quit = self.create_action('Quit')
         self.menu_load_commitmsg = self.create_action('Load Commit Message...')
-        self.menu_create_branch = self.create_action('Create...')
-        self.menu_checkout_branch = self.create_action('Checkout...')
-        self.menu_rebase_branch = self.create_action('Rebase...')
-        self.menu_delete_branch = self.create_action('Delete...')
-
+        self.menu_quit = self.create_action('Quit')
         self.menu_search_revision = self.create_action('Revision ID...')
-        self.menu_search_path = self.create_action('Commits Touching Path(s)...')
-        self.menu_search_revision_range = self.create_action('Revision Range...')
+        self.menu_search_path =\
+                self.create_action('Commits Touching Path(s)...')
+        self.menu_search_revision_range =\
+                self.create_action('Revision Range...')
         self.menu_search_date_range = self.create_action('Latest Commits...')
         self.menu_search_message = self.create_action('Commit Messages...')
-        self.menu_search_diff = self.create_action('Content Introduced in Commit...')
+        self.menu_search_diff =\
+                self.create_action('Content Introduced in Commit...')
         self.menu_search_author = self.create_action('Commits By Author...')
-        self.menu_search_committer = self.create_action('Commits By Committer...')
-
+        self.menu_search_committer =\
+                self.create_action('Commits By Committer...')
         self.menu_manage_bookmarks = self.create_action('Bookmarks...')
         self.menu_save_bookmark = self.create_action('Bookmark Current...')
         self.menu_search_grep = self.create_action('Grep')
-        self.menu_merge_local = self.create_action('Local Merge...')
+        self.menu_merge_local = self.create_action('Merge...')
         self.menu_merge_abort = self.create_action('Abort Merge...')
         self.menu_open_repo = self.create_action('Open...')
         self.menu_stash = self.create_action('Stash...')
-
-        self.menu_diff_branch = self.create_action('Apply Changes From...')
+        self.menu_diff_branch =\
+                self.create_action('Apply Changes From Branch...')
         self.menu_branch_compare = self.create_action('Branches...')
         self.menu_clone_repo = self.create_action('Clone...')
         self.menu_help_docs = self.create_action('Documentation')
         self.menu_commit_compare = self.create_action('Commits...')
-        self.menu_visualize_current = self.create_action('Visualize Current Branch...')
-        self.menu_visualize_all = self.create_action('Visualize All Branches...')
-        self.menu_browse_commits = self.create_action('Commits...')
-        self.menu_browse_branch = self.create_action('Browse Current Branch...')
-        self.menu_browse_other_branch = self.create_action('Browse Other Branch...')
-        self.menu_load_commitmsg_template = self.create_action('Get Commit Message Template')
-        self.menu_commit_compare_file = self.create_action('Commits Touching File...')
+        self.menu_visualize_current =\
+                self.create_action('Visualize Current Branch...')
+        self.menu_visualize_all =\
+                self.create_action('Visualize All Branches...')
+        self.menu_browse_commits = self.create_action('Browse Commits...')
+        self.menu_browse_branch =\
+                self.create_action('Browse Current Branch...')
+        self.menu_browse_other_branch =\
+                self.create_action('Browse Other Branch...')
+        self.menu_load_commitmsg_template =\
+                self.create_action('Get Commit Message Template')
+        self.menu_commit_compare_file =\
+                self.create_action('Commits Touching File...')
         self.menu_help_about = self.create_action('About')
         self.menu_branch_diff = self.create_action('SHA-1...')
-        self.menu_branch_review = self.create_action('Review...')
         self.menu_diff_expression = self.create_action('Expression...')
+        self.menu_create_tag = self.create_action('Create Tag...')
+        self.menu_create_branch = self.create_action('Create...')
+        self.menu_delete_branch = self.create_action('Delete...')
+        self.menu_checkout_branch = self.create_action('Checkout...')
+        self.menu_rebase_branch = self.create_action('Rebase...')
+        self.menu_branch_review = self.create_action('Review...')
 
-        self.menu_show.addAction(self.menu_browse_commits)
-        self.menu_show.addAction(self.menu_show_diffstat)
+        # Create the application menu
+        self.menubar = QtGui.QMenuBar(self)
 
-        self.menu_prepare.addAction(self.menu_stage_modified)
-        self.menu_prepare.addAction(self.menu_stage_untracked)
-        self.menu_prepare.addSeparator()
-        self.menu_prepare.addAction(self.menu_unstage_all)
-        self.menu_prepare.addAction(self.menu_unstage_selected)
-
-        self.menu_advanced.addAction(self.menu_cherry_pick)
-
-        self.commit_menu.addAction(self.menu_show.menuAction())
-        self.commit_menu.addAction(self.menu_prepare.menuAction())
-        self.commit_menu.addSeparator()
-        self.commit_menu.addAction(self.menu_stash)
-        self.commit_menu.addAction(self.menu_export_patches)
-        self.commit_menu.addSeparator()
-        self.commit_menu.addAction(self.menu_advanced.menuAction())
-
-        self.edit_menu.addAction(self.menu_undo)
-        self.edit_menu.addAction(self.menu_redo)
-        self.edit_menu.addSeparator()
-        self.edit_menu.addAction(self.menu_cut)
-        self.edit_menu.addAction(self.menu_copy)
-        self.edit_menu.addAction(self.menu_paste)
-        self.edit_menu.addAction(self.menu_delete)
-        self.edit_menu.addSeparator()
-        self.edit_menu.addAction(self.menu_select_all)
-        self.edit_menu.addSeparator()
-        self.edit_menu.addAction(self.menu_options)
-
-        self.menu_search_more.addAction(self.menu_search_author)
-        self.menu_search_more.addAction(self.menu_search_path)
-        self.menu_search_more.addAction(self.menu_search_message)
-        self.menu_search_more.addSeparator()
-        self.menu_search_more.addAction(self.menu_search_revision_range)
-        self.menu_search_more.addAction(self.menu_search_revision)
-        self.menu_search_more.addSeparator()
-        self.menu_search_more.addAction(self.menu_search_diff)
-
-        self.search_menu.addAction(self.menu_search_date_range)
-        self.search_menu.addAction(self.menu_search_grep)
-        self.search_menu.addAction(self.menu_search_more.menuAction())
-
-        self.menu_branch_view.addAction(self.menu_browse_branch)
-        self.menu_branch_view.addAction(self.menu_browse_other_branch)
-        self.menu_branch_view.addSeparator()
-        self.menu_branch_view.addAction(self.menu_visualize_current)
-        self.menu_branch_view.addAction(self.menu_visualize_all)
-
-        self.menu_branch_advanced.addAction(self.menu_diff_branch)
-
-        self.branch_menu.addAction(self.menu_branch_review)
-        self.branch_menu.addSeparator()
-        self.branch_menu.addAction(self.menu_create_branch)
-        self.branch_menu.addAction(self.menu_checkout_branch)
-        self.branch_menu.addAction(self.menu_rebase_branch)
-        self.branch_menu.addAction(self.menu_delete_branch)
-        self.branch_menu.addSeparator()
-        self.branch_menu.addAction(self.menu_branch_view.menuAction())
-        self.branch_menu.addAction(self.menu_branch_advanced.menuAction())
+        # File Menu
+        self.file_menu = self.create_menu('File', self.menubar)
         self.file_menu.addAction(self.menu_open_repo)
         self.file_menu.addAction(self.menu_clone_repo)
         self.file_menu.addSeparator()
@@ -279,49 +209,123 @@ class MainWindow(MainWindowBase):
         self.file_menu.addAction(self.menu_load_commitmsg_template)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_quit)
-        self.merge_menu.addAction(self.menu_merge_local)
-        self.merge_menu.addAction(self.menu_merge_abort)
-        self.help_menu.addAction(self.menu_help_docs)
-        self.help_menu.addAction(self.menu_help_about)
+        # Add to menubar
+        self.menubar.addAction(self.file_menu.menuAction())
+
+        # Edit Menu
+        self.edit_menu = self.create_menu('Edit', self.menubar)
+        self.edit_menu.addAction(self.menu_undo)
+        self.edit_menu.addAction(self.menu_redo)
+        self.edit_menu.addSeparator()
+        self.edit_menu.addAction(self.menu_cut)
+        self.edit_menu.addAction(self.menu_copy)
+        self.edit_menu.addAction(self.menu_paste)
+        self.edit_menu.addAction(self.menu_delete)
+        self.edit_menu.addSeparator()
+        self.edit_menu.addAction(self.menu_select_all)
+        self.edit_menu.addSeparator()
+        self.edit_menu.addAction(self.menu_options)
+        # Add to menubar
+        self.menubar.addAction(self.edit_menu.menuAction())
+
+        # Commit Menu
+        self.commit_menu = self.create_menu('Commit', self.menubar)
+        self.commit_menu.addAction(self.menu_stage_modified)
+        self.commit_menu.addAction(self.menu_stage_untracked)
+        self.commit_menu.addSeparator()
+        self.commit_menu.addAction(self.menu_unstage_all)
+        self.commit_menu.addAction(self.menu_unstage_selected)
+        self.commit_menu.addSeparator()
+        self.commit_menu.addAction(self.menu_browse_commits)
+        # Add to menubar
+        self.menubar.addAction(self.commit_menu.menuAction())
+
+        # Branch Menu
+        self.branch_menu = self.create_menu('Branch', self.menubar)
+        self.branch_menu.addAction(self.menu_branch_review)
+        self.branch_menu.addSeparator()
+        self.branch_menu.addAction(self.menu_create_branch)
+        self.branch_menu.addAction(self.menu_checkout_branch)
+        self.branch_menu.addAction(self.menu_rebase_branch)
+        self.branch_menu.addAction(self.menu_delete_branch)
+        self.branch_menu.addSeparator()
+        self.branch_menu.addAction(self.menu_browse_branch)
+        self.branch_menu.addAction(self.menu_browse_other_branch)
+        self.branch_menu.addSeparator()
+        self.branch_menu.addAction(self.menu_visualize_current)
+        self.branch_menu.addAction(self.menu_visualize_all)
+        self.branch_menu.addSeparator()
+        self.branch_menu.addAction(self.menu_diff_branch)
+        # Add to menubar
+        self.menubar.addAction(self.branch_menu.menuAction())
+
+        # Search Menu
+        self.search_menu = self.create_menu('Search', self.menubar)
+        self.search_menu.addAction(self.menu_search_date_range)
+        self.search_menu.addAction(self.menu_search_grep)
+        self.search_menu.addSeparator()
+        # Search / More Menu
+        self.menu_search_more = self.create_menu('More...', self.search_menu)
+        self.menu_search_more.addAction(self.menu_search_author)
+        self.menu_search_more.addAction(self.menu_search_path)
+        self.menu_search_more.addAction(self.menu_search_message)
+        self.menu_search_more.addSeparator()
+        self.menu_search_more.addAction(self.menu_search_revision_range)
+        self.menu_search_more.addAction(self.menu_search_revision)
+        self.menu_search_more.addSeparator()
+        self.menu_search_more.addAction(self.menu_search_diff)
+        self.search_menu.addAction(self.menu_search_more.menuAction())
+        # Add to menubar
+        self.menubar.addAction(self.search_menu.menuAction())
+
+        # Actions menu
+        self.actions_menu = self.create_menu('Actions', self.menubar)
+        self.actions_menu.addAction(self.menu_merge_local)
+        self.actions_menu.addAction(self.menu_stash)
+        self.actions_menu.addSeparator()
+        self.actions_menu.addAction(self.menu_create_tag)
+        self.actions_menu.addSeparator()
+        self.actions_menu.addAction(self.menu_export_patches)
+        self.actions_menu.addAction(self.menu_cherry_pick)
+        self.actions_menu.addSeparator()
+        self.actions_menu.addAction(self.menu_merge_abort)
+        # Add to menubar
+        self.menubar.addAction(self.actions_menu.menuAction())
+
+        # Diff Menu
+        self.diff_menu = self.create_menu('Diff', self.menubar)
         self.diff_menu.addAction(self.menu_branch_diff)
         self.diff_menu.addAction(self.menu_diff_expression)
         self.diff_menu.addSeparator()
         self.diff_menu.addAction(self.menu_branch_compare)
         self.diff_menu.addAction(self.menu_commit_compare)
         self.diff_menu.addAction(self.menu_commit_compare_file)
-
-        self.menu_tools.addAction(self.classicdockwidget.toggleViewAction())
-        self.menu_tools.addAction(self.diffdockwidget.toggleViewAction())
-        self.menu_tools.addAction(self.actiondockwidget.toggleViewAction())
-        self.menu_tools.addAction(self.commitdockwidget.toggleViewAction())
-        self.menu_tools.addAction(self.statusdockwidget.toggleViewAction())
-        self.menu_tools.addAction(self.logdockwidget.toggleViewAction())
-
-        self.menubar.addAction(self.file_menu.menuAction())
-        self.menubar.addAction(self.edit_menu.menuAction())
-        self.menubar.addAction(self.search_menu.menuAction())
-        self.menubar.addAction(self.commit_menu.menuAction())
-        self.menubar.addAction(self.branch_menu.menuAction())
-        self.menubar.addAction(self.merge_menu.menuAction())
+        self.diff_menu.addSeparator()
+        self.diff_menu.addAction(self.menu_show_diffstat)
+        # Add to menubar
         self.menubar.addAction(self.diff_menu.menuAction())
-        self.menubar.addAction(self.menu_tools.menuAction())
+
+        # Tools Menu
+        self.tools_menu = self.create_menu('Tools', self.menubar)
+        self.tools_menu.addAction(self.classicdockwidget.toggleViewAction())
+        self.tools_menu.addAction(self.diffdockwidget.toggleViewAction())
+        self.tools_menu.addAction(self.actiondockwidget.toggleViewAction())
+        self.tools_menu.addAction(self.commitdockwidget.toggleViewAction())
+        self.tools_menu.addAction(self.statusdockwidget.toggleViewAction())
+        self.tools_menu.addAction(self.logdockwidget.toggleViewAction())
+        self.menubar.addAction(self.tools_menu.menuAction())
+
+        # Help Menu
+        self.help_menu = self.create_menu('Help', self.menubar)
+        self.help_menu.addAction(self.menu_help_docs)
+        self.help_menu.addAction(self.menu_help_about)
+        # Add to menubar
         self.menubar.addAction(self.help_menu.menuAction())
 
-        top = QtCore.Qt.DockWidgetArea(4)
-        bottom = QtCore.Qt.DockWidgetArea(8)
+        # Set main menu
+        self.setMenuBar(self.menubar)
 
-        self.addDockWidget(top, self.commitdockwidget)
-        self.addDockWidget(top, self.classicdockwidget)
-        self.tabifyDockWidget(self.classicdockwidget, self.statusdockwidget)
-
-        self.addDockWidget(bottom, self.actiondockwidget)
-        self.addDockWidget(bottom, self.logdockwidget)
-        self.tabifyDockWidget(self.logdockwidget, self.diffdockwidget)
-
-        # Hide the classic dock by default
-        self.classicdockwidget.toggleViewAction().trigger()
-
-        # Translate
+        # Shortcuts
         self.menu_show_diffstat.setShortcut(tr('Ctrl+D'))
         self.menu_stage_modified.setShortcut(tr('Alt+A'))
         self.menu_stage_untracked.setShortcut(tr('Alt+U'))
@@ -341,6 +345,21 @@ class MainWindow(MainWindowBase):
         self.menu_checkout_branch.setShortcut(tr('Alt+B'))
         self.menu_stash.setShortcut(tr('Alt+Shift+S'))
         self.menu_help_docs.setShortcut(tr('F1'))
+
+        # Arrange dock widgets
+        top = QtCore.Qt.DockWidgetArea(4)
+        bottom = QtCore.Qt.DockWidgetArea(8)
+
+        self.addDockWidget(top, self.commitdockwidget)
+        self.addDockWidget(top, self.classicdockwidget)
+        self.tabifyDockWidget(self.classicdockwidget, self.statusdockwidget)
+
+        self.addDockWidget(bottom, self.actiondockwidget)
+        self.addDockWidget(bottom, self.logdockwidget)
+        self.tabifyDockWidget(self.logdockwidget, self.diffdockwidget)
+
+        # Hide the classic dock by default
+        self.classicdockwidget.toggleViewAction().trigger()
 
     def create_dock(self, title):
         """Create a dock widget and set it up accordingly."""
