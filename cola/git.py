@@ -9,9 +9,12 @@ import os
 import sys
 import errno
 import subprocess
+import threading
 
 from cola import core
 from cola import errors
+
+cmdlock = threading.Lock()
 
 
 def dashify(string):
@@ -103,6 +106,8 @@ class Git(object):
             command = map(replace_carot, command)
 
         # Start the process
+        # Guard against thread-unsafe .git/index.lock files
+        cmdlock.acquire()
         while True:
             try:
                 proc = subprocess.Popen(command,
@@ -116,15 +121,23 @@ class Git(object):
                 # Some systems interrupt system calls and throw OSError
                 if e.errno == errno.EINTR:
                     continue
+                cmdlock.release()
                 raise e
-
         # Wait for the process to return
-        output = core.read_nointr(proc.stdout)
-        proc.stdout.close()
-        status = core.wait_nointr(proc)
+        try:
+            output = core.read_nointr(proc.stdout)
+            proc.stdout.close()
+            status = core.wait_nointr(proc)
+        except:
+            status = 202
+            output = str(e)
+
+        # Let the next thread in
+        cmdlock.release()
 
         if with_exceptions and status != 0:
-            raise errors.GitCommandError(command, status, output)
+            cmdstr = 'Error running: %s\n%s' % (' '.join(command), str(e))
+            raise errors.GitCommandError(cmdstr, status, output)
 
         if not with_raw_output:
             output = output.rstrip()
@@ -159,12 +172,12 @@ class Git(object):
                     args.append("--%s=%s" % (dashify(k), v))
         return args
 
-    def _call_process(self, method, *args, **kwargs):
+    def _call_process(self, cmd, *args, **kwargs):
         """
         Run the given git command with the specified arguments and return
         the result as a String
 
-        ``method``
+        ``cmd``
             is the command
 
         ``args``
@@ -194,7 +207,7 @@ class Git(object):
         ext_args = map(core.encode, args)
         args = opt_args + ext_args
 
-        call = ['git', dashify(method)]
+        call = ['git', dashify(cmd)]
         call.extend(args)
 
         return self.execute(call, **_kwargs)
