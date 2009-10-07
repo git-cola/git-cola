@@ -19,7 +19,7 @@ def abort_merge():
            'Continue with aborting the current merge?')
     parent = QtGui.QApplication.instance().activeWindow()
     model = cola.model()
-    answer = qtutils.question(parent, 'Abort Merge?', txt)
+    answer = qtutils.question(parent, 'Abort Merge?', txt, default=False)
     if answer:
         model.abort_merge()
 
