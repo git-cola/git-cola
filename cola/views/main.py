@@ -20,6 +20,7 @@ from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.mainwindow import MainWindow
 from cola.controllers import compare
 from cola.controllers import search as smod
+from cola.controllers import createtag
 from cola.controllers.bookmark import manage_bookmarks
 from cola.controllers.bookmark import save_bookmark
 from cola.controllers.createbranch import create_new_branch
@@ -110,6 +111,7 @@ class MainView(MainWindow):
             (self.menu_browse_branch, self.browse_current),
             (self.menu_browse_other_branch, self.browse_other),
             (self.menu_browse_commits, self.browse_commits),
+            (self.menu_create_tag, createtag.create_tag),
             (self.menu_create_branch, create_new_branch),
             (self.menu_checkout_branch, self.checkout_branch),
             (self.menu_delete_branch, self.branch_delete),
