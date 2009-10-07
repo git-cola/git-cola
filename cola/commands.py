@@ -540,6 +540,40 @@ class StageUntracked(Stage):
         Stage.__init__(self, None)
         self.paths = self.model.untracked
 
+class Tag(Command):
+    """Create a tag object."""
+    def __init__(self, name, revision, sign=False, message=''):
+        Command.__init__(self)
+        self._name = name
+        self._message = core.encode(message)
+        self._revision = revision
+        self._sign = sign
+
+    def do(self):
+        log_msg = 'Tagging: "%s" as "%s"' % (self._revision, self._name)
+        if self._sign:
+            log_msg += ', GPG-signed'
+            path = cola.model().tmp_filename()
+            utils.write(path, self._message)
+            status, output = cola.model().git.tag(self._name,
+                                                  self._revision,
+                                                  s=True,
+                                                  F=path,
+                                                  with_status=True,
+                                                  with_stderr=True)
+            os.unlink(path)
+        else:
+            status, output = cola.model().git.tag(self._name,
+                                                  self._revision,
+                                                  with_status=True,
+                                                  with_stderr=True)
+        if output:
+            log_msg += '\nOutput:\n%s' % output
+
+        _notifier.broadcast(signals.log_cmd, status, log_msg)
+        if status == 0:
+            cola.model().update_status()
+
 
 class Unstage(Command):
     """Unstage a set of paths."""
@@ -651,6 +685,7 @@ def register():
         signals.stage_modified: StageModified,
         signals.stage_untracked: StageUntracked,
         signals.staged_summary: DiffStagedSummary,
+        signals.tag: Tag,
         signals.unstage: Unstage,
         signals.unstage_all: UnstageAll,
         signals.unstage_selected: UnstageSelected,
