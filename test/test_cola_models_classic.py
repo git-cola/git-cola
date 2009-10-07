@@ -4,21 +4,6 @@ import os
 import helper
 from cola.models.main import MainModel
 
-class MainModelObserver(object):
-    """Helper class for observing changes to the model."""
-    def __init__(self, model):
-        self.paths = None
-        model.add_message_observer(model.message_paths_staged,
-                                   self.observe_paths)
-        model.add_message_observer(model.message_paths_unstaged,
-                                   self.observe_paths)
-        model.add_message_observer(model.message_paths_reverted,
-                                   self.observe_paths)
-
-    def observe_paths(self, paths=None):
-        """React to the 'paths_staged' message."""
-        self.paths = paths
-
 
 class ClassicModelTestCase(helper.TestCase):
     """Tests interfaces used by the classic view."""
@@ -45,44 +30,6 @@ class ClassicModelTestCase(helper.TestCase):
         self.assertTrue('the-file' in everything)
         self.assertTrue('other-file' in everything)
 
-    def test_stage_paths(self):
-        """Test a simple usage of stage_paths()."""
-        self.setup_baseline_repo()
-        self.shell('echo change > the-file')
-
-        model = MainModel(cwd=os.getcwd())
-        observer = MainModelObserver(model)
-        model.stage_paths(['the-file'])
-
-        self.assertTrue('the-file' in observer.paths)
-
-    def test_stage_paths_subdir(self):
-        """Test stage_paths() in a subdirectory."""
-        self.setup_baseline_repo()
-        self.shell("""
-            mkdir -p foo/bar &&
-            touch foo/bar/baz &&
-            git add foo/bar/baz &&
-            echo change > foo/bar/baz
-        """)
-
-        model = MainModel(cwd=os.getcwd())
-        observer = MainModelObserver(model)
-
-        model.stage_paths(['foo'])
-
-        self.assertTrue('foo' in observer.paths)
-        self.assertTrue('foo/bar' in observer.paths)
-        self.assertTrue('foo/bar/baz' in observer.paths)
-
-        self.shell('echo change >> foo/bar/baz')
-
-        model.stage_paths(['foo/bar/baz'])
-
-        self.assertTrue('foo/bar/baz' in observer.paths)
-        self.assertTrue('foo/bar' in observer.paths)
-        self.assertTrue('foo' in observer.paths)
-
     def test_stage_paths_untracked(self):
         """Test stage_paths() with an untracked file."""
         self.setup_baseline_repo()
@@ -90,15 +37,9 @@ class ClassicModelTestCase(helper.TestCase):
             mkdir -p foo/bar &&
             touch foo/bar/baz
         """)
-
         model = MainModel(cwd=os.getcwd())
-        observer = MainModelObserver(model)
-
         model.stage_paths(['foo'])
 
-        self.assertTrue('foo' in observer.paths)
-        self.assertTrue('foo/bar' in observer.paths)
-        self.assertTrue('foo/bar/baz' in observer.paths)
         self.assertTrue('foo/bar/baz' in model.staged)
         self.assertTrue('foo/bar/baz' not in model.modified)
         self.assertTrue('foo/bar/baz' not in model.untracked)
@@ -112,10 +53,8 @@ class ClassicModelTestCase(helper.TestCase):
         """)
 
         model = MainModel(cwd=os.getcwd())
-        observer = MainModelObserver(model)
         model.unstage_paths(['the-file'])
 
-        self.assertTrue('the-file' in observer.paths)
         self.assertTrue('the-file' not in model.staged)
         self.assertTrue('the-file' in model.modified)
 
@@ -124,11 +63,8 @@ class ClassicModelTestCase(helper.TestCase):
         self.setup_baseline_repo(commit=False)
 
         model = MainModel(cwd=os.getcwd())
-        observer = MainModelObserver(model)
-
         model.unstage_paths(['the-file'])
 
-        self.assertTrue('the-file' in observer.paths)
         self.assertTrue('the-file' not in model.staged)
         self.assertTrue('the-file' in model.untracked)
 
@@ -140,15 +76,9 @@ class ClassicModelTestCase(helper.TestCase):
             touch foo/bar/baz &&
             git add foo/bar/baz
         """)
-
         model = MainModel(os.getcwd())
-        observer = MainModelObserver(model)
-
         model.unstage_paths(['foo'])
 
-        self.assertTrue('foo' in observer.paths)
-        self.assertTrue('foo/bar' in observer.paths)
-        self.assertTrue('foo/bar/baz' in observer.paths)
         self.assertTrue('foo/bar/baz' in model.untracked)
         self.assertTrue('foo/bar/baz' not in model.staged)
 
@@ -158,10 +88,8 @@ class ClassicModelTestCase(helper.TestCase):
         self.shell('echo change > the-file')
 
         model = MainModel(cwd=os.getcwd())
-        observer = MainModelObserver(model)
         model.revert_paths(['the-file'])
 
-        self.assertTrue('the-file' in observer.paths)
         self.assertTrue('the-file' not in model.staged)
         self.assertTrue('the-file' not in model.modified)
 
@@ -176,11 +104,7 @@ class ClassicModelTestCase(helper.TestCase):
         """)
 
         model = MainModel(cwd=os.getcwd())
-        observer = MainModelObserver(model)
         model.revert_paths(['foo'])
 
-        self.assertTrue('foo' in observer.paths)
-        self.assertTrue('foo/bar' in observer.paths)
-        self.assertTrue('foo/bar/baz' in observer.paths)
         self.assertTrue('foo/bar/baz' not in model.modified)
         self.assertTrue('foo/bar/baz' not in model.staged)

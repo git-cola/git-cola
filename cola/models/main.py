@@ -44,9 +44,6 @@ class MainModel(ObservableModel):
     # Observable messages
     message_updated = 'updated'
     message_about_to_update = 'about_to_update'
-    message_paths_staged   = 'paths_staged'
-    message_paths_unstaged = 'paths_unstaged'
-    message_paths_reverted = 'paths_reverted'
 
     # States
     mode_none = 'none' # Default: nothing's happened, do nothing
@@ -1199,86 +1196,32 @@ class MainModel(ObservableModel):
         return files
 
     def stage_paths(self, paths):
-        """Adds paths to git and notifies observers."""
-
-        # Grab the old lists of untracked + modified files
-        self.update_status()
-        old_modified = set(self.modified)
-        old_untracked = set(self.untracked)
-
-        # Add paths and scan for changes
-        paths = set(paths)
-        for path in paths:
-            # If a path doesn't exist then that means it should be removed
-            # from the index.   We use `git add -u` for that.
-            # Note: `git add -u` doesn't on untracked files.
+        """Stages add/removals to git."""
+        add = []
+        remove = []
+        for path in set(paths):
             if os.path.exists(core.encode(path)):
-                self.git.add('--', path)
+                add.append(path)
             else:
-                self.git.add('--', path, u=True)
-
+                remove.append(path)
+        # `git add -u` doesn't work on untracked files
+        if add:
+            self.git.add('--', *add)
+        # If a path doesn't exist then that means it should be removed
+        # from the index.   We use `git add -u` for that.
+        if remove:
+            self.git.add('--', u=True, *remove)
         self.update_status()
-
-        # Grab the new lists of untracked + modified files
-        new_modified = set(self.modified)
-        new_untracked = set(self.untracked)
-
-        # Handle 'git add' on a directory
-        newly_not_modified = utils.add_parents(old_modified - new_modified)
-        newly_not_untracked = utils.add_parents(old_untracked - new_untracked)
-        for path in newly_not_modified.union(newly_not_untracked):
-            paths.add(path)
-
-        self.notify_message_observers(self.message_paths_staged, paths=paths)
 
     def unstage_paths(self, paths):
         """Unstages paths from the staging area and notifies observers."""
-        paths = set(paths)
-
-        # Grab the old list of staged files
+        self.reset_helper(set(paths))
         self.update_status()
-        old_staged = set(self.staged)
-
-        # Reset and scan for new changes
-        self.reset_helper(paths)
-        self.update_status()
-
-        # Grab the new list of staged file
-        new_staged = set(self.staged)
-
-        # Handle 'git reset' on a directory
-        newly_unstaged = utils.add_parents(old_staged - new_staged)
-        for path in newly_unstaged:
-            paths.add(path)
-
-        self.notify_message_observers(self.message_paths_unstaged, paths=paths)
 
     def revert_paths(self, paths):
         """Revert paths to the content from HEAD."""
-        paths = set(paths)
-
-        # Grab the old set of changed files
+        self.git.checkout('HEAD', '--', *set(paths))
         self.update_status()
-        old_modified = set(self.modified)
-        old_staged = set(self.staged)
-        old_changed = old_modified.union(old_staged)
-
-        # Checkout and scan for changes
-        self.git.checkout('HEAD', '--', *paths)
-        self.update_status()
-
-        # Grab the new set of changed files
-        new_modified = set(self.modified)
-        new_staged = set(self.staged)
-        new_changed = new_modified.union(new_staged)
-
-        # Handle 'git checkout' on a directory
-        newly_reverted = utils.add_parents(old_changed - new_changed)
-
-        for path in newly_reverted:
-            paths.add(path)
-
-        self.notify_message_observers(self.message_paths_reverted, paths=paths)
 
     def getcwd(self):
         """If we've chosen a directory then use it, otherwise os.getcwd()."""
