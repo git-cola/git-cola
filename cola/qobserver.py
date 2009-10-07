@@ -101,13 +101,9 @@ class QObserver(observer.Observer, QtCore.QObject):
                     model.set_param(param+'_item', '')
             elif isinstance(widget, QtGui.QComboBox):
                 idx = widget.currentIndex()
+                txt = unicode(widget.currentText())
                 model.set_param(param+'_index', idx)
-                if idx != -1 and model.param(param):
-                    model.set_param(param+'_item',
-                                    model.param(param)[idx])
-                else:
-                    model.set_param(param+'_item', '')
-
+                model.set_param(param+'_item', txt)
             else:
                 print("SLOT(): Unknown widget:", param, widget)
 
@@ -190,6 +186,7 @@ class QObserver(observer.Observer, QtCore.QObject):
             self.add_signals('dateChanged(const QDate&)', widget)
         elif isinstance(widget, QtGui.QComboBox):
             self.add_signals('currentIndexChanged(int)', widget)
+            self.add_signals('editTextChanged(QString)', widget)
         else:
             raise Exception('Asked to connect unknown widget:\n\t%s => %s'
                             % (type(widget), str(widget.objectName())))
