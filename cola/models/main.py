@@ -177,7 +177,7 @@ class MainModel(ObservableModel):
             'gui_pruneduringfetch': False,
         }
         # config items that are purely git config --global settings
-        self.__global_defaults = {
+        self._global_defaults = {
             'cola_geometry': '',
             'cola_fontdiff': '',
             'cola_fontdiff_size': 12,
@@ -223,7 +223,7 @@ class MainModel(ObservableModel):
             if k not in global_dict:
                 self.set_param('global_'+k, v)
 
-        global_defaults = self.__global_defaults
+        global_defaults = self._global_defaults
         for k,v in global_defaults.iteritems():
             if k not in global_dict:
                 self.set_param('global_'+k, v)
@@ -263,7 +263,7 @@ class MainModel(ObservableModel):
         params.extend(map(lambda x: 'global_' + x,
                           self._local_and_global_defaults.keys()))
         params.extend(map(lambda x: 'global_' + x,
-                          self.__global_defaults.keys()))
+                          self._global_defaults.keys()))
         return [ p for p in params if not p.endswith('_size') ]
 
     def save_config_param(self, param):
