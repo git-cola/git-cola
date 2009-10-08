@@ -786,8 +786,8 @@ class MainModel(ObservableModel):
         return os.path.realpath(os.path.join(*paths))
 
     def merge_message_path(self):
-        for file in ('MERGE_MSG', 'SQUASH_MSG'):
-            path = self.git_repo_path(file)
+        for basename in ('MERGE_MSG', 'SQUASH_MSG'):
+            path = self.git_repo_path(basename)
             if os.path.exists(path):
                 return path
         return None
