@@ -12,6 +12,9 @@ from cola import core
 from cola import utils
 from cola import qtutils
 
+# Custom event type for GitRepoInfoEvents
+INFO_EVENT_TYPE = QtCore.QEvent.User + 42
+
 
 class Columns(object):
     """Defines columns in the classic view"""
@@ -211,9 +214,11 @@ class GitRepoEntry(QtCore.QObject):
 
     def event(self, e):
         """Receive GitRepoInfoEvents and emit corresponding Qt signals."""
-        e.accept()
-        self.emit(SIGNAL(e.signal), *e.data)
-        return True
+        if e.type() == INFO_EVENT_TYPE:
+            e.accept()
+            self.emit(SIGNAL(e.signal), *e.data)
+            return True
+        return QtCore.QObject.event(self, e)
 
 
 class GitRepoInfoTask(QtCore.QRunnable):
@@ -314,6 +319,9 @@ class GitRepoInfoEvent(QtCore.QEvent):
         QtCore.QEvent.__init__(self, QtCore.QEvent.User + 1)
         self.signal = signal
         self.data = data
+
+    def type(self):
+        return INFO_EVENT_TYPE
 
 
 class GitRepoItem(QtGui.QStandardItem):
