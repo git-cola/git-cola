@@ -122,10 +122,9 @@ class GitRepoModel(QtGui.QStandardItemModel):
         """Observes model changes and updates paths accordingly."""
         old_paths = self._interesting_paths
         new_paths = self._get_paths()
-        for path in new_paths - old_paths:
-            if path not in self._known_paths:
-                self.add_file(path, insert=True)
         for path in new_paths.union(old_paths):
+            if path not in self._known_paths:
+                continue
             self.entry(path).update()
 
         self._interesting_paths = new_paths
