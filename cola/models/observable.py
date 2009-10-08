@@ -34,7 +34,6 @@ class ObservableModel(Model, Observable):
         unserializable_copy = copy.deepcopy(_unserializable_attributes)
         self.restore_unserializable_attributes(attributes)
         clone.restore_unserializable_attributes(unserializable_copy)
-        clone.register_messages(messages=self.message_observers)
         return clone
 
     def set_param(self, param, value, notify=True):
@@ -61,7 +60,8 @@ class ObservableModel(Model, Observable):
         """Override Model.instance() to account for unserializable data."""
         obj = Model.instance(path)
         if isinstance(obj, ObservableModel):
+            # This ensures that clones always start out with no observers,
+            # but retain the hidden _unserializable_attributes.
             unserializable_copy = copy.deepcopy(_unserializable_attributes)
             obj.restore_unserializable_attributes(unserializable_copy)
-            obj.register_messages()
         return obj
