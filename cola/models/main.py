@@ -1191,7 +1191,12 @@ class MainModel(ObservableModel):
 
     def everything(self):
         """Returns a sorted list of all files, including untracked files."""
-        files = self.all_files() + self.untracked
+        files = [core.decode(f)
+                 for f in self.git.ls_files(z=True,
+                                            others=True,
+                                            cached=True)
+                                  .strip('\0')
+                                  .split('\0') if f]
         files.sort()
         return files
 
