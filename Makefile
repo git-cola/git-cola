@@ -63,12 +63,10 @@ clean:
 	for dir in share/doc/git-cola test; do \
 		(cd $$dir && $(MAKE) clean); \
 	done
-	find cola -name '*.py[co]' -print0 | xargs -0 rm -f
-	find jsonpickle -name '*.py[co]' -print0 | xargs -0 rm -f
+	find . -name .noseids -print0 | xargs -0 rm -f
+	find . -name '*.py[co]' -print0 | xargs -0 rm -f
 	find share -name '*.qm' -print0 | xargs -0 rm -f
-	find simplejson -name '*.py[co]' -print0 | xargs -0 rm -f
-	rm -rf build tmp
-	rm -f tags
+	rm -rf build tmp tags
 
 tags:
 	ctags -R cola/*.py cola/views/*.py cola/controllers/*.py

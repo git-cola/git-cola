@@ -34,7 +34,8 @@ help:
 	@echo "  doctest   to run all doctests embedded in the documentation (if enabled)"
 
 clean:
-	-rm -rf _build/*
+	-rm -rf conf.py _build/*
+	$(MAKE) -f Makefile.asciidoc clean
 
 conf.py:
 	cp conf.py.in conf.py
