@@ -15,12 +15,17 @@ from cola import inotify
 from cola import version
 
 # Spoof an X11 display for SSH
-if sys.platform == 'win32':
-    os.environ.setdefault('DISPLAY', ':native')
+os.environ.setdefault('DISPLAY', ':0')
 
-# Provide our own SSH_ASKPASS unless specified by the user
-os.environ.setdefault('SSH_ASKPASS',
-                      resources.prefix('libexec', 'git-cola', 'ssh-askpass'))
+# Provide an SSH_ASKPASS fallback
+if sys.platform == 'darwin':
+    os.environ.setdefault('SSH_ASKPASS',
+                          resources.prefix('libexec', 'git-cola',
+                                           'ssh-askpass-darwin'))
+else:
+    os.environ.setdefault('SSH_ASKPASS',
+                          resources.prefix('libexec', 'git-cola',
+                                           'ssh-askpass'))
 
 
 def main():
