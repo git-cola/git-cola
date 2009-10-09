@@ -78,6 +78,7 @@ def cola_data_files():
             _app_path('share/git-cola/styles/images', '*.png'),
             _app_path('share/applications', '*.desktop'),
             _app_path('share/doc/git-cola', '*.txt'),
+            _app_path('libexec/git-cola', 'ssh-askpass'),
             _lib_path('cola/*.py'),
             _lib_path('cola/models/*.py'),
             _lib_path('cola/controllers/*.py'),

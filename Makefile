@@ -47,6 +47,7 @@ install-html:
 uninstall:
 	rm -rf  $(DESTDIR)$(prefix)/bin/git-cola \
 		$(DESTDIR)$(prefix)/bin/cola \
+		$(DESTDIR)$(prefix)/libexec/git-cola \
 		$(DESTDIR)$(prefix)/share/applications/cola.desktop \
 		$(DESTDIR)$(prefix)/share/git-cola \
 		$(DESTDIR)$(prefix)/share/doc/git-cola
