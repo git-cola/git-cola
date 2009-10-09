@@ -19,6 +19,7 @@ include INSTALL
 include LICENSE
 include MANIFEST.in
 include libexec/git-cola/ssh-askpass
+include libexec/git-cola/ssh-askpass-darwin
 include share/applications/*.desktop
 include share/doc/git-cola/*.txt
 include share/doc/git-cola/*.conf
