@@ -52,18 +52,20 @@ uninstall:
 		$(DESTDIR)$(prefix)/share/git-cola \
 		$(DESTDIR)$(prefix)/share/doc/git-cola
 
-test: all
-	$(MAKE) -C test all
+test_flags	?=
+all_test_flags	?= --with-doctest $(test_flags)
+
+test:
+	@env PYTHONPATH="$(CURDIR)":"$(PYTHONPATH)" \
+	nosetests $(all_test_flags)
 
 coverage:
 	@env PYTHONPATH=$(CURDIR):$(PYTHONPATH) \
-		nosetests --verbose --with-doctest --with-id --with-coverage \
-		--cover-package=cola
+	nosetests $(all_test_flags) \
+		--with-coverage --cover-package=cola
 
 clean:
-	for dir in share/doc/git-cola test; do \
-		(cd $$dir && $(MAKE) clean); \
-	done
+	$(MAKE) -C share/doc/git-cola clean
 	find . -name .noseids -print0 | xargs -0 rm -f
 	find . -name '*.py[co]' -print0 | xargs -0 rm -f
 	find share -name '*.qm' -print0 | xargs -0 rm -f
