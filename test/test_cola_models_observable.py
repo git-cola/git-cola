@@ -42,13 +42,6 @@ class ObservableModelTestCase(unittest.TestCase):
         self.assertEqual(self.observer.args, (),)
         self.assertEqual(self.observer.opts, {'hello': 'world'})
 
-    def test_notify_message_observers_bogus_message(self):
-        """Test that bogus messages are ignored."""
-        self.assertRaises(ValueError, self.model.notify_message_observers,
-                          'this-is-a-bogus-message')
-        self.assertEqual(self.observer.args, None)
-        self.assertEqual(self.observer.opts, None)
-
     def test_observing_multiple_models(self):
         """Test that we can attach to multiple models."""
         self.model.copy(self.model, foo='bar')
