@@ -71,20 +71,25 @@ def _run_setup(git_version):
 
 
 def cola_data_files():
-    return [_app_path('share/git-cola/qm', '*.qm'),
+    data = [_app_path('share/git-cola/qm', '*.qm'),
             _app_path('share/git-cola/icons', '*.png'),
             _app_path('share/git-cola/icons', '*.svg'),
             _app_path('share/git-cola/styles', '*.qss'),
             _app_path('share/git-cola/styles/images', '*.png'),
             _app_path('share/applications', '*.desktop'),
             _app_path('share/doc/git-cola', '*.txt'),
-            _app_path('libexec/git-cola', 'ssh-askpass'),
             _lib_path('cola/*.py'),
             _lib_path('cola/models/*.py'),
             _lib_path('cola/controllers/*.py'),
             _lib_path('cola/views/*.py'),
             _lib_path('jsonpickle/*.py'),
             _lib_path('simplejson/*.py')]
+
+    if sys.platform == 'darwin':
+        data.append(_app_path('libexec/git-cola', 'ssh-askpass-darwin'))
+    else:
+        data.append(_app_path('libexec/git-cola', 'ssh-askpass'))
+    return data
 
 def _lib_path(entry):
     dirname = os.path.dirname(entry)
