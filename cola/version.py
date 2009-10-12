@@ -35,7 +35,10 @@ class VersionUnavailable(Exception):
 def git_describe_version():
     """Inspect the cola git repository and return the current version."""
     try:
-        v = git.Git.execute(['git', 'describe', '--tags', '--abbrev=4'],
+        v = git.Git.execute(['git', 'describe',
+                            '--tags',
+                            '--match=v*',
+                            '--abbrev=7'],
                             with_stderr=True)
     except errors.GitCommandError, e:
         raise VersionUnavailable(str(e))
@@ -53,8 +56,8 @@ def git_describe_version():
 def builtin_version():
     """Return the builtin version or throw a VersionUnavailable exception"""
     try:
-        import builtin_version as bv
-    except ImportError:
+        from cola import builtin_version as bv
+    except ImportError, e:
         raise VersionUnavailable()
     else:
         return bv.version
