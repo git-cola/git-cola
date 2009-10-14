@@ -38,7 +38,7 @@ doc:
 html:
 	$(MAKE) -C share/doc/git-cola html
 
-install-doc: install-html
+install-doc:
 	$(MAKE) -C share/doc/git-cola install
 
 install-html:
