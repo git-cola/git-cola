@@ -1,0 +1,24 @@
+Date: Thu, 3 Jan 2008 17:39:21 -0500
+From: Jeff King <peff@peff.net>
+To: Marco Costalba <mcostalba@gmail.com>
+Cc: davvid@gmail.com, Git Mailing List <git@vger.kernel.org>
+Subject: Re: [PATCH ugit] Allow user to choose history browser tool
+Message-ID: <20080103223920.GA17530@coredump.intra.peff.net>
+References: <e5bfff550801030408w1512e458x136f6be0371c13c2@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e5bfff550801030408w1512e458x136f6be0371c13c2@mail.gmail.com>
+
+On Thu, Jan 03, 2008 at 01:08:17PM +0100, Marco Costalba wrote:
+
+>  Instead of hard linking gitk let the user set
+>  the preferred history visualization tool in settings dialog.
+
+This is the exact situation that the 'git view' builtin alias was
+designed for. If every porcelain which spawned a viewer used 'git view',
+then the user would only need to configure one place (but note that 'git
+view' has never even made it out of next, so I am not recommending it
+instead of your patch, but just making a note).
+
+-Peff
