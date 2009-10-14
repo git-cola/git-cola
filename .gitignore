@@ -10,6 +10,7 @@
 /build
 /build-stamp
 /ChangeLog
+/cola.tuxfamily.org
 /configure-stamp
 /dist
 /debian/*.log
