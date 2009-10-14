@@ -1,0 +1,59 @@
+#!/bin/sh
+username=
+password=
+hostname=ftp.tuxfamily.org
+basedir=/gitcola/cola.tuxfamily.org-web/htdocs
+
+usage () {
+	echo
+	echo "usage: upload -u <user> -p <password> [<file>*]"
+	echo
+	exit -1
+}
+
+
+while test $# -gt 0; do
+	case "$1" in
+	-f)
+		shift
+		hostname="$1"
+		shift
+		;;
+	-p)
+		shift
+		password="$1"
+		shift
+		;;
+	-h|--help)
+		usage
+		;;
+	--)
+		shift
+		break
+		;;
+	*)
+		break
+		;;
+	esac
+done
+
+upload () {
+	cmd=
+	for filename in "$@"; do
+		! test -f "$filename" && {
+			echo "warning: '$filename' is not a file."
+			continue
+		}
+		dirname=$(dirname "$filename")
+		if test "$dirname" = "."; then
+			subdir=
+		else
+			subdir="$dirname/"
+		fi
+		cmd="$cmd""echo; cd $basedir/$subdir; echo transferring $filename;put $filename;"
+	done
+	cmd="$cmd""exit"
+	lftp ftp://$hostname -u $username,$password -e "$cmd"
+}
+
+upload "$@"
