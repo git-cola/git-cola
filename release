@@ -53,6 +53,8 @@ build_docs() {
 build_tarball() {
 	title Building tarball
 	do_or_die git checkout-index --prefix=$BASENAME/ --all
+	do_or_die python -c 'import cola.version; cola.version.write_builtin_version()'
+	do_or_die mv -v cola/builtin_version.py $BASENAME/cola/
 
 	pushd $BASENAME > /dev/null
 	printf "git-cola: $VERSION\nbottled-on: $(date)\n\n" > ChangeLog
