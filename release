@@ -1,0 +1,167 @@
+#!/bin/sh
+. $(dirname $0)/common.sh
+
+do_docs=false
+do_website=false
+do_tarball=false
+do_win32=false
+
+# Options
+prefix="$RELEASE_TREE"
+win32_login=Administrator@localhost
+win32_ssh_port=2002
+win32_cola_dir=cola
+win32_release_dir="$RELEASE_TREE_WIN32"
+web_src="$HOME"/src/cola-web
+tarball_dir="$RELEASE_TREE_RELEASES"
+
+usage() {
+	echo "$(basename "$0") [options]"
+	echo
+	echo "options:"
+	echo "--prefix <dir>            - specify the installation prefix"
+	echo "--tarball                 - build the tarball"
+	echo "--tarball-dir             - specify the tarball release directory"
+	echo "--web                     - build the website"
+	echo "--web-src <dir>           - specify the git-cola-web repo"
+	echo "--doc                     - build the documentation"
+	echo "--win32                   - build the win32 installer"
+	echo "--win32-login <user@host> - specify the win32 host"
+	echo "--win32-port <port #>     - specify the win32 ssh port number"
+	echo "--win32-dir <dir>         - specify win32 release dir"
+	echo "--win32-cola-dir <dir>    - specify the win32 cola repo path"
+	exit 1
+}
+
+build_website() {
+	if ! test -d "$web_src"; then
+		echo "error: cannot find git-cola-web at '$web_src'"
+		exit 2
+	fi
+	title Building website
+	here="$(pwd)"
+	do_or_die cd "$web_src"
+	do_or_die make prefix="$prefix"
+	do_or_die cd "$here"
+}
+
+build_docs() {
+	title Building docs
+	do_or_die make prefix="$prefix" install-doc
+}
+
+build_tarball() {
+	title Building tarball
+	do_or_die git checkout-index --prefix=$BASENAME/ --all
+
+	pushd $BASENAME > /dev/null
+	printf "git-cola: $VERSION\nbottled-on: $(date)\n\n" > ChangeLog
+	do_or_die git log --decorate >> ChangeLog
+	popd > /dev/null
+
+	do_or_die tar czf $TARBALL $BASENAME
+	do_or_die rm -rf $BASENAME
+
+	ensure_dir_exists "$tarball_dir"
+	do_or_die mv -v "$TARBALL" "$tarball_dir"
+}
+
+build_win32_remotely() {
+	title Building win32 remotely
+
+	do_or_die ssh -p $win32_ssh_port "$win32_login" '
+		PATH=/bin:/usr/bin:/c/Python26
+		cd '"$win32_cola_dir"'
+		win32/create-installer.sh
+	'
+	do_or_die scp -P $win32_ssh_port \
+		"$win32_login":"$win32_cola_dir"/"*.exe" $exe
+
+	do_or_die mv -v $exe "$win32_release_dir"/cola.exe
+
+	do_or_die ssh -p $win32_ssh_port \
+		"$win32_login" "/bin/rm '$win32_cola_dir'/*.exe"
+}
+
+# Parse options
+while test $# -gt 0; do
+	case "$1" in
+	--tarball)
+		shift
+		do_tarball=true
+		;;
+	--web)
+		shift
+		do_website=true
+		;;
+	--web-src)
+		shift
+		web_src="$1"
+		shift
+		;;
+	--win32)
+		shift
+		do_win32=true
+		;;
+	--win32-login)
+		shift
+		win32_login="$1"
+		shift
+		;;
+	--win32-release-dir)
+		shift
+		win32_release_dir="$1"
+		shift
+		;;
+	--win32-cola-dir)
+		shift
+		win32_cola_dir="$1"
+		shift
+		;;
+	--win32-port)
+		shift
+		win32_ssh_port="$1"
+		shift
+		;;
+	--win32-dir)
+		shift
+		win32_dir="$1"
+		shift
+		;;
+	--doc)
+		shift
+		do_docs=true
+		;;
+	--prefix)
+		shift
+		prefix="$1"
+		tarball_dir="$prefix"/releases
+		win32_release_dir="$tarball_dir"/win32
+		shift
+		;;
+	--)
+		shift
+		break
+		;;
+	*)
+		usage
+		;;
+	esac
+done
+
+
+if $do_tarball; then
+	build_tarball
+fi
+
+if $do_win32; then
+	build_win32_remotely
+fi
+
+if $do_website; then
+	build_website
+fi
+
+if $do_docs; then
+	build_docs
+fi
