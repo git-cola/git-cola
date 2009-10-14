@@ -25,10 +25,12 @@ def main():
         _check_pyqt_version()
         _build_translations()      # msgfmt: .po -> .qm
     try:
-        version.write_builtin_version()
+        if os.path.exists('.git'):
+            version.write_builtin_version()
         _run_setup(git_version)
     finally:
-        version.delete_builtin_version()
+        if os.path.exists('.git'):
+            version.delete_builtin_version()
     # restore the old mask
     os.umask(old_mask)
 
