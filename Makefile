@@ -22,9 +22,9 @@ $(APP): darwin
 	rm -rf build dist
 
 install:
-	$(PYTHON) setup.py --quiet install \
-		--prefix=$(prefix) \
-		--root=$(DESTDIR) \
+	$(PYTHON) setup.py install \
+		--quiet \
+		--prefix=$(DESTDIR)$(prefix) \
 		--force && \
 	rm -f $(PYTHON_SITE)/git_cola* && \
 	(test -d $(PYTHON_SITE) && rmdir -p $(PYTHON_SITE) 2>/dev/null || true) && \
@@ -72,6 +72,6 @@ clean:
 	rm -rf build tmp tags
 
 tags:
-	ctags -R cola/*.py cola/views/*.py cola/controllers/*.py
+	ctags cola/*.py cola/*/*.py
 
 .PHONY: all install doc install-doc install-html test clean darwin git-cola.app
