@@ -9,9 +9,9 @@ popd >/dev/null
 VERSION=$(bin/git-cola version | awk '{print $3}')
 
 BASENAME=cola-$VERSION
-TARBALL=$BASENAME.tar.gz
+TARBALL="$BASENAME"-src.tar.gz
 
-RELEASE_TREE="$PWD"/cola.tuxfamily.org
+RELEASE_TREE="$HOME"/src/cola.tuxfamily.org
 RELEASE_TREE_DOC="$RELEASE_TREE"
 RELEASE_TREE_RELEASES="$RELEASE_TREE"/releases
 RELEASE_TREE_WIN32="$RELEASE_TREE_RELEASES"/win32
