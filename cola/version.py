@@ -38,7 +38,8 @@ def git_describe_version():
         v = git.Git.execute(['git', 'describe',
                             '--tags',
                             '--match=v*',
-                            '--abbrev=7'],
+                            '--abbrev=7',
+                            'HEAD'],
                             with_stderr=True)
     except errors.GitCommandError, e:
         raise VersionUnavailable(str(e))
