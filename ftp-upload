@@ -1,27 +1,52 @@
 #!/bin/sh
+
 username=
 password=
 hostname=ftp.tuxfamily.org
 basedir=/gitcola/cola.tuxfamily.org-web/htdocs
+all=false
+src="$PWD"
 
 usage () {
 	echo
-	echo "usage: upload -u <user> -p <password> [<file>*]"
+	echo "usage: $(basename $0) [options] -u <user> -p <password> [<directory>...]"
+	echo "options:"
+	echo "--hostname <hostname>  - specify the ftp host"
+	echo "                         default: ftp.tuxfamily.org"
+	echo "--all                  - synchronize the entire source directory"
+	echo "                         default: false"
+	echo "--src      <directory> - specify the source directory"
+	echo "                         default: current directory"
+	echo "[<directory>...]       - specify zero or more directories to upload"
+	echo "                         ignored by --all"
 	echo
 	exit -1
 }
 
-
 while test $# -gt 0; do
 	case "$1" in
-	-f)
+	--host)
 		shift
 		hostname="$1"
+		shift
+		;;
+	-u)
+		shift
+		username="$1"
 		shift
 		;;
 	-p)
 		shift
 		password="$1"
+		shift
+		;;
+	--all)
+		shift
+		all=true
+		;;
+	--src)
+		shift
+		src="$1"
 		shift
 		;;
 	-h|--help)
@@ -39,21 +64,20 @@ done
 
 upload () {
 	cmd=
-	for filename in "$@"; do
-		! test -f "$filename" && {
-			echo "warning: '$filename' is not a file."
+	for directory in "$@"; do
+		if ! test -d "$directory"; then
+			echo "warning: '$directory' is not a directory."
 			continue
-		}
-		dirname=$(dirname "$filename")
-		if test "$dirname" = "."; then
-			subdir=
-		else
-			subdir="$dirname/"
 		fi
-		cmd="$cmd""echo; cd $basedir/$subdir; echo transferring $filename;put $filename;"
+		cmd="$cmd""mirror --delete -n -R $directory $basedir/$directory;"
 	done
 	cmd="$cmd""exit"
 	lftp ftp://$hostname -u $username,$password -e "$cmd"
 }
 
-upload "$@"
+if "$all"; then
+	lftp ftp://$hostname -u $username,$password \
+		-e "mirror --delete -n -R $src $basedir; exit"
+else
+	upload "$@"
+fi
