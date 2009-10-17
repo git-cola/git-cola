@@ -57,8 +57,7 @@ build_tarball() {
 		'import cola.version as v; v.write_builtin_version();'
 	do_or_die cp -v cola/builtin_version.py $BASENAME/cola/
 	do_or_die python -c \
-		'import cola.version; ' \
-		'cola.version.delete_builtin_version()'
+		'import cola.version as v; v.delete_builtin_version()'
 
 	pushd $BASENAME > /dev/null
 	printf "git-cola: $VERSION\nbottled-on: $(date)\n\n" > ChangeLog
