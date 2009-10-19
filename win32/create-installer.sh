@@ -26,7 +26,7 @@ do
 	esac
 done
 
-BASENAME=cola-$VERSION
+BASENAME=git-cola-$VERSION
 ETC=$BASENAME/etc
 ROOT="$PWD"/$BASENAME
 TARGET="$ROOT".exe
