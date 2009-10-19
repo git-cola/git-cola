@@ -79,10 +79,11 @@ build_win32_remotely() {
 		cd '"$win32_cola_dir"'
 		win32/create-installer.sh
 	'
+	exe=git-cola-$VERSION.exe
 	do_or_die scp -P $win32_ssh_port \
 		"$win32_login":"$win32_cola_dir"/"*.exe" $exe
 
-	do_or_die mv -v $exe "$win32_release_dir"/cola.exe
+	do_or_die mv -v $exe "$win32_release_dir"
 
 	do_or_die ssh -p $win32_ssh_port \
 		"$win32_login" "/bin/rm '$win32_cola_dir'/*.exe"
