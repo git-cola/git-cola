@@ -910,15 +910,11 @@ class MainModel(ObservableModel):
 
         except errors.GitInitError:
             # handle git init
-            for name in (self.git.ls_files(modified=True, z=True)
-                                 .split('\0')):
-                if name:
-                    modified.append(core.decode(name))
+            ls_files = (self.git.ls_files(modified=True, z=True)[:-1]
+                                .split('\0'))
+            modified.extend(map(core.decode, ls_files))
 
-        for name in self.git.ls_files(others=True, exclude_standard=True,
-                                      z=True).split('\0'):
-            if name:
-                untracked.append(core.decode(name))
+        untracked.extend(self.untracked_files())
 
         # Look for upstream modified files if this is a tracking branch
         if self.trackedbranch:
@@ -1193,6 +1189,14 @@ class MainModel(ObservableModel):
         """Returns a sorted list of all files, including untracked files."""
         ls_files = self.git.ls_files(z=True,
                                      cached=True,
+                                     others=True,
+                                     exclude_standard=True)[:-1]
+        return map(core.decode, ls_files.split('\0'))
+
+    def untracked_files(self):
+        """Returns a sorted list of all files, including untracked files."""
+        # -1 for trailing NULL
+        ls_files = self.git.ls_files(z=True,
                                      others=True,
                                      exclude_standard=True)[:-1]
         return map(core.decode, ls_files.split('\0'))
