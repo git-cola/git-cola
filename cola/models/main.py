@@ -1191,14 +1191,11 @@ class MainModel(ObservableModel):
 
     def everything(self):
         """Returns a sorted list of all files, including untracked files."""
-        files = [core.decode(f)
-                 for f in self.git.ls_files(z=True,
-                                            others=True,
-                                            cached=True)
-                                  .strip('\0')
-                                  .split('\0') if f]
-        files.sort()
-        return files
+        ls_files = self.git.ls_files(z=True,
+                                     cached=True,
+                                     others=True,
+                                     exclude_standard=True)[:-1]
+        return map(core.decode, ls_files.split('\0'))
 
     def stage_paths(self, paths):
         """Stages add/removals to git."""
