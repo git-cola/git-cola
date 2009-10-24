@@ -21,6 +21,15 @@ include MANIFEST.in
 include libexec/git-cola/ssh-askpass
 include libexec/git-cola/ssh-askpass-darwin
 include share/applications/*.desktop
+include share/doc/git-cola/*.rst
+include share/doc/git-cola/relnotes/*.rst
+include share/doc/git-cola/models/*.rst
+include share/doc/git-cola/controllers/*.rst
+include share/doc/git-cola/views/*.rst
+include share/doc/git-cola/images/*.png
+include share/doc/git-cola/_build/.gitignore
+include share/doc/git-cola/_static/.gitignore
+include share/doc/git-cola/_templates/.gitignore
 include share/doc/git-cola/*.txt
 include share/doc/git-cola/*.conf
 include share/doc/git-cola/Makefile
