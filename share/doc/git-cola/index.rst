@@ -8,6 +8,7 @@ git-cola documentation
 .. toctree::
 
     userguide
+    relnotes/index
     reference
 
 Indices and tables
