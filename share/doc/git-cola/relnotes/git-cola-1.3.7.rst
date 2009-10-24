@@ -17,7 +17,7 @@ Fixes
 * Handle interrupted system calls
 
 Developer
---------
+---------
 * PEP-8-ify more of the cola code base
 * Added more tests
 
