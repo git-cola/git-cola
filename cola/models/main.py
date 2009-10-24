@@ -831,12 +831,8 @@ class MainModel(ObservableModel):
                                        *branch.strip().split())
         if status != 0:
             return ([], [], [], [], [])
-        staged = []
-        for name in output.strip('\0').split('\0'):
-            if not name:
-                continue
-            staged.append(core.decode(name))
 
+        staged = map(core.decode, [n for n in output.split('\0') if n])
         return (staged, [], [], [], staged)
 
     def worktree_state(self, head='HEAD', staged_only=False):
@@ -912,7 +908,7 @@ class MainModel(ObservableModel):
             # handle git init
             ls_files = (self.git.ls_files(modified=True, z=True)[:-1]
                                 .split('\0'))
-            modified.extend(map(core.decode, ls_files))
+            modified.extend(map(core.decode, [f for f in ls_files if f]))
 
         untracked.extend(self.untracked_files())
 
@@ -921,12 +917,13 @@ class MainModel(ObservableModel):
             try:
                 diff_expr = self.merge_base_to(self.trackedbranch)
                 output = self.git.diff(diff_expr,
-                                       name_only=True, z=True)
+                                       name_only=True,
+                                       z=True)
+
                 if output.startswith('fatal:'):
                     raise errors.GitInitError('git init')
-                for name in output.split('\0'):
-                    if not name:
-                        continue
+
+                for name in [n for n in output.split('\0') if n]:
                     name = core.decode(name)
                     upstream_changed.append(name)
                     upstream_changed_set.add(name)
@@ -1190,16 +1187,16 @@ class MainModel(ObservableModel):
         ls_files = self.git.ls_files(z=True,
                                      cached=True,
                                      others=True,
-                                     exclude_standard=True)[:-1]
-        return map(core.decode, ls_files.split('\0'))
+                                     exclude_standard=True)
+        return map(core.decode, [f for f in ls_files.split('\0') if f])
 
     def untracked_files(self):
         """Returns a sorted list of all files, including untracked files."""
         # -1 for trailing NULL
         ls_files = self.git.ls_files(z=True,
                                      others=True,
-                                     exclude_standard=True)[:-1]
-        return map(core.decode, ls_files.split('\0'))
+                                     exclude_standard=True)
+        return map(core.decode, [f for f in ls_files.split('\0') if f])
 
     def stage_paths(self, paths):
         """Stages add/removals to git."""
