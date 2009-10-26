@@ -17,13 +17,14 @@ usage () {
 	echo "                         default: false"
 	echo "--src      <directory> - specify the source directory"
 	echo "                         default: current directory"
-	echo "[<directory>...]       - specify zero or more directories to upload"
+	echo "[<path>...]            - specify zero or more paths to upload"
 	echo "                         ignored by --all"
 	echo
 	exit -1
 }
 
-while test $# -gt 0; do
+while test $# -gt 0
+do
 	case "$1" in
 	--host)
 		shift
@@ -64,18 +65,33 @@ done
 
 upload () {
 	cmd=
-	for directory in "$@"; do
-		if ! test -d "$directory"; then
-			echo "warning: '$directory' is not a directory."
-			continue
+	for path in "$@"
+	do
+		if test -d "$path"
+		then
+			cmd="$cmd""mirror --delete -n -R $directory $basedir/$directory;"
 		fi
-		cmd="$cmd""mirror --delete -n -R $directory $basedir/$directory;"
+
+		if test -f "$path"
+		then
+			dirname="$(dirname "$path")"
+			if test "$dirname" = "."
+			then
+				subdir=
+			else
+				subdir="$dirname/"
+			fi
+			cmd="$cmd""echo; echo transfering $path;"
+			cmd="$cmd""cd $basedir/$subdir;"
+			cmd="$cmd""put $path;"
+		fi
 	done
 	cmd="$cmd""exit"
 	lftp ftp://$hostname -u $username,$password -e "$cmd"
 }
 
-if "$all"; then
+if "$all"
+then
 	lftp ftp://$hostname -u $username,$password \
 		-e "mirror --delete -n -R $src $basedir; exit"
 else
