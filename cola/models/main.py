@@ -1188,7 +1188,7 @@ class MainModel(ObservableModel):
                                      cached=True,
                                      others=True,
                                      exclude_standard=True)
-        return map(core.decode, [f for f in ls_files.split('\0') if f])
+        return sorted(map(core.decode, [f for f in ls_files.split('\0') if f]))
 
     def untracked_files(self):
         """Returns a sorted list of all files, including untracked files."""
