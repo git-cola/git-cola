@@ -266,7 +266,7 @@ class StatusWidget(QtGui.QWidget):
         enable_staging = self.model.enable_staging()
         if enable_staging:
             menu.addAction(self.tr('Stage Selected'),
-                           SLOT(signals.stage, self.modified()))
+                           SLOT(signals.stage, self.unstaged()))
             menu.addSeparator()
 
         menu.addAction(self.tr('Launch Editor'),
