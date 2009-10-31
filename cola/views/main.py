@@ -48,6 +48,7 @@ class MainView(MainWindow):
 
     def __init__(self, parent=None):
         MainWindow.__init__(self, parent)
+        self.setAcceptDrops(True)
         self.amend_is_checked = self.amend_checkbox.isChecked
 
         # Qt does not support noun/verbs
@@ -687,3 +688,31 @@ class MainView(MainWindow):
                                                with_stderr=True,
                                                with_status=True)
         qtutils.log(status, output)
+
+    def dragEnterEvent(self, event):
+        """Accepts drops"""
+        MainWindow.dragEnterEvent(self, event)
+        event.acceptProposedAction()
+
+    def dropEvent(self, event):
+        """Apply dropped patches with git-am"""
+        event.accept()
+        urls = event.mimeData().urls()
+        if not urls:
+            return
+        paths = map(lambda x: unicode(x.path()), urls)
+        patches = [p for p in paths if p.endswith('.patch')]
+        dirs = [p for p in paths if os.path.isdir(p)]
+        dirs.sort()
+        for d in dirs:
+            patches.extend(self._gather_patches(d))
+        # Broadcast the patches to apply
+        cola.notifier().broadcast(signals.apply_patches, patches)
+
+    def _gather_patches(self, path):
+        """Find patches in a subdirectory"""
+        patches = []
+        for root, subdirs, files in os.walk(path):
+            for name in [f for f in files if f.endswith('.patch')]:
+                patches.append(os.path.join(root, name))
+        return patches
