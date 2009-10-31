@@ -178,6 +178,41 @@ class ApplyDiffSelection(Command):
         diffcmd.do()
         self.model.update_status()
 
+class ApplyPatches(Command):
+    def __init__(self, patches):
+        Command.__init__(self)
+        patches.sort()
+        self.patches = patches
+
+    def do(self):
+        diff_text = ''
+        num_patches = len(self.patches)
+        orig_head = cola.model().git.rev_parse('HEAD')
+
+        for idx, patch in enumerate(self.patches):
+            status, output = cola.model().git.am(patch,
+                                                 with_status=True,
+                                                 with_stderr=True)
+            # Log the git-am command
+            _notifier.broadcast(signals.log_cmd, status, output)
+
+            if num_patches > 1:
+                diff = cola.model().git.diff('HEAD^!', stat=True)
+                diff_text += 'Patch %d/%d - ' % (idx+1, num_patches)
+                diff_text += '%s:\n%s\n\n' % (os.path.basename(patch), diff)
+
+        diff_text += 'Summary:\n'
+        diff_text += cola.model().git.diff(orig_head, stat=True)
+
+        # Display a diffstat
+        self.model.set_diff_text(diff_text)
+
+        _notifier.broadcast(signals.information,
+                            'Patch(es) Applied',
+                            '%d patch(es) applied:\n\n%s' %
+                            (len(self.patches),
+                             '\n'.join(map(os.path.basename, self.patches))))
+
 
 class HeadChangeCommand(Command):
     """Changes the model's current head."""
@@ -655,8 +690,9 @@ def register():
     """
     signal_to_command_map = {
         signals.add_signoff: AddSignoff,
-        signals.apply_diff_selection: ApplyDiffSelection,
         signals.amend_mode: AmendMode,
+        signals.apply_diff_selection: ApplyDiffSelection,
+        signals.apply_patches: ApplyPatches,
         signals.branch_mode: BranchMode,
         signals.clone: Clone,
         signals.checkout: Checkout,
