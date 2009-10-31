@@ -264,9 +264,8 @@ def is_broken():
 
 def checksum(path):
     """Return a cheap md5 hexdigest for a path."""
-    contents = slurp(path)
     md5 = hashlib.new('md5')
-    md5.add(contents)
+    md5.update(slurp(path))
     return md5.hexdigest()
 
 

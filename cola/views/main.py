@@ -202,10 +202,10 @@ class MainView(MainWindow):
             merge_msg_path = self.model.merge_message_path()
             if merge_msg_path is None:
                 return
-            merge_msg_hash = utils.checksum(merge_message_path)
-            if merge_msg_hash == self.merge_msg_hash:
+            merge_msg_hash = utils.checksum(merge_msg_path)
+            if merge_msg_hash == self.merge_message_hash:
                 return
-            self.merge_msg_hash = merge_msg_hash
+            self.merge_message_hash = merge_msg_hash
             cola.notifier().broadcast(signals.load_commit_message,
                                       merge_msg_path)
 

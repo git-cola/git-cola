@@ -674,6 +674,7 @@ def register():
         signals.edit: Edit,
         signals.format_patch: FormatPatch,
         signals.grep: GrepMode,
+        signals.load_commit_message: LoadCommitMessage,
         signals.modified_summary: Diffstat,
         signals.mergetool: Mergetool,
         signals.open_repo: OpenRepo,
