@@ -8,6 +8,7 @@ from PyQt4 import QtGui
 import cola
 from cola import utils
 from cola import qtutils
+from cola import signals
 from cola.qobserver import QObserver
 from cola.views import stash as stashmod
 
