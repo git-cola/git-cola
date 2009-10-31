@@ -96,6 +96,7 @@ def version():
     for v in [builtin_version, git_describe_version]:
         try:
             _version = v()
+            break
         except VersionUnavailable:
             pass
     if not _version:

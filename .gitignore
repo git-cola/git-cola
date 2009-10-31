@@ -11,6 +11,7 @@
 /build-stamp
 /ChangeLog
 /cola.tuxfamily.org
+/cola/builtin_version.py
 /configure-stamp
 /dist
 /debian/*.log
