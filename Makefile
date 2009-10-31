@@ -8,10 +8,9 @@ APP	?= git-cola.app
 APPZIP	?= $(shell darwin/name-tarball.py)
 
 all:
-	$(PYTHON) setup.py build && rm -rf build
+	$(PYTHON) setup.py build
 
 darwin: all
-	rm -rf dist
 	$(PYTHON) darwin/py2app-setup.py py2app
 
 $(APP): darwin
@@ -19,7 +18,6 @@ $(APP): darwin
 	mv dist/$(APP) $(CURDIR)
 	find $(APP) -name '*_debug*' | xargs rm -f
 	tar cjf $(APPZIP) $(APP)
-	rm -rf build dist
 
 install:
 	$(PYTHON) setup.py install \
@@ -29,8 +27,7 @@ install:
 	rm -f $(PYTHON_SITE)/git_cola* && \
 	(test -d $(PYTHON_SITE) && rmdir -p $(PYTHON_SITE) 2>/dev/null || true) && \
 	(cd $(DESTDIR)$(prefix)/bin && \
-	 ((! test -e cola && ln -s git-cola cola) || true)) && \
-	rm -rf build
+	 ((! test -e cola && ln -s git-cola cola) || true))
 
 doc:
 	$(MAKE) -C share/doc/git-cola all
@@ -69,7 +66,7 @@ clean:
 	find . -name .noseids -print0 | xargs -0 rm -f
 	find . -name '*.py[co]' -print0 | xargs -0 rm -f
 	find share -name '*.qm' -print0 | xargs -0 rm -f
-	rm -rf build tmp tags
+	rm -rf cola/builtin_version.* build dist tmp tags
 
 tags:
 	ctags cola/*.py cola/*/*.py
