@@ -69,15 +69,15 @@ do
 	esac
 done
 
-upload () {
+upload_paths () {
 	cmd=
 	for path in "$@"
 	do
 		if test -d "$path"
 		then
 			$upload &&
-			cmd="$cmd""mirror --delete -n -R $directory $basedir/$directory;"
-			cmd="$cmd""chmod 755 $basedir/$directory;"
+			cmd="$cmd""mirror --delete -n -R $path $basedir/$path;"
+			cmd="$cmd""chmod 755 $basedir/$path;"
 		fi
 
 		if test -f "$path"
@@ -105,5 +105,5 @@ then
 	lftp ftp://$hostname -u $username,$password \
 		-e "mirror --delete -n -R $src $basedir; exit"
 else
-	upload "$@"
+	upload_paths "$@"
 fi
