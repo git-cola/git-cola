@@ -6,7 +6,7 @@ from cola import git
 class GitCola(git.Git):
     """
     Subclass git.Git to provide custom behaviors.
-    
+
     GitPython throws exceptions by default.
     We suppress exceptions in favor of return values.
     """
