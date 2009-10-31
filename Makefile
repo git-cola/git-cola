@@ -52,7 +52,7 @@ uninstall:
 test_flags	?=
 all_test_flags	?= --with-doctest $(test_flags)
 
-test:
+test: all
 	@env PYTHONPATH="$(CURDIR)":"$(PYTHONPATH)" \
 	nosetests $(all_test_flags)
 
