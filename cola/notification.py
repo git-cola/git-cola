@@ -1,6 +1,5 @@
 import os
 from PyQt4 import QtCore
-from cola import signals
 
 debug = os.environ.get('COLA_NOTIFIER_DEBUG', False)
 _instance = None
@@ -19,7 +18,7 @@ class Notifier(object):
 
     def broadcast(self, signal, *args, **opts):
         if debug:
-            print ('broadcast: %s(%s, %s)' % (signals.name(signal),
+            print ('broadcast: %s(%s, %s)' % (name,
                                               args or '<empty>',
                                               kwargs or '<empty>'))
         self.emit(signal, *args, **opts)
