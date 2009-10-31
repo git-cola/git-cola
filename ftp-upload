@@ -4,6 +4,7 @@ username=
 password=
 hostname=ftp.tuxfamily.org
 basedir=/gitcola/cola.tuxfamily.org-web/htdocs
+upload=true
 all=false
 src="$PWD"
 
@@ -17,6 +18,7 @@ usage () {
 	echo "                         default: false"
 	echo "--src      <directory> - specify the source directory"
 	echo "                         default: current directory"
+	echo "--fix-perms            - skip upload and chmod only"
 	echo "[<path>...]            - specify zero or more paths to upload"
 	echo "                         ignored by --all"
 	echo
@@ -45,6 +47,10 @@ do
 		shift
 		all=true
 		;;
+	--fix-perms)
+		shift
+		upload=false
+		;;
 	--src)
 		shift
 		src="$1"
@@ -69,7 +75,9 @@ upload () {
 	do
 		if test -d "$path"
 		then
+			$upload &&
 			cmd="$cmd""mirror --delete -n -R $directory $basedir/$directory;"
+			cmd="$cmd""chmod 755 $basedir/$directory;"
 		fi
 
 		if test -f "$path"
@@ -83,7 +91,9 @@ upload () {
 			fi
 			cmd="$cmd""echo; echo transfering $path;"
 			cmd="$cmd""cd $basedir/$subdir;"
+			$upload &&
 			cmd="$cmd""put $path;"
+			cmd="$cmd""chmod 644 $basedir/$path;"
 		fi
 	done
 	cmd="$cmd""exit"
