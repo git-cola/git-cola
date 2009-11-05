@@ -475,7 +475,7 @@ class MainModel(ObservableModel):
         items = value.split(',')
         if len(items) < 2:
             return
-        self.global_cola_fontdiff_size = int(items[1])
+        self.global_cola_fontdiff_size = int(float(items[1]))
 
     def set_diff_font(self, fontstr):
         """Set the diff font string."""
