@@ -15,9 +15,9 @@ def launch_about_dialog():
     view.set_version(version.version())
 
 
-COPYRIGHT = """git-cola: a highly caffeinated git gui v$VERSION
+COPYRIGHT = """git-cola: A highly caffeinated Git GUI v$VERSION
 
-cola is a sweet, carbonated git gui known for its
+git-cola is a sweet, carbonated Git GUI known for its
 sugary flavour and caffeine-inspired features.
 
 

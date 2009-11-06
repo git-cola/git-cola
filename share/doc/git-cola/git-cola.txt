@@ -3,7 +3,7 @@ git-cola(1)
 
 NAME
 ----
-git-cola - a highly caffeinated git gui
+git-cola - A highly caffeinated Git GUI
 
 SYNOPSIS
 --------
@@ -11,7 +11,10 @@ SYNOPSIS
 
 DESCRIPTION
 -----------
-'git-cola' is a git gui optimized for working with the git index.
+'git-cola' is a powerful Git GUI written in Python.
+It has many unique features that make Git's advanced
+features simple and accessible.
+
 See below for a full list of options and usage information.
 
 OPTIONS

@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Cola
-Comment=Highly caffeinated git gui
+Comment=A highly caffeinated Git GUI
 Exec=git-cola
 Icon=/usr/share/git-cola/icons/git.svg
 StartupNotify=true
