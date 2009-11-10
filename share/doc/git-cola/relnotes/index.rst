@@ -2,6 +2,7 @@ Release Notes
 ======================
 .. toctree::
 
+   git-cola-1.4.0.3
    git-cola-1.4.0.2
    git-cola-1.4.0.1
    git-cola-1.4.0
