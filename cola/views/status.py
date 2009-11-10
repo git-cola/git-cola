@@ -219,18 +219,17 @@ class StatusWidget(QtGui.QWidget):
         """Expand the top-level category "folder" once and only once."""
         # Don't do this if items is empty; this makes it so that we
         # don't add the top-level index into the expanded_items set
-        # an item appears in a particular category.
+        # until an item appears in a particular category.
         if not items:
             return
         # Only run this once; we don't want to re-expand items that
-        # we've click on to re-collapse on updated().
+        # we've clicked on to re-collapse on updated().
         if idx in self.expanded_items:
             return
         self.expanded_items.add(idx)
-        for idx in xrange(self.idx_end):
-            item = self.tree.topLevelItem(idx)
-            if item:
-                self.tree.expandItem(item)
+        item = self.tree.topLevelItem(idx)
+        if item:
+            self.tree.expandItem(item)
 
     def tree_context_menu_event(self, event):
         """Create context menus for the repo status tree."""
