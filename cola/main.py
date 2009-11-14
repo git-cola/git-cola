@@ -20,12 +20,10 @@ os.environ.setdefault('DISPLAY', ':0')
 # Provide an SSH_ASKPASS fallback
 if sys.platform == 'darwin':
     os.environ.setdefault('SSH_ASKPASS',
-                          resources.prefix('libexec', 'git-cola',
-                                           'ssh-askpass-darwin'))
+                          resources.share('bin', 'ssh-askpass-darwin'))
 else:
     os.environ.setdefault('SSH_ASKPASS',
-                          resources.prefix('libexec', 'git-cola',
-                                           'ssh-askpass'))
+                          resources.share('bin', 'ssh-askpass'))
 
 
 def main():
