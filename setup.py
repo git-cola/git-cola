@@ -85,9 +85,9 @@ def cola_data_files():
             _lib_path('simplejson/*.py')]
 
     if sys.platform == 'darwin':
-        data.append(_app_path('libexec/git-cola', 'ssh-askpass-darwin'))
+        data.append(_app_path('share/git-cola/bin', 'ssh-askpass-darwin'))
     else:
-        data.append(_app_path('libexec/git-cola', 'ssh-askpass'))
+        data.append(_app_path('share/git-cola/bin', 'ssh-askpass'))
     return data
 
 def _lib_path(entry):

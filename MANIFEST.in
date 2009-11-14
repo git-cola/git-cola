@@ -18,8 +18,6 @@ include Makefile
 include INSTALL
 include LICENSE
 include MANIFEST.in
-include libexec/git-cola/ssh-askpass
-include libexec/git-cola/ssh-askpass-darwin
 include share/applications/*.desktop
 include share/doc/git-cola/*.rst
 include share/doc/git-cola/relnotes/*.rst
@@ -35,6 +33,7 @@ include share/doc/git-cola/*.conf
 include share/doc/git-cola/Makefile
 include share/doc/git-cola/build-docdep.perl
 include share/doc/git-cola/callouts.xsl
+include share/git-cola/bin/*
 include share/git-cola/qm/.gitignore
 include share/git-cola/po/*.po
 include share/git-cola/icons/*.png

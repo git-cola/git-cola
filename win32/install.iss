@@ -54,7 +54,7 @@ SetupWindowTitle={#emit APP_NAME} Setup
 [UninstallDelete]
 Type: files; Name: "{app}\bin\*"
 Type: files; Name: "{app}\etc\*"
-Type: files; Name: "{app}\libexec\git-cola\*"
+Type: files; Name: "{app}\share\git-cola\bin\*"
 Type: files; Name: "{app}\share\git-cola\lib\cola\*"
 Type: files; Name: "{app}\share\git-cola\lib\cola\models\*"
 Type: files; Name: "{app}\share\git-cola\lib\cola\controllers\*"
@@ -68,7 +68,7 @@ Type: dirifempty; Name: "{app}\share\git-cola\lib\cola"
 Type: dirifempty; Name: "{app}\share\git-cola\lib\simplejson"
 Type: dirifempty; Name: "{app}\share\git-cola\lib\jsonpickle"
 Type: dirifempty; Name: "{app}\share\git-cola\lib"
-Type: dirifempty; Name: "{app}\libexec\git-cola"
+Type: dirifempty; Name: "{app}\share\git-cola\bin"
 Type: dirifempty; Name: "{app}\etc"
 Type: dirifempty; Name: "{app}\bin"
 
