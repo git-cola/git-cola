@@ -100,23 +100,62 @@ def file_icon(filename):
     return resources.icon(ident_file_type(filename))
 
 
+def win32_abspath(exe):
+    """Return the absolute path to an .exe if it exists"""
+    if os.path.exists(exe):
+        return exe
+    if not exe.endswith('.exe'):
+        exe += '.exe'
+    if os.path.exists(exe):
+        return exe
+    for path in os.environ['PATH'].split(os.pathsep):
+        abspath = os.path.join(path, exe)
+        if os.path.exists(abspath):
+            return abspath
+    return None
+
+
+def win32_expand_paths(args):
+    """Expand filenames after the double-dash"""
+    if '--' not in args:
+        return args
+    dashes_idx = args.index('--')
+    cmd = args[:dashes_idx+1]
+    for path in args[dashes_idx+1:]:
+        cmd.append(shell_quote(os.path.join(os.getcwd(), path)))
+    return cmd
+
+
 def fork(args):
-    """Launches a command in the background."""
-    args = tuple([core.encode(a) for a in args])
+    """Launch a command in the background."""
     if os.name in ('nt', 'dos'):
-        for path in os.environ['PATH'].split(os.pathsep):
-            filenames = (os.path.join(path, args[0]),
-                         os.path.join(path, args[0]) + ".exe")
-            for filename in filenames:
-                if os.path.exists(filename):
-                    try:
-                        return os.spawnv(os.P_NOWAIT, filename, args)
-                    except os.error:
-                        pass
-        raise IOError('cannot find executable: %s' % args[0])
+        # Windows is absolutely insane.
+        #
+        # If we want to launch 'gitk' we have to use the 'sh -c' trick.
+        #
+        # If we want to launch 'git.exe' we have to expand all filenames
+        # after the double-dash.
+        #
+        # os.spawnv wants an absolute path in the command name but not in
+        # the command vector.  Wow.
+        enc_args = win32_expand_paths([core.encode(a) for a in args])
+        abspath = win32_abspath(enc_args[0])
+        if abspath:
+            # e.g. fork(['git', 'difftool', '--no-prompt', '--', 'path'])
+            return os.spawnv(os.P_NOWAIT, abspath, enc_args)
+
+        # e.g. fork(['gitk', '--all'])
+        sh_exe = win32_abspath('sh')
+        enc_argv = map(shell_quote, enc_args)
+        cmdstr = ' '.join(enc_argv)
+        cmd = ['sh.exe', '-c', cmdstr]
+        return os.spawnv(os.P_NOWAIT, sh_exe, cmd)
     else:
-        argv = map(shell_quote, args)
-        return os.system(' '.join(argv) + '&')
+        # Unix is absolutely simple
+        enc_args = [core.encode(a) for a in args]
+        enc_argv = map(shell_quote, enc_args)
+        cmdstr = ' '.join(enc_argv)
+        return os.system(cmdstr + '&')
 
 
 def sublist(a,b):

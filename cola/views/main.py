@@ -198,6 +198,11 @@ class MainView(MainWindow):
             title += ' *** amending ***'
         self.setWindowTitle(title)
 
+        if self.mode != self.model.mode_amend:
+            self.amend_checkbox.blockSignals(True)
+            self.amend_checkbox.setChecked(False)
+            self.amend_checkbox.blockSignals(False)
+
         if not self.model.read_only() and self.mode != self.model.mode_amend:
             # Check if there's a message file in .git/
             merge_msg_path = self.model.merge_message_path()

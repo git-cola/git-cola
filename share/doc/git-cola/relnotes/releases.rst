@@ -1,3 +1,12 @@
+git-cola v1.4.0.5
+=================
+
+Fixes
+-----
+* Fix launching external applications on Windows
+* Ensure that the 'amend' checkbox is unchecked when switching modes
+* Update the status tree when amending commits
+
 git-cola v1.4.0.4
 =================
 
