@@ -233,26 +233,30 @@ class CherryPick(Command):
         self.model.cherry_pick_list(self.commits)
 
 
-class Commit(Command):
+class ResetMode(Command):
+    """Reset the mode and clear the model's diff text."""
+    def __init__(self):
+        Command.__init__(self, update=True)
+        self.new_mode = self.model.mode_none
+        self.new_head = 'HEAD'
+        self.new_diff_text = ''
+
+
+class Commit(ResetMode):
     """Attempt to create a new commit."""
     def __init__(self, amend, msg):
-        Command.__init__(self)
+        ResetMode.__init__(self)
         self.amend = amend
         self.msg = core.encode(msg)
         self.old_commitmsg = self.model.commitmsg
-        self.new_mode = self.model.mode_none
         self.new_commitmsg = ''
-        self.new_diff_text = ''
 
     def do(self):
         status, output = self.model.commit_with_msg(self.msg, amend=self.amend)
         if status == 0:
-            self.model.set_mode(self.new_mode)
+            ResetMode.do(self)
             self.model.set_commitmsg(self.new_commitmsg)
-            self.model.set_diff_text(self.new_diff_text)
-            self.model.update_status()
             title = 'Commit: '
-            _notifier.broadcast(signals.amend, False)
         else:
             title = 'Commit failed: '
         _notifier.broadcast(signals.log_cmd, status, title+output)
@@ -484,15 +488,6 @@ class Rescan(Command):
     """Rescans for changes."""
     def __init__(self):
         Command.__init__(self, update=True)
-
-
-class ResetMode(Command):
-    """Reset the mode and clear the model's diff text."""
-    def __init__(self):
-        Command.__init__(self, update=True)
-        self.new_mode = self.model.mode_none
-        self.new_head = 'HEAD'
-        self.new_diff_text = ''
 
 
 class ReviewBranchMode(Command):
