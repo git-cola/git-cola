@@ -5,6 +5,7 @@ Views
     main
     mainwindow
     standard
+    startup
     about
     status
     repo
