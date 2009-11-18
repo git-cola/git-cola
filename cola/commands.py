@@ -507,16 +507,18 @@ class OpenRepo(Command):
 
 
 class Clone(Command):
-    """Clones a repository and launches a new cola session."""
-    def __init__(self, url, destdir):
+    """Clones a repository and optionally spawns a new cola session."""
+    def __init__(self, url, destdir, spawn=True):
         Command.__init__(self)
         self.url = url
         self.new_directory = utils.quote_repopath(destdir)
+        self.spawn = spawn
 
     def do(self):
         self.model.git.clone(self.url, self.new_directory,
                              with_stderr=True, with_status=True)
-        utils.fork(['python', sys.argv[0], '--repo', self.new_directory])
+        if self.spawn:
+            utils.fork(['python', sys.argv[0], '--repo', self.new_directory])
 
 
 class Rescan(Command):
