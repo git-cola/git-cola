@@ -6,6 +6,7 @@ Miscellaneous Utility Modules
     diffparse
     difftool
     gitcmds
+    guicmds
     inotify
     resources
     settings
