@@ -102,6 +102,7 @@ def main():
     # Import cola modules
     import cola
     from cola.models.gitrepo import GitRepoModel
+    from cola.views import startup
     from cola.views.main import MainView
     from cola.views.repo import RepoTreeView
     from cola.controllers.main import MainController
@@ -143,23 +144,22 @@ def main():
         # Add the default style dir so that we find our icons
         _setup_resource_dir(resources.style_dir())
 
+    # Register model commands
+    commands.register()
+
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
     model = cola.model()
     valid = model.use_worktree(repo)
     while not valid:
-        gitdir = qtutils.opendir_dialog(app.activeWindow(),
-                                        'Open Git Repository...',
-                                        os.getcwd())
+        startup_dlg = startup.StartupDialog(app.activeWindow())
+        gitdir = startup_dlg.find_git_repo()
         if not gitdir:
             sys.exit(-1)
         valid = model.use_worktree(gitdir)
 
     # Finally, go to the root of the git repo
     os.chdir(model.git.worktree())
-
-    # Register model commands
-    commands.register()
 
     # Show the GUI and start the event loop
     if opts.classic:
