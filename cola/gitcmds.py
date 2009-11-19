@@ -1,5 +1,6 @@
 """Provides commands and queries for Git."""
 import os
+import re
 from cStringIO import StringIO
 
 import cola
@@ -477,3 +478,19 @@ def changed_files(start, end):
     zfiles_str = git.diff('%s..%s' % (start, end),
                           name_only=True, z=True).strip('\0')
     return [core.decode(enc) for enc in zfiles_str.split('\0') if enc]
+
+
+def parse_ls_tree(rev):
+    """Return a list of(mode, type, sha1, path) tuples."""
+    lines = git.ls_tree(rev, r=True).splitlines()
+    output = []
+    regex = re.compile('^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
+    for line in lines:
+        match = regex.match(line)
+        if match:
+            mode = match.group(1)
+            objtype = match.group(2)
+            sha1 = match.group(3)
+            filename = match.group(4)
+            output.append((mode, objtype, sha1, filename,) )
+    return output
