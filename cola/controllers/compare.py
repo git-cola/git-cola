@@ -12,7 +12,7 @@ from cola import gitcmds
 from cola.qobserver import QObserver
 from cola.models.compare import CompareModel
 from cola.models.compare import BranchCompareModel
-from cola.views import compare
+from cola.views import compare as vcompare
 from cola.controllers.repobrowser import select_file_from_repo
 
 def compare_file():
@@ -28,7 +28,7 @@ def compare(filename=None):
     """Launches a dialog for comparing a pair of commits"""
     parent = QtGui.QApplication.instance().activeWindow()
     model = CompareModel()
-    view = compare.CompareView(parent)
+    view = vcompare.CompareView(parent)
     ctl = CompareController(model, view, filename)
     view.show()
 
@@ -36,7 +36,7 @@ def branch_compare():
     """Launches a dialog for comparing a pair of branches"""
     model = BranchCompareModel()
     parent = QtGui.QApplication.instance().activeWindow()
-    view = compare.BranchCompareView(parent)
+    view = vcompare.BranchCompareView(parent)
     ctl = BranchCompareController(model, view)
     view.show()
 

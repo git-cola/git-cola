@@ -83,9 +83,11 @@ class CompareView(standard.StandardDialog):
         self._bottom_layt.addItem(self._bottom_spacer)
 
         self.button_compare = QtGui.QPushButton(self)
+        self.button_compare.setText(self.tr('Compare'))
         self._bottom_layt.addWidget(self.button_compare)
 
         self.button_close = QtGui.QPushButton(self)
+        self.button_close.setText(self.tr('Close'))
         self._bottom_layt.addWidget(self.button_close)
 
         self._main_layt.addLayout(self._bottom_layt)
