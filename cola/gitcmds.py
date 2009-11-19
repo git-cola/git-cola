@@ -106,3 +106,23 @@ def branch_list(remote=False):
     output = model.git.for_each_ref(refs, format='%(refname)').splitlines()
     noprefix = map(lambda x: x[len(refs):], output)
     return filter(lambda x: x and x != 'HEAD', noprefix)
+
+def tracked_branch(branch=None):
+    """Return the remote branch associated with 'branch'."""
+    if branch is None:
+        branch = current_branch()
+    model = cola.model()
+    branch_remote = 'local_branch_%s_remote' % branch
+    if not model.has_param(branch_remote):
+        return ''
+    remote = model.param(branch_remote)
+    if not remote:
+        return ''
+    branch_merge = 'local_branch_%s_merge' % branch
+    if not model.has_param(branch_merge):
+        return ''
+    ref = model.param(branch_merge)
+    refs_heads = 'refs/heads/'
+    if ref.startswith(refs_heads):
+        return remote + '/' + ref[len(refs_heads):]
+    return ''

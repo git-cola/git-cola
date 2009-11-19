@@ -425,7 +425,7 @@ class MainModel(ObservableModel):
         self.notification_enabled = False
 
         # Set these early since they are used to calculate 'upstream_changed'.
-        self.set_trackedbranch(self.tracked_branch())
+        self.set_trackedbranch(gitcmds.tracked_branch())
         self.set_currentbranch(gitcmds.current_branch())
 
         (self.staged,
@@ -1050,20 +1050,6 @@ class MainModel(ObservableModel):
                                      with_stderr=True,
                                      with_status=True,
                                      **kwargs)
-
-
-    def tracked_branch(self):
-        """The name of the branch that current branch is tracking"""
-        remote = self.git.config('branch.'+self.currentbranch+'.remote',
-                                 get=True, with_stderr=True)
-        if not remote:
-            return ''
-        headref = self.git.config('branch.'+self.currentbranch+'.merge',
-                                  get=True, with_stderr=True)
-        if headref.startswith('refs/heads/'):
-            tracked_branch = headref[11:]
-            return remote + '/' + tracked_branch
-        return ''
 
     def create_branch(self, name, base, track=False):
         """Create a branch named 'name' from revision 'base'
