@@ -15,9 +15,6 @@ from cola import gitcmd
 from cola import gitcmds
 from cola.models.observable import ObservableModel
 
-#+-------------------------------------------------------------------------
-#+ A regex for matching the output of git(log|rev-list) --pretty=oneline
-REV_LIST_REGEX = re.compile('([0-9a-f]+)\W(.*)')
 
 # Provides access to a global MainModel instance
 _instance = None
@@ -481,40 +478,6 @@ class MainModel(ObservableModel):
         basename = basename.replace('\\', '-')
         tmpdir = self.tmp_dir()
         return os.path.join(tmpdir, basename)
-
-    def log_helper(self, all=False, extra_args=None):
-        """
-        Returns a pair of parallel arrays listing the revision sha1's
-        and commit summaries.
-        """
-        revs = []
-        summaries = []
-        regex = REV_LIST_REGEX
-        args = []
-        if extra_args:
-            args = extra_args
-        output = self.git.log(pretty='oneline', all=all, *args)
-        for line in map(core.decode, output.splitlines()):
-            match = regex.match(line)
-            if match:
-                revs.append(match.group(1))
-                summaries.append(match.group(2))
-        return (revs, summaries)
-
-    def parse_rev_list(self, raw_revs):
-        revs = []
-        for line in map(core.decode, raw_revs.splitlines()):
-            match = REV_LIST_REGEX.match(line)
-            if match:
-                rev_id = match.group(1)
-                summary = match.group(2)
-                revs.append((rev_id, summary,))
-        return revs
-
-    def rev_list_range(self, start, end):
-        range = '%s..%s' % (start, end)
-        raw_revs = self.git.rev_list(range, pretty='oneline')
-        return self.parse_rev_list(raw_revs)
 
     def git_repo_path(self, *subpaths):
         paths = [self.git.git_dir()]

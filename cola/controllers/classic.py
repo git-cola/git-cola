@@ -7,6 +7,7 @@ import cola
 import cola.utils
 import cola.difftool
 
+from cola import gitcmds
 from cola import signals
 from cola.controllers.selectcommits import select_commits
 from cola.models import gitrepo
@@ -61,7 +62,7 @@ class ClassicController(QtCore.QObject):
     def difftool_predecessor(self, paths):
         """Prompt for an older commit and launch difftool against it."""
         args = ['--'] + paths
-        revs, summaries = self.model.log_helper(all=True, extra_args=args)
+        revs, summaries = gitcmds.log_helper(all=True, extra_args=args)
         commits = select_commits('Select Previous Version',
                                  revs, summaries, multiselect=False)
         if not commits:

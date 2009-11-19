@@ -56,7 +56,7 @@ class SearchEngine(object):
 
     def revisions(self, *args, **kwargs):
         revlist = self.model.git.log(*args, **kwargs)
-        return self.model.parse_rev_list(revlist)
+        return gitcmds.parse_rev_list(revlist)
 
     def results(self):
         pass
@@ -102,7 +102,7 @@ class CommitterSearch(SearchEngine):
 class DiffSearch(SearchEngine):
     def results(self):
         query, kwargs = self.common_args()
-        return self.model.parse_rev_list(
+        return gitcmds.parse_rev_list(
             self.model.git.log('-S'+query, all=True, **kwargs))
 
 class DateRangeSearch(SearchEngine):

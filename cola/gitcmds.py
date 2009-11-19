@@ -523,3 +523,10 @@ def log_helper(all=False, extra_args=None):
             revs.append(match.group(1))
             summaries.append(match.group(2))
     return (revs, summaries)
+
+
+def rev_list_range(start, end):
+    """Return a (SHA-1, summary) pairs between start and end."""
+    revrange = '%s..%s' % (start, end)
+    raw_revs = git.rev_list(revrange, pretty='oneline')
+    return parse_rev_list(raw_revs)

@@ -5,6 +5,7 @@ import os
 from PyQt4 import QtGui
 
 import cola
+from cola import gitcmds
 from cola import utils
 from cola import qtutils
 from cola.views import createbranch
@@ -55,7 +56,7 @@ class CreateBranchController(QObserver):
                 qtutils.information('warning', msg)
                 return
             # Whether we should prompt the user for lost commits
-            commits = self.model.rev_list_range(revision, branch)
+            commits = gitcmds.rev_list_range(revision, branch)
             check_branch = bool(commits)
 
         if check_branch:
