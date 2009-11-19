@@ -325,48 +325,6 @@ class MainModel(ObservableModel):
                 self.subtree_sha1s.append(self.sha1s[idx])
                 self.subtree_names.append(name)
 
-    def add_or_remove(self, to_process):
-        """Invokes 'git add' to index the filenames in to_process that exist
-        and 'git rm' for those that do not exist."""
-
-        if not to_process:
-            return 'No files to add or remove.'
-
-        to_add = []
-        to_remove = []
-
-        for filename in to_process:
-            encfilename = core.encode(filename)
-            if os.path.exists(encfilename):
-                to_add.append(filename)
-
-        status = 0
-        if to_add:
-            newstatus, output = self.git.add(v=True,
-                                             with_stderr=True,
-                                             with_status=True,
-                                             *to_add)
-            status += newstatus
-        else:
-            output = ''
-
-        if len(to_add) == len(to_process):
-            # to_process only contained unremoved files --
-            # short-circuit the removal checks
-            return (status, output)
-
-        # Process files to remote
-        for filename in to_process:
-            if not os.path.exists(filename):
-                to_remove.append(filename)
-        newstatus, out = self.git.rm(with_stderr=True,
-                                     with_status=True,
-                                     *to_remove)
-        if status == 0:
-            status += newstatus
-        output + '\n\n' + out
-        return (status, output)
-
     def editor(self):
         return self.gui_config('editor')
 
