@@ -2,8 +2,11 @@
 import os
 
 import cola
+from cola import gitcmd
 from cola import core
 from cola import utils
+
+git = gitcmd.instance()
 
 
 def default_remote():
@@ -32,17 +35,15 @@ def corresponding_remote_ref():
 
 def diff_filenames(arg):
     """Return a list of filenames that have been modified"""
-    model = cola.model()
-    diff_zstr = model.git.diff(arg, name_only=True, z=True).rstrip('\0')
+    diff_zstr = git.diff(arg, name_only=True, z=True).rstrip('\0')
     return [core.decode(f) for f in diff_zstr.split('\0') if f]
 
 
 def all_files():
     """Return the names of all files in the repository"""
-    model = cola.model()
     return [core.decode(f)
-            for f in model.git.ls_files(z=True)
-                              .strip('\0').split('\0') if f]
+            for f in git.ls_files(z=True)
+                        .strip('\0').split('\0') if f]
 
 
 class _current_branch:
@@ -101,12 +102,13 @@ def branch_list(remote=False):
     else:
         return for_each_ref_basename('refs/heads/')
 
+
 def for_each_ref_basename(refs):
     """Return refs starting with 'refs'."""
-    model = cola.model()
-    output = model.git.for_each_ref(refs, format='%(refname)').splitlines()
+    output = git.for_each_ref(refs, format='%(refname)').splitlines()
     non_heads = filter(lambda x: not x.endswith('/HEAD'), output)
     return map(lambda x: x[len(refs):], non_heads)
+
 
 def tracked_branch(branch=None):
     """Return the remote branch associated with 'branch'."""
@@ -131,10 +133,9 @@ def tracked_branch(branch=None):
 
 def untracked_files():
     """Returns a sorted list of all files, including untracked files."""
-    model = cola.model()
-    ls_files = model.git.ls_files(z=True,
-                                  others=True,
-                                  exclude_standard=True)
+    ls_files = git.ls_files(z=True,
+                            others=True,
+                            exclude_standard=True)
     return [core.decode(f) for f in ls_files.split('\0') if f]
 
 
