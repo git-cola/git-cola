@@ -2,6 +2,7 @@
 import os
 
 import helper
+from cola import gitcmds
 from cola.models.main import MainModel
 
 
@@ -53,7 +54,8 @@ class ClassicModelTestCase(helper.TestCase):
         """)
 
         model = MainModel(cwd=os.getcwd())
-        model.unstage_paths(['the-file'])
+        gitcmds.unstage_paths(['the-file'])
+        model.update_status()
 
         self.assertTrue('the-file' not in model.staged)
         self.assertTrue('the-file' in model.modified)
@@ -63,7 +65,8 @@ class ClassicModelTestCase(helper.TestCase):
         self.setup_baseline_repo(commit=False)
 
         model = MainModel(cwd=os.getcwd())
-        model.unstage_paths(['the-file'])
+        gitcmds.unstage_paths(['the-file'])
+        model.update_status()
 
         self.assertTrue('the-file' not in model.staged)
         self.assertTrue('the-file' in model.untracked)
@@ -76,8 +79,9 @@ class ClassicModelTestCase(helper.TestCase):
             touch foo/bar/baz &&
             git add foo/bar/baz
         """)
-        model = MainModel(os.getcwd())
-        model.unstage_paths(['foo'])
+        model = MainModel(cwd=os.getcwd())
+        gitcmds.unstage_paths(['foo'])
+        model.update_status()
 
         self.assertTrue('foo/bar/baz' in model.untracked)
         self.assertTrue('foo/bar/baz' not in model.staged)
