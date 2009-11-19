@@ -492,3 +492,34 @@ def parse_ls_tree(rev):
             filename = match.group(4)
             output.append((mode, objtype, sha1, filename,) )
     return output
+
+
+# A regex for matching the output of git(log|rev-list) --pretty=oneline
+REV_LIST_REGEX = re.compile('^([0-9a-f]{40}) (.*)$')
+
+def parse_rev_list(raw_revs):
+    """Parse `git log --pretty=online` output into (SHA-1, summary) pairs."""
+    revs = []
+    for line in map(core.decode, raw_revs.splitlines()):
+        match = REV_LIST_REGEX.match(line)
+        if match:
+            rev_id = match.group(1)
+            summary = match.group(2)
+            revs.append((rev_id, summary,))
+    return revs
+
+
+def log_helper(all=False, extra_args=None):
+    """Return parallel arrays containing the SHA-1s and summaries."""
+    revs = []
+    summaries = []
+    args = []
+    if extra_args:
+        args = extra_args
+    output = git.log(pretty='oneline', all=all, *args)
+    for line in map(core.decode, output.splitlines()):
+        match = REV_LIST_REGEX.match(line)
+        if match:
+            revs.append(match.group(1))
+            summaries.append(match.group(2))
+    return (revs, summaries)
