@@ -96,16 +96,17 @@ def branch_list(remote=False):
     This explicitly removes HEAD from the list of remote branches.
 
     """
-    model = cola.model()
     if remote:
-        refs = 'refs/remotes/'
+        return for_each_ref_basename('refs/remotes/')
     else:
-        refs = 'refs/heads/'
-    lrefs = len(refs)
+        return for_each_ref_basename('refs/heads/')
 
+def for_each_ref_basename(refs):
+    """Return refs starting with 'refs'."""
+    model = cola.model()
     output = model.git.for_each_ref(refs, format='%(refname)').splitlines()
-    noprefix = map(lambda x: x[len(refs):], output)
-    return filter(lambda x: x and x != 'HEAD', noprefix)
+    non_heads = filter(lambda x: not x.endswith('/HEAD'), output)
+    return map(lambda x: x[len(refs):], non_heads)
 
 def tracked_branch(branch=None):
     """Return the remote branch associated with 'branch'."""
@@ -135,3 +136,10 @@ def untracked_files():
                                   others=True,
                                   exclude_standard=True)
     return [core.decode(f) for f in ls_files.split('\0') if f]
+
+
+def tag_list():
+    """Return a list of tags."""
+    tags = for_each_ref_basename('refs/tags/')
+    tags.reverse()
+    return tags
