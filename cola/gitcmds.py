@@ -8,25 +8,26 @@ from cola import utils
 
 def default_remote():
     """Return the remote tracked by the current branch."""
-    model = cola.model()
-    branch = model.currentbranch
+    branch = current_branch()
     branchconfig = 'branch.%s.remote' % branch
+    model = cola.model()
     return model.local_config(branchconfig, 'origin')
 
 
 def corresponding_remote_ref():
     """Return the remote branch tracked by the current branch."""
-    model = cola.model()
     remote = default_remote()
-    branch = model.currentbranch
+    branch = current_branch()
     best_match = '%s/%s' % (remote, branch)
-    remote_branches = model.remote_branches
+    remote_branches = branch_list(remote=True)
     if not remote_branches:
         return remote
     for rb in remote_branches:
         if rb == best_match:
             return rb
-    return remote_branches[0]
+    if remote_branches:
+        return remote_branches[0]
+    return remote
 
 
 def diff_filenames(arg):
