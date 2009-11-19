@@ -533,7 +533,7 @@ class ReviewBranchMode(Command):
     def __init__(self, branch):
         Command.__init__(self, update=True)
         self.new_mode = self.model.mode_review
-        self.new_head = self.model.merge_base_to(branch)
+        self.new_head = gitcmds.merge_base_to(branch)
         self.new_diff_text = ''
 
 
@@ -617,7 +617,8 @@ class Unstage(Command):
     def do(self):
         msg = 'Unstaging: %s' % (', '.join(self.paths))
         _notifier.broadcast(signals.log_cmd, 0, msg)
-        self.model.unstage_paths(self.paths)
+        gitcmds.unstage_paths(self.paths)
+        self.model.update_status()
 
 
 class UnstageAll(Command):

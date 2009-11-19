@@ -11,7 +11,6 @@ from cStringIO import StringIO
 
 from cola import core
 from cola import utils
-from cola import errors
 from cola import gitcmd
 from cola import gitcmds
 from cola.models.observable import ObservableModel
@@ -29,14 +28,6 @@ def model():
         return _instance
     _instance = MainModel()
     return _instance
-
-
-def eval_path(path):
-    """handles quoted paths."""
-    if path.startswith('"') and path.endswith('"'):
-        return core.decode(eval(path))
-    else:
-        return path
 
 
 class MainModel(ObservableModel):
@@ -390,8 +381,8 @@ class MainModel(ObservableModel):
          self.modified,
          self.unmerged,
          self.untracked,
-         self.upstream_changed) = self.worktree_state(head=head,
-                                                      staged_only=staged_only)
+         self.upstream_changed) = gitcmds.worktree_state(head=head,
+                                                staged_only=staged_only)
         # NOTE: the model's unstaged list holds an aggregate of the
         # the modified, unmerged, and untracked file lists.
         self.set_unstaged(self.modified + self.unmerged + self.untracked)
@@ -633,160 +624,6 @@ class MainModel(ObservableModel):
             os.unlink(merge_msg_path)
             merge_msg_path = self.merge_message_path()
 
-    def _is_modified(self, name):
-        status, out = self.git.diff('--', name,
-                                    name_only=True,
-                                    exit_code=True,
-                                    with_status=True)
-        return status != 0
-
-
-    def _branch_status(self, branch):
-        """
-        Returns a tuple of staged, unstaged, untracked, and unmerged files
-
-        This shows only the changes that were introduced in branch
-
-        """
-        status, output = self.git.diff(name_only=True,
-                                       M=True, z=True,
-                                       with_stderr=True,
-                                       with_status=True,
-                                       *branch.strip().split())
-        if status != 0:
-            return ([], [], [], [], [])
-
-        staged = map(core.decode, [n for n in output.split('\0') if n])
-        return (staged, [], [], [], staged)
-
-    def worktree_state(self, head='HEAD', staged_only=False):
-        """Return a tuple of files in various states of being
-
-        Can be staged, unstaged, untracked, unmerged, or changed
-        upstream.
-
-        """
-        self.git.update_index(refresh=True)
-        if staged_only:
-            return self._branch_status(head)
-
-        staged_set = set()
-        modified_set = set()
-        upstream_changed_set = set()
-
-        (staged, modified, unmerged, untracked, upstream_changed) = (
-                [], [], [], [], [])
-        try:
-            output = self.git.diff_index(head,
-                                         cached=True,
-                                         with_stderr=True)
-            if output.startswith('fatal:'):
-                raise errors.GitInitError('git init')
-            for line in output.splitlines():
-                rest, name = line.split('\t', 1)
-                status = rest[-1]
-                name = eval_path(name)
-                if status  == 'M':
-                    staged.append(name)
-                    staged_set.add(name)
-                    # This file will also show up as 'M' without --cached
-                    # so by default don't consider it modified unless
-                    # it's truly modified
-                    modified_set.add(name)
-                    if not staged_only and self._is_modified(name):
-                        modified.append(name)
-                elif status == 'A':
-                    staged.append(name)
-                    staged_set.add(name)
-                elif status == 'D':
-                    staged.append(name)
-                    staged_set.add(name)
-                    modified_set.add(name)
-                elif status == 'U':
-                    unmerged.append(name)
-                    modified_set.add(name)
-
-        except errors.GitInitError:
-            # handle git init
-            staged.extend(gitcmds.all_files())
-
-        try:
-            output = self.git.diff_index(head, with_stderr=True)
-            if output.startswith('fatal:'):
-                raise errors.GitInitError('git init')
-            for line in output.splitlines():
-                info, name = line.split('\t', 1)
-                status = info.split()[-1]
-                if status == 'M' or status == 'D':
-                    name = eval_path(name)
-                    if name not in modified_set:
-                        modified.append(name)
-                elif status == 'A':
-                    name = eval_path(name)
-                    # newly-added yet modified
-                    if (name not in modified_set and not staged_only and
-                            self._is_modified(name)):
-                        modified.append(name)
-
-        except errors.GitInitError:
-            # handle git init
-            ls_files = (self.git.ls_files(modified=True, z=True)[:-1]
-                                .split('\0'))
-            modified.extend(map(core.decode, [f for f in ls_files if f]))
-
-        untracked.extend(gitcmds.untracked_files())
-
-        # Look for upstream modified files if this is a tracking branch
-        if self.trackedbranch:
-            try:
-                diff_expr = self.merge_base_to(self.trackedbranch)
-                output = self.git.diff(diff_expr,
-                                       name_only=True,
-                                       z=True)
-
-                if output.startswith('fatal:'):
-                    raise errors.GitInitError('git init')
-
-                for name in [n for n in output.split('\0') if n]:
-                    name = core.decode(name)
-                    upstream_changed.append(name)
-                    upstream_changed_set.add(name)
-
-            except errors.GitInitError:
-                # handle git init
-                pass
-
-        # Keep stuff sorted
-        staged.sort()
-        modified.sort()
-        unmerged.sort()
-        untracked.sort()
-        upstream_changed.sort()
-
-        return (staged, modified, unmerged, untracked, upstream_changed)
-
-    def reset_helper(self, args):
-        """Removes files from the index
-
-        This handles the git init case, which is why it's not
-        just 'git reset name'.  For the git init case this falls
-        back to 'git rm --cached'.
-
-        """
-        # fake the status because 'git reset' returns 1
-        # regardless of success/failure
-        status = 0
-        output = self.git.reset('--', with_stderr=True, *args)
-        # handle git init: we have to use 'git rm --cached'
-        # detect this condition by checking if the file is still staged
-        state = self.worktree_state()
-        staged = state[0]
-        rmargs = [a for a in args if a in staged]
-        if not rmargs:
-            return (status, output)
-        output += self.git.rm('--', cached=True, with_stderr=True, *rmargs)
-        return (status, output)
-
     def remote_url(self, name):
         return self.git.config('remote.%s.url' % name, get=True)
 
@@ -917,26 +754,9 @@ class MainModel(ObservableModel):
 
         return commits
 
-    def changed_files(self, start, end):
-        zfiles_str = self.git.diff('%s..%s' % (start, end),
-                                   name_only=True, z=True).strip('\0')
-        return [core.decode(enc) for enc in zfiles_str.split('\0') if enc]
-
-    def renamed_files(self, start, end):
-        difflines = self.git.diff('%s..%s' % (start, end),
-                                  no_color=True,
-                                  M=True).splitlines()
-        return [ eval_path(r[12:].rstrip())
-                    for r in difflines if r.startswith('rename from ') ]
-
     def is_commit_published(self):
         head = self.git.rev_parse('HEAD')
         return bool(self.git.branch(r=True, contains=head))
-
-    def merge_base_to(self, ref):
-        """Given `ref`, return $(git merge-base ref HEAD)..ref."""
-        base = self.git.merge_base('HEAD', ref)
-        return '%s..%s' % (base, ref)
 
     def everything(self):
         """Returns a sorted list of all files, including untracked files."""
@@ -962,11 +782,6 @@ class MainModel(ObservableModel):
         # from the index.   We use `git add -u` for that.
         if remove:
             self.git.add('--', u=True, *remove)
-        self.update_status()
-
-    def unstage_paths(self, paths):
-        """Unstages paths from the staging area and notifies observers."""
-        self.reset_helper(set(paths))
         self.update_status()
 
     def getcwd(self):
