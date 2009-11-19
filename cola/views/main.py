@@ -14,7 +14,7 @@ from cola import qtutils
 from cola import settings
 from cola import signals
 from cola import resources
-from cola import guicmds 
+from cola import guicmds
 from cola.qtutils import SLOT
 from cola.views import about
 from cola.views.syntax import DiffSyntaxHighlighter
@@ -581,7 +581,7 @@ class MainView(MainWindow):
 
     def cherry_pick(self):
         """Launch the 'Cherry-Pick' dialog."""
-        revs, summaries = self.model.log_helper(all=True)
+        revs, summaries = gitcmds.log_helper(all=True)
         commits = select_commits('Cherry-Pick Commit',
                                  revs, summaries, multiselect=False)
         if not commits:
@@ -590,12 +590,12 @@ class MainView(MainWindow):
 
     def browse_commits(self):
         """Launch the 'Browse Commits' dialog."""
-        revs, summaries = self.model.log_helper(all=True)
+        revs, summaries = gitcmds.log_helper(all=True)
         select_commits('Browse Commits', revs, summaries)
 
     def export_patches(self):
         """Run 'git format-patch' on a list of commits."""
-        revs, summaries = self.model.log_helper()
+        revs, summaries = gitcmds.log_helper()
         to_export = select_commits('Export Patches', revs, summaries)
         if not to_export:
             return
