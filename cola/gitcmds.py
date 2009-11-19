@@ -32,3 +32,11 @@ def diff_filenames(arg):
     model = cola.model()
     diff_zstr = model.git.diff(arg, name_only=True, z=True).rstrip('\0')
     return [core.decode(f) for f in diff_zstr.split('\0') if f]
+
+
+def all_files():
+    """Return the names of all files in the repository"""
+    model = cola.model()
+    return [core.decode(f)
+            for f in model.git.ls_files(z=True)
+                              .strip('\0').split('\0') if f]

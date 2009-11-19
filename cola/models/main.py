@@ -13,6 +13,7 @@ from cola import gitcola
 from cola import core
 from cola import utils
 from cola import errors
+from cola import gitcmds
 from cola.models.observable import ObservableModel
 
 #+-------------------------------------------------------------------------
@@ -135,12 +136,6 @@ class MainModel(ObservableModel):
     def enable_staging(self):
         """Whether staging should be allowed."""
         return self.mode == self.mode_worktree
-
-    def all_files(self):
-        """Returns the names of all files in the repository"""
-        return [core.decode(f)
-                for f in self.git.ls_files(z=True)
-                                 .strip('\0').split('\0') if f]
 
     def generate_remote_helpers(self):
         """Generates helper methods for fetch, push and pull"""
@@ -884,7 +879,7 @@ class MainModel(ObservableModel):
 
         except errors.GitInitError:
             # handle git init
-            staged.extend(self.all_files())
+            staged.extend(gitcmds.all_files())
 
         try:
             output = self.git.diff_index(head, with_stderr=True)
