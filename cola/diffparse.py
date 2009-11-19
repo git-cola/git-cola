@@ -1,7 +1,7 @@
 import os
 import re
 
-from cola.utils import write
+from cola import utils
 
 
 class DiffParser(object):
@@ -45,7 +45,7 @@ class DiffParser(object):
         """Writes a new diff corresponding to the user's selection."""
         if not noop and which < len(self.diffs):
             diff = self.diffs[which]
-            write(filename, self.header + '\n' + diff + '\n')
+            utils.write(filename, self.header + '\n' + diff + '\n')
             return True
         else:
             return False
@@ -218,7 +218,7 @@ class DiffParser(object):
                 contents = self.diff_subset(idx, start, end)
                 if contents:
                     tmpfile = self.model.tmp_filename()
-                    write(tmpfile, contents)
+                    utils.write(tmpfile, contents)
                     if apply_to_worktree:
                         self.model.apply_diff_to_worktree(tmpfile)
                     else:
