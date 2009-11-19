@@ -101,7 +101,7 @@ class AmendMode(Command):
         self.new_head = 'HEAD'
         self.new_commitmsg = self.model.commitmsg
         # If we're going back into new-commit-mode then search the
-        # undo stack for a previous amend-commid-mode and grab the
+        # undo stack for a previous amend-commit-mode and grab the
         # commit message at that point in time.
         if not _factory.undostack:
             return
