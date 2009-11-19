@@ -464,40 +464,6 @@ class MainModel(ObservableModel):
         except IndexError:
             return None
 
-    def diff_details(self, idx, ref, staged=True):
-        """
-        Return a "diff" for an entry by index relative to ref.
-
-        `staged` indicates whether we should consider this as a
-        staged or unstaged entry.
-
-        """
-        filename = self.filename(idx, staged=staged)
-        if not filename:
-            return (None, None)
-        encfilename = core.encode(filename)
-        if staged:
-            diff = self.diff_helper(filename=filename,
-                                    ref=ref,
-                                    cached=True)
-        else:
-            if os.path.isdir(encfilename):
-                diff = '\n'.join(os.listdir(filename))
-
-            elif filename in self.unmerged:
-                diff = ('@@@ Unmerged @@@\n'
-                        '- %s is unmerged.\n+ ' % filename +
-                        'Right-click the file to launch "git mergetool".\n'
-                        '@@@ Unmerged @@@\n\n')
-                diff += self.diff_helper(filename=filename,
-                                        cached=False)
-            elif filename in self.modified:
-                diff = self.diff_helper(filename=filename,
-                                        cached=False)
-            else:
-                diff = 'SHA1: ' + self.git.hash_object(filename)
-        return (diff, filename)
-
     def stage_modified(self):
         status, output = self.git.add(v=True,
                                       with_stderr=True,
