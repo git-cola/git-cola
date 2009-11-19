@@ -88,6 +88,7 @@ class BrowserModel(observable.ObservableModel):
                 self.subtree_names.append(name)
 
     def subtree_node(self, idx):
+        """Return data for the tree item at idx."""
         return (self.subtree_types[idx],
                 self.subtree_sha1s[idx],
                 self.subtree_names[idx])
