@@ -126,3 +126,12 @@ def tracked_branch(branch=None):
     if ref.startswith(refs_heads):
         return remote + '/' + ref[len(refs_heads):]
     return ''
+
+
+def untracked_files():
+    """Returns a sorted list of all files, including untracked files."""
+    model = cola.model()
+    ls_files = model.git.ls_files(z=True,
+                                  others=True,
+                                  exclude_standard=True)
+    return [core.decode(f) for f in ls_files.split('\0') if f]

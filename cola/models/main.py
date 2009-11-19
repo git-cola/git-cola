@@ -894,7 +894,7 @@ class MainModel(ObservableModel):
                                 .split('\0'))
             modified.extend(map(core.decode, [f for f in ls_files if f]))
 
-        untracked.extend(self.untracked_files())
+        untracked.extend(gitcmds.untracked_files())
 
         # Look for upstream modified files if this is a tracking branch
         if self.trackedbranch:
@@ -1151,14 +1151,6 @@ class MainModel(ObservableModel):
                                      others=True,
                                      exclude_standard=True)
         return sorted(map(core.decode, [f for f in ls_files.split('\0') if f]))
-
-    def untracked_files(self):
-        """Returns a sorted list of all files, including untracked files."""
-        # -1 for trailing NULL
-        ls_files = self.git.ls_files(z=True,
-                                     others=True,
-                                     exclude_standard=True)
-        return map(core.decode, [f for f in ls_files.split('\0') if f])
 
     def stage_paths(self, paths):
         """Stages add/removals to git."""
