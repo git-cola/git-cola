@@ -15,9 +15,9 @@ from cola.models.compare import BranchCompareModel
 from cola.views import compare as vcompare
 from cola.controllers.repobrowser import select_file_from_repo
 
+
 def compare_file():
     """Launches a dialog for comparing revisions touching a file path"""
-    model = cola.model()
     parent = QtGui.QApplication.instance().activeWindow()
     filename = select_file_from_repo()
     if not filename:
@@ -124,7 +124,7 @@ class BranchCompareController(QObserver):
         """
         if branch == BranchCompareController.BRANCH_POINT:
             # Compare against the branch point so find the merge-base
-            branch = self.model.currentbranch
+            branch = gitcmds.current_branch()
             remote = gitcmds.corresponding_remote_ref()
             return self.model.git.merge_base(branch, remote)
         else:
