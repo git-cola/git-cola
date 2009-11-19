@@ -4,6 +4,7 @@
 from PyQt4 import QtGui
 
 import cola
+from cola import gitcmds
 from cola import qtutils
 from cola.views.selectcommits import SelectCommitsView
 from cola.qobserver import QObserver
@@ -103,7 +104,7 @@ class SelectCommitsController(QObserver):
         self.view.revision.selectAll()
 
         # Lookup the sha1's commit
-        commit_diff = self.model.commit_diff(sha1)
+        commit_diff = gitcmds.commit_diff(sha1)
         self.view.commit_text.setText(commit_diff)
 
         # Copy the sha1 into the clipboard

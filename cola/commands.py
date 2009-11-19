@@ -5,6 +5,7 @@ from cStringIO import StringIO
 
 import cola
 from cola import core
+from cola import gitcmds
 from cola import utils
 from cola import signals
 from cola import cmdfactory
@@ -229,10 +230,10 @@ class BranchMode(HeadChangeCommand):
         self.old_filename = self.model.filename
         self.new_filename = filename
         self.new_mode = self.model.mode_branch
-        self.new_diff_text = self.model.diff_helper(filename=filename,
-                                                    cached=False,
-                                                    reverse=True,
-                                                    branch=treeish)
+        self.new_diff_text = gitcmds.diff_helper(filename=filename,
+                                                 cached=False,
+                                                 reverse=True,
+                                                 branch=treeish)
 class Checkout(Command):
     """
     A command object for git-checkout.
@@ -347,8 +348,8 @@ class Diff(Command):
         self.old_filename = self.model.filename
         if not self.model.read_only():
             self.new_mode = self.model.mode_worktree
-        self.new_diff_text = self.model.diff_helper(filename=self.new_filename,
-                                                    cached=cached, **opts)
+        self.new_diff_text = gitcmds.diff_helper(filename=self.new_filename,
+                                                 cached=cached, **opts)
 
 
 class DiffMode(HeadChangeCommand):

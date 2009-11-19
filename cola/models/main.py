@@ -444,17 +444,6 @@ class MainModel(ObservableModel):
         self.global_cola_fontdiff = new_font
         self.notify_observers('global_cola_fontdiff')
 
-    def commit_diff(self, sha1):
-        commit = self.git.show(sha1)
-        first_newline = commit.index('\n')
-        if commit[first_newline+1:].startswith('Merge:'):
-            return (core.decode(commit) + '\n\n' +
-                    core.decode(self.diff_helper(commit=sha1,
-                                                 cached=False,
-                                                 suppress_header=False)))
-        else:
-            return core.decode(commit)
-
     def filename(self, idx, staged=True):
         try:
             if staged:
@@ -614,79 +603,6 @@ class MainModel(ObservableModel):
         range = '%s..%s' % (start, end)
         raw_revs = self.git.rev_list(range, pretty='oneline')
         return self.parse_rev_list(raw_revs)
-
-    def diff_helper(self,
-                    commit=None,
-                    branch=None,
-                    ref=None,
-                    endref=None,
-                    filename=None,
-                    cached=True,
-                    with_diff_header=False,
-                    suppress_header=True,
-                    reverse=False):
-        "Invokes git diff on a filepath."
-        if commit:
-            ref, endref = commit+'^', commit
-        argv = []
-        if ref and endref:
-            argv.append('%s..%s' % (ref, endref))
-        elif ref:
-            for r in ref.strip().split():
-                argv.append(r)
-        elif branch:
-            argv.append(branch)
-
-        if filename:
-            argv.append('--')
-            if type(filename) is list:
-                argv.extend(filename)
-            else:
-                argv.append(filename)
-
-        start = False
-        del_tag = 'deleted file mode '
-
-        headers = []
-        deleted = cached and not os.path.exists(core.encode(filename))
-
-        diffoutput = self.git.diff(R=reverse,
-                                   M=True,
-                                   no_color=True,
-                                   cached=cached,
-                                   unified=self.diff_context,
-                                   with_raw_output=True,
-                                   with_stderr=True,
-                                   *argv)
-
-        # Handle 'git init'
-        if diffoutput.startswith('fatal:'):
-            if with_diff_header:
-                return ('', '')
-            else:
-                return ''
-
-        output = StringIO()
-
-        diff = diffoutput.split('\n')
-        for line in map(core.decode, diff):
-            if not start and '@@' == line[:2] and '@@' in line[2:]:
-                start = True
-            if start or (deleted and del_tag in line):
-                output.write(core.encode(line) + '\n')
-            else:
-                if with_diff_header:
-                    headers.append(core.encode(line))
-                elif not suppress_header:
-                    output.write(core.encode(line) + '\n')
-
-        result = core.decode(output.getvalue())
-        output.close()
-
-        if with_diff_header:
-            return('\n'.join(headers), result)
-        else:
-            return result
 
     def git_repo_path(self, *subpaths):
         paths = [self.git.git_dir()]

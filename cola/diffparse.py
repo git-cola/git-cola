@@ -2,6 +2,7 @@ import os
 import re
 
 from cola import utils
+from cola import gitcmds
 
 
 class DiffParser(object):
@@ -23,11 +24,11 @@ class DiffParser(object):
         self.diffs = []
         self.selected = []
 
-        (header, diff) = model.diff_helper(filename=filename,
-                                           branch=branch,
-                                           with_diff_header=True,
-                                           cached=cached and not bool(branch),
-                                           reverse=cached or bool(branch) or reverse)
+        (header, diff) = gitcmds.diff_helper(filename=filename,
+                                             branch=branch,
+                                             with_diff_header=True,
+                                             cached=cached and not bool(branch),
+                                             reverse=cached or bool(branch) or reverse)
         self.model = model
         self.diff = diff
         self.header = header
@@ -35,11 +36,11 @@ class DiffParser(object):
 
         # Always index into the non-reversed diff
         self.fwd_header, self.fwd_diff = \
-            model.diff_helper(filename=filename,
-                              branch=branch,
-                              with_diff_header=True,
-                              cached=cached and not bool(branch),
-                              reverse=bool(branch))
+            gitcmds.diff_helper(filename=filename,
+                                branch=branch,
+                                with_diff_header=True,
+                                cached=cached and not bool(branch),
+                                reverse=bool(branch))
 
     def write_diff(self,filename,which,selected=False,noop=False):
         """Writes a new diff corresponding to the user's selection."""
