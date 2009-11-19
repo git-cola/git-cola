@@ -1,3 +1,27 @@
+git-cola v1.4.1
+===============
+
+This feature release adds two new features directly from
+`git-cola`'s github issues backlog.  On the developer
+front, further work was done towards modularizing the code base.
+
+Usability, bells and whistles
+-----------------------------
+* Dragging and dropping patches invokes `git-am`
+
+  http://github.com/davvid/git-cola/issues/closed#issue/3
+
+* A dialog to allow opening or cloning a repository
+  is presented when `git-cola` is launched outside of a git repository.
+
+  http://github.com/davvid/git-cola/issues/closed/#issue/22
+
+Developer
+---------
+* `cola.gitcmds` was added to factor out git command-line utilities
+* `cola.models.browser` was added to factor out repobrowser data
+
+
 git-cola v1.4.0.5
 =================
 
