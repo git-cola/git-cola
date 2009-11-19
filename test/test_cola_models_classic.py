@@ -81,30 +81,3 @@ class ClassicModelTestCase(helper.TestCase):
 
         self.assertTrue('foo/bar/baz' in model.untracked)
         self.assertTrue('foo/bar/baz' not in model.staged)
-
-    def test_revert_paths(self):
-        """Test a simple use of 'revert_paths'."""
-        self.setup_baseline_repo()
-        self.shell('echo change > the-file')
-
-        model = MainModel(cwd=os.getcwd())
-        model.revert_paths(['the-file'])
-
-        self.assertTrue('the-file' not in model.staged)
-        self.assertTrue('the-file' not in model.modified)
-
-    def test_revert_paths_subdir(self):
-        self.setup_baseline_repo()
-        self.shell("""
-            mkdir -p foo/bar &&
-            touch foo/bar/baz &&
-            git add foo/bar/baz &&
-            git commit -m'Changed foo/bar/baz' >/dev/null &&
-            echo change > foo/bar/baz
-        """)
-
-        model = MainModel(cwd=os.getcwd())
-        model.revert_paths(['foo'])
-
-        self.assertTrue('foo/bar/baz' not in model.modified)
-        self.assertTrue('foo/bar/baz' not in model.staged)

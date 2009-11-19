@@ -969,11 +969,6 @@ class MainModel(ObservableModel):
         self.reset_helper(set(paths))
         self.update_status()
 
-    def revert_paths(self, paths):
-        """Revert paths to the content from HEAD."""
-        self.git.checkout('HEAD', '--', *set(paths))
-        self.update_status()
-
     def getcwd(self):
         """If we've chosen a directory then use it, otherwise os.getcwd()."""
         if self.directory:
