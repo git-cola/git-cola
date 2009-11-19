@@ -448,7 +448,7 @@ class MainModel(ObservableModel):
         self.notification_enabled = notify_enabled
 
         self.read_font_sizes()
-        self.notify_observers('staged','unstaged')
+        self.notify_observers('staged', 'unstaged')
         self.notify_message_observers(self.message_updated)
 
     def read_font_sizes(self):
