@@ -50,7 +50,6 @@ class MainView(MainWindow):
     def __init__(self, parent=None):
         MainWindow.__init__(self, parent)
         self.setAcceptDrops(True)
-        self.amend_is_checked = self.amend_checkbox.isChecked
 
         # Qt does not support noun/verbs
         self.commit_button.setText(qtutils.tr('Commit@@verb'))
@@ -539,7 +538,7 @@ class MainView(MainWindow):
                                       error_msg)
             return
         # Warn that amending published commits is generally bad
-        amend = self.amend_is_checked()
+        amend = self.amend_checkbox.isChecked()
         if (amend and self.model.is_commit_published() and
             not qtutils.question(self,
                                  'Rewrite Published Commit?',
