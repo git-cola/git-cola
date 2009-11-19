@@ -333,7 +333,6 @@ def worktree_state(head='HEAD', staged_only=False):
 
     staged_set = set()
     modified_set = set()
-    upstream_changed_set = set()
 
     (staged, modified, unmerged, untracked, upstream_changed) = (
             [], [], [], [], [])
@@ -409,7 +408,6 @@ def worktree_state(head='HEAD', staged_only=False):
             for name in [n for n in output.split('\0') if n]:
                 name = core.decode(name)
                 upstream_changed.append(name)
-                upstream_changed_set.add(name)
 
         except errors.GitInitError:
             # handle git init
