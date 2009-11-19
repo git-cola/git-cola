@@ -436,8 +436,8 @@ class MainModel(ObservableModel):
         self.notification_enabled = False
 
         # Set these early since they are used to calculate 'upstream_changed'.
-        self.set_currentbranch(self.current_branch())
         self.set_trackedbranch(self.tracked_branch())
+        self.set_currentbranch(gitcmds.current_branch())
 
         (self.staged,
          self.modified,
@@ -1062,14 +1062,6 @@ class MainModel(ObservableModel):
                                      with_status=True,
                                      **kwargs)
 
-    def current_branch(self):
-        """Parses 'git symbolic-ref' to find the current branch."""
-        headref = self.git.symbolic_ref('HEAD', with_stderr=True)
-        if headref.startswith('refs/heads/'):
-            return headref[11:]
-        elif headref.startswith('fatal:'):
-            return ''
-        return headref
 
     def tracked_branch(self):
         """The name of the branch that current branch is tracking"""
