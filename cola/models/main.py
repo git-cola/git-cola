@@ -96,20 +96,6 @@ class MainModel(ObservableModel):
         self.revisions = []
         self.summaries = []
 
-        # These are parallel lists
-        # ref^{tree}
-        self.types = []
-        self.sha1s = []
-        self.names = []
-
-        self.directories = []
-        self.directory_entries = {}
-
-        # parallel lists
-        self.subtree_types = []
-        self.subtree_sha1s = []
-        self.subtree_names = []
-
         self.fetch_helper = None
         self.push_helper = None
         self.pull_helper = None
@@ -256,66 +242,6 @@ class MainModel(ObservableModel):
         param = param.replace('_', '.') # model -> git
         return self.config_set(param, value, local=is_local)
 
-    def init_browser_data(self):
-        """This scans over self.(names, sha1s, types) to generate
-        directories, directory_entries, and subtree_*"""
-
-        # Collect data for the model
-        if not self.currentbranch:
-            return
-
-        self.subtree_types = []
-        self.subtree_sha1s = []
-        self.subtree_names = []
-        self.directories = []
-        self.directory_entries = {}
-
-        # Lookup the tree info
-        tree_info = self.parse_ls_tree(self.currentbranch)
-
-        self.set_types(map(lambda(x): x[1], tree_info ))
-        self.set_sha1s(map(lambda(x): x[2], tree_info ))
-        self.set_names(map(lambda(x): x[3], tree_info ))
-
-        if self.directory: self.directories.append('..')
-
-        dir_entries = self.directory_entries
-        dir_regex = re.compile('([^/]+)/')
-        dirs_seen = {}
-        subdirs_seen = {}
-
-        for idx, name in enumerate(self.names):
-            if not name.startswith(self.directory):
-                continue
-            name = name[ len(self.directory): ]
-            if name.count('/'):
-                # This is a directory...
-                match = dir_regex.match(name)
-                if not match:
-                    continue
-                dirent = match.group(1) + '/'
-                if dirent not in self.directory_entries:
-                    self.directory_entries[dirent] = []
-
-                if dirent not in dirs_seen:
-                    dirs_seen[dirent] = True
-                    self.directories.append(dirent)
-
-                entry = name.replace(dirent, '')
-                entry_match = dir_regex.match(entry)
-                if entry_match:
-                    subdir = entry_match.group(1) + '/'
-                    if subdir in subdirs_seen:
-                        continue
-                    subdirs_seen[subdir] = True
-                    dir_entries[dirent].append(subdir)
-                else:
-                    dir_entries[dirent].append(entry)
-            else:
-                self.subtree_types.append(self.types[idx])
-                self.subtree_sha1s.append(self.sha1s[idx])
-                self.subtree_names.append(name)
-
     def editor(self):
         return self.gui_config('editor')
 
@@ -324,11 +250,6 @@ class MainModel(ObservableModel):
 
     def remember_gui_settings(self):
         return self.cola_config('savewindowsettings')
-
-    def subtree_node(self, idx):
-        return (self.subtree_types[idx],
-                self.subtree_sha1s[idx],
-                self.subtree_names[idx])
 
     def all_branches(self):
         return (self.local_branches + self.remote_branches)
@@ -666,21 +587,6 @@ class MainModel(ObservableModel):
             args, kwargs = self.remote_args(remote, push=push, **kwargs)
             return gitaction(*args, **kwargs)
         return remote_helper
-
-    def parse_ls_tree(self, rev):
-        """Returns a list of(mode, type, sha1, path) tuples."""
-        lines = self.git.ls_tree(rev, r=True).splitlines()
-        output = []
-        regex = re.compile('^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
-        for line in lines:
-            match = regex.match(line)
-            if match:
-                mode = match.group(1)
-                objtype = match.group(2)
-                sha1 = match.group(3)
-                filename = match.group(4)
-                output.append((mode, objtype, sha1, filename,) )
-        return output
 
     def create_branch(self, name, base, track=False):
         """Create a branch named 'name' from revision 'base'

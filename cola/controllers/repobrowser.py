@@ -6,11 +6,15 @@ import os
 from PyQt4 import QtGui
 
 import cola
+from cola import gitcmd
 from cola import utils
 from cola import resources
 from cola import qtutils
+from cola.models import browser
 from cola.views.selectcommits import SelectCommitsView
 from cola.qobserver import QObserver
+
+git = gitcmd.instance()
 
 
 def select_file_from_repo():
@@ -33,8 +37,7 @@ def browse_git_branch(branch):
         return
     # Clone the model to allow opening multiple browsers
     # with different sets of data
-    model = cola.model().clone()
-    model.set_currentbranch(branch)
+    model = browser.BrowserModel(branch)
     parent = QtGui.QApplication.instance().activeWindow()
     view = SelectCommitsView(parent, syntax=False)
     controller = RepoBrowserController(model, view)
@@ -88,7 +91,7 @@ class RepoBrowserController(QObserver):
             filename = os.path.join(curdir, name)
         else:
             filename = name
-        blame = self.model.git.blame(self.model.currentbranch, filename)
+        blame = git.blame(self.model.currentbranch, filename)
         self.view.commit_text.setText(blame)
 
     ######################################################################
@@ -141,8 +144,7 @@ class RepoBrowserController(QObserver):
             else:
                 self.filename = name
 
-            catguts = self.model.git.cat_file(objtype, sha1,
-                                              with_raw_output=True)
+            catguts = git.cat_file(objtype, sha1, with_raw_output=True)
             self.view.commit_text.setText(catguts)
 
             self.view.revision.setText(sha1)
@@ -186,8 +188,7 @@ class RepoBrowserController(QObserver):
             if not filename:
                 return
             self.model.set_directory(os.path.dirname(filename))
-            contents = self.model.git.cat_file(objtype, sha1,
-                                               with_raw_output=True)
+            contents = git.cat_file(objtype, sha1, with_raw_output=True)
             utils.write(filename, contents)
             return
 

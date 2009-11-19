@@ -612,7 +612,6 @@ class MainView(MainWindow):
         """Prompt for a branch and inspect content at that point in time."""
         # Prompt for a branch to browse
         branch = choose_from_combo('Browse Branch Files',
-                                   self.view,
                                    self.model.all_branches())
         if not branch:
             return
