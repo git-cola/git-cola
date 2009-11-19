@@ -347,7 +347,8 @@ class Diff(Command):
         self.new_filename = filenames[0]
         self.old_filename = self.model.filename
         if not self.model.read_only():
-            self.new_mode = self.model.mode_worktree
+            if self.model.mode != self.model.mode_amend:
+                self.new_mode = self.model.mode_worktree
         self.new_diff_text = gitcmds.diff_helper(filename=self.new_filename,
                                                  cached=cached, **opts)
 
