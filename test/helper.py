@@ -7,17 +7,16 @@ from os.path import dirname
 from os.path import basename
 
 from cola import core
-from cola.models.base import BaseModel as Model
-from cola.models.observable import ObservableModel
 
 
-DEBUG_MODE = os.getenv('DEBUG','')
+DEBUG_MODE = os.getenv('COLA_TEST_DEBUG','')
 
 TEST_SCRIPT_DIR = dirname(__file__)
 ROOT_TMP_DIR = join(TEST_SCRIPT_DIR, 'tmp')
 TEST_TMP_DIR = join(ROOT_TMP_DIR, basename(sys.argv[0]))
 
 LAST_IDX = 0
+
 
 def tmp_path(*paths):
     """Returns a path relative to the test/tmp directory"""
@@ -46,10 +45,10 @@ def create_dir():
     os.chdir(newdir)
     return newdir
 
-def rmdir(dir):
+def rmdir(path):
     if not DEBUG_MODE:
         os.chdir(ROOT_TMP_DIR)
-        shutil.rmtree(dir)
+        shutil.rmtree(path)
 
 def remove_dir():
     global LAST_IDX
@@ -66,50 +65,18 @@ def pipe(cmd):
     p.close()
     return out
 
-# All tests that operate on temporary data derive from helper.TestCase
+
 class TestCase(unittest.TestCase):
+    """Tests that operate on temporary git repositories."""
     def setUp(self):
         create_dir()
+
     def tearDown(self):
         remove_dir()
+
     def shell(self, cmd):
         result = shell(cmd)
         self.failIf(result != 0)
+
     def get_dir(self):
         return get_dir()
-
-class DuckModel(Model):
-    def __init__(self):
-        Model.__init__(self)
-
-        duck = Model()
-        duck.sound = 'quack'
-        duck.name = 'ducky'
-
-        goose = Model()
-        goose.sound = 'cluck'
-        goose.name = 'goose'
-
-        self.attribute = 'value'
-        self.mylist = [duck, duck, goose]
-        self.hello = 'world'
-        self.set_mylist([duck, duck, goose, 'meow', 'caboose', 42])
-
-    def duckMethod(self):
-        return 'duck'
-
-class InnerModel(Model):
-    def __init__(self):
-        Model.__init__(self)
-        self.foo = 'bar'
-
-class NestedModel(ObservableModel):
-    def __init__(self):
-        ObservableModel.__init__(self)
-        self.inner = InnerModel()
-        self.innerlist = []
-        self.innerlist.append(InnerModel())
-        self.innerlist.append([InnerModel()])
-        self.innerlist.append([[InnerModel()]])
-        self.innerlist.append([[[InnerModel(),InnerModel()]]])
-        self.innerlist.append({"foo": InnerModel()})

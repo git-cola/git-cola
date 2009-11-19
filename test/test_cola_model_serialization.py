@@ -6,17 +6,35 @@ import unittest
 
 from PyQt4 import QtCore
 
-from cola.models.observable import ObservableModel
-from cola.observer import Observer
+from cola import observer
+from cola.models import observable
+from cola.models import base
 
 import helper
-from helper import InnerModel
-from helper import NestedModel
 
-class ModelObserver(Observer, QtCore.QObject):
+
+class InnerModel(base.BaseModel):
+    def __init__(self):
+        base.BaseModel.__init__(self)
+        self.foo = 'bar'
+
+
+class NestedModel(observable.ObservableModel):
+    def __init__(self):
+        observable.ObservableModel.__init__(self)
+        self.inner = InnerModel()
+        self.innerlist = []
+        self.innerlist.append(InnerModel())
+        self.innerlist.append([InnerModel()])
+        self.innerlist.append([[InnerModel()]])
+        self.innerlist.append([[[InnerModel(),InnerModel()]]])
+        self.innerlist.append({'foo': InnerModel()})
+
+
+class ModelObserver(observer.Observer):
     def __init__(self, model):
-        Observer.__init__(self, model)
-        QtCore.QObject.__init__(self)
+        observer.Observer.__init__(self, model)
+
 
 class TestSaveRestore(unittest.TestCase):
     def setUp(self):
@@ -27,8 +45,7 @@ class TestSaveRestore(unittest.TestCase):
         path = os.path.join(helper.get_dir(), 'test.data')
         # save & reconstitute
         self.nested.save(path)
-        self.clone = ObservableModel.instance(path)
-        self.clone_observer = ModelObserver(self.clone)
+        self.clone = observable.ObservableModel.instance(path)
 
     def tearDown(self):
         """Remove test directories"""
