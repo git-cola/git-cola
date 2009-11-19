@@ -9,10 +9,10 @@ import time
 import subprocess
 from cStringIO import StringIO
 
-from cola import gitcola
 from cola import core
 from cola import utils
 from cola import errors
+from cola import gitcmd
 from cola import gitcmds
 from cola.models.observable import ObservableModel
 
@@ -70,7 +70,7 @@ class MainModel(ObservableModel):
         ObservableModel.__init__(self)
 
         # Initialize the git command object
-        self.git = gitcola.GitCola()
+        self.git = gitcmd.instance()
 
         #####################################################
         self.head = 'HEAD'

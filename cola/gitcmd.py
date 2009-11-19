@@ -3,12 +3,24 @@ import os
 from cola import git
 
 
+# Provides access to a global GitCola instance
+_instance = None
+def instance():
+    """Return the GitCola singleton"""
+    global _instance
+    if _instance:
+        return _instance
+    _instance = GitCola()
+    return _instance
+
+
 class GitCola(git.Git):
     """
     Subclass git.Git to provide custom behaviors.
 
     GitPython throws exceptions by default.
     We suppress exceptions in favor of return values.
+
     """
     def __init__(self):
         git.Git.__init__(self)
@@ -71,8 +83,7 @@ class GitCola(git.Git):
         return self._git_dir
 
     def _is_git_dir(self, d):
-        """ This is taken from the git setup.c:is_git_directory
-            function."""
+        """From git's setup.c:is_git_directory()."""
         if (os.path.isdir(d)
                 and os.path.isdir(os.path.join(d, 'objects'))
                 and os.path.isdir(os.path.join(d, 'refs'))):

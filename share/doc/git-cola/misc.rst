@@ -5,6 +5,7 @@ Miscellaneous Utility Modules
     core
     diffparse
     difftool
+    gitcmd
     gitcmds
     guicmds
     inotify
