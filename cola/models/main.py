@@ -845,52 +845,6 @@ class MainModel(ObservableModel):
                 output.append((mode, objtype, sha1, filename,) )
         return output
 
-    def format_patch_helper(self, to_export, revs, output='patches'):
-        """writes patches named by to_export to the output directory."""
-
-        outlines = []
-
-        cur_rev = to_export[0]
-        cur_master_idx = revs.index(cur_rev)
-
-        patches_to_export = [ [cur_rev] ]
-        patchset_idx = 0
-
-        # Group the patches into continuous sets
-        for idx, rev in enumerate(to_export[1:]):
-            # Limit the search to the current neighborhood for efficiency
-            master_idx = revs[ cur_master_idx: ].index(rev)
-            master_idx += cur_master_idx
-            if master_idx == cur_master_idx + 1:
-                patches_to_export[ patchset_idx ].append(rev)
-                cur_master_idx += 1
-                continue
-            else:
-                patches_to_export.append([ rev ])
-                cur_master_idx = master_idx
-                patchset_idx += 1
-
-        # Export each patchsets
-        status = 0
-        for patchset in patches_to_export:
-            newstatus, out = self.export_patchset(patchset[0],
-                                                  patchset[-1],
-                                                  output='patches',
-                                                  n=len(patchset) > 1,
-                                                  thread=True,
-                                                  patch_with_stat=True)
-            outlines.append(out)
-            if status == 0:
-                status += newstatus
-        return (status, '\n'.join(outlines))
-
-    def export_patchset(self, start, end, output="patches", **kwargs):
-        revarg = '%s^..%s' % (start, end)
-        return self.git.format_patch('-o', output, revarg,
-                                     with_stderr=True,
-                                     with_status=True,
-                                     **kwargs)
-
     def create_branch(self, name, base, track=False):
         """Create a branch named 'name' from revision 'base'
 

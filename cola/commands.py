@@ -447,8 +447,7 @@ class FormatPatch(Command):
         self.revs = revs
 
     def do(self):
-        self.model.format_patch_helper(self.to_export, self.revs,
-                                       output='patches')
+        gitcmds.format_patchsets(self.to_export, self.revs)
 
 
 class GrepMode(Command):
