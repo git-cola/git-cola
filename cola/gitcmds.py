@@ -86,3 +86,22 @@ def current_branch():
 
     # This shouldn't happen
     return ''
+
+
+def branch_list(remote=False):
+    """
+    Return a list of local or remote branches
+
+    This explicitly removes HEAD from the list of remote branches.
+
+    """
+    model = cola.model()
+    if remote:
+        refs = 'refs/remotes/'
+    else:
+        refs = 'refs/heads/'
+    lrefs = len(refs)
+
+    output = model.git.for_each_ref(refs, format='%(refname)').splitlines()
+    noprefix = map(lambda x: x[len(refs):], output)
+    return filter(lambda x: x and x != 'HEAD', noprefix)

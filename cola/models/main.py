@@ -237,17 +237,6 @@ class MainModel(ObservableModel):
     def gui_config(self, key):
         return getattr(self, 'global_gui_'+key)
 
-    def branch_list(self, remote=False):
-        """Returns a list of local or remote branches
-
-        This explicitly removes HEAD from the list of remote branches.
-        """
-        branches = map(lambda x: x.lstrip('* '),
-                self.git.branch(r=remote).splitlines())
-        if remote:
-            return [b for b in branches if b.find('/HEAD') == -1]
-        return branches
-
     def config_params(self):
         params = []
         params.extend(map(lambda x: 'local_' + x,
@@ -400,7 +389,7 @@ class MainModel(ObservableModel):
             return
         self.set_param('remote', remote)
         branches = utils.grep('%s/\S+$' % remote,
-                              self.branch_list(remote=True),
+                              gitcmds.branch_list(remote=True),
                               squash=False)
         self.set_remote_branches(branches)
 
@@ -449,9 +438,9 @@ class MainModel(ObservableModel):
         # the modified, unmerged, and untracked file lists.
         self.set_unstaged(self.modified + self.unmerged + self.untracked)
         self.set_remotes(self.git.remote().splitlines())
-        self.set_remote_branches(self.branch_list(remote=True))
-        self.set_local_branches(self.branch_list(remote=False))
         self.set_tags(self.git.tag().splitlines())
+        self.set_remote_branches(gitcmds.branch_list(remote=True))
+        self.set_local_branches(gitcmds.branch_list(remote=False))
         self.set_revision('')
         self.set_local_branch('')
         self.set_remote_branch('')
