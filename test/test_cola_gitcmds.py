@@ -14,6 +14,17 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         """Test branch_list(remote=False)."""
         self.assertEqual(gitcmds.branch_list(remote=False), ['master'])
 
+    def test_branch_list_remote(self):
+        """Test branch_list(remote=False)."""
+        self.assertEqual(gitcmds.branch_list(remote=True), [])
+        self.shell("""
+            git remote add origin .
+            git fetch origin > /dev/null 2>&1
+        """)
+        self.assertEqual(gitcmds.branch_list(remote=True), ['origin/master'])
+        self.shell('git remote rm origin')
+        self.assertEqual(gitcmds.branch_list(remote=True), [])
+
 
 if __name__ == '__main__':
     unittest.main()
