@@ -101,16 +101,16 @@ def branch_list(remote=False):
 
     """
     if remote:
-        return for_each_ref_basename('refs/remotes/')
+        return for_each_ref_basename('refs/remotes')
     else:
-        return for_each_ref_basename('refs/heads/')
+        return for_each_ref_basename('refs/heads')
 
 
 def for_each_ref_basename(refs):
     """Return refs starting with 'refs'."""
     output = git.for_each_ref(refs, format='%(refname)').splitlines()
     non_heads = filter(lambda x: not x.endswith('/HEAD'), output)
-    return map(lambda x: x[len(refs):], non_heads)
+    return map(lambda x: x[len(refs) + 1:], non_heads)
 
 
 def tracked_branch(branch=None):
@@ -144,7 +144,7 @@ def untracked_files():
 
 def tag_list():
     """Return a list of tags."""
-    tags = for_each_ref_basename('refs/tags/')
+    tags = for_each_ref_basename('refs/tags')
     tags.reverse()
     return tags
 
