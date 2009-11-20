@@ -46,11 +46,7 @@ class StatusWidget(QtGui.QWidget):
         self.layout.setContentsMargins(0, 0, 0, 0)
 
         self.tree.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
-        self.tree.setAnimated(True)
-        if hasattr(self.tree, 'setHeaderHidden'):
-            self.tree.setHeaderHidden(True)
-        else:
-            self.tree.headerItem().setHidden(True)
+        self.tree.headerItem().setHidden(True)
         self.tree.setAllColumnsShowFocus(True)
         self.tree.setSortingEnabled(False)
 
