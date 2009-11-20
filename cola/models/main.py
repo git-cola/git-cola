@@ -353,15 +353,6 @@ class MainModel(ObservableModel):
         self.global_cola_fontdiff = new_font
         self.notify_observers('global_cola_fontdiff')
 
-    def filename(self, idx, staged=True):
-        try:
-            if staged:
-                return self.staged[idx]
-            else:
-                return self.unstaged[idx]
-        except IndexError:
-            return None
-
     def stage_modified(self):
         status, output = self.git.add(v=True,
                                       with_stderr=True,
