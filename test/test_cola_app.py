@@ -1,9 +1,18 @@
 # -*- encoding: utf-8 -*-
 import unittest
+from PyQt4 import QtCore
 
 import cola.app
+from cola import version
 
-class ColaApplicationTestCase(unittest.TestCase):
+
+if version.check_version('4.4', QtCore.PYQT_VERSION_STR):
+    BaseTestCase = unittest.TestCase
+else:
+    BaseTestCase = object
+
+
+class ColaApplicationTestCase(BaseTestCase):
     """Test cases for the ColaApplication class"""
 
     def test_translates_noun(self):
