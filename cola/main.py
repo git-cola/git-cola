@@ -185,7 +185,10 @@ def main():
 
     # All done, cleanup
     inotify.stop()
-    QtCore.QThreadPool.globalInstance().waitForDone()
+
+    # TODO: Provide fallback implementation
+    if hasattr(QtCore, 'QThreadPool'):
+        QtCore.QThreadPool.globalInstance().waitForDone()
 
     pattern = cola.model().tmp_file_pattern()
     for filename in glob.glob(pattern):

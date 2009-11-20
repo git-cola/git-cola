@@ -286,7 +286,8 @@ class RepoTreeView(QtGui.QTreeView):
         """Create an action with a shortcut, tooltip, and callback slot."""
         action = QtGui.QAction(self.tr(name), self)
         action.setStatusTip(self.tr(tooltip))
-        action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
+        if hasattr(Qt, 'WidgetWithChildrenShortcut'):
+            action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
         action.setShortcut(shortcut)
         self.addAction(action)
         self.connect(action, SIGNAL('triggered()'), slot)

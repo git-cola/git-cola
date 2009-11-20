@@ -209,6 +209,9 @@ class GitRepoEntry(QtCore.QObject):
     def update(self):
         """Starts a GitRepoInfoTask to calculate info for entries."""
         # GitRepoInfoTask handles expensive lookups
+        if not hasattr(QtCore, 'QThreadPool'):
+            # TODO: provide a fallback implementation
+            return
         threadpool = QtCore.QThreadPool.globalInstance()
         self.task = GitRepoInfoTask(self.path)
         threadpool.start(self.task)
