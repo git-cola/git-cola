@@ -57,8 +57,7 @@ class _current_branch:
 
 def current_branch():
     """Find the current branch."""
-    model = cola.model()
-    head = os.path.abspath(model.git_repo_path('HEAD'))
+    head = git.git_path('HEAD')
     try:
         stat = os.stat(head)
         if _current_branch.stat == stat:
