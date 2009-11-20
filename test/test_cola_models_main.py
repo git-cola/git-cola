@@ -19,3 +19,14 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
     def test_local_branches(self):
         self.model.update_status()
         self.assertEqual(self.model.local_branches, ['master'])
+
+    def test_remote_branches(self):
+        self.model.update_status()
+        self.assertEqual(self.model.remote_branches, [])
+
+        self.shell("""
+                git remote add origin .
+                git fetch origin > /dev/null 2>&1
+        """)
+        self.model.update_status()
+        self.assertEqual(self.model.remote_branches, ['origin/master'])
