@@ -6,18 +6,18 @@ from cStringIO import StringIO
 import cola
 from cola import core
 from cola import gitcmd
+from cola import gitcfg
 from cola import errors
 from cola import utils
 
 git = gitcmd.instance()
+config = gitcfg.instance()
 
 
 def default_remote():
     """Return the remote tracked by the current branch."""
     branch = current_branch()
-    branchconfig = 'branch.%s.remote' % branch
-    model = cola.model()
-    return model.local_config(branchconfig, 'origin')
+    return config.get('branch.%s.remote' % branch)
 
 
 def corresponding_remote_ref():

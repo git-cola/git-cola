@@ -25,6 +25,12 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.shell('git remote rm origin')
         self.assertEqual(gitcmds.branch_list(remote=True), [])
 
+    def test_default_remote(self):
+        """Test default_remote()."""
+        self.assertEqual(gitcmds.default_remote(), None)
+        self.shell('git config branch.master.remote test')
+        self.assertEqual(gitcmds.default_remote(), 'test')
+
 
 if __name__ == '__main__':
     unittest.main()
