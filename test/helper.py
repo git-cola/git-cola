@@ -4,6 +4,7 @@ import shutil
 import unittest
 
 from cola import core
+from cola import gitcmd
 
 CUR_TEST = 0
 
@@ -84,6 +85,7 @@ class GitRepositoryTestCase(TmpPathTestCase):
         self.initialize_repo()
         if commit:
             self.commit_files()
+        gitcmd.instance().load_worktree(os.getcwd())
 
     def initialize_repo(self):
         self.shell("""
