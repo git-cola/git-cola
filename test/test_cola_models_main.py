@@ -51,3 +51,9 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
         self.shell('echo C > C')
         self.model.update_status()
         self.assertEqual(self.model.untracked, ['C'])
+
+    def test_remotes(self):
+        """Test the 'remote' attribute."""
+        self.shell('git remote add origin .')
+        self.model.update_status()
+        self.assertEqual(self.model.remotes, ['origin'])
