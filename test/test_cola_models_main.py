@@ -30,3 +30,8 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
         """)
         self.model.update_status()
         self.assertEqual(self.model.remote_branches, ['origin/master'])
+
+    def test_modified(self):
+        self.shell('echo change > A')
+        self.model.update_status()
+        self.assertEqual(self.model.modified, ['A'])
