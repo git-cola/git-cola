@@ -59,6 +59,9 @@ class GitCola(git.Git):
     def is_valid(self):
         return self._git_dir and self._is_git_dir(self._git_dir)
 
+    def git_path(self, *paths):
+        return os.path.join(self.git_dir(), *paths)
+
     def git_dir(self):
         if self.is_valid():
             return self._git_dir
