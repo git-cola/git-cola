@@ -15,6 +15,7 @@ _versions = {
     'git': '1.5.2',
     'python': '2.4',
     'pyqt': '4.3',
+    'pyqt_qrunnable': '4.4',
     # git-difftool moved out of contrib in git 1.6.3
     'difftool-builtin': '1.6.3',
     # git-mergetool learned --no-prompt in 1.6.2

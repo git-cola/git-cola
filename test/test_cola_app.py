@@ -6,7 +6,7 @@ import cola.app
 from cola import version
 
 
-if version.check_version('4.4', QtCore.PYQT_VERSION_STR):
+if version.check('pyqt_qrunnable', QtCore.PYQT_VERSION_STR):
     BaseTestCase = unittest.TestCase
 else:
     BaseTestCase = object
