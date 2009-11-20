@@ -8,12 +8,14 @@ from cola.models import main
 
 class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
 
+    def setUp(self):
+        helper.GitRepositoryTestCase.setUp(self)
+
     def test_git_commit(self):
         """Test running 'git commit' via cola.git"""
         self.shell("""
             echo A > A
             echo B > B
-            git init 2>&1 > /dev/null
             git add A B
             """)
 
@@ -25,10 +27,7 @@ class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
 
     def test_git_config(self):
         """Test cola.git.config()"""
-        self.shell("""
-            git init 2>&1 >/dev/null
-            git config section.key value
-        """)
+        self.shell('git config section.key value')
         model = main.MainModel(cwd=os.getcwd())
         value = model.git.config('section.key', get=True)
 

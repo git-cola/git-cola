@@ -72,23 +72,21 @@ def pipe(cmd):
 
 class GitRepositoryTestCase(unittest.TestCase):
     """Tests that operate on temporary git repositories."""
-    def setUp(self, init=False, commit=False):
+    def setUp(self, commit=False):
         create_dir()
-        if init or commit:
-            self.initialize_repo()
-
+        self.initialize_repo()
         if commit:
             self.commit_files()
 
     def initialize_repo(self):
         self.shell("""
-            git init
+            git init > /dev/null
             touch A B
             git add A B
         """)
 
     def commit_files(self):
-        self.shell('git commit -m"Initial commit"')
+        self.shell('git commit -m"Initial commit" > /dev/null')
 
     def tearDown(self):
         remove_dir()

@@ -6,20 +6,16 @@ from cola.models import main
 class MainModelTestCase(helper.GitRepositoryTestCase):
     """Tests the cola.models.main.MainModel class."""
 
-    def setup_baseline_repo(self, commit=True):
-        """Create a baseline repo for testing."""
-        self.shell("""
-            git init >/dev/null &&
-            touch the-file &&
-            git add the-file
-        """)
-        if commit:
-            self.shell("git commit -s -m'Initial commit' >/dev/null")
+    def setUp(self):
+        helper.GitRepositoryTestCase.setUp(self, commit=True)
+        self.model = main.MainModel(cwd=os.getcwd())
+        self.model.use_worktree(os.getcwd())
 
     def test_project(self):
         """Test the MainModel's 'project' attribute."""
-        self.setup_baseline_repo()
-        model = main.MainModel()
-        model.use_worktree(os.getcwd())
         project = os.path.basename(self.get_dir())
-        self.assertEqual(project, model.project)
+        self.assertEqual(self.model.project, project)
+
+    def test_local_branches(self):
+        self.model.update_status()
+        self.assertEqual(self.model.local_branches, ['master'])
