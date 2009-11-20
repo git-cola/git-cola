@@ -60,6 +60,11 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
         self.model.update_status()
         self.assertEqual(self.model.remotes, ['origin'])
 
+    def test_currentbranch(self):
+        """Test the 'currentbranch' attribute."""
+        self.shell('git checkout -b test > /dev/null 2>&1')
+        self.model.update_status()
+        self.assertEqual(self.model.currentbranch, 'test')
 
 if __name__ == '__main__':
     unittest.main()

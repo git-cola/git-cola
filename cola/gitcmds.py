@@ -51,7 +51,7 @@ def all_files():
 
 class _current_branch:
     """Stat cache for current_branch()."""
-    st_mtime = 0
+    stat = None
     value = None
 
 
@@ -59,10 +59,9 @@ def current_branch():
     """Find the current branch."""
     model = cola.model()
     head = os.path.abspath(model.git_repo_path('HEAD'))
-
     try:
-        st = os.stat(head)
-        if _current_branch.st_mtime == st.st_mtime:
+        stat = os.stat(head)
+        if _current_branch.stat == stat:
             return _current_branch.value
     except OSError, e:
         pass
@@ -74,7 +73,7 @@ def current_branch():
         if path.startswith(refs_heads + '/'):
             value = path[len(refs_heads)+1:]
             _current_branch.value = value
-            _current_branch.st_mtime = st.st_mtime
+            _current_branch.stat = stat
             return value
         return ''
 
@@ -85,7 +84,7 @@ def current_branch():
         if value.startswith(ref_prefix):
             value = value[len(ref_prefix):]
 
-        _current_branch.st_mtime = st.st_mtime
+        _current_branch.stat = stat
         _current_branch.value = value
         return value
 
