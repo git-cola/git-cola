@@ -6,7 +6,7 @@ from cola import gitcmds
 from cola.models.main import MainModel
 
 
-class ClassicModelTestCase(helper.TestCase):
+class ClassicModelTestCase(helper.GitRepositoryTestCase):
     """Tests interfaces used by the classic view."""
 
     def setup_baseline_repo(self, commit=True):

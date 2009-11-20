@@ -2,62 +2,66 @@ import os
 import sys
 import shutil
 import unittest
-from os.path import join
-from os.path import dirname
-from os.path import basename
 
 from cola import core
 
 
 DEBUG_MODE = os.getenv('COLA_TEST_DEBUG','')
+CUR_TEST = 0
 
-TEST_SCRIPT_DIR = dirname(__file__)
-ROOT_TMP_DIR = join(TEST_SCRIPT_DIR, 'tmp')
-TEST_TMP_DIR = join(ROOT_TMP_DIR, basename(sys.argv[0]))
 
-LAST_IDX = 0
+def tmp_root():
+    return os.path.join(os.path.dirname(__file__), 'tmp')
 
 
 def tmp_path(*paths):
     """Returns a path relative to the test/tmp directory"""
-    return join(TEST_SCRIPT_DIR, 'tmp', *paths)
+    return os.path.join(os.path.dirname(__file__), 'tmp', *paths)
+
 
 def fixture(*paths):
-    return join(TEST_SCRIPT_DIR, 'fixtures', *paths)
+    return os.path.join(os.path.dirname(__file__), 'fixtures', *paths)
+
 
 def setup_dir(dir):
     newdir = dir
-    parentdir = dirname(newdir)
+    parentdir = os.path.dirname(newdir)
     if not os.path.isdir(parentdir):
         os.mkdir(parentdir)
     if not os.path.isdir(newdir):
         os.mkdir(newdir)
 
+
 def get_dir():
-    global LAST_IDX
-    return '%s-%d.%04d' % (TEST_TMP_DIR, os.getpid(), LAST_IDX)
+    cur_tmpdir = os.path.join(tmp_root(), os.path.basename(sys.argv[0]))
+    return '%s-%d.%04d' % (cur_tmpdir, os.getpid(), CUR_TEST)
+
 
 def create_dir():
-    global LAST_IDX
-    LAST_IDX += 1
+    global CUR_TEST
+    CUR_TEST += 1
     newdir = get_dir()
     setup_dir(newdir)
     os.chdir(newdir)
     return newdir
 
+
 def rmdir(path):
     if not DEBUG_MODE:
-        os.chdir(ROOT_TMP_DIR)
+        os.chdir(tmp_root())
         shutil.rmtree(path)
 
+
 def remove_dir():
-    global LAST_IDX
+    global CUR_TEST
     testdir = get_dir()
     rmdir(testdir)
-    LAST_IDX -= 1
+    CUR_TEST -= 1
+
 
 def shell(cmd):
     return os.system(cmd)
+
 
 def pipe(cmd):
     p = os.popen(cmd)
@@ -66,10 +70,25 @@ def pipe(cmd):
     return out
 
 
-class TestCase(unittest.TestCase):
+class GitRepositoryTestCase(unittest.TestCase):
     """Tests that operate on temporary git repositories."""
-    def setUp(self):
+    def setUp(self, init=False, commit=False):
         create_dir()
+        if init or commit:
+            self.initialize_repo()
+
+        if commit:
+            self.commit_files()
+
+    def initialize_repo(self):
+        self.shell("""
+            git init
+            touch A B
+            git add A B
+        """)
+
+    def commit_files(self):
+        self.shell('git commit -m"Initial commit"')
 
     def tearDown(self):
         remove_dir()

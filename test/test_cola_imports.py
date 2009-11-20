@@ -4,10 +4,8 @@ import os
 import imp
 import unittest
 
-import helper
 
-
-class ColaImportTest(helper.TestCase):
+class ColaImportTest(unittest.TestCase):
     """Stub class used to hold the generated tests"""
     pass
 

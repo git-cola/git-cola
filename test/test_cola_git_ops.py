@@ -6,7 +6,7 @@ import unittest
 import helper
 from cola.models import main
 
-class ColaBasicGitTestCase(helper.TestCase):
+class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
 
     def test_git_commit(self):
         """Test running 'git commit' via cola.git"""
@@ -51,6 +51,7 @@ class ColaBasicGitTestCase(helper.TestCase):
         global_dict = model.config_dict(local=False)
 
         self.assertEqual(type(global_dict), dict)
+
 
 if __name__ == '__main__':
     unittest.main()

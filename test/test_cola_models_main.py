@@ -1,9 +1,9 @@
 import helper
 import os
 
-from cola.models.main import MainModel
+from cola.models import main
 
-class MainModelTestCase(helper.TestCase):
+class MainModelTestCase(helper.GitRepositoryTestCase):
     """Tests the cola.models.main.MainModel class."""
 
     def setup_baseline_repo(self, commit=True):
@@ -19,7 +19,7 @@ class MainModelTestCase(helper.TestCase):
     def test_project(self):
         """Test the MainModel's 'project' attribute."""
         self.setup_baseline_repo()
-        model = MainModel()
+        model = main.MainModel()
         model.use_worktree(os.getcwd())
         project = os.path.basename(self.get_dir())
         self.assertEqual(project, model.project)
