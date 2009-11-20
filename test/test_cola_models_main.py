@@ -66,5 +66,12 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
         self.model.update_status()
         self.assertEqual(self.model.currentbranch, 'test')
 
+    def test_tags(self):
+        """Test the 'tags' attribute."""
+        self.shell('git tag test')
+        self.model.update_status()
+        self.assertEqual(self.model.tags, ['test'])
+
+
 if __name__ == '__main__':
     unittest.main()
