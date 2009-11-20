@@ -1,7 +1,9 @@
-import helper
 import os
+import unittest
 
+import helper
 from cola.models import main
+
 
 class MainModelTestCase(helper.GitRepositoryTestCase):
     """Tests the cola.models.main.MainModel class."""
@@ -13,7 +15,7 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
 
     def test_project(self):
         """Test the 'project' attribute."""
-        project = os.path.basename(self.get_dir())
+        project = os.path.basename(self.test_path())
         self.assertEqual(self.model.project, project)
 
     def test_local_branches(self):
@@ -57,3 +59,7 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
         self.shell('git remote add origin .')
         self.model.update_status()
         self.assertEqual(self.model.remotes, ['origin'])
+
+
+if __name__ == '__main__':
+    unittest.main()

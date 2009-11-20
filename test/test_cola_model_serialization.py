@@ -36,22 +36,16 @@ class ModelObserver(observer.Observer):
         observer.Observer.__init__(self, model)
 
 
-class TestSaveRestore(unittest.TestCase):
+class TestSaveRestore(helper.TmpPathTestCase):
     def setUp(self):
         """Create a nested model for testing"""
-        helper.create_dir()
+        helper.TmpPathTestCase.setUp(self)
         self.nested = NestedModel()
         self.nested_observer = ModelObserver(self.nested)
-        path = os.path.join(helper.get_dir(), 'test.data')
+        path = self.test_path('test.data')
         # save & reconstitute
         self.nested.save(path)
         self.clone = observable.ObservableModel.instance(path)
-
-    def tearDown(self):
-        """Remove test directories"""
-        testdir = helper.get_dir()
-        if os.path.exists(testdir):
-            helper.remove_dir()
 
     def test_cloned_class(self):
         """Test equality for __class__"""

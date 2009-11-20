@@ -5,13 +5,7 @@ import unittest
 
 from cola import core
 
-
-DEBUG_MODE = os.getenv('COLA_TEST_DEBUG','')
 CUR_TEST = 0
-
-
-def tmp_root():
-    return os.path.join(os.path.dirname(__file__), 'tmp')
 
 
 def tmp_path(*paths):
@@ -32,30 +26,28 @@ def setup_dir(dir):
         os.mkdir(newdir)
 
 
-def get_dir():
-    cur_tmpdir = os.path.join(tmp_root(), os.path.basename(sys.argv[0]))
-    return '%s-%d.%04d' % (cur_tmpdir, os.getpid(), CUR_TEST)
+def test_path(*paths):
+    cur_tmpdir = os.path.join(tmp_path(), os.path.basename(sys.argv[0]))
+    root = '%s-%d.%04d' % (cur_tmpdir, os.getpid(), CUR_TEST)
+    return os.path.join(root, *paths)
 
 
 def create_dir():
     global CUR_TEST
     CUR_TEST += 1
-    newdir = get_dir()
+    newdir = test_path()
     setup_dir(newdir)
     os.chdir(newdir)
     return newdir
 
 
-def rmdir(path):
-    if not DEBUG_MODE:
-        os.chdir(tmp_root())
-        shutil.rmtree(path)
-
-
 def remove_dir():
+    """Remove the test's tmp directory and return to the tmp root."""
     global CUR_TEST
-    testdir = get_dir()
-    rmdir(testdir)
+    path = test_path()
+    if os.path.isdir(path):
+        os.chdir(tmp_path())
+        shutil.rmtree(path)
     CUR_TEST -= 1
 
 
@@ -70,10 +62,25 @@ def pipe(cmd):
     return out
 
 
-class GitRepositoryTestCase(unittest.TestCase):
+class TmpPathTestCase(unittest.TestCase):
+    def setUp(self):
+        create_dir()
+
+    def tearDown(self):
+        remove_dir()
+
+    def shell(self, cmd):
+        result = shell(cmd)
+        self.failIf(result != 0)
+
+    def test_path(self, *paths):
+        return test_path(*paths)
+
+
+class GitRepositoryTestCase(TmpPathTestCase):
     """Tests that operate on temporary git repositories."""
     def setUp(self, commit=False):
-        create_dir()
+        TmpPathTestCase.setUp(self)
         self.initialize_repo()
         if commit:
             self.commit_files()
@@ -87,13 +94,3 @@ class GitRepositoryTestCase(unittest.TestCase):
 
     def commit_files(self):
         self.shell('git commit -m"Initial commit" > /dev/null')
-
-    def tearDown(self):
-        remove_dir()
-
-    def shell(self, cmd):
-        result = shell(cmd)
-        self.failIf(result != 0)
-
-    def get_dir(self):
-        return get_dir()
