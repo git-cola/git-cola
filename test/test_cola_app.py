@@ -10,7 +10,9 @@ class ColaApplicationTestCase(unittest.TestCase):
         """Test that strings with @@noun are translated
         """
         app = cola.app.ColaApplication([], locale='ja_JP', gui=False)
-        self.assertEqual(app.translate('??', 'Commit@@noun'), u'コミット')
+        expected = (unichr(0x30b3) + unichr(0x30df) +
+                    unichr(0x30c3) + unichr(0x30c8))
+        self.assertEqual(app.translate('??', 'Commit@@noun'), expected)
 
     def test_translates_verb(self):
         """Test that strings with @@verb are translated
