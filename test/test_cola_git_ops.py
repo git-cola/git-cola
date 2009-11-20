@@ -9,7 +9,7 @@ from cola.models import main
 class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
 
     def setUp(self):
-        helper.GitRepositoryTestCase.setUp(self)
+        helper.GitRepositoryTestCase.setUp(self, commit=False)
 
     def test_git_commit(self):
         """Test running 'git commit' via cola.git"""

@@ -10,7 +10,7 @@ class ClassicModelTestCase(helper.GitRepositoryTestCase):
     """Tests interfaces used by the classic view."""
 
     def setUp(self):
-        helper.GitRepositoryTestCase.setUp(self)
+        helper.GitRepositoryTestCase.setUp(self, commit=False)
         self.model = main.MainModel(cwd=os.getcwd())
 
     def test_everything(self):

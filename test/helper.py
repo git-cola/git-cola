@@ -79,7 +79,7 @@ class TmpPathTestCase(unittest.TestCase):
 
 class GitRepositoryTestCase(TmpPathTestCase):
     """Tests that operate on temporary git repositories."""
-    def setUp(self, commit=False):
+    def setUp(self, commit=True):
         TmpPathTestCase.setUp(self)
         self.initialize_repo()
         if commit:

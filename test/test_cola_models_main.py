@@ -9,7 +9,7 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
     """Tests the cola.models.main.MainModel class."""
 
     def setUp(self):
-        helper.GitRepositoryTestCase.setUp(self, commit=True)
+        helper.GitRepositoryTestCase.setUp(self)
         self.model = main.MainModel(cwd=os.getcwd())
         self.model.use_worktree(os.getcwd())
 
