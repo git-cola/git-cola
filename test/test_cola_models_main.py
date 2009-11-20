@@ -38,3 +38,10 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
         self.shell('echo change > A')
         self.model.update_status()
         self.assertEqual(self.model.modified, ['A'])
+
+    def test_unstaged(self):
+        """Test the 'unstaged' attribute."""
+        self.shell('echo change > A')
+        self.shell('echo C > C')
+        self.model.update_status()
+        self.assertEqual(self.model.unstaged, ['A', 'C'])
