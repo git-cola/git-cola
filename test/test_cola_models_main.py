@@ -45,3 +45,9 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
         self.shell('echo C > C')
         self.model.update_status()
         self.assertEqual(self.model.unstaged, ['A', 'C'])
+
+    def test_untracked(self):
+        """Test the 'untracked' attribute."""
+        self.shell('echo C > C')
+        self.model.update_status()
+        self.assertEqual(self.model.untracked, ['C'])
