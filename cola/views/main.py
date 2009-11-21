@@ -20,6 +20,7 @@ from cola.qtutils import SLOT
 from cola.views import about
 from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.mainwindow import MainWindow
+from cola.controllers import classic
 from cola.controllers import compare
 from cola.controllers import search as smod
 from cola.controllers import createtag
@@ -162,6 +163,7 @@ class MainView(MainWindow):
             (self.menu_select_all, self.commitmsg.selectAll),
             (self.menu_undo, self.commitmsg.undo),
             (self.menu_redo, self.commitmsg.redo),
+            (self.menu_classic, classic.cola_classic),
         )
         for menu, callback in actions:
             self.connect(menu, SIGNAL('triggered()'), callback)

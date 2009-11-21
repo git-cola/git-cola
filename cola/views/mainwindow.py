@@ -103,10 +103,6 @@ class MainWindow(MainWindowBase):
         self.logdockwidget = self.create_dock('Command Output')
         self.logdockwidget.setWidget(logwidget)
 
-        # "Cola Classic" widget
-        self.classicdockwidget = self.create_dock('Cola Classic')
-        self.classicdockwidget.setWidget(classic.widget())
-
         # "Diff Viewer" widget
         self.diffdockwidget = self.create_dock('Diff Viewer')
         self.diffdockwidgetcontents = QtGui.QWidget()
@@ -191,6 +187,7 @@ class MainWindow(MainWindowBase):
         self.menu_checkout_branch = self.create_action('Checkout...')
         self.menu_rebase_branch = self.create_action('Rebase...')
         self.menu_branch_review = self.create_action('Review...')
+        self.menu_classic = self.create_action('Cola Classic...')
 
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)
@@ -307,7 +304,7 @@ class MainWindow(MainWindowBase):
 
         # Tools Menu
         self.tools_menu = self.create_menu('Tools', self.menubar)
-        self.tools_menu.addAction(self.classicdockwidget.toggleViewAction())
+        self.tools_menu.addAction(self.menu_classic)
         self.tools_menu.addAction(self.diffdockwidget.toggleViewAction())
         self.tools_menu.addAction(self.actiondockwidget.toggleViewAction())
         self.tools_menu.addAction(self.commitdockwidget.toggleViewAction())
@@ -351,15 +348,9 @@ class MainWindow(MainWindowBase):
         bottom = QtCore.Qt.DockWidgetArea(8)
 
         self.addDockWidget(top, self.commitdockwidget)
-        self.addDockWidget(top, self.classicdockwidget)
-        self.tabifyDockWidget(self.classicdockwidget, self.statusdockwidget)
-
         self.addDockWidget(bottom, self.actiondockwidget)
         self.addDockWidget(bottom, self.logdockwidget)
         self.tabifyDockWidget(self.logdockwidget, self.diffdockwidget)
-
-        # Hide the classic dock by default
-        self.classicdockwidget.toggleViewAction().trigger()
 
     def create_dock(self, title):
         """Create a dock widget and set it up accordingly."""
