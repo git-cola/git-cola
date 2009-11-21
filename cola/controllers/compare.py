@@ -125,8 +125,19 @@ class BranchCompareController(QObserver):
         if branch == BranchCompareController.BRANCH_POINT:
             # Compare against the branch point so find the merge-base
             branch = gitcmds.current_branch()
-            remote = gitcmds.corresponding_remote_ref()
-            return self.model.git.merge_base(branch, remote)
+            tracked_branch = gitcmds.tracked_branch()
+            if tracked_branch:
+                return self.model.git.merge_base(branch, tracked_branch)
+            else:
+                remote_branches = gitcmds.branch_list(remote=True)
+                remote_branch = 'origin/%s' % branch
+                if remote_branch in remote_branches:
+                    return self.model.git.merge_base(branch, remote_branch)
+
+                elif 'origin/master' in remote_branches:
+                    return self.model.git.merge_base(branch, 'origin/master')
+                else:
+                    return 'HEAD'
         else:
             # Compare against the remote branch
             return branch
