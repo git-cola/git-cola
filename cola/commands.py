@@ -190,22 +190,22 @@ class ApplyPatches(Command):
     def do(self):
         diff_text = ''
         num_patches = len(self.patches)
-        orig_head = cola.model().git.rev_parse('HEAD')
+        orig_head = self.model.git.rev_parse('HEAD')
 
         for idx, patch in enumerate(self.patches):
-            status, output = cola.model().git.am(patch,
-                                                 with_status=True,
-                                                 with_stderr=True)
+            status, output = self.model.git.am(patch,
+                                               with_status=True,
+                                               with_stderr=True)
             # Log the git-am command
             _notifier.broadcast(signals.log_cmd, status, output)
 
             if num_patches > 1:
-                diff = cola.model().git.diff('HEAD^!', stat=True)
+                diff = self.model.git.diff('HEAD^!', stat=True)
                 diff_text += 'Patch %d/%d - ' % (idx+1, num_patches)
                 diff_text += '%s:\n%s\n\n' % (os.path.basename(patch), diff)
 
         diff_text += 'Summary:\n'
-        diff_text += cola.model().git.diff(orig_head, stat=True)
+        diff_text += self.model.git.diff(orig_head, stat=True)
 
         # Display a diffstat
         self.model.set_diff_text(diff_text)
@@ -589,26 +589,26 @@ class Tag(Command):
         log_msg = 'Tagging: "%s" as "%s"' % (self._revision, self._name)
         if self._sign:
             log_msg += ', GPG-signed'
-            path = cola.model().tmp_filename()
+            path = self.model.tmp_filename()
             utils.write(path, self._message)
-            status, output = cola.model().git.tag(self._name,
-                                                  self._revision,
-                                                  s=True,
-                                                  F=path,
-                                                  with_status=True,
-                                                  with_stderr=True)
+            status, output = self.model.git.tag(self._name,
+                                                self._revision,
+                                                s=True,
+                                                F=path,
+                                                with_status=True,
+                                                with_stderr=True)
             os.unlink(path)
         else:
-            status, output = cola.model().git.tag(self._name,
-                                                  self._revision,
-                                                  with_status=True,
-                                                  with_stderr=True)
+            status, output = self.model.git.tag(self._name,
+                                                self._revision,
+                                                with_status=True,
+                                                with_stderr=True)
         if output:
             log_msg += '\nOutput:\n%s' % output
 
         _notifier.broadcast(signals.log_cmd, status, log_msg)
         if status == 0:
-            cola.model().update_status()
+            self.model.update_status()
 
 
 class Unstage(Command):
