@@ -49,7 +49,7 @@ def current_branch():
 
     # Handle legacy .git/HEAD symlinks
     if os.path.islink(head):
-        refs_heads = os.path.realpath(model.git_repo_path('refs', 'heads'))
+        refs_heads = os.path.realpath(git.git_path('refs', 'heads'))
         path = os.path.abspath(head).replace('\\', '/')
         if path.startswith(refs_heads + '/'):
             value = path[len(refs_heads)+1:]
