@@ -20,20 +20,6 @@ def default_remote():
     return config.get('branch.%s.remote' % branch)
 
 
-def corresponding_remote_ref():
-    """Return the remote branch tracked by the current branch."""
-    remote = default_remote()
-    branch = current_branch()
-    best_match = '%s/%s' % (remote, branch)
-    remote_branches = branch_list(remote=True)
-    if not remote_branches:
-        return remote
-    for rb in remote_branches:
-        if rb == best_match:
-            return rb
-    if remote_branches:
-        return remote_branches[0]
-    return remote
 
 
 def diff_filenames(arg):
