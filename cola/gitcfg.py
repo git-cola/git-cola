@@ -1,5 +1,6 @@
 import os
 import sys
+import copy
 
 from cola import core
 from cola import gitcmd
@@ -49,6 +50,12 @@ class GitConfig(object):
         self._configs = []
         self._config_files = {}
         self._find_config_files()
+
+    def user(self):
+        return copy.deepcopy(self._user)
+
+    def repo(self):
+        return copy.deepcopy(self._repo)
 
     def _find_config_files(self):
         """

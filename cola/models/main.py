@@ -12,9 +12,12 @@ from cStringIO import StringIO
 from cola import core
 from cola import utils
 from cola import gitcmd
+from cola import gitcfg
 from cola import gitcmds
 from cola.models.observable import ObservableModel
 
+# Static GitConfig instance
+_config = gitcfg.instance()
 
 # Provides access to a global MainModel instance
 _instance = None
@@ -25,6 +28,7 @@ def model():
         return _instance
     _instance = MainModel()
     return _instance
+
 
 
 class MainModel(ObservableModel):
@@ -157,8 +161,15 @@ class MainModel(ObservableModel):
             'gui_historybrowser': 'gitk',
         }
 
-        local_dict = self.config_dict(local=True)
-        global_dict = self.config_dict(local=False)
+        def _underscore(dct):
+            underscore = {}
+            for k, v in dct.iteritems():
+                underscore[k.replace('.', '_')] = v
+            return underscore
+
+        _config.update()
+        local_dict = _underscore(_config.repo())
+        global_dict = _underscore(_config.user())
 
         for k,v in local_dict.iteritems():
             self.set_param('local_'+k, v)
