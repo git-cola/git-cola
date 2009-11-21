@@ -31,6 +31,24 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.shell('git config branch.master.remote test')
         self.assertEqual(gitcmds.default_remote(), 'test')
 
+    def test_tracked_branch(self):
+        """Test tracked_branch()."""
+        self.assertEqual(gitcmds.tracked_branch(), None)
+        self.shell("""
+            git config branch.master.remote test
+            git config branch.master.merge refs/heads/master
+        """)
+        self.assertEqual(gitcmds.tracked_branch(), 'test/master')
+
+    def test_tracked_branch_other(self):
+        """Test tracked_branch('other')."""
+        self.assertEqual(gitcmds.tracked_branch('other'), None)
+        self.shell("""
+            git config branch.other.remote test
+            git config branch.other.merge refs/heads/other/branch
+        """)
+        self.assertEqual(gitcmds.tracked_branch('other'), 'test/other/branch')
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -115,21 +115,16 @@ def tracked_branch(branch=None):
     """Return the remote branch associated with 'branch'."""
     if branch is None:
         branch = current_branch()
-    model = cola.model()
-    branch_remote = 'local_branch_%s_remote' % branch
-    if not model.has_param(branch_remote):
-        return ''
-    remote = model.param(branch_remote)
+    remote = config.get('branch.%s.remote' % branch)
     if not remote:
-        return ''
-    branch_merge = 'local_branch_%s_merge' % branch
-    if not model.has_param(branch_merge):
-        return ''
-    ref = model.param(branch_merge)
+        return None
+    merge_ref = config.get('branch.%s.merge' % branch)
+    if not merge_ref:
+        return None
     refs_heads = 'refs/heads/'
-    if ref.startswith(refs_heads):
-        return remote + '/' + ref[len(refs_heads):]
-    return ''
+    if merge_ref.startswith(refs_heads):
+        return remote + '/' + merge_ref[len(refs_heads):]
+    return None
 
 
 def untracked_files():
