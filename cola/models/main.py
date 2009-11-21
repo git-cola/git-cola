@@ -470,11 +470,6 @@ class MainModel(ObservableModel):
         tmpdir = self.tmp_dir()
         return os.path.join(tmpdir, basename)
 
-    def git_repo_path(self, *subpaths):
-        paths = [self.git.git_dir()]
-        paths.extend(subpaths)
-        return os.path.realpath(os.path.join(*paths))
-
     def remote_url(self, name):
         return self.git.config('remote.%s.url' % name, get=True)
 

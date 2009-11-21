@@ -122,7 +122,7 @@ class AmendMode(Command):
         """Leave/enter amend mode."""
         """Attempt to enter amend mode.  Do not allow this when merging."""
         if self.amending:
-            if os.path.exists(self.model.git_repo_path('MERGE_HEAD')):
+            if os.path.exists(self.model.git.git_path('MERGE_HEAD')):
                 self.skip = True
                 _notifier.broadcast(signals.amend, False)
                 _notifier.broadcast(signals.information,
