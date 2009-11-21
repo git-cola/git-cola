@@ -9,12 +9,13 @@ from PyQt4.QtCore import SIGNAL
 
 import cola
 from cola import core
+from cola import gitcmds
+from cola import guicmds
 from cola import utils
 from cola import qtutils
 from cola import settings
 from cola import signals
 from cola import resources
-from cola import guicmds
 from cola.qtutils import SLOT
 from cola.views import about
 from cola.views.syntax import DiffSyntaxHighlighter
@@ -205,7 +206,7 @@ class MainView(MainWindow):
 
         if not self.model.read_only() and self.mode != self.model.mode_amend:
             # Check if there's a message file in .git/
-            merge_msg_path = self.model.merge_message_path()
+            merge_msg_path = gitcmds.merge_message_path()
             if merge_msg_path is None:
                 return
             merge_msg_hash = utils.checksum(merge_msg_path)

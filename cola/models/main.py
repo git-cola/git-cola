@@ -475,30 +475,6 @@ class MainModel(ObservableModel):
         paths.extend(subpaths)
         return os.path.realpath(os.path.join(*paths))
 
-    def merge_message_path(self):
-        for basename in ('MERGE_MSG', 'SQUASH_MSG'):
-            path = self.git_repo_path(basename)
-            if os.path.exists(path):
-                return path
-        return None
-
-    def merge_message(self):
-        return self.git.fmt_merge_msg('--file',
-                                      self.git_repo_path('FETCH_HEAD'))
-
-    def abort_merge(self):
-        # Reset the worktree
-        output = self.git.read_tree('HEAD', reset=True, u=True, v=True)
-        # remove MERGE_HEAD
-        merge_head = self.git_repo_path('MERGE_HEAD')
-        if os.path.exists(merge_head):
-            os.unlink(merge_head)
-        # remove MERGE_MESSAGE, etc.
-        merge_msg_path = self.merge_message_path()
-        while merge_msg_path:
-            os.unlink(merge_msg_path)
-            merge_msg_path = self.merge_message_path()
-
     def remote_url(self, name):
         return self.git.config('remote.%s.url' % name, get=True)
 

@@ -500,3 +500,32 @@ def rev_list_range(start, end):
     revrange = '%s..%s' % (start, end)
     raw_revs = git.rev_list(revrange, pretty='oneline')
     return parse_rev_list(raw_revs)
+
+
+def merge_message_path():
+    """Return the path to .git/MERGE_MSG or .git/SQUASH_MSG."""
+    for basename in ('MERGE_MSG', 'SQUASH_MSG'):
+        path = git.git_path(basename)
+        if os.path.exists(path):
+            return path
+    return None
+
+
+def abort_merge():
+    """Abort a merge by reading the tree at HEAD."""
+    # Reset the worktree
+    git.read_tree('HEAD', reset=True, u=True, v=True)
+    # remove MERGE_HEAD
+    merge_head = git.git_path('MERGE_HEAD')
+    if os.path.exists(merge_head):
+        os.unlink(merge_head)
+    # remove MERGE_MESSAGE, etc.
+    merge_msg_path = merge_message_path()
+    while merge_msg_path:
+        os.unlink(merge_msg_path)
+        merge_msg_path = merge_message_path()
+
+
+def merge_message(self):
+    """Return a merge message for FETCH_HEAD."""
+    return git.fmt_merge_msg('--file', git.git_path('FETCH_HEAD'))

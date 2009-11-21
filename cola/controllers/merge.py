@@ -5,6 +5,7 @@ from PyQt4 import QtGui
 from PyQt4.Qt import Qt
 
 import cola
+from cola import gitcmds
 from cola import utils
 from cola import qtutils
 from cola.qobserver import QObserver
@@ -18,10 +19,9 @@ def abort_merge():
            '*ALL* uncommitted changes to be lost.\n\n'
            'Continue with aborting the current merge?')
     parent = QtGui.QApplication.instance().activeWindow()
-    model = cola.model()
     answer = qtutils.question(parent, 'Abort Merge?', txt, default=False)
     if answer:
-        model.abort_merge()
+        gitcmds.abort_merge()
 
 def local_merge():
     """Provides a dialog for merging branches"""
@@ -79,7 +79,7 @@ class MergeController(QObserver):
 
         no_commit = not(self.view.checkbox_commit.isChecked())
         squash = self.view.checkbox_squash.isChecked()
-        msg = self.model.merge_message()
+        msg = gitcmds.merge_message()
         qtutils.log(*self.model.git.merge('-m'+msg,
                                          revision,
                                          strategy='recursive',
