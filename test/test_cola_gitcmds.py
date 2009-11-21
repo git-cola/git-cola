@@ -49,6 +49,11 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         """)
         self.assertEqual(gitcmds.tracked_branch('other'), 'test/other/branch')
 
+    def test_untracked_files(self):
+        """Test untracked_files()."""
+        self.shell('touch C D E')
+        self.assertEqual(gitcmds.untracked_files(), ['C', 'D', 'E'])
+
 
 if __name__ == '__main__':
     unittest.main()
