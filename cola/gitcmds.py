@@ -3,7 +3,6 @@ import os
 import re
 from cStringIO import StringIO
 
-import cola
 from cola import core
 from cola import gitcmd
 from cola import gitcfg
