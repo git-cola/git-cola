@@ -264,13 +264,9 @@ def export_patchset(start, end, output='patches', **kwargs):
                             **kwargs)
 
 
-def unstage_paths(paths):
-    """Unstages paths from the staging area and notifies observers."""
-    return reset_helper(paths)
-
-
-def reset_helper(args):
-    """Removes files from the index
+def unstage_paths(args):
+    """
+    Unstages paths from the staging area
 
     This handles the git init case, which is why it's not
     just 'git reset name'.  For the git init case this falls
