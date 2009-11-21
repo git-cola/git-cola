@@ -27,5 +27,11 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
         self.shell('git config test.bool false')
         self.assertEqual(self.config.get('test.bool'), False)
 
+    def test_default(self):
+        """Test default values in get()."""
+        self.assertEqual(self.config.get('does.not.exist'), None)
+        self.assertEqual(self.config.get('does.not.exist', default=42), 42)
+
+
 if __name__ == '__main__':
     unittest.main()
