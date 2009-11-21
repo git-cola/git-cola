@@ -16,10 +16,16 @@ Usability, bells and whistles
 
   http://github.com/davvid/git-cola/issues/closed/#issue/22
 
+Portability
+-----------
+* `git-cola` is once again compatible with PyQt 4.3.x.
+
 Developer
 ---------
 * `cola.gitcmds` was added to factor out git command-line utilities
+* `cola.gitcfg` was added for interacting with `git-config`
 * `cola.models.browser` was added to factor out repobrowser data
+* Added more tests
 
 
 git-cola v1.4.0.5
