@@ -110,7 +110,7 @@ def tracked_branch(branch=None):
 
 
 def untracked_files():
-    """Returns a sorted list of all files, including untracked files."""
+    """Returns a sorted list of untracked files."""
     ls_files = git.ls_files(z=True,
                             others=True,
                             exclude_standard=True)
