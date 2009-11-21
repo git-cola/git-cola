@@ -5,6 +5,7 @@ from cStringIO import StringIO
 
 import cola
 from cola import core
+from cola import gitcfg
 from cola import gitcmds
 from cola import utils
 from cola import signals
@@ -15,6 +16,7 @@ from cola.diffparse import DiffParser
 
 _notifier = cola.notifier()
 _factory = cmdfactory.factory()
+_config = gitcfg.instance()
 
 
 class Command(object):
@@ -372,7 +374,7 @@ class Diffstat(Command):
     def __init__(self):
         Command.__init__(self)
         diff = self.model.git.diff(self.model.head,
-                                   unified=self.model.diff_context,
+                                   unified=_config.get('diff.context', 3),
                                    no_color=True,
                                    M=True,
                                    stat=True)
