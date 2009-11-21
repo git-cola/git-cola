@@ -54,6 +54,11 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.shell('touch C D E')
         self.assertEqual(gitcmds.untracked_files(), ['C', 'D', 'E'])
 
+    def test_tag_list(self):
+        """Test tag_list()."""
+        self.shell('git tag a && git tag b && git tag c')
+        self.assertEqual(gitcmds.tag_list(), ['c', 'b', 'a'])
+
 
 if __name__ == '__main__':
     unittest.main()
