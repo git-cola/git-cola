@@ -138,10 +138,7 @@ class GitConfig(object):
     def get(self, key, default=None):
         """Return the string value for a config key."""
         self.update()
-        if key in self._repo:
-            return self._repo[key]
-        elif key in self._user:
-            return self._user[key]
-        elif key in self._system:
-            return self._system[key]
+        for dct in (self._repo, self._user, self._system):
+            if key in dct:
+                return dct[key]
         return default
