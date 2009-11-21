@@ -1,3 +1,4 @@
+import os
 import unittest
 
 import helper
@@ -58,6 +59,20 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         """Test tag_list()."""
         self.shell('git tag a && git tag b && git tag c')
         self.assertEqual(gitcmds.tag_list(), ['c', 'b', 'a'])
+
+    def test_merge_message_path(self):
+        """Test merge_message_path()."""
+        self.shell('touch .git/SQUASH_MSG')
+        self.assertEqual(gitcmds.merge_message_path(),
+                         os.path.abspath('.git/SQUASH_MSG'))
+        self.shell('touch .git/MERGE_MSG')
+        self.assertEqual(gitcmds.merge_message_path(),
+                         os.path.abspath('.git/MERGE_MSG'))
+        os.unlink(gitcmds.merge_message_path())
+        self.assertEqual(gitcmds.merge_message_path(),
+                         os.path.abspath('.git/SQUASH_MSG'))
+        os.unlink(gitcmds.merge_message_path())
+        self.assertEqual(gitcmds.merge_message_path(), None)
 
 
 if __name__ == '__main__':
