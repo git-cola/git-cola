@@ -94,11 +94,11 @@ class GitConfig(object):
         if cache_key == self._cache_key:
             return
         self._read_configs()
-        self._cache = cache_key
+        self._cache_key = cache_key
 
     def _get_cache_key(self):
         """Return a cache key used to avoiding re-reading git-config."""
-        return map(os.stat, self._configs)
+        return map(lambda x: os.stat(x).st_mtime, self._configs)
 
     def _read_configs(self):
         self._system = {}
