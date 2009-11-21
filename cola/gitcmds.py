@@ -192,8 +192,7 @@ def diff_helper(commit=None,
                           M=True,
                           no_color=True,
                           cached=cached,
-                          # TODO factor our config object
-                          unified=cola.model().diff_context,
+                          unified=config.get('diff.context', 3),
                           with_raw_output=True,
                           with_stderr=True,
                           *argv)
