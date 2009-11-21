@@ -16,10 +16,7 @@ config = gitcfg.instance()
 
 def default_remote():
     """Return the remote tracked by the current branch."""
-    branch = current_branch()
-    return config.get('branch.%s.remote' % branch)
-
-
+    return config.get('branch.%s.remote' % current_branch())
 
 
 def diff_filenames(arg):
