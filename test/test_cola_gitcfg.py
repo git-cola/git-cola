@@ -20,6 +20,12 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
         self.shell('git config test.int 42')
         self.assertEqual(self.config.get('test.int'), 42)
 
+    def test_bool(self):
+        """Test bool values in get()."""
+        self.shell('git config test.bool true')
+        self.assertEqual(self.config.get('test.bool'), True)
+        self.shell('git config test.bool false')
+        self.assertEqual(self.config.get('test.bool'), False)
 
 if __name__ == '__main__':
     unittest.main()
