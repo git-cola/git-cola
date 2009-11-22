@@ -16,6 +16,9 @@ Usability, bells and whistles
 
   http://github.com/davvid/git-cola/issues/closed/#issue/22
 
+* Optimized startup time by removing several calls to `git`.
+
+
 Portability
 -----------
 * `git-cola` is once again compatible with PyQt 4.3.x.
