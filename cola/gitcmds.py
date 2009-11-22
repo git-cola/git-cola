@@ -32,8 +32,8 @@ def all_files():
 
 
 class _current_branch:
-    """Stat cache for current_branch()."""
-    st_mtime = None
+    """Cache for current_branch()."""
+    data = None
     value = None
 
 
@@ -41,12 +41,11 @@ def current_branch():
     """Find the current branch."""
     head = git.git_path('HEAD')
     try:
-        st_mtime = os.stat(head).st_mtime
-        if _current_branch.st_mtime == st_mtime:
+        data = utils.slurp(head)
+        if _current_branch.data == data:
             return _current_branch.value
     except OSError, e:
         pass
-
     # Handle legacy .git/HEAD symlinks
     if os.path.islink(head):
         refs_heads = os.path.realpath(git.git_path('refs', 'heads'))
@@ -54,18 +53,18 @@ def current_branch():
         if path.startswith(refs_heads + '/'):
             value = path[len(refs_heads)+1:]
             _current_branch.value = value
-            _current_branch.st_mtime = st_mtime
+            _current_branch.data = data
             return value
         return ''
 
     # Handle the common .git/HEAD "ref: refs/heads/master" file
     if os.path.isfile(head):
-        value = utils.slurp(head).strip()
+        value = data.strip()
         ref_prefix = 'ref: refs/heads/'
         if value.startswith(ref_prefix):
             value = value[len(ref_prefix):]
 
-        _current_branch.st_mtime = st_mtime
+        _current_branch.data = data
         _current_branch.value = value
         return value
 
