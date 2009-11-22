@@ -10,9 +10,8 @@ from cola.qtutils import SLOT
 _widget = None
 def widget(parent=None):
     global _widget
-    if _widget:
-        return _widget
-    _widget = StatusWidget(parent)
+    if not _widget:
+        _widget = StatusWidget(parent)
     return _widget
 
 

@@ -8,9 +8,8 @@ _instance = None
 def instance():
     """Return the GitCola singleton"""
     global _instance
-    if _instance:
-        return _instance
-    _instance = GitCola()
+    if not _instance:
+        _instance = GitCola()
     return _instance
 
 
