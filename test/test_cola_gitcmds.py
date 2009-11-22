@@ -74,6 +74,22 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         os.unlink(gitcmds.merge_message_path())
         self.assertEqual(gitcmds.merge_message_path(), None)
 
+    def test_all_refs(self):
+        self.shell("""
+            git branch a &&
+            git branch b &&
+            git branch c &&
+            git tag d &&
+            git tag e &&
+            git tag f &&
+            git remote add origin . &&
+            git fetch origin > /dev/null 2>&1
+        """)
+        local, remote, tags = gitcmds.all_refs()
+        self.assertEqual(local, ['a', 'b', 'c', 'master'])
+        self.assertEqual(remote, ['origin/a', 'origin/b', 'origin/c', 'origin/master'])
+        self.assertEqual(tags, ['d', 'e', 'f'])
+
 
 if __name__ == '__main__':
     unittest.main()

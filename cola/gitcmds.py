@@ -93,6 +93,23 @@ def for_each_ref_basename(refs):
     return map(lambda x: x[len(refs) + 1:], non_heads)
 
 
+def all_refs():
+    """Return a tuple of (local branches, remote branches, tags)."""
+    local_branches = []
+    remote_branches = []
+    tags = []
+    triple = lambda x, y: (x, len(x) + 1, y)
+    query = (triple('refs/tags', tags),
+             triple('refs/heads', local_branches),
+             triple('refs/remotes', remote_branches))
+    for ref in git.for_each_ref(format='%(refname)').splitlines():
+        for prefix, prefix_len, dst in query:
+            if ref.startswith(prefix) and not ref.endswith('/HEAD'):
+                dst.append(ref[prefix_len:])
+                continue
+    return local_branches, remote_branches, tags
+
+
 def tracked_branch(branch=None):
     """Return the remote branch associated with 'branch'."""
     if branch is None:

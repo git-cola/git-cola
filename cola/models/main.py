@@ -316,9 +316,12 @@ class MainModel(ObservableModel):
         # the modified, unmerged, and untracked file lists.
         self.set_unstaged(self.modified + self.unmerged + self.untracked)
         self.set_remotes(self.git.remote().splitlines())
-        self.set_tags(gitcmds.tag_list())
-        self.set_remote_branches(gitcmds.branch_list(remote=True))
-        self.set_local_branches(gitcmds.branch_list(remote=False))
+
+        local_branches, remote_branches, tags = gitcmds.all_refs()
+        self.set_local_branches(local_branches)
+        self.set_remote_branches(remote_branches)
+        self.set_tags(tags)
+
         self.set_revision('')
         self.set_local_branch('')
         self.set_remote_branch('')
