@@ -4,6 +4,7 @@ import copy
 
 from cola import core
 from cola import gitcmd
+from cola import utils
 
 
 _config = None
@@ -38,7 +39,6 @@ class GitConfig(object):
         self._user = {}
         self._repo = {}
         self._cache_key = None
-
         self._configs = []
         self._config_files = {}
         self._find_config_files()
@@ -97,17 +97,25 @@ class GitConfig(object):
 
     def update(self):
         """Read config values from git."""
-        cache_key = self._get_cache_key()
-        if cache_key == self._cache_key:
+        if self._cached():
             return
         self._read_configs()
-        self._cache_key = cache_key
 
-    def _get_cache_key(self):
-        """Return a cache key used to avoiding re-reading git-config."""
-        return map(lambda x: os.stat(x).st_mtime, self._configs)
+    def _cached(self):
+        """
+        Return True when the cache matches.
+
+        Updates the cache and returns False when the cache does not match.
+
+        """
+        cache_key = map(utils.slurp, self._configs)
+        if not self._cache_key or cache_key != self._cache_key:
+            self._cache_key = cache_key
+            return False
+        return True
 
     def _read_configs(self):
+        """Read git config value into the system, user and repo dicts."""
         self._system = {}
         self._user = {}
         self._repo = {}
