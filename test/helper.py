@@ -91,8 +91,8 @@ class GitRepositoryTestCase(TmpPathTestCase):
 
     def initialize_repo(self):
         self.shell("""
-            git init > /dev/null
-            touch A B
+            git init > /dev/null &&
+            touch A B &&
             git add A B
         """)
 

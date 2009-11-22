@@ -19,7 +19,7 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         """Test branch_list(remote=False)."""
         self.assertEqual(gitcmds.branch_list(remote=True), [])
         self.shell("""
-            git remote add origin .
+            git remote add origin . &&
             git fetch origin > /dev/null 2>&1
         """)
         self.assertEqual(gitcmds.branch_list(remote=True), ['origin/master'])
@@ -36,7 +36,7 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         """Test tracked_branch()."""
         self.assertEqual(gitcmds.tracked_branch(), None)
         self.shell("""
-            git config branch.master.remote test
+            git config branch.master.remote test &&
             git config branch.master.merge refs/heads/master
         """)
         self.assertEqual(gitcmds.tracked_branch(), 'test/master')
@@ -45,7 +45,7 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         """Test tracked_branch('other')."""
         self.assertEqual(gitcmds.tracked_branch('other'), None)
         self.shell("""
-            git config branch.other.remote test
+            git config branch.other.remote test &&
             git config branch.other.merge refs/heads/other/branch
         """)
         self.assertEqual(gitcmds.tracked_branch('other'), 'test/other/branch')
