@@ -59,7 +59,7 @@ git-cola v1.4.0.2
 
 Fixes
 -----
-* Add missing 'Exit Diff Mode' button for 'Diff Expression' mode
+* Added missing 'Exit Diff Mode' button for 'Diff Expression' mode
 
   http://github.com/davvid/git-cola/issues/closed/#issue/31
 
@@ -73,12 +73,12 @@ git-cola v1.4.0.1
 
 Fixes
 -----
-* The classic view keeps entries in sorted order
-* Staging untracked files works again
+* Keep entries in sorted order in the `cola classic` tool
+* Fix staging untracked files
 
   http://github.com/davvid/git-cola/issues/closed/#issue/27
 
-* Fix the 'show' command in the Stash dialog
+* Fix the `show` command in the Stash dialog
 
   http://github.com/davvid/git-cola/issues/closed/#issue/29
 
@@ -91,21 +91,21 @@ git-cola v1.4.0
 ===============
 
 This release focuses on a redesign of the git-cola user interface,
-a tags interface, and better integration of the 'cola classic' widget.
+a tags interface, and better integration of the `cola classic` tool.
 A flexible interface based on configurable docks is used to manage the
 various cola widgets.
 
 Usability, bells and whistles
 -----------------------------
-* New main GUI is flexible and user-configurable
+* New GUI is flexible and user-configurable
 * Individual widgets can be detached and rearranged arbitrarily
 * Add an interface for creating tags
 * Provide a fallback `SSH_ASKPASS` implementation to prompt for
   SSH passwords on fetch/push/pull
 * The commit message editor displays the current row/column and
   warns when lines get too long
-* The cola classic widget displays upstream changes
-* `git cola --classic` launches cola classic in standalone mode
+* The `cola classic` tool displays upstream changes
+* `git cola --classic` launches `cola classic` in standalone mode
 * Provide more information in log messages
 
 Fixes
@@ -117,9 +117,9 @@ Developer
 ---------
 * Removed all usage of Qt Designer `.ui` files
 * Simpler model/view architecture
-* Selection now lives in the model
-* Centralized model notifications are used to keep views in sync
-* The git command class was made thread-safe
+* Selection is now shared across tools
+* Centralized notifications are used to keep views in sync
+* The `cola.git` command class was made thread-safe
 * Less coupling between model and view actions
 * The status view was rewritten to use the MVC architecture
 * Added more documentation and tests
@@ -130,26 +130,26 @@ git-cola v1.3.9
 
 Usability, bells and whistles
 -----------------------------
-* Add a `classic` view for browsing the entire repository
+* Added a `cola classic` tool for browsing the entire repository
 * Handle diff expressions with spaces
 * Handle renamed files
 
 Portability
 -----------
 * Handle carat `^` characters in diff expressions on Windows
-* Workaround a PyQt 4.5/4.6 QThreadPool bug
+* Worked around a PyQt 4.5/4.6 QThreadPool bug
 
 Documentation
 -------------
-* Add keyboard shortcut documentation
-* Add more API documentation
+* Added a keyboard shortcuts reference page
+* Added developer API documentation
 
 Fixes
 -----
 * Fix the diff expression used when reviewing branches
 * Fix a bug when pushing branches
-* Fix X11 warnings
-* Fix interrupted system calls on Mac OS X
+* Fix X11 warnings at startup
+* Fix more interrupted system calls on Mac OS X
 
 
 git-cola v1.3.8
@@ -158,19 +158,23 @@ git-cola v1.3.8
 Usability, bells and whistles
 -----------------------------
 * Fresh and tasty SVG logos
-* Branch review mode for reviewing topic branches
-* Diff modes for diffing between tags, branches, or arbitrary diff expressions.
-* The push dialog now selects the current branch by default. This is to prepare for upcoming git changes where git push will warn and later refuse to push when git-push is run without arguments
+* Added `Branch Review` mode for reviewing topic branches
+* Added diff modes for diffing between tags, branches,
+  or arbitrary `git diff` expressions
+* The push dialog selects the current branch by default.
+  This is in preparation for `git-1.7.0` where unconfigured `git push`
+  will refuse to push when run without specifying the remote name
+  and branch.  See the `git` release notes for more information
 * Support `open` and `clone` commands on Windows
 * Allow saving cola UI layouts
-* Re-enable double-click-to-stage for unmerged entries.
-  Disabling it for unmerged items was inconsistent, though safer
+* Re-enabled `double-click-to-stage` for unmerged entries.
+  Disabling it for unmerged items was inconsistent, though safer.
 * Show diffs when navigating the status tree with the keyboard
 
 Packaging
 ---------
-* Work around `pyuic4` bugs in the setup.py build script
-* Mac OSX application bundles now available for download
+* Worked around `pyuic4` bugs in the `setup.py` build script
+* Added Mac OSX application bundles to the download page
 
 
 git-cola v1.3.7
@@ -178,29 +182,29 @@ git-cola v1.3.7
 
 Subsystems
 ----------
-* `git-difftool` is now an official git command as of `git-v1.6.3`.
+* `git-difftool` became an official git command in `git-1.6.3`.
 * `git-difftool` learned `--no-prompt` / `-y` and a corresponding
   `difftool.prompt` configuration variable
 
 Usability, bells and whistles
 -----------------------------
-* Warn when non-ffwd is used for push/pull
+* Warn when `non-fast-forward` is used with fetch, push or pull
 * Allow `Ctrl+C` to exit cola when run from the command line
 
 Fixes
 -----
-* Support Unicode fonts
+* Support Unicode font names
 * Handle interrupted system calls
 
 Developer
 ---------
-* PEP-8-ify more of the cola code base
+* `PEP-8`-ified more of the cola code base
 * Added more tests
 
 Packaging
 ---------
-* All resources are installed into `$prefix/share/git-cola`.
-* Closes Debian bug #519972
+* All resources are now installed into `$prefix/share/git-cola`.
+  Closed Debian bug #519972
 
   http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=519972
 
@@ -210,28 +214,28 @@ git-cola v1.3.6
 
 Subsystems
 ----------
-* Support Kompare in `git-difftool`
-* Add a unique configuration namespace for `git-difftool`
-* The diff.tool git-config value defines the default diff tool
+* Added support for Kompare in `git-difftool`
+* Added a separate configuration namespace for `git-difftool`
+* Added the `diff.tool` configuration variable to define the default diff tool
 
 Usability, bells and whistles
 -----------------------------
-* The stash dialog allows passing the `--keep-index` option
-* Warn when amending a published commit
-* Simplify the file-across-revisions comparison dialog
-* Select `origin` by default in fetch/push/pull
-* Remove the search field from the log widget
+* The stash dialog allows passing the `--keep-index` option to `git stash`
+* Amending a published commit warns at commit time
+* Simplified the file-across-revisions comparison dialog
+* `origin` is selected by default in fetch/push/pull
+* Removed the search field from the log widget
 * The log window moved into a drawer widget at the bottom of the UI
 * Log window display can be configured with
-  `cola.showoutput` = `{never, always, errors}`.
-  `errors` is the default
+  `cola.showoutput` = `{never, always, errors}`.  `errors` is the default.
+  `NOTE` -- this variable was removed with the GUI rewrite in 1.4.0.
 
 Developer
 ---------
-* Improve nose unittest usage
+* Improved nose unittest usage
 
 Packaging
 ---------
-* Add a Windows/msysGit installer
-* Include private versions of `simplejson` and `jsonpickle`
+* Added a Windows/msysGit installer
+* Included private versions of `simplejson` and `jsonpickle`
   for ease of installation and development
