@@ -71,7 +71,7 @@ class GitConfig(object):
         if git_path:
             bin_dir = os.path.dirname(git_path)
             prefix = os.path.dirname(bin_dir)
-            system_config = os.path.join(prefix, 'etc')
+            system_config = os.path.join(prefix, 'etc', 'gitconfig')
             if os.path.exists(system_config):
                 self._config_files['system'] = system_config
                 self._configs.append(system_config)
@@ -132,8 +132,8 @@ class GitConfig(object):
     def read_config(self, path):
         """Return git config data from a path as a dictionary."""
         dest = {}
-        opts = {'f': path, 'z': True, 'list': True}
-        config_lines = self.git.config(**opts).split('\0')
+        args = ('--null', '--file', path, '--list')
+        config_lines = self.git.config(*args).split('\0')
         for line in config_lines:
             try:
                 k, v = line.split('\n')
