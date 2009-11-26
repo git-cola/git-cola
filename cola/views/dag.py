@@ -94,15 +94,19 @@ class Edge(QtGui.QGraphicsItem):
 class Node(QtGui.QGraphicsItem):
     _type = QtGui.QGraphicsItem.UserType + 1
 
-    def __init__(self, graph):
+    def __init__(self, graph, commit):
         QtGui.QGraphicsItem.__init__(self)
         self.setZValue(0)
         self.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
-
+        self.commit = commit
         self._graph = graph
-        self._width = 72
-        self._height = 18
+        self._width = 180
+        # Starts with enough space for two tags. Any more and the node
+        # needs to be taller to accomodate.
+        self._height = 18 
+        if len(self.commit.tags) > 1:
+            self._height = len(self.commit.tags) * 9 + 6 # +6 padding
         self._edges = []
 
         self._colors = {}
@@ -144,8 +148,8 @@ class Node(QtGui.QGraphicsItem):
         make edges point at the center of the glyph, rather than at the
         center of the entire node.
         """
-        glyph = QtCore.QRectF(-self._width/2., -self._height/2.,
-                              self._width/2, self._height)
+        glyph = QtCore.QRectF(-self._width/2., -9,
+                              self._width/4., 18)
         return glyph
 
     def paint(self, painter, option, widget):
@@ -156,7 +160,31 @@ class Node(QtGui.QGraphicsItem):
             self.setZValue(0)
             painter.setPen(self._colors['outline'])
         painter.setBrush(self._grad)
+
+        # Draw glyph
         painter.drawEllipse(self.glyph())
+        sha1_text = self.commit.sha1
+        font = painter.font()
+        font.setPointSize(5)
+        painter.setFont(font)
+        painter.setPen(QtCore.Qt.black)
+        text_options = QtGui.QTextOption()
+        text_options.setAlignment(QtCore.Qt.AlignCenter)
+        painter.drawText(self.glyph(), sha1_text, text_options)
+
+        # Draw tags
+        if not len(self.commit.tags):
+            return
+        # Those 2's affecting width are just for padding
+        text_box = QtCore.QRectF(-self._width/4.+2, -self._height/2.,
+                                 self._width*(3/4.)-2, self._height)
+        painter.drawRoundedRect(text_box, 4, 4)
+        tag_text = "\n".join(self.commit.tags)
+        text_options.setAlignment(QtCore.Qt.AlignVCenter)
+        # A bit of padding for the text
+        painter.translate(2.,0.)
+        painter.drawText(text_box, tag_text, text_options)
+
 
     def itemChange(self, change, value):
         if change == QtGui.QGraphicsItem.ItemPositionChange:
@@ -193,13 +221,13 @@ class GraphView(QtGui.QGraphicsView):
     def __init__(self):
         QtGui.QGraphicsView.__init__(self)
 
-        self._xoff = 100
+        self._xoff = 200
         self._yoff = 42
 
         self._items = []
         self._nodes = []
         self._selected = []
-        self._zoom = 0.5
+        self._zoom = 1
 
         self._panning = False
         self._last_mouse = [0, 0]
@@ -208,7 +236,6 @@ class GraphView(QtGui.QGraphicsView):
         size = 30000
 
         self.scale(self._zoom, self._zoom)
-        self.setMinimumSize(400, 400)
         self.setDragMode(self.RubberBandDrag)
 
         scene = QtGui.QGraphicsScene(self)
@@ -221,7 +248,7 @@ class GraphView(QtGui.QGraphicsView):
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
         self.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
 
-        self.setMinimumSize(50, 50)
+        self.setMinimumSize(600, 600)
         self.setWindowTitle(self.tr('git dag'))
 
         self.setBackgroundColor()
@@ -409,8 +436,7 @@ class GraphView(QtGui.QGraphicsView):
             for p in commit.parents:
                 edgelist = self._edges.setdefault(p, [])
                 edgelist.append(commit.sha1)
-            node = Node(self)
-            node.commit = commit
+            node = Node(self, commit)
             scene.addItem(node)
             self._nodes[commit.sha1] = node
             self._items.append(node)
@@ -469,8 +495,9 @@ class GraphView(QtGui.QGraphicsView):
             node = self._nodes[sha1]
             node.setPos(xmax, ymax)
 
-        pad = 88
-        self.scene().setSceneRect(-pad, -pad, gxmax+pad*2, gymax+pad*2)
+        xpad = 200
+        ypad = 88
+        self.scene().setSceneRect(-xpad, -ypad, gxmax+xpad, gymax+ypad*2)
 
 if __name__ == "__main__":
     # Find the source tree
