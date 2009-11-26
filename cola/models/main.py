@@ -205,7 +205,7 @@ class MainModel(ObservableModel):
                 self.set_param('global_'+k, v)
 
         # Load the diff context
-        self.diff_context = self.local_config('gui.diffcontext', 3)
+        self.diff_context = _config.get('gui.diffcontext', 3)
 
     def global_config(self, key, default=None):
         return self.param('global_'+key.replace('.', '_'),
