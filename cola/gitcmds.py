@@ -59,7 +59,7 @@ def current_branch():
 
     # Handle the common .git/HEAD "ref: refs/heads/master" file
     if os.path.isfile(head):
-        value = data.strip()
+        value = data.rstrip()
         ref_prefix = 'ref: refs/heads/'
         if value.startswith(ref_prefix):
             value = value[len(ref_prefix):]
