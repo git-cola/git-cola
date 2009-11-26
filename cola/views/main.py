@@ -130,7 +130,8 @@ class MainView(MainWindow):
             (self.menu_help_docs,
                 lambda: self.model.git.web__browse(resources.html_docs())),
             (self.menu_load_commitmsg, self.load_commitmsg),
-            (self.menu_load_commitmsg_template, self.load_template),
+            (self.menu_load_commitmsg_template,
+                SLOT(signals.load_commit_template)),
             (self.menu_manage_bookmarks, manage_bookmarks),
             (self.menu_save_bookmark, save_bookmark),
             (self.menu_merge_local, local_merge),
@@ -372,13 +373,6 @@ class MainView(MainWindow):
                                        self.model.getcwd())
         if filename:
             cola.notifier().broadcast(signals.load_commit_message, filename)
-
-
-    def load_template(self):
-        """Load the configured commit message template."""
-        template = self.model.global_config('commit.template')
-        if template:
-            cola.notifier().broadcast(signals.load_commit_message, template)
 
 
     def diff_key_press_event(self, event):
