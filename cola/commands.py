@@ -461,11 +461,12 @@ class GrepMode(Command):
         self.new_mode = self.model.mode_grep
         self.new_diff_text = self.model.git.grep(txt, n=True)
 
-
 class LoadCommitMessage(Command):
     """Loads a commit message from a path."""
     def __init__(self, path):
         Command.__init__(self)
+        if not path or not os.path.exists(path):
+            raise OSError('error: "%s" does not exist' % path)
         self.undoable = True
         self.path = path
         self.old_commitmsg = self.model.commitmsg
@@ -473,14 +474,17 @@ class LoadCommitMessage(Command):
 
     def do(self):
         self.model.set_directory(os.path.dirname(self.path))
-        fh = open(self.path, 'r')
-        contents = core.decode(core.read_nointr(fh))
-        fh.close()
-        self.model.set_commitmsg(contents)
+        self.model.set_commitmsg(utils.slurp(self.path))
 
     def undo(self):
         self.model.set_commitmsg(self.old_commitmsg)
         self.model.set_directory(self.old_directory)
+
+
+class LoadCommitTemplate(LoadCommitMessage):
+    """Loads the commit message template specified by commit.template."""
+    def __init__(self):
+        LoadCommitMessage.__init__(self, _config.get('commit.template'))
 
 
 class Mergetool(Command):
@@ -713,6 +717,7 @@ def register():
         signals.format_patch: FormatPatch,
         signals.grep: GrepMode,
         signals.load_commit_message: LoadCommitMessage,
+        signals.load_commit_template: LoadCommitTemplate,
         signals.modified_summary: Diffstat,
         signals.mergetool: Mergetool,
         signals.open_repo: OpenRepo,
