@@ -305,7 +305,7 @@ class MainModel(ObservableModel):
         self.set_unstaged(self.modified + self.unmerged + self.untracked)
         self.set_remotes(self.git.remote().splitlines())
 
-        local_branches, remote_branches, tags = gitcmds.all_refs()
+        local_branches, remote_branches, tags = gitcmds.all_refs(split=True)
         self.set_local_branches(local_branches)
         self.set_remote_branches(remote_branches)
         self.set_tags(tags)

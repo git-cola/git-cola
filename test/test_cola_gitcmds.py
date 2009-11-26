@@ -85,7 +85,24 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
             git remote add origin . &&
             git fetch origin > /dev/null 2>&1
         """)
-        local, remote, tags = gitcmds.all_refs()
+        refs = gitcmds.all_refs()
+        self.assertEqual(refs,
+                         ['a', 'b', 'c', 'master',
+                          'origin/a', 'origin/b', 'origin/c', 'origin/master',
+                          'd', 'e', 'f'])
+
+    def test_all_refs_split(self):
+        self.shell("""
+            git branch a &&
+            git branch b &&
+            git branch c &&
+            git tag d &&
+            git tag e &&
+            git tag f &&
+            git remote add origin . &&
+            git fetch origin > /dev/null 2>&1
+        """)
+        local, remote, tags = gitcmds.all_refs(split=True)
         self.assertEqual(local, ['a', 'b', 'c', 'master'])
         self.assertEqual(remote, ['origin/a', 'origin/b', 'origin/c', 'origin/master'])
         self.assertEqual(tags, ['d', 'e', 'f'])

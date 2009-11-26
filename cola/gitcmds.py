@@ -92,7 +92,7 @@ def for_each_ref_basename(refs):
     return map(lambda x: x[len(refs) + 1:], non_heads)
 
 
-def all_refs():
+def all_refs(split=False):
     """Return a tuple of (local branches, remote branches, tags)."""
     local_branches = []
     remote_branches = []
@@ -106,7 +106,10 @@ def all_refs():
             if ref.startswith(prefix) and not ref.endswith('/HEAD'):
                 dst.append(ref[prefix_len:])
                 continue
-    return local_branches, remote_branches, tags
+    if split:
+        return local_branches, remote_branches, tags
+    else:
+        return local_branches + remote_branches + tags
 
 
 def tracked_branch(branch=None):
