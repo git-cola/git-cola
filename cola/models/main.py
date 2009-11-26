@@ -4,7 +4,6 @@
 
 import os
 import sys
-import re
 import time
 import subprocess
 from cStringIO import StringIO
@@ -277,20 +276,9 @@ class MainModel(ObservableModel):
     def apply_diff_to_worktree(self, filename):
         return self.git.apply(filename)
 
-    def load_commitmsg(self, path):
-        fh = open(path, 'r')
-        contents = core.decode(core.read_nointr(fh))
-        fh.close()
-        self.set_commitmsg(contents)
-
     def prev_commitmsg(self):
         """Queries git for the latest commit message."""
         return core.decode(self.git.log('-1', pretty='format:%s%n%n%b'))
-
-    def load_commitmsg_template(self):
-        template = self.global_config('commit.template')
-        if template:
-            self.load_commitmsg(template)
 
     def update_status(self):
         # Give observers a chance to respond
