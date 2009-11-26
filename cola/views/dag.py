@@ -27,8 +27,9 @@ class Edge(QtGui.QGraphicsItem):
         if not self.source or not self.dest:
             return
 
-        line = QtCore.QLineF(self.mapFromItem(self.source, 0, 0),
-                             self.mapFromItem(self.dest, 0, 0))
+        line = QtCore.QLineF(
+                self.mapFromItem(self.source, self.source.glyph().center()),
+                self.mapFromItem(self.dest, self.dest.glyph().center()))
         length = line.length()
         if length == 0.0:
             return
@@ -100,7 +101,7 @@ class Node(QtGui.QGraphicsItem):
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
 
         self._graph = graph
-        self._width = 36
+        self._width = 72
         self._height = 18
         self._edges = []
 
@@ -134,6 +135,19 @@ class Node(QtGui.QGraphicsItem):
                      self._width, self._height)
         return path
 
+    def glyph(self):
+        """Provides location of the glyph representing this node
+
+        The node contains a glyph (a circle or ellipse) representing the
+        node, as well as other text alongside the glyph.  Knowing the
+        location of the glyph, rather than the entire node allows us to
+        make edges point at the center of the glyph, rather than at the
+        center of the entire node.
+        """
+        glyph = QtCore.QRectF(-self._width/2., -self._height/2.,
+                              self._width/2, self._height)
+        return glyph
+
     def paint(self, painter, option, widget):
         if self.isSelected():
             self.setZValue(1)
@@ -142,9 +156,7 @@ class Node(QtGui.QGraphicsItem):
             self.setZValue(0)
             painter.setPen(self._colors['outline'])
         painter.setBrush(self._grad)
-        #painter.drawPath(self.shape())
-        painter.drawEllipse(-self._width/2., -self._height/2.,
-                            self._width, self._height)
+        painter.drawEllipse(self.glyph())
 
     def itemChange(self, change, value):
         if change == QtGui.QGraphicsItem.ItemPositionChange:
