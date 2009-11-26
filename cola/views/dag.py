@@ -212,6 +212,8 @@ class GraphView(QtGui.QGraphicsView):
         self.setMinimumSize(50, 50)
         self.setWindowTitle(self.tr('git dag'))
 
+        self.setBackgroundColor()
+
     def add_commits(self, commits):
         """Traverse commits and add them to the view."""
         self.add(commits)
@@ -366,48 +368,16 @@ class GraphView(QtGui.QGraphicsView):
             y = pos.y()
             item.setPos( x + dx, y + dy )
 
-    def drawBackground(self, painter, rect):
-        # Gradient Fill
-        gradient = QtGui.QLinearGradient(rect.topLeft(), rect.bottomLeft())
-        gradient.setColorAt(0, QtCore.Qt.darkGray)
-        gradient.setColorAt(0.666, QtCore.Qt.black)
-        gradient.setColorAt(1, QtCore.Qt.black)
-        painter.fillRect(rect, QtGui.QBrush(gradient))
-        painter.setBrush(QtCore.Qt.NoBrush)
-        painter.drawRect(rect)
-        return
-
-        # Shadow.
-        sceneRect = self.sceneRect()
-        rightShadow = QtCore.QRectF(sceneRect.right(), sceneRect.top() + 5, 5, sceneRect.height())
-        bottomShadow = QtCore.QRectF(sceneRect.left() + 5, sceneRect.bottom(), sceneRect.width(), 5)
-        if rightShadow.intersects(rect) or rightShadow.contains(rect):
-            painter.fillRect(rightShadow, QtCore.Qt.darkGray)
-        if bottomShadow.intersects(rect) or bottomShadow.contains(rect):
-            painter.fillRect(bottomShadow, QtCore.Qt.darkGray)
-
-        # Fill.
-        gradient = QtGui.QLinearGradient(sceneRect.topLeft(), sceneRect.bottomRight())
-        gradient.setColorAt(0, QtCore.Qt.white)
-        gradient.setColorAt(1, QtCore.Qt.lightGray)
-        painter.fillRect(rect.intersect(sceneRect), QtGui.QBrush(gradient))
-        painter.setBrush(QtCore.Qt.NoBrush)
-        painter.drawRect(sceneRect)
-
-        # Text.
-        textRect = QtCore.QRectF(sceneRect.left() + 4, sceneRect.top() + 4,
-                                 sceneRect.width() - 4, sceneRect.height() - 4)
-        message = self.tr("Click and drag the nodes around, and zoom with the "
-                          "mouse wheel or the '+' and '-' keys")
-
-        font = painter.font()
-        font.setBold(True)
-        font.setPointSize(14)
-        painter.setFont(font)
-        painter.setPen(QtCore.Qt.lightGray)
-        painter.drawText(textRect.translated(2, 2), message)
-        painter.setPen(QtCore.Qt.black)
-        painter.drawText(textRect, message)
+    def setBackgroundColor(self, color=None):
+        # To set a gradient background brush we need to use StretchToDeviceMode
+        # but that seems to be segfaulting. Use a solid background.
+        if not color:
+            #color = QtGui.QGradient()
+            #color.setCoordinateMode(QtGui.QGradient.StretchToDeviceMode)
+            #color.setColorAt(0, QtCore.Qt.darkGray)
+            #color.setColorAt(1, QtCore.Qt.black)
+            color = QtGui.QColor(50,50,50)
+        self.setBackgroundBrush(color)
 
     def _scale_view(self, scale):
         factor = (self.matrix().scale(scale, scale)
