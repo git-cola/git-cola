@@ -602,14 +602,12 @@ class MainView(MainWindow):
 
     def browse_current(self):
         """Launch the 'Browse Current Branch' dialog."""
-        branch = self.model.currentbranch
-        browse_git_branch(branch)
+        browse_git_branch(gitcmds.current_branch())
 
     def browse_other(self):
         """Prompt for a branch and inspect content at that point in time."""
         # Prompt for a branch to browse
-        branch = choose_from_combo('Browse Branch Files',
-                                   self.model.all_branches())
+        branch = choose_from_combo('Browse Revision...', gitcmds.all_refs())
         if not branch:
             return
         # Launch the repobrowser
