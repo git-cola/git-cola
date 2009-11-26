@@ -604,7 +604,9 @@ class MainModel(ObservableModel):
             return self._commits
         log = self.git.log(all=True,
                            topo_order=True,
-                           pretty='format:%h:%p:%d',
+                           # put subject at the end b/c it can contain
+                           # any number of funky characters
+                           pretty='format:%h}:{%p}:{%d}:{%an}:{%aD}:{%s',
                            max_count=max_count)
         self._commits = [Commit(log_entry=line)
                          for line in log.splitlines()]
@@ -616,19 +618,38 @@ class Commit(object):
         self.sha1 = sha1
         self.subject = ''
         self.parents = []
-        self.labels = set()
+        self.tags = set()
+        self.author = ''
+        self.authdate = ''
         if log_entry:
             self.parse(log_entry)
     def parse(self, log_entry):
-        self.sha1, parents, labels = log_entry.split(':', 2)
+        self.sha1, parents, tags, author, authdate, subject = \
+                log_entry.split('}:{', 5)
+        if subject:
+            self.subject = subject
         if parents:
             for parent in parents.split(' '):
                 self.parents.append(parent)
-        if labels:
-            for label in labels[2:-1].split(', '):
-                if label.startswith('tag: '):
-                    label = label[10:] # tag: refs/
+        if tags:
+            for tag in tags[2:-1].split(', '):
+                if tag.startswith('tag: '):
+                    tag = tag[10:] # tag: refs/
                 else:
-                    label = label[5:] # refs/
-                self.labels.add(label)
+                    tag = tag[5:] # refs/
+                self.tags.add(tag)
+        if author:
+            self.author = author
+        if authdate:
+            self.authdate = authdate
         return self
+
+    def __repr__(self):
+        return ("{\n"
+                "  sha1: " + self.sha1 + "\n"
+                "  subject: " + self.subject + "\n"
+                "  author: " + self.author + "\n"
+                "  authdate: " + self.authdate + "\n"
+                "  parents: [" + ', '.join(self.parents) + "]\n"
+                "  tags: [" + ', '.join(self.tags) + "]\n"
+                "}")
