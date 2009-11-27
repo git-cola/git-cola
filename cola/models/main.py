@@ -635,6 +635,10 @@ class Commit(object):
             for tag in tags[2:-1].split(', '):
                 if tag.startswith('tag: '):
                     tag = tag[10:] # tag: refs/
+                elif tag.startswith('refs/remotes/'):
+                    tag = tag[13:] # refs/remotes/
+                elif tag.startswith('refs/heads/'):
+                    tag = tag[11:] # refs/heads/
                 else:
                     tag = tag[5:] # refs/
                 self.tags.add(tag)
