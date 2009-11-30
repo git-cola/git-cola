@@ -39,12 +39,6 @@ from cola.controllers.selectcommits import select_commits
 
 class MainView(MainWindow):
     """The main cola interface."""
-    idx_header = -1
-    idx_staged = 0
-    idx_modified = 1
-    idx_unmerged = 2
-    idx_untracked = 3
-    idx_end = 4
 
     # Read-only mode property
     mode = property(lambda self: self.model.mode)
