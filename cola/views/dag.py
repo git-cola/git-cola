@@ -2,6 +2,14 @@ import sys
 import math
 from PyQt4 import QtCore, QtGui
 
+def git_dag():
+    """Return a pre-populated git DAG widget."""
+    from cola.models import commit
+    view = GraphView()
+    view.add_commits(commit.commits())
+    view.show()
+    return view
+
 
 class Edge(QtGui.QGraphicsItem):
     _type = QtGui.QGraphicsItem.UserType + 2
@@ -505,11 +513,6 @@ if __name__ == "__main__":
     src = path.dirname(path.dirname(path.dirname(__file__)))
     sys.path.insert(0, path.abspath(src))
 
-    from cola.models.main import MainModel
-
     app = QtGui.QApplication(sys.argv)
-    model = MainModel()
-    view = GraphView()
-    view.add_commits(model.commits())
-    view.show()
+    view = git_dag()
     sys.exit(app.exec_())
