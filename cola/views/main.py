@@ -113,7 +113,7 @@ class MainView(MainWindow):
             (self.menu_checkout_branch, self.checkout_branch),
             (self.menu_delete_branch, self.branch_delete),
             (self.menu_rebase_branch, self.rebase),
-            (self.menu_clone_repo, self.clone_repo),
+            (self.menu_clone_repo, guicmds.clone_repo),
             (self.menu_commit_compare, compare.compare),
             (self.menu_commit_compare_file, compare.compare_file),
             (self.menu_cherry_pick, self.cherry_pick),
@@ -565,10 +565,6 @@ class MainView(MainWindow):
         if not dirname:
             return
         cola.notifier().broadcast(signals.open_repo, dirname)
-
-    def clone_repo(self):
-        """Clone a git repository."""
-        guicmds.clone_repo(self)
 
     def cherry_pick(self):
         """Launch the 'Cherry-Pick' dialog."""
