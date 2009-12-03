@@ -40,9 +40,6 @@ CONFIG VARIABLES
 cola.savewindowsettings::
 	Whether 'git-cola' should remember its window settings.
 
-cola.geometry::
-	Specifies information about 'git-cola''s window size and position.
-
 cola.fontdiff::
 	Specifies the font to use for 'git-cola''s diff display.
 
@@ -142,4 +139,3 @@ but you can use it just like any other git command, e.g. `git cola`.
 AUTHOR
 ------
 Written by David Aguilar <davvid@gmail.com>.
-
