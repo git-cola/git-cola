@@ -26,6 +26,9 @@ OPTIONS
 --style=<style>::
 	Launch 'git-cola' with a different stylesheet.
 
+--classic::
+	Launch the standalone 'cola classic' tool.
+
 GUI STYLES
 ----------
 'git-cola' ships with an alternate "dark" stylesheet.
