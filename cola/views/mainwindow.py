@@ -1,5 +1,6 @@
-from PyQt4 import QtCore
 from PyQt4 import QtGui
+from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 
 import cola
 from cola import settings
@@ -344,11 +345,12 @@ class MainWindow(MainWindowBase):
         self.menu_help_docs.setShortcut(tr('F1'))
 
         # Arrange dock widgets
-        top = QtCore.Qt.DockWidgetArea(4)
-        bottom = QtCore.Qt.DockWidgetArea(8)
+        top = Qt.TopDockWidgetArea
+        bottom = Qt.BottomDockWidgetArea
 
         self.addDockWidget(top, self.commitdockwidget)
-        self.addDockWidget(bottom, self.actiondockwidget)
+        self.addDockWidget(top, self.statusdockwidget)
+        self.addDockWidget(top, self.actiondockwidget)
         self.addDockWidget(bottom, self.logdockwidget)
         self.tabifyDockWidget(self.logdockwidget, self.diffdockwidget)
 
