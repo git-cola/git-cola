@@ -150,7 +150,7 @@ class MainModel(ObservableModel):
             'cola_geometry': '',
             'cola_fontdiff': '',
             'cola_fontdiff_size': 12,
-            'cola_savewindowsettings': False,
+            'cola_savewindowsettings': True,
             'cola_showoutput': 'errors',
             'cola_tabwidth': 8,
             'merge_keepbackup': True,
