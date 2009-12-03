@@ -16,7 +16,7 @@ class MainWindow(MainWindowBase):
     def __init__(self, parent=None):
         MainWindowBase.__init__(self, parent)
         # Default size; this is thrown out when save/restore is used
-        self.resize(888, 420)
+        self.resize(987, 610)
         self.setDockOptions(QtGui.QMainWindow.AllowNestedDocks |
                             QtGui.QMainWindow.AllowTabbedDocks |
                             QtGui.QMainWindow.AnimatedDocks)
