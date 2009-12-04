@@ -545,6 +545,6 @@ def abort_merge():
         merge_msg_path = merge_message_path()
 
 
-def merge_message(self):
+def merge_message():
     """Return a merge message for FETCH_HEAD."""
     return git.fmt_merge_msg('--file', git.git_path('FETCH_HEAD'))
