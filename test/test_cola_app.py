@@ -47,6 +47,13 @@ class ColaApplicationTestCase(BaseTestCase):
         app = cola.app.ColaApplication([], locale='en_US.UTF-8', gui=False)
         self.assertEqual(app.translate('??', 'Random'), 'Random')
 
+    def test_guards_against_qstring(self):
+        """Test that random English strings are passed through as-is
+        """
+        app = cola.app.ColaApplication([], locale='en_US.UTF-8', gui=False)
+        qstr = QtCore.QString('Random')
+        self.assertEqual(app.translate('??', qstr), 'Random')
+
 
 if __name__ == '__main__':
     unittest.main()
