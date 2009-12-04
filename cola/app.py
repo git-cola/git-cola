@@ -48,11 +48,11 @@ class ColaApplication(object):
             translator.load(qmfile)
             self._app.installTranslator(translator)
 
-    def translate(self, context, *args):
+    def translate(self, context, txt):
         """Supports @@noun/@@verb and context-less translation
         """
         # We set the context to '' to properly handle .qm files
-        trtxt = unicode(self._translate_base('', *args))
+        trtxt = unicode(self._translate_base('', str(txt)))
         if trtxt[-6:-4] == '@@': # handle @@verb / @@noun
             trtxt = trtxt[:-6]
         return trtxt
