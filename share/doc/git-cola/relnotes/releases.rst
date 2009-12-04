@@ -16,6 +16,10 @@ Usability, bells and whistles
 
   http://github.com/davvid/git-cola/issues/closed/#issue/22
 
+* Warn when `push` is used to create a new branch
+
+  http://github.com/davvid/git-cola/issues/closed#issue/35
+
 * Optimized startup time by removing several calls to `git`.
 
 
