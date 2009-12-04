@@ -60,18 +60,9 @@ Adjust accordingly.  You can also add python to your path and simply bin/git-col
 
 ABOUT THE VARIOUS COLA FLAVORS
 
-A cola-*-src tarball does not include any generated files --
-it is purely a "source" release and includes everything needed
-to generate a cola release.  It is basically an export of git-cola.git.
-    ~ http://cola.tuxfamily.org/releases/.
+A cola-*-src tarball does not include any generated files.
+It is purely a "source" release and includes everything needed
+to "make install".  It is basically an export of git-cola.git.
+Binary packages are available for Mac OSX and Windows.
 
-A cola-*-release tarball contains all of the generated gui files and is
-designed to be run as-is.  These are provided for convenience so that
-users are not required to have the PyQt4 development tools installed in
-order to use cola.
-    ~ http://cola.tuxfamily.org/releases/release/.
-
-A cola-*-win32 tarball contains extra scripts for use on Windows.
-It's easier to just use the .exe installer these days, but if you're
-paranoid and would rather just download a tarball then that's cool too.
-    ~ http://cola.tuxfamily.org/releases/win32/.
+~ http://cola.tuxfamily.org/downloads.html
