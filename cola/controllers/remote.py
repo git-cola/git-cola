@@ -141,7 +141,20 @@ class RemoteController(QObserver):
                 errmsg = self.tr('No repository selected.')
                 qtutils.log(1, errmsg)
                 return
+            remote, kwargs = self.common_args()
             action = self.action
+
+            # Check if we're about to create a new branch and warn.
+            if action == 'push' and not self.model.remote_branch:
+                branch = self.model.local_branch
+                candidate = '%s/%s' % (remote, branch)
+                if candidate not in self.model.remote_branches:
+                    msg = ('Branch "' + branch + '" does not exist in ' +
+                           remote + '.\n\nCreate a new branch?')
+                if not qtutils.question(self.view, 'Create New Branch?',
+                                        msg, default=False):
+                    return
+
             if not self.model.ffwd_only_checkbox:
                 if action == 'fetch':
                     msg = ('Non-fast-forward fetch overwrites local '
@@ -155,7 +168,6 @@ class RemoteController(QObserver):
                 if not qtutils.question(self.view,
                         'Force %s?' % action.title(), msg, default=False):
                     return
-            remote, kwargs = self.common_args()
             status, output = modelaction(remote, **kwargs)
             if not output: # git fetch --tags --verbose doesn't print anything...
                 output = self.tr('Already up-to-date.')
