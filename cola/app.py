@@ -52,7 +52,7 @@ class ColaApplication(object):
         """Supports @@noun/@@verb and context-less translation
         """
         # We set the context to '' to properly handle .qm files
-        trtxt = unicode(self._translate_base('', str(txt)))
+        trtxt = unicode(self._translate_base('', txt))
         if trtxt[-6:-4] == '@@': # handle @@verb / @@noun
             trtxt = trtxt[:-6]
         return trtxt
