@@ -204,6 +204,9 @@ def set_items(widget, items):
 
 def tr(txt):
     """Translate a string into a local language."""
+    if type(txt) is QtCore.QString:
+        # This has already been translated; leave as-is
+        return unicode(txt)
     return unicode(QtGui.QApplication.instance().translate('', txt))
 
 def icon_file(filename, staged=False, untracked=False):
