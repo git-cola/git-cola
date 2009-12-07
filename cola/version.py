@@ -105,12 +105,20 @@ def version():
     return _version
 
 
+# Avoid recomputing the same checks
+_check_version_cache = {}
+
 def check_version(min_ver, ver):
     """Check whether ver is greater or equal to min_ver
     """
+    test = (min_ver, ver)
+    if test in _check_version_cache:
+        return _check_version_cache[test]
     min_ver_list = version_to_list(min_ver)
     ver_list = version_to_list(ver)
-    return min_ver_list <= ver_list
+    answer = min_ver_list <= ver_list
+    _check_version_cache[test] = answer
+    return answer
 
 
 def check(key, ver):
