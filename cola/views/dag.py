@@ -4,13 +4,42 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
+from cola import qtutils
+
+
 def git_dag():
     """Return a pre-populated git DAG widget."""
     from cola.models import commit
-    view = GraphView()
+
+    view = GitDAGWidget()
     view.add_commits(commit.commits())
+    view.raise_()
     view.show()
     return view
+
+
+class GitDAGWidget(QtGui.QWidget):
+    """The git-dag widget."""
+    # Keep us in scope otherwise PyQt kills the widget
+    _instances = set()
+
+    def __del__(self):
+        self._instances.remove(self)
+
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
+        self._instances.add(self)
+
+
+        self._graphview = GraphView()
+        layt = QtGui.QHBoxLayout()
+        layt.addWidget(self._graphview)
+        self.setLayout(layt)
+
+        qtutils.add_close_acction(self)
+
+    def add_commits(self, commits):
+        self._graphview.add_commits(commits)
 
 
 class Edge(QtGui.QGraphicsItem):
@@ -226,7 +255,6 @@ class Node(QtGui.QGraphicsItem):
         self.dragged = False
 
 
-#+---------------------------------------------------------------------------
 class GraphView(QtGui.QGraphicsView):
     def __init__(self):
         QtGui.QGraphicsView.__init__(self)
