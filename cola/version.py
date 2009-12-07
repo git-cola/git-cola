@@ -20,6 +20,7 @@ _versions = {
     'difftool-builtin': '1.6.3',
     # git-mergetool learned --no-prompt in 1.6.2
     'mergetool-no-prompt': '1.6.2',
+    'patience': '1.6.2',
 }
 
 def get(key):

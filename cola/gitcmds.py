@@ -8,6 +8,7 @@ from cola import gitcmd
 from cola import gitcfg
 from cola import errors
 from cola import utils
+from cola import version
 
 git = gitcmd.instance()
 config = gitcfg.instance()
@@ -155,6 +156,9 @@ def commit_diff(sha1):
         return core.decode(commit)
 
 
+# None until proven guilty, no double jeopardy
+_use_patience = None
+
 def diff_helper(commit=None,
                 branch=None,
                 ref=None,
@@ -163,9 +167,10 @@ def diff_helper(commit=None,
                 cached=True,
                 with_diff_header=False,
                 suppress_header=True,
-                use_patience=True,
                 reverse=False):
     "Invokes git diff on a filepath."
+    global _use_patience
+
     if commit:
         ref, endref = commit+'^', commit
     argv = []
@@ -192,10 +197,9 @@ def diff_helper(commit=None,
 
     # The '--patience' option did not appear until git 1.6.2
     # so don't allow it to be used on version previous to that
-    git_version = git.version().split()[-1]
-    (major, minor, micro, patch) = git_version.split('.')
-    if int(minor) < 6 or (int(minor) == 6 and int(micro) < 2):
-        use_patience = False
+    if _use_patience is None:
+        git_version = git.version().split()[-1]
+        _use_patience = version.check('patience', git_version)
 
     diffoutput = git.diff(R=reverse,
                           M=True,
@@ -204,7 +208,7 @@ def diff_helper(commit=None,
                           unified=config.get('diff.context', 3),
                           with_raw_output=True,
                           with_stderr=True,
-                          patience=use_patience,
+                          patience=_use_patience,
                           *argv)
 
     # Handle 'git init'
