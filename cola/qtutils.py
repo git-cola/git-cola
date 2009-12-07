@@ -3,8 +3,9 @@
 """
 import os
 
-from PyQt4 import QtCore
 from PyQt4 import QtGui
+from PyQt4 import QtCore
+from PyQt4.QtCore import SIGNAL
 
 import cola
 from cola import core
@@ -292,3 +293,11 @@ def set_diff_font(widget):
     else:
         widget.setFont(qfont)
     widget.blockSignals(block)
+
+
+def add_close_acction(widget):
+    """Adds a Ctrl+w close action to a widget."""
+    action = QtGui.QAction(widget.tr('Close...'), widget)
+    action.setShortcut('Ctrl+w')
+    widget.addAction(action)
+    widget.connect(action, SIGNAL('triggered()'), widget.close)
