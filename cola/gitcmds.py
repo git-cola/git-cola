@@ -163,6 +163,7 @@ def diff_helper(commit=None,
                 cached=True,
                 with_diff_header=False,
                 suppress_header=True,
+                use_patience=True,
                 reverse=False):
     "Invokes git diff on a filepath."
     if commit:
@@ -189,6 +190,13 @@ def diff_helper(commit=None,
     headers = []
     deleted = cached and not os.path.exists(core.encode(filename))
 
+    # The '--patience' option did not appear until git 1.6.2
+    # so don't allow it to be used on version previous to that
+    git_version = git.version().split()[-1]
+    (major, minor, micro, patch) = git_version.split('.')
+    if int(minor) < 6 or (int(minor) == 6 and int(micro) < 2):
+        use_patience = False
+
     diffoutput = git.diff(R=reverse,
                           M=True,
                           no_color=True,
@@ -196,6 +204,7 @@ def diff_helper(commit=None,
                           unified=config.get('diff.context', 3),
                           with_raw_output=True,
                           with_stderr=True,
+                          patience=use_patience,
                           *argv)
 
     # Handle 'git init'
