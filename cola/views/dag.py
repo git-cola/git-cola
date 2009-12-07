@@ -235,7 +235,6 @@ class GraphView(QtGui.QGraphicsView):
         self._items = []
         self._nodes = []
         self._selected = []
-        self._zoom = 1
 
         self._panning = False
         self._last_mouse = [0, 0]
@@ -243,6 +242,7 @@ class GraphView(QtGui.QGraphicsView):
         self.timerId = 0
         size = 30000
 
+        self._zoom = 1
         self.scale(self._zoom, self._zoom)
         self.setDragMode(self.RubberBandDrag)
 
@@ -396,8 +396,8 @@ class GraphView(QtGui.QGraphicsView):
                         .width())
         if factor < 0.02 or factor > 42.0:
             return
-        self._zoom = zoom
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
+        self._zoom = zoom
         self.scale(zoom, zoom)
 
     def _wheel_pan(self, event):
@@ -454,6 +454,7 @@ class GraphView(QtGui.QGraphicsView):
                                .width())
         if factor < 0.07 or factor > 100:
             return
+        self._zoom = scale
         self.scale(scale, scale)
 
     def add(self, commits):
