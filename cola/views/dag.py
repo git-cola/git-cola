@@ -271,9 +271,9 @@ class GraphView(QtGui.QGraphicsView):
         key = event.key()
 
         if key == QtCore.Qt.Key_Plus:
-            self._scale_view(1.2)
+            self._scale_view(1.5)
         elif key == QtCore.Qt.Key_Minus:
-            self._scale_view(1 / 1.2)
+            self._scale_view(1 / 1.5)
         elif key == QtCore.Qt.Key_F:
             self._view_fit()
         elif event.key() == QtCore.Qt.Key_Z:
