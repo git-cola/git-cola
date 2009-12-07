@@ -1,6 +1,8 @@
 import sys
 import math
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtGui
+from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 
 def git_dag():
     """Return a pre-populated git DAG widget."""
@@ -402,15 +404,20 @@ class GraphView(QtGui.QGraphicsView):
 
     def _wheel_pan(self, event):
         """Handle mouse wheel panning."""
-        factor = (self.matrix()
-                      .mapRect(QtCore.QRectF(0.0, 0.0, 25.0, 25.0)).width())
 
         if event.delta() < 0:
-            s = -1.0
+            s = -42.0
         else:
-            s = 1.0
+            s = 42.0
 
-        matrix = QtGui.QMatrix(self.matrix()).translate(0, s * factor)
+        pan_rect = QtCore.QRectF(0.0, 0.0, 1.0, 1.0)
+        factor = 1.0 / self.matrix().mapRect(pan_rect).width()
+
+        if event.orientation() == Qt.Vertical:
+            matrix = self.matrix().translate(0, s * factor)
+        else:
+            matrix = self.matrix().translate(s * factor, 0)
+
         self.setTransformationAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setMatrix(matrix)
 
