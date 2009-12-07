@@ -381,6 +381,14 @@ class GraphView(QtGui.QGraphicsView):
         self.setMatrix(matrix)
 
     def wheelEvent(self, event):
+        """Handle Qt mouse wheel events."""
+        if event.modifiers() == QtCore.Qt.ControlModifier:
+            self._wheel_zoom(event)
+        else:
+            self._wheel_pan(event)
+
+    def _wheel_zoom(self, event):
+        """Handle mouse wheel zooming."""
         zoom = math.pow(2.0, event.delta() / 512.0)
         factor = (self.matrix()
                         .scale(zoom, zoom)
@@ -391,6 +399,20 @@ class GraphView(QtGui.QGraphicsView):
         self._zoom = zoom
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
         self.scale(zoom, zoom)
+
+    def _wheel_pan(self, event):
+        """Handle mouse wheel panning."""
+        factor = (self.matrix()
+                      .mapRect(QtCore.QRectF(0.0, 0.0, 25.0, 25.0)).width())
+
+        if event.delta() < 0:
+            s = -1.0
+        else:
+            s = 1.0
+
+        matrix = QtGui.QMatrix(self.matrix()).translate(0, s * factor)
+        self.setTransformationAnchor(QtGui.QGraphicsView.NoAnchor)
+        self.setMatrix(matrix)
 
     def _move_nodes_to_mouse_position(self):
         items = self.scene().selectedItems()
