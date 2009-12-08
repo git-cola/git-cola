@@ -156,9 +156,6 @@ def commit_diff(sha1):
         return core.decode(commit)
 
 
-# None until proven guilty, no double jeopardy
-_use_patience = None
-
 def diff_helper(commit=None,
                 branch=None,
                 ref=None,
@@ -169,8 +166,6 @@ def diff_helper(commit=None,
                 suppress_header=True,
                 reverse=False):
     "Invokes git diff on a filepath."
-    global _use_patience
-
     if commit:
         ref, endref = commit+'^', commit
     argv = []
@@ -197,9 +192,7 @@ def diff_helper(commit=None,
 
     # The '--patience' option did not appear until git 1.6.2
     # so don't allow it to be used on version previous to that
-    if _use_patience is None:
-        git_version = git.version().split()[-1]
-        _use_patience = version.check('patience', git_version)
+    patience = version.check('patience', version.git_version())
 
     diffoutput = git.diff(R=reverse,
                           M=True,
@@ -208,7 +201,7 @@ def diff_helper(commit=None,
                           unified=config.get('diff.context', 3),
                           with_raw_output=True,
                           with_stderr=True,
-                          patience=_use_patience,
+                          patience=patience,
                           *argv)
 
     # Handle 'git init'
