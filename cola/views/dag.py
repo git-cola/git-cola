@@ -102,7 +102,7 @@ class Edge(QtGui.QGraphicsItem):
         # Draw the line itself.
         line = QtCore.QLineF(self.source_pt, self.dest_pt)
         length = line.length()
-        if length < 7.0 or length > 2 ** 11:
+        if length < 7.0 or length > 2 ** 13:
             return
 
         painter.setPen(QtGui.QPen(QtCore.Qt.white, 0,
