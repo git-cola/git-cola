@@ -6,6 +6,7 @@ import os
 import sys
 
 from cola import git
+from cola import gitcmd
 from cola import errors
 from cola import utils
 from cola import resources
@@ -140,6 +141,10 @@ def version_to_list(version):
     return ver_list
 
 
+_git_version = None
 def git_version():
     """Returns the current GIT version"""
-    return utils.run_cmd(['git', '--version']).split()[2]
+    global _git_version
+    if _git_version is None:
+        _git_version = gitcmd.instance().version().split()[-1]
+    return _git_version
