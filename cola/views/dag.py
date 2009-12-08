@@ -7,12 +7,12 @@ from PyQt4.QtCore import Qt
 from cola import qtutils
 
 
-def git_dag():
+def git_dag(log_args=None):
     """Return a pre-populated git DAG widget."""
     from cola.models import commit
 
     view = GitDAGWidget()
-    view.add_commits(commit.commits())
+    view.add_commits(commit.commits(log_args=log_args))
     view.raise_()
     view.show()
     return view
