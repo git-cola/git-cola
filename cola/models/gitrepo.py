@@ -250,11 +250,10 @@ class GitRepoInfoTask(QRunnable):
             log_line = cola.model().git.log('-1', '--', self.path,
                                             M=True,
                                             all=True,
-                                            pretty='format:%ar/%s/%an')
+                                            pretty='format:%ar%x00%s%x00%an')
             if log_line:
                 log_line = core.decode(log_line)
-                date, rest = log_line.split('/', 1)
-                message, author = rest.rsplit('/', 1)
+                date, message, author = log_line.split('\0', 2)
                 self._data['date'] = date
                 self._data['message'] = message
                 self._data['author'] = author
