@@ -48,7 +48,7 @@ class Edge(QtGui.QGraphicsItem):
     def __init__(self, source, dest):
         QtGui.QGraphicsItem.__init__(self)
 
-        self.arrow_size = 5.0
+        self.arrow_size = 4.0
         self.source_pt = QtCore.QPointF()
         self.dest_pt = QtCore.QPointF()
         self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
@@ -66,15 +66,17 @@ class Edge(QtGui.QGraphicsItem):
         if not self.source or not self.dest:
             return
 
+        dest_glyph_pt = self.dest.glyph().center()
         line = QtCore.QLineF(
-                self.mapFromItem(self.source, self.source.glyph().center()),
-                self.mapFromItem(self.dest, self.dest.glyph().center()))
+                self.mapFromItem(self.source, dest_glyph_pt),
+                self.mapFromItem(self.dest, dest_glyph_pt))
+
         length = line.length()
         if length == 0.0:
             return
 
-        offset = QtCore.QPointF((line.dx() * 10) / length,
-                                (line.dy() * 10) / length)
+        offset = QtCore.QPointF((line.dx() * 23) / length,
+                                (line.dy() * 9) / length)
 
         self.prepareGeometryChange()
         self.source_pt = line.p1() + offset
@@ -108,7 +110,6 @@ class Edge(QtGui.QGraphicsItem):
                                   QtCore.Qt.FlatCap,
                                   QtCore.Qt.MiterJoin))
         painter.drawLine(line)
-        return
 
         # Draw the arrows if there's enough room.
         angle = math.acos(line.dx() / line.length())
@@ -126,8 +127,8 @@ class Edge(QtGui.QGraphicsItem):
                                  math.cos(angle - math.pi + math.pi/3.) *
                                  self.arrow_size))
 
-        #painter.setBrush(QtCore.Qt.white)
-        #painter.drawPolygon(QtGui.QPolygonF([line.p2(), dest_x, dest_y]))
+        painter.setBrush(QtCore.Qt.white)
+        painter.drawPolygon(QtGui.QPolygonF([line.p2(), dest_x, dest_y]))
 
 
 class Node(QtGui.QGraphicsItem):
