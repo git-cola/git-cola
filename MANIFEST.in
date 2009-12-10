@@ -8,9 +8,6 @@ include darwin/*
 include jsonpickle/LICENSE
 include jsonpickle/*.py
 include jsonpickle/tests/*.py
-include simplejson/LICENSE
-include simplejson/*.py
-include simplejson/tests/*.py
 include test/*.py
 include test/Makefile
 include README
