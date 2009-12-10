@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Cola
+Name=Cola Git GUI
 Comment=A highly caffeinated Git GUI
 Exec=git-cola
 Icon=/usr/share/git-cola/icons/git.svg
