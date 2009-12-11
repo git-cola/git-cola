@@ -151,9 +151,9 @@ class RemoteController(QObserver):
                 if candidate not in self.model.remote_branches:
                     msg = ('Branch "' + branch + '" does not exist in ' +
                            remote + '.\n\nCreate a new branch?')
-                if not qtutils.question(self.view, 'Create New Branch?',
-                                        msg, default=False):
-                    return
+                    if not qtutils.question(self.view, 'Create New Branch?',
+                                            msg, default=False):
+                        return
 
             if not self.model.ffwd_only_checkbox:
                 if action == 'fetch':
