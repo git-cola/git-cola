@@ -1,3 +1,24 @@
+git-cola v1.4.1.1
+=================
+
+Usability, bells and whistles
+-----------------------------
+* We now use patience diff by default when it is available via
+  `git diff --patience`.
+
+* Allow closing the `cola classic` tool with `Ctrl+W`.
+
+* Update desktop menu entry to read `Cola Git GUI`.
+
+Fixes
+-----
+* Fixed an unbound variable error in the `push` dialog.
+
+Packaging
+---------
+* Don't include `simplejson` in MANIFEST.in.
+
+
 git-cola v1.4.1
 ===============
 
