@@ -9,7 +9,19 @@ git-cola documentation
 .. toctree::
 
     userguide
+
+Release Notes
+=============
+.. toctree::
+    :maxdepth: 2
+
     relnotes/index
+
+Developer Reference
+===================
+.. toctree::
+    :maxdepth: 2
+
     reference
 
 Indices and tables
