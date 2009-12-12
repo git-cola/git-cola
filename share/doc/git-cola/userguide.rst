@@ -4,7 +4,8 @@ User Guide
 * :ref:`Introduction <intro>`
 * :ref:`Main Window <mainwindow>`
 * :ref:`Shortcut Keys <shortcuts>`
-    
+
+
 .. _intro:
 
 Introduction
@@ -15,7 +16,7 @@ interact with git repositories.
 .. _mainwindow:
 
 Main Window
-----------------------------------------------------------------
+===========
 This image shows the main `git-cola` interface.
 
 .. figure:: images/cola-macosx.png
@@ -52,8 +53,8 @@ This image shows the main `git-cola` interface.
 
 .. _shortcuts:
 
-Shortcut Keys
-----------------------------------------------------------------
+Main Shortcut Keys
+==================
 * :command:`h` -- Stage/unstage hunk at text cursor position
 * :command:`s` -- Stage/unstage selection
 * :command:`ctrl-b` -- Create branch
@@ -67,8 +68,9 @@ Shortcut Keys
 * :command:`alt-t` -- Stage selected files
 * :command:`shift-alt-s` -- Stash dialog
 
+
 Classic View Shortcut Keys
-----------------------------------------------------------------
+==========================
 * :command:`h` -- Move to parent/collapse
 * :command:`j` -- Move down
 * :command:`k` -- Move up
