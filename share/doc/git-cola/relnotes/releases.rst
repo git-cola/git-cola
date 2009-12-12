@@ -17,6 +17,7 @@ Fixes
 Packaging
 ---------
 * Don't include `simplejson` in MANIFEST.in.
+* Update desktop entry to read `Cola Git GUI`.
 
 
 git-cola v1.4.1
