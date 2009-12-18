@@ -30,16 +30,16 @@ install:
 	 ((! test -e cola && ln -s git-cola cola) || true))
 
 doc:
-	$(MAKE) -C share/doc/git-cola all
+	$(MAKE) -C share/doc/git-cola prefix=$(prefix) all
 
 html:
-	$(MAKE) -C share/doc/git-cola html
+	$(MAKE) -C share/doc/git-cola prefix=$(prefix) html
 
 install-doc:
-	$(MAKE) -C share/doc/git-cola install
+	$(MAKE) -C share/doc/git-cola prefix=$(prefix) install
 
 install-html:
-	$(MAKE) -C share/doc/git-cola install-html
+	$(MAKE) -C share/doc/git-cola prefix=$(prefix) install-html
 
 uninstall:
 	rm -rf  $(DESTDIR)$(prefix)/bin/git-cola \
