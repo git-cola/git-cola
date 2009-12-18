@@ -68,9 +68,8 @@ def main():
                       default='')
     opts, args = parser.parse_args()
 
-    if opts.version or 'version' in args:
+    if opts.version or (args and args[0] == 'version'):
         # Accept 'git cola --version' or 'git cola version'
-        git.Git.execute(['git', 'update-index', '--refresh'])
         print 'cola version', version.version()
         sys.exit(0)
 
