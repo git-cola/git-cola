@@ -67,9 +67,9 @@ def builtin_version():
         return bv.version
 
 
-def _builtin_version_file(ext = 'py'):
+def _builtin_version_file(ext='py'):
     """Returns the path to cola's builtin_version.py."""
-    dirname = os.path.dirname(os.path.abspath(__file__))
+    dirname = os.path.dirname(__file__)
     return os.path.join(dirname, 'builtin_version.%s' % ext)
 
 
@@ -86,7 +86,7 @@ def write_builtin_version():
 def delete_builtin_version():
     """Deletes cola/builtin_version.py."""
     for ext in ('py', 'pyc', 'pyo'):
-        fn = _builtin_version_file(ext)
+        fn = _builtin_version_file(ext=ext)
         if os.path.exists(fn):
             os.remove(fn)
 
