@@ -14,20 +14,27 @@ from cola import utils
 from cola import resources
 from cola import core
 
+
 def main():
     # ensure readable files
     old_mask = os.umask(0022)
-    git_version = version.git_version()
     if sys.argv[1] in ('install', 'build'):
         _setup_environment()
         _check_python_version()
-        _check_git_version(git_version)
+        _check_git_version()
         _check_pyqt_version()
         _build_translations()      # msgfmt: .po -> .qm
 
-    if os.path.exists('.git'):
+    # First see if there is a version file (included in release tarballs),
+    # then try git-describe, then default.
+    builtin_version = os.path.join('cola', 'builtin_version.py')
+    if os.path.exists('version') and not os.path.exists(builtin_version):
+        shutils.copy('version', builtin_version)
+
+    elif os.path.exists('.git'):
         version.write_builtin_version()
-    _run_setup(git_version)
+
+    _run_setup()
     # restore the old mask
     os.umask(old_mask)
 
@@ -39,14 +46,14 @@ def _setup_environment():
     win32 = os.path.join(os.path.dirname(__file__), 'win32')
     os.environ['PATH'] = win32 + os.pathsep + path
 
-def _run_setup(git_version):
+def _run_setup():
     """Runs distutils.setup()"""
 
     scripts = ['bin/git-cola']
 
     # git-difftool first moved out of git.git's contrib area in git 1.6.3
     if (os.environ.get('INSTALL_GIT_DIFFTOOL', '') or
-            not version.check('difftool-builtin', git_version)):
+            not version.check('difftool-builtin', version.git_version())):
         scripts.append('bin/difftool/git-difftool')
         scripts.append('bin/difftool/git-difftool--helper')
 
@@ -110,12 +117,13 @@ def _check_python_version():
         sys.exit(1)
 
 
-def _check_git_version(git_ver):
+def _check_git_version():
     """Check the minimum GIT version
     """
-    if not version.check('git', git_ver):
+    if not version.check('git', version.git_version()):
         print >> sys.stderr, ('GIT version %s or newer required.  '
-                              'Found %s' % (version.get('git'), git_ver))
+                              'Found %s' % (version.get('git'),
+                                            version.git_version()))
         sys.exit(1)
 
 def _check_pyqt_version():
