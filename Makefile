@@ -7,6 +7,9 @@ COLA_VER	?= $(shell git describe --abbrev=4 --match='v*.*')
 APP	?= git-cola.app
 APPZIP	?= $(shell darwin/name-tarball.py)
 
+# User customizations
+-include config.mak
+
 all:
 	$(PYTHON) setup.py build
 

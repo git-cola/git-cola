@@ -1,6 +1,7 @@
 /git-cola.app
 /build
 /cola/builtin_version.py
+/config.mak
 /dist
 /Meta
 /test/tmp
