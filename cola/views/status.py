@@ -248,6 +248,9 @@ class StatusWidget(QtGui.QWidget):
                            SLOT(signals.edit, self.staged()))
             menu.addAction(self.tr('Launch Diff Tool'),
                            SLOT(signals.difftool, True, self.staged()))
+            menu.addSeparator()
+            menu.addAction(self.tr('Remove Unstaged Edits'),
+                    lambda: self._remove_unstaged_edits(use_staged=True))
             return menu
 
         if unmerged:
@@ -286,10 +289,14 @@ class StatusWidget(QtGui.QWidget):
 
         return menu
 
-    def _remove_unstaged_edits(self):
+    def _remove_unstaged_edits(self, use_staged=False):
         if not self.model.undoable():
             return
-        items_to_undo = self.modified()
+        if use_staged:
+            items_to_undo = self.staged()
+        else:
+            items_to_undo = self.modified()
+
         if items_to_undo:
             if not qtutils.question(self,
                                     'Remove Unstaged Edits?',
