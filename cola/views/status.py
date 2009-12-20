@@ -274,8 +274,10 @@ class StatusWidget(QtGui.QWidget):
             menu.addAction(self.tr('Launch Diff Tool'),
                            SLOT(signals.difftool, False, self.modified()))
             menu.addSeparator()
-            menu.addAction(self.tr('Undo All Changes'),
-                           self._checkout_files)
+            menu.addAction(self.tr('Remove Unstaged Edits'),
+                           self._remove_unstaged_edits)
+            menu.addAction(self.tr('Remove Uncommited Edits'),
+                           self._remove_uncommitted_edits)
 
         if untracked:
             menu.addSeparator()
@@ -284,16 +286,34 @@ class StatusWidget(QtGui.QWidget):
 
         return menu
 
-    def _checkout_files(self):
+    def _remove_unstaged_edits(self):
         if not self.model.undoable():
             return
         items_to_undo = self.modified()
         if items_to_undo:
             if not qtutils.question(self,
-                                    'Destroy Local Changes?',
-                                    'This operation will drop '
-                                    'uncommitted changes.\n'
-                                    'Continue?',
+                                    'Remove Unstaged Edits?',
+                                    'This operation removes '
+                                    'unstaged edits.\n'
+                                    'There\'s no going back.  Continue?',
+                                    default=False):
+                return
+            cola.notifier().broadcast(signals.checkout,
+                                      ['--'] + items_to_undo)
+        else:
+            qtutils.log(1, self.tr('No files selected for '
+                                   'checkout from HEAD.'))
+
+    def _remove_uncommitted_edits(self):
+        if not self.model.undoable():
+            return
+        items_to_undo = self.modified()
+        if items_to_undo:
+            if not qtutils.question(self,
+                                    'Remove Uncommitted edits?',
+                                    'This operation removes '
+                                    'uncommitted edits.\n'
+                                    'There\'s no going back.  Continue?',
                                     default=False):
                 return
             cola.notifier().broadcast(signals.checkout,
