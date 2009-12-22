@@ -6,6 +6,8 @@ Usability, bells and whistles
 * It is now possible to checkout from the index as well
   as from `HEAD`.  This corresponds to the
   `Removed Unstaged Changes` action in the `Repository Status` tool.
+* The `remote` dialogs (fetch, push, pull) are now slightly
+  larger by default.
 * Added more user documentation.  We now include many links to
   external git resources.
 
@@ -29,6 +31,7 @@ Packaging
   is used in lieu of having the Git repository available.
   This allows for ``make clean && make`` to function outside of
   a Git repository.
+* Added the maintainer's ``make dist`` target to the ``Makefile``.
 
 
 git-cola v1.4.1.1
