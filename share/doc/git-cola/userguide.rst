@@ -5,4 +5,5 @@ User Guide
 
     intro
     mainwindow
+    tools
     shortcuts
