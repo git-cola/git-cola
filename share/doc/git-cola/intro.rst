@@ -41,8 +41,6 @@ You can also read the
 
 Running `git-cola`
 ==================
-.. sourcecode:: sh
-
 If you've already installed cola::
 
     git cola
