@@ -1,6 +1,0 @@
-=============
-Release Notes
-=============
-.. toctree::
-
-   releases

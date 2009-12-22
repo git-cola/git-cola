@@ -13,9 +13,9 @@ git-cola documentation
 Release Notes
 =============
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
-    relnotes/index
+    relnotes
 
 Developer Reference
 ===================

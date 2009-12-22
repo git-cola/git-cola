@@ -31,7 +31,7 @@ Packaging
   is used in lieu of having the Git repository available.
   This allows for ``make clean && make`` to function outside of
   a Git repository.
-* Added the maintainer's ``make dist`` target to the ``Makefile``.
+* Added maintainer's ``make dist`` target to the ``Makefile``.
 
 
 git-cola v1.4.1.1
