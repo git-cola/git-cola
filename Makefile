@@ -1,5 +1,4 @@
 prefix	?= $(HOME)
-DESTDIR	?= /
 PYTHON	?= python
 PYTHON_VER	?= $(shell $(PYTHON) -c 'import platform; print platform.python_version()[:3]')
 PYTHON_SITE	?= $(DESTDIR)$(prefix)/lib/python$(PYTHON_VER)/site-packages
