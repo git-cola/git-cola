@@ -1,3 +1,36 @@
+git-cola v1.4.1.2
+=================
+
+Usability, bells and whistles
+-----------------------------
+* It is now possible to checkout from the index as well
+  as from `HEAD`.  This corresponds to the
+  `Removed Unstaged Changes` action in the `Repository Status` tool.
+* Added more user documentation.  We now include many links to
+  external git resources.
+
+Fixes
+-----
+* Fixed a missing ``import`` when showing `right-click` actions
+  for unmerged files in the `Repository Status` tool.
+* ``git update-index --refresh`` is no longer run everytime
+  ``git cola version`` is run.
+
+Packaging
+---------
+* The ``Makefile`` will now conditionally include a ``config.mak``
+  file located at the root of the project.  This allows for user
+  customizations such as changes to the ``$prefix`` variable
+  to be stored in a file so that custom settings do not need to
+  be specified every time on the command-line.
+* The build scripts no longer require a ``.git`` directory to
+  generate the ``builtin_version.py`` module.  The release tarballs
+  now include a ``version`` file at the root of the project which
+  is used in lieu of having the Git repository available.
+  This allows for ``make clean && make`` to function outside of
+  a Git repository.
+
+
 git-cola v1.4.1.1
 =================
 
