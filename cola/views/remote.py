@@ -13,7 +13,7 @@ class RemoteView(standard.StandardDialog):
         """
         standard.StandardDialog.__init__(self, parent=parent)
 
-        self.resize(550, 512)
+        self.resize(666, 606)
         self._main_vbox_layt = QtGui.QVBoxLayout(self)
 
         # Local branch section
