@@ -52,23 +52,10 @@ build_docs() {
 
 build_tarball() {
 	title Building tarball
-	do_or_die git checkout-index --prefix=$BASENAME/ --all
-	do_or_die python -c \
-		'import cola.version as v; v.write_builtin_version();'
-	do_or_die cp -v cola/builtin_version.py $BASENAME/cola/
-	do_or_die python -c \
-		'import cola.version as v; v.delete_builtin_version()'
-
-	pushd $BASENAME > /dev/null
-	printf "git-cola: $VERSION\nbottled-on: $(date)\n\n" > ChangeLog
-	do_or_die git log --decorate >> ChangeLog
-	popd > /dev/null
-
-	do_or_die tar czf $TARBALL $BASENAME
-	do_or_die rm -rf $BASENAME
-
+	do_or_die make dist
 	ensure_dir_exists "$tarball_dir"
-	do_or_die mv -v "$TARBALL" "$tarball_dir"
+	# TODO remove the -src suffic from release tarball names
+	do_or_die mv -v *.gz "$tarball_dir"/"$TARBALL"
 }
 
 build_win32_remotely() {
