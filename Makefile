@@ -70,8 +70,11 @@ uninstall:
 		$(DESTDIR)$(prefix)/share/git-cola \
 		$(DESTDIR)$(prefix)/share/doc/git-cola
 
-test_flags	?=
-all_test_flags	?= --with-doctest $(test_flags)
+test_flags	:=
+all_test_flags	?= --with-doctest \
+		   --exclude=jsonpickle \
+		   --exclude=simplejson \
+		   $(test_flags)
 
 test: all
 	@env PYTHONPATH="$(CURDIR)":"$(PYTHONPATH)" \
