@@ -8,6 +8,7 @@ found at startup.
 import os
 
 from PyQt4 import QtGui
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import qtutils
@@ -31,32 +32,49 @@ class StartupDialog(QtGui.QDialog):
         self._layt.addWidget(self._clone_btn)
         self._layt.addWidget(self._close_btn)
 
-	self.model = settings.SettingsManager.settings()
+        self.model = settings.SettingsManager.settings()
 
-	if(len(self.model.bookmarks) > 0):
-	    self._vlayt = QtGui.QVBoxLayout()
-            self._bookmark_model = QtGui.QStandardItemModel()
-            item = QtGui.QStandardItem('Select manually...')
+        self._vlayt = QtGui.QVBoxLayout()
+
+        self._bookmark_label = QtGui.QLabel(self.tr('Select Repository...'))
+        self._bookmark_label.setAlignment(Qt.AlignCenter)
+
+        self._bookmark_model = QtGui.QStandardItemModel()
+
+        item = QtGui.QStandardItem('Select manually...')
+        item.setEditable(False)
+        self._bookmark_model.appendRow(item)
+
+        for bookmark in self.model.bookmarks:
+            item = QtGui.QStandardItem(bookmark)
             item.setEditable(False)
             self._bookmark_model.appendRow(item)
-            for bookmark in self.model.bookmarks:
-                item = QtGui.QStandardItem(bookmark)
-                item.setEditable(False)
-                self._bookmark_model.appendRow(item)
-	    self._bookmark_list = QtGui.QListView()
-            self._bookmark_list.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
-            self._bookmark_list.setModel(self._bookmark_model)
-            self._vlayt.addWidget(self._bookmark_list)
-	    self._vlayt.addLayout(self._layt)
-            self.resize(400, 150)
-            self.setLayout(self._vlayt)
-            self._bookmark_list.activated.connect(self._open_bookmark)
-        else:
-            self.setLayout(self._layt)
+
+        selection_mode = QtGui.QAbstractItemView.SingleSelection
+
+        self._bookmark_list = QtGui.QListView()
+        self._bookmark_list.setSelectionMode(selection_mode)
+        self._bookmark_list.setModel(self._bookmark_model)
+
+        if not self.model.bookmarks:
+            self._bookmark_label.setMinimumHeight(1)
+            self._bookmark_list.setMinimumHeight(1)
+            self._bookmark_label.hide()
+            self._bookmark_list.hide()
+
+        self._vlayt.addWidget(self._bookmark_label)
+        self._vlayt.addWidget(self._bookmark_list)
+        self._vlayt.addLayout(self._layt)
+
+        self.setLayout(self._vlayt)
 
         self.connect(self._open_btn, SIGNAL('clicked()'), self._open)
         self.connect(self._clone_btn, SIGNAL('clicked()'), self._clone)
         self.connect(self._close_btn, SIGNAL('clicked()'), self.reject)
+        self.connect(self._bookmark_list,
+                     SIGNAL('activated(const QModelIndex &)'),
+                     self._open_bookmark)
+
 
     def find_git_repo(self):
         """
