@@ -17,12 +17,13 @@ Fixes
   for unmerged files in the `Repository Status` tool.
 * ``git update-index --refresh`` is no longer run everytime
   ``git cola version`` is run.
+* Don't try to watch non-existant directories when using `inotify`.
 
 Packaging
 ---------
 * The ``Makefile`` will now conditionally include a ``config.mak``
   file located at the root of the project.  This allows for user
-  customizations such as changes to the ``$prefix`` variable
+  customizations such as changes to the `prefix` variable
   to be stored in a file so that custom settings do not need to
   be specified every time on the command-line.
 * The build scripts no longer require a ``.git`` directory to
@@ -32,6 +33,10 @@ Packaging
   This allows for ``make clean && make`` to function outside of
   a Git repository.
 * Added maintainer's ``make dist`` target to the ``Makefile``.
+* The built-in `simplejson` and `jsonpickle` libraries can be
+  excluded from ``make install`` by specifying the ``standalone=true``
+  `make` variable.  For example, ``make standalone=true install``.
+  This corresponds to the ``--standalone`` option to ``setup.py``.
 
 
 git-cola v1.4.1.1
