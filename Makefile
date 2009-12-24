@@ -10,6 +10,10 @@ TAR	?= tar
 # User customizations
 -include config.mak
 
+ifneq ($(standalone),)
+standalone_args	?= --standalone
+endif
+
 all:
 	$(PYTHON) setup.py build
 
@@ -23,14 +27,15 @@ $(APP): darwin
 	tar cjf $(APPZIP) $(APP)
 
 install:
-	$(PYTHON) setup.py install \
-		--quiet \
+	$(PYTHON) setup.py --quiet install \
+		$(standalone_args) \
+		--install-scripts=$(DESTDIR)$(prefix)/bin \
 		--prefix=$(DESTDIR)$(prefix) \
 		--force && \
-	rm -f $(PYTHON_SITE)/git_cola* && \
-	(test -d $(PYTHON_SITE) && rmdir -p $(PYTHON_SITE) 2>/dev/null || true) && \
+	rm -f $(PYTHON_SITE)/git_cola*
+	rmdir -p $(PYTHON_SITE) 2>/dev/null || true
 	(cd $(DESTDIR)$(prefix)/bin && \
-	 ((! test -e cola && ln -s git-cola cola) || true))
+	! test -e cola && ln -s git-cola cola) || true
 
 # Maintainer's dist target
 COLA_TARNAME=cola-$(COLA_VERSION)
