@@ -14,6 +14,13 @@ from cola import utils
 from cola import resources
 from cola import core
 
+# --standalone prevents installing thirdparty libraries
+if '--standalone' in sys.argv:
+    sys.argv.remove('--standalone')
+    _standalone = True
+else:
+    _standalone = False
+
 
 def main():
     # ensure readable files
@@ -76,7 +83,7 @@ def _run_setup():
           data_files = cola_data_files())
 
 
-def cola_data_files():
+def cola_data_files(standalone=_standalone):
     data = [_app_path('share/git-cola/qm', '*.qm'),
             _app_path('share/git-cola/icons', '*.png'),
             _app_path('share/git-cola/icons', '*.svg'),
@@ -87,9 +94,11 @@ def cola_data_files():
             _lib_path('cola/*.py'),
             _lib_path('cola/models/*.py'),
             _lib_path('cola/controllers/*.py'),
-            _lib_path('cola/views/*.py'),
-            _lib_path('jsonpickle/*.py'),
-            _lib_path('simplejson/*.py')]
+            _lib_path('cola/views/*.py')]
+
+    if not standalone:
+        data.extend([_lib_path('jsonpickle/*.py'),
+                     _lib_path('simplejson/*.py')])
 
     if sys.platform == 'darwin':
         data.append(_app_path('share/git-cola/bin', 'ssh-askpass-darwin'))
