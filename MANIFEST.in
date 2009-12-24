@@ -5,9 +5,6 @@ include cola/models/*.py
 include cola/controllers/*.py
 include cola/views/*.py
 include darwin/*
-include jsonpickle/LICENSE
-include jsonpickle/*.py
-include jsonpickle/tests/*.py
 include test/*.py
 include test/Makefile
 include README
