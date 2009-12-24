@@ -161,13 +161,6 @@ def _build_translations():
             print '\tmsgfmt --qt %s -o %s' % (src, dst)
             utils.run_cmd(['msgfmt', '--qt', src, '-o', dst])
 
-def _run_cmd(cmd):
-    """Runs a command and returns its output."""
-    pipe = os.popen(cmd)
-    contents = core.read_nointr(pipe).strip()
-    pipe.close()
-    return contents
-
 
 if __name__ == '__main__':
     main()
