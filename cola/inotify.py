@@ -136,6 +136,8 @@ class GitNotifier(QtCore.QThread):
         if not self._wmgr:
             return
         directory = os.path.realpath(directory)
+        if not os.path.exists(directory):
+            return
         if directory not in self._dirs_seen:
             self._wmgr.add_watch(directory, self._mask)
             self._dirs_seen.add(directory)
