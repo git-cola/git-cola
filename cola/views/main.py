@@ -472,8 +472,10 @@ class MainView(MainWindow):
                 menu.addAction(self.tr('Stage &Selected Lines'),
                                self.stage_hunk_selection)
                 menu.addSeparator()
-                menu.addAction(self.tr('Undo Hunk'), self.undo_hunk)
-                menu.addAction(self.tr('Undo Selection'), self.undo_selection)
+                menu.addAction(self.tr('Undo Hunk'),
+                               self.undo_hunk)
+                menu.addAction(self.tr('Undo Selected Lines'),
+                               self.undo_selection)
 
         elif self.mode == self.model.mode_index:
             menu.addAction(self.tr('Unstage &Hunk From Commit'), self.unstage_hunk)
