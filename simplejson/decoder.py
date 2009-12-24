@@ -187,6 +187,12 @@ def JSONObject((s, end), encoding, strict, scan_once, object_hook,
             nextchar = s[end:end + 1]
         # Trivial empty object
         if nextchar == '}':
+            if object_pairs_hook is not None:
+                result = object_pairs_hook(pairs)
+                return result, end
+            pairs = {}
+            if object_hook is not None:
+                pairs = object_hook(pairs)
             return pairs, end + 1
         elif nextchar != '"':
             raise JSONDecodeError("Expecting property name", s, end)

@@ -129,10 +129,12 @@ class JSONEncoder(object):
         sorted by key; this is useful for regression tests to ensure
         that JSON serializations can be compared on a day-to-day basis.
 
-        If indent is a non-negative integer, then JSON array
-        elements and object members will be pretty-printed with that
-        indent level.  An indent level of 0 will only insert newlines.
-        None is the most compact representation.
+        If indent is a string, then JSON array elements and object members
+        will be pretty-printed with a newline followed by that string repeated
+        for each level of nesting. ``None`` (the default) selects the most compact
+        representation without any newlines. For backwards compatibility with
+        versions of simplejson earlier than 2.1.0, an integer is also accepted
+        and is converted to a string with that many spaces.
 
         If specified, separators should be a (item_separator, key_separator)
         tuple.  The default is (', ', ': ').  To get the most compact JSON
@@ -153,6 +155,8 @@ class JSONEncoder(object):
         self.check_circular = check_circular
         self.allow_nan = allow_nan
         self.sort_keys = sort_keys
+        if isinstance(indent, (int, long)):
+            indent = ' ' * indent
         self.indent = indent
         if separators is not None:
             self.item_separator, self.key_separator = separators
@@ -183,6 +187,7 @@ class JSONEncoder(object):
     def encode(self, o):
         """Return a JSON string representation of a Python data structure.
 
+        >>> from simplejson import JSONEncoder
         >>> JSONEncoder().encode({"foo": ["bar", "baz"]})
         '{"foo": ["bar", "baz"]}'
 
@@ -299,7 +304,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
         buf = '['
         if _indent is not None:
             _current_indent_level += 1
-            newline_indent = '\n' + (' ' * (_indent * _current_indent_level))
+            newline_indent = '\n' + (_indent * _current_indent_level)
             separator = _item_separator + newline_indent
             buf += newline_indent
         else:
@@ -335,7 +340,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
                     yield chunk
         if newline_indent is not None:
             _current_indent_level -= 1
-            yield '\n' + (' ' * (_indent * _current_indent_level))
+            yield '\n' + (_indent * _current_indent_level)
         yield ']'
         if markers is not None:
             del markers[markerid]
@@ -352,7 +357,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
         yield '{'
         if _indent is not None:
             _current_indent_level += 1
-            newline_indent = '\n' + (' ' * (_indent * _current_indent_level))
+            newline_indent = '\n' + (_indent * _current_indent_level)
             item_separator = _item_separator + newline_indent
             yield newline_indent
         else:
@@ -412,7 +417,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
                     yield chunk
         if newline_indent is not None:
             _current_indent_level -= 1
-            yield '\n' + (' ' * (_indent * _current_indent_level))
+            yield '\n' + (_indent * _current_indent_level)
         yield '}'
         if markers is not None:
             del markers[markerid]

@@ -37,7 +37,7 @@ Compact encoding::
 Pretty printing::
 
     >>> import simplejson as json
-    >>> s = json.dumps({'4': 5, '6': 7}, sort_keys=True, indent=4)
+    >>> s = json.dumps({'4': 5, '6': 7}, sort_keys=True, indent='    ')
     >>> print '\n'.join([l.rstrip() for l in  s.splitlines()])
     {
         "4": 5,
@@ -149,10 +149,12 @@ def dump(obj, fp, skipkeys=False, ensure_ascii=True, check_circular=True,
     in strict compliance of the JSON specification, instead of using the
     JavaScript equivalents (``NaN``, ``Infinity``, ``-Infinity``).
 
-    If ``indent`` is a non-negative integer, then JSON array elements and
-    object members will be pretty-printed with that indent level. An indent
-    level of 0 will only insert newlines. ``None`` is the most compact
-    representation.
+    If *indent* is a string, then JSON array elements and object members
+    will be pretty-printed with a newline followed by that string repeated
+    for each level of nesting. ``None`` (the default) selects the most compact
+    representation without any newlines. For backwards compatibility with
+    versions of simplejson earlier than 2.1.0, an integer is also accepted
+    and is converted to a string with that many spaces.
 
     If ``separators`` is an ``(item_separator, dict_separator)`` tuple
     then it will be used instead of the default ``(', ', ': ')`` separators.
@@ -209,10 +211,12 @@ def dumps(obj, skipkeys=False, ensure_ascii=True, check_circular=True,
     strict compliance of the JSON specification, instead of using the
     JavaScript equivalents (``NaN``, ``Infinity``, ``-Infinity``).
 
-    If ``indent`` is a non-negative integer, then JSON array elements and
-    object members will be pretty-printed with that indent level. An indent
-    level of 0 will only insert newlines. ``None`` is the most compact
-    representation.
+    If ``indent`` is a string, then JSON array elements and object members
+    will be pretty-printed with a newline followed by that string repeated
+    for each level of nesting. ``None`` (the default) selects the most compact
+    representation without any newlines. For backwards compatibility with
+    versions of simplejson earlier than 2.1.0, an integer is also accepted
+    and is converted to a string with that many spaces.
 
     If ``separators`` is an ``(item_separator, dict_separator)`` tuple
     then it will be used instead of the default ``(', ', ': ')`` separators.
@@ -361,3 +365,42 @@ def loads(s, encoding=None, cls=None, object_hook=None, parse_float=None,
     if parse_constant is not None:
         kw['parse_constant'] = parse_constant
     return cls(encoding=encoding, **kw).decode(s)
+
+
+def _toggle_speedups(enabled):
+    import simplejson.decoder as dec
+    import simplejson.encoder as enc
+    import simplejson.scanner as scan
+    try:
+        from simplejson._speedups import make_encoder as c_make_encoder
+    except ImportError:
+        c_make_encoder = None
+    if enabled:
+        dec.scanstring = dec.c_scanstring or dec.py_scanstring
+        enc.c_make_encoder = c_make_encoder
+        enc.encode_basestring_ascii = (enc.c_encode_basestring_ascii or 
+            enc.py_encode_basestring_ascii)
+        scan.make_scanner = scan.c_make_scanner or scan.py_make_scanner
+    else:
+        dec.scanstring = dec.py_scanstring
+        enc.c_make_encoder = None
+        enc.encode_basestring_ascii = enc.py_encode_basestring_ascii
+        scan.make_scanner = scan.py_make_scanner
+    dec.make_scanner = scan.make_scanner
+    global _default_decoder
+    _default_decoder = JSONDecoder(
+        encoding=None,
+        object_hook=None,
+        object_pairs_hook=None,
+    )
+    global _default_encoder
+    _default_encoder = JSONEncoder(
+       skipkeys=False,
+       ensure_ascii=True,
+       check_circular=True,
+       allow_nan=True,
+       indent=None,
+       separators=None,
+       encoding='utf-8',
+       default=None,
+   )

@@ -29,7 +29,7 @@ def main():
         obj = json.load(infile, object_pairs_hook=json.OrderedDict)
     except ValueError, e:
         raise SystemExit(e)
-    json.dump(obj, outfile, sort_keys=True, indent=4)
+    json.dump(obj, outfile, sort_keys=True, indent='    ')
     outfile.write('\n')
 
 
