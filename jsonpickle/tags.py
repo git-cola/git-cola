@@ -6,12 +6,16 @@ created by the Pickler class.  The Unpickler uses
 these custom key names to identify dictionaries
 that need to be specially handled.
 """
+from jsonpickle.compat import set
+
 OBJECT = 'py/object'
-TYPE   = 'py/type'
-REPR   = 'py/repr'
-REF    = 'py/ref'
-TUPLE  = 'py/tuple'
-SET    = 'py/set'
+TYPE = 'py/type'
+REPR = 'py/repr'
+REF = 'py/ref'
+TUPLE = 'py/tuple'
+SET = 'py/set'
+SEQ = 'py/seq'
+STATE = 'py/state'
 
 # All reserved tag names
-RESERVED = set([OBJECT, TYPE, REPR, REF, TUPLE, SET])
+RESERVED = set([OBJECT, TYPE, REPR, REF, TUPLE, SET, SEQ, STATE])

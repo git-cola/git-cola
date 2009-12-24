@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2008 John Paulett (john -at- 7oars.com)
+# Copyright (C) 2008 John Paulett (john -at- paulett.org)
 # All rights reserved.
 #
 # This software is licensed as described in the file COPYING, which
@@ -8,6 +8,7 @@
 import types
 import jsonpickle.util as util
 import jsonpickle.tags as tags
+import jsonpickle.handlers as handlers
 
 
 class Pickler(object):
@@ -122,31 +123,10 @@ class Pickler(object):
             return self._pop(_mktyperef(obj))
 
         if util.is_object(obj):
-            data = {}
-            has_class = hasattr(obj, '__class__')
-            has_dict = hasattr(obj, '__dict__')
             if self._mkref(obj):
-                if has_class and not util.is_repr(obj):
-                    module, name = _getclassdetail(obj)
-                    if self.unpicklable is True:
-                        data[tags.OBJECT] = '%s.%s' % (module, name)
-
-                if util.is_repr(obj):
-                    if self.unpicklable is True:
-                        data[tags.REPR] = '%s/%s' % (obj.__class__.__module__,
-                                                     repr(obj))
-                    else:
-                        data = unicode(obj)
-                    return self._pop(data)
-
-                if util.is_dictionary_subclass(obj):
-                    return self._pop(self._flatten_dict_obj(obj, data))
-
-                if util.is_noncomplex(obj):
-                    return self._pop([self.flatten(v) for v in obj])
-
-                if has_dict:
-                    return self._pop(self._flatten_dict_obj(obj.__dict__, data))
+                # We've never seen this object so return its
+                # json representation.
+                return self._pop(self._flatten_obj_instance(obj))
             else:
                 # We've seen this object before so place an object
                 # reference tag in the data. This avoids infinite recursion
@@ -156,20 +136,99 @@ class Pickler(object):
             return self._pop(data)
         # else, what else? (methods, functions, old style classes...)
 
+    def _flatten_obj_instance(self, obj):
+        """Recursively flatten an instance and return a json-friendly dict
+        """
+        data = {}
+        has_class = hasattr(obj, '__class__')
+        has_dict = hasattr(obj, '__dict__')
+        has_slots = not has_dict and hasattr(obj, '__slots__')
+        has_getstate = has_dict and hasattr(obj, '__getstate__')
+        has_getstate_support = has_getstate and hasattr(obj, '__setstate__')
+        HandlerClass = handlers.registry.get(type(obj))
+
+        if (has_class and not util.is_repr(obj) and
+                not util.is_module(obj)):
+            module, name = _getclassdetail(obj)
+            if self.unpicklable is True:
+                data[tags.OBJECT] = '%s.%s' % (module, name)
+            # Check for a custom handler
+            if HandlerClass:
+                handler = HandlerClass(self)
+                return handler.flatten(obj, data)
+
+        if util.is_module(obj):
+            if self.unpicklable is True:
+                data[tags.REPR] = '%s/%s' % (obj.__name__,
+                                             obj.__name__)
+            else:
+                data = unicode(obj)
+            return data
+
+        if util.is_repr(obj):
+            if self.unpicklable is True:
+                data[tags.REPR] = '%s/%s' % (obj.__class__.__module__,
+                                             repr(obj))
+            else:
+                data = unicode(obj)
+            return data
+
+        if util.is_dictionary_subclass(obj):
+            return self._flatten_dict_obj(obj, data)
+
+        if util.is_noncomplex(obj):
+            return [self.flatten(v) for v in obj]
+
+        if has_dict:
+            # Support objects that subclasses list and set
+            if util.is_collection_subclass(obj):
+                return self._flatten_collection_obj(obj, data)
+
+            # Support objects with __getstate__(); this ensures that
+            # both __setstate__() and __getstate__() are implemented
+            if has_getstate_support:
+                data[tags.STATE] = self.flatten(obj.__getstate__())
+                return data
+
+            # hack for zope persistent objects; this unghostifies the object
+            getattr(obj, '_', None)
+            return self._flatten_dict_obj(obj.__dict__, data)
+
+        if has_slots:
+            return self._flatten_newstyle_with_slots(obj, data)
+
     def _flatten_dict_obj(self, obj, data):
         """Recursively call flatten() and return json-friendly dict
         """
         for k, v in obj.iteritems():
-            if util.is_function(v):
-                continue
-            if type(k) not in types.StringTypes:
-                try:
-                    k = repr(k)
-                except:
-                    k = unicode(k)
-            self._namestack.append(k)
-            data[k] = self.flatten(v)
-            self._namestack.pop()
+            self._flatten_key_value_pair(k, v, data)
+        return data
+
+    def _flatten_newstyle_with_slots(self, obj, data):
+        """Return a json-friendly dict for new-style objects with __slots__.
+        """
+        for k in obj.__slots__:
+            self._flatten_key_value_pair(k, getattr(obj, k), data)
+        return data
+
+    def _flatten_key_value_pair(self, k, v, data):
+        """Flatten a key/value pair into the passed-in dictionary."""
+        if not util.is_picklable(k, v):
+            return data
+        if type(k) not in types.StringTypes:
+            try:
+                k = repr(k)
+            except:
+                k = unicode(k)
+        self._namestack.append(k)
+        data[k] = self.flatten(v)
+        self._namestack.pop()
+        return data
+
+    def _flatten_collection_obj(self, obj, data):
+        """Return a json-friendly dict for a collection subclass."""
+        self._flatten_dict_obj(obj.__dict__, data)
+        data[tags.SEQ] = [ self.flatten(v) for v in obj ]
         return data
 
 def _mktyperef(obj):

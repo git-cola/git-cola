@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2008 John Paulett (john -at- 7oars.com)
+# Copyright (C) 2008 John Paulett (john -at- paulett.org)
 # All rights reserved.
 #
 # This software is licensed as described in the file COPYING, which
@@ -9,6 +9,8 @@
 import sys
 import jsonpickle.util as util
 import jsonpickle.tags as tags
+import jsonpickle.handlers as handlers
+from jsonpickle.compat import set
 
 
 class Unpickler(object):
@@ -70,6 +72,13 @@ class Unpickler(object):
             cls = loadclass(obj[tags.OBJECT])
             if not cls:
                 return self._pop(obj)
+
+            # check custom handlers
+            HandlerClass = handlers.registry.get(cls)
+            if HandlerClass:
+                handler = HandlerClass(self)
+                return self._pop(handler.restore(obj))
+
             try:
                 instance = object.__new__(cls)
             except TypeError:
@@ -84,6 +93,11 @@ class Unpickler(object):
             # keep a obj->name mapping for use in the _isobjref() case
             self._mkref(instance)
 
+            if hasattr(instance, '__setstate__') and has_tag(obj, tags.STATE):
+                state = self.restore(obj[tags.STATE])
+                instance.__setstate__(state)
+                return self._pop(instance)
+
             for k, v in obj.iteritems():
                 # ignore the reserved attribute
                 if k in tags.RESERVED:
@@ -95,9 +109,19 @@ class Unpickler(object):
                         util.is_dictionary_subclass(instance)):
                     instance[k] = value
                 else:
-                    instance.__dict__[k] = value
+                    setattr(instance, k, value)
                 # step out
                 self._namestack.pop()
+
+            # Handle list and set subclasses
+            if has_tag(obj, tags.SEQ):
+                if hasattr(instance, 'append'):
+                    for v in obj[tags.SEQ]:
+                        instance.append(self.restore(v))
+                if hasattr(instance, 'add'):
+                    for v in obj[tags.SEQ]:
+                        instance.add(self.restore(v))
+
             return self._pop(instance)
 
         if util.is_list(obj):
@@ -147,13 +171,13 @@ class Unpickler(object):
 
     def _mkref(self, obj):
         """
-        >>> from jsonpickle.tests.classes import Thing
+        >>> from samples import Thing
         >>> thing = Thing('referenced-thing')
         >>> u = Unpickler()
         >>> u._mkref(thing)
         '/'
         >>> u._namedict['/']
-        jsonpickle.tests.classes.Thing("referenced-thing")
+        samples.Thing("referenced-thing")
 
         """
         name = self._refname()
@@ -164,13 +188,13 @@ class Unpickler(object):
 def loadclass(module_and_name):
     """Loads the module and returns the class.
 
-    >>> loadclass('jsonpickle.tests.classes.Thing')
-    <class 'jsonpickle.tests.classes.Thing'>
+    >>> loadclass('samples.Thing')
+    <class 'samples.Thing'>
 
     >>> loadclass('example.module.does.not.exist.Missing')
 
 
-    >>> loadclass('jsonpickle.tests.classes.MissingThing')
+    >>> loadclass('samples.MissingThing')
 
 
     """
@@ -186,8 +210,8 @@ def loadrepr(reprstr):
     It involves the dynamic specification of code.
 
     >>> from jsonpickle import tags
-    >>> loadrepr('jsonpickle.tests.classes/jsonpickle.tests.classes.Thing("json")')
-    jsonpickle.tests.classes.Thing("json")
+    >>> loadrepr('samples/samples.Thing("json")')
+    samples.Thing("json")
 
     """
     module, evalstr = reprstr.split('/')
