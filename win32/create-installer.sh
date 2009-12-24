@@ -46,9 +46,6 @@ NOTES=$ETC/ReleaseNotes.txt
 
 printf "git-cola: v$VERSION\nBottled-on: $(date)\n\n\n" > $NOTES
 printf "To run cola, just type 'cola' from a Git Bash session.\n\n\n" >> $NOTES
-if test -f meta/ReleaseNotes; then
-	cat meta/ReleaseNotes  >> $NOTES
-fi
 
 tag=$(git tag | tail -2 | head -1)
 echo "--------------------------------------------------------" >> $NOTES
