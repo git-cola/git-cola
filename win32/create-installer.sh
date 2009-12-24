@@ -31,12 +31,11 @@ ETC=$BASENAME/etc
 ROOT="$PWD"/$BASENAME
 TARGET="$ROOT".exe
 
-echo "Building installer for git-cola v$VERSION"
+echo "Building installer for git-cola $VERSION"
 
 python setup.py --quiet install \
-	--root="$ROOT" \
-	--prefix='.' \
-	--install-scripts=bin
+	--prefix="$ROOT" \
+	--install-scripts="$ROOT"/bin
 rm -rf "$ROOT"/lib "$ROOT"/Lib build
 
 cp $BASENAME/bin/git-cola $BASENAME/bin/git-cola.pyw
