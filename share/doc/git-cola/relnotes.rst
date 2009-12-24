@@ -293,7 +293,7 @@ Usability, bells and whistles
 * The log window moved into a drawer widget at the bottom of the UI
 * Log window display can be configured with
   `cola.showoutput` = `{never, always, errors}`.  `errors` is the default.
-  `NOTE` -- this variable was removed with the GUI rewrite in 1.4.0.
+* `NOTE` -- `cola.showoutput` was removed with the GUI rewrite in 1.4.0.
 
 Developer
 ---------
