@@ -1,6 +1,11 @@
 =================
 Repository Status
 =================
+.. image:: _static/repo-status.png
+    :alt: Repository Status
+    :align: center
+
+
 The status tool shows you a quick summary of the
 state of the entire project.
 
@@ -8,11 +13,16 @@ Files are categorized similarly to what you'd see when running
 `git status <http://www.kernel.org/pub/software/scm/git/docs/git-status.html>`_
 on the command line.
 
-Clicking on the `Staged` folder shows a diffstat for the index.
+Actions
+=======
 
-Clicking on the `Modified` folder shows a diffstat for the worktree.
+Clicking the `Staged` folder shows a diffstat for the index.
 
-Clicking on individual files sends diffs to the `Diff Display`.
+Clicking the `Modified` folder shows a diffstat for the worktree.
+
+Clicking individual files sends diffs to the `Diff Display`.
+
+Double-clicking individual files adds and removes their content from the index.
 
 Right-click Actions
 ===================
@@ -69,7 +79,7 @@ Stage Selected
     `git add <http://www.kernel.org/pub/software/scm/git/docs/git-add.html>`_
 
 Launch Editor
-    Launches the configured visual text editor
+    Launch the configured visual text editor
 
 
 Untracked Files
