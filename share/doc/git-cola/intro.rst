@@ -5,7 +5,7 @@ Introduction
 `git-cola` is a powerful GUI for `git` that gives you an easy way to
 interact with Git repositories.
 
-Got Cola?
+Git Cola?
 =========
 Out of cola?  Don't panic.
 
@@ -20,7 +20,7 @@ Improve
     Submit issues and enhancement requests to the
     `git-cola issue tracker <http://github.com/davvid/git-cola/issues>`_.
 
-Fork
+Contribute
     `git-cola on github <http://github.com/davvid/git-cola/>`_
 
     .. sourcecode:: sh
