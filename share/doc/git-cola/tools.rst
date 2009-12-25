@@ -5,3 +5,4 @@ Tools
 
     status
     diffview
+    commitmsg
