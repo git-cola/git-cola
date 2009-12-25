@@ -27,13 +27,13 @@ single-clicking on its icon.  Right-clicking on an entry displays additional
 actions that can be performed such as launching `git-difftool` or
 `git-mergetool`.
 
-Diff Display (2)
-----------------
-The diff view displays diffs for selected files.
+Diff Viewer (2)
+---------------
+The diff viewer displays diffs for selected files.
 Additions are shown in green and removals are displayed in light red.
 Extraneous whitespace is shown in a pure red background.
 
-Right-clicking in the diff view provides access to additional actions
+Right-clicking in the diff viewer provides access to additional actions
 that can operate on the cursor location or selection.
 
 Diff Regions (3)
