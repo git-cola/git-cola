@@ -49,3 +49,20 @@ If you've already installed cola::
 If you have the git-cola source::
 
     make && bin/git-cola
+
+
+Thanks to
+=========
+`git-cola` was made possible due to the contributions of the following people:
+
+* Barry Roberts
+* Ben Boeckel
+* Daniel King
+* David Aguilar
+* David Martínez Martí
+* Kelvie Wong
+* Marco Costalba
+* Markus Heidelberg
+* Matthew Levine
+* Steffen Prohaska
+* Uri Okrent
