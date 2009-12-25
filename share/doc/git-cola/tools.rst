@@ -6,3 +6,4 @@ Tools
     status
     diffview
     commitmsg
+    actions
