@@ -8,6 +8,7 @@ Usability, bells and whistles
   `Removed Unstaged Changes` action in the `Repository Status` tool.
 * The `remote` dialogs (fetch, push, pull) are now slightly
   larger by default.
+* Bookmarks can be selected when `git-cola` is run outside of a Git repository.
 * Added more user documentation.  We now include many links to
   external git resources.
 
