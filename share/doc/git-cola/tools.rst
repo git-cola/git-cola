@@ -4,3 +4,4 @@ Tools
 .. toctree::
 
     status
+    diffview
