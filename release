@@ -20,6 +20,7 @@ usage() {
 	echo
 	echo "options:"
 	echo "--prefix <dir>            - specify the installation prefix"
+	echo "--all                     - build tarball, win32, docs, and web"
 	echo "--tarball                 - build the tarball"
 	echo "--tarball-dir             - specify the tarball release directory"
 	echo "--web                     - build the website"
@@ -67,9 +68,8 @@ build_win32_remotely() {
 	'
 	exe=git-cola-$VERSION.exe
 	do_or_die scp -P $win32_ssh_port \
-		"$win32_login":"$win32_cola_dir"/"*.exe" $exe
-
-	do_or_die mv -v $exe "$win32_release_dir"/git-cola.exe
+		"$win32_login":"$win32_cola_dir"/"*.exe" \
+		"$win32_release_dir"/git-cola.exe
 
 	do_or_die ssh -p $win32_ssh_port \
 		"$win32_login" "/bin/rm '$win32_cola_dir'/*.exe"
@@ -78,9 +78,31 @@ build_win32_remotely() {
 # Parse options
 while test $# -gt 0; do
 	case "$1" in
+	--prefix)
+		shift
+		prefix="$1"
+		tarball_dir="$prefix"/releases
+		win32_release_dir="$tarball_dir"/win32
+		shift
+		;;
+	--all)
+		shift
+		do_tarball=true
+		do_website=true
+		do_win32=true
+		do_docs=true
+		;;
 	--tarball)
 		shift
 		do_tarball=true
+		;;
+	--doc)
+		shift
+		do_docs=true
+		;;
+	--win32)
+		shift
+		do_win32=true
 		;;
 	--web)
 		shift
@@ -90,10 +112,6 @@ while test $# -gt 0; do
 		shift
 		web_src="$1"
 		shift
-		;;
-	--win32)
-		shift
-		do_win32=true
 		;;
 	--win32-login)
 		shift
@@ -118,17 +136,6 @@ while test $# -gt 0; do
 	--win32-dir)
 		shift
 		win32_dir="$1"
-		shift
-		;;
-	--doc)
-		shift
-		do_docs=true
-		;;
-	--prefix)
-		shift
-		prefix="$1"
-		tarball_dir="$prefix"/releases
-		win32_release_dir="$tarball_dir"/win32
 		shift
 		;;
 	--)
