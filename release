@@ -54,8 +54,7 @@ build_tarball() {
 	title Building tarball
 	do_or_die make dist
 	ensure_dir_exists "$tarball_dir"
-	# TODO remove the -src suffic from release tarball names
-	do_or_die mv -v *.gz "$tarball_dir"/"$TARBALL"
+	do_or_die mv -v cola-*.gz "$tarball_dir"
 }
 
 build_win32_remotely() {
