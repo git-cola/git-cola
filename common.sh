@@ -34,6 +34,6 @@ title() {
 
 ensure_dir_exists() {
 	if ! test -d "$1"; then
-		mkdir -p "$1"
+		do_or_die mkdir -p "$1"
 	fi
 }
