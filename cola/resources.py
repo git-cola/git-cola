@@ -23,7 +23,7 @@ def doc(*args):
 
 def html_docs():
     """Returns the path to the cola html documentation."""
-    return doc('git-cola.html')
+    return doc('html', 'index.html')
 
 def share(*args):
     """Returns a path relative to cola's /usr/share/ directory"""
