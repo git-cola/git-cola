@@ -55,6 +55,7 @@ Thanks to
 =========
 `git-cola` was made possible due to the contributions of the following people:
 
+* `core git hackers <http://git-scm.com/about>`_
 * Barry Roberts
 * Ben Boeckel
 * Daniel King
