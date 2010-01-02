@@ -8,7 +8,7 @@ Usability, bells and whistles
   `Removed Unstaged Changes` action in the `Repository Status` tool.
 * The `remote` dialogs (fetch, push, pull) are now slightly
   larger by default.
-* Bookmarks can be selected when `git-cola` is run outside of a Git repository.
+* Bookmarks can be selected when `git-cola` is run outside of a git repository.
 * Added more user documentation.  We now include many links to
   external git resources.
 
@@ -30,9 +30,9 @@ Packaging
 * The build scripts no longer require a ``.git`` directory to
   generate the ``builtin_version.py`` module.  The release tarballs
   now include a ``version`` file at the root of the project which
-  is used in lieu of having the Git repository available.
+  is used in lieu of having the git repository available.
   This allows for ``make clean && make`` to function outside of
-  a Git repository.
+  a git repository.
 * Added maintainer's ``make dist`` target to the ``Makefile``.
 * The built-in `simplejson` and `jsonpickle` libraries can be
   excluded from ``make install`` by specifying the ``standalone=true``

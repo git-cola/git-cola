@@ -77,7 +77,7 @@ def _run_setup():
           author_email = 'davvid@gmail.com',
           url = 'http://cola.tuxfamily.org/',
           description = 'git-cola',
-          long_description = 'A highly caffeinated Git GUI',
+          long_description = 'A highly caffeinated git GUI',
           scripts = scripts,
           packages = [],
           data_files = cola_data_files())
