@@ -47,10 +47,7 @@ Usability, bells and whistles
 -----------------------------
 * We now use patience diff by default when it is available via
   `git diff --patience`.
-
 * Allow closing the `cola classic` tool with `Ctrl+W`.
-
-* Update desktop menu entry to read `Cola Git GUI`.
 
 Fixes
 -----
