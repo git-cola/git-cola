@@ -290,27 +290,17 @@ def export_patchset(start, end, output='patches', **kwargs):
 
 
 def unstage_paths(args):
-    """
-    Unstages paths from the staging area
-
-    This handles the git init case, which is why it's not
-    just 'git reset name'.  For the git init case this falls
-    back to 'git rm --cached'.
-
-    """
-    # fake the status because 'git reset' returns 1
-    # regardless of success/failure
-    status = 0
-    output = git.reset('--', with_stderr=True, *set(args))
+    status, output = git.reset('--', with_stderr=True, with_status=True,
+                               *set(args))
+    if status != 128:
+        return (status, output)
     # handle git init: we have to use 'git rm --cached'
     # detect this condition by checking if the file is still staged
-    state = worktree_state()
-    staged = state[0]
-    rmargs = [a for a in args if a in staged]
-    if not rmargs:
-        return (status, output)
-    output += git.rm('--', cached=True, with_stderr=True, *rmargs)
-
+    status, output = git.update_index('--',
+                                      force_remove=True,
+                                      with_status=True,
+                                      with_stderr=True,
+                                      *set(args))
     return (status, output)
 
 
