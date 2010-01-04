@@ -5,6 +5,7 @@ import os
 from PyQt4 import QtGui
 
 import cola
+from cola import serializer
 from cola import gitcmds
 from cola import utils
 from cola import qtutils
@@ -13,7 +14,7 @@ from cola.qobserver import QObserver
 
 def create_new_branch(revision=''):
     """Launches a dialog for creating a new branch"""
-    model = cola.model().clone()
+    model = serializer.clone(cola.model())
     parent = QtGui.QApplication.instance().activeWindow()
     view = createbranch.CreateBranchView(parent)
     ctl = CreateBranchController(model, view)

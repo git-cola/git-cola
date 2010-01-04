@@ -6,6 +6,7 @@ from PyQt4 import QtGui
 import cola
 from cola import gitcmds
 from cola import qtutils
+from cola import serializer
 from cola.views.selectcommits import SelectCommitsView
 from cola.qobserver import QObserver
 from cola.controllers.createbranch import create_new_branch
@@ -25,7 +26,7 @@ class SelectCommitsController(QObserver):
 
     def __init__(self, model, view, revs, summaries):
         self.orig_model = model
-        QObserver.__init__(self, model.clone(), view)
+        QObserver.__init__(self, serializer.clone(model), view)
 
         self.model.set_revisions(revs)
         self.model.set_summaries(summaries)

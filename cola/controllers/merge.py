@@ -8,6 +8,7 @@ import cola
 from cola import gitcmds
 from cola import utils
 from cola import qtutils
+from cola import serializer
 from cola.qobserver import QObserver
 from cola.views.merge import MergeView
 
@@ -25,7 +26,7 @@ def abort_merge():
 
 def local_merge():
     """Provides a dialog for merging branches"""
-    model = cola.model().clone()
+    model = serializer.clone(cola.model())
     parent = QtGui.QApplication.instance().activeWindow()
     view = MergeView(parent)
     ctl = MergeController(model, view)

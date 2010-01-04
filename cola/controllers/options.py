@@ -6,6 +6,7 @@ from PyQt4 import QtGui
 
 import cola
 from cola import qtutils
+from cola import serializer
 from cola.views import option
 from cola.qobserver import QObserver
 
@@ -24,10 +25,10 @@ class OptionsController(QObserver):
 
     def __init__(self, view):
         ## operate on a clone of the original model
-        QObserver.__init__(self, cola.model().clone(), view)
+        QObserver.__init__(self, serializer.clone(cola.model()), view)
 
         ## used to restore original values when cancelling
-        self._backup_model = cola.model().clone()
+        self._backup_model = serializer.clone(cola.model())
 
         ## config params modified by the gui
         self.add_observables('local_user_email',
