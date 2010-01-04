@@ -50,6 +50,11 @@ class CompareModel(observable.ObservableModel):
 
         return commits
 
+    def describe(self, revid, descr):
+        version = self.git.describe(revid, tags=True, always=True,
+                                    abbrev=4)
+        return version + ' - ' + descr
+
 
 class BranchCompareModel(observable.ObservableModel):
     """Provides custom model data for BranchCompareController."""

@@ -555,11 +555,6 @@ class MainModel(ObservableModel):
         else:
             return pstr
 
-    def describe(self, revid, descr):
-        version = self.git.describe(revid, tags=True, always=True,
-                                    abbrev=4)
-        return version + ' - ' + descr
-
     def is_commit_published(self):
         head = self.git.rev_parse('HEAD')
         return bool(self.git.branch(r=True, contains=head))
