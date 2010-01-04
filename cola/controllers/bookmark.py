@@ -20,7 +20,7 @@ def save_bookmark():
     """
     model = settings.SettingsManager.settings()
     model.add_bookmark(os.getcwd())
-    model.save()
+    settings.SettingsManager.save()
     qtutils.information("Bookmark Saved")
 
 def manage_bookmarks():
@@ -45,7 +45,7 @@ class BookmarkController(QObserver):
 
     def save(self):
         """Saves the bookmarks settings and exits"""
-        self.model.save()
+        settings.SettingsManager.save()
         self.view.accept()
 
     def open(self):
