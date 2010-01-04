@@ -7,6 +7,7 @@ from PyQt4 import QtGui
 
 import cola
 from cola import gitcmd
+from cola import gitcmds
 from cola import utils
 from cola import resources
 from cola import qtutils
@@ -18,8 +19,10 @@ git = gitcmd.instance()
 
 
 def select_file_from_repo():
-    """Launche a dialog to selecting a filename from a branch."""
-    model = cola.model().clone()
+    """Launch a dialog for selecting a filename from a branch."""
+    # Clone the model to allow opening multiple browsers
+    # with different sets of data
+    model = browser.BrowserModel(gitcmds.current_branch())
     parent = QtGui.QApplication.instance().activeWindow()
     view = SelectCommitsView(parent, syntax=False)
     controller = RepoBrowserController(model, view,
@@ -35,14 +38,13 @@ def browse_git_branch(branch):
     """Launch a dialog to browse files in a specific branch."""
     if not branch:
         return
-    # Clone the model to allow opening multiple browsers
-    # with different sets of data
     model = browser.BrowserModel(branch)
     parent = QtGui.QApplication.instance().activeWindow()
     view = SelectCommitsView(parent, syntax=False)
     controller = RepoBrowserController(model, view)
     view.show()
     return view.exec_() == QtGui.QDialog.Accepted
+
 
 class RepoBrowserController(QObserver):
     """Provides control to the Repository Browser."""
@@ -211,7 +213,7 @@ class RepoBrowserController(QObserver):
         Populate the commit_list with the current directories and items
 
         Directories are always listed first.
-        
+
         """
 
         # Clear commit/revision fields
