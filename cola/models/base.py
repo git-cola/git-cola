@@ -13,6 +13,7 @@ import jsonpickle
 
 from cola import core
 
+from cola.compat import set
 
 class BaseModel(object):
     """

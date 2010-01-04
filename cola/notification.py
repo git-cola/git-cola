@@ -1,6 +1,8 @@
 import os
 from PyQt4 import QtCore
 
+from cola.compat import set
+
 debug = os.environ.get('COLA_NOTIFIER_DEBUG', False)
 _instance = None
 def notifier():

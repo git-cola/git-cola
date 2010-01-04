@@ -5,6 +5,7 @@ import cola
 from cola import signals
 from cola import qtutils
 from cola import utils
+from cola.compat import set
 from cola.qtutils import SLOT
 
 

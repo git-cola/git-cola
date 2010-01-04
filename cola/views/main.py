@@ -16,6 +16,7 @@ from cola import qtutils
 from cola import settings
 from cola import signals
 from cola import resources
+from cola.compat import set
 from cola.qtutils import SLOT
 from cola.views import about
 from cola.views.syntax import DiffSyntaxHighlighter

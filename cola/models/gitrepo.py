@@ -12,6 +12,7 @@ from cola import core
 from cola import utils
 from cola import qtutils
 from cola import version
+from cola.compat import set
 
 
 # Custom event type for GitRepoInfoEvents

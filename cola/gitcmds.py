@@ -9,6 +9,7 @@ from cola import gitcfg
 from cola import errors
 from cola import utils
 from cola import version
+from cola.compat import set
 
 git = gitcmd.instance()
 config = gitcfg.instance()

@@ -2,6 +2,7 @@
 """This module provides the Observable class"""
 
 import types
+from cola.compat import set
 
 class Observable(object):
     """Handles subject/observer notifications."""

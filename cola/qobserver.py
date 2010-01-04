@@ -16,6 +16,7 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 
 from cola import observer
+from cola.compat import set
 
 class QObserver(observer.Observer, QtCore.QObject):
 

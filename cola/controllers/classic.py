@@ -12,6 +12,7 @@ from cola import signals
 from cola.controllers.selectcommits import select_commits
 from cola.models import gitrepo
 from cola.views import repo
+from cola.compat import set
 
 
 def widget():

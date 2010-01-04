@@ -21,6 +21,7 @@ from PyQt4 import QtCore
 import cola
 from cola import signals
 from cola import utils
+from cola.compat import set
 
 INOTIFY_EVENT = QtCore.QEvent.User + 0
 
