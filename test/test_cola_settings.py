@@ -1,31 +1,37 @@
 import unittest
 import os
 
+from cola import serializer
 from cola import settings
 import helper
 
-_tmp_path = helper.tmp_path('colarc')
-settings.SettingsModel.path = lambda *args: _tmp_path
-
 class SettingsTestCase(unittest.TestCase):
     """Tests the cola.settings module"""
+    def setUp(self):
+        self._old_rcfile = settings._rcfile
+        self._rcfile = helper.tmp_path('colarc')
+        settings._rcfile = self._rcfile
+
     def tearDown(self):
-        if os.path.exists(_tmp_path):
-            os.remove(_tmp_path)
+        if os.path.exists(self._rcfile):
+            os.remove(self._rcfile)
+        settings._rcfile = self._old_rcfile
 
     def model(self):
-        return settings.SettingsModel()
+        settings.SettingsManager._settings = None
+        return settings.SettingsManager.settings()
 
-    def test_path(self):
-        """Test the test path() helper above"""
-        model = self.model()
-        self.assertEqual(model.path(), helper.tmp_path('colarc'))
+    def test_model_helper(self):
+        a = self.model()
+        b = self.model()
+        self.assertTrue(a is not b)
 
     def test_gui_save_restore(self):
         """Test saving and restoring gui state"""
         model = self.model()
         model.gui_state['test-gui'] = {'foo':'bar'}
-        model.save()
+        settings.SettingsManager.save()
+
         model = self.model()
         state = model.gui_state.get('test-gui', {})
         self.assertTrue('foo' in state)
@@ -35,7 +41,7 @@ class SettingsTestCase(unittest.TestCase):
         """Test the bookmark save/restore feature"""
         model = self.model()
         model.add_bookmark('test-bookmark')
-        model.save()
+        settings.SettingsManager.save()
         model = self.model()
         bookmarks = model.bookmarks
         self.assertEqual(len(bookmarks), 1)

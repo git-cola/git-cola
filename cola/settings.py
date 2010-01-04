@@ -5,30 +5,19 @@
 import os
 import user
 
-from cola.models.observable import ObservableModel
+from cola import serializer
+from cola.models import observable
 
-class SettingsModel(ObservableModel):
+# Here we store settings
+_rcfile = os.path.join(user.home, '.cola')
+
+
+class SettingsModel(observable.ObservableModel):
     def __init__(self):
         """Load existing settings if they exist"""
-        ObservableModel.__init__(self)
+        observable.ObservableModel.__init__(self)
         self.bookmarks = []
         self.gui_state = {}
-        self.load()
-
-    def path(self):
-        """Path to the model's on-disk representation"""
-        return os.path.join(user.home, '.cola')
-
-    def load(self):
-        """Loads settings if they exist"""
-        settings = self.path()
-        if os.path.exists(settings):
-            ObservableModel.load(self, settings)
-
-    def save(self):
-        """Saves settings to the .cola file"""
-        # Call the base method
-        ObservableModel.save(self, self.path())
 
     def add_bookmark(self, bookmark):
         """Adds a bookmark to the saved settings"""
@@ -40,14 +29,20 @@ class SettingsModel(ObservableModel):
         if bookmark in self.bookmarks:
             self.bookmarks.remove(bookmark)
 
+
 class SettingsManager(object):
     """Manages a SettingsModel singleton
     """
-    _settings = SettingsModel()
+    _settings = None
 
     @staticmethod
     def settings():
         """Returns the SettingsModel singleton"""
+        if not SettingsManager._settings:
+            if os.path.exists(_rcfile):
+                SettingsManager._settings = serializer.load(_rcfile)
+            else:
+                SettingsManager._settings = SettingsModel()
         return SettingsManager._settings
 
     @staticmethod
@@ -57,9 +52,14 @@ class SettingsManager(object):
         state = gui.export_state()
         model = SettingsManager.settings()
         model.gui_state[name] = state
-        model.save()
+        SettingsManager.save()
 
     @staticmethod
     def gui_state(gui):
         """Returns the state for a gui"""
         return SettingsManager.settings().gui_state.get(gui.name(), {})
+
+    @staticmethod
+    def save():
+        model = SettingsManager.settings()
+        serializer.save(model, _rcfile)

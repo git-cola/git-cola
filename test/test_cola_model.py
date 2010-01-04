@@ -25,6 +25,7 @@ class ModelTest(unittest.TestCase):
         model.attribute = 'value'
         self.assertEqual(model.param('attribute'), 'value')
 
+    # basic tests to ensure __getattr__ is sane
     def test_method(self):
         """Test calling a concrete method"""
         model = ExampleModel()
@@ -35,17 +36,6 @@ class ModelTest(unittest.TestCase):
         model = ExampleModel()
         model.thedict = { 'hello': 'world' }
         self.assertEqual(model.thedict['hello'], 'world' )
-
-    def test_from_dict(self):
-        """Test reconstituting a model from a dictionary."""
-        model = ExampleModel()
-        model.from_dict({
-            'test_dict': { 'hello':'world' },
-            'test_list': [ 'foo', 'bar' ],
-            'test_str': 'foo',
-        })
-        self.assertEqual(model.test_dict['hello'], 'world')
-        self.assertEqual(model.test_list[1], 'bar')
 
 
 if __name__ == '__main__':

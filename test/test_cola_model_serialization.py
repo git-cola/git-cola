@@ -7,6 +7,7 @@ import unittest
 from PyQt4 import QtCore
 
 from cola import observer
+from cola import serializer
 from cola.models import observable
 from cola.models import base
 
@@ -44,8 +45,8 @@ class TestSaveRestore(helper.TmpPathTestCase):
         self.nested_observer = ModelObserver(self.nested)
         path = self.test_path('test.data')
         # save & reconstitute
-        self.nested.save(path)
-        self.clone = observable.ObservableModel.instance(path)
+        serializer.save(self.nested, path)
+        self.clone = serializer.load(path)
 
     def test_cloned_class(self):
         """Test equality for __class__"""
@@ -89,7 +90,7 @@ class TestSaveRestore(helper.TmpPathTestCase):
 
     def test_clone_of_clone(self):
         """Test cloning a reconstructed object with an attached observer."""
-        clone = self.clone.clone()
+        clone = serializer.clone(self.clone)
         self.assertTrue(len(clone.observers) == 0)
         self.assertTrue(clone.notification_enabled)
         self.assertEqual(clone.__class__, self.clone.__class__)
