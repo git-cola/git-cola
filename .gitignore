@@ -15,5 +15,6 @@
 .DS_Store
 .noseids
 *.py[co]
+*.qm
 *.swp
 *~
