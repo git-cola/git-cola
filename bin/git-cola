@@ -31,12 +31,14 @@ def cola_init():
     if 'Contents/Resources' not in __file__:
         prefix = os.path.dirname(prefix)
 
-    # Look for modules in the source and install trees
-    paths_to_try = [prefix, os.path.join(prefix, 'share', 'git-cola', 'lib')]
-    actual_paths = [p for p in paths_to_try if os.path.exists(p)]
-    sys.path = actual_paths + sys.path
+    # Look for modules in the source or install trees
+    thirdparty = os.path.join(prefix, 'thirdparty')
+    if os.path.exists(thirdparty):
+        paths_to_try = [prefix, thirdparty]
+    else:
+        paths_to_try = [os.path.join(prefix, 'share', 'git-cola', 'lib')]
 
-    import cola.resources
+    sys.path = paths_to_try + sys.path
 
     # Setup the path so that git finds us when we run 'git cola'
     path_entries = os.environ.get('PATH').split(os.pathsep)

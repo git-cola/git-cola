@@ -6,11 +6,12 @@ COLA_VERSION	?= $(shell git describe --match='v*.*' | sed -e s/v//)
 APP	?= git-cola.app
 APPZIP	?= $(shell darwin/name-tarball.py)
 TAR	?= tar
+TEST_PYTHONPATH	?= "$(CURDIR)":"$(CURDIR)/thirdparty":"$(PYTHONPATH)"
 
 # User customizations
 -include config.mak
 
-ifneq ($(standalone),)
+ifdef standalone
 standalone_args	?= --standalone
 endif
 
@@ -71,19 +72,15 @@ uninstall:
 		$(DESTDIR)$(prefix)/share/doc/git-cola
 
 test_flags	:=
-all_test_flags	?= --with-doctest \
-		   --exclude=jsonpickle \
-		   --exclude=simplejson \
-		   $(test_flags)
+all_test_flags	?= --with-doctest $(test_flags)
 
 test: all
-	@env PYTHONPATH="$(CURDIR)":"$(PYTHONPATH)" \
+	@env PYTHONPATH="$(TEST_PYTHONPATH)" \
 	nosetests $(all_test_flags)
 
 coverage:
-	@env PYTHONPATH=$(CURDIR):$(PYTHONPATH) \
-	nosetests $(all_test_flags) \
-		--with-coverage --cover-package=cola
+	@env PYTHONPATH="$(TEST_PYTHONPATH)" \
+	nosetests --with-coverage --cover-package=cola $(all_test_flags)
 
 clean:
 	$(MAKE) -C share/doc/git-cola clean

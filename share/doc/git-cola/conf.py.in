@@ -16,6 +16,8 @@ import sys, os
 # Add the cola source directory to sys.path
 docdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 srcdir = os.path.dirname(os.path.dirname(docdir))
+thirdpartydir = os.path.join(srcdir, 'thirdparty')
+sys.path.insert(0, thirdpartydir)
 sys.path.insert(0, srcdir)
 
 # If extensions (or modules to document with autodoc) are in another directory,

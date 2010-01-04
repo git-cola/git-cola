@@ -7,7 +7,14 @@ from glob import glob
 
 from distutils.core import setup
 from distutils.command import build_scripts
+
+# Prevent distuils from changing "#!/usr/bin/env python"
 build_scripts.first_line_re = re.compile('^should not match$')
+
+# Look for modules in the root and thirdparty directories
+srcdir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(srcdir, 'thirdparty'))
+sys.path.insert(0, srcdir)
 
 from cola import version
 from cola import utils
@@ -50,7 +57,7 @@ def _setup_environment():
     if sys.platform != 'win32':
         return
     path = os.environ['PATH']
-    win32 = os.path.join(os.path.dirname(__file__), 'win32')
+    win32 = os.path.join(srcdir, 'win32')
     os.environ['PATH'] = win32 + os.pathsep + path
 
 def _run_setup():
@@ -91,14 +98,14 @@ def cola_data_files(standalone=_standalone):
             _app_path('share/git-cola/styles/images', '*.png'),
             _app_path('share/applications', '*.desktop'),
             _app_path('share/doc/git-cola', '*.txt'),
-            _lib_path('cola/*.py'),
-            _lib_path('cola/models/*.py'),
-            _lib_path('cola/controllers/*.py'),
-            _lib_path('cola/views/*.py')]
+            _package('cola'),
+            _package('cola.models'),
+            _package('cola.controllers'),
+            _package('cola.views')]
 
     if not standalone:
-        data.extend([_lib_path('jsonpickle/*.py'),
-                     _lib_path('simplejson/*.py')])
+        data.extend([_thirdparty_package('jsonpickle'),
+                     _thirdparty_package('simplejson')])
 
     if sys.platform == 'darwin':
         data.append(_app_path('share/git-cola/bin', 'ssh-askpass-darwin'))
@@ -106,10 +113,17 @@ def cola_data_files(standalone=_standalone):
         data.append(_app_path('share/git-cola/bin', 'ssh-askpass'))
     return data
 
-def _lib_path(entry):
-    dirname = os.path.dirname(entry)
-    app_dir = os.path.join('share/git-cola/lib', dirname)
-    return (app_dir, glob(entry))
+def _package(package, subdir=None):
+    subdirs = package.split('.')
+    app_dir = os.path.join('share', 'git-cola', 'lib', *subdirs)
+    if subdir:
+        subdirs.insert(0, subdir)
+    src_dir = os.path.join(*subdirs)
+    return (app_dir, glob(os.path.join(src_dir, '*.py')))
+
+
+def _thirdparty_package(package):
+    return _package(package, subdir='thirdparty')
 
 
 def _app_path(dirname, entry):
