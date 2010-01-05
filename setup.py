@@ -3,6 +3,7 @@ import re
 import os
 import sys
 import stat
+import shutil
 from glob import glob
 
 from distutils.core import setup
@@ -43,7 +44,7 @@ def main():
     # then try git-describe, then default.
     builtin_version = os.path.join('cola', 'builtin_version.py')
     if os.path.exists('version') and not os.path.exists(builtin_version):
-        shutils.copy('version', builtin_version)
+        shutil.copy('version', builtin_version)
 
     elif os.path.exists('.git'):
         version.write_builtin_version()
