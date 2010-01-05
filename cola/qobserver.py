@@ -34,14 +34,10 @@ class QObserver(observer.Observer, QtCore.QObject):
         self._model_to_view = {}
         self._mapped_params = set()
         self._connected = set()
-        self._in_textfield = False
-        self._in_callback = False
 
     def SLOT(self, *args):
         """Default slot to handle all Qt callbacks.
         This method delegates to callbacks from add_signals."""
-
-        self._in_textfield = False
 
         widget = self.sender()
         param = self._widget_names[widget]
@@ -49,13 +45,11 @@ class QObserver(observer.Observer, QtCore.QObject):
         if param in self._mapped_params:
             model = self.model
             if isinstance(widget, QtGui.QTextEdit):
-                self._in_textfield = True
                 value = unicode(widget.toPlainText())
                 model.set_param(param, value, notify=False)
             elif isinstance(widget, QtGui.QLineEdit):
-                self._in_textfield = True
                 value = unicode(widget.text())
-                model.set_param(param, value)
+                model.set_param(param, value, notify=False)
             elif isinstance(widget, QtGui.QCheckBox):
                 model.set_param(param, widget.isChecked())
             elif isinstance(widget, QtGui.QSpinBox):
@@ -109,12 +103,8 @@ class QObserver(observer.Observer, QtCore.QObject):
             else:
                 print("SLOT(): Unknown widget:", param, widget)
 
-        self._in_callback = True
         if param in self._callbacks:
             self._callbacks[param](*args)
-        self._in_callback = False
-        self._in_textfield = False
-
 
     def add_signals(self, signal_str, *objects):
         """Connects object's signal to the QObserver."""
@@ -191,9 +181,9 @@ class QObserver(observer.Observer, QtCore.QObject):
     def add_actions(self, **kwargs):
         """
         Register view actions.
-        
+
         Action are called in response to view changes.(view->model).
-        
+
         """
         for param, callback in kwargs.iteritems():
             if type(callback) is list:
@@ -203,12 +193,6 @@ class QObserver(observer.Observer, QtCore.QObject):
 
     def subject_changed(self, param, value):
         """Sends a model param to the view(model->view)"""
-
-        if self._in_textfield and not self._in_callback:
-            # A slot has changed the model and we're not in
-            # a user callback.  In this case the event is causing
-            # a feedback loop so skip redundant work and return.
-            return
 
         if param in self._model_to_view:
             # Temporarily disable notification to avoid loop-backs
@@ -292,6 +276,7 @@ class QObserver(observer.Observer, QtCore.QObject):
             else:
                 print('subject_changed(): Unknown widget:',
                       str(widget.objectName()), widget, value)
+
             self.model.notification_enabled = notify
 
         if param not in self._actions:
