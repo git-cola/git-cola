@@ -3,6 +3,7 @@
 """
 
 from PyQt4 import QtGui
+from PyQt4.QtCore import SIGNAL
 
 import cola
 from cola import qtutils
@@ -61,7 +62,7 @@ class OptionsController(QObserver):
         self.add_callbacks(global_cola_fontdiff_size = self.update_size)
         self.add_actions(global_cola_tabwidth = self.tell_parent_model)
         self.add_callbacks(save_button = self.save_settings)
-        self.connect(self.view, 'rejected()', self.restore_settings)
+        self.connect(self.view, SIGNAL('rejected()'), self.restore_settings)
 
     def refresh_view(self):
         """Apply the configured font and update widgets."""

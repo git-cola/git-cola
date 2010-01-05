@@ -12,8 +12,9 @@ different ways to query Qt widgets.
 """
 import types
 
-from PyQt4 import QtCore
 from PyQt4 import QtGui
+from PyQt4 import QtCore
+from PyQt4.QtCore import SIGNAL
 
 from cola import observer
 from cola.compat import set
@@ -114,18 +115,11 @@ class QObserver(observer.Observer, QtCore.QObject):
         self._in_callback = False
         self._in_textfield = False
 
-    def connect(self, obj, signal_str, *args):
-        """Convenience function so that subclasses do not have
-        to import QtCore.SIGNAL."""
-        signal = signal_str
-        if type(signal) is str:
-            signal = QtCore.SIGNAL(signal)
-        return QtCore.QObject.connect(obj, signal, *args)
 
     def add_signals(self, signal_str, *objects):
         """Connects object's signal to the QObserver."""
         for obj in objects:
-            self.connect(obj, signal_str, self.SLOT)
+            self.connect(obj, SIGNAL(signal_str), self.SLOT)
 
     def add_callbacks(self, **callbacks):
         """Registers callbacks that are called in response to GUI events."""
@@ -161,14 +155,16 @@ class QObserver(observer.Observer, QtCore.QObject):
             self.add_signals('itemClicked(QListWidgetItem *)', widget)
             doubleclick = str(widget.objectName())+'_doubleclick'
             if hasattr(self, doubleclick):
-                self.connect(widget, 'itemDoubleClicked(QListWidgetItem *)',
+                self.connect(widget,
+                             SIGNAL('itemDoubleClicked(QListWidgetItem *)'),
                              getattr(self, doubleclick))
         elif isinstance(widget, QtGui.QTreeWidget):
             self.add_signals('itemSelectionChanged()', widget)
             self.add_signals('itemClicked(QTreeWidgetItem *, int)', widget)
             doubleclick = str(widget.objectName())+'_doubleclick'
             if hasattr(self, doubleclick):
-                self.connect(widget, 'itemDoubleClicked(QTreeWidgetItem *, int)',
+                self.connect(widget,
+                             SIGNAL('itemDoubleClicked(QTreeWidgetItem *, int)'),
                              getattr(self, doubleclick))
 
         elif isinstance(widget, QtGui.QAbstractButton):
