@@ -59,7 +59,6 @@ diff.tool::
 
 merge.tool::
 	The default merge tool to use.
-	The config variable overrides the GIT_MERGE_TOOL environment variable.
 
 user.email::
 	Your email address to be recorded in any newly created commits.
@@ -85,10 +84,6 @@ EDITOR::
 GIT_DIFF_TOOL::
 	Specifies the default diff tool to use.
 	This is ignored when the git config variable `diff.tool` is defined.
-
-GIT_MERGE_TOOL::
-	Specifies the default merge tool to use.
-	This is ignored when the git config variable `merge.tool` is defined.
 
 
 SOURCE
