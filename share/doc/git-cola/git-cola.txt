@@ -55,7 +55,6 @@ gui.historybrowser::
 
 diff.tool::
 	The default diff tool to use.
-	The config variable overrides the GIT_DIFF_TOOL environment variable.
 
 merge.tool::
 	The default merge tool to use.
@@ -80,10 +79,6 @@ ENVIRONMENT VARIABLES
 EDITOR::
 	Specifies the default editor to use.
 	This is ignored when the git config variable `gui.editor` is defined.
-
-GIT_DIFF_TOOL::
-	Specifies the default diff tool to use.
-	This is ignored when the git config variable `diff.tool` is defined.
 
 
 SOURCE
