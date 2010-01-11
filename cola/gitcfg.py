@@ -108,7 +108,7 @@ class GitConfig(object):
         Updates the cache and returns False when the cache does not match.
 
         """
-        cache_key = map(utils.slurp, self._configs)
+        cache_key = map(lambda x: os.stat(x).st_mtime, self._configs)
         if not self._cache_key or cache_key != self._cache_key:
             self._cache_key = cache_key
             return False

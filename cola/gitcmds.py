@@ -14,6 +14,9 @@ from cola.compat import set
 git = gitcmd.instance()
 config = gitcfg.instance()
 
+class InvalidRepositoryError(StandardError):
+    pass
+
 
 def default_remote():
     """Return the remote tracked by the current branch."""
@@ -34,44 +37,44 @@ def all_files():
 
 
 class _current_branch:
-    """Cache for current_branch()."""
-    data = None
+    """Cache for current_branch()"""
+    key = None
     value = None
 
 
 def current_branch():
-    """Find the current branch."""
+    """Return the current branch"""
     head = git.git_path('HEAD')
     try:
-        data = utils.slurp(head)
-        if _current_branch.data == data:
+        key = os.stat(head).st_mtime
+        if _current_branch.key == key:
             return _current_branch.value
     except OSError, e:
         pass
-    # Handle legacy .git/HEAD symlinks
+
+    # Legacy .git/HEAD symlinks
     if os.path.islink(head):
         refs_heads = os.path.realpath(git.git_path('refs', 'heads'))
         path = os.path.abspath(head).replace('\\', '/')
         if path.startswith(refs_heads + '/'):
             value = path[len(refs_heads)+1:]
+            _current_branch.key = key
             _current_branch.value = value
-            _current_branch.data = data
             return value
-        return ''
+        raise InvalidRepositoryError('.git/HEAD symlink unparseable')
 
-    # Handle the common .git/HEAD "ref: refs/heads/master" file
+    # Common .git/HEAD "ref: refs/heads/master" file
     if os.path.isfile(head):
-        value = data.rstrip()
+        data = utils.slurp(head).rstrip()
         ref_prefix = 'ref: refs/heads/'
-        if value.startswith(ref_prefix):
-            value = value[len(ref_prefix):]
-
-        _current_branch.data = data
-        _current_branch.value = value
-        return value
-
-    # This shouldn't happen
-    return ''
+        if data.startswith(ref_prefix):
+            value = data[len(ref_prefix):]
+            _current_branch.key = key
+            _current_branch.value = value
+            return value
+        # Detached head
+        return data
+    raise InvalidRepositoryError('.git/HEAD is not a file')
 
 
 def branch_list(remote=False):
