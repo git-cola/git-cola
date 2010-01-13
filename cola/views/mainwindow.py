@@ -194,7 +194,7 @@ class MainWindow(MainWindowBase):
         self.menubar = QtGui.QMenuBar(self)
 
         # File Menu
-        self.file_menu = self.create_menu('File', self.menubar)
+        self.file_menu = self.create_menu('&File', self.menubar)
         self.file_menu.addAction(self.menu_open_repo)
         self.file_menu.addAction(self.menu_clone_repo)
         self.file_menu.addSeparator()
@@ -211,7 +211,7 @@ class MainWindow(MainWindowBase):
         self.menubar.addAction(self.file_menu.menuAction())
 
         # Edit Menu
-        self.edit_menu = self.create_menu('Edit', self.menubar)
+        self.edit_menu = self.create_menu('&Edit', self.menubar)
         self.edit_menu.addAction(self.menu_undo)
         self.edit_menu.addAction(self.menu_redo)
         self.edit_menu.addSeparator()
@@ -227,7 +227,7 @@ class MainWindow(MainWindowBase):
         self.menubar.addAction(self.edit_menu.menuAction())
 
         # Commit Menu
-        self.commit_menu = self.create_menu('Commit', self.menubar)
+        self.commit_menu = self.create_menu('Co&mmit', self.menubar)
         self.commit_menu.addAction(self.menu_stage_modified)
         self.commit_menu.addAction(self.menu_stage_untracked)
         self.commit_menu.addSeparator()
@@ -239,7 +239,7 @@ class MainWindow(MainWindowBase):
         self.menubar.addAction(self.commit_menu.menuAction())
 
         # Branch Menu
-        self.branch_menu = self.create_menu('Branch', self.menubar)
+        self.branch_menu = self.create_menu('B&ranch', self.menubar)
         self.branch_menu.addAction(self.menu_branch_review)
         self.branch_menu.addSeparator()
         self.branch_menu.addAction(self.menu_create_branch)
@@ -258,7 +258,7 @@ class MainWindow(MainWindowBase):
         self.menubar.addAction(self.branch_menu.menuAction())
 
         # Search Menu
-        self.search_menu = self.create_menu('Search', self.menubar)
+        self.search_menu = self.create_menu('&Search', self.menubar)
         self.search_menu.addAction(self.menu_search_date_range)
         self.search_menu.addAction(self.menu_search_grep)
         self.search_menu.addSeparator()
@@ -277,7 +277,7 @@ class MainWindow(MainWindowBase):
         self.menubar.addAction(self.search_menu.menuAction())
 
         # Actions menu
-        self.actions_menu = self.create_menu('Actions', self.menubar)
+        self.actions_menu = self.create_menu('Act&ions', self.menubar)
         self.actions_menu.addAction(self.menu_merge_local)
         self.actions_menu.addAction(self.menu_stash)
         self.actions_menu.addSeparator()
@@ -291,7 +291,7 @@ class MainWindow(MainWindowBase):
         self.menubar.addAction(self.actions_menu.menuAction())
 
         # Diff Menu
-        self.diff_menu = self.create_menu('Diff', self.menubar)
+        self.diff_menu = self.create_menu('&Diff', self.menubar)
         self.diff_menu.addAction(self.menu_branch_diff)
         self.diff_menu.addAction(self.menu_diff_expression)
         self.diff_menu.addSeparator()
@@ -304,7 +304,7 @@ class MainWindow(MainWindowBase):
         self.menubar.addAction(self.diff_menu.menuAction())
 
         # Tools Menu
-        self.tools_menu = self.create_menu('Tools', self.menubar)
+        self.tools_menu = self.create_menu('&Tools', self.menubar)
         self.tools_menu.addAction(self.menu_classic)
         self.tools_menu.addAction(self.diffdockwidget.toggleViewAction())
         self.tools_menu.addAction(self.actiondockwidget.toggleViewAction())
@@ -314,7 +314,7 @@ class MainWindow(MainWindowBase):
         self.menubar.addAction(self.tools_menu.menuAction())
 
         # Help Menu
-        self.help_menu = self.create_menu('Help', self.menubar)
+        self.help_menu = self.create_menu('&Help', self.menubar)
         self.help_menu.addAction(self.menu_help_docs)
         self.help_menu.addAction(self.menu_help_about)
         # Add to menubar
