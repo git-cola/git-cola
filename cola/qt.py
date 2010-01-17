@@ -1,4 +1,5 @@
 from PyQt4 import QtGui
+from PyQt4 import QtCore
 
 def create_button(text, layout=None):
     """Create a button, set its title, and add it to the parent."""
@@ -17,14 +18,19 @@ class QFlowLayoutWidget(QtGui.QWidget):
     def __init__(self, parent=None):
         QtGui.QWidget.__init__(self, parent)
         self._direction = self._vertical
-        self.setLayout(QtGui.QBoxLayout(self._direction))
-        self.layout().setSpacing(2)
-        self.layout().setMargin(2)
+        layout = QtGui.QBoxLayout(self._direction)
+        layout.setSpacing(2)
+        layout.setMargin(2)
+        self.setLayout(layout)
         self.setContentsMargins(2, 2, 2, 2)
+        policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum,
+                                   QtGui.QSizePolicy.Minimum)
+        self.setSizePolicy(policy)
+        self.setMinimumSize(QtCore.QSize(1, 1))
 
     def resizeEvent(self, event):
         size = event.size()
-        if size.width() * .39 < size.height():
+        if size.width() * 0.8 < size.height():
             dxn = self._vertical
         else:
             dxn = self._horizontal
@@ -32,4 +38,3 @@ class QFlowLayoutWidget(QtGui.QWidget):
         if dxn != self._direction:
             self._direction = dxn
             self.layout().setDirection(dxn)
-            self.layout().update()
