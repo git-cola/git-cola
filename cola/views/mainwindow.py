@@ -5,6 +5,7 @@ from PyQt4.QtCore import Qt
 import cola
 from cola import settings
 from cola import qtutils
+from cola import qt
 from cola.views import log
 from cola.qtutils import tr
 from cola.views import status
@@ -23,28 +24,23 @@ class MainWindow(MainWindowBase):
                             QtGui.QMainWindow.AnimatedDocks)
         # "Actions" widget
         self.actiondockwidget = self.create_dock('Actions')
-        self.actiondockwidgetcontents = QtGui.QWidget()
-        self.actiondockwidgetcontents.setContentsMargins(2, 2, 2, 2)
-        self.actiondockwidgetlayout =\
-                QtGui.QVBoxLayout(self.actiondockwidgetcontents)
-        self.actiondockwidgetlayout.setSpacing(3)
-        self.actiondockwidgetlayout.setMargin(3)
+        self.actiondockwidgetcontents = qt.QFlowLayoutWidget(parent=self)
 
-        layout = self.actiondockwidgetlayout
-        self.rescan_button = self.create_button('Rescan', layout)
-        self.stage_button = self.create_button('Stage', layout)
-        self.unstage_button = self.create_button('Unstage', layout)
-        self.fetch_button = self.create_button('Fetch', layout)
-        self.push_button = self.create_button('Push', layout)
-        self.pull_button = self.create_button('Pull', layout)
-        self.stash_button = self.create_button('Stash', layout)
-        self.alt_button = self.create_button('Exit Diff Mode', layout)
+        layout = self.actiondockwidgetcontents.layout()
+        self.rescan_button = qt.create_button('Rescan', layout)
+        self.stage_button = qt.create_button('Stage', layout)
+        self.unstage_button = qt.create_button('Unstage', layout)
+        self.fetch_button = qt.create_button('Fetch', layout)
+        self.push_button = qt.create_button('Push', layout)
+        self.pull_button = qt.create_button('Pull', layout)
+        self.stash_button = qt.create_button('Stash', layout)
+        self.alt_button = qt.create_button('Exit Diff Mode', layout)
         self.alt_button.hide()
 
         self.action_spacer = QtGui.QSpacerItem(1, 1,
-                                               QtGui.QSizePolicy.Minimum,
+                                               QtGui.QSizePolicy.MinimumExpanding,
                                                QtGui.QSizePolicy.MinimumExpanding)
-        self.actiondockwidgetlayout.addItem(self.action_spacer)
+        self.actiondockwidgetcontents.layout().addItem(self.action_spacer)
         self.actiondockwidget.setWidget(self.actiondockwidgetcontents)
 
         # "Repository Status" widget
@@ -74,8 +70,8 @@ class MainWindow(MainWindowBase):
         self.hboxlayout.setSpacing(3)
 
         # Sign off and commit buttons
-        self.signoff_button = self.create_button('Sign Off')
-        self.commit_button = self.create_button('Commit@@verb')
+        self.signoff_button = qt.create_button('Sign Off')
+        self.commit_button = qt.create_button('Commit@@verb')
 
         # Position display
         self.position_label = QtGui.QLabel(self.actiondockwidgetcontents)
@@ -372,14 +368,6 @@ class MainWindow(MainWindowBase):
         action = QtGui.QAction(self)
         action.setText(tr(title))
         return action
-
-    def create_button(self, text, layout=None):
-        """Create a button, set its title, and add it to the parent."""
-        button = QtGui.QPushButton()
-        button.setText(tr(text))
-        if layout:
-            layout.addWidget(button)
-        return button
 
     def closeEvent(self, event):
         """Save state in the settings manager."""
