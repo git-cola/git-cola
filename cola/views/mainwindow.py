@@ -52,7 +52,7 @@ class MainWindow(MainWindowBase):
         self.commitdockwidgetcontents = QtGui.QWidget()
 
         self.commitdockwidgetlayout = QtGui.QVBoxLayout(self.commitdockwidgetcontents)
-        self.commitdockwidgetlayout.setMargin(3)
+        self.commitdockwidgetlayout.setMargin(4)
 
         self.vboxlayout = QtGui.QVBoxLayout()
         self.vboxlayout.setSpacing(0)
@@ -68,6 +68,7 @@ class MainWindow(MainWindowBase):
 
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setSpacing(3)
+        self.hboxlayout.setContentsMargins(2, 6, 2, 0)
 
         # Sign off and commit buttons
         self.signoff_button = qt.create_button('Sign Off')
