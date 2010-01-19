@@ -467,7 +467,13 @@ class MainView(MainWindow):
         staged, modified, unmerged, untracked = cola.selection()
 
         if self.mode == self.model.mode_worktree:
-            if modified:
+            if modified and modified[0] in cola.model().submodules:
+                menu.addAction(self.tr('Stage'),
+                               SLOT(signals.stage, modified))
+                menu.addAction(self.tr('Launch git-cola'),
+                               SLOT(signals.open_repo,
+                                    os.path.abspath(modified[0])))
+            elif modified:
                 menu.addAction(self.tr('Stage &Hunk For Commit'),
                                self.stage_hunk)
                 menu.addAction(self.tr('Stage &Selected Lines'),
@@ -479,8 +485,17 @@ class MainView(MainWindow):
                                self.undo_selection)
 
         elif self.mode == self.model.mode_index:
-            menu.addAction(self.tr('Unstage &Hunk From Commit'), self.unstage_hunk)
-            menu.addAction(self.tr('Unstage &Selected Lines'), self.unstage_hunk_selection)
+            if staged and staged[0] in cola.model().submodules:
+                menu.addAction(self.tr('Unstage'),
+                               SLOT(signals.unstage, staged))
+                menu.addAction(self.tr('Launch git-cola'),
+                               SLOT(signals.open_repo,
+                                    os.path.abspath(staged[0])))
+            else:
+                menu.addAction(self.tr('Unstage &Hunk From Commit'),
+                               self.unstage_hunk)
+                menu.addAction(self.tr('Unstage &Selected Lines'),
+                               self.unstage_hunk_selection)
 
         elif self.mode == self.model.mode_branch:
             menu.addAction(self.tr('Apply Diff to Work Tree'), self.stage_hunk)
