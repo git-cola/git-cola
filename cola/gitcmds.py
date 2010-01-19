@@ -323,6 +323,21 @@ def worktree_state(head='HEAD', staged_only=False):
     upstream.
 
     """
+    state = worktree_state_dict(head=head, staged_only=staged_only)
+    return(state.get('staged', []),
+           state.get('modified', []),
+           state.get('unmerged', []),
+           state.get('untracked', []),
+           state.get('upstream_changed', []))
+
+
+def worktree_state_dict(head='HEAD', staged_only=False):
+    """Return a dict of files in various states of being
+
+    :rtype:`dict` - keys can be staged, unstaged, untracked, unmerged,
+    changed_upstream, or submodule.
+
+    """
     git.update_index(refresh=True)
     if staged_only:
         return _branch_status(head)
@@ -330,8 +345,12 @@ def worktree_state(head='HEAD', staged_only=False):
     staged_set = set()
     modified_set = set()
 
-    (staged, modified, unmerged, untracked, upstream_changed) = (
-            [], [], [], [], [])
+    staged = []
+    modified = []
+    unmerged = []
+    untracked = []
+    upstream_changed = []
+    submodules = set()
     try:
         output = git.diff_index(head,
                                 cached=True,
@@ -342,6 +361,8 @@ def worktree_state(head='HEAD', staged_only=False):
             rest, name = line.split('\t', 1)
             status = rest[-1]
             name = eval_path(name)
+            if '160000' in rest[1:14]:
+                submodules.add(name)
             if status  == 'M':
                 staged.append(name)
                 staged_set.add(name)
@@ -371,14 +392,15 @@ def worktree_state(head='HEAD', staged_only=False):
         if output.startswith('fatal:'):
             raise errors.GitInitError('git init')
         for line in output.splitlines():
-            info, name = line.split('\t', 1)
-            status = info.split()[-1]
+            rest , name = line.split('\t', 1)
+            status = rest[-1]
+            name = eval_path(name)
+            if '160000' in rest[1:13]:
+                submodules.add(name)
             if status == 'M' or status == 'D':
-                name = eval_path(name)
                 if name not in modified_set:
                     modified.append(name)
             elif status == 'A':
-                name = eval_path(name)
                 # newly-added yet modified
                 if (name not in modified_set and not staged_only and
                         is_modified(name)):
@@ -416,7 +438,12 @@ def worktree_state(head='HEAD', staged_only=False):
     untracked.sort()
     upstream_changed.sort()
 
-    return (staged, modified, unmerged, untracked, upstream_changed)
+    return {'staged': staged,
+            'modified': modified,
+            'unmerged': unmerged,
+            'untracked': untracked,
+            'upstream_changed': upstream_changed,
+            'submodules': submodules}
 
 
 def _branch_status(branch):
@@ -432,11 +459,11 @@ def _branch_status(branch):
                               with_status=True,
                               *branch.strip().split())
     if status != 0:
-        return ([], [], [], [], [])
+        return {}
 
     staged = map(core.decode, [n for n in output.split('\0') if n])
-    return (staged, [], [], [], staged)
-
+    return {'staged': staged,
+            'upstream_changed': upstream_changed}
 
 def merge_base_to(ref):
     """Given `ref`, return $(git merge-base ref HEAD)..ref."""

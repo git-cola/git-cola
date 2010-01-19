@@ -13,6 +13,7 @@ from cola import utils
 from cola import gitcmd
 from cola import gitcfg
 from cola import gitcmds
+from cola.compat import set
 from cola.models.observable import ObservableModel
 
 # Static GitConfig instance
@@ -27,7 +28,6 @@ def model():
         return _instance
     _instance = MainModel()
     return _instance
-
 
 
 class MainModel(ObservableModel):
@@ -86,6 +86,7 @@ class MainModel(ObservableModel):
         self.untracked = []
         self.unmerged = []
         self.upstream_changed = []
+        self.submodules = set()
 
         #####################################################
         # Refs
@@ -294,12 +295,14 @@ class MainModel(ObservableModel):
         self.set_trackedbranch(gitcmds.tracked_branch())
         self.set_currentbranch(gitcmds.current_branch())
 
-        (self.staged,
-         self.modified,
-         self.unmerged,
-         self.untracked,
-         self.upstream_changed) = gitcmds.worktree_state(head=head,
-                                                staged_only=staged_only)
+        state = gitcmds.worktree_state_dict(head=head, staged_only=staged_only)
+        self.staged = state.get('staged', [])
+        self.modified = state.get('modified', [])
+        self.unmerged = state.get('unmerged', [])
+        self.untracked = state.get('untracked', [])
+        self.upstream_changed = state.get('upstream_changed', [])
+        self.submodules = state.get('submodules', set())
+
         # NOTE: the model's unstaged list holds an aggregate of the
         # the modified, unmerged, and untracked file lists.
         self.set_unstaged(self.modified + self.unmerged + self.untracked)
@@ -422,7 +425,7 @@ class MainModel(ObservableModel):
             try:
                 k, v = line.split('=', 1)
             except:
-                # the user has an invalid entry in their git config
+                # value-less entry in .gitconfig
                 continue
             v = core.decode(v)
             k = k.replace('.','_') # git -> model
