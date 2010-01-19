@@ -197,6 +197,7 @@ def diff_helper(commit=None,
     # The '--patience' option did not appear until git 1.6.2
     # so don't allow it to be used on version previous to that
     patience = version.check('patience', version.git_version())
+    submodule = version.check('diff-submodule', version.git_version())
 
     diffoutput = git.diff(R=reverse,
                           M=True,
@@ -206,14 +207,20 @@ def diff_helper(commit=None,
                           with_raw_output=True,
                           with_stderr=True,
                           patience=patience,
+                          submodule=submodule,
                           *argv)
-
     # Handle 'git init'
     if diffoutput.startswith('fatal:'):
         if with_diff_header:
             return ('', '')
         else:
             return ''
+
+    if diffoutput.startswith('Submodule'):
+        if with_diff_header:
+            return ('', diffoutput)
+        else:
+            return diffoutput
 
     output = StringIO()
 

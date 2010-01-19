@@ -22,6 +22,7 @@ _versions = {
     # git-mergetool learned --no-prompt in 1.6.2
     'mergetool-no-prompt': '1.6.2',
     'patience': '1.6.2',
+    'diff-submodule': '1.6.6',
 }
 
 def get(key):
