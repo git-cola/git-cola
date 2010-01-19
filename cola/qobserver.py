@@ -205,7 +205,7 @@ class QObserver(observer.Observer, QtCore.QObject):
             elif isinstance(widget, QtGui.QPixmap):
                 widget.load(value)
             elif isinstance(widget, QtGui.QTextEdit):
-                widget.setText(value)
+                widget.setPlainText(value)
             elif isinstance(widget, QtGui.QLineEdit):
                 widget.setText(value)
             elif isinstance(widget, QtGui.QListWidget):

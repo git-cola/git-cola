@@ -230,7 +230,7 @@ class MainView(MainWindow):
         scrollbar = self.display_text.verticalScrollBar()
         scrollvalue = scrollbar.value()
         if text is not None:
-            self.display_text.setText(text)
+            self.display_text.setPlainText(text)
             scrollbar.setValue(scrollvalue)
 
     def action_cut(self):
