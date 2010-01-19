@@ -76,7 +76,7 @@ class MainWindow(MainWindowBase):
 
         # Position display
         self.position_label = QtGui.QLabel(self.actiondockwidgetcontents)
-        self.position_label.setAlignment(QtCore.Qt.AlignLeft)
+        self.position_label.setAlignment(Qt.AlignLeft)
 
         # Spacer between position and amend
         self.spacer = QtGui.QSpacerItem(1, 1,
@@ -113,7 +113,11 @@ class MainWindow(MainWindowBase):
         self.display_text.setReadOnly(True)
         self.display_text.setAcceptRichText(False)
         self.display_text.setCursorWidth(2)
-        self.display_text.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByKeyboard|QtCore.Qt.LinksAccessibleByMouse|QtCore.Qt.TextBrowserInteraction|QtCore.Qt.TextSelectableByKeyboard|QtCore.Qt.TextSelectableByMouse)
+        self.display_text.setTextInteractionFlags(Qt.LinksAccessibleByKeyboard |
+                                                  Qt.LinksAccessibleByMouse |
+                                                  Qt.TextBrowserInteraction |
+                                                  Qt.TextSelectableByKeyboard |
+                                                  Qt.TextSelectableByMouse)
 
         self.diffdockwidgetlayout.addWidget(self.display_text)
         self.diffdockwidget.setWidget(self.diffdockwidgetcontents)
