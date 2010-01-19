@@ -1,3 +1,5 @@
+import os
+
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
@@ -241,7 +243,13 @@ class StatusWidget(QtGui.QWidget):
         staged, modified, unmerged, untracked = self.selection()
         menu = QtGui.QMenu(self)
 
-        if staged:
+        if staged and staged[0] in cola.model().submodules:
+            menu.addAction(self.tr('Unstage Selected'),
+                           SLOT(signals.unstage, self.staged()))
+            menu.addAction(self.tr('Launch git-cola'),
+                           SLOT(signals.open_repo, os.path.abspath(staged[0])))
+            return menu
+        elif staged:
             menu.addAction(self.tr('Unstage Selected'),
                            SLOT(signals.unstage, self.staged()))
             menu.addSeparator()
@@ -265,16 +273,23 @@ class StatusWidget(QtGui.QWidget):
                            SLOT(signals.stage, self.unmerged()))
             return menu
 
+        modified_submodule = (modified and
+                              modified[0] in cola.model().submodules)
         enable_staging = self.model.enable_staging()
         if enable_staging:
             menu.addAction(self.tr('Stage Selected'),
                            SLOT(signals.stage, self.unstaged()))
             menu.addSeparator()
 
-        menu.addAction(self.tr('Launch Editor'),
-                       SLOT(signals.edit, self.unstaged()))
+        if modified_submodule:
+            menu.addAction(self.tr('Launch git-cola'),
+                           SLOT(signals.open_repo,
+                                os.path.abspath(modified[0])))
+        else:
+            menu.addAction(self.tr('Launch Editor'),
+                           SLOT(signals.edit, self.unstaged()))
 
-        if modified and enable_staging:
+        if modified and enable_staging and not modified_submodule:
             menu.addAction(self.tr('Launch Diff Tool'),
                            SLOT(signals.difftool, False, self.modified()))
             menu.addSeparator()
