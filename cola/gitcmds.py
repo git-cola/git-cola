@@ -472,6 +472,13 @@ def merge_base_to(ref):
     return '%s..%s' % (base, ref)
 
 
+def merge_base_parent(branch):
+    tracked = tracked_branch(branch=branch)
+    if tracked:
+        return '%s..%s' % (tracked, branch)
+    return 'master..%s' % branch
+
+
 def is_modified(name):
     status, out = git.diff('--', name,
                            name_only=True,

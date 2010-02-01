@@ -540,7 +540,7 @@ class ReviewBranchMode(Command):
     def __init__(self, branch):
         Command.__init__(self, update=True)
         self.new_mode = self.model.mode_review
-        self.new_head = gitcmds.merge_base_to(branch)
+        self.new_head = gitcmds.merge_base_parent(branch)
         self.new_diff_text = ''
 
 
