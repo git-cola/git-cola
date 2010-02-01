@@ -463,7 +463,8 @@ def _branch_status(branch):
 
     staged = map(core.decode, [n for n in output.split('\0') if n])
     return {'staged': staged,
-            'upstream_changed': upstream_changed}
+            'upstream_changed': staged}
+
 
 def merge_base_to(ref):
     """Given `ref`, return $(git merge-base ref HEAD)..ref."""
