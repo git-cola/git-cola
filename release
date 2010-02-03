@@ -62,11 +62,10 @@ build_win32_remotely() {
 	title Building win32 remotely
 
 	do_or_die ssh -p $win32_ssh_port "$win32_login" '
-		PATH=/bin:/usr/bin:/c/Python26
+		PATH=/c/Python26:$PATH
 		cd '"$win32_cola_dir"'
 		win32/create-installer.sh
 	'
-	exe=git-cola-$VERSION.exe
 	do_or_die scp -P $win32_ssh_port \
 		"$win32_login":"$win32_cola_dir"/"*.exe" \
 		"$win32_release_dir"/git-cola.exe
