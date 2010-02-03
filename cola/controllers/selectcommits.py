@@ -2,6 +2,7 @@
 
 """
 from PyQt4 import QtGui
+from PyQt4.QtCore import SIGNAL
 
 import cola
 from cola import gitcmds
@@ -32,7 +33,7 @@ class SelectCommitsController(QObserver):
         self.model.set_summaries(summaries)
 
         self.connect(view.commit_list,
-                     'itemSelectionChanged()',
+                     SIGNAL('itemSelectionChanged()'),
                      self.commit_sha1_selected)
         view.commit_list.contextMenuEvent = self.context_menu_event
         self.set_diff_font()
