@@ -28,7 +28,7 @@ done
 
 BASENAME=git-cola-$VERSION
 ETC=$BASENAME/etc
-ROOT="$PWD"/$BASENAME
+ROOT=$BASENAME
 TARGET="$ROOT".exe
 
 echo "Building installer for git-cola $VERSION"
