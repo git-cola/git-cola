@@ -547,7 +547,7 @@ def log_helper(all=False, extra_args=None):
     args = []
     if extra_args:
         args = extra_args
-    output = git.log(pretty='oneline', all=all, *args)
+    output = git.log(pretty='oneline', no_color=True, all=all, *args)
     for line in map(core.decode, output.splitlines()):
         match = REV_LIST_REGEX.match(line)
         if match:

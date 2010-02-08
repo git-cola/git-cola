@@ -28,9 +28,11 @@ class CompareModel(observable.ObservableModel):
         if filename:
             rev_list = self.git.log('--', filename,
                                     max_count=num_results,
+                                    no_color=True,
                                     pretty='oneline')
         else:
             rev_list = self.git.log(max_count=num_results,
+                                    no_color=True,
                                     pretty='oneline', all=True)
 
         commit_list = gitcmds.parse_rev_list(rev_list)

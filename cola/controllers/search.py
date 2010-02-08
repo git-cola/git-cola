@@ -40,8 +40,12 @@ class SearchEngine(object):
         self.model = model
 
     def rev_args(self):
-        max = self.model.max_results
-        return { 'max-count': max, 'pretty': 'format:%H %aN - %s - %ar' }
+        max_count = self.model.max_results
+        return {
+            'no_color': True,
+            'max-count': max_count,
+            'pretty': 'format:%H %aN - %s - %ar',
+        }
 
     def common_args(self):
         return (self.model.query, self.rev_args())

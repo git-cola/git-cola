@@ -279,7 +279,7 @@ class MainModel(ObservableModel):
 
     def prev_commitmsg(self):
         """Queries git for the latest commit message."""
-        return core.decode(self.git.log('-1', pretty='format:%s%n%n%b'))
+        return core.decode(self.git.log('-1', no_color=True, pretty='format:%s%n%n%b'))
 
     def update_status(self):
         # Give observers a chance to respond
