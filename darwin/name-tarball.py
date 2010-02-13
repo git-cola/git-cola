@@ -17,18 +17,17 @@ cpu = platform.processor()
 proc = {'i386': 'intel'}.get(cpu, cpu)
 name = 'unknown'
 version = macstuff[0]
-if version[:4] == '10.5':
+
+if version[:4] == '10.6':
+    name = 'snow_leopard'
+elif version[:4] == '10.5':
     name = 'leopard'
 elif version[:4] == '10.4':
     name = 'tiger'
 elif version[:4] == '10.3':
     name = 'panther'
 else:
-    print 'unrecognized mac version:', version
-    sys.exit(1)
+    name = 'unknown'
 
-# git-cola-v1.3.7-45-g7862.app.tar.bz2
-from cola import git
-ver = git.Git.execute(['git', 'describe', '--abbrev=4'])
-# git-cola-v1.3.7.app.tar.bz2
-print('git-cola-%s-%s-%s.app.tar.bz2' % (proc, name, ver))
+# git-cola-intel-leopard.app.tar.bz2
+print('git-cola-%s-%s.app.tar.bz2' % (proc, name))
