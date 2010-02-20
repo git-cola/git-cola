@@ -90,6 +90,6 @@ clean:
 	rm -rf cola/builtin_version.* build dist tmp tags git-cola.app
 
 tags:
-	ctags cola/*.py cola/*/*.py
+	ctags cola/*.py cola/*/*.py test/*.py
 
 .PHONY: all install doc install-doc install-html test clean darwin git-cola.app
