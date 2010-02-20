@@ -39,7 +39,7 @@ install:
 	! test -e cola && ln -s git-cola cola) || true
 
 # Maintainer's dist target
-COLA_TARNAME=cola-$(COLA_VERSION)
+COLA_TARNAME ?= cola-$(COLA_VERSION)
 dist: all
 	git archive --format=tar \
 		--prefix=$(COLA_TARNAME)/ HEAD^{tree} > $(COLA_TARNAME).tar
