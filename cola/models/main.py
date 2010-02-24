@@ -251,7 +251,8 @@ class MainModel(ObservableModel):
         return self.config_set(param, value, local=is_local)
 
     def editor(self):
-        return self.gui_config('editor')
+        app = self.gui_config('editor')
+        return {'vim': 'gvim'}.get(app, app)
 
     def history_browser(self):
         return self.gui_config('historybrowser')
