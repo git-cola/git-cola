@@ -157,7 +157,7 @@ class MainModel(ObservableModel):
             'merge_keepbackup': True,
             'diff_tool': os.getenv('GIT_DIFF_TOOL', 'xxdiff'),
             'merge_tool': os.getenv('GIT_MERGE_TOOL', 'xxdiff'),
-            'gui_editor': os.getenv('EDITOR', 'gvim'),
+            'gui_editor': os.getenv('VISUAL', os.getenv('EDITOR', 'gvim')),
             'gui_historybrowser': 'gitk',
         }
 
