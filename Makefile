@@ -27,7 +27,7 @@ $(APP): darwin
 	find $(APP) -name '*_debug*' | xargs rm -f
 	tar cjf $(APPZIP) $(APP)
 
-install:
+install: all
 	$(PYTHON) setup.py --quiet install \
 		$(standalone_args) \
 		--install-scripts=$(DESTDIR)$(prefix)/bin \
