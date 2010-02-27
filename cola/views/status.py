@@ -443,9 +443,11 @@ class StatusWidget(QtGui.QWidget):
             return result
 
         # Handle when the icons are clicked
-        # TODO query Qt for the event position relative to the icon.
+        indent = self.tree.indentation()
         xpos = event.pos().x()
-        if xpos > 45 and xpos < 59:
+        indent = indent * 2
+        iconwidth = 22
+        if indent < xpos < indent + iconwidth:
             if staged:
                 cola.notifier().broadcast(signals.unstage, self.staged())
             else:
