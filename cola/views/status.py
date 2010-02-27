@@ -164,12 +164,21 @@ class StatusWidget(QtGui.QWidget):
     def about_to_update(self):
         self.old_selection = self.selection()
 
+        self.old_scroll = None
+        vscroll = self.tree.verticalScrollBar()
+        if vscroll:
+            self.old_scroll = vscroll.value()
+
     def updated(self):
         """Update display from model data."""
         self.set_staged(self.model.staged)
         self.set_modified(self.model.modified)
         self.set_unmerged(self.model.unmerged)
         self.set_untracked(self.model.untracked)
+
+        vscroll = self.tree.verticalScrollBar()
+        if vscroll and self.old_scroll is not None:
+            vscroll.setValue(self.old_scroll)
 
         self.restore_selection()
 
