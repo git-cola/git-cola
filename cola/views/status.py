@@ -101,35 +101,37 @@ class StatusWidget(QtGui.QWidget):
                             updated_untracked)
 
         # Updating the status resets the repo status tree so
-        # restore the selected items and re-run the diff
-        showdiff = False
-        mode = self.mode
-        if mode == self.model.mode_worktree:
-            # Update unstaged items
-            if unstaged:
-                for item in unstaged:
-                    if item in updated_unstaged:
-                        idx = updated_unstaged.index(item)
-                        item = self.unstaged_item(idx)
-                        if item:
-                            showdiff = True
-                            item.setSelected(True)
-                            self.tree.setCurrentItem(item)
-                            self.tree.setItemSelected(item, True)
+        # restore the selected items which re-runs the diff
+        def select_item(item):
+            if not item:
+                return
+            self.tree.setItemSelected(item, True)
+            parent = item.parent()
+            if parent:
+                self.tree.scrollToItem(parent)
+            self.tree.scrollToItem(item)
 
-        elif mode in (self.model.mode_index, self.model.mode_amend):
-            # Ditto for staged items
-            if staged:
-                for item in staged:
-                    if item in updated_staged:
-                        idx = updated_staged.index(item)
-                        item = self.staged_item(idx)
-                        if item:
-                            showdiff = True
-                            item.setSelected(True)
-                            self.tree.setCurrentItem(item)
-                            self.tree.setItemSelected(item, True)
+        def select_unstaged(item):
+            idx = updated_unstaged.index(item)
+            select_item(self.unstaged_item(idx))
 
+        def select_staged(item):
+            idx = updated_staged.index(item)
+            select_item(self.staged_item(idx))
+
+        # Update newly-staged items
+        for item in unstaged:
+            if item in updated_unstaged:
+                select_unstaged(item)
+            elif item in updated_staged:
+                select_staged(item)
+
+        # Update newly unstaged items
+        for item in staged:
+            if item in updated_staged:
+                select_staged(item)
+            elif item in updated_unstaged:
+                select_unstaged(item)
 
     def staged_item(self, itemidx):
         return self._subtree_item(self.idx_staged, itemidx)
@@ -430,7 +432,7 @@ class StatusWidget(QtGui.QWidget):
             items = self.tree.selectedItems()
             self.tree.blockSignals(True)
             for i in items:
-                i.setSelected(False)
+                self.tree.setItemSelected(i, False)
             self.tree.blockSignals(False)
             return result
 
