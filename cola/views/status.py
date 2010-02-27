@@ -63,7 +63,7 @@ class StatusWidget(QtGui.QWidget):
 
         # Handle these events here
         self.tree.contextMenuEvent = self.tree_context_menu_event
-        self.tree.mousePressEvent = self.tree_click
+        self.tree.mouseReleaseEvent = self.tree_click
 
         self.expanded_items = set()
         self.model = cola.model()
@@ -416,7 +416,7 @@ class StatusWidget(QtGui.QWidget):
         the same appropriate action.
 
         """
-        result = QtGui.QTreeWidget.mousePressEvent(self.tree, event)
+        result = QtGui.QTreeWidget.mouseReleaseEvent(self.tree, event)
 
         # Sync the selection model
         s, m, um, ut = self.selection()
