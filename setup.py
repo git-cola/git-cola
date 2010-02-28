@@ -10,6 +10,11 @@ from glob import glob
 from distutils.core import setup
 from distutils.command import build_scripts
 
+try:
+    from extras import cmdclass
+except ImportError:
+    cmdclass = {}
+
 # Prevent distuils from changing "#!/usr/bin/env python"
 build_scripts.first_line_re = re.compile('^should not match$')
 
@@ -19,9 +24,6 @@ sys.path.insert(0, os.path.join(srcdir, 'thirdparty'))
 sys.path.insert(0, srcdir)
 
 from cola import version
-from cola import utils
-from cola import resources
-from cola import core
 
 # --standalone prevents installing thirdparty libraries
 if '--standalone' in sys.argv:
@@ -34,12 +36,11 @@ else:
 def main():
     # ensure readable files
     old_mask = os.umask(0022)
-    if sys.argv[1] in ('install', 'build'):
-        _setup_environment()
-        _check_python_version()
-        _check_git_version()
-        _check_pyqt_version()
-        _build_translations()      # msgfmt: .po -> .qm
+
+    _check_python_version()
+    _setup_environment()
+    _check_git_version()
+    _check_pyqt_version()
 
     # First see if there is a version file (included in release tarballs),
     # then try git-describe, then default.
@@ -81,14 +82,16 @@ def _run_setup():
 
     setup(name = 'git-cola',
           version = version.version(),
+          description = 'A highly caffeinated git GUI',
           license = 'GPLv2',
-          author = 'David Aguilar and contributors',
-          author_email = 'davvid@gmail.com',
+          author = 'The git-cola community',
+          author_email = 'git-cola@googlegroups.com',
           url = 'http://cola.tuxfamily.org/',
-          description = 'git-cola',
           long_description = 'A highly caffeinated git GUI',
           scripts = scripts,
+          cmdclass = cmdclass,
           packages = [],
+          package_data = {'cola': ['share/locale/*/LC_MESSAGES/git-cola.mo']},
           data_files = cola_data_files())
 
 
@@ -168,25 +171,6 @@ def _check_pyqt_version():
     print >> sys.stderr, ('PyQt4 version %s or newer required.  '
                           'Found %s' % (version.get('pyqt'), pyqtver))
     sys.exit(1)
-
-
-def _dirty(src, dst):
-    if not os.path.exists(dst):
-        return True
-    srcstat = os.stat(src)
-    dststat = os.stat(dst)
-    return srcstat[stat.ST_MTIME] > dststat[stat.ST_MTIME]
-
-
-def _build_translations():
-    print 'running build_translations'
-    sources = glob(resources.share('po', '*.po'))
-    sources = glob('share/git-cola/po/*.po')
-    for src in sources:
-        dst = resources.qm(os.path.basename(src)[:-3])
-        if _dirty(src, dst):
-            print '\tmsgfmt --qt %s -o %s' % (src, dst)
-            utils.run_cmd(['msgfmt', '--qt', src, '-o', dst])
 
 
 if __name__ == '__main__':
