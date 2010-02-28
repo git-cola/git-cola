@@ -4,6 +4,7 @@ import os
 import sys
 import stat
 import shutil
+import platform
 from glob import glob
 
 from distutils.core import setup
@@ -114,6 +115,7 @@ def cola_data_files(standalone=_standalone):
         data.append(_app_path('share/git-cola/bin', 'ssh-askpass'))
     return data
 
+
 def _package(package, subdir=None):
     subdirs = package.split('.')
     app_dir = os.path.join('share', 'git-cola', 'lib', *subdirs)
@@ -134,7 +136,7 @@ def _app_path(dirname, entry):
 def _check_python_version():
     """Check the minimum Python version
     """
-    pyver = '.'.join(map(lambda x: str(x), sys.version_info))
+    pyver = platform.python_version()
     if not version.check('python', pyver):
         print >> sys.stderr, ('Python version %s or newer required.  '
                               'Found %s' % (version.get('python'), pyver))
@@ -149,6 +151,7 @@ def _check_git_version():
                               'Found %s' % (version.get('git'),
                                             version.git_version()))
         sys.exit(1)
+
 
 def _check_pyqt_version():
     """Check the minimum PyQt version
