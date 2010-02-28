@@ -92,4 +92,13 @@ clean:
 tags:
 	ctags cola/*.py cola/*/*.py test/*.py
 
+qm:
+	$(PYTHON) setup.py build_qm -f
+
+pot:
+	$(PYTHON) setup.py build_pot -N -d .
+
+mo:
+	$(PYTHON) setup.py build_mo -f
+
 .PHONY: all install doc install-doc install-html test clean darwin git-cola.app
