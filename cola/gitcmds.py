@@ -41,7 +41,6 @@ class _current_branch:
     key = None
     value = None
 
-
 def current_branch():
     """Return the current branch"""
     head = git.git_path('HEAD')
@@ -51,30 +50,42 @@ def current_branch():
             return _current_branch.value
     except OSError, e:
         pass
+    data = git.rev_parse('HEAD', with_stderr=True, symbolic_full_name=True)
+    if data.startswith('fatal:'):
+        # git init -- read .git/HEAD.  We could do this unconditionally
+        # and avoid the subprocess call.  It's probably time to start
+        # using dulwich.
+        data = _read_git_head(head)
 
+    for refs_prefix in ('refs/heads/', 'refs/remotes/'):
+        if data.startswith(refs_prefix):
+            value = data[len(refs_prefix):]
+            _current_branch.key = key
+            _current_branch.value = value
+            return value
+    # Detached head
+    return data
+
+
+def _read_git_head(head, default='master'):
+    """Pure-python .git/HEAD reader"""
     # Legacy .git/HEAD symlinks
     if os.path.islink(head):
         refs_heads = os.path.realpath(git.git_path('refs', 'heads'))
         path = os.path.abspath(head).replace('\\', '/')
         if path.startswith(refs_heads + '/'):
-            value = path[len(refs_heads)+1:]
-            _current_branch.key = key
-            _current_branch.value = value
-            return value
-        raise InvalidRepositoryError('.git/HEAD symlink unparseable')
+            return path[len(refs_heads)+1:]
 
     # Common .git/HEAD "ref: refs/heads/master" file
-    if os.path.isfile(head):
+    elif os.path.isfile(head):
         data = utils.slurp(head).rstrip()
-        ref_prefix = 'ref: refs/heads/'
+        ref_prefix = 'ref: '
         if data.startswith(ref_prefix):
-            value = data[len(ref_prefix):]
-            _current_branch.key = key
-            _current_branch.value = value
-            return value
+            return data[len(ref_prefix):]
         # Detached head
         return data
-    raise InvalidRepositoryError('.git/HEAD is not a file')
+
+    return default
 
 
 def branch_list(remote=False):
