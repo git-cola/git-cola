@@ -90,8 +90,6 @@ def _run_setup():
           long_description = 'A highly caffeinated git GUI',
           scripts = scripts,
           cmdclass = cmdclass,
-          packages = [],
-          package_data = {'cola': ['share/locale/*/LC_MESSAGES/git-cola.mo']},
           data_files = cola_data_files())
 
 
@@ -103,6 +101,7 @@ def cola_data_files(standalone=_standalone):
             _app_path('share/git-cola/styles/images', '*.png'),
             _app_path('share/applications', '*.desktop'),
             _app_path('share/doc/git-cola', '*.txt'),
+            _app_path('share/locale', '*/LC_MESSAGES/git-cola.mo'),
             _package('cola'),
             _package('cola.models'),
             _package('cola.controllers'),
