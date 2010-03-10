@@ -101,4 +101,4 @@ pot:
 mo:
 	$(PYTHON) setup.py build_mo -f
 
-.PHONY: all install doc install-doc install-html test clean darwin git-cola.app
+.PHONY: all install doc install-doc install-html test clean darwin git-cola.app tags
