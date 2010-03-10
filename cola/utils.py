@@ -128,7 +128,7 @@ def win32_expand_paths(args):
 
 def fork(args):
     """Launch a command in the background."""
-    if os.name in ('nt', 'dos'):
+    if is_win32():
         # Windows is absolutely insane.
         #
         # If we want to launch 'gitk' we have to use the 'sh -c' trick.
@@ -288,6 +288,15 @@ def is_darwin():
     return 'macintosh' in p or 'darwin' in p
 
 
+_is_win32 = None
+def is_win32():
+    """Return True on win32"""
+    global _is_win32
+    if _is_win32 is None:
+        _is_win32 = os.name in ('nt', 'dos')
+    return _is_win32
+
+
 def is_broken():
     """Is it windows or mac? (e.g. is running git-mergetool non-trivial?)"""
     if is_darwin():
@@ -310,6 +319,6 @@ def checksum(path):
 
 def quote_repopath(repopath):
     """Quote a path for nt/dos only."""
-    if os.name in ('nt', 'dos'):
+    if is_win32():
         repopath = '"%s"' % repopath
     return repopath
