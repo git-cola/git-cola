@@ -4,7 +4,6 @@ import copy
 
 from cola import core
 from cola import gitcmd
-from cola import utils
 
 
 _config = None
