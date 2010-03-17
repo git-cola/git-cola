@@ -156,3 +156,6 @@ class GitConfig(object):
             if key in dct:
                 return dct[key]
         return default
+
+    def get_encoding(self, default='utf-8'):
+        return self.get('gui.encoding', default=default)
