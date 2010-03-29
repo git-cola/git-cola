@@ -9,6 +9,7 @@ from PyQt4 import QtGui
 
 from cola import utils
 from cola import resources
+from cola import i18n
 
 _app = None
 def instance(argv):
@@ -27,7 +28,11 @@ class ColaApplication(object):
     def __init__(self, argv, locale=None, gui=True):
         """Initialize our QApplication for translation
         """
-        # monkey-patch Qt's app translate() to handle .po files
+        if locale:
+            os.environ['LANG'] = locale
+            i18n.install()
+
+        # monkey-patch Qt's translate() to use our translate()
         if gui:
             self._app = instance(argv)
             self._app.setWindowIcon(QtGui.QIcon(resources.icon('git.svg')))
@@ -38,21 +43,15 @@ class ColaApplication(object):
             self._translate_base = QtCore.QCoreApplication.translate
             QtCore.QCoreApplication.translate = self.translate
 
-        # Find the current language settings and apply them
-        if not locale:
-            locale = str(QtCore.QLocale().system().name())
-
-        qmfile = utils.qm_for_locale(locale)
-        if os.path.exists(qmfile):
-            translator = QtCore.QTranslator(self._app)
-            translator.load(qmfile)
-            self._app.installTranslator(translator)
-
     def translate(self, context, txt):
-        """Supports @@noun/@@verb and context-less translation
+        """
+        Translate strings with gettext
+
+        Supports @@noun/@@verb specifiers.
+
         """
         # We set the context to '' to properly handle .qm files
-        trtxt = unicode(self._translate_base('', txt))
+        trtxt = i18n.gettext(txt)
         if trtxt[-6:-4] == '@@': # handle @@verb / @@noun
             trtxt = trtxt[:-6]
         return trtxt

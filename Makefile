@@ -86,14 +86,11 @@ clean:
 	$(MAKE) -C share/doc/git-cola clean
 	find . -name .noseids -print0 | xargs -0 rm -f
 	find . -name '*.py[co]' -print0 | xargs -0 rm -f
-	find share -name '*.qm' -print0 | xargs -0 rm -f
 	rm -rf cola/builtin_version.* build dist tmp tags git-cola.app
+	rm -rf share/locale
 
 tags:
 	ctags cola/*.py cola/*/*.py test/*.py
-
-qm:
-	$(PYTHON) setup.py build_qm -f
 
 pot:
 	$(PYTHON) setup.py build_pot -N -d .

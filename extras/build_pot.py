@@ -34,7 +34,7 @@ class build_pot(Command):
 
     def finalize_options(self):
         if self.build_dir is None:
-            self.build_dir = os.path.join('share', 'git-cola', 'po')
+            self.build_dir = 'po'
         if not self.output:
             self.output = (self.distribution.get_name() or 'messages')+'.pot'
         if self.lang is not None:

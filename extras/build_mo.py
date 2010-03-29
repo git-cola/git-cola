@@ -42,7 +42,7 @@ class build_mo(Command):
         if not self.output_base:
             self.output_base = self.prj_name or 'messages'
         if self.source_dir is None:
-            self.source_dir = os.path.join('share', 'git-cola', 'po')
+            self.source_dir = 'po'
         if self.lang is None:
             if self.prj_name:
                 re_po = re.compile(r'^(?:%s-)?([a-zA-Z_]+)\.po$' % self.prj_name)

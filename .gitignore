@@ -10,7 +10,6 @@
 /debian/bld
 /debian/cola
 /Meta
-/share/git-cola/qm
 /share/locale
 /test/tmp
 /tags

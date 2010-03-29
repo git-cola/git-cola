@@ -4,7 +4,7 @@ from PyQt4 import QtCore
 def create_button(text, layout=None):
     """Create a button, set its title, and add it to the parent."""
     button = QtGui.QPushButton()
-    button.setText(QtGui.QApplication.instance().tr(text))
+    button.setText(text)
     if layout:
         layout.addWidget(button)
     return button
