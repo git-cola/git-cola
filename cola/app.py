@@ -50,7 +50,6 @@ class ColaApplication(object):
         Supports @@noun/@@verb specifiers.
 
         """
-        # We set the context to '' to properly handle .qm files
         trtxt = i18n.gettext(txt)
         if trtxt[-6:-4] == '@@': # handle @@verb / @@noun
             trtxt = trtxt[:-6]

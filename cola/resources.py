@@ -33,9 +33,6 @@ def icon(basename):
     """Returns the full path to an icon file given a basename."""
     return share('icons', basename)
 
-def qm(name):
-    """Returns the path to a qm file given its name"""
-    return share('qm', name + '.qm')
 
 def stylesheet(name):
     """Returns a path relative to cola's /usr/share/../styles directory"""

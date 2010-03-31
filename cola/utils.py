@@ -64,15 +64,6 @@ def run_cmd(command):
     return git.Git.execute(command)
 
 
-def qm_for_locale(locale):
-    """Returns the .qm file for a particular $LANG values."""
-    regex = re.compile(r'([^\.])+\..*$')
-    match = regex.match(locale)
-    if match:
-        locale = match.group(1)
-    return resources.qm(locale.split('_')[0])
-
-
 def ident_file_type(filename):
     """Returns an icon based on the contents of filename."""
     if os.path.exists(filename):

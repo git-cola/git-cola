@@ -94,8 +94,7 @@ def _run_setup():
 
 
 def cola_data_files(standalone=_standalone):
-    data = [_app_path('share/git-cola/qm', '*.qm'),
-            _app_path('share/git-cola/icons', '*.png'),
+    data = [_app_path('share/git-cola/icons', '*.png'),
             _app_path('share/git-cola/icons', '*.svg'),
             _app_path('share/git-cola/styles', '*.qss'),
             _app_path('share/git-cola/styles/images', '*.png'),
