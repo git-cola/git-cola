@@ -13,38 +13,46 @@ else:
     # __file__ = '$prefix/cola/__file__.py'
     _prefix = os.path.dirname(os.path.dirname(_modpath))
 
+
 def prefix(*args):
-    """Returns a path relative to cola's installation prefix"""
+    """Return a path relative to cola's installation prefix"""
     return os.path.join(_prefix, *args)
 
+
 def doc(*args):
-    """Returns a path relative to cola's /usr/share/doc/ directory"""
+    """Return a path relative to cola's /usr/share/doc/ directory"""
     return os.path.join(_prefix, 'share', 'doc', 'git-cola', *args)
 
+
 def html_docs():
-    """Returns the path to the cola html documentation."""
+    """Return the path to the cola html documentation."""
+    # Note: This only exists after the install-docs target is run
     return doc('html', 'index.html')
 
+
 def share(*args):
-    """Returns a path relative to cola's /usr/share/ directory"""
+    """Return a path relative to cola's /usr/share/ directory"""
     return prefix('share', 'git-cola', *args)
 
+
 def icon(basename):
-    """Returns the full path to an icon file given a basename."""
+    """Return the full path to an icon file given a basename."""
     return share('icons', basename)
 
 
 def stylesheet(name):
-    """Returns a path relative to cola's /usr/share/../styles directory"""
+    """Return a path relative to cola's /usr/share/../styles directory"""
     stylesheet = share('styles', name + '.qss')
     if os.path.exists(stylesheet):
         return stylesheet
     else:
         return None
 
+
 def style_dir():
-    """Returns the path to the style dir within the cola install tree."""
+    """Return the path to the style dir within the cola install tree."""
     return share('styles')
+
 
 def resource_dirs(path):
     """Returns directories beneath a specific path"""
