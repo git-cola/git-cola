@@ -104,6 +104,10 @@ class MainModel(ObservableModel):
         if cwd:
             self.use_worktree(cwd)
 
+        #####################################################
+        # Dag
+        self._commits = []
+
     def read_only(self):
         return self.mode in self.modes_read_only
 
