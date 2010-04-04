@@ -19,15 +19,26 @@ See below for a full list of options and usage information.
 
 OPTIONS
 -------
+--classic::
+	Launch the standalone 'cola classic' tool.
 
+-r::
 --repo=<path>::
 	Run 'git-cola' on the git repository in <path>.
+	Defaults to the current directory.
 
+-s::
 --style=<style>::
 	Launch 'git-cola' with a different stylesheet.
 
---classic::
-	Launch the standalone 'cola classic' tool.
+-v::
+--version::
+	Prints the 'git-cola' version and exits.
+
+-g::
+--git-path::
+	Specifies the path to the 'git' binary.
+
 
 GUI STYLES
 ----------
@@ -36,7 +47,6 @@ Specify `--style=dark` or provide an external stylesheet with `--style=PATH`.
 
 CONFIG VARIABLES
 ----------------
-
 cola.savewindowsettings::
 	Whether 'git-cola' should remember its window settings.
 
@@ -89,13 +99,12 @@ A 'git-cola' development repository can be obtained via git:
 	git clone git://github.com/davvid/git-cola.git
 
 
-STYLESHEETS
------------
-
-git-cola ships with an alternative stylesheet called 'dark'.
+GUI THEMES
+----------
+'git-cola' ships with an alternative stylesheet called 'dark'.
 You can use this stylesheet by running `git cola --style=dark`.
 
-You can also skin git-cola by providing your own Qt stylesheet.
+You can also skin 'git-cola' by providing your own Qt stylesheet.
 E.g. `git cola --style=/path/to/style.qss`.
 
 Built-in styles can be found in `/usr/share/git-cola/styles`.
@@ -107,14 +116,13 @@ LINKS
 	http://cola.tuxfamily.org/
 
 'git-cola' sources on github::
-	http://github.com/davvid/git-cola/tree/master
+	http://github.com/davvid/git-cola
 
 
 SEE ALSO
 --------
 linkgit:git-difftool[1]::
 	Compare changes using common merge tools.
-	(New in git-1.6.3).
 
 linkgit:gitk[1]::
 	The git repository browser.  Shows branches, commit history
