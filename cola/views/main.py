@@ -189,8 +189,13 @@ class MainView(MainWindow):
 
     def _update_view(self):
         """Update the title with the current branch and directory name."""
-        title = '%s [%s]' % (self.model.project,
-                             self.model.currentbranch)
+        branch = self.model.currentbranch
+        curdir = os.getcwd()
+        msg = 'Repository: %s\nBranch: %s' % (curdir, branch)
+
+        self.setToolTip(msg)
+
+        title = '%s [%s]' % (self.model.project, branch)
         if self.mode in (self.model.mode_diff, self.model.mode_diff_expr):
             title += ' *** diff mode***'
         elif self.mode == self.model.mode_review:
