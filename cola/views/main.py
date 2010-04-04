@@ -32,12 +32,7 @@ from cola.controllers.createbranch import create_new_branch
 from cola.controllers.merge import local_merge
 from cola.controllers.merge import abort_merge
 from cola.controllers.options import update_options
-from cola.controllers.util import choose_from_combo
-from cola.controllers.util import choose_from_list
-from cola.controllers.remote import remote_action
-from cola.controllers.repobrowser import browse_git_branch
 from cola.controllers.stash import stash
-from cola.controllers.selectcommits import select_commits
 
 class MainView(MainWindow):
     """The main cola interface."""
@@ -96,46 +91,46 @@ class MainView(MainWindow):
         self._connect_button(self.stage_button, self.stage)
         self._connect_button(self.unstage_button, self.unstage)
         self._connect_button(self.commit_button, self.commit)
-        self._connect_button(self.fetch_button, self.fetch)
-        self._connect_button(self.push_button, self.push)
-        self._connect_button(self.pull_button, self.pull)
+        self._connect_button(self.fetch_button, guicmds.fetch_slot(self))
+        self._connect_button(self.push_button, guicmds.push_slot(self))
+        self._connect_button(self.pull_button, guicmds.pull_slot(self))
         self._connect_button(self.stash_button, stash)
 
         # Menu actions
         actions = (
             (self.menu_quit, self.close),
             (self.menu_branch_compare, compare.branch_compare),
-            (self.menu_branch_diff, self.branch_diff),
-            (self.menu_branch_review, self.review_branch),
-            (self.menu_browse_branch, self.browse_current),
-            (self.menu_browse_other_branch, self.browse_other),
-            (self.menu_browse_commits, self.browse_commits),
+            (self.menu_branch_diff, guicmds.branch_diff),
+            (self.menu_branch_review, guicmds.review_branch),
+            (self.menu_browse_branch, guicmds.browse_current),
+            (self.menu_browse_other_branch, guicmds.browse_other),
+            (self.menu_browse_commits, guicmds.browse_commits),
             (self.menu_create_tag, createtag.create_tag),
             (self.menu_create_branch, create_new_branch),
-            (self.menu_checkout_branch, self.checkout_branch),
-            (self.menu_delete_branch, self.branch_delete),
-            (self.menu_rebase_branch, self.rebase),
+            (self.menu_checkout_branch, guicmds.checkout_branch),
+            (self.menu_delete_branch, guicmds.branch_delete),
+            (self.menu_rebase_branch, guicmds.rebase),
             (self.menu_clone_repo, guicmds.clone_repo),
             (self.menu_commit_compare, compare.compare),
             (self.menu_commit_compare_file, compare.compare_file),
-            (self.menu_cherry_pick, self.cherry_pick),
-            (self.menu_diff_expression, self.diff_expression),
-            (self.menu_diff_branch, self.diff_branch),
-            (self.menu_export_patches, self.export_patches),
+            (self.menu_cherry_pick, guicmds.cherry_pick),
+            (self.menu_diff_expression, guicmds.diff_expression),
+            (self.menu_diff_branch, guicmds.diff_branch),
+            (self.menu_export_patches, guicmds.export_patches),
             (self.menu_help_about, about.launch_about_dialog),
             (self.menu_help_docs,
                 lambda: self.model.git.web__browse(resources.html_docs())),
-            (self.menu_load_commitmsg, self.load_commitmsg),
+            (self.menu_load_commitmsg, guicmds.load_commitmsg_slot(self)),
             (self.menu_load_commitmsg_template,
                 SLOT(signals.load_commit_template)),
             (self.menu_manage_bookmarks, manage_bookmarks),
             (self.menu_save_bookmark, save_bookmark),
             (self.menu_merge_local, local_merge),
             (self.menu_merge_abort, abort_merge),
-            (self.menu_open_repo, self.open_repo),
+            (self.menu_open_repo, guicmds.open_repo_slot(self)),
             (self.menu_options, update_options),
             (self.menu_rescan, SLOT(signals.rescan)),
-            (self.menu_search_grep, self.grep),
+            (self.menu_search_grep, guicmds.grep),
             (self.menu_search_revision, smod.search(smod.REVISION_ID)),
             (self.menu_search_revision_range, smod.search(smod.REVISION_RANGE)),
             (self.menu_search_message, smod.search(smod.MESSAGE)),
@@ -317,65 +312,10 @@ class MainView(MainWindow):
         state['windowstate'] = unicode(windowstate.toBase64().data())
         return state
 
-    def review_branch(self):
-        """Diff against an arbitrary revision, branch, tag, etc."""
-        branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
-                                   self.model.all_branches() +
-                                   self.model.tags)
-        if not branch:
-            return
-        cola.notifier().broadcast(signals.review_branch_mode, branch)
-
-    def branch_diff(self):
-        """Diff against an arbitrary revision, branch, tag, etc."""
-        branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
-                                   ['HEAD^'] +
-                                   self.model.all_branches() +
-                                   self.model.tags)
-        if not branch:
-            return
-        cola.notifier().broadcast(signals.diff_mode, branch)
-
-    def diff_expression(self):
-        """Diff using an arbitrary expression."""
-        expr = choose_from_combo('Enter Diff Expression',
-                                 self.model.all_branches() +
-                                 self.model.tags)
-        if not expr:
-            return
-        cola.notifier().broadcast(signals.diff_expr_mode, expr)
-
-
-    def diff_branch(self):
-        """Launches a diff against a branch."""
-        branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
-                                   ['HEAD^'] +
-                                   self.model.all_branches() +
-                                   self.model.tags)
-        if not branch:
-            return
-        zfiles_str = self.model.git.diff(branch, name_only=True,
-                                         no_color=True,
-                                         z=True).rstrip('\0')
-        files = zfiles_str.split('\0')
-        filename = choose_from_list('Select File', files)
-        if not filename:
-            return
-        cola.notifier().broadcast(signals.branch_mode, branch, filename)
-
     def _load_gui_state(self):
         """Restores the gui from the preferences file."""
         state = settings.SettingsManager.gui_state(self)
         self.import_state(state)
-
-    def load_commitmsg(self):
-        """Load a commit message from a file."""
-        filename = qtutils.open_dialog(self,
-                                       'Load Commit Message...',
-                                       self.model.getcwd())
-        if filename:
-            cola.notifier().broadcast(signals.load_commit_message, filename)
-
 
     def diff_key_press_event(self, event):
         """Handle shortcut keys in the diff view."""
@@ -505,27 +445,18 @@ class MainView(MainWindow):
                                self.unstage_hunk_selection)
 
         elif self.mode == self.model.mode_branch:
-            menu.addAction(self.tr('Apply Diff to Work Tree'), self.stage_hunk)
-            menu.addAction(self.tr('Apply Diff Selection to Work Tree'), self.stage_hunk_selection)
+            menu.addAction(self.tr('Apply Diff to Work Tree'),
+                           self.stage_hunk)
+            menu.addAction(self.tr('Apply Diff Selection to Work Tree'),
+                           self.stage_hunk_selection)
 
         elif self.mode == self.model.mode_grep:
-            menu.addAction(self.tr('Go Here'), self.goto_grep)
+            menu.addAction(self.tr('Go Here'),
+                           lambda: guicmds.goto_grep(self.selected_line()))
 
         menu.addSeparator()
         menu.addAction(self.tr('Copy'), self.copy_display)
         return menu
-
-    def fetch(self):
-        """Launch the 'fetch' remote dialog."""
-        remote_action(self, 'fetch')
-
-    def push(self):
-        """Launch the 'push' remote dialog."""
-        remote_action(self, 'push')
-
-    def pull(self):
-        """Launch the 'pull' remote dialog."""
-        remote_action(self, 'pull')
 
     def commit(self):
         """Attempt to create a commit from the index and commit message."""
@@ -566,99 +497,6 @@ class MainView(MainWindow):
             return
         # Perform the commit
         cola.notifier().broadcast(signals.commit, amend, msg)
-
-    def grep(self):
-        """Prompt and use 'git grep' to find the content."""
-        # This should be a command in cola.commands.
-        txt, ok = qtutils.prompt('grep')
-        if not ok:
-            return
-        cola.notifier().broadcast(signals.grep, txt)
-
-    def goto_grep(self):
-        """Called when Search -> Grep's right-click 'goto' action."""
-        line = self.selected_line()
-        filename, line_number, contents = line.split(':', 2)
-        filename = core.encode(filename)
-        cola.notifier().broadcast(signals.edit, [filename], line_number=line_number)
-
-    def open_repo(self):
-        """Spawn a new cola session."""
-        dirname = qtutils.opendir_dialog(self,
-                                         'Open Git Repository...',
-                                         self.model.getcwd())
-        if not dirname:
-            return
-        cola.notifier().broadcast(signals.open_repo, dirname)
-
-    def cherry_pick(self):
-        """Launch the 'Cherry-Pick' dialog."""
-        revs, summaries = gitcmds.log_helper(all=True)
-        commits = select_commits('Cherry-Pick Commit',
-                                 revs, summaries, multiselect=False)
-        if not commits:
-            return
-        cola.notifier().broadcast(signals.cherry_pick, commits)
-
-    def browse_commits(self):
-        """Launch the 'Browse Commits' dialog."""
-        revs, summaries = gitcmds.log_helper(all=True)
-        select_commits('Browse Commits', revs, summaries)
-
-    def export_patches(self):
-        """Run 'git format-patch' on a list of commits."""
-        revs, summaries = gitcmds.log_helper()
-        to_export = select_commits('Export Patches', revs, summaries)
-        if not to_export:
-            return
-        to_export.reverse()
-        revs.reverse()
-        cola.notifier().broadcast(signals.format_patch, to_export, revs)
-
-    def browse_current(self):
-        """Launch the 'Browse Current Branch' dialog."""
-        browse_git_branch(gitcmds.current_branch())
-
-    def browse_other(self):
-        """Prompt for a branch and inspect content at that point in time."""
-        # Prompt for a branch to browse
-        branch = choose_from_combo('Browse Revision...', gitcmds.all_refs())
-        if not branch:
-            return
-        # Launch the repobrowser
-        browse_git_branch(branch)
-
-    def branch_create(self):
-        """Launch the 'Create Branch' dialog."""
-        create_new_branch()
-
-    def branch_delete(self):
-        """Launch the 'Delete Branch' dialog."""
-        branch = choose_from_combo('Delete Branch',
-                                   self.model.local_branches)
-        if not branch:
-            return
-        cola.notifier().broadcast(signals.delete_branch, branch)
-
-    def checkout_branch(self):
-        """Launch the 'Checkout Branch' dialog."""
-        branch = choose_from_combo('Checkout Branch',
-                                   self.model.local_branches)
-        if not branch:
-            return
-        cola.notifier().broadcast(signals.checkout_branch, branch)
-
-    def rebase(self):
-        """Rebase onto a branch."""
-        branch = choose_from_combo('Rebase Branch',
-                                   self.model.all_branches())
-        if not branch:
-            return
-        #TODO cmd
-        status, output = self.model.git.rebase(branch,
-                                               with_stderr=True,
-                                               with_status=True)
-        qtutils.log(status, output)
 
     def dragEnterEvent(self, event):
         """Accepts drops"""

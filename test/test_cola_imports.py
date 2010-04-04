@@ -32,7 +32,6 @@ def __create_tests():
                      cola.controllers.search
                      cola.controllers.selectcommits
                      cola.controllers.stash
-                     cola.controllers.util
                      cola.models.base
                      cola.models.compare
                      cola.models.gitrepo

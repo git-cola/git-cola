@@ -1,8 +1,112 @@
 import os
+from PyQt4 import QtGui
 
 import cola
+import cola.app
+from cola import core
+from cola import gitcmd
+from cola import gitcmds
 from cola import qtutils
 from cola import signals
+from cola.views import itemlist
+from cola.views import combo
+
+
+def choose_from_combo(title, items):
+    """Quickly choose an item from a list using a combo box"""
+    parent = QtGui.QApplication.instance().activeWindow()
+    return combo.ComboView(parent,
+                           title=title,
+                           items=items).selected()
+
+
+def choose_from_list(title, items=None, dblclick=None):
+    """Quickly choose an item from a list using a list widget"""
+    parent = QtGui.QApplication.instance().activeWindow()
+    return itemlist.ListView(parent,
+                             title=title,
+                             items=items,
+                             dblclick=dblclick).selected()
+
+
+def slot_with_parent(fn, parent):
+    """Return an argument-less method for calling fn(parent=parent)
+
+    :param:`fn` - Function reference, must accept 'parent' as a keyword
+    :param:`parent` - Qt parent widget
+
+    """
+    def slot():
+        fn(parent=parent)
+    return slot
+
+
+def branch_delete():
+    """Launch the 'Delete Branch' dialog."""
+    branch = choose_from_combo('Delete Branch',
+                               cola.model().local_branches)
+    if not branch:
+        return
+    cola.notifier().broadcast(signals.delete_branch, branch)
+
+
+def branch_diff():
+    """Diff against an arbitrary revision, branch, tag, etc."""
+    branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
+                               ['HEAD^'] +
+                               cola.model().all_branches() +
+                               cola.model().tags)
+    if not branch:
+        return
+    cola.notifier().broadcast(signals.diff_mode, branch)
+
+
+def browse_commits():
+    """Launch the 'Browse Commits' dialog."""
+    from cola.controllers.selectcommits import select_commits
+
+    revs, summaries = gitcmds.log_helper(all=True)
+    select_commits('Browse Commits', revs, summaries)
+
+
+def browse_current():
+    """Launch the 'Browse Current Branch' dialog."""
+    from cola.controllers.repobrowser import browse_git_branch
+
+    browse_git_branch(gitcmds.current_branch())
+
+
+def browse_other():
+    """Prompt for a branch and inspect content at that point in time."""
+    # Prompt for a branch to browse
+    from cola.controllers.repobrowser import browse_git_branch
+
+    branch = choose_from_combo('Browse Revision...', gitcmds.all_refs())
+    if not branch:
+        return
+    # Launch the repobrowser
+    browse_git_branch(branch)
+
+
+def checkout_branch():
+    """Launch the 'Checkout Branch' dialog."""
+    branch = choose_from_combo('Checkout Branch',
+                               cola.model().local_branches)
+    if not branch:
+        return
+    cola.notifier().broadcast(signals.checkout_branch, branch)
+
+
+def cherry_pick():
+    """Launch the 'Cherry-Pick' dialog."""
+    from cola.controllers.selectcommits import select_commits
+
+    revs, summaries = gitcmds.log_helper(all=True)
+    commits = select_commits('Cherry-Pick Commit',
+                             revs, summaries, multiselect=False)
+    if not commits:
+        return
+    cola.notifier().broadcast(signals.cherry_pick, commits)
 
 
 def clone_repo(parent, spawn=True):
@@ -60,3 +164,138 @@ def clone_repo(parent, spawn=True):
     cola.notifier().broadcast(signals.clone, url, destdir,
                               spawn=spawn)
     return destdir
+
+
+def export_patches():
+    """Run 'git format-patch' on a list of commits."""
+    from cola.controllers.selectcommits import select_commits
+
+    revs, summaries = gitcmds.log_helper()
+    to_export = select_commits('Export Patches', revs, summaries)
+    if not to_export:
+        return
+    to_export.reverse()
+    revs.reverse()
+    cola.notifier().broadcast(signals.format_patch, to_export, revs)
+
+
+def diff_branch():
+    """Launches a diff against a branch."""
+    branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
+                               ['HEAD^'] +
+                               cola.model().all_branches() +
+                               cola.model().tags)
+    if not branch:
+        return
+    zfiles_str = gitcmd.instance().diff(branch, name_only=True,
+                                        no_color=True,
+                                        z=True).rstrip('\0')
+    files = zfiles_str.split('\0')
+    filename = choose_from_list('Select File', files)
+    if not filename:
+        return
+    cola.notifier().broadcast(signals.branch_mode, branch, filename)
+
+
+def diff_expression():
+    """Diff using an arbitrary expression."""
+    expr = choose_from_combo('Enter Diff Expression',
+                             cola.model().all_branches() +
+                             cola.model().tags)
+    if not expr:
+        return
+    cola.notifier().broadcast(signals.diff_expr_mode, expr)
+
+
+def goto_grep(line):
+    """Called when Search -> Grep's right-click 'goto' action."""
+    filename, line_number, contents = line.split(':', 2)
+    filename = core.encode(filename)
+    cola.notifier().broadcast(signals.edit, [filename], line_number=line_number)
+
+
+def grep():
+    """Prompt and use 'git grep' to find the content."""
+    # This should be a command in cola.commands.
+    txt, ok = qtutils.prompt('grep')
+    if not ok:
+        return
+    cola.notifier().broadcast(signals.grep, txt)
+
+
+def open_repo(parent):
+    """Spawn a new cola session."""
+    dirname = qtutils.opendir_dialog(parent,
+                                     'Open Git Repository...',
+                                     cola.model().getcwd())
+    if not dirname:
+        return
+    cola.notifier().broadcast(signals.open_repo, dirname)
+
+def open_repo_slot(parent):
+    return slot_with_parent(open_repo, parent)
+
+
+def load_commitmsg(parent):
+    """Load a commit message from a file."""
+    filename = qtutils.open_dialog(parent,
+                                   'Load Commit Message...',
+                                   cola.model().getcwd())
+    if filename:
+        cola.notifier().broadcast(signals.load_commit_message, filename)
+
+def load_commitmsg_slot(parent):
+    return slot_with_parent(load_commitmsg, parent)
+
+
+def rebase():
+    """Rebase onto a branch."""
+    branch = choose_from_combo('Rebase Branch',
+                               cola.model().all_branches())
+    if not branch:
+        return
+    #TODO cmd
+    status, output = gitcmd.instance().rebase(branch,
+                                              with_stderr=True,
+                                              with_status=True)
+    qtutils.log(status, output)
+
+
+def review_branch():
+    """Diff against an arbitrary revision, branch, tag, etc."""
+    branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
+                               cola.model().all_branches() +
+                               cola.model().tags)
+    if not branch:
+        return
+    cola.notifier().broadcast(signals.review_branch_mode, branch)
+
+
+def fetch(parent):
+    """Launch the 'fetch' remote dialog."""
+    from cola.controllers.remote import remote_action
+
+    remote_action(parent, 'fetch')
+
+def fetch_slot(parent):
+    return slot_with_parent(fetch, parent)
+
+
+def push(parent):
+    """Launch the 'push' remote dialog."""
+    from cola.controllers.remote import remote_action
+
+    remote_action(parent, 'push')
+
+def push_slot(parent):
+    return slot_with_parent(push, parent)
+
+
+def pull(parent):
+    """Launch the 'pull' remote dialog."""
+    from cola.controllers.remote import remote_action
+
+    remote_action(parent, 'pull')
+
+def pull_slot(parent):
+    return slot_with_parent(pull, parent)
