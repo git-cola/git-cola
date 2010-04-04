@@ -106,8 +106,8 @@ class Edge(QtGui.QGraphicsItem):
         if length > 2 ** 13:
             return
 
-        painter.setPen(QtGui.QPen(QtCore.Qt.white, 0,
-                                  QtCore.Qt.SolidLine,
+        painter.setPen(QtGui.QPen(QtCore.Qt.gray, 0,
+                                  QtCore.Qt.DotLine,
                                   QtCore.Qt.FlatCap,
                                   QtCore.Qt.MiterJoin))
         painter.drawLine(line)
@@ -128,7 +128,7 @@ class Edge(QtGui.QGraphicsItem):
                                  math.cos(angle - math.pi + math.pi/3.) *
                                  _arrow_size))
 
-        painter.setBrush(QtCore.Qt.white)
+        painter.setBrush(QtCore.Qt.gray)
         painter.drawPolygon(QtGui.QPolygonF([line.p2(), dest_x, dest_y]))
 
 
