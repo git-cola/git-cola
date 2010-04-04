@@ -44,6 +44,8 @@ class Commit(object):
                     tag = tag[13:] # refs/remotes/
                 elif tag.startswith('refs/heads/'):
                     tag = tag[11:] # refs/heads/
+                if tag.endswith('/HEAD'):
+                    continue
                 self.tags.add(tag)
         if author:
             self.author = author
