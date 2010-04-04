@@ -47,13 +47,15 @@ class GitDAGWidget(standard.StandardDialog):
         self._graphview.add_commits(commits)
 
 
+_arrow_size = 4.0
+_arrow_extra = (_arrow_size + 1.0) / 2.0
+
 class Edge(QtGui.QGraphicsItem):
     _type = QtGui.QGraphicsItem.UserType + 2
 
     def __init__(self, source, dest):
         QtGui.QGraphicsItem.__init__(self)
 
-        self.arrow_size = 4.0
         self.source_pt = QtCore.QPointF()
         self.dest_pt = QtCore.QPointF()
         self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
@@ -87,21 +89,15 @@ class Edge(QtGui.QGraphicsItem):
         self.source_pt = line.p1() + offset
         self.dest_pt = line.p2() - offset
 
-    def boundingRect(self):
+    def boundingRect(self, _extra=_arrow_extra):
         if not self.source or not self.dest:
             return QtCore.QRectF()
-
-        penWidth = 1
-        extra = (penWidth + self.arrow_size) / 2.0
-
         width = self.dest_pt.x() - self.source_pt.x()
         height = self.dest_pt.y() - self.source_pt.y()
-        return (QtCore.QRectF(self.source_pt,
-                              QtCore.QSizeF(width, height))
-                      .normalized()
-                      .adjusted(-extra, -extra, extra, extra))
+        rect = QtCore.QRectF(self.source_pt, QtCore.QSizeF(width, height))
+        return rect.normalized().adjusted(-_extra, -_extra, _extra, _extra)
 
-    def paint(self, painter, option, widget):
+    def paint(self, painter, option, widget, _arrow_size=_arrow_size):
         if not self.source or not self.dest:
             return
         # Draw the line itself.
@@ -117,20 +113,20 @@ class Edge(QtGui.QGraphicsItem):
         painter.drawLine(line)
 
         # Draw the arrows if there's enough room.
-        angle = math.acos(line.dx() / line.length())
+        angle = math.acos(line.dx() / length)
         if line.dy() >= 0:
             angle = 2.0 * math.pi - angle
 
         dest_x = (self.dest_pt +
                   QtCore.QPointF(math.sin(angle - math.pi/3.) *
-                                 self.arrow_size,
+                                 _arrow_size,
                                  math.cos(angle - math.pi/3.) *
-                                 self.arrow_size))
+                                 _arrow_size))
         dest_y = (self.dest_pt +
                   QtCore.QPointF(math.sin(angle - math.pi + math.pi/3.) *
-                                 self.arrow_size,
+                                 _arrow_size,
                                  math.cos(angle - math.pi + math.pi/3.) *
-                                 self.arrow_size))
+                                 _arrow_size))
 
         painter.setBrush(QtCore.Qt.white)
         painter.drawPolygon(QtGui.QPolygonF([line.p2(), dest_x, dest_y]))
@@ -148,7 +144,7 @@ class Node(QtGui.QGraphicsItem):
         self._width = 180
         # Starts with enough space for two tags. Any more and the node
         # needs to be taller to accomodate.
-        self._height = 18 
+        self._height = 18
         if len(self.commit.tags) > 1:
             self._height = len(self.commit.tags) * 9 + 6 # +6 padding
         self._edges = []
