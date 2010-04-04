@@ -473,10 +473,6 @@ class GraphView(QtGui.QGraphicsView):
         # To set a gradient background brush we need to use StretchToDeviceMode
         # but that seems to be segfaulting. Use a solid background.
         if not color:
-            #color = QtGui.QGradient()
-            #color.setCoordinateMode(QtGui.QGradient.StretchToDeviceMode)
-            #color.setColorAt(0, QtCore.Qt.darkGray)
-            #color.setColorAt(1, QtCore.Qt.black)
             color = QtGui.QColor(50,50,50)
         self.setBackgroundBrush(color)
 
