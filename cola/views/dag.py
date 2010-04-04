@@ -107,7 +107,7 @@ class Edge(QtGui.QGraphicsItem):
         # Draw the line itself.
         line = QtCore.QLineF(self.source_pt, self.dest_pt)
         length = line.length()
-        if length < 7.0 or length > 2 ** 13:
+        if length > 2 ** 13:
             return
 
         painter.setPen(QtGui.QPen(QtCore.Qt.white, 0,
@@ -142,7 +142,6 @@ class Node(QtGui.QGraphicsItem):
     def __init__(self, graph, commit):
         QtGui.QGraphicsItem.__init__(self)
         self.setZValue(0)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
         self.commit = commit
         self._graph = graph
