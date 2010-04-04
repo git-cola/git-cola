@@ -23,7 +23,7 @@ class RepoTreeView(QtGui.QTreeView):
         self.setUniformRowHeights(True)
         self.setAnimated(True)
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
-        cola.qtutils.add_close_acction(self)
+        cola.qtutils.add_close_action(self)
 
         # Observe model updates
         model = cola.model()

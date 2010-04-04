@@ -35,8 +35,7 @@ class GitDAGWidget(QtGui.QWidget):
         layt = QtGui.QHBoxLayout()
         layt.addWidget(self._graphview)
         self.setLayout(layt)
-
-        qtutils.add_close_acction(self)
+        qtutils.add_close_action(self)
 
     def add_commits(self, commits):
         self._graphview.add_commits(commits)

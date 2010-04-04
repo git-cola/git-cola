@@ -295,7 +295,7 @@ def set_diff_font(widget):
     widget.blockSignals(block)
 
 
-def add_close_acction(widget):
+def add_close_action(widget):
     """Adds a Ctrl+w close action to a widget."""
     action = QtGui.QAction(widget.tr('Close...'), widget)
     action.setShortcut('Ctrl+w')
