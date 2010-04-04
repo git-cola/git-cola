@@ -5,6 +5,7 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
 from cola import qtutils
+from cola.compat import set
 
 
 def git_dag(log_args=None):
