@@ -5,21 +5,21 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
 from cola import qtutils
+from cola.views import standard
 from cola.compat import set
 
 
-def git_dag(log_args=None):
+def git_dag(log_args=None, parent=None):
     """Return a pre-populated git DAG widget."""
     from cola.models import commit
 
-    view = GitDAGWidget()
+    view = GitDAGWidget(parent)
     view.add_commits(commit.commits(log_args=log_args))
-    view.raise_()
     view.show()
     return view
 
 
-class GitDAGWidget(QtGui.QWidget):
+class GitDAGWidget(standard.StandardDialog):
     """The git-dag widget."""
     # Keep us in scope otherwise PyQt kills the widget
     _instances = set()
@@ -28,12 +28,17 @@ class GitDAGWidget(QtGui.QWidget):
         self._instances.remove(self)
 
     def __init__(self, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+        standard.StandardDialog.__init__(self, parent)
         self._instances.add(self)
 
+        self.setObjectName('dag')
+        self.setWindowTitle(self.tr('git dag'))
+        self.setMinimumSize(1, 1)
+        self.resize(777, 666)
 
         self._graphview = GraphView()
         layt = QtGui.QHBoxLayout()
+        layt.setMargin(1)
         layt.addWidget(self._graphview)
         self.setLayout(layt)
         qtutils.add_close_action(self)
@@ -286,10 +291,6 @@ class GraphView(QtGui.QGraphicsView):
         self.setRenderHint(QtGui.QPainter.Antialiasing)
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
         self.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
-
-        self.setMinimumSize(600, 600)
-        self.setWindowTitle(self.tr('git dag'))
-
         self.setBackgroundColor()
 
     def add_commits(self, commits):
