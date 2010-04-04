@@ -154,6 +154,7 @@ class Node(QtGui.QGraphicsItem):
         self._colors['selected'] = QtGui.QColor.fromRgb(192, 192, 16)
         self._colors['outline'] = QtGui.QColor.fromRgb(0, 0, 0)
         self._colors['node'] = QtGui.QColor.fromRgb(255, 111, 69)
+        self._colors['decorations'] = QtGui.QColor.fromRgb(255, 255, 42)
 
         self._grad = QtGui.QLinearGradient(0.0, 0.0, 0.0, self._height)
         self._grad.setColorAt(0, self._colors['node'])
@@ -213,11 +214,12 @@ class Node(QtGui.QGraphicsItem):
         painter.drawText(self.glyph(), sha1_text, text_options)
 
         # Draw tags
-        if not len(self.commit.tags):
+        if not self.commit.tags:
             return
         # Those 2's affecting width are just for padding
         text_box = QtCore.QRectF(-self._width/4.+2, -self._height/2.,
                                  self._width*(3/4.)-2, self._height)
+        painter.setBrush(self._colors['decorations'])
         painter.drawRoundedRect(text_box, 4, 4)
         tag_text = "\n".join(self.commit.tags)
         text_options.setAlignment(QtCore.Qt.AlignVCenter)
