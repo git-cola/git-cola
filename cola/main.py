@@ -103,7 +103,7 @@ def main():
     from cola.models.gitrepo import GitRepoModel
     from cola.views import startup
     from cola.views.main import MainView
-    from cola.views.repo import RepoTreeView
+    from cola.views.repo import RepoDialog
     from cola.controllers.main import MainController
     from cola.controllers.classic import ClassicController
     from cola.app import ColaApplication
@@ -162,9 +162,9 @@ def main():
 
     # Show the GUI and start the event loop
     if opts.classic:
-        view = RepoTreeView()
-        view.setModel(GitRepoModel(view))
-        controller = ClassicController(view)
+        view = RepoDialog()
+        view.tree.setModel(GitRepoModel(view.tree))
+        controller = ClassicController(view.tree)
     else:
         view = MainView()
         controller = MainController(model, view)

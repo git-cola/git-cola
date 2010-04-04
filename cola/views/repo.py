@@ -8,6 +8,19 @@ import cola.utils
 import cola.qtutils
 from cola import signals
 from cola.models import gitrepo
+from cola.views import standard
+
+
+class RepoDialog(standard.StandardDialog):
+    def __init__(self, parent=None):
+        standard.StandardDialog.__init__(self, parent)
+        self.setObjectName('classic')
+        self.tree = RepoTreeView(parent)
+        self.setLayout(QtGui.QHBoxLayout())
+        self.layout().setMargin(1)
+        self.layout().addWidget(self.tree)
+        self.resize(720, 420)
+        cola.qtutils.add_close_action(self)
 
 
 class RepoTreeView(QtGui.QTreeView):
@@ -15,15 +28,12 @@ class RepoTreeView(QtGui.QTreeView):
     def __init__(self, parent=None):
         QtGui.QTreeView.__init__(self, parent)
 
-        self.resize(720, 300)
-        self.setWindowTitle(self.tr('classic'))
         self.setSortingEnabled(False)
         self.setAllColumnsShowFocus(True)
         self.setAlternatingRowColors(True)
         self.setUniformRowHeights(True)
         self.setAnimated(True)
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
-        cola.qtutils.add_close_action(self)
 
         # Observe model updates
         model = cola.model()

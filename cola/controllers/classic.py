@@ -1,5 +1,6 @@
 import os
 
+from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
@@ -12,20 +13,21 @@ from cola import signals
 from cola.controllers.selectcommits import select_commits
 from cola.models import gitrepo
 from cola.views import repo
+from cola.views import standard
 from cola.compat import set
 
 
-def widget():
+def widget(parent=None):
     """Return a widget for immediate use."""
-    view = repo.RepoTreeView()
-    view.setModel(gitrepo.GitRepoModel(view))
-    controller = ClassicController(view)
+    view = repo.RepoDialog(parent)
+    view.tree.setModel(gitrepo.GitRepoModel(view.tree))
+    controller = ClassicController(view.tree)
     return view
 
 
-def cola_classic():
+def cola_classic(parent=None):
     """Launch a new cola classic session."""
-    view = widget()
+    view = widget(parent)
     view.raise_()
     view.show()
 
