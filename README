@@ -1,10 +1,10 @@
 git-cola: A highly caffeinated git GUI
 
 git-cola is a sweet, carbonated git GUI known for its
-sugary flavour and caffeine-inspired features.
+sugary flavor and caffeine-inspired features.
 
 
-Copyright (C) 2009 David Aguilar and contributors
+Copyright (C) David Aguilar contributors, 2007, 2008, 2009, 2010
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,40 +19,30 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+FORK
+----
+~ git clone git://github.com/davvid/git-cola.git cola
+~ cola/bin/git-cola
+~ http://github.com/davvid/git-cola.git
 
-INSTALLATION
+DOWNLOAD
+--------
+~ http://cola.tuxfamily.org/
 
-See the 'INSTALL' file for more details.
+DISCUSS
+-------
+~ http://groups.google.com/group/git-cola/
 
+Join, suggest features, and send patches with 'git send-mail'
+to git-cola@googlegroups.com.
 
-THE WEBSITE
-
-Visit the git-cola home page:
-    ~ http://cola.tuxfamily.org/
-
-
-THE MAILING LIST
-
-Visit us on google groups:
-    ~ http://groups.google.com/group/git-cola/
-
-Feel free to join, suggest features, and submit patches with
-git-send-mail.
-
-
-THE BUG TRACKER
-
-We use the github issue tracker.  It's simple and it works.
-    ~ http://github.com/davvid/git-cola/issues
-
-We do prefer to discuss things on the mailing list, though,
-so don't be shy.
-
+SUPPORT
+-------
+~ http://github.com/davvid/git-cola/issues
 
 ACKNOWLEDGEMENTS
-
+----------------
 git-cola includes a copy of the following modules:
-
 GitPython ~ http://gitorious.org/projects/git-python/
 jsonpickle ~ http://code.google.com/p/jsonpickle/
 simplejson ~ http://code.google.com/p/simplejson/
