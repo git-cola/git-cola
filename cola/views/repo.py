@@ -1,3 +1,5 @@
+import os
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
@@ -7,12 +9,13 @@ import cola
 import cola.utils
 import cola.qtutils
 from cola import signals
+from cola.models import main
 from cola.models import gitrepo
 from cola.views import standard
 
 
 class RepoDialog(standard.StandardDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, update=True):
         standard.StandardDialog.__init__(self, parent)
         self.setObjectName('classic')
         self.tree = RepoTreeView(parent)
@@ -20,7 +23,32 @@ class RepoDialog(standard.StandardDialog):
         self.layout().setMargin(1)
         self.layout().addWidget(self.tree)
         self.resize(720, 420)
+        self.model = main.model()
+        self.model.add_message_observer(self.model.message_updated,
+                                        self._model_updated)
         cola.qtutils.add_close_action(self)
+        if update:
+            self._model_updated()
+
+    # Read-only mode property
+    mode = property(lambda self: self.model.mode)
+
+    def _model_updated(self):
+        """Update the title with the current branch and directory name."""
+        branch = self.model.currentbranch
+        curdir = os.getcwd()
+        msg = 'Repository: %s\nBranch: %s' % (curdir, branch)
+
+        self.setToolTip(msg)
+
+        title = '%s [%s]' % (self.model.project, branch)
+        if self.mode in (self.model.mode_diff, self.model.mode_diff_expr):
+            title += ' *** diff mode***'
+        elif self.mode == self.model.mode_review:
+            title += ' *** review mode***'
+        elif self.mode == self.model.mode_amend:
+            title += ' *** amending ***'
+        self.setWindowTitle(title)
 
 
 class RepoTreeView(QtGui.QTreeView):

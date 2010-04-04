@@ -162,7 +162,7 @@ def main():
 
     # Show the GUI and start the event loop
     if opts.classic:
-        view = RepoDialog()
+        view = RepoDialog(update=False)
         view.tree.setModel(GitRepoModel(view.tree))
         controller = ClassicController(view.tree)
     else:
