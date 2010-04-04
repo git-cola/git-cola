@@ -26,8 +26,12 @@ def doc(*args):
 
 def html_docs():
     """Return the path to the cola html documentation."""
-    # Note: This only exists after the install-docs target is run
-    return doc('html', 'index.html')
+    # index.html only exists after the install-docs target is run,
+    # so fallback to git-cola.txt.
+    htmldocs = doc('html', 'index.html')
+    if os.path.exists(htmldocs):
+        return htmldocs
+    return doc('git-cola.txt')
 
 
 def share(*args):
