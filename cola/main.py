@@ -7,12 +7,14 @@ import glob
 import sys
 import os
 
+import cola
 from cola import resources
 from cola import utils
 from cola import core
 from cola import git
 from cola import inotify
 from cola import version
+from cola import signals
 
 # Spoof an X11 display for SSH
 os.environ.setdefault('DISPLAY', ':0')
@@ -180,6 +182,13 @@ def main():
 
     # Show the view and start the main event loop
     view.show()
+    git.GIT_COLA_TRACE = os.getenv('GIT_COLA_TRACE', False)
+    if git.GIT_COLA_TRACE:
+        msg = ('info: Trace enabled.  '
+               'Many of commands reported with "trace:" '
+               'are git "plumbing" commands and are meant '
+               'for use by scripts rather than by end-users.')
+        cola.notifier().broadcast(signals.log_cmd, 0, msg)
     result = app.exec_()
 
     # All done, cleanup

@@ -11,8 +11,10 @@ import errno
 import subprocess
 import threading
 
+import cola
 from cola import core
 from cola import errors
+from cola import signals
 
 cmdlock = threading.Lock()
 
@@ -21,7 +23,8 @@ def dashify(string):
     return string.replace('_', '-')
 
 # Enables debugging of GitPython's git commands
-GIT_PYTHON_TRACE = os.environ.get("GIT_PYTHON_TRACE", False)
+GIT_PYTHON_TRACE = os.getenv('GIT_PYTHON_TRACE', False)
+GIT_COLA_TRACE = False
 
 execute_kwargs = ('cwd',
                   'istream',
@@ -148,6 +151,10 @@ class Git(object):
             else:
                 print "%s -> %d" % (command, status)
 
+        if GIT_COLA_TRACE:
+            msg = 'trace: %s' % ' '.join(map(shell_quote, command))
+            cola.notifier().broadcast(signals.log_cmd, status, msg)
+
         # Allow access to the command's status code
         if with_status:
             return (status, output)
@@ -193,6 +200,7 @@ class Git(object):
 
         Returns
             Same as execute()
+
         """
 
         # Handle optional arguments prior to calling transform_kwargs

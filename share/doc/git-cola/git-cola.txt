@@ -39,7 +39,6 @@ OPTIONS
 --git-path::
 	Specifies the path to the 'git' binary.
 
-
 GUI STYLES
 ----------
 'git-cola' ships with an alternate "dark" stylesheet.
@@ -82,18 +81,22 @@ user.name::
 
 See linkgit:git-config[1] for more details.
 
-
 ENVIRONMENT VARIABLES
 ---------------------
-
 EDITOR::
 	Specifies the default editor to use.
 	This is ignored when the git config variable `gui.editor` is defined.
 
+GIT_PYTHON_TRACE::
+	When defined, prints git commands and status to the terminal.
+	Print more information when set to the value 'full'.
+
+GIT_COLA_TRACE::
+	When defined, 'git-cola' outputs the 'git' commands it executes
+	into the 'Command Output' log viewer.
 
 SOURCE
 ------
-
 A 'git-cola' development repository can be obtained via git:
 
 	git clone git://github.com/davvid/git-cola.git
