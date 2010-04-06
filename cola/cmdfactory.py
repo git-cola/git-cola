@@ -41,8 +41,8 @@ class CommandFactory(object):
         self.redostack = []
         self.signal_to_command = {}
 
-        cola.notifier().listen(signals.undo, self.undo)
-        cola.notifier().listen(signals.redo, self.redo)
+        cola.notifier().connect(signals.undo, self.undo)
+        cola.notifier().connect(signals.redo, self.redo)
 
         self.model = cola.model()
         self.model.add_observer(self)
@@ -50,7 +50,7 @@ class CommandFactory(object):
     def add_command(self, signal, command):
         """Register a signal/command pair."""
         self.signal_to_command[signal] = command
-        cola.notifier().listen(signal, self.cmdrunner(signal))
+        cola.notifier().connect(signal, self.cmdrunner(signal))
 
     def notify(self, *params):
         """

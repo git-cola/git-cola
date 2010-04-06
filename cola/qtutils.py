@@ -19,7 +19,7 @@ def logger():
     global _logger
     if not _logger:
         _logger = cola.views.log.LogView()
-        cola.notifier().listen(signals.log_cmd, _logger.log)
+        cola.notifier().connect(signals.log_cmd, _logger.log)
     return _logger
 
 
@@ -84,7 +84,7 @@ def information(title, message=None):
     parent = QtGui.QApplication.instance().activeWindow()
     QtGui.QMessageBox.information(parent, title, message)
 # Register globally with the notifier
-cola.notifier().listen(signals.information, information)
+cola.notifier().connect(signals.information, information)
 
 def selected_treeitem(tree_widget):
     """Returns a(id_number, is_selected) for a QTreeWidget."""

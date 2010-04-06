@@ -74,10 +74,10 @@ class MainView(MainWindow):
                                         self._update_view)
 
         # Listen for text and amend messages
-        cola.notifier().listen(signals.diff_text, self.set_display)
-        cola.notifier().listen(signals.mode, self._mode_changed)
-        cola.notifier().listen(signals.inotify, self._inotify_enabled)
-        cola.notifier().listen(signals.amend, self.amend_checkbox.setChecked)
+        cola.notifier().connect(signals.diff_text, self.set_display)
+        cola.notifier().connect(signals.mode, self._mode_changed)
+        cola.notifier().connect(signals.inotify, self._inotify_enabled)
+        cola.notifier().connect(signals.amend, self.amend_checkbox.setChecked)
 
         # Broadcast the amend mode
         self.connect(self.amend_checkbox, SIGNAL('toggled(bool)'),

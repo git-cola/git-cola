@@ -31,9 +31,6 @@ class Notifier(object):
             for fxn in subscribers:
                 fxn(*args, **opts)
 
-    def listen(self, signal, callback):
-        self.connect(signal, callback)
-
     def connect(self, signal, callback):
         subscribers = self.channels.setdefault(signal, set())
         subscribers.add(callback)
