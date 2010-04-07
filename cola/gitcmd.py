@@ -15,10 +15,7 @@ def instance():
 
 class GitCola(git.Git):
     """
-    Subclass git.Git to provide custom behaviors.
-
-    GitPython throws exceptions by default.
-    We suppress exceptions in favor of return values.
+    Subclass git.Git to provide search-for-git-dir
 
     """
     def __init__(self):
