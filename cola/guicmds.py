@@ -12,6 +12,26 @@ from cola.views import itemlist
 from cola.views import combo
 
 
+def install_command_wrapper(parent):
+    wrapper = CommandWrapper(parent)
+    cola.factory().add_command_wrapper(wrapper)
+
+
+class CommandWrapper(object):
+    def __init__(self, parent):
+        self.parent = parent
+        self.callbacks = {
+                signals.question: self._question,
+                signals.information: self._information,
+        }
+
+    def _question(self, title, msg):
+        return qtutils.question(self.parent, title, msg)
+
+    def _information(self, title, msg):
+        return qtutils.information(self.parent, title, msg)
+
+
 def choose_from_combo(title, items):
     """Quickly choose an item from a list using a combo box"""
     parent = QtGui.QApplication.instance().activeWindow()
