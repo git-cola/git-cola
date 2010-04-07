@@ -547,7 +547,7 @@ class ReviewBranchMode(Command):
 class ShowUntracked(Command):
     """Show an untracked file."""
     # We don't actually do anything other than set the mode right now.
-    # We could probably check the mimetype for the file and handle things
+    # TODO check the mimetype for the file and handle things
     # generically.
     def __init__(self, filenames):
         Command.__init__(self)
