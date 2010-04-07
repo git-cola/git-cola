@@ -94,9 +94,7 @@ class ActionDialog(standard.StandardDialog):
             ('Tag', gitcmds.tag_list()),
         )
         revprompt = self.opts.get('revprompt', i18n.gettext('Revision'))
-        self.revselect = revselect.RevisionSelector(self,
-                                                    revs=revs,
-                                                    default_revision='HEAD')
+        self.revselect = revselect.RevisionSelector(self, revs=revs)
         self.revselect.set_revision_label(revprompt)
         self.layt.addWidget(self.revselect)
         if not opts.get('revprompt'):

@@ -4,7 +4,7 @@ from PyQt4.QtCore import SIGNAL
 from cola import qtutils
 
 class RevisionSelector(QtGui.QWidget):
-    def __init__(self, parent=None, revs=None, default_revision=None):
+    def __init__(self, parent=None, revs=None):
         QtGui.QWidget.__init__(self, parent)
 
         self._revs = revs
@@ -21,8 +21,6 @@ class RevisionSelector(QtGui.QWidget):
         self._rev_layt.addWidget(self._rev_label)
 
         self._revision = QtGui.QLineEdit()
-        if default_revision:
-            self._revision.setText(default_revision)
         self._rev_layt.addWidget(self._revision)
 
         self._layt.addLayout(self._rev_layt)
