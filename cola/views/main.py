@@ -155,8 +155,8 @@ class MainView(MainWindow):
             (self.menu_select_all, self.commitmsg.selectAll),
             (self.menu_undo, self.commitmsg.undo),
             (self.menu_redo, self.commitmsg.redo),
-            (self.menu_classic, lambda: classic.cola_classic(self)),
-            (self.menu_dag, lambda: dag.git_dag(parent=self)),
+            (self.menu_classic, classic.cola_classic),
+            (self.menu_dag, dag.git_dag),
         )
         for menu, callback in actions:
             self.connect(menu, SIGNAL('triggered()'), callback)
