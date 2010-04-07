@@ -129,6 +129,10 @@ class GitConfig(object):
                 # the user has an invalid entry in their git config
                 continue
             v = core.decode(v)
+            if v == 'yes':
+                v = 'true'
+            elif v == 'no':
+                v = 'false'
             if v == 'true' or v == 'false':
                 v = bool(eval(v.title()))
             try:

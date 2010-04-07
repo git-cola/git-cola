@@ -20,12 +20,23 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
         self.shell('git config test.int 42')
         self.assertEqual(self.config.get('test.int'), 42)
 
-    def test_bool(self):
+    def test_true(self):
         """Test bool values in get()."""
         self.shell('git config test.bool true')
         self.assertEqual(self.config.get('test.bool'), True)
+
+    def test_false(self):
         self.shell('git config test.bool false')
         self.assertEqual(self.config.get('test.bool'), False)
+
+    def test_yes(self):
+        self.shell('git config test.bool yes')
+        self.assertEqual(self.config.get('test.bool'), True)
+
+    def test_no(self):
+        self.shell('git config test.bool false')
+        self.assertEqual(self.config.get('test.bool'), False)
+
 
     def test_default(self):
         """Test default values in get()."""
