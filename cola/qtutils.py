@@ -301,3 +301,12 @@ def add_close_action(widget):
     action.setShortcut('Ctrl+w')
     widget.addAction(action)
     widget.connect(action, SIGNAL('triggered()'), widget.close)
+
+
+def center_on_screen(widget):
+    """Move widget to the center of the default screen"""
+    desktop = QtGui.QApplication.instance().desktop()
+    rect = desktop.screenGeometry(QtGui.QCursor().pos())
+    cy = rect.height()/2
+    cx = rect.width()/2
+    widget.move(cx - widget.width()/2, cy - widget.height()/2)
