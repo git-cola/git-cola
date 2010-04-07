@@ -152,3 +152,25 @@ class GitConfig(object):
 
     def get_encoding(self, default='utf-8'):
         return self.get('gui.encoding', default=default)
+
+    guitool_opts = ('cmd', 'needsfile', 'noconsole', 'norescan', 'confirm',
+                    'argprompt', 'revprompt', 'revunmerged', 'title', 'prompt')
+
+    def get_guitool_opts(self, name):
+        """Return the guitool.<name> namespace as a dict"""
+        keyprefix = 'guitool.' + name + '.'
+        opts = {}
+        for cfg in self.guitool_opts:
+            value = self.get(keyprefix + cfg)
+            if value is None:
+                continue
+            opts[cfg] = value
+        return opts
+
+    def get_guitool_names(self):
+        cmds = []
+        guitools = self.find('guitool.*.cmd')
+        for name, cmd in guitools.items():
+            name = name[len('guitool.'):-len('.cmd')]
+            cmds.append(name)
+        return cmds
