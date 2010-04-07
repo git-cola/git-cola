@@ -13,5 +13,6 @@ Miscellaneous Utility Modules
     resources
     settings
     utils
+    qt
     qtutils
     version
