@@ -60,21 +60,25 @@ class ActionDialog(standard.StandardDialog):
         self.layt.setMargin(10)
         self.setLayout(self.layt)
 
-        cmd = self.opts.get('cmd')
-        title = self.opts.get('title')
+        cmd = opts.get('cmd')
+        title = opts.get('title')
         if title:
             self.setWindowTitle(os.path.expandvars(title))
 
         self.prompt = QtGui.QLabel()
 
-        prompt = self.opts.get('prompt')
+        prompt = opts.get('prompt')
         if prompt:
             self.prompt.setText(os.path.expandvars(prompt))
         self.layt.addWidget(self.prompt)
 
 
         self.argslabel = QtGui.QLabel()
-        argprompt = self.opts.get('argprompt', i18n.gettext('Arguments'))
+        if 'argprompt' not in opts or opts.get('argprompt') is True:
+            argprompt = i18n.gettext('Arguments')
+        else:
+            argprompt = opts.get('argprompt')
+
         self.argslabel.setText(argprompt)
 
         self.argstxt = QtGui.QLineEdit()
@@ -93,10 +97,15 @@ class ActionDialog(standard.StandardDialog):
             ('Tracking Branch', gitcmds.branch_list(remote=True)),
             ('Tag', gitcmds.tag_list()),
         )
-        revprompt = self.opts.get('revprompt', i18n.gettext('Revision'))
+
+        if 'revprompt' not in opts or opts.get('revprompt') is True:
+            revprompt = i18n.gettext('Revision')
+        else:
+            revprompt = opts.get('revprompt')
         self.revselect = revselect.RevisionSelector(self, revs=revs)
         self.revselect.set_revision_label(revprompt)
         self.layt.addWidget(self.revselect)
+
         if not opts.get('revprompt'):
             self.revselect.hide()
 

@@ -565,34 +565,38 @@ class RunConfigAction(Command):
         cmd = opts.get('cmd')
         if 'title' not in opts:
             opts['title'] = cmd
+        title = opts.get('title')
 
-        if 'prompt' not in opts:
+        if 'prompt' not in opts or opts.get('prompt') is True:
             prompt = i18n.gettext('Are you sure you want to run %s?') % cmd
             opts['prompt'] = prompt
 
         if opts.get('needsfile'):
             filename = selection.filename()
             if not filename:
-                _notifier.broadcast(signals.information,
-                                    'Please select a file',
-                                    '"%s" requires a selected file' % cmd)
+                _factory.prompt_user(signals.information,
+                                     'Please select a file',
+                                     '"%s" requires a selected file' % cmd)
                 return
             os.environ['FILENAME'] = utils.shell_quote(filename)
 
         if opts.get('revprompt') or opts.get('argprompt'):
-            ok = _factory.prompt_user(signals.run_config_action, cmd, opts)
-            if not ok:
-                return
-            rev = opts.get('revision')
-            args = opts.get('args')
-            if opts.get('revprompt') and not rev:
-                return
+            while True:
+                ok = _factory.prompt_user(signals.run_config_action, cmd, opts)
+                if not ok:
+                    return
+                rev = opts.get('revision')
+                args = opts.get('args')
+                if opts.get('revprompt') and not rev:
+                    msg = ('Invalid revision:\n\n'
+                           'Revision expression is empty')
+                    _factory.prompt_user(signals.information, title, msg)
+                    continue
+                break
 
         elif opts.get('confirm'):
-            title = opts.get('title')
-            prompt = opts.get('prompt')
-            title = os.path.expandvars(title)
-            prompt = os.path.expandvars(prompt)
+            title = os.path.expandvars(opts.get('title'))
+            prompt = os.path.expadnvars(opts.get('prompt'))
             if not _factory.prompt_user(signals.question, title, prompt):
                 return
         if rev:
