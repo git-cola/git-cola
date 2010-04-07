@@ -20,6 +20,7 @@ from cola.compat import set
 from cola.qtutils import SLOT
 from cola.views import dag
 from cola.views import about
+from cola.views import actions as actionsmod
 from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.mainwindow import MainWindow
 from cola.controllers import classic
@@ -160,6 +161,13 @@ class MainView(MainWindow):
         )
         for menu, callback in actions:
             self.connect(menu, SIGNAL('triggered()'), callback)
+
+        # Install UI wrappers for command objects
+        actionsmod.install_command_wrapper(self)
+        guicmds.install_command_wrapper(self)
+
+        # Install .gitconfig-defined actions
+        actionsmod.install_config_actions(self.actions_menu)
 
         # Install diff shortcut keys for stage/unstage
         self.display_text.keyPressEvent = self.diff_key_press_event

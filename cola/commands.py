@@ -4,6 +4,7 @@ import sys
 from cStringIO import StringIO
 
 import cola
+from cola import i18n
 from cola import core
 from cola import gitcfg
 from cola import gitcmds
@@ -13,6 +14,7 @@ from cola import cmdfactory
 from cola import difftool
 from cola import version
 from cola.diffparse import DiffParser
+from cola.models import selection
 
 _notifier = cola.notifier()
 _factory = cmdfactory.factory()
@@ -544,6 +546,67 @@ class ReviewBranchMode(Command):
         self.new_diff_text = ''
 
 
+class RunConfigAction(Command):
+    """Run a user-configured action, typically from the "Tools" menu"""
+    def __init__(self, name):
+        Command.__init__(self)
+        self.name = name
+        self.model = cola.model()
+
+    def do(self):
+        for env in ('FILENAME', 'REVISION', 'ARGS'):
+            try:
+                del os.environ[env]
+            except KeyError:
+                pass
+        rev = None
+        args = None
+        opts = _config.get_guitool_opts(self.name)
+        cmd = opts.get('cmd')
+        if 'title' not in opts:
+            opts['title'] = cmd
+
+        if 'prompt' not in opts:
+            prompt = i18n.gettext('Are you sure you want to run %s?') % cmd
+            opts['prompt'] = prompt
+
+        if opts.get('needsfile'):
+            filename = selection.filename()
+            if not filename:
+                _notifier.broadcast(signals.information,
+                                    'Please select a file',
+                                    '"%s" requires a selected file' % cmd)
+                return
+            os.environ['FILENAME'] = utils.shell_quote(filename)
+
+        if opts.get('revprompt') or opts.get('argprompt'):
+            ok = _factory.prompt_user(signals.run_config_action, cmd, opts)
+            if not ok:
+                return
+            rev = opts.get('revision')
+            args = opts.get('args')
+            if opts.get('revprompt') and not rev:
+                return
+
+        elif opts.get('confirm'):
+            title = opts.get('title')
+            prompt = opts.get('prompt')
+            title = os.path.expandvars(title)
+            prompt = os.path.expandvars(prompt)
+            if not _factory.prompt_user(signals.question, title, prompt):
+                return
+        if rev:
+            os.environ['REVISION'] = rev
+        if args:
+            os.environ['ARGS'] = args
+        cmdexpand = os.path.expandvars(cmd)
+        status = os.system(cmdexpand)
+        _notifier.broadcast(signals.log_cmd, status, 'Running: ' + cmdexpand)
+        if not opts.get('norescan'):
+            self.model.update_status()
+        return status
+
+
 class ShowUntracked(Command):
     """Show an untracked file."""
     # We don't actually do anything other than set the mode right now.
@@ -724,6 +787,7 @@ def register():
         signals.rescan: Rescan,
         signals.reset_mode: ResetMode,
         signals.review_branch_mode: ReviewBranchMode,
+        signals.run_config_action: RunConfigAction,
         signals.show_untracked: ShowUntracked,
         signals.stage: Stage,
         signals.stage_modified: StageModified,
