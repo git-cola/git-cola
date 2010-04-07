@@ -15,6 +15,8 @@ def git_dag(log_args=None, parent=None):
 
     view = GitDAGWidget(parent)
     view.add_commits(commit.commits(log_args=log_args))
+    if not parent:
+        qtutils.center_on_screen(view)
     view.show()
     return view
 
