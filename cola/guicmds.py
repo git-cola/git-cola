@@ -32,8 +32,8 @@ def choose_from_list(title, items=None, dblclick=None):
 def slot_with_parent(fn, parent):
     """Return an argument-less method for calling fn(parent=parent)
 
-    :param:`fn` - Function reference, must accept 'parent' as a keyword
-    :param:`parent` - Qt parent widget
+    :param fn: - Function reference, must accept 'parent' as a keyword
+    :param parent: - Qt parent widget
 
     """
     def slot():
