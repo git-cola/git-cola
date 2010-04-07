@@ -127,7 +127,7 @@ class AmendMode(Command):
             if os.path.exists(self.model.git.git_path('MERGE_HEAD')):
                 self.skip = True
                 _notifier.broadcast(signals.amend, False)
-                _notifier.broadcast(signals.information,
+                _factory.prompt_user(signals.information,
                                     'Oops! Unmerged',
                                     'You are in the middle of a merge.\n'
                                     'You cannot amend while merging.')
@@ -212,7 +212,7 @@ class ApplyPatches(Command):
         # Display a diffstat
         self.model.set_diff_text(diff_text)
 
-        _notifier.broadcast(signals.information,
+        _factory.prompt_user(signals.information,
                             'Patch(es) Applied',
                             '%d patch(es) applied:\n\n%s' %
                             (len(self.patches),
@@ -317,7 +317,7 @@ class Delete(Command):
                     os.remove(filename)
                     rescan=True
                 except:
-                    _notifier.broadcast(signals.information,
+                    _factory.prompt_user(signals.information,
                                         'Error'
                                         'Deleting "%s" failed.' % filename)
         if rescan:

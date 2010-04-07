@@ -3,6 +3,7 @@ from PyQt4 import QtGui
 
 import cola
 import cola.app
+from cola import i18n
 from cola import core
 from cola import gitcmd
 from cola import gitcmds
@@ -29,7 +30,11 @@ class CommandWrapper(object):
         return qtutils.question(self.parent, title, msg)
 
     def _information(self, title, msg):
-        return qtutils.information(self.parent, title, msg)
+        if msg is None:
+            msg = title
+        title = i18n.gettext(title)
+        msg = i18n.gettext(msg)
+        QtGui.QMessageBox.information(self.parent, title, msg)
 
 
 def choose_from_combo(title, items):
