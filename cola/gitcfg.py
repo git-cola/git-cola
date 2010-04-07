@@ -1,6 +1,7 @@
 import os
 import sys
 import copy
+import fnmatch
 
 from cola import core
 from cola import gitcmd
@@ -40,6 +41,7 @@ class GitConfig(object):
         self._system = {}
         self._user = {}
         self._repo = {}
+        self._all = {}
         self._cache_key = None
         self._configs = []
         self._config_files = {}
@@ -49,6 +51,7 @@ class GitConfig(object):
         self._system = {}
         self._user = {}
         self._repo = {}
+        self._all = {}
         self._configs = []
         self._config_files = {}
         self._find_config_files()
@@ -58,6 +61,9 @@ class GitConfig(object):
 
     def repo(self):
         return copy.deepcopy(self._repo)
+
+    def all(self):
+        return copy.deepcopy(self._all)
 
     def _find_config_files(self):
         """
@@ -107,6 +113,10 @@ class GitConfig(object):
         if 'repo' in self._config_files:
             self._repo = self.read_config(self._config_files['repo'])
 
+        self._all = {}
+        for dct in (self._system, self._user, self._repo):
+            self._all.update(dct)
+
     def read_config(self, path):
         """Return git config data from a path as a dictionary."""
         dest = {}
@@ -131,10 +141,14 @@ class GitConfig(object):
     def get(self, key, default=None):
         """Return the string value for a config key."""
         self.update()
-        for dct in (self._repo, self._user, self._system):
-            if key in dct:
-                return dct[key]
-        return default
+        return self._all.get(key, default)
+
+    def find(self, pat):
+        result = {}
+        for key, val in self._all.items():
+            if fnmatch.fnmatch(key, pat):
+                result[key] = val
+        return result
 
     def get_encoding(self, default='utf-8'):
         return self.get('gui.encoding', default=default)
