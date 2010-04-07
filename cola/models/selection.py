@@ -36,6 +36,19 @@ def single_selection():
     return s, m, um, ut
 
 
+def filename():
+    s, m, um, ut = single_selection()
+    if s:
+        return s
+    if m:
+        return m
+    if um:
+        return um
+    if ut:
+        return ut
+    return None
+
+
 class SelectionModel(ObservableModel):
     """Provides information about selected file paths."""
     # Notification message sent out when selection changes
