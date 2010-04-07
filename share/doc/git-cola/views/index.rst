@@ -2,13 +2,14 @@ Views
 =====
 .. toctree::
 
+    about
+    dag
+    log
     main
     mainwindow
+    repo
+    revselect
     standard
     startup
-    about
     status
-    repo
     syntax
-    log
-    misc
