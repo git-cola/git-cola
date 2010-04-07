@@ -13,4 +13,3 @@ Controllers
     search
     selectcommits
     stash
-    util
