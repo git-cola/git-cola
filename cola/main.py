@@ -107,7 +107,7 @@ def main():
     from cola.views.main import MainView
     from cola.views.repo import RepoDialog
     from cola.controllers.main import MainController
-    from cola.controllers.classic import ClassicController
+    from cola.controllers.classic import cola_classic
     from cola.app import ColaApplication
     from cola import qtutils
     from cola import commands
@@ -164,12 +164,10 @@ def main():
 
     # Show the GUI and start the event loop
     if opts.classic:
-        view = RepoDialog(update=False)
-        view.tree.setModel(GitRepoModel(view.tree))
-        controller = ClassicController(view.tree)
+        view = cola_classic(update=False)
     else:
         view = MainView()
-        controller = MainController(model, view)
+        MainController(model, view)
 
     # Scan for the first time
     model.update_status()
