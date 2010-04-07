@@ -345,8 +345,8 @@ def worktree_state(head='HEAD', staged_only=False):
 def worktree_state_dict(head='HEAD', staged_only=False):
     """Return a dict of files in various states of being
 
-    :rtype:`dict` - keys can be staged, unstaged, untracked, unmerged,
-    changed_upstream, or submodule.
+    :rtype: dict, keys are staged, unstaged, untracked, unmerged,
+            changed_upstream, and submodule.
 
     """
     git.update_index(refresh=True)
