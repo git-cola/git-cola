@@ -3,6 +3,7 @@ Views
 .. toctree::
 
     about
+    actions
     dag
     log
     main
