@@ -238,10 +238,10 @@ class RepoTreeView(QtGui.QTreeView):
         paths = self.selected_paths()
 
         model = cola.model()
-        model_staged = set(model.staged)
-        model_modified = set(model.modified)
-        model_unmerged = set(model.unmerged)
-        model_untracked = set(model.untracked)
+        model_staged = cola.utils.add_parents(set(model.staged))
+        model_modified = cola.utils.add_parents(set(model.modified))
+        model_unmerged = cola.utils.add_parents(set(model.unmerged))
+        model_untracked =cola.utils.add_parents(set(model.untracked))
 
         for path in paths:
             if path in model_unmerged:
@@ -252,6 +252,8 @@ class RepoTreeView(QtGui.QTreeView):
                 staged.append(path)
             elif path in model_modified:
                 modified.append(path)
+            else:
+                staged.append(path)
         # Push the new selection into the model.
         cola.selection_model().set_selection(staged, modified,
                                              unmerged, untracked)
