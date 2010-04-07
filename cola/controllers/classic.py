@@ -9,6 +9,7 @@ import cola.utils
 import cola.difftool
 
 from cola import gitcmds
+from cola import qtutils
 from cola import signals
 from cola.controllers.selectcommits import select_commits
 from cola.models import gitrepo
@@ -17,19 +18,21 @@ from cola.views import standard
 from cola.compat import set
 
 
-def widget(parent=None):
+def widget(parent=None, update=True):
     """Return a widget for immediate use."""
-    view = repo.RepoDialog(parent)
+    view = repo.RepoDialog(parent=parent, update=update)
     view.tree.setModel(gitrepo.GitRepoModel(view.tree))
     controller = ClassicController(view.tree)
     return view
 
 
-def cola_classic(parent=None):
+def cola_classic(parent=None, update=True):
     """Launch a new cola classic session."""
-    view = widget(parent)
-    view.raise_()
+    view = widget(parent=parent, update=update)
+    if not parent:
+        qtutils.center_on_screen(view)
     view.show()
+    return view
 
 
 class ClassicController(QtCore.QObject):
