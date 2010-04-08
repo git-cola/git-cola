@@ -26,7 +26,7 @@ _unserializable_attributes = {
     'notification_enabled': True,
 }
 
-class ObservableModelSerializer(object):
+class OMSerializer(object):
     """Hide the internal 'observers' fields from serialization"""
     def __init__(self, obj):
         self.obj = obj
@@ -45,4 +45,4 @@ class ObservableModelSerializer(object):
 
 
 # Add a hook for this object
-serializer.handlers[ObservableModel] = ObservableModelSerializer
+serializer.handlers[ObservableModel] = OMSerializer

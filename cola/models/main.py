@@ -14,7 +14,8 @@ from cola import gitcmd
 from cola import gitcfg
 from cola import gitcmds
 from cola.compat import set
-from cola.models.observable import ObservableModel
+from cola import serializer
+from cola.models.observable import ObservableModel, OMSerializer
 
 # Static GitConfig instance
 _config = gitcfg.instance()
@@ -29,6 +30,11 @@ def model():
     _instance = MainModel()
     return _instance
 
+
+class MainSerializer(OMSerializer):
+    def post_decode_hook(self):
+        OMSerializer.post_decode_hook(self)
+        self.obj.generate_remote_helpers()
 
 class MainModel(ObservableModel):
     """Provides a friendly wrapper for doing common git operations."""
@@ -598,3 +604,5 @@ class MainModel(ObservableModel):
         if self.directory:
             return self.directory
         return os.getcwd()
+
+serializer.handlers[MainModel] = MainSerializer
