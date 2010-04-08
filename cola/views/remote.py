@@ -74,14 +74,23 @@ class RemoteView(standard.StandardDialog):
         if action:
             self.action_button.setText(action.title())
             self.setWindowTitle(action.title())
+
         if action == 'pull':
             self.tags_checkbox.hide()
             self.ffwd_only_checkbox.hide()
             self.local_label.hide()
             self.local_branch.hide()
             self.local_branches.hide()
-        if action != 'pull':
+            self.remote_branch.setFocus(True)
+        else:
             self.rebase_checkbox.hide()
+
+        # Action-dependent focus
+        if action == 'fetch':
+            self.remotename.setFocus(True)
+
+        if action == 'push':
+            self.local_branch.setFocus(True)
 
         if action == 'fetch':
             self.layout_remotes()
