@@ -21,40 +21,27 @@ class RemoteView(standard.StandardDialog):
         # Exposed
         self.local_label = QtGui.QLabel(self)
         self.local_label.setText(self.tr('Local Branches'))
-        self._local_branch_hbox_layt.addWidget(self.local_label)
         # Exposed
         self.local_branch = QtGui.QLineEdit(self)
-        self._local_branch_hbox_layt.addWidget(self.local_branch)
-        self._main_vbox_layt.addLayout(self._local_branch_hbox_layt)
         # Exposed
         self.local_branches = QtGui.QListWidget(self)
-        self._main_vbox_layt.addWidget(self.local_branches)
 
         # Remote branch section
         self._remote_branch_hbox_layt = QtGui.QHBoxLayout()
         self._remote_label = QtGui.QLabel(self)
         self._remote_label.setText(self.tr('Remote'))
-        self._remote_branch_hbox_layt.addWidget(self._remote_label)
         # Exposed
         self.remotename = QtGui.QLineEdit(self)
-        self._remote_branch_hbox_layt.addWidget(self.remotename)
-        self._main_vbox_layt.addLayout(self._remote_branch_hbox_layt)
         # Exposed
         self.remotes = QtGui.QListWidget(self)
-        self._main_vbox_layt.addWidget(self.remotes)
 
         self._remote_branches_hbox_layt = QtGui.QHBoxLayout()
         # Exposed
         self.remote_label = QtGui.QLabel(self)
         self.remote_label.setText(self.tr('Remote Branch'))
-        self._remote_branches_hbox_layt.addWidget(self.remote_label)
         # Exposed
         self.remote_branch = QtGui.QLineEdit(self)
-        self._remote_branches_hbox_layt.addWidget(self.remote_branch)
-        self._main_vbox_layt.addLayout(self._remote_branches_hbox_layt)
-
         self.remote_branches = QtGui.QListWidget(self)
-        self._main_vbox_layt.addWidget(self.remote_branches)
 
         self._options_hbox_layt = QtGui.QHBoxLayout()
         # Exposed
@@ -62,14 +49,13 @@ class RemoteView(standard.StandardDialog):
         self.ffwd_only_checkbox.setText(self.tr('Fast Forward Only'))
         self.ffwd_only_checkbox.setChecked(True)
         self.ffwd_only_checkbox.setObjectName("ffwd_only_checkbox")
-        self._options_hbox_layt.addWidget(self.ffwd_only_checkbox)
+
         # Exposed
         self.tags_checkbox = QtGui.QCheckBox(self)
         self.tags_checkbox.setText(self.tr('Include tags'))
-        self._options_hbox_layt.addWidget(self.tags_checkbox)
+
         self.rebase_checkbox = QtGui.QCheckBox(self)
         self.rebase_checkbox.setText(self.tr('Rebase'))
-        self._options_hbox_layt.addWidget(self.rebase_checkbox)
 
         self._options_spacer = QtGui.QSpacerItem(1, 1,
                                            QtGui.QSizePolicy.Expanding,
@@ -78,12 +64,13 @@ class RemoteView(standard.StandardDialog):
         # Exposed
         self.action_button = QtGui.QPushButton(self)
         self.action_button.setText(self.tr('Push'))
-        self._options_hbox_layt.addWidget(self.action_button)
         # Exposed
         self.cancel_button = QtGui.QPushButton(self)
         self.cancel_button.setText(self.tr('Cancel'))
-        self._options_hbox_layt.addWidget(self.cancel_button)
-        self._main_vbox_layt.addLayout(self._options_hbox_layt)
+
+        # connections
+        self.connect(self.cancel_button, SIGNAL('released()'), self.reject)
+
         if action:
             self.action_button.setText(action.title())
             self.setWindowTitle(action.title())
@@ -96,7 +83,46 @@ class RemoteView(standard.StandardDialog):
         if action != 'pull':
             self.rebase_checkbox.hide()
 
-        self.connect(self.cancel_button, SIGNAL('released()'), self.reject)
+        if action == 'fetch':
+            self.layout_remotes()
+            self.layout_remote_branches()
+            self.layout_local_branches()
+        elif action == 'pull':
+            self.layout_remote_branches()
+            self.layout_remotes()
+            self.layout_local_branches()
+        else:
+            self.layout_local_branches()
+            self.layout_remotes()
+            self.layout_remote_branches()
+
+        self.layout_options()
+
+    def layout_options(self):
+        self._options_hbox_layt.addWidget(self.ffwd_only_checkbox)
+        self._options_hbox_layt.addWidget(self.tags_checkbox)
+        self._options_hbox_layt.addWidget(self.rebase_checkbox)
+        self._options_hbox_layt.addWidget(self.action_button)
+        self._options_hbox_layt.addWidget(self.cancel_button)
+        self._main_vbox_layt.addLayout(self._options_hbox_layt)
+
+    def layout_local_branches(self):
+        self._local_branch_hbox_layt.addWidget(self.local_label)
+        self._local_branch_hbox_layt.addWidget(self.local_branch)
+        self._main_vbox_layt.addLayout(self._local_branch_hbox_layt)
+        self._main_vbox_layt.addWidget(self.local_branches)
+
+    def layout_remotes(self):
+        self._remote_branch_hbox_layt.addWidget(self._remote_label)
+        self._remote_branch_hbox_layt.addWidget(self.remotename)
+        self._main_vbox_layt.addLayout(self._remote_branch_hbox_layt)
+        self._main_vbox_layt.addWidget(self.remotes)
+
+    def layout_remote_branches(self):
+        self._remote_branches_hbox_layt.addWidget(self.remote_label)
+        self._remote_branches_hbox_layt.addWidget(self.remote_branch)
+        self._main_vbox_layt.addLayout(self._remote_branches_hbox_layt)
+        self._main_vbox_layt.addWidget(self.remote_branches)
 
     def select_first_remote(self):
         """Selects the first remote in the list view"""
