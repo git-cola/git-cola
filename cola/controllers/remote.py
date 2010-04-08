@@ -93,6 +93,20 @@ class RemoteController(QObserver):
         self.model.set_remotename(selection)
         self.view.remotename.selectAll()
 
+        if self.action != 'pull':
+            pass
+        all_branches = gitcmds.branch_list(remote=True)
+        branches = []
+        pat = selection + '/*'
+        for branch in all_branches:
+            if fnmatch.fnmatch(branch, pat):
+                branches.append(branch)
+        if branches:
+            self.model.set_remote_branches(branches)
+        else:
+            self.model.set_remote_branches(all_branches)
+        self.model.set_remote_branch('')
+
     def update_local_branches(self,*rest):
         """Update the local/remote branch names when a branch is selected"""
         branches = self.model.local_branches
