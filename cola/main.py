@@ -183,9 +183,9 @@ def main():
     git.GIT_COLA_TRACE = os.getenv('GIT_COLA_TRACE', False)
     if git.GIT_COLA_TRACE:
         msg = ('info: Trace enabled.  '
-               'Many of commands reported with "trace:" '
-               'are git "plumbing" commands and are meant '
-               'for use by scripts rather than by end-users.')
+               'Many of commands reported with "trace" use git\'s stable '
+               '"plumbing" API and are not intended for typical '
+               'day-to-day use.  Here be dragons')
         cola.notifier().broadcast(signals.log_cmd, 0, msg)
     result = app.exec_()
 
