@@ -1,5 +1,7 @@
 import os
 import sys
+import subprocess
+import cola.views.command
 
 from cStringIO import StringIO
 
@@ -604,7 +606,13 @@ class RunConfigAction(Command):
         if args:
             os.environ['ARGS'] = args
         cmdexpand = os.path.expandvars(cmd)
-        status = os.system(cmdexpand)
+
+        if opts.get('noconsole'):
+            status = subprocess.call(['sh','-c',cmdexpand], shell=True)
+        else:
+            cola.views.command.git_command('sh', ['-c',cmdexpand])
+            status = 0
+
         _notifier.broadcast(signals.log_cmd, status, 'Running: ' + cmdexpand)
         if not opts.get('norescan'):
             self.model.update_status()
