@@ -598,7 +598,7 @@ class RunConfigAction(Command):
 
         elif opts.get('confirm'):
             title = os.path.expandvars(opts.get('title'))
-            prompt = os.path.expadnvars(opts.get('prompt'))
+            prompt = os.path.expandvars(opts.get('prompt'))
             if not _factory.prompt_user(signals.question, title, prompt):
                 return
         if rev:

@@ -2,7 +2,7 @@
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from PyQt4 import *
+from PyQt4.QtCore import SIGNAL
 from cola import qtutils
 import subprocess
 import sys
@@ -63,14 +63,14 @@ class GitCommandWidget(QtGui.QWidget):
         self.exitstatus = 0
 
         # Connect the signals to the process
-        self.connect(self.proc, QtCore.SIGNAL("readyReadStandardOutput()"), self.readOutput)
-        self.connect(self.proc, QtCore.SIGNAL("readyReadSteandardError()"), self.readErrors)
-        self.connect(self.proc, QtCore.SIGNAL('finished(int)'), self.finishProc)
-        self.connect(self.proc, QtCore.SIGNAL('stateChanged(QProcess::ProcessState)'), self.stateChanged)
+        self.connect(self.proc, SIGNAL("readyReadStandardOutput()"), self.readOutput)
+        self.connect(self.proc, SIGNAL("readyReadStandardError()"), self.readErrors)
+        self.connect(self.proc, SIGNAL('finished(int)'), self.finishProc)
+        self.connect(self.proc, SIGNAL('stateChanged(QProcess::ProcessState)'), self.stateChanged)
 
         # Connect the signlas to the buttons
-        self.connect(self.button_abort, QtCore.SIGNAL('clicked()'), self.abortProc)
-        self.connect(self.button_close, QtCore.SIGNAL('clicked()'), self.close)
+        self.connect(self.button_abort, SIGNAL('clicked()'), self.abortProc)
+        self.connect(self.button_close, SIGNAL('clicked()'), self.close)
         # Start with abort disabled - will be enabled when the process is run.
         self.button_abort.setEnabled(False)
 
