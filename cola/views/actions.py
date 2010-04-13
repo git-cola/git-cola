@@ -90,7 +90,8 @@ class ActionDialog(standard.StandardDialog):
         if not self.opts.get('argprompt'):
             self.argslabel.setMinimumSize(1, 1)
             self.argstxt.setMinimumSize(1, 1)
-            self.argslayt.hide()
+            self.argstxt.hide()
+            self.argslabel.hide()
 
         revs = (
             ('Local Branch', gitcmds.branch_list(remote=False)),
