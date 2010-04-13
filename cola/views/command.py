@@ -26,8 +26,6 @@ class GitCommandWidget(QtGui.QWidget):
     _instances = set()
 
     def __del__(self):
-        if self.start:
-            self.proc.kill()
         self._instances.remove(self)
 
     def __init__(self, parent=None):
