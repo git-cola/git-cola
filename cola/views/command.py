@@ -85,22 +85,27 @@ class GitCommandWidget(QtGui.QWidget):
         self.proc.start(self.command, QtCore.QStringList(self.params))
 
     def readOutput(self):
-        strOut = self.proc.readAllStandardOutput()
-        cursor = self.output_text.textCursor()
-        cursor.movePosition(cursor.End)
-        text = self.output_text
-        cursor.insertText(QtCore.QString(strOut)) # When running don't touch the TextView!!
-        cursor.movePosition(cursor.End)
-        text.setTextCursor(cursor)
+        rawbytes = self.proc.readAllStandardOutput()
+        data = ''
+        for b in rawbytes:
+            data += b
+        self.out += data
+        self.append_text(data)
 
     def readErrors(self):
-        strOut = self.proc.readAllStandardOutput()
+        rawbytes = self.proc.readAllStandardError()
+        data = ''
+        for b in rawbytes:
+            data += b
+        self.err += data
+        self.append_text(data)
+
+    def append_text(self, txt):
         cursor = self.output_text.textCursor()
         cursor.movePosition(cursor.End)
-        text = self.output_text
-        cursor.insertText(QtCore.QString(strOut)) # When running don't touch the TextView!!
+        cursor.insertText(core.decode(txt))
         cursor.movePosition(cursor.End)
-        text.setTextCursor(cursor)
+        self.output_text.setTextCursor(cursor)
 
     def abortProc(self):
         if self.proc.state() != QtCore.QProcess.NotRunning:
@@ -131,4 +136,3 @@ class GitCommandWidget(QtGui.QWidget):
 
     def finishProc(self, status ):
         self.exitstatus = status
-
