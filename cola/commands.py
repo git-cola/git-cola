@@ -567,7 +567,6 @@ class RunConfigAction(Command):
         cmd = opts.get('cmd')
         if 'title' not in opts:
             opts['title'] = cmd
-        title = opts.get('title')
 
         if 'prompt' not in opts or opts.get('prompt') is True:
             prompt = i18n.gettext('Are you sure you want to run %s?') % cmd
@@ -581,6 +580,7 @@ class RunConfigAction(Command):
                                      '"%s" requires a selected file' % cmd)
                 return
             os.environ['FILENAME'] = utils.shell_quote(filename)
+
 
         if opts.get('revprompt') or opts.get('argprompt'):
             while True:
@@ -605,7 +605,9 @@ class RunConfigAction(Command):
             os.environ['REVISION'] = rev
         if args:
             os.environ['ARGS'] = args
+        title = os.path.expandvars(cmd)
         cmdexpand = os.path.expandvars(cmd)
+        _notifier.broadcast(signals.log_cmd, 0, 'running: ' + cmdexpand)
 
         if opts.get('noconsole'):
             status = subprocess.call(['sh','-c',cmdexpand], shell=True)
@@ -613,7 +615,6 @@ class RunConfigAction(Command):
             cola.views.command.git_command('sh', ['-c',cmdexpand])
             status = 0
 
-        _notifier.broadcast(signals.log_cmd, status, 'Running: ' + cmdexpand)
         if not opts.get('norescan'):
             self.model.update_status()
         return status
