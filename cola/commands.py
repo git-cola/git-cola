@@ -421,7 +421,9 @@ class Difftool(Command):
         args = []
         if self.staged and not self.model.read_only():
             args.append('--cached')
-        args.extend([self.model.head, '--'])
+        if self.model.head != 'HEAD':
+            args.append(self.model.head)
+        args.append('--')
         args.extend(self.filenames)
         difftool.launch(args)
 
