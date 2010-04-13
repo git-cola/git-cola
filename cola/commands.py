@@ -1,6 +1,5 @@
 import os
 import sys
-import cola.views.command
 
 from cStringIO import StringIO
 
@@ -613,8 +612,13 @@ class RunConfigAction(Command):
                                                  flag_error=False,
                                                  shell=True)
         else:
-            cola.views.command.git_command('sh', ['-c',cmdexpand])
-            status = 0
+            status, out, err = _factory.prompt_user(signals.run_command,
+                                                    title,
+                                                    'sh', ['-c', cmdexpand])
+
+        _notifier.broadcast(signals.log_cmd, status,
+                            'stdout: %s\nstatus: %s\nstderr: %s' %
+                                (out.rstrip(), status, err.rstrip()))
 
         if not opts.get('norescan'):
             self.model.update_status()

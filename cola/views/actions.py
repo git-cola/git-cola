@@ -12,6 +12,7 @@ from cola import gitcmds
 from cola.qtutils import SLOT
 from cola.views import revselect
 from cola.views import standard
+from cola.views import command
 
 
 def install_command_wrapper(parent):
@@ -34,7 +35,11 @@ class ActionCommandWrapper(object):
         self.parent = parent
         self.callbacks = {
                 signals.run_config_action: self._run_config_action,
+                signals.run_command: self._run_command,
         }
+
+    def _run_command(self, title, cmd, params):
+        return command.run_command(self.parent, title, cmd, params)
 
     def _run_config_action(self, name, opts):
         dlg = ActionDialog(self.parent, name, opts)

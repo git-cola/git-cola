@@ -1,26 +1,29 @@
 """ Provides the GitCommandWidget dialog. """
-
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
-from cola import qtutils
-import subprocess
-import sys
-import standard
 
-def git_command(command, params, parent=None):
-    """ Show a command widget """
+from cola import core
+from cola import qtutils
+from cola.views import standard
+
+
+def run_command(parent, title, command, params):
+    """Show a command widget """
 
     view = GitCommandWidget(parent)
     view.setWindowModality(QtCore.Qt.ApplicationModal)
     view.set_command(command, params)
+    view.setWindowTitle(title)
     if not parent:
         qtutils.center_on_screen(view)
     view.run()
     view.show()
-    return view.exitstatus
+    status = view.exec_()
+    return (view.exitstatus, view.out, view.err)
 
-class GitCommandWidget(QtGui.QWidget):
+
+class GitCommandWidget(standard.StandardDialog):
     ''' Nice TextView that reads the output of a command syncronously '''
     # Keep us in scope otherwise PyQt kills the widget
     _instances = set()
@@ -29,8 +32,16 @@ class GitCommandWidget(QtGui.QWidget):
         self._instances.remove(self)
 
     def __init__(self, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+        standard.StandardDialog.__init__(self, parent=parent)
         self._instances.add(self)
+        self.resize(720, 420)
+
+        # Construct the process
+        self.proc = QtCore.QProcess(self)
+        self.exitstatus = 0
+        self.out = ''
+        self.err = ''
+
         self._layout = QtGui.QVBoxLayout(self)
         self._layout.setContentsMargins(3, 3, 3, 3)
 
@@ -55,10 +66,6 @@ class GitCommandWidget(QtGui.QWidget):
         self.button_box.addButton(self.button_abort, QtGui.QDialogButtonBox.RejectRole)
         self.button_box.addButton(self.button_close, QtGui.QDialogButtonBox.AcceptRole)
         self._layout.addWidget(self.button_box)
-
-        # Construct the process
-        self.proc = QtCore.QProcess(self)
-        self.exitstatus = 0
 
         # Connect the signals to the process
         self.connect(self.proc, SIGNAL("readyReadStandardOutput()"), self.readOutput)
