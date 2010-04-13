@@ -1,6 +1,5 @@
 import os
 import sys
-import subprocess
 import cola.views.command
 
 from cStringIO import StringIO
@@ -610,7 +609,9 @@ class RunConfigAction(Command):
         _notifier.broadcast(signals.log_cmd, 0, 'running: ' + cmdexpand)
 
         if opts.get('noconsole'):
-            status = subprocess.call(['sh','-c',cmdexpand], shell=True)
+            status, out, err = utils.run_command(cmdexpand,
+                                                 flag_error=False,
+                                                 shell=True)
         else:
             cola.views.command.git_command('sh', ['-c',cmdexpand])
             status = 0
