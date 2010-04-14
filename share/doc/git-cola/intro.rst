@@ -55,16 +55,17 @@ Thanks to
 =========
 `git-cola` was made possible due to the contributions of the following people:
 
+* `GIT Hackers <http://git-scm.com/about>`_
 * Barry Roberts
 * Boris W
 * Ben Boeckel
 * Daniel King
 * David Aguilar
 * David Martínez Martí
-* `Git hackers <http://git-scm.com/about>`_
 * Iulian Udrea
 * Kelvie Wong
 * Marco Costalba
+* Michael Geddes
 * Markus Heidelberg
 * Matthew Levine
 * Steffen Prohaska
