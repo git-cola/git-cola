@@ -37,9 +37,7 @@ clean:
 	$(MAKE) -f Makefile.asciidoc clean
 
 conf.py:
-	cp conf.py.in conf.py
-	perl -p -i -e s,{version},"$(COLA_VERSION)", conf.py
-	perl -p -i -e s,{release},"$(COLA_RELEASE)", conf.py
+	perl -p -e 's,{version},"$(COLA_VERSION)",' conf.py.in | perl -p -e 's,{release},"$(COLA_RELEASE)",' > conf.py
 
 html: conf.py
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) _build/html
