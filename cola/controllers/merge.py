@@ -80,7 +80,7 @@ class MergeController(QObserver):
 
         no_commit = not(self.view.checkbox_commit.isChecked())
         squash = self.view.checkbox_squash.isChecked()
-        msg = gitcmds.merge_message()
+        msg = gitcmds.merge_message(revision)
         qtutils.log(*self.model.git.merge('-m'+msg,
                                          revision,
                                          strategy='recursive',

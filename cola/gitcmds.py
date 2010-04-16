@@ -598,6 +598,9 @@ def abort_merge():
         merge_msg_path = merge_message_path()
 
 
-def merge_message():
+def merge_message(revision):
     """Return a merge message for FETCH_HEAD."""
-    return git.fmt_merge_msg('--file', git.git_path('FETCH_HEAD'))
+    fetch_head = git.git_path('FETCH_HEAD')
+    if os.path.exists(fetch_head):
+        return git.fmt_merge_msg('--file', fetch_head)
+    return "Merge branch '%s'" % revision
