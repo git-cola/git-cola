@@ -4,6 +4,7 @@ htmldir ?= $(docdir)/html
 COLA_RELEASE	?= $(shell sh -c "git describe --abbrev=4 --match='v*.*' | sed -e s,^v,,")
 COLA_VERSION	?= $(shell sh -c "git tag | tail -1 | sed -e s,^v,,")
 RSYNC ?= rsync
+SED ?= sed
 # Makefile for Sphinx documentation
 #
 
@@ -36,8 +37,11 @@ clean:
 	-rm -rf conf.py _build
 	$(MAKE) -f Makefile.asciidoc clean
 
-conf.py:
-	perl -p -e 's,{version},"$(COLA_VERSION)",' conf.py.in | perl -p -e 's,{release},"$(COLA_RELEASE)",' > conf.py
+conf.py: conf.py.in
+	$(SED) \
+		-e "s,{version},$(COLA_VERSION)," \
+		-e "s,{release},$(COLA_RELEASE)," \
+	conf.py.in > conf.py
 
 html: conf.py
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) _build/html
