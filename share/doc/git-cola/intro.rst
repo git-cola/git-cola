@@ -68,5 +68,6 @@ Thanks to
 * Michael Geddes
 * Markus Heidelberg
 * Matthew Levine
+* Stefan Naewe
 * Steffen Prohaska
 * Uri Okrent
