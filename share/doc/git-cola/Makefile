@@ -39,8 +39,8 @@ clean:
 
 conf.py: conf.py.in
 	$(SED) \
-		-e "s,{version},$(COLA_VERSION)," \
-		-e "s,{release},$(COLA_RELEASE)," \
+		-e "s,\{version\},$(COLA_VERSION)," \
+		-e "s,\{release\},$(COLA_RELEASE)," \
 	conf.py.in > conf.py
 
 html: conf.py
