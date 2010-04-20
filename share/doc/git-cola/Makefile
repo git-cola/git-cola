@@ -1,10 +1,10 @@
 prefix ?= $(CURDIR)
 docdir ?= $(DESTDIR)$(prefix)/share/doc/git-cola
 htmldir ?= $(docdir)/html
-COLA_RELEASE	?= $(shell sh -c "git describe --abbrev=4 --match='v*.*' | sed -e s,^v,,")
-COLA_VERSION	?= $(shell sh -c "git tag | tail -1 | sed -e s,^v,,")
-RSYNC ?= rsync
 SED ?= sed
+COLA_VERSION	?= $(shell sh -c "git tag | tail -1 | $(SED) -e s,^v,,")
+COLA_RELEASE	?= $(shell sh -c "git describe --abbrev=4 --match='v*.*' | $(SED) -e s,^v,,")
+RSYNC ?= rsync
 # Makefile for Sphinx documentation
 #
 
