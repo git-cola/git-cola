@@ -62,6 +62,6 @@ sed -e "s/%APPVERSION%/$VERSION/" -e "s@%OUTPUTDIR%@$OUTPUTDIR@" \
 	< win32/install.iss > $BASENAME/install.iss &&
 cd "$BASENAME" &&
 echo "Lauching Inno Setup compiler ..." &&
-/share/InnoSetup/ISCC.exe install.iss /q | grep -Ev "\s*Reading|\s*Compressing" &&
+/share/InnoSetup/ISCC.exe install.iss | grep -Ev "\s*Reading|\s*Compressing" &&
 cd .. &&
 rm -rf "$BASENAME"
