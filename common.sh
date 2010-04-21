@@ -6,7 +6,10 @@ META="$(pwd)"
 popd >/dev/null
 
 # _the_ cola version
-VERSION=$(bin/git-cola version | awk '{print $3}')
+if test -e bin/git-cola
+then
+	VERSION=$(bin/git-cola version | awk '{print $3}')
+fi
 
 RELEASE_TREE="$HOME"/src/cola.tuxfamily.org
 RELEASE_TREE_DOC="$RELEASE_TREE"
