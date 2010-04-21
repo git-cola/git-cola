@@ -17,6 +17,10 @@ RELEASE_TREE_RELEASES="$RELEASE_TREE"/releases
 RELEASE_TREE_WIN32="$RELEASE_TREE_RELEASES"/win32
 RELEASE_TREE_DARWIN="$RELEASE_TREE_RELEASES"/darwin
 
+TF_USER=unknown
+TF_HTDOCS=/home/gitcola/cola.tuxfamily.org-web/htdocs
+TF_SSH_HOST=ssh.tuxfamily.org
+
 if test -e "$META"/config.sh
 then
 	. "$META"/config.sh

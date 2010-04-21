@@ -1,0 +1,6 @@
+#!/bin/sh
+. $(dirname $0)/common.sh
+
+rsync -avrP --delete --exclude=Meta \
+	"$RELEASE_TREE"/ \
+	"$TF_USER"@"$TF_SSH_HOST":"$TF_HTDOCS"/
