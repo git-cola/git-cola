@@ -5,6 +5,7 @@ from PyQt4.QtCore import Qt
 import cola
 from cola import settings
 from cola import qtutils
+from cola import qtcompat
 from cola import qt
 from cola.views import log
 from cola.views import dag
@@ -20,9 +21,10 @@ class MainWindow(MainWindowBase):
         MainWindowBase.__init__(self, parent)
         # Default size; this is thrown out when save/restore is used
         self.resize(987, 610)
-        self.setDockOptions(QtGui.QMainWindow.AllowNestedDocks |
-                            QtGui.QMainWindow.AllowTabbedDocks |
-                            QtGui.QMainWindow.AnimatedDocks)
+
+        # Dockwidget options
+        qtcompat.set_common_dock_options(self)
+
         # "Actions" widget
         self.actiondockwidget = self.create_dock('Actions')
         self.actiondockwidgetcontents = qt.QFlowLayoutWidget(parent=self)

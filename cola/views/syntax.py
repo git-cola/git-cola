@@ -7,12 +7,15 @@ implement the diff syntax highlighting.
 
 import re
 from PyQt4.QtCore import Qt
-from PyQt4.QtCore import pyqtProperty
 from PyQt4.QtCore import QVariant
 from PyQt4.QtGui import QFont
 from PyQt4.QtGui import QSyntaxHighlighter
 from PyQt4.QtGui import QTextCharFormat
 from PyQt4.QtGui import QColor
+try:
+    from PyQt4.QtCore import pyqtProperty
+except ImportError:
+    pyqtProperty = None
 
 def TERMINAL(pattern):
     """
@@ -202,6 +205,8 @@ def accessors(attr):
 
 def install_style_properties(cls):
     # Diff GUI colors -- this is controllable via the style sheet
+    if pyqtProperty is None:
+        return
     for name in default_colors:
         setattr(cls, name, pyqtProperty('QColor', *accessors(name)))
 

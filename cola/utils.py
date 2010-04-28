@@ -7,8 +7,12 @@ import sys
 import errno
 import platform
 import subprocess
-import hashlib
 import mimetypes
+
+try:
+    import hashlib
+except ImportError:
+    import md5 as hashlib
 
 from glob import glob
 from cStringIO import StringIO

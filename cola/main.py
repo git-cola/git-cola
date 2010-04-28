@@ -102,6 +102,9 @@ def main():
 
     # Import cola modules
     import cola
+    from cola import qtcompat
+    qtcompat.install()
+
     from cola.models.gitrepo import GitRepoModel
     from cola.views import startup
     from cola.views.main import MainView
@@ -204,8 +207,9 @@ def main():
 
 def _setup_resource_dir(dirname):
     """Adds resource directories to Qt's search path"""
-    from PyQt4 import QtCore
+    from cola import qtcompat
+
     resource_paths = resources.resource_dirs(dirname)
     for r in resource_paths:
         basename = os.path.basename(r)
-        QtCore.QDir.setSearchPaths(basename, [r])
+        qtcompat.add_search_path(basename, r)
