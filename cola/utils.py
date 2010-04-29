@@ -9,11 +9,6 @@ import platform
 import subprocess
 import mimetypes
 
-try:
-    import hashlib
-except ImportError:
-    import md5 as hashlib
-
 from glob import glob
 from cStringIO import StringIO
 
@@ -21,6 +16,7 @@ from cola import git
 from cola import core
 from cola import resources
 from cola.git import shell_quote
+from cola.compat import hashlib
 
 KNOWN_FILE_MIME_TYPES = {
     'text':      'script.png',
