@@ -2,7 +2,6 @@ import sys
 import math
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from PyQt4.QtCore import Qt
 
 from cola import qtutils
 from cola.views import standard
