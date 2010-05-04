@@ -564,8 +564,10 @@ class GraphView(QtGui.QGraphicsView):
             node.setPos(xmax, ymax)
 
         xpad = 200
-        ypad = 88
-        self.scene().setSceneRect(-xpad, -ypad, gxmax+xpad, gymax+ypad*2)
+        ypad = 66
+        self._xmax = gxmax
+        self._ymax = gymax
+        self.scene().setSceneRect(-xpad, -ypad, gxmax+xpad, gymax+ypad)
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
