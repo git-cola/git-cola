@@ -195,9 +195,7 @@ class MainView(MainWindow):
         branch = self.model.currentbranch
         curdir = os.getcwd()
         msg = 'Repository: %s\nBranch: %s' % (curdir, branch)
-
         self.commitdockwidget.setToolTip(msg)
-        self.statusdockwidget.setToolTip(msg)
 
         title = '%s [%s]' % (self.model.project, branch)
         if self.mode in (self.model.mode_diff, self.model.mode_diff_expr):
