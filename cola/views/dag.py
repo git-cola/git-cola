@@ -1,7 +1,13 @@
+import os
 import sys
 import math
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+
+if __name__ == "__main__":
+    # Find the source tree
+    src = os.path.join(os.path.dirname(__file__), '..', '..')
+    sys.path.insert(0, os.path.abspath(src))
 
 from cola import qtutils
 from cola.views import standard
@@ -562,11 +568,6 @@ class GraphView(QtGui.QGraphicsView):
         self.scene().setSceneRect(-xpad, -ypad, gxmax+xpad, gymax+ypad*2)
 
 if __name__ == "__main__":
-    # Find the source tree
-    from os import path
-    src = path.dirname(path.dirname(path.dirname(__file__)))
-    sys.path.insert(0, path.abspath(src))
-
     app = QtGui.QApplication(sys.argv)
     view = git_dag()
     sys.exit(app.exec_())
