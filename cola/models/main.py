@@ -585,11 +585,29 @@ class MainModel(ObservableModel):
         """Stages add/removals to git."""
         add = []
         remove = []
+        sset = set(self.staged)
+        mset = set(self.modified)
+        umset = set(self.unmerged)
+        utset = set(self.untracked)
+
+        self.notify_message_observers(self.message_about_to_update)
         for path in set(paths):
+            if path not in sset:
+                self.staged.append(path)
+            if path in umset:
+                self.unmerged.remove(path)
+            if path in mset:
+                self.modified.remove(path)
+            if path in utset:
+                self.untracked.remove(path)
             if os.path.exists(core.encode(path)):
                 add.append(path)
             else:
                 remove.append(path)
+
+        if add or remove:
+            self.staged.sort()
+
         # `git add -u` doesn't work on untracked files
         if add:
             self.git.add('--', *add)
@@ -597,7 +615,7 @@ class MainModel(ObservableModel):
         # from the index.   We use `git add -u` for that.
         if remove:
             self.git.add('--', u=True, *remove)
-        self.update_status()
+        self.notify_message_observers(self.message_updated)
 
     def getcwd(self):
         """If we've chosen a directory then use it, otherwise os.getcwd()."""
