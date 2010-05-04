@@ -54,6 +54,9 @@ class Commit(object):
 
         return self
 
+    def __str__(self):
+        return self.sha1
+
     def __repr__(self):
         return ("{\n"
                 "  sha1: " + self.sha1 + "\n"
