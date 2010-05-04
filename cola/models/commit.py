@@ -1,6 +1,9 @@
 from cola import gitcmd
 from cola import gitcmds
 
+# put subject at the end b/c it can contain
+# any number of funky characters
+logfmt = 'format:%H%x00%P%x00%d%x00%an%x00%aD%x00%s'
 git = gitcmd.instance()
 
 
@@ -8,9 +11,7 @@ def commits(max_count=808, log_args=None):
     if log_args is None:
         log_args = gitcmds.branch_list()
     log = git.log(topo_order=True,
-                  # put subject at the end b/c it can contain
-                  # any number of funky characters
-                  pretty='format:%h%x00%p%x00%d%x00%an%x00%aD%x00%s',
+                  pretty=logfmt,
                   max_count=max_count,
                   *log_args)
     return [Commit(log_entry=line) for line in log.splitlines()]
@@ -29,8 +30,10 @@ class Commit(object):
             self.parse(log_entry)
 
     def parse(self, log_entry):
-        self.sha1, parents, tags, author, authdate, subject = \
-                log_entry.split('\0', 5)
+        self.sha1 = log_entry[:40]
+        (parents, tags, author, authdate, subject) = \
+                log_entry[41:].split('\0', 5)
+
         if subject:
             self.subject = subject
         if parents:
