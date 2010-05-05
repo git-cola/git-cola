@@ -8,12 +8,12 @@ from cola import qtutils
 from cola.views import standard
 
 
-def run_command(parent, title, command, params):
+def run_command(parent, title, command):
     """Show a command widget """
 
     view = GitCommandWidget(parent)
     view.setWindowModality(QtCore.Qt.ApplicationModal)
-    view.set_command(command, params)
+    view.set_command(command)
     view.setWindowTitle(title)
     if not parent:
         qtutils.center_on_screen(view)
@@ -79,15 +79,14 @@ class GitCommandWidget(standard.StandardDialog):
         # Start with abort disabled - will be enabled when the process is run.
         self.button_abort.setEnabled(False)
 
-    def set_command(self, command, params):
+    def set_command(self, command):
         '''command : the shell command to spawn
            params  : parameters of the command '''
         self.command = command
-        self.params = params
 
     def run(self):
         ''' Runs the process '''
-        self.proc.start(self.command, QtCore.QStringList(self.params))
+        self.proc.start(self.command[0], QtCore.QStringList(self.command[1:]))
 
     def readOutput(self):
         rawbytes = self.proc.readAllStandardOutput()

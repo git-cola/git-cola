@@ -608,15 +608,13 @@ class RunConfigAction(Command):
         title = os.path.expandvars(cmd)
         cmdexpand = os.path.expandvars(cmd)
         _notifier.broadcast(signals.log_cmd, 0, 'running: ' + cmdexpand)
+        cmd = ['sh', '-c', cmdexpand]
 
         if opts.get('noconsole'):
-            status, out, err = utils.run_command(cmdexpand,
-                                                 flag_error=False,
-                                                 shell=True)
+            status, out, err = utils.run_command(cmd, flag_error=False)
         else:
             status, out, err = _factory.prompt_user(signals.run_command,
-                                                    title,
-                                                    'sh', ['-c', cmdexpand])
+                                                    title, cmd)
 
         _notifier.broadcast(signals.log_cmd, status,
                             'stdout: %s\nstatus: %s\nstderr: %s' %

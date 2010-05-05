@@ -38,8 +38,8 @@ class ActionCommandWrapper(object):
                 signals.run_command: self._run_command,
         }
 
-    def _run_command(self, title, cmd, params):
-        return command.run_command(self.parent, title, cmd, params)
+    def _run_command(self, title, cmd):
+        return command.run_command(self.parent, title, cmd)
 
     def _run_config_action(self, name, opts):
         dlg = ActionDialog(self.parent, name, opts)
