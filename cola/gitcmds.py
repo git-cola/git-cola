@@ -327,16 +327,14 @@ def unstage_paths(args):
 
 
 
-def worktree_state(head='HEAD', staged_only=False, check_upstream=False):
+def worktree_state(head='HEAD', staged_only=False):
     """Return a tuple of files in various states of being
 
     Can be staged, unstaged, untracked, unmerged, or changed
     upstream.
 
     """
-    state = worktree_state_dict(head=head,
-                                staged_only=staged_only,
-                                check_upstream=check_upstream)
+    state = worktree_state_dict(head=head, staged_only=staged_only)
     return(state.get('staged', []),
            state.get('modified', []),
            state.get('unmerged', []),
@@ -344,7 +342,7 @@ def worktree_state(head='HEAD', staged_only=False, check_upstream=False):
            state.get('upstream_changed', []))
 
 
-def worktree_state_dict(head='HEAD', staged_only=False, check_upstream=False):
+def worktree_state_dict(head='HEAD', staged_only=False):
     """Return a dict of files in various states of being
 
     :rtype: dict, keys are staged, unstaged, untracked, unmerged,
@@ -352,6 +350,7 @@ def worktree_state_dict(head='HEAD', staged_only=False, check_upstream=False):
 
     """
     git.update_index(refresh=True)
+
     if staged_only:
         return _branch_status(head)
 
@@ -365,9 +364,7 @@ def worktree_state_dict(head='HEAD', staged_only=False, check_upstream=False):
     upstream_changed = []
     submodules = set()
     try:
-        output = git.diff_index(head,
-                                cached=True,
-                                with_stderr=True)
+        output = git.diff_index(head, cached=True, with_stderr=True)
         if output.startswith('fatal:'):
             raise errors.GitInitError('git init')
         for line in output.splitlines():
@@ -427,10 +424,8 @@ def worktree_state_dict(head='HEAD', staged_only=False, check_upstream=False):
     untracked.extend(untracked_files())
 
     # Look for upstream modified files if this is a tracking branch
-    if check_upstream:
-        tracked = tracked_branch()
-
-    if check_upstream and tracked:
+    tracked = tracked_branch()
+    if tracked:
         try:
             diff_expr = merge_base_to(tracked)
             output = git.diff(diff_expr, name_only=True, z=True)

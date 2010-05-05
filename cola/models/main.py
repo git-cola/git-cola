@@ -61,7 +61,7 @@ class MainModel(ObservableModel):
     modes_undoable = (mode_none, mode_index, mode_worktree)
 
     unstaged = property(lambda self: self.modified + self.unmerged + self.untracked)
-    """An aggregate of the he modified, unmerged, and untracked file lists."""
+    """An aggregate of the modified, unmerged, and untracked file lists."""
 
     def __init__(self, cwd=None):
         """Reads git repository settings and sets several methods
@@ -294,12 +294,6 @@ class MainModel(ObservableModel):
         """Queries git for the latest commit message."""
         return core.decode(self.git.log('-1', no_color=True, pretty='format:%s%n%n%b'))
 
-    def update_status_fast(self):
-        """Update status without all the calories"""
-        self.notify_message_observers(self.message_about_to_update)
-        self._update_files(check_upstream=False)
-        self.notify_message_observers(self.message_updated)
-
     def update_status(self):
         # Give observers a chance to respond
         self.notify_message_observers(self.message_about_to_update)
@@ -319,17 +313,16 @@ class MainModel(ObservableModel):
 
         self.read_font_sizes()
 
-    def _update_files(self, check_upstream=True):
+    def _update_files(self, worktree_only=False):
         staged_only = self.read_only()
         state = gitcmds.worktree_state_dict(head=self.head,
-                                            staged_only=staged_only,
-                                            check_upstream=check_upstream)
+                                            staged_only=staged_only)
         self.staged = state.get('staged', [])
         self.modified = state.get('modified', [])
         self.unmerged = state.get('unmerged', [])
         self.untracked = state.get('untracked', [])
-        self.upstream_changed = state.get('upstream_changed', [])
         self.submodules = state.get('submodules', set())
+        self.upstream_changed = state.get('upstream_changed', [])
 
     def _update_refs(self):
         self.set_remotes(self.git.remote().splitlines())
@@ -642,6 +635,37 @@ class MainModel(ObservableModel):
 
         self.notify_message_observers(self.message_updated)
 
+    def unstage_paths(self, paths):
+        self.notify_message_observers(self.message_about_to_update)
+
+        staged_set = set(self.staged)
+        gitcmds.unstage_paths(paths)
+        all_paths_set = set(gitcmds.all_files())
+        modified = []
+        untracked = []
+
+        cur_modified_set = set(self.modified)
+        cur_untracked_set = set(self.untracked)
+
+        for path in paths:
+            if path in staged_set:
+                self.staged.remove(path)
+                if path in all_paths_set:
+                    if path not in cur_modified_set:
+                        modified.append(path)
+                else:
+                    if path not in cur_untracked_set:
+                        untracked.append(path)
+
+        if modified:
+            self.modified.extend(modified)
+            self.modified.sort()
+
+        if untracked:
+            self.untracked.extend(untracked)
+            self.untracked.sort()
+
+        self.notify_message_observers(self.message_updated)
 
     def getcwd(self):
         """If we've chosen a directory then use it, otherwise os.getcwd()."""

@@ -707,8 +707,7 @@ class Unstage(Command):
     def do(self):
         msg = 'Unstaging: %s' % (', '.join(self.paths))
         _notifier.broadcast(signals.log_cmd, 0, msg)
-        gitcmds.unstage_paths(self.paths)
-        self.model.update_status_fast()
+        self.model.unstage_paths(self.paths)
 
 
 class UnstageAll(Command):
