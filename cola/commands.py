@@ -607,9 +607,8 @@ class RunConfigAction(Command):
         if args:
             os.environ['ARGS'] = args
         title = os.path.expandvars(cmd)
-        cmdexpand = os.path.expandvars(cmd)
-        _notifier.broadcast(signals.log_cmd, 0, 'running: ' + cmdexpand)
-        cmd = ['sh', '-c', cmdexpand]
+        _notifier.broadcast(signals.log_cmd, 0, 'running: ' + title)
+        cmd = ['sh', '-c', cmd]
 
         if opts.get('noconsole'):
             status, out, err = utils.run_command(cmd, flag_error=False)
