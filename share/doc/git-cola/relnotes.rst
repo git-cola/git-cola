@@ -1,3 +1,25 @@
+git-cola v1.4.2.1
+=================
+Usability, bells and whistles
+-----------------------------
+* Staging and unstaging is faster.
+
+  http://github.com/davvid/git-cola/issues/closed#issue/48
+
+* `git-dag` |beta(TM)| reads history in a background thread.
+
+.. |beta(TM)| unicode:: beta U+2122
+
+Portability
+-----------
+* Added :data:`cola.compat.hashlib` for `Python 2.4` compatibility
+* Improved `PyQt 4.1.x` compatibility.
+
+Fixes
+-----
+* Configured menu actions use ``sh -c`` for Windows portability.
+
+
 git-cola v1.4.2
 ===============
 
