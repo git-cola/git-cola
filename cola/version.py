@@ -15,7 +15,7 @@ from cola import resources
 _versions = {
     'git': '1.5.2',
     'python': '2.4',
-    'pyqt': '4.3',
+    'pyqt': '4.1',
     'pyqt_qrunnable': '4.4',
     # git-difftool moved out of contrib in git 1.6.3
     'difftool-builtin': '1.6.3',
