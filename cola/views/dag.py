@@ -13,6 +13,7 @@ from cola import qtutils
 from cola.models import commit
 from cola.views import standard
 from cola.compat import set
+from cola.decorators import memoize
 
 
 def git_dag(log_args=None, parent=None):
@@ -145,6 +146,7 @@ class Edge(QtGui.QGraphicsItem):
         self.source_pt = line.p1() + offset
         self.dest_pt = line.p2() - offset
 
+    @memoize
     def boundingRect(self, _extra=_arrow_extra):
         if not self.source or not self.dest:
             return QtCore.QRectF()
@@ -220,6 +222,7 @@ class Node(QtGui.QGraphicsItem):
         self.dragged = False
         self.skipped = False
 
+    @memoize
     def type(self):
         return Node._type
 
@@ -227,15 +230,18 @@ class Node(QtGui.QGraphicsItem):
         self._edges.append(edge)
         edge.adjust()
 
+    @memoize
     def boundingRect(self):
         return self.shape().boundingRect()
 
+    @memoize
     def shape(self):
         path = QtGui.QPainterPath()
         path.addRect(-self._width/2., -self._height/2.,
                      self._width, self._height)
         return path
 
+    @memoize
     def glyph(self):
         """Provides location of the glyph representing this node
 
