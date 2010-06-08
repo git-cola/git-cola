@@ -17,6 +17,8 @@ from cola import core
 from cola import resources
 from cola.git import shell_quote
 from cola.compat import hashlib
+from cola.decorators import memoize
+
 
 KNOWN_FILE_MIME_TYPES = {
     'text':      'script.png',
@@ -279,15 +281,13 @@ def is_darwin():
     return 'macintosh' in p or 'darwin' in p
 
 
-_is_win32 = None
+@memoize
 def is_win32():
     """Return True on win32"""
-    global _is_win32
-    if _is_win32 is None:
-        _is_win32 = os.name in ('nt', 'dos')
-    return _is_win32
+    return os.name in ('nt', 'dos')
 
 
+@memoize
 def is_broken():
     """Is it windows or mac? (e.g. is running git-mergetool non-trivial?)"""
     if is_darwin():
@@ -299,6 +299,7 @@ def is_broken():
             if e.errno == errno.EINTR:
                 continue
             raise e
+    return False
 
 
 def checksum(path):
