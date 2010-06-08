@@ -65,16 +65,21 @@ def create_listwidget_item(text, filename):
     item.setText(text)
     return item
 
-_tree_icon_cache = {}
+
+@memoize
 def create_treewidget_item(text, filename):
     """Creates a QTreeWidgetItem with text and the icon at filename."""
-    if filename not in _tree_icon_cache:
-        _tree_icon_cache[filename] = QtGui.QIcon(filename)
-    icon = _tree_icon_cache[filename]
+    icon = cached_icon_from_path(filename)
     item = QtGui.QTreeWidgetItem()
     item.setIcon(0, icon)
     item.setText(0, text)
     return item
+
+
+@memoize
+def cached_icon_from_path(filename):
+    return QtGui.QIcon(filename)
+
 
 def information(title, message=None):
     """Launches a QMessageBox information with the
@@ -217,6 +222,8 @@ def set_items(widget, items):
     widget.clear()
     add_items(widget, items)
 
+
+@memoize
 def tr(txt):
     """Translate a string into a local language."""
     if type(txt) is QtCore.QString:
@@ -269,13 +276,12 @@ def set_listwidget_strings(widget, items):
     widget.clear()
     add_items(widget, [ QtGui.QListWidgetItem(i) for i in items ])
 
-_icon_cache = {}
+@memoize
 def cached_icon(key):
     """Maintain a cache of standard icons and return cache entries."""
-    if key not in _icon_cache:
-        style = QtGui.QApplication.instance().style()
-        _icon_cache[key] = style.standardIcon(key)
-    return _icon_cache[key]
+    style = QtGui.QApplication.instance().style()
+    return style.standardIcon(key)
+
 
 def dir_icon():
     """Return a standard icon for a directory."""
