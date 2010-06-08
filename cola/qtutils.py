@@ -30,6 +30,7 @@ def log(status, output):
         return
     cola.notifier().broadcast(signals.log_cmd, status, output)
 
+
 def SLOT(signal, *args, **opts):
     """
     Returns a callback that broadcasts a message over the notifier.
@@ -55,6 +56,7 @@ def prompt(msg, title=None):
     parent = QtGui.QApplication.instance().activeWindow()
     result = QtGui.QInputDialog.getText(parent, msg, title)
     return (unicode(result[0]), result[1])
+
 
 def create_listwidget_item(text, filename):
     """Creates a QListWidgetItem with text and the icon at filename."""
@@ -83,8 +85,10 @@ def information(title, message=None):
     message = tr(message)
     parent = QtGui.QApplication.instance().activeWindow()
     QtGui.QMessageBox.information(parent, title, message)
+
 # Register globally with the notifier
 cola.notifier().connect(signals.information, information)
+
 
 def selected_treeitem(tree_widget):
     """Returns a(id_number, is_selected) for a QTreeWidget."""
@@ -115,6 +119,7 @@ def selection_list(listwidget, items):
             selected.append(item)
     return selected
 
+
 def tree_selection(treeitem, items):
     """Returns model items that correspond to selected widget indices"""
     itemcount = treeitem.childCount()
@@ -126,6 +131,7 @@ def tree_selection(treeitem, items):
 
     return selected
 
+
 def selected_item(list_widget, items):
     """Returns the selected item in a QListWidget."""
     row, selected = selected_row(list_widget)
@@ -134,11 +140,13 @@ def selected_item(list_widget, items):
     else:
         return None
 
+
 def open_dialog(parent, title, filename=None):
     """Creates an Open File dialog and returns a filename."""
     title_tr = tr(title)
     return unicode(QtGui.QFileDialog
                         .getOpenFileName(parent, title_tr, filename))
+
 
 def opendir_dialog(parent, title, path):
     """Prompts for a directory path"""
@@ -157,9 +165,11 @@ def save_dialog(parent, title, filename=''):
     return unicode(QtGui.QFileDialog
                         .getSaveFileName(parent, title_tr, filename))
 
+
 def icon(basename):
     """Given a basename returns a QIcon from the corresponding cola icon."""
     return QtGui.QIcon(resources.icon(basename))
+
 
 def question(parent, title, message, default=True):
     """Launches a QMessageBox question with the provided title and message.
@@ -177,6 +187,7 @@ def question(parent, title, message, default=True):
                                         buttons, default)
     return result == QtGui.QMessageBox.Yes
 
+
 def set_clipboard(text):
     """Sets the copy/paste buffer to text."""
     if not text:
@@ -184,6 +195,7 @@ def set_clipboard(text):
     clipboard = QtGui.QApplication.instance().clipboard()
     clipboard.setText(text, QtGui.QClipboard.Clipboard)
     clipboard.setText(text, QtGui.QClipboard.Selection)
+
 
 def set_selected_item(widget, idx):
     """Sets a the currently selected item to the item at index idx."""
@@ -193,10 +205,12 @@ def set_selected_item(widget, idx):
             widget.setItemSelected(item, True)
             widget.setCurrentItem(item)
 
+
 def add_items(widget, items):
     """Adds items to a widget."""
     for item in items:
         widget.addItem(item)
+
 
 def set_items(widget, items):
     """Clear the existing widget contents and set the new items."""
@@ -209,6 +223,7 @@ def tr(txt):
         # This has already been translated; leave as-is
         return unicode(txt)
     return unicode(QtGui.QApplication.instance().translate('', txt))
+
 
 def icon_file(filename, staged=False, untracked=False):
     """Returns a file path representing a corresponding file path."""
@@ -223,10 +238,12 @@ def icon_file(filename, staged=False, untracked=False):
         ifile = utils.file_icon(filename)
     return ifile
 
+
 def icon_for_file(filename, staged=False, untracked=False):
     """Returns a QIcon for a particular file path."""
     ifile = icon_file(filename, staged=staged, untracked=untracked)
     return icon(ifile)
+
 
 def create_treeitem(filename, staged=False, untracked=False, check=True):
     """Given a filename, return a QListWidgetItem suitable
@@ -264,9 +281,11 @@ def dir_icon():
     """Return a standard icon for a directory."""
     return cached_icon(QtGui.QStyle.SP_DirIcon)
 
+
 def file_icon():
     """Return a standard icon for a file."""
     return cached_icon(QtGui.QStyle.SP_FileIcon)
+
 
 def diff_font():
     """Return the diff font string."""
@@ -282,6 +301,7 @@ def diff_font():
     # TODO this might not be the best place for the default
     cola.model().set_diff_font(font)
     return qfont
+
 
 def set_diff_font(widget):
     """Updates the diff font based on the configured value."""
