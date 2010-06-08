@@ -10,6 +10,8 @@ from cola import gitcmd
 from cola import errors
 from cola import utils
 from cola import resources
+from cola.decorators import memoize
+
 
 # minimum version requirements
 _versions = {
@@ -25,12 +27,11 @@ _versions = {
     'diff-submodule': '1.6.6',
 }
 
+
 def get(key):
     """Returns an entry from the known versions table"""
     return _versions.get(key)
 
-# cached to avoid recalculation
-_version = None
 
 class VersionUnavailable(Exception):
     pass
@@ -68,6 +69,7 @@ def builtin_version():
         return bv.version
 
 
+@memoize
 def _builtin_version_file(ext='py'):
     """Returns the path to cola's builtin_version.py."""
     dirname = os.path.dirname(__file__)
@@ -92,38 +94,28 @@ def delete_builtin_version():
             os.remove(fn)
 
 
+@memoize
 def version():
     """Returns the builtin version or calculates the current version."""
-    global _version
-    if _version:
-        return _version
     for v in [builtin_version, git_describe_version]:
         try:
-            _version = v()
-            break
+            return v()
         except VersionUnavailable:
             pass
-    if not _version:
-        _version = 'unknown-version'
-    return _version
+    return 'unknown-version'
 
 
-# Avoid recomputing the same checks
-_check_version_cache = {}
-
+@memoize
 def check_version(min_ver, ver):
     """Check whether ver is greater or equal to min_ver
     """
     test = (min_ver, ver)
-    if test in _check_version_cache:
-        return _check_version_cache[test]
     min_ver_list = version_to_list(min_ver)
     ver_list = version_to_list(ver)
-    answer = min_ver_list <= ver_list
-    _check_version_cache[test] = answer
-    return answer
+    return min_ver_list <= ver_list
 
 
+@memoize
 def check(key, ver):
     """Checks if a version is greater than the known version for <what>"""
     return check_version(get(key), ver)
@@ -142,10 +134,7 @@ def version_to_list(version):
     return ver_list
 
 
-_git_version = None
+@memoize
 def git_version():
     """Returns the current GIT version"""
-    global _git_version
-    if _git_version is None:
-        _git_version = gitcmd.instance().version().split()[-1]
-    return _git_version
+    return gitcmd.instance().version().split()[-1]
