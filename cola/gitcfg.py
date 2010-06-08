@@ -5,15 +5,13 @@ import fnmatch
 
 from cola import core
 from cola import gitcmd
+from cola.decorators import memoize
 
 
-_config = None
+@memoize
 def instance():
     """Return a static GitConfig instance."""
-    global _config
-    if not _config:
-        _config = GitConfig()
-    return _config
+    return GitConfig()
 
 
 def _appendifexists(category, path, result):

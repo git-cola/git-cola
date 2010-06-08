@@ -2,15 +2,15 @@ import os
 from PyQt4 import QtCore
 
 from cola.compat import set
+from cola.decorators import memoize
+
 
 debug = os.environ.get('COLA_NOTIFIER_DEBUG', False)
-_instance = None
+
+
+@memoize
 def notifier():
-    global _instance
-    if _instance:
-        return _instance
-    _instance = Notifier()
-    return _instance
+    return Notifier()
 
 
 class Notifier(object):

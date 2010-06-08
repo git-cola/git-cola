@@ -1,15 +1,13 @@
 """Provides a selection model to handle selection."""
 
 from cola.models.observable import ObservableModel
+from cola.decorators import memoize
 
-_selection_model = None
+
+@memoize
 def selection_model():
     """Provides access to a static SelectionModel instance."""
-    global _selection_model
-    if _selection_model:
-        return _selection_model
-    _selection_model = SelectionModel()
-    return _selection_model
+    return SelectionModel()
 
 
 def selection():

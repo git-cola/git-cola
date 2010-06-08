@@ -16,25 +16,25 @@ from cola import gitcmds
 from cola.compat import set
 from cola import serializer
 from cola.models.observable import ObservableModel, OMSerializer
+from cola.decorators import memoize
+
 
 # Static GitConfig instance
 _config = gitcfg.instance()
 
+
 # Provides access to a global MainModel instance
-_instance = None
+@memoize
 def model():
     """Returns the main model singleton"""
-    global _instance
-    if _instance:
-        return _instance
-    _instance = MainModel()
-    return _instance
+    return MainModel()
 
 
 class MainSerializer(OMSerializer):
     def post_decode_hook(self):
         OMSerializer.post_decode_hook(self)
         self.obj.generate_remote_helpers()
+
 
 class MainModel(ObservableModel):
     """Provides a friendly wrapper for doing common git operations."""

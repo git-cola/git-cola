@@ -1,16 +1,13 @@
 import os
 
 from cola import git
+from cola.decorators import memoize
 
 
-# Provides access to a global GitCola instance
-_instance = None
+@memoize
 def instance():
     """Return the GitCola singleton"""
-    global _instance
-    if not _instance:
-        _instance = GitCola()
-    return _instance
+    return GitCola()
 
 
 class GitCola(git.Git):

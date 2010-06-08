@@ -10,13 +10,12 @@ from PyQt4 import QtGui
 from cola import utils
 from cola import resources
 from cola import i18n
+from cola.decorators import memoize
 
-_app = None
+
+@memoize
 def instance(argv):
-    global _app
-    if not _app:
-        _app = QtGui.QApplication(argv)
-    return _app
+   return QtGui.QApplication(list(argv))
 
 
 class ColaApplication(object):
@@ -34,7 +33,7 @@ class ColaApplication(object):
 
         # monkey-patch Qt's translate() to use our translate()
         if gui:
-            self._app = instance(argv)
+            self._app = instance(tuple(argv))
             self._app.setWindowIcon(QtGui.QIcon(resources.icon('git.svg')))
             self._translate_base = QtGui.QApplication.translate
             QtGui.QApplication.translate = self.translate

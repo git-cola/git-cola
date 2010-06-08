@@ -11,16 +11,13 @@ the undo and redo signals and manages the undo/redo stack.
 """
 import cola
 from cola import signals
+from cola.decorators import memoize
 
 
-_factory = None
+@memoize
 def factory():
     """Return a static instance of the command factory."""
-    global _factory
-    if _factory:
-        return _factory
-    _factory = CommandFactory()
-    return _factory
+    return CommandFactory()
 
 
 def SLOT(signal, *args, **opts):

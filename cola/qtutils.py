@@ -12,15 +12,15 @@ from cola import core
 from cola import utils
 from cola import signals
 from cola import resources
+from cola.decorators import memoize
 import cola.views.log
 
-_logger = None
+
+@memoize
 def logger():
-    global _logger
-    if not _logger:
-        _logger = cola.views.log.LogView()
-        cola.notifier().connect(signals.log_cmd, _logger.log)
-    return _logger
+    logview = cola.views.log.LogView()
+    cola.notifier().connect(signals.log_cmd, logview.log)
+    return logview
 
 
 def log(status, output):
