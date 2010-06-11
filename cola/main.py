@@ -113,7 +113,7 @@ def main():
     from cola.controllers.classic import cola_classic
     from cola.app import ColaApplication
     from cola import qtutils
-    from cola import commands
+    from cola import cmds
 
 
     # Allow Ctrl-C to exit
@@ -149,7 +149,7 @@ def main():
         _setup_resource_dir(resources.style_dir())
 
     # Register model commands
-    commands.register()
+    cmds.register()
 
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.

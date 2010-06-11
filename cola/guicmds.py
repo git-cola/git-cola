@@ -241,7 +241,7 @@ def goto_grep(line):
 
 def grep():
     """Prompt and use 'git grep' to find the content."""
-    # This should be a command in cola.commands.
+    # This should be a command in cola.cmds.
     txt, ok = qtutils.prompt('grep')
     if not ok:
         return
