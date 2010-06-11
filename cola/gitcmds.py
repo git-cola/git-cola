@@ -4,14 +4,14 @@ import re
 from cStringIO import StringIO
 
 from cola import core
-from cola import gitcmd
+from cola import git
 from cola import gitcfg
 from cola import errors
 from cola import utils
 from cola import version
 from cola.compat import set
 
-git = gitcmd.instance()
+git = git.instance()
 config = gitcfg.instance()
 
 class InvalidRepositoryError(StandardError):

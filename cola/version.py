@@ -6,7 +6,6 @@ import os
 import sys
 
 from cola import git
-from cola import gitcmd
 from cola import errors
 from cola import utils
 from cola import resources
@@ -137,4 +136,4 @@ def version_to_list(version):
 @memoize
 def git_version():
     """Returns the current GIT version"""
-    return gitcmd.instance().version().split()[-1]
+    return git.instance().version().split()[-1]

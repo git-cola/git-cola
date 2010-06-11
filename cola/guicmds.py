@@ -5,7 +5,7 @@ import cola
 import cola.app
 from cola import i18n
 from cola import core
-from cola import gitcmd
+from cola import git
 from cola import gitcmds
 from cola import qtutils
 from cola import signals
@@ -212,9 +212,9 @@ def diff_branch():
                                cola.model().tags)
     if not branch:
         return
-    zfiles_str = gitcmd.instance().diff(branch, name_only=True,
-                                        no_color=True,
-                                        z=True).rstrip('\0')
+    zfiles_str = git.instance().diff(branch, name_only=True,
+                                     no_color=True,
+                                     z=True).rstrip('\0')
     files = zfiles_str.split('\0')
     filename = choose_from_list('Select File', files)
     if not filename:
@@ -280,9 +280,9 @@ def rebase():
     if not branch:
         return
     #TODO cmd
-    status, output = gitcmd.instance().rebase(branch,
-                                              with_stderr=True,
-                                              with_status=True)
+    status, output = git.instance().rebase(branch,
+                                           with_stderr=True,
+                                           with_status=True)
     qtutils.log(status, output)
 
 

@@ -2,7 +2,7 @@ import os
 
 import cola
 from cola import core
-from cola import gitcmd
+from cola import git
 from cola import gitcmds
 from cola.models import observable
 
@@ -12,7 +12,7 @@ class CompareModel(observable.ObservableModel):
     """Provides custom model data for CompareController."""
     def __init__(self):
         observable.ObservableModel.__init__(self)
-        self.git = gitcmd.instance()
+        self.git = git.instance()
         self.descriptions_start = []
         self.descriptions_end = []
         self.revisions_start = []
@@ -62,7 +62,7 @@ class BranchCompareModel(observable.ObservableModel):
     """Provides custom model data for BranchCompareController."""
     def __init__(self):
         observable.ObservableModel.__init__(self)
-        self.git = gitcmd.instance()
+        self.git = git.instance()
         self.remote_branches = gitcmds.branch_list(remote=True)
         self.local_branches = gitcmds.branch_list(remote=False)
         self.left_combo = ['Local', 'Remote']

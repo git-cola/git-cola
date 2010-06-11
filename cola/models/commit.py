@@ -1,11 +1,11 @@
-from cola import gitcmd
+from cola import git
 from cola import gitcmds
 from cola import utils
 
 # put subject at the end b/c it can contain
 # any number of funky characters
 logfmt = 'format:%H%x00%P%x00%d%x00%an%x00%aD%x00%s'
-git = gitcmd.instance()
+git = git.instance()
 
 
 class CommitFactory(object):

@@ -4,7 +4,7 @@ import copy
 import fnmatch
 
 from cola import core
-from cola import gitcmd
+from cola import git
 from cola.decorators import memoize
 
 
@@ -27,7 +27,7 @@ def _stat_info():
     # Try /etc/gitconfig as a fallback for the system config
     _appendifexists('system', '/etc/gitconfig', data)
     _appendifexists('user', os.path.expanduser('~/.gitconfig'), data)
-    _appendifexists('repo', gitcmd.instance().git_path('config'), data)
+    _appendifexists('repo', git.instance().git_path('config'), data)
     return data
 
 
@@ -35,7 +35,7 @@ class GitConfig(object):
     """Encapsulate access to git-config values."""
 
     def __init__(self):
-        self.git = gitcmd.instance()
+        self.git = git.instance()
         self._system = {}
         self._user = {}
         self._repo = {}

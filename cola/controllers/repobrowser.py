@@ -6,7 +6,7 @@ import os
 from PyQt4 import QtGui
 
 import cola
-from cola import gitcmd
+from cola import git
 from cola import gitcmds
 from cola import utils
 from cola import resources
@@ -15,7 +15,7 @@ from cola.models import browser
 from cola.views.selectcommits import SelectCommitsView
 from cola.qobserver import QObserver
 
-git = gitcmd.instance()
+git = git.instance()
 
 
 def select_file_from_repo():
