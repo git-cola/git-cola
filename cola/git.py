@@ -8,6 +8,7 @@ import re
 import os
 import sys
 import errno
+import commands
 import subprocess
 import threading
 
@@ -160,7 +161,7 @@ class Git(object):
                 print "%s -> %d" % (command, status)
 
         if GIT_COLA_TRACE:
-            msg = 'trace: %s' % ' '.join(map(shell_quote, command))
+            msg = 'trace: %s' % ' '.join(map(commands.mkarg, command))
             cola.notifier().broadcast(signals.log_cmd, status, msg)
 
         # Allow access to the command's status code
@@ -241,50 +242,6 @@ def replace_carot(cmd_arg):
 
     """
     return cmd_arg.replace('^', '^^')
-
-
-def shell_quote(*strings):
-    """
-    Quote strings so that they can be suitably martialled
-    off to the shell.  This method supports POSIX sh syntax.
-    This is crucial to properly handle command line arguments
-    with spaces, quotes, double-quotes, etc. on darwin/win32...
-    """
-
-    regex = re.compile('[^\w!%+,\-./:@^]')
-    quote_regex = re.compile("((?:'\\''){2,})")
-
-    ret = []
-    for s in strings:
-        if not s:
-            continue
-
-        if '\x00' in s:
-            raise ValueError('No way to quote strings '
-                             'containing null(\\000) bytes')
-
-        # = does need quoting else in command position it's a
-        # program-local environment setting
-        match = regex.search(s)
-        if match and '=' not in s:
-            # ' -> '\''
-            s = s.replace("'", "'\\''")
-
-            # make multiple ' in a row look simpler
-            # '\'''\'''\'' -> '"'''"'
-            quote_match = quote_regex.match(s)
-            if quote_match:
-                quotes = match.group(1)
-                s.replace(quotes, ("'" *(len(quotes)/4)) + "\"'")
-
-            s = "'%s'" % s
-            if s.startswith("''"):
-                s = s[2:]
-
-            if s.endswith("''"):
-                s = s[:-2]
-        ret.append(s)
-    return ' '.join(ret)
 
 
 class GitCola(Git):

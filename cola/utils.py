@@ -5,6 +5,7 @@ import os
 import re
 import sys
 import errno
+import commands
 import platform
 import subprocess
 import mimetypes
@@ -15,7 +16,6 @@ from cStringIO import StringIO
 from cola import git
 from cola import core
 from cola import resources
-from cola.git import shell_quote
 from cola.compat import hashlib
 from cola.decorators import memoize
 
@@ -109,13 +109,13 @@ def win32_abspath(exe):
 
 
 def win32_expand_paths(args):
-    """Expand filenames after the double-dash"""
+    """Expand and quote filenames after the double-dash"""
     if '--' not in args:
         return args
     dashes_idx = args.index('--')
     cmd = args[:dashes_idx+1]
     for path in args[dashes_idx+1:]:
-        cmd.append(shell_quote(os.path.join(os.getcwd(), path)))
+        cmd.append(commands.mkarg(os.path.join(os.getcwd(), path)))
     return cmd
 
 
@@ -139,14 +139,14 @@ def fork(args):
 
         # e.g. fork(['gitk', '--all'])
         sh_exe = win32_abspath('sh')
-        enc_argv = map(shell_quote, enc_args)
+        enc_argv = map(commands.mkarg, enc_args)
         cmdstr = ' '.join(enc_argv)
         cmd = ['sh.exe', '-c', cmdstr]
         return os.spawnv(os.P_NOWAIT, sh_exe, cmd)
     else:
         # Unix is absolutely simple
         enc_args = [core.encode(a) for a in args]
-        enc_argv = map(shell_quote, enc_args)
+        enc_argv = map(commands.mkarg, enc_args)
         cmdstr = ' '.join(enc_argv)
         return os.system(cmdstr + '&')
 
