@@ -66,7 +66,6 @@ def create_listwidget_item(text, filename):
     return item
 
 
-@memoize
 def create_treewidget_item(text, filename):
     """Creates a QTreeWidgetItem with text and the icon at filename."""
     icon = cached_icon_from_path(filename)
