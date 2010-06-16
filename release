@@ -40,10 +40,9 @@ build_website() {
 		exit 2
 	fi
 	title Building website
-	here="$(pwd)"
 	do_or_die cd "$web_src"
 	do_or_die make prefix="$prefix"
-	do_or_die cd "$here"
+	do_or_die cd "$META"
 }
 
 build_docs() {
@@ -68,7 +67,12 @@ build_win32_remotely() {
 	'
 	do_or_die scp -P $win32_ssh_port \
 		"$win32_login":"$win32_cola_dir"/"*.exe" \
-		"$win32_release_dir"/git-cola.exe
+		"$win32_release_dir"
+
+	do_or_die cd "$win32_release_dir"
+	do_or_die rm -f git-cola.exe
+	do_or_die ln -s git-cola-"$VERSION".exe git-cola.exe
+	do_or_die cd "$META"
 
 	do_or_die ssh -p $win32_ssh_port \
 		"$win32_login" "/bin/rm '$win32_cola_dir'/*.exe"
