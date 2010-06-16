@@ -235,10 +235,11 @@ def slurp(path):
 
 
 def write(path, contents):
-    """Writes a string to a file."""
-    fh = open(path, 'w')
+    """Writes a raw string to a file."""
+    fh = open(path, 'wb')
     core.write_nointr(fh, core.encode(contents))
     fh.close()
+
 
 def strip_prefix(prefix, string):
     """Return string, without the prefix. Blow up if string doesn't
