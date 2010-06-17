@@ -216,7 +216,10 @@ class Node(QtGui.QGraphicsItem):
         self._colors['bg'] = QtGui.QColor.fromRgb(16, 16, 16)
         self._colors['selected'] = QtGui.QColor.fromRgb(192, 192, 16)
         self._colors['outline'] = QtGui.QColor.fromRgb(0, 0, 0)
-        self._colors['node'] = QtGui.QColor.fromRgb(255, 111, 69)
+        if len(commit.parents) == 1:
+            self._colors['node'] = QtGui.QColor.fromRgb(255, 111, 69)
+        else:
+            self._colors['node'] = QtGui.QColor.fromRgb(169, 111, 69)
         self._colors['decorations'] = QtGui.QColor.fromRgb(255, 255, 42)
 
         self._grad = QtGui.QLinearGradient(0.0, 0.0, 0.0, self._height)
