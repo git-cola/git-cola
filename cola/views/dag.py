@@ -283,14 +283,6 @@ class Node(QtGui.QGraphicsItem):
         painter.translate(2.,0.)
         painter.drawText(text_box, tag_text, text_options)
 
-
-    def itemChange(self, change, value):
-        if change == QtGui.QGraphicsItem.ItemPositionChange:
-            for edge in self._edges:
-                edge.adjust()
-            #self._graph.itemMoved()
-        return QtGui.QGraphicsItem.itemChange(self, change, value)
-
     def mousePressEvent(self, event):
         self.selected = self.isSelected()
         self.pressed = True
