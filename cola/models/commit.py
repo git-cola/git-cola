@@ -8,17 +8,43 @@ logfmt = 'format:%H%x00%P%x00%d%x00%an%x00%aD%x00%s'
 git = gitcmd.instance()
 
 
+class CommitFactory(object):
+    _commits = {}
+
+    @classmethod
+    def new(cls, sha1=None, log_entry=None):
+        if not sha1 and log_entry:
+            sha1 = log_entry[:40]
+        try:
+            commit = cls._commits[sha1]
+            if log_entry and not commit.parsed:
+                commit.parse(log_entry)
+        except KeyError:
+            commit = Commit(sha1=sha1,
+                            log_entry=log_entry)
+            cls._commits[sha1] = commit
+
+        return commit
 
 
 class Commit(object):
-    __slots__ = ('sha1', 'subject', 'parents', 'tags', 'author', 'authdate')
-    def __init__(self, sha1='', log_entry=''):
+    __slots__ = ('sha1',
+                 'subject',
+                 'parents',
+                 'children',
+                 'tags',
+                 'author',
+                 'authdate',
+                 'parsed')
+    def __init__(self, sha1=None, log_entry=None):
         self.sha1 = sha1
-        self.subject = ''
+        self.subject = None
         self.parents = []
+        self.children = []
         self.tags = set()
-        self.author = ''
-        self.authdate = ''
+        self.author = None
+        self.authdate = None
+        self.parsed = False
         if log_entry:
             self.parse(log_entry)
 
@@ -31,6 +57,8 @@ class Commit(object):
             self.subject = subject
         if parents:
             for parent in parents.split(' '):
+                parent = CommitFactory.new(sha1=parent)
+                parent.children.append(self)
                 self.parents.append(parent)
         if tags:
             for tag in tags[2:-1].split(', '):
@@ -48,6 +76,7 @@ class Commit(object):
         if authdate:
             self.authdate = authdate
 
+        self.parsed = True
         return self
 
     def __str__(self):
@@ -118,7 +147,7 @@ class RepoReader(object):
         try:
             return self._objects[sha1]
         except KeyError:
-            c = Commit(log_entry=log_entry)
+            c = CommitFactory.new(log_entry=log_entry)
             self._objects[c.sha1] = c
             self._topo_list.append(c)
             return c
