@@ -321,8 +321,6 @@ class GraphView(QtGui.QGraphicsView):
 
         self._items = []
         self._selected = []
-        self._commits = {}
-        self._children = {}
         self._nodes = {}
 
         self._loc = {}
@@ -545,10 +543,6 @@ class GraphView(QtGui.QGraphicsView):
     def add(self, commits):
         scene = self.scene()
         for commit in commits:
-            self._commits[commit.sha1] = commit
-            for p in commit.parents:
-                children = self._children.setdefault(p, [])
-                children.append(commit.sha1)
             node = Node(commit)
             scene.addItem(node)
             self._nodes[commit.sha1] = node
@@ -558,13 +552,9 @@ class GraphView(QtGui.QGraphicsView):
         """Create edges linking commits with their parents"""
         scene = self.scene()
         for commit in commits:
-            children = self._children.get(commit.sha1, None)
-            # root commit
-            if children is None:
-                continue
             commit_node = self._nodes[commit.sha1]
-            for child_sha1 in children:
-                child_node = self._nodes[child_sha1]
+            for child in commit.children:
+                child_node = self._nodes[child.sha1]
                 edge = Edge(commit_node, child_node)
                 scene.addItem(edge)
 
@@ -575,13 +565,6 @@ class GraphView(QtGui.QGraphicsView):
         xpos = 0
         ypos = 0
         for commit in commits:
-            if commit.sha1 not in self._children:
-                self._loc[commit.sha1] = (xpos, ypos)
-                node = self._nodes.get(commit.sha1, None)
-                node.setPos(xpos, ypos)
-                xpos += self._xoff
-                gxmax = max(xpos, gxmax)
-                continue
             ymax = 0
             xmax = None
             for sha1 in self._children[commit.sha1]:
