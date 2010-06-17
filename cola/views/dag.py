@@ -192,16 +192,22 @@ class Edge(QtGui.QGraphicsItem):
 
 class Node(QtGui.QGraphicsItem):
     _type = QtGui.QGraphicsItem.UserType + 1
+    _width = 180
+    _height = 18
+
+    _shape = QtGui.QPainterPath()
+    _shape.addRect(_width/-2., _height/-2., _width, _height)
+
+    _bound = _shape.boundingRect()
+    _glyph = QtCore.QRectF(-_width/2., -9, _width/4., 18)
 
     def __init__(self, commit):
         QtGui.QGraphicsItem.__init__(self)
         self.setZValue(0)
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
         self.commit = commit
-        self._width = 180
         # Starts with enough space for two tags. Any more and the node
         # needs to be taller to accomodate.
-        self._height = 18
         if len(self.commit.tags) > 1:
             self._height = len(self.commit.tags) * 9 + 6 # +6 padding
         self._edges = []
@@ -221,27 +227,20 @@ class Node(QtGui.QGraphicsItem):
         self.dragged = False
         self.skipped = False
 
-    @memoize
-    def type(self):
-        return Node._type
+    def type(self, _type=_type):
+        return _type
 
     def add_edge(self, edge):
         self._edges.append(edge)
         edge.adjust()
 
-    @memoize
-    def boundingRect(self):
-        return self.shape().boundingRect()
+    def boundingRect(self, _bound=_bound):
+        return _bound
 
-    @memoize
-    def shape(self):
-        path = QtGui.QPainterPath()
-        path.addRect(-self._width/2., -self._height/2.,
-                     self._width, self._height)
-        return path
+    def shape(self, _shape=_shape):
+        return _shape
 
-    @memoize
-    def glyph(self):
+    def glyph(self, _glyph=_glyph):
         """Provides location of the glyph representing this node
 
         The node contains a glyph (a circle or ellipse) representing the
@@ -250,9 +249,7 @@ class Node(QtGui.QGraphicsItem):
         make edges point at the center of the glyph, rather than at the
         center of the entire node.
         """
-        glyph = QtCore.QRectF(-self._width/2., -9,
-                              self._width/4., 18)
-        return glyph
+        return _glyph
 
     def paint(self, painter, option, widget):
         if self.isSelected():
