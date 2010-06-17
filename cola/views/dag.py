@@ -193,12 +193,11 @@ class Edge(QtGui.QGraphicsItem):
 class Node(QtGui.QGraphicsItem):
     _type = QtGui.QGraphicsItem.UserType + 1
 
-    def __init__(self, graph, commit):
+    def __init__(self, commit):
         QtGui.QGraphicsItem.__init__(self)
         self.setZValue(0)
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
         self.commit = commit
-        self._graph = graph
         self._width = 180
         # Starts with enough space for two tags. Any more and the node
         # needs to be taller to accomodate.
@@ -561,7 +560,7 @@ class GraphView(QtGui.QGraphicsView):
             for p in commit.parents:
                 children = self._children.setdefault(p, [])
                 children.append(commit.sha1)
-            node = Node(self, commit)
+            node = Node(commit)
             scene.addItem(node)
             self._nodes[commit.sha1] = node
             self._items.append(node)
