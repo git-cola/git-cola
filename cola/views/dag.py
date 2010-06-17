@@ -490,10 +490,9 @@ class GraphView(QtGui.QGraphicsView):
         """Handle mouse wheel panning."""
 
         if event.delta() < 0:
-            s = -100.0
+            s = -133.
         else:
-            s = 100.0
-
+            s = 133.
         pan_rect = QtCore.QRectF(0.0, 0.0, 1.0, 1.0)
         factor = 1.0 / self.matrix().mapRect(pan_rect).width()
 
@@ -501,7 +500,6 @@ class GraphView(QtGui.QGraphicsView):
             matrix = self.matrix().translate(0, s * factor)
         else:
             matrix = self.matrix().translate(s * factor, 0)
-
         self.setTransformationAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setMatrix(matrix)
 
