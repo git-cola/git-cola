@@ -480,7 +480,7 @@ class GraphView(QtGui.QGraphicsView):
                         .scale(zoom, zoom)
                         .mapRect(QtCore.QRectF(0.0, 0.0, 1.0, 1.0))
                         .width())
-        if factor < 0.02 or factor > 42.0:
+        if factor < 0.014 or factor > 42.0:
             return
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
         self._zoom = zoom
