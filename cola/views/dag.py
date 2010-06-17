@@ -564,11 +564,13 @@ class GraphView(QtGui.QGraphicsView):
 
         xpos = 0
         ypos = 0
+
         for commit in commits:
+            # Center nodes relative to their children
             ymax = 0
             xmax = None
-            for sha1 in self._children[commit.sha1]:
-                loc = self._loc[sha1]
+            for child in commit.children:
+                loc = self._loc[child.sha1]
                 if xmax is None:
                     xmax = loc[0]
                 xmax = min(xmax, loc[0])
@@ -584,7 +586,11 @@ class GraphView(QtGui.QGraphicsView):
                 gxmax = max(gxmax, xmax)
                 self._cols[ymax] = xmax
             else:
-                xmax = max(0, xmax)
+                prev = ymax - self._yoff
+                if prev in self._cols:
+                    xmax = self._cols[prev]/2
+                else:
+                    xmax = 0
                 self._cols[ymax] = xmax
 
             sha1 = commit.sha1
@@ -592,11 +598,12 @@ class GraphView(QtGui.QGraphicsView):
             node = self._nodes[sha1]
             node.setPos(xmax, ymax)
 
-        xpad = 200
+        xpad = 333
         ypad = 66
         self._xmax = gxmax
         self._ymax = gymax
         self.scene().setSceneRect(-xpad, -ypad, gxmax+xpad, gymax+ypad)
+
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
