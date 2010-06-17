@@ -8,14 +8,6 @@ logfmt = 'format:%H%x00%P%x00%d%x00%an%x00%aD%x00%s'
 git = gitcmd.instance()
 
 
-def commits(max_count=808, log_args=None):
-    if log_args is None:
-        log_args = gitcmds.branch_list()
-    log = git.log(topo_order=True,
-                  pretty=logfmt,
-                  max_count=max_count,
-                  *log_args)
-    return [Commit(log_entry=line) for line in log.splitlines()]
 
 
 class Commit(object):
