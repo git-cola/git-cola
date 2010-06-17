@@ -253,10 +253,8 @@ class Node(QtGui.QGraphicsItem):
 
     def paint(self, painter, option, widget):
         if self.isSelected():
-            self.setZValue(1)
             painter.setPen(self._colors['selected'])
         else:
-            self.setZValue(0)
             painter.setPen(self._colors['outline'])
         painter.setBrush(self._grad)
 
