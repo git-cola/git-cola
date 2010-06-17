@@ -232,7 +232,6 @@ class Node(QtGui.QGraphicsItem):
 
     def add_edge(self, edge):
         self._edges.append(edge)
-        edge.adjust()
 
     def boundingRect(self, _bound=_bound):
         return _bound
@@ -265,6 +264,7 @@ class Node(QtGui.QGraphicsItem):
         font.setPointSize(5)
         painter.setFont(font)
         painter.setPen(QtCore.Qt.black)
+
         text_options = QtGui.QTextOption()
         text_options.setAlignment(QtCore.Qt.AlignCenter)
         painter.drawText(self.glyph(), sha1_text, text_options)
@@ -300,6 +300,10 @@ class Node(QtGui.QGraphicsItem):
         if self.pressed:
             self.dragged = True
         QtGui.QGraphicsItem.mouseMoveEvent(self, event)
+        for node in self.scene().selectedItems():
+            for edge in node._edges:
+                edge.adjust()
+        self.scene().update()
 
     def mouseReleaseEvent(self, event):
         QtGui.QGraphicsItem.mouseReleaseEvent(self, event)
