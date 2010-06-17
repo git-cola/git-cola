@@ -123,8 +123,8 @@ class Edge(QtGui.QGraphicsItem):
         self.setZValue(-2)
         self.adjust()
 
-    def type(self):
-        return Edge._type
+    def type(self, _type=_type):
+        return _type
 
     def adjust(self):
         if not self.source or not self.dest:
