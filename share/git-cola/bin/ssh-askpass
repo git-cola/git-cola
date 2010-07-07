@@ -39,7 +39,10 @@ pack .b -side bottom -fill x -padx 10 -pady 10
 bind . <Visibility> {focus -force .e}
 bind . <Key-Return> finish
 bind . <Key-Escape> {destroy .}
-bind . <Destroy>    {exit $rc}
+bind . <Destroy>    {
+	bind . <Destroy> {}
+	exit $::rc
+}
 
 proc finish {} {
 	if {$::yesno} {
