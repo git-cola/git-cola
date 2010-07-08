@@ -25,8 +25,9 @@ def _appendifexists(category, path, result):
 def _stat_info():
     data = []
     # Try /etc/gitconfig as a fallback for the system config
+    userconfig = os.path.expanduser(os.path.join('~', '.gitconfig'))
     _appendifexists('system', '/etc/gitconfig', data)
-    _appendifexists('user', os.path.expanduser('~/.gitconfig'), data)
+    _appendifexists('user', userconfig, data)
     _appendifexists('repo', git.instance().git_path('config'), data)
     return data
 
