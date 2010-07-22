@@ -9,6 +9,11 @@ import platform
 sourcedir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, sourcedir)
 
+try:
+    from extras import cmdclass
+except ImportError:
+    cmdclass = {}
+
 from setup import cola_data_files
 import setuptools
 
@@ -31,6 +36,7 @@ try:
                                          'prefer_ppc': prefer_ppc,
                                          'iconfile': 'darwin/git-cola.icns',
                                          'includes': ['sip', 'PyQt4._qt']}},
+                     cmdclass = cmdclass,
                      setup_requires=['py2app'])
 finally:
     # Remove the temporary file
