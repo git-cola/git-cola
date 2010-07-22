@@ -13,6 +13,9 @@ Fixes
 
   http://github.com/davvid/git-cola/issues/closed#issue/51
 
+* Fixed a hang-on-exit bug in the cola-provided
+  'ssh-askpass' implementation.
+
 git-cola v1.4.2.1
 =================
 Usability, bells and whistles
