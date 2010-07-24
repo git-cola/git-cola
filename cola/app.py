@@ -29,7 +29,7 @@ class ColaApplication(object):
         """
         if locale:
             os.environ['LANG'] = locale
-            i18n.install()
+        i18n.install()
 
         # monkey-patch Qt's translate() to use our translate()
         if gui:
