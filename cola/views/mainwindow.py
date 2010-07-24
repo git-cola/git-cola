@@ -34,7 +34,7 @@ class MainWindow(MainWindowBase):
         self.stage_button = qt.create_button('Stage', layout)
         self.unstage_button = qt.create_button('Unstage', layout)
         self.fetch_button = qt.create_button('Fetch...', layout)
-        self.push_button = qt.create_button('Push..', layout)
+        self.push_button = qt.create_button('Push...', layout)
         self.pull_button = qt.create_button('Pull...', layout)
         self.stash_button = qt.create_button('Stash...', layout)
         self.alt_button = qt.create_button('Exit Diff Mode', layout)
