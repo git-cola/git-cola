@@ -489,11 +489,16 @@ class MainView(MainWindow):
             error_msg = self.tr(''
                 'No changes to commit.\n\n'
                 'You must stage at least 1 file before you can commit.\n')
-            qtutils.log(1, error_msg)
-            cola.notifier().broadcast(signals.information,
-                                      'No Staged Changes',
-                                      error_msg)
-            return
+            if self.model.modified:
+                error_msg += '\n'
+                error_msg += self.tr('Would you like to stage '
+                                     'and commit all modified files?')
+                if not qtutils.question(self, 'Stage and commit?', error_msg,
+                                        default=False):
+                    return
+            else:
+                return
+            cola.notifier().broadcast(signals.stage_modified)
         # Warn that amending published commits is generally bad
         amend = self.amend_checkbox.isChecked()
         if (amend and self.model.is_commit_published() and
