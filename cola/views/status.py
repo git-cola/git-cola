@@ -254,15 +254,16 @@ class StatusWidget(QtGui.QWidget):
         staged, modified, unmerged, untracked = self.selection()
         menu = QtGui.QMenu(self)
 
-        if staged and staged[0] in cola.model().submodules:
+        enable_staging = self.model.enable_staging()
+        if not enable_staging:
             menu.addAction(self.tr('Unstage Selected'),
                            SLOT(signals.unstage, self.staged()))
+
+        if staged and staged[0] in cola.model().submodules:
             menu.addAction(self.tr('Launch git-cola'),
                            SLOT(signals.open_repo, os.path.abspath(staged[0])))
             return menu
         elif staged:
-            menu.addAction(self.tr('Unstage Selected'),
-                           SLOT(signals.unstage, self.staged()))
             menu.addSeparator()
             menu.addAction(self.tr('Launch Editor'),
                            SLOT(signals.edit, self.staged()))
@@ -286,7 +287,6 @@ class StatusWidget(QtGui.QWidget):
 
         modified_submodule = (modified and
                               modified[0] in cola.model().submodules)
-        enable_staging = self.model.enable_staging()
         if enable_staging:
             menu.addAction(self.tr('Stage Selected'),
                            SLOT(signals.stage, self.unstaged()))
@@ -296,7 +296,7 @@ class StatusWidget(QtGui.QWidget):
             menu.addAction(self.tr('Launch git-cola'),
                            SLOT(signals.open_repo,
                                 os.path.abspath(modified[0])))
-        else:
+        elif self.unstaged():
             menu.addAction(self.tr('Launch Editor'),
                            SLOT(signals.edit, self.unstaged()))
 

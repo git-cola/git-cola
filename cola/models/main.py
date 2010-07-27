@@ -591,6 +591,9 @@ class MainModel(ObservableModel):
 
     def stage_paths(self, paths):
         """Stages add/removals to git."""
+        if not paths:
+            self.stage_all()
+            return
         add = []
         remove = []
         sset = set(self.staged)
@@ -636,6 +639,9 @@ class MainModel(ObservableModel):
         self.notify_message_observers(self.message_updated)
 
     def unstage_paths(self, paths):
+        if not paths:
+            self.unstage_all()
+            return
         self.notify_message_observers(self.message_about_to_update)
 
         staged_set = set(self.staged)
