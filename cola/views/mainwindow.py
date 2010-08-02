@@ -29,6 +29,8 @@ class MainWindow(MainWindowBase):
         self.actiondockwidget = self.create_dock('Actions')
         self.actiondockwidgetcontents = QtGui.QWidget()
         layout = QtGui.QVBoxLayout(self.actiondockwidgetcontents)
+        self.actionslayout = layout
+        self.actiondockwidgetcontents.setLayout(layout)
         self.rescan_button = qt.create_button('Rescan', layout)
         self.stage_button = qt.create_button('Stage', layout)
         self.unstage_button = qt.create_button('Unstage', layout)
