@@ -21,7 +21,7 @@ class QFlowLayoutWidget(QtGui.QWidget):
     def __init__(self, parent=None):
         QtGui.QWidget.__init__(self, parent)
         self._direction = self._vertical
-        layout = QtGui.QBoxLayout(self._direction)
+        self._layout = layout = QtGui.QBoxLayout(self._direction)
         layout.setSpacing(2)
         layout.setMargin(2)
         self.setLayout(layout)
