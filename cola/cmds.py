@@ -2,6 +2,7 @@ import os
 import sys
 
 from cStringIO import StringIO
+import commands
 
 import cola
 from cola import i18n
@@ -579,7 +580,7 @@ class RunConfigAction(Command):
                                      'Please select a file',
                                      '"%s" requires a selected file' % cmd)
                 return
-            os.environ['FILENAME'] = utils.shell_quote(filename)
+            os.environ['FILENAME'] = commands.mkarg(filename)
 
 
         if opts.get('revprompt') or opts.get('argprompt'):
