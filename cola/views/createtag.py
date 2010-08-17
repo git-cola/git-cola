@@ -84,9 +84,6 @@ class CreateTag(standard.StandardDialog):
         self.close_button.setText(self.tr('Close'))
         self._button_hbox_layt.addWidget(self.close_button)
 
-        self.connect(self.sign_tag, SIGNAL('stateChanged(int)'),
-                     self.tag_msg.setEnabled)
         self.connect(self.close_button, SIGNAL('clicked()'), self.accept)
 
         qtutils.set_diff_font(self.tag_msg)
-        self.tag_msg.setEnabled(False)
