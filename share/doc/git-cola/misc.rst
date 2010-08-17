@@ -6,7 +6,7 @@ Miscellaneous Utility Modules
     diffparse
     difftool
     gitcfg
-    gitcmd
+    git
     gitcmds
     guicmds
     inotify
