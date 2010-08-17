@@ -434,26 +434,6 @@ class StatusWidget(QtGui.QWidget):
             for i in items:
                 self.tree.setItemSelected(i, False)
             self.tree.blockSignals(False)
-            return result
-
-        # An item was clicked -- get its index in the model
-        staged, idx = self.index_for_item(item)
-        if idx == self.idx_header:
-            return result
-
-        if self.model.read_only():
-            return result
-
-        # Handle when the icons are clicked
-        indent = self.tree.indentation()
-        xpos = event.pos().x()
-        indent = indent * 2
-        iconwidth = 22
-        if indent < xpos < indent + iconwidth:
-            if staged:
-                cola.notifier().broadcast(signals.unstage, self.staged())
-            else:
-                cola.notifier().broadcast(signals.stage, self.unstaged())
         return result
 
     def tree_doubleclick(self, item, column):
