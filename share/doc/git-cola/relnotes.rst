@@ -1,5 +1,19 @@
 .. |beta(TM)| unicode:: beta U+2122
 
+git-cola v1.4.2.4
+=================
+Usability, bells and whistles
+-----------------------------
+* Removed "single-click to (un)stage" in the status view.
+  This is a usability improvement since we no longer perform
+  different actions depending on where a row is clicked.
+
+* Added ability to create unsigned, annotated tags
+
+Fixes
+-----
+* Updated documentation to use `cola.git` instead of `cola.gitcmd`.
+
 git-cola v1.4.2.3
 =================
 Usability, bells and whistles
