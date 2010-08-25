@@ -1,9 +1,11 @@
 #!/bin/sh
 unset CDPATH
 
-pushd "$(dirname "$0")" >/dev/null
+curdir="$(pwd)"
+cd "$(dirname "$0")"
 META="$(pwd)"
-popd >/dev/null
+cd "$curdir"
+unset curdir
 
 # _the_ cola version
 if test -e bin/git-cola
