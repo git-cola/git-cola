@@ -35,6 +35,7 @@ from cola.controllers.merge import abort_merge
 from cola.controllers.options import update_options
 from cola.controllers.stash import stash
 
+
 class MainView(MainWindow):
     """The main cola interface."""
 
@@ -98,7 +99,7 @@ class MainView(MainWindow):
         self._connect_button(self.stash_button, stash)
 
         # Menu actions
-        actions = (
+        actions = [
             (self.menu_quit, self.close),
             (self.menu_branch_compare, compare.branch_compare),
             (self.menu_branch_diff, guicmds.branch_diff),
@@ -161,7 +162,19 @@ class MainView(MainWindow):
             (self.menu_redo, self.commitmsg.redo),
             (self.menu_classic, classic.cola_classic),
             (self.menu_dag, dag.git_dag),
-        )
+        ]
+
+        # Diff Actions
+        if hasattr(Qt, 'WidgetWithChildrenShortcut'):
+            # We can only enable this shortcut on newer versions of Qt
+            # that support WidgetWithChildrenShortcut otherwise we get
+            # an ambiguous shortcut error.
+            self.diff_copy = QtGui.QAction(self.display_text)
+            self.diff_copy.setShortcut(QtGui.QKeySequence.Copy)
+            self.diff_copy.setShortcutContext(Qt.WidgetWithChildrenShortcut)
+            self.display_text.addAction(self.diff_copy)
+            actions.append((self.diff_copy, self.copy_display,))
+
         for menu, callback in actions:
             self.connect(menu, SIGNAL('triggered()'), callback)
 
@@ -330,8 +343,8 @@ class MainView(MainWindow):
     def diff_key_press_event(self, event):
         """Handle shortcut keys in the diff view."""
         if event.key() != QtCore.Qt.Key_H and event.key() != QtCore.Qt.Key_S:
-            event.ignore()
-            return
+            return QtGui.QTextEdit.keyPressEvent(self.display_text, event)
+
         staged, modified, unmerged, untracked = cola.single_selection()
         if event.key() == QtCore.Qt.Key_H:
             if self.mode == self.model.mode_worktree and modified:

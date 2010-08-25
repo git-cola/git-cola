@@ -132,7 +132,7 @@ class MainWindow(MainWindowBase):
         self.menu_stage_untracked = self.create_action('Stage All Untracked')
         self.menu_export_patches = self.create_action('Export Patches...')
         self.menu_cut = self.create_action('Cut')
-        self.menu_copy = self.create_action('Copy')
+        self.menu_copy = self.create_action('Copy', local=True)
         self.menu_paste = self.create_action('Paste')
         self.menu_select_all = self.create_action('Select All')
         self.menu_options = self.create_action('Options')
@@ -341,10 +341,10 @@ class MainWindow(MainWindowBase):
         self.menu_stage_modified.setShortcut(tr('Alt+A'))
         self.menu_stage_untracked.setShortcut(tr('Alt+U'))
         self.menu_export_patches.setShortcut(tr('Ctrl+E'))
-        self.menu_cut.setShortcut(tr('Ctrl+X'))
-        self.menu_copy.setShortcut(tr('Ctrl+C'))
-        self.menu_paste.setShortcut(tr('Ctrl+V'))
-        self.menu_select_all.setShortcut(tr('Ctrl+A'))
+        self.menu_cut.setShortcut(QtGui.QKeySequence.Cut)
+        self.menu_copy.setShortcut(QtGui.QKeySequence.Copy)
+        self.menu_paste.setShortcut(QtGui.QKeySequence.Paste)
+        self.menu_select_all.setShortcut(QtGui.QKeySequence.SelectAll)
         self.menu_options.setShortcut(tr('Ctrl+O'))
         self.menu_delete.setShortcut(tr('Del'))
         self.menu_undo.setShortcut(tr('Ctrl+Z'))
@@ -380,10 +380,12 @@ class MainWindow(MainWindowBase):
         qmenu.setTitle(tr(title))
         return qmenu
 
-    def create_action(self, title):
+    def create_action(self, title, local=False):
         """Create an action and set its title."""
         action = QtGui.QAction(self)
         action.setText(tr(title))
+        if local and hasattr(Qt, 'WidgetWithChildrenShortcut'):
+            action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
         return action
 
     def closeEvent(self, event):
