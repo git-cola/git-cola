@@ -41,10 +41,19 @@ class GitDAGWidget(standard.StandardDialog):
         self.setMinimumSize(1, 1)
         self.resize(777, 666)
 
+        self._splitter = QtGui.QSplitter()
+        self._splitter.setOrientation(QtCore.Qt.Vertical)
+        self._splitter.setHandleWidth(2)
+
         self._graphview = GraphView()
-        layt = QtGui.QHBoxLayout()
+        self._widget = QtGui.QWidget()
+
+        self._splitter.insertWidget(0, self._graphview)
+        self._splitter.insertWidget(1, self._widget)
+
+        self._layt = layt = QtGui.QHBoxLayout()
         layt.setMargin(1)
-        layt.addWidget(self._graphview)
+        layt.addWidget(self._splitter)
         self.setLayout(layt)
 
         qtutils.add_close_action(self)
