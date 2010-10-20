@@ -1,7 +1,8 @@
 prefix	?= $(HOME)
 PYTHON	?= python
-PYTHON_VER	?= $(shell $(PYTHON) -c 'import platform; print platform.python_version()[:3]')
-PYTHON_SITE	?= $(DESTDIR)$(prefix)/lib/python$(PYTHON_VER)/site-packages
+PYTHON_VER	?= $(shell $(PYTHON) -c 'import platform; print(platform.python_version()[:3])')
+PYTHON_LIB	?= $(shell $(PYTHON) -c 'import os.path as p; import distutils.sysconfig as sc; print(p.basename(sc.get_config_var("LIBDIR")))')
+PYTHON_SITE	?= $(DESTDIR)$(prefix)/$(PYTHON_LIB)/python$(PYTHON_VER)/site-packages
 COLA_VERSION	?= $(shell git describe --match='v*.*' | sed -e s/v//)
 APP	?= git-cola.app
 APPZIP	?= $(shell darwin/name-tarball.py)
