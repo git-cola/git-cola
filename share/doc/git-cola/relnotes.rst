@@ -1,5 +1,24 @@
 .. |beta(TM)| unicode:: beta U+2122
 
+git-cola v1.4.2.5
+=================
+Usability, bells and whistles
+-----------------------------
+* Clicking on paths in the status widget copies them into the
+  copy/paste buffer for easy middle-clicking into terminals.
+
+* Ctrl+C in diff viewer copies the selected diff to the clipboard.
+
+Fixes
+-----
+* Fixed the disappearing actions buttons on PyQt 4.7.4
+  as reported by Arch and Ubuntu 10.10.
+
+  http://github.com/davvid/git-cola/issues/closed#issue/62
+
+* Fixed mouse interaction with the status widget where some
+  items could not be de-selected.
+
 git-cola v1.4.2.4
 =================
 Usability, bells and whistles
@@ -8,7 +27,7 @@ Usability, bells and whistles
   This is a usability improvement since we no longer perform
   different actions depending on where a row is clicked.
 
-* Added ability to create unsigned, annotated tags
+* Added ability to create unsigned, annotated tags.
 
 Fixes
 -----
