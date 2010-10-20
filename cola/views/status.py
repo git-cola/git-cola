@@ -63,7 +63,8 @@ class StatusWidget(QtGui.QWidget):
 
         # Handle these events here
         self.tree.contextMenuEvent = self.tree_context_menu_event
-        self.tree.mouseReleaseEvent = self.tree_click
+        self.tree_mouse_release_event = self.tree.mouseReleaseEvent
+        self.tree.mouseReleaseEvent = self.tree_click_event
 
         self.expanded_items = set()
         self.model = cola.model()
@@ -440,7 +441,11 @@ class StatusWidget(QtGui.QWidget):
             self.tree.blockSignals(False)
         return result
 
-    def tree_click(self, column):
+    def tree_click_event(self, event):
+        self.tree_mouse_release_event(event)
+        self.tree_click()
+
+    def tree_click(self, column=None):
         """Called when an item is clicked in the repo status tree."""
         if self.model.read_only():
             return
