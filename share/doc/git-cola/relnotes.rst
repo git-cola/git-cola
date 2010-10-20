@@ -19,6 +19,11 @@ Fixes
 * Fixed mouse interaction with the status widget where some
   items could not be de-selected.
 
+Packaging
+---------
+* Removed hard-coded reference to lib/ when calculating Python's
+  site-packages directory.
+
 git-cola v1.4.2.4
 =================
 Usability, bells and whistles
