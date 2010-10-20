@@ -47,7 +47,7 @@ build_website() {
 
 build_docs() {
 	title Building docs
-	do_or_die make prefix="$prefix" install-doc
+	do_or_die make prefix="$prefix" install
 }
 
 build_tarball() {
