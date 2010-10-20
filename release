@@ -40,14 +40,15 @@ build_website() {
 		exit 2
 	fi
 	title Building website
+	curdir="$(pwd)"
 	do_or_die cd "$web_src"
 	do_or_die make prefix="$prefix"
-	do_or_die cd "$META"
+	do_or_die cd "$curdir"
 }
 
 build_docs() {
 	title Building docs
-	do_or_die make prefix="$prefix" install
+	do_or_die make prefix="$prefix" install-doc
 }
 
 build_tarball() {
