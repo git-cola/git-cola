@@ -271,7 +271,7 @@ class Node(QtGui.QGraphicsItem):
 
         # Draw glyph
         painter.drawEllipse(self.glyph())
-        sha1_text = self.commit.sha1
+        sha1_text = self.commit.sha1[:8]
         font = painter.font()
         font.setPointSize(5)
         painter.setFont(font)
