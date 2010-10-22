@@ -1,22 +1,17 @@
 #!/usr/bin/env python
-import re
+
 import os
 import sys
 import stat
 import shutil
 import platform
 from glob import glob
-
 from distutils.core import setup
-from distutils.command import build_scripts
 
 try:
     from extras import cmdclass
 except ImportError:
     cmdclass = {}
-
-# Prevent distuils from changing "#!/usr/bin/env python"
-build_scripts.first_line_re = re.compile('^should not match$')
 
 # Look for modules in the root and thirdparty directories
 srcdir = os.path.dirname(os.path.abspath(__file__))
