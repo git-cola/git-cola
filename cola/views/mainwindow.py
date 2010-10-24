@@ -8,7 +8,6 @@ from cola import qtutils
 from cola import qtcompat
 from cola import qt
 from cola.views import log
-from cola.views import dag
 from cola.qtutils import tr
 from cola.views import status
 from cola.views.standard import create_standard_widget
