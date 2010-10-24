@@ -10,6 +10,7 @@ from cola import errors
 from cola import utils
 from cola import version
 from cola.compat import set
+from cola.decorators import memoize
 
 git = git.instance()
 config = gitcfg.instance()
@@ -169,6 +170,35 @@ def commit_diff(sha1):
                                              suppress_header=False)))
     else:
         return core.decode(commit)
+
+
+@memoize
+def _common_diff_opts():
+    patience = version.check('patience', version.git_version())
+    submodule = version.check('diff-submodule', version.git_version())
+    return {
+        'patience': patience,
+        'submodule': submodule,
+        'no_color': True,
+        'with_raw_output': True,
+        'with_stderr': True,
+    }
+
+
+def sha1_diff(sha1):
+    opts = _common_diff_opts()
+    return git.diff(sha1 + '^!',
+                    unified=config.get('diff.context', 3),
+                    **opts)
+
+
+def diff_info(sha1):
+    log = git.log('-1',
+                  '--format=Author:\t%aN <%aE>%n'
+                  'Date:\t%aD%n%n'
+                  '%s%n%n%b',
+                  sha1)
+    return log + '\n\n' + sha1_diff(sha1)
 
 
 def diff_helper(commit=None,
