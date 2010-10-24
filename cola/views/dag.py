@@ -341,7 +341,7 @@ class GraphView(QtGui.QGraphicsView):
         self._panning = False
         self._last_mouse = [0, 0]
 
-        self._zoom = 1
+        self._zoom = 2
         self.scale(self._zoom, self._zoom)
         self.setDragMode(self.RubberBandDrag)
 
