@@ -2,12 +2,11 @@ import os
 import sys
 import shutil
 import unittest
+import tempfile
 
 from cola import core
 from cola import git
 from cola import gitcfg
-
-CUR_TEST = 0
 
 
 def tmp_path(*paths):
@@ -19,38 +18,17 @@ def fixture(*paths):
     return os.path.join(os.path.dirname(__file__), 'fixtures', *paths)
 
 
-def setup_dir(dir):
-    newdir = dir
-    parentdir = os.path.dirname(newdir)
-    if not os.path.isdir(parentdir):
-        os.mkdir(parentdir)
-    if not os.path.isdir(newdir):
-        os.mkdir(newdir)
-
-
-def test_path(*paths):
-    cur_tmpdir = os.path.join(tmp_path(), os.path.basename(sys.argv[0]))
-    root = '%s-%d.%04d' % (cur_tmpdir, os.getpid(), CUR_TEST)
-    return os.path.join(root, *paths)
-
-
 def create_dir():
-    global CUR_TEST
-    CUR_TEST += 1
-    newdir = test_path()
-    setup_dir(newdir)
+    newdir = tempfile.mkdtemp('cola_test_XXXXXX')
     os.chdir(newdir)
     return newdir
 
 
-def remove_dir():
+def remove_dir(path):
     """Remove the test's tmp directory and return to the tmp root."""
-    global CUR_TEST
-    path = test_path()
     if os.path.isdir(path):
         os.chdir(tmp_path())
         shutil.rmtree(path)
-    CUR_TEST -= 1
 
 
 def shell(cmd):
@@ -66,17 +44,17 @@ def pipe(cmd):
 
 class TmpPathTestCase(unittest.TestCase):
     def setUp(self):
-        create_dir()
+        self._testdir = create_dir()
 
     def tearDown(self):
-        remove_dir()
+        remove_dir(self._testdir)
 
     def shell(self, cmd):
         result = shell(cmd)
         self.failIf(result != 0)
 
     def test_path(self, *paths):
-        return test_path(*paths)
+        return os.path.join(self._testdir, *paths)
 
 
 class GitRepositoryTestCase(TmpPathTestCase):
