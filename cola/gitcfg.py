@@ -51,6 +51,7 @@ class GitConfig(object):
         self._user = {}
         self._repo = {}
         self._all = {}
+        self._cache_key = None
         self._configs = []
         self._config_files = {}
         self._find_config_files()
