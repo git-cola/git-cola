@@ -18,19 +18,6 @@ def fixture(*paths):
     return os.path.join(os.path.dirname(__file__), 'fixtures', *paths)
 
 
-def create_dir():
-    newdir = tempfile.mkdtemp('cola_test_XXXXXX')
-    os.chdir(newdir)
-    return newdir
-
-
-def remove_dir(path):
-    """Remove the test's tmp directory and return to the tmp root."""
-    if os.path.isdir(path):
-        os.chdir(tmp_path())
-        shutil.rmtree(path)
-
-
 def shell(cmd):
     return os.system(cmd)
 
@@ -44,10 +31,15 @@ def pipe(cmd):
 
 class TmpPathTestCase(unittest.TestCase):
     def setUp(self):
-        self._testdir = create_dir()
+        self._testdir = tempfile.mkdtemp('_cola_test')
+        os.chdir(self._testdir)
+        print self._testdir
 
     def tearDown(self):
-        remove_dir(self._testdir)
+        """Remove the test directory and return to the tmp root."""
+        path = self._testdir
+        os.chdir(tmp_path())
+        shutil.rmtree(path)
 
     def shell(self, cmd):
         result = shell(cmd)
