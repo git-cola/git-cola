@@ -42,6 +42,11 @@ class _current_branch:
     key = None
     value = None
 
+
+def clear_cache():
+    _current_branch.key = None
+
+
 def current_branch():
     """Return the current branch"""
     head = git.git_path('HEAD')

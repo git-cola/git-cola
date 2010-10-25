@@ -7,6 +7,7 @@ import tempfile
 from cola import core
 from cola import git
 from cola import gitcfg
+from cola import gitcmds
 
 
 def tmp_path(*paths):
@@ -57,6 +58,7 @@ class GitRepositoryTestCase(TmpPathTestCase):
             self.commit_files()
         git.instance().load_worktree(os.getcwd())
         gitcfg.instance().reset()
+        gitcmds.clear_cache()
 
     def initialize_repo(self):
         self.shell("""
