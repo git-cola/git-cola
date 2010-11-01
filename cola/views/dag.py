@@ -23,8 +23,10 @@ from cola.views import syntax
 def git_dag(log_args=None, parent=None):
     """Return a pre-populated git DAG widget."""
     view = GitDAGWidget(parent)
-    view.thread.start(QtCore.QThread.LowPriority)
+    view.resize_to_desktop()
+    view.raise_()
     view.show()
+    view.thread.start(QtCore.QThread.LowPriority)
     return view
 
 
@@ -58,6 +60,9 @@ class GitDAGWidget(standard.StandardDialog):
     def delete(self):
         self._instances.remove(self)
 
+    def splitter(self):
+        return self._splitter
+
     def __init__(self, parent=None, args=None):
         standard.StandardDialog.__init__(self, parent)
         self._instances.add(self)
@@ -65,7 +70,6 @@ class GitDAGWidget(standard.StandardDialog):
         self.setObjectName('dag')
         self.setWindowTitle(self.tr('git dag'))
         self.setMinimumSize(1, 1)
-        self.resize(777, 666)
 
         self._splitter = QtGui.QSplitter()
         self._splitter.setOrientation(QtCore.Qt.Vertical)
@@ -87,8 +91,7 @@ class GitDAGWidget(standard.StandardDialog):
             qtutils.center_on_screen(self)
 
         self.thread = ReaderThread(self, args)
-        self.thread.connect(self.thread,
-                            self.thread.commit_ready,
+        self.thread.connect(self.thread, self.thread.commit_ready,
                             self._add_commit)
 
     def _add_commit(self, sha1):
@@ -113,6 +116,13 @@ class GitDAGWidget(standard.StandardDialog):
         self.thread.stop = False
         self.thread.mutex.unlock()
         self.thread.condition.wakeOne()
+
+    def resize_to_desktop(self):
+        desktop = QtGui.QApplication.instance().desktop()
+        width = desktop.width()
+        height = desktop.height()
+        self.resize(width/2, height)
+        self.splitter().setSizes([height/2, height/2])
 
 
 class ReaderThread(QtCore.QThread):
@@ -377,16 +387,14 @@ class GraphView(QtGui.QGraphicsView):
         self.scale(self._zoom, self._zoom)
         self.setDragMode(self.RubberBandDrag)
 
-        size = 30000
         scene = QtGui.QGraphicsScene(self)
         scene.setItemIndexMethod(QtGui.QGraphicsScene.NoIndex)
-        scene.setSceneRect(-size/4, -size/2, size/2, size)
         self.setScene(scene)
 
         self.setCacheMode(QtGui.QGraphicsView.CacheBackground)
         self.setRenderHint(QtGui.QPainter.Antialiasing)
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
-        self.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
+        self.setResizeAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setBackgroundColor()
 
     def add_commits(self, commits):
@@ -397,6 +405,7 @@ class GraphView(QtGui.QGraphicsView):
 
     def keyPressEvent(self, event):
         key = event.key()
+        QtGui.QGraphicsView.keyPressEvent(self, event)
 
         if key == QtCore.Qt.Key_Plus:
             self._scale_view(1.5)
@@ -404,10 +413,6 @@ class GraphView(QtGui.QGraphicsView):
             self._scale_view(1 / 1.5)
         elif key == QtCore.Qt.Key_F:
             self._view_fit()
-        elif event.key() == QtCore.Qt.Key_Z:
-            self._move_nodes_to_mouse_position()
-        else:
-            QtGui.QGraphicsView.keyPressEvent(self, event)
 
     def _view_fit(self):
         """Fit selected items into the viewport"""
@@ -545,29 +550,6 @@ class GraphView(QtGui.QGraphicsView):
         self.setTransformationAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setMatrix(matrix)
 
-    def _move_nodes_to_mouse_position(self):
-        items = self.scene().selectedItems()
-        if not items:
-            return
-        dx = 0
-        dy = 0
-        min_distance = sys.maxint
-        for item in items:
-            width = item.boundingRect().width()
-            pos = item.pos()
-            tmp_dx = self._last_mouse[0] - pos.x() - width/2.0
-            tmp_dy = self._last_mouse[1] - pos.y() - width/2.0
-            distance = math.sqrt(tmp_dx ** 2 + tmp_dy ** 2)
-            if distance < min_distance:
-                min_distance = distance
-                dx = tmp_dx
-                dy = tmp_dy
-        for item in items:
-            pos = item.pos()
-            x = pos.x();
-            y = pos.y()
-            item.setPos( x + dx, y + dy )
-
     def setBackgroundColor(self, color=None):
         # To set a gradient background brush we need to use StretchToDeviceMode
         # but that seems to be segfaulting. Use a solid background.
@@ -642,11 +624,10 @@ class GraphView(QtGui.QGraphicsView):
             node = self._nodes[sha1]
             node.setPos(xmax, ymax)
 
-        xpad = 333
-        ypad = 66
+        xpad = 99
         self._xmax = gxmax
         self._ymax = gymax
-        self.scene().setSceneRect(-xpad, -ypad, gxmax+xpad, gymax+ypad)
+        self.scene().setSceneRect(-xpad, 0, gxmax, gymax)
 
 
 if __name__ == "__main__":
