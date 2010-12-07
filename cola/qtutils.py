@@ -241,7 +241,7 @@ def icon_file(filename, staged=False, untracked=False):
     elif untracked:
         ifile = resources.icon('untracked.png')
     else:
-        ifile = utils.file_icon(filename)
+        ifile = utils.file_icon(core.encode(filename))
     return ifile
 
 

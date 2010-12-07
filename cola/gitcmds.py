@@ -531,7 +531,7 @@ def eval_path(path):
     if path.startswith('"') and path.endswith('"'):
         return core.decode(eval(path))
     else:
-        return path
+        return core.decode(path)
 
 
 def renamed_files(start, end, git=git):
