@@ -26,7 +26,8 @@ def default_remote():
 
 def diff_filenames(arg):
     """Return a list of filenames that have been modified"""
-    diff_zstr = git.diff(arg, name_only=True, z=True).rstrip('\0')
+    diff_zstr = git.diff(arg, name_only=True, z=True,
+                         **_common_diff_opts()).rstrip('\0')
     return [core.decode(f) for f in diff_zstr.split('\0') if f]
 
 
@@ -177,24 +178,22 @@ def commit_diff(sha1):
         return core.decode(commit)
 
 
-@memoize
-def _common_diff_opts():
+def _common_diff_opts(config=config):
     patience = version.check('patience', version.git_version())
     submodule = version.check('diff-submodule', version.git_version())
     return {
         'patience': patience,
         'submodule': submodule,
         'no_color': True,
+        'no_ext_diff': True,
         'with_raw_output': True,
         'with_stderr': True,
+        'unified': config.get('diff.context', 3),
     }
 
 
-def sha1_diff(sha1):
-    opts = _common_diff_opts()
-    return git.diff(sha1 + '^!',
-                    unified=config.get('diff.context', 3),
-                    **opts)
+def sha1_diff(sha1, git=git):
+    return git.diff(sha1 + '^!', **_common_diff_opts())
 
 
 def diff_info(sha1):
@@ -245,16 +244,8 @@ def diff_helper(commit=None,
     patience = version.check('patience', version.git_version())
     submodule = version.check('diff-submodule', version.git_version())
 
-    diffoutput = git.diff(R=reverse,
-                          M=True,
-                          no_color=True,
-                          cached=cached,
-                          unified=config.get('diff.context', 3),
-                          with_raw_output=True,
-                          with_stderr=True,
-                          patience=patience,
-                          submodule=submodule,
-                          *argv)
+    diffoutput = git.diff(R=reverse, M=True, cached=cached,
+                          *argv, **_common_diff_opts())
     # Handle 'git init'
     if diffoutput.startswith('fatal:'):
         if with_diff_header:
@@ -463,7 +454,8 @@ def worktree_state_dict(head='HEAD', staged_only=False):
     if tracked:
         try:
             diff_expr = merge_base_to(tracked)
-            output = git.diff(diff_expr, name_only=True, z=True)
+            output = git.diff(diff_expr, name_only=True, z=True,
+                              **_common_diff_opts())
 
             if output.startswith('fatal:'):
                 raise errors.GitInitError('git init')
@@ -500,9 +492,9 @@ def _branch_status(branch):
     """
     status, output = git.diff(name_only=True,
                               M=True, z=True,
-                              with_stderr=True,
                               with_status=True,
-                              *branch.strip().split())
+                              *branch.strip().split(),
+                              **_common_diff_opts())
     if status != 0:
         return {}
 
@@ -528,7 +520,8 @@ def is_modified(name):
     status, out = git.diff('--', name,
                            name_only=True,
                            exit_code=True,
-                           with_status=True)
+                           with_status=True,
+                           **_common_diff_opts())
     return status != 0
 
 
@@ -540,17 +533,17 @@ def eval_path(path):
         return path
 
 
-def renamed_files(start, end):
-    difflines = git.diff('%s..%s' % (start, end),
-                         no_color=True,
-                         M=True).splitlines()
+def renamed_files(start, end, git=git):
+    difflines = git.diff('%s..%s' % (start, end), M=True,
+                         **_common_diff_opts()).splitlines()
     return [eval_path(r[12:].rstrip())
                 for r in difflines if r.startswith('rename from ')]
 
 
 def changed_files(start, end):
     zfiles_str = git.diff('%s..%s' % (start, end),
-                          name_only=True, z=True).strip('\0')
+                          name_only=True, z=True,
+                          **_common_diff_opts()).strip('\0')
     return [core.decode(enc) for enc in zfiles_str.split('\0') if enc]
 
 
