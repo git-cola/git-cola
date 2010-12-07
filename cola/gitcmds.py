@@ -24,14 +24,14 @@ def default_remote():
     return config.get('branch.%s.remote' % current_branch())
 
 
-def diff_filenames(arg):
+def diff_filenames(arg, git=git):
     """Return a list of filenames that have been modified"""
     diff_zstr = git.diff(arg, name_only=True, z=True,
                          **_common_diff_opts()).rstrip('\0')
     return [core.decode(f) for f in diff_zstr.split('\0') if f]
 
 
-def all_files():
+def all_files(git=git):
     """Return the names of all files in the repository"""
     return [core.decode(f)
             for f in git.ls_files(z=True)
@@ -48,7 +48,7 @@ def clear_cache():
     _current_branch.key = None
 
 
-def current_branch():
+def current_branch(git=git):
     """Return the current branch"""
     head = git.git_path('HEAD')
     try:
@@ -74,7 +74,7 @@ def current_branch():
     return data
 
 
-def _read_git_head(head, default='master'):
+def _read_git_head(head, default='master', git=git):
     """Pure-python .git/HEAD reader"""
     # Legacy .git/HEAD symlinks
     if os.path.islink(head):
@@ -108,14 +108,14 @@ def branch_list(remote=False):
         return for_each_ref_basename('refs/heads')
 
 
-def for_each_ref_basename(refs):
+def for_each_ref_basename(refs, git=git):
     """Return refs starting with 'refs'."""
     output = git.for_each_ref(refs, format='%(refname)').splitlines()
     non_heads = filter(lambda x: not x.endswith('/HEAD'), output)
     return map(lambda x: x[len(refs) + 1:], non_heads)
 
 
-def all_refs(split=False):
+def all_refs(split=False, git=git):
     """Return a tuple of (local branches, remote branches, tags)."""
     local_branches = []
     remote_branches = []
@@ -151,7 +151,7 @@ def tracked_branch(branch=None):
     return None
 
 
-def untracked_files():
+def untracked_files(git=git):
     """Returns a sorted list of untracked files."""
     ls_files = git.ls_files(z=True,
                             others=True,
@@ -166,7 +166,7 @@ def tag_list():
     return tags
 
 
-def commit_diff(sha1):
+def commit_diff(sha1, git=git):
     commit = git.show(sha1)
     first_newline = commit.index('\n')
     if commit[first_newline+1:].startswith('Merge:'):
@@ -196,7 +196,7 @@ def sha1_diff(sha1, git=git):
     return git.diff(sha1 + '^!', **_common_diff_opts())
 
 
-def diff_info(sha1):
+def diff_info(sha1, git=git):
     log = git.log('-1',
                   '--format=Author:\t%aN <%aE>%n'
                   'Date:\t%aD%n%n'
@@ -213,7 +213,8 @@ def diff_helper(commit=None,
                 cached=True,
                 with_diff_header=False,
                 suppress_header=True,
-                reverse=False):
+                reverse=False,
+                git=git):
     "Invokes git diff on a filepath."
     if commit:
         ref, endref = commit+'^', commit
@@ -368,7 +369,7 @@ def worktree_state(head='HEAD', staged_only=False):
            state.get('upstream_changed', []))
 
 
-def worktree_state_dict(head='HEAD', staged_only=False):
+def worktree_state_dict(head='HEAD', staged_only=False, git=git):
     """Return a dict of files in various states of being
 
     :rtype: dict, keys are staged, unstaged, untracked, unmerged,
@@ -483,7 +484,7 @@ def worktree_state_dict(head='HEAD', staged_only=False):
             'submodules': submodules}
 
 
-def _branch_status(branch):
+def _branch_status(branch, git=git):
     """
     Returns a tuple of staged, unstaged, untracked, and unmerged files
 
@@ -516,7 +517,7 @@ def merge_base_parent(branch):
     return 'master..%s' % branch
 
 
-def is_modified(name):
+def is_modified(name, git=git):
     status, out = git.diff('--', name,
                            name_only=True,
                            exit_code=True,
@@ -540,7 +541,7 @@ def renamed_files(start, end, git=git):
                 for r in difflines if r.startswith('rename from ')]
 
 
-def changed_files(start, end):
+def changed_files(start, end, git=git):
     zfiles_str = git.diff('%s..%s' % (start, end),
                           name_only=True, z=True,
                           **_common_diff_opts()).strip('\0')
