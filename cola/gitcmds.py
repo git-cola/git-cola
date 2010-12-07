@@ -188,7 +188,7 @@ def _common_diff_opts(config=config):
         'no_ext_diff': True,
         'with_raw_output': True,
         'with_stderr': True,
-        'unified': config.get('diff.context', 3),
+        'unified': config.get('gui.diffcontext', 3),
     }
 
 
