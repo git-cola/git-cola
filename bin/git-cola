@@ -25,9 +25,7 @@ def cola_init():
     """Provides access to the cola modules"""
     # Try to detect where it is run from and set prefix and the search path.
     # It is assumed that the user installed Cola using the --prefix= option
-    prefix = os.path.dirname(os.path.abspath(__file__))
-    if 'Contents/Resources' not in __file__:
-        prefix = os.path.dirname(prefix)
+    prefix = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     # Look for modules in the source or install trees
     thirdparty = os.path.join(prefix, 'thirdparty')

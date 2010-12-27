@@ -5,7 +5,6 @@ PYTHON_LIB	?= $(shell $(PYTHON) -c 'import os.path as p; import distutils.syscon
 PYTHON_SITE	?= $(DESTDIR)$(prefix)/$(PYTHON_LIB)/python$(PYTHON_VER)/site-packages
 COLA_VERSION	?= $(shell git describe --match='v*.*' | sed -e s/v//)
 APP	?= git-cola.app
-APPZIP	?= $(shell darwin/name-tarball.py)
 TAR	?= tar
 TEST_PYTHONPATH	?= "$(CURDIR)":"$(CURDIR)/thirdparty":"$(PYTHONPATH)"
 
@@ -19,14 +18,13 @@ endif
 all:
 	$(PYTHON) setup.py build
 
-darwin: all
-	$(PYTHON) darwin/py2app-setup.py py2app
-
-$(APP): darwin
-	rm -rf $(APP)
-	mv dist/$(APP) $(CURDIR)
-	find $(APP) -name '*_debug*' | xargs rm -f
-	tar cjf $(APPZIP) $(APP)
+git-cola.app:
+	mkdir -p $(APP)/Contents/MacOS
+	cp darwin/git-cola $(APP)/Contents/MacOS
+	cp darwin/Info.plist darwin/PkgInfo $(APP)/Contents
+	$(MAKE) prefix=$(APP)/Contents/Resources install
+	cp darwin/git-cola.icns $(APP)/Contents/Resources
+	$(TAR) czf $(APP)-$(COLA_VERSION).tar.gz $(APP)
 
 install: all
 	$(PYTHON) setup.py --quiet install \
@@ -99,4 +97,4 @@ pot:
 mo:
 	$(PYTHON) setup.py build_mo -f
 
-.PHONY: all install doc install-doc install-html test clean darwin git-cola.app tags
+.PHONY: all install doc install-doc install-html test clean tags git-cola.app
