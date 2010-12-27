@@ -178,11 +178,12 @@ def main():
     # Start the inotify thread
     inotify.start()
 
+    # Show the view and start the main event loop
+    view.show()
+
     # Make sure that we start out on top
     view.raise_()
 
-    # Show the view and start the main event loop
-    view.show()
     git.GIT_COLA_TRACE = os.getenv('GIT_COLA_TRACE', False)
     if git.GIT_COLA_TRACE:
         msg = ('info: Trace enabled.  '
