@@ -40,7 +40,10 @@ class SettingsManager(object):
         """Returns the SettingsModel singleton"""
         if not SettingsManager._settings:
             if os.path.exists(_rcfile):
-                SettingsManager._settings = serializer.load(_rcfile)
+                try:
+                    SettingsManager._settings = serializer.load(_rcfile)
+                except: # bad json
+                    SettingsManager._settings = SettingsModel()
             else:
                 SettingsManager._settings = SettingsModel()
         return SettingsManager._settings
