@@ -61,9 +61,10 @@ class ClassicController(QtCore.QObject):
             return
         self.updated.add(path)
         gitrepo.GitRepoEntryManager.entry(path).update()
+        entry = gitrepo.GitRepoEntryManager.entry
         for row in xrange(item.rowCount()):
             path = item.child(row, 0).path
-            gitrepo.GitRepoEntryManager.entry(path).update()
+            entry(path).update()
 
     def difftool_predecessor(self, paths):
         """Prompt for an older commit and launch difftool against it."""
