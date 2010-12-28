@@ -1,5 +1,41 @@
 .. |beta(TM)| unicode:: beta U+2122
 
+git-cola v1.4.3
+===============
+Usability, bells and whistles
+-----------------------------
+* `git-dag` |beta(TM)| now has a separate display area
+  for displaying commit metadata.  This area will soon
+  grow additional functionality such as cherry-picking,
+  branching, etc.
+
+Fixes
+-----
+* Fixed tests from a previous refactoring.
+
+* Guard against 'diff.external' configuration by always
+  calling 'git diff' with the '--no-ext-diff' option.
+
+  http://github.com/davvid/git-cola/issues/closed#issue/67
+
+* Respect 'gui.diffcontext' so that cola's diff display
+  shows the correct number of context lines.
+
+* Raise the GUI so that it is in the foreground on OS X.
+
+Packaging
+---------
+* We now allow distutils to rewrite cola's shebang line.
+  This allows us to run on systems where "which python"
+  is Python3k.  This is exposed by setting the `PYTHON`
+  Makefile variable to the location of python2.x.
+
+* git-cola.app is now a tiny download because it no longer
+  contains Qt and PyQt.  These libraries are provided as a
+  separate download.
+
+  http://code.google.com/p/git-cola/downloads/list
+
 git-cola v1.4.2.5
 =================
 Usability, bells and whistles
