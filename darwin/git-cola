@@ -1,4 +1,9 @@
 #!/bin/sh
+# Setup PATH for git-osx-installer and other common
+# locations such as /usr/local/bin
+PATH="$PATH":/usr/local/bin:/usr/local/git/bin
+export PATH
+
 # Contents/MacOS/$this_script
 # Contents/Resources
 macos="$(dirname "$0")"
