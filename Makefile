@@ -24,7 +24,7 @@ git-cola.app:
 	cp darwin/Info.plist darwin/PkgInfo $(APP)/Contents
 	$(MAKE) prefix=$(APP)/Contents/Resources install
 	cp darwin/git-cola.icns $(APP)/Contents/Resources
-	$(TAR) czf $(APP)-$(COLA_VERSION).tar.gz $(APP)
+	$(TAR) czf git-cola-$(COLA_VERSION).app.tar.gz $(APP)
 
 install: all
 	$(PYTHON) setup.py --quiet install \
