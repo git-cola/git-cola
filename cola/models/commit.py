@@ -138,7 +138,6 @@ class RepoReader(object):
             self._topo_list = []
         log_entry = self._proc.stdout.readline()
         if not log_entry:
-            self._proc.kill()
             del self._proc
             self._cached = True
             self._proc = None
