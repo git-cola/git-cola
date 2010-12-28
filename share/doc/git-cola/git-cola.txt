@@ -52,6 +52,10 @@ cola.savewindowsettings::
 cola.fontdiff::
 	Specifies the font to use for 'git-cola''s diff display.
 
+cola.classicdockable::
+	Whether to create a dock widget with the 'Cola Classic' tool.
+	Defaults to 'false' to speedup startup time.
+
 gui.diffcontext::
 	The number of diff context lines used and displayed by 'git-cola'
 

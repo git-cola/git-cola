@@ -4,6 +4,7 @@ from PyQt4.QtCore import Qt
 
 import cola
 from cola import settings
+from cola import gitcfg
 from cola import qtutils
 from cola import qtcompat
 from cola import qt
@@ -23,6 +24,13 @@ class MainWindow(MainWindowBase):
 
         # Dockwidget options
         qtcompat.set_common_dock_options(self)
+
+        self.classic_dockable = gitcfg.instance().get('cola.classicdockable')
+
+        if self.classic_dockable:
+            self.classicdockwidget = self.create_dock('Cola Classic')
+            self.classicwidget = classic.widget(parent=self)
+            self.classicdockwidget.setWidget(self.classicwidget)
 
         # "Actions" widget
         self.actiondockwidget = self.create_dock('Actions')
@@ -318,6 +326,8 @@ class MainWindow(MainWindowBase):
         self.tools_menu.addAction(self.menu_classic)
         self.tools_menu.addAction(self.menu_dag)
         self.tools_menu.addSeparator()
+        if self.classic_dockable:
+            self.tools_menu.addAction(self.classicdockwidget.toggleViewAction())
         self.tools_menu.addAction(self.diffdockwidget.toggleViewAction())
         self.tools_menu.addAction(self.actiondockwidget.toggleViewAction())
         self.tools_menu.addAction(self.commitdockwidget.toggleViewAction())
@@ -361,9 +371,13 @@ class MainWindow(MainWindowBase):
         bottom = Qt.BottomDockWidgetArea
 
         self.addDockWidget(top, self.commitdockwidget)
+        if self.classic_dockable:
+            self.addDockWidget(top, self.classicdockwidget)
         self.addDockWidget(top, self.statusdockwidget)
         self.addDockWidget(top, self.actiondockwidget)
         self.addDockWidget(bottom, self.logdockwidget)
+        if self.classic_dockable:
+            self.tabifyDockWidget(self.classicdockwidget, self.commitdockwidget)
         self.tabifyDockWidget(self.logdockwidget, self.diffdockwidget)
 
     def create_dock(self, title):
