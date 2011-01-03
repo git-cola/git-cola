@@ -3,24 +3,25 @@
 
 # Windows doesn't have the 'dirname' command, so fake it
 dirname() {
-    dir=$(echo "$@" | perl -pe 's,(.*)/[^/]+,\1,')
-    test "$dir" = "$1" && dir=.
-    echo "$dir"
+	dir=$(echo "$@" | perl -pe 's,(.*)/[^/]+,\1,')
+	test "$dir" = "$1" && dir=.
+	echo "$dir"
 }
-mydir="$(dirname $0)"
-parentdir="$(dirname $mydir)"
+mydir="$(dirname "$0")"
+parentdir="$(dirname "$mydir")"
 
 # Windows uses 'git-cola.pyw' instead of 'git-cola'
 COLA="$parentdir"/bin/git-cola
 if test -f "$COLA".pyw; then
-    COLA="$COLA".pyw
+	COLA="$COLA".pyw
 fi
 
 # Find a suitable Python and use it to run cola
-for python in /c/Python26 /c/Python25; do
-    if test -d "$python"; then
-        PATH="$PATH":$python
-        exec $python/python.exe "$COLA" "$@"
-    fi
+for python in "/c/Python26" "/c/Python25"; do
+	if test -d "$python"; then
+		PATH="$PATH":"$python"
+		export PATH
+		exec "$python/python.exe" "$COLA" "$@"
+	fi
 done
 exit 1
