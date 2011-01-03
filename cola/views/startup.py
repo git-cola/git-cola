@@ -86,8 +86,8 @@ class StartupDialog(QtGui.QDialog):
         a new one with git-clone.
 
         """
-        self.raise_()
         self.show()
+        self.raise_()
         if self.exec_() == QtGui.QDialog.Accepted:
             return self._gitdir
         return None
