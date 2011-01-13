@@ -390,7 +390,7 @@ class MainModel(ObservableModel):
         return (full_status, '\n'.join(full_output))
 
     def _sliced_add(self, input_items, size=42):
-        lambda_fn = lambda x: self.git.add('--',
+        lambda_fn = lambda x: self.git.add('--force', '--',
                                            v=True,
                                            with_stderr=True,
                                            with_status=True,
