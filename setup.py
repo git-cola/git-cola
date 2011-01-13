@@ -95,11 +95,13 @@ def cola_data_files(standalone=_standalone):
             _app_path('share/git-cola/styles/images', '*.png'),
             _app_path('share/applications', '*.desktop'),
             _app_path('share/doc/git-cola', '*.txt'),
-            _app_path('share/locale', '*/LC_MESSAGES/git-cola.mo'),
             _package('cola'),
             _package('cola.models'),
             _package('cola.controllers'),
             _package('cola.views')]
+
+    data.extend([_app_path(localedir, 'git-cola.mo')
+                 for localedir in glob('share/locale/*/LC_MESSAGES')])
 
     if not standalone:
         data.extend([_thirdparty_package('jsonpickle'),
