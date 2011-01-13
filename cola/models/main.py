@@ -5,6 +5,7 @@
 import os
 import sys
 import time
+import copy
 import subprocess
 from cStringIO import StringIO
 
@@ -377,27 +378,41 @@ class MainModel(ObservableModel):
         self.global_cola_fontdiff = new_font
         self.notify_observers('global_cola_fontdiff')
 
+    def _sliced_op(self, input_items, map_fn, size=42):
+        items = copy.copy(input_items)
+        full_status = 0
+        full_output = []
+        while len(items) > 0:
+            status, output = map_fn(items[:size])
+            full_status = full_status or status
+            full_output.append(output)
+            items = items[size:]
+        return (full_status, '\n'.join(full_output))
+
+    def _sliced_add(self, input_items, size=42):
+        lambda_fn = lambda x: self.git.add('--',
+                                           v=True,
+                                           with_stderr=True,
+                                           with_status=True,
+                                           *x)
+        return self._sliced_op(input_items, lambda_fn)
+
     def stage_modified(self):
-        status, output = self.git.add(v=True,
-                                      with_stderr=True,
-                                      with_status=True,
-                                      *self.modified)
+        status, output = self._sliced_add(self.modified)
         self.update_status()
         return (status, output)
 
     def stage_untracked(self):
-        status, output = self.git.add(v=True,
-                                      with_stderr=True,
-                                      with_status=True,
-                                      *self.untracked)
+        status, output = self._sliced_add(self.untracked)
         self.update_status()
         return (status, output)
 
     def reset(self, *items):
-        status, output = self.git.reset('--',
-                                        with_stderr=True,
-                                        with_status=True,
-                                        *items)
+        lambda_fn = lambda x: self.git.reset('--',
+                                             with_stderr=True,
+                                             with_status=True,
+                                             *x)
+        status, output = self._sliced_op(items, lambda_fn)
         self.update_status()
         return (status, output)
 
@@ -627,11 +642,13 @@ class MainModel(ObservableModel):
 
         # `git add -u` doesn't work on untracked files
         if add:
-            self.git.add('--', *add)
+            self._sliced_add(add)
         # If a path doesn't exist then that means it should be removed
         # from the index.   We use `git add -u` for that.
         if remove:
-            self.git.add('--', u=True, *remove)
+            while remove:
+                self.git.add('--', u=True, with_stderr=True, *remove[:42])
+                remove = remove[42:]
 
         if dirs:
             self._update_files()
