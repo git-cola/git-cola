@@ -102,7 +102,10 @@ class GitConfig(object):
 
     def _read_configs(self):
         """Read git config value into the system, user and repo dicts."""
-        self.reset()
+        self._system = {}
+        self._user = {}
+        self._repo = {}
+        self._all = {}
 
         if 'system' in self._config_files:
             self._system = self.read_config(self._config_files['system'])
