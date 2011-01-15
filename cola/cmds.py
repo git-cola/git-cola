@@ -68,25 +68,6 @@ class Command(object):
         return self.__class__.__name__
 
 
-class AddSignoff(Command):
-    """Add a signed-off-by to the commit message."""
-    def __init__(self):
-        Command.__init__(self)
-        self.undoable = True
-        self.old_commitmsg = self.model.commitmsg
-        self.new_commitmsg = self.old_commitmsg
-        signoff = ('\nSigned-off-by: %s <%s>\n' %
-                    (self.model.local_user_name, self.model.local_user_email))
-        if signoff not in self.new_commitmsg:
-            self.new_commitmsg += ('\n' + signoff)
-
-    def do(self):
-        self.model.set_commitmsg(self.new_commitmsg)
-
-    def undo(self):
-        self.model.set_commitmsg(self.old_commitmsg)
-
-
 class AmendMode(Command):
     """Try to amend a commit."""
     def __init__(self, amend):
@@ -783,7 +764,6 @@ def register():
 
     """
     signal_to_command_map = {
-        signals.add_signoff: AddSignoff,
         signals.amend_mode: AmendMode,
         signals.apply_diff_selection: ApplyDiffSelection,
         signals.apply_patches: ApplyPatches,

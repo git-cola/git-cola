@@ -88,8 +88,8 @@ class MainView(MainWindow):
         # Add button callbacks
         self._relay_button(self.alt_button, signals.reset_mode)
         self._relay_button(self.rescan_button, signals.rescan)
-        self._relay_button(self.signoff_button, signals.add_signoff)
 
+        self._connect_button(self.signoff_button, self.signoff)
         self._connect_button(self.stage_button, self.stage)
         self._connect_button(self.unstage_button, self.unstage)
         self._connect_button(self.commit_button, self.commit)
@@ -481,10 +481,17 @@ class MainView(MainWindow):
         menu.addAction(self.tr('Copy'), self.copy_display)
         return menu
 
+    def signoff(self):
+        """Add standard 'Signed-off-by:' line to the commit message"""
+        msg = unicode(self.commitmsg.toPlainText())
+        signoff = ('\nSigned-off-by: %s <%s>' %
+                    (self.model.local_user_name, self.model.local_user_email))
+        if signoff not in msg:
+            self.commitmsg.append(signoff)
+
     def commit(self):
         """Attempt to create a commit from the index and commit message."""
-        #self.reset_mode()
-        msg = self.model.commitmsg
+        msg = unicode(self.commitmsg.toPlainText())
         if not msg:
             # Describe a good commit message
             error_msg = self.tr(''
