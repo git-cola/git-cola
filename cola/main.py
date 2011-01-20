@@ -165,7 +165,10 @@ def main():
     # Finally, go to the root of the git repo
     os.chdir(model.git.worktree())
 
-    # Show the GUI and start the event loop
+    # Scan for the first time
+    model.update_status()
+
+    # Show the GUI
     if opts.classic:
         view = cola_classic(update=False)
     else:
@@ -173,7 +176,7 @@ def main():
         MainController(model, view)
 
     # Scan for the first time
-    model.update_status()
+    model.broadcast_updated()
 
     # Start the inotify thread
     inotify.start()
@@ -191,6 +194,8 @@ def main():
                '"plumbing" API and are not intended for typical '
                'day-to-day use.  Here be dragons')
         cola.notifier().broadcast(signals.log_cmd, 0, msg)
+
+    # Start the event loop
     result = app.exec_()
 
     # All done, cleanup

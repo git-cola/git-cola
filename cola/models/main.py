@@ -310,9 +310,12 @@ class MainModel(ObservableModel):
         # Re-enable notifications and emit changes
         self.notification_enabled = True
         self.notify_observers('staged', 'unstaged')
-        self.notify_message_observers(self.message_updated)
+        self.broadcast_updated()
 
         self.read_font_sizes()
+
+    def broadcast_updated(self):
+        self.notify_message_observers(self.message_updated)
 
     def _update_files(self, worktree_only=False):
         staged_only = self.read_only()

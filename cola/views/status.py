@@ -60,6 +60,7 @@ class StatusWidget(QtGui.QWidget):
 
         # Used to restore the selection
         self.old_selection = None
+        self.old_scroll = None
 
         # Handle these events here
         self.tree.contextMenuEvent = self.tree_context_menu_event
