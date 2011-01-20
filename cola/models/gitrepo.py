@@ -12,6 +12,7 @@ from cola import core
 from cola import utils
 from cola import qtutils
 from cola import version
+from cola import resources
 from cola.compat import set
 
 
@@ -299,29 +300,35 @@ class GitRepoInfoTask(QRunnable):
         upstream_changed = utils.add_parents(set(model.upstream_changed))
 
         if self.path in unmerged:
-            return qtutils.tr('Unmerged')
+            return (resources.icon('sigil-unmerged.png'),
+                    qtutils.tr('Unmerged'))
         if self.path in modified and self.path in staged:
-            return qtutils.tr('Partially Staged')
+            return (resources.icon('sigil-partial.png'),
+                    qtutils.tr('Partially Staged'))
         if self.path in modified:
-            return qtutils.tr('Modified')
+            return (resources.icon('sigil-modified.png'),
+                    qtutils.tr('Modified'))
         if self.path in staged:
-            return qtutils.tr('Staged')
-        if self.path in untracked:
-            return qtutils.tr('Untracked')
+            return (resources.icon('sigil-staged.png'),
+                    qtutils.tr('Staged'))
         if self.path in upstream_changed:
-            return qtutils.tr('Changed Upstream')
-        return '-'
+            return (resources.icon('sigil-upstream.png'),
+                    qtutils.tr('Changed Upstream'))
+        if self.path in untracked:
+            return (None, '?')
+        return (None, '')
 
     def run(self):
         """Perform expensive lookups and post corresponding events."""
         app = QtGui.QApplication.instance()
-        app.postEvent(GitRepoEntryManager.entry(self.path),
+        entry = GitRepoEntryManager.entry(self.path)
+        app.postEvent(entry,
                 GitRepoInfoEvent(Columns.MESSAGE, self.data('message')))
-        app.postEvent(GitRepoEntryManager.entry(self.path),
+        app.postEvent(entry,
                 GitRepoInfoEvent(Columns.AGE, self.data('date')))
-        app.postEvent(GitRepoEntryManager.entry(self.path),
+        app.postEvent(entry,
                 GitRepoInfoEvent(Columns.WHO, self.data('author')))
-        app.postEvent(GitRepoEntryManager.entry(self.path),
+        app.postEvent(entry,
                 GitRepoInfoEvent(Columns.STATUS, self.status()))
 
 
@@ -350,7 +357,18 @@ class GitRepoItem(QtGui.QStandardItem):
         self.setEditable(False)
         self.setDragEnabled(False)
         entry = GitRepoEntryManager.entry(path)
-        QtCore.QObject.connect(entry, SIGNAL(column), self.setText)
+        if column == Columns.STATUS:
+            QtCore.QObject.connect(entry, SIGNAL(column), self.set_status)
+        else:
+            QtCore.QObject.connect(entry, SIGNAL(column), self.setText)
+
+    def set_status(self, data):
+        icon, txt = data
+        if icon:
+            self.setIcon(QtGui.QIcon(icon))
+        else:
+            self.setIcon(QtGui.QIcon())
+        self.setText(txt)
 
 
 class GitRepoNameItem(GitRepoItem):
