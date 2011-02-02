@@ -77,7 +77,6 @@ class MainView(MainWindow):
         # Listen for text and amend messages
         cola.notifier().connect(signals.diff_text, self.set_display)
         cola.notifier().connect(signals.mode, self._mode_changed)
-        cola.notifier().connect(signals.inotify, self._inotify_enabled)
         cola.notifier().connect(signals.amend, self.amend_checkbox.setChecked)
 
         # Broadcast the amend mode
@@ -197,13 +196,6 @@ class MainView(MainWindow):
 
     def _connect_button(self, button, callback):
         self.connect(button, SIGNAL('clicked()'), callback)
-
-    def _inotify_enabled(self, enabled):
-        """Hide the rescan button when inotify is enabled."""
-        if enabled:
-            self.rescan_button.hide()
-        else:
-            self.rescan_button.show()
 
     def _update_view(self):
         """Update the title with the current branch and directory name."""
