@@ -19,6 +19,7 @@ except ImportError:
 from PyQt4 import QtCore
 
 import cola
+from cola import core
 from cola import signals
 from cola import utils
 from cola.compat import set
@@ -51,10 +52,9 @@ def start():
 def stop():
     if not has_inotify():
         return
-    _thread.set_abort(True)
-    _thread.quit()
+    _thread.stop(True)
     _thread.wait()
-    
+
 
 def has_inotify():
     """Return True if pyinotify is available."""
@@ -86,20 +86,17 @@ class FileSysEvent(ProcessEvent):
 
     def process_default(self, event):
         """Notifies the Qt parent when actions occur"""
-        ## Limit the notification frequency to 1 per second
-        if time.time() - self._last_event_time > 1.0:
+        # Limit the notification frequency
+        if time.time() - self._last_event_time > 0.333:
             self._parent.notify()
-        self._last_event_time = time.time()
-
+            self._last_event_time = time.time()
 
 class GitNotifier(QtCore.QThread):
     """Polls inotify for changes and generates FileSysEvents"""
 
-    def __init__(self, timeout=250):
+    def __init__(self, timeout=333):
         """Set up the pyinotify thread"""
         QtCore.QThread.__init__(self)
-        self.setTerminationEnabled(True)
-
         ## QApplication receiver of Qt events
         self._receiver = EventReceiver()
         ## Git command object
@@ -109,7 +106,7 @@ class GitNotifier(QtCore.QThread):
         ## Path to monitor
         self._path = self._git.worktree()
         ## Signals thread termination
-        self._abort = False
+        self._running = True
         ## Directories to watching
         self._dirs_seen = set()
         ## The inotify watch manager instantiated in run()
@@ -121,13 +118,14 @@ class GitNotifier(QtCore.QThread):
                       EventsCodes.ALL_FLAGS['IN_MODIFY'] |
                       EventsCodes.ALL_FLAGS['IN_MOVED_TO'])
 
-    def set_abort(self, abort):
-        """Tells the GitNotifier to abort"""
-        self._abort = abort
+    def stop(self, stopped):
+        """Tells the GitNotifier to stop"""
+        self._timeout = 0
+        self._running = not stopped
 
     def notify(self):
         """Post a Qt event in response to inotify updates"""
-        if not self._abort:
+        if self._running:
             event_type = QtCore.QEvent.Type(INOTIFY_EVENT)
             event = QtCore.QEvent(event_type)
             QtCore.QCoreApplication.postEvent(self._receiver, event)
@@ -163,23 +161,25 @@ class GitNotifier(QtCore.QThread):
                                 timeout=self._timeout)
         else:
             notifier = Notifier(self._wmgr, FileSysEvent(self))
-        dirs_seen = set()
-        added_flag = False
-        # self._abort signals app termination.  The timeout is a tradeoff
+
+        self._watch_directory(self._path)
+
+        # Register files/directories known to git
+        for filename in core.decode(self._git.ls_files()).splitlines():
+            filename = os.path.realpath(filename)
+            directory = os.path.dirname(filename)
+            self._watch_directory(directory)
+
+        # self._running signals app termination.  The timeout is a tradeoff
         # between fast notification response and waiting too long to exit.
-        while not self._abort:
-            if not added_flag:
-                self._watch_directory(self._path)
-                # Register files/directories known to git
-                for filename in self._git.ls_files().splitlines():
-                    directory = os.path.dirname(filename)
-                    self._watch_directory(directory)
-                added_flag = True
-            notifier.process_events()
+        while self._running:
             if self._is_pyinotify_08x():
                 check = notifier.check_events()
             else:
                 check = notifier.check_events(timeout=self._timeout)
+            if not self._running:
+                break
             if check:
                 notifier.read_events()
+                notifier.process_events()
         notifier.stop()
