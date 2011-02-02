@@ -115,7 +115,8 @@ class GitNotifier(QtCore.QThread):
         ## The inotify watch manager instantiated in run()
         self._wmgr = None
         ## Events to capture
-        self._mask = (EventsCodes.ALL_FLAGS['IN_CREATE'] |
+        self._mask = (EventsCodes.ALL_FLAGS['IN_ATTRIB'] |
+                      EventsCodes.ALL_FLAGS['IN_CLOSE_WRITE'] |
                       EventsCodes.ALL_FLAGS['IN_DELETE'] |
                       EventsCodes.ALL_FLAGS['IN_MODIFY'] |
                       EventsCodes.ALL_FLAGS['IN_MOVED_TO'])
