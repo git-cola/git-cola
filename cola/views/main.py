@@ -25,13 +25,12 @@ from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.mainwindow import MainWindow
 from cola.controllers import classic
 from cola.controllers import compare
-from cola.controllers import search as smod
 from cola.controllers import createtag
+from cola.controllers import merge
+from cola.controllers import search as smod
 from cola.controllers.bookmark import manage_bookmarks
 from cola.controllers.bookmark import save_bookmark
 from cola.controllers.createbranch import create_new_branch
-from cola.controllers.merge import local_merge
-from cola.controllers.merge import abort_merge
 from cola.controllers.options import update_options
 from cola.controllers.stash import stash
 
@@ -127,8 +126,8 @@ class MainView(MainWindow):
                 SLOT(signals.load_commit_template)),
             (self.menu_manage_bookmarks, manage_bookmarks),
             (self.menu_save_bookmark, save_bookmark),
-            (self.menu_merge_local, local_merge),
-            (self.menu_merge_abort, abort_merge),
+            (self.menu_merge_local, merge.local_merge),
+            (self.menu_merge_abort, merge.abort_merge),
             (self.menu_fetch, guicmds.fetch_slot(self)),
             (self.menu_push, guicmds.push_slot(self)),
             (self.menu_pull, guicmds.pull_slot(self)),
@@ -342,8 +341,9 @@ class MainView(MainWindow):
 
     def diff_key_press_event(self, event):
         """Handle shortcut keys in the diff view."""
+        result = QtGui.QTextEdit.keyPressEvent(self.display_text, event)
         if event.key() != QtCore.Qt.Key_H and event.key() != QtCore.Qt.Key_S:
-            return QtGui.QTextEdit.keyPressEvent(self.display_text, event)
+            return result
 
         staged, modified, unmerged, untracked = cola.single_selection()
         if event.key() == QtCore.Qt.Key_H:
@@ -356,6 +356,7 @@ class MainView(MainWindow):
                 self.stage_hunk_selection()
             elif self.mode == self.model.mode_index:
                 self.unstage_hunk_selection()
+        return result
 
     def process_diff_selection(self, selected=False,
                                staged=True, apply_to_worktree=False,
