@@ -11,6 +11,7 @@ the undo and redo signals and manages the undo/redo stack.
 """
 import cola
 from cola import signals
+from cola import errors
 from cola.decorators import memoize
 
 
@@ -93,25 +94,41 @@ class CommandFactory(object):
         cmdobj = cmdclass(*args, **opts)
         # TODO we disable undo/redo for now; views just need to
         # inspect the stack and add menu entries when we enable it.
-        if self.undoable and cmdobj.is_undoable():
+        ok, result = self._do(cmdobj)
+        if ok and self.undoable and cmdobj.is_undoable():
             self.undostack.append(cmdobj)
-        return cmdobj.do()
+        return result
+
+    def _do(self, cmdobj):
+        try:
+            result = cmdobj.do()
+        except errors.UsageError, e:
+            self.prompt_user(signals.information, e.title, e.message)
+            return False, None
+        else:
+            return True, result
 
     def undo(self):
         """Undo the last command and add it to the redo stack."""
         if self.undostack:
             cmdobj = self.undostack.pop()
-            cmdobj.undo()
+            result = cmdobj.undo()
             self.redostack.append(cmdobj)
+            return result
         else:
             print 'warning: undo stack is empty, doing nothing'
+            return None
 
     def redo(self):
         """Redo the last command and add it to the undo stack."""
         if self.redostack:
             cmdobj = self.redostack.pop()
-            cmdobj.do()
-            self.undo.append(cmd)
+            ok, result = self._do(cmdobj)
+            if ok and cmdobj.is_undoable():
+                self.undo.append(cmd)
+            else:
+                self.redostack.push(cmdobj)
+            return result
         else:
             print 'warning: redo stack is empty, doing nothing'
 
