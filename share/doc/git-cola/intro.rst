@@ -64,6 +64,7 @@ Thanks to
 * David Martínez Martí
 * Iulian Udrea
 * Kelvie Wong
+* Kevin Kofler
 * Marco Costalba
 * Michael Geddes
 * Markus Heidelberg
