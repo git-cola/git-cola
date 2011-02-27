@@ -7,6 +7,7 @@ import commands
 import cola
 from cola import i18n
 from cola import core
+from cola import errors
 from cola import gitcfg
 from cola import gitcmds
 from cola import utils
@@ -447,18 +448,21 @@ class GrepMode(Command):
         self.new_mode = self.model.mode_grep
         self.new_diff_text = self.model.git.grep(txt, n=True)
 
+
 class LoadCommitMessage(Command):
     """Loads a commit message from a path."""
     def __init__(self, path):
         Command.__init__(self)
-        if not path or not os.path.exists(path):
-            raise OSError('error: "%s" does not exist' % path)
         self.undoable = True
         self.path = path
         self.old_commitmsg = self.model.commitmsg
         self.old_directory = self.model.directory
 
     def do(self):
+        path = self.path
+        if not path or not os.path.isfile(path):
+            raise errors.UsageError('Error: cannot find commit template',
+                                    '%s: No such file or directory.' % path)
         self.model.set_directory(os.path.dirname(self.path))
         self.model.set_commitmsg(utils.slurp(self.path))
 
@@ -471,6 +475,14 @@ class LoadCommitTemplate(LoadCommitMessage):
     """Loads the commit message template specified by commit.template."""
     def __init__(self):
         LoadCommitMessage.__init__(self, _config.get('commit.template'))
+
+    def do(self):
+        if self.path is None:
+            raise errors.UsageError('Error: unconfigured commit template',
+                    'A commit template has not been configured.\n'
+                    'Use "git config" to define "commit.template"\n'
+                    'so that it points to a commit template.')
+        return LoadCommitMessage.do(self)
 
 
 class Mergetool(Command):
