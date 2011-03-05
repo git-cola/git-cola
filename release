@@ -14,6 +14,7 @@ win32_cola_dir=cola
 win32_release_dir="$RELEASE_TREE_WIN32"
 web_src="$HOME"/src/cola-web
 tarball_dir="$RELEASE_TREE_RELEASES"
+darwin_dir="$RELEASE_TREE_DARWIN"
 
 usage() {
 	echo "$(basename "$0") [options]"
@@ -56,6 +57,10 @@ build_tarball() {
 	do_or_die make dist
 	ensure_dir_exists "$tarball_dir"
 	do_or_die mv -v cola-*.gz "$tarball_dir"
+
+	ensure_dir_exists "$darwin_dir"
+	do_or_die make app-tarball
+	do_or_die mv -v git-cola-*.app.tar.gz "$darwin_dir"
 }
 
 build_win32_remotely() {
