@@ -68,6 +68,10 @@ class StatusWidget(QtGui.QWidget):
         self.tree.mouseReleaseEvent = self.tree_click_event
 
         self.expanded_items = set()
+
+        self.connect(self, SIGNAL('about_to_update'), self._about_to_update)
+        self.connect(self, SIGNAL('updated'), self._updated)
+
         self.model = cola.model()
         self.model.add_message_observer(self.model.message_about_to_update,
                                         self.about_to_update)
@@ -170,6 +174,9 @@ class StatusWidget(QtGui.QWidget):
         return parent.child(itemidx)
 
     def about_to_update(self):
+        self.emit(SIGNAL('about_to_update'))
+
+    def _about_to_update(self):
         self.old_selection = self.selection()
 
         self.old_scroll = None
@@ -179,6 +186,9 @@ class StatusWidget(QtGui.QWidget):
 
     def updated(self):
         """Update display from model data."""
+        self.emit(SIGNAL('updated'))
+
+    def _updated(self):
         self.set_staged(self.model.staged)
         self.set_modified(self.model.modified)
         self.set_unmerged(self.model.unmerged)

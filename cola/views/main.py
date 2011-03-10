@@ -187,6 +187,9 @@ class MainView(MainWindow):
         self.display_text.keyPressEvent = self.diff_key_press_event
         self.display_text.contextMenuEvent = self.diff_context_menu_event
 
+        self.connect(self, SIGNAL('update'), self._update_callback)
+        self.connect(self, SIGNAL('import_state'), self.import_state)
+
         # Restore saved settings
         self._load_gui_state()
 
@@ -198,6 +201,9 @@ class MainView(MainWindow):
         self.connect(button, SIGNAL('clicked()'), callback)
 
     def _update_view(self):
+        self.emit(SIGNAL('update'))
+
+    def _update_callback(self):
         """Update the title with the current branch and directory name."""
         branch = self.model.currentbranch
         curdir = os.getcwd()

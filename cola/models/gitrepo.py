@@ -36,6 +36,8 @@ class GitRepoModel(QtGui.QStandardItemModel):
         QtGui.QStandardItem.__init__(self, parent)
         self._interesting_paths = self._get_paths()
         self._known_paths = set()
+
+        self.connect(self, SIGNAL('updated'), self._updated_callback)
         model = cola.model()
         model.add_message_observer(model.message_updated,
                                    self._model_updated)
@@ -124,6 +126,9 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def _model_updated(self):
         """Observes model changes and updates paths accordingly."""
+        self.emit(SIGNAL('updated'))
+
+    def _updated_callback(self):
         old_paths = self._interesting_paths
         new_paths = self._get_paths()
         for path in new_paths.union(old_paths):

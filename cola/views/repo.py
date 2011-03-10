@@ -23,6 +23,8 @@ class RepoDialog(standard.StandardDialog):
         self.layout().setMargin(1)
         self.layout().addWidget(self.tree)
         self.resize(720, 420)
+
+        self.connect(self, SIGNAL('updated'), self._updated_callback)
         self.model = main.model()
         self.model.add_message_observer(self.model.message_updated,
                                         self._model_updated)
@@ -35,6 +37,9 @@ class RepoDialog(standard.StandardDialog):
 
     def _model_updated(self):
         """Update the title with the current branch and directory name."""
+        self.emit(SIGNAL('updated'))
+
+    def _updated_callback(self):
         branch = self.model.currentbranch
         curdir = os.getcwd()
         msg = 'Repository: %s\nBranch: %s' % (curdir, branch)
