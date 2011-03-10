@@ -14,22 +14,34 @@ def instance():
     return GitConfig()
 
 
-def _appendifexists(category, path, result):
-    try:
-        mtime = os.stat(path).st_mtime
-        result.append((category, path, mtime))
-    except OSError:
-        pass
-
-
 def _stat_info():
-    data = []
     # Try /etc/gitconfig as a fallback for the system config
     userconfig = os.path.expanduser(os.path.join('~', '.gitconfig'))
-    _appendifexists('system', '/etc/gitconfig', data)
-    _appendifexists('user', userconfig, data)
-    _appendifexists('repo', git.instance().git_path('config'), data)
-    return data
+    paths = (('system', '/etc/gitconfig'),
+             ('user', userconfig),
+             ('repo', git.instance().git_path('config')))
+    statinfo = []
+    for category, path in paths:
+        try:
+            statinfo.append((category, path, os.stat(path).st_mtime))
+        except OSError:
+            continue
+    return statinfo
+
+
+def _cache_key():
+    # Try /etc/gitconfig as a fallback for the system config
+    userconfig = os.path.expanduser(os.path.join('~', '.gitconfig'))
+    paths = ('/etc/gitconfig',
+             userconfig,
+             git.instance().git_path('config'))
+    mtimes = []
+    for path in paths:
+        try:
+            mtimes.append(os.stat(path).st_mtime)
+        except OSError:
+            continue
+    return mtimes
 
 
 class GitConfig(object):
@@ -94,7 +106,7 @@ class GitConfig(object):
         Updates the cache and returns False when the cache does not match.
 
         """
-        cache_key = _stat_info()
+        cache_key = _cache_key()
         if not self._cache_key or cache_key != self._cache_key:
             self._cache_key = cache_key
             return False
