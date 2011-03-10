@@ -115,6 +115,8 @@ def main():
     from cola import qtutils
     from cola import cmds
 
+    # TODO: remove in 2012?
+    has_threadpool = hasattr(QtCore, 'QThreadPool')
 
     # Allow Ctrl-C to exit
     signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -165,27 +167,27 @@ def main():
     # Finally, go to the root of the git repo
     os.chdir(model.git.worktree())
 
-    # Scan for the first time
-    model.update_status()
-
     # Show the GUI
     if opts.classic:
         view = cola_classic(update=False)
     else:
         view = MainView()
-        MainController(model, view)
-
-    # Scan for the first time
-    model.broadcast_updated()
-
-    # Start the inotify thread
-    inotify.start()
+        ctl = MainController(model, view)
 
     # Show the view and start the main event loop
     view.show()
 
     # Make sure that we start out on top
     view.raise_()
+
+    # Scan for the first time
+    if has_threadpool:
+        task = _start_update_thread(model)
+    else:
+        model.update_status()
+
+    # Start the inotify thread
+    inotify.start()
 
     git.GIT_COLA_TRACE = os.getenv('GIT_COLA_TRACE', False)
     if git.GIT_COLA_TRACE:
@@ -201,14 +203,33 @@ def main():
     # All done, cleanup
     inotify.stop()
 
-    # TODO: Provide fallback implementation
-    if hasattr(QtCore, 'QThreadPool'):
+    if has_threadpool:
         QtCore.QThreadPool.globalInstance().waitForDone()
 
     pattern = cola.model().tmp_file_pattern()
     for filename in glob.glob(pattern):
         os.unlink(filename)
     sys.exit(result)
+
+
+def _start_update_thread(model):
+    """Update the model in the background
+
+    git-cola should startup as quickly as possible.
+
+    """
+    from PyQt4 import QtCore
+
+    class UpdateTask(QtCore.QRunnable):
+        def run(self):
+            model.update_status()
+
+    # Hold onto a reference to prevent PyQt from dereferencing
+    task = UpdateTask()
+    QtCore.QThreadPool.globalInstance().start(task)
+
+    return task
+
 
 
 def _setup_resource_dir(dirname):
