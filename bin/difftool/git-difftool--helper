@@ -83,13 +83,13 @@ launch_merge_tool () {
 		;;
 
 	ecmerge)
-		"$merge_tool_path" "$LOCAL" "$REMOTE" \
-			--default --mode=merge2 --to="$MERGED"
+		"$merge_tool_path" --default --mode=diff2 \
+			"$LOCAL" "$REMOTE"
 		;;
 
 	emerge)
 		"$merge_tool_path" -f emerge-files-command \
-			"$LOCAL" "$REMOTE" "$(basename "$MERGED")"
+			"$LOCAL" "$REMOTE"
 		;;
 
 	*)
