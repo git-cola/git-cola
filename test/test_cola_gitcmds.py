@@ -1,12 +1,18 @@
 import os
+import time
 import unittest
 
 import helper
 from cola import gitcmds
+from cola import gitcfg
 
 
 class GitCmdsTestCase(helper.GitRepositoryTestCase):
     """Tests the cola.gitcmds module."""
+    def setUp(self):
+        helper.GitRepositoryTestCase.setUp(self)
+        self.config = gitcfg.GitConfig()
+
     def test_currentbranch(self):
         """Test current_branch()."""
         self.assertEqual(gitcmds.current_branch(), 'master')
@@ -28,27 +34,33 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
 
     def test_default_remote(self):
         """Test default_remote()."""
-        self.assertEqual(gitcmds.default_remote(), None)
+        self.assertEqual(gitcmds.default_remote(config=self.config), None)
         self.shell('git config branch.master.remote test')
-        self.assertEqual(gitcmds.default_remote(), 'test')
+        self.config.reset()
+        self.assertEqual(gitcmds.default_remote(config=self.config), 'test')
 
     def test_tracked_branch(self):
         """Test tracked_branch()."""
-        self.assertEqual(gitcmds.tracked_branch(), None)
+        self.assertEqual(gitcmds.tracked_branch(config=self.config), None)
         self.shell("""
             git config branch.master.remote test &&
             git config branch.master.merge refs/heads/master
         """)
-        self.assertEqual(gitcmds.tracked_branch(), 'test/master')
+        self.config.reset()
+        self.assertEqual(gitcmds.tracked_branch(config=self.config),
+                         'test/master')
 
     def test_tracked_branch_other(self):
         """Test tracked_branch('other')."""
-        self.assertEqual(gitcmds.tracked_branch('other'), None)
+        self.assertEqual(gitcmds.tracked_branch('other', config=self.config),
+                         None)
         self.shell("""
             git config branch.other.remote test &&
             git config branch.other.merge refs/heads/other/branch
         """)
-        self.assertEqual(gitcmds.tracked_branch('other'), 'test/other/branch')
+        self.config.reset()
+        self.assertEqual(gitcmds.tracked_branch('other', config=self.config),
+                         'test/other/branch')
 
     def test_untracked_files(self):
         """Test untracked_files()."""

@@ -19,8 +19,10 @@ class InvalidRepositoryError(StandardError):
     pass
 
 
-def default_remote():
+def default_remote(config=None):
     """Return the remote tracked by the current branch."""
+    if config is None:
+        config = gitcfg.instance()
     return config.get('branch.%s.remote' % current_branch())
 
 
@@ -135,8 +137,10 @@ def all_refs(split=False, git=git):
         return local_branches + remote_branches + tags
 
 
-def tracked_branch(branch=None):
+def tracked_branch(branch=None, config=None):
     """Return the remote branch associated with 'branch'."""
+    if config is None:
+        config = gitcfg.instance()
     if branch is None:
         branch = current_branch()
     remote = config.get('branch.%s.remote' % branch)
