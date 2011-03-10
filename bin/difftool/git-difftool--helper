@@ -54,7 +54,9 @@ launch_merge_tool () {
 	tkdiff)
 		"$merge_tool_path" "$LOCAL" "$REMOTE"
 		;;
-
+	p4merge)
+		"$merge_tool_path" "$LOCAL" "$REMOTE"
+		;;
 	meld)
 		"$merge_tool_path" "$LOCAL" "$REMOTE"
 		;;
@@ -109,7 +111,9 @@ valid_custom_tool() {
 # Built-in merge tools are always valid.
 valid_tool() {
 	case "$1" in
-	kdiff3 | kompare | tkdiff | xxdiff | meld | opendiff | emerge | vimdiff | gvimdiff | ecmerge)
+	kdiff3 | tkdiff | xxdiff | meld | opendiff | \
+	vimdiff | gvimdiff | vimdiff2 | gvimdiff2 | \
+	emerge | ecmerge | diffuse | araxis | p4merge)
 		;; # happy
 	*)
 		if ! valid_custom_tool "$1"
@@ -166,29 +170,31 @@ if test -z "$merge_tool"; then
 fi
 
 # Try to guess an appropriate merge tool if no tool has been set.
-if test -z "$merge_tool"; then
-	# We have a $DISPLAY so try some common UNIX merge tools
-	if test -n "$DISPLAY"; then
+if test -z "$merge_tool"
+then
+	if test -n "$DISPLAY"
+	then
 		# If gnome then prefer meld, otherwise, prefer kdiff3 or kompare
-		if test -n "$GNOME_DESKTOP_SESSION_ID" ; then
-			merge_tool_candidates="meld kdiff3 kompare tkdiff xxdiff gvimdiff diffuse"
+		if test -n "$GNOME_DESKTOP_SESSION_ID"
+		then
+			tools="meld opendiff kdiff3 tkdiff xxdiff $tools"
 		else
-			merge_tool_candidates="kdiff3 kompare tkdiff xxdiff meld gvimdiff diffuse"
+			tools="opendiff kdiff3 tkdiff xxdiff meld $tools"
 		fi
+		tools="$tools gvimdiff diffuse ecmerge p4merge araxis"
 	fi
-	if echo "${VISUAL:-$EDITOR}" | grep 'emacs' > /dev/null 2>&1; then
-		# $EDITOR is emacs so add emerge as a candidate
-		merge_tool_candidates="$merge_tool_candidates emerge opendiff vimdiff"
-	elif echo "${VISUAL:-$EDITOR}" | grep 'vim' > /dev/null 2>&1; then
-		# $EDITOR is vim so add vimdiff as a candidate
-		merge_tool_candidates="$merge_tool_candidates vimdiff opendiff emerge"
-	else
-		merge_tool_candidates="$merge_tool_candidates opendiff emerge vimdiff"
-	fi
-	echo "merge tool candidates: $merge_tool_candidates"
+	case "${VISUAL:-EDITOR}" in
+	*vim*)
+		tools="$tools vimdiff emerge"
+		;;
+	*)
+		tools="$tools emerge vimdiff"
+		;;
+	esac
+	echo >&2 "merge tool candidates: $tools"
 
 	# Loop over each candidate and stop when a valid merge tool is found.
-	for i in $merge_tool_candidates
+	for i in $tools
 	do
 		init_merge_tool_path $i
 		if type "$merge_tool_path" > /dev/null 2>&1; then
