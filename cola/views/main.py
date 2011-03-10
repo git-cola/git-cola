@@ -369,8 +369,25 @@ class MainView(MainWindow):
 
     def _load_gui_state(self):
         """Restores the gui from the preferences file."""
-        state = settings.SettingsManager.gui_state(self)
-        self.import_state(state)
+        if self._has_threadpool:
+            self._start_gui_state_loading_thread()
+        else:
+            state = settings.SettingsManager.gui_state(self)
+            self.import_state(state)
+
+    def _start_gui_state_loading_thread(self):
+        """Do expensive file reading and json decoding in the background"""
+        class LoadGUIStateTask(QtCore.QRunnable):
+            def __init__(self, sender):
+                QtCore.QRunnable.__init__(self)
+                self._sender = sender
+            def run(self):
+                state = settings.SettingsManager.gui_state(self._sender)
+                self._sender.emit(SIGNAL('import_state'), state)
+
+        task = LoadGUIStateTask(self)
+        QtCore.QThreadPool.globalInstance().start(task)
+        return task
 
     def diff_key_press_event(self, event):
         """Handle shortcut keys in the diff view."""
