@@ -49,6 +49,8 @@ class MainView(MainWindow):
         self.commit_button.setText(qtutils.tr('Commit@@verb'))
         self.commit_menu.setTitle(qtutils.tr('Commit@@verb'))
 
+        self._has_threadpool = hasattr(QtCore, 'QThreadPool')
+
         # Diff/patch syntax highlighter
         self.syntax = DiffSyntaxHighlighter(self.display_text.document())
 
@@ -180,18 +182,51 @@ class MainView(MainWindow):
         actionsmod.install_command_wrapper(self)
         guicmds.install_command_wrapper(self)
 
-        # Install .gitconfig-defined actions
-        actionsmod.install_config_actions(self.actions_menu)
-
         # Install diff shortcut keys for stage/unstage
         self.display_text.keyPressEvent = self.diff_key_press_event
         self.display_text.contextMenuEvent = self.diff_context_menu_event
 
         self.connect(self, SIGNAL('update'), self._update_callback)
         self.connect(self, SIGNAL('import_state'), self.import_state)
+        self.connect(self, SIGNAL('install_config_actions'),
+                     self._install_config_actions)
+
+        # Install .git-config 
+        self.install_config_actions()
 
         # Restore saved settings
         self._load_gui_state()
+
+    def install_config_actions(self):
+        """Install .gitconfig-defined actions"""
+        if self._has_threadpool:
+            self._start_config_actions_task()
+        else:
+            names = actionsmod.get_config_actions()
+            self._install_config_actions(names)
+
+    def _start_config_actions_task(self):
+        """Do the expensive "get_config_actions()" call in the background"""
+        class ConfigActionsTask(QtCore.QRunnable):
+            def __init__(self, sender):
+                QtCore.QRunnable.__init__(self)
+                self._sender = sender
+            def run(self):
+                names = actionsmod.get_config_actions()
+                self._sender.emit(SIGNAL('install_config_actions'), names)
+
+        task = ConfigActionsTask(self)
+        QtCore.QThreadPool.globalInstance().start(task)
+        return task
+
+    def _install_config_actions(self, names):
+        """Install .gitconfig-defined actions"""
+        if not names:
+            return
+        menu = self.actions_menu
+        menu.addSeparator()
+        for name in names:
+            menu.addAction(name, SLOT(signals.run_config_action, name))
 
     def _relay_button(self, button, signal):
         callback = SLOT(signal)

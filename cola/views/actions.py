@@ -20,14 +20,10 @@ def install_command_wrapper(parent):
     cola.factory().add_command_wrapper(cmd_wrapper)
 
 
-def install_config_actions(menu):
+def get_config_actions():
     cfg = gitcfg.instance()
     names = cfg.get_guitool_names()
-    if not names:
-        return
-    menu.addSeparator()
-    for name in names:
-        menu.addAction(name, SLOT(signals.run_config_action, name))
+    return names or []
 
 
 class ActionCommandWrapper(object):
