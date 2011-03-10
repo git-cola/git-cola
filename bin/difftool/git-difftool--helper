@@ -141,6 +141,9 @@ init_merge_tool_path() {
 		emerge)
 			merge_tool_path=emacs
 			;;
+		araxis)
+			merge_tool_path=compare
+			;;
 		*)
 			merge_tool_path="$1"
 			;;
