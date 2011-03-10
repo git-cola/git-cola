@@ -63,12 +63,9 @@ launch_merge_tool () {
 		"$merge_tool_path" "$LOCAL" "$REMOTE" | cat
 		;;
 
-	vimdiff)
-		"$merge_tool_path" -d -c "wincmd l" "$LOCAL" "$REMOTE"
-		;;
-
-	gvimdiff)
-		"$merge_tool_path" -d -c "wincmd l" -f "$LOCAL" "$REMOTE"
+	vimdiff|gvimdiff|vimdiff2|gvimdiff2)
+		"$merge_tool_path" -R -f -d -c "wincmd l" \
+			"$LOCAL" "$REMOTE"
 		;;
 
 	xxdiff)
@@ -132,10 +129,10 @@ init_merge_tool_path() {
 	merge_tool_path=$(git config mergetool."$1".path)
 	if test -z "$merge_tool_path"; then
 		case "$1" in
-		vimdiff)
+		vimdiff|vimdiff2)
 			merge_tool_path=vim
 			;;
-		gvimdiff)
+		gvimdiff|gvimdiff2)
 			merge_tool_path=gvim
 			;;
 		emerge)
