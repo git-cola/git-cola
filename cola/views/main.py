@@ -191,16 +191,18 @@ class MainView(MainWindow):
         self.connect(self, SIGNAL('install_config_actions'),
                      self._install_config_actions)
 
-        # Install .git-config 
+        # Install .git-config-defined actions
+        self._config_task = None
         self.install_config_actions()
 
         # Restore saved settings
+        self._gui_state_task = None
         self._load_gui_state()
 
     def install_config_actions(self):
         """Install .gitconfig-defined actions"""
         if self._has_threadpool:
-            self._start_config_actions_task()
+            self._config_task = self._start_config_actions_task()
         else:
             names = actionsmod.get_config_actions()
             self._install_config_actions(names)
@@ -370,7 +372,7 @@ class MainView(MainWindow):
     def _load_gui_state(self):
         """Restores the gui from the preferences file."""
         if self._has_threadpool:
-            self._start_gui_state_loading_thread()
+            self._gui_state_task = self._start_gui_state_loading_thread()
         else:
             state = settings.SettingsManager.gui_state(self)
             self.import_state(state)
@@ -387,6 +389,7 @@ class MainView(MainWindow):
 
         task = LoadGUIStateTask(self)
         QtCore.QThreadPool.globalInstance().start(task)
+
         return task
 
     def diff_key_press_event(self, event):
