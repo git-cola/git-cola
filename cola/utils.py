@@ -5,7 +5,6 @@ import os
 import re
 import sys
 import errno
-import commands
 import platform
 import subprocess
 import mimetypes
