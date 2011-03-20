@@ -108,41 +108,21 @@ def win32_abspath(exe):
     return None
 
 
-def win32_expand_paths(args):
-    """Expand and quote filenames after the double-dash"""
-    if '--' not in args:
-        return args
-    dashes_idx = args.index('--')
-    cmd = args[:dashes_idx+1]
-    for path in args[dashes_idx+1:]:
-        cmd.append(commands.mkarg(os.path.join(os.getcwd(), path)))
-    return cmd
-
-
 def fork(args):
     """Launch a command in the background."""
     if is_win32():
         # Windows is absolutely insane.
-        #
-        # If we want to launch 'gitk' we have to use the 'sh -c' trick.
-        #
-        # If we want to launch 'git.exe' we have to expand all filenames
-        # after the double-dash.
-        #
-        # os.spawnv wants an absolute path in the command name but not in
-        # the command vector.  Wow.
-        enc_args = win32_expand_paths([core.encode(a) for a in args])
-        abspath = win32_abspath(enc_args[0])
+        enc_args = map(core.encode, args)
+        abspath = win32_abspath(args[0])
         if abspath:
             # e.g. fork(['git', 'difftool', '--no-prompt', '--', 'path'])
             return os.spawnv(os.P_NOWAIT, abspath, enc_args)
-
-        # e.g. fork(['gitk', '--all'])
-        sh_exe = win32_abspath('sh')
-        enc_argv = map(commands.mkarg, enc_args)
-        cmdstr = ' '.join(enc_argv)
-        cmd = ['sh.exe', '-c', cmdstr]
-        return os.spawnv(os.P_NOWAIT, sh_exe, cmd)
+        else:
+            # e.g. fork(['gitk', '--all'])
+            cmdstr = subprocess.list2cmdline(enc_args)
+            sh_exe = win32_abspath('sh')
+            cmd = ['sh.exe', '-c', cmdstr]
+            return os.spawnv(os.P_NOWAIT, sh_exe, cmd)
     else:
         # I like having a sane os.system()
         enc_args = [core.encode(a) for a in args]
