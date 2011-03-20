@@ -144,10 +144,9 @@ def fork(args):
         cmd = ['sh.exe', '-c', cmdstr]
         return os.spawnv(os.P_NOWAIT, sh_exe, cmd)
     else:
-        # Unix is absolutely simple
+        # I like having a sane os.system()
         enc_args = [core.encode(a) for a in args]
-        enc_argv = map(commands.mkarg, enc_args)
-        cmdstr = ' '.join(enc_argv)
+        cmdstr = subprocess.list2cmdline(enc_args)
         return os.system(cmdstr + '&')
 
 
