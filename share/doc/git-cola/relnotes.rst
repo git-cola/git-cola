@@ -1,5 +1,29 @@
 .. |beta(TM)| unicode:: beta U+2122
 
+git-cola v1.4.3.2
+=================
+Usability, bells and whistles
+-----------------------------
+* Faster startup time! `git-cola` now offloads initialization
+  to a background thread so that the GUI appears almost instantly.
+
+* Specialized diff options for p4merge, vimdiff, araxis, emerge,
+  and ecmerge in difftool (backported from git.git).
+
+Fixes
+-----
+* Fix launching commands in the background on Windows
+  (e.g. when launching `git-difftool`).
+
+* Fix unicode errors when home or repository directories contain
+  unicode characters.
+
+  http://github.com/davvid/git-cola/issues/closed#issue/74
+
+  Redhat's bugzilla #694806
+
+  https://bugzilla.redhat.com/show_bug.cgi?id=694806
+
 git-cola v1.4.3.1
 =================
 Usability, bells and whistles
