@@ -18,8 +18,8 @@ def _stat_info():
     # Try /etc/gitconfig as a fallback for the system config
     userconfig = os.path.expanduser(os.path.join('~', '.gitconfig'))
     paths = (('system', '/etc/gitconfig'),
-             ('user', userconfig),
-             ('repo', git.instance().git_path('config')))
+             ('user', core.decode(userconfig)),
+             ('repo', core.decode(git.instance().git_path('config'))))
     statinfo = []
     for category, path in paths:
         try:
