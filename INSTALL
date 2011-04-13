@@ -88,7 +88,7 @@ Download the latest stable Git, Python 2.6, and Py26-PyQt4 installers
     http://python.org/download/
     http://www.riverbankcomputing.co.uk/software/pyqt/download
 
-Download the latest Cola-[version].exe installer
+Download the latest git-cola-[version].exe installer
     http://cola.tuxfamily.org/releases/win32/
 
 Once it's installed you can run it from the Start menu or
@@ -101,14 +101,6 @@ tree by using the 'win32/cola' shell script.
     $ win32/cola
 
 Note: win32/cola assumes you've installed Python in /c/Python26 or /c/Python25.
-Adjust accordingly.  You can also add python to your path and simply bin/git-cola.
+Adjust accordingly.
 
-
-ABOUT THE VARIOUS COLA FLAVORS
-
-A cola-*-src tarball does not include any generated files.
-It is purely a "source" release and includes everything needed
-to "make install".  It is basically an export of git-cola.git.
-Binary packages are available for Mac OSX and Windows.
-
-~ http://cola.tuxfamily.org/downloads.html
+You can also add python to your path and run bin/git-cola directly.
