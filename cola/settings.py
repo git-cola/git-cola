@@ -5,11 +5,12 @@
 import os
 import user
 
+from cola import core
 from cola import serializer
 from cola.models import observable
 
 # Here we store settings
-_rcfile = os.path.join(user.home, '.cola')
+_rcfile = os.path.join(core.decode(user.home), '.cola')
 
 
 class SettingsModel(observable.ObservableModel):
