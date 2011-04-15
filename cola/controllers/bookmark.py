@@ -57,7 +57,7 @@ class BookmarkController(QObserver):
         if not selection:
             return
         for item in selection:
-            utils.fork(['git', 'cola', item])
+            utils.fork([sys.executable, sys.argv[0], '--repo', item])
 
     def delete(self):
         """Removes a bookmark from the bookmarks list"""
