@@ -134,7 +134,7 @@ def cherry_pick():
     cola.notifier().broadcast(signals.cherry_pick, commits)
 
 
-def clone_repo(parent, spawn=True):
+def clone_repo(spawn=True):
     """
     Present GUI controls for cloning a repository
 
@@ -142,7 +142,7 @@ def clone_repo(parent, spawn=True):
 
     """
     url, ok = qtutils.prompt('Path or URL to clone (Env. $VARS okay)')
-    url = os.path.expandvars(url)
+    url = os.path.expandvars(core.encode(url))
     if not ok or not url:
         return None
     try:
@@ -168,12 +168,14 @@ def clone_repo(parent, spawn=True):
         return None
 
     # Prompt the user for a directory to use as the parent directory
+    parent = QtGui.QApplication.instance().activeWindow()
     msg = 'Select a parent directory for the new clone'
     dirname = qtutils.opendir_dialog(parent, msg, cola.model().getcwd())
     if not dirname:
         return None
     count = 1
-    destdir = os.path.join(dirname, default)
+    dirname = core.decode(dirname)
+    destdir = os.path.join(dirname, core.decode(default))
     olddestdir = destdir
     if os.path.exists(destdir):
         # An existing path can be specified
@@ -186,7 +188,7 @@ def clone_repo(parent, spawn=True):
     while os.path.exists(destdir):
         destdir = olddestdir + str(count)
         count += 1
-    cola.notifier().broadcast(signals.clone, url, destdir,
+    cola.notifier().broadcast(signals.clone, core.decode(url), destdir,
                               spawn=spawn)
     return destdir
 
