@@ -139,7 +139,8 @@ class MainModel(ObservableModel):
         is_valid = self.git.is_valid()
         if is_valid:
             self._init_config_data()
-            self.set_project(os.path.basename(self.git.worktree()))
+            basename = os.path.basename(self.git.worktree())
+            self.set_project(core.decode(basename))
         return is_valid
 
     def _init_config_data(self):
