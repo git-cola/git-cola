@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Cola Git GUI
 Comment=A highly caffeinated git GUI
-Exec=git-cola
+Exec=git-cola --prompt
 Icon=/usr/share/git-cola/icons/git.svg
 StartupNotify=true
 Terminal=false

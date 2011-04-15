@@ -62,6 +62,13 @@ def main():
                       metavar='PATH',
                       default=os.getcwd())
 
+    # Specifies that we should prompt for a repository at startup
+    parser.add_option('--prompt',
+                      help='Prompt for a repository before starting the main GUI.',
+                      dest='prompt',
+                      action='store_true',
+                      default=False)
+
     # Used on Windows for adding 'git' to the path
     parser.add_option('-g', '--git-path',
                       help='Specifies the path to the git binary',
@@ -156,7 +163,7 @@ def main():
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
     model = cola.model()
-    valid = model.use_worktree(repo)
+    valid = model.use_worktree(repo) and not opts.prompt
     while not valid:
         startup_dlg = startup.StartupDialog(app.activeWindow())
         gitdir = startup_dlg.find_git_repo()

@@ -8,4 +8,4 @@ export PATH
 # Contents/Resources
 macos="$(dirname "$0")"
 contents="$(dirname "$macos")"
-exec python "$contents/Resources/bin/git-cola"
+exec python "$contents/Resources/bin/git-cola" --prompt
