@@ -15,7 +15,7 @@ from cola.decorators import memoize
 
 @memoize
 def instance(argv):
-   return QtGui.QApplication(list(argv))
+    return QtGui.QApplication(list(argv))
 
 
 class ColaApplication(object):
