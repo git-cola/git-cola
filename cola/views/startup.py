@@ -102,7 +102,7 @@ class StartupDialog(QtGui.QDialog):
             self.accept()
 
     def _clone(self):
-        gitdir = guicmds.clone_repo(self, spawn=False)
+        gitdir = guicmds.clone_repo(spawn=False)
         if gitdir:
             self._gitdir = gitdir
             self.accept()
