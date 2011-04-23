@@ -22,6 +22,14 @@ OPTIONS
 --classic::
 	Launch the standalone 'cola classic' tool.
 
+-g::
+--git-path::
+	Specifies the path to the 'git' binary.
+
+--prompt::
+	Prompt for a git repository instead of auto-detecting it
+	in the current directory.
+
 -r::
 --repo=<path>::
 	Run 'git-cola' on the git repository in <path>.
@@ -33,11 +41,8 @@ OPTIONS
 
 -v::
 --version::
-	Prints the 'git-cola' version and exits.
+	Print the 'git-cola' version and exit.
 
--g::
---git-path::
-	Specifies the path to the 'git' binary.
 
 GUI STYLES
 ----------
