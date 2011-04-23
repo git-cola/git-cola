@@ -271,7 +271,7 @@ class MainView(MainWindow):
                 return
             self.merge_message_hash = merge_msg_hash
             cola.notifier().broadcast(signals.load_commit_message,
-                                      merge_msg_path)
+                                      core.decode(merge_msg_path))
 
     def _mode_changed(self, mode):
         """React to mode changes; hide/show the "Exit Diff Mode" button."""

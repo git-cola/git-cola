@@ -463,8 +463,8 @@ class LoadCommitMessage(Command):
         if not path or not os.path.isfile(path):
             raise errors.UsageError('Error: cannot find commit template',
                                     '%s: No such file or directory.' % path)
-        self.model.set_directory(os.path.dirname(self.path))
-        self.model.set_commitmsg(utils.slurp(self.path))
+        self.model.set_directory(os.path.dirname(path))
+        self.model.set_commitmsg(utils.slurp(path))
 
     def undo(self):
         self.model.set_commitmsg(self.old_commitmsg)
