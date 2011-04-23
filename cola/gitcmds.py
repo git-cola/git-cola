@@ -87,7 +87,7 @@ def _read_git_head(head, default='master', git=git):
 
     # Common .git/HEAD "ref: refs/heads/master" file
     elif os.path.isfile(head):
-        data = utils.slurp(head).rstrip()
+        data = utils.slurp(core.decode(head)).rstrip()
         ref_prefix = 'ref: '
         if data.startswith(ref_prefix):
             return data[len(ref_prefix):]
