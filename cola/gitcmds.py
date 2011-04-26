@@ -126,7 +126,8 @@ def all_refs(split=False, git=git):
     query = (triple('refs/tags', tags),
              triple('refs/heads', local_branches),
              triple('refs/remotes', remote_branches))
-    for ref in git.for_each_ref(format='%(refname)').splitlines():
+    cmdout = core.decode(git.for_each_ref(format='%(refname)'))
+    for ref in cmdout.splitlines():
         for prefix, prefix_len, dst in query:
             if ref.startswith(prefix) and not ref.endswith('/HEAD'):
                 dst.append(ref[prefix_len:])
