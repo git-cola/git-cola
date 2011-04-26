@@ -68,7 +68,7 @@ def current_branch(git=git):
 
     for refs_prefix in ('refs/heads/', 'refs/remotes/'):
         if data.startswith(refs_prefix):
-            value = data[len(refs_prefix):]
+            value = core.decode(data[len(refs_prefix):])
             _current_branch.key = key
             _current_branch.value = value
             return value
