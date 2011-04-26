@@ -112,7 +112,7 @@ def branch_list(remote=False):
 
 def for_each_ref_basename(refs, git=git):
     """Return refs starting with 'refs'."""
-    output = git.for_each_ref(refs, format='%(refname)').splitlines()
+    output = core.decode(git.for_each_ref(refs, format='%(refname)').splitlines())
     non_heads = filter(lambda x: not x.endswith('/HEAD'), output)
     return map(lambda x: x[len(refs) + 1:], non_heads)
 
