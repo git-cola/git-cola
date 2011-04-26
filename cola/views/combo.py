@@ -39,7 +39,7 @@ class ComboView(standard.StandardDialog):
         return self.items_widget.currentIndex()
 
     def value(self):
-        return str(self.items_widget.currentText())
+        return unicode(self.items_widget.currentText())
 
     def selected(self):
         """Present the dialog and return the chosen item."""
