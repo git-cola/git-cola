@@ -57,10 +57,12 @@ class MainWindow(MainWindowBase):
         self.commitdockwidgetcontents = QtGui.QWidget()
 
         self.commitdockwidgetlayout = QtGui.QVBoxLayout(self.commitdockwidgetcontents)
-        self.commitdockwidgetlayout.setMargin(4)
+        self.commitdockwidgetlayout.setMargin(0)
+        self.commitdockwidgetlayout.setSpacing(0)
 
         self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setSpacing(0)
+        self.vboxlayout.setSpacing(2)
+        self.vboxlayout.setMargin(0)
 
         self.commitmsg = QtGui.QTextEdit(self.commitdockwidgetcontents)
         self.commitmsg.setMinimumSize(QtCore.QSize(1, 1))
@@ -71,8 +73,8 @@ class MainWindow(MainWindowBase):
         self.commitmsg.setAcceptRichText(False)
 
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setSpacing(3)
-        self.hboxlayout.setContentsMargins(2, 6, 2, 0)
+        self.hboxlayout.setSpacing(0)
+        self.hboxlayout.setMargin(0)
 
         # Sign off and commit buttons
         self.signoff_button = qt.create_button('Sign Off')
@@ -94,6 +96,7 @@ class MainWindow(MainWindowBase):
 
         self.vboxlayout.addWidget(self.commitmsg)
         self.vboxlayout.addLayout(self.hboxlayout)
+
         self.commitdockwidgetlayout.addLayout(self.vboxlayout)
         self.commitdockwidget.setWidget(self.commitdockwidgetcontents)
 
