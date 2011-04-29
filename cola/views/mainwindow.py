@@ -45,11 +45,7 @@ class MainWindow(MainWindowBase):
         self.stash_button = qt.create_button('Stash...', layout)
         self.alt_button = qt.create_button('Exit Diff Mode', layout)
         self.alt_button.hide()
-
-        self.action_spacer = QtGui.QSpacerItem(1, 1,
-                                               QtGui.QSizePolicy.MinimumExpanding,
-                                               QtGui.QSizePolicy.MinimumExpanding)
-        self.actiondockwidgetcontents.layout().addItem(self.action_spacer)
+        layout.addStretch()
         self.actiondockwidget.setWidget(self.actiondockwidgetcontents)
 
         # "Repository Status" widget
@@ -73,7 +69,6 @@ class MainWindow(MainWindowBase):
         self.commitmsg.setSizePolicy(policy)
         self.commitmsg.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.commitmsg.setAcceptRichText(False)
-        self.vboxlayout.addWidget(self.commitmsg)
 
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setSpacing(3)
@@ -87,10 +82,6 @@ class MainWindow(MainWindowBase):
         self.position_label = QtGui.QLabel(self.actiondockwidgetcontents)
         self.position_label.setAlignment(Qt.AlignLeft)
 
-        # Spacer between position and amend
-        self.spacer = QtGui.QSpacerItem(1, 1,
-                                        QtGui.QSizePolicy.MinimumExpanding,
-                                        QtGui.QSizePolicy.Minimum)
         # Amend checkbox
         self.amend_checkbox = QtGui.QCheckBox(self.commitdockwidgetcontents)
         self.amend_checkbox.setText(tr('Amend Last Commit'))
@@ -98,9 +89,10 @@ class MainWindow(MainWindowBase):
         self.hboxlayout.addWidget(self.signoff_button)
         self.hboxlayout.addWidget(self.commit_button)
         self.hboxlayout.addWidget(self.position_label)
-        self.hboxlayout.addItem(self.spacer)
+        self.hboxlayout.addStretch()
         self.hboxlayout.addWidget(self.amend_checkbox)
 
+        self.vboxlayout.addWidget(self.commitmsg)
         self.vboxlayout.addLayout(self.hboxlayout)
         self.commitdockwidgetlayout.addLayout(self.vboxlayout)
         self.commitdockwidget.setWidget(self.commitdockwidgetcontents)
