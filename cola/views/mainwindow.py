@@ -142,7 +142,7 @@ class MainWindow(MainWindowBase):
         self.menu_copy = self.create_action('Copy', local=True)
         self.menu_paste = self.create_action('Paste')
         self.menu_select_all = self.create_action('Select All')
-        self.menu_options = self.create_action('Options')
+        self.menu_options = self.create_action('Preferences')
         self.menu_delete = self.create_action('Delete')
         self.menu_undo = self.create_action('Undo')
         self.menu_redo = self.create_action('Redo')

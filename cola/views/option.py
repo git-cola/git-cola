@@ -9,7 +9,7 @@ class OptionsView(standard.StandardDialog):
     def __init__(self, parent=None):
         standard.StandardDialog.__init__(self, parent=parent)
         #self.setWindowModality(QtCore.Qt.ApplicationModal)
-        self.setWindowTitle(self.tr('Options'))
+        self.setWindowTitle(self.tr('Preferences'))
         self.resize(608, 425)
 
         self._main_layt = QtGui.QVBoxLayout(self)
