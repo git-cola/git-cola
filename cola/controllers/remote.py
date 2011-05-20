@@ -221,6 +221,7 @@ class RemoteController(QObserver):
 
             # Disable the GUI by default
             self.view.setEnabled(False)
+            self.progress.setEnabled(True)
             QtGui.QApplication.setOverrideCursor(Qt.WaitCursor)
 
             # Show a nice progress bar
