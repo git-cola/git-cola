@@ -90,6 +90,25 @@ def information(title, message=None):
     parent = QtGui.QApplication.instance().activeWindow()
     QtGui.QMessageBox.information(parent, title, message)
 
+
+def critical(title, message=None, details=None):
+    """Show a warning with the provided title and message."""
+    if message is None:
+        message = title
+    title = tr(title)
+    message = tr(message)
+    parent = QtGui.QApplication.instance().activeWindow()
+    mbox = QtGui.QMessageBox(parent)
+    mbox.setWindowTitle(title)
+    mbox.setTextFormat(QtCore.Qt.PlainText)
+    mbox.setText(message)
+    mbox.setIcon(QtGui.QMessageBox.Critical)
+    mbox.setStandardButtons(QtGui.QMessageBox.Close)
+    mbox.setDefaultButton(QtGui.QMessageBox.Close)
+    if details:
+        mbox.setDetailedText(details)
+    mbox.exec_()
+
 # Register globally with the notifier
 cola.notifier().connect(signals.information, information)
 

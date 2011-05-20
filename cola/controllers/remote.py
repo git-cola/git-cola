@@ -209,5 +209,12 @@ class RemoteController(QObserver):
                 output = self.tr('Already up-to-date.')
             # Force the status to 1 so that we always display the log
             qtutils.log(1, output)
+
+            if status != 0 and action == 'push':
+                message = 'Error pushing to "%s".\n\nPull first?' % remote
+                qtutils.critical('Push Error',
+                                 message=message, details=output)
+
             self.view.accept()
+
         return remote_callback
