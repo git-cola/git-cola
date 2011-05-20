@@ -29,7 +29,6 @@ def remote_action(parent, action):
     view = remote.RemoteView(parent, action)
     controller = RemoteController(model, view, action)
     view.show()
-    return view.exec_()
 
 
 class RemoteController(QObserver):
@@ -54,6 +53,12 @@ class RemoteController(QObserver):
             'pull': self.gen_remote_callback(self.model.pull_helper),
         }   [action]
         self.action_result = None
+        self._tasks = []
+        self.progress = QtGui.QProgressDialog(self.view)
+        self.progress.setRange(0, 0)
+        self.progress.setCancelButton(None)
+        self.progress.setWindowTitle('git ' + action)
+        self.progress.setWindowModality(Qt.WindowModal)
         """Callbacks corresponding to the 3 (fetch/push/pull) modes"""
 
         self.add_actions(remotes = self.display_remotes)
@@ -61,6 +66,8 @@ class RemoteController(QObserver):
                            remotes = self.update_remotes,
                            local_branches = self.update_local_branches,
                            remote_branches = self.update_remote_branches)
+        self.view.connect(self.view, SIGNAL('action_completed'),
+                          self._action_completed)
         self.refresh_view()
         remotes = self.model.remotes
         if 'origin' in remotes:
@@ -217,47 +224,48 @@ class RemoteController(QObserver):
             QtGui.QApplication.setOverrideCursor(Qt.WaitCursor)
 
             # Show a nice progress bar
-            progress = QtGui.QProgressDialog(self.view)
-            progress.setRange(0, 0)
-            progress.setCancelButton(None)
-            progress.setLabelText('Connecting to %s...' % remote)
-            progress.setWindowModality(Qt.WindowModal)
-            progress.setAutoClose(True)
-            progress.setAutoReset(True)
+            self.progress.setLabelText('Connecting to %s...' % remote)
+            self.progress.show()
 
-            # Use a timer to run the action
-            timer = QtCore.QTimer(self.view)
-            timer.setSingleShot(True)
-
-            def runaction():
-                """Runs the model action and captures the result"""
-                self.action_result = modelaction(remote, **kwargs)
-                progress.close()
-
-            # Connect the timer to runaction()
-            self.view.connect(timer, SIGNAL('timeout()'), runaction)
-
-            # Show the progress bar, start the timer, and block
-            # waiting for runaction() to close the progress bar
-            progress.show()
-            timer.start(0)
-            progress.exec_()
-
-            # Grab the results of the action and finish up
-            status, output = self.action_result
-
-            if not output: # git fetch --tags --verbose doesn't print anything...
-                output = self.tr('Already up-to-date.')
-            # Force the status to 1 so that we always display the log
-            qtutils.log(1, output)
-
-            progress.close()
-            QtGui.QApplication.restoreOverrideCursor()
-
-            if status != 0 and action == 'push':
-                message = 'Error pushing to "%s".\n\nPull first?' % remote
-                qtutils.critical('Push Error',
-                                 message=message, details=output)
-            self.view.accept()
+            # Use a thread to update in the background
+            task = ActionTask(self.view, modelaction, remote, kwargs)
+            self._tasks.append(task)
+            QtCore.QThreadPool.globalInstance().start(task)
 
         return remote_callback
+
+
+    def _action_completed(self, task, status, output):
+        # Grab the results of the action and finish up
+        if task in self._tasks:
+            self._tasks.remove(task)
+
+        if not output: # git fetch --tags --verbose doesn't print anything...
+            output = self.tr('Already up-to-date.')
+        # Force the status to 1 so that we always display the log
+        qtutils.log(1, output)
+
+        self.progress.close()
+        QtGui.QApplication.restoreOverrideCursor()
+
+        if status != 0 and self.action == 'push':
+            message = 'Error pushing to "%s".\n\nPull first?' % remote
+            qtutils.critical('Push Error',
+                             message=message, details=output)
+
+        self.action_completed = True
+        self.view.accept()
+
+
+class ActionTask(QtCore.QRunnable):
+    def __init__(self, sender, modelaction, remote, kwargs):
+        QtCore.QRunnable.__init__(self)
+        self._sender = sender
+        self._modelaction = modelaction
+        self._remote = remote
+        self._kwargs = kwargs
+
+    def run(self):
+        """Runs the model action and captures the result"""
+        status, output = self._modelaction(self._remote, **self._kwargs)
+        self._sender.emit(SIGNAL('action_completed'), self, status, output)
