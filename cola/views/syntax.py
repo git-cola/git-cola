@@ -178,17 +178,6 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
         if self.whitespace:
             self.create_rules('(..*?)(\s+)$', (None, bad_ws))
 
-class LogSyntaxHighlighter(GenericSyntaxHighligher):
-    def generate_rules(self):
-        info = self.mkformat(self.color_info, bold=True)
-        emphasis = self.mkformat(self.color_emphasis, bold=True)
-        date = self.mkformat(self.color_date, bold=True)
-
-        info_rgx = '^([^:]+:)(.*)$'
-        date_rgx = TERMINAL('^\w{3}\W+\w{3}\W+\d+\W+[:0-9]+\W+\d{4}$')
-
-        self.create_rules(date_rgx, date,
-                          info_rgx, (info, emphasis))
 
 # This is used as a mixin to generate property callbacks
 def accessors(attr):
