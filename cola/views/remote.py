@@ -12,6 +12,7 @@ class RemoteView(standard.StandardDialog):
         """Customizes the dialog based on the remote action
         """
         standard.StandardDialog.__init__(self, parent=parent)
+        self.setWindowModality(QtCore.Qt.WindowModal)
 
         self.resize(666, 606)
         self._main_vbox_layt = QtGui.QVBoxLayout(self)
