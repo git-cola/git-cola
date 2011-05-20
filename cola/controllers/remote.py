@@ -3,6 +3,10 @@
 
 import os
 import fnmatch
+from PyQt4 import QtGui
+from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
+from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import QDialog
 
 import cola
@@ -25,6 +29,8 @@ def remote_action(parent, action):
     view = remote.RemoteView(parent, action)
     controller = RemoteController(model, view, action)
     view.show()
+    return view.exec_()
+
 
 class RemoteController(QObserver):
     """Provides control for the remote-action dialog."""
@@ -47,6 +53,7 @@ class RemoteController(QObserver):
             'push': self.gen_remote_callback(self.model.push_helper),
             'pull': self.gen_remote_callback(self.model.pull_helper),
         }   [action]
+        self.action_result = None
         """Callbacks corresponding to the 3 (fetch/push/pull) modes"""
 
         self.add_actions(remotes = self.display_remotes)
@@ -204,17 +211,53 @@ class RemoteController(QObserver):
                 if not qtutils.question(self.view,
                         'Force %s?' % action.title(), msg, default=False):
                     return
-            status, output = modelaction(remote, **kwargs)
+
+            # Disable the GUI by default
+            self.view.setEnabled(False)
+            QtGui.QApplication.setOverrideCursor(Qt.WaitCursor)
+
+            # Show a nice progress bar
+            progress = QtGui.QProgressDialog(self.view)
+            progress.setRange(0, 0)
+            progress.setCancelButton(None)
+            progress.setLabelText('Connecting to %s...' % remote)
+            progress.setWindowModality(Qt.WindowModal)
+            progress.setAutoClose(True)
+            progress.setAutoReset(True)
+
+            # Use a timer to run the action
+            timer = QtCore.QTimer(self.view)
+            timer.setSingleShot(True)
+
+            def runaction():
+                """Runs the model action and captures the result"""
+                self.action_result = modelaction(remote, **kwargs)
+                progress.close()
+
+            # Connect the timer to runaction()
+            self.view.connect(timer, SIGNAL('timeout()'), runaction)
+
+            # Show the progress bar, start the timer, and block
+            # waiting for runaction() to close the progress bar
+            progress.show()
+            timer.start(0)
+            progress.exec_()
+
+            # Grab the results of the action and finish up
+            status, output = self.action_result
+
             if not output: # git fetch --tags --verbose doesn't print anything...
                 output = self.tr('Already up-to-date.')
             # Force the status to 1 so that we always display the log
             qtutils.log(1, output)
 
+            progress.close()
+            QtGui.QApplication.restoreOverrideCursor()
+
             if status != 0 and action == 'push':
                 message = 'Error pushing to "%s".\n\nPull first?' % remote
                 qtutils.critical('Push Error',
                                  message=message, details=output)
-
             self.view.accept()
 
         return remote_callback
