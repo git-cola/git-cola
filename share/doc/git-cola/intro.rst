@@ -59,10 +59,12 @@ Thanks to
 * Barry Roberts
 * Boris W
 * Ben Boeckel
+* Christian Jann
 * Daniel King
 * David Aguilar
 * David Martínez Martí
 * Iulian Udrea
+* Justin Lecher
 * Kelvie Wong
 * Kevin Kofler
 * Marco Costalba
