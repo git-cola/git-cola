@@ -8,6 +8,7 @@ class MergeView(QtGui.QDialog):
     """Provides a dialog for merging branches."""
     def __init__(self, parent=None):
         QtGui.QDialog.__init__(self, parent)
+        self.setWindowModality(Qt.WindowModal)
         self.setWindowTitle(tr('Merge'))
         self.resize(673, 339)
         self.vboxlayout = QtGui.QVBoxLayout(self)
