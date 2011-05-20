@@ -13,6 +13,7 @@ from cola.views import standard
 class CreateTag(standard.StandardDialog):
     def __init__(self, parent=None):
         standard.StandardDialog.__init__(self, parent=parent)
+        self.setWindowModality(QtCore.Qt.WindowModal)
         self.setWindowTitle(self.tr('Create Tag'))
         self.resize(506, 295)
         self._main_layt = QtGui.QVBoxLayout(self)
