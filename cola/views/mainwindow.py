@@ -109,7 +109,7 @@ class MainWindow(MainWindowBase):
         self.diffdockwidget = self.create_dock('Diff Viewer')
         self.diffdockwidgetcontents = QtGui.QWidget()
         self.diffdockwidgetlayout = QtGui.QVBoxLayout(self.diffdockwidgetcontents)
-        self.diffdockwidgetlayout.setMargin(3)
+        self.diffdockwidgetlayout.setMargin(0)
 
         self.display_text = QtGui.QTextEdit(self.diffdockwidgetcontents)
         self.display_text.setMinimumSize(QtCore.QSize(1, 1))

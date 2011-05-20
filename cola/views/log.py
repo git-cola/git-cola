@@ -11,7 +11,7 @@ class LogView(QtGui.QWidget):
         QtGui.QWidget.__init__(self, parent)
 
         self._layout = QtGui.QVBoxLayout(self)
-        self._layout.setContentsMargins(3, 3, 3, 3)
+        self._layout.setMargin(0)
 
         self.output_text = QtGui.QTextEdit(self)
         self.output_text.setAcceptDrops(False)
