@@ -60,10 +60,6 @@ class MainWindow(MainWindowBase):
         self.commitdockwidgetlayout.setMargin(0)
         self.commitdockwidgetlayout.setSpacing(0)
 
-        self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setSpacing(2)
-        self.vboxlayout.setMargin(0)
-
         self.commitmsg = QtGui.QTextEdit(self.commitdockwidgetcontents)
         self.commitmsg.setMinimumSize(QtCore.QSize(1, 1))
         policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum,
@@ -72,9 +68,9 @@ class MainWindow(MainWindowBase):
         self.commitmsg.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.commitmsg.setAcceptRichText(False)
 
-        self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setSpacing(0)
-        self.hboxlayout.setMargin(0)
+        self.commit_ctrls_layt = QtGui.QHBoxLayout()
+        self.commit_ctrls_layt.setSpacing(4)
+        self.commit_ctrls_layt.setMargin(0)
 
         # Sign off and commit buttons
         self.signoff_button = qt.create_button('Sign Off')
@@ -88,16 +84,15 @@ class MainWindow(MainWindowBase):
         self.amend_checkbox = QtGui.QCheckBox(self.commitdockwidgetcontents)
         self.amend_checkbox.setText(tr('Amend Last Commit'))
 
-        self.hboxlayout.addWidget(self.signoff_button)
-        self.hboxlayout.addWidget(self.commit_button)
-        self.hboxlayout.addWidget(self.position_label)
-        self.hboxlayout.addStretch()
-        self.hboxlayout.addWidget(self.amend_checkbox)
+        self.commit_ctrls_layt.addWidget(self.signoff_button)
+        self.commit_ctrls_layt.addWidget(self.commit_button)
+        self.commit_ctrls_layt.addWidget(self.position_label)
+        self.commit_ctrls_layt.addStretch()
+        self.commit_ctrls_layt.addWidget(self.amend_checkbox)
 
-        self.vboxlayout.addWidget(self.commitmsg)
-        self.vboxlayout.addLayout(self.hboxlayout)
+        self.commitdockwidgetlayout.addWidget(self.commitmsg)
+        self.commitdockwidgetlayout.addLayout(self.commit_ctrls_layt)
 
-        self.commitdockwidgetlayout.addLayout(self.vboxlayout)
         self.commitdockwidget.setWidget(self.commitdockwidgetcontents)
 
         # "Command Output" widget
