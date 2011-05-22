@@ -50,7 +50,7 @@ class MainWindow(MainWindowBase):
 
         # "Repository Status" widget
         self.statusdockwidget = self.create_dock('Repository Status')
-        self.statusdockwidget.setWidget(status.widget())
+        self.statusdockwidget.setWidget(status.StatusWidget(self))
 
         # "Commit Message Editor" widget
         self.commitdockwidget = self.create_dock('Commit Message Editor')

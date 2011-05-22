@@ -11,14 +11,6 @@ from cola.compat import set
 from cola.qtutils import SLOT
 
 
-_widget = None
-def widget(parent=None):
-    global _widget
-    if not _widget:
-        _widget = StatusWidget(parent)
-    return _widget
-
-
 class StatusWidget(QtGui.QWidget):
     """
     Provides a git-status-like repository widget.
