@@ -4,6 +4,7 @@
 import os
 
 from PyQt4 import QtGui
+from PyQt4.QtCore import SIGNAL
 
 import cola
 from cola import utils
@@ -16,9 +17,9 @@ def stash():
     """Launches a stash dialog using the provided model + view
     """
     model = cola.model()
-    model.keep_index = True
     model.stash_list = []
     model.stash_revids = []
+    model.stash_names = []
     parent = QtGui.QApplication.instance().activeWindow()
     view = stashmod.StashView(parent)
     ctl = StashController(model, view)
@@ -30,20 +31,27 @@ class StashController(QObserver):
     """
     def __init__(self, model, view):
         QObserver.__init__(self, model, view)
-        self.add_observables('stash_list', 'keep_index')
-        self.add_callbacks(button_stash_show  = self.stash_show,
-                           button_stash_apply = self.stash_apply,
-                           button_stash_drop  = self.stash_drop,
-                           button_stash_clear = self.stash_clear,
-                           button_stash_save  = self.stash_save)
+        self.add_callbacks(button_apply = self.stash_apply,
+                           button_remove = self.stash_remove,
+                           button_save  = self.stash_save,
+                           button_close = self.close)
+        self.connect(self.view.stash_list, SIGNAL('itemSelectionChanged()'),
+                     self.item_selected)
         self.update_model()
+        self.update_actions()
 
     def update_model(self):
         """Initiates git queries on the model and updates the view
         """
         self.model.set_stash_list(self.model.parse_stash_list())
         self.model.set_stash_revids(self.model.parse_stash_list(revids=True))
+        self.model.set_stash_names(self.model.parse_stash_list(names=True))
         self.refresh_view()
+
+    def refresh_view(self):
+        self.view.stash_list.clear()
+        for item in self.model.stash_list:
+            self.view.stash_list.addItem(item)
 
     def selected_stash(self):
         """Returns the stash name of the currently selected stash
@@ -52,37 +60,32 @@ class StashController(QObserver):
         stash_list = self.model.stash_revids
         return qtutils.selected_item(list_widget, stash_list)
 
+    def selected_name(self):
+        list_widget = self.view.stash_list
+        stash_list = self.model.stash_names
+        return qtutils.selected_item(list_widget, stash_list)
+
     def stash_save(self):
         """Saves the worktree in a stash
 
         This prompts the user for a stash name and creates
         a git stash named accordingly.
         """
-        if not qtutils.question(self.view,
-                                'Stash Changes?',
-                                'This will stash your current '
-                                'changes away for later use.\n'
-                                'Continue?'):
-            return
-
-        stash_name, ok = qtutils.prompt('Enter a name for this stash')
-        if not ok:
-            return
-        while stash_name in self.model.stash_list:
-            qtutils.information('Oops!',
-                                'That name already exists.  '
-                                'Please enter another name.')
-            stash_name, ok = qtutils.prompt('Enter a name for this stash')
-            if not ok:
-                return
-
-        if not stash_name:
+        stash_name, ok = qtutils.prompt('Save Stash',
+                                        'Enter a name for the stash')
+        if not ok or not stash_name:
             return
 
         # Sanitize the stash name
         stash_name = utils.sanitize(stash_name)
+
+        if stash_name in self.model.stash_names:
+            qtutils.critical('Oops!',
+                             'A stash named "%s" already exists' % stash_name)
+            return
+
         args = []
-        if self.model.keep_index:
+        if self.view.keep_index.isChecked():
             args.append('--keep-index')
         args.append(stash_name)
 
@@ -93,8 +96,16 @@ class StashController(QObserver):
         self.view.accept()
         cola.notifier().broadcast(signals.rescan)
 
-    def stash_show(self):
+    def update_actions(self):
+        has_changes = bool(self.model.modified + self.model.staged)
+        has_stash = self.selected_stash() is not None
+        self.view.button_save.setEnabled(has_changes)
+        self.view.button_apply.setEnabled(has_stash)
+        self.view.button_remove.setEnabled(has_stash)
+
+    def item_selected(self):
         """Shows the current stash in the main view."""
+        self.update_actions()
         selection = self.selected_stash()
         if not selection:
             return
@@ -114,35 +125,25 @@ class StashController(QObserver):
         self.view.accept()
         cola.notifier().broadcast(signals.rescan)
 
-    def stash_drop(self):
+    def stash_remove(self):
         """Drops the currently selected stash
         """
         selection = self.selected_stash()
+        name = self.selected_name()
         if not selection:
             return
-        if not qtutils.question(self.view,
-                                'Drop Stash?',
-                                'This will permanently remove the '
-                                'selected stash.\n'
-                                'Recovering these changes may not '
-                                'be possible.\n\n'
-                                'Continue?'):
+        if not qtutils.confirm(self.view,
+                               'Remove Stash?',
+                               'Remove "%s"?' % name,
+                               'Recovering these changes may not be possible.',
+                               'Remove',
+                               icon=qtutils.discard_icon()):
             return
         qtutils.log(*self.model.git.stash('drop', selection,
                                           with_stderr=True,
                                           with_status=True))
         self.update_model()
 
-    def stash_clear(self):
-        """Clears all stashes
-        """
-        if not qtutils.question(self.view,
-                                'Drop All Stashes?',
-                                'This will permanently remove '
-                                'ALL stashed changes.\n'
-                                'Recovering these changes may not '
-                                'be possible.\n\n'
-                                'Continue?'):
-            return
-        self.model.git.stash('clear'),
-        self.update_model()
+    def close(self):
+        self.view.accept()
+        cola.notifier().broadcast(signals.rescan)
