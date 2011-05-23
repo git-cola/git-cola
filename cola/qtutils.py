@@ -123,6 +123,7 @@ def selected_treeitem(tree_widget):
         selected = True
     return(id_number, selected)
 
+
 def selected_row(list_widget):
     """Returns a(row_number, is_selected) tuple for a QListWidget."""
     row = list_widget.currentRow()
@@ -286,7 +287,7 @@ def create_treeitem(filename, staged=False, untracked=False, check=True):
 
 
 def update_file_icons(widget, items, staged=True,
-            untracked=False, offset=0):
+                      untracked=False, offset=0):
     """Populate a QListWidget with custom icon items."""
     for idx, model_item in enumerate(items):
         item = widget.item(idx+offset)
