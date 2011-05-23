@@ -91,6 +91,7 @@ class StashController(QObserver):
                                           with_status=True,
                                           *args))
         self.view.accept()
+        cola.notifier().broadcast(signals.rescan)
 
     def stash_show(self):
         """Shows the current stash in the main view."""
@@ -111,6 +112,7 @@ class StashController(QObserver):
                                           with_stderr=True,
                                           with_status=True))
         self.view.accept()
+        cola.notifier().broadcast(signals.rescan)
 
     def stash_drop(self):
         """Drops the currently selected stash
