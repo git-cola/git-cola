@@ -158,7 +158,7 @@ class QObserver(observer.Observer, QtCore.QObject):
                              getattr(self, doubleclick))
 
         elif isinstance(widget, QtGui.QAbstractButton):
-            self.add_signals('released()', widget)
+            self.add_signals('clicked()', widget)
         elif isinstance(widget, QtGui.QAction):
             self.add_signals('triggered()', widget)
         elif isinstance(widget, QtGui.QCheckBox):
