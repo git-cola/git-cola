@@ -157,8 +157,12 @@ def tree_selection(treeitem, items):
 
 def selected_item(list_widget, items):
     """Returns the selected item in a QListWidget."""
-    row, selected = selected_row(list_widget)
-    if selected and row < len(items):
+    widget_items = list_widget.selectedItems()
+    if not widget_items:
+        return None
+    widget_item = widget_items[0]
+    row = list_widget.row(widget_item)
+    if row < len(items):
         return items[row]
     else:
         return None
