@@ -331,6 +331,22 @@ def file_icon():
     return cached_icon(QtGui.QStyle.SP_FileIcon)
 
 
+def apply_icon():
+    return cached_icon(QtGui.QStyle.SP_DialogApplyButton)
+
+
+def save_icon():
+    return cached_icon(QtGui.QStyle.SP_DialogSaveButton)
+
+
+def ok_icon():
+    return cached_icon(QtGui.QStyle.SP_DialogOkButton)
+
+
+def discard_icon():
+    return cached_icon(QtGui.QStyle.SP_DialogDiscardButton)
+
+
 def diff_font():
     """Return the diff font string."""
     qfont = QtGui.QFont()
