@@ -216,6 +216,21 @@ def question(parent, title, message, default=True):
     return result == QtGui.QMessageBox.Yes
 
 
+def confirm(parent, title, text, informative_text, ok_text, icon=None):
+    """Confirm that an action should take place"""
+    if icon is None:
+        icon = ok_icon()
+    msgbox = QtGui.QMessageBox(parent)
+    msgbox.setWindowTitle(parent.tr(title))
+    msgbox.setText(text)
+    msgbox.setInformativeText(parent.tr(informative_text))
+    ok = msgbox.addButton(parent.tr(ok_text), QtGui.QMessageBox.ActionRole)
+    ok.setIcon(icon)
+    cancel = msgbox.addButton(QtGui.QMessageBox.Cancel)
+    msgbox.exec_()
+    return msgbox.clickedButton() == ok
+
+
 def set_clipboard(text):
     """Sets the copy/paste buffer to text."""
     if not text:
