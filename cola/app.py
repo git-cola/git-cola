@@ -27,9 +27,7 @@ class ColaApplication(object):
     def __init__(self, argv, locale=None, gui=True):
         """Initialize our QApplication for translation
         """
-        if locale:
-            os.environ['LANG'] = locale
-        i18n.install()
+        i18n.install(locale)
 
         # monkey-patch Qt's translate() to use our translate()
         if gui:
@@ -42,7 +40,7 @@ class ColaApplication(object):
             self._translate_base = QtCore.QCoreApplication.translate
             QtCore.QCoreApplication.translate = self.translate
 
-    def translate(self, context, txt):
+    def translate(self, domain, txt):
         """
         Translate strings with gettext
 

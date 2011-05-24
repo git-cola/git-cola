@@ -22,10 +22,14 @@ def N_(s):
     return s
 
 
-def install():
+def install(locale):
     global _translation
     if sys.platform == 'win32':
         _check_win32_locale()
+    if locale:
+        os.environ['LANG'] = locale
+        os.environ['LC_MESSAGES'] = locale
+    _gettext.textdomain('messages')
     _translation = _gettext.translation('git-cola',
                                         localedir=_get_locale_dir(),
                                         fallback=True)
