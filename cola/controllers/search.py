@@ -28,15 +28,10 @@ COMMITTER      = 'radio_committer'
 DATE_RANGE     = 'radio_daterange'
 
 
-def search(searchtype, browse=False):
+def search():
     """Return a callback to handle various search actions."""
-    def search_handler():
-        search_commits(cola.model(),
-                       QtGui.QApplication.instance().activeWindow(),
-                       searchtype,
-                       browse)
-    return search_handler
-
+    search_commits(cola.model(),
+                   QtGui.QApplication.instance().activeWindow())
 
 class SearchEngine(object):
     def __init__(self, model):
@@ -251,7 +246,7 @@ class SearchController(QObserver):
                                                 with_stderr=True,
                                                 with_status=True))
 
-def search_commits(model, parent, mode, browse):
+def search_commits(model, parent):
     def date(timespec):
         return '%04d-%02d-%02d' % time.localtime(timespec)[:3]
 
@@ -259,9 +254,7 @@ def search_commits(model, parent, mode, browse):
     model = SearchModel(cwd=model.git.worktree())
     view = SearchView(parent)
     ctl = SearchController(model, view)
-    ctl.set_mode(mode)
-    model.set_start_date(date(time.time()-(87640*7)))
+    ctl.set_mode(MESSAGE)
+    model.set_start_date(date(time.time()-(87640*31)))
     model.set_end_date(date(time.time()+87640))
     view.show()
-    if browse:
-        ctl.browse_callback()
