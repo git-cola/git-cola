@@ -4,6 +4,9 @@
 import os
 import re
 import time
+import shlex
+import subprocess
+
 from PyQt4 import QtGui
 
 import cola
@@ -85,7 +88,10 @@ class RevisionRangeSearch(SearchEngine):
 class PathSearch(SearchEngine):
     def results(self):
         query, args = self.common_args()
-        paths = ['--'] + query.split(':')
+        try:
+            paths = ['--'] + shlex.split(str(query))
+        except UnicodeEncodeError:
+            paths = ['--'] + query.split(' ')
         return self.revisions(all=True, *paths, **args)
 
 class MessageSearch(SearchEngine):
@@ -207,7 +213,7 @@ class SearchController(QObserver):
             if not path.startswith(os.getcwd()):
                 continue
             filepaths.append(path[lenprefix:])
-        query = ':'.join(filepaths)
+        query = subprocess.list2cmdline(filepaths)
         self.model.set_query('')
         self.set_mode(PATH)
         self.model.set_query(query)
