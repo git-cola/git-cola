@@ -332,19 +332,28 @@ def file_icon():
 
 
 def apply_icon():
+    """Return a standard Apply icon"""
     return cached_icon(QtGui.QStyle.SP_DialogApplyButton)
 
 
 def save_icon():
+    """Return a standard Save icon"""
     return cached_icon(QtGui.QStyle.SP_DialogSaveButton)
 
 
 def ok_icon():
+    """Return a standard Ok icon"""
     return cached_icon(QtGui.QStyle.SP_DialogOkButton)
 
 
 def discard_icon():
+    """Return a standard Discard icon"""
     return cached_icon(QtGui.QStyle.SP_DialogDiscardButton)
+
+
+def close_icon():
+    """Return a standard Close icon"""
+    return cached_icon(QtGui.QStyle.SP_DialogCloseButton)
 
 
 def diff_font():
