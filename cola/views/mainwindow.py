@@ -70,12 +70,18 @@ class MainWindow(MainWindowBase):
 
         self.commit_ctrls_layt = QtGui.QHBoxLayout()
         self.commit_ctrls_layt.setSpacing(4)
-        self.commit_ctrls_layt.setMargin(0)
+        self.commit_ctrls_layt.setMargin(4)
 
         # Sign off and commit buttons
-        self.signoff_button = qt.create_button('Sign Off')
-        self.commit_button = qt.create_button('Commit@@verb')
+        self.signoff_button = qt.create_toolbutton(self,
+                                                   text='Sign Off',
+                                                   tooltip='Sign off on this commit',
+                                                   icon=qtutils.apply_icon())
 
+        self.commit_button = qt.create_toolbutton(self,
+                                                  text='Commit@@verb',
+                                                  tooltip='Commit staged changes',
+                                                  icon=qtutils.save_icon())
         # Position display
         self.position_label = QtGui.QLabel(self.actiondockwidgetcontents)
         self.position_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
