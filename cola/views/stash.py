@@ -5,6 +5,7 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+from cola import qt
 from cola import qtutils
 from cola.views import standard
 
@@ -66,15 +67,10 @@ class StashView(standard.StandardDialog):
         self._main_layt.addWidget(self.stash_list)
         self._main_layt.addItem(self._btn_layt)
 
+
     def toolbutton(self, text, tooltip, icon):
-        btn = QtGui.QToolButton(self)
-        btn.setText(self.tr(text))
-        btn.setToolTip(self.tr(tooltip))
-        btn.setIcon(icon)
-        btn.setAutoRaise(True)
-        btn.setAutoFillBackground(True)
-        btn.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-        return btn
+        return qt.create_toolbutton(self,
+                                    text=text, tooltip=tooltip, icon=icon)
 
     def pushbutton(self, text, tooltip):
         btn = QtGui.QPushButton(self)
