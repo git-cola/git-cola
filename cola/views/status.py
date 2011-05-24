@@ -44,6 +44,8 @@ class StatusWidget(QtGui.QWidget):
         self.tree.headerItem().setHidden(True)
         self.tree.setAllColumnsShowFocus(True)
         self.tree.setSortingEnabled(False)
+        self.tree.setUniformRowHeights(True)
+        self.tree.setAnimated(True)
 
         self.add_item('Staged', 'plus.png', hide=True)
         self.add_item('Modified', 'modified.png', hide=True)
