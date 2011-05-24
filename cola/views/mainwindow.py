@@ -78,7 +78,7 @@ class MainWindow(MainWindowBase):
 
         # Position display
         self.position_label = QtGui.QLabel(self.actiondockwidgetcontents)
-        self.position_label.setAlignment(Qt.AlignLeft)
+        self.position_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
 
         # Amend checkbox
         self.amend_checkbox = QtGui.QCheckBox(self.commitdockwidgetcontents)
