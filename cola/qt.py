@@ -1,13 +1,32 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 
 from cola import i18n
 
 
-def create_button(text, layout=None):
+def create_button(text, layout=None, tooltip=None, icon=None):
     """Create a button, set its title, and add it to the parent."""
     button = QtGui.QPushButton()
     button.setText(i18n.gettext(text))
+    if icon:
+        button.setIcon(icon)
+    if layout is not None:
+        layout.addWidget(button)
+    return button
+
+
+def create_toolbutton(parent, text=None, layout=None, tooltip=None, icon=None):
+    button = QtGui.QToolButton(parent)
+    button.setAutoRaise(True)
+    button.setAutoFillBackground(True)
+    if icon:
+        button.setIcon(icon)
+    if text:
+        button.setText(i18n.gettext(text))
+        button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+    if tooltip:
+        button.setToolTip(i18n.gettext(tooltip))
     if layout is not None:
         layout.addWidget(button)
     return button
