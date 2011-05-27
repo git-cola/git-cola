@@ -36,7 +36,8 @@ class StashView(standard.StandardDialog):
                             self.tr('Remove the selected stash'),
                             qtutils.discard_icon())
         self.button_close = \
-            self.pushbutton(self.tr('Close'), self.tr('Close'))
+            self.pushbutton(self.tr('Close'),
+                            self.tr('Close'), qtutils.close_icon())
 
         self.keep_index = QtGui.QCheckBox(self)
         self.keep_index.setText(self.tr('Keep Index'))
@@ -72,10 +73,11 @@ class StashView(standard.StandardDialog):
         return qt.create_toolbutton(self,
                                     text=text, tooltip=tooltip, icon=icon)
 
-    def pushbutton(self, text, tooltip):
+    def pushbutton(self, text, tooltip, icon):
         btn = QtGui.QPushButton(self)
         btn.setText(self.tr(text))
         btn.setToolTip(self.tr(tooltip))
+        btn.setIcon(icon)
         return btn
 
 if __name__ == "__main__":
