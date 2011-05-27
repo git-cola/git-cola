@@ -80,13 +80,14 @@ def cached_icon_from_path(filename):
     return QtGui.QIcon(filename)
 
 
-def information(title, message=None, details=None, informative_text=None):
+def information(title, message=None, parent=None, details=None, informative_text=None):
     """Show information with the provided title and message."""
     if message is None:
         message = title
     title = tr(title)
     message = tr(message)
-    parent = QtGui.QApplication.instance().activeWindow()
+    if parent is None:
+        parent = QtGui.QApplication.instance().activeWindow()
     mbox = QtGui.QMessageBox(parent)
     mbox.setStandardButtons(QtGui.QMessageBox.Close)
     mbox.setDefaultButton(QtGui.QMessageBox.Close)

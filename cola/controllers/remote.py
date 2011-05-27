@@ -261,6 +261,7 @@ class RemoteController(QObserver):
 
             message = '"git %s" %s' % (self.action, result)
             qtutils.information(title,
+                                parent=self.view,
                                 message=message, details=output)
         self.view.accept()
 
