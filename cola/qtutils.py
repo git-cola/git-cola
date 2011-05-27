@@ -80,15 +80,30 @@ def cached_icon_from_path(filename):
     return QtGui.QIcon(filename)
 
 
-def information(title, message=None):
-    """Launches a QMessageBox information with the
-    provided title and message."""
+def information(title, message=None, details=None, informative_text=None):
+    """Show information with the provided title and message."""
     if message is None:
         message = title
     title = tr(title)
     message = tr(message)
     parent = QtGui.QApplication.instance().activeWindow()
-    QtGui.QMessageBox.information(parent, title, message)
+    mbox = QtGui.QMessageBox(parent)
+    mbox.setStandardButtons(QtGui.QMessageBox.Close)
+    mbox.setDefaultButton(QtGui.QMessageBox.Close)
+    mbox.setWindowTitle(title)
+    mbox.setWindowModality(QtCore.Qt.WindowModal)
+    mbox.setTextFormat(QtCore.Qt.PlainText)
+    mbox.setText(message)
+    if informative_text:
+        mbox.setInformativeText(tr(informative_text))
+    if details:
+        mbox.setDetailedText(details)
+    # Render git.svg into a 1-inch wide pixmap
+    pixmap = QtGui.QPixmap(resources.icon('git.svg'))
+    xres = pixmap.physicalDpiX()
+    pixmap = pixmap.scaledToHeight(xres, QtCore.Qt.SmoothTransformation)
+    mbox.setIconPixmap(pixmap)
+    mbox.exec_()
 
 
 def critical(title, message=None, details=None):
