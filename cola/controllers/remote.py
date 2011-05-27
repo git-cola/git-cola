@@ -52,7 +52,6 @@ class RemoteController(QObserver):
             'push': self.gen_remote_callback(self.model.push_helper),
             'pull': self.gen_remote_callback(self.model.pull_helper),
         }   [action]
-        self.action_result = None
         self._tasks = []
         self.progress = QtGui.QProgressDialog(self.view)
         self.progress.setRange(0, 0)
@@ -253,8 +252,16 @@ class RemoteController(QObserver):
             message = 'Error pushing to "%s".\n\nPull first?' % remote
             qtutils.critical('Push Error',
                              message=message, details=output)
+        else:
+            title = self.view.windowTitle()
+            if status == 0:
+                result = 'succeeded'
+            else:
+                result = 'returned exit status %d' % status
 
-        self.action_completed = True
+            message = '"git %s" %s' % (self.action, result)
+            qtutils.information(title,
+                                message=message, details=output)
         self.view.accept()
 
 
