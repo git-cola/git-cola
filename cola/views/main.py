@@ -28,11 +28,11 @@ from cola.controllers import compare
 from cola.controllers import createtag
 from cola.controllers import merge
 from cola.controllers import search as smod
+from cola.controllers import stash
 from cola.controllers.bookmark import manage_bookmarks
 from cola.controllers.bookmark import save_bookmark
 from cola.controllers.createbranch import create_new_branch
 from cola.controllers.options import update_options
-from cola.controllers.stash import stash
 
 
 class MainView(MainWindow):
@@ -96,7 +96,7 @@ class MainView(MainWindow):
         self._connect_button(self.fetch_button, guicmds.fetch_slot(self))
         self._connect_button(self.push_button, guicmds.push_slot(self))
         self._connect_button(self.pull_button, guicmds.pull_slot(self))
-        self._connect_button(self.stash_button, stash)
+        self._connect_button(self.stash_button, lambda: stash.stash(parent=self))
 
         # Menu actions
         actions = [
@@ -138,7 +138,7 @@ class MainView(MainWindow):
             (self.menu_grep, guicmds.grep),
             (self.menu_search_commits, smod.search),
             (self.menu_show_diffstat, SLOT(signals.diffstat)),
-            (self.menu_stash, stash),
+            (self.menu_stash, lambda: stash.stash(parent=self)),
             (self.menu_stage_modified, SLOT(signals.stage_modified)),
             (self.menu_stage_untracked, SLOT(signals.stage_untracked)),
             (self.menu_unstage_selected, SLOT(signals.unstage_selected)),

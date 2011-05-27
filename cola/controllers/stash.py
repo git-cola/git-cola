@@ -13,14 +13,15 @@ from cola import signals
 from cola.qobserver import QObserver
 from cola.views import stash as stashmod
 
-def stash():
+def stash(parent=None):
     """Launches a stash dialog using the provided model + view
     """
     model = cola.model()
     model.stash_list = []
     model.stash_revids = []
     model.stash_names = []
-    parent = QtGui.QApplication.instance().activeWindow()
+    if parent is None:
+        parent = QtGui.QApplication.instance().activeWindow()
     view = stashmod.StashView(parent)
     ctl = StashController(model, view)
     view.show()
