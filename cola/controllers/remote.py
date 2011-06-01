@@ -249,7 +249,7 @@ class RemoteController(QObserver):
         QtGui.QApplication.restoreOverrideCursor()
 
         if status != 0 and self.action == 'push':
-            message = 'Error pushing to "%s".\n\nPull first?' % remote
+            message = 'Error pushing to "%s".\n\nPull first?' % self.model.remotename
             qtutils.critical('Push Error',
                              message=message, details=output)
         else:
