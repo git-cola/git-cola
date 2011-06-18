@@ -344,8 +344,8 @@ def export_patchset(start, end, output='patches', **kwargs):
                             **kwargs)
 
 
-def unstage_paths(args):
-    status, output = git.reset('--', with_stderr=True, with_status=True,
+def unstage_paths(args, head='HEAD'):
+    status, output = git.reset(head, '--', with_stderr=True, with_status=True,
                                *set(args))
     if status != 128:
         return (status, output)

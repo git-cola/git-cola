@@ -421,7 +421,8 @@ class MainModel(ObservableModel):
         return (status, output)
 
     def unstage_all(self):
-        status, output = self.git.reset(with_stderr=True,
+        status, output = self.git.reset(self.head, '--', '.',
+                                        with_stderr=True,
                                         with_status=True)
         self.update_status()
         return (status, output)
@@ -668,7 +669,7 @@ class MainModel(ObservableModel):
         self.notify_message_observers(self.message_about_to_update)
 
         staged_set = set(self.staged)
-        gitcmds.unstage_paths(paths)
+        gitcmds.unstage_paths(paths, head=self.head)
         all_paths_set = set(gitcmds.all_files())
         modified = []
         untracked = []
