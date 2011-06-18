@@ -191,7 +191,7 @@ def main():
     if has_threadpool:
         task = _start_update_thread(model)
     else:
-        model.update_status()
+        model.update_status(update_index=True)
 
     # Start the inotify thread
     inotify.start()
@@ -229,7 +229,7 @@ def _start_update_thread(model):
 
     class UpdateTask(QtCore.QRunnable):
         def run(self):
-            model.update_status()
+            model.update_status(update_index=True)
 
     # Hold onto a reference to prevent PyQt from dereferencing
     task = UpdateTask()

@@ -375,14 +375,18 @@ def worktree_state(head='HEAD', staged_only=False):
            state.get('upstream_changed', []))
 
 
-def worktree_state_dict(head='HEAD', staged_only=False, git=git):
+def worktree_state_dict(head='HEAD',
+                        staged_only=False,
+                        update_index=False,
+                        git=git):
     """Return a dict of files in various states of being
 
     :rtype: dict, keys are staged, unstaged, untracked, unmerged,
             changed_upstream, and submodule.
 
     """
-    git.update_index(refresh=True)
+    if update_index:
+        git.update_index(refresh=True)
 
     if staged_only:
         return _branch_status(head)
