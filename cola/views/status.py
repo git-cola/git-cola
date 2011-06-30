@@ -327,8 +327,8 @@ class StatusWidget(QtGui.QWidget):
                            SLOT(signals.delete, self.untracked()))
             menu.addSeparator()
             menu.addAction(self.tr('Add to .gitignore'),
-                           SLOT(signals.ignore, self.untracked()))
-            
+                           SLOT(signals.ignore,
+                                map(lambda x: '/' + x, self.untracked())))
 
         return menu
 

@@ -304,19 +304,19 @@ class Ignore(Command):
         self.filenames = filenames
 
     def do(self):
-        new_additions=u''       
-        for file in self.filenames:
-            new_additions = new_additions + file + '\n'
+        new_additions = ''
+        for fname in self.filenames:
+            new_additions = new_additions + fname + '\n'
         for_status = new_additions
-        if (new_additions is not ''):
-            if( u'.gitignore' in gitcmds.all_files()):
-                current_list = utils.slurp(u'.gitignore')
+        if new_additions:
+            if '.gitignore' in gitcmds.all_files():
+                current_list = utils.slurp('.gitignore')
                 new_additions = new_additions + current_list
-            utils.write(u'.gitignore', new_additions)
+            utils.write('.gitignore', new_additions)
             _notifier.broadcast(signals.log_cmd,
                                 0,
-                                'Added to .gitignore:\n%s' % for_status )
-            self.model.update_file_status()        
+                                'Added to .gitignore:\n%s' % for_status)
+            self.model.update_file_status()
 
 
 class Delete(Command):
