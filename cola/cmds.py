@@ -297,6 +297,28 @@ class Commit(ResetMode):
         _notifier.broadcast(signals.log_cmd, status, title+output)
 
 
+class Ignore(Command):
+    """Add files to .gitignore"""
+    def __init__(self, filenames):
+        Command.__init__(self)
+        self.filenames = filenames
+
+    def do(self):
+        new_additions=u''       
+        for file in self.filenames:
+            new_additions = new_additions + file + '\n'
+        for_status = new_additions
+        if (new_additions is not ''):
+            if( u'.gitignore' in gitcmds.all_files()):
+                current_list = utils.slurp(u'.gitignore')
+                new_additions = new_additions + current_list
+            utils.write(u'.gitignore', new_additions)
+            _notifier.broadcast(signals.log_cmd,
+                                0,
+                                'Added to .gitignore:\n%s' % for_status )
+            self.model.update_file_status()        
+
+
 class Delete(Command):
     """Simply delete files."""
     def __init__(self, filenames):
@@ -809,6 +831,7 @@ def register():
         signals.edit: Edit,
         signals.format_patch: FormatPatch,
         signals.grep: GrepMode,
+        signals.ignore: Ignore,
         signals.load_commit_message: LoadCommitMessage,
         signals.load_commit_template: LoadCommitTemplate,
         signals.modified_summary: Diffstat,

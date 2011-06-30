@@ -93,3 +93,6 @@ Launch Editor
 
 Delete File(s)
     Delete files from the filesystem
+    
+Add to .gitignore
+	Adds file/files to GIT ignore list for untracked files

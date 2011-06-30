@@ -325,6 +325,10 @@ class StatusWidget(QtGui.QWidget):
             menu.addSeparator()
             menu.addAction(self.tr('Delete File(s)'),
                            SLOT(signals.delete, self.untracked()))
+            menu.addSeparator()
+            menu.addAction(self.tr('Add to .gitignore'),
+                           SLOT(signals.ignore, self.untracked()))
+            
 
         return menu
 
