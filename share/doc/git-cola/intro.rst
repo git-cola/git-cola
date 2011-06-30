@@ -56,6 +56,7 @@ Thanks to
 `git-cola` was made possible due to the contributions of the following people:
 
 * `GIT Hackers <http://git-scm.com/about>`_
+* Audrius Karabanovas
 * Barry Roberts
 * Boris W
 * Ben Boeckel
