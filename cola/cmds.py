@@ -770,8 +770,8 @@ class UntrackedSummary(Command):
         if untracked:
             io.write('# possible .gitignore rule%s:\n' % suffix)
             for u in untracked:
-                io.write('/%s\n' % u)
-        self.new_diff_text = io.getvalue()
+                io.write('/'+core.encode(u))
+        self.new_diff_text = core.decode(io.getvalue())
 
 
 class VisualizeAll(Command):
