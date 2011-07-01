@@ -258,10 +258,10 @@ class GitRepoInfoTask(QRunnable):
                                             M=True,
                                             all=True,
                                             no_color=True,
-                                            pretty='format:%ar%x00%s%x00%an')
+                                            pretty='format:%ar%x01%s%x01%an')
             if log_line:
                 log_line = core.decode(log_line)
-                date, message, author = log_line.split('\0', 2)
+                date, message, author = log_line.split(chr(0x01), 2)
                 self._data['date'] = date
                 self._data['message'] = message
                 self._data['author'] = author
