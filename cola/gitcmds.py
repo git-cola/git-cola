@@ -204,7 +204,7 @@ def sha1_diff(sha1, git=git):
 
 def diff_info(sha1, git=git):
     log = git.log('-1',
-                  '--format=Author:\t%aN <%aE>%n'
+                  '--pretty=format:Author:\t%aN <%aE>%n'
                   'Date:\t%aD%n%n'
                   '%s%n%n%b',
                   sha1)
