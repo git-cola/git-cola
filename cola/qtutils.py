@@ -142,10 +142,12 @@ def selected_treeitem(tree_widget):
 
 def selected_row(list_widget):
     """Returns a(row_number, is_selected) tuple for a QListWidget."""
-    row = list_widget.currentRow()
-    item = list_widget.item(row)
-    selected = item is not None and item.isSelected()
-    return(row, selected)
+    items = list_widget.selectedItems()
+    if not items:
+        return (-1, False)
+    item = items[0]
+    return (list_widget.row(item), True)
+
 
 def selection_list(listwidget, items):
     """Returns an array of model items that correspond to
