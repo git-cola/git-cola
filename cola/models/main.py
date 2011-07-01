@@ -523,7 +523,11 @@ class MainModel(ObservableModel):
         tmpdir = self.tmp_dir()
         return os.path.join(tmpdir, basename)
 
-    def remote_url(self, name):
+    def remote_url(self, name, action):
+        if action == 'push':
+            url = self.git.config('remote.%s.pushurl' % name, get=True)
+            if url:
+                return url
         return self.git.config('remote.%s.url' % name, get=True)
 
     def remote_args(self, remote,

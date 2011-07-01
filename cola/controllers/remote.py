@@ -111,7 +111,7 @@ class RemoteController(QObserver):
         """Display the available remotes in a listwidget"""
         displayed = []
         for remotename in self.model.remotes:
-            url = self.model.remote_url(remotename)
+            url = self.model.remote_url(remotename, self.action)
             display = ('%s\t(%s %s)'
                        % (remotename, unicode(self.tr('URL:')), url))
             displayed.append(display)
