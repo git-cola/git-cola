@@ -3,14 +3,10 @@
 """
 
 import os
-import user
 
 from cola import core
 from cola import serializer
 from cola.models import observable
-
-# Here we store settings
-_rcfile = os.path.join(core.decode(user.home), '.cola')
 
 
 class SettingsModel(observable.ObservableModel):
@@ -36,13 +32,16 @@ class SettingsManager(object):
     """
     _settings = None
 
+    # Here we store settings
+    _rcfile = os.path.join(core.decode(os.path.expanduser('~')), '.cola')
+
     @staticmethod
     def settings():
         """Returns the SettingsModel singleton"""
         if not SettingsManager._settings:
-            if os.path.exists(_rcfile):
+            if os.path.exists(SettingsManager._rcfile):
                 try:
-                    SettingsManager._settings = serializer.load(_rcfile)
+                    SettingsManager._settings = serializer.load(SettingsManager._rcfile)
                 except: # bad json
                     SettingsManager._settings = SettingsModel()
             else:
@@ -66,4 +65,4 @@ class SettingsManager(object):
     @staticmethod
     def save():
         model = SettingsManager.settings()
-        serializer.save(model, _rcfile)
+        serializer.save(model, SettingsManager._rcfile)
