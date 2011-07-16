@@ -224,7 +224,7 @@ class RemoteController(QObserver):
             QtGui.QApplication.setOverrideCursor(Qt.WaitCursor)
 
             # Show a nice progress bar
-            self.progress.setLabelText('Connecting to %s...' % remote)
+            self.progress.setLabelText('Updating...')
             self.progress.show()
 
             # Use a thread to update in the background
