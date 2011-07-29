@@ -206,32 +206,46 @@ class DiffParser(object):
                 if special_selection in self.fwd_diff:
                     selection = special_selection
                 else:
-                    return
+                    return 0, ''
             start = self.fwd_diff.index(selection)
             end = start + len(selection)
             self.set_diffs_to_range(start, end)
         else:
             self.set_diff_to_offset(offset)
             selected = False
+
+        output = ''
+        status = 0
         # Process diff selection only
         if selected:
             for idx in self.selected:
                 contents = self.diff_subset(idx, start, end)
-                if contents:
-                    tmpfile = self.model.tmp_filename()
-                    utils.write(tmpfile, contents)
-                    if apply_to_worktree:
-                        self.model.apply_diff_to_worktree(tmpfile)
-                    else:
-                        self.model.apply_diff(tmpfile)
-                    os.unlink(tmpfile)
+                if not contents:
+                    continue
+                tmpfile = self.model.tmp_filename()
+                utils.write(tmpfile, contents)
+                if apply_to_worktree:
+                    stat, out = self.model.apply_diff_to_worktree(tmpfile)
+                    output += out
+                    status = max(status, stat)
+                else:
+                    stat, out = self.model.apply_diff(tmpfile)
+                    output += out
+                    status = max(status, stat)
+                os.unlink(tmpfile)
         # Process a complete hunk
         else:
             for idx, diff in enumerate(self.diffs):
                 tmpfile = self.model.tmp_filename()
-                if self.write_diff(tmpfile,idx):
-                    if apply_to_worktree:
-                        self.model.apply_diff_to_worktree(tmpfile)
-                    else:
-                        self.model.apply_diff(tmpfile)
-                    os.unlink(tmpfile)
+                if not self.write_diff(tmpfile,idx):
+                    continue
+                if apply_to_worktree:
+                    stat, out = self.model.apply_diff_to_worktree(tmpfile)
+                    output += out
+                    status = max(status, stat)
+                else:
+                    stat, out = self.model.apply_diff(tmpfile)
+                    output += out
+                    status = max(status, stat)
+                os.unlink(tmpfile)
+        return status, output

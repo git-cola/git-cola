@@ -287,10 +287,12 @@ class MainModel(ObservableModel):
         self.set_remote_branches(branches)
 
     def apply_diff(self, filename):
-        return self.git.apply(filename, index=True, cached=True)
+        return self.git.apply(filename, index=True, cached=True,
+                              with_stderr=True, with_status=True)
 
     def apply_diff_to_worktree(self, filename):
-        return self.git.apply(filename)
+        return self.git.apply(filename,
+                              with_stderr=True, with_status=True)
 
     def prev_commitmsg(self):
         """Queries git for the latest commit message."""

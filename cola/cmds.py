@@ -140,6 +140,7 @@ class ApplyDiffSelection(Command):
                                 filename=self.model.filename,
                                 cached=False,
                                 branch=self.model.head)
+            status, output = \
             parser.process_diff_selection(self.selected,
                                           self.offset,
                                           self.selection,
@@ -150,11 +151,13 @@ class ApplyDiffSelection(Command):
                                 filename=self.model.filename,
                                 cached=self.staged,
                                 reverse=self.apply_to_worktree)
+            status, output = \
             parser.process_diff_selection(self.selected,
                                           self.offset,
                                           self.selection,
                                           apply_to_worktree=
                                               self.apply_to_worktree)
+        _notifier.broadcast(signals.log_cmd, status, output)
         # Redo the diff to show changes
         if self.staged:
             diffcmd = DiffStaged([self.model.filename])
@@ -162,6 +165,7 @@ class ApplyDiffSelection(Command):
             diffcmd = Diff([self.model.filename])
         diffcmd.do()
         self.model.update_file_status()
+
 
 class ApplyPatches(Command):
     def __init__(self, patches):
