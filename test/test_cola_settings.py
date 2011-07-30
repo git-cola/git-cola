@@ -8,14 +8,14 @@ import helper
 class SettingsTestCase(unittest.TestCase):
     """Tests the cola.settings module"""
     def setUp(self):
-        self._old_rcfile = settings._rcfile
+        self._old_rcfile = settings.SettingsManager._rcfile
         self._rcfile = helper.tmp_path('colarc')
-        settings._rcfile = self._rcfile
+        settings.SettingsManager._rcfile = self._rcfile
 
     def tearDown(self):
         if os.path.exists(self._rcfile):
             os.remove(self._rcfile)
-        settings._rcfile = self._old_rcfile
+        settings.SettingsManager._rcfile = self._old_rcfile
 
     def model(self):
         settings.SettingsManager._settings = None
