@@ -81,7 +81,7 @@ clean:
 	rm -rf share/locale
 
 tags:
-	ctags cola/*.py cola/*/*.py test/*.py
+	find . -name '*.py' -print0 | xargs -0 ctags -f tags
 
 pot:
 	$(PYTHON) setup.py build_pot -N -d .
