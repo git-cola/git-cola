@@ -191,15 +191,14 @@ class MainModel(ObservableModel):
                 self.set_param('local_'+k, v)
 
         # Bootstrap the internal font*size variables
-        for param in ('global_cola_fontdiff'):
-            if hasattr(self, param):
-                font = getattr(self, param)
-                if font:
-                    size = int(font.split(',')[1])
-                    self.set_param(param+'_size', size)
-                    param = param[len('global_'):]
-                    global_dict[param] = font
-                    global_dict[param+'_size'] = size
+        param = 'global_cola_fontdiff'
+        font = getattr(self, param, None)
+        if font:
+            size = int(font.split(',')[1])
+            self.set_param(param+'_size', size)
+            param = param[len('global_'):]
+            global_dict[param] = font
+            global_dict[param+'_size'] = size
 
         # Load defaults for all undefined items
         local_and_global_defaults = self._local_and_global_defaults
@@ -441,21 +440,17 @@ class MainModel(ObservableModel):
         self.update_file_status()
         return (status, output)
 
-    def config_set(self, key=None, value=None, local=True):
-        if key and value is not None:
-            # git config category.key value
-            strval = unicode(value)
-            if type(value) is bool:
-                # git uses "true" and "false"
-                strval = strval.lower()
-            if local:
-                argv = [ key, strval ]
-            else:
-                argv = [ '--global', key, strval ]
-            return self.git.config(*argv)
+    def config_set(self, key, value, local=True):
+        # git config category.key value
+        strval = unicode(value)
+        if type(value) is bool:
+            # git uses "true" and "false"
+            strval = strval.lower()
+        if local:
+            argv = [key, strval]
         else:
-            msg = "oops in config_set(key=%s,value=%s,local=%s)"
-            raise Exception(msg % (key, value, local))
+            argv = ['--global', key, strval]
+        return self.git.config(*argv)
 
     def config_dict(self, local=True):
         """parses the lines from git config --list into a dictionary"""
