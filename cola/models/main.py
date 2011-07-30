@@ -3,11 +3,8 @@
 """
 
 import os
-import sys
 import time
 import copy
-import subprocess
-from cStringIO import StringIO
 
 from cola import core
 from cola import utils
@@ -195,11 +192,9 @@ class MainModel(ObservableModel):
 
         # Bootstrap the internal font*size variables
         for param in ('global_cola_fontdiff'):
-            setdefault = True
             if hasattr(self, param):
                 font = getattr(self, param)
                 if font:
-                    setdefault = False
                     size = int(font.split(',')[1])
                     self.set_param(param+'_size', size)
                     param = param[len('global_'):]
