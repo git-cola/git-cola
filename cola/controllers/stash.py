@@ -1,8 +1,5 @@
 """This controller handles the stash dialog."""
 
-
-import os
-
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 

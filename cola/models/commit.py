@@ -1,5 +1,4 @@
 from cola import git
-from cola import gitcmds
 from cola import utils
 
 # put subject at the end b/c it can contain

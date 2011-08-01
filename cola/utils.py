@@ -9,9 +9,6 @@ import platform
 import subprocess
 import mimetypes
 
-from glob import glob
-from cStringIO import StringIO
-
 from cola import git
 from cola import core
 from cola import resources

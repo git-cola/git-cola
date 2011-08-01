@@ -1,5 +1,3 @@
-import os
-
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
@@ -14,7 +12,6 @@ from cola import signals
 from cola.controllers.selectcommits import select_commits
 from cola.models import gitrepo
 from cola.views import repo
-from cola.views import standard
 from cola.compat import set
 
 
@@ -80,7 +77,6 @@ class ClassicController(QtCore.QObject):
 
 if __name__ == '__main__':
     import sys
-    from PyQt4 import QtGui
 
     app = QtGui.QApplication(sys.argv)
     cola_classic()

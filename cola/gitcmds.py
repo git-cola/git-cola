@@ -10,7 +10,6 @@ from cola import errors
 from cola import utils
 from cola import version
 from cola.compat import set
-from cola.decorators import memoize
 
 git = git.instance()
 config = gitcfg.instance()
@@ -185,6 +184,8 @@ def commit_diff(sha1, git=git):
 
 
 def _common_diff_opts(config=config):
+    # The '--patience' option did not appear until git 1.6.2
+    # so don't allow it to be used on version previous to that
     patience = version.check('patience', version.git_version())
     submodule = version.check('diff-submodule', version.git_version())
     return {
@@ -245,11 +246,6 @@ def diff_helper(commit=None,
 
     headers = []
     deleted = cached and not os.path.exists(core.encode(filename))
-
-    # The '--patience' option did not appear until git 1.6.2
-    # so don't allow it to be used on version previous to that
-    patience = version.check('patience', version.git_version())
-    submodule = version.check('diff-submodule', version.git_version())
 
     diffoutput = git.diff(R=reverse, M=True, cached=cached,
                           *argv, **_common_diff_opts())

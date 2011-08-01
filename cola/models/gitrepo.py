@@ -1,5 +1,4 @@
 import os
-import sys
 import time
 
 from PyQt4 import QtCore
@@ -170,7 +169,6 @@ class GitRepoModel(QtGui.QStandardItemModel):
                 parent = direntries[path]
             else:
                 grandparent = parent
-                parent_path = '/'.join(curdir[:-1])
                 parent = self.add_directory(grandparent, path)
                 direntries[path] = parent
         return parent

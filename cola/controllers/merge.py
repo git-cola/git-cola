@@ -1,8 +1,6 @@
 """This controller handles the merge dialog."""
 
-
 from PyQt4 import QtGui
-from PyQt4.Qt import Qt
 
 import cola
 from cola import gitcmds

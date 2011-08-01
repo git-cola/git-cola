@@ -10,8 +10,6 @@ are always available in the model without having to worry about the
 different ways to query Qt widgets.
 
 """
-import types
-
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL

@@ -12,7 +12,6 @@ def save(obj, path):
 
 
 def load(path):
-    import jsonpickle
     return decode(utils.slurp(path))
 
 

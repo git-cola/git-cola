@@ -3,12 +3,10 @@
 
 import re
 import os
-import sys
 
 from cola import git
 from cola import errors
 from cola import utils
-from cola import resources
 from cola.decorators import memoize
 
 

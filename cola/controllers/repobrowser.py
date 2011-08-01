@@ -5,7 +5,6 @@ import os
 
 from PyQt4 import QtGui
 
-import cola
 from cola import git
 from cola import gitcmds
 from cola import utils
@@ -80,7 +79,6 @@ class RepoBrowserController(QObserver):
         if item is None or not item.isSelected():
             return
         directories = self.model.directories
-        directory_entries = self.model.directory_entries
         if current < len(directories):
             # ignore directories
             return

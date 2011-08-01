@@ -2,11 +2,9 @@
 
 from PyQt4 import QtGui
 
-import cola
 from cola import qtutils
 from cola import version
 from cola.qobserver import QObserver
-from cola.views import log
 
 
 class MainController(QObserver):

@@ -1,6 +1,3 @@
-import os
-
-import cola
 from cola import core
 from cola import git
 from cola import gitcmds

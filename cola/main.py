@@ -7,9 +7,7 @@ import glob
 import sys
 import os
 
-import cola
 from cola import resources
-from cola import utils
 from cola import core
 from cola import git
 from cola import inotify
@@ -112,14 +110,11 @@ def main():
     from cola import qtcompat
     qtcompat.install()
 
-    from cola.models.gitrepo import GitRepoModel
     from cola.views import startup
     from cola.views.main import MainView
-    from cola.views.repo import RepoDialog
     from cola.controllers.main import MainController
     from cola.controllers.classic import cola_classic
     from cola.app import ColaApplication
-    from cola import qtutils
     from cola import cmds
 
     # TODO: remove in 2012?

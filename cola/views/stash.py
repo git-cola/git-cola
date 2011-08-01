@@ -2,8 +2,6 @@
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
 
 from cola import qt
 from cola import qtutils

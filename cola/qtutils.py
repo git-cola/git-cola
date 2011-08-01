@@ -244,7 +244,7 @@ def confirm(parent, title, text, informative_text, ok_text, icon=None):
     msgbox.setInformativeText(tr(informative_text))
     ok = msgbox.addButton(tr(ok_text), QtGui.QMessageBox.ActionRole)
     ok.setIcon(icon)
-    cancel = msgbox.addButton(QtGui.QMessageBox.Cancel)
+    msgbox.addButton(QtGui.QMessageBox.Cancel)
     msgbox.exec_()
     return msgbox.clickedButton() == ok
 

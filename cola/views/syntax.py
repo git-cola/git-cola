@@ -102,9 +102,11 @@ class GenericSyntaxHighligher(QSyntaxHighlighter):
 
     def highlightBlock(self, qstr):
         ascii = qstr.toAscii().data()
-        if not ascii: return
+        if not ascii:
+            return
         formats = self.formats(ascii)
-        if not formats: return
+        if not formats:
+            return
         for match, fmts in formats:
             start = match.start()
             end = match.end()

@@ -1,11 +1,7 @@
 """This controller handles the compare commits dialog."""
 
-import os
-
 from PyQt4 import QtGui
 
-import cola
-from cola import utils
 from cola import qtutils
 from cola import difftool
 from cola import gitcmds
@@ -18,7 +14,6 @@ from cola.controllers.repobrowser import select_file_from_repo
 
 def compare_file():
     """Launches a dialog for comparing revisions touching a file path"""
-    parent = QtGui.QApplication.instance().activeWindow()
     filename = select_file_from_repo()
     if not filename:
         return

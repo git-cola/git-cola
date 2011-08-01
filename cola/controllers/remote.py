@@ -1,13 +1,11 @@
 """This controller handles the remote dialog."""
 
 
-import os
 import fnmatch
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import QDialog
 
 import cola
 from cola import serializer

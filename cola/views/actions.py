@@ -5,11 +5,9 @@ from PyQt4.QtCore import SIGNAL
 import cola
 from cola import qt
 from cola import i18n
-from cola import qtutils
 from cola import signals
 from cola import gitcfg
 from cola import gitcmds
-from cola.qtutils import SLOT
 from cola.views import revselect
 from cola.views import standard
 from cola.views import command
@@ -61,7 +59,6 @@ class ActionDialog(standard.StandardDialog):
         self.layt.setMargin(10)
         self.setLayout(self.layt)
 
-        cmd = opts.get('cmd')
         title = opts.get('title')
         if title:
             self.setWindowTitle(os.path.expandvars(title))

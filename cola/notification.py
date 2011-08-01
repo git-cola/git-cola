@@ -1,5 +1,4 @@
 import os
-from PyQt4 import QtCore
 
 from cola.compat import set
 from cola.decorators import memoize

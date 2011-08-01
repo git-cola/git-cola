@@ -588,9 +588,6 @@ class GraphView(QtGui.QGraphicsView):
         gxmax = self._xmax
         gymax = self._ymax
 
-        xpos = 0
-        ypos = 0
-
         for commit in commits:
             # Center nodes relative to their children
             ymax = 0

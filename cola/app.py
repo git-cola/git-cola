@@ -2,12 +2,9 @@
 """Provides the cola QApplication subclass"""
 # style note: we use camelCase here since we're masquerading a Qt class
 
-import os
-
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 
-from cola import utils
 from cola import resources
 from cola import i18n
 from cola.decorators import memoize

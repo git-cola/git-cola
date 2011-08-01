@@ -1,7 +1,5 @@
 """This controller handles the create branch dialog."""
 
-
-import os
 from PyQt4 import QtGui
 
 import cola

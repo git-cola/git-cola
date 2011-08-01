@@ -326,7 +326,7 @@ class RepoTreeView(QtGui.QTreeView):
         untracked = cola.utils.add_parents(set(model.untracked))
         tracked = staged.union(modified)
         return [p for p in selection
-                if p not in untracked or p in staged or p in modified]
+                if p not in untracked or p in tracked]
 
     def _create_action(self, name, tooltip, slot, shortcut):
         """Create an action with a shortcut, tooltip, and callback slot."""

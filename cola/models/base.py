@@ -3,7 +3,6 @@
 import types
 import copy
 
-from cola import serializer
 from cola.compat import set
 
 class BaseModel(object):
