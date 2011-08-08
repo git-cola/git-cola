@@ -2,8 +2,6 @@
 
 import os
 import sys
-import stat
-import shutil
 import platform
 from glob import glob
 from distutils.core import setup
@@ -15,8 +13,8 @@ except ImportError:
 
 # Look for modules in the root and thirdparty directories
 srcdir = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(srcdir, 'thirdparty'))
-sys.path.insert(0, srcdir)
+sys.path.insert(1, os.path.join(srcdir, 'thirdparty'))
+sys.path.insert(1, srcdir)
 
 from cola import version
 
@@ -37,14 +35,7 @@ def main():
     _check_git_version()
     _check_pyqt_version()
 
-    # First see if there is a version file (included in release tarballs),
-    # then try git-describe, then default.
-    builtin_version = os.path.join('cola', 'builtin_version.py')
-    if os.path.exists('version') and not os.path.exists(builtin_version):
-        shutil.copy('version', builtin_version)
-
-    elif os.path.exists('.git'):
-        version.write_builtin_version()
+    version.write_builtin_version()
 
     _run_setup()
     # restore the old mask

@@ -1,9 +1,12 @@
+TERM = dummy
+export TERM
+
 prefix	?= $(HOME)
 PYTHON	?= python
 PYTHON_VER	?= $(shell $(PYTHON) -c 'import platform; print(platform.python_version()[:3])')
 PYTHON_LIB	?= $(shell $(PYTHON) -c 'import os.path as p; import distutils.sysconfig as sc; print(p.basename(sc.get_config_var("LIBDIR")))')
 PYTHON_SITE	?= $(DESTDIR)$(prefix)/$(PYTHON_LIB)/python$(PYTHON_VER)/site-packages
-COLA_VERSION	?= $(shell git describe --match='v*.*' | sed -e s/v//)
+COLA_VERSION	?= $(shell $(PYTHON) cola/version.py)
 APP	?= git-cola.app
 TAR	?= tar
 TEST_PYTHONPATH	?= "$(CURDIR)":"$(CURDIR)/thirdparty":"$(PYTHONPATH)"
@@ -34,13 +37,13 @@ COLA_TARNAME ?= cola-$(COLA_VERSION)
 dist: all
 	git archive --format=tar \
 		--prefix=$(COLA_TARNAME)/ HEAD^{tree} > $(COLA_TARNAME).tar
-	@mkdir -p $(COLA_TARNAME)/cola
-	@cp cola/builtin_version.py $(COLA_TARNAME)/cola
-	@cp cola/builtin_version.py $(COLA_TARNAME)/version
+	mkdir -p $(COLA_TARNAME)/cola
+	cp cola/builtin_version.py $(COLA_TARNAME)/cola
+	echo $(COLA_VERSION) > $(COLA_TARNAME)/version
 	$(TAR) rf $(COLA_TARNAME).tar \
 		$(COLA_TARNAME)/version \
 		$(COLA_TARNAME)/cola/builtin_version.py
-	@$(RM) -r $(COLA_TARNAME)
+	$(RM) -r $(COLA_TARNAME)
 	gzip -f -9 $(COLA_TARNAME).tar
 
 doc:
@@ -77,7 +80,7 @@ clean:
 	$(MAKE) -C share/doc/git-cola clean
 	find . -name .noseids -print0 | xargs -0 rm -f
 	find . -name '*.py[co]' -print0 | xargs -0 rm -f
-	rm -rf cola/builtin_version.* build dist tmp tags git-cola.app
+	rm -rf build dist tmp tags git-cola.app
 	rm -rf share/locale
 
 tags:
