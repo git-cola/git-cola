@@ -3,7 +3,6 @@
 
 import os
 import sys
-import re
 
 if __name__ == '__main__':
     srcdir = os.path.dirname(os.path.dirname(__file__))
@@ -51,7 +50,7 @@ def git_describe_version():
                             with_stderr=True)
     except errors.GitCommandError, e:
         raise VersionUnavailable(str(e))
-    if not re.match(r'^v[0-9]', v):
+    if v[0:1] != 'v' or not v[1:2].isdigit():
         raise VersionUnavailable('%s: bad version' % v)
     try:
         dirty = git.Git.execute(['git', 'diff-index', '--name-only', 'HEAD'])
@@ -59,7 +58,7 @@ def git_describe_version():
         raise VersionUnavailable(str(e))
     if dirty:
         v += '-dirty'
-    return re.sub('-', '.', utils.strip_prefix('v', v))
+    return utils.strip_prefix('v', v.replace('-', '.'))
 
 
 def builtin_version():
