@@ -1,15 +1,28 @@
-TERM = dummy
-export TERM
+# The default target of this Makefile is...
+all::
 
-prefix	?= $(HOME)
-PYTHON	?= python
-PYTHON_VER	?= $(shell $(PYTHON) -c 'import platform; print(platform.python_version()[:3])')
-PYTHON_LIB	?= $(shell $(PYTHON) -c 'import os.path as p; import distutils.sysconfig as sc; print(p.basename(sc.get_config_var("LIBDIR")))')
-PYTHON_SITE	?= $(DESTDIR)$(prefix)/$(PYTHON_LIB)/python$(PYTHON_VER)/site-packages
-COLA_VERSION	?= $(shell $(PYTHON) cola/version.py)
-APP	?= git-cola.app
-TAR	?= tar
-TEST_PYTHONPATH	?= "$(CURDIR)":"$(CURDIR)/thirdparty":"$(PYTHONPATH)"
+# The external commands used by this Makefile are...
+GIT = git
+NOSETESTS = nosetests
+PYTHON = python
+TAR = tar
+
+# These values can be overridden on the command-line or via config.mak
+prefix = $(HOME)
+bindir = $(prefix)/bin
+# DESTDIR =
+
+cola_app = git-cola.app
+cola_version = $(shell env TERM=dummy $(PYTHON) cola/version.py)
+cola_dist := cola-$(cola_version)
+
+python_path = $(CURDIR):$(CURDIR)/thirdparty:$(PYTHONPATH)
+python_version = $(shell env TERM=dummy $(PYTHON) -c 'import distutils.sysconfig as sc; print(sc.get_python_version())')
+python_libdir = $(shell env TERM=dummy $(PYTHON) -c 'import os.path as p; import distutils.sysconfig as sc; print(p.basename(sc.get_config_var("LIBDIR")))')
+python_site := $(prefix)/$(python_libdir)/python$(python_version)/site-packages
+
+test_flags =
+all_test_flags = --with-doctest $(test_flags)
 
 # User customizations
 -include config.mak
@@ -18,33 +31,33 @@ ifdef standalone
 standalone_args	?= --standalone
 endif
 
-all:
+
+all::
 	$(PYTHON) setup.py build
 
 install: all
 	$(PYTHON) setup.py --quiet install \
 		$(standalone_args) \
-		--install-scripts=$(DESTDIR)$(prefix)/bin \
 		--prefix=$(DESTDIR)$(prefix) \
+		--install-scripts=$(DESTDIR)$(bindir) \
 		--force && \
-	rm -f $(PYTHON_SITE)/git_cola*
-	rmdir -p $(PYTHON_SITE) 2>/dev/null || true
-	(cd $(DESTDIR)$(prefix)/bin && \
+	rm -f $(DESTDIR)$(python_site)/git_cola*
+	rmdir -p $(DESTDIR)$(python_site) 2>/dev/null || true
+	(cd $(DESTDIR)$(bindir) && \
 	! test -e cola && ln -s git-cola cola) || true
 
 # Maintainer's dist target
-COLA_TARNAME ?= cola-$(COLA_VERSION)
 dist: all
-	git archive --format=tar \
-		--prefix=$(COLA_TARNAME)/ HEAD^{tree} > $(COLA_TARNAME).tar
-	mkdir -p $(COLA_TARNAME)/cola
-	cp cola/builtin_version.py $(COLA_TARNAME)/cola
-	echo $(COLA_VERSION) > $(COLA_TARNAME)/version
-	$(TAR) rf $(COLA_TARNAME).tar \
-		$(COLA_TARNAME)/version \
-		$(COLA_TARNAME)/cola/builtin_version.py
-	$(RM) -r $(COLA_TARNAME)
-	gzip -f -9 $(COLA_TARNAME).tar
+	$(GIT) archive --format=tar --prefix=$(cola_dist)/ HEAD^{tree} \
+		>$(cola_dist).tar
+	mkdir -p $(cola_dist)/cola
+	cp cola/builtin_version.py $(cola_dist)/cola
+	echo $(cola_version) > $(cola_dist)/version
+	$(TAR) rf $(cola_dist).tar \
+		$(cola_dist)/version \
+		$(cola_dist)/cola/builtin_version.py
+	rm -r $(cola_dist)
+	gzip -f -9 $(cola_dist).tar
 
 doc:
 	$(MAKE) -C share/doc/git-cola prefix=$(prefix) all
@@ -65,16 +78,13 @@ uninstall:
 		$(DESTDIR)$(prefix)/share/git-cola \
 		$(DESTDIR)$(prefix)/share/doc/git-cola
 
-test_flags	:=
-all_test_flags	?= --with-doctest $(test_flags)
-
 test: all
-	@env PYTHONPATH="$(TEST_PYTHONPATH)" \
-	nosetests $(all_test_flags)
+	@env PYTHONPATH=$(python_path) \
+	$(NOSETESTS) $(all_test_flags)
 
 coverage:
-	@env PYTHONPATH="$(TEST_PYTHONPATH)" \
-	nosetests --with-coverage --cover-package=cola $(all_test_flags)
+	@env PYTHONPATH=$(python_path) \
+	$(NOSETESTS) --with-coverage --cover-package=cola $(all_test_flags)
 
 clean:
 	$(MAKE) -C share/doc/git-cola clean
@@ -93,14 +103,14 @@ mo:
 	$(PYTHON) setup.py build_mo -f
 
 git-cola.app:
-	mkdir -p $(APP)/Contents/MacOS
-	cp darwin/git-cola $(APP)/Contents/MacOS
-	cp darwin/Info.plist darwin/PkgInfo $(APP)/Contents
-	$(MAKE) prefix=$(APP)/Contents/Resources install
-	cp darwin/git-cola.icns $(APP)/Contents/Resources
+	mkdir -p $(cola_app)/Contents/MacOS
+	cp darwin/git-cola $(cola_app)/Contents/MacOS
+	cp darwin/Info.plist darwin/PkgInfo $(cola_app)/Contents
+	$(MAKE) prefix=$(cola_app)/Contents/Resources install
+	cp darwin/git-cola.icns $(cola_app)/Contents/Resources
 
 app-tarball: git-cola.app
-	$(TAR) czf git-cola-$(COLA_VERSION).app.tar.gz $(APP)
+	$(TAR) czf git-cola-$(cola_version).app.tar.gz $(cola_app)
 
 .PHONY: all install doc install-doc install-html test clean tags
 .PHONY: git-cola.app app-tarball
