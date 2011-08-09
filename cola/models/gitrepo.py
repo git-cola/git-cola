@@ -162,14 +162,16 @@ class GitRepoModel(QtGui.QStandardItemModel):
         entries = dirname.split('/')
         curdir = []
         parent = self.invisibleRootItem()
+        curdir_append = curdir.append
+        self_add_directory = self.add_directory
         for entry in entries:
-            curdir.append(entry)
+            curdir_append(entry)
             path = '/'.join(curdir)
             if path in direntries:
                 parent = direntries[path]
             else:
                 grandparent = parent
-                parent = self.add_directory(grandparent, path)
+                parent = self_add_directory(grandparent, path)
                 direntries[path] = parent
         return parent
 
@@ -185,11 +187,13 @@ class GitRepoEntryManager(object):
     static_entries = {}
 
     @classmethod
-    def entry(cls, path):
+    def entry(cls, path, _static_entries=static_entries):
         """Return a static instance of a GitRepoEntry."""
-        if path not in cls.static_entries:
-            cls.static_entries[path] = GitRepoEntry(path)
-        return cls.static_entries[path]
+        try:
+            e = _static_entries[path]
+        except KeyError:
+            e = _static_entries[path] = GitRepoEntry(path)
+        return e
 
 
 class GitRepoEntry(QtCore.QObject):
