@@ -32,7 +32,7 @@ class Columns(object):
 class GitRepoModel(QtGui.QStandardItemModel):
     """Provides an interface into a git repository for browsing purposes."""
     def __init__(self, parent):
-        QtGui.QStandardItem.__init__(self, parent)
+        QtGui.QStandardItemModel.__init__(self, parent)
         self._interesting_paths = self._get_paths()
         self._known_paths = set()
 
