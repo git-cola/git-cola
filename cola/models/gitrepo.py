@@ -196,6 +196,45 @@ class GitRepoEntryManager(object):
         return e
 
 
+class TaskRunner(object):
+    """Manages QRunnable task instances to avoid python's garbage collector
+
+    When PyQt stops referencing a QRunnable instance Python cleans it up
+    which leads to segfaults, e.g. the dreaded "C++ object has gone away".
+
+    This class keeps track of tasks and cleans up references to them as they
+    complete.
+
+    """
+    singleton = None
+
+    @classmethod
+    def instance(cls):
+        if cls.singleton is None:
+            cls.singleton = TaskRunner()
+        return cls.singleton
+
+    def __init__(self):
+        self.tasks = set()
+        self.threadpool = QtCore.QThreadPool.globalInstance()
+        self.notifier = QtCore.QObject()
+        self.notifier.connect(self.notifier, SIGNAL('task_done'), self.task_done)
+
+    def run(self, task):
+        if not hasattr(QtCore, 'QThreadPool'):
+            # TODO: provide a fallback implementation
+            return
+        self.tasks.add(task)
+        self.threadpool.start(task)
+
+    def task_done(self, task):
+        if task in self.tasks:
+            self.tasks.remove(task)
+
+    def cleanup_task(self, task):
+        self.notifier.emit(SIGNAL('task_done'), task)
+
+
 class GitRepoEntry(QtCore.QObject):
     """
     Provides asynchronous lookup of repository data for a path.
@@ -206,7 +245,6 @@ class GitRepoEntry(QtCore.QObject):
     def __init__(self, path):
         QtCore.QObject.__init__(self)
         self.path = path
-        self.task = None
 
     def update_name(self):
         """Emits a signal corresponding to the entry's name."""
@@ -218,12 +256,8 @@ class GitRepoEntry(QtCore.QObject):
     def update(self):
         """Starts a GitRepoInfoTask to calculate info for entries."""
         # GitRepoInfoTask handles expensive lookups
-        if not hasattr(QtCore, 'QThreadPool'):
-            # TODO: provide a fallback implementation
-            return
-        threadpool = QtCore.QThreadPool.globalInstance()
-        self.task = GitRepoInfoTask(self.path)
-        threadpool.start(self.task)
+        task = GitRepoInfoTask(self.path)
+        TaskRunner.instance().run(task)
 
     def event(self, e):
         """Receive GitRepoInfoEvents and emit corresponding Qt signals."""
@@ -337,6 +371,8 @@ class GitRepoInfoTask(QRunnable):
                 GitRepoInfoEvent(Columns.WHO, self.data('author')))
         app.postEvent(entry,
                 GitRepoInfoEvent(Columns.STATUS, self.status()))
+
+        TaskRunner.instance().cleanup_task(self)
 
 
 class GitRepoInfoEvent(QtCore.QEvent):
