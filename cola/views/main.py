@@ -552,20 +552,26 @@ class MainView(MainWindow):
                                       'Missing Commit Message',
                                       error_msg)
             return
+
         if not self.model.staged:
             error_msg = self.tr(''
                 'No changes to commit.\n\n'
-                'You must stage at least 1 file before you can commit.\n')
+                'You must stage at least 1 file before you can commit.')
             if self.model.modified:
-                error_msg += '\n'
-                error_msg += self.tr('Would you like to stage '
-                                     'and commit all modified files?')
-                if not qtutils.question(self, 'Stage and commit?', error_msg,
-                                        default=False):
+                informative_text = self.tr('Would you like to stage '
+                                           'and commit all modified files?')
+                if not qtutils.confirm(self, 'Stage and commit?',
+                                       error_msg,
+                                       informative_text,
+                                       ok_text='Stage and Commit'):
                     return
             else:
+                cola.notifier().broadcast(signals.information,
+                                          'Nothing to commit',
+                                          error_msg)
                 return
             cola.notifier().broadcast(signals.stage_modified)
+
         # Warn that amending published commits is generally bad
         amend = self.amend_checkbox.isChecked()
         if (amend and self.model.is_commit_published() and
