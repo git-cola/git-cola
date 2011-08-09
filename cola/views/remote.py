@@ -89,25 +89,15 @@ class RemoteView(standard.StandardDialog):
         else:
             self.rebase_checkbox.hide()
 
-        # Action-dependent focus
-        if action == 'fetch':
-            self.remotename.setFocus()
+        self.remotename.setFocus()
+        self.layout_remotes()
 
         if action == 'push':
-            self.local_branch.setFocus()
-
-        if action == 'fetch':
-            self.layout_remotes()
+            self.layout_local_branches()
+            self.layout_remote_branches()
+        else: # fetch and pull
             self.layout_remote_branches()
             self.layout_local_branches()
-        elif action == 'pull':
-            self.layout_remote_branches()
-            self.layout_remotes()
-            self.layout_local_branches()
-        else:
-            self.layout_local_branches()
-            self.layout_remotes()
-            self.layout_remote_branches()
 
         self.layout_options()
 

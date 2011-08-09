@@ -79,7 +79,7 @@ class RemoteController(QObserver):
         self.update_remotes()
 
         # Default to "git fetch origin master"
-        if action == 'fetch':
+        if action == 'fetch' or action == 'pull':
             self.model.set_local_branch('')
             self.model.set_remote_branch('')
             return
@@ -93,17 +93,7 @@ class RemoteController(QObserver):
                 return
             if self.view.select_local_branch(idx):
                 self.model.set_local_branch(branch)
-
-        if action == 'pull':
-            branch = self.model.currentbranch
-            remotebranch = gitcmds.tracked_branch(branch)
-            if remotebranch is None:
-                return
-            try:
-                idx = self.model.remote_branches.index(remotebranch)
-            except ValueError:
-                return
-            self.model.set_remote_branch(branch)
+            self.model.set_remote_branch('')
 
     def display_remotes(self, widget):
         """Display the available remotes in a listwidget"""
