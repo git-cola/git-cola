@@ -319,6 +319,35 @@ class MainModel(ObservableModel):
 
         self.read_font_sizes()
 
+    def update_status_of_files(self, files):
+        self.notify_message_observers(self.message_about_to_update)
+        self.notification_enabled = False
+
+        states = gitcmds.partial_worktree_state_dict(files, self.head)
+        for status, path in states:
+            if status == 'unmodified':
+                if path in self.modified:
+                    self.modified.remove(path)
+                if path in self.untracked:
+                    self.untracked.remove(path)
+            elif status == 'modified':
+                if path in self.untracked:
+                    self.untracked.remove(path)
+                if path not in self.modified:
+                    self.modified.append(path)
+            elif status == 'untracked':
+                if path in self.modified:
+                    self.modified.remove(path)
+                if path not in self.untracked:
+                    self.untracked.append(path)
+
+        self.modified.sort()
+        self.untracked.sort()
+
+        self.notification_enabled = True
+        self.notify_observers('staged', 'unstaged')
+        self.broadcast_updated()
+
     def broadcast_updated(self):
         self.notify_message_observers(self.message_updated)
 
