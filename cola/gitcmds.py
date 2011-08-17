@@ -489,6 +489,22 @@ def worktree_state_dict(head='HEAD',
             'upstream_changed': upstream_changed,
             'submodules': submodules}
 
+def partial_worktree_state_dict(files, head='HEAD'):
+    states = []
+    for path in files:
+        output = git.status(path, porcelain=True)
+        if output == "" or output[1] == " ":
+            states.append(('unmodified', path))
+            status = None
+        else:
+            status = output[1]
+
+        if status == "M" or status == "D" or status == "R":
+            states.append(('modified', path))
+        elif status == "?":
+            states.append(('untracked', path))
+
+    return states
 
 def _branch_status(branch, git=git):
     """
