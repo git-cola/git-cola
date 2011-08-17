@@ -66,6 +66,7 @@ Thanks to
 * David Martínez Martí
 * Iulian Udrea
 * Justin Lecher
+* Karl Bielefeldt
 * Kelvie Wong
 * Kevin Kofler
 * Marco Costalba
