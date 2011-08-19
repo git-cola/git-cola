@@ -18,8 +18,7 @@ cola_dist := cola-$(cola_version)
 
 python_path = $(CURDIR):$(CURDIR)/thirdparty:$(PYTHONPATH)
 python_version = $(shell env TERM=dummy $(PYTHON) -c 'import distutils.sysconfig as sc; print(sc.get_python_version())')
-python_libdir = $(shell env TERM=dummy $(PYTHON) -c 'import os.path as p; import distutils.sysconfig as sc; print(p.basename(sc.get_config_var("LIBDIR")))')
-python_site := $(prefix)/$(python_libdir)/python$(python_version)/site-packages
+python_site := $(prefix)/lib*/python$(python_version)/site-packages
 
 test_flags =
 all_test_flags = --with-doctest $(test_flags)
