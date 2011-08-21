@@ -1,5 +1,38 @@
 .. |beta(TM)| unicode:: beta U+2122
 
+git-cola v1.4.3.5
+=================
+Usability, bells and whistles
+-----------------------------
+* inotify is much snappier and available on Windows
+  thanks to Karl Bielefeldt.
+
+* New right-click command to add untracked files to .gitignore
+  thanks to Audrius Karabanovas.
+
+* Stash, fetch, push, and pull usability improvements
+
+* General usability improvements
+
+* stderr is logged when applying partial diffs.
+
+Fixes
+-----
+* Files can be unstaged when amending.
+
+  http://github.com/davvid/git-cola/issues/closed#issue/82
+
+* Show the configured remote.$remote.pushurl in the GUI
+
+  http://github.com/davvid/git-cola/issues/closed#issue/83
+
+* Removed usage of the "user" module.
+
+  http://github.com/davvid/git-cola/issues/closed#issue/86
+
+* Avoids an extra `git update-index` call during startup.
+
+
 git-cola v1.4.3.4
 =================
 Usability, bells and whistles
