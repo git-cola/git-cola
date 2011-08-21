@@ -90,7 +90,10 @@ def release_version():
         v = fp.read().strip()
         fp.close()
     else:
-        v = version()
+        try:
+            v = git_describe_version()
+        except VersionUnavailable:
+            v = version()
     return v
 
 

@@ -6,10 +6,7 @@ import platform
 from glob import glob
 from distutils.core import setup
 
-try:
-    from extras import cmdclass
-except ImportError:
-    cmdclass = {}
+from extras import cmdclass
 
 # Look for modules in the root and thirdparty directories
 srcdir = os.path.dirname(os.path.abspath(__file__))
