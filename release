@@ -12,7 +12,7 @@ win32_login=Administrator@localhost
 win32_ssh_port=2002
 win32_cola_dir=cola
 win32_release_dir="$RELEASE_TREE_WIN32"
-web_src="$WEB_SRC"
+web_src="$WEB_SOURCE"
 tarball_dir="$RELEASE_TREE_RELEASES"
 darwin_dir="$RELEASE_TREE_DARWIN"
 
