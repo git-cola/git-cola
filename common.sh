@@ -13,6 +13,8 @@ then
 	VERSION=$(bin/git-cola version | awk '{print $3}')
 fi
 
+WEB_SOURCE="$HOME"/src/cola-web
+
 RELEASE_TREE="$HOME"/src/cola.tuxfamily.org
 RELEASE_TREE_DOC="$RELEASE_TREE"
 RELEASE_TREE_RELEASES="$RELEASE_TREE"/releases

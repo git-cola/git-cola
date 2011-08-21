@@ -2,10 +2,23 @@
 . $(dirname $0)/common.sh
 
 rsync -avrP --delete --exclude=.git --exclude=Meta \
-	"$TF_USER"@"$TF_SSH_HOST":"$TF_HTDOCS/" "$RELEASE_TREE/"
+	"$TF_USER"@"$TF_SSH_HOST":"$TF_HTDOCS/" "$RELEASE_TREE/" &&
 
+if ! test -d "$WEB_SOURCE"
+then
+	echo "error: '$WEB_SOURCE' could not found" >&2
+	exit 1
+fi
+
+cd "$WEB_SOURCE"
 if test -d releases
 then
-	rsync -avrP --delete --exclude=HEADER.html --exclude=.gitignore \
+	echo "updating web source release tree"
+	rsync -arP --delete --exclude=HEADER.html --exclude=.gitignore \
 		"$RELEASE_TREE/releases/" releases/
+
+	rsync -arP --delete --exclude=HEADER.html --exclude=.gitignore \
+		"$RELEASE_TREE/share/" share/
+else
+	echo "no releases/ folder found"
 fi
