@@ -62,6 +62,8 @@ class GitDAGWidget(standard.StandardDialog):
         self.setWindowTitle(self.tr('git dag'))
         self.setMinimumSize(1, 1)
 
+        self._queue = []
+
         self._splitter = QtGui.QSplitter()
         self._splitter.setOrientation(QtCore.Qt.Vertical)
         self._splitter.setChildrenCollapsible(True)
@@ -88,9 +90,25 @@ class GitDAGWidget(standard.StandardDialog):
         self.thread.connect(self.thread, self.thread.commit_ready,
                             self._add_commit)
 
+        self.thread.connect(self.thread, self.thread.done,
+                            self._thread_done)
+
     def _add_commit(self, sha1):
-        c = self.thread.repo[sha1]
-        self.add_commits([c])
+        self._queue.append(self.thread.repo[sha1])
+        if len(self._queue) > 64:
+            self.process_queue()
+
+    def process_queue(self):
+        commits = self._queue
+        self._queue = []
+        self.add_commits(commits)
+
+    def _thread_done(self):
+        self.process_queue()
+        for scrollbar in (self._graphview.verticalScrollBar(),
+                          self._graphview.horizontalScrollBar()):
+            if scrollbar:
+                scrollbar.setValue(scrollbar.minimum())
 
     def add_commits(self, commits):
         self._graphview.add_commits(commits)
@@ -121,6 +139,7 @@ class GitDAGWidget(standard.StandardDialog):
 class ReaderThread(QtCore.QThread):
 
     commit_ready = QtCore.SIGNAL('commit_ready')
+    done = QtCore.SIGNAL('done')
 
     def __init__(self, parent, args):
         super(ReaderThread, self).__init__(parent)
@@ -140,6 +159,7 @@ class ReaderThread(QtCore.QThread):
                 self.repo.reset()
                 return
             self.emit(self.commit_ready, commit.sha1)
+        self.emit(self.done)
 
 
 _arrow_size = 4.0
@@ -230,14 +250,21 @@ class Edge(QtGui.QGraphicsItem):
 
 class Node(QtGui.QGraphicsItem):
     _type = QtGui.QGraphicsItem.UserType + 1
-    _width = 180
-    _height = 18
+    _width = 150
+    _height = 16
 
     _shape = QtGui.QPainterPath()
     _shape.addRect(_width/-2., _height/-2., _width, _height)
 
     _bound = _shape.boundingRect()
-    _glyph = QtCore.QRectF(-_width/2., -9, _width/4., 18)
+    _glyph = QtCore.QRectF(-_width/2., -_height/2, _width/4., _height)
+
+    _colors_selected = QtGui.QColor.fromRgb(255, 255, 0)
+    _colors_outline = QtGui.QColor.fromRgb(64, 96, 192)
+    _colors_decorations = QtGui.QColor.fromRgb(255, 255, 64)
+
+    _colors_commit = QtGui.QColor.fromRgb(128, 222, 255)
+    _colors_merge = QtGui.QColor.fromRgb(255, 255, 255)
 
     def __init__(self, commit, nodecom):
         QtGui.QGraphicsItem.__init__(self)
@@ -250,22 +277,13 @@ class Node(QtGui.QGraphicsItem):
         # Starts with enough space for two tags. Any more and the node
         # needs to be taller to accomodate.
         if len(self.commit.tags) > 1:
-            self._height = len(self.commit.tags) * 9 + 6 # +6 padding
+            self._height = len(self.commit.tags) * self._height/2 + 6 # +6 padding
         self._edges = []
 
-        self._colors = {}
-        self._colors['bg'] = QtGui.QColor.fromRgb(16, 16, 16)
-        self._colors['selected'] = QtGui.QColor.fromRgb(192, 192, 16)
-        self._colors['outline'] = QtGui.QColor.fromRgb(0, 0, 0)
-        if len(commit.parents) == 1:
-            self._colors['node'] = QtGui.QColor.fromRgb(255, 111, 69)
+        if len(commit.parents) > 1:
+            self._colors_node = self._colors_merge
         else:
-            self._colors['node'] = QtGui.QColor.fromRgb(169, 111, 69)
-        self._colors['decorations'] = QtGui.QColor.fromRgb(255, 255, 42)
-
-        self._grad = QtGui.QLinearGradient(0.0, 0.0, 0.0, self._height)
-        self._grad.setColorAt(0, self._colors['node'])
-        self._grad.setColorAt(1, self._colors['node'].darker())
+            self._colors_node = self._colors_commit
 
         self.pressed = False
         self.dragged = False
@@ -295,11 +313,14 @@ class Node(QtGui.QGraphicsItem):
         return _glyph
 
     def paint(self, painter, option, widget):
+        pen = QtGui.QPen()
+        pen.setWidth(1.5)
         if self.isSelected():
-            painter.setPen(self._colors['selected'])
+            pen.setColor(self._colors_selected)
         else:
-            painter.setPen(self._colors['outline'])
-        painter.setBrush(self._grad)
+            pen.setColor(self._colors_outline)
+        painter.setPen(pen)
+        painter.setBrush(self._colors_node)
 
         # Draw glyph
         painter.drawEllipse(self.glyph())
@@ -318,8 +339,8 @@ class Node(QtGui.QGraphicsItem):
             return
         # Those 2's affecting width are just for padding
         text_box = QtCore.QRectF(-self._width/4.+2, -self._height/2.,
-                                 self._width*(3/4.)-2, self._height)
-        painter.setBrush(self._colors['decorations'])
+                                 self._width/2.2-2, self._height)
+        painter.setBrush(self._colors_decorations)
         painter.drawRoundedRect(text_box, 4, 4)
         tag_text = "\n".join(self.commit.tags)
         text_options.setAlignment(QtCore.Qt.AlignVCenter)
@@ -360,10 +381,10 @@ class GraphView(QtGui.QGraphicsView):
     def __init__(self, nodecom):
         QtGui.QGraphicsView.__init__(self)
 
-        self._xoff = 200
-        self._yoff = 42
+        self._xoff = 132
+        self._yoff = 32
         self._xmax = 0
-        self._ymax = 0
+        self._ymin = 0
 
         self._items = []
         self._selected = []
@@ -371,7 +392,7 @@ class GraphView(QtGui.QGraphicsView):
         self._nodecom = nodecom
 
         self._loc = {}
-        self._cols = {}
+        self._rows = {}
 
         self._panning = False
         self._last_mouse = [0, 0]
@@ -388,7 +409,7 @@ class GraphView(QtGui.QGraphicsView):
         self.setRenderHint(QtGui.QPainter.Antialiasing)
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
         self.setResizeAnchor(QtGui.QGraphicsView.NoAnchor)
-        self.setBackgroundColor()
+        self.setBackgroundBrush(QtGui.QColor.fromRgb(0, 0, 0))
 
     def add_commits(self, commits):
         """Traverse commits and add them to the view."""
@@ -543,13 +564,6 @@ class GraphView(QtGui.QGraphicsView):
         self.setTransformationAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setMatrix(matrix)
 
-    def setBackgroundColor(self, color=None):
-        # To set a gradient background brush we need to use StretchToDeviceMode
-        # but that seems to be segfaulting. Use a solid background.
-        if not color:
-            color = QtGui.QColor(50,50,50)
-        self.setBackgroundBrush(color)
-
     def _scale_view(self, scale):
         factor = (self.matrix().scale(scale, scale)
                                .mapRect(QtCore.QRectF(0, 0, 1, 1))
@@ -571,53 +585,52 @@ class GraphView(QtGui.QGraphicsView):
         """Create edges linking commits with their parents"""
         scene = self.scene()
         for commit in commits:
-            commit_node = self._nodes[commit.sha1]
-            for child in commit.children:
-                child_node = self._nodes[child.sha1]
-                edge = Edge(commit_node, child_node)
+            try:
+                commit_node = self._nodes[commit.sha1]
+            except KeyError:
+                pass
+            for parent in commit.parents:
+                parent_node = self._nodes[parent.sha1]
+                edge = Edge(parent_node, commit_node)
                 scene.addItem(edge)
 
     def layout(self, commits):
-        gxmax = self._xmax
-        gymax = self._ymax
-
-        for commit in commits:
-            # Center nodes relative to their children
-            ymax = 0
-            xmax = None
-            for child in commit.children:
-                loc = self._loc[child.sha1]
-                if xmax is None:
-                    xmax = loc[0]
-                xmax = min(xmax, loc[0])
-                ymax = max(ymax, loc[1])
-                gxmax = max(gxmax, xmax)
-                gymax = max(gymax, ymax)
-            if xmax is None:
-                xmax = 0
-            ymax += self._yoff
-            gymax = max(gymax, ymax)
-            if ymax in self._cols:
-                xmax = max(xmax, self._cols[ymax] + self._xoff)
-                gxmax = max(gxmax, xmax)
-                self._cols[ymax] = xmax
-            else:
-                prev = ymax - self._yoff
-                if prev in self._cols:
-                    xmax = self._cols[prev]/2
-                else:
-                    xmax = 0
-                self._cols[ymax] = xmax
-
+        if not self._loc:
+            commit = commits[0]
             sha1 = commit.sha1
-            self._loc[sha1] = (xmax, ymax)
             node = self._nodes[sha1]
-            node.setPos(xmax, ymax)
+            self._loc[sha1] = (0, 0)
+            self._rows[commit.generation] = [0]
+            node.setPos(0, 0)
+            commits = commits[1:]
 
-        xpad = 99
-        self._xmax = gxmax
-        self._ymax = gymax
-        self.scene().setSceneRect(-xpad, 0, gxmax, gymax)
+        xmax = self._xmax
+        ymin = self._ymin
+        for commit in commits:
+            generation = commit.generation
+            sha1 = commit.sha1
+            try:
+                row = self._rows[generation]
+            except KeyError:
+                row = self._rows[generation] = []
+
+            xpos = (len(commit.parents)-1) * self._xoff
+            if row:
+                xpos += row[-1] + self._xoff
+            ypos = -commit.generation * self._yoff
+
+            self._loc[sha1] = (xpos, ypos)
+            node = self._nodes[sha1]
+            node.setPos(xpos, ypos)
+
+            row.append(xpos)
+            xmax = max(xmax, xpos)
+            ymin = min(ymin, ypos)
+
+        self._xmax = xmax
+        self._ymin = ymin
+        self.scene().setSceneRect(-self._xoff, ymin-self._yoff*2,
+                                  xmax+self._xoff*2, abs(ymin)+self._yoff*3)
 
 
 if __name__ == "__main__":
