@@ -20,12 +20,12 @@ from cola.views import standard
 from cola.views import syntax
 
 
-def git_dag(log_args=None, parent=None):
+def git_dag(parent=None, log_args=None):
     """Return a pre-populated git DAG widget."""
-    view = GitDAGWidget(parent)
+    view = GitDAGWidget(parent=parent)
     view.resize_to_desktop()
-    view.raise_()
     view.show()
+    view.raise_()
     view.thread.start(QtCore.QThread.LowPriority)
     return view
 
@@ -633,5 +633,5 @@ if __name__ == "__main__":
     model = main.model()
     model._init_config_data()
     app = QtGui.QApplication(sys.argv)
-    view = git_dag()
+    view = git_dag(app.activeWindow())
     sys.exit(app.exec_())
