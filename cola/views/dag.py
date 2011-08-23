@@ -13,7 +13,6 @@ from cola import observable
 from cola import qtutils
 from cola import signals
 from cola import gitcmds
-from cola.compat import set
 from cola.decorators import memoize
 from cola.models import commit
 from cola.views import standard
@@ -56,17 +55,8 @@ class GitCommitView(QtGui.QWidget):
 class GitDAGWidget(standard.StandardDialog):
     """The git-dag widget."""
     # Keep us in scope otherwise PyQt kills the widget
-    _instances = set()
-
-    def delete(self):
-        self._instances.remove(self)
-
-    def splitter(self):
-        return self._splitter
-
     def __init__(self, parent=None, args=None):
-        standard.StandardDialog.__init__(self, parent)
-        self._instances.add(self)
+        standard.StandardDialog.__init__(self, parent=parent)
 
         self.setObjectName('dag')
         self.setWindowTitle(self.tr('git dag'))
