@@ -42,6 +42,7 @@ class GitCommitView(QtGui.QWidget):
 
         self._layt = QtGui.QVBoxLayout()
         self._layt.addWidget(self.diff)
+        self._layt.setMargin(2)
         self.setLayout(self._layt)
 
         sig = signals.sha1_selected
@@ -73,6 +74,7 @@ class GitDAGWidget(standard.StandardDialog):
 
         self._splitter = QtGui.QSplitter()
         self._splitter.setOrientation(QtCore.Qt.Vertical)
+        self._splitter.setChildrenCollapsible(True)
 
         self._nodecom = observable.Observable()
         self._graphview = GraphView(nodecom=self._nodecom)
@@ -80,6 +82,8 @@ class GitDAGWidget(standard.StandardDialog):
 
         self._splitter.insertWidget(0, self._graphview)
         self._splitter.insertWidget(1, self._widget)
+        self._splitter.setSizes([75, 25])
+        self._splitter.setStretchFactor(0, 1)
 
         self._layt = layt = QtGui.QHBoxLayout()
         layt.setMargin(0)
@@ -121,8 +125,7 @@ class GitDAGWidget(standard.StandardDialog):
         desktop = QtGui.QApplication.instance().desktop()
         width = desktop.width()
         height = desktop.height()
-        self.resize(width/2, height)
-        self.splitter().setSizes([height/2, height/2])
+        self.resize(width, height)
 
 
 class ReaderThread(QtCore.QThread):
