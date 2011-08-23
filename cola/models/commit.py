@@ -22,7 +22,6 @@ class CommitFactory(object):
             commit = Commit(sha1=sha1,
                             log_entry=log_entry)
             cls._commits[sha1] = commit
-
         return commit
 
 
@@ -34,6 +33,7 @@ class Commit(object):
                  'tags',
                  'author',
                  'authdate',
+                 'generation',
                  'parsed')
     def __init__(self, sha1=None, log_entry=None):
         self.sha1 = sha1
@@ -44,6 +44,7 @@ class Commit(object):
         self.author = None
         self.authdate = None
         self.parsed = False
+        self.generation = 0
         if log_entry:
             self.parse(log_entry)
 
@@ -54,11 +55,18 @@ class Commit(object):
 
         if subject:
             self.subject = subject
+
         if parents:
-            for parent in parents.split(' '):
-                parent = CommitFactory.new(sha1=parent)
+            generation = None
+            for parent_sha1 in parents.split(' '):
+                parent = CommitFactory.new(sha1=parent_sha1)
                 parent.children.append(self)
+                if generation is None:
+                    generation = parent.generation+1
                 self.parents.append(parent)
+                generation = max(parent.generation+1, generation)
+            self.generation = generation
+
         if tags:
             for tag in tags[2:-1].split(', '):
                 if tag.startswith('tag: '):
@@ -101,6 +109,7 @@ class RepoReader(object):
         self._objects = {}
         self._cmd = ('git', 'log',
                      '--topo-order',
+                     '--reverse',
                      '--pretty='+logfmt) + tuple(args)
         self._cached = False
         """Indicates that all data has been read"""
