@@ -651,8 +651,8 @@ class GraphView(QtGui.QGraphicsView):
 
         self._xmax = xmax
         self._ymin = ymin
-        self.scene().setSceneRect(-self._xoff, ymin-self._yoff*2,
-                                  xmax+self._xoff*2, abs(ymin)+self._yoff*3)
+        self.scene().setSceneRect(self._xoff*-2, ymin-self._yoff*2,
+                                  xmax+self._xoff*3, abs(ymin)+self._yoff*4)
 
 
 if __name__ == "__main__":
