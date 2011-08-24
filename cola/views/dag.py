@@ -75,19 +75,23 @@ class GitDAGWidget(standard.StandardDialog):
 
         self._splitter.insertWidget(0, self._graphview)
         self._splitter.insertWidget(1, self._widget)
-        self._splitter.setSizes([75, 25])
         self._splitter.setStretchFactor(0, 1)
+        self._splitter.setStretchFactor(1, 1)
 
         self._layt = layt = QtGui.QHBoxLayout()
         layt.setMargin(0)
         layt.addWidget(self._splitter)
         self.setLayout(layt)
 
+        self._splitter.setSizes([self.height()*2/3, self.height()/3])
+
+
         qtutils.add_close_action(self)
         if not parent:
             qtutils.center_on_screen(self)
 
         self.thread = ReaderThread(self, args)
+
         self.thread.connect(self.thread, self.thread.commit_ready,
                             self._add_commit)
 
