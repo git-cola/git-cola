@@ -7,7 +7,8 @@ from PyQt4 import QtCore
 if __name__ == "__main__":
     # Find the source tree
     src = os.path.join(os.path.dirname(__file__), '..', '..')
-    sys.path.insert(0, os.path.abspath(src))
+    sys.path.insert(1, os.path.join(os.path.abspath(src), 'thirdparty'))
+    sys.path.insert(1, os.path.abspath(src))
 
 from cola import observable
 from cola import qtutils
