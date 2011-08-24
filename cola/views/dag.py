@@ -105,6 +105,8 @@ class GitDAGWidget(standard.StandardDialog):
 
     def process_queue(self):
         commits = self._queue
+        if not commits:
+            return
         self._queue = []
         self.add_commits(commits)
 
@@ -114,6 +116,7 @@ class GitDAGWidget(standard.StandardDialog):
                           self._graphview.horizontalScrollBar()):
             if scrollbar:
                 scrollbar.setValue(scrollbar.minimum())
+        self._graphview.select('HEAD')
 
     def add_commits(self, commits):
         self._graphview.add_commits(commits)
@@ -294,6 +297,13 @@ class Node(QtGui.QGraphicsItem):
         self.dragged = False
         self.skipped = False
 
+    def itemChange(self, change, value):
+        if (change == QtGui.QGraphicsItem.ItemSelectedHasChanged and
+                value.toPyObject()):
+            sig = signals.sha1_selected
+            self._nodecom.notify_message_observers(sig, self.commit.sha1)
+        return QtGui.QGraphicsItem.itemChange(self, change, value)
+
     def type(self, _type=_type):
         return _type
 
@@ -356,9 +366,7 @@ class Node(QtGui.QGraphicsItem):
     def mousePressEvent(self, event):
         self.pressed = True
         self.selected = self.isSelected()
-        sig = signals.sha1_selected
         QtGui.QGraphicsItem.mousePressEvent(self, event)
-        self._nodecom.notify_message_observers(sig, self.commit.sha1)
 
     def mouseMoveEvent(self, event):
         if self.pressed:
@@ -432,6 +440,12 @@ class GraphView(QtGui.QGraphicsView):
             self._scale_view(1 / 1.5)
         elif key == QtCore.Qt.Key_F:
             self._view_fit()
+    def select(self, sha1):
+        try:
+            node = self._nodes[sha1]
+        except KeyError:
+            return
+        node.setSelected(True)
 
     def _view_fit(self):
         """Fit selected items into the viewport"""
@@ -584,6 +598,8 @@ class GraphView(QtGui.QGraphicsView):
             node = Node(commit, self._nodecom)
             scene.addItem(node)
             self._nodes[commit.sha1] = node
+            for ref in commit.tags:
+                self._nodes[ref] = node
             self._items.append(node)
 
     def link(self, commits):
@@ -593,6 +609,7 @@ class GraphView(QtGui.QGraphicsView):
             try:
                 commit_node = self._nodes[commit.sha1]
             except KeyError:
+                # TODO - Handle truncated history viewing
                 pass
             for parent in commit.parents:
                 parent_node = self._nodes[parent.sha1]
