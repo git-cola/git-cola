@@ -5,6 +5,7 @@ import os
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
@@ -256,6 +257,15 @@ def set_clipboard(text):
     clipboard = QtGui.QApplication.instance().clipboard()
     clipboard.setText(text, QtGui.QClipboard.Clipboard)
     clipboard.setText(text, QtGui.QClipboard.Selection)
+
+
+def add_action(widget, text, fn, *shortcuts):
+    action = QtGui.QAction(text, widget)
+    action.setShortcuts(shortcuts)
+    action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
+    widget.addAction(action)
+    widget.connect(action, SIGNAL('triggered()'), fn)
+    return action
 
 
 def set_selected_item(widget, idx):
