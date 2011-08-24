@@ -424,22 +424,28 @@ class GraphView(QtGui.QGraphicsView):
         self.setResizeAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setBackgroundBrush(QtGui.QColor.fromRgb(0, 0, 0))
 
+        self._action_zoom_in = (
+            qtutils.add_action(self, 'Zoom In',
+                               lambda: self._scale_view(1.5),
+                               QtCore.Qt.Key_Plus,
+                               QtCore.Qt.Key_Equal))
+
+        self._action_zoom_out = (
+            qtutils.add_action(self, 'Zoom Out',
+                               lambda: self._scale_view(1.0/1.5),
+                               QtCore.Qt.Key_Minus))
+
+        self._action_zoom_fit = (
+            qtutils.add_action(self, 'Zoom to Fit',
+                               self._view_fit,
+                               QtCore.Qt.Key_F))
+
     def add_commits(self, commits):
         """Traverse commits and add them to the view."""
         self.add(commits)
         self.layout(commits)
         self.link(commits)
 
-    def keyPressEvent(self, event):
-        key = event.key()
-        QtGui.QGraphicsView.keyPressEvent(self, event)
-
-        if key == QtCore.Qt.Key_Plus:
-            self._scale_view(1.5)
-        elif key == QtCore.Qt.Key_Minus:
-            self._scale_view(1 / 1.5)
-        elif key == QtCore.Qt.Key_F:
-            self._view_fit()
     def select(self, sha1):
         try:
             node = self._nodes[sha1]
