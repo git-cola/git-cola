@@ -440,6 +440,26 @@ class GraphView(QtGui.QGraphicsView):
                                self._view_fit,
                                QtCore.Qt.Key_F))
 
+        self._action_select_parent = (
+            qtutils.add_action(self, 'Select Parent',
+                               self._select_parent,
+                               QtCore.Qt.Key_J))
+
+        self._action_select_oldest_parent = (
+            qtutils.add_action(self, 'Select Oldest Parent',
+                               self._select_oldest_parent,
+                               'Shift+J'))
+
+        self._action_select_child = (
+            qtutils.add_action(self, 'Select Child',
+                               self._select_child,
+                               QtCore.Qt.Key_K))
+
+        self._action_select_child = (
+            qtutils.add_action(self, 'Select Nth Child',
+                               self._select_nth_child,
+                               'Shift+K'))
+
     def add_commits(self, commits):
         """Traverse commits and add them to the view."""
         self.add(commits)
@@ -447,11 +467,94 @@ class GraphView(QtGui.QGraphicsView):
         self.link(commits)
 
     def select(self, sha1):
+        """Select the node for the SHA-1"""
         try:
             node = self._nodes[sha1]
         except KeyError:
             return
         node.setSelected(True)
+
+    def selected_node(self):
+        """Return the currently selected node"""
+        selected_nodes = self.scene().selectedItems()
+        if not selected_nodes:
+            return None
+        return selected_nodes[0]
+
+    def get_node_by_generation(self, commits, criteria_fn):
+        """Return the node for the commit matching criteria"""
+        if not commits:
+            return None
+        generation = None
+        for commit in commits:
+            if (generation is None or
+                    criteria_fn(generation, commit.generation)):
+                sha1 = commit.sha1
+                generation = commit.generation
+        try:
+            return self._nodes[sha1]
+        except KeyError:
+            return None
+
+    def oldest_node(self, commits):
+        """Return the node for the commit with the oldest generation number"""
+        return self.get_node_by_generation(commits, lambda a, b: a > b)
+
+    def newest_node(self, commits):
+        """Return the node for the commit with the newest generation number"""
+        return self.get_node_by_generation(commits, lambda a, b: a < b)
+
+    def _select_parent(self):
+        """Select the parent with the newest generation number"""
+        selected_node = self.selected_node()
+        if selected_node is None:
+            return
+        parent_node = self.newest_node(selected_node.commit.parents)
+        if parent_node is None:
+            return
+        selected_node.setSelected(False)
+        parent_node.setSelected(True)
+        self.ensureVisible(parent_node.mapRectToScene(parent_node.boundingRect()))
+
+    def _select_oldest_parent(self):
+        """Select the parent with the oldest generation number"""
+        selected_node = self.selected_node()
+        if selected_node is None:
+            return
+        parent_node = self.oldest_node(selected_node.commit.parents)
+        if parent_node is None:
+            return
+        selected_node.setSelected(False)
+        parent_node.setSelected(True)
+        self.ensureVisible(parent_node.mapRectToScene(parent_node.boundingRect()))
+
+    def _select_child(self):
+        """Select the child with the oldest generation number"""
+        selected_node = self.selected_node()
+        if selected_node is None:
+            return
+        child_node = self.oldest_node(selected_node.commit.children)
+        if child_node is None:
+            return
+        selected_node.setSelected(False)
+        child_node.setSelected(True)
+        self.ensureVisible(child_node.mapRectToScene(child_node.boundingRect()))
+
+    def _select_nth_child(self):
+        """Select the Nth child with the newest generation number (N > 1)"""
+        selected_node = self.selected_node()
+        if selected_node is None:
+            return
+        if len(selected_node.commit.children) > 1:
+            children = selected_node.commit.children[1:]
+        else:
+            children = selected_node.commit.children
+        child_node = self.newest_node(children)
+        if child_node is None:
+            return
+        selected_node.setSelected(False)
+        child_node.setSelected(True)
+        self.ensureVisible(child_node.mapRectToScene(child_node.boundingRect()))
 
     def _view_fit(self):
         """Fit selected items into the viewport"""
