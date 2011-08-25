@@ -10,6 +10,7 @@ if __name__ == '__main__':
     sys.path.insert(1, os.path.join(srcdir, 'thirdparty'))
 
 from cola import git
+from cola import core
 from cola import errors
 from cola import utils
 from cola.decorators import memoize
@@ -87,14 +88,15 @@ def release_version():
     """
     if os.path.exists('version'):
         fp = open('version', 'r')
-        v = fp.read().strip()
+        v = core.read_nointr(fp).strip()
         fp.close()
-    else:
+        return v
+    elif os.path.isdir('.git'):
         try:
-            v = git_describe_version()
+            return git_describe_version()
         except VersionUnavailable:
-            v = version()
-    return v
+            pass
+    return version()
 
 
 def write_builtin_version():
