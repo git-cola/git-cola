@@ -170,7 +170,7 @@ class ReaderThread(QtCore.QThread):
         self.emit(self.done)
 
 
-_arrow_size = 4.0
+_arrow_size = 3.0
 _arrow_extra = (_arrow_size + 1.0) / 2.0
 
 class Edge(QtGui.QGraphicsItem):
@@ -206,7 +206,7 @@ class Edge(QtGui.QGraphicsItem):
             return
 
         offset = QtCore.QPointF((line.dx() * 23) / length,
-                                (line.dy() * 9) / length)
+                                (line.dy() * 10) / length)
 
         self.prepareGeometryChange()
         self.source_pt = line.p1() + offset
@@ -259,7 +259,7 @@ class Edge(QtGui.QGraphicsItem):
 class Node(QtGui.QGraphicsItem):
     _type = QtGui.QGraphicsItem.UserType + 1
     _width = 150
-    _height = 16
+    _height = 18
 
     _shape = QtGui.QPainterPath()
     _shape.addRect(_width/-2., _height/-2., _width, _height)
