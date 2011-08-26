@@ -85,41 +85,23 @@ class GitDAGWidget(standard.StandardDialog):
 
         self._splitter.setSizes([self.height()*2/3, self.height()/3])
 
-
         qtutils.add_close_action(self)
         if not parent:
             qtutils.center_on_screen(self)
 
         self.thread = ReaderThread(self, args)
 
-        self.thread.connect(self.thread, self.thread.commit_ready,
-                            self._add_commit)
+        self.thread.connect(self.thread, self.thread.commits_ready,
+                            self.add_commits)
 
         self.thread.connect(self.thread, self.thread.done,
-                            self._thread_done)
-
-    def _add_commit(self, sha1):
-        self._queue.append(self.thread.repo[sha1])
-        if len(self._queue) > 64:
-            self.process_queue()
-
-    def process_queue(self):
-        commits = self._queue
-        if not commits:
-            return
-        self._queue = []
-        self.add_commits(commits)
-
-    def _thread_done(self):
-        self.process_queue()
-        for scrollbar in (self._graphview.verticalScrollBar(),
-                          self._graphview.horizontalScrollBar()):
-            if scrollbar:
-                scrollbar.setValue(scrollbar.minimum())
-        self._graphview.select('HEAD')
+                            self.thread_done)
 
     def add_commits(self, commits):
         self._graphview.add_commits(commits)
+
+    def thread_done(self):
+        self._graphview.select('HEAD')
 
     def close(self):
         self.thread.abort = True
@@ -146,7 +128,7 @@ class GitDAGWidget(standard.StandardDialog):
 
 class ReaderThread(QtCore.QThread):
 
-    commit_ready = QtCore.SIGNAL('commit_ready')
+    commits_ready = QtCore.SIGNAL('commits_ready')
     done = QtCore.SIGNAL('done')
 
     def __init__(self, parent, args):
@@ -158,6 +140,7 @@ class ReaderThread(QtCore.QThread):
         self.condition = QtCore.QWaitCondition()
 
     def run(self):
+        commits = []
         for commit in self.repo:
             self.mutex.lock()
             if self.stop:
@@ -166,7 +149,13 @@ class ReaderThread(QtCore.QThread):
             if self.abort:
                 self.repo.reset()
                 return
-            self.emit(self.commit_ready, commit.sha1)
+            commits.append(commit)
+            if len(commits) > 512:
+                self.emit(self.commits_ready, commits)
+                commits = []
+
+        if commits:
+            self.emit(self.commits_ready, commits)
         self.emit(self.done)
 
 
