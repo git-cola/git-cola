@@ -278,6 +278,7 @@ class Node(QtGui.QGraphicsItem):
         QtGui.QGraphicsItem.__init__(self)
         self.setZValue(0)
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
+        self.setCursor(QtCore.Qt.PointingHandCursor)
 
         self.commit = commit
         self._nodecom = nodecom
