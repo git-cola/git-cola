@@ -14,7 +14,6 @@ from cola import observable
 from cola import qtutils
 from cola import signals
 from cola import gitcmds
-from cola.decorators import memoize
 from cola.models import commit
 from cola.views import standard
 from cola.views import syntax
@@ -159,13 +158,18 @@ class ReaderThread(QtCore.QThread):
         self.emit(self.done)
 
 
-_arrow_size = 3.0
-_arrow_extra = (_arrow_size + 1.0) / 2.0
+class Cache(object):
+    pass
+
 
 class Edge(QtGui.QGraphicsItem):
     _type = QtGui.QGraphicsItem.UserType + 1
+    _arrow_size = 2.0
+    _arrow_extra = (_arrow_size+1.0)/2.0
 
-    def __init__(self, source, dest):
+    def __init__(self, source, dest,
+                 extra=_arrow_extra,
+                 arrow_size=_arrow_size):
         QtGui.QGraphicsItem.__init__(self)
 
         self.source_pt = QtCore.QPointF()
@@ -173,116 +177,126 @@ class Edge(QtGui.QGraphicsItem):
         self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
         self.source = source
         self.dest = dest
-        self.source.add_edge(self)
-        self.dest.add_edge(self)
         self.setZValue(-2)
-        self.adjust()
 
-    def type(self, _type=_type):
-        return _type
-
-    def adjust(self):
-        if not self.source or not self.dest:
-            return
-
+        # Adjust the points to leave a small margin between
+        # the arrow and the commit.
         dest_pt = Node._bbox.center()
         line = QtCore.QLineF(
                 self.mapFromItem(self.source, dest_pt),
                 self.mapFromItem(self.dest, dest_pt))
-
+        # Magic
+        dx = 22.
+        dy = 11.
         length = line.length()
-        if length == 0.0:
-            return
+        offset = QtCore.QPointF((line.dx() * dx) / length,
+                                (line.dy() * dy) / length)
 
-        offset = QtCore.QPointF((line.dx() * 23) / length,
-                                (line.dy() * 10) / length)
-
-        self.prepareGeometryChange()
         self.source_pt = line.p1() + offset
         self.dest_pt = line.p2() - offset
 
-    @memoize
-    def boundingRect(self, _extra=_arrow_extra):
-        if not self.source or not self.dest:
-            return QtCore.QRectF()
-        width = self.dest_pt.x() - self.source_pt.x()
-        height = self.dest_pt.y() - self.source_pt.y()
-        rect = QtCore.QRectF(self.source_pt, QtCore.QSizeF(width, height))
-        return rect.normalized().adjusted(-_extra, -_extra, _extra, _extra)
-
-    def paint(self, painter, option, widget, _arrow_size=_arrow_size):
-        if not self.source or not self.dest:
-            return
-        # Draw the line itself.
         line = QtCore.QLineF(self.source_pt, self.dest_pt)
+        self.line = line
+
+        self.pen = QtGui.QPen(QtCore.Qt.gray, 0,
+                              QtCore.Qt.DotLine,
+                              QtCore.Qt.FlatCap,
+                              QtCore.Qt.MiterJoin)
+
+        # Setup the arrow polygon
         length = line.length()
-        if length > 2 ** 13:
-            return
-
-        painter.setPen(QtGui.QPen(QtCore.Qt.gray, 0,
-                                  QtCore.Qt.DotLine,
-                                  QtCore.Qt.FlatCap,
-                                  QtCore.Qt.MiterJoin))
-        painter.drawLine(line)
-
-        # Draw the arrows if there's enough room.
         angle = math.acos(line.dx() / length)
         if line.dy() >= 0:
             angle = 2.0 * math.pi - angle
 
         dest_x = (self.dest_pt +
                   QtCore.QPointF(math.sin(angle - math.pi/3.) *
-                                 _arrow_size,
+                                 arrow_size,
                                  math.cos(angle - math.pi/3.) *
-                                 _arrow_size))
+                                 arrow_size))
         dest_y = (self.dest_pt +
                   QtCore.QPointF(math.sin(angle - math.pi + math.pi/3.) *
-                                 _arrow_size,
+                                 arrow_size,
                                  math.cos(angle - math.pi + math.pi/3.) *
-                                 _arrow_size))
+                                 arrow_size))
+        self.poly = QtGui.QPolygonF([line.p2(), dest_x, dest_y])
 
-        painter.setBrush(QtCore.Qt.gray)
-        painter.drawPolygon(QtGui.QPolygonF([line.p2(), dest_x, dest_y]))
+        width = self.dest_pt.x() - self.source_pt.x()
+        height = self.dest_pt.y() - self.source_pt.y()
+        rect = QtCore.QRectF(self.source_pt, QtCore.QSizeF(width, height))
+        self._bound = rect.normalized().adjusted(-extra, -extra, extra, extra)
+
+    def type(self, _type=_type):
+        return _type
+
+    def boundingRect(self):
+        return self._bound
+
+    def paint(self, painter, option, widget,
+              arrow_size=_arrow_size,
+              gray=QtCore.Qt.gray):
+        # Draw the line
+        painter.setPen(self.pen)
+        painter.drawLine(self.line)
+
+        # Draw the arrow
+        painter.setBrush(gray)
+        painter.drawPolygon(self.poly)
 
 
 class Node(QtGui.QGraphicsItem):
     _type = QtGui.QGraphicsItem.UserType + 2
-    _width = 42
-    _height = 18
+    _width = 46.
+    _height = 24.
 
     _shape = QtGui.QPainterPath()
     _shape.addRect(_width/-2., _height/-2., _width, _height)
-
     _bbox = _shape.boundingRect()
 
-    _colors_selected = QtGui.QColor.fromRgb(255, 255, 0)
-    _colors_outline = QtGui.QColor.fromRgb(64, 96, 192)
+    _inner = QtGui.QPainterPath()
+    _inner.addRect(_width/-2.+2., _height/-2.+2, _width-4., _height-4.)
+    _inner = _inner.boundingRect()
 
-    _colors_commit = QtGui.QColor.fromRgb(128, 222, 255)
-    _colors_merge = QtGui.QColor.fromRgb(255, 255, 255)
+    _selected_color = QtGui.QColor.fromRgb(255, 255, 0)
+    _outline_color = QtGui.QColor.fromRgb(64, 96, 192)
 
-    def __init__(self, commit, nodecom):
+
+    _text_options = QtGui.QTextOption()
+    _text_options.setAlignment(QtCore.Qt.AlignCenter)
+
+    _node_pen = QtGui.QPen()
+    _node_pen.setWidth(1.0)
+    _node_pen.setColor(_outline_color)
+
+    def __init__(self, commit,
+                 nodecom,
+                 selectable=QtGui.QGraphicsItem.ItemIsSelectable,
+                 cursor=QtCore.Qt.PointingHandCursor,
+                 xpos=_width/2.+1.,
+                 commit_color=QtGui.QColor.fromRgb(128, 222, 255),
+                 merge_color=QtGui.QColor.fromRgb(255, 255, 255)):
+
         QtGui.QGraphicsItem.__init__(self)
+
         self.setZValue(0)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
-        self.setCursor(QtCore.Qt.PointingHandCursor)
+        self.setFlag(selectable)
+        self.setCursor(cursor)
 
         self.commit = commit
-        self._nodecom = nodecom
+        self.nodecom = nodecom
 
         if commit.tags:
-            self._label = Label(commit)
-            self._label.setParentItem(self)
-            self._label.setPos(self._width/2.+2., 0.)
+            self.label = Label(commit)
+            self.label.setParentItem(self)
+            self.label.setPos(xpos, 0.)
         else:
-            self._label = None
-
-        self._edges = []
+            self.label = None
 
         if len(commit.parents) > 1:
-            self._colors_node = self._colors_merge
+            self.node_color = merge_color
         else:
-            self._colors_node = self._colors_commit
+            self.node_color = commit_color
+        self.sha1_text = commit.sha1[:8]
 
         self.pressed = False
         self.dragged = False
@@ -293,17 +307,21 @@ class Node(QtGui.QGraphicsItem):
     #
 
     def itemChange(self, change, value):
-        if (change == QtGui.QGraphicsItem.ItemSelectedHasChanged and
-                value.toPyObject()):
-            sig = signals.sha1_selected
-            self._nodecom.notify_message_observers(sig, self.commit.sha1)
+        if change == QtGui.QGraphicsItem.ItemSelectedHasChanged:
+            if value.toPyObject():
+                sig = signals.sha1_selected
+                self.nodecom.notify_message_observers(sig, self.commit.sha1)
+                color = self._selected_color
+            else:
+                color = self._outline_color
+            node_pen = QtGui.QPen()
+            node_pen.setWidth(1.0)
+            node_pen.setColor(color)
+            self._node_pen = node_pen
         return QtGui.QGraphicsItem.itemChange(self, change, value)
 
     def type(self, _type=_type):
         return _type
-
-    def add_edge(self, edge):
-        self._edges.append(edge)
 
     def boundingRect(self, _bbox=_bbox):
         return _bbox
@@ -311,41 +329,37 @@ class Node(QtGui.QGraphicsItem):
     def shape(self, _shape=_shape):
         return _shape
 
-    def paint(self, painter, option, widget, bbox=_bbox):
-        pen = QtGui.QPen()
-        pen.setWidth(1.5)
-        if self.isSelected():
-            pen.setColor(self._colors_selected)
-        else:
-            pen.setColor(self._colors_outline)
-        painter.setPen(pen)
-        painter.setBrush(self._colors_node)
+    def paint(self, painter, option, widget,
+              inner=_inner,
+              text_options=_text_options,
+              black_pen=QtCore.Qt.black,
+              cache=Cache):
+
+        painter.setPen(self._node_pen)
+        painter.setBrush(self.node_color)
 
         # Draw ellipse
-        painter.drawEllipse(bbox)
-        sha1_text = self.commit.sha1[:8]
-        font = painter.font()
-        font.setPointSize(5)
-        painter.setFont(font)
-        painter.setPen(QtCore.Qt.black)
+        painter.drawEllipse(inner)
 
-        text_options = QtGui.QTextOption()
-        text_options.setAlignment(QtCore.Qt.AlignCenter)
-        painter.drawText(bbox, sha1_text, text_options)
+        try:
+            font = cache.font
+        except AttributeError:
+            font = cache.font = painter.font()
+            font.setPointSize(5)
+
+        painter.setFont(font)
+        painter.setPen(black_pen)
+        painter.drawText(inner, self.sha1_text, text_options)
 
     def mousePressEvent(self, event):
+        QtGui.QGraphicsItem.mousePressEvent(self, event)
         self.pressed = True
         self.selected = self.isSelected()
-        QtGui.QGraphicsItem.mousePressEvent(self, event)
 
     def mouseMoveEvent(self, event):
         if self.pressed:
             self.dragged = True
         QtGui.QGraphicsItem.mouseMoveEvent(self, event)
-        for node in self.scene().selectedItems():
-            for edge in node._edges:
-                edge.adjust()
-        self.scene().update()
 
     def mouseReleaseEvent(self, event):
         QtGui.QGraphicsItem.mouseReleaseEvent(self, event)
@@ -371,10 +385,17 @@ class Label(QtGui.QGraphicsItem):
 
     _bbox = _shape.boundingRect()
 
-    _color_other = QtGui.QColor.fromRgb(255, 255, 64)
-    _color_current = QtGui.QColor.fromRgb(64, 255, 64)
+    _text_options = QtGui.QTextOption()
+    _text_options.setAlignment(QtCore.Qt.AlignCenter)
+    _text_options.setAlignment(QtCore.Qt.AlignVCenter)
 
-    def __init__(self, commit):
+    _black = QtCore.Qt.black
+
+    def __init__(self, commit,
+                 other_color=QtGui.QColor.fromRgb(255, 255, 64),
+                 head_color=QtGui.QColor.fromRgb(64, 255, 64),
+                 width=_width,
+                 height=_height):
         QtGui.QGraphicsItem.__init__(self)
         self.setZValue(-1)
 
@@ -382,12 +403,20 @@ class Label(QtGui.QGraphicsItem):
         # needs to be taller to accomodate.
 
         self.commit = commit
-        self._height = len(commit.tags) * self._height/2 + 4 # +6 padding
+        height = len(commit.tags) * height/2. + 4. # +6 padding
+
+        self.label_box = QtCore.QRectF(0., -height/2., width, height)
+        self.text_box = QtCore.QRectF(2., -height/2., width-4., height)
+        self.tag_text = '\n'.join(commit.tags)
 
         if 'HEAD' in commit.tags:
-            self._color = self._color_current
+            self.color = head_color
         else:
-            self._color = self._color_other
+            self.color = other_color
+
+        self.pen = QtGui.QPen()
+        self.pen.setColor(self.color.darker())
+        self.pen.setWidth(1.0)
 
     def type(self, _type=_type):
         return _type
@@ -398,29 +427,22 @@ class Label(QtGui.QGraphicsItem):
     def shape(self, _shape=_shape):
         return _shape
 
-    def paint(self, painter, option, widget):
-        pen = QtGui.QPen()
-        pen.setWidth(1.0)
-        painter.setPen(pen)
-        painter.setBrush(self._color)
-
+    def paint(self, painter, option, widget,
+              text_options=_text_options,
+              black=_black,
+              cache=Cache):
         # Draw tags
-        text_box = QtCore.QRectF(0., -self._height/2., self._width, self._height)
-
-        painter.drawRoundedRect(text_box, 4, 4)
-        tag_text = "\n".join(self.commit.tags)
-
-        font = painter.font()
-        font.setPointSize(5)
+        painter.setBrush(self.color)
+        painter.setPen(self.pen)
+        painter.drawRoundedRect(self.label_box, 4, 4)
+        try:
+            font = cache.font
+        except AttributeError:
+            font = cache.font = painter.font()
+            font.setPointSize(5)
         painter.setFont(font)
-        painter.setPen(QtCore.Qt.black)
-
-        text_options = QtGui.QTextOption()
-        text_options.setAlignment(QtCore.Qt.AlignCenter)
-        text_options.setAlignment(QtCore.Qt.AlignVCenter)
-        painter.translate(4., 0.)
-        painter.drawText(text_box, tag_text, text_options)
-
+        painter.setPen(black)
+        painter.drawText(self.text_box, self.tag_text, text_options)
 
 
 class GraphView(QtGui.QGraphicsView):
@@ -506,13 +528,18 @@ class GraphView(QtGui.QGraphicsView):
         except KeyError:
             return
         node.setSelected(True)
+        self.ensureVisible(node.mapRectToScene(node.boundingRect()))
 
     def selected_node(self):
         """Return the currently selected node"""
-        selected_nodes = self.scene().selectedItems()
+        selected_nodes = self.selected_nodes()
         if not selected_nodes:
             return None
         return selected_nodes[0]
+
+    def selected_nodes(self):
+        """Return the currently selected node"""
+        return self.scene().selectedItems()
 
     def get_node_by_generation(self, commits, criteria_fn):
         """Return the node for the commit matching criteria"""
