@@ -174,7 +174,7 @@ _arrow_size = 3.0
 _arrow_extra = (_arrow_size + 1.0) / 2.0
 
 class Edge(QtGui.QGraphicsItem):
-    _type = QtGui.QGraphicsItem.UserType + 2
+    _type = QtGui.QGraphicsItem.UserType + 1
 
     def __init__(self, source, dest):
         QtGui.QGraphicsItem.__init__(self)
@@ -196,10 +196,10 @@ class Edge(QtGui.QGraphicsItem):
         if not self.source or not self.dest:
             return
 
-        dest_glyph_pt = self.dest.glyph().center()
+        dest_pt = Node._bbox.center()
         line = QtCore.QLineF(
-                self.mapFromItem(self.source, dest_glyph_pt),
-                self.mapFromItem(self.dest, dest_glyph_pt))
+                self.mapFromItem(self.source, dest_pt),
+                self.mapFromItem(self.dest, dest_pt))
 
         length = line.length()
         if length == 0.0:
@@ -257,19 +257,17 @@ class Edge(QtGui.QGraphicsItem):
 
 
 class Node(QtGui.QGraphicsItem):
-    _type = QtGui.QGraphicsItem.UserType + 1
-    _width = 150
+    _type = QtGui.QGraphicsItem.UserType + 2
+    _width = 42
     _height = 18
 
     _shape = QtGui.QPainterPath()
     _shape.addRect(_width/-2., _height/-2., _width, _height)
 
-    _bound = _shape.boundingRect()
-    _glyph = QtCore.QRectF(-_width/2., -_height/2, _width/4., _height)
+    _bbox = _shape.boundingRect()
 
     _colors_selected = QtGui.QColor.fromRgb(255, 255, 0)
     _colors_outline = QtGui.QColor.fromRgb(64, 96, 192)
-    _colors_decorations = QtGui.QColor.fromRgb(255, 255, 64)
 
     _colors_commit = QtGui.QColor.fromRgb(128, 222, 255)
     _colors_merge = QtGui.QColor.fromRgb(255, 255, 255)
@@ -283,10 +281,13 @@ class Node(QtGui.QGraphicsItem):
         self.commit = commit
         self._nodecom = nodecom
 
-        # Starts with enough space for two tags. Any more and the node
-        # needs to be taller to accomodate.
-        if len(self.commit.tags) > 1:
-            self._height = len(self.commit.tags) * self._height/2 + 6 # +6 padding
+        if commit.tags:
+            self._label = Label(commit)
+            self._label.setParentItem(self)
+            self._label.setPos(self._width/2.+2., 0.)
+        else:
+            self._label = None
+
         self._edges = []
 
         if len(commit.parents) > 1:
@@ -297,6 +298,10 @@ class Node(QtGui.QGraphicsItem):
         self.pressed = False
         self.dragged = False
         self.skipped = False
+
+    #
+    # Overridden Qt methods
+    #
 
     def itemChange(self, change, value):
         if (change == QtGui.QGraphicsItem.ItemSelectedHasChanged and
@@ -311,24 +316,13 @@ class Node(QtGui.QGraphicsItem):
     def add_edge(self, edge):
         self._edges.append(edge)
 
-    def boundingRect(self, _bound=_bound):
-        return _bound
+    def boundingRect(self, _bbox=_bbox):
+        return _bbox
 
     def shape(self, _shape=_shape):
         return _shape
 
-    def glyph(self, _glyph=_glyph):
-        """Provides location of the glyph representing this node
-
-        The node contains a glyph (a circle or ellipse) representing the
-        node, as well as other text alongside the glyph.  Knowing the
-        location of the glyph, rather than the entire node allows us to
-        make edges point at the center of the glyph, rather than at the
-        center of the entire node.
-        """
-        return _glyph
-
-    def paint(self, painter, option, widget):
+    def paint(self, painter, option, widget, bbox=_bbox):
         pen = QtGui.QPen()
         pen.setWidth(1.5)
         if self.isSelected():
@@ -338,8 +332,8 @@ class Node(QtGui.QGraphicsItem):
         painter.setPen(pen)
         painter.setBrush(self._colors_node)
 
-        # Draw glyph
-        painter.drawEllipse(self.glyph())
+        # Draw ellipse
+        painter.drawEllipse(bbox)
         sha1_text = self.commit.sha1[:8]
         font = painter.font()
         font.setPointSize(5)
@@ -348,21 +342,7 @@ class Node(QtGui.QGraphicsItem):
 
         text_options = QtGui.QTextOption()
         text_options.setAlignment(QtCore.Qt.AlignCenter)
-        painter.drawText(self.glyph(), sha1_text, text_options)
-
-        # Draw tags
-        if not self.commit.tags:
-            return
-        # Those 2's affecting width are just for padding
-        text_box = QtCore.QRectF(-self._width/4.+2, -self._height/2.,
-                                 self._width/2.2-2, self._height)
-        painter.setBrush(self._colors_decorations)
-        painter.drawRoundedRect(text_box, 4, 4)
-        tag_text = "\n".join(self.commit.tags)
-        text_options.setAlignment(QtCore.Qt.AlignVCenter)
-        # A bit of padding for the text
-        painter.translate(2.,0.)
-        painter.drawText(text_box, tag_text, text_options)
+        painter.drawText(bbox, sha1_text, text_options)
 
     def mousePressEvent(self, event):
         self.pressed = True
@@ -389,6 +369,69 @@ class Node(QtGui.QGraphicsItem):
         self.skipped = False
         self.pressed = False
         self.dragged = False
+
+
+class Label(QtGui.QGraphicsItem):
+    _type = QtGui.QGraphicsItem.UserType + 3
+
+    _width = 72
+    _height = 18
+
+    _shape = QtGui.QPainterPath()
+    _shape.addRect(0, 0, _width, _height)
+
+    _bbox = _shape.boundingRect()
+
+    _color_other = QtGui.QColor.fromRgb(255, 255, 64)
+    _color_current = QtGui.QColor.fromRgb(64, 255, 64)
+
+    def __init__(self, commit):
+        QtGui.QGraphicsItem.__init__(self)
+        self.setZValue(-1)
+
+        # Starts with enough space for two tags. Any more and the node
+        # needs to be taller to accomodate.
+
+        self.commit = commit
+        self._height = len(commit.tags) * self._height/2 + 4 # +6 padding
+
+        if 'HEAD' in commit.tags:
+            self._color = self._color_current
+        else:
+            self._color = self._color_other
+
+    def type(self, _type=_type):
+        return _type
+
+    def boundingRect(self, _bbox=_bbox):
+        return _bbox
+
+    def shape(self, _shape=_shape):
+        return _shape
+
+    def paint(self, painter, option, widget):
+        pen = QtGui.QPen()
+        pen.setWidth(1.0)
+        painter.setPen(pen)
+        painter.setBrush(self._color)
+
+        # Draw tags
+        text_box = QtCore.QRectF(0., -self._height/2., self._width, self._height)
+
+        painter.drawRoundedRect(text_box, 4, 4)
+        tag_text = "\n".join(self.commit.tags)
+
+        font = painter.font()
+        font.setPointSize(5)
+        painter.setFont(font)
+        painter.setPen(QtCore.Qt.black)
+
+        text_options = QtGui.QTextOption()
+        text_options.setAlignment(QtCore.Qt.AlignCenter)
+        text_options.setAlignment(QtCore.Qt.AlignVCenter)
+        painter.translate(4., 0.)
+        painter.drawText(text_box, tag_text, text_options)
+
 
 
 class GraphView(QtGui.QGraphicsView):
