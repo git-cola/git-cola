@@ -515,6 +515,15 @@ class GraphView(QtGui.QGraphicsView):
                                self._select_nth_child,
                                'Shift+K'))
 
+        self._action_export_patches = (
+            qtutils.add_action(self, 'Export Patches',
+                               self._export_patches))
+
+    def contextMenuEvent(self, event):
+        menu = QtGui.QMenu(self)
+        menu.addAction(self._action_export_patches)
+        menu.exec_(self.mapToGlobal(event.pos()))
+
     def add_commits(self, commits):
         """Traverse commits and add them to the view."""
         self.add(commits)
@@ -563,6 +572,11 @@ class GraphView(QtGui.QGraphicsView):
     def newest_node(self, commits):
         """Return the node for the commit with the newest generation number"""
         return self.get_node_by_generation(commits, lambda a, b: a < b)
+
+    def _export_patches(self):
+        nodes = self.selected_nodes()
+        for node in nodes:
+            print node.commit.sha1
 
     def _select_parent(self):
         """Select the parent with the newest generation number"""
@@ -673,6 +687,9 @@ class GraphView(QtGui.QGraphicsView):
             self._mouse_start = [pos.x(), pos.y()]
             self._saved_matrix = QtGui.QMatrix(self.matrix())
             self._panning = True
+            return
+        if event.button() == QtCore.Qt.RightButton:
+            event.ignore()
             return
         self._handle_event(QtGui.QGraphicsView.mousePressEvent, event)
 
