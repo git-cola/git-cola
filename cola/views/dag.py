@@ -300,7 +300,6 @@ class Node(QtGui.QGraphicsItem):
 
         self.pressed = False
         self.dragged = False
-        self.skipped = False
 
     #
     # Overridden Qt methods
@@ -363,13 +362,10 @@ class Node(QtGui.QGraphicsItem):
 
     def mouseReleaseEvent(self, event):
         QtGui.QGraphicsItem.mouseReleaseEvent(self, event)
-        if (not self.dragged
-                and self.selected
-                and event.button() == QtCore.Qt.LeftButton):
-            self.setSelected(False)
-            self.skipped = True
+        if (not self.dragged and
+                self.selected and
+                event.button() == QtCore.Qt.LeftButton):
             return
-        self.skipped = False
         self.pressed = False
         self.dragged = False
 
@@ -664,15 +660,12 @@ class GraphView(QtGui.QGraphicsView):
             return
         elif QtCore.Qt.ShiftModifier != event.modifiers():
             return
-        self._selected = [ i for i in self._items if i.isSelected() ]
+        self._selected = [i for i in self._items if i.isSelected()]
 
     def _restore_selection(self, event):
         if QtCore.Qt.ShiftModifier != event.modifiers():
             return
         for item in self._selected:
-            if item.skipped:
-                item.skipped = False
-                continue
             item.setSelected(True)
 
     def _handle_event(self, eventhandler, event):
