@@ -121,26 +121,26 @@ class GitDAGWidget(standard.StandardDialog):
         self._buttons_layt.addWidget(self.maxresults)
 
 
-        self._mainsplitter = QtGui.QSplitter()
-        self._mainsplitter.setOrientation(QtCore.Qt.Vertical)
-        self._mainsplitter.setChildrenCollapsible(True)
-
         self._nodecom = observable.Observable()
 
         self._graphview = GraphView(nodecom=self._nodecom)
         self._treewidget = CommitTreeWidget()
         self._diffwidget = DiffWidget(nodecom=self._nodecom)
 
-        self._bottomsplitter = QtGui.QSplitter()
-        self._bottomsplitter.setOrientation(QtCore.Qt.Horizontal)
-        self._bottomsplitter.setChildrenCollapsible(True)
-        self._bottomsplitter.setStretchFactor(0, 1)
-        self._bottomsplitter.setStretchFactor(1, 1)
-        self._bottomsplitter.insertWidget(0, self._treewidget)
-        self._bottomsplitter.insertWidget(1, self._diffwidget)
+        self._mainsplitter = QtGui.QSplitter()
+        self._mainsplitter.setOrientation(QtCore.Qt.Horizontal)
+        self._mainsplitter.setChildrenCollapsible(True)
 
-        self._mainsplitter.insertWidget(0, self._graphview)
-        self._mainsplitter.insertWidget(1, self._bottomsplitter)
+        self._leftsplitter = QtGui.QSplitter()
+        self._leftsplitter.setOrientation(QtCore.Qt.Vertical)
+        self._leftsplitter.setChildrenCollapsible(True)
+        self._leftsplitter.setStretchFactor(0, 1)
+        self._leftsplitter.setStretchFactor(1, 1)
+        self._leftsplitter.insertWidget(0, self._treewidget)
+        self._leftsplitter.insertWidget(1, self._diffwidget)
+
+        self._mainsplitter.insertWidget(0, self._leftsplitter)
+        self._mainsplitter.insertWidget(1, self._graphview)
 
         self._mainsplitter.setStretchFactor(0, 1)
         self._mainsplitter.setStretchFactor(1, 1)
@@ -162,14 +162,14 @@ class GitDAGWidget(standard.StandardDialog):
         self.thread.connect(self.thread, self.thread.done,
                             self.thread_done)
 
-        self.connect(self._bottomsplitter,
+        self.connect(self._leftsplitter,
                      SIGNAL('splitterMoved(int,int)'),
                      self._splitter_moved)
 
     def show(self):
         standard.StandardDialog.show(self)
-        self._bottomsplitter.setSizes([self.width()/3, self.width()*2/3])
-        self._mainsplitter.setSizes([self.height()*2/3, self.height()/3])
+        self._mainsplitter.setSizes([self.width()*2/5, self.width()*3/5])
+        self._leftsplitter.setSizes([self.height()/3, self.height()*2/3])
         self._treewidget.adjust_columns()
 
     def resizeEvent(self, e):
