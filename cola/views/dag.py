@@ -3,6 +3,7 @@ import sys
 import math
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtCore import SIGNAL
 
 if __name__ == "__main__":
     # Find the source tree
@@ -161,10 +162,21 @@ class GitDAGWidget(standard.StandardDialog):
         self.thread.connect(self.thread, self.thread.done,
                             self.thread_done)
 
+        self.connect(self._bottomsplitter,
+                     SIGNAL('splitterMoved(int,int)'),
+                     self._splitter_moved)
+
     def show(self):
         standard.StandardDialog.show(self)
         self._bottomsplitter.setSizes([self.width()/3, self.width()*2/3])
         self._mainsplitter.setSizes([self.height()*2/3, self.height()/3])
+        self._treewidget.adjust_columns()
+
+    def resizeEvent(self, e):
+        standard.StandardDialog.resizeEvent(self, e)
+        self._treewidget.adjust_columns()
+
+    def _splitter_moved(self, pos, idx):
         self._treewidget.adjust_columns()
 
     def add_commits(self, commits):
