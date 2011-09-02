@@ -151,11 +151,6 @@ class GitDAGWidget(standard.StandardDialog):
         self.setLayout(layt)
 
         qtutils.add_close_action(self)
-        if not parent:
-            qtutils.center_on_screen(self)
-
-        self._bottomsplitter.setSizes([self.width()/3, self.width()*2/3])
-        self._mainsplitter.setSizes([self.height()*2/3, self.height()/3])
 
         self._queue = []
         self.thread = ReaderThread(self, args)
@@ -166,6 +161,12 @@ class GitDAGWidget(standard.StandardDialog):
         self.thread.connect(self.thread, self.thread.done,
                             self.thread_done)
 
+    def show(self):
+        standard.StandardDialog.show(self)
+        self._bottomsplitter.setSizes([self.width()/3, self.width()*2/3])
+        self._mainsplitter.setSizes([self.height()*2/3, self.height()/3])
+        self._treewidget.adjust_columns()
+
     def add_commits(self, commits):
         self._graphview.add_commits(commits)
         items = [CommitTreeWidgetItem(c) for c in reversed(commits)]
@@ -173,7 +174,6 @@ class GitDAGWidget(standard.StandardDialog):
 
     def thread_done(self):
         self._graphview.select('HEAD')
-        self._treewidget.adjust_columns()
 
     def close(self):
         self.thread.abort = True
