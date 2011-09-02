@@ -379,8 +379,9 @@ class Node(QtGui.QGraphicsItem):
     def itemChange(self, change, value):
         if change == QtGui.QGraphicsItem.ItemSelectedHasChanged:
             if value.toPyObject():
-                sig = signals.sha1_selected
-                self.nodecom.notify_message_observers(sig, self.commit.sha1)
+                if not self.scene().parent().selecting():
+                    sig = signals.commit_selected
+                    self.nodecom.notify_message_observers(sig, self.commit)
                 color = self._selected_color
             else:
                 color = self._outline_color
@@ -530,6 +531,8 @@ class GraphView(QtGui.QGraphicsView):
         self._rows = {}
 
         self._panning = False
+        self._pressed = False
+        self._selecting = False
         self._last_mouse = [0, 0]
 
         self._zoom = 2
@@ -755,6 +758,8 @@ class GraphView(QtGui.QGraphicsView):
         if event.button() == QtCore.Qt.RightButton:
             event.ignore()
             return
+        if event.button() == QtCore.Qt.LeftButton:
+            self._pressed = True
         self._handle_event(QtGui.QGraphicsView.mousePressEvent, event)
 
     def mouseMoveEvent(self, event):
@@ -762,11 +767,18 @@ class GraphView(QtGui.QGraphicsView):
         if self._panning:
             self._pan(event)
             return
+        if self._pressed:
+            self._selecting = True
         self._last_mouse[0] = pos.x()
         self._last_mouse[1] = pos.y()
         self._handle_event(QtGui.QGraphicsView.mouseMoveEvent, event)
 
+    def selecting(self):
+        return self._selecting
+
     def mouseReleaseEvent(self, event):
+        self._pressed = False
+        self._selecting = False
         if event.button() == QtCore.Qt.MidButton:
             self._panning = False
             return
