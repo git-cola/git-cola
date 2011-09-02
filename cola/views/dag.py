@@ -29,7 +29,7 @@ def git_dag(parent=None, log_args=None):
     return view
 
 
-class GitCommitView(QtGui.QWidget):
+class DiffWidget(QtGui.QWidget):
     def __init__(self, parent=None, nodecom=None):
         QtGui.QWidget.__init__(self, parent)
 
@@ -39,7 +39,7 @@ class GitCommitView(QtGui.QWidget):
         self.diff_syn = syntax.DiffSyntaxHighlighter(self.diff.document())
         qtutils.set_diff_font(self.diff)
 
-        self._layt = QtGui.QVBoxLayout()
+        self._layt = QtGui.QHBoxLayout()
         self._layt.addWidget(self.diff)
         self._layt.setMargin(2)
         self.setLayout(self._layt)
@@ -52,6 +52,33 @@ class GitCommitView(QtGui.QWidget):
         qtutils.set_clipboard(sha1)
 
 
+class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
+    def __init__(self, commit, parent=None):
+        QtGui.QListWidgetItem.__init__(self, parent)
+        self.commit = commit
+        self.setText(0, commit.subject)
+        self.setText(1, commit.author)
+        self.setText(2, commit.authdate)
+
+
+class CommitTreeWidget(QtGui.QTreeWidget):
+    def __init__(self, parent=None):
+        QtGui.QTreeWidget.__init__(self, parent)
+        self.setAlternatingRowColors(True)
+        self.setUniformRowHeights(True)
+        self.setAllColumnsShowFocus(True)
+        self.setIndentation(0)
+        self.setHeaderLabels(['Subject', 'Author', 'Date'])
+
+    def adjust_columns(self):
+        width = self.width()-20
+        zero = width*2/3
+        onetwo = width/6
+        self.setColumnWidth(0, zero)
+        self.setColumnWidth(1, onetwo)
+        self.setColumnWidth(2, onetwo)
+
+
 class GitDAGWidget(standard.StandardDialog):
     """The git-dag widget."""
     # Keep us in scope otherwise PyQt kills the widget
@@ -62,32 +89,73 @@ class GitDAGWidget(standard.StandardDialog):
         self.setWindowTitle(self.tr('git dag'))
         self.setMinimumSize(1, 1)
 
-        self._queue = []
+        self.revlabel = QtGui.QLabel()
+        self.revlabel.setText('Revision')
 
-        self._splitter = QtGui.QSplitter()
-        self._splitter.setOrientation(QtCore.Qt.Vertical)
-        self._splitter.setChildrenCollapsible(True)
+        self.revtext = QtGui.QLineEdit()
+        self.revtext.setText('HEAD')
+
+        self.maxlabel = QtGui.QLabel()
+        self.maxlabel.setText('Max Results')
+
+        self.maxresults = QtGui.QSpinBox()
+        self.maxresults.setMinimum(-1)
+        self.maxresults.setMaximum(2**31 - 1)
+        self.maxresults.setValue(3000)
+
+        self.displaybutton = QtGui.QPushButton()
+        self.displaybutton.setText('Display')
+
+        self._buttons_layt = QtGui.QHBoxLayout()
+        self._buttons_layt.setMargin(2)
+        self._buttons_layt.setSpacing(2)
+
+        self._buttons_layt.addWidget(self.revlabel)
+        self._buttons_layt.addWidget(self.revtext)
+        self._buttons_layt.addWidget(self.displaybutton)
+        self._buttons_layt.addStretch()
+        self._buttons_layt.addWidget(self.maxlabel)
+        self._buttons_layt.addWidget(self.maxresults)
+
+
+        self._mainsplitter = QtGui.QSplitter()
+        self._mainsplitter.setOrientation(QtCore.Qt.Vertical)
+        self._mainsplitter.setChildrenCollapsible(True)
 
         self._nodecom = observable.Observable()
+
         self._graphview = GraphView(nodecom=self._nodecom)
-        self._widget = GitCommitView(nodecom=self._nodecom)
+        self._treewidget = CommitTreeWidget()
+        self._diffwidget = DiffWidget(nodecom=self._nodecom)
 
-        self._splitter.insertWidget(0, self._graphview)
-        self._splitter.insertWidget(1, self._widget)
-        self._splitter.setStretchFactor(0, 1)
-        self._splitter.setStretchFactor(1, 1)
+        self._bottomsplitter = QtGui.QSplitter()
+        self._bottomsplitter.setOrientation(QtCore.Qt.Horizontal)
+        self._bottomsplitter.setChildrenCollapsible(True)
+        self._bottomsplitter.setStretchFactor(0, 1)
+        self._bottomsplitter.setStretchFactor(1, 1)
+        self._bottomsplitter.insertWidget(0, self._treewidget)
+        self._bottomsplitter.insertWidget(1, self._diffwidget)
 
-        self._layt = layt = QtGui.QHBoxLayout()
+        self._mainsplitter.insertWidget(0, self._graphview)
+        self._mainsplitter.insertWidget(1, self._bottomsplitter)
+
+        self._mainsplitter.setStretchFactor(0, 1)
+        self._mainsplitter.setStretchFactor(1, 1)
+
+        self._layt = layt = QtGui.QVBoxLayout()
         layt.setMargin(0)
-        layt.addWidget(self._splitter)
+        layt.addItem(self._buttons_layt)
+        layt.addWidget(self._mainsplitter)
         self.setLayout(layt)
-
-        self._splitter.setSizes([self.height()*2/3, self.height()/3])
 
         qtutils.add_close_action(self)
         if not parent:
             qtutils.center_on_screen(self)
 
+        self._bottomsplitter.setSizes([self.width()/3, self.width()*2/3])
+        self._mainsplitter.setSizes([self.height()*2/3, self.height()/3])
+
+        self._queue = []
         self.thread = ReaderThread(self, args)
 
         self.thread.connect(self.thread, self.thread.commits_ready,
@@ -98,9 +166,12 @@ class GitDAGWidget(standard.StandardDialog):
 
     def add_commits(self, commits):
         self._graphview.add_commits(commits)
+        items = [CommitTreeWidgetItem(c) for c in reversed(commits)]
+        self._treewidget.insertTopLevelItems(0, items)
 
     def thread_done(self):
         self._graphview.select('HEAD')
+        self._treewidget.adjust_columns()
 
     def close(self):
         self.thread.abort = True
@@ -149,7 +220,7 @@ class ReaderThread(QtCore.QThread):
                 self.repo.reset()
                 return
             commits.append(commit)
-            if len(commits) > 512:
+            if len(commits) >= 512:
                 self.emit(self.commits_ready, commits)
                 commits = []
 
