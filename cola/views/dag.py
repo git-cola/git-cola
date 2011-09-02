@@ -44,11 +44,13 @@ class DiffWidget(QtGui.QWidget):
         self._layt.setMargin(2)
         self.setLayout(self._layt)
 
-        sig = signals.sha1_selected
+        sig = signals.commit_selected
         nodecom.add_message_observer(sig, self._node_selected)
 
-    def _node_selected(self, sha1):
-        self.diff.setText(gitcmds.diff_info(sha1))
+    def _node_selected(self, commit):
+        sha1 = commit.sha1
+        merge = len(commit.parents) > 1
+        self.diff.setText(gitcmds.diff_info(sha1, merge=merge))
         qtutils.set_clipboard(sha1)
 
 

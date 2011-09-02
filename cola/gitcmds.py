@@ -203,12 +203,21 @@ def sha1_diff(sha1, git=git):
     return git.diff(sha1 + '^!', **_common_diff_opts())
 
 
-def diff_info(sha1, git=git):
+def diff_info(sha1, git=git, merge=True):
+
+    if merge:
+        mergefmt = 'Merge: %P%n'
+    else:
+        mergefmt = ''
+
     log = git.log('-1',
-                  '--pretty=format:Author:\t%aN <%aE>%n'
-                  'Date:\t%aD%n%n'
-                  '%s%n%n%b',
-                  sha1)
+            '--pretty=format:'
+            'commit %H%n' +
+            mergefmt +
+            'Author: %aN <%aE>%n'
+            'Date:   %aD%n'
+            '%n%s%n%n%b',
+            sha1)
     return log + '\n\n' + sha1_diff(sha1)
 
 
