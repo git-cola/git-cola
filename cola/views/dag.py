@@ -168,7 +168,7 @@ class GitDAGWidget(standard.StandardDialog):
 
     def show(self):
         standard.StandardDialog.show(self)
-        self._mainsplitter.setSizes([self.width()*2/5, self.width()*3/5])
+        self._mainsplitter.setSizes([self.width()/2, self.width()/2])
         self._leftsplitter.setSizes([self.height()/3, self.height()*2/3])
         self._treewidget.adjust_columns()
 
