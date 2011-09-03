@@ -186,6 +186,7 @@ class GitDAGWidget(standard.StandardDialog):
 
     def thread_done(self):
         self._graphview.select('HEAD')
+        self._graphview.view_fit()
 
     def close(self):
         self.thread.abort = True
@@ -576,7 +577,7 @@ class GraphView(QtGui.QGraphicsView):
 
         self._action_zoom_fit = (
             qtutils.add_action(self, 'Zoom to Fit',
-                               self._view_fit,
+                               self.view_fit,
                                QtCore.Qt.Key_F))
 
         self._action_select_parent = (
@@ -714,7 +715,7 @@ class GraphView(QtGui.QGraphicsView):
         child_node.setSelected(True)
         self.ensureVisible(child_node.mapRectToScene(child_node.boundingRect()))
 
-    def _view_fit(self):
+    def view_fit(self):
         """Fit selected items into the viewport"""
 
         items = self.scene().selectedItems()
@@ -735,7 +736,7 @@ class GraphView(QtGui.QGraphicsView):
                 xmax = max(xmax, pos.x()+xoff)
                 ymax = max(ymax, pos.y()+yoff)
             rect = QtCore.QRectF(xmin, ymin, xmax-xmin, ymax-ymin)
-        adjust = 42.0
+        adjust = Node._width
         rect.setX(rect.x() - adjust)
         rect.setY(rect.y() - adjust)
         rect.setHeight(rect.height() + adjust)
