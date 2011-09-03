@@ -162,7 +162,7 @@ class GitDAGWidget(standard.StandardDialog):
         self.thread.connect(self.thread, self.thread.done,
                             self.thread_done)
 
-        self.connect(self._leftsplitter,
+        self.connect(self._mainsplitter,
                      SIGNAL('splitterMoved(int,int)'),
                      self._splitter_moved)
 
