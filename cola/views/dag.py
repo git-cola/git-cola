@@ -31,7 +31,7 @@ def git_dag(parent=None, log_args=None):
 
 
 class DiffWidget(QtGui.QWidget):
-    def __init__(self, parent=None, nodecom=None):
+    def __init__(self, nodecom, parent=None):
         QtGui.QWidget.__init__(self, parent)
 
         self.diff = QtGui.QTextEdit()
@@ -46,9 +46,9 @@ class DiffWidget(QtGui.QWidget):
         self.setLayout(self._layt)
 
         sig = signals.commit_selected
-        nodecom.add_message_observer(sig, self._node_selected)
+        nodecom.add_message_observer(sig, self._commit_selected)
 
-    def _node_selected(self, commit):
+    def _commit_selected(self, commit):
         sha1 = commit.sha1
         merge = len(commit.parents) > 1
         self.diff.setText(gitcmds.diff_info(sha1, merge=merge))
@@ -65,13 +65,38 @@ class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
 
 
 class CommitTreeWidget(QtGui.QTreeWidget):
-    def __init__(self, parent=None):
+    def __init__(self, nodecom, parent=None):
         QtGui.QTreeWidget.__init__(self, parent)
-        self.setAlternatingRowColors(True)
         self.setUniformRowHeights(True)
         self.setAllColumnsShowFocus(True)
-        self.setIndentation(0)
+        self.setRootIsDecorated(False)
         self.setHeaderLabels(['Subject', 'Author', 'Date'])
+
+        self._sha1map = {}
+        self.nodecom = nodecom
+        sig = signals.commit_selected
+        nodecom.add_message_observer(sig, self._commit_selected)
+
+        self.connect(self, SIGNAL('itemSelectionChanged()'),
+                     self._item_selection_changed)
+
+    def _item_selection_changed(self):
+        items = self.selectedItems()
+        if not items:
+            return
+        sig = signals.commit_selected
+        self.nodecom.notify_message_observers(sig, items[0].commit)
+
+    def _commit_selected(self, commit):
+        self.select(commit.sha1)
+
+    def select(self, sha1):
+        item = self._sha1map[sha1]
+        self.blockSignals(True)
+        self.scrollToItem(item)
+        self.setCurrentItem(item)
+        item.setSelected(True)
+        self.blockSignals(False)
 
     def adjust_columns(self):
         width = self.width()-20
@@ -81,6 +106,18 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self.setColumnWidth(1, onetwo)
         self.setColumnWidth(2, onetwo)
 
+    def clear(self):
+        self._sha1map = {}
+
+    def add_commits(self,commits):
+        items = []
+        for c in reversed(commits):
+            item = CommitTreeWidgetItem(c)
+            items.append(item)
+            self._sha1map[c.sha1] = item
+            for tag in c.tags:
+                self._sha1map[tag] = item
+        self.insertTopLevelItems(0, items)
 
 class GitDAGWidget(standard.StandardDialog):
     """The git-dag widget."""
@@ -121,11 +158,11 @@ class GitDAGWidget(standard.StandardDialog):
         self._buttons_layt.addWidget(self.maxresults)
 
 
-        self._nodecom = observable.Observable()
+        self._nodecom = nodecom = observable.Observable()
 
-        self._graphview = GraphView(nodecom=self._nodecom)
-        self._treewidget = CommitTreeWidget()
-        self._diffwidget = DiffWidget(nodecom=self._nodecom)
+        self._graphview = GraphView(nodecom)
+        self._treewidget = CommitTreeWidget(nodecom)
+        self._diffwidget = DiffWidget(nodecom)
 
         self._mainsplitter = QtGui.QSplitter()
         self._mainsplitter.setOrientation(QtCore.Qt.Horizontal)
@@ -181,10 +218,10 @@ class GitDAGWidget(standard.StandardDialog):
 
     def add_commits(self, commits):
         self._graphview.add_commits(commits)
-        items = [CommitTreeWidgetItem(c) for c in reversed(commits)]
-        self._treewidget.insertTopLevelItems(0, items)
+        self._treewidget.add_commits(commits)
 
     def thread_done(self):
+        self._treewidget.select('HEAD')
         self._graphview.select('HEAD')
         self._graphview.view_fit()
 
@@ -390,6 +427,9 @@ class Node(QtGui.QGraphicsItem):
     #
     # Overridden Qt methods
     #
+
+    def blockSignals(self, blocked):
+        self.nodecom.notification_enabled = not blocked
 
     def itemChange(self, change, value):
         if change == QtGui.QGraphicsItem.ItemSelectedHasChanged:
@@ -604,6 +644,12 @@ class GraphView(QtGui.QGraphicsView):
             qtutils.add_action(self, 'Export Patches',
                                self._export_patches))
 
+        sig = signals.commit_selected
+        nodecom.add_message_observer(sig, self._commit_selected)
+
+    def _commit_selected(self, commit):
+        self.select(commit.sha1)
+
     def contextMenuEvent(self, event):
         menu = QtGui.QMenu(self)
         menu.addAction(self._action_export_patches)
@@ -621,7 +667,10 @@ class GraphView(QtGui.QGraphicsView):
             node = self._nodes[sha1]
         except KeyError:
             return
+        self.scene().clearSelection()
+        node.blockSignals(True)
         node.setSelected(True)
+        node.blockSignals(False)
         self.ensureVisible(node.mapRectToScene(node.boundingRect()))
 
     def selected_node(self):
