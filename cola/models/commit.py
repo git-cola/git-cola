@@ -79,7 +79,7 @@ class Commit(object):
                     continue
                 self.tags.add(tag)
         if author:
-            self.author = author
+            self.author = core.decode(author)
         if authdate:
             self.authdate = authdate
 

@@ -200,7 +200,7 @@ def _common_diff_opts(config=config):
 
 
 def sha1_diff(sha1, git=git):
-    return git.diff(sha1 + '^!', **_common_diff_opts())
+    return core.decode(git.diff(sha1 + '^!', **_common_diff_opts()))
 
 
 def diff_info(sha1, git=git, merge=True):
@@ -218,7 +218,7 @@ def diff_info(sha1, git=git, merge=True):
             'Date:   %aD%n'
             '%n%s%n%n%b',
             sha1)
-    return log + '\n\n' + sha1_diff(sha1)
+    return core.decode(log) + '\n\n' + sha1_diff(sha1)
 
 
 def diff_helper(commit=None,
