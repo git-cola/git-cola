@@ -11,6 +11,7 @@ if __name__ == "__main__":
     sys.path.insert(1, os.path.join(os.path.abspath(src), 'thirdparty'))
     sys.path.insert(1, os.path.abspath(src))
 
+import cola
 from cola import observable
 from cola import qtutils
 from cola import signals
@@ -20,9 +21,9 @@ from cola.views import standard
 from cola.views import syntax
 
 
-def git_dag(parent=None, ref='HEAD'):
+def git_dag(model, parent):
     """Return a pre-populated git DAG widget."""
-    dag = commit.DAG(ref, 1000)
+    dag = commit.DAG(model.currentbranch, 1000)
     view = GitDAGWidget(dag, parent=parent)
     view.resize_to_desktop()
     view.show()
@@ -1050,11 +1051,10 @@ class GraphView(QtGui.QGraphicsView):
 
 
 if __name__ == "__main__":
-
-    from cola.models import main
-    model = main.model()
+    model = cola.model()
     model.use_worktree(os.getcwd())
+    model.update_status()
 
     app = QtGui.QApplication(sys.argv)
-    view = git_dag(app.activeWindow())
+    view = git_dag(model, app.activeWindow())
     sys.exit(app.exec_())

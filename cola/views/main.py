@@ -154,7 +154,7 @@ class MainView(MainWindow):
             (self.menu_undo, self.commitmsg.undo),
             (self.menu_redo, self.commitmsg.redo),
             (self.menu_classic, classic.cola_classic),
-            (self.menu_dag, lambda: dag.git_dag(parent=self)),
+            (self.menu_dag, lambda: dag.git_dag(self.model, self)),
         ]
 
         # Diff Actions
