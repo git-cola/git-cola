@@ -77,7 +77,7 @@ class Commit(object):
                 log_entry[41:].split(chr(0x01), 5)
 
         if subject:
-            self.subject = subject
+            self.subject = core.decode(subject)
 
         if parents:
             generation = None
@@ -100,7 +100,7 @@ class Commit(object):
                     tag = tag[11:] # refs/heads/
                 if tag.endswith('/HEAD'):
                     continue
-                self.tags.add(tag)
+                self.tags.add(core.decode(tag))
         if author:
             self.author = core.decode(author)
         if authdate:
