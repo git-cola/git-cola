@@ -18,15 +18,13 @@ from cola.decorators import memoize
 
 # minimum version requirements
 _versions = {
-    'git': '1.5.2',
+    # git-diff learned --patience in 1.6.2
+    # git-mergetool learned --no-prompt in 1.6.2
+    # git-difftool moved out of contrib in git 1.6.3
+    'git': '1.6.3',
     'python': '2.4',
     'pyqt': '4.1',
     'pyqt_qrunnable': '4.4',
-    # git-difftool moved out of contrib in git 1.6.3
-    'difftool-builtin': '1.6.3',
-    # git-mergetool learned --no-prompt in 1.6.2
-    'mergetool-no-prompt': '1.6.2',
-    'patience': '1.6.2',
     'diff-submodule': '1.6.6',
 }
 

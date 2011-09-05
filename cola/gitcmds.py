@@ -184,12 +184,9 @@ def commit_diff(sha1, git=git):
 
 
 def _common_diff_opts(config=config):
-    # The '--patience' option did not appear until git 1.6.2
-    # so don't allow it to be used on version previous to that
-    patience = version.check('patience', version.git_version())
     submodule = version.check('diff-submodule', version.git_version())
     return {
-        'patience': patience,
+        'patience': True,
         'submodule': submodule,
         'no_color': True,
         'no_ext_diff': True,

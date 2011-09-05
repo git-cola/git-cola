@@ -532,11 +532,7 @@ class Mergetool(Command):
     def do(self):
         if not self.paths:
             return
-        if version.check('mergetool-no-prompt',
-                         self.model.git.version().split()[-1]):
-            utils.fork(['git', 'mergetool', '--no-prompt', '--'] + self.paths)
-        else:
-            utils.fork(['xterm', '-e', 'git', 'mergetool', '--'] + self.paths)
+        utils.fork(['git', 'mergetool', '--no-prompt', '--'] + self.paths)
 
 
 class OpenRepo(Command):

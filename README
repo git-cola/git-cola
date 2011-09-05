@@ -19,6 +19,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+REQUIREMENTS
+------------
+~ git version 1.6.3 or newer
+~ Python 2.4 or newer
+~ PyQt 4.1 or newer
+
 FORK
 ----
 ~ git clone git://github.com/davvid/git-cola.git cola
@@ -43,5 +49,5 @@ ACKNOWLEDGEMENTS
 ----------------
 git-cola includes the following modules:
 GitPython ~ http://gitorious.org/projects/git-python/
-jsonpickle ~ http://code.google.com/p/jsonpickle/
+jsonpickle ~ https://github.com/jsonpickle/jsonpickle
 simplejson ~ http://code.google.com/p/simplejson/

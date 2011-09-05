@@ -1,8 +1,0 @@
-git-difftool originated in git-cola.
-
-It first appeared in git.git's contrib/ area in January 2009
-after it was rewritten as a GIT_EXTERNAL_DIFF compatible script.
-
-git-difftool became an official git command in April 2009 with the
-release of git 1.6.3.  setup.py checks for git 1.6.3 and installs
-git-difftool when an older git version is detected.

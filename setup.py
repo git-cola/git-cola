@@ -51,12 +51,6 @@ def _run_setup():
 
     scripts = ['bin/git-cola']
 
-    # git-difftool first moved out of git.git's contrib area in git 1.6.3
-    if (os.environ.get('INSTALL_GIT_DIFFTOOL', '') or
-            not version.check('difftool-builtin', version.git_version())):
-        scripts.append('bin/difftool/git-difftool')
-        scripts.append('bin/difftool/git-difftool--helper')
-
     if sys.platform == 'win32':
         scripts.append('win32/cola')
         scripts.append('win32/dirname')
