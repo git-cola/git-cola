@@ -127,6 +127,17 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self.insertTopLevelItems(0, items)
 
 
+class GitRefCompleter(QtGui.QCompleter):
+    """Provides completion for branches and tags"""
+    def __init__(self, parent):
+        model = cola.model()
+        revs = (model.local_branches +
+                model.remote_branches +
+                model.tags)
+        QtGui.QCompleter.__init__(self, revs, parent)
+        self.setCompletionMode(self.UnfilteredPopupCompletion)
+
+
 class GitDAGWidget(standard.StandardDialog):
     """The git-dag widget."""
     # Keep us in scope otherwise PyQt kills the widget
@@ -142,6 +153,8 @@ class GitDAGWidget(standard.StandardDialog):
 
         self.revtext = QtGui.QLineEdit()
         self.revtext.setText(dag.ref)
+        self.revcompleter = GitRefCompleter(self)
+        self.revtext.setCompleter(self.revcompleter)
 
         self.maxresults = QtGui.QSpinBox()
         self.maxresults.setMinimum(-1)
