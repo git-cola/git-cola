@@ -70,6 +70,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         QtGui.QTreeWidget.__init__(self, parent)
         self.setUniformRowHeights(True)
         self.setAllColumnsShowFocus(True)
+        self.setAlternatingRowColors(True)
         self.setRootIsDecorated(False)
         self.setHeaderLabels(['Subject', 'Author', 'Date'])
 
@@ -937,7 +938,26 @@ class GraphView(QtGui.QGraphicsView):
         if factor < 0.07 or factor > 100:
             return
         self._zoom = scale
+
+        scrollbar = self.verticalScrollBar()
+        if scrollbar:
+            value = scrollbar.value()
+            min_ = scrollbar.minimum()
+            max_ = scrollbar.maximum()
+            range_ = max_ - min_
+            distance = value - min_
+            scrolloffset = distance/float(range_)
+
+        self.setTransformationAnchor(QtGui.QGraphicsView.NoAnchor)
         self.scale(scale, scale)
+
+        scrollbar = self.verticalScrollBar()
+        if scrollbar:
+            min_ = scrollbar.minimum()
+            max_ = scrollbar.maximum()
+            range_ = max_ - min_
+            value = min_ + int(float(range_) * scrolloffset)
+            scrollbar.setValue(value)
 
     def clear(self):
         self.scene().clear()
