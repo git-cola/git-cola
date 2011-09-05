@@ -150,6 +150,14 @@ class GitDAGWidget(standard.StandardDialog):
         self.displaybutton = QtGui.QPushButton()
         self.displaybutton.setText('Display')
 
+        self.zoom_in = QtGui.QPushButton()
+        self.zoom_in.setIcon(qtutils.icon('zoom-in.png'))
+        self.zoom_in.setFlat(True)
+
+        self.zoom_out = QtGui.QPushButton()
+        self.zoom_out.setIcon(qtutils.icon('zoom-out.png'))
+        self.zoom_out.setFlat(True)
+
         self._buttons_layt = QtGui.QHBoxLayout()
         self._buttons_layt.setMargin(2)
         self._buttons_layt.setSpacing(2)
@@ -159,7 +167,8 @@ class GitDAGWidget(standard.StandardDialog):
         self._buttons_layt.addWidget(self.maxresults)
         self._buttons_layt.addWidget(self.displaybutton)
         self._buttons_layt.addStretch()
-
+        self._buttons_layt.addWidget(self.zoom_in)
+        self._buttons_layt.addWidget(self.zoom_out)
 
         self._nodecom = nodecom = observable.Observable()
         self._graphview = GraphView(nodecom)
@@ -201,9 +210,14 @@ class GitDAGWidget(standard.StandardDialog):
         self.thread.connect(self.thread, self.thread.done,
                             self.thread_done)
 
-        self.connect(self._mainsplitter,
-                     SIGNAL('splitterMoved(int,int)'),
+        self.connect(self._mainsplitter, SIGNAL('splitterMoved(int,int)'),
                      self._splitter_moved)
+
+        self.connect(self.zoom_in, SIGNAL('pressed()'),
+                     self._graphview.zoom_in)
+
+        self.connect(self.zoom_out, SIGNAL('pressed()'),
+                     self._graphview.zoom_out)
 
         self.connect(self.maxresults, SIGNAL('valueChanged(int)'),
                      lambda(x): self.dag.set_count(x))
@@ -634,13 +648,13 @@ class GraphView(QtGui.QGraphicsView):
 
         self._action_zoom_in = (
             qtutils.add_action(self, 'Zoom In',
-                               lambda: self._scale_view(1.5),
+                               self.zoom_in,
                                QtCore.Qt.Key_Plus,
                                QtCore.Qt.Key_Equal))
 
         self._action_zoom_out = (
             qtutils.add_action(self, 'Zoom Out',
-                               lambda: self._scale_view(1.0/1.5),
+                               self.zoom_out,
                                QtCore.Qt.Key_Minus))
 
         self._action_zoom_fit = (
@@ -674,6 +688,12 @@ class GraphView(QtGui.QGraphicsView):
 
         sig = signals.commit_selected
         nodecom.add_message_observer(sig, self._commit_selected)
+
+    def zoom_in(self):
+        self._scale_view(1.5)
+
+    def zoom_out(self):
+        self._scale_view(1.0/1.5)
 
     def _commit_selected(self, commit):
         self.select(commit.sha1)
