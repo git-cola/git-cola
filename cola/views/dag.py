@@ -20,9 +20,10 @@ from cola.views import standard
 from cola.views import syntax
 
 
-def git_dag(parent=None, log_args=None):
+def git_dag(parent=None, ref='HEAD'):
     """Return a pre-populated git DAG widget."""
-    view = GitDAGWidget(parent=parent)
+    dag = commit.DAG(ref, 1000)
+    view = GitDAGWidget(dag, parent=parent)
     view.resize_to_desktop()
     view.show()
     view.raise_()
@@ -91,7 +92,10 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self.select(commit.sha1)
 
     def select(self, sha1):
-        item = self._sha1map[sha1]
+        try:
+            item = self._sha1map[sha1]
+        except KeyError:
+            return
         self.blockSignals(True)
         self.scrollToItem(item)
         self.setCurrentItem(item)
@@ -107,7 +111,8 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self.setColumnWidth(2, onetwo)
 
     def clear(self):
-        self._sha1map = {}
+        QtGui.QTreeWidget.clear(self)
+        self._sha1map.clear()
 
     def add_commits(self,commits):
         items = []
@@ -119,12 +124,13 @@ class CommitTreeWidget(QtGui.QTreeWidget):
                 self._sha1map[tag] = item
         self.insertTopLevelItems(0, items)
 
+
 class GitDAGWidget(standard.StandardDialog):
     """The git-dag widget."""
     # Keep us in scope otherwise PyQt kills the widget
-    def __init__(self, parent=None, args=None):
+    def __init__(self, dag, parent=None, args=None):
         standard.StandardDialog.__init__(self, parent=parent)
-
+        self.dag = dag
         self.setObjectName('dag')
         self.setWindowTitle(self.tr('git dag'))
         self.setMinimumSize(1, 1)
@@ -133,15 +139,12 @@ class GitDAGWidget(standard.StandardDialog):
         self.revlabel.setText('Revision')
 
         self.revtext = QtGui.QLineEdit()
-        self.revtext.setText('HEAD')
-
-        self.maxlabel = QtGui.QLabel()
-        self.maxlabel.setText('Max Results')
+        self.revtext.setText(dag.ref)
 
         self.maxresults = QtGui.QSpinBox()
         self.maxresults.setMinimum(-1)
         self.maxresults.setMaximum(2**31 - 1)
-        self.maxresults.setValue(3000)
+        self.maxresults.setValue(dag.count)
 
         self.displaybutton = QtGui.QPushButton()
         self.displaybutton.setText('Display')
@@ -152,14 +155,12 @@ class GitDAGWidget(standard.StandardDialog):
 
         self._buttons_layt.addWidget(self.revlabel)
         self._buttons_layt.addWidget(self.revtext)
+        self._buttons_layt.addWidget(self.maxresults)
         self._buttons_layt.addWidget(self.displaybutton)
         self._buttons_layt.addStretch()
-        self._buttons_layt.addWidget(self.maxlabel)
-        self._buttons_layt.addWidget(self.maxresults)
 
 
         self._nodecom = nodecom = observable.Observable()
-
         self._graphview = GraphView(nodecom)
         self._treewidget = CommitTreeWidget(nodecom)
         self._diffwidget = DiffWidget(nodecom)
@@ -191,7 +192,7 @@ class GitDAGWidget(standard.StandardDialog):
         qtutils.add_close_action(self)
 
         self._queue = []
-        self.thread = ReaderThread(self, args)
+        self.thread = ReaderThread(self, dag)
 
         self.thread.connect(self.thread, self.thread.commits_ready,
                             self.add_commits)
@@ -202,6 +203,19 @@ class GitDAGWidget(standard.StandardDialog):
         self.connect(self._mainsplitter,
                      SIGNAL('splitterMoved(int,int)'),
                      self._splitter_moved)
+
+        self.connect(self.maxresults, SIGNAL('valueChanged(int)'),
+                     lambda(x): self.dag.set_count(x))
+
+        self.connect(self.displaybutton, SIGNAL('pressed()'),
+                     self._display)
+
+    def _display(self):
+        self.stop()
+        self.clear()
+        self.dag.set_ref(unicode(self.revtext.text()))
+        self.dag.set_count(self.maxresults.value())
+        self.start()
 
     def show(self):
         standard.StandardDialog.show(self)
@@ -216,24 +230,36 @@ class GitDAGWidget(standard.StandardDialog):
     def _splitter_moved(self, pos, idx):
         self._treewidget.adjust_columns()
 
+    def clear(self):
+        self._graphview.clear()
+        self._treewidget.clear()
+
     def add_commits(self, commits):
         self._graphview.add_commits(commits)
         self._treewidget.add_commits(commits)
 
     def thread_done(self):
-        self._treewidget.select('HEAD')
-        self._graphview.select('HEAD')
+        self._treewidget.select(self.dag.ref)
+        self._graphview.select(self.dag.ref)
         self._graphview.view_fit()
 
     def close(self):
-        self.thread.abort = True
-        self.thread.wait()
+        self.stop()
         standard.StandardDialog.close(self)
 
     def pause(self):
         self.thread.mutex.lock()
         self.thread.stop = True
         self.thread.mutex.unlock()
+
+    def stop(self):
+        self.thread.abort = True
+        self.thread.wait()
+
+    def start(self):
+        self.thread.abort = False
+        self.thread.stop = False
+        self.thread.start()
 
     def resume(self):
         self.thread.mutex.lock()
@@ -253,25 +279,27 @@ class ReaderThread(QtCore.QThread):
     commits_ready = QtCore.SIGNAL('commits_ready')
     done = QtCore.SIGNAL('done')
 
-    def __init__(self, parent, args):
-        super(ReaderThread, self).__init__(parent)
-        self.repo = commit.RepoReader(args=args)
+    def __init__(self, parent, dag):
+        QtCore.QThread.__init__(self, parent)
+        self.dag = dag
         self.abort = False
         self.stop = False
         self.mutex = QtCore.QMutex()
         self.condition = QtCore.QWaitCondition()
 
     def run(self):
+        repo = commit.RepoReader(self.dag)
+        repo.reset()
         commits = []
-        for commit in self.repo:
+        for c in repo:
             self.mutex.lock()
             if self.stop:
                 self.condition.wait(self.mutex)
             self.mutex.unlock()
             if self.abort:
-                self.repo.reset()
+                repo.reset()
                 return
-            commits.append(commit)
+            commits.append(c)
             if len(commits) >= 512:
                 self.emit(self.commits_ready, commits)
                 commits = []
@@ -582,7 +610,6 @@ class GraphView(QtGui.QGraphicsView):
         self._nodes = {}
         self._nodecom = nodecom
 
-        self._loc = {}
         self._rows = {}
 
         self._panning = False
@@ -654,12 +681,6 @@ class GraphView(QtGui.QGraphicsView):
         menu = QtGui.QMenu(self)
         menu.addAction(self._action_export_patches)
         menu.exec_(self.mapToGlobal(event.pos()))
-
-    def add_commits(self, commits):
-        """Traverse commits and add them to the view."""
-        self.add(commits)
-        self.layout(commits)
-        self.link(commits)
 
     def select(self, sha1):
         """Select the node for the SHA-1"""
@@ -918,15 +939,28 @@ class GraphView(QtGui.QGraphicsView):
         self._zoom = scale
         self.scale(scale, scale)
 
-    def add(self, commits):
+    def clear(self):
+        self.scene().clear()
+        self._items = []
+        self._selected = []
+        self._nodes.clear()
+        self._rows.clear()
+        self._xmax = 0
+        self._ymin = 0
+
+    def add_commits(self, commits):
+        """Traverse commits and add them to the view."""
         scene = self.scene()
         for commit in commits:
             node = Node(commit, self._nodecom)
-            scene.addItem(node)
             self._nodes[commit.sha1] = node
             for ref in commit.tags:
                 self._nodes[ref] = node
             self._items.append(node)
+            scene.addItem(node)
+
+        self.layout(commits)
+        self.link(commits)
 
     def link(self, commits):
         """Create edges linking commits with their parents"""
@@ -938,20 +972,15 @@ class GraphView(QtGui.QGraphicsView):
                 # TODO - Handle truncated history viewing
                 pass
             for parent in commit.parents:
-                parent_node = self._nodes[parent.sha1]
+                try:
+                    parent_node = self._nodes[parent.sha1]
+                except KeyError:
+                    # TODO - Handle truncated history viewing
+                    continue
                 edge = Edge(parent_node, commit_node)
                 scene.addItem(edge)
 
     def layout(self, commits):
-        if not self._loc:
-            commit = commits[0]
-            sha1 = commit.sha1
-            node = self._nodes[sha1]
-            self._loc[sha1] = (0, 0)
-            self._rows[commit.generation] = [0]
-            node.setPos(0, 0)
-            commits = commits[1:]
-
         xmax = self._xmax
         ymin = self._ymin
         for commit in commits:
@@ -967,7 +996,6 @@ class GraphView(QtGui.QGraphicsView):
                 xpos += row[-1] + self._xoff
             ypos = -commit.generation * self._yoff
 
-            self._loc[sha1] = (xpos, ypos)
             node = self._nodes[sha1]
             node.setPos(xpos, ypos)
 
@@ -982,10 +1010,11 @@ class GraphView(QtGui.QGraphicsView):
 
 
 if __name__ == "__main__":
-    from cola.models import main
 
+    from cola.models import main
     model = main.model()
-    model._init_config_data()
+    model.use_worktree(os.getcwd())
+
     app = QtGui.QApplication(sys.argv)
     view = git_dag(app.activeWindow())
     sys.exit(app.exec_())

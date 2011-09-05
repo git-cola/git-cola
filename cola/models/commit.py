@@ -1,5 +1,7 @@
 from cola import git
 from cola import utils
+from cola import core
+from cola.observable import Observable
 
 # put subject at the end b/c it can contain
 # any number of funky characters
@@ -9,6 +11,10 @@ git = git.instance()
 
 class CommitFactory(object):
     _commits = {}
+
+    @classmethod
+    def reset(cls):
+        cls._commits.clear()
 
     @classmethod
     def new(cls, sha1=None, log_entry=None):
@@ -23,6 +29,23 @@ class CommitFactory(object):
                             log_entry=log_entry)
             cls._commits[sha1] = commit
         return commit
+
+
+class DAG(Observable):
+    ref_updated = 'ref_updated'
+    count_updated = 'count_updated'
+    def __init__(self, ref, count):
+        Observable.__init__(self)
+        self.ref = ref
+        self.count = count
+
+    def set_ref(self, ref):
+        self.ref = ref
+        self.notify_message_observers(self.ref_updated)
+
+    def set_count(self, count):
+        self.count = count
+        self.notify_message_observers(self.count_updated)
 
 
 class Commit(object):
@@ -101,16 +124,15 @@ class Commit(object):
 
 
 class RepoReader(object):
-    def __init__(self, args=None):
-        if args is None:
-            args = ('HEAD',)
+    def __init__(self, dag, git=git):
+        self.dag = dag
         self.git = git
         self._proc = None
         self._objects = {}
         self._cmd = ('git', 'log',
                      '--topo-order',
                      '--reverse',
-                     '--pretty='+logfmt) + tuple(args)
+                     '--pretty='+logfmt)
         self._cached = False
         """Indicates that all data has been read"""
         self._idx = -1
@@ -122,10 +144,12 @@ class RepoReader(object):
     """Return True when no commits remain to be read"""
 
     def reset(self):
+        CommitFactory.reset()
         if self._proc:
             self._topo_list = []
             self._proc.kill()
         self._proc = None
+        self._cached = False
 
     def __iter__(self):
         if self._cached:
@@ -142,7 +166,8 @@ class RepoReader(object):
                 self._idx = -1
                 raise StopIteration
         if self._proc is None:
-            self._proc = utils.start_command(self._cmd)
+            cmd = self._cmd + ('-%d' % self.dag.count, self.dag.ref)
+            self._proc = utils.start_command(cmd)
             self._topo_list = []
         log_entry = self._proc.stdout.readline()
         if not log_entry:
