@@ -165,11 +165,11 @@ class GitDAGWidget(standard.StandardDialog):
         self.displaybutton.setText('Display')
 
         self.zoom_in = QtGui.QPushButton()
-        self.zoom_in.setIcon(qtutils.icon('zoom-in.png'))
+        self.zoom_in.setIcon(qtutils.theme_icon('zoom-in.png'))
         self.zoom_in.setFlat(True)
 
         self.zoom_out = QtGui.QPushButton()
-        self.zoom_out.setIcon(qtutils.icon('zoom-out.png'))
+        self.zoom_out.setIcon(qtutils.theme_icon('zoom-out.png'))
         self.zoom_out.setFlat(True)
 
         self._buttons_layt = QtGui.QHBoxLayout()
