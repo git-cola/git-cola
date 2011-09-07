@@ -14,7 +14,6 @@ from cola import utils
 from cola import signals
 from cola import cmdfactory
 from cola import difftool
-from cola import version
 from cola.diffparse import DiffParser
 from cola.models import selection
 
@@ -364,6 +363,9 @@ class Diff(Command):
     """Perform a diff and set the model's current text."""
     def __init__(self, filenames, cached=False):
         Command.__init__(self)
+        # Guard against the list of files being empty
+        if not filenames:
+            return
         opts = {}
         if cached:
             cached = not self.model.read_only()
