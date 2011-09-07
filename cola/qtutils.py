@@ -430,26 +430,19 @@ def center_on_screen(widget):
     widget.move(cx - widget.width()/2, cy - widget.height()/2)
 
 
-def get_gtk_icon(name):
-    try:
-        import gtk
-    except ImportError:
-        return None
-    gtk_stock = {
-        'zoom-in.png': gtk.STOCK_ZOOM_IN,
-        'zoom-out.png': gtk.STOCK_ZOOM_OUT,
-    }
-    try:
-        gtk_symbol = gtk_stock[name]
-        theme = gtk.icon_theme_get_default()
-        icon = theme.lookup_icon(gtk_symbol, 16, 0)
-        return icon.get_filename()
-    except:
-        return None
-
-
+@memoize
 def theme_icon(name):
-    gtk_icon = get_gtk_icon(name)
-    if gtk_icon is not None:
-        return QtGui.QIcon(gtk_icon)
+    """Grab an icon from the current theme with a fallback
+
+    Support older versions of Qt by catching AttributeError and
+    falling back to our default icons.
+
+    """
+    try:
+        base, ext = os.path.splitext(name)
+        qicon = QtGui.QIcon.fromTheme(base)
+        if not qicon.isNull():
+            return qicon
+    except AttributeError:
+        pass
     return icon(name)
