@@ -82,11 +82,28 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self._sha1map = {}
         self.nodecom = nodecom
         self._selecting = False
+        self._commits = []
+
+        self._action_create_patch = (
+            qtutils.add_action(self, 'Create Patch',
+                               self._create_patch))
+
         sig = signals.commits_selected
         nodecom.add_message_observer(sig, self._commits_selected)
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self._item_selection_changed)
+
+    def _update_actions(self):
+        has_selection = bool(self.selectedItems())
+        self._action_create_patch.setEnabled(has_selection)
+
+    def contextMenuEvent(self, event):
+        self._update_actions()
+
+        menu = QtGui.QMenu(self)
+        menu.addAction(self._action_create_patch)
+        menu.exec_(self.mapToGlobal(event.pos()))
 
     def selecting(self):
         return self._selecting
@@ -131,8 +148,10 @@ class CommitTreeWidget(QtGui.QTreeWidget):
     def clear(self):
         QtGui.QTreeWidget.clear(self)
         self._sha1map.clear()
+        self._commits = []
 
     def add_commits(self,commits):
+        self._commits.extend(commits)
         items = []
         for c in reversed(commits):
             item = CommitTreeWidgetItem(c)
@@ -141,6 +160,15 @@ class CommitTreeWidget(QtGui.QTreeWidget):
             for tag in c.tags:
                 self._sha1map[tag] = item
         self.insertTopLevelItems(0, items)
+
+    def _create_patch(self):
+        items = self.selectedItems()
+        if not items:
+            return
+        items.reverse()
+        sha1s = [item.commit.sha1 for item in items]
+        all_sha1s = [c.sha1 for c in self._commits]
+        cola.notifier().broadcast(signals.format_patch, sha1s, all_sha1s)
 
 
 class GitRefCompleter(QtGui.QCompleter):
