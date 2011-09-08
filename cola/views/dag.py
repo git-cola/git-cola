@@ -719,6 +719,15 @@ class GraphView(QtGui.QGraphicsView):
                                self._select_nth_child,
                                'Shift+K'))
 
+        # Context menu actions
+        self._action_diff_this_selected = (
+            qtutils.add_action(self, 'Diff this -> selected',
+                               self._diff_this_selected))
+
+        self._action_diff_selected_this = (
+            qtutils.add_action(self, 'Diff selected -> this',
+                               self._diff_selected_this))
+
         self._action_create_patch = (
             qtutils.add_action(self, 'Create Patch',
                                self._create_patch))
@@ -741,13 +750,20 @@ class GraphView(QtGui.QGraphicsView):
         clicked_item = self.scene().itemAt(self.mapToScene(event.pos()))
         selected_item = self.selected_node()
 
+        can_diff = (clicked_item and selected_item and
+                    clicked_item is not selected_item)
         has_selection = bool(selected_item)
+
+        self._action_diff_this_selected.setEnabled(can_diff)
+        self._action_diff_selected_this.setEnabled(can_diff)
         self._action_create_patch.setEnabled(has_selection)
 
     def contextMenuEvent(self, event):
         self._update_actions(event)
 
         menu = QtGui.QMenu(self)
+        menu.addAction(self._action_diff_this_selected)
+        menu.addAction(self._action_diff_selected_this)
         menu.addAction(self._action_create_patch)
         menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -797,6 +813,12 @@ class GraphView(QtGui.QGraphicsView):
     def newest_node(self, commits):
         """Return the node for the commit with the newest generation number"""
         return self.get_node_by_generation(commits, lambda a, b: a < b)
+
+    def _diff_this_selected(self):
+        pass
+
+    def _diff_selected_this(self):
+        pass
 
     def _create_patch(self):
         nodes = self.selected_nodes()
