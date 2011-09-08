@@ -27,13 +27,14 @@ class FileDiffDialog(QtGui.QDialog):
         self.a = a
         self.b = b
 
+        self.setWindowTitle('Select File(s)')
         self._tree = QtGui.QTreeWidget(self)
         self._tree.setAlternatingRowColors(True)
         self._tree.setRootIsDecorated(False)
         self._tree.setSelectionMode(self._tree.ExtendedSelection)
         self._tree.setUniformRowHeights(True)
         self._tree.setAllColumnsShowFocus(True)
-        self._tree.setHeaderLabels(['Select Files'])
+        self._tree.setHeaderHidden(True)
 
         self._diff_btn = QtGui.QPushButton('Compare')
         self._diff_btn.setIcon(qtutils.ok_icon())

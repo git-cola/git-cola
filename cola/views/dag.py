@@ -744,6 +744,8 @@ class GraphView(QtGui.QGraphicsView):
         self._nodes = {}
         self._nodecom = nodecom
         self._commits = []
+        self._selected_node = None
+        self._clicked_node = None
 
         self._rows = {}
 
@@ -830,12 +832,19 @@ class GraphView(QtGui.QGraphicsView):
         self.select([commit.sha1 for commit in commits])
 
     def _update_actions(self, event):
-        clicked_item = self.scene().itemAt(self.mapToScene(event.pos()))
-        selected_item = self.selected_node()
+        clicked_node = self.scene().itemAt(self.mapToScene(event.pos()))
+        selected_nodes = self.selected_nodes()
 
-        can_diff = bool(clicked_item and selected_item and
-                        clicked_item is not selected_item)
-        has_selection = bool(selected_item)
+        has_selection = bool(selected_nodes)
+        can_diff = bool(clicked_node and len(selected_nodes) == 1 and
+                        clicked_node is not selected_nodes[0])
+
+        if can_diff:
+            self._clicked_node = clicked_node
+            self._selected_node = selected_nodes[0]
+        else:
+            self._clicked_node = None
+            self._selected_node = None
 
         self._action_diff_this_selected.setEnabled(can_diff)
         self._action_diff_selected_this.setEnabled(can_diff)
@@ -898,10 +907,14 @@ class GraphView(QtGui.QGraphicsView):
         return self.get_node_by_generation(commits, lambda a, b: a < b)
 
     def _diff_this_selected(self):
-        pass
+        clicked_sha1 = self._clicked_node.commit.sha1
+        selected_sha1 = self._selected_node.commit.sha1
+        difftool.diff_commits(self, clicked_sha1, selected_sha1)
 
     def _diff_selected_this(self):
-        pass
+        clicked_sha1 = self._clicked_node.commit.sha1
+        selected_sha1 = self._selected_node.commit.sha1
+        difftool.diff_commits(self, selected_sha1, clicked_sha1)
 
     def _create_patch(self):
         nodes = self.selected_nodes()
