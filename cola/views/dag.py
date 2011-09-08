@@ -328,6 +328,9 @@ class GitDAGWidget(standard.StandardDialog):
                      self._display)
 
     def _display(self):
+        new_ref = unicode(self.revtext.text())
+        if not new_ref:
+            return
         self.stop()
         self.clear()
         self.dag.set_ref(unicode(self.revtext.text()))
