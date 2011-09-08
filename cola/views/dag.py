@@ -215,7 +215,6 @@ class GitDAGWidget(standard.StandardDialog):
 
         qtutils.add_close_action(self)
 
-        self._queue = []
         self.thread = ReaderThread(self, dag)
 
         self.thread.connect(self.thread, self.thread.commits_ready,
@@ -638,6 +637,7 @@ class GraphView(QtGui.QGraphicsView):
         self._selected = []
         self._nodes = {}
         self._nodecom = nodecom
+        self._commits = []
 
         self._rows = {}
 
@@ -696,9 +696,9 @@ class GraphView(QtGui.QGraphicsView):
                                self._select_nth_child,
                                'Shift+K'))
 
-        self._action_export_patches = (
-            qtutils.add_action(self, 'Export Patches',
-                               self._export_patches))
+        self._action_create_patch = (
+            qtutils.add_action(self, 'Create Patch',
+                               self._create_patch))
 
         sig = signals.commit_selected
         nodecom.add_message_observer(sig, self._commit_selected)
@@ -712,9 +712,18 @@ class GraphView(QtGui.QGraphicsView):
     def _commit_selected(self, commit):
         self.select(commit.sha1)
 
+    def _update_actions(self, event):
+        clicked_item = self.scene().itemAt(self.mapToScene(event.pos()))
+        selected_item = self.selected_node()
+
+        has_selection = bool(selected_item)
+        self._action_create_patch.setEnabled(has_selection)
+
     def contextMenuEvent(self, event):
+        self._update_actions(event)
+
         menu = QtGui.QMenu(self)
-        menu.addAction(self._action_export_patches)
+        menu.addAction(self._action_create_patch)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def select(self, sha1):
@@ -763,10 +772,14 @@ class GraphView(QtGui.QGraphicsView):
         """Return the node for the commit with the newest generation number"""
         return self.get_node_by_generation(commits, lambda a, b: a < b)
 
-    def _export_patches(self):
+    def _create_patch(self):
         nodes = self.selected_nodes()
-        for node in nodes:
-            print node.commit.sha1
+        if not nodes:
+            return
+        selected_commits = sort_by_generation([n.commit for n in nodes])
+        sha1s = [c.sha1 for c in selected_commits]
+        all_sha1s = [c.sha1 for c in self._commits]
+        cola.notifier().broadcast(signals.format_patch, sha1s, all_sha1s)
 
     def _select_parent(self):
         """Select the parent with the newest generation number"""
@@ -1001,9 +1014,11 @@ class GraphView(QtGui.QGraphicsView):
         self._rows.clear()
         self._xmax = 0
         self._ymin = 0
+        self._commits = []
 
     def add_commits(self, commits):
         """Traverse commits and add them to the view."""
+        self._commits.extend(commits)
         scene = self.scene()
         for commit in commits:
             node = Node(commit, self._nodecom)
@@ -1062,11 +1077,19 @@ class GraphView(QtGui.QGraphicsView):
         self.scene().setSceneRect(self._xoff*-2, ymin-self._yoff*2,
                                   xmax+self._xoff*3, abs(ymin)+self._yoff*4)
 
+def sort_by_generation(commits):
+    commits.sort(cmp=lambda a, b: cmp(a.generation, b.generation))
+    return commits
+
 
 if __name__ == "__main__":
     model = cola.model()
     model.use_worktree(os.getcwd())
     model.update_status()
+
+    # Default command handler
+    import cola.cmds
+    cola.cmds.register()
 
     app = QtGui.QApplication(sys.argv)
     view = git_dag(model, app.activeWindow())
