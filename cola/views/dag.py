@@ -47,10 +47,13 @@ class DiffWidget(QtGui.QWidget):
         self._layt.setMargin(2)
         self.setLayout(self._layt)
 
-        sig = signals.commit_selected
-        nodecom.add_message_observer(sig, self._commit_selected)
+        sig = signals.commits_selected
+        nodecom.add_message_observer(sig, self._commits_selected)
 
-    def _commit_selected(self, commit):
+    def _commits_selected(self, commits):
+        if len(commits) != 1:
+            return
+        commit = commits[0]
         sha1 = commit.sha1
         merge = len(commit.parents) > 1
         self.diff.setText(gitcmds.diff_info(sha1, merge=merge))
@@ -69,6 +72,7 @@ class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
 class CommitTreeWidget(QtGui.QTreeWidget):
     def __init__(self, nodecom, parent=None):
         QtGui.QTreeWidget.__init__(self, parent)
+        self.setSelectionMode(self.ContiguousSelection)
         self.setUniformRowHeights(True)
         self.setAllColumnsShowFocus(True)
         self.setAlternatingRowColors(True)
@@ -77,32 +81,44 @@ class CommitTreeWidget(QtGui.QTreeWidget):
 
         self._sha1map = {}
         self.nodecom = nodecom
-        sig = signals.commit_selected
-        nodecom.add_message_observer(sig, self._commit_selected)
+        self._selecting = False
+        sig = signals.commits_selected
+        nodecom.add_message_observer(sig, self._commits_selected)
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self._item_selection_changed)
+
+    def selecting(self):
+        return self._selecting
+
+    def set_selecting(self, selecting):
+        self._selecting = selecting
 
     def _item_selection_changed(self):
         items = self.selectedItems()
         if not items:
             return
-        sig = signals.commit_selected
-        self.nodecom.notify_message_observers(sig, items[0].commit)
+        self.set_selecting(True)
+        sig = signals.commits_selected
+        self.nodecom.notify_message_observers(sig, [i.commit for i in items])
+        self.set_selecting(False)
 
-    def _commit_selected(self, commit):
-        self.select(commit.sha1)
-
-    def select(self, sha1):
-        try:
-            item = self._sha1map[sha1]
-        except KeyError:
+    def _commits_selected(self, commits):
+        if self.selecting():
             return
-        self.blockSignals(True)
-        self.scrollToItem(item)
-        self.setCurrentItem(item)
-        item.setSelected(True)
-        self.blockSignals(False)
+        self.select([commit.sha1 for commit in commits])
+
+    def select(self, sha1s):
+        self.clearSelection()
+        for sha1 in sha1s:
+            try:
+                item = self._sha1map[sha1]
+            except KeyError:
+                continue
+            self.blockSignals(True)
+            self.scrollToItem(item)
+            item.setSelected(True)
+            self.blockSignals(False)
 
     def adjust_columns(self):
         width = self.width()-20
@@ -267,8 +283,8 @@ class GitDAGWidget(standard.StandardDialog):
         self._treewidget.add_commits(commits)
 
     def thread_done(self):
-        self._treewidget.select(self.dag.ref)
-        self._graphview.select(self.dag.ref)
+        self._treewidget.select([self.dag.ref])
+        self._graphview.select([self.dag.ref])
         self._graphview.view_fit()
 
     def close(self):
@@ -489,10 +505,16 @@ class Node(QtGui.QGraphicsItem):
 
     def itemChange(self, change, value):
         if change == QtGui.QGraphicsItem.ItemSelectedHasChanged:
+            # Broadcast selection to other widgets
+            selected_items = self.scene().selectedItems()
+            commits = [item.commit for item in selected_items]
+            self.scene().parent().set_selecting(True)
+            sig = signals.commits_selected
+            self.nodecom.notify_message_observers(sig, commits)
+            self.scene().parent().set_selecting(False)
+
+            # Cache the pen for use in paint()
             if value.toPyObject():
-                if not self.scene().parent().selecting():
-                    sig = signals.commit_selected
-                    self.nodecom.notify_message_observers(sig, self.commit)
                 color = self._selected_color
             else:
                 color = self._outline_color
@@ -500,6 +522,7 @@ class Node(QtGui.QGraphicsItem):
             node_pen.setWidth(1.0)
             node_pen.setColor(color)
             self._node_pen = node_pen
+
         return QtGui.QGraphicsItem.itemChange(self, change, value)
 
     def type(self, _type=_type):
@@ -700,8 +723,8 @@ class GraphView(QtGui.QGraphicsView):
             qtutils.add_action(self, 'Create Patch',
                                self._create_patch))
 
-        sig = signals.commit_selected
-        nodecom.add_message_observer(sig, self._commit_selected)
+        sig = signals.commits_selected
+        nodecom.add_message_observer(sig, self._commits_selected)
 
     def zoom_in(self):
         self._scale_view(1.5)
@@ -709,8 +732,10 @@ class GraphView(QtGui.QGraphicsView):
     def zoom_out(self):
         self._scale_view(1.0/1.5)
 
-    def _commit_selected(self, commit):
-        self.select(commit.sha1)
+    def _commits_selected(self, commits):
+        if self.selecting():
+            return
+        self.select([commit.sha1 for commit in commits])
 
     def _update_actions(self, event):
         clicked_item = self.scene().itemAt(self.mapToScene(event.pos()))
@@ -726,17 +751,18 @@ class GraphView(QtGui.QGraphicsView):
         menu.addAction(self._action_create_patch)
         menu.exec_(self.mapToGlobal(event.pos()))
 
-    def select(self, sha1):
+    def select(self, sha1s):
         """Select the node for the SHA-1"""
-        try:
-            node = self._nodes[sha1]
-        except KeyError:
-            return
         self.scene().clearSelection()
-        node.blockSignals(True)
-        node.setSelected(True)
-        node.blockSignals(False)
-        self.ensureVisible(node.mapRectToScene(node.boundingRect()))
+        for sha1 in sha1s:
+            try:
+                node = self._nodes[sha1]
+            except KeyError:
+                continue
+            node.blockSignals(True)
+            node.setSelected(True)
+            node.blockSignals(False)
+            self.ensureVisible(node.mapRectToScene(node.boundingRect()))
 
     def selected_node(self):
         """Return the currently selected node"""
@@ -900,8 +926,6 @@ class GraphView(QtGui.QGraphicsView):
         if self._panning:
             self._pan(event)
             return
-        if self._pressed:
-            self._selecting = True
         self._last_mouse[0] = pos.x()
         self._last_mouse[1] = pos.y()
         self._handle_event(QtGui.QGraphicsView.mouseMoveEvent, event)
@@ -909,9 +933,11 @@ class GraphView(QtGui.QGraphicsView):
     def selecting(self):
         return self._selecting
 
+    def set_selecting(self, selecting):
+        self._selecting = selecting
+
     def mouseReleaseEvent(self, event):
         self._pressed = False
-        self._selecting = False
         if event.button() == QtCore.Qt.MidButton:
             self._panning = False
             return
