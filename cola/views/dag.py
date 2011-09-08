@@ -16,6 +16,7 @@ from cola import observable
 from cola import qtutils
 from cola import signals
 from cola import gitcmds
+from cola import difftool
 from cola.models import commit
 from cola.views import standard
 from cola.views import syntax
@@ -83,6 +84,16 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self.nodecom = nodecom
         self._selecting = False
         self._commits = []
+        self._clicked_item = None
+        self._selected_item = None
+
+        self._action_diff_this_selected = (
+            qtutils.add_action(self, 'Diff this -> selected',
+                               self._diff_this_selected))
+
+        self._action_diff_selected_this = (
+            qtutils.add_action(self, 'Diff selected -> this',
+                               self._diff_selected_this))
 
         self._action_create_patch = (
             qtutils.add_action(self, 'Create Patch',
@@ -94,16 +105,39 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self._item_selection_changed)
 
-    def _update_actions(self):
-        has_selection = bool(self.selectedItems())
+    def _update_actions(self, event):
+        selected_items = self.selectedItems()
+        has_selection = bool(selected_items)
         self._action_create_patch.setEnabled(has_selection)
 
+        item = self.itemAt(event.pos())
+        can_diff = bool(item and len(selected_items) == 1 and
+                        item is not selected_items[0])
+
+        if can_diff:
+            self._clicked_item = item
+            self._selected_item = selected_items[0]
+        else:
+            self._clicked_item = None
+            self._selected_item = None
+
+        self._action_diff_this_selected.setEnabled(can_diff)
+        self._action_diff_selected_this.setEnabled(can_diff)
+
     def contextMenuEvent(self, event):
-        self._update_actions()
+        self._update_actions(event)
 
         menu = QtGui.QMenu(self)
+        menu.addAction(self._action_diff_this_selected)
+        menu.addAction(self._action_diff_selected_this)
         menu.addAction(self._action_create_patch)
         menu.exec_(self.mapToGlobal(event.pos()))
+
+    def mousePressEvent(self, event):
+        if event.buttons() == QtCore.Qt.RightButton:
+            event.accept()
+            return
+        QtGui.QTreeWidget.mousePressEvent(self, event)
 
     def selecting(self):
         return self._selecting
@@ -160,6 +194,16 @@ class CommitTreeWidget(QtGui.QTreeWidget):
             for tag in c.tags:
                 self._sha1map[tag] = item
         self.insertTopLevelItems(0, items)
+
+    def _diff_this_selected(self):
+        clicked_sha1 = self._clicked_item.commit.sha1
+        selected_sha1 = self._selected_item.commit.sha1
+        difftool.diff_commits(self, clicked_sha1, selected_sha1)
+
+    def _diff_selected_this(self):
+        clicked_sha1 = self._clicked_item.commit.sha1
+        selected_sha1 = self._selected_item.commit.sha1
+        difftool.diff_commits(self, selected_sha1, clicked_sha1)
 
     def _create_patch(self):
         items = self.selectedItems()
@@ -789,8 +833,8 @@ class GraphView(QtGui.QGraphicsView):
         clicked_item = self.scene().itemAt(self.mapToScene(event.pos()))
         selected_item = self.selected_node()
 
-        can_diff = (clicked_item and selected_item and
-                    clicked_item is not selected_item)
+        can_diff = bool(clicked_item and selected_item and
+                        clicked_item is not selected_item)
         has_selection = bool(selected_item)
 
         self._action_diff_this_selected.setEnabled(can_diff)
