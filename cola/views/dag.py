@@ -462,7 +462,7 @@ class Edge(QtGui.QGraphicsItem):
 
         # Adjust the points to leave a small margin between
         # the arrow and the commit.
-        dest_pt = Node._bbox.center()
+        dest_pt = Commit._bbox.center()
         line = QtCore.QLineF(
                 self.mapFromItem(self.source, dest_pt),
                 self.mapFromItem(self.dest, dest_pt))
@@ -525,7 +525,7 @@ class Edge(QtGui.QGraphicsItem):
         painter.drawPolygon(self.poly)
 
 
-class Node(QtGui.QGraphicsItem):
+class Commit(QtGui.QGraphicsItem):
     _type = QtGui.QGraphicsItem.UserType + 2
     _width = 46.
     _height = 24.
@@ -545,9 +545,9 @@ class Node(QtGui.QGraphicsItem):
     _text_options = QtGui.QTextOption()
     _text_options.setAlignment(QtCore.Qt.AlignCenter)
 
-    _node_pen = QtGui.QPen()
-    _node_pen.setWidth(1.0)
-    _node_pen.setColor(_outline_color)
+    _commit_pen = QtGui.QPen()
+    _commit_pen.setWidth(1.0)
+    _commit_pen.setColor(_outline_color)
 
     def __init__(self, commit,
                  notifier,
@@ -574,9 +574,9 @@ class Node(QtGui.QGraphicsItem):
             self.label = None
 
         if len(commit.parents) > 1:
-            self.node_color = merge_color
+            self.commit_color = merge_color
         else:
-            self.node_color = commit_color
+            self.commit_color = commit_color
         self.sha1_text = commit.sha1[:8]
 
         self.pressed = False
@@ -604,10 +604,10 @@ class Node(QtGui.QGraphicsItem):
                 color = self._selected_color
             else:
                 color = self._outline_color
-            node_pen = QtGui.QPen()
-            node_pen.setWidth(1.0)
-            node_pen.setColor(color)
-            self._node_pen = node_pen
+            commit_pen = QtGui.QPen()
+            commit_pen.setWidth(1.0)
+            commit_pen.setColor(color)
+            self._commit_pen = commit_pen
 
         return QtGui.QGraphicsItem.itemChange(self, change, value)
 
@@ -626,8 +626,8 @@ class Node(QtGui.QGraphicsItem):
               black_pen=QtCore.Qt.black,
               cache=Cache):
 
-        painter.setPen(self._node_pen)
-        painter.setBrush(self.node_color)
+        painter.setPen(self._commit_pen)
+        painter.setBrush(self.commit_color)
 
         # Draw ellipse
         painter.drawEllipse(inner)
@@ -687,7 +687,7 @@ class Label(QtGui.QGraphicsItem):
         QtGui.QGraphicsItem.__init__(self)
         self.setZValue(-1)
 
-        # Starts with enough space for two tags. Any more and the node
+        # Starts with enough space for two tags. Any more and the commit
         # needs to be taller to accomodate.
 
         self.commit = commit
@@ -742,13 +742,12 @@ class GraphView(QtGui.QGraphicsView):
         self._xmax = 0
         self._ymin = 0
 
-        self._items = []
         self._selected = []
-        self._nodes = {}
         self._notifier = notifier
         self._commits = []
-        self._selected_node = None
-        self._clicked_node = None
+        self._items = {}
+        self._selected_item = None
+        self._clicked_item = None
 
         self._rows = {}
 
@@ -835,19 +834,19 @@ class GraphView(QtGui.QGraphicsView):
         self.select([commit.sha1 for commit in commits])
 
     def _update_actions(self, event):
-        clicked_node = self.scene().itemAt(self.mapToScene(event.pos()))
-        selected_nodes = self.selected_nodes()
+        clicked_item = self.scene().itemAt(self.mapToScene(event.pos()))
+        selected_items = self.selected_items()
 
-        has_selection = bool(selected_nodes)
-        can_diff = bool(clicked_node and len(selected_nodes) == 1 and
-                        clicked_node is not selected_nodes[0])
+        has_selection = bool(selected_items)
+        can_diff = bool(clicked_item and len(selected_items) == 1 and
+                        clicked_item is not selected_items[0])
 
         if can_diff:
-            self._clicked_node = clicked_node
-            self._selected_node = selected_nodes[0]
+            self._clicked_item = clicked_item
+            self._selected_item = selected_items[0]
         else:
-            self._clicked_node = None
-            self._selected_node = None
+            self._clicked_item = None
+            self._selected_item = None
 
         self._action_diff_this_selected.setEnabled(can_diff)
         self._action_diff_selected_this.setEnabled(can_diff)
@@ -863,31 +862,31 @@ class GraphView(QtGui.QGraphicsView):
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def select(self, sha1s):
-        """Select the node for the SHA-1"""
+        """Select the item for the SHA-1"""
         self.scene().clearSelection()
         for sha1 in sha1s:
             try:
-                node = self._nodes[sha1]
+                item = self._items[sha1]
             except KeyError:
                 continue
-            node.blockSignals(True)
-            node.setSelected(True)
-            node.blockSignals(False)
-            self.ensureVisible(node.mapRectToScene(node.boundingRect()))
+            item.blockSignals(True)
+            item.setSelected(True)
+            item.blockSignals(False)
+            self.ensureVisible(item.mapRectToScene(item.boundingRect()))
 
-    def selected_node(self):
-        """Return the currently selected node"""
-        selected_nodes = self.selected_nodes()
-        if not selected_nodes:
+    def selected_item(self):
+        """Return the currently selected item"""
+        selected_items = self.selected_items()
+        if not selected_items:
             return None
-        return selected_nodes[0]
+        return selected_items[0]
 
-    def selected_nodes(self):
-        """Return the currently selected node"""
+    def selected_items(self):
+        """Return the currently selected item"""
         return self.scene().selectedItems()
 
-    def get_node_by_generation(self, commits, criteria_fn):
-        """Return the node for the commit matching criteria"""
+    def get_item_by_generation(self, commits, criteria_fn):
+        """Return the item for the commit matching criteria"""
         if not commits:
             return None
         generation = None
@@ -897,88 +896,88 @@ class GraphView(QtGui.QGraphicsView):
                 sha1 = commit.sha1
                 generation = commit.generation
         try:
-            return self._nodes[sha1]
+            return self._items[sha1]
         except KeyError:
             return None
 
-    def oldest_node(self, commits):
-        """Return the node for the commit with the oldest generation number"""
-        return self.get_node_by_generation(commits, lambda a, b: a > b)
+    def oldest_item(self, commits):
+        """Return the item for the commit with the oldest generation number"""
+        return self.get_item_by_generation(commits, lambda a, b: a > b)
 
-    def newest_node(self, commits):
-        """Return the node for the commit with the newest generation number"""
-        return self.get_node_by_generation(commits, lambda a, b: a < b)
+    def newest_item(self, commits):
+        """Return the item for the commit with the newest generation number"""
+        return self.get_item_by_generation(commits, lambda a, b: a < b)
 
     def _diff_this_selected(self):
-        clicked_sha1 = self._clicked_node.commit.sha1
-        selected_sha1 = self._selected_node.commit.sha1
+        clicked_sha1 = self._clicked_item.commit.sha1
+        selected_sha1 = self._selected_item.commit.sha1
         difftool.diff_commits(self, clicked_sha1, selected_sha1)
 
     def _diff_selected_this(self):
-        clicked_sha1 = self._clicked_node.commit.sha1
-        selected_sha1 = self._selected_node.commit.sha1
+        clicked_sha1 = self._clicked_item.commit.sha1
+        selected_sha1 = self._selected_item.commit.sha1
         difftool.diff_commits(self, selected_sha1, clicked_sha1)
 
     def _create_patch(self):
-        nodes = self.selected_nodes()
-        if not nodes:
+        items = self.selected_items()
+        if not items:
             return
-        selected_commits = sort_by_generation([n.commit for n in nodes])
+        selected_commits = sort_by_generation([n.commit for n in items])
         sha1s = [c.sha1 for c in selected_commits]
         all_sha1s = [c.sha1 for c in self._commits]
         cola.notifier().broadcast(signals.format_patch, sha1s, all_sha1s)
 
     def _select_parent(self):
         """Select the parent with the newest generation number"""
-        selected_node = self.selected_node()
-        if selected_node is None:
+        selected_item = self.selected_item()
+        if selected_item is None:
             return
-        parent_node = self.newest_node(selected_node.commit.parents)
-        if parent_node is None:
+        parent_item = self.newest_item(selected_item.commit.parents)
+        if parent_item is None:
             return
-        selected_node.setSelected(False)
-        parent_node.setSelected(True)
-        self.ensureVisible(parent_node.mapRectToScene(parent_node.boundingRect()))
+        selected_item.setSelected(False)
+        parent_item.setSelected(True)
+        self.ensureVisible(parent_item.mapRectToScene(parent_item.boundingRect()))
 
     def _select_oldest_parent(self):
         """Select the parent with the oldest generation number"""
-        selected_node = self.selected_node()
-        if selected_node is None:
+        selected_item = self.selected_item()
+        if selected_item is None:
             return
-        parent_node = self.oldest_node(selected_node.commit.parents)
-        if parent_node is None:
+        parent_item = self.oldest_item(selected_item.commit.parents)
+        if parent_item is None:
             return
-        selected_node.setSelected(False)
-        parent_node.setSelected(True)
-        self.ensureVisible(parent_node.mapRectToScene(parent_node.boundingRect()))
+        selected_item.setSelected(False)
+        parent_item.setSelected(True)
+        self.ensureVisible(parent_item.mapRectToScene(parent_item.boundingRect()))
 
     def _select_child(self):
         """Select the child with the oldest generation number"""
-        selected_node = self.selected_node()
-        if selected_node is None:
+        selected_item = self.selected_item()
+        if selected_item is None:
             return
-        child_node = self.oldest_node(selected_node.commit.children)
-        if child_node is None:
+        child_item = self.oldest_item(selected_item.commit.children)
+        if child_item is None:
             return
-        selected_node.setSelected(False)
-        child_node.setSelected(True)
-        self.ensureVisible(child_node.mapRectToScene(child_node.boundingRect()))
+        selected_item.setSelected(False)
+        child_item.setSelected(True)
+        self.ensureVisible(child_item.mapRectToScene(child_item.boundingRect()))
 
     def _select_nth_child(self):
         """Select the Nth child with the newest generation number (N > 1)"""
-        selected_node = self.selected_node()
-        if selected_node is None:
+        selected_item = self.selected_item()
+        if selected_item is None:
             return
-        if len(selected_node.commit.children) > 1:
-            children = selected_node.commit.children[1:]
+        if len(selected_item.commit.children) > 1:
+            children = selected_item.commit.children[1:]
         else:
-            children = selected_node.commit.children
-        child_node = self.newest_node(children)
-        if child_node is None:
+            children = selected_item.commit.children
+        child_item = self.newest_item(children)
+        if child_item is None:
             return
-        selected_node.setSelected(False)
-        child_node.setSelected(True)
-        self.ensureVisible(child_node.mapRectToScene(child_node.boundingRect()))
+        selected_item.setSelected(False)
+        child_item.setSelected(True)
+        self.ensureVisible(child_item.mapRectToScene(child_item.boundingRect()))
 
     def view_fit(self):
         """Fit selected items into the viewport"""
@@ -1001,7 +1000,7 @@ class GraphView(QtGui.QGraphicsView):
                 xmax = max(xmax, pos.x()+xoff)
                 ymax = max(ymax, pos.y()+yoff)
             rect = QtCore.QRectF(xmin, ymin, xmax-xmin, ymax-ymin)
-        adjust = Node._width
+        adjust = Commit._width
         rect.setX(rect.x() - adjust)
         rect.setY(rect.y() - adjust)
         rect.setHeight(rect.height() + adjust)
@@ -1014,7 +1013,7 @@ class GraphView(QtGui.QGraphicsView):
             return
         elif QtCore.Qt.ShiftModifier != event.modifiers():
             return
-        self._selected = [i for i in self._items if i.isSelected()]
+        self._selected = self.selected_items()
 
     def _restore_selection(self, event):
         if QtCore.Qt.ShiftModifier != event.modifiers():
@@ -1155,9 +1154,8 @@ class GraphView(QtGui.QGraphicsView):
 
     def clear(self):
         self.scene().clear()
-        self._items = []
         self._selected = []
-        self._nodes.clear()
+        self._items.clear()
         self._rows.clear()
         self._xmax = 0
         self._ymin = 0
@@ -1168,12 +1166,11 @@ class GraphView(QtGui.QGraphicsView):
         self._commits.extend(commits)
         scene = self.scene()
         for commit in commits:
-            node = Node(commit, self._notifier)
-            self._nodes[commit.sha1] = node
+            item = Commit(commit, self._notifier)
+            self._items[commit.sha1] = item
             for ref in commit.tags:
-                self._nodes[ref] = node
-            self._items.append(node)
-            scene.addItem(node)
+                self._items[ref] = item
+            scene.addItem(item)
 
         self.layout(commits)
         self.link(commits)
@@ -1183,17 +1180,17 @@ class GraphView(QtGui.QGraphicsView):
         scene = self.scene()
         for commit in commits:
             try:
-                commit_node = self._nodes[commit.sha1]
+                commit_item = self._items[commit.sha1]
             except KeyError:
                 # TODO - Handle truncated history viewing
                 pass
             for parent in commit.parents:
                 try:
-                    parent_node = self._nodes[parent.sha1]
+                    parent_item = self._items[parent.sha1]
                 except KeyError:
                     # TODO - Handle truncated history viewing
                     continue
-                edge = Edge(parent_node, commit_node)
+                edge = Edge(parent_item, commit_item)
                 scene.addItem(edge)
 
     def layout(self, commits):
@@ -1212,8 +1209,8 @@ class GraphView(QtGui.QGraphicsView):
                 xpos += row[-1] + self._xoff
             ypos = -commit.generation * self._yoff
 
-            node = self._nodes[sha1]
-            node.setPos(xpos, ypos)
+            item = self._items[sha1]
+            item.setPos(xpos, ypos)
 
             row.append(xpos)
             xmax = max(xmax, xpos)
