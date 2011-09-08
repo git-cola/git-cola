@@ -34,7 +34,7 @@ def git_dag(model, parent):
 
 
 class DiffWidget(QtGui.QWidget):
-    def __init__(self, nodecom, parent=None):
+    def __init__(self, notifier, parent=None):
         QtGui.QWidget.__init__(self, parent)
 
         self.diff = QtGui.QTextEdit()
@@ -49,7 +49,7 @@ class DiffWidget(QtGui.QWidget):
         self.setLayout(self._layt)
 
         sig = signals.commits_selected
-        nodecom.add_message_observer(sig, self._commits_selected)
+        notifier.add_message_observer(sig, self._commits_selected)
 
     def _commits_selected(self, commits):
         if len(commits) != 1:
@@ -71,7 +71,7 @@ class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
 
 
 class CommitTreeWidget(QtGui.QTreeWidget):
-    def __init__(self, nodecom, parent=None):
+    def __init__(self, notifier, parent=None):
         QtGui.QTreeWidget.__init__(self, parent)
         self.setSelectionMode(self.ContiguousSelection)
         self.setUniformRowHeights(True)
@@ -81,7 +81,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self.setHeaderLabels(['Subject', 'Author', 'Date'])
 
         self._sha1map = {}
-        self.nodecom = nodecom
+        self.notifier = notifier
         self._selecting = False
         self._commits = []
         self._clicked_item = None
@@ -100,7 +100,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
                                self._create_patch))
 
         sig = signals.commits_selected
-        nodecom.add_message_observer(sig, self._commits_selected)
+        notifier.add_message_observer(sig, self._commits_selected)
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self._item_selection_changed)
@@ -151,7 +151,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
             return
         self.set_selecting(True)
         sig = signals.commits_selected
-        self.nodecom.notify_message_observers(sig, [i.commit for i in items])
+        self.notifier.notify_message_observers(sig, [i.commit for i in items])
         self.set_selecting(False)
 
     def _commits_selected(self, commits):
@@ -273,10 +273,10 @@ class GitDAGWidget(standard.StandardDialog):
         self._buttons_layt.addWidget(self.zoom_out)
 
         self._commits = {}
-        self._nodecom = nodecom = observable.Observable()
-        self._graphview = GraphView(nodecom)
-        self._treewidget = CommitTreeWidget(nodecom)
-        self._diffwidget = DiffWidget(nodecom)
+        self._notifier = notifier = observable.Observable()
+        self._graphview = GraphView(notifier)
+        self._treewidget = CommitTreeWidget(notifier)
+        self._diffwidget = DiffWidget(notifier)
 
         self._mainsplitter = QtGui.QSplitter()
         self._mainsplitter.setOrientation(QtCore.Qt.Horizontal)
@@ -370,7 +370,7 @@ class GitDAGWidget(standard.StandardDialog):
         except KeyError:
             return
         sig = signals.commits_selected
-        self._nodecom.notify_message_observers(sig, [commit_obj])
+        self._notifier.notify_message_observers(sig, [commit_obj])
         self._graphview.view_fit()
 
     def close(self):
@@ -550,7 +550,7 @@ class Node(QtGui.QGraphicsItem):
     _node_pen.setColor(_outline_color)
 
     def __init__(self, commit,
-                 nodecom,
+                 notifier,
                  selectable=QtGui.QGraphicsItem.ItemIsSelectable,
                  cursor=QtCore.Qt.PointingHandCursor,
                  xpos=_width/2.+1.,
@@ -564,7 +564,7 @@ class Node(QtGui.QGraphicsItem):
         self.setCursor(cursor)
 
         self.commit = commit
-        self.nodecom = nodecom
+        self.notifier = notifier
 
         if commit.tags:
             self.label = Label(commit)
@@ -587,7 +587,7 @@ class Node(QtGui.QGraphicsItem):
     #
 
     def blockSignals(self, blocked):
-        self.nodecom.notification_enabled = not blocked
+        self.notifier.notification_enabled = not blocked
 
     def itemChange(self, change, value):
         if change == QtGui.QGraphicsItem.ItemSelectedHasChanged:
@@ -596,7 +596,7 @@ class Node(QtGui.QGraphicsItem):
             commits = [item.commit for item in selected_items]
             self.scene().parent().set_selecting(True)
             sig = signals.commits_selected
-            self.nodecom.notify_message_observers(sig, commits)
+            self.notifier.notify_message_observers(sig, commits)
             self.scene().parent().set_selecting(False)
 
             # Cache the pen for use in paint()
@@ -734,7 +734,7 @@ class Label(QtGui.QGraphicsItem):
 
 
 class GraphView(QtGui.QGraphicsView):
-    def __init__(self, nodecom):
+    def __init__(self, notifier):
         QtGui.QGraphicsView.__init__(self)
 
         self._xoff = 132
@@ -745,7 +745,7 @@ class GraphView(QtGui.QGraphicsView):
         self._items = []
         self._selected = []
         self._nodes = {}
-        self._nodecom = nodecom
+        self._notifier = notifier
         self._commits = []
         self._selected_node = None
         self._clicked_node = None
@@ -821,7 +821,7 @@ class GraphView(QtGui.QGraphicsView):
                                self._create_patch))
 
         sig = signals.commits_selected
-        nodecom.add_message_observer(sig, self._commits_selected)
+        notifier.add_message_observer(sig, self._commits_selected)
 
     def zoom_in(self):
         self._scale_view(1.5)
@@ -1168,7 +1168,7 @@ class GraphView(QtGui.QGraphicsView):
         self._commits.extend(commits)
         scene = self.scene()
         for commit in commits:
-            node = Node(commit, self._nodecom)
+            node = Node(commit, self._notifier)
             self._nodes[commit.sha1] = node
             for ref in commit.tags:
                 self._nodes[ref] = node
