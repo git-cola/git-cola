@@ -228,6 +228,7 @@ class GitDAGWidget(standard.StandardDialog):
         self._buttons_layt.addWidget(self.zoom_in)
         self._buttons_layt.addWidget(self.zoom_out)
 
+        self._commits = {}
         self._nodecom = nodecom = observable.Observable()
         self._graphview = GraphView(nodecom)
         self._treewidget = CommitTreeWidget(nodecom)
@@ -305,14 +306,24 @@ class GitDAGWidget(standard.StandardDialog):
     def clear(self):
         self._graphview.clear()
         self._treewidget.clear()
+        self._commits.clear()
 
     def add_commits(self, commits):
+        # Keep track of commits
+        for commit_obj in commits:
+            self._commits[commit_obj.sha1] = commit_obj
+            for tag in commit_obj.tags:
+                self._commits[tag] = commit_obj
         self._graphview.add_commits(commits)
         self._treewidget.add_commits(commits)
 
     def thread_done(self):
-        self._treewidget.select([self.dag.ref])
-        self._graphview.select([self.dag.ref])
+        try:
+            commit_obj = self._commits[self.dag.ref]
+        except KeyError:
+            return
+        sig = signals.commits_selected
+        self._nodecom.notify_message_observers(sig, [commit_obj])
         self._graphview.view_fit()
 
     def close(self):
