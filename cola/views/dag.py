@@ -83,7 +83,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self.setHeaderLabels(['Subject', 'Author', 'Date'])
 
         self._sha1map = {}
-        self.notifier = notifier
+        self._notifier = notifier
         self._selecting = False
         self._commits = []
         self._clicked_item = None
@@ -118,7 +118,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
             return
         self.set_selecting(True)
         sig = signals.commits_selected
-        self.notifier.notify_message_observers(sig, [i.commit for i in items])
+        self._notifier.notify_message_observers(sig, [i.commit for i in items])
         self.set_selecting(False)
 
     def _commits_selected(self, commits):
@@ -539,7 +539,7 @@ class Commit(QtGui.QGraphicsItem):
         self.setCursor(cursor)
 
         self.commit = commit
-        self.notifier = notifier
+        self._notifier = notifier
 
         if commit.tags:
             self.label = Label(commit)
@@ -562,7 +562,7 @@ class Commit(QtGui.QGraphicsItem):
     #
 
     def blockSignals(self, blocked):
-        self.notifier.notification_enabled = not blocked
+        self._notifier.notification_enabled = not blocked
 
     def itemChange(self, change, value):
         if change == QtGui.QGraphicsItem.ItemSelectedHasChanged:
@@ -571,7 +571,7 @@ class Commit(QtGui.QGraphicsItem):
             commits = [item.commit for item in selected_items]
             self.scene().parent().set_selecting(True)
             sig = signals.commits_selected
-            self.notifier.notify_message_observers(sig, commits)
+            self._notifier.notify_message_observers(sig, commits)
             self.scene().parent().set_selecting(False)
 
             # Cache the pen for use in paint()
