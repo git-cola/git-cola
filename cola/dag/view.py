@@ -610,18 +610,20 @@ class Commit(QtGui.QGraphicsItem):
               text_options=_text_options,
               cache=Cache):
 
-        painter.setPen(self._commit_pen)
-        painter.setBrush(self.commit_color)
+        # Do not draw outside the exposed rect
+        painter.setClipRect(option.exposedRect)
 
         # Draw ellipse
+        painter.setPen(self._commit_pen)
+        painter.setBrush(self.commit_color)
         painter.drawEllipse(inner)
 
+        # Draw text
         try:
             font = cache.font
         except AttributeError:
             font = cache.font = painter.font()
             font.setPointSize(5)
-
         painter.setFont(font)
         painter.setPen(self.text_pen)
         painter.drawText(inner, self.sha1_text, text_options)
@@ -748,8 +750,10 @@ class GraphView(QtGui.QGraphicsView):
         scene.setItemIndexMethod(QtGui.QGraphicsScene.NoIndex)
         self.setScene(scene)
 
-        self.setCacheMode(QtGui.QGraphicsView.CacheBackground)
         self.setRenderHint(QtGui.QPainter.Antialiasing)
+        self.setOptimizationFlag(self.DontAdjustForAntialiasing, True)
+        self.setViewportUpdateMode(self.SmartViewportUpdate)
+        self.setCacheMode(QtGui.QGraphicsView.CacheBackground)
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
         self.setResizeAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setBackgroundBrush(QtGui.QColor.fromRgb(0, 0, 0))
