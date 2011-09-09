@@ -10,17 +10,20 @@ from cola.models import tag
 from cola.views import createtag
 
 
-def create_tag():
+def create_tag(revision=''):
     """Entry point for external callers."""
     app = QtGui.QApplication.instance()
+    model = tag.TagModel()
+    if revision:
+        model.revision = [revision]
     view = createtag.CreateTag(parent=app.activeWindow())
-    ctl = CreateTagController(view)
+    ctl = CreateTagController(model, view)
     view.show()
 
 
 class CreateTagController(qobserver.QObserver):
-    def __init__(self, view):
-        qobserver.QObserver.__init__(self, tag.TagModel(), view)
+    def __init__(self, model, view):
+        qobserver.QObserver.__init__(self, model, view)
         self.add_observables('tag_name', 'tag_msg', 'revision', 'sign_tag')
         self.add_callbacks(create_button=self.create_tag)
         self.refresh_view()

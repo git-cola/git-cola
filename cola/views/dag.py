@@ -21,6 +21,7 @@ from cola.models import commit
 from cola.views import standard
 from cola.views import syntax
 from cola.controllers import createbranch
+from cola.controllers import createtag
 
 
 def git_dag(model, parent):
@@ -183,6 +184,10 @@ class CommitTreeWidget(QtGui.QTreeWidget):
     def _create_branch(self):
         sha1 = self._clicked_item.commit.sha1
         createbranch.create_new_branch(revision=sha1)
+
+    def _create_tag(self):
+        sha1 = self._clicked_item.commit.sha1
+        createtag.create_tag(revision=sha1)
 
 
 class GitRefCompleter(QtGui.QCompleter):
@@ -866,6 +871,10 @@ class GraphView(QtGui.QGraphicsView):
         sha1 = self._clicked_item.commit.sha1
         createbranch.create_new_branch(revision=sha1)
 
+    def _create_tag(self):
+        sha1 = self._clicked_item.commit.sha1
+        createtag.create_tag(revision=sha1)
+
     def _select_parent(self):
         """Select the parent with the newest generation number"""
         selected_item = self.selected_item()
@@ -1204,6 +1213,9 @@ def update_actions(self, event):
     self._actions['diff_selected_this'].setEnabled(can_diff)
     self._actions['create_patch'].setEnabled(has_selection)
     self._actions['create_branch'].setEnabled(has_single_selection)
+    self._actions['create_tag'].setEnabled(has_single_selection)
+
+
 def context_menu_event(self, event):
     menu = QtGui.QMenu(self)
     menu.addAction(self._actions['diff_this_selected'])
@@ -1211,6 +1223,7 @@ def context_menu_event(self, event):
     menu.addSeparator()
     menu.addAction(self._actions['create_patch'])
     menu.addAction(self._actions['create_branch'])
+    menu.addAction(self._actions['create_tag'])
     menu.exec_(self.mapToGlobal(event.pos()))
 
 
