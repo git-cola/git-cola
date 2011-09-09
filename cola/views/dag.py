@@ -20,6 +20,7 @@ from cola import difftool
 from cola.models import commit
 from cola.views import standard
 from cola.views import syntax
+from cola.controllers import createbranch
 
 
 def git_dag(model, parent):
@@ -99,6 +100,10 @@ class CommitTreeWidget(QtGui.QTreeWidget):
             qtutils.add_action(self, 'Create Patch',
                                self._create_patch))
 
+        self._action_create_branch = (
+            qtutils.add_action(self, 'Create Branch',
+                               self._create_branch))
+
         sig = signals.commits_selected
         notifier.add_message_observer(sig, self._commits_selected)
 
@@ -108,21 +113,22 @@ class CommitTreeWidget(QtGui.QTreeWidget):
     def _update_actions(self, event):
         selected_items = self.selectedItems()
         has_selection = bool(selected_items)
-        self._action_create_patch.setEnabled(has_selection)
+        has_single_selection = len(selected_items) == 1
 
         item = self.itemAt(event.pos())
-        can_diff = bool(item and len(selected_items) == 1 and
+        can_diff = bool(item and has_single_selection and
                         item is not selected_items[0])
 
+        self._clicked_item = item
         if can_diff:
-            self._clicked_item = item
             self._selected_item = selected_items[0]
         else:
-            self._clicked_item = None
             self._selected_item = None
 
         self._action_diff_this_selected.setEnabled(can_diff)
         self._action_diff_selected_this.setEnabled(can_diff)
+        self._action_create_patch.setEnabled(has_selection)
+        self._action_create_branch.setEnabled(has_single_selection)
 
     def contextMenuEvent(self, event):
         self._update_actions(event)
@@ -130,7 +136,9 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         menu = QtGui.QMenu(self)
         menu.addAction(self._action_diff_this_selected)
         menu.addAction(self._action_diff_selected_this)
+        menu.addSeparator()
         menu.addAction(self._action_create_patch)
+        menu.addAction(self._action_create_branch)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def mousePressEvent(self, event):
@@ -213,6 +221,10 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         sha1s = [item.commit.sha1 for item in items]
         all_sha1s = [c.sha1 for c in self._commits]
         cola.notifier().broadcast(signals.format_patch, sha1s, all_sha1s)
+
+    def _create_branch(self):
+        sha1 = self._clicked_item.commit.sha1
+        createbranch.create_new_branch(revision=sha1)
 
 
 class GitRefCompleter(QtGui.QCompleter):
@@ -819,6 +831,10 @@ class GraphView(QtGui.QGraphicsView):
             qtutils.add_action(self, 'Create Patch',
                                self._create_patch))
 
+        self._action_create_branch = (
+            qtutils.add_action(self, 'Create Branch',
+                               self._create_branch))
+
         sig = signals.commits_selected
         notifier.add_message_observer(sig, self._commits_selected)
 
@@ -836,16 +852,16 @@ class GraphView(QtGui.QGraphicsView):
     def _update_actions(self, event):
         clicked_item = self.scene().itemAt(self.mapToScene(event.pos()))
         selected_items = self.selected_items()
+        has_single_selection = len(selected_items) == 1
 
         has_selection = bool(selected_items)
-        can_diff = bool(clicked_item and len(selected_items) == 1 and
+        can_diff = bool(clicked_item and has_single_selection and
                         clicked_item is not selected_items[0])
 
+        self._clicked_item = clicked_item
         if can_diff:
-            self._clicked_item = clicked_item
             self._selected_item = selected_items[0]
         else:
-            self._clicked_item = None
             self._selected_item = None
 
         self._action_diff_this_selected.setEnabled(can_diff)
@@ -858,7 +874,9 @@ class GraphView(QtGui.QGraphicsView):
         menu = QtGui.QMenu(self)
         menu.addAction(self._action_diff_this_selected)
         menu.addAction(self._action_diff_selected_this)
+        menu.addSeparator()
         menu.addAction(self._action_create_patch)
+        menu.addAction(self._action_create_branch)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def select(self, sha1s):
@@ -926,6 +944,10 @@ class GraphView(QtGui.QGraphicsView):
         sha1s = [c.sha1 for c in selected_commits]
         all_sha1s = [c.sha1 for c in self._commits]
         cola.notifier().broadcast(signals.format_patch, sha1s, all_sha1s)
+
+    def _create_branch(self):
+        sha1 = self._clicked_item.commit.sha1
+        createbranch.create_new_branch(revision=sha1)
 
     def _select_parent(self):
         """Select the parent with the newest generation number"""
