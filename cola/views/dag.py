@@ -189,6 +189,10 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         sha1 = self._clicked_item.commit.sha1
         createtag.create_tag(revision=sha1)
 
+    def _cherry_pick(self):
+        sha1 = self._clicked_item.commit.sha1
+        cola.notifier().broadcast(signals.cherry_pick, [sha1])
+
 
 class GitRefCompleter(QtGui.QCompleter):
     """Provides completion for branches and tags"""
@@ -249,6 +253,9 @@ class GitDAGWidget(standard.StandardDialog):
 
         self._commits = {}
         self._notifier = notifier = observable.Observable()
+        self._notifier.refs_updated = refs_updated = 'refs_updated'
+        self._notifier.add_message_observer(refs_updated, self._display)
+
         self._graphview = GraphView(notifier)
         self._treewidget = CommitTreeWidget(notifier)
         self._diffwidget = DiffWidget(notifier)
@@ -875,6 +882,11 @@ class GraphView(QtGui.QGraphicsView):
         sha1 = self._clicked_item.commit.sha1
         createtag.create_tag(revision=sha1)
 
+    def _cherry_pick(self):
+        sha1 = self._clicked_item.commit.sha1
+        cola.notifier().broadcast(signals.cherry_pick, [sha1])
+        self._notifier.notify_message_observers(self._notifier.refs_updated)
+
     def _select_parent(self):
         """Select the parent with the newest generation number"""
         selected_item = self.selected_item()
@@ -1191,6 +1203,9 @@ def context_menu_actions(self):
     'create_tag':
         qtutils.add_action(self, 'Create Tag',
                            self._create_tag),
+    'cherry_pick':
+        qtutils.add_action(self, 'Cherry Pick',
+                           self._cherry_pick),
     }
 
 
@@ -1214,6 +1229,7 @@ def update_actions(self, event):
     self._actions['create_patch'].setEnabled(has_selection)
     self._actions['create_branch'].setEnabled(has_single_selection)
     self._actions['create_tag'].setEnabled(has_single_selection)
+    self._actions['cherry_pick'].setEnabled(has_single_selection)
 
 
 def context_menu_event(self, event):
@@ -1224,6 +1240,7 @@ def context_menu_event(self, event):
     menu.addAction(self._actions['create_patch'])
     menu.addAction(self._actions['create_branch'])
     menu.addAction(self._actions['create_tag'])
+    menu.addAction(self._actions['cherry_pick'])
     menu.exec_(self.mapToGlobal(event.pos()))
 
 
