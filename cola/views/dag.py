@@ -531,13 +531,18 @@ class Commit(QtGui.QGraphicsItem):
     _commit_pen.setWidth(1.0)
     _commit_pen.setColor(_outline_color)
 
+    _commit_color = QtGui.QColor.fromRgb(128, 222, 255)
+    _commit_selected_color = QtGui.QColor.fromRgb(32, 64, 255)
+    _merge_color = QtGui.QColor.fromRgb(255, 255, 255)
+
     def __init__(self, commit,
                  notifier,
                  selectable=QtGui.QGraphicsItem.ItemIsSelectable,
                  cursor=QtCore.Qt.PointingHandCursor,
                  xpos=_width/2.+1.,
-                 commit_color=QtGui.QColor.fromRgb(128, 222, 255),
-                 merge_color=QtGui.QColor.fromRgb(255, 255, 255)):
+                 commit_color=_commit_color,
+                 commit_selected_color=_commit_selected_color,
+                 merge_color=_merge_color):
 
         QtGui.QGraphicsItem.__init__(self)
 
@@ -559,6 +564,7 @@ class Commit(QtGui.QGraphicsItem):
             self.commit_color = merge_color
         else:
             self.commit_color = commit_color
+        self.text_pen = QtCore.Qt.black
         self.sha1_text = commit.sha1[:8]
 
         self.pressed = False
@@ -583,8 +589,15 @@ class Commit(QtGui.QGraphicsItem):
 
             # Cache the pen for use in paint()
             if value.toPyObject():
+                self.commit_color = self._commit_selected_color
+                self.text_pen = QtCore.Qt.white
                 color = self._selected_color
             else:
+                self.text_pen = QtCore.Qt.black
+                if len(self.commit.parents) > 1:
+                    self.commit_color = self._merge_color
+                else:
+                    self.commit_color = self._commit_color
                 color = self._outline_color
             commit_pen = QtGui.QPen()
             commit_pen.setWidth(1.0)
@@ -605,7 +618,6 @@ class Commit(QtGui.QGraphicsItem):
     def paint(self, painter, option, widget,
               inner=_inner,
               text_options=_text_options,
-              black_pen=QtCore.Qt.black,
               cache=Cache):
 
         painter.setPen(self._commit_pen)
@@ -621,7 +633,7 @@ class Commit(QtGui.QGraphicsItem):
             font.setPointSize(5)
 
         painter.setFont(font)
-        painter.setPen(black_pen)
+        painter.setPen(self.text_pen)
         painter.drawText(inner, self.sha1_text, text_options)
 
     def mousePressEvent(self, event):
