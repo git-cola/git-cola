@@ -87,22 +87,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self._commits = []
         self._clicked_item = None
         self._selected_item = None
-
-        self._action_diff_this_selected = (
-            qtutils.add_action(self, 'Diff this -> selected',
-                               self._diff_this_selected))
-
-        self._action_diff_selected_this = (
-            qtutils.add_action(self, 'Diff selected -> this',
-                               self._diff_selected_this))
-
-        self._action_create_patch = (
-            qtutils.add_action(self, 'Create Patch',
-                               self._create_patch))
-
-        self._action_create_branch = (
-            qtutils.add_action(self, 'Create Branch',
-                               self._create_branch))
+        self._actions = context_menu_actions(self)
 
         sig = signals.commits_selected
         notifier.add_message_observer(sig, self._commits_selected)
@@ -110,28 +95,8 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self._item_selection_changed)
 
-    def _update_actions(self, event):
-        selected_items = self.selectedItems()
-        has_selection = bool(selected_items)
-        has_single_selection = len(selected_items) == 1
-
-        item = self.itemAt(event.pos())
-        can_diff = bool(item and has_single_selection and
-                        item is not selected_items[0])
-
-        self._clicked_item = item
-        if can_diff:
-            self._selected_item = selected_items[0]
-        else:
-            self._selected_item = None
-
-        self._action_diff_this_selected.setEnabled(can_diff)
-        self._action_diff_selected_this.setEnabled(can_diff)
-        self._action_create_patch.setEnabled(has_selection)
-        self._action_create_branch.setEnabled(has_single_selection)
-
     def contextMenuEvent(self, event):
-        self._update_actions(event)
+        update_actions(self, event)
 
         menu = QtGui.QMenu(self)
         menu.addAction(self._action_diff_this_selected)
@@ -818,22 +783,7 @@ class GraphView(QtGui.QGraphicsView):
                                self._select_nth_child,
                                'Shift+K'))
 
-        # Context menu actions
-        self._action_diff_this_selected = (
-            qtutils.add_action(self, 'Diff this -> selected',
-                               self._diff_this_selected))
-
-        self._action_diff_selected_this = (
-            qtutils.add_action(self, 'Diff selected -> this',
-                               self._diff_selected_this))
-
-        self._action_create_patch = (
-            qtutils.add_action(self, 'Create Patch',
-                               self._create_patch))
-
-        self._action_create_branch = (
-            qtutils.add_action(self, 'Create Branch',
-                               self._create_branch))
+        self._actions = context_menu_actions(self)
 
         sig = signals.commits_selected
         notifier.add_message_observer(sig, self._commits_selected)
@@ -849,27 +799,8 @@ class GraphView(QtGui.QGraphicsView):
             return
         self.select([commit.sha1 for commit in commits])
 
-    def _update_actions(self, event):
-        clicked_item = self.scene().itemAt(self.mapToScene(event.pos()))
-        selected_items = self.selected_items()
-        has_single_selection = len(selected_items) == 1
-
-        has_selection = bool(selected_items)
-        can_diff = bool(clicked_item and has_single_selection and
-                        clicked_item is not selected_items[0])
-
-        self._clicked_item = clicked_item
-        if can_diff:
-            self._selected_item = selected_items[0]
-        else:
-            self._selected_item = None
-
-        self._action_diff_this_selected.setEnabled(can_diff)
-        self._action_diff_selected_this.setEnabled(can_diff)
-        self._action_create_patch.setEnabled(has_selection)
-
     def contextMenuEvent(self, event):
-        self._update_actions(event)
+        update_actions(self, event)
 
         menu = QtGui.QMenu(self)
         menu.addAction(self._action_diff_this_selected)
@@ -894,13 +825,13 @@ class GraphView(QtGui.QGraphicsView):
 
     def selected_item(self):
         """Return the currently selected item"""
-        selected_items = self.selected_items()
+        selected_items = self.selectedItems()
         if not selected_items:
             return None
         return selected_items[0]
 
-    def selected_items(self):
-        """Return the currently selected item"""
+    def selectedItems(self):
+        """Return the currently selected items"""
         return self.scene().selectedItems()
 
     def get_item_by_generation(self, commits, criteria_fn):
@@ -937,7 +868,7 @@ class GraphView(QtGui.QGraphicsView):
         difftool.diff_commits(self, selected_sha1, clicked_sha1)
 
     def _create_patch(self):
-        items = self.selected_items()
+        items = self.selectedItems()
         if not items:
             return
         selected_commits = sort_by_generation([n.commit for n in items])
@@ -1035,7 +966,7 @@ class GraphView(QtGui.QGraphicsView):
             return
         elif QtCore.Qt.ShiftModifier != event.modifiers():
             return
-        self._selected = self.selected_items()
+        self._selected = self.selectedItems()
 
     def _restore_selection(self, event):
         if QtCore.Qt.ShiftModifier != event.modifiers():
@@ -1248,6 +1179,45 @@ def sort_by_generation(commits):
     return commits
 
 
+def context_menu_actions(self):
+    return {
+    'diff_this_selected':
+        qtutils.add_action(self, 'Diff this -> selected',
+                           self._diff_this_selected),
+    'diff_selected_this':
+        qtutils.add_action(self, 'Diff selected -> this',
+                           self._diff_selected_this),
+    'create_patch':
+        qtutils.add_action(self, 'Create Patch',
+                           self._create_patch),
+    'create_branch':
+        qtutils.add_action(self, 'Create Branch',
+                           self._create_branch),
+    'create_tag':
+        qtutils.add_action(self, 'Create Tag',
+                           self._create_tag),
+    }
+
+
+def update_actions(self, event):
+    clicked_item = self.itemAt(event.pos())
+    selected_items = self.selectedItems()
+    has_single_selection = len(selected_items) == 1
+
+    has_selection = bool(selected_items)
+    can_diff = bool(clicked_item and has_single_selection and
+                    clicked_item is not selected_items[0])
+
+    self._clicked_item = clicked_item
+    if can_diff:
+        self._selected_item = selected_items[0]
+    else:
+        self._selected_item = None
+
+    self._actions['diff_this_selected'].setEnabled(can_diff)
+    self._actions['diff_selected_this'].setEnabled(can_diff)
+    self._actions['create_patch'].setEnabled(has_selection)
+    self._actions['create_branch'].setEnabled(has_single_selection)
 if __name__ == "__main__":
     model = cola.model()
     model.use_worktree(os.getcwd())
