@@ -97,14 +97,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
 
     def contextMenuEvent(self, event):
         update_actions(self, event)
-
-        menu = QtGui.QMenu(self)
-        menu.addAction(self._action_diff_this_selected)
-        menu.addAction(self._action_diff_selected_this)
-        menu.addSeparator()
-        menu.addAction(self._action_create_patch)
-        menu.addAction(self._action_create_branch)
-        menu.exec_(self.mapToGlobal(event.pos()))
+        context_menu_event(self, event)
 
     def mousePressEvent(self, event):
         if event.buttons() == QtCore.Qt.RightButton:
@@ -801,14 +794,7 @@ class GraphView(QtGui.QGraphicsView):
 
     def contextMenuEvent(self, event):
         update_actions(self, event)
-
-        menu = QtGui.QMenu(self)
-        menu.addAction(self._action_diff_this_selected)
-        menu.addAction(self._action_diff_selected_this)
-        menu.addSeparator()
-        menu.addAction(self._action_create_patch)
-        menu.addAction(self._action_create_branch)
-        menu.exec_(self.mapToGlobal(event.pos()))
+        context_menu_event(self, event)
 
     def select(self, sha1s):
         """Select the item for the SHA-1"""
@@ -1218,6 +1204,16 @@ def update_actions(self, event):
     self._actions['diff_selected_this'].setEnabled(can_diff)
     self._actions['create_patch'].setEnabled(has_selection)
     self._actions['create_branch'].setEnabled(has_single_selection)
+def context_menu_event(self, event):
+    menu = QtGui.QMenu(self)
+    menu.addAction(self._actions['diff_this_selected'])
+    menu.addAction(self._actions['diff_selected_this'])
+    menu.addSeparator()
+    menu.addAction(self._actions['create_patch'])
+    menu.addAction(self._actions['create_branch'])
+    menu.exec_(self.mapToGlobal(event.pos()))
+
+
 if __name__ == "__main__":
     model = cola.model()
     model.use_worktree(os.getcwd())
