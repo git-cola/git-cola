@@ -1,25 +1,53 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
+from PyQt4.QtCore import SIGNAL
 
 import cola
+from cola import guicmds
 from cola import settings
+from cola import signals
 from cola import gitcfg
 from cola import qtutils
 from cola import qtcompat
 from cola import qt
+from cola import resources
 from cola.qtutils import tr
+from cola.qtutils import SLOT
+from cola.controllers import classic
+from cola.controllers import compare
+from cola.controllers import createtag
+from cola.controllers import merge
+from cola.controllers import stash
+from cola.controllers import search
+from cola.controllers.bookmark import manage_bookmarks
+from cola.controllers.bookmark import save_bookmark
+from cola.controllers.createbranch import create_new_branch
+from cola.controllers.options import update_options
+from cola.views import about
+from cola.views import dag
 from cola.views import status
 from cola.views.standard import create_standard_widget
-from cola.controllers import classic
+
+
+class DiffTextEdit(QtGui.QTextEdit):
+    def __init__(self, parent):
+        QtGui.QTextEdit.__init__(self, parent)
+        self.setMinimumSize(QtCore.QSize(1, 1))
+        self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
+        self.setAcceptRichText(False)
+        self.setCursorWidth(2)
+        self.setTextInteractionFlags(Qt.TextSelectableByKeyboard |
+                                     Qt.TextSelectableByMouse)
 
 
 MainWindowBase = create_standard_widget(QtGui.QMainWindow)
 class MainWindow(MainWindowBase):
-    def __init__(self, parent=None):
+    def __init__(self, model, parent=None, add_action=qtutils.add_action, SLOT=SLOT):
         MainWindowBase.__init__(self, parent)
         # Default size; this is thrown out when save/restore is used
         self.resize(987, 610)
+        self.model = cola.model()
 
         # Dockwidget options
         qtcompat.set_common_dock_options(self)
@@ -111,99 +139,141 @@ class MainWindow(MainWindowBase):
         self.diffdockwidgetlayout = QtGui.QVBoxLayout(self.diffdockwidgetcontents)
         self.diffdockwidgetlayout.setMargin(0)
 
-        self.display_text = QtGui.QTextEdit(self.diffdockwidgetcontents)
-        self.display_text.setMinimumSize(QtCore.QSize(1, 1))
-        self.display_text.setLineWrapMode(QtGui.QTextEdit.NoWrap)
-        self.display_text.setReadOnly(True)
-        self.display_text.setAcceptRichText(False)
-        self.display_text.setCursorWidth(2)
-        self.display_text.setTextInteractionFlags(Qt.LinksAccessibleByKeyboard |
-                                                  Qt.LinksAccessibleByMouse |
-                                                  Qt.TextBrowserInteraction |
-                                                  Qt.TextSelectableByKeyboard |
-                                                  Qt.TextSelectableByMouse)
-
+        self.display_text = DiffTextEdit(self.diffdockwidgetcontents)
         self.diffdockwidgetlayout.addWidget(self.display_text)
         self.diffdockwidget.setWidget(self.diffdockwidgetcontents)
 
         # All Actions
-        self.menu_unstage_selected = self.create_action('Unstage From Commit')
-        self.menu_show_diffstat = self.create_action('Diffstat')
-        self.menu_stage_modified =\
-                self.create_action('Stage Changed Files To Commit')
-        self.menu_stage_untracked = self.create_action('Stage All Untracked')
-        self.menu_export_patches = self.create_action('Export Patches...')
-        self.menu_cut = self.create_action('Cut')
-        self.menu_copy = self.create_action('Copy', local=True)
-        self.menu_paste = self.create_action('Paste')
-        self.menu_select_all = self.create_action('Select All')
-        self.menu_options = self.create_action('Preferences')
-        self.menu_delete = self.create_action('Delete')
-        self.menu_undo = self.create_action('Undo')
-        self.menu_redo = self.create_action('Redo')
-        self.menu_rescan = self.create_action('Rescan')
-        self.menu_cherry_pick = self.create_action('Cherry-Pick...')
-        self.menu_unstage_all = self.create_action('Unstage All')
-        self.menu_load_commitmsg = self.create_action('Load Commit Message...')
-        self.menu_quit = self.create_action('Quit')
-        self.menu_search_revision = self.create_action('Revision ID...')
-        self.menu_search_path =\
-                self.create_action('Commits Touching Path(s)...')
-        self.menu_search_revision_range =\
-                self.create_action('Revision Range...')
-        self.menu_search_date_range = self.create_action('Latest Commits...')
-        self.menu_search_diff =\
-                self.create_action('Content Introduced in Commit...')
-        self.menu_search_author = self.create_action('Commits By Author...')
-        self.menu_search_committer =\
-                self.create_action('Commits By Committer...')
-        self.menu_manage_bookmarks = self.create_action('Bookmarks...')
-        self.menu_save_bookmark = self.create_action('Bookmark Current...')
-        self.menu_grep = self.create_action('Grep')
-        self.menu_merge_local = self.create_action('Merge...')
-        self.menu_merge_abort = self.create_action('Abort Merge...')
-        self.menu_fetch = self.create_action('Fetch...')
-        self.menu_push = self.create_action('Push...')
-        self.menu_pull = self.create_action('Pull...')
-        self.menu_open_repo = self.create_action('Open...')
-        self.menu_stash = self.create_action('Stash...')
-        self.menu_diff_branch =\
-                self.create_action('Apply Changes From Branch...')
-        self.menu_branch_compare = self.create_action('Branches...')
-        self.menu_clone_repo = self.create_action('Clone...')
-        self.menu_help_docs = self.create_action('Documentation')
-        self.menu_commit_compare = self.create_action('Commits...')
-        self.menu_visualize_current =\
-                self.create_action('Visualize Current Branch...')
-        self.menu_visualize_all =\
-                self.create_action('Visualize All Branches...')
-        self.menu_browse_commits = self.create_action('Browse...')
-        self.menu_search_commits = self.create_action('Search...')
-        self.menu_browse_branch =\
-                self.create_action('Browse Current Branch...')
-        self.menu_browse_other_branch =\
-                self.create_action('Browse Other Branch...')
-        self.menu_load_commitmsg_template =\
-                self.create_action('Get Commit Message Template')
-        self.menu_commit_compare_file =\
-                self.create_action('Commits Touching File...')
-        self.menu_help_about = self.create_action('About')
-        self.menu_branch_diff = self.create_action('SHA-1...')
-        self.menu_diff_expression = self.create_action('Expression...')
-        self.menu_create_tag = self.create_action('Create Tag...')
-        self.menu_create_branch = self.create_action('Create...')
-        self.menu_delete_branch = self.create_action('Delete...')
-        self.menu_checkout_branch = self.create_action('Checkout...')
-        self.menu_rebase_branch = self.create_action('Rebase...')
-        self.menu_branch_review = self.create_action('Review...')
-        self.menu_classic = self.create_action('Cola Classic...')
-        self.menu_dag = self.create_action('DAG...')
+        self.menu_unstage_selected = add_action(self,
+                'Unstage From Commit', SLOT(signals.unstage_selected))
+        self.menu_show_diffstat = add_action(self,
+                'Diffstat', SLOT(signals.diffstat), 'Ctrl+D')
+        self.menu_stage_modified = add_action(self,
+                'Stage Changed Files To Commit',
+                SLOT(signals.stage_modified), 'Alt+A')
+        self.menu_stage_untracked = add_action(self,
+                'Stage All Untracked', SLOT(signals.stage_untracked), 'Alt+U')
+        self.menu_export_patches = add_action(self,
+                'Export Patches...', guicmds.export_patches, 'Ctrl+E')
+        self.menu_preferences = add_action(self,
+                'Preferences', update_options,
+                QtGui.QKeySequence.Preferences, 'Ctrl+O')
+        self.menu_undo = add_action(self,
+                'Undo', self.commitmsg.undo, QtGui.QKeySequence.Undo)
+        self.menu_redo = add_action(self,
+                'Redo', self.commitmsg.redo, QtGui.QKeySequence.Redo)
+        self.menu_rescan = add_action(self,
+                'Rescan', SLOT(signals.rescan),
+                'Ctrl+R', QtGui.QKeySequence.Refresh)
+        self.menu_cherry_pick = add_action(self,
+                'Cherry-Pick...', guicmds.cherry_pick, 'Ctrl+P')
+        self.menu_unstage_all = add_action(self,
+                'Unstage All', SLOT(signals.unstage_all))
+        self.menu_load_commitmsg = add_action(self,
+                'Load Commit Message...', guicmds.load_commitmsg_slot(self))
+        self.menu_quit = add_action(self,
+                'Quit', self.close, 'Ctrl+Q')
+        self.menu_manage_bookmarks = add_action(self,
+                'Bookmarks...', manage_bookmarks)
+        self.menu_save_bookmark = add_action(self,
+                'Bookmark Current...', save_bookmark)
+        self.menu_grep = add_action(self,
+                'Grep', guicmds.grep)
+        self.menu_merge_local = add_action(self,
+                'Merge...', merge.local_merge)
+        self.menu_merge_abort = add_action(self,
+                'Abort Merge...', merge.abort_merge)
+        self.menu_fetch = add_action(self,
+                'Fetch...', guicmds.fetch_slot(self))
+        self.menu_push = add_action(self,
+                'Push...', guicmds.push_slot(self))
+        self.menu_pull = add_action(self,
+                'Pull...', guicmds.pull_slot(self))
+        self.menu_open_repo = add_action(self,
+                'Open...', guicmds.open_repo_slot(self))
+        self.menu_stash = add_action(self,
+                'Stash...', lambda: stash.stash(parent=self), 'Alt+Shift+S')
+        self.menu_diff_branch = add_action(self,
+                'Apply Changes From Branch...', guicmds.diff_branch)
+        self.menu_branch_compare = add_action(self,
+                'Branches...', compare.branch_compare)
+        self.menu_clone_repo = add_action(self,
+                'Clone...', guicmds.clone_repo)
+        self.menu_help_docs = add_action(self,
+                'Documentation',
+                lambda: self.model.git.web__browse(resources.html_docs()),
+                QtGui.QKeySequence.HelpContents)
+        self.menu_commit_compare = add_action(self,
+                'Commits...', compare.compare)
+        self.menu_commit_compare_file = add_action(self,
+                'Commits Touching File...', compare.compare_file)
+        self.menu_visualize_current = add_action(self,
+                'Visualize Current Branch...', SLOT(signals.visualize_current))
+        self.menu_visualize_all = add_action(self,
+                'Visualize All Branches...', SLOT(signals.visualize_all))
+        self.menu_browse_commits = add_action(self,
+                'Browse...', guicmds.browse_commits)
+        self.menu_search_commits = add_action(self,
+                'Search...', search.search)
+        self.menu_browse_branch = add_action(self,
+                'Browse Current Branch...', guicmds.browse_current)
+        self.menu_browse_other_branch = add_action(self,
+                'Browse Other Branch...', guicmds.browse_other)
+        self.menu_load_commitmsg_template = add_action(self,
+                'Get Commit Message Template',
+                SLOT(signals.load_commit_template))
+        self.menu_help_about = add_action(self,
+                'About', about.launch_about_dialog)
+        self.menu_branch_diff = add_action(self,
+                'SHA-1...', guicmds.branch_diff)
+        self.menu_diff_expression = add_action(self,
+                'Expression...', guicmds.diff_expression)
+        self.menu_create_tag = add_action(self,
+                'Create Tag...', createtag.create_tag)
+        self.menu_create_branch = add_action(self,
+                'Create...', create_new_branch, 'Ctrl+B')
+        self.menu_delete_branch = add_action(self,
+                'Delete...', guicmds.branch_delete)
+        self.menu_checkout_branch = add_action(self,
+                'Checkout...', guicmds.checkout_branch, 'Alt+B')
+        self.menu_rebase_branch = add_action(self,
+                'Rebase...', guicmds.rebase)
+        self.menu_branch_review = add_action(self,
+                'Review...', guicmds.review_branch)
+        self.menu_classic = add_action(self,
+                'Cola Classic...', classic.cola_classic)
+        self.menu_dag = add_action(self,
+                'DAG...', lambda: dag.git_dag(self.model, self))
+
+        # Broadcast the amend mode
+        self.connect(self.amend_checkbox, SIGNAL('toggled(bool)'),
+                     SLOT(signals.amend_mode))
+
+        # Add button callbacks
+        self._relay_button(self.alt_button, signals.reset_mode)
+        self._relay_button(self.rescan_button, signals.rescan)
+
+        self._connect_button(self.signoff_button, self.signoff)
+        self._connect_button(self.stage_button, self.stage)
+        self._connect_button(self.unstage_button, self.unstage)
+        self._connect_button(self.commit_button, self.commit)
+        self._connect_button(self.fetch_button, guicmds.fetch_slot(self))
+        self._connect_button(self.push_button, guicmds.push_slot(self))
+        self._connect_button(self.pull_button, guicmds.pull_slot(self))
+        self._connect_button(self.stash_button, lambda: stash.stash(parent=self))
+
+        # Listen for text and amend messages
+        cola.notifier().connect(signals.diff_text, self.set_display)
+        cola.notifier().connect(signals.mode, self._mode_changed)
+        cola.notifier().connect(signals.amend, self.amend_checkbox.setChecked)
 
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)
 
         # File Menu
         self.file_menu = self.create_menu('&File', self.menubar)
+        self.file_menu.addAction(self.menu_preferences)
+        self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_open_repo)
         self.file_menu.addAction(self.menu_clone_repo)
         self.file_menu.addSeparator()
@@ -218,22 +288,6 @@ class MainWindow(MainWindowBase):
         self.file_menu.addAction(self.menu_quit)
         # Add to menubar
         self.menubar.addAction(self.file_menu.menuAction())
-
-        # Edit Menu
-        self.edit_menu = self.create_menu('&Edit', self.menubar)
-        self.edit_menu.addAction(self.menu_undo)
-        self.edit_menu.addAction(self.menu_redo)
-        self.edit_menu.addSeparator()
-        self.edit_menu.addAction(self.menu_cut)
-        self.edit_menu.addAction(self.menu_copy)
-        self.edit_menu.addAction(self.menu_paste)
-        self.edit_menu.addAction(self.menu_delete)
-        self.edit_menu.addSeparator()
-        self.edit_menu.addAction(self.menu_select_all)
-        self.edit_menu.addSeparator()
-        self.edit_menu.addAction(self.menu_options)
-        # Add to menubar
-        self.menubar.addAction(self.edit_menu.menuAction())
 
         # Commit Menu
         self.commit_menu = self.create_menu('Co&mmit', self.menubar)
@@ -323,27 +377,6 @@ class MainWindow(MainWindowBase):
         # Set main menu
         self.setMenuBar(self.menubar)
 
-        # Shortcuts
-        self.menu_show_diffstat.setShortcut(tr('Ctrl+D'))
-        self.menu_stage_modified.setShortcut(tr('Alt+A'))
-        self.menu_stage_untracked.setShortcut(tr('Alt+U'))
-        self.menu_export_patches.setShortcut(tr('Ctrl+E'))
-        self.menu_cut.setShortcut(QtGui.QKeySequence.Cut)
-        self.menu_copy.setShortcut(QtGui.QKeySequence.Copy)
-        self.menu_paste.setShortcut(QtGui.QKeySequence.Paste)
-        self.menu_select_all.setShortcut(QtGui.QKeySequence.SelectAll)
-        self.menu_options.setShortcut(tr('Ctrl+O'))
-        self.menu_delete.setShortcut(tr('Del'))
-        self.menu_undo.setShortcut(tr('Ctrl+Z'))
-        self.menu_redo.setShortcut(tr('Ctrl+Shift+Z'))
-        self.menu_rescan.setShortcut(tr('Ctrl+R'))
-        self.menu_cherry_pick.setShortcut(tr('Ctrl+P'))
-        self.menu_quit.setShortcut(tr('Ctrl+Q'))
-        self.menu_create_branch.setShortcut(tr('Ctrl+B'))
-        self.menu_checkout_branch.setShortcut(tr('Alt+B'))
-        self.menu_stash.setShortcut(tr('Alt+Shift+S'))
-        self.menu_help_docs.setShortcut(tr('F1'))
-
         # Arrange dock widgets
         top = Qt.TopDockWidgetArea
         bottom = Qt.BottomDockWidgetArea
@@ -371,16 +404,34 @@ class MainWindow(MainWindowBase):
         qmenu.setTitle(tr(title))
         return qmenu
 
-    def create_action(self, title, local=False):
-        """Create an action and set its title."""
-        action = QtGui.QAction(self)
-        action.setText(tr(title))
-        if local and hasattr(Qt, 'WidgetWithChildrenShortcut'):
-            action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
-        return action
-
     def closeEvent(self, event):
         """Save state in the settings manager."""
         if cola.model().remember_gui_settings():
             settings.SettingsManager.save_gui_state(self)
         self.close()
+
+    def _relay_button(self, button, signal):
+        callback = SLOT(signal)
+        self._connect_button(button, callback)
+
+    def _connect_button(self, button, callback):
+        self.connect(button, SIGNAL('clicked()'), callback)
+
+    def _mode_changed(self, mode):
+        """React to mode changes; hide/show the "Exit Diff Mode" button."""
+        if mode in (self.model.mode_review,
+                    self.model.mode_diff,
+                    self.model.mode_diff_expr):
+            self.alt_button.setMinimumHeight(40)
+            self.alt_button.show()
+        else:
+            self.alt_button.setMinimumHeight(1)
+            self.alt_button.hide()
+
+    def set_display(self, text):
+        """Set the diff text display."""
+        scrollbar = self.display_text.verticalScrollBar()
+        scrollvalue = scrollbar.value()
+        if text is not None:
+            self.display_text.setPlainText(text)
+            scrollbar.setValue(scrollvalue)

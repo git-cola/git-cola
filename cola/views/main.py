@@ -4,7 +4,6 @@ import os
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
@@ -15,24 +14,11 @@ from cola import utils
 from cola import qtutils
 from cola import settings
 from cola import signals
-from cola import resources
 from cola.compat import set
 from cola.qtutils import SLOT
-from cola.views import dag
-from cola.views import about
 from cola.views import actions as actionsmod
 from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.mainwindow import MainWindow
-from cola.controllers import classic
-from cola.controllers import compare
-from cola.controllers import createtag
-from cola.controllers import merge
-from cola.controllers import search as smod
-from cola.controllers import stash
-from cola.controllers.bookmark import manage_bookmarks
-from cola.controllers.bookmark import save_bookmark
-from cola.controllers.createbranch import create_new_branch
-from cola.controllers.options import update_options
 
 
 class MainView(MainWindow):
@@ -72,104 +58,8 @@ class MainView(MainWindow):
         # Change this whenever dockwidgets are removed.
         self._widget_version = 1
 
-        self.model = cola.model()
         self.model.add_message_observer(self.model.message_updated,
                                         self._update_view)
-
-        # Listen for text and amend messages
-        cola.notifier().connect(signals.diff_text, self.set_display)
-        cola.notifier().connect(signals.mode, self._mode_changed)
-        cola.notifier().connect(signals.amend, self.amend_checkbox.setChecked)
-
-        # Broadcast the amend mode
-        self.connect(self.amend_checkbox, SIGNAL('toggled(bool)'),
-                     SLOT(signals.amend_mode))
-
-        # Add button callbacks
-        self._relay_button(self.alt_button, signals.reset_mode)
-        self._relay_button(self.rescan_button, signals.rescan)
-
-        self._connect_button(self.signoff_button, self.signoff)
-        self._connect_button(self.stage_button, self.stage)
-        self._connect_button(self.unstage_button, self.unstage)
-        self._connect_button(self.commit_button, self.commit)
-        self._connect_button(self.fetch_button, guicmds.fetch_slot(self))
-        self._connect_button(self.push_button, guicmds.push_slot(self))
-        self._connect_button(self.pull_button, guicmds.pull_slot(self))
-        self._connect_button(self.stash_button, lambda: stash.stash(parent=self))
-
-        # Menu actions
-        actions = [
-            (self.menu_quit, self.close),
-            (self.menu_branch_compare, compare.branch_compare),
-            (self.menu_branch_diff, guicmds.branch_diff),
-            (self.menu_branch_review, guicmds.review_branch),
-            (self.menu_browse_branch, guicmds.browse_current),
-            (self.menu_browse_other_branch, guicmds.browse_other),
-            (self.menu_browse_commits, guicmds.browse_commits),
-            (self.menu_create_tag, createtag.create_tag),
-            (self.menu_create_branch, create_new_branch),
-            (self.menu_checkout_branch, guicmds.checkout_branch),
-            (self.menu_delete_branch, guicmds.branch_delete),
-            (self.menu_rebase_branch, guicmds.rebase),
-            (self.menu_clone_repo, guicmds.clone_repo),
-            (self.menu_commit_compare, compare.compare),
-            (self.menu_commit_compare_file, compare.compare_file),
-            (self.menu_cherry_pick, guicmds.cherry_pick),
-            (self.menu_diff_expression, guicmds.diff_expression),
-            (self.menu_diff_branch, guicmds.diff_branch),
-            (self.menu_export_patches, guicmds.export_patches),
-            (self.menu_help_about, about.launch_about_dialog),
-            (self.menu_help_docs,
-                lambda: self.model.git.web__browse(resources.html_docs())),
-            (self.menu_load_commitmsg, guicmds.load_commitmsg_slot(self)),
-            (self.menu_load_commitmsg_template,
-                SLOT(signals.load_commit_template)),
-            (self.menu_manage_bookmarks, manage_bookmarks),
-            (self.menu_save_bookmark, save_bookmark),
-            (self.menu_merge_local, merge.local_merge),
-            (self.menu_merge_abort, merge.abort_merge),
-            (self.menu_fetch, guicmds.fetch_slot(self)),
-            (self.menu_push, guicmds.push_slot(self)),
-            (self.menu_pull, guicmds.pull_slot(self)),
-            (self.menu_open_repo, guicmds.open_repo_slot(self)),
-            (self.menu_options, update_options),
-            (self.menu_rescan, SLOT(signals.rescan)),
-            (self.menu_grep, guicmds.grep),
-            (self.menu_search_commits, smod.search),
-            (self.menu_show_diffstat, SLOT(signals.diffstat)),
-            (self.menu_stash, lambda: stash.stash(parent=self)),
-            (self.menu_stage_modified, SLOT(signals.stage_modified)),
-            (self.menu_stage_untracked, SLOT(signals.stage_untracked)),
-            (self.menu_unstage_selected, SLOT(signals.unstage_selected)),
-            (self.menu_unstage_all, SLOT(signals.unstage_all)),
-            (self.menu_visualize_all, SLOT(signals.visualize_all)),
-            (self.menu_visualize_current, SLOT(signals.visualize_current)),
-            # TODO This edit menu stuff should/could be command objects
-            (self.menu_cut, self.action_cut),
-            (self.menu_copy, self.action_copy),
-            (self.menu_paste, self.commitmsg.paste),
-            (self.menu_delete, self.action_delete),
-            (self.menu_select_all, self.commitmsg.selectAll),
-            (self.menu_undo, self.commitmsg.undo),
-            (self.menu_redo, self.commitmsg.redo),
-            (self.menu_classic, classic.cola_classic),
-            (self.menu_dag, lambda: dag.git_dag(self.model, self)),
-        ]
-
-        # Diff Actions
-        if hasattr(Qt, 'WidgetWithChildrenShortcut'):
-            # We can only enable this shortcut on newer versions of Qt
-            # that support WidgetWithChildrenShortcut otherwise we get
-            # an ambiguous shortcut error.
-            self.diff_copy = QtGui.QAction(self.display_text)
-            self.diff_copy.setShortcut(QtGui.QKeySequence.Copy)
-            self.diff_copy.setShortcutContext(Qt.WidgetWithChildrenShortcut)
-            self.display_text.addAction(self.diff_copy)
-            actions.append((self.diff_copy, self.copy_display,))
-
-        for menu, callback in actions:
-            self.connect(menu, SIGNAL('triggered()'), callback)
 
         # Install UI wrappers for command objects
         actionsmod.install_command_wrapper(self)
@@ -223,13 +113,6 @@ class MainView(MainWindow):
         for name in names:
             menu.addAction(name, SLOT(signals.run_config_action, name))
 
-    def _relay_button(self, button, signal):
-        callback = SLOT(signal)
-        self._connect_button(button, callback)
-
-    def _connect_button(self, button, callback):
-        self.connect(button, SIGNAL('clicked()'), callback)
-
     def _update_view(self):
         self.emit(SIGNAL('update'))
 
@@ -265,42 +148,6 @@ class MainView(MainWindow):
             self.merge_message_hash = merge_msg_hash
             cola.notifier().broadcast(signals.load_commit_message,
                                       core.decode(merge_msg_path))
-
-    def _mode_changed(self, mode):
-        """React to mode changes; hide/show the "Exit Diff Mode" button."""
-        if mode in (self.model.mode_review,
-                    self.model.mode_diff,
-                    self.model.mode_diff_expr):
-            self.alt_button.setMinimumHeight(40)
-            self.alt_button.show()
-        else:
-            self.alt_button.setMinimumHeight(1)
-            self.alt_button.hide()
-
-    def set_display(self, text):
-        """Set the diff text display."""
-        scrollbar = self.display_text.verticalScrollBar()
-        scrollvalue = scrollbar.value()
-        if text is not None:
-            self.display_text.setPlainText(text)
-            scrollbar.setValue(scrollvalue)
-
-    def action_cut(self):
-        self.action_copy()
-        self.action_delete()
-
-    def action_copy(self):
-        cursor = self.commitmsg.textCursor()
-        selection = cursor.selection().toPlainText()
-        qtutils.set_clipboard(selection)
-
-    def action_delete(self):
-        self.commitmsg.textCursor().removeSelectedText()
-
-    def copy_display(self):
-        cursor = self.display_text.textCursor()
-        selection = cursor.selection().toPlainText()
-        qtutils.set_clipboard(selection)
 
     def diff_selection(self):
         cursor = self.display_text.textCursor()
@@ -525,7 +372,9 @@ class MainView(MainWindow):
                            lambda: guicmds.goto_grep(self.selected_line()))
 
         menu.addSeparator()
-        menu.addAction(self.tr('Copy'), self.copy_display)
+        menu.addAction('Copy', self.display_text.copy)
+        menu.addAction('Select All', self.display_text.selectAll)
+
         return menu
 
     def signoff(self):
