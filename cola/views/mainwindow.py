@@ -12,8 +12,7 @@ from cola import qtutils
 from cola import qtcompat
 from cola import qt
 from cola import resources
-from cola.qtutils import tr
-from cola.qtutils import SLOT
+from cola.qtutils import add_action, SLOT, tr
 from cola.controllers import classic
 from cola.controllers import compare
 from cola.controllers import createtag
@@ -27,23 +26,13 @@ from cola.controllers.options import update_options
 from cola.views import about
 from cola.views import dag
 from cola.views import status
+from cola.views.diff import DiffTextEdit
 from cola.views.standard import create_standard_widget
-
-
-class DiffTextEdit(QtGui.QTextEdit):
-    def __init__(self, parent):
-        QtGui.QTextEdit.__init__(self, parent)
-        self.setMinimumSize(QtCore.QSize(1, 1))
-        self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
-        self.setAcceptRichText(False)
-        self.setCursorWidth(2)
-        self.setTextInteractionFlags(Qt.TextSelectableByKeyboard |
-                                     Qt.TextSelectableByMouse)
 
 
 MainWindowBase = create_standard_widget(QtGui.QMainWindow)
 class MainWindow(MainWindowBase):
-    def __init__(self, model, parent=None, add_action=qtutils.add_action, SLOT=SLOT):
+    def __init__(self, model, parent=None, add_action=add_action, SLOT=SLOT):
         MainWindowBase.__init__(self, parent)
         # Default size; this is thrown out when save/restore is used
         self.resize(987, 610)
@@ -263,7 +252,6 @@ class MainWindow(MainWindowBase):
         self._connect_button(self.stash_button, lambda: stash.stash(parent=self))
 
         # Listen for text and amend messages
-        cola.notifier().connect(signals.diff_text, self.set_display)
         cola.notifier().connect(signals.mode, self._mode_changed)
         cola.notifier().connect(signals.amend, self.amend_checkbox.setChecked)
 
@@ -408,7 +396,7 @@ class MainWindow(MainWindowBase):
         """Save state in the settings manager."""
         if cola.model().remember_gui_settings():
             settings.SettingsManager.save_gui_state(self)
-        self.close()
+        MainWindowBase.closeEvent(self, event)
 
     def _relay_button(self, button, signal):
         callback = SLOT(signal)
@@ -427,11 +415,3 @@ class MainWindow(MainWindowBase):
         else:
             self.alt_button.setMinimumHeight(1)
             self.alt_button.hide()
-
-    def set_display(self, text):
-        """Set the diff text display."""
-        scrollbar = self.display_text.verticalScrollBar()
-        scrollvalue = scrollbar.value()
-        if text is not None:
-            self.display_text.setPlainText(text)
-            scrollbar.setValue(scrollvalue)

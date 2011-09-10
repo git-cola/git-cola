@@ -2,7 +2,6 @@
 """
 import os
 
-from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
@@ -11,13 +10,11 @@ from cola import core
 from cola import gitcmds
 from cola import guicmds
 from cola import utils
-from cola import qtutils
 from cola import settings
 from cola import signals
 from cola.compat import set
-from cola.qtutils import SLOT
+from cola.qtutils import confirm, log, question, SLOT, tr
 from cola.views import actions as actionsmod
-from cola.views.syntax import DiffSyntaxHighlighter
 from cola.views.mainwindow import MainWindow
 
 
@@ -32,17 +29,13 @@ class MainView(MainWindow):
         self.setAcceptDrops(True)
 
         # Qt does not support noun/verbs
-        self.commit_button.setText(qtutils.tr('Commit@@verb'))
-        self.commit_menu.setTitle(qtutils.tr('Commit@@verb'))
+        self.commit_button.setText(tr('Commit@@verb'))
+        self.commit_menu.setTitle(tr('Commit@@verb'))
 
         self._has_threadpool = hasattr(QtCore, 'QThreadPool')
 
-        # Diff/patch syntax highlighter
-        self.syntax = DiffSyntaxHighlighter(self.display_text.document())
-
         # Display the current column
-        self.connect(self.commitmsg,
-                     SIGNAL('cursorPositionChanged()'),
+        self.connect(self.commitmsg, SIGNAL('cursorPositionChanged()'),
                      self.show_cursor_position)
 
         # Keeps track of merge messages we've seen
@@ -64,10 +57,6 @@ class MainView(MainWindow):
         # Install UI wrappers for command objects
         actionsmod.install_command_wrapper(self)
         guicmds.install_command_wrapper(self)
-
-        # Install diff shortcut keys for stage/unstage
-        self.display_text.keyPressEvent = self.diff_key_press_event
-        self.display_text.contextMenuEvent = self.diff_context_menu_event
 
         self.connect(self, SIGNAL('update'), self._update_callback)
         self.connect(self, SIGNAL('import_state'), self.import_state)
@@ -149,27 +138,6 @@ class MainView(MainWindow):
             cola.notifier().broadcast(signals.load_commit_message,
                                       core.decode(merge_msg_path))
 
-    def diff_selection(self):
-        cursor = self.display_text.textCursor()
-        offset = cursor.position()
-        selection = unicode(cursor.selection().toPlainText())
-        return offset, selection
-
-    def selected_line(self):
-        cursor = self.display_text.textCursor()
-        offset = cursor.position()
-        contents = unicode(self.display_text.toPlainText())
-        while (offset >= 1
-                and contents[offset-1]
-                and contents[offset-1] != '\n'):
-            offset -= 1
-        data = contents[offset:]
-        if '\n' in data:
-            line, rest = data.split('\n', 1)
-        else:
-            line = data
-        return line
-
     def show_cursor_position(self):
         """Update the UI with the current row and column."""
         cursor = self.commitmsg.textCursor()
@@ -229,63 +197,7 @@ class MainView(MainWindow):
 
         task = LoadGUIStateTask(self)
         QtCore.QThreadPool.globalInstance().start(task)
-
         return task
-
-    def diff_key_press_event(self, event):
-        """Handle shortcut keys in the diff view."""
-        result = QtGui.QTextEdit.keyPressEvent(self.display_text, event)
-        if event.key() != QtCore.Qt.Key_H and event.key() != QtCore.Qt.Key_S:
-            return result
-
-        staged, modified, unmerged, untracked = cola.single_selection()
-        if event.key() == QtCore.Qt.Key_H:
-            if self.mode == self.model.mode_worktree and modified:
-                self.stage_hunk()
-            elif self.mode == self.model.mode_index:
-                self.unstage_hunk()
-        elif event.key() == QtCore.Qt.Key_S:
-            if self.mode == self.model.mode_worktree and modified:
-                self.stage_hunk_selection()
-            elif self.mode == self.model.mode_index:
-                self.unstage_hunk_selection()
-        return result
-
-    def process_diff_selection(self, selected=False,
-                               staged=True, apply_to_worktree=False,
-                               reverse=False):
-        """Implement un/staging of selected lines or hunks."""
-        offset, selection = self.diff_selection()
-        cola.notifier().broadcast(signals.apply_diff_selection,
-                                  staged,
-                                  selected,
-                                  offset,
-                                  selection,
-                                  apply_to_worktree)
-
-    def undo_hunk(self):
-        """Destructively remove a hunk from a worktree file."""
-        if not qtutils.question(self,
-                                'Destroy Local Changes?',
-                                'This operation will drop '
-                                'uncommitted changes.\n'
-                                'Continue?',
-                                default=False):
-            return
-        self.process_diff_selection(staged=False, apply_to_worktree=True,
-                                    reverse=True)
-
-    def undo_selection(self):
-        """Destructively check out content for the selected file from $head."""
-        if not qtutils.question(self,
-                                'Destroy Local Changes?',
-                                'This operation will drop '
-                                'uncommitted changes.\n'
-                                'Continue?',
-                                default=False):
-            return
-        self.process_diff_selection(staged=False, apply_to_worktree=True,
-                                    reverse=True, selected=True)
 
     def stage(self):
         """Stage selected files, or all files if no selection exists."""
@@ -303,80 +215,6 @@ class MainView(MainWindow):
         else:
             cola.notifier().broadcast(signals.unstage, paths)
 
-    def stage_hunk(self):
-        """Stage a specific hunk."""
-        self.process_diff_selection(staged=False)
-
-    def stage_hunk_selection(self):
-        """Stage selected lines."""
-        self.process_diff_selection(staged=False, selected=True)
-
-    def unstage_hunk(self, cached=True):
-        """Unstage a hunk."""
-        self.process_diff_selection(staged=True)
-
-    def unstage_hunk_selection(self):
-        """Unstage selected lines."""
-        self.process_diff_selection(staged=True, selected=True)
-
-    def diff_context_menu_event(self, event):
-        """Create the context menu for the diff display."""
-        menu = self.diff_context_menu_setup()
-        textedit = self.display_text
-        menu.exec_(textedit.mapToGlobal(event.pos()))
-
-    def diff_context_menu_setup(self):
-        """Set up the context menu for the diff display."""
-        menu = QtGui.QMenu(self)
-        staged, modified, unmerged, untracked = cola.selection()
-
-        if self.mode == self.model.mode_worktree:
-            if modified and modified[0] in cola.model().submodules:
-                menu.addAction(self.tr('Stage'),
-                               SLOT(signals.stage, modified))
-                menu.addAction(self.tr('Launch git-cola'),
-                               SLOT(signals.open_repo,
-                                    os.path.abspath(modified[0])))
-            elif modified:
-                menu.addAction(self.tr('Stage &Hunk For Commit'),
-                               self.stage_hunk)
-                menu.addAction(self.tr('Stage &Selected Lines'),
-                               self.stage_hunk_selection)
-                menu.addSeparator()
-                menu.addAction(self.tr('Undo Hunk'),
-                               self.undo_hunk)
-                menu.addAction(self.tr('Undo Selected Lines'),
-                               self.undo_selection)
-
-        elif self.mode == self.model.mode_index:
-            if staged and staged[0] in cola.model().submodules:
-                menu.addAction(self.tr('Unstage'),
-                               SLOT(signals.unstage, staged))
-                menu.addAction(self.tr('Launch git-cola'),
-                               SLOT(signals.open_repo,
-                                    os.path.abspath(staged[0])))
-            else:
-                menu.addAction(self.tr('Unstage &Hunk From Commit'),
-                               self.unstage_hunk)
-                menu.addAction(self.tr('Unstage &Selected Lines'),
-                               self.unstage_hunk_selection)
-
-        elif self.mode == self.model.mode_branch:
-            menu.addAction(self.tr('Apply Diff to Work Tree'),
-                           self.stage_hunk)
-            menu.addAction(self.tr('Apply Diff Selection to Work Tree'),
-                           self.stage_hunk_selection)
-
-        elif self.mode == self.model.mode_grep:
-            menu.addAction(self.tr('Go Here'),
-                           lambda: guicmds.goto_grep(self.selected_line()))
-
-        menu.addSeparator()
-        menu.addAction('Copy', self.display_text.copy)
-        menu.addAction('Select All', self.display_text.selectAll)
-
-        return menu
-
     def signoff(self):
         """Add standard 'Signed-off-by:' line to the commit message"""
         msg = unicode(self.commitmsg.toPlainText())
@@ -390,29 +228,29 @@ class MainView(MainWindow):
         msg = unicode(self.commitmsg.toPlainText())
         if not msg:
             # Describe a good commit message
-            error_msg = self.tr(''
+            error_msg = tr(''
                 'Please supply a commit message.\n\n'
                 'A good commit message has the following format:\n\n'
                 '- First line: Describe in one sentence what you did.\n'
                 '- Second line: Blank\n'
                 '- Remaining lines: Describe why this change is good.\n')
-            qtutils.log(1, error_msg)
+            log(1, error_msg)
             cola.notifier().broadcast(signals.information,
                                       'Missing Commit Message',
                                       error_msg)
             return
 
         if not self.model.staged:
-            error_msg = self.tr(''
+            error_msg = tr(''
                 'No changes to commit.\n\n'
                 'You must stage at least 1 file before you can commit.')
             if self.model.modified:
-                informative_text = self.tr('Would you like to stage '
-                                           'and commit all modified files?')
-                if not qtutils.confirm(self, 'Stage and commit?',
-                                       error_msg,
-                                       informative_text,
-                                       ok_text='Stage and Commit'):
+                informative_text = tr('Would you like to stage and '
+                                      'commit all modified files?')
+                if not confirm(self, 'Stage and commit?',
+                               error_msg,
+                               informative_text,
+                               ok_text='Stage and Commit'):
                     return
             else:
                 cola.notifier().broadcast(signals.information,
@@ -424,13 +262,13 @@ class MainView(MainWindow):
         # Warn that amending published commits is generally bad
         amend = self.amend_checkbox.isChecked()
         if (amend and self.model.is_commit_published() and
-            not qtutils.question(self,
-                                 'Rewrite Published Commit?',
-                                 'This commit has already been published.\n'
-                                 'You are rewriting published history.\n'
-                                 'You probably don\'t want to do this.\n\n'
-                                 'Continue?',
-                                 default=False)):
+            not question(self,
+                         'Rewrite Published Commit?',
+                         'This commit has already been published.\n'
+                         'You are rewriting published history.\n'
+                         'You probably don\'t want to do this.\n\n'
+                         'Continue?',
+                         default=False)):
             return
         # Perform the commit
         cola.notifier().broadcast(signals.commit, amend, msg)
