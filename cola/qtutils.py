@@ -414,11 +414,9 @@ def set_diff_font(widget):
 
 
 def add_close_action(widget):
-    """Adds a Ctrl+w close action to a widget."""
-    action = QtGui.QAction(widget.tr('Close...'), widget)
-    action.setShortcut('Ctrl+w')
-    widget.addAction(action)
-    widget.connect(action, SIGNAL('triggered()'), widget.close)
+    """Adds close action and shortcuts to a widget."""
+    return add_action(widget, 'Close...',
+                      widget.close, QtGui.QKeySequence.Close, 'Ctrl+Q')
 
 
 def center_on_screen(widget):
