@@ -1,5 +1,6 @@
 import os
 import sys
+import platform
 
 from cStringIO import StringIO
 import commands
@@ -195,13 +196,13 @@ class ApplyPatches(Command):
         # Display a diffstat
         self.model.set_diff_text(diff_text)
 
+        self.model.update_file_status()
+
         _factory.prompt_user(signals.information,
                             'Patch(es) Applied',
                             '%d patch(es) applied:\n\n%s' %
                             (len(self.patches),
                              '\n'.join(map(os.path.basename, self.patches))))
-
-        self.model.update_file_status()
 
 
 class HeadChangeCommand(Command):
@@ -238,12 +239,12 @@ class Checkout(Command):
         Command.__init__(self)
         self.argv = argv
         self.checkout_branch = checkout_branch
+        self.new_diff_text = ''
 
     def do(self):
         status, output = self.model.git.checkout(with_stderr=True,
                                                  with_status=True, *self.argv)
         _notifier.broadcast(signals.log_cmd, status, output)
-        self.model.set_diff_text('')
         if self.checkout_branch:
             self.model.update_status()
         else:
@@ -486,7 +487,7 @@ class GrepMode(Command):
         """Perform a git-grep."""
         Command.__init__(self)
         self.new_mode = self.model.mode_grep
-        self.new_diff_text = self.model.git.grep(txt, n=True)
+        self.new_diff_text = core.decode(self.model.git.grep(txt, n=True))
 
 
 class LoadCommitMessage(Command):
@@ -659,6 +660,12 @@ class RunConfigAction(Command):
         return status
 
 
+class SetDiffText(Command):
+    def __init__(self, text):
+        self.undoable = True
+        self.new_diff_text = text
+
+
 class ShowUntracked(Command):
     """Show an untracked file."""
     # We don't actually do anything other than set the mode right now.
@@ -668,6 +675,33 @@ class ShowUntracked(Command):
         Command.__init__(self)
         self.new_mode = self.model.mode_worktree
         # TODO new_diff_text = utils.file_preview(filenames[0])
+
+
+class SignOff(Command):
+    def __init__(self):
+        Command.__init__(self)
+        self.undoable = True
+        self.old_commitmsg = self.model.commitmsg
+
+    def do(self):
+        signoff = self.signoff()
+        if signoff in self.model.commitmsg:
+            return
+        self.model.set_commitmsg(self.model.commitmsg + '\n' + signoff)
+
+    def undo(self):
+        self.model.set_commitmsg(self.old_commitmsg)
+
+    def signoff(self):
+        try:
+            import pwd
+            user = pwd.getpwuid(os.getuid()).pw_name
+        except ImportError:
+            user = os.getenv('USER', 'unknown')
+
+        name = _config.get('user.name', user)
+        email = _config.get('user.email', '%s@%s' % (user, platform.node()))
+        return '\nSigned-off-by: %s <%s>' % (name, email)
 
 
 class Stage(Command):
@@ -694,6 +728,7 @@ class StageUntracked(Stage):
     def __init__(self):
         Stage.__init__(self, None)
         self.paths = self.model.untracked
+
 
 class Tag(Command):
     """Create a tag object."""
@@ -853,7 +888,9 @@ def register():
         signals.reset_mode: ResetMode,
         signals.review_branch_mode: ReviewBranchMode,
         signals.run_config_action: RunConfigAction,
+        signals.set_diff_text: SetDiffText,
         signals.show_untracked: ShowUntracked,
+        signals.signoff: SignOff,
         signals.stage: Stage,
         signals.stage_modified: StageModified,
         signals.stage_untracked: StageUntracked,
