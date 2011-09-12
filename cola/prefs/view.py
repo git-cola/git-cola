@@ -1,3 +1,5 @@
+import os
+
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
@@ -94,9 +96,7 @@ class RepoFormWidget(FormWidget):
         FormWidget.__init__(self, model, parent, source=source)
 
         self.name = QtGui.QLineEdit()
-
         self.email = QtGui.QLineEdit()
-
         self.merge_verbosity = QtGui.QSpinBox()
         self.merge_verbosity.setMinimum(0)
         self.merge_verbosity.setMaximum(5)
@@ -167,7 +167,7 @@ class SettingsFormWidget(FormWidget):
             'cola.savewindowsettings': (self.save_gui_settings, True),
             'cola.tabwidth': (self.tab_width, 8),
             'diff.tool': (self.difftool, 'xxdiff'),
-            'gui.editor': (self.editor, 'gvim'),
+            'gui.editor': (self.editor, os.getenv('VISUAL', 'gvim')),
             'gui.historybrowser': (self.historybrowser, 'gitk'),
             'merge.keepbackup': (self.keep_merge_backups, True),
             'merge.tool': (self.mergetool, 'xxdiff'),
@@ -179,42 +179,15 @@ class SettingsFormWidget(FormWidget):
         self.connect(self.font_size, SIGNAL('valueChanged(int)'),
                      self.font_size_changed)
 
-    def font_string(self):
-        font_str = self.model.get_config('user', 'cola.fontdiff')
-        if font_str is None:
-            font = QtGui.QFont()
-            family = 'Monospace'
-            if is_darwin():
-                family = 'Monaco'
-            font.setFamily(family)
-            font_str = unicode(font.toString())
-        return font_str
-
-    def font_size_from_string(self, font_str):
-        """Parse the font size from the font string
-
-        e.g. "Droid Sans Mono,10,-1,5,50,0,0,0,0,0"
-
-        """
-        font_info = font_str.split(',')
-        if font_info and len(font_info) > 1:
-            try:
-                return int(font_info[1])
-            except ValueError:
-                pass
-        return 12
-
     def update_from_config(self):
         FormWidget.update_from_config(self)
         self.fixed_font.blockSignals(True)
         self.font_size.blockSignals(True)
 
-        font_str = self.font_string()
-        font = QtGui.QFont()
-        if font.fromString(font_str):
-            self.fixed_font.setCurrentFont(font)
+        font = diff_font()
+        font_size = font.pointSize()
 
-        font_size = self.font_size_from_string(font_str)
+        self.fixed_font.setCurrentFont(font)
         self.font_size.setValue(font_size)
 
         self.fixed_font.blockSignals(False)
@@ -289,13 +262,33 @@ class PreferencesView(standard.StandardDialog):
         widget.update_from_config()
 
 
+def tab_width():
+    return gitcfg.instance().get('cola.tabwidth', 8)
+
+
+def diff_font_str():
+    font_str = gitcfg.instance().get('cola.fontdiff')
+    if font_str is None:
+        font = QtGui.QFont()
+        family = 'Monospace'
+        if is_darwin():
+            family = 'Monaco'
+        font.setFamily(family)
+        font_str = unicode(font.toString())
+    return font_str
+
+
+def diff_font():
+    font_str = diff_font_str()
+    font = QtGui.QFont()
+    font.fromString(font_str)
+    return font
+
+
 if __name__ == "__main__":
     import sys
-    from cola.prefs.controller import PreferencesController
-    from cola.prefs.model import PreferencesModel
+    from cola.prefs import preferences
+
     app = QtGui.QApplication(sys.argv)
-    model = PreferencesModel()
-    prefs = PreferencesView(model)
-    ctl = PreferencesController(model, prefs)
-    prefs.show()
+    preferences()
     sys.exit(app.exec_())
