@@ -52,7 +52,7 @@ class FileDiffDialog(QtGui.QDialog):
         self._layt = QtGui.QVBoxLayout()
         self._layt.setMargin(4)
         self._layt.addWidget(self._tree)
-        self._layt.addItem(self._button_layt)
+        self._layt.addLayout(self._button_layt)
         self.setLayout(self._layt)
 
         qtutils.add_close_action(self)

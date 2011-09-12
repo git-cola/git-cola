@@ -280,7 +280,7 @@ class GitDAGWidget(standard.StandardDialog):
 
         self._layt = layt = QtGui.QVBoxLayout()
         layt.setMargin(0)
-        layt.addItem(self._buttons_layt)
+        layt.addLayout(self._buttons_layt)
         layt.addWidget(self._mainsplitter)
         self.setLayout(layt)
 

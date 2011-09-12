@@ -64,7 +64,7 @@ class StashView(standard.StandardDialog):
 
         self._main_layt.addWidget(self._label)
         self._main_layt.addWidget(self.stash_list)
-        self._main_layt.addItem(self._btn_layt)
+        self._main_layt.addLayout(self._btn_layt)
 
 
     def toolbutton(self, text, tooltip, icon):
