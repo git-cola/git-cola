@@ -4,6 +4,7 @@ import fnmatch
 
 from cola import core
 from cola import git
+from cola import observable
 from cola.decorators import memoize
 
 
@@ -43,10 +44,14 @@ def _cache_key():
     return mtimes
 
 
-class GitConfig(object):
+class GitConfig(observable.Observable):
     """Encapsulate access to git-config values."""
 
+    message_user_config_changed = 'user_config_changed'
+    message_repo_config_changed = 'repo_config_changed'
+
     def __init__(self):
+        observable.Observable.__init__(self)
         self.git = git.instance()
         self._system = {}
         self._user = {}
@@ -148,18 +153,48 @@ class GitConfig(object):
             elif v == 'no':
                 v = 'false'
             if v == 'true' or v == 'false':
-                v = bool(eval(v.title()))
+                v = (v == 'true')
             try:
                 v = int(eval(v))
             except:
                 pass
-            dest[k] = v
+            dest[k.lower()] = v
         return dest
 
-    def get(self, key, default=None):
+    def get(self, key, default=None, source=None):
         """Return the string value for a config key."""
         self.update()
         return self._all.get(key, default)
+
+    def get_user(self, key, default=None):
+        self.update()
+        return self._user.get(key, default)
+
+    def get_repo(self, key, default=None):
+        self.update()
+        return self._repo.get(key, default)
+
+    def python_to_git(self, value):
+        if type(value) is bool:
+            if value:
+                return 'true'
+            else:
+                return 'false'
+        if type(value) is int:
+            return unicode(value)
+        return value
+
+    def set_user(self, key, value):
+        msg = self.message_user_config_changed
+        self.git.config('--global', key, self.python_to_git(value))
+        self.update()
+        self.notify_message_observers(msg, key, value)
+
+    def set_repo(self, key, value):
+        msg = self.message_repo_config_changed
+        self.git.config(key, self.python_to_git(value))
+        self.update()
+        self.notify_message_observers(msg, key, value)
 
     def find(self, pat):
         result = {}
