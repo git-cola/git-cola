@@ -44,7 +44,6 @@ class MainModel(ObservableModel):
     message_filename_changed = 'filename_changed'
     message_head_changed = 'head_changed'
     message_mode_changed = 'mode_changed'
-    message_tab_width_changed = 'tab_width_changed'
     message_updated = 'updated'
 
     # States

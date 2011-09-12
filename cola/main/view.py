@@ -20,20 +20,6 @@ from cola import qt
 from cola import resources
 from cola import utils
 from cola import version
-from cola.prefs import diff_font
-from cola.prefs import PreferencesModel
-from cola.prefs import preferences
-from cola.prefs import tab_width
-from cola.qt import create_button
-from cola.qt import create_dock
-from cola.qt import create_menu
-from cola.qtutils import add_action
-from cola.qtutils import connect_button
-from cola.qtutils import emit
-from cola.qtutils import logger
-from cola.qtutils import relay_signal
-from cola.qtutils import SLOT
-from cola.qtutils import tr
 from cola.controllers import classic
 from cola.controllers import compare
 from cola.controllers import createtag
@@ -50,7 +36,21 @@ from cola.views import status
 from cola.views.commitmsg import CommitMessageEditor
 from cola.views.diff import DiffTextEdit
 from cola.views.standard import create_standard_widget
+from cola.prefs import diff_font
+from cola.prefs import PreferencesModel
+from cola.prefs import preferences
+from cola.prefs import tab_width
+from cola.qt import create_button
+from cola.qt import create_dock
+from cola.qt import create_menu
+from cola.qtutils import add_action
+from cola.qtutils import connect_button
+from cola.qtutils import emit
 from cola.qtutils import log
+from cola.qtutils import logger
+from cola.qtutils import relay_signal
+from cola.qtutils import SLOT
+from cola.qtutils import tr
 
 
 MainWindow = create_standard_widget(QtGui.QMainWindow)
