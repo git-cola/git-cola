@@ -3,6 +3,7 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
 from cola import qtutils
+from cola.prefs import diff_font
 from cola.views import standard
 
 
@@ -51,6 +52,7 @@ class CreateTag(standard.StandardDialog):
         self.tag_msg = QtGui.QTextEdit(self)
         self.tag_msg.setAcceptRichText(False)
         self.tag_msg.setToolTip(self.tr('Specifies the tag message'))
+        self.tag_msg.setFont(diff_font())
         self._input_form_layt.setWidget(2, QtGui.QFormLayout.FieldRole,
                                         self.tag_msg)
         # Revision
@@ -82,5 +84,3 @@ class CreateTag(standard.StandardDialog):
         self._button_hbox_layt.addWidget(self.close_button)
 
         self.connect(self.close_button, SIGNAL('clicked()'), self.accept)
-
-        qtutils.set_diff_font(self.tag_msg)

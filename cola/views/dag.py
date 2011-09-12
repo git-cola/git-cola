@@ -17,11 +17,12 @@ from cola import qtutils
 from cola import signals
 from cola import gitcmds
 from cola import difftool
-from cola.models import commit
-from cola.views import standard
-from cola.views import syntax
 from cola.controllers import createbranch
 from cola.controllers import createtag
+from cola.models import commit
+from cola.prefs import diff_font
+from cola.views import standard
+from cola.views import syntax
 
 
 def git_dag(model, parent):
@@ -42,8 +43,8 @@ class DiffWidget(QtGui.QWidget):
         self.diff = QtGui.QTextEdit()
         self.diff.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.diff.setReadOnly(True)
+        self.diff.setFont(diff_font())
         self.diff_syn = syntax.DiffSyntaxHighlighter(self.diff.document())
-        qtutils.set_diff_font(self.diff)
 
         self._layt = QtGui.QHBoxLayout()
         self._layt.addWidget(self.diff)

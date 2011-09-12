@@ -163,14 +163,6 @@ class SearchController(QObserver):
             radio_committer = self.search_callback,
             radio_daterange = self.search_callback,
             )
-        self.update_fonts()
-
-    def update_fonts(self):
-        font = self.model.cola_config('fontdiff')
-        if font:
-            qfont = QtGui.QFont()
-            qfont.fromString(font)
-            self.view.commit_text.setFont(qfont)
 
     def set_mode(self, mode):
         radio = getattr(self.view, mode)

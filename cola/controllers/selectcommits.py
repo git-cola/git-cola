@@ -8,6 +8,7 @@ import cola
 from cola import gitcmds
 from cola import qtutils
 from cola import serializer
+from cola.prefs import diff_font
 from cola.views.selectcommits import SelectCommitsView
 from cola.qobserver import QObserver
 from cola.controllers.createbranch import create_new_branch
@@ -36,17 +37,7 @@ class SelectCommitsController(QObserver):
                      SIGNAL('itemSelectionChanged()'),
                      self.commit_sha1_selected)
         view.commit_list.contextMenuEvent = self.context_menu_event
-        self.set_diff_font()
-
-    def set_diff_font(self):
-        if not self.model.has_param('global_cola_fontdiff'):
-            return
-        font = self.model.param('global_cola_fontdiff')
-        if not font:
-            return
-        qf = QtGui.QFont()
-        qf.fromString(font)
-        self.view.commit_text.setFont(qf)
+        self.view.commit_text.setFont(diff_font())
 
     def select_commits(self):
         summaries = self.model.summaries

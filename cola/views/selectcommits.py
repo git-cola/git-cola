@@ -2,7 +2,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
-from cola import qtutils
+from cola.prefs import diff_font
 from cola.views.syntax import DiffSyntaxHighlighter
 
 class SelectCommitsView(QtGui.QDialog):
@@ -80,4 +80,4 @@ class SelectCommitsView(QtGui.QDialog):
 
         # Set the console font
         if syntax:
-            qtutils.set_diff_font(self.commit_text)
+            self.commit_text.setFont(diff_font())
