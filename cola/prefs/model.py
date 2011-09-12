@@ -5,6 +5,7 @@ from cola.cmds import BaseCommand
 
 class PreferencesModel(observable.Observable):
     message_set_config = 'set_config'
+    message_config_updated = 'config_updated'
 
     def __init__(self):
         observable.Observable.__init__(self)
@@ -15,6 +16,8 @@ class PreferencesModel(observable.Observable):
             self.config.set_repo(config, value)
         else:
             self.config.set_user(config, value)
+        message = self.message_config_updated
+        self.notify_message_observers(message, source, config, value)
 
     def get_config(self, source, config):
         if source == 'repo':
