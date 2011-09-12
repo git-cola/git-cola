@@ -16,6 +16,21 @@ def create_button(text, layout=None, tooltip=None, icon=None):
     return button
 
 
+def create_dock(title, parent):
+    """Create a dock widget and set it up accordingly."""
+    dock = QtGui.QDockWidget(parent)
+    dock.setWindowTitle(tr(title))
+    dock.setObjectName(title)
+    return dock
+
+
+def create_menu(title, parent):
+    """Create a menu and set its title."""
+    qmenu = QtGui.QMenu(parent)
+    qmenu.setTitle(tr(title))
+    return qmenu
+
+
 def create_toolbutton(parent, text=None, layout=None, tooltip=None, icon=None):
     button = QtGui.QToolButton(parent)
     button.setAutoRaise(True)
