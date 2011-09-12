@@ -125,7 +125,7 @@ class CommandFactory(object):
             cmdobj = self.redostack.pop()
             ok, result = self._do(cmdobj)
             if ok and cmdobj.is_undoable():
-                self.undo.append(cmd)
+                self.undo.append(cmdobj)
             else:
                 self.redostack.push(cmdobj)
             return result
