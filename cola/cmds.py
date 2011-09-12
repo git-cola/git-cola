@@ -870,4 +870,4 @@ def register():
     }
 
     for signal, cmd in signal_to_command_map.iteritems():
-        _factory.add_command(signal, cmd)
+        _factory.add_global_command(signal, cmd)

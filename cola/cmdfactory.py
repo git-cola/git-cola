@@ -32,23 +32,30 @@ def SLOT(signal, *args, **opts):
 
 
 class CommandFactory(object):
-    def __init__(self):
+    def __init__(self, context=None):
         """Setup the undo/redo stacks and register for notifications."""
         self.undoable = True
         self.undostack = []
         self.redostack = []
         self.signal_to_command = {}
         self.callbacks = {}
+        self.context = context
 
         cola.notifier().connect(signals.undo, self.undo)
         cola.notifier().connect(signals.redo, self.redo)
 
         self.model = cola.model()
         self.model.add_observer(self)
+    def has_command(self, signal):
+        return signal in self.signal_to_command
 
     def add_command(self, signal, command):
         """Register a signal/command pair."""
         self.signal_to_command[signal] = command
+
+    def add_global_command(self, signal, command):
+        """Register a global signal/command pair."""
+        self.add_command(signal, command)
         cola.notifier().connect(signal, self.cmdrunner(signal))
 
     def add_command_wrapper(self, cmd_wrapper):
@@ -92,6 +99,7 @@ class CommandFactory(object):
         """Given a signal and arguments, run its corresponding command."""
         cmdclass = self.signal_to_command[signal]
         cmdobj = cmdclass(*args, **opts)
+        cmdobj.context = self.context
         # TODO we disable undo/redo for now; views just need to
         # inspect the stack and add menu entries when we enable it.
         ok, result = self._do(cmdobj)
