@@ -23,12 +23,32 @@ _factory = cmdfactory.factory()
 _config = gitcfg.instance()
 
 
-class Command(object):
-    """Base class for all commands; provides the command pattern."""
+class BaseCommand(object):
+    """Base class for all commands; provides the command pattern"""
+    def __init__(self):
+        self.undoable = False
+
+    def is_undoable(self):
+        """Can this be undone?"""
+        return self.undoable
+
+    def name(self):
+        """Return this command's name."""
+        return self.__class__.__name__
+
+    def do(self):
+        raise NotImplementedError('%s.do() is unimplemented' % self.name())
+
+    def undo(self):
+        raise NotImplementedError('%s.undo() is unimplemented' % self.name())
+
+
+class Command(BaseCommand):
+    """Base class for commands that modify the main model"""
     def __init__(self):
         """Initialize the command and stash away values for use in do()"""
         # These are commonly used so let's make it easier to write new commands.
-        self.undoable = False
+        BaseCommand.__init__(self)
         self.model = cola.model()
 
         self.old_diff_text = self.model.diff_text
@@ -48,20 +68,12 @@ class Command(object):
         self.model.set_head(self.new_head)
         self.model.set_mode(self.new_mode)
 
-    def is_undoable(self):
-        """Can this be undone?"""
-        return self.undoable
-
     def undo(self):
         """Undo the operation."""
         self.model.set_diff_text(self.old_diff_text)
         self.model.set_filename(self.old_filename)
         self.model.set_head(self.old_head)
         self.model.set_mode(self.old_mode)
-
-    def name(self):
-        """Return this command's name."""
-        return self.__class__.__name__
 
 
 class AmendMode(Command):
