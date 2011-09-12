@@ -40,7 +40,6 @@ class MainModel(ObservableModel):
     # Observable messages
     message_about_to_update = 'about_to_update'
     message_commit_message_changed = 'commit_message_changed'
-    message_diff_font_changed = 'diff_font_changed'
     message_diff_text_changed = 'diff_text_changed'
     message_filename_changed = 'filename_changed'
     message_head_changed = 'head_changed'
@@ -142,138 +141,19 @@ class MainModel(ObservableModel):
         self.git.load_worktree(worktree)
         is_valid = self.git.is_valid()
         if is_valid:
-            self._init_config_data()
             basename = os.path.basename(self.git.worktree())
             self.set_project(core.decode(basename))
         return is_valid
 
-    def _init_config_data(self):
-        """Reads git config --list and creates parameters
-        for each setting."""
-        # These parameters are saved in .gitconfig,
-        # so ideally these should be as short as possible.
-
-        # config items that are controllable globally
-        # and per-repository
-        self._local_and_global_defaults = {
-            'user_name': '',
-            'user_email': '',
-            'merge_summary': False,
-            'merge_diffstat': True,
-            'merge_verbosity': 2,
-            'gui_diffcontext': 3,
-            'gui_pruneduringfetch': False,
-        }
-        # config items that are purely git config --global settings
-        self._global_defaults = {
-            'cola_geometry': '',
-            'cola_fontdiff': '',
-            'cola_fontdiff_size': 12,
-            'cola_savewindowsettings': True,
-            'cola_showoutput': 'errors',
-            'cola_tabwidth': 8,
-            'merge_keepbackup': True,
-            'diff_tool': os.getenv('GIT_DIFF_TOOL', 'xxdiff'),
-            'merge_tool': os.getenv('GIT_MERGE_TOOL', 'xxdiff'),
-            'gui_editor': os.getenv('VISUAL', os.getenv('EDITOR', 'gvim')),
-            'gui_historybrowser': 'gitk',
-        }
-
-        def _underscore(dct):
-            underscore = {}
-            for k, v in dct.iteritems():
-                underscore[k.replace('.', '_')] = v
-            return underscore
-
-        _config.update()
-        local_dict = _underscore(_config.repo())
-        global_dict = _underscore(_config.user())
-
-        for k,v in local_dict.iteritems():
-            self.set_param('local_'+k, v)
-        for k,v in global_dict.iteritems():
-            self.set_param('global_'+k, v)
-            if k not in local_dict:
-                local_dict[k]=v
-                self.set_param('local_'+k, v)
-
-        # Bootstrap the internal font*size variables
-        param = 'global_cola_fontdiff'
-        font = getattr(self, param, None)
-        if font:
-            size = int(font.split(',')[1])
-            self.set_param(param+'_size', size)
-            param = param[len('global_'):]
-            global_dict[param] = font
-            global_dict[param+'_size'] = size
-
-        # Load defaults for all undefined items
-        local_and_global_defaults = self._local_and_global_defaults
-        for k,v in local_and_global_defaults.iteritems():
-            if k not in local_dict:
-                self.set_param('local_'+k, v)
-            if k not in global_dict:
-                self.set_param('global_'+k, v)
-
-        global_defaults = self._global_defaults
-        for k,v in global_defaults.iteritems():
-            if k not in global_dict:
-                self.set_param('global_'+k, v)
-
-        # Load the diff context
-        self.diff_context = _config.get('gui.diffcontext', 3)
-
-    def global_config(self, key, default=None):
-        return self.param('global_'+key.replace('.', '_'),
-                          default=default)
-
-    def local_config(self, key, default=None):
-        return self.param('local_'+key.replace('.', '_'),
-                          default=default)
-
-    def cola_config(self, key):
-        return getattr(self, 'global_cola_'+key)
-
-    def gui_config(self, key):
-        return getattr(self, 'global_gui_'+key)
-
-    def config_params(self):
-        params = []
-        params.extend(map(lambda x: 'local_' + x,
-                          self._local_and_global_defaults.keys()))
-        params.extend(map(lambda x: 'global_' + x,
-                          self._local_and_global_defaults.keys()))
-        params.extend(map(lambda x: 'global_' + x,
-                          self._global_defaults.keys()))
-        return [ p for p in params if not p.endswith('_size') ]
-
-    def save_config_param(self, param):
-        if param not in self.config_params():
-            return
-        value = getattr(self, param)
-        if param == 'local_gui_diffcontext':
-            self.diff_context = value
-        if param.startswith('local_'):
-            param = param[len('local_'):]
-            is_local = True
-        elif param.startswith('global_'):
-            param = param[len('global_'):]
-            is_local = False
-        else:
-            raise Exception("Invalid param '%s' passed to " % param
-                           +'save_config_param()')
-        param = param.replace('_', '.') # model -> git
-        return self.config_set(param, value, local=is_local)
-
     def editor(self):
-        app = self.gui_config('editor')
+        app = _config.get('gui.editor', 'gvim')
         return {'vim': 'gvim'}.get(app, app)
 
     def history_browser(self):
-        return self.gui_config('historybrowser')
+        return _config.get('gui.historybrowser', 'gitk')
 
     def remember_gui_settings(self):
-        return self.cola_config('savewindowsettings')
+        return _config.get('cola.savewindowsettings', True)
 
     def all_branches(self):
         return (self.local_branches + self.remote_branches)
@@ -344,8 +224,6 @@ class MainModel(ObservableModel):
         self.notify_observers('staged', 'unstaged')
         self.broadcast_updated()
 
-        self.read_font_sizes()
-
     def update_status_of_files(self, files):
         self.notify_message_observers(self.message_about_to_update)
         self.notification_enabled = False
@@ -408,22 +286,6 @@ class MainModel(ObservableModel):
         self.set_remote_branches(remote_branches)
         self.set_tags(tags)
 
-    def read_font_sizes(self):
-        """Read font sizes from the configuration."""
-        value = self.cola_config('fontdiff')
-        if not value:
-            return
-        items = value.split(',')
-        if len(items) < 2:
-            return
-        self.global_cola_fontdiff_size = int(float(items[1]))
-
-    def set_diff_font(self, fontstr):
-        """Set the diff font string."""
-        self.global_cola_fontdiff = fontstr
-        self.read_font_sizes()
-        self.notify_message_observers(self.message_diff_font_changed)
-
     def delete_branch(self, branch):
         return self.git.branch(branch,
                                D=True,
@@ -432,17 +294,6 @@ class MainModel(ObservableModel):
 
     def revision_sha1(self, idx):
         return self.revisions[idx]
-
-    def apply_diff_font_size(self, default):
-        old_font = self.cola_config('fontdiff')
-        if not old_font:
-            old_font = default
-        size = self.cola_config('fontdiff_size')
-        props = old_font.split(',')
-        props[1] = str(size)
-        new_font = ','.join(props)
-        self.global_cola_fontdiff = new_font
-        self.notify_observers('global_cola_fontdiff')
 
     def _sliced_op(self, input_items, map_fn, size=42):
         items = copy.copy(input_items)

@@ -411,34 +411,6 @@ def close_icon():
     return cached_icon(QtGui.QStyle.SP_DialogCloseButton)
 
 
-def diff_font():
-    """Return the diff font string."""
-    qfont = QtGui.QFont()
-    font = cola.model().cola_config('fontdiff')
-    if font and qfont.fromString(font):
-        return qfont
-    family = 'Monospace'
-    if cola.utils.is_darwin():
-        family = 'Monaco'
-    qfont.setFamily(family)
-    font = unicode(qfont.toString())
-    # TODO this might not be the best place for the default
-    cola.model().set_diff_font(font)
-    return qfont
-
-
-def set_diff_font(widget):
-    """Updates the diff font based on the configured value."""
-    qfont = diff_font()
-    block = widget.signalsBlocked()
-    widget.blockSignals(True)
-    if isinstance(widget, QtGui.QFontComboBox):
-        widget.setCurrentFont(qfont)
-    else:
-        widget.setFont(qfont)
-    widget.blockSignals(block)
-
-
 def add_close_action(widget):
     """Adds close action and shortcuts to a widget."""
     return add_action(widget, 'Close...',

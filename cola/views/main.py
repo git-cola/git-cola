@@ -3,7 +3,6 @@
 import os
 
 from PyQt4 import QtCore
-from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
 import cola
@@ -16,8 +15,6 @@ from cola import version
 from cola.qtutils import connect_button
 from cola.qtutils import emit
 from cola.qtutils import log
-from cola.qtutils import logger
-from cola.qtutils import set_diff_font
 from cola.views import actions as actions
 from cola.views.mainwindow import MainWindow
 
@@ -41,10 +38,6 @@ class MainView(MainWindow):
 
         model.add_message_observer(model.message_updated,
                                    self._update_view)
-        model.add_message_observer(model.message_diff_font_changed,
-                                   self._update_diff_font)
-        model.add_message_observer(model.message_tab_width_changed,
-                                   self._update_tab_width)
 
         connect_button(self.stage_button, self.stage)
         connect_button(self.unstage_button, self.unstage)
@@ -62,7 +55,6 @@ class MainView(MainWindow):
         self._gui_state_task = None
         self._load_gui_state()
 
-        self._update_diff_font()
         log(0, self.model.git_version + '\ncola version ' + version.version())
 
     def install_config_actions(self):
@@ -211,18 +203,3 @@ class MainView(MainWindow):
             for name in [f for f in files if f.endswith('.patch')]:
                 patches.append(os.path.join(root, name))
         return patches
-
-    def _update_diff_font(self):
-        """Updates the diff font based on the configured value."""
-        # TODO make each individual widget register for notification directly
-        # so that we don't have to manage them here
-        set_diff_font(logger())
-        set_diff_font(self.diff_viewer)
-        set_diff_font(self.commitmsgeditor.commitmsg)
-
-    def _update_tab_width(self):
-        """Implement the variable-tab-width setting."""
-        tab_width = self.model.cola_config('tabwidth')
-        display_font = self.diff_viewer.font()
-        space_width = QtGui.QFontMetrics(display_font).width(' ')
-        self.diff_viewer.setTabStopWidth(tab_width * space_width)

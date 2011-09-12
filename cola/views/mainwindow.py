@@ -11,12 +11,17 @@ from cola import qtutils
 from cola import qtcompat
 from cola import qt
 from cola import resources
+from cola.prefs import diff_font
+from cola.prefs import PreferencesModel
+from cola.prefs import preferences
+from cola.prefs import tab_width
 from cola.qt import create_button
 from cola.qt import create_dock
 from cola.qt import create_menu
 from cola.qtutils import add_action
 from cola.qtutils import connect_button
 from cola.qtutils import emit
+from cola.qtutils import logger
 from cola.qtutils import relay_signal
 from cola.qtutils import SLOT
 from cola.qtutils import tr
@@ -29,7 +34,6 @@ from cola.controllers import search
 from cola.controllers.bookmark import manage_bookmarks
 from cola.controllers.bookmark import save_bookmark
 from cola.controllers.createbranch import create_new_branch
-from cola.controllers.options import update_options
 from cola.views import about
 from cola.views import dag
 from cola.views import status
@@ -54,6 +58,7 @@ class MainWindow(MainWindowBase):
         # Default size; this is thrown out when save/restore is used
         self.resize(987, 610)
         self.model = model
+        self.prefs_model = prefs_model = PreferencesModel()
         self.setAcceptDrops(True)
 
         # Dockwidget options
@@ -116,7 +121,7 @@ class MainWindow(MainWindowBase):
         self.menu_export_patches = add_action(self,
                 'Export Patches...', guicmds.export_patches, 'Ctrl+E')
         self.menu_preferences = add_action(self,
-                'Preferences', update_options,
+                'Preferences', lambda: preferences(model=prefs_model),
                 QtGui.QKeySequence.Preferences, 'Ctrl+O')
         self.menu_rescan = add_action(self,
                 'Rescan', emit(self, signals.rescan),
@@ -340,7 +345,13 @@ class MainWindow(MainWindowBase):
         model.add_message_observer(model.message_mode_changed,
                                    self._mode_changed)
 
+        prefs_model.add_message_observer(prefs_model.message_config_updated,
+                                         self._config_updated)
 
+        self._set_diff_font(diff_font())
+        self._set_tab_width(tab_width())
+
+    # Qt overrides
     def closeEvent(self, event):
         """Save state in the settings manager."""
         if cola.model().remember_gui_settings():
@@ -357,3 +368,23 @@ class MainWindow(MainWindowBase):
         else:
             self.alt_button.setMinimumHeight(1)
             self.alt_button.hide()
+
+    def _config_updated(self, source, config, value):
+        if config == 'cola.fontdiff':
+            font = QtGui.QFont()
+            if not font.fromString(value):
+                return
+            self._set_diff_font(font)
+        elif config == 'cola.tabwidth':
+            # variable-tab-width setting
+            self._set_tab_width(value)
+
+    def _set_diff_font(self, font):
+        logger().setFont(font)
+        self.diff_viewer.setFont(font)
+        self.commitmsgeditor.commitmsg.setFont(font)
+
+    def _set_tab_width(self, tab_width):
+        display_font = self.diff_viewer.font()
+        space_width = QtGui.QFontMetrics(display_font).width(' ')
+        self.diff_viewer.setTabStopWidth(tab_width * space_width)
