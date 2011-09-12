@@ -173,7 +173,7 @@ def main():
     if opts.classic:
         view = cola_classic(update=False)
     else:
-        view = MainView()
+        view = MainView(model)
         ctl = MainController(model, view)
 
     # Show the view and start the main event loop

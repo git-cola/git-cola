@@ -3,18 +3,22 @@
 import os
 
 from PyQt4 import QtCore
+from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
 import cola
 from cola import core
 from cola import gitcmds
-from cola import guicmds
 from cola import utils
 from cola import settings
 from cola import signals
-from cola.compat import set
-from cola.qtutils import confirm, log, question, SLOT, tr
-from cola.views import actions as actionsmod
+from cola import version
+from cola.qtutils import connect_button
+from cola.qtutils import emit
+from cola.qtutils import log
+from cola.qtutils import logger
+from cola.qtutils import set_diff_font
+from cola.views import actions as actions
 from cola.views.mainwindow import MainWindow
 
 
@@ -24,39 +28,26 @@ class MainView(MainWindow):
     # Read-only mode property
     mode = property(lambda self: self.model.mode)
 
-    def __init__(self, parent=None):
-        MainWindow.__init__(self, parent)
-        self.setAcceptDrops(True)
-
-        # Qt does not support noun/verbs
-        self.commit_button.setText(tr('Commit@@verb'))
-        self.commit_menu.setTitle(tr('Commit@@verb'))
-
+    def __init__(self, model, parent=None):
+        MainWindow.__init__(self, model, parent)
         self._has_threadpool = hasattr(QtCore, 'QThreadPool')
-
-        # Display the current column
-        self.connect(self.commitmsg, SIGNAL('cursorPositionChanged()'),
-                     self.show_cursor_position)
 
         # Keeps track of merge messages we've seen
         self.merge_message_hash = ''
-
-        # Initialize the seen tree widget indexes
-        self._seen_indexes = set()
-
-        # Initialize the GUI to show 'Column: 00'
-        self.show_cursor_position()
 
         # Internal field used by import/export_state().
         # Change this whenever dockwidgets are removed.
         self._widget_version = 1
 
-        self.model.add_message_observer(self.model.message_updated,
-                                        self._update_view)
+        model.add_message_observer(model.message_updated,
+                                   self._update_view)
+        model.add_message_observer(model.message_diff_font_changed,
+                                   self._update_diff_font)
+        model.add_message_observer(model.message_tab_width_changed,
+                                   self._update_tab_width)
 
-        # Install UI wrappers for command objects
-        actionsmod.install_command_wrapper(self)
-        guicmds.install_command_wrapper(self)
+        connect_button(self.stage_button, self.stage)
+        connect_button(self.unstage_button, self.unstage)
 
         self.connect(self, SIGNAL('update'), self._update_callback)
         self.connect(self, SIGNAL('import_state'), self.import_state)
@@ -71,12 +62,15 @@ class MainView(MainWindow):
         self._gui_state_task = None
         self._load_gui_state()
 
+        self._update_diff_font()
+        log(0, self.model.git_version + '\ncola version ' + version.version())
+
     def install_config_actions(self):
         """Install .gitconfig-defined actions"""
         if self._has_threadpool:
             self._config_task = self._start_config_actions_task()
         else:
-            names = actionsmod.get_config_actions()
+            names = actions.get_config_actions()
             self._install_config_actions(names)
 
     def _start_config_actions_task(self):
@@ -86,7 +80,7 @@ class MainView(MainWindow):
                 QtCore.QRunnable.__init__(self)
                 self._sender = sender
             def run(self):
-                names = actionsmod.get_config_actions()
+                names = actions.get_config_actions()
                 self._sender.emit(SIGNAL('install_config_actions'), names)
 
         task = ConfigActionsTask(self)
@@ -100,7 +94,7 @@ class MainView(MainWindow):
         menu = self.actions_menu
         menu.addSeparator()
         for name in names:
-            menu.addAction(name, SLOT(signals.run_config_action, name))
+            menu.addAction(name, emit(self, signals.run_config_action, name))
 
     def _update_view(self):
         self.emit(SIGNAL('update'))
@@ -121,10 +115,7 @@ class MainView(MainWindow):
             title += ' *** amending ***'
         self.setWindowTitle(title)
 
-        if self.mode != self.model.mode_amend:
-            self.amend_checkbox.blockSignals(True)
-            self.amend_checkbox.setChecked(False)
-            self.amend_checkbox.blockSignals(False)
+        self.commitmsgeditor.set_mode(self.mode)
 
         if not self.model.read_only() and self.mode != self.model.mode_amend:
             # Check if there's a message file in .git/
@@ -137,28 +128,6 @@ class MainView(MainWindow):
             self.merge_message_hash = merge_msg_hash
             cola.notifier().broadcast(signals.load_commit_message,
                                       core.decode(merge_msg_path))
-
-    def show_cursor_position(self):
-        """Update the UI with the current row and column."""
-        cursor = self.commitmsg.textCursor()
-        position = cursor.position()
-        txt = unicode(self.commitmsg.toPlainText())
-        rows = txt[:position].count('\n') + 1
-        cols = cursor.columnNumber()
-        display = ' %d,%d ' % (rows, cols)
-        if cols > 78:
-            display = ('<span style="color: white; '
-                       '             background-color: red;"'
-                       '>%s</span>' % display.replace(' ', '&nbsp;'))
-        elif cols > 72:
-            display = ('<span style="color: black; '
-                       '             background-color: orange;"'
-                       '>%s</span>' % display.replace(' ', '&nbsp;'))
-        elif cols > 64:
-            display = ('<span style="color: black; '
-                       '             background-color: yellow;"'
-                       '>%s</span>' % display.replace(' ', '&nbsp;'))
-        self.position_label.setText(display)
 
     def import_state(self, state):
         """Imports data for save/restore"""
@@ -215,64 +184,6 @@ class MainView(MainWindow):
         else:
             cola.notifier().broadcast(signals.unstage, paths)
 
-    def signoff(self):
-        """Add standard 'Signed-off-by:' line to the commit message"""
-        msg = unicode(self.commitmsg.toPlainText())
-        signoff = ('\nSigned-off-by: %s <%s>' %
-                    (self.model.local_user_name, self.model.local_user_email))
-        if signoff not in msg:
-            self.commitmsg.append(signoff)
-
-    def commit(self):
-        """Attempt to create a commit from the index and commit message."""
-        msg = unicode(self.commitmsg.toPlainText())
-        if not msg:
-            # Describe a good commit message
-            error_msg = tr(''
-                'Please supply a commit message.\n\n'
-                'A good commit message has the following format:\n\n'
-                '- First line: Describe in one sentence what you did.\n'
-                '- Second line: Blank\n'
-                '- Remaining lines: Describe why this change is good.\n')
-            log(1, error_msg)
-            cola.notifier().broadcast(signals.information,
-                                      'Missing Commit Message',
-                                      error_msg)
-            return
-
-        if not self.model.staged:
-            error_msg = tr(''
-                'No changes to commit.\n\n'
-                'You must stage at least 1 file before you can commit.')
-            if self.model.modified:
-                informative_text = tr('Would you like to stage and '
-                                      'commit all modified files?')
-                if not confirm(self, 'Stage and commit?',
-                               error_msg,
-                               informative_text,
-                               ok_text='Stage and Commit'):
-                    return
-            else:
-                cola.notifier().broadcast(signals.information,
-                                          'Nothing to commit',
-                                          error_msg)
-                return
-            cola.notifier().broadcast(signals.stage_modified)
-
-        # Warn that amending published commits is generally bad
-        amend = self.amend_checkbox.isChecked()
-        if (amend and self.model.is_commit_published() and
-            not question(self,
-                         'Rewrite Published Commit?',
-                         'This commit has already been published.\n'
-                         'You are rewriting published history.\n'
-                         'You probably don\'t want to do this.\n\n'
-                         'Continue?',
-                         default=False)):
-            return
-        # Perform the commit
-        cola.notifier().broadcast(signals.commit, amend, msg)
-
     def dragEnterEvent(self, event):
         """Accepts drops"""
         MainWindow.dragEnterEvent(self, event)
@@ -300,3 +211,18 @@ class MainView(MainWindow):
             for name in [f for f in files if f.endswith('.patch')]:
                 patches.append(os.path.join(root, name))
         return patches
+
+    def _update_diff_font(self):
+        """Updates the diff font based on the configured value."""
+        # TODO make each individual widget register for notification directly
+        # so that we don't have to manage them here
+        set_diff_font(logger())
+        set_diff_font(self.diff_viewer)
+        set_diff_font(self.commitmsgeditor.commitmsg)
+
+    def _update_tab_width(self):
+        """Implement the variable-tab-width setting."""
+        tab_width = self.model.cola_config('tabwidth')
+        display_font = self.diff_viewer.font()
+        space_width = QtGui.QFontMetrics(display_font).width(' ')
+        self.diff_viewer.setTabStopWidth(tab_width * space_width)

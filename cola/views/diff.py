@@ -13,7 +13,7 @@ from cola.views.syntax import DiffSyntaxHighlighter
 class DiffTextEdit(QtGui.QTextEdit):
     def __init__(self, parent):
         QtGui.QTextEdit.__init__(self, parent)
-        self.model = cola.model()
+        self.model = model = cola.model()
         self.setMinimumSize(QtCore.QSize(1, 1))
         self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.setAcceptRichText(False)
@@ -43,7 +43,9 @@ class DiffTextEdit(QtGui.QTextEdit):
                 self.tr('Apply Diff Selection to Work Tree'),
                 self.stage_hunk_selection)
 
-        cola.notifier().connect(signals.diff_text, self.setPlainText)
+        model.add_message_observer(model.message_diff_text_changed,
+                                   self.setPlainText)
+
         self.connect(self, SIGNAL('copyAvailable(bool)'),
                      self.enable_selection_actions)
 

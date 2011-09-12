@@ -41,11 +41,6 @@ class CommandFactory(object):
         self.callbacks = {}
         self.context = context
 
-        cola.notifier().connect(signals.undo, self.undo)
-        cola.notifier().connect(signals.redo, self.redo)
-
-        self.model = cola.model()
-        self.model.add_observer(self)
     def has_command(self, signal):
         return signal in self.signal_to_command
 
@@ -66,23 +61,6 @@ class CommandFactory(object):
             return self.callbacks[name](*args, **opts)
         except KeyError:
             raise NotImplementedError('No callback for "%s' % name)
-
-    def notify(self, *params):
-        """
-        Observe model changes.
-
-        This captures model parameters and maps them to signals that
-        are observed by the UIs.
-
-        """
-        actions = {
-            'diff_text': SLOT(signals.diff_text, self.model.diff_text),
-            'commitmsg': SLOT(signals.editor_text, self.model.commitmsg),
-            'mode': SLOT(signals.mode, self.model.mode),
-        }
-        for param in params:
-            action = actions.get(param, lambda: None)
-            action()
 
     def clear(self):
         """Clear the undo and redo stacks."""

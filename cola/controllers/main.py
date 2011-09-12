@@ -1,45 +1,31 @@
 """Provides the main application controller."""
 
-from PyQt4 import QtGui
+from cola.ctrl import Controller
+from cola import guicmds
+from cola import signals
+from cola.views import actions
 
-from cola import qtutils
-from cola import version
-from cola.qobserver import QObserver
 
-
-class MainController(QObserver):
-    """Manage interactions between models and views."""
-
+class MainController(Controller):
     def __init__(self, model, view):
-        """Initializes the MainController's internal data."""
-        QObserver.__init__(self, model, view)
+        Controller.__init__(self, model, view)
 
-        # Binds model params to their equivalent view widget
-        self.add_observables('commitmsg')
+        # Install UI wrappers for command objects
+        actions.install_command_wrapper(self.view)
+        guicmds.install_command_wrapper(self.view)
 
-        # When a model attribute changes, this runs a specific action
-        self.add_actions(global_cola_fontdiff = self.update_diff_font)
-        self.add_actions(global_cola_tabwidth = self.update_tab_width)
-
-        # Route events here
-        self._init_log_window()
-        self.refresh_view('global_cola_fontdiff') # Update the diff font
-
-    def update_diff_font(self):
-        """Updates the diff font based on the configured value."""
-        qtutils.set_diff_font(qtutils.logger())
-        qtutils.set_diff_font(self.view.display_text)
-        qtutils.set_diff_font(self.view.commitmsg)
-
-    def update_tab_width(self):
-        """Implement the variable-tab-width setting."""
-        tab_width = self.model.cola_config('tabwidth')
-        display_font = self.view.display_text.font()
-        space_width = QtGui.QFontMetrics(display_font).width(' ')
-        self.view.display_text.setTabStopWidth(tab_width * space_width)
-
-    def _init_log_window(self):
-        """Initialize the logging subwindow."""
-        branch = self.model.currentbranch
-        qtutils.log(0, self.model.git_version +
-                    '\ncola version ' + version.version())
+        self.add_global_command(signals.amend_mode)
+        self.add_global_command(signals.diffstat)
+        self.add_global_command(signals.load_commit_message)
+        self.add_global_command(signals.load_commit_template)
+        self.add_global_command(signals.rescan)
+        self.add_global_command(signals.reset_mode)
+        self.add_global_command(signals.run_config_action)
+        self.add_global_command(signals.signoff)
+        self.add_global_command(signals.stage_untracked)
+        self.add_global_command(signals.stage_modified)
+        self.add_global_command(signals.stage_untracked)
+        self.add_global_command(signals.unstage_all)
+        self.add_global_command(signals.unstage_selected)
+        self.add_global_command(signals.visualize_all)
+        self.add_global_command(signals.visualize_current)

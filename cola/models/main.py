@@ -11,8 +11,8 @@ from cola import utils
 from cola import git
 from cola import gitcfg
 from cola import gitcmds
-from cola.compat import set
 from cola import serializer
+from cola.compat import set
 from cola.models.observable import ObservableModel, OMSerializer
 from cola.decorators import memoize
 
@@ -38,8 +38,15 @@ class MainModel(ObservableModel):
     """Provides a friendly wrapper for doing common git operations."""
 
     # Observable messages
-    message_updated = 'updated'
     message_about_to_update = 'about_to_update'
+    message_commit_message_changed = 'commit_message_changed'
+    message_diff_font_changed = 'diff_font_changed'
+    message_diff_text_changed = 'diff_text_changed'
+    message_filename_changed = 'filename_changed'
+    message_head_changed = 'head_changed'
+    message_mode_changed = 'mode_changed'
+    message_tab_width_changed = 'tab_width_changed'
+    message_updated = 'updated'
 
     # States
     mode_none = 'none' # Default: nothing's happened, do nothing
@@ -72,8 +79,8 @@ class MainModel(ObservableModel):
 
         #####################################################
         self.head = 'HEAD'
-        self.mode = self.mode_none
         self.diff_text = ''
+        self.mode = self.mode_none
         self.filename = None
         self.currentbranch = ''
         self.trackedbranch = ''
@@ -271,6 +278,26 @@ class MainModel(ObservableModel):
     def all_branches(self):
         return (self.local_branches + self.remote_branches)
 
+    def set_commitmsg(self, msg):
+        self.commitmsg = msg
+        self.notify_message_observers(self.message_commit_message_changed, msg)
+
+    def set_diff_text(self, txt):
+        self.diff_text = txt
+        self.notify_message_observers(self.message_diff_text_changed, txt)
+
+    def set_filename(self, filename):
+        self.filename = filename
+        self.notify_message_observers(self.message_filename_changed, filename)
+
+    def set_head(self, head):
+        self.head = head
+        self.notify_message_observers(self.message_head_changed, head)
+
+    def set_mode(self, mode):
+        self.mode = mode
+        self.notify_message_observers(self.message_mode_changed, mode)
+
     def set_remote(self, remote):
         if not remote:
             return
@@ -395,6 +422,7 @@ class MainModel(ObservableModel):
         """Set the diff font string."""
         self.global_cola_fontdiff = fontstr
         self.read_font_sizes()
+        self.notify_message_observers(self.message_diff_font_changed)
 
     def delete_branch(self, branch):
         return self.git.branch(branch,
