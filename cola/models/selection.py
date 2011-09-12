@@ -1,6 +1,6 @@
 """Provides a selection model to handle selection."""
 
-from cola.models.observable import ObservableModel
+from cola.obsmodel import ObservableModel
 from cola.decorators import memoize
 
 

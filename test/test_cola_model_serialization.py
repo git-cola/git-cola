@@ -1,28 +1,24 @@
 #!/usr/bin/env python
 """Tests model serialization methods"""
-import os
-import sys
 import unittest
-
-from PyQt4 import QtCore
 
 from cola import observer
 from cola import serializer
-from cola.models import observable
-from cola.models import base
+from cola.obsmodel import ObservableModel
+from cola.basemodel import BaseModel
 
 import helper
 
 
-class InnerModel(base.BaseModel):
+class InnerModel(BaseModel):
     def __init__(self):
-        base.BaseModel.__init__(self)
+        BaseModel.__init__(self)
         self.foo = 'bar'
 
 
-class NestedModel(observable.ObservableModel):
+class NestedModel(ObservableModel):
     def __init__(self):
-        observable.ObservableModel.__init__(self)
+        ObservableModel.__init__(self)
         self.inner = InnerModel()
         self.innerlist = []
         self.innerlist.append(InnerModel())

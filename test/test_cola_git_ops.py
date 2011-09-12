@@ -4,7 +4,7 @@ import os
 import unittest
 
 import helper
-from cola.models import main
+from cola.main.model import MainModel
 
 class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
 
@@ -19,7 +19,7 @@ class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
             git add A B
             """)
 
-        model = main.MainModel(cwd=os.getcwd())
+        model = MainModel(cwd=os.getcwd())
         model.git.commit(m='commit test')
         log = helper.pipe('git log --pretty=oneline | wc -l')
 
@@ -28,7 +28,7 @@ class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
     def test_git_config(self):
         """Test cola.git.config()"""
         self.shell('git config section.key value')
-        model = main.MainModel(cwd=os.getcwd())
+        model = MainModel(cwd=os.getcwd())
         value = model.git.config('section.key', get=True)
 
         self.assertEqual(value, 'value')

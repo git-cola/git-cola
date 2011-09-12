@@ -13,7 +13,7 @@ from cola import gitcfg
 from cola import gitcmds
 from cola import serializer
 from cola.compat import set
-from cola.models.observable import ObservableModel, OMSerializer
+from cola.obsmodel import ObservableModel, OMSerializer
 from cola.decorators import memoize
 
 

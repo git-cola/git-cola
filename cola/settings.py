@@ -6,13 +6,13 @@ import os
 
 from cola import core
 from cola import serializer
-from cola.models import observable
+from cola.obsmodel import ObservableModel
 
 
-class SettingsModel(observable.ObservableModel):
+class SettingsModel(ObservableModel):
     def __init__(self):
         """Load existing settings if they exist"""
-        observable.ObservableModel.__init__(self)
+        ObservableModel.__init__(self)
         self.bookmarks = []
         self.gui_state = {}
 

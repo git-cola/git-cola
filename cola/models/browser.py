@@ -2,12 +2,12 @@ import re
 
 import cola
 from cola import gitcmds
-from cola.models import observable
+from cola.obsmodel import ObservableModel
 
 
-class BrowserModel(observable.ObservableModel):
+class BrowserModel(ObservableModel):
     def __init__(self, branch=None):
-        observable.ObservableModel.__init__(self)
+        ObservableModel.__init__(self)
         self.copy_params(cola.model())
         if branch:
             self.currentbranch = branch

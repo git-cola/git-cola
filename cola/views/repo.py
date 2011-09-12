@@ -9,7 +9,6 @@ import cola
 import cola.utils
 import cola.qtutils
 from cola import signals
-from cola.models import main
 from cola.models import gitrepo
 from cola.views import standard
 
@@ -25,7 +24,7 @@ class RepoDialog(standard.StandardDialog):
         self.resize(720, 420)
 
         self.connect(self, SIGNAL('updated'), self._updated_callback)
-        self.model = main.model()
+        self.model = cola.model()
         self.model.add_message_observer(self.model.message_updated,
                                         self._model_updated)
         cola.qtutils.add_close_action(self)

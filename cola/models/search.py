@@ -1,8 +1,8 @@
-from cola.models import main
+from cola.main.model import MainModel
 
-class SearchModel(main.MainModel):
+class SearchModel(MainModel):
     def __init__(self, cwd=None):
-        main.MainModel.__init__(self, cwd=cwd)
+        MainModel.__init__(self, cwd=cwd)
         self.query = ''
         self.max_results = 500
         self.start_date = ''

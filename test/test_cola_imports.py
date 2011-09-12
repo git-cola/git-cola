@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 """Tests the import-safety of leaf cola modules"""
-import os
-import imp
 import unittest
 
 
@@ -18,26 +16,29 @@ def _gen_test_method(themodule):
 
 def __create_tests():
     for module in """cola.git
+                     cola.basemodel
                      cola.observer
+                     cola.obsmodel
                      cola.settings
                      cola.controllers.bookmark
                      cola.controllers.classic
                      cola.controllers.compare
                      cola.controllers.createbranch
-                     cola.controllers.main
+                     cola.main.controller
+                     cola.main.model
                      cola.controllers.merge
-                     cola.controllers.options
                      cola.controllers.remote
                      cola.controllers.repobrowser
                      cola.controllers.search
                      cola.controllers.selectcommits
                      cola.controllers.stash
-                     cola.models.base
                      cola.models.compare
                      cola.models.gitrepo
-                     cola.models.main
-                     cola.models.observable
-                     cola.models.search""".split():
+                     cola.models.search
+                     cola.prefs.view
+                     cola.prefs.model
+                     cola.prefs.controller
+                     """.strip().split():
         method = _gen_test_method(module)
         method.__doc__ = 'Test that we can import %s' % module
         methodname = "test_" + module.replace('.', '_')

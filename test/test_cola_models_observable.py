@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 import unittest
-import copy
 
-from cola.models.observable import ObservableModel
+from cola.obsmodel import ObservableModel
 
 class ConcreteModel(ObservableModel):
     """A concrete model for testing."""

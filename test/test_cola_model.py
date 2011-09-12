@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 import unittest
-import helper
 
-from cola.models.base import BaseModel
+from cola.basemodel import BaseModel
 
 class ExampleModel(BaseModel):
     """An example model for use by these tests"""

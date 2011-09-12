@@ -2,7 +2,7 @@ import copy
 
 from cola import serializer
 from cola.observable import Observable
-from cola.models.base import BaseModel as Model
+from cola.basemodel import BaseModel as Model
 from cola.compat import set
 
 

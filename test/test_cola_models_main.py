@@ -2,15 +2,15 @@ import os
 import unittest
 
 import helper
-from cola.models import main
+from cola.main.model import MainModel
 
 
 class MainModelTestCase(helper.GitRepositoryTestCase):
-    """Tests the cola.models.main.MainModel class."""
+    """Tests the MainModel class."""
 
     def setUp(self):
         helper.GitRepositoryTestCase.setUp(self)
-        self.model = main.MainModel(cwd=os.getcwd())
+        self.model = MainModel(cwd=os.getcwd())
 
     def test_project(self):
         """Test the 'project' attribute."""

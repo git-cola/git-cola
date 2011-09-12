@@ -3,7 +3,7 @@ import os
 
 import helper
 from cola import gitcmds
-from cola.models import main
+from cola.main.model import MainModel
 
 
 class ClassicModelTestCase(helper.GitRepositoryTestCase):
@@ -11,7 +11,7 @@ class ClassicModelTestCase(helper.GitRepositoryTestCase):
 
     def setUp(self):
         helper.GitRepositoryTestCase.setUp(self, commit=False)
-        self.model = main.MainModel(cwd=os.getcwd())
+        self.model = MainModel(cwd=os.getcwd())
 
     def test_everything(self):
         """Test the MainModel.everything() method."""

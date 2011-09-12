@@ -15,7 +15,7 @@ from cola import version
 from cola.qtutils import connect_button
 from cola.qtutils import emit
 from cola.qtutils import log
-from cola.views import actions as actions
+from cola.views import actions
 from cola.views.mainwindow import MainWindow
 
 

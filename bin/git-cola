@@ -50,5 +50,5 @@ def cola_init():
 if __name__ == '__main__':
     # lights, cameras, action
     cola_init()
-    import cola.main
-    cola.main.main()
+    import cola.app
+    cola.app.main()
