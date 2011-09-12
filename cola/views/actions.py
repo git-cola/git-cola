@@ -3,11 +3,11 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
 import cola
-from cola import qt
-from cola import i18n
-from cola import signals
 from cola import gitcfg
 from cola import gitcmds
+from cola import qt
+from cola import qtutils
+from cola import signals
 from cola.views import revselect
 from cola.views import standard
 from cola.views import command
@@ -73,7 +73,7 @@ class ActionDialog(standard.StandardDialog):
 
         self.argslabel = QtGui.QLabel()
         if 'argprompt' not in opts or opts.get('argprompt') is True:
-            argprompt = i18n.gettext('Arguments')
+            argprompt = qtutils.tr('Arguments')
         else:
             argprompt = opts.get('argprompt')
 
@@ -98,7 +98,7 @@ class ActionDialog(standard.StandardDialog):
         )
 
         if 'revprompt' not in opts or opts.get('revprompt') is True:
-            revprompt = i18n.gettext('Revision')
+            revprompt = qtutils.tr('Revision')
         else:
             revprompt = opts.get('revprompt')
         self.revselect = revselect.RevisionSelector(self, revs=revs)

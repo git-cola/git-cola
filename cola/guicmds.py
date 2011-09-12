@@ -32,8 +32,8 @@ class CommandWrapper(object):
     def _information(self, title, msg):
         if msg is None:
             msg = title
-        title = i18n.gettext(title)
-        msg = i18n.gettext(msg)
+        title = qtutils.tr(title)
+        msg = qtutils.tr(msg)
         QtGui.QMessageBox.information(self.parent, title, msg)
 
 
