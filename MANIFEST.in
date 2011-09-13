@@ -1,5 +1,6 @@
 include bin/git-cola
 include cola/*.py
+include cola/dag/*.py
 include cola/controllers/*.py
 include cola/main/*.py
 include cola/models/*.py

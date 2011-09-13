@@ -19,7 +19,8 @@ from cola import gitcmds
 from cola import difftool
 from cola.controllers import createbranch
 from cola.controllers import createtag
-from cola.models import commit
+from cola.dag.model import DAG
+from cola.dag.model import RepoReader
 from cola.prefs import diff_font
 from cola.views import standard
 from cola.views import syntax
@@ -27,7 +28,7 @@ from cola.views import syntax
 
 def git_dag(model, parent):
     """Return a pre-populated git DAG widget."""
-    dag = commit.DAG(model.currentbranch, 1000)
+    dag = DAG(model.currentbranch, 1000)
     view = GitDAGWidget(dag, parent=parent)
     view.resize_to_desktop()
     view.show()
@@ -401,7 +402,7 @@ class ReaderThread(QtCore.QThread):
         self.condition = QtCore.QWaitCondition()
 
     def run(self):
-        repo = commit.RepoReader(self.dag)
+        repo = RepoReader(self.dag)
         repo.reset()
         commits = []
         for c in repo:

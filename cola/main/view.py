@@ -29,9 +29,9 @@ from cola.controllers import search
 from cola.controllers.bookmark import manage_bookmarks
 from cola.controllers.bookmark import save_bookmark
 from cola.controllers.createbranch import create_new_branch
+from cola.dag import git_dag
 from cola.views import actions
 from cola.views import about
-from cola.views import dag
 from cola.views import status
 from cola.views.commitmsg import CommitMessageEditor
 from cola.views.diff import DiffTextEdit
@@ -227,7 +227,7 @@ class MainView(MainWindow):
         self.menu_classic = add_action(self,
                 'Cola Classic...', classic.cola_classic)
         self.menu_dag = add_action(self,
-                'DAG...', lambda: dag.git_dag(self.model, self))
+                'DAG...', lambda: git_dag(self.model, self))
 
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)
