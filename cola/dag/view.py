@@ -250,8 +250,8 @@ class GitDAGWidget(standard.StandardDialog):
         self._buttons_layt.addWidget(self.maxresults)
         self._buttons_layt.addWidget(self.displaybutton)
         self._buttons_layt.addStretch()
-        self._buttons_layt.addWidget(self.zoom_in)
         self._buttons_layt.addWidget(self.zoom_out)
+        self._buttons_layt.addWidget(self.zoom_in)
 
         self._commits = {}
         self._notifier = notifier = observable.Observable()
