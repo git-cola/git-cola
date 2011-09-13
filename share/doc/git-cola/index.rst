@@ -17,13 +17,6 @@ Release Notes
 
     relnotes
 
-Developer Reference
-===================
-.. toctree::
-    :maxdepth: 2
-
-    reference
-
 Indices and tables
 ==================
 
