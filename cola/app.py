@@ -171,10 +171,10 @@ def main():
     from cola import qtcompat
     qtcompat.install()
 
+    from cola.classic import cola_classic
     from cola.views import startup
     from cola.main.view import MainView
     from cola.main.controller import MainController
-    from cola.controllers.classic import cola_classic
     from cola.app import ColaApplication
     from cola import cmds
 

@@ -10,15 +10,16 @@ from cola import gitcmds
 from cola import qtutils
 from cola import signals
 from cola.controllers.selectcommits import select_commits
-from cola.models import gitrepo
-from cola.views import repo
+from cola.classic.view import RepoDialog
+from cola.classic.model import GitRepoModel
+from cola.classic.model import GitRepoEntryManager
 from cola.compat import set
 
 
 def widget(parent=None, update=True):
     """Return a widget for immediate use."""
-    view = repo.RepoDialog(parent=parent, update=update)
-    view.tree.setModel(gitrepo.GitRepoModel(view.tree))
+    view = RepoDialog(parent=parent, update=update)
+    view.tree.setModel(GitRepoModel(view.tree))
     controller = ClassicController(view.tree)
     return view
 
@@ -57,8 +58,8 @@ class ClassicController(QtCore.QObject):
         if path in self.updated:
             return
         self.updated.add(path)
-        gitrepo.GitRepoEntryManager.entry(path).update()
-        entry = gitrepo.GitRepoEntryManager.entry
+        GitRepoEntryManager.entry(path).update()
+        entry = GitRepoEntryManager.entry
         for row in xrange(item.rowCount()):
             path = item.child(row, 0).path
             entry(path).update()

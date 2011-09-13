@@ -7,6 +7,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
+from cola import gitcfg
 from cola import core
 from cola import utils
 from cola import qtutils
@@ -280,6 +281,7 @@ class GitRepoInfoTask(QRunnable):
     def __init__(self, path):
         QRunnable.__init__(self)
         self.path = path
+        self._cfg = gitcfg.instance()
         self._data = {}
 
     def data(self, key):
@@ -304,7 +306,7 @@ class GitRepoInfoTask(QRunnable):
             else:
                 self._data['date'] = self.date()
                 self._data['message'] = '-'
-                self._data['author'] = cola.model().local_user_name
+                self._data['author'] = self._cfg.get('user.name', 'unknown')
         return self._data[key]
 
     def name(self):

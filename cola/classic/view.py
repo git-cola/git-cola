@@ -9,8 +9,8 @@ import cola
 import cola.utils
 import cola.qtutils
 from cola import signals
-from cola.models import gitrepo
 from cola.views import standard
+from cola.classic.model import GitRepoNameItem
 
 
 class RepoDialog(standard.StandardDialog):
@@ -288,7 +288,7 @@ class RepoTreeView(QtGui.QTreeView):
         """Return the selected paths."""
         items = map(self.model().itemFromIndex, self.selectedIndexes())
         return [i.path for i in items
-                    if i.type() == gitrepo.GitRepoNameItem.TYPE]
+                    if i.type() == GitRepoNameItem.TYPE]
 
     def selected_staged_paths(self, selection=None):
         """Return selected staged paths."""

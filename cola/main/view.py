@@ -20,7 +20,8 @@ from cola import qt
 from cola import resources
 from cola import utils
 from cola import version
-from cola.controllers import classic
+from cola.classic import cola_classic
+from cola.classic import classic_widget
 from cola.controllers import compare
 from cola.controllers import createtag
 from cola.controllers import merge
@@ -89,7 +90,7 @@ class MainView(MainWindow):
 
         if self.classic_dockable:
             self.classicdockwidget = create_dock('Cola Classic', self)
-            self.classicwidget = classic.widget(parent=self)
+            self.classicwidget = classic_widget(parent=self)
             self.classicdockwidget.setWidget(self.classicwidget)
 
         # "Actions" widget
@@ -225,7 +226,7 @@ class MainView(MainWindow):
         self.menu_branch_review = add_action(self,
                 'Review...', guicmds.review_branch)
         self.menu_classic = add_action(self,
-                'Cola Classic...', classic.cola_classic)
+                'Cola Classic...', cola_classic)
         self.menu_dag = add_action(self,
                 'DAG...', lambda: git_dag(self.model, self))
 

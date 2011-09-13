@@ -17,15 +17,18 @@ def _gen_test_method(themodule):
 def __create_tests():
     for module in """cola.git
                      cola.basemodel
+                     cola.classic.controller
+                     cola.classic.model
+                     cola.classic.view
                      cola.observer
                      cola.obsmodel
                      cola.settings
                      cola.controllers.bookmark
-                     cola.controllers.classic
                      cola.controllers.compare
                      cola.controllers.createbranch
                      cola.main.controller
                      cola.main.model
+                     cola.main.view
                      cola.controllers.merge
                      cola.controllers.remote
                      cola.controllers.repobrowser
@@ -33,7 +36,6 @@ def __create_tests():
                      cola.controllers.selectcommits
                      cola.controllers.stash
                      cola.models.compare
-                     cola.models.gitrepo
                      cola.models.search
                      cola.prefs.view
                      cola.prefs.model
