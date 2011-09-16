@@ -211,10 +211,11 @@ class PreferencesView(standard.StandardDialog):
 
         self.resize(600, 360)
 
-        self._combobox = QtGui.QComboBox()
-        self._combobox.addItem('All Repositories')
-        self._combobox.addItem('Current Repository')
-        self._combobox.addItem('Settings')
+        self._tabbar = QtGui.QTabBar()
+        self._tabbar.setDrawBase(False)
+        self._tabbar.addTab('All Repositories')
+        self._tabbar.addTab('Current Repository')
+        self._tabbar.addTab('Settings')
 
         self._user_form = RepoFormWidget(model, self, source='user')
         self._repo_form = RepoFormWidget(model, self, source='all')
@@ -240,12 +241,12 @@ class PreferencesView(standard.StandardDialog):
 
         self._layt = QtGui.QVBoxLayout()
         self._layt.setMargin(4)
-        self._layt.addWidget(self._combobox)
+        self._layt.addWidget(self._tabbar)
         self._layt.addWidget(self._stackedwidget)
         self._layt.addLayout(self._button_layt)
         self.setLayout(self._layt)
 
-        self.connect(self._combobox, SIGNAL('activated(int)'),
+        self.connect(self._tabbar, SIGNAL('currentChanged(int)'),
                      self._stackedwidget.setCurrentIndex)
 
         self.connect(self._stackedwidget, SIGNAL('currentChanged(int)'),
