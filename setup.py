@@ -78,8 +78,12 @@ def cola_data_files(standalone=_standalone):
             _app_path('share/applications', '*.desktop'),
             _app_path('share/doc/git-cola', '*.txt'),
             _package('cola'),
+            _package('cola.classic'),
+            _package('cola.dag'),
+            _package('cola.main'),
             _package('cola.models'),
             _package('cola.controllers'),
+            _package('cola.prefs'),
             _package('cola.views')]
 
     data.extend([_app_path(localedir, 'git-cola.mo')
