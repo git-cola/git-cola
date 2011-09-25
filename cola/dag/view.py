@@ -22,6 +22,7 @@ from cola.controllers import createtag
 from cola.dag.model import DAG
 from cola.dag.model import RepoReader
 from cola.prefs import diff_font
+from cola.qt import GitRefCompleter
 from cola.views import standard
 from cola.views import syntax
 
@@ -194,17 +195,6 @@ class CommitTreeWidget(QtGui.QTreeWidget):
     def _cherry_pick(self):
         sha1 = self._clicked_item.commit.sha1
         cola.notifier().broadcast(signals.cherry_pick, [sha1])
-
-
-class GitRefCompleter(QtGui.QCompleter):
-    """Provides completion for branches and tags"""
-    def __init__(self, parent):
-        model = cola.model()
-        revs = (model.local_branches +
-                model.remote_branches +
-                model.tags)
-        QtGui.QCompleter.__init__(self, revs, parent)
-        self.setCompletionMode(self.UnfilteredPopupCompletion)
 
 
 class GitDAGWidget(standard.StandardDialog):
