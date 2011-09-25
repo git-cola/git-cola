@@ -2,6 +2,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
+import cola
 from cola.qtutils import tr
 
 
@@ -75,3 +76,26 @@ class QFlowLayoutWidget(QtGui.QWidget):
         if dxn != self._direction:
             self._direction = dxn
             self.layout().setDirection(dxn)
+
+
+class GitRefCompleter(QtGui.QCompleter):
+    """Provides completion for branches and tags"""
+    def __init__(self, parent):
+        QtGui.QCompleter.__init__(self, parent)
+        self.model = GitRefStringListModel(parent)
+        self.setModel(self.model)
+        self.setCompletionMode(self.UnfilteredPopupCompletion)
+
+
+class GitRefStringListModel(QtGui.QStringListModel):
+    def __init__(self, parent=None):
+        QtGui.QStringListModel.__init__(self, parent)
+        self.model = cola.model()
+        msg = self.model.message_updated
+        self.model.add_message_observer(msg, self.update_git_refs)
+        self.update_git_refs()
+
+    def update_git_refs(self):
+        model = self.model
+        revs = model.local_branches + model.remote_branches + model.tags
+        self.setStringList(revs)
