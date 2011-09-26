@@ -49,6 +49,7 @@ class ColaApplication(object):
         from PyQt4 import QtGui
         from PyQt4 import QtCore
 
+        from cola import cmds
 
         i18n.install(locale)
 
@@ -62,6 +63,9 @@ class ColaApplication(object):
             self._app = QtCore.QCoreApplication(argv)
             self._translate_base = QtCore.QCoreApplication.translate
             QtCore.QCoreApplication.translate = self.translate
+
+        # Register model commands
+        cmds.register()
 
     def translate(self, domain, txt):
         """
@@ -176,7 +180,6 @@ def main():
     from cola.main.view import MainView
     from cola.main.controller import MainController
     from cola.app import ColaApplication
-    from cola import cmds
 
     # TODO: remove in 2012?
     has_threadpool = hasattr(QtCore, 'QThreadPool')
@@ -212,9 +215,6 @@ def main():
     else:
         # Add the default style dir so that we find our icons
         _setup_resource_dir(resources.style_dir())
-
-    # Register model commands
-    cmds.register()
 
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.

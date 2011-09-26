@@ -1249,14 +1249,12 @@ def context_menu_event(self, event):
 
 
 if __name__ == "__main__":
+    from cola import app
+
     model = cola.model()
     model.use_worktree(os.getcwd())
     model.update_status()
 
-    # Default command handler
-    import cola.cmds
-    cola.cmds.register()
-
-    app = QtGui.QApplication(sys.argv)
+    app = app.ColaApplication(sys.argv)
     view = git_dag(model, app.activeWindow())
     sys.exit(app.exec_())
