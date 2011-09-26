@@ -861,6 +861,23 @@ class VisualizePaths(Command):
         utils.fork(self.argv)
 
 
+class VisualizeRevision(Command):
+    """Visualize a specific revision."""
+    def __init__(self, revision, paths=None):
+        Command.__init__(self)
+        self.revision = revision
+        self.paths = paths
+
+    def do(self):
+        argv = [self.model.history_browser()]
+        if self.revision:
+            argv.append(self.revision)
+        if self.paths:
+            argv.append('--')
+            argv.extend(self.paths)
+        utils.fork(argv)
+
+
 def register():
     """
     Register signal mappings with the factory.
@@ -916,6 +933,7 @@ def register():
         signals.visualize_all: VisualizeAll,
         signals.visualize_current: VisualizeCurrent,
         signals.visualize_paths: VisualizePaths,
+        signals.visualize_revision: VisualizeRevision,
     }
 
     for signal, cmd in signal_to_command_map.iteritems():
