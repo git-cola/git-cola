@@ -626,8 +626,7 @@ class RunConfigAction(Command):
                                      'Please select a file',
                                      '"%s" requires a selected file' % cmd)
                 return
-            os.environ['FILENAME'] = commands.mkarg(filename)
-
+            os.environ['FILENAME'] = filename
 
         if opts.get('revprompt') or opts.get('argprompt'):
             while True:
