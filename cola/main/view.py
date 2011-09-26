@@ -47,9 +47,9 @@ from cola.qtutils import relay_signal
 from cola.qtutils import SLOT
 from cola.qtutils import tr
 from cola.views import actions
-from cola.views import about
 from cola.views.commitmsg import CommitMessageEditor
 from cola.views.standard import create_standard_widget
+from cola.widgets.about import launch_about_dialog
 from cola.widgets.diff import DiffTextEdit
 from cola.widgets.status import StatusWidget
 
@@ -208,7 +208,7 @@ class MainView(MainWindow):
                 'Get Commit Message Template',
                 emit(self, signals.load_commit_template))
         self.menu_help_about = add_action(self,
-                'About', about.launch_about_dialog)
+                'About', launch_about_dialog)
         self.menu_branch_diff = add_action(self,
                 'SHA-1...', guicmds.branch_diff)
         self.menu_diff_expression = add_action(self,
