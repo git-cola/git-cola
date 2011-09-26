@@ -3,14 +3,13 @@ from PyQt4 import QtGui
 
 import cola
 import cola.app
-from cola import i18n
 from cola import core
 from cola import git
 from cola import gitcmds
 from cola import qtutils
 from cola import signals
-from cola.views import itemlist
 from cola.views import combo
+from cola.widgets.listview import ListView
 
 
 def install_command_wrapper(parent):
@@ -48,10 +47,8 @@ def choose_from_combo(title, items):
 def choose_from_list(title, items=None, dblclick=None):
     """Quickly choose an item from a list using a list widget"""
     parent = QtGui.QApplication.instance().activeWindow()
-    return itemlist.ListView(parent,
-                             title=title,
-                             items=items,
-                             dblclick=dblclick).selected()
+    return ListView(parent,
+                    title=title, items=items, dblclick=dblclick).selected()
 
 
 def slot_with_parent(fn, parent):
