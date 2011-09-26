@@ -89,21 +89,6 @@ def file_icon(filename):
     return resources.icon(ident_file_type(filename))
 
 
-def win32_abspath(exe):
-    """Return the absolute path to an .exe if it exists"""
-    if os.path.exists(exe):
-        return exe
-    if not exe.endswith('.exe'):
-        exe += '.exe'
-    if os.path.exists(exe):
-        return exe
-    for path in os.environ['PATH'].split(os.pathsep):
-        abspath = os.path.join(path, exe)
-        if os.path.exists(abspath):
-            return abspath
-    return None
-
-
 def fork(args):
     """Launch a command in the background."""
     encoded_args = [core.encode(arg) for arg in args]
@@ -247,19 +232,6 @@ def is_win32():
     return os.name in ('nt', 'dos')
 
 
-@memoize
-def is_broken():
-    """Is it windows or mac? (e.g. is running git-mergetool non-trivial?)"""
-    if is_darwin():
-        return True
-    while True:
-        try:
-            return platform.system() == 'Windows'
-        except IOError, e:
-            if e.errno == errno.EINTR:
-                continue
-            raise e
-    return False
 
 
 def checksum(path):

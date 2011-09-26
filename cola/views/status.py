@@ -287,9 +287,8 @@ class StatusWidget(QtGui.QWidget):
             return menu
 
         if unmerged:
-            if not utils.is_broken():
-                menu.addAction(self.tr('Launch Merge Tool'),
-                               SLOT(signals.mergetool, self.unmerged()))
+            menu.addAction(self.tr('Launch Merge Tool'),
+                           SLOT(signals.mergetool, self.unmerged()))
             menu.addAction(self.tr('Launch Editor'),
                            SLOT(signals.edit, self.unmerged()))
             menu.addSeparator()
