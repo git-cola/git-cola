@@ -3,7 +3,7 @@
 from cola.ctrl import Controller
 from cola import guicmds
 from cola import signals
-from cola.views import actions
+from cola.widgets import cfgactions
 
 
 class MainController(Controller):
@@ -11,7 +11,7 @@ class MainController(Controller):
         Controller.__init__(self, model, view)
 
         # Install UI wrappers for command objects
-        actions.install_command_wrapper(self.view)
+        cfgactions.install_command_wrapper(self.view)
         guicmds.install_command_wrapper(self.view)
 
         self.add_global_command(signals.amend_mode)

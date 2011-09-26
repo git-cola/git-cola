@@ -46,9 +46,9 @@ from cola.qtutils import logger
 from cola.qtutils import relay_signal
 from cola.qtutils import SLOT
 from cola.qtutils import tr
-from cola.views import actions
 from cola.views.commitmsg import CommitMessageEditor
 from cola.views.standard import create_standard_widget
+from cola.widgets import cfgactions
 from cola.widgets.about import launch_about_dialog
 from cola.widgets.diff import DiffTextEdit
 from cola.widgets.status import StatusWidget
@@ -441,7 +441,7 @@ class MainView(MainWindow):
         if self._has_threadpool:
             self._config_task = self._start_config_actions_task()
         else:
-            names = actions.get_config_actions()
+            names = cfgactions.get_config_actions()
             self._install_config_actions(names)
 
     def _start_config_actions_task(self):
@@ -451,7 +451,7 @@ class MainView(MainWindow):
                 QtCore.QRunnable.__init__(self)
                 self._sender = sender
             def run(self):
-                names = actions.get_config_actions()
+                names = cfgactions.get_config_actions()
                 self._sender.emit(SIGNAL('install_config_actions'), names)
 
         task = ConfigActionsTask(self)

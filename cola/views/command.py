@@ -19,6 +19,7 @@ def run_command(parent, title, command):
         qtutils.center_on_screen(view)
     view.run()
     view.show()
+    view.raise_()
     status = view.exec_()
     return (view.exitstatus, view.out, view.err)
 
