@@ -47,7 +47,6 @@ class DAG(Observable):
         self.count = count
         self.notify_message_observers(self.count_updated)
 
-
 class Commit(object):
     __slots__ = ('sha1',
                  'subject',
@@ -169,7 +168,7 @@ class RepoReader(object):
             cmd = self._cmd + ('-%d' % self.dag.count, self.dag.ref)
             self._proc = utils.start_command(cmd)
             self._topo_list = []
-        log_entry = self._proc.stdout.readline()
+        log_entry = self._proc.stdout.readline().rstrip()
         if not log_entry:
             del self._proc
             self._cached = True
