@@ -31,12 +31,6 @@ from cola.controllers.bookmark import manage_bookmarks
 from cola.controllers.bookmark import save_bookmark
 from cola.controllers.createbranch import create_new_branch
 from cola.dag import git_dag
-from cola.views import actions
-from cola.views import about
-from cola.views import status
-from cola.views.commitmsg import CommitMessageEditor
-from cola.views.diff import DiffTextEdit
-from cola.views.standard import create_standard_widget
 from cola.prefs import diff_font
 from cola.prefs import PreferencesModel
 from cola.prefs import preferences
@@ -52,6 +46,12 @@ from cola.qtutils import logger
 from cola.qtutils import relay_signal
 from cola.qtutils import SLOT
 from cola.qtutils import tr
+from cola.views import actions
+from cola.views import about
+from cola.views import status
+from cola.views.commitmsg import CommitMessageEditor
+from cola.views.standard import create_standard_widget
+from cola.widgets.diff import DiffTextEdit
 
 
 MainWindow = create_standard_widget(QtGui.QMainWindow)
