@@ -4,6 +4,7 @@ include cola/dag/*.py
 include cola/classic/*.py
 include cola/controllers/*.py
 include cola/main/*.py
+include cola/merge/*.py
 include cola/models/*.py
 include cola/prefs/*.py
 include cola/views/*.py

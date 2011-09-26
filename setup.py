@@ -81,6 +81,7 @@ def cola_data_files(standalone=_standalone):
             _package('cola.classic'),
             _package('cola.dag'),
             _package('cola.main'),
+            _package('cola.merge'),
             _package('cola.models'),
             _package('cola.controllers'),
             _package('cola.prefs'),
