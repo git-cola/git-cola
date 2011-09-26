@@ -48,10 +48,10 @@ from cola.qtutils import SLOT
 from cola.qtutils import tr
 from cola.views import actions
 from cola.views import about
-from cola.views import status
 from cola.views.commitmsg import CommitMessageEditor
 from cola.views.standard import create_standard_widget
 from cola.widgets.diff import DiffTextEdit
+from cola.widgets.status import StatusWidget
 
 
 MainWindow = create_standard_widget(QtGui.QMainWindow)
@@ -111,7 +111,7 @@ class MainView(MainWindow):
 
         # "Repository Status" widget
         self.statusdockwidget = create_dock('Repository Status', self)
-        self.statusdockwidget.setWidget(status.StatusWidget(self))
+        self.statusdockwidget.setWidget(StatusWidget(self))
 
         # "Commit Message Editor" widget
         self.commitdockwidget = create_dock('Commit Message Editor', self)
