@@ -3,7 +3,6 @@ import sys
 import platform
 
 from cStringIO import StringIO
-import commands
 
 import cola
 from cola import i18n

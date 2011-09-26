@@ -7,7 +7,6 @@
 import os
 import sys
 import errno
-import commands
 import subprocess
 import threading
 
@@ -160,7 +159,7 @@ class Git(object):
                 print "%s -> %d" % (command, status)
 
         if GIT_COLA_TRACE:
-            msg = 'trace: %s' % ' '.join(map(commands.mkarg, command))
+            msg = 'trace: ' + subprocess.list2cmdline(command)
             cola.notifier().broadcast(signals.log_cmd, status, msg)
 
         # Allow access to the command's status code
