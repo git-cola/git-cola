@@ -11,6 +11,7 @@ import cola
 from cola import core
 from cola import gitcmds
 from cola import guicmds
+from cola import merge
 from cola import settings
 from cola import signals
 from cola import gitcfg
@@ -24,7 +25,6 @@ from cola.classic import cola_classic
 from cola.classic import classic_widget
 from cola.controllers import compare
 from cola.controllers import createtag
-from cola.controllers import merge
 from cola.controllers import stash
 from cola.controllers import search
 from cola.controllers.bookmark import manage_bookmarks
