@@ -5,7 +5,7 @@ from cola.observable import Observable
 
 # put subject at the end b/c it can contain
 # any number of funky characters
-logfmt = 'format:%H%x01%P%x01%d%x01%an%x01%aD%x01%s'
+logfmt = 'format:%H%x00%P%x00%d%x00%an%x00%aD%x00%s'
 git = git.instance()
 
 
@@ -74,7 +74,7 @@ class Commit(object):
     def parse(self, log_entry):
         self.sha1 = log_entry[:40]
         (parents, tags, author, authdate, subject) = \
-                log_entry[41:].split(chr(0x01), 5)
+                log_entry[41:].split('\0', 5)
 
         if subject:
             self.subject = core.decode(subject)

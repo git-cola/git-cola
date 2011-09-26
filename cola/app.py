@@ -50,6 +50,7 @@ class ColaApplication(object):
         from PyQt4 import QtCore
 
         from cola import cmds
+        from cola import utils
 
         i18n.install(locale)
 
@@ -66,6 +67,11 @@ class ColaApplication(object):
 
         # Register model commands
         cmds.register()
+
+        # Make file descriptors binary for win32
+        utils.set_binary(sys.stdin)
+        utils.set_binary(sys.stdout)
+        utils.set_binary(sys.stderr)
 
     def translate(self, domain, txt):
         """
