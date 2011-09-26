@@ -8,7 +8,7 @@ from cola import git
 from cola import gitcmds
 from cola import qtutils
 from cola import signals
-from cola.views import combo
+from cola.widgets.combodlg import ComboDialog
 from cola.widgets.listview import ListView
 
 
@@ -39,9 +39,7 @@ class CommandWrapper(object):
 def choose_from_combo(title, items):
     """Quickly choose an item from a list using a combo box"""
     parent = QtGui.QApplication.instance().activeWindow()
-    return combo.ComboView(parent,
-                           title=title,
-                           items=items).selected()
+    return ComboDialog(parent, title=title, items=items).selected()
 
 
 def choose_from_list(title, items=None, dblclick=None):

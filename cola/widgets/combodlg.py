@@ -5,7 +5,7 @@ from PyQt4.QtCore import SIGNAL
 from cola.views import standard
 
 
-class ComboView(standard.StandardDialog):
+class ComboDialog(standard.StandardDialog):
     """A dialog for choosing branches."""
 
     def __init__(self, parent=None, title='', items=None):
@@ -60,7 +60,7 @@ class ComboView(standard.StandardDialog):
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
-    combo = ComboView()
+    combo = ComboDialog()
     combo.show()
     sys.exit(app.exec_())
 
