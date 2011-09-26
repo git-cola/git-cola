@@ -22,9 +22,9 @@ from cola.controllers import createtag
 from cola.dag.model import DAG
 from cola.dag.model import RepoReader
 from cola.prefs import diff_font
+from cola.qt import DiffSyntaxHighlighter
 from cola.qt import GitRefCompleter
 from cola.views import standard
-from cola.views import syntax
 
 
 def git_dag(model, parent):
@@ -46,7 +46,7 @@ class DiffWidget(QtGui.QWidget):
         self.diff.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.diff.setReadOnly(True)
         self.diff.setFont(diff_font())
-        self.diff_syn = syntax.DiffSyntaxHighlighter(self.diff.document())
+        self.diff_syn = DiffSyntaxHighlighter(self.diff.document())
 
         self._layt = QtGui.QHBoxLayout()
         self._layt.addWidget(self.diff)

@@ -1,6 +1,6 @@
 from PyQt4 import QtGui
 
-from cola.views import syntax
+from cola import qt
 
 
 def create_standard_widget(qtclass):
@@ -11,7 +11,7 @@ def create_standard_widget(qtclass):
         def __init__(self, parent=None):
             self._qtclass = qtclass
             self._qtclass.__init__(self, parent)
-            syntax.set_theme_properties(self)
+            qt.set_theme_properties(self)
 
         def show(self):
             """Automatically centers and raises dialogs"""
@@ -60,7 +60,7 @@ def create_standard_widget(qtclass):
         def style_properties(self):
             # user-definable color properties
             props = {}
-            for name in syntax.default_colors:
+            for name in qt.default_colors:
                 props[name] = getattr(self, '_'+name)
             return props
 
@@ -69,7 +69,7 @@ def create_standard_widget(qtclass):
                 self.syntax.set_colors(self.style_properties())
                 self.syntax.reset()
 
-    syntax.install_style_properties(StandardWidget)
+    qt.install_style_properties(StandardWidget)
     return StandardWidget
 
 

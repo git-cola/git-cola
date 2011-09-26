@@ -5,8 +5,8 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
 from cola.prefs import diff_font
+from cola.qt import DiffSyntaxHighlighter
 from cola.views import standard
-from cola.views import syntax
 
 
 class SearchView(standard.StandardDialog):
@@ -106,8 +106,8 @@ class SearchView(standard.StandardDialog):
         self.commit_text.setReadOnly(True)
         self.commit_text.setAcceptRichText(False)
         self.commit_text.setFont(diff_font())
-        self._syntax = syntax.DiffSyntaxHighlighter(self.commit_text.document(),
-                                                    whitespace=False)
+        self._syntax = DiffSyntaxHighlighter(self.commit_text.document(),
+                                             whitespace=False)
         self._main_vbox_layt.addWidget(self.splitter)
 
         self._button_grid_layt = QtGui.QGridLayout()

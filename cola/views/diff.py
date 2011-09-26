@@ -6,8 +6,8 @@ import cola
 import os
 from cola import guicmds
 from cola import signals
+from cola.qt import DiffSyntaxHighlighter
 from cola.qtutils import add_action, question, SLOT
-from cola.views.syntax import DiffSyntaxHighlighter
 
 
 class DiffTextEdit(QtGui.QTextEdit):

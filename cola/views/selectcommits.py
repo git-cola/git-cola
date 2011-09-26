@@ -3,7 +3,7 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
 from cola.prefs import diff_font
-from cola.views.syntax import DiffSyntaxHighlighter
+from cola.qt import DiffSyntaxHighlighter
 
 class SelectCommitsView(QtGui.QDialog):
     def __init__(self,
