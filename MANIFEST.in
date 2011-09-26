@@ -8,6 +8,7 @@ include cola/merge/*.py
 include cola/models/*.py
 include cola/prefs/*.py
 include cola/views/*.py
+include cola/widgets/*.py
 include darwin/*
 include test/*.py
 include README

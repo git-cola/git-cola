@@ -71,21 +71,24 @@ def _run_setup():
 
 
 def cola_data_files(standalone=_standalone):
-    data = [_app_path('share/git-cola/icons', '*.png'),
-            _app_path('share/git-cola/icons', '*.svg'),
-            _app_path('share/git-cola/styles', '*.qss'),
-            _app_path('share/git-cola/styles/images', '*.png'),
-            _app_path('share/applications', '*.desktop'),
-            _app_path('share/doc/git-cola', '*.txt'),
-            _package('cola'),
-            _package('cola.classic'),
-            _package('cola.dag'),
-            _package('cola.main'),
-            _package('cola.merge'),
-            _package('cola.models'),
-            _package('cola.controllers'),
-            _package('cola.prefs'),
-            _package('cola.views')]
+    data = [
+        _app_path('share/git-cola/icons', '*.png'),
+        _app_path('share/git-cola/icons', '*.svg'),
+        _app_path('share/git-cola/styles', '*.qss'),
+        _app_path('share/git-cola/styles/images', '*.png'),
+        _app_path('share/applications', '*.desktop'),
+        _app_path('share/doc/git-cola', '*.txt'),
+        _package('cola'),
+        _package('cola.classic'),
+        _package('cola.dag'),
+        _package('cola.main'),
+        _package('cola.merge'),
+        _package('cola.models'),
+        _package('cola.controllers'),
+        _package('cola.prefs'),
+        _package('cola.views'),
+        _package('cola.widgets'),
+    ]
 
     data.extend([_app_path(localedir, 'git-cola.mo')
                  for localedir in glob('share/locale/*/LC_MESSAGES')])
