@@ -269,12 +269,6 @@ def checksum(path):
     return md5.hexdigest()
 
 
-def quote_repopath(repopath):
-    """Quote a path for nt/dos only."""
-    if is_win32():
-        repopath = '"%s"' % repopath
-    return repopath
-
 # From git.git
 """Misc. useful functionality used by the rest of this package.
 

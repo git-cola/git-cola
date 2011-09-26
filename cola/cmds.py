@@ -554,7 +554,7 @@ class OpenRepo(Command):
     """Launches git-cola on a repo."""
     def __init__(self, dirname):
         Command.__init__(self)
-        self.new_directory = utils.quote_repopath(dirname)
+        self.new_directory = dirname
 
     def do(self):
         self.model.set_directory(self.new_directory)
@@ -566,7 +566,7 @@ class Clone(Command):
     def __init__(self, url, destdir, spawn=True):
         Command.__init__(self)
         self.url = url
-        self.new_directory = utils.quote_repopath(destdir)
+        self.new_directory = destdir
         self.spawn = spawn
 
     def do(self):
