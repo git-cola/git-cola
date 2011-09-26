@@ -106,24 +106,8 @@ def win32_abspath(exe):
 
 def fork(args):
     """Launch a command in the background."""
-    if is_win32():
-        # Windows is absolutely insane.
-        enc_args = map(core.encode, args)
-        abspath = win32_abspath(args[0])
-        if abspath:
-            # e.g. fork(['git', 'difftool', '--no-prompt', '--', 'path'])
-            return os.spawnv(os.P_NOWAIT, abspath, enc_args)
-        else:
-            # e.g. fork(['gitk', '--all'])
-            cmdstr = subprocess.list2cmdline(enc_args)
-            sh_exe = win32_abspath('sh')
-            cmd = ['sh.exe', '-c', cmdstr]
-            return os.spawnv(os.P_NOWAIT, sh_exe, cmd)
-    else:
-        # I like having a sane os.system()
-        enc_args = [core.encode(a) for a in args]
-        cmdstr = subprocess.list2cmdline(enc_args)
-        return os.system(cmdstr + '&')
+    encoded_args = [core.encode(arg) for arg in args]
+    return subprocess.Popen(encoded_args).pid
 
 
 def sublist(a,b):
