@@ -14,12 +14,12 @@ from cola import utils
 from cola import signals
 from cola import resources
 from cola.decorators import memoize
-import cola.views.log
+from cola.widgets.log import LogView
 
 
 @memoize
 def logger():
-    logview = cola.views.log.LogView()
+    logview = LogView()
     cola.notifier().connect(signals.log_cmd, logview.log)
     return logview
 
