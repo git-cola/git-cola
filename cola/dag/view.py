@@ -23,7 +23,7 @@ from cola.dag.model import DAG
 from cola.dag.model import RepoReader
 from cola.prefs import diff_font
 from cola.qt import DiffSyntaxHighlighter
-from cola.qt import GitRefCompleter
+from cola.qt import GitRefLineEdit
 from cola.views import standard
 
 
@@ -210,10 +210,8 @@ class GitDAGWidget(standard.StandardDialog):
         self.revlabel = QtGui.QLabel()
         self.revlabel.setText('Revision')
 
-        self.revtext = QtGui.QLineEdit()
+        self.revtext = GitRefLineEdit()
         self.revtext.setText(dag.ref)
-        self.revcompleter = GitRefCompleter(self)
-        self.revtext.setCompleter(self.revcompleter)
 
         self.maxresults = QtGui.QSpinBox()
         self.maxresults.setMinimum(-1)

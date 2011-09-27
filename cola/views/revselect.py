@@ -2,6 +2,7 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
 from cola import qtutils
+from cola.qt import GitRefLineEdit
 
 class RevisionSelector(QtGui.QWidget):
     def __init__(self, parent=None, revs=None):
@@ -20,7 +21,7 @@ class RevisionSelector(QtGui.QWidget):
         self._rev_label = QtGui.QLabel()
         self._rev_layt.addWidget(self._rev_label)
 
-        self._revision = QtGui.QLineEdit()
+        self._revision = GitRefLineEdit()
         self._rev_layt.addWidget(self._revision)
 
         self._layt.addLayout(self._rev_layt)

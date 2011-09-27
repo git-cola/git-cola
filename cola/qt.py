@@ -121,6 +121,14 @@ class GitRefStringListModel(QtGui.QStringListModel):
     def dispose(self):
         self.model.remove_observer(self.update_git_refs)
 
+
+class GitRefLineEdit(QtGui.QLineEdit):
+    def __init__(self, parent=None):
+        QtGui.QLineEdit.__init__(self, parent)
+        self.refcompleter = GitRefCompleter(self)
+        self.setCompleter(self.refcompleter)
+
+
 # Syntax highlighting
 
 def TERMINAL(pattern):

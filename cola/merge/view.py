@@ -4,7 +4,7 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import qtutils
 from cola import signals
-from cola.qt import GitRefCompleter
+from cola.qt import GitRefLineEdit
 from cola.qtutils import tr
 
 class MergeView(QtGui.QDialog):
@@ -22,9 +22,7 @@ class MergeView(QtGui.QDialog):
         self.revision_label = QtGui.QLabel()
         self.revision_label.setText(tr('Revision To Merge'))
 
-        self.revision = QtGui.QLineEdit()
-        self.revisioncompleter = GitRefCompleter(self)
-        self.revision.setCompleter(self.revisioncompleter)
+        self.revision = GitRefLineEdit()
 
         self.radio_local = QtGui.QRadioButton()
         self.radio_local.setText(tr('Local Branch'))
