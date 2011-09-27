@@ -19,13 +19,13 @@ from cola import qtutils
 from cola import qtcompat
 from cola import qt
 from cola import resources
+from cola import stash
 from cola import utils
 from cola import version
 from cola.classic import cola_classic
 from cola.classic import classic_widget
 from cola.controllers import compare
 from cola.controllers import createtag
-from cola.controllers import stash
 from cola.controllers import search
 from cola.controllers.bookmark import manage_bookmarks
 from cola.controllers.bookmark import save_bookmark

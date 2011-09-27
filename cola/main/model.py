@@ -494,16 +494,6 @@ class MainModel(ObservableModel):
             cherries.append(out)
         return (status, '\n'.join(cherries))
 
-    def parse_stash_list(self, revids=False, names=False):
-        """Parses "git stash list" and returns a list of stashes."""
-        stashes = self.git.stash("list").splitlines()
-        if revids:
-            return [s[:s.index(':')] for s in stashes]
-        elif names:
-            return [s.split(': ', 2)[-1] for s in stashes]
-        else:
-            return stashes
-
     def pad(self, pstr, num=22):
         topad = num-len(pstr)
         if topad > 0:
