@@ -10,8 +10,8 @@ from cola import gitcmds
 from cola import qt
 from cola import qtutils
 from cola import signals
-from cola.views import revselect
 from cola.views import standard
+from cola.widgets.revselect import RevisionSelector
 
 
 def install_command_wrapper(parent):
@@ -230,7 +230,7 @@ class ActionDialog(standard.StandardDialog):
             revprompt = qtutils.tr('Revision')
         else:
             revprompt = opts.get('revprompt')
-        self.revselect = revselect.RevisionSelector(self, revs=revs)
+        self.revselect = RevisionSelector(self, revs=revs)
         self.revselect.set_revision_label(revprompt)
         self.layt.addWidget(self.revselect)
 
