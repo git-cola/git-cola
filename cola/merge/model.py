@@ -2,7 +2,7 @@ import cola
 from cola.cmds import BaseCommand
 from cola import gitcmds
 from cola import observable
-from cola.qtutils import log
+from cola import signals
 
 
 class MergeModel(observable.Observable):
@@ -57,7 +57,8 @@ class MergeRevision(BaseCommand):
         revision = self.revision
         no_commit = self.no_commit
         status, output = self.context.merge(revision, no_commit, squash)
-        log(status, output)
+        notifier = cola.notifier()
+        notifier.broadcast(signals.log_cmd, status, output)
         self.context.update_status()
 
 
