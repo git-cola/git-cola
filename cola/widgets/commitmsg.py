@@ -15,6 +15,7 @@ from cola.qtutils import question
 from cola.qtutils import relay_signal
 from cola.qtutils import save_icon
 from cola.qtutils import tr
+from cola.prefs import diff_font
 
 
 class CommitMessageEditor(QtGui.QWidget):
@@ -27,6 +28,7 @@ class CommitMessageEditor(QtGui.QWidget):
         self._layt.setSpacing(0)
 
         self.commitmsg = CommitMessageTextEdit(model, self)
+        self.commitmsg.setFont(diff_font())
 
         self._ctrls_layt = QtGui.QHBoxLayout()
         self._ctrls_layt.setSpacing(4)

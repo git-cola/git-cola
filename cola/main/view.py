@@ -31,10 +31,8 @@ from cola.controllers.bookmark import manage_bookmarks
 from cola.controllers.bookmark import save_bookmark
 from cola.controllers.createbranch import create_new_branch
 from cola.dag import git_dag
-from cola.prefs import diff_font
 from cola.prefs import PreferencesModel
 from cola.prefs import preferences
-from cola.prefs import tab_width
 from cola.qt import create_button
 from cola.qt import create_dock
 from cola.qt import create_menu
@@ -386,9 +384,6 @@ class MainView(MainWindow):
         self._config_task = None
         self.install_config_actions()
 
-        self._set_diff_font(diff_font())
-        self._set_tab_width(tab_width())
-
         # Restore saved settings
         self._gui_state_task = None
         self._load_gui_state()
@@ -422,19 +417,13 @@ class MainView(MainWindow):
             if not font.fromString(value):
                 return
             self._set_diff_font(font)
+            logger().setFont(font)
+            self.diff_viewer.setFont(font)
+            self.commitmsgeditor.commitmsg.setFont(font)
+
         elif config == 'cola.tabwidth':
             # variable-tab-width setting
-            self._set_tab_width(value)
-
-    def _set_diff_font(self, font):
-        logger().setFont(font)
-        self.diff_viewer.setFont(font)
-        self.commitmsgeditor.commitmsg.setFont(font)
-
-    def _set_tab_width(self, tab_width):
-        display_font = self.diff_viewer.font()
-        space_width = QtGui.QFontMetrics(display_font).width(' ')
-        self.diff_viewer.setTabStopWidth(tab_width * space_width)
+            self.diff_viewer.set_tab_width(value)
 
     def install_config_actions(self):
         """Install .gitconfig-defined actions"""

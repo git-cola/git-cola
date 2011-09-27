@@ -1,28 +1,42 @@
+import os
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt, SIGNAL
 
 import cola
-import os
 from cola import guicmds
 from cola import signals
+from cola.prefs import diff_font
+from cola.prefs import tab_width
 from cola.qt import DiffSyntaxHighlighter
 from cola.qtutils import add_action, question, SLOT
 
 
-class DiffTextEdit(QtGui.QTextEdit):
+class DiffView(QtGui.QTextEdit):
     def __init__(self, parent):
         QtGui.QTextEdit.__init__(self, parent)
-        self.model = model = cola.model()
         self.setMinimumSize(QtCore.QSize(1, 1))
         self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.setAcceptRichText(False)
         self.setCursorWidth(2)
-
         self.setTextInteractionFlags(Qt.TextSelectableByKeyboard |
                                      Qt.TextSelectableByMouse)
         # Diff/patch syntax highlighter
         self.syntax = DiffSyntaxHighlighter(self.document())
+        self.setFont(diff_font())
+        self.set_tab_width(tab_width())
+
+    def set_tab_width(self, tab_width):
+        display_font = self.font()
+        space_width = QtGui.QFontMetrics(display_font).width(' ')
+        self.setTabStopWidth(tab_width * space_width)
+
+
+class DiffTextEdit(DiffView):
+    def __init__(self, parent):
+        DiffView.__init__(self, parent)
+        self.model = model = cola.model()
 
         # Install diff shortcut keys for stage/unstage
         self.action_process_hunk = add_action(self, 'Process Hunk',
