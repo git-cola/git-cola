@@ -98,6 +98,12 @@ class GitRefCompleter(QtGui.QCompleter):
         self.setModel(self.model)
         self.setCompletionMode(self.UnfilteredPopupCompletion)
 
+    def __del__(self):
+        self.dispose()
+
+    def dispose(self):
+        self.model.dispose()
+
 
 class GitRefStringListModel(QtGui.QStringListModel):
     def __init__(self, parent=None):
@@ -112,6 +118,8 @@ class GitRefStringListModel(QtGui.QStringListModel):
         revs = model.local_branches + model.remote_branches + model.tags
         self.setStringList(revs)
 
+    def dispose(self):
+        self.model.remove_observer(self.update_git_refs)
 
 # Syntax highlighting
 
