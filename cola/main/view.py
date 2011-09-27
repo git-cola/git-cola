@@ -46,10 +46,10 @@ from cola.qtutils import logger
 from cola.qtutils import relay_signal
 from cola.qtutils import SLOT
 from cola.qtutils import tr
-from cola.views.commitmsg import CommitMessageEditor
 from cola.views.standard import create_standard_widget
 from cola.widgets import cfgactions
 from cola.widgets.about import launch_about_dialog
+from cola.widgets.commitmsg import CommitMessageEditor
 from cola.widgets.diff import DiffTextEdit
 from cola.widgets.status import StatusWidget
 
