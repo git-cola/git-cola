@@ -7,6 +7,7 @@ include cola/main/*.py
 include cola/merge/*.py
 include cola/models/*.py
 include cola/prefs/*.py
+include cola/stash/*.py
 include cola/views/*.py
 include cola/widgets/*.py
 include darwin/*
