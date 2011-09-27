@@ -44,14 +44,8 @@ def run_command(parent, title, command):
 class GitCommandWidget(standard.StandardDialog):
     """Nice TextView that reads the output of a command syncronously"""
     # Keep us in scope otherwise PyQt kills the widget
-    _instances = set()
-
-    def __del__(self):
-        self._instances.remove(self)
-
     def __init__(self, parent=None):
         standard.StandardDialog.__init__(self, parent=parent)
-        self._instances.add(self)
         self.resize(720, 420)
 
         # Construct the process
