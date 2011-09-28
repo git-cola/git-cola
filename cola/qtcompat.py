@@ -8,6 +8,9 @@ def install():
     if not hasattr(QtGui.QVBoxLayout, 'setContentsMargins'):
         QtGui.QVBoxLayout.setContentsMargins = lambda *args: True
 
+    if not hasattr(QtGui.QKeySequence, 'Preferences'):
+        QtGui.QKeySequence.Preferences = 'Ctrl+O'
+
 
 def add_search_path(prefix, path):
     if hasattr(QtCore.QDir, 'addSearchPath'):

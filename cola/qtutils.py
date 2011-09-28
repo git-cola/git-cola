@@ -13,6 +13,7 @@ from cola import core
 from cola import utils
 from cola import signals
 from cola import resources
+from cola.compat import set
 from cola.decorators import memoize
 from cola.widgets.log import LogView
 
@@ -289,6 +290,7 @@ def add_action(widget, text, fn, *shortcuts):
     action = QtGui.QAction(text, widget)
     action.connect(action, SIGNAL('triggered()'), fn)
     if shortcuts:
+        shortcuts = list(set(shortcuts))
         action.setShortcuts(shortcuts)
         action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
         widget.addAction(action)
