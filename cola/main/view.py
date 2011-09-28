@@ -116,6 +116,8 @@ class MainView(MainWindow):
         self.commitmsgeditor = CommitMessageEditor(model, self)
         relay_signal(self, self.commitmsgeditor, SIGNAL(signals.amend_mode))
         relay_signal(self, self.commitmsgeditor, SIGNAL(signals.signoff))
+        relay_signal(self, self.commitmsgeditor,
+                     SIGNAL(signals.load_previous_message))
         self.commitdockwidget.setWidget(self.commitmsgeditor)
 
         # "Command Output" widget

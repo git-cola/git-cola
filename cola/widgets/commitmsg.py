@@ -4,6 +4,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
+from cola import gitcmds
 from cola import signals
 from cola.qt import create_toolbutton
 from cola.qtutils import apply_icon
@@ -16,6 +17,9 @@ from cola.qtutils import relay_signal
 from cola.qtutils import save_icon
 from cola.qtutils import tr
 from cola.prefs import diff_font
+from cola.controllers.selectcommits import select_commits
+from cola.dag.model import DAG
+from cola.dag.model import RepoReader
 
 
 class CommitMessageEditor(QtGui.QWidget):
@@ -63,7 +67,8 @@ class CommitMessageEditor(QtGui.QWidget):
         self._layt.addLayout(self._ctrls_layt)
         self.setLayout(self._layt)
 
-        relay_signal(self, self.signoff_button, SIGNAL(signals.signoff))
+        relay_signal(self, self.commitmsg,
+                     SIGNAL(signals.load_previous_message))
         connect_button(self.commit_button, self.commit)
 
         cola.notifier().connect(signals.amend, self.amend_checkbox.setChecked)
@@ -165,6 +170,7 @@ class CommitMessageTextEdit(QtGui.QTextEdit):
         QtGui.QTextEdit.__init__(self, parent)
         self.model = model
         self.notifying = False
+        self.menu_ready= False
         self.setMinimumSize(QtCore.QSize(1, 1))
         policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum,
                                    QtGui.QSizePolicy.Minimum)
@@ -188,3 +194,47 @@ class CommitMessageTextEdit(QtGui.QTextEdit):
         self.blockSignals(True)
         self.setPlainText(unicode(message))
         self.blockSignals(False)
+
+    def contextMenuEvent(self, event):
+        self.menu_ready = False
+        menu = self.createStandardContextMenu()
+        menu.addSeparator()
+        prevmenu = menu.addMenu('Load Previous Commit Message')
+        self.connect(prevmenu, SIGNAL('aboutToShow()'),
+                     lambda: self.prev_commit_menu_clicked(prevmenu, event))
+        menu.exec_(self.mapToGlobal(event.pos()))
+        self.menu_ready = False
+
+    def prev_commit_menu_clicked(self, menu, event):
+        if self.menu_ready:
+            return
+        dag = DAG('HEAD', 6)
+        commits = RepoReader(dag)
+
+        menu_commits = []
+        for idx, c in enumerate(commits):
+            menu_commits.insert(0, c)
+            if idx > 5:
+                continue
+
+        for c in menu_commits:
+            menu.addAction(c.subject,
+                           lambda c=c: self.load_previous_message(c.sha1))
+
+        if len(commits) == 6:
+            menu.addSeparator()
+            menu.addAction('More...', self.choose_commit)
+
+        self.menu_ready = True
+
+    def choose_commit(self):
+        revs, summaries = gitcmds.log_helper()
+        sha1s = select_commits('Select Commit Message', revs, summaries,
+                               multiselect=False)
+        if not sha1s:
+            return
+        sha1 = sha1s[0]
+        self.load_previous_message(sha1)
+
+    def load_previous_message(self, sha1):
+        self.emit(SIGNAL(signals.load_previous_message), sha1)
