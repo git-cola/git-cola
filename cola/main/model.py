@@ -194,9 +194,10 @@ class MainModel(ObservableModel):
         return self.git.apply(filename,
                               with_stderr=True, with_status=True)
 
-    def prev_commitmsg(self):
+    def prev_commitmsg(self, *args):
         """Queries git for the latest commit message."""
-        return core.decode(self.git.log('-1', no_color=True, pretty='format:%s%n%n%b'))
+        log = self.git.log('-1', no_color=True, pretty='format:%s%n%n%b', *args)
+        return core.decode(log)
 
     def update_file_status(self, update_index=False):
         self.notify_message_observers(self.message_about_to_update)

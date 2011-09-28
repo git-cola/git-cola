@@ -537,6 +537,22 @@ class LoadCommitTemplate(LoadCommitMessage):
         return LoadCommitMessage.do(self)
 
 
+class LoadPreviousMessage(Command):
+    """Try to amend a commit."""
+    def __init__(self, sha1):
+        Command.__init__(self)
+        self.sha1 = sha1
+        self.old_commitmsg = self.model.commitmsg
+        self.new_commitmsg = self.model.prev_commitmsg(sha1)
+        self.undoable = True
+
+    def do(self):
+        self.model.set_commitmsg(self.new_commitmsg)
+
+    def undo(self):
+        self.model.set_commitmsg(self.old_commitmsg)
+
+
 class Mergetool(Command):
     """Launch git-mergetool on a list of paths."""
     def __init__(self, paths):
@@ -908,6 +924,7 @@ def register():
         signals.ignore: Ignore,
         signals.load_commit_message: LoadCommitMessage,
         signals.load_commit_template: LoadCommitTemplate,
+        signals.load_previous_message: LoadPreviousMessage,
         signals.modified_summary: Diffstat,
         signals.mergetool: Mergetool,
         signals.open_repo: OpenRepo,

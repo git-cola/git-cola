@@ -18,6 +18,7 @@ class MainController(Controller):
         self.add_global_command(signals.diffstat)
         self.add_global_command(signals.load_commit_message)
         self.add_global_command(signals.load_commit_template)
+        self.add_global_command(signals.load_previous_message)
         self.add_global_command(signals.rescan)
         self.add_global_command(signals.reset_mode)
         self.add_global_command(signals.run_config_action)
