@@ -107,7 +107,6 @@ class DiffTextEdit(DiffView):
                            lambda: guicmds.goto_grep(self.selected_line()))
 
         menu.addSeparator()
-        add_action(menu, 'Copy', self.copy)
         menu.addAction('Copy', self.copy)
         menu.addAction('Select All', self.selectAll)
         menu.exec_(self.mapToGlobal(event.pos()))
