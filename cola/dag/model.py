@@ -142,6 +142,10 @@ class RepoReader(object):
     cached = property(lambda self: self._cached)
     """Return True when no commits remain to be read"""
 
+
+    def __len__(self):
+        return len(self._topo_list)
+
     def reset(self):
         CommitFactory.reset()
         if self._proc:
