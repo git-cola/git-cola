@@ -20,15 +20,15 @@ Fixes
 -----
 * Files can be unstaged when amending.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/82
+  http://github.com/git-cola/git-cola/issues/closed#issue/82
 
 * Show the configured remote.$remote.pushurl in the GUI
 
-  http://github.com/davvid/git-cola/issues/closed#issue/83
+  http://github.com/git-cola/git-cola/issues/closed#issue/83
 
 * Removed usage of the "user" module.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/86
+  http://github.com/git-cola/git-cola/issues/closed#issue/86
 
 * Avoids an extra `git update-index` call during startup.
 
@@ -39,7 +39,7 @@ Usability, bells and whistles
 -----------------------------
 * We now provide better feedback when `git push` fails.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/69
+  http://github.com/git-cola/git-cola/issues/closed#issue/69
 
 * The Fetch, Push, and Pull dialogs now give better feedback
   when interacting with remotes.  The dialogs are modal and
@@ -88,7 +88,7 @@ Fixes
 * Fix unicode errors when home or repository directories contain
   unicode characters.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/74
+  http://github.com/git-cola/git-cola/issues/closed#issue/74
 
   Redhat's bugzilla #694806
 
@@ -100,7 +100,7 @@ Usability, bells and whistles
 -----------------------------
 * The `cola classic` tool can be now configured to be dockable.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/56
+  http://github.com/git-cola/git-cola/issues/closed#issue/56
 
 * The `cola classic` tool now uses visual sigils to indicate a file's status.
   The idea and icons were provided by Uri Okrent.
@@ -122,7 +122,7 @@ Fixes
 * Fixed a stacktrace when trying to use "Get Commit Message Template"
   with an unconfigured "commit.template" git config variable.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/72
+  http://github.com/git-cola/git-cola/issues/closed#issue/72
 
   This bug originated in Redhat's bugzilla #675721 via a Fedora user.
 
@@ -152,7 +152,7 @@ Fixes
 * Guard against 'diff.external' configuration by always
   calling 'git diff' with the '--no-ext-diff' option.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/67
+  http://github.com/git-cola/git-cola/issues/closed#issue/67
 
 * Respect 'gui.diffcontext' so that cola's diff display
   shows the correct number of context lines.
@@ -186,7 +186,7 @@ Fixes
 * Fixed the disappearing actions buttons on PyQt 4.7.4
   as reported by Arch and Ubuntu 10.10.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/62
+  http://github.com/git-cola/git-cola/issues/closed#issue/62
 
 * Fixed mouse interaction with the status widget where some
   items could not be de-selected.
@@ -216,23 +216,23 @@ Usability, bells and whistles
 -----------------------------
 * Allow un/staging by right-clicking top-level items
 
-  http://github.com/davvid/git-cola/issues/closed#issue/57
+  http://github.com/git-cola/git-cola/issues/closed#issue/57
 
 * Running 'commit' with no staged changes prompts to allow
   staging all files.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/55
+  http://github.com/git-cola/git-cola/issues/closed#issue/55
 
 * Fetch, Push, and Pull are now available via the menus
 
-  http://github.com/davvid/git-cola/issues/closed#issue/58
+  http://github.com/git-cola/git-cola/issues/closed#issue/58
 
 Fixes
 -----
 * Simplified the actions widget to work around a regression
   in PyQt4 4.7.4.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/62
+  http://github.com/git-cola/git-cola/issues/closed#issue/62
 
 git-cola v1.4.2.2
 =================
@@ -245,7 +245,7 @@ Fixes
 * Added '...' indicators to the buttons for
   'Fetch...', 'Push...', 'Pull...', and 'Stash...'.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/51
+  http://github.com/git-cola/git-cola/issues/closed#issue/51
 
 * Fixed a hang-on-exit bug in the cola-provided
   'ssh-askpass' implementation.
@@ -256,7 +256,7 @@ Usability, bells and whistles
 -----------------------------
 * Staging and unstaging is faster.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/48
+  http://github.com/git-cola/git-cola/issues/closed#issue/48
 
 * `git-dag` |beta(TM)| reads history in a background thread.
 
@@ -278,7 +278,7 @@ Usability, bells and whistles
 * Added support for the configurable ``guitool.<tool>.*``
   actions as described in ``git-config(1)``.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/44
+  http://github.com/git-cola/git-cola/issues/closed#issue/44
 
   http://www.kernel.org/pub/software/scm/git/docs/git-config.html
 
@@ -295,7 +295,7 @@ Usability, bells and whistles
 * The context menu for modified submodules includes an option
   to launch `git-cola`.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/17
+  http://github.com/git-cola/git-cola/issues/closed#issue/17
 
 * Prefer ``$VISUAL`` over ``$EDITOR`` when both are defined.
   These are used to set a default editor in lieu of `core.editor`
@@ -310,11 +310,11 @@ Usability, bells and whistles
 * Show the path to the current repository in a tooltip
   over the commit message editor.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/45
+  http://github.com/git-cola/git-cola/issues/closed#issue/45
 
 * Log internal ``git`` commands when ``GIT_COLA_TRACE`` is defined.
 
-  http://github.com/davvid/git-cola/issues/closed#issue/39
+  http://github.com/git-cola/git-cola/issues/closed#issue/39
 
 Fixes
 -----
@@ -328,17 +328,17 @@ Fixes
   by the `git-config` parser.
 * Better defaults are used for `fetch`, `push`, and `pull`..
 
-  http://github.com/davvid/git-cola/issues/closed#issue/43
+  http://github.com/git-cola/git-cola/issues/closed#issue/43
 
 Packaging
 ---------
 * Removed colon (`:`) from the applilcation name on Windows
 
-  http://github.com/davvid/git-cola/issues/closed#issue/41
+  http://github.com/git-cola/git-cola/issues/closed#issue/41
 
 * Fixed bugs with the Windows installer
 
-  http://github.com/davvid/git-cola/issues/closed#issue/40
+  http://github.com/git-cola/git-cola/issues/closed#issue/40
 
 * Added a more standard i18n infrastructure.  The install
   tree now has the common ``share/locale/$lang/LC_MESSAGES/git-cola.mo``
@@ -431,16 +431,16 @@ Usability, bells and whistles
 -----------------------------
 * Dragging and dropping patches invokes `git-am`
 
-  http://github.com/davvid/git-cola/issues/closed#issue/3
+  http://github.com/git-cola/git-cola/issues/closed#issue/3
 
 * A dialog to allow opening or cloning a repository
   is presented when `git-cola` is launched outside of a git repository.
 
-  http://github.com/davvid/git-cola/issues/closed/#issue/22
+  http://github.com/git-cola/git-cola/issues/closed/#issue/22
 
 * Warn when `push` is used to create a new branch
 
-  http://github.com/davvid/git-cola/issues/closed#issue/35
+  http://github.com/git-cola/git-cola/issues/closed#issue/35
 
 * Optimized startup time by removing several calls to `git`.
 
@@ -490,11 +490,11 @@ Fixes
 -----
 * Added missing 'Exit Diff Mode' button for 'Diff Expression' mode
 
-  http://github.com/davvid/git-cola/issues/closed/#issue/31
+  http://github.com/git-cola/git-cola/issues/closed/#issue/31
 
 * Fix a bug when initializing fonts on Windows
 
-  http://github.com/davvid/git-cola/issues/closed/#issue/32
+  http://github.com/git-cola/git-cola/issues/closed/#issue/32
 
 
 git-cola v1.4.0.1
@@ -505,15 +505,15 @@ Fixes
 * Keep entries in sorted order in the `cola classic` tool
 * Fix staging untracked files
 
-  http://github.com/davvid/git-cola/issues/closed/#issue/27
+  http://github.com/git-cola/git-cola/issues/closed/#issue/27
 
 * Fix the `show` command in the Stash dialog
 
-  http://github.com/davvid/git-cola/issues/closed/#issue/29
+  http://github.com/git-cola/git-cola/issues/closed/#issue/29
 
 * Fix a typo when loading merge commit messages
 
-  http://github.com/davvid/git-cola/issues/closed/#issue/30
+  http://github.com/git-cola/git-cola/issues/closed/#issue/30
 
 
 git-cola v1.4.0

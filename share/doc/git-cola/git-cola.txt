@@ -108,7 +108,7 @@ SOURCE
 ------
 A 'git-cola' development repository can be obtained via git:
 
-	git clone git://github.com/davvid/git-cola.git
+	git clone git://github.com/git-cola/git-cola.git
 
 
 GUI THEMES
@@ -125,10 +125,10 @@ Built-in styles can be found in `/usr/share/git-cola/styles`.
 LINKS
 -----
 'git-cola' homepage::
-	http://cola.tuxfamily.org/
+	https://git-cola.github.com/
 
 'git-cola' sources on github::
-	http://github.com/davvid/git-cola
+	https://github.com/git-cola/git-cola/
 
 
 SEE ALSO

@@ -2,8 +2,8 @@
 Introduction
 ============
 
-`git-cola` is a powerful GUI for `git` that gives you an easy way to
-interact with Git repositories.
+`git-cola` is a simple, powerful, and feature-rich GUI for `git`
+that provides an easy way to interact with Git repositories.
 
 Git Cola?
 =========
@@ -11,21 +11,21 @@ Out of cola?  Don't panic.
 
 Download
     Visit the
-    `git-cola download page <http://cola.tuxfamily.org/downloads.html>`_
+    `git-cola home page <https://git-cola.github.com/>`_
 
 Discuss
     `git-cola mailing list <http://groups.google.com/group/git-cola>`_.
 
 Improve
     Submit issues and enhancement requests to the
-    `git-cola issue tracker <http://github.com/davvid/git-cola/issues>`_.
+    `git-cola issue tracker <http://github.com/git-cola/git-cola/issues>`_.
 
 Contribute
-    `git-cola on github <http://github.com/davvid/git-cola/>`_
+    `git-cola on github <http://github.com/git-cola/git-cola/>`_
 
     .. sourcecode:: sh
 
-        git clone git://github.com/davvid/git-cola.git
+        git clone git://github.com/git-cola/git-cola.git
 
 
 Installation
