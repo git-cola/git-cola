@@ -2,8 +2,6 @@ prefix ?= $(CURDIR)
 docdir ?= $(DESTDIR)$(prefix)/share/doc/git-cola
 htmldir ?= $(docdir)/html
 SED ?= sed
-COLA_VERSION	?= $(shell sh -c "git tag | tail -1 | $(SED) -e s,^v,,")
-COLA_RELEASE	?= $(shell sh -c "git describe --abbrev=4 --match='v*.*' | $(SED) -e s,^v,,")
 RSYNC ?= rsync
 # Makefile for Sphinx documentation
 #
@@ -37,39 +35,33 @@ clean:
 	-rm -rf conf.py _build
 	$(MAKE) -f Makefile.asciidoc clean
 
-conf.py: conf.py.in
-	$(SED) \
-		-e "s,@@VERSION@@,$(COLA_VERSION)," \
-		-e "s,@@RELEASE@@,$(COLA_RELEASE)," \
-	conf.py.in > conf.py
-
-html: conf.py
+html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) _build/html
 	@echo
 	@echo "Build finished. The HTML pages are in _build/html."
 
-dirhtml: conf.py
+dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) _build/dirhtml
 	@echo
 	@echo "Build finished. The HTML pages are in _build/dirhtml."
 
-pickle: conf.py
+pickle:
 	$(SPHINXBUILD) -b pickle $(ALLSPHINXOPTS) _build/pickle
 	@echo
 	@echo "Build finished; now you can process the pickle files."
 
-json: conf.py
+json:
 	$(SPHINXBUILD) -b json $(ALLSPHINXOPTS) _build/json
 	@echo
 	@echo "Build finished; now you can process the JSON files."
 
-htmlhelp: conf.py
+htmlhelp:
 	$(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) _build/htmlhelp
 	@echo
 	@echo "Build finished; now you can run HTML Help Workshop with the" \
 	      ".hhp project file in _build/htmlhelp."
 
-qthelp: conf.py
+qthelp:
 	$(SPHINXBUILD) -b qthelp $(ALLSPHINXOPTS) _build/qthelp
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
@@ -78,14 +70,14 @@ qthelp: conf.py
 	@echo "To view the help file:"
 	@echo "# assistant -collectionFile _build/qthelp/git-cola.qhc"
 
-latex: conf.py
+latex:
 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) _build/latex
 	@echo
 	@echo "Build finished; the LaTeX files are in _build/latex."
 	@echo "Run \`make all-pdf' or \`make all-ps' in that directory to" \
 	      "run these through (pdf)latex."
 
-changes: conf.py
+changes:
 	$(SPHINXBUILD) -b changes $(ALLSPHINXOPTS) _build/changes
 	@echo
 	@echo "The overview file is in _build/changes."
@@ -96,7 +88,7 @@ linkcheck:
 	@echo "Link check complete; look for any errors in the above output " \
 	      "or in _build/linkcheck/output.txt."
 
-doctest: conf.py
+doctest:
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) _build/doctest
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in _build/doctest/output.txt."
@@ -114,5 +106,3 @@ install-html: html
 
 install-man:
 	$(MAKE) -f Makefile.asciidoc install
-
-.PHONY: conf.py
