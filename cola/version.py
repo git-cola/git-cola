@@ -1,5 +1,9 @@
-# Copyright (c) 2008 David Aguilar
-"""Provides the current cola version number"""
+# Copyright (c) 2012 David Aguilar
+"""Provide cola's version number"""
+
+# The current git-cola version
+_default_version = '1.5.0-rc0'
+
 
 import os
 import sys
@@ -14,7 +18,6 @@ from cola import core
 from cola import errors
 from cola import utils
 from cola.decorators import memoize
-
 
 # minimum version requirements
 _versions = {
@@ -117,14 +120,14 @@ def delete_builtin_version():
 
 
 @memoize
-def version():
+def version(vstr=_default_version):
     """Returns the builtin version or calculates the current version."""
     for v in [builtin_version, git_describe_version]:
         try:
             return v()
         except VersionUnavailable:
             pass
-    return 'unknown'
+    return vstr
 
 
 @memoize
