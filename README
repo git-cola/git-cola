@@ -1,10 +1,8 @@
 git-cola: A highly caffeinated git GUI
 
-git-cola is a sweet, carbonated git GUI known for its
-sugary flavor and caffeine-inspired features.
+git-cola is a simple, powerful, and feature-rich git GUI.
 
-
-Copyright (C) 2007, 2008, 2009, 2010, David Aguilar and contributors
+Copyright (C) 2007-2012, David Aguilar and contributors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,13 +25,12 @@ REQUIREMENTS
 
 FORK
 ----
-~ git clone git://github.com/davvid/git-cola.git cola
-~ cola/bin/git-cola
-~ http://github.com/davvid/git-cola.git
+~ https://github.com/git-cola/git-cola.git
+~ git clone git://github.com/git-cola/git-cola.git
 
 DOWNLOAD
 --------
-~ http://cola.tuxfamily.org/
+~ https://git-cola.github.com/
 
 DISCUSS
 -------
@@ -43,11 +40,10 @@ Join, suggest features, and send patches with 'git send-mail'.
 
 SUPPORT
 -------
-~ http://github.com/davvid/git-cola/issues
+~ http://github.com/git-cola/git-cola/issues
 
 ACKNOWLEDGEMENTS
 ----------------
 git-cola includes the following modules:
-GitPython ~ http://gitorious.org/projects/git-python/
 jsonpickle ~ https://github.com/jsonpickle/jsonpickle
 simplejson ~ http://code.google.com/p/simplejson/
