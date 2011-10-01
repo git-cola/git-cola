@@ -826,7 +826,8 @@ class GraphView(QtGui.QGraphicsView):
             item.blockSignals(True)
             item.setSelected(True)
             item.blockSignals(False)
-            self.ensureVisible(item.mapRectToScene(item.boundingRect()))
+            item_rect = item.sceneTransform().mapRect(item.boundingRect())
+            self.ensureVisible(item_rect)
 
     def selected_item(self):
         """Return the currently selected item"""
