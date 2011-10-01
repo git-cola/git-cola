@@ -1098,6 +1098,7 @@ class GraphView(QtGui.QGraphicsView):
             return
         self._zoom = scale
 
+        adjust_scrollbars = True
         scrollbar = self.verticalScrollBar()
         if scrollbar:
             value = scrollbar.value()
@@ -1105,13 +1106,17 @@ class GraphView(QtGui.QGraphicsView):
             max_ = scrollbar.maximum()
             range_ = max_ - min_
             distance = value - min_
-            scrolloffset = distance/float(range_)
+            nonzero_range = float(range_) != 0.0
+            if nonzero_range:
+                scrolloffset = distance/float(range_)
+            else:
+                adjust_scrollbars = False
 
         self.setTransformationAnchor(QtGui.QGraphicsView.NoAnchor)
         self.scale(scale, scale)
 
         scrollbar = self.verticalScrollBar()
-        if scrollbar:
+        if scrollbar and adjust_scrollbars:
             min_ = scrollbar.minimum()
             max_ = scrollbar.maximum()
             range_ = max_ - min_
