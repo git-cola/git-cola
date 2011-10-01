@@ -154,7 +154,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self._sha1map.clear()
         self._commits = []
 
-    def add_commits(self,commits):
+    def add_commits(self, commits):
         self._commits.extend(commits)
         items = []
         for c in reversed(commits):
@@ -208,7 +208,7 @@ class GitDAGWidget(standard.StandardDialog):
         self.setMinimumSize(1, 1)
 
         self.revlabel = QtGui.QLabel()
-        self.revlabel.setText('Revision')
+        self.revlabel.setText('git log -')
 
         self.revtext = GitRefLineEdit()
         self.revtext.setText(dag.ref)
@@ -231,11 +231,11 @@ class GitDAGWidget(standard.StandardDialog):
 
         self._buttons_layt = QtGui.QHBoxLayout()
         self._buttons_layt.setMargin(2)
-        self._buttons_layt.setSpacing(2)
+        self._buttons_layt.setSpacing(4)
 
         self._buttons_layt.addWidget(self.revlabel)
-        self._buttons_layt.addWidget(self.revtext)
         self._buttons_layt.addWidget(self.maxresults)
+        self._buttons_layt.addWidget(self.revtext)
         self._buttons_layt.addWidget(self.displaybutton)
         self._buttons_layt.addStretch()
         self._buttons_layt.addWidget(self.zoom_out)
@@ -270,6 +270,7 @@ class GitDAGWidget(standard.StandardDialog):
 
         self._layt = layt = QtGui.QVBoxLayout()
         layt.setMargin(0)
+        layt.setSpacing(0)
         layt.addLayout(self._buttons_layt)
         layt.addWidget(self._mainsplitter)
         self.setLayout(layt)
@@ -305,7 +306,7 @@ class GitDAGWidget(standard.StandardDialog):
             return
         self.stop()
         self.clear()
-        self.dag.set_ref(unicode(self.revtext.text()))
+        self.dag.set_ref(new_ref)
         self.dag.set_count(self.maxresults.value())
         self.start()
 

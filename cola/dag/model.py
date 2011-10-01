@@ -1,6 +1,8 @@
+import shlex
+
+from cola import core
 from cola import git
 from cola import utils
-from cola import core
 from cola.observable import Observable
 
 # put subject at the end b/c it can contain
@@ -138,10 +140,10 @@ class RepoReader(object):
         self.git = git
         self._proc = None
         self._objects = {}
-        self._cmd = ('git', 'log',
+        self._cmd = ['git', 'log',
                      '--topo-order',
                      '--reverse',
-                     '--pretty='+logfmt)
+                     '--pretty='+logfmt]
         self._cached = False
         """Indicates that all data has been read"""
         self._idx = -1
@@ -179,7 +181,8 @@ class RepoReader(object):
                 self._idx = -1
                 raise StopIteration
         if self._proc is None:
-            cmd = self._cmd + ('-%d' % self.dag.count, self.dag.ref)
+            ref_args = shlex.split(core.encode(self.dag.ref))
+            cmd = self._cmd + ['-%d' % self.dag.count] + ref_args
             self._proc = utils.start_command(cmd)
             self._topo_list = []
         log_entry = self._proc.stdout.readline().rstrip()
