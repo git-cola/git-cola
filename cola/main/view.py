@@ -196,8 +196,6 @@ class MainView(MainWindow):
         self.menu_visualize_all = add_action(self,
                 'Visualize All Branches...',
                 emit(self, signals.visualize_all))
-        self.menu_browse_commits = add_action(self,
-                'Browse...', guicmds.browse_commits)
         self.menu_search_commits = add_action(self,
                 'Search...', search.search)
         self.menu_browse_branch = add_action(self,
@@ -261,7 +259,6 @@ class MainView(MainWindow):
         self.commit_menu.addAction(self.menu_unstage_all)
         self.commit_menu.addAction(self.menu_unstage_selected)
         self.commit_menu.addSeparator()
-        self.commit_menu.addAction(self.menu_browse_commits)
         self.commit_menu.addAction(self.menu_search_commits)
         # Add to menubar
         self.menubar.addAction(self.commit_menu.menuAction())

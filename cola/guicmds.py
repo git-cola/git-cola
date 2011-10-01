@@ -81,14 +81,6 @@ def branch_diff():
     cola.notifier().broadcast(signals.diff_mode, branch)
 
 
-def browse_commits():
-    """Launch the 'Browse Commits' dialog."""
-    from cola.controllers.selectcommits import select_commits
-
-    revs, summaries = gitcmds.log_helper(all=True)
-    select_commits('Browse Commits', revs, summaries)
-
-
 def browse_current():
     """Launch the 'Browse Current Branch' dialog."""
     from cola.controllers.repobrowser import browse_git_branch
