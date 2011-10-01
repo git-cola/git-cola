@@ -87,12 +87,7 @@ def release_version():
     then try git-describe, then default.
 
     """
-    if os.path.exists('version'):
-        fp = open('version', 'r')
-        v = core.read_nointr(fp).strip()
-        fp.close()
-        return v
-    elif os.path.isdir('.git'):
+    if os.path.isdir('.git'):
         try:
             return git_describe_version()
         except VersionUnavailable:
