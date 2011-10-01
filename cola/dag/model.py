@@ -10,11 +10,13 @@ git = git.instance()
 
 
 class CommitFactory(object):
+    root_generation = 0
     _commits = {}
 
     @classmethod
     def reset(cls):
         cls._commits.clear()
+        cls.root_generation = 0
 
     @classmethod
     def new(cls, sha1=None, log_entry=None):
@@ -24,9 +26,15 @@ class CommitFactory(object):
             commit = cls._commits[sha1]
             if log_entry and not commit.parsed:
                 commit.parse(log_entry)
+            cls.root_generation = max(commit.generation,
+                                      cls.root_generation)
         except KeyError:
             commit = Commit(sha1=sha1,
                             log_entry=log_entry)
+            if not log_entry:
+                cls.root_generation += 1
+                commit.generation = max(commit.generation,
+                                        cls.root_generation)
             cls._commits[sha1] = commit
         return commit
 
@@ -48,6 +56,8 @@ class DAG(Observable):
         self.notify_message_observers(self.count_updated)
 
 class Commit(object):
+    root_generation = 0
+
     __slots__ = ('sha1',
                  'subject',
                  'parents',
@@ -66,7 +76,7 @@ class Commit(object):
         self.author = None
         self.authdate = None
         self.parsed = False
-        self.generation = 0
+        self.generation = CommitFactory.root_generation
         if log_entry:
             self.parse(log_entry)
 
