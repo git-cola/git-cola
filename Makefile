@@ -46,17 +46,9 @@ install: all
 	! test -e cola && ln -s git-cola cola) || true
 
 # Maintainer's dist target
-dist: all
-	$(GIT) archive --format=tar --prefix=$(cola_dist)/ HEAD^{tree} \
-		>$(cola_dist).tar
-	mkdir -p $(cola_dist)/cola
-	cp cola/builtin_version.py $(cola_dist)/cola
-	echo $(cola_version) > $(cola_dist)/version
-	$(TAR) rf $(cola_dist).tar \
-		$(cola_dist)/version \
-		$(cola_dist)/cola/builtin_version.py
-	rm -r $(cola_dist)
-	gzip -f -9 $(cola_dist).tar
+dist:
+	$(GIT) archive --format=tar --prefix=$(cola_dist)/ HEAD^{tree} | \
+		gzip -f -9 - >$(cola_dist).tar.gz
 
 doc:
 	$(MAKE) -C share/doc/git-cola prefix=$(prefix) all
