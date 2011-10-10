@@ -125,7 +125,7 @@ Built-in styles can be found in `/usr/share/git-cola/styles`.
 LINKS
 -----
 'git-cola' homepage::
-	https://git-cola.github.com/
+	http://git-cola.github.com/
 
 'git-cola' sources on github::
 	https://github.com/git-cola/git-cola/
