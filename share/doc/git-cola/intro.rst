@@ -11,7 +11,7 @@ Out of cola?  Don't panic.
 
 Download
     Visit the
-    `git-cola home page <https://git-cola.github.com/>`_
+    `git-cola home page <http://git-cola.github.com/>`_
 
 Discuss
     `git-cola mailing list <http://groups.google.com/group/git-cola>`_.
@@ -51,11 +51,10 @@ If you have the git-cola source::
     make && bin/git-cola
 
 
-Thanks to
-=========
+Special Thanks
+==============
 `git-cola` was made possible due to the contributions of the following people:
 
-* `GIT Hackers <http://git-scm.com/about>`_
 * Audrius Karabanovas
 * Barry Roberts
 * Boris W
@@ -64,6 +63,7 @@ Thanks to
 * Daniel King
 * David Aguilar
 * David Martínez Martí
+* `GIT Hackers <http://git-scm.com/about>`_
 * Iulian Udrea
 * Justin Lecher
 * Karl Bielefeldt
