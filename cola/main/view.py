@@ -146,8 +146,7 @@ class MainView(MainWindow):
                 'Preferences', lambda: preferences(model=prefs_model),
                 QtGui.QKeySequence.Preferences, 'Ctrl+O')
         self.menu_rescan = add_action(self,
-                'Rescan', emit(self, signals.rescan),
-                'Ctrl+R', QtGui.QKeySequence.Refresh)
+                'Rescan', emit(self, signals.rescan), 'Ctrl+R')
         self.menu_cherry_pick = add_action(self,
                 'Cherry-Pick...', guicmds.cherry_pick, 'Ctrl+P')
         self.menu_unstage_all = add_action(self,
