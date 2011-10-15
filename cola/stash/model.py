@@ -1,15 +1,16 @@
 import cola
-from cola import git
 from cola import observable
+from cola import signals
+from cola.git import git
+from cola.cmds import BaseCommand
 
 
 class StashModel(observable.Observable):
     def __init__(self):
         observable.Observable.__init__(self)
-        self.git = git.instance()
 
     def stash_list(self):
-        return self.git.stash('list').splitlines()
+        return git.stash('list').splitlines()
 
     def has_stashable_changes(self):
         model = cola.model()
@@ -24,6 +25,27 @@ class StashModel(observable.Observable):
         return stashes, revids, names
 
     def stash_diff(self, rev):
-        diffstat = self.git.stash('show', rev)
-        diff = self.git.stash('show', '-p', rev)
+        diffstat = git.stash('show', rev)
+        diff = git.stash('show', '-p', rev)
         return diffstat + '\n\n' + diff
+
+
+class ApplyStash(BaseCommand):
+    command = 'apply_stash'
+    def __init__(self, selection, index):
+        BaseCommand.__init__(self)
+        self.selection = selection
+        self.index = index
+
+    def do(self):
+        if self.index:
+            args = ['apply', '--index', self.selection]
+        else:
+            args = ['apply', self.selection]
+        status, output = git.stash(with_stderr=True, with_status=True, *args)
+        cola.notifier().broadcast(signals.log_cmd, status, output)
+
+
+command_directory = {
+    ApplyStash.command: ApplyStash,
+}

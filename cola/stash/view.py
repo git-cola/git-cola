@@ -8,6 +8,7 @@ from cola import qt
 from cola import qtutils
 from cola import signals
 from cola import utils
+from cola.stash.model import ApplyStash
 from cola.views import standard
 from cola.widgets.diff import DiffView
 
@@ -159,9 +160,8 @@ class StashView(standard.StandardDialog):
         selection = self.selected_stash()
         if not selection:
             return
-        qtutils.log(*self.model.git.stash('apply', '--index', selection,
-                                          with_stderr=True,
-                                          with_status=True))
+        index = self.keep_index.isChecked()
+        self.emit(SIGNAL(ApplyStash.command), selection, index)
         self.accept()
         self.emit(SIGNAL(signals.rescan))
 
