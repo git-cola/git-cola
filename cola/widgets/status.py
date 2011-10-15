@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
@@ -321,14 +322,38 @@ class StatusWidget(QtGui.QWidget):
 
         if untracked:
             menu.addSeparator()
-            menu.addAction(self.tr('Delete File(s)'),
-                           SLOT(signals.delete, self.untracked()))
+            menu.addAction(self.tr('Delete File(s)'), self._delete_files)
             menu.addSeparator()
             menu.addAction(self.tr('Add to .gitignore'),
                            SLOT(signals.ignore,
                                 map(lambda x: '/' + x, self.untracked())))
 
         return menu
+
+    def _delete_files(self):
+        files = self.untracked()
+        count = len(files)
+        if count == 0:
+            return
+        if count > 1:
+            msg = unicode(self.tr('Delete %d Files')) % count
+            info = self.tr('The following files will be deleted:\n\n')
+        else:
+            msg = self.tr('Delete 1 File')
+            info = self.tr('The following file will be deleted:\n\n')
+
+        fileinfo = subprocess.list2cmdline(files)
+        if len(fileinfo) > 2048:
+            fileinfo = fileinfo[:2048].rstrip() + '...'
+        info += fileinfo
+        if count > 1:
+            info += '\n\nDelete all %d files?' % count
+        else:
+            info += '\n\nDelete this file?'
+        ok_text = self.tr('Delete')
+        if qtutils.confirm(self, msg, msg, info, ok_text,
+                           icon=qtutils.discard_icon()):
+            cola.notifier().broadcast(signals.delete, files)
 
     def _remove_unstaged_edits(self, use_staged=False):
         if not self.model.undoable():
