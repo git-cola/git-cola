@@ -877,6 +877,8 @@ class VisualizePaths(Command):
         utils.fork(self.argv)
 
 
+visualize_revision = 'visualize_revision'
+
 class VisualizeRevision(Command):
     """Visualize a specific revision."""
     def __init__(self, revision, paths=None):

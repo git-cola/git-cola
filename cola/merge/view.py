@@ -3,22 +3,21 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import qtutils
-from cola import signals
 from cola.qt import GitRefLineEdit
 from cola.qtutils import tr
+from cola.merge.model import merge, visualize_revision
+
 
 class MergeView(QtGui.QDialog):
     """Provides a dialog for merging branches."""
     def __init__(self, model, parent=None):
         QtGui.QDialog.__init__(self, parent)
         self.model = model
-
         self.setWindowModality(Qt.WindowModal)
         self.resize(700, 400)
 
         # Widgets
         self.title_label = QtGui.QLabel()
-
         self.revision_label = QtGui.QLabel()
         self.revision_label.setText(tr('Revision To Merge'))
 
@@ -27,10 +26,8 @@ class MergeView(QtGui.QDialog):
         self.radio_local = QtGui.QRadioButton()
         self.radio_local.setText(tr('Local Branch'))
         self.radio_local.setChecked(True)
-
         self.radio_remote = QtGui.QRadioButton()
         self.radio_remote.setText(tr('Tracking Branch'))
-
         self.radio_tag = QtGui.QRadioButton()
         self.radio_tag.setText(tr('Tag'))
 
@@ -113,11 +110,10 @@ class MergeView(QtGui.QDialog):
                      self.viz_revision)
 
         # Observer messages
-        msg = model.message_updated
-        model.add_message_observer(msg, self.update_from_model)
-        self.update_from_model()
+        model.add_message_observer(model.message_updated, self.update_all)
+        self.update_all()
 
-    def update_from_model(self):
+    def update_all(self):
         """Set the branch name for the window title and label."""
         self.update_title()
         self.update_revisions()
@@ -175,7 +171,7 @@ class MergeView(QtGui.QDialog):
             qtutils.information('No Revision Specified',
                                 'You must specify a revision to view')
             return
-        self.emit(SIGNAL(signals.visualize_revision), revision)
+        self.emit(SIGNAL(visualize_revision), revision)
 
     def merge_revision(self):
         """Merge the selected revision/branch"""
@@ -187,6 +183,5 @@ class MergeView(QtGui.QDialog):
 
         do_commit = self.checkbox_commit.isChecked()
         squash = self.checkbox_squash.isChecked()
-        self.emit(SIGNAL(self.model.message_merge),
-                  revision, not(do_commit), squash)
+        self.emit(SIGNAL(merge), revision, not(do_commit), squash)
         self.accept()

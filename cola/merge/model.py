@@ -1,12 +1,11 @@
 import cola
-from cola.cmds import BaseCommand
 from cola import gitcmds
 from cola import observable
 from cola import signals
+from cola.cmds import BaseCommand, VisualizeRevision, visualize_revision
 
 
 class MergeModel(observable.Observable):
-    message_merge = 'merge'
     message_updated = 'updated'
 
     def __init__(self):
@@ -45,7 +44,10 @@ class MergeModel(observable.Observable):
         return status, output
 
 
-class MergeRevision(BaseCommand):
+# Merge command
+merge = 'merge'
+
+class Merge(BaseCommand):
     def __init__(self, revision, no_commit, squash):
         BaseCommand.__init__(self)
         self.revision = revision
@@ -63,5 +65,6 @@ class MergeRevision(BaseCommand):
 
 
 command_directory = {
-    MergeModel.message_merge: MergeRevision,
+    merge: Merge,
+    visualize_revision: VisualizeRevision,
 }
