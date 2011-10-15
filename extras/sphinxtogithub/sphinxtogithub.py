@@ -1,6 +1,7 @@
 #! /usr/bin/env python
  
 from optparse import OptionParser
+import warnings
 import os
 import sys
 import shutil
@@ -316,9 +317,12 @@ def sphinx_extension(app, exception):
 def setup(app):
     "Setup function for Sphinx Extension"
 
+    if (not hasattr(app, 'add_config_value') or
+        not hasattr(app, 'connect')):
+        warnings.warn('Could not call add_config_value() in sphinxtogithub')
+        return
     app.add_config_value("sphinx_to_github", True, '')
     app.add_config_value("sphinx_to_github_verbose", True, '')
-
     app.connect("build-finished", sphinx_extension)
 
 
