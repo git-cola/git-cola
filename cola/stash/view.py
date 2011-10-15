@@ -6,9 +6,8 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import qt
 from cola import qtutils
-from cola import signals
 from cola import utils
-from cola.stash.model import save_stash, apply_stash, drop_stash
+from cola.stash.model import save_stash, apply_stash, drop_stash, rescan
 from cola.views import standard
 from cola.widgets.diff import DiffView
 
@@ -102,7 +101,7 @@ class StashView(standard.StandardDialog):
 
     def close(self):
         self.accept()
-        self.emit(SIGNAL(signals.rescan))
+        self.emit(SIGNAL(rescan))
 
     def toolbutton(self, text, tooltip, icon):
         return qt.create_toolbutton(self,
@@ -163,7 +162,7 @@ class StashView(standard.StandardDialog):
         index = self.keep_index.isChecked()
         self.emit(SIGNAL(apply_stash), selection, index)
         self.accept()
-        self.emit(SIGNAL(signals.rescan))
+        self.emit(SIGNAL(rescan))
 
     def stash_save(self):
         """Saves the worktree in a stash
@@ -186,7 +185,7 @@ class StashView(standard.StandardDialog):
         keep_index = self.keep_index.isChecked()
         self.emit(SIGNAL(save_stash), stash_name, keep_index)
         self.accept()
-        self.emit(SIGNAL(signals.rescan))
+        self.emit(SIGNAL(rescan))
 
     def stash_remove(self):
         """Drops the currently selected stash

@@ -2,7 +2,7 @@ import cola
 from cola import observable
 from cola import signals
 from cola.git import git
-from cola.cmds import BaseCommand
+from cola.cmds import BaseCommand, Rescan, rescan
 
 apply_stash = 'apply_stash'
 drop_stash = 'drop_stash'
@@ -78,5 +78,6 @@ class SaveStash(BaseCommand):
 command_directory = {
     apply_stash: ApplyStash,
     drop_stash: DropStash,
+    rescan: Rescan,
     save_stash: SaveStash,
 }

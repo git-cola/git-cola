@@ -591,6 +591,8 @@ class Clone(Command):
             utils.fork(['python', sys.argv[0], '--repo', self.new_directory])
 
 
+rescan = 'rescan'
+
 class Rescan(Command):
     """Rescans for changes."""
     def do(self):
