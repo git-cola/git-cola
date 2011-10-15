@@ -20,6 +20,11 @@ class Controller(object):
             handler = self.do_wrapper(signal)
         self.view.connect(self.view, SIGNAL(signal), handler)
 
+    def add_commands(self, command_directory, handler=None):
+        for signal, cmdclass in command_directory.items():
+            self.factory.add_command(signal, cmdclass)
+            self.add_command(signal, handler=handler)
+
     def add_global_command(self, signal):
         self.view.connect(self.view, SIGNAL(signal), SLOT(signal))
 
