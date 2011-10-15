@@ -19,6 +19,17 @@ class StatusWidget(QtGui.QWidget):
     Qt signals.
 
     """
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
+        self.layout = QtGui.QVBoxLayout(self)
+        self.setLayout(self.layout)
+
+        self.tree = StatusTreeWidget(self)
+        self.layout.addWidget(self.tree)
+        self.layout.setContentsMargins(0, 0, 0, 0)
+
+
+class StatusTreeWidget(QtGui.QTreeWidget):
     # Item categories
     idx_header = -1
     idx_staged = 0
@@ -30,22 +41,15 @@ class StatusWidget(QtGui.QWidget):
     # Read-only access to the mode state
     mode = property(lambda self: self.model.mode)
 
-    def __init__(self, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+    def __init__(self, parent):
+        QtGui.QTreeWidget.__init__(self, parent)
 
-        self.layout = QtGui.QVBoxLayout(self)
-        self.setLayout(self.layout)
-
-        self.tree = QtGui.QTreeWidget(self)
-        self.layout.addWidget(self.tree)
-        self.layout.setContentsMargins(0, 0, 0, 0)
-
-        self.tree.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
-        self.tree.headerItem().setHidden(True)
-        self.tree.setAllColumnsShowFocus(True)
-        self.tree.setSortingEnabled(False)
-        self.tree.setUniformRowHeights(True)
-        self.tree.setAnimated(True)
+        self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+        self.headerItem().setHidden(True)
+        self.setAllColumnsShowFocus(True)
+        self.setSortingEnabled(False)
+        self.setUniformRowHeights(True)
+        self.setAnimated(True)
 
         self.add_item('Staged', 'plus.png', hide=True)
         self.add_item('Modified', 'modified.png', hide=True)
@@ -55,11 +59,6 @@ class StatusWidget(QtGui.QWidget):
         # Used to restore the selection
         self.old_selection = None
         self.old_scroll = None
-
-        # Handle these events here
-        self.tree.contextMenuEvent = self.tree_context_menu_event
-        self.tree_mouse_release_event = self.tree.mouseReleaseEvent
-        self.tree.mouseReleaseEvent = self.tree_click_event
 
         self.expanded_items = set()
 
@@ -71,23 +70,23 @@ class StatusWidget(QtGui.QWidget):
                                         self.about_to_update)
         self.model.add_message_observer(self.model.message_updated,
                                         self.updated)
-        self.connect(self.tree, SIGNAL('itemSelectionChanged()'),
-                     self.tree_selection)
-        self.connect(self.tree,
-                     SIGNAL('itemDoubleClicked(QTreeWidgetItem*, int)'),
-                     self.tree_doubleclick)
 
-        self.connect(self.tree,
-                     SIGNAL('itemClicked(QTreeWidgetItem*, int)'),
-                     self.tree_click)
+        self.connect(self, SIGNAL('itemSelectionChanged()'),
+                     self.show_selection)
+        self.connect(self,
+                     SIGNAL('itemDoubleClicked(QTreeWidgetItem*,int)'),
+                     self.double_clicked)
+        self.connect(self,
+                     SIGNAL('itemClicked(QTreeWidgetItem*,int)'),
+                     self.clicked)
 
     def add_item(self, txt, path, hide=False):
         """Create a new top-level item in the status tree."""
-        item = QtGui.QTreeWidgetItem(self.tree)
+        item = QtGui.QTreeWidgetItem(self)
         item.setText(0, self.tr(txt))
         item.setIcon(0, qtutils.icon(path))
         if hide:
-            self.tree.setItemHidden(item, True)
+            self.setItemHidden(item, True)
 
     def restore_selection(self):
         if not self.old_selection:
@@ -111,11 +110,11 @@ class StatusWidget(QtGui.QWidget):
         def select_item(item):
             if not item:
                 return
-            self.tree.setItemSelected(item, True)
+            self.setItemSelected(item, True)
             parent = item.parent()
             if parent:
-                self.tree.scrollToItem(parent)
-            self.tree.scrollToItem(item)
+                self.scrollToItem(parent)
+            self.scrollToItem(item)
 
         def select_unstaged(item):
             idx = updated_unstaged.index(item)
@@ -146,19 +145,18 @@ class StatusWidget(QtGui.QWidget):
         return self._subtree_item(self.idx_modified, itemidx)
 
     def unstaged_item(self, itemidx):
-        tree = self.tree
         # is it modified?
-        item = tree.topLevelItem(self.idx_modified)
+        item = self.topLevelItem(self.idx_modified)
         count = item.childCount()
         if itemidx < count:
             return item.child(itemidx)
         # is it unmerged?
-        item = tree.topLevelItem(self.idx_unmerged)
+        item = self.topLevelItem(self.idx_unmerged)
         count += item.childCount()
         if itemidx < count:
             return item.child(itemidx)
         # is it untracked?
-        item = tree.topLevelItem(self.idx_untracked)
+        item = self.topLevelItem(self.idx_untracked)
         count += item.childCount()
         if itemidx < count:
             return item.child(itemidx)
@@ -166,7 +164,7 @@ class StatusWidget(QtGui.QWidget):
         return None
 
     def _subtree_item(self, idx, itemidx):
-        parent = self.tree.topLevelItem(idx)
+        parent = self.topLevelItem(idx)
         return parent.child(itemidx)
 
     def about_to_update(self):
@@ -176,7 +174,7 @@ class StatusWidget(QtGui.QWidget):
         self.old_selection = self.selection()
 
         self.old_scroll = None
-        vscroll = self.tree.verticalScrollBar()
+        vscroll = self.verticalScrollBar()
         if vscroll:
             self.old_scroll = vscroll.value()
 
@@ -190,7 +188,7 @@ class StatusWidget(QtGui.QWidget):
         self.set_unmerged(self.model.unmerged)
         self.set_untracked(self.model.untracked)
 
-        vscroll = self.tree.verticalScrollBar()
+        vscroll = self.verticalScrollBar()
         if vscroll and self.old_scroll is not None:
             vscroll.setValue(self.old_scroll)
 
@@ -198,7 +196,7 @@ class StatusWidget(QtGui.QWidget):
 
         if not self.model.staged:
             return
-        staged = self.tree.topLevelItem(self.idx_staged)
+        staged = self.topLevelItem(self.idx_staged)
         if self.mode in self.model.modes_read_only:
             staged.setText(0, self.tr('Changed'))
         else:
@@ -226,11 +224,11 @@ class StatusWidget(QtGui.QWidget):
                      untracked=False,
                      check=True):
         """Add a list of items to a treewidget item."""
-        parent = self.tree.topLevelItem(idx)
+        parent = self.topLevelItem(idx)
         if items:
-            self.tree.setItemHidden(parent, False)
+            self.setItemHidden(parent, False)
         else:
-            self.tree.setItemHidden(parent, True)
+            self.setItemHidden(parent, True)
         parent.takeChildren()
         for item in items:
             treeitem = qtutils.create_treeitem(item,
@@ -252,16 +250,16 @@ class StatusWidget(QtGui.QWidget):
         if idx in self.expanded_items:
             return
         self.expanded_items.add(idx)
-        item = self.tree.topLevelItem(idx)
+        item = self.topLevelItem(idx)
         if item:
-            self.tree.expandItem(item)
+            self.expandItem(item)
 
-    def tree_context_menu_event(self, event):
+    def contextMenuEvent(self, event):
         """Create context menus for the repo status tree."""
-        menu = self.tree_context_menu_setup()
-        menu.exec_(self.tree.mapToGlobal(event.pos()))
+        menu = self.create_context_menu()
+        menu.exec_(self.mapToGlobal(event.pos()))
 
-    def tree_context_menu_setup(self):
+    def create_context_menu(self):
         """Set up the status menu for the repo status tree."""
         staged, modified, unmerged, untracked = self.selection()
         menu = QtGui.QMenu(self)
@@ -327,7 +325,6 @@ class StatusWidget(QtGui.QWidget):
             menu.addAction(self.tr('Add to .gitignore'),
                            SLOT(signals.ignore,
                                 map(lambda x: '/' + x, self.untracked())))
-
         return menu
 
     def _delete_files(self):
@@ -414,7 +411,7 @@ class StatusWidget(QtGui.QWidget):
 
     def selected_indexes(self):
         """Returns a list of (category, row) representing the tree selection."""
-        selected = self.tree.selectedIndexes()
+        selected = self.selectedIndexes()
         result = []
         for idx in selected:
             if idx.parent().isValid():
@@ -446,44 +443,41 @@ class StatusWidget(QtGui.QWidget):
         return self._subtree_selection(self.idx_untracked, self.model.untracked)
 
     def _subtree_selection(self, idx, items):
-        item = self.tree.topLevelItem(idx)
+        item = self.topLevelItem(idx)
         return qtutils.tree_selection(item, items)
 
-    def tree_click(self, event):
-        """
-        Called when a repo status tree item is clicked.
-
-        This handles the behavior where clicking on the icon invokes
-        the same appropriate action.
-
-        """
-        result = QtGui.QTreeWidget.mouseReleaseEvent(self.tree, event)
-
-        # Sync the selection model
-        s, m, um, ut = self.selection()
-        cola.selection_model().set_selection(s, m, um, ut)
-
-        # Get the item that was clicked
-        item = self.tree.itemAt(event.pos())
-        if not item:
-            # Nothing was clicked -- reset the display and return
-            cola.notifier().broadcast(signals.reset_mode)
-            items = self.tree.selectedItems()
-            self.tree.blockSignals(True)
-            for i in items:
-                self.tree.setItemSelected(i, False)
-            self.tree.blockSignals(False)
+    def mouseReleaseEvent(self, event):
+        result = QtGui.QTreeWidget.mouseReleaseEvent(self, event)
+        self.clicked()
         return result
 
-    def tree_click_event(self, event):
-        self.tree_mouse_release_event(event)
-        self.tree_click()
+    def clicked(self, item=None, idx=None):
+        """Called when a repo status tree item is clicked.
 
-    def tree_click(self, column=None):
-        """Called when an item is clicked in the repo status tree."""
+        This handles the behavior where clicking on the icon invokes
+        the a context-specific action.
+
+        """
         if self.model.read_only():
             return
+
+        # Sync the selection model
         staged, modified, unmerged, untracked = self.selection()
+        cola.selection_model().set_selection(staged, modified,
+                                             unmerged, untracked)
+
+        # Clear the selection if an empty area was clicked
+        selection = self.selected_indexes()
+        if not selection:
+            if self.mode == self.model.mode_amend:
+                cola.notifier().broadcast(signals.set_diff_text, '')
+            else:
+                cola.notifier().broadcast(signals.reset_mode)
+            self.blockSignals(True)
+            self.clearSelection()
+            self.blockSignals(False)
+            return
+
         if staged:
             qtutils.set_clipboard(staged[0])
         elif modified:
@@ -493,7 +487,7 @@ class StatusWidget(QtGui.QWidget):
         elif untracked:
             qtutils.set_clipboard(untracked[0])
 
-    def tree_doubleclick(self, item, column):
+    def double_clicked(self, item, idx):
         """Called when an item is double-clicked in the repo status tree."""
         if self.model.read_only():
             return
@@ -507,8 +501,8 @@ class StatusWidget(QtGui.QWidget):
         elif untracked:
             cola.notifier().broadcast(signals.stage, untracked)
 
-    def tree_selection(self):
-        """Show a data for the selected item."""
+    def show_selection(self):
+        """Show the selected item."""
         # Sync the selection model
         s, m, um, ut = self.selection()
         cola.selection_model().set_selection(s, m, um, ut)
@@ -539,34 +533,3 @@ class StatusWidget(QtGui.QWidget):
 
         elif category == self.idx_untracked:
             cola.notifier().broadcast(signals.show_untracked, self.unstaged())
-
-    def index_for_item(self, item):
-        """
-        Given an item, returns the index of the item.
-
-        The indexes for unstaged items are grouped such that
-        the index of unmerged[1] = len(modified) + 1, etc.
-
-        """
-        if not item:
-            return False, -1
-
-        parent = item.parent()
-        if not parent:
-            return False, -1
-
-        pidx = self.tree.indexOfTopLevelItem(parent)
-        if pidx == self.idx_staged:
-            return True, parent.indexOfChild(item)
-        elif pidx == self.idx_modified:
-            return False, parent.indexOfChild(item)
-
-        count = self.tree.topLevelItem(self.idx_modified).childCount()
-        if pidx == self.idx_unmerged:
-            return False, count + parent.indexOfChild(item)
-
-        count += self.tree.topLevelItem(self.idx_unmerged).childCount()
-        if pidx == self.idx_untracked:
-            return False, count + parent.indexOfChild(item)
-
-        return False, -1

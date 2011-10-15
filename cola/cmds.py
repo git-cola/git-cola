@@ -92,6 +92,7 @@ class AmendMode(Command):
         # else, amend unchecked, regular commit
         self.new_mode = self.model.mode_none
         self.new_head = 'HEAD'
+        self.new_diff_text = ''
         self.new_commitmsg = self.model.commitmsg
         # If we're going back into new-commit-mode then search the
         # undo stack for a previous amend-commit-mode and grab the
@@ -690,6 +691,7 @@ class RunConfigAction(Command):
 
 class SetDiffText(Command):
     def __init__(self, text):
+        Command.__init__(self)
         self.undoable = True
         self.new_diff_text = text
 
