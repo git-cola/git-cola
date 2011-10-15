@@ -4,6 +4,10 @@ from cola import signals
 from cola.git import git
 from cola.cmds import BaseCommand
 
+apply_stash = 'apply_stash'
+drop_stash = 'drop_stash'
+save_stash = 'save_stash'
+
 
 class StashModel(observable.Observable):
     def __init__(self):
@@ -31,7 +35,6 @@ class StashModel(observable.Observable):
 
 
 class ApplyStash(BaseCommand):
-    command = 'apply_stash'
     def __init__(self, selection, index):
         BaseCommand.__init__(self)
         self.selection = selection
@@ -46,6 +49,34 @@ class ApplyStash(BaseCommand):
         cola.notifier().broadcast(signals.log_cmd, status, output)
 
 
+class DropStash(BaseCommand):
+    def __init__(self, stash_sha1):
+        BaseCommand.__init__(self)
+        self.stash_sha1 = stash_sha1
+
+    def do(self):
+        status, output = git.stash('drop', self.stash_sha1,
+                                   with_stderr=True, with_status=True)
+        cola.notifier().broadcast(signals.log_cmd, status, output)
+
+
+class SaveStash(BaseCommand):
+    def __init__(self, stash_name, keep_index):
+        BaseCommand.__init__(self)
+        self.stash_name = stash_name
+        self.keep_index = keep_index
+
+    def do(self):
+        if self.keep_index:
+            args = ['save', '--keep-index', self.stash_name]
+        else:
+            args = ['save', self.stash_name]
+        status, output = git.stash(with_stderr=True, with_status=True, *args)
+        cola.notifier().broadcast(signals.log_cmd, status, output)
+
+
 command_directory = {
-    ApplyStash.command: ApplyStash,
+    apply_stash: ApplyStash,
+    drop_stash: DropStash,
+    save_stash: SaveStash,
 }

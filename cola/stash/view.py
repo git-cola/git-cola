@@ -8,7 +8,7 @@ from cola import qt
 from cola import qtutils
 from cola import signals
 from cola import utils
-from cola.stash.model import ApplyStash
+from cola.stash.model import save_stash, apply_stash, drop_stash
 from cola.views import standard
 from cola.widgets.diff import DiffView
 
@@ -161,7 +161,7 @@ class StashView(standard.StandardDialog):
         if not selection:
             return
         index = self.keep_index.isChecked()
-        self.emit(SIGNAL(ApplyStash.command), selection, index)
+        self.emit(SIGNAL(apply_stash), selection, index)
         self.accept()
         self.emit(SIGNAL(signals.rescan))
 
@@ -176,24 +176,15 @@ class StashView(standard.StandardDialog):
                                         'Enter a name for the stash')
         if not ok or not stash_name:
             return
-
         # Sanitize the stash name
         stash_name = utils.sanitize(stash_name)
-
         if stash_name in self.names:
             qtutils.critical('Oops!',
                              'A stash named "%s" already exists' % stash_name)
             return
 
-        args = []
-        if self.keep_index.isChecked():
-            args.append('--keep-index')
-        args.append(stash_name)
-
-        qtutils.log(*self.model.git.stash('save',
-                                          with_stderr=True,
-                                          with_status=True,
-                                          *args))
+        keep_index = self.keep_index.isChecked()
+        self.emit(SIGNAL(save_stash), stash_name, keep_index)
         self.accept()
         self.emit(SIGNAL(signals.rescan))
 
@@ -211,8 +202,6 @@ class StashView(standard.StandardDialog):
                                'Remove',
                                icon=qtutils.discard_icon()):
             return
-        qtutils.log(*self.model.git.stash('drop', selection,
-                                          with_stderr=True,
-                                          with_status=True))
+        self.emit(SIGNAL(drop_stash), selection)
         self.update_from_model()
         self.stash_view.setPlainText('')
