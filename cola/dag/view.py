@@ -1,15 +1,8 @@
-import os
 import sys
 import math
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
-
-if __name__ == "__main__":
-    # Find the source tree
-    src = os.path.join(os.path.dirname(__file__), '..', '..')
-    sys.path.insert(1, os.path.join(os.path.abspath(src), 'thirdparty'))
-    sys.path.insert(1, os.path.abspath(src))
 
 import cola
 from cola import observable
@@ -19,23 +12,13 @@ from cola import gitcmds
 from cola import difftool
 from cola.controllers import createbranch
 from cola.controllers import createtag
-from cola.dag.model import DAG
+from cola.dag.model import archive
 from cola.dag.model import RepoReader
 from cola.prefs import diff_font
 from cola.qt import DiffSyntaxHighlighter
 from cola.qt import GitRefLineEdit
 from cola.views import standard
-
-
-def git_dag(model, parent):
-    """Return a pre-populated git DAG widget."""
-    dag = DAG(model.currentbranch, 1000)
-    view = GitDAGWidget(dag, parent=parent)
-    view.resize_to_desktop()
-    view.show()
-    view.raise_()
-    view.thread.start(QtCore.QThread.LowPriority)
-    return view
+from cola.widgets.archive import GitArchiveDialog
 
 
 class DiffWidget(QtGui.QWidget):
@@ -199,7 +182,6 @@ class CommitTreeWidget(QtGui.QTreeWidget):
 
 class GitDAGWidget(standard.StandardDialog):
     """The git-dag widget."""
-    # Keep us in scope otherwise PyQt kills the widget
     def __init__(self, dag, parent=None, args=None):
         standard.StandardDialog.__init__(self, parent=parent)
         self.dag = dag
@@ -249,6 +231,9 @@ class GitDAGWidget(standard.StandardDialog):
         self._graphview = GraphView(notifier)
         self._treewidget = CommitTreeWidget(notifier)
         self._diffwidget = DiffWidget(notifier)
+
+        qtutils.relay_signal(self, self._graphview, SIGNAL(archive))
+        qtutils.relay_signal(self, self._treewidget, SIGNAL(archive))
 
         self._mainsplitter = QtGui.QSplitter()
         self._mainsplitter.setOrientation(QtCore.Qt.Horizontal)
@@ -1207,15 +1192,18 @@ def context_menu_actions(self):
     'diff_selected_this':
         qtutils.add_action(self, 'Diff selected -> this',
                            self._diff_selected_this),
-    'create_patch':
-        qtutils.add_action(self, 'Create Patch',
-                           self._create_patch),
     'create_branch':
         qtutils.add_action(self, 'Create Branch',
                            self._create_branch),
+    'create_patch':
+        qtutils.add_action(self, 'Create Patch',
+                           self._create_patch),
     'create_tag':
         qtutils.add_action(self, 'Create Tag',
                            self._create_tag),
+    'create_tarball':
+        qtutils.add_action(self, 'Save As Tarball/Zip...',
+                           lambda: create_tarball(self)),
     'cherry_pick':
         qtutils.add_action(self, 'Cherry Pick',
                            self._cherry_pick),
@@ -1240,6 +1228,7 @@ def update_actions(self, event):
     self._actions['diff_this_selected'].setEnabled(can_diff)
     self._actions['diff_selected_this'].setEnabled(can_diff)
     self._actions['create_patch'].setEnabled(has_selection)
+    self._actions['create_tarball'].setEnabled(has_selection)
     self._actions['create_branch'].setEnabled(has_single_selection)
     self._actions['create_tag'].setEnabled(has_single_selection)
     self._actions['cherry_pick'].setEnabled(has_single_selection)
@@ -1250,20 +1239,19 @@ def context_menu_event(self, event):
     menu.addAction(self._actions['diff_this_selected'])
     menu.addAction(self._actions['diff_selected_this'])
     menu.addSeparator()
-    menu.addAction(self._actions['create_patch'])
     menu.addAction(self._actions['create_branch'])
     menu.addAction(self._actions['create_tag'])
     menu.addAction(self._actions['cherry_pick'])
+    menu.addSeparator()
+    menu.addAction(self._actions['create_patch'])
+    menu.addAction(self._actions['create_tarball'])
     menu.exec_(self.mapToGlobal(event.pos()))
 
 
-if __name__ == "__main__":
-    from cola import app
-
-    model = cola.model()
-    model.use_worktree(os.getcwd())
-    model.update_status()
-
-    app = app.ColaApplication(sys.argv)
-    view = git_dag(model, app.activeWindow())
-    sys.exit(app.exec_())
+def create_tarball(self):
+    ref = self._clicked_item.commit.sha1
+    dlg = GitArchiveDialog.create(ref, parent=self)
+    if dlg is None:
+        return
+    self.emit(SIGNAL(archive), ref, dlg.fmt, dlg.filename)
+    qtutils.information('File Saved', 'File saved to "%s"' % dlg.filename)

@@ -1,14 +1,19 @@
 import shlex
 
+import cola
 from cola import core
 from cola import git
+from cola import signals
 from cola import utils
+from cola.cmds import BaseCommand
 from cola.observable import Observable
 
 # put subject at the end b/c it can contain
 # any number of funky characters
 logfmt = 'format:%H%x01%P%x01%d%x01%an%x01%aD%x01%s'
 git = git.instance()
+
+archive = 'archive'
 
 
 class CommitFactory(object):
@@ -205,3 +210,27 @@ class RepoReader(object):
 
     def items(self):
         return self._objects.items()
+
+
+class Archive(BaseCommand):
+    def __init__(self, ref, fmt, filename):
+        BaseCommand.__init__(self)
+        self.ref = ref
+        self.fmt = fmt
+        self.filename = filename
+
+    def do(self):
+        fp = open(self.filename, 'wb')
+        cmd = ['git', 'archive', '-9', '--format='+self.fmt, self.ref]
+        proc = utils.start_command(cmd, stdout=fp)
+        out, err = proc.communicate()
+        fp.close()
+        if err:
+            out += err
+        status = proc.returncode
+        cola.notifier().broadcast(signals.log_cmd, status, out)
+
+
+command_directory = {
+    archive: Archive,
+}
