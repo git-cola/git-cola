@@ -116,7 +116,9 @@ class GitArchiveDialog(QtGui.QDialog):
         self.connect(self.save, SIGNAL('clicked()'), self.save_archive)
 
         if 'tar.gz' in self.format_strings:
-            self.format_combo.setCurrentIndex(self.format_strings.index('tar.gz'))
+            self.update_filetext_for_format(self.format_strings.index('tar.gz'))
+        elif 'tar' in self.format_strings:
+            self.update_filetext_for_format(self.format_strings.index('tar'))
 
         self.resize(420, 0)
 
