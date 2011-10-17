@@ -11,6 +11,7 @@ if __name__ == '__main__':
 
 from cola import qtutils
 from cola.git import git
+from cola.qt import QCollapsibleGroupBox
 
 
 class GitArchiveDialog(QtGui.QDialog):
@@ -31,6 +32,7 @@ class GitArchiveDialog(QtGui.QDialog):
 
         # outputs
         self.fmt = None
+        self.prefix = None
         self.filename = ref
 
         # constants
@@ -62,6 +64,13 @@ class GitArchiveDialog(QtGui.QDialog):
         self.save.setDefault(True)
         self.save.setEnabled(False)
 
+        self.prefix_label = QtGui.QLabel()
+        self.prefix_label.setText('Prefix')
+        self.prefix_text = QtGui.QLineEdit()
+
+        self.prefix_group = QCollapsibleGroupBox(parent=self)
+        self.prefix_group.setTitle('Advanced')
+
         # layouts
         self.filelayt = QtGui.QHBoxLayout()
         self.filelayt.setSpacing(spacing)
@@ -69,6 +78,14 @@ class GitArchiveDialog(QtGui.QDialog):
         self.filelayt.addWidget(self.browse)
         self.filelayt.addWidget(self.filetext)
         self.filelayt.addWidget(self.format_combo)
+
+        self.prefixlayt = QtGui.QHBoxLayout()
+        self.prefixlayt.setSpacing(spacing)
+        self.prefixlayt.setMargin(margin)
+        self.prefixlayt.addWidget(self.prefix_label)
+        self.prefixlayt.addWidget(self.prefix_text)
+        self.prefix_group.setLayout(self.prefixlayt)
+        self.prefix_group.set_collapsed(True)
 
         self.btnlayt = QtGui.QHBoxLayout()
         self.btnlayt.setSpacing(spacing)
@@ -81,6 +98,7 @@ class GitArchiveDialog(QtGui.QDialog):
         self.mainlayt.setMargin(margin)
         self.mainlayt.setSpacing(0)
         self.mainlayt.addLayout(self.filelayt)
+        self.mainlayt.addWidget(self.prefix_group)
         self.mainlayt.addStretch()
         self.mainlayt.addLayout(self.btnlayt)
         self.setLayout(self.mainlayt)

@@ -90,6 +90,55 @@ class QFlowLayoutWidget(QtGui.QWidget):
             self.layout().setDirection(dxn)
 
 
+class QCollapsibleGroupBox(QtGui.QGroupBox):
+    def __init__(self, parent=None):
+        QtGui.QGroupBox.__init__(self, parent)
+        self.setFlat(True)
+        self.collapsed = False
+        self.click_pos = None
+        self.collapse_icon_size = 16
+
+    def set_collapsed(self, collapsed):
+        self.collapsed = collapsed
+        for widget in self.findChildren(QtGui.QWidget):
+            widget.setHidden(collapsed)
+
+    def mousePressEvent(self, event):
+        if event.button() == QtCore.Qt.LeftButton:
+            option = QtGui.QStyleOptionGroupBox()
+            self.initStyleOption(option)
+            icon_size = self.collapse_icon_size
+            button_area = QtCore.QRect(0, 0, icon_size, icon_size)
+            top_left = option.rect.adjusted(0, 0, -10, 0).topLeft()
+            button_area.moveTopLeft(QtCore.QPoint(top_left))
+            self.click_pos = event.pos()
+        QtGui.QGroupBox.mousePressEvent(self, event)
+
+    def mouseReleaseEvent(self, event):
+        if (event.button() == QtCore.Qt.LeftButton and
+            self.click_pos == event.pos()):
+            self.set_collapsed(not self.collapsed)
+        QtGui.QGroupBox.mouseReleaseEvent(self, event)
+
+    def paintEvent(self, event):
+        painter = QtGui.QStylePainter(self)
+        option = QtGui.QStyleOptionGroupBox()
+        self.initStyleOption(option)
+        painter.save()
+        painter.translate(self.collapse_icon_size + 4, 0)
+        painter.drawComplexControl(QtGui.QStyle.CC_GroupBox, option)
+        painter.restore()
+
+        style = QtGui.QStyle
+        point = option.rect.adjusted(0, 0, -10, 0).topLeft()
+        icon_size = self.collapse_icon_size
+        option.rect = QtCore.QRect(point.x(), point.y(), icon_size, icon_size)
+        if self.collapsed:
+            painter.drawPrimitive(style.PE_IndicatorArrowRight, option)
+        else:
+            painter.drawPrimitive(style.PE_IndicatorArrowDown, option)
+
+
 class GitRefCompleter(QtGui.QCompleter):
     """Provides completion for branches and tags"""
     def __init__(self, parent):
