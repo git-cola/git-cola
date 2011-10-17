@@ -213,18 +213,26 @@ class RepoReader(object):
 
 
 class Archive(BaseCommand):
-    def __init__(self, ref, fmt, filename):
+    def __init__(self, ref, fmt, prefix, filename):
         BaseCommand.__init__(self)
         self.ref = ref
         self.fmt = fmt
+        self.prefix = prefix
         self.filename = filename
 
     def do(self):
         fp = open(self.filename, 'wb')
-        cmd = ['git', 'archive', '-9', '--format='+self.fmt, self.ref]
+        cmd = ['git', 'archive', '--format='+self.fmt]
+        if self.fmt in ('tgz', 'tar.gz'):
+            cmd.append('-9')
+        if self.prefix:
+            cmd.append('--prefix=' + self.prefix)
+        cmd.append(self.ref)
         proc = utils.start_command(cmd, stdout=fp)
         out, err = proc.communicate()
         fp.close()
+        if not out:
+            out = ''
         if err:
             out += err
         status = proc.returncode

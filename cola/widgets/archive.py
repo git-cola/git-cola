@@ -32,7 +32,7 @@ class GitArchiveDialog(QtGui.QDialog):
 
         # outputs
         self.fmt = None
-        self.prefix = None
+        self.prefix = ''
         self.filename = ref
 
         # constants
@@ -107,6 +107,9 @@ class GitArchiveDialog(QtGui.QDialog):
         self.connect(self.filetext, SIGNAL('textChanged(QString)'),
                      self.filetext_changed)
 
+        self.connect(self.prefix_text, SIGNAL('textChanged(QString)'),
+                     self.prefix_text_changed)
+
         self.connect(self.format_combo, SIGNAL('currentIndexChanged(int)'),
                      self.update_filetext_for_format)
 
@@ -119,6 +122,8 @@ class GitArchiveDialog(QtGui.QDialog):
             self.update_filetext_for_format(self.format_strings.index('tar.gz'))
         elif 'tar' in self.format_strings:
             self.update_filetext_for_format(self.format_strings.index('tar'))
+        else:
+            self.update_filetext_for_format(0)
 
         self.resize(420, 0)
 
@@ -147,6 +152,9 @@ class GitArchiveDialog(QtGui.QDialog):
     def filetext_changed(self, qstr):
         self.filename = unicode(qstr)
         self.save.setEnabled(bool(self.filename))
+
+    def prefix_text_changed(self, qstr):
+        self.prefix = unicode(qstr)
 
     def update_filetext_for_format(self, idx):
         self.fmt = self.format_strings[idx]

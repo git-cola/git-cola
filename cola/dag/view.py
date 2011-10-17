@@ -1253,5 +1253,5 @@ def create_tarball(self):
     dlg = GitArchiveDialog.create(ref, parent=self)
     if dlg is None:
         return
-    self.emit(SIGNAL(archive), ref, dlg.fmt, dlg.filename)
+    self.emit(SIGNAL(archive), ref, dlg.fmt, dlg.prefix, dlg.filename)
     qtutils.information('File Saved', 'File saved to "%s"' % dlg.filename)
