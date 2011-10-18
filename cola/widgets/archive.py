@@ -102,6 +102,18 @@ class GitArchiveDialog(QtGui.QDialog):
         self.mainlayt.addStretch()
         self.mainlayt.addLayout(self.btnlayt)
         self.setLayout(self.mainlayt)
+        self.resize(420, 0)
+
+        # initial setup; done before connecting to avoid
+        # signal/slot side-effects
+        if 'tar.gz' in self.format_strings:
+            idx = self.format_strings.index('tar.gz')
+        elif 'zip' in self.format_strings:
+            idx = self.format_strings.index('zip')
+        else:
+            idx = 0
+        self.format_combo.setCurrentIndex(idx)
+        self.update_filetext_for_format(idx)
 
         # connections
         self.connect(self.filetext, SIGNAL('textChanged(QString)'),
@@ -121,14 +133,6 @@ class GitArchiveDialog(QtGui.QDialog):
         self.connect(self.cancel, SIGNAL('clicked()'), self.reject)
         self.connect(self.save, SIGNAL('clicked()'), self.save_archive)
 
-        if 'tar.gz' in self.format_strings:
-            self.update_filetext_for_format(self.format_strings.index('tar.gz'))
-        elif 'tar' in self.format_strings:
-            self.update_filetext_for_format(self.format_strings.index('tar'))
-        else:
-            self.update_filetext_for_format(0)
-
-        self.resize(420, 0)
 
     def save_archive(self):
         if not self.filename:
