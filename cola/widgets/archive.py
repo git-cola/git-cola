@@ -62,7 +62,6 @@ class GitArchiveDialog(QtGui.QDialog):
         self.save = QtGui.QPushButton()
         self.save.setText('Save')
         self.save.setDefault(True)
-        self.save.setEnabled(False)
 
         self.prefix_label = QtGui.QLabel()
         self.prefix_label.setText('Prefix')
