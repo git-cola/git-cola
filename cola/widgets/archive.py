@@ -170,7 +170,8 @@ class GitArchiveDialog(QtGui.QDialog):
             if text.endswith(ext):
                 text = text[:-len(ext)]
                 break
-        self.filetext.setText(text + '.' + self.fmt)
+        self.filename = '%s.%s' % (text, self.fmt)
+        self.filetext.setText(self.filename)
         self.filetext.setFocus(True)
         if '/' in text:
             start = text.rindex('/') + 1
