@@ -4,6 +4,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import QVariant
+from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import QFont
 from PyQt4.QtGui import QSyntaxHighlighter
 from PyQt4.QtGui import QTextCharFormat
@@ -102,6 +103,7 @@ class QCollapsibleGroupBox(QtGui.QGroupBox):
         self.collapsed = collapsed
         for widget in self.findChildren(QtGui.QWidget):
             widget.setHidden(collapsed)
+        self.emit(SIGNAL('toggled(bool)'), collapsed)
 
     def mousePressEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
