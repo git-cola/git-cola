@@ -13,12 +13,14 @@ from cola import difftool
 from cola.controllers import createbranch
 from cola.controllers import createtag
 from cola.dag.model import archive
+from cola.dag.model import save_blob
 from cola.dag.model import RepoReader
 from cola.prefs import diff_font
 from cola.qt import DiffSyntaxHighlighter
 from cola.qt import GitRefLineEdit
 from cola.views import standard
 from cola.widgets.archive import GitArchiveDialog
+from cola.widgets.browse import BrowseDialog
 
 
 class DiffWidget(QtGui.QWidget):
@@ -232,8 +234,9 @@ class GitDAGWidget(standard.StandardDialog):
         self._treewidget = CommitTreeWidget(notifier)
         self._diffwidget = DiffWidget(notifier)
 
-        qtutils.relay_signal(self, self._graphview, SIGNAL(archive))
-        qtutils.relay_signal(self, self._treewidget, SIGNAL(archive))
+        for signal in (archive, save_blob):
+            qtutils.relay_signal(self, self._graphview, SIGNAL(signal))
+            qtutils.relay_signal(self, self._treewidget, SIGNAL(signal))
 
         self._mainsplitter = QtGui.QSplitter()
         self._mainsplitter.setOrientation(QtCore.Qt.Horizontal)
@@ -1207,6 +1210,10 @@ def context_menu_actions(self):
     'cherry_pick':
         qtutils.add_action(self, 'Cherry Pick',
                            self._cherry_pick),
+
+    'save_blob':
+        qtutils.add_action(self, 'Grab File...',
+                           lambda: save_blob_dialog(self)),
     }
 
 
@@ -1229,6 +1236,7 @@ def update_actions(self, event):
     self._actions['diff_selected_this'].setEnabled(can_diff)
     self._actions['create_patch'].setEnabled(has_selection)
     self._actions['create_tarball'].setEnabled(has_selection)
+    self._actions['save_blob'].setEnabled(has_selection)
     self._actions['create_branch'].setEnabled(has_single_selection)
     self._actions['create_tag'].setEnabled(has_single_selection)
     self._actions['cherry_pick'].setEnabled(has_single_selection)
@@ -1241,10 +1249,12 @@ def context_menu_event(self, event):
     menu.addSeparator()
     menu.addAction(self._actions['create_branch'])
     menu.addAction(self._actions['create_tag'])
-    menu.addAction(self._actions['cherry_pick'])
     menu.addSeparator()
+    menu.addAction(self._actions['cherry_pick'])
     menu.addAction(self._actions['create_patch'])
     menu.addAction(self._actions['create_tarball'])
+    menu.addSeparator()
+    menu.addAction(self._actions['save_blob'])
     menu.exec_(self.mapToGlobal(event.pos()))
 
 
@@ -1254,4 +1264,16 @@ def create_tarball(self):
     if dlg is None:
         return
     self.emit(SIGNAL(archive), ref, dlg.fmt, dlg.prefix, dlg.filename)
+    qtutils.information('File Saved', 'File saved to "%s"' % dlg.filename)
+
+
+def save_blob_dialog(self):
+    ref = self._clicked_item.commit.sha1
+    parent = QtGui.QApplication.activeWindow()
+    dlg = BrowseDialog.create(ref,
+                              width=parent.width()*3/4,
+                              parent=parent)
+    if dlg is None:
+        return
+    self.emit(SIGNAL(save_blob), ref, dlg.relpath, dlg.filename)
     qtutils.information('File Saved', 'File saved to "%s"' % dlg.filename)
