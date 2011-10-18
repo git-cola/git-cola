@@ -101,7 +101,7 @@ class GitArchiveDialog(QtGui.QDialog):
         self.mainlayt.addStretch()
         self.mainlayt.addLayout(self.btnlayt)
         self.setLayout(self.mainlayt)
-        self.resize(420, 0)
+        self.resize(555, 0)
 
         # initial setup; done before connecting to avoid
         # signal/slot side-effects
