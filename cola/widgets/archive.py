@@ -113,6 +113,9 @@ class GitArchiveDialog(QtGui.QDialog):
         self.connect(self.format_combo, SIGNAL('currentIndexChanged(int)'),
                      self.update_filetext_for_format)
 
+        self.connect(self.prefix_group, SIGNAL('toggled(bool)'),
+                     self.prefix_group_toggled)
+
         self.connect(self.browse, SIGNAL('clicked()'), self.choose_filename)
 
         self.connect(self.cancel, SIGNAL('clicked()'), self.reject)
@@ -171,6 +174,12 @@ class GitArchiveDialog(QtGui.QDialog):
         else:
             start = 0
         self.filetext.setSelection(start, len(text) - start)
+
+    def prefix_group_toggled(self, toggled):
+        if toggled:
+            self.filetext.setFocus(True)
+        else:
+            self.prefix_text.setFocus(True)
 
 
 if __name__ == '__main__':
