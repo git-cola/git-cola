@@ -97,7 +97,7 @@ git-cola.app:
 	mkdir -p $(cola_app)/Contents/MacOS
 	cp darwin/git-cola $(cola_app)/Contents/MacOS
 	cp darwin/Info.plist darwin/PkgInfo $(cola_app)/Contents
-	$(MAKE) prefix=$(cola_app)/Contents/Resources install
+	$(MAKE) prefix=$(cola_app)/Contents/Resources install install-doc
 	cp darwin/git-cola.icns $(cola_app)/Contents/Resources
 
 app-tarball: git-cola.app
