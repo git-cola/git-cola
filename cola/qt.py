@@ -1,4 +1,6 @@
 import re
+import shlex
+import subprocess
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -15,7 +17,9 @@ except ImportError:
     pyqtProperty = None
 
 import cola
+from cola import core
 from cola import utils
+from cola.compat import set
 from cola.qtutils import tr
 
 
@@ -145,32 +149,16 @@ class GitRefCompleter(QtGui.QCompleter):
     """Provides completion for branches and tags"""
     def __init__(self, parent):
         QtGui.QCompleter.__init__(self, parent)
-        self.model = GitRefStringListModel(parent)
-        self.setModel(self.model)
+        self.smodel = GitRefStringListModel(parent)
+        self.setModel(self.smodel)
         self.setCompletionMode(self.UnfilteredPopupCompletion)
+        self.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
 
     def __del__(self):
         self.dispose()
 
     def dispose(self):
-        self.model.dispose()
-
-
-class GitRefStringListModel(QtGui.QStringListModel):
-    def __init__(self, parent=None):
-        QtGui.QStringListModel.__init__(self, parent)
-        self.model = cola.model()
-        msg = self.model.message_updated
-        self.model.add_message_observer(msg, self.update_git_refs)
-        self.update_git_refs()
-
-    def update_git_refs(self):
-        model = self.model
-        revs = model.local_branches + model.remote_branches + model.tags
-        self.setStringList(revs)
-
-    def dispose(self):
-        self.model.remove_observer(self.update_git_refs)
+        self.smodel.dispose()
 
 
 class GitRefLineEdit(QtGui.QLineEdit):
@@ -179,6 +167,135 @@ class GitRefLineEdit(QtGui.QLineEdit):
         self.refcompleter = GitRefCompleter(self)
         self.setCompleter(self.refcompleter)
 
+
+class GitRefStringListModel(QtGui.QStringListModel):
+    def __init__(self, parent):
+        QtGui.QStringListModel.__init__(self, parent)
+        self.cmodel = cola.model()
+        msg = self.cmodel.message_updated
+        self.cmodel.add_message_observer(msg, self.update_git_refs)
+        self.update_git_refs()
+
+    def dispose(self):
+        self.cmodel.remove_observer(self.update_git_refs)
+
+    def update_git_refs(self):
+        revs = self.completion_strings()
+        self.setStringList(revs)
+
+    def completion_strings(self):
+        """For subclasses"""
+        model = self.cmodel
+        return model.local_branches + model.remote_branches + model.tags
+
+
+class GitRefAndFileCompleter(QtGui.QCompleter):
+    """Provides completion for branches and tags"""
+    def __init__(self, parent):
+        QtGui.QCompleter.__init__(self, parent)
+        self.smodel = GitRefAndFileStringListModel(parent)
+        self.setModel(self.smodel)
+        self.setCompletionMode(self.UnfilteredPopupCompletion)
+
+    def __del__(self):
+        self.dispose()
+
+    def dispose(self):
+        self.smodel.dispose()
+
+
+class GitRefAndFileStringListModel(GitRefStringListModel):
+    def __init__(self, parent):
+        GitRefStringListModel.__init__(self, parent)
+
+    def lower_cmp(self, a, b):
+        return cmp(a.replace('.','').lower(), b.replace('.','').lower())
+
+    def completion_strings(self):
+        extra = self.cmodel.everything()
+        extra.sort(cmp=self.lower_cmp)
+        return GitRefStringListModel.completion_strings(self) + ['--'] + extra
+
+
+class GitRefAndFileLineEdit(QtGui.QLineEdit):
+    def __init__(self, parent=None):
+        QtGui.QLineEdit.__init__(self, parent)
+        self._completer = GitRefAndFileCompleter(self)
+        self._completer.setWidget(self)
+        self.connect(self._completer, SIGNAL('activated(QString)'),
+                     self._complete)
+        self._keys_to_ignore = set([QtCore.Qt.Key_Enter,
+                                    QtCore.Qt.Key_Return,
+                                    QtCore.Qt.Key_Escape])
+
+    def _complete(self, completion):
+        """
+        This is the event handler for the QCompleter.activated(QString) signal,
+        it is called when the user selects an item in the completer popup.
+        """
+        if not completion:
+            return
+        words = self.words()
+        if words:
+            words.pop()
+        words.append(unicode(completion))
+        self.setText(subprocess.list2cmdline(words))
+        self.emit(SIGNAL('ref_changed'))
+
+    def words(self):
+        text = self.text()
+        encoded = core.encode(unicode(text))
+        return [core.decode(e) for e in shlex.split(encoded)]
+
+    def last_word(self):
+        words = self.words()
+        if not words:
+            return self.text()
+        if not words[-1]:
+            return u''
+        return words[-1]
+
+    def event(self, event):
+        if event.type() == QtCore.QEvent.KeyPress:
+            if (event.key() == QtCore.Qt.Key_Tab and
+                self._completer.popup().isVisible()):
+                    event.ignore()
+                    return True
+        return QtGui.QLineEdit.event(self, event)
+
+    def keyPressEvent(self, event):
+        if self._completer.popup().isVisible():
+            if event.key() in self._keys_to_ignore:
+                event.ignore()
+                self._complete(self.last_word())
+                return
+
+        elif (event.key() == QtCore.Qt.Key_Down and
+              self._completer.completionCount() > 0):
+                event.accept()
+                self._completer.popup().setCurrentIndex(
+                        self._completer.completionModel().index(0,0))
+                self._completer.complete()
+                return
+
+        QtGui.QLineEdit.keyPressEvent(self, event)
+
+        prefix = self.last_word()
+        if prefix != self._completer.completionPrefix():
+            self._update_popup_items(prefix)
+        if len(event.text()) > 0 and len(prefix) > 0:
+            self._completer.complete()
+        if len(prefix) == 0:
+            self._completer.popup().hide()
+
+    def _update_popup_items(self, prefix):
+        """
+        Filters the completer's popup items to only show items
+        with the given prefix.
+        """
+        self._completer.setCompletionPrefix(prefix)
+        self._completer.popup().setCurrentIndex(
+                self._completer.completionModel().index(0,0))
 
 # Syntax highlighting
 
