@@ -730,14 +730,13 @@ class GraphView(QtGui.QGraphicsView):
         self._pressed = False
         self._selecting = False
         self._last_mouse = [0, 0]
-
         self._zoom = 2
-        self.scale(self._zoom, self._zoom)
         self.setDragMode(self.RubberBandDrag)
 
         scene = QtGui.QGraphicsScene(self)
         scene.setItemIndexMethod(QtGui.QGraphicsScene.NoIndex)
         self.setScene(scene)
+
 
         self.setRenderHint(QtGui.QPainter.Antialiasing)
         self.setOptimizationFlag(self.DontAdjustForAntialiasing, True)
@@ -956,7 +955,7 @@ class GraphView(QtGui.QGraphicsView):
                 xmax = max(xmax, pos.x()+xoff)
                 ymax = max(ymax, pos.y()+yoff)
             rect = QtCore.QRectF(xmin, ymin, xmax-xmin, ymax-ymin)
-        adjust = Commit._width
+        adjust = Commit._width * 6
         rect.setX(rect.x() - adjust)
         rect.setY(rect.y() - adjust)
         rect.setHeight(rect.height() + adjust)
@@ -1179,8 +1178,8 @@ class GraphView(QtGui.QGraphicsView):
 
         self._xmax = xmax
         self._ymin = ymin
-        self.scene().setSceneRect(self._xoff*-2, ymin-self._yoff*2,
-                                  xmax+self._xoff*3, abs(ymin)+self._yoff*4)
+        self.scene().setSceneRect(-self._xoff/2, ymin-self._yoff,
+                                  xmax+self._xoff, abs(ymin)+self._yoff*4)
 
 def sort_by_generation(commits):
     commits.sort(cmp=lambda a, b: cmp(a.generation, b.generation))
