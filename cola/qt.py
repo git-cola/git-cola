@@ -212,7 +212,7 @@ class GitRefAndFileStringListModel(GitRefStringListModel):
         return cmp(a.replace('.','').lower(), b.replace('.','').lower())
 
     def completion_strings(self):
-        extra = self.cmodel.everything()
+        extra = list(utils.add_parents(set(self.cmodel.everything())))
         extra.sort(cmp=self.lower_cmp)
         return GitRefStringListModel.completion_strings(self) + ['--'] + extra
 
