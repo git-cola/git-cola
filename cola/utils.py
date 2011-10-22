@@ -6,6 +6,7 @@ import re
 import sys
 import errno
 import platform
+import shlex
 import subprocess
 import mimetypes
 
@@ -196,6 +197,20 @@ def sanitize(s):
     for c in """ \t!@#$%^&*()\\;,<>"'[]{}~|""":
         s = s.replace(c, '_')
     return s
+
+
+def shell_split(s):
+    """Split string apart into utf-8 encoded words using shell syntax"""
+    try:
+        return shlex.split(core.encode(s))
+    except ValueError:
+        return [s]
+
+
+def shell_usplit(s):
+    """Returns a unicode list instead of encoded strings"""
+    return [core.decode(arg) for arg in shell_split(s)]
+
 
 def is_linux():
     """Is this a linux machine?"""

@@ -1,5 +1,3 @@
-import shlex
-
 import cola
 from cola import core
 from cola import git
@@ -187,7 +185,7 @@ class RepoReader(object):
                 self._idx = -1
                 raise StopIteration
         if self._proc is None:
-            ref_args = shlex.split(core.encode(self.dag.ref))
+            ref_args = utils.shell_split(self.dag.ref)
             cmd = self._cmd + ['-%d' % self.dag.count] + ref_args
             self._proc = utils.start_command(cmd)
             self._topo_list = []

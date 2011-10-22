@@ -1,5 +1,4 @@
 import re
-import shlex
 import subprocess
 
 from PyQt4 import QtGui
@@ -243,9 +242,7 @@ class GitRefAndFileLineEdit(QtGui.QLineEdit):
         self.emit(SIGNAL('ref_changed'))
 
     def words(self):
-        text = self.text()
-        encoded = core.encode(unicode(text))
-        return [core.decode(e) for e in shlex.split(encoded)]
+        return utils.shell_usplit(unicode(self.text()))
 
     def last_word(self):
         words = self.words()
