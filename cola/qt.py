@@ -173,11 +173,11 @@ class GitRefModel(QtGui.QStandardItemModel):
         QtGui.QStandardItemModel.__init__(self, parent)
         self.cmodel = cola.model()
         msg = self.cmodel.message_updated
-        self.cmodel.add_message_observer(msg, self.update_git_refs)
+        self.cmodel.add_message_observer(msg, self.update_matches)
         self.update_matches()
 
     def dispose(self):
-        self.cmodel.remove_observer(self.update_git_refs)
+        self.cmodel.remove_observer(self.update_matches)
 
     def update_matches(self):
         model = self.cmodel
