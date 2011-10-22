@@ -184,7 +184,7 @@ class Git(object):
                 break
             except OSError, e:
                 # Some systems interrupt system calls and throw OSError
-                if e.errno == errno.EINTR:
+                if e.errno in (errno.EINTR, errno.ENOMEM):
                     continue
                 cmdlock.release()
                 raise e
