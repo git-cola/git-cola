@@ -16,9 +16,10 @@ except ImportError:
     pyqtProperty = None
 
 import cola
-from cola import core
-from cola import utils
+from cola import resources
 from cola.compat import set
+from cola import utils
+from cola import qtutils
 from cola.qtutils import tr
 
 
@@ -148,8 +149,8 @@ class GitRefCompleter(QtGui.QCompleter):
     """Provides completion for branches and tags"""
     def __init__(self, parent):
         QtGui.QCompleter.__init__(self, parent)
-        self.smodel = GitRefStringListModel(parent)
-        self.setModel(self.smodel)
+        self._model = GitRefModel(parent)
+        self.setModel(self._model)
         self.setCompletionMode(self.UnfilteredPopupCompletion)
         self.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
 
@@ -157,7 +158,7 @@ class GitRefCompleter(QtGui.QCompleter):
         self.dispose()
 
     def dispose(self):
-        self.smodel.dispose()
+        self._model.dispose()
 
 
 class GitRefLineEdit(QtGui.QLineEdit):
@@ -167,65 +168,138 @@ class GitRefLineEdit(QtGui.QLineEdit):
         self.setCompleter(self.refcompleter)
 
 
-class GitRefStringListModel(QtGui.QStringListModel):
+class GitRefModel(QtGui.QStandardItemModel):
     def __init__(self, parent):
-        QtGui.QStringListModel.__init__(self, parent)
+        QtGui.QStandardItemModel.__init__(self, parent)
         self.cmodel = cola.model()
         msg = self.cmodel.message_updated
         self.cmodel.add_message_observer(msg, self.update_git_refs)
-        self.update_git_refs()
+        self.update_matches()
 
     def dispose(self):
         self.cmodel.remove_observer(self.update_git_refs)
 
-    def update_git_refs(self):
-        revs = self.completion_strings()
-        self.setStringList(revs)
-
-    def completion_strings(self):
-        """For subclasses"""
+    def update_matches(self):
         model = self.cmodel
-        return model.local_branches + model.remote_branches + model.tags
+        matches = model.local_branches + model.remote_branches + model.tags
+        QStandardItem = QtGui.QStandardItem
+        self.clear()
+        for match in matches:
+            item = QStandardItem()
+            item.setIcon(QtGui.QIcon(resources.icon('git.svg')))
+            item.setText(match)
+            self.appendRow(item)
 
 
-class GitRefAndFileCompleter(QtGui.QCompleter):
-    """Provides completion for branches and tags"""
+class GitLogCompletionModel(QtGui.QStandardItemModel):
     def __init__(self, parent):
-        QtGui.QCompleter.__init__(self, parent)
-        self.smodel = GitRefAndFileStringListModel(parent)
-        self.setModel(self.smodel)
-        self.setCompletionMode(self.UnfilteredPopupCompletion)
-
-    def __del__(self):
-        self.dispose()
-
-    def dispose(self):
-        self.smodel.dispose()
-
-
-class GitRefAndFileStringListModel(GitRefStringListModel):
-    def __init__(self, parent):
-        GitRefStringListModel.__init__(self, parent)
+        self.matched_text = None
+        QtGui.QStandardItemModel.__init__(self, parent)
+        self.cmodel = cola.model()
 
     def lower_cmp(self, a, b):
         return cmp(a.replace('.','').lower(), b.replace('.','').lower())
 
-    def completion_strings(self):
-        extra = list(utils.add_parents(set(self.cmodel.everything())))
-        extra.sort(cmp=self.lower_cmp)
-        return GitRefStringListModel.completion_strings(self) + ['--'] + extra
+    def update_matches(self, case_sensitive):
+        QStandardItem = QtGui.QStandardItem
+        file_list = self.cmodel.everything()
+        files = set(file_list)
+        files_and_dirs = utils.add_parents(set(files))
+        dirs = files_and_dirs.difference(files)
+
+        file_icon = qtutils.file_icon()
+        dir_icon = qtutils.dir_icon()
+        git_icon = QtGui.QIcon(resources.icon('git.svg'))
+
+        model = self.cmodel
+        refs = model.local_branches + model.remote_branches + model.tags
+        matched_text = self.matched_text
+
+        if matched_text:
+            if case_sensitive:
+                matched_refs = [r for r in refs if matched_text in r]
+            else:
+                matched_refs = [r for r in refs
+                                    if matched_text.lower() in r.lower()]
+        else:
+            matched_refs = refs
+
+        matched_refs.sort(cmp=self.lower_cmp)
+
+        if matched_text:
+            if case_sensitive:
+                matched_paths = [f for f in files_and_dirs
+                                        if matched_text in f]
+            else:
+                matched_paths = [f for f in files_and_dirs
+                                    if matched_text.lower() in f.lower()]
+        else:
+            matched_paths = list(files_and_dirs)
+
+        matched_paths.sort(cmp=self.lower_cmp)
+
+        items = []
+
+        for ref in matched_refs:
+            item = QStandardItem()
+            item.setText(ref)
+            item.setIcon(git_icon)
+            items.append(item)
+
+        if matched_paths and (not matched_text or matched_text in '--'):
+            item = QStandardItem()
+            item.setText('--')
+            item.setIcon(file_icon)
+            items.append(item)
+
+        for match in matched_paths:
+            item = QStandardItem()
+            item.setText(match)
+            if match in dirs:
+                item.setIcon(dir_icon)
+            else:
+                item.setIcon(file_icon)
+            items.append(item)
+
+        self.clear()
+        for item in items:
+            self.appendRow(item)
+
+    def set_match_text(self, text, case_sensitive):
+        self.matched_text = text
+        self.update_matches(case_sensitive)
 
 
-class GitRefAndFileLineEdit(QtGui.QLineEdit):
+class GitLogLineEdit(QtGui.QLineEdit):
     def __init__(self, parent=None):
         QtGui.QLineEdit.__init__(self, parent)
-        self._completer = GitRefAndFileCompleter(self)
+
+        self._model = GitLogCompletionModel(self)
+        self._delegate = HighlightCompletionDelegate(self)
+
+        self._completer = QtGui.QCompleter(self)
         self._completer.setWidget(self)
+        self._completer.setModel(self._model)
+        self._completer.setCompletionMode(
+                QtGui.QCompleter.UnfilteredPopupCompletion)
+        self._completer.popup().setItemDelegate(self._delegate)
+
         self.connect(self._completer, SIGNAL('activated(QString)'),
                      self._complete)
+        self.connect(self, SIGNAL('textChanged(QString)'), self._text_changed)
         self._keys_to_ignore = set([QtCore.Qt.Key_Enter,
                                     QtCore.Qt.Key_Return,
                                     QtCore.Qt.Key_Escape])
+
+    def _text_changed(self, text):
+        text = self.last_word()
+        case_sensitive = bool([char for char in text if char.isupper()])
+        if case_sensitive:
+            self._completer.setCaseSensitivity(QtCore.Qt.CaseSensitive)
+        else:
+            self._completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+        self._delegate.set_highlight_text(text, case_sensitive)
+        self._model.set_match_text(text, case_sensitive)
 
     def _complete(self, completion):
         """
@@ -293,6 +367,68 @@ class GitRefAndFileLineEdit(QtGui.QLineEdit):
         self._completer.setCompletionPrefix(prefix)
         self._completer.popup().setCurrentIndex(
                 self._completer.completionModel().index(0,0))
+
+
+class HighlightCompletionDelegate(QtGui.QStyledItemDelegate):
+    """A delegate used for auto-completion to give formatted completion"""
+    def __init__(self, parent=None): # model, parent=None):
+        QtGui.QStyledItemDelegate.__init__(self, parent)
+        self.highlight_text = ''
+        self.case_sensitive = False
+
+        self.doc = QtGui.QTextDocument()
+        self.doc.setDocumentMargin(0)
+
+    def set_highlight_text(self, text, case_sensitive):
+        """Sets the text that will be made bold in the term name when displayed"""
+        self.highlight_text = text
+        self.case_sensitive = case_sensitive
+
+    def paint(self, painter, option, index):
+        """Overloaded Qt method for custom painting of a model index"""
+        if not self.highlight_text:
+            return QtGui.QStyledItemDelegate.paint(self, painter, option, index)
+
+        text = unicode(index.data().toPyObject())
+        if self.case_sensitive:
+            html = text.replace(self.highlight_text,
+                                '<strong>%s</strong>' % self.highlight_text)
+        else:
+            match = re.match('(.*)(' + self.highlight_text + ')(.*)',
+                             text, re.IGNORECASE)
+            if match:
+                start = match.group(1) or ''
+                middle = match.group(2) or ''
+                end = match.group(3) or ''
+                html = (start + ('<strong>%s</strong>' % middle) + end)
+            else:
+                html = text
+        self.doc.setHtml(html)
+
+        # Painting item without text, Text Document will paint the text
+        optionV4 = QtGui.QStyleOptionViewItemV4(option)
+        self.initStyleOption(optionV4, index)
+        optionV4.text = QtCore.QString()
+
+        style = QtGui.QApplication.style()
+        style.drawControl(QtGui.QStyle.CE_ItemViewItem, optionV4, painter)
+        ctx = QtGui.QAbstractTextDocumentLayout.PaintContext()
+
+        # Highlighting text if item is selected
+        if (optionV4.state & QtGui.QStyle.State_Selected):
+            ctx.palette.setColor(QtGui.QPalette.Text, optionV4.palette.color(QtGui.QPalette.Active, QtGui.QPalette.HighlightedText))
+
+        # translate the painter to where the text is drawn
+        textRect = style.subElementRect(QtGui.QStyle.SE_ItemViewItemText, optionV4)
+        painter.save()
+
+        start = textRect.topLeft() + QtCore.QPoint(3, 0)
+        painter.translate(start)
+        painter.setClipRect(textRect.translated(-start))
+
+        # tell the text document to draw the html for us
+        self.doc.documentLayout().draw(painter, ctx)
+        painter.restore()
 
 # Syntax highlighting
 

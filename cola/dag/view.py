@@ -17,7 +17,7 @@ from cola.dag.model import save_blob
 from cola.dag.model import RepoReader
 from cola.prefs import diff_font
 from cola.qt import DiffSyntaxHighlighter
-from cola.qt import GitRefAndFileLineEdit
+from cola.qt import GitLogLineEdit
 from cola.views import standard
 from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.browse import BrowseDialog
@@ -194,7 +194,7 @@ class GitDAGWidget(standard.StandardDialog):
         self.revlabel = QtGui.QLabel()
         self.revlabel.setText('git log -')
 
-        self.revtext = GitRefAndFileLineEdit(parent=self)
+        self.revtext = GitLogLineEdit(parent=self)
         self.revtext.setText(dag.ref)
 
         self.maxresults = QtGui.QSpinBox()
