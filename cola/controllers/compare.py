@@ -9,15 +9,16 @@ from cola.qobserver import QObserver
 from cola.models.compare import CompareModel
 from cola.models.compare import BranchCompareModel
 from cola.views import compare as vcompare
-from cola.controllers.repobrowser import select_file_from_repo
+from cola.widgets.browse import BrowseDialog
 
 
 def compare_file():
     """Launches a dialog for comparing revisions touching a file path"""
-    filename = select_file_from_repo()
+    filename = BrowseDialog.select_file('HEAD')
     if not filename:
         return
     compare(filename)
+
 
 def compare(filename=None):
     """Launches a dialog for comparing a pair of commits"""
@@ -26,6 +27,7 @@ def compare(filename=None):
     view = vcompare.CompareView(parent)
     ctl = CompareController(model, view, filename)
     view.show()
+    return ctl
 
 def branch_compare():
     """Launches a dialog for comparing a pair of branches"""
@@ -34,6 +36,7 @@ def branch_compare():
     view = vcompare.BranchCompareView(parent)
     ctl = BranchCompareController(model, view)
     view.show()
+    return ctl
 
 class BranchCompareController(QObserver):
     """Provides a dialog for comparing local and remote git branches"""

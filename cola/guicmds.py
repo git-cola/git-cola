@@ -8,6 +8,7 @@ from cola import git
 from cola import gitcmds
 from cola import qtutils
 from cola import signals
+from cola.widgets.browse import BrowseDialog
 from cola.widgets.combodlg import ComboDialog
 from cola.widgets.listview import ListView
 
@@ -83,21 +84,17 @@ def branch_diff():
 
 def browse_current():
     """Launch the 'Browse Current Branch' dialog."""
-    from cola.controllers.repobrowser import browse_git_branch
-
-    browse_git_branch(gitcmds.current_branch())
+    branch = gitcmds.current_branch()
+    BrowseDialog.browse(branch)
 
 
 def browse_other():
     """Prompt for a branch and inspect content at that point in time."""
     # Prompt for a branch to browse
-    from cola.controllers.repobrowser import browse_git_branch
-
     branch = choose_from_combo('Browse Revision...', gitcmds.all_refs())
     if not branch:
         return
-    # Launch the repobrowser
-    browse_git_branch(branch)
+    BrowseDialog.browse(branch)
 
 
 def checkout_branch():
