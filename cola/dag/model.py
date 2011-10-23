@@ -12,7 +12,6 @@ logfmt = 'format:%H%x01%P%x01%d%x01%an%x01%aD%x01%s'
 git = git.instance()
 
 archive = 'archive'
-save_blob = 'save_blob'
 
 
 class CommitFactory(object):
@@ -238,27 +237,6 @@ class Archive(BaseCommand):
         cola.notifier().broadcast(signals.log_cmd, status, out)
 
 
-class SaveBlob(BaseCommand):
-    def __init__(self, ref, relpath, filename):
-        BaseCommand.__init__(self)
-        self.ref = ref
-        self.relpath = relpath
-        self.filename = filename
-
-    def do(self):
-        ref = core.encode(self.ref)
-        relpath = core.encode(self.relpath)
-        cmd = ['git', 'show', '%s:%s' % (ref, relpath)]
-        fp = open(core.encode(self.filename), 'wb')
-        proc = utils.start_command(cmd, stdout=fp)
-        out, err = proc.communicate()
-        fp.close()
-        status = proc.returncode
-        msg = ('Saved "%s" from %s to "%s"' %
-               (self.relpath, self.ref, self.filename))
-        cola.notifier().broadcast(signals.log_cmd, status, msg)
-
 command_directory = {
     archive: Archive,
-    save_blob: SaveBlob,
 }

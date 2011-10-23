@@ -13,7 +13,6 @@ from cola import difftool
 from cola.controllers import createbranch
 from cola.controllers import createtag
 from cola.dag.model import archive
-from cola.dag.model import save_blob
 from cola.dag.model import RepoReader
 from cola.prefs import diff_font
 from cola.qt import DiffSyntaxHighlighter
@@ -234,7 +233,7 @@ class GitDAGWidget(standard.StandardDialog):
         self._treewidget = CommitTreeWidget(notifier)
         self._diffwidget = DiffWidget(notifier)
 
-        for signal in (archive, save_blob):
+        for signal in (archive,):
             qtutils.relay_signal(self, self._graphview, SIGNAL(signal))
             qtutils.relay_signal(self, self._treewidget, SIGNAL(signal))
 
@@ -1270,12 +1269,4 @@ def create_tarball(self):
 
 
 def save_blob_dialog(self):
-    ref = self._clicked_item.commit.sha1
-    parent = QtGui.QApplication.activeWindow()
-    dlg = BrowseDialog.create(ref,
-                              width=parent.width()*3/4,
-                              parent=parent)
-    if dlg is None:
-        return
-    self.emit(SIGNAL(save_blob), ref, dlg.relpath, dlg.filename)
-    qtutils.information('File Saved', 'File saved to "%s"' % dlg.filename)
+    return BrowseDialog.browse(self._clicked_item.commit.sha1)

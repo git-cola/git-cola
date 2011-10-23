@@ -3,47 +3,96 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
 import cola
+from cola import cmdfactory
+from cola import core
 from cola import utils
 from cola import qtutils
 from cola import signals
+from cola.cmds import BaseCommand
+from cola.ctrl import Controller
 from cola.git import git
+
+
+save_blob = 'save_blob'
+
+
+class BrowseModel(object):
+    def __init__(self, ref):
+        self.ref = ref
+        self.relpath = None
+        self.filename = None
+
+
+class SaveBlob(BaseCommand):
+    def __init__(self):
+        BaseCommand.__init__(self)
+        self.factory = cmdfactory.factory()
+
+    def do(self):
+        context = self.context
+        ref = core.encode(context.ref)
+        relpath = core.encode(context.relpath)
+
+        cmd = ['git', 'show', '%s:%s' % (ref, relpath)]
+        fp = open(core.encode(context.filename), 'wb')
+        proc = utils.start_command(cmd, stdout=fp)
+
+        out, err = proc.communicate()
+        fp.close()
+
+        status = proc.returncode
+        msg = ('Saved "%s" from %s to "%s"' %
+               (context.relpath, context.ref, context.filename))
+        cola.notifier().broadcast(signals.log_cmd, status, msg)
+
+        self.factory.prompt_user(signals.information,
+                                 'File Saved',
+                                 'File saved to "%s"' % context.filename)
+
+
+class BrowseDialogController(Controller):
+    def __init__(self, model, view):
+        Controller.__init__(self, model, view)
+        command_directory = {
+            save_blob: SaveBlob,
+        }
+        self.add_commands(command_directory)
 
 
 class BrowseDialog(QtGui.QDialog):
 
     @staticmethod
-    def create(ref, width=420, height=333, parent=None):
-        dlg = BrowseDialog(ref, parent=parent)
-        dlg.resize(width, height)
+    def browse(ref):
+        parent = QtGui.QApplication.activeWindow()
+        model = BrowseModel(ref)
+        dlg = BrowseDialog(model, parent=parent)
+        ctrl = BrowseDialogController(model, dlg)
+        dlg.resize(parent.width()*3/4, 333)
         dlg.show()
         dlg.raise_()
         if dlg.exec_() != dlg.Accepted:
             return None
-        return dlg
+        return ctrl
 
     def __init__(self, ref, parent=None):
         QtGui.QDialog.__init__(self, parent)
         self.setWindowModality(QtCore.Qt.WindowModal)
-        self.setWindowTitle('Browsing %s' % ref)
+        self.setWindowTitle('Browsing %s' % model.ref)
 
-        # inputs
-        self.ref = ref
-
-        # outputs
-        self.relpath = None
-        self.filename = None
+        # updated for use by commands
+        self.model = model
 
         # widgets
-        self.tree = GitTreeWidget(self.ref, parent=self)
-        self.cancel = QtGui.QPushButton('Cancel')
         self.save = QtGui.QPushButton('Save')
+        self.tree = GitTreeWidget(model.ref, parent=self)
+        self.close = QtGui.QPushButton('Close')
         self.save.setDefault(True)
         self.save.setEnabled(False)
 
         # layouts
         self.btnlayt = QtGui.QHBoxLayout()
         self.btnlayt.addStretch()
-        self.btnlayt.addWidget(self.cancel)
+        self.btnlayt.addWidget(self.close)
         self.btnlayt.addWidget(self.save)
 
         self.layt = QtGui.QVBoxLayout()
@@ -62,15 +111,24 @@ class BrowseDialog(QtGui.QDialog):
         self.connect(self.tree, SIGNAL('selectionChanged()'),
                      self.selection_changed)
 
-    def path_chosen(self, path):
+    def path_chosen(self, path, close=True):
+        """Update the model from the view"""
+        model = self.model
+        model.relpath = path
+        model.filename = path
+        if close:
+            self.accept()
+
+    def save_path(self, path):
         """Choose an output filename based on the selected path"""
-        self.relpath = path
-        self.filename = path
+        self.path_chosen(path, close=False)
+        model = self.model
         filename = QtGui.QFileDialog.getSaveFileName(self,
-                        self.tr('Save File'), self.filename)
+                        self.tr('Save File'), model.filename)
         if not filename:
             return
-        self.filename = unicode(filename)
+        model.filename = unicode(filename)
+        self.emit(SIGNAL(save_blob))
         self.accept()
 
     def save_blob(self):
@@ -78,7 +136,7 @@ class BrowseDialog(QtGui.QDialog):
         filenames = self.tree.selected_files()
         if not filenames:
             return
-        self.path_chosen(filenames[0])
+        self.path_chosen(filenames[0], close=True)
 
     def selection_changed(self):
         """Update actions based on the current selection"""
@@ -94,8 +152,8 @@ class GitTreeWidget(QtGui.QTreeView):
         self.setAllColumnsShowFocus(True)
         self.setUniformRowHeights(True)
 
-        model = GitTreeModel(ref, self)
-        self.setModel(model)
+        self._model = GitTreeModel(ref, self)
+        self.setModel(self._model)
 
         self.connect(self, SIGNAL('doubleClicked(const QModelIndex &)'),
                      self.double_clicked)
