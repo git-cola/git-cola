@@ -74,7 +74,19 @@ class BrowseDialog(QtGui.QDialog):
             return None
         return ctrl
 
-    def __init__(self, ref, parent=None):
+    @staticmethod
+    def select_file(ref):
+        parent = QtGui.QApplication.activeWindow()
+        model = BrowseModel(ref)
+        dlg = BrowseDialog(model, select_file=True, parent=parent)
+        dlg.resize(parent.width()*3/4, 333)
+        dlg.show()
+        dlg.raise_()
+        if dlg.exec_() != dlg.Accepted:
+            return None
+        return model.filename
+
+    def __init__(self, model, select_file=False, parent=None):
         QtGui.QDialog.__init__(self, parent)
         self.setWindowModality(QtCore.Qt.WindowModal)
         self.setWindowTitle('Browsing %s' % model.ref)
@@ -83,9 +95,9 @@ class BrowseDialog(QtGui.QDialog):
         self.model = model
 
         # widgets
-        self.save = QtGui.QPushButton('Save')
         self.tree = GitTreeWidget(model.ref, parent=self)
         self.close = QtGui.QPushButton('Close')
+        self.save = QtGui.QPushButton(select_file and 'Select' or 'Save')
         self.save.setDefault(True)
         self.save.setEnabled(False)
 
@@ -102,11 +114,14 @@ class BrowseDialog(QtGui.QDialog):
         self.setLayout(self.layt)
 
         # connections
-        self.connect(self.cancel, SIGNAL('clicked()'), self.reject)
+        self.connect(self.close, SIGNAL('clicked()'), self.reject)
 
         self.connect(self.save, SIGNAL('clicked()'), self.save_blob)
 
-        self.connect(self.tree, SIGNAL('path_chosen'), self.path_chosen)
+        if select_file:
+            self.connect(self.tree, SIGNAL('path_chosen'), self.path_chosen)
+        else:
+            self.connect(self.tree, SIGNAL('path_chosen'), self.save_path)
 
         self.connect(self.tree, SIGNAL('selectionChanged()'),
                      self.selection_changed)
