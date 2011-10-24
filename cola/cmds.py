@@ -325,7 +325,7 @@ class Ignore(Command):
             new_additions = new_additions + fname + '\n'
         for_status = new_additions
         if new_additions:
-            if '.gitignore' in gitcmds.all_files():
+            if os.path.exists('.gitignore'):
                 current_list = utils.slurp('.gitignore')
                 new_additions = new_additions + current_list
             utils.write('.gitignore', new_additions)
