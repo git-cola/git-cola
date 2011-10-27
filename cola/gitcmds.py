@@ -393,93 +393,14 @@ def worktree_state_dict(head='HEAD',
     if staged_only:
         return _branch_status(head)
 
-    staged_set = set()
-    modified_set = set()
+    staged, unmerged, submodules = diff_index(head)
+    modified, more_submods = diff_worktree()
 
-    staged = []
-    modified = []
-    unmerged = []
-    untracked = []
-    upstream_changed = []
-    submodules = set()
-    try:
-        output = git.diff_index(head, cached=True, with_stderr=True)
-        if output.startswith('fatal:'):
-            raise errors.GitInitError('git init')
-        for line in output.splitlines():
-            rest, name = line.split('\t', 1)
-            status = rest[-1]
-            name = eval_path(name)
-            if '160000' in rest[1:14]:
-                submodules.add(name)
-            if status  == 'M':
-                staged.append(name)
-                staged_set.add(name)
-                # This file will also show up as 'M' without --cached
-                # so by default don't consider it modified unless
-                # it's truly modified
-                modified_set.add(name)
-                if not staged_only and is_modified(name):
-                    modified.append(name)
-            elif status == 'A':
-                staged.append(name)
-                staged_set.add(name)
-            elif status == 'D':
-                staged.append(name)
-                staged_set.add(name)
-                modified_set.add(name)
-            elif status == 'U':
-                unmerged.append(name)
-                modified_set.add(name)
-
-    except errors.GitInitError:
-        # handle git init
-        staged.extend(all_files())
-
-    try:
-        output = git.diff_index(head, with_stderr=True)
-        if output.startswith('fatal:'):
-            raise errors.GitInitError('git init')
-        for line in output.splitlines():
-            rest , name = line.split('\t', 1)
-            status = rest[-1]
-            name = eval_path(name)
-            if '160000' in rest[1:13]:
-                submodules.add(name)
-            if status == 'M' or status == 'D':
-                if name not in modified_set:
-                    modified.append(name)
-            elif status == 'A':
-                # newly-added yet modified
-                if (name not in modified_set and not staged_only and
-                        is_modified(name)):
-                    modified.append(name)
-
-    except errors.GitInitError:
-        # handle git init
-        ls_files = git.ls_files(modified=True, z=True)[:-1].split('\0')
-        modified.extend(map(core.decode, [f for f in ls_files if f]))
-
-    untracked.extend(untracked_files())
+    submodules = submodules.union(more_submods)
+    untracked = untracked_files()
 
     # Look for upstream modified files if this is a tracking branch
-    tracked = tracked_branch()
-    if tracked:
-        try:
-            diff_expr = merge_base_to(tracked)
-            output = git.diff(diff_expr, name_only=True, z=True,
-                              **_common_diff_opts())
-
-            if output.startswith('fatal:'):
-                raise errors.GitInitError('git init')
-
-            for name in [n for n in output.split('\0') if n]:
-                name = core.decode(name)
-                upstream_changed.append(name)
-
-        except errors.GitInitError:
-            # handle git init
-            pass
+    upstream_changed = diff_upstream(head)
 
     # Keep stuff sorted
     staged.sort()
@@ -494,6 +415,68 @@ def worktree_state_dict(head='HEAD',
             'untracked': untracked,
             'upstream_changed': upstream_changed,
             'submodules': submodules}
+
+
+def diff_index(head):
+    submodules = set()
+    staged = []
+    unmerged = []
+
+    output = git.diff_index(head, z=True, cached=True, with_stderr=True)
+    if output.startswith('fatal:'):
+        # handle git init
+        return all_files(), unmerged, submodules
+
+    while output:
+        rest, output = output.split('\0', 1)
+        name, output = output.split('\0', 1)
+        status = rest[-1]
+        name = core.decode(name)
+        if '160000' in rest[1:14]:
+            submodules.add(name)
+        elif status  in 'DAM':
+            staged.append(name)
+        elif status == 'U':
+            unmerged.append(name)
+
+    return staged, unmerged, submodules
+
+
+def diff_worktree():
+    modified = []
+    submodules = set()
+
+    output = git.diff_files(z=True, with_stderr=True)
+    if output.startswith('fatal:'):
+        # handle git init
+        ls_files = git.ls_files(modified=True, z=True)[:-1].split('\0')
+        modified = [core.decode(f) for f in ls_files if f]
+        return modified, submodules
+
+    while output:
+        rest, output = output.split('\0', 1)
+        name, output = output.split('\0', 1)
+        status = rest[-1]
+        name = core.decode(name)
+        if '160000' in rest[1:14]:
+            submodules.add(name)
+        elif status in 'DAM':
+            modified.append(name)
+
+    return modified, submodules
+
+
+def diff_upstream(head):
+    tracked = tracked_branch()
+    if not tracked:
+        return []
+    diff_expr = merge_base_to(head, tracked)
+    output = git.diff(diff_expr, name_only=True, z=True,
+                      **_common_diff_opts())
+    if output.startswith('fatal:'):
+        return []
+    return [core.decode(n) for n in output.split('\0') if n]
+
 
 def partial_worktree_state_dict(files, head='HEAD'):
     states = []
@@ -511,6 +494,7 @@ def partial_worktree_state_dict(files, head='HEAD'):
             states.append(('untracked', path))
 
     return states
+
 
 def _branch_status(branch, git=git):
     """
@@ -532,9 +516,9 @@ def _branch_status(branch, git=git):
             'upstream_changed': staged}
 
 
-def merge_base_to(ref):
+def merge_base_to(head, ref):
     """Given `ref`, return $(git merge-base ref HEAD)..ref."""
-    base = git.merge_base('HEAD', ref)
+    base = git.merge_base(head, ref)
     return '%s..%s' % (base, ref)
 
 
@@ -543,15 +527,6 @@ def merge_base_parent(branch):
     if tracked:
         return '%s..%s' % (tracked, branch)
     return 'master..%s' % branch
-
-
-def is_modified(name, git=git):
-    status, out = git.diff('--', name,
-                           name_only=True,
-                           exit_code=True,
-                           with_status=True,
-                           **_common_diff_opts())
-    return status != 0
 
 
 def eval_path(path):
