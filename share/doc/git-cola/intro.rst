@@ -64,6 +64,7 @@ Special Thanks
 * David Aguilar
 * David Martínez Martí
 * `GIT Hackers <http://git-scm.com/about>`_
+* Ismael Juma
 * Iulian Udrea
 * Justin Lecher
 * Karl Bielefeldt
@@ -73,6 +74,7 @@ Special Thanks
 * Michael Geddes
 * Markus Heidelberg
 * Matthew Levine
+* Paolo G. Giarrusso
 * Stefan Naewe
 * Steffen Prohaska
 * Uri Okrent
