@@ -189,8 +189,10 @@ def main(context):
     from cola import qtcompat
     qtcompat.install()
 
+    from cola import guicmds
     from cola.app import ColaApplication
     from cola.classic import cola_classic
+    from cola.widgets import cfgactions
     from cola.widgets import startup
     from cola.main.view import MainView
     from cola.main.controller import MainController
@@ -224,6 +226,9 @@ def main(context):
     else:
         view = MainView(model)
         ctl = MainController(model, view)
+    # Install UI wrappers for command objects
+    cfgactions.install_command_wrapper(view)
+    guicmds.install_command_wrapper(view)
 
     # Show the view and start the main event loop
     view.show()
@@ -253,7 +258,8 @@ def main(context):
     for filename in glob.glob(pattern):
         os.unlink(filename)
     sys.exit(result)
-    return task
+
+    return ctl, task
 
 
 def _start_update_thread(model):
@@ -275,7 +281,6 @@ def _start_update_thread(model):
     return task
 
 
-
 def _send_msg():
     import cola
     git.GIT_COLA_TRACE = os.getenv('GIT_COLA_TRACE', False)
@@ -285,6 +290,7 @@ def _send_msg():
                '"plumbing" API and are not intended for typical '
                'day-to-day use.  Here be dragons')
         cola.notifier().broadcast(signals.log_cmd, 0, msg)
+
 
 def _setup_resource_dir(dirname):
     """Adds resource directories to Qt's search path"""
