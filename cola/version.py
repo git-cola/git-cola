@@ -14,7 +14,6 @@ if __name__ == '__main__':
     sys.path.insert(1, os.path.join(srcdir, 'thirdparty'))
 
 from cola import git
-from cola import core
 from cola import errors
 from cola import utils
 from cola.decorators import memoize
