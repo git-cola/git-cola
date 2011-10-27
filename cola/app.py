@@ -16,16 +16,25 @@ from cola import version
 from cola.decorators import memoize
 
 
-# Spoof an X11 display for SSH
-os.environ.setdefault('DISPLAY', ':0')
+def setup_environment():
+    # Spoof an X11 display for SSH
+    os.environ.setdefault('DISPLAY', ':0')
 
-# Provide an SSH_ASKPASS fallback
-if sys.platform == 'darwin':
-    os.environ.setdefault('SSH_ASKPASS',
-                          resources.share('bin', 'ssh-askpass-darwin'))
-else:
-    os.environ.setdefault('SSH_ASKPASS',
-                          resources.share('bin', 'ssh-askpass'))
+    # Provide an SSH_ASKPASS fallback
+    if sys.platform == 'darwin':
+        os.environ.setdefault('SSH_ASKPASS',
+                              resources.share('bin', 'ssh-askpass-darwin'))
+    else:
+        os.environ.setdefault('SSH_ASKPASS',
+                              resources.share('bin', 'ssh-askpass'))
+
+    # Setup the path so that git finds us when we run 'git cola'
+    path_entries = os.environ.get('PATH').split(os.pathsep)
+    bindir = os.path.dirname(os.path.abspath(__file__))
+    path_entries.insert(0, bindir)
+    path = os.pathsep.join(path_entries)
+    os.environ['PATH'] = path
+    os.putenv('PATH', path)
 
 
 @memoize
@@ -93,10 +102,7 @@ class ColaApplication(object):
         return self._app.exec_()
 
 
-
-def main():
-    """Parses the command-line arguments and starts git-cola
-    """
+def parse_args(context):
     parser = optparse.OptionParser(usage='%prog [options]')
 
     # We also accept 'git cola version'
@@ -133,8 +139,10 @@ def main():
                       dest='git',
                       metavar='PATH',
                       default='')
-    opts, args = parser.parse_args()
+    return parser.parse_args()
 
+
+def process_args(opts, args):
     if opts.version or (args and args[0] == 'version'):
         # Accept 'git cola --version' or 'git cola version'
         print 'cola version', version.version()
@@ -154,6 +162,16 @@ def main():
 
     # We do everything relative to the repo root
     os.chdir(opts.repo)
+
+    return repo
+
+
+def main(context):
+    """Parses the command-line arguments and starts git-cola
+    """
+    setup_environment()
+    opts, args = parse_args(context)
+    repo = process_args(opts, args)
 
     try:
         # Defer these imports to allow git cola --version without pyqt installed
@@ -236,6 +254,7 @@ def main():
     for filename in glob.glob(pattern):
         os.unlink(filename)
     sys.exit(result)
+    return task
 
 
 def _start_update_thread(model):

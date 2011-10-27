@@ -38,17 +38,8 @@ def cola_init():
         paths_to_try = [os.path.join(prefix, 'share', 'git-cola', 'lib')]
         sys.path = paths_to_try + sys.path
 
-    # Setup the path so that git finds us when we run 'git cola'
-    path_entries = os.environ.get('PATH').split(os.pathsep)
-    bindir = os.path.dirname(os.path.abspath(__file__))
-    path_entries.insert(0, bindir)
-    path = os.pathsep.join(path_entries)
-    os.environ['PATH'] = path
-    os.putenv('PATH', path)
-
-
 if __name__ == '__main__':
     # lights, cameras, action
     cola_init()
     import cola.app
-    cola.app.main()
+    cola.app.main('git-cola')
