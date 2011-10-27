@@ -25,7 +25,7 @@ _versions = {
     # git-difftool moved out of contrib in git 1.6.3
     'git': '1.6.3',
     'python': '2.4',
-    'pyqt': '4.1',
+    'pyqt': '4.4',
     'pyqt_qrunnable': '4.4',
     'diff-submodule': '1.6.6',
 }

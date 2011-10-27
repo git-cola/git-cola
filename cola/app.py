@@ -7,7 +7,6 @@ import os
 import signal
 import sys
 
-from cola import core
 from cola import git
 from cola import i18n
 from cola import inotify
@@ -176,9 +175,6 @@ def main():
     from cola.main.view import MainView
     from cola.main.controller import MainController
 
-    # TODO: remove in 2012?
-    has_threadpool = hasattr(QtCore, 'QThreadPool')
-
     # Allow Ctrl-C to exit
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -216,10 +212,7 @@ def main():
     view.raise_()
 
     # Scan for the first time
-    if has_threadpool:
-        task = _start_update_thread(model)
-    else:
-        model.update_status(update_index=True)
+    task = _start_update_thread(model)
 
     # Start the inotify thread
     inotify.start()
@@ -237,9 +230,7 @@ def main():
 
     # All done, cleanup
     inotify.stop()
-
-    if has_threadpool:
-        QtCore.QThreadPool.globalInstance().waitForDone()
+    QtCore.QThreadPool.globalInstance().waitForDone()
 
     pattern = cola.model().tmp_file_pattern()
     for filename in glob.glob(pattern):

@@ -21,7 +21,7 @@ REQUIREMENTS
 ------------
 ~ git version 1.6.3 or newer
 ~ Python 2.4 or newer
-~ PyQt 4.1 or newer
+~ PyQt 4.4 or newer
 
 FORK
 ----

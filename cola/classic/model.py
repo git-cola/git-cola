@@ -222,9 +222,6 @@ class TaskRunner(object):
         self.notifier.connect(self.notifier, SIGNAL('task_done'), self.task_done)
 
     def run(self, task):
-        if not hasattr(QtCore, 'QThreadPool'):
-            # TODO: provide a fallback implementation
-            return
         self.tasks.add(task)
         self.threadpool.start(task)
 

@@ -70,8 +70,6 @@ class MainView(MainWindow):
         self.model = model
         self.prefs_model = prefs_model = PreferencesModel()
 
-        self._has_threadpool = hasattr(QtCore, 'QThreadPool')
-
         # Internal field used by import/export_state().
         # Change this whenever dockwidgets are removed.
         self._widget_version = 1
@@ -427,11 +425,7 @@ class MainView(MainWindow):
 
     def install_config_actions(self):
         """Install .gitconfig-defined actions"""
-        if self._has_threadpool:
-            self._config_task = self._start_config_actions_task()
-        else:
-            names = cfgactions.get_config_actions()
-            self._install_config_actions(names)
+        self._config_task = self._start_config_actions_task()
 
     def _start_config_actions_task(self):
         """Do the expensive "get_config_actions()" call in the background"""
@@ -508,11 +502,7 @@ class MainView(MainWindow):
 
     def _load_gui_state(self):
         """Restores the gui from the preferences file."""
-        if self._has_threadpool:
-            self._gui_state_task = self._start_gui_state_loading_thread()
-        else:
-            state = settings.SettingsManager.gui_state(self)
-            self.import_state(state)
+        self._gui_state_task = self._start_gui_state_loading_thread()
 
     def _start_gui_state_loading_thread(self):
         """Do expensive file reading and json decoding in the background"""
