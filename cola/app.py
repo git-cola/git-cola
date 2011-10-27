@@ -182,6 +182,8 @@ def main(context):
         print >> sys.stderr, 'e.g.:    sudo apt-get install python-qt4'
         sys.exit(-1)
 
+    from PyQt4.QtCore import SIGNAL
+
     # Import cola modules
     import cola
     from cola import qtcompat
@@ -235,13 +237,10 @@ def main(context):
     # Start the inotify thread
     inotify.start()
 
-    git.GIT_COLA_TRACE = os.getenv('GIT_COLA_TRACE', False)
-    if git.GIT_COLA_TRACE:
-        msg = ('info: Trace enabled.  '
-               'Many of commands reported with "trace" use git\'s stable '
-               '"plumbing" API and are not intended for typical '
-               'day-to-day use.  Here be dragons')
-        cola.notifier().broadcast(signals.log_cmd, 0, msg)
+    msg_timer = QtCore.QTimer()
+    msg_timer.setSingleShot(True)
+    msg_timer.connect(msg_timer, SIGNAL('timeout()'), _send_msg)
+    msg_timer.start(0)
 
     # Start the event loop
     result = app.exec_()
@@ -275,6 +274,17 @@ def _start_update_thread(model):
 
     return task
 
+
+
+def _send_msg():
+    import cola
+    git.GIT_COLA_TRACE = os.getenv('GIT_COLA_TRACE', False)
+    if git.GIT_COLA_TRACE:
+        msg = ('info: Trace enabled.  '
+               'Many of commands reported with "trace" use git\'s stable '
+               '"plumbing" API and are not intended for typical '
+               'day-to-day use.  Here be dragons')
+        cola.notifier().broadcast(signals.log_cmd, 0, msg)
 
 def _setup_resource_dir(dirname):
     """Adds resource directories to Qt's search path"""
