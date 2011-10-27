@@ -39,6 +39,7 @@ git-cola is designed to run directly out of its source tree.
 
     $ make
     $ bin/git-cola
+    $ bin/git-dag
 
 
 MAC OS X INSTALLTION INSTRUCTIONS

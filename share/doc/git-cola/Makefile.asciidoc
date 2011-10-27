@@ -58,7 +58,7 @@ doc.dep : $(wildcard *.txt) build-docdep.perl
 -include doc.dep
 
 clean:
-	rm -f *.xml git-cola.html *.pdf *.1 doc.dep
+	rm -f *.xml git-cola.html git-dag.html *.pdf *.1 doc.dep
 
 %.html : %.txt
 	$(ASCIIDOC) -b xhtml11 -d manpage -f asciidoc.conf $(ASCIIDOC_EXTRA) $<

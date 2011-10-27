@@ -1,0 +1,75 @@
+git-dag(1)
+==========
+
+NAME
+----
+git-dag - An advanced git DAG visualizer
+
+SYNOPSIS
+--------
+'git dag' [options]
+
+DESCRIPTION
+-----------
+'git-dag' is a powerful git DAG visualizer written in Python.
+'git-dag' supports many of the 'git-log' options through its
+graphical interface.
+
+See below for a full list of command-line options and usage information.
+
+OPTIONS
+-------
+--classic::
+	Launch the standalone 'cola classic' tool.
+
+-g::
+--git-path::
+	Specifies the path to the 'git' binary.
+
+--prompt::
+	Prompt for a git repository instead of auto-detecting it
+	in the current directory.
+
+-r::
+--repo=<path>::
+	Run 'git-cola' on the git repository in <path>.
+	Defaults to the current directory.
+
+-v::
+--version::
+	Print the 'git-cola' version and exit.
+
+
+SOURCE
+------
+A 'git-cola' development repository can be obtained via git:
+
+	git clone git://github.com/git-cola/git-cola.git
+
+
+LINKS
+-----
+'git-cola' homepage::
+	http://git-cola.github.com/
+
+'git-cola' sources on github::
+	https://github.com/git-cola/git-cola/
+
+
+SEE ALSO
+--------
+linkgit:git-difftool[1]::
+	Compare changes using common merge tools.
+
+linkgit:gitk[1]::
+	The git repository browser.  Shows branches, commit history
+	and file differences.
+
+GIT
+---
+'git-dag' is independently developed from the linkgit:git[7] suite,
+but you can use it just like any other git command, e.g. `git dag`.
+
+AUTHOR
+------
+Written by David Aguilar <davvid@gmail.com>.
