@@ -400,10 +400,12 @@ class MainView(MainWindow):
 
     def _mode_changed(self, mode):
         """React to mode changes; hide/show the "Exit Diff Mode" button."""
-        if mode in (self.model.mode_review,
+        if mode in (self.model.mode_branch,
+                    self.model.mode_review,
                     self.model.mode_diff,
                     self.model.mode_diff_expr):
-            self.alt_button.setMinimumHeight(40)
+            height = self.stage_button.minimumHeight()
+            self.alt_button.setMinimumHeight(height)
             self.alt_button.show()
         else:
             self.alt_button.setMinimumHeight(1)
