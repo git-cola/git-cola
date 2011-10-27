@@ -35,19 +35,10 @@ OPTIONS
 	Run 'git-cola' on the git repository in <path>.
 	Defaults to the current directory.
 
--s::
---style=<style>::
-	Launch 'git-cola' with a different stylesheet.
-
 -v::
 --version::
 	Print the 'git-cola' version and exit.
 
-
-GUI STYLES
-----------
-'git-cola' ships with an alternate "dark" stylesheet.
-Specify `--style=dark` or provide an external stylesheet with `--style=PATH`.
 
 CONFIG VARIABLES
 ----------------
@@ -109,17 +100,6 @@ SOURCE
 A 'git-cola' development repository can be obtained via git:
 
 	git clone git://github.com/git-cola/git-cola.git
-
-
-GUI THEMES
-----------
-'git-cola' ships with an alternative stylesheet called 'dark'.
-You can use this stylesheet by running `git cola --style=dark`.
-
-You can also skin 'git-cola' by providing your own Qt stylesheet.
-E.g. `git cola --style=/path/to/style.qss`.
-
-Built-in styles can be found in `/usr/share/git-cola/styles`.
 
 
 LINKS

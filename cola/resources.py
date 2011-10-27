@@ -41,23 +41,9 @@ def share(*args):
 
 def icon(basename):
     """Return the full path to an icon file given a basename."""
-    return share('icons', basename)
+    return 'icons:'+basename
 
 
-def stylesheet(name):
-    """Return a path relative to cola's /usr/share/../styles directory"""
-    stylesheet = share('styles', name + '.qss')
-    if os.path.exists(stylesheet):
-        return stylesheet
-    else:
-        return None
-
-
-def style_dir():
+def icon_dir():
     """Return the path to the style dir within the cola install tree."""
-    return share('styles')
-
-
-def resource_dirs(path):
-    """Returns directories beneath a specific path"""
-    return [p for p in glob.glob(os.path.join(path, '*')) if os.path.isdir(p)]
+    return share('icons')

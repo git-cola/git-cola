@@ -74,8 +74,6 @@ def cola_data_files(standalone=_standalone):
     data = [
         _app_path('share/git-cola/icons', '*.png'),
         _app_path('share/git-cola/icons', '*.svg'),
-        _app_path('share/git-cola/styles', '*.qss'),
-        _app_path('share/git-cola/styles/images', '*.png'),
         _app_path('share/applications', '*.desktop'),
         _app_path('share/doc/git-cola', '*.txt'),
         _package('cola'),

@@ -93,9 +93,6 @@ class ColaApplication(object):
         """Wrap exec_()"""
         return self._app.exec_()
 
-    def setStyleSheet(self, txt):
-        """Wrap setStyleSheet(txt)"""
-        return self._app.setStyleSheet(txt)
 
 
 def main():
@@ -116,14 +113,6 @@ def main():
                       dest='classic',
                       default=False,
                       action='store_true')
-
-    # Accept --style=/path/to/style.qss or --style=dark for built-in styles
-    parser.add_option('-s', '--style',
-                      help='Applies an alternate stylesheet.  '
-                           'The allowed values are: "dark" or a file path.',
-                      dest='style',
-                      metavar='PATH or STYLE',
-                      default='')
 
     # Specifies a git repository to open
     parser.add_option('-r', '--repo',
@@ -193,34 +182,11 @@ def main():
     # Allow Ctrl-C to exit
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
+    # Add the default style dir so that we find our icons
+    _setup_resource_dir(resources.icon_dir())
+
     # Initialize the app
     app = ColaApplication(sys.argv)
-
-    style = None
-    if opts.style:
-        # This loads the built-in and user-specified stylesheets.
-        # We allows absolute and relative paths to a stylesheet
-        # by assuming that non-file arguments refer to a built-in style.
-        if os.path.isabs(opts.style) or os.path.isfile(opts.style):
-            filename = opts.style
-        else:
-            filename = resources.stylesheet(opts.style)
-
-        if filename and os.path.exists(filename):
-            # Automatically register each subdirectory in the style dir
-            # as a Qt resource directory.
-            _setup_resource_dir(os.path.dirname(filename))
-            stylesheet = open(filename, 'r')
-            style = core.read_nointr(stylesheet)
-            stylesheet.close()
-            app.setStyleSheet(style)
-        else:
-            _setup_resource_dir(resources.style_dir())
-            print >> sys.stderr, ("warn: '%s' is not a valid style."
-                                  % opts.style)
-    else:
-        # Add the default style dir so that we find our icons
-        _setup_resource_dir(resources.style_dir())
 
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
@@ -304,7 +270,5 @@ def _setup_resource_dir(dirname):
     """Adds resource directories to Qt's search path"""
     from cola import qtcompat
 
-    resource_paths = resources.resource_dirs(dirname)
-    for r in resource_paths:
-        basename = os.path.basename(r)
-        qtcompat.add_search_path(basename, r)
+    basename = os.path.basename(dirname)
+    qtcompat.add_search_path(basename, dirname)
