@@ -59,12 +59,12 @@ def _run_setup():
 
     setup(name = 'git-cola',
           version = version.version(),
-          description = 'A highly caffeinated git GUI',
+          description = 'The highly caffeinated git GUI',
           license = 'GPLv2',
           author = 'The git-cola community',
           author_email = 'git-cola@googlegroups.com',
-          url = 'http://cola.tuxfamily.org/',
-          long_description = 'A highly caffeinated git GUI',
+          url = 'http://git-cola.github.com/',
+          long_description = 'A sleek and powerful git GUI',
           scripts = scripts,
           cmdclass = cmdclass,
           data_files = cola_data_files())

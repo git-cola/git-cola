@@ -1,7 +1,7 @@
 #define APP_NAME     'git-cola'
-#define APP_LONGNAME 'git-cola - A highly caffeinated git GUI'
+#define APP_LONGNAME 'git-cola - The highly caffeinated git GUI'
 #define APP_VERSION  '%APPVERSION%'
-#define APP_URL      'http://cola.tuxfamily.org/'
+#define APP_URL      'http://git-cola.github.com/'
 
 [Setup]
 ; Compiler-related
