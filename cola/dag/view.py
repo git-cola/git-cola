@@ -183,8 +183,9 @@ class CommitTreeWidget(QtGui.QTreeWidget):
 
 class GitDAGWidget(standard.StandardDialog):
     """The git-dag widget."""
-    def __init__(self, dag, parent=None, args=None):
+    def __init__(self, model, dag, parent=None, args=None):
         standard.StandardDialog.__init__(self, parent=parent)
+        self.model = model
         self.dag = dag
         self.setObjectName('dag')
         self.setWindowTitle(self.tr('git dag'))
@@ -289,6 +290,25 @@ class GitDAGWidget(standard.StandardDialog):
 
         self.connect(self.revtext, SIGNAL('ref_changed'),
                      self._display)
+
+        # The model is updated in another thread so use
+        # signals/slots to bring control back to the main GUI thread
+        self.model.add_message_observer(self.model.message_updated,
+                                        self._model_updated)
+
+        self.connect(self, SIGNAL('model_updated'),
+                     self.model_updated)
+
+    def _model_updated(self):
+        self.emit(SIGNAL('model_updated'))
+
+    def model_updated(self):
+        if self.dag.ref:
+            return
+        if not self.model.currentbranch:
+            return
+        self.revtext.setText(self.model.currentbranch)
+        self._display()
 
     def _display(self):
         new_ref = unicode(self.revtext.text())

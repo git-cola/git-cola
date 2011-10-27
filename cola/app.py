@@ -192,6 +192,7 @@ def main(context):
     from cola import guicmds
     from cola.app import ColaApplication
     from cola.classic import cola_classic
+    from cola.dag import git_dag
     from cola.widgets import cfgactions
     from cola.widgets import startup
     from cola.main.view import MainView
@@ -223,9 +224,13 @@ def main(context):
     # Show the GUI
     if opts.classic:
         view = cola_classic(update=False)
-    else:
+    elif context == 'git-cola':
         view = MainView(model)
         ctl = MainController(model, view)
+    elif context == 'git-dag':
+        ctl = git_dag(model, app.activeWindow())
+        view = ctl.view
+
     # Install UI wrappers for command objects
     cfgactions.install_command_wrapper(view)
     guicmds.install_command_wrapper(view)
