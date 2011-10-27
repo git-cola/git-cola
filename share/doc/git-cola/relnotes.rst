@@ -1,5 +1,48 @@
 .. |beta(TM)| unicode:: beta U+2122
 
+git-cola v1.7.0
+===============
+Usability, bells and whistles
+-----------------------------
+* `git-dag` is no longer |beta(TM)|
+
+* Export a patch series from `git-dag` into a `patches/` directory.
+
+* `git-dag` learned to diff commits, slice history along paths, etc.
+
+* Added instant-preview to the `git-stash` widget.
+
+* A simpler preferences editor is used to edit `git-config` values.
+
+  http://github.com/git-cola/git-cola/issues/closed#issue/90
+
+  http://github.com/git-cola/git-cola/issues/closed#issue/89
+
+* Previous commit messages can be re-loaded from the message editor.
+
+  http://github.com/git-cola/git-cola/issues/closed#issue/33
+
+Fixes
+-----
+* Display commits with no file changes.
+
+  http://github.com/git-cola/git-cola/issues/closed#issue/82
+
+* Improved the diff editor's copy/paste behavior
+
+  http://github.com/git-cola/git-cola/issues/closed#issue/90
+
+Packaging
+---------
+* Bumped version number to ceil(minimum git version).
+  `git-cola` now requires `git` >= 1.6.3.
+
+* Simplified git-cola's versioning when building from tarballs
+  outside of git.  We no longer check for a 'version' file at
+  the root of the repository.  We instead keep a default version
+  in `cola/version.py` and use it when `git-cola`'s `.git` repository
+  is not available.
+
 git-cola v1.4.3.5
 =================
 Usability, bells and whistles
