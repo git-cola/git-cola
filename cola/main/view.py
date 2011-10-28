@@ -458,7 +458,7 @@ class MainView(standard.MainWindow):
         msg = 'Repository: %s\nBranch: %s' % (curdir, branch)
         self.commitdockwidget.setToolTip(msg)
 
-        title = '%s [%s]' % (self.model.project, branch)
+        title = '%s: %s' % (self.model.project, branch)
         if self.mode in (self.model.mode_diff, self.model.mode_diff_expr):
             title += ' *** diff mode***'
         elif self.mode == self.model.mode_review:

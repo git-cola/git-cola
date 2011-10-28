@@ -190,8 +190,7 @@ class DAGView(standard.Dialog):
 
         self.model = model
         self.dag = dag
-        self.setObjectName('git-dag')
-        self.setWindowTitle(self.tr('git-dag'))
+        self.setObjectName('dag')
         self.setMinimumSize(1, 1)
 
         self.revlabel = QtGui.QLabel()
@@ -271,6 +270,7 @@ class DAGView(standard.Dialog):
         # Update fields affected by model
         self.revtext.setText(dag.ref)
         self.maxresults.setValue(dag.count)
+        self.update_window_title()
 
         self.thread = ReaderThread(self, dag)
 
@@ -298,6 +298,9 @@ class DAGView(standard.Dialog):
         self.connect(self.revtext, SIGNAL('ref_changed'),
                      self._display)
 
+        self.connect(self.revtext, SIGNAL('textChanged(QString)'),
+                     self._text_changed)
+
         # The model is updated in another thread so use
         # signals/slots to bring control back to the main GUI thread
         self.model.add_message_observer(self.model.message_updated,
@@ -307,6 +310,17 @@ class DAGView(standard.Dialog):
                      self.model_updated)
 
         qtutils.add_close_action(self)
+
+    def _text_changed(self, txt):
+        self.dag.ref = unicode(txt)
+        self.update_window_title()
+
+    def update_window_title(self):
+        project = self.model.project
+        if self.dag.ref:
+            self.setWindowTitle('%s: %s' % (project, self.dag.ref))
+        else:
+            self.setWindowTitle(project)
 
     def export_state(self):
         state = standard.Dialog.export_state(self)
