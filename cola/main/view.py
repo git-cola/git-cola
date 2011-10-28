@@ -44,7 +44,7 @@ from cola.qtutils import logger
 from cola.qtutils import relay_signal
 from cola.qtutils import SLOT
 from cola.qtutils import tr
-from cola.views.standard import create_standard_widget
+from cola.views import standard
 from cola.widgets import cfgactions
 from cola.widgets.about import launch_about_dialog
 from cola.widgets.commitmsg import CommitMessageEditor
@@ -52,8 +52,7 @@ from cola.widgets.diff import DiffTextEdit
 from cola.widgets.status import StatusWidget
 
 
-MainWindow = create_standard_widget(QtGui.QMainWindow)
-class MainView(MainWindow):
+class MainView(standard.MainWindow):
     def __init__(self, model, parent=None,
                  add_action=add_action,
                  connect_button=connect_button,
@@ -64,7 +63,7 @@ class MainView(MainWindow):
                  relay_signal=relay_signal,
                  SLOT=SLOT,
                  tr=tr):
-        MainWindow.__init__(self, parent)
+        standard.MainWindow.__init__(self, parent)
         # Default size; this is thrown out when save/restore is used
         self.resize(987, 610)
         self.model = model
@@ -72,7 +71,7 @@ class MainView(MainWindow):
 
         # Internal field used by import/export_state().
         # Change this whenever dockwidgets are removed.
-        self._widget_version = 1
+        self.widget_version = 1
 
         # Keeps track of merge messages we've seen
         self.merge_message_hash = ''
@@ -372,7 +371,7 @@ class MainView(MainWindow):
         connect_button(self.unstage_button, self.unstage)
 
         self.connect(self, SIGNAL('update'), self._update_callback)
-        self.connect(self, SIGNAL('import_state'), self.import_state)
+        self.connect(self, SIGNAL('apply_state'), self.apply_state)
         self.connect(self, SIGNAL('install_config_actions'),
                      self._install_config_actions)
 
@@ -389,9 +388,8 @@ class MainView(MainWindow):
     # Qt overrides
     def closeEvent(self, event):
         """Save state in the settings manager."""
-        if cola.model().remember_gui_settings():
-            settings.SettingsManager.save_gui_state(self)
-        MainWindow.closeEvent(self, event)
+        qtutils.save_state(self)
+        standard.MainWindow.closeEvent(self, event)
 
     # Accessors
     mode = property(lambda self: self.model.mode)
@@ -483,22 +481,16 @@ class MainView(MainWindow):
             cola.notifier().broadcast(signals.load_commit_message,
                                       core.decode(merge_msg_path))
 
-    def import_state(self, state):
+    def apply_state(self, state):
         """Imports data for save/restore"""
-        MainWindow.import_state(self, state)
-        # Restore the dockwidget, etc. window state
-        if 'windowstate' in state:
-            windowstate = state['windowstate']
-            self.restoreState(QtCore.QByteArray.fromBase64(str(windowstate)),
-                              self._widget_version)
+        # 1 is the widget version; change when widgets are added/removed
+        standard.MainWindow.apply_state(self, state)
+        qtutils.apply_window_state(self, state, 1)
 
     def export_state(self):
         """Exports data for save/restore"""
-        state = MainWindow.export_state(self)
-        # Save the window state
-        windowstate = self.saveState(self._widget_version)
-        state['windowstate'] = unicode(windowstate.toBase64().data())
-        return state
+        state = standard.MainWindow.export_state(self)
+        return qtutils.export_window_state(self, state, self.widget_version)
 
     def _load_gui_state(self):
         """Restores the gui from the preferences file."""
@@ -512,7 +504,7 @@ class MainView(MainWindow):
                 self._sender = sender
             def run(self):
                 state = settings.SettingsManager.gui_state(self._sender)
-                self._sender.emit(SIGNAL('import_state'), state)
+                self._sender.emit(SIGNAL('apply_state'), state)
 
         task = LoadGUIStateTask(self)
         QtCore.QThreadPool.globalInstance().start(task)
@@ -536,7 +528,7 @@ class MainView(MainWindow):
 
     def dragEnterEvent(self, event):
         """Accepts drops"""
-        MainWindow.dragEnterEvent(self, event)
+        standard.MainWindow.dragEnterEvent(self, event)
         event.acceptProposedAction()
 
     def dropEvent(self, event):

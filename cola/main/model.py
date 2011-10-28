@@ -151,9 +151,6 @@ class MainModel(ObservableModel):
     def history_browser(self):
         return _config.get('gui.historybrowser', 'gitk')
 
-    def remember_gui_settings(self):
-        return _config.get('cola.savewindowsettings', True)
-
     def all_branches(self):
         return (self.local_branches + self.remote_branches)
 

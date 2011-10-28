@@ -2,14 +2,13 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
-from cola import qtutils
 from cola.prefs import diff_font
 from cola.views import standard
 
 
-class CreateTag(standard.StandardDialog):
+class CreateTag(standard.Dialog):
     def __init__(self, parent=None):
-        standard.StandardDialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
         self.setWindowModality(QtCore.Qt.WindowModal)
         self.setWindowTitle(self.tr('Create Tag'))
         self.resize(506, 295)

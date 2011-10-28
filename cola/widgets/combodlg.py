@@ -5,11 +5,11 @@ from PyQt4.QtCore import SIGNAL
 from cola.views import standard
 
 
-class ComboDialog(standard.StandardDialog):
+class ComboDialog(standard.Dialog):
     """A dialog for choosing branches."""
 
     def __init__(self, parent=None, title='', items=None):
-        standard.StandardDialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
 
         self.setWindowTitle(title)
         self.resize(400, 73)

@@ -6,13 +6,13 @@ from cola import qtutils
 from cola.views import standard
 
 
-class RemoteView(standard.StandardDialog):
+class RemoteView(standard.Dialog):
     """A dialog for choosing branches."""
 
     def __init__(self, parent, action):
         """Customizes the dialog based on the remote action
         """
-        standard.StandardDialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
         self.setWindowModality(QtCore.Qt.WindowModal)
 
         self.resize(666, 420)

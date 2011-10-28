@@ -9,20 +9,19 @@ if __name__ == '__main__':
     sys.path.insert(1, os.path.join(os.path.abspath(src), 'thirdparty'))
     sys.path.insert(1, os.path.abspath(src))
 
-from cola.dag.view import GitDAGWidget
+from cola.dag.view import DAGView
 from cola.dag.model import DAG
-from cola.dag.controller import GitDAGController
+from cola.dag.controller import DAGController
 
 
 def git_dag(model, parent):
     """Return a pre-populated git DAG widget."""
     dag = DAG(model.currentbranch, 1000)
-    view = GitDAGWidget(model, dag, parent=parent)
-    ctl = GitDAGController(dag, view)
-    view.resize_to_desktop()
+    view = DAGView(model, dag, parent=parent)
+    ctl = DAGController(dag, view)
     view.show()
     view.raise_()
-    if model.currentbranch:
+    if dag.ref:
         view.thread.start(QtCore.QThread.LowPriority)
     return ctl
 

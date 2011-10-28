@@ -12,9 +12,9 @@ from cola.views import standard
 from cola.widgets.diff import DiffView
 
 
-class StashView(standard.StandardDialog):
+class StashView(standard.Dialog):
     def __init__(self, model, parent=None):
-        standard.StandardDialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
         self.model = model
         self.stashes = []
         self.revids = []

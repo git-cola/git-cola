@@ -9,9 +9,9 @@ from cola.qt import DiffSyntaxHighlighter
 from cola.views import standard
 
 
-class SearchView(standard.StandardDialog):
+class SearchView(standard.Dialog):
     def __init__(self, parent=None):
-        standard.StandardDialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
 
         self.setWindowTitle(self.tr('Search'))
         if self.parent():

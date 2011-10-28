@@ -181,10 +181,10 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         cola.notifier().broadcast(signals.cherry_pick, [sha1])
 
 
-class GitDAGWidget(standard.StandardDialog):
+class DAGView(standard.Dialog):
     """The git-dag widget."""
     def __init__(self, model, dag, parent=None, args=None):
-        standard.StandardDialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
         self.model = model
         self.dag = dag
         self.setObjectName('dag')
@@ -321,13 +321,13 @@ class GitDAGWidget(standard.StandardDialog):
         self.start()
 
     def show(self):
-        standard.StandardDialog.show(self)
+        standard.Dialog.show(self)
         self._mainsplitter.setSizes([self.width()/2, self.width()/2])
         self._leftsplitter.setSizes([self.height()/3, self.height()*2/3])
         self._treewidget.adjust_columns()
 
     def resizeEvent(self, e):
-        standard.StandardDialog.resizeEvent(self, e)
+        standard.Dialog.resizeEvent(self, e)
         self._treewidget.adjust_columns()
 
     def _splitter_moved(self, pos, idx):
@@ -358,7 +358,7 @@ class GitDAGWidget(standard.StandardDialog):
 
     def close(self):
         self.stop()
-        standard.StandardDialog.close(self)
+        standard.Dialog.close(self)
 
     def pause(self):
         self.thread.mutex.lock()

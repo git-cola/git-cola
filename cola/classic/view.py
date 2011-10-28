@@ -13,9 +13,9 @@ from cola.views import standard
 from cola.classic.model import GitRepoNameItem
 
 
-class RepoDialog(standard.StandardDialog):
+class RepoDialog(standard.Dialog):
     def __init__(self, parent=None, update=True):
-        standard.StandardDialog.__init__(self, parent)
+        standard.Dialog.__init__(self, parent)
         self.setObjectName('classic')
         self.tree = RepoTreeView(parent)
         self.setLayout(QtGui.QHBoxLayout())

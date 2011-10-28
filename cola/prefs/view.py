@@ -204,9 +204,9 @@ class SettingsFormWidget(FormWidget):
                   'user', 'cola.fontdiff', unicode(font.toString()))
 
 
-class PreferencesView(standard.StandardDialog):
+class PreferencesView(standard.Dialog):
     def __init__(self, model, parent=None):
-        standard.StandardDialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
         self.setWindowTitle(self.tr('Preferences'))
 
         self.resize(600, 360)

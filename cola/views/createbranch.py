@@ -4,11 +4,11 @@ from PyQt4.QtCore import SIGNAL
 from cola.views import standard
 
 
-class CreateBranchView(standard.StandardDialog):
+class CreateBranchView(standard.Dialog):
     """A dialog for creating branches."""
 
     def __init__(self, parent=None):
-        standard.StandardDialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
 
         self.setWindowTitle(self.tr('Create Branch'))
 

@@ -7,9 +7,9 @@ from PyQt4.QtCore import SIGNAL
 from cola.views import standard
 
 
-class CompareView(standard.StandardDialog):
+class CompareView(standard.Dialog):
     def __init__(self, parent=None):
-        standard.StandardDialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
 
         self.setWindowTitle(self.tr('Compare Commits'))
         self.resize(649, 372)
@@ -95,9 +95,9 @@ class CompareView(standard.StandardDialog):
         self.connect(self.button_close, SIGNAL('clicked()'), self.accept)
 
 
-class BranchCompareView(standard.StandardDialog):
+class BranchCompareView(standard.Dialog):
     def __init__(self, parent=None):
-        standard.StandardDialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
 
         self.setWindowTitle(self.tr('Branch Diff Viewer'))
         self.resize(658, 350)

@@ -41,11 +41,11 @@ def run_command(parent, title, command):
     return (view.exitstatus, view.out, view.err)
 
 
-class GitCommandWidget(standard.StandardDialog):
+class GitCommandWidget(standard.Dialog):
     """Nice TextView that reads the output of a command syncronously"""
     # Keep us in scope otherwise PyQt kills the widget
     def __init__(self, parent=None):
-        standard.StandardDialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
         self.resize(720, 420)
 
         # Construct the process
@@ -178,9 +178,9 @@ class ActionCommandWrapper(object):
         return True
 
 
-class ActionDialog(standard.StandardDialog):
+class ActionDialog(standard.Dialog):
     def __init__(self, parent, name, opts):
-        standard.StandardDialog.__init__(self, parent)
+        standard.Dialog.__init__(self, parent)
         self.name = name
         self.opts = opts
 

@@ -32,7 +32,7 @@ def create_standard_widget(qtclass):
             """Returns the name of the view class"""
             return self.__class__.__name__.lower()
 
-        def import_state(self, settings):
+        def apply_state(self, settings):
             """Imports data for view save/restore"""
             if 'width' in settings and 'height' in settings:
                 w = settings.get('width')
@@ -74,4 +74,5 @@ def create_standard_widget(qtclass):
 
 
 # The base class for all cola QDialogs.
-StandardDialog = create_standard_widget(QtGui.QDialog)
+Dialog = create_standard_widget(QtGui.QDialog)
+MainWindow = create_standard_widget(QtGui.QMainWindow)

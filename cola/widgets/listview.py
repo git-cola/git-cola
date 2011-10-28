@@ -7,9 +7,9 @@ from PyQt4.QtCore import SIGNAL
 from cola.views import standard
 
 
-class ListView(standard.StandardDialog):
+class ListView(standard.Dialog):
     def __init__(self, parent=None, title="", items=None, dblclick=None):
-        standard.StandardDialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
 
         self.setWindowTitle(title)
 
