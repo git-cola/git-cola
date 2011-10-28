@@ -399,6 +399,7 @@ class DAGView(standard.Dialog):
         self._graphview.view_fit()
 
     def done(self, ok):
+        self.revtext.close_popup()
         qtutils.save_state(self)
         return standard.Dialog.done(self, ok)
 

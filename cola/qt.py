@@ -377,6 +377,9 @@ class GitLogLineEdit(QtGui.QLineEdit):
         self._drag = 0
         return QtGui.QLineEdit.mouseReleaseEvent(self, event)
 
+    def close_popup(self):
+        self._completer.popup().close()
+
     def _update_popup_items(self, prefix):
         """
         Filters the completer's popup items to only show items
