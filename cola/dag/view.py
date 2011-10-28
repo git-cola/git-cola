@@ -185,22 +185,23 @@ class DAGView(standard.Dialog):
     """The git-dag widget."""
     def __init__(self, model, dag, parent=None, args=None):
         standard.Dialog.__init__(self, parent=parent)
+        # change when widgets are added/removed
+        self.widget_version = 1
+
         self.model = model
         self.dag = dag
-        self.setObjectName('dag')
-        self.setWindowTitle(self.tr('git dag'))
+        self.setObjectName('git-dag')
+        self.setWindowTitle(self.tr('git-dag'))
         self.setMinimumSize(1, 1)
 
         self.revlabel = QtGui.QLabel()
         self.revlabel.setText('git log -')
 
         self.revtext = GitLogLineEdit(parent=self)
-        self.revtext.setText(dag.ref)
 
         self.maxresults = QtGui.QSpinBox()
         self.maxresults.setMinimum(-1)
         self.maxresults.setMaximum(2**31 - 1)
-        self.maxresults.setValue(dag.count)
 
         self.displaybutton = QtGui.QPushButton()
         self.displaybutton.setText('Display')
@@ -263,7 +264,13 @@ class DAGView(standard.Dialog):
         layt.addWidget(self._mainsplitter)
         self.setLayout(layt)
 
-        qtutils.add_close_action(self)
+        # Also re-loads dag.* from the saved state
+        if not qtutils.apply_state(self):
+            self.resize_to_desktop()
+
+        # Update fields affected by model
+        self.revtext.setText(dag.ref)
+        self.maxresults.setValue(dag.count)
 
         self.thread = ReaderThread(self, dag)
 
@@ -298,6 +305,27 @@ class DAGView(standard.Dialog):
 
         self.connect(self, SIGNAL('model_updated'),
                      self.model_updated)
+
+        qtutils.add_close_action(self)
+
+    def export_state(self):
+        state = standard.Dialog.export_state(self)
+        state['ref'] = self.dag.ref
+        state['count'] = self.dag.count
+        return state
+
+    def apply_state(self, state):
+        try:
+            standard.Dialog.apply_state(self, state)
+        except:
+            return
+        try:
+            ref = state['ref']
+            count = state['count']
+        except KeyError:
+            return
+        self.dag.set_ref(ref)
+        self.dag.set_count(count)
 
     def _model_updated(self):
         self.emit(SIGNAL('model_updated'))
@@ -355,6 +383,10 @@ class DAGView(standard.Dialog):
         sig = signals.commits_selected
         self._notifier.notify_message_observers(sig, [commit_obj])
         self._graphview.view_fit()
+
+    def done(self, ok):
+        qtutils.save_state(self)
+        return standard.Dialog.done(self, ok)
 
     def close(self):
         self.stop()
