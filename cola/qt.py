@@ -10,16 +10,13 @@ from PyQt4.QtGui import QFont
 from PyQt4.QtGui import QSyntaxHighlighter
 from PyQt4.QtGui import QTextCharFormat
 from PyQt4.QtGui import QColor
-try:
-    from PyQt4.QtCore import pyqtProperty
-except ImportError:
-    pyqtProperty = None
+from PyQt4.QtCore import pyqtProperty
 
 import cola
 from cola import resources
-from cola.compat import set
 from cola import utils
 from cola import qtutils
+from cola.compat import set
 from cola.qtutils import tr
 
 
@@ -273,6 +270,8 @@ class GitLogCompletionModel(QtGui.QStandardItemModel):
 class GitLogLineEdit(QtGui.QLineEdit):
     def __init__(self, parent=None):
         QtGui.QLineEdit.__init__(self, parent)
+        # used to hide the completion popup after a drag-select
+        self._drag = 0
 
         self._model = GitLogCompletionModel(self)
         self._delegate = HighlightCompletionDelegate(self)
@@ -321,7 +320,7 @@ class GitLogLineEdit(QtGui.QLineEdit):
     def last_word(self):
         words = self.words()
         if not words:
-            return self.text()
+            return unicode(self.text())
         if not words[-1]:
             return u''
         return words[-1]
@@ -334,6 +333,11 @@ class GitLogLineEdit(QtGui.QLineEdit):
                     return True
         return QtGui.QLineEdit.event(self, event)
 
+    def do_completion(self):
+        self._completer.popup().setCurrentIndex(
+                self._completer.completionModel().index(0,0))
+        self._completer.complete()
+
     def keyPressEvent(self, event):
         if self._completer.popup().isVisible():
             if event.key() in self._keys_to_ignore:
@@ -344,9 +348,7 @@ class GitLogLineEdit(QtGui.QLineEdit):
         elif (event.key() == QtCore.Qt.Key_Down and
               self._completer.completionCount() > 0):
                 event.accept()
-                self._completer.popup().setCurrentIndex(
-                        self._completer.completionModel().index(0,0))
-                self._completer.complete()
+                self.do_completion()
                 return
 
         QtGui.QLineEdit.keyPressEvent(self, event)
@@ -358,6 +360,22 @@ class GitLogLineEdit(QtGui.QLineEdit):
             self._completer.complete()
         if len(prefix) == 0:
             self._completer.popup().hide()
+
+    #: _drag: 0 - unclicked, 1 - clicked, 2 - dragged
+    def mousePressEvent(self, event):
+        self._drag = 1
+        return QtGui.QLineEdit.mousePressEvent(self, event)
+
+    def mouseMoveEvent(self, event):
+        if self._drag == 1:
+            self._drag = 2
+        return QtGui.QLineEdit.mouseMoveEvent(self, event)
+
+    def mouseReleaseEvent(self, event):
+        if self._drag != 2 and event.buttons() != QtCore.Qt.RightButton:
+            self.do_completion()
+        self._drag = 0
+        return QtGui.QLineEdit.mouseReleaseEvent(self, event)
 
     def _update_popup_items(self, prefix):
         """
