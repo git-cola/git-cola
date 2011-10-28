@@ -290,15 +290,23 @@ class GitLogLineEdit(QtGui.QLineEdit):
                                     QtCore.Qt.Key_Return,
                                     QtCore.Qt.Key_Escape])
 
+    def is_case_sensitive(self, text):
+        return bool([char for char in text if char.isupper()])
+
     def _text_changed(self, text):
         text = self.last_word()
-        case_sensitive = bool([char for char in text if char.isupper()])
+        case_sensitive = self.is_case_sensitive(text)
         if case_sensitive:
             self._completer.setCaseSensitivity(QtCore.Qt.CaseSensitive)
         else:
             self._completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
         self._delegate.set_highlight_text(text, case_sensitive)
         self._model.set_match_text(text, case_sensitive)
+
+    def update_matches(self):
+        text = self.last_word()
+        case_sensitive = self.is_case_sensitive(text)
+        self._model.update_matches(case_sensitive)
 
     def _complete(self, completion):
         """

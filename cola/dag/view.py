@@ -346,6 +346,7 @@ class DAGView(standard.Dialog):
 
     def model_updated(self):
         if self.dag.ref:
+            self.revtext.update_matches()
             return
         if not self.model.currentbranch:
             return
