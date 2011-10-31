@@ -362,7 +362,7 @@ class GitLogLineEdit(QtGui.QLineEdit):
         QtGui.QLineEdit.keyPressEvent(self, event)
 
         prefix = self.last_word()
-        if prefix != self._completer.completionPrefix():
+        if prefix != unicode(self._completer.completionPrefix()):
             self._update_popup_items(prefix)
         if len(event.text()) > 0 and len(prefix) > 0:
             self._completer.complete()
