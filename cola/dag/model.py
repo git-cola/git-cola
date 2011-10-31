@@ -1,3 +1,5 @@
+import subprocess
+
 import cola
 from cola import core
 from cola import git
@@ -47,18 +49,38 @@ class CommitFactory(object):
 class DAG(Observable):
     ref_updated = 'ref_updated'
     count_updated = 'count_updated'
+
     def __init__(self, ref, count):
         Observable.__init__(self)
         self.ref = ref
         self.count = count
+        self.overrides = {}
 
     def set_ref(self, ref):
+        changed = ref != self.ref
         self.ref = ref
         self.notify_message_observers(self.ref_updated)
+        return changed
 
     def set_count(self, count):
+        changed = count != self.count
         self.count = count
         self.notify_message_observers(self.count_updated)
+        return changed
+
+    def set_options(self, opts, args):
+        if opts is not None:
+            if self.set_count(opts.count):
+                self.overrides['count'] = opts.count
+
+        if args is not None:
+            ref = subprocess.list2cmdline([core.decode(a) for a in args])
+            if self.set_ref(ref):
+                self.overrides['ref'] = ref
+
+    def overridden(self, opt):
+        return opt in self.overrides
+
 
 class Commit(object):
     root_generation = 0

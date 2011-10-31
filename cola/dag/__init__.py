@@ -14,9 +14,11 @@ from cola.dag.model import DAG
 from cola.dag.controller import DAGController
 
 
-def git_dag(model, parent):
+def git_dag(model, parent, opts=None, args=None):
     """Return a pre-populated git DAG widget."""
     dag = DAG(model.currentbranch, 1000)
+    dag.set_options(opts, args)
+
     view = DAGView(model, dag, parent=parent)
     ctl = DAGController(dag, view)
     view.show()

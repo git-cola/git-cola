@@ -139,6 +139,14 @@ def parse_args(context):
                       dest='git',
                       metavar='PATH',
                       default='')
+
+    if context == 'git-dag':
+        parser.add_option('-c', '--count',
+                          help='Number of commits to display.',
+                          dest='count',
+                          type='int',
+                          default=1000)
+
     return parser.parse_args()
 
 
@@ -228,7 +236,7 @@ def main(context):
         view = MainView(model)
         ctl = MainController(model, view)
     elif context == 'git-dag':
-        ctl = git_dag(model, app.activeWindow())
+        ctl = git_dag(model, app.activeWindow(), opts=opts, args=args)
         view = ctl.view
 
     # Install UI wrappers for command objects

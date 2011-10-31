@@ -338,8 +338,12 @@ class DAGView(standard.Dialog):
             count = state['count']
         except KeyError:
             return
-        self.dag.set_ref(ref)
-        self.dag.set_count(count)
+
+        if not self.dag.overridden('ref'):
+            self.dag.set_ref(ref)
+
+        if not self.dag.overridden('count'):
+            self.dag.set_count(count)
 
     def _model_updated(self):
         self.emit(SIGNAL('model_updated'))
