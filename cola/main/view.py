@@ -31,6 +31,7 @@ from cola.controllers.bookmark import manage_bookmarks
 from cola.controllers.bookmark import save_bookmark
 from cola.controllers.createbranch import create_new_branch
 from cola.dag import git_dag
+from cola.prefs import diff_font
 from cola.prefs import PreferencesModel
 from cola.prefs import preferences
 from cola.qt import create_button
@@ -40,7 +41,6 @@ from cola.qtutils import add_action
 from cola.qtutils import connect_button
 from cola.qtutils import emit
 from cola.qtutils import log
-from cola.qtutils import logger
 from cola.qtutils import relay_signal
 from cola.qtutils import SLOT
 from cola.qtutils import tr
@@ -119,6 +119,7 @@ class MainView(standard.MainWindow):
 
         # "Command Output" widget
         logwidget = qtutils.logger()
+        logwidget.setFont(diff_font())
         self.logdockwidget = create_dock('Command Output', self)
         self.logdockwidget.setWidget(logwidget)
 
@@ -413,7 +414,7 @@ class MainView(standard.MainWindow):
             if not font.fromString(value):
                 return
             self._set_diff_font(font)
-            logger().setFont(font)
+            qtutils.logger().setFont(font)
             self.diff_viewer.setFont(font)
             self.commitmsgeditor.commitmsg.setFont(font)
 
