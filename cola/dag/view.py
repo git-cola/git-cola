@@ -10,6 +10,7 @@ from cola import qtutils
 from cola import signals
 from cola import gitcmds
 from cola import difftool
+from cola import utils
 from cola.controllers import createbranch
 from cola.controllers import createtag
 from cola.dag.model import archive
@@ -185,6 +186,8 @@ class DAGView(standard.Dialog):
     """The git-dag widget."""
     def __init__(self, model, dag, parent=None, args=None):
         standard.Dialog.__init__(self, parent=parent)
+        if utils.is_darwin():
+            self.setAttribute(QtCore.Qt.WA_MacMetalStyle)
         # change when widgets are added/removed
         self.widget_version = 1
 
