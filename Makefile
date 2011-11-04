@@ -84,6 +84,7 @@ clean:
 	find . -name '*.py[co]' -print0 | xargs -0 rm -f
 	rm -rf build dist tmp tags git-cola.app
 	rm -rf share/locale
+	rm -f cola/builtin_version.py*
 
 tags:
 	find . -name '*.py' -print0 | xargs -0 ctags -f tags
