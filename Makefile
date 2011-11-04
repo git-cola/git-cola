@@ -21,7 +21,7 @@ python_version = $(shell env TERM=dummy $(PYTHON) -c 'import distutils.sysconfig
 python_site := $(prefix)/lib*/python$(python_version)/site-packages
 
 test_flags =
-all_test_flags = --with-doctest $(test_flags)
+all_test_flags = --with-doctest --exclude=sphinxtogithub $(test_flags)
 
 # User customizations
 -include config.mak
