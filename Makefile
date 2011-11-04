@@ -12,7 +12,8 @@ prefix = $(HOME)
 bindir = $(prefix)/bin
 # DESTDIR =
 
-cola_app = $(CURDIR)/git-cola.app
+cola_app_base= git-cola.app
+cola_app = $(CURDIR)/$(cola_app_base)
 cola_version = $(shell env TERM=dummy $(PYTHON) cola/version.py)
 cola_dist := cola-$(cola_version)
 
