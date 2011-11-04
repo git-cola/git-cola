@@ -4,13 +4,11 @@ import subprocess
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
-from PyQt4.QtCore import QVariant
 from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import QFont
 from PyQt4.QtGui import QSyntaxHighlighter
 from PyQt4.QtGui import QTextCharFormat
 from PyQt4.QtGui import QColor
-from PyQt4.QtCore import pyqtProperty
 
 import cola
 from cola import resources
@@ -473,25 +471,23 @@ def TERMINAL(pattern):
 # rebuilding the same regexes whenever stylesheets change
 _RGX_CACHE = {}
 
-default_colors = {}
-def _install_default_colors():
-    def color(c, a=255):
-        qc = QColor(c)
-        qc.setAlpha(a)
-        return qc
-    default_colors.update({
-        'color_add':            color(Qt.green, 128),
-        'color_remove':         color(Qt.red,   128),
-        'color_begin':          color(Qt.darkCyan),
-        'color_header':         color(Qt.darkYellow),
-        'color_stat_add':       color(QColor(32, 255, 32)),
-        'color_stat_info':      color(QColor(32, 32, 255)),
-        'color_stat_remove':    color(QColor(255, 32, 32)),
-        'color_emphasis':       color(Qt.black),
-        'color_info':           color(Qt.blue),
-        'color_date':           color(Qt.darkCyan),
-    })
-_install_default_colors()
+def color(c, a=255):
+    qc = QColor(c)
+    qc.setAlpha(a)
+    return qc
+
+default_colors = {
+    'color_add':            color(Qt.green, 128),
+    'color_remove':         color(Qt.red,   128),
+    'color_begin':          color(Qt.darkCyan),
+    'color_header':         color(Qt.darkYellow),
+    'color_stat_add':       color(QColor(32, 255, 32)),
+    'color_stat_info':      color(QColor(32, 32, 255)),
+    'color_stat_remove':    color(QColor(255, 32, 32)),
+    'color_emphasis':       color(Qt.black),
+    'color_info':           color(Qt.blue),
+    'color_date':           color(Qt.darkCyan),
+}
 
 
 class GenericSyntaxHighligher(QSyntaxHighlighter):
@@ -499,11 +495,6 @@ class GenericSyntaxHighligher(QSyntaxHighlighter):
         QSyntaxHighlighter.__init__(self, doc)
         for attr, val in default_colors.items():
             setattr(self, attr, val)
-        self._rules = []
-        self.generate_rules()
-        self.reset()
-
-    def reset(self):
         self._rules = []
         self.generate_rules()
 
@@ -634,30 +625,6 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
                                              diffstat_remove))
         if self.whitespace:
             self.create_rules('(..*?)(\s+)$', (None, bad_ws))
-
-
-# This is used as a mixin to generate property callbacks
-def accessors(attr):
-    private_attr = '_'+attr
-
-    def getter(self):
-        return self.__dict__.get(private_attr, None)
-
-    def setter(self, value):
-        self.__dict__[private_attr] = value
-        self.reset_syntax()
-    return (getter, setter)
-
-def install_style_properties(cls):
-    # Diff GUI colors -- this is controllable via the style sheet
-    if pyqtProperty is None:
-        return
-    for name in default_colors:
-        setattr(cls, name, pyqtProperty('QColor', *accessors(name)))
-
-def set_theme_properties(widget):
-    for name, color in default_colors.items():
-        widget.setProperty(name, QVariant(color))
 
 
 if __name__ == '__main__':

@@ -1,7 +1,5 @@
 from PyQt4 import QtGui
 
-from cola import qt
-
 
 def create_standard_widget(qtclass):
     """Create a standard widget derived from a qt class.
@@ -11,10 +9,9 @@ def create_standard_widget(qtclass):
         def __init__(self, parent=None):
             self._qtclass = qtclass
             self._qtclass.__init__(self, parent)
-            qt.set_theme_properties(self)
 
         def show(self):
-            """Automatically centers and raises dialogs"""
+            """Automatically centers dialogs"""
             if self.parent():
                 left = self.parent().x()
                 width = self.parent().width()
@@ -25,51 +22,32 @@ def create_standard_widget(qtclass):
 
                 self.move(x, y)
             # Call the base Qt show()
-            self.raise_()
             self._qtclass.show(self)
 
         def name(self):
             """Returns the name of the view class"""
             return self.__class__.__name__.lower()
 
-        def apply_state(self, settings):
+        def apply_state(self, state):
             """Imports data for view save/restore"""
-            if 'width' in settings and 'height' in settings:
-                w = settings.get('width')
-                h = settings.get('height')
-                try:
-                    self.resize(w, h)
-                except:
-                    pass
-
-            if 'x' in settings and 'y' in settings:
-                x = settings.get('x')
-                y = settings.get('y')
-                try:
-                    self.move(x, y)
-                except:
-                    pass
+            try:
+                self.resize(state['width'], state['height'])
+            except:
+                pass
+            try:
+                self.move(state['x'], state['y'])
+            except:
+                pass
 
         def export_state(self):
             """Exports data for view save/restore"""
-            state = {}
-            for funcname in ('width', 'height', 'x', 'y'):
-                state[funcname] = getattr(self, funcname)()
-            return state
+            return {
+                'x': self.x(),
+                'y': self.y(),
+                'width': self.width(),
+                'height': self.height(),
+            }
 
-        def style_properties(self):
-            # user-definable color properties
-            props = {}
-            for name in qt.default_colors:
-                props[name] = getattr(self, '_'+name)
-            return props
-
-        def reset_syntax(self):
-            if hasattr(self, 'syntax') and self.syntax:
-                self.syntax.set_colors(self.style_properties())
-                self.syntax.reset()
-
-    qt.install_style_properties(StandardWidget)
     return StandardWidget
 
 
