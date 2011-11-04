@@ -37,6 +37,15 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
         self.shell('git config test.bool false')
         self.assertEqual(self.config.get('test.bool'), False)
 
+    def test_bool_no_value(self):
+        self.shell('printf "[test]\n" >> .git/config')
+        self.shell('printf "\tbool\n" >> .git/config')
+        self.assertEqual(self.config.get('test.bool'), True)
+
+    def test_empty_value(self):
+        self.shell('printf "[test]\n" >> .git/config')
+        self.shell('printf "\tvalue = \n" >> .git/config')
+        self.assertEqual(self.config.get('test.value'), '')
 
     def test_default(self):
         """Test default values in get()."""

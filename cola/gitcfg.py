@@ -143,21 +143,24 @@ class GitConfig(observable.Observable):
         config_lines = self.git.config(*args).split('\0')
         for line in config_lines:
             try:
-                k, v = line.split('\n')
-            except:
+                k, v = line.split('\n', 1)
+            except ValueError:
                 # the user has an invalid entry in their git config
-                continue
-            v = core.decode(v)
-            if v == 'yes':
+                if not line:
+                    continue
+                k = line
                 v = 'true'
-            elif v == 'no':
-                v = 'false'
-            if v == 'true' or v == 'false':
-                v = (v == 'true')
-            try:
-                v = int(eval(v))
-            except:
-                pass
+            v = core.decode(v)
+
+            if v in ('true', 'yes'):
+                v = True
+            elif v in ('false', 'no'):
+                v = False
+            else:
+                try:
+                    v = int(v)
+                except ValueError:
+                    pass
             dest[k.lower()] = v
         return dest
 
