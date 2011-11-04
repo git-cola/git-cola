@@ -264,7 +264,8 @@ def question(parent, title, message, default=True):
     return result == QtGui.QMessageBox.Yes
 
 
-def confirm(parent, title, text, informative_text, ok_text, icon=None):
+def confirm(parent, title, text, informative_text, ok_text,
+            icon=None, default=True):
     """Confirm that an action should take place"""
     if icon is None:
         icon = ok_icon()
@@ -274,7 +275,11 @@ def confirm(parent, title, text, informative_text, ok_text, icon=None):
     msgbox.setInformativeText(tr(informative_text))
     ok = msgbox.addButton(tr(ok_text), QtGui.QMessageBox.ActionRole)
     ok.setIcon(icon)
-    msgbox.addButton(QtGui.QMessageBox.Cancel)
+    cancel = msgbox.addButton(QtGui.QMessageBox.Cancel)
+    if default:
+        msgbox.setDefaultButton(ok)
+    else:
+        msgbox.setDefaultButton(cancel)
     msgbox.exec_()
     return msgbox.clickedButton() == ok
 
