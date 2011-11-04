@@ -45,7 +45,7 @@ class ListView(standard.Dialog):
         item = self.items_widget.currentItem()
         if not item:
             return None
-        return str(item.text())
+        return unicode(item.text())
 
     def selected(self):
         """Present the dialog and return the chosen item."""

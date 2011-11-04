@@ -201,7 +201,7 @@ def diff_branch():
     zfiles_str = git.instance().diff(branch, name_only=True,
                                      no_color=True,
                                      z=True).rstrip('\0')
-    files = zfiles_str.split('\0')
+    files = [core.decode(f) for f in zfiles_str.split('\0')]
     filename = choose_from_list('Select File', files)
     if not filename:
         return
