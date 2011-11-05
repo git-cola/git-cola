@@ -66,6 +66,9 @@ class BrowseDialog(QtGui.QDialog):
         parent = QtGui.QApplication.activeWindow()
         model = BrowseModel(ref)
         dlg = BrowseDialog(model, parent=parent)
+        dlg_model = GitTreeModel(ref, dlg)
+        dlg.setModel(dlg_model)
+        dlg.setWindowTitle('Browsing %s' % model.ref)
         ctrl = BrowseDialogController(model, dlg)
         dlg.resize(parent.width()*3/4, 333)
         dlg.show()
@@ -79,6 +82,9 @@ class BrowseDialog(QtGui.QDialog):
         parent = QtGui.QApplication.activeWindow()
         model = BrowseModel(ref)
         dlg = BrowseDialog(model, select_file=True, parent=parent)
+        dlg_model = GitTreeModel(ref, dlg)
+        dlg.setModel(dlg_model)
+        dlg.setWindowTitle('Select File from %s' % model.ref)
         dlg.resize(parent.width()*3/4, 333)
         dlg.show()
         dlg.raise_()
@@ -89,7 +95,6 @@ class BrowseDialog(QtGui.QDialog):
     def __init__(self, model, select_file=False, parent=None):
         QtGui.QDialog.__init__(self, parent)
         self.setWindowModality(QtCore.Qt.WindowModal)
-        self.setWindowTitle('Browsing %s' % model.ref)
 
         # updated for use by commands
         self.model = model
@@ -125,6 +130,9 @@ class BrowseDialog(QtGui.QDialog):
 
         self.connect(self.tree, SIGNAL('selectionChanged()'),
                      self.selection_changed)
+
+    def setModel(self, model):
+        self.tree.setModel(model)
 
     def path_chosen(self, path, close=True):
         """Update the model from the view"""
@@ -166,9 +174,6 @@ class GitTreeWidget(QtGui.QTreeView):
         self.setAlternatingRowColors(True)
         self.setAllColumnsShowFocus(True)
         self.setUniformRowHeights(True)
-
-        self._model = GitTreeModel(ref, self)
-        self.setModel(self._model)
 
         self.connect(self, SIGNAL('doubleClicked(const QModelIndex &)'),
                      self.double_clicked)
