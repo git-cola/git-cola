@@ -36,5 +36,5 @@ include share/doc/git-cola/Makefile.asciidoc
 include share/doc/git-cola/build-docdep.perl
 include share/doc/git-cola/callouts.xsl
 include share/git-cola/bin/*
-include share/git-cola/icons/*.png
+include share/git-cola/icons/*
 include win32/*
