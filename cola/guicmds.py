@@ -10,7 +10,6 @@ from cola import qtutils
 from cola import signals
 from cola.widgets.browse import BrowseDialog
 from cola.widgets.combodlg import ComboDialog
-from cola.widgets.listview import ListView
 
 
 def install_command_wrapper(parent):
@@ -41,13 +40,6 @@ def choose_from_combo(title, items):
     """Quickly choose an item from a list using a combo box"""
     parent = QtGui.QApplication.instance().activeWindow()
     return ComboDialog(parent, title=title, items=items).selected()
-
-
-def choose_from_list(title, items=None, dblclick=None):
-    """Quickly choose an item from a list using a list widget"""
-    parent = QtGui.QApplication.instance().activeWindow()
-    return ListView(parent,
-                    title=title, items=items, dblclick=dblclick).selected()
 
 
 def slot_with_parent(fn, parent):
@@ -202,7 +194,8 @@ def diff_branch():
                                      no_color=True,
                                      z=True).rstrip('\0')
     files = [core.decode(f) for f in zfiles_str.split('\0')]
-    filename = choose_from_list('Select File', files)
+
+    filename = BrowseDialog.select_file_from_list(files)
     if not filename:
         return
     cola.notifier().broadcast(signals.branch_mode, branch, filename)
