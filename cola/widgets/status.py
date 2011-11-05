@@ -266,63 +266,79 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         enable_staging = self.model.enable_staging()
         if not enable_staging:
-            menu.addAction(self.tr('Unstage Selected'),
+            menu.addAction(qtutils.icon('remove.svg'),
+                           self.tr('Unstage Selected'),
                            SLOT(signals.unstage, self.staged()))
 
         if staged and staged[0] in cola.model().submodules:
-            menu.addAction(self.tr('Launch git-cola'),
+            menu.addAction(qtutils.icon('git.svg'),
+                           self.tr('Launch git-cola'),
                            SLOT(signals.open_repo, os.path.abspath(staged[0])))
             return menu
         elif staged:
             menu.addSeparator()
-            menu.addAction(self.tr('Launch Editor'),
+            menu.addAction(qtutils.icon('open.svg'),
+                           self.tr('Launch Editor'),
                            SLOT(signals.edit, self.staged()))
-            menu.addAction(self.tr('Launch Diff Tool'),
+            menu.addAction(qtutils.icon('git.svg'),
+                           self.tr('Launch Diff Tool'),
                            SLOT(signals.difftool, True, self.staged()))
             menu.addSeparator()
-            menu.addAction(self.tr('Remove Unstaged Edits'),
-                    lambda: self._remove_unstaged_edits(use_staged=True))
+            menu.addAction(qtutils.icon('undo.svg'),
+                           self.tr('Revert Unstaged Edits'),
+                           lambda: self._revert_unstaged_edits(use_staged=True))
             return menu
 
         if unmerged:
-            menu.addAction(self.tr('Launch Merge Tool'),
+            menu.addAction(qtutils.icon('git.svg'),
+                           self.tr('Launch Merge Tool'),
                            SLOT(signals.mergetool, self.unmerged()))
-            menu.addAction(self.tr('Launch Editor'),
+            menu.addAction(qtutils.icon('open.svg'),
+                           self.tr('Launch Editor'),
                            SLOT(signals.edit, self.unmerged()))
             menu.addSeparator()
-            menu.addAction(self.tr('Stage Selected'),
+            menu.addAction(qtutils.icon('add.svg'),
+                           self.tr('Stage Selected'),
                            SLOT(signals.stage, self.unmerged()))
             return menu
 
         modified_submodule = (modified and
                               modified[0] in cola.model().submodules)
         if enable_staging:
-            menu.addAction(self.tr('Stage Selected'),
+            menu.addAction(qtutils.icon('add.svg'),
+                           self.tr('Stage Selected'),
                            SLOT(signals.stage, self.unstaged()))
             menu.addSeparator()
 
         if modified_submodule:
-            menu.addAction(self.tr('Launch git-cola'),
+            menu.addAction(qtutils.icon('git.svg'),
+                           self.tr('Launch git-cola'),
                            SLOT(signals.open_repo,
                                 os.path.abspath(modified[0])))
         elif self.unstaged():
-            menu.addAction(self.tr('Launch Editor'),
+            menu.addAction(qtutils.icon('open.svg'),
+                           self.tr('Launch Editor'),
                            SLOT(signals.edit, self.unstaged()))
 
         if modified and enable_staging and not modified_submodule:
-            menu.addAction(self.tr('Launch Diff Tool'),
+            menu.addAction(qtutils.icon('git.svg'),
+                           self.tr('Launch Diff Tool'),
                            SLOT(signals.difftool, False, self.modified()))
             menu.addSeparator()
-            menu.addAction(self.tr('Remove Unstaged Edits'),
-                           self._remove_unstaged_edits)
-            menu.addAction(self.tr('Remove Uncommited Edits'),
-                           self._remove_uncommitted_edits)
+            menu.addAction(qtutils.icon('undo.svg'),
+                           self.tr('Revert Unstaged Edits'),
+                           self._revert_unstaged_edits)
+            menu.addAction(qtutils.icon('undo.svg'),
+                           self.tr('Revert Uncommited Edits'),
+                           self._revert_uncommitted_edits)
 
         if untracked:
             menu.addSeparator()
-            menu.addAction(self.tr('Delete File(s)'), self._delete_files)
+            menu.addAction(qtutils.discard_icon(),
+                           self.tr('Delete File(s)'), self._delete_files)
             menu.addSeparator()
-            menu.addAction(self.tr('Add to .gitignore'),
+            menu.addAction(qtutils.icon('edit-clear.svg'),
+                           self.tr('Add to .gitignore'),
                            SLOT(signals.ignore,
                                 map(lambda x: '/' + x, self.untracked())))
         return menu
@@ -352,7 +368,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            icon=qtutils.discard_icon()):
             cola.notifier().broadcast(signals.delete, files)
 
-    def _remove_unstaged_edits(self, use_staged=False):
+    def _revert_unstaged_edits(self, use_staged=False):
         if not self.model.undoable():
             return
         if use_staged:
@@ -361,12 +377,14 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             items_to_undo = self.modified()
 
         if items_to_undo:
-            if not qtutils.question(self,
-                                    'Remove Unstaged Edits?',
-                                    'This operation removes '
-                                    'unstaged edits.\n'
-                                    'There\'s no going back.  Continue?',
-                                    default=False):
+            if not qtutils.confirm(self,
+                    'Revert Unstaged Changes?',
+                    'This operation will drop unstaged changes.\n'
+                    'These changes cannot be recovered.',
+                    'Revert these unstaged changes?',
+                    default=False,
+                    ok_text='Revert Unstaged Changes',
+                    icon=qtutils.icon('undo.svg')):
                 return
             cola.notifier().broadcast(signals.checkout,
                                       ['--'] + items_to_undo)
@@ -374,17 +392,19 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             qtutils.log(1, self.tr('No files selected for '
                                    'checkout from HEAD.'))
 
-    def _remove_uncommitted_edits(self):
+    def _revert_uncommitted_edits(self):
         if not self.model.undoable():
             return
         items_to_undo = self.modified()
         if items_to_undo:
-            if not qtutils.question(self,
-                                    'Remove Uncommitted edits?',
-                                    'This operation removes '
-                                    'uncommitted edits.\n'
-                                    'There\'s no going back.  Continue?',
-                                    default=False):
+            if not qtutils.confirm(self,
+                    'Revert Uncommitted Changes?',
+                    'This operation will drop uncommitted changes.\n'
+                    'These changes cannot be recovered.',
+                    'Revert these uncommitted modifications?',
+                    default=False,
+                    ok_text='Revert Uncommitted Changes',
+                    icon=qtutils.icon('undo.svg')):
                 return
             cola.notifier().broadcast(signals.checkout,
                                       ['HEAD', '--'] + items_to_undo)

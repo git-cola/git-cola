@@ -44,7 +44,7 @@ Launch Difftool
     Visualize changes with
     `git difftool <http://www.kernel.org/pub/software/scm/git/docs/git-difftool.html>`_
 
-Remove Unstaged Edits
+Revert Unstaged Edits
     Throw away unstaged edits.
 
 Modified Files
@@ -60,12 +60,12 @@ Launch Difftool
     Visualize changes relative to the index with
     `git difftool <http://www.kernel.org/pub/software/scm/git/docs/git-difftool.html>`_
 
-Remove Unstaged Edits
-    Removes unstaged content by checking out selected paths
+Revert Unstaged Edits
+    Reverts unstaged content by checking out selected paths
     from the index/staging area
 
-Remove Uncommited Edits
-    Throw away uncommitted edits
+Revert Uncommited Edits
+    Throws away uncommitted edits
 
 
 Unmerged Files
