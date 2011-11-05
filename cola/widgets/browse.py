@@ -92,6 +92,23 @@ class BrowseDialog(QtGui.QDialog):
             return None
         return model.filename
 
+    @staticmethod
+    def select_file_from_list(file_list):
+        parent = QtGui.QApplication.activeWindow()
+        model = BrowseModel(None)
+        dlg = BrowseDialog(model, select_file=True, parent=parent)
+        dlg_model = GitFileTreeModel(dlg)
+        dlg_model.add_files(file_list)
+        dlg.setModel(dlg_model)
+        dlg.expandAll()
+        dlg.setWindowTitle('Select File from %s' % model.ref)
+        dlg.resize(parent.width()*3/4, 333)
+        dlg.show()
+        dlg.raise_()
+        if dlg.exec_() != dlg.Accepted:
+            return None
+        return model.filename
+
     def __init__(self, model, select_file=False, parent=None):
         QtGui.QDialog.__init__(self, parent)
         self.setWindowModality(QtCore.Qt.WindowModal)
@@ -130,6 +147,9 @@ class BrowseDialog(QtGui.QDialog):
 
         self.connect(self.tree, SIGNAL('selectionChanged()'),
                      self.selection_changed)
+
+    def expandAll(self):
+        self.tree.expandAll()
 
     def setModel(self, model):
         self.tree.setModel(model)
