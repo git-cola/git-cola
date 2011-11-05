@@ -10,8 +10,8 @@ from cola import gitcmds
 from cola import qt
 from cola import qtutils
 from cola import signals
+from cola.qt import GitRefLineEdit
 from cola.views import standard
-from cola.widgets.revselect import RevisionSelector
 
 
 def install_command_wrapper(parent):
@@ -230,7 +230,7 @@ class ActionDialog(standard.Dialog):
             revprompt = qtutils.tr('Revision')
         else:
             revprompt = opts.get('revprompt')
-        self.revselect = RevisionSelector(self, revs=revs)
+        self.revselect = RevisionSelector(self, revs)
         self.revselect.set_revision_label(revprompt)
         self.layt.addWidget(self.revselect)
 
@@ -239,10 +239,7 @@ class ActionDialog(standard.Dialog):
 
         # Close/Run buttons
         self.btnlayt = QtGui.QHBoxLayout()
-        self.btnspacer = QtGui.QSpacerItem(1, 1,
-                                           QtGui.QSizePolicy.MinimumExpanding,
-                                           QtGui.QSizePolicy.Minimum)
-        self.btnlayt.addItem(self.btnspacer)
+        self.btnlayt.addStretch()
         self.closebtn = qt.create_button(self.tr('Close'), self.btnlayt)
         self.runbtn = qt.create_button(self.tr('Run'), self.btnlayt)
         self.runbtn.setDefault(True)
@@ -259,3 +256,69 @@ class ActionDialog(standard.Dialog):
 
     def args(self):
         return self.argstxt.text()
+
+
+class RevisionSelector(QtGui.QWidget):
+    def __init__(self, parent, revs):
+        QtGui.QWidget.__init__(self, parent)
+
+        self._revs = revs
+        self._revdict = dict(revs)
+
+        self._layt = QtGui.QVBoxLayout()
+        self._layt.setMargin(0)
+        self.setLayout(self._layt)
+
+        self._rev_layt = QtGui.QHBoxLayout()
+        self._rev_layt.setMargin(0)
+
+        self._rev_label = QtGui.QLabel()
+        self._rev_layt.addWidget(self._rev_label)
+
+        self._revision = GitRefLineEdit()
+        self._rev_layt.addWidget(self._revision)
+
+        self._layt.addLayout(self._rev_layt)
+
+        self._radio_layt = QtGui.QHBoxLayout()
+        self._radio_btns = {}
+
+        # Create the radio buttons
+        for label, rev_list in self._revs:
+            radio = QtGui.QRadioButton()
+            radio.setText(self.tr(label))
+            radio.setObjectName(label)
+            self.connect(radio, SIGNAL('clicked()'), self._set_revision_list)
+            self._radio_layt.addWidget(radio)
+            self._radio_btns[label] = radio
+
+        self._radio_layt.addStretch()
+
+        self._layt.addLayout(self._radio_layt)
+
+        self._rev_list = QtGui.QListWidget()
+        self._layt.addWidget(self._rev_list)
+
+        label, rev_list = self._revs[0]
+        self._radio_btns[label].setChecked(True)
+        qtutils.set_items(self._rev_list, rev_list)
+
+        self.connect(self._rev_list, SIGNAL('itemSelectionChanged()'),
+                     self._rev_list_selection_changed)
+
+    def revision(self):
+        return self._revision.text()
+
+    def set_revision_label(self, txt):
+        self._rev_label.setText(txt)
+
+    def _set_revision_list(self):
+        sender = str(self.sender().objectName())
+        revs = self._revdict[sender]
+        qtutils.set_items(self._rev_list, revs)
+
+    def _rev_list_selection_changed(self):
+        items = self._rev_list.selectedItems()
+        if not items:
+            return
+        self._revision.setText(items[0].text())
