@@ -335,7 +335,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         if untracked:
             menu.addSeparator()
             menu.addAction(qtutils.discard_icon(),
-                           self.tr('Delete File(s)'), self._delete_files)
+                           self.tr('Delete File(s)...'), self._delete_files)
             menu.addSeparator()
             menu.addAction(qtutils.icon('edit-clear.svg'),
                            self.tr('Add to .gitignore'),
