@@ -77,13 +77,17 @@ def relay_signal(parent, child, signal):
     return relay_slot
 
 
+def active_window():
+    return QtGui.QApplication.activeWindow()
+
+
 def prompt(msg, title=None):
     """Presents the user with an input widget and returns the input."""
     if title is None:
         title = msg
     msg = tr(msg)
     title = tr(title)
-    parent = QtGui.QApplication.instance().activeWindow()
+    parent = active_window()
     result = QtGui.QInputDialog.getText(parent, msg, title)
     return (unicode(result[0]), result[1])
 
@@ -117,7 +121,7 @@ def information(title, message=None, parent=None, details=None, informative_text
     title = tr(title)
     message = tr(message)
     if parent is None:
-        parent = QtGui.QApplication.instance().activeWindow()
+        parent = active_window()
     mbox = QtGui.QMessageBox(parent)
     mbox.setStandardButtons(QtGui.QMessageBox.Close)
     mbox.setDefaultButton(QtGui.QMessageBox.Close)
@@ -143,7 +147,7 @@ def critical(title, message=None, details=None):
         message = title
     title = tr(title)
     message = tr(message)
-    parent = QtGui.QApplication.instance().activeWindow()
+    parent = active_window()
     mbox = QtGui.QMessageBox(parent)
     mbox.setWindowTitle(title)
     mbox.setTextFormat(QtCore.Qt.PlainText)
