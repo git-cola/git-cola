@@ -285,7 +285,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            SLOT(signals.difftool, True, self.staged()))
             menu.addSeparator()
             menu.addAction(qtutils.icon('undo.svg'),
-                           self.tr('Revert Unstaged Edits'),
+                           self.tr('Revert Unstaged Edits...'),
                            lambda: self._revert_unstaged_edits(use_staged=True))
             return menu
 
@@ -326,10 +326,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            SLOT(signals.difftool, False, self.modified()))
             menu.addSeparator()
             menu.addAction(qtutils.icon('undo.svg'),
-                           self.tr('Revert Unstaged Edits'),
+                           self.tr('Revert Unstaged Edits...'),
                            self._revert_unstaged_edits)
             menu.addAction(qtutils.icon('undo.svg'),
-                           self.tr('Revert Uncommited Edits'),
+                           self.tr('Revert Uncommited Edits...'),
                            self._revert_uncommitted_edits)
 
         if untracked:
