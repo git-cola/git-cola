@@ -6,11 +6,12 @@ from PyQt4.QtCore import Qt, SIGNAL
 
 import cola
 from cola import guicmds
+from cola import qtutils
 from cola import signals
 from cola.prefs import diff_font
 from cola.prefs import tab_width
 from cola.qt import DiffSyntaxHighlighter
-from cola.qtutils import add_action, question, SLOT
+from cola.qtutils import SLOT
 
 
 class DiffView(QtGui.QTextEdit):
@@ -39,23 +40,32 @@ class DiffTextEdit(DiffView):
         self.model = model = cola.model()
 
         # Install diff shortcut keys for stage/unstage
-        self.action_process_hunk = add_action(self, 'Process Hunk',
-                   self.apply_hunk, QtCore.Qt.Key_H)
-        self.action_process_selection = add_action(self, 'Process Selection',
-                   self.apply_selection, QtCore.Qt.Key_S)
+        self.action_process_section = qtutils.add_action(self,
+                'Process Section',
+                self.apply_section, QtCore.Qt.Key_H)
+        self.action_process_selection = qtutils.add_action(self,
+                'Process Selection',
+                self.apply_selection, QtCore.Qt.Key_S)
         # Context menu actions
-        self.action_stage_selection = add_action(self,
+        self.action_stage_selection = qtutils.add_action(self,
                 self.tr('Stage &Selected Lines'),
-                self.stage_hunk_selection)
-        self.action_undo_selection = add_action(self,
-                self.tr('Undo Selected Lines'),
-                self.undo_selection)
-        self.action_unstage_selection = add_action(self,
+                self.stage_selection)
+        self.action_stage_selection.setIcon(qtutils.icon('add.svg'))
+
+        self.action_revert_selection = qtutils.add_action(self,
+                self.tr('Revert Selected Lines...'),
+                self.revert_selection)
+        self.action_revert_selection.setIcon(qtutils.icon('undo.svg'))
+
+        self.action_unstage_selection = qtutils.add_action(self,
                 self.tr('Unstage &Selected Lines'),
-                self.unstage_hunk_selection)
-        self.action_apply_selection = add_action(self,
+                self.unstage_selection)
+        self.action_unstage_selection.setIcon(qtutils.icon('remove.svg'))
+
+        self.action_apply_selection = qtutils.add_action(self,
                 self.tr('Apply Diff Selection to Work Tree'),
-                self.stage_hunk_selection)
+                self.stage_selection)
+        self.action_apply_selection.setIcon(qtutils.apply_icon())
 
         model.add_message_observer(model.message_diff_text_changed,
                                    self.setPlainText)
@@ -71,44 +81,55 @@ class DiffTextEdit(DiffView):
 
         if self.mode == self.model.mode_worktree:
             if modified and modified[0] in cola.model().submodules:
-                menu.addAction(self.tr('Stage'),
+                menu.addAction(qtutils.icon('add.svg'),
+                               self.tr('Stage'),
                                SLOT(signals.stage, modified))
-                menu.addAction(self.tr('Launch git-cola'),
+                menu.addAction(qtutils.icon('git.svg'),
+                               self.tr('Launch git-cola'),
                                SLOT(signals.open_repo,
                                     os.path.abspath(modified[0])))
             elif modified:
-                menu.addAction(self.tr('Stage &Hunk For Commit'),
-                               self.stage_hunk)
+                menu.addAction(qtutils.icon('add.svg'),
+                               self.tr('Stage Section'),
+                               self.stage_section)
                 menu.addAction(self.action_stage_selection)
                 menu.addSeparator()
-                menu.addAction(self.tr('Undo Hunk'),
-                               self.undo_hunk)
-                menu.addAction(self.action_undo_selection)
+                menu.addAction(qtutils.icon('undo.svg'),
+                               self.tr('Revert Section...'),
+                               self.revert_section)
+                menu.addAction(self.action_revert_selection)
 
         elif self.mode == self.model.mode_index:
             if staged and staged[0] in cola.model().submodules:
-                menu.addAction(self.tr('Unstage'),
+                menu.addAction(qtutils.icon('remove.svg'),
+                               self.tr('Unstage'),
                                SLOT(signals.unstage, staged))
-                menu.addAction(self.tr('Launch git-cola'),
+                menu.addAction(qtutils.icon('git.svg'),
+                               self.tr('Launch git-cola'),
                                SLOT(signals.open_repo,
                                     os.path.abspath(staged[0])))
             else:
-                menu.addAction(self.tr('Unstage &Hunk From Commit'),
-                               self.unstage_hunk)
+                menu.addAction(qtutils.icon('remove.svg'),
+                               self.tr('Unstage Section'),
+                               self.unstage_section)
                 menu.addAction(self.action_unstage_selection)
 
         elif self.mode == self.model.mode_branch:
-            menu.addAction(self.tr('Apply Diff to Work Tree'),
-                           self.stage_hunk)
+            menu.addAction(qtutils.apply_icon(),
+                           self.tr('Apply Diff to Work Tree'),
+                           self.stage_section)
             menu.addAction(self.action_apply_selection)
 
         elif self.mode == self.model.mode_grep:
-            menu.addAction(self.tr('Go Here'),
+            menu.addAction(qtutils.icon('open.svg'),
+                           self.tr('Launch Editor'),
                            lambda: guicmds.goto_grep(self.selected_line()))
 
         menu.addSeparator()
-        menu.addAction('Copy', self.copy)
-        menu.addAction('Select All', self.selectAll)
+        menu.addAction(qtutils.icon('edit-copy.svg'),
+                       'Copy', self.copy)
+        menu.addAction(qtutils.icon('edit-select-all.svg'),
+                       'Select All', self.selectAll)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def setPlainText(self, text):
@@ -148,56 +169,64 @@ class DiffTextEdit(DiffView):
     # Mutators
     def enable_selection_actions(self, enabled):
         self.action_apply_selection.setEnabled(enabled)
-        self.action_undo_selection.setEnabled(enabled)
+        self.action_revert_selection.setEnabled(enabled)
         self.action_unstage_selection.setEnabled(enabled)
         self.action_stage_selection.setEnabled(enabled)
 
-    def apply_hunk(self):
+    def apply_section(self):
         staged, modified, unmerged, untracked = cola.single_selection()
         if self.mode == self.model.mode_worktree and modified:
-            self.stage_hunk()
+            self.stage_section()
         elif self.mode == self.model.mode_index:
-            self.unstage_hunk()
+            self.unstage_section()
 
     def apply_selection(self):
         staged, modified, unmerged, untracked = cola.single_selection()
         if self.mode == self.model.mode_worktree and modified:
-            self.stage_hunk_selection()
+            self.stage_selection()
         elif self.mode == self.model.mode_index:
-            self.unstage_hunk_selection()
+            self.unstage_selection()
 
-    def stage_hunk(self):
-        """Stage a specific hunk."""
+    def stage_section(self):
+        """Stage a specific section."""
         self.process_diff_selection(staged=False)
 
-    def stage_hunk_selection(self):
+    def stage_selection(self):
         """Stage selected lines."""
         self.process_diff_selection(staged=False, selected=True)
 
-    def unstage_hunk(self, cached=True):
-        """Unstage a hunk."""
+    def unstage_section(self, cached=True):
+        """Unstage a section."""
         self.process_diff_selection(staged=True)
 
-    def unstage_hunk_selection(self):
+    def unstage_selection(self):
         """Unstage selected lines."""
         self.process_diff_selection(staged=True, selected=True)
 
-    def undo_hunk(self):
-        """Destructively remove a hunk from a worktree file."""
-        if not question(self,
-                'Destroy Local Changes?',
+    def revert_section(self):
+        """Destructively remove a section from a worktree file."""
+        if not qtutils.confirm(self,
+                'Revert Section?',
                 'This operation will drop uncommitted changes.\n'
-                'Continue?', default=False):
+                'These changes cannot be recovered.',
+                'Revert these uncommitted modifications?',
+                default=False,
+                ok_text='Revert Section',
+                icon=qtutils.icon('undo.svg')):
             return
         self.process_diff_selection(staged=False, apply_to_worktree=True,
                                     reverse=True)
 
-    def undo_selection(self):
+    def revert_selection(self):
         """Destructively check out content for the selected file from $head."""
-        if not question(self,
-                'Destroy Local Changes?',
-                'This operation will drop uncommitted changes.\nContinue?',
-                default=False):
+        if not qtutils.confirm(self,
+                'Revert Selected Lines?',
+                'This operation will drop uncommitted changes.\n'
+                'These changes cannot be recovered.',
+                'Revert these uncommitted modifications?',
+                default=False,
+                ok_text='Revert Selected Lines',
+                icon=qtutils.icon('undo.svg')):
             return
         self.process_diff_selection(staged=False, apply_to_worktree=True,
                                     reverse=True, selected=True)
@@ -205,7 +234,7 @@ class DiffTextEdit(DiffView):
     def process_diff_selection(self, selected=False,
                                staged=True, apply_to_worktree=False,
                                reverse=False):
-        """Implement un/staging of selected lines or hunks."""
+        """Implement un/staging of selected lines or sections."""
         offset, selection = self.offset_and_selection()
         cola.notifier().broadcast(signals.apply_diff_selection,
                                   staged,

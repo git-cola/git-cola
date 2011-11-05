@@ -4,7 +4,7 @@ Shortcut Keys
 
 Main Interface
 ==============
-* :command:`h` -- Stage/unstage hunk at text cursor position
+* :command:`h` -- Stage/unstage section at text cursor position
 * :command:`s` -- Stage/unstage selection
 * :command:`ctrl-b` -- Create branch
 * :command:`alt-b` -- Checkout branch

@@ -17,13 +17,13 @@ Diff Regions
 ============
 The ``@@`` patterns denote each diff region.  Selecting lines of diff
 and using the `Stage Selected` command will stage just the selected fragment.
-Clicking within a diff region and selecting the `Stage Hunk` stages that
+Clicking within a diff region and selecting the `Stage Section` stages that
 region.  The corresponding opposite commands can be performed on staged
 files as well.
 
 Keyboard Shortcuts
 ==================
-* :command:`h` -- Stage/unstage hunk at text cursor position.
+* :command:`h` -- Stage/unstage section at text cursor position.
 * :command:`s` -- Stage/unstage selection.  If nothing is selected then
   this is equivalent to the :command:`h` shortcut.
 
@@ -36,24 +36,24 @@ Different actions are available depending a file's status.
 
 Modified Files
 --------------
-Stage Hunk for Commit
+Stage Section
     Add the diff region at the cursor position to the index.
 
 Stage Selected Lines
     Add selected diff lines to the index.
     This corresponds to the gray lines in the image.
 
-Undo Hunk
+Revert Section
     Apply a reverse patch to the worktree.
     This reverts unstaged modifications to a file.
 
-Undo Selected Lines
+Revert Selected Lines
     Apply a subset of the reverse patch to the worktree.
 
 
 Staged Files
 ------------
-Unstage Hunk
+Unstage Section
     Remove the diff region at the cursor position from the index.
 
 Unstage Selected Lines
