@@ -240,8 +240,8 @@ def main(context):
         view = ctl.view
 
     # Install UI wrappers for command objects
-    cfgactions.install_command_wrapper(view)
-    guicmds.install_command_wrapper(view)
+    cfgactions.install_command_wrapper()
+    guicmds.install_command_wrapper()
 
     # Show the view and start the main event loop
     view.show()

@@ -14,8 +14,9 @@ from cola.qt import GitRefLineEdit
 from cola.views import standard
 
 
-def install_command_wrapper(parent):
-    cmd_wrapper = ActionCommandWrapper(parent)
+
+def install_command_wrapper():
+    cmd_wrapper = ActionCommandWrapper()
     cola.factory().add_command_wrapper(cmd_wrapper)
 
 
@@ -34,9 +35,9 @@ def run_command(parent, title, command):
     view.setWindowTitle(title)
     if not parent:
         qtutils.center_on_screen(view)
-    view.run()
     view.show()
     view.raise_()
+    view.run()
     view.exec_()
     return (view.exitstatus, view.out, view.err)
 
@@ -154,18 +155,17 @@ class GitCommandWidget(standard.Dialog):
 
 
 class ActionCommandWrapper(object):
-    def __init__(self, parent):
-        self.parent = parent
+    def __init__(self):
         self.callbacks = {
                 signals.run_config_action: self._run_config_action,
                 signals.run_command: self._run_command,
         }
 
     def _run_command(self, title, cmd):
-        return run_command(self.parent, title, cmd)
+        return run_command(qtutils.active_window(), title, cmd)
 
     def _run_config_action(self, name, opts):
-        dlg = ActionDialog(self.parent, name, opts)
+        dlg = ActionDialog(qtutils.active_window(), name, opts)
         dlg.show()
         if dlg.exec_() != QtGui.QDialog.Accepted:
             return False
@@ -181,6 +181,7 @@ class ActionCommandWrapper(object):
 class ActionDialog(standard.Dialog):
     def __init__(self, parent, name, opts):
         standard.Dialog.__init__(self, parent)
+        self.setWindowModality(QtCore.Qt.ApplicationModal)
         self.name = name
         self.opts = opts
 

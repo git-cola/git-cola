@@ -12,28 +12,27 @@ from cola.widgets.browse import BrowseDialog
 from cola.widgets.combodlg import ComboDialog
 
 
-def install_command_wrapper(parent):
-    wrapper = CommandWrapper(parent)
+def install_command_wrapper():
+    wrapper = CommandWrapper()
     cola.factory().add_command_wrapper(wrapper)
 
 
 class CommandWrapper(object):
-    def __init__(self, parent):
-        self.parent = parent
+    def __init__(self):
         self.callbacks = {
                 signals.question: self._question,
                 signals.information: self._information,
         }
 
     def _question(self, title, msg):
-        return qtutils.question(self.parent, title, msg)
+        return qtutils.question(qtutils.active_window(), title, msg)
 
     def _information(self, title, msg):
         if msg is None:
             msg = title
         title = qtutils.tr(title)
         msg = qtutils.tr(msg)
-        QtGui.QMessageBox.information(self.parent, title, msg)
+        QtGui.QMessageBox.information(qtutils.active_window(), title, msg)
 
 
 def choose_from_combo(title, items):
