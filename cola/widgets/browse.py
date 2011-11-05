@@ -271,12 +271,81 @@ class GitTreeWidget(QtGui.QTreeView):
         return result
 
 
-class GitTreeModel(QtGui.QStandardItemModel):
-    def __init__(self, ref, parent):
+class GitFileTreeModel(QtGui.QStandardItemModel):
+    """Presents a list of file paths as a hierarchical tree."""
+    def __init__(self, parent):
         QtGui.QStandardItemModel.__init__(self, parent)
+        self.dir_entries = {'': self.invisibleRootItem()}
+        self.dir_rows = {}
+
+    def add_files(self, files):
+        """Add a list of files"""
+        add_file = self.add_file
+        for f in files:
+            add_file(f)
+
+    def add_file(self, path):
+        """Add a file to the model."""
+        dirname = utils.dirname(path)
+        dir_entries = self.dir_entries
+        try:
+            parent = dir_entries[dirname]
+        except KeyError:
+            parent = dir_entries[dirname] = self.create_dir_entry(dirname)
+
+        row_items = self.create_row(path, False)
+        parent.appendRow(row_items)
+
+    def add_directory(self, parent, path):
+        """Add a directory entry to the model."""
+        # Create model items
+        row_items = self.create_row(path, True)
+
+        # Insert directories before file paths
+        try:
+            row = self.dir_rows[parent]
+        except KeyError:
+            row = self.dir_rows[parent] = 0
+
+        parent.insertRow(row, row_items)
+        self.dir_rows[parent] += 1
+        self.dir_entries[path] = row_items[0]
+
+        return row_items[0]
+
+    def create_row(self, path, is_dir):
+        """Return a list of items representing a row."""
+        return [GitTreeItem(path, is_dir)]
+
+    def create_dir_entry(self, dirname):
+        """
+        Create a directory entry for the model.
+
+        This ensures that directories are always listed before files.
+
+        """
+        entries = dirname.split('/')
+        curdir = []
+        parent = self.invisibleRootItem()
+        curdir_append = curdir.append
+        self_add_directory = self.add_directory
+        dir_entries = self.dir_entries
+        for entry in entries:
+            curdir_append(entry)
+            path = '/'.join(curdir)
+            try:
+                parent = dir_entries[path]
+            except KeyError:
+                grandparent = parent
+                parent = self_add_directory(grandparent, path)
+                dir_entries[path] = parent
+        return parent
+
+
+class GitTreeModel(GitFileTreeModel):
+    def __init__(self, ref, parent):
+        GitFileTreeModel.__init__(self, parent)
         self.ref = ref
-        self._dir_rows = {}
-        self._dir_entries = {'': self.invisibleRootItem()}
         self._initialize()
 
     def _initialize(self):
@@ -294,64 +363,10 @@ class GitTreeModel(QtGui.QStandardItemModel):
             objtype = line[7]
             relpath = line[6 + 1 + 4 + 1 + 40 + 1:]
             if objtype == 't':
-                parent = self._dir_entries[utils.dirname(relpath)]
+                parent = self.dir_entries[utils.dirname(relpath)]
                 self.add_directory(parent, relpath)
             elif objtype == 'b':
                 self.add_file(relpath)
-
-    def _create_row(self, path, is_dir):
-        """Return a list of items representing a row."""
-        return [GitTreeItem(path, is_dir)]
-
-    def add_file(self, path):
-        """Add a file to the model."""
-        dirname = utils.dirname(path)
-        parent = self._dir_entries[dirname]
-        self._add_file(parent, path)
-
-    def _add_file(self, parent, path):
-        """Add a file entry to the model."""
-        row_items = self._create_row(path, False)
-        parent.appendRow(row_items)
-
-    def add_directory(self, parent, path):
-        """Add a directory entry to the model."""
-        # Create model items
-        row_items = self._create_row(path, True)
-
-        # Insert directories before file paths
-        try:
-            row = self._dir_rows[parent]
-        except KeyError:
-            row = self._dir_rows[parent] = 0
-        parent.insertRow(row, row_items)
-        self._dir_rows[parent] += 1
-        self._dir_entries[path] = row_items[0]
-
-        return row_items[0]
-
-    def _create_dir_entry(self, dirname, direntries):
-        """
-        Create a directory entry for the model.
-
-        This ensures that directories are always listed before files.
-
-        """
-        entries = dirname.split('/')
-        curdir = []
-        parent = self.invisibleRootItem()
-        curdir_append = curdir.append
-        self_add_directory = self.add_directory
-        for entry in entries:
-            curdir_append(entry)
-            path = '/'.join(curdir)
-            if path in direntries:
-                parent = direntries[path]
-            else:
-                grandparent = parent
-                parent = self_add_directory(grandparent, path)
-                direntries[path] = parent
-        return parent
 
 
 class GitTreeItem(QtGui.QStandardItem):
