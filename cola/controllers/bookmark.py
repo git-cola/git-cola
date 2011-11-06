@@ -27,10 +27,11 @@ def save_bookmark():
 def manage_bookmarks():
     """Launches the bookmarks manager dialog"""
     model = settings.SettingsManager.settings()
-    parent = QtGui.QApplication.instance().activeWindow()
+    parent = qtutils.active_window()
     view = bookmark.BookmarkView(parent)
     ctl = BookmarkController(model, view)
     view.show()
+    return ctl
 
 
 class BookmarkController(QObserver):

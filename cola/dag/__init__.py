@@ -31,11 +31,12 @@ def git_dag(model, parent, opts=None, args=None):
 if __name__ == "__main__":
     import cola
     from cola import app
+    from cola import qtutils
 
     model = cola.model()
     model.use_worktree(os.getcwd())
     model.update_status()
 
     app = app.ColaApplication(sys.argv)
-    ctl = git_dag(model, app.activeWindow())
+    ctl = git_dag(model, qtutils.active_window())
     sys.exit(app.exec_())

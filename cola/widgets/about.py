@@ -2,32 +2,27 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
+from cola import qtutils
 from cola import version
 
 def launch_about_dialog():
     """Launches the Help -> About dialog"""
-    app = QtGui.QApplication.instance()
-    view = AboutView(app.activeWindow())
-    style = app.styleSheet()
-    if style:
-        view.setStyleSheet(style)
+    view = AboutView(qtutils.active_window())
     view.show()
     view.set_version(version.version())
 
 
-COPYRIGHT = """git-cola: A highly caffeinated git GUI v$VERSION
+COPYRIGHT = """git-cola: The highly caffeinated git GUI v$VERSION
 
 git-cola is a sweet, carbonated git GUI known for its
-sugary flavour and caffeine-inspired features.
+sugary flavor and caffeine-inspired features.
 
 
-Copyright (C) 2009, 2010, 2011 David Aguilar and contributors
+Copyright (C) 2007-2012, David Aguilar and contributors
 
 This program is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation, either
-version 2 of the License, or (at your option)
-any later version.
+version 2 as published by the Free Software Foundation.
 
 This program is distributed in the hope that it will
 be useful, but WITHOUT ANY WARRANTY; without even the

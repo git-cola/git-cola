@@ -63,7 +63,7 @@ class BrowseDialog(QtGui.QDialog):
 
     @staticmethod
     def browse(ref):
-        parent = QtGui.QApplication.activeWindow()
+        parent = qtutils.active_window()
         model = BrowseModel(ref)
         dlg = BrowseDialog(model, parent=parent)
         dlg_model = GitTreeModel(ref, dlg)
@@ -79,7 +79,7 @@ class BrowseDialog(QtGui.QDialog):
 
     @staticmethod
     def select_file(ref):
-        parent = QtGui.QApplication.activeWindow()
+        parent = qtutils.active_window()
         model = BrowseModel(ref)
         dlg = BrowseDialog(model, select_file=True, parent=parent)
         dlg_model = GitTreeModel(ref, dlg)
@@ -94,7 +94,7 @@ class BrowseDialog(QtGui.QDialog):
 
     @staticmethod
     def select_file_from_list(file_list):
-        parent = QtGui.QApplication.activeWindow()
+        parent = qtutils.active_window()
         model = BrowseModel(None)
         dlg = BrowseDialog(model, select_file=True, parent=parent)
         dlg_model = GitFileTreeModel(dlg)

@@ -13,11 +13,12 @@ from cola.qobserver import QObserver
 def create_new_branch(revision=''):
     """Launches a dialog for creating a new branch"""
     model = serializer.clone(cola.model())
-    parent = QtGui.QApplication.instance().activeWindow()
-    view = createbranch.CreateBranchView(parent)
+    view = createbranch.CreateBranchView(qtutils.active_window())
     ctl = CreateBranchController(model, view)
     model.set_revision(revision)
     view.show()
+    return ctl
+
 
 class CreateBranchController(QObserver):
     """Provides control for the "create branch" dialog"""

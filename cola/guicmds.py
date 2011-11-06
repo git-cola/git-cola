@@ -37,8 +37,7 @@ class CommandWrapper(object):
 
 def choose_from_combo(title, items):
     """Quickly choose an item from a list using a combo box"""
-    parent = QtGui.QApplication.instance().activeWindow()
-    return ComboDialog(parent, title=title, items=items).selected()
+    return ComboDialog(qtutils.active_window(), title=title, items=items).selected()
 
 
 def slot_with_parent(fn, parent):
@@ -143,7 +142,7 @@ def clone_repo(spawn=True):
         return None
 
     # Prompt the user for a directory to use as the parent directory
-    parent = QtGui.QApplication.instance().activeWindow()
+    parent = qtutils.active_window()
     msg = 'Select a parent directory for the new clone'
     dirname = qtutils.opendir_dialog(parent, msg, cola.model().getcwd())
     if not dirname:

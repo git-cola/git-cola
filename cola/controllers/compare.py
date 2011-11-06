@@ -1,14 +1,13 @@
 """This controller handles the compare commits dialog."""
 
-from PyQt4 import QtGui
-
 from cola import qtutils
 from cola import difftool
 from cola import gitcmds
 from cola.qobserver import QObserver
 from cola.models.compare import CompareModel
 from cola.models.compare import BranchCompareModel
-from cola.views import compare as vcompare
+from cola.views.compare import BranchCompareView
+from cola.views.compare import CompareView
 from cola.widgets.browse import BrowseDialog
 
 
@@ -22,9 +21,8 @@ def compare_file():
 
 def compare(filename=None):
     """Launches a dialog for comparing a pair of commits"""
-    parent = QtGui.QApplication.instance().activeWindow()
     model = CompareModel()
-    view = vcompare.CompareView(parent)
+    view = CompareView(qtutils.active_window())
     ctl = CompareController(model, view, filename)
     view.show()
     return ctl
@@ -32,8 +30,7 @@ def compare(filename=None):
 def branch_compare():
     """Launches a dialog for comparing a pair of branches"""
     model = BranchCompareModel()
-    parent = QtGui.QApplication.instance().activeWindow()
-    view = vcompare.BranchCompareView(parent)
+    view = BranchCompareView(qtutils.active_window())
     ctl = BranchCompareController(model, view)
     view.show()
     return ctl

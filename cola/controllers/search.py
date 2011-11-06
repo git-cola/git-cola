@@ -30,8 +30,7 @@ DATE_RANGE     = 'radio_daterange'
 
 def search():
     """Return a callback to handle various search actions."""
-    search_commits(cola.model(),
-                   QtGui.QApplication.instance().activeWindow())
+    search_commits(cola.model(), qtutils.active_window())
 
 class SearchEngine(object):
     def __init__(self, model):

@@ -1,7 +1,5 @@
 """Provides CreateTagController to interact with the CreateTag view."""
 
-from PyQt4 import QtGui
-
 import cola
 from cola import signals
 from cola import qobserver
@@ -12,13 +10,13 @@ from cola.views import createtag
 
 def create_tag(revision=''):
     """Entry point for external callers."""
-    app = QtGui.QApplication.instance()
     model = tag.TagModel()
     if revision:
         model.revision = [revision]
-    view = createtag.CreateTag(parent=app.activeWindow())
+    view = createtag.CreateTag(qtutils.active_window())
     ctl = CreateTagController(model, view)
     view.show()
+    return ctl
 
 
 class CreateTagController(qobserver.QObserver):

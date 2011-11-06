@@ -649,7 +649,7 @@ if __name__ == '__main__':
             self.syntax = DiffSyntaxHighlighter(self.output_text.document())
 
     app = QtGui.QApplication(sys.argv)
-    dialog = SyntaxTestDialog(app.activeWindow())
+    dialog = SyntaxTestDialog(qtutils.active_window())
     dialog.show()
     dialog.raise_()
     app.exec_()

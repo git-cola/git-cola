@@ -17,9 +17,8 @@ from cola.controllers.createbranch import create_new_branch
 def select_commits(title, revs, summaries, multiselect=True):
     """Use the SelectCommitsView to select commits from a list."""
     model = cola.model()
-    app = QtGui.QApplication.instance()
-    parent = app.activeWindow()
-    view = SelectCommitsView(parent, app.tr(title), multiselect=multiselect)
+    parent = qtutils.active_window()
+    view = SelectCommitsView(parent, qtutils.tr(title), multiselect=multiselect)
     ctl = SelectCommitsController(model, view, revs, summaries)
     return ctl.select_commits()
 

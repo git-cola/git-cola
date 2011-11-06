@@ -7,7 +7,7 @@ from cola.views import standard
 
 
 class CreateTag(standard.Dialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent):
         standard.Dialog.__init__(self, parent=parent)
         self.setWindowModality(QtCore.Qt.WindowModal)
         self.setWindowTitle(self.tr('Create Tag'))
