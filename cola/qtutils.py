@@ -418,8 +418,18 @@ def ok_icon():
     return cached_icon(QtGui.QStyle.SP_DialogOkButton)
 
 
+def open_icon():
+    """Return a standard Save icon"""
+    return cached_icon(QtGui.QStyle.SP_DirOpenIcon)
+
+
 def git_icon():
     return icon('git.svg')
+
+
+def reload_icon():
+    """Returna  standard Refresh icon"""
+    return cached_icon(QtGui.QStyle.SP_BrowserReload)
 
 
 def discard_icon():

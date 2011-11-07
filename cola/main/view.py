@@ -121,27 +121,41 @@ class MainView(standard.MainWindow):
         # All Actions
         self.menu_unstage_all = add_action(self,
                 'Unstage All', emit(self, signals.unstage_all))
+        self.menu_unstage_all.setIcon(qtutils.icon('remove.svg'))
+
         self.menu_unstage_selected = add_action(self,
                 'Unstage From Commit', emit(self, signals.unstage_selected))
+        self.menu_unstage_selected.setIcon(qtutils.icon('remove.svg'))
+
         self.menu_show_diffstat = add_action(self,
                 'Diffstat', emit(self, signals.diffstat), 'Ctrl+D')
+
         self.menu_stage_modified = add_action(self,
                 'Stage Changed Files To Commit',
                 emit(self, signals.stage_modified), 'Alt+A')
+        self.menu_stage_modified.setIcon(qtutils.icon('add.svg'))
+
         self.menu_stage_untracked = add_action(self,
                 'Stage All Untracked', emit(self, signals.stage_untracked), 'Alt+U')
+        self.menu_stage_untracked.setIcon(qtutils.icon('add.svg'))
+
         self.menu_export_patches = add_action(self,
                 'Export Patches...', guicmds.export_patches, 'Ctrl+E')
         self.menu_preferences = add_action(self,
                 'Preferences', lambda: preferences(model=prefs_model),
                 QtGui.QKeySequence.Preferences, 'Ctrl+O')
+
         self.menu_rescan = add_action(self,
                 'Rescan', emit(self, signals.rescan), 'Ctrl+R')
+        self.menu_rescan.setIcon(qtutils.reload_icon())
+
         self.menu_cherry_pick = add_action(self,
                 'Cherry-Pick...', guicmds.cherry_pick, 'Ctrl+P')
 
         self.menu_load_commitmsg = add_action(self,
                 'Load Commit Message...', guicmds.load_commitmsg)
+        self.menu_load_commitmsg.setIcon(qtutils.open_icon())
+
         self.menu_quit = add_action(self,
                 'Quit', self.close, 'Ctrl+Q')
         self.menu_manage_bookmarks = add_action(self,
@@ -152,16 +166,22 @@ class MainView(standard.MainWindow):
                 'Grep', guicmds.grep)
         self.menu_merge_local = add_action(self,
                 'Merge...', merge.local_merge)
+
         self.menu_merge_abort = add_action(self,
                 'Abort Merge...', merge.abort_merge)
+        self.menu_merge_abort.setIcon(qtutils.icon('undo.svg'))
+
         self.menu_fetch = add_action(self,
                 'Fetch...', guicmds.fetch)
         self.menu_push = add_action(self,
                 'Push...', guicmds.push)
         self.menu_pull = add_action(self,
                 'Pull...', guicmds.pull)
+
         self.menu_open_repo = add_action(self,
                 'Open...', guicmds.open_repo)
+        self.menu_open_repo.setIcon(qtutils.open_icon())
+
         self.menu_stash = add_action(self,
                 'Stash...', stash.stash, 'Alt+Shift+S')
         self.menu_diff_branch = add_action(self,
@@ -204,10 +224,14 @@ class MainView(standard.MainWindow):
                 'Expression...', guicmds.diff_expression)
         self.menu_create_tag = add_action(self,
                 'Create Tag...', createtag.create_tag)
+
         self.menu_create_branch = add_action(self,
                 'Create...', create_new_branch, 'Ctrl+B')
+
         self.menu_delete_branch = add_action(self,
                 'Delete...', guicmds.branch_delete)
+        self.menu_delete_branch.setIcon(qtutils.discard_icon())
+
         self.menu_checkout_branch = add_action(self,
                 'Checkout...', guicmds.checkout_branch, 'Alt+B')
         self.menu_rebase_branch = add_action(self,
