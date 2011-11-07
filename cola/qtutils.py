@@ -87,8 +87,7 @@ def prompt(msg, title=None):
         title = msg
     msg = tr(msg)
     title = tr(title)
-    parent = active_window()
-    result = QtGui.QInputDialog.getText(parent, msg, title)
+    result = QtGui.QInputDialog.getText(active_window(), msg, title)
     return (unicode(result[0]), result[1])
 
 
@@ -239,11 +238,11 @@ def opendir_dialog(title, path):
                                               title_tr, path, flags))
 
 
-def save_dialog(parent, title, filename=''):
+def save_as(filename, title='Save As...'):
     """Creates a Save File dialog and returns a filename."""
-    title_tr = parent.tr(title)
+    title_tr = tr(title)
     return unicode(QtGui.QFileDialog
-                        .getSaveFileName(parent, title_tr, filename))
+                        .getSaveFileName(active_window(), title_tr, filename))
 
 
 def icon(basename):

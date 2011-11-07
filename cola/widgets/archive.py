@@ -148,8 +148,7 @@ class GitArchiveDialog(QtGui.QDialog):
         self.accept()
 
     def choose_filename(self):
-        filename = QtGui.QFileDialog.getSaveFileName(self,
-                        self.tr('Save File'), self.filename)
+        filename = qtutils.save_as(self.filename)
         if not filename:
             return
         self.filetext.setText(filename)

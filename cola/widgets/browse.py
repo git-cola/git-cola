@@ -166,11 +166,10 @@ class BrowseDialog(QtGui.QDialog):
         """Choose an output filename based on the selected path"""
         self.path_chosen(path, close=False)
         model = self.model
-        filename = QtGui.QFileDialog.getSaveFileName(self,
-                        self.tr('Save File'), model.filename)
+        filename = qtutils.save_as(model.filename)
         if not filename:
             return
-        model.filename = unicode(filename)
+        model.filename = filename
         self.emit(SIGNAL(save_blob))
         self.accept()
 
