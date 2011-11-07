@@ -19,6 +19,8 @@ def install_command_wrapper():
 class CommandWrapper(object):
     def __init__(self):
         self.callbacks = {
+                signals.confirm: qtutils.confirm,
+                signals.critical: qtutils.critical,
                 signals.information: qtutils.information,
                 signals.question: qtutils.question,
         }

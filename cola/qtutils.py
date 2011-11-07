@@ -194,8 +194,15 @@ def question(title, message, default=True):
                    .question(active_window(), title, msg, buttons, default))
     return result == QtGui.QMessageBox.Yes
 
-# Register globally with the notifier
-cola.notifier().connect(signals.information, information)
+
+def register_for_signals():
+    # Register globally with the notifier
+    notifier = cola.notifier()
+    notifier.connect(signals.confirm, confirm)
+    notifier.connect(signals.critical, critical)
+    notifier.connect(signals.information, information)
+    notifier.connect(signals.question, question)
+register_for_signals()
 
 
 def selected_treeitem(tree_widget):
