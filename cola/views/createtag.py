@@ -13,6 +13,7 @@ class CreateTag(standard.Dialog):
         self.setWindowTitle(self.tr('Create Tag'))
         self.resize(506, 295)
         self._main_layt = QtGui.QVBoxLayout(self)
+        self._main_layt.setContentsMargins(6, 12, 6, 6)
 
         # Form layout for inputs
         self._input_form_layt = QtGui.QFormLayout()
@@ -74,7 +75,7 @@ class CreateTag(standard.Dialog):
         self._button_hbox_layt.addItem(self._button_spacer)
 
         self.create_button = QtGui.QPushButton(self)
-        self.create_button.setText(self.tr('Create'))
+        self.create_button.setText(self.tr('Create Tag'))
         self._button_hbox_layt.addWidget(self.create_button)
         self._main_layt.addLayout(self._button_hbox_layt)
 
