@@ -14,10 +14,10 @@ from cola.classic.model import GitRepoNameItem
 
 
 class RepoDialog(standard.Dialog):
-    def __init__(self, parent=None, update=True):
+    def __init__(self, parent, update=True):
         standard.Dialog.__init__(self, parent)
         self.setObjectName('classic')
-        self.tree = RepoTreeView(parent)
+        self.tree = RepoTreeView(self)
         self.setLayout(QtGui.QHBoxLayout())
         self.layout().setMargin(1)
         self.layout().addWidget(self.tree)
@@ -57,7 +57,7 @@ class RepoDialog(standard.Dialog):
 
 class RepoTreeView(QtGui.QTreeView):
     """Provides a filesystem-like view of a git repository."""
-    def __init__(self, parent=None):
+    def __init__(self, parent):
         QtGui.QTreeView.__init__(self, parent)
 
         self.setSortingEnabled(False)

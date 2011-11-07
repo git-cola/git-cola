@@ -42,7 +42,6 @@ from cola.qtutils import connect_button
 from cola.qtutils import emit
 from cola.qtutils import log
 from cola.qtutils import relay_signal
-from cola.qtutils import SLOT
 from cola.qtutils import tr
 from cola.views import standard
 from cola.widgets import cfgactions
@@ -53,16 +52,7 @@ from cola.widgets.status import StatusWidget
 
 
 class MainView(standard.MainWindow):
-    def __init__(self, model, parent=None,
-                 add_action=add_action,
-                 connect_button=connect_button,
-                 create_button=create_button,
-                 create_dock=create_dock,
-                 create_menu=create_menu,
-                 emit=emit,
-                 relay_signal=relay_signal,
-                 SLOT=SLOT,
-                 tr=tr):
+    def __init__(self, model, parent):
         standard.MainWindow.__init__(self, parent)
         # Default size; this is thrown out when save/restore is used
         self.resize(987, 610)
@@ -85,12 +75,12 @@ class MainView(standard.MainWindow):
 
         if self.classic_dockable:
             self.classicdockwidget = create_dock('Cola Classic', self)
-            self.classicwidget = classic_widget(parent=self)
+            self.classicwidget = classic_widget(self)
             self.classicdockwidget.setWidget(self.classicwidget)
 
         # "Actions" widget
         self.actiondockwidget = create_dock('Actions', self)
-        self.actiondockwidgetcontents = qt.QFlowLayoutWidget(parent=self)
+        self.actiondockwidgetcontents = qt.QFlowLayoutWidget(self)
         layout = self.actiondockwidgetcontents.layout()
         self.stage_button = create_button('Stage', layout)
         self.unstage_button = create_button('Unstage', layout)
@@ -223,7 +213,7 @@ class MainView(standard.MainWindow):
         self.menu_classic = add_action(self,
                 'Cola Classic...', cola_classic)
         self.menu_dag = add_action(self,
-                'DAG...', lambda: git_dag(self.model, self))
+                'DAG...', lambda: git_dag(self.model))
 
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)

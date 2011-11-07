@@ -226,10 +226,10 @@ def main(context):
     if opts.classic:
         view = cola_classic(update=False)
     elif context == 'git-cola':
-        view = MainView(model)
+        view = MainView(model, qtutils.active_window())
         ctl = MainController(model, view)
     elif context == 'git-dag':
-        ctl = git_dag(model, app.activeWindow(), opts=opts, args=args)
+        ctl = git_dag(model, opts=opts, args=args)
         view = ctl.view
 
     # Install UI wrappers for command objects

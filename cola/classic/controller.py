@@ -16,19 +16,17 @@ from cola.classic.model import GitRepoEntryManager
 from cola.compat import set
 
 
-def widget(parent=None, update=True):
+def widget(parent, update=True):
     """Return a widget for immediate use."""
-    view = RepoDialog(parent=parent, update=update)
+    view = RepoDialog(parent, update=update)
     view.tree.setModel(GitRepoModel(view.tree))
-    controller = ClassicController(view.tree)
+    ctl = ClassicController(view.tree)
     return view
 
 
-def cola_classic(parent=None, update=True):
+def cola_classic(update=True):
     """Launch a new cola classic session."""
-    view = widget(parent=parent, update=update)
-    if not parent:
-        qtutils.center_on_screen(view)
+    view = widget(qtutils.active_window(), update=update)
     view.show()
     return view
 

@@ -65,7 +65,7 @@ class QFlowLayoutWidget(QtGui.QWidget):
     _horizontal = QtGui.QBoxLayout.LeftToRight
     _vertical = QtGui.QBoxLayout.TopToBottom
 
-    def __init__(self, parent=None):
+    def __init__(self, parent):
         QtGui.QWidget.__init__(self, parent)
         self._direction = self._vertical
         self._layout = layout = QtGui.QBoxLayout(self._direction)
