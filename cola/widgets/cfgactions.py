@@ -14,7 +14,6 @@ from cola.qt import GitRefLineEdit
 from cola.views import standard
 
 
-
 def install_command_wrapper():
     cmd_wrapper = ActionCommandWrapper()
     cola.factory().add_command_wrapper(cmd_wrapper)
@@ -26,15 +25,12 @@ def get_config_actions():
     return names or []
 
 
-def run_command(parent, title, command):
+def run_command(title, command):
     """Show a command widget"""
-
-    view = GitCommandWidget(parent)
+    view = GitCommandWidget(qtutils.active_window())
     view.setWindowModality(QtCore.Qt.ApplicationModal)
     view.set_command(command)
     view.setWindowTitle(title)
-    if not parent:
-        qtutils.center_on_screen(view)
     view.show()
     view.raise_()
     view.run()
@@ -46,7 +42,7 @@ class GitCommandWidget(standard.Dialog):
     """Nice TextView that reads the output of a command syncronously"""
     # Keep us in scope otherwise PyQt kills the widget
     def __init__(self, parent=None):
-        standard.Dialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent)
         self.resize(720, 420)
 
         # Construct the process
@@ -143,6 +139,8 @@ class GitCommandWidget(standard.Dialog):
         else:
             event.accept()
 
+        return standard.Dialog.closeEvent(self, event)
+
     def stateChanged(self, newstate):
         # State of process has changed - change the abort button state.
         if newstate == QtCore.QProcess.NotRunning:
@@ -157,14 +155,11 @@ class GitCommandWidget(standard.Dialog):
 class ActionCommandWrapper(object):
     def __init__(self):
         self.callbacks = {
-                signals.run_config_action: self._run_config_action,
-                signals.run_command: self._run_command,
+                signals.run_config_action: self.run_config_action,
+                signals.run_command: run_command,
         }
 
-    def _run_command(self, title, cmd):
-        return run_command(qtutils.active_window(), title, cmd)
-
-    def _run_config_action(self, name, opts):
+    def run_config_action(self, name, opts):
         dlg = ActionDialog(qtutils.active_window(), name, opts)
         dlg.show()
         if dlg.exec_() != QtGui.QDialog.Accepted:
