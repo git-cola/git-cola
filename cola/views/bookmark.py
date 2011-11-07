@@ -13,6 +13,8 @@ class BookmarkView(standard.Dialog):
         self.setWindowTitle(self.tr('Bookmarks'))
         self.resize(494, 238)
         self._vboxlayt = QtGui.QVBoxLayout(self)
+        self._vboxlayt.setMargin(6)
+
         # Exposed
         self.bookmarks = QtGui.QListWidget(self)
         self.bookmarks.setAlternatingRowColors(True)
