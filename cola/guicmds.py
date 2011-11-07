@@ -224,7 +224,7 @@ def grep():
     cola.notifier().broadcast(signals.grep, txt)
 
 
-def open_repo(parent):
+def open_repo():
     """Spawn a new cola session."""
     dirname = qtutils.opendir_dialog('Open Git Repository...',
                                      cola.model().getcwd())
@@ -232,19 +232,13 @@ def open_repo(parent):
         return
     cola.notifier().broadcast(signals.open_repo, dirname)
 
-def open_repo_slot(parent):
-    return slot_with_parent(open_repo, parent)
 
-
-def load_commitmsg(parent):
+def load_commitmsg():
     """Load a commit message from a file."""
     filename = qtutils.open_dialog('Load Commit Message...',
                                    cola.model().getcwd())
     if filename:
         cola.notifier().broadcast(signals.load_commit_message, filename)
-
-def load_commitmsg_slot(parent):
-    return slot_with_parent(load_commitmsg, parent)
 
 
 def rebase():
@@ -270,31 +264,22 @@ def review_branch():
     cola.notifier().broadcast(signals.review_branch_mode, branch)
 
 
-def fetch(parent):
+def fetch():
     """Launch the 'fetch' remote dialog."""
     from cola.controllers.remote import remote_action
 
-    remote_action(parent, 'fetch')
-
-def fetch_slot(parent):
-    return slot_with_parent(fetch, parent)
+    remote_action('fetch')
 
 
-def push(parent):
+def push():
     """Launch the 'push' remote dialog."""
     from cola.controllers.remote import remote_action
 
-    remote_action(parent, 'push')
-
-def push_slot(parent):
-    return slot_with_parent(push, parent)
+    remote_action('push')
 
 
-def pull(parent):
+def pull():
     """Launch the 'pull' remote dialog."""
     from cola.controllers.remote import remote_action
 
-    remote_action(parent, 'pull')
-
-def pull_slot(parent):
-    return slot_with_parent(pull, parent)
+    return remote_action('pull')

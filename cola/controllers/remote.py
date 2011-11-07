@@ -1,6 +1,5 @@
 """This controller handles the remote dialog."""
 
-
 import fnmatch
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -15,7 +14,7 @@ from cola import qtutils
 from cola.views import remote
 from cola.qobserver import QObserver
 
-def remote_action(parent, action):
+def remote_action(action):
     """Launches fetch/push/pull dialogs."""
     # TODO: subclass model
     model = serializer.clone(cola.model())
@@ -24,9 +23,10 @@ def remote_action(parent, action):
     model.rebase_checkbox = False
     model.ffwd_only_checkbox = True
 
-    view = remote.RemoteView(parent, action)
-    controller = RemoteController(model, view, action)
+    view = remote.RemoteView(qtutils.active_window(), action)
+    ctl = RemoteController(model, view, action)
     view.show()
+    return ctl
 
 
 class RemoteController(QObserver):

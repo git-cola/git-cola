@@ -119,6 +119,8 @@ class MainView(standard.MainWindow):
         self.diffdockwidget.setWidget(self.diff_viewer)
 
         # All Actions
+        self.menu_unstage_all = add_action(self,
+                'Unstage All', emit(self, signals.unstage_all))
         self.menu_unstage_selected = add_action(self,
                 'Unstage From Commit', emit(self, signals.unstage_selected))
         self.menu_show_diffstat = add_action(self,
@@ -137,10 +139,9 @@ class MainView(standard.MainWindow):
                 'Rescan', emit(self, signals.rescan), 'Ctrl+R')
         self.menu_cherry_pick = add_action(self,
                 'Cherry-Pick...', guicmds.cherry_pick, 'Ctrl+P')
-        self.menu_unstage_all = add_action(self,
-                'Unstage All', emit(self, signals.unstage_all))
+
         self.menu_load_commitmsg = add_action(self,
-                'Load Commit Message...', guicmds.load_commitmsg_slot(self))
+                'Load Commit Message...', guicmds.load_commitmsg)
         self.menu_quit = add_action(self,
                 'Quit', self.close, 'Ctrl+Q')
         self.menu_manage_bookmarks = add_action(self,
@@ -154,13 +155,13 @@ class MainView(standard.MainWindow):
         self.menu_merge_abort = add_action(self,
                 'Abort Merge...', merge.abort_merge)
         self.menu_fetch = add_action(self,
-                'Fetch...', guicmds.fetch_slot(self))
+                'Fetch...', guicmds.fetch)
         self.menu_push = add_action(self,
-                'Push...', guicmds.push_slot(self))
+                'Push...', guicmds.push)
         self.menu_pull = add_action(self,
-                'Pull...', guicmds.pull_slot(self))
+                'Pull...', guicmds.pull)
         self.menu_open_repo = add_action(self,
-                'Open...', guicmds.open_repo_slot(self))
+                'Open...', guicmds.open_repo)
         self.menu_stash = add_action(self,
                 'Stash...', stash.stash, 'Alt+Shift+S')
         self.menu_diff_branch = add_action(self,
@@ -353,9 +354,9 @@ class MainView(standard.MainWindow):
         # Add button callbacks
         connect_button(self.rescan_button, emit(self, signals.rescan))
         connect_button(self.alt_button, emit(self, signals.reset_mode))
-        connect_button(self.fetch_button, guicmds.fetch_slot(self))
-        connect_button(self.push_button, guicmds.push_slot(self))
-        connect_button(self.pull_button, guicmds.pull_slot(self))
+        connect_button(self.fetch_button, guicmds.fetch)
+        connect_button(self.push_button, guicmds.push)
+        connect_button(self.pull_button, guicmds.pull)
         connect_button(self.stash_button, stash.stash)
 
         connect_button(self.stage_button, self.stage)
