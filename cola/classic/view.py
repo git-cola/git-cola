@@ -6,9 +6,9 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
-import cola.utils
-import cola.qtutils
+from cola import qtutils
 from cola import signals
+from cola import utils
 from cola.views import standard
 from cola.classic.model import GitRepoNameItem
 
@@ -27,7 +27,7 @@ class RepoDialog(standard.Dialog):
         self.model = cola.model()
         self.model.add_message_observer(self.model.message_updated,
                                         self._model_updated)
-        cola.qtutils.add_close_action(self)
+        qtutils.add_close_action(self)
         if update:
             self._model_updated()
 
@@ -242,10 +242,10 @@ class RepoTreeView(QtGui.QTreeView):
         paths = self.selected_paths()
 
         model = cola.model()
-        model_staged = cola.utils.add_parents(set(model.staged))
-        model_modified = cola.utils.add_parents(set(model.modified))
-        model_unmerged = cola.utils.add_parents(set(model.unmerged))
-        model_untracked =cola.utils.add_parents(set(model.untracked))
+        model_staged = utils.add_parents(set(model.staged))
+        model_modified = utils.add_parents(set(model.modified))
+        model_unmerged = utils.add_parents(set(model.unmerged))
+        model_untracked =utils.add_parents(set(model.untracked))
 
         for path in paths:
             if path in model_unmerged:
@@ -294,7 +294,7 @@ class RepoTreeView(QtGui.QTreeView):
         """Return selected staged paths."""
         if not selection:
             selection = self.selected_paths()
-        staged = cola.utils.add_parents(set(cola.model().staged))
+        staged = utils.add_parents(set(cola.model().staged))
         return [p for p in selection if p in staged]
 
     def selected_modified_paths(self, selection=None):
@@ -302,7 +302,7 @@ class RepoTreeView(QtGui.QTreeView):
         if not selection:
             selection = self.selected_paths()
         model = cola.model()
-        modified = cola.utils.add_parents(set(model.modified))
+        modified = utils.add_parents(set(model.modified))
         return [p for p in selection if p in modified]
 
     def selected_unstaged_paths(self, selection=None):
@@ -310,8 +310,8 @@ class RepoTreeView(QtGui.QTreeView):
         if not selection:
             selection = self.selected_paths()
         model = cola.model()
-        modified = cola.utils.add_parents(set(model.modified))
-        untracked = cola.utils.add_parents(set(model.untracked))
+        modified = utils.add_parents(set(model.modified))
+        untracked = utils.add_parents(set(model.untracked))
         unstaged = modified.union(untracked)
         return [p for p in selection if p in unstaged]
 
@@ -322,7 +322,7 @@ class RepoTreeView(QtGui.QTreeView):
         model = cola.model()
         staged = set(self.selected_staged_paths())
         modified = set(self.selected_modified_paths())
-        untracked = cola.utils.add_parents(set(model.untracked))
+        untracked = utils.add_parents(set(model.untracked))
         tracked = staged.union(modified)
         return [p for p in selection
                 if p not in untracked or p in tracked]
