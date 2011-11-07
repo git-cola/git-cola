@@ -38,9 +38,9 @@ class StashView(standard.Dialog):
             self.toolbutton(self.tr('Save'),
                             self.tr('Save modified state to new stash'),
                             qtutils.save_icon())
-        self.button_remove = \
-            self.toolbutton(self.tr('Remove'),
-                            self.tr('Remove the selected stash'),
+        self.button_drop = \
+            self.toolbutton(self.tr('Drop'),
+                            self.tr('Drop the selected stash'),
                             qtutils.discard_icon())
         self.button_close = \
             self.pushbutton(self.tr('Close'),
@@ -51,8 +51,8 @@ class StashView(standard.Dialog):
         self.keep_index.setChecked(True)
 
         self.setTabOrder(self.button_save, self.button_apply)
-        self.setTabOrder(self.button_apply, self.button_remove)
-        self.setTabOrder(self.button_remove, self.keep_index)
+        self.setTabOrder(self.button_apply, self.button_drop)
+        self.setTabOrder(self.button_drop, self.keep_index)
         self.setTabOrder(self.keep_index, self.button_close)
 
         # Arrange layouts
@@ -74,7 +74,7 @@ class StashView(standard.Dialog):
 
         self.btn_layt.addWidget(self.button_save)
         self.btn_layt.addWidget(self.button_apply)
-        self.btn_layt.addWidget(self.button_remove)
+        self.btn_layt.addWidget(self.button_drop)
         self.btn_layt.addWidget(self.keep_index)
         self.btn_layt.addStretch()
         self.btn_layt.addWidget(self.button_close)
@@ -89,8 +89,8 @@ class StashView(standard.Dialog):
                      self.stash_apply)
         self.connect(self.button_save, SIGNAL('clicked()'),
                      self.stash_save)
-        self.connect(self.button_remove, SIGNAL('clicked()'),
-                     self.stash_remove)
+        self.connect(self.button_drop, SIGNAL('clicked()'),
+                     self.stash_drop)
         self.connect(self.button_close, SIGNAL('clicked()'), self.close)
 
         self.update_from_model()
@@ -140,7 +140,7 @@ class StashView(standard.Dialog):
         has_stash = bool(self.selected_stash())
         self.button_save.setEnabled(has_changes)
         self.button_apply.setEnabled(has_stash)
-        self.button_remove.setEnabled(has_stash)
+        self.button_drop.setEnabled(has_stash)
 
     def update_from_model(self):
         """Initiates git queries on the model and updates the view
@@ -187,7 +187,7 @@ class StashView(standard.Dialog):
         self.accept()
         self.emit(SIGNAL(rescan))
 
-    def stash_remove(self):
+    def stash_drop(self):
         """Drops the currently selected stash
         """
         selection = self.selected_stash()
