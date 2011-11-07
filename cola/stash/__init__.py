@@ -1,18 +1,14 @@
-from PyQt4 import QtGui
-
 from cola import qtutils
 from cola.stash.controller import StashController
 from cola.stash.model import StashModel
 from cola.stash.view import StashView
 
 
-def stash(parent=None):
+def stash():
     """Launches a stash dialog using the provided model + view
     """
-    if parent is None:
-        parent = qtutils.active_window()
     model = StashModel()
-    view = StashView(model, parent)
+    view = StashView(model, qtutils.active_window())
     ctl = StashController(model, view)
     view.show()
     return ctl

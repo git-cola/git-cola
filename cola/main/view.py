@@ -162,7 +162,7 @@ class MainView(standard.MainWindow):
         self.menu_open_repo = add_action(self,
                 'Open...', guicmds.open_repo_slot(self))
         self.menu_stash = add_action(self,
-                'Stash...', lambda: stash.stash(parent=self), 'Alt+Shift+S')
+                'Stash...', stash.stash, 'Alt+Shift+S')
         self.menu_diff_branch = add_action(self,
                 'Apply Changes From Branch...', guicmds.diff_branch)
         self.menu_branch_compare = add_action(self,
@@ -356,7 +356,7 @@ class MainView(standard.MainWindow):
         connect_button(self.fetch_button, guicmds.fetch_slot(self))
         connect_button(self.push_button, guicmds.push_slot(self))
         connect_button(self.pull_button, guicmds.pull_slot(self))
-        connect_button(self.stash_button, lambda: stash.stash(parent=self))
+        connect_button(self.stash_button, stash.stash)
 
         connect_button(self.stage_button, self.stage)
         connect_button(self.unstage_button, self.unstage)
