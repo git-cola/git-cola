@@ -79,6 +79,10 @@ class ColaApplication(object):
         i18n.install(locale)
         qtcompat.install()
 
+        # Add the default style dir so that we find our icons
+        icon_dir = resources.icon_dir()
+        qtcompat.add_search_path(os.path.basename(icon_dir), icon_dir)
+
         # monkey-patch Qt's translate() to use our translate()
         if gui:
             self._app = instance(tuple(argv))
@@ -201,9 +205,6 @@ def main(context):
     # Allow Ctrl-C to exit
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    # Add the default style dir so that we find our icons
-    _setup_resource_dir(resources.icon_dir())
-
     # Initialize the app
     app = ColaApplication(sys.argv)
 
@@ -295,11 +296,3 @@ def _send_msg():
                '"plumbing" API and are not intended for typical '
                'day-to-day use.  Here be dragons')
         cola.notifier().broadcast(signals.log_cmd, 0, msg)
-
-
-def _setup_resource_dir(dirname):
-    """Adds resource directories to Qt's search path"""
-    from cola import qtcompat
-
-    basename = os.path.basename(dirname)
-    qtcompat.add_search_path(basename, dirname)
