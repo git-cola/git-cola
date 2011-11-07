@@ -20,20 +20,14 @@ def local_merge():
 def abort_merge():
     """Prompts before aborting a merge in progress
     """
-    title = 'Abort Merge...'
-    txt = ('Abort merge?\n\n'
-           'Aborting the current merge will cause '
-           '*ALL* uncommitted changes to be lost.\n\n'
-           'Continue with aborting the current merge?')
-    info = 'Recovering uncommitted changes will not be possible'
-    ok_text = qtutils.tr('Abort Merge...')
-    if ok_text.endswith(unichr(0x2026)):
-        ok_text = ok_text[:-1]
-    elif ok_text.endswith('...'):
-        ok_text = ok_text[:-3]
-    parent = qtutils.active_window()
-    answer = qtutils.confirm(parent, title, txt, info, ok_text)
-    if answer:
+    title = qtutils.tr('Abort Merge...')
+    txt = ('Aborting the current merge will cause '
+           '*ALL* uncommitted changes to be lost.\n'
+           'Recovering uncommitted changes is not possible.')
+    info_txt = 'Aborting the current merge?'
+    ok_txt = 'Abort Merge'
+    if qtutils.confirm(title, txt, info_txt, ok_txt,
+                       default=False, icon=qtutils.icon('undo.svg')):
         gitcmds.abort_merge()
 
 

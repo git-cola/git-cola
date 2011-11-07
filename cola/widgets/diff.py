@@ -205,28 +205,26 @@ class DiffTextEdit(DiffView):
 
     def revert_section(self):
         """Destructively remove a section from a worktree file."""
-        if not qtutils.confirm(self,
-                'Revert Section?',
-                'This operation will drop uncommitted changes.\n'
-                'These changes cannot be recovered.',
-                'Revert these uncommitted modifications?',
-                default=False,
-                ok_text='Revert Section',
-                icon=qtutils.icon('undo.svg')):
+        if not qtutils.confirm('Revert Section?',
+                               'This operation drops uncommitted changes.\n'
+                               'These changes cannot be recovered.',
+                               'Revert the uncommitted changes?',
+                               'Revert Section',
+                               default=False,
+                               icon=qtutils.icon('undo.svg')):
             return
         self.process_diff_selection(staged=False, apply_to_worktree=True,
                                     reverse=True)
 
     def revert_selection(self):
         """Destructively check out content for the selected file from $head."""
-        if not qtutils.confirm(self,
-                'Revert Selected Lines?',
-                'This operation will drop uncommitted changes.\n'
-                'These changes cannot be recovered.',
-                'Revert these uncommitted modifications?',
-                default=False,
-                ok_text='Revert Selected Lines',
-                icon=qtutils.icon('undo.svg')):
+        if not qtutils.confirm('Revert Selected Lines?',
+                               'This operation drops uncommitted changes.\n'
+                               'These changes cannot be recovered.',
+                               'Revert the uncommitted changes?',
+                               'Revert Selected Lines',
+                               default=False,
+                               icon=qtutils.icon('undo.svg')):
             return
         self.process_diff_selection(staged=False, apply_to_worktree=True,
                                     reverse=True, selected=True)

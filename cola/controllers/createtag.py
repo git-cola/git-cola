@@ -35,11 +35,15 @@ class CreateTagController(qobserver.QObserver):
             return
         if (self.model.sign_tag and
                 not self.model.tag_msg and
-                not qtutils.question(self.view,
-                                     'Use Empty Message?',
-                                     'Signing is enabled and the tag '
-                                     'message is empty.\n\n'
-                                     'Continue?')):
+                not qtutils.confirm('Missing Tag Message',
+                                    'Tag-signing was requested but the tag '
+                                    'message is empty.',
+                                    'An unsigned, lightweight tag will be '
+                                    'created instead.\n'
+                                    'Create an unsigned tag?',
+                                    'Create Unsigned Tag',
+                                    default=False,
+                                    icon=qtutils.save_icon())):
             return
         cola.notifier().broadcast(signals.tag,
                                   self.model.tag_name,

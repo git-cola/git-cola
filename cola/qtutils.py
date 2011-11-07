@@ -113,15 +113,53 @@ def cached_icon_from_path(filename):
     return QtGui.QIcon(filename)
 
 
-def information(title, message=None, parent=None, details=None, informative_text=None):
+def confirm(title, text, informative_text, ok_text,
+            icon=None, default=True):
+    """Confirm that an action should take place"""
+    if icon is None:
+        icon = ok_icon()
+    elif icon and isinstance(icon, basestring):
+        icon = QtGui.QIcon(icon)
+    msgbox = QtGui.QMessageBox(active_window())
+    msgbox.setWindowTitle(tr(title))
+    msgbox.setText(tr(text))
+    msgbox.setInformativeText(tr(informative_text))
+    ok = msgbox.addButton(tr(ok_text), QtGui.QMessageBox.ActionRole)
+    ok.setIcon(icon)
+    cancel = msgbox.addButton(QtGui.QMessageBox.Cancel)
+    if default:
+        msgbox.setDefaultButton(ok)
+    else:
+        msgbox.setDefaultButton(cancel)
+    msgbox.exec_()
+    return msgbox.clickedButton() == ok
+
+
+def critical(title, message=None, details=None):
+    """Show a warning with the provided title and message."""
+    if message is None:
+        message = title
+    title = tr(title)
+    message = tr(message)
+    mbox = QtGui.QMessageBox(active_window())
+    mbox.setWindowTitle(title)
+    mbox.setTextFormat(QtCore.Qt.PlainText)
+    mbox.setText(message)
+    mbox.setIcon(QtGui.QMessageBox.Critical)
+    mbox.setStandardButtons(QtGui.QMessageBox.Close)
+    mbox.setDefaultButton(QtGui.QMessageBox.Close)
+    if details:
+        mbox.setDetailedText(details)
+    mbox.exec_()
+
+
+def information(title, message=None, details=None, informative_text=None):
     """Show information with the provided title and message."""
     if message is None:
         message = title
     title = tr(title)
     message = tr(message)
-    if parent is None:
-        parent = active_window()
-    mbox = QtGui.QMessageBox(parent)
+    mbox = QtGui.QMessageBox(active_window())
     mbox.setStandardButtons(QtGui.QMessageBox.Close)
     mbox.setDefaultButton(QtGui.QMessageBox.Close)
     mbox.setWindowTitle(title)
@@ -140,23 +178,21 @@ def information(title, message=None, parent=None, details=None, informative_text
     mbox.exec_()
 
 
-def critical(title, message=None, details=None):
-    """Show a warning with the provided title and message."""
-    if message is None:
-        message = title
+def question(title, message, default=True):
+    """Launches a QMessageBox question with the provided title and message.
+    Passing "default=False" will make "No" the default choice."""
+    yes = QtGui.QMessageBox.Yes
+    no = QtGui.QMessageBox.No
+    buttons = yes | no
+    if default:
+        default = yes
+    else:
+        default = no
     title = tr(title)
-    message = tr(message)
-    parent = active_window()
-    mbox = QtGui.QMessageBox(parent)
-    mbox.setWindowTitle(title)
-    mbox.setTextFormat(QtCore.Qt.PlainText)
-    mbox.setText(message)
-    mbox.setIcon(QtGui.QMessageBox.Critical)
-    mbox.setStandardButtons(QtGui.QMessageBox.Close)
-    mbox.setDefaultButton(QtGui.QMessageBox.Close)
-    if details:
-        mbox.setDetailedText(details)
-    mbox.exec_()
+    msg = tr(message)
+    result = (QtGui.QMessageBox
+                   .question(active_window(), title, msg, buttons, default))
+    return result == QtGui.QMessageBox.Yes
 
 # Register globally with the notifier
 cola.notifier().connect(signals.information, information)
@@ -248,43 +284,6 @@ def save_as(filename, title='Save As...'):
 def icon(basename):
     """Given a basename returns a QIcon from the corresponding cola icon."""
     return QtGui.QIcon(resources.icon(basename))
-
-
-def question(parent, title, message, default=True):
-    """Launches a QMessageBox question with the provided title and message.
-    Passing "default=False" will make "No" the default choice."""
-    yes = QtGui.QMessageBox.Yes
-    no = QtGui.QMessageBox.No
-    buttons = yes | no
-    if default:
-        default = yes
-    else:
-        default = no
-    title = tr(title)
-    message = tr(message)
-    result = QtGui.QMessageBox.question(parent, title, message,
-                                        buttons, default)
-    return result == QtGui.QMessageBox.Yes
-
-
-def confirm(parent, title, text, informative_text, ok_text,
-            icon=None, default=True):
-    """Confirm that an action should take place"""
-    if icon is None:
-        icon = ok_icon()
-    msgbox = QtGui.QMessageBox(parent)
-    msgbox.setWindowTitle(tr(title))
-    msgbox.setText(tr(text))
-    msgbox.setInformativeText(tr(informative_text))
-    ok = msgbox.addButton(tr(ok_text), QtGui.QMessageBox.ActionRole)
-    ok.setIcon(icon)
-    cancel = msgbox.addButton(QtGui.QMessageBox.Cancel)
-    if default:
-        msgbox.setDefaultButton(ok)
-    else:
-        msgbox.setDefaultButton(cancel)
-    msgbox.exec_()
-    return msgbox.clickedButton() == ok
 
 
 def set_clipboard(text):

@@ -348,23 +348,20 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         count = len(files)
         if count == 0:
             return
-        if count > 1:
-            msg = unicode(self.tr('Delete %d Files')) % count
-            info = self.tr('The following files will be deleted:\n\n')
-        else:
-            msg = self.tr('Delete 1 File')
-            info = self.tr('The following file will be deleted:\n\n')
+
+        title = 'Delete Files?'
+        msg = self.tr('The following files will be deleted:\n\n')
 
         fileinfo = subprocess.list2cmdline(files)
         if len(fileinfo) > 2048:
             fileinfo = fileinfo[:2048].rstrip() + '...'
-        info += fileinfo
-        if count > 1:
-            info += '\n\nDelete all %d files?' % count
-        else:
-            info += '\n\nDelete this file?'
-        ok_text = self.tr('Delete')
-        if qtutils.confirm(self, msg, msg, info, ok_text,
+        msg += fileinfo
+
+        info_txt = unicode(self.tr('Delete %d file(s)?')) % count
+        ok_txt = 'Delete Files'
+
+        if qtutils.confirm(title, msg, info_txt, ok_txt,
+                           default=False,
                            icon=qtutils.discard_icon()):
             cola.notifier().broadcast(signals.delete, files)
 
@@ -377,14 +374,13 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             items_to_undo = self.modified()
 
         if items_to_undo:
-            if not qtutils.confirm(self,
-                    'Revert Unstaged Changes?',
-                    'This operation will drop unstaged changes.\n'
-                    'These changes cannot be recovered.',
-                    'Revert these unstaged changes?',
-                    default=False,
-                    ok_text='Revert Unstaged Changes',
-                    icon=qtutils.icon('undo.svg')):
+            if not qtutils.confirm('Revert Unstaged Changes?',
+                                   'This operation drops unstaged changes.'
+                                   '\nThese changes cannot be recovered.',
+                                   'Revert the unstaged changes?',
+                                   'Revert Unstaged Changes',
+                                   default=False,
+                                   icon=qtutils.icon('undo.svg')):
                 return
             cola.notifier().broadcast(signals.checkout,
                                       ['--'] + items_to_undo)
@@ -397,14 +393,13 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             return
         items_to_undo = self.modified()
         if items_to_undo:
-            if not qtutils.confirm(self,
-                    'Revert Uncommitted Changes?',
-                    'This operation will drop uncommitted changes.\n'
-                    'These changes cannot be recovered.',
-                    'Revert these uncommitted modifications?',
-                    default=False,
-                    ok_text='Revert Uncommitted Changes',
-                    icon=qtutils.icon('undo.svg')):
+            if not qtutils.confirm('Revert Uncommitted Changes?',
+                                   'This operation drops uncommitted changes.'
+                                   '\nThese changes cannot be recovered.',
+                                   'Revert the uncommitted changes?',
+                                   'Revert Uncommitted Changes',
+                                   default=False,
+                                   icon=qtutils.icon('undo.svg')):
                 return
             cola.notifier().broadcast(signals.checkout,
                                       ['HEAD', '--'] + items_to_undo)

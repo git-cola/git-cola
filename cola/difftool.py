@@ -80,8 +80,7 @@ class FileDiffDialog(QtGui.QDialog):
             self.hide()
             qtutils.information('git cola',
                                 message='No changes to diff',
-                                details=details,
-                                parent=self)
+                                details=details)
             self.close()
             return self.Accepted
 

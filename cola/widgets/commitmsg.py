@@ -12,7 +12,6 @@ from cola.qtutils import confirm
 from cola.qtutils import connect_button
 from cola.qtutils import emit
 from cola.qtutils import log
-from cola.qtutils import question
 from cola.qtutils import relay_signal
 from cola.qtutils import save_icon
 from cola.qtutils import tr
@@ -116,10 +115,12 @@ class CommitMessageEditor(QtGui.QWidget):
             if self.model.modified:
                 informative_text = tr('Would you like to stage and '
                                       'commit all modified files?')
-                if not confirm(self, 'Stage and commit?',
+                if not confirm('Stage and commit?',
                                error_msg,
                                informative_text,
-                               ok_text='Stage and Commit'):
+                               'Stage and Commit',
+                               default=False,
+                               icon=save_icon()):
                     return
             else:
                 cola.notifier().broadcast(signals.information,
@@ -131,13 +132,13 @@ class CommitMessageEditor(QtGui.QWidget):
         # Warn that amending published commits is generally bad
         amend = self.amend_checkbox.isChecked()
         if (amend and self.model.is_commit_published() and
-            not question(self,
-                         'Rewrite Published Commit?',
-                         'This commit has already been published.\n'
-                         'You are rewriting published history.\n'
-                         'You probably don\'t want to do this.\n\n'
-                         'Continue?',
-                         default=False)):
+            not confirm('Rewrite Published Commit?',
+                        'This commit has already been published.\n'
+                        'This operation will rewrite published history.\n'
+                        'You probably don\'t want to do this.',
+                        'Amend the published commit?',
+                        'Amend Commit',
+                        default=False, icon=save_icon())):
             return
         # Perform the commit
         cola.notifier().broadcast(signals.commit, amend, msg)

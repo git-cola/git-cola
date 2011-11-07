@@ -134,16 +134,17 @@ class GitArchiveDialog(QtGui.QDialog):
 
 
     def save_archive(self):
-        if not self.filename:
+        filename = self.filename
+        if not filename:
             return
-        if os.path.exists(self.filename):
-            title = 'Overwrite'
-            text = 'Save and Overwrite?'
-            info = ('The file "%s" exists and will be overwritten.\n'
-                    'Save anyways?') % self.filename
-            ok_text = 'Save'
+        if os.path.exists(filename):
+            title = 'Overwrite File?'
+            msg = 'The file "%s" exists and will be overwritten.' % filename
+            info_txt = 'Overwrite "%s"?' % filename
+            ok_txt = 'Overwrite'
             icon = qtutils.save_icon()
-            if not qtutils.confirm(self, title, text, info, ok_text, icon=icon):
+            if not qtutils.confirm(title, msg, info_txt, ok_txt,
+                                   default=False, icon=icon):
                 return
         self.accept()
 

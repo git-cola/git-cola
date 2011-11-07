@@ -365,13 +365,13 @@ class RepoTreeView(QtGui.QTreeView):
 
     def revert(self):
         """Signal that we should revert changes to a path."""
-        if not cola.qtutils.question(self,
-                                     'Revert Local Changes?',
-                                     'This operation will drop '
-                                     'uncommitted changes.\n'
-                                     'This cannot be undone.\n'
-                                     'Continue?',
-                                     default=False):
+        if not qtutils.confirm('Revert Uncommitted Changes?',
+                               'This operation drops uncommitted changes.'
+                               '\nThese changes cannot be recovered.',
+                               'Revert the uncommitted changes?',
+                               'Revert Uncommitted Changes',
+                               default=False,
+                               icon=qtutils.icon('undo.svg')):
             return
         paths = self.selected_tracked_paths()
         cola.notifier().broadcast(signals.checkout,

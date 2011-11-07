@@ -1,7 +1,5 @@
 """This controller handles the create branch dialog."""
 
-from PyQt4 import QtGui
-
 import cola
 from cola import serializer
 from cola import gitcmds
@@ -77,11 +75,14 @@ class CreateBranchController(QObserver):
 
             lines.extend([
                 unicode(self.tr('Recovering lost commits may not be easy.')),
-                unicode(self.tr("Reset '%s'?")) % branch
                 ])
 
-            result = qtutils.question(self.view, 'warning', '\n'.join(lines))
-            if not result:
+            if not qtutils.confirm('Reset Branch?',
+                                   '\n'.join(lines),
+                                   'Reset "%s" to "%s"?' % (branch, revision),
+                                   'Reset Branch',
+                                   default=False,
+                                   icon=qtutils.icon('undo.svg')):
                 return
 
         # TODO handle fetch

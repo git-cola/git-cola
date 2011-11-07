@@ -186,24 +186,34 @@ class RemoteController(QObserver):
                 branch = self.model.local_branch
                 candidate = '%s/%s' % (remote, branch)
                 if candidate not in self.model.remote_branches:
-                    msg = ('Branch "' + branch + '" does not exist in ' +
-                           remote + '.\n\nCreate a new branch?')
-                    if not qtutils.question(self.view, 'Create New Branch?',
-                                            msg, default=False):
+                    title = 'Push'
+                    msg = 'Branch "%s" does not exist in %s.' % (branch, remote)
+                    msg += '\nA new remote branch will be published.'
+                    info_txt= 'Create a new remote branch?'
+                    ok_text = 'Create Remote Branch'
+                    if not qtutils.confirm(title, msg, info_txt, ok_text,
+                                           default=False,
+                                           icon=qtutils.icon('git.svg')):
                         return
 
             if not self.model.ffwd_only_checkbox:
+                title = 'Force %s?' % action.title()
+                ok_text = 'Force %s' % action.title()
+
                 if action == 'fetch':
-                    msg = ('Non-fast-forward fetch overwrites local '
-                           'history!\n\tContinue?')
+                    msg = 'Non-fast-forward fetch overwrites local history!'
+                    info_txt = 'Force fetching from %s?' % remote
                 elif action == 'push':
                     msg = ('Non-fast-forward push overwrites published '
-                           'history!\nAre you sure you want to do this?  '
-                           '(Did you pull first?)\n\tContinue?')
+                           'history!\n(Did you pull first?)')
+                    info_txt = 'Force push to %s?' % remote
                 else: # pull: shouldn't happen since the controls are hidden
                     msg = "You probably don't want to do this.\n\tContinue?"
-                if not qtutils.question(self.view,
-                        'Force %s?' % action.title(), msg, default=False):
+                    return
+
+                if not qtutils.confirm(title, msg, info_txt, ok_text,
+                                       default=False,
+                                       icon=qtutils.discard_icon()):
                     return
 
             # Disable the GUI by default
@@ -249,7 +259,6 @@ class RemoteController(QObserver):
 
             message = '"git %s" %s' % (self.action, result)
             qtutils.information(title,
-                                parent=self.view,
                                 message=message, details=output)
         self.view.accept()
 

@@ -194,11 +194,11 @@ class StashView(standard.Dialog):
         name = self.selected_name()
         if not selection:
             return
-        if not qtutils.confirm(self,
-                               'Remove Stash?',
-                               'Remove "%s"?' % name,
-                               'Recovering these changes may not be possible.',
-                               'Remove',
+        if not qtutils.confirm('Drop Stash?',
+                               'Recovering a dropped stash is not possible.',
+                               'Drop the "%s" stash?' % name,
+                               'Drop Stash',
+                               default=False,
                                icon=qtutils.discard_icon()):
             return
         self.emit(SIGNAL(drop_stash), selection)

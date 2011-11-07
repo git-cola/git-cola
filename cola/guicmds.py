@@ -1,5 +1,4 @@
 import os
-from PyQt4 import QtGui
 
 import cola
 import cola.app
@@ -20,19 +19,9 @@ def install_command_wrapper():
 class CommandWrapper(object):
     def __init__(self):
         self.callbacks = {
-                signals.question: self._question,
-                signals.information: self._information,
+                signals.information: qtutils.information,
+                signals.question: qtutils.question,
         }
-
-    def _question(self, title, msg):
-        return qtutils.question(qtutils.active_window(), title, msg)
-
-    def _information(self, title, msg):
-        if msg is None:
-            msg = title
-        title = qtutils.tr(title)
-        msg = qtutils.tr(msg)
-        QtGui.QMessageBox.information(qtutils.active_window(), title, msg)
 
 
 def choose_from_combo(title, items):

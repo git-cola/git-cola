@@ -128,10 +128,13 @@ class GitCommandWidget(standard.Dialog):
     def closeEvent(self, event):
         if self.proc.state() != QtCore.QProcess.NotRunning:
             # The process is still running, make sure we really want to abort.
-            reply = QtGui.QMessageBox.question(self, 'Message',
-                    self.tr('Abort process?'),
-                    QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
-            if reply == QtGui.QMessageBox.Yes:
+            title = 'Abort Action'
+            msg = ('An action is still running.\n'
+                   'Terminating it could result in data loss.')
+            info_text = 'Abort the action?'
+            ok_text = 'Abort Action'
+            if qtutils.confirm(title, msg, info_text, ok_text,
+                               default=False, icon=qtutils.discard_icon()):
                 self.abortProc()
                 event.accept()
             else:
