@@ -86,7 +86,7 @@ class ColaApplication(object):
         # monkey-patch Qt's translate() to use our translate()
         if gui:
             self._app = instance(tuple(argv))
-            self._app.setWindowIcon(QtGui.QIcon(resources.icon('git.svg')))
+            self._app.setWindowIcon(qtutils.git_icon())
             self._translate_base = QtGui.QApplication.translate
             QtGui.QApplication.translate = self.translate
         else:

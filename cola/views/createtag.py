@@ -2,6 +2,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
+from cola import qtutils
 from cola.prefs import diff_font
 from cola.views import standard
 
@@ -76,6 +77,7 @@ class CreateTag(standard.Dialog):
 
         self.create_button = QtGui.QPushButton(self)
         self.create_button.setText(self.tr('Create Tag'))
+        self.create_button.setIcon(qtutils.git_icon())
         self._button_hbox_layt.addWidget(self.create_button)
         self._main_layt.addLayout(self._button_hbox_layt)
 

@@ -181,7 +181,7 @@ class GitRefModel(QtGui.QStandardItemModel):
         self.clear()
         for match in matches:
             item = QStandardItem()
-            item.setIcon(QtGui.QIcon(resources.icon('git.svg')))
+            item.setIcon(qtutils.git_icon())
             item.setText(match)
             self.appendRow(item)
 
@@ -204,7 +204,7 @@ class GitLogCompletionModel(QtGui.QStandardItemModel):
 
         file_icon = qtutils.file_icon()
         dir_icon = qtutils.dir_icon()
-        git_icon = QtGui.QIcon(resources.icon('git.svg'))
+        git_icon = qtutils.git_icon()
 
         model = self.cmodel
         refs = model.local_branches + model.remote_branches + model.tags

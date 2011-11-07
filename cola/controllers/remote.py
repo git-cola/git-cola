@@ -193,7 +193,7 @@ class RemoteController(QObserver):
                     ok_text = 'Create Remote Branch'
                     if not qtutils.confirm(title, msg, info_txt, ok_text,
                                            default=False,
-                                           icon=qtutils.icon('git.svg')):
+                                           icon=qtutils.git_icon()):
                         return
 
             if not self.model.ffwd_only_checkbox:

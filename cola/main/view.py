@@ -168,8 +168,11 @@ class MainView(standard.MainWindow):
                 'Apply Changes From Branch...', guicmds.diff_branch)
         self.menu_branch_compare = add_action(self,
                 'Branches...', compare.branch_compare)
+
         self.menu_clone_repo = add_action(self,
                 'Clone...', guicmds.clone_repo)
+        self.menu_clone_repo.setIcon(qtutils.git_icon())
+
         self.menu_help_docs = add_action(self,
                 'Documentation',
                 lambda: self.model.git.web__browse(resources.html_docs()),
@@ -211,10 +214,14 @@ class MainView(standard.MainWindow):
                 'Rebase...', guicmds.rebase)
         self.menu_branch_review = add_action(self,
                 'Review...', guicmds.review_branch)
+
         self.menu_classic = add_action(self,
                 'Cola Classic...', cola_classic)
+        self.menu_classic.setIcon(qtutils.git_icon())
+
         self.menu_dag = add_action(self,
                 'DAG...', lambda: git_dag(self.model))
+        self.menu_dag.setIcon(qtutils.git_icon())
 
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)

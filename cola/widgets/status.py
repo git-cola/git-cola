@@ -271,7 +271,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            SLOT(signals.unstage, self.staged()))
 
         if staged and staged[0] in cola.model().submodules:
-            menu.addAction(qtutils.icon('git.svg'),
+            menu.addAction(qtutils.git_icon(),
                            self.tr('Launch git-cola'),
                            SLOT(signals.open_repo, os.path.abspath(staged[0])))
             return menu
@@ -280,7 +280,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             menu.addAction(qtutils.icon('open.svg'),
                            self.tr('Launch Editor'),
                            SLOT(signals.edit, self.staged()))
-            menu.addAction(qtutils.icon('git.svg'),
+            menu.addAction(qtutils.git_icon(),
                            self.tr('Launch Diff Tool'),
                            SLOT(signals.difftool, True, self.staged()))
             menu.addSeparator()
@@ -290,7 +290,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             return menu
 
         if unmerged:
-            menu.addAction(qtutils.icon('git.svg'),
+            menu.addAction(qtutils.git_icon(),
                            self.tr('Launch Merge Tool'),
                            SLOT(signals.mergetool, self.unmerged()))
             menu.addAction(qtutils.icon('open.svg'),
@@ -311,7 +311,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             menu.addSeparator()
 
         if modified_submodule:
-            menu.addAction(qtutils.icon('git.svg'),
+            menu.addAction(qtutils.git_icon(),
                            self.tr('Launch git-cola'),
                            SLOT(signals.open_repo,
                                 os.path.abspath(modified[0])))
@@ -321,7 +321,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            SLOT(signals.edit, self.unstaged()))
 
         if modified and enable_staging and not modified_submodule:
-            menu.addAction(qtutils.icon('git.svg'),
+            menu.addAction(qtutils.git_icon(),
                            self.tr('Launch Diff Tool'),
                            SLOT(signals.difftool, False, self.modified()))
             menu.addSeparator()

@@ -1,6 +1,7 @@
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
+from cola import qtutils
 from cola.views import standard
 
 
@@ -135,6 +136,7 @@ class CreateBranchView(standard.Dialog):
         # Exposed
         self.create_button = QtGui.QPushButton(self)
         self.create_button.setText(self.tr('Create Branch'))
+        self.create_button.setIcon(qtutils.git_icon())
         self.create_button.setDefault(True)
         self._buttons_layt.addWidget(self.create_button)
 

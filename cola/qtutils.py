@@ -418,6 +418,10 @@ def ok_icon():
     return cached_icon(QtGui.QStyle.SP_DialogOkButton)
 
 
+def git_icon():
+    return icon('git.svg')
+
+
 def discard_icon():
     """Return a standard Discard icon"""
     return cached_icon(QtGui.QStyle.SP_DialogDiscardButton)

@@ -84,7 +84,7 @@ class DiffTextEdit(DiffView):
                 menu.addAction(qtutils.icon('add.svg'),
                                self.tr('Stage'),
                                SLOT(signals.stage, modified))
-                menu.addAction(qtutils.icon('git.svg'),
+                menu.addAction(qtutils.git_icon(),
                                self.tr('Launch git-cola'),
                                SLOT(signals.open_repo,
                                     os.path.abspath(modified[0])))
@@ -104,7 +104,7 @@ class DiffTextEdit(DiffView):
                 menu.addAction(qtutils.icon('remove.svg'),
                                self.tr('Unstage'),
                                SLOT(signals.unstage, staged))
-                menu.addAction(qtutils.icon('git.svg'),
+                menu.addAction(qtutils.git_icon(),
                                self.tr('Launch git-cola'),
                                SLOT(signals.open_repo,
                                     os.path.abspath(staged[0])))
