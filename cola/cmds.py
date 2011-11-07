@@ -654,10 +654,9 @@ class RunConfigAction(Command):
                 rev = opts.get('revision')
                 args = opts.get('args')
                 if opts.get('revprompt') and not rev:
-                    msg = ('Invalid revision:\n\n'
-                           'Revision expression is empty')
-                    title = 'Oops!'
-                    _factory.prompt_user(signals.information, title, msg)
+                    title = 'Invalid Revision'
+                    msg = 'The revision expression cannot be empty.'
+                    _factory.prompt_user(signals.critical, title, msg)
                     continue
                 break
 

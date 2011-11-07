@@ -29,9 +29,9 @@ class CreateTagController(qobserver.QObserver):
     def create_tag(self):
         """Verifies inputs and emits a notifier tag message."""
         if not self.model.tag_name:
-            cola.notifier().broadcast(signals.information,
-                                      self.tr('Missing Name'),
-                                      self.tr('You must name the tag.'))
+            cola.notifier().broadcast(signals.critical,
+                                      'Missing Name',
+                                      'You must name the tag.')
             return
         if (self.model.sign_tag and
                 not self.model.tag_msg and
