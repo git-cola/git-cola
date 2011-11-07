@@ -24,9 +24,15 @@ class StartupDialog(QtGui.QDialog):
         self._gitdir = None
 
         self._layt = QtGui.QHBoxLayout()
+        self._layt.setMargin(0)
         self._open_btn = QtGui.QPushButton('Open...')
+        self._open_btn.setIcon(qtutils.open_icon())
+
         self._clone_btn = QtGui.QPushButton('Clone...')
+        self._clone_btn.setIcon(qtutils.git_icon())
+
         self._close_btn = QtGui.QPushButton('Close')
+        self._close_btn.setIcon(qtutils.close_icon())
 
         self._layt.addWidget(self._open_btn)
         self._layt.addWidget(self._clone_btn)
@@ -35,6 +41,7 @@ class StartupDialog(QtGui.QDialog):
         self.model = settings.SettingsManager.settings()
 
         self._vlayt = QtGui.QVBoxLayout()
+        self._vlayt.setMargin(6)
 
         self._bookmark_label = QtGui.QLabel(self.tr('Select Repository...'))
         self._bookmark_label.setAlignment(Qt.AlignCenter)
@@ -54,6 +61,7 @@ class StartupDialog(QtGui.QDialog):
 
         self._bookmark_list = QtGui.QListView()
         self._bookmark_list.setSelectionMode(selection_mode)
+        self._bookmark_list.setAlternatingRowColors(True)
         self._bookmark_list.setModel(self._bookmark_model)
 
         if not self.model.bookmarks:
