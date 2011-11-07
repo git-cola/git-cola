@@ -95,9 +95,8 @@ class StartupDialog(QtGui.QDialog):
     def _open(self):
         self._gitdir = self._get_selected_bookmark()
         if not self._gitdir:
-            self._gitdir = qtutils.opendir_dialog(self,
-                                              'Open Git Repository...',
-                                              os.getcwd())
+            self._gitdir = qtutils.opendir_dialog('Open Git Repository...',
+                                                  os.getcwd())
         if self._gitdir:
             self.accept()
 

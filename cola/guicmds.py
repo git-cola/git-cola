@@ -142,9 +142,8 @@ def clone_repo(spawn=True):
         return None
 
     # Prompt the user for a directory to use as the parent directory
-    parent = qtutils.active_window()
     msg = 'Select a parent directory for the new clone'
-    dirname = qtutils.opendir_dialog(parent, msg, cola.model().getcwd())
+    dirname = qtutils.opendir_dialog(msg, cola.model().getcwd())
     if not dirname:
         return None
     count = 1
@@ -227,8 +226,7 @@ def grep():
 
 def open_repo(parent):
     """Spawn a new cola session."""
-    dirname = qtutils.opendir_dialog(parent,
-                                     'Open Git Repository...',
+    dirname = qtutils.opendir_dialog('Open Git Repository...',
                                      cola.model().getcwd())
     if not dirname:
         return
@@ -240,8 +238,7 @@ def open_repo_slot(parent):
 
 def load_commitmsg(parent):
     """Load a commit message from a file."""
-    filename = qtutils.open_dialog(parent,
-                                   'Load Commit Message...',
+    filename = qtutils.open_dialog('Load Commit Message...',
                                    cola.model().getcwd())
     if filename:
         cola.notifier().broadcast(signals.load_commit_message, filename)

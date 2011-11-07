@@ -221,22 +221,22 @@ def selected_item(list_widget, items):
         return None
 
 
-def open_dialog(parent, title, filename=None):
+def open_dialog(title, filename=None):
     """Creates an Open File dialog and returns a filename."""
     title_tr = tr(title)
     return unicode(QtGui.QFileDialog
-                        .getOpenFileName(parent, title_tr, filename))
+                        .getOpenFileName(active_window(), title_tr, filename))
 
 
-def opendir_dialog(parent, title, path):
+def opendir_dialog(title, path):
     """Prompts for a directory path"""
 
     flags = (QtGui.QFileDialog.ShowDirsOnly |
              QtGui.QFileDialog.DontResolveSymlinks)
     title_tr = tr(title)
-    qstr = (QtGui.QFileDialog
-                 .getExistingDirectory(parent, title_tr, path, flags))
-    return unicode(qstr)
+    return unicode(QtGui.QFileDialog
+                        .getExistingDirectory(active_window(),
+                                              title_tr, path, flags))
 
 
 def save_dialog(parent, title, filename=''):
