@@ -327,7 +327,6 @@ def set_items(widget, items):
     add_items(widget, items)
 
 
-@memoize
 def tr(txt):
     """Translate a string into a local language."""
     if type(txt) is QtCore.QString:
