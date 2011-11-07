@@ -7,13 +7,37 @@ import os
 import signal
 import sys
 
+try:
+    from PyQt4 import QtGui
+    from PyQt4 import QtCore
+    from PyQt4.QtCore import SIGNAL
+except ImportError:
+    print >> sys.stderr, 'Sorry, you do not seem to have PyQt4 installed.'
+    print >> sys.stderr, 'Please install it before using git-cola.'
+    print >> sys.stderr, 'e.g.:    sudo apt-get install python-qt4'
+    sys.exit(-1)
+
+
+# Import cola modules
+import cola
+from cola import cmds
 from cola import git
-from cola import i18n
+from cola import guicmds
 from cola import inotify
+from cola import i18n
+from cola import qtcompat
+from cola import qtutils
 from cola import resources
 from cola import signals
+from cola import utils
 from cola import version
+from cola.classic import cola_classic
+from cola.dag import git_dag
 from cola.decorators import memoize
+from cola.main.view import MainView
+from cola.main.controller import MainController
+from cola.widgets import cfgactions
+from cola.widgets import startup
 
 
 def setup_environment():
@@ -39,8 +63,6 @@ def setup_environment():
 
 @memoize
 def instance(argv):
-    from PyQt4 import QtGui
-
     return QtGui.QApplication(list(argv))
 
 
@@ -54,13 +76,8 @@ class ColaApplication(object):
     def __init__(self, argv, locale=None, gui=True):
         """Initialize our QApplication for translation
         """
-        from PyQt4 import QtGui
-        from PyQt4 import QtCore
-
-        from cola import cmds
-        from cola import utils
-
         i18n.install(locale)
+        qtcompat.install()
 
         # monkey-patch Qt's translate() to use our translate()
         if gui:
@@ -180,31 +197,6 @@ def main(context):
     setup_environment()
     opts, args = parse_args(context)
     repo = process_args(opts, args)
-
-    try:
-        # Defer these imports to allow git cola --version without pyqt installed
-        from PyQt4 import QtCore
-    except ImportError:
-        print >> sys.stderr, 'Sorry, you do not seem to have PyQt4 installed.'
-        print >> sys.stderr, 'Please install it before using cola.'
-        print >> sys.stderr, 'e.g.:    sudo apt-get install python-qt4'
-        sys.exit(-1)
-
-    from PyQt4.QtCore import SIGNAL
-
-    # Import cola modules
-    import cola
-    from cola import qtcompat
-    qtcompat.install()
-
-    from cola import guicmds
-    from cola.app import ColaApplication
-    from cola.classic import cola_classic
-    from cola.dag import git_dag
-    from cola.widgets import cfgactions
-    from cola.widgets import startup
-    from cola.main.view import MainView
-    from cola.main.controller import MainController
 
     # Allow Ctrl-C to exit
     signal.signal(signal.SIGINT, signal.SIG_DFL)
