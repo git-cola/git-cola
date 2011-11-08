@@ -27,15 +27,15 @@ def cola_init():
     prefix = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     # Look for modules in the source or install trees
-    thirdparty = os.path.join(prefix, 'thirdparty')
-    if os.path.exists(thirdparty):
-        # Source tree: prefer cola's modules but allow system versions of thirdparty
-        sys.path.insert(0, prefix)
-        sys.path.append(thirdparty)
+    cola_dir = os.path.join(prefix, 'cola')
+    if os.path.exists(cola_dir):
+        # Source tree
+        sys.path.insert(1, prefix)
     else:
-        # Install tree: prefer cola
+        # Install tree
         paths_to_try = [os.path.join(prefix, 'share', 'git-cola', 'lib')]
         sys.path = paths_to_try + sys.path
+
 
 if __name__ == '__main__':
     # lights, cameras, action

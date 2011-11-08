@@ -17,7 +17,6 @@ cola_app = $(CURDIR)/$(cola_app_base)
 cola_version = $(shell env TERM=dummy $(PYTHON) cola/version.py)
 cola_dist := cola-$(cola_version)
 
-python_path = $(CURDIR):$(CURDIR)/thirdparty:$(PYTHONPATH)
 python_version = $(shell env TERM=dummy $(PYTHON) -c 'import distutils.sysconfig as sc; print(sc.get_python_version())')
 python_site := $(prefix)/lib*/python$(python_version)/site-packages
 
@@ -71,11 +70,9 @@ uninstall:
 		$(DESTDIR)$(prefix)/share/doc/git-cola
 
 test: all
-	@env PYTHONPATH=$(python_path) \
 	$(NOSETESTS) $(all_test_flags)
 
 coverage:
-	@env PYTHONPATH=$(python_path) \
 	$(NOSETESTS) --with-coverage --cover-package=cola $(all_test_flags)
 
 clean:

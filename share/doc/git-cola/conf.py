@@ -16,11 +16,9 @@ import sys, os
 # Add the cola source directory to sys.path
 docdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 srcdir = os.path.dirname(os.path.dirname(docdir))
-thirdpartydir = os.path.join(srcdir, 'thirdparty')
 extrasdir = os.path.join(srcdir, 'extras')
 
 sys.path.insert(1, extrasdir)
-sys.path.insert(1, thirdpartydir)
 sys.path.insert(1, srcdir)
 
 import cola.version

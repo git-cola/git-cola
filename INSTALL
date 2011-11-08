@@ -27,13 +27,6 @@ If you want to do a global install you can do
 
     # make prefix=/usr install
 
-The "install" target will by default include copies of
-simplejson and jsonpickle.  If your system already has these
-modules installed then you can specify standalone=true when running "make":
-
-    $ make prefix=/usr standalone=true install
-
-
 You don't need to install cola to run it.
 git-cola is designed to run directly out of its source tree.
 

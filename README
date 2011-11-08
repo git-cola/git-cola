@@ -41,9 +41,3 @@ Join, suggest features, and send patches with 'git send-mail'.
 SUPPORT
 -------
 ~ http://github.com/git-cola/git-cola/issues
-
-ACKNOWLEDGEMENTS
-----------------
-git-cola includes the following modules:
-jsonpickle ~ https://github.com/jsonpickle/jsonpickle
-simplejson ~ http://code.google.com/p/simplejson/

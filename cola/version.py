@@ -11,7 +11,6 @@ import sys
 if __name__ == '__main__':
     srcdir = os.path.dirname(os.path.dirname(__file__))
     sys.path.insert(1, srcdir)
-    sys.path.insert(1, os.path.join(srcdir, 'thirdparty'))
 
 from cola import git
 from cola import errors

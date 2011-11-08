@@ -6,21 +6,14 @@ import platform
 from glob import glob
 from distutils.core import setup
 
-from extras import cmdclass
-
-# Look for modules in the root and thirdparty directories
+# Look for modules in the root
 srcdir = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(1, os.path.join(srcdir, 'thirdparty'))
-sys.path.insert(1, srcdir)
 
+from extras import cmdclass
 from cola import version
 
-# --standalone prevents installing thirdparty libraries
 if '--standalone' in sys.argv:
     sys.argv.remove('--standalone')
-    _standalone = True
-else:
-    _standalone = False
 
 
 def main():
@@ -52,10 +45,15 @@ def _run_setup():
     scripts = ['bin/git-cola']
 
     if sys.platform == 'win32':
-        scripts.append('win32/cola')
-        scripts.append('win32/dirname')
-        scripts.append('win32/py2exe-setup.py')
-        scripts.append('win32/py2exe-setup.cmd')
+        scripts.extend([
+                'win32/cola',
+                'win32/dirname',
+                'win32/py2exe-setup.py',
+                'win32/py2exe-setup.cmd',
+        ])
+        requires = []
+    else:
+        requires = ['simplejson']
 
     setup(name = 'git-cola',
           version = version.version(),
@@ -65,12 +63,13 @@ def _run_setup():
           author_email = 'git-cola@googlegroups.com',
           url = 'http://git-cola.github.com/',
           long_description = 'A sleek and powerful git GUI',
+          requires = requires,
           scripts = scripts,
           cmdclass = cmdclass,
           data_files = cola_data_files())
 
 
-def cola_data_files(standalone=_standalone):
+def cola_data_files():
     data = [
         _app_path('share/git-cola/icons', '*.png'),
         _app_path('share/git-cola/icons', '*.svg'),
@@ -92,10 +91,6 @@ def cola_data_files(standalone=_standalone):
     data.extend([_app_path(localedir, 'git-cola.mo')
                  for localedir in glob('share/locale/*/LC_MESSAGES')])
 
-    if not standalone:
-        data.extend([_thirdparty_package('jsonpickle'),
-                     _thirdparty_package('simplejson')])
-
     if sys.platform == 'darwin':
         data.append(_app_path('share/git-cola/bin', 'ssh-askpass-darwin'))
     else:
@@ -110,10 +105,6 @@ def _package(package, subdir=None):
         subdirs.insert(0, subdir)
     src_dir = os.path.join(*subdirs)
     return (app_dir, glob(os.path.join(src_dir, '*.py')))
-
-
-def _thirdparty_package(package):
-    return _package(package, subdir='thirdparty')
 
 
 def _app_path(dirname, entry):
