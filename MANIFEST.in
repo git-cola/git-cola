@@ -15,9 +15,9 @@ include darwin/*
 include test/*.py
 include README
 include ChangeLog
+include COPYING
 include Makefile
 include INSTALL
-include LICENSE
 include MANIFEST.in
 include po/*.po
 include share/applications/*.desktop
