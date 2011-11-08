@@ -32,13 +32,12 @@ class StartupDialog(QtGui.QDialog):
         self._clone_btn.setIcon(qtutils.git_icon())
 
         self._close_btn = QtGui.QPushButton('Close')
-        self._close_btn.setIcon(qtutils.close_icon())
 
         self._layt.addWidget(self._open_btn)
         self._layt.addWidget(self._clone_btn)
         self._layt.addWidget(self._close_btn)
 
-        self.model = settings.SettingsManager.settings()
+        self.model = settings.Settings()
 
         self._vlayt = QtGui.QVBoxLayout()
         self._vlayt.setMargin(6)
