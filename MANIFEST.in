@@ -12,6 +12,8 @@ include cola/stash/*.py
 include cola/views/*.py
 include cola/widgets/*.py
 include darwin/*
+include extras/*.py
+include extras/sphinxtogithub/*.py
 include test/*.py
 include README
 include ChangeLog
