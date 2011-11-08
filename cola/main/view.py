@@ -22,13 +22,12 @@ from cola import resources
 from cola import stash
 from cola import utils
 from cola import version
+from cola.bookmarks import manage_bookmarks
 from cola.classic import cola_classic
 from cola.classic import classic_widget
 from cola.controllers import compare
 from cola.controllers import createtag
 from cola.controllers import search
-from cola.controllers.bookmark import manage_bookmarks
-from cola.controllers.bookmark import save_bookmark
 from cola.controllers.createbranch import create_new_branch
 from cola.dag import git_dag
 from cola.prefs import diff_font
@@ -159,8 +158,6 @@ class MainView(standard.MainWindow):
                 'Quit', self.close, 'Ctrl+Q')
         self.menu_manage_bookmarks = add_action(self,
                 'Bookmarks...', manage_bookmarks)
-        self.menu_save_bookmark = add_action(self,
-                'Bookmark Current...', save_bookmark)
         self.menu_grep = add_action(self,
                 'Grep', guicmds.grep)
         self.menu_merge_local = add_action(self,
@@ -253,11 +250,10 @@ class MainView(standard.MainWindow):
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_open_repo)
         self.file_menu.addAction(self.menu_clone_repo)
+        self.file_menu.addAction(self.menu_manage_bookmarks)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_rescan)
         self.file_menu.addSeparator()
-        self.file_menu.addAction(self.menu_manage_bookmarks)
-        self.file_menu.addAction(self.menu_save_bookmark)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_load_commitmsg)
         self.file_menu.addAction(self.menu_load_commitmsg_template)
@@ -523,7 +519,7 @@ class MainView(standard.MainWindow):
                 QtCore.QRunnable.__init__(self)
                 self._sender = sender
             def run(self):
-                state = settings.SettingsManager.gui_state(self._sender)
+                state = settings.Settings().get_gui_state(self._sender)
                 self._sender.emit(SIGNAL('apply_state'), state)
 
         task = LoadGUIStateTask(self)
