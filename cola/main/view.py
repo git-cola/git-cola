@@ -154,7 +154,6 @@ class MainView(standard.MainWindow):
 
         self.menu_load_commitmsg = add_action(self,
                 'Load Commit Message...', guicmds.load_commitmsg)
-        self.menu_load_commitmsg.setIcon(qtutils.open_icon())
 
         self.menu_quit = add_action(self,
                 'Quit', self.close, 'Ctrl+Q')
@@ -169,7 +168,6 @@ class MainView(standard.MainWindow):
 
         self.menu_merge_abort = add_action(self,
                 'Abort Merge...', merge.abort_merge)
-        self.menu_merge_abort.setIcon(qtutils.icon('undo.svg'))
 
         self.menu_fetch = add_action(self,
                 'Fetch...', guicmds.fetch)
@@ -230,7 +228,6 @@ class MainView(standard.MainWindow):
 
         self.menu_delete_branch = add_action(self,
                 'Delete...', guicmds.branch_delete)
-        self.menu_delete_branch.setIcon(qtutils.discard_icon())
 
         self.menu_checkout_branch = add_action(self,
                 'Checkout...', guicmds.checkout_branch, 'Alt+B')
