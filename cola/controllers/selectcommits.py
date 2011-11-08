@@ -4,30 +4,29 @@
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
-import cola
 from cola import gitcmds
 from cola import qtutils
-from cola import serializer
 from cola.prefs import diff_font
 from cola.views.selectcommits import SelectCommitsView
 from cola.qobserver import QObserver
 from cola.controllers.createbranch import create_new_branch
+from cola.main.model import MainModel
 
 #+-------------------------------------------------------------
 def select_commits(title, revs, summaries, multiselect=True):
     """Use the SelectCommitsView to select commits from a list."""
-    model = cola.model()
+    model = MainModel()
     parent = qtutils.active_window()
     view = SelectCommitsView(parent, qtutils.tr(title), multiselect=multiselect)
     ctl = SelectCommitsController(model, view, revs, summaries)
     return ctl.select_commits()
 
+
 class SelectCommitsController(QObserver):
     """Select a commit from parallel rev and summary lists"""
 
     def __init__(self, model, view, revs, summaries):
-        self.orig_model = model
-        QObserver.__init__(self, serializer.clone(model), view)
+        QObserver.__init__(self, model, view)
 
         self.model.set_revisions(revs)
         self.model.set_summaries(summaries)
@@ -72,8 +71,7 @@ class SelectCommitsController(QObserver):
         row, selected = qtutils.selected_row(self.view.commit_list)
         if not selected:
             return
-        create_new_branch(self.orig_model, self.view,
-                          revision=self.model.revision_sha1(row))
+        create_new_branch(revision=self.model.revision_sha1(row))
 
     def cherry_pick(self):
         row, selected = qtutils.selected_row(self.view.commit_list)

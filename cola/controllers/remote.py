@@ -7,17 +7,27 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
-from cola import serializer
 from cola import gitcmds
 from cola import utils
 from cola import qtutils
 from cola.views import remote
 from cola.qobserver import QObserver
+from cola.main.model import MainModel
 
 def remote_action(action):
     """Launches fetch/push/pull dialogs."""
     # TODO: subclass model
-    model = serializer.clone(cola.model())
+    model = MainModel()
+
+    global_model = cola.model()
+    model.currentbranch = global_model.currentbranch
+    model.local_branches = global_model.local_branches
+    model.remote_branches = global_model.remote_branches
+    model.tags = global_model.tags
+    model.remotes = global_model.remotes
+
+    model.local_branch = ''
+    model.remote_branch = ''
     model.remotename = ''
     model.tags_checkbox = False
     model.rebase_checkbox = False

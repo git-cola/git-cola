@@ -1,16 +1,20 @@
 """This controller handles the create branch dialog."""
 
-import cola
-from cola import serializer
 from cola import gitcmds
 from cola import utils
 from cola import qtutils
 from cola.views import createbranch
 from cola.qobserver import QObserver
+from cola.main.model import MainModel
 
 def create_new_branch(revision=''):
     """Launches a dialog for creating a new branch"""
-    model = serializer.clone(cola.model())
+    model = MainModel()
+    model.update_status()
+
+    model.revision = revision
+    model.local_branch = ''
+
     view = createbranch.CreateBranchView(qtutils.active_window())
     ctl = CreateBranchController(model, view)
     model.set_revision(revision)

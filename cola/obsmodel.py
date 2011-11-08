@@ -1,9 +1,5 @@
-import copy
-
-from cola import serializer
 from cola.observable import Observable
 from cola.basemodel import BaseModel as Model
-from cola.compat import set
 
 
 class ObservableModel(Model, Observable):
@@ -18,31 +14,3 @@ class ObservableModel(Model, Observable):
         # Perform notifications
         if notify:
             self.notify_observers(param)
-
-
-_unserializable_attributes = {
-    'observers': set(),
-    'message_observers': {},
-    'notification_enabled': True,
-}
-
-class OMSerializer(object):
-    """Hide the internal 'observers' fields from serialization"""
-    def __init__(self, obj):
-        self.obj = obj
-        self.attributes = {}
-
-    def pre_encode_hook(self):
-        for attribute in _unserializable_attributes:
-            self.attributes[attribute] = self.obj.__dict__.pop(attribute)
-
-    def post_encode_hook(self):
-        self.obj.__dict__.update(self.attributes)
-        self.attributes = {}
-
-    def post_decode_hook(self):
-        self.obj.__dict__.update(copy.deepcopy(_unserializable_attributes))
-
-
-# Add a hook for this object
-serializer.handlers[ObservableModel] = OMSerializer
