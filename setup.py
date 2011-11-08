@@ -42,7 +42,10 @@ def _setup_environment():
 def _run_setup():
     """Runs distutils.setup()"""
 
-    scripts = ['bin/git-cola']
+    scripts = [
+        'bin/git-cola',
+        'bin/git-dag',
+    ]
 
     if sys.platform == 'win32':
         scripts.extend([
