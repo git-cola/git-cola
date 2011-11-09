@@ -27,8 +27,8 @@ def cola_init():
     prefix = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     # Look for modules in the source or install trees
-    cola_dir = os.path.join(prefix, 'cola')
-    if os.path.exists(cola_dir):
+    cola_mod = os.path.join(prefix, 'cola', '__init__.py')
+    if os.path.exists(cola_mod):
         # Source tree
         sys.path.insert(1, prefix)
     else:
