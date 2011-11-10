@@ -57,7 +57,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.add_item('Untracked', 'untracked.png', hide=True)
 
         # Used to restore the selection
-        self.old_selection = None
         self.old_scroll = None
 
         self.expanded_items = set()
@@ -87,56 +86,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         item.setIcon(0, qtutils.icon(path))
         if hide:
             self.setItemHidden(item, True)
-
-    def restore_selection(self):
-        if not self.old_selection:
-            return
-        (staged, modified, unmerged, untracked) = self.old_selection
-
-        # unstaged is an aggregate
-        unstaged = modified + unmerged + untracked
-        # restore selection
-        updated_staged = self.model.staged
-        updated_modified = self.model.modified
-        updated_unmerged = self.model.unmerged
-        updated_untracked = self.model.untracked
-        # unstaged is an aggregate
-        updated_unstaged = (updated_modified +
-                            updated_unmerged +
-                            updated_untracked)
-
-        # Updating the status resets the repo status tree so
-        # restore the selected items which re-runs the diff
-        def select_item(item):
-            if not item:
-                return
-            self.setItemSelected(item, True)
-            parent = item.parent()
-            if parent:
-                self.scrollToItem(parent)
-            self.scrollToItem(item)
-
-        def select_unstaged(item):
-            idx = updated_unstaged.index(item)
-            select_item(self.unstaged_item(idx))
-
-        def select_staged(item):
-            idx = updated_staged.index(item)
-            select_item(self.staged_item(idx))
-
-        # Update newly-staged items
-        for item in unstaged:
-            if item in updated_unstaged:
-                select_unstaged(item)
-            elif item in updated_staged:
-                select_staged(item)
-
-        # Update newly unstaged items
-        for item in staged:
-            if item in updated_staged:
-                select_staged(item)
-            elif item in updated_unstaged:
-                select_unstaged(item)
 
     def staged_item(self, itemidx):
         return self._subtree_item(self.idx_staged, itemidx)
@@ -171,8 +120,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.emit(SIGNAL('about_to_update'))
 
     def _about_to_update(self):
-        self.old_selection = self.selection()
-
         self.old_scroll = None
         vscroll = self.verticalScrollBar()
         if vscroll:
@@ -191,11 +138,11 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         vscroll = self.verticalScrollBar()
         if vscroll and self.old_scroll is not None:
             vscroll.setValue(self.old_scroll)
-
-        self.restore_selection()
+            self.old_scroll = None
 
         if not self.model.staged:
             return
+
         staged = self.topLevelItem(self.idx_staged)
         if self.mode in self.model.modes_read_only:
             staged.setText(0, self.tr('Changed'))
