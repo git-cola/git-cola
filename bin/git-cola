@@ -24,8 +24,8 @@ def cola_init():
     """Provides access to the cola modules"""
     # Try to detect where it is run from and set prefix and the search path.
     # It is assumed that the user installed Cola using the --prefix= option
-    prefix = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+    prefix = os.path.dirname(os.path.dirname(
+        os.path.realpath(os.path.abspath(__file__))))
     # Look for modules in the source or install trees
     cola_mod = os.path.join(prefix, 'cola', '__init__.py')
     if os.path.exists(cola_mod):
