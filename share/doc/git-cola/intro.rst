@@ -72,6 +72,7 @@ Special Thanks
 * Kevin Kofler
 * Marco Costalba
 * Michael Geddes
+* Michael Homer
 * Markus Heidelberg
 * Matthew Levine
 * Paolo G. Giarrusso
