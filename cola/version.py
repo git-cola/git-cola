@@ -41,21 +41,15 @@ class VersionUnavailable(Exception):
 
 def git_describe_version():
     """Inspect the cola git repository and return the current version."""
-    try:
-        v = git.Git.execute(['git', 'describe',
-                            '--tags',
-                            '--match=v*',
-                            '--abbrev=7',
-                            'HEAD'],
-                            with_stderr=True)
-    except errors.GitCommandError, e:
-        raise VersionUnavailable(str(e))
+    v = git.Git.execute(['git', 'describe',
+                        '--tags',
+                        '--match=v*',
+                        '--abbrev=7',
+                        'HEAD'],
+                        with_stderr=True)
     if v[0:1] != 'v' or not v[1:2].isdigit():
         raise VersionUnavailable('%s: bad version' % v)
-    try:
-        dirty = git.Git.execute(['git', 'diff-index', '--name-only', 'HEAD'])
-    except errors.GitCommandError, e:
-        raise VersionUnavailable(str(e))
+    dirty = git.Git.execute(['git', 'diff-index', '--name-only', 'HEAD'])
     if dirty:
         v += '-dirty'
     return utils.strip_prefix('v', v.replace('-', '.'))
