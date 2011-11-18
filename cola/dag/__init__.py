@@ -33,7 +33,7 @@ if __name__ == "__main__":
     from cola import app
 
     model = cola.model()
-    model.use_worktree(os.getcwd())
+    model.set_worktree(os.getcwd())
     model.update_status()
 
     app = app.ColaApplication(sys.argv)

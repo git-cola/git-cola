@@ -211,13 +211,13 @@ def main(context):
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
     model = cola.model()
-    valid = model.use_worktree(repo) and not opts.prompt
+    valid = model.set_worktree(repo) and not opts.prompt
     while not valid:
         startup_dlg = startup.StartupDialog(app.activeWindow())
         gitdir = startup_dlg.find_git_repo()
         if not gitdir:
             sys.exit(-1)
-        valid = model.use_worktree(gitdir)
+        valid = model.set_worktree(gitdir)
 
     # Finally, go to the root of the git repo
     os.chdir(model.git.worktree())
@@ -274,8 +274,6 @@ def _start_update_thread(model):
     git-cola should startup as quickly as possible.
 
     """
-    from PyQt4 import QtCore
-
     class UpdateTask(QtCore.QRunnable):
         def run(self):
             model.update_status(update_index=True)

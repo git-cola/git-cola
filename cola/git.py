@@ -32,9 +32,9 @@ class Git(object):
     """
     def __init__(self):
         self._git_cwd = None #: The working directory used by execute()
-        self.load_worktree(os.getcwd())
+        self.set_worktree(os.getcwd())
 
-    def load_worktree(self, path):
+    def set_worktree(self, path):
         self._git_dir = path
         self._worktree = None
         self.worktree()

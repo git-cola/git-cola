@@ -104,7 +104,7 @@ class MainModel(ObservableModel):
         self.pull_helper = None
         self.generate_remote_helpers()
         if cwd:
-            self.use_worktree(cwd)
+            self.set_worktree(cwd)
 
         #####################################################
         # Dag
@@ -127,14 +127,6 @@ class MainModel(ObservableModel):
         self.fetch_helper = self.gen_remote_helper(self.git.fetch)
         self.pull_helper = self.gen_remote_helper(self.git.pull)
 
-    def use_worktree(self, worktree):
-        self.git.load_worktree(worktree)
-        is_valid = self.git.is_valid()
-        if is_valid:
-            basename = os.path.basename(self.git.worktree())
-            self.set_project(core.decode(basename))
-        return is_valid
-
     def editor(self):
         app = _config.get('gui.editor', 'gvim')
         return {'vim': 'gvim'}.get(app, app)
@@ -144,6 +136,14 @@ class MainModel(ObservableModel):
 
     def all_branches(self):
         return (self.local_branches + self.remote_branches)
+
+    def set_worktree(self, worktree):
+        self.git.set_worktree(worktree)
+        is_valid = self.git.is_valid()
+        if is_valid:
+            basename = os.path.basename(self.git.worktree())
+            self.set_project(core.decode(basename))
+        return is_valid
 
     def set_commitmsg(self, msg):
         self.commitmsg = msg

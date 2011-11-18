@@ -2,12 +2,9 @@
 """Tests various operations using the cola.git module
 """
 
-import os
 import time
 import signal
 import unittest
-
-import helper
 
 from cola import git
 
