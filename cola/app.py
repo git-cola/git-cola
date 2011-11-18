@@ -286,9 +286,7 @@ def _start_update_thread(model):
 
 
 def _send_msg():
-    import cola
-    git.GIT_COLA_TRACE = os.getenv('GIT_COLA_TRACE', False)
-    if git.GIT_COLA_TRACE:
+    if git.GIT_COLA_TRACE == 'trace':
         msg = ('info: Trace enabled.  '
                'Many of commands reported with "trace" use git\'s stable '
                '"plumbing" API and are not intended for typical '

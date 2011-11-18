@@ -87,13 +87,11 @@ EDITOR::
 	Specifies the default editor to use.
 	This is ignored when the git config variable `gui.editor` is defined.
 
-GIT_PYTHON_TRACE::
-	When defined, prints git commands and status to the terminal.
-	Print more information when set to the value 'full'.
-
 GIT_COLA_TRACE::
-	When defined, 'git-cola' outputs the 'git' commands it executes
-	into the 'Command Output' log viewer.
+
+	When defined, 'git-cola' logs 'git' commands to stdout.
+	When set to 'full', 'git-cola' also logs the exit status and output.
+	When set to 'trace', 'git-cola' logs to the 'Command Output' widget.
 
 SOURCE
 ------

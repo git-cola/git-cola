@@ -1,9 +1,3 @@
-# cmd.py
-# Copyright (C) 2008, 2009 Michael Trier (mtrier@gmail.com) and contributors
-#
-# This module is part of GitPython and is released under
-# the BSD License: http://www.opensource.org/licenses/bsd-license.php
-
 import os
 import sys
 import errno
@@ -13,13 +7,10 @@ cmdlock = threading.Lock()
 
 import cola
 from cola import core
-from cola import errors
 from cola import signals
 from cola.decorators import memoize
 
-# Enables debugging of GitPython's git commands
-GIT_PYTHON_TRACE = os.getenv('GIT_PYTHON_TRACE', False)
-GIT_COLA_TRACE = False
+GIT_COLA_TRACE = os.getenv('GIT_COLA_TRACE', '')
 
 
 def dashify(string):
@@ -120,7 +111,8 @@ class Git(object):
                 with_exceptions=False,
                 with_raw_output=False,
                 with_status=False,
-                with_stderr=False):
+                with_stderr=False,
+                cola_trace=GIT_COLA_TRACE):
         """
         Execute a command and returns its output
 
@@ -153,17 +145,9 @@ class Git(object):
 
         """
 
-        if GIT_PYTHON_TRACE and not GIT_PYTHON_TRACE == 'full':
-            print ' '.join(command)
-
         # Allow the user to have the command executed in their working dir.
         if not cwd:
             cwd = os.getcwd()
-
-        if with_stderr:
-            stderr = subprocess.STDOUT
-        else:
-            stderr = None
 
         extra = {}
         if sys.platform == 'win32':
@@ -173,49 +157,45 @@ class Git(object):
         # Start the process
         # Guard against thread-unsafe .git/index.lock files
         cmdlock.acquire()
-        while True:
+        # Some systems (e.g. darwin) interrupt system calls
+        count = 0
+        while count < 13:
             try:
                 proc = subprocess.Popen(command,
                                         cwd=cwd,
                                         stdin=istream,
-                                        stderr=stderr,
+                                        stderr=subprocess.PIPE,
                                         stdout=subprocess.PIPE,
                                         **extra)
+                # Wait for the process to return
+                out, err = proc.communicate()
+                status = proc.returncode
                 break
             except OSError, e:
-                # Some systems interrupt system calls and throw OSError
-                if e.errno in (errno.EINTR, errno.ENOMEM):
+                if e.errno == errno.EINTR or e.errno == errno.ENOMEM:
+                    count += 1
                     continue
                 cmdlock.release()
-                raise e
-        # Wait for the process to return
-        try:
-            output = core.read_nointr(proc.stdout)
-            proc.stdout.close()
-            status = core.wait_nointr(proc)
-        except:
-            status = 202
-            output = str(e)
-
+                raise
+            except:
+                cmdlock.release()
+                raise
         # Let the next thread in
         cmdlock.release()
-
-        if with_exceptions and status != 0:
-            cmdstr = 'Error running: %s\n%s' % (' '.join(command), str(e))
-            raise errors.GitCommandError(cmdstr, status, output)
-
+        output = with_stderr and (out+err) or out
         if not with_raw_output:
-            output = output.rstrip()
+            output = output.rstrip('\n')
 
-        if GIT_PYTHON_TRACE == 'full':
+        if cola_trace == 'trace':
+            msg = 'trace: ' + subprocess.list2cmdline(command)
+            cola.notifier().broadcast(signals.log_cmd, status, msg)
+        elif cola_trace == 'full':
             if output:
                 print "%s -> %d: '%s'" % (command, status, output)
             else:
                 print "%s -> %d" % (command, status)
-
-        if GIT_COLA_TRACE:
-            msg = 'trace: ' + subprocess.list2cmdline(command)
-            cola.notifier().broadcast(signals.log_cmd, status, msg)
+        elif cola_trace:
+            print ' '.join(command)
 
         # Allow access to the command's status code
         if with_status:
