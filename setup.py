@@ -12,9 +12,6 @@ srcdir = os.path.dirname(os.path.abspath(__file__))
 from extras import cmdclass
 from cola import version
 
-if '--standalone' in sys.argv:
-    sys.argv.remove('--standalone')
-
 
 def main():
     # ensure readable files
@@ -127,17 +124,16 @@ def _check_python_version():
 def _check_git_version():
     """Check the minimum GIT version
     """
-    if not version.check('git', version.git_version()):
+    git_version = version.git_version()
+    if not version.check('git', git_version):
         print >> sys.stderr, ('GIT version %s or newer required.  '
-                              'Found %s' % (version.get('git'),
-                                            version.git_version()))
+                              'Found %s' % (version.get('git'), git_version))
         sys.exit(1)
 
 
 def _check_pyqt_version():
     """Check the minimum PyQt version
     """
-    has_pyqt = False
     pyqtver = 'None'
     try:
         from PyQt4 import QtCore

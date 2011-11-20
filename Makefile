@@ -26,17 +26,12 @@ all_test_flags = --with-doctest --exclude=sphinxtogithub $(test_flags)
 # User customizations
 -include config.mak
 
-ifdef standalone
-standalone_args	?= --standalone
-endif
-
 
 all::
 	$(PYTHON) setup.py build
 
 install: all
 	$(PYTHON) setup.py --quiet install \
-		$(standalone_args) \
 		--prefix=$(DESTDIR)$(prefix) \
 		--install-scripts=$(DESTDIR)$(bindir) \
 		--force && \
