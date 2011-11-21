@@ -7,14 +7,10 @@ do_tarball=false
 do_win32=false
 
 # Options
-prefix="$RELEASE_TREE"
+prefix="$WEB_SOURCE"
 win32_login=Administrator@localhost
 win32_ssh_port=2002
 win32_cola_dir=cola
-win32_release_dir="$RELEASE_TREE_WIN32"
-web_src="$WEB_SOURCE"
-tarball_dir="$RELEASE_TREE_RELEASES"
-darwin_dir="$RELEASE_TREE_DARWIN"
 
 usage() {
 	echo "$(basename "$0") [options]"
@@ -24,8 +20,6 @@ usage() {
 	echo "--all                     - build tarball, win32, docs, and web"
 	echo "--tarball                 - build the tarball"
 	echo "--tarball-dir             - specify the tarball release directory"
-	echo "--web                     - build the website"
-	echo "--web-src <dir>           - specify the git-cola-web repo"
 	echo "--doc                     - build the documentation"
 	echo "--win32                   - build the win32 installer"
 	echo "--win32-login <user@host> - specify the win32 host"
@@ -33,18 +27,6 @@ usage() {
 	echo "--win32-dir <dir>         - specify win32 release dir"
 	echo "--win32-cola-dir <dir>    - specify the win32 cola repo path"
 	exit 1
-}
-
-build_website() {
-	if ! test -d "$web_src"; then
-		echo "error: cannot find git-cola-web at '$web_src'"
-		exit 2
-	fi
-	title Building website
-	curdir="$(pwd)"
-	do_or_die cd "$web_src"
-	do_or_die make prefix="$prefix"
-	do_or_die cd "$curdir"
 }
 
 build_docs() {
@@ -55,12 +37,7 @@ build_docs() {
 build_tarball() {
 	title Building tarball
 	do_or_die make dist
-	ensure_dir_exists "$tarball_dir"
-	do_or_die mv -v cola-*.gz "$tarball_dir"
-
-	ensure_dir_exists "$darwin_dir"
 	do_or_die make app-tarball
-	do_or_die mv -v git-cola-*.app.tar.gz "$darwin_dir"
 }
 
 build_win32_remotely() {
@@ -72,10 +49,7 @@ build_win32_remotely() {
 		win32/create-installer.sh
 	'
 	do_or_die scp -P $win32_ssh_port \
-		"$win32_login":"$win32_cola_dir"/"*.exe" \
-		"$win32_release_dir"
-
-	chmod 755 "$win32_release_dir"/*.exe
+		"$win32_login":"$win32_cola_dir"/"*.exe" .
 
 	do_or_die ssh -p $win32_ssh_port \
 		"$win32_login" "/bin/rm '$win32_cola_dir'/*.exe"
@@ -87,14 +61,11 @@ while test $# -gt 0; do
 	--prefix)
 		shift
 		prefix="$1"
-		tarball_dir="$prefix"/releases
-		win32_release_dir="$tarball_dir"/win32
 		shift
 		;;
 	--all)
 		shift
 		do_tarball=true
-		do_website=true
 		do_win32=true
 		do_docs=true
 		;;
@@ -110,23 +81,9 @@ while test $# -gt 0; do
 		shift
 		do_win32=true
 		;;
-	--web)
-		shift
-		do_website=true
-		;;
-	--web-src)
-		shift
-		web_src="$1"
-		shift
-		;;
 	--win32-login)
 		shift
 		win32_login="$1"
-		shift
-		;;
-	--win32-release-dir)
-		shift
-		win32_release_dir="$1"
 		shift
 		;;
 	--win32-cola-dir)
@@ -161,10 +118,6 @@ fi
 
 if $do_win32; then
 	build_win32_remotely
-fi
-
-if $do_website; then
-	build_website
 fi
 
 if $do_docs; then

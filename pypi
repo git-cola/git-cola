@@ -1,3 +1,0 @@
-#!/bin/sh
-python setup.py register sdist upload
-rm -f MANIFEST
