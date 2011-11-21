@@ -1,4 +1,5 @@
 import os
+import copy
 import subprocess
 import itertools
 
@@ -103,67 +104,71 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def restore_selection(self):
         if not self.old_selection or not self.old_contents:
             return
-        # unstaged is an aggregate
+
         (staged, modified, unmerged, untracked) = self.old_contents
-        unstaged = modified + unmerged + untracked
 
         (staged_sel, modified_sel,
          unmerged_sel, untracked_sel) = self.old_selection
-        unstaged_sel = modified_sel + unmerged_sel + untracked_sel
 
-        updated_staged = self.model.staged
-        updated_modified = self.model.modified
-        updated_unmerged = self.model.unmerged
-        updated_untracked = self.model.untracked
-        updated_unstaged = \
-                updated_modified + updated_unmerged + updated_untracked
+        (updated_staged, updated_modified,
+         updated_unmerged, updated_untracked) = self.contents()
 
-        def select_unstaged(item):
-            idx = updated_unstaged.index(item)
-            select_item(self, self.unstaged_item(idx))
+        def select_modified(item):
+            idx = updated_modified.index(item)
+            select_item(self, self.modified_item(idx))
+
+        def select_unmerged(item):
+            idx = updated_unmerged.index(item)
+            select_item(self, self.unmerged_item(idx))
+
+        def select_untracked(item):
+            idx = updated_untracked.index(item)
+            select_item(self, self.untracked_item(idx))
 
         def select_staged(item):
             idx = updated_staged.index(item)
             select_item(self, self.staged_item(idx))
 
-        # When something is staged, select the next unstaged item
-        if len(updated_unstaged) < len(unstaged) and unstaged:
-            new_unstaged = set(updated_unstaged)
-            for idx, i in enumerate(unstaged):
-                if i not in new_unstaged:
-                    for j in itertools.chain(unstaged[idx+1:],
-                                             reversed(unstaged[:idx])):
-                        if j in new_unstaged:
-                            select_unstaged(j)
-                            return
+        restore_selection_actions = (
+            (updated_modified, modified, modified_sel, select_modified),
+            (updated_unmerged, unmerged, unmerged_sel, select_unmerged),
+            (updated_untracked, untracked, untracked_sel, select_untracked),
+            (updated_staged, staged, staged_sel, select_staged),
+        )
 
-        # When something is unstaged we should select the next staged item
-        if len(updated_staged) < len(staged) and staged:
-            new_staged = set(updated_staged)
-            for idx, i in enumerate(staged):
-                if i not in new_staged:
-                    for j in itertools.chain(staged[idx+1:],
-                                             reversed(staged[:idx])):
-                        if j in new_staged:
-                            select_staged(j)
-                            return
+        for (new, old, selection, action) in restore_selection_actions:
+            # When modified is staged, select the next modified item
+            # When unmerged is staged, select the next unmerged item
+            # When untracked is staged, select the next untracked item
+            # When something is unstaged we should select the next staged item
+            new_set = set(new)
+            if len(new) < len(old) and old:
+                for idx, i in enumerate(old):
+                    if i not in new_set:
+                        for j in itertools.chain(old[idx+1:],
+                                                 reversed(old[:idx])):
+                            if j in new_set:
+                                action(j)
+                                return
 
-        # Reselect items when doing partial-staging
-        new_unstaged = set(updated_unstaged)
-        for item in unstaged_sel:
-            if item in new_unstaged:
-                select_unstaged(item)
-
-        new_staged = set(updated_staged)
-        for item in staged_sel:
-            if item in new_staged:
-                select_staged(item)
+        for (new, old, selection, action) in restore_selection_actions:
+            # Reselect items when doing partial-staging
+            new_set = set(new)
+            for item in selection:
+                if item in new_set:
+                    action(item)
 
     def staged_item(self, itemidx):
         return self._subtree_item(self.idx_staged, itemidx)
 
     def modified_item(self, itemidx):
         return self._subtree_item(self.idx_modified, itemidx)
+
+    def unmerged_item(self, itemidx):
+        return self._subtree_item(self.idx_unmerged, itemidx)
+
+    def untracked_item(self, itemidx):
+        return self._subtree_item(self.idx_untracked, itemidx)
 
     def unstaged_item(self, itemidx):
         # is it modified?
@@ -192,8 +197,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.emit(SIGNAL('about_to_update'))
 
     def _about_to_update(self):
-        self.old_selection = self.selection()
-        self.old_contents = self.contents()
+        self.old_selection = copy.deepcopy(self.selection())
+        self.old_contents = copy.deepcopy(self.contents())
 
         self.old_scroll = None
         vscroll = self.verticalScrollBar()
