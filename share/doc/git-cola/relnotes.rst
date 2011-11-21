@@ -1,5 +1,39 @@
 .. |beta(TM)| unicode:: beta U+2122
 
+git-cola v1.7.1
+===============
+Usability, bells and whistles
+-----------------------------
+* Refined the staging/unstaging behavior for code reviews.
+
+  http://github.com/git-cola/git-cola/issues/closed#issue/97
+
+* Added more styling and icons to menus and buttons.
+
+* Adjusted some terminology to more closely match the git CLI.
+
+Fixes
+-----
+* Boolean `git-config` settings with no value are now supported
+  (these are not created by git these days but exist in legacy repositories).
+
+* Unicode branches and tags are supported in the "branch diff" tool.
+
+* Guard against low-memory conditions and more interrupted system calls.
+
+Packaging
+---------
+* Added desktop launchers for git-cola.desktop and git-dag.desktop.
+  This replaces the old cola.desktop, so some adjustments to RPM .spec
+  and debian/ files will be needed.
+
+* Fixed the darwin app-tarball Makefile target to create relative paths.
+
+Cleanup
+-------
+* The `--style` option was removed.  `git-cola` follows the system theme
+  so there's no need for this option these days.
+
 git-cola v1.7.0
 ===============
 Usability, bells and whistles
