@@ -4,6 +4,7 @@ from PyQt4.QtCore import SIGNAL
 
 from cola.prefs import diff_font
 from cola.qt import DiffSyntaxHighlighter
+from cola.widgets import defs
 
 class SelectCommitsView(QtGui.QDialog):
     def __init__(self,
@@ -24,7 +25,7 @@ class SelectCommitsView(QtGui.QDialog):
 
         self.splitter = QtGui.QSplitter(self)
         self.splitter.setOrientation(QtCore.Qt.Vertical)
-        self.splitter.setHandleWidth(2)
+        self.splitter.setHandleWidth(defs.handle_width)
         self.splitter.setObjectName('splitter')
 
         self.commit_list = QtGui.QListWidget(self.splitter)

@@ -7,6 +7,7 @@ from PyQt4.QtCore import SIGNAL
 from cola.prefs import diff_font
 from cola.qt import DiffSyntaxHighlighter
 from cola.views import standard
+from cola.widgets import defs
 
 
 class SearchView(standard.Dialog):
@@ -92,8 +93,8 @@ class SearchView(standard.Dialog):
         self._main_vbox_layt.addLayout(self._top_grid_layt)
         # Exposed
         self.splitter = QtGui.QSplitter(self)
+        self.splitter.setHandleWidth(defs.handle_width)
         self.splitter.setOrientation(QtCore.Qt.Vertical)
-        self.splitter.setHandleWidth(2)
         # Exposed
         self.commit_list = QtGui.QListWidget(self.splitter)
         self.commit_list.setMinimumSize(QtCore.QSize(1, 1))

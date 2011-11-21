@@ -246,10 +246,12 @@ class DAGView(standard.Dialog):
         self._mainsplitter = QtGui.QSplitter()
         self._mainsplitter.setOrientation(QtCore.Qt.Horizontal)
         self._mainsplitter.setChildrenCollapsible(True)
+        self._mainsplitter.setHandleWidth(defs.handle_width)
 
         self._leftsplitter = QtGui.QSplitter()
         self._leftsplitter.setOrientation(QtCore.Qt.Vertical)
         self._leftsplitter.setChildrenCollapsible(True)
+        self._leftsplitter.setHandleWidth(defs.handle_width)
         self._leftsplitter.setStretchFactor(0, 1)
         self._leftsplitter.setStretchFactor(1, 1)
         self._leftsplitter.insertWidget(0, self._treewidget)

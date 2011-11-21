@@ -66,6 +66,7 @@ class StashView(standard.Dialog):
         self.btn_layt.setSpacing(defs.spacing)
 
         self.splitter = QtGui.QSplitter()
+        self.splitter.setHandleWidth(defs.handle_width)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setChildrenCollapsible(True)
         self.splitter.setStretchFactor(0, 1)
