@@ -14,19 +14,22 @@ from cola import version
 
 
 def main():
-    # ensure readable files
-    old_mask = os.umask(0022)
-
     _check_python_version()
     _setup_environment()
     _check_git_version()
     _check_pyqt_version()
-
-    version.write_builtin_version()
-
     _run_setup()
-    # restore the old mask
-    os.umask(old_mask)
+
+
+def _check_python_version():
+    """Check the minimum Python version
+    """
+    pyver = platform.python_version()
+    if not version.check('python', pyver):
+        print >> sys.stderr, ('Python version %s or newer required.  '
+                              'Found %s' % (version.get('python'), pyver))
+        sys.exit(1)
+
 
 def _setup_environment():
     """Adds win32/ to our path for windows only"""
@@ -35,6 +38,33 @@ def _setup_environment():
     path = os.environ['PATH']
     win32 = os.path.join(srcdir, 'win32')
     os.environ['PATH'] = win32 + os.pathsep + path
+
+
+def _check_git_version():
+    """Check the minimum GIT version
+    """
+    git_version = version.git_version()
+    if not version.check('git', git_version):
+        print >> sys.stderr, ('GIT version %s or newer required.  '
+                              'Found %s' % (version.get('git'), git_version))
+        sys.exit(1)
+
+
+def _check_pyqt_version():
+    """Check the minimum PyQt version
+    """
+    pyqtver = 'None'
+    try:
+        from PyQt4 import QtCore
+        pyqtver = QtCore.PYQT_VERSION_STR
+        if version.check('pyqt', pyqtver):
+            return
+    except ImportError:
+        pass
+    print >> sys.stderr, ('PyQt4 version %s or newer required.  '
+                          'Found %s' % (version.get('pyqt'), pyqtver))
+    sys.exit(1)
+
 
 def _run_setup():
     """Runs distutils.setup()"""
@@ -51,9 +81,6 @@ def _run_setup():
                 'win32/py2exe-setup.py',
                 'win32/py2exe-setup.cmd',
         ])
-        requires = []
-    else:
-        requires = ['simplejson']
 
     setup(name = 'git-cola',
           version = version.version(),
@@ -63,7 +90,6 @@ def _run_setup():
           author_email = 'git-cola@googlegroups.com',
           url = 'http://git-cola.github.com/',
           long_description = 'A sleek and powerful git GUI',
-          requires = requires,
           scripts = scripts,
           cmdclass = cmdclass,
           data_files = cola_data_files())
@@ -109,42 +135,6 @@ def _package(package, subdir=None):
 
 def _app_path(dirname, entry):
     return (dirname, glob(os.path.join(dirname, entry)))
-
-
-def _check_python_version():
-    """Check the minimum Python version
-    """
-    pyver = platform.python_version()
-    if not version.check('python', pyver):
-        print >> sys.stderr, ('Python version %s or newer required.  '
-                              'Found %s' % (version.get('python'), pyver))
-        sys.exit(1)
-
-
-def _check_git_version():
-    """Check the minimum GIT version
-    """
-    git_version = version.git_version()
-    if not version.check('git', git_version):
-        print >> sys.stderr, ('GIT version %s or newer required.  '
-                              'Found %s' % (version.get('git'), git_version))
-        sys.exit(1)
-
-
-def _check_pyqt_version():
-    """Check the minimum PyQt version
-    """
-    pyqtver = 'None'
-    try:
-        from PyQt4 import QtCore
-        pyqtver = QtCore.PYQT_VERSION_STR
-        if version.check('pyqt', pyqtver):
-            return
-    except ImportError:
-        pass
-    print >> sys.stderr, ('PyQt4 version %s or newer required.  '
-                          'Found %s' % (version.get('pyqt'), pyqtver))
-    sys.exit(1)
 
 
 if __name__ == '__main__':

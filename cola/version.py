@@ -12,7 +12,6 @@ if __name__ == '__main__':
     srcdir = os.path.dirname(os.path.dirname(__file__))
     sys.path.insert(1, srcdir)
 
-from cola import utils
 from cola.git import git
 from cola.decorators import memoize
 
@@ -34,78 +33,8 @@ def get(key):
     return _versions.get(key)
 
 
-class VersionUnavailable(Exception):
-    pass
-
-
-def git_describe_version():
-    """Inspect the cola git repository and return the current version."""
-    if not os.path.isdir('.git') or not os.path.exists('cola/__init__.py'):
-        raise VersionUnavailable('not a git-cola sandbox')
-
-    v = git.execute(['git', 'describe', '--match=v[0-9]*', '--abbrev=7'])
-    if v:
-        return utils.strip_prefix('v', v.replace('-', '.'))
-    else:
-        raise VersionUnavailable('bad version: "%s"' % v)
-
-
-def builtin_version():
-    """Return the builtin version or throw a VersionUnavailable exception"""
-    try:
-        from cola import builtin_version as bv
-    except ImportError:
-        raise VersionUnavailable()
-    else:
-        return bv.version
-
-
-@memoize
-def _builtin_version_file(ext='py'):
-    """Returns the path to cola's builtin_version.py."""
-    dirname = os.path.dirname(__file__)
-    return os.path.join(dirname, 'builtin_version.%s' % ext)
-
-
-def release_version():
-    """Return a version number for a release
-
-    First see if there is a version file (included in release tarballs),
-    then try git-describe, then default.
-
-    """
-    try:
-        return git_describe_version()
-    except VersionUnavailable:
-        return version()
-
-
-def write_builtin_version():
-    """Writes cola/builtin_version.py
-
-    """
-    v = release_version()
-    f = file(_builtin_version_file(), 'w')
-    f.write('# This file was generated automatically. Do not edit by hand.\n'
-            'version = %r\n' % v)
-    f.close()
-
-
-def delete_builtin_version():
-    """Deletes cola/builtin_version.py."""
-    for ext in ('py', 'pyc', 'pyo'):
-        fn = _builtin_version_file(ext=ext)
-        if os.path.exists(fn):
-            os.remove(fn)
-
-
 def version():
-    """Returns the builtin version or calculates the current version."""
-    for v in [builtin_version, git_describe_version]:
-        try:
-            return v()
-        except VersionUnavailable:
-            continue
+    """Returns the current version"""
     return _default_version
 
 
@@ -144,4 +73,4 @@ def git_version():
 
 
 if __name__ == '__main__':
-    print(release_version())
+    print(version())
