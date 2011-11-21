@@ -428,7 +428,6 @@ class MainView(standard.MainWindow):
             font = QtGui.QFont()
             if not font.fromString(value):
                 return
-            self._set_diff_font(font)
             qtutils.logger().setFont(font)
             self.diff_viewer.setFont(font)
             self.commitmsgeditor.commitmsg.setFont(font)
