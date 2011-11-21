@@ -81,7 +81,7 @@ def active_window():
     return QtGui.QApplication.activeWindow()
 
 
-def prompt(msg, title=None, text=None):
+def prompt(msg, title=None, text=''):
     """Presents the user with an input widget and returns the input."""
     if title is None:
         title = msg
