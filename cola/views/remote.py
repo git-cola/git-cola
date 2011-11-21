@@ -4,6 +4,7 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import qtutils
 from cola.views import standard
+from cola.widgets import defs
 
 
 class RemoteView(standard.Dialog):
@@ -17,6 +18,8 @@ class RemoteView(standard.Dialog):
 
         self.resize(666, 420)
         self._main_vbox_layt = QtGui.QVBoxLayout(self)
+        self._main_vbox_layt.setMargin(defs.margin)
+        self._main_vbox_layt.setSpacing(defs.spacing)
 
         # Local branch section
         self._local_branch_hbox_layt = QtGui.QHBoxLayout()
