@@ -1,5 +1,6 @@
 import os
 import subprocess
+import itertools
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
@@ -9,6 +10,16 @@ from cola import signals
 from cola import qtutils
 from cola.compat import set
 from cola.qtutils import SLOT
+
+
+def select_item(tree, item):
+    if not item:
+        return
+    tree.setItemSelected(item, True)
+    parent = item.parent()
+    if parent:
+        tree.scrollToItem(parent)
+    tree.scrollToItem(item)
 
 
 class StatusWidget(QtGui.QWidget):
@@ -58,6 +69,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         # Used to restore the selection
         self.old_scroll = None
+        self.old_selection = None
+        self.old_contents = None
 
         self.expanded_items = set()
 
@@ -86,6 +99,65 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         item.setIcon(0, qtutils.icon(path))
         if hide:
             self.setItemHidden(item, True)
+
+    def restore_selection(self):
+        if not self.old_selection or not self.old_contents:
+            return
+        # unstaged is an aggregate
+        (staged, modified, unmerged, untracked) = self.old_contents
+        unstaged = modified + unmerged + untracked
+
+        (staged_sel, modified_sel,
+         unmerged_sel, untracked_sel) = self.old_selection
+        unstaged_sel = modified_sel + unmerged_sel + untracked_sel
+
+        updated_staged = self.model.staged
+        updated_modified = self.model.modified
+        updated_unmerged = self.model.unmerged
+        updated_untracked = self.model.untracked
+        updated_unstaged = \
+                updated_modified + updated_unmerged + updated_untracked
+
+        def select_unstaged(item):
+            idx = updated_unstaged.index(item)
+            select_item(self, self.unstaged_item(idx))
+
+        def select_staged(item):
+            idx = updated_staged.index(item)
+            select_item(self, self.staged_item(idx))
+
+        # When something is staged, select the next unstaged item
+        if len(updated_unstaged) < len(unstaged) and unstaged:
+            new_unstaged = set(updated_unstaged)
+            for idx, i in enumerate(unstaged):
+                if i not in new_unstaged:
+                    for j in itertools.chain(unstaged[idx+1:],
+                                             reversed(unstaged[:idx])):
+                        if j in new_unstaged:
+                            select_unstaged(j)
+                            return
+
+        # When something is unstaged we should select the next staged item
+        if len(updated_staged) < len(staged) and staged:
+            new_staged = set(updated_staged)
+            for idx, i in enumerate(staged):
+                if i not in new_staged:
+                    for j in itertools.chain(staged[idx+1:],
+                                             reversed(staged[:idx])):
+                        if j in new_staged:
+                            select_staged(j)
+                            return
+
+        # Reselect items when doing partial-staging
+        new_unstaged = set(updated_unstaged)
+        for item in unstaged_sel:
+            if item in new_unstaged:
+                select_unstaged(item)
+
+        new_staged = set(updated_staged)
+        for item in staged_sel:
+            if item in new_staged:
+                select_staged(item)
 
     def staged_item(self, itemidx):
         return self._subtree_item(self.idx_staged, itemidx)
@@ -120,6 +192,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.emit(SIGNAL('about_to_update'))
 
     def _about_to_update(self):
+        self.old_selection = self.selection()
+        self.old_contents = self.contents()
+
         self.old_scroll = None
         vscroll = self.verticalScrollBar()
         if vscroll:
@@ -139,6 +214,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         if vscroll and self.old_scroll is not None:
             vscroll.setValue(self.old_scroll)
             self.old_scroll = None
+
+        self.restore_selection()
 
         if not self.model.staged:
             return
@@ -388,6 +465,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         """Return the current selection in the repo status tree."""
         return (self.staged(), self.modified(),
                 self.unmerged(), self.untracked())
+
+    def contents(self):
+        return (self.model.staged, self.model.modified,
+                self.model.unmerged, self.model.untracked)
 
     def staged(self):
         return self._subtree_selection(self.idx_staged, self.model.staged)
