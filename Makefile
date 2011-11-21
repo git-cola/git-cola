@@ -59,10 +59,21 @@ install-html:
 
 uninstall:
 	rm -rf  $(DESTDIR)$(prefix)/bin/git-cola \
+		$(DESTDIR)$(prefix)/bin/git-dag \
 		$(DESTDIR)$(prefix)/bin/cola \
-		$(DESTDIR)$(prefix)/share/applications/cola.desktop \
+		$(DESTDIR)$(prefix)/share/applications/git-cola.desktop \
+		$(DESTDIR)$(prefix)/share/applications/git-dag.desktop \
 		$(DESTDIR)$(prefix)/share/git-cola \
 		$(DESTDIR)$(prefix)/share/doc/git-cola
+	rm -f $(DESTDIR)$(prefix)/share/locale/*/LC_MESSAGES/git-cola.mo
+	rmdir $(DESTDIR)$(prefix)/share/locale/*/LC_MESSAGES 2>/dev/null || true
+	rmdir $(DESTDIR)$(prefix)/share/locale/* 2>/dev/null || true
+	rmdir $(DESTDIR)$(prefix)/share/locale 2>/dev/null || true
+	rmdir $(DESTDIR)$(prefix)/share/doc 2>/dev/null || true
+	rmdir $(DESTDIR)$(prefix)/share/applications 2>/dev/null || true
+	rmdir $(DESTDIR)$(prefix)/share 2>/dev/null || true
+	rmdir $(DESTDIR)$(prefix)/bin 2>/dev/null || true
+	rmdir $(DESTDIR)$(prefix) 2>/dev/null || true
 
 test: all
 	$(NOSETESTS) $(all_test_flags)
