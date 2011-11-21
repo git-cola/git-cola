@@ -9,6 +9,7 @@ from cola import gitcfg
 from cola.views import standard
 from cola.qtutils import relay_signal
 from cola.utils import is_darwin
+from cola.widgets import defs
 
 
 class FormWidget(QtGui.QWidget):
@@ -236,11 +237,13 @@ class PreferencesView(standard.Dialog):
 
         self._button_layt = QtGui.QHBoxLayout()
         self._button_layt.setMargin(0)
+        self._button_layt.setSpacing(defs.spacing)
         self._button_layt.addStretch()
         self._button_layt.addWidget(self.close_button)
 
         self._layt = QtGui.QVBoxLayout()
-        self._layt.setMargin(4)
+        self._layt.setMargin(defs.margin)
+        self._layt.setSpacing(defs.spacing)
         self._layt.addWidget(self._tabbar)
         self._layt.addWidget(self._stackedwidget)
         self._layt.addLayout(self._button_layt)

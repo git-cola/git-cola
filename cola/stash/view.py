@@ -9,6 +9,7 @@ from cola import qtutils
 from cola import utils
 from cola.stash.model import save_stash, apply_stash, drop_stash, rescan
 from cola.views import standard
+from cola.widgets import defs
 from cola.widgets.diff import DiffView
 
 
@@ -57,12 +58,12 @@ class StashView(standard.Dialog):
 
         # Arrange layouts
         self.main_layt = QtGui.QVBoxLayout()
-        self.main_layt.setMargin(6)
-        self.main_layt.setSpacing(6)
+        self.main_layt.setMargin(defs.margin)
+        self.main_layt.setSpacing(defs.spacing)
 
         self.btn_layt = QtGui.QHBoxLayout()
         self.btn_layt.setMargin(0)
-        self.btn_layt.setSpacing(4)
+        self.btn_layt.setSpacing(defs.spacing)
 
         self.splitter = QtGui.QSplitter()
         self.splitter.setOrientation(QtCore.Qt.Horizontal)

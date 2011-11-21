@@ -14,6 +14,7 @@ from PyQt4.QtCore import SIGNAL
 from cola import qtutils
 from cola import guicmds
 from cola import settings
+from cola.widgets import defs
 
 class StartupDialog(QtGui.QDialog):
     """Provides a GUI to Open or Clone a git repository."""
@@ -24,7 +25,8 @@ class StartupDialog(QtGui.QDialog):
         self._gitdir = None
 
         self._layt = QtGui.QHBoxLayout()
-        self._layt.setMargin(0)
+        self._layt.setMargin(defs.margin)
+        self._layt.setSpacing(defs.spacing)
         self._open_btn = QtGui.QPushButton('Open...')
         self._open_btn.setIcon(qtutils.open_icon())
 
@@ -40,7 +42,8 @@ class StartupDialog(QtGui.QDialog):
         self.model = settings.Settings()
 
         self._vlayt = QtGui.QVBoxLayout()
-        self._vlayt.setMargin(6)
+        self._vlayt.setMargin(defs.margin)
+        self._vlayt.setSpacing(defs.margin)
 
         self._bookmark_label = QtGui.QLabel(self.tr('Select Repository...'))
         self._bookmark_label.setAlignment(Qt.AlignCenter)

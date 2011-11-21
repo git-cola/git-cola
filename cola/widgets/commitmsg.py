@@ -15,6 +15,7 @@ from cola.qtutils import log
 from cola.qtutils import relay_signal
 from cola.qtutils import save_icon
 from cola.qtutils import tr
+from cola.widgets import defs
 from cola.prefs import diff_font
 from cola.controllers.selectcommits import select_commits
 from cola.dag.model import DAG
@@ -34,8 +35,8 @@ class CommitMessageEditor(QtGui.QWidget):
         self.commitmsg.setFont(diff_font())
 
         self._ctrls_layt = QtGui.QHBoxLayout()
-        self._ctrls_layt.setSpacing(4)
-        self._ctrls_layt.setMargin(4)
+        self._ctrls_layt.setSpacing(defs.spacing)
+        self._ctrls_layt.setMargin(defs.margin)
 
         # Sign off and commit buttons
         self.signoff_button = create_toolbutton(self,

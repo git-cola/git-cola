@@ -12,6 +12,7 @@ from cola import qtutils
 from cola import signals
 from cola.qt import GitRefLineEdit
 from cola.views import standard
+from cola.widgets import defs
 
 
 def install_command_wrapper():
@@ -184,7 +185,8 @@ class ActionDialog(standard.Dialog):
         self.opts = opts
 
         self.layt = QtGui.QVBoxLayout()
-        self.layt.setMargin(10)
+        self.layt.setMargin(defs.margin)
+        self.layt.setSpacing(defs.spacing)
         self.setLayout(self.layt)
 
         title = opts.get('title')

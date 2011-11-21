@@ -5,6 +5,7 @@ from PyQt4.QtCore import SIGNAL
 from cola import utils
 from cola import qtutils
 from cola import gitcmds
+from cola.widgets import defs
 
 
 def launch(args):
@@ -50,7 +51,8 @@ class FileDiffDialog(QtGui.QDialog):
         self._button_layt.addWidget(self._close_btn)
 
         self._layt = QtGui.QVBoxLayout()
-        self._layt.setMargin(4)
+        self._layt.setMargin(defs.margin)
+        self._layt.setSpacing(defs.spacing)
         self._layt.addWidget(self._tree)
         self._layt.addLayout(self._button_layt)
         self.setLayout(self._layt)

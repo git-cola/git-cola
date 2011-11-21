@@ -12,6 +12,7 @@ if __name__ == '__main__':
 from cola import qtutils
 from cola.git import git
 from cola.qt import QCollapsibleGroupBox
+from cola.widgets import defs
 
 
 class GitArchiveDialog(QtGui.QDialog):
@@ -34,11 +35,6 @@ class GitArchiveDialog(QtGui.QDialog):
         self.fmt = None
         self.prefix = ''
         self.filename = ref
-
-        # constants
-        spacing = 4
-        margin = 4
-        inner_margin = 0
 
         # widgets
         self.setWindowTitle('Save Archive')
@@ -72,29 +68,29 @@ class GitArchiveDialog(QtGui.QDialog):
 
         # layouts
         self.filelayt = QtGui.QHBoxLayout()
-        self.filelayt.setSpacing(spacing)
-        self.filelayt.setMargin(inner_margin)
+        self.filelayt.setMargin(0)
+        self.filelayt.setSpacing(defs.spacing)
         self.filelayt.addWidget(self.browse)
         self.filelayt.addWidget(self.filetext)
         self.filelayt.addWidget(self.format_combo)
 
         self.prefixlayt = QtGui.QHBoxLayout()
-        self.prefixlayt.setSpacing(spacing)
-        self.prefixlayt.setMargin(margin)
+        self.prefixlayt.setMargin(defs.margin)
+        self.prefixlayt.setSpacing(defs.spacing)
         self.prefixlayt.addWidget(self.prefix_label)
         self.prefixlayt.addWidget(self.prefix_text)
         self.prefix_group.setLayout(self.prefixlayt)
         self.prefix_group.set_collapsed(True)
 
         self.btnlayt = QtGui.QHBoxLayout()
-        self.btnlayt.setSpacing(spacing)
-        self.btnlayt.setMargin(inner_margin)
+        self.btnlayt.setMargin(0)
+        self.btnlayt.setSpacing(defs.spacing)
         self.btnlayt.addStretch()
         self.btnlayt.addWidget(self.cancel)
         self.btnlayt.addWidget(self.save)
 
         self.mainlayt = QtGui.QVBoxLayout()
-        self.mainlayt.setMargin(margin)
+        self.mainlayt.setMargin(defs.margin)
         self.mainlayt.setSpacing(0)
         self.mainlayt.addLayout(self.filelayt)
         self.mainlayt.addWidget(self.prefix_group)

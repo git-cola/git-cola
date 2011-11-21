@@ -5,6 +5,7 @@ from PyQt4.QtCore import SIGNAL
 from cola import qtutils
 from cola.qt import GitRefLineEdit
 from cola.qtutils import tr
+from cola.widgets import defs
 from cola.merge.model import merge, visualize_revision
 
 
@@ -72,7 +73,8 @@ class MergeView(QtGui.QDialog):
         self.buttonlayt.addWidget(self.button_merge)
 
         self.mainlayt = QtGui.QVBoxLayout()
-        self.mainlayt.setMargin(4)
+        self.mainlayt.setMargin(defs.margin)
+        self.mainlayt.setSpacing(defs.spacing)
         self.mainlayt.addLayout(self.radiolayt)
         self.mainlayt.addWidget(self.revisions)
         self.mainlayt.addLayout(self.revlayt)

@@ -3,6 +3,7 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import qtutils
 from cola.views import standard
+from cola.widgets import defs
 
 
 class CreateBranchView(standard.Dialog):
@@ -15,7 +16,8 @@ class CreateBranchView(standard.Dialog):
 
         self.resize(555, 333)
         self._main_layt = QtGui.QVBoxLayout(self)
-        self._main_layt.setMargin(6)
+        self._main_layt.setMargin(defs.margin)
+        self._main_layt.setSpacing(defs.spacing)
 
         self._branch_name_layt = QtGui.QHBoxLayout()
         self._branch_name_label = QtGui.QLabel(self)
@@ -31,10 +33,11 @@ class CreateBranchView(standard.Dialog):
         self._rev_start_grp.setTitle(self.tr('Starting Revision'))
 
         self._rev_start_vbox_layt = QtGui.QVBoxLayout(self._rev_start_grp)
-        self._rev_start_vbox_layt.setMargin(3)
+        self._rev_start_vbox_layt.setMargin(defs.margin)
+        self._rev_start_vbox_layt.setSpacing(defs.spacing)
 
         self._rev_start_textinput_layt = QtGui.QHBoxLayout()
-        self._rev_start_textinput_layt.setSpacing(4)
+        self._rev_start_textinput_layt.setSpacing(defs.spacing)
 
         self._rev_label = QtGui.QLabel(self._rev_start_grp)
         self._rev_label.setText(self.tr('Revision Expression:'))
@@ -76,13 +79,15 @@ class CreateBranchView(standard.Dialog):
         self._main_layt.addWidget(self._rev_start_grp)
 
         self._options_section_layt = QtGui.QHBoxLayout()
-        self._options_section_layt.setMargin(3)
+        self._options_section_layt.setMargin(defs.margin)
+        self._options_section_layt.setSpacing(defs.spacing)
 
         self._option_grpbox = QtGui.QGroupBox(self)
         self._option_grpbox.setTitle(self.tr('Options'))
 
         self._options_grp_layt = QtGui.QVBoxLayout(self._option_grpbox)
-        self._options_grp_layt.setMargin(3)
+        self._options_grp_layt.setMargin(defs.margin)
+        self._options_grp_layt.setSpacing(defs.spacing)
         self._options_radio_layt = QtGui.QHBoxLayout()
 
         self._update_existing_label = QtGui.QLabel(self._option_grpbox)
@@ -131,7 +136,8 @@ class CreateBranchView(standard.Dialog):
         self._options_section_layt.addWidget(self._option_grpbox)
 
         self._buttons_layt = QtGui.QHBoxLayout()
-        self._buttons_layt.setMargin(3)
+        self._buttons_layt.setMargin(defs.margin)
+        self._buttons_layt.setSpacing(defs.spacing)
 
         # Exposed
         self.create_button = QtGui.QPushButton(self)

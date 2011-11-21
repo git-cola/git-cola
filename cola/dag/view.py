@@ -19,6 +19,7 @@ from cola.prefs import diff_font
 from cola.qt import DiffSyntaxHighlighter
 from cola.qt import GitLogLineEdit
 from cola.views import standard
+from cola.widgets import defs
 from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.browse import BrowseDialog
 
@@ -35,7 +36,8 @@ class DiffWidget(QtGui.QWidget):
 
         self._layt = QtGui.QHBoxLayout()
         self._layt.addWidget(self.diff)
-        self._layt.setMargin(2)
+        self._layt.setMargin(0)
+        self._layt.setSpacing(defs.spacing)
         self.setLayout(self._layt)
 
         sig = signals.commits_selected
@@ -217,8 +219,8 @@ class DAGView(standard.Dialog):
         self.zoom_out.setFlat(True)
 
         self._buttons_layt = QtGui.QHBoxLayout()
-        self._buttons_layt.setMargin(2)
-        self._buttons_layt.setSpacing(4)
+        self._buttons_layt.setMargin(defs.margin)
+        self._buttons_layt.setSpacing(defs.spacing)
 
         self._buttons_layt.addWidget(self.revlabel)
         self._buttons_layt.addWidget(self.maxresults)

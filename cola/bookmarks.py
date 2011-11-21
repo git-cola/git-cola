@@ -11,6 +11,7 @@ from cola import qtutils
 from cola import settings
 from cola import utils
 from cola.views import standard
+from cola.widgets import defs
 
 
 def manage_bookmarks():
@@ -29,7 +30,8 @@ class BookmarksDialog(standard.Dialog):
         self.setWindowTitle(self.tr('Bookmarks'))
         self.setWindowModality(QtCore.Qt.WindowModal)
         self.layt = QtGui.QVBoxLayout(self)
-        self.layt.setMargin(6)
+        self.layt.setMargin(defs.margin)
+        self.layt.setSpacing(defs.spacing)
 
         self.bookmarks = QtGui.QListWidget(self)
         self.bookmarks.setAlternatingRowColors(True)

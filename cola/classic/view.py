@@ -10,6 +10,7 @@ from cola import qtutils
 from cola import signals
 from cola import utils
 from cola.views import standard
+from cola.widgets import defs
 from cola.classic.model import GitRepoNameItem
 
 
@@ -18,9 +19,11 @@ class RepoDialog(standard.Dialog):
         standard.Dialog.__init__(self, parent)
         self.setObjectName('classic')
         self.tree = RepoTreeView(self)
-        self.setLayout(QtGui.QHBoxLayout())
-        self.layout().setMargin(1)
-        self.layout().addWidget(self.tree)
+        self.mainlayout = QtGui.QHBoxLayout()
+        self.setLayout(self.mainlayout)
+        self.mainlayout.setMargin(0)
+        self.mainlayout.setSpacing(defs.spacing)
+        self.mainlayout.addWidget(self.tree)
         self.resize(720, 420)
 
         self.connect(self, SIGNAL('updated'), self._updated_callback)

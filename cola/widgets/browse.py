@@ -11,6 +11,7 @@ from cola import signals
 from cola.cmds import BaseCommand
 from cola.ctrl import Controller
 from cola.git import git
+from cola.widgets import defs
 
 
 save_blob = 'save_blob'
@@ -130,7 +131,8 @@ class BrowseDialog(QtGui.QDialog):
         self.btnlayt.addWidget(self.save)
 
         self.layt = QtGui.QVBoxLayout()
-        self.layt.setMargin(6)
+        self.layt.setMargin(defs.margin)
+        self.layt.setSpacing(defs.spacing)
         self.layt.addWidget(self.tree)
         self.layt.addLayout(self.btnlayt)
         self.setLayout(self.layt)

@@ -11,11 +11,11 @@ from PyQt4.QtGui import QTextCharFormat
 from PyQt4.QtGui import QColor
 
 import cola
-from cola import resources
 from cola import utils
 from cola import qtutils
 from cola.compat import set
 from cola.qtutils import tr
+from cola.widgets import defs
 
 
 def create_button(text, layout=None, tooltip=None, icon=None):
@@ -69,10 +69,9 @@ class QFlowLayoutWidget(QtGui.QWidget):
         QtGui.QWidget.__init__(self, parent)
         self._direction = self._vertical
         self._layout = layout = QtGui.QBoxLayout(self._direction)
-        layout.setSpacing(2)
-        layout.setMargin(2)
+        layout.setSpacing(defs.spacing)
+        layout.setMargin(defs.margin)
         self.setLayout(layout)
-        self.setContentsMargins(2, 2, 2, 2)
         policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum,
                                    QtGui.QSizePolicy.Minimum)
         self.setSizePolicy(policy)

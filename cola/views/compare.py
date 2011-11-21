@@ -5,6 +5,7 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
 from cola.views import standard
+from cola.widgets import defs
 
 
 class CompareView(standard.Dialog):
@@ -17,7 +18,8 @@ class CompareView(standard.Dialog):
 
         self._top_layt = QtGui.QHBoxLayout()
         self._top_left_layt = QtGui.QVBoxLayout()
-        self._top_left_layt.setSpacing(1)
+        self._top_left_layt.setMargin(0)
+        self._top_left_layt.setSpacing(defs.spacing)
 
         # Exposed
         self.descriptions_start = QtGui.QTreeWidget(self)
@@ -34,7 +36,8 @@ class CompareView(standard.Dialog):
         self._top_layt.addLayout(self._top_left_layt)
 
         self._top_right_layt = QtGui.QVBoxLayout()
-        self._top_right_layt.setSpacing(1)
+        self._top_right_layt.setMargin(0)
+        self._top_right_layt.setSpacing(defs.spacing)
 
         # Exposed
         self.descriptions_end = QtGui.QTreeWidget(self)
@@ -61,6 +64,7 @@ class CompareView(standard.Dialog):
 
         self._bottom_layt = QtGui.QHBoxLayout()
         self._bottom_layt.setMargin(0)
+        self._bottom_layt.setSpacing(defs.spacing)
 
         self.show_versions = QtGui.QCheckBox(self)
         self.show_versions.setText(self.tr('Show Versions'))
@@ -103,16 +107,18 @@ class BranchCompareView(standard.Dialog):
         self.resize(658, 350)
 
         self._main_layt = QtGui.QVBoxLayout(self)
-        self._main_layt.setMargin(3)
+        self._main_layt.setMargin(defs.margin)
+        self._main_layt.setSpacing(defs.spacing)
 
         self._splitter = QtGui.QSplitter(self)
         self._splitter.setOrientation(QtCore.Qt.Vertical)
-        self._splitter.setHandleWidth(3)
+        self._splitter.setHandleWidth(defs.handle_width)
 
         self._top_widget = QtGui.QWidget(self._splitter)
 
         self._top_grid_layt = QtGui.QGridLayout(self._top_widget)
         self._top_grid_layt.setMargin(0)
+        self._top_grid_layt.setSpacing(defs.spacing)
 
         # Exposed
         self.left_combo = QtGui.QComboBox(self._top_widget)
@@ -137,7 +143,8 @@ class BranchCompareView(standard.Dialog):
 
         self._bottom_widget = QtGui.QWidget(self._splitter)
         self._bottom_grid_layt = QtGui.QGridLayout(self._bottom_widget)
-        self._bottom_grid_layt.setMargin(3)
+        self._bottom_grid_layt.setMargin(0)
+        self._bottom_grid_layt.setSpacing(defs.spacing)
 
         self._button_spacer = QtGui.QSpacerItem(1, 1,
                                                 QtGui.QSizePolicy.Expanding,
