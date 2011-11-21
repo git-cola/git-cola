@@ -1,3 +1,3 @@
-margin = 5
-spacing = 5
-handle_width = 5
+margin = 4
+spacing = 4
+handle_width = 4
