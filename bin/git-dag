@@ -34,8 +34,8 @@ def cola_init():
         sys.path.insert(1, prefix)
     else:
         # Install tree
-        paths_to_try = [os.path.join(prefix, 'share', 'git-cola', 'lib')]
-        sys.path = paths_to_try + sys.path
+        install_lib = os.path.join(prefix, 'share', 'git-cola', 'lib')
+        sys.path.insert(1, install_lib)
 
 
 if __name__ == '__main__':
