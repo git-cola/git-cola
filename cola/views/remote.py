@@ -49,23 +49,20 @@ class RemoteView(standard.Dialog):
         self.remote_branches = QtGui.QListWidget(self)
 
         self._options_hbox_layt = QtGui.QHBoxLayout()
+        self._options_hbox_layt.setSpacing(defs.spacing)
+        self._options_hbox_layt.addStretch()
         # Exposed
         self.ffwd_only_checkbox = QtGui.QCheckBox(self)
-        self.ffwd_only_checkbox.setText(self.tr('Fast Forward Only'))
+        self.ffwd_only_checkbox.setText(self.tr('Fast Forward Only '))
         self.ffwd_only_checkbox.setChecked(True)
         self.ffwd_only_checkbox.setObjectName("ffwd_only_checkbox")
 
         # Exposed
         self.tags_checkbox = QtGui.QCheckBox(self)
-        self.tags_checkbox.setText(self.tr('Include tags'))
+        self.tags_checkbox.setText(self.tr('Include tags '))
 
         self.rebase_checkbox = QtGui.QCheckBox(self)
-        self.rebase_checkbox.setText(self.tr('Rebase'))
-
-        self._options_spacer = QtGui.QSpacerItem(1, 1,
-                                           QtGui.QSizePolicy.Expanding,
-                                           QtGui.QSizePolicy.Minimum)
-        self._options_hbox_layt.addItem(self._options_spacer)
+        self.rebase_checkbox.setText(self.tr('Rebase '))
         # Exposed
         self.action_button = QtGui.QPushButton(self)
         self.action_button.setText(self.tr('Push'))
