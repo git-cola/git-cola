@@ -6,13 +6,13 @@ from cStringIO import StringIO
 from cola import core
 from cola import git
 from cola import gitcfg
-from cola import errors
 from cola import utils
 from cola import version
 from cola.compat import set
 
 git = git.instance()
 config = gitcfg.instance()
+
 
 class InvalidRepositoryError(StandardError):
     pass
@@ -396,6 +396,13 @@ def worktree_state_dict(head='HEAD',
     staged, unmerged, submodules = diff_index(head)
     modified, more_submods = diff_worktree()
 
+    # Remove unmerged paths from the modified list
+    unmerged_set = set(unmerged)
+    modified_set = set(modified)
+    modified_unmerged = modified_set.intersection(unmerged_set)
+    for path in modified_unmerged:
+        modified.remove(path)
+
     submodules = submodules.union(more_submods)
     untracked = untracked_files()
 
@@ -434,7 +441,7 @@ def diff_index(head):
         name = core.decode(name)
         if '160000' in rest[1:14]:
             submodules.add(name)
-        elif status  in 'DAM':
+        elif status  in 'DAMT':
             staged.append(name)
         elif status == 'U':
             unmerged.append(name)
