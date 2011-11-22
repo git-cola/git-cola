@@ -485,24 +485,6 @@ def diff_upstream(head):
     return [core.decode(n) for n in output.split('\0') if n]
 
 
-def partial_worktree_state_dict(files, head='HEAD'):
-    states = []
-    for path in files:
-        output = git.status(path, porcelain=True)
-        if output == "" or output[1] == " ":
-            states.append(('unmodified', path))
-            status = None
-        else:
-            status = output[1]
-
-        if status == "M" or status == "D" or status == "R":
-            states.append(('modified', path))
-        elif status == "?":
-            states.append(('untracked', path))
-
-    return states
-
-
 def _branch_status(branch, git=git):
     """
     Returns a tuple of staged, unstaged, untracked, and unmerged files

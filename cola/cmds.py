@@ -848,14 +848,10 @@ class UntrackedSummary(Command):
         self.new_diff_text = core.decode(io.getvalue())
 
 
-class UpdateStatus(Command):
-    """Update the status of a list of files."""
-    def __init__(self, files):
-        Command.__init__(self)
-        self.files = files
-
+class UpdateFileStatus(Command):
+    """Rescans for changes."""
     def do(self):
-        self.model.update_status_of_files(self.files)
+        self.model.update_file_status()
 
 
 class VisualizeAll(Command):
@@ -958,7 +954,7 @@ def register():
         signals.unstage_all: UnstageAll,
         signals.unstage_selected: UnstageSelected,
         signals.untracked_summary: UntrackedSummary,
-        signals.update_status: UpdateStatus,
+        signals.update_file_status: UpdateFileStatus,
         signals.visualize_all: VisualizeAll,
         signals.visualize_current: VisualizeCurrent,
         signals.visualize_paths: VisualizePaths,

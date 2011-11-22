@@ -82,22 +82,18 @@ class Handler():
         """Create an event handler"""
         ## Timer used to prevent notification floods
         self._timer = None
-        ## The files that have changed since the last broadcast
-        self._files = set()
         ## Lock to protect files and timer from threading issues
         self._lock = Lock()
 
     def broadcast(self):
         """Broadcasts a list of all files touched since last broadcast"""
         with self._lock:
-            cola.notifier().broadcast(signals.update_status, self._files)
-            self._files = set()
+            cola.notifier().broadcast(signals.update_file_status)
             self._timer = None
 
     def handle(self, path):
         """Queues up filesystem events for broadcast"""
         with self._lock:
-            self._files.add(path)
             if self._timer is None:
                 self._timer = Timer(0.333, self.broadcast)
                 self._timer.start()
