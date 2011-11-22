@@ -12,10 +12,11 @@ prefix = $(HOME)
 bindir = $(prefix)/bin
 # DESTDIR =
 
-cola_app_base= git-cola.app
+cola_base := git-cola
+cola_app_base= $(cola_base).app
 cola_app = $(CURDIR)/$(cola_app_base)
 cola_version = $(shell env TERM=dummy $(PYTHON) cola/version.py)
-cola_dist := cola-$(cola_version)
+cola_dist := $(cola_base)-$(cola_version)
 
 python_version = $(shell env TERM=dummy $(PYTHON) -c 'import distutils.sysconfig as sc; print(sc.get_python_version())')
 python_site := $(prefix)/lib*/python$(python_version)/site-packages
@@ -105,7 +106,7 @@ git-cola.app:
 	cp darwin/git-cola.icns $(cola_app)/Contents/Resources
 
 app-tarball: git-cola.app
-	$(TAR) czf git-cola-$(cola_version).app.tar.gz $(cola_app_base)
+	$(TAR) czf $(cola_dist).app.tar.gz $(cola_app_base)
 
 .PHONY: all install doc install-doc install-html test clean tags
 .PHONY: git-cola.app app-tarball
