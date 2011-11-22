@@ -1,5 +1,25 @@
 .. |beta(TM)| unicode:: beta U+2122
 
+git-cola v1.7.1.1
+=================
+Fixes
+-----
+* Further enhanced the staging/unstaging behavior in the status widget.
+
+  http://github.com/git-cola/git-cola/issues/closed#issue/97
+
+* Unmerged files are no longer listed as modified.
+
+Packaging
+---------
+The `cola-$version` tarballs on github were originally setup to
+have the same contents as the old tarballs hosted on tuxfamily.
+The `make dist` target was changed to write files to a
+`git-cola-$version` subdirectory and tarball.
+
+This makes the filenames consistent for the source tarball,
+the darwin .app tarball, and the win32 .exe installer.
+
 git-cola v1.7.1
 ===============
 Usability, bells and whistles
