@@ -15,11 +15,9 @@ include darwin/*
 include extras/*.py
 include extras/sphinxtogithub/*.py
 include test/*.py
-include README
-include ChangeLog
+include README.md
 include COPYING
 include Makefile
-include INSTALL
 include MANIFEST.in
 include po/*.po
 include share/applications/*.desktop
