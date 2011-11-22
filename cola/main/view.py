@@ -145,7 +145,7 @@ class MainView(standard.MainWindow):
                 QtGui.QKeySequence.Preferences, 'Ctrl+O')
 
         self.menu_rescan = add_action(self,
-                'Rescan', emit(self, signals.rescan), 'Ctrl+R')
+                'Rescan', emit(self, signals.rescan_and_refresh), 'Ctrl+R')
         self.menu_rescan.setIcon(qtutils.reload_icon())
 
         self.menu_cherry_pick = add_action(self,
@@ -376,7 +376,8 @@ class MainView(standard.MainWindow):
 
 
         # Add button callbacks
-        connect_button(self.rescan_button, emit(self, signals.rescan))
+        connect_button(self.rescan_button,
+                       emit(self, signals.rescan_and_refresh))
         connect_button(self.alt_button, emit(self, signals.reset_mode))
         connect_button(self.fetch_button, guicmds.fetch)
         connect_button(self.push_button, guicmds.push)

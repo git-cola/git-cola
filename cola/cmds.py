@@ -597,6 +597,14 @@ rescan = 'rescan'
 class Rescan(Command):
     """Rescans for changes."""
     def do(self):
+        self.model.update_status()
+
+
+rescan_and_refresh = 'rescan_and_refresh'
+
+class RescanAndRefresh(Command):
+    """Rescans for changes."""
+    def do(self):
         self.model.update_status(update_index=True)
 
 
@@ -934,6 +942,7 @@ def register():
         signals.mergetool: Mergetool,
         signals.open_repo: OpenRepo,
         signals.rescan: Rescan,
+        signals.rescan_and_refresh: RescanAndRefresh,
         signals.reset_mode: ResetMode,
         signals.review_branch_mode: ReviewBranchMode,
         signals.run_config_action: RunConfigAction,
