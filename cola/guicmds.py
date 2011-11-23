@@ -177,11 +177,11 @@ def diff_branch():
                                cola.model().tags)
     if not branch:
         return
-    zfiles_str = git.diff(branch, name_only=True,
-                                     no_color=True,
-                                     z=True).rstrip('\0')
-    files = [core.decode(f) for f in zfiles_str.split('\0')]
-
+    files = gitcmds.diff_filenames(branch)
+    if not files:
+        qtutils.critical('No Differences',
+                         'No differences found for "%s"' % branch)
+        return
     filename = BrowseDialog.select_file_from_list(files)
     if not filename:
         return
