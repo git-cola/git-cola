@@ -417,7 +417,9 @@ class Diffstat(Command):
                                    M=True,
                                    stat=True)
         self.new_diff_text = core.decode(diff)
-        self.new_mode = self.model.mode_worktree
+        if not self.model.read_only():
+            if self.model.mode != self.model.mode_amend:
+                self.new_mode = self.model.mode_worktree
 
 
 class DiffStaged(Diff):
@@ -710,7 +712,9 @@ class ShowUntracked(Command):
     # generically.
     def __init__(self, filenames):
         Command.__init__(self)
-        self.new_mode = self.model.mode_worktree
+        if not self.model.read_only():
+            if self.model.mode != self.model.mode_amend:
+                self.new_mode = self.model.mode_worktree
         # TODO new_diff_text = utils.file_preview(filenames[0])
 
 
