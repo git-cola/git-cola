@@ -69,16 +69,16 @@ class FileDiffDialog(QtGui.QDialog):
         self.connect(self._diff_btn, SIGNAL('clicked()'), self.diff)
         self.connect(self._close_btn, SIGNAL('clicked()'), self.close)
 
-        self.diff_arg = '%s..%s' % (self.a, self.b)
+        self.diff_arg = (self.a, self.b)
 
         self.resize(720, 420)
 
 
     def exec_(self):
-        filenames = gitcmds.diff_filenames(self.diff_arg)
+        filenames = gitcmds.diff_filenames(*self.diff_arg)
         if not filenames:
             details = ('"git diff --name-only %s" returned an empty list' %
-                       self.diff_arg)
+                       ' '.join(self.diff_arg))
             self.hide()
             qtutils.information('git cola',
                                 message='No changes to diff',
@@ -103,7 +103,7 @@ class FileDiffDialog(QtGui.QDialog):
 
     def _tree_double_clicked(self, item, column):
         path = item.data(0, QtCore.Qt.UserRole).toPyObject()
-        launch([self.diff_arg, '--', unicode(path)])
+        launch(self.diff_arg + ('--', unicode(path)))
 
     def diff(self):
         items = self._tree.selectedItems()
@@ -111,4 +111,4 @@ class FileDiffDialog(QtGui.QDialog):
             return
         paths = [i.data(0, QtCore.Qt.UserRole).toPyObject() for i in items]
         for path in paths:
-            launch([self.diff_arg, '--', unicode(path)])
+            launch(self.diff_arg + ('--', unicode(path)))
