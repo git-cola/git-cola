@@ -95,11 +95,11 @@ class BranchCompareController(QObserver):
                 right_item == BranchCompareController.SANDBOX):
             self.use_sandbox = True
             if left_item == BranchCompareController.SANDBOX:
-                self.diff_arg = right_item
+                self.diff_arg = (right_item,)
             else:
-                self.diff_arg = left_item
+                self.diff_arg = (left_item,)
         else:
-            self.diff_arg = '%s..%s' % (left_item, right_item)
+            self.diff_arg = (left_item, right_item)
             self.use_sandbox = False
 
         # start and end as in 'git diff start end'
@@ -107,7 +107,7 @@ class BranchCompareController(QObserver):
         self.end = right_item
 
         # TODO leverage Qt's model/view architecture
-        files = gitcmds.diff_filenames(self.diff_arg)
+        files = gitcmds.diff_filenames(*self.diff_arg)
         self.model.set_diff_files(files)
         icon = qtutils.icon('script.png')
         for idx in xrange(0, self.view.diff_files.topLevelItemCount()):
@@ -181,8 +181,8 @@ class BranchCompareController(QObserver):
         if self.use_sandbox:
             arg = self.diff_arg
         else:
-            arg = '%s..%s' % (self.start, self.end)
-        difftool.launch([arg, '--', filename])
+            arg = (self.start, self.end)
+        difftool.launch(arg + ('--', filename))
 
 
 class CompareController(QObserver):
