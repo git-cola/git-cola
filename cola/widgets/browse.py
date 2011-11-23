@@ -377,7 +377,10 @@ class GitTreeModel(GitFileTreeModel):
             cola.notifier().broadcast(signals.log_cmd, status, output)
             return
 
-        for line in output.rstrip('\0').split('\0'):
+        if not output:
+            return
+
+        for line in core.decode(output[:-1]).split('\0'):
             # .....6 ...4 ......................................40
             # 040000 tree c127cde9a0c644a3a8fef449a244f47d5272dfa6	relative
             # 100644 blob 139e42bf4acaa4927ec9be1ec55a252b97d3f1e2	relative/path
