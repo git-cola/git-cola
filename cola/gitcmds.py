@@ -24,13 +24,20 @@ def default_remote(config=None):
     return config.get('branch.%s.remote' % current_branch())
 
 
+def diff_index_filenames(ref):
+    """Return a of filenames that have been modified relative to the index"""
+    diff_zstr = git.diff_index(ref, name_only=True, z=True)
+    return _parse_diff_filenames(diff_zstr)
+
+
 def diff_filenames(*args):
     """Return a list of filenames that have been modified"""
-    if len(args) == 1:
-        diff_zstr = git.diff_index(args[0], name_only=True, z=True)
-    else:
-        diff_zstr = git.diff_tree(name_only=True,
-                                  no_commit_id=True, r=True, z=True, *args)
+    diff_zstr = git.diff_tree(name_only=True,
+                              no_commit_id=True, r=True, z=True, *args)
+    return _parse_diff_filenames(diff_zstr)
+
+
+def _parse_diff_filenames(diff_zstr):
     if diff_zstr:
         return core.decode(diff_zstr[:-1]).split('\0')
     else:
