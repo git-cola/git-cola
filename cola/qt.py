@@ -185,25 +185,46 @@ class GitRefModel(QtGui.QStandardItemModel):
             self.appendRow(item)
 
 
+class UpdateGitLogCompletionModelThread(QtCore.QThread):
+    def __init__(self, model):
+        QtCore.QThread.__init__(self)
+        self.model = model
+        self.case_insensitive = False
+
+    def run(self):
+        text = None
+        # Loop when the matched text changes between the start and end time.
+        # This happens when gather_matches() takes too long and the
+        # model's matched_text changes in-between.
+        while text != self.model.matched_text:
+            text = self.model.matched_text
+            items = self.model.gather_matches(self.case_insensitive)
+        self.emit(SIGNAL('items_gathered'), *items)
+
+
 class GitLogCompletionModel(QtGui.QStandardItemModel):
     def __init__(self, parent):
         self.matched_text = None
         QtGui.QStandardItemModel.__init__(self, parent)
         self.cmodel = cola.model()
+        self.update_thread = UpdateGitLogCompletionModelThread(self)
+        self.connect(self.update_thread, SIGNAL('items_gathered'),
+                     self.apply_matches)
 
     def lower_cmp(self, a, b):
         return cmp(a.replace('.','').lower(), b.replace('.','').lower())
 
-    def update_matches(self, case_sensitive):
-        QStandardItem = QtGui.QStandardItem
+    def update_matches(self, case_insensitive):
+        self.update_thread.case_insensitive = case_insensitive
+        if not self.update_thread.isRunning():
+            self.update_thread.start()
+
+    def gather_matches(self, case_sensitive):
         file_list = self.cmodel.everything()
         files = set(file_list)
         files_and_dirs = utils.add_parents(set(files))
-        dirs = files_and_dirs.difference(files)
 
-        file_icon = qtutils.file_icon()
-        dir_icon = qtutils.dir_icon()
-        git_icon = qtutils.git_icon()
+        dirs = files_and_dirs.difference(files)
 
         model = self.cmodel
         refs = model.local_branches + model.remote_branches + model.tags
@@ -232,8 +253,17 @@ class GitLogCompletionModel(QtGui.QStandardItemModel):
 
         matched_paths.sort(cmp=self.lower_cmp)
 
-        items = []
+        return (matched_refs, matched_paths, dirs)
 
+
+    def apply_matches(self, matched_refs, matched_paths, dirs):
+        QStandardItem = QtGui.QStandardItem
+        file_icon = qtutils.file_icon()
+        dir_icon = qtutils.dir_icon()
+        git_icon = qtutils.git_icon()
+
+        matched_text = self.matched_text
+        items = []
         for ref in matched_refs:
             item = QStandardItem()
             item.setText(ref)
@@ -256,8 +286,7 @@ class GitLogCompletionModel(QtGui.QStandardItemModel):
             items.append(item)
 
         self.clear()
-        for item in items:
-            self.appendRow(item)
+        self.invisibleRootItem().appendRows(items)
 
     def set_match_text(self, text, case_sensitive):
         self.matched_text = text
