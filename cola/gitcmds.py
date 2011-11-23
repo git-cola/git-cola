@@ -4,13 +4,12 @@ import re
 from cStringIO import StringIO
 
 from cola import core
-from cola import git
 from cola import gitcfg
 from cola import utils
 from cola import version
 from cola.compat import set
+from cola.git import git
 
-git = git.instance()
 config = gitcfg.instance()
 
 
