@@ -530,13 +530,6 @@ def renamed_files(start, end, git=git):
                 for r in difflines if r.startswith('rename from ')]
 
 
-def changed_files(start, end, git=git):
-    zfiles_str = git.diff('%s..%s' % (start, end),
-                          name_only=True, z=True,
-                          **_common_diff_opts()).strip('\0')
-    return [core.decode(enc) for enc in zfiles_str.split('\0') if enc]
-
-
 def parse_ls_tree(rev):
     """Return a list of(mode, type, sha1, path) tuples."""
     lines = git.ls_tree(rev, r=True).splitlines()

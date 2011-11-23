@@ -310,7 +310,7 @@ class CompareController(QObserver):
         # get the changed files list
         start = self.model.revision_start
         end = self.model.revision_end
-        files = gitcmds.changed_files(start, end)
+        files = gitcmds.diff_filenames(start, end)
 
         # get the old name of any renamed files, and prune them
         # from the changes list
