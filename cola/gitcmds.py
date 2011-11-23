@@ -26,8 +26,11 @@ def default_remote(config=None):
 
 def diff_filenames(*args):
     """Return a list of filenames that have been modified"""
-    diff_zstr = git.diff_tree(name_only=True, no_commit_id=True, r=True, z=True,
-                              *args)
+    if len(args) == 1:
+        diff_zstr = git.diff_index(args[0], name_only=True, z=True)
+    else:
+        diff_zstr = git.diff_tree(name_only=True,
+                                  no_commit_id=True, r=True, z=True, *args)
     if diff_zstr:
         return core.decode(diff_zstr[:-1]).split('\0')
     else:
@@ -488,22 +491,14 @@ def diff_upstream(head):
     return diff_filenames(merge_base, tracked)
 
 
-def _branch_status(branch, git=git):
+def _branch_status(branch):
     """
     Returns a tuple of staged, unstaged, untracked, and unmerged files
 
     This shows only the changes that were introduced in branch
 
     """
-    status, output = git.diff(name_only=True,
-                              M=True, z=True,
-                              with_status=True,
-                              *branch.strip().split(),
-                              **_common_diff_opts())
-    if status != 0:
-        return {}
-
-    staged = map(core.decode, [n for n in output.split('\0') if n])
+    staged = diff_filenames(branch)
     return {'staged': staged,
             'upstream_changed': staged}
 
