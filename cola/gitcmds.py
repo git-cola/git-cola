@@ -24,11 +24,14 @@ def default_remote(config=None):
     return config.get('branch.%s.remote' % current_branch())
 
 
-def diff_filenames(arg, git=git):
+def diff_filenames(*args):
     """Return a list of filenames that have been modified"""
-    diff_zstr = git.diff(arg, name_only=True, z=True,
-                         **_common_diff_opts()).rstrip('\0')
-    return [core.decode(f) for f in diff_zstr.split('\0') if f]
+    diff_zstr = git.diff_tree(name_only=True, no_commit_id=True, r=True, z=True,
+                              *args)
+    if diff_zstr:
+        return core.decode(diff_zstr[:-1]).split('\0')
+    else:
+        return []
 
 
 def all_files(git=git):
@@ -476,12 +479,8 @@ def diff_upstream(head):
     tracked = tracked_branch()
     if not tracked:
         return []
-    diff_expr = merge_base_to(head, tracked)
-    output = git.diff(diff_expr, name_only=True, z=True,
-                      **_common_diff_opts())
-    if output.startswith('fatal:'):
-        return []
-    return [core.decode(n) for n in output.split('\0') if n]
+    merge_base = merge_base_to(head, tracked)
+    return diff_filenames(merge_base, tracked)
 
 
 def _branch_status(branch, git=git):
@@ -506,8 +505,7 @@ def _branch_status(branch, git=git):
 
 def merge_base_to(head, ref):
     """Given `ref`, return $(git merge-base ref HEAD)..ref."""
-    base = git.merge_base(head, ref)
-    return '%s..%s' % (base, ref)
+    return git.merge_base(head, ref)
 
 
 def merge_base_parent(branch):
