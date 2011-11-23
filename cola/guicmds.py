@@ -2,10 +2,10 @@ import os
 
 import cola
 from cola import core
-from cola import git
 from cola import gitcmds
 from cola import qtutils
 from cola import signals
+from cola.git import git
 from cola.widgets.browse import BrowseDialog
 from cola.widgets.combodlg import ComboDialog
 
@@ -177,7 +177,7 @@ def diff_branch():
                                cola.model().tags)
     if not branch:
         return
-    zfiles_str = git.instance().diff(branch, name_only=True,
+    zfiles_str = git.diff(branch, name_only=True,
                                      no_color=True,
                                      z=True).rstrip('\0')
     files = [core.decode(f) for f in zfiles_str.split('\0')]
@@ -238,9 +238,7 @@ def rebase():
     if not branch:
         return
     #TODO cmd
-    status, output = git.instance().rebase(branch,
-                                           with_stderr=True,
-                                           with_status=True)
+    status, output = git.rebase(branch, with_stderr=True, with_status=True)
     qtutils.log(status, output)
 
 
