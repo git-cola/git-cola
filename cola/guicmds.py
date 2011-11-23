@@ -1,7 +1,6 @@
 import os
 
 import cola
-import cola.app
 from cola import core
 from cola import git
 from cola import gitcmds
