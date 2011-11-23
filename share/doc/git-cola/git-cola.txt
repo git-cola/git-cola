@@ -3,32 +3,25 @@ git-cola(1)
 
 NAME
 ----
-git-cola - A highly caffeinated git GUI
+git-cola - The highly caffeinated git GUI
 
 SYNOPSIS
 --------
-'git cola' [options]
+'git cola' [options] [sub-command]
 
 DESCRIPTION
 -----------
-'git-cola' is a powerful git GUI written in Python.
-It has many unique features that make git's advanced
-features simple and accessible.
-
+'git-cola' is a sleek and powerful git GUI written in Python.
 See below for a full list of options and usage information.
 
 OPTIONS
 -------
---classic::
-	Launch the standalone 'cola classic' tool.
-
 -g::
 --git-path::
 	Specifies the path to the 'git' binary.
 
 --prompt::
-	Prompt for a git repository instead of auto-detecting it
-	in the current directory.
+	Prompt for a git repository instead of using the current directory.
 
 -r::
 --repo=<path>::
@@ -38,6 +31,26 @@ OPTIONS
 -v::
 --version::
 	Print the 'git-cola' version and exit.
+
+SUB-COMMANDS
+------------
+classic::
+	Launch the 'classic' tool.
+
+fetch::
+	Launch the 'fetch' tool.
+
+pull::
+	Launch the 'pull' tool.
+
+push::
+	Launch the 'push' tool.
+
+stash::
+	Launch the 'stash' tool.
+
+tag::
+	Launch the 'tag' tool.
 
 
 CONFIG VARIABLES

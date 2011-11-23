@@ -31,8 +31,10 @@ from cola import resources
 from cola import signals
 from cola import utils
 from cola import version
+from cola.controllers.createtag import create_tag
 from cola.classic import cola_classic
 from cola.dag import git_dag
+from cola.stash import stash
 from cola.decorators import memoize
 from cola.main.view import MainView
 from cola.main.controller import MainController
@@ -133,13 +135,6 @@ def parse_args(context):
                       default=False,
                       action='store_true')
 
-    # Accept git cola --classic
-    parser.add_option('--classic',
-                      help='Launch cola classic',
-                      dest='classic',
-                      default=False,
-                      action='store_true')
-
     # Specifies a git repository to open
     parser.add_option('-r', '--repo',
                       help='Specifies the path to a git repository.',
@@ -222,24 +217,51 @@ def main(context):
     # Finally, go to the root of the git repo
     os.chdir(model.git.worktree())
 
+    # Prepare to launch a sub-command
+    builtins = set(('cola',
+                    'classic',
+                    'dag',
+                    'fetch',
+                    'pull',
+                    'push',
+                    'stash',
+                    'tag'))
+
+    if context != 'git-dag' and args and args[0] in builtins:
+        context = args[0]
+
     # Show the GUI
-    if opts.classic:
-        view = cola_classic(update=False)
-    elif context == 'git-cola':
+    if context == 'git-cola' or context == 'cola':
         view = MainView(model, qtutils.active_window())
         ctl = MainController(model, view)
-    elif context == 'git-dag':
+    elif context == 'git-dag' or context == 'dag':
         ctl = git_dag(model, opts=opts, args=args)
         view = ctl.view
+    elif context == 'classic':
+        view = cola_classic(update=False)
+    # TODO: the calls to update_status() can be done asynchronously
+    # by hooking into the message_updated notification.
+    elif context == 'stash':
+        model.update_status()
+        view = stash().view
+    elif context == 'fetch':
+        model.update_status()
+        view = guicmds.fetch().view
+    elif context == 'pull':
+        model.update_status()
+        view = guicmds.pull().view
+    elif context == 'push':
+        model.update_status()
+        view = guicmds.push().view
+    elif context == 'tag':
+        view = create_tag().view
 
     # Install UI wrappers for command objects
     cfgactions.install_command_wrapper()
     guicmds.install_command_wrapper()
 
-    # Show the view and start the main event loop
-    view.show()
-
     # Make sure that we start out on top
+    view.show()
     view.raise_()
 
     # Scan for the first time

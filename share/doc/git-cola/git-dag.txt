@@ -7,7 +7,7 @@ git-dag - An advanced git DAG visualizer
 
 SYNOPSIS
 --------
-'git dag' [options]
+'git dag' [options] [<since>..<until>] [[--] [<path>...]]
 
 DESCRIPTION
 -----------
@@ -19,9 +19,6 @@ See below for a full list of command-line options and usage information.
 
 OPTIONS
 -------
---classic::
-	Launch the standalone 'cola classic' tool.
-
 -g::
 --git-path::
 	Specifies the path to the 'git' binary.
@@ -38,13 +35,6 @@ OPTIONS
 -v::
 --version::
 	Print the 'git-cola' version and exit.
-
-
-SOURCE
-------
-A 'git-cola' development repository can be obtained via git:
-
-	git clone git://github.com/git-cola/git-cola.git
 
 
 LINKS

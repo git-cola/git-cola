@@ -256,14 +256,14 @@ def fetch():
     """Launch the 'fetch' remote dialog."""
     from cola.controllers.remote import remote_action
 
-    remote_action('fetch')
+    return remote_action('fetch')
 
 
 def push():
     """Launch the 'push' remote dialog."""
     from cola.controllers.remote import remote_action
 
-    remote_action('push')
+    return remote_action('push')
 
 
 def pull():
