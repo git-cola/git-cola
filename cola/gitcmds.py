@@ -34,11 +34,13 @@ def diff_filenames(*args):
         return []
 
 
-def all_files(git=git):
+def all_files():
     """Return the names of all files in the repository"""
-    return [core.decode(f)
-            for f in git.ls_files(z=True)
-                        .strip('\0').split('\0') if f]
+    ls_files = git.ls_files(z=True)
+    if ls_files:
+        return core.decode(ls_files[:-1]).split('\0')
+    else:
+        return []
 
 
 class _current_branch:
@@ -51,14 +53,15 @@ def clear_cache():
     _current_branch.key = None
 
 
-def current_branch(git=git):
+def current_branch():
     """Return the current branch"""
+    decode = core.decode
     head = git.git_path('HEAD')
     try:
         key = os.stat(head).st_mtime
         if _current_branch.key == key:
             return _current_branch.value
-    except OSError, e:
+    except OSError:
         pass
     data = git.rev_parse('HEAD', with_stderr=True, symbolic_full_name=True)
     if data.startswith('fatal:'):
@@ -69,7 +72,7 @@ def current_branch(git=git):
 
     for refs_prefix in ('refs/heads/', 'refs/remotes/'):
         if data.startswith(refs_prefix):
-            value = core.decode(data[len(refs_prefix):])
+            value = decode(data[len(refs_prefix):])
             _current_branch.key = key
             _current_branch.value = value
             return value
@@ -160,10 +163,10 @@ def tracked_branch(branch=None, config=None):
 
 def untracked_files(git=git):
     """Returns a sorted list of untracked files."""
-    ls_files = git.ls_files(z=True,
-                            others=True,
-                            exclude_standard=True)
-    return [core.decode(f) for f in ls_files.split('\0') if f]
+    ls_files = git.ls_files(z=True, others=True, exclude_standard=True)
+    if ls_files:
+        return core.decode(ls_files[:-1]).split('\0')
+    return []
 
 
 def tag_list():
@@ -231,6 +234,7 @@ def diff_helper(commit=None,
                 reverse=False,
                 git=git):
     "Invokes git diff on a filepath."
+    encode = core.encode
     if commit:
         ref, endref = commit+'^', commit
     argv = []
@@ -253,7 +257,7 @@ def diff_helper(commit=None,
     del_tag = 'deleted file mode '
 
     headers = []
-    deleted = cached and not os.path.exists(core.encode(filename))
+    deleted = cached and not os.path.exists(encode(filename))
 
     diffoutput = git.diff(R=reverse, M=True, cached=cached,
                           *argv, **_common_diff_opts())
@@ -272,17 +276,17 @@ def diff_helper(commit=None,
 
     output = StringIO()
 
-    diff = diffoutput.split('\n')
-    for line in map(core.decode, diff):
+    diff = core.decode(diffoutput).split('\n')
+    for line in diff:
         if not start and '@@' == line[:2] and '@@' in line[2:]:
             start = True
         if start or (deleted and del_tag in line):
-            output.write(core.encode(line) + '\n')
+            output.write(encode(line) + '\n')
         else:
             if with_diff_header:
-                headers.append(core.encode(line))
+                headers.append(encode(line))
             elif not suppress_header:
-                output.write(core.encode(line) + '\n')
+                output.write(encode(line) + '\n')
 
     result = core.decode(output.getvalue())
     output.close()
@@ -381,8 +385,7 @@ def worktree_state(head='HEAD', staged_only=False):
 
 def worktree_state_dict(head='HEAD',
                         staged_only=False,
-                        update_index=False,
-                        git=git):
+                        update_index=False):
     """Return a dict of files in various states of being
 
     :rtype: dict, keys are staged, unstaged, untracked, unmerged,
@@ -427,6 +430,7 @@ def worktree_state_dict(head='HEAD',
 
 
 def diff_index(head):
+    decode = core.decode
     submodules = set()
     staged = []
     unmerged = []
@@ -440,7 +444,7 @@ def diff_index(head):
         rest, output = output.split('\0', 1)
         name, output = output.split('\0', 1)
         status = rest[-1]
-        name = core.decode(name)
+        name = decode(name)
         if '160000' in rest[1:14]:
             submodules.add(name)
         elif status  in 'DAMT':
@@ -458,8 +462,9 @@ def diff_worktree():
     output = git.diff_files(z=True, with_stderr=True)
     if output.startswith('fatal:'):
         # handle git init
-        ls_files = git.ls_files(modified=True, z=True)[:-1].split('\0')
-        modified = [core.decode(f) for f in ls_files if f]
+        ls_files = core.decode(git.ls_files(modified=True, z=True))
+        if ls_files:
+            modified = ls_files[:-1].split('\0')
         return modified, submodules
 
     while output:
