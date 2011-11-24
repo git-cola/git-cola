@@ -3,6 +3,7 @@ import copy
 import subprocess
 import itertools
 
+from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
@@ -74,6 +75,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.old_contents = None
 
         self.expanded_items = set()
+
+        self.up = qtutils.add_action(self, 'Move Up', self.move_up, 'K')
+        self.down = qtutils.add_action(self, 'Move Down', self.move_down, 'J')
 
         self.connect(self, SIGNAL('about_to_update'), self._about_to_update)
         self.connect(self, SIGNAL('updated'), self._updated)
@@ -583,3 +587,98 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         elif category == self.idx_untracked:
             cola.notifier().broadcast(signals.show_untracked, self.unstaged())
+
+    def move_up(self):
+        self.move('up')
+
+    def move_down(self):
+        self.move('down')
+
+    def move(self, direction):
+        staged, modified, unmerged, untracked = self.single_selection()
+        to_try = [
+            (staged, self.m.staged, self.idx_staged),
+            (unmerged, self.m.unmerged, self.idx_unmerged),
+            (modified, self.m.modified, self.idx_modified),
+            (untracked, self.m.untracked, self.idx_untracked),
+        ]
+        going_up = direction == 'up'
+        def select(item):
+            self.scrollToItem(item)
+            self.setCurrentItem(item)
+            self.setItemSelected(item, True)
+
+        has_selection = [i[0] for i in to_try if i[0] is not None]
+        if not has_selection:
+            indexes = self.selectedIndexes()
+            if indexes:
+                # No files are selected but the tree has a selection;
+                # it must be one of the container items.
+                index = indexes[0]
+                parent_item = self.itemFromIndex(index)
+                if going_up:
+                    item = self.itemAbove(parent_item)
+                else:
+                    item = self.itemBelow(parent_item)
+                if item:
+                    select(item)
+                    return
+
+            if going_up:
+                # go to the last item
+                for dummy, itemlist, parent_idx in reversed(to_try):
+                    idx = len(itemlist)-1
+                    if idx >= 0:
+                        parent = self.topLevelItem(parent_idx)
+                        select(parent.child(idx))
+                        return
+            else:
+                # go to the first item
+                for dummy, itemlist, parent_idx in to_try:
+                    if itemlist:
+                        parent = self.topLevelItem(parent_idx)
+                        item = parent.child(0)
+                        select(parent.child(0))
+                        return
+            return
+
+        for item, itemlist, parent_idx in to_try:
+            if item is None:
+                continue
+            idx = itemlist.index(item)
+            if going_up:
+                if idx > 0:
+                    parent = self.topLevelItem(parent_idx)
+                    select(parent.child(idx - 1))
+                    return
+            else:
+                if idx < len(itemlist) - 1:
+                    parent = self.topLevelItem(parent_idx)
+                    select(parent.child(idx + 1))
+                    return
+
+        # Jump across category boundaries to select the next file.
+        # We do not use itemAbove/Below because we want to avoid
+        # selecting the 'Staged', 'Modified', etc. parent items
+
+        ready = False
+        best_idx = None
+        best_list = None
+
+        if going_up:
+            to_try.reverse()
+
+        for item, itemlist, parent_idx in to_try:
+            if item is not None and not ready:
+                ready = True
+                continue
+            if itemlist:
+                best_list = itemlist
+                best_idx = parent_idx
+
+        if best_list:
+            parent = self.topLevelItem(best_idx)
+            if going_up:
+                select(parent.child(len(best_list) - 1))
+            else:
+                select(parent.child(0))

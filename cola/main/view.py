@@ -248,6 +248,10 @@ class MainView(standard.MainWindow):
                 'DAG...', lambda: git_dag(self.model))
         self.menu_dag.setIcon(qtutils.git_icon())
 
+        # Relayed actions
+        status_tree = self.statusdockwidget.widget().tree
+        self.addAction(status_tree.up)
+        self.addAction(status_tree.down)
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)
 
