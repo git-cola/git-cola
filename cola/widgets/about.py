@@ -160,7 +160,7 @@ span.title {
     <td>Checkout branch</td>
 </tr>
 <tr>
-    <td class="shortcut">Ctrl + d</td>
+    <td class="shortcut">Alt + d</td>
     <td>:</td>
     <td>Show diffstat</td>
 </tr>

@@ -128,7 +128,7 @@ class MainView(standard.MainWindow):
         self.menu_unstage_selected.setIcon(qtutils.icon('remove.svg'))
 
         self.menu_show_diffstat = add_action(self,
-                'Diffstat', emit(self, signals.diffstat), 'Ctrl+D')
+                'Diffstat', emit(self, signals.diffstat), 'Alt+D')
 
         self.menu_stage_modified = add_action(self,
                 'Stage Changed Files To Commit',

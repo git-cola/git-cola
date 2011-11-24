@@ -7,7 +7,7 @@ Main Interface
 * :command:`ctrl-s` -- Stage/unstage selection
 * :command:`ctrl-b` -- Create branch
 * :command:`alt-b` -- Checkout branch
-* :command:`ctrl-d` -- Diffstat the most recent commit
+* :command:`alt-d` -- Diffstat the most recent commit
 * :command:`ctrl-e` -- Export patches
 * :command:`ctrl-p` -- Cherry-pick
 * :command:`ctrl-r` -- Rescan/refresh repository status
