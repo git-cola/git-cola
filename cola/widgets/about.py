@@ -272,11 +272,6 @@ span.title {
     <td>Unstage selected</td>
 </tr>
 <tr>
-    <td class="shortcut">Ctrl + u</td>
-    <td>:</td>
-    <td>Unstage selected</td>
-</tr>
-<tr>
     <td class="shortcut">Shift + Ctrl + h</td>
     <td>:</td>
     <td>View history</td>
@@ -306,7 +301,6 @@ span.title {
         widget = show_shortcuts.widget = QtGui.QDialog(parent)
         widget.setWindowModality(QtCore.Qt.WindowModal)
         widget.setAttribute(QtCore.Qt.WA_NoSystemBackground, True)
-
 
         web = QtWebKit.QWebView(parent)
         web.setHtml(html)
