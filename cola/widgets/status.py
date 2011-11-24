@@ -51,7 +51,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     idx_end = 4
 
     # Read-only access to the mode state
-    mode = property(lambda self: self.model.mode)
+    mode = property(lambda self: self.m.mode)
 
     def __init__(self, parent):
         QtGui.QTreeWidget.__init__(self, parent)
@@ -78,11 +78,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.connect(self, SIGNAL('about_to_update'), self._about_to_update)
         self.connect(self, SIGNAL('updated'), self._updated)
 
-        self.model = cola.model()
-        self.model.add_message_observer(self.model.message_about_to_update,
-                                        self.about_to_update)
-        self.model.add_message_observer(self.model.message_updated,
-                                        self.updated)
+        self.m = cola.model()
+        self.m.add_message_observer(self.m.message_about_to_update,
+                                    self.about_to_update)
+        self.m.add_message_observer(self.m.message_updated, self.updated)
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.show_selection)
@@ -210,10 +209,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.emit(SIGNAL('updated'))
 
     def _updated(self):
-        self.set_staged(self.model.staged)
-        self.set_modified(self.model.modified)
-        self.set_unmerged(self.model.unmerged)
-        self.set_untracked(self.model.untracked)
+        self.set_staged(self.m.staged)
+        self.set_modified(self.m.modified)
+        self.set_unmerged(self.m.unmerged)
+        self.set_untracked(self.m.untracked)
 
         vscroll = self.verticalScrollBar()
         if vscroll and self.old_scroll is not None:
@@ -222,11 +221,11 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         self.restore_selection()
 
-        if not self.model.staged:
+        if not self.m.staged:
             return
 
         staged = self.topLevelItem(self.idx_staged)
-        if self.mode in self.model.modes_read_only:
+        if self.mode in self.m.modes_read_only:
             staged.setText(0, self.tr('Changed'))
         else:
             staged.setText(0, self.tr('Staged'))
@@ -234,7 +233,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def set_staged(self, items):
         """Adds items to the 'Staged' subtree."""
         self._set_subtree(items, self.idx_staged, staged=True,
-                          check=not self.model.read_only())
+                          check=not self.m.read_only())
 
     def set_modified(self, items):
         """Adds items to the 'Modified' subtree."""
@@ -293,13 +292,13 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         staged, modified, unmerged, untracked = self.selection()
         menu = QtGui.QMenu(self)
 
-        enable_staging = self.model.enable_staging()
+        enable_staging = self.m.enable_staging()
         if not enable_staging:
             menu.addAction(qtutils.icon('remove.svg'),
                            self.tr('Unstage Selected'),
                            SLOT(signals.unstage, self.staged()))
 
-        if staged and staged[0] in cola.model().submodules:
+        if staged and staged[0] in self.m.submodules:
             menu.addAction(qtutils.git_icon(),
                            self.tr('Launch git-cola'),
                            SLOT(signals.open_repo, os.path.abspath(staged[0])))
@@ -332,7 +331,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             return menu
 
         modified_submodule = (modified and
-                              modified[0] in cola.model().submodules)
+                              modified[0] in self.m.submodules)
         if enable_staging:
             menu.addAction(qtutils.icon('add.svg'),
                            self.tr('Stage Selected'),
@@ -395,7 +394,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             cola.notifier().broadcast(signals.delete, files)
 
     def _revert_unstaged_edits(self, use_staged=False):
-        if not self.model.undoable():
+        if not self.m.undoable():
             return
         if use_staged:
             items_to_undo = self.staged()
@@ -418,7 +417,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                    'checkout from HEAD.'))
 
     def _revert_uncommitted_edits(self):
-        if not self.model.undoable():
+        if not self.m.undoable():
             return
         items_to_undo = self.modified()
         if items_to_undo:
@@ -472,23 +471,23 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 self.unmerged(), self.untracked())
 
     def contents(self):
-        return (self.model.staged, self.model.modified,
-                self.model.unmerged, self.model.untracked)
+        return (self.m.staged, self.m.modified,
+                self.m.unmerged, self.m.untracked)
 
     def staged(self):
-        return self._subtree_selection(self.idx_staged, self.model.staged)
+        return self._subtree_selection(self.idx_staged, self.m.staged)
 
     def unstaged(self):
         return self.modified() + self.unmerged() + self.untracked()
 
     def modified(self):
-        return self._subtree_selection(self.idx_modified, self.model.modified)
+        return self._subtree_selection(self.idx_modified, self.m.modified)
 
     def unmerged(self):
-        return self._subtree_selection(self.idx_unmerged, self.model.unmerged)
+        return self._subtree_selection(self.idx_unmerged, self.m.unmerged)
 
     def untracked(self):
-        return self._subtree_selection(self.idx_untracked, self.model.untracked)
+        return self._subtree_selection(self.idx_untracked, self.m.untracked)
 
     def _subtree_selection(self, idx, items):
         item = self.topLevelItem(idx)
@@ -506,7 +505,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         the a context-specific action.
 
         """
-        if self.model.read_only():
+        if self.m.read_only():
             return
 
         # Sync the selection model
@@ -517,7 +516,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         # Clear the selection if an empty area was clicked
         selection = self.selected_indexes()
         if not selection:
-            if self.mode == self.model.mode_amend:
+            if self.mode == self.m.mode_amend:
                 cola.notifier().broadcast(signals.set_diff_text, '')
             else:
                 cola.notifier().broadcast(signals.reset_mode)
@@ -537,7 +536,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def double_clicked(self, item, idx):
         """Called when an item is double-clicked in the repo status tree."""
-        if self.model.read_only():
+        self._process_selection()
+
+    def _process_selection(self):
+        if self.m.read_only():
             return
         staged, modified, unmerged, untracked = self.selection()
         if staged:
