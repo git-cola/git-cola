@@ -252,6 +252,8 @@ class MainView(standard.MainWindow):
         status_tree = self.statusdockwidget.widget().tree
         self.addAction(status_tree.up)
         self.addAction(status_tree.down)
+        self.addAction(status_tree.process_selection)
+
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)
 

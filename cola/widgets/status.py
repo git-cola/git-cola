@@ -76,6 +76,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         self.expanded_items = set()
 
+        self.process_selection = qtutils.add_action(self,
+                'Process Selection', self._process_selection, 'Ctrl+S')
+
         self.up = qtutils.add_action(self, 'Move Up', self.move_up, 'K')
         self.down = qtutils.add_action(self, 'Move Down', self.move_down, 'J')
 

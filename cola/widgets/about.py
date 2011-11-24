@@ -135,6 +135,11 @@ span.title {
     <td class="title">Main actions</td>
 </tr>
 <tr>
+    <td class="shortcut">Ctrl + s</td>
+    <td>:</td>
+    <td>Stage/unstage selected files</td>
+</tr>
+<tr>
     <td class="shortcut">Alt + a</td>
     <td>:</td>
     <td>Stage all modified files</td>

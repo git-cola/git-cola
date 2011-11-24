@@ -4,8 +4,7 @@ Shortcut Keys
 
 Main Interface
 ==============
-* :command:`h` -- Stage/unstage section at text cursor position
-* :command:`s` -- Stage/unstage selection
+* :command:`ctrl-s` -- Stage/unstage selection
 * :command:`ctrl-b` -- Create branch
 * :command:`alt-b` -- Checkout branch
 * :command:`ctrl-d` -- Diffstat the most recent commit
@@ -17,6 +16,10 @@ Main Interface
 * :command:`alt-t` -- Stage selected files
 * :command:`shift-alt-s` -- Stash dialog
 
+Diff Viewer
+===========
+* :command:`h` -- Stage/unstage section at text cursor position
+* :command:`s` -- Stage/unstage selection
 
 Cola Classic
 ============
