@@ -150,6 +150,11 @@ span.title {
     <td>Stage all untracked files</td>
 </tr>
 <tr>
+    <td class="shortcut">Ctrl + e</td>
+    <td>:</td>
+    <td>Launch editor</td>
+</tr>
+<tr>
     <td class="shortcut">Ctrl + d</td>
     <td>:</td>
     <td>View diff using `git difftool`</td>

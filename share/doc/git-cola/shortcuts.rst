@@ -7,6 +7,7 @@ Main Interface
 * :command:`ctrl-s` -- Stage/unstage selection
 * :command:`alt-a` -- Stage all modified files
 * :command:`alt-u` -- Stage all untracked files
+* :command:`ctrl-e` -- Launch Editor
 * :command:`ctrl-d` -- View Diff (`git difftool <path>`)
 * :command:`ctrl-b` -- Create branch
 * :command:`alt-b` -- Checkout branch
