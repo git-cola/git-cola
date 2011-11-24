@@ -140,7 +140,7 @@ class MainView(standard.MainWindow):
         self.menu_stage_untracked.setIcon(qtutils.icon('add.svg'))
 
         self.menu_export_patches = add_action(self,
-                'Export Patches...', guicmds.export_patches, 'Ctrl+E')
+                'Export Patches...', guicmds.export_patches, 'Alt+E')
         self.menu_preferences = add_action(self,
                 'Preferences', lambda: preferences(model=prefs_model),
                 QtGui.QKeySequence.Preferences, 'Ctrl+O')

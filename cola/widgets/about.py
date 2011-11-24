@@ -170,7 +170,7 @@ span.title {
     <td>Show diffstat</td>
 </tr>
 <tr>
-    <td class="shortcut">Ctrl + e</td>
+    <td class="shortcut">Alt + e</td>
     <td>:</td>
     <td>Export patches</td>
 </tr>

@@ -11,14 +11,14 @@ Main Interface
 * :command:`ctrl-b` -- Create branch
 * :command:`alt-b` -- Checkout branch
 * :command:`alt-d` -- Diffstat the most recent commit
-* :command:`ctrl-e` -- Export patches
+* :command:`alt-e` -- Export patches
 * :command:`ctrl-p` -- Cherry-pick
 * :command:`ctrl-r` -- Rescan/refresh repository status
 * :command:`shift-alt-s` -- Stash dialog
 
 Diff Viewer
 ===========
-* :command:`h` -- Stage/unstage section at text cursor position
+* :command:`h` -- Stage/unstage section under text cursor
 * :command:`s` -- Stage/unstage selection
 
 Cola Classic
