@@ -79,6 +79,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.process_selection = qtutils.add_action(self,
                 'Process Selection', self._process_selection, 'Ctrl+S')
 
+        self.launch_difftool = qtutils.add_action(self,
+                'Process Selection', self._launch_difftool, 'Ctrl+D')
+
         self.up = qtutils.add_action(self, 'Move Up', self.move_up, 'K')
         self.down = qtutils.add_action(self, 'Move Down', self.move_down, 'J')
 
@@ -557,6 +560,18 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             cola.notifier().broadcast(signals.stage, unmerged)
         elif untracked:
             cola.notifier().broadcast(signals.stage, untracked)
+
+    def _launch_difftool(self):
+        staged, modified, unmerged, untracked = self.selection()
+        if staged:
+            selection = staged
+        elif modified:
+            selection = modified
+        elif unmerged:
+            selection = unmerged
+        else:
+            return
+        cola.notifier().broadcast(signals.difftool, bool(staged), selection)
 
     def show_selection(self):
         """Show the selected item."""

@@ -253,6 +253,7 @@ class MainView(standard.MainWindow):
         self.addAction(status_tree.up)
         self.addAction(status_tree.down)
         self.addAction(status_tree.process_selection)
+        self.addAction(status_tree.launch_difftool)
 
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)

@@ -5,15 +5,15 @@ Shortcut Keys
 Main Interface
 ==============
 * :command:`ctrl-s` -- Stage/unstage selection
+* :command:`alt-a` -- Stage all modified files
+* :command:`alt-u` -- Stage all untracked files
+* :command:`ctrl-d` -- View Diff (`git difftool <path>`)
 * :command:`ctrl-b` -- Create branch
 * :command:`alt-b` -- Checkout branch
 * :command:`alt-d` -- Diffstat the most recent commit
 * :command:`ctrl-e` -- Export patches
 * :command:`ctrl-p` -- Cherry-pick
 * :command:`ctrl-r` -- Rescan/refresh repository status
-* :command:`alt-a` -- Stage all modified files
-* :command:`alt-u` -- Stage all untracked files
-* :command:`alt-t` -- Stage selected files
 * :command:`shift-alt-s` -- Stash dialog
 
 Diff Viewer
