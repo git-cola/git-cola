@@ -45,6 +45,7 @@ from cola.qtutils import tr
 from cola.views import standard
 from cola.widgets import cfgactions
 from cola.widgets.about import launch_about_dialog
+from cola.widgets.about import show_shortcuts
 from cola.widgets.commitmsg import CommitMessageEditor
 from cola.widgets.diff import DiffTextEdit
 from cola.widgets.status import StatusWidget
@@ -192,6 +193,12 @@ class MainView(standard.MainWindow):
                 'Documentation',
                 lambda: self.model.git.web__browse(resources.html_docs()),
                 QtGui.QKeySequence.HelpContents)
+
+        self.menu_help_shortcuts = add_action(self,
+                'Keyboard Shortcuts',
+                show_shortcuts,
+                QtCore.Qt.Key_Question)
+
         self.menu_commit_compare = add_action(self,
                 'Commits...', compare.compare)
         self.menu_commit_compare_file = add_action(self,
@@ -343,6 +350,7 @@ class MainView(standard.MainWindow):
         # Help Menu
         self.help_menu = create_menu('&Help', self.menubar)
         self.help_menu.addAction(self.menu_help_docs)
+        self.help_menu.addAction(self.menu_help_shortcuts)
         self.help_menu.addAction(self.menu_help_about)
         # Add to menubar
         self.menubar.addAction(self.help_menu.menuAction())
