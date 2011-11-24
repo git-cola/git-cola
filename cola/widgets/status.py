@@ -45,8 +45,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     # Item categories
     idx_header = -1
     idx_staged = 0
-    idx_modified = 1
-    idx_unmerged = 2
+    idx_unmerged = 1
+    idx_modified = 2
     idx_untracked = 3
     idx_end = 4
 
@@ -64,8 +64,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.setAnimated(True)
 
         self.add_item('Staged', 'plus.png', hide=True)
-        self.add_item('Modified', 'modified.png', hide=True)
         self.add_item('Unmerged', 'unmerged.png', hide=True)
+        self.add_item('Modified', 'modified.png', hide=True)
         self.add_item('Untracked', 'untracked.png', hide=True)
 
         # Used to restore the selection
