@@ -419,8 +419,13 @@ def ok_icon():
 
 
 def open_icon():
-    """Return a standard Save icon"""
+    """Return a standard open directory icon"""
     return cached_icon(QtGui.QStyle.SP_DirOpenIcon)
+
+
+def dir_close_icon():
+    """Return a standard closed directory icon"""
+    return cached_icon(QtGui.QStyle.SP_DirClosedIcon)
 
 
 def git_icon():

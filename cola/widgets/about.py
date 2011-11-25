@@ -135,6 +135,11 @@ span.title {
     <td class="title">Main actions</td>
 </tr>
 <tr>
+    <td class="shortcut">Ctrl + r</td>
+    <td>:</td>
+    <td>Rescan / refresh repository status</td>
+</tr>
+<tr>
     <td class="shortcut">Ctrl + s</td>
     <td>:</td>
     <td>Stage/unstage selected files</td>
@@ -148,16 +153,6 @@ span.title {
     <td class="shortcut">Alt + u</td>
     <td>:</td>
     <td>Stage all untracked files</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + e</td>
-    <td>:</td>
-    <td>Launch editor</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + d</td>
-    <td>:</td>
-    <td>View diff using `git difftool`</td>
 </tr>
 <tr>
     <td class="shortcut">Ctrl + b</td>
@@ -185,11 +180,6 @@ span.title {
     <td>Cherry pick</td>
 </tr>
 <tr>
-    <td class="shortcut">Ctrl + r</td>
-    <td>:</td>
-    <td>Rescan / refresh repository status</td>
-</tr>
-<tr>
     <td class="shortcut">Shift + Alt + s</td>
     <td>:</td>
     <td>Stash</td>
@@ -201,66 +191,27 @@ span.title {
 </tr>
 </table>
 
-<!-- Diff Viewer -->
+<!-- Editing -->
 <table class="center">
 <tr>
     <td width="33%">&nbsp;</td>
     <td>&nbsp;</td>
-    <td class="title">Diff viewer</td>
+    <td class="title">Editing</td>
 </tr>
 <tr>
-    <td class="shortcut">s</td>
+    <td class="shortcut">Ctrl + e</td>
     <td>:</td>
-    <td>Stage/unstage selected text or
-        stage/unstage the patch diff section (hunk) beneath
-        the text cursor when nothing is selected
-    </td>
+    <td>Launch editor</td>
 </tr>
 <tr>
-    <td class="shortcut">h</td>
+    <td class="shortcut">Shift + Ctrl + e</td>
     <td>:</td>
-    <td>Stage/unstage the patch diff section (hunk) beneath
-        the text cursor
-    </td>
+    <td>View / edit recently modified files</td>
 </tr>
 <tr>
-    <td class="shortcut">Ctrl + a</td>
+    <td class="shortcut">Ctrl + d</td>
     <td>:</td>
-    <td>Select All</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + c</td>
-    <td>:</td>
-    <td>Copy</td>
-</tr>
-</table>
-
-<!-- Tree navigation -->
-<table class="center">
-<tr>
-    <td width="33%">&nbsp;</td>
-    <td>&nbsp;</td>
-    <td class="title">Tree navigation</td>
-</tr>
-<tr>
-    <td class="shortcut">h</td>
-    <td>:</td>
-    <td>Move to parent/collapse</td>
-</tr>
-<tr>
-    <td class="shortcut">j</td>
-    <td>:</td>
-    <td>Move down</td>
-</tr>
-<tr>
-    <td class="shortcut">k</td>
-    <td>:</td>
-    <td>Move up</td>
-</tr>
-<tr>
-    <td class="shortcut">l</td>
-    <td>:</td>
-    <td>Expand directory</td>
+    <td>View diff using `git difftool`</td>
 </tr>
 </table>
 
@@ -307,6 +258,60 @@ span.title {
     <td>Revert uncommitted changes</td>
 </tr>
 </table>
+
+<!-- Diff Viewer -->
+<table class="center">
+<tr>
+    <td width="33%">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td class="title">Diff viewer</td>
+</tr>
+<tr>
+    <td class="shortcut">s</td>
+    <td>:</td>
+    <td>Stage/unstage selected text or
+        stage/unstage the patch diff section (hunk) beneath
+        the text cursor when nothing is selected
+    </td>
+</tr>
+<tr>
+    <td class="shortcut">h</td>
+    <td>:</td>
+    <td>Stage/unstage the patch diff section (hunk) beneath
+        the text cursor
+    </td>
+</tr>
+</table>
+
+<!-- Tree navigation -->
+<table class="center">
+<tr>
+    <td width="33%">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td class="title">Tree navigation</td>
+</tr>
+<tr>
+    <td class="shortcut">h</td>
+    <td>:</td>
+    <td>Move to parent/collapse</td>
+</tr>
+<tr>
+    <td class="shortcut">j</td>
+    <td>:</td>
+    <td>Move down</td>
+</tr>
+<tr>
+    <td class="shortcut">k</td>
+    <td>:</td>
+    <td>Move up</td>
+</tr>
+<tr>
+    <td class="shortcut">l</td>
+    <td>:</td>
+    <td>Expand directory</td>
+</tr>
+</table>
+
 </body>
 """
     try:

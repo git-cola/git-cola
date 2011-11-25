@@ -48,6 +48,7 @@ from cola.widgets.about import launch_about_dialog
 from cola.widgets.about import show_shortcuts
 from cola.widgets.commitmsg import CommitMessageEditor
 from cola.widgets.diff import DiffTextEdit
+from cola.widgets.recent import browse_recent
 from cola.widgets.status import StatusWidget
 
 
@@ -148,6 +149,9 @@ class MainView(standard.MainWindow):
         self.menu_rescan = add_action(self,
                 'Rescan', emit(self, signals.rescan_and_refresh), 'Ctrl+R')
         self.menu_rescan.setIcon(qtutils.reload_icon())
+
+        self.menu_browse_recent = add_action(self,
+                'Recently Modified Files...', browse_recent, 'Shift+Ctrl+E')
 
         self.menu_cherry_pick = add_action(self,
                 'Cherry-Pick...', guicmds.cherry_pick, 'Ctrl+P')
@@ -268,6 +272,7 @@ class MainView(standard.MainWindow):
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_rescan)
         self.file_menu.addSeparator()
+        self.file_menu.addAction(self.menu_browse_recent)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_load_commitmsg)
         self.file_menu.addAction(self.menu_load_commitmsg_template)
