@@ -144,7 +144,6 @@ class BranchCompareView(standard.Dialog):
         self._bottom_widget = QtGui.QWidget(self._splitter)
         self._bottom_grid_layt = QtGui.QGridLayout(self._bottom_widget)
         self._bottom_grid_layt.setMargin(0)
-        self._bottom_grid_layt.setSpacing(defs.spacing)
 
         self._button_spacer = QtGui.QSpacerItem(1, 1,
                                                 QtGui.QSizePolicy.Expanding,
