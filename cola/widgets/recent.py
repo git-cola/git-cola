@@ -33,6 +33,7 @@ class UpdateFileListThread(QtCore.QThread):
 class RecentFileDialog(standard.Dialog):
     def __init__(self, parent):
         standard.Dialog.__init__(self, parent)
+        self.setWindowTitle(self.tr('Recently Modified Files'))
         self.setWindowModality(QtCore.Qt.WindowModal)
 
         self.update_thread = UpdateFileListThread()
