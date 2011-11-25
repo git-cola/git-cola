@@ -39,6 +39,7 @@ python setup.py --quiet install \
 rm -rf "$ROOT"/lib "$ROOT"/Lib build
 
 cp $BASENAME/bin/git-cola $BASENAME/bin/git-cola.pyw
+cp $BASENAME/bin/git-dag $BASENAME/bin/git-dag.pyw
 mkdir -p $ETC 2>/dev/null
 cp win32/git.bmp win32/gpl-2.0.rtf win32/git.ico $ETC
 
