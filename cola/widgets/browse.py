@@ -299,6 +299,11 @@ class GitFileTreeModel(QtGui.QStandardItemModel):
         self.dir_entries = {'': self.invisibleRootItem()}
         self.dir_rows = {}
 
+    def clear(self):
+        QtGui.QStandardItemModel.clear(self)
+        self.dir_rows = {}
+        self.dir_entries = {'': self.invisibleRootItem()}
+
     def add_files(self, files):
         """Add a list of files"""
         add_file = self.add_file
