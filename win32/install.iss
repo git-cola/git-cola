@@ -270,7 +270,8 @@ begin
     EdtPython:=TEdit.Create(PythonPage);
     with EdtPython do begin
         Parent:=PythonPage.Surface;
-        Text:='C:\Python26\pythonw.exe';
+        Text:=GetPreviousData('PythonPath', 'C:\Python26');
+        Text:=Text+'pythonw.exe';
         if not FileExists(Text) then begin
             Text:='';
         end;
@@ -311,7 +312,8 @@ begin
     EdtGit:=TEdit.Create(GitPage);
     with EdtGit do begin
         Parent:=GitPage.Surface;
-        Text:='C:\Program Files\Git\bin\git.exe';
+        Text:=GetPreviousData('GitPath', 'C:\Program Files\Git');
+        Text:=Text+'git.exe';
         if not FileExists(Text) then begin
             Text:='';
         end;
