@@ -478,7 +478,7 @@ class Edit(Command):
         if not os.path.exists(filename):
             return
         editor = self.model.editor()
-        if 'vi' in editor and self.line_number:
+        if editor == 'gvim' and self.line_number:
             utils.fork([editor, filename, '+'+self.line_number])
         else:
             utils.fork([editor, filename])
