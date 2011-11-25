@@ -94,7 +94,7 @@ class BrowseDialog(QtGui.QDialog):
         return model.filename
 
     @staticmethod
-    def select_file_from_list(file_list):
+    def select_file_from_list(file_list, title='Select File'):
         parent = qtutils.active_window()
         model = BrowseModel(None)
         dlg = BrowseDialog(model, select_file=True, parent=parent)
@@ -102,7 +102,7 @@ class BrowseDialog(QtGui.QDialog):
         dlg_model.add_files(file_list)
         dlg.setModel(dlg_model)
         dlg.expandAll()
-        dlg.setWindowTitle('Select File from %s' % model.ref)
+        dlg.setWindowTitle(title)
         dlg.resize(parent.width()*3/4, 333)
         dlg.show()
         dlg.raise_()
