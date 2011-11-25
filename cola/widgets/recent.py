@@ -119,6 +119,8 @@ class RecentFileDialog(standard.Dialog):
         self.connect(self.close_button, SIGNAL('clicked()'), self.accept)
         self.connect(self.edit_button, SIGNAL('clicked()'), self.edit_selected)
 
+        qtutils.add_action(self, 'Refresh', self.refresh, 'Ctrl+R')
+
         self.update_thread.count = 0
         self.update_thread.start()
 
