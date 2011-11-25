@@ -291,6 +291,18 @@ class GitTreeWidget(QtGui.QTreeView):
 
         return result
 
+    def select_first_file(self):
+        """Select the first filename in the tree"""
+        model = self.model()
+        idx = self.indexAt(QtCore.QPoint(0, 0))
+        item = model.itemFromIndex(idx)
+        while idx and idx.isValid() and item and item.is_dir:
+            idx = self.indexBelow(idx)
+            item = model.itemFromIndex(idx)
+
+        if idx and idx.isValid() and item:
+            self.setCurrentIndex(idx)
+
 
 class GitFileTreeModel(QtGui.QStandardItemModel):
     """Presents a list of file paths as a hierarchical tree."""
