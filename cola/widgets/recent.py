@@ -106,6 +106,8 @@ class RecentFileDialog(standard.Dialog):
         self.connect(self.count, SIGNAL('valueChanged(int)'),
                      self.count_changed)
 
+        self.connect(self.count, SIGNAL('editingFinished()'), self.refresh)
+
         self.connect(self.refresh_button, SIGNAL('clicked()'), self.refresh)
 
         self.connect(self.update_thread, SIGNAL('filenames'),
