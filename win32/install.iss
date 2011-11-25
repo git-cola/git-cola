@@ -38,15 +38,15 @@ Source: "*"; DestDir: "{app}"; Excludes: "\*.bmp, \install.*, \tmp.*, \bin\*inst
 Source: "etc\ReleaseNotes.txt"; DestDir: "{app}\etc"; Flags: isreadme
 
 [Icons]
-Name: "{group}\git-cola"; Filename: "{app}\bin\git-cola.pyw"; Parameters: "--prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"
-Name: "{group}\git-dag"; Filename: "{app}\bin\git-dag.pyw"; Parameters: "--prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"
+Name: "{group}\git-cola"; Filename: "{code:GetPythonExe}"; Parameters: "{app}\bin\git-cola.pyw --prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"
+Name: "{group}\git-dag"; Filename: "{code:GetPythonExe}"; Parameters: "{app}\bin\git-dag.pyw --prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"
 Name: "{group}\git-cola Homepage"; Filename: "{#emit APP_URL}"; WorkingDir: "%USERPROFILE%";
 Name: "{group}\Release Notes"; Filename: "{app}\etc\ReleaseNotes.txt"; WorkingDir: "%USERPROFILE%";
 Name: "{group}\License"; Filename: "{app}\etc\gpl-2.0.rtf"; WorkingDir: "%USERPROFILE%";
 Name: "{group}\Uninstall git-cola"; Filename: "{uninstallexe}"
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\git-cola"; Filename: "{app}\bin\git-cola.pyw"; Parameters: "--prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"; Tasks: quicklaunchicon
-Name: "{code:GetShellFolder|desktop}\git-cola"; Filename: "{app}\bin\git-cola.pyw"; Parameters: "--prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"; Tasks: desktopicon
-Name: "{code:GetShellFolder|desktop}\git-dag"; Filename: "{app}\bin\git-dag.pyw"; Parameters: "--prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"; Tasks: desktopicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\git-cola"; Filename: "{code:GetPythonExe}"; Parameters: "{app}\bin\git-cola.pyw --prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"; Tasks: quicklaunchicon
+Name: "{code:GetShellFolder|desktop}\git-cola"; Filename: "{code:GetPythonExe}"; Parameters: "{app}\bin\git-cola.pyw --prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"; Tasks: desktopicon
+Name: "{code:GetShellFolder|desktop}\git-dag"; Filename: "{code:GetPythonExe}"; Parameters: "{app}\bin\git-dag.pyw --prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"; Tasks: desktopicon
 
 [Messages]
 BeveledLabel={#emit APP_URL}
@@ -270,7 +270,8 @@ begin
     EdtPython:=TEdit.Create(PythonPage);
     with EdtPython do begin
         Parent:=PythonPage.Surface;
-        Text:='C:\Python26\pythonw.exe';
+        Text:=GetPreviousData('PythonPath', 'C:\Python26');
+        Text:=Text+'pythonw.exe';
         if not FileExists(Text) then begin
             Text:='';
         end;
@@ -311,7 +312,8 @@ begin
     EdtGit:=TEdit.Create(GitPage);
     with EdtGit do begin
         Parent:=GitPage.Surface;
-        Text:='C:\Program Files\Git\bin\git.exe';
+        Text:=GetPreviousData('GitPath', 'C:\Program Files\Git');
+        Text:=Text+'git.exe';
         if not FileExists(Text) then begin
             Text:='';
         end;
