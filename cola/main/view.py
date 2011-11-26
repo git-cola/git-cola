@@ -352,11 +352,8 @@ class MainView(standard.MainWindow):
         self.tools_menu.addSeparator()
         if self.classic_dockable:
             self.tools_menu.addAction(self.classicdockwidget.toggleViewAction())
-        self.tools_menu.addAction(self.diffdockwidget.toggleViewAction())
-        self.tools_menu.addAction(self.actionsdockwidget.toggleViewAction())
-        self.tools_menu.addAction(self.commitdockwidget.toggleViewAction())
-        self.tools_menu.addAction(self.statusdockwidget.toggleViewAction())
-        self.tools_menu.addAction(self.logdockwidget.toggleViewAction())
+
+        self.setup_dockwidget_tools_menu()
         self.menubar.addAction(self.tools_menu.menuAction())
 
         # Help Menu
@@ -545,6 +542,28 @@ class MainView(standard.MainWindow):
         task = LoadGUIStateTask(self)
         QtCore.QThreadPool.globalInstance().start(task)
         return task
+
+    def setup_dockwidget_tools_menu(self):
+        # Hotkeys for toggling the dock widgets
+        dockwidgets = (
+            (self.logdockwidget, 'Alt+0'),
+            (self.commitdockwidget, 'Alt+1'),
+            (self.statusdockwidget, 'Alt+2'),
+            (self.diffdockwidget, 'Alt+3'),
+            (self.actionsdockwidget, 'Alt+4'),
+        )
+        for dockwidget, shortcut in dockwidgets:
+            action = dockwidget.toggleViewAction()
+            action.setShortcut(shortcut)
+            self.tools_menu.addAction(action)
+            self.addAction(action)
+            def showdock(show, dockwidget=dockwidget):
+                if show:
+                    dockwidget.raise_()
+                    dockwidget.widget().setFocus(True)
+                else:
+                    self.setFocus(True)
+            self.connect(action, SIGNAL('triggered(bool)'), showdock)
 
     def stage(self):
         """Stage selected files, or all files if no selection exists."""
