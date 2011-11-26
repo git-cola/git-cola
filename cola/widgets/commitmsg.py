@@ -33,6 +33,7 @@ class CommitMessageEditor(QtGui.QWidget):
 
         self.commitmsg = CommitMessageTextEdit(model, self)
         self.commitmsg.setFont(diff_font())
+        self.setFocusProxy(self.commitmsg)
 
         self._ctrls_layt = QtGui.QHBoxLayout()
         self._ctrls_layt.setSpacing(defs.spacing)
