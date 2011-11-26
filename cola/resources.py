@@ -1,6 +1,6 @@
 """Provides the prefix() function for finding cola resources"""
 import os
-import glob
+import webbrowser
 
 _modpath = os.path.abspath(__file__)
 if 'share' in __file__ and 'lib' in __file__:
@@ -33,6 +33,10 @@ def html_docs():
         return htmldocs
     return doc('git-cola.txt')
 
+
+def show_html_docs():
+    url = html_docs()
+    webbrowser.open_new_tab(url)
 
 def share(*args):
     """Return a path relative to cola's /usr/share/ directory"""

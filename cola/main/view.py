@@ -194,8 +194,7 @@ class MainView(standard.MainWindow):
         self.menu_clone_repo.setIcon(qtutils.git_icon())
 
         self.menu_help_docs = add_action(self,
-                'Documentation',
-                lambda: self.model.git.web__browse(resources.html_docs()),
+                'Documentation', resources.show_html_docs,
                 QtGui.QKeySequence.HelpContents)
 
         self.menu_help_shortcuts = add_action(self,
