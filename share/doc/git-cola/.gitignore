@@ -1,6 +1,7 @@
-*.html
 *.pdf
 *.7
 *.1
-doc.dep
 /_build
+/git-cola.html
+/git-dag.html
+/doc.dep

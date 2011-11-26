@@ -1,8 +1,9 @@
 prefix ?= $(CURDIR)
-docdir ?= $(DESTDIR)$(prefix)/share/doc/git-cola
+docdir ?= $(prefix)/share/doc/git-cola
 htmldir ?= $(docdir)/html
 SED ?= sed
 RSYNC ?= rsync
+# DESTDIR =
 # Makefile for Sphinx documentation
 #
 
@@ -97,12 +98,14 @@ all: html
 	$(MAKE) -f Makefile.asciidoc all
 
 install: install-html install-man
-	cp git-cola.txt $(docdir)
+	test  -d $(DESTDIR)$(docdir) || mkdir -p $(DESTDIR)$(docdir)
+	cp *.txt $(DESTDIR)$(docdir)
+	cp *.html $(DESTDIR)$(docdir)
 
 install-html: html
-	test  -d $(htmldir) || mkdir -p $(htmldir)
-	$(RSYNC) -ar --delete _build/html/ $(htmldir)/
-	$(MAKE) -f Makefile.asciidoc install-html
+	test  -d $(DESTDIR)$(htmldir) || mkdir -p $(DESTDIR)$(htmldir)
+	$(RSYNC) -ar --delete _build/html/ $(DESTDIR)$(htmldir)/
+	$(MAKE) -f Makefile.asciidoc prefix=$(prefix) install-html
 
 install-man:
-	$(MAKE) -f Makefile.asciidoc install
+	$(MAKE) -f Makefile.asciidoc prefix=$(prefix) install

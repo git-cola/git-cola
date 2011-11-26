@@ -101,6 +101,7 @@ def cola_data_files():
         _app_path('share/git-cola/icons', '*.svg'),
         _app_path('share/applications', '*.desktop'),
         _app_path('share/doc/git-cola', '*.txt'),
+        _app_path('share/doc/git-cola', '*.html'),
         _package('cola'),
         _package('cola.classic'),
         _package('cola.dag'),
