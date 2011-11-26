@@ -428,6 +428,16 @@ def dir_close_icon():
     return cached_icon(QtGui.QStyle.SP_DirClosedIcon)
 
 
+def titlebar_close_icon():
+    """Return a dock widget close icon"""
+    return cached_icon(QtGui.QStyle.SP_TitleBarCloseButton)
+
+
+def titlebar_normal_icon():
+    """Return a dock widget close icon"""
+    return cached_icon(QtGui.QStyle.SP_TitleBarNormalButton)
+
+
 def git_icon():
     return icon('git.svg')
 

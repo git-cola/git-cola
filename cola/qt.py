@@ -29,11 +29,51 @@ def create_button(text, layout=None, tooltip=None, icon=None):
     return button
 
 
+class DockTitleBarWidget(QtGui.QWidget):
+    def __init__(self, parent, title):
+        QtGui.QWidget.__init__(self, parent)
+        label = QtGui.QLabel()
+        font = label.font()
+        font.setCapitalization(QtGui.QFont.SmallCaps)
+        label.setFont(font)
+        label.setText(title)
+
+        self.close_button = QtGui.QPushButton()
+        self.close_button.setFlat(True)
+        self.close_button.setFixedSize(QtCore.QSize(16, 16))
+        self.close_button.setIcon(qtutils.titlebar_close_icon())
+
+        self.toggle_button = QtGui.QPushButton()
+        self.toggle_button.setFlat(True)
+        self.toggle_button.setFixedSize(QtCore.QSize(16, 16))
+        self.toggle_button.setIcon(qtutils.titlebar_normal_icon())
+
+        layout = QtGui.QHBoxLayout()
+        layout.setMargin(2)
+        layout.setSpacing(defs.spacing)
+        layout.addWidget(label)
+        layout.addStretch()
+        layout.addWidget(self.toggle_button)
+        layout.addWidget(self.close_button)
+        self.setLayout(layout)
+
+        self.connect(self.toggle_button, SIGNAL('clicked()'),
+                     self.toggle_floating)
+
+        self.connect(self.close_button, SIGNAL('clicked()'),
+                     self.parent().toggleViewAction().trigger)
+
+    def toggle_floating(self):
+        self.parent().setFloating(not self.parent().isFloating())
+
+
 def create_dock(title, parent):
     """Create a dock widget and set it up accordingly."""
     dock = QtGui.QDockWidget(parent)
     dock.setWindowTitle(tr(title))
     dock.setObjectName(title)
+    titlebar = DockTitleBarWidget(dock, title)
+    dock.setTitleBarWidget(titlebar)
     return dock
 
 
