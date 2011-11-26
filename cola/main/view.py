@@ -80,9 +80,9 @@ class MainView(standard.MainWindow):
             self.classicdockwidget.setWidget(self.classicwidget)
 
         # "Actions" widget
-        self.actiondockwidget = create_dock('Actions', self)
-        self.actiondockwidgetcontents = qt.QFlowLayoutWidget(self)
-        layout = self.actiondockwidgetcontents.layout()
+        self.actionsdockwidget = create_dock('Actions', self)
+        self.actionsdockwidgetcontents = qt.QFlowLayoutWidget(self)
+        layout = self.actionsdockwidgetcontents.layout()
         self.stage_button = create_button('Stage', layout)
         self.unstage_button = create_button('Unstage', layout)
         self.rescan_button = create_button('Rescan', layout)
@@ -93,7 +93,7 @@ class MainView(standard.MainWindow):
         self.alt_button = create_button('Exit Diff Mode', layout)
         self.alt_button.hide()
         layout.addStretch()
-        self.actiondockwidget.setWidget(self.actiondockwidgetcontents)
+        self.actionsdockwidget.setWidget(self.actionsdockwidgetcontents)
 
         # "Repository Status" widget
         self.statusdockwidget = create_dock('Repository Status', self)
@@ -353,7 +353,7 @@ class MainView(standard.MainWindow):
         if self.classic_dockable:
             self.tools_menu.addAction(self.classicdockwidget.toggleViewAction())
         self.tools_menu.addAction(self.diffdockwidget.toggleViewAction())
-        self.tools_menu.addAction(self.actiondockwidget.toggleViewAction())
+        self.tools_menu.addAction(self.actionsdockwidget.toggleViewAction())
         self.tools_menu.addAction(self.commitdockwidget.toggleViewAction())
         self.tools_menu.addAction(self.statusdockwidget.toggleViewAction())
         self.tools_menu.addAction(self.logdockwidget.toggleViewAction())
@@ -378,7 +378,7 @@ class MainView(standard.MainWindow):
         if self.classic_dockable:
             self.addDockWidget(top, self.classicdockwidget)
         self.addDockWidget(top, self.statusdockwidget)
-        self.addDockWidget(top, self.actiondockwidget)
+        self.addDockWidget(top, self.actionsdockwidget)
         self.addDockWidget(bottom, self.logdockwidget)
         if self.classic_dockable:
             self.tabifyDockWidget(self.classicdockwidget, self.commitdockwidget)
