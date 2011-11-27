@@ -24,6 +24,8 @@ def create_button(text, layout=None, tooltip=None, icon=None):
     button.setText(tr(text))
     if icon:
         button.setIcon(icon)
+    if tooltip is not None:
+        button.setToolTip(tooltip)
     if layout is not None:
         layout.addWidget(button)
     return button
