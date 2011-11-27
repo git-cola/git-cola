@@ -717,7 +717,7 @@ if __name__ == '__main__':
             else:
                 family = 'Monospace'
             font.setFamily(family)
-            font.setPointSize(13)
+            font.setPointSize(12)
             self.output_text.setFont(font)
             self.output_text.setAcceptDrops(False)
             self.vboxlayout.addWidget(self.output_text)
