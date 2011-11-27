@@ -40,13 +40,11 @@ class CommitMessageEditor(QtGui.QWidget):
         self._ctrls_layt.setMargin(defs.margin)
 
         # Sign off and commit buttons
-        self.signoff_button = create_toolbutton(self,
-                                                text='Sign Off',
+        self.signoff_button = create_toolbutton(text='Sign Off',
                                                 tooltip='Sign off on this commit',
                                                 icon=apply_icon())
 
-        self.commit_button = create_toolbutton(self,
-                                               text='Commit@@verb',
+        self.commit_button = create_toolbutton(text='Commit@@verb',
                                                tooltip='Commit staged changes',
                                                icon=save_icon())
 

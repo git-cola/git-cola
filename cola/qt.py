@@ -84,8 +84,8 @@ def create_menu(title, parent):
     return qmenu
 
 
-def create_toolbutton(parent, text=None, layout=None, tooltip=None, icon=None):
-    button = QtGui.QToolButton(parent)
+def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
+    button = QtGui.QToolButton()
     button.setAutoRaise(True)
     button.setAutoFillBackground(True)
     if icon:

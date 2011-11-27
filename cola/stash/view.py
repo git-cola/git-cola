@@ -106,8 +106,7 @@ class StashView(standard.Dialog):
         self.emit(SIGNAL(rescan))
 
     def toolbutton(self, text, tooltip, icon):
-        return qt.create_toolbutton(self,
-                                    text=text, tooltip=tooltip, icon=icon)
+        return qt.create_toolbutton(text=text, tooltip=tooltip, icon=icon)
 
     def pushbutton(self, text, tooltip, icon):
         btn = QtGui.QPushButton(self)
