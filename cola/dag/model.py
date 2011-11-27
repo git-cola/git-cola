@@ -8,7 +8,7 @@ from cola import utils
 from cola.cmds import BaseCommand
 from cola.observable import Observable
 
-# put subject at the end b/c it can contain
+# put summary at the end b/c it can contain
 # any number of funky characters
 logfmt = 'format:%H%x01%P%x01%d%x01%an%x01%aD%x01%s'
 git = git.instance()
@@ -86,7 +86,7 @@ class Commit(object):
     root_generation = 0
 
     __slots__ = ('sha1',
-                 'subject',
+                 'summary',
                  'parents',
                  'children',
                  'tags',
@@ -96,7 +96,7 @@ class Commit(object):
                  'parsed')
     def __init__(self, sha1=None, log_entry=None):
         self.sha1 = sha1
-        self.subject = None
+        self.summary = None
         self.parents = []
         self.children = []
         self.tags = set()
@@ -109,11 +109,11 @@ class Commit(object):
 
     def parse(self, log_entry):
         self.sha1 = log_entry[:40]
-        (parents, tags, author, authdate, subject) = \
+        (parents, tags, author, authdate, summary) = \
                 log_entry[41:].split(chr(0x01), 5)
 
-        if subject:
-            self.subject = core.decode(subject)
+        if summary:
+            self.summary = core.decode(summary)
 
         if parents:
             generation = None
@@ -151,7 +151,7 @@ class Commit(object):
     def __repr__(self):
         return ("{\n"
                 "  sha1: " + self.sha1 + "\n"
-                "  subject: " + self.subject + "\n"
+                "  summary: " + self.summary + "\n"
                 "  author: " + self.author + "\n"
                 "  authdate: " + self.authdate + "\n"
                 "  parents: [" + ', '.join(self.parents) + "]\n"

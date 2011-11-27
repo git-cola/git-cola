@@ -57,7 +57,7 @@ class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
     def __init__(self, commit, parent=None):
         QtGui.QListWidgetItem.__init__(self, parent)
         self.commit = commit
-        self.setText(0, commit.subject)
+        self.setText(0, commit.summary)
         self.setText(1, commit.author)
         self.setText(2, commit.authdate)
 
@@ -70,7 +70,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self.setAllColumnsShowFocus(True)
         self.setAlternatingRowColors(True)
         self.setRootIsDecorated(False)
-        self.setHeaderLabels(['Subject', 'Author', 'Date'])
+        self.setHeaderLabels(['Summary', 'Author', 'Date'])
 
         self._sha1map = {}
         self._notifier = notifier

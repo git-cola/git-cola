@@ -219,7 +219,7 @@ class CommitMessageTextEdit(QtGui.QTextEdit):
                 continue
 
         for c in menu_commits:
-            menu.addAction(c.subject,
+            menu.addAction(c.summary,
                            lambda c=c: self.load_previous_message(c.sha1))
 
         if len(commits) == 6:
