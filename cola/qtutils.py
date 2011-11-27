@@ -423,6 +423,11 @@ def open_icon():
     return cached_icon(QtGui.QStyle.SP_DirOpenIcon)
 
 
+def options_icon():
+    """Return a standard open directory icon"""
+    return icon('options.svg')
+
+
 def dir_close_icon():
     """Return a standard closed directory icon"""
     return cached_icon(QtGui.QStyle.SP_DirClosedIcon)
