@@ -447,7 +447,7 @@ class MainView(standard.MainWindow):
                 return
             qtutils.logger().setFont(font)
             self.diff_viewer.setFont(font)
-            self.commitmsgeditor.commitmsg.setFont(font)
+            self.commitmsgeditor.setFont(font)
 
         elif config == 'cola.tabwidth':
             # variable-tab-width setting
