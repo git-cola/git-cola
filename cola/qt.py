@@ -129,27 +129,32 @@ class QFlowLayoutWidget(QtGui.QWidget):
             self.layout().setDirection(dxn)
 
 
-class QCollapsibleGroupBox(QtGui.QGroupBox):
+class ExpandableGroupBox(QtGui.QGroupBox):
     def __init__(self, parent=None):
         QtGui.QGroupBox.__init__(self, parent)
         self.setFlat(True)
-        self.collapsed = False
+        self.expanded = True
         self.click_pos = None
-        self.collapse_icon_size = 16
+        self.arrow_icon_size = 16
 
-    def set_collapsed(self, collapsed):
-        self.collapsed = collapsed
+    def set_expanded(self, expanded):
+        if expanded == self.expanded:
+            self.emit(SIGNAL('expanded(bool)'), expanded)
+            return
+        self.expanded = expanded
         for widget in self.findChildren(QtGui.QWidget):
-            widget.setHidden(collapsed)
-        self.emit(SIGNAL('toggled(bool)'), collapsed)
+            widget.setHidden(not expanded)
+        self.emit(SIGNAL('expanded(bool)'), expanded)
 
     def mousePressEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
             option = QtGui.QStyleOptionGroupBox()
             self.initStyleOption(option)
-            icon_size = self.collapse_icon_size
+            icon_size = self.arrow_icon_size
             button_area = QtCore.QRect(0, 0, icon_size, icon_size)
-            top_left = option.rect.adjusted(0, 0, -10, 0).topLeft()
+            offset = self.arrow_icon_size + defs.spacing
+            adjusted = option.rect.adjusted(0, 0, -offset, 0)
+            top_left = adjusted.topLeft()
             button_area.moveTopLeft(QtCore.QPoint(top_left))
             self.click_pos = event.pos()
         QtGui.QGroupBox.mousePressEvent(self, event)
@@ -157,7 +162,7 @@ class QCollapsibleGroupBox(QtGui.QGroupBox):
     def mouseReleaseEvent(self, event):
         if (event.button() == QtCore.Qt.LeftButton and
             self.click_pos == event.pos()):
-            self.set_collapsed(not self.collapsed)
+            self.set_expanded(not self.expanded)
         QtGui.QGroupBox.mouseReleaseEvent(self, event)
 
     def paintEvent(self, event):
@@ -165,18 +170,18 @@ class QCollapsibleGroupBox(QtGui.QGroupBox):
         option = QtGui.QStyleOptionGroupBox()
         self.initStyleOption(option)
         painter.save()
-        painter.translate(self.collapse_icon_size + 4, 0)
-        painter.drawComplexControl(QtGui.QStyle.CC_GroupBox, option)
+        painter.translate(self.arrow_icon_size + defs.spacing, 0)
+        painter.drawText(option.rect, QtCore.Qt.AlignLeft, self.title())
         painter.restore()
 
         style = QtGui.QStyle
-        point = option.rect.adjusted(0, 0, -10, 0).topLeft()
-        icon_size = self.collapse_icon_size
+        point = option.rect.adjusted(0, -4, 0, 0).topLeft()
+        icon_size = self.arrow_icon_size
         option.rect = QtCore.QRect(point.x(), point.y(), icon_size, icon_size)
-        if self.collapsed:
-            painter.drawPrimitive(style.PE_IndicatorArrowRight, option)
-        else:
+        if self.expanded:
             painter.drawPrimitive(style.PE_IndicatorArrowDown, option)
+        else:
+            painter.drawPrimitive(style.PE_IndicatorArrowRight, option)
 
 
 class GitRefCompleter(QtGui.QCompleter):

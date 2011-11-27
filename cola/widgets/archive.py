@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
 from cola import qtutils
 from cola.git import git
-from cola.qt import QCollapsibleGroupBox
+from cola.qt import ExpandableGroupBox
 from cola.widgets import defs
 
 
@@ -63,7 +63,7 @@ class GitArchiveDialog(QtGui.QDialog):
         self.prefix_label.setText('Prefix')
         self.prefix_text = QtGui.QLineEdit()
 
-        self.prefix_group = QCollapsibleGroupBox(parent=self)
+        self.prefix_group = ExpandableGroupBox()
         self.prefix_group.setTitle('Advanced')
 
         # layouts
@@ -80,7 +80,7 @@ class GitArchiveDialog(QtGui.QDialog):
         self.prefixlayt.addWidget(self.prefix_label)
         self.prefixlayt.addWidget(self.prefix_text)
         self.prefix_group.setLayout(self.prefixlayt)
-        self.prefix_group.set_collapsed(True)
+        self.prefix_group.set_expanded(False)
 
         self.btnlayt = QtGui.QHBoxLayout()
         self.btnlayt.setMargin(0)
@@ -120,8 +120,8 @@ class GitArchiveDialog(QtGui.QDialog):
         self.connect(self.format_combo, SIGNAL('currentIndexChanged(int)'),
                      self.update_filetext_for_format)
 
-        self.connect(self.prefix_group, SIGNAL('toggled(bool)'),
-                     self.prefix_group_toggled)
+        self.connect(self.prefix_group, SIGNAL('expanded(bool)'),
+                     self.prefix_group_expanded)
 
         self.connect(self.browse, SIGNAL('clicked()'), self.choose_filename)
 
@@ -175,11 +175,11 @@ class GitArchiveDialog(QtGui.QDialog):
             start = 0
         self.filetext.setSelection(start, len(text) - start)
 
-    def prefix_group_toggled(self, toggled):
-        if toggled:
-            self.filetext.setFocus(True)
-        else:
+    def prefix_group_expanded(self, expanded):
+        if expanded:
             self.prefix_text.setFocus(True)
+        else:
+            self.filetext.setFocus(True)
 
 
 if __name__ == '__main__':
