@@ -154,7 +154,7 @@ class CreateBranchView(standard.Dialog):
         self._options_section_layt.addLayout(self._buttons_layt)
         self._main_layt.addLayout(self._options_section_layt)
 
-        self.connect(self.cancel_button, SIGNAL('pressed()'), self.reject)
+        qtutils.connect_button(self.cancel_button, self.reject)
 
 
 if __name__ == "__main__":
