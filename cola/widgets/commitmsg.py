@@ -121,6 +121,9 @@ class CommitMessageEditor(QtGui.QWidget):
         self.enable_placeholder_summary(True)
         self.enable_placeholder_description(True)
 
+        self.commit_button.setEnabled(False)
+        self.commit_action.setEnabled(False)
+
     def is_summary_placeholder(self):
         summary = unicode(self.summary.text()).strip()
         return summary == self.summary_placeholder
@@ -215,6 +218,13 @@ class CommitMessageEditor(QtGui.QWidget):
         self.update_placeholder_state()
         self.notifying = False
 
+        self.update_actions()
+
+    def update_actions(self):
+        commit_enabled = bool(self.commit_summary())
+        self.commit_button.setEnabled(commit_enabled)
+        self.commit_action.setEnabled(commit_enabled)
+
     def update_placeholder_state(self):
         """Update the color palette for the placeholder text"""
         self.set_placeholder_palette(self.summary,
@@ -288,6 +298,8 @@ class CommitMessageEditor(QtGui.QWidget):
         elif focus_description:
             self.description.setFocus(True)
 
+        self.update_actions()
+
     def setFont(self, font):
         """Pass the setFont() calls down to the text widgets"""
         self.summary.setFont(font)
@@ -301,8 +313,7 @@ class CommitMessageEditor(QtGui.QWidget):
 
     def commit(self):
         """Attempt to create a commit from the index and commit message."""
-        msg = self.commit_message()
-        if not msg:
+        if not bool(self.commit_summary()):
             # Describe a good commit message
             error_msg = tr(''
                 'Please supply a commit message.\n\n'
@@ -315,6 +326,8 @@ class CommitMessageEditor(QtGui.QWidget):
                                       'Missing Commit Message',
                                       error_msg)
             return
+
+        msg = self.commit_message()
 
         if not self.model.staged:
             error_msg = tr(''
