@@ -104,7 +104,6 @@ def show_shortcuts():
         parent = qtutils.active_window()
         widget = show_shortcuts.widget = QtGui.QDialog(parent)
         widget.setWindowModality(QtCore.Qt.WindowModal)
-        widget.setAttribute(QtCore.Qt.WA_NoSystemBackground, True)
 
         web = QtWebKit.QWebView(parent)
         web.setHtml(html)
