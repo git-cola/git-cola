@@ -37,6 +37,8 @@ from cola.qt import create_button
 from cola.qt import create_dock
 from cola.qt import create_menu
 from cola.qtutils import add_action
+from cola.qtutils import connect_action
+from cola.qtutils import connect_action_bool
 from cola.qtutils import connect_button
 from cola.qtutils import emit
 from cola.qtutils import log
@@ -562,7 +564,7 @@ class MainView(standard.MainWindow):
                     dockwidget.widget().setFocus(True)
                 else:
                     self.setFocus(True)
-            self.connect(action, SIGNAL('triggered(bool)'), showdock)
+            connect_action_bool(action, showdock)
 
     def stage(self):
         """Stage selected files, or all files if no selection exists."""

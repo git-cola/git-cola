@@ -61,6 +61,14 @@ def SLOT(signal, *args, **opts):
     return broadcast
 
 
+def connect_action(action, callback):
+    action.connect(action, SIGNAL('triggered()'), callback)
+
+
+def connect_action_bool(action, callback):
+    action.connect(action, SIGNAL('triggered(bool)'), callback)
+
+
 def connect_button(button, callback):
     button.connect(button, SIGNAL('clicked()'), callback)
 
@@ -304,7 +312,7 @@ def set_clipboard(text):
 
 def add_action(widget, text, fn, *shortcuts):
     action = QtGui.QAction(text, widget)
-    action.connect(action, SIGNAL('triggered()'), fn)
+    connect_action(action, fn)
     if shortcuts:
         shortcuts = list(set(shortcuts))
         action.setShortcuts(shortcuts)

@@ -9,6 +9,7 @@ import cola
 from cola import qtutils
 from cola import signals
 from cola import utils
+from cola import qtutils
 from cola.views import standard
 from cola.widgets import defs
 from cola.classic.model import GitRepoNameItem
@@ -338,7 +339,7 @@ class RepoTreeView(QtGui.QTreeView):
             action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
         action.setShortcut(shortcut)
         self.addAction(action)
-        self.connect(action, SIGNAL('triggered()'), slot)
+        qtutils.connect_action(action, slot)
         return action
 
     def view_history(self):

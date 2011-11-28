@@ -7,6 +7,8 @@ from cola import gitcmds
 from cola import signals
 from cola.qt import create_toolbutton
 from cola.qtutils import confirm
+from cola.qtutils import connect_action
+from cola.qtutils import connect_action_bool
 from cola.qtutils import connect_button
 from cola.qtutils import emit
 from cola.qtutils import log
@@ -87,14 +89,12 @@ class CommitMessageEditor(QtGui.QWidget):
                      SIGNAL(signals.load_previous_message))
 
         connect_button(self.commit_button, self.commit)
-        self.connect(self.signoff_action, SIGNAL('triggered()'),
-                     emit(self, signals.signoff))
+        connect_action(self.signoff_action, emit(self, signals.signoff))
 
         cola.notifier().connect(signals.amend, self.amend_action.setChecked)
 
         # Broadcast the amend mode
-        self.connect(self.amend_action,
-                     SIGNAL('triggered(bool)'), emit(self, signals.amend_mode))
+        connect_action_bool(self.amend_action, emit(self, signals.amend_mode))
 
         self.model.add_message_observer(self.model.message_commit_message_changed,
                                         self.set_commit_message)
