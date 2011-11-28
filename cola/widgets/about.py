@@ -1,6 +1,5 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from PyQt4 import QtWebKit
 from PyQt4.QtCore import SIGNAL
 
 
@@ -84,6 +83,15 @@ class AboutView(QtGui.QDialog):
 
 
 def show_shortcuts():
+    try:
+        from PyQt4 import QtWebKit
+    except ImportError:
+        # redhat disabled QtWebKit in their qt build but don't punish the
+        # users
+        qtutils.critical('This PyQt4 does not include QtWebKit.\n'
+                         'The keyboard shortcuts feature is unavailable.')
+        return
+
     try:
         html = show_shortcuts.html
     except AttributeError:
