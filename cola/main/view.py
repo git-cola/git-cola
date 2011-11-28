@@ -554,17 +554,29 @@ class MainView(standard.MainWindow):
             (self.actionsdockwidget, 'Alt+4'),
         )
         for dockwidget, shortcut in dockwidgets:
+            # Associate the action with the shortcut
             action = dockwidget.toggleViewAction()
             action.setShortcut(shortcut)
             self.tools_menu.addAction(action)
-            self.addAction(action)
             def showdock(show, dockwidget=dockwidget):
                 if show:
                     dockwidget.raise_()
                     dockwidget.widget().setFocus(True)
                 else:
                     self.setFocus(True)
+            self.addAction(action)
             connect_action_bool(action, showdock)
+
+            # Create a new shortcut Shift+<shortcut> that gives focus
+            action = QtGui.QAction(self)
+            action.setShortcut('Shift+' + shortcut)
+            def focusdock(dockwidget=dockwidget, showdock=showdock):
+                if dockwidget.toggleViewAction().isChecked():
+                    showdock(True)
+                else:
+                    dockwidget.toggleViewAction().trigger()
+            self.addAction(action)
+            connect_action(action, focusdock)
 
     def stage(self):
         """Stage selected files, or all files if no selection exists."""
