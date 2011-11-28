@@ -51,11 +51,6 @@ class StashView(standard.Dialog):
         self.keep_index.setText(self.tr('Keep Index'))
         self.keep_index.setChecked(True)
 
-        self.setTabOrder(self.button_save, self.button_apply)
-        self.setTabOrder(self.button_apply, self.button_drop)
-        self.setTabOrder(self.button_drop, self.keep_index)
-        self.setTabOrder(self.keep_index, self.button_close)
-
         # Arrange layouts
         self.main_layt = QtGui.QVBoxLayout()
         self.main_layt.setMargin(defs.margin)
@@ -100,6 +95,11 @@ class StashView(standard.Dialog):
 
         self.connect(self.stash_list, SIGNAL('itemSelectionChanged()'),
                      self.item_selected)
+
+        self.setTabOrder(self.button_save, self.button_apply)
+        self.setTabOrder(self.button_apply, self.button_drop)
+        self.setTabOrder(self.button_drop, self.keep_index)
+        self.setTabOrder(self.keep_index, self.button_close)
 
     def close(self):
         self.accept()
