@@ -553,6 +553,7 @@ def rgba(r, g, b, a=255):
     return c
 
 default_colors = {
+    'color_text':           rgba(0x00, 0x00, 0x00),
     'color_add':            rgba(0xcd, 0xff, 0xe0),
     'color_remove':         rgba(0xff, 0xd0, 0xd0),
     'color_header':         rgba(0xbb, 0xbb, 0xbb),
@@ -653,14 +654,14 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
         GenericSyntaxHighligher.__init__(self, doc)
 
     def generate_rules(self):
-        diff_head = self.mkformat(self.color_header)
-        diff_head_bold = self.mkformat(self.color_header, bold=True)
+        diff_head = self.mkformat(fg=self.color_header)
+        diff_head_bold = self.mkformat(fg=self.color_header, bold=True)
 
-        diff_add = self.mkformat(bg=self.color_add)
-        diff_remove = self.mkformat(bg=self.color_remove)
+        diff_add = self.mkformat(fg=self.color_text, bg=self.color_add)
+        diff_remove = self.mkformat(fg=self.color_text, bg=self.color_remove)
 
         if self.whitespace:
-            bad_ws = self.mkformat(Qt.black, Qt.red)
+            bad_ws = self.mkformat(fg=Qt.black, bg=Qt.red)
 
         # We specify the whitespace rule last so that it is
         # applied after the diff addition/removal rules.
