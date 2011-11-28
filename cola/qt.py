@@ -546,22 +546,16 @@ def TERMINAL(pattern):
 # rebuilding the same regexes whenever stylesheets change
 _RGX_CACHE = {}
 
-def color(c, a=255):
-    qc = QColor(c)
-    qc.setAlpha(a)
-    return qc
+def rgba(r, g, b, a=255):
+    c = QColor()
+    c.setRgb(r, g, b)
+    c.setAlpha(a)
+    return c
 
 default_colors = {
-    'color_add':            color(Qt.green, 128),
-    'color_remove':         color(Qt.red,   128),
-    'color_begin':          color(Qt.darkCyan),
-    'color_header':         color(Qt.darkYellow),
-    'color_stat_add':       color(QColor(32, 255, 32)),
-    'color_stat_info':      color(QColor(32, 32, 255)),
-    'color_stat_remove':    color(QColor(255, 32, 32)),
-    'color_emphasis':       color(Qt.black),
-    'color_info':           color(Qt.blue),
-    'color_date':           color(Qt.darkCyan),
+    'color_add':            rgba(0xcd, 0xff, 0xe0),
+    'color_remove':         rgba(0xff, 0xd0, 0xd0),
+    'color_header':         rgba(0xbb, 0xbb, 0xbb),
 }
 
 
@@ -623,7 +617,6 @@ class GenericSyntaxHighligher(QSyntaxHighlighter):
             return
         for match, fmts in formats:
             start = match.start()
-            end = match.end()
             groups = match.groups()
 
             # No groups in the regex, assume this is a single rule
@@ -660,14 +653,11 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
         GenericSyntaxHighligher.__init__(self, doc)
 
     def generate_rules(self):
-        diff_begin = self.mkformat(self.color_begin, bold=True)
         diff_head = self.mkformat(self.color_header)
+        diff_head_bold = self.mkformat(self.color_header, bold=True)
+
         diff_add = self.mkformat(bg=self.color_add)
         diff_remove = self.mkformat(bg=self.color_remove)
-
-        diffstat_info = self.mkformat(self.color_stat_info, bold=True)
-        diffstat_add = self.mkformat(self.color_stat_add, bold=True)
-        diffstat_remove = self.mkformat(self.color_stat_remove, bold=True)
 
         if self.whitespace:
             bad_ws = self.mkformat(Qt.black, Qt.red)
@@ -675,29 +665,36 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
         # We specify the whitespace rule last so that it is
         # applied after the diff addition/removal rules.
         # The rules for the header
-        diff_bgn_rgx = TERMINAL('^@@|^\+\+\+|^---')
-        diff_hd1_rgx = TERMINAL('^diff --git')
-        diff_hd2_rgx = TERMINAL('^index \S+\.\.\S+')
-        diff_hd3_rgx = TERMINAL('^new file mode')
-        diff_add_rgx = TERMINAL('^\+')
-        diff_rmv_rgx = TERMINAL('^-')
-        diff_sts_rgx = ('(.+\|.+?)(\d+)(.+?)([\+]*?)([-]*?)$')
-        diff_sum_rgx = ('(\s+\d+ files changed[^\d]*)'
-                        '(:?\d+ insertions[^\d]*)'
-                        '(:?\d+ deletions.*)$')
+        diff_old_rgx = TERMINAL(r'^--- a/')
+        diff_new_rgx = TERMINAL(r'^\+\+\+ b/')
+        diff_ctx_rgx = TERMINAL(r'^@@ ')
 
-        self.create_rules(diff_bgn_rgx,     diff_begin,
+        diff_hd1_rgx = TERMINAL(r'^diff --git a/.*b/.*')
+        diff_hd2_rgx = TERMINAL(r'^index \S+\.\.\S+')
+        diff_hd3_rgx = TERMINAL(r'^new file mode')
+        diff_add_rgx = TERMINAL(r'^\+')
+        diff_rmv_rgx = TERMINAL(r'^-')
+        diff_bar_rgx = TERMINAL(r'^([ ]+.*)(\|[ ]+\d+[ ]+[+-]+)$')
+        diff_sts_rgx = (r'(.+\|.+?)(\d+)(.+?)([\+]*?)([-]*?)$')
+        diff_sum_rgx = (r'(\s+\d+ files changed[^\d]*)'
+                        r'(:?\d+ insertions[^\d]*)'
+                        r'(:?\d+ deletions.*)$')
+
+        self.create_rules(diff_old_rgx,     diff_head,
+                          diff_new_rgx,     diff_head,
+                          diff_ctx_rgx,     diff_head_bold,
+                          diff_bar_rgx,     (diff_head_bold, diff_head),
                           diff_hd1_rgx,     diff_head,
                           diff_hd2_rgx,     diff_head,
                           diff_hd3_rgx,     diff_head,
                           diff_add_rgx,     diff_add,
                           diff_rmv_rgx,     diff_remove,
-                          diff_sts_rgx,     (None, diffstat_info,
-                                             None, diffstat_add,
-                                             diffstat_remove),
-                          diff_sum_rgx,     (diffstat_info,
-                                             diffstat_add,
-                                             diffstat_remove))
+                          diff_sts_rgx,     (None, diff_head,
+                                             None, diff_head,
+                                             diff_head),
+                          diff_sum_rgx,     (diff_head,
+                                             diff_head,
+                                             diff_head))
         if self.whitespace:
             self.create_rules('(..*?)(\s+)$', (None, bad_ws))
 
