@@ -18,10 +18,11 @@ from cola.qtutils import tr
 from cola.widgets import defs
 
 
-def create_button(text, layout=None, tooltip=None, icon=None):
+def create_button(text='', layout=None, tooltip=None, icon=None):
     """Create a button, set its title, and add it to the parent."""
     button = QtGui.QPushButton()
-    button.setText(tr(text))
+    if text:
+        button.setText(tr(text))
     if icon:
         button.setIcon(icon)
     if tooltip is not None:

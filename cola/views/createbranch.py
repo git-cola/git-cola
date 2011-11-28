@@ -1,6 +1,7 @@
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
+from cola import qt
 from cola import qtutils
 from cola.views import standard
 from cola.widgets import defs
@@ -140,15 +141,13 @@ class CreateBranchView(standard.Dialog):
         self._buttons_layt.setSpacing(defs.spacing)
 
         # Exposed
-        self.create_button = QtGui.QPushButton(self)
-        self.create_button.setText(self.tr('Create Branch'))
-        self.create_button.setIcon(qtutils.git_icon())
+        self.create_button = qt.create_button(text='Create Branch',
+                                              icon=qtutils.git_icon())
         self.create_button.setDefault(True)
         self._buttons_layt.addWidget(self.create_button)
 
         # Exposed
-        self.cancel_button = QtGui.QPushButton(self)
-        self.cancel_button.setText(self.tr('Cancel'))
+        self.cancel_button = qt.create_button(text='Cancel')
         self._buttons_layt.addWidget(self.cancel_button)
 
         self._options_section_layt.addLayout(self._buttons_layt)

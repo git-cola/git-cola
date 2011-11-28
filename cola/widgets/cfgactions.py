@@ -241,8 +241,8 @@ class ActionDialog(standard.Dialog):
         # Close/Run buttons
         self.btnlayt = QtGui.QHBoxLayout()
         self.btnlayt.addStretch()
-        self.closebtn = qt.create_button(self.tr('Close'), self.btnlayt)
-        self.runbtn = qt.create_button(self.tr('Run'), self.btnlayt)
+        self.closebtn = qt.create_button(text=self.tr('Close'), layout=self.btnlayt)
+        self.runbtn = qt.create_button(text=self.tr('Run'), layout=self.btnlayt)
         self.runbtn.setDefault(True)
         self.layt.addLayout(self.btnlayt)
 

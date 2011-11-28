@@ -2,6 +2,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
+from cola import qt
 from cola import qtutils
 from cola.prefs import diff_font
 from cola.views import standard
@@ -75,14 +76,12 @@ class CreateTag(standard.Dialog):
                                                 QtGui.QSizePolicy.Minimum)
         self._button_hbox_layt.addItem(self._button_spacer)
 
-        self.create_button = QtGui.QPushButton(self)
-        self.create_button.setText(self.tr('Create Tag'))
-        self.create_button.setIcon(qtutils.git_icon())
+        self.create_button = qt.create_button(text='Create Tag',
+                                              icon=qtutils.git_icon())
         self._button_hbox_layt.addWidget(self.create_button)
         self._main_layt.addLayout(self._button_hbox_layt)
 
-        self.close_button = QtGui.QPushButton(self)
-        self.close_button.setText(self.tr('Close'))
+        self.close_button = qt.create_button(text='Close')
         self._button_hbox_layt.addWidget(self.close_button)
 
         self.connect(self.close_button, SIGNAL('clicked()'), self.accept)
