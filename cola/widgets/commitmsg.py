@@ -52,10 +52,8 @@ class CommitMessageEditor(QtGui.QWidget):
         self.actions_menu = QtGui.QMenu()
         self.actions_button = create_toolbutton(icon=options_icon(),
                                                 tooltip='Actions...')
-        self.actions_button.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.actions_button.setMenu(self.actions_menu)
-        actions_height = self.actions_button.sizeHint().height()
-        self.actions_button.setFixedSize(34, actions_height)
+        self.actions_button.setPopupMode(QtGui.QToolButton.InstantPopup)
 
         # Amend checkbox
         self.signoff_action = self.actions_menu.addAction(tr('Sign Off'))
