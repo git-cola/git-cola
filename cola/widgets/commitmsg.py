@@ -62,6 +62,10 @@ class CommitMessageEditor(QtGui.QWidget):
         self.signoff_action.setToolTip('Sign off on this commit')
         self.signoff_action.setShortcut('Ctrl+i')
 
+        self.commit_action = self.actions_menu.addAction(tr('Commit@@verb'))
+        self.commit_action.setToolTip(tr('Commit staged changes'))
+        self.commit_action.setShortcut('Ctrl+m')
+
         self.actions_menu.addSeparator()
         self.amend_action = self.actions_menu.addAction(tr('Amend Last Commit'))
         self.amend_action.setCheckable(True)
@@ -89,6 +93,7 @@ class CommitMessageEditor(QtGui.QWidget):
                      SIGNAL(signals.load_previous_message))
 
         connect_button(self.commit_button, self.commit)
+        connect_action(self.commit_action, self.commit)
         connect_action(self.signoff_action, emit(self, signals.signoff))
 
         cola.notifier().connect(signals.amend, self.amend_action.setChecked)
