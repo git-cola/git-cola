@@ -186,8 +186,6 @@ class MainView(standard.MainWindow):
 
         self.menu_stash = add_action(self,
                 'Stash...', stash.stash, 'Alt+Shift+S')
-        self.menu_diff_branch = add_action(self,
-                'Apply Changes From Branch...', guicmds.diff_branch)
         self.menu_branch_compare = add_action(self,
                 'Branches...', compare.branch_compare)
 
@@ -309,8 +307,6 @@ class MainView(standard.MainWindow):
         self.branch_menu.addSeparator()
         self.branch_menu.addAction(self.menu_visualize_current)
         self.branch_menu.addAction(self.menu_visualize_all)
-        self.branch_menu.addSeparator()
-        self.branch_menu.addAction(self.menu_diff_branch)
         # Add to menubar
         self.menubar.addAction(self.branch_menu.menuAction())
 
@@ -431,8 +427,7 @@ class MainView(standard.MainWindow):
 
     def _mode_changed(self, mode):
         """React to mode changes; hide/show the "Exit Diff Mode" button."""
-        if mode in (self.model.mode_branch,
-                    self.model.mode_review,
+        if mode in (self.model.mode_review,
                     self.model.mode_diff,
                     self.model.mode_diff_expr):
             height = self.stage_button.minimumHeight()

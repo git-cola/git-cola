@@ -114,12 +114,6 @@ class DiffTextEdit(DiffView):
                                self.unstage_section)
                 menu.addAction(self.action_unstage_selection)
 
-        elif self.mode == self.model.mode_branch:
-            menu.addAction(qtutils.apply_icon(),
-                           self.tr('Apply Diff to Work Tree'),
-                           self.stage_section)
-            menu.addAction(self.action_apply_selection)
-
         elif self.mode == self.model.mode_grep:
             menu.addAction(qtutils.icon('open.svg'),
                            self.tr('Launch Editor'),

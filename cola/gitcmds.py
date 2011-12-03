@@ -192,8 +192,8 @@ def commit_diff(sha1, git=git):
     if commit[first_newline+1:].startswith('Merge:'):
         return (core.decode(commit) + '\n\n' +
                 core.decode(diff_helper(commit=sha1,
-                                             cached=False,
-                                             suppress_header=False)))
+                                        cached=False,
+                                        suppress_header=False)))
     else:
         return core.decode(commit)
 
@@ -234,7 +234,6 @@ def diff_info(sha1, git=git, merge=True):
 
 
 def diff_helper(commit=None,
-                branch=None,
                 ref=None,
                 endref=None,
                 filename=None,
@@ -251,10 +250,8 @@ def diff_helper(commit=None,
     if ref and endref:
         argv.append('%s..%s' % (ref, endref))
     elif ref:
-        for r in ref.strip().split():
+        for r in utils.shell_split(ref.strip()):
             argv.append(r)
-    elif branch:
-        argv.append(branch)
 
     if filename:
         argv.append('--')
@@ -269,10 +266,11 @@ def diff_helper(commit=None,
     headers = []
     deleted = cached and not os.path.exists(encode(filename))
 
-    diffoutput = git.diff(R=reverse, M=True, cached=cached,
-                          *argv, **_common_diff_opts())
-    # Handle 'git init'
-    if diffoutput.startswith('fatal:'):
+    status, diffoutput = git.diff(R=reverse, M=True, cached=cached,
+                                  with_status=True,
+                                  *argv, **_common_diff_opts())
+    if status != 0:
+        # git init
         if with_diff_header:
             return ('', '')
         else:

@@ -146,29 +146,16 @@ class ApplyDiffSelection(Command):
         self.apply_to_worktree = apply_to_worktree
 
     def do(self):
-        if self.model.mode == self.model.mode_branch:
-            # We're applying changes from a different branch!
-            parser = DiffParser(self.model,
-                                filename=self.model.filename,
-                                cached=False,
-                                branch=self.model.head)
-            status, output = \
-            parser.process_diff_selection(self.selected,
-                                          self.offset,
-                                          self.selection,
-                                          apply_to_worktree=True)
-        else:
-            # The normal worktree vs index scenario
-            parser = DiffParser(self.model,
-                                filename=self.model.filename,
-                                cached=self.staged,
-                                reverse=self.apply_to_worktree)
-            status, output = \
-            parser.process_diff_selection(self.selected,
-                                          self.offset,
-                                          self.selection,
-                                          apply_to_worktree=
-                                              self.apply_to_worktree)
+        # The normal worktree vs index scenario
+        parser = DiffParser(self.model,
+                            filename=self.model.filename,
+                            cached=self.staged,
+                            reverse=self.apply_to_worktree)
+        status, output = \
+        parser.process_diff_selection(self.selected,
+                                      self.offset,
+                                      self.selection,
+                                      apply_to_worktree=self.apply_to_worktree)
         _notifier.broadcast(signals.log_cmd, status, output)
         # Redo the diff to show changes
         if self.staged:
@@ -229,17 +216,6 @@ class HeadChangeCommand(Command):
         self.model.update_file_status()
 
 
-class BranchMode(HeadChangeCommand):
-    """Enter into diff-branch mode."""
-    def __init__(self, treeish, filename):
-        HeadChangeCommand.__init__(self, treeish)
-        self.old_filename = self.model.filename
-        self.new_filename = filename
-        self.new_mode = self.model.mode_branch
-        self.new_diff_text = gitcmds.diff_helper(filename=filename,
-                                                 cached=False,
-                                                 reverse=True,
-                                                 branch=treeish)
 class Checkout(Command):
     """
     A command object for git-checkout.
@@ -917,7 +893,6 @@ def register():
         signals.amend_mode: AmendMode,
         signals.apply_diff_selection: ApplyDiffSelection,
         signals.apply_patches: ApplyPatches,
-        signals.branch_mode: BranchMode,
         signals.clone: Clone,
         signals.checkout: Checkout,
         signals.checkout_branch: CheckoutBranch,

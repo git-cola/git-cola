@@ -8,7 +8,7 @@ from cola import gitcmds
 class DiffParser(object):
     """Handles parsing diff for use by the interactive index editor."""
     def __init__(self, model, filename='',
-                 cached=True, branch=None, reverse=False):
+                 cached=True, reverse=False):
 
         self._header_re = re.compile('^@@ -(\d+),(\d+) \+(\d+),(\d+) @@.*')
         self._headers = []
@@ -25,10 +25,9 @@ class DiffParser(object):
         self.selected = []
 
         (header, diff) = gitcmds.diff_helper(filename=filename,
-                                             branch=branch,
                                              with_diff_header=True,
-                                             cached=cached and not bool(branch),
-                                             reverse=cached or bool(branch) or reverse)
+                                             cached=cached,
+                                             reverse=cached or reverse)
         self.model = model
         self.diff = diff
         self.header = header
@@ -37,10 +36,8 @@ class DiffParser(object):
         # Always index into the non-reversed diff
         self.fwd_header, self.fwd_diff = \
             gitcmds.diff_helper(filename=filename,
-                                branch=branch,
                                 with_diff_header=True,
-                                cached=cached and not bool(branch),
-                                reverse=bool(branch))
+                                cached=cached)
 
     def write_diff(self,filename,which,selected=False,noop=False):
         """Writes a new diff corresponding to the user's selection."""

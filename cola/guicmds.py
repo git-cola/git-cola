@@ -169,25 +169,6 @@ def export_patches():
     cola.notifier().broadcast(signals.format_patch, to_export, revs)
 
 
-def diff_branch():
-    """Launches a diff against a branch."""
-    branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
-                               ['HEAD^'] +
-                               cola.model().all_branches() +
-                               cola.model().tags)
-    if not branch:
-        return
-    files = gitcmds.diff_filenames(branch)
-    if not files:
-        qtutils.critical('No Differences',
-                         'No differences found for "%s"' % branch)
-        return
-    filename = BrowseDialog.select_file_from_list(files)
-    if not filename:
-        return
-    cola.notifier().broadcast(signals.branch_mode, branch, filename)
-
-
 def diff_expression():
     """Diff using an arbitrary expression."""
     expr = choose_from_combo('Enter Diff Expression',
