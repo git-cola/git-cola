@@ -18,9 +18,9 @@ from cola.qtutils import save_icon
 from cola.qtutils import tr
 from cola.widgets import defs
 from cola.prefs import diff_font
-from cola.controllers.selectcommits import select_commits
 from cola.dag.model import DAG
 from cola.dag.model import RepoReader
+from cola.widgets.selectcommits import select_commits
 
 
 class CommitMessageEditor(QtGui.QWidget):

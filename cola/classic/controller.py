@@ -9,7 +9,7 @@ import cola.difftool
 from cola import gitcmds
 from cola import qtutils
 from cola import signals
-from cola.controllers.selectcommits import select_commits
+from cola.widgets.selectcommits import select_commits
 from cola.classic.view import RepoDialog
 from cola.classic.model import GitRepoModel
 from cola.classic.model import GitRepoEntryManager

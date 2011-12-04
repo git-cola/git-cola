@@ -8,6 +8,7 @@ from cola import signals
 from cola.git import git
 from cola.widgets.browse import BrowseDialog
 from cola.widgets.combodlg import ComboDialog
+from cola.widgets.selectcommits import select_commits
 
 
 def install_command_wrapper():
@@ -88,8 +89,6 @@ def checkout_branch():
 
 def cherry_pick():
     """Launch the 'Cherry-Pick' dialog."""
-    from cola.controllers.selectcommits import select_commits
-
     revs, summaries = gitcmds.log_helper(all=True)
     commits = select_commits('Cherry-Pick Commit',
                              revs, summaries, multiselect=False)
@@ -158,8 +157,6 @@ def clone_repo(spawn=True):
 
 def export_patches():
     """Run 'git format-patch' on a list of commits."""
-    from cola.controllers.selectcommits import select_commits
-
     revs, summaries = gitcmds.log_helper()
     to_export = select_commits('Export Patches', revs, summaries)
     if not to_export:

@@ -94,8 +94,6 @@ class MainModel(ObservableModel):
         self.local_branches = []
         self.remote_branches = []
         self.tags = []
-        self.revisions = []
-        self.summaries = []
 
         self.fetch_helper = None
         self.push_helper = None
@@ -248,9 +246,6 @@ class MainModel(ObservableModel):
                                D=True,
                                with_stderr=True,
                                with_status=True)
-
-    def revision_sha1(self, idx):
-        return self.revisions[idx]
 
     def _sliced_op(self, input_items, map_fn, size=42):
         items = copy.copy(input_items)
