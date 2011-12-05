@@ -73,14 +73,12 @@ def current_branch():
             return _current_branch.value
     except OSError:
         pass
-    data = git.rev_parse('HEAD', with_stderr=True, symbolic_full_name=True)
-    if data.startswith('fatal:'):
-        # git init -- read .git/HEAD.  We could do this unconditionally
-        # and avoid the subprocess call.  It's probably time to start
-        # using dulwich.
+    status, data = git.rev_parse('HEAD', symbolic_full_name=True, with_status=True)
+    if status != 0:
+        # git init -- read .git/HEAD.  We could do this unconditionally...
         data = _read_git_head(head)
 
-    for refs_prefix in ('refs/heads/', 'refs/remotes/'):
+    for refs_prefix in ('refs/heads/', 'refs/remotes/', 'refs/tags/'):
         if data.startswith(refs_prefix):
             value = decode(data[len(refs_prefix):])
             _current_branch.key = key
