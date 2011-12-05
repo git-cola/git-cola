@@ -9,7 +9,7 @@ import cola
 from cola import qtutils
 from cola import signals
 from cola import utils
-from cola import qtutils
+from cola.models.selection import State
 from cola.views import standard
 from cola.widgets import defs
 from cola.classic.model import GitRepoNameItem
@@ -240,16 +240,17 @@ class RepoTreeView(QtGui.QTreeView):
     def sync_selection(self):
         """Push selection into the selection model."""
         staged = []
-        modified = []
         unmerged = []
+        modified = []
         untracked = []
-        paths = self.selected_paths()
+        state = State(staged, unmerged, modified, untracked)
 
+        paths = self.selected_paths()
         model = cola.model()
         model_staged = utils.add_parents(set(model.staged))
         model_modified = utils.add_parents(set(model.modified))
         model_unmerged = utils.add_parents(set(model.unmerged))
-        model_untracked =utils.add_parents(set(model.untracked))
+        model_untracked = utils.add_parents(set(model.untracked))
 
         for path in paths:
             if path in model_unmerged:
@@ -263,8 +264,7 @@ class RepoTreeView(QtGui.QTreeView):
             else:
                 staged.append(path)
         # Push the new selection into the model.
-        cola.selection_model().set_selection(staged, modified,
-                                             unmerged, untracked)
+        cola.selection_model().set_selection(state)
         return paths
 
     def selectionChanged(self, old_selection, new_selection):

@@ -77,18 +77,18 @@ class DiffTextEdit(DiffView):
     def contextMenuEvent(self, event):
         """Create the context menu for the diff display."""
         menu = QtGui.QMenu(self)
-        staged, modified, unmerged, untracked = cola.selection()
+        s = cola.selection()
 
         if self.mode == self.model.mode_worktree:
-            if modified and modified[0] in cola.model().submodules:
+            if s.modified and s.modified[0] in cola.model().submodules:
                 menu.addAction(qtutils.icon('add.svg'),
                                self.tr('Stage'),
-                               SLOT(signals.stage, modified))
+                               SLOT(signals.stage, s.modified))
                 menu.addAction(qtutils.git_icon(),
                                self.tr('Launch git-cola'),
                                SLOT(signals.open_repo,
-                                    os.path.abspath(modified[0])))
-            elif modified:
+                                    os.path.abspath(s.modified[0])))
+            elif s.modified:
                 menu.addAction(qtutils.icon('add.svg'),
                                self.tr('Stage Section'),
                                self.stage_section)
@@ -100,14 +100,14 @@ class DiffTextEdit(DiffView):
                 menu.addAction(self.action_revert_selection)
 
         elif self.mode == self.model.mode_index:
-            if staged and staged[0] in cola.model().submodules:
+            if s.staged and s.staged[0] in cola.model().submodules:
                 menu.addAction(qtutils.icon('remove.svg'),
                                self.tr('Unstage'),
-                               SLOT(signals.unstage, staged))
+                               SLOT(signals.unstage, s.staged))
                 menu.addAction(qtutils.git_icon(),
                                self.tr('Launch git-cola'),
                                SLOT(signals.open_repo,
-                                    os.path.abspath(staged[0])))
+                                    os.path.abspath(s.staged[0])))
             else:
                 menu.addAction(qtutils.icon('remove.svg'),
                                self.tr('Unstage Section'),
@@ -168,15 +168,15 @@ class DiffTextEdit(DiffView):
         self.action_stage_selection.setEnabled(enabled)
 
     def apply_section(self):
-        staged, modified, unmerged, untracked = cola.single_selection()
-        if self.mode == self.model.mode_worktree and modified:
+        s = cola.single_selection()
+        if self.mode == self.model.mode_worktree and s.modified:
             self.stage_section()
         elif self.mode == self.model.mode_index:
             self.unstage_section()
 
     def apply_selection(self):
-        staged, modified, unmerged, untracked = cola.single_selection()
-        if self.mode == self.model.mode_worktree and modified:
+        s = cola.single_selection()
+        if self.mode == self.model.mode_worktree and s.modified:
             self.stage_selection()
         elif self.mode == self.model.mode_index:
             self.unstage_selection()

@@ -1,7 +1,11 @@
 """Provides a selection model to handle selection."""
 
-from cola.obsmodel import ObservableModel
+import collections
+
+from cola.observable import Observable
 from cola.decorators import memoize
+
+State = collections.namedtuple('State', 'staged unmerged modified untracked')
 
 
 @memoize
@@ -12,68 +16,66 @@ def selection_model():
 
 def selection():
     """Return the current selection."""
-    model = selection_model()
-    return (model.staged, model.modified, model.unmerged, model.untracked)
+    return selection_model().selection()
 
 
 def single_selection():
     """Scan across staged, modified, etc. and return a single item."""
-    staged, modified, unmerged, untracked = selection()
-    s = None
-    m = None
-    um = None
-    ut = None
-    if staged:
-        s = staged[0]
-    elif modified:
-        m = modified[0]
-    elif unmerged:
-        um = unmerged[0]
-    elif untracked:
-        ut = untracked[0]
-    return s, m, um, ut
+    return selection_model().single_selection()
 
 
 def filename():
-    s, m, um, ut = single_selection()
-    if s:
-        return s
-    if m:
-        return m
-    if um:
-        return um
-    if ut:
-        return ut
-    return None
+    return selection_model().filename()
 
 
-class SelectionModel(ObservableModel):
+class SelectionModel(Observable):
     """Provides information about selected file paths."""
     # Notification message sent out when selection changes
     message_selection_changed = 'selection_changed'
 
     # These properties wrap the individual selection items
     # to provide higher-level pseudo-selections.
-    unstaged = property(lambda self: self.modified +
-                                     self.unmerged +
+    unstaged = property(lambda self: self.unmerged +
+                                     self.modified +
                                      self.untracked)
 
-    all = property(lambda self: self.staged +
-                                self.modified +
-                                self.unmerged +
-                                self.untracked)
-
     def __init__(self):
-        ObservableModel.__init__(self)
+        Observable.__init__(self)
         self.staged = []
-        self.modified = []
         self.unmerged = []
+        self.modified = []
         self.untracked = []
 
-    def set_selection(self, staged, modified, unmerged, untracked):
+    def set_selection(self, s):
         """Set the new selection."""
-        self.set_staged(staged)
-        self.set_modified(modified)
-        self.set_unmerged(unmerged)
-        self.set_untracked(untracked)
+        self.staged = s.staged
+        self.unmerged = s.unmerged
+        self.modified = s.modified
+        self.untracked = s.untracked
         self.notify_message_observers(self.message_selection_changed)
+
+    def selection(self):
+        return State(self.staged, self.unmerged,
+                     self.modified, self.untracked)
+
+    def single_selection(self):
+        st = None
+        m = None
+        um = None
+        ut = None
+        if self.staged:
+            st = self.staged[0]
+        elif self.modified:
+            m = self.modified[0]
+        elif self.unmerged:
+            um = self.unmerged[0]
+        elif self.untracked:
+            ut = self.untracked[0]
+        return State(st, um, m, ut)
+
+    def filename(self):
+        paths = [p for p in self.single_selection() if p is not None]
+        if paths:
+            return paths[0]
+        else:
+            return None

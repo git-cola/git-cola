@@ -1,5 +1,4 @@
 import os
-import copy
 import subprocess
 import itertools
 
@@ -11,6 +10,7 @@ from cola import signals
 from cola import qtutils
 from cola.compat import set
 from cola.qtutils import SLOT
+from cola.models.selection import State
 
 
 def select_item(tree, item):
@@ -116,35 +116,31 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         if not self.old_selection or not self.old_contents:
             return
 
-        (staged, modified, unmerged, untracked) = self.old_contents
-
-        (staged_sel, modified_sel,
-         unmerged_sel, untracked_sel) = self.old_selection
-
-        (updated_staged, updated_modified,
-         updated_unmerged, updated_untracked) = self.contents()
+        old_c = self.old_contents
+        old_s = self.old_selection
+        new_c = self.contents()
 
         def select_modified(item):
-            idx = updated_modified.index(item)
+            idx = new_c.modified.index(item)
             select_item(self, self.modified_item(idx))
 
         def select_unmerged(item):
-            idx = updated_unmerged.index(item)
+            idx = new_c.unmerged.index(item)
             select_item(self, self.unmerged_item(idx))
 
         def select_untracked(item):
-            idx = updated_untracked.index(item)
+            idx = new_c.untracked.index(item)
             select_item(self, self.untracked_item(idx))
 
         def select_staged(item):
-            idx = updated_staged.index(item)
+            idx = new_c.staged.index(item)
             select_item(self, self.staged_item(idx))
 
         restore_selection_actions = (
-            (updated_modified, modified, modified_sel, select_modified),
-            (updated_unmerged, unmerged, unmerged_sel, select_unmerged),
-            (updated_untracked, untracked, untracked_sel, select_untracked),
-            (updated_staged, staged, staged_sel, select_staged),
+            (new_c.modified, old_c.modified, old_s.modified, select_modified),
+            (new_c.unmerged, old_c.unmerged, old_s.unmerged, select_unmerged),
+            (new_c.untracked, old_c.untracked, old_s.untracked, select_untracked),
+            (new_c.staged, old_c.staged, old_s.staged, select_staged),
         )
 
         for (new, old, selection, action) in restore_selection_actions:
@@ -208,8 +204,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.emit(SIGNAL('about_to_update'))
 
     def _about_to_update(self):
-        self.old_selection = copy.deepcopy(self.selection())
-        self.old_contents = copy.deepcopy(self.contents())
+        self.old_selection = self.selection()
+        self.old_contents = self.contents()
 
         self.old_scroll = None
         vscroll = self.verticalScrollBar()
@@ -301,8 +297,35 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def create_context_menu(self):
         """Set up the status menu for the repo status tree."""
-        staged, modified, unmerged, untracked = self.selection()
+        s = self.selection()
         menu = QtGui.QMenu(self)
+
+        selection = self.selected_indexes()
+        if selection:
+            category, idx = selection[0]
+            # A header item e.g. 'Staged', 'Modified', etc.
+            if category == self.idx_header:
+                if idx == self.idx_staged:
+                    menu.addAction(qtutils.icon('remove.svg'),
+                                   self.tr('Unstage All'),
+                                   SLOT(signals.unstage_all))
+                    return menu
+                elif idx == self.idx_unmerged:
+                    menu.addAction(qtutils.icon('add.svg'),
+                                   self.tr('Stage Merged'),
+                                   SLOT(signals.stage_unmerged))
+                    return menu
+                elif idx == self.idx_modified:
+                    menu.addAction(qtutils.icon('add.svg'),
+                                   self.tr('Stage Modified'),
+                                   SLOT(signals.stage_modified))
+                    return menu
+
+                elif idx == self.idx_untracked:
+                    menu.addAction(qtutils.icon('add.svg'),
+                                   self.tr('Stage Untracked'),
+                                   SLOT(signals.stage_untracked))
+                    return menu
 
         enable_staging = self.m.enable_staging()
         if not enable_staging:
@@ -310,12 +333,13 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            self.tr('Unstage Selected'),
                            SLOT(signals.unstage, self.staged()))
 
-        if staged and staged[0] in self.m.submodules:
+        if s.staged and s.staged[0] in self.m.submodules:
             menu.addAction(qtutils.git_icon(),
                            self.tr('Launch git-cola'),
-                           SLOT(signals.open_repo, os.path.abspath(staged[0])))
+                           SLOT(signals.open_repo,
+                                os.path.abspath(s.staged[0])))
             return menu
-        elif staged:
+        elif s.staged:
             menu.addSeparator()
             menu.addAction(qtutils.icon('open.svg'),
                            self.tr('Launch Editor'),
@@ -329,7 +353,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            lambda: self._revert_unstaged_edits(use_staged=True))
             return menu
 
-        if unmerged:
+        if s.unmerged:
             menu.addAction(qtutils.git_icon(),
                            self.tr('Launch Merge Tool'),
                            SLOT(signals.mergetool, self.unmerged()))
@@ -339,11 +363,11 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             menu.addSeparator()
             menu.addAction(qtutils.icon('add.svg'),
                            self.tr('Stage Selected'),
-                           SLOT(signals.stage, self.unmerged()))
+                           SLOT(signals.stage, self.unstaged()))
             return menu
 
-        modified_submodule = (modified and
-                              modified[0] in self.m.submodules)
+        modified_submodule = (s.modified and
+                              s.modified[0] in self.m.submodules)
         if enable_staging:
             menu.addAction(qtutils.icon('add.svg'),
                            self.tr('Stage Selected'),
@@ -354,13 +378,13 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             menu.addAction(qtutils.git_icon(),
                            self.tr('Launch git-cola'),
                            SLOT(signals.open_repo,
-                                os.path.abspath(modified[0])))
+                                os.path.abspath(s.modified[0])))
         elif self.unstaged():
             menu.addAction(qtutils.icon('open.svg'),
                            self.tr('Launch Editor'),
                            SLOT(signals.edit, self.unstaged()))
 
-        if modified and enable_staging and not modified_submodule:
+        if s.modified and enable_staging and not modified_submodule:
             menu.addAction(qtutils.git_icon(),
                            self.tr('Launch Diff Tool'),
                            SLOT(signals.difftool, False, self.modified()))
@@ -372,7 +396,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            self.tr('Revert Uncommited Edits...'),
                            self._revert_uncommitted_edits)
 
-        if untracked:
+        if s.untracked:
             menu.addSeparator()
             menu.addAction(qtutils.discard_icon(),
                            self.tr('Delete File(s)...'), self._delete_files)
@@ -449,20 +473,22 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def single_selection(self):
         """Scan across staged, modified, etc. and return a single item."""
-        staged, modified, unmerged, untracked = self.selection()
-        s = None
-        m = None
+        st = None
         um = None
+        m = None
         ut = None
-        if staged:
-            s = staged[0]
-        elif modified:
-            m = modified[0]
-        elif unmerged:
-            um = unmerged[0]
-        elif untracked:
-            ut = untracked[0]
-        return s, m, um, ut
+
+        s = self.selection()
+        if s.staged:
+            st = s.staged[0]
+        elif s.modified:
+            m = s.modified[0]
+        elif s.unmerged:
+            um = s.unmerged[0]
+        elif s.untracked:
+            ut = s.untracked[0]
+
+        return State(st, um, m, ut)
 
     def selected_indexes(self):
         """Returns a list of (category, row) representing the tree selection."""
@@ -479,18 +505,57 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def selection(self):
         """Return the current selection in the repo status tree."""
-        return (self.staged(), self.modified(),
-                self.unmerged(), self.untracked())
+        return State(self.staged(), self.unmerged(),
+                     self.modified(), self.untracked())
 
     def contents(self):
-        return (self.m.staged, self.m.modified,
-                self.m.unmerged, self.m.untracked)
+        return State(self.m.staged, self.m.unmerged,
+                     self.m.modified, self.m.untracked)
+
+    def all_files(self):
+        c = self.contents()
+        return c.staged + c.unmerged + c.modified + c.untracked
+
+    def selected_idx(self):
+        c = self.contents()
+        s = self.single_selection()
+        offset = 0
+        for content, selection in zip(c, s):
+            if len(content) == 0:
+                continue
+            if selection is not None:
+                return offset + content.index(selection)
+            offset += len(content)
+        return None
+
+    def select_by_index(self, idx):
+        c = self.contents()
+        to_try = [
+            (c.staged, self.idx_staged),
+            (c.unmerged, self.idx_unmerged),
+            (c.modified, self.idx_modified),
+            (c.untracked, self.idx_untracked),
+        ]
+        for content, toplevel_idx in to_try:
+            if len(content) == 0:
+                continue
+            if idx < len(content):
+                parent = self.topLevelItem(toplevel_idx)
+                item = parent.child(idx)
+                self.select_item(item)
+                return
+            idx -= len(content)
+
+    def select_item(self, item):
+        self.scrollToItem(item)
+        self.setCurrentItem(item)
+        self.setItemSelected(item, True)
 
     def staged(self):
         return self._subtree_selection(self.idx_staged, self.m.staged)
 
     def unstaged(self):
-        return self.modified() + self.unmerged() + self.untracked()
+        return self.unmerged() + self.modified() + self.untracked()
 
     def modified(self):
         return self._subtree_selection(self.idx_modified, self.m.modified)
@@ -521,9 +586,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             return
 
         # Sync the selection model
-        staged, modified, unmerged, untracked = self.selection()
-        cola.selection_model().set_selection(staged, modified,
-                                             unmerged, untracked)
+        s = self.selection()
+        cola.selection_model().set_selection(s)
 
         # Clear the selection if an empty area was clicked
         selection = self.selected_indexes()
@@ -537,14 +601,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             self.blockSignals(False)
             return
 
-        if staged:
-            qtutils.set_clipboard(staged[0])
-        elif modified:
-            qtutils.set_clipboard(modified[0])
-        elif unmerged:
-            qtutils.set_clipboard(unmerged[0])
-        elif untracked:
-            qtutils.set_clipboard(untracked[0])
+        filename = cola.selection_model().filename()
+        if filename is not None:
+            qtutils.set_clipboard(filename)
 
     def double_clicked(self, item, idx):
         """Called when an item is double-clicked in the repo status tree."""
@@ -553,15 +612,19 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def _process_selection(self):
         if self.m.read_only():
             return
-        staged, modified, unmerged, untracked = self.selection()
-        if staged:
-            cola.notifier().broadcast(signals.unstage, staged)
-        elif modified:
-            cola.notifier().broadcast(signals.stage, modified)
-        elif unmerged:
-            cola.notifier().broadcast(signals.stage, unmerged)
-        elif untracked:
-            cola.notifier().broadcast(signals.stage, untracked)
+        s = self.selection()
+        if s.staged:
+            cola.notifier().broadcast(signals.unstage, s.staged)
+
+        unstaged = []
+        if s.unmerged:
+            unstaged.extend(s.unmerged)
+        if s.modified:
+            unstaged.extend(s.modified)
+        if s.untracked:
+            unstaged.extend(s.untracked)
+        if unstaged:
+            cola.notifier().broadcast(signals.stage, unstaged)
 
     def _launch_difftool(self):
         staged, modified, unmerged, untracked = self.selection()
@@ -576,15 +639,15 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         cola.notifier().broadcast(signals.difftool, bool(staged), selection)
 
     def _launch_editor(self):
-        staged, modified, unmerged, untracked = self.selection()
-        if staged:
-            selection = staged
-        elif unmerged:
-            selection = unmerged
-        elif modified:
-            selection = modified
-        elif untracked:
-            selection = untracked
+        s = self.selection()
+        if s.staged:
+            selection = s.staged
+        elif s.unmerged:
+            selection = s.unmerged
+        elif s.modified:
+            selection = s.modified
+        elif s.untracked:
+            selection = s.untracked
         else:
             return
         cola.notifier().broadcast(signals.edit, selection)
@@ -592,8 +655,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def show_selection(self):
         """Show the selected item."""
         # Sync the selection model
-        s, m, um, ut = self.selection()
-        cola.selection_model().set_selection(s, m, um, ut)
+        cola.selection_model().set_selection(self.selection())
 
         selection = self.selected_indexes()
         if not selection:
