@@ -740,6 +740,13 @@ class StageModified(Stage):
         self.paths = self.model.modified
 
 
+class StageUnmerged(Stage):
+    """Stage all modified files."""
+    def __init__(self):
+        Stage.__init__(self, None)
+        self.paths = self.model.unmerged
+
+
 class StageUntracked(Stage):
     """Stage all untracked files."""
     def __init__(self):
@@ -926,6 +933,7 @@ def register():
         signals.signoff: SignOff,
         signals.stage: Stage,
         signals.stage_modified: StageModified,
+        signals.stage_unmerged: StageUnmerged,
         signals.stage_untracked: StageUntracked,
         signals.staged_summary: DiffStagedSummary,
         signals.tag: Tag,
