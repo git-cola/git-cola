@@ -13,34 +13,47 @@ from cola import qtutils
 from cola.git import git
 from cola.qt import ExpandableGroupBox
 from cola.widgets import defs
+from cola.dag.model import archive
 
 
 class GitArchiveDialog(QtGui.QDialog):
 
     @staticmethod
-    def create(ref, parent=None):
-        dlg = GitArchiveDialog(ref, parent=parent)
+    def create(ref, shortref, parent):
+        dlg = GitArchiveDialog(ref, shortref, parent)
         if dlg.exec_() != dlg.Accepted:
             return None
         return dlg
 
-    def __init__(self, ref, parent=None):
+    @classmethod
+    def save(cls, ref, shortref, parent):
+        dlg = cls.create(ref, shortref, parent)
+        if dlg is None:
+            return
+        parent.emit(SIGNAL(archive), ref, dlg.fmt, dlg.prefix, dlg.filename)
+        qtutils.information('File Saved', 'File saved to "%s"' % dlg.filename)
+
+    def __init__(self, ref, shortref=None, parent=None):
         QtGui.QDialog.__init__(self, parent)
         self.setWindowModality(QtCore.Qt.WindowModal)
 
         # input
         self.ref = ref
+        if shortref is None:
+            shortref = ref
 
         # outputs
         self.fmt = None
-        self.prefix = ''
-        self.filename = ref
+
+        filename = '%s-%s' % (os.path.basename(os.getcwd()), shortref)
+        self.prefix = filename + '/'
+        self.filename = filename
 
         # widgets
         self.setWindowTitle('Save Archive')
 
         self.filetext = QtGui.QLineEdit()
-        self.filetext.setText(ref)
+        self.filetext.setText(self.filename)
 
         self.browse = QtGui.QToolButton()
         self.browse.setAutoRaise(True)
@@ -62,6 +75,7 @@ class GitArchiveDialog(QtGui.QDialog):
         self.prefix_label = QtGui.QLabel()
         self.prefix_label.setText('Prefix')
         self.prefix_text = QtGui.QLineEdit()
+        self.prefix_text.setText(self.prefix)
 
         self.prefix_group = ExpandableGroupBox()
         self.prefix_group.setTitle('Advanced')
@@ -154,18 +168,22 @@ class GitArchiveDialog(QtGui.QDialog):
     def filetext_changed(self, qstr):
         self.filename = unicode(qstr)
         self.save.setEnabled(bool(self.filename))
+        prefix = self.strip_exts(os.path.basename(self.filename)) + '/'
+        self.prefix_text.setText(prefix)
 
     def prefix_text_changed(self, qstr):
         self.prefix = unicode(qstr)
 
-    def update_filetext_for_format(self, idx):
-        self.fmt = self.format_strings[idx]
-        text = unicode(self.filetext.text())
+    def strip_exts(self, text):
         for format_string in self.format_strings:
             ext = '.'+format_string
             if text.endswith(ext):
-                text = text[:-len(ext)]
-                break
+                return text[:-len(ext)]
+        return text
+
+    def update_filetext_for_format(self, idx):
+        self.fmt = self.format_strings[idx]
+        text = self.strip_exts(unicode(self.filetext.text()))
         self.filename = '%s.%s' % (text, self.fmt)
         self.filetext.setText(self.filename)
         self.filetext.setFocus(True)

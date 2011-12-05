@@ -30,6 +30,7 @@ from cola.controllers import createtag
 from cola.controllers import search
 from cola.controllers.createbranch import create_new_branch
 from cola.dag import git_dag
+from cola.git import git
 from cola.prefs import diff_font
 from cola.prefs import PreferencesModel
 from cola.prefs import preferences
@@ -47,6 +48,7 @@ from cola.qtutils import tr
 from cola.views import standard
 from cola.widgets import cfgactions
 from cola.widgets.about import launch_about_dialog
+from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.about import show_shortcuts
 from cola.widgets.commitmsg import CommitMessageEditor
 from cola.widgets.diff import DiffTextEdit
@@ -168,6 +170,9 @@ class MainView(standard.MainWindow):
         self.menu_load_commitmsg = add_action(self,
                 'Load Commit Message...', guicmds.load_commitmsg)
 
+        self.menu_save_tarball = add_action(self,
+                'Save As Tarball/Zip...', self.save_archive)
+
         self.menu_quit = add_action(self,
                 'Quit', self.close, 'Ctrl+Q')
         self.menu_manage_bookmarks = add_action(self,
@@ -283,6 +288,7 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.menu_load_commitmsg)
         self.file_menu.addAction(self.menu_load_commitmsg_template)
         self.file_menu.addSeparator()
+        self.file_menu.addAction(self.menu_save_tarball)
         self.file_menu.addAction(self.menu_quit)
         # Add to menubar
         self.menubar.addAction(self.file_menu.menuAction())
@@ -583,6 +589,11 @@ class MainView(standard.MainWindow):
                     dockwidget.toggleViewAction().trigger()
             self.addAction(action)
             connect_action(action, focusdock)
+
+    def save_archive(self):
+        ref = git.rev_parse('HEAD')
+        shortref = ref[:7]
+        GitArchiveDialog.save(ref, shortref, self)
 
     def stage(self):
         """Stage selected files, or all files if no selection exists."""

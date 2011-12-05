@@ -1340,11 +1340,8 @@ def context_menu_event(self, event):
 
 def create_tarball(self):
     ref = self._clicked_item.commit.sha1
-    dlg = GitArchiveDialog.create(ref, parent=self)
-    if dlg is None:
-        return
-    self.emit(SIGNAL(archive), ref, dlg.fmt, dlg.prefix, dlg.filename)
-    qtutils.information('File Saved', 'File saved to "%s"' % dlg.filename)
+    shortref = ref[:7]
+    GitArchiveDialog.save(ref, shortref, self)
 
 
 def save_blob_dialog(self):
