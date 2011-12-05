@@ -62,6 +62,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.setSortingEnabled(False)
         self.setUniformRowHeights(True)
         self.setAnimated(True)
+        self.setRootIsDecorated(False)
 
         self.add_item('Staged', 'plus.png', hide=True)
         self.add_item('Unmerged', 'unmerged.png', hide=True)
