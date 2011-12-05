@@ -273,11 +273,7 @@ def tab_width():
 def diff_font_str():
     font_str = gitcfg.instance().get('cola.fontdiff')
     if font_str is None:
-        font = QtGui.QFont()
-        family = 'Monospace'
-        if is_darwin():
-            family = 'Monaco'
-        font.setFamily(family)
+        font = qtutils.default_monospace_font()
         font_str = unicode(font.toString())
     return font_str
 

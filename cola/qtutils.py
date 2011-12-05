@@ -529,3 +529,12 @@ def theme_icon(name):
     except AttributeError:
         pass
     return icon(name)
+
+
+def default_monospace_font():
+    font = QtGui.QFont()
+    family = 'Monospace'
+    if utils.is_darwin():
+        family = 'Monaco'
+    font.setFamily(family)
+    return font
