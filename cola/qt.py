@@ -35,7 +35,7 @@ def create_button(text='', layout=None, tooltip=None, icon=None):
 class DockTitleBarWidget(QtGui.QWidget):
     def __init__(self, parent, title):
         QtGui.QWidget.__init__(self, parent)
-        label = QtGui.QLabel()
+        self.label = label = QtGui.QLabel()
         font = label.font()
         font.setCapitalization(QtGui.QFont.SmallCaps)
         label.setFont(font)
@@ -51,11 +51,16 @@ class DockTitleBarWidget(QtGui.QWidget):
         self.toggle_button.setFixedSize(QtCore.QSize(16, 16))
         self.toggle_button.setIcon(qtutils.titlebar_normal_icon())
 
+        self.corner_layout = QtGui.QHBoxLayout()
+        self.corner_layout.setMargin(0)
+        self.corner_layout.setSpacing(defs.spacing)
+
         layout = QtGui.QHBoxLayout()
         layout.setMargin(2)
         layout.setSpacing(defs.spacing)
         layout.addWidget(label)
         layout.addStretch()
+        layout.addLayout(self.corner_layout)
         layout.addWidget(self.toggle_button)
         layout.addWidget(self.close_button)
         self.setLayout(layout)
@@ -68,6 +73,12 @@ class DockTitleBarWidget(QtGui.QWidget):
 
     def toggle_floating(self):
         self.parent().setFloating(not self.parent().isFloating())
+
+    def set_title(self, title):
+        self.label.setText(title)
+
+    def add_corner_widget(self, widget):
+        self.corner_layout.addWidget(widget)
 
 
 def create_dock(title, parent):
