@@ -105,12 +105,12 @@ class CommitMessageEditor(QtGui.QWidget):
         self.connect(self.summary, SIGNAL('returnPressed()'),
                      self.summary_return_pressed)
 
+        self.connect(self.summary, SIGNAL('cursorPositionChanged(int,int)'),
+                     lambda x, y: self.emit_summary_position())
+
         # Keep model informed of changes
         self.connect(self.summary, SIGNAL('textChanged(QString)'),
                      self.commit_message_changed)
-
-        self.connect(self.summary, SIGNAL('textChanged(QString)'),
-                     self.emit_summary_position)
 
         self.connect(self.description, SIGNAL('textChanged()'),
                      self.commit_message_changed)
@@ -166,6 +166,7 @@ class CommitMessageEditor(QtGui.QWidget):
             self.summary.setText(self.summary_placeholder)
         else:
             self.summary.clear()
+        self.summary.setCursorPosition(0)
         self.summary.blockSignals(blocksignals)
         self.set_placeholder_palette(self.summary, placeholder)
 
@@ -285,6 +286,7 @@ class CommitMessageEditor(QtGui.QWidget):
 
         blocksignals = self.summary.blockSignals(True)
         self.summary.setText(summary)
+        self.summary.setCursorPosition(0)
         self.summary.blockSignals(blocksignals)
 
         # Update description
@@ -322,7 +324,7 @@ class CommitMessageEditor(QtGui.QWidget):
         self.amend_action.blockSignals(blocksignals)
 
     def emit_summary_position(self):
-        cols = len(self.commit_summary())
+        cols = self.summary.cursorPosition()
         self.emit(SIGNAL('cursorPosition(int,int)'), 1, cols)
 
     def emit_cursor_position(self):
