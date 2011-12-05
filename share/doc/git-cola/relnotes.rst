@@ -56,8 +56,9 @@ Packaging
 
 Deprecated Features
 -------------------
-* The 'Apply Changes from Branch...' feature had outlived its usefulness
-  and was removed to simplify things.
+* The 'Apply Changes from Branch...' feature was removed.
+  `git-dag`'s 'Grab File...' feature used alongside the index/worktree editor
+  is a simpler alternative.
 
 git-cola v1.7.1.1
 =================
