@@ -41,6 +41,7 @@ class MainModel(ObservableModel):
     # States
     mode_none = 'none' # Default: nothing's happened, do nothing
     mode_worktree = 'worktree' # Comparing index to worktree
+    mode_untracked = 'untracked' # Dealing with an untracked file
     mode_index = 'index' # Comparing index to last commit
     mode_amend = 'amend' # Amending a commit
     mode_grep = 'grep' # We ran Search -> Grep
@@ -115,7 +116,7 @@ class MainModel(ObservableModel):
 
     def enable_staging(self):
         """Whether staging should be allowed."""
-        return self.mode == self.mode_worktree
+        return self.mode in (self.mode_worktree, self.mode_untracked)
 
     def generate_remote_helpers(self):
         """Generates helper methods for fetch, push and pull"""

@@ -690,7 +690,7 @@ class ShowUntracked(Command):
         Command.__init__(self)
         if not self.model.read_only():
             if self.model.mode != self.model.mode_amend:
-                self.new_mode = self.model.mode_worktree
+                self.new_mode = self.model.mode_untracked
         # TODO new_diff_text = utils.file_preview(filenames[0])
 
 
@@ -833,6 +833,10 @@ class UntrackedSummary(Command):
             for u in untracked:
                 io.write('/'+core.encode(u))
         self.new_diff_text = core.decode(io.getvalue())
+
+        if not self.model.read_only():
+            if self.model.mode != self.model.mode_amend:
+                self.new_mode = self.model.mode_untracked
 
 
 class UpdateFileStatus(Command):
