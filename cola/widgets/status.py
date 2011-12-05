@@ -686,96 +686,41 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             cola.notifier().broadcast(signals.show_untracked, self.unstaged())
 
     def move_up(self):
-        self.move('up')
+        idx = self.selected_idx()
+        all_files = self.all_files()
+        if idx is None:
+            selection = self.selected_indexes()
+            if selection:
+                category, toplevel_idx = selection[0]
+                if category == self.idx_header:
+                    item = self.itemAbove(self.topLevelItem(toplevel_idx))
+                    if item is not None:
+                        self.select_item(item)
+                        return
+            if all_files:
+                self.select_by_index(len(all_files) - 1)
+            return
+        if idx - 1 >= 0:
+            self.select_by_index(idx - 1)
+        else:
+            self.select_by_index(len(all_files) - 1)
 
     def move_down(self):
-        self.move('down')
-
-    def move(self, direction):
-        staged, modified, unmerged, untracked = self.single_selection()
-        to_try = [
-            (staged, self.m.staged, self.idx_staged),
-            (unmerged, self.m.unmerged, self.idx_unmerged),
-            (modified, self.m.modified, self.idx_modified),
-            (untracked, self.m.untracked, self.idx_untracked),
-        ]
-        going_up = direction == 'up'
-        def select(item):
-            self.scrollToItem(item)
-            self.setCurrentItem(item)
-            self.setItemSelected(item, True)
-
-        has_selection = [i[0] for i in to_try if i[0] is not None]
-        if not has_selection:
-            indexes = self.selectedIndexes()
-            if indexes:
-                # No files are selected but the tree has a selection;
-                # it must be one of the container items.
-                index = indexes[0]
-                parent_item = self.itemFromIndex(index)
-                if going_up:
-                    item = self.itemAbove(parent_item)
-                else:
-                    item = self.itemBelow(parent_item)
-                if item:
-                    select(item)
-                    return
-
-            if going_up:
-                # go to the last item
-                for dummy, itemlist, parent_idx in reversed(to_try):
-                    idx = len(itemlist)-1
-                    if idx >= 0:
-                        parent = self.topLevelItem(parent_idx)
-                        select(parent.child(idx))
+        idx = self.selected_idx()
+        all_files = self.all_files()
+        if idx is None:
+            selection = self.selected_indexes()
+            if selection:
+                category, toplevel_idx = selection[0]
+                if category == self.idx_header:
+                    item = self.itemBelow(self.topLevelItem(toplevel_idx))
+                    if item is not None:
+                        self.select_item(item)
                         return
-            else:
-                # go to the first item
-                for dummy, itemlist, parent_idx in to_try:
-                    if itemlist:
-                        parent = self.topLevelItem(parent_idx)
-                        item = parent.child(0)
-                        select(parent.child(0))
-                        return
+            if all_files:
+                self.select_by_index(0)
             return
-
-        for item, itemlist, parent_idx in to_try:
-            if item is None:
-                continue
-            idx = itemlist.index(item)
-            if going_up:
-                if idx > 0:
-                    parent = self.topLevelItem(parent_idx)
-                    select(parent.child(idx - 1))
-                    return
-            else:
-                if idx < len(itemlist) - 1:
-                    parent = self.topLevelItem(parent_idx)
-                    select(parent.child(idx + 1))
-                    return
-
-        # Jump across category boundaries to select the next file.
-        # We do not use itemAbove/Below because we want to avoid
-        # selecting the 'Staged', 'Modified', etc. parent items
-
-        ready = False
-        best_idx = None
-        best_list = None
-
-        if going_up:
-            to_try.reverse()
-
-        for item, itemlist, parent_idx in to_try:
-            if item is not None and not ready:
-                ready = True
-                continue
-            if itemlist:
-                best_list = itemlist
-                best_idx = parent_idx
-
-        if best_list:
-            parent = self.topLevelItem(best_idx)
-            if going_up:
-                select(parent.child(len(best_list) - 1))
-            else:
-                select(parent.child(0))
+        if idx + 1 < len(all_files):
+            self.select_by_index(idx + 1)
+        else:
+            self.select_by_index(0)
