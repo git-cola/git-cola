@@ -11,10 +11,6 @@ class Controller(object):
         self.commands = {}
         self.factory = CommandFactory(model)
 
-    def add_command_directory(self, command_directory):
-        for signal, cmdclass in command_directory.items():
-            self.factory.add_command(signal, cmdclass)
-
     def add_command(self, signal, handler=None):
         if handler is None:
             handler = self.do_wrapper(signal)
