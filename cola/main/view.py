@@ -395,6 +395,8 @@ class MainView(standard.MainWindow):
         prefs_model.add_message_observer(prefs_model.message_config_updated,
                                          self._config_updated)
 
+        # Set a default value
+        self.show_cursor_position(1, 0)
 
         # Add button callbacks
         connect_button(self.rescan_button,
