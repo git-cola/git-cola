@@ -109,8 +109,14 @@ class CommitMessageEditor(QtGui.QWidget):
         self.connect(self.summary, SIGNAL('textChanged(QString)'),
                      self.commit_message_changed)
 
+        self.connect(self.summary, SIGNAL('textChanged(QString)'),
+                     self.emit_summary_position)
+
         self.connect(self.description, SIGNAL('textChanged()'),
                      self.commit_message_changed)
+
+        self.connect(self.description, SIGNAL('cursorPositionChanged()'),
+                     self.emit_cursor_position)
 
         self.setFocusProxy(self.summary)
         self.setFont(diff_font())
@@ -135,6 +141,7 @@ class CommitMessageEditor(QtGui.QWidget):
     def eventFilter(self, obj, event):
         if obj == self.summary:
             if event.type() == QtCore.QEvent.FocusIn:
+                self.emit_summary_position()
                 if self.is_summary_placeholder():
                     self.enable_placeholder_summary(False)
 
@@ -217,7 +224,6 @@ class CommitMessageEditor(QtGui.QWidget):
         self.model.set_commitmsg(message)
         self.update_placeholder_state()
         self.notifying = False
-
         self.update_actions()
 
     def update_actions(self):
@@ -295,8 +301,12 @@ class CommitMessageEditor(QtGui.QWidget):
         # Focus the empty summary or description
         if focus_summary:
             self.summary.setFocus(True)
+            self.emit_summary_position()
         elif focus_description:
             self.description.setFocus(True)
+            self.emit_cursor_position()
+        else:
+            self.emit_summary_position()
 
         self.update_actions()
 
@@ -310,6 +320,19 @@ class CommitMessageEditor(QtGui.QWidget):
         blocksignals = self.amend_action.blockSignals(True)
         self.amend_action.setChecked(checked)
         self.amend_action.blockSignals(blocksignals)
+
+    def emit_summary_position(self):
+        cols = len(self.commit_summary())
+        self.emit(SIGNAL('cursorPosition(int,int)'), 1, cols)
+
+    def emit_cursor_position(self):
+        """Update the UI with the current row and column."""
+        cursor = self.description.textCursor()
+        position = cursor.position()
+        txt = unicode(self.description.toPlainText())
+        rows = txt[:position].count('\n') + 1 + 2 # description starts at 2
+        cols = cursor.columnNumber()
+        self.emit(SIGNAL('cursorPosition(int,int)'), rows, cols)
 
     def commit(self):
         """Attempt to create a commit from the index and commit message."""

@@ -102,7 +102,14 @@ class MainView(standard.MainWindow):
         self.statusdockwidget.setWidget(StatusWidget(self))
 
         # "Commit Message Editor" widget
+        self.position_label = QtGui.QLabel()
+        font = qtutils.default_monospace_font()
+        font.setPointSize(int(font.pointSize() * 0.8))
+        self.position_label.setFont(font)
         self.commitdockwidget = create_dock('Commit Message Editor', self)
+        titlebar = self.commitdockwidget.titleBarWidget()
+        titlebar.add_corner_widget(self.position_label)
+
         self.commitmsgeditor = CommitMessageEditor(model, self)
         relay_signal(self, self.commitmsgeditor, SIGNAL(signals.amend_mode))
         relay_signal(self, self.commitmsgeditor, SIGNAL(signals.signoff))
@@ -401,6 +408,8 @@ class MainView(standard.MainWindow):
         connect_button(self.stage_button, self.stage)
         connect_button(self.unstage_button, self.unstage)
 
+        self.connect(self.commitmsgeditor, SIGNAL('cursorPosition(int,int)'),
+                     self.show_cursor_position)
         self.connect(self, SIGNAL('update'), self._update_callback)
         self.connect(self, SIGNAL('apply_state'), self.apply_state)
         self.connect(self, SIGNAL('install_config_actions'),
@@ -616,3 +625,22 @@ class MainView(standard.MainWindow):
             for name in [f for f in files if f.endswith('.patch')]:
                 patches.append(os.path.join(root, name))
         return patches
+
+    def show_cursor_position(self, rows, cols):
+        display = '&nbsp;%02d:%02d&nbsp;' % (rows, cols)
+        if cols > 78:
+            display = ('<span style="color: white; '
+                       '             background-color: red;"'
+                       '>%s</span>' % display)
+        elif cols > 72:
+            display = ('<span style="color: black; '
+                       '             background-color: orange;"'
+                       '>%s</span>' % display)
+        elif cols > 64:
+            display = ('<span style="color: black; '
+                       '             background-color: yellow;"'
+                       '>%s</span>' % display)
+        else:
+            display = ('<span style="color: grey;">%s</span>' % display)
+
+        self.position_label.setText(display)
