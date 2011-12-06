@@ -6,6 +6,7 @@ import cola
 from cola import gitcmds
 from cola import signals
 from cola.qt import create_toolbutton
+from cola.qtutils import add_action
 from cola.qtutils import confirm
 from cola.qtutils import connect_action
 from cola.qtutils import connect_action_bool
@@ -118,6 +119,9 @@ class CommitMessageEditor(QtGui.QWidget):
         self.connect(self.description, SIGNAL('cursorPositionChanged()'),
                      self.emit_cursor_position)
 
+        self.connect(self.description, SIGNAL('shiftTab()'),
+                     self.focus_summary)
+
         self.setFocusProxy(self.summary)
         self.setFont(diff_font())
 
@@ -129,6 +133,9 @@ class CommitMessageEditor(QtGui.QWidget):
 
         self.commit_button.setEnabled(False)
         self.commit_action.setEnabled(False)
+
+    def focus_summary(self):
+        self.summary.setFocus(True)
 
     def is_summary_placeholder(self):
         summary = unicode(self.summary.text()).strip()
@@ -431,6 +438,12 @@ class CommitMessageTextEdit(QtGui.QTextEdit):
         self.setSizePolicy(policy)
         self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.setAcceptRichText(False)
+
+        self.action_emit_shift_tab = add_action(self,
+                'Shift Tab', self.shift_tab, 'Shift+tab')
+
+    def shift_tab(self):
+        self.emit(SIGNAL('shiftTab()'))
 
     def setFont(self, font):
         QtGui.QTextEdit.setFont(self, font)
