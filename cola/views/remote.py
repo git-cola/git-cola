@@ -49,7 +49,7 @@ class RemoteView(standard.Dialog):
         self.remote_branches = QtGui.QListWidget(self)
 
         self._options_hbox_layt = QtGui.QHBoxLayout()
-        self._options_hbox_layt.setSpacing(defs.spacing)
+        self._options_hbox_layt.setSpacing(defs.button_spacing)
         self._options_hbox_layt.addStretch()
         # Exposed
         self.ffwd_only_checkbox = QtGui.QCheckBox(self)
