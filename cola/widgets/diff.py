@@ -126,6 +126,17 @@ class DiffTextEdit(DiffView):
                        'Select All', self.selectAll)
         menu.exec_(self.mapToGlobal(event.pos()))
 
+    def wheelEvent(self, event):
+        if event.modifiers() & QtCore.Qt.ControlModifier:
+            # Intercept the Control modifier to not resize the text
+            # when doing control+mousewheel
+            event.accept()
+            event = QtGui.QWheelEvent(event.pos(), event.delta(),
+                                      QtCore.Qt.NoButton,
+                                      QtCore.Qt.NoModifier,
+                                      event.orientation())
+        return super(DiffTextEdit, self).wheelEvent(event)
+
     def setPlainText(self, text):
         """setPlainText(str) while retaining scrollbar positions"""
         scrollbar = self.verticalScrollBar()
