@@ -434,21 +434,25 @@ class CommitMessageEditor(QtGui.QWidget):
 class CommitMessageTextEdit(QtGui.QTextEdit):
     def __init__(self, parent=None):
         QtGui.QTextEdit.__init__(self, parent)
-
-        policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum,
-                                   QtGui.QSizePolicy.Minimum)
-        self.setSizePolicy(policy)
         self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.setAcceptRichText(False)
+        self.setMinimumSize(QtCore.QSize(1, 1))
 
         self.action_emit_shift_tab = add_action(self,
                 'Shift Tab', self.shift_tab, 'Shift+tab')
 
+        self.installEventFilter(self)
+
+    def eventFilter(self, obj, event):
+        if event.type() == QtCore.QEvent.FocusIn:
+            height = QtGui.QFontMetrics(self.font()).height() * 3
+            height += defs.spacing * 4
+            self.setMinimumSize(QtCore.QSize(1, height))
+
+        elif event.type() == QtCore.QEvent.FocusOut:
+            self.setMinimumSize(QtCore.QSize(1, 1))
+
+        return False
+
     def shift_tab(self):
         self.emit(SIGNAL('shiftTab()'))
-
-    def setFont(self, font):
-        QtGui.QTextEdit.setFont(self, font)
-        height = QtGui.QFontMetrics(font).height() * 2
-        height += defs.spacing * 3
-        self.setMinimumSize(QtCore.QSize(1, height))
