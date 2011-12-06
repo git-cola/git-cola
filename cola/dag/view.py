@@ -198,14 +198,13 @@ class DAGView(standard.Dialog):
         self.setObjectName('dag')
         self.setMinimumSize(1, 1)
 
-        self.revlabel = QtGui.QLabel()
-        self.revlabel.setText('git log -')
-
         self.revtext = GitLogLineEdit(parent=self)
 
         self.maxresults = QtGui.QSpinBox()
-        self.maxresults.setMinimum(-1)
-        self.maxresults.setMaximum(2**31 - 1)
+        self.maxresults.setMinimum(1)
+        self.maxresults.setMaximum(99999)
+        self.maxresults.setPrefix('git log -')
+        self.maxresults.setSuffix('')
 
         self.displaybutton = QtGui.QPushButton()
         self.displaybutton.setText('Display')
@@ -220,9 +219,8 @@ class DAGView(standard.Dialog):
 
         self._buttons_layt = QtGui.QHBoxLayout()
         self._buttons_layt.setMargin(defs.margin)
-        self._buttons_layt.setSpacing(defs.spacing)
+        self._buttons_layt.setSpacing(defs.button_spacing)
 
-        self._buttons_layt.addWidget(self.revlabel)
         self._buttons_layt.addWidget(self.maxresults)
         self._buttons_layt.addWidget(self.revtext)
         self._buttons_layt.addWidget(self.displaybutton)
