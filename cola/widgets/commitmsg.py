@@ -122,7 +122,6 @@ class CommitMessageEditor(QtGui.QWidget):
         self.connect(self.description, SIGNAL('shiftTab()'),
                      self.focus_summary)
 
-        self.setFocusProxy(self.summary)
         self.setFont(diff_font())
 
         self.summary.installEventFilter(self)
@@ -133,6 +132,8 @@ class CommitMessageEditor(QtGui.QWidget):
 
         self.commit_button.setEnabled(False)
         self.commit_action.setEnabled(False)
+
+        self.setFocusProxy(self.summary)
 
     def focus_summary(self):
         self.summary.setFocus(True)
@@ -158,6 +159,7 @@ class CommitMessageEditor(QtGui.QWidget):
 
         elif obj == self.description:
             if event.type() == QtCore.QEvent.FocusIn:
+                self.emit_cursor_position()
                 if self.is_description_placeholder():
                     self.enable_placeholder_description(False)
 
