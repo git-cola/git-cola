@@ -63,7 +63,7 @@ class CommitMessageEditor(QtGui.QWidget):
 
         self.commit_action = self.actions_menu.addAction(tr('Commit@@verb'))
         self.commit_action.setToolTip(tr('Commit staged changes'))
-        self.commit_action.setShortcut('Ctrl+m')
+        self.commit_action.setShortcut('Ctrl+Return')
 
         self.actions_menu.addSeparator()
         self.amend_action = self.actions_menu.addAction(tr('Amend Last Commit'))
