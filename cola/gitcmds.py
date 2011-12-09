@@ -480,7 +480,7 @@ def diff_worktree():
         name = core.decode(name)
         if '160000' in rest[1:14]:
             submodules.add(name)
-        elif status in 'DAM':
+        elif status in 'DAMT':
             modified.append(name)
 
     return modified, submodules
