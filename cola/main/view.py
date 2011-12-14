@@ -25,7 +25,6 @@ from cola import version
 from cola.bookmarks import manage_bookmarks
 from cola.classic import cola_classic
 from cola.classic import classic_widget
-from cola.controllers import compare
 from cola.controllers import createtag
 from cola.controllers import search
 from cola.controllers.createbranch import create_new_branch
@@ -48,9 +47,10 @@ from cola.qtutils import tr
 from cola.views import standard
 from cola.widgets import cfgactions
 from cola.widgets.about import launch_about_dialog
-from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.about import show_shortcuts
+from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.commitmsg import CommitMessageEditor
+from cola.widgets.compare import branch_compare
 from cola.widgets.diff import DiffTextEdit
 from cola.widgets.recent import browse_recent
 from cola.widgets.status import StatusWidget
@@ -198,8 +198,6 @@ class MainView(standard.MainWindow):
 
         self.menu_stash = add_action(self,
                 'Stash...', stash.stash, 'Alt+Shift+S')
-        self.menu_branch_compare = add_action(self,
-                'Branches...', compare.branch_compare)
 
         self.menu_clone_repo = add_action(self,
                 'Clone...', guicmds.clone_repo)
@@ -214,10 +212,6 @@ class MainView(standard.MainWindow):
                 show_shortcuts,
                 QtCore.Qt.Key_Question)
 
-        self.menu_commit_compare = add_action(self,
-                'Commits...', compare.compare)
-        self.menu_commit_compare_file = add_action(self,
-                'Commits Touching File...', compare.compare_file)
         self.menu_visualize_current = add_action(self,
                 'Visualize Current Branch...',
                 emit(self, signals.visualize_current))
@@ -235,10 +229,14 @@ class MainView(standard.MainWindow):
                 emit(self, signals.load_commit_template))
         self.menu_help_about = add_action(self,
                 'About', launch_about_dialog)
+
         self.menu_branch_diff = add_action(self,
                 'SHA-1...', guicmds.branch_diff)
         self.menu_diff_expression = add_action(self,
                 'Expression...', guicmds.diff_expression)
+        self.menu_branch_compare = add_action(self,
+                'Branches...', branch_compare)
+
         self.menu_create_tag = add_action(self,
                 'Create Tag...', createtag.create_tag)
 
@@ -346,10 +344,7 @@ class MainView(standard.MainWindow):
         self.diff_menu = create_menu('&Diff', self.menubar)
         self.diff_menu.addAction(self.menu_branch_diff)
         self.diff_menu.addAction(self.menu_diff_expression)
-        self.diff_menu.addSeparator()
         self.diff_menu.addAction(self.menu_branch_compare)
-        self.diff_menu.addAction(self.menu_commit_compare)
-        self.diff_menu.addAction(self.menu_commit_compare_file)
         self.diff_menu.addSeparator()
         self.diff_menu.addAction(self.menu_show_diffstat)
         # Add to menubar
