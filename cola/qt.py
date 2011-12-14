@@ -678,13 +678,14 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
         # We specify the whitespace rule last so that it is
         # applied after the diff addition/removal rules.
         # The rules for the header
-        diff_old_rgx = TERMINAL(r'^--- a/')
-        diff_new_rgx = TERMINAL(r'^\+\+\+ b/')
+        diff_old_rgx = TERMINAL(r'^--- ')
+        diff_new_rgx = TERMINAL(r'^\+\+\+ ')
         diff_ctx_rgx = TERMINAL(r'^@@ ')
 
         diff_hd1_rgx = TERMINAL(r'^diff --git a/.*b/.*')
         diff_hd2_rgx = TERMINAL(r'^index \S+\.\.\S+')
         diff_hd3_rgx = TERMINAL(r'^new file mode')
+        diff_hd4_rgx = TERMINAL(r'^deleted file mode')
         diff_add_rgx = TERMINAL(r'^\+')
         diff_rmv_rgx = TERMINAL(r'^-')
         diff_bar_rgx = TERMINAL(r'^([ ]+.*)(\|[ ]+\d+[ ]+[+-]+)$')
@@ -700,6 +701,7 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
                           diff_hd1_rgx,     diff_head,
                           diff_hd2_rgx,     diff_head,
                           diff_hd3_rgx,     diff_head,
+                          diff_hd4_rgx,     diff_head,
                           diff_add_rgx,     diff_add,
                           diff_rmv_rgx,     diff_remove,
                           diff_sts_rgx,     (None, diff_head,
