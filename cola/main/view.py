@@ -50,7 +50,7 @@ from cola.widgets.about import launch_about_dialog
 from cola.widgets.about import show_shortcuts
 from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.commitmsg import CommitMessageEditor
-from cola.widgets.compare import branch_compare
+from cola.widgets.compare import compare_branches
 from cola.widgets.diff import DiffTextEdit
 from cola.widgets.recent import browse_recent
 from cola.widgets.status import StatusWidget
@@ -235,7 +235,7 @@ class MainView(standard.MainWindow):
         self.menu_diff_expression = add_action(self,
                 'Expression...', guicmds.diff_expression)
         self.menu_branch_compare = add_action(self,
-                'Branches...', branch_compare)
+                'Branches...', compare_branches)
 
         self.menu_create_tag = add_action(self,
                 'Create Tag...', createtag.create_tag)

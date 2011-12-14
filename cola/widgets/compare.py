@@ -13,37 +13,30 @@ from cola.views import standard
 from cola.widgets import defs
 
 
-class BranchCompareItem(QtGui.QTreeWidgetItem):
+class FileItem(QtGui.QTreeWidgetItem):
     def __init__(self, path, icon):
         QtGui.QTreeWidgetItem.__init__(self, [path])
         self.path = path
         self.setIcon(0, icon)
 
 
-def branch_compare():
+def compare_branches():
     """Launches a dialog for comparing a pair of branches"""
-    model = BranchCompareModel()
-    view = BranchCompareView(model, qtutils.active_window())
+    view = CompareBranchesDialog(qtutils.active_window())
     view.show()
     return view
 
 
-class BranchCompareModel(object):
-    """Provides custom model data for BranchCompareController."""
-    def __init__(self):
-        self.remote_branches = gitcmds.branch_list(remote=True)
-        self.local_branches = gitcmds.branch_list(remote=False)
-
-
-class BranchCompareView(standard.Dialog):
+class CompareBranchesDialog(standard.Dialog):
 
     BRANCH_POINT = '*** Branch Point ***'
     SANDBOX      = '*** Sandbox ***'
     LOCAL        = 'Local'
 
-    def __init__(self, model, parent):
+    def __init__(self, parent):
         standard.Dialog.__init__(self, parent=parent)
-        self.model = model
+        self.remote_branches = gitcmds.branch_list(remote=True)
+        self.local_branches = gitcmds.branch_list(remote=False)
 
         self.setWindowTitle(self.tr('Branch Diff Viewer'))
         self.resize(658, 350)
@@ -168,10 +161,9 @@ class BranchCompareView(standard.Dialog):
         # If any of the selection includes sandbox then we
         # generate the same diff, regardless.  This means we don't
         # support reverse diffs against sandbox aka worktree.
-        if (left_item == BranchCompareView.SANDBOX or
-                right_item == BranchCompareView.SANDBOX):
+        if self.SANDBOX in (left_item, right_item):
             self.use_sandbox = True
-            if left_item == BranchCompareView.SANDBOX:
+            if left_item == self.SANDBOX:
                 self.diff_arg = (right_item,)
             else:
                 self.diff_arg = (left_item,)
@@ -191,7 +183,7 @@ class BranchCompareView(standard.Dialog):
         self.set_diff_files(files)
 
     def set_diff_files(self, files):
-        mk = BranchCompareItem
+        mk = FileItem
         icon = qtutils.icon('script.png')
         self.diff_files.clear()
         self.diff_files.addTopLevelItems([mk(f, icon) for f in files])
@@ -199,7 +191,7 @@ class BranchCompareView(standard.Dialog):
     def remote_ref(self, branch):
         """Returns the remote ref for 'git diff [local] [remote]'
         """
-        if branch == BranchCompareView.BRANCH_POINT:
+        if branch == self.BRANCH_POINT:
             # Compare against the branch point so find the merge-base
             branch = gitcmds.current_branch()
             tracked_branch = gitcmds.tracked_branch()
@@ -238,11 +230,9 @@ class BranchCompareView(standard.Dialog):
         # sandbox as a valid choice.  If we're looking at
         # "remote" stuff then also include the branch point.
         if which == self.LOCAL:
-            new_list = ([BranchCompareView.SANDBOX]+
-                        self.model.local_branches)
+            new_list = ([self.SANDBOX]+ self.local_branches)
         else:
-            new_list = ([BranchCompareView.BRANCH_POINT] +
-                        self.model.remote_branches)
+            new_list = ([self.BRANCH_POINT] + self.remote_branches)
 
         widget.clear()
         widget.addItems(new_list)
