@@ -296,8 +296,8 @@ msgid "Revert Changes"
 msgstr "Inverser modification"
 
 #: git-gui.sh:2049 git-gui.sh:2368 git-gui.sh:2467
-msgid "Approuver"
-msgstr "Se désinscrire"
+msgid "Sign Off"
+msgstr "Approuver"
 
 #: git-gui.sh:2053 git-gui.sh:2372
 msgid "Commit@@verb"
