@@ -20,9 +20,9 @@ def browse_recent():
 
 
 class UpdateFileListThread(QtCore.QThread):
-    def __init__(self):
+    def __init__(self, count):
         QtCore.QThread.__init__(self)
-        self.count = 0
+        self.count = count
 
     def run(self):
         ref = 'HEAD~%d' % self.count
@@ -36,12 +36,13 @@ class RecentFileDialog(standard.Dialog):
         self.setWindowTitle(self.tr('Recently Modified Files'))
         self.setWindowModality(QtCore.Qt.WindowModal)
 
-        self.update_thread = UpdateFileListThread()
+        count = 1
+        self.update_thread = UpdateFileListThread(count)
 
         self.count = QtGui.QSpinBox()
         self.count.setMinimum(0)
         self.count.setMaximum(10000)
-        self.count.setValue(0)
+        self.count.setValue(count)
         self.count.setSuffix(self.tr(' commits ago'))
 
         self.count_label = QtGui.QLabel()
@@ -124,7 +125,6 @@ class RecentFileDialog(standard.Dialog):
 
         qtutils.add_action(self, 'Refresh', self.refresh, 'Ctrl+R')
 
-        self.update_thread.count = 0
         self.update_thread.start()
 
     def edit_selected(self):
