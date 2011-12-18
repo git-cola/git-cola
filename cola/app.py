@@ -40,6 +40,7 @@ from cola.main.controller import MainController
 from cola.widgets import cfgactions
 from cola.widgets import startup
 from cola.widgets.createtag import create_tag
+from cola.widgets.createbranch import create_new_branch
 from cola.widgets.search import search
 
 
@@ -219,7 +220,7 @@ def main(context):
     os.chdir(model.git.worktree())
 
     # Prepare to launch a sub-command
-    builtins = set(('cola',
+    builtins = set(('branch',
                     'classic',
                     'dag',
                     'fetch',
@@ -233,7 +234,9 @@ def main(context):
         context = args[0]
 
     # Show the GUI
-    if context == 'git-dag' or context == 'dag':
+    if context == 'branch':
+        view = create_new_branch()
+    elif context == 'git-dag' or context == 'dag':
         ctl = git_dag(model, opts=opts, args=args)
         view = ctl.view
     elif context == 'classic':
