@@ -26,7 +26,6 @@ from cola.bookmarks import manage_bookmarks
 from cola.classic import cola_classic
 from cola.classic import classic_widget
 from cola.controllers import createtag
-from cola.controllers import search
 from cola.controllers.createbranch import create_new_branch
 from cola.dag import git_dag
 from cola.git import git
@@ -54,6 +53,7 @@ from cola.widgets.compare import compare_branches
 from cola.widgets.diff import DiffTextEdit
 from cola.widgets.recent import browse_recent
 from cola.widgets.status import StatusWidget
+from cola.widgets.search import search
 
 
 class MainView(standard.MainWindow):
@@ -219,7 +219,7 @@ class MainView(standard.MainWindow):
                 'Visualize All Branches...',
                 emit(self, signals.visualize_all))
         self.menu_search_commits = add_action(self,
-                'Search...', search.search)
+                'Search...', search)
         self.menu_browse_branch = add_action(self,
                 'Browse Current Branch...', guicmds.browse_current)
         self.menu_browse_other_branch = add_action(self,

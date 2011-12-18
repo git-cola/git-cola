@@ -389,11 +389,6 @@ def update_file_icons(widget, items, staged=True,
         if item:
             item.setIcon(icon_for_file(model_item, staged, untracked))
 
-def set_listwidget_strings(widget, items):
-    """Sets a list widget to the strings passed in items."""
-    widget.clear()
-    add_items(widget, [ QtGui.QListWidgetItem(i) for i in items ])
-
 @memoize
 def cached_icon(key):
     """Maintain a cache of standard icons and return cache entries."""
