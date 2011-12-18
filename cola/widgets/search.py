@@ -34,6 +34,7 @@ class SearchOptions(object):
 class SearchWidget(standard.Dialog):
     def __init__(self, parent):
         super(SearchWidget, self).__init__(parent)
+        self.setAttribute(QtCore.Qt.WA_MacMetalStyle)
         self.setWindowTitle(self.tr('Search'))
 
         self.mode_combo = QtGui.QComboBox()
@@ -83,10 +84,10 @@ class SearchWidget(standard.Dialog):
         self.top_layout.setMargin(0)
         self.top_layout.setSpacing(defs.button_spacing)
 
-        self.top_layout.addWidget(self.browse_button)
         self.top_layout.addWidget(self.query)
         self.top_layout.addWidget(self.start_date)
         self.top_layout.addWidget(self.end_date)
+        self.top_layout.addWidget(self.browse_button)
         self.top_layout.addWidget(self.search_button)
         self.top_layout.addStretch()
         self.top_layout.addWidget(self.mode_combo)
