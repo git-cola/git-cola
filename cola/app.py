@@ -254,7 +254,7 @@ def main(context):
         model.update_status()
         view = guicmds.push().view
     elif context == 'tag':
-        view = create_tag().view
+        view = create_tag()
 
     # Install UI wrappers for command objects
     cfgactions.install_command_wrapper()
