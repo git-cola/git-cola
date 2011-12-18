@@ -79,6 +79,12 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self.selected = None
         self.menu_actions = context_menu_actions(self)
 
+        self.action_up = qtutils.add_action(self, 'Go Up', self.go_up,
+                                            QtCore.Qt.Key_K)
+
+        self.action_down = qtutils.add_action(self, 'Go Down', self.go_down,
+                                              QtCore.Qt.Key_J)
+
         sig = signals.commits_selected
         notifier.add_message_observer(sig, self.commits_selected)
 
@@ -94,6 +100,21 @@ class CommitTreeWidget(QtGui.QTreeWidget):
             event.accept()
             return
         QtGui.QTreeWidget.mousePressEvent(self, event)
+
+    def go_up(self):
+        self.goto(self.itemAbove)
+
+    def go_down(self):
+        self.goto(self.itemBelow)
+
+    def goto(self, finder):
+        items = self.selectedItems()
+        item = items and items[0] or None
+        if item is None:
+            return
+        found = finder(item)
+        if found:
+            self.select([found.commit.sha1], block_signals=False)
 
     def set_selecting(self, selecting):
         self.selecting = selecting
@@ -112,17 +133,17 @@ class CommitTreeWidget(QtGui.QTreeWidget):
             return
         self.select([commit.sha1 for commit in commits])
 
-    def select(self, sha1s):
+    def select(self, sha1s, block_signals=True):
         self.clearSelection()
         for sha1 in sha1s:
             try:
                 item = self.sha1map[sha1]
             except KeyError:
                 continue
-            self.blockSignals(True)
+            block = self.blockSignals(block_signals)
             self.scrollToItem(item)
             item.setSelected(True)
-            self.blockSignals(False)
+            self.blockSignals(block)
 
     def adjust_columns(self):
         width = self.width()-20
