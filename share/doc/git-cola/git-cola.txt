@@ -34,6 +34,9 @@ OPTIONS
 
 SUB-COMMANDS
 ------------
+branch::
+	Launch the 'branch' tool.
+
 classic::
 	Launch the 'classic' tool.
 
@@ -45,6 +48,9 @@ pull::
 
 push::
 	Launch the 'push' tool.
+
+search::
+	Launch the 'search' tool.
 
 stash::
 	Launch the 'stash' tool.
