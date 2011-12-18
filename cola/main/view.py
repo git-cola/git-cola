@@ -50,7 +50,7 @@ from cola.widgets.about import show_shortcuts
 from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.commitmsg import CommitMessageEditor
 from cola.widgets.compare import compare_branches
-from cola.widgets.diff import DiffTextEdit
+from cola.widgets.diff import DiffEditor
 from cola.widgets.recent import browse_recent
 from cola.widgets.status import StatusWidget
 from cola.widgets.search import search
@@ -126,9 +126,9 @@ class MainView(standard.MainWindow):
         self.logdockwidget.setWidget(logwidget)
 
         # "Diff Viewer" widget
-        self.diffdockwidget = create_dock('Diff Viewer', self)
-        self.diff_viewer = DiffTextEdit(self.diffdockwidget)
-        self.diffdockwidget.setWidget(self.diff_viewer)
+        self.diffdockwidget = create_dock('Diff', self)
+        self.diff_editor = DiffEditor(self.diffdockwidget)
+        self.diffdockwidget.setWidget(self.diff_editor)
 
         # All Actions
         self.menu_unstage_all = add_action(self,
@@ -455,12 +455,12 @@ class MainView(standard.MainWindow):
             if not font.fromString(value):
                 return
             qtutils.logger().setFont(font)
-            self.diff_viewer.setFont(font)
+            self.diff_editor.setFont(font)
             self.commitmsgeditor.setFont(font)
 
         elif config == 'cola.tabwidth':
             # variable-tab-width setting
-            self.diff_viewer.set_tab_width(value)
+            self.diff_editor.set_tab_width(value)
 
     def install_config_actions(self):
         """Install .gitconfig-defined actions"""

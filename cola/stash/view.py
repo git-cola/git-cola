@@ -10,7 +10,7 @@ from cola import utils
 from cola.stash.model import save_stash, apply_stash, drop_stash, rescan
 from cola.views import standard
 from cola.widgets import defs
-from cola.widgets.diff import DiffView
+from cola.widgets.diff import DiffTextEdit
 
 
 class StashView(standard.Dialog):
@@ -29,7 +29,7 @@ class StashView(standard.Dialog):
             self.resize(700, 420)
 
         self.stash_list = QtGui.QListWidget(self)
-        self.stash_view = DiffView(self)
+        self.stash_text = DiffTextEdit(self)
 
         self.button_apply =\
             self.toolbutton(self.tr('Apply'),
@@ -67,7 +67,7 @@ class StashView(standard.Dialog):
         self.splitter.setStretchFactor(0, 1)
         self.splitter.setStretchFactor(1, 1)
         self.splitter.insertWidget(0, self.stash_list)
-        self.splitter.insertWidget(1, self.stash_view)
+        self.splitter.insertWidget(1, self.stash_text)
 
         self.btn_layt.addWidget(self.button_save)
         self.btn_layt.addWidget(self.button_apply)
@@ -134,7 +134,7 @@ class StashView(standard.Dialog):
         if not selection:
             return
         diff_text = self.model.stash_diff(selection)
-        self.stash_view.setPlainText(diff_text)
+        self.stash_text.setPlainText(diff_text)
 
     def update_actions(self):
         has_changes = self.model.has_stashable_changes()
@@ -204,4 +204,4 @@ class StashView(standard.Dialog):
             return
         self.emit(SIGNAL(drop_stash), selection)
         self.update_from_model()
-        self.stash_view.setPlainText('')
+        self.stash_text.setPlainText('')

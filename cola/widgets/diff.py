@@ -14,8 +14,8 @@ from cola.qt import DiffSyntaxHighlighter
 from cola.qtutils import SLOT
 
 
-class DiffView(QtGui.QTextEdit):
-    def __init__(self, parent):
+class DiffTextEdit(QtGui.QTextEdit):
+    def __init__(self, parent, whitespace=True):
         QtGui.QTextEdit.__init__(self, parent)
         self.setMinimumSize(QtCore.QSize(1, 1))
         self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
@@ -24,7 +24,8 @@ class DiffView(QtGui.QTextEdit):
         self.setTextInteractionFlags(Qt.TextSelectableByKeyboard |
                                      Qt.TextSelectableByMouse)
         # Diff/patch syntax highlighter
-        self.syntax = DiffSyntaxHighlighter(self.document())
+        self.syntax = DiffSyntaxHighlighter(self.document(),
+                                            whitespace=whitespace)
         self.setFont(diff_font())
         self.set_tab_width(tab_width())
 
@@ -34,9 +35,9 @@ class DiffView(QtGui.QTextEdit):
         self.setTabStopWidth(tab_width * space_width)
 
 
-class DiffTextEdit(DiffView):
+class DiffEditor(DiffTextEdit):
     def __init__(self, parent):
-        DiffView.__init__(self, parent)
+        super(DiffEditor, self).__init__(parent)
         self.model = model = cola.model()
 
         # Install diff shortcut keys for stage/unstage
@@ -135,7 +136,7 @@ class DiffTextEdit(DiffView):
                                       QtCore.Qt.NoButton,
                                       QtCore.Qt.NoModifier,
                                       event.orientation())
-        return super(DiffTextEdit, self).wheelEvent(event)
+        return super(DiffEditor, self).wheelEvent(event)
 
     def setPlainText(self, text):
         """setPlainText(str) while retaining scrollbar positions"""
