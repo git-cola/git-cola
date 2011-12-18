@@ -12,7 +12,6 @@ from cola import gitcmds
 from cola import difftool
 from cola import utils
 from cola.controllers import createbranch
-from cola.controllers import createtag
 from cola.dag.model import archive
 from cola.dag.model import RepoReader
 from cola.prefs import diff_font
@@ -20,6 +19,7 @@ from cola.qt import DiffSyntaxHighlighter
 from cola.qt import GitLogLineEdit
 from cola.views import standard
 from cola.widgets import defs
+from cola.widgets.createtag import create_tag
 from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.browse import BrowseDialog
 
@@ -177,7 +177,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
 
     def _create_tag(self):
         sha1 = self._clicked_item.commit.sha1
-        createtag.create_tag(revision=sha1)
+        create_tag(revision=sha1)
 
     def _cherry_pick(self):
         sha1 = self._clicked_item.commit.sha1
@@ -954,7 +954,7 @@ class GraphView(QtGui.QGraphicsView):
 
     def _create_tag(self):
         sha1 = self._clicked_item.commit.sha1
-        createtag.create_tag(revision=sha1)
+        create_tag(revision=sha1)
 
     def _cherry_pick(self):
         sha1 = self._clicked_item.commit.sha1

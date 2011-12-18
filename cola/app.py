@@ -31,7 +31,6 @@ from cola import resources
 from cola import signals
 from cola import utils
 from cola import version
-from cola.controllers.createtag import create_tag
 from cola.classic import cola_classic
 from cola.dag import git_dag
 from cola.stash import stash
@@ -40,6 +39,7 @@ from cola.main.view import MainView
 from cola.main.controller import MainController
 from cola.widgets import cfgactions
 from cola.widgets import startup
+from cola.widgets.createtag import create_tag
 
 
 def setup_environment():

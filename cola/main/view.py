@@ -25,7 +25,6 @@ from cola import version
 from cola.bookmarks import manage_bookmarks
 from cola.classic import cola_classic
 from cola.classic import classic_widget
-from cola.controllers import createtag
 from cola.controllers.createbranch import create_new_branch
 from cola.dag import git_dag
 from cola.git import git
@@ -50,6 +49,7 @@ from cola.widgets.about import show_shortcuts
 from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.commitmsg import CommitMessageEditor
 from cola.widgets.compare import compare_branches
+from cola.widgets.createtag import create_tag
 from cola.widgets.diff import DiffEditor
 from cola.widgets.recent import browse_recent
 from cola.widgets.status import StatusWidget
@@ -238,7 +238,7 @@ class MainView(standard.MainWindow):
                 'Branches...', compare_branches)
 
         self.menu_create_tag = add_action(self,
-                'Create Tag...', createtag.create_tag)
+                'Create Tag...', create_tag)
 
         self.menu_create_branch = add_action(self,
                 'Create...', create_new_branch, 'Ctrl+B')
