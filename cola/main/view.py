@@ -25,7 +25,6 @@ from cola import version
 from cola.bookmarks import manage_bookmarks
 from cola.classic import cola_classic
 from cola.classic import classic_widget
-from cola.controllers.createbranch import create_new_branch
 from cola.dag import git_dag
 from cola.git import git
 from cola.prefs import diff_font
@@ -50,6 +49,7 @@ from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.commitmsg import CommitMessageEditor
 from cola.widgets.compare import compare_branches
 from cola.widgets.createtag import create_tag
+from cola.widgets.createbranch import create_new_branch
 from cola.widgets.diff import DiffEditor
 from cola.widgets.recent import browse_recent
 from cola.widgets.status import StatusWidget
