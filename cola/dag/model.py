@@ -18,11 +18,11 @@ archive = 'archive'
 
 class CommitFactory(object):
     root_generation = 0
-    _commits = {}
+    commits = {}
 
     @classmethod
     def reset(cls):
-        cls._commits.clear()
+        cls.commits.clear()
         cls.root_generation = 0
 
     @classmethod
@@ -30,7 +30,7 @@ class CommitFactory(object):
         if not sha1 and log_entry:
             sha1 = log_entry[:40]
         try:
-            commit = cls._commits[sha1]
+            commit = cls.commits[sha1]
             if log_entry and not commit.parsed:
                 commit.parse(log_entry)
             cls.root_generation = max(commit.generation,
@@ -42,7 +42,7 @@ class CommitFactory(object):
                 cls.root_generation += 1
                 commit.generation = max(commit.generation,
                                         cls.root_generation)
-            cls._commits[sha1] = commit
+            cls.commits[sha1] = commit
         return commit
 
 

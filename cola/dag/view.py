@@ -10,7 +10,6 @@ from cola import qtutils
 from cola import signals
 from cola import gitcmds
 from cola import difftool
-from cola import utils
 from cola.dag.model import archive
 from cola.dag.model import RepoReader
 from cola.prefs import diff_font
@@ -32,18 +31,18 @@ class DiffWidget(QtGui.QWidget):
         self.diff.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.diff.setReadOnly(True)
         self.diff.setFont(diff_font())
-        self.diff_syn = DiffSyntaxHighlighter(self.diff.document())
+        self.highlighter = DiffSyntaxHighlighter(self.diff.document())
 
-        self._layt = QtGui.QHBoxLayout()
-        self._layt.addWidget(self.diff)
-        self._layt.setMargin(0)
-        self._layt.setSpacing(defs.spacing)
-        self.setLayout(self._layt)
+        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout.addWidget(self.diff)
+        self.main_layout.setMargin(0)
+        self.main_layout.setSpacing(defs.spacing)
+        self.setLayout(self.main_layout)
 
         sig = signals.commits_selected
-        notifier.add_message_observer(sig, self._commits_selected)
+        notifier.add_message_observer(sig, self.commits_selected)
 
-    def _commits_selected(self, commits):
+    def commits_selected(self, commits):
         if len(commits) != 1:
             return
         commit = commits[0]
@@ -72,22 +71,22 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self.setRootIsDecorated(False)
         self.setHeaderLabels(['Summary', 'Author', 'Date'])
 
-        self._sha1map = {}
-        self._notifier = notifier
-        self._selecting = False
-        self._commits = []
-        self._clicked_item = None
-        self._selected_item = None
-        self._actions = context_menu_actions(self)
+        self.sha1map = {}
+        self.notifier = notifier
+        self.selecting = False
+        self.commits = []
+        self.clicked = None
+        self.selected = None
+        self.menu_actions = context_menu_actions(self)
 
         sig = signals.commits_selected
-        notifier.add_message_observer(sig, self._commits_selected)
+        notifier.add_message_observer(sig, self.commits_selected)
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
-                     self._item_selection_changed)
+                     self.selection_changed)
 
     def contextMenuEvent(self, event):
-        update_actions(self, event)
+        update_menu_actions(self, event)
         context_menu_event(self, event)
 
     def mousePressEvent(self, event):
@@ -96,23 +95,20 @@ class CommitTreeWidget(QtGui.QTreeWidget):
             return
         QtGui.QTreeWidget.mousePressEvent(self, event)
 
-    def selecting(self):
-        return self._selecting
-
     def set_selecting(self, selecting):
-        self._selecting = selecting
+        self.selecting = selecting
 
-    def _item_selection_changed(self):
+    def selection_changed(self):
         items = self.selectedItems()
         if not items:
             return
         self.set_selecting(True)
         sig = signals.commits_selected
-        self._notifier.notify_message_observers(sig, [i.commit for i in items])
+        self.notifier.notify_message_observers(sig, [i.commit for i in items])
         self.set_selecting(False)
 
-    def _commits_selected(self, commits):
-        if self.selecting():
+    def commits_selected(self, commits):
+        if self.selecting:
             return
         self.select([commit.sha1 for commit in commits])
 
@@ -120,7 +116,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self.clearSelection()
         for sha1 in sha1s:
             try:
-                item = self._sha1map[sha1]
+                item = self.sha1map[sha1]
             except KeyError:
                 continue
             self.blockSignals(True)
@@ -138,49 +134,49 @@ class CommitTreeWidget(QtGui.QTreeWidget):
 
     def clear(self):
         QtGui.QTreeWidget.clear(self)
-        self._sha1map.clear()
-        self._commits = []
+        self.sha1map.clear()
+        self.commits = []
 
     def add_commits(self, commits):
-        self._commits.extend(commits)
+        self.commits.extend(commits)
         items = []
         for c in reversed(commits):
             item = CommitTreeWidgetItem(c)
             items.append(item)
-            self._sha1map[c.sha1] = item
+            self.sha1map[c.sha1] = item
             for tag in c.tags:
-                self._sha1map[tag] = item
+                self.sha1map[tag] = item
         self.insertTopLevelItems(0, items)
 
-    def _diff_this_selected(self):
-        clicked_sha1 = self._clicked_item.commit.sha1
-        selected_sha1 = self._selected_item.commit.sha1
+    def diff_this_selected(self):
+        clicked_sha1 = self.clicked.commit.sha1
+        selected_sha1 = self.selected.commit.sha1
         difftool.diff_commits(self, clicked_sha1, selected_sha1)
 
-    def _diff_selected_this(self):
-        clicked_sha1 = self._clicked_item.commit.sha1
-        selected_sha1 = self._selected_item.commit.sha1
+    def diff_selected_this(self):
+        clicked_sha1 = self.clicked.commit.sha1
+        selected_sha1 = self.selected.commit.sha1
         difftool.diff_commits(self, selected_sha1, clicked_sha1)
 
-    def _create_patch(self):
+    def create_patch(self):
         items = self.selectedItems()
         if not items:
             return
         items.reverse()
         sha1s = [item.commit.sha1 for item in items]
-        all_sha1s = [c.sha1 for c in self._commits]
+        all_sha1s = [c.sha1 for c in self.commits]
         cola.notifier().broadcast(signals.format_patch, sha1s, all_sha1s)
 
-    def _create_branch(self):
-        sha1 = self._clicked_item.commit.sha1
+    def create_branch(self):
+        sha1 = self.clicked.commit.sha1
         create_new_branch(revision=sha1)
 
-    def _create_tag(self):
-        sha1 = self._clicked_item.commit.sha1
+    def create_tag(self):
+        sha1 = self.clicked.commit.sha1
         create_tag(revision=sha1)
 
-    def _cherry_pick(self):
-        sha1 = self._clicked_item.commit.sha1
+    def cherry_pick(self):
+        sha1 = self.clicked.commit.sha1
         cola.notifier().broadcast(signals.cherry_pick, [sha1])
 
 
@@ -188,15 +184,14 @@ class DAGView(standard.Dialog):
     """The git-dag widget."""
     def __init__(self, model, dag, parent=None, args=None):
         standard.Dialog.__init__(self, parent=parent)
-        if utils.is_darwin():
-            self.setAttribute(QtCore.Qt.WA_MacMetalStyle)
-        # change when widgets are added/removed
-        self.widget_version = 1
-
-        self.model = model
-        self.dag = dag
+        self.setAttribute(QtCore.Qt.WA_MacMetalStyle)
         self.setObjectName('dag')
         self.setMinimumSize(1, 1)
+
+        # change when widgets are added/removed
+        self.widget_version = 1
+        self.model = model
+        self.dag = dag
 
         self.revtext = GitLogLineEdit(parent=self)
 
@@ -217,56 +212,56 @@ class DAGView(standard.Dialog):
         self.zoom_out.setIcon(qtutils.theme_icon('zoom-out.png'))
         self.zoom_out.setFlat(True)
 
-        self._buttons_layt = QtGui.QHBoxLayout()
-        self._buttons_layt.setMargin(defs.margin)
-        self._buttons_layt.setSpacing(defs.button_spacing)
+        self.top_layout = QtGui.QHBoxLayout()
+        self.top_layout.setMargin(defs.margin)
+        self.top_layout.setSpacing(defs.button_spacing)
 
-        self._buttons_layt.addWidget(self.maxresults)
-        self._buttons_layt.addWidget(self.revtext)
-        self._buttons_layt.addWidget(self.displaybutton)
-        self._buttons_layt.addStretch()
-        self._buttons_layt.addWidget(self.zoom_out)
-        self._buttons_layt.addWidget(self.zoom_in)
+        self.top_layout.addWidget(self.maxresults)
+        self.top_layout.addWidget(self.revtext)
+        self.top_layout.addWidget(self.displaybutton)
+        self.top_layout.addStretch()
+        self.top_layout.addWidget(self.zoom_out)
+        self.top_layout.addWidget(self.zoom_in)
 
-        self._commits = {}
-        self._notifier = notifier = observable.Observable()
-        self._notifier.refs_updated = refs_updated = 'refs_updated'
-        self._notifier.add_message_observer(refs_updated, self._display)
+        self.commits = {}
+        self.notifier = notifier = observable.Observable()
+        self.notifier.refs_updated = refs_updated = 'refs_updated'
+        self.notifier.add_message_observer(refs_updated, self.display)
 
-        self._graphview = GraphView(notifier)
-        self._treewidget = CommitTreeWidget(notifier)
-        self._diffwidget = DiffWidget(notifier)
+        self.graphview = GraphView(notifier)
+        self.treewidget = CommitTreeWidget(notifier)
+        self.diffwidget = DiffWidget(notifier)
 
         for signal in (archive,):
-            qtutils.relay_signal(self, self._graphview, SIGNAL(signal))
-            qtutils.relay_signal(self, self._treewidget, SIGNAL(signal))
+            qtutils.relay_signal(self, self.graphview, SIGNAL(signal))
+            qtutils.relay_signal(self, self.treewidget, SIGNAL(signal))
 
-        self._mainsplitter = QtGui.QSplitter()
-        self._mainsplitter.setOrientation(QtCore.Qt.Horizontal)
-        self._mainsplitter.setChildrenCollapsible(True)
-        self._mainsplitter.setHandleWidth(defs.handle_width)
+        self.splitter = QtGui.QSplitter()
+        self.splitter.setOrientation(QtCore.Qt.Horizontal)
+        self.splitter.setChildrenCollapsible(True)
+        self.splitter.setHandleWidth(defs.handle_width)
 
-        self._leftsplitter = QtGui.QSplitter()
-        self._leftsplitter.setOrientation(QtCore.Qt.Vertical)
-        self._leftsplitter.setChildrenCollapsible(True)
-        self._leftsplitter.setHandleWidth(defs.handle_width)
-        self._leftsplitter.setStretchFactor(0, 1)
-        self._leftsplitter.setStretchFactor(1, 1)
-        self._leftsplitter.insertWidget(0, self._treewidget)
-        self._leftsplitter.insertWidget(1, self._diffwidget)
+        self.left_splitter = QtGui.QSplitter()
+        self.left_splitter.setOrientation(QtCore.Qt.Vertical)
+        self.left_splitter.setChildrenCollapsible(True)
+        self.left_splitter.setHandleWidth(defs.handle_width)
+        self.left_splitter.setStretchFactor(0, 1)
+        self.left_splitter.setStretchFactor(1, 1)
+        self.left_splitter.insertWidget(0, self.treewidget)
+        self.left_splitter.insertWidget(1, self.diffwidget)
 
-        self._mainsplitter.insertWidget(0, self._leftsplitter)
-        self._mainsplitter.insertWidget(1, self._graphview)
+        self.splitter.insertWidget(0, self.left_splitter)
+        self.splitter.insertWidget(1, self.graphview)
 
-        self._mainsplitter.setStretchFactor(0, 1)
-        self._mainsplitter.setStretchFactor(1, 1)
+        self.splitter.setStretchFactor(0, 1)
+        self.splitter.setStretchFactor(1, 1)
 
-        self._layt = layt = QtGui.QVBoxLayout()
-        layt.setMargin(0)
-        layt.setSpacing(0)
-        layt.addLayout(self._buttons_layt)
-        layt.addWidget(self._mainsplitter)
-        self.setLayout(layt)
+        self.main_layout = layout = QtGui.QVBoxLayout()
+        layout.setMargin(0)
+        layout.setSpacing(0)
+        layout.addLayout(self.top_layout)
+        layout.addWidget(self.splitter)
+        self.setLayout(layout)
 
         # Also re-loads dag.* from the saved state
         if not qtutils.apply_state(self):
@@ -285,38 +280,38 @@ class DAGView(standard.Dialog):
         self.thread.connect(self.thread, self.thread.done,
                             self.thread_done)
 
-        self.connect(self._mainsplitter, SIGNAL('splitterMoved(int,int)'),
-                     self._splitter_moved)
+        self.connect(self.splitter, SIGNAL('splitterMoved(int,int)'),
+                     self.splitter_moved)
 
         self.connect(self.zoom_in, SIGNAL('pressed()'),
-                     self._graphview.zoom_in)
+                     self.graphview.zoom_in)
 
         self.connect(self.zoom_out, SIGNAL('pressed()'),
-                     self._graphview.zoom_out)
+                     self.graphview.zoom_out)
 
         self.connect(self.maxresults, SIGNAL('valueChanged(int)'),
                      lambda(x): self.dag.set_count(x))
 
         self.connect(self.displaybutton, SIGNAL('pressed()'),
-                     self._display)
+                     self.display)
 
         self.connect(self.revtext, SIGNAL('ref_changed'),
-                     self._display)
+                     self.display)
 
         self.connect(self.revtext, SIGNAL('textChanged(QString)'),
-                     self._text_changed)
+                     self.text_changed)
 
         # The model is updated in another thread so use
         # signals/slots to bring control back to the main GUI thread
         self.model.add_message_observer(self.model.message_updated,
-                                        self._model_updated)
+                                        self.emit_model_updated)
 
         self.connect(self, SIGNAL('model_updated'),
                      self.model_updated)
 
         qtutils.add_close_action(self)
 
-    def _text_changed(self, txt):
+    def text_changed(self, txt):
         self.dag.ref = unicode(txt)
         self.update_window_title()
 
@@ -350,7 +345,7 @@ class DAGView(standard.Dialog):
         if not self.dag.overridden('count'):
             self.dag.set_count(count)
 
-    def _model_updated(self):
+    def emit_model_updated(self):
         self.emit(SIGNAL('model_updated'))
 
     def model_updated(self):
@@ -360,9 +355,9 @@ class DAGView(standard.Dialog):
         if not self.model.currentbranch:
             return
         self.revtext.setText(self.model.currentbranch)
-        self._display()
+        self.display()
 
-    def _display(self):
+    def display(self):
         new_ref = unicode(self.revtext.text())
         if not new_ref:
             return
@@ -374,39 +369,39 @@ class DAGView(standard.Dialog):
 
     def show(self):
         standard.Dialog.show(self)
-        self._mainsplitter.setSizes([self.width()/2, self.width()/2])
-        self._leftsplitter.setSizes([self.height()/3, self.height()*2/3])
-        self._treewidget.adjust_columns()
+        self.splitter.setSizes([self.width()/2, self.width()/2])
+        self.left_splitter.setSizes([self.height()/3, self.height()*2/3])
+        self.treewidget.adjust_columns()
 
     def resizeEvent(self, e):
         standard.Dialog.resizeEvent(self, e)
-        self._treewidget.adjust_columns()
+        self.treewidget.adjust_columns()
 
-    def _splitter_moved(self, pos, idx):
-        self._treewidget.adjust_columns()
+    def splitter_moved(self, pos, idx):
+        self.treewidget.adjust_columns()
 
     def clear(self):
-        self._graphview.clear()
-        self._treewidget.clear()
-        self._commits.clear()
+        self.graphview.clear()
+        self.treewidget.clear()
+        self.commits.clear()
 
     def add_commits(self, commits):
         # Keep track of commits
         for commit_obj in commits:
-            self._commits[commit_obj.sha1] = commit_obj
+            self.commits[commit_obj.sha1] = commit_obj
             for tag in commit_obj.tags:
-                self._commits[tag] = commit_obj
-        self._graphview.add_commits(commits)
-        self._treewidget.add_commits(commits)
+                self.commits[tag] = commit_obj
+        self.graphview.add_commits(commits)
+        self.treewidget.add_commits(commits)
 
     def thread_done(self):
         try:
-            commit_obj = self._commits[self.dag.ref]
+            commit_obj = self.commits[self.dag.ref]
         except KeyError:
             return
         sig = signals.commits_selected
-        self._notifier.notify_message_observers(sig, [commit_obj])
-        self._graphview.view_fit()
+        self.notifier.notify_message_observers(sig, [commit_obj])
+        self.graphview.view_fit()
 
     def done(self, ok):
         self.revtext.close_popup()
@@ -484,13 +479,13 @@ class Cache(object):
 
 
 class Edge(QtGui.QGraphicsItem):
-    _type = QtGui.QGraphicsItem.UserType + 1
-    _arrow_size = 2.0
-    _arrow_extra = (_arrow_size+1.0)/2.0
+    item_type = QtGui.QGraphicsItem.UserType + 1
+    arrow_size = 2.0
+    arrow_extra = (arrow_size+1.0)/2.0
 
     def __init__(self, source, dest,
-                 extra=_arrow_extra,
-                 arrow_size=_arrow_size):
+                 extra=arrow_extra,
+                 arrow_size=arrow_size):
         QtGui.QGraphicsItem.__init__(self)
 
         self.source_pt = QtCore.QPointF()
@@ -502,7 +497,7 @@ class Edge(QtGui.QGraphicsItem):
 
         # Adjust the points to leave a small margin between
         # the arrow and the commit.
-        dest_pt = Commit._bbox.center()
+        dest_pt = Commit.item_bbox.center()
         line = QtCore.QLineF(
                 self.mapFromItem(self.source, dest_pt),
                 self.mapFromItem(self.dest, dest_pt))
@@ -545,16 +540,16 @@ class Edge(QtGui.QGraphicsItem):
         width = self.dest_pt.x() - self.source_pt.x()
         height = self.dest_pt.y() - self.source_pt.y()
         rect = QtCore.QRectF(self.source_pt, QtCore.QSizeF(width, height))
-        self._bound = rect.normalized().adjusted(-extra, -extra, extra, extra)
+        self.bound = rect.normalized().adjusted(-extra, -extra, extra, extra)
 
-    def type(self, _type=_type):
-        return _type
+    def type(self):
+        return self.item_type
 
     def boundingRect(self):
-        return self._bound
+        return self.bound
 
     def paint(self, painter, option, widget,
-              arrow_size=_arrow_size,
+              arrow_size=arrow_size,
               gray=QtCore.Qt.gray):
         # Draw the line
         painter.setPen(self.pen)
@@ -566,41 +561,41 @@ class Edge(QtGui.QGraphicsItem):
 
 
 class Commit(QtGui.QGraphicsItem):
-    _type = QtGui.QGraphicsItem.UserType + 2
-    _width = 46.
-    _height = 24.
+    item_type = QtGui.QGraphicsItem.UserType + 2
+    width = 46.
+    height = 24.
 
-    _shape = QtGui.QPainterPath()
-    _shape.addRect(_width/-2., _height/-2., _width, _height)
-    _bbox = _shape.boundingRect()
+    item_shape = QtGui.QPainterPath()
+    item_shape.addRect(width/-2., height/-2., width, height)
+    item_bbox = item_shape.boundingRect()
 
-    _inner = QtGui.QPainterPath()
-    _inner.addRect(_width/-2.+2., _height/-2.+2, _width-4., _height-4.)
-    _inner = _inner.boundingRect()
+    inner_rect = QtGui.QPainterPath()
+    inner_rect.addRect(width/-2.+2., height/-2.+2, width-4., height-4.)
+    inner_rect = inner_rect.boundingRect()
 
-    _selected_color = QtGui.QColor.fromRgb(255, 255, 0)
-    _outline_color = QtGui.QColor.fromRgb(64, 96, 192)
+    selected_color = QtGui.QColor.fromRgb(255, 255, 0)
+    outline_color = QtGui.QColor.fromRgb(64, 96, 192)
 
 
-    _text_options = QtGui.QTextOption()
-    _text_options.setAlignment(QtCore.Qt.AlignCenter)
+    text_options = QtGui.QTextOption()
+    text_options.setAlignment(QtCore.Qt.AlignCenter)
 
-    _commit_pen = QtGui.QPen()
-    _commit_pen.setWidth(1.0)
-    _commit_pen.setColor(_outline_color)
+    commit_pen = QtGui.QPen()
+    commit_pen.setWidth(1.0)
+    commit_pen.setColor(outline_color)
 
-    _commit_color = QtGui.QColor.fromRgb(128, 222, 255)
-    _commit_selected_color = QtGui.QColor.fromRgb(32, 64, 255)
-    _merge_color = QtGui.QColor.fromRgb(255, 255, 255)
+    cached_commit_color = QtGui.QColor.fromRgb(128, 222, 255)
+    cached_commit_selected_color = QtGui.QColor.fromRgb(32, 64, 255)
+    cached_merge_color = QtGui.QColor.fromRgb(255, 255, 255)
 
     def __init__(self, commit,
                  notifier,
                  selectable=QtGui.QGraphicsItem.ItemIsSelectable,
                  cursor=QtCore.Qt.PointingHandCursor,
-                 xpos=_width/2.+1.,
-                 commit_color=_commit_color,
-                 commit_selected_color=_commit_selected_color,
-                 merge_color=_merge_color):
+                 xpos=width/2. + 1.,
+                 commit_color=cached_commit_color,
+                 commit_selected_color=cached_commit_selected_color,
+                 merge_color=cached_merge_color):
 
         QtGui.QGraphicsItem.__init__(self)
 
@@ -609,12 +604,12 @@ class Commit(QtGui.QGraphicsItem):
         self.setCursor(cursor)
 
         self.commit = commit
-        self._notifier = notifier
+        self.notifier = notifier
 
         if commit.tags:
-            self.label = Label(commit)
-            self.label.setParentItem(self)
-            self.label.setPos(xpos, 0.)
+            self.label = label = Label(commit)
+            label.setParentItem(self)
+            label.setPos(xpos, 0.)
         else:
             self.label = None
 
@@ -633,7 +628,7 @@ class Commit(QtGui.QGraphicsItem):
     #
 
     def blockSignals(self, blocked):
-        self._notifier.notification_enabled = not blocked
+        self.notifier.notification_enabled = not blocked
 
     def itemChange(self, change, value):
         if change == QtGui.QGraphicsItem.ItemSelectedHasChanged:
@@ -642,47 +637,47 @@ class Commit(QtGui.QGraphicsItem):
             commits = [item.commit for item in selected_items]
             self.scene().parent().set_selecting(True)
             sig = signals.commits_selected
-            self._notifier.notify_message_observers(sig, commits)
+            self.notifier.notify_message_observers(sig, commits)
             self.scene().parent().set_selecting(False)
 
             # Cache the pen for use in paint()
             if value.toPyObject():
-                self.commit_color = self._commit_selected_color
+                self.commit_color = self.cached_commit_selected_color
                 self.text_pen = QtCore.Qt.white
-                color = self._selected_color
+                color = self.selected_color
             else:
                 self.text_pen = QtCore.Qt.black
                 if len(self.commit.parents) > 1:
-                    self.commit_color = self._merge_color
+                    self.commit_color = self.cached_merge_color
                 else:
-                    self.commit_color = self._commit_color
-                color = self._outline_color
+                    self.commit_color = self.cached_commit_color
+                color = self.outline_color
             commit_pen = QtGui.QPen()
             commit_pen.setWidth(1.0)
             commit_pen.setColor(color)
-            self._commit_pen = commit_pen
+            self.commit_pen = commit_pen
 
         return QtGui.QGraphicsItem.itemChange(self, change, value)
 
-    def type(self, _type=_type):
-        return _type
+    def type(self):
+        return self.item_type
 
-    def boundingRect(self, _bbox=_bbox):
-        return _bbox
+    def boundingRect(self, rect=item_bbox):
+        return rect
 
-    def shape(self, _shape=_shape):
-        return _shape
+    def shape(self):
+        return self.item_shape
 
     def paint(self, painter, option, widget,
-              inner=_inner,
-              text_options=_text_options,
+              inner=inner_rect,
+              text_opts=text_options,
               cache=Cache):
 
         # Do not draw outside the exposed rect
         painter.setClipRect(option.exposedRect)
 
         # Draw ellipse
-        painter.setPen(self._commit_pen)
+        painter.setPen(self.commit_pen)
         painter.setBrush(self.commit_color)
         painter.drawEllipse(inner)
 
@@ -694,7 +689,7 @@ class Commit(QtGui.QGraphicsItem):
             font.setPointSize(5)
         painter.setFont(font)
         painter.setPen(self.text_pen)
-        painter.drawText(inner, self.sha1_text, text_options)
+        painter.drawText(inner, self.sha1_text, text_opts)
 
     def mousePressEvent(self, event):
         QtGui.QGraphicsItem.mousePressEvent(self, event)
@@ -717,38 +712,32 @@ class Commit(QtGui.QGraphicsItem):
 
 
 class Label(QtGui.QGraphicsItem):
-    _type = QtGui.QGraphicsItem.UserType + 3
+    item_type = QtGui.QGraphicsItem.UserType + 3
 
-    _width = 72
-    _height = 18
+    width = 72
+    height = 18
 
-    _shape = QtGui.QPainterPath()
-    _shape.addRect(0, 0, _width, _height)
+    item_shape = QtGui.QPainterPath()
+    item_shape.addRect(0, 0, width, height)
+    item_bbox = item_shape.boundingRect()
 
-    _bbox = _shape.boundingRect()
-
-    _text_options = QtGui.QTextOption()
-    _text_options.setAlignment(QtCore.Qt.AlignCenter)
-    _text_options.setAlignment(QtCore.Qt.AlignVCenter)
-
-    _black = QtCore.Qt.black
+    text_options = QtGui.QTextOption()
+    text_options.setAlignment(QtCore.Qt.AlignCenter)
+    text_options.setAlignment(QtCore.Qt.AlignVCenter)
 
     def __init__(self, commit,
                  other_color=QtGui.QColor.fromRgb(255, 255, 64),
-                 head_color=QtGui.QColor.fromRgb(64, 255, 64),
-                 width=_width,
-                 height=_height):
+                 head_color=QtGui.QColor.fromRgb(64, 255, 64)):
         QtGui.QGraphicsItem.__init__(self)
         self.setZValue(-1)
 
         # Starts with enough space for two tags. Any more and the commit
         # needs to be taller to accomodate.
-
         self.commit = commit
-        height = len(commit.tags) * height/2. + 4. # +6 padding
+        height = len(commit.tags) * self.height/2. + 4. # +6 padding
 
-        self.label_box = QtCore.QRectF(0., -height/2., width, height)
-        self.text_box = QtCore.QRectF(2., -height/2., width-4., height)
+        self.label_box = QtCore.QRectF(0., -height/2., self.width, height)
+        self.text_box = QtCore.QRectF(2., -height/2., self.width-4., height)
         self.tag_text = '\n'.join(commit.tags)
 
         if 'HEAD' in commit.tags:
@@ -760,18 +749,18 @@ class Label(QtGui.QGraphicsItem):
         self.pen.setColor(self.color.darker())
         self.pen.setWidth(1.0)
 
-    def type(self, _type=_type):
-        return _type
+    def type(self):
+        return self.item_type
 
-    def boundingRect(self, _bbox=_bbox):
-        return _bbox
+    def boundingRect(self, rect=item_bbox):
+        return rect
 
-    def shape(self, _shape=_shape):
-        return _shape
+    def shape(self):
+        return self.item_shape
 
     def paint(self, painter, option, widget,
-              text_options=_text_options,
-              black=_black,
+              text_opts=text_options,
+              black=QtCore.Qt.black,
               cache=Cache):
         # Draw tags
         painter.setBrush(self.color)
@@ -784,32 +773,33 @@ class Label(QtGui.QGraphicsItem):
             font.setPointSize(5)
         painter.setFont(font)
         painter.setPen(black)
-        painter.drawText(self.text_box, self.tag_text, text_options)
+        painter.drawText(self.text_box, self.tag_text, text_opts)
 
 
 class GraphView(QtGui.QGraphicsView):
     def __init__(self, notifier):
         QtGui.QGraphicsView.__init__(self)
 
-        self._xoff = 132
-        self._yoff = 32
-        self._xmax = 0
-        self._ymin = 0
+        self.x_off = 132
+        self.y_off = 32
+        self.x_max = 0
+        self.y_min = 0
 
-        self._selected = []
-        self._notifier = notifier
-        self._commits = []
-        self._items = {}
-        self._selected_item = None
-        self._clicked_item = None
+        self.selected = []
+        self.notifier = notifier
+        self.commits = []
+        self.items = {}
+        self.selected = None
+        self.clicked = None
+        self.saved_matrix = QtGui.QMatrix(self.matrix())
 
-        self._rows = {}
+        self.rows = {}
 
-        self._panning = False
-        self._pressed = False
-        self._selecting = False
-        self._last_mouse = [0, 0]
-        self._zoom = 2
+        self.is_panning = False
+        self.pressed = False
+        self.selecting = False
+        self.last_mouse = [0, 0]
+        self.zoom = 2
         self.setDragMode(self.RubberBandDrag)
 
         scene = QtGui.QGraphicsScene(self)
@@ -825,60 +815,69 @@ class GraphView(QtGui.QGraphicsView):
         self.setResizeAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setBackgroundBrush(QtGui.QColor.fromRgb(0, 0, 0))
 
-        self._action_zoom_in = (
+        self.action_zoom_in = (
             qtutils.add_action(self, 'Zoom In',
                                self.zoom_in,
                                QtCore.Qt.Key_Plus,
                                QtCore.Qt.Key_Equal))
 
-        self._action_zoom_out = (
+        self.action_zoom_out = (
             qtutils.add_action(self, 'Zoom Out',
                                self.zoom_out,
                                QtCore.Qt.Key_Minus))
 
-        self._action_zoom_fit = (
+        self.action_zoom_fit = (
             qtutils.add_action(self, 'Zoom to Fit',
                                self.view_fit,
                                QtCore.Qt.Key_F))
 
-        self._action_select_parent = (
+        self.action_select_parent = (
             qtutils.add_action(self, 'Select Parent',
-                               self._select_parent,
+                               self.select_parent,
                                QtCore.Qt.Key_J))
 
-        self._action_select_oldest_parent = (
+        self.action_select_oldest_parent = (
             qtutils.add_action(self, 'Select Oldest Parent',
-                               self._select_oldest_parent,
+                               self.select_oldest_parent,
                                'Shift+J'))
 
-        self._action_select_child = (
+        self.action_select_child = (
             qtutils.add_action(self, 'Select Child',
-                               self._select_child,
+                               self.select_child,
                                QtCore.Qt.Key_K))
 
-        self._action_select_child = (
+        self.action_select_child = (
             qtutils.add_action(self, 'Select Nth Child',
-                               self._select_nth_child,
+                               self.select_nth_child,
                                'Shift+K'))
 
-        self._actions = context_menu_actions(self)
+        self.menu_actions = context_menu_actions(self)
 
         sig = signals.commits_selected
-        notifier.add_message_observer(sig, self._commits_selected)
+        notifier.add_message_observer(sig, self.commits_selected)
+
+    def clear(self):
+        self.scene().clear()
+        self.selected = []
+        self.items.clear()
+        self.rows.clear()
+        self.x_max = 0
+        self.y_min = 0
+        self.commits = []
 
     def zoom_in(self):
-        self._scale_view(1.5)
+        self.scale_view(1.5)
 
     def zoom_out(self):
-        self._scale_view(1.0/1.5)
+        self.scale_view(1.0/1.5)
 
-    def _commits_selected(self, commits):
-        if self.selecting():
+    def commits_selected(self, commits):
+        if self.selecting:
             return
         self.select([commit.sha1 for commit in commits])
 
     def contextMenuEvent(self, event):
-        update_actions(self, event)
+        update_menu_actions(self, event)
         context_menu_event(self, event)
 
     def select(self, sha1s):
@@ -886,7 +885,7 @@ class GraphView(QtGui.QGraphicsView):
         self.scene().clearSelection()
         for sha1 in sha1s:
             try:
-                item = self._items[sha1]
+                item = self.items[sha1]
             except KeyError:
                 continue
             item.blockSignals(True)
@@ -917,7 +916,7 @@ class GraphView(QtGui.QGraphicsView):
                 sha1 = commit.sha1
                 generation = commit.generation
         try:
-            return self._items[sha1]
+            return self.items[sha1]
         except KeyError:
             return None
 
@@ -929,39 +928,39 @@ class GraphView(QtGui.QGraphicsView):
         """Return the item for the commit with the newest generation number"""
         return self.get_item_by_generation(commits, lambda a, b: a < b)
 
-    def _diff_this_selected(self):
-        clicked_sha1 = self._clicked_item.commit.sha1
-        selected_sha1 = self._selected_item.commit.sha1
+    def diff_this_selected(self):
+        clicked_sha1 = self.clicked.commit.sha1
+        selected_sha1 = self.selected.commit.sha1
         difftool.diff_commits(self, clicked_sha1, selected_sha1)
 
-    def _diff_selected_this(self):
-        clicked_sha1 = self._clicked_item.commit.sha1
-        selected_sha1 = self._selected_item.commit.sha1
+    def diff_selected_this(self):
+        clicked_sha1 = self.clicked.commit.sha1
+        selected_sha1 = self.selected.commit.sha1
         difftool.diff_commits(self, selected_sha1, clicked_sha1)
 
-    def _create_patch(self):
+    def create_patch(self):
         items = self.selectedItems()
         if not items:
             return
         selected_commits = sort_by_generation([n.commit for n in items])
         sha1s = [c.sha1 for c in selected_commits]
-        all_sha1s = [c.sha1 for c in self._commits]
+        all_sha1s = [c.sha1 for c in self.commits]
         cola.notifier().broadcast(signals.format_patch, sha1s, all_sha1s)
 
-    def _create_branch(self):
-        sha1 = self._clicked_item.commit.sha1
+    def create_branch(self):
+        sha1 = self.clicked.commit.sha1
         create_new_branch(revision=sha1)
 
-    def _create_tag(self):
-        sha1 = self._clicked_item.commit.sha1
+    def create_tag(self):
+        sha1 = self.clicked.commit.sha1
         create_tag(revision=sha1)
 
-    def _cherry_pick(self):
-        sha1 = self._clicked_item.commit.sha1
+    def cherry_pick(self):
+        sha1 = self.clicked.commit.sha1
         cola.notifier().broadcast(signals.cherry_pick, [sha1])
-        self._notifier.notify_message_observers(self._notifier.refs_updated)
+        self.notifier.notify_message_observers(self.notifier.refs_updated)
 
-    def _select_parent(self):
+    def select_parent(self):
         """Select the parent with the newest generation number"""
         selected_item = self.selected_item()
         if selected_item is None:
@@ -973,7 +972,7 @@ class GraphView(QtGui.QGraphicsView):
         parent_item.setSelected(True)
         self.ensureVisible(parent_item.mapRectToScene(parent_item.boundingRect()))
 
-    def _select_oldest_parent(self):
+    def select_oldest_parent(self):
         """Select the parent with the oldest generation number"""
         selected_item = self.selected_item()
         if selected_item is None:
@@ -985,7 +984,7 @@ class GraphView(QtGui.QGraphicsView):
         parent_item.setSelected(True)
         self.ensureVisible(parent_item.mapRectToScene(parent_item.boundingRect()))
 
-    def _select_child(self):
+    def select_child(self):
         """Select the child with the oldest generation number"""
         selected_item = self.selected_item()
         if selected_item is None:
@@ -997,7 +996,7 @@ class GraphView(QtGui.QGraphicsView):
         child_item.setSelected(True)
         self.ensureVisible(child_item.mapRectToScene(child_item.boundingRect()))
 
-    def _select_nth_child(self):
+    def select_nth_child(self):
         """Select the Nth child with the newest generation number (N > 1)"""
         selected_item = self.selected_item()
         if selected_item is None:
@@ -1020,21 +1019,21 @@ class GraphView(QtGui.QGraphicsView):
         if not items:
             rect = self.scene().itemsBoundingRect()
         else:
-            xmin = sys.maxint
-            ymin = sys.maxint
-            xmax = -sys.maxint
+            x_min = sys.maxint
+            y_min = sys.maxint
+            x_max = -sys.maxint
             ymax = -sys.maxint
             for item in items:
                 pos = item.pos()
                 item_rect = item.boundingRect()
-                xoff = item_rect.width()
-                yoff = item_rect.height()
-                xmin = min(xmin, pos.x())
-                ymin = min(ymin, pos.y())
-                xmax = max(xmax, pos.x()+xoff)
-                ymax = max(ymax, pos.y()+yoff)
-            rect = QtCore.QRectF(xmin, ymin, xmax-xmin, ymax-ymin)
-        adjust = Commit._width * 6
+                x_off = item_rect.width()
+                y_off = item_rect.height()
+                x_min = min(x_min, pos.x())
+                y_min = min(y_min, pos.y())
+                x_max = max(x_max, pos.x()+x_off)
+                ymax = max(ymax, pos.y()+y_off)
+            rect = QtCore.QRectF(x_min, y_min, x_max-x_min, ymax-y_min)
+        adjust = Commit.width * 2
         rect.setX(rect.x() - adjust)
         rect.setY(rect.y() - adjust)
         rect.setHeight(rect.height() + adjust)
@@ -1042,66 +1041,63 @@ class GraphView(QtGui.QGraphicsView):
         self.fitInView(rect, QtCore.Qt.KeepAspectRatio)
         self.scene().invalidate()
 
-    def _save_selection(self, event):
+    def save_selection(self, event):
         if event.button() != QtCore.Qt.LeftButton:
             return
         elif QtCore.Qt.ShiftModifier != event.modifiers():
             return
-        self._selected = self.selectedItems()
+        self.selected = self.selectedItems()
 
-    def _restore_selection(self, event):
+    def restore_selection(self, event):
         if QtCore.Qt.ShiftModifier != event.modifiers():
             return
-        for item in self._selected:
+        for item in self.selected:
             item.setSelected(True)
 
-    def _handle_event(self, eventhandler, event):
+    def handle_event(self, event_handler, event):
         self.update()
-        self._save_selection(event)
-        eventhandler(self, event)
-        self._restore_selection(event)
+        self.save_selection(event)
+        event_handler(self, event)
+        self.restore_selection(event)
 
     def mousePressEvent(self, event):
         if event.button() == QtCore.Qt.MidButton:
             pos = event.pos()
-            self._mouse_start = [pos.x(), pos.y()]
-            self._saved_matrix = QtGui.QMatrix(self.matrix())
-            self._panning = True
+            self.mouse_start = [pos.x(), pos.y()]
+            self.saved_matrix = QtGui.QMatrix(self.matrix())
+            self.is_panning = True
             return
         if event.button() == QtCore.Qt.RightButton:
             event.ignore()
             return
         if event.button() == QtCore.Qt.LeftButton:
-            self._pressed = True
-        self._handle_event(QtGui.QGraphicsView.mousePressEvent, event)
+            self.pressed = True
+        self.handle_event(QtGui.QGraphicsView.mousePressEvent, event)
 
     def mouseMoveEvent(self, event):
         pos = self.mapToScene(event.pos())
-        if self._panning:
-            self._pan(event)
+        if self.is_panning:
+            self.pan(event)
             return
-        self._last_mouse[0] = pos.x()
-        self._last_mouse[1] = pos.y()
-        self._handle_event(QtGui.QGraphicsView.mouseMoveEvent, event)
-
-    def selecting(self):
-        return self._selecting
+        self.last_mouse[0] = pos.x()
+        self.last_mouse[1] = pos.y()
+        self.handle_event(QtGui.QGraphicsView.mouseMoveEvent, event)
 
     def set_selecting(self, selecting):
-        self._selecting = selecting
+        self.selecting = selecting
 
     def mouseReleaseEvent(self, event):
-        self._pressed = False
+        self.pressed = False
         if event.button() == QtCore.Qt.MidButton:
-            self._panning = False
+            self.is_panning = False
             return
-        self._handle_event(QtGui.QGraphicsView.mouseReleaseEvent, event)
-        self._selected = []
+        self.handle_event(QtGui.QGraphicsView.mouseReleaseEvent, event)
+        self.selected = []
 
-    def _pan(self, event):
+    def pan(self, event):
         pos = event.pos()
-        dx = pos.x() - self._mouse_start[0]
-        dy = pos.y() - self._mouse_start[1]
+        dx = pos.x() - self.mouse_start[0]
+        dy = pos.y() - self.mouse_start[1]
 
         if dx == 0 and dy == 0:
             return
@@ -1117,18 +1113,18 @@ class GraphView(QtGui.QGraphicsView):
         if dy < 0.0:
             ty = -ty
 
-        matrix = QtGui.QMatrix(self._saved_matrix).translate(tx, ty)
+        matrix = QtGui.QMatrix(self.saved_matrix).translate(tx, ty)
         self.setTransformationAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setMatrix(matrix)
 
     def wheelEvent(self, event):
         """Handle Qt mouse wheel events."""
         if event.modifiers() == QtCore.Qt.ControlModifier:
-            self._wheel_zoom(event)
+            self.wheel_zoom(event)
         else:
-            self._wheel_pan(event)
+            self.wheel_pan(event)
 
-    def _wheel_zoom(self, event):
+    def wheel_zoom(self, event):
         """Handle mouse wheel zooming."""
         zoom = math.pow(2.0, event.delta() / 512.0)
         factor = (self.matrix()
@@ -1138,10 +1134,10 @@ class GraphView(QtGui.QGraphicsView):
         if factor < 0.014 or factor > 42.0:
             return
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
-        self._zoom = zoom
+        self.zoom = zoom
         self.scale(zoom, zoom)
 
-    def _wheel_pan(self, event):
+    def wheel_pan(self, event):
         """Handle mouse wheel panning."""
 
         if event.delta() < 0:
@@ -1158,13 +1154,13 @@ class GraphView(QtGui.QGraphicsView):
         self.setTransformationAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setMatrix(matrix)
 
-    def _scale_view(self, scale):
+    def scale_view(self, scale):
         factor = (self.matrix().scale(scale, scale)
                                .mapRect(QtCore.QRectF(0, 0, 1, 1))
                                .width())
         if factor < 0.07 or factor > 100:
             return
-        self._zoom = scale
+        self.zoom = scale
 
         adjust_scrollbars = True
         scrollbar = self.verticalScrollBar()
@@ -1191,24 +1187,15 @@ class GraphView(QtGui.QGraphicsView):
             value = min_ + int(float(range_) * scrolloffset)
             scrollbar.setValue(value)
 
-    def clear(self):
-        self.scene().clear()
-        self._selected = []
-        self._items.clear()
-        self._rows.clear()
-        self._xmax = 0
-        self._ymin = 0
-        self._commits = []
-
     def add_commits(self, commits):
         """Traverse commits and add them to the view."""
-        self._commits.extend(commits)
+        self.commits.extend(commits)
         scene = self.scene()
         for commit in commits:
-            item = Commit(commit, self._notifier)
-            self._items[commit.sha1] = item
+            item = Commit(commit, self.notifier)
+            self.items[commit.sha1] = item
             for ref in commit.tags:
-                self._items[ref] = item
+                self.items[ref] = item
             scene.addItem(item)
 
         self.layout(commits)
@@ -1219,13 +1206,13 @@ class GraphView(QtGui.QGraphicsView):
         scene = self.scene()
         for commit in commits:
             try:
-                commit_item = self._items[commit.sha1]
+                commit_item = self.items[commit.sha1]
             except KeyError:
                 # TODO - Handle truncated history viewing
                 pass
             for parent in commit.parents:
                 try:
-                    parent_item = self._items[parent.sha1]
+                    parent_item = self.items[parent.sha1]
                 except KeyError:
                     # TODO - Handle truncated history viewing
                     continue
@@ -1233,32 +1220,32 @@ class GraphView(QtGui.QGraphicsView):
                 scene.addItem(edge)
 
     def layout(self, commits):
-        xmax = self._xmax
-        ymin = self._ymin
+        x_max = self.x_max
+        y_min = self.y_min
         for commit in commits:
             generation = commit.generation
             sha1 = commit.sha1
             try:
-                row = self._rows[generation]
+                row = self.rows[generation]
             except KeyError:
-                row = self._rows[generation] = []
+                row = self.rows[generation] = []
 
-            xpos = (len(commit.parents)-1) * self._xoff
+            xpos = (len(commit.parents)-1) * self.x_off
             if row:
-                xpos += row[-1] + self._xoff
-            ypos = -commit.generation * self._yoff
+                xpos += row[-1] + self.x_off
+            ypos = -commit.generation * self.y_off
 
-            item = self._items[sha1]
+            item = self.items[sha1]
             item.setPos(xpos, ypos)
 
             row.append(xpos)
-            xmax = max(xmax, xpos)
-            ymin = min(ymin, ypos)
+            x_max = max(x_max, xpos)
+            y_min = min(y_min, ypos)
 
-        self._xmax = xmax
-        self._ymin = ymin
-        self.scene().setSceneRect(-self._xoff/2, ymin-self._yoff,
-                                  xmax+self._xoff, abs(ymin)+self._yoff*4)
+        self.x_max = x_max
+        self.y_min = y_min
+        self.scene().setSceneRect(-self.x_off/2, y_min-self.y_off,
+                                  x_max+self.x_off, abs(y_min)+self.y_off*4)
 
 def sort_by_generation(commits):
     commits.sort(cmp=lambda a, b: cmp(a.generation, b.generation))
@@ -1269,25 +1256,25 @@ def context_menu_actions(self):
     return {
     'diff_this_selected':
         qtutils.add_action(self, 'Diff this -> selected',
-                           self._diff_this_selected),
+                           self.diff_this_selected),
     'diff_selected_this':
         qtutils.add_action(self, 'Diff selected -> this',
-                           self._diff_selected_this),
+                           self.diff_selected_this),
     'create_branch':
         qtutils.add_action(self, 'Create Branch',
-                           self._create_branch),
+                           self.create_branch),
     'create_patch':
         qtutils.add_action(self, 'Create Patch',
-                           self._create_patch),
+                           self.create_patch),
     'create_tag':
         qtutils.add_action(self, 'Create Tag',
-                           self._create_tag),
+                           self.create_tag),
     'create_tarball':
         qtutils.add_action(self, 'Save As Tarball/Zip...',
                            lambda: create_tarball(self)),
     'cherry_pick':
         qtutils.add_action(self, 'Cherry Pick',
-                           self._cherry_pick),
+                           self.cherry_pick),
 
     'save_blob':
         qtutils.add_action(self, 'Grab File...',
@@ -1295,52 +1282,52 @@ def context_menu_actions(self):
     }
 
 
-def update_actions(self, event):
-    clicked_item = self.itemAt(event.pos())
+def update_menu_actions(self, event):
+    clicked = self.itemAt(event.pos())
     selected_items = self.selectedItems()
     has_single_selection = len(selected_items) == 1
 
     has_selection = bool(selected_items)
-    can_diff = bool(clicked_item and has_single_selection and
-                    clicked_item is not selected_items[0])
+    can_diff = bool(clicked and has_single_selection and
+                    clicked is not selected_items[0])
 
-    self._clicked_item = clicked_item
+    self.clicked = clicked
     if can_diff:
-        self._selected_item = selected_items[0]
+        self.selected = selected_items[0]
     else:
-        self._selected_item = None
+        self.selected = None
 
-    self._actions['diff_this_selected'].setEnabled(can_diff)
-    self._actions['diff_selected_this'].setEnabled(can_diff)
-    self._actions['create_patch'].setEnabled(has_selection)
-    self._actions['create_tarball'].setEnabled(has_single_selection)
-    self._actions['save_blob'].setEnabled(has_single_selection)
-    self._actions['create_branch'].setEnabled(has_single_selection)
-    self._actions['create_tag'].setEnabled(has_single_selection)
-    self._actions['cherry_pick'].setEnabled(has_single_selection)
+    self.menu_actions['diff_this_selected'].setEnabled(can_diff)
+    self.menu_actions['diff_selected_this'].setEnabled(can_diff)
+    self.menu_actions['create_patch'].setEnabled(has_selection)
+    self.menu_actions['create_tarball'].setEnabled(has_single_selection)
+    self.menu_actions['save_blob'].setEnabled(has_single_selection)
+    self.menu_actions['create_branch'].setEnabled(has_single_selection)
+    self.menu_actions['create_tag'].setEnabled(has_single_selection)
+    self.menu_actions['cherry_pick'].setEnabled(has_single_selection)
 
 
 def context_menu_event(self, event):
     menu = QtGui.QMenu(self)
-    menu.addAction(self._actions['diff_this_selected'])
-    menu.addAction(self._actions['diff_selected_this'])
+    menu.addAction(self.menu_actions['diff_this_selected'])
+    menu.addAction(self.menu_actions['diff_selected_this'])
     menu.addSeparator()
-    menu.addAction(self._actions['create_branch'])
-    menu.addAction(self._actions['create_tag'])
+    menu.addAction(self.menu_actions['create_branch'])
+    menu.addAction(self.menu_actions['create_tag'])
     menu.addSeparator()
-    menu.addAction(self._actions['cherry_pick'])
-    menu.addAction(self._actions['create_patch'])
-    menu.addAction(self._actions['create_tarball'])
+    menu.addAction(self.menu_actions['cherry_pick'])
+    menu.addAction(self.menu_actions['create_patch'])
+    menu.addAction(self.menu_actions['create_tarball'])
     menu.addSeparator()
-    menu.addAction(self._actions['save_blob'])
+    menu.addAction(self.menu_actions['save_blob'])
     menu.exec_(self.mapToGlobal(event.pos()))
 
 
 def create_tarball(self):
-    ref = self._clicked_item.commit.sha1
+    ref = self.clicked.commit.sha1
     shortref = ref[:7]
     GitArchiveDialog.save(ref, shortref, self)
 
 
 def save_blob_dialog(self):
-    return BrowseDialog.browse(self._clicked_item.commit.sha1)
+    return BrowseDialog.browse(self.clicked.commit.sha1)
