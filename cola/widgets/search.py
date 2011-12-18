@@ -1,4 +1,4 @@
-"""Provides the SearchView class."""
+"""A widget for searching git commits"""
 import os
 import time
 import subprocess
@@ -311,7 +311,7 @@ class Search(SearchWidget):
 
     def browse_callback(self):
         paths = QtGui.QFileDialog.getOpenFileNames(self,
-                                                   self.tr("Choose Path(s)"))
+                                                   self.tr('Choose Path(s)'))
         if not paths:
             return
         filepaths = []
@@ -365,7 +365,7 @@ def search_commits(parent):
 
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import sys
     app = QtGui.QApplication(sys.argv)
     search = Search()
