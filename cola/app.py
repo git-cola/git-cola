@@ -40,6 +40,7 @@ from cola.main.controller import MainController
 from cola.widgets import cfgactions
 from cola.widgets import startup
 from cola.widgets.createtag import create_tag
+from cola.widgets.search import search
 
 
 def setup_environment():
@@ -225,25 +226,20 @@ def main(context):
                     'pull',
                     'push',
                     'stash',
+                    'search',
                     'tag'))
 
     if context != 'git-dag' and args and args[0] in builtins:
         context = args[0]
 
     # Show the GUI
-    if context == 'git-cola' or context == 'cola':
-        view = MainView(model, qtutils.active_window())
-        ctl = MainController(model, view)
-    elif context == 'git-dag' or context == 'dag':
+    if context == 'git-dag' or context == 'dag':
         ctl = git_dag(model, opts=opts, args=args)
         view = ctl.view
     elif context == 'classic':
         view = cola_classic(update=False)
     # TODO: the calls to update_status() can be done asynchronously
     # by hooking into the message_updated notification.
-    elif context == 'stash':
-        model.update_status()
-        view = stash().view
     elif context == 'fetch':
         model.update_status()
         view = guicmds.fetch().view
@@ -253,8 +249,16 @@ def main(context):
     elif context == 'push':
         model.update_status()
         view = guicmds.push().view
+    elif context == 'search':
+        view = search()
+    elif context == 'stash':
+        model.update_status()
+        view = stash().view
     elif context == 'tag':
         view = create_tag()
+    else:
+        view = MainView(model, qtutils.active_window())
+        ctl = MainController(model, view)
 
     # Install UI wrappers for command objects
     cfgactions.install_command_wrapper()

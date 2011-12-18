@@ -115,12 +115,15 @@ class SearchWidget(standard.Dialog):
         self.main_layout.addLayout(self.bottom_layout)
         self.setLayout(self.main_layout)
 
-        self.resize(self.parent().width(), self.parent().height())
+        if self.parent():
+            self.resize(self.parent().width(), self.parent().height())
+        else:
+            self.resize(720, 500)
 
 
 def search():
     """Return a callback to handle various search actions."""
-    search_commits(qtutils.active_window())
+    return search_commits(qtutils.active_window())
 
 
 class SearchEngine(object):
@@ -362,6 +365,7 @@ def search_commits(parent):
     opts = SearchOptions()
     widget = Search(opts, parent)
     widget.show()
+    return widget
 
 
 
