@@ -128,6 +128,22 @@ class ColaApplication(object):
 
 
 def parse_args(context):
+    args = sys.argv[1:]
+    builtins = set(('branch',
+                    'classic',
+                    'dag',
+                    'fetch',
+                    'pull',
+                    'push',
+                    'stash',
+                    'search',
+                    'tag'))
+    if context == 'git-dag':
+        context = 'dag'
+    elif args and args[0] in builtins:
+        context = args.pop(0)
+        sys.argv = sys.argv[0:1] + args
+
     parser = optparse.OptionParser(usage='%prog [options]')
 
     # We also accept 'git cola version'
@@ -158,14 +174,15 @@ def parse_args(context):
                       metavar='PATH',
                       default='')
 
-    if context == 'git-dag':
+    if context == 'dag':
         parser.add_option('-c', '--count',
                           help='Number of commits to display.',
                           dest='count',
                           type='int',
                           default=1000)
 
-    return parser.parse_args()
+    opts, args = parser.parse_args()
+    return opts, args, context
 
 
 def process_args(opts, args):
@@ -196,7 +213,7 @@ def main(context):
     """Parses the command-line arguments and starts git-cola
     """
     setup_environment()
-    opts, args = parse_args(context)
+    opts, args, context = parse_args(context)
     repo = process_args(opts, args)
 
     # Allow Ctrl-C to exit
@@ -218,20 +235,6 @@ def main(context):
 
     # Finally, go to the root of the git repo
     os.chdir(model.git.worktree())
-
-    # Prepare to launch a sub-command
-    builtins = set(('branch',
-                    'classic',
-                    'dag',
-                    'fetch',
-                    'pull',
-                    'push',
-                    'stash',
-                    'search',
-                    'tag'))
-
-    if context != 'git-dag' and args and args[0] in builtins:
-        context = args[0]
 
     # Show the GUI
     if context == 'branch':
