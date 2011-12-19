@@ -279,7 +279,8 @@ class Commit(ResetMode):
         self.new_commitmsg = ''
 
     def do(self):
-        status, output = self.model.commit_with_msg(self.msg, amend=self.amend)
+        tmpfile = utils.tmp_filename('commit-message')
+        status, output = self.model.commit_with_msg(self.msg, tmpfile, amend=self.amend)
         if status == 0:
             ResetMode.do(self)
             self.model.set_commitmsg(self.new_commitmsg)
@@ -767,7 +768,7 @@ class Tag(Command):
         log_msg = 'Tagging: "%s" as "%s"' % (self._revision, self._name)
         opts = {}
         if self._message:
-            opts['F'] = self.model.tmp_filename()
+            opts['F'] = utils.tmp_filename('tag-message')
             utils.write(opts['F'], self._message)
 
         if self._sign:

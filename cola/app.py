@@ -293,7 +293,7 @@ def main(context):
     inotify.stop()
     QtCore.QThreadPool.globalInstance().waitForDone()
 
-    pattern = cola.model().tmp_file_pattern()
+    pattern = utils.tmp_file_pattern()
     for filename in glob.glob(pattern):
         os.unlink(filename)
     sys.exit(result)

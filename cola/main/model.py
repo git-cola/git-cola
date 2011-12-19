@@ -291,15 +291,11 @@ class MainModel(Observable):
             newdict[k]=v
         return newdict
 
-    def commit_with_msg(self, msg, amend=False):
+    def commit_with_msg(self, msg, tmpfile, amend=False):
         """Creates a git commit."""
 
         if not msg.endswith('\n'):
             msg += '\n'
-        # Sure, this is a potential "security risk," but if someone
-        # is trying to intercept/re-write commit messages on your system,
-        # then you probably have bigger problems to worry about.
-        tmpfile = self.tmp_filename()
 
         # Create the commit message file
         fh = open(tmpfile, 'w')
@@ -312,21 +308,6 @@ class MainModel(Observable):
                                       with_stderr=True)
         os.unlink(tmpfile)
         return (status, out)
-
-    def tmp_dir(self):
-        # Allow TMPDIR/TMP with a fallback to /tmp
-        return os.environ.get('TMP', os.environ.get('TMPDIR', '/tmp'))
-
-    def tmp_file_pattern(self):
-        return os.path.join(self.tmp_dir(), '*.git-cola.%s.*' % os.getpid())
-
-    def tmp_filename(self, prefix=''):
-        basename = ((prefix+'.git-cola.%s.%s'
-                    % (os.getpid(), time.time())))
-        basename = basename.replace('/', '-')
-        basename = basename.replace('\\', '-')
-        tmpdir = self.tmp_dir()
-        return os.path.join(tmpdir, basename)
 
     def remote_url(self, name, action):
         if action == 'push':

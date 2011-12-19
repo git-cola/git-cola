@@ -1,20 +1,24 @@
 # Copyright (c) 2008 David Aguilar
 """This module provides miscellaneous utility functions."""
 
-import os
-import re
-import sys
 import errno
+import mimetypes
+import os
 import platform
+import random
+import re
 import shlex
 import subprocess
-import mimetypes
+import sys
+import time
 
 from cola import git
 from cola import core
 from cola import resources
 from cola.compat import hashlib
 from cola.decorators import memoize
+
+random.seed(hash(time.time()))
 
 
 KNOWN_FILE_MIME_TYPES = {
@@ -210,6 +214,22 @@ def shell_split(s):
 def shell_usplit(s):
     """Returns a unicode list instead of encoded strings"""
     return [core.decode(arg) for arg in shell_split(s)]
+
+
+def tmp_dir():
+    # Allow TMPDIR/TMP with a fallback to /tmp
+    return os.environ.get('TMP', os.environ.get('TMPDIR', '/tmp'))
+
+
+def tmp_file_pattern():
+    return os.path.join(tmp_dir(), 'git-cola-%s-.*' % os.getpid())
+
+
+def tmp_filename(prefix):
+    randstr = ''.join([chr(random.randint(ord('a'), ord('z'))) for i in range(7)])
+    prefix = prefix.replace('/', '-').replace('\\', '-')
+    basename = 'git-cola-%s-%s-%s' % (os.getpid(), randstr, prefix)
+    return os.path.join(tmp_dir(), basename)
 
 
 def is_linux():

@@ -219,7 +219,7 @@ class DiffParser(object):
                 contents = self.diff_subset(idx, start, end)
                 if not contents:
                     continue
-                tmpfile = self.model.tmp_filename()
+                tmpfile = utils.tmp_filename('selection')
                 utils.write(tmpfile, contents)
                 if apply_to_worktree:
                     stat, out = self.model.apply_diff_to_worktree(tmpfile)
@@ -233,7 +233,7 @@ class DiffParser(object):
         # Process a complete hunk
         else:
             for idx, diff in enumerate(self.diffs):
-                tmpfile = self.model.tmp_filename()
+                tmpfile = utils.tmp_filename('patch%02d' % idx)
                 if not self.write_diff(tmpfile,idx):
                     continue
                 if apply_to_worktree:
