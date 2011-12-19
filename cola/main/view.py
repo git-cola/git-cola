@@ -427,7 +427,7 @@ class MainView(standard.MainWindow):
         self._gui_state_task = None
         self._load_gui_state()
 
-        log(0, self.model.git_version + '\ncola version ' + version.version())
+        log(0, version.git_version_str() + '\ncola version ' + version.version())
 
     # Qt overrides
     def closeEvent(self, event):

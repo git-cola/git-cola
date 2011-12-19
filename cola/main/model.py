@@ -11,7 +11,7 @@ from cola import git
 from cola import gitcfg
 from cola import gitcmds
 from cola.compat import set
-from cola.obsmodel import ObservableModel
+from cola.observable import Observable
 from cola.decorators import memoize
 
 
@@ -25,13 +25,14 @@ def model():
     return MainModel()
 
 
-class MainModel(ObservableModel):
+class MainModel(Observable):
     """Provides a friendly wrapper for doing common git operations."""
 
     # Observable messages
     message_about_to_update = 'about_to_update'
     message_commit_message_changed = 'commit_message_changed'
     message_diff_text_changed = 'diff_text_changed'
+    message_directory_changed = 'directory_changed'
     message_filename_changed = 'filename_changed'
     message_head_changed = 'head_changed'
     message_mode_changed = 'mode_changed'
@@ -60,24 +61,20 @@ class MainModel(ObservableModel):
         """Reads git repository settings and sets several methods
         so that they refer to the git module.  This object
         encapsulates cola's interaction with git."""
-        ObservableModel.__init__(self)
+        super(MainModel, self).__init__()
 
         # Initialize the git command object
         self.git = git.instance()
 
-        #####################################################
         self.head = 'HEAD'
         self.diff_text = ''
         self.mode = self.mode_none
         self.filename = None
         self.currentbranch = ''
-        self.trackedbranch = ''
         self.directory = ''
-        self.git_version = self.git.version()
+        self.project = ''
         self.remotes = []
 
-        #####################################################
-        # Status info
         self.commitmsg = ''
         self.modified = []
         self.staged = []
@@ -86,23 +83,11 @@ class MainModel(ObservableModel):
         self.upstream_changed = []
         self.submodules = set()
 
-        #####################################################
-        # Refs
-        self.revision = ''
         self.local_branches = []
         self.remote_branches = []
         self.tags = []
-
-        self.fetch_helper = None
-        self.push_helper = None
-        self.pull_helper = None
-        self.generate_remote_helpers()
         if cwd:
             self.set_worktree(cwd)
-
-        #####################################################
-        # Dag
-        self._commits = []
 
     def read_only(self):
         return self.mode in self.modes_read_only
@@ -114,12 +99,6 @@ class MainModel(ObservableModel):
     def enable_staging(self):
         """Whether staging should be allowed."""
         return self.mode in (self.mode_worktree, self.mode_untracked)
-
-    def generate_remote_helpers(self):
-        """Generates helper methods for fetch, push and pull"""
-        self.push_helper = self.gen_remote_helper(self.git.push, push=True)
-        self.fetch_helper = self.gen_remote_helper(self.git.fetch)
-        self.pull_helper = self.gen_remote_helper(self.git.pull)
 
     def editor(self):
         app = _config.get('gui.editor', 'gvim')
@@ -136,7 +115,7 @@ class MainModel(ObservableModel):
         is_valid = self.git.is_valid()
         if is_valid:
             basename = os.path.basename(self.git.worktree())
-            self.set_project(core.decode(basename))
+            self.project = core.decode(basename)
         return is_valid
 
     def set_commitmsg(self, msg):
@@ -146,6 +125,10 @@ class MainModel(ObservableModel):
     def set_diff_text(self, txt):
         self.diff_text = txt
         self.notify_message_observers(self.message_diff_text_changed, txt)
+
+    def set_directory(self, path):
+        self.directory = path
+        self.notify_message_observers(self.message_directory_changed, path)
 
     def set_filename(self, filename):
         self.filename = filename
@@ -174,30 +157,16 @@ class MainModel(ObservableModel):
 
     def update_file_status(self, update_index=False):
         self.notify_message_observers(self.message_about_to_update)
-        self.notification_enabled = False
         self._update_files(update_index=update_index)
-        self.notification_enabled = True
-        self.notify_observers('staged', 'unstaged')
-        self.broadcast_updated()
+        self.notify_message_observers(self.message_updated)
 
     def update_status(self, update_index=False):
         # Give observers a chance to respond
         self.notify_message_observers(self.message_about_to_update)
-        # This allows us to defer notification until the
-        # we finish processing data
-        self.notification_enabled = False
-
         self._update_files(update_index=update_index)
         self._update_refs()
         self._update_branches_and_tags()
         self._update_branch_heads()
-
-        # Re-enable notifications and emit changes
-        self.notification_enabled = True
-        self.notify_observers('staged', 'unstaged')
-        self.broadcast_updated()
-
-    def broadcast_updated(self):
         self.notify_message_observers(self.message_updated)
 
     def _update_files(self, update_index=False):
@@ -213,18 +182,17 @@ class MainModel(ObservableModel):
         self.upstream_changed = state.get('upstream_changed', [])
 
     def _update_refs(self):
-        self.set_remotes(self.git.remote().splitlines())
+        self.remotes = self.git.remote().splitlines()
 
     def _update_branch_heads(self):
         # Set these early since they are used to calculate 'upstream_changed'.
-        self.set_trackedbranch(gitcmds.tracked_branch())
-        self.set_currentbranch(gitcmds.current_branch())
+        self.currentbranch = gitcmds.current_branch()
 
     def _update_branches_and_tags(self):
         local_branches, remote_branches, tags = gitcmds.all_refs(split=True)
-        self.set_local_branches(local_branches)
-        self.set_remote_branches(remote_branches)
-        self.set_tags(tags)
+        self.local_branches = local_branches
+        self.remote_branches = remote_branches
+        self.tags = tags
 
     def delete_branch(self, branch):
         return self.git.branch(branch,
@@ -399,13 +367,18 @@ class MainModel(ObservableModel):
         }
         return (args, kwargs)
 
-    def gen_remote_helper(self, gitaction, push=False):
-        """Generates a closure that calls git fetch, push or pull
-        """
-        def remote_helper(remote, **kwargs):
-            args, kwargs = self.remote_args(remote, push=push, **kwargs)
-            return gitaction(*args, **kwargs)
-        return remote_helper
+    def run_remote_action(self, action, remote, push=False, **kwargs):
+        args, kwargs = self.remote_args(remote, push=push, **kwargs)
+        return action(*args, **kwargs)
+
+    def fetch(self, remote, **opts):
+        return self.run_remote_action(self.git.fetch, remote, **opts)
+
+    def push(self, remote, **opts):
+        return self.run_remote_action(self.git.fetch, remote, push=True, **opts)
+
+    def pull(self, remote, **opts):
+        return self.run_remote_action(self.git.pull, remote, push=True, **opts)
 
     def create_branch(self, name, base, track=False):
         """Create a branch named 'name' from revision 'base'

@@ -67,9 +67,14 @@ def version_to_list(version):
 
 
 @memoize
+def git_version_str():
+    """Returns the current GIT version"""
+    return git.version()
+
+@memoize
 def git_version():
     """Returns the current GIT version"""
-    return git.version().split()[-1]
+    return git_version_str().split()[-1]
 
 
 if __name__ == '__main__':

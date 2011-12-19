@@ -66,20 +66,13 @@ class RemoteActionDialog(standard.Dialog):
         """Customizes the dialog based on the remote action
         """
         standard.Dialog.__init__(self, parent=parent)
+        self.model = model
+        self.action = action
+        self.tasks = []
+
         self.setWindowTitle(self.tr(action))
         self.setWindowModality(QtCore.Qt.WindowModal)
 
-        self.model = model
-
-        #: The current mode; one of fetch/push/pull
-        self.action = action
-        self.action_method = {
-            FETCH: self.gen_remote_callback(self.model.fetch_helper),
-            PUSH: self.gen_remote_callback(self.model.push_helper),
-            PULL: self.gen_remote_callback(self.model.pull_helper),
-        }   [action]
-
-        self.tasks = []
         self.progress = QtGui.QProgressDialog(self)
         self.progress.setRange(0, 0)
         self.progress.setCancelButton(None)
@@ -187,7 +180,7 @@ class RemoteActionDialog(standard.Dialog):
         self.connect(self.remote_branches, SIGNAL('itemSelectionChanged()'),
                      self.update_remote_branches)
 
-        connect_button(self.action_button, self.action_method)
+        connect_button(self.action_button, self.action_callback)
         connect_button(self.close_button, self.reject)
 
         self.connect(self, SIGNAL('action_completed'), self.action_completed)
@@ -342,71 +335,74 @@ class RemoteActionDialog(standard.Dialog):
 
     #+-------------------------------------------------------------
     #+ Actions
-    def gen_remote_callback(self, model_action):
-        """Generates a Qt callback for fetch/push/pull.
-        """
-        def remote_callback():
-            remote_name = unicode(self.remote_name.text())
-            if not remote_name:
-                errmsg = self.tr('No repository selected.')
-                qtutils.log(1, errmsg)
-                return
-            remote, kwargs = self.common_args()
-            action = self.action
+    def action_callback(self):
+        action = self.action
+        if action == FETCH:
+            model_action = self.model.fetch
+        elif action == PUSH:
+            model_action = self.model.push
+        else: # if action == PULL:
+            model_action = self.model.pull
 
-            # Check if we're about to create a new branch and warn.
-            remote_branch = unicode(self.remote_branch.text())
-            local_branch = unicode(self.local_branch.text())
+        remote_name = unicode(self.remote_name.text())
+        if not remote_name:
+            errmsg = self.tr('No repository selected.')
+            qtutils.log(1, errmsg)
+            return
+        remote, kwargs = self.common_args()
+        action = self.action
 
-            if action == PUSH and not remote_branch:
-                branch = local_branch
-                candidate = '%s/%s' % (remote, branch)
-                if candidate not in self.model.remote_branches:
-                    title = self.tr(PUSH)
-                    msg = 'Branch "%s" does not exist in %s.' % (branch, remote)
-                    msg += '\nA new remote branch will be published.'
-                    info_txt= 'Create a new remote branch?'
-                    ok_text = 'Create Remote Branch'
-                    if not qtutils.confirm(title, msg, info_txt, ok_text,
-                                           default=False,
-                                           icon=qtutils.git_icon()):
-                        return
+        # Check if we're about to create a new branch and warn.
+        remote_branch = unicode(self.remote_branch.text())
+        local_branch = unicode(self.local_branch.text())
 
-            if not self.ffwd_only_checkbox.isChecked():
-                title = 'Force %s?' % action.title()
-                ok_text = 'Force %s' % action.title()
-
-                if action == FETCH:
-                    msg = 'Non-fast-forward fetch overwrites local history!'
-                    info_txt = 'Force fetching from %s?' % remote
-                elif action == PUSH:
-                    msg = ('Non-fast-forward push overwrites published '
-                           'history!\n(Did you pull first?)')
-                    info_txt = 'Force push to %s?' % remote
-                else: # pull: shouldn't happen since the controls are hidden
-                    msg = "You probably don't want to do this.\n\tContinue?"
-                    return
-
+        if action == PUSH and not remote_branch:
+            branch = local_branch
+            candidate = '%s/%s' % (remote, branch)
+            if candidate not in self.model.remote_branches:
+                title = self.tr(PUSH)
+                msg = 'Branch "%s" does not exist in %s.' % (branch, remote)
+                msg += '\nA new remote branch will be published.'
+                info_txt= 'Create a new remote branch?'
+                ok_text = 'Create Remote Branch'
                 if not qtutils.confirm(title, msg, info_txt, ok_text,
                                        default=False,
-                                       icon=qtutils.discard_icon()):
+                                       icon=qtutils.git_icon()):
                     return
 
-            # Disable the GUI by default
-            self.setEnabled(False)
-            self.progress.setEnabled(True)
-            QtGui.QApplication.setOverrideCursor(Qt.WaitCursor)
+        if not self.ffwd_only_checkbox.isChecked():
+            title = 'Force %s?' % action.title()
+            ok_text = 'Force %s' % action.title()
 
-            # Show a nice progress bar
-            self.progress.setLabelText('Updating...')
-            self.progress.show()
+            if action == FETCH:
+                msg = 'Non-fast-forward fetch overwrites local history!'
+                info_txt = 'Force fetching from %s?' % remote
+            elif action == PUSH:
+                msg = ('Non-fast-forward push overwrites published '
+                       'history!\n(Did you pull first?)')
+                info_txt = 'Force push to %s?' % remote
+            else: # pull: shouldn't happen since the controls are hidden
+                msg = "You probably don't want to do this.\n\tContinue?"
+                return
 
-            # Use a thread to update in the background
-            task = ActionTask(self, model_action, remote, kwargs)
-            self.tasks.append(task)
-            QtCore.QThreadPool.globalInstance().start(task)
+            if not qtutils.confirm(title, msg, info_txt, ok_text,
+                                   default=False,
+                                   icon=qtutils.discard_icon()):
+                return
 
-        return remote_callback
+        # Disable the GUI by default
+        self.setEnabled(False)
+        self.progress.setEnabled(True)
+        QtGui.QApplication.setOverrideCursor(Qt.WaitCursor)
+
+        # Show a nice progress bar
+        self.progress.setLabelText('Updating...')
+        self.progress.show()
+
+        # Use a thread to update in the background
+        task = ActionTask(self, model_action, remote, kwargs)
+        self.tasks.append(task)
+        QtCore.QThreadPool.globalInstance().start(task)
 
     def action_completed(self, task, status, output):
         # Grab the results of the action and finish up
