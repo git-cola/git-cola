@@ -191,13 +191,13 @@ class GitConfig(observable.Observable):
         msg = self.message_user_config_changed
         self.git.config('--global', key, self.python_to_git(value))
         self.update()
-        self.notify_message_observers(msg, key, value)
+        self.notify_observers(msg, key, value)
 
     def set_repo(self, key, value):
         msg = self.message_repo_config_changed
         self.git.config(key, self.python_to_git(value))
         self.update()
-        self.notify_message_observers(msg, key, value)
+        self.notify_observers(msg, key, value)
 
     def find(self, pat):
         result = {}

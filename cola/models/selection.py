@@ -52,7 +52,7 @@ class SelectionModel(Observable):
         self.unmerged = s.unmerged
         self.modified = s.modified
         self.untracked = s.untracked
-        self.notify_message_observers(self.message_selection_changed)
+        self.notify_observers(self.message_selection_changed)
 
     def selection(self):
         return State(self.staged, self.unmerged,

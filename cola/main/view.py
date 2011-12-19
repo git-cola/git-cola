@@ -388,14 +388,11 @@ class MainView(standard.MainWindow):
         self.tabifyDockWidget(self.logdockwidget, self.diffdockwidget)
 
         # Listen for model notifications
-        model.add_message_observer(model.message_mode_changed,
-                                   self._mode_changed)
+        model.add_observer(model.message_mode_changed, self._mode_changed)
+        model.add_observer(model.message_updated, self._update_view)
 
-        model.add_message_observer(model.message_updated,
-                                   self._update_view)
-
-        prefs_model.add_message_observer(prefs_model.message_config_updated,
-                                         self._config_updated)
+        prefs_model.add_observer(prefs_model.message_config_updated,
+                                 self._config_updated)
 
         # Set a default value
         self.show_cursor_position(1, 0)

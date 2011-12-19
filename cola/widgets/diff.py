@@ -68,8 +68,7 @@ class DiffEditor(DiffTextEdit):
                 self.stage_selection)
         self.action_apply_selection.setIcon(qtutils.apply_icon())
 
-        model.add_message_observer(model.message_diff_text_changed,
-                                   self.setPlainText)
+        model.add_observer(model.message_diff_text_changed, self.setPlainText)
 
         self.connect(self, SIGNAL('copyAvailable(bool)'),
                      self.enable_selection_actions)

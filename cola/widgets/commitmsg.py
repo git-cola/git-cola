@@ -100,8 +100,8 @@ class CommitMessageEditor(QtGui.QWidget):
         # Broadcast the amend mode
         connect_action_bool(self.amend_action, emit(self, signals.amend_mode))
 
-        self.model.add_message_observer(self.model.message_commit_message_changed,
-                                        self.set_commit_message)
+        self.model.add_observer(self.model.message_commit_message_changed,
+                                self.set_commit_message)
 
         self.connect(self.summary, SIGNAL('returnPressed()'),
                      self.summary_return_pressed)

@@ -40,7 +40,7 @@ class DiffWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
         sig = signals.commits_selected
-        notifier.add_message_observer(sig, self.commits_selected)
+        notifier.add_observer(sig, self.commits_selected)
 
     def commits_selected(self, commits):
         if len(commits) != 1:
@@ -86,7 +86,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
                                               QtCore.Qt.Key_J)
 
         sig = signals.commits_selected
-        notifier.add_message_observer(sig, self.commits_selected)
+        notifier.add_observer(sig, self.commits_selected)
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.selection_changed)
@@ -125,7 +125,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
             return
         self.set_selecting(True)
         sig = signals.commits_selected
-        self.notifier.notify_message_observers(sig, [i.commit for i in items])
+        self.notifier.notify_observers(sig, [i.commit for i in items])
         self.set_selecting(False)
 
     def commits_selected(self, commits):
@@ -247,7 +247,7 @@ class DAGView(standard.Dialog):
         self.commits = {}
         self.notifier = notifier = observable.Observable()
         self.notifier.refs_updated = refs_updated = 'refs_updated'
-        self.notifier.add_message_observer(refs_updated, self.display)
+        self.notifier.add_observer(refs_updated, self.display)
 
         self.graphview = GraphView(notifier)
         self.treewidget = CommitTreeWidget(notifier)
@@ -324,8 +324,8 @@ class DAGView(standard.Dialog):
 
         # The model is updated in another thread so use
         # signals/slots to bring control back to the main GUI thread
-        self.model.add_message_observer(self.model.message_updated,
-                                        self.emit_model_updated)
+        self.model.add_observer(self.model.message_updated,
+                                self.emit_model_updated)
 
         self.connect(self, SIGNAL('model_updated'),
                      self.model_updated)
@@ -421,7 +421,7 @@ class DAGView(standard.Dialog):
         except KeyError:
             return
         sig = signals.commits_selected
-        self.notifier.notify_message_observers(sig, [commit_obj])
+        self.notifier.notify_observers(sig, [commit_obj])
         self.graphview.view_fit()
 
     def done(self, ok):
@@ -658,7 +658,7 @@ class Commit(QtGui.QGraphicsItem):
             commits = [item.commit for item in selected_items]
             self.scene().parent().set_selecting(True)
             sig = signals.commits_selected
-            self.notifier.notify_message_observers(sig, commits)
+            self.notifier.notify_observers(sig, commits)
             self.scene().parent().set_selecting(False)
 
             # Cache the pen for use in paint()
@@ -875,7 +875,7 @@ class GraphView(QtGui.QGraphicsView):
         self.menu_actions = context_menu_actions(self)
 
         sig = signals.commits_selected
-        notifier.add_message_observer(sig, self.commits_selected)
+        notifier.add_observer(sig, self.commits_selected)
 
     def clear(self):
         self.scene().clear()
@@ -979,7 +979,7 @@ class GraphView(QtGui.QGraphicsView):
     def cherry_pick(self):
         sha1 = self.clicked.commit.sha1
         cola.notifier().broadcast(signals.cherry_pick, [sha1])
-        self.notifier.notify_message_observers(self.notifier.refs_updated)
+        self.notifier.notify_observers(self.notifier.refs_updated)
 
     def select_parent(self):
         """Select the parent with the newest generation number"""

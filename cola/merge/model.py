@@ -13,10 +13,10 @@ class MergeModel(observable.Observable):
         self.model = cola.model()
         # Relay the "updated" message
         msg = self.model.message_updated
-        self.model.add_message_observer(msg, self.notify_updated)
+        self.model.add_observer(msg, self.notify_updated)
 
     def notify_updated(self):
-        self.notify_message_observers(self.message_updated)
+        self.notify_observers(self.message_updated)
 
     def update_status(self):
         self.model.update_status()

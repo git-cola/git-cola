@@ -112,7 +112,7 @@ class MergeView(QtGui.QDialog):
                      self.viz_revision)
 
         # Observer messages
-        model.add_message_observer(model.message_updated, self.update_all)
+        model.add_observer(model.message_updated, self.update_all)
         self.update_all()
 
     def update_all(self):

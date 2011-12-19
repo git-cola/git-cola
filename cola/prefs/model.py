@@ -17,7 +17,7 @@ class PreferencesModel(observable.Observable):
         else:
             self.config.set_user(config, value)
         message = self.message_config_updated
-        self.notify_message_observers(message, source, config, value)
+        self.notify_observers(message, source, config, value)
 
     def get_config(self, source, config):
         if source == 'repo':

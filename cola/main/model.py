@@ -120,27 +120,27 @@ class MainModel(Observable):
 
     def set_commitmsg(self, msg):
         self.commitmsg = msg
-        self.notify_message_observers(self.message_commit_message_changed, msg)
+        self.notify_observers(self.message_commit_message_changed, msg)
 
     def set_diff_text(self, txt):
         self.diff_text = txt
-        self.notify_message_observers(self.message_diff_text_changed, txt)
+        self.notify_observers(self.message_diff_text_changed, txt)
 
     def set_directory(self, path):
         self.directory = path
-        self.notify_message_observers(self.message_directory_changed, path)
+        self.notify_observers(self.message_directory_changed, path)
 
     def set_filename(self, filename):
         self.filename = filename
-        self.notify_message_observers(self.message_filename_changed, filename)
+        self.notify_observers(self.message_filename_changed, filename)
 
     def set_head(self, head):
         self.head = head
-        self.notify_message_observers(self.message_head_changed, head)
+        self.notify_observers(self.message_head_changed, head)
 
     def set_mode(self, mode):
         self.mode = mode
-        self.notify_message_observers(self.message_mode_changed, mode)
+        self.notify_observers(self.message_mode_changed, mode)
 
     def apply_diff(self, filename):
         return self.git.apply(filename, index=True, cached=True,
@@ -156,18 +156,18 @@ class MainModel(Observable):
         return core.decode(log)
 
     def update_file_status(self, update_index=False):
-        self.notify_message_observers(self.message_about_to_update)
+        self.notify_observers(self.message_about_to_update)
         self._update_files(update_index=update_index)
-        self.notify_message_observers(self.message_updated)
+        self.notify_observers(self.message_updated)
 
     def update_status(self, update_index=False):
         # Give observers a chance to respond
-        self.notify_message_observers(self.message_about_to_update)
+        self.notify_observers(self.message_about_to_update)
         self._update_files(update_index=update_index)
         self._update_refs()
         self._update_branches_and_tags()
         self._update_branch_heads()
-        self.notify_message_observers(self.message_updated)
+        self.notify_observers(self.message_updated)
 
     def _update_files(self, update_index=False):
         staged_only = self.read_only()
@@ -420,7 +420,7 @@ class MainModel(Observable):
             else:
                 remove.append(path)
 
-        self.notify_message_observers(self.message_about_to_update)
+        self.notify_observers(self.message_about_to_update)
 
         # `git add -u` doesn't work on untracked files
         if add:
@@ -434,7 +434,7 @@ class MainModel(Observable):
                 remove = remove[42:]
 
         self._update_files()
-        self.notify_message_observers(self.message_updated)
+        self.notify_observers(self.message_updated)
 
     def unstage_paths(self, paths):
         if not paths:

@@ -29,16 +29,15 @@ class RepoDialog(standard.Dialog):
 
         self.connect(self, SIGNAL('updated'), self._updated_callback)
         self.model = cola.model()
-        self.model.add_message_observer(self.model.message_updated,
-                                        self._model_updated)
+        self.model.add_observer(self.model.message_updated, self.model_updated)
         qtutils.add_close_action(self)
         if update:
-            self._model_updated()
+            self.model_updated()
 
     # Read-only mode property
     mode = property(lambda self: self.model.mode)
 
-    def _model_updated(self):
+    def model_updated(self):
         """Update the title with the current branch and directory name."""
         self.emit(SIGNAL('updated'))
 
@@ -73,8 +72,7 @@ class RepoTreeView(QtGui.QTreeView):
 
         # Observe model updates
         model = cola.model()
-        model.add_message_observer(model.message_updated,
-                                   self.update_actions)
+        model.add_observer(model.message_updated, self.update_actions)
 
         # The non-Qt cola application model
         self.connect(self, SIGNAL('expanded(QModelIndex)'), self.size_columns)

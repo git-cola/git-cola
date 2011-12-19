@@ -92,9 +92,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.connect(self, SIGNAL('updated'), self._updated)
 
         self.m = cola.model()
-        self.m.add_message_observer(self.m.message_about_to_update,
-                                    self.about_to_update)
-        self.m.add_message_observer(self.m.message_updated, self.updated)
+        self.m.add_observer(self.m.message_about_to_update,
+                            self.about_to_update)
+        self.m.add_observer(self.m.message_updated, self.updated)
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.show_selection)

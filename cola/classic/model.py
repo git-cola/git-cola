@@ -39,8 +39,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
         self.connect(self, SIGNAL('updated'), self._updated_callback)
         model = cola.model()
-        model.add_message_observer(model.message_updated,
-                                   self._model_updated)
+        model.add_observer(model.message_updated, self._model_updated)
         self._dir_rows = {}
         self.setColumnCount(len(Columns.ALL))
         for idx, header in enumerate(Columns.ALL):
