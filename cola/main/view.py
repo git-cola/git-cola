@@ -43,6 +43,7 @@ from cola.qtutils import relay_signal
 from cola.qtutils import tr
 from cola.views import standard
 from cola.widgets import cfgactions
+from cola.widgets import remote
 from cola.widgets.about import launch_about_dialog
 from cola.widgets.about import show_shortcuts
 from cola.widgets.archive import GitArchiveDialog
@@ -186,11 +187,11 @@ class MainView(standard.MainWindow):
                 'Abort Merge...', merge.abort_merge)
 
         self.menu_fetch = add_action(self,
-                'Fetch...', guicmds.fetch)
+                'Fetch...', remote.fetch)
         self.menu_push = add_action(self,
-                'Push...', guicmds.push)
+                'Push...', remote.push)
         self.menu_pull = add_action(self,
-                'Pull...', guicmds.pull)
+                'Pull...', remote.pull)
 
         self.menu_open_repo = add_action(self,
                 'Open...', guicmds.open_repo)
@@ -403,9 +404,9 @@ class MainView(standard.MainWindow):
         connect_button(self.rescan_button,
                        emit(self, signals.rescan_and_refresh))
         connect_button(self.alt_button, emit(self, signals.reset_mode))
-        connect_button(self.fetch_button, guicmds.fetch)
-        connect_button(self.push_button, guicmds.push)
-        connect_button(self.pull_button, guicmds.pull)
+        connect_button(self.fetch_button, remote.fetch)
+        connect_button(self.push_button, remote.push)
+        connect_button(self.pull_button, remote.pull)
         connect_button(self.stash_button, stash.stash)
 
         connect_button(self.stage_button, self.stage)

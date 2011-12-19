@@ -7,7 +7,6 @@ import time
 import copy
 
 from cola import core
-from cola import utils
 from cola import git
 from cola import gitcfg
 from cola import gitcmds
@@ -76,8 +75,6 @@ class MainModel(ObservableModel):
         self.directory = ''
         self.git_version = self.git.version()
         self.remotes = []
-        self.local_branch = ''
-        self.remote_branch = ''
 
         #####################################################
         # Status info
@@ -162,15 +159,6 @@ class MainModel(ObservableModel):
         self.mode = mode
         self.notify_message_observers(self.message_mode_changed, mode)
 
-    def set_remote(self, remote):
-        if not remote:
-            return
-        self.set_param('remote', remote)
-        branches = utils.grep('%s/\S+$' % remote,
-                              gitcmds.branch_list(remote=True),
-                              squash=False)
-        self.set_remote_branches(branches)
-
     def apply_diff(self, filename):
         return self.git.apply(filename, index=True, cached=True,
                               with_stderr=True, with_status=True)
@@ -226,10 +214,6 @@ class MainModel(ObservableModel):
 
     def _update_refs(self):
         self.set_remotes(self.git.remote().splitlines())
-        self.set_revision('')
-        self.set_local_branch('')
-        self.set_remote_branch('')
-
 
     def _update_branch_heads(self):
         # Set these early since they are used to calculate 'upstream_changed'.
@@ -396,9 +380,9 @@ class MainModel(ObservableModel):
             local_branch = remote_branch
             remote_branch = tmp
         if ffwd:
-            branch_arg = '%s:%s' % ( remote_branch, local_branch )
+            branch_arg = '%s:%s' % (remote_branch, local_branch)
         else:
-            branch_arg = '+%s:%s' % ( remote_branch, local_branch )
+            branch_arg = '+%s:%s' % (remote_branch, local_branch)
         args = [remote]
         if local_branch and remote_branch:
             args.append(branch_arg)

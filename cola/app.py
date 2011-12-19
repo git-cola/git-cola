@@ -37,6 +37,7 @@ from cola.stash import stash
 from cola.decorators import memoize
 from cola.main.view import MainView
 from cola.main.controller import MainController
+from cola.widgets import remote
 from cola.widgets import cfgactions
 from cola.widgets import startup
 from cola.widgets.createtag import create_tag
@@ -248,13 +249,13 @@ def main(context):
     # by hooking into the message_updated notification.
     elif context == 'fetch':
         model.update_status()
-        view = guicmds.fetch().view
+        view = remote.fetch()
     elif context == 'pull':
         model.update_status()
-        view = guicmds.pull().view
+        view = remote.pull()
     elif context == 'push':
         model.update_status()
-        view = guicmds.push().view
+        view = remote.push()
     elif context == 'search':
         view = search()
     elif context == 'stash':

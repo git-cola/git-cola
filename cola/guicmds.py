@@ -228,24 +228,3 @@ def review_branch():
     if not branch:
         return
     cola.notifier().broadcast(signals.review_branch_mode, branch)
-
-
-def fetch():
-    """Launch the 'fetch' remote dialog."""
-    from cola.controllers.remote import remote_action
-
-    return remote_action('fetch')
-
-
-def push():
-    """Launch the 'push' remote dialog."""
-    from cola.controllers.remote import remote_action
-
-    return remote_action('push')
-
-
-def pull():
-    """Launch the 'pull' remote dialog."""
-    from cola.controllers.remote import remote_action
-
-    return remote_action('pull')
