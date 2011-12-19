@@ -157,6 +157,8 @@ def tracked_branch(branch=None, config=None):
         config = gitcfg.instance()
     if branch is None:
         branch = current_branch()
+    if branch is None:
+        return None
     remote = config.get('branch.%s.remote' % branch)
     if not remote:
         return None
