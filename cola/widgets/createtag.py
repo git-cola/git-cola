@@ -9,7 +9,7 @@ from cola.prefs import diff_font
 from cola.qtutils import connect_button
 from cola.qtutils import critical
 from cola.qtutils import information
-from cola.views import standard
+from cola.widgets import standard
 
 
 def create_tag(revision=''):

@@ -110,7 +110,6 @@ def cola_data_files():
         _package('cola.models'),
         _package('cola.prefs'),
         _package('cola.stash'),
-        _package('cola.views'),
         _package('cola.widgets'),
     ]
 

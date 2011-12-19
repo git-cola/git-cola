@@ -2,7 +2,7 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
-from cola.views import standard
+from cola.widgets import standard
 
 
 class ComboDialog(standard.Dialog):

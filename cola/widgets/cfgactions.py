@@ -11,8 +11,8 @@ from cola import qt
 from cola import qtutils
 from cola import signals
 from cola.qt import GitRefLineEdit
-from cola.views import standard
 from cola.widgets import defs
+from cola.widgets import standard
 
 
 def install_command_wrapper():

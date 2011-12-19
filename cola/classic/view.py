@@ -10,8 +10,8 @@ from cola import qtutils
 from cola import signals
 from cola import utils
 from cola.models.selection import State
-from cola.views import standard
 from cola.widgets import defs
+from cola.widgets import standard
 from cola.classic.model import GitRepoNameItem
 
 

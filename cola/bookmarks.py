@@ -10,8 +10,8 @@ from cola import core
 from cola import qtutils
 from cola import settings
 from cola import utils
-from cola.views import standard
 from cola.widgets import defs
+from cola.widgets import standard
 
 
 def manage_bookmarks():

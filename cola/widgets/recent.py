@@ -7,9 +7,9 @@ from cola import gitcmds
 from cola import qtutils
 from cola import signals
 from cola.widgets import defs
+from cola.widgets import standard
 from cola.widgets.browse import GitTreeWidget
 from cola.widgets.browse import GitFileTreeModel
-from cola.views import standard
 
 
 def browse_recent():

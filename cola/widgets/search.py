@@ -14,8 +14,8 @@ from cola.git import git
 from cola.qt import create_toolbutton
 from cola.qtutils import connect_button
 from cola.qtutils import dir_icon
-from cola.views import standard
 from cola.widgets import defs
+from cola.widgets import standard
 from cola.widgets.diff import DiffTextEdit
 
 

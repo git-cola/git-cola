@@ -15,8 +15,8 @@ from cola.dag.model import RepoReader
 from cola.prefs import diff_font
 from cola.qt import DiffSyntaxHighlighter
 from cola.qt import GitLogLineEdit
-from cola.views import standard
 from cola.widgets import defs
+from cola.widgets import standard
 from cola.widgets.createbranch import create_new_branch
 from cola.widgets.createtag import create_tag
 from cola.widgets.archive import GitArchiveDialog

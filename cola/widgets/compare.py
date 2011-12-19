@@ -9,8 +9,8 @@ from cola import difftool
 from cola import gitcmds
 from cola.git import git
 from cola.qtutils import connect_button
-from cola.views import standard
 from cola.widgets import defs
+from cola.widgets import standard
 
 
 class FileItem(QtGui.QTreeWidgetItem):

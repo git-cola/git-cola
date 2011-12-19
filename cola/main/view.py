@@ -41,9 +41,9 @@ from cola.qtutils import emit
 from cola.qtutils import log
 from cola.qtutils import relay_signal
 from cola.qtutils import tr
-from cola.views import standard
 from cola.widgets import cfgactions
 from cola.widgets import remote
+from cola.widgets import standard
 from cola.widgets.about import launch_about_dialog
 from cola.widgets.about import show_shortcuts
 from cola.widgets.archive import GitArchiveDialog

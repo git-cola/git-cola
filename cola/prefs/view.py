@@ -6,10 +6,9 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import qtutils
 from cola import gitcfg
-from cola.views import standard
 from cola.qtutils import relay_signal
-from cola.utils import is_darwin
 from cola.widgets import defs
+from cola.widgets import standard
 
 
 class FormWidget(QtGui.QWidget):

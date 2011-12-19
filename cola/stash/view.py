@@ -8,8 +8,8 @@ from cola import qt
 from cola import qtutils
 from cola import utils
 from cola.stash.model import save_stash, apply_stash, drop_stash, rescan
-from cola.views import standard
 from cola.widgets import defs
+from cola.widgets import standard
 from cola.widgets.diff import DiffTextEdit
 
 

@@ -5,8 +5,8 @@ from cola import gitcmds
 from cola import qt
 from cola import qtutils
 from cola import utils
-from cola.views import standard
 from cola.widgets import defs
+from cola.widgets import standard
 from cola.main.model import MainModel
 
 
