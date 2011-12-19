@@ -80,12 +80,12 @@ class MainView(standard.MainWindow):
         self.classic_dockable = gitcfg.instance().get('cola.classicdockable')
 
         if self.classic_dockable:
-            self.classicdockwidget = create_dock('Cola Classic', self)
+            self.classicdockwidget = create_dock('Classic', self)
             self.classicwidget = classic_widget(self)
             self.classicdockwidget.setWidget(self.classicwidget)
 
         # "Actions" widget
-        self.actionsdockwidget = create_dock('Actions', self)
+        self.actionsdockwidget = create_dock('Action', self)
         self.actionsdockwidgetcontents = qt.QFlowLayoutWidget(self)
         layout = self.actionsdockwidgetcontents.layout()
         self.stage_button = create_button(text='Stage', layout=layout)
@@ -101,7 +101,7 @@ class MainView(standard.MainWindow):
         self.actionsdockwidget.setWidget(self.actionsdockwidgetcontents)
 
         # "Repository Status" widget
-        self.statusdockwidget = create_dock('Repository Status', self)
+        self.statusdockwidget = create_dock('Status', self)
         self.statusdockwidget.setWidget(StatusWidget(self))
 
         # "Commit Message Editor" widget
@@ -109,7 +109,7 @@ class MainView(standard.MainWindow):
         font = qtutils.default_monospace_font()
         font.setPointSize(int(font.pointSize() * 0.8))
         self.position_label.setFont(font)
-        self.commitdockwidget = create_dock('Commit Message Editor', self)
+        self.commitdockwidget = create_dock('Commit', self)
         titlebar = self.commitdockwidget.titleBarWidget()
         titlebar.add_corner_widget(self.position_label)
 
@@ -123,7 +123,7 @@ class MainView(standard.MainWindow):
         # "Command Output" widget
         logwidget = qtutils.logger()
         logwidget.setFont(diff_font())
-        self.logdockwidget = create_dock('Command Output', self)
+        self.logdockwidget = create_dock('Console', self)
         self.logdockwidget.setWidget(logwidget)
 
         # "Diff Viewer" widget
