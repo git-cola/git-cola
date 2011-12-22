@@ -1,5 +1,6 @@
 import subprocess
 
+import os
 import cola
 from cola import core
 from cola import git
@@ -80,6 +81,14 @@ class DAG(Observable):
 
     def overridden(self, opt):
         return opt in self.overrides
+
+    def paths(self):
+        all_refs = utils.shell_split(self.ref)
+        if '--' in all_refs:
+            all_refs = all_refs[all_refs.index('--'):]
+
+        return [p for p in all_refs
+                    if p and os.path.exists(core.encode(p))]
 
 
 class Commit(object):

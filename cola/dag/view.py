@@ -172,12 +172,12 @@ class CommitTreeWidget(QtGui.QTreeWidget):
     def diff_this_selected(self):
         clicked_sha1 = self.clicked.commit.sha1
         selected_sha1 = self.selected.commit.sha1
-        difftool.diff_commits(self, clicked_sha1, selected_sha1)
+        self.emit(SIGNAL('diff_commits'), clicked_sha1, selected_sha1)
 
     def diff_selected_this(self):
         clicked_sha1 = self.clicked.commit.sha1
         selected_sha1 = self.selected.commit.sha1
-        difftool.diff_commits(self, selected_sha1, clicked_sha1)
+        self.emit(SIGNAL('diff_commits'), selected_sha1, clicked_sha1)
 
     def create_patch(self):
         items = self.selectedItems()
@@ -309,6 +309,12 @@ class DAGView(standard.Dialog):
 
         self.connect(self.zoom_out, SIGNAL('pressed()'),
                      self.graphview.zoom_out)
+
+        self.connect(self.treewidget, SIGNAL('diff_commits'),
+                     self.diff_commits)
+
+        self.connect(self.graphview, SIGNAL('diff_commits'),
+                     self.diff_commits)
 
         self.connect(self.maxresults, SIGNAL('valueChanged(int)'),
                      lambda(x): self.dag.set_count(x))
@@ -458,6 +464,13 @@ class DAGView(standard.Dialog):
         width = desktop.width()
         height = desktop.height()
         self.resize(width, height)
+
+    def diff_commits(self, a, b):
+        paths = self.dag.paths()
+        if paths:
+            difftool.launch([a, b, '--'] + paths)
+        else:
+            difftool.diff_commits(self, a, b)
 
 
 class ReaderThread(QtCore.QThread):
@@ -952,12 +965,12 @@ class GraphView(QtGui.QGraphicsView):
     def diff_this_selected(self):
         clicked_sha1 = self.clicked.commit.sha1
         selected_sha1 = self.selected.commit.sha1
-        difftool.diff_commits(self, clicked_sha1, selected_sha1)
+        self.emit(SIGNAL('diff_commits'), clicked_sha1, selected_sha1)
 
     def diff_selected_this(self):
         clicked_sha1 = self.clicked.commit.sha1
         selected_sha1 = self.selected.commit.sha1
-        difftool.diff_commits(self, selected_sha1, clicked_sha1)
+        self.emit(SIGNAL('diff_commits'), selected_sha1, clicked_sha1)
 
     def create_patch(self):
         items = self.selectedItems()
