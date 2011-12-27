@@ -201,12 +201,12 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         cola.notifier().broadcast(signals.cherry_pick, [sha1])
 
 
-class DAGView(standard.Dialog):
+class DAGView(standard.Widget):
     """The git-dag widget."""
+
     def __init__(self, model, dag, parent=None, args=None):
-        standard.Dialog.__init__(self, parent=parent)
+        super(DAGView, self).__init__(parent)
         self.setAttribute(QtCore.Qt.WA_MacMetalStyle)
-        self.setObjectName('dag')
         self.setMinimumSize(1, 1)
 
         # change when widgets are added/removed
@@ -350,27 +350,22 @@ class DAGView(standard.Dialog):
             self.setWindowTitle(project)
 
     def export_state(self):
-        state = standard.Dialog.export_state(self)
-        state['ref'] = self.dag.ref
+        state = super(DAGView, self).export_state()
         state['count'] = self.dag.count
         return state
 
     def apply_state(self, state):
         try:
-            standard.Dialog.apply_state(self, state)
+            super(DAGView, self).apply_state(state)
         except:
-            return
+            pass
         try:
-            ref = state['ref']
             count = state['count']
         except KeyError:
-            return
-
-        if not self.dag.overridden('ref'):
-            self.dag.set_ref(ref)
-
-        if not self.dag.overridden('count'):
-            self.dag.set_count(count)
+            pass
+        else:
+            if not self.dag.overridden('count'):
+                self.dag.set_count(count)
 
     def emit_model_updated(self):
         self.emit(SIGNAL('model_updated'))
@@ -395,13 +390,13 @@ class DAGView(standard.Dialog):
         self.start()
 
     def show(self):
-        standard.Dialog.show(self)
+        super(DAGView, self).show()
         self.splitter.setSizes([self.width()/2, self.width()/2])
         self.left_splitter.setSizes([self.height()/3, self.height()*2/3])
         self.treewidget.adjust_columns()
 
     def resizeEvent(self, e):
-        standard.Dialog.resizeEvent(self, e)
+        super(DAGView, self).resizeEvent(e)
         self.treewidget.adjust_columns()
 
     def splitter_moved(self, pos, idx):
@@ -430,14 +425,11 @@ class DAGView(standard.Dialog):
         self.notifier.notify_observers(sig, [commit_obj])
         self.graphview.view_fit()
 
-    def done(self, ok):
+    def closeEvent(self, event):
+        self.stop()
         self.revtext.close_popup()
         qtutils.save_state(self)
-        return standard.Dialog.done(self, ok)
-
-    def close(self):
-        self.stop()
-        standard.Dialog.close(self)
+        return super(DAGView, self).closeEvent(event)
 
     def pause(self):
         self.thread.mutex.lock()
@@ -475,8 +467,8 @@ class DAGView(standard.Dialog):
 
 class ReaderThread(QtCore.QThread):
 
-    commits_ready = QtCore.SIGNAL('commits_ready')
-    done = QtCore.SIGNAL('done')
+    commits_ready = SIGNAL('commits_ready')
+    done = SIGNAL('done')
 
     def __init__(self, parent, dag):
         QtCore.QThread.__init__(self, parent)

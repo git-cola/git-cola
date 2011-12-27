@@ -52,5 +52,6 @@ def create_standard_widget(qtclass):
 
 
 # The base class for all cola QDialogs.
+Widget = create_standard_widget(QtGui.QWidget)
 Dialog = create_standard_widget(QtGui.QDialog)
 MainWindow = create_standard_widget(QtGui.QMainWindow)
