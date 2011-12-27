@@ -19,7 +19,7 @@ def git_dag(model, opts=None, args=None):
     dag = DAG(model.currentbranch, 1000)
     dag.set_options(opts, args)
 
-    view = DAGView(model, dag, qtutils.active_window())
+    view = DAGView(model, dag, None)
     ctl = DAGController(dag, view)
     view.show()
     view.raise_()
