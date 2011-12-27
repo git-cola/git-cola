@@ -167,12 +167,10 @@ def export_patches():
 
 def diff_expression():
     """Diff using an arbitrary expression."""
-    expr = choose_from_combo('Enter Diff Expression',
-                             cola.model().all_branches() +
-                             cola.model().tags)
-    if not expr:
+    ref = choose_ref('Enter Diff Expression', 'Diff')
+    if not ref:
         return
-    cola.notifier().broadcast(signals.diff_expr_mode, expr)
+    difftool.diff_expression(qtutils.active_window(), ref)
 
 
 def goto_grep(line):

@@ -44,10 +44,9 @@ class MainModel(Observable):
     mode_index = 'index' # Comparing index to last commit
     mode_amend = 'amend' # Amending a commit
     mode_grep = 'grep' # We ran Search -> Grep
-    mode_diff_expr = 'diff_expr' # Diffing using arbitrary expression
 
     # Modes where we don't do anything like staging, etc.
-    modes_read_only = set((mode_grep, mode_diff_expr,))
+    modes_read_only = set((mode_grep,))
     # Modes where we can checkout files from the $head
     modes_undoable = set((mode_none, mode_index, mode_worktree))
 

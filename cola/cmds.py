@@ -204,18 +204,6 @@ class ApplyPatches(Command):
                              '\n'.join(map(os.path.basename, self.patches))))
 
 
-class HeadChangeCommand(Command):
-    """Changes the model's current head."""
-    def __init__(self, treeish):
-        Command.__init__(self)
-        self.new_head = treeish
-        self.new_diff_text = ''
-
-    def do(self):
-        Command.do(self)
-        self.model.update_file_status()
-
-
 class Checkout(Command):
     """
     A command object for git-checkout.
@@ -368,13 +356,6 @@ class Diff(Command):
                 self.new_mode = self.model.mode_worktree
         self.new_diff_text = gitcmds.diff_helper(filename=self.new_filename,
                                                  cached=cached, **opts)
-
-
-class DiffExprMode(HeadChangeCommand):
-    """Enter diff-expr mode and clear the model's diff text."""
-    def __init__(self, treeish):
-        HeadChangeCommand.__init__(self, treeish)
-        self.new_mode = self.model.mode_diff_expr
 
 
 class Diffstat(Command):
@@ -893,7 +874,6 @@ def register():
         signals.delete: Delete,
         signals.delete_branch: DeleteBranch,
         signals.diff: Diff,
-        signals.diff_expr_mode: DiffExprMode,
         signals.diff_staged: DiffStaged,
         signals.diffstat: Diffstat,
         signals.difftool: Difftool,

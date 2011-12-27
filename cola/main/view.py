@@ -95,8 +95,6 @@ class MainView(standard.MainWindow):
         self.push_button = create_button(text='Push...', layout=layout)
         self.pull_button = create_button(text='Pull...', layout=layout)
         self.stash_button = create_button(text='Stash...', layout=layout)
-        self.alt_button = create_button(text='Exit Diff Mode', layout=layout)
-        self.alt_button.hide()
         layout.addStretch()
         self.actionsdockwidget.setWidget(self.actionsdockwidgetcontents)
 
@@ -388,7 +386,6 @@ class MainView(standard.MainWindow):
         self.tabifyDockWidget(self.logdockwidget, self.diffdockwidget)
 
         # Listen for model notifications
-        model.add_observer(model.message_mode_changed, self._mode_changed)
         model.add_observer(model.message_updated, self._update_view)
 
         prefs_model.add_observer(prefs_model.message_config_updated,
@@ -400,7 +397,6 @@ class MainView(standard.MainWindow):
         # Add button callbacks
         connect_button(self.rescan_button,
                        emit(self, signals.rescan_and_refresh))
-        connect_button(self.alt_button, emit(self, signals.reset_mode))
         connect_button(self.fetch_button, remote.fetch)
         connect_button(self.push_button, remote.push)
         connect_button(self.pull_button, remote.pull)
@@ -434,16 +430,6 @@ class MainView(standard.MainWindow):
 
     # Accessors
     mode = property(lambda self: self.model.mode)
-
-    def _mode_changed(self, mode):
-        """React to mode changes; hide/show the "Exit Diff Mode" button."""
-        if mode == self.model.mode_diff_expr:
-            height = self.stage_button.minimumHeight()
-            self.alt_button.setMinimumHeight(height)
-            self.alt_button.show()
-        else:
-            self.alt_button.setMinimumHeight(1)
-            self.alt_button.hide()
 
     def _config_updated(self, source, config, value):
         if config == 'cola.fontdiff':
@@ -496,10 +482,8 @@ class MainView(standard.MainWindow):
         self.commitdockwidget.setToolTip(msg)
 
         title = '%s: %s' % (self.model.project, branch)
-        if self.mode == self.model.mode_diff_expr:
-            title += ' *** diff mode***'
-        elif self.mode == self.model.mode_amend:
-            title += ' *** amending ***'
+        if self.mode == self.model.mode_amend:
+            title += ' ** amending **'
         self.setWindowTitle(title)
 
         self.commitmsgeditor.set_mode(self.mode)
