@@ -29,6 +29,8 @@ class FileDiffDialog(QtGui.QDialog):
         self.b = b
 
         self.setWindowTitle('Select File(s)')
+        self.setWindowModality(QtCore.Qt.WindowModal)
+
         self._tree = QtGui.QTreeWidget(self)
         self._tree.setAlternatingRowColors(True)
         self._tree.setRootIsDecorated(False)
