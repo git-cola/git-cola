@@ -16,17 +16,25 @@ def launch(args):
 
 
 def diff_commits(parent, a, b):
-    dlg = FileDiffDialog(parent, a, b)
+    dlg = FileDiffDialog(parent, a=a, b=b)
+    dlg.show()
+    dlg.raise_()
+    return dlg.exec_() == QtGui.QDialog.Accepted
+
+
+def diff_expression(parent, expr):
+    dlg = FileDiffDialog(parent, expr=expr)
     dlg.show()
     dlg.raise_()
     return dlg.exec_() == QtGui.QDialog.Accepted
 
 
 class FileDiffDialog(QtGui.QDialog):
-    def __init__(self, parent, a, b):
+    def __init__(self, parent, a=None, b=None, expr=None):
         QtGui.QDialog.__init__(self, parent)
         self.a = a
         self.b = b
+        self.expr = expr
 
         self.setWindowTitle('Select File(s)')
         self.setWindowModality(QtCore.Qt.WindowModal)
@@ -71,7 +79,9 @@ class FileDiffDialog(QtGui.QDialog):
         self.connect(self._diff_btn, SIGNAL('clicked()'), self.diff)
         self.connect(self._close_btn, SIGNAL('clicked()'), self.close)
 
-        if self.b is None:
+        if self.expr:
+            self.diff_arg = tuple(utils.shell_split(self.expr))
+        elif self.b is None:
             self.diff_arg = (self.a,)
         else:
             self.diff_arg = (self.a, self.b)
@@ -80,7 +90,9 @@ class FileDiffDialog(QtGui.QDialog):
 
 
     def exec_(self):
-        if self.b is None:
+        if self.expr:
+            filenames = gitcmds.diff_filenames(*self.diff_arg)
+        elif self.b is None:
             filenames = gitcmds.diff_index_filenames(self.a)
         else:
             filenames = gitcmds.diff_filenames(*self.diff_arg)
