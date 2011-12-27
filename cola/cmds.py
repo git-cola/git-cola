@@ -370,13 +370,6 @@ class Diff(Command):
                                                  cached=cached, **opts)
 
 
-class DiffMode(HeadChangeCommand):
-    """Enter diff mode and clear the model's diff text."""
-    def __init__(self, treeish):
-        HeadChangeCommand.__init__(self, treeish)
-        self.new_mode = self.model.mode_diff
-
-
 class DiffExprMode(HeadChangeCommand):
     """Enter diff-expr mode and clear the model's diff text."""
     def __init__(self, treeish):
@@ -900,7 +893,6 @@ def register():
         signals.delete: Delete,
         signals.delete_branch: DeleteBranch,
         signals.diff: Diff,
-        signals.diff_mode: DiffMode,
         signals.diff_expr_mode: DiffExprMode,
         signals.diff_staged: DiffStaged,
         signals.diffstat: Diffstat,

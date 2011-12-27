@@ -232,7 +232,7 @@ class MainView(standard.MainWindow):
                 'About', launch_about_dialog)
 
         self.menu_branch_diff = add_action(self,
-                'SHA-1...', guicmds.branch_diff)
+                'SHA-1...', guicmds.diff_revision)
         self.menu_diff_expression = add_action(self,
                 'Expression...', guicmds.diff_expression)
         self.menu_branch_compare = add_action(self,
@@ -437,8 +437,7 @@ class MainView(standard.MainWindow):
 
     def _mode_changed(self, mode):
         """React to mode changes; hide/show the "Exit Diff Mode" button."""
-        if mode in (self.model.mode_diff,
-                    self.model.mode_diff_expr):
+        if mode == self.model.mode_diff_expr:
             height = self.stage_button.minimumHeight()
             self.alt_button.setMinimumHeight(height)
             self.alt_button.show()
@@ -497,7 +496,7 @@ class MainView(standard.MainWindow):
         self.commitdockwidget.setToolTip(msg)
 
         title = '%s: %s' % (self.model.project, branch)
-        if self.mode in (self.model.mode_diff, self.model.mode_diff_expr):
+        if self.mode == self.model.mode_diff_expr:
             title += ' *** diff mode***'
         elif self.mode == self.model.mode_amend:
             title += ' *** amending ***'

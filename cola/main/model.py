@@ -3,7 +3,6 @@
 """
 
 import os
-import time
 import copy
 
 from cola import core
@@ -45,11 +44,10 @@ class MainModel(Observable):
     mode_index = 'index' # Comparing index to last commit
     mode_amend = 'amend' # Amending a commit
     mode_grep = 'grep' # We ran Search -> Grep
-    mode_diff = 'diff' # Diffing against an arbitrary branch
     mode_diff_expr = 'diff_expr' # Diffing using arbitrary expression
 
     # Modes where we don't do anything like staging, etc.
-    modes_read_only = (mode_grep, mode_diff, mode_diff_expr)
+    modes_read_only = (mode_grep, mode_diff_expr)
     # Modes where we can checkout files from the $head
     modes_undoable = (mode_none, mode_index, mode_worktree)
 

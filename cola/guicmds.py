@@ -54,15 +54,12 @@ def branch_delete():
     cola.notifier().broadcast(signals.delete_branch, branch)
 
 
-def branch_diff():
-    """Diff against an arbitrary revision, branch, tag, etc."""
-    branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
-                               ['HEAD^'] +
-                               cola.model().all_branches() +
-                               cola.model().tags)
-    if not branch:
+def diff_revision():
+    """Diff an arbitrary revision against the worktree"""
+    ref = choose_ref('Select Revision to Diff', 'Diff', pre=['HEAD^'])
+    if not ref:
         return
-    cola.notifier().broadcast(signals.diff_mode, branch)
+    difftool.diff_commits(qtutils.active_window(), ref, None)
 
 
 def browse_current():
@@ -222,9 +219,12 @@ def rebase():
     qtutils.log(status, output)
 
 
-def choose_ref(title, button_text):
+def choose_ref(title, button_text, pre=None):
+    provider = None
+    if pre:
+        provider = qt.GitRefProvider(pre=pre)
     parent = qtutils.active_window()
-    return qt.GitRefDialog.ref(title, button_text, parent)
+    return qt.GitRefDialog.ref(title, button_text, parent, provider=provider)
 
 
 def review_branch():
