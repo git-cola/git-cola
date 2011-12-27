@@ -220,6 +220,85 @@ class GitRefLineEdit(QtGui.QLineEdit):
         self.refcompleter = GitRefCompleter(self)
         self.setCompleter(self.refcompleter)
 
+        self.refcompleter.popup().installEventFilter(self)
+
+    def eventFilter(self, obj, event):
+        """Fix an annoyance on OS X
+
+        The completer popup steals focus.  Work around it.
+        This affects dialogs without QtCore.Qt.WindowModal modality.
+
+        """
+        if obj == self.refcompleter.popup():
+            if event.type() == QtCore.QEvent.FocusIn:
+                return True
+        return False
+
+    def mouseReleaseEvent(self, event):
+        super(GitRefLineEdit, self).mouseReleaseEvent(event)
+        self.refcompleter.complete()
+
+
+class GitRefDialog(QtGui.QDialog):
+    def __init__(self, title, button_text, parent):
+        super(GitRefDialog, self).__init__(parent)
+        self.setWindowTitle(title)
+
+        self.label = QtGui.QLabel()
+        self.label.setText(title)
+
+        self.lineedit = GitRefLineEdit(self)
+        self.setFocusProxy(self.lineedit)
+
+        self.ok_button = QtGui.QPushButton()
+        self.ok_button.setText(self.tr(button_text))
+        self.ok_button.setIcon(qtutils.apply_icon())
+
+        self.close_button = QtGui.QPushButton()
+        self.close_button.setText(self.tr('Close'))
+
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.setMargin(0)
+        self.button_layout.setSpacing(defs.button_spacing)
+        self.button_layout.addStretch()
+        self.button_layout.addWidget(self.ok_button)
+        self.button_layout.addWidget(self.close_button)
+
+        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout.setMargin(defs.margin)
+        self.main_layout.setSpacing(defs.spacing)
+
+        self.main_layout.addWidget(self.label)
+        self.main_layout.addWidget(self.lineedit)
+        self.main_layout.addLayout(self.button_layout)
+        self.setLayout(self.main_layout)
+
+        qtutils.connect_button(self.ok_button, self.accept)
+        qtutils.connect_button(self.close_button, self.reject)
+
+        self.connect(self.lineedit, SIGNAL('textChanged(QString)'),
+                     self.text_changed)
+
+        self.setWindowModality(QtCore.Qt.WindowModal)
+        self.ok_button.setEnabled(False)
+
+    def text(self):
+        return unicode(self.lineedit.text())
+
+    def text_changed(self, txt):
+        self.ok_button.setEnabled(bool(self.text()))
+
+    @staticmethod
+    def ref(title, button_text, parent):
+        dlg = GitRefDialog(title, button_text, parent)
+        dlg.show()
+        dlg.raise_()
+        dlg.setFocus()
+        if dlg.exec_() == GitRefDialog.Accepted:
+            return dlg.text()
+        else:
+            return None
+
 
 class GitRefModel(QtGui.QStandardItemModel):
     def __init__(self, parent):
