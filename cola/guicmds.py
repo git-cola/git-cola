@@ -2,7 +2,9 @@ import os
 
 import cola
 from cola import core
+from cola import difftool
 from cola import gitcmds
+from cola import qt
 from cola import qtutils
 from cola import signals
 from cola.git import git
@@ -220,11 +222,15 @@ def rebase():
     qtutils.log(status, output)
 
 
+def choose_ref(title, button_text):
+    parent = qtutils.active_window()
+    return qt.GitRefDialog.ref(title, button_text, parent)
+
+
 def review_branch():
     """Diff against an arbitrary revision, branch, tag, etc."""
-    branch = choose_from_combo('Select Branch, Tag, or Commit-ish',
-                               cola.model().all_branches() +
-                               cola.model().tags)
+    branch = choose_ref('Select Branch to Review', 'Review')
     if not branch:
         return
-    cola.notifier().broadcast(signals.review_branch_mode, branch)
+    merge_base = gitcmds.merge_base_parent(branch)
+    difftool.diff_commits(qtutils.active_window(), merge_base, branch)

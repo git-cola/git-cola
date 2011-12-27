@@ -516,8 +516,8 @@ def merge_base_to(head, ref):
 def merge_base_parent(branch):
     tracked = tracked_branch(branch=branch)
     if tracked:
-        return '%s..%s' % (tracked, branch)
-    return 'master..%s' % branch
+        return tracked
+    return 'HEAD'
 
 
 def eval_path(path):

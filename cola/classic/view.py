@@ -51,8 +51,6 @@ class RepoDialog(standard.Dialog):
         title = '%s [%s]' % (self.model.project, branch)
         if self.mode in (self.model.mode_diff, self.model.mode_diff_expr):
             title += ' *** diff mode***'
-        elif self.mode == self.model.mode_review:
-            title += ' *** review mode***'
         elif self.mode == self.model.mode_amend:
             title += ' *** amending ***'
         self.setWindowTitle(title)

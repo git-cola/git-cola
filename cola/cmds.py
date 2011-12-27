@@ -587,19 +587,6 @@ class RescanAndRefresh(Command):
         self.model.update_status(update_index=True)
 
 
-class ReviewBranchMode(Command):
-    """Enter into review-branch mode."""
-    def __init__(self, branch):
-        Command.__init__(self)
-        self.new_mode = self.model.mode_review
-        self.new_head = gitcmds.merge_base_parent(branch)
-        self.new_diff_text = ''
-
-    def do(self):
-        Command.do(self)
-        self.model.update_status()
-
-
 class RunConfigAction(Command):
     """Run a user-configured action, typically from the "Tools" menu"""
     def __init__(self, name):
@@ -931,7 +918,6 @@ def register():
         signals.rescan: Rescan,
         signals.rescan_and_refresh: RescanAndRefresh,
         signals.reset_mode: ResetMode,
-        signals.review_branch_mode: ReviewBranchMode,
         signals.run_config_action: RunConfigAction,
         signals.set_diff_text: SetDiffText,
         signals.show_untracked: ShowUntracked,

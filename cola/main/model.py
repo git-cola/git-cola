@@ -47,10 +47,9 @@ class MainModel(Observable):
     mode_grep = 'grep' # We ran Search -> Grep
     mode_diff = 'diff' # Diffing against an arbitrary branch
     mode_diff_expr = 'diff_expr' # Diffing using arbitrary expression
-    mode_review = 'review' # Reviewing a branch
 
     # Modes where we don't do anything like staging, etc.
-    modes_read_only = (mode_grep, mode_diff, mode_diff_expr, mode_review)
+    modes_read_only = (mode_grep, mode_diff, mode_diff_expr)
     # Modes where we can checkout files from the $head
     modes_undoable = (mode_none, mode_index, mode_worktree)
 
