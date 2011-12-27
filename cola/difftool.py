@@ -71,13 +71,20 @@ class FileDiffDialog(QtGui.QDialog):
         self.connect(self._diff_btn, SIGNAL('clicked()'), self.diff)
         self.connect(self._close_btn, SIGNAL('clicked()'), self.close)
 
-        self.diff_arg = (self.a, self.b)
+        if self.b is None:
+            self.diff_arg = (self.a,)
+        else:
+            self.diff_arg = (self.a, self.b)
 
         self.resize(720, 420)
 
 
     def exec_(self):
-        filenames = gitcmds.diff_filenames(*self.diff_arg)
+        if self.b is None:
+            filenames = gitcmds.diff_index_filenames(self.a)
+        else:
+            filenames = gitcmds.diff_filenames(*self.diff_arg)
+
         if not filenames:
             details = ('"git diff --name-only %s" returned an empty list' %
                        ' '.join(self.diff_arg))
