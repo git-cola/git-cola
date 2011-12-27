@@ -200,9 +200,9 @@ class ExpandableGroupBox(QtGui.QGroupBox):
 
 class GitRefCompleter(QtGui.QCompleter):
     """Provides completion for branches and tags"""
-    def __init__(self, parent):
+    def __init__(self, parent, provider=None):
         QtGui.QCompleter.__init__(self, parent)
-        self._model = GitRefModel(parent)
+        self._model = GitRefModel(parent, provider=provider)
         self.setModel(self._model)
         self.setCompletionMode(self.UnfilteredPopupCompletion)
         self.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
@@ -215,11 +215,10 @@ class GitRefCompleter(QtGui.QCompleter):
 
 
 class GitRefLineEdit(QtGui.QLineEdit):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, provider=None):
         QtGui.QLineEdit.__init__(self, parent)
-        self.refcompleter = GitRefCompleter(self)
+        self.refcompleter = GitRefCompleter(self, provider=provider)
         self.setCompleter(self.refcompleter)
-
         self.refcompleter.popup().installEventFilter(self)
 
     def eventFilter(self, obj, event):
@@ -240,14 +239,14 @@ class GitRefLineEdit(QtGui.QLineEdit):
 
 
 class GitRefDialog(QtGui.QDialog):
-    def __init__(self, title, button_text, parent):
+    def __init__(self, title, button_text, parent, provider=None):
         super(GitRefDialog, self).__init__(parent)
         self.setWindowTitle(title)
 
         self.label = QtGui.QLabel()
         self.label.setText(title)
 
-        self.lineedit = GitRefLineEdit(self)
+        self.lineedit = GitRefLineEdit(self, provider=provider)
         self.setFocusProxy(self.lineedit)
 
         self.ok_button = QtGui.QPushButton()
@@ -289,8 +288,8 @@ class GitRefDialog(QtGui.QDialog):
         self.ok_button.setEnabled(bool(self.text()))
 
     @staticmethod
-    def ref(title, button_text, parent):
-        dlg = GitRefDialog(title, button_text, parent)
+    def ref(title, button_text, parent, provider=None):
+        dlg = GitRefDialog(title, button_text, parent, provider=provider)
         dlg.show()
         dlg.raise_()
         dlg.setFocus()
@@ -300,23 +299,47 @@ class GitRefDialog(QtGui.QDialog):
             return None
 
 
-class GitRefModel(QtGui.QStandardItemModel):
-    def __init__(self, parent):
-        QtGui.QStandardItemModel.__init__(self, parent)
-        self.cmodel = cola.model()
-        msg = self.cmodel.message_updated
-        self.cmodel.add_observer(msg, self.update_matches)
-        self.update_matches()
+class GitRefProvider(QtCore.QObject):
+    def __init__(self, pre=None):
+        super(GitRefProvider, self).__init__()
+        if pre:
+            self.pre = pre
+        else:
+            self.pre = []
+        self.model = model = cola.model()
+        msg = model.message_updated
+        model.add_observer(msg, self.emit_updated)
+
+    def emit_updated(self):
+        self.emit(SIGNAL('updated()'))
+
+    def matches(self):
+        model = self.model
+        return self.pre + model.local_branches + model.remote_branches + model.tags
 
     def dispose(self):
-        self.cmodel.remove_observer(self.update_matches)
+        self.model.remove_observer(self.emit_updated)
+
+
+class GitRefModel(QtGui.QStandardItemModel):
+    def __init__(self, parent, provider=None):
+        QtGui.QStandardItemModel.__init__(self, parent)
+
+        if provider is None:
+            provider = GitRefProvider()
+        self.provider = provider
+        self.update_matches()
+
+        self.connect(self.provider, SIGNAL('updated()'),
+                     self.update_matches)
+
+    def dispose(self):
+        self.provider.dispose()
 
     def update_matches(self):
-        model = self.cmodel
-        matches = model.local_branches + model.remote_branches + model.tags
         QStandardItem = QtGui.QStandardItem
         self.clear()
-        for match in matches:
+        for match in self.provider.matches():
             item = QStandardItem()
             item.setIcon(qtutils.git_icon())
             item.setText(match)
