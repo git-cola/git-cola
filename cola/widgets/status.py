@@ -348,10 +348,11 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             menu.addAction(qtutils.git_icon(),
                            self.tr('Launch Diff Tool'),
                            SLOT(signals.difftool, True, self.staged()))
-            menu.addSeparator()
-            menu.addAction(qtutils.icon('undo.svg'),
-                           self.tr('Revert Unstaged Edits...'),
-                           lambda: self._revert_unstaged_edits(use_staged=True))
+            if self.m.undoable():
+                menu.addSeparator()
+                menu.addAction(qtutils.icon('undo.svg'),
+                               self.tr('Revert Unstaged Edits...'),
+                               lambda: self._revert_unstaged_edits(staged=True))
             return menu
 
         if s.unmerged:
@@ -390,9 +391,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            self.tr('Launch Diff Tool'),
                            SLOT(signals.difftool, False, self.modified()))
             menu.addSeparator()
-            menu.addAction(qtutils.icon('undo.svg'),
-                           self.tr('Revert Unstaged Edits...'),
-                           self._revert_unstaged_edits)
+            if self.m.undoable():
+                menu.addAction(qtutils.icon('undo.svg'),
+                               self.tr('Revert Unstaged Edits...'),
+                               self._revert_unstaged_edits)
             menu.addAction(qtutils.icon('undo.svg'),
                            self.tr('Revert Uncommited Edits...'),
                            self._revert_uncommitted_edits)
@@ -430,10 +432,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            icon=qtutils.discard_icon()):
             cola.notifier().broadcast(signals.delete, files)
 
-    def _revert_unstaged_edits(self, use_staged=False):
+    def _revert_unstaged_edits(self, staged=False):
         if not self.m.undoable():
             return
-        if use_staged:
+        if staged:
             items_to_undo = self.staged()
         else:
             items_to_undo = self.modified()
@@ -454,8 +456,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                    'checkout from HEAD.'))
 
     def _revert_uncommitted_edits(self):
-        if not self.m.undoable():
-            return
         items_to_undo = self.modified()
         if items_to_undo:
             if not qtutils.confirm('Revert Uncommitted Changes?',
@@ -467,7 +467,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                    icon=qtutils.icon('undo.svg')):
                 return
             cola.notifier().broadcast(signals.checkout,
-                                      ['HEAD', '--'] + items_to_undo)
+                                      [self.m.head, '--'] + items_to_undo)
         else:
             qtutils.log(1, self.tr('No files selected for '
                                    'checkout from HEAD.'))

@@ -47,9 +47,9 @@ class MainModel(Observable):
     mode_diff_expr = 'diff_expr' # Diffing using arbitrary expression
 
     # Modes where we don't do anything like staging, etc.
-    modes_read_only = (mode_grep, mode_diff_expr)
+    modes_read_only = set((mode_grep, mode_diff_expr,))
     # Modes where we can checkout files from the $head
-    modes_undoable = (mode_none, mode_index, mode_worktree)
+    modes_undoable = set((mode_none, mode_index, mode_worktree))
 
     unstaged = property(lambda self: self.modified + self.unmerged + self.untracked)
     """An aggregate of the modified, unmerged, and untracked file lists."""
@@ -95,7 +95,8 @@ class MainModel(Observable):
 
     def enable_staging(self):
         """Whether staging should be allowed."""
-        return self.mode in (self.mode_worktree, self.mode_untracked)
+        return self.mode in (self.mode_amend,
+                             self.mode_worktree, self.mode_untracked)
 
     def editor(self):
         app = _config.get('gui.editor', 'gvim')
