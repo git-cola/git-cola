@@ -1,5 +1,7 @@
+import collections
 import sys
 import math
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
@@ -426,11 +428,12 @@ class DAGView(standard.Widget):
             return
         sig = signals.commits_selected
         self.notifier.notify_observers(sig, [commit_obj])
+        self.graphview.update_scene_rect()
         self.graphview.view_fit()
 
     def closeEvent(self, event):
-        self.stop()
         self.revtext.close_popup()
+        self.stop()
         qtutils.save_state(self)
         return super(DAGView, self).closeEvent(event)
 
@@ -822,7 +825,7 @@ class GraphView(QtGui.QGraphicsView):
         self.clicked = None
         self.saved_matrix = QtGui.QMatrix(self.matrix())
 
-        self.rows = {}
+        self.x_offsets = collections.defaultdict(int)
 
         self.is_panning = False
         self.pressed = False
@@ -889,7 +892,7 @@ class GraphView(QtGui.QGraphicsView):
         self.scene().clear()
         self.selected = []
         self.items.clear()
-        self.rows.clear()
+        self.x_offsets.clear()
         self.x_max = 0
         self.y_min = 0
         self.commits = []
@@ -1227,7 +1230,7 @@ class GraphView(QtGui.QGraphicsView):
                 self.items[ref] = item
             scene.addItem(item)
 
-        self.layout(commits)
+        self.layout_commits(commits)
         self.link(commits)
 
     def link(self, commits):
@@ -1248,33 +1251,56 @@ class GraphView(QtGui.QGraphicsView):
                 edge = Edge(parent_item, commit_item)
                 scene.addItem(edge)
 
-    def layout(self, commits):
+    def layout_commits(self, nodes):
+        positions = self.position_nodes(nodes)
+        for sha1, (x, y) in positions.items():
+            item = self.items[sha1]
+            item.setPos(x, y)
+
+    def position_nodes(self, nodes):
         x_max = self.x_max
         y_min = self.y_min
-        for commit in commits:
-            generation = commit.generation
-            sha1 = commit.sha1
-            try:
-                row = self.rows[generation]
-            except KeyError:
-                row = self.rows[generation] = []
 
-            xpos = (len(commit.parents)-1) * self.x_off
-            if row:
-                xpos += row[-1] + self.x_off
-            ypos = -commit.generation * self.y_off
+        positions = {}
+        for node in reversed(nodes):
+            generation = node.generation
+            sha1 = node.sha1
 
-            item = self.items[sha1]
-            item.setPos(xpos, ypos)
+            xoff = self.x_off
+            cur_xoff = self.x_offsets[generation]
+            next_xoff = cur_xoff
+            next_xoff += xoff
+            self.x_offsets[generation] = next_xoff
 
-            row.append(xpos)
+            if len(node.parents) > 1:
+                # Sweep across generations from child to farthest
+                # parents and reserve padding for intermediate
+                # nodes.  This minimizes overlapping edges.
+                mingen = reduce(min, [p.generation for p in node.parents])
+                for gen in xrange(mingen+1, node.generation):
+                    new_xoff = self.x_offsets[gen] + xoff
+                    self.x_offsets[gen] = max(new_xoff, next_xoff)
+
+            xpos = cur_xoff
+            ypos = -node.generation * self.y_off
+
             x_max = max(x_max, xpos)
             y_min = min(y_min, ypos)
 
+            positions[sha1] = (xpos, ypos)
+
         self.x_max = x_max
         self.y_min = y_min
-        self.scene().setSceneRect(-self.x_off/2, y_min-self.y_off,
-                                  x_max+self.x_off, abs(y_min)+self.y_off*4)
+
+        return positions
+
+    def update_scene_rect(self):
+        y_min = self.y_min
+        x_max = self.x_max
+        self.scene().setSceneRect(-self.x_off/2,
+                                  y_min-self.y_off,
+                                  x_max+self.x_off*2,
+                                  abs(y_min)+self.y_off*2)
 
 def sort_by_generation(commits):
     commits.sort(cmp=lambda a, b: cmp(a.generation, b.generation))
