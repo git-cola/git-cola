@@ -219,6 +219,8 @@ class DAGView(standard.Widget):
         self.model = model
         self.dag = dag
 
+        self.commits = {}
+        self.commit_list = []
         self.revtext = GitLogLineEdit(parent=self)
 
         self.maxresults = QtGui.QSpinBox()
@@ -249,7 +251,6 @@ class DAGView(standard.Widget):
         self.top_layout.addWidget(self.zoom_out)
         self.top_layout.addWidget(self.zoom_in)
 
-        self.commits = {}
         self.notifier = notifier = observable.Observable()
         self.notifier.refs_updated = refs_updated = 'refs_updated'
         self.notifier.add_observer(refs_updated, self.display)
@@ -411,8 +412,10 @@ class DAGView(standard.Widget):
         self.graphview.clear()
         self.treewidget.clear()
         self.commits.clear()
+        self.commit_list = []
 
     def add_commits(self, commits):
+        self.commit_list.extend(commits)
         # Keep track of commits
         for commit_obj in commits:
             self.commits[commit_obj.sha1] = commit_obj
@@ -423,8 +426,8 @@ class DAGView(standard.Widget):
 
     def thread_done(self):
         try:
-            commit_obj = self.commits[self.dag.ref]
-        except KeyError:
+            commit_obj = self.commit_list[-1]
+        except IndexError:
             return
         sig = signals.commits_selected
         self.notifier.notify_observers(sig, [commit_obj])
