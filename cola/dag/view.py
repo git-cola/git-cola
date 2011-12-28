@@ -1222,36 +1222,47 @@ class GraphView(QtGui.QGraphicsView):
             item.setPos(x, y)
 
     def position_nodes(self, nodes):
+        positions = {}
+
         x_max = self.x_max
         y_min = self.y_min
+        x_off = self.x_off
+        y_off = self.y_off
+        x_offsets = self.x_offsets
 
-        positions = {}
-        for node in reversed(nodes):
+        for node in nodes:
             generation = node.generation
             sha1 = node.sha1
 
-            xoff = self.x_off
-            cur_xoff = self.x_offsets[generation]
+            if len(node.children) > 1:
+                # This is a fan-out so sweep over child generations and
+                # shift them to the right to avoid overlapping edges
+                child_gens = [c.generation for c in node.children]
+                maxgen = reduce(max, child_gens)
+                mingen = reduce(min, child_gens)
+                if maxgen > mingen:
+                    for g in xrange(generation+1, maxgen):
+                        x_offsets[g] += x_off
+
+            if len(node.parents) == 1:
+                # Align nodes relative to their parents
+                parent_gen = node.parents[0].generation
+                parent_off = x_offsets[parent_gen]
+                x_offsets[generation] = max(parent_off-x_off,
+                                            x_offsets[generation])
+
+            cur_xoff = x_offsets[generation]
             next_xoff = cur_xoff
-            next_xoff += xoff
-            self.x_offsets[generation] = next_xoff
+            next_xoff += x_off
+            x_offsets[generation] = next_xoff
 
-            if len(node.parents) > 1:
-                # Sweep across generations from child to farthest
-                # parents and reserve padding for intermediate
-                # nodes.  This minimizes overlapping edges.
-                mingen = reduce(min, [p.generation for p in node.parents])
-                for gen in xrange(mingen+1, node.generation):
-                    new_xoff = self.x_offsets[gen] + xoff
-                    self.x_offsets[gen] = max(new_xoff, next_xoff)
+            x_pos = cur_xoff
+            y_pos = -generation * y_off
+            positions[sha1] = (x_pos, y_pos)
 
-            xpos = cur_xoff
-            ypos = -node.generation * self.y_off
+            x_max = max(x_max, x_pos)
+            y_min = min(y_min, y_pos)
 
-            x_max = max(x_max, xpos)
-            y_min = min(y_min, ypos)
-
-            positions[sha1] = (xpos, ypos)
 
         self.x_max = x_max
         self.y_min = y_min
