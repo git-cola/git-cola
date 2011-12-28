@@ -1,25 +1,22 @@
 from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4.QtCore import SIGNAL
+from PyQt4.QtCore import Qt
 
 
 from cola import resources
 from cola import qtutils
 from cola import utils
 from cola import version
+from cola.prefs import diff_font
+from cola.widgets import defs
 
 def launch_about_dialog():
     """Launches the Help -> About dialog"""
     view = AboutView(qtutils.active_window())
-    view.show()
     view.set_version(version.version())
+    view.show()
 
 
 COPYRIGHT = """git-cola: The highly caffeinated git GUI v$VERSION
-
-git-cola is a sweet, carbonated git GUI known for its
-sugary flavor and caffeine-inspired features.
-
 
 Copyright (C) 2007-2012, David Aguilar and contributors
 
@@ -47,39 +44,52 @@ class AboutView(QtGui.QDialog):
         QtGui.QDialog.__init__(self, parent)
 
         self.setWindowTitle('About git-cola')
-        self.setStyleSheet('QWidget { background-color: white; color: #666; }')
+        self.setWindowModality(Qt.WindowModal)
 
-        self.setMinimumSize(QtCore.QSize(280, 420))
-        self.setMaximumSize(QtCore.QSize(280, 420))
+        self.label = QtGui.QLabel()
+        self.pixmap = QtGui.QPixmap('icons:logo-top.png')
+        #self.label.setStyleSheet('QWidget {background: #000; }')
+        self.label.setPixmap(self.pixmap)
+        self.label.setAlignment(Qt.AlignRight | Qt.AlignTop)
 
-        self.ham = QtGui.QLabel(self)
-        self.ham.setGeometry(QtCore.QRect(0, -10, 291, 121))
-        self.ham.setPixmap(QtGui.QPixmap('images:logo-cola.png'))
+        palette = self.label.palette()
+        palette.setColor(QtGui.QPalette.Window, Qt.black)
+        self.label.setAutoFillBackground(True)
+        self.label.setPalette(palette)
 
-        self.spam = QtGui.QLabel(self)
-        self.spam.setGeometry(QtCore.QRect(10, 110, 261, 261))
+        self.text = QtGui.QTextEdit()
+        self.text.setReadOnly(True)
+        self.text.setLineWrapMode(QtGui.QTextEdit.NoWrap)
+        self.text.setAcceptRichText(False)
+        self.text.setTextInteractionFlags(Qt.TextSelectableByKeyboard |
+                                          Qt.TextSelectableByMouse)
+        self.text.setFont(diff_font())
+        self.text.setPlainText(COPYRIGHT)
 
-        font = QtGui.QFont()
-        font.setFamily('Sans Serif')
-        font.setPointSize(5)
-        self.spam.setFont(font)
+        self.close_button = QtGui.QPushButton()
+        self.close_button.setText(self.tr('Close'))
+        self.close_button.setDefault(True)
 
-        self.spam.setTextFormat(QtCore.Qt.LogText)
-        self.spam.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.spam.setWordWrap(True)
-        self.spam.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
-        self.spam.setText(COPYRIGHT)
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.addStretch()
+        self.button_layout.addWidget(self.close_button)
 
-        self.kthx = QtGui.QPushButton(self)
-        self.kthx.setGeometry(QtCore.QRect(60, 380, 160, 24))
-        self.kthx.setText('kthx bye')
-        self.kthx.setDefault(True)
+        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout.setMargin(0)
+        self.main_layout.setSpacing(defs.spacing)
 
-        self.connect(self.kthx, SIGNAL('clicked()'), self.accept)
+        self.main_layout.addWidget(self.label)
+        self.main_layout.addWidget(self.text)
+        self.main_layout.addLayout(self.button_layout)
+        self.setLayout(self.main_layout)
+
+        self.resize(666, 420)
+
+        qtutils.connect_button(self.close_button, self.accept)
 
     def set_version(self, version):
         """Sets the version field in the 'about' dialog"""
-        self.spam.setText(self.spam.text().replace('$VERSION', version))
+        self.text.setPlainText(self.text.toPlainText().replace('$VERSION', version))
 
 
 def show_shortcuts():
@@ -103,7 +113,7 @@ def show_shortcuts():
     except AttributeError:
         parent = qtutils.active_window()
         widget = show_shortcuts.widget = QtGui.QDialog(parent)
-        widget.setWindowModality(QtCore.Qt.WindowModal)
+        widget.setWindowModality(Qt.WindowModal)
 
         web = QtWebKit.QWebView(parent)
         web.setHtml(html)
@@ -117,8 +127,8 @@ def show_shortcuts():
         widget.resize(800, min(parent.height(), 600))
 
         qtutils.add_action(widget, 'Close', widget.accept,
-                           QtCore.Qt.Key_Question,
-                           QtCore.Qt.Key_Enter,
-                           QtCore.Qt.Key_Return)
+                           Qt.Key_Question,
+                           Qt.Key_Enter,
+                           Qt.Key_Return)
     widget.show()
     return widget
