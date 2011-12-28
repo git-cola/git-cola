@@ -26,7 +26,7 @@ Usability, bells and whistles
 * `git-dag` no longer prompts for files when diffing commits if the
   text field contains paths.
 
-* General user interface improvements.
+* General user interface and performance improvements.
 
 Fixes
 -----
