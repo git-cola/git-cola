@@ -99,7 +99,10 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         if event.buttons() == QtCore.Qt.RightButton:
             event.accept()
             return
-        QtGui.QTreeWidget.mousePressEvent(self, event)
+        if event.modifiers() == QtCore.Qt.MetaModifier:
+            event.accept()
+            return
+        super(CommitTreeWidget, self).mousePressEvent(event)
 
     def go_up(self):
         self.goto(self.itemAbove)
