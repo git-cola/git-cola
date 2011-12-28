@@ -515,59 +515,27 @@ class Edge(QtGui.QGraphicsItem):
     arrow_size = 2.0
     arrow_extra = (arrow_size+1.0)/2.0
 
+    pen = QtGui.QPen(QtCore.Qt.gray, 1.0,
+                     QtCore.Qt.DotLine,
+                     QtCore.Qt.SquareCap,
+                     QtCore.Qt.BevelJoin)
+
     def __init__(self, source, dest,
                  extra=arrow_extra,
                  arrow_size=arrow_size):
+
         QtGui.QGraphicsItem.__init__(self)
 
-        self.source_pt = QtCore.QPointF()
-        self.dest_pt = QtCore.QPointF()
         self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
         self.source = source
         self.dest = dest
         self.setZValue(-2)
 
-        # Adjust the points to leave a small margin between
-        # the arrow and the commit.
         dest_pt = Commit.item_bbox.center()
-        line = QtCore.QLineF(
-                self.mapFromItem(self.source, dest_pt),
-                self.mapFromItem(self.dest, dest_pt))
-        # Magic
-        dx = 22.
-        dy = 11.
-        length = line.length()
-        offset = QtCore.QPointF((line.dx() * dx) / length,
-                                (line.dy() * dy) / length)
 
-        self.source_pt = line.p1() + offset
-        self.dest_pt = line.p2() - offset
-
-        line = QtCore.QLineF(self.source_pt, self.dest_pt)
-        self.line = line
-
-        self.pen = QtGui.QPen(QtCore.Qt.gray, 0,
-                              QtCore.Qt.DotLine,
-                              QtCore.Qt.FlatCap,
-                              QtCore.Qt.MiterJoin)
-
-        # Setup the arrow polygon
-        length = line.length()
-        angle = math.acos(line.dx() / length)
-        if line.dy() >= 0:
-            angle = 2.0 * math.pi - angle
-
-        dest_x = (self.dest_pt +
-                  QtCore.QPointF(math.sin(angle - math.pi/3.) *
-                                 arrow_size,
-                                 math.cos(angle - math.pi/3.) *
-                                 arrow_size))
-        dest_y = (self.dest_pt +
-                  QtCore.QPointF(math.sin(angle - math.pi + math.pi/3.) *
-                                 arrow_size,
-                                 math.cos(angle - math.pi + math.pi/3.) *
-                                 arrow_size))
-        self.poly = QtGui.QPolygonF([line.p2(), dest_x, dest_y])
+        self.source_pt = self.mapFromItem(self.source, dest_pt)
+        self.dest_pt = self.mapFromItem(self.dest, dest_pt)
+        self.line = QtCore.QLineF(self.source_pt, self.dest_pt)
 
         width = self.dest_pt.x() - self.source_pt.x()
         height = self.dest_pt.y() - self.source_pt.y()
@@ -586,10 +554,6 @@ class Edge(QtGui.QGraphicsItem):
         # Draw the line
         painter.setPen(self.pen)
         painter.drawLine(self.line)
-
-        # Draw the arrow
-        painter.setBrush(gray)
-        painter.drawPolygon(self.poly)
 
 
 class Commit(QtGui.QGraphicsItem):
