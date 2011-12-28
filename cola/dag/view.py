@@ -221,6 +221,10 @@ class DAGView(standard.Widget):
 
         self.commits = {}
         self.commit_list = []
+
+        self.old_count = None
+        self.old_ref = None
+
         self.revtext = GitLogLineEdit(parent=self)
 
         self.maxresults = QtGui.QSpinBox()
@@ -322,8 +326,8 @@ class DAGView(standard.Widget):
         self.connect(self.graphview, SIGNAL('diff_commits'),
                      self.diff_commits)
 
-        self.connect(self.maxresults, SIGNAL('valueChanged(int)'),
-                     lambda(x): self.dag.set_count(x))
+        self.connect(self.maxresults, SIGNAL('editingFinished()'),
+                     self.display)
 
         self.connect(self.displaybutton, SIGNAL('pressed()'),
                      self.display)
@@ -389,6 +393,17 @@ class DAGView(standard.Widget):
         new_ref = unicode(self.revtext.text())
         if not new_ref:
             return
+        new_count = self.maxresults.value()
+        old_ref = self.old_ref
+        old_count = self.old_count
+        if old_ref == new_ref and old_count == new_count:
+            return
+
+        self.setEnabled(False)
+
+        self.old_ref = new_ref
+        self.old_count = new_count
+
         self.stop()
         self.clear()
         self.dag.set_ref(new_ref)
@@ -425,6 +440,7 @@ class DAGView(standard.Widget):
         self.treewidget.add_commits(commits)
 
     def thread_done(self):
+        self.setEnabled(True)
         try:
             commit_obj = self.commit_list[-1]
         except IndexError:
