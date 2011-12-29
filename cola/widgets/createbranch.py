@@ -1,4 +1,5 @@
 from PyQt4 import QtGui
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import gitcmds
@@ -25,7 +26,8 @@ class CreateBranchDialog(standard.Dialog):
     """A dialog for creating branches."""
 
     def __init__(self, model, parent=None):
-        standard.Dialog.__init__(self, parent=parent)
+        super(CreateBranchDialog, self).__init__(parent=parent)
+        self.setAttribute(Qt.WA_MacMetalStyle)
         self.model = model
 
         self.setWindowTitle(self.tr('Create Branch'))

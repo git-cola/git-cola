@@ -2,6 +2,7 @@
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import qt
@@ -15,7 +16,8 @@ from cola.widgets.diff import DiffTextEdit
 
 class StashView(standard.Dialog):
     def __init__(self, model, parent=None):
-        standard.Dialog.__init__(self, parent=parent)
+        super(StashView, self).__init__(parent=parent)
+        self.setAttribute(Qt.WA_MacMetalStyle)
         self.model = model
         self.stashes = []
         self.revids = []

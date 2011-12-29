@@ -1,5 +1,6 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
@@ -111,7 +112,8 @@ class BrowseDialog(QtGui.QDialog):
         return model.filename
 
     def __init__(self, model, select_file=False, parent=None):
-        QtGui.QDialog.__init__(self, parent)
+        super(BrowseDialog, self).__init__(parent)
+        self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowModality(QtCore.Qt.WindowModal)
 
         # updated for use by commands

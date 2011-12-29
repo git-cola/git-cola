@@ -1,8 +1,8 @@
 import fnmatch
 
-from PyQt4.QtCore import Qt
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
@@ -65,7 +65,8 @@ class RemoteActionDialog(standard.Dialog):
     def __init__(self, model, action, parent):
         """Customizes the dialog based on the remote action
         """
-        standard.Dialog.__init__(self, parent=parent)
+        super(RemoteActionDialog, self).__init__(parent=parent)
+        self.setAttribute(Qt.WA_MacMetalStyle)
         self.model = model
         self.action = action
         self.tasks = []

@@ -1,5 +1,6 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import utils
@@ -31,7 +32,8 @@ def diff_expression(parent, expr):
 
 class FileDiffDialog(QtGui.QDialog):
     def __init__(self, parent, a=None, b=None, expr=None):
-        QtGui.QDialog.__init__(self, parent)
+        super(FileDiffDialog, self).__init__(parent)
+        self.setAttribute(Qt.WA_MacMetalStyle)
         self.a = a
         self.b = b
         self.expr = expr

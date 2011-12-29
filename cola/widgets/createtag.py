@@ -1,5 +1,6 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 
 import cola
 from cola import qt
@@ -32,7 +33,8 @@ class TagOptions(object):
 
 class CreateTag(standard.Dialog):
     def __init__(self, opts, parent):
-        standard.Dialog.__init__(self, parent=parent)
+        super(CreateTag, self).__init__(parent=parent)
+        self.setAttribute(Qt.WA_MacMetalStyle)
         self.opts = opts
 
         self.setWindowModality(QtCore.Qt.WindowModal)

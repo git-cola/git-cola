@@ -73,7 +73,7 @@ class MainView(standard.MainWindow):
         self.merge_message_hash = ''
 
         self.setAcceptDrops(True)
-        self.setAttribute(QtCore.Qt.WA_MacMetalStyle)
+        self.setAttribute(Qt.WA_MacMetalStyle)
 
         # Dockwidget options
         qtcompat.set_common_dock_options(self)
