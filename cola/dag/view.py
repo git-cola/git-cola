@@ -534,7 +534,7 @@ class Edge(QtGui.QGraphicsItem):
     arrow_size = 2.0
     arrow_extra = (arrow_size+1.0)/2.0
 
-    pen = QtGui.QPen(QtCore.Qt.gray, 1.3,
+    pen = QtGui.QPen(QtCore.Qt.gray, 1.0,
                      QtCore.Qt.DotLine,
                      QtCore.Qt.SquareCap,
                      QtCore.Qt.BevelJoin)
