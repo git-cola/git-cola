@@ -44,7 +44,7 @@ class CommitMessageEditor(QtGui.QWidget):
         pal.setColor(QtGui.QPalette.Active, QtGui.QPalette.Text, color)
         pal.setColor(QtGui.QPalette.Inactive, QtGui.QPalette.Text, color)
 
-        self.summary = QtGui.QLineEdit()
+        self.summary = CommitSummaryLineEdit()
         self.description = CommitMessageTextEdit()
 
         self.commit_button = create_toolbutton(text='Commit@@verb',
@@ -105,7 +105,7 @@ class CommitMessageEditor(QtGui.QWidget):
                                 self.set_commit_message)
 
         self.connect(self.summary, SIGNAL('returnPressed()'),
-                     self.summary_return_pressed)
+                     self.focus_description)
 
         self.connect(self.summary, SIGNAL('cursorPositionChanged(int,int)'),
                      lambda x, y: self.emit_summary_position())
@@ -195,9 +195,8 @@ class CommitMessageEditor(QtGui.QWidget):
         else:
             widget.setPalette(self.default_palette)
 
-    def summary_return_pressed(self):
-        if bool(self.commit_summary()):
-            self.description.setFocus(True)
+    def focus_description(self):
+        self.description.setFocus(True)
 
     def commit_summary(self):
         """Return the commit summary as unicode"""
@@ -432,6 +431,18 @@ class CommitMessageEditor(QtGui.QWidget):
         self.emit(SIGNAL(signals.load_previous_message), sha1)
 
 
+class CommitSummaryLineEdit(QtGui.QLineEdit):
+    def __init__(self, parent=None):
+        super(CommitSummaryLineEdit, self).__init__(parent)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Down:
+            self.emit(SIGNAL('returnPressed()'))
+            event.ignore()
+            return
+        super(CommitSummaryLineEdit, self).keyPressEvent(event)
+
+
 class CommitMessageTextEdit(QtGui.QTextEdit):
     def __init__(self, parent=None):
         QtGui.QTextEdit.__init__(self, parent)
@@ -440,7 +451,7 @@ class CommitMessageTextEdit(QtGui.QTextEdit):
         self.setMinimumSize(QtCore.QSize(1, 1))
 
         self.action_emit_shift_tab = add_action(self,
-                'Shift Tab', self.shift_tab, 'Shift+tab')
+                'Shift Tab', self.emit_shift_tab, 'Shift+tab')
 
         self.installEventFilter(self)
 
@@ -459,6 +470,10 @@ class CommitMessageTextEdit(QtGui.QTextEdit):
         if event.key() == Qt.Key_Up:
             cursor = self.textCursor()
             position = cursor.position()
+            if position == 0:
+                self.emit_shift_tab()
+                event.ignore()
+                return
             text_before = unicode(self.toPlainText())[:position]
             lines_before = text_before.count('\n')
             if lines_before == 0:
@@ -479,5 +494,5 @@ class CommitMessageTextEdit(QtGui.QTextEdit):
                 return
         super(CommitMessageTextEdit, self).keyPressEvent(event)
 
-    def shift_tab(self):
+    def emit_shift_tab(self):
         self.emit(SIGNAL('shiftTab()'))
