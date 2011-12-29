@@ -59,7 +59,7 @@ from cola.widgets.search import search
 
 class MainView(standard.MainWindow):
     def __init__(self, model, parent):
-        standard.MainWindow.__init__(self, parent)
+        super(MainView, self).__init__(parent)
         # Default size; this is thrown out when save/restore is used
         self.resize(987, 610)
         self.model = model
@@ -73,6 +73,7 @@ class MainView(standard.MainWindow):
         self.merge_message_hash = ''
 
         self.setAcceptDrops(True)
+        self.setAttribute(QtCore.Qt.WA_MacMetalStyle)
 
         # Dockwidget options
         qtcompat.set_common_dock_options(self)
