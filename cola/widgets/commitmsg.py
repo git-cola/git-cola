@@ -1,5 +1,6 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
@@ -453,6 +454,30 @@ class CommitMessageTextEdit(QtGui.QTextEdit):
             self.setMinimumSize(QtCore.QSize(1, 1))
 
         return False
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Up:
+            cursor = self.textCursor()
+            position = cursor.position()
+            text_before = unicode(self.toPlainText())[:position]
+            lines_before = text_before.count('\n')
+            if lines_before == 0:
+                cursor.setPosition(0)
+                self.setTextCursor(cursor)
+                event.ignore()
+                return
+        elif event.key() == Qt.Key_Down:
+            cursor = self.textCursor()
+            position = cursor.position()
+            all_text = unicode(self.toPlainText())
+            text_after = all_text[position:]
+            lines_after = text_after.count('\n')
+            if lines_after == 0:
+                cursor.setPosition(len(all_text))
+                self.setTextCursor(cursor)
+                event.ignore()
+                return
+        super(CommitMessageTextEdit, self).keyPressEvent(event)
 
     def shift_tab(self):
         self.emit(SIGNAL('shiftTab()'))
