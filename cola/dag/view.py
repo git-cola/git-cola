@@ -793,7 +793,15 @@ class Label(QtGui.QGraphicsItem):
 
 class GraphView(QtGui.QGraphicsView):
     def __init__(self, notifier):
-        QtGui.QGraphicsView.__init__(self)
+        super(GraphView, self).__init__()
+
+        try:
+            from PyQt4 import QtOpenGL
+            glformat = QtOpenGL.QGLFormat(QtOpenGL.QGL.SampleBuffers)
+            self.glwidget = QtOpenGL.QGLWidget(glformat)
+            self.setViewport(self.glwidget)
+        except:
+            pass
 
         self.x_off = 132
         self.y_off = 32
