@@ -65,7 +65,7 @@ class ClassicController(QtCore.QObject):
     def difftool_predecessor(self, paths):
         """Prompt for an older commit and launch difftool against it."""
         args = ['--'] + paths
-        revs, summaries = gitcmds.log_helper(all=True, extra_args=args)
+        revs, summaries = gitcmds.log_helper(all=False, extra_args=args)
         commits = select_commits('Select Previous Version',
                                  revs, summaries, multiselect=False)
         if not commits:

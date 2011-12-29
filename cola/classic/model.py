@@ -290,7 +290,7 @@ class GitRepoInfoTask(QRunnable):
         if not self._data:
             log_line = cola.model().git.log('-1', '--', self.path,
                                             M=True,
-                                            all=True,
+                                            all=False,
                                             no_color=True,
                                             pretty='format:%ar%x01%s%x01%an')
             if log_line:
