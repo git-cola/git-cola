@@ -7,10 +7,9 @@ import cola.utils
 import cola.difftool
 
 from cola import gitcmds
-from cola import qtutils
 from cola import signals
 from cola.widgets.selectcommits import select_commits
-from cola.classic.view import RepoDialog
+from cola.classic.view import Browser
 from cola.classic.model import GitRepoModel
 from cola.classic.model import GitRepoEntryManager
 from cola.compat import set
@@ -18,9 +17,9 @@ from cola.compat import set
 
 def widget(parent, update=True):
     """Return a widget for immediate use."""
-    view = RepoDialog(parent, update=update)
+    view = Browser(parent, update=update)
     view.tree.setModel(GitRepoModel(view.tree))
-    ctl = ClassicController(view.tree)
+    view.ctl = ClassicController(view.tree)
     return view
 
 

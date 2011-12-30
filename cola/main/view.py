@@ -78,10 +78,11 @@ class MainView(standard.MainWindow):
         # Dockwidget options
         qtcompat.set_common_dock_options(self)
 
-        self.classic_dockable = gitcfg.instance().get('cola.classicdockable')
+        cfg = gitcfg.instance()
+        self.classic_dockable = cfg.get('cola.browserdockable')
 
         if self.classic_dockable:
-            self.classicdockwidget = create_dock('Classic', self)
+            self.classicdockwidget = create_dock('Browser', self)
             self.classicwidget = classic_widget(self)
             self.classicdockwidget.setWidget(self.classicwidget)
 
@@ -254,7 +255,7 @@ class MainView(standard.MainWindow):
                 'Review...', guicmds.review_branch)
 
         self.menu_classic = add_action(self,
-                'Cola Classic...', cola_classic)
+                'Browser...', cola_classic)
         self.menu_classic.setIcon(qtutils.git_icon())
 
         self.menu_dag = add_action(self,

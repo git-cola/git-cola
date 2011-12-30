@@ -18,13 +18,13 @@ Main Interface
 * :command:`ctrl-p` -- Cherry-pick
 * :command:`shift-alt-s` -- Stash dialog
 
-Diff Viewer
-===========
+Diff
+====
 * :command:`h` -- Stage/unstage section under text cursor
 * :command:`s` -- Stage/unstage selection
 
-Cola Classic
-============
+Browser
+=======
 * :command:`h` -- Move to parent/collapse
 * :command:`j` -- Move down
 * :command:`k` -- Move up

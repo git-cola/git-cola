@@ -131,6 +131,7 @@ class ColaApplication(object):
 def parse_args(context):
     args = sys.argv[1:]
     builtins = set(('branch',
+                    'browse',
                     'classic',
                     'dag',
                     'fetch',
@@ -240,10 +241,10 @@ def main(context):
     # Show the GUI
     if context == 'branch':
         view = create_new_branch()
-    elif context == 'git-dag' or context == 'dag':
+    elif context in ('git-dag', 'dag'):
         ctl = git_dag(model, opts=opts, args=args)
         view = ctl.view
-    elif context == 'classic':
+    elif context in ('classic', 'browse'):
         view = cola_classic(update=False)
     # TODO: the calls to update_status() can be done asynchronously
     # by hooking into the message_updated notification.
