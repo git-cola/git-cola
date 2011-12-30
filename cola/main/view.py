@@ -263,11 +263,15 @@ class MainView(standard.MainWindow):
         self.menu_dag.setIcon(qtutils.git_icon())
 
         # Relayed actions
-        status_tree = self.statusdockwidget.widget().tree
-        self.addAction(status_tree.up)
-        self.addAction(status_tree.down)
-        self.addAction(status_tree.process_selection)
-        self.addAction(status_tree.launch_difftool)
+        if not self.classic_dockable:
+            # These shortcuts conflict with those from the
+            # 'Browser' widget so don't register them when
+            # the browser is a dockable tool.
+            status_tree = self.statusdockwidget.widget().tree
+            self.addAction(status_tree.up)
+            self.addAction(status_tree.down)
+            self.addAction(status_tree.process_selection)
+            self.addAction(status_tree.launch_difftool)
 
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)
