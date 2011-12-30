@@ -79,8 +79,8 @@ class MainView(standard.MainWindow):
         qtcompat.set_common_dock_options(self)
 
         cfg = gitcfg.instance()
-        self.classic_dockable = cfg.get('cola.browserdockable')
-
+        self.classic_dockable = (cfg.get('cola.browserdockable') or
+                                 cfg.get('cola.classicdockable'))
         if self.classic_dockable:
             self.classicdockwidget = create_dock('Browser', self)
             self.classicwidget = classic_widget(self)
