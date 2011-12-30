@@ -1,7 +1,6 @@
 import os
 
 from PyQt4 import QtGui
-from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
@@ -15,10 +14,9 @@ from cola.widgets import standard
 from cola.classic.model import GitRepoNameItem
 
 
-class RepoDialog(standard.Dialog):
+class RepoDialog(standard.Widget):
     def __init__(self, parent, update=True):
-        standard.Dialog.__init__(self, parent)
-        self.setObjectName('classic')
+        super(RepoDialog, self).__init__(parent)
         self.tree = RepoTreeView(self)
         self.mainlayout = QtGui.QHBoxLayout()
         self.setLayout(self.mainlayout)

@@ -26,7 +26,7 @@ def widget(parent, update=True):
 
 def cola_classic(update=True):
     """Launch a new cola classic session."""
-    view = widget(qtutils.active_window(), update=update)
+    view = widget(None, update=update)
     view.show()
     return view
 
