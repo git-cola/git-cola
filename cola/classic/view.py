@@ -54,16 +54,12 @@ class RepoDialog(standard.Dialog):
         self.setWindowTitle(title)
 
 
-class RepoTreeView(QtGui.QTreeView):
+class RepoTreeView(standard.TreeView):
     """Provides a filesystem-like view of a git repository."""
     def __init__(self, parent):
-        QtGui.QTreeView.__init__(self, parent)
+        super(RepoTreeView, self).__init__(parent)
 
         self.setSortingEnabled(False)
-        self.setAllColumnsShowFocus(True)
-        self.setAlternatingRowColors(True)
-        self.setUniformRowHeights(True)
-        self.setAnimated(True)
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 
         # Observe model updates
@@ -73,6 +69,10 @@ class RepoTreeView(QtGui.QTreeView):
         # The non-Qt cola application model
         self.connect(self, SIGNAL('expanded(QModelIndex)'), self.size_columns)
         self.connect(self, SIGNAL('collapsed(QModelIndex)'), self.size_columns)
+
+        # Sync selection before the key press event changes the model index
+        self.connect(self, SIGNAL('indexAboutToChange()'), self.sync_selection)
+
         self.action_history =\
                 self._create_action('View History...',
                                     'View history for selected path(s).',
@@ -144,86 +144,6 @@ class RepoTreeView(QtGui.QTreeView):
         menu.addSeparator()
         menu.addAction(self.action_revert)
         menu.exec_(self.mapToGlobal(event.pos()))
-
-    def keyPressEvent(self, event):
-        """
-        Override keyPressEvent to allow LeftArrow to work on non-directories.
-
-        When LeftArrow is pressed on a file entry or an unexpanded directory,
-        then move the current index to the parent directory.
-
-        This simplifies navigation using the keyboard.
-        For power-users, we support Vim keybindings ;-P
-
-        """
-        # Check whether the item is expanded before calling the base class
-        # keyPressEvent otherwise we end up collapsing and changing the
-        # current index in one shot, which we don't want to do.
-        index = self.currentIndex()
-        was_expanded = self.isExpanded(index)
-        was_collapsed = not was_expanded
-
-        # Vim keybindings...
-        # Rewrite the event before marshalling to QTreeView.event()
-        key = event.key()
-
-        # Remap 'H' to 'Left'
-        if key == QtCore.Qt.Key_H:
-            event = QtGui.QKeyEvent(event.type(),
-                                    QtCore.Qt.Key_Left,
-                                    event.modifiers())
-        # Remap 'J' to 'Down'
-        elif key == QtCore.Qt.Key_J:
-            event = QtGui.QKeyEvent(event.type(),
-                                    QtCore.Qt.Key_Down,
-                                    event.modifiers())
-        # Remap 'K' to 'Up'
-        elif key == QtCore.Qt.Key_K:
-            event = QtGui.QKeyEvent(event.type(),
-                                    QtCore.Qt.Key_Up,
-                                    event.modifiers())
-        # Remap 'L' to 'Right'
-        elif key == QtCore.Qt.Key_L:
-            event = QtGui.QKeyEvent(event.type(),
-                                    QtCore.Qt.Key_Right,
-                                    event.modifiers())
-
-        # Re-read the event key to take the remappings into account
-        key = event.key()
-
-        # Process the keyPressEvent before changing the current index
-        # otherwise the event will affect the new index set here
-        # instead of the original index.
-        result = QtGui.QTreeView.keyPressEvent(self, event)
-
-        # Sync the selection model
-        self.sync_selection()
-
-        # Try to select the first item if the model index is invalid
-        if not index.isValid():
-            index = self.model().index(0, 0, QtCore.QModelIndex())
-            if index.isValid():
-                self.setCurrentIndex(index)
-            return result
-
-        # Automatically select the first entry when expanding a directory
-        if (key == QtCore.Qt.Key_Right and was_collapsed and
-                self.isExpanded(index)):
-            index = self.moveCursor(self.MoveDown, event.modifiers())
-            self.setCurrentIndex(index)
-
-        # Process non-root entries with valid parents only.
-        if key == QtCore.Qt.Key_Left and index.parent().isValid():
-
-            # File entries have rowCount() == 0
-            if self.item_from_index(index).rowCount() == 0:
-                self.setCurrentIndex(index.parent())
-
-            # Otherwise, do this for collapsed directories only
-            elif was_collapsed:
-                self.setCurrentIndex(index.parent())
-
-        return result
 
     def mousePressEvent(self, event):
         """Synchronize the selection on mouse-press."""
