@@ -7,6 +7,7 @@ from cola import utils
 from cola import qtutils
 from cola import gitcmds
 from cola.widgets import defs
+from cola.widgets import standard
 
 
 def launch(args):
@@ -41,12 +42,9 @@ class FileDiffDialog(QtGui.QDialog):
         self.setWindowTitle('Select File(s)')
         self.setWindowModality(QtCore.Qt.WindowModal)
 
-        self._tree = QtGui.QTreeWidget(self)
-        self._tree.setAlternatingRowColors(True)
+        self._tree = standard.TreeWidget(self)
         self._tree.setRootIsDecorated(False)
         self._tree.setSelectionMode(self._tree.ExtendedSelection)
-        self._tree.setUniformRowHeights(True)
-        self._tree.setAllColumnsShowFocus(True)
         self._tree.setHeaderHidden(True)
 
         self._diff_btn = QtGui.QPushButton('Compare')
