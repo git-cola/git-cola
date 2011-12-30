@@ -437,9 +437,12 @@ class CommitSummaryLineEdit(QtGui.QLineEdit):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Down:
-            self.emit(SIGNAL('returnPressed()'))
-            event.ignore()
-            return
+            position = self.cursorPosition()
+            curtext = unicode(self.text())
+            if position == len(curtext):
+                self.emit(SIGNAL('returnPressed()'))
+                event.ignore()
+                return
         super(CommitSummaryLineEdit, self).keyPressEvent(event)
 
 
