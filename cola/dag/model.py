@@ -3,16 +3,16 @@ import subprocess
 import os
 import cola
 from cola import core
-from cola import git
+from cola.git import git
 from cola import signals
 from cola import utils
 from cola.cmds import BaseCommand
 from cola.observable import Observable
 
 # put summary at the end b/c it can contain
-# any number of funky characters
-logfmt = 'format:%H%x01%P%x01%d%x01%an%x01%aD%x01%s'
-git = git.instance()
+# any number of funky characters, including the separator
+logfmt = 'format:%H%x01%P%x01%d%x01%an%x01%ar%x01%ae%x01%s'
+logsep = chr(0x01)
 
 archive = 'archive'
 
@@ -101,6 +101,7 @@ class Commit(object):
                  'tags',
                  'author',
                  'authdate',
+                 'email',
                  'generation',
                  'parsed')
     def __init__(self, sha1=None, log_entry=None):
@@ -109,6 +110,7 @@ class Commit(object):
         self.parents = []
         self.children = []
         self.tags = set()
+        self.email = None
         self.author = None
         self.authdate = None
         self.parsed = False
@@ -116,10 +118,10 @@ class Commit(object):
         if log_entry:
             self.parse(log_entry)
 
-    def parse(self, log_entry):
+    def parse(self, log_entry, sep=logsep):
         self.sha1 = log_entry[:40]
-        (parents, tags, author, authdate, summary) = \
-                log_entry[41:].split(chr(0x01), 5)
+        (parents, tags, author, authdate, email, summary) = \
+                log_entry[41:].split(sep, 6)
 
         if summary:
             self.summary = core.decode(summary)
@@ -150,6 +152,8 @@ class Commit(object):
             self.author = core.decode(author)
         if authdate:
             self.authdate = authdate
+        if email:
+            self.email = core.decode(email)
 
         self.parsed = True
         return self
@@ -214,17 +218,20 @@ class RepoReader(object):
             except IndexError:
                 self._idx = -1
                 raise StopIteration
+
         if self._proc is None:
             ref_args = utils.shell_split(self.dag.ref)
             cmd = self._cmd + ['-%d' % self.dag.count] + ref_args
             self._proc = utils.start_command(cmd)
             self._topo_list = []
+
         log_entry = self._proc.stdout.readline().rstrip()
         if not log_entry:
             del self._proc
             self._cached = True
             self._proc = None
             raise StopIteration
+
         sha1 = log_entry[:40]
         try:
             return self._objects[sha1]
