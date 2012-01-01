@@ -378,13 +378,21 @@ class CommitMessageTextEdit(HintedTextEdit):
             cursor = self.textCursor()
             position = cursor.position()
             if position == 0:
-                self.emit_shift_tab()
+                if cursor.hasSelection():
+                    cursor.setPosition(0)
+                    self.setTextCursor(cursor)
+                else:
+                    self.emit_shift_tab()
                 event.ignore()
                 return
             text_before = unicode(self.toPlainText())[:position]
             lines_before = text_before.count('\n')
             if lines_before == 0:
-                cursor.setPosition(0)
+                if event.modifiers() & Qt.ShiftModifier:
+                    mode = QtGui.QTextCursor.KeepAnchor
+                else:
+                    mode = QtGui.QTextCursor.MoveAnchor
+                cursor.setPosition(0, mode)
                 self.setTextCursor(cursor)
                 event.ignore()
                 return
@@ -395,7 +403,11 @@ class CommitMessageTextEdit(HintedTextEdit):
             text_after = all_text[position:]
             lines_after = text_after.count('\n')
             if lines_after == 0:
-                cursor.setPosition(len(all_text))
+                if event.modifiers() & Qt.ShiftModifier:
+                    mode = QtGui.QTextCursor.KeepAnchor
+                else:
+                    mode = QtGui.QTextCursor.MoveAnchor
+                cursor.setPosition(len(all_text), mode)
                 self.setTextCursor(cursor)
                 event.ignore()
                 return
