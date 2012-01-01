@@ -97,6 +97,9 @@ class CommitMessageEditor(QtGui.QWidget):
         self.connect(self.summary, SIGNAL('returnPressed()'),
                      self.focus_description)
 
+        self.connect(self.summary, SIGNAL('downPressed()'),
+                     self.focus_description)
+
         self.connect(self.summary, SIGNAL('cursorPosition(int,int)'),
                      self.emit_position)
 
@@ -345,7 +348,7 @@ class CommitSummaryLineEdit(HintedLineEdit):
             position = self.cursorPosition()
             curtext = unicode(self.text())
             if position == len(curtext):
-                self.emit(SIGNAL('returnPressed()'))
+                self.emit(SIGNAL('downPressed()'))
                 event.ignore()
                 return
         super(CommitSummaryLineEdit, self).keyPressEvent(event)
