@@ -1,5 +1,22 @@
 .. |beta(TM)| unicode:: beta U+2122
 
+git-cola v1.7.4
+===============
+Usability, bells and whistles
+-----------------------------
+* The 'Classic' tool was renamed to 'Browser' and learned to
+  limit history to the current branch.
+
+* `git-dag` learned about gravatar and uses it to show images
+  for commit authors.
+
+* `git-dag` learned to use OpenGL for rendering resulting in
+  much faster rendering.
+
+* More dialogs learned vim-style keyboard shortcuts.
+
+* The commit message editor learned better arrow key navigation.
+
 git-cola v1.7.3
 ===============
 Usability, bells and whistles
