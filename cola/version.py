@@ -2,7 +2,7 @@
 """Provide cola's version number"""
 
 # The current git-cola version
-_default_version = '1.7.3'
+_default_version = '1.7.4'
 
 
 import os
