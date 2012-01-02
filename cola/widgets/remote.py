@@ -81,7 +81,7 @@ class RemoteActionDialog(standard.Dialog):
         self.progress.setWindowModality(Qt.WindowModal)
 
         self.local_label = QtGui.QLabel()
-        self.local_label.setText(self.tr('Local Branches'))
+        self.local_label.setText(self.tr('Local Branch'))
 
         self.local_branch = QtGui.QLineEdit()
         self.local_branches = QtGui.QListWidget()
@@ -94,8 +94,8 @@ class RemoteActionDialog(standard.Dialog):
         self.remotes = QtGui.QListWidget()
         self.remotes.addItems(self.model.remotes)
 
-        self.remote_label = QtGui.QLabel()
-        self.remote_label.setText(self.tr('Remote Branch'))
+        self.remote_branch_label = QtGui.QLabel()
+        self.remote_branch_label.setText(self.tr('Remote Branch'))
 
         self.remote_branch = QtGui.QLineEdit()
         self.remote_branches = QtGui.QListWidget()
@@ -128,7 +128,7 @@ class RemoteActionDialog(standard.Dialog):
         self.remote_branch_layout.addWidget(self.remote_name)
 
         self.remote_branches_layout = QtGui.QHBoxLayout()
-        self.remote_branches_layout.addWidget(self.remote_label)
+        self.remote_branches_layout.addWidget(self.remote_branch_label)
         self.remote_branches_layout.addWidget(self.remote_branch)
 
         self.options_layout = QtGui.QHBoxLayout()
