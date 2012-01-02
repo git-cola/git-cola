@@ -1288,7 +1288,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
                 x_max = max(x_max, pos.x()+x_off)
                 ymax = max(ymax, pos.y()+y_off)
             rect = QtCore.QRectF(x_min, y_min, x_max-x_min, ymax-y_min)
-        adjust = Commit.width * 2
+        adjust = Commit.width
         rect.setX(rect.x() - adjust)
         rect.setY(rect.y() - adjust)
         rect.setHeight(rect.height() + adjust)
@@ -1531,10 +1531,10 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
     def update_scene_rect(self):
         y_min = self.y_min
         x_max = self.x_max
-        self.scene().setSceneRect(-self.x_off/2,
-                                  y_min-self.y_off,
-                                  x_max+self.x_off*2,
-                                  abs(y_min)+self.y_off*2)
+        self.scene().setSceneRect(-Commit.width*3/4,
+                                  y_min-self.y_off/2,
+                                  x_max + int(self.x_off * 1.1),
+                                  abs(y_min)+self.y_off)
 
     def sort_by_generation(commits):
         commits.sort(cmp=lambda a, b: cmp(a.generation, b.generation))
