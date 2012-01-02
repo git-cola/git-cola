@@ -23,7 +23,7 @@ class HintedTextWidgetEventFilter(QtCore.QObject):
 
 class HintedTextWidgetMixin(object):
     def __init__(self, hint):
-        self._hint = hint
+        self._hint = unicode(self.tr(hint))
         self._event_filter = HintedTextWidgetEventFilter(self)
         self.installEventFilter(self._event_filter)
 
