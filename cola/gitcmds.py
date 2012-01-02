@@ -215,22 +215,12 @@ def sha1_diff(sha1, git=git):
     return core.decode(git.diff(sha1 + '^!', **_common_diff_opts()))
 
 
-def diff_info(sha1, git=git, merge=True):
-
-    if merge:
-        mergefmt = 'Merge: %P%n'
-    else:
-        mergefmt = ''
-
-    log = git.log('-1',
-            '--pretty=format:'
-            'commit %H%n' +
-            mergefmt +
-            'Author: %aN <%aE>%n'
-            'Date:   %aD%n'
-            '%n%s%n%n%b',
-            sha1)
-    return core.decode(log) + '\n\n' + sha1_diff(sha1)
+def diff_info(sha1, git=git):
+    log = git.log('-1', '--pretty=format:%b', sha1)
+    decoded = core.decode(log).strip()
+    if decoded:
+        decoded += '\n\n'
+    return decoded + sha1_diff(sha1)
 
 
 def diff_helper(commit=None,

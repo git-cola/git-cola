@@ -1,17 +1,23 @@
 import collections
-import sys
 import math
+import sys
+import time
+import urllib
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4 import QtNetwork
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
+from cola import difftool
+from cola import gitcmds
 from cola import observable
 from cola import qtutils
+from cola import resources
 from cola import signals
-from cola import gitcmds
-from cola import difftool
+from cola.compat import hashlib
 from cola.dag.model import archive
 from cola.dag.model import RepoReader
 from cola.prefs import diff_font
@@ -25,9 +31,136 @@ from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.browse import BrowseDialog
 
 
+class GravatarLabel(QtGui.QLabel):
+    def __init__(self, parent=None):
+        super(GravatarLabel, self).__init__(parent)
+
+        self.email = None
+        self.response = None
+        self.timeout = 0
+        self.imgsize = 48
+
+        self.network = QtNetwork.QNetworkAccessManager()
+        self.connect(self.network,
+                     SIGNAL('finished(QNetworkReply*)'),
+                     self.network_finished)
+
+    def url_for_email(self, email):
+        email_hash = hashlib.md5(email).hexdigest()
+        default_url = 'http://git-cola.github.com/images/git-64x64.jpg'
+        encoded_url = urllib.quote(default_url, '')
+        query = '?s=%d&d=%s' % (self.imgsize, encoded_url)
+        url = 'http://gravatar.com/avatar/' + email_hash + query
+        return url
+
+    def get_email(self, email):
+        if (self.timeout > 0 and
+                (int(time.time()) - self.timeout) < (5 * 60)):
+            self.set_pixmap_from_response()
+            return
+        if email == self.email and self.response is not None:
+            self.set_pixmap_from_response()
+            return
+        self.email = email
+        self.get(self.url_for_email(email))
+
+    def get(self, url):
+        self.network.get(QtNetwork.QNetworkRequest(QtCore.QUrl(url)))
+
+    def default_pixmap_as_bytes(self):
+        xres = self.imgsize
+        pixmap = QtGui.QPixmap(resources.icon('git.svg'))
+        pixmap = pixmap.scaledToHeight(xres, Qt.SmoothTransformation)
+        byte_array = QtCore.QByteArray()
+        buf = QtCore.QBuffer(byte_array)
+        buf.open(QtCore.QIODevice.WriteOnly)
+        pixmap.save(buf, 'PNG')
+        buf.close()
+        return byte_array
+
+    def network_finished(self, reply):
+        header = QtCore.QByteArray('Location')
+        raw_header = reply.rawHeader(header)
+        if raw_header:
+            location = unicode(QtCore.QString(raw_header)).strip()
+            request_location = unicode(self.url_for_email(self.email))
+            relocated = location != request_location
+        else:
+            relocated = False
+
+        if reply.error() == QtNetwork.QNetworkReply.NoError:
+            if relocated:
+                # We could do get_url(urllib.unquote(location)) to
+                # download the default image.
+                # Save bandwidth by using a pixmap.
+                self.response = self.default_pixmap_as_bytes()
+            else:
+                self.response = reply.readAll()
+            self.timeout = 0
+        else:
+            self.response = self.default_pixmap_as_bytes()
+            self.timeout = int(time.time())
+        self.set_pixmap_from_response()
+
+    def set_pixmap_from_response(self):
+        pixmap = QtGui.QPixmap()
+        pixmap.loadFromData(self.response)
+        self.setPixmap(pixmap)
+
+
+class TextLabel(QtGui.QLabel):
+    def __init__(self, parent=None):
+        super(TextLabel, self).__init__(parent)
+        self.setTextInteractionFlags(Qt.TextSelectableByMouse |
+                                     Qt.LinksAccessibleByMouse)
+        self.setOpenExternalLinks(True)
+        self._text = ''
+        self._elide = False
+
+    def elide(self):
+        self._elide = True
+
+    def setText(self, text):
+        if self._elide:
+            self._text = text
+            width = self.width()
+            fm = QtGui.QFontMetrics(self.font())
+            text = fm.elidedText(text, Qt.ElideRight, width-2)
+        super(TextLabel, self).setText(text)
+
+    def resizeEvent(self, event):
+        super(TextLabel, self).resizeEvent(event)
+        if self._elide:
+            self.setText(self._text)
+
+
 class DiffWidget(QtGui.QWidget):
     def __init__(self, notifier, parent):
         QtGui.QWidget.__init__(self, parent)
+
+        author_font = QtGui.QFont(self.font())
+        author_font.setPointSize(int(author_font.pointSize() * 1.1))
+
+        summary_font = QtGui.QFont(author_font)
+        summary_font.setWeight(QtGui.QFont.Bold)
+
+        policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,
+                                   QtGui.QSizePolicy.Minimum)
+
+        self.gravatar_label = GravatarLabel()
+
+        self.author_label = TextLabel()
+        self.author_label.setTextFormat(Qt.RichText)
+        self.author_label.setFont(author_font)
+        self.author_label.setSizePolicy(policy)
+        self.author_label.setAlignment(Qt.AlignBottom)
+
+        self.summary_label = TextLabel()
+        self.summary_label.setTextFormat(Qt.PlainText)
+        self.summary_label.setFont(summary_font)
+        self.summary_label.setSizePolicy(policy)
+        self.summary_label.setAlignment(Qt.AlignTop)
+        self.summary_label.elide()
 
         self.diff = QtGui.QTextEdit()
         self.diff.setLineWrapMode(QtGui.QTextEdit.NoWrap)
@@ -35,10 +168,23 @@ class DiffWidget(QtGui.QWidget):
         self.diff.setFont(diff_font())
         self.highlighter = DiffSyntaxHighlighter(self.diff.document())
 
-        self.main_layout = QtGui.QHBoxLayout()
-        self.main_layout.addWidget(self.diff)
+        self.info_layout = QtGui.QVBoxLayout()
+        self.info_layout.setMargin(0)
+        self.info_layout.setSpacing(0)
+        self.info_layout.addWidget(self.author_label)
+        self.info_layout.addWidget(self.summary_label)
+
+        self.logo_layout = QtGui.QHBoxLayout()
+        self.logo_layout.setContentsMargins(defs.margin, 0, defs.margin, 0)
+        self.logo_layout.setSpacing(defs.button_spacing)
+        self.logo_layout.addWidget(self.gravatar_label)
+        self.logo_layout.addLayout(self.info_layout)
+
+        self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setMargin(0)
         self.main_layout.setSpacing(defs.spacing)
+        self.main_layout.addLayout(self.logo_layout)
+        self.main_layout.addWidget(self.diff)
         self.setLayout(self.main_layout)
 
         sig = signals.commits_selected
@@ -49,9 +195,27 @@ class DiffWidget(QtGui.QWidget):
             return
         commit = commits[0]
         sha1 = commit.sha1
-        merge = len(commit.parents) > 1
-        self.diff.setText(gitcmds.diff_info(sha1, merge=merge))
-        qtutils.set_clipboard(sha1)
+        self.diff.setText(gitcmds.diff_info(sha1))
+
+        email = commit.email or ''
+        summary = commit.summary or ''
+        author = commit.author or ''
+
+        template_args = {
+                'author': author,
+                'email': email,
+                'summary': summary
+        }
+
+        self.gravatar_label.get_email(email)
+        author_text = ("""%(author)s &lt;"""
+                       """<a href="mailto:%(email)s">"""
+                       """%(email)s</a>&gt;"""
+                       % template_args)
+
+        self.author_label.setText(author_text)
+        self.summary_label.setText(summary)
+
 
 class ViewerMixin(object):
     def __init__(self):
@@ -190,7 +354,7 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         self.setAllColumnsShowFocus(True)
         self.setAlternatingRowColors(True)
         self.setRootIsDecorated(False)
-        self.setHeaderLabels(['Summary', 'Author', 'Date'])
+        self.setHeaderLabels(['Summary', 'Author', 'Age'])
 
         self.sha1map = {}
         self.notifier = notifier
@@ -508,7 +672,7 @@ class DAGView(standard.Widget):
     def show(self):
         super(DAGView, self).show()
         self.splitter.setSizes([self.width()/2, self.width()/2])
-        self.left_splitter.setSizes([self.height()/3, self.height()*2/3])
+        self.left_splitter.setSizes([self.height()/4, self.height()*3/4])
         self.treewidget.adjust_columns()
 
     def resizeEvent(self, e):
