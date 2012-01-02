@@ -26,7 +26,7 @@ from cola.widgets.browse import BrowseDialog
 
 
 class DiffWidget(QtGui.QWidget):
-    def __init__(self, notifier, parent=None):
+    def __init__(self, notifier, parent):
         QtGui.QWidget.__init__(self, parent)
 
         self.diff = QtGui.QTextEdit()
@@ -53,6 +53,123 @@ class DiffWidget(QtGui.QWidget):
         self.diff.setText(gitcmds.diff_info(sha1, merge=merge))
         qtutils.set_clipboard(sha1)
 
+class ViewerMixin(object):
+    def __init__(self):
+        self.selected = None
+        self.clicked = None
+        self.menu_actions = self.context_menu_actions()
+
+    def diff_selected_this(self):
+        clicked_sha1 = self.clicked.sha1
+        selected_sha1 = self.selected.sha1
+        self.emit(SIGNAL('diff_commits'), selected_sha1, clicked_sha1)
+
+    def diff_this_selected(self):
+        clicked_sha1 = self.clicked.sha1
+        selected_sha1 = self.selected.sha1
+        self.emit(SIGNAL('diff_commits'), clicked_sha1, selected_sha1)
+
+    def cherry_pick(self):
+        sha1 = self.clicked.sha1
+        cola.notifier().broadcast(signals.cherry_pick, [sha1])
+
+    def copy_to_clipboard(self):
+        clicked_sha1 = self.clicked.sha1
+        qtutils.set_clipboard(clicked_sha1)
+
+    def create_branch(self):
+        sha1 = self.clicked.sha1
+        create_new_branch(revision=sha1)
+
+    def create_tag(self):
+        sha1 = self.clicked.sha1
+        create_tag(revision=sha1)
+
+    def create_tarball(self):
+        ref = self.clicked.sha1
+        shortref = ref[:7]
+        GitArchiveDialog.save(ref, shortref, self)
+
+    def save_blob_dialog(self):
+        return BrowseDialog.browse(self.clicked.sha1)
+
+    def context_menu_actions(self):
+        return {
+        'diff_this_selected':
+            qtutils.add_action(self, 'Diff this -> selected',
+                               self.diff_this_selected),
+        'diff_selected_this':
+            qtutils.add_action(self, 'Diff selected -> this',
+                               self.diff_selected_this),
+        'create_branch':
+            qtutils.add_action(self, 'Create Branch',
+                               self.create_branch),
+        'create_patch':
+            qtutils.add_action(self, 'Create Patch',
+                               self.create_patch),
+        'create_tag':
+            qtutils.add_action(self, 'Create Tag',
+                               self.create_tag),
+        'create_tarball':
+            qtutils.add_action(self, 'Save As Tarball/Zip...',
+                               self.create_tarball),
+        'cherry_pick':
+            qtutils.add_action(self, 'Cherry Pick',
+                               self.cherry_pick),
+        'save_blob':
+            qtutils.add_action(self, 'Grab File...',
+                               self.save_blob_dialog),
+        'copy':
+            qtutils.add_action(self, 'Copy SHA-1',
+                               self.copy_to_clipboard,
+                               QtGui.QKeySequence.Copy),
+        }
+
+    def update_menu_actions(self, event):
+        clicked = self.itemAt(event.pos())
+        selected_items = self.selectedItems()
+        has_single_selection = len(selected_items) == 1
+
+        has_selection = bool(selected_items)
+        can_diff = bool(clicked and has_single_selection and
+                        clicked is not selected_items[0])
+
+        self.clicked = clicked.commit
+        if can_diff:
+            self.selected = selected_items[0].commit
+        else:
+            self.selected = None
+
+        self.menu_actions['diff_this_selected'].setEnabled(can_diff)
+        self.menu_actions['diff_selected_this'].setEnabled(can_diff)
+
+        self.menu_actions['create_branch'].setEnabled(has_single_selection)
+        self.menu_actions['create_tag'].setEnabled(has_single_selection)
+
+        self.menu_actions['cherry_pick'].setEnabled(has_single_selection)
+        self.menu_actions['create_patch'].setEnabled(has_selection)
+        self.menu_actions['create_tarball'].setEnabled(has_single_selection)
+
+        self.menu_actions['save_blob'].setEnabled(has_single_selection)
+        self.menu_actions['copy'].setEnabled(has_single_selection)
+
+    def context_menu_event(self, event):
+        self.update_menu_actions(event)
+        menu = QtGui.QMenu(self)
+        menu.addAction(self.menu_actions['diff_this_selected'])
+        menu.addAction(self.menu_actions['diff_selected_this'])
+        menu.addSeparator()
+        menu.addAction(self.menu_actions['create_branch'])
+        menu.addAction(self.menu_actions['create_tag'])
+        menu.addSeparator()
+        menu.addAction(self.menu_actions['cherry_pick'])
+        menu.addAction(self.menu_actions['create_patch'])
+        menu.addAction(self.menu_actions['create_tarball'])
+        menu.addSeparator()
+        menu.addAction(self.menu_actions['save_blob'])
+        menu.addAction(self.menu_actions['copy'])
+        menu.exec_(self.mapToGlobal(event.pos()))
+
 
 class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
     def __init__(self, commit, parent=None):
@@ -63,9 +180,11 @@ class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
         self.setText(2, commit.authdate)
 
 
-class CommitTreeWidget(QtGui.QTreeWidget):
-    def __init__(self, notifier, parent=None):
+class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
+    def __init__(self, notifier, parent):
         QtGui.QTreeWidget.__init__(self, parent)
+        ViewerMixin.__init__(self)
+
         self.setSelectionMode(self.ContiguousSelection)
         self.setUniformRowHeights(True)
         self.setAllColumnsShowFocus(True)
@@ -77,9 +196,6 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         self.notifier = notifier
         self.selecting = False
         self.commits = []
-        self.clicked = None
-        self.selected = None
-        self.menu_actions = context_menu_actions(self)
 
         self.action_up = qtutils.add_action(self, 'Go Up', self.go_up,
                                             QtCore.Qt.Key_K)
@@ -94,8 +210,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
                      self.selection_changed)
 
     def contextMenuEvent(self, event):
-        update_menu_actions(self, event)
-        context_menu_event(self, event)
+        self.context_menu_event(event)
 
     def mousePressEvent(self, event):
         if event.buttons() == QtCore.Qt.RightButton:
@@ -136,6 +251,7 @@ class CommitTreeWidget(QtGui.QTreeWidget):
     def commits_selected(self, commits):
         if self.selecting:
             return
+        self.clicked = commits and commits[0] or None
         self.select([commit.sha1 for commit in commits])
 
     def select(self, sha1s, block_signals=True):
@@ -174,16 +290,6 @@ class CommitTreeWidget(QtGui.QTreeWidget):
                 self.sha1map[tag] = item
         self.insertTopLevelItems(0, items)
 
-    def diff_this_selected(self):
-        clicked_sha1 = self.clicked.commit.sha1
-        selected_sha1 = self.selected.commit.sha1
-        self.emit(SIGNAL('diff_commits'), clicked_sha1, selected_sha1)
-
-    def diff_selected_this(self):
-        clicked_sha1 = self.clicked.commit.sha1
-        selected_sha1 = self.selected.commit.sha1
-        self.emit(SIGNAL('diff_commits'), selected_sha1, clicked_sha1)
-
     def create_patch(self):
         items = self.selectedItems()
         if not items:
@@ -193,24 +299,13 @@ class CommitTreeWidget(QtGui.QTreeWidget):
         all_sha1s = [c.sha1 for c in self.commits]
         cola.notifier().broadcast(signals.format_patch, sha1s, all_sha1s)
 
-    def create_branch(self):
-        sha1 = self.clicked.commit.sha1
-        create_new_branch(revision=sha1)
-
-    def create_tag(self):
-        sha1 = self.clicked.commit.sha1
-        create_tag(revision=sha1)
-
-    def cherry_pick(self):
-        sha1 = self.clicked.commit.sha1
-        cola.notifier().broadcast(signals.cherry_pick, [sha1])
-
 
 class DAGView(standard.Widget):
     """The git-dag widget."""
 
     def __init__(self, model, dag, parent=None, args=None):
         super(DAGView, self).__init__(parent)
+
         self.setAttribute(QtCore.Qt.WA_MacMetalStyle)
         self.setMinimumSize(1, 1)
 
@@ -259,9 +354,9 @@ class DAGView(standard.Widget):
         self.notifier.refs_updated = refs_updated = 'refs_updated'
         self.notifier.add_observer(refs_updated, self.display)
 
-        self.graphview = GraphView(notifier)
-        self.treewidget = CommitTreeWidget(notifier)
-        self.diffwidget = DiffWidget(notifier)
+        self.graphview = GraphView(notifier, self)
+        self.treewidget = CommitTreeWidget(notifier, self)
+        self.diffwidget = DiffWidget(notifier, self)
 
         for signal in (archive,):
             qtutils.relay_signal(self, self.graphview, SIGNAL(signal))
@@ -287,12 +382,12 @@ class DAGView(standard.Widget):
         self.splitter.setStretchFactor(0, 1)
         self.splitter.setStretchFactor(1, 1)
 
-        self.main_layout = layout = QtGui.QVBoxLayout()
-        layout.setMargin(0)
-        layout.setSpacing(0)
-        layout.addLayout(self.top_layout)
-        layout.addWidget(self.splitter)
-        self.setLayout(layout)
+        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout.setMargin(0)
+        self.main_layout.setSpacing(0)
+        self.main_layout.addLayout(self.top_layout)
+        self.main_layout.addWidget(self.splitter)
+        self.setLayout(self.main_layout)
 
         # Also re-loads dag.* from the saved state
         if not qtutils.apply_state(self):
@@ -791,10 +886,10 @@ class Label(QtGui.QGraphicsItem):
         painter.drawText(self.text_box, self.tag_text, text_opts)
 
 
-class GraphView(QtGui.QGraphicsView):
-    def __init__(self, notifier):
-        super(GraphView, self).__init__()
-
+class GraphView(QtGui.QGraphicsView, ViewerMixin):
+    def __init__(self, notifier, parent):
+        QtGui.QGraphicsView.__init__(self, parent)
+        ViewerMixin.__init__(self)
         try:
             from PyQt4 import QtOpenGL
             glformat = QtOpenGL.QGLFormat(QtOpenGL.QGL.SampleBuffers)
@@ -808,12 +903,10 @@ class GraphView(QtGui.QGraphicsView):
         self.x_max = 0
         self.y_min = 0
 
-        self.selected = []
+        self.selection_list = []
         self.notifier = notifier
         self.commits = []
         self.items = {}
-        self.selected = None
-        self.clicked = None
         self.saved_matrix = QtGui.QMatrix(self.matrix())
 
         self.x_offsets = collections.defaultdict(int)
@@ -874,14 +967,12 @@ class GraphView(QtGui.QGraphicsView):
                                self.select_nth_child,
                                'Shift+K'))
 
-        self.menu_actions = context_menu_actions(self)
-
         sig = signals.commits_selected
         notifier.add_observer(sig, self.commits_selected)
 
     def clear(self):
         self.scene().clear()
-        self.selected = []
+        self.selection_list = []
         self.items.clear()
         self.x_offsets.clear()
         self.x_max = 0
@@ -897,11 +988,11 @@ class GraphView(QtGui.QGraphicsView):
     def commits_selected(self, commits):
         if self.selecting:
             return
+        self.clicked = commits and commits[0] or None
         self.select([commit.sha1 for commit in commits])
 
     def contextMenuEvent(self, event):
-        update_menu_actions(self, event)
-        context_menu_event(self, event)
+        self.context_menu_event(event)
 
     def select(self, sha1s):
         """Select the item for the SHA-1"""
@@ -951,37 +1042,14 @@ class GraphView(QtGui.QGraphicsView):
         """Return the item for the commit with the newest generation number"""
         return self.get_item_by_generation(commits, lambda a, b: a < b)
 
-    def diff_this_selected(self):
-        clicked_sha1 = self.clicked.commit.sha1
-        selected_sha1 = self.selected.commit.sha1
-        self.emit(SIGNAL('diff_commits'), clicked_sha1, selected_sha1)
-
-    def diff_selected_this(self):
-        clicked_sha1 = self.clicked.commit.sha1
-        selected_sha1 = self.selected.commit.sha1
-        self.emit(SIGNAL('diff_commits'), selected_sha1, clicked_sha1)
-
     def create_patch(self):
         items = self.selectedItems()
         if not items:
             return
-        selected_commits = sort_by_generation([n.commit for n in items])
+        selected_commits = self.sort_by_generation([n.commit for n in items])
         sha1s = [c.sha1 for c in selected_commits]
         all_sha1s = [c.sha1 for c in self.commits]
         cola.notifier().broadcast(signals.format_patch, sha1s, all_sha1s)
-
-    def create_branch(self):
-        sha1 = self.clicked.commit.sha1
-        create_new_branch(revision=sha1)
-
-    def create_tag(self):
-        sha1 = self.clicked.commit.sha1
-        create_tag(revision=sha1)
-
-    def cherry_pick(self):
-        sha1 = self.clicked.commit.sha1
-        cola.notifier().broadcast(signals.cherry_pick, [sha1])
-        self.notifier.notify_observers(self.notifier.refs_updated)
 
     def select_parent(self):
         """Select the parent with the newest generation number"""
@@ -1069,12 +1137,12 @@ class GraphView(QtGui.QGraphicsView):
             return
         elif QtCore.Qt.ShiftModifier != event.modifiers():
             return
-        self.selected = self.selectedItems()
+        self.selection_list = self.selectedItems()
 
     def restore_selection(self, event):
         if QtCore.Qt.ShiftModifier != event.modifiers():
             return
-        for item in self.selected:
+        for item in self.selection_list:
             item.setSelected(True)
 
     def handle_event(self, event_handler, event):
@@ -1115,7 +1183,7 @@ class GraphView(QtGui.QGraphicsView):
             self.is_panning = False
             return
         self.handle_event(QtGui.QGraphicsView.mouseReleaseEvent, event)
-        self.selected = []
+        self.selection_list = []
 
     def pan(self, event):
         pos = event.pos()
@@ -1304,87 +1372,6 @@ class GraphView(QtGui.QGraphicsView):
                                   x_max+self.x_off*2,
                                   abs(y_min)+self.y_off*2)
 
-def sort_by_generation(commits):
-    commits.sort(cmp=lambda a, b: cmp(a.generation, b.generation))
-    return commits
-
-
-def context_menu_actions(self):
-    return {
-    'diff_this_selected':
-        qtutils.add_action(self, 'Diff this -> selected',
-                           self.diff_this_selected),
-    'diff_selected_this':
-        qtutils.add_action(self, 'Diff selected -> this',
-                           self.diff_selected_this),
-    'create_branch':
-        qtutils.add_action(self, 'Create Branch',
-                           self.create_branch),
-    'create_patch':
-        qtutils.add_action(self, 'Create Patch',
-                           self.create_patch),
-    'create_tag':
-        qtutils.add_action(self, 'Create Tag',
-                           self.create_tag),
-    'create_tarball':
-        qtutils.add_action(self, 'Save As Tarball/Zip...',
-                           lambda: create_tarball(self)),
-    'cherry_pick':
-        qtutils.add_action(self, 'Cherry Pick',
-                           self.cherry_pick),
-
-    'save_blob':
-        qtutils.add_action(self, 'Grab File...',
-                           lambda: save_blob_dialog(self)),
-    }
-
-
-def update_menu_actions(self, event):
-    clicked = self.itemAt(event.pos())
-    selected_items = self.selectedItems()
-    has_single_selection = len(selected_items) == 1
-
-    has_selection = bool(selected_items)
-    can_diff = bool(clicked and has_single_selection and
-                    clicked is not selected_items[0])
-
-    self.clicked = clicked
-    if can_diff:
-        self.selected = selected_items[0]
-    else:
-        self.selected = None
-
-    self.menu_actions['diff_this_selected'].setEnabled(can_diff)
-    self.menu_actions['diff_selected_this'].setEnabled(can_diff)
-    self.menu_actions['create_patch'].setEnabled(has_selection)
-    self.menu_actions['create_tarball'].setEnabled(has_single_selection)
-    self.menu_actions['save_blob'].setEnabled(has_single_selection)
-    self.menu_actions['create_branch'].setEnabled(has_single_selection)
-    self.menu_actions['create_tag'].setEnabled(has_single_selection)
-    self.menu_actions['cherry_pick'].setEnabled(has_single_selection)
-
-
-def context_menu_event(self, event):
-    menu = QtGui.QMenu(self)
-    menu.addAction(self.menu_actions['diff_this_selected'])
-    menu.addAction(self.menu_actions['diff_selected_this'])
-    menu.addSeparator()
-    menu.addAction(self.menu_actions['create_branch'])
-    menu.addAction(self.menu_actions['create_tag'])
-    menu.addSeparator()
-    menu.addAction(self.menu_actions['cherry_pick'])
-    menu.addAction(self.menu_actions['create_patch'])
-    menu.addAction(self.menu_actions['create_tarball'])
-    menu.addSeparator()
-    menu.addAction(self.menu_actions['save_blob'])
-    menu.exec_(self.mapToGlobal(event.pos()))
-
-
-def create_tarball(self):
-    ref = self.clicked.commit.sha1
-    shortref = ref[:7]
-    GitArchiveDialog.save(ref, shortref, self)
-
-
-def save_blob_dialog(self):
-    return BrowseDialog.browse(self.clicked.commit.sha1)
+    def sort_by_generation(commits):
+        commits.sort(cmp=lambda a, b: cmp(a.generation, b.generation))
+        return commits
