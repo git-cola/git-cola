@@ -66,7 +66,7 @@ You don't need to install cola to run it, though.
     bin/git-cola
     bin/git-dag
 
-## MAC OS X INSTALLTION INSTRUCTIONS
+## MAC OS X
 
 Whether you install cola yourself with `make install` or
 use the `git-cola.app` bundle, you will need to install
