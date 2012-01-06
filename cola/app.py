@@ -12,12 +12,7 @@ import sys
 if platform.system() == 'Darwin':
     homebrew_mods = '/usr/local/lib/python'
     if os.path.isdir(homebrew_mods):
-        python_path = os.getenv('PYTHONPATH')
-        if python_path:
-            idx = 1 + python_path.count(':') + 1
-        else:
-            idx = 1
-        sys.path.insert(idx, homebrew_mods)
+        sys.path.append(homebrew_mods)
 
 try:
     from PyQt4 import QtGui
