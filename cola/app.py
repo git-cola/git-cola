@@ -4,8 +4,20 @@
 import glob
 import optparse
 import os
+import platform
 import signal
 import sys
+
+# Make homebrew work by default
+if platform.system() == 'Darwin':
+    homebrew_mods = '/usr/local/lib/python'
+    if os.path.isdir(homebrew_mods):
+        python_path = os.getenv('PYTHONPATH')
+        if python_path:
+            idx = 1 + python_path.count(':') + 1
+        else:
+            idx = 1
+        sys.path.insert(idx, homebrew_mods)
 
 try:
     from PyQt4 import QtGui
