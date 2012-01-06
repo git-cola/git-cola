@@ -1536,7 +1536,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
                                   x_max + int(self.x_off * 1.1),
                                   abs(y_min)+self.y_off)
 
-    def sort_by_generation(commits):
+    def sort_by_generation(self, commits):
         if len(commits) < 2:
             return commits
         commits.sort(cmp=lambda a, b: cmp(a.generation, b.generation))
