@@ -8,7 +8,6 @@ if __name__ == '__main__':
     src = os.path.join(os.path.dirname(__file__), '..', '..')
     sys.path.insert(1, os.path.abspath(src))
 
-from cola import qtutils
 from cola.dag.view import DAGView
 from cola.dag.model import DAG
 from cola.dag.controller import DAGController
@@ -22,20 +21,6 @@ def git_dag(model, opts=None, args=None):
     view = DAGView(model, dag, None)
     ctl = DAGController(dag, view)
     view.show()
-    view.raise_()
     if dag.ref:
-        view.thread.start(QtCore.QThread.LowPriority)
+        view.display()
     return ctl
-
-
-if __name__ == "__main__":
-    import cola
-    from cola import app
-
-    model = cola.model()
-    model.set_worktree(os.getcwd())
-    model.update_status()
-
-    app = app.ColaApplication(sys.argv)
-    ctl = git_dag(model)
-    sys.exit(app.exec_())

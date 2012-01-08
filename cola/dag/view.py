@@ -658,16 +658,15 @@ class DAGView(standard.Widget):
         if old_ref == new_ref and old_count == new_count:
             return
 
-        self.setEnabled(False)
-
         self.old_ref = new_ref
         self.old_count = new_count
 
-        self.stop()
+        self.setEnabled(False)
+        self.thread.stop()
         self.clear()
         self.dag.set_ref(new_ref)
         self.dag.set_count(self.maxresults.value())
-        self.start()
+        self.thread.start()
 
     def show(self):
         super(DAGView, self).show()
@@ -711,29 +710,9 @@ class DAGView(standard.Widget):
 
     def closeEvent(self, event):
         self.revtext.close_popup()
-        self.stop()
+        self.thread.stop()
         qtutils.save_state(self)
         return super(DAGView, self).closeEvent(event)
-
-    def pause(self):
-        self.thread.mutex.lock()
-        self.thread.stop = True
-        self.thread.mutex.unlock()
-
-    def stop(self):
-        self.thread.abort = True
-        self.thread.wait()
-
-    def start(self):
-        self.thread.abort = False
-        self.thread.stop = False
-        self.thread.start()
-
-    def resume(self):
-        self.thread.mutex.lock()
-        self.thread.stop = False
-        self.thread.mutex.unlock()
-        self.thread.condition.wakeOne()
 
     def resize_to_desktop(self):
         desktop = QtGui.QApplication.instance().desktop()
@@ -757,21 +736,21 @@ class ReaderThread(QtCore.QThread):
     def __init__(self, parent, dag):
         QtCore.QThread.__init__(self, parent)
         self.dag = dag
-        self.abort = False
-        self.stop = False
-        self.mutex = QtCore.QMutex()
-        self.condition = QtCore.QWaitCondition()
+        self._abort = False
+        self._stop = False
+        self._mutex = QtCore.QMutex()
+        self._condition = QtCore.QWaitCondition()
 
     def run(self):
         repo = RepoReader(self.dag)
         repo.reset()
         commits = []
         for c in repo:
-            self.mutex.lock()
-            if self.stop:
-                self.condition.wait(self.mutex)
-            self.mutex.unlock()
-            if self.abort:
+            self._mutex.lock()
+            if self._stop:
+                self._condition.wait(self._mutex)
+            self._mutex.unlock()
+            if self._abort:
                 repo.reset()
                 return
             commits.append(c)
@@ -782,6 +761,26 @@ class ReaderThread(QtCore.QThread):
         if commits:
             self.emit(self.commits_ready, commits)
         self.emit(self.done)
+
+    def start(self):
+        self._abort = False
+        self._stop = False
+        super(ReaderThread, self).start()
+
+    def pause(self):
+        self._mutex.lock()
+        self._stop = True
+        self._mutex.unlock()
+
+    def resume(self):
+        self._mutex.lock()
+        self._stop = False
+        self._mutex.unlock()
+        self._condition.wakeOne()
+
+    def stop(self):
+        self._abort = True
+        self.wait()
 
 
 class Cache(object):
