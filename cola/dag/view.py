@@ -706,7 +706,7 @@ class DAGView(standard.Widget):
         sig = signals.commits_selected
         self.notifier.notify_observers(sig, [commit_obj])
         self.graphview.update_scene_rect()
-        self.graphview.view_fit()
+        self.graphview.set_initial_view()
 
     def closeEvent(self, event):
         self.revtext.close_popup()
@@ -1107,7 +1107,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
 
         self.action_zoom_fit = (
             qtutils.add_action(self, 'Zoom to Fit',
-                               self.view_fit,
+                               self.fit_view_to_selection,
                                QtCore.Qt.Key_F))
 
         self.action_select_parent = (
@@ -1266,10 +1266,21 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         child_item.setSelected(True)
         self.ensureVisible(child_item.mapRectToScene(child_item.boundingRect()))
 
-    def view_fit(self):
+    def set_initial_view(self):
+        self_commits = self.commits
+        self_items = self.items
+
+        commits = self_commits[-8:]
+        items = [self_items[c.sha1] for c in commits]
+        self.fit_view_to_items(items)
+
+    def fit_view_to_selection(self):
         """Fit selected items into the viewport"""
 
         items = self.scene().selectedItems()
+        self.fit_view_to_items(items)
+
+    def fit_view_to_items(self, items):
         if not items:
             rect = self.scene().itemsBoundingRect()
         else:
@@ -1283,15 +1294,16 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
                 x_off = item_rect.width()
                 y_off = item_rect.height()
                 x_min = min(x_min, pos.x())
-                y_min = min(y_min, pos.y())
+                y_min = min(y_min, pos.y()-y_off)
                 x_max = max(x_max, pos.x()+x_off)
-                ymax = max(ymax, pos.y()+y_off)
+                ymax = max(ymax, pos.y())
             rect = QtCore.QRectF(x_min, y_min, x_max-x_min, ymax-y_min)
-        adjust = Commit.width
-        rect.setX(rect.x() - adjust)
-        rect.setY(rect.y() - adjust)
-        rect.setHeight(rect.height() + adjust)
-        rect.setWidth(rect.width() + adjust)
+        x_adjust = Commit.width
+        y_adjust = Commit.height
+        rect.setX(rect.x() - x_adjust)
+        rect.setY(rect.y())
+        rect.setHeight(rect.height() + y_adjust)
+        rect.setWidth(rect.width() + x_adjust)
         self.fitInView(rect, QtCore.Qt.KeepAspectRatio)
         self.scene().invalidate()
 
