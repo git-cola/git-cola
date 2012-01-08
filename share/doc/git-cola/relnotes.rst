@@ -1,5 +1,13 @@
 .. |beta(TM)| unicode:: beta U+2122
 
+git-cola v1.7.4.1
+=================
+Fixes
+-----
+* Detect Homebrew so that OS X users do not need to set PYTHONPATH.
+
+* `git-dag` can export patches again.
+
 git-cola v1.7.4
 ===============
 Usability, bells and whistles
