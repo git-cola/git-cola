@@ -351,7 +351,6 @@ class RemoteActionDialog(standard.Dialog):
             qtutils.log(1, errmsg)
             return
         remote, kwargs = self.common_args()
-        action = self.action
 
         # Check if we're about to create a new branch and warn.
         remote_branch = unicode(self.remote_branch.text())

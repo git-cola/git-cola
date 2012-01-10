@@ -353,7 +353,7 @@ class MainModel(Observable):
         return self.run_remote_action(self.git.fetch, remote, **opts)
 
     def push(self, remote, **opts):
-        return self.run_remote_action(self.git.fetch, remote, push=True, **opts)
+        return self.run_remote_action(self.git.push, remote, push=True, **opts)
 
     def pull(self, remote, **opts):
         return self.run_remote_action(self.git.pull, remote, push=True, **opts)
