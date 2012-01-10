@@ -113,25 +113,46 @@ class TextLabel(QtGui.QLabel):
         super(TextLabel, self).__init__(parent)
         self.setTextInteractionFlags(Qt.TextSelectableByMouse |
                                      Qt.LinksAccessibleByMouse)
-        self.setOpenExternalLinks(True)
+        self._display = ''
+        self._template = ''
         self._text = ''
         self._elide = False
+        self._metrics = QtGui.QFontMetrics(self.font())
+        self.setOpenExternalLinks(True)
+
+    def setFont(self, font):
+        self._metrics = QtGui.QFontMetrics(font)
+        super(TextLabel, self).setFont(font)
 
     def elide(self):
         self._elide = True
 
-    def setText(self, text):
-        if self._elide:
-            self._text = text
-            width = self.width()
-            fm = QtGui.QFontMetrics(self.font())
-            text = fm.elidedText(text, Qt.ElideRight, width-2)
-        super(TextLabel, self).setText(text)
+    def setPlainText(self, text):
+        self.setTemplate(text, text)
+
+    def setTemplate(self, text, template):
+        self._display = text
+        self._text = text
+        self._template = template
+        self.update_text(self.width())
+        self.setText(self._display)
+
+    def update_text(self, width):
+        self._display = self._text
+        if not self._elide:
+            return
+        text = self._metrics.elidedText(self._template,
+                                        Qt.ElideRight, width-2)
+        if unicode(text) != self._template:
+            self._display = text
 
     def resizeEvent(self, event):
-        super(TextLabel, self).resizeEvent(event)
         if self._elide:
-            self.setText(self._text)
+            self.update_text(event.size().width())
+            block = self.blockSignals(True)
+            self.setText(self._display)
+            self.blockSignals(block)
+        super(TextLabel, self).resizeEvent(event)
 
 
 class DiffWidget(QtGui.QWidget):
@@ -154,6 +175,7 @@ class DiffWidget(QtGui.QWidget):
         self.author_label.setFont(author_font)
         self.author_label.setSizePolicy(policy)
         self.author_label.setAlignment(Qt.AlignBottom)
+        self.author_label.elide()
 
         self.summary_label = TextLabel()
         self.summary_label.setTextFormat(Qt.PlainText)
@@ -213,8 +235,9 @@ class DiffWidget(QtGui.QWidget):
                        """%(email)s</a>&gt;"""
                        % template_args)
 
-        self.author_label.setText(author_text)
-        self.summary_label.setText(summary)
+        author_template = '%(author)s <%(email)s>' % template_args
+        self.author_label.setTemplate(author_text, author_template)
+        self.summary_label.setPlainText(summary)
 
 
 class ViewerMixin(object):
