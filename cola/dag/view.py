@@ -385,10 +385,10 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         self.commits = []
 
         self.action_up = qtutils.add_action(self, 'Go Up', self.go_up,
-                                            QtCore.Qt.Key_K)
+                                            Qt.Key_K)
 
         self.action_down = qtutils.add_action(self, 'Go Down', self.go_down,
-                                              QtCore.Qt.Key_J)
+                                              Qt.Key_J)
 
         sig = signals.commits_selected
         notifier.add_observer(sig, self.commits_selected)
@@ -400,10 +400,10 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         self.context_menu_event(event)
 
     def mousePressEvent(self, event):
-        if event.buttons() == QtCore.Qt.RightButton:
+        if event.buttons() == Qt.RightButton:
             event.accept()
             return
-        if event.modifiers() == QtCore.Qt.MetaModifier:
+        if event.modifiers() == Qt.MetaModifier:
             event.accept()
             return
         super(CommitTreeWidget, self).mousePressEvent(event)
@@ -493,7 +493,7 @@ class DAGView(standard.Widget):
     def __init__(self, model, dag, parent=None, args=None):
         super(DAGView, self).__init__(parent)
 
-        self.setAttribute(QtCore.Qt.WA_MacMetalStyle)
+        self.setAttribute(Qt.WA_MacMetalStyle)
         self.setMinimumSize(1, 1)
 
         # change when widgets are added/removed
@@ -550,12 +550,12 @@ class DAGView(standard.Widget):
             qtutils.relay_signal(self, self.treewidget, SIGNAL(signal))
 
         self.splitter = QtGui.QSplitter()
-        self.splitter.setOrientation(QtCore.Qt.Horizontal)
+        self.splitter.setOrientation(Qt.Horizontal)
         self.splitter.setChildrenCollapsible(True)
         self.splitter.setHandleWidth(defs.handle_width)
 
         self.left_splitter = QtGui.QSplitter()
-        self.left_splitter.setOrientation(QtCore.Qt.Vertical)
+        self.left_splitter.setOrientation(Qt.Vertical)
         self.left_splitter.setChildrenCollapsible(True)
         self.left_splitter.setHandleWidth(defs.handle_width)
         self.left_splitter.setStretchFactor(0, 1)
@@ -812,21 +812,12 @@ class Cache(object):
 
 class Edge(QtGui.QGraphicsItem):
     item_type = QtGui.QGraphicsItem.UserType + 1
-    arrow_size = 2.0
-    arrow_extra = (arrow_size+1.0)/2.0
 
-    pen = QtGui.QPen(QtCore.Qt.gray, 1.0,
-                     QtCore.Qt.DotLine,
-                     QtCore.Qt.SquareCap,
-                     QtCore.Qt.BevelJoin)
-
-    def __init__(self, source, dest,
-                 extra=arrow_extra,
-                 arrow_size=arrow_size):
+    def __init__(self, source, dest):
 
         QtGui.QGraphicsItem.__init__(self)
 
-        self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
+        self.setAcceptedMouseButtons(Qt.NoButton)
         self.source = source
         self.dest = dest
         self.setZValue(-2)
@@ -840,7 +831,7 @@ class Edge(QtGui.QGraphicsItem):
         width = self.dest_pt.x() - self.source_pt.x()
         height = self.dest_pt.y() - self.source_pt.y()
         rect = QtCore.QRectF(self.source_pt, QtCore.QSizeF(width, height))
-        self.bound = rect.normalized().adjusted(-extra, -extra, extra, extra)
+        self.bound = rect.normalized()
 
     def type(self):
         return self.item_type
@@ -849,10 +840,10 @@ class Edge(QtGui.QGraphicsItem):
         return self.bound
 
     def paint(self, painter, option, widget,
-              arrow_size=arrow_size,
-              gray=QtCore.Qt.gray):
+              pen = QtGui.QPen(Qt.gray, 1.0,
+                               Qt.DotLine, Qt.SquareCap, Qt.BevelJoin)):
         # Draw the line
-        painter.setPen(self.pen)
+        painter.setPen(pen)
         painter.drawLine(self.line)
 
 
@@ -869,25 +860,24 @@ class Commit(QtGui.QGraphicsItem):
     inner_rect.addRect(width/-2.+2., height/-2.+2, width-4., height-4.)
     inner_rect = inner_rect.boundingRect()
 
-    selected_color = QtGui.QColor.fromRgb(255, 255, 0)
-    outline_color = QtGui.QColor.fromRgb(64, 96, 192)
-
+    outline_color = QtGui.QColor.fromRgb(0, 0x60, 0x80)
+    selected_color= QtGui.QColor.fromRgb(0, 0xc4, 0xff)
 
     text_options = QtGui.QTextOption()
-    text_options.setAlignment(QtCore.Qt.AlignCenter)
+    text_options.setAlignment(Qt.AlignCenter)
 
     commit_pen = QtGui.QPen()
     commit_pen.setWidth(1.0)
     commit_pen.setColor(outline_color)
 
-    cached_commit_color = QtGui.QColor.fromRgb(128, 222, 255)
-    cached_commit_selected_color = QtGui.QColor.fromRgb(32, 64, 255)
-    cached_merge_color = QtGui.QColor.fromRgb(255, 255, 255)
+    cached_commit_color = QtGui.QColor.fromRgb(0x0, 0xc4, 0xff)
+    cached_commit_selected_color = QtGui.QColor.fromRgb(0x66, 0xff, 0xff)
+    cached_merge_color = QtGui.QColor.fromRgb(0xff, 0xff, 0xff)
 
     def __init__(self, commit,
                  notifier,
                  selectable=QtGui.QGraphicsItem.ItemIsSelectable,
-                 cursor=QtCore.Qt.PointingHandCursor,
+                 cursor=Qt.PointingHandCursor,
                  xpos=width/2. + 1.,
                  commit_color=cached_commit_color,
                  commit_selected_color=cached_commit_selected_color,
@@ -913,7 +903,7 @@ class Commit(QtGui.QGraphicsItem):
             self.commit_color = merge_color
         else:
             self.commit_color = commit_color
-        self.text_pen = QtCore.Qt.black
+        self.text_pen = Qt.black
         self.sha1_text = commit.sha1[:8]
 
         self.pressed = False
@@ -939,10 +929,8 @@ class Commit(QtGui.QGraphicsItem):
             # Cache the pen for use in paint()
             if value.toPyObject():
                 self.commit_color = self.cached_commit_selected_color
-                self.text_pen = QtCore.Qt.white
                 color = self.selected_color
             else:
-                self.text_pen = QtCore.Qt.black
                 if len(self.commit.parents) > 1:
                     self.commit_color = self.cached_merge_color
                 else:
@@ -1001,7 +989,7 @@ class Commit(QtGui.QGraphicsItem):
         QtGui.QGraphicsItem.mouseReleaseEvent(self, event)
         if (not self.dragged and
                 self.selected and
-                event.button() == QtCore.Qt.LeftButton):
+                event.button() == Qt.LeftButton):
             return
         self.pressed = False
         self.dragged = False
@@ -1018,8 +1006,8 @@ class Label(QtGui.QGraphicsItem):
     item_bbox = item_shape.boundingRect()
 
     text_options = QtGui.QTextOption()
-    text_options.setAlignment(QtCore.Qt.AlignCenter)
-    text_options.setAlignment(QtCore.Qt.AlignVCenter)
+    text_options.setAlignment(Qt.AlignCenter)
+    text_options.setAlignment(Qt.AlignVCenter)
 
     def __init__(self, commit,
                  other_color=QtGui.QColor.fromRgb(255, 255, 64),
@@ -1056,7 +1044,7 @@ class Label(QtGui.QGraphicsItem):
 
     def paint(self, painter, option, widget,
               text_opts=text_options,
-              black=QtCore.Qt.black,
+              black=Qt.black,
               cache=Cache):
         # Draw tags
         painter.setBrush(self.color)
@@ -1117,41 +1105,26 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         self.setResizeAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setBackgroundBrush(QtGui.QColor.fromRgb(0, 0, 0))
 
-        self.action_zoom_in = (
-            qtutils.add_action(self, 'Zoom In',
-                               self.zoom_in,
-                               QtCore.Qt.Key_Plus,
-                               QtCore.Qt.Key_Equal))
+        qtutils.add_action(self, 'Zoom In',
+                           self.zoom_in, Qt.Key_Plus, Qt.Key_Equal)
 
-        self.action_zoom_out = (
-            qtutils.add_action(self, 'Zoom Out',
-                               self.zoom_out,
-                               QtCore.Qt.Key_Minus))
+        qtutils.add_action(self, 'Zoom Out',
+                           self.zoom_out, Qt.Key_Minus)
 
-        self.action_zoom_fit = (
-            qtutils.add_action(self, 'Zoom to Fit',
-                               self.fit_view_to_selection,
-                               QtCore.Qt.Key_F))
+        qtutils.add_action(self, 'Zoom to Fit',
+                           self.fit_view_to_selection, Qt.Key_F)
 
-        self.action_select_parent = (
-            qtutils.add_action(self, 'Select Parent',
-                               self.select_parent,
-                               QtCore.Qt.Key_J))
+        qtutils.add_action(self, 'Select Parent',
+                           self.select_parent, 'Shift+J')
 
-        self.action_select_oldest_parent = (
-            qtutils.add_action(self, 'Select Oldest Parent',
-                               self.select_oldest_parent,
-                               'Shift+J'))
+        qtutils.add_action(self, 'Select Oldest Parent',
+                           self.select_oldest_parent, Qt.Key_J)
 
-        self.action_select_child = (
-            qtutils.add_action(self, 'Select Child',
-                               self.select_child,
-                               QtCore.Qt.Key_K))
+        qtutils.add_action(self, 'Select Child',
+                           self.select_child, 'Shift+K')
 
-        self.action_select_child = (
-            qtutils.add_action(self, 'Select Nth Child',
-                               self.select_nth_child,
-                               'Shift+K'))
+        qtutils.add_action(self, 'Select Newest Child',
+                           self.select_newest_child, Qt.Key_K)
 
         sig = signals.commits_selected
         notifier.add_observer(sig, self.commits_selected)
@@ -1273,7 +1246,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         child_item.setSelected(True)
         self.ensureVisible(child_item.mapRectToScene(child_item.boundingRect()))
 
-    def select_nth_child(self):
+    def select_newest_child(self):
         """Select the Nth child with the newest generation number (N > 1)"""
         selected_item = self.selected_item()
         if selected_item is None:
@@ -1327,18 +1300,18 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         rect.setY(rect.y())
         rect.setHeight(rect.height() + y_adjust)
         rect.setWidth(rect.width() + x_adjust)
-        self.fitInView(rect, QtCore.Qt.KeepAspectRatio)
+        self.fitInView(rect, Qt.KeepAspectRatio)
         self.scene().invalidate()
 
     def save_selection(self, event):
-        if event.button() != QtCore.Qt.LeftButton:
+        if event.button() != Qt.LeftButton:
             return
-        elif QtCore.Qt.ShiftModifier != event.modifiers():
+        elif Qt.ShiftModifier != event.modifiers():
             return
         self.selection_list = self.selectedItems()
 
     def restore_selection(self, event):
-        if QtCore.Qt.ShiftModifier != event.modifiers():
+        if Qt.ShiftModifier != event.modifiers():
             return
         for item in self.selection_list:
             item.setSelected(True)
@@ -1350,16 +1323,16 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         self.restore_selection(event)
 
     def mousePressEvent(self, event):
-        if event.button() == QtCore.Qt.MidButton:
+        if event.button() == Qt.MidButton:
             pos = event.pos()
             self.mouse_start = [pos.x(), pos.y()]
             self.saved_matrix = QtGui.QMatrix(self.matrix())
             self.is_panning = True
             return
-        if event.button() == QtCore.Qt.RightButton:
+        if event.button() == Qt.RightButton:
             event.ignore()
             return
-        if event.button() == QtCore.Qt.LeftButton:
+        if event.button() == Qt.LeftButton:
             self.pressed = True
         self.handle_event(QtGui.QGraphicsView.mousePressEvent, event)
 
@@ -1377,7 +1350,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
 
     def mouseReleaseEvent(self, event):
         self.pressed = False
-        if event.button() == QtCore.Qt.MidButton:
+        if event.button() == Qt.MidButton:
             self.is_panning = False
             return
         self.handle_event(QtGui.QGraphicsView.mouseReleaseEvent, event)
@@ -1408,7 +1381,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
 
     def wheelEvent(self, event):
         """Handle Qt mouse wheel events."""
-        if event.modifiers() == QtCore.Qt.ControlModifier:
+        if event.modifiers() == Qt.ControlModifier:
             self.wheel_zoom(event)
         else:
             self.wheel_pan(event)
@@ -1436,7 +1409,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         pan_rect = QtCore.QRectF(0.0, 0.0, 1.0, 1.0)
         factor = 1.0 / self.matrix().mapRect(pan_rect).width()
 
-        if event.orientation() == QtCore.Qt.Vertical:
+        if event.orientation() == Qt.Vertical:
             matrix = self.matrix().translate(0, s * factor)
         else:
             matrix = self.matrix().translate(s * factor, 0)
