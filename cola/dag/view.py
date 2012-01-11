@@ -860,8 +860,8 @@ class Commit(QtGui.QGraphicsItem):
     inner_rect.addRect(width/-2.+2., height/-2.+2, width-4., height-4.)
     inner_rect = inner_rect.boundingRect()
 
-    outline_color = QtGui.QColor.fromRgb(0, 0x60, 0x80)
-    selected_color= QtGui.QColor.fromRgb(0, 0xc4, 0xff)
+    outline_color = QtGui.QColor.fromRgb(0, 0x50, 0xa0)
+    selected_color= QtGui.QColor.fromRgb(0xa0, 0x50, 0x00)
 
     text_options = QtGui.QTextOption()
     text_options.setAlignment(Qt.AlignCenter)
@@ -870,8 +870,8 @@ class Commit(QtGui.QGraphicsItem):
     commit_pen.setWidth(1.0)
     commit_pen.setColor(outline_color)
 
-    cached_commit_color = QtGui.QColor.fromRgb(0x0, 0xc4, 0xff)
-    cached_commit_selected_color = QtGui.QColor.fromRgb(0x66, 0xff, 0xff)
+    cached_commit_color = QtGui.QColor.fromRgb(0x0, 0x80, 0xff)
+    cached_commit_selected_color = QtGui.QColor.fromRgb(0xff, 0x80, 0x00)
     cached_merge_color = QtGui.QColor.fromRgb(0xff, 0xff, 0xff)
 
     def __init__(self, commit,
@@ -901,9 +901,10 @@ class Commit(QtGui.QGraphicsItem):
 
         if len(commit.parents) > 1:
             self.commit_color = merge_color
+            self.text_pen = Qt.black
         else:
             self.commit_color = commit_color
-        self.text_pen = Qt.black
+            self.text_pen = Qt.white
         self.sha1_text = commit.sha1[:8]
 
         self.pressed = False
@@ -930,11 +931,14 @@ class Commit(QtGui.QGraphicsItem):
             if value.toPyObject():
                 self.commit_color = self.cached_commit_selected_color
                 color = self.selected_color
+                self.text_pen = Qt.white
             else:
                 if len(self.commit.parents) > 1:
                     self.commit_color = self.cached_merge_color
+                    self.text_pen = Qt.black
                 else:
                     self.commit_color = self.cached_commit_color
+                    self.text_pen = Qt.white
                 color = self.outline_color
             commit_pen = QtGui.QPen()
             commit_pen.setWidth(1.0)
