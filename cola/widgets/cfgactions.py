@@ -10,8 +10,8 @@ from cola import gitcmds
 from cola import qt
 from cola import qtutils
 from cola import signals
-from cola.qt import GitRefLineEdit
 from cola.widgets import defs
+from cola.widgets import completion
 from cola.widgets import standard
 
 
@@ -276,7 +276,7 @@ class RevisionSelector(QtGui.QWidget):
         self._rev_label = QtGui.QLabel()
         self._rev_layt.addWidget(self._rev_label)
 
-        self._revision = GitRefLineEdit()
+        self._revision = completion.GitRefLineEdit()
         self._rev_layt.addWidget(self._revision)
 
         self._layt.addLayout(self._rev_layt)

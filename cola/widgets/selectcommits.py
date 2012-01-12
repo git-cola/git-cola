@@ -6,7 +6,6 @@ from PyQt4.QtCore import SIGNAL
 from cola import gitcmds
 from cola import qtutils
 from cola.qt import DiffSyntaxHighlighter
-from cola.qt import GitRefLineEdit
 from cola.prefs import diff_font
 from cola.widgets import defs
 

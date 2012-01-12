@@ -22,7 +22,7 @@ from cola.dag.model import archive
 from cola.dag.model import RepoReader
 from cola.prefs import diff_font
 from cola.qt import DiffSyntaxHighlighter
-from cola.qt import GitLogLineEdit
+from cola.widgets import completion
 from cola.widgets import defs
 from cola.widgets import standard
 from cola.widgets.createbranch import create_new_branch
@@ -507,7 +507,7 @@ class DAGView(standard.Widget):
         self.old_count = None
         self.old_ref = None
 
-        self.revtext = GitLogLineEdit(parent=self)
+        self.revtext = completion.GitLogLineEdit(parent=self)
 
         self.maxresults = QtGui.QSpinBox()
         self.maxresults.setMinimum(1)

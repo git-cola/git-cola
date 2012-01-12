@@ -1,5 +1,4 @@
 import re
-import subprocess
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -10,11 +9,10 @@ from PyQt4.QtGui import QSyntaxHighlighter
 from PyQt4.QtGui import QTextCharFormat
 from PyQt4.QtGui import QColor
 
-import cola
 from cola import utils
 from cola import qtutils
-from cola.compat import set
 from cola.qtutils import tr
+from cola.widgets import completion
 from cola.widgets import defs
 
 
@@ -198,55 +196,15 @@ class ExpandableGroupBox(QtGui.QGroupBox):
             painter.drawPrimitive(style.PE_IndicatorArrowRight, option)
 
 
-class GitRefCompleter(QtGui.QCompleter):
-    """Provides completion for branches and tags"""
-    def __init__(self, parent, provider=None):
-        QtGui.QCompleter.__init__(self, parent)
-        self._model = GitRefModel(parent, provider=provider)
-        self.setModel(self._model)
-        self.setCompletionMode(self.UnfilteredPopupCompletion)
-        self.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
-
-    def __del__(self):
-        self.dispose()
-
-    def dispose(self):
-        self._model.dispose()
-
-
-class GitRefLineEdit(QtGui.QLineEdit):
-    def __init__(self, parent=None, provider=None):
-        QtGui.QLineEdit.__init__(self, parent)
-        self.refcompleter = GitRefCompleter(self, provider=provider)
-        self.setCompleter(self.refcompleter)
-        self.refcompleter.popup().installEventFilter(self)
-
-    def eventFilter(self, obj, event):
-        """Fix an annoyance on OS X
-
-        The completer popup steals focus.  Work around it.
-        This affects dialogs without QtCore.Qt.WindowModal modality.
-
-        """
-        if obj == self.refcompleter.popup():
-            if event.type() == QtCore.QEvent.FocusIn:
-                return True
-        return False
-
-    def mouseReleaseEvent(self, event):
-        super(GitRefLineEdit, self).mouseReleaseEvent(event)
-        self.refcompleter.complete()
-
-
 class GitRefDialog(QtGui.QDialog):
-    def __init__(self, title, button_text, parent, provider=None):
+    def __init__(self, title, button_text, parent):
         super(GitRefDialog, self).__init__(parent)
         self.setWindowTitle(title)
 
         self.label = QtGui.QLabel()
         self.label.setText(title)
 
-        self.lineedit = GitRefLineEdit(self, provider=provider)
+        self.lineedit = completion.GitRefLineEdit(self)
         self.setFocusProxy(self.lineedit)
 
         self.ok_button = QtGui.QPushButton()
@@ -288,8 +246,8 @@ class GitRefDialog(QtGui.QDialog):
         self.ok_button.setEnabled(bool(self.text()))
 
     @staticmethod
-    def ref(title, button_text, parent, provider=None):
-        dlg = GitRefDialog(title, button_text, parent, provider=provider)
+    def ref(title, button_text, parent):
+        dlg = GitRefDialog(title, button_text, parent)
         dlg.show()
         dlg.raise_()
         dlg.setFocus()
@@ -298,353 +256,6 @@ class GitRefDialog(QtGui.QDialog):
         else:
             return None
 
-
-class GitRefProvider(QtCore.QObject):
-    def __init__(self, pre=None):
-        super(GitRefProvider, self).__init__()
-        if pre:
-            self.pre = pre
-        else:
-            self.pre = []
-        self.model = model = cola.model()
-        msg = model.message_updated
-        model.add_observer(msg, self.emit_updated)
-
-    def emit_updated(self):
-        self.emit(SIGNAL('updated()'))
-
-    def matches(self):
-        model = self.model
-        return self.pre + model.local_branches + model.remote_branches + model.tags
-
-    def dispose(self):
-        self.model.remove_observer(self.emit_updated)
-
-
-class GitRefModel(QtGui.QStandardItemModel):
-    def __init__(self, parent, provider=None):
-        QtGui.QStandardItemModel.__init__(self, parent)
-
-        if provider is None:
-            provider = GitRefProvider()
-        self.provider = provider
-        self.update_matches()
-
-        self.connect(self.provider, SIGNAL('updated()'),
-                     self.update_matches)
-
-    def dispose(self):
-        self.provider.dispose()
-
-    def update_matches(self):
-        QStandardItem = QtGui.QStandardItem
-        self.clear()
-        for match in self.provider.matches():
-            item = QStandardItem()
-            item.setIcon(qtutils.git_icon())
-            item.setText(match)
-            self.appendRow(item)
-
-
-class UpdateGitLogCompletionModelThread(QtCore.QThread):
-    def __init__(self, model):
-        QtCore.QThread.__init__(self)
-        self.model = model
-        self.case_insensitive = False
-
-    def run(self):
-        text = None
-        # Loop when the matched text changes between the start and end time.
-        # This happens when gather_matches() takes too long and the
-        # model's matched_text changes in-between.
-        while text != self.model.matched_text:
-            text = self.model.matched_text
-            items = self.model.gather_matches(self.case_insensitive)
-        self.emit(SIGNAL('items_gathered'), *items)
-
-
-class GitLogCompletionModel(QtGui.QStandardItemModel):
-    def __init__(self, parent):
-        self.matched_text = None
-        QtGui.QStandardItemModel.__init__(self, parent)
-        self.cmodel = cola.model()
-        self.update_thread = UpdateGitLogCompletionModelThread(self)
-        self.connect(self.update_thread, SIGNAL('items_gathered'),
-                     self.apply_matches)
-
-    def lower_cmp(self, a, b):
-        return cmp(a.replace('.','').lower(), b.replace('.','').lower())
-
-    def update_matches(self, case_insensitive):
-        self.update_thread.case_insensitive = case_insensitive
-        if not self.update_thread.isRunning():
-            self.update_thread.start()
-
-    def gather_matches(self, case_sensitive):
-        file_list = self.cmodel.everything()
-        files = set(file_list)
-        files_and_dirs = utils.add_parents(set(files))
-
-        dirs = files_and_dirs.difference(files)
-
-        model = self.cmodel
-        refs = model.local_branches + model.remote_branches + model.tags
-        matched_text = self.matched_text
-
-        if matched_text:
-            if case_sensitive:
-                matched_refs = [r for r in refs if matched_text in r]
-            else:
-                matched_refs = [r for r in refs
-                                    if matched_text.lower() in r.lower()]
-        else:
-            matched_refs = refs
-
-        matched_refs.sort(cmp=self.lower_cmp)
-
-        if matched_text:
-            if case_sensitive:
-                matched_paths = [f for f in files_and_dirs
-                                        if matched_text in f]
-            else:
-                matched_paths = [f for f in files_and_dirs
-                                    if matched_text.lower() in f.lower()]
-        else:
-            matched_paths = list(files_and_dirs)
-
-        matched_paths.sort(cmp=self.lower_cmp)
-
-        return (matched_refs, matched_paths, dirs)
-
-
-    def apply_matches(self, matched_refs, matched_paths, dirs):
-        QStandardItem = QtGui.QStandardItem
-        file_icon = qtutils.file_icon()
-        dir_icon = qtutils.dir_icon()
-        git_icon = qtutils.git_icon()
-
-        matched_text = self.matched_text
-        items = []
-        for ref in matched_refs:
-            item = QStandardItem()
-            item.setText(ref)
-            item.setIcon(git_icon)
-            items.append(item)
-
-        if matched_paths and (not matched_text or matched_text in '--'):
-            item = QStandardItem()
-            item.setText('--')
-            item.setIcon(file_icon)
-            items.append(item)
-
-        for match in matched_paths:
-            item = QStandardItem()
-            item.setText(match)
-            if match in dirs:
-                item.setIcon(dir_icon)
-            else:
-                item.setIcon(file_icon)
-            items.append(item)
-
-        self.clear()
-        self.invisibleRootItem().appendRows(items)
-
-    def set_match_text(self, text, case_sensitive):
-        self.matched_text = text
-        self.update_matches(case_sensitive)
-
-
-class GitLogLineEdit(QtGui.QLineEdit):
-    def __init__(self, parent=None):
-        QtGui.QLineEdit.__init__(self, parent)
-        # used to hide the completion popup after a drag-select
-        self._drag = 0
-
-        self._model = GitLogCompletionModel(self)
-        self._delegate = HighlightCompletionDelegate(self)
-
-        self._completer = QtGui.QCompleter(self)
-        self._completer.setWidget(self)
-        self._completer.setModel(self._model)
-        self._completer.setCompletionMode(
-                QtGui.QCompleter.UnfilteredPopupCompletion)
-        self._completer.popup().setItemDelegate(self._delegate)
-
-        self.connect(self._completer, SIGNAL('activated(QString)'),
-                     self._complete)
-        self.connect(self, SIGNAL('textChanged(QString)'), self._text_changed)
-        self._keys_to_ignore = set([QtCore.Qt.Key_Enter,
-                                    QtCore.Qt.Key_Return,
-                                    QtCore.Qt.Key_Escape])
-
-    def is_case_sensitive(self, text):
-        return bool([char for char in text if char.isupper()])
-
-    def _text_changed(self, text):
-        text = self.last_word()
-        case_sensitive = self.is_case_sensitive(text)
-        if case_sensitive:
-            self._completer.setCaseSensitivity(QtCore.Qt.CaseSensitive)
-        else:
-            self._completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
-        self._delegate.set_highlight_text(text, case_sensitive)
-        self._model.set_match_text(text, case_sensitive)
-
-    def update_matches(self):
-        text = self.last_word()
-        case_sensitive = self.is_case_sensitive(text)
-        self._model.update_matches(case_sensitive)
-
-    def _complete(self, completion):
-        """
-        This is the event handler for the QCompleter.activated(QString) signal,
-        it is called when the user selects an item in the completer popup.
-        """
-        if not completion:
-            return
-        words = self.words()
-        if words:
-            words.pop()
-        words.append(unicode(completion))
-        self.setText(subprocess.list2cmdline(words))
-        self.emit(SIGNAL('ref_changed'))
-
-    def words(self):
-        return utils.shell_usplit(unicode(self.text()))
-
-    def last_word(self):
-        words = self.words()
-        if not words:
-            return unicode(self.text())
-        if not words[-1]:
-            return u''
-        return words[-1]
-
-    def event(self, event):
-        if event.type() == QtCore.QEvent.KeyPress:
-            if (event.key() == QtCore.Qt.Key_Tab and
-                self._completer.popup().isVisible()):
-                    event.ignore()
-                    return True
-        return QtGui.QLineEdit.event(self, event)
-
-    def do_completion(self):
-        self._completer.popup().setCurrentIndex(
-                self._completer.completionModel().index(0,0))
-        self._completer.complete()
-
-    def keyPressEvent(self, event):
-        if self._completer.popup().isVisible():
-            if event.key() in self._keys_to_ignore:
-                event.ignore()
-                self._complete(self.last_word())
-                return
-
-        elif (event.key() == QtCore.Qt.Key_Down and
-              self._completer.completionCount() > 0):
-                event.accept()
-                self.do_completion()
-                return
-
-        QtGui.QLineEdit.keyPressEvent(self, event)
-
-        prefix = self.last_word()
-        if prefix != unicode(self._completer.completionPrefix()):
-            self._update_popup_items(prefix)
-        if len(event.text()) > 0 and len(prefix) > 0:
-            self._completer.complete()
-        if len(prefix) == 0:
-            self._completer.popup().hide()
-
-    #: _drag: 0 - unclicked, 1 - clicked, 2 - dragged
-    def mousePressEvent(self, event):
-        self._drag = 1
-        return QtGui.QLineEdit.mousePressEvent(self, event)
-
-    def mouseMoveEvent(self, event):
-        if self._drag == 1:
-            self._drag = 2
-        return QtGui.QLineEdit.mouseMoveEvent(self, event)
-
-    def mouseReleaseEvent(self, event):
-        if self._drag != 2 and event.buttons() != QtCore.Qt.RightButton:
-            self.do_completion()
-        self._drag = 0
-        return QtGui.QLineEdit.mouseReleaseEvent(self, event)
-
-    def close_popup(self):
-        self._completer.popup().close()
-
-    def _update_popup_items(self, prefix):
-        """
-        Filters the completer's popup items to only show items
-        with the given prefix.
-        """
-        self._completer.setCompletionPrefix(prefix)
-        self._completer.popup().setCurrentIndex(
-                self._completer.completionModel().index(0,0))
-
-
-class HighlightCompletionDelegate(QtGui.QStyledItemDelegate):
-    """A delegate used for auto-completion to give formatted completion"""
-    def __init__(self, parent=None): # model, parent=None):
-        QtGui.QStyledItemDelegate.__init__(self, parent)
-        self.highlight_text = ''
-        self.case_sensitive = False
-
-        self.doc = QtGui.QTextDocument()
-        self.doc.setDocumentMargin(0)
-
-    def set_highlight_text(self, text, case_sensitive):
-        """Sets the text that will be made bold in the term name when displayed"""
-        self.highlight_text = text
-        self.case_sensitive = case_sensitive
-
-    def paint(self, painter, option, index):
-        """Overloaded Qt method for custom painting of a model index"""
-        if not self.highlight_text:
-            return QtGui.QStyledItemDelegate.paint(self, painter, option, index)
-
-        text = unicode(index.data().toPyObject())
-        if self.case_sensitive:
-            html = text.replace(self.highlight_text,
-                                '<strong>%s</strong>' % self.highlight_text)
-        else:
-            match = re.match('(.*)(' + self.highlight_text + ')(.*)',
-                             text, re.IGNORECASE)
-            if match:
-                start = match.group(1) or ''
-                middle = match.group(2) or ''
-                end = match.group(3) or ''
-                html = (start + ('<strong>%s</strong>' % middle) + end)
-            else:
-                html = text
-        self.doc.setHtml(html)
-
-        # Painting item without text, Text Document will paint the text
-        optionV4 = QtGui.QStyleOptionViewItemV4(option)
-        self.initStyleOption(optionV4, index)
-        optionV4.text = QtCore.QString()
-
-        style = QtGui.QApplication.style()
-        style.drawControl(QtGui.QStyle.CE_ItemViewItem, optionV4, painter)
-        ctx = QtGui.QAbstractTextDocumentLayout.PaintContext()
-
-        # Highlighting text if item is selected
-        if (optionV4.state & QtGui.QStyle.State_Selected):
-            ctx.palette.setColor(QtGui.QPalette.Text, optionV4.palette.color(QtGui.QPalette.Active, QtGui.QPalette.HighlightedText))
-
-        # translate the painter to where the text is drawn
-        textRect = style.subElementRect(QtGui.QStyle.SE_ItemViewItemText, optionV4)
-        painter.save()
-
-        start = textRect.topLeft() + QtCore.QPoint(3, 0)
-        painter.translate(start)
-        painter.setClipRect(textRect.translated(-start))
-
-        # tell the text document to draw the html for us
-        self.doc.documentLayout().draw(painter, ctx)
-        painter.restore()
 
 # Syntax highlighting
 

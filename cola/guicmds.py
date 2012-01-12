@@ -56,7 +56,7 @@ def branch_delete():
 
 def diff_revision():
     """Diff an arbitrary revision against the worktree"""
-    ref = choose_ref('Select Revision to Diff', 'Diff', pre=['HEAD^'])
+    ref = choose_ref('Select Revision to Diff', 'Diff')
     if not ref:
         return
     difftool.diff_commits(qtutils.active_window(), ref, None)
@@ -217,12 +217,9 @@ def rebase():
     qtutils.log(status, output)
 
 
-def choose_ref(title, button_text, pre=None):
-    provider = None
-    if pre:
-        provider = qt.GitRefProvider(pre=pre)
+def choose_ref(title, button_text):
     parent = qtutils.active_window()
-    return qt.GitRefDialog.ref(title, button_text, parent, provider=provider)
+    return qt.GitRefDialog.ref(title, button_text, parent)
 
 
 def review_branch():
