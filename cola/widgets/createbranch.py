@@ -7,6 +7,7 @@ from cola import qt
 from cola import qtutils
 from cola import utils
 from cola.widgets import defs
+from cola.widgets import completion
 from cola.widgets import standard
 from cola.main.model import MainModel
 
@@ -40,7 +41,7 @@ class CreateBranchDialog(standard.Dialog):
         self.rev_label = QtGui.QLabel()
         self.rev_label.setText(self.tr('Revision Expression:'))
 
-        self.revision = QtGui.QLineEdit()
+        self.revision = completion.GitRefLineEdit()
 
         self.local_radio = QtGui.QRadioButton()
         self.local_radio.setText(self.tr('Local Branch'))
