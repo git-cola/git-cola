@@ -161,7 +161,7 @@ class ExpandableGroupBox(QtGui.QGroupBox):
         self.emit(SIGNAL('expanded(bool)'), expanded)
 
     def mousePressEvent(self, event):
-        if event.button() == QtCore.Qt.LeftButton:
+        if event.button() == Qt.LeftButton:
             option = QtGui.QStyleOptionGroupBox()
             self.initStyleOption(option)
             icon_size = self.arrow_icon_size
@@ -174,7 +174,7 @@ class ExpandableGroupBox(QtGui.QGroupBox):
         QtGui.QGroupBox.mousePressEvent(self, event)
 
     def mouseReleaseEvent(self, event):
-        if (event.button() == QtCore.Qt.LeftButton and
+        if (event.button() == Qt.LeftButton and
             self.click_pos == event.pos()):
             self.set_expanded(not self.expanded)
         QtGui.QGroupBox.mouseReleaseEvent(self, event)
@@ -185,7 +185,7 @@ class ExpandableGroupBox(QtGui.QGroupBox):
         self.initStyleOption(option)
         painter.save()
         painter.translate(self.arrow_icon_size + defs.spacing, 0)
-        painter.drawText(option.rect, QtCore.Qt.AlignLeft, self.title())
+        painter.drawText(option.rect, Qt.AlignLeft, self.title())
         painter.restore()
 
         style = QtGui.QStyle
@@ -278,7 +278,7 @@ class GitRefDialog(QtGui.QDialog):
         self.connect(self.lineedit, SIGNAL('textChanged(QString)'),
                      self.text_changed)
 
-        self.setWindowModality(QtCore.Qt.WindowModal)
+        self.setWindowModality(Qt.WindowModal)
         self.ok_button.setEnabled(False)
 
     def text(self):
