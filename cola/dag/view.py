@@ -860,28 +860,28 @@ class Commit(QtGui.QGraphicsItem):
     inner_rect.addRect(width/-2.+2., height/-2.+2, width-4., height-4.)
     inner_rect = inner_rect.boundingRect()
 
-    outline_color = QtGui.QColor.fromRgb(0, 0x50, 0xa0)
-    selected_color= QtGui.QColor.fromRgb(0xa0, 0x50, 0x00)
-
     text_options = QtGui.QTextOption()
     text_options.setAlignment(Qt.AlignCenter)
+
+    commit_color = QtGui.QColor.fromRgb(0x0, 0x80, 0xff)
+    commit_selected_color = QtGui.QColor.fromRgb(0xff, 0x8a, 0x22)
+    merge_color = QtGui.QColor.fromRgb(0xff, 0xff, 0xff)
+
+    outline_color = commit_color.darker()
+    selected_outline_color = commit_selected_color.darker()
 
     commit_pen = QtGui.QPen()
     commit_pen.setWidth(1.0)
     commit_pen.setColor(outline_color)
-
-    cached_commit_color = QtGui.QColor.fromRgb(0x0, 0x80, 0xff)
-    cached_commit_selected_color = QtGui.QColor.fromRgb(0xff, 0x80, 0x00)
-    cached_merge_color = QtGui.QColor.fromRgb(0xff, 0xff, 0xff)
 
     def __init__(self, commit,
                  notifier,
                  selectable=QtGui.QGraphicsItem.ItemIsSelectable,
                  cursor=Qt.PointingHandCursor,
                  xpos=width/2. + 1.,
-                 commit_color=cached_commit_color,
-                 commit_selected_color=cached_commit_selected_color,
-                 merge_color=cached_merge_color):
+                 cached_commit_color=commit_color,
+                 cached_commit_selected_color=commit_selected_color,
+                 cached_merge_color=merge_color):
 
         QtGui.QGraphicsItem.__init__(self)
 
@@ -900,10 +900,10 @@ class Commit(QtGui.QGraphicsItem):
             self.label = None
 
         if len(commit.parents) > 1:
-            self.commit_color = merge_color
+            self.brush = cached_merge_color
             self.text_pen = Qt.black
         else:
-            self.commit_color = commit_color
+            self.brush = cached_commit_color
             self.text_pen = Qt.white
         self.sha1_text = commit.sha1[:8]
 
@@ -929,15 +929,15 @@ class Commit(QtGui.QGraphicsItem):
 
             # Cache the pen for use in paint()
             if value.toPyObject():
-                self.commit_color = self.cached_commit_selected_color
-                color = self.selected_color
+                self.brush = self.commit_selected_color
+                color = self.selected_outline_color
                 self.text_pen = Qt.white
             else:
                 if len(self.commit.parents) > 1:
-                    self.commit_color = self.cached_merge_color
+                    self.brush = self.merge_color
                     self.text_pen = Qt.black
                 else:
-                    self.commit_color = self.cached_commit_color
+                    self.brush = self.commit_color
                     self.text_pen = Qt.white
                 color = self.outline_color
             commit_pen = QtGui.QPen()
@@ -966,7 +966,7 @@ class Commit(QtGui.QGraphicsItem):
 
         # Draw ellipse
         painter.setPen(self.commit_pen)
-        painter.setBrush(self.commit_color)
+        painter.setBrush(self.brush)
         painter.drawEllipse(inner)
 
         # Draw text
