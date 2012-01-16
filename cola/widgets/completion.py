@@ -30,26 +30,13 @@ class CompletionLineEdit(QtGui.QLineEdit):
         completer.popup().setItemDelegate(self._delegate)
         self.connect(self._completer, SIGNAL('activated(QString)'),
                      self._complete)
-        #completer.popup().installEventFilter(self)
 
-    def eventFilter(self, obj, event):
-        """Fix an annoyance on OS X
-
-        The completer popup steals focus.  Work around it.
-        This affects dialogs without Qt.WindowModal modality.
-
-        """
-        if obj == self.refcompleter.popup():
-            if event.type() == QtCore.QEvent.FocusIn:
-                return True
-        return False
-
-    def is_case_sensitive(self, text):
+    def _is_case_sensitive(self, text):
         return bool([char for char in text if char.isupper()])
 
     def _text_changed(self, text):
         text = self._last_word()
-        case_sensitive = self.is_case_sensitive(text)
+        case_sensitive = self._is_case_sensitive(text)
         if case_sensitive:
             self._completer.setCaseSensitivity(Qt.CaseSensitive)
         else:
@@ -59,7 +46,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
 
     def update_matches(self):
         text = self._last_word()
-        case_sensitive = self.is_case_sensitive(text)
+        case_sensitive = self._is_case_sensitive(text)
         self._completer.model().update_matches(case_sensitive)
 
     def _complete(self, completion):
@@ -99,7 +86,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
                 self._completer.popup().isVisible()):
                     event.ignore()
                     return True
-        return QtGui.QLineEdit.event(self, event)
+        return super(CompletionLineEdit, self).event(event)
 
     def do_completion(self):
         self._completer.popup().setCurrentIndex(
@@ -119,7 +106,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
                 self.do_completion()
                 return
 
-        QtGui.QLineEdit.keyPressEvent(self, event)
+        super(CompletionLineEdit, self).keyPressEvent(event)
 
         prefix = self._last_word()
         if prefix != unicode(self._completer.completionPrefix()):
@@ -132,12 +119,12 @@ class CompletionLineEdit(QtGui.QLineEdit):
     #: _drag: 0 - unclicked, 1 - clicked, 2 - dragged
     def mousePressEvent(self, event):
         self._drag = 1
-        return QtGui.QLineEdit.mousePressEvent(self, event)
+        return super(CompletionLineEdit, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
         if self._drag == 1:
             self._drag = 2
-        return QtGui.QLineEdit.mouseMoveEvent(self, event)
+        return super(CompletionLineEdit, self).mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
         if self._drag != 2 and event.buttons() != Qt.RightButton:

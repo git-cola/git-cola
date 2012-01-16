@@ -28,10 +28,11 @@ class CreateBranchDialog(standard.Dialog):
 
     def __init__(self, model, parent=None):
         super(CreateBranchDialog, self).__init__(parent=parent)
+        self.setWindowModality(Qt.WindowModal)
         self.setAttribute(Qt.WA_MacMetalStyle)
-        self.model = model
-
         self.setWindowTitle(self.tr('Create Branch'))
+
+        self.model = model
 
         self.branch_name_label = QtGui.QLabel()
         self.branch_name_label.setText(self.tr('Branch Name'))

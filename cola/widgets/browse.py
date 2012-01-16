@@ -115,7 +115,7 @@ class BrowseDialog(QtGui.QDialog):
     def __init__(self, model, select_file=False, parent=None):
         super(BrowseDialog, self).__init__(parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
-        self.setWindowModality(QtCore.Qt.WindowModal)
+        self.setWindowModality(Qt.WindowModal)
 
         # updated for use by commands
         self.model = model

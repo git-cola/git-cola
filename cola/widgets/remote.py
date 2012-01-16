@@ -66,13 +66,13 @@ class RemoteActionDialog(standard.Dialog):
         """Customizes the dialog based on the remote action
         """
         super(RemoteActionDialog, self).__init__(parent=parent)
-        self.setAttribute(Qt.WA_MacMetalStyle)
         self.model = model
         self.action = action
         self.tasks = []
 
+        self.setAttribute(Qt.WA_MacMetalStyle)
+        self.setWindowModality(Qt.WindowModal)
         self.setWindowTitle(self.tr(action))
-        self.setWindowModality(QtCore.Qt.WindowModal)
 
         self.progress = QtGui.QProgressDialog(self)
         self.progress.setRange(0, 0)

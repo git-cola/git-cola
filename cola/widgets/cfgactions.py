@@ -1,6 +1,7 @@
 import os
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
@@ -28,10 +29,8 @@ def get_config_actions():
 
 def run_command(title, command):
     """Show a command widget"""
-    view = GitCommandWidget(qtutils.active_window())
-    view.setWindowModality(QtCore.Qt.ApplicationModal)
+    view = GitCommandWidget(title, qtutils.active_window())
     view.set_command(command)
-    view.setWindowTitle(title)
     view.show()
     view.raise_()
     view.run()
@@ -42,9 +41,12 @@ def run_command(title, command):
 class GitCommandWidget(standard.Dialog):
     """Nice TextView that reads the output of a command syncronously"""
     # Keep us in scope otherwise PyQt kills the widget
-    def __init__(self, parent=None):
+    def __init__(self, title, parent=None):
         standard.Dialog.__init__(self, parent)
         self.resize(720, 420)
+
+        self.setWindowTitle(title)
+        self.setWindowModality(Qt.ApplicationModal)
 
         # Construct the process
         self.proc = QtCore.QProcess(self)
@@ -180,9 +182,10 @@ class ActionCommandWrapper(object):
 class ActionDialog(standard.Dialog):
     def __init__(self, parent, name, opts):
         standard.Dialog.__init__(self, parent)
-        self.setWindowModality(QtCore.Qt.ApplicationModal)
         self.name = name
         self.opts = opts
+
+        self.setWindowModality(Qt.ApplicationModal)
 
         self.layt = QtGui.QVBoxLayout()
         self.layt.setMargin(defs.margin)

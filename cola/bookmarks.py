@@ -4,6 +4,7 @@ import sys
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import core
@@ -28,7 +29,7 @@ class BookmarksDialog(standard.Dialog):
 
         self.resize(494, 238)
         self.setWindowTitle(self.tr('Bookmarks'))
-        self.setWindowModality(QtCore.Qt.WindowModal)
+        self.setWindowModality(Qt.WindowModal)
         self.layt = QtGui.QVBoxLayout(self)
         self.layt.setMargin(defs.margin)
         self.layt.setSpacing(defs.spacing)
