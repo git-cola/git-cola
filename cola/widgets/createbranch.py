@@ -37,12 +37,15 @@ class CreateBranchDialog(standard.Dialog):
         self.branch_name_label = QtGui.QLabel()
         self.branch_name_label.setText(self.tr('Branch Name'))
 
-        self.local_branch = QtGui.QLineEdit()
+        self.branch_name = QtGui.QLineEdit()
 
         self.rev_label = QtGui.QLabel()
-        self.rev_label.setText(self.tr('Revision Expression:'))
+        self.rev_label.setText(self.tr('Starting Revision'))
 
         self.revision = completion.GitRefLineEdit()
+        current = gitcmds.current_branch()
+        if current:
+            self.revision.setText(current)
 
         self.local_radio = QtGui.QRadioButton()
         self.local_radio.setText(self.tr('Local Branch'))
@@ -93,7 +96,7 @@ class CreateBranchDialog(standard.Dialog):
 
         self.branch_name_layout = QtGui.QHBoxLayout()
         self.branch_name_layout.addWidget(self.branch_name_label)
-        self.branch_name_layout.addWidget(self.local_branch)
+        self.branch_name_layout.addWidget(self.branch_name)
 
         self.rev_start_radiobtn_layout = QtGui.QHBoxLayout()
         self.rev_start_radiobtn_layout.addWidget(self.local_radio)
@@ -161,10 +164,7 @@ class CreateBranchDialog(standard.Dialog):
         self.connect(self.branch_list, SIGNAL('itemSelectionChanged()'),
                      self.branch_item_changed)
 
-        if self.parent():
-            self.resize(self.parent().width(), self.parent().height())
-        else:
-            self.resize(555, 333)
+        self.resize(555, 333)
 
         self.display_model()
 
@@ -174,9 +174,9 @@ class CreateBranchDialog(standard.Dialog):
     def create_branch(self):
         """Creates a branch; called by the "Create Branch" button"""
 
-        revision = unicode(self.revision.text())
-        branch = unicode(self.local_branch.text())
-        existing_branches = self.model.local_branches
+        revision = self.revision.value()
+        branch = unicode(self.branch_name.text())
+        existing_branches = gitcmds.branch_list()
 
         if not branch or not revision:
             qtutils.critical('Missing Data',
@@ -223,7 +223,8 @@ class CreateBranchDialog(standard.Dialog):
                                    icon=qtutils.icon('undo.svg')):
                 return
 
-        # TODO handle fetch
+        # TODO handle fetch, rest, and ffwd-only options..
+        # in a background thread.
         track = self.remote_radio.isChecked()
         fetch = self.fetch_checkbox.isChecked()
         ffwd = self.ffwd_only_radio.isChecked()
@@ -264,7 +265,7 @@ class CreateBranchDialog(standard.Dialog):
             return
 
         # Signal that we've clicked on a remote branch
-        self.local_branch.setText(branch)
+        self.branch_name.setText(branch)
 
     def display_model(self):
         """Sets the branch list to the available branches

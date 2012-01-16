@@ -24,6 +24,9 @@ class CompletionLineEdit(QtGui.QLineEdit):
         self._keys_to_ignore = set([Qt.Key_Enter, Qt.Key_Return,
                                     Qt.Key_Escape])
 
+    def value(self):
+        return unicode(self.text())
+
     def setCompleter(self, completer):
         self._completer = completer
         completer.setWidget(self)
