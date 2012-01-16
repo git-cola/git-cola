@@ -89,6 +89,8 @@ class CompletionLineEdit(QtGui.QLineEdit):
                 self._completer.popup().isVisible()):
                     event.ignore()
                     return True
+        if event.type() == QtCore.QEvent.Hide:
+            self.close_popup()
         return super(CompletionLineEdit, self).event(event)
 
     def do_completion(self):
@@ -136,7 +138,8 @@ class CompletionLineEdit(QtGui.QLineEdit):
         return super(CompletionLineEdit, self).mouseReleaseEvent(event)
 
     def close_popup(self):
-        self._completer.popup().close()
+        if self._completer.popup().isVisible():
+            self._completer.popup().close()
 
     def _update_popup_items(self, prefix):
         """
