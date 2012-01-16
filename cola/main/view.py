@@ -426,6 +426,8 @@ class MainView(standard.MainWindow):
         self._gui_state_task = None
         self._load_gui_state()
 
+        self.statusdockwidget.widget().setFocus()
+
         log(0, version.git_version_str() + '\ncola version ' + version.version())
 
     # Qt overrides
