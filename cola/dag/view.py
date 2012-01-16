@@ -722,6 +722,7 @@ class DAGView(standard.Widget):
 
     def thread_done(self):
         self.setEnabled(True)
+        self.graphview.setFocus()
         try:
             commit_obj = self.commit_list[-1]
         except IndexError:
