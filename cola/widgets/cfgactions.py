@@ -23,8 +23,7 @@ def install_command_wrapper():
 
 def get_config_actions():
     cfg = gitcfg.instance()
-    names = cfg.get_guitool_names()
-    return names or []
+    return cfg.get_guitool_names()
 
 
 def run_command(title, command):

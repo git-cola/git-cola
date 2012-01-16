@@ -224,9 +224,8 @@ class GitConfig(observable.Observable):
         return opts
 
     def get_guitool_names(self):
-        cmds = []
         guitools = self.find('guitool.*.cmd')
-        for name, cmd in guitools.items():
-            name = name[len('guitool.'):-len('.cmd')]
-            cmds.append(name)
-        return cmds
+        prefix = len('guitool.')
+        suffix = len('.cmd')
+        return sorted([name[prefix:-suffix]
+                        for (name, cmd) in guitools.items()])
