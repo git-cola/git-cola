@@ -245,9 +245,14 @@ class GitRefDialog(QtGui.QDialog):
     def text_changed(self, txt):
         self.ok_button.setEnabled(bool(self.text()))
 
+    def set_text(self, ref):
+        self.lineedit.setText(ref)
+
     @staticmethod
-    def ref(title, button_text, parent):
+    def ref(title, button_text, parent, default=None):
         dlg = GitRefDialog(title, button_text, parent)
+        if default:
+            dlg.set_text(default)
         dlg.show()
         dlg.raise_()
         dlg.setFocus()
@@ -255,7 +260,6 @@ class GitRefDialog(QtGui.QDialog):
             return dlg.text()
         else:
             return None
-
 
 # Syntax highlighting
 

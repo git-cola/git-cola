@@ -56,7 +56,8 @@ def branch_delete():
 
 def diff_revision():
     """Diff an arbitrary revision against the worktree"""
-    ref = choose_ref('Select Revision to Diff', 'Diff')
+    ref = choose_ref('Select Revision to Diff', 'Diff',
+                     default='HEAD^')
     if not ref:
         return
     difftool.diff_commits(qtutils.active_window(), ref, None)
@@ -167,7 +168,14 @@ def export_patches():
 
 def diff_expression():
     """Diff using an arbitrary expression."""
-    ref = choose_ref('Enter Diff Expression', 'Diff')
+    tracked = gitcmds.tracked_branch()
+    current = gitcmds.current_branch()
+    if tracked and current:
+        default = tracked + '..' + current
+    else:
+        default = 'origin/master..'
+    ref = choose_ref('Enter Diff Expression', 'Diff',
+                     default=default)
     if not ref:
         return
     difftool.diff_expression(qtutils.active_window(), ref)
@@ -217,9 +225,9 @@ def rebase():
     qtutils.log(status, output)
 
 
-def choose_ref(title, button_text):
+def choose_ref(title, button_text, default=None):
     parent = qtutils.active_window()
-    return qt.GitRefDialog.ref(title, button_text, parent)
+    return qt.GitRefDialog.ref(title, button_text, parent, default=default)
 
 
 def review_branch():
