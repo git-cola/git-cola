@@ -10,14 +10,14 @@ from cola.prefs import diff_font
 from cola.qtutils import connect_button
 from cola.qtutils import critical
 from cola.qtutils import information
+from cola.widgets import completion
 from cola.widgets import standard
+from cola.widgets import text
 
 
 def create_tag(revision=''):
     """Entry point for external callers."""
-    opts = TagOptions()
-    if revision:
-        opts.revisions.insert(0, revision)
+    opts = TagOptions(revision)
     view = CreateTag(opts, qtutils.active_window())
     view.show()
     return view
@@ -27,19 +27,19 @@ def create_tag(revision=''):
 class TagOptions(object):
     """Simple data container for the CreateTag dialog."""
 
-    def __init__(self):
-        self.revisions = ['HEAD'] + cola.model().all_branches()
+    def __init__(self, revision):
+        self.revision = revision or 'HEAD'
 
 
 class CreateTag(standard.Dialog):
     def __init__(self, opts, parent):
         super(CreateTag, self).__init__(parent=parent)
+        self.setWindowModality(QtCore.Qt.WindowModal)
         self.setAttribute(Qt.WA_MacMetalStyle)
+        self.setWindowTitle(self.tr('Create Tag'))
+
         self.opts = opts
 
-        self.setWindowModality(QtCore.Qt.WindowModal)
-        self.setWindowTitle(self.tr('Create Tag'))
-        self.resize(506, 295)
         self.main_layt = QtGui.QVBoxLayout(self)
         self.main_layt.setContentsMargins(6, 12, 6, 6)
 
@@ -53,7 +53,7 @@ class CreateTag(standard.Dialog):
         self.input_form_layt.setWidget(0, QtGui.QFormLayout.LabelRole,
                                        self.tag_name_label)
 
-        self.tag_name = QtGui.QLineEdit(self)
+        self.tag_name = text.HintedLineEdit('vX.Y.Z', self)
         self.tag_name.setToolTip(self.tr('Specifies the tag name'))
         self.input_form_layt.setWidget(0, QtGui.QFormLayout.FieldRole,
                                        self.tag_name)
@@ -77,10 +77,10 @@ class CreateTag(standard.Dialog):
         self.input_form_layt.setWidget(2, QtGui.QFormLayout.LabelRole,
                                        self.tag_msg_label)
 
-        self.tag_msg = QtGui.QTextEdit(self)
-        self.tag_msg.setAcceptRichText(False)
+        self.tag_msg = text.HintedTextEdit('Tag message...', self)
         self.tag_msg.setToolTip(self.tr('Specifies the tag message'))
         self.tag_msg.setFont(diff_font())
+        self.tag_msg.enable_hint(True)
         self.input_form_layt.setWidget(2, QtGui.QFormLayout.FieldRole,
                                        self.tag_msg)
         # Revision
@@ -89,10 +89,8 @@ class CreateTag(standard.Dialog):
         self.input_form_layt.setWidget(3, QtGui.QFormLayout.LabelRole,
                                        self.rev_label)
 
-        self.revision = QtGui.QComboBox()
-        self.revision.addItems(self.opts.revisions)
-        self.revision.setCurrentIndex(0)
-        self.revision.setEditable(True)
+        self.revision = completion.GitRefLineEdit()
+        self.revision.setText(self.opts.revision)
         self.revision.setToolTip(self.tr('Specifies the SHA-1 to tag'))
         self.input_form_layt.setWidget(3, QtGui.QFormLayout.FieldRole,
                                        self.revision)
@@ -112,15 +110,14 @@ class CreateTag(standard.Dialog):
         connect_button(self.close_button, self.accept)
         connect_button(self.create_button, self.create_tag)
 
-    def sync_options(self):
-        pass
+        self.resize(506, 295)
 
     def create_tag(self):
         """Verifies inputs and emits a notifier tag message."""
 
-        revision = unicode(self.revision.currentText())
-        tag_name = unicode(self.tag_name.text())
-        tag_msg = unicode(self.tag_msg.toPlainText())
+        revision = self.revision.value()
+        tag_name = self.tag_name.value()
+        tag_msg = self.tag_msg.value()
         sign_tag = self.sign_tag.isChecked()
 
         if not revision:
