@@ -585,7 +585,7 @@ class DAGView(standard.Widget):
         self.maxresults.setValue(dag.count)
         self.update_window_title()
 
-        self.thread = ReaderThread(self, dag)
+        self.thread = ReaderThread(dag, self)
 
         self.thread.connect(self.thread, self.thread.commits_ready,
                             self.add_commits)
@@ -757,7 +757,7 @@ class ReaderThread(QtCore.QThread):
     commits_ready = SIGNAL('commits_ready')
     done = SIGNAL('done')
 
-    def __init__(self, parent, dag):
+    def __init__(self, dag, parent):
         QtCore.QThread.__init__(self, parent)
         self.dag = dag
         self._abort = False
