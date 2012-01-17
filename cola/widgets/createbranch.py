@@ -1,4 +1,5 @@
 from PyQt4 import QtGui
+from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
@@ -23,6 +24,54 @@ def create_new_branch(revision=''):
     return view
 
 
+class CreateOpts(object):
+    def __init__(self, model):
+        self.model = model
+        self.reset = False
+        self.track = False
+        self.fetch = True
+        self.checkout = True
+        self.revision = 'HEAD'
+        self.branch = ''
+
+
+class CreateThread(QtCore.QThread):
+    def __init__(self, opts, parent):
+        super(CreateThread, self).__init__(parent)
+        self.opts = opts
+
+    def run(self):
+        branch = self.opts.branch
+        revision = self.opts.revision
+        reset = self.opts.reset
+        checkout = self.opts.checkout
+        track = self.opts.track
+        model = self.opts.model
+        results = []
+
+        if track and '/' in revision:
+            remote = revision.split('/', 1)[0]
+            status, out = model.git.fetch(remote,
+                                          with_status=True,
+                                          with_stderr=True)
+            self.emit(SIGNAL('command'), status, out)
+            results.append(('fetch', status, out))
+
+        if status == 0:
+            status, out = model.create_branch(branch, revision,
+                                              force=reset,
+                                              track=track)
+            self.emit(SIGNAL('command'), status, out)
+
+        results.append(('branch', status, out))
+        if status == 0 and checkout:
+            status, out = model.git.checkout(branch,
+                                             with_status=True,
+                                             with_stderr=True)
+            self.emit(SIGNAL('command'), status, out)
+            results.append(('checkout', status, out))
+        self.emit(SIGNAL('done'), results)
+
 class CreateBranchDialog(standard.Dialog):
     """A dialog for creating branches."""
 
@@ -33,6 +82,14 @@ class CreateBranchDialog(standard.Dialog):
         self.setWindowTitle(self.tr('Create Branch'))
 
         self.model = model
+        self.opts = CreateOpts(model)
+        self.thread = CreateThread(self.opts, self)
+
+        self.progress = QtGui.QProgressDialog(self)
+        self.progress.setRange(0, 0)
+        self.progress.setCancelButton(None)
+        self.progress.setWindowTitle(self.tr('Create Branch'))
+        self.progress.setWindowModality(Qt.WindowModal)
 
         self.branch_name_label = QtGui.QLabel()
         self.branch_name_label.setText(self.tr('Branch Name'))
@@ -92,7 +149,7 @@ class CreateBranchDialog(standard.Dialog):
                                               icon=qtutils.git_icon())
         self.create_button.setDefault(True)
 
-        self.cancel_button = qt.create_button(text='Cancel')
+        self.close_button = qt.create_button(text='Close')
 
         self.branch_name_layout = QtGui.QHBoxLayout()
         self.branch_name_layout.addWidget(self.branch_name_label)
@@ -139,7 +196,7 @@ class CreateBranchDialog(standard.Dialog):
         self.buttons_layout.setMargin(defs.margin)
         self.buttons_layout.setSpacing(defs.spacing)
         self.buttons_layout.addWidget(self.create_button)
-        self.buttons_layout.addWidget(self.cancel_button)
+        self.buttons_layout.addWidget(self.close_button)
 
         self.options_section_layout = QtGui.QHBoxLayout()
         self.options_section_layout.setMargin(defs.margin)
@@ -155,7 +212,7 @@ class CreateBranchDialog(standard.Dialog):
         self.main_layout.addLayout(self.options_section_layout)
         self.setLayout(self.main_layout)
 
-        qtutils.connect_button(self.cancel_button, self.reject)
+        qtutils.connect_button(self.close_button, self.reject)
         qtutils.connect_button(self.create_button, self.create_branch)
         qtutils.connect_button(self.local_radio, self.display_model)
         qtutils.connect_button(self.remote_radio, self.display_model)
@@ -164,29 +221,40 @@ class CreateBranchDialog(standard.Dialog):
         self.connect(self.branch_list, SIGNAL('itemSelectionChanged()'),
                      self.branch_item_changed)
 
-        self.resize(555, 333)
+        self.connect(self.thread, SIGNAL('command'), self.thread_command)
+        self.connect(self.thread, SIGNAL('done'), self.thread_done)
 
+        self.resize(555, 333)
         self.display_model()
 
     def set_revision(self, revision):
         self.revision.setText(revision)
 
+    def getopts(self):
+        self.opts.revision = self.revision.value()
+        self.opts.branch = unicode(self.branch_name.text())
+        self.opts.checkout = self.checkout_checkbox.isChecked()
+        self.opts.reset = self.reset_radio.isChecked()
+        self.opts.fetch = self.fetch_checkbox.isChecked()
+        self.opts.track = self.remote_radio.isChecked()
+
     def create_branch(self):
         """Creates a branch; called by the "Create Branch" button"""
-
-        revision = self.revision.value()
-        branch = unicode(self.branch_name.text())
+        self.getopts()
+        revision = self.opts.revision
+        branch = self.opts.branch
+        no_update = self.no_update_radio.isChecked()
+        ffwd_only = self.ffwd_only_radio.isChecked()
         existing_branches = gitcmds.branch_list()
+        check_branch = False
 
         if not branch or not revision:
             qtutils.critical('Missing Data',
                              'Please provide both a branch '
                              'name and revision expression.')
             return
-
-        check_branch = False
         if branch in existing_branches:
-            if self.no_update_radio.isChecked():
+            if no_update:
                 msg = self.tr("Branch '%s' already exists.")
                 msg = unicode(msg) % branch
                 qtutils.critical('Branch Exists', msg)
@@ -196,10 +264,12 @@ class CreateBranchDialog(standard.Dialog):
             check_branch = bool(commits)
 
         if check_branch:
-            msg = self.tr("Resetting '%s' to '%s' will "
-                          "lose the following commits:")
-            lines = [ unicode(msg) % (branch, revision) ]
-
+            qmsg = self.tr("Resetting '%s' to '%s' will lose commits.")
+            msg = unicode(qmsg) % (branch, revision)
+            if ffwd_only:
+                qtutils.critical('Branch Exists', msg)
+                return
+            lines = [msg]
             for idx, commit in enumerate(commits):
                 subject = commit[1][0:min(len(commit[1]),16)]
                 if len(subject) < len(commit[1]):
@@ -210,11 +280,8 @@ class CreateBranchDialog(standard.Dialog):
                     skip = len(commits) - 5
                     lines.append('\t(%d skipped)' % skip)
                     break
-
-            lines.extend([
-                unicode(self.tr('Recovering lost commits may not be easy.')),
-                ])
-
+            line = unicode(self.tr('Recovering lost commits may not be easy.'))
+            lines.append(line)
             if not qtutils.confirm('Reset Branch?',
                                    '\n'.join(lines),
                                    'Reset "%s" to "%s"?' % (branch, revision),
@@ -222,48 +289,58 @@ class CreateBranchDialog(standard.Dialog):
                                    default=False,
                                    icon=qtutils.icon('undo.svg')):
                 return
+        self.setEnabled(False)
+        self.progress.setEnabled(True)
+        QtGui.QApplication.setOverrideCursor(Qt.WaitCursor)
 
-        # TODO handle fetch, rest, and ffwd-only options..
-        # in a background thread.
-        track = self.remote_radio.isChecked()
-        fetch = self.fetch_checkbox.isChecked()
-        ffwd = self.ffwd_only_radio.isChecked()
-        reset = self.reset_radio.isChecked()
-        chkout = self.checkout_checkbox.isChecked()
+        # Show a nice progress bar
+        self.progress.setLabelText('Updating...')
+        self.progress.show()
+        self.thread.start()
 
-        status, output = self.model.create_branch(branch, revision, track=track)
+    def thread_command(self, status, output):
         qtutils.log(status, output)
-        if status == 0 and chkout:
-            status, output = self.model.git.checkout(branch,
-                                                     with_status=True,
-                                                     with_stderr=True)
-            qtutils.log(status, output)
+
+    def thread_done(self, results):
+        self.setEnabled(True)
+        self.progress.close()
+        QtGui.QApplication.restoreOverrideCursor()
+
+        detail_lines = []
+        for (cmd, status, out) in results:
+            if status != 0:
+                qtutils.critical('Create Branch Error',
+                                 '"git %s" returned exit status "%d"' %
+                                 (cmd, status))
+                return
+            line = '"git %s" returned exit status %d' % (cmd, status)
+            detail_lines.append(line)
+            detail_lines.append(out)
+            detail_lines.append('')
+        details = '\n'.join(detail_lines)
+        qtutils.information('Create Branch', 'Branch created',
+                            details=details)
         self.accept()
 
     def branch_item_changed(self, *rest):
         """This callback is called when the branch selection changes"""
-
         # When the branch selection changes then we should update
         # the "Revision Expression" accordingly.
         qlist = self.branch_list
         (row, selected) = qtutils.selected_row(qlist)
         if not selected:
             return
-
+        # Update the model with the selection
         sources = self.branch_sources()
         rev = sources[row]
-
-        # Update the model with the selection
         self.revision.setText(rev)
 
-        # Only set the branch name field if we're
-        # branching from a remote branch.
+        # Set the branch field if we're branching from a remote branch.
         if not self.remote_radio.isChecked():
             return
         branch = utils.basename(rev)
         if branch == 'HEAD':
             return
-
         # Signal that we've clicked on a remote branch
         self.branch_name.setText(branch)
 

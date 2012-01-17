@@ -358,12 +358,13 @@ class MainModel(Observable):
     def pull(self, remote, **opts):
         return self.run_remote_action(self.git.pull, remote, push=True, **opts)
 
-    def create_branch(self, name, base, track=False):
+    def create_branch(self, name, base, track=False, force=False):
         """Create a branch named 'name' from revision 'base'
 
         Pass track=True to create a local tracking branch.
         """
-        return self.git.branch(name, base, track=track,
+        return self.git.branch(name, base,
+                               track=track, force=force,
                                with_stderr=True,
                                with_status=True)
 
