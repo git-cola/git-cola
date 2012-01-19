@@ -195,9 +195,12 @@ class RemoteActionDialog(standard.Dialog):
             self.remote_branch.setFocus()
         else:
             self.rebase_checkbox.hide()
+
+        if not qtutils.apply_state(self):
+            self.resize(666, 420)
+
         self.remote_name.setFocus()
 
-        self.resize(666, 420)
 
     def set_field_defaults(self):
         # Default to "git fetch origin master"
@@ -449,3 +452,21 @@ class Push(RemoteActionDialog):
 class Pull(RemoteActionDialog):
     def __init__(self, model, parent):
         super(Pull, self).__init__(model, PULL, parent)
+
+    def apply_state(self, state):
+        super(Pull, self).apply_state(state)
+        try:
+            rebase = state['rebase']
+        except KeyError:
+            pass
+        else:
+            self.rebase_checkbox.setChecked(rebase)
+
+    def export_state(self):
+        state = super(Pull, self).export_state()
+        state['rebase'] = self.rebase_checkbox.isChecked()
+        return state
+
+    def done(self, exit_code):
+        qtutils.save_state(self)
+        return super(Pull, self).done(exit_code)
