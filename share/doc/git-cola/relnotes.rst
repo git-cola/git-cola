@@ -1,4 +1,22 @@
-.. |beta(TM)| unicode:: beta U+2122
+git-cola v1.7.5
+===============
+Usability, bells and whistles
+-----------------------------
+* Auto-completion was added to more tools.
+
+* `git-dag` is easier to use on smaller displays -- the author
+  field elides its text which allows for a more compact display.
+
+* Selected commits in `git-dag` were made more prominent and
+  easier to see.
+
+* 'Create Branch' learned to fetch remote branches and uses a
+  background thread to do so.
+
+* User-configured GUI tools are listed alphabetically in the 'Actions' menu.
+
+* The 'Pull' dialog remembers the value of the 'Rebase' checkbox
+  between invocations.
 
 git-cola v1.7.4.1
 =================
@@ -80,7 +98,7 @@ Usability, bells and whistles
     git cola pull
     git cola tag
 
-* `git-dag` is more responsive when gathering tab-completions.
+* `git-dag` is more responsive when gathering auto-completions.
 
 * Keyboard shortcuts are displayed when the '?' key is pressed.
 
@@ -183,8 +201,6 @@ git-cola v1.7.0
 ===============
 Usability, bells and whistles
 -----------------------------
-* `git-dag` is no longer |beta(TM)|
-
 * Export a patch series from `git-dag` into a `patches/` directory.
 
 * `git-dag` learned to diff commits, slice history along paths, etc.
@@ -362,7 +378,7 @@ git-cola v1.4.3
 ===============
 Usability, bells and whistles
 -----------------------------
-* `git-dag` |beta(TM)| now has a separate display area
+* `git-dag` now has a separate display area
   for displaying commit metadata.  This area will soon
   grow additional functionality such as cherry-picking,
   branching, etc.
@@ -401,7 +417,7 @@ Usability, bells and whistles
 * Clicking on paths in the status widget copies them into the
   copy/paste buffer for easy middle-clicking into terminals.
 
-* Ctrl+C in diff viewer copies the selected diff to the clipboard.
+* `Ctrl+C` in diff viewer copies the selected diff to the clipboard.
 
 Fixes
 -----
@@ -460,7 +476,7 @@ git-cola v1.4.2.2
 =================
 Usability, bells and whistles
 -----------------------------
-* `git-dag` |beta(TM)| interaction was made faster.
+* `git-dag` interaction was made faster.
 
 Fixes
 -----
@@ -480,7 +496,7 @@ Usability, bells and whistles
 
   http://github.com/git-cola/git-cola/issues/closed#issue/48
 
-* `git-dag` |beta(TM)| reads history in a background thread.
+* `git-dag` reads history in a background thread.
 
 Portability
 -----------
@@ -494,7 +510,6 @@ Fixes
 
 git-cola v1.4.2
 ===============
-
 Usability, bells and whistles
 -----------------------------
 * Added support for the configurable ``guitool.<tool>.*``
@@ -577,7 +592,6 @@ Packaging
 
 git-cola v1.4.1.2
 =================
-
 Usability, bells and whistles
 -----------------------------
 * It is now possible to checkout from the index as well
@@ -588,7 +602,7 @@ Usability, bells and whistles
 * Bookmarks can be selected when `git-cola` is run outside of a git repository.
 * Added more user documentation.  We now include many links to
   external git resources.
-* Added `git-dag Beta` to the available tools.
+* Added `git-dag` to the available tools.
   `git-dag` is a node-based DAG history browser.
   It doesn't do much yet, but it's been merged so that we can start
   building and improving upon it.
@@ -625,7 +639,6 @@ Packaging
 
 git-cola v1.4.1.1
 =================
-
 Usability, bells and whistles
 -----------------------------
 * We now use patience diff by default when it is available via
@@ -644,7 +657,6 @@ Packaging
 
 git-cola v1.4.1
 ===============
-
 This feature release adds two new features directly from
 `git-cola`'s github issues backlog.  On the developer
 front, further work was done towards modularizing the code base.
@@ -681,7 +693,6 @@ Developer
 
 git-cola v1.4.0.5
 =================
-
 Fixes
 -----
 * Fix launching external applications on Windows
@@ -691,7 +702,6 @@ Fixes
 
 git-cola v1.4.0.4
 =================
-
 Packaging
 ---------
 * Fix Lintian warnings
@@ -699,7 +709,6 @@ Packaging
 
 git-cola v1.4.0.3
 =================
-
 Fixes
 -----
 * Fix X11 warnings on application startup
@@ -707,7 +716,6 @@ Fixes
 
 git-cola v1.4.0.2
 =================
-
 Fixes
 -----
 * Added missing 'Exit Diff Mode' button for 'Diff Expression' mode
@@ -721,7 +729,6 @@ Fixes
 
 git-cola v1.4.0.1
 =================
-
 Fixes
 -----
 * Keep entries in sorted order in the `cola classic` tool
@@ -740,7 +747,6 @@ Fixes
 
 git-cola v1.4.0
 ===============
-
 This release focuses on a redesign of the git-cola user interface,
 a tags interface, and better integration of the `cola classic` tool.
 A flexible interface based on configurable docks is used to manage the
@@ -778,7 +784,6 @@ Developer
 
 git-cola v1.3.9
 ===============
-
 Usability, bells and whistles
 -----------------------------
 * Added a `cola classic` tool for browsing the entire repository
@@ -805,7 +810,6 @@ Fixes
 
 git-cola v1.3.8
 ===============
-
 Usability, bells and whistles
 -----------------------------
 * Fresh and tasty SVG logos
@@ -830,7 +834,6 @@ Packaging
 
 git-cola v1.3.7
 ===============
-
 Subsystems
 ----------
 * `git-difftool` became an official git command in `git-1.6.3`.
@@ -862,7 +865,6 @@ Packaging
 
 git-cola v1.3.6
 ===============
-
 Subsystems
 ----------
 * Added support for Kompare in `git-difftool`
