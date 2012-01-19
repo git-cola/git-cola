@@ -647,10 +647,7 @@ class DAGView(standard.Widget):
         return state
 
     def apply_state(self, state):
-        try:
-            super(DAGView, self).apply_state(state)
-        except:
-            pass
+        super(DAGView, self).apply_state(state)
         try:
             count = state['count']
         except KeyError:
