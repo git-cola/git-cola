@@ -120,7 +120,7 @@ class MainView(standard.MainWindow):
                      SIGNAL(signals.load_previous_message))
         self.commitdockwidget.setWidget(self.commitmsgeditor)
 
-        # "Command Output" widget
+        # "Console" widget
         logwidget = qtutils.logger()
         logwidget.setFont(diff_font())
         self.logdockwidget = create_dock('Console', self)
@@ -414,7 +414,6 @@ class MainView(standard.MainWindow):
         self.connect(self.commitmsgeditor, SIGNAL('cursorPosition(int,int)'),
                      self.show_cursor_position)
         self.connect(self, SIGNAL('update'), self._update_callback)
-        self.connect(self, SIGNAL('apply_state'), self.apply_state)
         self.connect(self, SIGNAL('install_config_actions'),
                      self._install_config_actions)
 
@@ -423,8 +422,7 @@ class MainView(standard.MainWindow):
         self.install_config_actions()
 
         # Restore saved settings
-        self._gui_state_task = None
-        self._load_gui_state()
+        qtutils.apply_state(self)
 
         self.statusdockwidget.widget().setFocus()
 
@@ -511,31 +509,13 @@ class MainView(standard.MainWindow):
     def apply_state(self, state):
         """Imports data for save/restore"""
         # 1 is the widget version; change when widgets are added/removed
-        standard.MainWindow.apply_state(self, state)
+        super(MainView, self).apply_state(state)
         qtutils.apply_window_state(self, state, 1)
 
     def export_state(self):
         """Exports data for save/restore"""
-        state = standard.MainWindow.export_state(self)
+        state = super(MainView, self).export_state()
         return qtutils.export_window_state(self, state, self.widget_version)
-
-    def _load_gui_state(self):
-        """Restores the gui from the preferences file."""
-        self._gui_state_task = self._start_gui_state_loading_thread()
-
-    def _start_gui_state_loading_thread(self):
-        """Do expensive file reading and json decoding in the background"""
-        class LoadGUIStateTask(QtCore.QRunnable):
-            def __init__(self, sender):
-                QtCore.QRunnable.__init__(self)
-                self._sender = sender
-            def run(self):
-                state = settings.Settings().get_gui_state(self._sender)
-                self._sender.emit(SIGNAL('apply_state'), state)
-
-        task = LoadGUIStateTask(self)
-        QtCore.QThreadPool.globalInstance().start(task)
-        return task
 
     def setup_dockwidget_tools_menu(self):
         # Hotkeys for toggling the dock widgets
