@@ -246,6 +246,12 @@ class ViewerMixin(object):
         self.clicked = None
         self.menu_actions = self.context_menu_actions()
 
+    def selected_sha1(self):
+        item = self.selected_item()
+        if item is None:
+            return None
+        return item.commit.sha1
+
     def diff_selected_this(self):
         clicked_sha1 = self.clicked.sha1
         selected_sha1 = self.selected.sha1
@@ -257,40 +263,41 @@ class ViewerMixin(object):
         self.emit(SIGNAL('diff_commits'), clicked_sha1, selected_sha1)
 
     def cherry_pick(self):
-        if self.clicked is None:
+        sha1 = self.selected_sha1()
+        if sha1 is None:
             return
-        sha1 = self.clicked.sha1
         cola.notifier().broadcast(signals.cherry_pick, [sha1])
 
     def copy_to_clipboard(self):
-        if self.clicked is None:
+        sha1 = self.selected_sha1()
+        if sha1 is None:
             return
-        sha1 = self.clicked.sha1
         qtutils.set_clipboard(sha1)
 
     def create_branch(self):
-        if self.clicked is None:
+        sha1 = self.selected_sha1()
+        if sha1 is None:
             return
-        sha1 = self.clicked.sha1
         create_new_branch(revision=sha1)
 
     def create_tag(self):
-        if self.clicked is None:
+        sha1 = self.selected_sha1()
+        if sha1 is None:
             return
-        sha1 = self.clicked.sha1
         create_tag(revision=sha1)
 
     def create_tarball(self):
-        if self.clicked is None:
+        sha1 = self.selected_sha1()
+        if sha1 is None:
             return
-        ref = self.clicked.sha1
-        shortref = ref[:7]
-        GitArchiveDialog.save(ref, shortref, self)
+        short_sha1 = sha1[:7]
+        GitArchiveDialog.save(sha1, short_sha1, self)
 
     def save_blob_dialog(self):
-        if self.clicked is None:
+        sha1 = self.selected_sha1()
+        if sha1 is None:
             return
-        return BrowseDialog.browse(self.clicked.sha1)
+        return BrowseDialog.browse(sha1)
 
     def context_menu_actions(self):
         return {
@@ -328,17 +335,11 @@ class ViewerMixin(object):
         selected_items = self.selectedItems()
         clicked = self.itemAt(event.pos())
         if clicked is None:
-            if selected_items:
-                clicked = selected_items[0].commit
-            else:
-                clicked = None
+            self.clicked = None
         else:
-            clicked = clicked.commit
+            self.clicked = clicked.commit
 
-        self.clicked = clicked
-
-        has_single_selection = len(selected_items) == 1 and bool(clicked)
-
+        has_single_selection = len(selected_items) == 1
         has_selection = bool(selected_items)
         can_diff = bool(clicked and has_single_selection and
                         clicked is not selected_items[0].commit)
@@ -457,7 +458,6 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         self.set_selecting(False)
 
     def commits_selected(self, commits):
-        self.clicked = commits and commits[0] or None
         if self.selecting:
             return
         self.select([commit.sha1 for commit in commits])
@@ -1167,7 +1167,6 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         self.scale_view(1.0/1.5)
 
     def commits_selected(self, commits):
-        self.clicked = commits and commits[0] or None
         if self.selecting:
             return
         self.select([commit.sha1 for commit in commits])
