@@ -852,19 +852,46 @@ class Edge(QtGui.QGraphicsItem):
         rect = QtCore.QRectF(self.source_pt, QtCore.QSizeF(width, height))
         self.bound = rect.normalized()
 
+        # Choose a new color for branchy edges
+        if self.line.length() > GraphView.y_off:
+            color = EdgeColor.next()
+            line = Qt.SolidLine
+        else:
+            color = EdgeColor.current()
+            line = Qt.DotLine
+        self.pen = QtGui.QPen(color, 1.0, line, Qt.SquareCap, Qt.BevelJoin)
+
     def type(self):
         return self.item_type
 
     def boundingRect(self):
         return self.bound
 
-    def paint(self, painter, option, widget,
-              pen = QtGui.QPen(Qt.gray, 1.0,
-                               Qt.DotLine, Qt.SquareCap, Qt.BevelJoin)):
+    def paint(self, painter, option, widget):
         # Draw the line
-        painter.setPen(pen)
+        painter.setPen(self.pen)
         painter.drawLine(self.line)
 
+class EdgeColor(object):
+    """An edge color factory"""
+
+    current_color_index = 0
+    colors = [
+                QtGui.QColor.fromRgb(0xff, 0x30, 0x30), # red
+                QtGui.QColor.fromRgb(0x30, 0xff, 0x30), # green
+                QtGui.QColor.fromRgb(0x30, 0x30, 0xff), # blue
+                QtGui.QColor.fromRgb(0xff, 0xff, 0x30), # yellow
+             ]
+
+    @classmethod
+    def next(cls):
+        cls.current_color_index += 1
+        cls.current_color_index %= len(cls.colors)
+        return cls.colors[cls.current_color_index]
+
+    @classmethod
+    def current(cls):
+        return cls.colors[cls.current_color_index]
 
 class Commit(QtGui.QGraphicsItem):
     item_type = QtGui.QGraphicsItem.UserType + 2
@@ -1084,6 +1111,12 @@ class Label(QtGui.QGraphicsItem):
 
 
 class GraphView(QtGui.QGraphicsView, ViewerMixin):
+
+    x_off = 132
+    y_off = 32
+    x_max = 0
+    y_min = 0
+
     def __init__(self, notifier, parent):
         QtGui.QGraphicsView.__init__(self, parent)
         ViewerMixin.__init__(self)
@@ -1095,10 +1128,6 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         except:
             pass
 
-        self.x_off = 132
-        self.y_off = 32
-        self.x_max = 0
-        self.y_min = 0
 
         self.selection_list = []
         self.notifier = notifier
