@@ -48,6 +48,7 @@ class CreateThread(QtCore.QThread):
         track = self.opts.track
         model = self.opts.model
         results = []
+        status = 0
 
         if track and '/' in revision:
             remote = revision.split('/', 1)[0]
