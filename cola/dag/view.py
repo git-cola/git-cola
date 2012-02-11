@@ -877,12 +877,9 @@ class EdgeColor(object):
 
     current_color_index = 0
     colors = [
-                QtGui.QColor.fromRgb(0xff, 0x30, 0x30), # red
-                QtGui.QColor.fromRgb(0xff, 0xff, 0x30), # yellow
-                QtGui.QColor.fromRgb(0x30, 0xff, 0x30), # green
-                QtGui.QColor.fromRgb(0x30, 0xff, 0xff), # cyan
+                QtGui.QColor.fromRgb(0xff, 0xff, 0xff), # white
                 QtGui.QColor.fromRgb(0x30, 0x80, 0xff), # blue
-                QtGui.QColor.fromRgb(0xff, 0x30, 0xff), # magenta
+                QtGui.QColor.fromRgb(0x80, 0x80, 0xff), # indigo
              ]
 
     @classmethod
