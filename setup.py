@@ -15,7 +15,6 @@ from cola import version
 
 def main():
     _check_python_version()
-    _setup_environment()
     _check_git_version()
     _check_pyqt_version()
     _run_setup()
@@ -29,15 +28,6 @@ def _check_python_version():
         print >> sys.stderr, ('Python version %s or newer required.  '
                               'Found %s' % (version.get('python'), pyver))
         sys.exit(1)
-
-
-def _setup_environment():
-    """Adds win32/ to our path for windows only"""
-    if sys.platform != 'win32':
-        return
-    path = os.environ['PATH']
-    win32 = os.path.join(srcdir, 'win32')
-    os.environ['PATH'] = win32 + os.pathsep + path
 
 
 def _check_git_version():
@@ -75,12 +65,7 @@ def _run_setup():
     ]
 
     if sys.platform == 'win32':
-        scripts.extend([
-                'win32/cola',
-                'win32/dirname',
-                'win32/py2exe-setup.py',
-                'win32/py2exe-setup.cmd',
-        ])
+        scripts.append('win32/cola')
 
     setup(name = 'git-cola',
           version = version.version(),
