@@ -1,12 +1,18 @@
 #!/bin/sh
-
 if ! test -d win32; then
 	echo "Please run this script from the root of the cola source tree"
 	exit 1
 fi
 
 # Add Python and Gettext to our path
-PATH=/c/Python26:/bin:/usr/bin:/mingw/bin:"/c/Program Files/Gnu/bin":win32:"$PATH"
+for python in "/c/Python27" "/c/Python26" "/c/Python25"
+do
+	if test -d "$python"
+	then
+		break
+	fi
+done
+PATH="$python":/bin:/usr/bin:/mingw/bin:"/c/Program Files/Gnu/bin":win32:"$PATH"
 export PATH
 
 VERSION=$(bin/git-cola version | awk '{print $3}')
