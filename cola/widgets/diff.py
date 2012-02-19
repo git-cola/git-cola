@@ -73,6 +73,14 @@ class DiffEditor(DiffTextEdit):
         self.connect(self, SIGNAL('copyAvailable(bool)'),
                      self.enable_selection_actions)
 
+    def mousePressEvent(self, event):
+        # Move the text cursor so that the right-click events operate
+        # on the current position, not the last left-clicked position.
+        if event.button() == Qt.RightButton:
+            if not self.textCursor().hasSelection():
+                self.setTextCursor(self.cursorForPosition(event.pos()))
+        super(DiffEditor, self).mousePressEvent(event)
+
     # Qt overrides
     def contextMenuEvent(self, event):
         """Create the context menu for the diff display."""
