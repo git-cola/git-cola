@@ -132,7 +132,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
         return super(CompletionLineEdit, self).mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
-        if self._drag != 2 and event.buttons() != Qt.RightButton:
+        if self._drag != 2 and event.button() != Qt.RightButton:
             self.do_completion()
         self._drag = 0
         return super(CompletionLineEdit, self).mouseReleaseEvent(event)

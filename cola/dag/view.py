@@ -422,10 +422,7 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         self.context_menu_event(event)
 
     def mousePressEvent(self, event):
-        if event.buttons() == Qt.RightButton:
-            event.accept()
-            return
-        if event.modifiers() == Qt.MetaModifier:
+        if event.button() == Qt.RightButton:
             event.accept()
             return
         super(CommitTreeWidget, self).mousePressEvent(event)
