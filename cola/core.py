@@ -71,3 +71,8 @@ def write(fh, content):
 def wait(proc):
     """Wait on a subprocess and retry when interrupted"""
     return proc.wait()
+
+
+@interruptable
+def readline(fh):
+    return fh.readline()

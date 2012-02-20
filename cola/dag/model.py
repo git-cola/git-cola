@@ -1,6 +1,6 @@
+import os
 import subprocess
 
-import os
 import cola
 from cola import core
 from cola.git import git
@@ -225,7 +225,7 @@ class RepoReader(object):
             self._proc = utils.start_command(cmd)
             self._topo_list = []
 
-        log_entry = self._proc.stdout.readline().rstrip()
+        log_entry = core.readline(self._proc.stdout).rstrip()
         if not log_entry:
             del self._proc
             self._cached = True
