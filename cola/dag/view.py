@@ -655,9 +655,9 @@ class DAGView(standard.Widget):
     def update_window_title(self):
         project = self.model.project
         if self.dag.ref:
-            self.setWindowTitle('%s: %s' % (project, self.dag.ref))
+            self.setWindowTitle('%s: %s - DAG' % (project, self.dag.ref))
         else:
-            self.setWindowTitle(project)
+            self.setWindowTitle(project + ' - DAG')
 
     def export_state(self):
         state = super(DAGView, self).export_state()
