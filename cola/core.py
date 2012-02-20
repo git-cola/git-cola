@@ -5,7 +5,7 @@ OSX and others are known to interrupt system calls
     http://en.wikipedia.org/wiki/PCLSRing
     http://en.wikipedia.org/wiki/Unix_philosophy#Worse_is_better
 
-The {read,write,wait}_nointr functions handle this situation
+The @interruptable functions handle this situation
 """
 import errno
 
@@ -35,50 +35,39 @@ def encode(unenc):
     """
     return unenc.encode('utf-8', 'replace')
 
-def read_nointr(fh):
+
+def interruptable(fn):
+    def interruptable_decorator(*args):
+        while True:
+            try:
+                result = fn(*args)
+            except IOError, e:
+                if e.errno == errno.EINTR:
+                    continue
+                raise e
+            except OSError, e:
+                if e.errno == errno.EINTR:
+                    continue
+                raise e
+            else:
+                break
+        return result
+    return interruptable_decorator
+
+
+@interruptable
+def read(fh):
     """Read from a filehandle and retry when interrupted"""
-    while True:
-        try:
-            content = fh.read()
-            break
-        except IOError, e:
-            if e.errno == errno.EINTR:
-                continue
-            raise e
-        except OSError, e:
-            if e.errno == errno.EINTR:
-                continue
-            raise e
-    return content
+    return fh.read()
 
-def write_nointr(fh, content):
+
+@interruptable
+def write(fh, content):
     """Write to a filehandle and retry when interrupted"""
-    while True:
-        try:
-            content = fh.write(content)
-            break
-        except IOError, e:
-            if e.errno == errno.EINTR:
-                continue
-            raise e
-        except OSError, e:
-            if e.errno == errno.EINTR:
-                continue
-            raise e
-    return content
+    return fh.write(content)
 
-def wait_nointr(proc):
+
+@interruptable
+def wait(proc):
     """Wait on a subprocess and retry when interrupted"""
-    while True:
-        try:
-            status = proc.wait()
-            break
-        except IOError, e:
-            if e.errno == errno.EINTR:
-                continue
-            raise e
-        except OSError, e:
-            if e.errno == errno.EINTR:
-                continue
-            raise e
-    return status
+    return proc.wait()

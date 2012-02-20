@@ -16,7 +16,7 @@ class CoreColaUnicodeTestCase(unittest.TestCase):
         """
         filename = helper.fixture('unicode.txt')
         fh = open(filename)
-        content = core.read_nointr(fh).strip()
+        content = core.read(fh).strip()
         fh.close()
         self.assertEqual(core.decode(content), u'unicøde')
 
@@ -25,7 +25,7 @@ class CoreColaUnicodeTestCase(unittest.TestCase):
         """
         filename = helper.fixture('unicode.txt')
         fh = open(filename)
-        content = core.read_nointr(fh).strip()
+        content = core.read(fh).strip()
         fh.close()
         self.assertEqual(content, core.encode(u'unicøde'))
 

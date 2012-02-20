@@ -178,7 +178,7 @@ def dirname(path):
 def slurp(path):
     """Slurps a filepath into a string."""
     fh = open(core.encode(path))
-    slushy = core.read_nointr(fh)
+    slushy = core.read(fh)
     fh.close()
     return core.decode(slushy)
 
@@ -186,7 +186,7 @@ def slurp(path):
 def write(path, contents):
     """Writes a raw string to a file."""
     fh = open(core.encode(path), 'wb')
-    core.write_nointr(fh, core.encode(contents))
+    core.write(fh, core.encode(contents))
     fh.close()
 
 

@@ -25,7 +25,7 @@ def shell(cmd):
 
 def pipe(cmd):
     p = os.popen(cmd)
-    out = core.read_nointr(p).strip()
+    out = core.read(p).strip()
     p.close()
     return out
 

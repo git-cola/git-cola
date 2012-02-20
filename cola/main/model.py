@@ -296,7 +296,7 @@ class MainModel(Observable):
 
         # Create the commit message file
         fh = open(tmpfile, 'w')
-        core.write_nointr(fh, msg)
+        core.write(fh, msg)
         fh.close()
 
         # Run 'git commit'
