@@ -46,7 +46,7 @@ class Browser(standard.Widget):
 
         self.setToolTip(msg)
 
-        title = '%s: %s' % (self.model.project, branch)
+        title = '%s: %s - Browse' % (self.model.project, branch)
         if self.mode == self.model.mode_amend:
             title += ' ** amending **'
         self.setWindowTitle(title)
