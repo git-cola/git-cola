@@ -12,7 +12,6 @@ from cola import core
 from cola import gitcmds
 from cola import guicmds
 from cola import merge
-from cola import settings
 from cola import signals
 from cola import gitcfg
 from cola import qtutils
