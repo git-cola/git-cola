@@ -519,13 +519,13 @@ class MainView(standard.MainWindow):
     def setup_dockwidget_tools_menu(self):
         # Hotkeys for toggling the dock widgets
         dockwidgets = (
-            (self.logdockwidget, 'Alt+0'),
-            (self.commitdockwidget, 'Alt+1'),
-            (self.statusdockwidget, 'Alt+2'),
-            (self.diffdockwidget, 'Alt+3'),
-            (self.actionsdockwidget, 'Alt+4'),
+            ('Alt+0', self.logdockwidget),
+            ('Alt+1', self.commitdockwidget),
+            ('Alt+2', self.statusdockwidget),
+            ('Alt+3', self.diffdockwidget),
+            ('Alt+4', self.actionsdockwidget),
         )
-        for dockwidget, shortcut in dockwidgets:
+        for shortcut, dockwidget in dockwidgets:
             # Associate the action with the shortcut
             action = dockwidget.toggleViewAction()
             action.setShortcut(shortcut)
