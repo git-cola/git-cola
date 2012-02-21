@@ -3,6 +3,7 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+import cola
 from cola import gitcmds
 from cola import qt
 from cola import qtutils
@@ -71,7 +72,10 @@ class CreateThread(QtCore.QThread):
                                              with_stderr=True)
             self.emit(SIGNAL('command'), status, out)
             results.append(('checkout', status, out))
+
+        cola.model().update_status()
         self.emit(SIGNAL('done'), results)
+
 
 class CreateBranchDialog(standard.Dialog):
     """A dialog for creating branches."""
