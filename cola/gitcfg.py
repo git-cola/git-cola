@@ -200,6 +200,7 @@ class GitConfig(observable.Observable):
         self.notify_observers(msg, key, value)
 
     def find(self, pat):
+        self.update()
         result = {}
         for key, val in self._all.items():
             if fnmatch.fnmatch(key, pat):
