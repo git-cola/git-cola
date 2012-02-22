@@ -159,7 +159,7 @@ class MainView(standard.MainWindow):
                 QtGui.QKeySequence.Preferences, 'Ctrl+O')
 
         self.menu_edit_remotes = add_action(self,
-                'Edit Remotes...', editremotes.edit)
+                'Edit Remotes...', lambda: editremotes.edit().exec_())
         self.menu_rescan = add_action(self,
                 'Rescan', emit(self, signals.rescan_and_refresh), 'Ctrl+R')
         self.menu_rescan.setIcon(qtutils.reload_icon())

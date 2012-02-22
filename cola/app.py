@@ -138,6 +138,7 @@ def parse_args(context):
                     'fetch',
                     'pull',
                     'push',
+                    'remote',
                     'stash',
                     'search',
                     'tag'))
@@ -271,6 +272,9 @@ def main(context):
         from cola.widgets import remote
         model.update_status()
         view = remote.push()
+    elif context == 'remote':
+        from cola.widgets import editremotes
+        view = editremotes.edit()
     elif context == 'search':
         from cola.widgets.search import search
         view = search()

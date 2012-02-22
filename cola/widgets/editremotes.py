@@ -269,9 +269,8 @@ def edit():
     window = RemoteEditor(qtutils.active_window())
     window.show()
     window.raise_()
-    window.exec_()
     return window
 
 if __name__ == '__main__':
     app = cola.app.ColaApplication([])
-    edit()
+    edit().exec_()
