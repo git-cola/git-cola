@@ -21,8 +21,11 @@ class RemoteEditor(QtGui.QDialog):
         self.setWindowModality(Qt.WindowModal)
 
         self.default_hint = (''
-            'You can add and remote remote git repositories\n'
-            'using the Add(+) and Delete(-) buttons on the left side.')
+            'Add and remove remote repositories using the \n'
+            'Add(+) and Delete(-) buttons on the left-hand side.\n'
+            '\n'
+            'Remotes can be renamed by selecting one from the list\n'
+            'and pressing "enter", or by double-clicking.')
 
         self.remote_list = []
         self.remotes = QtGui.QListWidget()
