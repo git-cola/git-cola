@@ -31,7 +31,6 @@ class RemoteEditor(QtGui.QDialog):
 
         self.info = text.HintedTextEdit(self.default_hint)
         self.info.setReadOnly(True)
-        self.info.enable_hint(True)
         self.info.setFont(prefs.diff_font())
         font = self.info.font()
         metrics = QtGui.QFontMetrics(font)
@@ -103,6 +102,8 @@ class RemoteEditor(QtGui.QDialog):
         self.remotes.clear()
         self.remotes.addItems(remotes)
         self.remote_list = remotes
+        self.info.set_hint(self.default_hint)
+        self.info.enable_hint(True)
         for idx, r in enumerate(remotes):
             item = self.remotes.item(idx)
             item.setFlags(item.flags() | Qt.ItemIsEditable)
@@ -136,9 +137,6 @@ class RemoteEditor(QtGui.QDialog):
         if status != 0:
             qtutils.critical('Error deleting remote "%s"' % remote, out)
         cola.model().update_status()
-
-        self.info.set_hint(self.default_hint)
-        self.info.enable_hint(True)
         self.refresh()
 
     def remote_renamed(self, item):
