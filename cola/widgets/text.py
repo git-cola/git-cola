@@ -43,6 +43,12 @@ class HintedTextWidgetMixin(object):
     def reset_cursor(self):
         pass
 
+    def set_hint(self, hint):
+        is_hint = self.is_hint()
+        self._hint = hint
+        if is_hint:
+            self.enable_hint(True)
+
     def hint(self):
         return self._hint
 
@@ -95,6 +101,7 @@ class HintedTextEdit(QtGui.QTextEdit, HintedTextWidgetMixin):
 
     def set_value(self, value):
         self.setPlainText(value)
+        self.refresh_palette()
 
     def emit_position(self):
         cursor = self.textCursor()
@@ -120,6 +127,7 @@ class HintedLineEdit(QtGui.QLineEdit, HintedTextWidgetMixin):
 
     def set_value(self, value):
         self.setText(value)
+        self.refresh_palette()
 
     def as_unicode(self):
         return unicode(self.text())
