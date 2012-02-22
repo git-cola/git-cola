@@ -41,6 +41,7 @@ from cola.qtutils import log
 from cola.qtutils import relay_signal
 from cola.qtutils import tr
 from cola.widgets import cfgactions
+from cola.widgets import editremotes
 from cola.widgets import remote
 from cola.widgets import standard
 from cola.widgets.about import launch_about_dialog
@@ -157,6 +158,8 @@ class MainView(standard.MainWindow):
                 'Preferences', lambda: preferences(model=prefs_model),
                 QtGui.QKeySequence.Preferences, 'Ctrl+O')
 
+        self.menu_edit_remotes = add_action(self,
+                'Edit Remotes...', editremotes.edit)
         self.menu_rescan = add_action(self,
                 'Rescan', emit(self, signals.rescan_and_refresh), 'Ctrl+R')
         self.menu_rescan.setIcon(qtutils.reload_icon())
@@ -283,6 +286,7 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.menu_clone_repo)
         self.file_menu.addAction(self.menu_manage_bookmarks)
         self.file_menu.addSeparator()
+        self.file_menu.addAction(self.menu_edit_remotes)
         self.file_menu.addAction(self.menu_rescan)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_browse_recent)
