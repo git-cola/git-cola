@@ -38,18 +38,11 @@ from cola import resources
 from cola import signals
 from cola import utils
 from cola import version
-from cola.classic import cola_classic
-from cola.dag import git_dag
-from cola.stash import stash
 from cola.decorators import memoize
 from cola.main.view import MainView
 from cola.main.controller import MainController
-from cola.widgets import remote
 from cola.widgets import cfgactions
 from cola.widgets import startup
-from cola.widgets.createtag import create_tag
-from cola.widgets.createbranch import create_new_branch
-from cola.widgets.search import search
 
 
 def setup_environment():
@@ -136,6 +129,7 @@ class ColaApplication(object):
 
 
 def parse_args(context):
+    # TODO switch to argparse, bundle it for win32?
     args = sys.argv[1:]
     builtins = set(('branch',
                     'browse',
@@ -147,13 +141,20 @@ def parse_args(context):
                     'stash',
                     'search',
                     'tag'))
-    if context == 'git-dag':
+    if context in ('git-dag', 'dag'):
         context = 'dag'
+        usage = 'git dag [options]'
     elif args and args[0] in builtins:
         context = args.pop(0)
         sys.argv = sys.argv[0:1] + args
+        usage = 'git cola %s [options]' % context
+    else:
+        usage = ('git cola [sub-command] [options]\n'
+                 '\n'
+                 'Sub-commands:\n\t' +
+                 '\n\t'.join(sorted(builtins)))
 
-    parser = optparse.OptionParser(usage='%prog [options]')
+    parser = optparse.OptionParser(usage=usage)
 
     # We also accept 'git cola version'
     parser.add_option('-v', '--version',
@@ -247,29 +248,38 @@ def main(context):
 
     # Show the GUI
     if context == 'branch':
+        from cola.widgets.createbranch import create_new_branch
         view = create_new_branch()
     elif context in ('git-dag', 'dag'):
+        from cola.dag import git_dag
         ctl = git_dag(model, opts=opts, args=args)
         view = ctl.view
     elif context in ('classic', 'browse'):
+        from cola.classic import cola_classic
         view = cola_classic(update=False)
     # TODO: the calls to update_status() can be done asynchronously
     # by hooking into the message_updated notification.
     elif context == 'fetch':
+        from cola.widgets import remote
         model.update_status()
         view = remote.fetch()
     elif context == 'pull':
+        from cola.widgets import remote
         model.update_status()
         view = remote.pull()
     elif context == 'push':
+        from cola.widgets import remote
         model.update_status()
         view = remote.push()
     elif context == 'search':
+        from cola.widgets.search import search
         view = search()
     elif context == 'stash':
+        from cola.stash import stash
         model.update_status()
         view = stash().view
     elif context == 'tag':
+        from cola.widgets.createtag import create_tag
         view = create_tag()
     else:
         view = MainView(model, qtutils.active_window())
