@@ -782,6 +782,19 @@ class UnstageSelected(Unstage):
         Unstage.__init__(self, cola.selection_model().staged)
 
 
+class Untrack(Command):
+    """Unstage a set of paths."""
+    def __init__(self, paths):
+        Command.__init__(self)
+        self.paths = paths
+
+    def do(self):
+        msg = 'Untracking: %s' % (', '.join(self.paths))
+        _notifier.broadcast(signals.log_cmd, 0, msg)
+        status, out = self.model.untrack_paths(self.paths)
+        _notifier.broadcast(signals.log_cmd, status, out)
+
+
 class UntrackedSummary(Command):
     """List possible .gitignore rules as the diff text."""
     def __init__(self):
@@ -900,6 +913,7 @@ def register():
         signals.stage_untracked: StageUntracked,
         signals.staged_summary: DiffStagedSummary,
         signals.tag: Tag,
+        signals.untrack: Untrack,
         signals.unstage: Unstage,
         signals.unstage_all: UnstageAll,
         signals.unstage_selected: UnstageSelected,

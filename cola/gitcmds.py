@@ -357,13 +357,18 @@ def unstage_paths(args, head='HEAD'):
         return (status, output)
     # handle git init: we have to use 'git rm --cached'
     # detect this condition by checking if the file is still staged
+    return untrack_paths(args, head=head)
+
+
+def untrack_paths(args, head='HEAD'):
+    if not args:
+        return (-1, 'Nothing to do')
     status, output = git.update_index('--',
                                       force_remove=True,
                                       with_status=True,
                                       with_stderr=True,
                                       *set(args))
     return (status, output)
-
 
 
 def worktree_state(head='HEAD', staged_only=False):

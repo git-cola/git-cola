@@ -441,6 +441,11 @@ class MainModel(Observable):
         gitcmds.unstage_paths(paths, head=self.head)
         self.update_file_status()
 
+    def untrack_paths(self, paths):
+        status, out = gitcmds.untrack_paths(paths, head=self.head)
+        self.update_file_status()
+        return status, out
+
     def getcwd(self):
         """If we've chosen a directory then use it, otherwise os.getcwd()."""
         if self.directory:
