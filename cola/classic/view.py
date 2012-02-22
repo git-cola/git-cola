@@ -87,6 +87,12 @@ class RepoTreeView(standard.TreeView):
                                     'the staging area.',
                                     self.unstage_selected,
                                     'Ctrl+U')
+
+        self.action_untrack =\
+                self._create_action('Untrack Selected',
+                                    'Stop tracking path(s)',
+                                    self.untrack_selected)
+
         self.action_difftool =\
                 self._create_action('View Diff...',
                                     'Launch git-difftool on the current path.',
@@ -124,6 +130,7 @@ class RepoTreeView(standard.TreeView):
         self.action_history.setEnabled(selected)
         self.action_stage.setEnabled(unstaged)
         self.action_unstage.setEnabled(staged)
+        self.action_untrack.setEnabled(tracked)
         self.action_difftool.setEnabled(staged or modified)
         self.action_difftool_predecessor.setEnabled(tracked)
         self.action_revert.setEnabled(tracked)
@@ -141,6 +148,7 @@ class RepoTreeView(standard.TreeView):
         menu.addAction(self.action_difftool_predecessor)
         menu.addSeparator()
         menu.addAction(self.action_revert)
+        menu.addAction(self.action_untrack)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def mousePressEvent(self, event):
@@ -243,13 +251,14 @@ class RepoTreeView(standard.TreeView):
         return [p for p in selection
                 if p not in untracked or p in tracked]
 
-    def _create_action(self, name, tooltip, slot, shortcut):
+    def _create_action(self, name, tooltip, slot, shortcut=None):
         """Create an action with a shortcut, tooltip, and callback slot."""
         action = QtGui.QAction(self.tr(name), self)
         action.setStatusTip(self.tr(tooltip))
-        if hasattr(Qt, 'WidgetWithChildrenShortcut'):
-            action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
-        action.setShortcut(shortcut)
+        if shortcut is not None:
+            if hasattr(Qt, 'WidgetWithChildrenShortcut'):
+                action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
+            action.setShortcut(shortcut)
         self.addAction(action)
         qtutils.connect_action(action, slot)
         return action
@@ -267,6 +276,11 @@ class RepoTreeView(standard.TreeView):
         """Signal that we should stage selected paths."""
         cola.notifier().broadcast(signals.unstage,
                                   self.selected_staged_paths())
+
+    def untrack_selected(self):
+        """Signal that we should stage selected paths."""
+        cola.notifier().broadcast(signals.untrack,
+                                  self.selected_tracked_paths())
 
     def difftool(self):
         """Signal that we should launch difftool on a path."""
