@@ -1,13 +1,10 @@
 """This module provides core functions for handling unicode and UNIX quirks
 
-OSX and others are known to interrupt system calls
+The @interruptable functions retry when system calls are interrupted,
+e.g. when python raises an IOError or OSError with errno == EINTR.
 
-    http://en.wikipedia.org/wiki/PCLSRing
-    http://en.wikipedia.org/wiki/Unix_philosophy#Worse_is_better
-
-The @interruptable functions handle this situation
 """
-import errno
+from cola.decorators import interruptable
 
 # Some files are not in UTF-8; some other aren't in any codification.
 # Remember that GIT doesn't care about encodings (saves binary data)
@@ -30,29 +27,11 @@ def decode(enc):
     # this shouldn't ever happen... FIXME
     return unicode(enc)
 
+
 def encode(unenc):
     """encode(unencoded_string) returns a string encoded in utf-8
     """
     return unenc.encode('utf-8', 'replace')
-
-
-def interruptable(fn):
-    def interruptable_decorator(*args):
-        while True:
-            try:
-                result = fn(*args)
-            except IOError, e:
-                if e.errno == errno.EINTR:
-                    continue
-                raise e
-            except OSError, e:
-                if e.errno == errno.EINTR:
-                    continue
-                raise e
-            else:
-                break
-        return result
-    return interruptable_decorator
 
 
 @interruptable

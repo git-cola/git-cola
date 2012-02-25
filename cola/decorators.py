@@ -1,22 +1,28 @@
-__all__ = ('decorator', 'deprecated', 'memoize')
+__all__ = ('decorated', 'deprecator', 'memoize', 'interruptable')
+
+import errno
 
 
 def decorator(caller, func=None):
     """
+    Create a new decorator
+
     decorator(caller) converts a caller function into a decorator;
     decorator(caller, func) decorates a function using a caller.
+
     """
-    if func is None: # returns a decorator
+    if func is None:
+        # return a decorator
         def _decorator(f, *args, **opts):
             def _caller(*args, **opts):
                 return caller(f, *args, **opts)
             return _caller
         return _decorator
-
-    else: # returns a decorated function
-        def _decorator(*args, **opts):
+    else:
+        # return a decorated function
+        def _decorated(*args, **opts):
             return caller(func, *args, **opts)
-        return _decorator
+        return _decorated
 
 
 @decorator
@@ -47,7 +53,35 @@ def _memoize(func, *args, **opts):
         key = args
     cache = func.cache # attribute added by memoize
     try:
-        return cache[key]
+        result = cache[key]
     except KeyError:
-        cache[key] = result = func(*args, **opts)
-        return result
+        result = cache[key] = func(*args, **opts)
+    return result
+
+
+@decorator
+def interruptable(func, *args, **opts):
+    """Handle interruptable system calls
+
+    OSX and others are known to interrupt system calls
+
+        http://en.wikipedia.org/wiki/PCLSRing
+        http://en.wikipedia.org/wiki/Unix_philosophy#Worse_is_better
+
+    The @interruptable decorator handles this situation
+
+    """
+    while True:
+        try:
+            result = func(*args, **opts)
+        except IOError, e:
+            if e.errno == errno.EINTR:
+                continue
+            raise e
+        except OSError, e:
+            if e.errno == errno.EINTR:
+                continue
+            raise e
+        else:
+            break
+    return result
