@@ -1,7 +1,6 @@
 # Copyright (c) 2008 David Aguilar
 """This module provides miscellaneous utility functions."""
 
-import errno
 import mimetypes
 import os
 import platform
@@ -17,6 +16,7 @@ from cola import core
 from cola import resources
 from cola.compat import hashlib
 from cola.decorators import memoize
+from cola.decorators import interruptable
 
 random.seed(hash(time.time()))
 
@@ -232,33 +232,21 @@ def tmp_filename(prefix):
     return os.path.join(tmp_dir(), basename)
 
 
+@interruptable
 def is_linux():
     """Is this a linux machine?"""
-    while True:
-        try:
-            return platform.system() == 'Linux'
-        except IOError, e:
-            if e.errno == errno.EINTR:
-                continue
-            raise e
+    return platform.system() == 'Linux'
+
 
 def is_debian():
     """Is it debian?"""
     return os.path.exists('/usr/bin/apt-get')
 
 
+@interruptable
 def is_darwin():
     """Return True on OSX."""
-    while True:
-        try:
-            p = platform.platform()
-            break
-        except IOError, e:
-            if e.errno == errno.EINTR:
-                continue
-            raise e
-    p = p.lower()
-    return 'macintosh' in p or 'darwin' in p
+    return platform.system() == 'Darwin'
 
 
 @memoize
