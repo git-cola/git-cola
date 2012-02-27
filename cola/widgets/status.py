@@ -231,7 +231,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def set_staged(self, items):
         """Adds items to the 'Staged' subtree."""
         self._set_subtree(items, self.idx_staged, staged=True,
-                          check=not self.m.read_only())
+                          check=not self.m.amending())
 
     def set_modified(self, items):
         """Adds items to the 'Modified' subtree."""
@@ -317,8 +317,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                    SLOT(signals.stage_untracked))
                     return menu
 
-        enable_staging = self.m.enable_staging()
-        if not enable_staging:
+        if s.staged and self.m.unstageable():
             menu.addAction(qtutils.icon('remove.svg'),
                            self.tr('Unstage Selected'),
                            SLOT(signals.unstage, self.staged()))
@@ -359,7 +358,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         modified_submodule = (s.modified and
                               s.modified[0] in self.m.submodules)
-        if enable_staging:
+        if self.m.stageable():
             menu.addAction(qtutils.icon('add.svg'),
                            self.tr('Stage Selected'),
                            SLOT(signals.stage, self.unstaged()))
@@ -375,7 +374,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            self.tr('Launch Editor'),
                            SLOT(signals.edit, self.unstaged()))
 
-        if s.modified and enable_staging and not modified_submodule:
+        if s.modified and self.m.stageable() and not modified_submodule:
             menu.addAction(qtutils.git_icon(),
                            self.tr('Launch Diff Tool'),
                            SLOT(signals.difftool, False, self.modified()))
@@ -384,9 +383,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 menu.addAction(qtutils.icon('undo.svg'),
                                self.tr('Revert Unstaged Edits...'),
                                self._revert_unstaged_edits)
-            menu.addAction(qtutils.icon('undo.svg'),
-                           self.tr('Revert Uncommited Edits...'),
-                           self._revert_uncommitted_edits)
+                menu.addAction(qtutils.icon('undo.svg'),
+                               self.tr('Revert Uncommited Edits...'),
+                               self._revert_uncommitted_edits)
 
         if s.untracked:
             menu.addSeparator()
@@ -438,8 +437,11 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                    default=False,
                                    icon=qtutils.icon('undo.svg')):
                 return
+            args = []
+            if not staged and self.m.amending():
+                args.append(self.m.head)
             cola.notifier().broadcast(signals.checkout,
-                                      ['--'] + items_to_undo)
+                                      args + ['--'] + items_to_undo)
         else:
             qtutils.log(1, self.tr('No files selected for '
                                    'checkout from HEAD.'))
@@ -582,7 +584,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         # Clear the selection if an empty area was clicked
         selection = self.selected_indexes()
         if not selection:
-            if self.mode == self.m.mode_amend:
+            if self.m.amending():
                 cola.notifier().broadcast(signals.set_diff_text, '')
             else:
                 cola.notifier().broadcast(signals.reset_mode)

@@ -87,7 +87,7 @@ class DiffEditor(DiffTextEdit):
         menu = QtGui.QMenu(self)
         s = cola.selection()
 
-        if self.mode == self.model.mode_worktree:
+        if self.model.stageable():
             if s.modified and s.modified[0] in cola.model().submodules:
                 menu.addAction(qtutils.icon('add.svg'),
                                self.tr('Stage'),
@@ -107,7 +107,7 @@ class DiffEditor(DiffTextEdit):
                                self.revert_section)
                 menu.addAction(self.action_revert_selection)
 
-        elif self.mode == self.model.mode_index:
+        if self.model.unstageable():
             if s.staged and s.staged[0] in cola.model().submodules:
                 menu.addAction(qtutils.icon('remove.svg'),
                                self.tr('Unstage'),
@@ -116,7 +116,7 @@ class DiffEditor(DiffTextEdit):
                                self.tr('Launch git-cola'),
                                SLOT(signals.open_repo,
                                     os.path.abspath(s.staged[0])))
-            else:
+            elif s.staged:
                 menu.addAction(qtutils.icon('remove.svg'),
                                self.tr('Unstage Section'),
                                self.unstage_section)
@@ -188,16 +188,16 @@ class DiffEditor(DiffTextEdit):
 
     def apply_section(self):
         s = cola.single_selection()
-        if self.mode == self.model.mode_worktree and s.modified:
+        if self.model.stageable() and s.modified:
             self.stage_section()
-        elif self.mode == self.model.mode_index:
+        elif self.model.unstageable():
             self.unstage_section()
 
     def apply_selection(self):
         s = cola.single_selection()
-        if self.mode == self.model.mode_worktree and s.modified:
+        if self.model.stageable() and s.modified:
             self.stage_selection()
-        elif self.mode == self.model.mode_index:
+        elif self.model.unstageable():
             self.unstage_selection()
 
     def stage_section(self):

@@ -228,6 +228,8 @@ def diff_helper(commit=None,
                 endref=None,
                 filename=None,
                 cached=True,
+                head=None,
+                amending=False,
                 with_diff_header=False,
                 suppress_header=True,
                 reverse=False,
@@ -242,6 +244,8 @@ def diff_helper(commit=None,
     elif ref:
         for r in utils.shell_split(ref.strip()):
             argv.append(r)
+    elif head and amending and cached:
+        argv.append(head)
 
     if filename:
         argv.append('--')

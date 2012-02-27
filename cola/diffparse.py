@@ -18,13 +18,17 @@ class DiffParser(object):
         self._diff_spans = []
         self._diff_offsets = []
 
+        self.head = model.head
+        self.amending = model.amending()
         self.start = None
         self.end = None
         self.offset = None
         self.diffs = []
         self.selected = []
 
-        (header, diff) = gitcmds.diff_helper(filename=filename,
+        (header, diff) = gitcmds.diff_helper(head=self.head,
+                                             amending=self.amending,
+                                             filename=filename,
                                              with_diff_header=True,
                                              cached=cached,
                                              reverse=cached or reverse)
@@ -35,7 +39,9 @@ class DiffParser(object):
 
         # Always index into the non-reversed diff
         self.fwd_header, self.fwd_diff = \
-            gitcmds.diff_helper(filename=filename,
+            gitcmds.diff_helper(head=self.head,
+                                amending=self.amending,
+                                filename=filename,
                                 with_diff_header=True,
                                 cached=cached)
 
