@@ -346,14 +346,10 @@ class Diff(Command):
             return
         opts = {}
         if cached:
-            cached = not self.model.read_only()
-            opts = dict(ref=self.model.head)
-
+            opts['ref'] = self.model.head
         self.new_filename = filenames[0]
         self.old_filename = self.model.filename
-        if not self.model.read_only():
-            if self.model.mode != self.model.mode_amend:
-                self.new_mode = self.model.mode_worktree
+        self.new_mode = self.model.mode_worktree
         self.new_diff_text = gitcmds.diff_helper(filename=self.new_filename,
                                                  cached=cached, **opts)
 
@@ -368,33 +364,26 @@ class Diffstat(Command):
                                    M=True,
                                    stat=True)
         self.new_diff_text = core.decode(diff)
-        if not self.model.read_only():
-            if self.model.mode != self.model.mode_amend:
-                self.new_mode = self.model.mode_worktree
+        self.new_mode = self.model.mode_worktree
 
 
 class DiffStaged(Diff):
     """Perform a staged diff on a file."""
     def __init__(self, filenames):
         Diff.__init__(self, filenames, cached=True)
-        if not self.model.read_only():
-            if self.model.mode != self.model.mode_amend:
-                self.new_mode = self.model.mode_index
+        self.new_mode = self.model.mode_index
 
 
 class DiffStagedSummary(Command):
     def __init__(self):
         Command.__init__(self)
-        cached = not self.model.read_only()
         diff = self.model.git.diff(self.model.head,
-                                   cached=cached,
+                                   cached=True,
                                    no_color=True,
                                    patch_with_stat=True,
                                    M=True)
         self.new_diff_text = core.decode(diff)
-        if not self.model.read_only():
-            if self.model.mode != self.model.mode_amend:
-                self.new_mode = self.model.mode_index
+        self.new_mode = self.model.mode_index
 
 
 class Difftool(Command):
@@ -408,7 +397,7 @@ class Difftool(Command):
         if not self.filenames:
             return
         args = []
-        if self.staged and not self.model.read_only():
+        if self.staged:
             args.append('--cached')
         if self.model.head != 'HEAD':
             args.append(self.model.head)
@@ -650,9 +639,7 @@ class ShowUntracked(Command):
     # generically.
     def __init__(self, filenames):
         Command.__init__(self)
-        if not self.model.read_only():
-            if self.model.mode != self.model.mode_amend:
-                self.new_mode = self.model.mode_untracked
+        self.new_mode = self.model.mode_untracked
         # TODO new_diff_text = utils.file_preview(filenames[0])
 
 
@@ -808,10 +795,7 @@ class UntrackedSummary(Command):
             for u in untracked:
                 io.write('/'+core.encode(u))
         self.new_diff_text = core.decode(io.getvalue())
-
-        if not self.model.read_only():
-            if self.model.mode != self.model.mode_amend:
-                self.new_mode = self.model.mode_untracked
+        self.new_mode = self.model.mode_untracked
 
 
 class UpdateFileStatus(Command):

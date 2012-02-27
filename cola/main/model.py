@@ -43,12 +43,23 @@ class MainModel(Observable):
     mode_untracked = 'untracked' # Dealing with an untracked file
     mode_index = 'index' # Comparing index to last commit
     mode_amend = 'amend' # Amending a commit
+
+    # TODO 'grep' should be a separate dialog and not this class
+    # then we can remove all of the read_only() bits.
+
     mode_grep = 'grep' # We ran Search -> Grep
 
     # Modes where we don't do anything like staging, etc.
     modes_read_only = set((mode_grep,))
+
     # Modes where we can checkout files from the $head
-    modes_undoable = set((mode_none, mode_index, mode_worktree))
+    modes_undoable = set((mode_amend, mode_index, mode_worktree))
+
+    # Modes where we can partially stage files
+    modes_stageable = set((mode_amend, mode_worktree, mode_untracked))
+
+    # Modes where we can partially unstage files
+    modes_unstageable = set((mode_amend, mode_index))
 
     unstaged = property(lambda self: self.modified + self.unmerged + self.untracked)
     """An aggregate of the modified, unmerged, and untracked file lists."""
@@ -88,14 +99,19 @@ class MainModel(Observable):
     def read_only(self):
         return self.mode in self.modes_read_only
 
+    def unstageable(self):
+        return self.mode in self.modes_unstageable
+
+    def amending(self):
+        return self.mode == self.mode_amend
+
     def undoable(self):
         """Whether we can checkout files from the $head."""
         return self.mode in self.modes_undoable
 
-    def enable_staging(self):
+    def stageable(self):
         """Whether staging should be allowed."""
-        return self.mode in (self.mode_amend,
-                             self.mode_worktree, self.mode_untracked)
+        return self.mode in self.modes_stageable
 
     def editor(self):
         app = _config.get('gui.editor', 'gvim')
@@ -136,6 +152,9 @@ class MainModel(Observable):
         self.notify_observers(self.message_head_changed, head)
 
     def set_mode(self, mode):
+        if self.read_only() or self.amending():
+            if mode != self.mode_none:
+                return
         self.mode = mode
         self.notify_observers(self.message_mode_changed, mode)
 
@@ -167,10 +186,8 @@ class MainModel(Observable):
         self.notify_observers(self.message_updated)
 
     def _update_files(self, update_index=False):
-        staged_only = self.read_only()
         state = gitcmds.worktree_state_dict(head=self.head,
-                                            update_index=update_index,
-                                            staged_only=staged_only)
+                                            update_index=update_index)
         self.staged = state.get('staged', [])
         self.modified = state.get('modified', [])
         self.unmerged = state.get('unmerged', [])

@@ -254,7 +254,10 @@ def diff_helper(commit=None,
     del_tag = 'deleted file mode '
 
     headers = []
-    deleted = cached and not os.path.exists(encode(filename))
+    if filename is not None:
+        deleted = cached and not os.path.exists(encode(filename))
+    else:
+        deleted = False
 
     status, diffoutput = git.diff(R=reverse, M=True, cached=cached,
                                   with_status=True,
@@ -351,34 +354,31 @@ def export_patchset(start, end, output='patches', **kwargs):
 
 
 def unstage_paths(args, head='HEAD'):
-    status, output = git.reset(head, '--', with_stderr=True, with_status=True,
+    status, output = git.reset(head, '--', with_status=True,
                                *set(args))
-    if status != 128:
+    if status == 128:
+        # handle git init: we have to use 'git rm --cached'
+        # detect this condition by checking if the file is still staged
+        return untrack_paths(args, head=head)
+    else:
         return (status, output)
-    # handle git init: we have to use 'git rm --cached'
-    # detect this condition by checking if the file is still staged
-    return untrack_paths(args, head=head)
 
 
 def untrack_paths(args, head='HEAD'):
     if not args:
         return (-1, 'Nothing to do')
-    status, output = git.update_index('--',
-                                      force_remove=True,
-                                      with_status=True,
-                                      with_stderr=True,
-                                      *set(args))
-    return (status, output)
+    return git.update_index('--', force_remove=True,
+                            with_status=True, *set(args))
 
 
-def worktree_state(head='HEAD', staged_only=False):
+def worktree_state(head='HEAD'):
     """Return a tuple of files in various states of being
 
     Can be staged, unstaged, untracked, unmerged, or changed
     upstream.
 
     """
-    state = worktree_state_dict(head=head, staged_only=staged_only)
+    state = worktree_state_dict(head=head)
     return(state.get('staged', []),
            state.get('modified', []),
            state.get('unmerged', []),
@@ -386,9 +386,7 @@ def worktree_state(head='HEAD', staged_only=False):
            state.get('upstream_changed', []))
 
 
-def worktree_state_dict(head='HEAD',
-                        staged_only=False,
-                        update_index=False):
+def worktree_state_dict(head='HEAD', update_index=False):
     """Return a dict of files in various states of being
 
     :rtype: dict, keys are staged, unstaged, untracked, unmerged,
@@ -397,9 +395,6 @@ def worktree_state_dict(head='HEAD',
     """
     if update_index:
         git.update_index(refresh=True)
-
-    if staged_only:
-        return _branch_status(head)
 
     staged, unmerged, submodules = diff_index(head)
     modified, more_submods = diff_worktree()
@@ -432,14 +427,15 @@ def worktree_state_dict(head='HEAD',
             'submodules': submodules}
 
 
-def diff_index(head):
+def diff_index(head, cached=True):
     decode = core.decode
     submodules = set()
     staged = []
     unmerged = []
 
-    output = git.diff_index(head, z=True, cached=True, with_stderr=True)
-    if output.startswith('fatal:'):
+    status, output = git.diff_index(head, cached=cached,
+                                    z=True, with_status=True)
+    if status != 0:
         # handle git init
         return all_files(), unmerged, submodules
 
@@ -462,8 +458,8 @@ def diff_worktree():
     modified = []
     submodules = set()
 
-    output = git.diff_files(z=True, with_stderr=True)
-    if output.startswith('fatal:'):
+    status, output = git.diff_files(z=True, with_status=True)
+    if status != 0:
         # handle git init
         ls_files = core.decode(git.ls_files(modified=True, z=True))
         if ls_files:

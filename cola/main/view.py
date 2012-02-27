@@ -497,7 +497,7 @@ class MainView(standard.MainWindow):
 
         self.commitmsgeditor.set_mode(self.mode)
 
-        if not self.model.read_only() and self.mode != self.model.mode_amend:
+        if not self.model.amending():
             # Check if there's a message file in .git/
             merge_msg_path = gitcmds.merge_message_path()
             if merge_msg_path is None:
