@@ -43,10 +43,10 @@ class DiffEditor(DiffTextEdit):
         # Install diff shortcut keys for stage/unstage
         self.action_process_section = qtutils.add_action(self,
                 'Process Section',
-                self.apply_section, QtCore.Qt.Key_H)
+                self.apply_section, Qt.Key_H)
         self.action_process_selection = qtutils.add_action(self,
                 'Process Selection',
-                self.apply_selection, QtCore.Qt.Key_S)
+                self.apply_selection, Qt.Key_S)
         # Context menu actions
         self.action_stage_selection = qtutils.add_action(self,
                 self.tr('Stage &Selected Lines'),
@@ -135,13 +135,13 @@ class DiffEditor(DiffTextEdit):
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def wheelEvent(self, event):
-        if event.modifiers() & QtCore.Qt.ControlModifier:
+        if event.modifiers() & Qt.ControlModifier:
             # Intercept the Control modifier to not resize the text
             # when doing control+mousewheel
             event.accept()
             event = QtGui.QWheelEvent(event.pos(), event.delta(),
-                                      QtCore.Qt.NoButton,
-                                      QtCore.Qt.NoModifier,
+                                      Qt.NoButton,
+                                      Qt.NoModifier,
                                       event.orientation())
         return super(DiffEditor, self).wheelEvent(event)
 
