@@ -103,6 +103,14 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                      SIGNAL('itemDoubleClicked(QTreeWidgetItem*,int)'),
                      self.double_clicked)
 
+        self.connect(self,
+                     SIGNAL('itemCollapsed(QTreeWidgetItem*)'),
+                     lambda x: self.update_column_widths())
+
+        self.connect(self,
+                     SIGNAL('itemExpanded(QTreeWidgetItem*)'),
+                     lambda x: self.update_column_widths())
+
     def add_item(self, txt, path, hide=False):
         """Create a new top-level item in the status tree."""
         item = QtGui.QTreeWidgetItem(self)
@@ -227,6 +235,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             self.old_scroll = None
 
         self.restore_selection()
+        self.update_column_widths()
 
     def set_staged(self, items):
         """Adds items to the 'Staged' subtree."""
@@ -263,6 +272,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                                untracked=untracked)
             parent.addChild(treeitem)
         self.expand_items(idx, items)
+
+    def update_column_widths(self):
+        self.resizeColumnToContents(0)
 
     def expand_items(self, idx, items):
         """Expand the top-level category "folder" once and only once."""
