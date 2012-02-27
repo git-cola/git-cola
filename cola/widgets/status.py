@@ -98,12 +98,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.show_selection)
+
         self.connect(self,
                      SIGNAL('itemDoubleClicked(QTreeWidgetItem*,int)'),
                      self.double_clicked)
-        self.connect(self,
-                     SIGNAL('itemClicked(QTreeWidgetItem*,int)'),
-                     self.clicked)
 
     def add_item(self, txt, path, hide=False):
         """Create a new top-level item in the status tree."""
@@ -229,15 +227,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             self.old_scroll = None
 
         self.restore_selection()
-
-        if not self.m.staged:
-            return
-
-        staged = self.topLevelItem(self.idx_staged)
-        if self.mode in self.m.modes_read_only:
-            staged.setText(0, self.tr('Changed'))
-        else:
-            staged.setText(0, self.tr('Staged'))
 
     def set_staged(self, items):
         """Adds items to the 'Staged' subtree."""
