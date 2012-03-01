@@ -17,6 +17,18 @@ def dashify(string):
     return string.replace('_', '-')
 
 
+def is_git_dir(d):
+    """From git's setup.c:is_git_directory()."""
+    if (os.path.isdir(d)
+            and os.path.isdir(os.path.join(d, 'objects'))
+            and os.path.isdir(os.path.join(d, 'refs'))):
+        headref = os.path.join(d, 'HEAD')
+        return (os.path.isfile(headref)
+                or (os.path.islink(headref)
+                and os.readlink(headref).startswith('refs')))
+    return False
+
+
 class Git(object):
     """
     The Git class manages communication with the Git binary
@@ -39,7 +51,7 @@ class Git(object):
         else:
             curdir = os.getcwd()
 
-        if self._is_git_dir(os.path.join(curdir, '.git')):
+        if is_git_dir(os.path.join(curdir, '.git')):
             return curdir
 
         # Handle bare repositories
@@ -56,7 +68,7 @@ class Git(object):
         return self._worktree
 
     def is_valid(self):
-        return self._git_dir and self._is_git_dir(self._git_dir)
+        return self._git_dir and is_git_dir(self._git_dir)
 
     def git_path(self, *paths):
         return os.path.join(self.git_dir(), *paths)
@@ -72,28 +84,17 @@ class Git(object):
             curpath = os.path.abspath(os.getcwd())
         # Search for a .git directory
         while curpath:
-            if self._is_git_dir(curpath):
+            if is_git_dir(curpath):
                 self._git_dir = curpath
                 break
             gitpath = os.path.join(curpath, '.git')
-            if self._is_git_dir(gitpath):
+            if is_git_dir(gitpath):
                 self._git_dir = gitpath
                 break
             curpath, dummy = os.path.split(curpath)
             if not dummy:
                 break
         return self._git_dir
-
-    def _is_git_dir(self, d):
-        """From git's setup.c:is_git_directory()."""
-        if (os.path.isdir(d)
-                and os.path.isdir(os.path.join(d, 'objects'))
-                and os.path.isdir(os.path.join(d, 'refs'))):
-            headref = os.path.join(d, 'HEAD')
-            return (os.path.isfile(headref)
-                    or (os.path.islink(headref)
-                    and os.readlink(headref).startswith('refs')))
-        return False
 
     def set_cwd(self, path):
         """Sets the current directory."""
