@@ -411,9 +411,14 @@ def apply_icon():
     return cached_icon(QtGui.QStyle.SP_DialogApplyButton)
 
 
+def new_icon():
+    return cached_icon(QtGui.QStyle.SP_FileDialogNewFolder)
+
+
 def save_icon():
     """Return a standard Save icon"""
     return cached_icon(QtGui.QStyle.SP_DialogSaveButton)
+
 
 
 def ok_icon():

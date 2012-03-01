@@ -11,9 +11,12 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-from cola import qtutils
+from cola import core
+from cola import git
 from cola import guicmds
 from cola import settings
+from cola import qtutils
+from cola import utils
 from cola.widgets import defs
 
 class StartupDialog(QtGui.QDialog):
@@ -27,6 +30,10 @@ class StartupDialog(QtGui.QDialog):
         self._layt = QtGui.QHBoxLayout()
         self._layt.setMargin(defs.margin)
         self._layt.setSpacing(defs.spacing)
+
+        self._new_btn = QtGui.QPushButton('New...')
+        self._new_btn.setIcon(qtutils.new_icon())
+
         self._open_btn = QtGui.QPushButton('Open...')
         self._open_btn.setIcon(qtutils.open_icon())
 
@@ -37,6 +44,8 @@ class StartupDialog(QtGui.QDialog):
 
         self._layt.addWidget(self._open_btn)
         self._layt.addWidget(self._clone_btn)
+        self._layt.addWidget(self._new_btn)
+        self._layt.addStretch()
         self._layt.addWidget(self._close_btn)
 
         self.model = settings.Settings()
@@ -78,9 +87,11 @@ class StartupDialog(QtGui.QDialog):
 
         self.setLayout(self._vlayt)
 
-        self.connect(self._open_btn, SIGNAL('clicked()'), self._open)
-        self.connect(self._clone_btn, SIGNAL('clicked()'), self._clone)
-        self.connect(self._close_btn, SIGNAL('clicked()'), self.reject)
+        qtutils.connect_button(self._open_btn, self._open)
+        qtutils.connect_button(self._clone_btn, self._clone)
+        qtutils.connect_button(self._new_btn, self._new)
+        qtutils.connect_button(self._close_btn, self.reject)
+
         self.connect(self._bookmark_list,
                      SIGNAL('activated(const QModelIndex &)'),
                      self._open_bookmark)
@@ -114,6 +125,39 @@ class StartupDialog(QtGui.QDialog):
         gitdir = guicmds.clone_repo(spawn=False)
         if gitdir:
             self._gitdir = gitdir
+            self.accept()
+
+    def _new(self):
+        dlg = QtGui.QFileDialog(self)
+        dlg.setFileMode(QtGui.QFileDialog.Directory)
+        dlg.setOption(QtGui.QFileDialog.ShowDirsOnly)
+        if dlg.exec_() != QtGui.QFileDialog.Accepted:
+            return
+        paths = dlg.selectedFiles()
+        if not paths:
+            return
+        upath = unicode(paths[0])
+        if not upath:
+            return
+        path = core.encode(unicode(paths[0]))
+        # Avoid needlessly calling `git init`.
+        if git.is_git_dir(path):
+            # We could prompt here and confirm that they really didn't
+            # mean to open an existing repository, but I think
+            # treating it like an "Open" is a sensible DWIM answer.
+            self._gitdir = upath
+            self.accept()
+            return
+
+        os.chdir(path)
+        status, out, err = utils.run_command(['git', 'init'])
+        if status != 0:
+            title = 'Error Creating Repository'
+            msg = 'git init returned exit status %d' % status
+            details = 'output:\n%s\n\nerrors:\n%s' % (out, err)
+            qtutils.critical(title, msg, details)
+        else:
+            self._gitdir = upath
             self.accept()
 
     def _open_bookmark(self, index):
