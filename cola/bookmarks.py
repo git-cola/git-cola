@@ -3,7 +3,6 @@ import os
 import sys
 
 from PyQt4 import QtGui
-from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
@@ -45,6 +44,7 @@ class BookmarksDialog(standard.Dialog):
         self.open_button = QtGui.QPushButton(self)
         self.open_button.setText(self.tr('Open'))
         self.open_button.setIcon(qtutils.open_icon())
+        self.open_button.setEnabled(False)
         self.button_layout.addWidget(self.open_button)
 
         self.add_button = QtGui.QPushButton(self)
@@ -90,6 +90,7 @@ class BookmarksDialog(standard.Dialog):
 
     def item_selection_changed(self):
         has_selection = bool(self.selection())
+        self.open_button.setEnabled(has_selection)
         self.delete_button.setEnabled(has_selection)
 
     def save(self):
