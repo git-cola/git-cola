@@ -131,7 +131,8 @@ class ColaApplication(object):
 def parse_args(context):
     # TODO switch to argparse, bundle it for win32?
     args = sys.argv[1:]
-    builtins = set(('branch',
+    builtins = set(('archive',
+                    'branch',
                     'browse',
                     'classic',
                     'dag',
@@ -248,7 +249,11 @@ def main(context):
     os.chdir(model.git.worktree())
 
     # Show the GUI
-    if context == 'branch':
+    if context == 'archive':
+        from cola.widgets.archive import GitArchiveDialog
+        model.update_status()
+        view = GitArchiveDialog(model.currentbranch)
+    elif context == 'branch':
         from cola.widgets.createbranch import create_new_branch
         view = create_new_branch()
     elif context in ('git-dag', 'dag'):
