@@ -85,32 +85,19 @@ class MergeView(QtGui.QDialog):
         self.revision.setFocus()
 
         # Signal/slot connections
-        self.connect(self.button_cancel, SIGNAL('clicked()'),
-                     self.reject)
-
-        self.connect(self.checkbox_squash, SIGNAL('clicked()'),
-                     self.toggle_squash)
-
         self.connect(self.revision, SIGNAL('textChanged(QString)'),
                      self.update_title)
 
         self.connect(self.revisions, SIGNAL('itemSelectionChanged()'),
                      self.revision_selected)
 
-        self.connect(self.radio_local, SIGNAL('clicked()'),
-                     self.update_revisions)
-
-        self.connect(self.radio_remote, SIGNAL('clicked()'),
-                     self.update_revisions)
-
-        self.connect(self.radio_tag, SIGNAL('clicked()'),
-                     self.update_revisions)
-
-        self.connect(self.button_merge, SIGNAL('clicked()'),
-                     self.merge_revision)
-
-        self.connect(self.button_viz, SIGNAL('clicked()'),
-                     self.viz_revision)
+        qtutils.connect_button(self.button_cancel, self.reject)
+        qtutils.connect_button(self.checkbox_squash, self.toggle_squash)
+        qtutils.connect_button(self.radio_local, self.update_revisions)
+        qtutils.connect_button(self.radio_remote, self.update_revisions)
+        qtutils.connect_button(self.radio_tag, self.update_revisions)
+        qtutils.connect_button(self.button_merge, self.merge_revision)
+        qtutils.connect_button(self.button_viz, self.viz_revision)
 
         # Observer messages
         model.add_observer(model.message_updated, self.update_all)

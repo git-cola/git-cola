@@ -84,11 +84,11 @@ class GitCommandWidget(standard.Dialog):
         self.connect(self.proc, SIGNAL('finished(int)'), self.finishProc)
         self.connect(self.proc, SIGNAL('stateChanged(QProcess::ProcessState)'), self.stateChanged)
 
-        # Connect the signlas to the buttons
-        self.connect(self.button_abort, SIGNAL('clicked()'), self.abortProc)
-        self.connect(self.button_close, SIGNAL('clicked()'), self.close)
         # Start with abort disabled - will be enabled when the process is run.
         self.button_abort.setEnabled(False)
+
+        qtutils.connect_button(self.button_abort, self.abortProc)
+        qtutils.connect_button(self.button_close, self.close)
 
     def set_command(self, command):
         self.command = command
@@ -248,11 +248,11 @@ class ActionDialog(standard.Dialog):
         self.runbtn.setDefault(True)
         self.layt.addLayout(self.btnlayt)
 
-        self.connect(self.closebtn, SIGNAL('clicked()'), self.reject)
-        self.connect(self.runbtn, SIGNAL('clicked()'), self.accept)
-
         # Widen the dialog by default
         self.resize(666, self.height())
+
+        qtutils.connect_button(self.closebtn, self.reject)
+        qtutils.connect_button(self.runbtn, self.accept)
 
     def revision(self):
         return self.revselect.revision()
@@ -291,7 +291,7 @@ class RevisionSelector(QtGui.QWidget):
             radio = QtGui.QRadioButton()
             radio.setText(self.tr(label))
             radio.setObjectName(label)
-            self.connect(radio, SIGNAL('clicked()'), self._set_revision_list)
+            qtutils.connect_button(radio, self._set_revision_list)
             self._radio_layt.addWidget(radio)
             self._radio_btns[label] = radio
 

@@ -109,19 +109,14 @@ class RecentFileDialog(standard.Dialog):
 
         self.connect(self.count, SIGNAL('editingFinished()'), self.refresh)
 
-        self.connect(self.refresh_button, SIGNAL('clicked()'), self.refresh)
-
         self.connect(self.update_thread, SIGNAL('filenames'),
                      self.set_filenames)
 
-        self.connect(self.expand_button, SIGNAL('clicked()'),
-                     self.tree.expandAll)
-
-        self.connect(self.collapse_button, SIGNAL('clicked()'),
-                     self.tree.collapseAll)
-
-        self.connect(self.close_button, SIGNAL('clicked()'), self.accept)
-        self.connect(self.edit_button, SIGNAL('clicked()'), self.edit_selected)
+        qtutils.connect_button(self.refresh_button, self.refresh)
+        qtutils.connect_button(self.expand_button, self.tree.expandAll)
+        qtutils.connect_button(self.collapse_button, self.tree.collapseAll)
+        qtutils.connect_button(self.close_button, self.accept)
+        qtutils.connect_button(self.edit_button, self.edit_selected)
 
         qtutils.add_action(self, 'Refresh', self.refresh, 'Ctrl+R')
 

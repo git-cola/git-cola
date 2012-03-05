@@ -71,13 +71,14 @@ class BookmarksDialog(standard.Dialog):
 
         self.layt.addLayout(self.button_layout)
 
-        self.connect(self.open_button, SIGNAL('clicked()'), self.open_repo)
-        self.connect(self.add_button, SIGNAL('clicked()'), self.add)
-        self.connect(self.delete_button, SIGNAL('clicked()'), self.delete)
-        self.connect(self.save_button, SIGNAL('clicked()'), self.save)
-        self.connect(self.close_button, SIGNAL('clicked()'), self.accept)
         self.connect(self.bookmarks, SIGNAL('itemSelectionChanged()'),
                      self.item_selection_changed)
+
+        qtutils.connect_button(self.open_button, self.open_repo)
+        qtutils.connect_button(self.add_button, self.add)
+        qtutils.connect_button(self.delete_button, self.delete)
+        qtutils.connect_button(self.save_button, self.save)
+        qtutils.connect_button(self.close_button, self.accept)
 
         self.update_bookmarks()
 

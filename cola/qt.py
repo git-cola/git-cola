@@ -63,14 +63,14 @@ class DockTitleBarWidget(QtGui.QWidget):
         layout.addWidget(self.close_button)
         self.setLayout(layout)
 
-        self.connect(self.toggle_button, SIGNAL('clicked()'),
-                     self.toggle_floating)
-
-        self.connect(self.close_button, SIGNAL('clicked()'),
-                     self.parent().toggleViewAction().trigger)
+        qtutils.connect_button(self.toggle_button, self.toggle_floating)
+        qtutils.connect_button(self.close_button, self.toggle_visibility)
 
     def toggle_floating(self):
         self.parent().setFloating(not self.parent().isFloating())
+
+    def toggle_visibility(self):
+        self.parent().toggleViewAction().trigger()
 
     def set_title(self, title):
         self.label.setText(title)

@@ -137,10 +137,10 @@ class GitArchiveDialog(QtGui.QDialog):
         self.connect(self.prefix_group, SIGNAL('expanded(bool)'),
                      self.prefix_group_expanded)
 
-        self.connect(self.browse, SIGNAL('clicked()'), self.choose_filename)
 
-        self.connect(self.cancel, SIGNAL('clicked()'), self.reject)
-        self.connect(self.save, SIGNAL('clicked()'), self.save_archive)
+        qtutils.connect_button(self.browse, self.choose_filename)
+        qtutils.connect_button(self.cancel, self.reject)
+        qtutils.connect_button(self.save, self.save_archive)
 
 
     def save_archive(self):

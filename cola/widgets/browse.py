@@ -141,10 +141,6 @@ class BrowseDialog(QtGui.QDialog):
         self.setLayout(self.layt)
 
         # connections
-        self.connect(self.close, SIGNAL('clicked()'), self.reject)
-
-        self.connect(self.save, SIGNAL('clicked()'), self.save_blob)
-
         if select_file:
             self.connect(self.tree, SIGNAL('path_chosen'), self.path_chosen)
         else:
@@ -152,6 +148,9 @@ class BrowseDialog(QtGui.QDialog):
 
         self.connect(self.tree, SIGNAL('selectionChanged()'),
                      self.selection_changed)
+
+        qtutils.connect_button(self.close, self.reject)
+        qtutils.connect_button(self.save, self.save_blob)
 
     def expandAll(self):
         self.tree.expandAll()

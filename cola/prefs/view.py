@@ -254,8 +254,7 @@ class PreferencesView(standard.Dialog):
         self.connect(self._stackedwidget, SIGNAL('currentChanged(int)'),
                      self.update_widget)
 
-        self.connect(self.close_button, SIGNAL('clicked()'), self.accept)
-
+        qtutils.connect_button(self.close_button, self.accept)
         qtutils.add_close_action(self)
 
         self.update_widget(0)

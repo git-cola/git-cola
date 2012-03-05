@@ -84,24 +84,21 @@ class StashView(standard.Dialog):
 
         self.splitter.setSizes([self.width()/3, self.width()*2/3])
 
-        self.connect(self.button_apply, SIGNAL('clicked()'),
-                     self.stash_apply)
-        self.connect(self.button_save, SIGNAL('clicked()'),
-                     self.stash_save)
-        self.connect(self.button_drop, SIGNAL('clicked()'),
-                     self.stash_drop)
-        self.connect(self.button_close, SIGNAL('clicked()'), self.close)
-
         self.update_from_model()
         self.update_actions()
-
-        self.connect(self.stash_list, SIGNAL('itemSelectionChanged()'),
-                     self.item_selected)
 
         self.setTabOrder(self.button_save, self.button_apply)
         self.setTabOrder(self.button_apply, self.button_drop)
         self.setTabOrder(self.button_drop, self.keep_index)
         self.setTabOrder(self.keep_index, self.button_close)
+
+        self.connect(self.stash_list, SIGNAL('itemSelectionChanged()'),
+                     self.item_selected)
+
+        qtutils.connect_button(self.button_apply, self.stash_apply)
+        qtutils.connect_button(self.button_save, self.stash_save)
+        qtutils.connect_button(self.button_drop, self.stash_drop)
+        qtutils.connect_button(self.button_close, self.close)
 
     def close(self):
         self.accept()

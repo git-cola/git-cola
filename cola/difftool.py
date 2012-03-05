@@ -67,8 +67,6 @@ class FileDiffDialog(QtGui.QDialog):
         self._layt.addLayout(self._button_layt)
         self.setLayout(self._layt)
 
-        qtutils.add_close_action(self)
-
         self.connect(self._tree, SIGNAL('itemSelectionChanged()'),
                      self._tree_selection_changed)
 
@@ -76,8 +74,9 @@ class FileDiffDialog(QtGui.QDialog):
                      SIGNAL('itemDoubleClicked(QTreeWidgetItem*,int)'),
                      self._tree_double_clicked)
 
-        self.connect(self._diff_btn, SIGNAL('clicked()'), self.diff)
-        self.connect(self._close_btn, SIGNAL('clicked()'), self.close)
+        qtutils.connect_button(self._diff_btn, self.diff)
+        qtutils.connect_button(self._close_btn, self.close)
+        qtutils.add_close_action(self)
 
         if self.expr:
             self.diff_arg = tuple(utils.shell_split(self.expr))
