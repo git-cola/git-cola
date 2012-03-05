@@ -65,6 +65,7 @@ class MergeView(QtGui.QDialog):
         self.radiolayt.addWidget(self.radio_tag)
 
         self.buttonlayt = QtGui.QHBoxLayout()
+        self.buttonlayt.setSpacing(defs.button_spacing)
         self.buttonlayt.addWidget(self.button_viz)
         self.buttonlayt.addStretch()
         self.buttonlayt.addWidget(self.checkbox_squash)
