@@ -61,8 +61,10 @@ Special Thanks
 * Ben Boeckel
 * Christian Jann
 * Daniel King
+* Daniel Fahlke
 * David Aguilar
 * David Martínez Martí
+* Eric Drechsel
 * `GIT Hackers <http://git-scm.com/about>`_
 * Ismael Juma
 * Iulian Udrea
@@ -70,12 +72,16 @@ Special Thanks
 * Karl Bielefeldt
 * Kelvie Wong
 * Kevin Kofler
+* Libor Jelinek
+* Mahmoud Hossam
 * Marco Costalba
-* Michael Geddes
-* Michael Homer
 * Markus Heidelberg
 * Matthew Levine
+* Michael Geddes
+* Michael Homer
+* Omega Weapon
 * Paolo G. Giarrusso
 * Stefan Naewe
 * Steffen Prohaska
+* Ugo Riboni
 * Uri Okrent
