@@ -2,16 +2,11 @@
 
 from cola.ctrl import Controller
 from cola import signals
-from cola.dag.model import archive, Archive
 
 
 class MainController(Controller):
     def __init__(self, model, view):
         Controller.__init__(self, model, view)
-        command_directory = {
-            archive: Archive,
-        }
-        self.add_commands(command_directory)
 
         self.add_global_command(signals.amend_mode)
         self.add_global_command(signals.diffstat)

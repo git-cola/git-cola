@@ -1,5 +1,5 @@
 from PyQt4 import QtGui
-from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import os
@@ -13,29 +13,28 @@ from cola import qtutils
 from cola.git import git
 from cola.qt import ExpandableGroupBox
 from cola.widgets import defs
-from cola.dag.model import archive
+from cola.dag.model import archive, command_directory
+from cola.ctrl import Controller
+
+
+class ArchiveController(Controller):
+    def __init__(self, view):
+        Controller.__init__(self, None, view)
+        self.add_commands(command_directory)
 
 
 class GitArchiveDialog(QtGui.QDialog):
-
     @staticmethod
-    def create(ref, shortref, parent):
+    def save(ref, shortref, parent=None):
         dlg = GitArchiveDialog(ref, shortref, parent)
         if dlg.exec_() != dlg.Accepted:
             return None
         return dlg
 
-    @classmethod
-    def save(cls, ref, shortref, parent):
-        dlg = cls.create(ref, shortref, parent)
-        if dlg is None:
-            return
-        parent.emit(SIGNAL(archive), ref, dlg.fmt, dlg.prefix, dlg.filename)
-        qtutils.information('File Saved', 'File saved to "%s"' % dlg.filename)
-
     def __init__(self, ref, shortref=None, parent=None):
         QtGui.QDialog.__init__(self, parent)
-        self.setWindowModality(QtCore.Qt.WindowModal)
+        self.setWindowModality(Qt.WindowModal)
+        self.controller = ArchiveController(self)
 
         # input
         self.ref = ref
@@ -137,11 +136,17 @@ class GitArchiveDialog(QtGui.QDialog):
         self.connect(self.prefix_group, SIGNAL('expanded(bool)'),
                      self.prefix_group_expanded)
 
+        self.connect(self, SIGNAL('accepted()'), self.archive_saved)
 
         qtutils.connect_button(self.browse, self.choose_filename)
         qtutils.connect_button(self.cancel, self.reject)
         qtutils.connect_button(self.save, self.save_archive)
 
+    def archive_saved(self):
+        self.emit(SIGNAL(archive),
+                  self.ref, self.fmt, self.prefix, self.filename)
+        qtutils.information('File Saved', 'File saved to "%s"' %
+                            self.filename)
 
     def save_archive(self):
         filename = self.filename
