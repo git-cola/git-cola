@@ -1,3 +1,22 @@
+git-cola v1.7.6
+===============
+Usability, bells and whistles
+-----------------------------
+* `git dag` learned to color-code node edges.
+
+* New GUI for editing remote repositories.
+
+* New `git cola archive` and `git-cola remote` sub-commands.
+
+* `git cola browser` learned an 'Untrack' command.
+
+* The diff editor learned to staged/unstaged while amending.
+
+* The status widget learned to scroll horizontally.
+
+* New git repositories can be created by clicking 'New' on the
+  `git cola --prompt` startup screen.
+
 git-cola v1.7.5
 ===============
 Usability, bells and whistles
