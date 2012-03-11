@@ -1,6 +1,6 @@
 # git-cola: The highly caffeinated git GUI
 
-## git-cola is a sleek and powerful git GUI
+    git-cola is a powerful git GUI with a slick and intuitive user interface.
 
     Copyright (C) 2007-2012, David Aguilar and contributors
     
@@ -28,7 +28,7 @@ New releases are available on the
 
 ## FORK
 
-    git clone git://github.com/git-cola/git-cola.git
+    git clone git://github.com/git-cola/git-cola.git cola
 
 [git-cola on github](https://github.com/git-cola/git-cola)
 
@@ -59,12 +59,12 @@ If you want to do a global install you can do
 
     make prefix=/usr install
 
-You don't need to install cola to run it, though.
+You don't need to `make` to run it, though.
 *git-cola* is designed to run directly out of its source tree.
 
-    make
-    bin/git-cola
-    bin/git-dag
+    git clone git://github.com/git-cola/git-cola.git cola
+    cola/bin/git-cola
+    cola/bin/git-dag
 
 ## MAC OS X
 
@@ -79,6 +79,7 @@ and use it to install git-cola.
 
 Once brew has installed git-cola (and its dependencies) you use
 `git-cola.app` or install from source using `make install`.
+
 Installing these packages also gives you a PyQt development
 environment which can be used for building your own applications
 or hacking on cola itself.
