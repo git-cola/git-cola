@@ -850,12 +850,16 @@ class Edge(QtGui.QGraphicsItem):
         self.bound = rect.normalized()
 
         # Choose a new color for branchy edges
-        if self.source.x() != self.dest.x():
+        if self.line.length() > GraphView.y_off:
             color = EdgeColor.next()
-            line = Qt.SolidLine
         else:
             color = EdgeColor.current()
+
+        if self.source.x() != self.dest.x():
+            line = Qt.SolidLine
+        else:
             line = Qt.DotLine
+
         self.pen = QtGui.QPen(color, 1.0, line, Qt.SquareCap, Qt.BevelJoin)
 
     def type(self):
