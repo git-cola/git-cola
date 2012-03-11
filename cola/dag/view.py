@@ -873,6 +873,13 @@ class EdgeColor(object):
     """An edge color factory"""
 
     current_color_index = 0
+    # TODO: Make this configurable, e.g.
+    # colors = [
+    #             QtGui.QColor.fromRgb(0xff, 0x30, 0x30), # red
+    #             QtGui.QColor.fromRgb(0x30, 0xff, 0x30), # green
+    #             QtGui.QColor.fromRgb(0x30, 0x30, 0xff), # blue
+    #             QtGui.QColor.fromRgb(0xff, 0xff, 0x30), # yellow
+    #          ]
     colors = [
                 QtGui.QColor.fromRgb(0xff, 0xff, 0xff), # white
                 QtGui.QColor.fromRgb(0x30, 0x80, 0xff), # blue
