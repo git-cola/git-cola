@@ -26,7 +26,24 @@ def is_git_dir(d):
         return (os.path.isfile(headref)
                 or (os.path.islink(headref)
                 and os.readlink(headref).startswith('refs')))
-    return False
+
+    return is_git_file(d)
+
+
+def is_git_file(f):
+    return os.path.isfile(f) and '.git' == os.path.basename(f)
+
+
+def read_git_file(f):
+    if f is None:
+        return None
+    if is_git_file(f):
+        fh = open(f)
+        data = core.decode(core.read(fh)).rstrip()
+        fh.close()
+        if data.startswith('gitdir: '):
+            return core.decode(data[len('gitdir: '):])
+    return None
 
 
 class Git(object):
@@ -35,10 +52,13 @@ class Git(object):
     """
     def __init__(self):
         self._git_cwd = None #: The working directory used by execute()
+        self._worktree = None
+        self._git_file_path = None
         self.set_worktree(os.getcwd())
 
     def set_worktree(self, path):
         self._git_dir = path
+        self._git_file_path = None
         self._worktree = None
         self.worktree()
 
@@ -71,7 +91,10 @@ class Git(object):
         return self._git_dir and is_git_dir(self._git_dir)
 
     def git_path(self, *paths):
-        return os.path.join(self.git_dir(), *paths)
+        if self._git_file_path is None:
+            return os.path.join(self.git_dir(), *paths)
+        else:
+            return os.path.join(self._git_file_path, *paths)
 
     def git_dir(self):
         if self.is_valid():
@@ -94,6 +117,7 @@ class Git(object):
             curpath, dummy = os.path.split(curpath)
             if not dummy:
                 break
+        self._git_file_path = read_git_file(self._git_dir)
         return self._git_dir
 
     def set_cwd(self, path):
