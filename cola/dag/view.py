@@ -849,15 +849,15 @@ class Edge(QtGui.QGraphicsItem):
         rect = QtCore.QRectF(self.source_pt, QtCore.QSizeF(width, height))
         self.bound = rect.normalized()
 
-        # Choose a new color for branchy edges
-        if self.line.length() > GraphView.y_off:
+        # Choose a new color for new branch edges
+        if self.source.x() < self.dest.x():
             color = EdgeColor.next()
-        else:
+            line = Qt.SolidLine
+        elif self.source.x() != self.dest.x():
             color = EdgeColor.current()
-
-        if self.source.x() != self.dest.x():
             line = Qt.SolidLine
         else:
+            color = EdgeColor.current()
             line = Qt.DotLine
 
         self.pen = QtGui.QPen(color, 1.0, line, Qt.SquareCap, Qt.BevelJoin)
@@ -1529,7 +1529,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
             except KeyError:
                 # TODO - Handle truncated history viewing
                 pass
-            for parent in commit.parents:
+            for parent in reversed(commit.parents):
                 try:
                     parent_item = self.items[parent.sha1]
                 except KeyError:
