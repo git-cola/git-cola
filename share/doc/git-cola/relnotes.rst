@@ -2,7 +2,10 @@ git-cola v1.7.6
 ===============
 Usability, bells and whistles
 -----------------------------
-* `git dag` learned to color-code node edges.
+* `git dag` learned to color-code branchy edges.
+  The edge colors change when a new branch is detected,
+  which makes the history much easier to follow.
+  A huge thanks to Uri Okrent for making it happen.
 
 * New GUI for editing remote repositories.
 
