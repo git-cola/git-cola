@@ -6,13 +6,13 @@ Usability, bells and whistles
 
 * New GUI for editing remote repositories.
 
-* New `git cola archive` and `git-cola remote` sub-commands.
+* New `git cola archive` and `git cola remote` sub-commands.
 
 * `git cola browser` learned an 'Untrack' command.
 
 * The diff editor learned to staged/unstaged while amending.
 
-* The status widget learned to scroll horizontally.
+* The status tool can now scroll horizontally.
 
 * New git repositories can be created by clicking 'New' on the
   `git cola --prompt` startup screen.
@@ -23,10 +23,10 @@ Usability, bells and whistles
 -----------------------------
 * Auto-completion was added to more tools.
 
-* `git-dag` is easier to use on smaller displays -- the author
+* `git dag` is easier to use on smaller displays -- the author
   field elides its text which allows for a more compact display.
 
-* Selected commits in `git-dag` were made more prominent and
+* Selected commits in `git dag` were made more prominent and
   easier to see.
 
 * 'Create Branch' learned to fetch remote branches and uses a
@@ -43,7 +43,7 @@ Fixes
 -----
 * Detect Homebrew so that OS X users do not need to set PYTHONPATH.
 
-* `git-dag` can export patches again.
+* `git dag` can export patches again.
 
 git-cola v1.7.4
 ===============
@@ -52,10 +52,10 @@ Usability, bells and whistles
 * The 'Classic' tool was renamed to 'Browser' and learned to
   limit history to the current branch.
 
-* `git-dag` learned about gravatar and uses it to show images
+* `git dag` learned about gravatar and uses it to show images
   for commit authors.
 
-* `git-dag` learned to use OpenGL for rendering resulting in
+* `git dag` learned to use OpenGL for rendering resulting in
   much faster rendering.
 
 * More dialogs learned vim-style keyboard shortcuts.
@@ -66,7 +66,7 @@ git-cola v1.7.3
 ===============
 Usability, bells and whistles
 -----------------------------
-* `git-cola` learned a few new sub commands:
+* `git cola` learned a few new sub commands:
 
 .. sourcecode:: sh
 
@@ -85,7 +85,7 @@ Usability, bells and whistles
 
 * vim-style `h,j,k,l` navigation shortcuts were added to the DAG widget.
 
-* `git-dag` no longer prompts for files when diffing commits if the
+* `git dag` no longer prompts for files when diffing commits if the
   text field contains paths.
 
 * General user interface and performance improvements.
@@ -106,7 +106,7 @@ git-cola v1.7.2
 ===============
 Usability, bells and whistles
 -----------------------------
-* `git-cola` can now launch sub commands, e.g.:
+* `git cola` can now launch sub commands, e.g.:
 
 .. sourcecode:: sh
 
@@ -117,7 +117,7 @@ Usability, bells and whistles
     git cola pull
     git cola tag
 
-* `git-dag` is more responsive when gathering auto-completions.
+* `git dag` is more responsive when gathering auto-completions.
 
 * Keyboard shortcuts are displayed when the '?' key is pressed.
 
@@ -159,7 +159,7 @@ Packaging
 Deprecated Features
 -------------------
 * The 'Apply Changes from Branch...' feature was removed.
-  `git-dag`'s 'Grab File...' feature used alongside the index/worktree editor
+  `git dag`'s 'Grab File...' feature used alongside the index/worktree editor
   is a simpler alternative.
 
 git-cola v1.7.1.1
@@ -196,7 +196,7 @@ Usability, bells and whistles
 
 Fixes
 -----
-* Boolean `git-config` settings with no value are now supported
+* Boolean `git config` settings with no value are now supported
   (these are not created by git these days but exist in legacy repositories).
 
 * Unicode branches and tags are supported in the "branch diff" tool.
@@ -213,20 +213,20 @@ Packaging
 
 Cleanup
 -------
-* The `--style` option was removed.  `git-cola` follows the system theme
+* The `--style` option was removed.  `git cola` follows the system theme
   so there's no need for this option these days.
 
 git-cola v1.7.0
 ===============
 Usability, bells and whistles
 -----------------------------
-* Export a patch series from `git-dag` into a `patches/` directory.
+* Export a patch series from `git dag` into a `patches/` directory.
 
-* `git-dag` learned to diff commits, slice history along paths, etc.
+* `git dag` learned to diff commits, slice history along paths, etc.
 
-* Added instant-preview to the `git-stash` widget.
+* Added instant-preview to the `git stash` widget.
 
-* A simpler preferences editor is used to edit `git-config` values.
+* A simpler preferences editor is used to edit `git config` values.
 
   http://github.com/git-cola/git-cola/issues/closed#issue/90
 
@@ -249,12 +249,12 @@ Fixes
 Packaging
 ---------
 * Bumped version number to ceil(minimum git version).
-  `git-cola` now requires `git` >= 1.6.3.
+  `git cola` now requires `git` >= 1.6.3.
 
 * Simplified git-cola's versioning when building from tarballs
   outside of git.  We no longer check for a 'version' file at
   the root of the repository.  We instead keep a default version
-  in `cola/version.py` and use it when `git-cola`'s `.git` repository
+  in `cola/version.py` and use it when `git cola`'s `.git` repository
   is not available.
 
 git-cola v1.4.3.5
@@ -314,9 +314,9 @@ git-cola v1.4.3.3
 =================
 Usability, bells and whistles
 -----------------------------
-* The `git-cola` desktop launchers now prompt for a repo
+* The `git cola` desktop launchers now prompt for a repo
   by default.  This is done by using the new `--prompt`
-  flag which tells `git-cola` to ignore any git repositories
+  flag which tells `git cola` to ignore any git repositories
   in the current directory and prompt for one instead.
 
 Fixes
@@ -331,7 +331,7 @@ git-cola v1.4.3.2
 =================
 Usability, bells and whistles
 -----------------------------
-* Faster startup time! `git-cola` now offloads initialization
+* Faster startup time! `git cola` now offloads initialization
   to a background thread so that the GUI appears almost instantly.
 
 * Specialized diff options for p4merge, vimdiff, araxis, emerge,
@@ -340,7 +340,7 @@ Usability, bells and whistles
 Fixes
 -----
 * Fix launching commands in the background on Windows
-  (e.g. when launching `git-difftool`).
+  (e.g. when launching `git difftool`).
 
 * Fix unicode errors when home or repository directories contain
   unicode characters.
@@ -397,7 +397,7 @@ git-cola v1.4.3
 ===============
 Usability, bells and whistles
 -----------------------------
-* `git-dag` now has a separate display area
+* `git dag` now has a separate display area
   for displaying commit metadata.  This area will soon
   grow additional functionality such as cherry-picking,
   branching, etc.
@@ -495,7 +495,7 @@ git-cola v1.4.2.2
 =================
 Usability, bells and whistles
 -----------------------------
-* `git-dag` interaction was made faster.
+* `git dag` interaction was made faster.
 
 Fixes
 -----
@@ -515,7 +515,7 @@ Usability, bells and whistles
 
   http://github.com/git-cola/git-cola/issues/closed#issue/48
 
-* `git-dag` reads history in a background thread.
+* `git dag` reads history in a background thread.
 
 Portability
 -----------
@@ -536,20 +536,20 @@ Usability, bells and whistles
 
   http://github.com/git-cola/git-cola/issues/closed#issue/44
 
-  http://www.kernel.org/pub/software/scm/git/docs/git-config.html
+  http://schacon.github.com/git/git-config.html
 
-  This makes it possible to add new actions to `git-cola`
+  This makes it possible to add new actions to `git cola`
   by simply editing ``~/.gitconfig``.  This implements the
-  same guitool support as `git-gui`.
-* Introduced a stat cache to speed up `git-config` and
+  same guitool support as `git gui`.
+* Introduced a stat cache to speed up `git config` and
   repository status checks.
-* Added Alt-key shortcuts to the main `git-cola` interface.
+* Added Alt-key shortcuts to the main `git cola` interface.
 * The `Actions` dock widget switches between a horizontal
   and vertical layout when resized.
 * We now use ``git diff --submodule`` for submodules
   (used when git >= 1.6.6).
 * The context menu for modified submodules includes an option
-  to launch `git-cola`.
+  to launch `git cola`.
 
   http://github.com/git-cola/git-cola/issues/closed#issue/17
 
@@ -579,9 +579,9 @@ Fixes
   requires you to checkout the branch into which the reviewed
   branch will be merged.
 * Guard against `color.ui = always` configuration when using
-  `git-log` by passing ``--no-color``.
+  `git log` by passing ``--no-color``.
 * ``yes`` and ``no`` are now supported as valid booleans
-  by the `git-config` parser.
+  by the `git config` parser.
 * Better defaults are used for `fetch`, `push`, and `pull`..
 
   http://github.com/git-cola/git-cola/issues/closed#issue/43
@@ -618,11 +618,11 @@ Usability, bells and whistles
   `Removed Unstaged Changes` action in the `Repository Status` tool.
 * The `remote` dialogs (fetch, push, pull) are now slightly
   larger by default.
-* Bookmarks can be selected when `git-cola` is run outside of a git repository.
+* Bookmarks can be selected when `git cola` is run outside of a git repository.
 * Added more user documentation.  We now include many links to
   external git resources.
-* Added `git-dag` to the available tools.
-  `git-dag` is a node-based DAG history browser.
+* Added `git dag` to the available tools.
+  `git dag` is a node-based DAG history browser.
   It doesn't do much yet, but it's been merged so that we can start
   building and improving upon it.
 
@@ -677,17 +677,17 @@ Packaging
 git-cola v1.4.1
 ===============
 This feature release adds two new features directly from
-`git-cola`'s github issues backlog.  On the developer
+`git cola`'s github issues backlog.  On the developer
 front, further work was done towards modularizing the code base.
 
 Usability, bells and whistles
 -----------------------------
-* Dragging and dropping patches invokes `git-am`
+* Dragging and dropping patches invokes `git am`
 
   http://github.com/git-cola/git-cola/issues/closed#issue/3
 
 * A dialog to allow opening or cloning a repository
-  is presented when `git-cola` is launched outside of a git repository.
+  is presented when `git cola` is launched outside of a git repository.
 
   http://github.com/git-cola/git-cola/issues/closed/#issue/22
 
@@ -700,12 +700,12 @@ Usability, bells and whistles
 
 Portability
 -----------
-* `git-cola` is once again compatible with PyQt 4.3.x.
+* `git cola` is once again compatible with PyQt 4.3.x.
 
 Developer
 ---------
 * `cola.gitcmds` was added to factor out git command-line utilities
-* `cola.gitcfg` was added for interacting with `git-config`
+* `cola.gitcfg` was added for interacting with `git config`
 * `cola.models.browser` was added to factor out repobrowser data
 * Added more tests
 
@@ -836,7 +836,7 @@ Usability, bells and whistles
 * Added diff modes for diffing between tags, branches,
   or arbitrary `git diff` expressions
 * The push dialog selects the current branch by default.
-  This is in preparation for `git-1.7.0` where unconfigured `git push`
+  This is in preparation for `git 1.7.0` where unconfigured `git push`
   will refuse to push when run without specifying the remote name
   and branch.  See the `git` release notes for more information
 * Support `open` and `clone` commands on Windows
@@ -855,8 +855,8 @@ git-cola v1.3.7
 ===============
 Subsystems
 ----------
-* `git-difftool` became an official git command in `git-1.6.3`.
-* `git-difftool` learned `--no-prompt` / `-y` and a corresponding
+* `git difftool` became an official git command in `git 1.6.3`.
+* `git difftool` learned `--no-prompt` / `-y` and a corresponding
   `difftool.prompt` configuration variable
 
 Usability, bells and whistles
@@ -886,8 +886,8 @@ git-cola v1.3.6
 ===============
 Subsystems
 ----------
-* Added support for Kompare in `git-difftool`
-* Added a separate configuration namespace for `git-difftool`
+* Added support for Kompare in `git difftool`
+* Added a separate configuration namespace for `git difftool`
 * Added the `diff.tool` configuration variable to define the default diff tool
 
 Usability, bells and whistles
