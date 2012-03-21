@@ -184,7 +184,10 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
         self.case_sensitive = False
 
         self.doc = QtGui.QTextDocument()
-        self.doc.setDocumentMargin(0)
+        try:
+            self.doc.setDocumentMargin(0)
+        except: # older PyQt4
+            pass
 
     def set_highlight_text(self, text, case_sensitive):
         """Sets the text that will be made bold in the term name when displayed"""

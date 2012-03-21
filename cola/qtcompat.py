@@ -11,6 +11,9 @@ def install():
     if not hasattr(QtGui.QKeySequence, 'Preferences'):
         QtGui.QKeySequence.Preferences = 'Ctrl+O'
 
+    if not hasattr(QtGui.QGraphicsItem, 'mapRectToScene'):
+        QtGui.QGraphicsItem.mapRectToScene = _map_rect_to_scene
+
 
 def add_search_path(prefix, path):
     if hasattr(QtCore.QDir, 'addSearchPath'):
@@ -23,3 +26,8 @@ def set_common_dock_options(window):
     tabbed = QtGui.QMainWindow.AllowTabbedDocks
     animated = QtGui.QMainWindow.AnimatedDocks
     window.setDockOptions(nested | tabbed | animated)
+
+
+def _map_rect_to_scene(self, rect):
+    """Only available in newer PyQt4 versions"""
+    return self.sceneTransform().mapRect(rect)
