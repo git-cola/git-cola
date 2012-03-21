@@ -37,7 +37,7 @@ class DiffTextEdit(QtGui.QTextEdit):
 
 class DiffEditor(DiffTextEdit):
     def __init__(self, parent):
-        super(DiffEditor, self).__init__(parent)
+        DiffTextEdit.__init__(self, parent)
         self.model = model = cola.model()
 
         # Install diff shortcut keys for stage/unstage
@@ -79,7 +79,7 @@ class DiffEditor(DiffTextEdit):
         if event.button() == Qt.RightButton:
             if not self.textCursor().hasSelection():
                 self.setTextCursor(self.cursorForPosition(event.pos()))
-        super(DiffEditor, self).mousePressEvent(event)
+        DiffTextEdit.mousePressEvent(self, event)
 
     # Qt overrides
     def contextMenuEvent(self, event):
@@ -143,7 +143,7 @@ class DiffEditor(DiffTextEdit):
                                       Qt.NoButton,
                                       Qt.NoModifier,
                                       event.orientation())
-        return super(DiffEditor, self).wheelEvent(event)
+        return DiffTextEdit.wheelEvent(self, event)
 
     def setPlainText(self, text):
         """setPlainText(str) while retaining scrollbar positions"""

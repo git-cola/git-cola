@@ -16,7 +16,7 @@ from cola.classic.model import GitRepoNameItem
 
 class Browser(standard.Widget):
     def __init__(self, parent, update=True):
-        super(Browser, self).__init__(parent)
+        standard.Widget.__init__(self, parent)
         self.tree = RepoTreeView(self)
         self.mainlayout = QtGui.QHBoxLayout()
         self.setLayout(self.mainlayout)
@@ -55,7 +55,7 @@ class Browser(standard.Widget):
 class RepoTreeView(standard.TreeView):
     """Provides a filesystem-like view of a git repository."""
     def __init__(self, parent):
-        super(RepoTreeView, self).__init__(parent)
+        standard.TreeView.__init__(self, parent)
 
         self.setSortingEnabled(False)
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)

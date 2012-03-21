@@ -341,7 +341,7 @@ class CommitMessageEditor(QtGui.QWidget):
 class CommitSummaryLineEdit(HintedLineEdit):
     def __init__(self, parent=None):
         hint = u'Commit summary'
-        super(CommitSummaryLineEdit, self).__init__(hint, parent)
+        HintedLineEdit.__init__(self, hint, parent)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Down:
@@ -351,13 +351,13 @@ class CommitSummaryLineEdit(HintedLineEdit):
                 self.emit(SIGNAL('downPressed()'))
                 event.ignore()
                 return
-        super(CommitSummaryLineEdit, self).keyPressEvent(event)
+        HintedLineEdit.keyPressEvent(self, event)
 
 
 class CommitMessageTextEdit(HintedTextEdit):
     def __init__(self, parent=None):
         hint = u'Extended description...'
-        super(CommitMessageTextEdit, self).__init__(hint, parent)
+        HintedTextEdit.__init__(self, hint, parent)
         self.setMinimumSize(QtCore.QSize(1, 1))
 
         self.action_emit_shift_tab = add_action(self,
@@ -414,7 +414,7 @@ class CommitMessageTextEdit(HintedTextEdit):
                 self.setTextCursor(cursor)
                 event.ignore()
                 return
-        super(CommitMessageTextEdit, self).keyPressEvent(event)
+        HintedTextEdit.keyPressEvent(self, event)
 
     def emit_shift_tab(self):
         self.emit(SIGNAL('shiftTab()'))

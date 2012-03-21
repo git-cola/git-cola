@@ -13,7 +13,7 @@ from cola.cmds import BaseCommand
 from cola.ctrl import Controller
 from cola.git import git
 from cola.widgets import defs
-from cola.widgets import standard
+from cola.widgets.standard import TreeView
 
 
 save_blob = 'save_blob'
@@ -113,7 +113,7 @@ class BrowseDialog(QtGui.QDialog):
         return model.filename
 
     def __init__(self, model, select_file=False, parent=None):
-        super(BrowseDialog, self).__init__(parent)
+        QtGui.QDialog.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowModality(Qt.WindowModal)
 
@@ -190,9 +190,9 @@ class BrowseDialog(QtGui.QDialog):
         self.save.setEnabled(bool(filenames))
 
 
-class GitTreeWidget(standard.TreeView):
+class GitTreeWidget(TreeView):
     def __init__(self, ref, parent=None):
-        super(GitTreeWidget, self).__init__(parent)
+        TreeView.__init__(self, parent)
         self.setHeaderHidden(True)
 
         self.connect(self, SIGNAL('doubleClicked(const QModelIndex &)'),

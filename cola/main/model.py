@@ -68,7 +68,7 @@ class MainModel(Observable):
         """Reads git repository settings and sets several methods
         so that they refer to the git module.  This object
         encapsulates cola's interaction with git."""
-        super(MainModel, self).__init__()
+        Observable.__init__(self)
 
         # Initialize the git command object
         self.git = git.instance()

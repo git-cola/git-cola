@@ -33,7 +33,7 @@ class TagOptions(object):
 
 class CreateTag(standard.Dialog):
     def __init__(self, opts, parent):
-        super(CreateTag, self).__init__(parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
         self.setWindowModality(QtCore.Qt.WindowModal)
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(self.tr('Create Tag'))

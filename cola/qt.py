@@ -198,7 +198,7 @@ class ExpandableGroupBox(QtGui.QGroupBox):
 
 class GitRefDialog(QtGui.QDialog):
     def __init__(self, title, button_text, parent):
-        super(GitRefDialog, self).__init__(parent)
+        QtGui.QDialog.__init__(self, parent)
         self.setWindowTitle(title)
 
         self.label = QtGui.QLabel()

@@ -5,7 +5,7 @@ from PyQt4.QtCore import SIGNAL
 
 class HintedTextWidgetEventFilter(QtCore.QObject):
     def __init__(self, parent):
-        super(HintedTextWidgetEventFilter, self).__init__(parent)
+        QtCore.QObject.__init__(self, parent)
         self.widget = parent
 
     def eventFilter(self, obj, event):

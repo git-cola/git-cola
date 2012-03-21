@@ -33,7 +33,7 @@ class SearchOptions(object):
 
 class SearchWidget(standard.Dialog):
     def __init__(self, parent):
-        super(SearchWidget, self).__init__(parent)
+        standard.Dialog.__init__(self, parent)
         self.setAttribute(QtCore.Qt.WA_MacMetalStyle)
         self.setWindowTitle(self.tr('Search'))
 
@@ -221,7 +221,7 @@ class Search(SearchWidget):
     DATE_RANGE      = 'Search Date Range'
 
     def __init__(self, model, parent):
-        super(Search, self).__init__(parent)
+        SearchWidget.__init__(self, parent)
         self.model = model
 
         # Each search type is handled by a distinct SearchEngine subclass

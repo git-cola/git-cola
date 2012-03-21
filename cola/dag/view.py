@@ -24,16 +24,16 @@ from cola.prefs import diff_font
 from cola.qt import DiffSyntaxHighlighter
 from cola.widgets import completion
 from cola.widgets import defs
-from cola.widgets import standard
 from cola.widgets.createbranch import create_new_branch
 from cola.widgets.createtag import create_tag
 from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.browse import BrowseDialog
+from cola.widgets.standard import Widget
 
 
 class GravatarLabel(QtGui.QLabel):
     def __init__(self, parent=None):
-        super(GravatarLabel, self).__init__(parent)
+        QtGui.QLabel.__init__(self, parent)
 
         self.email = None
         self.response = None
@@ -110,7 +110,7 @@ class GravatarLabel(QtGui.QLabel):
 
 class TextLabel(QtGui.QLabel):
     def __init__(self, parent=None):
-        super(TextLabel, self).__init__(parent)
+        QtGui.QLabel.__init__(self, parent)
         self.setTextInteractionFlags(Qt.TextSelectableByMouse |
                                      Qt.LinksAccessibleByMouse)
         self._display = ''
@@ -122,7 +122,7 @@ class TextLabel(QtGui.QLabel):
 
     def setFont(self, font):
         self._metrics = QtGui.QFontMetrics(font)
-        super(TextLabel, self).setFont(font)
+        QtGui.QLabel.setFont(self, font)
 
     def elide(self):
         self._elide = True
@@ -152,7 +152,7 @@ class TextLabel(QtGui.QLabel):
             block = self.blockSignals(True)
             self.setText(self._display)
             self.blockSignals(block)
-        super(TextLabel, self).resizeEvent(event)
+        QtGui.QLabel.resizeEvent(self, event)
 
 
 class DiffWidget(QtGui.QWidget):
@@ -392,7 +392,7 @@ class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
 class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
     def __init__(self, notifier, parent):
         QtGui.QTreeWidget.__init__(self, parent)
-        super(CommitTreeWidget, self).__init__(parent)
+        ViewerMixin.__init__(self)
 
         self.setSelectionMode(self.ContiguousSelection)
         self.setUniformRowHeights(True)
@@ -425,7 +425,7 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         if event.button() == Qt.RightButton:
             event.accept()
             return
-        super(CommitTreeWidget, self).mousePressEvent(event)
+        QtGui.QTreeWidget.mousePressEvent(self, event)
 
     def go_up(self):
         self.goto(self.itemAbove)
@@ -505,11 +505,11 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         cola.notifier().broadcast(signals.format_patch, sha1s, all_sha1s)
 
 
-class DAGView(standard.Widget):
+class DAGView(Widget):
     """The git-dag widget."""
 
     def __init__(self, model, dag, parent=None, args=None):
-        super(DAGView, self).__init__(parent)
+        Widget.__init__(self, parent)
 
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setMinimumSize(1, 1)
@@ -660,12 +660,12 @@ class DAGView(standard.Widget):
             self.setWindowTitle(project + ' - DAG')
 
     def export_state(self):
-        state = super(DAGView, self).export_state()
+        state = Widget.export_state(self)
         state['count'] = self.dag.count
         return state
 
     def apply_state(self, state):
-        super(DAGView, self).apply_state(state)
+        Widget.apply_state(self, state)
         try:
             count = state['count']
         except KeyError:
@@ -707,13 +707,13 @@ class DAGView(standard.Widget):
         self.thread.start()
 
     def show(self):
-        super(DAGView, self).show()
+        Widget.show(self)
         self.splitter.setSizes([self.width()/2, self.width()/2])
         self.left_splitter.setSizes([self.height()/4, self.height()*3/4])
         self.treewidget.adjust_columns()
 
     def resizeEvent(self, e):
-        super(DAGView, self).resizeEvent(e)
+        Widget.resizeEvent(self, e)
         self.treewidget.adjust_columns()
 
     def splitter_moved(self, pos, idx):
@@ -751,7 +751,7 @@ class DAGView(standard.Widget):
         self.revtext.close_popup()
         self.thread.stop()
         qtutils.save_state(self)
-        return super(DAGView, self).closeEvent(event)
+        return Widget.closeEvent(self, event)
 
     def resize_to_desktop(self):
         desktop = QtGui.QApplication.instance().desktop()
@@ -804,7 +804,7 @@ class ReaderThread(QtCore.QThread):
     def start(self):
         self._abort = False
         self._stop = False
-        super(ReaderThread, self).start()
+        QtCore.QThread.start(self)
 
     def pause(self):
         self._mutex.lock()
@@ -1125,7 +1125,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
     y_min = 0
 
     def __init__(self, notifier, parent):
-        super(GraphView, self).__init__(parent)
+        QtGui.QGraphicsView.__init__(self, parent)
         ViewerMixin.__init__(self)
         try:
             from PyQt4 import QtOpenGL

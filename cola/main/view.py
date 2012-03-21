@@ -43,7 +43,6 @@ from cola.qtutils import tr
 from cola.widgets import cfgactions
 from cola.widgets import editremotes
 from cola.widgets import remote
-from cola.widgets import standard
 from cola.widgets.about import launch_about_dialog
 from cola.widgets.about import show_shortcuts
 from cola.widgets.archive import GitArchiveDialog
@@ -55,11 +54,12 @@ from cola.widgets.diff import DiffEditor
 from cola.widgets.recent import browse_recent
 from cola.widgets.status import StatusWidget
 from cola.widgets.search import search
+from cola.widgets.standard import MainWindow
 
 
-class MainView(standard.MainWindow):
+class MainView(MainWindow):
     def __init__(self, model, parent):
-        super(MainView, self).__init__(parent)
+        MainWindow.__init__(self, parent)
         # Default size; this is thrown out when save/restore is used
         self.resize(987, 610)
         self.model = model
@@ -435,7 +435,7 @@ class MainView(standard.MainWindow):
     def closeEvent(self, event):
         """Save state in the settings manager."""
         qtutils.save_state(self)
-        standard.MainWindow.closeEvent(self, event)
+        MainWindow.closeEvent(self, event)
 
     # Accessors
     mode = property(lambda self: self.model.mode)
@@ -512,12 +512,12 @@ class MainView(standard.MainWindow):
     def apply_state(self, state):
         """Imports data for save/restore"""
         # 1 is the widget version; change when widgets are added/removed
-        super(MainView, self).apply_state(state)
+        MainWindow.apply_state(self, state)
         qtutils.apply_window_state(self, state, 1)
 
     def export_state(self):
         """Exports data for save/restore"""
-        state = super(MainView, self).export_state()
+        state = MainWindow.export_state(self)
         return qtutils.export_window_state(self, state, self.widget_version)
 
     def setup_dockwidget_tools_menu(self):
@@ -577,7 +577,7 @@ class MainView(standard.MainWindow):
 
     def dragEnterEvent(self, event):
         """Accepts drops"""
-        standard.MainWindow.dragEnterEvent(self, event)
+        MainWindow.dragEnterEvent(self, event)
         event.acceptProposedAction()
 
     def dropEvent(self, event):

@@ -10,7 +10,7 @@ from cola import qtutils
 from cola import utils
 from cola.widgets import defs
 from cola.widgets import completion
-from cola.widgets import standard
+from cola.widgets.standard import Dialog
 from cola.main.model import MainModel
 
 
@@ -38,7 +38,7 @@ class CreateOpts(object):
 
 class CreateThread(QtCore.QThread):
     def __init__(self, opts, parent):
-        super(CreateThread, self).__init__(parent)
+        QtCore.QThread.__init__(self, parent)
         self.opts = opts
 
     def run(self):
@@ -77,11 +77,11 @@ class CreateThread(QtCore.QThread):
         self.emit(SIGNAL('done'), results)
 
 
-class CreateBranchDialog(standard.Dialog):
+class CreateBranchDialog(Dialog):
     """A dialog for creating branches."""
 
     def __init__(self, model, parent=None):
-        super(CreateBranchDialog, self).__init__(parent=parent)
+        Dialog.__init__(self, parent=parent)
         self.setWindowModality(Qt.WindowModal)
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(self.tr('Create Branch'))

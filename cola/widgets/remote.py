@@ -65,7 +65,7 @@ class RemoteActionDialog(standard.Dialog):
     def __init__(self, model, action, parent):
         """Customizes the dialog based on the remote action
         """
-        super(RemoteActionDialog, self).__init__(parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
         self.model = model
         self.action = action
         self.tasks = []
@@ -441,20 +441,20 @@ class RemoteActionDialog(standard.Dialog):
 # Use distinct classes so that each saves its own set of preferences
 class Fetch(RemoteActionDialog):
     def __init__(self, model, parent):
-        super(Fetch, self).__init__(model, FETCH, parent)
+        RemoteActionDialog.__init__(self, model, FETCH, parent)
 
 
 class Push(RemoteActionDialog):
     def __init__(self, model, parent):
-        super(Push, self).__init__(model, PUSH, parent)
+        RemoteActionDialog.__init__(self, model, PUSH, parent)
 
 
 class Pull(RemoteActionDialog):
     def __init__(self, model, parent):
-        super(Pull, self).__init__(model, PULL, parent)
+        RemoteActionDialog.__init__(self, model, PULL, parent)
 
     def apply_state(self, state):
-        super(Pull, self).apply_state(state)
+        RemoteActionDialog.apply_state(self, state)
         try:
             rebase = state['rebase']
         except KeyError:
@@ -463,10 +463,10 @@ class Pull(RemoteActionDialog):
             self.rebase_checkbox.setChecked(rebase)
 
     def export_state(self):
-        state = super(Pull, self).export_state()
+        state = RemoteActionDialog.export_state(self)
         state['rebase'] = self.rebase_checkbox.isChecked()
         return state
 
     def done(self, exit_code):
         qtutils.save_state(self)
-        return super(Pull, self).done(exit_code)
+        return RemoteActionDialog.done(self, exit_code)

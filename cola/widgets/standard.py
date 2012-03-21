@@ -8,7 +8,7 @@ def create_widget_class(Base):
   class Widget(Base):
     # Mix-in for standard view operations
     def __init__(self, parent=None):
-        super(Widget, self).__init__(parent)
+        Base.__init__(self, parent)
 
     def show(self):
         """Automatically centers dialogs"""
@@ -54,7 +54,7 @@ def create_widget_class(Base):
 def create_tree_class(Base):
   class Tree(Base):
     def __init__(self, parent=None):
-        super(Tree, self).__init__(parent)
+        Base.__init__(self, parent)
         self.setAlternatingRowColors(True)
         self.setUniformRowHeights(True)
         self.setAllColumnsShowFocus(True)
@@ -109,7 +109,7 @@ def create_tree_class(Base):
         # Re-read the event key to take the remappings into account
         key = event.key()
 
-        result = super(Tree, self).keyPressEvent(event)
+        result = Base.keyPressEvent(self, event)
 
         # Let others hook in here before we change the indexes
         self.emit(SIGNAL('indexAboutToChange()'))

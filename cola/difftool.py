@@ -33,7 +33,7 @@ def diff_expression(parent, expr):
 
 class FileDiffDialog(QtGui.QDialog):
     def __init__(self, parent, a=None, b=None, expr=None):
-        super(FileDiffDialog, self).__init__(parent)
+        QtGui.QDialog.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.a = a
         self.b = b

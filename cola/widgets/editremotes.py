@@ -15,7 +15,7 @@ from cola.widgets import text
 
 class RemoteEditor(QtGui.QDialog):
     def __init__(self, parent):
-        super(RemoteEditor, self).__init__(parent)
+        QtGui.QDialog.__init__(self, parent)
 
         self.setWindowTitle('Edit Remotes')
         self.setWindowModality(Qt.WindowModal)
@@ -182,7 +182,7 @@ class RemoteEditor(QtGui.QDialog):
 
 class RemoteInfoThread(QtCore.QThread):
     def __init__(self, parent):
-        super(RemoteInfoThread, self).__init__(parent)
+        QtCore.QThread.__init__(self, parent)
         self.remote = None
 
     def run(self):
@@ -202,7 +202,7 @@ class RemoteInfoThread(QtCore.QThread):
 
 class AddRemoteWidget(QtGui.QDialog):
     def __init__(self, parent):
-        super(AddRemoteWidget, self).__init__(parent)
+        QtGui.QDialog.__init__(self, parent)
         self.setWindowModality(Qt.WindowModal)
 
         self.add_btn = QtGui.QPushButton(self.tr('Add Remote'))

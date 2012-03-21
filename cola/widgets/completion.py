@@ -14,7 +14,7 @@ from cola.compat import set
 
 class CompletionLineEdit(QtGui.QLineEdit):
     def __init__(self, parent=None):
-        super(CompletionLineEdit, self).__init__(parent)
+        QtGui.QLineEdit.__init__(self, parent)
         # used to hide the completion popup after a drag-select
         self._drag = 0
 
@@ -91,7 +91,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
                     return True
         if event.type() == QtCore.QEvent.Hide:
             self.close_popup()
-        return super(CompletionLineEdit, self).event(event)
+        return QtGui.QLineEdit.event(self, event)
 
     def do_completion(self):
         self._completer.popup().setCurrentIndex(
@@ -111,7 +111,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
                 self.do_completion()
                 return
 
-        super(CompletionLineEdit, self).keyPressEvent(event)
+        QtGui.QLineEdit.keyPressEvent(self, event)
 
         prefix = self._last_word()
         if prefix != unicode(self._completer.completionPrefix()):
@@ -124,18 +124,18 @@ class CompletionLineEdit(QtGui.QLineEdit):
     #: _drag: 0 - unclicked, 1 - clicked, 2 - dragged
     def mousePressEvent(self, event):
         self._drag = 1
-        return super(CompletionLineEdit, self).mousePressEvent(event)
+        return QtGui.QLineEdit.mousePressEvent(self, event)
 
     def mouseMoveEvent(self, event):
         if self._drag == 1:
             self._drag = 2
-        return super(CompletionLineEdit, self).mouseMoveEvent(event)
+        return QtGui.QLineEdit.mouseMoveEvent(self, event)
 
     def mouseReleaseEvent(self, event):
         if self._drag != 2 and event.button() != Qt.RightButton:
             self.do_completion()
         self._drag = 0
-        return super(CompletionLineEdit, self).mouseReleaseEvent(event)
+        return QtGui.QLineEdit.mouseReleaseEvent(self, event)
 
     def close_popup(self):
         if self._completer.popup().isVisible():
@@ -179,7 +179,7 @@ class GatherCompletionsThread(QtCore.QThread):
 class HighlightDelegate(QtGui.QStyledItemDelegate):
     """A delegate used for auto-completion to give formatted completion"""
     def __init__(self, parent=None): # model, parent=None):
-        super(HighlightDelegate, self).__init__(parent)
+        QtGui.QStyledItemDelegate.__init__(self, parent)
         self.highlight_text = ''
         self.case_sensitive = False
 
@@ -194,7 +194,7 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
     def paint(self, painter, option, index):
         """Overloaded Qt method for custom painting of a model index"""
         if not self.highlight_text:
-            return super(HighlightDelegate, self).paint(painter, option, index)
+            return QtGui.QStyledItemDelegate.paint(self, painter, option, index)
 
         text = unicode(index.data().toPyObject())
         if self.case_sensitive:
@@ -240,7 +240,7 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
 
 class CompletionModel(QtGui.QStandardItemModel):
     def __init__(self, parent):
-        super(CompletionModel, self).__init__(parent)
+        QtGui.QStandardItemModel.__init__(self, parent)
         self.matched_text = ''
         self.case_sensitive = False
 
@@ -307,14 +307,14 @@ class CompletionModel(QtGui.QStandardItemModel):
 
 class Completer(QtGui.QCompleter):
     def __init__(self, parent):
-        super(Completer, self).__init__(parent)
+        QtGui.QCompleter.__init__(self, parent)
         self._model = None
         self.setWidget(parent)
         self.setCompletionMode(QtGui.QCompleter.UnfilteredPopupCompletion)
         self.setCaseSensitivity(Qt.CaseInsensitive)
 
     def setModel(self, model):
-        super(Completer, self).setModel(model)
+        QtGui.QCompleter.setModel(self, model)
         self.connect(model, SIGNAL('updated()'), self.updated)
         self._model = model
 
@@ -333,7 +333,7 @@ class Completer(QtGui.QCompleter):
 
 class GitRefCompletionModel(CompletionModel):
     def __init__(self, parent):
-        super(GitRefCompletionModel, self).__init__(parent)
+        CompletionModel.__init__(self, parent)
         self.cola_model = model = cola.model()
         msg = model.message_updated
         model.add_observer(msg, self.emit_updated)
@@ -369,11 +369,11 @@ class GitRefCompletionModel(CompletionModel):
 
 class GitLogCompletionModel(GitRefCompletionModel):
     def __init__(self, parent):
-        super(GitLogCompletionModel, self).__init__(parent)
+        GitRefCompletionModel.__init__(self, parent)
 
     def gather_matches(self, case_sensitive):
         (matched_refs, dummy_paths, dummy_dirs) =\
-                super(GitLogCompletionModel, self).gather_matches(case_sensitive)
+                GitRefCompletionModel.gather_matches(self, case_sensitive)
 
         file_list = self.cola_model.everything()
         files = set(file_list)
@@ -400,23 +400,23 @@ class GitLogCompletionModel(GitRefCompletionModel):
 
 class GitLogCompleter(Completer):
     def __init__(self, parent):
-        super(GitLogCompleter, self).__init__(parent)
+        Completer.__init__(self, parent)
         self.setModel(GitLogCompletionModel(self))
 
 
 class GitRefCompleter(Completer):
     def __init__(self, parent):
-        super(GitRefCompleter, self).__init__(parent)
+        Completer.__init__(self, parent)
         self.setModel(GitRefCompletionModel(self))
 
 
 class GitLogLineEdit(CompletionLineEdit):
     def __init__(self, parent=None):
-        super(GitLogLineEdit, self).__init__(parent)
+        CompletionLineEdit.__init__(self, parent)
         self.setCompleter(GitLogCompleter(self))
 
 
 class GitRefLineEdit(CompletionLineEdit):
     def __init__(self, parent=None):
-        super(GitRefLineEdit, self).__init__(parent)
+        CompletionLineEdit.__init__(self, parent)
         self.setCompleter(GitRefCompleter(self))

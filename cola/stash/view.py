@@ -10,13 +10,13 @@ from cola import qtutils
 from cola import utils
 from cola.stash.model import save_stash, apply_stash, drop_stash, rescan
 from cola.widgets import defs
-from cola.widgets import standard
 from cola.widgets.diff import DiffTextEdit
+from cola.widgets.standard import Dialog
 
 
-class StashView(standard.Dialog):
+class StashView(Dialog):
     def __init__(self, model, parent=None):
-        super(StashView, self).__init__(parent=parent)
+        Dialog.__init__(self, parent=parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.model = model
         self.stashes = []
