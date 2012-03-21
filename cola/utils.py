@@ -94,11 +94,46 @@ def file_icon(filename):
     return resources.icon(ident_file_type(filename))
 
 
-def fork(args):
-    """Launch a command in the background."""
+def _fork_posix(args):
+    """Launch a process in the background."""
     encoded_args = [core.encode(arg) for arg in args]
     return subprocess.Popen(encoded_args).pid
 
+
+def _fork_win32(args):
+    """Launch a background process using crazy win32 voodoo."""
+    # This is probably wrong, but it works.  Windows.. wow.
+    if args[0] == 'git-dag':
+        # win32 can't exec python scripts
+        args = [sys.executable] + args
+
+    enc_args = map(core.encode, args)
+    abspath = win32_abspath(enc_args[0])
+    if abspath:
+        # e.g. fork(['git', 'difftool', '--no-prompt', '--', 'path'])
+        enc_args[0] = abspath
+    else:
+        # e.g. fork(['gitk', '--all'])
+        cmdstr = subprocess.list2cmdline(enc_args)
+        sh_exe = win32_abspath('sh')
+        enc_args = [sh_exe, '-c', cmdstr]
+
+    DETACHED_PROCESS = 0x00000008 # Amazing!
+    return subprocess.Popen(enc_args, creationflags=DETACHED_PROCESS).pid
+
+def win32_abspath(exe):
+    """Return the absolute path to an .exe if it exists"""
+    if os.path.exists(exe):
+        return exe
+    if not exe.endswith('.exe'):
+        exe += '.exe'
+    if os.path.exists(exe):
+        return exe
+    for path in os.environ['PATH'].split(os.pathsep):
+        abspath = os.path.join(path, exe)
+        if os.path.exists(abspath):
+            return abspath
+    return None
 
 def sublist(a,b):
     """Subtracts list b from list a and returns the resulting list."""
@@ -284,6 +319,15 @@ def checksum(path):
     return md5.hexdigest()
 
 
+def _quote_repopath_win32(repopath):
+    """Quote a path for nt/dos only."""
+    return '"%s"' % repopath
+
+
+def _quote_repopath_posix(repopath):
+    return repopath
+
+
 def error(msg, *args):
     """Print an error message to stderr."""
     print >> sys.stderr, "ERROR:", msg % args
@@ -388,3 +432,12 @@ def run_command(args, cwd=None, shell=False, add_env=None,
     if flag_error and exit_code:
         error("'%s' returned exit code %i", " ".join(args), exit_code)
     return (exit_code, output, errors)
+
+
+# Portability wrappers
+if is_win32():
+    fork = _fork_win32
+    quote_repopath = _quote_repopath_win32
+else:
+    fork = _fork_posix
+    quote_repopath = _quote_repopath_posix
