@@ -128,10 +128,10 @@ class CommitMessageEditor(QtGui.QWidget):
         self.setFocusProxy(self.summary)
 
     def focus_summary(self):
-        self.summary.setFocus(True)
+        self.summary.setFocus()
 
     def focus_description(self):
-        self.description.setFocus(True)
+        self.description.setFocus()
 
     def commit_message(self):
         """Return the commit message as a unicode string"""
@@ -228,10 +228,10 @@ class CommitMessageEditor(QtGui.QWidget):
 
         # Focus the empty summary or description
         if focus_summary:
-            self.summary.setFocus(True)
+            self.summary.setFocus()
             self.summary.emit_position()
         elif focus_description:
-            self.description.setFocus(True)
+            self.description.setFocus()
             self.description.emit_position()
         else:
             self.summary.emit_position()

@@ -191,7 +191,7 @@ class GitArchiveDialog(QtGui.QDialog):
         text = self.strip_exts(unicode(self.filetext.text()))
         self.filename = '%s.%s' % (text, self.fmt)
         self.filetext.setText(self.filename)
-        self.filetext.setFocus(True)
+        self.filetext.setFocus()
         if '/' in text:
             start = text.rindex('/') + 1
         else:
@@ -200,9 +200,9 @@ class GitArchiveDialog(QtGui.QDialog):
 
     def prefix_group_expanded(self, expanded):
         if expanded:
-            self.prefix_text.setFocus(True)
+            self.prefix_text.setFocus()
         else:
-            self.filetext.setFocus(True)
+            self.filetext.setFocus()
 
 
 if __name__ == '__main__':

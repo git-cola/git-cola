@@ -537,9 +537,9 @@ class MainView(MainWindow):
             def showdock(show, dockwidget=dockwidget):
                 if show:
                     dockwidget.raise_()
-                    dockwidget.widget().setFocus(True)
+                    dockwidget.widget().setFocus()
                 else:
-                    self.setFocus(True)
+                    self.setFocus()
             self.addAction(action)
             connect_action_bool(action, showdock)
 

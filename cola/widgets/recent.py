@@ -158,4 +158,4 @@ class RecentFileDialog(standard.Dialog):
         self.tree_model.add_files(filenames)
         self.tree.expandAll()
         self.tree.select_first_file()
-        self.tree.setFocus(True)
+        self.tree.setFocus()
