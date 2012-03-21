@@ -246,5 +246,6 @@ class GitNotifier(QtCore.QThread):
                 if not self._running:
                     break
                 path = path.replace('\\', '/')
-                if not path.startswith('.git/') and os.path.isfile(path):
+                if (not path.startswith('.git/') and
+                        '/.git/' not in path and os.path.isfile(path)):
                     handler.handle(path)
