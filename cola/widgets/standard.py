@@ -22,7 +22,7 @@ def create_widget_class(Base):
 
             self.move(x, y)
         # Call the base Qt show()
-        super(Widget, self).show()
+        Base.show(self)
 
     def name(self):
         """Returns the name of the view class"""
