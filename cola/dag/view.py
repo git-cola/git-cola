@@ -392,7 +392,7 @@ class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
 class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
     def __init__(self, notifier, parent):
         QtGui.QTreeWidget.__init__(self, parent)
-        ViewerMixin.__init__(self)
+        super(CommitTreeWidget, self).__init__(parent)
 
         self.setSelectionMode(self.ContiguousSelection)
         self.setUniformRowHeights(True)
@@ -1125,7 +1125,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
     y_min = 0
 
     def __init__(self, notifier, parent):
-        QtGui.QGraphicsView.__init__(self, parent)
+        super(GraphView, self).__init__(parent)
         ViewerMixin.__init__(self)
         try:
             from PyQt4 import QtOpenGL
