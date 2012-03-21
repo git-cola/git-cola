@@ -807,26 +807,26 @@ class UpdateFileStatus(Command):
 class VisualizeAll(Command):
     """Visualize all branches."""
     def do(self):
-        browser = self.model.history_browser()
-        utils.fork([browser, '--all'])
+        browser = utils.shell_split(self.model.history_browser())
+        utils.fork(browser + ['--all'])
 
 
 class VisualizeCurrent(Command):
     """Visualize all branches."""
     def do(self):
-        browser = self.model.history_browser()
-        utils.fork([browser, self.model.currentbranch])
+        browser = utils.shell_split(self.model.history_browser())
+        utils.fork(browser + [self.model.currentbranch])
 
 
 class VisualizePaths(Command):
     """Path-limited visualization."""
     def __init__(self, paths):
         Command.__init__(self)
-        browser = self.model.history_browser()
+        browser = utils.shell_split(self.model.history_browser())
         if paths:
-            self.argv = [browser] + paths
+            self.argv = browser + paths
         else:
-            self.argv = [browser]
+            self.argv = browser
 
     def do(self):
         utils.fork(self.argv)
@@ -842,7 +842,7 @@ class VisualizeRevision(Command):
         self.paths = paths
 
     def do(self):
-        argv = [self.model.history_browser()]
+        argv = utils.shell_split(self.model.history_browser())
         if self.revision:
             argv.append(self.revision)
         if self.paths:
