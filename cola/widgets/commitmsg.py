@@ -127,6 +127,9 @@ class CommitMessageEditor(QtGui.QWidget):
 
         self.setFocusProxy(self.summary)
 
+        # Allow tab to jump from the summary to the description
+        self.setTabOrder(self.summary, self.description)
+
     def focus_summary(self):
         self.summary.setFocus()
 
