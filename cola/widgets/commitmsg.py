@@ -37,8 +37,9 @@ class CommitMessageEditor(QtGui.QWidget):
         self.summary = CommitSummaryLineEdit()
         self.description = CommitMessageTextEdit()
 
+        commit_button_tooltip = 'Commit staged changes\nShortcut: Ctrl+Enter'
         self.commit_button = create_toolbutton(text='Commit@@verb',
-                                               tooltip='Commit staged changes',
+                                               tooltip=commit_button_tooltip,
                                                icon=save_icon())
 
         self.actions_menu = QtGui.QMenu()
