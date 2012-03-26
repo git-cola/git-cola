@@ -412,30 +412,32 @@ class RemoteActionDialog(standard.Dialog):
         if task in self.tasks:
             self.tasks.remove(task)
 
-        if not output: # git fetch --tags --verbose doesn't print anything...
-            output = self.tr('Already up-to-date.')
-        # Force the status to 1 so that we always display the log
-        qtutils.log(1, output)
+        already_up_to_date = self.tr('Already up-to-date.')
 
+        if not output: # git fetch --tags --verbose doesn't print anything...
+            output = already_up_to_date
+
+        self.setEnabled(True)
         self.progress.close()
         QtGui.QApplication.restoreOverrideCursor()
 
-        if status != 0 and self.action == PUSH:
-            remote_name = unicode(self.remote_name.text())
-            message = 'Error pushing to "%s".\n\nPull first?' % remote_name
-            qtutils.critical('Push Error',
-                             message=message, details=output)
-        else:
-            title = self.windowTitle()
-            if status == 0:
-                result = 'succeeded'
-            else:
-                result = 'returned exit status %d' % status
+        result = 'returned exit status %d' % status
+        message = '"git %s" %s' % (self.action.lower(), result)
+        if output:
+            message += '\n\n' + output
 
-            message = '"git %s" %s' % (self.action.lower(), result)
-            qtutils.information(title,
-                                message=message, details=output)
-        self.accept()
+        # Force the status to 1 so that we always display the log
+        qtutils.log(1, message)
+
+        if status == 0:
+            self.accept()
+            return
+
+        if self.action == PUSH:
+            message += '\n\nHave you rebased/pulled lately?'
+
+        qtutils.critical(self.windowTitle(),
+                         message=message, details=output)
 
 
 # Use distinct classes so that each saves its own set of preferences
