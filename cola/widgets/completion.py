@@ -14,7 +14,11 @@ from cola.compat import set
 
 class CompletionLineEdit(QtGui.QLineEdit):
     def __init__(self, parent=None):
+        from cola.prefs import diff_font
+
         QtGui.QLineEdit.__init__(self, parent)
+
+        self.setFont(diff_font())
         # used to hide the completion popup after a drag-select
         self._drag = 0
 
