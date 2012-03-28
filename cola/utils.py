@@ -94,6 +94,7 @@ def file_icon(filename):
     return resources.icon(ident_file_type(filename))
 
 
+@interruptable
 def _fork_posix(args):
     """Launch a process in the background."""
     encoded_args = [core.encode(arg) for arg in args]
@@ -120,6 +121,7 @@ def _fork_win32(args):
 
     DETACHED_PROCESS = 0x00000008 # Amazing!
     return subprocess.Popen(enc_args, creationflags=DETACHED_PROCESS).pid
+
 
 def win32_abspath(exe):
     """Return the absolute path to an .exe if it exists"""

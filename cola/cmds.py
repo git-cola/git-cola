@@ -1,6 +1,7 @@
 import os
 import sys
 import platform
+from fnmatch import fnmatch
 
 from cStringIO import StringIO
 
@@ -418,10 +419,26 @@ class Edit(Command):
         if not os.path.exists(filename):
             return
         editor = self.model.editor()
-        if editor == 'gvim' and self.line_number:
-            utils.fork([editor, filename, '+'+self.line_number])
+        opts = []
+
+        if self.line_number is None:
+            opts = self.filenames
         else:
-            utils.fork([editor, filename])
+            # Single-file w/ line-numbers (likely from grep)
+            editor_opts = {
+                    '*gvim*': ['+'+self.line_number, filename],
+                    '*emacs*': ['+'+self.line_number, filename],
+                    '*textpad*': ['%s(%s,0)' % (filename, self.line_number)],
+                    '*notepad++*': ['-n'+self.line_number, filename],
+            }
+
+            opts = self.filenames
+            for pattern, opt in editor_opts.items():
+                if fnmatch(editor, pattern):
+                    opts = opt
+                    break
+
+        utils.fork(utils.shell_split(editor) + opts)
 
 
 class FormatPatch(Command):
