@@ -190,11 +190,12 @@ def goto_grep(line):
 
 def grep():
     """Prompt and use 'git grep' to find the content."""
-    # This should be a command in cola.cmds.
-    txt, ok = qtutils.prompt('grep')
-    if not ok:
-        return
-    cola.notifier().broadcast(signals.grep, txt)
+    from cola.widgets.grep import run_grep
+
+    widget = run_grep(parent=qtutils.active_window())
+    widget.show()
+    widget.raise_()
+    return widget
 
 
 def open_repo():
