@@ -453,14 +453,6 @@ class FormatPatch(Command):
         _notifier.broadcast(signals.log_cmd, status, output)
 
 
-class GrepMode(Command):
-    def __init__(self, txt):
-        """Perform a git-grep."""
-        Command.__init__(self)
-        self.new_mode = self.model.mode_grep
-        self.new_diff_text = core.decode(self.model.git.grep(txt, n=True))
-
-
 class LoadCommitMessage(Command):
     """Loads a commit message from a path."""
     def __init__(self, path):
@@ -893,7 +885,6 @@ def register():
         signals.difftool: Difftool,
         signals.edit: Edit,
         signals.format_patch: FormatPatch,
-        signals.grep: GrepMode,
         signals.ignore: Ignore,
         signals.load_commit_message: LoadCommitMessage,
         signals.load_commit_template: LoadCommitTemplate,

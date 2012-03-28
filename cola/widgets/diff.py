@@ -4,7 +4,6 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt, SIGNAL
 
 import cola
-from cola import guicmds
 from cola import qtutils
 from cola import signals
 from cola.qtutils import SLOT
@@ -90,11 +89,6 @@ class DiffEditor(DiffTextEdit):
                                self.unstage_section)
                 menu.addAction(self.action_unstage_selection)
 
-        elif self.mode == self.model.mode_grep:
-            menu.addAction(qtutils.icon('open.svg'),
-                           self.tr('Launch Editor'),
-                           lambda: guicmds.goto_grep(self.selected_line()))
-
         menu.addSeparator()
         menu.addAction(qtutils.icon('edit-copy.svg'),
                        'Copy', self.copy)
@@ -119,7 +113,7 @@ class DiffEditor(DiffTextEdit):
         if scrollbar:
             scrollvalue = scrollbar.value()
         if text is not None:
-            QtGui.QTextEdit.setPlainText(self, text)
+            DiffTextEdit.setPlainText(self, text)
             if scrollbar:
                 scrollbar.setValue(scrollvalue)
 

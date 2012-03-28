@@ -586,9 +586,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         the a context-specific action.
 
         """
-        if self.m.read_only():
-            return
-
         # Sync the selection model
         s = self.selection()
         cola.selection_model().set_selection(s)
@@ -614,8 +611,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self._process_selection()
 
     def _process_selection(self):
-        if self.m.read_only():
-            return
         s = self.selection()
         if s.staged:
             cola.notifier().broadcast(signals.unstage, s.staged)

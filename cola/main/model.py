@@ -44,14 +44,6 @@ class MainModel(Observable):
     mode_index = 'index' # Comparing index to last commit
     mode_amend = 'amend' # Amending a commit
 
-    # TODO 'grep' should be a separate dialog and not this class
-    # then we can remove all of the read_only() bits.
-
-    mode_grep = 'grep' # We ran Search -> Grep
-
-    # Modes where we don't do anything like staging, etc.
-    modes_read_only = set((mode_grep,))
-
     # Modes where we can checkout files from the $head
     modes_undoable = set((mode_amend, mode_index, mode_worktree))
 
@@ -95,9 +87,6 @@ class MainModel(Observable):
         self.tags = []
         if cwd:
             self.set_worktree(cwd)
-
-    def read_only(self):
-        return self.mode in self.modes_read_only
 
     def unstageable(self):
         return self.mode in self.modes_unstageable
@@ -152,7 +141,7 @@ class MainModel(Observable):
         self.notify_observers(self.message_head_changed, head)
 
     def set_mode(self, mode):
-        if self.read_only() or self.amending():
+        if self.amending():
             if mode != self.mode_none:
                 return
         self.mode = mode
