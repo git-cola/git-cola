@@ -7,6 +7,7 @@ import cola
 from cola import qtutils
 from cola import signals
 from cola.qtutils import SLOT
+from cola.widgets import defs
 from cola.widgets.text import DiffTextEdit
 
 
@@ -22,11 +23,13 @@ class DiffEditor(DiffTextEdit):
         self.action_process_selection = qtutils.add_action(self,
                 'Process Selection',
                 self.apply_selection, Qt.Key_S)
+
         # Context menu actions
         self.action_stage_selection = qtutils.add_action(self,
                 self.tr('Stage &Selected Lines'),
                 self.stage_selection)
         self.action_stage_selection.setIcon(qtutils.icon('add.svg'))
+        self.action_stage_selection.setShortcut(Qt.Key_S)
 
         self.action_revert_selection = qtutils.add_action(self,
                 self.tr('Revert Selected Lines...'),
@@ -37,6 +40,7 @@ class DiffEditor(DiffTextEdit):
                 self.tr('Unstage &Selected Lines'),
                 self.unstage_selection)
         self.action_unstage_selection.setIcon(qtutils.icon('remove.svg'))
+        self.action_unstage_selection.setShortcut(Qt.Key_S)
 
         self.action_apply_selection = qtutils.add_action(self,
                 self.tr('Apply Diff Selection to Work Tree'),
@@ -56,17 +60,19 @@ class DiffEditor(DiffTextEdit):
 
         if self.model.stageable():
             if s.modified and s.modified[0] in cola.model().submodules:
-                menu.addAction(qtutils.icon('add.svg'),
-                               self.tr('Stage'),
-                               SLOT(signals.stage, s.modified))
+                action = menu.addAction(qtutils.icon('add.svg'),
+                                        self.tr('Stage'),
+                                        SLOT(signals.stage, s.modified))
+                action.setShortcut(defs.stage_shortcut)
                 menu.addAction(qtutils.git_icon(),
                                self.tr('Launch git-cola'),
                                SLOT(signals.open_repo,
                                     os.path.abspath(s.modified[0])))
             elif s.modified:
-                menu.addAction(qtutils.icon('add.svg'),
-                               self.tr('Stage Section'),
-                               self.stage_section)
+                action = menu.addAction(qtutils.icon('add.svg'),
+                                        self.tr('Stage Section'),
+                                        self.stage_section)
+                action.setShortcut(Qt.Key_H)
                 menu.addAction(self.action_stage_selection)
                 menu.addSeparator()
                 menu.addAction(qtutils.icon('undo.svg'),
@@ -76,24 +82,29 @@ class DiffEditor(DiffTextEdit):
 
         if self.model.unstageable():
             if s.staged and s.staged[0] in cola.model().submodules:
-                menu.addAction(qtutils.icon('remove.svg'),
-                               self.tr('Unstage'),
-                               SLOT(signals.unstage, s.staged))
+                action = menu.addAction(qtutils.icon('remove.svg'),
+                                        self.tr('Unstage'),
+                                        SLOT(signals.unstage, s.staged))
+                action.setShortcut(defs.stage_shortcut)
                 menu.addAction(qtutils.git_icon(),
                                self.tr('Launch git-cola'),
                                SLOT(signals.open_repo,
                                     os.path.abspath(s.staged[0])))
             elif s.staged:
-                menu.addAction(qtutils.icon('remove.svg'),
-                               self.tr('Unstage Section'),
-                               self.unstage_section)
+                action = menu.addAction(qtutils.icon('remove.svg'),
+                                        self.tr('Unstage Section'),
+                                        self.unstage_section)
+                action.setShortcut(Qt.Key_H)
                 menu.addAction(self.action_unstage_selection)
 
         menu.addSeparator()
-        menu.addAction(qtutils.icon('edit-copy.svg'),
-                       'Copy', self.copy)
-        menu.addAction(qtutils.icon('edit-select-all.svg'),
-                       'Select All', self.selectAll)
+        action = menu.addAction(qtutils.icon('edit-copy.svg'),
+                                'Copy', self.copy)
+        action.setShortcut(QtGui.QKeySequence.Copy)
+
+        action = menu.addAction(qtutils.icon('edit-select-all.svg'),
+                                'Select All', self.selectAll)
+        action.setShortcut(QtGui.QKeySequence.SelectAll)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def wheelEvent(self, event):
