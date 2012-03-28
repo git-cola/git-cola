@@ -65,6 +65,10 @@ def setup_environment():
     os.environ['PATH'] = path
     os.putenv('PATH', path)
 
+    # We don't ever want a pager
+    os.environ['GIT_PAGER'] = ''
+    os.putenv('GIT_PAGER', '')
+
 
 @memoize
 def instance(argv):
