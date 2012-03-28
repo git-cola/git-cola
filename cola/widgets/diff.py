@@ -1,38 +1,14 @@
 import os
 
 from PyQt4 import QtGui
-from PyQt4 import QtCore
 from PyQt4.QtCore import Qt, SIGNAL
 
 import cola
 from cola import guicmds
 from cola import qtutils
 from cola import signals
-from cola.prefs import diff_font
-from cola.prefs import tab_width
-from cola.qt import DiffSyntaxHighlighter
 from cola.qtutils import SLOT
-
-
-class DiffTextEdit(QtGui.QTextEdit):
-    def __init__(self, parent, whitespace=True):
-        QtGui.QTextEdit.__init__(self, parent)
-        self.setMinimumSize(QtCore.QSize(1, 1))
-        self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
-        self.setAcceptRichText(False)
-        self.setCursorWidth(2)
-        self.setTextInteractionFlags(Qt.TextSelectableByKeyboard |
-                                     Qt.TextSelectableByMouse)
-        # Diff/patch syntax highlighter
-        self.syntax = DiffSyntaxHighlighter(self.document(),
-                                            whitespace=whitespace)
-        self.setFont(diff_font())
-        self.set_tab_width(tab_width())
-
-    def set_tab_width(self, tab_width):
-        display_font = self.font()
-        space_width = QtGui.QFontMetrics(display_font).width(' ')
-        self.setTabStopWidth(tab_width * space_width)
+from cola.widgets.text import DiffTextEdit
 
 
 class DiffEditor(DiffTextEdit):
@@ -72,14 +48,6 @@ class DiffEditor(DiffTextEdit):
 
         self.connect(self, SIGNAL('copyAvailable(bool)'),
                      self.enable_selection_actions)
-
-    def mousePressEvent(self, event):
-        # Move the text cursor so that the right-click events operate
-        # on the current position, not the last left-clicked position.
-        if event.button() == Qt.RightButton:
-            if not self.textCursor().hasSelection():
-                self.setTextCursor(self.cursorForPosition(event.pos()))
-        DiffTextEdit.mousePressEvent(self, event)
 
     # Qt overrides
     def contextMenuEvent(self, event):
@@ -163,21 +131,6 @@ class DiffEditor(DiffTextEdit):
         offset = cursor.position()
         selection = unicode(cursor.selection().toPlainText())
         return offset, selection
-
-    def selected_line(self):
-        cursor = self.textCursor()
-        offset = cursor.position()
-        contents = unicode(self.toPlainText())
-        while (offset >= 1
-                and contents[offset-1]
-                and contents[offset-1] != '\n'):
-            offset -= 1
-        data = contents[offset:]
-        if '\n' in data:
-            line, rest = data.split('\n', 1)
-        else:
-            line = data
-        return line
 
     # Mutators
     def enable_selection_actions(self, enabled):

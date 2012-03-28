@@ -5,9 +5,8 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import gitcmds
 from cola import qtutils
-from cola.qt import DiffSyntaxHighlighter
-from cola.prefs import diff_font
 from cola.widgets import defs
+from cola.widgets.text import DiffTextEdit
 
 
 def select_commits(title, revs, summaries, multiselect=True):
@@ -44,13 +43,7 @@ class SelectCommitsDialog(QtGui.QDialog):
         self.commit_list.setSelectionMode(mode)
         self.commit_list.setAlternatingRowColors(True)
 
-        self.commit_text = QtGui.QTextEdit()
-        self.commit_text.setMinimumSize(QtCore.QSize(0, 40))
-        self.commit_text.setTabChangesFocus(True)
-        self.commit_text.setUndoRedoEnabled(False)
-        self.commit_text.setLineWrapMode(QtGui.QTextEdit.NoWrap)
-        self.commit_text.setReadOnly(True)
-        self.commit_text.setFont(diff_font())
+        self.commit_text = DiffTextEdit(self, whitespace=False)
 
         self.label = QtGui.QLabel()
         self.label.setText(self.tr('Revision Expression:'))
@@ -65,9 +58,6 @@ class SelectCommitsDialog(QtGui.QDialog):
         self.close_button = QtGui.QPushButton(self.tr('Close'))
 
         # Make the list widget slighty larger
-        self.syntax = DiffSyntaxHighlighter(self.commit_text.document(),
-                                            whitespace=False)
-
         self.splitter = QtGui.QSplitter()
         self.splitter.setOrientation(QtCore.Qt.Vertical)
         self.splitter.setHandleWidth(defs.handle_width)

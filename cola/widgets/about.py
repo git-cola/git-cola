@@ -6,8 +6,8 @@ from cola import resources
 from cola import qtutils
 from cola import utils
 from cola import version
-from cola.prefs import diff_font
 from cola.widgets import defs
+from cola.widgets.text import MonoTextView
 
 def launch_about_dialog():
     """Launches the Help -> About dialog"""
@@ -57,13 +57,8 @@ class AboutView(QtGui.QDialog):
         self.label.setAutoFillBackground(True)
         self.label.setPalette(palette)
 
-        self.text = QtGui.QTextEdit()
+        self.text = MonoTextView(self)
         self.text.setReadOnly(True)
-        self.text.setLineWrapMode(QtGui.QTextEdit.NoWrap)
-        self.text.setAcceptRichText(False)
-        self.text.setTextInteractionFlags(Qt.TextSelectableByKeyboard |
-                                          Qt.TextSelectableByMouse)
-        self.text.setFont(diff_font())
         self.text.setPlainText(COPYRIGHT)
 
         self.close_button = QtGui.QPushButton()

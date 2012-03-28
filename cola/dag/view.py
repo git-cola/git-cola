@@ -20,8 +20,6 @@ from cola import signals
 from cola.compat import hashlib
 from cola.dag.model import archive
 from cola.dag.model import RepoReader
-from cola.prefs import diff_font
-from cola.qt import DiffSyntaxHighlighter
 from cola.widgets import completion
 from cola.widgets import defs
 from cola.widgets.createbranch import create_new_branch
@@ -29,6 +27,7 @@ from cola.widgets.createtag import create_tag
 from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.browse import BrowseDialog
 from cola.widgets.standard import Widget
+from cola.widgets.text import DiffTextEdit
 
 
 class GravatarLabel(QtGui.QLabel):
@@ -184,11 +183,7 @@ class DiffWidget(QtGui.QWidget):
         self.summary_label.setAlignment(Qt.AlignTop)
         self.summary_label.elide()
 
-        self.diff = QtGui.QTextEdit()
-        self.diff.setLineWrapMode(QtGui.QTextEdit.NoWrap)
-        self.diff.setReadOnly(True)
-        self.diff.setFont(diff_font())
-        self.highlighter = DiffSyntaxHighlighter(self.diff.document())
+        self.diff = DiffTextEdit(self, whitespace=False)
 
         self.info_layout = QtGui.QVBoxLayout()
         self.info_layout.setMargin(0)

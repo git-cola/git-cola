@@ -26,7 +26,6 @@ from cola.classic import cola_classic
 from cola.classic import classic_widget
 from cola.dag import git_dag
 from cola.git import git
-from cola.prefs import diff_font
 from cola.prefs import PreferencesModel
 from cola.prefs import preferences
 from cola.qt import create_button
@@ -122,7 +121,6 @@ class MainView(MainWindow):
 
         # "Console" widget
         logwidget = qtutils.logger()
-        logwidget.setFont(diff_font())
         self.logdockwidget = create_dock('Console', self)
         self.logdockwidget.setWidget(logwidget)
 

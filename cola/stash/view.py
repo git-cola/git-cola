@@ -10,7 +10,7 @@ from cola import qtutils
 from cola import utils
 from cola.stash.model import save_stash, apply_stash, drop_stash, rescan
 from cola.widgets import defs
-from cola.widgets.diff import DiffTextEdit
+from cola.widgets.text import DiffTextEdit
 from cola.widgets.standard import Dialog
 
 

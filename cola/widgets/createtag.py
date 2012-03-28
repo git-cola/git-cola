@@ -79,7 +79,6 @@ class CreateTag(standard.Dialog):
 
         self.tag_msg = text.HintedTextEdit('Tag message...', self)
         self.tag_msg.setToolTip(self.tr('Specifies the tag message'))
-        self.tag_msg.setFont(diff_font())
         self.tag_msg.enable_hint(True)
         self.input_form_layt.setWidget(2, QtGui.QFormLayout.FieldRole,
                                        self.tag_msg)

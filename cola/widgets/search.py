@@ -16,7 +16,7 @@ from cola.qtutils import connect_button
 from cola.qtutils import dir_icon
 from cola.widgets import defs
 from cola.widgets import standard
-from cola.widgets.diff import DiffTextEdit
+from cola.widgets.text import DiffTextEdit
 
 
 def mkdate(timespec):
@@ -68,8 +68,6 @@ class SearchWidget(standard.Dialog):
         self.commit_list.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 
         self.commit_text = DiffTextEdit(self, whitespace=False)
-        self.commit_text.setTabChangesFocus(True)
-        self.commit_text.setReadOnly(True)
 
         self.button_export = QtGui.QPushButton()
         self.button_export.setText(self.tr('Export Patches'))

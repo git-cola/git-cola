@@ -3,6 +3,7 @@ import time
 from PyQt4 import QtGui
 
 from cola import core
+from cola.widgets.text import MonoTextView
 
 
 class LogView(QtGui.QWidget):
@@ -13,12 +14,7 @@ class LogView(QtGui.QWidget):
         self._layout = QtGui.QVBoxLayout(self)
         self._layout.setMargin(0)
 
-        self.output_text = QtGui.QTextEdit(self)
-        self.output_text.setAcceptDrops(False)
-        self.output_text.setTabChangesFocus(True)
-        self.output_text.setUndoRedoEnabled(False)
-        self.output_text.setReadOnly(True)
-        self.output_text.setAcceptRichText(False)
+        self.output_text = MonoTextView(self)
         self._layout.addWidget(self.output_text)
         if output:
             self.set_output(output)

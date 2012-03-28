@@ -17,11 +17,11 @@ from cola import signals
 from cola import resources
 from cola.compat import set
 from cola.decorators import memoize
-from cola.widgets.log import LogView
 
 
 @memoize
 def logger():
+    from cola.widgets.log import LogView
     logview = LogView()
     cola.notifier().connect(signals.log_cmd, logview.log)
     return logview
@@ -413,7 +413,6 @@ def apply_icon():
 
 def new_icon():
     return cached_icon(QtGui.QStyle.SP_FileDialogNewFolder)
-
 
 def save_icon():
     """Return a standard Save icon"""

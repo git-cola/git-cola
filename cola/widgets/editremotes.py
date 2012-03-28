@@ -5,7 +5,6 @@ from PyQt4.QtCore import SIGNAL
 
 import cola.app
 from cola import core
-from cola import prefs
 from cola import qtutils
 from cola import gitcfg
 from cola.git import git
@@ -32,9 +31,7 @@ class RemoteEditor(QtGui.QDialog):
         self.remotes.setToolTip(self.tr(
             'Remote git repositories - double-click to rename'))
 
-        self.info = text.HintedTextEdit(self.default_hint)
-        self.info.setReadOnly(True)
-        self.info.setFont(prefs.diff_font())
+        self.info = text.HintedTextView(self.default_hint, self)
         font = self.info.font()
         metrics = QtGui.QFontMetrics(font)
         width = metrics.width('_' * 72)
@@ -210,13 +207,10 @@ class AddRemoteWidget(QtGui.QDialog):
 
         self.cancel_btn = QtGui.QPushButton(self.tr('Cancel'))
 
-        diff_font = prefs.diff_font()
-        metrics = QtGui.QFontMetrics(diff_font)
-
         def lineedit(hint):
             widget = text.HintedLineEdit(hint)
-            widget.setFont(diff_font)
             widget.enable_hint(True)
+            metrics = QtGui.QFontMetrics(widget.font())
             widget.setMinimumWidth(metrics.width('_' * 32))
             return widget
 
