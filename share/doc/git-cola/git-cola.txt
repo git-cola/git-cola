@@ -43,6 +43,9 @@ browse::
 fetch::
 	Launch the 'fetch' tool.
 
+grep::
+	Launch the 'grep' tool.
+
 pull::
 	Launch the 'pull' tool.
 
