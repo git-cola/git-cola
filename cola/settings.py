@@ -11,6 +11,20 @@ except ImportError:
     import json
 
 
+def mkdict(obj):
+    if type(obj) is dict:
+        return obj
+    else:
+        return {}
+
+
+def mklist(obj):
+    if type(obj) is list:
+        return obj
+    else:
+        return []
+
+
 class Settings(object):
     _file = '~/.config/git-cola/settings'
 
@@ -22,14 +36,14 @@ class Settings(object):
     # properties
     def _get_bookmarks(self):
         try:
-            bookmarks = self.values['bookmarks']
+            bookmarks = mklist(self.values['bookmarks'])
         except KeyError:
             bookmarks = self.values['bookmarks'] = []
         return bookmarks
 
     def _get_gui_state(self):
         try:
-            gui_state = self.values['gui_state']
+            gui_state = mkdict(self.values['gui_state'])
         except KeyError:
             gui_state = self.values['gui_state'] = {}
         return gui_state
@@ -70,7 +84,7 @@ class Settings(object):
             return
         try:
             fp = open(path, 'rb')
-            self.values = json.load(fp)
+            self.values = mkdict(json.load(fp))
         except: # bad json
             pass
 
@@ -93,14 +107,13 @@ class Settings(object):
     def save_gui_state(self, gui):
         """Saves settings for a cola view"""
         name = gui.name()
-        state = gui.export_state()
-        self.gui_state[name] = state
+        self.gui_state[name] = mkdict(gui.export_state())
         self.save()
 
     def get_gui_state(self, gui):
         """Returns the state for a gui"""
         try:
-            state = self.gui_state[gui.name()]
+            state = mkdict(self.gui_state[gui.name()])
         except KeyError:
             state = self.gui_state[gui.name()] = {}
         return state
