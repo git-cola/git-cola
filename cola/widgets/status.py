@@ -10,6 +10,7 @@ from cola import signals
 from cola import qtutils
 from cola.compat import set
 from cola.qtutils import SLOT
+from cola.widgets import defs
 from cola.models.selection import State
 
 
@@ -77,13 +78,18 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.expanded_items = set()
 
         self.process_selection = qtutils.add_action(self,
-                'Process Selection', self._process_selection, 'Ctrl+S')
+                'Process Selection', self._process_selection,
+                defs.stage_shortcut)
 
         self.launch_difftool = qtutils.add_action(self,
-                'Process Selection', self._launch_difftool, 'Ctrl+D')
+                'Launch Diff Tool', self._launch_difftool,
+                defs.difftool_shortcut)
+        self.launch_difftool.setIcon(qtutils.icon('git.svg'))
 
-        self.launch_difftool = qtutils.add_action(self,
-                'Launch Editor', self._launch_editor, 'Ctrl+E')
+        self.launch_editor = qtutils.add_action(self,
+                'Launch Editor', self._launch_editor,
+                defs.editor_shortcut)
+        self.launch_editor.setIcon(qtutils.open_file_icon())
 
         self.up = qtutils.add_action(self, 'Move Up', self.move_up, 'K')
         self.down = qtutils.add_action(self, 'Move Down', self.move_down, 'J')

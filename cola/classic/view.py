@@ -80,7 +80,7 @@ class RepoTreeView(standard.TreeView):
                 self._create_action('Stage Selected',
                                     'Stage selected path(s) for commit.',
                                     self.stage_selected,
-                                    'Ctrl+S')
+                                    defs.stage_shortcut)
         self.action_unstage =\
                 self._create_action('Unstage Selected',
                                     'Remove selected path(s) from '
@@ -97,7 +97,7 @@ class RepoTreeView(standard.TreeView):
                 self._create_action('View Diff...',
                                     'Launch git-difftool on the current path.',
                                     self.difftool,
-                                    'Ctrl+D')
+                                    defs.difftool_shortcut)
         self.action_difftool_predecessor =\
                 self._create_action('Diff Against Predecessor...',
                                     'Launch git-difftool against previous versions.',
@@ -112,7 +112,7 @@ class RepoTreeView(standard.TreeView):
                 self._create_action('Launch Editor',
                                     'Edit selected path(s).',
                                     self.editor,
-                                    'Ctrl+E')
+                                    defs.editor_shortcut)
 
     def size_columns(self):
         """Set the column widths."""

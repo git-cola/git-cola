@@ -51,7 +51,7 @@ class CommitMessageEditor(QtGui.QWidget):
         # Amend checkbox
         self.signoff_action = self.actions_menu.addAction(tr('Sign Off'))
         self.signoff_action.setToolTip('Sign off on this commit')
-        self.signoff_action.setShortcut('Ctrl+i')
+        self.signoff_action.setShortcut('Ctrl+I')
 
         self.commit_action = self.actions_menu.addAction(tr('Commit@@verb'))
         self.commit_action.setToolTip(tr('Commit staged changes'))
