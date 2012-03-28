@@ -1,6 +1,66 @@
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4.QtCore import SIGNAL
+from PyQt4 import QtGui, QtCore
+from PyQt4.QtCore import Qt, SIGNAL
+
+
+class MonoTextEdit(QtGui.QTextEdit):
+    def __init__(self, parent):
+        from cola.prefs import diff_font, tab_width
+
+        QtGui.QTextEdit.__init__(self, parent)
+        self.setMinimumSize(QtCore.QSize(1, 1))
+        self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
+        self.setAcceptRichText(False)
+        self.setFont(diff_font())
+        self.set_tab_width(tab_width())
+        self.setCursorWidth(2)
+
+    def set_tab_width(self, tab_width):
+        display_font = self.font()
+        space_width = QtGui.QFontMetrics(display_font).width(' ')
+        self.setTabStopWidth(tab_width * space_width)
+
+    def selected_line(self):
+        cursor = self.textCursor()
+        offset = cursor.position()
+        contents = unicode(self.toPlainText())
+        while (offset >= 1
+                and contents[offset-1]
+                and contents[offset-1] != '\n'):
+            offset -= 1
+        data = contents[offset:]
+        if '\n' in data:
+            line, rest = data.split('\n', 1)
+        else:
+            line = data
+        return line
+
+    def mousePressEvent(self, event):
+        # Move the text cursor so that the right-click events operate
+        # on the current position, not the last left-clicked position.
+        if event.button() == Qt.RightButton:
+            if not self.textCursor().hasSelection():
+                self.setTextCursor(self.cursorForPosition(event.pos()))
+        QtGui.QTextEdit.mousePressEvent(self, event)
+
+
+class MonoTextView(MonoTextEdit):
+    def __init__(self, parent):
+        MonoTextEdit.__init__(self, parent)
+        self.setAcceptDrops(False)
+        self.setTabChangesFocus(True)
+        self.setUndoRedoEnabled(False)
+        self.setTextInteractionFlags(Qt.TextSelectableByKeyboard |
+                                     Qt.TextSelectableByMouse)
+
+
+class DiffTextEdit(MonoTextView):
+    def __init__(self, parent, whitespace=True):
+        from cola.qt import DiffSyntaxHighlighter
+
+        MonoTextView.__init__(self, parent)
+        # Diff/patch syntax highlighter
+        self.highlighter = DiffSyntaxHighlighter(self.document(),
+                                                 whitespace=whitespace)
 
 
 class HintedTextWidgetEventFilter(QtCore.QObject):
@@ -85,14 +145,9 @@ class HintedTextWidgetMixin(object):
         self.enable_hint_palette(self.is_hint())
 
 
-class HintedTextEdit(QtGui.QTextEdit, HintedTextWidgetMixin):
-    def __init__(self, hint, parent=None):
-        QtGui.QTextEdit.__init__(self, parent)
+class HintedTextEditMixin(HintedTextWidgetMixin):
+    def __init__(self, hint):
         HintedTextWidgetMixin.__init__(self, hint)
-
-        self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
-        self.setAcceptRichText(False)
-
         self.connect(self, SIGNAL('cursorPositionChanged()'),
                      self.emit_position)
 
@@ -112,11 +167,27 @@ class HintedTextEdit(QtGui.QTextEdit, HintedTextWidgetMixin):
         self.emit(SIGNAL('cursorPosition(int,int)'), rows, cols)
 
 
+class HintedTextEdit(MonoTextEdit, HintedTextEditMixin):
+    def __init__(self, hint, parent=None):
+        MonoTextEdit.__init__(self, parent)
+        HintedTextEditMixin.__init__(self, hint)
+
+
+# The read-only variant.
+class HintedTextView(MonoTextView, HintedTextEditMixin):
+    def __init__(self, hint, parent=None):
+        MonoTextView.__init__(self, parent)
+        HintedTextEditMixin.__init__(self, hint)
+
+
 class HintedLineEdit(QtGui.QLineEdit, HintedTextWidgetMixin):
     def __init__(self, hint, parent=None):
+        from cola.prefs import diff_font
+
         QtGui.QLineEdit.__init__(self, parent)
         HintedTextWidgetMixin.__init__(self, hint)
 
+        self.setFont(diff_font())
         self.connect(self,
                      SIGNAL('cursorPositionChanged(int,int)'),
                      lambda x, y: self.emit_position())
