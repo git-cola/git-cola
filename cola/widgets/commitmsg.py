@@ -353,8 +353,12 @@ class CommitSummaryLineEdit(HintedLineEdit):
             curtext = unicode(self.text())
             if position == len(curtext):
                 self.emit(SIGNAL('downPressed()'))
-                event.ignore()
+                event.accept()
                 return
+        if event.key() in (Qt.Key_Return, Qt.Key_Enter):
+            self.emit(SIGNAL('returnPressed()'))
+            event.accept()
+            return
         HintedLineEdit.keyPressEvent(self, event)
 
 
@@ -390,7 +394,7 @@ class CommitMessageTextEdit(HintedTextEdit):
                     self.setTextCursor(cursor)
                 else:
                     self.emit_shift_tab()
-                event.ignore()
+                event.accept()
                 return
             text_before = unicode(self.toPlainText())[:position]
             lines_before = text_before.count('\n')
@@ -401,7 +405,7 @@ class CommitMessageTextEdit(HintedTextEdit):
                     mode = QtGui.QTextCursor.MoveAnchor
                 cursor.setPosition(0, mode)
                 self.setTextCursor(cursor)
-                event.ignore()
+                event.accept()
                 return
         elif event.key() == Qt.Key_Down:
             cursor = self.textCursor()
@@ -416,7 +420,7 @@ class CommitMessageTextEdit(HintedTextEdit):
                     mode = QtGui.QTextCursor.MoveAnchor
                 cursor.setPosition(len(all_text), mode)
                 self.setTextCursor(cursor)
-                event.ignore()
+                event.accept()
                 return
         HintedTextEdit.keyPressEvent(self, event)
 
