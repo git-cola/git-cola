@@ -23,13 +23,18 @@ class GrepThread(QtCore.QThread):
     def run(self):
         if self.txt is None:
             return
+        query = self.txt
+
         if self.shell:
-            args = utils.shell_split(self.txt)
+            args = utils.shell_split(query)
         else:
-            args = [self.txt]
+            args = [query]
         status, out = git.grep(with_status=True, with_stderr=True,
                                n=True, *args)
-        self.emit(SIGNAL('result'), status, core.decode(out))
+        if query == self.txt:
+            self.emit(SIGNAL('result'), status, core.decode(out))
+        else:
+            self.run()
 
 
 class Grep(Dialog):
@@ -97,7 +102,7 @@ class Grep(Dialog):
                      self.process_result)
 
         self.connect(self.input_txt, SIGNAL('textChanged(QString)'),
-                     lambda x: self.search_button.setEnabled(bool(unicode(x))))
+                     self.input_txt_changed)
 
         qtutils.connect_button(self.search_button, self.search)
         qtutils.connect_button(self.edit_button, self.edit)
@@ -110,6 +115,12 @@ class Grep(Dialog):
     def done(self, exit_code):
         qtutils.save_state(self)
         return Dialog.done(self, exit_code)
+
+    def input_txt_changed(self, txt):
+        enabled = len(unicode(txt)) > 1
+        self.search_button.setEnabled(enabled)
+        if enabled:
+            self.search()
 
     def search(self):
         self.search_button.setEnabled(False)
@@ -130,6 +141,7 @@ class Grep(Dialog):
 
     def edit(self):
         guicmds.goto_grep(self.result_txt.selected_line()),
+
 
 class GrepTextView(HintedTextView):
     def __init__(self, hint, parent):
