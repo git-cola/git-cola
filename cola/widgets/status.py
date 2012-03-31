@@ -94,6 +94,12 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.up = qtutils.add_action(self, 'Move Up', self.move_up, 'K')
         self.down = qtutils.add_action(self, 'Move Down', self.move_down, 'J')
 
+        self.copy_path_action = qtutils.add_action(self,
+                                                   'Copy Path to Clipboard',
+                                                   self.copy_path,
+                                                   QtGui.QKeySequence.Copy)
+        self.copy_path_action.setIcon(qtutils.theme_icon('edit-copy.svg'))
+
         self.connect(self, SIGNAL('about_to_update'), self._about_to_update)
         self.connect(self, SIGNAL('updated'), self._updated)
 
@@ -349,6 +355,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            self.tr('Launch git-cola'),
                            SLOT(signals.open_repo,
                                 os.path.abspath(s.staged[0])))
+            menu.addSeparator()
+            menu.addAction(self.copy_path_action)
             return menu
         elif s.staged:
             menu.addSeparator()
@@ -368,6 +376,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 menu.addAction(qtutils.icon('undo.svg'),
                                self.tr('Revert Unstaged Edits...'),
                                lambda: self._revert_unstaged_edits(staged=True))
+            menu.addSeparator()
+            menu.addAction(self.copy_path_action)
             return menu
 
         if s.unmerged:
@@ -385,6 +395,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                     self.tr('Stage Selected'),
                                     SLOT(signals.stage, self.unstaged()))
             action.setShortcut(defs.stage_shortcut)
+            menu.addSeparator()
+            menu.addAction(self.copy_path_action)
             return menu
 
         modified_submodule = (s.modified and
@@ -431,6 +443,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            self.tr('Add to .gitignore'),
                            SLOT(signals.ignore,
                                 map(lambda x: '/' + x, self.untracked())))
+        menu.addSeparator()
+        menu.addAction(self.copy_path_action)
         return menu
 
     def _delete_files(self):
@@ -625,10 +639,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             self.blockSignals(False)
             return
 
-        filename = cola.selection_model().filename()
-        if filename is not None:
-            qtutils.set_clipboard(filename)
-
     def double_clicked(self, item, idx):
         """Called when an item is double-clicked in the repo status tree."""
         self._process_selection()
@@ -745,3 +755,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             self.select_by_index(idx + 1)
         else:
             self.select_by_index(0)
+
+    def copy_path(self):
+        """Copy a selected path to the clipboard"""
+        filename = cola.selection_model().filename()
+        if filename is not None:
+            curdir = os.getcwdu()
+            qtutils.set_clipboard(os.path.join(curdir, filename))
