@@ -50,8 +50,6 @@ class Grep(Dialog):
         self.input_txt = HintedLineEdit(hint, self)
         self.input_txt.enable_hint(True)
 
-        self.search_button = QtGui.QPushButton('Search')
-
         hint = 'grep result...'
         self.result_txt = GrepTextView(hint, self)
         self.result_txt.enable_hint(True)
@@ -83,7 +81,6 @@ class Grep(Dialog):
 
         self.input_layout.addWidget(self.input_label)
         self.input_layout.addWidget(self.input_txt)
-        self.input_layout.addWidget(self.search_button)
 
         self.bottom_layout.addWidget(self.edit_button)
         self.bottom_layout.addWidget(self.shell_checkbox)
@@ -96,7 +93,6 @@ class Grep(Dialog):
         self.setLayout(self.mainlayout)
 
         self.grep_thread = GrepThread(self)
-        self.search_button.setEnabled(False)
 
         self.connect(self.grep_thread, SIGNAL('result'),
                      self.process_result)
@@ -104,7 +100,6 @@ class Grep(Dialog):
         self.connect(self.input_txt, SIGNAL('textChanged(QString)'),
                      self.input_txt_changed)
 
-        qtutils.connect_button(self.search_button, self.search)
         qtutils.connect_button(self.edit_button, self.edit)
         qtutils.connect_button(self.close_button, self.close)
         qtutils.add_close_action(self)
@@ -117,13 +112,11 @@ class Grep(Dialog):
         return Dialog.done(self, exit_code)
 
     def input_txt_changed(self, txt):
-        enabled = len(unicode(txt)) > 1
-        self.search_button.setEnabled(enabled)
-        if enabled:
+        has_query = len(unicode(txt)) > 1
+        if has_query:
             self.search()
 
     def search(self):
-        self.search_button.setEnabled(False)
         self.edit_button.setEnabled(False)
 
         self.grep_thread.txt = self.input_txt.as_unicode()
@@ -136,7 +129,6 @@ class Grep(Dialog):
 
     def process_result(self, status, out):
         self.result_txt.set_value(out)
-        self.search_button.setEnabled(True)
         self.edit_button.setEnabled(status == 0)
 
     def edit(self):
