@@ -3,6 +3,7 @@ import subprocess
 import itertools
 
 from PyQt4 import QtGui
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
@@ -91,8 +92,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 defs.editor_shortcut)
         self.launch_editor.setIcon(qtutils.open_file_icon())
 
-        self.up = qtutils.add_action(self, 'Move Up', self.move_up, 'K')
-        self.down = qtutils.add_action(self, 'Move Down', self.move_down, 'J')
+        self.up = qtutils.add_action(self,
+                'Move Up', self.move_up, Qt.Key_K)
+        self.down = qtutils.add_action(self,
+                'Move Down', self.move_down, Qt.Key_J)
 
         self.copy_path_action = qtutils.add_action(self,
                                                    'Copy Path to Clipboard',
