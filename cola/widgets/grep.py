@@ -47,7 +47,7 @@ class Grep(Dialog):
         self.input_label.setFont(diff_font())
 
         hint = 'command-line arguments'
-        self.input_txt = HintedLineEdit(hint, self)
+        self.input_txt = GrepLineEdit(hint, self)
         self.input_txt.enable_hint(True)
 
         hint = 'grep result...'
@@ -100,6 +100,9 @@ class Grep(Dialog):
         self.connect(self.input_txt, SIGNAL('textChanged(QString)'),
                      self.input_txt_changed)
 
+        self.connect(self.input_txt, SIGNAL('returnPressed()'),
+                     lambda: self.result_txt.setFocus())
+
         qtutils.connect_button(self.edit_button, self.edit)
         qtutils.connect_button(self.close_button, self.close)
         qtutils.add_close_action(self)
@@ -135,6 +138,17 @@ class Grep(Dialog):
         guicmds.goto_grep(self.result_txt.selected_line()),
 
 
+class GrepLineEdit(HintedLineEdit):
+    def __init__(self, hint, parent):
+        HintedLineEdit.__init__(self, hint, parent)
+
+    def keyPressEvent(self, event):
+        if event.key() in (Qt.Key_Return, Qt.Key_Enter):
+            self.emit(SIGNAL('returnPressed()'))
+        else:
+            HintedLineEdit.keyPressEvent(self, event)
+
+
 class GrepTextView(HintedTextView):
     def __init__(self, hint, parent):
         HintedTextView.__init__(self, hint, parent)
@@ -143,11 +157,78 @@ class GrepTextView(HintedTextView):
                 lambda: guicmds.goto_grep(self.selected_line()))
         self.goto_action.setShortcut(defs.editor_shortcut)
 
+        qtutils.add_action(self, 'Up',
+                lambda: self.move(QtGui.QTextCursor.Up),
+                Qt.Key_K)
+
+        qtutils.add_action(self, 'Down',
+                lambda: self.move(QtGui.QTextCursor.Down),
+                Qt.Key_J)
+
+        qtutils.add_action(self, 'Left',
+                lambda: self.move(QtGui.QTextCursor.Left),
+                Qt.Key_H)
+
+        qtutils.add_action(self, 'Right',
+                lambda: self.move(QtGui.QTextCursor.Right),
+                Qt.Key_L)
+
+        qtutils.add_action(self, 'StartOfLine',
+                lambda: self.move(QtGui.QTextCursor.StartOfLine),
+                Qt.Key_0)
+
+        qtutils.add_action(self, 'EndOfLine',
+                lambda: self.move(QtGui.QTextCursor.EndOfLine),
+                Qt.Key_Dollar)
+
+        qtutils.add_action(self, 'WordLeft',
+                lambda: self.move(QtGui.QTextCursor.WordLeft),
+                Qt.Key_B)
+
+        qtutils.add_action(self, 'WordRight',
+                lambda: self.move(QtGui.QTextCursor.WordRight),
+                Qt.Key_W)
+
+        qtutils.add_action(self, 'PageUp',
+                lambda: self.page(-self.height()/2),
+                'Shift+Space')
+
+        qtutils.add_action(self, 'PageDown',
+                lambda: self.page(self.height()/2),
+                Qt.Key_Space)
+
     def contextMenuEvent(self, event):
         menu = self.createStandardContextMenu(event.pos())
         menu.addSeparator()
         menu.addAction(self.goto_action)
         menu.exec_(self.mapToGlobal(event.pos()))
+
+    def page(self, offset):
+        rect = self.cursorRect()
+        x = rect.x()
+        y = rect.y() + offset
+        new_cursor = self.cursorForPosition(QtCore.QPoint(x, y))
+        if new_cursor is not None:
+            self.set_text_cursor(new_cursor)
+
+    def set_text_cursor(self, cursor):
+        self.setTextCursor(cursor)
+        self.ensureCursorVisible()
+        self.viewport().update()
+
+    def move(self, direction):
+        cursor = self.textCursor()
+        if cursor.movePosition(direction):
+            self.set_text_cursor(cursor)
+
+    def paintEvent(self, event):
+        HintedTextView.paintEvent(self, event)
+        if self.hasFocus():
+            # Qt doesn't redraw the cursor when using movePosition().
+            # So.. draw our own cursor.
+            rect = self.cursorRect()
+            painter = QtGui.QPainter(self.viewport())
+            painter.fillRect(rect, Qt.SolidPattern)
 
 
 def run_grep(txt=None, parent=None):
