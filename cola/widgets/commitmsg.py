@@ -34,8 +34,25 @@ class CommitMessageEditor(QtGui.QWidget):
         self.model = model
         self.notifying = False
 
+        # Actions
+        self.signoff_action = add_action(self, 'Sign Off',
+                                         emit(self, signals.signoff),
+                                         'Ctrl+I')
+        self.signoff_action.setToolTip('Sign off on this commit')
+
+        self.commit_action = add_action(self, 'Commit@@verb',
+                                        self.commit,
+                                        'Ctrl+Return')
+        self.commit_action.setToolTip(tr('Commit staged changes'))
+
+        # Widgets
         self.summary = CommitSummaryLineEdit()
+        self.summary.extra_actions.append(self.signoff_action)
+        self.summary.extra_actions.append(self.commit_action)
+
         self.description = CommitMessageTextEdit()
+        self.description.extra_actions.append(self.signoff_action)
+        self.description.extra_actions.append(self.commit_action)
 
         commit_button_tooltip = 'Commit staged changes\nShortcut: Ctrl+Enter'
         self.commit_button = create_toolbutton(text='Commit@@verb',
@@ -48,16 +65,11 @@ class CommitMessageEditor(QtGui.QWidget):
         self.actions_button.setMenu(self.actions_menu)
         self.actions_button.setPopupMode(QtGui.QToolButton.InstantPopup)
 
-        # Amend checkbox
-        self.signoff_action = self.actions_menu.addAction(tr('Sign Off'))
-        self.signoff_action.setToolTip('Sign off on this commit')
-        self.signoff_action.setShortcut('Ctrl+I')
-
-        self.commit_action = self.actions_menu.addAction(tr('Commit@@verb'))
-        self.commit_action.setToolTip(tr('Commit staged changes'))
-        self.commit_action.setShortcut('Ctrl+Return')
-
+        self.actions_menu.addAction(self.signoff_action)
+        self.actions_menu.addAction(self.commit_action)
         self.actions_menu.addSeparator()
+
+        # Amend checkbox
         self.amend_action = self.actions_menu.addAction(tr('Amend Last Commit'))
         self.amend_action.setCheckable(True)
 
@@ -84,8 +96,6 @@ class CommitMessageEditor(QtGui.QWidget):
                      SIGNAL(signals.load_previous_message))
 
         connect_button(self.commit_button, self.commit)
-        connect_action(self.commit_action, self.commit)
-        connect_action(self.signoff_action, emit(self, signals.signoff))
 
         cola.notifier().connect(signals.amend, self.amend_action.setChecked)
 
@@ -346,6 +356,7 @@ class CommitSummaryLineEdit(HintedLineEdit):
     def __init__(self, parent=None):
         hint = u'Commit summary'
         HintedLineEdit.__init__(self, hint, parent)
+        self.extra_actions = []
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Down:
@@ -361,11 +372,20 @@ class CommitSummaryLineEdit(HintedLineEdit):
             return
         HintedLineEdit.keyPressEvent(self, event)
 
+    def contextMenuEvent(self, event):
+        menu = self.createStandardContextMenu()
+        if self.extra_actions:
+            menu.addSeparator()
+        for action in self.extra_actions:
+            menu.addAction(action)
+        menu.exec_(self.mapToGlobal(event.pos()))
+
 
 class CommitMessageTextEdit(HintedTextEdit):
     def __init__(self, parent=None):
         hint = u'Extended description...'
         HintedTextEdit.__init__(self, hint, parent)
+        self.extra_actions = []
         self.setMinimumSize(QtCore.QSize(1, 1))
 
         self.action_emit_shift_tab = add_action(self,
@@ -383,6 +403,14 @@ class CommitMessageTextEdit(HintedTextEdit):
             self.setMinimumSize(QtCore.QSize(1, 1))
 
         return False
+
+    def contextMenuEvent(self, event):
+        menu = self.createStandardContextMenu()
+        if self.extra_actions:
+            menu.addSeparator()
+        for action in self.extra_actions:
+            menu.addAction(action)
+        menu.exec_(self.mapToGlobal(event.pos()))
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Up:
