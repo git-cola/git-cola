@@ -311,7 +311,7 @@ def set_clipboard(text):
 
 
 def add_action(widget, text, fn, *shortcuts):
-    action = QtGui.QAction(text, widget)
+    action = QtGui.QAction(tr(text), widget)
     connect_action(action, fn)
     if shortcuts:
         shortcuts = list(set(shortcuts))
