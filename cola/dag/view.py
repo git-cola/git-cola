@@ -633,6 +633,9 @@ class DAGView(Widget):
         self.connect(self.revtext, SIGNAL('textChanged(QString)'),
                      self.text_changed)
 
+        self.connect(self.revtext, SIGNAL('returnPressed()'),
+                     self.display)
+
         # The model is updated in another thread so use
         # signals/slots to bring control back to the main GUI thread
         self.model.add_observer(self.model.message_updated,

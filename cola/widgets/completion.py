@@ -90,9 +90,14 @@ class CompletionLineEdit(QtGui.QLineEdit):
     def event(self, event):
         if event.type() == QtCore.QEvent.KeyPress:
             if (event.key() == Qt.Key_Tab and
-                self._completer.popup().isVisible()):
-                    event.ignore()
-                    return True
+                    self._completer.popup().isVisible()):
+                event.ignore()
+                return True
+            if (event.key() in (Qt.Key_Return, Qt.Key_Enter) and
+                    not self._completer.popup().isVisible()):
+                self.emit(SIGNAL('returnPressed()'))
+                event.accept()
+                return True
         if event.type() == QtCore.QEvent.Hide:
             self.close_popup()
         return QtGui.QLineEdit.event(self, event)
