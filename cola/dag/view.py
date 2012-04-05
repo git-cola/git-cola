@@ -241,6 +241,13 @@ class ViewerMixin(object):
         self.clicked = None
         self.menu_actions = self.context_menu_actions()
 
+    def selected_item(self):
+        """Return the currently selected item"""
+        selected_items = self.selectedItems()
+        if not selected_items:
+            return None
+        return selected_items[0]
+
     def selected_sha1(self):
         item = self.selected_item()
         if item is None:
@@ -1221,13 +1228,6 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
             item.blockSignals(False)
             item_rect = item.sceneTransform().mapRect(item.boundingRect())
             self.ensureVisible(item_rect)
-
-    def selected_item(self):
-        """Return the currently selected item"""
-        selected_items = self.selectedItems()
-        if not selected_items:
-            return None
-        return selected_items[0]
 
     def selectedItems(self):
         """Return the currently selected items"""
