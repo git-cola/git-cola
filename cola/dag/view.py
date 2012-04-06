@@ -907,7 +907,7 @@ class EdgeColor(object):
 
 class Commit(QtGui.QGraphicsItem):
     item_type = QtGui.QGraphicsItem.UserType + 2
-    width = 46.
+    width = 48.
     height = 24.
 
     item_shape = QtGui.QPainterPath()
@@ -1025,14 +1025,14 @@ class Commit(QtGui.QGraphicsItem):
         # Draw ellipse
         painter.setPen(self.commit_pen)
         painter.setBrush(self.brush)
-        painter.drawEllipse(inner)
+        painter.drawRoundedRect(inner, 22, 9)
 
         # Draw text
         try:
             font = cache.font
         except AttributeError:
             font = cache.font = painter.font()
-            font.setPointSize(5)
+            font.setPointSize(8)
         painter.setFont(font)
         painter.setPen(self.text_pen)
         painter.drawText(inner, self.sha1_text, text_opts)
@@ -1080,11 +1080,7 @@ class Label(QtGui.QGraphicsItem):
         # Starts with enough space for two tags. Any more and the commit
         # needs to be taller to accomodate.
         self.commit = commit
-        height = len(commit.tags) * self.height/2. + 4. # +6 padding
-
-        self.label_box = QtCore.QRectF(0., -height/2., self.width, height)
-        self.text_box = QtCore.QRectF(2., -height/2., self.width-4., height)
-        self.tag_text = '\n'.join(commit.tags)
+        self.label_text = '\n'.join(commit.tags)
 
         if 'HEAD' in commit.tags:
             self.color = head_color
@@ -1108,26 +1104,37 @@ class Label(QtGui.QGraphicsItem):
               text_opts=text_options,
               black=Qt.black,
               cache=Cache):
+        try:
+            font = cache.label_font
+            height = cache.label_height
+        except AttributeError:
+            font = cache.label_font = painter.font()
+            font.setPointSize(6)
+            height = cache.label_height = QtGui.QFontMetrics(font).height()
+
+        height = height * len(self.commit.tags)
+        label_box = QtCore.QRectF(0., -height/2.-3, self.width, height+6)
+        text_box = QtCore.QRectF(3., -height/2., self.width-4., height)
+
         # Draw tags
         painter.setBrush(self.color)
         painter.setPen(self.pen)
-        painter.drawRoundedRect(self.label_box, 4, 4)
-        try:
-            font = cache.font
-        except AttributeError:
-            font = cache.font = painter.font()
-            font.setPointSize(5)
+        painter.drawRoundedRect(label_box, 4, 4)
         painter.setFont(font)
         painter.setPen(black)
-        painter.drawText(self.text_box, self.tag_text, text_opts)
+        painter.drawText(text_box, self.label_text, text_opts)
 
 
 class GraphView(QtGui.QGraphicsView, ViewerMixin):
 
-    x_off = 132
-    y_off = 32
     x_max = 0
     y_min = 0
+
+    x_adjust = Commit.width*4/3
+    y_adjust = Commit.height*4/3
+
+    x_off = x_adjust + Label.width
+    y_off = 32
 
     def __init__(self, notifier, parent):
         QtGui.QGraphicsView.__init__(self, parent)
@@ -1349,12 +1356,12 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
                 x_max = max(x_max, pos.x()+x_off)
                 ymax = max(ymax, pos.y())
             rect = QtCore.QRectF(x_min, y_min, x_max-x_min, ymax-y_min)
-        x_adjust = Commit.width
-        y_adjust = Commit.height
+        x_adjust = GraphView.x_adjust
+        y_adjust = GraphView.y_adjust
         rect.setX(rect.x() - x_adjust)
-        rect.setY(rect.y())
-        rect.setHeight(rect.height() + y_adjust)
-        rect.setWidth(rect.width() + x_adjust)
+        rect.setY(rect.y() - y_adjust)
+        rect.setHeight(rect.height() + y_adjust * 2)
+        rect.setWidth(rect.width() + x_adjust * 2)
         self.fitInView(rect, Qt.KeepAspectRatio)
         self.scene().invalidate()
 
@@ -1593,10 +1600,10 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
     def update_scene_rect(self):
         y_min = self.y_min
         x_max = self.x_max
-        self.scene().setSceneRect(-Commit.width*3/4,
-                                  y_min-self.y_off/2,
-                                  x_max + int(self.x_off * 1.1),
-                                  abs(y_min)+self.y_off)
+        self.scene().setSceneRect(-GraphView.x_adjust,
+                                  y_min-GraphView.y_adjust,
+                                  x_max + GraphView.x_adjust,
+                                  abs(y_min) + GraphView.y_adjust)
 
     def sort_by_generation(self, commits):
         if len(commits) < 2:
