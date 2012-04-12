@@ -69,6 +69,39 @@ def setup_environment():
     os.environ['GIT_PAGER'] = ''
     os.putenv('GIT_PAGER', '')
 
+    # --- >8 --- >8 ---
+    # Git v1.7.10 Release Notes
+    # =========================
+    #
+    # Compatibility Notes
+    # -------------------
+    #
+    #  * From this release on, the "git merge" command in an interactive
+    #   session will start an editor when it automatically resolves the
+    #   merge for the user to explain the resulting commit, just like the
+    #   "git commit" command does when it wasn't given a commit message.
+    #
+    #   If you have a script that runs "git merge" and keeps its standard
+    #   input and output attached to the user's terminal, and if you do not
+    #   want the user to explain the resulting merge commits, you can
+    #   export GIT_MERGE_AUTOEDIT environment variable set to "no", like
+    #   this:
+    #
+    #        #!/bin/sh
+    #        GIT_MERGE_AUTOEDIT=no
+    #        export GIT_MERGE_AUTOEDIT
+    #
+    #   to disable this behavior (if you want your users to explain their
+    #   merge commits, you do not have to do anything).  Alternatively, you
+    #   can give the "--no-edit" option to individual invocations of the
+    #   "git merge" command if you know everybody who uses your script has
+    #   Git v1.7.8 or newer.
+    # --- >8 --- >8 ---
+    # Longer-term: Use `git merge --no-commit` so that we always
+    # have a chance to explain our merges.
+    os.environ['GIT_MERGE_AUTOEDIT'] = 'no'
+    os.putenv('GIT_MERGE_AUTOEDIT', 'no')
+
 
 @memoize
 def instance(argv):
