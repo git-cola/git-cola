@@ -6,7 +6,6 @@ from PyQt4.QtCore import SIGNAL
 import cola.app
 from cola import core
 from cola import qtutils
-from cola import gitcfg
 from cola.git import git
 from cola.widgets import defs
 from cola.widgets import text
@@ -40,7 +39,6 @@ class RemoteEditor(QtGui.QDialog):
         self.info.setMinimumHeight(height)
         self.info_thread = RemoteInfoThread(self)
 
-        self.cfg = gitcfg.instance()
         self.add_btn = QtGui.QToolButton()
         self.add_btn.setIcon(qtutils.icon('add.svg'))
         self.add_btn.setToolTip(self.tr('Add new remote git repository'))
@@ -95,10 +93,7 @@ class RemoteEditor(QtGui.QDialog):
                      self.selection_changed)
 
     def refresh(self):
-        prefix = len('remote.')
-        suffix = len('.url')
-        remote_urls = self.cfg.find('remote.*.url')
-        remotes = [k[prefix:-suffix] for k in sorted(remote_urls.keys())]
+        remotes = core.decode(git.remote()).splitlines()
         self.remotes.clear()
         self.remotes.addItems(remotes)
         self.remote_list = remotes
