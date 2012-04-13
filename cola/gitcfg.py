@@ -53,6 +53,7 @@ class GitConfig(observable.Observable):
     def __init__(self):
         observable.Observable.__init__(self)
         self.git = git.instance()
+        self._map = {}
         self._system = {}
         self._user = {}
         self._repo = {}
@@ -63,13 +64,14 @@ class GitConfig(observable.Observable):
         self._find_config_files()
 
     def reset(self):
-        self._system = {}
-        self._user = {}
-        self._repo = {}
-        self._all = {}
+        self._map.clear()
+        self._system.clear()
+        self._user.clear()
+        self._repo.clear()
+        self._all.clear()
         self._cache_key = None
         self._configs = []
-        self._config_files = {}
+        self._config_files.clear()
         self._find_config_files()
 
     def user(self):
@@ -111,28 +113,31 @@ class GitConfig(observable.Observable):
 
         """
         cache_key = _cache_key()
-        if not self._cache_key or cache_key != self._cache_key:
+        if self._cache_key is None or cache_key != self._cache_key:
             self._cache_key = cache_key
             return False
         return True
 
     def _read_configs(self):
         """Read git config value into the system, user and repo dicts."""
-        self._system = {}
-        self._user = {}
-        self._repo = {}
-        self._all = {}
+        self._map.clear()
+        self._system.clear()
+        self._user.clear()
+        self._repo.clear()
+        self._all.clear()
 
         if 'system' in self._config_files:
-            self._system = self.read_config(self._config_files['system'])
+            self._system.update(
+                    self.read_config(self._config_files['system']))
 
         if 'user' in self._config_files:
-            self._user = self.read_config(self._config_files['user'])
+            self._user.update(
+                    self.read_config(self._config_files['user']))
 
         if 'repo' in self._config_files:
-            self._repo = self.read_config(self._config_files['repo'])
+            self._repo.update(
+                    self.read_config(self._config_files['repo']))
 
-        self._all = {}
         for dct in (self._system, self._user, self._repo):
             self._all.update(dct)
 
@@ -150,6 +155,7 @@ class GitConfig(observable.Observable):
                     continue
                 k = line
                 v = 'true'
+            k = core.decode(k)
             v = core.decode(v)
 
             if v in ('true', 'yes'):
@@ -161,21 +167,31 @@ class GitConfig(observable.Observable):
                     v = int(v)
                 except ValueError:
                     pass
-            dest[k.lower()] = v
+            self._map[k.lower()] = k
+            dest[k] = v
         return dest
 
-    def get(self, key, default=None, source=None):
-        """Return the string value for a config key."""
+    def _get(self, src, key, default):
         self.update()
-        return self._all.get(key, default)
+        try:
+            return src[key]
+        except KeyError:
+            pass
+        key = self._map.get(key.lower(), key)
+        try:
+            return src[key]
+        except KeyError:
+            return src.get(key.lower(), default)
+
+    def get(self, key, default=None):
+        """Return the string value for a config key."""
+        return self._get(self._all, key, default)
 
     def get_user(self, key, default=None):
-        self.update()
-        return self._user.get(key, default)
+        return self._get(self._user, key, default)
 
     def get_repo(self, key, default=None):
-        self.update()
-        return self._repo.get(key, default)
+        return self._get(self._repo, key, default)
 
     def python_to_git(self, value):
         if type(value) is bool:
@@ -200,10 +216,12 @@ class GitConfig(observable.Observable):
         self.notify_observers(msg, key, value)
 
     def find(self, pat):
-        self.update()
+        pat = pat.lower()
+        match = fnmatch.fnmatch
         result = {}
+        self.update()
         for key, val in self._all.items():
-            if fnmatch.fnmatch(key, pat):
+            if match(key, pat):
                 result[key] = val
         return result
 
