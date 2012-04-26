@@ -24,7 +24,7 @@ Screenshots are available on the
 
 ## DOWNLOAD
 
-    apt-get install git-cola python-inotify
+    apt-get install git-cola python-pyinotify
 
 New releases are available on the
 [git-cola download page](http://git-cola.github.com/downloads.html).
