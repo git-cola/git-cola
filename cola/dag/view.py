@@ -119,17 +119,13 @@ class TextLabel(QtGui.QLabel):
         self._metrics = QtGui.QFontMetrics(self.font())
         self.setOpenExternalLinks(True)
 
-    def setFont(self, font):
-        self._metrics = QtGui.QFontMetrics(font)
-        QtGui.QLabel.setFont(self, font)
-
     def elide(self):
         self._elide = True
 
-    def setPlainText(self, text):
-        self.setTemplate(text, text)
+    def set_text(self, text):
+        self.set_template(text, text)
 
-    def setTemplate(self, text, template):
+    def set_template(self, text, template):
         self._display = text
         self._text = text
         self._template = template
@@ -144,6 +140,11 @@ class TextLabel(QtGui.QLabel):
                                         Qt.ElideRight, width-2)
         if unicode(text) != self._template:
             self._display = text
+
+    # Qt overrides
+    def setFont(self, font):
+        self._metrics = QtGui.QFontMetrics(font)
+        QtGui.QLabel.setFont(self, font)
 
     def resizeEvent(self, event):
         if self._elide:
@@ -231,11 +232,12 @@ class DiffWidget(QtGui.QWidget):
                        % template_args)
 
         author_template = '%(author)s <%(email)s>' % template_args
-        self.author_label.setTemplate(author_text, author_template)
-        self.summary_label.setPlainText(summary)
+        self.author_label.set_template(author_text, author_template)
+        self.summary_label.set_text(summary)
 
 
 class ViewerMixin(object):
+    """Implementations must provide selected_items()"""
     def __init__(self):
         self.selected = None
         self.clicked = None
@@ -243,7 +245,7 @@ class ViewerMixin(object):
 
     def selected_item(self):
         """Return the currently selected item"""
-        selected_items = self.selectedItems()
+        selected_items = self.selected_items()
         if not selected_items:
             return None
         return selected_items[0]
@@ -334,7 +336,7 @@ class ViewerMixin(object):
         }
 
     def update_menu_actions(self, event):
-        selected_items = self.selectedItems()
+        selected_items = self.selected_items()
         clicked = self.itemAt(event.pos())
         if clicked is None:
             self.clicked = None
@@ -420,14 +422,9 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.selection_changed)
 
-    def contextMenuEvent(self, event):
-        self.context_menu_event(event)
-
-    def mousePressEvent(self, event):
-        if event.button() == Qt.RightButton:
-            event.accept()
-            return
-        QtGui.QTreeWidget.mousePressEvent(self, event)
+    # ViewerMixin
+    def selected_items(self):
+        return self.selectedItems()
 
     def go_up(self):
         self.goto(self.itemAbove)
@@ -436,7 +433,7 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         self.goto(self.itemBelow)
 
     def goto(self, finder):
-        items = self.selectedItems()
+        items = self.selected_items()
         item = items and items[0] or None
         if item is None:
             return
@@ -448,7 +445,7 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         self.selecting = selecting
 
     def selection_changed(self):
-        items = self.selectedItems()
+        items = self.selected_items()
         if not items:
             return
         self.set_selecting(True)
@@ -505,6 +502,16 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         sha1s = [item.commit.sha1 for item in items]
         all_sha1s = [c.sha1 for c in self.commits]
         cola.notifier().broadcast(signals.format_patch, sha1s, all_sha1s)
+
+    # Qt overrides
+    def contextMenuEvent(self, event):
+        self.context_menu_event(event)
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.RightButton:
+            event.accept()
+            return
+        QtGui.QTreeWidget.mousePressEvent(self, event)
 
 
 class DAGView(Widget):
@@ -717,10 +724,6 @@ class DAGView(Widget):
         self.left_splitter.setSizes([self.height()/4, self.height()*3/4])
         self.treewidget.adjust_columns()
 
-    def resizeEvent(self, e):
-        Widget.resizeEvent(self, e)
-        self.treewidget.adjust_columns()
-
     def splitter_moved(self, pos, idx):
         self.treewidget.adjust_columns()
 
@@ -752,12 +755,6 @@ class DAGView(Widget):
         self.graphview.update_scene_rect()
         self.graphview.set_initial_view()
 
-    def closeEvent(self, event):
-        self.revtext.close_popup()
-        self.thread.stop()
-        qtutils.save_state(self)
-        return Widget.closeEvent(self, event)
-
     def resize_to_desktop(self):
         desktop = QtGui.QApplication.instance().desktop()
         width = desktop.width()
@@ -771,9 +768,19 @@ class DAGView(Widget):
         else:
             difftool.diff_commits(self, a, b)
 
+    # Qt overrides
+    def closeEvent(self, event):
+        self.revtext.close_popup()
+        self.thread.stop()
+        qtutils.save_state(self)
+        return Widget.closeEvent(self, event)
+
+    def resizeEvent(self, e):
+        Widget.resizeEvent(self, e)
+        self.treewidget.adjust_columns()
+
 
 class ReaderThread(QtCore.QThread):
-
     commits_ready = SIGNAL('commits_ready')
     done = SIGNAL('done')
 
@@ -867,6 +874,7 @@ class Edge(QtGui.QGraphicsItem):
 
         self.pen = QtGui.QPen(color, 1.0, line, Qt.SquareCap, Qt.BevelJoin)
 
+    # Qt overrides
     def type(self):
         return self.item_type
 
@@ -967,10 +975,6 @@ class Commit(QtGui.QGraphicsItem):
 
         self.pressed = False
         self.dragged = False
-
-    #
-    # Overridden Qt methods
-    #
 
     def blockSignals(self, blocked):
         self.notifier.notification_enabled = not blocked
@@ -1208,6 +1212,11 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         self.y_min = 0
         self.commits = []
 
+    # ViewerMixin
+    def selected_items(self):
+        """Return the currently selected items"""
+        return self.scene().selectedItems()
+
     def zoom_in(self):
         self.scale_view(1.5)
 
@@ -1218,9 +1227,6 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         if self.selecting:
             return
         self.select([commit.sha1 for commit in commits])
-
-    def contextMenuEvent(self, event):
-        self.context_menu_event(event)
 
     def select(self, sha1s):
         """Select the item for the SHA-1"""
@@ -1235,10 +1241,6 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
             item.blockSignals(False)
             item_rect = item.sceneTransform().mapRect(item.boundingRect())
             self.ensureVisible(item_rect)
-
-    def selectedItems(self):
-        """Return the currently selected items"""
-        return self.scene().selectedItems()
 
     def get_item_by_generation(self, commits, criteria_fn):
         """Return the item for the commit matching criteria"""
@@ -1264,7 +1266,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         return self.get_item_by_generation(commits, lambda a, b: a < b)
 
     def create_patch(self):
-        items = self.selectedItems()
+        items = self.selected_items()
         if not items:
             return
         selected_commits = self.sort_by_generation([n.commit for n in items])
@@ -1335,7 +1337,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
     def fit_view_to_selection(self):
         """Fit selected items into the viewport"""
 
-        items = self.scene().selectedItems()
+        items = self.selected_items()
         self.fit_view_to_items(items)
 
     def fit_view_to_items(self, items):
@@ -1370,7 +1372,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
             return
         elif Qt.ShiftModifier != event.modifiers():
             return
-        self.selection_list = self.selectedItems()
+        self.selection_list = self.selected_items()
 
     def restore_selection(self, event):
         if Qt.ShiftModifier != event.modifiers():
@@ -1384,39 +1386,8 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         event_handler(self, event)
         self.restore_selection(event)
 
-    def mousePressEvent(self, event):
-        if event.button() == Qt.MidButton:
-            pos = event.pos()
-            self.mouse_start = [pos.x(), pos.y()]
-            self.saved_matrix = QtGui.QMatrix(self.matrix())
-            self.is_panning = True
-            return
-        if event.button() == Qt.RightButton:
-            event.ignore()
-            return
-        if event.button() == Qt.LeftButton:
-            self.pressed = True
-        self.handle_event(QtGui.QGraphicsView.mousePressEvent, event)
-
-    def mouseMoveEvent(self, event):
-        pos = self.mapToScene(event.pos())
-        if self.is_panning:
-            self.pan(event)
-            return
-        self.last_mouse[0] = pos.x()
-        self.last_mouse[1] = pos.y()
-        self.handle_event(QtGui.QGraphicsView.mouseMoveEvent, event)
-
     def set_selecting(self, selecting):
         self.selecting = selecting
-
-    def mouseReleaseEvent(self, event):
-        self.pressed = False
-        if event.button() == Qt.MidButton:
-            self.is_panning = False
-            return
-        self.handle_event(QtGui.QGraphicsView.mouseReleaseEvent, event)
-        self.selection_list = []
 
     def pan(self, event):
         pos = event.pos()
@@ -1440,13 +1411,6 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         matrix = QtGui.QMatrix(self.saved_matrix).translate(tx, ty)
         self.setTransformationAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setMatrix(matrix)
-
-    def wheelEvent(self, event):
-        """Handle Qt mouse wheel events."""
-        if event.modifiers() == Qt.ControlModifier:
-            self.wheel_zoom(event)
-        else:
-            self.wheel_pan(event)
 
     def wheel_zoom(self, event):
         """Handle mouse wheel zooming."""
@@ -1610,3 +1574,45 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
             return commits
         commits.sort(cmp=lambda a, b: cmp(a.generation, b.generation))
         return commits
+
+    # Qt overrides
+    def contextMenuEvent(self, event):
+        self.context_menu_event(event)
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MidButton:
+            pos = event.pos()
+            self.mouse_start = [pos.x(), pos.y()]
+            self.saved_matrix = QtGui.QMatrix(self.matrix())
+            self.is_panning = True
+            return
+        if event.button() == Qt.RightButton:
+            event.ignore()
+            return
+        if event.button() == Qt.LeftButton:
+            self.pressed = True
+        self.handle_event(QtGui.QGraphicsView.mousePressEvent, event)
+
+    def mouseMoveEvent(self, event):
+        pos = self.mapToScene(event.pos())
+        if self.is_panning:
+            self.pan(event)
+            return
+        self.last_mouse[0] = pos.x()
+        self.last_mouse[1] = pos.y()
+        self.handle_event(QtGui.QGraphicsView.mouseMoveEvent, event)
+
+    def mouseReleaseEvent(self, event):
+        self.pressed = False
+        if event.button() == Qt.MidButton:
+            self.is_panning = False
+            return
+        self.handle_event(QtGui.QGraphicsView.mouseReleaseEvent, event)
+        self.selection_list = []
+
+    def wheelEvent(self, event):
+        """Handle Qt mouse wheel events."""
+        if event.modifiers() == Qt.ControlModifier:
+            self.wheel_zoom(event)
+        else:
+            self.wheel_pan(event)
