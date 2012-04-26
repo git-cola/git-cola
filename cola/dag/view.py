@@ -971,7 +971,7 @@ class Commit(QtGui.QGraphicsItem):
         else:
             self.brush = cached_commit_color
             self.text_pen = Qt.white
-        self.sha1_text = commit.sha1[:8]
+        self.sha1_text = commit.sha1[:7]
 
         self.pressed = False
         self.dragged = False
@@ -1036,7 +1036,7 @@ class Commit(QtGui.QGraphicsItem):
             font = cache.font
         except AttributeError:
             font = cache.font = painter.font()
-            font.setPointSize(8)
+            font.setPointSize(9)
         painter.setFont(font)
         painter.setPen(self.text_pen)
         painter.drawText(inner, self.sha1_text, text_opts)
@@ -1330,7 +1330,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         self_commits = self.commits
         self_items = self.items
 
-        commits = self_commits[-8:]
+        commits = self_commits[-1:]
         items = [self_items[c.sha1] for c in commits]
         self.fit_view_to_items(items)
 
