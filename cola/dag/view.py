@@ -1172,7 +1172,6 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         self.setScene(scene)
 
         self.setRenderHint(QtGui.QPainter.Antialiasing)
-        self.setOptimizationFlag(self.DontSavePainterState, True)
         self.setViewportUpdateMode(self.BoundingRectViewportUpdate)
         self.setCacheMode(QtGui.QGraphicsView.CacheBackground)
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
