@@ -1,3 +1,25 @@
+git-cola v1.7.7
+===============
+Usability, bells and whistles
+-----------------------------
+* New and improved `grep` mode lets you instantly find and edit files.
+* New `git cola grep` standalone mode.
+* Support for passing arguments to the configured editors, e.g. `gvim -p`
+  This makes it possible to select multiple files in the status
+  window and use `Ctrl-e` to edit them all at once.
+* Remote operations now prompt on errors only.
+* The `Tab` key now jumps to the extended description when editing the summary.
+* More shortcut key labels and misc. UX improvements.
+
+Fixes
+-----
+* Selecting an item no longer copies its filename to the copy/paste buffer.
+  `Ctrl-c` or the "Copy" context-menu action can be used instead.
+* The repository monitoring feature on Windows learned to ignore
+  changes within the ".git" directory.  Thanks to Andreas Sommer.
+
+  http://github.com/git-cola/git-cola/issues/closed#issue/120
+
 git-cola v1.7.6
 ===============
 Usability, bells and whistles
