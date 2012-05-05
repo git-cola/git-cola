@@ -41,6 +41,22 @@ the `Ctrl-s` shortcut key.
 
 Additional actions can be performed using the right-click context menu.
 
+Configuring your $EDITOR
+------------------------
+The editor used by `Ctrl-e` is configured from the Preferences screen.
+The environment variables `$VISUAL` and `$EDITOR` are used when no editor
+has been configured.
+
+The editor preference is saved in the `gui.editor` variable using
+`git config <http://schacon.github.com/git/git-config.html>`_.
+
+*ProTip* -- Setting `gvim -p` as your configured editor opens
+multiple files using tabs (and `gvim -o` uses splits).
+
+`git cola` is {vim, emacs, textpad, notepad++}-aware.
+When you select a line in the `grep` screen and press any of
+`Enter`, `Ctrl-e`, or the "Edit" button, you are taken to that exact line.
+
 Actions
 -------
 Clicking the `Staged` folder shows a diffstat for the index.
@@ -206,8 +222,8 @@ so please be mindful when writing commit messages.
 
 Amend Last Commit
 -----------------
-Clicking on `Amend Last Commit` makes `git-cola` amend the previous commit
-instead of creating a new one.  `git-cola` loads the previous commit message
+Clicking on `Amend Last Commit` makes `git cola` amend the previous commit
+instead of creating a new one.  `git cola` loads the previous commit message
 into the commit message editor when this option is selected.
 
 The :ref:`Status <status>`_ tool will display all of the changes for the
