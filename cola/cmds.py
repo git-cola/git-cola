@@ -426,7 +426,7 @@ class Edit(Command):
         else:
             # Single-file w/ line-numbers (likely from grep)
             editor_opts = {
-                    '*gvim*': ['+'+self.line_number, filename],
+                    '*vim*': ['+'+self.line_number, filename],
                     '*emacs*': ['+'+self.line_number, filename],
                     '*textpad*': ['%s(%s,0)' % (filename, self.line_number)],
                     '*notepad++*': ['-n'+self.line_number, filename],
