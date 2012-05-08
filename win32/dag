@@ -20,6 +20,7 @@ for python in "/c/Python27" "/c/Python26" "/c/Python25"; do
 		PATH="$PATH":"$python"
 		export PATH
 		exec "$python/python.exe" "$COLA" "$@"
+		break
 	fi
 done
 exit 1
