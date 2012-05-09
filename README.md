@@ -45,7 +45,7 @@ New releases are available on the
 
 * [git](http://git-scm.com/) 1.6.3 or newer
 
-* [Python](http://python.org/) 2.6 or newer
+* [Python](http://python.org/) 2.5 through 2.7
 
 * [PyQt4](http://www.riverbankcomputing.co.uk/software/pyqt/download) 4.4 or newer
 
@@ -90,7 +90,7 @@ or hacking on cola itself.
 
 ## WINDOWS INSTALLATION
 
-Download the latest stable Git, Python 2.6, and Py26-PyQt4 installers
+Download the latest stable Git, Python 2.x, and Py2x-PyQt4 installers
 
 * [msysGit](http://code.google.com/p/msysgit/)
 
