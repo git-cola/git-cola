@@ -92,7 +92,7 @@ or hacking on cola itself.
 
 Download the latest stable Git, Python 2.x, and Py2x-PyQt4 installers
 
-* [msysGit](http://code.google.com/p/msysgit/)
+* [msysGit](http://msysgit.github.com/)
 
 * [Python](http://python.org/download/)
 
