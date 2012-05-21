@@ -17,6 +17,7 @@ Thanks
 * Iulian Udrea
 * Justin Lecher
 * Karl Bielefeldt
+* Karthik Manamcheri
 * Kelvie Wong
 * Kevin Kofler
 * Libor Jelinek
