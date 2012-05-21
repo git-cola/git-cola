@@ -3,7 +3,6 @@
 
 import mimetypes
 import os
-import platform
 import random
 import re
 import shlex
@@ -15,7 +14,6 @@ from cola import git
 from cola import core
 from cola import resources
 from cola.compat import hashlib
-from cola.decorators import memoize
 from cola.decorators import interruptable
 
 random.seed(hash(time.time()))
@@ -269,10 +267,9 @@ def tmp_filename(prefix):
     return os.path.join(tmp_dir(), basename)
 
 
-@interruptable
 def is_linux():
     """Is this a linux machine?"""
-    return platform.system() == 'Linux'
+    return sys.platform.startswith('linux')
 
 
 def is_debian():
@@ -280,16 +277,14 @@ def is_debian():
     return os.path.exists('/usr/bin/apt-get')
 
 
-@interruptable
 def is_darwin():
     """Return True on OSX."""
-    return platform.system() == 'Darwin'
+    return sys.platform == 'darwin'
 
 
-@memoize
 def is_win32():
     """Return True on win32"""
-    return os.name in ('nt', 'dos')
+    return sys.platform == 'win32' or sys.platform == 'cygwin'
 
 
 def win32_set_binary(fd):
