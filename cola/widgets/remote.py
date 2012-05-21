@@ -101,6 +101,7 @@ class RemoteActionDialog(standard.Dialog):
         self.model = model
         self.action = action
         self.tasks = []
+        self.filtered_remote_branches = []
 
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowModality(Qt.WindowModal)
@@ -275,6 +276,7 @@ class RemoteActionDialog(standard.Dialog):
     def set_remote_branches(self, branches):
         self.remote_branches.clear()
         self.remote_branches.addItems(branches)
+        self.filtered_remote_branches = branches
 
     def select_first_remote(self):
         """Selects the first remote in the list view"""
@@ -345,11 +347,11 @@ class RemoteActionDialog(standard.Dialog):
     def update_remote_branches(self,*rest):
         """Update the remote branch name when a branch is selected"""
         widget = self.remote_branches
-        branches = self.model.remote_branches
-        selection = qtutils.selected_item(widget,branches)
+        branches = self.filtered_remote_branches
+        selection = qtutils.selected_item(widget, branches)
         if not selection:
             return
-        branch = utils.basename(selection)
+        branch = utils.strip_one(selection)
         if branch == 'HEAD':
             return
         self.set_remote_branch(branch)

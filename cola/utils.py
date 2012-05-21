@@ -194,6 +194,16 @@ def basename(path):
     return path.rsplit('/', 1)[-1]
 
 
+def strip_one(path):
+    """Strip one level of directory
+
+    >>> strip_one('/usr/bin/git')
+    'bin/git'
+
+    """
+    return path.split('/', 1)[1]
+
+
 def dirname(path):
     """
     An os.path.dirname() implementation that always uses '/'
