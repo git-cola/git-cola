@@ -200,8 +200,17 @@ def strip_one(path):
     >>> strip_one('/usr/bin/git')
     'bin/git'
 
+    >>> strip_one('local/bin/git')
+    'bin/git'
+
+    >>> strip_one('bin/git')
+    'git'
+
+    >>> strip_one('git')
+    'git'
+
     """
-    return path.split('/', 1)[1]
+    return path.strip('/').split('/', 1)[-1]
 
 
 def dirname(path):
