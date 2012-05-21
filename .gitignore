@@ -1,14 +1,7 @@
 /git-cola.app
 /build
-/build-stamp
-/cola/builtin_version.py
 /config.mak
-/configure-stamp
 /dist
-/debian/*.log
-/debian/files
-/debian/bld
-/debian/cola
 /Meta
 /share/locale
 /test/tmp
