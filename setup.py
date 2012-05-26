@@ -4,7 +4,7 @@ import os
 import sys
 import platform
 from glob import glob
-from distutils.core import setup
+from setuptools import setup
 
 # Look for modules in the root
 srcdir = os.path.dirname(os.path.abspath(__file__))
@@ -67,16 +67,17 @@ def _run_setup():
     if sys.platform == 'win32':
         scripts.append('win32/cola')
 
-    setup(name = 'git-cola',
-          version = version.version(),
-          description = 'The highly caffeinated git GUI',
-          license = 'GPLv2',
-          author = 'The git-cola community',
-          author_email = 'git-cola@googlegroups.com',
-          url = 'http://git-cola.github.com/',
-          long_description = 'A sleek and powerful git GUI',
-          scripts = scripts,
-          cmdclass = cmdclass,
+    setup(name='git-cola',
+          version=version.version(),
+          description='The highly caffeinated git GUI',
+          long_description='A sleek and powerful git GUI',
+          license='GPLv2',
+          author='David Aguilar',
+          author_email='davvid@gmail.com',
+          url='http://git-cola.github.com/',
+          scripts=scripts,
+          cmdclass=cmdclass,
+          platforms='any',
           data_files = cola_data_files())
 
 

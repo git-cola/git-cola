@@ -10,6 +10,7 @@ TAR = tar
 # These values can be overridden on the command-line or via config.mak
 prefix = $(HOME)
 bindir = $(prefix)/bin
+coladir = $(prefix)/share/git-cola/lib
 # DESTDIR =
 
 cola_base := git-cola
@@ -18,28 +19,32 @@ cola_app = $(CURDIR)/$(cola_app_base)
 cola_version = $(shell env TERM=dummy $(PYTHON) cola/version.py)
 cola_dist := $(cola_base)-$(cola_version)
 
-python_version = $(shell env TERM=dummy $(PYTHON) -c 'import distutils.sysconfig as sc; print(sc.get_python_version())')
-python_site := $(prefix)/lib*/python$(python_version)/site-packages
-
 test_flags =
 all_test_flags = --with-doctest --exclude=sphinxtogithub $(test_flags)
 
 # User customizations
 -include config.mak
 
+setup_args = --prefix=$(prefix)
+setup_args += --quiet
+setup_args += --force
+setup_args += --single-version-externally-managed
+setup_args += --install-scripts=$(bindir)
+setup_args += --record=build/MANIFEST
+setup_args += --install-lib=$(coladir)
+ifdef DESTDIR
+    setup_args += --root=$(DESTDIR)
+endif
 
 all::
 	$(PYTHON) setup.py build
 
 install: all
-	$(PYTHON) setup.py --quiet install \
-		--prefix=$(DESTDIR)$(prefix) \
-		--install-scripts=$(DESTDIR)$(bindir) \
-		--force && \
-	rm -f $(DESTDIR)$(python_site)/git_cola*
-	rmdir -p $(DESTDIR)$(python_site) 2>/dev/null || true
+	$(PYTHON) setup.py install $(setup_args)
 	(cd $(DESTDIR)$(bindir) && \
 	! test -e cola && ln -s git-cola cola) || true
+	rm -rf $(DESTDIR)$(coladir)/git_cola*
+	rm -rf git_cola.egg-info
 
 # Maintainer's dist target
 dist:
