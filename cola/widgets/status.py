@@ -54,6 +54,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     idx_end = 4
 
     txt_default_app = 'Open Using Default Application'
+    txt_parent_dir = 'Open Parent Directory'
 
     # Read-only access to the mode state
     mode = property(lambda self: self.m.mode)
@@ -101,6 +102,12 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                     self._open_using_default_app,
                     defs.default_app_shortcut)
             self.open_using_default_app.setIcon(qtutils.file_icon())
+
+            self.open_parent_dir = qtutils.add_action(self,
+                    self.txt_parent_dir,
+                    self._open_parent_dir,
+                    defs.parent_dir_shortcut)
+            self.open_parent_dir.setIcon(qtutils.open_file_icon())
 
         self.up = qtutils.add_action(self,
                 'Move Up', self.move_up, Qt.Key_K)
@@ -385,10 +392,16 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             action.setShortcut(defs.editor_shortcut)
 
             if not utils.is_win32():
+                menu.addSeparator()
                 action = menu.addAction(qtutils.file_icon(),
                         self.tr(self.txt_default_app),
                         SLOT(signals.open_default_app, self.staged()))
                 action.setShortcut(defs.default_app_shortcut)
+
+                action = menu.addAction(qtutils.open_file_icon(),
+                        self.tr(self.txt_parent_dir),
+                        self._open_parent_dir)
+                action.setShortcut(defs.parent_dir_shortcut)
 
             if self.m.undoable():
                 menu.addSeparator()
@@ -413,11 +426,19 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                     self.tr('Launch Editor'),
                                     SLOT(signals.edit, self.unmerged()))
             action.setShortcut(defs.editor_shortcut)
+
             if not utils.is_win32():
+                menu.addSeparator()
                 action = menu.addAction(qtutils.file_icon(),
                         self.tr(self.txt_default_app),
                         SLOT(signals.open_default_app, self.unmerged()))
                 action.setShortcut(defs.default_app_shortcut)
+
+                action = menu.addAction(qtutils.open_file_icon(),
+                        self.tr(self.txt_parent_dir),
+                        self._open_parent_dir)
+                action.setShortcut(defs.parent_dir_shortcut)
+
             menu.addSeparator()
             menu.addAction(self.copy_path_action)
             return menu
@@ -449,10 +470,16 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                     SLOT(signals.edit, self.unstaged()))
             action.setShortcut(defs.editor_shortcut)
             if not utils.is_win32():
+                menu.addSeparator()
                 action = menu.addAction(qtutils.file_icon(),
                         self.tr(self.txt_default_app),
                         SLOT(signals.open_default_app, self.unstaged()))
                 action.setShortcut(defs.default_app_shortcut)
+
+                action = menu.addAction(qtutils.open_file_icon(),
+                        self.tr(self.txt_parent_dir),
+                        self._open_parent_dir)
+                action.setShortcut(defs.parent_dir_shortcut)
 
         menu.addSeparator()
 
@@ -726,6 +753,13 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         if not selection:
             return
         cola.notifier().broadcast(signals.open_default_app, selection)
+
+    def _open_parent_dir(self):
+        selection = self.selected_group()
+        if not selection:
+            return
+        dirs = set(map(os.path.dirname, selection))
+        cola.notifier().broadcast(signals.open_default_app, dirs)
 
     def show_selection(self):
         """Show the selected item."""

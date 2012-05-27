@@ -8,3 +8,4 @@ editor_shortcut = 'Ctrl+E'
 stage_shortcut = 'Ctrl+S'
 
 default_app_shortcut = 'Space'
+parent_dir_shortcut = 'Shift+Space'
