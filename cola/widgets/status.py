@@ -9,6 +9,7 @@ from PyQt4.QtCore import SIGNAL
 import cola
 from cola import signals
 from cola import qtutils
+from cola import utils
 from cola.compat import set
 from cola.qtutils import SLOT
 from cola.widgets import defs
@@ -52,6 +53,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     idx_untracked = 3
     idx_end = 4
 
+    txt_default_app = 'Open Using Default Application'
+
     # Read-only access to the mode state
     mode = property(lambda self: self.m.mode)
 
@@ -90,7 +93,14 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.launch_editor = qtutils.add_action(self,
                 'Launch Editor', self._launch_editor,
                 defs.editor_shortcut)
-        self.launch_editor.setIcon(qtutils.open_file_icon())
+        self.launch_editor.setIcon(qtutils.options_icon())
+
+        if not utils.is_win32():
+            self.open_using_default_app = qtutils.add_action(self,
+                    self.txt_default_app,
+                    self._open_using_default_app,
+                    defs.default_app_shortcut)
+            self.open_using_default_app.setIcon(qtutils.file_icon())
 
         self.up = qtutils.add_action(self,
                 'Move Up', self.move_up, Qt.Key_K)
@@ -363,16 +373,22 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             return menu
         elif s.staged:
             menu.addSeparator()
-            action = menu.addAction(qtutils.open_file_icon(),
-                                    self.tr('Launch Editor'),
-                                    SLOT(signals.edit, self.staged()))
-            action.setShortcut(defs.editor_shortcut)
-
             action = menu.addAction(qtutils.git_icon(),
                                     self.tr('Launch Diff Tool'),
                                     SLOT(signals.difftool, True,
                                          self.staged()))
             action.setShortcut(defs.difftool_shortcut)
+
+            action = menu.addAction(qtutils.options_icon(),
+                                    self.tr('Launch Editor'),
+                                    SLOT(signals.edit, self.staged()))
+            action.setShortcut(defs.editor_shortcut)
+
+            if not utils.is_win32():
+                action = menu.addAction(qtutils.file_icon(),
+                        self.tr(self.txt_default_app),
+                        SLOT(signals.open_default_app, self.staged()))
+                action.setShortcut(defs.default_app_shortcut)
 
             if self.m.undoable():
                 menu.addSeparator()
@@ -388,16 +404,20 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            self.tr('Launch Merge Tool'),
                            SLOT(signals.mergetool, self.unmerged()))
 
-            action = menu.addAction(qtutils.open_file_icon(),
-                                    self.tr('Launch Editor'),
-                                    SLOT(signals.edit, self.unmerged()))
-            action.setShortcut(defs.editor_shortcut)
-            menu.addSeparator()
-
             action = menu.addAction(qtutils.icon('add.svg'),
                                     self.tr('Stage Selected'),
                                     SLOT(signals.stage, self.unstaged()))
             action.setShortcut(defs.stage_shortcut)
+            menu.addSeparator()
+            action = menu.addAction(qtutils.options_icon(),
+                                    self.tr('Launch Editor'),
+                                    SLOT(signals.edit, self.unmerged()))
+            action.setShortcut(defs.editor_shortcut)
+            if not utils.is_win32():
+                action = menu.addAction(qtutils.file_icon(),
+                        self.tr(self.txt_default_app),
+                        SLOT(signals.open_default_app, self.unmerged()))
+                action.setShortcut(defs.default_app_shortcut)
             menu.addSeparator()
             menu.addAction(self.copy_path_action)
             return menu
@@ -411,24 +431,32 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             action.setShortcut(defs.stage_shortcut)
             menu.addSeparator()
 
-        if modified_submodule:
-            menu.addAction(qtutils.git_icon(),
-                           self.tr('Launch git-cola'),
-                           SLOT(signals.open_repo,
-                                os.path.abspath(s.modified[0])))
-        elif self.unstaged():
-            action = menu.addAction(qtutils.open_file_icon(),
-                                    self.tr('Launch Editor'),
-                                    SLOT(signals.edit, self.unstaged()))
-            action.setShortcut(defs.editor_shortcut)
-
         if s.modified and self.m.stageable() and not modified_submodule:
             action = menu.addAction(qtutils.git_icon(),
                                     self.tr('Launch Diff Tool'),
                                     SLOT(signals.difftool, False,
                                          self.modified()))
             action.setShortcut(defs.difftool_shortcut)
-            menu.addSeparator()
+
+        if modified_submodule:
+            menu.addAction(qtutils.git_icon(),
+                           self.tr('Launch git-cola'),
+                           SLOT(signals.open_repo,
+                                os.path.abspath(s.modified[0])))
+        elif self.unstaged():
+            action = menu.addAction(qtutils.options_icon(),
+                                    self.tr('Launch Editor'),
+                                    SLOT(signals.edit, self.unstaged()))
+            action.setShortcut(defs.editor_shortcut)
+            if not utils.is_win32():
+                action = menu.addAction(qtutils.file_icon(),
+                        self.tr(self.txt_default_app),
+                        SLOT(signals.open_default_app, self.unstaged()))
+                action.setShortcut(defs.default_app_shortcut)
+
+        menu.addSeparator()
+
+        if s.modified and self.m.stageable() and not modified_submodule:
             if self.m.undoable():
                 menu.addAction(qtutils.icon('undo.svg'),
                                self.tr('Revert Unstaged Edits...'),
@@ -560,6 +588,20 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         c = self.contents()
         return c.staged + c.unmerged + c.modified + c.untracked
 
+    def selected_group(self):
+        """A list of selected files in various states of being"""
+        selection = []
+        s = self.selection()
+        if s.staged:
+            selection = s.staged
+        elif s.unmerged:
+            selection = s.unmerged
+        elif s.modified:
+            selection = s.modified
+        elif s.untracked:
+            selection = s.untracked
+        return selection
+
     def selected_idx(self):
         c = self.contents()
         s = self.single_selection()
@@ -674,18 +716,16 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         cola.notifier().broadcast(signals.difftool, bool(staged), selection)
 
     def _launch_editor(self):
-        s = self.selection()
-        if s.staged:
-            selection = s.staged
-        elif s.unmerged:
-            selection = s.unmerged
-        elif s.modified:
-            selection = s.modified
-        elif s.untracked:
-            selection = s.untracked
-        else:
+        selection = self.selected_group()
+        if not selection:
             return
         cola.notifier().broadcast(signals.edit, selection)
+
+    def _open_using_default_app(self):
+        selection = self.selected_group()
+        if not selection:
+            return
+        cola.notifier().broadcast(signals.open_default_app, selection)
 
     def show_selection(self):
         """Show the selected item."""

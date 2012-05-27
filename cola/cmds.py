@@ -517,6 +517,21 @@ class Mergetool(Command):
         utils.fork(['git', 'mergetool', '--no-prompt', '--'] + self.paths)
 
 
+class OpenDefaultApp(Command):
+    """Open a file using the OS default."""
+    def __init__(self, filenames):
+        Command.__init__(self)
+        if utils.is_darwin():
+            launcher = 'open'
+        else:
+            launcher = 'xdg-open'
+        self.cmd = [launcher]
+        self.cmd.extend(filenames)
+
+    def do(self):
+        utils.fork(self.cmd)
+
+
 class OpenRepo(Command):
     """Launches git-cola on a repo."""
     def __init__(self, dirname):
@@ -891,6 +906,7 @@ def register():
         signals.load_previous_message: LoadPreviousMessage,
         signals.modified_summary: Diffstat,
         signals.mergetool: Mergetool,
+        signals.open_default_app: OpenDefaultApp,
         signals.open_repo: OpenRepo,
         signals.rescan: Rescan,
         signals.rescan_and_refresh: RescanAndRefresh,
