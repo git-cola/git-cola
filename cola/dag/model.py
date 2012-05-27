@@ -11,7 +11,7 @@ from cola.observable import Observable
 
 # put summary at the end b/c it can contain
 # any number of funky characters, including the separator
-logfmt = 'format:%H%x01%P%x01%d%x01%an%x01%ar%x01%ae%x01%s'
+logfmt = 'format:%H%x01%P%x01%d%x01%an%x01%ad%x01%ae%x01%s'
 logsep = chr(0x01)
 
 archive = 'archive'
