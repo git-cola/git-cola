@@ -63,10 +63,10 @@ class Command(BaseCommand):
 
     def do(self):
         """Perform the operation."""
-        self.model.set_diff_text(self.new_diff_text)
         self.model.set_filename(self.new_filename)
         self.model.set_head(self.new_head)
         self.model.set_mode(self.new_mode)
+        self.model.set_diff_text(self.new_diff_text)
 
     def undo(self):
         """Undo the operation."""

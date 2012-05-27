@@ -15,6 +15,7 @@ class DiffEditor(DiffTextEdit):
     def __init__(self, parent):
         DiffTextEdit.__init__(self, parent)
         self.model = model = cola.model()
+        self.mode = self.model.mode_none
 
         # Install diff shortcut keys for stage/unstage
         self.action_process_section = qtutils.add_action(self,
@@ -47,6 +48,8 @@ class DiffEditor(DiffTextEdit):
                 self.stage_selection)
         self.action_apply_selection.setIcon(qtutils.apply_icon())
 
+        model.add_observer(model.message_mode_about_to_change,
+                           self._mode_about_to_change)
         model.add_observer(model.message_diff_text_changed, self.setPlainText)
 
         self.connect(self, SIGNAL('copyAvailable(bool)'),
@@ -118,8 +121,14 @@ class DiffEditor(DiffTextEdit):
                                       event.orientation())
         return DiffTextEdit.wheelEvent(self, event)
 
+    def _mode_about_to_change(self, mode):
+        self.mode = mode
+
     def setPlainText(self, text):
         """setPlainText(str) while retaining scrollbar positions"""
+        highlight = (self.mode != self.model.mode_none and
+                     self.mode != self.model.mode_untracked)
+        self.highlighter.set_enabled(highlight)
         scrollbar = self.verticalScrollBar()
         if scrollbar:
             scrollvalue = scrollbar.value()
@@ -127,9 +136,6 @@ class DiffEditor(DiffTextEdit):
             DiffTextEdit.setPlainText(self, text)
             if scrollbar:
                 scrollbar.setValue(scrollvalue)
-
-    # Accessors
-    mode = property(lambda self: self.model.mode)
 
     def offset_and_selection(self):
         cursor = self.textCursor()

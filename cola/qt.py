@@ -295,10 +295,14 @@ class GenericSyntaxHighligher(QSyntaxHighlighter):
         for attr, val in default_colors.items():
             setattr(self, attr, val)
         self._rules = []
+        self.enabled = True
         self.generate_rules()
 
     def generate_rules(self):
         pass
+
+    def set_enabled(self, enabled):
+        self.enabled = enabled
 
     def create_rules(self, *rules):
         if len(rules) % 2:
@@ -339,6 +343,8 @@ class GenericSyntaxHighligher(QSyntaxHighlighter):
         return fmt
 
     def highlightBlock(self, qstr):
+        if not self.enabled:
+            return
         ascii = unicode(qstr)
         if not ascii:
             return
