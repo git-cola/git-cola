@@ -4,6 +4,8 @@ The @interruptable functions retry when system calls are interrupted,
 e.g. when python raises an IOError or OSError with errno == EINTR.
 
 """
+import itertools
+
 from cola.decorators import interruptable
 
 # Some files are not in UTF-8; some other aren't in any codification.
@@ -16,10 +18,15 @@ _encoding_tests = [
     # <-- add encodings here
 ]
 
-def decode(enc):
+def decode(enc, encoding=None):
     """decode(encoded_string) returns an unencoded unicode string
     """
-    for encoding in _encoding_tests:
+    if encoding is None:
+        encoding_tests = _encoding_tests
+    else:
+        encoding_tests = itertools.chain([encoding], _encoding_tests)
+
+    for encoding in encoding_tests:
         try:
             return unicode(enc.decode(encoding))
         except:

@@ -61,6 +61,8 @@ class GitConfig(observable.Observable):
         self._cache_key = None
         self._configs = []
         self._config_files = {}
+        self._value_cache = {}
+        self._attr_cache = {}
         self._find_config_files()
 
     def reset(self):
@@ -72,6 +74,8 @@ class GitConfig(observable.Observable):
         self._cache_key = None
         self._configs = []
         self._config_files.clear()
+        self._value_cache = {}
+        self._attr_cache = {}
         self._find_config_files()
 
     def user(self):
@@ -225,8 +229,45 @@ class GitConfig(observable.Observable):
                 result[key] = val
         return result
 
-    def get_encoding(self, default='utf-8'):
-        return self.get('gui.encoding', default=default)
+    def get_cached(self, key, default=None):
+        cache = self._value_cache
+        try:
+            value = cache[key]
+        except KeyError:
+            value = cache[key] = self.get(key, default=default)
+        return value
+
+    def gui_encoding(self):
+        return self.get_cached('gui.encoding', default='utf-8')
+
+    def is_per_file_attrs_enabled(self):
+        return self.get_cached('cola.fileattributes', default=False)
+
+    def file_encoding(self, path):
+        if not self.is_per_file_attrs_enabled():
+            return None
+        cache = self._attr_cache
+        try:
+            value = cache[path]
+        except KeyError:
+            value = cache[path] = self._file_encoding(path)
+        return value
+
+    def _file_encoding(self, path):
+        """Return the file encoding for a path"""
+        status, out = self.git.check_attr('encoding', '--', path,
+                                          with_status=True)
+        if status != 0:
+            return None
+        out = core.decode(out)
+        header = '%s: encoding: ' % path
+        if out.startswith(header):
+            encoding = out[len(header):].strip()
+            if (encoding != 'unspecified' and
+                    encoding != 'unset' and
+                    encoding != 'set'):
+                return encoding
+        return None
 
     guitool_opts = ('cmd', 'needsfile', 'noconsole', 'norescan', 'confirm',
                     'argprompt', 'revprompt', 'revunmerged', 'title', 'prompt')

@@ -67,6 +67,11 @@ CONFIG VARIABLES
 cola.savewindowsettings::
 	Whether 'git-cola' should remember its window settings.
 
+cola.fileattributes::
+	Enables per-file linkgit:gitattributes[5] encoding support
+	when set to `true`.  This tells 'git-cola' to honor the
+	configured encoding when displaying and applying diffs.
+
 cola.fontdiff::
 	Specifies the font to use for 'git-cola''s diff display.
 

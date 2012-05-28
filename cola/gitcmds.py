@@ -247,12 +247,14 @@ def diff_helper(commit=None,
     elif head and amending and cached:
         argv.append(head)
 
+    encoding = None
     if filename:
         argv.append('--')
         if type(filename) is list:
             argv.extend(filename)
         else:
             argv.append(filename)
+            encoding = config.file_encoding(filename)
 
     start = False
     del_tag = 'deleted file mode '
@@ -281,7 +283,7 @@ def diff_helper(commit=None,
 
     output = StringIO()
 
-    diff = core.decode(diffoutput).split('\n')
+    diff = core.decode(diffoutput, encoding=encoding).split('\n')
     for line in diff:
         if not start and '@@' == line[:2] and '@@' in line[2:]:
             start = True
