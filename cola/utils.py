@@ -237,10 +237,10 @@ def slurp(path):
     return core.decode(slushy)
 
 
-def write(path, contents):
+def write(path, contents, encoding=None):
     """Writes a raw string to a file."""
     fh = open(core.encode(path), 'wb')
-    core.write(fh, core.encode(contents))
+    core.write(fh, core.encode(contents, encoding=encoding))
     fh.close()
 
 

@@ -3,6 +3,7 @@ import re
 
 from cola import utils
 from cola import gitcmds
+from cola import gitcfg
 
 
 class DiffParser(object):
@@ -18,6 +19,7 @@ class DiffParser(object):
         self._diff_spans = []
         self._diff_offsets = []
 
+        self.config = gitcfg.instance()
         self.head = model.head
         self.amending = model.amending()
         self.start = None
@@ -25,6 +27,7 @@ class DiffParser(object):
         self.offset = None
         self.diffs = []
         self.selected = []
+        self.filename = filename
 
         (header, diff) = gitcmds.diff_helper(head=self.head,
                                              amending=self.amending,
@@ -49,7 +52,9 @@ class DiffParser(object):
         """Writes a new diff corresponding to the user's selection."""
         if not noop and which < len(self.diffs):
             diff = self.diffs[which]
-            utils.write(filename, self.header + '\n' + diff + '\n')
+            encoding = self.config.file_encoding(self.filename)
+            utils.write(filename, self.header + '\n' + diff + '\n',
+                        encoding=encoding)
             return True
         else:
             return False
@@ -221,12 +226,13 @@ class DiffParser(object):
         status = 0
         # Process diff selection only
         if selected:
+            encoding = self.config.file_encoding(self.filename)
             for idx in self.selected:
                 contents = self.diff_subset(idx, start, end)
                 if not contents:
                     continue
                 tmpfile = utils.tmp_filename('selection')
-                utils.write(tmpfile, contents)
+                utils.write(tmpfile, contents, encoding=encoding)
                 if apply_to_worktree:
                     stat, out = self.model.apply_diff_to_worktree(tmpfile)
                     output += out

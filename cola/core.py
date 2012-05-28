@@ -35,10 +35,12 @@ def decode(enc, encoding=None):
     return unicode(enc)
 
 
-def encode(unenc):
+def encode(unenc, encoding=None):
     """encode(unencoded_string) returns a string encoded in utf-8
     """
-    return unenc.encode('utf-8', 'replace')
+    if encoding is None:
+        encoding = 'utf-8'
+    return unenc.encode(encoding, 'replace')
 
 
 @interruptable
