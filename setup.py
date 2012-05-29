@@ -4,7 +4,7 @@ import os
 import sys
 import platform
 from glob import glob
-from setuptools import setup
+from distutils.core import setup
 
 # Look for modules in the root
 srcdir = os.path.dirname(os.path.abspath(__file__))
@@ -79,7 +79,6 @@ def _run_setup():
           cmdclass=cmdclass,
           platforms='any',
           data_files = cola_data_files())
-
 
 def cola_data_files():
     data = [

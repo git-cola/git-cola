@@ -28,7 +28,6 @@ all_test_flags = --with-doctest --exclude=sphinxtogithub $(test_flags)
 setup_args = --prefix=$(prefix)
 setup_args += --quiet
 setup_args += --force
-setup_args += --single-version-externally-managed
 setup_args += --install-scripts=$(bindir)
 setup_args += --record=build/MANIFEST
 setup_args += --install-lib=$(coladir)
