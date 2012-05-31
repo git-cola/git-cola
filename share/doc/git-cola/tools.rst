@@ -226,5 +226,4 @@ Clicking on `Amend Last Commit` makes `git cola` amend the previous commit
 instead of creating a new one.  `git cola` loads the previous commit message
 into the commit message editor when this option is selected.
 
-The :ref:`Status <status>`_ tool will display all of the changes for the
-amended commit.
+The `Status` tool will display all of the changes for the amended commit.
