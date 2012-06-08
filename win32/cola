@@ -15,12 +15,35 @@ if test -f "$COLA".pyw; then
 	COLA="$COLA".pyw
 fi
 
-# Find a suitable Python and use it to run cola
-for python in "/c/Python27" "/c/Python26" "/c/Python25"; do
-	if test -d "$python"; then
-		PATH="$PATH":"$python"
-		export PATH
-		exec "$python/python.exe" "$COLA" "$@"
+# The path to python can be specified by setting the
+# PYTHON environment variable.
+if test -z "$PYTHON"
+then
+	PYTHON="$(which pythonw.exe 2>/dev/null)"
+fi
+# The path to python can be specified in the
+# `cola.pythonlocation` git configuration variable.
+if test -z "$PYTHON"
+then
+	PYTHON="$(git config cola.pythonlocation)"
+fi
+if test -n "$PYTHON"
+then
+	exec "$PYTHON" "$COLA" "$@"
+fi
+
+# Find a suitable Python and use it to run cola.
+# If your python is installed in another location then
+# add that path to the top of the list below or
+# set the `cola.pythonlocation` git configuration variable.
+for python in \
+	"/c/Python27" \
+	"/c/Python26" \
+	"/c/Python25"
+do
+	if test -d "$python"
+	then
+		PATH="$python":"$PATH" exec "$python/pythonw.exe" "$COLA" "$@"
 	fi
 done
 exit 1
