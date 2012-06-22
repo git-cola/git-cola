@@ -664,7 +664,10 @@ class ShowUntracked(Command):
     def __init__(self, filenames):
         Command.__init__(self)
         self.new_mode = self.model.mode_untracked
-        self.new_diff_text = utils.slurp(filenames[0])
+        try:
+            self.new_diff_text = utils.slurp(filenames[0])
+        except:
+            self.new_diff_text = ''
 
 
 class SignOff(Command):
