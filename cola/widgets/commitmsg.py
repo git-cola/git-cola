@@ -393,6 +393,10 @@ class CommitMessageTextEdit(HintedTextEdit):
 
         self.installEventFilter(self)
 
+        self.setLineWrapMode(QtGui.QTextEdit.FixedColumnWidth)
+        self.setLineWrapColumnOrWidth(72)
+        self.setWordWrapMode(QtGui.QTextOption.WordWrap)
+
     def eventFilter(self, obj, event):
         if event.type() == QtCore.QEvent.FocusIn:
             height = QtGui.QFontMetrics(self.font()).height() * 3
