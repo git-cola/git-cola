@@ -95,7 +95,8 @@ def prompt(msg, title=None, text=''):
         title = msg
     msg = tr(msg)
     title = tr(title)
-    result = QtGui.QInputDialog.getText(active_window(), msg, title, text=text)
+    result = QtGui.QInputDialog.getText(active_window(), msg, title,
+                                        QtGui.QLineEdit.Normal, text)
     return (unicode(result[0]), result[1])
 
 
