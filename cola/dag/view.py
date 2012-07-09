@@ -1036,7 +1036,7 @@ class Commit(QtGui.QGraphicsItem):
             font = cache.font
         except AttributeError:
             font = cache.font = painter.font()
-            font.setPointSize(9)
+            font.setPointSize(7)
         painter.setFont(font)
         painter.setPen(self.text_pen)
         painter.drawText(inner, self.sha1_text, text_opts)
