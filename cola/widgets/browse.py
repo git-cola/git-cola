@@ -73,7 +73,10 @@ class BrowseDialog(QtGui.QDialog):
         dlg.setModel(dlg_model)
         dlg.setWindowTitle('Browsing %s' % model.ref)
         ctrl = BrowseDialogController(model, dlg)
-        dlg.resize(parent.width()*3/4, 333)
+        if hasattr(parent, 'width'):
+            dlg.resize(parent.width()*3/4, 333)
+        else:
+            dlg.resize(420, 333)
         dlg.show()
         dlg.raise_()
         if dlg.exec_() != dlg.Accepted:
