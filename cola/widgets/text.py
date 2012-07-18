@@ -4,20 +4,26 @@ from PyQt4.QtCore import Qt, SIGNAL
 
 class MonoTextEdit(QtGui.QTextEdit):
     def __init__(self, parent):
-        from cola.prefs import diff_font, tab_width
+        from cola.prefs import diff_font, tabwidth
 
         QtGui.QTextEdit.__init__(self, parent)
+        self._tabwidth = 8
         self.setMinimumSize(QtCore.QSize(1, 1))
         self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.setAcceptRichText(False)
         self.setFont(diff_font())
-        self.set_tab_width(tab_width())
+        self.set_tabwidth(tabwidth())
         self.setCursorWidth(2)
 
-    def set_tab_width(self, tab_width):
-        display_font = self.font()
-        space_width = QtGui.QFontMetrics(display_font).width(' ')
-        self.setTabStopWidth(tab_width * space_width)
+    def tabwidth(self):
+        return self._tabwidth
+
+    def set_tabwidth(self, width):
+        self._tabwidth = width
+        font = self.font()
+        fm = QtGui.QFontMetrics(font)
+        pixels = fm.width('m' * width)
+        self.setTabStopWidth(pixels)
 
     def selected_line(self):
         cursor = self.textCursor()
@@ -162,9 +168,13 @@ class HintedTextEditMixin(HintedTextWidgetMixin):
         cursor = self.textCursor()
         position = cursor.position()
         txt = self.as_unicode()
-        rows = txt[:position].count('\n') + 1
-        cols = cursor.columnNumber()
-        self.emit(SIGNAL('cursorPosition(int,int)'), rows, cols)
+        before = txt[:position]
+        row = before.count('\n')
+        line = before.split('\n')[row]
+        col = cursor.columnNumber()
+        if hasattr(self, 'tabwidth'):
+            col += line[:col].count('\t') * (self.tabwidth() - 1)
+        self.emit(SIGNAL('cursorPosition(int,int)'), row+1, col)
 
 
 class HintedTextEdit(MonoTextEdit, HintedTextEditMixin):

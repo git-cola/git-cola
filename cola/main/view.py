@@ -440,6 +440,7 @@ class MainView(MainWindow):
 
     def _config_updated(self, source, config, value):
         if config == 'cola.fontdiff':
+            # The diff font
             font = QtGui.QFont()
             if not font.fromString(value):
                 return
@@ -449,7 +450,8 @@ class MainView(MainWindow):
 
         elif config == 'cola.tabwidth':
             # variable-tab-width setting
-            self.diff_editor.set_tab_width(value)
+            self.diff_editor.set_tabwidth(value)
+            self.commitmsgeditor.set_tabwidth(value)
 
     def install_config_actions(self):
         """Install .gitconfig-defined actions"""

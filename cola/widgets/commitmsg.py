@@ -9,7 +9,6 @@ from cola import signals
 from cola.qt import create_toolbutton
 from cola.qtutils import add_action
 from cola.qtutils import confirm
-from cola.qtutils import connect_action
 from cola.qtutils import connect_action_bool
 from cola.qtutils import connect_button
 from cola.qtutils import emit
@@ -20,6 +19,7 @@ from cola.qtutils import save_icon
 from cola.qtutils import tr
 from cola.widgets import defs
 from cola.prefs import diff_font
+from cola.prefs import tabwidth
 from cola.dag.model import DAG
 from cola.dag.model import RepoReader
 from cola.widgets.selectcommits import select_commits
@@ -138,6 +138,8 @@ class CommitMessageEditor(QtGui.QWidget):
 
         self.setFocusProxy(self.summary)
 
+        self.set_tabwidth(tabwidth())
+
         # Allow tab to jump from the summary to the description
         self.setTabOrder(self.summary, self.description)
 
@@ -252,6 +254,9 @@ class CommitMessageEditor(QtGui.QWidget):
 
         self.update_actions()
 
+    def set_tabwidth(self, width):
+        self._tabwidth = width
+        self.description.set_tabwidth(width)
     def setFont(self, font):
         """Pass the setFont() calls down to the text widgets"""
         self.summary.setFont(font)
