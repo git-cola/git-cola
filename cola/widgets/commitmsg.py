@@ -6,6 +6,7 @@ from PyQt4.QtCore import SIGNAL
 import cola
 from cola import gitcmds
 from cola import signals
+from cola import utils
 from cola.qt import create_toolbutton
 from cola.qtutils import add_action
 from cola.qtutils import confirm
@@ -20,6 +21,8 @@ from cola.qtutils import tr
 from cola.widgets import defs
 from cola.prefs import diff_font
 from cola.prefs import tabwidth
+from cola.prefs import textwidth
+from cola.prefs import linebreak
 from cola.dag.model import DAG
 from cola.dag.model import RepoReader
 from cola.widgets.selectcommits import select_commits
@@ -33,6 +36,10 @@ class CommitMessageEditor(QtGui.QWidget):
 
         self.model = model
         self.notifying = False
+
+        self._linebreak = None
+        self._textwidth = None
+        self._tabwidth = None
 
         # Actions
         self.signoff_action = add_action(self, 'Sign Off',
@@ -73,8 +80,15 @@ class CommitMessageEditor(QtGui.QWidget):
         self.amend_action = self.actions_menu.addAction(tr('Amend Last Commit'))
         self.amend_action.setCheckable(True)
 
+        # Line wrapping
+        self.actions_menu.addSeparator()
+        self.autowrap_action = self.actions_menu.addAction(
+                tr('Auto-Wrap Lines'))
+        self.autowrap_action.setCheckable(True)
+        self.autowrap_action.setChecked(linebreak())
+
         self.prev_commits_menu = self.actions_menu.addMenu(
-                    'Load Previous Commit Message')
+                tr('Load Previous Commit Message'))
         self.connect(self.prev_commits_menu, SIGNAL('aboutToShow()'),
                      self.build_prev_commits_menu)
 
@@ -101,6 +115,9 @@ class CommitMessageEditor(QtGui.QWidget):
 
         # Broadcast the amend mode
         connect_action_bool(self.amend_action, emit(self, signals.amend_mode))
+
+        # Handle the one-off autowrapping
+        connect_action_bool(self.autowrap_action, self.set_linebreak)
 
         self.model.add_observer(self.model.message_commit_message_changed,
                                 self.set_commit_message)
@@ -139,6 +156,8 @@ class CommitMessageEditor(QtGui.QWidget):
         self.setFocusProxy(self.summary)
 
         self.set_tabwidth(tabwidth())
+        self.set_textwidth(textwidth())
+        self.set_linebreak(linebreak())
 
         # Allow tab to jump from the summary to the description
         self.setTabOrder(self.summary, self.description)
@@ -149,10 +168,13 @@ class CommitMessageEditor(QtGui.QWidget):
     def focus_description(self):
         self.description.setFocus()
 
-    def commit_message(self):
+    def commit_message(self, raw=True):
         """Return the commit message as a unicode string"""
         summary = self.summary.value()
-        description = self.description.value()
+        if raw:
+            description = self.description.value()
+        else:
+            description = self.formatted_description()
         if summary and description:
             return summary + u'\n\n' + description
         elif summary:
@@ -161,6 +183,12 @@ class CommitMessageEditor(QtGui.QWidget):
             return u'\n\n' + description
         else:
             return u''
+
+    def formatted_description(self):
+        text = self.description.value()
+        if not self._linebreak:
+            return text
+        return utils.word_wrap(text, self._tabwidth, self._textwidth)
 
     def commit_message_changed(self, value=None):
         """Update the model when values change"""
@@ -257,6 +285,18 @@ class CommitMessageEditor(QtGui.QWidget):
     def set_tabwidth(self, width):
         self._tabwidth = width
         self.description.set_tabwidth(width)
+
+    def set_textwidth(self, width):
+        self._textwidth = width
+        self.description.set_textwidth(width)
+
+    def set_linebreak(self, brk):
+        self._linebreak = brk
+        self.description.set_linebreak(brk)
+        blocksignals = self.autowrap_action.blockSignals(True)
+        self.autowrap_action.setChecked(brk)
+        self.autowrap_action.blockSignals(blocksignals)
+
     def setFont(self, font):
         """Pass the setFont() calls down to the text widgets"""
         self.summary.setFont(font)
@@ -287,7 +327,7 @@ class CommitMessageEditor(QtGui.QWidget):
                                       error_msg)
             return
 
-        msg = self.commit_message()
+        msg = self.commit_message(raw=False)
 
         if not self.model.staged:
             error_msg = tr(''

@@ -85,6 +85,16 @@ cola.browserdockable::
 cola.tabwidth::
 	The number of columns occupied by a tab character.
 
+cola.linebreak::
+	Whether to automatically break long lines while editing commit
+	messages.  Defaults to 'true'.  This setting is configured using
+	the 'Preferences' dialog, but it can be toggled for one-off usage
+	using the commit message editor's settings sub-menu.
+
+cola.textwidth::
+	The number of columns used for line wrapping.
+	Tabs are counted according to `cola.tabwidth`.
+
 gui.diffcontext::
 	The number of diff context lines used and displayed by 'git-cola'.
 

@@ -25,6 +25,19 @@ class MonoTextEdit(QtGui.QTextEdit):
         pixels = fm.width('m' * width)
         self.setTabStopWidth(pixels)
 
+    def set_textwidth(self, width):
+        font = self.font()
+        fm = QtGui.QFontMetrics(font)
+        pixels = fm.width('m' * (width + 2))
+        self.setLineWrapColumnOrWidth(pixels)
+
+    def set_linebreak(self, brk):
+        if brk:
+            wrapmode = QtGui.QTextEdit.FixedPixelWidth
+        else:
+            wrapmode = QtGui.QTextEdit.NoWrap
+        self.setLineWrapMode(wrapmode)
+
     def selected_line(self):
         cursor = self.textCursor()
         offset = cursor.position()

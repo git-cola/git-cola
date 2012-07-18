@@ -1,6 +1,8 @@
 from cola.prefs.view import PreferencesView
 from cola.prefs.view import diff_font
 from cola.prefs.view import tabwidth
+from cola.prefs.view import textwidth
+from cola.prefs.view import linebreak
 from cola.prefs.model import PreferencesModel
 from cola.prefs.controller import PreferencesController
 

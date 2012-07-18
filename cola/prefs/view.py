@@ -146,6 +146,11 @@ class SettingsFormWidget(FormWidget):
         self.tabwidth.setWrapping(True)
         self.tabwidth.setMaximum(42)
 
+        self.textwidth = QtGui.QSpinBox()
+        self.textwidth.setWrapping(True)
+        self.textwidth.setMaximum(150)
+
+        self.linebreak = QtGui.QCheckBox()
         self.editor = QtGui.QLineEdit()
         self.historybrowser = QtGui.QLineEdit()
         self.difftool = QtGui.QLineEdit()
@@ -156,6 +161,8 @@ class SettingsFormWidget(FormWidget):
         self.add_row('Fixed-Width Font', self.fixed_font)
         self.add_row('Font Size', self.font_size)
         self.add_row('Tab Width', self.tabwidth)
+        self.add_row('Text Width', self.textwidth)
+        self.add_row('Auto-Wrap Lines', self.linebreak)
         self.add_row('Editor', self.editor)
         self.add_row('History Browser', self.historybrowser)
         self.add_row('Diff Tool', self.difftool)
@@ -166,6 +173,8 @@ class SettingsFormWidget(FormWidget):
         self.set_config({
             'cola.savewindowsettings': (self.save_gui_settings, True),
             'cola.tabwidth': (self.tabwidth, 8),
+            'cola.textwidth': (self.textwidth, 72),
+            'cola.linebreak': (self.linebreak, True),
             'diff.tool': (self.difftool, 'xxdiff'),
             'gui.editor': (self.editor, os.getenv('VISUAL', 'gvim')),
             'gui.historybrowser': (self.historybrowser, 'gitk'),
@@ -265,6 +274,14 @@ class PreferencesView(standard.Dialog):
 
 def tabwidth():
     return gitcfg.instance().get('cola.tabwidth', 8)
+
+
+def textwidth():
+    return gitcfg.instance().get('cola.textwidth', 72)
+
+
+def linebreak():
+    return gitcfg.instance().get('cola.linebreak', True)
 
 
 def diff_font_str():

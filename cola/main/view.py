@@ -453,6 +453,14 @@ class MainView(MainWindow):
             self.diff_editor.set_tabwidth(value)
             self.commitmsgeditor.set_tabwidth(value)
 
+        elif config == 'cola.linebreak':
+            # enables automatic line breaks
+            self.commitmsgeditor.set_linebreak(value)
+
+        elif config == 'cola.textwidth':
+            # text width used for line wrapping
+            self.commitmsgeditor.set_textwidth(value)
+
     def install_config_actions(self):
         """Install .gitconfig-defined actions"""
         self._config_task = self._start_config_actions_task()
