@@ -181,17 +181,16 @@ class SettingsFormWidget(FormWidget):
 
     def update_from_config(self):
         FormWidget.update_from_config(self)
-        self.fixed_font.blockSignals(True)
-        self.font_size.blockSignals(True)
 
+        block = self.fixed_font.blockSignals(True)
         font = diff_font()
-        font_size = font.pointSize()
-
         self.fixed_font.setCurrentFont(font)
-        self.font_size.setValue(font_size)
+        self.fixed_font.blockSignals(block)
 
-        self.fixed_font.blockSignals(False)
-        self.font_size.blockSignals(False)
+        block = self.font_size.blockSignals(True)
+        font_size = font.pointSize()
+        self.font_size.setValue(font_size)
+        self.font_size.blockSignals(block)
 
     def font_size_changed(self, size):
         font = self.fixed_font.currentFont()
