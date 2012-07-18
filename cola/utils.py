@@ -250,11 +250,42 @@ def strip_prefix(prefix, string):
     assert string.startswith(prefix)
     return string[len(prefix):]
 
+
 def sanitize(s):
     """Removes shell metacharacters from a string."""
     for c in """ \t!@#$%^&*()\\;,<>"'[]{}~|""":
         s = s.replace(c, '_')
     return s
+
+
+def word_wrap(text, tabwidth, limit):
+    r"""Wrap long lines to the specified limit
+    
+    >>> text = 'a bb ccc dddd\neeeee'
+    >>> word_wrap(text, 8, 2)
+    'a bb\nccc\ndddd\neeeee'
+    >>> word_wrap(text, 8, 4)
+    'a bb\nccc\ndddd\neeeee'
+    
+    """
+    lines = []
+    for line in text.split('\n'):
+        linelen = 0
+        words = []
+        for idx, word in enumerate(line.split(' ')):
+            words.append(word)
+            linelen += len(word.replace('\t', ''))
+            linelen += word.count('\t') * tabwidth
+            if idx > 0:
+                linelen += 1
+            if linelen >= limit:
+                lines.append(' '.join(words))
+                linelen = 0
+                words = []
+        if words:
+            lines.append(' '.join(words))
+
+    return '\n'.join(lines)
 
 
 def shell_split(s):
