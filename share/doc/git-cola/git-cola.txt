@@ -35,31 +35,31 @@ OPTIONS
 SUB-COMMANDS
 ------------
 branch::
-	Launch the 'branch' tool.
+	Create branches.
 
 browse::
-	Launch the 'browser' tool.
+	Browse tracked files.
 
 fetch::
-	Launch the 'fetch' tool.
+	Fetch remote branches.
 
 grep::
-	Launch the 'grep' tool.
+	Use `git grep` to search for content.
 
 pull::
-	Launch the 'pull' tool.
+	Fetch and merge remote branches.
 
 push::
-	Launch the 'push' tool.
+	Push branches to remotes.
 
 search::
-	Launch the 'search' tool.
+	Search for commits.
 
 stash::
-	Launch the 'stash' tool.
+	Stash modifications.
 
 tag::
-	Launch the 'tag' tool.
+	Create tags.
 
 
 CONFIG VARIABLES
@@ -83,7 +83,7 @@ cola.tabwidth::
 	The number of columns occupied by a tab character.
 
 gui.diffcontext::
-	The number of diff context lines used and displayed by 'git-cola'
+	The number of diff context lines used and displayed by 'git-cola'.
 
 gui.editor::
 	The default text editor is controlled by gui.editor.
