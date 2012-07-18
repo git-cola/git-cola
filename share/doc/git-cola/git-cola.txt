@@ -40,6 +40,9 @@ branch::
 browse::
 	Browse tracked files.
 
+config::
+	Configure 'git-cola' settings.
+
 fetch::
 	Fetch remote branches.
 

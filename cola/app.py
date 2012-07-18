@@ -172,6 +172,7 @@ def parse_args(context):
                     'branch',
                     'browse',
                     'classic',
+                    'config',
                     'dag',
                     'fetch',
                     'grep',
@@ -301,9 +302,13 @@ def main(context):
     elif context in ('classic', 'browse'):
         from cola.classic import cola_classic
         view = cola_classic(update=False)
-    # TODO: the calls to update_status() can be done asynchronously
-    # by hooking into the message_updated notification.
+    elif context == 'config':
+        from cola.prefs import preferences
+        ctl = preferences()
+        view = ctl.view
     elif context == 'fetch':
+        # TODO: the calls to update_status() can be done asynchronously
+        # by hooking into the message_updated notification.
         from cola.widgets import remote
         model.update_status()
         view = remote.fetch()
