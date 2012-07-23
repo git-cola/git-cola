@@ -42,6 +42,21 @@ class ColaUtilsTestCase(unittest.TestCase):
         self.assertTrue('foo/bar' in path_set)
         self.assertTrue('foo' in path_set)
 
+    def test_word_wrap(self):
+        tabwidth = 8
+        limit = 16
+        text = """
+12345678901 3 56 8 01 3 5 7
+
+1 3 5"""
+        expect = """
+12345678901 3 56
+8 01 3 5 7
+
+1 3 5"""
+        wrapped = utils.word_wrap(text, tabwidth, limit)
+        self.assertEqual(expect, wrapped)
+
 
 if __name__ == '__main__':
     unittest.main()
