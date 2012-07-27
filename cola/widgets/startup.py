@@ -63,8 +63,12 @@ class StartupDialog(QtGui.QDialog):
         item.setEditable(False)
         self._bookmark_model.appendRow(item)
 
-        for bookmark in self.model.bookmarks:
-            item = QtGui.QStandardItem(bookmark)
+        added = set()
+        for repo in self.model.bookmarks + self.model.recent:
+            if repo in added:
+                continue
+            added.add(repo)
+            item = QtGui.QStandardItem(repo)
             item.setEditable(False)
             self._bookmark_model.appendRow(item)
 
