@@ -260,32 +260,60 @@ def sanitize(s):
 
 def word_wrap(text, tabwidth, limit):
     r"""Wrap long lines to the specified limit
-    
+
     >>> text = 'a bb ccc dddd\neeeee'
     >>> word_wrap(text, 8, 2)
-    'a bb\nccc\ndddd\neeeee'
+    'a\nbb\nccc\ndddd\neeeee'
     >>> word_wrap(text, 8, 4)
     'a bb\nccc\ndddd\neeeee'
-    
+
     """
     lines = []
     for line in text.split('\n'):
         linelen = 0
         words = []
         for idx, word in enumerate(line.split(' ')):
-            words.append(word)
-            linelen += len(word.replace('\t', ''))
-            linelen += word.count('\t') * tabwidth
-            if idx > 0:
+            if words:
                 linelen += 1
-            if linelen >= limit:
-                lines.append(' '.join(words))
-                linelen = 0
-                words = []
+            words.append(word)
+            linelen += tablength(word, tabwidth)
+            if linelen > limit:
+                # Split on dashes
+                if '-' in word:
+                    dash = word.index('-')
+                    prefix = word[:dash+1]
+                    suffix = word[dash+1:]
+                    words.pop()
+                    words.append(prefix)
+                    lines.append(' '.join(words))
+                    words = [suffix]
+                    linelen = tablength(suffix, tabwidth)
+                    continue
+                if len(words) > 1:
+                    words.pop()
+                    lines.append(' '.join(words))
+                    words = [word]
+                    linelen = tablength(word, tabwidth)
+                    continue
+                else:
+                    lines.append(' '.join(words))
+                    words = []
+                    linelen = 0
+                    continue
         if words:
             lines.append(' '.join(words))
 
     return '\n'.join(lines)
+
+
+def tablength(word, tabwidth):
+    """Return length of a word taking tabs into account
+
+    >>> tablength("\\t\\t\\t\\tX", 8)
+    33
+
+    """
+    return len(word.replace('\t', '')) + word.count('\t') * tabwidth
 
 
 def shell_split(s):
