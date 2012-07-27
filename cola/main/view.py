@@ -18,6 +18,7 @@ from cola import qtutils
 from cola import qtcompat
 from cola import qt
 from cola import resources
+from cola import settings
 from cola import stash
 from cola import utils
 from cola import version
@@ -281,6 +282,8 @@ class MainView(MainWindow):
         self.file_menu.addAction(self.menu_preferences)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_open_repo)
+        self.menu_open_recent = self.file_menu.addMenu(tr('Open Recent'))
+        self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_clone_repo)
         self.file_menu.addAction(self.menu_manage_bookmarks)
         self.file_menu.addSeparator()
@@ -412,6 +415,9 @@ class MainView(MainWindow):
         connect_button(self.stage_button, self.stage)
         connect_button(self.unstage_button, self.unstage)
 
+        self.connect(self.menu_open_recent, SIGNAL('aboutToShow()'),
+                     self.build_recent_menu)
+
         self.connect(self.commitmsgeditor, SIGNAL('cursorPosition(int,int)'),
                      self.show_cursor_position)
         self.connect(self, SIGNAL('update'), self._update_callback)
@@ -434,6 +440,16 @@ class MainView(MainWindow):
         """Save state in the settings manager."""
         qtutils.save_state(self)
         MainWindow.closeEvent(self, event)
+
+    def build_recent_menu(self):
+        recent = settings.Settings().recent
+        menu = self.menu_open_recent
+        menu.clear()
+        for r in recent:
+            name = os.path.basename(r)
+            directory = os.path.dirname(r)
+            text = u'%s %s %s' % (name, unichr(0x2192), directory)
+            menu.addAction(text, qtutils.SLOT(signals.open_repo, r))
 
     # Accessors
     mode = property(lambda self: self.model.mode)

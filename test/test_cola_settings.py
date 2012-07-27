@@ -8,7 +8,7 @@ class SettingsTestCase(unittest.TestCase):
     """Tests the cola.settings module"""
     def setUp(self):
         settings.Settings._file = self._file = helper.tmp_path('settings')
-        settings.Settings.load_dot_cola = lambda x, y: None
+        settings.Settings.load_dot_cola = lambda x, y: {}
 
     def tearDown(self):
         if os.path.exists(self._file):
