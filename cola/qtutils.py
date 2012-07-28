@@ -489,9 +489,11 @@ def center_on_screen(widget):
     widget.move(cx - widget.width()/2, cy - widget.height()/2)
 
 
-def save_state(widget):
+def save_state(widget, handler=None):
+    if handler is None:
+        handler = settings.Settings()
     if gitcfg.instance().get('cola.savewindowsettings', True):
-        settings.Settings().save_gui_state(widget)
+        handler.save_gui_state(widget)
 
 
 def export_window_state(widget, state, version):

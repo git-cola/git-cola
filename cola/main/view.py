@@ -438,7 +438,9 @@ class MainView(MainWindow):
     # Qt overrides
     def closeEvent(self, event):
         """Save state in the settings manager."""
-        qtutils.save_state(self)
+        s = settings.Settings()
+        s.add_recent(core.decode(os.getcwd()))
+        qtutils.save_state(self, handler=s)
         MainWindow.closeEvent(self, event)
 
     def build_recent_menu(self):

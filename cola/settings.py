@@ -93,10 +93,6 @@ class Settings(object):
             parent = os.path.dirname(path)
             if not os.path.isdir(parent):
                 os.makedirs(parent)
-
-            self.reload_recent()
-            self.add_recent(core.decode(os.getcwd()))
-
             fp = open(path, 'wb')
             json.dump(self.values, fp, indent=4)
             fp.close()
