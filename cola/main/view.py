@@ -51,6 +51,7 @@ from cola.widgets.compare import compare_branches
 from cola.widgets.createtag import create_tag
 from cola.widgets.createbranch import create_new_branch
 from cola.widgets.diff import DiffEditor
+from cola.widgets.log import LogWidget
 from cola.widgets.recent import browse_recent
 from cola.widgets.status import StatusWidget
 from cola.widgets.search import search
@@ -121,14 +122,15 @@ class MainView(MainWindow):
         self.commitdockwidget.setWidget(self.commitmsgeditor)
 
         # "Console" widget
-        logwidget = qtutils.logger()
+        self.logwidget = LogWidget()
         self.logdockwidget = create_dock('Console', self)
-        self.logdockwidget.setWidget(logwidget)
+        self.logdockwidget.setWidget(self.logwidget)
+        cola.notifier().connect(signals.log_cmd, self.logwidget.log)
 
         # "Diff Viewer" widget
         self.diffdockwidget = create_dock('Diff', self)
-        self.diff_editor = DiffEditor(self.diffdockwidget)
-        self.diffdockwidget.setWidget(self.diff_editor)
+        self.diffeditor = DiffEditor(self.diffdockwidget)
+        self.diffdockwidget.setWidget(self.diffeditor)
 
         # All Actions
         self.menu_unstage_all = add_action(self,
@@ -462,13 +464,13 @@ class MainView(MainWindow):
             font = QtGui.QFont()
             if not font.fromString(value):
                 return
-            qtutils.logger().setFont(font)
-            self.diff_editor.setFont(font)
+            self.logwidget.setFont(font)
+            self.diffeditor.setFont(font)
             self.commitmsgeditor.setFont(font)
 
         elif config == 'cola.tabwidth':
             # variable-tab-width setting
-            self.diff_editor.set_tabwidth(value)
+            self.diffeditor.set_tabwidth(value)
             self.commitmsgeditor.set_tabwidth(value)
 
         elif config == 'cola.linebreak':

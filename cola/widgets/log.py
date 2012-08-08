@@ -6,7 +6,7 @@ from cola import core
 from cola.widgets.text import MonoTextView
 
 
-class LogView(QtGui.QWidget):
+class LogWidget(QtGui.QWidget):
     """A simple dialog to display command logs."""
     def __init__(self, parent=None, output=None):
         QtGui.QWidget.__init__(self, parent)

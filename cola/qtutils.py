@@ -19,14 +19,6 @@ from cola.compat import set
 from cola.decorators import memoize
 
 
-@memoize
-def logger():
-    from cola.widgets.log import LogView
-    logview = LogView()
-    cola.notifier().connect(signals.log_cmd, logview.log)
-    return logview
-
-
 def log(status, output):
     """Sends messages to the log window.
     """
