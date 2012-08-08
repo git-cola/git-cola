@@ -3,10 +3,11 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+import cola
 from cola import core
-from cola import guicmds
 from cola import utils
 from cola import qtutils
+from cola import signals
 from cola.git import git
 from cola.prefs import diff_font
 from cola.widgets import defs
@@ -135,7 +136,7 @@ class Grep(Dialog):
         self.edit_button.setEnabled(status == 0)
 
     def edit(self):
-        guicmds.goto_grep(self.result_txt.selected_line()),
+        goto_grep(self.result_txt.selected_line()),
 
 
 class GrepLineEdit(HintedLineEdit):
@@ -152,9 +153,7 @@ class GrepLineEdit(HintedLineEdit):
 class GrepTextView(HintedTextView):
     def __init__(self, hint, parent):
         HintedTextView.__init__(self, hint, parent)
-        self.goto_action = qtutils.add_action(
-                self, 'Launch Editor',
-                lambda: guicmds.goto_grep(self.selected_line()))
+        self.goto_action = qtutils.add_action(self, 'Launch Editor', self.edit)
         self.goto_action.setShortcut(defs.editor_shortcut)
 
         qtutils.add_action(self, 'Up',
@@ -203,6 +202,9 @@ class GrepTextView(HintedTextView):
         menu.addAction(self.goto_action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
+    def edit(self):
+        goto_grep(self.selected_line())
+
     def page(self, offset):
         rect = self.cursorRect()
         x = rect.x()
@@ -229,6 +231,14 @@ class GrepTextView(HintedTextView):
             rect = self.cursorRect()
             painter = QtGui.QPainter(self.viewport())
             painter.fillRect(rect, Qt.SolidPattern)
+
+
+def goto_grep(line):
+    """Called when Search -> Grep's right-click 'goto' action."""
+    filename, line_number, contents = line.split(':', 2)
+    filename = core.encode(filename)
+    cola.notifier().broadcast(signals.edit, [filename],
+                              line_number=line_number)
 
 
 def run_grep(txt=None, parent=None):

@@ -10,6 +10,7 @@ from cola import signals
 from cola.git import git
 from cola.widgets.browse import BrowseDialog
 from cola.widgets.combodlg import ComboDialog
+from cola.widgets.grep import run_grep
 from cola.widgets.selectcommits import select_commits
 
 
@@ -181,17 +182,8 @@ def diff_expression():
     difftool.diff_expression(qtutils.active_window(), ref)
 
 
-def goto_grep(line):
-    """Called when Search -> Grep's right-click 'goto' action."""
-    filename, line_number, contents = line.split(':', 2)
-    filename = core.encode(filename)
-    cola.notifier().broadcast(signals.edit, [filename], line_number=line_number)
-
-
 def grep():
     """Prompt and use 'git grep' to find the content."""
-    from cola.widgets.grep import run_grep
-
     widget = run_grep(parent=qtutils.active_window())
     widget.show()
     widget.raise_()
