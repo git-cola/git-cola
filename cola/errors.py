@@ -8,4 +8,4 @@ class UsageError(ColaError):
     def __init__(self, title, message):
         ColaError.__init__(self, message)
         self.title = title
-        self.message = message
+        self.msg = message

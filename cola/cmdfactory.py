@@ -89,7 +89,7 @@ class CommandFactory(object):
         try:
             result = cmdobj.do()
         except errors.UsageError, e:
-            self.prompt_user(signals.information, e.title, e.message)
+            self.prompt_user(signals.information, e.title, e.msg)
             return False, None
         else:
             return True, result
