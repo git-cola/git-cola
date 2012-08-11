@@ -187,7 +187,7 @@ class DiffEditor(DiffTextEdit):
                                'These changes cannot be recovered.',
                                'Revert the uncommitted changes?',
                                'Revert Section',
-                               default=False,
+                               default=True,
                                icon=qtutils.icon('undo.svg')):
             return
         self.process_diff_selection(staged=False, apply_to_worktree=True,
@@ -200,7 +200,7 @@ class DiffEditor(DiffTextEdit):
                                'These changes cannot be recovered.',
                                'Revert the uncommitted changes?',
                                'Revert Selected Lines',
-                               default=False,
+                               default=True,
                                icon=qtutils.icon('undo.svg')):
             return
         self.process_diff_selection(staged=False, apply_to_worktree=True,

@@ -523,7 +523,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         ok_txt = 'Delete Files'
 
         if qtutils.confirm(title, msg, info_txt, ok_txt,
-                           default=False,
+                           default=True,
                            icon=qtutils.discard_icon()):
             cola.notifier().broadcast(signals.delete, files)
 
@@ -541,7 +541,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                    '\nThese changes cannot be recovered.',
                                    'Revert the unstaged changes?',
                                    'Revert Unstaged Changes',
-                                   default=False,
+                                   default=True,
                                    icon=qtutils.icon('undo.svg')):
                 return
             args = []
@@ -561,7 +561,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                    '\nThese changes cannot be recovered.',
                                    'Revert the uncommitted changes?',
                                    'Revert Uncommitted Changes',
-                                   default=False,
+                                   default=True,
                                    icon=qtutils.icon('undo.svg')):
                 return
             cola.notifier().broadcast(signals.checkout,

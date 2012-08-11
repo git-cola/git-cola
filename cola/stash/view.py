@@ -198,7 +198,7 @@ class StashView(Dialog):
                                'Recovering a dropped stash is not possible.',
                                'Drop the "%s" stash?' % name,
                                'Drop Stash',
-                               default=False,
+                               default=True,
                                icon=qtutils.discard_icon()):
             return
         self.emit(SIGNAL(drop_stash), selection)

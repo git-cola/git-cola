@@ -300,7 +300,7 @@ class RepoTreeView(standard.TreeView):
                                '\nThese changes cannot be recovered.',
                                'Revert the uncommitted changes?',
                                'Revert Uncommitted Changes',
-                               default=False,
+                               default=True,
                                icon=qtutils.icon('undo.svg')):
             return
         paths = self.selected_tracked_paths()
