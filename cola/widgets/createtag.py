@@ -6,7 +6,6 @@ import cola
 from cola import qt
 from cola import qtutils
 from cola import signals
-from cola.prefs import diff_font
 from cola.qtutils import connect_button
 from cola.qtutils import critical
 from cola.qtutils import information
@@ -126,7 +125,7 @@ class CreateTag(standard.Dialog):
             critical('Missing Name', 'Please specify a name for the new tag.')
             return
         elif (sign_tag and not tag_msg and
-            not qtutils.confirm('Missing Tag Message',
+                not qtutils.confirm('Missing Tag Message',
                                     'Tag-signing was requested but the tag '
                                     'message is empty.',
                                     'An unsigned, lightweight tag will be '
