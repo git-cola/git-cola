@@ -514,7 +514,11 @@ class Mergetool(Command):
     def do(self):
         if not self.paths:
             return
-        utils.fork(['git', 'mergetool', '--no-prompt', '--'] + self.paths)
+        if utils.is_win32():
+            utils.fork(['git', 'mergetool', '--no-prompt', '--'] + self.paths)
+        else:
+            utils.fork(['xterm', '-e',
+                        'git', 'mergetool', '--no-prompt', '--'] + self.paths)
 
 
 class OpenDefaultApp(Command):
