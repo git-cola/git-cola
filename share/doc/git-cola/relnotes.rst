@@ -1,3 +1,54 @@
+git-cola v1.8.0
+===============
+Usability, bells and whistles
+-----------------------------
+* `git cola` learned to honor `.gitattributes` when showing and
+  interactively applying diffs.  This makes it possible to store
+  files in git using a non-utf-8 encoding and `git cola` will
+  properly accept them.  This must be enabled by settings
+  `cola.fileattributes` to true, as it incurs a small performance
+  penalty.
+
+  http://github.com/git-cola/git-cola/issues/closed#issue/96
+
+* `git cola` now wraps commit messages at 72 columns automatically.
+  This is configurable using the `cola.linebreak` variable to enable/disable
+  the feature, and `cola.textwidth` to configure the limit.
+
+  http://github.com/git-cola/git-cola/issues/closed#issue/133
+
+* A new "Open Recent" sub-menu was added to the "File" menu.
+  This makes it easy to open a recently-edited repository.
+
+  http://github.com/git-cola/git-cola/issues/closed#issue/135
+
+* We now show a preview for untracked files when they are clicked
+  using the `Status` tool.
+* A new "Open Using Default Application" action was added to the
+  `Status` tool.  It is activated using either `Spacebar` or through
+  the context menu.  This action uses `xdg-open` on Linux and
+  `open` on Mac OS X.
+* A new "Open Parent Directory" action was added to the `Status` tool.
+  It is activated using either `Shift+Spacebar` or through the
+  context menu.
+* `git dag` learned to honor the `log.date` git configuration variable.
+  This makes the date display follow whatever format the user has
+  configured.
+* A new `git cola config` sub-command was added for quickly
+  tweaking `git cola`'s git configuration settings.
+* Some small usability tweaks -- some user confirmation prompts
+  were defaulting to "Cancel" when they should have been defaulting
+  to the affirmative option instead.
+
+Fixes
+-----
+* Properly handle arbitrarily-named branches.
+* We went back to launching `git mergetool` using an xterm.
+  The reason is that there are a couple of places where `git mergetool`
+  requires a terminal for user interaction not covered by `--no-prompt`.
+* We now properly handle an edge case when applying short diffs at
+  the start of a file.
+
 git-cola v1.7.7
 ===============
 Usability, bells and whistles
