@@ -26,7 +26,7 @@ class DiffParser(object):
         self.start = None
         self.end = None
         self.offset = None
-        self.diffs = []
+        self.diff_sel = []
         self.selected = []
         self.filename = filename
 
@@ -51,8 +51,8 @@ class DiffParser(object):
 
     def write_diff(self,filename,which,selected=False,noop=False):
         """Writes a new diff corresponding to the user's selection."""
-        if not noop and which < len(self.diffs):
-            diff = self.diffs[which]
+        if not noop and which < len(self.diff_sel):
+            diff = self.diff_sel[which]
             encoding = self.config.file_encoding(self.filename)
             utils.write(filename, self.header + '\n' + diff + '\n',
                         encoding=encoding)
@@ -147,13 +147,13 @@ class DiffParser(object):
     def set_diff_to_offset(self, offset):
         """Sets the diff selection to be the hunk at a particular offset."""
         self.offset = offset
-        self.diffs, self.selected = self.diff_for_offset(offset)
+        self.diff_sel, self.selected = self.diff_for_offset(offset)
 
     def set_diffs_to_range(self, start, end):
         """Sets the diff selection to be a range of hunks."""
         self.start = start
         self.end = end
-        self.diffs, self.selected = self.diffs_for_range(start,end)
+        self.diff_sel, self.selected = self.diffs_for_range(start,end)
 
     def diff_for_offset(self, offset):
         """Returns the hunks for a particular offset."""
@@ -269,7 +269,7 @@ class DiffParser(object):
                 os.unlink(tmpfile)
         # Process a complete hunk
         else:
-            for idx, diff in enumerate(self.diffs):
+            for idx, diff in enumerate(self.diff_sel):
                 tmpfile = utils.tmp_filename('patch%02d' % idx)
                 if not self.write_diff(tmpfile,idx):
                     continue
