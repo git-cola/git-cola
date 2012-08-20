@@ -256,10 +256,7 @@ def diff_helper(commit=None,
             argv.append(filename)
             encoding = config.file_encoding(filename)
 
-    start = False
-    del_tag = 'deleted file mode '
 
-    headers = []
     if filename is not None:
         deleted = cached and not os.path.exists(encode(filename))
     else:
@@ -275,12 +272,23 @@ def diff_helper(commit=None,
         else:
             return ''
 
+    return extract_diff_header(status, deleted, encoding,
+                               with_diff_header, suppress_header, diffoutput)
+
+
+def extract_diff_header(status, deleted, encoding,
+                        with_diff_header, suppress_header, diffoutput):
+    encode = core.encode
+    headers = []
+
     if diffoutput.startswith('Submodule'):
         if with_diff_header:
             return ('', diffoutput)
         else:
             return diffoutput
 
+    start = False
+    del_tag = 'deleted file mode '
     output = StringIO()
 
     diff = core.decode(diffoutput, encoding=encoding).split('\n')
