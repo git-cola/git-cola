@@ -1,0 +1,9 @@
+diff --git b/foo bar/a a/foo bar/a
+index 5934e89..5716ca5 100644
+--- b/foo bar/a	
++++ a/foo bar/a	
+@@ -1,4 +1 @@
+ bar
+-a
+-b
+-c

@@ -1,0 +1,61 @@
+diff --git b/cola/diffparse.py a/cola/diffparse.py
+index 33a892e..a680f4b 100644
+--- b/cola/diffparse.py
++++ a/cola/diffparse.py
+@@ -6,21 +6,10 @@ from cola import gitcmds
+ from cola import gitcfg
+ 
+ 
+-class DiffSource(object):
+-    def get(self, head, amending, filename, cached, reverse):
+-        return gitcmds.diff_helper(head=head,
+-                                   amending=amending,
+-                                   filename=filename,
+-                                   with_diff_header=True,
+-                                   cached=cached,
+-                                   reverse=reverse)
+-
+-
+ class DiffParser(object):
+     """Handles parsing diff for use by the interactive index editor."""
+     def __init__(self, model, filename='',
+-                 cached=True, reverse=False,
+-                 diff_source=None):
++                 cached=True, reverse=False):
+ 
+         self._header_re = re.compile('^@@ -(\d+),(\d+) \+(\d+),(\d+) @@.*')
+         self._header_start_re = re.compile('^@@ -(\d+) \+(\d+),(\d+) @@.*')
+@@ -40,11 +29,13 @@ class DiffParser(object):
+         self.diff_sel = []
+         self.selected = []
+         self.filename = filename
+-        self.diff_source = diff_source or DiffSource()
+ 
+-        (header, diff) = self.diff_source.get(self.head, self.amending,
+-                                              filename, cached,
+-                                              cached or reverse)
++        (header, diff) = gitcmds.diff_helper(head=self.head,
++                                             amending=self.amending,
++                                             filename=filename,
++                                             with_diff_header=True,
++                                             cached=cached,
++                                             reverse=cached or reverse)
+         self.model = model
+         self.diff = diff
+         self.header = header
+@@ -52,10 +43,11 @@ class DiffParser(object):
+ 
+         # Always index into the non-reversed diff
+         self.fwd_header, self.fwd_diff = \
+-                self.diff_source.get(self.head,
+-                                     self.amending,
+-                                     filename,
+-                                     cached, False)
++            gitcmds.diff_helper(head=self.head,
++                                amending=self.amending,
++                                filename=filename,
++                                with_diff_header=True,
++                                cached=cached)
+ 
+     def write_diff(self,filename,which,selected=False,noop=False):
+         """Writes a new diff corresponding to the user's selection."""
