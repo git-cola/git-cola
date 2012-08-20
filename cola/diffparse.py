@@ -12,6 +12,7 @@ class DiffParser(object):
                  cached=True, reverse=False):
 
         self._header_re = re.compile('^@@ -(\d+),(\d+) \+(\d+),(\d+) @@.*')
+        self._header_start_re = re.compile('^@@ -(\d+) \+(\d+),(\d+) @@.*')
         self._headers = []
 
         self._idx = -1
@@ -111,14 +112,27 @@ class DiffParser(object):
                 else:
                     newdiff.append(line)
 
-        new_count = self._headers[diff][1] + adds - deletes
-        if new_count != self._headers[diff][3]:
-            header = '@@ -%d,%d +%d,%d @@' % (
-                            self._headers[diff][0],
-                            self._headers[diff][1],
-                            self._headers[diff][2],
-                            new_count)
-            newdiff[0] = header
+        diff_header = self._headers[diff]
+        diff_header_len = len(diff_header)
+
+        if diff_header_len == 4:
+            new_count = diff_header[1] + adds - deletes
+            if new_count != diff_header[3]:
+                header = '@@ -%d,%d +%d,%d @@' % (
+                                diff_header[0],
+                                diff_header[1],
+                                diff_header[2],
+                                new_count)
+                newdiff[0] = header
+        elif diff_header_len == 3:
+            new_count = adds - deletes
+            if new_count != diff_header[2]:
+                header = '@@ -%d +%d,%d @@' % (
+                                diff_header[0],
+                                diff_header[1],
+                                new_count)
+                newdiff[0] = header
+
 
         return (self.header + '\n' + '\n'.join(newdiff) + '\n')
 
@@ -175,6 +189,9 @@ class DiffParser(object):
 
         for idx, line in enumerate(diff.split('\n')):
             match = self._header_re.match(line)
+            match_start = None
+            if match is None:
+                match_start = self._header_start_re.match(line)
             if match:
                 self._headers.append([
                         int(match.group(1)),
@@ -182,8 +199,16 @@ class DiffParser(object):
                         int(match.group(3)),
                         int(match.group(4))
                         ])
-                self._diffs.append( [line] )
 
+            elif match_start:
+                self._headers.append([
+                        int(match_start.group(1)),
+                        int(match_start.group(2)),
+                        int(match_start.group(3))
+                        ])
+
+            if match or match_start:
+                self._diffs.append( [line] )
                 line_len = len(line) + 1 #\n
                 self._diff_spans.append([total_offset,
                         total_offset + line_len])
