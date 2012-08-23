@@ -110,3 +110,14 @@ If you are developing *git-cola* on Windows you can run it from its
 source tree by using `pythonw.exe`.
 
     pythonw.exe bin/git-cola
+
+If you want to build the `git-cola Installer` yourself run the provided script
+
+    win32/create-installer.sh
+
+You have to make sure that the file
+
+    /share/InnoSetup/ISCC.exe
+
+exists, though. That is normally the case when you run the *msysGit bash* and not the
+*Git for Windows bash* (look [here](http://msysgit.github.com/) for the differences).
