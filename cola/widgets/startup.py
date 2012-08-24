@@ -64,7 +64,9 @@ class StartupDialog(QtGui.QDialog):
         self._bookmark_model.appendRow(item)
 
         added = set()
-        for repo in self.model.bookmarks + self.model.recent:
+        all_repos = self.model.bookmarks + self.model.recent
+
+        for repo in all_repos:
             if repo in added:
                 continue
             added.add(repo)
@@ -79,7 +81,7 @@ class StartupDialog(QtGui.QDialog):
         self._bookmark_list.setAlternatingRowColors(True)
         self._bookmark_list.setModel(self._bookmark_model)
 
-        if not self.model.bookmarks:
+        if not all_repos:
             self._bookmark_label.setMinimumHeight(1)
             self._bookmark_list.setMinimumHeight(1)
             self._bookmark_label.hide()
