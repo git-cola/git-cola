@@ -49,14 +49,6 @@ def setup_environment():
     # Spoof an X11 display for SSH
     os.environ.setdefault('DISPLAY', ':0')
 
-    # Provide an SSH_ASKPASS fallback
-    if sys.platform == 'darwin':
-        os.environ.setdefault('SSH_ASKPASS',
-                              resources.share('bin', 'ssh-askpass-darwin'))
-    else:
-        os.environ.setdefault('SSH_ASKPASS',
-                              resources.share('bin', 'ssh-askpass'))
-
     # Setup the path so that git finds us when we run 'git cola'
     path_entries = os.environ.get('PATH').split(os.pathsep)
     bindir = os.path.dirname(os.path.abspath(__file__))
@@ -68,6 +60,24 @@ def setup_environment():
     # We don't ever want a pager
     os.environ['GIT_PAGER'] = ''
     os.putenv('GIT_PAGER', '')
+
+    # Setup *SSH_ASKPASS
+    git_askpass = os.getenv('GIT_ASKPASS')
+    ssh_askpass = os.getenv('SSH_ASKPASS')
+    if git_askpass:
+        askpass = git_askpass
+    elif ssh_askpass:
+        askpass = ssh_askpass
+    elif sys.platform == 'darwin':
+        askpass = resources.share('bin', 'ssh-askpass-darwin')
+    else:
+        askpass = resources.share('bin', 'ssh-askpass')
+
+    os.environ['GIT_ASKPASS'] = askpass
+    os.putenv('GIT_ASKPASS', askpass)
+
+    os.environ['SSH_ASKPASS'] = askpass
+    os.putenv('SSH_ASKPASS', askpass)
 
     # --- >8 --- >8 ---
     # Git v1.7.10 Release Notes
