@@ -36,7 +36,7 @@ class RecentFileDialog(standard.Dialog):
         self.setWindowTitle(self.tr('Recently Modified Files'))
         self.setWindowModality(QtCore.Qt.WindowModal)
 
-        count = 1
+        count = 8
         self.update_thread = UpdateFileListThread(count)
 
         self.count = QtGui.QSpinBox()
