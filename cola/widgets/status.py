@@ -7,8 +7,9 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
-from cola import signals
+from cola import difftool
 from cola import qtutils
+from cola import signals
 from cola import utils
 from cola.compat import set
 from cola.qtutils import SLOT
@@ -87,7 +88,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 defs.stage_shortcut)
 
         self.launch_difftool = qtutils.add_action(self,
-                'Launch Diff Tool', self._launch_difftool,
+                'Launch Diff Tool', difftool.run,
                 defs.difftool_shortcut)
         self.launch_difftool.setIcon(qtutils.icon('git.svg'))
 
@@ -745,18 +746,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             unstaged.extend(s.untracked)
         if unstaged:
             cola.notifier().broadcast(signals.stage, unstaged)
-
-    def _launch_difftool(self):
-        staged, modified, unmerged, untracked = self.selection()
-        if staged:
-            selection = staged
-        elif unmerged:
-            selection = unmerged
-        elif modified:
-            selection = modified
-        else:
-            return
-        cola.notifier().broadcast(signals.difftool, bool(staged), selection)
 
     def _launch_editor(self):
         selection = self.selected_group()
