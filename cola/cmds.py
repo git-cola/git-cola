@@ -395,16 +395,8 @@ class Difftool(Command):
         self.filenames = filenames
 
     def do(self):
-        if not self.filenames:
-            return
-        args = []
-        if self.staged:
-            args.append('--cached')
-        if self.model.head != 'HEAD':
-            args.append(self.model.head)
-        args.append('--')
-        args.extend(self.filenames)
-        difftool.launch(args)
+        difftool.launch_with_head(self.filenames,
+                                  self.staged, self.model.head)
 
 
 class Edit(Command):
