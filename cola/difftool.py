@@ -3,11 +3,39 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+import cola
 from cola import utils
 from cola import qtutils
 from cola import gitcmds
 from cola.widgets import defs
 from cola.widgets import standard
+
+
+def run():
+    s = cola.selection()
+    if s.staged:
+        selection = s.staged
+    elif s.unmerged:
+        selection = s.unmerged
+    elif s.modified:
+        selection = s.modified
+    elif s.untracked:
+        selection = s.untracked
+    else:
+        return
+    model = cola.model()
+    launch_with_head(selection, bool(s.staged), model.head)
+
+
+def launch_with_head(filenames, staged, head):
+    args = []
+    if staged:
+        args.append('--cached')
+    if head != 'HEAD':
+        args.append(head)
+    args.append('--')
+    args.extend(filenames)
+    launch(args)
 
 
 def launch(args):
