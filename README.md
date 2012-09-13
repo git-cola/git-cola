@@ -119,5 +119,6 @@ You have to make sure that the file
 
     /share/InnoSetup/ISCC.exe
 
-exists, though. That is normally the case when you run the *msysGit bash* and not the
-*Git for Windows bash* (look [here](http://msysgit.github.com/) for the differences).
+exists. That is normally the case when you run the *msysGit bash* and
+not the *Git for Windows bash* (look [here](http://msysgit.github.com/)
+for the differences).
