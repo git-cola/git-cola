@@ -24,6 +24,10 @@ def single_selection():
     return selection_model().single_selection()
 
 
+def selected_group():
+    return selection_model().group()
+
+
 def filename():
     return selection_model().filename()
 
@@ -79,3 +83,17 @@ class SelectionModel(Observable):
             return paths[0]
         else:
             return None
+
+    def group(self):
+        """A list of selected files in various states of being"""
+        selection = []
+        s = self.selection()
+        if s.staged:
+            selection = s.staged
+        elif s.unmerged:
+            selection = s.unmerged
+        elif s.modified:
+            selection = s.modified
+        elif s.untracked:
+            selection = s.untracked
+        return selection
