@@ -7,11 +7,12 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
-from cola import difftool
+from cola import cmds
 from cola import qtutils
 from cola import signals
 from cola import utils
 from cola.compat import set
+from cola.cmds import run
 from cola.qtutils import SLOT
 from cola.widgets import defs
 from cola.models.selection import State
@@ -88,13 +89,15 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 defs.stage_shortcut)
 
         self.launch_difftool = qtutils.add_action(self,
-                'Launch Diff Tool', difftool.run,
-                defs.difftool_shortcut)
+                cmds.LaunchDifftool.NAME,
+                run(cmds.LaunchDifftool),
+                cmds.LaunchDifftool.SHORTCUT)
         self.launch_difftool.setIcon(qtutils.icon('git.svg'))
 
         self.launch_editor = qtutils.add_action(self,
-                'Launch Editor', self._launch_editor,
-                defs.editor_shortcut)
+                cmds.LaunchEditor.NAME,
+                run(cmds.LaunchEditor),
+                cmds.LaunchEditor.SHORTCUT)
         self.launch_editor.setIcon(qtutils.options_icon())
 
         if not utils.is_win32():
@@ -378,16 +381,15 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def _create_staged_context_menu(self, menu, s):
         action = menu.addAction(qtutils.options_icon(),
-                                self.tr('Launch Editor'),
-                                SLOT(signals.edit, self.staged()))
-        action.setShortcut(defs.editor_shortcut)
+                                self.tr(cmds.LaunchEditor.NAME),
+                                run(cmds.LaunchEditor))
+        action.setShortcut(cmds.LaunchEditor.SHORTCUT)
 
         if s.staged[0] not in self.m.submodules:
             action = menu.addAction(qtutils.git_icon(),
-                                    self.tr('Launch Diff Tool'),
-                                    SLOT(signals.difftool, True,
-                                         self.staged()))
-            action.setShortcut(defs.difftool_shortcut)
+                                    self.tr(cmds.LaunchDifftool.NAME),
+                                    run(cmds.LaunchDifftool))
+            action.setShortcut(cmds.LaunchDifftool.SHORTCUT)
 
         if self.m.unstageable():
             menu.addSeparator()
@@ -437,9 +439,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         action.setShortcut(defs.stage_shortcut)
         menu.addSeparator()
         action = menu.addAction(qtutils.options_icon(),
-                                self.tr('Launch Editor'),
-                                SLOT(signals.edit, self.unmerged()))
-        action.setShortcut(defs.editor_shortcut)
+                                self.tr(cmds.LaunchEditor.NAME),
+                                run(cmds.LaunchEditor))
+        action.setShortcut(cmds.LaunchEditor.SHORTCUT)
 
         if not utils.is_win32():
             menu.addSeparator()
@@ -468,16 +470,15 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                 os.path.abspath(s.modified[0])))
         elif self.unstaged():
             action = menu.addAction(qtutils.options_icon(),
-                                    self.tr('Launch Editor'),
-                                    SLOT(signals.edit, self.unstaged()))
-            action.setShortcut(defs.editor_shortcut)
+                                    self.tr(cmds.LaunchEditor.NAME),
+                                    run(cmds.LaunchEditor))
+            action.setShortcut(cmds.Edit.SHORTCUT)
 
         if s.modified and self.m.stageable() and not modified_submodule:
             action = menu.addAction(qtutils.git_icon(),
-                                    self.tr('Launch Diff Tool'),
-                                    SLOT(signals.difftool, False,
-                                         self.modified()))
-            action.setShortcut(defs.difftool_shortcut)
+                                    self.tr(cmds.LaunchDifftool.NAME),
+                                    run(cmds.LaunchDifftool))
+            action.setShortcut(cmds.LaunchDifftool.SHORTCUT)
 
         if self.m.stageable():
             menu.addSeparator()
@@ -746,12 +747,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             unstaged.extend(s.untracked)
         if unstaged:
             cola.notifier().broadcast(signals.stage, unstaged)
-
-    def _launch_editor(self):
-        selection = self.selected_group()
-        if not selection:
-            return
-        cola.notifier().broadcast(signals.edit, selection)
 
     def _open_using_default_app(self):
         selection = self.selected_group()

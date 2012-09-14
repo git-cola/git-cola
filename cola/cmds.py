@@ -401,12 +401,17 @@ class Difftool(Command):
 
 class Edit(Command):
     """Edit a file using the configured gui.editor."""
+    NAME = 'Edit'
+    SHORTCUT = 'Ctrl+E'
+
     def __init__(self, filenames, line_number=None):
         Command.__init__(self)
         self.filenames = filenames
         self.line_number = line_number
 
     def do(self):
+        if not self.filenames:
+            return
         filename = self.filenames[0]
         if not os.path.exists(filename):
             return
@@ -443,6 +448,27 @@ class FormatPatch(Command):
     def do(self):
         status, output = gitcmds.format_patchsets(self.to_export, self.revs)
         _notifier.broadcast(signals.log_cmd, status, output)
+
+
+class LaunchDifftool(BaseCommand):
+    NAME = 'Launch Diff Tool'
+    SHORTCUT = 'Ctrl+D'
+
+    def __init__(self):
+        BaseCommand.__init__(self)
+
+    def do(self):
+        difftool.run()
+
+
+class LaunchEditor(Edit):
+    NAME = 'Launch Editor'
+    SHORTCUT = 'Ctrl+E'
+
+    def __init__(self):
+        s = cola.selection()
+        allfiles = s.staged + s.unmerged + s.modified + s.untracked
+        Edit.__init__(self, allfiles)
 
 
 class LoadCommitMessage(Command):
@@ -876,19 +902,25 @@ class VisualizeRevision(Command):
 
 def run(cls, *args, **opts):
     """
-    Returns a callback that broadcasts a message over the notifier.
+    Returns a callback that runs a command
 
-    If the caller of SLOT() provides args or opts then those are
+    If the caller of run() provides args or opts then those are
     used instead of the ones provided by the invoker of the callback.
 
     """
-    def broadcast(*local_args, **local_opts):
-        if args or opts:
-            cola.notifier().broadcast(cls.NAME, *args, **opts)
-        else:
-            cola.notifier().broadcast(cls.NAME, *local_args, **local_opts)
-    return broadcast
+    if args or opts:
+        cls(*args, **opts).do()
+        return
 
+    def runner(*local_args, **local_opts):
+        cls(*local_args, **local_opts).do()
+
+    return runner
+
+
+def do(cls, *args, **opts):
+    """Run a command in-place"""
+    cls(*args, **opts).do()
 
 def register():
     """
@@ -913,9 +945,11 @@ def register():
         signals.diff_staged: DiffStaged,
         signals.diffstat: Diffstat,
         signals.difftool: Difftool,
-        signals.edit: Edit,
+        Edit.NAME: Edit,
         signals.format_patch: FormatPatch,
         signals.ignore: Ignore,
+        LaunchDifftool.NAME: LaunchDifftool,
+        LaunchEditor.NAME: LaunchEditor,
         signals.load_commit_message: LoadCommitMessage,
         signals.load_commit_template: LoadCommitTemplate,
         signals.load_previous_message: LoadPreviousMessage,

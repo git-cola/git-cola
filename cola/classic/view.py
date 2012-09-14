@@ -5,9 +5,11 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
+from cola import cmds
 from cola import qtutils
 from cola import signals
 from cola import utils
+from cola.cmds import run
 from cola.models.selection import State
 from cola.widgets import defs
 from cola.widgets import standard
@@ -94,10 +96,10 @@ class RepoTreeView(standard.TreeView):
                                     self.untrack_selected)
 
         self.action_difftool =\
-                self._create_action('View Diff...',
+                self._create_action(cmds.LaunchDifftool.NAME,
                                     'Launch git-difftool on the current path.',
-                                    self.difftool,
-                                    defs.difftool_shortcut)
+                                    run(cmds.LaunchDifftool),
+                                    cmds.LaunchDifftool.SHORTCUT)
         self.action_difftool_predecessor =\
                 self._create_action('Diff Against Predecessor...',
                                     'Launch git-difftool against previous versions.',
@@ -109,10 +111,10 @@ class RepoTreeView(standard.TreeView):
                                     self.revert,
                                     'Ctrl+Z')
         self.action_editor =\
-                self._create_action('Launch Editor',
+                self._create_action(cmds.LaunchEditor.NAME,
                                     'Edit selected path(s).',
-                                    self.editor,
-                                    defs.editor_shortcut)
+                                    run(cmds.LaunchEditor),
+                                    cmds.LaunchDifftool.SHORTCUT)
 
     def size_columns(self):
         """Set the column widths."""
@@ -282,12 +284,6 @@ class RepoTreeView(standard.TreeView):
         cola.notifier().broadcast(signals.untrack,
                                   self.selected_tracked_paths())
 
-    def difftool(self):
-        """Signal that we should launch difftool on a path."""
-        cola.notifier().broadcast(signals.difftool,
-                                  False,
-                                  self.selected_tracked_paths())
-
     def difftool_predecessor(self):
         """Diff paths against previous versions."""
         paths = self.selected_tracked_paths()
@@ -306,10 +302,6 @@ class RepoTreeView(standard.TreeView):
         paths = self.selected_tracked_paths()
         cola.notifier().broadcast(signals.checkout,
                                   ['HEAD', '--'] + paths)
-
-    def editor(self):
-        """Signal that we should edit selected paths using an external editor."""
-        cola.notifier().broadcast(signals.edit, self.selected_paths())
 
     def current_path(self):
         """Return the path for the current item."""

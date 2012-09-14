@@ -3,11 +3,11 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import cola
+from cola import cmds
 from cola import core
 from cola import utils
 from cola import qtutils
-from cola import signals
+from cola.cmds import do
 from cola.git import git
 from cola.prefs import diff_font
 from cola.widgets import defs
@@ -58,7 +58,7 @@ class Grep(Dialog):
         self.edit_button = QtGui.QPushButton(self.tr('Edit'))
         self.edit_button.setIcon(qtutils.open_file_icon())
         self.edit_button.setEnabled(False)
-        self.edit_button.setShortcut(defs.editor_shortcut)
+        self.edit_button.setShortcut(cmds.Edit.SHORTCUT)
 
         self.shell_checkbox = QtGui.QCheckBox(self.tr('Shell arguments'))
         self.shell_checkbox.setToolTip(
@@ -154,7 +154,7 @@ class GrepTextView(HintedTextView):
     def __init__(self, hint, parent):
         HintedTextView.__init__(self, hint, parent)
         self.goto_action = qtutils.add_action(self, 'Launch Editor', self.edit)
-        self.goto_action.setShortcut(defs.editor_shortcut)
+        self.goto_action.setShortcut(cmds.Edit.SHORTCUT)
 
         qtutils.add_action(self, 'Up',
                 lambda: self.move(QtGui.QTextCursor.Up),
@@ -237,8 +237,7 @@ def goto_grep(line):
     """Called when Search -> Grep's right-click 'goto' action."""
     filename, line_number, contents = line.split(':', 2)
     filename = core.encode(filename)
-    cola.notifier().broadcast(signals.edit, [filename],
-                              line_number=line_number)
+    do(cmds.Edit, [filename], line_number=line_number)
 
 
 def run_grep(txt=None, parent=None):
