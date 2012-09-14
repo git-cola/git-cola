@@ -816,7 +816,7 @@ class UntrackedSummary(Command):
         if untracked:
             io.write('# possible .gitignore rule%s:\n' % suffix)
             for u in untracked:
-                io.write('/'+core.encode(u))
+                io.write('/'+core.encode(u)+'\n')
         self.new_diff_text = core.decode(io.getvalue())
         self.new_mode = self.model.mode_untracked
 
