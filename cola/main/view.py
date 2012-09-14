@@ -182,7 +182,7 @@ class MainView(MainWindow):
         self.menu_manage_bookmarks = add_action(self,
                 'Bookmarks...', manage_bookmarks)
         self.menu_grep = add_action(self,
-                'Grep', guicmds.grep)
+                'Grep', guicmds.grep, 'Ctrl+G')
         self.menu_merge_local = add_action(self,
                 'Merge...', merge.local_merge)
 
