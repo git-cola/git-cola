@@ -874,6 +874,22 @@ class VisualizeRevision(Command):
         utils.fork(argv)
 
 
+def run(cls, *args, **opts):
+    """
+    Returns a callback that broadcasts a message over the notifier.
+
+    If the caller of SLOT() provides args or opts then those are
+    used instead of the ones provided by the invoker of the callback.
+
+    """
+    def broadcast(*local_args, **local_opts):
+        if args or opts:
+            cola.notifier().broadcast(cls.NAME, *args, **opts)
+        else:
+            cola.notifier().broadcast(cls.NAME, *local_args, **local_opts)
+    return broadcast
+
+
 def register():
     """
     Register signal mappings with the factory.
