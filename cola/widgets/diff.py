@@ -4,8 +4,10 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt, SIGNAL
 
 import cola
+from cola import cmds
 from cola import qtutils
 from cola import signals
+from cola.cmds import run
 from cola.qtutils import SLOT
 from cola.widgets import defs
 from cola.widgets.text import DiffTextEdit
@@ -17,7 +19,6 @@ class DiffEditor(DiffTextEdit):
         self.model = model = cola.model()
         self.mode = self.model.mode_none
 
-        # Install diff shortcut keys for stage/unstage
         self.action_process_section = qtutils.add_action(self,
                 'Process Section',
                 self.apply_section, Qt.Key_H)
@@ -25,7 +26,16 @@ class DiffEditor(DiffTextEdit):
                 'Process Selection',
                 self.apply_selection, Qt.Key_S)
 
-        # Context menu actions
+        self.launch_editor = qtutils.add_action(self,
+                cmds.LaunchEditor.NAME, run(cmds.LaunchEditor),
+                cmds.LaunchEditor.SHORTCUT)
+        self.launch_editor.setIcon(qtutils.options_icon())
+
+        self.launch_difftool = qtutils.add_action(self,
+                cmds.LaunchDifftool.NAME, run(cmds.LaunchDifftool),
+                cmds.LaunchDifftool.SHORTCUT)
+        self.launch_difftool.setIcon(qtutils.icon('git.svg'))
+
         self.action_stage_selection = qtutils.add_action(self,
                 self.tr('Stage &Selected Lines'),
                 self.stage_selection)
@@ -99,6 +109,11 @@ class DiffEditor(DiffTextEdit):
                                         self.unstage_section)
                 action.setShortcut(Qt.Key_H)
                 menu.addAction(self.action_unstage_selection)
+
+        if self.model.stageable() or self.model.unstageable():
+            menu.addSeparator()
+            menu.addAction(self.launch_editor)
+            menu.addAction(self.launch_difftool)
 
         menu.addSeparator()
         action = menu.addAction(qtutils.icon('edit-copy.svg'),
