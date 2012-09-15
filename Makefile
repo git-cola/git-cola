@@ -6,6 +6,7 @@ GIT = git
 NOSETESTS = nosetests
 PYTHON = python
 TAR = tar
+CTAGS = ctags
 
 # These values can be overridden on the command-line or via config.mak
 prefix = $(HOME)
@@ -94,7 +95,7 @@ clean:
 	rm -rf share/locale
 
 tags:
-	find . -name '*.py' -print0 | xargs -0 ctags -f tags
+	find . -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
 
 pot:
 	$(PYTHON) setup.py build_pot -N -d .
