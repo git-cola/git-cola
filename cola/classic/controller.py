@@ -6,8 +6,8 @@ import cola
 import cola.utils
 import cola.difftool
 
+from cola import cmds
 from cola import gitcmds
-from cola import signals
 from cola.widgets.selectcommits import select_commits
 from cola.classic.view import Browser
 from cola.classic.model import GitRepoModel
@@ -46,7 +46,7 @@ class ClassicController(QtCore.QObject):
     def view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
         entries = map(unicode, entries)
-        cola.notifier().broadcast(signals.visualize_paths, entries)
+        cmds.do(cmds.VisualizePaths, entries)
 
     def query_model(self, model_index):
         """Update information about a directory as it is expanded."""

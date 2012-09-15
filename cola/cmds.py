@@ -205,6 +205,33 @@ class ApplyPatches(Command):
                              '\n'.join(map(os.path.basename, self.patches))))
 
 
+class Archive(BaseCommand):
+    def __init__(self, ref, fmt, prefix, filename):
+        BaseCommand.__init__(self)
+        self.ref = ref
+        self.fmt = fmt
+        self.prefix = prefix
+        self.filename = filename
+
+    def do(self):
+        fp = open(core.encode(self.filename), 'wb')
+        cmd = ['git', 'archive', '--format='+self.fmt]
+        if self.fmt in ('tgz', 'tar.gz'):
+            cmd.append('-9')
+        if self.prefix:
+            cmd.append('--prefix=' + self.prefix)
+        cmd.append(self.ref)
+        proc = utils.start_command(cmd, stdout=fp)
+        out, err = proc.communicate()
+        fp.close()
+        if not out:
+            out = ''
+        if err:
+            out += err
+        status = proc.returncode
+        cola.notifier().broadcast(signals.log_cmd, status, out)
+
+
 class Checkout(Command):
     """
     A command object for git-checkout.
@@ -523,6 +550,31 @@ class LoadPreviousMessage(Command):
         self.model.set_commitmsg(self.old_commitmsg)
 
 
+class Merge(Command):
+    def __init__(self, revision, no_commit, squash):
+        Command.__init__(self)
+        self.revision = revision
+        self.no_commit = no_commit
+        self.squash = squash
+
+    def do(self):
+        squash = self.squash
+        revision = self.revision
+        no_commit = self.no_commit
+        msg = gitcmds.merge_message(revision)
+
+        status, output = self.model.git.merge('-m', msg,
+                                              revision,
+                                              no_commit=no_commit,
+                                              squash=squash,
+                                              with_stderr=True,
+                                              with_status=True)
+
+        notifier = cola.notifier()
+        notifier.broadcast(signals.log_cmd, status, output)
+        self.model.update_status()
+
+
 class Mergetool(Command):
     """Launch git-mergetool on a list of paths."""
     def __init__(self, paths):
@@ -539,19 +591,39 @@ class Mergetool(Command):
                         'git', 'mergetool', '--no-prompt', '--'] + self.paths)
 
 
-class OpenDefaultApp(Command):
+class OpenDefaultApp(BaseCommand):
     """Open a file using the OS default."""
+    NAME = 'Open Using Default Application'
+    SHORTCUT = 'Space'
+
     def __init__(self, filenames):
-        Command.__init__(self)
+        BaseCommand.__init__(self)
         if utils.is_darwin():
             launcher = 'open'
         else:
             launcher = 'xdg-open'
-        self.cmd = [launcher]
-        self.cmd.extend(filenames)
+        self.launcher = launcher
+        self.filenames = filenames
 
     def do(self):
-        utils.fork(self.cmd)
+        if not self.filenames:
+            return
+        utils.fork([self.launcher] + self.filenames)
+
+
+class OpenParentDir(OpenDefaultApp):
+    """Open parent directories using the OS default."""
+    NAME = 'Open Parent Directory'
+    SHORTCUT = 'Shift+Space'
+
+    def __init__(self, filenames):
+        OpenDefaultApp.__init__(self, filenames)
+
+    def do(self):
+        if not self.filenames:
+            return
+        dirs = set(map(os.path.dirname, self.filenames))
+        utils.fork([self.launcher] + dirs)
 
 
 class OpenRepo(Command):
@@ -588,10 +660,11 @@ class Rescan(Command):
         self.model.update_status()
 
 
-rescan_and_refresh = 'rescan_and_refresh'
-
 class RescanAndRefresh(Command):
     """Rescans for changes."""
+    NAME = 'Rescan'
+    SHORTCUT = 'Ctrl+R'
+
     def do(self):
         self.model.update_status(update_index=True)
 
@@ -693,6 +766,9 @@ class ShowUntracked(Command):
 
 
 class SignOff(Command):
+    NAME = 'Sign Off'
+    SHORTCUT = 'Ctrl+I'
+
     def __init__(self):
         Command.__init__(self)
         self.undoable = True
@@ -721,6 +797,9 @@ class SignOff(Command):
 
 class Stage(Command):
     """Stage a set of paths."""
+    NAME = 'Stage'
+    SHORTCUT = 'Ctrl+S'
+
     def __init__(self, paths):
         Command.__init__(self)
         self.paths = paths
@@ -733,6 +812,9 @@ class Stage(Command):
 
 class StageModified(Stage):
     """Stage all modified files."""
+    NAME = 'Stage Modified'
+    SHORTCUT = 'Ctrl+S'
+
     def __init__(self):
         Stage.__init__(self, None)
         self.paths = self.model.modified
@@ -740,6 +822,9 @@ class StageModified(Stage):
 
 class StageUnmerged(Stage):
     """Stage all modified files."""
+    NAME = 'Stage Unmerged'
+    SHORTCUT = 'Ctrl+S'
+
     def __init__(self):
         Stage.__init__(self, None)
         self.paths = self.model.unmerged
@@ -747,6 +832,9 @@ class StageUnmerged(Stage):
 
 class StageUntracked(Stage):
     """Stage all untracked files."""
+    NAME = 'Stage Untracked'
+    SHORTCUT = 'Ctrl+S'
+
     def __init__(self):
         Stage.__init__(self, None)
         self.paths = self.model.untracked
@@ -796,6 +884,9 @@ class Tag(Command):
 
 class Unstage(Command):
     """Unstage a set of paths."""
+    NAME = 'Unstage'
+    SHORTCUT = 'Ctrl+S'
+
     def __init__(self, paths):
         Command.__init__(self)
         self.paths = paths
@@ -881,8 +972,6 @@ class VisualizePaths(Command):
         utils.fork(self.argv)
 
 
-visualize_revision = 'visualize_revision'
-
 class VisualizeRevision(Command):
     """Visualize a specific revision."""
     def __init__(self, revision, paths=None):
@@ -908,12 +997,11 @@ def run(cls, *args, **opts):
     used instead of the ones provided by the invoker of the callback.
 
     """
-    if args or opts:
-        cls(*args, **opts).do()
-        return
-
     def runner(*local_args, **local_opts):
-        cls(*local_args, **local_opts).do()
+        if args or opts:
+            cls(*args, **opts).do()
+        else:
+            cls(*local_args, **local_opts).do()
 
     return runner
 
@@ -931,55 +1019,7 @@ def register():
 
     """
     signal_to_command_map = {
-        signals.amend_mode: AmendMode,
-        signals.apply_diff_selection: ApplyDiffSelection,
-        signals.apply_patches: ApplyPatches,
-        signals.clone: Clone,
-        signals.checkout: Checkout,
-        signals.checkout_branch: CheckoutBranch,
-        signals.cherry_pick: CherryPick,
-        signals.commit: Commit,
-        signals.delete: Delete,
-        signals.delete_branch: DeleteBranch,
-        signals.diff: Diff,
-        signals.diff_staged: DiffStaged,
-        signals.diffstat: Diffstat,
-        signals.difftool: Difftool,
-        Edit.NAME: Edit,
-        signals.format_patch: FormatPatch,
-        signals.ignore: Ignore,
-        LaunchDifftool.NAME: LaunchDifftool,
-        LaunchEditor.NAME: LaunchEditor,
-        signals.load_commit_message: LoadCommitMessage,
-        signals.load_commit_template: LoadCommitTemplate,
-        signals.load_previous_message: LoadPreviousMessage,
-        signals.modified_summary: Diffstat,
-        signals.mergetool: Mergetool,
-        signals.open_default_app: OpenDefaultApp,
-        signals.open_repo: OpenRepo,
-        signals.rescan: Rescan,
-        signals.rescan_and_refresh: RescanAndRefresh,
-        signals.reset_mode: ResetMode,
         signals.run_config_action: RunConfigAction,
-        signals.set_diff_text: SetDiffText,
-        signals.show_untracked: ShowUntracked,
-        signals.signoff: SignOff,
-        signals.stage: Stage,
-        signals.stage_modified: StageModified,
-        signals.stage_unmerged: StageUnmerged,
-        signals.stage_untracked: StageUntracked,
-        signals.staged_summary: DiffStagedSummary,
-        signals.tag: Tag,
-        signals.untrack: Untrack,
-        signals.unstage: Unstage,
-        signals.unstage_all: UnstageAll,
-        signals.unstage_selected: UnstageSelected,
-        signals.untracked_summary: UntrackedSummary,
-        signals.update_file_status: UpdateFileStatus,
-        signals.visualize_all: VisualizeAll,
-        signals.visualize_current: VisualizeCurrent,
-        signals.visualize_paths: VisualizePaths,
-        signals.visualize_revision: VisualizeRevision,
     }
 
     for signal, cmd in signal_to_command_map.iteritems():

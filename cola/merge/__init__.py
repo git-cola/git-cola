@@ -1,20 +1,16 @@
-from PyQt4 import QtGui
-
+import cola
 from cola import gitcmds
 from cola import qtutils
-from cola.merge.controller import MergeController
-from cola.merge.model import MergeModel
 from cola.merge.view import MergeView
 
 
 def local_merge():
     """Provides a dialog for merging branches"""
-    model = MergeModel()
+    model = cola.model()
     view = MergeView(model, qtutils.active_window())
-    ctl = MergeController(model, view)
     view.show()
     view.raise_()
-    return ctl
+    return view
 
 
 def abort_merge():
@@ -35,6 +31,6 @@ if __name__ == '__main__':
     from cola import app
 
     app = app.ColaApplication([])
-    ctl = local_merge()
-    ctl.model.update_status()
+    view = local_merge()
+    cola.model().update_status()
     app.exec_()

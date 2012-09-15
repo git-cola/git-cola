@@ -9,18 +9,12 @@ if __name__ == '__main__':
     sys.path.insert(1,
             os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
+from cola import cmds
 from cola import qtutils
 from cola.git import git
 from cola.qt import ExpandableGroupBox
 from cola.widgets import defs
-from cola.dag.model import archive, command_directory
-from cola.ctrl import Controller
 
-
-class ArchiveController(Controller):
-    def __init__(self, view):
-        Controller.__init__(self, None, view)
-        self.add_commands(command_directory)
 
 
 class GitArchiveDialog(QtGui.QDialog):
@@ -34,7 +28,6 @@ class GitArchiveDialog(QtGui.QDialog):
     def __init__(self, ref, shortref=None, parent=None):
         QtGui.QDialog.__init__(self, parent)
         self.setWindowModality(Qt.WindowModal)
-        self.controller = ArchiveController(self)
 
         # input
         self.ref = ref
@@ -143,10 +136,8 @@ class GitArchiveDialog(QtGui.QDialog):
         qtutils.connect_button(self.save, self.save_archive)
 
     def archive_saved(self):
-        self.emit(SIGNAL(archive),
-                  self.ref, self.fmt, self.prefix, self.filename)
-        qtutils.information('File Saved', 'File saved to "%s"' %
-                            self.filename)
+        cmds.do(cmds.Archive, self.ref, self.fmt, self.prefix, self.filename)
+        qtutils.information('File Saved', 'File saved to "%s"' % self.filename)
 
     def save_archive(self):
         filename = self.filename

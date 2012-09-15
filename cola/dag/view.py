@@ -10,15 +10,13 @@ from PyQt4 import QtNetwork
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import cola
+from cola import cmds
 from cola import difftool
 from cola import gitcmds
 from cola import observable
 from cola import qtutils
 from cola import resources
-from cola import signals
 from cola.compat import hashlib
-from cola.dag.model import archive
 from cola.dag.model import RepoReader
 from cola.widgets import completion
 from cola.widgets import defs
@@ -28,6 +26,9 @@ from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.browse import BrowseDialog
 from cola.widgets.standard import Widget
 from cola.widgets.text import DiffTextEdit
+
+
+COMMITS_SELECTED = 'COMMITS_SELECTED'
 
 
 class GravatarLabel(QtGui.QLabel):
@@ -205,8 +206,7 @@ class DiffWidget(QtGui.QWidget):
         self.main_layout.addWidget(self.diff)
         self.setLayout(self.main_layout)
 
-        sig = signals.commits_selected
-        notifier.add_observer(sig, self.commits_selected)
+        notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
 
     def commits_selected(self, commits):
         if len(commits) != 1:
@@ -270,7 +270,7 @@ class ViewerMixin(object):
         sha1 = self.selected_sha1()
         if sha1 is None:
             return
-        cola.notifier().broadcast(signals.cherry_pick, [sha1])
+        cmds.do(cmds.CherryPick, [sha1])
 
     def copy_to_clipboard(self):
         sha1 = self.selected_sha1()
@@ -416,8 +416,7 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         self.action_down = qtutils.add_action(self, 'Go Down', self.go_down,
                                               Qt.Key_J)
 
-        sig = signals.commits_selected
-        notifier.add_observer(sig, self.commits_selected)
+        notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.selection_changed)
@@ -449,8 +448,8 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         if not items:
             return
         self.set_selecting(True)
-        sig = signals.commits_selected
-        self.notifier.notify_observers(sig, [i.commit for i in items])
+        self.notifier.notify_observers(COMMITS_SELECTED,
+                                       [i.commit for i in items])
         self.set_selecting(False)
 
     def commits_selected(self, commits):
@@ -501,7 +500,7 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         items.reverse()
         sha1s = [item.commit.sha1 for item in items]
         all_sha1s = [c.sha1 for c in self.commits]
-        cola.notifier().broadcast(signals.format_patch, sha1s, all_sha1s)
+        cmds.do(cmds.FormatPatch, sha1s, all_sha1s)
 
     # Qt overrides
     def contextMenuEvent(self, event):
@@ -571,10 +570,6 @@ class DAGView(Widget):
         self.graphview = GraphView(notifier, self)
         self.treewidget = CommitTreeWidget(notifier, self)
         self.diffwidget = DiffWidget(notifier, self)
-
-        for signal in (archive,):
-            qtutils.relay_signal(self, self.graphview, SIGNAL(signal))
-            qtutils.relay_signal(self, self.treewidget, SIGNAL(signal))
 
         self.splitter = QtGui.QSplitter()
         self.splitter.setOrientation(Qt.Horizontal)
@@ -750,8 +745,7 @@ class DAGView(Widget):
             commit_obj = self.commit_list[-1]
         except IndexError:
             return
-        sig = signals.commits_selected
-        self.notifier.notify_observers(sig, [commit_obj])
+        self.notifier.notify_observers(COMMITS_SELECTED, [commit_obj])
         self.graphview.update_scene_rect()
         self.graphview.set_initial_view()
 
@@ -985,8 +979,7 @@ class Commit(QtGui.QGraphicsItem):
             selected_items = self.scene().selectedItems()
             commits = [item.commit for item in selected_items]
             self.scene().parent().set_selecting(True)
-            sig = signals.commits_selected
-            self.notifier.notify_observers(sig, commits)
+            self.notifier.notify_observers(COMMITS_SELECTED, commits)
             self.scene().parent().set_selecting(False)
 
             # Cache the pen for use in paint()
@@ -1199,8 +1192,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         qtutils.add_action(self, 'Select Newest Child',
                            self.select_newest_child, Qt.Key_K)
 
-        sig = signals.commits_selected
-        notifier.add_observer(sig, self.commits_selected)
+        notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
 
     def clear(self):
         self.scene().clear()
@@ -1271,7 +1263,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         selected_commits = self.sort_by_generation([n.commit for n in items])
         sha1s = [c.sha1 for c in selected_commits]
         all_sha1s = [c.sha1 for c in self.commits]
-        cola.notifier().broadcast(signals.format_patch, sha1s, all_sha1s)
+        cmds.do(cmds.FormatPatch, sha1s, all_sha1s)
 
     def select_parent(self):
         """Select the parent with the newest generation number"""

@@ -2,7 +2,6 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
-import cola
 from cola import cmds
 from cola import gitcmds
 from cola import qtutils
@@ -129,7 +128,7 @@ class RecentFileDialog(standard.Dialog):
         self.edit_files(filenames)
 
     def edit_files(self, filenames):
-        cola.notifier().broadcast(cmds.Edit.NAME, filenames)
+        cmds.do(cmds.Edit, filenames)
 
     def edit_file(self, filename):
         self.edit_files([filename])

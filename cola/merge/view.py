@@ -2,11 +2,11 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+from cola import cmds
 from cola import qtutils
 from cola.qtutils import tr
 from cola.widgets import completion
 from cola.widgets import defs
-from cola.merge.model import merge, visualize_revision
 
 
 class MergeView(QtGui.QDialog):
@@ -109,7 +109,7 @@ class MergeView(QtGui.QDialog):
         self.update_revisions()
 
     def update_title(self, dummy_txt=None):
-        branch = self.model.current_branch()
+        branch = self.model.currentbranch
         revision = unicode(self.revision.text())
         if revision:
             txt = unicode(tr('Merge "%s" into "%s"')) % (revision, branch)
@@ -147,11 +147,11 @@ class MergeView(QtGui.QDialog):
     def current_revisions(self):
         """Retrieve candidate items to merge"""
         if self.radio_local.isChecked():
-            return self.model.local_branches()
+            return self.model.local_branches
         elif self.radio_remote.isChecked():
-            return self.model.remote_branches()
+            return self.model.remote_branches
         elif self.radio_tag.isChecked():
-            return self.model.tags()
+            return self.model.tags
         return []
 
     def viz_revision(self):
@@ -161,7 +161,7 @@ class MergeView(QtGui.QDialog):
             qtutils.information('No Revision Specified',
                                 'You must specify a revision to view')
             return
-        self.emit(SIGNAL(visualize_revision), revision)
+        cmds.do(cmds.VisualizeRevision, revision)
 
     def merge_revision(self):
         """Merge the selected revision/branch"""
@@ -173,5 +173,5 @@ class MergeView(QtGui.QDialog):
 
         do_commit = self.checkbox_commit.isChecked()
         squash = self.checkbox_squash.isChecked()
-        self.emit(SIGNAL(merge), revision, not(do_commit), squash)
+        cmds.do(cmds.Merge, revision, not(do_commit), squash)
         self.accept()

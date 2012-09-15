@@ -1,20 +1,15 @@
 import os
 import subprocess
 
-import cola
 from cola import core
 from cola.git import git
-from cola import signals
 from cola import utils
-from cola.cmds import BaseCommand
 from cola.observable import Observable
 
 # put summary at the end b/c it can contain
 # any number of funky characters, including the separator
 logfmt = 'format:%H%x01%P%x01%d%x01%an%x01%ad%x01%ae%x01%s'
 logsep = chr(0x01)
-
-archive = 'archive'
 
 
 class CommitFactory(object):
@@ -246,35 +241,3 @@ class RepoReader(object):
 
     def items(self):
         return self._objects.items()
-
-
-class Archive(BaseCommand):
-    def __init__(self, ref, fmt, prefix, filename):
-        BaseCommand.__init__(self)
-        self.ref = ref
-        self.fmt = fmt
-        self.prefix = prefix
-        self.filename = filename
-
-    def do(self):
-        fp = open(core.encode(self.filename), 'wb')
-        cmd = ['git', 'archive', '--format='+self.fmt]
-        if self.fmt in ('tgz', 'tar.gz'):
-            cmd.append('-9')
-        if self.prefix:
-            cmd.append('--prefix=' + self.prefix)
-        cmd.append(self.ref)
-        proc = utils.start_command(cmd, stdout=fp)
-        out, err = proc.communicate()
-        fp.close()
-        if not out:
-            out = ''
-        if err:
-            out += err
-        status = proc.returncode
-        cola.notifier().broadcast(signals.log_cmd, status, out)
-
-
-command_directory = {
-    archive: Archive,
-}

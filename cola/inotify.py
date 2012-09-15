@@ -5,6 +5,7 @@ import os
 from threading import Timer
 from threading import Lock
 from cola import utils
+from cola import cmds
 
 try:
     import pyinotify
@@ -88,7 +89,7 @@ class Handler():
     def broadcast(self):
         """Broadcasts a list of all files touched since last broadcast"""
         with self._lock:
-            cola.notifier().broadcast(signals.update_file_status)
+            cmds.do(cmds.UpdateFileStatus)
             self._timer = None
 
     def handle(self, path):

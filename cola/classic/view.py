@@ -7,7 +7,6 @@ from PyQt4.QtCore import SIGNAL
 import cola
 from cola import cmds
 from cola import qtutils
-from cola import signals
 from cola import utils
 from cola.cmds import run
 from cola.models.selection import State
@@ -82,7 +81,7 @@ class RepoTreeView(standard.TreeView):
                 self._create_action('Stage Selected',
                                     'Stage selected path(s) for commit.',
                                     self.stage_selected,
-                                    defs.stage_shortcut)
+                                    cmds.Stage.SHORTCUT)
         self.action_unstage =\
                 self._create_action('Unstage Selected',
                                     'Remove selected path(s) from '
@@ -197,7 +196,7 @@ class RepoTreeView(standard.TreeView):
 
         if paths and self.model().path_is_interesting(paths[0]):
             cached = paths[0] in cola.model().staged
-            cola.notifier().broadcast(signals.diff, paths, cached)
+            cmds.do(cmds.Diff, paths, cached)
         return result
 
     def setModel(self, model):
@@ -271,18 +270,15 @@ class RepoTreeView(standard.TreeView):
 
     def stage_selected(self):
         """Signal that we should stage selected paths."""
-        cola.notifier().broadcast(signals.stage,
-                                  self.selected_unstaged_paths())
+        cmds.do(cmds.Stage, self.selected_unstaged_paths())
 
     def unstage_selected(self):
         """Signal that we should stage selected paths."""
-        cola.notifier().broadcast(signals.unstage,
-                                  self.selected_staged_paths())
+        cmds.do(cmds.Unstage, self.selected_staged_paths())
 
     def untrack_selected(self):
-        """Signal that we should stage selected paths."""
-        cola.notifier().broadcast(signals.untrack,
-                                  self.selected_tracked_paths())
+        """untrack selected paths."""
+        cmds.do(cmds.Untrack, self.selected_tracked_paths())
 
     def difftool_predecessor(self):
         """Diff paths against previous versions."""
@@ -300,8 +296,7 @@ class RepoTreeView(standard.TreeView):
                                icon=qtutils.icon('undo.svg')):
             return
         paths = self.selected_tracked_paths()
-        cola.notifier().broadcast(signals.checkout,
-                                  ['HEAD', '--'] + paths)
+        cmds.do(cmds.Checkout, ['HEAD', '--'] + paths)
 
     def current_path(self):
         """Return the path for the current item."""

@@ -1,6 +1,7 @@
 import os
 
 import cola
+from cola import cmds
 from cola import core
 from cola import difftool
 from cola import gitcmds
@@ -52,7 +53,7 @@ def branch_delete():
                                cola.model().local_branches)
     if not branch:
         return
-    cola.notifier().broadcast(signals.delete_branch, branch)
+    cmds.do(cmds.DeleteBranch, branch)
 
 
 def diff_revision():
@@ -85,7 +86,7 @@ def checkout_branch():
                                cola.model().local_branches)
     if not branch:
         return
-    cola.notifier().broadcast(signals.checkout_branch, branch)
+    cmds.do(cmds.CheckoutBranch, branch)
 
 
 def cherry_pick():
@@ -95,7 +96,7 @@ def cherry_pick():
                              revs, summaries, multiselect=False)
     if not commits:
         return
-    cola.notifier().broadcast(signals.cherry_pick, commits)
+    cmds.do(cmds.CherryPick, commits)
 
 
 def clone_repo(spawn=True):
@@ -151,8 +152,7 @@ def clone_repo(spawn=True):
     while os.path.exists(destdir):
         destdir = olddestdir + str(count)
         count += 1
-    cola.notifier().broadcast(signals.clone, core.decode(url), destdir,
-                              spawn=spawn)
+    cmds.do(cmds.Clone, core.decode(url), destdir, spawn=spawn)
     return destdir
 
 
@@ -196,7 +196,7 @@ def open_repo():
                                      cola.model().getcwd())
     if not dirname:
         return
-    cola.notifier().broadcast(signals.open_repo, dirname)
+    cmds.do(cmds.OpenRepo, dirname)
 
 
 def load_commitmsg():
@@ -204,7 +204,7 @@ def load_commitmsg():
     filename = qtutils.open_dialog('Load Commit Message...',
                                    cola.model().getcwd())
     if filename:
-        cola.notifier().broadcast(signals.load_commit_message, filename)
+        cmds.do(cmds.LoadCommitMessage, filename)
 
 
 def rebase():

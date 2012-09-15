@@ -2,10 +2,9 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
-import cola
+from cola import cmds
 from cola import qt
 from cola import qtutils
-from cola import signals
 from cola.qtutils import connect_button
 from cola.qtutils import critical
 from cola.qtutils import information
@@ -136,8 +135,8 @@ class CreateTag(standard.Dialog):
                                     icon=qtutils.save_icon())):
             return
 
-        cola.notifier().broadcast(signals.tag, tag_name, revision,
-                                  sign=sign_tag, message=tag_msg)
+        cmds.do(cmds.Tag, tag_name, revision,
+                sign=sign_tag, message=tag_msg)
         information('Tag Created', 'Created a new tag named "%s"' % tag_name,
                     details=tag_msg or None)
         self.accept()

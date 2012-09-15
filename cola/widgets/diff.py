@@ -6,9 +6,7 @@ from PyQt4.QtCore import Qt, SIGNAL
 import cola
 from cola import cmds
 from cola import qtutils
-from cola import signals
 from cola.cmds import run
-from cola.qtutils import SLOT
 from cola.widgets import defs
 from cola.widgets.text import DiffTextEdit
 
@@ -28,7 +26,8 @@ class DiffEditor(DiffTextEdit):
 
         self.launch_editor = qtutils.add_action(self,
                 cmds.LaunchEditor.NAME, run(cmds.LaunchEditor),
-                cmds.LaunchEditor.SHORTCUT)
+                cmds.LaunchEditor.SHORTCUT,
+                'Return', 'Enter')
         self.launch_editor.setIcon(qtutils.options_icon())
 
         self.launch_difftool = qtutils.add_action(self,
@@ -74,12 +73,12 @@ class DiffEditor(DiffTextEdit):
         if self.model.stageable():
             if s.modified and s.modified[0] in cola.model().submodules:
                 action = menu.addAction(qtutils.icon('add.svg'),
-                                        self.tr('Stage'),
-                                        SLOT(signals.stage, s.modified))
-                action.setShortcut(defs.stage_shortcut)
+                                        self.tr(cmds.Stage.NAME),
+                                        cmds.run(cmds.Stage, s.modified))
+                action.setShortcut(cmds.Stage.SHORTCUT)
                 menu.addAction(qtutils.git_icon(),
                                self.tr('Launch git-cola'),
-                               SLOT(signals.open_repo,
+                               cmds.run(cmds.OpenRepo,
                                     os.path.abspath(s.modified[0])))
             elif s.modified:
                 action = menu.addAction(qtutils.icon('add.svg'),
@@ -96,12 +95,12 @@ class DiffEditor(DiffTextEdit):
         if self.model.unstageable():
             if s.staged and s.staged[0] in cola.model().submodules:
                 action = menu.addAction(qtutils.icon('remove.svg'),
-                                        self.tr('Unstage'),
-                                        SLOT(signals.unstage, s.staged))
-                action.setShortcut(defs.stage_shortcut)
+                                        self.tr(cmds.Unstage.NAME),
+                                        cmds.do(cmds.Unstage, s.staged))
+                action.setShortcut(cmds.Unstage.SHORTCUT)
                 menu.addAction(qtutils.git_icon(),
                                self.tr('Launch git-cola'),
-                               SLOT(signals.open_repo,
+                               cmds.do(cmds.OpenRepo,
                                     os.path.abspath(s.staged[0])))
             elif s.staged:
                 action = menu.addAction(qtutils.icon('remove.svg'),
@@ -226,9 +225,5 @@ class DiffEditor(DiffTextEdit):
                                reverse=False):
         """Implement un/staging of selected lines or sections."""
         offset, selection = self.offset_and_selection()
-        cola.notifier().broadcast(signals.apply_diff_selection,
-                                  staged,
-                                  selected,
-                                  offset,
-                                  selection,
-                                  apply_to_worktree)
+        cmds.do(cmds.ApplyDiffSelection,
+                staged, selected, offset, selection, apply_to_worktree)
