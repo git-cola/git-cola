@@ -1,6 +1,7 @@
 import os
 import sys
 import platform
+import traceback
 from fnmatch import fnmatch
 
 from cStringIO import StringIO
@@ -984,28 +985,19 @@ def run(cls, *args, **opts):
     """
     def runner(*local_args, **local_opts):
         if args or opts:
-            cls(*args, **opts).do()
+            do(cls, *args, **opts)
         else:
-            cls(*local_args, **local_opts).do()
+            do(cls, *local_args, **local_opts)
 
     return runner
 
 
 def do(cls, *args, **opts):
     """Run a command in-place"""
-    cls(*args, **opts).do()
-
-def register():
-    """
-    Register signal mappings with the factory.
-
-    These commands are automatically created and run when
-    their corresponding signal is broadcast by the notifier.
-
-    """
-    signal_to_command_map = {
-        signals.run_config_action: RunConfigAction,
-    }
-
-    for signal, cmd in signal_to_command_map.iteritems():
-        _factory.add_global_command(signal, cmd)
+    try:
+        cls(*args, **opts).do()
+    except StandardError, e:
+        exc_type, exc_value, exc_tb = sys.exc_info()
+        details = traceback.format_exception(exc_type, exc_value, exc_tb)
+        details = '\n'.join(details)
+        Interaction.critical('Oops', message=e.msg, details=details)

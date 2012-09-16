@@ -731,7 +731,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def _process_selection(self):
         s = self.selection()
         if s.staged:
-            cola.notifier().broadcast(signals.unstage, s.staged)
+            cmds.do(cmds.Unstage, s.staged)
 
         unstaged = []
         if s.unmerged:
