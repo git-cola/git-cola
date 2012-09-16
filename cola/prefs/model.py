@@ -4,7 +4,6 @@ from cola.cmds import BaseCommand
 
 
 class PreferencesModel(observable.Observable):
-    message_set_config = 'set_config'
     message_config_updated = 'config_updated'
 
     def __init__(self):
@@ -26,25 +25,21 @@ class PreferencesModel(observable.Observable):
             return self.config.get(config)
 
 
-class SetConfigCommand(BaseCommand):
-    def __init__(self, source, config, value):
+class SetConfig(BaseCommand):
+    def __init__(self, model, source, config, value):
         BaseCommand.__init__(self)
         self.undoable = True
         self.source = source
         self.config = config
         self.value = value
         self.old_value = None
+        self.model = model
 
     def do(self):
-        self.old_value = self.context.get_config(self.source, self.config)
-        self.context.set_config(self.source, self.config, self.value)
+        self.old_value = self.model.get_config(self.source, self.config)
+        self.model.set_config(self.source, self.config, self.value)
 
     def undo(self):
         if self.old_value is None:
             return
-        self.context.set_config(self.source, self.config, self.old_value)
-
-
-command_directory = {
-    PreferencesModel.message_set_config: SetConfigCommand,
-}
+        self.model.set_config(self.source, self.config, self.old_value)

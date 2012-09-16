@@ -6,7 +6,6 @@ from PyQt4.QtCore import SIGNAL
 import cola
 from cola import cmds
 from cola import gitcmds
-from cola import signals
 from cola import utils
 from cola.cmds import Interaction
 from cola.qt import create_toolbutton
@@ -107,7 +106,8 @@ class CommitMessageEditor(QtGui.QWidget):
 
         connect_button(self.commit_button, self.commit)
 
-        cola.notifier().connect(signals.amend, self.amend_action.setChecked)
+        notifier = cola.notifier()
+        notifier.connect(notifier.AMEND, self.amend_action.setChecked)
 
         # Broadcast the amend mode
         connect_action_bool(self.amend_action, cmds.run(cmds.AmendMode))

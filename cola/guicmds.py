@@ -20,18 +20,6 @@ def choose_from_combo(title, items):
     return ComboDialog(qtutils.active_window(), title=title, items=items).selected()
 
 
-def slot_with_parent(fn, parent):
-    """Return an argument-less method for calling fn(parent=parent)
-
-    :param fn: - Function reference, must accept 'parent' as a keyword
-    :param parent: - Qt parent widget
-
-    """
-    def slot():
-        fn(parent=parent)
-    return slot
-
-
 def branch_delete():
     """Launch the 'Delete Branch' dialog."""
     branch = choose_from_combo('Delete Branch',
@@ -148,7 +136,7 @@ def export_patches():
         return
     to_export.reverse()
     revs.reverse()
-    cola.notifier().broadcast(signals.format_patch, to_export, revs)
+    cmds.do(cmds.FormatPatch, to_export, revs)
 
 
 def diff_expression():

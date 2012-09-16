@@ -2,13 +2,13 @@
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+from cola import cmds
 from cola import qt
 from cola import qtutils
 from cola import utils
-from cola.stash.model import save_stash, apply_stash, drop_stash, rescan
+from cola.stash.model import ApplyStash, SaveStash, DropStash
 from cola.widgets import defs
 from cola.widgets.text import DiffTextEdit
 from cola.widgets.standard import Dialog
@@ -17,7 +17,7 @@ from cola.widgets.standard import Dialog
 class StashView(Dialog):
     def __init__(self, model, parent=None):
         Dialog.__init__(self, parent=parent)
-        self.setAttribute(Qt.WA_MacMetalStyle)
+        self.setAttribute(QtCore.Qt.WA_MacMetalStyle)
         self.model = model
         self.stashes = []
         self.revids = []
@@ -102,7 +102,7 @@ class StashView(Dialog):
 
     def close(self):
         self.accept()
-        self.emit(SIGNAL(rescan))
+        cmds.do(cmds.Rescan)
 
     def toolbutton(self, text, tooltip, icon):
         return qt.create_toolbutton(text=text, tooltip=tooltip, icon=icon)
@@ -160,9 +160,9 @@ class StashView(Dialog):
         if not selection:
             return
         index = self.keep_index.isChecked()
-        self.emit(SIGNAL(apply_stash), selection, index)
+        cmds.do(ApplyStash, selection, index)
         self.accept()
-        self.emit(SIGNAL(rescan))
+        cmds.do(cmds.Rescan)
 
     def stash_save(self):
         """Saves the worktree in a stash
@@ -183,9 +183,9 @@ class StashView(Dialog):
             return
 
         keep_index = self.keep_index.isChecked()
-        self.emit(SIGNAL(save_stash), stash_name, keep_index)
+        cmds.do(SaveStash, stash_name, keep_index)
         self.accept()
-        self.emit(SIGNAL(rescan))
+        cmds.do(cmds.Rescan)
 
     def stash_drop(self):
         """Drops the currently selected stash
@@ -201,6 +201,6 @@ class StashView(Dialog):
                                default=True,
                                icon=qtutils.discard_icon()):
             return
-        self.emit(SIGNAL(drop_stash), selection)
+        cmds.do(DropStash, selection)
         self.update_from_model()
         self.stash_text.setPlainText('')

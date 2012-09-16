@@ -15,6 +15,8 @@ def notifier():
 class Notifier(object):
     """Object for sending and receiving notification messages"""
 
+    AMEND = 'amend'
+
     def __init__(self):
         self.channels = {}
 

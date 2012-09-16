@@ -1,8 +1,0 @@
-amend = 'amend'
-confirm = 'confirm'
-critical = 'critical'
-information = 'information'
-log_cmd = 'log_cmd'
-question = 'question'
-run_config_action = 'run_config_action'
-run_command = 'run_command'

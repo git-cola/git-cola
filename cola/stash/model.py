@@ -1,12 +1,8 @@
 import cola
 from cola import observable
-from cola import signals
 from cola.git import git
-from cola.cmds import BaseCommand, Rescan, rescan
-
-apply_stash = 'apply_stash'
-drop_stash = 'drop_stash'
-save_stash = 'save_stash'
+from cola.cmds import BaseCommand
+from cola.interaction import Interaction
 
 
 class StashModel(observable.Observable):
@@ -46,7 +42,7 @@ class ApplyStash(BaseCommand):
         else:
             args = ['apply', self.selection]
         status, output = git.stash(with_stderr=True, with_status=True, *args)
-        cola.notifier().broadcast(signals.log_cmd, status, output)
+        Interaction.log_status(status, output, '')
 
 
 class DropStash(BaseCommand):
@@ -57,7 +53,7 @@ class DropStash(BaseCommand):
     def do(self):
         status, output = git.stash('drop', self.stash_sha1,
                                    with_stderr=True, with_status=True)
-        cola.notifier().broadcast(signals.log_cmd, status, output)
+        Interaction.log_status(status, output, '')
 
 
 class SaveStash(BaseCommand):
@@ -72,12 +68,4 @@ class SaveStash(BaseCommand):
         else:
             args = ['save', self.stash_name]
         status, output = git.stash(with_stderr=True, with_status=True, *args)
-        cola.notifier().broadcast(signals.log_cmd, status, output)
-
-
-command_directory = {
-    apply_stash: ApplyStash,
-    drop_stash: DropStash,
-    rescan: Rescan,
-    save_stash: SaveStash,
-}
+        Interaction.log_status(status, output, '')

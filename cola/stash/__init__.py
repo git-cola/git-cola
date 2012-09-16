@@ -1,5 +1,4 @@
 from cola import qtutils
-from cola.stash.controller import StashController
 from cola.stash.model import StashModel
 from cola.stash.view import StashView
 
@@ -9,9 +8,9 @@ def stash():
     """
     model = StashModel()
     view = StashView(model, qtutils.active_window())
-    ctl = StashController(model, view)
     view.show()
-    return ctl
+    view.raise_()
+    return view
 
 
 if __name__ == '__main__':
@@ -20,5 +19,5 @@ if __name__ == '__main__':
 
     cola.model().update_status()
     app = ColaApplication([])
-    ctl = stash()
+    view = stash()
     app.exec_()

@@ -13,8 +13,8 @@ from cola import core
 from cola import gitcmds
 from cola import guicmds
 from cola import merge
-from cola import signals
 from cola import gitcfg
+from cola import prefs
 from cola import qtutils
 from cola import qtcompat
 from cola import qt
@@ -28,8 +28,6 @@ from cola.classic import cola_classic
 from cola.classic import classic_widget
 from cola.dag import git_dag
 from cola.git import git
-from cola.prefs import PreferencesModel
-from cola.prefs import preferences
 from cola.interaction import Interaction
 from cola.qt import create_button
 from cola.qt import create_dock
@@ -38,7 +36,6 @@ from cola.qtutils import add_action
 from cola.qtutils import connect_action
 from cola.qtutils import connect_action_bool
 from cola.qtutils import connect_button
-from cola.qtutils import emit
 from cola.qtutils import tr
 from cola.widgets import cfgactions
 from cola.widgets import editremotes
@@ -64,7 +61,7 @@ class MainView(MainWindow):
         # Default size; this is thrown out when save/restore is used
         self.resize(987, 610)
         self.model = model
-        self.prefs_model = prefs_model = PreferencesModel()
+        self.prefs_model = prefs_model = prefs.PreferencesModel()
 
         # Internal field used by import/export_state().
         # Change this whenever dockwidgets are removed.
@@ -151,7 +148,7 @@ class MainView(MainWindow):
         self.menu_export_patches = add_action(self,
                 'Export Patches...', guicmds.export_patches, 'Alt+E')
         self.menu_preferences = add_action(self,
-                'Preferences', lambda: preferences(model=prefs_model),
+                'Preferences', self.preferences,
                 QtGui.QKeySequence.Preferences, 'Ctrl+O')
 
         self.menu_edit_remotes = add_action(self,
@@ -506,7 +503,7 @@ class MainView(MainWindow):
         menu = self.actions_menu
         menu.addSeparator()
         for name in names:
-            menu.addAction(name, emit(self, signals.run_config_action, name))
+            menu.addAction(name, cmds.run(cmds.RunConfigAction, name))
 
     def _update_view(self):
         self.emit(SIGNAL('update'))
@@ -580,6 +577,9 @@ class MainView(MainWindow):
                     dockwidget.toggleViewAction().trigger()
             self.addAction(action)
             connect_action(action, focusdock)
+
+    def preferences(self):
+        return prefs.preferences(model=self.prefs_model, parent=self)
 
     def save_archive(self):
         ref = git.rev_parse('HEAD')

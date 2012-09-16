@@ -4,11 +4,12 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
+from cola import cmds
 from cola import qtutils
 from cola import gitcfg
-from cola.qtutils import relay_signal
 from cola.widgets import defs
 from cola.widgets import standard
+from cola.prefs.model import SetConfig
 
 
 class FormWidget(QtGui.QWidget):
@@ -48,23 +49,20 @@ class FormWidget(QtGui.QWidget):
                            self._text_config_changed(config))
 
     def _int_config_changed(self, config):
-        def emitter(value):
-            self.emit(SIGNAL(self.model.message_set_config),
-                      self.source, config, value)
-        return emitter
+        def runner(value):
+            cmds.do(SetConfig, self.model, self.source, config, value)
+        return runner
 
     def _bool_config_changed(self, config):
-        def emitter(value):
-            self.emit(SIGNAL(self.model.message_set_config),
-                      self.source, config, value)
-        return emitter
+        def runner(value):
+            cmds.do(SetConfig, self.model, self.source, config, value)
+        return runner
 
     def _text_config_changed(self, config):
-        def emitter():
+        def runner():
             value = unicode(self.sender().text())
-            self.emit(SIGNAL(self.model.message_set_config),
-                      self.source, config, value)
-        return emitter
+            cmds.do(SetConfig, self.model, self.source, config, value)
+        return runner
 
     def update_from_config(self):
         if self.source == 'repo':
@@ -204,18 +202,19 @@ class SettingsFormWidget(FormWidget):
     def font_size_changed(self, size):
         font = self.fixed_font.currentFont()
         font.setPointSize(size)
-        self.emit(SIGNAL(self.model.message_set_config),
-                  'user', 'cola.fontdiff', unicode(font.toString()))
+        cmds.do(SetConfig, self.model,
+                'user', 'cola.fontdiff', unicode(font.toString()))
 
     def current_font_changed(self, font):
-        self.emit(SIGNAL(self.model.message_set_config),
-                  'user', 'cola.fontdiff', unicode(font.toString()))
+        cmds.do(SetConfig, self.model,
+                'user', 'cola.fontdiff', unicode(font.toString()))
 
 
 class PreferencesView(standard.Dialog):
     def __init__(self, model, parent=None):
         standard.Dialog.__init__(self, parent=parent)
         self.setWindowTitle(self.tr('Preferences'))
+        self.setWindowModality(QtCore.Qt.WindowModal)
 
         self.resize(600, 360)
 
@@ -228,10 +227,6 @@ class PreferencesView(standard.Dialog):
         self._user_form = RepoFormWidget(model, self, source='user')
         self._repo_form = RepoFormWidget(model, self, source='all')
         self._options_form = SettingsFormWidget(model, self)
-
-        relay_signal(self, self._user_form, SIGNAL(model.message_set_config))
-        relay_signal(self, self._repo_form, SIGNAL(model.message_set_config))
-        relay_signal(self, self._options_form, SIGNAL(model.message_set_config))
 
         self._stackedwidget = QtGui.QStackedWidget()
         self._stackedwidget.addWidget(self._user_form)
@@ -304,5 +299,5 @@ if __name__ == "__main__":
     from cola.prefs import preferences
 
     app = QtGui.QApplication(sys.argv)
-    preferences()
+    view = preferences()
     sys.exit(app.exec_())

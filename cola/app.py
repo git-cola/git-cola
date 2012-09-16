@@ -27,7 +27,6 @@ except ImportError:
 
 # Import cola modules
 import cola
-from cola import cmds
 from cola import git
 from cola import inotify
 from cola import i18n
@@ -39,7 +38,6 @@ from cola import version
 from cola.decorators import memoize
 from cola.interaction import Interaction
 from cola.main.view import MainView
-from cola.main.controller import MainController
 from cola.widgets import cfgactions
 from cola.widgets import startup
 
@@ -146,9 +144,6 @@ class ColaApplication(object):
             self._app = QtCore.QCoreApplication(argv)
             self._translate_base = QtCore.QCoreApplication.translate
             QtCore.QCoreApplication.translate = self.translate
-
-        # Register model commands
-        cmds.register()
 
         # Make file descriptors binary for win32
         utils.set_binary(sys.stdin)
@@ -308,15 +303,13 @@ def main(context):
         view = create_new_branch()
     elif context in ('git-dag', 'dag'):
         from cola.dag import git_dag
-        ctl = git_dag(model, opts=opts, args=args)
-        view = ctl.view
+        view = git_dag(model, opts=opts, args=args)
     elif context in ('classic', 'browse'):
         from cola.classic import cola_classic
         view = cola_classic(update=False)
     elif context == 'config':
         from cola.prefs import preferences
-        ctl = preferences()
-        view = ctl.view
+        view = preferences()
     elif context == 'fetch':
         # TODO: the calls to update_status() can be done asynchronously
         # by hooking into the message_updated notification.
@@ -343,14 +336,12 @@ def main(context):
     elif context == 'stash':
         from cola.stash import stash
         model.update_status()
-        view = stash().view
+        view = stash()
     elif context == 'tag':
         from cola.widgets.createtag import create_tag
         view = create_tag()
     else:
         view = MainView(model, qtutils.active_window())
-        ctl = MainController(model, view)
-
 
     # Make sure that we start out on top
     view.show()
@@ -379,7 +370,7 @@ def main(context):
         os.unlink(filename)
     sys.exit(result)
 
-    return ctl, task
+    return view, task
 
 
 def _start_update_thread(model):

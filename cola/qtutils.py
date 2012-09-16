@@ -15,30 +15,6 @@ from cola import settings
 from cola import resources
 from cola.compat import set
 from cola.decorators import memoize
-def emit(widget, signal, *args, **opts):
-    """Return a function that emits a signal"""
-    def emitter(*local_args, **local_opts):
-        if args or opts:
-            widget.emit(SIGNAL(signal), *args, **opts)
-        else:
-            widget.emit(SIGNAL(signal), *local_args, **local_opts)
-    return emitter
-
-
-def SLOT(signal, *args, **opts):
-    """
-    Returns a callback that broadcasts a message over the notifier.
-
-    If the caller of SLOT() provides args or opts then those are
-    used instead of the ones provided by the invoker of the callback.
-
-    """
-    def broadcast(*local_args, **local_opts):
-        if args or opts:
-            cola.notifier().broadcast(signal, *args, **opts)
-        else:
-            cola.notifier().broadcast(signal, *local_args, **local_opts)
-    return broadcast
 from cola.interaction import Interaction
 
 
@@ -52,18 +28,6 @@ def connect_action_bool(action, callback):
 
 def connect_button(button, callback):
     button.connect(button, SIGNAL('clicked()'), callback)
-
-
-def relay_button(button, signal):
-    connect_button(button, SLOT(signal))
-
-
-def relay_signal(parent, child, signal):
-    """Relay a signal from the child widget through the parent"""
-    def relay_slot(*args, **opts):
-        parent.emit(signal, *args, **opts)
-    parent.connect(child, signal, relay_slot)
-    return relay_slot
 
 
 def active_window():
