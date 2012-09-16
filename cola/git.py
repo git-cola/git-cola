@@ -3,12 +3,13 @@ import sys
 import errno
 import subprocess
 import threading
-cmdlock = threading.Lock()
 
 from cola import core
 from cola.decorators import memoize
 from cola.interaction import Interaction
 
+
+INDEX_LOCK = threading.Lock()
 GIT_COLA_TRACE = os.getenv('GIT_COLA_TRACE', '')
 
 
@@ -180,7 +181,7 @@ class Git(object):
 
         # Start the process
         # Guard against thread-unsafe .git/index.lock files
-        cmdlock.acquire()
+        INDEX_LOCK.acquire()
         # Some systems (e.g. darwin) interrupt system calls
         count = 0
         while count < 13:
@@ -199,13 +200,13 @@ class Git(object):
                 if e.errno == errno.EINTR or e.errno == errno.ENOMEM:
                     count += 1
                     continue
-                cmdlock.release()
+                INDEX_LOCK.release()
                 raise
             except:
-                cmdlock.release()
+                INDEX_LOCK.release()
                 raise
         # Let the next thread in
-        cmdlock.release()
+        INDEX_LOCK.release()
         output = with_stderr and (out+err) or out
         if not with_raw_output:
             output = output.rstrip('\n')
