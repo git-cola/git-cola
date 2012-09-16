@@ -11,6 +11,7 @@ from cola import gitcmds
 from cola import prefs
 from cola import qtutils
 from cola import utils
+from cola.interaction import Interaction
 from cola.qtutils import connect_button
 from cola.widgets import defs
 from cola.widgets import standard
@@ -389,7 +390,7 @@ class RemoteActionDialog(standard.Dialog):
         remote_name = unicode(self.remote_name.text())
         if not remote_name:
             errmsg = self.tr('No repository selected.')
-            qtutils.log(1, errmsg)
+            Interaction.log(errmsg)
             return
         remote, kwargs = self.common_args()
 
@@ -470,7 +471,7 @@ class RemoteActionDialog(standard.Dialog):
             message += '\n\n' + output
 
         # Force the status to 1 so that we always display the log
-        qtutils.log(1, message)
+        Interaction.log(message)
 
         if status == 0:
             self.accept()
@@ -479,8 +480,8 @@ class RemoteActionDialog(standard.Dialog):
         if self.action == PUSH:
             message += '\n\nHave you rebased/pulled lately?'
 
-        qtutils.critical(self.windowTitle(),
-                         message=message, details=output)
+        Interaction.critical(self.windowTitle(),
+                             message=message, details=output)
 
 
 # Use distinct classes so that each saves its own set of preferences

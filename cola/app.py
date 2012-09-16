@@ -29,16 +29,15 @@ except ImportError:
 import cola
 from cola import cmds
 from cola import git
-from cola import guicmds
 from cola import inotify
 from cola import i18n
 from cola import qtcompat
 from cola import qtutils
 from cola import resources
-from cola import signals
 from cola import utils
 from cola import version
 from cola.decorators import memoize
+from cola.interaction import Interaction
 from cola.main.view import MainView
 from cola.main.controller import MainController
 from cola.widgets import cfgactions
@@ -128,8 +127,10 @@ class ColaApplication(object):
     def __init__(self, argv, locale=None, gui=True):
         """Initialize our QApplication for translation
         """
+        cfgactions.install()
         i18n.install(locale)
         qtcompat.install()
+        qtutils.install()
 
         # Add the default style dir so that we find our icons
         icon_dir = resources.icon_dir()
@@ -350,9 +351,6 @@ def main(context):
         view = MainView(model, qtutils.active_window())
         ctl = MainController(model, view)
 
-    # Install UI wrappers for command objects
-    cfgactions.install_command_wrapper()
-    guicmds.install_command_wrapper()
 
     # Make sure that we start out on top
     view.show()
@@ -407,4 +405,4 @@ def _send_msg():
                'Many of commands reported with "trace" use git\'s stable '
                '"plumbing" API and are not intended for typical '
                'day-to-day use.  Here be dragons')
-        cola.notifier().broadcast(signals.log_cmd, 0, msg)
+        Interaction.log(msg)

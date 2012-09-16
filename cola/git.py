@@ -5,10 +5,9 @@ import subprocess
 import threading
 cmdlock = threading.Lock()
 
-import cola
 from cola import core
-from cola import signals
 from cola.decorators import memoize
+from cola.interaction import Interaction
 
 GIT_COLA_TRACE = os.getenv('GIT_COLA_TRACE', '')
 
@@ -213,7 +212,7 @@ class Git(object):
 
         if cola_trace == 'trace':
             msg = 'trace: ' + subprocess.list2cmdline(command)
-            cola.notifier().broadcast(signals.log_cmd, status, msg)
+            Interaction.log_status(status, msg, '')
         elif cola_trace == 'full':
             if output:
                 print "%s -> %d: '%s'" % (command, status, output)

@@ -8,25 +8,13 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import cola
 from cola import core
 from cola import gitcfg
 from cola import utils
 from cola import settings
-from cola import signals
 from cola import resources
 from cola.compat import set
 from cola.decorators import memoize
-
-
-def log(status, output):
-    """Sends messages to the log window.
-    """
-    if not output:
-        return
-    cola.notifier().broadcast(signals.log_cmd, status, output)
-
-
 def emit(widget, signal, *args, **opts):
     """Return a function that emits a signal"""
     def emitter(*local_args, **local_opts):
@@ -51,6 +39,7 @@ def SLOT(signal, *args, **opts):
         else:
             cola.notifier().broadcast(signal, *local_args, **local_opts)
     return broadcast
+from cola.interaction import Interaction
 
 
 def connect_action(action, callback):
@@ -194,16 +183,6 @@ def question(title, message, default=True):
     result = (QtGui.QMessageBox
                    .question(active_window(), title, msg, buttons, default))
     return result == QtGui.QMessageBox.Yes
-
-
-def register_for_signals():
-    # Register globally with the notifier
-    notifier = cola.notifier()
-    notifier.connect(signals.confirm, confirm)
-    notifier.connect(signals.critical, critical)
-    notifier.connect(signals.information, information)
-    notifier.connect(signals.question, question)
-register_for_signals()
 
 
 def selected_treeitem(tree_widget):
@@ -536,3 +515,10 @@ def default_monospace_font():
         family = 'Monaco'
     font.setFamily(family)
     return font
+
+
+def install():
+    Interaction.critical = staticmethod(critical)
+    Interaction.confirm = staticmethod(confirm)
+    Interaction.question = staticmethod(question)
+    Interaction.information = staticmethod(information)

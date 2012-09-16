@@ -8,6 +8,7 @@ from cola import gitcmds
 from cola import qt
 from cola import qtutils
 from cola import utils
+from cola.interaction import Interaction
 from cola.widgets import defs
 from cola.widgets import completion
 from cola.widgets.standard import Dialog
@@ -304,7 +305,7 @@ class CreateBranchDialog(Dialog):
         self.thread.start()
 
     def thread_command(self, status, output):
-        qtutils.log(status, output)
+        Interaction.log_status(status, output)
 
     def thread_done(self, results):
         self.setEnabled(True)
@@ -314,9 +315,9 @@ class CreateBranchDialog(Dialog):
         detail_lines = []
         for (cmd, status, out) in results:
             if status != 0:
-                qtutils.critical('Create Branch Error',
-                                 '"git %s" returned exit status "%d"' %
-                                 (cmd, status))
+                Interaction.critical(
+                        'Create Branch Error',
+                        '"git %s" returned exit status "%d"' % (cmd, status))
                 return
             line = '"git %s" returned exit status %d' % (cmd, status)
             detail_lines.append(line)

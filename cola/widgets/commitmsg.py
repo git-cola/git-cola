@@ -8,12 +8,12 @@ from cola import cmds
 from cola import gitcmds
 from cola import signals
 from cola import utils
+from cola.cmds import Interaction
 from cola.qt import create_toolbutton
 from cola.qtutils import add_action
 from cola.qtutils import confirm
 from cola.qtutils import connect_action_bool
 from cola.qtutils import connect_button
-from cola.qtutils import log
 from cola.qtutils import options_icon
 from cola.qtutils import save_icon
 from cola.qtutils import tr
@@ -317,10 +317,8 @@ class CommitMessageEditor(QtGui.QWidget):
                 '- First line: Describe in one sentence what you did.\n'
                 '- Second line: Blank\n'
                 '- Remaining lines: Describe why this change is good.\n')
-            log(1, error_msg)
-            cola.notifier().broadcast(signals.information,
-                                      'Missing Commit Message',
-                                      error_msg)
+            Interaction.log(error_msg)
+            Interaction.information('Missing Commit Message', error_msg)
             return
 
         msg = self.commit_message(raw=False)
@@ -340,9 +338,7 @@ class CommitMessageEditor(QtGui.QWidget):
                                icon=save_icon()):
                     return
             else:
-                cola.notifier().broadcast(signals.information,
-                                          'Nothing to commit',
-                                          error_msg)
+                Interaction.information('Nothing to commit', error_msg)
                 return
             cmds.do(cmds.StageModified)
 

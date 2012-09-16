@@ -9,10 +9,9 @@ from PyQt4.QtCore import SIGNAL
 import cola
 from cola import cmds
 from cola import qtutils
-from cola import signals
 from cola import utils
 from cola.compat import set
-from cola.widgets import defs
+from cola.interaction import Interaction
 from cola.models.selection import State
 
 
@@ -565,8 +564,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 args.append(self.m.head)
             cmds.do(cmds.Checkout, args + ['--'] + items_to_undo)
         else:
-            qtutils.log(1, self.tr('No files selected for '
-                                   'checkout from HEAD.'))
+            msg = self.tr('No files selected for checkout from HEAD.')
+            Interaction.log(msg)
 
     def _revert_uncommitted_edits(self):
         items_to_undo = self.modified()
@@ -581,8 +580,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 return
             cmds.do(cmds.Checkout, [self.m.head, '--'] + items_to_undo)
         else:
-            qtutils.log(1, self.tr('No files selected for '
-                                   'checkout from HEAD.'))
+            msg = self.tr('No files selected for checkout from HEAD.')
+            Interaction.log(msg)
 
     def single_selection(self):
         """Scan across staged, modified, etc. and return a single item."""

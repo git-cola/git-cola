@@ -30,6 +30,7 @@ from cola.dag import git_dag
 from cola.git import git
 from cola.prefs import PreferencesModel
 from cola.prefs import preferences
+from cola.interaction import Interaction
 from cola.qt import create_button
 from cola.qt import create_dock
 from cola.qt import create_menu
@@ -38,7 +39,6 @@ from cola.qtutils import connect_action
 from cola.qtutils import connect_action_bool
 from cola.qtutils import connect_button
 from cola.qtutils import emit
-from cola.qtutils import log
 from cola.qtutils import tr
 from cola.widgets import cfgactions
 from cola.widgets import editremotes
@@ -121,7 +121,6 @@ class MainView(MainWindow):
         self.logwidget = LogWidget()
         self.logdockwidget = create_dock('Console', self)
         self.logdockwidget.setWidget(self.logwidget)
-        cola.notifier().connect(signals.log_cmd, self.logwidget.log)
 
         # "Diff Viewer" widget
         self.diffdockwidget = create_dock('Diff', self)
@@ -431,7 +430,12 @@ class MainView(MainWindow):
 
         self.statusdockwidget.widget().setFocus()
 
-        log(0, version.git_version_str() + '\ncola version ' + version.version())
+        # Route command output here
+        Interaction.log_status = self.logwidget.log_status
+        Interaction.log = self.logwidget.log
+
+        Interaction.log(version.git_version_str() +
+                        '\ncola version ' + version.version())
 
     # Qt overrides
     def closeEvent(self, event):

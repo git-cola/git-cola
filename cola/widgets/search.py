@@ -10,6 +10,7 @@ from PyQt4.QtCore import SIGNAL
 from cola import gitcmds
 from cola import utils
 from cola import qtutils
+from cola.interaction import Interaction
 from cola.git import git
 from cola.qt import create_toolbutton
 from cola.qtutils import connect_button
@@ -348,7 +349,7 @@ class Search(SearchWidget):
         if not selected or len(self.results) < row:
             return
         revision = self.results[row][0]
-        qtutils.log(*self.model.export_patchset(revision, revision))
+        Interaction.log_status(*self.model.export_patchset(revision, revision))
 
     def cherry_pick(self):
         widget = self.commit_list
@@ -356,9 +357,9 @@ class Search(SearchWidget):
         if not selected or len(self.results) < row:
             return
         revision = self.results[row][0]
-        qtutils.log(*git.cherry_pick(revision,
-                                     with_stderr=True,
-                                     with_status=True))
+        Interaction.log_status(*git.cherry_pick(revision,
+                               with_stderr=True,
+                               with_status=True))
 
 def search_commits(parent):
     opts = SearchOptions()

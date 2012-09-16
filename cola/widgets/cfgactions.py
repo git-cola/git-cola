@@ -4,26 +4,39 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import cola
 from cola import core
 from cola import gitcfg
 from cola import gitcmds
 from cola import qt
 from cola import qtutils
-from cola import signals
+from cola.interaction import Interaction
 from cola.widgets import defs
 from cola.widgets import completion
 from cola.widgets import standard
 
 
-def install_command_wrapper():
-    cmd_wrapper = ActionCommandWrapper()
-    cola.factory().add_command_wrapper(cmd_wrapper)
+def install():
+    Interaction.run_command = staticmethod(run_command)
+    Interaction.confirm_config_action = staticmethod(confirm_config_action)
 
 
 def get_config_actions():
     cfg = gitcfg.instance()
     return cfg.get_guitool_names()
+
+
+def confirm_config_action(name, opts):
+    dlg = ActionDialog(qtutils.active_window(), name, opts)
+    dlg.show()
+    if dlg.exec_() != QtGui.QDialog.Accepted:
+        return False
+    rev = unicode(dlg.revision())
+    if rev:
+        opts['revision'] = rev
+    args = unicode(dlg.args())
+    if args:
+        opts['args'] = args
+    return True
 
 
 def run_command(title, command):
@@ -155,27 +168,6 @@ class GitCommandWidget(standard.Dialog):
 
     def finishProc(self, status ):
         self.exitstatus = status
-
-
-class ActionCommandWrapper(object):
-    def __init__(self):
-        self.callbacks = {
-                signals.run_config_action: self.run_config_action,
-                signals.run_command: run_command,
-        }
-
-    def run_config_action(self, name, opts):
-        dlg = ActionDialog(qtutils.active_window(), name, opts)
-        dlg.show()
-        if dlg.exec_() != QtGui.QDialog.Accepted:
-            return False
-        rev = unicode(dlg.revision())
-        if rev:
-            opts['revision'] = rev
-        args = unicode(dlg.args())
-        if args:
-            opts['args'] = args
-        return True
 
 
 class ActionDialog(standard.Dialog):

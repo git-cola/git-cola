@@ -7,27 +7,12 @@ from cola import difftool
 from cola import gitcmds
 from cola import qt
 from cola import qtutils
-from cola import signals
 from cola.git import git
+from cola.interaction import Interaction
 from cola.widgets.browse import BrowseDialog
 from cola.widgets.combodlg import ComboDialog
 from cola.widgets.grep import run_grep
 from cola.widgets.selectcommits import select_commits
-
-
-def install_command_wrapper():
-    wrapper = CommandWrapper()
-    cola.factory().add_command_wrapper(wrapper)
-
-
-class CommandWrapper(object):
-    def __init__(self):
-        self.callbacks = {
-                signals.confirm: qtutils.confirm,
-                signals.critical: qtutils.critical,
-                signals.information: qtutils.information,
-                signals.question: qtutils.question,
-        }
 
 
 def choose_from_combo(title, items):
@@ -126,10 +111,10 @@ def clone_repo(spawn=True):
         if not default:
             raise
     except:
-        cola.notifier().broadcast(signals.information,
-                                  'Error Cloning',
-                                  'Could not parse: "%s"' % url)
-        qtutils.log(1, 'Oops, could not parse git url: "%s"' % url)
+        Interaction.information(
+                'Error Cloning',
+                'Could not parse: "%s"' % url)
+        Interaction.log('Oops, could not parse git url: "%s"' % url)
         return None
 
     # Prompt the user for a directory to use as the parent directory
@@ -145,8 +130,7 @@ def clone_repo(spawn=True):
         # An existing path can be specified
         msg = ('"%s" already exists, cola will create a new directory' %
                destdir)
-        cola.notifier().broadcast(signals.information,
-                                  'Directory Exists', msg)
+        Interaction.information('Directory Exists', msg)
 
     # Make sure the new destdir doesn't exist
     while os.path.exists(destdir):
@@ -215,7 +199,7 @@ def rebase():
         return
     #TODO cmd
     status, output = git.rebase(branch, with_stderr=True, with_status=True)
-    qtutils.log(status, output)
+    Interaction.log_status(status, output, '')
 
 
 def choose_ref(title, button_text, default=None):

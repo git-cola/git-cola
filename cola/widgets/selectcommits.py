@@ -5,6 +5,7 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import gitcmds
 from cola import qtutils
+from cola.interaction import Interaction
 from cola.widgets import defs
 from cola.widgets.text import DiffTextEdit
 
@@ -98,7 +99,7 @@ class SelectCommitsDialog(QtGui.QDialog):
         summaries = self.model.summaries
         if not summaries:
             msg = self.tr('No commits exist in this branch.')
-            qtutils.log(1, msg)
+            Interaction.log(msg)
             return []
         qtutils.set_items(self.commit_list, summaries)
         self.show()

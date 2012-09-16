@@ -25,14 +25,22 @@ class LogWidget(QtGui.QWidget):
     def set_output(self, output):
         self.output_text.setText(output)
 
-    def log(self, status, output):
-        if not output:
+    def log_status(self, status, out, err=None):
+        msg = out
+        if err:
+            msg += '\n' + err
+        if status != 0:
+            msg += '\nexit code %s' % status
+        self.log(msg)
+
+    def log(self, msg):
+        if not msg:
             return
         cursor = self.output_text.textCursor()
         cursor.movePosition(cursor.End)
         text = self.output_text
         cursor.insertText(time.asctime() + '\n')
-        for line in unicode(core.decode(output)).splitlines():
+        for line in unicode(core.decode(msg)).splitlines():
             cursor.insertText(line + '\n')
         cursor.insertText('\n')
         cursor.movePosition(cursor.End)

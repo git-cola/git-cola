@@ -12,14 +12,12 @@ from cola import errors
 from cola import gitcfg
 from cola import gitcmds
 from cola import utils
-from cola import signals
-from cola import cmdfactory
 from cola import difftool
 from cola.diffparse import DiffParser
+from cola.interaction import Interaction
 from cola.models import selection
 
 _notifier = cola.notifier()
-_factory = cmdfactory.factory()
 _config = gitcfg.instance()
 
 
@@ -78,6 +76,8 @@ class Command(BaseCommand):
 
 class AmendMode(Command):
     """Try to amend a commit."""
+    LAST_MESSAGE = None
+
     def __init__(self, amend):
         Command.__init__(self)
         self.undoable = True
@@ -89,6 +89,7 @@ class AmendMode(Command):
             self.new_mode = self.model.mode_amend
             self.new_head = 'HEAD^'
             self.new_commitmsg = self.model.prev_commitmsg()
+            AmendMode.LAST_MESSAGE = self.model.commitmsg
             return
         # else, amend unchecked, regular commit
         self.new_mode = self.model.mode_none
@@ -98,18 +99,9 @@ class AmendMode(Command):
         # If we're going back into new-commit-mode then search the
         # undo stack for a previous amend-commit-mode and grab the
         # commit message at that point in time.
-        if not _factory.undostack:
-            return
-        undo_count = len(_factory.undostack)
-        for i in xrange(undo_count):
-            # Find the latest AmendMode command
-            idx = undo_count - i - 1
-            cmdobj = _factory.undostack[idx]
-            if type(cmdobj) is not AmendMode:
-                continue
-            if cmdobj.amending:
-                self.new_commitmsg = cmdobj.old_commitmsg
-                break
+        if AmendMode.LAST_MESSAGE is not None:
+            self.new_commitmsg = AmendMode.LAST_MESSAGE
+            AmendMode.LAST_MESSAGE = None
 
     def do(self):
         """Leave/enter amend mode."""
@@ -117,14 +109,14 @@ class AmendMode(Command):
         if self.amending:
             if os.path.exists(self.model.git.git_path('MERGE_HEAD')):
                 self.skip = True
-                _notifier.broadcast(signals.amend, False)
-                _factory.prompt_user(signals.information,
-                                    'Oops! Unmerged',
-                                    'You are in the middle of a merge.\n'
-                                    'You cannot amend while merging.')
+                _notifier.broadcast(_notifier.AMEND, False)
+                Interaction.information(
+                        'Oops! Unmerged',
+                        'You are in the middle of a merge.\n'
+                        'You cannot amend while merging.')
                 return
         self.skip = False
-        _notifier.broadcast(signals.amend, self.amending)
+        _notifier.broadcast(_notifier.AMEND, self.amending)
         self.model.set_commitmsg(self.new_commitmsg)
         Command.do(self)
         self.model.update_file_status()
@@ -157,7 +149,7 @@ class ApplyDiffSelection(Command):
                                       self.offset,
                                       self.selection,
                                       apply_to_worktree=self.apply_to_worktree)
-        _notifier.broadcast(signals.log_cmd, status, output)
+        Interaction.log_status(status, output, '')
         # Redo the diff to show changes
         if self.staged:
             diffcmd = DiffStaged([self.model.filename])
@@ -183,7 +175,7 @@ class ApplyPatches(Command):
                                                with_status=True,
                                                with_stderr=True)
             # Log the git-am command
-            _notifier.broadcast(signals.log_cmd, status, output)
+            Interaction.log_status(status, output, '')
 
             if num_patches > 1:
                 diff = self.model.git.diff('HEAD^!', stat=True)
@@ -198,11 +190,11 @@ class ApplyPatches(Command):
 
         self.model.update_file_status()
 
-        _factory.prompt_user(signals.information,
-                            'Patch(es) Applied',
-                            '%d patch(es) applied:\n\n%s' %
-                            (len(self.patches),
-                             '\n'.join(map(os.path.basename, self.patches))))
+        Interaction.information(
+                'Patch(es) Applied',
+                '%d patch(es) applied:\n\n%s' %
+                (len(self.patches),
+                 '\n'.join(map(os.path.basename, self.patches))))
 
 
 class Archive(BaseCommand):
@@ -224,12 +216,8 @@ class Archive(BaseCommand):
         proc = utils.start_command(cmd, stdout=fp)
         out, err = proc.communicate()
         fp.close()
-        if not out:
-            out = ''
-        if err:
-            out += err
         status = proc.returncode
-        cola.notifier().broadcast(signals.log_cmd, status, out)
+        Interaction.log_status(status, out or '', err or '')
 
 
 class Checkout(Command):
@@ -248,7 +236,7 @@ class Checkout(Command):
     def do(self):
         status, output = self.model.git.checkout(with_stderr=True,
                                                  with_status=True, *self.argv)
-        _notifier.broadcast(signals.log_cmd, status, output)
+        Interaction.log_status(status, output, '')
         if self.checkout_branch:
             self.model.update_status()
         else:
@@ -303,7 +291,7 @@ class Commit(ResetMode):
             title = 'Commit: '
         else:
             title = 'Commit failed: '
-        _notifier.broadcast(signals.log_cmd, status, title+output)
+        Interaction.log_status(status, title+output, '')
 
 
 class Ignore(Command):
@@ -322,9 +310,8 @@ class Ignore(Command):
                 current_list = utils.slurp('.gitignore')
                 new_additions = new_additions + current_list
             utils.write('.gitignore', new_additions)
-            _notifier.broadcast(signals.log_cmd,
-                                0,
-                                'Added to .gitignore:\n%s' % for_status)
+            Interaction.log_status(
+                    0, 'Added to .gitignore:\n%s' % for_status, '')
             self.model.update_file_status()
 
 
@@ -343,11 +330,11 @@ class Delete(Command):
                     os.remove(filename)
                     rescan=True
                 except:
-                    _factory.prompt_user(signals.information,
-                                        'Error'
-                                        'Deleting "%s" failed.' % filename)
+                    Interaction.information(
+                            'Error', 'Deleting "%s" failed' % filename)
         if rescan:
             self.model.update_file_status()
+
 
 class DeleteBranch(Command):
     """Delete a git branch."""
@@ -362,7 +349,7 @@ class DeleteBranch(Command):
             output = 'E' + output[1:]
         else:
             title = 'Info: '
-        _notifier.broadcast(signals.log_cmd, status, title + output)
+        Interaction.log_status(status, title + output)
 
 
 class Diff(Command):
@@ -474,7 +461,7 @@ class FormatPatch(Command):
 
     def do(self):
         status, output = gitcmds.format_patchsets(self.to_export, self.revs)
-        _notifier.broadcast(signals.log_cmd, status, output)
+        Interaction.log_status(status, output, '')
 
 
 class LaunchDifftool(BaseCommand):
@@ -570,8 +557,7 @@ class Merge(Command):
                                               with_stderr=True,
                                               with_status=True)
 
-        notifier = cola.notifier()
-        notifier.broadcast(signals.log_cmd, status, output)
+        Interaction.log_status(status, output, '')
         self.model.update_status()
 
 
@@ -696,48 +682,47 @@ class RunConfigAction(Command):
         if opts.get('needsfile'):
             filename = selection.filename()
             if not filename:
-                _factory.prompt_user(signals.information,
-                                     'Please select a file',
-                                     '"%s" requires a selected file' % cmd)
-                return
+                Interaction.information(
+                        'Please select a file',
+                        '"%s" requires a selected file' % cmd)
+                return False
             os.environ['FILENAME'] = filename
 
         if opts.get('revprompt') or opts.get('argprompt'):
             while True:
-                ok = _factory.prompt_user(signals.run_config_action, cmd, opts)
+                ok = Interaction.confirm_config_action(cmd, opts)
                 if not ok:
-                    return
+                    return False
                 rev = opts.get('revision')
                 args = opts.get('args')
                 if opts.get('revprompt') and not rev:
                     title = 'Invalid Revision'
                     msg = 'The revision expression cannot be empty.'
-                    _factory.prompt_user(signals.critical, title, msg)
+                    Interaction.critical(title, msg)
                     continue
                 break
 
         elif opts.get('confirm'):
             title = os.path.expandvars(opts.get('title'))
             prompt = os.path.expandvars(opts.get('prompt'))
-            if not _factory.prompt_user(signals.question, title, prompt):
+            if Interaction.question(title, prompt):
                 return
         if rev:
             os.environ['REVISION'] = rev
         if args:
             os.environ['ARGS'] = args
         title = os.path.expandvars(cmd)
-        _notifier.broadcast(signals.log_cmd, 0, 'running: ' + title)
+        Interaction.log('running: ' + title)
         cmd = ['sh', '-c', cmd]
 
         if opts.get('noconsole'):
-            status, out, err = utils.run_command(cmd, flag_error=False)
+            status, out, err = utils.run_command(cmd)
         else:
-            status, out, err = _factory.prompt_user(signals.run_command,
-                                                    title, cmd)
+            status, out, err = Interaction.run_command(title, cmd)
 
-        _notifier.broadcast(signals.log_cmd, status,
-                            'stdout: %s\nstatus: %s\nstderr: %s' %
-                                (out.rstrip(), status, err.rstrip()))
+        Interaction.log_status(status,
+                               out and 'stdout: %s' % out,
+                               err and 'stderr: %s' % err)
 
         if not opts.get('norescan'):
             self.model.update_status()
@@ -806,7 +791,7 @@ class Stage(Command):
 
     def do(self):
         msg = 'Staging: %s' % (', '.join(self.paths))
-        _notifier.broadcast(signals.log_cmd, 0, msg)
+        Interaction.log(msg)
         self.model.stage_paths(self.paths)
 
 
@@ -877,7 +862,7 @@ class Tag(Command):
         if output:
             log_msg += '\nOutput:\n%s' % output
 
-        _notifier.broadcast(signals.log_cmd, status, log_msg)
+        Interaction.log_status(status, log_msg, '')
         if status == 0:
             self.model.update_status()
 
@@ -893,7 +878,7 @@ class Unstage(Command):
 
     def do(self):
         msg = 'Unstaging: %s' % (', '.join(self.paths))
-        _notifier.broadcast(signals.log_cmd, 0, msg)
+        Interaction.log(msg)
         self.model.unstage_paths(self.paths)
 
 
@@ -917,9 +902,9 @@ class Untrack(Command):
 
     def do(self):
         msg = 'Untracking: %s' % (', '.join(self.paths))
-        _notifier.broadcast(signals.log_cmd, 0, msg)
+        Interaction.log(msg)
         status, out = self.model.untrack_paths(self.paths)
-        _notifier.broadcast(signals.log_cmd, status, out)
+        Interaction.log_status(status, out, '')
 
 
 class UntrackedSummary(Command):
