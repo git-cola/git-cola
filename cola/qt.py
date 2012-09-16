@@ -43,11 +43,13 @@ class DockTitleBarWidget(QtGui.QWidget):
         self.close_button.setFlat(True)
         self.close_button.setFixedSize(QtCore.QSize(16, 16))
         self.close_button.setIcon(qtutils.titlebar_close_icon())
+        self.close_button.setToolTip(self.tr('Close'))
 
         self.toggle_button = QtGui.QPushButton()
         self.toggle_button.setFlat(True)
         self.toggle_button.setFixedSize(QtCore.QSize(16, 16))
         self.toggle_button.setIcon(qtutils.titlebar_normal_icon())
+        self.toggle_button.setToolTip(self.tr('Detach'))
 
         self.corner_layout = QtGui.QHBoxLayout()
         self.corner_layout.setMargin(0)
@@ -68,6 +70,7 @@ class DockTitleBarWidget(QtGui.QWidget):
 
     def toggle_floating(self):
         self.parent().setFloating(not self.parent().isFloating())
+        self.update_tooltips()
 
     def toggle_visibility(self):
         self.parent().toggleViewAction().trigger()
@@ -77,6 +80,12 @@ class DockTitleBarWidget(QtGui.QWidget):
 
     def add_corner_widget(self, widget):
         self.corner_layout.addWidget(widget)
+
+    def update_tooltips(self):
+        if self.parent().isFloating():
+            self.toggle_button.setToolTip(self.tr('Attach'))
+        else:
+            self.toggle_button.setToolTip(self.tr('Detach'))
 
 
 def create_dock(title, parent):

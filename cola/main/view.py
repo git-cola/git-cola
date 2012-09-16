@@ -422,6 +422,13 @@ class MainView(MainWindow):
         self._config_task = None
         self.install_config_actions()
 
+        self.dockwidgets = (
+                self.logdockwidget,
+                self.commitdockwidget,
+                self.statusdockwidget,
+                self.diffdockwidget,
+                self.actionsdockwidget,
+        )
         # Restore saved settings
         qtutils.apply_state(self)
 
@@ -538,6 +545,8 @@ class MainView(MainWindow):
         # 1 is the widget version; change when widgets are added/removed
         MainWindow.apply_state(self, state)
         qtutils.apply_window_state(self, state, 1)
+        for widget in self.dockwidgets:
+            widget.titleBarWidget().update_tooltips()
 
     def export_state(self):
         """Exports data for save/restore"""
