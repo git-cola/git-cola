@@ -410,8 +410,9 @@ def worktree_state_dict(head='HEAD', update_index=False):
     if update_index:
         git.update_index(refresh=True)
 
-    staged, unmerged, submodules = diff_index(head)
-    modified, more_submods = diff_worktree()
+    staged, unmerged, staged_submods = diff_index(head)
+    modified, modified_submods = diff_worktree()
+    untracked = untracked_files()
 
     # Remove unmerged paths from the modified list
     unmerged_set = set(unmerged)
@@ -420,8 +421,17 @@ def worktree_state_dict(head='HEAD', update_index=False):
     for path in modified_unmerged:
         modified.remove(path)
 
-    submodules = submodules.union(more_submods)
-    untracked = untracked_files()
+    # All submodules
+    submodules = staged_submods.union(modified_submods)
+
+    # Only include the submodule in the staged list once it has
+    # been staged.  Otherwise, we'll see the submodule as being
+    # both modified and staged.
+    modified_submods = modified_submods.difference(staged_submods)
+
+    # Add submodules to the staged and unstaged lists
+    staged.extend(list(staged_submods))
+    modified.extend(list(modified_submods))
 
     # Look for upstream modified files if this is a tracking branch
     upstream_changed = diff_upstream(head)
