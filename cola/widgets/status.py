@@ -377,16 +377,18 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             return menu
 
     def _create_staged_context_menu(self, menu, s):
+        if s.staged[0] in self.m.submodules:
+            return self._create_staged_submodule_context_menu(menu, s)
+
         action = menu.addAction(qtutils.options_icon(),
                                 self.tr(cmds.LaunchEditor.NAME),
                                 cmds.run(cmds.LaunchEditor))
         action.setShortcut(cmds.LaunchEditor.SHORTCUT)
 
-        if s.staged[0] not in self.m.submodules:
-            action = menu.addAction(qtutils.git_icon(),
-                                    self.tr(cmds.LaunchDifftool.NAME),
-                                    cmds.run(cmds.LaunchDifftool))
-            action.setShortcut(cmds.LaunchDifftool.SHORTCUT)
+        action = menu.addAction(qtutils.git_icon(),
+                                self.tr(cmds.LaunchDifftool.NAME),
+                                cmds.run(cmds.LaunchDifftool))
+        action.setShortcut(cmds.LaunchDifftool.SHORTCUT)
 
         if self.m.unstageable():
             menu.addSeparator()
@@ -394,15 +396,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                     self.tr('Unstage Selected'),
                                     cmds.run(cmds.Unstage, self.staged()))
             action.setShortcut(cmds.Unstage.SHORTCUT)
-
-        if s.staged[0] in self.m.submodules:
-            menu.addSeparator()
-            menu.addAction(qtutils.git_icon(),
-                           self.tr('Launch git-cola'),
-                           cmds.run(cmds.OpenRepo,
-                                    os.path.abspath(s.staged[0])))
-            menu.addAction(self.copy_path_action)
-            return menu
 
         if not utils.is_win32():
             menu.addSeparator()
@@ -421,6 +414,27 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             menu.addAction(qtutils.icon('undo.svg'),
                            self.tr('Revert Unstaged Edits...'),
                            lambda: self._revert_unstaged_edits(staged=True))
+        menu.addSeparator()
+        menu.addAction(self.copy_path_action)
+        return menu
+
+    def _create_staged_submodule_context_menu(self, menu, s):
+        menu.addAction(qtutils.git_icon(),
+                       self.tr('Launch git-cola'),
+                       cmds.run(cmds.OpenRepo,
+                                os.path.abspath(s.staged[0])))
+
+        action = menu.addAction(qtutils.options_icon(),
+                                self.tr(cmds.LaunchEditor.NAME),
+                                cmds.run(cmds.LaunchEditor))
+        action.setShortcut(cmds.LaunchEditor.SHORTCUT)
+
+        menu.addSeparator()
+        action = menu.addAction(qtutils.icon('remove.svg'),
+                                self.tr('Unstage Selected'),
+                                cmds.run(cmds.Unstage, self.staged()))
+        action.setShortcut(cmds.Unstage.SHORTCUT)
+
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
         return menu
@@ -459,19 +473,16 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def _create_unstaged_context_menu(self, menu, s):
         modified_submodule = (s.modified and
                               s.modified[0] in self.m.submodules)
-
         if modified_submodule:
-            menu.addAction(qtutils.git_icon(),
-                           self.tr('Launch git-cola'),
-                           cmds.run(cmds.OpenRepo,
-                                os.path.abspath(s.modified[0])))
-        elif self.unstaged():
+            return self._create_modified_submodule_context_menu(menu, s)
+
+        if self.unstaged():
             action = menu.addAction(qtutils.options_icon(),
                                     self.tr(cmds.LaunchEditor.NAME),
                                     cmds.run(cmds.LaunchEditor))
             action.setShortcut(cmds.Edit.SHORTCUT)
 
-        if s.modified and self.m.stageable() and not modified_submodule:
+        if s.modified and self.m.stageable():
             action = menu.addAction(qtutils.git_icon(),
                                     self.tr(cmds.LaunchDifftool.NAME),
                                     cmds.run(cmds.LaunchDifftool))
@@ -484,7 +495,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                     cmds.run(cmds.Stage, self.unstaged()))
             action.setShortcut(cmds.Stage.SHORTCUT)
 
-        if s.modified and self.m.stageable() and not modified_submodule:
+        if s.modified and self.m.stageable():
             if self.m.undoable():
                 menu.addSeparator()
                 menu.addAction(qtutils.icon('undo.svg'),
@@ -494,7 +505,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                self.tr('Revert Uncommited Edits...'),
                                self._revert_uncommitted_edits)
 
-        if self.unstaged() and not modified_submodule and not utils.is_win32():
+        if self.unstaged() and not utils.is_win32():
             menu.addSeparator()
             action = menu.addAction(qtutils.file_icon(),
                     self.tr(cmds.OpenDefaultApp.NAME),
@@ -515,6 +526,28 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                            self.tr('Add to .gitignore'),
                            cmds.run(cmds.Ignore,
                                 map(lambda x: '/' + x, self.untracked())))
+        menu.addSeparator()
+        menu.addAction(self.copy_path_action)
+        return menu
+
+    def _create_modified_submodule_context_menu(self, menu, s):
+        menu.addAction(qtutils.git_icon(),
+                       self.tr('Launch git-cola'),
+                       cmds.run(cmds.OpenRepo,
+                            os.path.abspath(s.modified[0])))
+
+        action = menu.addAction(qtutils.options_icon(),
+                                self.tr(cmds.LaunchEditor.NAME),
+                                cmds.run(cmds.LaunchEditor))
+        action.setShortcut(cmds.Edit.SHORTCUT)
+
+        if self.m.stageable():
+            menu.addSeparator()
+            action = menu.addAction(qtutils.icon('add.svg'),
+                                    self.tr('Stage Selected'),
+                                    cmds.run(cmds.Stage, self.unstaged()))
+            action.setShortcut(cmds.Stage.SHORTCUT)
+
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
         return menu
