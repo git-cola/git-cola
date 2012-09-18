@@ -257,7 +257,12 @@ def word_wrap(text, tabwidth, limit):
 
     """
     lines = []
+    # Acked-by:, Signed-off-by:, Helped-by:, etc.
+    special_tag_rgx = re.compile('^[a-zA-Z-]+:')
     for line in text.split('\n'):
+        if special_tag_rgx.match(line):
+            lines.append(line)
+            continue
         linelen = 0
         words = []
         for idx, word in enumerate(line.split(' ')):

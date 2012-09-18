@@ -108,6 +108,29 @@ else:
         text = ' ' * 6
         self.assertEqual('  \n  \n', self.wrap(text))
 
+    def test_word_wrap_special_tag(self):
+        self.limit = 2
+        text = """
+This test is so meta, even this sentence
+
+With-special-tag: Avoids word-wrap
+"""
+
+        expect = """
+This
+test
+is
+so
+meta,
+even
+this
+sentence
+
+With-special-tag: Avoids word-wrap
+"""
+
+        self.assertEqual(self.wrap(text), expect)
+
 
 if __name__ == '__main__':
     unittest.main()
