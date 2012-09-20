@@ -7,6 +7,7 @@ from fnmatch import fnmatch
 from cStringIO import StringIO
 
 import cola
+from cola import compat
 from cola import i18n
 from cola import core
 from cola import errors
@@ -666,7 +667,7 @@ class RunConfigAction(Command):
     def do(self):
         for env in ('FILENAME', 'REVISION', 'ARGS'):
             try:
-                del os.environ[env]
+                compat.unsetenv(env)
             except KeyError:
                 pass
         rev = None
@@ -687,7 +688,7 @@ class RunConfigAction(Command):
                         'Please select a file',
                         '"%s" requires a selected file' % cmd)
                 return False
-            os.environ['FILENAME'] = filename
+            compat.putenv('FILENAME', filename)
 
         if opts.get('revprompt') or opts.get('argprompt'):
             while True:
@@ -709,9 +710,9 @@ class RunConfigAction(Command):
             if Interaction.question(title, prompt):
                 return
         if rev:
-            os.environ['REVISION'] = rev
+            compat.putenv('REVISION', rev)
         if args:
-            os.environ['ARGS'] = args
+            compat.putenv('ARGS', args)
         title = os.path.expandvars(cmd)
         Interaction.log('running: ' + title)
         cmd = ['sh', '-c', cmd]
