@@ -27,6 +27,7 @@ except ImportError:
 
 # Import cola modules
 import cola
+from cola import compat
 from cola import git
 from cola import inotify
 from cola import i18n
@@ -51,12 +52,10 @@ def setup_environment():
     bindir = os.path.dirname(os.path.abspath(__file__))
     path_entries.insert(0, bindir)
     path = os.pathsep.join(path_entries)
-    os.environ['PATH'] = path
-    os.putenv('PATH', path)
+    compat.putenv('PATH', path)
 
     # We don't ever want a pager
-    os.environ['GIT_PAGER'] = ''
-    os.putenv('GIT_PAGER', '')
+    compat.putenv('GIT_PAGER', '')
 
     # Setup *SSH_ASKPASS
     git_askpass = os.getenv('GIT_ASKPASS')
@@ -70,11 +69,8 @@ def setup_environment():
     else:
         askpass = resources.share('bin', 'ssh-askpass')
 
-    os.environ['GIT_ASKPASS'] = askpass
-    os.putenv('GIT_ASKPASS', askpass)
-
-    os.environ['SSH_ASKPASS'] = askpass
-    os.putenv('SSH_ASKPASS', askpass)
+    compat.putenv('GIT_ASKPASS', askpass)
+    compat.putenv('SSH_ASKPASS', askpass)
 
     # --- >8 --- >8 ---
     # Git v1.7.10 Release Notes
@@ -106,8 +102,7 @@ def setup_environment():
     # --- >8 --- >8 ---
     # Longer-term: Use `git merge --no-commit` so that we always
     # have a chance to explain our merges.
-    os.environ['GIT_MERGE_AUTOEDIT'] = 'no'
-    os.putenv('GIT_MERGE_AUTOEDIT', 'no')
+    compat.putenv('GIT_MERGE_AUTOEDIT', 'no')
 
 
 @memoize
@@ -252,7 +247,7 @@ def process_args(opts, args):
         # Adds git to the PATH.  This is needed on Windows.
         path_entries = os.environ.get('PATH', '').split(os.pathsep)
         path_entries.insert(0, os.path.dirname(opts.git))
-        os.environ['PATH'] = os.pathsep.join(path_entries)
+        compat.putenv('PATH', os.pathsep.join(path_entries))
 
     # Bail out if --repo is not a directory
     repo = os.path.realpath(opts.repo)
