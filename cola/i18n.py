@@ -4,6 +4,7 @@ import gettext as _gettext
 import os
 import sys
 
+from cola import compat
 from cola import resources
 
 _null_translation = _gettext.NullTranslations()
@@ -27,8 +28,8 @@ def install(locale):
     if sys.platform == 'win32':
         _check_win32_locale()
     if locale:
-        os.environ['LANG'] = locale
-        os.environ['LC_MESSAGES'] = locale
+        compat.putenv('LANG', locale)
+        compat.putenv('LC_MESSAGES', locale)
     _gettext.textdomain('messages')
     _translation = _gettext.translation('git-cola',
                                         localedir=_get_locale_dir(),
@@ -67,7 +68,7 @@ def _check_win32_locale():
             lang = ':'.join([i for i in lang if i])
         # set lang code for gettext
         if lang:
-            os.environ['LANGUAGE'] = lang
+            compat.putenv('LANGUAGE', lang)
 
 
 # additional strings for translation
