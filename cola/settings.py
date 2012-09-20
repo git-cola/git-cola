@@ -10,8 +10,6 @@ try:
 except ImportError:
     import json
 
-from cola import core
-
 
 def mkdict(obj):
     if type(obj) is dict:
