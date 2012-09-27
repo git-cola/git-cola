@@ -140,6 +140,16 @@ class ColaApplication(object):
             self._translate_base = QtCore.QCoreApplication.translate
             QtCore.QCoreApplication.translate = self.translate
 
+        self._app.setStyleSheet("""
+            QMainWindow::separator {
+                width: 3px;
+                height: 3px;
+            }
+            QMainWindow::separator:hover {
+                background: white;
+            }
+            """)
+
         # Make file descriptors binary for win32
         utils.set_binary(sys.stdin)
         utils.set_binary(sys.stdout)
