@@ -39,7 +39,7 @@ class ItemDelegate(QtGui.QStyledItemDelegate):
 class HeaderItem(QtGui.QTreeWidgetItem):
     def __init__(self, parent):
         QtGui.QTreeWidgetItem.__init__(self, parent)
-        self.setBackground(0, QtGui.QColor(88, 88, 88))
+        self.setBackground(0, QtGui.QColor(42, 42, 42))
         self.setForeground(0, QtGui.QColor(255, 255, 255))
 
 
