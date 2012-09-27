@@ -339,19 +339,19 @@ class GitRepoInfoTask(QRunnable):
         upstream_changed = utils.add_parents(set(model.upstream_changed))
 
         if self.path in unmerged:
-            return (resources.icon('sigil-unmerged.png'),
+            return (resources.icon('modified.png'),
                     qtutils.tr('Unmerged'))
         if self.path in modified and self.path in staged:
-            return (resources.icon('sigil-partial.png'),
+            return (resources.icon('partial.png'),
                     qtutils.tr('Partially Staged'))
         if self.path in modified:
-            return (resources.icon('sigil-modified.png'),
+            return (resources.icon('modified.png'),
                     qtutils.tr('Modified'))
         if self.path in staged:
-            return (resources.icon('sigil-staged.png'),
+            return (resources.icon('staged.png'),
                     qtutils.tr('Staged'))
         if self.path in upstream_changed:
-            return (resources.icon('sigil-upstream.png'),
+            return (resources.icon('upstream.png'),
                     qtutils.tr('Changed Upstream'))
         if self.path in untracked:
             return (None, '?')

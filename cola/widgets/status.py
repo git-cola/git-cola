@@ -25,6 +25,24 @@ def select_item(tree, item):
     tree.scrollToItem(item)
 
 
+class ItemDelegate(QtGui.QStyledItemDelegate):
+    def __init__(self, parent):
+        QtGui.QStyledItemDelegate.__init__(self, parent)
+        self._size_hint = QtGui.QStyledItemDelegate.sizeHint
+
+    def sizeHint(self, option, index):
+        hint = self._size_hint(self, option, index)
+        hint.setHeight(hint.height() + 2)
+        return hint
+
+
+class HeaderItem(QtGui.QTreeWidgetItem):
+    def __init__(self, parent):
+        QtGui.QTreeWidgetItem.__init__(self, parent)
+        self.setBackground(0, QtGui.QColor(88, 88, 88))
+        self.setForeground(0, QtGui.QColor(255, 255, 255))
+
+
 class StatusWidget(QtGui.QWidget):
     """
     Provides a git-status-like repository widget.
@@ -61,17 +79,19 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         QtGui.QTreeWidget.__init__(self, parent)
 
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+        self.setItemDelegateForColumn(0, ItemDelegate(self))
         self.headerItem().setHidden(True)
         self.setAllColumnsShowFocus(True)
         self.setSortingEnabled(False)
         self.setUniformRowHeights(True)
         self.setAnimated(True)
         self.setRootIsDecorated(False)
+        self.setIndentation(0)
 
-        self.add_item('Staged', 'plus.png', hide=True)
-        self.add_item('Unmerged', 'unmerged.png', hide=True)
-        self.add_item('Modified', 'modified.png', hide=True)
-        self.add_item('Untracked', 'untracked.png', hide=True)
+        self.add_item('Staged', hide=True)
+        self.add_item('Unmerged', hide=True)
+        self.add_item('Modified', hide=True)
+        self.add_item('Untracked', hide=True)
 
         # Used to restore the selection
         self.old_scroll = None
@@ -144,11 +164,16 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                      SIGNAL('itemExpanded(QTreeWidgetItem*)'),
                      lambda x: self.update_column_widths())
 
-    def add_item(self, txt, path, hide=False):
+    def add_item(self, txt, hide=False):
         """Create a new top-level item in the status tree."""
-        item = QtGui.QTreeWidgetItem(self)
+        # TODO no icon
+        font = self.font()
+        font.setBold(True)
+        font.setCapitalization(QtGui.QFont.SmallCaps)
+
+        item = HeaderItem(self)
+        item.setFont(0, font)
         item.setText(0, self.tr(txt))
-        item.setIcon(0, qtutils.icon(path))
         if hide:
             self.setItemHidden(item, True)
 
