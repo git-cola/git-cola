@@ -78,6 +78,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def __init__(self, parent):
         QtGui.QTreeWidget.__init__(self, parent)
 
+        self.setCursor(Qt.PointingHandCursor)
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
         self.setItemDelegateForColumn(0, ItemDelegate(self))
         self.headerItem().setHidden(True)

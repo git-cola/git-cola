@@ -19,6 +19,7 @@ from cola.widgets import defs
 def create_button(text='', layout=None, tooltip=None, icon=None):
     """Create a button, set its title, and add it to the parent."""
     button = QtGui.QPushButton()
+    button.setCursor(Qt.PointingHandCursor)
     if text:
         button.setText(tr(text))
     if icon:
@@ -39,13 +40,17 @@ class DockTitleBarWidget(QtGui.QWidget):
         label.setFont(font)
         label.setText(title)
 
+        self.setCursor(QtCore.Qt.OpenHandCursor)
+
         self.close_button = QtGui.QPushButton()
+        self.close_button.setCursor(QtCore.Qt.PointingHandCursor)
         self.close_button.setFlat(True)
         self.close_button.setFixedSize(QtCore.QSize(16, 16))
         self.close_button.setIcon(qtutils.titlebar_close_icon())
         self.close_button.setToolTip(self.tr('Close'))
 
         self.toggle_button = QtGui.QPushButton()
+        self.toggle_button.setCursor(QtCore.Qt.PointingHandCursor)
         self.toggle_button.setFlat(True)
         self.toggle_button.setFixedSize(QtCore.QSize(16, 16))
         self.toggle_button.setIcon(qtutils.titlebar_normal_icon())
@@ -109,6 +114,7 @@ def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
     button = QtGui.QToolButton()
     button.setAutoRaise(True)
     button.setAutoFillBackground(True)
+    button.setCursor(Qt.PointingHandCursor)
     if icon:
         button.setIcon(icon)
     if text:
