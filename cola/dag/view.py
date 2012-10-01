@@ -185,6 +185,12 @@ class DiffWidget(QtGui.QWidget):
         self.summary_label.setAlignment(Qt.AlignTop)
         self.summary_label.elide()
 
+        self.sha1_label = TextLabel()
+        self.sha1_label.setTextFormat(Qt.PlainText)
+        self.sha1_label.setSizePolicy(policy)
+        self.sha1_label.setAlignment(Qt.AlignTop)
+        self.sha1_label.elide()
+
         self.diff = DiffTextEdit(self, whitespace=False)
 
         self.info_layout = QtGui.QVBoxLayout()
@@ -192,6 +198,7 @@ class DiffWidget(QtGui.QWidget):
         self.info_layout.setSpacing(0)
         self.info_layout.addWidget(self.author_label)
         self.info_layout.addWidget(self.summary_label)
+        self.info_layout.addWidget(self.sha1_label)
 
         self.logo_layout = QtGui.QHBoxLayout()
         self.logo_layout.setContentsMargins(defs.margin, 0, defs.margin, 0)
@@ -234,6 +241,7 @@ class DiffWidget(QtGui.QWidget):
         author_template = '%(author)s <%(email)s>' % template_args
         self.author_label.set_template(author_text, author_template)
         self.summary_label.set_text(summary)
+        self.sha1_label.set_text(sha1)
 
 
 class ViewerMixin(object):
