@@ -290,7 +290,7 @@ def icon_file(filename, staged=False, untracked=False):
     """Returns a file path representing a corresponding file path."""
     if staged:
         if os.path.exists(core.encode(filename)):
-            ifile = resources.icon('staged.png')
+            ifile = resources.icon('staged-item.png')
         else:
             ifile = resources.icon('removed.png')
     elif untracked:

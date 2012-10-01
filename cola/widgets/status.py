@@ -25,24 +25,6 @@ def select_item(tree, item):
     tree.scrollToItem(item)
 
 
-class ItemDelegate(QtGui.QStyledItemDelegate):
-    def __init__(self, parent):
-        QtGui.QStyledItemDelegate.__init__(self, parent)
-        self._size_hint = QtGui.QStyledItemDelegate.sizeHint
-
-    def sizeHint(self, option, index):
-        hint = self._size_hint(self, option, index)
-        hint.setHeight(hint.height() + 2)
-        return hint
-
-
-class HeaderItem(QtGui.QTreeWidgetItem):
-    def __init__(self, parent):
-        QtGui.QTreeWidgetItem.__init__(self, parent)
-        self.setBackground(0, QtGui.QColor(42, 42, 42))
-        self.setForeground(0, QtGui.QColor(255, 255, 255))
-
-
 class StatusWidget(QtGui.QWidget):
     """
     Provides a git-status-like repository widget.
@@ -78,9 +60,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def __init__(self, parent):
         QtGui.QTreeWidget.__init__(self, parent)
 
-        self.setCursor(Qt.PointingHandCursor)
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
-        self.setItemDelegateForColumn(0, ItemDelegate(self))
         self.headerItem().setHidden(True)
         self.setAllColumnsShowFocus(True)
         self.setSortingEnabled(False)
@@ -172,7 +152,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         font.setBold(True)
         font.setCapitalization(QtGui.QFont.SmallCaps)
 
-        item = HeaderItem(self)
+        item = QtGui.QTreeWidgetItem(self)
         item.setFont(0, font)
         item.setText(0, self.tr(txt))
         if hide:
