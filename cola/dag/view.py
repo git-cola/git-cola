@@ -1144,13 +1144,13 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
     def __init__(self, notifier, parent):
         QtGui.QGraphicsView.__init__(self, parent)
         ViewerMixin.__init__(self)
-        try:
-            from PyQt4 import QtOpenGL
-            glformat = QtOpenGL.QGLFormat(QtOpenGL.QGL.SampleBuffers)
-            self.glwidget = QtOpenGL.QGLWidget(glformat)
-            self.setViewport(self.glwidget)
-        except:
-            pass
+        #try:
+            #from PyQt4 import QtOpenGL
+            #glformat = QtOpenGL.QGLFormat(QtOpenGL.QGL.SampleBuffers)
+            #self.glwidget = QtOpenGL.QGLWidget(glformat)
+            #self.setViewport(self.glwidget)
+        #except:
+            #pass
 
 
         self.selection_list = []
