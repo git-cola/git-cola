@@ -900,8 +900,8 @@ class EdgeColor(object):
     #             QtGui.QColor.fromRgb(0xff, 0xff, 0x30), # yellow
     #          ]
     colors = [
-                QtGui.QColor.fromRgb(0xff, 0xff, 0xff), # white
-                QtGui.QColor.fromRgb(0x30, 0x80, 0xff), # blue
+                QtGui.QColor(Qt.black),
+                QtGui.QColor(Qt.blue),
                 QtGui.QColor.fromRgb(0x80, 0x80, 0xff), # indigo
              ]
 
@@ -931,9 +931,9 @@ class Commit(QtGui.QGraphicsItem):
     text_options = QtGui.QTextOption()
     text_options.setAlignment(Qt.AlignCenter)
 
-    commit_color = QtGui.QColor.fromRgb(0x0, 0x80, 0xff)
-    commit_selected_color = QtGui.QColor.fromRgb(0xff, 0x8a, 0x22)
-    merge_color = QtGui.QColor.fromRgb(0xff, 0xff, 0xff)
+    commit_color = QtGui.QColor(Qt.blue)
+    commit_selected_color = QtGui.QColor(Qt.green)
+    merge_color = QtGui.QColor(Qt.gray)
 
     outline_color = commit_color.darker()
     selected_outline_color = commit_selected_color.darker()
@@ -1077,8 +1077,8 @@ class Label(QtGui.QGraphicsItem):
     text_options.setAlignment(Qt.AlignVCenter)
 
     def __init__(self, commit,
-                 other_color=QtGui.QColor.fromRgb(255, 255, 64),
-                 head_color=QtGui.QColor.fromRgb(64, 255, 64)):
+                 other_color=QtGui.QColor(255, 255, 64),
+                 head_color=QtGui.QColor(64, 255, 64)):
         QtGui.QGraphicsItem.__init__(self)
         self.setZValue(-1)
 
@@ -1177,7 +1177,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         self.setCacheMode(QtGui.QGraphicsView.CacheBackground)
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
         self.setResizeAnchor(QtGui.QGraphicsView.NoAnchor)
-        self.setBackgroundBrush(QtGui.QColor.fromRgb(0, 0, 0))
+        self.setBackgroundBrush(QtGui.QColor(Qt.white))
 
         qtutils.add_action(self, 'Zoom In',
                            self.zoom_in, Qt.Key_Plus, Qt.Key_Equal)
