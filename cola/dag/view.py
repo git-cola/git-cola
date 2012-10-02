@@ -917,7 +917,7 @@ class EdgeColor(object):
 
 class Commit(QtGui.QGraphicsItem):
     item_type = QtGui.QGraphicsItem.UserType + 2
-    width = 48.
+    width = 24.
     height = 24.
 
     item_shape = QtGui.QPainterPath()
@@ -1030,7 +1030,7 @@ class Commit(QtGui.QGraphicsItem):
         # Draw ellipse
         painter.setPen(self.commit_pen)
         painter.setBrush(self.brush)
-        painter.drawRoundedRect(inner, 22, 9)
+        painter.drawEllipse(inner)
 
         # Draw text
         #try:
