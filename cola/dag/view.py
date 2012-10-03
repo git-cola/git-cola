@@ -9,6 +9,9 @@ from PyQt4 import QtCore
 from PyQt4 import QtNetwork
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
+from PyQt4.QtCore import QPointF
+from PyQt4.QtCore import QRectF
+
 
 from cola import cmds
 from cola import difftool
@@ -884,18 +887,51 @@ class Edge(QtGui.QGraphicsItem):
         return self.bound
 
     def paint(self, painter, option, widget):
-        # Draw the line
-        painter.setPen(self.pen)
-        #painter.drawLine(self.line)
-        path = QtGui.QPainterPath()
-        path.moveTo(self.source.x(),self.source.y())
-        y_source_up = self.source.y() - 20
-        path.lineTo(self.source.x(),y_source_up)
-        y_dest_down = self.dest.y() + 20
-        path.lineTo(self.dest.x(),y_dest_down)
-        path.lineTo(self.dest.x(),self.dest.y())
-        painter.drawPath(path)
         
+        arc_rect = 10
+        connector_length = 10
+        
+        painter.setPen(self.pen)
+        
+        if self.source.x() == self.dest.x():
+            painter.drawLine(self.source.x(),self.source.y(),self.dest.x(),self.dest.y())
+        
+        else:
+            
+            #Define points starting from source
+            point1 = QPointF(self.source.x(),self.source.y())
+            point2 = QPointF(point1.x(),point1.y() - connector_length)
+            point3 = QPointF(point2.x() + arc_rect, point2.y() - arc_rect)
+                        
+            #Define points starting from dest
+            point4 = QPointF(self.dest.x(),self.dest.y())
+            point5 = QPointF(point4.x(),point3.y() - arc_rect)
+            point6 = QPointF(point5.x() - arc_rect, point5.y() + arc_rect)
+            
+            start_angle_arc1 = 180*16 # 180 degrees (QtPainter uses 1/16th degrees)
+            span_angle_arc1 = -90*16 # -90 degrees (QtPainter uses 1/16th degrees)
+            start_angle_arc2 = -90*16 # -90 degrees (QtPainter uses 1/16th degrees)
+            span_angle_arc2 = 90*16 # 90 degrees (QtPainter uses 1/16th degrees)
+        
+            # If the dest is at the left of the source, then we need to reverse some values
+            if self.source.x() > self.dest.x():
+                point5 = QPointF(point4.x(),point4.y() + connector_length)
+                point6 = QPointF(point5.x() + arc_rect, point5.y() + arc_rect)
+                point3 = QPointF(self.source.x() - arc_rect,point6.y())
+                point2 = QPointF(self.source.x(), point3.y() + arc_rect)
+                
+                start_angle_arc1 = 90*16
+                span_angle_arc1 = -90*16
+                span_angle_arc2 = -90*16
+            
+            painter.drawLine(point1,point2)
+            painter.drawLine(point5,point4)
+            painter.drawLine(point3,point6)
+            
+            painter.drawArc(QRectF(point2,point3),start_angle_arc1,span_angle_arc1)
+            painter.drawArc(QRectF(point6,point5),start_angle_arc2,span_angle_arc2)
+            
+            
 
 class EdgeColor(object):
     """An edge color factory"""
