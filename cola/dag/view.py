@@ -872,9 +872,9 @@ class Edge(QtGui.QGraphicsItem):
             line = Qt.SolidLine
         else:
             color = EdgeColor.current()
-            line = Qt.DotLine
+            line = Qt.SolidLine
 
-        self.pen = QtGui.QPen(color, 1.0, line, Qt.SquareCap, Qt.BevelJoin)
+        self.pen = QtGui.QPen(color, 4.0, line, Qt.SquareCap, Qt.RoundJoin)
 
     # Qt overrides
     def type(self):
@@ -886,7 +886,16 @@ class Edge(QtGui.QGraphicsItem):
     def paint(self, painter, option, widget):
         # Draw the line
         painter.setPen(self.pen)
-        painter.drawLine(self.line)
+        #painter.drawLine(self.line)
+        path = QtGui.QPainterPath()
+        path.moveTo(self.source.x(),self.source.y())
+        y_source_up = self.source.y() - 20
+        path.lineTo(self.source.x(),y_source_up)
+        y_dest_down = self.dest.y() + 20
+        path.lineTo(self.dest.x(),y_dest_down)
+        path.lineTo(self.dest.x(),self.dest.y())
+        painter.drawPath(path)
+        
 
 class EdgeColor(object):
     """An edge color factory"""
@@ -1085,7 +1094,7 @@ class Label(QtGui.QGraphicsItem):
         # Starts with enough space for two tags. Any more and the commit
         # needs to be taller to accomodate.
         self.commit = commit
-        self.label_text = '\n'.join(commit.tags)
+        self.label_text = '/'.join(commit.tags)
 
         if 'HEAD' in commit.tags:
             self.color = head_color
@@ -1138,8 +1147,8 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
     x_adjust = Commit.width*4/3
     y_adjust = Commit.height*4/3
 
-    x_off = x_adjust + Label.width
-    y_off = 32
+    x_off = 48
+    y_off = 48
 
     def __init__(self, notifier, parent):
         QtGui.QGraphicsView.__init__(self, parent)
@@ -1549,6 +1558,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
 
             x_pos = cur_xoff
             y_pos = -generation * y_off
+            #y_pos = y_off
             positions[sha1] = (x_pos, y_pos)
 
             x_max = max(x_max, x_pos)
