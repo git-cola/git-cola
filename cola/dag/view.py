@@ -1007,7 +1007,7 @@ class Commit(QtGui.QGraphicsItem):
                  notifier,
                  selectable=QtGui.QGraphicsItem.ItemIsSelectable,
                  cursor=Qt.PointingHandCursor,
-                 xpos=width/2. + 1.,
+                 xpos=commit_radius/2. + 1.,
                  cached_commit_color=commit_color,
                  cached_commit_selected_color=commit_selected_color,
                  cached_merge_color=merge_color):
@@ -1197,7 +1197,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
     y_min = 0
 
     x_adjust = Commit.commit_radius*4/3
-    y_adjust = Commit.height*4/3
+    y_adjust = Commit.commit_radius*4/3
 
     x_off = 18
     y_off = 24
