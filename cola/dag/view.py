@@ -3,6 +3,8 @@ import math
 import sys
 import time
 import urllib
+from operator import attrgetter
+
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -889,7 +891,7 @@ class Edge(QtGui.QGraphicsItem):
     def paint(self, painter, option, widget):
         
         arc_rect = 10
-        connector_length = 10
+        connector_length = 5
         
         painter.setPen(self.pen)
         
@@ -943,18 +945,32 @@ class EdgeColor(object):
     #             QtGui.QColor.fromRgb(0x30, 0xff, 0x30), # green
     #             QtGui.QColor.fromRgb(0x30, 0x30, 0xff), # blue
     #             QtGui.QColor.fromRgb(0xff, 0xff, 0x30), # yellow
-    #          ]
+    #         
     colors = [
-                QtGui.QColor(Qt.black),
+                QtGui.QColor(Qt.red),
+                QtGui.QColor(Qt.green),
                 QtGui.QColor(Qt.blue),
-                QtGui.QColor.fromRgb(0x80, 0x80, 0xff), # indigo
+                QtGui.QColor(Qt.black),
+                QtGui.QColor(Qt.darkRed),
+                QtGui.QColor(Qt.darkGreen),
+                QtGui.QColor(Qt.darkBlue),
+                QtGui.QColor(Qt.cyan),
+                QtGui.QColor(Qt.magenta),
+                QtGui.QColor(Qt.yellow),
+                QtGui.QColor(Qt.gray),
+                QtGui.QColor(Qt.darkCyan),
+                QtGui.QColor(Qt.darkMagenta),
+                QtGui.QColor(Qt.darkYellow),
+                QtGui.QColor(Qt.darkGray),
              ]
 
     @classmethod
     def next(cls):
         cls.current_color_index += 1
         cls.current_color_index %= len(cls.colors)
-        return cls.colors[cls.current_color_index]
+        color = cls.colors[cls.current_color_index]
+        color.setAlpha(128)
+        return color
 
     @classmethod
     def current(cls):
@@ -962,23 +978,23 @@ class EdgeColor(object):
 
 class Commit(QtGui.QGraphicsItem):
     item_type = QtGui.QGraphicsItem.UserType + 2
-    width = 24.
-    height = 24.
+    commit_radius = 12.
+    merge_radius = 18.
 
     item_shape = QtGui.QPainterPath()
-    item_shape.addRect(width/-2., height/-2., width, height)
+    item_shape.addRect(commit_radius/-2., commit_radius/-2., commit_radius, commit_radius)
     item_bbox = item_shape.boundingRect()
 
     inner_rect = QtGui.QPainterPath()
-    inner_rect.addRect(width/-2.+2., height/-2.+2, width-4., height-4.)
+    inner_rect.addRect(commit_radius/-2.+2., commit_radius/-2.+2, commit_radius-4., commit_radius-4.)
     inner_rect = inner_rect.boundingRect()
 
     text_options = QtGui.QTextOption()
     text_options.setAlignment(Qt.AlignCenter)
 
-    commit_color = QtGui.QColor(Qt.blue)
+    commit_color = QtGui.QColor(Qt.white)
     commit_selected_color = QtGui.QColor(Qt.green)
-    merge_color = QtGui.QColor(Qt.gray)
+    merge_color = QtGui.QColor(Qt.lightGray)
 
     outline_color = commit_color.darker()
     selected_outline_color = commit_selected_color.darker()
@@ -1180,11 +1196,11 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
     x_max = 0
     y_min = 0
 
-    x_adjust = Commit.width*4/3
+    x_adjust = Commit.commit_radius*4/3
     y_adjust = Commit.height*4/3
 
-    x_off = 48
-    y_off = 48
+    x_off = 18
+    y_off = 24
 
     def __init__(self, notifier, parent):
         QtGui.QGraphicsView.__init__(self, parent)
@@ -1566,11 +1582,12 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         y_off = self.y_off
         x_offsets = self.x_offsets
 
+        #for node in self.order_nodes_by(nodes,'authdate'):
         for node in nodes:
             generation = node.generation
             sha1 = node.sha1
 
-            if len(node.children) > 1:
+            if node.is_fork():
                 # This is a fan-out so sweep over child generations and
                 # shift them to the right to avoid overlapping edges
                 child_gens = [c.generation for c in node.children]
@@ -1580,7 +1597,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
                     for g in xrange(generation+1, maxgen):
                         x_offsets[g] += x_off
 
-            if len(node.parents) == 1:
+            if not node.is_merge():
                 # Align nodes relative to their parents
                 parent_gen = node.parents[0].generation
                 parent_off = x_offsets[parent_gen]
@@ -1605,6 +1622,9 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         self.y_min = y_min
 
         return positions
+
+    def order_nodes_by(self,nodes,attr):
+        return sorted(nodes, key=attrgetter(attr))
 
     def update_scene_rect(self):
         y_min = self.y_min
