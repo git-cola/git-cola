@@ -1093,16 +1093,7 @@ class Commit(QtGui.QGraphicsItem):
         painter.setBrush(self.brush)
         painter.drawEllipse(inner)
 
-        # Draw text
-        #try:
-            #font = cache.font
-        #except AttributeError:
-            #font = cache.font = painter.font()
-            #font.setPointSize(7)
-        #painter.setFont(font)
-        #painter.setPen(self.text_pen)
-        #painter.drawText(inner, self.sha1_text, text_opts)
-
+       
     def mousePressEvent(self, event):
         QtGui.QGraphicsItem.mousePressEvent(self, event)
         self.pressed = True
