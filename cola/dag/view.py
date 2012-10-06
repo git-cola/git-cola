@@ -1581,7 +1581,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
                 for g in xrange(generation+1, maxgen):
                     x_offsets[g] += x_off
 
-            if not node.is_merge():
+            if len(node.parents) == 1:
                 # Align nodes relative to their parents
                 parent_gen = node.parents[0].generation
                 parent_off = x_offsets[parent_gen]
