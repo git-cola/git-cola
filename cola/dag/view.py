@@ -1576,11 +1576,10 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
                 # This is a fan-out so sweep over child generations and
                 # shift them to the right to avoid overlapping edges
                 child_gens = [c.generation for c in node.children]
-                maxgen = reduce(max, child_gens)
-                mingen = reduce(min, child_gens)
-                if maxgen > mingen:
-                    for g in xrange(generation+1, maxgen):
-                        x_offsets[g] += x_off
+                maxgen = max(child_gens)
+                mingen = min(child_gens)
+                for g in xrange(generation+1, maxgen):
+                    x_offsets[g] += x_off
 
             if not node.is_merge():
                 # Align nodes relative to their parents
