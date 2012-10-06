@@ -1596,20 +1596,20 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
 
             x_pos = cur_xoff
             y_pos = -generation * y_off
+            
+            y_pos = min(y_pos, y_min - y_off)
+            
             #y_pos = y_off
             positions[sha1] = (x_pos, y_pos)
 
             x_max = max(x_max, x_pos)
-            y_min = min(y_min, y_pos)
+            y_min = y_pos
 
 
         self.x_max = x_max
         self.y_min = y_min
 
         return positions
-
-    def order_nodes_by(self,nodes,attr):
-        return sorted(nodes, key=attrgetter(attr))
 
     def update_scene_rect(self):
         y_min = self.y_min
