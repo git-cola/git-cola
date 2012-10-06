@@ -1131,8 +1131,8 @@ class Label(QtGui.QGraphicsItem):
     text_options.setAlignment(Qt.AlignVCenter)
 
     def __init__(self, commit,
-                 other_color=QtGui.QColor(255, 255, 64),
-                 head_color=QtGui.QColor(64, 255, 64)):
+                 other_color=QtGui.QColor(Qt.lightGray),
+                 head_color=QtGui.QColor(Qt.green)):
         QtGui.QGraphicsItem.__init__(self)
         self.setZValue(-1)
 
@@ -1171,17 +1171,23 @@ class Label(QtGui.QGraphicsItem):
             font.setPointSize(6)
             height = cache.label_height = QtGui.QFontMetrics(font).height()
 
-        height = height * len(self.commit.tags)
-        label_box = QtCore.QRectF(0., -height/2.-3, self.width, height+6)
-        text_box = QtCore.QRectF(3., -height/2., self.width-4., height)
-
+        
         # Draw tags
         painter.setBrush(self.color)
         painter.setPen(self.pen)
-        painter.drawRoundedRect(label_box, 4, 4)
         painter.setFont(font)
         painter.setPen(black)
-        painter.drawText(text_box, self.label_text, text_opts)
+        
+        current_width = 0
+        
+        for tag in self.commit.tags:
+            
+            text_rect = painter.boundingRect(QRectF(current_width + 10,0,0,0),Qt.TextSingleLine,tag)
+            box_rect = text_rect.adjusted(-1,-1,1,1)
+            painter.drawRoundedRect(box_rect,4,4)
+            painter.drawText(text_rect,Qt.TextSingleLine,tag)
+            current_width += text_rect.width() + 10
+            
 
 
 class GraphView(QtGui.QGraphicsView, ViewerMixin):
