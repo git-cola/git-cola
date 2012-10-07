@@ -991,9 +991,6 @@ class Commit(QtGui.QGraphicsItem):
     inner_rect.addRect(commit_radius/-2.+2., commit_radius/-2.+2, commit_radius-4., commit_radius-4.)
     inner_rect = inner_rect.boundingRect()
 
-    text_options = QtGui.QTextOption()
-    text_options.setAlignment(Qt.AlignCenter)
-
     commit_color = QtGui.QColor(Qt.white)
     commit_selected_color = QtGui.QColor(Qt.green)
     merge_color = QtGui.QColor(Qt.lightGray)
@@ -1026,17 +1023,14 @@ class Commit(QtGui.QGraphicsItem):
         if commit.tags:
             self.label = label = Label(commit)
             label.setParentItem(self)
-            label.setPos(xpos, 0.)
+            label.setPos(xpos, -self.commit_radius/2.)
         else:
             self.label = None
 
         if len(commit.parents) > 1:
             self.brush = cached_merge_color
-            self.text_pen = Qt.black
         else:
             self.brush = cached_commit_color
-            self.text_pen = Qt.white
-        self.sha1_text = commit.sha1[:7]
 
         self.pressed = False
         self.dragged = False
@@ -1057,14 +1051,11 @@ class Commit(QtGui.QGraphicsItem):
             if value.toPyObject():
                 self.brush = self.commit_selected_color
                 color = self.selected_outline_color
-                self.text_pen = Qt.white
             else:
                 if len(self.commit.parents) > 1:
                     self.brush = self.merge_color
-                    self.text_pen = Qt.black
                 else:
                     self.brush = self.commit_color
-                    self.text_pen = Qt.white
                 color = self.outline_color
             commit_pen = QtGui.QPen()
             commit_pen.setWidth(1.0)
@@ -1084,7 +1075,6 @@ class Commit(QtGui.QGraphicsItem):
 
     def paint(self, painter, option, widget,
               inner=inner_rect,
-              text_opts=text_options,
               cache=Cache):
 
         # Do not draw outside the exposed rect
@@ -1131,7 +1121,7 @@ class Label(QtGui.QGraphicsItem):
     text_options.setAlignment(Qt.AlignVCenter)
 
     def __init__(self, commit,
-                 other_color=QtGui.QColor(Qt.lightGray),
+                 other_color=QtGui.QColor(Qt.white),
                  head_color=QtGui.QColor(Qt.green)):
         QtGui.QGraphicsItem.__init__(self)
         self.setZValue(-1)
@@ -1139,13 +1129,13 @@ class Label(QtGui.QGraphicsItem):
         # Starts with enough space for two tags. Any more and the commit
         # needs to be taller to accomodate.
         self.commit = commit
-        self.label_text = '/'.join(commit.tags)
-
+        
         if 'HEAD' in commit.tags:
             self.color = head_color
         else:
             self.color = other_color
 
+        self.color.setAlpha(180) 
         self.pen = QtGui.QPen()
         self.pen.setColor(self.color.darker())
         self.pen.setWidth(1.0)
@@ -1167,7 +1157,7 @@ class Label(QtGui.QGraphicsItem):
             font = cache.label_font
             height = cache.label_height
         except AttributeError:
-            font = cache.label_font = painter.font()
+            font = cache.label_font = QtGui.QApplication.font()
             font.setPointSize(6)
             height = cache.label_height = QtGui.QFontMetrics(font).height()
 
@@ -1176,17 +1166,16 @@ class Label(QtGui.QGraphicsItem):
         painter.setBrush(self.color)
         painter.setPen(self.pen)
         painter.setFont(font)
-        painter.setPen(black)
         
         current_width = 0
         
         for tag in self.commit.tags:
             
-            text_rect = painter.boundingRect(QRectF(current_width + 10,0,0,0),Qt.TextSingleLine,tag)
+            text_rect = painter.boundingRect(QRectF(current_width,0,0,0),Qt.TextSingleLine,tag)
             box_rect = text_rect.adjusted(-1,-1,1,1)
-            painter.drawRoundedRect(box_rect,4,4)
+            painter.drawRoundedRect(box_rect,2,2)
             painter.drawText(text_rect,Qt.TextSingleLine,tag)
-            current_width += text_rect.width() + 10
+            current_width += text_rect.width() + 5
             
 
 
