@@ -5,7 +5,6 @@ import time
 import urllib
 from operator import attrgetter
 
-
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4 import QtNetwork
@@ -546,7 +545,10 @@ class DAGView(Widget):
         self.old_count = None
         self.old_ref = None
 
-        self.revtext = completion.GitLogLineEdit(parent=self)
+        self.branchlabel = QtGui.QLabel()
+        self.branchlabel.setText('Branch:')
+        self.branchcombo = QtGui.QComboBox()
+        self.branchcombo.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Fixed)
 
         self.maxresults = QtGui.QSpinBox()
         self.maxresults.setMinimum(1)
@@ -570,7 +572,8 @@ class DAGView(Widget):
         self.top_layout.setSpacing(defs.button_spacing)
 
         self.top_layout.addWidget(self.maxresults)
-        self.top_layout.addWidget(self.revtext)
+        self.top_layout.addWidget(self.branchlabel)
+        self.top_layout.addWidget(self.branchcombo)
         self.top_layout.addWidget(self.displaybutton)
         self.top_layout.addStretch()
         self.top_layout.addWidget(self.zoom_out)
@@ -616,7 +619,6 @@ class DAGView(Widget):
             self.resize_to_desktop()
 
         # Update fields affected by model
-        self.revtext.setText(dag.ref)
         self.maxresults.setValue(dag.count)
         self.update_window_title()
 
@@ -648,16 +650,11 @@ class DAGView(Widget):
 
         self.connect(self.displaybutton, SIGNAL('pressed()'),
                      self.display)
-
-        self.connect(self.revtext, SIGNAL('ref_changed'),
+                     
+        self.connect(self.branchcombo, SIGNAL('currentIndexChanged(int)'),
                      self.display)
 
-        self.connect(self.revtext, SIGNAL('textChanged(QString)'),
-                     self.text_changed)
-
-        self.connect(self.revtext, SIGNAL('returnPressed()'),
-                     self.display)
-
+        
         # The model is updated in another thread so use
         # signals/slots to bring control back to the main GUI thread
         self.model.add_observer(self.model.message_updated,
@@ -698,18 +695,16 @@ class DAGView(Widget):
         self.emit(SIGNAL('model_updated'))
 
     def model_updated(self):
-        if self.dag.ref:
-            self.revtext.update_matches()
-            return
-        if not self.model.currentbranch:
-            return
-        self.revtext.setText(self.model.currentbranch)
+        self.branchcombo.clear()
+        self.branchcombo.addItems(self.model.all_branches())
+        current_index = self.model.all_branches().index(self.model.currentbranch)
+        dialog = QtGui.QDialogButtonBox()
+        QtGui.QLabel(str(current_index),dialog)
+        self.branchcombo.setCurrentIndex(current_index)
         self.display()
 
     def display(self):
-        new_ref = unicode(self.revtext.text())
-        if not new_ref:
-            return
+        new_ref = unicode(self.branchcombo.currentText())
         new_count = self.maxresults.value()
         old_ref = self.old_ref
         old_count = self.old_count
@@ -777,7 +772,6 @@ class DAGView(Widget):
 
     # Qt overrides
     def closeEvent(self, event):
-        self.revtext.close_popup()
         self.thread.stop()
         qtutils.save_state(self)
         return Widget.closeEvent(self, event)
