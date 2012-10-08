@@ -1017,6 +1017,7 @@ class Commit(QtGui.QGraphicsItem):
         self.setZValue(0)
         self.setFlag(selectable)
         self.setCursor(cursor)
+        self.setToolTip(commit.sha1[:7] + ": " + commit.summary)
 
         self.commit = commit
         self.notifier = notifier
