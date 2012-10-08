@@ -556,10 +556,7 @@ class DAGView(Widget):
         self.maxresults.setMaximum(99999)
         self.maxresults.setPrefix('git log -')
         self.maxresults.setSuffix('')
-
-        self.displaybutton = QtGui.QPushButton()
-        self.displaybutton.setText('Display')
-
+    
         self.zoom_in = QtGui.QPushButton()
         self.zoom_in.setIcon(qtutils.theme_icon('zoom-in.png'))
         self.zoom_in.setFlat(True)
@@ -575,7 +572,6 @@ class DAGView(Widget):
         self.top_layout.addWidget(self.maxresults)
         self.top_layout.addWidget(self.branchlabel)
         self.top_layout.addWidget(self.branchcombo)
-        self.top_layout.addWidget(self.displaybutton)
         self.top_layout.addStretch()
         self.top_layout.addWidget(self.zoom_out)
         self.top_layout.addWidget(self.zoom_in)
@@ -649,9 +645,6 @@ class DAGView(Widget):
         self.connect(self.maxresults, SIGNAL('editingFinished()'),
                      self.display)
 
-        self.connect(self.displaybutton, SIGNAL('pressed()'),
-                     self.display)
-                     
         self.connect(self.branchcombo, SIGNAL('currentIndexChanged(int)'),
                      self.display)
 
