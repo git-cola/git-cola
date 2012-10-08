@@ -416,7 +416,7 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         self.setAllColumnsShowFocus(True)
         self.setAlternatingRowColors(True)
         self.setRootIsDecorated(False)
-        self.setHeaderLabels(['Summary', 'Author', 'Age'])
+        self.setHeaderLabels([tr('Summary'), tr('Author'), tr('Age')])
 
         self.sha1map = {}
         self.notifier = notifier
