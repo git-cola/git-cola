@@ -696,15 +696,19 @@ class DAGView(Widget):
 
     def model_updated(self):
         self.branchcombo.clear()
+        self.fill_branch_combo()
+        self.display()
+
+    def fill_branch_combo(self):
         self.branchcombo.addItems(self.model.all_branches())
         current_index = self.model.all_branches().index(self.model.currentbranch)
-        dialog = QtGui.QDialogButtonBox()
-        QtGui.QLabel(str(current_index),dialog)
         self.branchcombo.setCurrentIndex(current_index)
-        self.display()
+        
 
     def display(self):
         new_ref = unicode(self.branchcombo.currentText())
+        if not new_ref:
+            self.fill_branch_combo()
         new_count = self.maxresults.value()
         old_ref = self.old_ref
         old_count = self.old_count
