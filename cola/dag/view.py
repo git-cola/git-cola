@@ -21,6 +21,7 @@ from cola import observable
 from cola import qtutils
 from cola import resources
 from cola.compat import hashlib
+from cola.qtutils import tr
 from cola.dag.model import RepoReader
 from cola.widgets import completion
 from cola.widgets import defs
@@ -546,7 +547,7 @@ class DAGView(Widget):
         self.old_ref = None
 
         self.branchlabel = QtGui.QLabel()
-        self.branchlabel.setText('Branch:')
+        self.branchlabel.setText(tr('Branch:'))
         self.branchcombo = QtGui.QComboBox()
         self.branchcombo.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Fixed)
 
