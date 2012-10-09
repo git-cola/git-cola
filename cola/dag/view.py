@@ -984,7 +984,7 @@ class Commit(QtGui.QGraphicsItem):
     inner_rect = inner_rect.boundingRect()
 
     commit_color = QtGui.QColor(Qt.white)
-    commit_selected_color = QtGui.QColor(Qt.green)
+    commit_selected_color = QtGui.QPalette().color(QtGui.QPalette().Highlight)
     merge_color = QtGui.QColor(Qt.lightGray)
 
     outline_color = commit_color.darker()
@@ -1042,8 +1042,9 @@ class Commit(QtGui.QGraphicsItem):
 
             # Cache the pen for use in paint()
             if value.toPyObject():
-                self.brush = self.commit_selected_color
-                color = self.selected_outline_color
+                palette = QtGui.QPalette()
+                self.brush = palette.brush(QtGui.QPalette.Highlight)
+                color = self.brush.color().darker()
             else:
                 if len(self.commit.parents) > 1:
                     self.brush = self.merge_color
@@ -1115,7 +1116,7 @@ class Label(QtGui.QGraphicsItem):
 
     def __init__(self, commit,
                  other_color=QtGui.QColor(Qt.white),
-                 head_color=QtGui.QColor(Qt.green)):
+                 head_color= QtGui.QPalette().color(QtGui.QPalette().Highlight)):
         QtGui.QGraphicsItem.__init__(self)
         self.setZValue(-1)
 
@@ -1128,7 +1129,7 @@ class Label(QtGui.QGraphicsItem):
         else:
             self.color = other_color
 
-        self.color.setAlpha(180) 
+        #self.color.setAlpha(180) 
         self.pen = QtGui.QPen()
         self.pen.setColor(self.color.darker())
         self.pen.setWidth(1.0)
