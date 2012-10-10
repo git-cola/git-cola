@@ -5,6 +5,7 @@ import time
 import urllib
 from operator import attrgetter
 
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4 import QtNetwork
@@ -21,7 +22,6 @@ from cola import observable
 from cola import qtutils
 from cola import resources
 from cola.compat import hashlib
-from cola.qtutils import tr
 from cola.dag.model import RepoReader
 from cola.widgets import completion
 from cola.widgets import defs
@@ -416,7 +416,7 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         self.setAllColumnsShowFocus(True)
         self.setAlternatingRowColors(True)
         self.setRootIsDecorated(False)
-        self.setHeaderLabels([tr('Summary'), tr('Author'), tr('Age')])
+        self.setHeaderLabels(['Summary', 'Author', 'Age'])
 
         self.sha1map = {}
         self.notifier = notifier
@@ -546,17 +546,17 @@ class DAGView(Widget):
         self.old_count = None
         self.old_ref = None
 
-        self.branchlabel = QtGui.QLabel()
-        self.branchlabel.setText(tr('Branch:'))
-        self.branchcombo = QtGui.QComboBox()
-        self.branchcombo.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Fixed)
+        self.revtext = completion.GitLogLineEdit(parent=self)
 
         self.maxresults = QtGui.QSpinBox()
         self.maxresults.setMinimum(1)
         self.maxresults.setMaximum(99999)
         self.maxresults.setPrefix('git log -')
         self.maxresults.setSuffix('')
-    
+
+        self.displaybutton = QtGui.QPushButton()
+        self.displaybutton.setText('Display')
+
         self.zoom_in = QtGui.QPushButton()
         self.zoom_in.setIcon(qtutils.theme_icon('zoom-in.png'))
         self.zoom_in.setFlat(True)
@@ -570,8 +570,8 @@ class DAGView(Widget):
         self.top_layout.setSpacing(defs.button_spacing)
 
         self.top_layout.addWidget(self.maxresults)
-        self.top_layout.addWidget(self.branchlabel)
-        self.top_layout.addWidget(self.branchcombo)
+        self.top_layout.addWidget(self.revtext)
+        self.top_layout.addWidget(self.displaybutton)
         self.top_layout.addStretch()
         self.top_layout.addWidget(self.zoom_out)
         self.top_layout.addWidget(self.zoom_in)
@@ -616,6 +616,7 @@ class DAGView(Widget):
             self.resize_to_desktop()
 
         # Update fields affected by model
+        self.revtext.setText(dag.ref)
         self.maxresults.setValue(dag.count)
         self.update_window_title()
 
@@ -645,10 +646,18 @@ class DAGView(Widget):
         self.connect(self.maxresults, SIGNAL('editingFinished()'),
                      self.display)
 
-        self.connect(self.branchcombo, SIGNAL('currentIndexChanged(int)'),
+        self.connect(self.displaybutton, SIGNAL('pressed()'),
                      self.display)
 
-        
+        self.connect(self.revtext, SIGNAL('ref_changed'),
+                     self.display)
+
+        self.connect(self.revtext, SIGNAL('textChanged(QString)'),
+                     self.text_changed)
+
+        self.connect(self.revtext, SIGNAL('returnPressed()'),
+                     self.display)
+
         # The model is updated in another thread so use
         # signals/slots to bring control back to the main GUI thread
         self.model.add_observer(self.model.message_updated,
@@ -689,20 +698,18 @@ class DAGView(Widget):
         self.emit(SIGNAL('model_updated'))
 
     def model_updated(self):
-        self.branchcombo.clear()
-        self.fill_branch_combo()
+        if self.dag.ref:
+            self.revtext.update_matches()
+            return
+        if not self.model.currentbranch:
+            return
+        self.revtext.setText(self.model.currentbranch)
         self.display()
 
-    def fill_branch_combo(self):
-        self.branchcombo.addItems(self.model.all_branches())
-        current_index = self.model.all_branches().index(self.model.currentbranch)
-        self.branchcombo.setCurrentIndex(current_index)
-        
-
     def display(self):
-        new_ref = unicode(self.branchcombo.currentText())
+        new_ref = unicode(self.revtext.text())
         if not new_ref:
-            self.fill_branch_combo()
+            return
         new_count = self.maxresults.value()
         old_ref = self.old_ref
         old_count = self.old_count
@@ -770,6 +777,7 @@ class DAGView(Widget):
 
     # Qt overrides
     def closeEvent(self, event):
+        self.revtext.close_popup()
         self.thread.stop()
         qtutils.save_state(self)
         return Widget.closeEvent(self, event)
@@ -984,7 +992,7 @@ class Commit(QtGui.QGraphicsItem):
     inner_rect = inner_rect.boundingRect()
 
     commit_color = QtGui.QColor(Qt.white)
-    commit_selected_color = QtGui.QPalette().color(QtGui.QPalette().Highlight)
+    commit_selected_color = QtGui.QColor(Qt.green)
     merge_color = QtGui.QColor(Qt.lightGray)
 
     outline_color = commit_color.darker()
@@ -1008,7 +1016,6 @@ class Commit(QtGui.QGraphicsItem):
         self.setZValue(0)
         self.setFlag(selectable)
         self.setCursor(cursor)
-        self.setToolTip(commit.sha1[:6] + ": " + commit.summary)
 
         self.commit = commit
         self.notifier = notifier
@@ -1042,9 +1049,8 @@ class Commit(QtGui.QGraphicsItem):
 
             # Cache the pen for use in paint()
             if value.toPyObject():
-                palette = QtGui.QPalette()
-                self.brush = palette.brush(QtGui.QPalette.Highlight)
-                color = self.brush.color().darker()
+                self.brush = self.commit_selected_color
+                color = self.selected_outline_color
             else:
                 if len(self.commit.parents) > 1:
                     self.brush = self.merge_color
@@ -1116,7 +1122,7 @@ class Label(QtGui.QGraphicsItem):
 
     def __init__(self, commit,
                  other_color=QtGui.QColor(Qt.white),
-                 head_color= QtGui.QPalette().color(QtGui.QPalette().Highlight)):
+                 head_color=QtGui.QColor(Qt.green)):
         QtGui.QGraphicsItem.__init__(self)
         self.setZValue(-1)
 
@@ -1129,7 +1135,7 @@ class Label(QtGui.QGraphicsItem):
         else:
             self.color = other_color
 
-        #self.color.setAlpha(180) 
+        self.color.setAlpha(180) 
         self.pen = QtGui.QPen()
         self.pen.setColor(self.color.darker())
         self.pen.setWidth(1.0)
