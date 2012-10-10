@@ -3,12 +3,17 @@ import math
 import sys
 import time
 import urllib
+from operator import attrgetter
+
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4 import QtNetwork
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
+from PyQt4.QtCore import QPointF
+from PyQt4.QtCore import QRectF
+
 
 from cola import cmds
 from cola import difftool
@@ -185,6 +190,12 @@ class DiffWidget(QtGui.QWidget):
         self.summary_label.setAlignment(Qt.AlignTop)
         self.summary_label.elide()
 
+        self.sha1_label = TextLabel()
+        self.sha1_label.setTextFormat(Qt.PlainText)
+        self.sha1_label.setSizePolicy(policy)
+        self.sha1_label.setAlignment(Qt.AlignTop)
+        self.sha1_label.elide()
+
         self.diff = DiffTextEdit(self, whitespace=False)
 
         self.info_layout = QtGui.QVBoxLayout()
@@ -192,6 +203,7 @@ class DiffWidget(QtGui.QWidget):
         self.info_layout.setSpacing(0)
         self.info_layout.addWidget(self.author_label)
         self.info_layout.addWidget(self.summary_label)
+        self.info_layout.addWidget(self.sha1_label)
 
         self.logo_layout = QtGui.QHBoxLayout()
         self.logo_layout.setContentsMargins(defs.margin, 0, defs.margin, 0)
@@ -234,6 +246,7 @@ class DiffWidget(QtGui.QWidget):
         author_template = '%(author)s <%(email)s>' % template_args
         self.author_label.set_template(author_text, author_template)
         self.summary_label.set_text(summary)
+        self.sha1_label.set_text(sha1)
 
 
 class ViewerMixin(object):
@@ -864,9 +877,9 @@ class Edge(QtGui.QGraphicsItem):
             line = Qt.SolidLine
         else:
             color = EdgeColor.current()
-            line = Qt.DotLine
+            line = Qt.SolidLine
 
-        self.pen = QtGui.QPen(color, 1.0, line, Qt.SquareCap, Qt.BevelJoin)
+        self.pen = QtGui.QPen(color, 4.0, line, Qt.SquareCap, Qt.RoundJoin)
 
     # Qt overrides
     def type(self):
@@ -876,9 +889,53 @@ class Edge(QtGui.QGraphicsItem):
         return self.bound
 
     def paint(self, painter, option, widget):
-        # Draw the line
+        
+        arc_rect = 10
+        connector_length = 5
+        
         painter.setPen(self.pen)
-        painter.drawLine(self.line)
+        path = QtGui.QPainterPath()
+            
+        if self.source.x() == self.dest.x():
+            path.moveTo(self.source.x(),self.source.y())
+            path.lineTo(self.dest.x(),self.dest.y())
+            painter.drawPath(path)
+        
+        else:
+            
+            #Define points starting from source
+            point1 = QPointF(self.source.x(),self.source.y())
+            point2 = QPointF(point1.x(),point1.y() - connector_length)
+            point3 = QPointF(point2.x() + arc_rect, point2.y() - arc_rect)
+                        
+            #Define points starting from dest
+            point4 = QPointF(self.dest.x(),self.dest.y())
+            point5 = QPointF(point4.x(),point3.y() - arc_rect)
+            point6 = QPointF(point5.x() - arc_rect, point5.y() + arc_rect)
+            
+            start_angle_arc1 = 180
+            span_angle_arc1 = 90
+            start_angle_arc2 = 90
+            span_angle_arc2 = -90
+        
+            # If the dest is at the left of the source, then we need to reverse some values
+            if self.source.x() > self.dest.x():
+                point5 = QPointF(point4.x(),point4.y() + connector_length)
+                point6 = QPointF(point5.x() + arc_rect, point5.y() + arc_rect)
+                point3 = QPointF(self.source.x() - arc_rect,point6.y())
+                point2 = QPointF(self.source.x(), point3.y() + arc_rect)
+                
+                span_angle_arc1 = 90
+            
+            
+            path.moveTo(point1)
+            path.lineTo(point2)
+            path.arcTo(QRectF(point2,point3),start_angle_arc1,span_angle_arc1)
+            path.lineTo(point6)
+            path.arcTo(QRectF(point6,point5),start_angle_arc2,span_angle_arc2)
+            path.lineTo(point4)
+            painter.drawPath(path)
+            
 
 class EdgeColor(object):
     """An edge color factory"""
@@ -890,18 +947,32 @@ class EdgeColor(object):
     #             QtGui.QColor.fromRgb(0x30, 0xff, 0x30), # green
     #             QtGui.QColor.fromRgb(0x30, 0x30, 0xff), # blue
     #             QtGui.QColor.fromRgb(0xff, 0xff, 0x30), # yellow
-    #          ]
+    #         
     colors = [
-                QtGui.QColor.fromRgb(0xff, 0xff, 0xff), # white
-                QtGui.QColor.fromRgb(0x30, 0x80, 0xff), # blue
-                QtGui.QColor.fromRgb(0x80, 0x80, 0xff), # indigo
+                QtGui.QColor(Qt.red),
+                QtGui.QColor(Qt.green),
+                QtGui.QColor(Qt.blue),
+                QtGui.QColor(Qt.black),
+                QtGui.QColor(Qt.darkRed),
+                QtGui.QColor(Qt.darkGreen),
+                QtGui.QColor(Qt.darkBlue),
+                QtGui.QColor(Qt.cyan),
+                QtGui.QColor(Qt.magenta),
+                QtGui.QColor(Qt.yellow),
+                QtGui.QColor(Qt.gray),
+                QtGui.QColor(Qt.darkCyan),
+                QtGui.QColor(Qt.darkMagenta),
+                QtGui.QColor(Qt.darkYellow),
+                QtGui.QColor(Qt.darkGray),
              ]
 
     @classmethod
     def next(cls):
         cls.current_color_index += 1
         cls.current_color_index %= len(cls.colors)
-        return cls.colors[cls.current_color_index]
+        color = cls.colors[cls.current_color_index]
+        color.setAlpha(128)
+        return color
 
     @classmethod
     def current(cls):
@@ -909,23 +980,20 @@ class EdgeColor(object):
 
 class Commit(QtGui.QGraphicsItem):
     item_type = QtGui.QGraphicsItem.UserType + 2
-    width = 48.
-    height = 24.
+    commit_radius = 12.
+    merge_radius = 18.
 
     item_shape = QtGui.QPainterPath()
-    item_shape.addRect(width/-2., height/-2., width, height)
+    item_shape.addRect(commit_radius/-2., commit_radius/-2., commit_radius, commit_radius)
     item_bbox = item_shape.boundingRect()
 
     inner_rect = QtGui.QPainterPath()
-    inner_rect.addRect(width/-2.+2., height/-2.+2, width-4., height-4.)
+    inner_rect.addRect(commit_radius/-2.+2., commit_radius/-2.+2, commit_radius-4., commit_radius-4.)
     inner_rect = inner_rect.boundingRect()
 
-    text_options = QtGui.QTextOption()
-    text_options.setAlignment(Qt.AlignCenter)
-
-    commit_color = QtGui.QColor.fromRgb(0x0, 0x80, 0xff)
-    commit_selected_color = QtGui.QColor.fromRgb(0xff, 0x8a, 0x22)
-    merge_color = QtGui.QColor.fromRgb(0xff, 0xff, 0xff)
+    commit_color = QtGui.QColor(Qt.white)
+    commit_selected_color = QtGui.QColor(Qt.green)
+    merge_color = QtGui.QColor(Qt.lightGray)
 
     outline_color = commit_color.darker()
     selected_outline_color = commit_selected_color.darker()
@@ -938,7 +1006,7 @@ class Commit(QtGui.QGraphicsItem):
                  notifier,
                  selectable=QtGui.QGraphicsItem.ItemIsSelectable,
                  cursor=Qt.PointingHandCursor,
-                 xpos=width/2. + 1.,
+                 xpos=commit_radius/2. + 1.,
                  cached_commit_color=commit_color,
                  cached_commit_selected_color=commit_selected_color,
                  cached_merge_color=merge_color):
@@ -955,17 +1023,14 @@ class Commit(QtGui.QGraphicsItem):
         if commit.tags:
             self.label = label = Label(commit)
             label.setParentItem(self)
-            label.setPos(xpos, 0.)
+            label.setPos(xpos, -self.commit_radius/2.)
         else:
             self.label = None
 
         if len(commit.parents) > 1:
             self.brush = cached_merge_color
-            self.text_pen = Qt.black
         else:
             self.brush = cached_commit_color
-            self.text_pen = Qt.white
-        self.sha1_text = commit.sha1[:7]
 
         self.pressed = False
         self.dragged = False
@@ -986,14 +1051,11 @@ class Commit(QtGui.QGraphicsItem):
             if value.toPyObject():
                 self.brush = self.commit_selected_color
                 color = self.selected_outline_color
-                self.text_pen = Qt.white
             else:
                 if len(self.commit.parents) > 1:
                     self.brush = self.merge_color
-                    self.text_pen = Qt.black
                 else:
                     self.brush = self.commit_color
-                    self.text_pen = Qt.white
                 color = self.outline_color
             commit_pen = QtGui.QPen()
             commit_pen.setWidth(1.0)
@@ -1013,7 +1075,6 @@ class Commit(QtGui.QGraphicsItem):
 
     def paint(self, painter, option, widget,
               inner=inner_rect,
-              text_opts=text_options,
               cache=Cache):
 
         # Do not draw outside the exposed rect
@@ -1022,18 +1083,9 @@ class Commit(QtGui.QGraphicsItem):
         # Draw ellipse
         painter.setPen(self.commit_pen)
         painter.setBrush(self.brush)
-        painter.drawRoundedRect(inner, 22, 9)
+        painter.drawEllipse(inner)
 
-        # Draw text
-        try:
-            font = cache.font
-        except AttributeError:
-            font = cache.font = painter.font()
-            font.setPointSize(7)
-        painter.setFont(font)
-        painter.setPen(self.text_pen)
-        painter.drawText(inner, self.sha1_text, text_opts)
-
+       
     def mousePressEvent(self, event):
         QtGui.QGraphicsItem.mousePressEvent(self, event)
         self.pressed = True
@@ -1069,21 +1121,21 @@ class Label(QtGui.QGraphicsItem):
     text_options.setAlignment(Qt.AlignVCenter)
 
     def __init__(self, commit,
-                 other_color=QtGui.QColor.fromRgb(255, 255, 64),
-                 head_color=QtGui.QColor.fromRgb(64, 255, 64)):
+                 other_color=QtGui.QColor(Qt.white),
+                 head_color=QtGui.QColor(Qt.green)):
         QtGui.QGraphicsItem.__init__(self)
         self.setZValue(-1)
 
         # Starts with enough space for two tags. Any more and the commit
         # needs to be taller to accomodate.
         self.commit = commit
-        self.label_text = '\n'.join(commit.tags)
-
+        
         if 'HEAD' in commit.tags:
             self.color = head_color
         else:
             self.color = other_color
 
+        self.color.setAlpha(180) 
         self.pen = QtGui.QPen()
         self.pen.setColor(self.color.darker())
         self.pen.setWidth(1.0)
@@ -1105,21 +1157,26 @@ class Label(QtGui.QGraphicsItem):
             font = cache.label_font
             height = cache.label_height
         except AttributeError:
-            font = cache.label_font = painter.font()
+            font = cache.label_font = QtGui.QApplication.font()
             font.setPointSize(6)
             height = cache.label_height = QtGui.QFontMetrics(font).height()
 
-        height = height * len(self.commit.tags)
-        label_box = QtCore.QRectF(0., -height/2.-3, self.width, height+6)
-        text_box = QtCore.QRectF(3., -height/2., self.width-4., height)
-
+        
         # Draw tags
         painter.setBrush(self.color)
         painter.setPen(self.pen)
-        painter.drawRoundedRect(label_box, 4, 4)
         painter.setFont(font)
-        painter.setPen(black)
-        painter.drawText(text_box, self.label_text, text_opts)
+        
+        current_width = 0
+        
+        for tag in self.commit.tags:
+            
+            text_rect = painter.boundingRect(QRectF(current_width,0,0,0),Qt.TextSingleLine,tag)
+            box_rect = text_rect.adjusted(-1,-1,1,1)
+            painter.drawRoundedRect(box_rect,2,2)
+            painter.drawText(text_rect,Qt.TextSingleLine,tag)
+            current_width += text_rect.width() + 5
+            
 
 
 class GraphView(QtGui.QGraphicsView, ViewerMixin):
@@ -1127,23 +1184,15 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
     x_max = 0
     y_min = 0
 
-    x_adjust = Commit.width*4/3
-    y_adjust = Commit.height*4/3
+    x_adjust = Commit.commit_radius*4/3
+    y_adjust = Commit.commit_radius*4/3
 
-    x_off = x_adjust + Label.width
-    y_off = 32
+    x_off = 18
+    y_off = 24
 
     def __init__(self, notifier, parent):
         QtGui.QGraphicsView.__init__(self, parent)
         ViewerMixin.__init__(self)
-        try:
-            from PyQt4 import QtOpenGL
-            glformat = QtOpenGL.QGLFormat(QtOpenGL.QGL.SampleBuffers)
-            self.glwidget = QtOpenGL.QGLWidget(glformat)
-            self.setViewport(self.glwidget)
-        except:
-            pass
-
 
         self.selection_list = []
         self.notifier = notifier
@@ -1169,7 +1218,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         self.setCacheMode(QtGui.QGraphicsView.CacheBackground)
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
         self.setResizeAnchor(QtGui.QGraphicsView.NoAnchor)
-        self.setBackgroundBrush(QtGui.QColor.fromRgb(0, 0, 0))
+        self.setBackgroundBrush(QtGui.QColor(Qt.white))
 
         qtutils.add_action(self, 'Zoom In',
                            self.zoom_in, Qt.Key_Plus, Qt.Key_Equal)
@@ -1321,7 +1370,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         self_commits = self.commits
         self_items = self.items
 
-        commits = self_commits[-1:]
+        commits = self_commits[-10:]
         items = [self_items[c.sha1] for c in commits]
         self.fit_view_to_items(items)
 
@@ -1513,19 +1562,19 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         y_off = self.y_off
         x_offsets = self.x_offsets
 
+        #for node in self.order_nodes_by(nodes,'authdate'):
         for node in nodes:
             generation = node.generation
             sha1 = node.sha1
 
-            if len(node.children) > 1:
+            if node.is_fork():
                 # This is a fan-out so sweep over child generations and
                 # shift them to the right to avoid overlapping edges
                 child_gens = [c.generation for c in node.children]
-                maxgen = reduce(max, child_gens)
-                mingen = reduce(min, child_gens)
-                if maxgen > mingen:
-                    for g in xrange(generation+1, maxgen):
-                        x_offsets[g] += x_off
+                maxgen = max(child_gens)
+                mingen = min(child_gens)
+                for g in xrange(generation+1, maxgen):
+                    x_offsets[g] += x_off
 
             if len(node.parents) == 1:
                 # Align nodes relative to their parents
@@ -1541,10 +1590,14 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
 
             x_pos = cur_xoff
             y_pos = -generation * y_off
+            
+            y_pos = min(y_pos, y_min - y_off)
+            
+            #y_pos = y_off
             positions[sha1] = (x_pos, y_pos)
 
             x_max = max(x_max, x_pos)
-            y_min = min(y_min, y_pos)
+            y_min = y_pos
 
 
         self.x_max = x_max
