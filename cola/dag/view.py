@@ -34,6 +34,17 @@ from cola.widgets.text import DiffTextEdit
 COMMITS_SELECTED = 'COMMITS_SELECTED'
 
 
+class Gravatar(object):
+    @staticmethod
+    def url_for_email(email, imgsize):
+        email_hash = hashlib.md5(email).hexdigest()
+        default_url = 'http://git-cola.github.com/images/git-64x64.jpg'
+        encoded_url = urllib.quote(default_url, '')
+        query = '?s=%d&d=%s' % (imgsize, encoded_url)
+        url = 'http://gravatar.com/avatar/' + email_hash + query
+        return url
+
+
 class GravatarLabel(QtGui.QLabel):
     def __init__(self, parent=None):
         QtGui.QLabel.__init__(self, parent)
@@ -42,21 +53,17 @@ class GravatarLabel(QtGui.QLabel):
         self.response = None
         self.timeout = 0
         self.imgsize = 48
+        self.pixmaps = {}
 
         self.network = QtNetwork.QNetworkAccessManager()
         self.connect(self.network,
                      SIGNAL('finished(QNetworkReply*)'),
                      self.network_finished)
 
-    def url_for_email(self, email):
-        email_hash = hashlib.md5(email).hexdigest()
-        default_url = 'http://git-cola.github.com/images/git-64x64.jpg'
-        encoded_url = urllib.quote(default_url, '')
-        query = '?s=%d&d=%s' % (self.imgsize, encoded_url)
-        url = 'http://gravatar.com/avatar/' + email_hash + query
-        return url
-
     def get_email(self, email):
+        if email in self.pixmaps:
+            self.setPixmap(self.pixmaps[email])
+            return
         if (self.timeout > 0 and
                 (int(time.time()) - self.timeout) < (5 * 60)):
             self.set_pixmap_from_response()
@@ -65,9 +72,10 @@ class GravatarLabel(QtGui.QLabel):
             self.set_pixmap_from_response()
             return
         self.email = email
-        self.get(self.url_for_email(email))
+        self.get(email)
 
-    def get(self, url):
+    def get(self, email):
+        url = Gravatar.url_for_email(email, self.imgsize)
         self.network.get(QtNetwork.QNetworkRequest(QtCore.QUrl(url)))
 
     def default_pixmap_as_bytes(self):
@@ -82,11 +90,14 @@ class GravatarLabel(QtGui.QLabel):
         return byte_array
 
     def network_finished(self, reply):
+        email = self.email
+
         header = QtCore.QByteArray('Location')
         raw_header = reply.rawHeader(header)
         if raw_header:
             location = unicode(QtCore.QString(raw_header)).strip()
-            request_location = unicode(self.url_for_email(self.email))
+            request_location = unicode(
+                    Gravatar.url_for_email(self.email, self.imgsize))
             relocated = location != request_location
         else:
             relocated = False
@@ -103,12 +114,22 @@ class GravatarLabel(QtGui.QLabel):
         else:
             self.response = self.default_pixmap_as_bytes()
             self.timeout = int(time.time())
-        self.set_pixmap_from_response()
+
+        pixmap = self.set_pixmap_from_response()
+
+        # If the email has not changed (e.g. no other requests)
+        # then we know that this pixmap corresponds to this specific
+        # email address.  We can't blindly trust self.email else
+        # we may add cache entries for thee wrong email address.
+        url = Gravatar.url_for_email(email, self.imgsize)
+        if url == unicode(reply.url().toString()):
+            self.pixmaps[email] = pixmap
 
     def set_pixmap_from_response(self):
         pixmap = QtGui.QPixmap()
         pixmap.loadFromData(self.response)
         self.setPixmap(pixmap)
+        return pixmap
 
 
 class TextLabel(QtGui.QLabel):
@@ -1004,13 +1025,13 @@ class Commit(QtGui.QGraphicsItem):
 
         QtGui.QGraphicsItem.__init__(self)
 
+        self.commit = commit
+        self.notifier = notifier
+
         self.setZValue(0)
         self.setFlag(selectable)
         self.setCursor(cursor)
-        self.setToolTip(commit.sha1[:7] + ": " + commit.summary)
-
-        self.commit = commit
-        self.notifier = notifier
+        self.setToolTip(commit.sha1[:7] + ': ' + commit.summary)
 
         if commit.tags:
             self.label = label = Label(commit)
