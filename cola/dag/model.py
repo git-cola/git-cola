@@ -167,6 +167,14 @@ class Commit(object):
                 "}")
 
 
+    def is_fork(self):
+        ''' Returns True if the node is a fork'''
+        return len(self.children) > 1
+    
+    def is_merge(self):
+        ''' Returns True if the node is a fork'''
+        return len(self.parents) > 1
+
 class RepoReader(object):
     def __init__(self, dag, git=git):
         self.dag = dag
