@@ -3,8 +3,6 @@ import math
 import sys
 import time
 import urllib
-from operator import attrgetter
-
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -13,7 +11,6 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 from PyQt4.QtCore import QPointF
 from PyQt4.QtCore import QRectF
-
 
 from cola import cmds
 from cola import difftool
@@ -890,45 +887,45 @@ class Edge(QtGui.QGraphicsItem):
         return self.bound
 
     def paint(self, painter, option, widget):
-        
+
         arc_rect = 10
         connector_length = 5
-        
+
         painter.setPen(self.pen)
         path = QtGui.QPainterPath()
-            
+
         if self.source.x() == self.dest.x():
             path.moveTo(self.source.x(),self.source.y())
             path.lineTo(self.dest.x(),self.dest.y())
             painter.drawPath(path)
-        
+
         else:
-            
+
             #Define points starting from source
             point1 = QPointF(self.source.x(),self.source.y())
             point2 = QPointF(point1.x(),point1.y() - connector_length)
             point3 = QPointF(point2.x() + arc_rect, point2.y() - arc_rect)
-                        
+
             #Define points starting from dest
             point4 = QPointF(self.dest.x(),self.dest.y())
             point5 = QPointF(point4.x(),point3.y() - arc_rect)
             point6 = QPointF(point5.x() - arc_rect, point5.y() + arc_rect)
-            
+
             start_angle_arc1 = 180
             span_angle_arc1 = 90
             start_angle_arc2 = 90
             span_angle_arc2 = -90
-        
+
             # If the dest is at the left of the source, then we need to reverse some values
             if self.source.x() > self.dest.x():
                 point5 = QPointF(point4.x(),point4.y() + connector_length)
                 point6 = QPointF(point5.x() + arc_rect, point5.y() + arc_rect)
                 point3 = QPointF(self.source.x() - arc_rect,point6.y())
                 point2 = QPointF(self.source.x(), point3.y() + arc_rect)
-                
+
                 span_angle_arc1 = 90
-            
-            
+
+
             path.moveTo(point1)
             path.lineTo(point2)
             path.arcTo(QRectF(point2,point3),start_angle_arc1,span_angle_arc1)
@@ -936,19 +933,12 @@ class Edge(QtGui.QGraphicsItem):
             path.arcTo(QRectF(point6,point5),start_angle_arc2,span_angle_arc2)
             path.lineTo(point4)
             painter.drawPath(path)
-            
+
 
 class EdgeColor(object):
     """An edge color factory"""
 
     current_color_index = 0
-    # TODO: Make this configurable, e.g.
-    # colors = [
-    #             QtGui.QColor.fromRgb(0xff, 0x30, 0x30), # red
-    #             QtGui.QColor.fromRgb(0x30, 0xff, 0x30), # green
-    #             QtGui.QColor.fromRgb(0x30, 0x30, 0xff), # blue
-    #             QtGui.QColor.fromRgb(0xff, 0xff, 0x30), # yellow
-    #         
     colors = [
                 QtGui.QColor(Qt.red),
                 QtGui.QColor(Qt.green),
@@ -1087,7 +1077,7 @@ class Commit(QtGui.QGraphicsItem):
         painter.setBrush(self.brush)
         painter.drawEllipse(inner)
 
-       
+
     def mousePressEvent(self, event):
         QtGui.QGraphicsItem.mousePressEvent(self, event)
         self.pressed = True
@@ -1131,13 +1121,13 @@ class Label(QtGui.QGraphicsItem):
         # Starts with enough space for two tags. Any more and the commit
         # needs to be taller to accomodate.
         self.commit = commit
-        
+
         if 'HEAD' in commit.tags:
             self.color = head_color
         else:
             self.color = other_color
 
-        self.color.setAlpha(180) 
+        self.color.setAlpha(180)
         self.pen = QtGui.QPen()
         self.pen.setColor(self.color.darker())
         self.pen.setWidth(1.0)
@@ -1163,22 +1153,22 @@ class Label(QtGui.QGraphicsItem):
             font.setPointSize(6)
             height = cache.label_height = QtGui.QFontMetrics(font).height()
 
-        
+
         # Draw tags
         painter.setBrush(self.color)
         painter.setPen(self.pen)
         painter.setFont(font)
-        
+
         current_width = 0
-        
+
         for tag in self.commit.tags:
-            
+
             text_rect = painter.boundingRect(QRectF(current_width,0,0,0),Qt.TextSingleLine,tag)
             box_rect = text_rect.adjusted(-1,-1,1,1)
             painter.drawRoundedRect(box_rect,2,2)
             painter.drawText(text_rect,Qt.TextSingleLine,tag)
             current_width += text_rect.width() + 5
-            
+
 
 
 class GraphView(QtGui.QGraphicsView, ViewerMixin):
@@ -1592,15 +1582,14 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
 
             x_pos = cur_xoff
             y_pos = -generation * y_off
-            
+
             y_pos = min(y_pos, y_min - y_off)
-            
+
             #y_pos = y_off
             positions[sha1] = (x_pos, y_pos)
 
             x_max = max(x_max, x_pos)
             y_min = y_pos
-
 
         self.x_max = x_max
         self.y_min = y_min
