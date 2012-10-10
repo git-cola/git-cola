@@ -23,6 +23,7 @@ from cola import qtutils
 from cola import resources
 from cola.compat import hashlib
 from cola.dag.model import RepoReader
+from cola.qtutils import tr
 from cola.widgets import completion
 from cola.widgets import defs
 from cola.widgets.createbranch import create_new_branch
