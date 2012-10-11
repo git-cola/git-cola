@@ -1,12 +1,9 @@
 import collections
 import math
 import sys
-import time
-import urllib
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from PyQt4 import QtNetwork
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 from PyQt4.QtCore import QPointF
@@ -17,8 +14,7 @@ from cola import difftool
 from cola import gitcmds
 from cola import observable
 from cola import qtutils
-from cola import resources
-from cola.compat import hashlib
+from cola.dag import gravatar
 from cola.dag.model import RepoReader
 from cola.qtutils import tr
 from cola.widgets import completion
@@ -32,104 +28,6 @@ from cola.widgets.text import DiffTextEdit
 
 
 COMMITS_SELECTED = 'COMMITS_SELECTED'
-
-
-class Gravatar(object):
-    @staticmethod
-    def url_for_email(email, imgsize):
-        email_hash = hashlib.md5(email).hexdigest()
-        default_url = 'http://git-cola.github.com/images/git-64x64.jpg'
-        encoded_url = urllib.quote(default_url, '')
-        query = '?s=%d&d=%s' % (imgsize, encoded_url)
-        url = 'http://gravatar.com/avatar/' + email_hash + query
-        return url
-
-
-class GravatarLabel(QtGui.QLabel):
-    def __init__(self, parent=None):
-        QtGui.QLabel.__init__(self, parent)
-
-        self.email = None
-        self.response = None
-        self.timeout = 0
-        self.imgsize = 48
-        self.pixmaps = {}
-
-        self.network = QtNetwork.QNetworkAccessManager()
-        self.connect(self.network,
-                     SIGNAL('finished(QNetworkReply*)'),
-                     self.network_finished)
-
-    def get_email(self, email):
-        if email in self.pixmaps:
-            self.setPixmap(self.pixmaps[email])
-            return
-        if (self.timeout > 0 and
-                (int(time.time()) - self.timeout) < (5 * 60)):
-            self.set_pixmap_from_response()
-            return
-        if email == self.email and self.response is not None:
-            self.set_pixmap_from_response()
-            return
-        self.email = email
-        self.get(email)
-
-    def get(self, email):
-        url = Gravatar.url_for_email(email, self.imgsize)
-        self.network.get(QtNetwork.QNetworkRequest(QtCore.QUrl(url)))
-
-    def default_pixmap_as_bytes(self):
-        xres = self.imgsize
-        pixmap = QtGui.QPixmap(resources.icon('git.svg'))
-        pixmap = pixmap.scaledToHeight(xres, Qt.SmoothTransformation)
-        byte_array = QtCore.QByteArray()
-        buf = QtCore.QBuffer(byte_array)
-        buf.open(QtCore.QIODevice.WriteOnly)
-        pixmap.save(buf, 'PNG')
-        buf.close()
-        return byte_array
-
-    def network_finished(self, reply):
-        email = self.email
-
-        header = QtCore.QByteArray('Location')
-        raw_header = reply.rawHeader(header)
-        if raw_header:
-            location = unicode(QtCore.QString(raw_header)).strip()
-            request_location = unicode(
-                    Gravatar.url_for_email(self.email, self.imgsize))
-            relocated = location != request_location
-        else:
-            relocated = False
-
-        if reply.error() == QtNetwork.QNetworkReply.NoError:
-            if relocated:
-                # We could do get_url(urllib.unquote(location)) to
-                # download the default image.
-                # Save bandwidth by using a pixmap.
-                self.response = self.default_pixmap_as_bytes()
-            else:
-                self.response = reply.readAll()
-            self.timeout = 0
-        else:
-            self.response = self.default_pixmap_as_bytes()
-            self.timeout = int(time.time())
-
-        pixmap = self.set_pixmap_from_response()
-
-        # If the email has not changed (e.g. no other requests)
-        # then we know that this pixmap corresponds to this specific
-        # email address.  We can't blindly trust self.email else
-        # we may add cache entries for thee wrong email address.
-        url = Gravatar.url_for_email(email, self.imgsize)
-        if url == unicode(reply.url().toString()):
-            self.pixmaps[email] = pixmap
-
-    def set_pixmap_from_response(self):
-        pixmap = QtGui.QPixmap()
-        pixmap.loadFromData(self.response)
-        self.setPixmap(pixmap)
-        return pixmap
 
 
 class TextLabel(QtGui.QLabel):
@@ -193,7 +91,7 @@ class DiffWidget(QtGui.QWidget):
         policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,
                                    QtGui.QSizePolicy.Minimum)
 
-        self.gravatar_label = GravatarLabel()
+        self.gravatar_label = gravatar.GravatarLabel()
 
         self.author_label = TextLabel()
         self.author_label.setTextFormat(Qt.RichText)
@@ -256,7 +154,6 @@ class DiffWidget(QtGui.QWidget):
                 'summary': summary
         }
 
-        self.gravatar_label.get_email(email)
         author_text = ("""%(author)s &lt;"""
                        """<a href="mailto:%(email)s">"""
                        """%(email)s</a>&gt;"""
@@ -267,6 +164,7 @@ class DiffWidget(QtGui.QWidget):
         self.summary_label.set_text(summary)
         self.sha1_label.set_text(sha1)
 
+        self.gravatar_label.set_email(email)
 
 class ViewerMixin(object):
     """Implementations must provide selected_items()"""
@@ -564,6 +462,7 @@ class DAGView(Widget):
 
         self.old_count = None
         self.old_ref = None
+        self.thread = ReaderThread(dag, self)
 
         self.revtext = completion.GitLogLineEdit(parent=self)
 
@@ -639,7 +538,8 @@ class DAGView(Widget):
         self.maxresults.setValue(dag.count)
         self.update_window_title()
 
-        self.thread = ReaderThread(dag, self)
+        qtutils.connect_button(self.zoom_in, self.graphview.zoom_in)
+        qtutils.connect_button(self.zoom_out, self.graphview.zoom_out)
 
         self.thread.connect(self.thread, self.thread.commits_ready,
                             self.add_commits)
@@ -650,11 +550,6 @@ class DAGView(Widget):
         self.connect(self.splitter, SIGNAL('splitterMoved(int,int)'),
                      self.splitter_moved)
 
-        self.connect(self.zoom_in, SIGNAL('pressed()'),
-                     self.graphview.zoom_in)
-
-        self.connect(self.zoom_out, SIGNAL('pressed()'),
-                     self.graphview.zoom_out)
 
         self.connect(self.treewidget, SIGNAL('diff_commits'),
                      self.diff_commits)
