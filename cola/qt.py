@@ -88,9 +88,11 @@ class DockTitleBarWidget(QtGui.QWidget):
 
     def update_tooltips(self):
         if self.parent().isFloating():
-            self.toggle_button.setToolTip(self.tr('Attach'))
+            tooltip = self.tr('Attach')
         else:
-            self.toggle_button.setToolTip(self.tr('Detach'))
+            tooltip = self.tr('Detach')
+        self.toggle_button.setToolTip(tooltip)
+
 
 
 def create_dock(title, parent):

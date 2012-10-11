@@ -14,6 +14,7 @@ from cola import difftool
 from cola import gitcmds
 from cola import observable
 from cola import qtutils
+from cola.compat import set
 from cola.dag import gravatar
 from cola.dag.model import RepoReader
 from cola.qtutils import tr
@@ -78,6 +79,17 @@ class TextLabel(QtGui.QLabel):
         QtGui.QLabel.resizeEvent(self, event)
 
 
+class DiffInfoTask(QtCore.QRunnable):
+    def __init__(self, sha1, reflector):
+        QtCore.QRunnable.__init__(self)
+        self.sha1 = sha1
+        self.reflector = reflector
+
+    def run(self):
+        diff = gitcmds.diff_info(self.sha1)
+        self.reflector.emit(SIGNAL('diff'), diff)
+
+
 class DiffWidget(QtGui.QWidget):
     def __init__(self, notifier, parent):
         QtGui.QWidget.__init__(self, parent)
@@ -114,6 +126,8 @@ class DiffWidget(QtGui.QWidget):
         self.sha1_label.elide()
 
         self.diff = DiffTextEdit(self, whitespace=False)
+        self.tasks = set()
+        self.reflector = QtCore.QObject(self)
 
         self.info_layout = QtGui.QVBoxLayout()
         self.info_layout.setMargin(0)
@@ -136,13 +150,26 @@ class DiffWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
+        self.connect(self.reflector, SIGNAL('diff'), self.diff.setText)
+        self.connect(self.reflector, SIGNAL('task_done'), self.task_done)
+
+    def task_done(self, task):
+        try:
+            self.tasks.remove(task)
+        except:
+            pass
+
+    def set_diff_sha1(self, sha1):
+        self.diff.setText(self.tr('+++ Loading...'))
+        task = DiffInfoTask(sha1, self.reflector)
+        self.tasks.add(task)
+        QtCore.QThreadPool.globalInstance().start(task)
 
     def commits_selected(self, commits):
         if len(commits) != 1:
             return
         commit = commits[0]
         sha1 = commit.sha1
-        self.diff.setText(gitcmds.diff_info(sha1))
 
         email = commit.email or ''
         summary = commit.summary or ''
@@ -164,7 +191,9 @@ class DiffWidget(QtGui.QWidget):
         self.summary_label.set_text(summary)
         self.sha1_label.set_text(sha1)
 
+        self.set_diff_sha1(sha1)
         self.gravatar_label.set_email(email)
+
 
 class ViewerMixin(object):
     """Implementations must provide selected_items()"""
