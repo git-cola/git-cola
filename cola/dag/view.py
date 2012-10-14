@@ -840,19 +840,19 @@ class Edge(QtGui.QGraphicsItem):
         path = QtGui.QPainterPath()
 
         if self.source.x() == self.dest.x():
-            path.moveTo(self.source.x(),self.source.y())
-            path.lineTo(self.dest.x(),self.dest.y())
+            path.moveTo(self.source.x(), self.source.y())
+            path.lineTo(self.dest.x(), self.dest.y())
             painter.drawPath(path)
 
         else:
 
             #Define points starting from source
-            point1 = QPointF(self.source.x(),self.source.y())
-            point2 = QPointF(point1.x(),point1.y() - connector_length)
+            point1 = QPointF(self.source.x(), self.source.y())
+            point2 = QPointF(point1.x(), point1.y() - connector_length)
             point3 = QPointF(point2.x() + arc_rect, point2.y() - arc_rect)
 
             #Define points starting from dest
-            point4 = QPointF(self.dest.x(),self.dest.y())
+            point4 = QPointF(self.dest.x(), self.dest.y())
             point5 = QPointF(point4.x(),point3.y() - arc_rect)
             point6 = QPointF(point5.x() - arc_rect, point5.y() + arc_rect)
 
@@ -861,11 +861,12 @@ class Edge(QtGui.QGraphicsItem):
             start_angle_arc2 = 90
             span_angle_arc2 = -90
 
-            # If the dest is at the left of the source, then we need to reverse some values
+            # If the dest is at the left of the source, then we
+            # need to reverse some values
             if self.source.x() > self.dest.x():
-                point5 = QPointF(point4.x(),point4.y() + connector_length)
+                point5 = QPointF(point4.x(), point4.y() + connector_length)
                 point6 = QPointF(point5.x() + arc_rect, point5.y() + arc_rect)
-                point3 = QPointF(self.source.x() - arc_rect,point6.y())
+                point3 = QPointF(self.source.x() - arc_rect, point6.y())
                 point2 = QPointF(self.source.x(), point3.y() + arc_rect)
 
                 span_angle_arc1 = 90
@@ -873,9 +874,11 @@ class Edge(QtGui.QGraphicsItem):
 
             path.moveTo(point1)
             path.lineTo(point2)
-            path.arcTo(QRectF(point2,point3),start_angle_arc1,span_angle_arc1)
+            path.arcTo(QRectF(point2, point3),
+                       start_angle_arc1, span_angle_arc1)
             path.lineTo(point6)
-            path.arcTo(QRectF(point6,point5),start_angle_arc2,span_angle_arc2)
+            path.arcTo(QRectF(point6, point5),
+                       start_angle_arc2, span_angle_arc2)
             path.lineTo(point4)
             painter.drawPath(path)
 
@@ -916,15 +919,20 @@ class EdgeColor(object):
 
 class Commit(QtGui.QGraphicsItem):
     item_type = QtGui.QGraphicsItem.UserType + 2
-    commit_radius = 12.
-    merge_radius = 18.
+    commit_radius = 12.0
+    merge_radius = 18.0
 
     item_shape = QtGui.QPainterPath()
-    item_shape.addRect(commit_radius/-2., commit_radius/-2., commit_radius, commit_radius)
+    item_shape.addRect(commit_radius / -2.0,
+                       commit_radius / -2.0,
+                       commit_radius, commit_radius)
     item_bbox = item_shape.boundingRect()
 
     inner_rect = QtGui.QPainterPath()
-    inner_rect.addRect(commit_radius/-2.+2., commit_radius/-2.+2, commit_radius-4., commit_radius-4.)
+    inner_rect.addRect(commit_radius / -2.0 + 2.0,
+                       commit_radius / -2.0 + 2.0,
+                       commit_radius - 4.0,
+                       commit_radius - 4.0)
     inner_rect = inner_rect.boundingRect()
 
     commit_color = QtGui.QColor(Qt.white)
@@ -942,7 +950,7 @@ class Commit(QtGui.QGraphicsItem):
                  notifier,
                  selectable=QtGui.QGraphicsItem.ItemIsSelectable,
                  cursor=Qt.PointingHandCursor,
-                 xpos=commit_radius/2. + 1.,
+                 xpos=commit_radius / 2.0 + 1.0,
                  cached_commit_color=commit_color,
                  cached_commit_selected_color=commit_selected_color,
                  cached_merge_color=merge_color):
@@ -960,7 +968,7 @@ class Commit(QtGui.QGraphicsItem):
         if commit.tags:
             self.label = label = Label(commit)
             label.setParentItem(self)
-            label.setPos(xpos, -self.commit_radius/2.)
+            label.setPos(xpos, -self.commit_radius / 2.0)
         else:
             self.label = None
 
@@ -1092,11 +1100,9 @@ class Label(QtGui.QGraphicsItem):
               cache=Cache):
         try:
             font = cache.label_font
-            height = cache.label_height
         except AttributeError:
             font = cache.label_font = QtGui.QApplication.font()
             font.setPointSize(6)
-            height = cache.label_height = QtGui.QFontMetrics(font).height()
 
 
         # Draw tags
@@ -1107,11 +1113,11 @@ class Label(QtGui.QGraphicsItem):
         current_width = 0
 
         for tag in self.commit.tags:
-
-            text_rect = painter.boundingRect(QRectF(current_width,0,0,0),Qt.TextSingleLine,tag)
-            box_rect = text_rect.adjusted(-1,-1,1,1)
-            painter.drawRoundedRect(box_rect,2,2)
-            painter.drawText(text_rect,Qt.TextSingleLine,tag)
+            text_rect = painter.boundingRect(
+                    QRectF(current_width, 0, 0, 0), Qt.TextSingleLine, tag)
+            box_rect = text_rect.adjusted(-1, -1, 1, 1)
+            painter.drawRoundedRect(box_rect, 2, 2)
+            painter.drawText(text_rect, Qt.TextSingleLine, tag)
             current_width += text_rect.width() + 5
 
 
@@ -1198,7 +1204,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         self.scale_view(1.5)
 
     def zoom_out(self):
-        self.scale_view(1.0/1.5)
+        self.scale_view(1.0 / 1.5)
 
     def commits_selected(self, commits):
         if self.selecting:
@@ -1261,7 +1267,8 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
             return
         selected_item.setSelected(False)
         parent_item.setSelected(True)
-        self.ensureVisible(parent_item.mapRectToScene(parent_item.boundingRect()))
+        self.ensureVisible(
+                parent_item.mapRectToScene(parent_item.boundingRect()))
 
     def select_oldest_parent(self):
         """Select the parent with the oldest generation number"""
@@ -1273,7 +1280,8 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
             return
         selected_item.setSelected(False)
         parent_item.setSelected(True)
-        self.ensureVisible(parent_item.mapRectToScene(parent_item.boundingRect()))
+        scene_rect = parent_item.mapRectToScene(parent_item.boundingRect())
+        self.ensureVisible(scene_rect)
 
     def select_child(self):
         """Select the child with the oldest generation number"""
@@ -1285,7 +1293,8 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
             return
         selected_item.setSelected(False)
         child_item.setSelected(True)
-        self.ensureVisible(child_item.mapRectToScene(child_item.boundingRect()))
+        scene_rect = child_item.mapRectToScene(child_item.boundingRect())
+        self.ensureVisible(scene_rect)
 
     def select_newest_child(self):
         """Select the Nth child with the newest generation number (N > 1)"""
@@ -1301,7 +1310,8 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
             return
         selected_item.setSelected(False)
         child_item.setSelected(True)
-        self.ensureVisible(child_item.mapRectToScene(child_item.boundingRect()))
+        scene_rect = child_item.mapRectToScene(child_item.boundingRect())
+        self.ensureVisible(scene_rect)
 
     def set_initial_view(self):
         self_commits = self.commits
@@ -1406,9 +1416,9 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         """Handle mouse wheel panning."""
 
         if event.delta() < 0:
-            s = -133.
+            s = -133.0
         else:
-            s = 133.
+            s = 133.0
         pan_rect = QtCore.QRectF(0.0, 0.0, 1.0, 1.0)
         factor = 1.0 / self.matrix().mapRect(pan_rect).width()
 
@@ -1423,7 +1433,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         factor = (self.matrix().scale(scale, scale)
                                .mapRect(QtCore.QRectF(0, 0, 1, 1))
                                .width())
-        if factor < 0.07 or factor > 100:
+        if factor < 0.07 or factor > 100.0:
             return
         self.zoom = scale
 
@@ -1509,8 +1519,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
                 # shift them to the right to avoid overlapping edges
                 child_gens = [c.generation for c in node.children]
                 maxgen = max(child_gens)
-                mingen = min(child_gens)
-                for g in xrange(generation+1, maxgen):
+                for g in xrange(generation + 1, maxgen):
                     x_offsets[g] += x_off
 
             if len(node.parents) == 1:
