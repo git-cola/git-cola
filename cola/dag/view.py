@@ -872,7 +872,6 @@ class Edge(QtGui.QGraphicsItem):
 
                 span_angle_arc1 = 90
 
-
             path.moveTo(point1)
             path.lineTo(point2)
             path.arcTo(QRectF(point2, point3),
@@ -938,10 +937,10 @@ class Commit(QtGui.QGraphicsItem):
     inner_rect = inner_rect.boundingRect()
 
     commit_color = QtGui.QColor(Qt.white)
-    commit_selected_color = QtGui.QColor(Qt.green)
+    outline_color = commit_color.darker()
     merge_color = QtGui.QColor(Qt.lightGray)
 
-    outline_color = commit_color.darker()
+    commit_selected_color = QtGui.QColor(Qt.green)
     selected_outline_color = commit_selected_color.darker()
 
     commit_pen = QtGui.QPen()
@@ -954,7 +953,6 @@ class Commit(QtGui.QGraphicsItem):
                  cursor=Qt.PointingHandCursor,
                  xpos=commit_radius / 2.0 + 1.0,
                  cached_commit_color=commit_color,
-                 cached_commit_selected_color=commit_selected_color,
                  cached_merge_color=merge_color):
 
         QtGui.QGraphicsItem.__init__(self)
@@ -1138,6 +1136,10 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
     def __init__(self, notifier, parent):
         QtGui.QGraphicsView.__init__(self, parent)
         ViewerMixin.__init__(self)
+
+        highlight = self.palette().color(QtGui.QPalette.Highlight)
+        Commit.commit_selected_color = highlight
+        Commit.selected_outline_color = highlight.darker()
 
         self.selection_list = []
         self.notifier = notifier
