@@ -13,6 +13,7 @@ from cola import cmds
 from cola import difftool
 from cola import gitcmds
 from cola import observable
+from cola import qt
 from cola import qtutils
 from cola.compat import set
 from cola.dag import gravatar
@@ -897,7 +898,8 @@ class EdgeColor(object):
                 QtGui.QColor(Qt.darkBlue),
                 QtGui.QColor(Qt.cyan),
                 QtGui.QColor(Qt.magenta),
-                QtGui.QColor(Qt.yellow),
+                # Orange; Qt.yellow is too low-contrast
+                qt.rgba(0xff, 0x66, 0x00),
                 QtGui.QColor(Qt.gray),
                 QtGui.QColor(Qt.darkCyan),
                 QtGui.QColor(Qt.darkMagenta),
