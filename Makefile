@@ -12,6 +12,7 @@ CTAGS = ctags
 prefix = $(HOME)
 bindir = $(prefix)/bin
 coladir = $(prefix)/share/git-cola/lib
+darwin_python = /System/Library/Frameworks/Python.framework/Resources/Python.app/Contents/MacOS/Python
 # DESTDIR =
 
 cola_base := git-cola
@@ -105,10 +106,12 @@ mo:
 
 git-cola.app:
 	mkdir -p $(cola_app)/Contents/MacOS
+	mkdir -p $(cola_app)/Contents/Resources
 	cp darwin/git-cola $(cola_app)/Contents/MacOS
 	cp darwin/Info.plist darwin/PkgInfo $(cola_app)/Contents
 	$(MAKE) prefix=$(cola_app)/Contents/Resources install install-doc
 	cp darwin/git-cola.icns $(cola_app)/Contents/Resources
+	ln -sf $(darwin_python) $(cola_app)/Contents/Resources/git-cola
 
 app-tarball: git-cola.app
 	$(TAR) czf $(cola_dist).app.tar.gz $(cola_app_base)
