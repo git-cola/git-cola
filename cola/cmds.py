@@ -1001,4 +1001,13 @@ def do(cls, *args, **opts):
         exc_type, exc_value, exc_tb = sys.exc_info()
         details = traceback.format_exception(exc_type, exc_value, exc_tb)
         details = '\n'.join(details)
-        Interaction.critical('Oops', message=e.msg, details=details)
+        msg = _exception_message(e)
+        Interaction.critical('Oops', message=msg, details=details)
+
+
+
+def _exception_message(e):
+    if hasattr(e, 'msg'):
+        return e.msg
+    else:
+        return str(e)
