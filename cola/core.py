@@ -44,9 +44,9 @@ def encode(unenc, encoding=None):
 
 
 @interruptable
-def read(fh):
+def read(fh, size=-1):
     """Read from a filehandle and retry when interrupted"""
-    return fh.read()
+    return fh.read(size)
 
 
 @interruptable

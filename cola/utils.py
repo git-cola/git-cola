@@ -217,10 +217,10 @@ def dirname(path):
     return path.rsplit('/', 1)[0]
 
 
-def slurp(path):
+def slurp(path, size=-1):
     """Slurps a filepath into a string."""
     fh = open(core.encode(path))
-    slushy = core.read(fh)
+    slushy = core.read(fh, size=size)
     fh.close()
     return core.decode(slushy)
 
