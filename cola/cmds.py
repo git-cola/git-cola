@@ -6,6 +6,9 @@ from fnmatch import fnmatch
 
 from cStringIO import StringIO
 
+from PyQt4 import QtCore
+from PyQt4.QtCore import SIGNAL
+
 import cola
 from cola import compat
 from cola import i18n
@@ -35,6 +38,15 @@ class BaseCommand(object):
     def name(self):
         """Return this command's name."""
         return self.__class__.__name__
+
+    def prepare(self):
+        """Prepare to run the command.
+
+        This is performed in a separate thread before do()
+        is invoked.
+
+        """
+        pass
 
     def do(self):
         raise NotImplementedError('%s.do() is unimplemented' % self.name())
@@ -995,8 +1007,12 @@ def run(cls, *args, **opts):
 
 def do(cls, *args, **opts):
     """Run a command in-place"""
+    do_cmd(cls(*args, **opts))
+
+
+def do_cmd(cmd):
     try:
-        cls(*args, **opts).do()
+        cmd.do()
     except StandardError, e:
         exc_type, exc_value, exc_tb = sys.exc_info()
         details = traceback.format_exception(exc_type, exc_value, exc_tb)
@@ -1004,6 +1020,51 @@ def do(cls, *args, **opts):
         msg = _exception_message(e)
         Interaction.critical('Oops', message=msg, details=details)
 
+
+def bg(parent, cls, *args, **opts):
+    """
+    Returns a callback that runs a command
+
+    If the caller of run() provides args or opts then those are
+    used instead of the ones provided by the invoker of the callback.
+
+    """
+    def runner(*local_args, **local_opts):
+        if args or opts:
+            background(parent, cls, *args, **opts)
+        else:
+            background(parent, cls, *local_args, **local_opts)
+
+    return runner
+
+
+def background(parent, cls, *args, **opts):
+    cmd = cls(*args, **opts)
+    task = AsyncCommand(parent, cmd)
+    QtCore.QThreadPool.globalInstance().start(task)
+
+
+class RunCommand(QtCore.QObject):
+    def __init__(self, cmd, parent):
+        QtCore.QObject.__init__(self, parent)
+        self.cmd = cmd
+        self.connect(self, SIGNAL('command_ready'), self.do)
+
+    def run(self):
+        self.cmd.prepare()
+        self.emit(SIGNAL('command_ready'))
+
+    def do(self):
+        do_cmd(self.cmd)
+
+
+class AsyncCommand(QtCore.QRunnable):
+    def __init__(self, parent, cmd):
+        QtCore.QRunnable.__init__(self)
+        self.runner = RunCommand(cmd, parent)
+
+    def run(self):
+        self.runner.run()
 
 
 def _exception_message(e):
