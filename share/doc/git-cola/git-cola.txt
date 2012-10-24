@@ -68,7 +68,8 @@ tag::
 CONFIG VARIABLES
 ----------------
 cola.savewindowsettings::
-	Whether 'git-cola' should remember its window settings.
+	'git-cola' will remember its window settings when set to `true`.
+	These settings are saved in `$HOME/.config/git-cola`.
 
 cola.fileattributes::
 	Enables per-file linkgit:gitattributes[5] encoding support
@@ -95,11 +96,16 @@ cola.textwidth::
 	The number of columns used for line wrapping.
 	Tabs are counted according to `cola.tabwidth`.
 
+cola.readsize::
+	'git-cola' avoids reading large binary untracked files.
+	The maximum size to read is controlled by `cola.readsize`
+	and defaults to `2048`.
+
 gui.diffcontext::
 	The number of diff context lines used and displayed by 'git-cola'.
 
 gui.editor::
-	The default text editor is controlled by gui.editor.
+	The default text editor is controlled by `gui.editor`.
 	The config variable overrides the EDITOR environment variable.
 
 gui.historybrowser::

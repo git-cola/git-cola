@@ -752,16 +752,26 @@ class SetDiffText(Command):
 
 class ShowUntracked(Command):
     """Show an untracked file."""
-    # We don't actually do anything other than set the mode right now.
-    # TODO check the mimetype for the file and handle things
-    # generically.
     def __init__(self, filenames):
         Command.__init__(self)
+        self.filenames = filenames
         self.new_mode = self.model.mode_untracked
+        self.new_diff_text = ''
+
+    def prepare(self):
+        filenames = self.filenames
+        self.new_diff_text = self.diff_text_for(filenames[0])
+
+    def diff_text_for(self, filename):
+        size = _config.get('cola.readsize', 1024 * 2)
         try:
-            self.new_diff_text = utils.slurp(filenames[0])
+            result = utils.slurp(filename, size=size)
         except:
-            self.new_diff_text = ''
+            result = ''
+
+        if len(result) == size:
+            result += '...'
+        return result
 
 
 class SignOff(Command):

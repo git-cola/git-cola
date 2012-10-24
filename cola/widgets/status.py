@@ -821,7 +821,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             cmds.do(cmds.Diff, self.unmerged())
 
         elif category == self.idx_untracked:
-            cmds.do(cmds.ShowUntracked, self.unstaged())
+            cmds.background(self, cmds.ShowUntracked, self.unstaged())
 
     def move_up(self):
         idx = self.selected_idx()
