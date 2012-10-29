@@ -1048,16 +1048,23 @@ def bg(parent, cls, *args, **opts):
     return runner
 
 
+# Holds a reference to background tasks to avoid PyQt4 segfaults
+ALL_TASKS = set()
+
+
 def background(parent, cls, *args, **opts):
     cmd = cls(*args, **opts)
     task = AsyncCommand(parent, cmd)
+    ALL_TASKS.add(task)
     QtCore.QThreadPool.globalInstance().start(task)
 
 
+
 class RunCommand(QtCore.QObject):
-    def __init__(self, cmd, parent):
+    def __init__(self, cmd, task, parent):
         QtCore.QObject.__init__(self, parent)
         self.cmd = cmd
+        self.task = task
         self.connect(self, SIGNAL('command_ready'), self.do)
 
     def run(self):
@@ -1066,12 +1073,16 @@ class RunCommand(QtCore.QObject):
 
     def do(self):
         do_cmd(self.cmd)
+        try:
+            ALL_TASKS.remove(self.task)
+        except:
+            pass
 
 
 class AsyncCommand(QtCore.QRunnable):
     def __init__(self, parent, cmd):
         QtCore.QRunnable.__init__(self)
-        self.runner = RunCommand(cmd, parent)
+        self.runner = RunCommand(cmd, self, parent)
 
     def run(self):
         self.runner.run()
