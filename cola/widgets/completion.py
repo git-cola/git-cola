@@ -181,7 +181,7 @@ class GatherCompletionsThread(QtCore.QThread):
             text = self.model.matched_text
             items = self.model.gather_matches(self.case_sensitive)
 
-        if text is not None: 
+        if text is not None:
             self.emit(SIGNAL('items_gathered'), items)
 
 
@@ -235,13 +235,15 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
 
         # Highlighting text if item is selected
         if (optionV4.state & QtGui.QStyle.State_Selected):
-            ctx.palette.setColor(QtGui.QPalette.Text, optionV4.palette.color(QtGui.QPalette.Active, QtGui.QPalette.HighlightedText))
+            color = optionV4.palette.color(QtGui.QPalette.Active,
+                                           QtGui.QPalette.HighlightedText)
+            ctx.palette.setColor(QtGui.QPalette.Text, color)
 
         # translate the painter to where the text is drawn
-        textRect = style.subElementRect(QtGui.QStyle.SE_ItemViewItemText, optionV4)
+        rect = style.subElementRect(QtGui.QStyle.SE_ItemViewItemText, optionV4)
         painter.save()
 
-        start = textRect.topLeft() + QtCore.QPoint(3, 0)
+        start = rect.topLeft() + QtCore.QPoint(3, 0)
         painter.translate(start)
 
         # tell the text document to draw the html for us
