@@ -243,7 +243,6 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
 
         start = textRect.topLeft() + QtCore.QPoint(3, 0)
         painter.translate(start)
-        painter.setClipRect(textRect.translated(-start))
 
         # tell the text document to draw the html for us
         self.doc.documentLayout().draw(painter, ctx)
