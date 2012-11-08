@@ -1,7 +1,9 @@
 import os
+import sys
 import subprocess
 import itertools
 
+from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
@@ -41,6 +43,13 @@ class StatusWidget(QtGui.QWidget):
         self.tree = StatusTreeWidget(self)
         self.layout.addWidget(self.tree)
         self.layout.setContentsMargins(0, 0, 0, 0)
+
+    def set_initial_size(self):
+        self.setMaximumWidth(222)
+        QtCore.QTimer.singleShot(1, self.restore_size)
+
+    def restore_size(self):
+        self.setMaximumWidth(2 ** 13)
 
 
 class StatusTreeWidget(QtGui.QTreeWidget):

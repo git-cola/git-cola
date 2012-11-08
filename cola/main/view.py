@@ -62,7 +62,7 @@ class MainView(MainWindow):
 
         # Internal field used by import/export_state().
         # Change this whenever dockwidgets are removed.
-        self.widget_version = 1
+        self.widget_version = 2
 
         # Keeps track of merge messages we've seen
         self.merge_message_hash = ''
@@ -85,10 +85,13 @@ class MainView(MainWindow):
         self.actionsdockwidget = create_dock('Action', self)
         self.actionsdockwidgetcontents = action.ActionButtons(self)
         self.actionsdockwidget.setWidget(self.actionsdockwidgetcontents)
+        self.actionsdockwidget.toggleViewAction().setChecked(False)
+        self.actionsdockwidget.hide()
 
         # "Repository Status" widget
+        self.statuswidget = StatusWidget(self)
         self.statusdockwidget = create_dock('Status', self)
-        self.statusdockwidget.setWidget(StatusWidget(self))
+        self.statusdockwidget.setWidget(self.statuswidget)
 
         # "Commit Message Editor" widget
         self.position_label = QtGui.QLabel()
@@ -106,6 +109,8 @@ class MainView(MainWindow):
         self.logwidget = LogWidget()
         self.logdockwidget = create_dock('Console', self)
         self.logdockwidget.setWidget(self.logwidget)
+        self.logdockwidget.toggleViewAction().setChecked(False)
+        self.logdockwidget.hide()
 
         # "Diff Viewer" widget
         self.diffdockwidget = create_dock('Diff', self)
@@ -365,18 +370,20 @@ class MainView(MainWindow):
         self.setMenuBar(self.menubar)
 
         # Arrange dock widgets
-        top = Qt.TopDockWidgetArea
+        left = Qt.LeftDockWidgetArea
+        right = Qt.RightDockWidgetArea
         bottom = Qt.BottomDockWidgetArea
 
-        self.addDockWidget(top, self.commitdockwidget)
+        self.addDockWidget(left, self.commitdockwidget)
         if self.classic_dockable:
-            self.addDockWidget(top, self.classicdockwidget)
-        self.addDockWidget(top, self.statusdockwidget)
-        self.addDockWidget(top, self.actionsdockwidget)
-        self.addDockWidget(bottom, self.logdockwidget)
-        if self.classic_dockable:
+            self.addDockWidget(left, self.classicdockwidget)
             self.tabifyDockWidget(self.classicdockwidget, self.commitdockwidget)
-        self.tabifyDockWidget(self.logdockwidget, self.diffdockwidget)
+        self.addDockWidget(left, self.diffdockwidget)
+        self.addDockWidget(bottom, self.actionsdockwidget)
+        self.addDockWidget(bottom, self.logdockwidget)
+        self.tabifyDockWidget(self.actionsdockwidget, self.logdockwidget)
+
+        self.addDockWidget(right, self.statusdockwidget)
 
         # Listen for model notifications
         model.add_observer(model.message_updated, self._update_view)
@@ -408,7 +415,8 @@ class MainView(MainWindow):
                 self.actionsdockwidget,
         )
         # Restore saved settings
-        qtutils.apply_state(self)
+        if not qtutils.apply_state(self):
+            self.set_initial_size()
 
         self.statusdockwidget.widget().setFocus()
 
@@ -418,6 +426,10 @@ class MainView(MainWindow):
 
         Interaction.log(version.git_version_str() +
                         '\ncola version ' + version.version())
+
+    def set_initial_size(self):
+        self.statuswidget.set_initial_size()
+        self.commitmsgeditor.set_initial_size()
 
     # Qt overrides
     def closeEvent(self, event):
