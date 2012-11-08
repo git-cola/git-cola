@@ -522,9 +522,10 @@ class MainView(MainWindow):
         """Imports data for save/restore"""
         # 1 is the widget version; change when widgets are added/removed
         MainWindow.apply_state(self, state)
-        qtutils.apply_window_state(self, state, 1)
+        result = qtutils.apply_window_state(self, state, self.widget_version)
         for widget in self.dockwidgets:
             widget.titleBarWidget().update_tooltips()
+        return result
 
     def export_state(self):
         """Exports data for save/restore"""

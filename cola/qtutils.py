@@ -442,16 +442,15 @@ def apply_window_state(widget, state, version):
     # Restore the dockwidget, etc. window state
     try:
         windowstate = state['windowstate']
-        widget.restoreState(QtCore.QByteArray.fromBase64(str(windowstate)),
-                            version)
+        return widget.restoreState(QtCore.QByteArray.fromBase64(str(windowstate)),
+                                   version)
     except KeyError:
-        pass
+        return False
 
 
 def apply_state(widget):
     state = settings.Settings().get_gui_state(widget)
-    widget.apply_state(state)
-    return bool(state)
+    return bool(state) and widget.apply_state(state)
 
 
 @memoize
