@@ -389,7 +389,7 @@ class CommitMessageEditor(QtGui.QWidget):
         if not sha1s:
             return
         sha1 = sha1s[0]
-        cmds.do(cmds.LoadCommitMessage, sha1)
+        cmds.do(cmds.LoadPreviousMessage, sha1)
 
 
 class CommitSummaryLineEdit(HintedLineEdit):
