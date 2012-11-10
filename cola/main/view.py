@@ -546,12 +546,16 @@ class MainView(MainWindow):
 
     def setup_dockwidget_tools_menu(self):
         # Hotkeys for toggling the dock widgets
+        if utils.is_darwin():
+            optkey = 'Meta'
+        else:
+            optkey = 'Ctrl'
         dockwidgets = (
-            ('Alt+0', self.logdockwidget),
-            ('Alt+1', self.commitdockwidget),
-            ('Alt+2', self.statusdockwidget),
-            ('Alt+3', self.diffdockwidget),
-            ('Alt+4', self.actionsdockwidget),
+            (optkey + '+0', self.logdockwidget),
+            (optkey + '+1', self.commitdockwidget),
+            (optkey + '+2', self.statusdockwidget),
+            (optkey + '+3', self.diffdockwidget),
+            (optkey + '+4', self.actionsdockwidget),
         )
         for shortcut, dockwidget in dockwidgets:
             # Associate the action with the shortcut
