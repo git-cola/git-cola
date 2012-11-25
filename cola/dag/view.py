@@ -924,14 +924,14 @@ class Commit(QtGui.QGraphicsItem):
     merge_radius = 18.0
 
     item_shape = QtGui.QPainterPath()
-    item_shape.addRect(commit_radius / -2.0,
-                       commit_radius / -2.0,
+    item_shape.addRect(commit_radius/-2.0,
+                       commit_radius/-2.0,
                        commit_radius, commit_radius)
     item_bbox = item_shape.boundingRect()
 
     inner_rect = QtGui.QPainterPath()
-    inner_rect.addRect(commit_radius / -2.0 + 2.0,
-                       commit_radius / -2.0 + 2.0,
+    inner_rect.addRect(commit_radius/-2.0 + 2.0,
+                       commit_radius/-2.0 + 2.0,
                        commit_radius - 4.0,
                        commit_radius - 4.0)
     inner_rect = inner_rect.boundingRect()
@@ -951,7 +951,7 @@ class Commit(QtGui.QGraphicsItem):
                  notifier,
                  selectable=QtGui.QGraphicsItem.ItemIsSelectable,
                  cursor=Qt.PointingHandCursor,
-                 xpos=commit_radius / 2.0 + 1.0,
+                 xpos=commit_radius/2.0 + 1.0,
                  cached_commit_color=commit_color,
                  cached_merge_color=merge_color):
 
@@ -968,7 +968,7 @@ class Commit(QtGui.QGraphicsItem):
         if commit.tags:
             self.label = label = Label(commit)
             label.setParentItem(self)
-            label.setPos(xpos, -self.commit_radius / 2.0)
+            label.setPos(xpos, -self.commit_radius/2.0)
         else:
             self.label = None
 
@@ -1208,7 +1208,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         self.scale_view(1.5)
 
     def zoom_out(self):
-        self.scale_view(1.0 / 1.5)
+        self.scale_view(1.0/1.5)
 
     def commits_selected(self, commits):
         if self.selecting:
@@ -1353,8 +1353,8 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         y_adjust = GraphView.y_adjust
         rect.setX(rect.x() - x_adjust)
         rect.setY(rect.y() - y_adjust)
-        rect.setHeight(rect.height() + y_adjust * 2)
-        rect.setWidth(rect.width() + x_adjust * 2)
+        rect.setHeight(rect.height() + y_adjust*2)
+        rect.setWidth(rect.width() + x_adjust*2)
         self.fitInView(rect, Qt.KeepAspectRatio)
         self.scene().invalidate()
 
@@ -1405,7 +1405,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
 
     def wheel_zoom(self, event):
         """Handle mouse wheel zooming."""
-        zoom = math.pow(2.0, event.delta() / 512.0)
+        zoom = math.pow(2.0, event.delta()/512.0)
         factor = (self.matrix()
                         .scale(zoom, zoom)
                         .mapRect(QtCore.QRectF(0.0, 0.0, 1.0, 1.0))
@@ -1424,12 +1424,12 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         else:
             s = 133.0
         pan_rect = QtCore.QRectF(0.0, 0.0, 1.0, 1.0)
-        factor = 1.0 / self.matrix().mapRect(pan_rect).width()
+        factor = 1.0/self.matrix().mapRect(pan_rect).width()
 
         if event.orientation() == Qt.Vertical:
-            matrix = self.matrix().translate(0, s * factor)
+            matrix = self.matrix().translate(0, s*factor)
         else:
-            matrix = self.matrix().translate(s * factor, 0)
+            matrix = self.matrix().translate(s*factor, 0)
         self.setTransformationAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setMatrix(matrix)
 
@@ -1449,7 +1449,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
             max_ = scrollbar.maximum()
             range_ = max_ - min_
             distance = value - min_
-            nonzero_range = float(range_) != 0.0
+            nonzero_range = float(range_) > 0.1
             if nonzero_range:
                 scrolloffset = distance/float(range_)
             else:
@@ -1513,7 +1513,6 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         y_off = self.y_off
         x_offsets = self.x_offsets
 
-        #for node in self.order_nodes_by(nodes,'authdate'):
         for node in nodes:
             generation = node.generation
             sha1 = node.sha1
