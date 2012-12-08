@@ -259,8 +259,9 @@ class Checkout(Command):
 
 class CheckoutBranch(Checkout):
     """Checkout a branch."""
-    def __init__(self, branch, checkout_branch=True):
-        Checkout.__init__(self, [branch])
+    def __init__(self, branch):
+        args = [branch]
+        Checkout.__init__(self, args, checkout_branch=True)
 
 
 class CherryPick(Command):
