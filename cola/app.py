@@ -187,6 +187,7 @@ def parse_args(context):
                     'dag',
                     'fetch',
                     'grep',
+                    'merge',
                     'pull',
                     'push',
                     'remote',
@@ -324,6 +325,10 @@ def main(context):
     elif context == 'grep':
         from cola.widgets import grep
         view = grep.run_grep(parent=None)
+    elif context == 'merge':
+        from cola.merge import view
+        model.update_status()
+        view = view.MergeView(model, parent=None)
     elif context == 'pull':
         from cola.widgets import remote
         model.update_status()

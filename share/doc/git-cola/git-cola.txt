@@ -49,6 +49,9 @@ fetch::
 grep::
 	Use `git grep` to search for content.
 
+merge::
+	Merge branches.
+
 pull::
 	Fetch and merge remote branches.
 

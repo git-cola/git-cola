@@ -18,6 +18,8 @@ Usability, bells and whistles
 
   http://github.com/git-cola/git-cola/issues/140
 
+* A new `git cola merge` sub-command was added for merging branches.
+
 * Less blocking in the main UI
 
 Fixes
