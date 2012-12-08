@@ -2,6 +2,7 @@ Thanks
 ======
 `git-cola` was made possible thanks to the contributions of the following people:
 
+* Andreas Sommer
 * Audrius Karabanovas
 * Barry Roberts
 * Boris W
@@ -13,8 +14,11 @@ Thanks
 * David Martínez Martí
 * Eric Drechsel
 * `GIT Hackers <http://git-scm.com/about>`_
+* Guillaume de Bure
+* Ingo Weinhold
 * Ismael Juma
 * Iulian Udrea
+* Johann Schmitz
 * Justin Lecher
 * Karl Bielefeldt
 * Karthik Manamcheri
