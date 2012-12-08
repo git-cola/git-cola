@@ -570,6 +570,7 @@ class DAGView(Widget):
 
         qtutils.connect_button(self.zoom_in, self.graphview.zoom_in)
         qtutils.connect_button(self.zoom_out, self.graphview.zoom_out)
+        qtutils.connect_button(self.displaybutton, self.display)
 
         self.thread.connect(self.thread, self.thread.commits_ready,
                             self.add_commits)
@@ -588,9 +589,6 @@ class DAGView(Widget):
                      self.diff_commits)
 
         self.connect(self.maxresults, SIGNAL('editingFinished()'),
-                     self.display)
-
-        self.connect(self.displaybutton, SIGNAL('pressed()'),
                      self.display)
 
         self.connect(self.revtext, SIGNAL('ref_changed'),
