@@ -1,9 +1,13 @@
+import os
 import subprocess
 from cola import utils
 
 
 class Interaction(object):
     """Prompts the user and answers questions"""
+
+    VERBOSE = bool(os.getenv('GIT_COLA_VERBOSE'))
+
     @staticmethod
     def information(title,
                     message=None, details=None, informative_text=None):
@@ -46,7 +50,7 @@ class Interaction(object):
 
     @classmethod
     def run_command(cls, title, cmd):
-        print('$ ' + subprocess.list2cmdline(cmd))
+        cls.log('$ ' + subprocess.list2cmdline(cmd))
         status, out, err = utils.run_command(cmd)
         cls.log_status(status, out, err)
 
@@ -64,6 +68,7 @@ class Interaction(object):
                  status))
         cls.log(msg)
 
-    @staticmethod
-    def log(message):
-        print(message)
+    @classmethod
+    def log(cls, message):
+        if cls.VERBOSE:
+            print(message)
