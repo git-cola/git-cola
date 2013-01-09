@@ -34,6 +34,10 @@ def is_git_file(f):
     return os.path.isfile(f) and '.git' == os.path.basename(f)
 
 
+def is_git_worktree(d):
+    return is_git_dir(os.path.join(d, '.git'))
+
+
 def read_git_file(f):
     if f is None:
         return None

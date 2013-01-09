@@ -1,6 +1,7 @@
 import unittest
 import os
 
+from cola import git
 from cola import settings
 import helper
 
@@ -14,8 +15,8 @@ class SettingsTestCase(unittest.TestCase):
         if os.path.exists(self._file):
             os.remove(self._file)
 
-    def model(self):
-        return settings.Settings()
+    def model(self, **kwargs):
+        return settings.Settings(**kwargs)
 
     def test_gui_save_restore(self):
         """Test saving and restoring gui state"""
@@ -32,22 +33,18 @@ class SettingsTestCase(unittest.TestCase):
         """Test the bookmark save/restore feature"""
 
         # We automatically purge missing entries so we mock-out
-        # os.path.exists so that this bookmark is kept.
+        # git.is_git_worktree() so that this bookmark is kept.
 
         bookmark = '/tmp/python/thinks/this/exists'
-        os_path_exists = os.path.exists
 
-        def mock_exists(path):
-            return path == bookmark or os_path_exists(path)
-
-        os.path.exists = mock_exists
+        def mock_verify(path):
+            return path == bookmark
 
         model = self.model()
         model.add_bookmark(bookmark)
         model.save()
 
-        model = self.model()
-        os.path.exists = os_path_exists # undo mock
+        model = self.model(verify=mock_verify)
 
         bookmarks = model.bookmarks
         self.assertEqual(len(model.bookmarks), 1)

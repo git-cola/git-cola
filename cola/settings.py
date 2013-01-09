@@ -11,6 +11,7 @@ except ImportError:
     import json
 
 from cola import core
+from cola import git
 from cola import xdg
 
 
@@ -31,13 +32,14 @@ def mklist(obj):
 class Settings(object):
     _file = xdg.config_home('settings')
 
-    def __init__(self):
+    def __init__(self, verify=git.is_git_worktree):
         """Load existing settings if they exist"""
         self.values = {
                 'bookmarks': [],
                 'gui_state': {},
                 'recent': [],
         }
+        self.verify = verify
         self.load()
         self.remove_missing()
 
@@ -47,7 +49,7 @@ class Settings(object):
         missing_recent = []
 
         for bookmark in self.bookmarks:
-            if not os.path.exists(core.encode(bookmark)):
+            if not self.verify(core.encode(bookmark)):
                 missing_bookmarks.append(bookmark)
 
         for bookmark in missing_bookmarks:
@@ -57,7 +59,7 @@ class Settings(object):
                 pass
 
         for recent in self.recent:
-            if not os.path.exists(core.encode(recent)):
+            if not self.verify(core.encode(recent)):
                 missing_recent.append(recent)
 
         for recent in missing_recent:
