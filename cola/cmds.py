@@ -1018,18 +1018,19 @@ def run(cls, *args, **opts):
 
 def do(cls, *args, **opts):
     """Run a command in-place"""
-    do_cmd(cls(*args, **opts))
+    return do_cmd(cls(*args, **opts))
 
 
 def do_cmd(cmd):
     try:
-        cmd.do()
+        return cmd.do()
     except StandardError, e:
         exc_type, exc_value, exc_tb = sys.exc_info()
         details = traceback.format_exception(exc_type, exc_value, exc_tb)
         details = '\n'.join(details)
         msg = _exception_message(e)
         Interaction.critical('Oops', message=msg, details=details)
+        return None
 
 
 def bg(parent, cls, *args, **opts):
