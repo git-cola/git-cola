@@ -10,6 +10,7 @@ try:
 except ImportError:
     import json
 
+from cola import core
 from cola import xdg
 
 
@@ -38,6 +39,32 @@ class Settings(object):
                 'recent': [],
         }
         self.load()
+        self.remove_missing()
+
+
+    def remove_missing(self):
+        missing_bookmarks = []
+        missing_recent = []
+
+        for bookmark in self.bookmarks:
+            if not os.path.exists(core.encode(bookmark)):
+                missing_bookmarks.append(bookmark)
+
+        for bookmark in missing_bookmarks:
+            try:
+                self.bookmarks.remove(bookmark)
+            except:
+                pass
+
+        for recent in self.recent:
+            if not os.path.exists(core.encode(recent)):
+                missing_recent.append(recent)
+
+        for recent in missing_recent:
+            try:
+                self.recent.remove(recent)
+            except:
+                pass
 
     # properties
     def _get_bookmarks(self):

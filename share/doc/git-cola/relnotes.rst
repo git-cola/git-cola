@@ -1,3 +1,12 @@
+git-cola v1.8.2 (DRAFT)
+=======================
+Usability, bells and whistles
+-----------------------------
+* We now automatically remove missing repositories from the
+  "Select Repository" dialog.
+
+  http://github.com/git-cola/git-cola/issues/145
+
 git-cola v1.8.1
 ===============
 Usability, bells and whistles
