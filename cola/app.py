@@ -139,6 +139,8 @@ class ColaApplication(object):
             self._app = QtCore.QCoreApplication(argv)
             self._translate_base = QtCore.QCoreApplication.translate
             QtCore.QCoreApplication.translate = self.translate
+            if not hasattr(self._app, 'setStyleSheet'):
+                self._app.setStyleSheet = lambda x: None
 
         self._app.setStyleSheet("""
             QMainWindow::separator {
