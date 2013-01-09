@@ -85,7 +85,7 @@ def clone_repo(spawn=True):
         return None
     try:
         # Pick a suitable basename by parsing the URL
-        newurl = url.replace('\\', '/')
+        newurl = url.replace('\\', '/').rstrip('/')
         default = newurl.rsplit('/', 1)[-1]
         if default == '.git':
             # The end of the URL is /.git, so assume it's a file path
@@ -124,8 +124,9 @@ def clone_repo(spawn=True):
     while os.path.exists(destdir):
         destdir = olddestdir + str(count)
         count += 1
-    cmds.do(cmds.Clone, core.decode(url), destdir, spawn=spawn)
-    return destdir
+    if cmds.do(cmds.Clone, core.decode(url), destdir, spawn=spawn):
+        return destdir
+    return None
 
 
 def export_patches():

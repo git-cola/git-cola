@@ -647,11 +647,21 @@ class Clone(Command):
         self.spawn = spawn
 
     def do(self):
-        self.model.git.clone(self.url, self.new_directory,
-                             with_stderr=True, with_status=True)
+        status, out = self.model.git.clone(self.url,
+                                           self.new_directory,
+                                           with_stderr=True,
+                                           with_status=True)
+        if status != 0:
+            Interaction.information(
+                    'Error cloning: %s' % self.url,
+                    'git clone returned exit code %s%s' %
+                    (status,
+                     out and ('\n' + out) or ''))
+            return False
         if self.spawn:
             utils.fork([sys.executable, sys.argv[0],
                         '--repo', self.new_directory])
+        return True
 
 
 rescan = 'rescan'

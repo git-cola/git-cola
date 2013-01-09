@@ -7,11 +7,26 @@ Usability, bells and whistles
 
   http://github.com/git-cola/git-cola/issues/145
 
+Fixes
+-----
+* Better error handling when cloning repositories.
+
+  We were not handling the case where a git URL has
+  no basename, e.g. `https://git.example.com/`.
+  `git cola` originally rejected these URLs instead of
+  allowing users to clone them.  It now allows these URLs
+  when they point to valid git repositories.
+
+  Additionally, `git cola` learned to echo the errors
+  reported by `git clone` when it fails.
+
+  http://github.com/git-cola/git-cola/issues/156
+
 git-cola v1.8.1
 ===============
 Usability, bells and whistles
 -----------------------------
-* `git-dag` got a big visual upgrade.
+* `git dag` got a big visual upgrade.
 
 * Ctrl+G now launches the "Grep" tool.
 
