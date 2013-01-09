@@ -650,7 +650,8 @@ class Clone(Command):
         self.model.git.clone(self.url, self.new_directory,
                              with_stderr=True, with_status=True)
         if self.spawn:
-            utils.fork(['python', sys.argv[0], '--repo', self.new_directory])
+            utils.fork([sys.executable, sys.argv[0],
+                        '--repo', self.new_directory])
 
 
 rescan = 'rescan'
