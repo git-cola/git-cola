@@ -60,6 +60,10 @@ class Grep(Dialog):
         self.edit_button.setEnabled(False)
         self.edit_button.setShortcut(cmds.Edit.SHORTCUT)
 
+        self.refresh_button = QtGui.QPushButton(self.tr('Refresh'))
+        self.refresh_button.setIcon(qtutils.reload_icon())
+        self.refresh_button.setShortcut(QtGui.QKeySequence.Refresh)
+
         self.shell_checkbox = QtGui.QCheckBox(self.tr('Shell arguments'))
         self.shell_checkbox.setToolTip(
                 'Parse arguments using a shell.\n'
@@ -84,6 +88,7 @@ class Grep(Dialog):
         self.input_layout.addWidget(self.input_txt)
 
         self.bottom_layout.addWidget(self.edit_button)
+        self.bottom_layout.addWidget(self.refresh_button)
         self.bottom_layout.addWidget(self.shell_checkbox)
         self.bottom_layout.addStretch()
         self.bottom_layout.addWidget(self.close_button)
@@ -105,6 +110,7 @@ class Grep(Dialog):
                      lambda: self.result_txt.setFocus())
 
         qtutils.connect_button(self.edit_button, self.edit)
+        qtutils.connect_button(self.refresh_button, self.search)
         qtutils.connect_button(self.close_button, self.close)
         qtutils.add_close_action(self)
 
@@ -122,6 +128,7 @@ class Grep(Dialog):
 
     def search(self):
         self.edit_button.setEnabled(False)
+        self.refresh_button.setEnabled(False)
 
         self.grep_thread.txt = self.input_txt.as_unicode()
         self.grep_thread.shell = self.shell_checkbox.isChecked()
@@ -129,11 +136,12 @@ class Grep(Dialog):
 
     def search_for(self, txt):
         self.input_txt.set_value(txt)
-        self.run()
+        self.search()
 
     def process_result(self, status, out):
         self.result_txt.set_value(out)
         self.edit_button.setEnabled(status == 0)
+        self.refresh_button.setEnabled(status == 0)
 
     def edit(self):
         goto_grep(self.result_txt.selected_line()),
