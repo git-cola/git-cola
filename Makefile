@@ -2,11 +2,19 @@
 all::
 
 # The external commands used by this Makefile are...
+CTAGS = ctags
+CP = cp
+FIND = find
 GIT = git
+GZIP = gzip
+LN = ln
+MKDIR_P = mkdir -p
 NOSETESTS = nosetests
 PYTHON = python
+RM = rm -f
+RM_R = rm -fr
+RMDIR = rmdir
 TAR = tar
-CTAGS = ctags
 
 # These values can be overridden on the command-line or via config.mak
 prefix = $(HOME)
@@ -43,14 +51,14 @@ all::
 install: all
 	$(PYTHON) setup.py install $(setup_args)
 	(cd $(DESTDIR)$(bindir) && \
-	! test -e cola && ln -s git-cola cola) || true
-	rm -rf $(DESTDIR)$(coladir)/git_cola*
-	rm -rf git_cola.egg-info
+	! test -e cola && $(LN) -s git-cola cola) || true
+	$(RM_R) $(DESTDIR)$(coladir)/git_cola*
+	$(RM_R) git_cola.egg-info
 
 # Maintainer's dist target
 dist:
 	$(GIT) archive --format=tar --prefix=$(cola_dist)/ HEAD^{tree} | \
-		gzip -f -9 - >$(cola_dist).tar.gz
+		$(GZIP) -f -9 - >$(cola_dist).tar.gz
 
 doc:
 	$(MAKE) -C share/doc/git-cola prefix=$(prefix) all
@@ -65,22 +73,22 @@ install-html:
 	$(MAKE) -C share/doc/git-cola prefix=$(prefix) install-html
 
 uninstall:
-	rm -rf  $(DESTDIR)$(prefix)/bin/git-cola \
-		$(DESTDIR)$(prefix)/bin/git-dag \
-		$(DESTDIR)$(prefix)/bin/cola \
-		$(DESTDIR)$(prefix)/share/applications/git-cola.desktop \
-		$(DESTDIR)$(prefix)/share/applications/git-dag.desktop \
-		$(DESTDIR)$(prefix)/share/git-cola \
-		$(DESTDIR)$(prefix)/share/doc/git-cola
-	rm -f $(DESTDIR)$(prefix)/share/locale/*/LC_MESSAGES/git-cola.mo
-	rmdir $(DESTDIR)$(prefix)/share/locale/*/LC_MESSAGES 2>/dev/null || true
-	rmdir $(DESTDIR)$(prefix)/share/locale/* 2>/dev/null || true
-	rmdir $(DESTDIR)$(prefix)/share/locale 2>/dev/null || true
-	rmdir $(DESTDIR)$(prefix)/share/doc 2>/dev/null || true
-	rmdir $(DESTDIR)$(prefix)/share/applications 2>/dev/null || true
-	rmdir $(DESTDIR)$(prefix)/share 2>/dev/null || true
-	rmdir $(DESTDIR)$(prefix)/bin 2>/dev/null || true
-	rmdir $(DESTDIR)$(prefix) 2>/dev/null || true
+	$(RM) $(DESTDIR)$(prefix)/bin/git-cola
+	$(RM) $(DESTDIR)$(prefix)/bin/git-dag
+	$(RM) $(DESTDIR)$(prefix)/bin/cola
+	$(RM) $(DESTDIR)$(prefix)/share/applications/git-cola.desktop
+	$(RM) $(DESTDIR)$(prefix)/share/applications/git-dag.desktop
+	$(RM_R) $(DESTDIR)$(prefix)/share/git-cola
+	$(RM_R) $(DESTDIR)$(prefix)/share/doc/git-cola
+	$(RM) $(DESTDIR)$(prefix)/share/locale/*/LC_MESSAGES/git-cola.mo
+	$(RMDIR) $(DESTDIR)$(prefix)/share/locale/*/LC_MESSAGES 2>/dev/null || true
+	$(RMDIR) $(DESTDIR)$(prefix)/share/locale/* 2>/dev/null || true
+	$(RMDIR) $(DESTDIR)$(prefix)/share/locale 2>/dev/null || true
+	$(RMDIR) $(DESTDIR)$(prefix)/share/doc 2>/dev/null || true
+	$(RMDIR) $(DESTDIR)$(prefix)/share/applications 2>/dev/null || true
+	$(RMDIR) $(DESTDIR)$(prefix)/share 2>/dev/null || true
+	$(RMDIR) $(DESTDIR)$(prefix)/bin 2>/dev/null || true
+	$(RMDIR) $(DESTDIR)$(prefix) 2>/dev/null || true
 
 test: all
 	$(NOSETESTS) $(all_test_flags)
@@ -90,13 +98,13 @@ coverage:
 
 clean:
 	$(MAKE) -C share/doc/git-cola clean
-	find . -name .noseids -print0 | xargs -0 rm -f
-	find . -name '*.py[co]' -print0 | xargs -0 rm -f
-	rm -rf build dist tmp tags git-cola.app
-	rm -rf share/locale
+	$(FIND) . -name .noseids -print0 | xargs -0 rm -f
+	$(FIND) . -name '*.py[co]' -print0 | xargs -0 rm -f
+	$(RM_R) build dist tmp tags git-cola.app
+	$(RM_R) share/locale
 
 tags:
-	find . -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
+	$(FIND) . -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
 
 pot:
 	$(PYTHON) setup.py build_pot -N -d .
@@ -105,13 +113,13 @@ mo:
 	$(PYTHON) setup.py build_mo -f
 
 git-cola.app:
-	mkdir -p $(cola_app)/Contents/MacOS
-	mkdir -p $(cola_app)/Contents/Resources
-	cp darwin/git-cola $(cola_app)/Contents/MacOS
-	cp darwin/Info.plist darwin/PkgInfo $(cola_app)/Contents
+	$(MKDIR_P) $(cola_app)/Contents/MacOS
+	$(MKDIR_P) $(cola_app)/Contents/Resources
+	$(CP) darwin/git-cola $(cola_app)/Contents/MacOS
+	$(CP) darwin/Info.plist darwin/PkgInfo $(cola_app)/Contents
 	$(MAKE) prefix=$(cola_app)/Contents/Resources install install-doc
-	cp darwin/git-cola.icns $(cola_app)/Contents/Resources
-	ln -sf $(darwin_python) $(cola_app)/Contents/Resources/git-cola
+	$(CP) darwin/git-cola.icns $(cola_app)/Contents/Resources
+	$(LN) -sf $(darwin_python) $(cola_app)/Contents/Resources/git-cola
 
 app-tarball: git-cola.app
 	$(TAR) czf $(cola_dist).app.tar.gz $(cola_app_base)
