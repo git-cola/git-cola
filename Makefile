@@ -43,6 +43,7 @@ setup_args += --record=build/MANIFEST
 setup_args += --install-lib=$(coladir)
 ifdef DESTDIR
     setup_args += --root=$(DESTDIR)
+    export DESTDIR
 endif
 
 all::
