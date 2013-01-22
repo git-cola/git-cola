@@ -9,6 +9,14 @@ Usability, bells and whistles
 
 Fixes
 -----
+* The inotify auto-refresh feature makes it difficult to select text in
+  the "diff" editor when files are being continually modified by another
+  process.  The auto-refresh causes it to lose the currently selected text,
+  which is not wanted.  We now avoid this problem by saving and restoring
+  the selection when refreshing the editor.
+
+  http://github.com/git-cola/git-cola/issues/155
+
 * Fixed the Alt+D Diffstat shortcut.
 
   http://github.com/git-cola/git-cola/issues/159

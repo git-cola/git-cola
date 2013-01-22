@@ -7,11 +7,11 @@ import cola
 from cola import cmds
 from cola import qtutils
 from cola.cmds import run
-from cola.widgets import defs
 from cola.widgets.text import DiffTextEdit
 
 
 class DiffEditor(DiffTextEdit):
+
     def __init__(self, parent):
         DiffTextEdit.__init__(self, parent)
         self.model = model = cola.model()
@@ -143,13 +143,40 @@ class DiffEditor(DiffTextEdit):
         highlight = (self.mode != self.model.mode_none and
                      self.mode != self.model.mode_untracked)
         self.highlighter.set_enabled(highlight)
+
         scrollbar = self.verticalScrollBar()
         if scrollbar:
             scrollvalue = scrollbar.value()
-        if text is not None:
-            DiffTextEdit.setPlainText(self, text)
-            if scrollbar:
-                scrollbar.setValue(scrollvalue)
+        else:
+            scrollvalue = None
+
+        if text is None:
+            return
+
+        offset, selection = self.offset_and_selection()
+        old_text = unicode(self.toPlainText())
+
+        DiffTextEdit.setPlainText(self, text)
+
+        # If the old selection exists in the new text then
+        # re-select it.
+        if selection and selection in text:
+            idx = text.index(selection)
+            cursor = self.textCursor()
+            cursor.setPosition(idx)
+            cursor.setPosition(idx + len(selection),
+                               QtGui.QTextCursor.KeepAnchor)
+            self.setTextCursor(cursor)
+
+        # Otherwise, if the text is identical and there
+        # is no selection then restore the cursor position.
+        elif text == old_text:
+            cursor = self.textCursor()
+            cursor.setPosition(offset)
+            self.setTextCursor(cursor)
+
+        if scrollbar and scrollvalue is not None:
+            scrollbar.setValue(scrollvalue)
 
     def offset_and_selection(self):
         cursor = self.textCursor()
