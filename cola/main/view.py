@@ -338,7 +338,7 @@ class MainView(MainWindow):
         self.menubar.addAction(self.actions_menu.menuAction())
 
         # Diff Menu
-        self.diff_menu = create_menu('&Diff', self.menubar)
+        self.diff_menu = create_menu('Diff', self.menubar)
         self.diff_menu.addAction(self.menu_branch_diff)
         self.diff_menu.addAction(self.menu_diff_expression)
         self.diff_menu.addAction(self.menu_branch_compare)

@@ -9,6 +9,12 @@ Usability, bells and whistles
 
 Fixes
 -----
+* Fixed the Alt+D Diffstat shortcut.
+
+  http://github.com/git-cola/git-cola/issues/159
+
+Fixes
+-----
 * Better error handling when cloning repositories.
 
   We were not handling the case where a git URL has

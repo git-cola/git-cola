@@ -33,6 +33,7 @@ Thanks
 * Michael Homer
 * Omega Weapon
 * Paolo G. Giarrusso
+* Rustam Safin
 * Stefan Naewe
 * Steffen Prohaska
 * Ugo Riboni
