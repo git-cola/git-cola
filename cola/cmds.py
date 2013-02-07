@@ -290,6 +290,9 @@ class ResetMode(Command):
 
 class Commit(ResetMode):
     """Attempt to create a new commit."""
+
+    SHORTCUT = 'Ctrl+Return'
+
     def __init__(self, amend, msg):
         ResetMode.__init__(self)
         self.amend = amend

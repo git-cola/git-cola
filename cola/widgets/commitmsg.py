@@ -47,7 +47,7 @@ class CommitMessageEditor(QtGui.QWidget):
 
         self.commit_action = add_action(self, 'Commit@@verb',
                                         self.commit,
-                                        'Ctrl+Return')
+                                        cmds.Commit.SHORTCUT)
         self.commit_action.setToolTip(tr('Commit staged changes'))
 
         # Widgets
