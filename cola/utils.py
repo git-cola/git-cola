@@ -370,15 +370,6 @@ def checksum(path):
     return md5.hexdigest()
 
 
-def _quote_repopath_win32(repopath):
-    """Quote a path for nt/dos only."""
-    return '"%s"' % repopath
-
-
-def _quote_repopath_posix(repopath):
-    return repopath
-
-
 def error(msg, *args):
     """Print an error message to stderr."""
     print >> sys.stderr, "ERROR:", msg % args
@@ -489,7 +480,5 @@ def run_command(args, cwd=None, shell=False, add_env=None,
 # Portability wrappers
 if is_win32():
     fork = _fork_win32
-    quote_repopath = _quote_repopath_win32
 else:
     fork = _fork_posix
-    quote_repopath = _quote_repopath_posix

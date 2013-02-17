@@ -632,21 +632,21 @@ class OpenParentDir(OpenDefaultApp):
 
 class OpenRepo(Command):
     """Launches git-cola on a repo."""
-    def __init__(self, dirname):
+    def __init__(self, repo_path):
         Command.__init__(self)
-        self.new_directory = utils.quote_repopath(dirname)
+        self.repo_path = repo_path
 
     def do(self):
-        self.model.set_directory(self.new_directory)
-        utils.fork([sys.executable, sys.argv[0], '--repo', self.new_directory])
+        self.model.set_directory(self.repo_path)
+        utils.fork([sys.executable, sys.argv[0], '--repo', self.repo_path])
 
 
 class Clone(Command):
     """Clones a repository and optionally spawns a new cola session."""
-    def __init__(self, url, destdir, spawn=True):
+    def __init__(self, url, new_directory, spawn=True):
         Command.__init__(self)
         self.url = url
-        self.new_directory = utils.quote_repopath(destdir)
+        self.new_directory = new_directory
         self.spawn = spawn
 
     def do(self):
