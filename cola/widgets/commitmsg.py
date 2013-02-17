@@ -8,6 +8,7 @@ from cola import cmds
 from cola import gitcmds
 from cola import utils
 from cola.cmds import Interaction
+from cola.i18n import N_
 from cola.qt import create_toolbutton
 from cola.qtutils import add_action
 from cola.qtutils import confirm
@@ -360,7 +361,12 @@ class CommitMessageEditor(QtGui.QWidget):
                         'Amend Commit',
                         default=False, icon=save_icon())):
             return
-        cmds.do(cmds.Commit, amend, msg)
+        status, output = cmds.do(cmds.Commit, amend, msg)
+        if status != 0:
+            Interaction.critical(N_('Commit failed'),
+                                 N_('"git commit" returned exit code %s') %
+                                    (status,),
+                                 output)
 
     def build_prev_commits_menu(self):
         dag = DAG('HEAD', 6)

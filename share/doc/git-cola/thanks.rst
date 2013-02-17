@@ -23,6 +23,7 @@ Thanks
 * Karl Bielefeldt
 * Karthik Manamcheri
 * Kelvie Wong
+* Kerrick Staley
 * Kevin Kofler
 * Libor Jelinek
 * Mahmoud Hossam

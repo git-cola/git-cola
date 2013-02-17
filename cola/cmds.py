@@ -311,6 +311,8 @@ class Commit(ResetMode):
             title = 'Commit failed: '
         Interaction.log_status(status, title+output, '')
 
+        return status, output
+
 
 class Ignore(Command):
     """Add files to .gitignore"""
