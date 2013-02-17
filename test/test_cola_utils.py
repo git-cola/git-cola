@@ -67,13 +67,13 @@ class WordWrapTestCase(unittest.TestCase):
     def test_word_wrap_dashes(self):
         self.limit = 4
         text = '123-5'
-        expect = '123-\n5'
+        expect = '123-5'
         self.assertEqual(expect, self.wrap(text))
 
     def test_word_wrap_double_dashes(self):
         self.limit = 4
         text = '12--5'
-        expect = '12-\n-5'
+        expect = '12--\n5'
         self.assertEqual(expect, self.wrap(text))
 
     def test_word_wrap_many_lines(self):
@@ -106,7 +106,7 @@ else:
     def test_word_wrap_spaces(self):
         self.limit = 2
         text = ' ' * 6
-        self.assertEqual('  \n  \n', self.wrap(text))
+        self.assertEqual(' ' * 6, self.wrap(text))
 
     def test_word_wrap_special_tag(self):
         self.limit = 2
