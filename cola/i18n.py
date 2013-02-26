@@ -14,7 +14,10 @@ _translation = _null_translation
 
 
 def gettext(s):
-    return _translation.ugettext(s)
+    txt = _translation.ugettext(s)
+    if txt[-6:-4] == '@@': # handle @@verb / @@noun
+        txt = txt[:-6]
+    return txt
 
 
 def ngettext(s, p, n):
@@ -22,7 +25,7 @@ def ngettext(s, p, n):
 
 
 def N_(s):
-    return s
+    return gettext(s)
 
 
 def install(locale):
@@ -87,22 +90,3 @@ def _check_win32_locale():
         # set lang code for gettext
         if lang:
             compat.putenv('LANGUAGE', lang)
-
-
-# additional strings for translation
-if 0:
-    # file kinds
-    N_('file')
-    N_('directory')
-    N_('symlink')
-    # bugs status
-    N_('fixed')
-    # qcat titles for various file types
-    N_('View text file')
-    N_('View image file')
-    N_('View binary file')
-    N_('View symlink')
-    N_('View directory')
-    #
-    N_("No changes selected to commit")
-    N_("No changes selected to revert")
