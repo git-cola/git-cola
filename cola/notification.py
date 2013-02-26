@@ -22,9 +22,9 @@ class Notifier(object):
 
     def broadcast(self, signal, *args, **opts):
         if debug:
-            print ('broadcast: %s(%s, %s)' % (signal,
-                                              args or '<empty>',
-                                              opts or '<empty>'))
+            print('broadcast: %s(%s, %s)' % (signal,
+                                             args or '<empty>',
+                                             opts or '<empty>'))
         self.emit(signal, *args, **opts)
 
     def emit(self, signal, *args, **opts):

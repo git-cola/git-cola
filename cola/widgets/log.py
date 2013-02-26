@@ -2,7 +2,7 @@ import time
 
 from PyQt4 import QtGui
 
-from cola import core
+from cola.i18n import N_
 from cola.widgets.text import MonoTextView
 
 
@@ -30,7 +30,8 @@ class LogWidget(QtGui.QWidget):
         if err:
             msg += '\n' + err
         if status != 0:
-            msg += '\nexit code %s' % status
+            msg += '\n'
+            msg += N_('exit code %s') % status
         self.log(msg)
 
     def log(self, msg):
@@ -40,7 +41,7 @@ class LogWidget(QtGui.QWidget):
         cursor.movePosition(cursor.End)
         text = self.output_text
         cursor.insertText(time.asctime() + '\n')
-        for line in unicode(core.decode(msg)).splitlines():
+        for line in msg.splitlines():
             cursor.insertText(line + '\n')
         cursor.insertText('\n')
         cursor.movePosition(cursor.End)

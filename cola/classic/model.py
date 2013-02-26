@@ -14,6 +14,7 @@ from cola import qtutils
 from cola import version
 from cola import resources
 from cola.compat import set
+from cola.i18n import N_
 
 
 # Custom event type for GitRepoInfoEvents
@@ -22,12 +23,23 @@ INFO_EVENT_TYPE = QtCore.QEvent.User + 42
 
 class Columns(object):
     """Defines columns in the classic view"""
-    NAME = 'name'
-    STATUS = 'status'
-    AGE = 'age'
-    MESSAGE = 'message'
-    WHO = 'who'
-    ALL = (NAME, STATUS, AGE, MESSAGE, WHO)
+    NAME = 'Name'
+    STATUS = 'Status'
+    AGE = 'Age'
+    MESSAGE = 'Message'
+    AUTHOR = 'Author'
+    ALL = (NAME, STATUS, AGE, MESSAGE, AUTHOR)
+
+    @classmethod
+    def text(cls, column):
+        mapping = {
+            cls.NAME: N_('Name'),
+            cls.STATUS: N_('Status'),
+            cls.AGE: N_('Age'),
+            cls.MESSAGE: N_('Message'),
+            cls.AUTHOR: N_('Author')
+        }
+        return mapping.get(column, column)
 
 
 class GitRepoModel(QtGui.QStandardItemModel):
@@ -43,8 +55,8 @@ class GitRepoModel(QtGui.QStandardItemModel):
         self._dir_rows = {}
         self.setColumnCount(len(Columns.ALL))
         for idx, header in enumerate(Columns.ALL):
-            self.setHeaderData(idx, Qt.Horizontal,
-                               QtCore.QVariant(self.tr(header.title())))
+            text = Columns.text(header)
+            self.setHeaderData(idx, Qt.Horizontal, QtCore.QVariant(text))
 
         self._direntries = {'': self.invisibleRootItem()}
         self._initialize()
@@ -322,11 +334,11 @@ class GitRepoInfoTask(QRunnable):
         elapsed = time.time() - st.st_mtime
         minutes = int(elapsed / 60.)
         if minutes < 60:
-            return '%d minutes ago' % minutes
+            return N_('%d minutes ago') % minutes
         hours = int(elapsed / 60. / 60.)
         if hours < 24:
-            return '%d hours ago' % hours
-        return '%d days ago' % int(elapsed / 60. / 60. / 24.)
+            return N_('%d hours ago') % hours
+        return N_('%d days ago') % int(elapsed / 60. / 60. / 24.)
 
     def status(self):
         """Return the status for the entry's path."""
@@ -339,20 +351,15 @@ class GitRepoInfoTask(QRunnable):
         upstream_changed = utils.add_parents(set(model.upstream_changed))
 
         if self.path in unmerged:
-            return (resources.icon('modified.png'),
-                    qtutils.tr('Unmerged'))
+            return (resources.icon('modified.png'), N_('Unmerged'))
         if self.path in modified and self.path in staged:
-            return (resources.icon('partial.png'),
-                    qtutils.tr('Partially Staged'))
+            return (resources.icon('partial.png'), N_('Partially Staged'))
         if self.path in modified:
-            return (resources.icon('modified.png'),
-                    qtutils.tr('Modified'))
+            return (resources.icon('modified.png'), N_('Modified'))
         if self.path in staged:
-            return (resources.icon('staged.png'),
-                    qtutils.tr('Staged'))
+            return (resources.icon('staged.png'), N_('Staged'))
         if self.path in upstream_changed:
-            return (resources.icon('upstream.png'),
-                    qtutils.tr('Changed Upstream'))
+            return (resources.icon('upstream.png'), N_('Changed Upstream'))
         if self.path in untracked:
             return (None, '?')
         return (None, '')
@@ -366,7 +373,7 @@ class GitRepoInfoTask(QRunnable):
         app.postEvent(entry,
                 GitRepoInfoEvent(Columns.AGE, self.data('date')))
         app.postEvent(entry,
-                GitRepoInfoEvent(Columns.WHO, self.data('author')))
+                GitRepoInfoEvent(Columns.AUTHOR, self.data('author')))
         app.postEvent(entry,
                 GitRepoInfoEvent(Columns.STATUS, self.status()))
 

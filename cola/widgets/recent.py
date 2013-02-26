@@ -5,6 +5,7 @@ from PyQt4.QtCore import SIGNAL
 from cola import cmds
 from cola import gitcmds
 from cola import qtutils
+from cola.i18n import N_
 from cola.widgets import defs
 from cola.widgets import standard
 from cola.widgets.browse import GitTreeWidget
@@ -32,7 +33,7 @@ class UpdateFileListThread(QtCore.QThread):
 class RecentFileDialog(standard.Dialog):
     def __init__(self, parent):
         standard.Dialog.__init__(self, parent)
-        self.setWindowTitle(self.tr('Recently Modified Files'))
+        self.setWindowTitle(N_('Recently Modified Files'))
         self.setWindowModality(QtCore.Qt.WindowModal)
 
         count = 8
@@ -42,13 +43,13 @@ class RecentFileDialog(standard.Dialog):
         self.count.setMinimum(0)
         self.count.setMaximum(10000)
         self.count.setValue(count)
-        self.count.setSuffix(self.tr(' commits ago'))
+        self.count.setSuffix(N_(' commits ago'))
 
         self.count_label = QtGui.QLabel()
-        self.count_label.setText(self.tr('Showing changes since'))
+        self.count_label.setText(N_('Showing changes since'))
 
         self.refresh_button = QtGui.QPushButton()
-        self.refresh_button.setText('Refresh')
+        self.refresh_button.setText(N_('Refresh'))
         self.refresh_button.setIcon(qtutils.reload_icon())
         self.refresh_button.setEnabled(False)
 
@@ -57,21 +58,21 @@ class RecentFileDialog(standard.Dialog):
         self.tree.setModel(self.tree_model)
 
         self.expand_button = QtGui.QPushButton()
-        self.expand_button.setText('Expand')
+        self.expand_button.setText(N_('Expand'))
         self.expand_button.setIcon(qtutils.open_icon())
 
         self.collapse_button = QtGui.QPushButton()
-        self.collapse_button.setText('Collapse')
+        self.collapse_button.setText(N_('Collapse'))
         self.collapse_button.setIcon(qtutils.dir_close_icon())
 
         self.edit_button = QtGui.QPushButton()
-        self.edit_button.setText('Edit')
+        self.edit_button.setText(N_('Edit'))
         self.edit_button.setIcon(qtutils.apply_icon())
         self.edit_button.setDefault(True)
         self.edit_button.setEnabled(False)
 
         self.close_button = QtGui.QPushButton()
-        self.close_button.setText('Close')
+        self.close_button.setText(N_('Close'))
 
         toplayout = QtGui.QHBoxLayout()
         toplayout.setMargin(0)
@@ -117,7 +118,7 @@ class RecentFileDialog(standard.Dialog):
         qtutils.connect_button(self.close_button, self.accept)
         qtutils.connect_button(self.edit_button, self.edit_selected)
 
-        qtutils.add_action(self, 'Refresh', self.refresh, 'Ctrl+R')
+        qtutils.add_action(self, N_('Refresh'), self.refresh, 'Ctrl+R')
 
         self.update_thread.start()
 

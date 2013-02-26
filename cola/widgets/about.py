@@ -6,6 +6,7 @@ from cola import resources
 from cola import qtutils
 from cola import utils
 from cola import version
+from cola.i18n import N_
 from cola.widgets import defs
 from cola.widgets.text import MonoTextView
 
@@ -43,7 +44,7 @@ class AboutView(QtGui.QDialog):
     def __init__(self, parent=None):
         QtGui.QDialog.__init__(self, parent)
 
-        self.setWindowTitle('About git-cola')
+        self.setWindowTitle(N_('About git-cola'))
         self.setWindowModality(Qt.WindowModal)
 
         self.label = QtGui.QLabel()
@@ -62,7 +63,7 @@ class AboutView(QtGui.QDialog):
         self.text.setPlainText(COPYRIGHT)
 
         self.close_button = QtGui.QPushButton()
-        self.close_button.setText(self.tr('Close'))
+        self.close_button.setText(N_('Close'))
         self.close_button.setDefault(True)
 
         self.button_layout = QtGui.QHBoxLayout()
@@ -93,8 +94,8 @@ def show_shortcuts():
     except ImportError:
         # redhat disabled QtWebKit in their qt build but don't punish the
         # users
-        qtutils.critical('This PyQt4 does not include QtWebKit.\n'
-                         'The keyboard shortcuts feature is unavailable.')
+        qtutils.critical(N_('This PyQt4 does not include QtWebKit.\n'
+                            'The keyboard shortcuts feature is unavailable.'))
         return
 
     try:
@@ -121,7 +122,7 @@ def show_shortcuts():
         widget.setLayout(layout)
         widget.resize(800, min(parent.height(), 600))
 
-        qtutils.add_action(widget, 'Close', widget.accept,
+        qtutils.add_action(widget, N_('Close'), widget.accept,
                            Qt.Key_Question,
                            Qt.Key_Enter,
                            Qt.Key_Return)

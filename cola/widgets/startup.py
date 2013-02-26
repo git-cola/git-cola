@@ -17,6 +17,7 @@ from cola import guicmds
 from cola import settings
 from cola import qtutils
 from cola import utils
+from cola.i18n import N_
 from cola.widgets import defs
 
 class StartupDialog(QtGui.QDialog):
@@ -24,23 +25,23 @@ class StartupDialog(QtGui.QDialog):
 
     def __init__(self, parent=None):
         QtGui.QDialog.__init__(self, parent)
-        self.setWindowTitle(self.tr('git-cola'))
+        self.setWindowTitle(N_('git-cola'))
         self._gitdir = None
 
         self._layt = QtGui.QHBoxLayout()
         self._layt.setMargin(defs.margin)
         self._layt.setSpacing(defs.spacing)
 
-        self._new_btn = QtGui.QPushButton('New...')
+        self._new_btn = QtGui.QPushButton(N_('New...'))
         self._new_btn.setIcon(qtutils.new_icon())
 
-        self._open_btn = QtGui.QPushButton('Open...')
+        self._open_btn = QtGui.QPushButton(N_('Open...'))
         self._open_btn.setIcon(qtutils.open_icon())
 
-        self._clone_btn = QtGui.QPushButton('Clone...')
+        self._clone_btn = QtGui.QPushButton(N_('Clone...'))
         self._clone_btn.setIcon(qtutils.git_icon())
 
-        self._close_btn = QtGui.QPushButton('Close')
+        self._close_btn = QtGui.QPushButton(N_('Close'))
 
         self._layt.addWidget(self._open_btn)
         self._layt.addWidget(self._clone_btn)
@@ -54,12 +55,12 @@ class StartupDialog(QtGui.QDialog):
         self._vlayt.setMargin(defs.margin)
         self._vlayt.setSpacing(defs.margin)
 
-        self._bookmark_label = QtGui.QLabel(self.tr('Select Repository...'))
+        self._bookmark_label = QtGui.QLabel(N_('Select Repository...'))
         self._bookmark_label.setAlignment(Qt.AlignCenter)
 
         self._bookmark_model = QtGui.QStandardItemModel()
 
-        item = QtGui.QStandardItem('Select manually...')
+        item = QtGui.QStandardItem(N_('Select manually...'))
         item.setEditable(False)
         self._bookmark_model.appendRow(item)
 
@@ -122,7 +123,7 @@ class StartupDialog(QtGui.QDialog):
     def _open(self):
         self._gitdir = self._get_selected_bookmark()
         if not self._gitdir:
-            self._gitdir = qtutils.opendir_dialog('Open Git Repository...',
+            self._gitdir = qtutils.opendir_dialog(N_('Open Git Repository...'),
                                                   os.getcwd())
         if self._gitdir:
             self.accept()
@@ -158,9 +159,13 @@ class StartupDialog(QtGui.QDialog):
         os.chdir(path)
         status, out, err = utils.run_command(['git', 'init'])
         if status != 0:
-            title = 'Error Creating Repository'
-            msg = 'git init returned exit status %d' % status
-            details = 'output:\n%s\n\nerrors:\n%s' % (out, err)
+            title = N_('Error Creating Repository')
+            msg = (N_('"%(command)s" returned exit status %(status)d') %
+                   dict(command='git init', status=status))
+            details = N_('Output:\n%s') % out
+            if err:
+                details += '\n\n'
+                details += N_('Errors: %s') % err
             qtutils.critical(title, msg, details)
         else:
             self._gitdir = upath

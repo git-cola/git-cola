@@ -4,7 +4,7 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import cmds
 from cola import qtutils
-from cola.qtutils import tr
+from cola.i18n import N_
 from cola.widgets import completion
 from cola.widgets import defs
 
@@ -20,37 +20,37 @@ class MergeView(QtGui.QDialog):
         # Widgets
         self.title_label = QtGui.QLabel()
         self.revision_label = QtGui.QLabel()
-        self.revision_label.setText(tr('Revision To Merge'))
+        self.revision_label.setText(N_('Revision To Merge'))
 
         self.revision = completion.GitRefLineEdit()
 
         self.radio_local = QtGui.QRadioButton()
-        self.radio_local.setText(tr('Local Branch'))
+        self.radio_local.setText(N_('Local Branch'))
         self.radio_local.setChecked(True)
         self.radio_remote = QtGui.QRadioButton()
-        self.radio_remote.setText(tr('Tracking Branch'))
+        self.radio_remote.setText(N_('Tracking Branch'))
         self.radio_tag = QtGui.QRadioButton()
-        self.radio_tag.setText(tr('Tag'))
+        self.radio_tag.setText(N_('Tag'))
 
         self.revisions = QtGui.QListWidget()
         self.revisions.setAlternatingRowColors(True)
 
         self.button_viz = QtGui.QPushButton(self)
-        self.button_viz.setText(tr('Visualize'))
+        self.button_viz.setText(N_('Visualize'))
 
         self.checkbox_squash = QtGui.QCheckBox(self)
-        self.checkbox_squash.setText(tr('Squash'))
+        self.checkbox_squash.setText(N_('Squash'))
 
         self.checkbox_commit = QtGui.QCheckBox(self)
-        self.checkbox_commit.setText(tr('Commit'))
+        self.checkbox_commit.setText(N_('Commit'))
         self.checkbox_commit.setChecked(True)
         self.checkbox_commit_state = True
 
         self.button_cancel = QtGui.QPushButton(self)
-        self.button_cancel.setText(tr('Cancel'))
+        self.button_cancel.setText(N_('Cancel'))
 
         self.button_merge = QtGui.QPushButton(self)
-        self.button_merge.setText(tr('Merge'))
+        self.button_merge.setText(N_('Merge'))
 
         # Layouts
         self.revlayt = QtGui.QHBoxLayout()
@@ -112,9 +112,10 @@ class MergeView(QtGui.QDialog):
         branch = self.model.currentbranch
         revision = unicode(self.revision.text())
         if revision:
-            txt = unicode(tr('Merge "%s" into "%s"')) % (revision, branch)
+            txt = (N_('Merge "%(revision)s" into "%(branch)s"') %
+                   dict(revision=revision, branch=branch))
         else:
-            txt = unicode(tr('Merge into "%s"')) % branch
+            txt = N_('Merge into "%s"') % branch
         self.title_label.setText(txt)
         self.setWindowTitle(txt)
 
@@ -158,8 +159,8 @@ class MergeView(QtGui.QDialog):
         """Launch a gitk-like viewer on the selection revision"""
         revision = unicode(self.revision.text())
         if not revision:
-            qtutils.information('No Revision Specified',
-                                'You must specify a revision to view')
+            qtutils.information(N_('No Revision Specified'),
+                                N_('You must specify a revision to view.'))
             return
         cmds.do(cmds.VisualizeRevision, revision)
 
@@ -167,8 +168,8 @@ class MergeView(QtGui.QDialog):
         """Merge the selected revision/branch"""
         revision = unicode(self.revision.text())
         if not revision:
-            qtutils.information('No Revision Specified',
-                                'You must specify a revision to merge')
+            qtutils.information(N_('No Revision Specified'),
+                                N_('You must specify a revision to merge.'))
             return
 
         do_commit = self.checkbox_commit.isChecked()

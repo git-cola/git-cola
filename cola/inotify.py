@@ -6,6 +6,7 @@ from threading import Timer
 from threading import Lock
 from cola import utils
 from cola import cmds
+from cola.i18n import N_
 from cola.interaction import Interaction
 
 try:
@@ -41,17 +42,17 @@ def start():
     global _thread
     if not AVAILABLE:
         if utils.is_win32():
-            msg = ('file notification: disabled\n'
-                   'Note: install pywin32 to enable.\n')
+            msg = N_('file notification: disabled\n'
+                     'Note: install pywin32 to enable.\n')
         elif utils.is_linux():
-            msg = ('inotify: disabled\n'
-                   'Note: install python-pyinotify to enable inotify.\n')
+            msg = N_('inotify: disabled\n'
+                     'Note: install python-pyinotify to enable inotify.\n')
         else:
             return
 
         if utils.is_debian():
-            msg += ('On Debian systems '
-                    'try: sudo aptitude install python-pyinotify')
+            msg += N_('On Debian systems '
+                      'try: sudo aptitude install python-pyinotify')
         Interaction.log(msg)
         return
 
@@ -59,9 +60,9 @@ def start():
     _thread = GitNotifier()
     _thread.start()
     if utils.is_win32():
-        msg = 'file notification: enabled'
+        msg = N_('File notification enabled.')
     else:
-        msg = 'inotify support: enabled'
+        msg = N_('inotify enabled.')
     Interaction.log(msg)
 
 def stop():

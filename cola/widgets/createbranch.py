@@ -8,6 +8,7 @@ from cola import gitcmds
 from cola import qt
 from cola import qtutils
 from cola import utils
+from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.widgets import defs
 from cola.widgets import completion
@@ -85,7 +86,7 @@ class CreateBranchDialog(Dialog):
         Dialog.__init__(self, parent=parent)
         self.setWindowModality(Qt.WindowModal)
         self.setAttribute(Qt.WA_MacMetalStyle)
-        self.setWindowTitle(self.tr('Create Branch'))
+        self.setWindowTitle(N_('Create Branch'))
 
         self.model = model
         self.opts = CreateOpts(model)
@@ -94,16 +95,16 @@ class CreateBranchDialog(Dialog):
         self.progress = QtGui.QProgressDialog(self)
         self.progress.setRange(0, 0)
         self.progress.setCancelButton(None)
-        self.progress.setWindowTitle(self.tr('Create Branch'))
+        self.progress.setWindowTitle(N_('Create Branch'))
         self.progress.setWindowModality(Qt.WindowModal)
 
         self.branch_name_label = QtGui.QLabel()
-        self.branch_name_label.setText(self.tr('Branch Name'))
+        self.branch_name_label.setText(N_('Branch Name'))
 
         self.branch_name = QtGui.QLineEdit()
 
         self.rev_label = QtGui.QLabel()
-        self.rev_label.setText(self.tr('Starting Revision'))
+        self.rev_label.setText(N_('Starting Revision'))
 
         self.revision = completion.GitRefLineEdit()
         current = gitcmds.current_branch()
@@ -111,51 +112,51 @@ class CreateBranchDialog(Dialog):
             self.revision.setText(current)
 
         self.local_radio = QtGui.QRadioButton()
-        self.local_radio.setText(self.tr('Local Branch'))
+        self.local_radio.setText(N_('Local Branch'))
         self.local_radio.setChecked(True)
 
         self.remote_radio = QtGui.QRadioButton()
-        self.remote_radio.setText(self.tr('Tracking Branch'))
+        self.remote_radio.setText(N_('Tracking Branch'))
 
         self.tag_radio = QtGui.QRadioButton()
-        self.tag_radio.setText(self.tr('Tag'))
+        self.tag_radio.setText(N_('Tag'))
 
         self.branch_list = QtGui.QListWidget()
 
         self.update_existing_label = QtGui.QLabel()
-        self.update_existing_label.setText(self.tr('Update Existing Branch:'))
+        self.update_existing_label.setText(N_('Update Existing Branch:'))
 
         self.no_update_radio = QtGui.QRadioButton()
-        self.no_update_radio.setText(self.tr('No'))
+        self.no_update_radio.setText(N_('No'))
 
         self.ffwd_only_radio = QtGui.QRadioButton()
-        self.ffwd_only_radio.setText(self.tr('Fast Forward Only'))
+        self.ffwd_only_radio.setText(N_('Fast Forward Only'))
         self.ffwd_only_radio.setChecked(True)
 
         self.reset_radio = QtGui.QRadioButton()
-        self.reset_radio.setText(self.tr('Reset'))
+        self.reset_radio.setText(N_('Reset'))
 
         self.options_bottom_layout = QtGui.QHBoxLayout()
         self.options_checkbox_layout = QtGui.QVBoxLayout()
 
         self.fetch_checkbox = QtGui.QCheckBox()
-        self.fetch_checkbox.setText(self.tr('Fetch Tracking Branch'))
+        self.fetch_checkbox.setText(N_('Fetch Tracking Branch'))
         self.fetch_checkbox.setChecked(True)
         self.options_checkbox_layout.addWidget(self.fetch_checkbox)
 
         self.checkout_checkbox = QtGui.QCheckBox()
-        self.checkout_checkbox.setText(self.tr('Checkout After Creation'))
+        self.checkout_checkbox.setText(N_('Checkout After Creation'))
         self.checkout_checkbox.setChecked(True)
         self.options_checkbox_layout.addWidget(self.checkout_checkbox)
 
         self.options_bottom_layout.addLayout(self.options_checkbox_layout)
         self.options_bottom_layout.addStretch()
 
-        self.create_button = qt.create_button(text='Create Branch',
+        self.create_button = qt.create_button(text=N_('Create Branch'),
                                               icon=qtutils.git_icon())
         self.create_button.setDefault(True)
 
-        self.close_button = qt.create_button(text='Close')
+        self.close_button = qt.create_button(text=N_('Close'))
 
         self.branch_name_layout = QtGui.QHBoxLayout()
         self.branch_name_layout.addWidget(self.branch_name_label)
@@ -174,7 +175,7 @@ class CreateBranchDialog(Dialog):
         self.rev_start_textinput_layout.addWidget(self.revision)
 
         self.rev_start_group = QtGui.QGroupBox()
-        self.rev_start_group.setTitle(self.tr('Starting Revision'))
+        self.rev_start_group.setTitle(N_('Starting Revision'))
 
         self.rev_start_layout = QtGui.QVBoxLayout(self.rev_start_group)
         self.rev_start_layout.setMargin(defs.margin)
@@ -190,7 +191,7 @@ class CreateBranchDialog(Dialog):
         self.options_radio_layout.addWidget(self.reset_radio)
 
         self.option_group = QtGui.QGroupBox()
-        self.option_group.setTitle(self.tr('Options'))
+        self.option_group.setTitle(N_('Options'))
 
         self.options_grp_layout = QtGui.QVBoxLayout(self.option_group)
         self.options_grp_layout.setMargin(defs.margin)
@@ -255,25 +256,25 @@ class CreateBranchDialog(Dialog):
         check_branch = False
 
         if not branch or not revision:
-            qtutils.critical('Missing Data',
-                             'Please provide both a branch '
-                             'name and revision expression.')
+            qtutils.critical(N_('Missing Data'),
+                             N_('Please provide both a branch '
+                                'name and revision expression.'))
             return
         if branch in existing_branches:
             if no_update:
-                msg = self.tr("Branch '%s' already exists.")
-                msg = unicode(msg) % branch
-                qtutils.critical('Branch Exists', msg)
+                msg = N_('Branch "%s" already exists.') % branch
+                qtutils.critical(N_('Branch Exists'), msg)
                 return
             # Whether we should prompt the user for lost commits
             commits = gitcmds.rev_list_range(revision, branch)
             check_branch = bool(commits)
 
         if check_branch:
-            qmsg = self.tr("Resetting '%s' to '%s' will lose commits.")
-            msg = unicode(qmsg) % (branch, revision)
+            msg = (N_('Resetting "%(branch)s" to "%(revision)s" '
+                      'will lose commits.') %
+                   dict(branch=branch, revision=revision))
             if ffwd_only:
-                qtutils.critical('Branch Exists', msg)
+                qtutils.critical(N_('Branch Exists'), msg)
                 return
             lines = [msg]
             for idx, commit in enumerate(commits):
@@ -284,14 +285,15 @@ class CreateBranchDialog(Dialog):
                         +'\t' + subject)
                 if idx >= 5:
                     skip = len(commits) - 5
-                    lines.append('\t(%d skipped)' % skip)
+                    lines.append('\t(%s)' % (N_('%d skipped') % skip))
                     break
-            line = unicode(self.tr('Recovering lost commits may not be easy.'))
+            line = N_('Recovering lost commits may not be easy.')
             lines.append(line)
-            if not qtutils.confirm('Reset Branch?',
+            if not qtutils.confirm(N_('Reset Branch?'),
                                    '\n'.join(lines),
-                                   'Reset "%s" to "%s"?' % (branch, revision),
-                                   'Reset Branch',
+                                   (N_('Reset "%(branch)s" to "%(revision)s"?') %
+                                    dict(branch=branch, revision=revision)),
+                                   N_('Reset Branch'),
                                    default=False,
                                    icon=qtutils.icon('undo.svg')):
                 return
@@ -300,7 +302,7 @@ class CreateBranchDialog(Dialog):
         QtGui.QApplication.setOverrideCursor(Qt.WaitCursor)
 
         # Show a nice progress bar
-        self.progress.setLabelText('Updating...')
+        self.progress.setLabelText(N_('Updating...'))
         self.progress.show()
         self.thread.start()
 
@@ -316,15 +318,17 @@ class CreateBranchDialog(Dialog):
         for (cmd, status, out) in results:
             if status != 0:
                 Interaction.critical(
-                        'Create Branch Error',
-                        '"git %s" returned exit status "%d"' % (cmd, status))
+                        N_('Error Creating Branch'),
+                        (N_('"%(command)s" returned exit status "%(status)d"') %
+                         dict(command='git '+cmd, status=status)))
                 return
             line = '"git %s" returned exit status %d' % (cmd, status)
             detail_lines.append(line)
             detail_lines.append(out)
             detail_lines.append('')
         details = '\n'.join(detail_lines)
-        qtutils.information('Create Branch', 'Branch created',
+        qtutils.information(N_('Create Branch'),
+                            N_('Branch created'),
                             details=details)
         self.accept()
 

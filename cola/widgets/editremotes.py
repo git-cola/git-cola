@@ -7,6 +7,7 @@ import cola.app
 from cola import core
 from cola import qtutils
 from cola.git import git
+from cola.i18n import N_
 from cola.widgets import defs
 from cola.widgets import text
 
@@ -18,7 +19,7 @@ class RemoteEditor(QtGui.QDialog):
         self.setWindowTitle('Edit Remotes')
         self.setWindowModality(Qt.WindowModal)
 
-        self.default_hint = (''
+        self.default_hint = N_(''
             'Add and remove remote repositories using the \n'
             'Add(+) and Delete(-) buttons on the left-hand side.\n'
             '\n'
@@ -27,7 +28,7 @@ class RemoteEditor(QtGui.QDialog):
 
         self.remote_list = []
         self.remotes = QtGui.QListWidget()
-        self.remotes.setToolTip(self.tr(
+        self.remotes.setToolTip(N_(
             'Remote git repositories - double-click to rename'))
 
         self.info = text.HintedTextView(self.default_hint, self)
@@ -41,17 +42,17 @@ class RemoteEditor(QtGui.QDialog):
 
         self.add_btn = QtGui.QToolButton()
         self.add_btn.setIcon(qtutils.icon('add.svg'))
-        self.add_btn.setToolTip(self.tr('Add new remote git repository'))
+        self.add_btn.setToolTip(N_('Add new remote git repository'))
 
         self.refresh_btn = QtGui.QToolButton()
         self.refresh_btn.setIcon(qtutils.icon('view-refresh.svg'))
-        self.refresh_btn.setToolTip(self.tr('Refresh'))
+        self.refresh_btn.setToolTip(N_('Refresh'))
 
         self.delete_btn = QtGui.QToolButton()
         self.delete_btn.setIcon(qtutils.icon('remove.svg'))
-        self.delete_btn.setToolTip(self.tr('Delete remote'))
+        self.delete_btn.setToolTip(N_('Delete remote'))
 
-        self.close_btn = QtGui.QPushButton(self.tr('Close'))
+        self.close_btn = QtGui.QPushButton(N_('Close'))
 
         self._top_layout = QtGui.QSplitter()
         self._top_layout.setOrientation(Qt.Horizontal)
@@ -112,7 +113,7 @@ class RemoteEditor(QtGui.QDialog):
         status, out = git.remote('add', name, url,
                                  with_status=True, with_stderr=True)
         if status != 0:
-            qtutils.critical('Error creating remote "%s"' % name, out)
+            qtutils.critical(N_('Error creating remote "%s"') % name, out)
         self.refresh()
 
     def delete(self):
@@ -120,17 +121,17 @@ class RemoteEditor(QtGui.QDialog):
         if remote is None:
             return
 
-        title = 'Delete Remote'
-        question = 'Delete remote?'
-        info = unicode(self.tr('Delete remote "%s"')) % remote
-        ok_btn = 'Delete'
+        title = N_('Delete Remote')
+        question = N_('Delete remote?')
+        info = N_('Delete remote "%s"') % remote
+        ok_btn = N_('Delete')
         if not qtutils.confirm(title, question, info, ok_btn):
             return
 
         status, out = git.remote('rm', remote,
                                  with_status=True, with_stderr=True)
         if status != 0:
-            qtutils.critical('Error deleting remote "%s"' % remote, out)
+            qtutils.critical(N_('Error deleting remote "%s"') % remote, out)
         cola.model().update_status()
         self.refresh()
 
@@ -149,11 +150,11 @@ class RemoteEditor(QtGui.QDialog):
             item.setText(old_name)
             return
 
-        title = 'Rename Remote'
-        question = 'Rename remote?'
-        info = unicode(self.tr(
-                'Rename remote "%s" to "%s"?')) % (old_name, new_name)
-        ok_btn = 'Rename'
+        title = N_('Rename Remote')
+        question = N_('Rename remote?')
+        info = (N_('Rename remote "%(current)s" to "%(new)s"?') %
+                dict(current=old_name, new=new_name))
+        ok_btn = N_('Rename')
 
         if qtutils.confirm(title, question, info, ok_btn):
             git.remote('rename', old_name, new_name)
@@ -165,7 +166,7 @@ class RemoteEditor(QtGui.QDialog):
         remote = qtutils.selected_item(self.remotes, self.remote_list)
         if remote is None:
             return
-        self.info.set_hint('Gathering info for "%s"...' % remote)
+        self.info.set_hint(N_('Gathering info for "%s"...') % remote)
         self.info.enable_hint(True)
 
         self.info_thread.remote = remote
@@ -197,10 +198,10 @@ class AddRemoteWidget(QtGui.QDialog):
         QtGui.QDialog.__init__(self, parent)
         self.setWindowModality(Qt.WindowModal)
 
-        self.add_btn = QtGui.QPushButton(self.tr('Add Remote'))
+        self.add_btn = QtGui.QPushButton(N_('Add Remote'))
         self.add_btn.setIcon(qtutils.apply_icon())
 
-        self.cancel_btn = QtGui.QPushButton(self.tr('Cancel'))
+        self.cancel_btn = QtGui.QPushButton(N_('Cancel'))
 
         def lineedit(hint):
             widget = text.HintedLineEdit(hint)
@@ -209,14 +210,14 @@ class AddRemoteWidget(QtGui.QDialog):
             widget.setMinimumWidth(metrics.width('_' * 32))
             return widget
 
-        self.name = lineedit('Name for the new remote')
+        self.name = lineedit(N_('Name for the new remote'))
         self.url = lineedit('git://git.example.com/repo.git')
 
         self._form = QtGui.QFormLayout()
         self._form.setMargin(defs.margin)
         self._form.setSpacing(defs.spacing)
-        self._form.addRow(self.tr('Name'), self.name)
-        self._form.addRow(self.tr('URL'), self.url)
+        self._form.addRow(N_('Name'), self.name)
+        self._form.addRow(N_('URL'), self.url)
 
         self._btn_layout = QtGui.QHBoxLayout()
         self._btn_layout.setMargin(0)

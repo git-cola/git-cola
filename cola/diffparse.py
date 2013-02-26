@@ -224,8 +224,8 @@ class DiffParser(object):
                 self._idx += 1
             else:
                 if self._idx < 0:
-                    errmsg = 'Malformed diff?\n\n%s' % diff
-                    raise AssertionError, errmsg
+                    errmsg = 'Malformed diff?: %s' % diff
+                    raise AssertionError(errmsg)
                 line_len = len(line) + 1
                 total_offset += line_len
 

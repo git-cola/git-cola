@@ -11,7 +11,6 @@ from PyQt4.QtCore import SIGNAL
 
 import cola
 from cola import compat
-from cola import i18n
 from cola import core
 from cola import errors
 from cola import gitcfg
@@ -19,6 +18,7 @@ from cola import gitcmds
 from cola import utils
 from cola import difftool
 from cola.diffparse import DiffParser
+from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import selection
 
@@ -28,6 +28,7 @@ _config = gitcfg.instance()
 
 class BaseCommand(object):
     """Base class for all commands; provides the command pattern"""
+
     def __init__(self):
         self.undoable = False
 
@@ -35,9 +36,9 @@ class BaseCommand(object):
         """Can this be undone?"""
         return self.undoable
 
-    def name(self):
-        """Return this command's name."""
-        return self.__class__.__name__
+    @staticmethod
+    def name(cls):
+        return 'Unknown'
 
     def prepare(self):
         """Prepare to run the command.
@@ -49,14 +50,15 @@ class BaseCommand(object):
         pass
 
     def do(self):
-        raise NotImplementedError('%s.do() is unimplemented' % self.name())
+        raise NotImplementedError('%s.do() is unimplemented' % self.__class__.__name__)
 
     def undo(self):
-        raise NotImplementedError('%s.undo() is unimplemented' % self.name())
+        raise NotImplementedError('%s.undo() is unimplemented' % self.__class__.__name__)
 
 
 class Command(BaseCommand):
     """Base class for commands that modify the main model"""
+
     def __init__(self):
         """Initialize the command and stash away values for use in do()"""
         # These are commonly used so let's make it easier to write new commands.
@@ -90,7 +92,12 @@ class Command(BaseCommand):
 
 class AmendMode(Command):
     """Try to amend a commit."""
+
     LAST_MESSAGE = None
+
+    @staticmethod
+    def name():
+        return N_('Amend')
 
     def __init__(self, amend):
         Command.__init__(self)
@@ -125,9 +132,9 @@ class AmendMode(Command):
                 self.skip = True
                 _notifier.broadcast(_notifier.AMEND, False)
                 Interaction.information(
-                        'Oops! Unmerged',
-                        'You are in the middle of a merge.\n'
-                        'You cannot amend while merging.')
+                        N_('Cannot Amend'),
+                        N_('You are in the middle of a merge.\n'
+                           'Cannot amend while merging.'))
                 return
         self.skip = False
         _notifier.broadcast(_notifier.AMEND, self.amending)
@@ -144,6 +151,7 @@ class AmendMode(Command):
 
 
 class ApplyDiffSelection(Command):
+
     def __init__(self, staged, selected, offset, selection, apply_to_worktree):
         Command.__init__(self)
         self.staged = staged
@@ -174,6 +182,7 @@ class ApplyDiffSelection(Command):
 
 
 class ApplyPatches(Command):
+
     def __init__(self, patches):
         Command.__init__(self)
         patches.sort()
@@ -193,25 +202,26 @@ class ApplyPatches(Command):
 
             if num_patches > 1:
                 diff = self.model.git.diff('HEAD^!', stat=True)
-                diff_text += 'Patch %d/%d - ' % (idx+1, num_patches)
-                diff_text += '%s:\n%s\n\n' % (os.path.basename(patch), diff)
+                diff_text += (N_('PATCH %(current)d/%(count)d') %
+                              dict(current=idx+1, count=num_patches))
+                diff_text += ' - %s:\n%s\n\n' % (os.path.basename(patch), diff)
 
-        diff_text += 'Summary:\n'
+        diff_text += N_('Summary:') + '\n'
         diff_text += self.model.git.diff(orig_head, stat=True)
 
         # Display a diffstat
         self.model.set_diff_text(diff_text)
-
         self.model.update_file_status()
 
+        basenames = '\n'.join([os.path.basename(p) for p in self.patches])
         Interaction.information(
-                'Patch(es) Applied',
-                '%d patch(es) applied:\n\n%s' %
-                (len(self.patches),
-                 '\n'.join(map(os.path.basename, self.patches))))
+                N_('Patch(es) Applied'),
+                (N_('%d patch(es) applied.') + '\n\n%s') %
+                    (len(self.patches), basenames))
 
 
 class Archive(BaseCommand):
+
     def __init__(self, ref, fmt, prefix, filename):
         BaseCommand.__init__(self)
         self.ref = ref
@@ -241,6 +251,7 @@ class Checkout(Command):
     'argv' is handed off directly to git.
 
     """
+
     def __init__(self, argv, checkout_branch=False):
         Command.__init__(self)
         self.argv = argv
@@ -259,6 +270,7 @@ class Checkout(Command):
 
 class CheckoutBranch(Checkout):
     """Checkout a branch."""
+
     def __init__(self, branch):
         args = [branch]
         Checkout.__init__(self, args, checkout_branch=True)
@@ -266,6 +278,7 @@ class CheckoutBranch(Checkout):
 
 class CherryPick(Command):
     """Cherry pick commits into the current branch."""
+
     def __init__(self, commits):
         Command.__init__(self)
         self.commits = commits
@@ -277,6 +290,7 @@ class CherryPick(Command):
 
 class ResetMode(Command):
     """Reset the mode and clear the model's diff text."""
+
     def __init__(self):
         Command.__init__(self)
         self.new_mode = self.model.mode_none
@@ -306,16 +320,17 @@ class Commit(ResetMode):
         if status == 0:
             ResetMode.do(self)
             self.model.set_commitmsg(self.new_commitmsg)
-            title = 'Commit: '
+            msg = N_('Created commit: %s') % output
         else:
-            title = 'Commit failed: '
-        Interaction.log_status(status, title+output, '')
+            msg = N_('Commit failed: %s') % output
+        Interaction.log_status(status, msg, '')
 
         return status, output
 
 
 class Ignore(Command):
     """Add files to .gitignore"""
+
     def __init__(self, filenames):
         Command.__init__(self)
         self.filenames = filenames
@@ -336,7 +351,8 @@ class Ignore(Command):
 
 
 class Delete(Command):
-    """Simply delete files."""
+    """Delete files."""
+
     def __init__(self, filenames):
         Command.__init__(self)
         self.filenames = filenames
@@ -351,29 +367,27 @@ class Delete(Command):
                     rescan=True
                 except:
                     Interaction.information(
-                            'Error', 'Deleting "%s" failed' % filename)
+                            N_('Error'),
+                            N_('Deleting "%s" failed') % filename)
         if rescan:
             self.model.update_file_status()
 
 
 class DeleteBranch(Command):
     """Delete a git branch."""
+
     def __init__(self, branch):
         Command.__init__(self)
         self.branch = branch
 
     def do(self):
         status, output = self.model.delete_branch(self.branch)
-        title = ''
-        if output.startswith('error:'):
-            output = 'E' + output[1:]
-        else:
-            title = 'Info: '
-        Interaction.log_status(status, title + output)
+        Interaction.log_status(status, output)
 
 
 class Diff(Command):
     """Perform a diff and set the model's current text."""
+
     def __init__(self, filenames, cached=False):
         Command.__init__(self)
         # Guard against the list of files being empty
@@ -391,6 +405,7 @@ class Diff(Command):
 
 class Diffstat(Command):
     """Perform a diffstat and set the model's diff text."""
+
     def __init__(self):
         Command.__init__(self)
         diff = self.model.git.diff(self.model.head,
@@ -404,12 +419,14 @@ class Diffstat(Command):
 
 class DiffStaged(Diff):
     """Perform a staged diff on a file."""
+
     def __init__(self, filenames):
         Diff.__init__(self, filenames, cached=True)
         self.new_mode = self.model.mode_index
 
 
 class DiffStagedSummary(Command):
+
     def __init__(self):
         Command.__init__(self)
         diff = self.model.git.diff(self.model.head,
@@ -423,6 +440,7 @@ class DiffStagedSummary(Command):
 
 class Difftool(Command):
     """Run git-difftool limited by path."""
+
     def __init__(self, staged, filenames):
         Command.__init__(self)
         self.staged = staged
@@ -435,8 +453,11 @@ class Difftool(Command):
 
 class Edit(Command):
     """Edit a file using the configured gui.editor."""
-    NAME = 'Edit'
     SHORTCUT = 'Ctrl+E'
+
+    @staticmethod
+    def name():
+        return N_('Edit')
 
     def __init__(self, filenames, line_number=None):
         Command.__init__(self)
@@ -474,6 +495,7 @@ class Edit(Command):
 
 class FormatPatch(Command):
     """Output a patch series given all revisions and a selected subset."""
+
     def __init__(self, to_export, revs):
         Command.__init__(self)
         self.to_export = to_export
@@ -485,8 +507,11 @@ class FormatPatch(Command):
 
 
 class LaunchDifftool(BaseCommand):
-    NAME = 'Launch Diff Tool'
     SHORTCUT = 'Ctrl+D'
+
+    @staticmethod
+    def name():
+        return N_('Launch Diff Tool')
 
     def __init__(self):
         BaseCommand.__init__(self)
@@ -496,8 +521,11 @@ class LaunchDifftool(BaseCommand):
 
 
 class LaunchEditor(Edit):
-    NAME = 'Launch Editor'
     SHORTCUT = 'Ctrl+E'
+
+    @staticmethod
+    def name():
+        return N_('Launch Editor')
 
     def __init__(self):
         s = cola.selection()
@@ -507,6 +535,7 @@ class LaunchEditor(Edit):
 
 class LoadCommitMessage(Command):
     """Loads a commit message from a path."""
+
     def __init__(self, path):
         Command.__init__(self)
         self.undoable = True
@@ -517,8 +546,8 @@ class LoadCommitMessage(Command):
     def do(self):
         path = self.path
         if not path or not os.path.isfile(path):
-            raise errors.UsageError('Error: cannot find commit template',
-                                    '%s: No such file or directory.' % path)
+            raise errors.UsageError(N_('Error: Cannot find commit template'),
+                                    N_('%s: No such file or directory.') % path)
         self.model.set_directory(os.path.dirname(path))
         self.model.set_commitmsg(utils.slurp(path))
 
@@ -534,10 +563,11 @@ class LoadCommitTemplate(LoadCommitMessage):
 
     def do(self):
         if self.path is None:
-            raise errors.UsageError('Error: unconfigured commit template',
-                    'A commit template has not been configured.\n'
-                    'Use "git config" to define "commit.template"\n'
-                    'so that it points to a commit template.')
+            raise errors.UsageError(
+                    N_('Error: Unconfigured commit template'),
+                    N_('A commit template has not been configured.\n'
+                       'Use "git config" to define "commit.template"\n'
+                       'so that it points to a commit template.'))
         return LoadCommitMessage.do(self)
 
 
@@ -583,6 +613,7 @@ class Merge(Command):
 
 class Mergetool(Command):
     """Launch git-mergetool on a list of paths."""
+
     def __init__(self, paths):
         Command.__init__(self)
         self.paths = paths
@@ -599,8 +630,11 @@ class Mergetool(Command):
 
 class OpenDefaultApp(BaseCommand):
     """Open a file using the OS default."""
-    NAME = 'Open Using Default Application'
     SHORTCUT = 'Space'
+
+    @staticmethod
+    def name():
+        return N_('Open Using Default Application')
 
     def __init__(self, filenames):
         BaseCommand.__init__(self)
@@ -619,8 +653,11 @@ class OpenDefaultApp(BaseCommand):
 
 class OpenParentDir(OpenDefaultApp):
     """Open parent directories using the OS default."""
-    NAME = 'Open Parent Directory'
     SHORTCUT = 'Shift+Space'
+
+    @staticmethod
+    def name():
+        return N_('Open Parent Directory')
 
     def __init__(self, filenames):
         OpenDefaultApp.__init__(self, filenames)
@@ -634,6 +671,7 @@ class OpenParentDir(OpenDefaultApp):
 
 class OpenRepo(Command):
     """Launches git-cola on a repo."""
+
     def __init__(self, repo_path):
         Command.__init__(self)
         self.repo_path = repo_path
@@ -645,6 +683,7 @@ class OpenRepo(Command):
 
 class Clone(Command):
     """Clones a repository and optionally spawns a new cola session."""
+
     def __init__(self, url, new_directory, spawn=True):
         Command.__init__(self)
         self.url = url
@@ -658,10 +697,9 @@ class Clone(Command):
                                            with_status=True)
         if status != 0:
             Interaction.information(
-                    'Error cloning: %s' % self.url,
-                    'git clone returned exit code %s%s' %
-                    (status,
-                     out and ('\n' + out) or ''))
+                    N_('Error: could not clone "%s"') % self.url,
+                    (N_('git clone returned exit code %s') % status) +
+                    (out and ('\n' + out) or ''))
             return False
         if self.spawn:
             utils.fork([sys.executable, sys.argv[0],
@@ -669,18 +707,21 @@ class Clone(Command):
         return True
 
 
-rescan = 'rescan'
-
 class Rescan(Command):
     """Rescans for changes."""
+
     def do(self):
         self.model.update_status()
 
 
 class RescanAndRefresh(Command):
     """Rescans for changes."""
-    NAME = 'Rescan'
+
     SHORTCUT = 'Ctrl+R'
+
+    @staticmethod
+    def name():
+        return N_('Rescan')
 
     def do(self):
         self.model.update_status(update_index=True)
@@ -688,9 +729,10 @@ class RescanAndRefresh(Command):
 
 class RunConfigAction(Command):
     """Run a user-configured action, typically from the "Tools" menu"""
-    def __init__(self, name):
+
+    def __init__(self, action_name):
         Command.__init__(self)
-        self.name = name
+        self.action_name = action_name
         self.model = cola.model()
 
     def do(self):
@@ -701,21 +743,21 @@ class RunConfigAction(Command):
                 pass
         rev = None
         args = None
-        opts = _config.get_guitool_opts(self.name)
+        opts = _config.get_guitool_opts(self.action_name)
         cmd = opts.get('cmd')
         if 'title' not in opts:
             opts['title'] = cmd
 
         if 'prompt' not in opts or opts.get('prompt') is True:
-            prompt = i18n.gettext('Are you sure you want to run %s?') % cmd
+            prompt = N_('Run "%s"?') % cmd
             opts['prompt'] = prompt
 
         if opts.get('needsfile'):
             filename = selection.filename()
             if not filename:
                 Interaction.information(
-                        'Please select a file',
-                        '"%s" requires a selected file' % cmd)
+                        N_('Please select a file'),
+                        N_('"%s" requires a selected file.') % cmd)
                 return False
             compat.putenv('FILENAME', filename)
 
@@ -727,8 +769,8 @@ class RunConfigAction(Command):
                 rev = opts.get('revision')
                 args = opts.get('args')
                 if opts.get('revprompt') and not rev:
-                    title = 'Invalid Revision'
-                    msg = 'The revision expression cannot be empty.'
+                    title = N_('Invalid Revision')
+                    msg = N_('The revision expression cannot be empty.')
                     Interaction.critical(title, msg)
                     continue
                 break
@@ -743,7 +785,7 @@ class RunConfigAction(Command):
         if args:
             compat.putenv('ARGS', args)
         title = os.path.expandvars(cmd)
-        Interaction.log('running: ' + title)
+        Interaction.log(N_('Running command: %s') % title)
         cmd = ['sh', '-c', cmd]
 
         if opts.get('noconsole'):
@@ -752,8 +794,8 @@ class RunConfigAction(Command):
             status, out, err = Interaction.run_command(title, cmd)
 
         Interaction.log_status(status,
-                               out and 'stdout: %s' % out,
-                               err and 'stderr: %s' % err)
+                               out and (N_('Output: %s') % out) or '',
+                               err and (N_('Errors: %s') % err) or '')
 
         if not opts.get('norescan'):
             self.model.update_status()
@@ -761,6 +803,7 @@ class RunConfigAction(Command):
 
 
 class SetDiffText(Command):
+
     def __init__(self, text):
         Command.__init__(self)
         self.undoable = True
@@ -769,6 +812,7 @@ class SetDiffText(Command):
 
 class ShowUntracked(Command):
     """Show an untracked file."""
+
     def __init__(self, filenames):
         Command.__init__(self)
         self.filenames = filenames
@@ -792,8 +836,11 @@ class ShowUntracked(Command):
 
 
 class SignOff(Command):
-    NAME = 'Sign Off'
     SHORTCUT = 'Ctrl+I'
+
+    @staticmethod
+    def name():
+        return N_('Sign Off')
 
     def __init__(self):
         Command.__init__(self)
@@ -814,7 +861,7 @@ class SignOff(Command):
             import pwd
             user = pwd.getpwuid(os.getuid()).pw_name
         except ImportError:
-            user = os.getenv('USER', 'unknown')
+            user = os.getenv('USER', N_('unknown'))
 
         name = _config.get('user.name', user)
         email = _config.get('user.email', '%s@%s' % (user, platform.node()))
@@ -823,23 +870,30 @@ class SignOff(Command):
 
 class Stage(Command):
     """Stage a set of paths."""
-    NAME = 'Stage'
     SHORTCUT = 'Ctrl+S'
+
+    @staticmethod
+    def name():
+        return N_('Stage')
 
     def __init__(self, paths):
         Command.__init__(self)
         self.paths = paths
 
     def do(self):
-        msg = 'Staging: %s' % (', '.join(self.paths))
+        msg = N_('Staging: %s') % (', '.join(self.paths))
         Interaction.log(msg)
         self.model.stage_paths(self.paths)
 
 
 class StageModified(Stage):
     """Stage all modified files."""
-    NAME = 'Stage Modified'
+
     SHORTCUT = 'Ctrl+S'
+
+    @staticmethod
+    def name():
+        return N_('Stage Modified')
 
     def __init__(self):
         Stage.__init__(self, None)
@@ -848,8 +902,12 @@ class StageModified(Stage):
 
 class StageUnmerged(Stage):
     """Stage all modified files."""
-    NAME = 'Stage Unmerged'
+
     SHORTCUT = 'Ctrl+S'
+
+    @staticmethod
+    def name():
+        return N_('Stage Unmerged')
 
     def __init__(self):
         Stage.__init__(self, None)
@@ -858,8 +916,12 @@ class StageUnmerged(Stage):
 
 class StageUntracked(Stage):
     """Stage all untracked files."""
-    NAME = 'Stage Untracked'
+
     SHORTCUT = 'Ctrl+S'
+
+    @staticmethod
+    def name():
+        return N_('Stage Untracked')
 
     def __init__(self):
         Stage.__init__(self, None)
@@ -868,6 +930,7 @@ class StageUntracked(Stage):
 
 class Tag(Command):
     """Create a tag object."""
+
     def __init__(self, name, revision, sign=False, message=''):
         Command.__init__(self)
         self._name = name
@@ -876,14 +939,15 @@ class Tag(Command):
         self._sign = sign
 
     def do(self):
-        log_msg = 'Tagging: "%s" as "%s"' % (self._revision, self._name)
+        log_msg = (N_('Tagging "%(revision)s" as "%(name)s"') %
+                   dict(revision=self._revision, name=self._name))
         opts = {}
         if self._message:
             opts['F'] = utils.tmp_filename('tag-message')
             utils.write(opts['F'], self._message)
 
         if self._sign:
-            log_msg += ', GPG-signed'
+            log_msg += ' (%s)' % N_('GPG-signed')
             opts['s'] = True
             status, output = self.model.git.tag(self._name,
                                                 self._revision,
@@ -901,7 +965,7 @@ class Tag(Command):
             os.unlink(opts['F'])
 
         if output:
-            log_msg += '\nOutput:\n%s' % output
+            log_msg += '\n' + N_('Output: %s') % output
 
         Interaction.log_status(status, log_msg, '')
         if status == 0:
@@ -910,39 +974,46 @@ class Tag(Command):
 
 class Unstage(Command):
     """Unstage a set of paths."""
-    NAME = 'Unstage'
+
     SHORTCUT = 'Ctrl+S'
+
+    @staticmethod
+    def name():
+        return N_('Unstage')
 
     def __init__(self, paths):
         Command.__init__(self)
         self.paths = paths
 
     def do(self):
-        msg = 'Unstaging: %s' % (', '.join(self.paths))
+        msg = N_('Unstaging: %s') % (', '.join(self.paths))
         Interaction.log(msg)
         self.model.unstage_paths(self.paths)
 
 
 class UnstageAll(Command):
     """Unstage all files; resets the index."""
+
     def do(self):
         self.model.unstage_all()
 
 
 class UnstageSelected(Unstage):
     """Unstage selected files."""
+
     def __init__(self):
         Unstage.__init__(self, cola.selection_model().staged)
 
 
 class Untrack(Command):
     """Unstage a set of paths."""
+
     def __init__(self, paths):
         Command.__init__(self)
         self.paths = paths
 
     def do(self):
-        msg = 'Untracking: %s' % (', '.join(self.paths))
+        msg = N_('Untracking: %s') % (', '.join(self.paths))
         Interaction.log(msg)
         status, out = self.model.untrack_paths(self.paths)
         Interaction.log_status(status, out, '')
@@ -950,6 +1021,7 @@ class Untrack(Command):
 
 class UntrackedSummary(Command):
     """List possible .gitignore rules as the diff text."""
+
     def __init__(self):
         Command.__init__(self)
         untracked = self.model.untracked
@@ -966,12 +1038,14 @@ class UntrackedSummary(Command):
 
 class UpdateFileStatus(Command):
     """Rescans for changes."""
+
     def do(self):
         self.model.update_file_status()
 
 
 class VisualizeAll(Command):
     """Visualize all branches."""
+
     def do(self):
         browser = utils.shell_split(self.model.history_browser())
         utils.fork(browser + ['--all'])
@@ -979,6 +1053,7 @@ class VisualizeAll(Command):
 
 class VisualizeCurrent(Command):
     """Visualize all branches."""
+
     def do(self):
         browser = utils.shell_split(self.model.history_browser())
         utils.fork(browser + [self.model.currentbranch])
@@ -986,6 +1061,7 @@ class VisualizeCurrent(Command):
 
 class VisualizePaths(Command):
     """Path-limited visualization."""
+
     def __init__(self, paths):
         Command.__init__(self)
         browser = utils.shell_split(self.model.history_browser())
@@ -1000,6 +1076,7 @@ class VisualizePaths(Command):
 
 class VisualizeRevision(Command):
     """Visualize a specific revision."""
+
     def __init__(self, revision, paths=None):
         Command.__init__(self)
         self.revision = revision
@@ -1045,7 +1122,7 @@ def do_cmd(cmd):
         details = traceback.format_exception(exc_type, exc_value, exc_tb)
         details = '\n'.join(details)
         msg = _exception_message(e)
-        Interaction.critical('Oops', message=msg, details=details)
+        Interaction.critical(N_('Error'), message=msg, details=details)
         return None
 
 
@@ -1079,6 +1156,7 @@ def background(parent, cls, *args, **opts):
 
 
 class RunCommand(QtCore.QObject):
+
     def __init__(self, cmd, task, parent):
         QtCore.QObject.__init__(self, parent)
         self.cmd = cmd
@@ -1098,6 +1176,7 @@ class RunCommand(QtCore.QObject):
 
 
 class AsyncCommand(QtCore.QRunnable):
+
     def __init__(self, parent, cmd):
         QtCore.QRunnable.__init__(self)
         self.runner = RunCommand(cmd, self, parent)

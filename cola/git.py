@@ -220,11 +220,11 @@ class Git(object):
             Interaction.log_status(status, msg, '')
         elif cola_trace == 'full':
             if output:
-                print "%s -> %d: '%s'" % (command, status, output)
+                print("%s -> %d: '%s'" % (command, status, output))
             else:
-                print "%s -> %d" % (command, status)
+                print("%s -> %d" % (command, status))
         elif cola_trace:
-            print ' '.join(command)
+            print(' '.join(command))
 
         # Allow access to the command's status code
         if with_status:

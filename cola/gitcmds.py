@@ -9,6 +9,7 @@ from cola import utils
 from cola import version
 from cola.compat import set
 from cola.git import git
+from cola.i18n import N_
 
 config = gitcfg.instance()
 
@@ -380,7 +381,7 @@ def unstage_paths(args, head='HEAD'):
 
 def untrack_paths(args, head='HEAD'):
     if not args:
-        return (-1, 'Nothing to do')
+        return (-1, N_('Nothing to do'))
     return git.update_index('--', force_remove=True,
                             with_status=True, *set(args))
 

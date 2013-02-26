@@ -9,6 +9,7 @@ from cola import utils
 from cola import qtutils
 from cola.cmds import BaseCommand
 from cola.git import git
+from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.widgets import defs
 from cola.widgets.standard import TreeView
@@ -38,13 +39,15 @@ class SaveBlob(BaseCommand):
         fp.close()
 
         status = proc.returncode
-        msg = ('Saved "%s" from %s to "%s"' %
-               (model.relpath, model.ref, model.filename))
+        msg = (N_('Saved "%(filename)s" from "%(ref)s" to "%(destination)s"') %
+               dict(filename=model.relpath,
+                    ref=model.ref,
+                    destination=model.filename))
         Interaction.log_status(status, msg, '')
 
         Interaction.information(
-                'File Saved',
-                'File saved to "%s"' % model.filename)
+                N_('File Saved'),
+                N_('File saved to "%s"') % model.filename)
 
 
 
@@ -57,7 +60,7 @@ class BrowseDialog(QtGui.QDialog):
         dlg = BrowseDialog(model, parent=parent)
         dlg_model = GitTreeModel(ref, dlg)
         dlg.setModel(dlg_model)
-        dlg.setWindowTitle('Browsing %s' % model.ref)
+        dlg.setWindowTitle(N_('Browsing %s') % model.ref)
         if hasattr(parent, 'width'):
             dlg.resize(parent.width()*3/4, 333)
         else:
@@ -75,7 +78,7 @@ class BrowseDialog(QtGui.QDialog):
         dlg = BrowseDialog(model, select_file=True, parent=parent)
         dlg_model = GitTreeModel(ref, dlg)
         dlg.setModel(dlg_model)
-        dlg.setWindowTitle('Select File from %s' % model.ref)
+        dlg.setWindowTitle(N_('Select file from "%s"') % model.ref)
         dlg.resize(parent.width()*3/4, 333)
         dlg.show()
         dlg.raise_()
@@ -84,7 +87,7 @@ class BrowseDialog(QtGui.QDialog):
         return model.filename
 
     @staticmethod
-    def select_file_from_list(file_list, title='Select File'):
+    def select_file_from_list(file_list, title=N_('Select File')):
         parent = qtutils.active_window()
         model = BrowseModel(None)
         dlg = BrowseDialog(model, select_file=True, parent=parent)
@@ -110,8 +113,8 @@ class BrowseDialog(QtGui.QDialog):
 
         # widgets
         self.tree = GitTreeWidget(model.ref, parent=self)
-        self.close = QtGui.QPushButton('Close')
-        self.save = QtGui.QPushButton(select_file and 'Select' or 'Save')
+        self.close = QtGui.QPushButton(N_('Close'))
+        self.save = QtGui.QPushButton(select_file and N_('Select') or N_('Save'))
         self.save.setDefault(True)
         self.save.setEnabled(False)
 

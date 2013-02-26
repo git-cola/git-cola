@@ -9,10 +9,11 @@ from cola import cmds
 from cola import qtutils
 from cola import utils
 from cola.cmds import run
-from cola.models.selection import State
+from cola.i18n import N_
 from cola.widgets import defs
 from cola.widgets import standard
 from cola.classic.model import GitRepoNameItem
+from cola.models.selection import State
 
 
 class Browser(standard.Widget):
@@ -43,13 +44,14 @@ class Browser(standard.Widget):
     def _updated_callback(self):
         branch = self.model.currentbranch
         curdir = os.getcwd()
-        msg = 'Repository: %s\nBranch: %s' % (curdir, branch)
-
+        msg = N_('Repository: %s') % curdir
+        msg += '\n'
+        msg += N_('Branch: %s') % branch
         self.setToolTip(msg)
 
         title = '%s: %s - Browse' % (self.model.project, branch)
         if self.mode == self.model.mode_amend:
-            title += ' ** amending **'
+            title += ' (%s)' % N_('Amending')
         self.setWindowTitle(title)
 
 
@@ -73,45 +75,46 @@ class RepoTreeView(standard.TreeView):
         self.connect(self, SIGNAL('indexAboutToChange()'), self.sync_selection)
 
         self.action_history =\
-                self._create_action('View History...',
-                                    'View history for selected path(s).',
-                                    self.view_history,
-                                    'Shift+Ctrl+H')
+                self._create_action(
+                        N_('View History...'),
+                        N_('View history for selected path(s).'),
+                        self.view_history,
+                        'Shift+Ctrl+H')
         self.action_stage =\
-                self._create_action('Stage Selected',
-                                    'Stage selected path(s) for commit.',
+                self._create_action(N_('Stage Selected'),
+                                    N_('Stage selected path(s) for commit.'),
                                     self.stage_selected,
                                     cmds.Stage.SHORTCUT)
         self.action_unstage =\
-                self._create_action('Unstage Selected',
-                                    'Remove selected path(s) from '
-                                    'the staging area.',
-                                    self.unstage_selected,
-                                    'Ctrl+U')
+                self._create_action(
+                        N_('Unstage Selected'),
+                        N_('Remove selected path(s) from the staging area.'),
+                        self.unstage_selected,
+                        'Ctrl+U')
 
         self.action_untrack =\
-                self._create_action('Untrack Selected',
-                                    'Stop tracking path(s)',
+                self._create_action(N_('Untrack Selected'),
+                                    N_('Stop tracking path(s)'),
                                     self.untrack_selected)
 
         self.action_difftool =\
-                self._create_action(cmds.LaunchDifftool.NAME,
-                                    'Launch git-difftool on the current path.',
+                self._create_action(cmds.LaunchDifftool.name(),
+                                    N_('Launch git-difftool on the current path.'),
                                     run(cmds.LaunchDifftool),
                                     cmds.LaunchDifftool.SHORTCUT)
         self.action_difftool_predecessor =\
-                self._create_action('Diff Against Predecessor...',
-                                    'Launch git-difftool against previous versions.',
+                self._create_action(N_('Diff Against Predecessor...'),
+                                    N_('Launch git-difftool against previous versions.'),
                                     self.difftool_predecessor,
                                     'Shift+Ctrl+D')
         self.action_revert =\
-                self._create_action('Revert Uncommitted Changes...',
-                                    'Revert changes to selected path(s).',
+                self._create_action(N_('Revert Uncommitted Changes...'),
+                                    N_('Revert changes to selected path(s).'),
                                     self.revert,
                                     'Ctrl+Z')
         self.action_editor =\
-                self._create_action(cmds.LaunchEditor.NAME,
-                                    'Edit selected path(s).',
+                self._create_action(cmds.LaunchEditor.name(),
+                                    N_('Edit selected path(s).'),
                                     run(cmds.LaunchEditor),
                                     cmds.LaunchDifftool.SHORTCUT)
 
@@ -254,8 +257,8 @@ class RepoTreeView(standard.TreeView):
 
     def _create_action(self, name, tooltip, slot, shortcut=None):
         """Create an action with a shortcut, tooltip, and callback slot."""
-        action = QtGui.QAction(self.tr(name), self)
-        action.setStatusTip(self.tr(tooltip))
+        action = QtGui.QAction(name, self)
+        action.setStatusTip(tooltip)
         if shortcut is not None:
             if hasattr(Qt, 'WidgetWithChildrenShortcut'):
                 action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
@@ -287,11 +290,11 @@ class RepoTreeView(standard.TreeView):
 
     def revert(self):
         """Signal that we should revert changes to a path."""
-        if not qtutils.confirm('Revert Uncommitted Changes?',
-                               'This operation drops uncommitted changes.'
-                               '\nThese changes cannot be recovered.',
-                               'Revert the uncommitted changes?',
-                               'Revert Uncommitted Changes',
+        if not qtutils.confirm(N_('Revert Uncommitted Changes?'),
+                               N_('This operation drops uncommitted changes.\n'
+                                  'These changes cannot be recovered.'),
+                               N_('Revert the uncommitted changes?'),
+                               N_('Revert Uncommitted Changes'),
                                default=True,
                                icon=qtutils.icon('undo.svg')):
             return

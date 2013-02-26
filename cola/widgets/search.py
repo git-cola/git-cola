@@ -10,6 +10,7 @@ from PyQt4.QtCore import SIGNAL
 from cola import gitcmds
 from cola import utils
 from cola import qtutils
+from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.git import git
 from cola.qt import create_toolbutton
@@ -36,25 +37,25 @@ class SearchWidget(standard.Dialog):
     def __init__(self, parent):
         standard.Dialog.__init__(self, parent)
         self.setAttribute(QtCore.Qt.WA_MacMetalStyle)
-        self.setWindowTitle(self.tr('Search'))
+        self.setWindowTitle(N_('Search'))
 
         self.mode_combo = QtGui.QComboBox()
         self.browse_button = create_toolbutton(icon=dir_icon(),
-                                               tooltip='Browse...')
+                                               tooltip=N_('Browse...'))
         self.query = QtGui.QLineEdit()
 
         self.start_date = QtGui.QDateEdit()
         self.start_date.setCurrentSection(QtGui.QDateTimeEdit.YearSection)
         self.start_date.setCalendarPopup(True)
-        self.start_date.setDisplayFormat(self.tr('yyyy-MM-dd'))
+        self.start_date.setDisplayFormat(N_('yyyy-MM-dd'))
 
         self.end_date = QtGui.QDateEdit()
         self.end_date.setCurrentSection(QtGui.QDateTimeEdit.YearSection)
         self.end_date.setCalendarPopup(True)
-        self.end_date.setDisplayFormat(self.tr('yyyy-MM-dd'))
+        self.end_date.setDisplayFormat(N_('yyyy-MM-dd'))
 
         self.search_button = QtGui.QPushButton()
-        self.search_button.setText(self.tr('Search'))
+        self.search_button.setText(N_('Search'))
         self.search_button.setDefault(True)
 
         self.max_count = QtGui.QSpinBox()
@@ -71,13 +72,13 @@ class SearchWidget(standard.Dialog):
         self.commit_text = DiffTextEdit(self, whitespace=False)
 
         self.button_export = QtGui.QPushButton()
-        self.button_export.setText(self.tr('Export Patches'))
+        self.button_export.setText(N_('Export Patches'))
 
         self.button_cherrypick = QtGui.QPushButton()
-        self.button_cherrypick.setText(self.tr('Cherry Pick'))
+        self.button_cherrypick.setText(N_('Cherry Pick'))
 
         self.button_close = QtGui.QPushButton()
-        self.button_close.setText(self.tr('Close'))
+        self.button_close.setText(N_('Close'))
 
         self.top_layout = QtGui.QHBoxLayout()
         self.top_layout.setMargin(0)
@@ -211,27 +212,28 @@ class DateRangeSearch(SearchEngine):
 
 
 class Search(SearchWidget):
-    EXPR            = 'Search by Expression'
-    PATH            = 'Search by Path'
-    MESSAGE         = 'Search Commit Messages'
-    DIFF            = 'Search Diffs'
-    AUTHOR          = 'Search Authors'
-    COMMITTER       = 'Search Committers'
-    DATE_RANGE      = 'Search Date Range'
 
     def __init__(self, model, parent):
         SearchWidget.__init__(self, parent)
         self.model = model
 
+        self.EXPR = N_('Search by Expression')
+        self.PATH = N_('Search by Path')
+        self.MESSAGE = N_('Search Commit Messages')
+        self.DIFF = N_('Search Diffs')
+        self.AUTHOR = N_('Search Authors')
+        self.COMMITTER = N_('Search Committers')
+        self.DATE_RANGE = N_('Search Date Range')
+
         # Each search type is handled by a distinct SearchEngine subclass
         self.engines = {
-            self.EXPR:           RevisionSearch,
-            self.PATH:           PathSearch,
-            self.MESSAGE:        MessageSearch,
-            self.DIFF:           DiffSearch,
-            self.AUTHOR:         AuthorSearch,
-            self.COMMITTER:      CommitterSearch,
-            self.DATE_RANGE:     DateRangeSearch,
+            self.EXPR: RevisionSearch,
+            self.PATH: PathSearch,
+            self.MESSAGE: MessageSearch,
+            self.DIFF: DiffSearch,
+            self.AUTHOR: AuthorSearch,
+            self.COMMITTER: CommitterSearch,
+            self.DATE_RANGE: DateRangeSearch,
         }
 
         self.modes = (self.EXPR, self.PATH, self.DATE_RANGE,
@@ -314,7 +316,7 @@ class Search(SearchWidget):
 
     def browse_callback(self):
         paths = QtGui.QFileDialog.getOpenFileNames(self,
-                                                   self.tr('Choose Path(s)'))
+                                                   N_('Choose Path(s)'))
         if not paths:
             return
         filepaths = []

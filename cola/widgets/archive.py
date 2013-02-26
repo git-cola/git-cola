@@ -12,6 +12,7 @@ if __name__ == '__main__':
 from cola import cmds
 from cola import qtutils
 from cola.git import git
+from cola.i18n import N_
 from cola.qt import ExpandableGroupBox
 from cola.widgets import defs
 
@@ -42,7 +43,7 @@ class GitArchiveDialog(QtGui.QDialog):
         self.filename = filename
 
         # widgets
-        self.setWindowTitle('Save Archive')
+        self.setWindowTitle(N_('Save Archive'))
 
         self.filetext = QtGui.QLineEdit()
         self.filetext.setText(self.filename)
@@ -58,19 +59,19 @@ class GitArchiveDialog(QtGui.QDialog):
         self.format_combo.addItems(self.format_strings)
 
         self.cancel = QtGui.QPushButton()
-        self.cancel.setText('Cancel')
+        self.cancel.setText(N_('Cancel'))
 
         self.save = QtGui.QPushButton()
-        self.save.setText('Save')
+        self.save.setText(N_('Save'))
         self.save.setDefault(True)
 
         self.prefix_label = QtGui.QLabel()
-        self.prefix_label.setText('Prefix')
+        self.prefix_label.setText(N_('Prefix'))
         self.prefix_text = QtGui.QLineEdit()
         self.prefix_text.setText(self.prefix)
 
         self.prefix_group = ExpandableGroupBox()
-        self.prefix_group.setTitle('Advanced')
+        self.prefix_group.setTitle(N_('Advanced'))
 
         # layouts
         self.filelayt = QtGui.QHBoxLayout()
@@ -137,17 +138,18 @@ class GitArchiveDialog(QtGui.QDialog):
 
     def archive_saved(self):
         cmds.do(cmds.Archive, self.ref, self.fmt, self.prefix, self.filename)
-        qtutils.information('File Saved', 'File saved to "%s"' % self.filename)
+        qtutils.information(N_('File Saved'),
+                            N_('File saved to "%s"') % self.filename)
 
     def save_archive(self):
         filename = self.filename
         if not filename:
             return
         if os.path.exists(filename):
-            title = 'Overwrite File?'
-            msg = 'The file "%s" exists and will be overwritten.' % filename
-            info_txt = 'Overwrite "%s"?' % filename
-            ok_txt = 'Overwrite'
+            title = N_('Overwrite File?')
+            msg = N_('The file "%s" exists and will be overwritten.') % filename
+            info_txt = N_('Overwrite "%s"?') % filename
+            ok_txt = N_('Overwrite')
             icon = qtutils.save_icon()
             if not qtutils.confirm(title, msg, info_txt, ok_txt,
                                    default=False, icon=icon):

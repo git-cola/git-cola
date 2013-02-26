@@ -8,6 +8,7 @@ from cola import cmds
 from cola import qt
 from cola import qtutils
 from cola import utils
+from cola.i18n import N_
 from cola.stash.model import ApplyStash, SaveStash, DropStash
 from cola.widgets import defs
 from cola.widgets.text import DiffTextEdit
@@ -24,7 +25,7 @@ class StashView(Dialog):
         self.names = []
 
         self.setWindowModality(QtCore.Qt.WindowModal)
-        self.setWindowTitle(self.tr('Stash'))
+        self.setWindowTitle(N_('Stash'))
         if parent:
             self.resize(parent.width(), 420)
         else:
@@ -34,23 +35,23 @@ class StashView(Dialog):
         self.stash_text = DiffTextEdit(self)
 
         self.button_apply =\
-            self.toolbutton(self.tr('Apply'),
-                            self.tr('Apply the selected stash'),
+            self.toolbutton(N_('Apply'),
+                            N_('Apply the selected stash'),
                             qtutils.apply_icon())
         self.button_save =\
-            self.toolbutton(self.tr('Save'),
-                            self.tr('Save modified state to new stash'),
+            self.toolbutton(N_('Save'),
+                            N_('Save modified state to new stash'),
                             qtutils.save_icon())
         self.button_drop = \
-            self.toolbutton(self.tr('Drop'),
-                            self.tr('Drop the selected stash'),
+            self.toolbutton(N_('Drop'),
+                            N_('Drop the selected stash'),
                             qtutils.discard_icon())
         self.button_close = \
-            self.pushbutton(self.tr('Close'),
-                            self.tr('Close'), qtutils.close_icon())
+            self.pushbutton(N_('Close'),
+                            N_('Close'), qtutils.close_icon())
 
         self.keep_index = QtGui.QCheckBox(self)
-        self.keep_index.setText(self.tr('Keep Index'))
+        self.keep_index.setText(N_('Keep Index'))
         self.keep_index.setChecked(True)
 
         # Arrange layouts
@@ -109,8 +110,8 @@ class StashView(Dialog):
 
     def pushbutton(self, text, tooltip, icon):
         btn = QtGui.QPushButton(self)
-        btn.setText(self.tr(text))
-        btn.setToolTip(self.tr(tooltip))
+        btn.setText(text)
+        btn.setToolTip(tooltip)
         btn.setIcon(icon)
         return btn
 
@@ -171,15 +172,15 @@ class StashView(Dialog):
         a git stash named accordingly.
 
         """
-        stash_name, ok = qtutils.prompt('Save Stash',
-                                        'Enter a name for the stash')
+        stash_name, ok = qtutils.prompt(N_('Save Stash'),
+                                        N_('Enter a name for the stash'))
         if not ok or not stash_name:
             return
         # Sanitize the stash name
         stash_name = utils.sanitize(stash_name)
         if stash_name in self.names:
-            qtutils.critical('Oops!',
-                             'A stash named "%s" already exists' % stash_name)
+            qtutils.critical(N_('Error: Stash exists'),
+                             N_('A stash named "%s" already exists') % stash_name)
             return
 
         keep_index = self.keep_index.isChecked()
@@ -194,10 +195,10 @@ class StashView(Dialog):
         name = self.selected_name()
         if not selection:
             return
-        if not qtutils.confirm('Drop Stash?',
-                               'Recovering a dropped stash is not possible.',
-                               'Drop the "%s" stash?' % name,
-                               'Drop Stash',
+        if not qtutils.confirm(N_('Drop Stash?'),
+                               N_('Recovering a dropped stash is not possible.'),
+                               N_('Drop the "%s" stash?') % name,
+                               N_('Drop Stash'),
                                default=True,
                                icon=qtutils.discard_icon()):
             return

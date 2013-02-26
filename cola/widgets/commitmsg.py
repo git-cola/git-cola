@@ -16,7 +16,6 @@ from cola.qtutils import connect_action_bool
 from cola.qtutils import connect_button
 from cola.qtutils import options_icon
 from cola.qtutils import save_icon
-from cola.qtutils import tr
 from cola.widgets import defs
 from cola.prefs import diff_font
 from cola.prefs import tabwidth
@@ -41,15 +40,16 @@ class CommitMessageEditor(QtGui.QWidget):
         self._tabwidth = None
 
         # Actions
-        self.signoff_action = add_action(self, cmds.SignOff.NAME,
+        self.signoff_action = add_action(self, cmds.SignOff.name(),
                                          cmds.run(cmds.SignOff),
                                          cmds.SignOff.SHORTCUT)
-        self.signoff_action.setToolTip('Sign off on this commit')
+        self.signoff_action.setToolTip(N_('Sign off on this commit'))
 
-        self.commit_action = add_action(self, 'Commit@@verb',
+        self.commit_action = add_action(self,
+                                        N_('Commit@@verb'),
                                         self.commit,
                                         cmds.Commit.SHORTCUT)
-        self.commit_action.setToolTip(tr('Commit staged changes'))
+        self.commit_action.setToolTip(N_('Commit staged changes'))
 
         # Widgets
         self.summary = CommitSummaryLineEdit()
@@ -60,14 +60,15 @@ class CommitMessageEditor(QtGui.QWidget):
         self.description.extra_actions.append(self.signoff_action)
         self.description.extra_actions.append(self.commit_action)
 
-        commit_button_tooltip = 'Commit staged changes\nShortcut: Ctrl+Enter'
-        self.commit_button = create_toolbutton(text='Commit@@verb',
+        commit_button_tooltip = N_('Commit staged changes\n'
+                                   'Shortcut: Ctrl+Enter')
+        self.commit_button = create_toolbutton(text=N_('Commit@@verb'),
                                                tooltip=commit_button_tooltip,
                                                icon=save_icon())
 
         self.actions_menu = QtGui.QMenu()
         self.actions_button = create_toolbutton(icon=options_icon(),
-                                                tooltip='Actions...')
+                                                tooltip=N_('Actions...'))
         self.actions_button.setMenu(self.actions_menu)
         self.actions_button.setPopupMode(QtGui.QToolButton.InstantPopup)
 
@@ -76,18 +77,18 @@ class CommitMessageEditor(QtGui.QWidget):
         self.actions_menu.addSeparator()
 
         # Amend checkbox
-        self.amend_action = self.actions_menu.addAction(tr('Amend Last Commit'))
+        self.amend_action = self.actions_menu.addAction(N_('Amend Last Commit'))
         self.amend_action.setCheckable(True)
 
         # Line wrapping
         self.actions_menu.addSeparator()
         self.autowrap_action = self.actions_menu.addAction(
-                tr('Auto-Wrap Lines'))
+                N_('Auto-Wrap Lines'))
         self.autowrap_action.setCheckable(True)
         self.autowrap_action.setChecked(linebreak())
 
         self.prev_commits_menu = self.actions_menu.addMenu(
-                tr('Load Previous Commit Message'))
+                N_('Load Previous Commit Message'))
         self.connect(self.prev_commits_menu, SIGNAL('aboutToShow()'),
                      self.build_prev_commits_menu)
 
@@ -180,13 +181,13 @@ class CommitMessageEditor(QtGui.QWidget):
         else:
             description = self.formatted_description()
         if summary and description:
-            return summary + u'\n\n' + description
+            return summary + '\n\n' + description
         elif summary:
             return summary
         elif description:
-            return u'\n\n' + description
+            return '\n\n' + description
         else:
-            return u''
+            return ''
 
     def formatted_description(self):
         text = self.description.value()
@@ -228,13 +229,13 @@ class CommitMessageEditor(QtGui.QWidget):
 
         if num_lines == 0:
             # Message is empty
-            summary = u''
-            description = u''
+            summary = ''
+            description = ''
 
         elif num_lines == 1:
             # Message has a summary only
             summary = lines[0]
-            description = u''
+            description = ''
 
         elif num_lines == 2:
             # Message has two lines; this is not a common case
@@ -249,7 +250,7 @@ class CommitMessageEditor(QtGui.QWidget):
                 description_lines = lines[1:]
             else:
                 description_lines = lines[2:]
-            description = u'\n'.join(description_lines)
+            description = '\n'.join(description_lines)
 
         focus_summary = not summary
         focus_description = not description
@@ -319,46 +320,46 @@ class CommitMessageEditor(QtGui.QWidget):
         """Attempt to create a commit from the index and commit message."""
         if not bool(self.summary.value()):
             # Describe a good commit message
-            error_msg = tr(''
+            error_msg = N_(''
                 'Please supply a commit message.\n\n'
                 'A good commit message has the following format:\n\n'
                 '- First line: Describe in one sentence what you did.\n'
                 '- Second line: Blank\n'
                 '- Remaining lines: Describe why this change is good.\n')
             Interaction.log(error_msg)
-            Interaction.information('Missing Commit Message', error_msg)
+            Interaction.information(N_('Missing Commit Message'), error_msg)
             return
 
         msg = self.commit_message(raw=False)
 
         if not self.model.staged:
-            error_msg = tr(''
+            error_msg = N_(''
                 'No changes to commit.\n\n'
                 'You must stage at least 1 file before you can commit.')
             if self.model.modified:
-                informative_text = tr('Would you like to stage and '
+                informative_text = N_('Would you like to stage and '
                                       'commit all modified files?')
-                if not confirm('Stage and commit?',
+                if not confirm(N_('Stage and commit?'),
                                error_msg,
                                informative_text,
-                               'Stage and Commit',
+                               N_('Stage and Commit'),
                                default=False,
                                icon=save_icon()):
                     return
             else:
-                Interaction.information('Nothing to commit', error_msg)
+                Interaction.information(N_('Nothing to commit'), error_msg)
                 return
             cmds.do(cmds.StageModified)
 
         # Warn that amending published commits is generally bad
         amend = self.amend_action.isChecked()
         if (amend and self.model.is_commit_published() and
-            not confirm('Rewrite Published Commit?',
-                        'This commit has already been published.\n'
-                        'This operation will rewrite published history.\n'
-                        'You probably don\'t want to do this.',
-                        'Amend the published commit?',
-                        'Amend Commit',
+            not confirm(N_('Rewrite Published Commit?'),
+                        N_('This commit has already been published.\n'
+                           'This operation will rewrite published history.\n'
+                           'You probably don\'t want to do this.'),
+                        N_('Amend the published commit?'),
+                        N_('Amend Commit'),
                         default=False, icon=save_icon())):
             return
         status, output = cmds.do(cmds.Commit, amend, msg)
@@ -386,11 +387,11 @@ class CommitMessageEditor(QtGui.QWidget):
 
         if len(commits) == 6:
             menu.addSeparator()
-            menu.addAction('More...', self.choose_commit)
+            menu.addAction(N_('More...'), self.choose_commit)
 
     def choose_commit(self):
         revs, summaries = gitcmds.log_helper()
-        sha1s = select_commits('Select Commit Message', revs, summaries,
+        sha1s = select_commits(N_('Select Commit Message'), revs, summaries,
                                multiselect=False)
         if not sha1s:
             return
@@ -400,7 +401,7 @@ class CommitMessageEditor(QtGui.QWidget):
 
 class CommitSummaryLineEdit(HintedLineEdit):
     def __init__(self, parent=None):
-        hint = u'Commit summary'
+        hint = N_('Commit summary')
         HintedLineEdit.__init__(self, hint, parent)
         self.extra_actions = []
 
@@ -429,7 +430,7 @@ class CommitSummaryLineEdit(HintedLineEdit):
 
 class CommitMessageTextEdit(HintedTextEdit):
     def __init__(self, parent=None):
-        hint = u'Extended description...'
+        hint = N_('Extended description...')
         HintedTextEdit.__init__(self, hint, parent)
         self.extra_actions = []
         self.setMinimumSize(QtCore.QSize(1, 1))

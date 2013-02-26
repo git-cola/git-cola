@@ -5,6 +5,7 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import gitcmds
 from cola import qtutils
+from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.widgets import defs
 from cola.widgets.text import DiffTextEdit
@@ -14,8 +15,7 @@ def select_commits(title, revs, summaries, multiselect=True):
     """Use the SelectCommitsDialog to select commits from a list."""
     model = Model(revs, summaries)
     parent = qtutils.active_window()
-    dialog = SelectCommitsDialog(model, parent, qtutils.tr(title),
-                                 multiselect=multiselect)
+    dialog = SelectCommitsDialog(model, parent, title, multiselect=multiselect)
     return dialog.select_commits()
 
 
@@ -47,16 +47,16 @@ class SelectCommitsDialog(QtGui.QDialog):
         self.commit_text = DiffTextEdit(self, whitespace=False)
 
         self.label = QtGui.QLabel()
-        self.label.setText(self.tr('Revision Expression:'))
+        self.label.setText(N_('Revision Expression:'))
         self.revision = QtGui.QLineEdit()
         self.revision.setReadOnly(True)
 
-        self.select_button = QtGui.QPushButton(self.tr('Select'))
+        self.select_button = QtGui.QPushButton(N_('Select'))
         self.select_button.setIcon(qtutils.apply_icon())
         self.select_button.setEnabled(False)
         self.select_button.setDefault(True)
 
-        self.close_button = QtGui.QPushButton(self.tr('Close'))
+        self.close_button = QtGui.QPushButton(N_('Close'))
 
         # Make the list widget slighty larger
         self.splitter = QtGui.QSplitter()
@@ -98,7 +98,7 @@ class SelectCommitsDialog(QtGui.QDialog):
     def select_commits(self):
         summaries = self.model.summaries
         if not summaries:
-            msg = self.tr('No commits exist in this branch.')
+            msg = N_('No commits exist in this branch.')
             Interaction.log(msg)
             return []
         qtutils.set_items(self.commit_list, summaries)

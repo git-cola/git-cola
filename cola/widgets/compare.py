@@ -8,6 +8,7 @@ from cola import qtutils
 from cola import difftool
 from cola import gitcmds
 from cola.git import git
+from cola.i18n import N_
 from cola.qtutils import connect_button
 from cola.widgets import defs
 from cola.widgets import standard
@@ -29,16 +30,18 @@ def compare_branches():
 
 class CompareBranchesDialog(standard.Dialog):
 
-    BRANCH_POINT = '*** Branch Point ***'
-    SANDBOX      = '*** Sandbox ***'
-    LOCAL        = 'Local'
 
     def __init__(self, parent):
         standard.Dialog.__init__(self, parent=parent)
+
+        self.BRANCH_POINT = N_('*** Branch Point ***')
+        self.SANDBOX = N_('*** Sandbox ***')
+        self.LOCAL = N_('Local')
+
         self.remote_branches = gitcmds.branch_list(remote=True)
         self.local_branches = gitcmds.branch_list(remote=False)
 
-        self.setWindowTitle(self.tr('Branch Diff Viewer'))
+        self.setWindowTitle(N_('Branch Diff Viewer'))
         self.resize(658, 350)
 
         self.main_layt = QtGui.QVBoxLayout(self)
@@ -56,14 +59,14 @@ class CompareBranchesDialog(standard.Dialog):
         self.top_grid_layt.setSpacing(defs.spacing)
 
         self.left_combo = QtGui.QComboBox(self.top_widget)
-        self.left_combo.addItem(self.tr('Local'))
-        self.left_combo.addItem(self.tr('Remote'))
+        self.left_combo.addItem(N_('Local'))
+        self.left_combo.addItem(N_('Remote'))
         self.left_combo.setCurrentIndex(0)
         self.top_grid_layt.addWidget(self.left_combo, 0, 0, 1, 1)
 
         self.right_combo = QtGui.QComboBox(self.top_widget)
-        self.right_combo.addItem(self.tr('Local'))
-        self.right_combo.addItem(self.tr('Remote'))
+        self.right_combo.addItem(N_('Local'))
+        self.right_combo.addItem(N_('Remote'))
         self.right_combo.setCurrentIndex(1)
         self.top_grid_layt.addWidget(self.right_combo, 0, 1, 1, 1)
 
@@ -84,15 +87,15 @@ class CompareBranchesDialog(standard.Dialog):
         self.bottom_grid_layt.addItem(self.button_spacer, 1, 1, 1, 1)
 
         self.button_compare = QtGui.QPushButton(self.bottom_widget)
-        self.button_compare.setText(self.tr('Compare'))
+        self.button_compare.setText(N_('Compare'))
         self.bottom_grid_layt.addWidget(self.button_compare, 1, 2, 1, 1)
 
         self.button_close = QtGui.QPushButton(self.bottom_widget)
-        self.button_close.setText(self.tr('Close'))
+        self.button_close.setText(N_('Close'))
         self.bottom_grid_layt.addWidget(self.button_close, 1, 3, 1, 1)
 
         self.diff_files = QtGui.QTreeWidget(self.bottom_widget)
-        self.diff_files.headerItem().setText(0, self.tr('File Differences'))
+        self.diff_files.headerItem().setText(0, N_('File Differences'))
         self.diff_files.setRootIsDecorated(False)
 
         self.bottom_grid_layt.addWidget(self.diff_files, 0, 0, 1, 4)

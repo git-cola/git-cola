@@ -11,6 +11,7 @@ from cola import gitcmds
 from cola import prefs
 from cola import qtutils
 from cola import utils
+from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.qtutils import connect_button
 from cola.widgets import defs
@@ -106,54 +107,54 @@ class RemoteActionDialog(standard.Dialog):
 
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowModality(Qt.WindowModal)
-        self.setWindowTitle(self.tr(action))
+        self.setWindowTitle(action)
 
         self.progress = QtGui.QProgressDialog(self)
         self.progress.setFont(prefs.diff_font())
         self.progress.setRange(0, 0)
         self.progress.setCancelButton(None)
-        self.progress.setWindowTitle(self.tr(action))
+        self.progress.setWindowTitle(action)
         self.progress.setWindowModality(Qt.WindowModal)
         self.progress.setLabelText('Updating..   ')
         self.progress_thread = ProgressAnimationThread('Updating', self)
 
         self.local_label = QtGui.QLabel()
-        self.local_label.setText(self.tr('Local Branch'))
+        self.local_label.setText(N_('Local Branch'))
 
         self.local_branch = QtGui.QLineEdit()
         self.local_branches = QtGui.QListWidget()
         self.local_branches.addItems(self.model.local_branches)
 
         self.remote_label = QtGui.QLabel()
-        self.remote_label.setText(self.tr('Remote'))
+        self.remote_label.setText(N_('Remote'))
 
         self.remote_name = QtGui.QLineEdit()
         self.remotes = QtGui.QListWidget()
         self.remotes.addItems(self.model.remotes)
 
         self.remote_branch_label = QtGui.QLabel()
-        self.remote_branch_label.setText(self.tr('Remote Branch'))
+        self.remote_branch_label.setText(N_('Remote Branch'))
 
         self.remote_branch = QtGui.QLineEdit()
         self.remote_branches = QtGui.QListWidget()
         self.remote_branches.addItems(self.model.remote_branches)
 
         self.ffwd_only_checkbox = QtGui.QCheckBox()
-        self.ffwd_only_checkbox.setText(self.tr('Fast Forward Only '))
+        self.ffwd_only_checkbox.setText(N_('Fast Forward Only '))
         self.ffwd_only_checkbox.setChecked(True)
 
         self.tags_checkbox = QtGui.QCheckBox()
-        self.tags_checkbox.setText(self.tr('Include tags '))
+        self.tags_checkbox.setText(N_('Include tags '))
 
         self.rebase_checkbox = QtGui.QCheckBox()
-        self.rebase_checkbox.setText(self.tr('Rebase '))
+        self.rebase_checkbox.setText(N_('Rebase '))
 
         self.action_button = QtGui.QPushButton()
-        self.action_button.setText(self.tr(action))
+        self.action_button.setText(action)
         self.action_button.setIcon(qtutils.ok_icon())
 
         self.close_button = QtGui.QPushButton()
-        self.close_button.setText(self.tr('Close'))
+        self.close_button.setText(N_('Close'))
         self.close_button.setIcon(qtutils.close_icon())
 
         self.local_branch_layout = QtGui.QHBoxLayout()
@@ -309,8 +310,8 @@ class RemoteActionDialog(standard.Dialog):
         displayed = []
         for remote_name in self.model.remotes:
             url = self.model.remote_url(remote_name, self.action)
-            display = ('%s\t(%s %s)'
-                       % (remote_name, unicode(self.tr('URL:')), url))
+            display = ('%s\t(%s)'
+                       % (remote_name, N_('URL: %s') % url))
             displayed.append(display)
         qtutils.set_items(widget,displayed)
 
@@ -389,7 +390,7 @@ class RemoteActionDialog(standard.Dialog):
 
         remote_name = unicode(self.remote_name.text())
         if not remote_name:
-            errmsg = self.tr('No repository selected.')
+            errmsg = N_('No repository selected.')
             Interaction.log(errmsg)
             return
         remote, kwargs = self.common_args()
@@ -402,27 +403,29 @@ class RemoteActionDialog(standard.Dialog):
             branch = local_branch
             candidate = '%s/%s' % (remote, branch)
             if candidate not in self.model.remote_branches:
-                title = self.tr(PUSH)
-                msg = 'Branch "%s" does not exist in %s.' % (branch, remote)
-                msg += '\nA new remote branch will be published.'
-                info_txt= 'Create a new remote branch?'
-                ok_text = 'Create Remote Branch'
+                title = N_('Push')
+                args = dict(branch=branch, remote=remote)
+                msg = N_('Branch "%(branch)s" does not exist in "%(remote)s".\n'
+                         'A new remote branch will be published.') % args
+                info_txt= N_('Create a new remote branch?')
+                ok_text = N_('Create Remote Branch')
                 if not qtutils.confirm(title, msg, info_txt, ok_text,
                                        default=False,
                                        icon=qtutils.git_icon()):
                     return
 
         if not self.ffwd_only_checkbox.isChecked():
-            title = 'Force %s?' % action.title()
-            ok_text = 'Force %s' % action.title()
-
             if action == FETCH:
-                msg = 'Non-fast-forward fetch overwrites local history!'
-                info_txt = 'Force fetching from %s?' % remote
+                title = N_('Force Fetch?')
+                msg = N_('Non-fast-forward fetch overwrites local history!')
+                info_txt = N_('Force fetching from %s?') % remote
+                ok_text = N_('Force Fetch')
             elif action == PUSH:
-                msg = ('Non-fast-forward push overwrites published '
-                       'history!\n(Did you pull first?)')
-                info_txt = 'Force push to %s?' % remote
+                title = N_('Force Push?')
+                msg = N_('Non-fast-forward push overwrites published '
+                         'history!\n(Did you pull first?)')
+                info_txt = N_('Force push to %s?') % remote
+                ok_text = N_('Force Push')
             else: # pull: shouldn't happen since the controls are hidden
                 msg = "You probably don't want to do this.\n\tContinue?"
                 return
@@ -456,7 +459,7 @@ class RemoteActionDialog(standard.Dialog):
         if task in self.tasks:
             self.tasks.remove(task)
 
-        already_up_to_date = self.tr('Already up-to-date.')
+        already_up_to_date = N_('Already up-to-date.')
 
         if not output: # git fetch --tags --verbose doesn't print anything...
             output = already_up_to_date
@@ -465,8 +468,9 @@ class RemoteActionDialog(standard.Dialog):
         self.progress.close()
         QtGui.QApplication.restoreOverrideCursor()
 
-        result = 'returned exit status %d' % status
-        message = '"git %s" %s' % (self.action.lower(), result)
+        command = 'git %s' % self.action.lower()
+        message = (N_('"%(command)s" returned exit status %(status)d') %
+                   dict(command=command, status=status))
         if output:
             message += '\n\n' + output
 
@@ -478,7 +482,8 @@ class RemoteActionDialog(standard.Dialog):
             return
 
         if self.action == PUSH:
-            message += '\n\nHave you rebased/pulled lately?'
+            message += '\n\n'
+            message += N_('Have you rebased/pulled lately?')
 
         Interaction.critical(self.windowTitle(),
                              message=message, details=output)

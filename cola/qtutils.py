@@ -15,6 +15,7 @@ from cola import settings
 from cola import resources
 from cola.compat import set
 from cola.decorators import memoize
+from cola.i18n import N_
 from cola.interaction import Interaction
 
 
@@ -38,8 +39,6 @@ def prompt(msg, title=None, text=''):
     """Presents the user with an input widget and returns the input."""
     if title is None:
         title = msg
-    msg = tr(msg)
-    title = tr(title)
     result = QtGui.QInputDialog.getText(active_window(), msg, title,
                                         QtGui.QLineEdit.Normal, text)
     return (unicode(result[0]), result[1])
@@ -75,10 +74,10 @@ def confirm(title, text, informative_text, ok_text,
     elif icon and isinstance(icon, basestring):
         icon = QtGui.QIcon(icon)
     msgbox = QtGui.QMessageBox(active_window())
-    msgbox.setWindowTitle(tr(title))
-    msgbox.setText(tr(text))
-    msgbox.setInformativeText(tr(informative_text))
-    ok = msgbox.addButton(tr(ok_text), QtGui.QMessageBox.ActionRole)
+    msgbox.setWindowTitle(title)
+    msgbox.setText(text)
+    msgbox.setInformativeText(informative_text)
+    ok = msgbox.addButton(ok_text, QtGui.QMessageBox.ActionRole)
     ok.setIcon(icon)
     cancel = msgbox.addButton(QtGui.QMessageBox.Cancel)
     if default:
@@ -93,8 +92,6 @@ def critical(title, message=None, details=None):
     """Show a warning with the provided title and message."""
     if message is None:
         message = title
-    title = tr(title)
-    message = tr(message)
     mbox = QtGui.QMessageBox(active_window())
     mbox.setWindowTitle(title)
     mbox.setTextFormat(QtCore.Qt.PlainText)
@@ -111,8 +108,6 @@ def information(title, message=None, details=None, informative_text=None):
     """Show information with the provided title and message."""
     if message is None:
         message = title
-    title = tr(title)
-    message = tr(message)
     mbox = QtGui.QMessageBox(active_window())
     mbox.setStandardButtons(QtGui.QMessageBox.Close)
     mbox.setDefaultButton(QtGui.QMessageBox.Close)
@@ -121,7 +116,7 @@ def information(title, message=None, details=None, informative_text=None):
     mbox.setTextFormat(QtCore.Qt.PlainText)
     mbox.setText(message)
     if informative_text:
-        mbox.setInformativeText(tr(informative_text))
+        mbox.setInformativeText(informative_text)
     if details:
         mbox.setDetailedText(details)
     # Render git.svg into a 1-inch wide pixmap
@@ -132,7 +127,7 @@ def information(title, message=None, details=None, informative_text=None):
     mbox.exec_()
 
 
-def question(title, message, default=True):
+def question(title, msg, default=True):
     """Launches a QMessageBox question with the provided title and message.
     Passing "default=False" will make "No" the default choice."""
     yes = QtGui.QMessageBox.Yes
@@ -142,8 +137,6 @@ def question(title, message, default=True):
         default = yes
     else:
         default = no
-    title = tr(title)
-    msg = tr(message)
     result = (QtGui.QMessageBox
                    .question(active_window(), title, msg, buttons, default))
     return result == QtGui.QMessageBox.Yes
@@ -209,9 +202,8 @@ def selected_item(list_widget, items):
 
 def open_dialog(title, filename=None):
     """Creates an Open File dialog and returns a filename."""
-    title_tr = tr(title)
     return unicode(QtGui.QFileDialog
-                        .getOpenFileName(active_window(), title_tr, filename))
+                        .getOpenFileName(active_window(), title, filename))
 
 
 def opendir_dialog(title, path):
@@ -219,17 +211,15 @@ def opendir_dialog(title, path):
 
     flags = (QtGui.QFileDialog.ShowDirsOnly |
              QtGui.QFileDialog.DontResolveSymlinks)
-    title_tr = tr(title)
     return unicode(QtGui.QFileDialog
                         .getExistingDirectory(active_window(),
-                                              title_tr, path, flags))
+                                              title, path, flags))
 
 
 def save_as(filename, title='Save As...'):
     """Creates a Save File dialog and returns a filename."""
-    title_tr = tr(title)
     return unicode(QtGui.QFileDialog
-                        .getSaveFileName(active_window(), title_tr, filename))
+                        .getSaveFileName(active_window(), title, filename))
 
 
 def icon(basename):
@@ -247,7 +237,7 @@ def set_clipboard(text):
 
 
 def add_action(widget, text, fn, *shortcuts):
-    action = QtGui.QAction(tr(text), widget)
+    action = QtGui.QAction(text, widget)
     connect_action(action, fn)
     if shortcuts:
         shortcuts = list(set(shortcuts))
@@ -276,14 +266,6 @@ def set_items(widget, items):
     """Clear the existing widget contents and set the new items."""
     widget.clear()
     add_items(widget, items)
-
-
-def tr(txt):
-    """Translate a string into a local language."""
-    if type(txt) is QtCore.QString:
-        # This has already been translated; leave as-is
-        return unicode(txt)
-    return unicode(QtGui.QApplication.instance().translate('', txt))
 
 
 def icon_file(filename, staged=False, untracked=False):
@@ -411,7 +393,7 @@ def close_icon():
 
 def add_close_action(widget):
     """Adds close action and shortcuts to a widget."""
-    return add_action(widget, 'Close...',
+    return add_action(widget, N_('Close...'),
                       widget.close, QtGui.QKeySequence.Close, 'Ctrl+Q')
 
 

@@ -18,7 +18,7 @@ from cola import qtutils
 from cola.compat import set
 from cola.dag import gravatar
 from cola.dag.model import RepoReader
-from cola.qtutils import tr
+from cola.i18n import N_
 from cola.widgets import completion
 from cola.widgets import defs
 from cola.widgets.createbranch import create_new_branch
@@ -161,7 +161,7 @@ class DiffWidget(QtGui.QWidget):
             pass
 
     def set_diff_sha1(self, sha1):
-        self.diff.setText(self.tr('+++ Loading...'))
+        self.diff.setText('+++ ' + N_('Loading...'))
         task = DiffInfoTask(sha1, self.reflector)
         self.tasks.add(task)
         QtCore.QThreadPool.globalInstance().start(task)
@@ -266,31 +266,31 @@ class ViewerMixin(object):
     def context_menu_actions(self):
         return {
         'diff_this_selected':
-            qtutils.add_action(self, 'Diff this -> selected',
+            qtutils.add_action(self, N_('Diff this -> selected'),
                                self.diff_this_selected),
         'diff_selected_this':
-            qtutils.add_action(self, 'Diff selected -> this',
+            qtutils.add_action(self, N_('Diff selected -> this'),
                                self.diff_selected_this),
         'create_branch':
-            qtutils.add_action(self, 'Create Branch',
+            qtutils.add_action(self, N_('Create Branch'),
                                self.create_branch),
         'create_patch':
-            qtutils.add_action(self, 'Create Patch',
+            qtutils.add_action(self, N_('Create Patch'),
                                self.create_patch),
         'create_tag':
-            qtutils.add_action(self, 'Create Tag',
+            qtutils.add_action(self, N_('Create Tag'),
                                self.create_tag),
         'create_tarball':
-            qtutils.add_action(self, 'Save As Tarball/Zip...',
+            qtutils.add_action(self, N_('Save As Tarball/Zip...'),
                                self.create_tarball),
         'cherry_pick':
-            qtutils.add_action(self, 'Cherry Pick',
+            qtutils.add_action(self, N_('Cherry Pick'),
                                self.cherry_pick),
         'save_blob':
-            qtutils.add_action(self, 'Grab File...',
+            qtutils.add_action(self, N_('Grab File...'),
                                self.save_blob_dialog),
         'copy':
-            qtutils.add_action(self, 'Copy SHA-1',
+            qtutils.add_action(self, N_('Copy SHA-1'),
                                self.copy_to_clipboard,
                                QtGui.QKeySequence.Copy),
         }
@@ -363,17 +363,17 @@ class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
         self.setAllColumnsShowFocus(True)
         self.setAlternatingRowColors(True)
         self.setRootIsDecorated(False)
-        self.setHeaderLabels([tr('Summary'), tr('Author'), tr('Age')])
+        self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Age')])
 
         self.sha1map = {}
         self.notifier = notifier
         self.selecting = False
         self.commits = []
 
-        self.action_up = qtutils.add_action(self, 'Go Up', self.go_up,
+        self.action_up = qtutils.add_action(self, N_('Go Up'), self.go_up,
                                             Qt.Key_K)
 
-        self.action_down = qtutils.add_action(self, 'Go Down', self.go_down,
+        self.action_down = qtutils.add_action(self, N_('Go Down'), self.go_down,
                                               Qt.Key_J)
 
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
@@ -503,7 +503,7 @@ class DAGView(Widget):
         self.maxresults.setSuffix('')
 
         self.displaybutton = QtGui.QPushButton()
-        self.displaybutton.setText('Display')
+        self.displaybutton.setText(N_('Display'))
 
         self.zoom_in = QtGui.QPushButton()
         self.zoom_in.setIcon(qtutils.theme_icon('zoom-in.png'))
@@ -1165,25 +1165,25 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         self.setResizeAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setBackgroundBrush(QtGui.QColor(Qt.white))
 
-        qtutils.add_action(self, 'Zoom In',
+        qtutils.add_action(self, N_('Zoom In'),
                            self.zoom_in, Qt.Key_Plus, Qt.Key_Equal)
 
-        qtutils.add_action(self, 'Zoom Out',
+        qtutils.add_action(self, N_('Zoom Out'),
                            self.zoom_out, Qt.Key_Minus)
 
-        qtutils.add_action(self, 'Zoom to Fit',
+        qtutils.add_action(self, N_('Zoom to Fit'),
                            self.fit_view_to_selection, Qt.Key_F)
 
-        qtutils.add_action(self, 'Select Parent',
+        qtutils.add_action(self, N_('Select Parent'),
                            self.select_parent, 'Shift+J')
 
-        qtutils.add_action(self, 'Select Oldest Parent',
+        qtutils.add_action(self, N_('Select Oldest Parent'),
                            self.select_oldest_parent, Qt.Key_J)
 
-        qtutils.add_action(self, 'Select Child',
+        qtutils.add_action(self, N_('Select Child'),
                            self.select_child, 'Shift+K')
 
-        qtutils.add_action(self, 'Select Newest Child',
+        qtutils.add_action(self, N_('Select Newest Child'),
                            self.select_newest_child, Qt.Key_K)
 
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)

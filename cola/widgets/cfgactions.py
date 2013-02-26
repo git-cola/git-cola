@@ -9,6 +9,7 @@ from cola import gitcfg
 from cola import gitcmds
 from cola import qt
 from cola import qtutils
+from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.widgets import defs
 from cola.widgets import completion
@@ -81,9 +82,9 @@ class GitCommandWidget(standard.Dialog):
 
         # Create abort / close buttons
         self.button_abort = QtGui.QPushButton(self)
-        self.button_abort.setText(self.tr('Abort'))
+        self.button_abort.setText(N_('Abort'))
         self.button_close = QtGui.QPushButton(self)
-        self.button_close.setText(self.tr('Close'))
+        self.button_close.setText(N_('Close'))
 
         # Put them in a horizontal layout at the bottom.
         self.button_box = QtGui.QDialogButtonBox(self)
@@ -143,11 +144,11 @@ class GitCommandWidget(standard.Dialog):
     def closeEvent(self, event):
         if self.proc.state() != QtCore.QProcess.NotRunning:
             # The process is still running, make sure we really want to abort.
-            title = 'Abort Action'
-            msg = ('An action is still running.\n'
-                   'Terminating it could result in data loss.')
-            info_text = 'Abort the action?'
-            ok_text = 'Abort Action'
+            title = N_('Abort Action')
+            msg = N_('An action is still running.\n'
+                     'Terminating it could result in data loss.')
+            info_text = N_('Abort the action?')
+            ok_text = N_('Abort Action')
             if qtutils.confirm(title, msg, info_text, ok_text,
                                default=False, icon=qtutils.discard_icon()):
                 self.abortProc()
@@ -197,7 +198,7 @@ class ActionDialog(standard.Dialog):
 
         self.argslabel = QtGui.QLabel()
         if 'argprompt' not in opts or opts.get('argprompt') is True:
-            argprompt = qtutils.tr('Arguments')
+            argprompt = N_('Arguments')
         else:
             argprompt = opts.get('argprompt')
 
@@ -216,13 +217,13 @@ class ActionDialog(standard.Dialog):
             self.argslabel.hide()
 
         revs = (
-            ('Local Branch', gitcmds.branch_list(remote=False)),
-            ('Tracking Branch', gitcmds.branch_list(remote=True)),
-            ('Tag', gitcmds.tag_list()),
+            (N_('Local Branch'), gitcmds.branch_list(remote=False)),
+            (N_('Tracking Branch'), gitcmds.branch_list(remote=True)),
+            (N_('Tag'), gitcmds.tag_list()),
         )
 
         if 'revprompt' not in opts or opts.get('revprompt') is True:
-            revprompt = qtutils.tr('Revision')
+            revprompt = N_('Revision')
         else:
             revprompt = opts.get('revprompt')
         self.revselect = RevisionSelector(self, revs)
@@ -235,8 +236,8 @@ class ActionDialog(standard.Dialog):
         # Close/Run buttons
         self.btnlayt = QtGui.QHBoxLayout()
         self.btnlayt.addStretch()
-        self.closebtn = qt.create_button(text=self.tr('Close'), layout=self.btnlayt)
-        self.runbtn = qt.create_button(text=self.tr('Run'), layout=self.btnlayt)
+        self.closebtn = qt.create_button(text=N_('Close'), layout=self.btnlayt)
+        self.runbtn = qt.create_button(text=N_('Run'), layout=self.btnlayt)
         self.runbtn.setDefault(True)
         self.layt.addLayout(self.btnlayt)
 
@@ -281,7 +282,7 @@ class RevisionSelector(QtGui.QWidget):
         # Create the radio buttons
         for label, rev_list in self._revs:
             radio = QtGui.QRadioButton()
-            radio.setText(self.tr(label))
+            radio.setText(label)
             radio.setObjectName(label)
             qtutils.connect_button(radio, self._set_revision_list)
             self._radio_layt.addWidget(radio)
@@ -308,7 +309,7 @@ class RevisionSelector(QtGui.QWidget):
         self._rev_label.setText(txt)
 
     def _set_revision_list(self):
-        sender = str(self.sender().objectName())
+        sender = unicode(self.sender().objectName())
         revs = self._revdict[sender]
         qtutils.set_items(self._rev_list, revs)
 

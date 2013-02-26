@@ -7,6 +7,7 @@ from PyQt4.QtCore import SIGNAL
 from cola import cmds
 from cola import qtutils
 from cola import gitcfg
+from cola.i18n import N_
 from cola.widgets import defs
 from cola.widgets import standard
 from cola.prefs.model import SetConfig
@@ -111,12 +112,12 @@ class RepoFormWidget(FormWidget):
         self.merge_diffstat = QtGui.QCheckBox()
         self.merge_diffstat.setChecked(True)
 
-        self.add_row('User Name', self.name)
-        self.add_row('Email Address', self.email)
-        self.add_row('Merge Verbosity', self.merge_verbosity)
-        self.add_row('Number of Diff Context Lines', self.diff_context)
-        self.add_row('Summarize Merge Commits', self.merge_summary)
-        self.add_row('Show Diffstat After Merge', self.merge_diffstat)
+        self.add_row(N_('User Name'), self.name)
+        self.add_row(N_('Email Address'), self.email)
+        self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
+        self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
+        self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
+        self.add_row(N_('Show Diffstat After Merge'), self.merge_diffstat)
 
         self.set_config({
             'gui.diffcontext': (self.diff_context, 5),
@@ -156,17 +157,17 @@ class SettingsFormWidget(FormWidget):
         self.keep_merge_backups = QtGui.QCheckBox()
         self.save_gui_settings = QtGui.QCheckBox()
 
-        self.add_row('Fixed-Width Font', self.fixed_font)
-        self.add_row('Font Size', self.font_size)
-        self.add_row('Tab Width', self.tabwidth)
-        self.add_row('Text Width', self.textwidth)
-        self.add_row('Auto-Wrap Lines', self.linebreak)
-        self.add_row('Editor', self.editor)
-        self.add_row('History Browser', self.historybrowser)
-        self.add_row('Diff Tool', self.difftool)
-        self.add_row('Merge Tool', self.mergetool)
-        self.add_row('Keep *.orig Merge Backups', self.keep_merge_backups)
-        self.add_row('Save GUI Settings', self.save_gui_settings)
+        self.add_row(N_('Fixed-Width Font'), self.fixed_font)
+        self.add_row(N_('Font Size'), self.font_size)
+        self.add_row(N_('Tab Width'), self.tabwidth)
+        self.add_row(N_('Text Width'), self.textwidth)
+        self.add_row(N_('Auto-Wrap Lines'), self.linebreak)
+        self.add_row(N_('Editor'), self.editor)
+        self.add_row(N_('History Browser'), self.historybrowser)
+        self.add_row(N_('Diff Tool'), self.difftool)
+        self.add_row(N_('Merge Tool'), self.mergetool)
+        self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
+        self.add_row(N_('Save GUI Settings'), self.save_gui_settings)
 
         self.set_config({
             'cola.savewindowsettings': (self.save_gui_settings, True),
@@ -213,16 +214,16 @@ class SettingsFormWidget(FormWidget):
 class PreferencesView(standard.Dialog):
     def __init__(self, model, parent=None):
         standard.Dialog.__init__(self, parent=parent)
-        self.setWindowTitle(self.tr('Preferences'))
+        self.setWindowTitle(N_('Preferences'))
         self.setWindowModality(QtCore.Qt.WindowModal)
 
         self.resize(600, 360)
 
         self._tabbar = QtGui.QTabBar()
         self._tabbar.setDrawBase(False)
-        self._tabbar.addTab('All Repositories')
-        self._tabbar.addTab('Current Repository')
-        self._tabbar.addTab('Settings')
+        self._tabbar.addTab(N_('All Repositories'))
+        self._tabbar.addTab(N_('Current Repository'))
+        self._tabbar.addTab(N_('Settings'))
 
         self._user_form = RepoFormWidget(model, self, source='user')
         self._repo_form = RepoFormWidget(model, self, source='all')
@@ -234,7 +235,7 @@ class PreferencesView(standard.Dialog):
         self._stackedwidget.addWidget(self._options_form)
 
         self.close_button = QtGui.QPushButton(self)
-        self.close_button.setText(qtutils.tr('Close'))
+        self.close_button.setText(N_('Close'))
         self.close_button.setIcon(qtutils.close_icon())
 
         self._button_layt = QtGui.QHBoxLayout()
@@ -294,7 +295,7 @@ def diff_font():
     return font
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import sys
     from cola.prefs import preferences
 

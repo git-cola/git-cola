@@ -10,6 +10,8 @@ from cola import core
 from cola import qtutils
 from cola import settings
 from cola import utils
+from cola.i18n import N_
+from cola.interaction import Interaction
 from cola.widgets import defs
 from cola.widgets import standard
 
@@ -27,7 +29,7 @@ class BookmarksDialog(standard.Dialog):
         self.model = settings.Settings()
 
         self.resize(494, 238)
-        self.setWindowTitle(self.tr('Bookmarks'))
+        self.setWindowTitle(N_('Bookmarks'))
         self.setWindowModality(Qt.WindowModal)
         self.layt = QtGui.QVBoxLayout(self)
         self.layt.setMargin(defs.margin)
@@ -42,31 +44,31 @@ class BookmarksDialog(standard.Dialog):
         self.button_layout = QtGui.QHBoxLayout()
 
         self.open_button = QtGui.QPushButton(self)
-        self.open_button.setText(self.tr('Open'))
+        self.open_button.setText(N_('Open'))
         self.open_button.setIcon(qtutils.open_icon())
         self.open_button.setEnabled(False)
         self.button_layout.addWidget(self.open_button)
 
         self.add_button = QtGui.QPushButton(self)
-        self.add_button.setText(self.tr('Add'))
+        self.add_button.setText(N_('Add'))
         self.add_button.setIcon(qtutils.icon('add.svg'))
         self.button_layout.addWidget(self.add_button)
 
         self.delete_button = QtGui.QPushButton(self)
-        self.delete_button.setText(self.tr('Delete'))
+        self.delete_button.setText(N_('Delete'))
         self.delete_button.setIcon(qtutils.discard_icon())
         self.delete_button.setEnabled(False)
         self.button_layout.addWidget(self.delete_button)
         self.button_layout.addStretch()
 
         self.save_button = QtGui.QPushButton(self)
-        self.save_button.setText(self.tr('Save'))
+        self.save_button.setText(N_('Save'))
         self.save_button.setIcon(qtutils.save_icon())
         self.save_button.setEnabled(False)
         self.button_layout.addWidget(self.save_button)
 
         self.close_button = QtGui.QPushButton(self)
-        self.close_button.setText(self.tr('Close'))
+        self.close_button.setText(N_('Close'))
         self.button_layout.addWidget(self.close_button)
 
         self.layt.addLayout(self.button_layout)
@@ -97,12 +99,13 @@ class BookmarksDialog(standard.Dialog):
     def save(self):
         """Saves the bookmarks settings and exits"""
         self.model.save()
-        qtutils.information("Bookmarks Saved")
+        Interaction.information(N_('Bookmarks Saved'),
+                                N_('Successfully saved bookmarks'))
         self.save_button.setEnabled(False)
 
     def add(self):
-        path, ok = qtutils.prompt('Path to git repository:',
-                                  title='Enter Git Repository',
+        path, ok = qtutils.prompt(N_('Path to git repository'),
+                                  title=N_('Enter Git Repository'),
                                   text=core.decode(os.getcwd()))
         if not ok:
             return

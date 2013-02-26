@@ -7,6 +7,7 @@ import cola
 from cola import cmds
 from cola import qtutils
 from cola.cmds import run
+from cola.i18n import N_
 from cola.widgets.text import DiffTextEdit
 
 
@@ -18,42 +19,42 @@ class DiffEditor(DiffTextEdit):
         self.mode = self.model.mode_none
 
         self.action_process_section = qtutils.add_action(self,
-                'Process Section',
+                N_('Process Section'),
                 self.apply_section, Qt.Key_H)
         self.action_process_selection = qtutils.add_action(self,
-                'Process Selection',
+                N_('Process Selection'),
                 self.apply_selection, Qt.Key_S)
 
         self.launch_editor = qtutils.add_action(self,
-                cmds.LaunchEditor.NAME, run(cmds.LaunchEditor),
+                cmds.LaunchEditor.name(), run(cmds.LaunchEditor),
                 cmds.LaunchEditor.SHORTCUT,
                 'Return', 'Enter')
         self.launch_editor.setIcon(qtutils.options_icon())
 
         self.launch_difftool = qtutils.add_action(self,
-                cmds.LaunchDifftool.NAME, run(cmds.LaunchDifftool),
+                cmds.LaunchDifftool.name(), run(cmds.LaunchDifftool),
                 cmds.LaunchDifftool.SHORTCUT)
         self.launch_difftool.setIcon(qtutils.icon('git.svg'))
 
         self.action_stage_selection = qtutils.add_action(self,
-                self.tr('Stage &Selected Lines'),
+                N_('Stage &Selected Lines'),
                 self.stage_selection)
         self.action_stage_selection.setIcon(qtutils.icon('add.svg'))
         self.action_stage_selection.setShortcut(Qt.Key_S)
 
         self.action_revert_selection = qtutils.add_action(self,
-                self.tr('Revert Selected Lines...'),
+                N_('Revert Selected Lines...'),
                 self.revert_selection)
         self.action_revert_selection.setIcon(qtutils.icon('undo.svg'))
 
         self.action_unstage_selection = qtutils.add_action(self,
-                self.tr('Unstage &Selected Lines'),
+                N_('Unstage &Selected Lines'),
                 self.unstage_selection)
         self.action_unstage_selection.setIcon(qtutils.icon('remove.svg'))
         self.action_unstage_selection.setShortcut(Qt.Key_S)
 
         self.action_apply_selection = qtutils.add_action(self,
-                self.tr('Apply Diff Selection to Work Tree'),
+                N_('Apply Diff Selection to Work Tree'),
                 self.stage_selection)
         self.action_apply_selection.setIcon(qtutils.apply_icon())
 
@@ -73,38 +74,38 @@ class DiffEditor(DiffTextEdit):
         if self.model.stageable():
             if s.modified and s.modified[0] in cola.model().submodules:
                 action = menu.addAction(qtutils.icon('add.svg'),
-                                        self.tr(cmds.Stage.NAME),
+                                        cmds.Stage.name(),
                                         cmds.run(cmds.Stage, s.modified))
                 action.setShortcut(cmds.Stage.SHORTCUT)
                 menu.addAction(qtutils.git_icon(),
-                               self.tr('Launch git-cola'),
+                               N_('Launch git-cola'),
                                cmds.run(cmds.OpenRepo,
                                     os.path.abspath(s.modified[0])))
             elif s.modified:
                 action = menu.addAction(qtutils.icon('add.svg'),
-                                        self.tr('Stage Section'),
+                                        N_('Stage Section'),
                                         self.stage_section)
                 action.setShortcut(Qt.Key_H)
                 menu.addAction(self.action_stage_selection)
                 menu.addSeparator()
                 menu.addAction(qtutils.icon('undo.svg'),
-                               self.tr('Revert Section...'),
+                               N_('Revert Section...'),
                                self.revert_section)
                 menu.addAction(self.action_revert_selection)
 
         if self.model.unstageable():
             if s.staged and s.staged[0] in cola.model().submodules:
                 action = menu.addAction(qtutils.icon('remove.svg'),
-                                        self.tr(cmds.Unstage.NAME),
+                                        cmds.Unstage.name(),
                                         cmds.do(cmds.Unstage, s.staged))
                 action.setShortcut(cmds.Unstage.SHORTCUT)
                 menu.addAction(qtutils.git_icon(),
-                               self.tr('Launch git-cola'),
+                               N_('Launch git-cola'),
                                cmds.do(cmds.OpenRepo,
                                     os.path.abspath(s.staged[0])))
             elif s.staged:
                 action = menu.addAction(qtutils.icon('remove.svg'),
-                                        self.tr('Unstage Section'),
+                                        N_('Unstage Section'),
                                         self.unstage_section)
                 action.setShortcut(Qt.Key_H)
                 menu.addAction(self.action_unstage_selection)
@@ -116,11 +117,11 @@ class DiffEditor(DiffTextEdit):
 
         menu.addSeparator()
         action = menu.addAction(qtutils.icon('edit-copy.svg'),
-                                'Copy', self.copy)
+                                N_('Copy'), self.copy)
         action.setShortcut(QtGui.QKeySequence.Copy)
 
         action = menu.addAction(qtutils.icon('edit-select-all.svg'),
-                                'Select All', self.selectAll)
+                                N_('Select All'), self.selectAll)
         action.setShortcut(QtGui.QKeySequence.SelectAll)
         menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -223,11 +224,11 @@ class DiffEditor(DiffTextEdit):
 
     def revert_section(self):
         """Destructively remove a section from a worktree file."""
-        if not qtutils.confirm('Revert Section?',
-                               'This operation drops uncommitted changes.\n'
-                               'These changes cannot be recovered.',
-                               'Revert the uncommitted changes?',
-                               'Revert Section',
+        if not qtutils.confirm(N_('Revert Section?'),
+                               N_('This operation drops uncommitted changes.\n'
+                                  'These changes cannot be recovered.'),
+                               N_('Revert the uncommitted changes?'),
+                               N_('Revert Section'),
                                default=True,
                                icon=qtutils.icon('undo.svg')):
             return
@@ -236,11 +237,11 @@ class DiffEditor(DiffTextEdit):
 
     def revert_selection(self):
         """Destructively check out content for the selected file from $head."""
-        if not qtutils.confirm('Revert Selected Lines?',
-                               'This operation drops uncommitted changes.\n'
-                               'These changes cannot be recovered.',
-                               'Revert the uncommitted changes?',
-                               'Revert Selected Lines',
+        if not qtutils.confirm(N_('Revert Selected Lines?'),
+                               N_('This operation drops uncommitted changes.\n'
+                                  'These changes cannot be recovered.'),
+                               N_('Revert the uncommitted changes?'),
+                               N_('Revert Selected Lines'),
                                default=True,
                                icon=qtutils.icon('undo.svg')):
             return

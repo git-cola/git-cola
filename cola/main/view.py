@@ -26,13 +26,13 @@ from cola.classic import cola_classic
 from cola.classic import classic_widget
 from cola.dag import git_dag
 from cola.git import git
+from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.qt import create_dock
 from cola.qt import create_menu
 from cola.qtutils import add_action
 from cola.qtutils import connect_action
 from cola.qtutils import connect_action_bool
-from cola.qtutils import tr
 from cola.widgets import action
 from cola.widgets import cfgactions
 from cola.widgets import editremotes
@@ -77,12 +77,12 @@ class MainView(MainWindow):
         self.classic_dockable = (cfg.get('cola.browserdockable') or
                                  cfg.get('cola.classicdockable'))
         if self.classic_dockable:
-            self.classicdockwidget = create_dock('Browser', self)
+            self.classicdockwidget = create_dock(N_('Browser'), self)
             self.classicwidget = classic_widget(self)
             self.classicdockwidget.setWidget(self.classicwidget)
 
         # "Actions" widget
-        self.actionsdockwidget = create_dock('Action', self)
+        self.actionsdockwidget = create_dock(N_('Action'), self)
         self.actionsdockwidgetcontents = action.ActionButtons(self)
         self.actionsdockwidget.setWidget(self.actionsdockwidgetcontents)
         self.actionsdockwidget.toggleViewAction().setChecked(False)
@@ -90,7 +90,7 @@ class MainView(MainWindow):
 
         # "Repository Status" widget
         self.statuswidget = StatusWidget(self)
-        self.statusdockwidget = create_dock('Status', self)
+        self.statusdockwidget = create_dock(N_('Status'), self)
         self.statusdockwidget.setWidget(self.statuswidget)
 
         # "Commit Message Editor" widget
@@ -98,7 +98,7 @@ class MainView(MainWindow):
         font = qtutils.default_monospace_font()
         font.setPointSize(int(font.pointSize() * 0.8))
         self.position_label.setFont(font)
-        self.commitdockwidget = create_dock('Commit', self)
+        self.commitdockwidget = create_dock(N_('Commit'), self)
         titlebar = self.commitdockwidget.titleBarWidget()
         titlebar.add_corner_widget(self.position_label)
 
@@ -107,149 +107,152 @@ class MainView(MainWindow):
 
         # "Console" widget
         self.logwidget = LogWidget()
-        self.logdockwidget = create_dock('Console', self)
+        self.logdockwidget = create_dock(N_('Console'), self)
         self.logdockwidget.setWidget(self.logwidget)
         self.logdockwidget.toggleViewAction().setChecked(False)
         self.logdockwidget.hide()
 
         # "Diff Viewer" widget
-        self.diffdockwidget = create_dock('Diff', self)
+        self.diffdockwidget = create_dock(N_('Diff'), self)
         self.diffeditor = DiffEditor(self.diffdockwidget)
         self.diffdockwidget.setWidget(self.diffeditor)
 
         # All Actions
         self.menu_unstage_all = add_action(self,
-                'Unstage All', cmds.run(cmds.UnstageAll))
+                N_('Unstage All'), cmds.run(cmds.UnstageAll))
         self.menu_unstage_all.setIcon(qtutils.icon('remove.svg'))
 
         self.menu_unstage_selected = add_action(self,
-                'Unstage From Commit', cmds.run(cmds.UnstageSelected))
+                N_('Unstage From Commit'), cmds.run(cmds.UnstageSelected))
         self.menu_unstage_selected.setIcon(qtutils.icon('remove.svg'))
 
         self.menu_show_diffstat = add_action(self,
-                'Diffstat', cmds.run(cmds.Diffstat), 'Alt+D')
+                N_('Diffstat'), cmds.run(cmds.Diffstat), 'Alt+D')
 
         self.menu_stage_modified = add_action(self,
-                'Stage Changed Files To Commit',
+                N_('Stage Changed Files To Commit'),
                 cmds.run(cmds.StageModified), 'Alt+A')
         self.menu_stage_modified.setIcon(qtutils.icon('add.svg'))
 
         self.menu_stage_untracked = add_action(self,
-                'Stage All Untracked', cmds.run(cmds.StageUntracked), 'Alt+U')
+                N_('Stage All Untracked'),
+                cmds.run(cmds.StageUntracked), 'Alt+U')
         self.menu_stage_untracked.setIcon(qtutils.icon('add.svg'))
 
         self.menu_export_patches = add_action(self,
-                'Export Patches...', guicmds.export_patches, 'Alt+E')
+                N_('Export Patches...'), guicmds.export_patches, 'Alt+E')
         self.menu_preferences = add_action(self,
-                'Preferences', self.preferences,
+                N_('Preferences'), self.preferences,
                 QtGui.QKeySequence.Preferences, 'Ctrl+O')
 
         self.menu_edit_remotes = add_action(self,
-                'Edit Remotes...', lambda: editremotes.edit().exec_())
+                N_('Edit Remotes...'), lambda: editremotes.edit().exec_())
         self.menu_rescan = add_action(self,
-                cmds.RescanAndRefresh.NAME,
+                cmds.RescanAndRefresh.name(),
                 cmds.run(cmds.RescanAndRefresh),
                 cmds.RescanAndRefresh.SHORTCUT)
         self.menu_rescan.setIcon(qtutils.reload_icon())
 
         self.menu_browse_recent = add_action(self,
-                'Recently Modified Files...', browse_recent, 'Shift+Ctrl+E')
+                N_('Recently Modified Files...'),
+                browse_recent, 'Shift+Ctrl+E')
 
         self.menu_cherry_pick = add_action(self,
-                'Cherry-Pick...', guicmds.cherry_pick, 'Ctrl+P')
+                N_('Cherry-Pick...'),
+                guicmds.cherry_pick, 'Ctrl+P')
 
         self.menu_load_commitmsg = add_action(self,
-                'Load Commit Message...', guicmds.load_commitmsg)
+                N_('Load Commit Message...'), guicmds.load_commitmsg)
 
         self.menu_save_tarball = add_action(self,
-                'Save As Tarball/Zip...', self.save_archive)
+                N_('Save As Tarball/Zip...'), self.save_archive)
 
         self.menu_quit = add_action(self,
-                'Quit', self.close, 'Ctrl+Q')
+                N_('Quit'), self.close, 'Ctrl+Q')
         self.menu_manage_bookmarks = add_action(self,
-                'Bookmarks...', manage_bookmarks)
+                N_('Bookmarks...'), manage_bookmarks)
         self.menu_grep = add_action(self,
-                'Grep', guicmds.grep, 'Ctrl+G')
+                N_('Grep'), guicmds.grep, 'Ctrl+G')
         self.menu_merge_local = add_action(self,
-                'Merge...', merge.local_merge)
+                N_('Merge...'), merge.local_merge)
 
         self.menu_merge_abort = add_action(self,
-                'Abort Merge...', merge.abort_merge)
+                N_('Abort Merge...'), merge.abort_merge)
 
         self.menu_fetch = add_action(self,
-                'Fetch...', remote.fetch)
+                N_('Fetch...'), remote.fetch)
         self.menu_push = add_action(self,
-                'Push...', remote.push)
+                N_('Push...'), remote.push)
         self.menu_pull = add_action(self,
-                'Pull...', remote.pull)
+                N_('Pull...'), remote.pull)
 
         self.menu_open_repo = add_action(self,
-                'Open...', guicmds.open_repo)
+                N_('Open...'), guicmds.open_repo)
         self.menu_open_repo.setIcon(qtutils.open_icon())
 
         self.menu_stash = add_action(self,
-                'Stash...', stash.stash, 'Alt+Shift+S')
+                N_('Stash...'), stash.stash, 'Alt+Shift+S')
 
         self.menu_clone_repo = add_action(self,
-                'Clone...', guicmds.clone_repo)
+                N_('Clone...'), guicmds.clone_repo)
         self.menu_clone_repo.setIcon(qtutils.git_icon())
 
         self.menu_help_docs = add_action(self,
-                'Documentation', resources.show_html_docs,
+                N_('Documentation'), resources.show_html_docs,
                 QtGui.QKeySequence.HelpContents)
 
         self.menu_help_shortcuts = add_action(self,
-                'Keyboard Shortcuts',
+                N_('Keyboard Shortcuts'),
                 show_shortcuts,
                 QtCore.Qt.Key_Question)
 
         self.menu_visualize_current = add_action(self,
-                'Visualize Current Branch...',
+                N_('Visualize Current Branch...'),
                 cmds.run(cmds.VisualizeCurrent))
         self.menu_visualize_all = add_action(self,
-                'Visualize All Branches...',
+                N_('Visualize All Branches...'),
                 cmds.run(cmds.VisualizeAll))
         self.menu_search_commits = add_action(self,
-                'Search...', search)
+                N_('Search...'), search)
         self.menu_browse_branch = add_action(self,
-                'Browse Current Branch...', guicmds.browse_current)
+                N_('Browse Current Branch...'), guicmds.browse_current)
         self.menu_browse_other_branch = add_action(self,
-                'Browse Other Branch...', guicmds.browse_other)
+                N_('Browse Other Branch...'), guicmds.browse_other)
         self.menu_load_commitmsg_template = add_action(self,
-                'Get Commit Message Template',
+                N_('Get Commit Message Template'),
                 cmds.run(cmds.LoadCommitTemplate))
         self.menu_help_about = add_action(self,
-                'About', launch_about_dialog)
+                N_('About'), launch_about_dialog)
 
         self.menu_branch_diff = add_action(self,
-                'SHA-1...', guicmds.diff_revision)
+                N_('SHA-1...'), guicmds.diff_revision)
         self.menu_diff_expression = add_action(self,
-                'Expression...', guicmds.diff_expression)
+                N_('Expression...'), guicmds.diff_expression)
         self.menu_branch_compare = add_action(self,
-                'Branches...', compare_branches)
+                N_('Branches...'), compare_branches)
 
         self.menu_create_tag = add_action(self,
-                'Create Tag...', create_tag)
+                N_('Create Tag...'), create_tag)
 
         self.menu_create_branch = add_action(self,
-                'Create...', create_new_branch, 'Ctrl+B')
+                N_('Create...'), create_new_branch, 'Ctrl+B')
 
         self.menu_delete_branch = add_action(self,
-                'Delete...', guicmds.branch_delete)
+                N_('Delete...'), guicmds.branch_delete)
 
         self.menu_checkout_branch = add_action(self,
-                'Checkout...', guicmds.checkout_branch, 'Alt+B')
+                N_('Checkout...'), guicmds.checkout_branch, 'Alt+B')
         self.menu_rebase_branch = add_action(self,
-                'Rebase...', guicmds.rebase)
+                N_('Rebase...'), guicmds.rebase)
         self.menu_branch_review = add_action(self,
-                'Review...', guicmds.review_branch)
+                N_('Review...'), guicmds.review_branch)
 
         self.menu_classic = add_action(self,
-                'Browser...', cola_classic)
+                N_('Browser...'), cola_classic)
         self.menu_classic.setIcon(qtutils.git_icon())
 
         self.menu_dag = add_action(self,
-                'DAG...', lambda: git_dag(self.model))
+                N_('DAG...'), lambda: git_dag(self.model))
         self.menu_dag.setIcon(qtutils.git_icon())
 
         # Relayed actions
@@ -266,11 +269,11 @@ class MainView(MainWindow):
         self.menubar = QtGui.QMenuBar(self)
 
         # File Menu
-        self.file_menu = create_menu('&File', self.menubar)
+        self.file_menu = create_menu(N_('File'), self.menubar)
         self.file_menu.addAction(self.menu_preferences)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_open_repo)
-        self.menu_open_recent = self.file_menu.addMenu(tr('Open Recent'))
+        self.menu_open_recent = self.file_menu.addMenu(N_('Open Recent'))
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_clone_repo)
         self.file_menu.addAction(self.menu_manage_bookmarks)
@@ -289,8 +292,8 @@ class MainView(MainWindow):
         self.menubar.addAction(self.file_menu.menuAction())
 
         # Commit Menu
-        self.commit_menu = create_menu('Co&mmit', self.menubar)
-        self.commit_menu.setTitle(tr('Commit@@verb'))
+        self.commit_menu = create_menu(N_('Commit@@verb'), self.menubar)
+        self.commit_menu.setTitle(N_('Commit@@verb'))
         self.commit_menu.addAction(self.menu_stage_modified)
         self.commit_menu.addAction(self.menu_stage_untracked)
         self.commit_menu.addSeparator()
@@ -302,7 +305,7 @@ class MainView(MainWindow):
         self.menubar.addAction(self.commit_menu.menuAction())
 
         # Branch Menu
-        self.branch_menu = create_menu('B&ranch', self.menubar)
+        self.branch_menu = create_menu(N_('Branch'), self.menubar)
         self.branch_menu.addAction(self.menu_branch_review)
         self.branch_menu.addSeparator()
         self.branch_menu.addAction(self.menu_create_branch)
@@ -319,7 +322,7 @@ class MainView(MainWindow):
         self.menubar.addAction(self.branch_menu.menuAction())
 
         # Actions menu
-        self.actions_menu = create_menu('Act&ions', self.menubar)
+        self.actions_menu = create_menu(N_('Actions'), self.menubar)
         self.actions_menu.addAction(self.menu_merge_local)
         self.actions_menu.addAction(self.menu_stash)
         self.actions_menu.addSeparator()
@@ -338,7 +341,7 @@ class MainView(MainWindow):
         self.menubar.addAction(self.actions_menu.menuAction())
 
         # Diff Menu
-        self.diff_menu = create_menu('Diff', self.menubar)
+        self.diff_menu = create_menu(N_('Diff'), self.menubar)
         self.diff_menu.addAction(self.menu_branch_diff)
         self.diff_menu.addAction(self.menu_diff_expression)
         self.diff_menu.addAction(self.menu_branch_compare)
@@ -348,7 +351,7 @@ class MainView(MainWindow):
         self.menubar.addAction(self.diff_menu.menuAction())
 
         # Tools Menu
-        self.tools_menu = create_menu('&Tools', self.menubar)
+        self.tools_menu = create_menu(N_('Tools'), self.menubar)
         self.tools_menu.addAction(self.menu_classic)
         self.tools_menu.addAction(self.menu_dag)
         self.tools_menu.addSeparator()
@@ -359,7 +362,7 @@ class MainView(MainWindow):
         self.menubar.addAction(self.tools_menu.menuAction())
 
         # Help Menu
-        self.help_menu = create_menu('&Help', self.menubar)
+        self.help_menu = create_menu(N_('Help'), self.menubar)
         self.help_menu.addAction(self.menu_help_docs)
         self.help_menu.addAction(self.menu_help_shortcuts)
         self.help_menu.addAction(self.menu_help_about)
@@ -424,8 +427,8 @@ class MainView(MainWindow):
         Interaction.log_status = self.logwidget.log_status
         Interaction.log = self.logwidget.log
 
-        Interaction.log(version.git_version_str() +
-                        '\ncola version ' + version.version())
+        Interaction.log(version.git_version_str() + '\n' +
+                        N_('git-cola version %s') % version.version())
 
     def set_initial_size(self):
         self.statuswidget.set_initial_size()
@@ -446,7 +449,7 @@ class MainView(MainWindow):
         for r in recent:
             name = os.path.basename(r)
             directory = os.path.dirname(r)
-            text = u'%s %s %s' % (name, unichr(0x2192), directory)
+            text = '%s %s %s' % (name, unichr(0x2192), directory)
             menu.addAction(text, cmds.run(cmds.OpenRepo, r))
 
     # Accessors
@@ -509,12 +512,14 @@ class MainView(MainWindow):
         """Update the title with the current branch and directory name."""
         branch = self.model.currentbranch
         curdir = core.decode(os.getcwd())
-        msg = 'Repository: %s\nBranch: %s' % (curdir, branch)
+        msg = N_('Repository: %s') % curdir
+        msg += '\n'
+        msg += N_('Branch: %s') % branch
         self.commitdockwidget.setToolTip(msg)
 
         title = '%s: %s' % (self.model.project, branch)
         if self.mode == self.model.mode_amend:
-            title += ' ** amending **'
+            title += ' (%s)' %  N_('Amending')
         self.setWindowTitle(title)
 
         self.commitmsgeditor.set_mode(self.mode)

@@ -36,6 +36,7 @@ Thanks
 * Paolo G. Giarrusso
 * Peter Júnoš
 * Rustam Safin
+* Sergey Leschina
 * Stefan Naewe
 * Steffen Prohaska
 * Ugo Riboni

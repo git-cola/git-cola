@@ -11,7 +11,7 @@ from PyQt4.QtGui import QColor
 
 from cola import utils
 from cola import qtutils
-from cola.qtutils import tr
+from cola.i18n import N_
 from cola.widgets import completion
 from cola.widgets import defs
 
@@ -21,7 +21,7 @@ def create_button(text='', layout=None, tooltip=None, icon=None):
     button = QtGui.QPushButton()
     button.setCursor(Qt.PointingHandCursor)
     if text:
-        button.setText(tr(text))
+        button.setText(text)
     if icon:
         button.setIcon(icon)
     if tooltip is not None:
@@ -47,14 +47,14 @@ class DockTitleBarWidget(QtGui.QWidget):
         self.close_button.setFlat(True)
         self.close_button.setFixedSize(QtCore.QSize(16, 16))
         self.close_button.setIcon(qtutils.titlebar_close_icon())
-        self.close_button.setToolTip(self.tr('Close'))
+        self.close_button.setToolTip(N_('Close'))
 
         self.toggle_button = QtGui.QPushButton()
         self.toggle_button.setCursor(QtCore.Qt.PointingHandCursor)
         self.toggle_button.setFlat(True)
         self.toggle_button.setFixedSize(QtCore.QSize(16, 16))
         self.toggle_button.setIcon(qtutils.titlebar_normal_icon())
-        self.toggle_button.setToolTip(self.tr('Detach'))
+        self.toggle_button.setToolTip(N_('Detach'))
 
         self.corner_layout = QtGui.QHBoxLayout()
         self.corner_layout.setMargin(0)
@@ -88,9 +88,9 @@ class DockTitleBarWidget(QtGui.QWidget):
 
     def update_tooltips(self):
         if self.parent().isFloating():
-            tooltip = self.tr('Attach')
+            tooltip = N_('Attach')
         else:
-            tooltip = self.tr('Detach')
+            tooltip = N_('Detach')
         self.toggle_button.setToolTip(tooltip)
 
 
@@ -98,7 +98,7 @@ class DockTitleBarWidget(QtGui.QWidget):
 def create_dock(title, parent):
     """Create a dock widget and set it up accordingly."""
     dock = QtGui.QDockWidget(parent)
-    dock.setWindowTitle(tr(title))
+    dock.setWindowTitle(title)
     dock.setObjectName(title)
     titlebar = DockTitleBarWidget(dock, title)
     dock.setTitleBarWidget(titlebar)
@@ -108,7 +108,7 @@ def create_dock(title, parent):
 def create_menu(title, parent):
     """Create a menu and set its title."""
     qmenu = QtGui.QMenu(parent)
-    qmenu.setTitle(tr(title))
+    qmenu.setTitle(title)
     return qmenu
 
 
@@ -120,10 +120,10 @@ def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
     if icon:
         button.setIcon(icon)
     if text:
-        button.setText(tr(text))
+        button.setText(text)
         button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
     if tooltip:
-        button.setToolTip(tr(tooltip))
+        button.setToolTip(tooltip)
     if layout is not None:
         layout.addWidget(button)
     return button
@@ -225,11 +225,11 @@ class GitRefDialog(QtGui.QDialog):
         self.setFocusProxy(self.lineedit)
 
         self.ok_button = QtGui.QPushButton()
-        self.ok_button.setText(self.tr(button_text))
+        self.ok_button.setText(button_text)
         self.ok_button.setIcon(qtutils.apply_icon())
 
         self.close_button = QtGui.QPushButton()
-        self.close_button.setText(self.tr('Close'))
+        self.close_button.setText(N_('Close'))
 
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.setMargin(0)

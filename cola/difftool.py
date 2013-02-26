@@ -7,6 +7,7 @@ import cola
 from cola import utils
 from cola import qtutils
 from cola import gitcmds
+from cola.i18n import N_
 from cola.widgets import defs
 from cola.widgets import standard
 
@@ -67,7 +68,7 @@ class FileDiffDialog(QtGui.QDialog):
         self.b = b
         self.expr = expr
 
-        self.setWindowTitle('Select File(s)')
+        self.setWindowTitle(N_('Select File(s)'))
         self.setWindowModality(QtCore.Qt.WindowModal)
 
         self._tree = standard.TreeWidget(self)
@@ -75,11 +76,11 @@ class FileDiffDialog(QtGui.QDialog):
         self._tree.setSelectionMode(self._tree.ExtendedSelection)
         self._tree.setHeaderHidden(True)
 
-        self._diff_btn = QtGui.QPushButton('Compare')
+        self._diff_btn = QtGui.QPushButton(N_('Compare'))
         self._diff_btn.setIcon(qtutils.ok_icon())
         self._diff_btn.setEnabled(False)
 
-        self._close_btn = QtGui.QPushButton('Close')
+        self._close_btn = QtGui.QPushButton(N_('Close'))
         self._close_btn.setIcon(qtutils.close_icon())
 
         self._button_layt = QtGui.QHBoxLayout()
@@ -125,11 +126,11 @@ class FileDiffDialog(QtGui.QDialog):
             filenames = gitcmds.diff_filenames(*self.diff_arg)
 
         if not filenames:
-            details = ('"git diff --name-only %s" returned an empty list' %
+            details = (N_('"git diff --name-only %s" returned an empty list') %
                        ' '.join(self.diff_arg))
             self.hide()
-            qtutils.information('git cola',
-                                message='No changes to diff',
+            qtutils.information(N_('No Differences'),
+                                message=N_('No changes found for diff.'),
                                 details=details)
             self.close()
             return self.Accepted
