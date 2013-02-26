@@ -69,12 +69,16 @@ def version_to_list(version):
 @memoize
 def git_version_str():
     """Returns the current GIT version"""
-    return git.version()
+    return git.version().strip()
 
 @memoize
 def git_version():
     """Returns the current GIT version"""
-    return git_version_str().split()[-1]
+    parts = git_version_str().split()
+    if parts and len(parts) > 2:
+        return parts[2]
+    else:
+        return 'v1.6.3' # minimum supported version
 
 
 if __name__ == '__main__':
