@@ -14,6 +14,9 @@ def install():
     if not hasattr(QtGui.QGraphicsItem, 'mapRectToScene'):
         QtGui.QGraphicsItem.mapRectToScene = _map_rect_to_scene
 
+    if not hasattr(QtCore.QCoreApplication, 'setStyleSheet'):
+        QtCore.QCoreApplication.setStyleSheet = lambda *args: None
+
 
 def add_search_path(prefix, path):
     if hasattr(QtCore.QDir, 'addSearchPath'):
