@@ -20,9 +20,9 @@ try:
     from PyQt4 import QtCore
     from PyQt4.QtCore import SIGNAL
 except ImportError:
-    print >> sys.stderr, 'Sorry, you do not seem to have PyQt4 installed.'
-    print >> sys.stderr, 'Please install it before using git-cola.'
-    print >> sys.stderr, 'e.g.:    sudo apt-get install python-qt4'
+    sys.stderr.write('Sorry, you do not seem to have PyQt4 installed.\n')
+    sys.stderr.write('Please install it before using git-cola.\n')
+    sys.stderr.write('e.g.: sudo apt-get install python-qt4\n')
     sys.exit(-1)
 
 
