@@ -323,7 +323,7 @@ git = instance()
 Git command singleton
 
 >>> from cola.git import git
->>> 'git' == git.version()[:3]
+>>> 'git' == git.version()[:3].lower()
 True
 
 """
