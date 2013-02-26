@@ -119,8 +119,6 @@ class ColaApplication(object):
     """
 
     def __init__(self, argv, locale=None, gui=True):
-        """Initialize our QApplication for translation
-        """
         cfgactions.install()
         i18n.install(locale)
         qtcompat.install()
@@ -130,18 +128,11 @@ class ColaApplication(object):
         icon_dir = resources.icon_dir()
         qtcompat.add_search_path(os.path.basename(icon_dir), icon_dir)
 
-        # monkey-patch Qt's translate() to use our translate()
         if gui:
             self._app = instance(tuple(argv))
             self._app.setWindowIcon(qtutils.git_icon())
-            self._translate_base = QtGui.QApplication.translate
-            QtGui.QApplication.translate = self.translate
         else:
             self._app = QtCore.QCoreApplication(argv)
-            self._translate_base = QtCore.QCoreApplication.translate
-            QtCore.QCoreApplication.translate = self.translate
-            if not hasattr(self._app, 'setStyleSheet'):
-                self._app.setStyleSheet = lambda x: None
 
         self._app.setStyleSheet("""
             QMainWindow::separator {
@@ -157,18 +148,6 @@ class ColaApplication(object):
         utils.set_binary(sys.stdin)
         utils.set_binary(sys.stdout)
         utils.set_binary(sys.stderr)
-
-    def translate(self, domain, txt):
-        """
-        Translate strings with gettext
-
-        Supports @@noun/@@verb specifiers.
-
-        """
-        trtxt = i18n.gettext(txt)
-        if trtxt[-6:-4] == '@@': # handle @@verb / @@noun
-            trtxt = trtxt[:-6]
-        return trtxt
 
     def activeWindow(self):
         """Wrap activeWindow()"""
