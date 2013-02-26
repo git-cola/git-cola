@@ -4,13 +4,14 @@
 import glob
 import optparse
 import os
-import platform
 import signal
 import sys
 
 # Make homebrew work by default
-if platform.system() == 'Darwin':
-    homebrew_mods = '/usr/local/lib/python'
+if sys.platform == 'darwin':
+    version_info = sys.version_info
+    python_version = '%s.%s' % (version_info.major, version_info.minor)
+    homebrew_mods = '/usr/local/lib/python%s/site-packages' % python_version
     if os.path.isdir(homebrew_mods):
         sys.path.append(homebrew_mods)
 
