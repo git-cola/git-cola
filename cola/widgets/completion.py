@@ -333,7 +333,7 @@ class Completer(QtGui.QCompleter):
 
     def model(self):
         return self._model
-        
+
     def updated(self):
         self.model().update()
 
