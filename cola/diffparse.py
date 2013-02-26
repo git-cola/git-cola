@@ -80,7 +80,6 @@ class DiffParser(object):
         newdiff = []
         local_offset = 0
         offset = self._diff_spans[diff][0]
-        diffguts = '\n'.join(self._diffs[diff])
 
         for line in self._diffs[diff]:
             line_start = offset + local_offset
