@@ -54,22 +54,28 @@ def diff_commits(parent, a, b):
     return dlg.exec_() == QtGui.QDialog.Accepted
 
 
-def diff_expression(parent, expr):
+def diff_expression(parent, expr, create_widget=False):
     dlg = FileDiffDialog(parent, expr=expr)
+    if create_widget:
+        return dlg
     dlg.show()
     dlg.raise_()
     return dlg.exec_() == QtGui.QDialog.Accepted
 
 
 class FileDiffDialog(QtGui.QDialog):
-    def __init__(self, parent, a=None, b=None, expr=None):
+    def __init__(self, parent, a=None, b=None, expr=None, title=None):
         QtGui.QDialog.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
+
         self.a = a
         self.b = b
         self.expr = expr
 
-        self.setWindowTitle(N_('Select File(s)'))
+        if title is None:
+            title = N_('git-cola diff')
+
+        self.setWindowTitle(title)
         self.setWindowModality(QtCore.Qt.WindowModal)
 
         self._expr = completion.GitRefLineEdit(parent=self)
@@ -99,6 +105,7 @@ class FileDiffDialog(QtGui.QDialog):
         self._layt = QtGui.QVBoxLayout()
         self._layt.setMargin(defs.margin)
         self._layt.setSpacing(defs.spacing)
+
         self._layt.addWidget(self._expr)
         self._layt.addWidget(self._tree)
         self._layt.addLayout(self._button_layt)

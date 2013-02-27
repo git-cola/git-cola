@@ -7,6 +7,8 @@ Usability, bells and whistles
 
   http://github.com/git-cola/git-cola/issues/145
 
+* A new `git cola diff` sub-command was added for diffing changed files.
+
 Fixes
 -----
 * The inotify auto-refresh feature makes it difficult to select text in

@@ -7,6 +7,7 @@ import optparse
 import os
 import signal
 import sys
+import subprocess
 
 # Make homebrew work by default
 if sys.platform == 'darwin':
@@ -30,6 +31,7 @@ except ImportError:
 # Import cola modules
 import cola
 from cola import compat
+from cola import core
 from cola import git
 from cola import inotify
 from cola import i18n
@@ -163,6 +165,7 @@ def parse_args(context):
                     'classic',
                     'config',
                     'dag',
+                    'diff',
                     'fetch',
                     'grep',
                     'merge',
@@ -294,6 +297,12 @@ def main(context):
     elif context == 'config':
         from cola.prefs import preferences
         view = preferences()
+    elif context == 'diff':
+        from cola.difftool import diff_expression
+        while args and args[0] == '--':
+            args.pop(0)
+        expr = subprocess.list2cmdline(map(core.decode, args))
+        view = diff_expression(None, expr, create_widget=True)
     elif context == 'fetch':
         # TODO: the calls to update_status() can be done asynchronously
         # by hooking into the message_updated notification.

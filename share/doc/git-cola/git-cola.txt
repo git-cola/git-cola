@@ -43,6 +43,9 @@ browse::
 config::
 	Configure 'git-cola' settings.
 
+diff::
+	Diff changed files.
+
 fetch::
 	Fetch remote branches.
 
