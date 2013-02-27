@@ -1,4 +1,5 @@
-# Copyright (C) 2009, David Aguilar <davvid@gmail.com>
+# Copyright (C) 2009, 2010, 2011, 2012, 2013
+# David Aguilar <davvid@gmail.com>
 """Provides the main() routine and ColaApplicaiton"""
 
 import glob
