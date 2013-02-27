@@ -232,7 +232,7 @@ def parse_args(context):
 def process_args(opts, args):
     if opts.version or (args and args[0] == 'version'):
         # Accept 'git cola --version' or 'git cola version'
-        print('cola version', version.version())
+        print('cola version %s' % version.version())
         sys.exit(0)
 
     if opts.git:
