@@ -229,7 +229,7 @@ def parse_args(context):
 def process_args(opts, args):
     if opts.version or (args and args[0] == 'version'):
         # Accept 'git cola --version' or 'git cola version'
-        print 'cola version', version.version()
+        print('cola version', version.version())
         sys.exit(0)
 
     if opts.git:
@@ -241,12 +241,12 @@ def process_args(opts, args):
     # Bail out if --repo is not a directory
     repo = os.path.realpath(opts.repo)
     if not os.path.isdir(repo):
-        print >> sys.stderr, "fatal: '%s' is not a directory.  Consider supplying -r <path>.\n" % repo
+        sys.stderr.write("fatal: '%s' is not a directory.  "
+                         'Consider supplying -r <path>.\n' % repo)
         sys.exit(-1)
 
     # We do everything relative to the repo root
     os.chdir(opts.repo)
-
     return repo
 
 
