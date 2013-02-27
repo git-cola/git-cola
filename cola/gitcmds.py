@@ -38,6 +38,16 @@ def diff_filenames(*args):
     return _parse_diff_filenames(diff_zstr)
 
 
+def diff(args):
+    """Return a list of filenames for the given diff arguments
+
+    :param args: list of arguments to pass to "git diff --name-only"
+
+    """
+    diff_zstr = git.diff(name_only=True, z=True, *args)
+    return _parse_diff_filenames(diff_zstr)
+
+
 def _parse_diff_filenames(diff_zstr):
     if diff_zstr:
         return core.decode(diff_zstr[:-1]).split('\0')
