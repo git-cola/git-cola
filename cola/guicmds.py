@@ -147,12 +147,9 @@ def diff_expression():
     tracked = gitcmds.tracked_branch()
     current = gitcmds.current_branch()
     if tracked and current:
-        default = tracked + '..' + current
+        ref = tracked + '..' + current
     else:
-        default = 'origin/master..'
-    ref = choose_ref(N_('Enter Diff Expression'), N_('Diff'), default=default)
-    if not ref:
-        return
+        ref = 'origin/master..'
     difftool.diff_expression(qtutils.active_window(), ref)
 
 
