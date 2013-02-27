@@ -341,28 +341,6 @@ def is_win32():
     return sys.platform == 'win32' or sys.platform == 'cygwin'
 
 
-def win32_set_binary(fd):
-    try:
-        import msvcrt
-    except ImportError:
-        return
-    # When run without console, pipes may expose invalid
-    # fileno(), usually set to -1.
-    if hasattr(fd, 'fileno') and fd.fileno() >= 0:
-        msvcrt.setmode(fd.fileno(), os.O_BINARY)
-
-
-def posix_set_binary(fd):
-    """POSIX file descriptors are always binary"""
-    pass
-
-
-if is_win32():
-    set_binary = win32_set_binary
-else:
-    set_binary = posix_set_binary
-
-
 def checksum(path):
     """Return a cheap md5 hexdigest for a path."""
     md5 = hashlib.new('md5')

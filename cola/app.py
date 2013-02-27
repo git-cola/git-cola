@@ -144,11 +144,6 @@ class ColaApplication(object):
             }
             """)
 
-        # Make file descriptors binary for win32
-        utils.set_binary(sys.stdin)
-        utils.set_binary(sys.stdout)
-        utils.set_binary(sys.stderr)
-
     def activeWindow(self):
         """Wrap activeWindow()"""
         return self._app.activeWindow()
