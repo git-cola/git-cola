@@ -8,6 +8,7 @@ from cola import gitcmds
 from cola import qt
 from cola import qtutils
 from cola.git import git
+from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.widgets.browse import BrowseDialog
 from cola.widgets.combodlg import ComboDialog
@@ -22,7 +23,7 @@ def choose_from_combo(title, items):
 
 def branch_delete():
     """Launch the 'Delete Branch' dialog."""
-    branch = choose_from_combo('Delete Branch',
+    branch = choose_from_combo(N_('Delete Branch'),
                                cola.model().local_branches)
     if not branch:
         return
@@ -31,7 +32,8 @@ def branch_delete():
 
 def diff_revision():
     """Diff an arbitrary revision against the worktree"""
-    ref = choose_ref('Select Revision to Diff', 'Diff',
+    ref = choose_ref(N_('Select Revision to Diff'),
+                     N_('Diff'),
                      default='HEAD^')
     if not ref:
         return
@@ -47,7 +49,7 @@ def browse_current():
 def browse_other():
     """Prompt for a branch and inspect content at that point in time."""
     # Prompt for a branch to browse
-    branch = choose_from_combo('Browse Revision...', gitcmds.all_refs())
+    branch = choose_from_combo(N_('Browse Revision...'), gitcmds.all_refs())
     if not branch:
         return
     BrowseDialog.browse(branch)
@@ -55,7 +57,7 @@ def browse_other():
 
 def checkout_branch():
     """Launch the 'Checkout Branch' dialog."""
-    branch = choose_from_combo('Checkout Branch',
+    branch = choose_from_combo(N_('Checkout Branch'),
                                cola.model().local_branches)
     if not branch:
         return
@@ -65,7 +67,7 @@ def checkout_branch():
 def cherry_pick():
     """Launch the 'Cherry-Pick' dialog."""
     revs, summaries = gitcmds.log_helper(all=True)
-    commits = select_commits('Cherry-Pick Commit',
+    commits = select_commits(N_('Cherry-Pick Commit'),
                              revs, summaries, multiselect=False)
     if not commits:
         return
@@ -79,7 +81,7 @@ def clone_repo(spawn=True):
     A new cola session is invoked when 'spawn' is True.
 
     """
-    url, ok = qtutils.prompt('Path or URL to clone (Env. $VARS okay)')
+    url, ok = qtutils.prompt(N_('Path or URL to clone (Env. $VARS okay)'))
     url = os.path.expandvars(core.encode(url))
     if not ok or not url:
         return None
@@ -100,13 +102,13 @@ def clone_repo(spawn=True):
             raise
     except:
         Interaction.information(
-                'Error Cloning',
-                'Could not parse: "%s"' % url)
-        Interaction.log('Oops, could not parse git url: "%s"' % url)
+                N_('Error Cloning'),
+                N_('Could not parse Git URL: "%s"') % url)
+        Interaction.log(N_('Could not parse Git URL: "%s"') % url)
         return None
 
     # Prompt the user for a directory to use as the parent directory
-    msg = 'Select a parent directory for the new clone'
+    msg = N_('Select a parent directory for the new clone')
     dirname = qtutils.opendir_dialog(msg, cola.model().getcwd())
     if not dirname:
         return None
@@ -116,7 +118,7 @@ def clone_repo(spawn=True):
     olddestdir = destdir
     if os.path.exists(destdir):
         # An existing path can be specified
-        msg = ('"%s" already exists, cola will create a new directory' %
+        msg = (N_('"%s" already exists, cola will create a new directory') %
                destdir)
         Interaction.information('Directory Exists', msg)
 
@@ -132,7 +134,7 @@ def clone_repo(spawn=True):
 def export_patches():
     """Run 'git format-patch' on a list of commits."""
     revs, summaries = gitcmds.log_helper()
-    to_export = select_commits('Export Patches', revs, summaries)
+    to_export = select_commits(N_('Export Patches'), revs, summaries)
     if not to_export:
         return
     to_export.reverse()
@@ -148,8 +150,7 @@ def diff_expression():
         default = tracked + '..' + current
     else:
         default = 'origin/master..'
-    ref = choose_ref('Enter Diff Expression', 'Diff',
-                     default=default)
+    ref = choose_ref(N_('Enter Diff Expression'), N_('Diff'), default=default)
     if not ref:
         return
     difftool.diff_expression(qtutils.active_window(), ref)
@@ -165,7 +166,7 @@ def grep():
 
 def open_repo():
     """Spawn a new cola session."""
-    dirname = qtutils.opendir_dialog('Open Git Repository...',
+    dirname = qtutils.opendir_dialog(N_('Open Git Repository...'),
                                      cola.model().getcwd())
     if not dirname:
         return
@@ -174,7 +175,7 @@ def open_repo():
 
 def load_commitmsg():
     """Load a commit message from a file."""
-    filename = qtutils.open_dialog('Load Commit Message...',
+    filename = qtutils.open_dialog(N_('Load Commit Message...'),
                                    cola.model().getcwd())
     if filename:
         cmds.do(cmds.LoadCommitMessage, filename)
@@ -182,7 +183,7 @@ def load_commitmsg():
 
 def rebase():
     """Rebase onto a branch."""
-    branch = choose_from_combo('Rebase Branch',
+    branch = choose_from_combo(N_('Rebase Branch'),
                                cola.model().all_branches())
     if not branch:
         return
@@ -198,7 +199,7 @@ def choose_ref(title, button_text, default=None):
 
 def review_branch():
     """Diff against an arbitrary revision, branch, tag, etc."""
-    branch = choose_ref('Select Branch to Review', 'Review')
+    branch = choose_ref(N_('Select Branch to Review'), N_('Review'))
     if not branch:
         return
     merge_base = gitcmds.merge_base_parent(branch)
