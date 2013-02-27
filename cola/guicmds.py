@@ -30,16 +30,6 @@ def branch_delete():
     cmds.do(cmds.DeleteBranch, branch)
 
 
-def diff_revision():
-    """Diff an arbitrary revision against the worktree"""
-    ref = choose_ref(N_('Select Revision to Diff'),
-                     N_('Diff'),
-                     default='HEAD^')
-    if not ref:
-        return
-    difftool.diff_commits(qtutils.active_window(), ref, None)
-
-
 def browse_current():
     """Launch the 'Browse Current Branch' dialog."""
     branch = gitcmds.current_branch()

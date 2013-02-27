@@ -224,8 +224,6 @@ class MainView(MainWindow):
         self.menu_help_about = add_action(self,
                 N_('About'), launch_about_dialog)
 
-        self.menu_branch_diff = add_action(self,
-                N_('SHA-1...'), guicmds.diff_revision)
         self.menu_diff_expression = add_action(self,
                 N_('Expression...'), guicmds.diff_expression)
         self.menu_branch_compare = add_action(self,
@@ -342,7 +340,6 @@ class MainView(MainWindow):
 
         # Diff Menu
         self.diff_menu = create_menu(N_('Diff'), self.menubar)
-        self.diff_menu.addAction(self.menu_branch_diff)
         self.diff_menu.addAction(self.menu_diff_expression)
         self.diff_menu.addAction(self.menu_branch_compare)
         self.diff_menu.addSeparator()
