@@ -1,5 +1,5 @@
-git-cola v1.8.2 (DRAFT)
-=======================
+git-cola v1.8.2
+===============
 Usability, bells and whistles
 -----------------------------
 * We now automatically remove missing repositories from the
@@ -18,6 +18,10 @@ Fixes
   the selection when refreshing the editor.
 
   http://github.com/git-cola/git-cola/issues/155
+
+* More strings have been marked for l10n.
+
+  http://github.com/git-cola/git-cola/issues/157
 
 * Fixed the Alt+D Diffstat shortcut.
 
