@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: git-gui\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-14 07:18+0100\n"
+"POT-Creation-Date: 2013-02-26 23:01-0800\n"
 "PO-Revision-Date: 2008-03-12 22:12+0100\n"
 "Last-Translator: Michele Ballabio <barra_cuda@katamail.com>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -17,1256 +17,1270 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: git-gui.sh:41 git-gui.sh:634 git-gui.sh:648 git-gui.sh:661 git-gui.sh:744
-#: git-gui.sh:763
-msgid "git-gui: fatal error"
-msgstr "git-gui: errore grave"
-
-#: git-gui.sh:593
-#, tcl-format
-msgid "Invalid font specified in %s:"
-msgstr "Caratteri non validi specificati in %s:"
-
-#: git-gui.sh:620
-msgid "Main Font"
-msgstr "Caratteri principali"
-
-#: git-gui.sh:621
-msgid "Diff/Console Font"
-msgstr "Caratteri per confronti e terminale"
-
-#: git-gui.sh:635
-msgid "Cannot find git in PATH."
-msgstr "Impossibile trovare git nel PATH"
-
-#: git-gui.sh:662
-msgid "Cannot parse Git version string:"
-msgstr "Impossibile determinare la versione di Git:"
-
-#: git-gui.sh:680
-#, tcl-format
-msgid ""
-"Git version cannot be determined.\n"
-"\n"
-"%s claims it is version '%s'.\n"
-"\n"
-"%s requires at least Git 1.5.0 or later.\n"
-"\n"
-"Assume '%s' is version 1.5.0?\n"
+#: cola/bookmarks.py:32
+msgid "Bookmarks"
 msgstr ""
-"La versione di Git non può essere determinata.\n"
-"\n"
-"%s riporta che la versione è '%s'.\n"
-"\n"
-"%s richiede almeno Git 1.5.0 o superiore.\n"
-"\n"
-"Assumere che '%s' sia alla versione 1.5.0?\n"
 
-#: git-gui.sh:918
-msgid "Git directory not found:"
-msgstr "Non trovo la directory di git: "
+#: cola/bookmarks.py:47
+msgid "Open"
+msgstr "Apri"
 
-#: git-gui.sh:925
-msgid "Cannot move to top of working directory:"
-msgstr "Impossibile spostarsi sulla directory principale del progetto:"
-
-#: git-gui.sh:932
-msgid "Cannot use funny .git directory:"
-msgstr "Impossibile usare una .git directory strana:"
-
-#: git-gui.sh:937
-msgid "No working directory"
-msgstr "Nessuna directory di lavoro"
-
-#: git-gui.sh:1084 lib/checkout_op.tcl:283
-msgid "Refreshing file status..."
-msgstr "Controllo dello stato dei file in corso..."
-
-#: git-gui.sh:1149
-msgid "Scanning for modified files ..."
-msgstr "Ricerca di file modificati in corso..."
-
-#: git-gui.sh:1324 lib/browser.tcl:246
-msgid "Ready."
-msgstr "Pronto."
-
-#: git-gui.sh:1590
-msgid "Unmodified"
-msgstr "Non modificato"
-
-#: git-gui.sh:1592
-msgid "Modified, not staged"
-msgstr "Modificato, non preparato per una nuova revisione"
-
-#: git-gui.sh:1593 git-gui.sh:1598
-msgid "Staged for commit"
-msgstr "Preparato per una nuova revisione"
-
-#: git-gui.sh:1594 git-gui.sh:1599
-msgid "Portions staged for commit"
-msgstr "Parti preparate per una nuova revisione"
-
-#: git-gui.sh:1595 git-gui.sh:1600
-msgid "Staged for commit, missing"
-msgstr "Preparato per una nuova revisione, mancante"
-
-#: git-gui.sh:1597
-msgid "Untracked, not staged"
-msgstr "Non tracciato, non preparato per una nuova revisione"
-
-#: git-gui.sh:1602
-msgid "Missing"
-msgstr "Mancante"
-
-#: git-gui.sh:1603
-msgid "Staged for removal"
-msgstr "Preparato per la rimozione"
-
-#: git-gui.sh:1604
-msgid "Staged for removal, still present"
-msgstr "Preparato alla rimozione, ancora presente"
-
-#: git-gui.sh:1606 git-gui.sh:1607 git-gui.sh:1608 git-gui.sh:1609
-msgid "Requires merge resolution"
-msgstr "Richiede risoluzione dei conflitti"
-
-#: git-gui.sh:1644
-msgid "Starting gitk... please wait..."
-msgstr "Avvio di gitk... attendere..."
-
-#: git-gui.sh:1653
-#, tcl-format
-msgid ""
-"Unable to start gitk:\n"
-"\n"
-"%s does not exist"
+#: cola/bookmarks.py:53
+msgid "Add"
 msgstr ""
-"Impossibile avviare gitk:\n"
-"\n"
-"%s non esiste"
 
-#: git-gui.sh:1860 lib/choose_repository.tcl:36
-msgid "Repository"
-msgstr "Archivio"
-
-#: git-gui.sh:1861
-msgid "Edit"
-msgstr "Modifica"
-
-#: git-gui.sh:1863 lib/choose_rev.tcl:561
-msgid "Branch"
-msgstr "Ramo"
-
-#: git-gui.sh:1866 lib/choose_rev.tcl:548
-msgid "Commit@@noun"
-msgstr "Revisione"
-
-#: git-gui.sh:1869 lib/merge.tcl:120 lib/merge.tcl:149 lib/merge.tcl:167
-msgid "Merge"
-msgstr "Fusione (Merge)"
-
-#: git-gui.sh:1870 lib/choose_rev.tcl:557
-msgid "Remote"
-msgstr "Remoto"
-
-#: git-gui.sh:1879
-msgid "Browse Current Branch's Files"
-msgstr "Esplora i file del ramo attuale"
-
-#: git-gui.sh:1883
-msgid "Browse Branch Files..."
-msgstr "Esplora i file del ramo..."
-
-#: git-gui.sh:1888
-msgid "Visualize Current Branch's History"
-msgstr "Visualizza la cronologia del ramo attuale"
-
-#: git-gui.sh:1892
-msgid "Visualize All Branch History"
-msgstr "Visualizza la cronologia di tutti i rami"
-
-#: git-gui.sh:1899
-#, tcl-format
-msgid "Browse %s's Files"
-msgstr "Esplora i file di %s"
-
-#: git-gui.sh:1901
-#, tcl-format
-msgid "Visualize %s's History"
-msgstr "Visualizza la cronologia di %s"
-
-#: git-gui.sh:1906 lib/database.tcl:27 lib/database.tcl:67
-msgid "Database Statistics"
-msgstr "Statistiche dell'archivio"
-
-#: git-gui.sh:1909 lib/database.tcl:34
-msgid "Compress Database"
-msgstr "Comprimi l'archivio"
-
-#: git-gui.sh:1912
-msgid "Verify Database"
-msgstr "Verifica l'archivio"
-
-#: git-gui.sh:1919 git-gui.sh:1923 git-gui.sh:1927 lib/shortcut.tcl:7
-#: lib/shortcut.tcl:39 lib/shortcut.tcl:71
-msgid "Create Desktop Icon"
-msgstr "Crea icona desktop"
-
-#: git-gui.sh:1932 lib/choose_repository.tcl:177 lib/choose_repository.tcl:185
-msgid "Quit"
-msgstr "Esci"
-
-#: git-gui.sh:1939
-msgid "Undo"
-msgstr "Annulla"
-
-#: git-gui.sh:1942
-msgid "Redo"
-msgstr "Ripeti"
-
-#: git-gui.sh:1946 git-gui.sh:2443
-msgid "Cut"
-msgstr "Taglia"
-
-#: git-gui.sh:1949 git-gui.sh:2446 git-gui.sh:2520 git-gui.sh:2614
-#: lib/console.tcl:69
-msgid "Copy"
-msgstr "Copia"
-
-#: git-gui.sh:1952 git-gui.sh:2449
-msgid "Paste"
-msgstr "Incolla"
-
-#: git-gui.sh:1955 git-gui.sh:2452 lib/branch_delete.tcl:26
-#: lib/remote_branch_delete.tcl:38
+#: cola/bookmarks.py:58 cola/widgets/editremotes.py:127
 msgid "Delete"
 msgstr "Elimina"
 
-#: git-gui.sh:1959 git-gui.sh:2456 git-gui.sh:2618 lib/console.tcl:71
-msgid "Select All"
-msgstr "Seleziona tutto"
+#: cola/bookmarks.py:65 cola/stash/view.py:42 cola/widgets/archive.py:65
+#: cola/widgets/browse.py:117
+msgid "Save"
+msgstr "Salva"
 
-#: git-gui.sh:1968
-msgid "Create..."
-msgstr "Crea..."
+#: cola/bookmarks.py:71 cola/difftool.py:96 cola/qt.py:50 cola/qt.py:232
+#: cola/prefs/view.py:238 cola/stash/view.py:50 cola/stash/view.py:51
+#: cola/widgets/about.py:66 cola/widgets/about.py:125
+#: cola/widgets/browse.py:116 cola/widgets/cfgactions.py:87
+#: cola/widgets/cfgactions.py:239 cola/widgets/compare.py:94
+#: cola/widgets/createbranch.py:159 cola/widgets/createtag.py:104
+#: cola/widgets/editremotes.py:55 cola/widgets/grep.py:74
+#: cola/widgets/recent.py:75 cola/widgets/remote.py:157
+#: cola/widgets/search.py:81 cola/widgets/selectcommits.py:59
+#: cola/widgets/startup.py:44
+msgid "Close"
+msgstr "Chiudi"
 
-#: git-gui.sh:1974
-msgid "Checkout..."
-msgstr "Attiva..."
+#: cola/bookmarks.py:102
+msgid "Bookmarks Saved"
+msgstr ""
 
-#: git-gui.sh:1980
-msgid "Rename..."
-msgstr "Rinomina"
+#: cola/bookmarks.py:103
+msgid "Successfully saved bookmarks"
+msgstr ""
 
-#: git-gui.sh:1985 git-gui.sh:2085
-msgid "Delete..."
-msgstr "Elimina..."
+#: cola/bookmarks.py:107
+#, fuzzy
+msgid "Path to git repository"
+msgstr "%s non è un archivio Git."
 
-#: git-gui.sh:1990
-msgid "Reset..."
-msgstr "Ripristina..."
+#: cola/bookmarks.py:108
+#, fuzzy
+msgid "Enter Git Repository"
+msgstr "Archivio Git"
 
-#: git-gui.sh:2002 git-gui.sh:2389
-msgid "New Commit"
-msgstr "Nuova revisione"
+#: cola/cmds.py:100
+msgid "Amend"
+msgstr ""
 
-#: git-gui.sh:2010 git-gui.sh:2396
-msgid "Amend Last Commit"
-msgstr "Correggi l'ultima revisione"
+#: cola/cmds.py:135
+#, fuzzy
+msgid "Cannot Amend"
+msgstr "Impossibile scrivere icona:"
 
-#: git-gui.sh:2019 git-gui.sh:2356 lib/remote_branch_delete.tcl:99
-msgid "Rescan"
-msgstr "Analizza nuovamente"
+#: cola/cmds.py:136
+msgid ""
+"You are in the middle of a merge.\n"
+"Cannot amend while merging."
+msgstr ""
 
-#: git-gui.sh:2025
-msgid "Stage To Commit"
-msgstr "Prepara per una nuova revisione"
+#: cola/cmds.py:205
+#, python-format
+msgid "PATCH %(current)d/%(count)d"
+msgstr ""
 
-#: git-gui.sh:2031
-msgid "Stage Changed Files To Commit"
-msgstr "Prepara i file modificati per una nuova revisione"
+#: cola/cmds.py:209
+msgid "Summary:"
+msgstr ""
 
-#: git-gui.sh:2037
-msgid "Unstage From Commit"
-msgstr "Annulla preparazione"
+#: cola/cmds.py:218
+msgid "Patch(es) Applied"
+msgstr ""
 
-#: git-gui.sh:2042 lib/index.tcl:395
-msgid "Revert Changes"
-msgstr "Annulla modifiche"
+#: cola/cmds.py:219
+#, python-format
+msgid "%d patch(es) applied."
+msgstr ""
 
-#: git-gui.sh:2049 git-gui.sh:2368 git-gui.sh:2467
-msgid "Sign Off"
-msgstr "Sign Off"
+#: cola/cmds.py:323
+#, fuzzy, python-format
+msgid "Created commit: %s"
+msgstr "Creata revisione %s: %s"
 
-#: git-gui.sh:2053 git-gui.sh:2372
-msgid "Commit@@verb"
-msgstr "Nuova revisione"
+#: cola/cmds.py:325
+#, fuzzy, python-format
+msgid "Commit failed: %s"
+msgstr "Impossibile creare una nuova revisione."
 
-#: git-gui.sh:2064
-msgid "Local Merge..."
-msgstr "Fusione locale..."
+#: cola/cmds.py:370 cola/cmds.py:1125
+#, fuzzy
+msgid "Error"
+msgstr "errore"
 
-#: git-gui.sh:2069
-msgid "Abort Merge..."
-msgstr "Interrompi fusione..."
+#: cola/cmds.py:371
+#, python-format
+msgid "Deleting \"%s\" failed"
+msgstr ""
 
-#: git-gui.sh:2081
-msgid "Push..."
-msgstr "Propaga..."
+#: cola/cmds.py:460 cola/widgets/grep.py:59 cola/widgets/recent.py:69
+msgid "Edit"
+msgstr "Modifica"
 
-#: git-gui.sh:2092 lib/choose_repository.tcl:41
-msgid "Apple"
-msgstr "Apple"
+#: cola/cmds.py:514
+msgid "Launch Diff Tool"
+msgstr ""
 
-#: git-gui.sh:2095 git-gui.sh:2117 lib/about.tcl:14
-#: lib/choose_repository.tcl:44 lib/choose_repository.tcl:50
-#, tcl-format
-msgid "About %s"
-msgstr "Informazioni su %s"
+#: cola/cmds.py:528
+msgid "Launch Editor"
+msgstr ""
 
-#: git-gui.sh:2099
-msgid "Preferences..."
-msgstr "Preferenze..."
+#: cola/cmds.py:549
+msgid "Error: Cannot find commit template"
+msgstr ""
 
-#: git-gui.sh:2107 git-gui.sh:2639
-msgid "Options..."
-msgstr "Opzioni..."
-
-#: git-gui.sh:2113 lib/choose_repository.tcl:47
-msgid "Help"
-msgstr "Aiuto"
-
-#: git-gui.sh:2154
-msgid "Online Documentation"
-msgstr "Documentazione sul web"
-
-#: git-gui.sh:2238
-#, tcl-format
-msgid "fatal: cannot stat path %s: No such file or directory"
+#: cola/cmds.py:550
+#, fuzzy, python-format
+msgid "%s: No such file or directory."
 msgstr ""
 "errore grave: impossibile effettuare lo stat del path %s: file o directory "
 "non trovata"
 
-#: git-gui.sh:2271
-msgid "Current Branch:"
-msgstr "Ramo attuale:"
-
-#: git-gui.sh:2292
-msgid "Staged Changes (Will Commit)"
-msgstr "Modifiche preparate (saranno nella nuova revisione)"
-
-#: git-gui.sh:2312
-msgid "Unstaged Changes"
-msgstr "Modifiche non preparate"
-
-#: git-gui.sh:2362
-msgid "Stage Changed"
-msgstr "Prepara modificati"
-
-#: git-gui.sh:2378 lib/transport.tcl:93 lib/transport.tcl:182
-msgid "Push"
-msgstr "Propaga (Push)"
-
-#: git-gui.sh:2408
-msgid "Initial Commit Message:"
-msgstr "Messaggio di revisione iniziale:"
-
-#: git-gui.sh:2409
-msgid "Amended Commit Message:"
-msgstr "Messaggio di revisione corretto:"
-
-#: git-gui.sh:2410
-msgid "Amended Initial Commit Message:"
-msgstr "Messaggio iniziale di revisione corretto:"
-
-#: git-gui.sh:2411
-msgid "Amended Merge Commit Message:"
-msgstr "Messaggio di fusione corretto:"
-
-#: git-gui.sh:2412
-msgid "Merge Commit Message:"
-msgstr "Messaggio di fusione:"
-
-#: git-gui.sh:2413
-msgid "Commit Message:"
-msgstr "Messaggio di revisione:"
-
-#: git-gui.sh:2459 git-gui.sh:2622 lib/console.tcl:73
-msgid "Copy All"
-msgstr "Copia tutto"
-
-#: git-gui.sh:2483 lib/blame.tcl:107
-msgid "File:"
-msgstr "File:"
-
-#: git-gui.sh:2589
-msgid "Apply/Reverse Hunk"
-msgstr "Applica/Inverti sezione"
-
-#: git-gui.sh:2595
-msgid "Show Less Context"
-msgstr "Mostra meno contesto"
-
-#: git-gui.sh:2602
-msgid "Show More Context"
-msgstr "Mostra più contesto"
-
-#: git-gui.sh:2610
-msgid "Refresh"
-msgstr "Rinfresca"
-
-#: git-gui.sh:2631
-msgid "Decrease Font Size"
-msgstr "Diminuisci dimensione caratteri"
-
-#: git-gui.sh:2635
-msgid "Increase Font Size"
-msgstr "Aumenta dimensione caratteri"
-
-#: git-gui.sh:2646
-msgid "Unstage Hunk From Commit"
-msgstr "Sezione non preparata per una nuova revisione"
-
-#: git-gui.sh:2648
-msgid "Stage Hunk For Commit"
-msgstr "Prepara sezione per una nuova revisione"
-
-#: git-gui.sh:2667
-msgid "Initializing..."
-msgstr "Inizializzazione..."
-
-#: git-gui.sh:2762
-#, tcl-format
-msgid ""
-"Possible environment issues exist.\n"
-"\n"
-"The following environment variables are probably\n"
-"going to be ignored by any Git subprocess run\n"
-"by %s:\n"
-"\n"
+#: cola/cmds.py:567
+msgid "Error: Unconfigured commit template"
 msgstr ""
-"Possibili problemi con le variabili d'ambiente.\n"
-"\n"
-"Le seguenti variabili d'ambiente saranno probabilmente\n"
-"ignorate da tutti i sottoprocessi di Git avviati\n"
-"da %s:\n"
-"\n"
 
-#: git-gui.sh:2792
+#: cola/cmds.py:568
 msgid ""
-"\n"
-"This is due to a known issue with the\n"
-"Tcl binary distributed by Cygwin."
+"A commit template has not been configured.\n"
+"Use \"git config\" to define \"commit.template\"\n"
+"so that it points to a commit template."
 msgstr ""
-"\n"
-"Ciò è dovuto a un problema conosciuto\n"
-"causato dall'eseguibile Tcl distribuito da Cygwin."
 
-#: git-gui.sh:2797
-#, tcl-format
-msgid ""
-"\n"
-"\n"
-"A good replacement for %s\n"
-"is placing values for the user.name and\n"
-"user.email settings into your personal\n"
-"~/.gitconfig file.\n"
+#: cola/cmds.py:637
+msgid "Open Using Default Application"
 msgstr ""
-"\n"
-"\n"
-"Una buona alternativa a %s\n"
-"consiste nell'assegnare valori alle variabili di configurazione\n"
-"user.name e user.email nel tuo file ~/.gitconfig personale.\n"
 
-#: lib/about.tcl:26
-msgid "git-gui - a graphical user interface for Git."
-msgstr "git-gui - un'interfaccia grafica per Git."
+#: cola/cmds.py:660
+#, fuzzy
+msgid "Open Parent Directory"
+msgstr "Apri archivio recente:"
 
-#: lib/blame.tcl:77
-msgid "File Viewer"
-msgstr "Mostra file"
+#: cola/cmds.py:700
+#, python-format
+msgid "Error: could not clone \"%s\""
+msgstr ""
 
-#: lib/blame.tcl:81
-msgid "Commit:"
-msgstr "Revisione:"
+#: cola/cmds.py:701
+#, python-format
+msgid "git clone returned exit code %s"
+msgstr ""
 
-#: lib/blame.tcl:264
-msgid "Copy Commit"
-msgstr "Copia revisione"
+#: cola/cmds.py:724 cola/widgets/action.py:19
+msgid "Rescan"
+msgstr "Analizza nuovamente"
 
-#: lib/blame.tcl:384
-#, tcl-format
-msgid "Reading %s..."
-msgstr "Lettura di %s..."
+#: cola/cmds.py:752
+#, python-format
+msgid "Run \"%s\"?"
+msgstr ""
 
-#: lib/blame.tcl:488
-msgid "Loading copy/move tracking annotations..."
-msgstr "Caricamento annotazioni per copie/spostamenti..."
-
-#: lib/blame.tcl:508
-msgid "lines annotated"
-msgstr "linee annotate"
-
-#: lib/blame.tcl:689
-msgid "Loading original location annotations..."
-msgstr "Caricamento annotazioni per posizione originaria..."
-
-#: lib/blame.tcl:692
-msgid "Annotation complete."
-msgstr "Annotazione completata."
-
-#: lib/blame.tcl:746
-msgid "Loading annotation..."
-msgstr "Caricamento annotazioni..."
-
-#: lib/blame.tcl:802
-msgid "Author:"
-msgstr "Autore:"
-
-#: lib/blame.tcl:806
-msgid "Committer:"
-msgstr "Revisione creata da:"
-
-#: lib/blame.tcl:811
-msgid "Original File:"
-msgstr "File originario:"
-
-#: lib/blame.tcl:925
-msgid "Originally By:"
-msgstr "In origine da:"
-
-#: lib/blame.tcl:931
-msgid "In File:"
-msgstr "Nel file:"
-
-#: lib/blame.tcl:936
-msgid "Copied Or Moved Here By:"
-msgstr "Copiato o spostato qui da:"
-
-#: lib/branch_checkout.tcl:14 lib/branch_checkout.tcl:19
-msgid "Checkout Branch"
-msgstr "Attiva ramo"
-
-#: lib/branch_checkout.tcl:23
-msgid "Checkout"
-msgstr "Attiva"
-
-#: lib/branch_checkout.tcl:27 lib/branch_create.tcl:35
-#: lib/branch_delete.tcl:32 lib/branch_rename.tcl:30 lib/browser.tcl:282
-#: lib/checkout_op.tcl:522 lib/choose_font.tcl:43 lib/merge.tcl:171
-#: lib/option.tcl:103 lib/remote_branch_delete.tcl:42 lib/transport.tcl:97
-msgid "Cancel"
-msgstr "Annulla"
-
-#: lib/branch_checkout.tcl:32 lib/browser.tcl:287
-msgid "Revision"
-msgstr "Revisione"
-
-#: lib/branch_checkout.tcl:36 lib/branch_create.tcl:69 lib/option.tcl:242
-msgid "Options"
-msgstr "Opzioni"
-
-#: lib/branch_checkout.tcl:39 lib/branch_create.tcl:92
-msgid "Fetch Tracking Branch"
-msgstr "Recupera duplicato locale di ramo remoto"
-
-#: lib/branch_checkout.tcl:44
-msgid "Detach From Local Branch"
-msgstr "Stacca da ramo locale"
-
-#: lib/branch_create.tcl:22
-msgid "Create Branch"
-msgstr "Crea ramo"
-
-#: lib/branch_create.tcl:27
-msgid "Create New Branch"
-msgstr "Crea nuovo ramo"
-
-#: lib/branch_create.tcl:31 lib/choose_repository.tcl:371
-msgid "Create"
-msgstr "Crea"
-
-#: lib/branch_create.tcl:40
-msgid "Branch Name"
-msgstr "Nome del ramo"
-
-#: lib/branch_create.tcl:43
-msgid "Name:"
-msgstr "Nome:"
-
-#: lib/branch_create.tcl:58
-msgid "Match Tracking Branch Name"
-msgstr "Appaia nome del duplicato locale di ramo remoto"
-
-#: lib/branch_create.tcl:66
-msgid "Starting Revision"
-msgstr "Revisione iniziale"
-
-#: lib/branch_create.tcl:72
-msgid "Update Existing Branch:"
-msgstr "Aggiorna ramo esistente:"
-
-#: lib/branch_create.tcl:75
-msgid "No"
-msgstr "No"
-
-#: lib/branch_create.tcl:80
-msgid "Fast Forward Only"
-msgstr "Solo fast forward"
-
-#: lib/branch_create.tcl:85 lib/checkout_op.tcl:514
-msgid "Reset"
-msgstr "Ripristina"
-
-#: lib/branch_create.tcl:97
-msgid "Checkout After Creation"
-msgstr "Attiva dopo la creazione"
-
-#: lib/branch_create.tcl:131
-msgid "Please select a tracking branch."
+#: cola/cmds.py:759
+#, fuzzy
+msgid "Please select a file"
 msgstr "Scegliere un duplicato locale di ramo remoto"
 
-#: lib/branch_create.tcl:140
-#, tcl-format
-msgid "Tracking branch %s is not a branch in the remote repository."
+#: cola/cmds.py:760
+#, python-format
+msgid "\"%s\" requires a selected file."
 msgstr ""
-"Il duplicato locale del ramo remoto %s non è un ramo nell'archivio remoto."
 
-#: lib/branch_create.tcl:153 lib/branch_rename.tcl:86
-msgid "Please supply a branch name."
-msgstr "Inserire un nome per il ramo."
+#: cola/cmds.py:772
+#, fuzzy
+msgid "Invalid Revision"
+msgstr "Revisione non valida: %s"
 
-#: lib/branch_create.tcl:164 lib/branch_rename.tcl:106
-#, tcl-format
-msgid "'%s' is not an acceptable branch name."
-msgstr "'%s' non è utilizzabile come nome di ramo."
+#: cola/cmds.py:773
+#, fuzzy
+msgid "The revision expression cannot be empty."
+msgstr "L'espressione di revisione è vuota."
 
-#: lib/branch_delete.tcl:15
+#: cola/cmds.py:788
+#, python-format
+msgid "Running command: %s"
+msgstr ""
+
+#: cola/cmds.py:797 cola/cmds.py:968 cola/interaction.py:70
+#, python-format
+msgid "Output: %s"
+msgstr ""
+
+#: cola/cmds.py:798 cola/interaction.py:71 cola/widgets/startup.py:168
+#, python-format
+msgid "Errors: %s"
+msgstr ""
+
+#: cola/cmds.py:843
+msgid "Sign Off"
+msgstr "Sign Off"
+
+#: cola/cmds.py:864
+msgid "unknown"
+msgstr ""
+
+#: cola/cmds.py:877 cola/widgets/action.py:17
+#, fuzzy
+msgid "Stage"
+msgstr "Salva"
+
+#: cola/cmds.py:884
+#, fuzzy, python-format
+msgid "Staging: %s"
+msgstr "Analisi in corso %s..."
+
+#: cola/cmds.py:896
+msgid "Stage Modified"
+msgstr ""
+
+#: cola/cmds.py:910
+#, fuzzy
+msgid "Stage Unmerged"
+msgstr "Prepara modificati"
+
+#: cola/cmds.py:924
+#, fuzzy
+msgid "Stage Untracked"
+msgstr "Prepara modificati"
+
+#: cola/cmds.py:942
+#, python-format
+msgid "Tagging \"%(revision)s\" as \"%(name)s\""
+msgstr ""
+
+#: cola/cmds.py:950
+msgid "GPG-signed"
+msgstr ""
+
+#: cola/cmds.py:982 cola/widgets/action.py:18
+#, fuzzy
+msgid "Unstage"
+msgstr "Modifiche non preparate"
+
+#: cola/cmds.py:989
+#, fuzzy, python-format
+msgid "Unstaging: %s"
+msgstr "%s non farà parte della prossima revisione"
+
+#: cola/cmds.py:1016
+#, python-format
+msgid "Untracking: %s"
+msgstr ""
+
+#: cola/difftool.py:76
+msgid "git-cola diff"
+msgstr ""
+
+#: cola/difftool.py:92 cola/widgets/compare.py:90
+msgid "Compare"
+msgstr ""
+
+#: cola/gitcmds.py:394
+#, fuzzy
+msgid "Nothing to do"
+msgstr "Niente da clonare da %s."
+
+#: cola/guicmds.py:26
 msgid "Delete Branch"
 msgstr "Elimina ramo"
 
-#: lib/branch_delete.tcl:20
-msgid "Delete Local Branch"
-msgstr "Elimina ramo locale"
+#: cola/guicmds.py:42
+#, fuzzy
+msgid "Browse Revision..."
+msgstr "Revisione"
 
-#: lib/branch_delete.tcl:37
-msgid "Local Branches"
-msgstr "Rami locali"
+#: cola/guicmds.py:50
+msgid "Checkout Branch"
+msgstr "Attiva ramo"
 
-#: lib/branch_delete.tcl:52
-msgid "Delete Only If Merged Into"
-msgstr "Cancella solo se fuso con un altro ramo"
+#: cola/guicmds.py:60
+#, fuzzy
+msgid "Cherry-Pick Commit"
+msgstr "Copia revisione"
 
-#: lib/branch_delete.tcl:54
-msgid "Always (Do not perform merge test.)"
-msgstr "Sempre (Non effettuare verifiche di fusione)."
-
-#: lib/branch_delete.tcl:103
-#, tcl-format
-msgid "The following branches are not completely merged into %s:"
-msgstr "I rami seguenti non sono stati fusi completamente in %s:"
-
-#: lib/branch_delete.tcl:115
-msgid ""
-"Recovering deleted branches is difficult. \n"
-"\n"
-" Delete the selected branches?"
+#: cola/guicmds.py:74
+msgid "Path or URL to clone (Env. $VARS okay)"
 msgstr ""
-"Ricomporre rami cancellati può essere complicato. \n"
-"\n"
-" Eliminare i rami selezionati?"
 
-#: lib/branch_delete.tcl:141
-#, tcl-format
-msgid ""
-"Failed to delete branches:\n"
-"%s"
+#: cola/guicmds.py:95
+#, fuzzy
+msgid "Error Cloning"
+msgstr "Errore nel caricamento del file:"
+
+#: cola/guicmds.py:96 cola/guicmds.py:97
+#, python-format
+msgid "Could not parse Git URL: \"%s\""
 msgstr ""
-"Impossibile cancellare i rami:\n"
-"%s"
 
-#: lib/branch_rename.tcl:14 lib/branch_rename.tcl:22
-msgid "Rename Branch"
-msgstr "Rinomina ramo"
-
-#: lib/branch_rename.tcl:26
-msgid "Rename"
-msgstr "Rinomina"
-
-#: lib/branch_rename.tcl:36
-msgid "Branch:"
-msgstr "Ramo:"
-
-#: lib/branch_rename.tcl:39
-msgid "New Name:"
-msgstr "Nuovo Nome:"
-
-#: lib/branch_rename.tcl:75
-msgid "Please select a branch to rename."
-msgstr "Scegliere un ramo da rinominare."
-
-#: lib/branch_rename.tcl:96 lib/checkout_op.tcl:179
-#, tcl-format
-msgid "Branch '%s' already exists."
-msgstr "Il ramo '%s' esiste già."
-
-#: lib/branch_rename.tcl:117
-#, tcl-format
-msgid "Failed to rename '%s'."
-msgstr "Impossibile rinominare '%s'."
-
-#: lib/browser.tcl:17
-msgid "Starting..."
-msgstr "Avvio in corso..."
-
-#: lib/browser.tcl:26
-msgid "File Browser"
-msgstr "File browser"
-
-#: lib/browser.tcl:126 lib/browser.tcl:143
-#, tcl-format
-msgid "Loading %s..."
-msgstr "Caricamento %s..."
-
-#: lib/browser.tcl:187
-msgid "[Up To Parent]"
-msgstr "[Directory superiore]"
-
-#: lib/browser.tcl:267 lib/browser.tcl:273
-msgid "Browse Branch Files"
-msgstr "Esplora i file del ramo"
-
-#: lib/browser.tcl:278 lib/choose_repository.tcl:387
-#: lib/choose_repository.tcl:474 lib/choose_repository.tcl:484
-#: lib/choose_repository.tcl:987
-msgid "Browse"
-msgstr "Esplora"
-
-#: lib/checkout_op.tcl:79
-#, tcl-format
-msgid "Fetching %s from %s"
-msgstr "Recupero %s da %s"
-
-#: lib/checkout_op.tcl:127
-#, tcl-format
-msgid "fatal: Cannot resolve %s"
-msgstr "errore grave: impossibile risolvere %s"
-
-#: lib/checkout_op.tcl:140 lib/console.tcl:81 lib/database.tcl:31
-msgid "Close"
-msgstr "Chiudi"
-
-#: lib/checkout_op.tcl:169
-#, tcl-format
-msgid "Branch '%s' does not exist."
-msgstr "Il ramo '%s' non esiste."
-
-#: lib/checkout_op.tcl:206
-#, tcl-format
-msgid ""
-"Branch '%s' already exists.\n"
-"\n"
-"It cannot fast-forward to %s.\n"
-"A merge is required."
+#: cola/guicmds.py:101
+msgid "Select a parent directory for the new clone"
 msgstr ""
-"Il ramo '%s' esiste già.\n"
-"\n"
-"Non può effettuare un 'fast-forward' a %s.\n"
-"E' necessaria una fusione."
 
-#: lib/checkout_op.tcl:220
-#, tcl-format
-msgid "Merge strategy '%s' not supported."
-msgstr "La strategia di fusione '%s' non è supportata."
-
-#: lib/checkout_op.tcl:239
-#, tcl-format
-msgid "Failed to update '%s'."
-msgstr "Impossibile aggiornare '%s'."
-
-#: lib/checkout_op.tcl:251
-msgid "Staging area (index) is already locked."
+#: cola/guicmds.py:111
+#, python-format
+msgid "\"%s\" already exists, cola will create a new directory"
 msgstr ""
-"L'area di preparazione per una nuova revisione (indice) è già bloccata."
 
-#: lib/checkout_op.tcl:266
-msgid ""
-"Last scanned state does not match repository state.\n"
-"\n"
-"Another Git program has modified this repository since the last scan.  A "
-"rescan must be performed before the current branch can be changed.\n"
-"\n"
-"The rescan will be automatically started now.\n"
+#: cola/guicmds.py:127 cola/widgets/search.py:75
+msgid "Export Patches"
 msgstr ""
-"L'ultimo stato analizzato non corrisponde allo stato dell'archivio.\n"
-"\n"
-"Un altro programma Git ha modificato questo archivio dall'ultima analisi. "
-"Bisogna effettuare una nuova analisi prima di poter cambiare il ramo "
-"attuale.\n"
-"\n"
-"La nuova analisi comincerà ora.\n"
 
-#: lib/checkout_op.tcl:322
-#, tcl-format
-msgid "Updating working directory to '%s'..."
-msgstr "Aggiornamento della directory di lavoro a '%s' in corso..."
-
-#: lib/checkout_op.tcl:323
-msgid "files checked out"
-msgstr "file presenti nella directory di lavoro"
-
-#: lib/checkout_op.tcl:353
-#, tcl-format
-msgid "Aborted checkout of '%s' (file level merging is required)."
-msgstr "Attivazione di '%s' fallita (richiesta una fusione a livello file)."
-
-#: lib/checkout_op.tcl:354
-msgid "File level merge required."
-msgstr "E' richiesta una fusione a livello file."
-
-#: lib/checkout_op.tcl:358
-#, tcl-format
-msgid "Staying on branch '%s'."
-msgstr "Si rimarrà sul ramo '%s'."
-
-#: lib/checkout_op.tcl:429
-msgid ""
-"You are no longer on a local branch.\n"
-"\n"
-"If you wanted to be on a branch, create one now starting from 'This Detached "
-"Checkout'."
-msgstr ""
-"Non si è più su un ramo locale\n"
-"\n"
-"Se si vuole rimanere su un ramo, crearne uno ora a partire da 'Questa "
-"revisione attiva staccata'."
-
-#: lib/checkout_op.tcl:446 lib/checkout_op.tcl:450
-#, tcl-format
-msgid "Checked out '%s'."
-msgstr "Attivazione di '%s' completata."
-
-#: lib/checkout_op.tcl:478
-#, tcl-format
-msgid "Resetting '%s' to '%s' will lose the following commits:"
-msgstr ""
-"Ripristinare '%s' a '%s' comporterà la perdita delle seguenti revisioni:"
-
-#: lib/checkout_op.tcl:500
-msgid "Recovering lost commits may not be easy."
-msgstr "Ricomporre le revisioni perdute potrebbe non essere semplice."
-
-#: lib/checkout_op.tcl:505
-#, tcl-format
-msgid "Reset '%s'?"
-msgstr "Ripristinare '%s'?"
-
-#: lib/checkout_op.tcl:510 lib/merge.tcl:163
-msgid "Visualize"
-msgstr "Visualizza"
-
-#: lib/checkout_op.tcl:578
-#, tcl-format
-msgid ""
-"Failed to set current branch.\n"
-"\n"
-"This working directory is only partially switched.  We successfully updated "
-"your files, but failed to update an internal Git file.\n"
-"\n"
-"This should not have occurred.  %s will now close and give up."
-msgstr ""
-"Impossibile preparare il ramo attuale.\n"
-"\n"
-"Questa directory di lavoro è stata convertita solo parzialmente. I file sono "
-"stati aggiornati correttamente, ma l'aggiornamento di un file di Git ha "
-"prodotto degli errori.\n"
-"\n"
-"Questo non sarebbe dovuto succedere.  %s ora terminerà senza altre azioni."
-
-#: lib/choose_font.tcl:39
-msgid "Select"
-msgstr "Seleziona"
-
-#: lib/choose_font.tcl:53
-msgid "Font Family"
-msgstr "Famiglia di caratteri"
-
-#: lib/choose_font.tcl:74
-msgid "Font Size"
-msgstr "Dimensione caratteri"
-
-#: lib/choose_font.tcl:91
-msgid "Font Example"
-msgstr "Esempio caratteri"
-
-#: lib/choose_font.tcl:103
-msgid ""
-"This is example text.\n"
-"If you like this text, it can be your font."
-msgstr ""
-"Questo è un testo d'esempio.\n"
-"Se ti piace questo testo, scegli questo carattere."
-
-#: lib/choose_repository.tcl:28
-msgid "Git Gui"
-msgstr "Git Gui"
-
-#: lib/choose_repository.tcl:81 lib/choose_repository.tcl:376
-msgid "Create New Repository"
-msgstr "Crea nuovo archivio"
-
-#: lib/choose_repository.tcl:87
-msgid "New..."
-msgstr "Nuovo..."
-
-#: lib/choose_repository.tcl:94 lib/choose_repository.tcl:460
-msgid "Clone Existing Repository"
-msgstr "Clona archivio esistente"
-
-#: lib/choose_repository.tcl:100
-msgid "Clone..."
-msgstr "Clona..."
-
-#: lib/choose_repository.tcl:107 lib/choose_repository.tcl:976
-msgid "Open Existing Repository"
+#: cola/guicmds.py:156 cola/widgets/startup.py:126
+#, fuzzy
+msgid "Open Git Repository..."
 msgstr "Apri archivio esistente"
 
-#: lib/choose_repository.tcl:113
+#: cola/guicmds.py:165 cola/main/view.py:165
+#, fuzzy
+msgid "Load Commit Message..."
+msgstr "Messaggio di revisione:"
+
+#: cola/guicmds.py:173
+#, fuzzy
+msgid "Rebase Branch"
+msgstr "Rinomina ramo"
+
+#: cola/guicmds.py:189
+#, fuzzy
+msgid "Select Branch to Review"
+msgstr "Elimina ramo"
+
+#: cola/guicmds.py:189
+msgid "Review"
+msgstr ""
+
+#: cola/inotify.py:45
+msgid ""
+"file notification: disabled\n"
+"Note: install pywin32 to enable.\n"
+msgstr ""
+
+#: cola/inotify.py:48
+msgid ""
+"inotify: disabled\n"
+"Note: install python-pyinotify to enable inotify.\n"
+msgstr ""
+
+#: cola/inotify.py:54
+msgid "On Debian systems try: sudo aptitude install python-pyinotify"
+msgstr ""
+
+#: cola/inotify.py:63
+#, fuzzy
+msgid "File notification enabled."
+msgstr "Fidati delle date di modifica dei file"
+
+#: cola/inotify.py:65
+msgid "inotify enabled."
+msgstr ""
+
+#: cola/interaction.py:53
+msgid "Continue"
+msgstr "Continua"
+
+#: cola/interaction.py:63
+#, python-format
+msgid "Run %s?"
+msgstr ""
+
+#: cola/interaction.py:64
+#, python-format
+msgid "Run the \"%s\" command?"
+msgstr ""
+
+#: cola/interaction.py:65 cola/widgets/cfgactions.py:240
+msgid "Run"
+msgstr ""
+
+#: cola/interaction.py:72
+#, python-format
+msgid "Exit code: %s"
+msgstr ""
+
+#: cola/qt.py:57 cola/qt.py:93
+#, fuzzy
+msgid "Detach"
+msgstr "Elimina ramo"
+
+#: cola/qt.py:91
+msgid "Attach"
+msgstr ""
+
+#: cola/qtutils.py:396
+#, fuzzy
+msgid "Close..."
+msgstr "Clona..."
+
+#: cola/classic/controller.py:69
+msgid "Select Previous Version"
+msgstr ""
+
+#: cola/classic/model.py:36 cola/widgets/createtag.py:51
+#: cola/widgets/editremotes.py:219
+#, fuzzy
+msgid "Name"
+msgstr "Nome:"
+
+#: cola/classic/model.py:37 cola/main/view.py:93
+msgid "Status"
+msgstr ""
+
+#: cola/classic/model.py:38 cola/dag/view.py:366
+msgid "Age"
+msgstr ""
+
+#: cola/classic/model.py:39 cola/widgets/createtag.py:74
+#, fuzzy
+msgid "Message"
+msgstr "Fusione (Merge)"
+
+#: cola/classic/model.py:40 cola/dag/view.py:366
+#, fuzzy
+msgid "Author"
+msgstr "Autore:"
+
+#: cola/classic/model.py:337
+#, python-format
+msgid "%d minutes ago"
+msgstr ""
+
+#: cola/classic/model.py:340
+#, python-format
+msgid "%d hours ago"
+msgstr ""
+
+#: cola/classic/model.py:341
+#, python-format
+msgid "%d days ago"
+msgstr ""
+
+#: cola/classic/model.py:354 cola/widgets/status.py:80
+#, fuzzy
+msgid "Unmerged"
+msgstr "Fusione (Merge)"
+
+#: cola/classic/model.py:356
+msgid "Partially Staged"
+msgstr ""
+
+#: cola/classic/model.py:358 cola/widgets/status.py:81
+#, fuzzy
+msgid "Modified"
+msgstr "Non modificato"
+
+#: cola/classic/model.py:360 cola/widgets/status.py:79
+#, fuzzy
+msgid "Staged"
+msgstr "Prepara modificati"
+
+#: cola/classic/model.py:362
+msgid "Changed Upstream"
+msgstr ""
+
+#: cola/classic/view.py:47 cola/main/view.py:512
+#, fuzzy, python-format
+msgid "Repository: %s"
+msgstr "Archivio:"
+
+#: cola/classic/view.py:49 cola/main/view.py:514
+#, fuzzy, python-format
+msgid "Branch: %s"
+msgstr "Ramo:"
+
+#: cola/classic/view.py:54 cola/main/view.py:519
+msgid "Amending"
+msgstr ""
+
+#: cola/classic/view.py:79
+msgid "View History..."
+msgstr ""
+
+#: cola/classic/view.py:80
+msgid "View history for selected path(s)."
+msgstr ""
+
+#: cola/classic/view.py:84 cola/widgets/status.py:460
+#: cola/widgets/status.py:506 cola/widgets/status.py:559
+#, fuzzy
+msgid "Stage Selected"
+msgstr "Seleziona"
+
+#: cola/classic/view.py:85
+#, fuzzy
+msgid "Stage selected path(s) for commit."
+msgstr "Preparato per una nuova revisione"
+
+#: cola/classic/view.py:90 cola/widgets/status.py:408
+#: cola/widgets/status.py:446
+msgid "Unstage Selected"
+msgstr ""
+
+#: cola/classic/view.py:91
+msgid "Remove selected path(s) from the staging area."
+msgstr ""
+
+#: cola/classic/view.py:96
+msgid "Untrack Selected"
+msgstr ""
+
+#: cola/classic/view.py:97
+msgid "Stop tracking path(s)"
+msgstr ""
+
+#: cola/classic/view.py:102
+msgid "Launch git-difftool on the current path."
+msgstr ""
+
+#: cola/classic/view.py:106
+msgid "Diff Against Predecessor..."
+msgstr ""
+
+#: cola/classic/view.py:107
+msgid "Launch git-difftool against previous versions."
+msgstr ""
+
+#: cola/classic/view.py:111
+#, fuzzy
+msgid "Revert Uncommitted Changes..."
+msgstr "Annulla modifiche"
+
+#: cola/classic/view.py:112
+#, fuzzy
+msgid "Revert changes to selected path(s)."
+msgstr "Annullare le modifiche nel file %s?"
+
+#: cola/classic/view.py:117
+msgid "Edit selected path(s)."
+msgstr ""
+
+#: cola/classic/view.py:293 cola/widgets/status.py:619
+#, fuzzy
+msgid "Revert Uncommitted Changes?"
+msgstr "Annulla modifiche"
+
+#: cola/classic/view.py:294 cola/widgets/diff.py:228 cola/widgets/diff.py:241
+#: cola/widgets/status.py:620
+msgid ""
+"This operation drops uncommitted changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+#: cola/classic/view.py:296 cola/widgets/diff.py:230 cola/widgets/diff.py:243
+#: cola/widgets/status.py:622
+msgid "Revert the uncommitted changes?"
+msgstr ""
+
+#: cola/classic/view.py:297 cola/widgets/status.py:623
+#, fuzzy
+msgid "Revert Uncommitted Changes"
+msgstr "Annulla modifiche"
+
+#: cola/dag/view.py:164
+#, fuzzy
+msgid "Loading..."
+msgstr "Caricamento %s..."
+
+#: cola/dag/view.py:269
+msgid "Diff this -> selected"
+msgstr ""
+
+#: cola/dag/view.py:272
+msgid "Diff selected -> this"
+msgstr ""
+
+#: cola/dag/view.py:275 cola/widgets/createbranch.py:89
+#: cola/widgets/createbranch.py:98 cola/widgets/createbranch.py:155
+#: cola/widgets/createbranch.py:330
+msgid "Create Branch"
+msgstr "Crea ramo"
+
+#: cola/dag/view.py:278
+#, fuzzy
+msgid "Create Patch"
+msgstr "Crea ramo"
+
+#: cola/dag/view.py:281 cola/widgets/createtag.py:38
+#: cola/widgets/createtag.py:99
+#, fuzzy
+msgid "Create Tag"
+msgstr "Crea"
+
+#: cola/dag/view.py:284 cola/main/view.py:168
+msgid "Save As Tarball/Zip..."
+msgstr ""
+
+#: cola/dag/view.py:287 cola/widgets/search.py:78
+msgid "Cherry Pick"
+msgstr ""
+
+#: cola/dag/view.py:290
+msgid "Grab File..."
+msgstr ""
+
+#: cola/dag/view.py:293
+#, fuzzy
+msgid "Copy SHA-1"
+msgstr "Copia tutto"
+
+#: cola/dag/view.py:366
+msgid "Summary"
+msgstr ""
+
+#: cola/dag/view.py:373
+msgid "Go Up"
+msgstr ""
+
+#: cola/dag/view.py:376
+msgid "Go Down"
+msgstr ""
+
+#: cola/dag/view.py:506
+msgid "Display"
+msgstr ""
+
+#: cola/dag/view.py:1168
+msgid "Zoom In"
+msgstr ""
+
+#: cola/dag/view.py:1171
+msgid "Zoom Out"
+msgstr ""
+
+#: cola/dag/view.py:1174
+msgid "Zoom to Fit"
+msgstr ""
+
+#: cola/dag/view.py:1177
+#, fuzzy
+msgid "Select Parent"
+msgstr "Seleziona"
+
+#: cola/dag/view.py:1180
+msgid "Select Oldest Parent"
+msgstr ""
+
+#: cola/dag/view.py:1183
+#, fuzzy
+msgid "Select Child"
+msgstr "Seleziona tutto"
+
+#: cola/dag/view.py:1186
+msgid "Select Newest Child"
+msgstr ""
+
+#: cola/main/view.py:80
+#, fuzzy
+msgid "Browser"
+msgstr "Esplora"
+
+#: cola/main/view.py:85
+#, fuzzy
+msgid "Action"
+msgstr "Opzioni"
+
+#: cola/main/view.py:101 cola/merge/view.py:45
+#, fuzzy
+msgid "Commit"
+msgstr "Revisione:"
+
+#: cola/main/view.py:110
+#, fuzzy
+msgid "Console"
+msgstr "Chiudi"
+
+#: cola/main/view.py:116 cola/main/view.py:342
+msgid "Diff"
+msgstr ""
+
+#: cola/main/view.py:122 cola/widgets/status.py:368
+msgid "Unstage All"
+msgstr ""
+
+#: cola/main/view.py:126
+msgid "Unstage From Commit"
+msgstr "Annulla preparazione"
+
+#: cola/main/view.py:130
+msgid "Diffstat"
+msgstr ""
+
+#: cola/main/view.py:133
+msgid "Stage Changed Files To Commit"
+msgstr "Prepara i file modificati per una nuova revisione"
+
+#: cola/main/view.py:138
+msgid "Stage All Untracked"
+msgstr ""
+
+#: cola/main/view.py:143
+msgid "Export Patches..."
+msgstr ""
+
+#: cola/main/view.py:145 cola/prefs/view.py:217
+msgid "Preferences"
+msgstr "Preferenze"
+
+#: cola/main/view.py:149
+msgid "Edit Remotes..."
+msgstr ""
+
+#: cola/main/view.py:157
+#, fuzzy
+msgid "Recently Modified Files..."
+msgstr "Ricerca di file modificati in corso..."
+
+#: cola/main/view.py:161
+#, fuzzy
+msgid "Cherry-Pick..."
+msgstr "Attiva..."
+
+#: cola/main/view.py:171
+msgid "Quit"
+msgstr "Esci"
+
+#: cola/main/view.py:173
+msgid "Bookmarks..."
+msgstr ""
+
+#: cola/main/view.py:175
+msgid "Grep"
+msgstr ""
+
+#: cola/main/view.py:177
+#, fuzzy
+msgid "Merge..."
+msgstr "Fusione (Merge)"
+
+#: cola/main/view.py:180 cola/merge/__init__.py:20
+msgid "Abort Merge..."
+msgstr "Interrompi fusione..."
+
+#: cola/main/view.py:183 cola/widgets/action.py:20
+#, fuzzy
+msgid "Fetch..."
+msgstr "Ripristina..."
+
+#: cola/main/view.py:185 cola/widgets/action.py:21
+msgid "Push..."
+msgstr "Propaga..."
+
+#: cola/main/view.py:187 cola/widgets/action.py:22
+#, fuzzy
+msgid "Pull..."
+msgstr "Propaga..."
+
+#: cola/main/view.py:190 cola/widgets/startup.py:38
 msgid "Open..."
 msgstr "Apri..."
 
-#: lib/choose_repository.tcl:126
-msgid "Recent Repositories"
-msgstr "Archivi recenti"
+#: cola/main/view.py:194 cola/widgets/action.py:23
+#, fuzzy
+msgid "Stash..."
+msgstr "Propaga..."
 
-#: lib/choose_repository.tcl:132
-msgid "Open Recent Repository:"
+#: cola/main/view.py:197 cola/widgets/startup.py:41
+msgid "Clone..."
+msgstr "Clona..."
+
+#: cola/main/view.py:201
+#, fuzzy
+msgid "Documentation"
+msgstr "Documentazione sul web"
+
+#: cola/main/view.py:205
+msgid "Keyboard Shortcuts"
+msgstr ""
+
+#: cola/main/view.py:210
+#, fuzzy
+msgid "Visualize Current Branch..."
+msgstr "Visualizza la cronologia del ramo attuale"
+
+#: cola/main/view.py:213
+#, fuzzy
+msgid "Visualize All Branches..."
+msgstr "Visualizza la cronologia di tutti i rami"
+
+#: cola/main/view.py:216
+#, fuzzy
+msgid "Search..."
+msgstr "Avvio in corso..."
+
+#: cola/main/view.py:218
+#, fuzzy
+msgid "Browse Current Branch..."
+msgstr "Esplora i file del ramo attuale"
+
+#: cola/main/view.py:220
+#, fuzzy
+msgid "Browse Other Branch..."
+msgstr "Esplora i file del ramo..."
+
+#: cola/main/view.py:222
+#, fuzzy
+msgid "Get Commit Message Template"
+msgstr "Larghezza del messaggio di revisione"
+
+#: cola/main/view.py:225
+#, fuzzy
+msgid "About"
+msgstr "Informazioni su %s"
+
+#: cola/main/view.py:228
+#, fuzzy
+msgid "Expression..."
+msgstr "Opzioni..."
+
+#: cola/main/view.py:230
+#, fuzzy
+msgid "Branches..."
+msgstr "Rami"
+
+#: cola/main/view.py:233
+#, fuzzy
+msgid "Create Tag..."
+msgstr "Crea..."
+
+#: cola/main/view.py:236
+msgid "Create..."
+msgstr "Crea..."
+
+#: cola/main/view.py:239
+msgid "Delete..."
+msgstr "Elimina..."
+
+#: cola/main/view.py:242
+msgid "Checkout..."
+msgstr "Attiva..."
+
+#: cola/main/view.py:244
+#, fuzzy
+msgid "Rebase..."
+msgstr "Ripristina..."
+
+#: cola/main/view.py:246
+#, fuzzy
+msgid "Review..."
+msgstr "Ripristina..."
+
+#: cola/main/view.py:249
+#, fuzzy
+msgid "Browser..."
+msgstr "Esplora"
+
+#: cola/main/view.py:253
+msgid "DAG..."
+msgstr ""
+
+#: cola/main/view.py:270
+#, fuzzy
+msgid "File"
+msgstr "File:"
+
+#: cola/main/view.py:274
+#, fuzzy
+msgid "Open Recent"
 msgstr "Apri archivio recente:"
 
-#: lib/choose_repository.tcl:296 lib/choose_repository.tcl:303
-#: lib/choose_repository.tcl:310
-#, tcl-format
-msgid "Failed to create repository %s:"
-msgstr "Impossibile creare l'archivio %s:"
+#: cola/main/view.py:293 cola/main/view.py:294 cola/widgets/commitmsg.py:49
+#: cola/widgets/commitmsg.py:65
+msgid "Commit@@verb"
+msgstr "Nuova revisione"
 
-#: lib/choose_repository.tcl:381 lib/choose_repository.tcl:478
-msgid "Directory:"
-msgstr "Directory:"
+#: cola/main/view.py:306
+msgid "Branch"
+msgstr "Ramo"
 
-#: lib/choose_repository.tcl:412 lib/choose_repository.tcl:537
-#: lib/choose_repository.tcl:1011
-msgid "Git Repository"
-msgstr "Archivio Git"
+#: cola/main/view.py:323
+#, fuzzy
+msgid "Actions"
+msgstr "Opzioni"
 
-#: lib/choose_repository.tcl:437
-#, tcl-format
-msgid "Directory %s already exists."
-msgstr "La directory %s esiste già."
-
-#: lib/choose_repository.tcl:441
-#, tcl-format
-msgid "File %s already exists."
-msgstr "Il file %s esiste già."
-
-#: lib/choose_repository.tcl:455
-msgid "Clone"
-msgstr "Clona"
-
-#: lib/choose_repository.tcl:468
-msgid "URL:"
-msgstr "URL:"
-
-#: lib/choose_repository.tcl:489
-msgid "Clone Type:"
-msgstr "Tipo di clone:"
-
-#: lib/choose_repository.tcl:495
-msgid "Standard (Fast, Semi-Redundant, Hardlinks)"
-msgstr "Standard (veloce, semi-ridondante, con hardlink)"
-
-#: lib/choose_repository.tcl:501
-msgid "Full Copy (Slower, Redundant Backup)"
-msgstr "Copia completa (più lento, backup ridondante)"
-
-#: lib/choose_repository.tcl:507
-msgid "Shared (Fastest, Not Recommended, No Backup)"
-msgstr "Shared (il più veloce, non raccomandato, nessun backup)"
-
-#: lib/choose_repository.tcl:543 lib/choose_repository.tcl:590
-#: lib/choose_repository.tcl:736 lib/choose_repository.tcl:806
-#: lib/choose_repository.tcl:1017 lib/choose_repository.tcl:1025
-#, tcl-format
-msgid "Not a Git repository: %s"
-msgstr "%s non è un archivio Git."
-
-#: lib/choose_repository.tcl:579
-msgid "Standard only available for local repository."
-msgstr "Standard è disponibile solo per archivi locali."
-
-#: lib/choose_repository.tcl:583
-msgid "Shared only available for local repository."
-msgstr "Shared è disponibile solo per archivi locali."
-
-#: lib/choose_repository.tcl:604
-#, tcl-format
-msgid "Location %s already exists."
-msgstr "Il file/directory %s esiste già."
-
-#: lib/choose_repository.tcl:615
-msgid "Failed to configure origin"
-msgstr "Impossibile configurare origin"
-
-#: lib/choose_repository.tcl:627
-msgid "Counting objects"
-msgstr "Calcolo oggetti"
-
-#: lib/choose_repository.tcl:628
-msgid "buckets"
+#: cola/main/view.py:351
+msgid "Tools"
 msgstr ""
 
-#: lib/choose_repository.tcl:652
-#, tcl-format
-msgid "Unable to copy objects/info/alternates: %s"
-msgstr "Impossibile copiare oggetti/info/alternate: %s"
+#: cola/main/view.py:362
+msgid "Help"
+msgstr "Aiuto"
 
-#: lib/choose_repository.tcl:688
-#, tcl-format
-msgid "Nothing to clone from %s."
-msgstr "Niente da clonare da %s."
-
-#: lib/choose_repository.tcl:690 lib/choose_repository.tcl:904
-#: lib/choose_repository.tcl:916
-msgid "The 'master' branch has not been initialized."
-msgstr "Il ramo 'master' non è stato inizializzato."
-
-#: lib/choose_repository.tcl:703
-msgid "Hardlinks are unavailable.  Falling back to copying."
-msgstr "Impossibile utilizzare gli hardlink. Si ricorrerà alla copia."
-
-#: lib/choose_repository.tcl:715
-#, tcl-format
-msgid "Cloning from %s"
-msgstr "Clonazione da %s"
-
-#: lib/choose_repository.tcl:746
-msgid "Copying objects"
-msgstr "Copia degli oggetti"
-
-#: lib/choose_repository.tcl:747
-msgid "KiB"
-msgstr "KiB"
-
-#: lib/choose_repository.tcl:771
-#, tcl-format
-msgid "Unable to copy object: %s"
-msgstr "Impossibile copiare oggetto: %s"
-
-#: lib/choose_repository.tcl:781
-msgid "Linking objects"
-msgstr "Collegamento oggetti"
-
-#: lib/choose_repository.tcl:782
-msgid "objects"
-msgstr "oggetti"
-
-#: lib/choose_repository.tcl:790
-#, tcl-format
-msgid "Unable to hardlink object: %s"
-msgstr "Hardlink impossibile sull'oggetto: %s"
-
-#: lib/choose_repository.tcl:845
-msgid "Cannot fetch branches and objects.  See console output for details."
+#: cola/main/view.py:428
+#, python-format
+msgid "git-cola version %s"
 msgstr ""
-"Impossibile recuperare rami e oggetti. Controllare i dettagli forniti dalla "
-"console."
 
-#: lib/choose_repository.tcl:856
-msgid "Cannot fetch tags.  See console output for details."
+#: cola/merge/__init__.py:21
+#, fuzzy
+msgid ""
+"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Recovering uncommitted changes is not possible."
 msgstr ""
-"Impossibile recuperare le etichette. Controllare i dettagli forniti dalla "
-"console."
+"Interrompere fusione?\n"
+"\n"
+"L'interruzione della fusione attuale causerà la perdita di *TUTTE* le "
+"modifiche non ancora presenti nell'archivio.\n"
+"\n"
+"Continuare con l'interruzione della fusione attuale?"
 
-#: lib/choose_repository.tcl:880
-msgid "Cannot determine HEAD.  See console output for details."
+#: cola/merge/__init__.py:24
+msgid "Aborting the current merge?"
 msgstr ""
-"Impossibile determinare HEAD. Controllare i dettagli forniti dalla console."
 
-#: lib/choose_repository.tcl:889
-#, tcl-format
-msgid "Unable to cleanup %s"
-msgstr "Impossibile ripulire %s"
+#: cola/merge/__init__.py:25
+#, fuzzy
+msgid "Abort Merge"
+msgstr "Interrompi fusione..."
 
-#: lib/choose_repository.tcl:895
-msgid "Clone failed."
-msgstr "Clonazione non riuscita."
+#: cola/merge/view.py:23
+msgid "Revision To Merge"
+msgstr "Revisione da fondere"
 
-#: lib/choose_repository.tcl:902
-msgid "No default branch obtained."
-msgstr "Non è stato trovato un ramo predefinito."
-
-#: lib/choose_repository.tcl:913
-#, tcl-format
-msgid "Cannot resolve %s as a commit."
-msgstr "Impossibile risolvere %s come una revisione."
-
-#: lib/choose_repository.tcl:925
-msgid "Creating working directory"
-msgstr "Creazione directory di lavoro"
-
-#: lib/choose_repository.tcl:926 lib/index.tcl:65 lib/index.tcl:127
-#: lib/index.tcl:193
-msgid "files"
-msgstr "file"
-
-#: lib/choose_repository.tcl:955
-msgid "Initial file checkout failed."
-msgstr "Attivazione iniziale non riuscita."
-
-#: lib/choose_repository.tcl:971
-msgid "Open"
-msgstr "Apri"
-
-#: lib/choose_repository.tcl:981
-msgid "Repository:"
-msgstr "Archivio:"
-
-#: lib/choose_repository.tcl:1031
-#, tcl-format
-msgid "Failed to open repository %s:"
-msgstr "Impossibile accedere all'archivio %s:"
-
-#: lib/choose_rev.tcl:53
-msgid "This Detached Checkout"
-msgstr "Questa revisione attiva staccata"
-
-#: lib/choose_rev.tcl:60
-msgid "Revision Expression:"
-msgstr "Espressione di revisione:"
-
-#: lib/choose_rev.tcl:74
+#: cola/merge/view.py:28 cola/widgets/cfgactions.py:220
+#: cola/widgets/createbranch.py:115 cola/widgets/remote.py:122
 msgid "Local Branch"
 msgstr "Ramo locale"
 
-#: lib/choose_rev.tcl:79
+#: cola/merge/view.py:31 cola/widgets/cfgactions.py:221
+#: cola/widgets/createbranch.py:119
 msgid "Tracking Branch"
 msgstr "Duplicato locale di ramo remoto"
 
-#: lib/choose_rev.tcl:84 lib/choose_rev.tcl:538
+#: cola/merge/view.py:33 cola/widgets/cfgactions.py:222
+#: cola/widgets/createbranch.py:122
 msgid "Tag"
 msgstr "Etichetta"
 
-#: lib/choose_rev.tcl:317
-#, tcl-format
-msgid "Invalid revision: %s"
-msgstr "Revisione non valida: %s"
+#: cola/merge/view.py:39
+msgid "Visualize"
+msgstr "Visualizza"
 
-#: lib/choose_rev.tcl:338
-msgid "No revision selected."
+#: cola/merge/view.py:42
+#, fuzzy
+msgid "Squash"
+msgstr "Propaga (Push)"
+
+#: cola/merge/view.py:50 cola/widgets/archive.py:62
+#: cola/widgets/editremotes.py:204
+msgid "Cancel"
+msgstr "Annulla"
+
+#: cola/merge/view.py:53
+msgid "Merge"
+msgstr "Fusione (Merge)"
+
+#: cola/merge/view.py:115
+#, python-format
+msgid "Merge \"%(revision)s\" into \"%(branch)s\""
+msgstr ""
+
+#: cola/merge/view.py:118
+#, fuzzy, python-format
+msgid "Merge into \"%s\""
+msgstr "Fusione in %s"
+
+#: cola/merge/view.py:162 cola/merge/view.py:171
+#, fuzzy
+msgid "No Revision Specified"
 msgstr "Nessuna revisione selezionata."
 
-#: lib/choose_rev.tcl:346
-msgid "Revision expression is empty."
-msgstr "L'espressione di revisione è vuota."
-
-#: lib/choose_rev.tcl:531
-msgid "Updated"
-msgstr "Aggiornato"
-
-#: lib/choose_rev.tcl:559
-msgid "URL"
-msgstr "URL"
-
-#: lib/commit.tcl:9
-msgid ""
-"There is nothing to amend.\n"
-"\n"
-"You are about to create the initial commit.  There is no commit before this "
-"to amend.\n"
+#: cola/merge/view.py:163
+msgid "You must specify a revision to view."
 msgstr ""
-"Non c'è niente da correggere.\n"
-"\n"
-"Stai per creare la revisione iniziale. Non esiste una revisione precedente "
-"da correggere.\n"
 
-#: lib/commit.tcl:18
-msgid ""
-"Cannot amend while merging.\n"
-"\n"
-"You are currently in the middle of a merge that has not been fully "
-"completed.  You cannot amend the prior commit unless you first abort the "
-"current merge activity.\n"
+#: cola/merge/view.py:172
+msgid "You must specify a revision to merge."
 msgstr ""
-"Non è possibile effettuare una correzione durante una fusione.\n"
-"\n"
-"In questo momento si sta effettuando una fusione che non è stata del tutto "
-"completata. Non puoi correggere la revisione precedente a meno che prima tu "
-"non interrompa l'operazione di fusione in corso.\n"
 
-#: lib/commit.tcl:49
-msgid "Error loading commit data for amend:"
-msgstr "Errore durante il caricamento dei dati della revisione da correggere:"
+#: cola/prefs/view.py:115
+msgid "User Name"
+msgstr "Nome utente"
 
-#: lib/commit.tcl:76
-msgid "Unable to obtain your identity:"
-msgstr "Impossibile ottenere la tua identità:"
+#: cola/prefs/view.py:116
+msgid "Email Address"
+msgstr "Indirizzo Email"
 
-#: lib/commit.tcl:81
-msgid "Invalid GIT_COMMITTER_IDENT:"
-msgstr "GIT_COMMITTER_IDENT non valida:"
+#: cola/prefs/view.py:117
+msgid "Merge Verbosity"
+msgstr "Prolissità della fusione"
 
-#: lib/commit.tcl:133
-msgid ""
-"Last scanned state does not match repository state.\n"
-"\n"
-"Another Git program has modified this repository since the last scan.  A "
-"rescan must be performed before another commit can be created.\n"
-"\n"
-"The rescan will be automatically started now.\n"
+#: cola/prefs/view.py:118
+msgid "Number of Diff Context Lines"
+msgstr "Numero di linee di contesto nelle differenze"
+
+#: cola/prefs/view.py:119
+msgid "Summarize Merge Commits"
+msgstr "Riepilogo nelle revisioni di fusione"
+
+#: cola/prefs/view.py:120
+msgid "Show Diffstat After Merge"
+msgstr "Mostra statistiche delle differenze dopo la fusione"
+
+#: cola/prefs/view.py:160
+msgid "Fixed-Width Font"
 msgstr ""
-"L'ultimo stato analizzato non corrisponde allo stato dell'archivio.\n"
-"\n"
-"Un altro programma Git ha modificato questo archivio dall'ultima analisi. "
-"Bisogna effettuare una nuova analisi prima di poter creare una nuova "
-"revisione.\n"
-"\n"
-"La nuova analisi comincerà ora.\n"
 
-#: lib/commit.tcl:154
-#, tcl-format
-msgid ""
-"Unmerged files cannot be committed.\n"
-"\n"
-"File %s has merge conflicts.  You must resolve them and stage the file "
-"before committing.\n"
+#: cola/prefs/view.py:161
+msgid "Font Size"
+msgstr "Dimensione caratteri"
+
+#: cola/prefs/view.py:162
+msgid "Tab Width"
 msgstr ""
-"Non è possibile creare una revisione con file non sottoposti a fusione.\n"
-"\n"
-"Il file %s presenta dei conflitti. Devi risolverli e preparare il file per "
-"creare una nuova revisione prima di effettuare questa azione.\n"
 
-#: lib/commit.tcl:162
-#, tcl-format
-msgid ""
-"Unknown file state %s detected.\n"
-"\n"
-"File %s cannot be committed by this program.\n"
+#: cola/prefs/view.py:163
+msgid "Text Width"
 msgstr ""
-"Stato di file %s sconosciuto.\n"
-"\n"
-"Questo programma non può creare una revisione contenente il file %s.\n"
 
-#: lib/commit.tcl:170
-msgid ""
-"No changes to commit.\n"
-"\n"
-"You must stage at least 1 file before you can commit.\n"
+#: cola/prefs/view.py:164 cola/widgets/commitmsg.py:86
+msgid "Auto-Wrap Lines"
 msgstr ""
-"Nessuna modifica per la nuova revisione.\n"
-"\n"
-"Devi preparare per una nuova revisione almeno 1 file prima di effettuare "
-"questa operazione.\n"
 
-#: lib/commit.tcl:183
+#: cola/prefs/view.py:165
+#, fuzzy
+msgid "Editor"
+msgstr "Modifica"
+
+#: cola/prefs/view.py:166
+#, fuzzy
+msgid "History Browser"
+msgstr "File browser"
+
+#: cola/prefs/view.py:167
+msgid "Diff Tool"
+msgstr ""
+
+#: cola/prefs/view.py:168
+#, fuzzy
+msgid "Merge Tool"
+msgstr "Fusione (Merge)"
+
+#: cola/prefs/view.py:169
+msgid "Keep *.orig Merge Backups"
+msgstr ""
+
+#: cola/prefs/view.py:170
+msgid "Save GUI Settings"
+msgstr ""
+
+#: cola/prefs/view.py:224
+#, fuzzy
+msgid "All Repositories"
+msgstr "Tutti gli archivi"
+
+#: cola/prefs/view.py:225
+#, fuzzy
+msgid "Current Repository"
+msgstr "Crea nuovo archivio"
+
+#: cola/prefs/view.py:226
+#, fuzzy
+msgid "Settings"
+msgstr "Avvio in corso..."
+
+#: cola/stash/view.py:28
+msgid "Stash"
+msgstr ""
+
+#: cola/stash/view.py:38
+#, fuzzy
+msgid "Apply"
+msgstr "Apple"
+
+#: cola/stash/view.py:39
+msgid "Apply the selected stash"
+msgstr ""
+
+#: cola/stash/view.py:43
+msgid "Save modified state to new stash"
+msgstr ""
+
+#: cola/stash/view.py:46
+msgid "Drop"
+msgstr ""
+
+#: cola/stash/view.py:47
+msgid "Drop the selected stash"
+msgstr ""
+
+#: cola/stash/view.py:54
+msgid "Keep Index"
+msgstr ""
+
+#: cola/stash/view.py:175
+msgid "Save Stash"
+msgstr ""
+
+#: cola/stash/view.py:176
+msgid "Enter a name for the stash"
+msgstr ""
+
+#: cola/stash/view.py:182
+msgid "Error: Stash exists"
+msgstr ""
+
+#: cola/stash/view.py:183
+#, fuzzy, python-format
+msgid "A stash named \"%s\" already exists"
+msgstr "Il file %s esiste già."
+
+#: cola/stash/view.py:198
+msgid "Drop Stash?"
+msgstr ""
+
+#: cola/stash/view.py:199
+#, fuzzy
+msgid "Recovering a dropped stash is not possible."
+msgstr "Ricomporre le revisioni perdute potrebbe non essere semplice."
+
+#: cola/stash/view.py:200
+#, python-format
+msgid "Drop the \"%s\" stash?"
+msgstr ""
+
+#: cola/stash/view.py:201
+msgid "Drop Stash"
+msgstr ""
+
+#: cola/widgets/about.py:47
+msgid "About git-cola"
+msgstr ""
+
+#: cola/widgets/about.py:97
+msgid ""
+"This PyQt4 does not include QtWebKit.\n"
+"The keyboard shortcuts feature is unavailable."
+msgstr ""
+
+#: cola/widgets/archive.py:46
+msgid "Save Archive"
+msgstr ""
+
+#: cola/widgets/archive.py:69
+msgid "Prefix"
+msgstr ""
+
+#: cola/widgets/archive.py:74
+msgid "Advanced"
+msgstr ""
+
+#: cola/widgets/archive.py:141 cola/widgets/browse.py:49
+msgid "File Saved"
+msgstr ""
+
+#: cola/widgets/archive.py:142 cola/widgets/browse.py:50
+#, python-format
+msgid "File saved to \"%s\""
+msgstr ""
+
+#: cola/widgets/archive.py:149
+msgid "Overwrite File?"
+msgstr ""
+
+#: cola/widgets/archive.py:150
+#, python-format
+msgid "The file \"%s\" exists and will be overwritten."
+msgstr ""
+
+#: cola/widgets/archive.py:151
+#, python-format
+msgid "Overwrite \"%s\"?"
+msgstr ""
+
+#: cola/widgets/archive.py:152
+msgid "Overwrite"
+msgstr ""
+
+#: cola/widgets/browse.py:42
+#, python-format
+msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
+msgstr ""
+
+#: cola/widgets/browse.py:63
+#, fuzzy, python-format
+msgid "Browsing %s"
+msgstr "Aggiunta di %s in corso"
+
+#: cola/widgets/browse.py:81
+#, fuzzy, python-format
+msgid "Select file from \"%s\""
+msgstr "Cancellazione rami da %s"
+
+#: cola/widgets/browse.py:90
+#, fuzzy
+msgid "Select File"
+msgstr "Seleziona tutto"
+
+#: cola/widgets/browse.py:117 cola/widgets/selectcommits.py:54
+msgid "Select"
+msgstr "Seleziona"
+
+#: cola/widgets/cfgactions.py:85
+#, fuzzy
+msgid "Abort"
+msgstr "Interruzione"
+
+#: cola/widgets/cfgactions.py:147 cola/widgets/cfgactions.py:151
+#, fuzzy
+msgid "Abort Action"
+msgstr "Interruzione"
+
+#: cola/widgets/cfgactions.py:148
+msgid ""
+"An action is still running.\n"
+"Terminating it could result in data loss."
+msgstr ""
+
+#: cola/widgets/cfgactions.py:150
+msgid "Abort the action?"
+msgstr ""
+
+#: cola/widgets/cfgactions.py:201
+msgid "Arguments"
+msgstr ""
+
+#: cola/widgets/cfgactions.py:226 cola/widgets/createtag.py:85
+msgid "Revision"
+msgstr "Revisione"
+
+#: cola/widgets/commitmsg.py:46
+#, fuzzy
+msgid "Sign off on this commit"
+msgstr "Preparato per una nuova revisione"
+
+#: cola/widgets/commitmsg.py:52
+#, fuzzy
+msgid "Commit staged changes"
+msgstr "Archiviazione modifiche..."
+
+#: cola/widgets/commitmsg.py:63
+msgid ""
+"Commit staged changes\n"
+"Shortcut: Ctrl+Enter"
+msgstr ""
+
+#: cola/widgets/commitmsg.py:71
+#, fuzzy
+msgid "Actions..."
+msgstr "Opzioni..."
+
+#: cola/widgets/commitmsg.py:80
+msgid "Amend Last Commit"
+msgstr "Correggi l'ultima revisione"
+
+#: cola/widgets/commitmsg.py:91
+#, fuzzy
+msgid "Load Previous Commit Message"
+msgstr "Messaggio di fusione:"
+
+#: cola/widgets/commitmsg.py:323
 msgid ""
 "Please supply a commit message.\n"
 "\n"
@@ -1284,711 +1298,1801 @@ msgstr ""
 "- Seconda linea: vuota.\n"
 "- Terza linea: spiega a cosa serve la tua modifica.\n"
 
-#: lib/commit.tcl:207
-#, tcl-format
-msgid "warning: Tcl does not support encoding '%s'."
-msgstr "attenzione: Tcl non supporta la codifica '%s'."
+#: cola/widgets/commitmsg.py:330
+#, fuzzy
+msgid "Missing Commit Message"
+msgstr "Messaggio di fusione:"
 
-#: lib/commit.tcl:221
-msgid "Calling pre-commit hook..."
-msgstr "Avvio pre-commit hook..."
-
-#: lib/commit.tcl:236
-msgid "Commit declined by pre-commit hook."
-msgstr "Revisione rifiutata dal pre-commit hook."
-
-#: lib/commit.tcl:259
-msgid "Calling commit-msg hook..."
-msgstr "Avvio commit-msg hook..."
-
-#: lib/commit.tcl:274
-msgid "Commit declined by commit-msg hook."
-msgstr "Revisione rifiutata dal commit-msg hook."
-
-#: lib/commit.tcl:287
-msgid "Committing changes..."
-msgstr "Archiviazione modifiche..."
-
-#: lib/commit.tcl:303
-msgid "write-tree failed:"
-msgstr "write-tree non riuscito:"
-
-#: lib/commit.tcl:304 lib/commit.tcl:348 lib/commit.tcl:368
-msgid "Commit failed."
-msgstr "Impossibile creare una nuova revisione."
-
-#: lib/commit.tcl:321
-#, tcl-format
-msgid "Commit %s appears to be corrupt"
-msgstr "La revisione %s sembra essere danneggiata"
-
-#: lib/commit.tcl:326
+#: cola/widgets/commitmsg.py:336
+#, fuzzy
 msgid ""
 "No changes to commit.\n"
 "\n"
-"No files were modified by this commit and it was not a merge commit.\n"
-"\n"
-"A rescan will be automatically started now.\n"
+"You must stage at least 1 file before you can commit."
 msgstr ""
 "Nessuna modifica per la nuova revisione.\n"
 "\n"
-"Questa revisione non modifica alcun file e non effettua alcuna fusione.\n"
-"\n"
-"Si procederà subito ad una nuova analisi.\n"
+"Devi preparare per una nuova revisione almeno 1 file prima di effettuare "
+"questa operazione.\n"
 
-#: lib/commit.tcl:333
-msgid "No changes to commit."
+#: cola/widgets/commitmsg.py:340
+msgid "Would you like to stage and commit all modified files?"
+msgstr ""
+
+#: cola/widgets/commitmsg.py:342
+#, fuzzy
+msgid "Stage and commit?"
+msgstr "Preparato per una nuova revisione"
+
+#: cola/widgets/commitmsg.py:345
+#, fuzzy
+msgid "Stage and Commit"
+msgstr "Prepara per una nuova revisione"
+
+#: cola/widgets/commitmsg.py:350
+#, fuzzy
+msgid "Nothing to commit"
 msgstr "Nessuna modifica per la nuova revisione."
 
-#: lib/commit.tcl:347
-msgid "commit-tree failed:"
-msgstr "commit-tree non riuscito:"
+#: cola/widgets/commitmsg.py:357
+msgid "Rewrite Published Commit?"
+msgstr ""
 
-#: lib/commit.tcl:367
-msgid "update-ref failed:"
-msgstr "update-ref non riuscito:"
-
-#: lib/commit.tcl:454
-#, tcl-format
-msgid "Created commit %s: %s"
-msgstr "Creata revisione %s: %s"
-
-#: lib/console.tcl:59
-msgid "Working... please wait..."
-msgstr "Elaborazione in corso... attendere..."
-
-#: lib/console.tcl:186
-msgid "Success"
-msgstr "Successo"
-
-#: lib/console.tcl:200
-msgid "Error: Command Failed"
-msgstr "Errore: comando non riuscito"
-
-#: lib/database.tcl:43
-msgid "Number of loose objects"
-msgstr "Numero di oggetti slegati"
-
-#: lib/database.tcl:44
-msgid "Disk space used by loose objects"
-msgstr "Spazio su disco utilizzato da oggetti slegati"
-
-#: lib/database.tcl:45
-msgid "Number of packed objects"
-msgstr "Numero di oggetti impacchettati"
-
-#: lib/database.tcl:46
-msgid "Number of packs"
-msgstr "Numero di pacchetti"
-
-#: lib/database.tcl:47
-msgid "Disk space used by packed objects"
-msgstr "Spazio su disco utilizzato da oggetti impacchettati"
-
-#: lib/database.tcl:48
-msgid "Packed objects waiting for pruning"
-msgstr "Oggetti impacchettati che attendono la potatura"
-
-#: lib/database.tcl:49
-msgid "Garbage files"
-msgstr "File inutili"
-
-#: lib/database.tcl:72
-msgid "Compressing the object database"
-msgstr "Compressione dell'archivio in corso"
-
-#: lib/database.tcl:83
-msgid "Verifying the object database with fsck-objects"
-msgstr "Verifica dell'archivio con fsck-objects in corso"
-
-#: lib/database.tcl:108
-#, tcl-format
+#: cola/widgets/commitmsg.py:358
 msgid ""
-"This repository currently has approximately %i loose objects.\n"
-"\n"
-"To maintain optimal performance it is strongly recommended that you compress "
-"the database when more than %i loose objects exist.\n"
-"\n"
-"Compress the database now?"
+"This commit has already been published.\n"
+"This operation will rewrite published history.\n"
+"You probably don't want to do this."
 msgstr ""
-"Questo archivio attualmente ha circa %i oggetti slegati.\n"
-"\n"
-"Per mantenere buone prestazioni si raccomanda di comprimere l'archivio "
-"quando sono presenti più di %i oggetti slegati.\n"
-"\n"
-"Comprimere l'archivio ora?"
 
-#: lib/date.tcl:25
-#, tcl-format
-msgid "Invalid date from Git: %s"
-msgstr "Git ha restituito una data non valida: %s"
-
-#: lib/diff.tcl:42
-#, tcl-format
-msgid ""
-"No differences detected.\n"
-"\n"
-"%s has no changes.\n"
-"\n"
-"The modification date of this file was updated by another application, but "
-"the content within the file was not changed.\n"
-"\n"
-"A rescan will be automatically started to find other files which may have "
-"the same state."
+#: cola/widgets/commitmsg.py:361
+msgid "Amend the published commit?"
 msgstr ""
-"Non sono state trovate differenze.\n"
-"\n"
-"%s non ha modifiche.\n"
-"\n"
-"La data di modifica di questo file è stata cambiata da un'altra "
-"applicazione, ma il contenuto del file è rimasto invariato.\n"
-"\n"
-"Si procederà automaticamente ad una nuova analisi per trovare altri file che "
-"potrebbero avere lo stesso stato."
 
-#: lib/diff.tcl:81
-#, tcl-format
-msgid "Loading diff of %s..."
-msgstr "Caricamento delle differenze di %s..."
+#: cola/widgets/commitmsg.py:362
+#, fuzzy
+msgid "Amend Commit"
+msgstr "Correggi l'ultima revisione"
 
-#: lib/diff.tcl:114 lib/diff.tcl:184
-#, tcl-format
-msgid "Unable to display %s"
-msgstr "Impossibile visualizzare %s"
+#: cola/widgets/commitmsg.py:367
+#, fuzzy
+msgid "Commit failed"
+msgstr "Impossibile creare una nuova revisione."
 
-#: lib/diff.tcl:115
-msgid "Error loading file:"
-msgstr "Errore nel caricamento del file:"
-
-#: lib/diff.tcl:122
-msgid "Git Repository (subproject)"
-msgstr "Archivio Git (sottoprogetto)"
-
-#: lib/diff.tcl:134
-msgid "* Binary file (not showing content)."
-msgstr "* File binario (il contenuto non sarà mostrato)."
-
-#: lib/diff.tcl:185
-msgid "Error loading diff:"
-msgstr "Errore nel caricamento delle differenze:"
-
-#: lib/diff.tcl:303
-msgid "Failed to unstage selected hunk."
-msgstr "Impossibile rimuovere la sezione scelta dalla nuova revisione."
-
-#: lib/diff.tcl:310
-msgid "Failed to stage selected hunk."
-msgstr "Impossibile preparare la sezione scelta per una nuova revisione."
-
-#: lib/error.tcl:20 lib/error.tcl:114
-msgid "error"
-msgstr "errore"
-
-#: lib/error.tcl:36
-msgid "warning"
-msgstr "attenzione"
-
-#: lib/error.tcl:94
-msgid "You must correct the above errors before committing."
+#: cola/widgets/commitmsg.py:368
+#, python-format
+msgid "\"git commit\" returned exit code %s"
 msgstr ""
-"Bisogna correggere gli errori suddetti prima di creare una nuova revisione."
 
-#: lib/index.tcl:6
-msgid "Unable to unlock the index."
-msgstr "Impossibile sbloccare l'accesso all'indice"
+#: cola/widgets/commitmsg.py:390
+#, fuzzy
+msgid "More..."
+msgstr "Clona..."
 
-#: lib/index.tcl:15
-msgid "Index Error"
-msgstr "Errore nell'indice"
+#: cola/widgets/commitmsg.py:394
+#, fuzzy
+msgid "Select Commit Message"
+msgstr "Messaggio di fusione:"
 
-#: lib/index.tcl:21
-msgid ""
-"Updating the Git index failed.  A rescan will be automatically started to "
-"resynchronize git-gui."
+#: cola/widgets/commitmsg.py:404
+#, fuzzy
+msgid "Commit summary"
+msgstr "Messaggio di revisione:"
+
+#: cola/widgets/commitmsg.py:433
+msgid "Extended description..."
 msgstr ""
-"Impossibile aggiornare l'indice. Ora sarà avviata una nuova analisi che "
-"aggiornerà git-gui."
 
-#: lib/index.tcl:27
-msgid "Continue"
-msgstr "Continua"
-
-#: lib/index.tcl:31
-msgid "Unlock Index"
-msgstr "Sblocca l'accesso all'indice"
-
-#: lib/index.tcl:282
-#, tcl-format
-msgid "Unstaging %s from commit"
-msgstr "%s non farà parte della prossima revisione"
-
-#: lib/index.tcl:313
-msgid "Ready to commit."
-msgstr "Pronto per creare una nuova revisione."
-
-#: lib/index.tcl:326
-#, tcl-format
-msgid "Adding %s"
-msgstr "Aggiunta di %s in corso"
-
-#: lib/index.tcl:381
-#, tcl-format
-msgid "Revert changes in file %s?"
-msgstr "Annullare le modifiche nel file %s?"
-
-#: lib/index.tcl:383
-#, tcl-format
-msgid "Revert changes in these %i files?"
-msgstr "Annullare le modifiche in questi %i file?"
-
-#: lib/index.tcl:391
-msgid "Any unstaged changes will be permanently lost by the revert."
+#: cola/widgets/compare.py:37
+msgid "*** Branch Point ***"
 msgstr ""
-"Tutte le modifiche non preparate per una nuova revisione saranno perse per "
-"sempre."
 
-#: lib/index.tcl:394
-msgid "Do Nothing"
-msgstr "Non fare niente"
-
-#: lib/merge.tcl:13
-msgid ""
-"Cannot merge while amending.\n"
-"\n"
-"You must finish amending this commit before starting any type of merge.\n"
+#: cola/widgets/compare.py:38
+msgid "*** Sandbox ***"
 msgstr ""
-"Non posso effettuare fusioni durante una correzione.\n"
-"\n"
-"Bisogna finire di correggere questa revisione prima di iniziare una "
-"qualunque fusione.\n"
 
-#: lib/merge.tcl:27
-msgid ""
-"Last scanned state does not match repository state.\n"
-"\n"
-"Another Git program has modified this repository since the last scan.  A "
-"rescan must be performed before a merge can be performed.\n"
-"\n"
-"The rescan will be automatically started now.\n"
+#: cola/widgets/compare.py:39 cola/widgets/compare.py:62
+#: cola/widgets/compare.py:68
+msgid "Local"
 msgstr ""
-"L'ultimo stato analizzato non corrisponde allo stato dell'archivio.\n"
-"\n"
-"Un altro programma Git ha modificato questo archivio dall'ultima analisi."
-"Bisogna effettuare una nuova analisi prima di poter effettuare una fusione.\n"
-"\n"
-"La nuova analisi comincerà ora.\n"
 
-#: lib/merge.tcl:44
-#, tcl-format
-msgid ""
-"You are in the middle of a conflicted merge.\n"
-"\n"
-"File %s has merge conflicts.\n"
-"\n"
-"You must resolve them, stage the file, and commit to complete the current "
-"merge.  Only then can you begin another merge.\n"
+#: cola/widgets/compare.py:44
+msgid "Branch Diff Viewer"
 msgstr ""
-"Sei nel mezzo di una fusione con conflitti.\n"
-"\n"
-"Il file %s ha dei conflitti.\n"
-"\n"
-"Bisogna risolvere i conflitti, preparare il file per una nuova revisione ed "
-"infine crearla per completare la fusione attuale. Solo a questo punto potrai "
-"iniziare un'altra fusione.\n"
 
-#: lib/merge.tcl:54
-#, tcl-format
-msgid ""
-"You are in the middle of a change.\n"
-"\n"
-"File %s is modified.\n"
-"\n"
-"You should complete the current commit before starting a merge.  Doing so "
-"will help you abort a failed merge, should the need arise.\n"
-msgstr ""
-"Sei nel mezzo di una modifica.\n"
-"\n"
-"Il file %s è stato modificato.\n"
-"\n"
-"Bisogna completare la creazione della revisione attuale prima di iniziare "
-"una fusione. In questo modo sarà più facile interrompere una fusione non "
-"riuscita, nel caso ce ne fosse bisogno.\n"
+#: cola/widgets/compare.py:63 cola/widgets/compare.py:69
+#: cola/widgets/remote.py:129
+msgid "Remote"
+msgstr "Remoto"
 
-#: lib/merge.tcl:106
-#, tcl-format
-msgid "%s of %s"
-msgstr "%s di %s"
-
-#: lib/merge.tcl:119
-#, tcl-format
-msgid "Merging %s and %s..."
-msgstr "Fusione di %s e %s in corso..."
-
-#: lib/merge.tcl:130
-msgid "Merge completed successfully."
-msgstr "Fusione completata con successo."
-
-#: lib/merge.tcl:132
-msgid "Merge failed.  Conflict resolution is required."
-msgstr "Fusione non riuscita. Bisogna risolvere i conflitti."
-
-#: lib/merge.tcl:157
-#, tcl-format
-msgid "Merge Into %s"
-msgstr "Fusione in %s"
-
-#: lib/merge.tcl:176
-msgid "Revision To Merge"
-msgstr "Revisione da fondere"
-
-#: lib/merge.tcl:211
-msgid ""
-"Cannot abort while amending.\n"
-"\n"
-"You must finish amending this commit.\n"
-msgstr ""
-"Interruzione impossibile durante una correzione.\n"
-"\n"
-"Bisogna finire di correggere questa revisione.\n"
-
-#: lib/merge.tcl:221
-msgid ""
-"Abort merge?\n"
-"\n"
-"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
-"\n"
-"Continue with aborting the current merge?"
-msgstr ""
-"Interrompere fusione?\n"
-"\n"
-"L'interruzione della fusione attuale causerà la perdita di *TUTTE* le "
-"modifiche non ancora presenti nell'archivio.\n"
-"\n"
-"Continuare con l'interruzione della fusione attuale?"
-
-#: lib/merge.tcl:227
-msgid ""
-"Reset changes?\n"
-"\n"
-"Resetting the changes will cause *ALL* uncommitted changes to be lost.\n"
-"\n"
-"Continue with resetting the current changes?"
-msgstr ""
-"Ripristinare la revisione corrente e annullare le modifiche?\n"
-"\n"
-"L'annullamento delle modifiche causerà la perdita di *TUTTE* le modifiche "
-"non ancora presenti nell'archivio.\n"
-"\n"
-"Continuare con l'annullamento delle modifiche attuali?"
-
-#: lib/merge.tcl:238
-msgid "Aborting"
-msgstr "Interruzione"
-
-#: lib/merge.tcl:238
-msgid "files reset"
-msgstr "ripristino file"
-
-#: lib/merge.tcl:265
-msgid "Abort failed."
-msgstr "Interruzione non riuscita."
-
-#: lib/merge.tcl:267
-msgid "Abort completed.  Ready."
-msgstr "Interruzione completata. Pronto."
-
-#: lib/option.tcl:95
-msgid "Restore Defaults"
-msgstr "Ripristina valori predefiniti"
-
-#: lib/option.tcl:99
-msgid "Save"
-msgstr "Salva"
-
-#: lib/option.tcl:109
-#, tcl-format
-msgid "%s Repository"
-msgstr "Archivio di %s"
-
-#: lib/option.tcl:110
-msgid "Global (All Repositories)"
-msgstr "Tutti gli archivi"
-
-#: lib/option.tcl:116
-msgid "User Name"
-msgstr "Nome utente"
-
-#: lib/option.tcl:117
-msgid "Email Address"
-msgstr "Indirizzo Email"
-
-#: lib/option.tcl:119
-msgid "Summarize Merge Commits"
-msgstr "Riepilogo nelle revisioni di fusione"
-
-#: lib/option.tcl:120
-msgid "Merge Verbosity"
-msgstr "Prolissità della fusione"
-
-#: lib/option.tcl:121
-msgid "Show Diffstat After Merge"
-msgstr "Mostra statistiche delle differenze dopo la fusione"
-
-#: lib/option.tcl:123
-msgid "Trust File Modification Timestamps"
-msgstr "Fidati delle date di modifica dei file"
-
-#: lib/option.tcl:124
-msgid "Prune Tracking Branches During Fetch"
-msgstr ""
-"Effettua potatura dei duplicati locali di rami remoti durante il recupero"
-
-#: lib/option.tcl:125
-msgid "Match Tracking Branches"
-msgstr "Appaia duplicati locali di rami remoti"
-
-#: lib/option.tcl:126
-msgid "Number of Diff Context Lines"
-msgstr "Numero di linee di contesto nelle differenze"
-
-#: lib/option.tcl:127
-msgid "Commit Message Text Width"
-msgstr "Larghezza del messaggio di revisione"
-
-#: lib/option.tcl:128
-msgid "New Branch Name Template"
-msgstr "Modello per il nome di un nuovo ramo"
-
-#: lib/option.tcl:192
-msgid "Spelling Dictionary:"
-msgstr "Lingua dizionario:"
-
-#: lib/option.tcl:216
-msgid "Change Font"
-msgstr "Cambia caratteri"
-
-#: lib/option.tcl:220
-#, tcl-format
-msgid "Choose %s"
-msgstr "Scegli %s"
-
-#: lib/option.tcl:226
-msgid "pt."
-msgstr "pt."
-
-#: lib/option.tcl:240
-msgid "Preferences"
+#: cola/widgets/compare.py:98
+#, fuzzy
+msgid "File Differences"
 msgstr "Preferenze"
 
-#: lib/option.tcl:275
-msgid "Failed to completely save options:"
-msgstr "Impossibile salvare completamente le opzioni:"
+#: cola/widgets/createbranch.py:102
+msgid "Branch Name"
+msgstr "Nome del ramo"
 
-#: lib/remote_branch_delete.tcl:29 lib/remote_branch_delete.tcl:34
-msgid "Delete Remote Branch"
-msgstr "Cancella ramo remoto"
+#: cola/widgets/createbranch.py:107 cola/widgets/createbranch.py:178
+msgid "Starting Revision"
+msgstr "Revisione iniziale"
 
-#: lib/remote_branch_delete.tcl:47
-msgid "From Repository"
-msgstr "Da archivio"
+#: cola/widgets/createbranch.py:127
+msgid "Update Existing Branch:"
+msgstr "Aggiorna ramo esistente:"
 
-#: lib/remote_branch_delete.tcl:50 lib/transport.tcl:123
-msgid "Remote:"
-msgstr "Remoto:"
+#: cola/widgets/createbranch.py:130
+msgid "No"
+msgstr "No"
 
-#: lib/remote_branch_delete.tcl:66 lib/transport.tcl:138
-msgid "Arbitrary URL:"
-msgstr "URL specifico:"
+#: cola/widgets/createbranch.py:133
+msgid "Fast Forward Only"
+msgstr "Solo fast forward"
 
-#: lib/remote_branch_delete.tcl:84
-msgid "Branches"
+#: cola/widgets/createbranch.py:137
+msgid "Reset"
+msgstr "Ripristina"
+
+#: cola/widgets/createbranch.py:143
+msgid "Fetch Tracking Branch"
+msgstr "Recupera duplicato locale di ramo remoto"
+
+#: cola/widgets/createbranch.py:148
+msgid "Checkout After Creation"
+msgstr "Attiva dopo la creazione"
+
+#: cola/widgets/createbranch.py:194
+msgid "Options"
+msgstr "Opzioni"
+
+#: cola/widgets/createbranch.py:259
+#, fuzzy
+msgid "Missing Data"
+msgstr "Mancante"
+
+#: cola/widgets/createbranch.py:260
+msgid "Please provide both a branch name and revision expression."
+msgstr ""
+
+#: cola/widgets/createbranch.py:265
+#, fuzzy, python-format
+msgid "Branch \"%s\" already exists."
+msgstr "Il ramo '%s' esiste già."
+
+#: cola/widgets/createbranch.py:266 cola/widgets/createbranch.py:277
+#, fuzzy
+msgid "Branch Exists"
 msgstr "Rami"
 
-#: lib/remote_branch_delete.tcl:109
-msgid "Delete Only If"
-msgstr "Elimina solo se"
-
-#: lib/remote_branch_delete.tcl:111
-msgid "Merged Into:"
-msgstr "Fuso in:"
-
-#: lib/remote_branch_delete.tcl:119
-msgid "Always (Do not perform merge checks)"
-msgstr "Sempre (non verificare le fusioni)"
-
-#: lib/remote_branch_delete.tcl:152
-msgid "A branch is required for 'Merged Into'."
-msgstr "Si richiede un ramo per 'Fuso in'."
-
-#: lib/remote_branch_delete.tcl:184
-#, tcl-format
-msgid ""
-"The following branches are not completely merged into %s:\n"
-"\n"
-" - %s"
+#: cola/widgets/createbranch.py:273
+#, fuzzy, python-format
+msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr ""
-"I rami seguenti non sono stati fusi completamente in %s:\n"
-"\n"
-" - %s"
+"Ripristinare '%s' a '%s' comporterà la perdita delle seguenti revisioni:"
 
-#: lib/remote_branch_delete.tcl:189
-#, tcl-format
-msgid ""
-"One or more of the merge tests failed because you have not fetched the "
-"necessary commits.  Try fetching from %s first."
+#: cola/widgets/createbranch.py:288
+#, python-format
+msgid "%d skipped"
 msgstr ""
-"Impossibile verificare una o più fusioni: mancano le revisioni necessarie. "
-"Prova prima a recuperarle da %s."
 
-#: lib/remote_branch_delete.tcl:207
-msgid "Please select one or more branches to delete."
-msgstr "Scegliere uno o più rami da cancellare."
+#: cola/widgets/createbranch.py:290
+msgid "Recovering lost commits may not be easy."
+msgstr "Ricomporre le revisioni perdute potrebbe non essere semplice."
 
-#: lib/remote_branch_delete.tcl:216
-msgid ""
-"Recovering deleted branches is difficult.\n"
-"\n"
-"Delete the selected branches?"
+#: cola/widgets/createbranch.py:292
+#, fuzzy
+msgid "Reset Branch?"
+msgstr "Elimina ramo"
+
+#: cola/widgets/createbranch.py:294
+#, python-format
+msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr ""
-"Ricomporre rami cancellati è difficile.\n"
+
+#: cola/widgets/createbranch.py:296
+#, fuzzy
+msgid "Reset Branch"
+msgstr "Elimina ramo"
+
+#: cola/widgets/createbranch.py:305
+#, fuzzy
+msgid "Updating..."
+msgstr "Avvio in corso..."
+
+#: cola/widgets/createbranch.py:321
+#, fuzzy
+msgid "Error Creating Branch"
+msgstr "Crea ramo"
+
+#: cola/widgets/createbranch.py:322
+#, python-format
+msgid "\"%(command)s\" returned exit status \"%(status)d\""
+msgstr ""
+
+#: cola/widgets/createbranch.py:331
+#, fuzzy
+msgid "Branch created"
+msgstr "Nome del ramo"
+
+#: cola/widgets/createtag.py:56
+msgid "Specifies the tag name"
+msgstr ""
+
+#: cola/widgets/createtag.py:62
+#, fuzzy
+msgid "Sign Tag"
+msgstr "Sign Off"
+
+#: cola/widgets/createtag.py:67
+msgid "Whether to sign the tag (git tag -s)"
+msgstr ""
+
+#: cola/widgets/createtag.py:78
+msgid "Tag message..."
+msgstr ""
+
+#: cola/widgets/createtag.py:79
+msgid "Specifies the tag message"
+msgstr ""
+
+#: cola/widgets/createtag.py:91
+msgid "Specifies the SHA-1 to tag"
+msgstr ""
+
+#: cola/widgets/createtag.py:121
+#, fuzzy
+msgid "Missing Revision"
+msgstr "Revisione iniziale"
+
+#: cola/widgets/createtag.py:122
+#, fuzzy
+msgid "Please specify a revision to tag."
+msgstr "Scegliere un ramo da rinominare."
+
+#: cola/widgets/createtag.py:125
+#, fuzzy
+msgid "Missing Name"
+msgstr "Mancante"
+
+#: cola/widgets/createtag.py:126
+msgid "Please specify a name for the new tag."
+msgstr ""
+
+#: cola/widgets/createtag.py:129
+#, fuzzy
+msgid "Missing Tag Message"
+msgstr "Revisione da fondere"
+
+#: cola/widgets/createtag.py:130
+msgid "Tag-signing was requested but the tag message is empty."
+msgstr ""
+
+#: cola/widgets/createtag.py:132
+msgid ""
+"An unsigned, lightweight tag will be created instead.\n"
+"Create an unsigned tag?"
+msgstr ""
+
+#: cola/widgets/createtag.py:135
+msgid "Create Unsigned Tag"
+msgstr ""
+
+#: cola/widgets/createtag.py:142
+#, fuzzy
+msgid "Tag Created"
+msgstr "Crea"
+
+#: cola/widgets/createtag.py:143
+#, python-format
+msgid "Created a new tag named \"%s\""
+msgstr ""
+
+#: cola/widgets/diff.py:22
+msgid "Process Section"
+msgstr ""
+
+#: cola/widgets/diff.py:25
+msgid "Process Selection"
+msgstr ""
+
+#: cola/widgets/diff.py:40
+msgid "Stage &Selected Lines"
+msgstr ""
+
+#: cola/widgets/diff.py:46
+msgid "Revert Selected Lines..."
+msgstr ""
+
+#: cola/widgets/diff.py:51
+#, fuzzy
+msgid "Unstage &Selected Lines"
+msgstr "Modifiche non preparate"
+
+#: cola/widgets/diff.py:57
+msgid "Apply Diff Selection to Work Tree"
+msgstr ""
+
+#: cola/widgets/diff.py:81 cola/widgets/diff.py:103 cola/widgets/status.py:435
+#: cola/widgets/status.py:547
+msgid "Launch git-cola"
+msgstr ""
+
+#: cola/widgets/diff.py:86
+#, fuzzy
+msgid "Stage Section"
+msgstr "Revisione iniziale"
+
+#: cola/widgets/diff.py:92
+msgid "Revert Section..."
+msgstr ""
+
+#: cola/widgets/diff.py:108
+msgid "Unstage Section"
+msgstr ""
+
+#: cola/widgets/diff.py:120
+msgid "Copy"
+msgstr "Copia"
+
+#: cola/widgets/diff.py:124
+msgid "Select All"
+msgstr "Seleziona tutto"
+
+#: cola/widgets/diff.py:227
+msgid "Revert Section?"
+msgstr ""
+
+#: cola/widgets/diff.py:231
+msgid "Revert Section"
+msgstr ""
+
+#: cola/widgets/diff.py:240
+#, fuzzy
+msgid "Revert Selected Lines?"
+msgstr "Annullare le modifiche nel file %s?"
+
+#: cola/widgets/diff.py:244
+msgid "Revert Selected Lines"
+msgstr ""
+
+#: cola/widgets/editremotes.py:22
+msgid ""
+"Add and remove remote repositories using the \n"
+"Add(+) and Delete(-) buttons on the left-hand side.\n"
 "\n"
-"Cancellare i rami selezionati?"
+"Remotes can be renamed by selecting one from the list\n"
+"and pressing \"enter\", or by double-clicking."
+msgstr ""
 
-#: lib/remote_branch_delete.tcl:226
-#, tcl-format
-msgid "Deleting branches from %s"
-msgstr "Cancellazione rami da %s"
+#: cola/widgets/editremotes.py:32
+msgid "Remote git repositories - double-click to rename"
+msgstr ""
 
-#: lib/remote_branch_delete.tcl:286
+#: cola/widgets/editremotes.py:45
+#, fuzzy
+msgid "Add new remote git repository"
+msgstr "%s non è un archivio Git."
+
+#: cola/widgets/editremotes.py:49 cola/widgets/grep.py:64
+#: cola/widgets/recent.py:52 cola/widgets/recent.py:121
+msgid "Refresh"
+msgstr "Rinfresca"
+
+#: cola/widgets/editremotes.py:53
+#, fuzzy
+msgid "Delete remote"
+msgstr "Cancella ramo remoto"
+
+#: cola/widgets/editremotes.py:116
+#, python-format
+msgid "Error creating remote \"%s\""
+msgstr ""
+
+#: cola/widgets/editremotes.py:124
+#, fuzzy
+msgid "Delete Remote"
+msgstr "Cancella ramo remoto"
+
+#: cola/widgets/editremotes.py:125
+#, fuzzy
+msgid "Delete remote?"
+msgstr "Cancella ramo remoto"
+
+#: cola/widgets/editremotes.py:126
+#, fuzzy, python-format
+msgid "Delete remote \"%s\""
+msgstr "Cancella ramo remoto"
+
+#: cola/widgets/editremotes.py:134
+#, python-format
+msgid "Error deleting remote \"%s\""
+msgstr ""
+
+#: cola/widgets/editremotes.py:153
+#, fuzzy
+msgid "Rename Remote"
+msgstr "Remoto"
+
+#: cola/widgets/editremotes.py:154
+#, fuzzy
+msgid "Rename remote?"
+msgstr "Remoto"
+
+#: cola/widgets/editremotes.py:155
+#, python-format
+msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
+msgstr ""
+
+#: cola/widgets/editremotes.py:157
+msgid "Rename"
+msgstr "Rinomina"
+
+#: cola/widgets/editremotes.py:169
+#, fuzzy, python-format
+msgid "Gathering info for \"%s\"..."
+msgstr "Caricamento delle differenze di %s..."
+
+#: cola/widgets/editremotes.py:201
+#, fuzzy
+msgid "Add Remote"
+msgstr "Remoto"
+
+#: cola/widgets/editremotes.py:213
+msgid "Name for the new remote"
+msgstr ""
+
+#: cola/widgets/editremotes.py:220
+msgid "URL"
+msgstr "URL"
+
+#: cola/widgets/grep.py:51
+msgid "command-line arguments"
+msgstr ""
+
+#: cola/widgets/grep.py:55
+msgid "grep result..."
+msgstr ""
+
+#: cola/widgets/grep.py:68
+msgid "Shell arguments"
+msgstr ""
+
+#: cola/widgets/grep.py:70
+msgid ""
+"Parse arguments using a shell.\n"
+"Queries with spaces will require \"double quotes\"."
+msgstr ""
+
+#: cola/widgets/log.py:34
+#, fuzzy, python-format
+msgid "exit code %s"
+msgstr "recupera da %s"
+
+#: cola/widgets/recent.py:36
+msgid "Recently Modified Files"
+msgstr ""
+
+#: cola/widgets/recent.py:46
+msgid " commits ago"
+msgstr ""
+
+#: cola/widgets/recent.py:49
+#, fuzzy
+msgid "Showing changes since"
+msgstr "Propagazione modifiche a %s"
+
+#: cola/widgets/recent.py:61
+msgid "Expand"
+msgstr ""
+
+#: cola/widgets/recent.py:65
+#, fuzzy
+msgid "Collapse"
+msgstr "Chiudi"
+
+#: cola/widgets/remote.py:136
+#, fuzzy
+msgid "Remote Branch"
+msgstr "Rinomina ramo"
+
+#: cola/widgets/remote.py:143
+#, fuzzy
+msgid "Fast Forward Only "
+msgstr "Solo fast forward"
+
+#: cola/widgets/remote.py:147
+#, fuzzy
+msgid "Include tags "
+msgstr "Includi etichette"
+
+#: cola/widgets/remote.py:150
+#, fuzzy
+msgid "Rebase "
+msgstr "Ripristina"
+
+#: cola/widgets/remote.py:314
+#, fuzzy, python-format
+msgid "URL: %s"
+msgstr "URL:"
+
+#: cola/widgets/remote.py:393
 msgid "No repository selected."
 msgstr "Nessun archivio selezionato."
 
-#: lib/remote_branch_delete.tcl:291
-#, tcl-format
-msgid "Scanning %s..."
-msgstr "Analisi in corso %s..."
+#: cola/widgets/remote.py:406
+msgid "Push"
+msgstr "Propaga (Push)"
 
-#: lib/remote.tcl:165
-msgid "Prune from"
-msgstr "Effettua potatura da"
+#: cola/widgets/remote.py:408
+#, python-format
+msgid ""
+"Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
+"A new remote branch will be published."
+msgstr ""
 
-#: lib/remote.tcl:170
-msgid "Fetch from"
-msgstr "Recupera da"
+#: cola/widgets/remote.py:410
+#, fuzzy
+msgid "Create a new remote branch?"
+msgstr "Crea nuovo ramo"
 
-#: lib/remote.tcl:213
-msgid "Push to"
-msgstr "Propaga verso"
+#: cola/widgets/remote.py:411
+#, fuzzy
+msgid "Create Remote Branch"
+msgstr "Cancella ramo remoto"
 
-#: lib/shortcut.tcl:20 lib/shortcut.tcl:61
-msgid "Cannot write shortcut:"
-msgstr "Impossibile scrivere shortcut:"
+#: cola/widgets/remote.py:419
+msgid "Force Fetch?"
+msgstr ""
 
-#: lib/shortcut.tcl:136
-msgid "Cannot write icon:"
-msgstr "Impossibile scrivere icona:"
+#: cola/widgets/remote.py:420
+msgid "Non-fast-forward fetch overwrites local history!"
+msgstr ""
 
-#: lib/spellcheck.tcl:57
-msgid "Unsupported spell checker"
-msgstr "Correttore ortografico non supportato"
+#: cola/widgets/remote.py:421
+#, fuzzy, python-format
+msgid "Force fetching from %s?"
+msgstr "Recupero %s da %s"
 
-#: lib/spellcheck.tcl:65
-msgid "Spell checking is unavailable"
-msgstr "Correzione ortografica indisponibile"
+#: cola/widgets/remote.py:422
+msgid "Force Fetch"
+msgstr ""
 
-#: lib/spellcheck.tcl:68
-msgid "Invalid spell checking configuration"
-msgstr "La configurazione del correttore ortografico non è valida"
+#: cola/widgets/remote.py:424
+msgid "Force Push?"
+msgstr ""
 
-#: lib/spellcheck.tcl:70
-#, tcl-format
-msgid "Reverting dictionary to %s."
-msgstr "Il dizionario è stato reimpostato su %s."
+#: cola/widgets/remote.py:425
+msgid ""
+"Non-fast-forward push overwrites published history!\n"
+"(Did you pull first?)"
+msgstr ""
 
-#: lib/spellcheck.tcl:73
-msgid "Spell checker silently failed on startup"
-msgstr "Il correttore ortografico ha riportato un errore all'avvio"
+#: cola/widgets/remote.py:427
+#, python-format
+msgid "Force push to %s?"
+msgstr ""
 
-#: lib/spellcheck.tcl:80
-msgid "Unrecognized spell checker"
-msgstr "Correttore ortografico sconosciuto"
+#: cola/widgets/remote.py:428
+msgid "Force Push"
+msgstr ""
 
-#: lib/spellcheck.tcl:180
-msgid "No Suggestions"
-msgstr "Nessun suggerimento"
+#: cola/widgets/remote.py:462
+msgid "Already up-to-date."
+msgstr ""
 
-#: lib/spellcheck.tcl:381
-msgid "Unexpected EOF from spell checker"
-msgstr "Il correttore ortografico ha mandato un EOF inaspettato"
+#: cola/widgets/remote.py:472 cola/widgets/startup.py:163
+#, python-format
+msgid "\"%(command)s\" returned exit status %(status)d"
+msgstr ""
 
-#: lib/spellcheck.tcl:385
-msgid "Spell Checker Failed"
-msgstr "Errore nel correttore ortografico"
+#: cola/widgets/remote.py:486
+msgid "Have you rebased/pulled lately?"
+msgstr ""
 
-#: lib/status_bar.tcl:83
-#, tcl-format
-msgid "%s ... %*i of %*i %s (%3i%%)"
-msgstr "%1$s ... %6$s: %2$*i di %4$*i (%7$3i%%)"
+#: cola/widgets/search.py:40 cola/widgets/search.py:58
+msgid "Search"
+msgstr ""
 
-#: lib/transport.tcl:6
-#, tcl-format
-msgid "fetch %s"
-msgstr "recupera da %s"
+#: cola/widgets/search.py:44
+#, fuzzy
+msgid "Browse..."
+msgstr "Esplora"
 
-#: lib/transport.tcl:7
-#, tcl-format
-msgid "Fetching new changes from %s"
-msgstr "Recupero nuove modifiche da %s"
+#: cola/widgets/search.py:50 cola/widgets/search.py:55
+msgid "yyyy-MM-dd"
+msgstr ""
 
-#: lib/transport.tcl:18
-#, tcl-format
-msgid "remote prune %s"
-msgstr "potatura remota di %s"
+#: cola/widgets/search.py:220
+#, fuzzy
+msgid "Search by Expression"
+msgstr "Espressione di revisione:"
 
-#: lib/transport.tcl:19
-#, tcl-format
-msgid "Pruning tracking branches deleted from %s"
-msgstr "Effettua potatura dei duplicati locali di rami remoti cancellati da %s"
+#: cola/widgets/search.py:221
+msgid "Search by Path"
+msgstr ""
 
-#: lib/transport.tcl:25 lib/transport.tcl:71
-#, tcl-format
-msgid "push %s"
-msgstr "propaga verso %s"
+#: cola/widgets/search.py:222
+#, fuzzy
+msgid "Search Commit Messages"
+msgstr "Messaggio di fusione:"
 
-#: lib/transport.tcl:26
-#, tcl-format
-msgid "Pushing changes to %s"
-msgstr "Propagazione modifiche a %s"
+#: cola/widgets/search.py:223
+msgid "Search Diffs"
+msgstr ""
 
-#: lib/transport.tcl:72
-#, tcl-format
-msgid "Pushing %s %s to %s"
-msgstr "Propagazione %s %s a %s"
+#: cola/widgets/search.py:224
+msgid "Search Authors"
+msgstr ""
 
-#: lib/transport.tcl:89
-msgid "Push Branches"
-msgstr "Propaga rami"
+#: cola/widgets/search.py:225
+#, fuzzy
+msgid "Search Committers"
+msgstr "Revisione creata da:"
 
-#: lib/transport.tcl:103
-msgid "Source Branches"
-msgstr "Rami di origine"
+#: cola/widgets/search.py:226
+msgid "Search Date Range"
+msgstr ""
 
-#: lib/transport.tcl:120
-msgid "Destination Repository"
-msgstr "Archivio di destinazione"
+#: cola/widgets/search.py:319
+#, fuzzy
+msgid "Choose Path(s)"
+msgstr "Scegli %s"
 
-#: lib/transport.tcl:158
-msgid "Transfer Options"
-msgstr "Opzioni di trasferimento"
+#: cola/widgets/selectcommits.py:50
+msgid "Revision Expression:"
+msgstr "Espressione di revisione:"
 
-#: lib/transport.tcl:160
-msgid "Force overwrite existing branch (may discard changes)"
-msgstr "Sovrascrivi ramo esistente (alcune modifiche potrebbero essere perse)"
+#: cola/widgets/selectcommits.py:101
+msgid "No commits exist in this branch."
+msgstr ""
 
-#: lib/transport.tcl:164
-msgid "Use thin pack (for slow network connections)"
-msgstr "Utilizza 'thin pack' (per connessioni lente)"
+#: cola/widgets/startup.py:28
+msgid "git-cola"
+msgstr ""
 
-#: lib/transport.tcl:168
-msgid "Include tags"
-msgstr "Includi etichette"
+#: cola/widgets/startup.py:35
+msgid "New..."
+msgstr "Nuovo..."
+
+#: cola/widgets/startup.py:58
+#, fuzzy
+msgid "Select Repository..."
+msgstr "Archivio Git"
+
+#: cola/widgets/startup.py:63
+#, fuzzy
+msgid "Select manually..."
+msgstr "Seleziona tutto"
+
+#: cola/widgets/startup.py:162
+#, fuzzy
+msgid "Error Creating Repository"
+msgstr "Crea nuovo archivio"
+
+#: cola/widgets/startup.py:165
+#, python-format
+msgid ""
+"Output:\n"
+"%s"
+msgstr ""
+
+#: cola/widgets/status.py:82
+#, fuzzy
+msgid "Untracked"
+msgstr "Non tracciato, non preparato per una nuova revisione"
+
+#: cola/widgets/status.py:92
+#, fuzzy
+msgid "Stage / Unstage"
+msgstr "Prepara modificati"
+
+#: cola/widgets/status.py:122
+msgid "Move Up"
+msgstr ""
+
+#: cola/widgets/status.py:124
+msgid "Move Down"
+msgstr ""
+
+#: cola/widgets/status.py:127
+msgid "Copy Path to Clipboard"
+msgstr ""
+
+#: cola/widgets/status.py:427 cola/widgets/status.py:514
+msgid "Revert Unstaged Edits..."
+msgstr ""
+
+#: cola/widgets/status.py:456
+msgid "Launch Merge Tool"
+msgstr ""
+
+#: cola/widgets/status.py:517
+msgid "Revert Uncommited Edits..."
+msgstr ""
+
+#: cola/widgets/status.py:535
+#, fuzzy
+msgid "Delete File(s)..."
+msgstr "Elimina..."
+
+#: cola/widgets/status.py:538
+msgid "Add to .gitignore"
+msgstr ""
+
+#: cola/widgets/status.py:574
+#, fuzzy
+msgid "Delete Files?"
+msgstr "Elimina"
+
+#: cola/widgets/status.py:575
+msgid "The following files will be deleted:"
+msgstr ""
+
+#: cola/widgets/status.py:582
+#, python-format
+msgid "Delete %d file(s)?"
+msgstr ""
+
+#: cola/widgets/status.py:583
+#, fuzzy
+msgid "Delete Files"
+msgstr "Elimina"
+
+#: cola/widgets/status.py:599
+#, fuzzy
+msgid "Revert Unstaged Changes?"
+msgstr "Modifiche non preparate"
+
+#: cola/widgets/status.py:600
+msgid ""
+"This operation drops unstaged changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+#: cola/widgets/status.py:602
+#, fuzzy
+msgid "Revert the unstaged changes?"
+msgstr "Modifiche non preparate"
+
+#: cola/widgets/status.py:603
+#, fuzzy
+msgid "Revert Unstaged Changes"
+msgstr "Modifiche non preparate"
+
+#: cola/widgets/status.py:612 cola/widgets/status.py:629
+msgid "No files selected for checkout from HEAD."
+msgstr ""
+
+#~ msgid "git-gui: fatal error"
+#~ msgstr "git-gui: errore grave"
+
+#~ msgid "Invalid font specified in %s:"
+#~ msgstr "Caratteri non validi specificati in %s:"
+
+#~ msgid "Main Font"
+#~ msgstr "Caratteri principali"
+
+#~ msgid "Diff/Console Font"
+#~ msgstr "Caratteri per confronti e terminale"
+
+#~ msgid "Cannot find git in PATH."
+#~ msgstr "Impossibile trovare git nel PATH"
+
+#~ msgid "Cannot parse Git version string:"
+#~ msgstr "Impossibile determinare la versione di Git:"
+
+#~ msgid ""
+#~ "Git version cannot be determined.\n"
+#~ "\n"
+#~ "%s claims it is version '%s'.\n"
+#~ "\n"
+#~ "%s requires at least Git 1.5.0 or later.\n"
+#~ "\n"
+#~ "Assume '%s' is version 1.5.0?\n"
+#~ msgstr ""
+#~ "La versione di Git non può essere determinata.\n"
+#~ "\n"
+#~ "%s riporta che la versione è '%s'.\n"
+#~ "\n"
+#~ "%s richiede almeno Git 1.5.0 o superiore.\n"
+#~ "\n"
+#~ "Assumere che '%s' sia alla versione 1.5.0?\n"
+
+#~ msgid "Git directory not found:"
+#~ msgstr "Non trovo la directory di git: "
+
+#~ msgid "Cannot move to top of working directory:"
+#~ msgstr "Impossibile spostarsi sulla directory principale del progetto:"
+
+#~ msgid "Cannot use funny .git directory:"
+#~ msgstr "Impossibile usare una .git directory strana:"
+
+#~ msgid "No working directory"
+#~ msgstr "Nessuna directory di lavoro"
+
+#~ msgid "Refreshing file status..."
+#~ msgstr "Controllo dello stato dei file in corso..."
+
+#~ msgid "Ready."
+#~ msgstr "Pronto."
+
+#~ msgid "Modified, not staged"
+#~ msgstr "Modificato, non preparato per una nuova revisione"
+
+#~ msgid "Portions staged for commit"
+#~ msgstr "Parti preparate per una nuova revisione"
+
+#~ msgid "Staged for commit, missing"
+#~ msgstr "Preparato per una nuova revisione, mancante"
+
+#~ msgid "Staged for removal"
+#~ msgstr "Preparato per la rimozione"
+
+#~ msgid "Staged for removal, still present"
+#~ msgstr "Preparato alla rimozione, ancora presente"
+
+#~ msgid "Requires merge resolution"
+#~ msgstr "Richiede risoluzione dei conflitti"
+
+#~ msgid "Starting gitk... please wait..."
+#~ msgstr "Avvio di gitk... attendere..."
+
+#~ msgid ""
+#~ "Unable to start gitk:\n"
+#~ "\n"
+#~ "%s does not exist"
+#~ msgstr ""
+#~ "Impossibile avviare gitk:\n"
+#~ "\n"
+#~ "%s non esiste"
+
+#~ msgid "Repository"
+#~ msgstr "Archivio"
+
+#~ msgid "Commit@@noun"
+#~ msgstr "Revisione"
+
+#~ msgid "Browse %s's Files"
+#~ msgstr "Esplora i file di %s"
+
+#~ msgid "Visualize %s's History"
+#~ msgstr "Visualizza la cronologia di %s"
+
+#~ msgid "Database Statistics"
+#~ msgstr "Statistiche dell'archivio"
+
+#~ msgid "Compress Database"
+#~ msgstr "Comprimi l'archivio"
+
+#~ msgid "Verify Database"
+#~ msgstr "Verifica l'archivio"
+
+#~ msgid "Create Desktop Icon"
+#~ msgstr "Crea icona desktop"
+
+#~ msgid "Undo"
+#~ msgstr "Annulla"
+
+#~ msgid "Redo"
+#~ msgstr "Ripeti"
+
+#~ msgid "Cut"
+#~ msgstr "Taglia"
+
+#~ msgid "Paste"
+#~ msgstr "Incolla"
+
+#~ msgid "Rename..."
+#~ msgstr "Rinomina"
+
+#~ msgid "New Commit"
+#~ msgstr "Nuova revisione"
+
+#~ msgid "Local Merge..."
+#~ msgstr "Fusione locale..."
+
+#~ msgid "Preferences..."
+#~ msgstr "Preferenze..."
+
+#~ msgid "Current Branch:"
+#~ msgstr "Ramo attuale:"
+
+#~ msgid "Staged Changes (Will Commit)"
+#~ msgstr "Modifiche preparate (saranno nella nuova revisione)"
+
+#~ msgid "Initial Commit Message:"
+#~ msgstr "Messaggio di revisione iniziale:"
+
+#~ msgid "Amended Commit Message:"
+#~ msgstr "Messaggio di revisione corretto:"
+
+#~ msgid "Amended Initial Commit Message:"
+#~ msgstr "Messaggio iniziale di revisione corretto:"
+
+#~ msgid "Amended Merge Commit Message:"
+#~ msgstr "Messaggio di fusione corretto:"
+
+#~ msgid "Apply/Reverse Hunk"
+#~ msgstr "Applica/Inverti sezione"
+
+#~ msgid "Show Less Context"
+#~ msgstr "Mostra meno contesto"
+
+#~ msgid "Show More Context"
+#~ msgstr "Mostra più contesto"
+
+#~ msgid "Decrease Font Size"
+#~ msgstr "Diminuisci dimensione caratteri"
+
+#~ msgid "Increase Font Size"
+#~ msgstr "Aumenta dimensione caratteri"
+
+#~ msgid "Unstage Hunk From Commit"
+#~ msgstr "Sezione non preparata per una nuova revisione"
+
+#~ msgid "Stage Hunk For Commit"
+#~ msgstr "Prepara sezione per una nuova revisione"
+
+#~ msgid "Initializing..."
+#~ msgstr "Inizializzazione..."
+
+#~ msgid ""
+#~ "Possible environment issues exist.\n"
+#~ "\n"
+#~ "The following environment variables are probably\n"
+#~ "going to be ignored by any Git subprocess run\n"
+#~ "by %s:\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Possibili problemi con le variabili d'ambiente.\n"
+#~ "\n"
+#~ "Le seguenti variabili d'ambiente saranno probabilmente\n"
+#~ "ignorate da tutti i sottoprocessi di Git avviati\n"
+#~ "da %s:\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is due to a known issue with the\n"
+#~ "Tcl binary distributed by Cygwin."
+#~ msgstr ""
+#~ "\n"
+#~ "Ciò è dovuto a un problema conosciuto\n"
+#~ "causato dall'eseguibile Tcl distribuito da Cygwin."
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "A good replacement for %s\n"
+#~ "is placing values for the user.name and\n"
+#~ "user.email settings into your personal\n"
+#~ "~/.gitconfig file.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Una buona alternativa a %s\n"
+#~ "consiste nell'assegnare valori alle variabili di configurazione\n"
+#~ "user.name e user.email nel tuo file ~/.gitconfig personale.\n"
+
+#~ msgid "git-gui - a graphical user interface for Git."
+#~ msgstr "git-gui - un'interfaccia grafica per Git."
+
+#~ msgid "File Viewer"
+#~ msgstr "Mostra file"
+
+#~ msgid "Reading %s..."
+#~ msgstr "Lettura di %s..."
+
+#~ msgid "Loading copy/move tracking annotations..."
+#~ msgstr "Caricamento annotazioni per copie/spostamenti..."
+
+#~ msgid "lines annotated"
+#~ msgstr "linee annotate"
+
+#~ msgid "Loading original location annotations..."
+#~ msgstr "Caricamento annotazioni per posizione originaria..."
+
+#~ msgid "Annotation complete."
+#~ msgstr "Annotazione completata."
+
+#~ msgid "Loading annotation..."
+#~ msgstr "Caricamento annotazioni..."
+
+#~ msgid "Original File:"
+#~ msgstr "File originario:"
+
+#~ msgid "Originally By:"
+#~ msgstr "In origine da:"
+
+#~ msgid "In File:"
+#~ msgstr "Nel file:"
+
+#~ msgid "Copied Or Moved Here By:"
+#~ msgstr "Copiato o spostato qui da:"
+
+#~ msgid "Checkout"
+#~ msgstr "Attiva"
+
+#~ msgid "Detach From Local Branch"
+#~ msgstr "Stacca da ramo locale"
+
+#~ msgid "Match Tracking Branch Name"
+#~ msgstr "Appaia nome del duplicato locale di ramo remoto"
+
+#~ msgid "Tracking branch %s is not a branch in the remote repository."
+#~ msgstr ""
+#~ "Il duplicato locale del ramo remoto %s non è un ramo nell'archivio remoto."
+
+#~ msgid "Please supply a branch name."
+#~ msgstr "Inserire un nome per il ramo."
+
+#~ msgid "'%s' is not an acceptable branch name."
+#~ msgstr "'%s' non è utilizzabile come nome di ramo."
+
+#~ msgid "Delete Local Branch"
+#~ msgstr "Elimina ramo locale"
+
+#~ msgid "Local Branches"
+#~ msgstr "Rami locali"
+
+#~ msgid "Delete Only If Merged Into"
+#~ msgstr "Cancella solo se fuso con un altro ramo"
+
+#~ msgid "Always (Do not perform merge test.)"
+#~ msgstr "Sempre (Non effettuare verifiche di fusione)."
+
+#~ msgid "The following branches are not completely merged into %s:"
+#~ msgstr "I rami seguenti non sono stati fusi completamente in %s:"
+
+#~ msgid ""
+#~ "Recovering deleted branches is difficult. \n"
+#~ "\n"
+#~ " Delete the selected branches?"
+#~ msgstr ""
+#~ "Ricomporre rami cancellati può essere complicato. \n"
+#~ "\n"
+#~ " Eliminare i rami selezionati?"
+
+#~ msgid ""
+#~ "Failed to delete branches:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Impossibile cancellare i rami:\n"
+#~ "%s"
+
+#~ msgid "New Name:"
+#~ msgstr "Nuovo Nome:"
+
+#~ msgid "Failed to rename '%s'."
+#~ msgstr "Impossibile rinominare '%s'."
+
+#~ msgid "[Up To Parent]"
+#~ msgstr "[Directory superiore]"
+
+#~ msgid "Browse Branch Files"
+#~ msgstr "Esplora i file del ramo"
+
+#~ msgid "fatal: Cannot resolve %s"
+#~ msgstr "errore grave: impossibile risolvere %s"
+
+#~ msgid "Branch '%s' does not exist."
+#~ msgstr "Il ramo '%s' non esiste."
+
+#~ msgid ""
+#~ "Branch '%s' already exists.\n"
+#~ "\n"
+#~ "It cannot fast-forward to %s.\n"
+#~ "A merge is required."
+#~ msgstr ""
+#~ "Il ramo '%s' esiste già.\n"
+#~ "\n"
+#~ "Non può effettuare un 'fast-forward' a %s.\n"
+#~ "E' necessaria una fusione."
+
+#~ msgid "Merge strategy '%s' not supported."
+#~ msgstr "La strategia di fusione '%s' non è supportata."
+
+#~ msgid "Failed to update '%s'."
+#~ msgstr "Impossibile aggiornare '%s'."
+
+#~ msgid "Staging area (index) is already locked."
+#~ msgstr ""
+#~ "L'area di preparazione per una nuova revisione (indice) è già bloccata."
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before the current branch can be changed.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "L'ultimo stato analizzato non corrisponde allo stato dell'archivio.\n"
+#~ "\n"
+#~ "Un altro programma Git ha modificato questo archivio dall'ultima analisi. "
+#~ "Bisogna effettuare una nuova analisi prima di poter cambiare il ramo "
+#~ "attuale.\n"
+#~ "\n"
+#~ "La nuova analisi comincerà ora.\n"
+
+#~ msgid "Updating working directory to '%s'..."
+#~ msgstr "Aggiornamento della directory di lavoro a '%s' in corso..."
+
+#~ msgid "files checked out"
+#~ msgstr "file presenti nella directory di lavoro"
+
+#~ msgid "Aborted checkout of '%s' (file level merging is required)."
+#~ msgstr "Attivazione di '%s' fallita (richiesta una fusione a livello file)."
+
+#~ msgid "File level merge required."
+#~ msgstr "E' richiesta una fusione a livello file."
+
+#~ msgid "Staying on branch '%s'."
+#~ msgstr "Si rimarrà sul ramo '%s'."
+
+#~ msgid ""
+#~ "You are no longer on a local branch.\n"
+#~ "\n"
+#~ "If you wanted to be on a branch, create one now starting from 'This "
+#~ "Detached Checkout'."
+#~ msgstr ""
+#~ "Non si è più su un ramo locale\n"
+#~ "\n"
+#~ "Se si vuole rimanere su un ramo, crearne uno ora a partire da 'Questa "
+#~ "revisione attiva staccata'."
+
+#~ msgid "Checked out '%s'."
+#~ msgstr "Attivazione di '%s' completata."
+
+#~ msgid "Reset '%s'?"
+#~ msgstr "Ripristinare '%s'?"
+
+#~ msgid ""
+#~ "Failed to set current branch.\n"
+#~ "\n"
+#~ "This working directory is only partially switched.  We successfully "
+#~ "updated your files, but failed to update an internal Git file.\n"
+#~ "\n"
+#~ "This should not have occurred.  %s will now close and give up."
+#~ msgstr ""
+#~ "Impossibile preparare il ramo attuale.\n"
+#~ "\n"
+#~ "Questa directory di lavoro è stata convertita solo parzialmente. I file "
+#~ "sono stati aggiornati correttamente, ma l'aggiornamento di un file di Git "
+#~ "ha prodotto degli errori.\n"
+#~ "\n"
+#~ "Questo non sarebbe dovuto succedere.  %s ora terminerà senza altre azioni."
+
+#~ msgid "Font Family"
+#~ msgstr "Famiglia di caratteri"
+
+#~ msgid "Font Example"
+#~ msgstr "Esempio caratteri"
+
+#~ msgid ""
+#~ "This is example text.\n"
+#~ "If you like this text, it can be your font."
+#~ msgstr ""
+#~ "Questo è un testo d'esempio.\n"
+#~ "Se ti piace questo testo, scegli questo carattere."
+
+#~ msgid "Git Gui"
+#~ msgstr "Git Gui"
+
+#~ msgid "Clone Existing Repository"
+#~ msgstr "Clona archivio esistente"
+
+#~ msgid "Recent Repositories"
+#~ msgstr "Archivi recenti"
+
+#~ msgid "Failed to create repository %s:"
+#~ msgstr "Impossibile creare l'archivio %s:"
+
+#~ msgid "Directory:"
+#~ msgstr "Directory:"
+
+#~ msgid "Directory %s already exists."
+#~ msgstr "La directory %s esiste già."
+
+#~ msgid "Clone"
+#~ msgstr "Clona"
+
+#~ msgid "Clone Type:"
+#~ msgstr "Tipo di clone:"
+
+#~ msgid "Standard (Fast, Semi-Redundant, Hardlinks)"
+#~ msgstr "Standard (veloce, semi-ridondante, con hardlink)"
+
+#~ msgid "Full Copy (Slower, Redundant Backup)"
+#~ msgstr "Copia completa (più lento, backup ridondante)"
+
+#~ msgid "Shared (Fastest, Not Recommended, No Backup)"
+#~ msgstr "Shared (il più veloce, non raccomandato, nessun backup)"
+
+#~ msgid "Standard only available for local repository."
+#~ msgstr "Standard è disponibile solo per archivi locali."
+
+#~ msgid "Shared only available for local repository."
+#~ msgstr "Shared è disponibile solo per archivi locali."
+
+#~ msgid "Location %s already exists."
+#~ msgstr "Il file/directory %s esiste già."
+
+#~ msgid "Failed to configure origin"
+#~ msgstr "Impossibile configurare origin"
+
+#~ msgid "Counting objects"
+#~ msgstr "Calcolo oggetti"
+
+#~ msgid "Unable to copy objects/info/alternates: %s"
+#~ msgstr "Impossibile copiare oggetti/info/alternate: %s"
+
+#~ msgid "The 'master' branch has not been initialized."
+#~ msgstr "Il ramo 'master' non è stato inizializzato."
+
+#~ msgid "Hardlinks are unavailable.  Falling back to copying."
+#~ msgstr "Impossibile utilizzare gli hardlink. Si ricorrerà alla copia."
+
+#~ msgid "Cloning from %s"
+#~ msgstr "Clonazione da %s"
+
+#~ msgid "Copying objects"
+#~ msgstr "Copia degli oggetti"
+
+#~ msgid "KiB"
+#~ msgstr "KiB"
+
+#~ msgid "Unable to copy object: %s"
+#~ msgstr "Impossibile copiare oggetto: %s"
+
+#~ msgid "Linking objects"
+#~ msgstr "Collegamento oggetti"
+
+#~ msgid "objects"
+#~ msgstr "oggetti"
+
+#~ msgid "Unable to hardlink object: %s"
+#~ msgstr "Hardlink impossibile sull'oggetto: %s"
+
+#~ msgid "Cannot fetch branches and objects.  See console output for details."
+#~ msgstr ""
+#~ "Impossibile recuperare rami e oggetti. Controllare i dettagli forniti "
+#~ "dalla console."
+
+#~ msgid "Cannot fetch tags.  See console output for details."
+#~ msgstr ""
+#~ "Impossibile recuperare le etichette. Controllare i dettagli forniti dalla "
+#~ "console."
+
+#~ msgid "Cannot determine HEAD.  See console output for details."
+#~ msgstr ""
+#~ "Impossibile determinare HEAD. Controllare i dettagli forniti dalla "
+#~ "console."
+
+#~ msgid "Unable to cleanup %s"
+#~ msgstr "Impossibile ripulire %s"
+
+#~ msgid "Clone failed."
+#~ msgstr "Clonazione non riuscita."
+
+#~ msgid "No default branch obtained."
+#~ msgstr "Non è stato trovato un ramo predefinito."
+
+#~ msgid "Cannot resolve %s as a commit."
+#~ msgstr "Impossibile risolvere %s come una revisione."
+
+#~ msgid "Creating working directory"
+#~ msgstr "Creazione directory di lavoro"
+
+#~ msgid "files"
+#~ msgstr "file"
+
+#~ msgid "Initial file checkout failed."
+#~ msgstr "Attivazione iniziale non riuscita."
+
+#~ msgid "Failed to open repository %s:"
+#~ msgstr "Impossibile accedere all'archivio %s:"
+
+#~ msgid "This Detached Checkout"
+#~ msgstr "Questa revisione attiva staccata"
+
+#~ msgid "Updated"
+#~ msgstr "Aggiornato"
+
+#~ msgid ""
+#~ "There is nothing to amend.\n"
+#~ "\n"
+#~ "You are about to create the initial commit.  There is no commit before "
+#~ "this to amend.\n"
+#~ msgstr ""
+#~ "Non c'è niente da correggere.\n"
+#~ "\n"
+#~ "Stai per creare la revisione iniziale. Non esiste una revisione "
+#~ "precedente da correggere.\n"
+
+#~ msgid ""
+#~ "Cannot amend while merging.\n"
+#~ "\n"
+#~ "You are currently in the middle of a merge that has not been fully "
+#~ "completed.  You cannot amend the prior commit unless you first abort the "
+#~ "current merge activity.\n"
+#~ msgstr ""
+#~ "Non è possibile effettuare una correzione durante una fusione.\n"
+#~ "\n"
+#~ "In questo momento si sta effettuando una fusione che non è stata del "
+#~ "tutto completata. Non puoi correggere la revisione precedente a meno che "
+#~ "prima tu non interrompa l'operazione di fusione in corso.\n"
+
+#~ msgid "Error loading commit data for amend:"
+#~ msgstr ""
+#~ "Errore durante il caricamento dei dati della revisione da correggere:"
+
+#~ msgid "Unable to obtain your identity:"
+#~ msgstr "Impossibile ottenere la tua identità:"
+
+#~ msgid "Invalid GIT_COMMITTER_IDENT:"
+#~ msgstr "GIT_COMMITTER_IDENT non valida:"
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before another commit can be created.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "L'ultimo stato analizzato non corrisponde allo stato dell'archivio.\n"
+#~ "\n"
+#~ "Un altro programma Git ha modificato questo archivio dall'ultima analisi. "
+#~ "Bisogna effettuare una nuova analisi prima di poter creare una nuova "
+#~ "revisione.\n"
+#~ "\n"
+#~ "La nuova analisi comincerà ora.\n"
+
+#~ msgid ""
+#~ "Unmerged files cannot be committed.\n"
+#~ "\n"
+#~ "File %s has merge conflicts.  You must resolve them and stage the file "
+#~ "before committing.\n"
+#~ msgstr ""
+#~ "Non è possibile creare una revisione con file non sottoposti a fusione.\n"
+#~ "\n"
+#~ "Il file %s presenta dei conflitti. Devi risolverli e preparare il file "
+#~ "per creare una nuova revisione prima di effettuare questa azione.\n"
+
+#~ msgid ""
+#~ "Unknown file state %s detected.\n"
+#~ "\n"
+#~ "File %s cannot be committed by this program.\n"
+#~ msgstr ""
+#~ "Stato di file %s sconosciuto.\n"
+#~ "\n"
+#~ "Questo programma non può creare una revisione contenente il file %s.\n"
+
+#~ msgid "warning: Tcl does not support encoding '%s'."
+#~ msgstr "attenzione: Tcl non supporta la codifica '%s'."
+
+#~ msgid "Calling pre-commit hook..."
+#~ msgstr "Avvio pre-commit hook..."
+
+#~ msgid "Commit declined by pre-commit hook."
+#~ msgstr "Revisione rifiutata dal pre-commit hook."
+
+#~ msgid "Calling commit-msg hook..."
+#~ msgstr "Avvio commit-msg hook..."
+
+#~ msgid "Commit declined by commit-msg hook."
+#~ msgstr "Revisione rifiutata dal commit-msg hook."
+
+#~ msgid "write-tree failed:"
+#~ msgstr "write-tree non riuscito:"
+
+#~ msgid "Commit %s appears to be corrupt"
+#~ msgstr "La revisione %s sembra essere danneggiata"
+
+#~ msgid ""
+#~ "No changes to commit.\n"
+#~ "\n"
+#~ "No files were modified by this commit and it was not a merge commit.\n"
+#~ "\n"
+#~ "A rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "Nessuna modifica per la nuova revisione.\n"
+#~ "\n"
+#~ "Questa revisione non modifica alcun file e non effettua alcuna fusione.\n"
+#~ "\n"
+#~ "Si procederà subito ad una nuova analisi.\n"
+
+#~ msgid "commit-tree failed:"
+#~ msgstr "commit-tree non riuscito:"
+
+#~ msgid "update-ref failed:"
+#~ msgstr "update-ref non riuscito:"
+
+#~ msgid "Working... please wait..."
+#~ msgstr "Elaborazione in corso... attendere..."
+
+#~ msgid "Success"
+#~ msgstr "Successo"
+
+#~ msgid "Error: Command Failed"
+#~ msgstr "Errore: comando non riuscito"
+
+#~ msgid "Number of loose objects"
+#~ msgstr "Numero di oggetti slegati"
+
+#~ msgid "Disk space used by loose objects"
+#~ msgstr "Spazio su disco utilizzato da oggetti slegati"
+
+#~ msgid "Number of packed objects"
+#~ msgstr "Numero di oggetti impacchettati"
+
+#~ msgid "Number of packs"
+#~ msgstr "Numero di pacchetti"
+
+#~ msgid "Disk space used by packed objects"
+#~ msgstr "Spazio su disco utilizzato da oggetti impacchettati"
+
+#~ msgid "Packed objects waiting for pruning"
+#~ msgstr "Oggetti impacchettati che attendono la potatura"
+
+#~ msgid "Garbage files"
+#~ msgstr "File inutili"
+
+#~ msgid "Compressing the object database"
+#~ msgstr "Compressione dell'archivio in corso"
+
+#~ msgid "Verifying the object database with fsck-objects"
+#~ msgstr "Verifica dell'archivio con fsck-objects in corso"
+
+#~ msgid ""
+#~ "This repository currently has approximately %i loose objects.\n"
+#~ "\n"
+#~ "To maintain optimal performance it is strongly recommended that you "
+#~ "compress the database when more than %i loose objects exist.\n"
+#~ "\n"
+#~ "Compress the database now?"
+#~ msgstr ""
+#~ "Questo archivio attualmente ha circa %i oggetti slegati.\n"
+#~ "\n"
+#~ "Per mantenere buone prestazioni si raccomanda di comprimere l'archivio "
+#~ "quando sono presenti più di %i oggetti slegati.\n"
+#~ "\n"
+#~ "Comprimere l'archivio ora?"
+
+#~ msgid "Invalid date from Git: %s"
+#~ msgstr "Git ha restituito una data non valida: %s"
+
+#~ msgid ""
+#~ "No differences detected.\n"
+#~ "\n"
+#~ "%s has no changes.\n"
+#~ "\n"
+#~ "The modification date of this file was updated by another application, "
+#~ "but the content within the file was not changed.\n"
+#~ "\n"
+#~ "A rescan will be automatically started to find other files which may have "
+#~ "the same state."
+#~ msgstr ""
+#~ "Non sono state trovate differenze.\n"
+#~ "\n"
+#~ "%s non ha modifiche.\n"
+#~ "\n"
+#~ "La data di modifica di questo file è stata cambiata da un'altra "
+#~ "applicazione, ma il contenuto del file è rimasto invariato.\n"
+#~ "\n"
+#~ "Si procederà automaticamente ad una nuova analisi per trovare altri file "
+#~ "che potrebbero avere lo stesso stato."
+
+#~ msgid "Unable to display %s"
+#~ msgstr "Impossibile visualizzare %s"
+
+#~ msgid "Git Repository (subproject)"
+#~ msgstr "Archivio Git (sottoprogetto)"
+
+#~ msgid "* Binary file (not showing content)."
+#~ msgstr "* File binario (il contenuto non sarà mostrato)."
+
+#~ msgid "Error loading diff:"
+#~ msgstr "Errore nel caricamento delle differenze:"
+
+#~ msgid "Failed to unstage selected hunk."
+#~ msgstr "Impossibile rimuovere la sezione scelta dalla nuova revisione."
+
+#~ msgid "Failed to stage selected hunk."
+#~ msgstr "Impossibile preparare la sezione scelta per una nuova revisione."
+
+#~ msgid "warning"
+#~ msgstr "attenzione"
+
+#~ msgid "You must correct the above errors before committing."
+#~ msgstr ""
+#~ "Bisogna correggere gli errori suddetti prima di creare una nuova "
+#~ "revisione."
+
+#~ msgid "Unable to unlock the index."
+#~ msgstr "Impossibile sbloccare l'accesso all'indice"
+
+#~ msgid "Index Error"
+#~ msgstr "Errore nell'indice"
+
+#~ msgid ""
+#~ "Updating the Git index failed.  A rescan will be automatically started to "
+#~ "resynchronize git-gui."
+#~ msgstr ""
+#~ "Impossibile aggiornare l'indice. Ora sarà avviata una nuova analisi che "
+#~ "aggiornerà git-gui."
+
+#~ msgid "Unlock Index"
+#~ msgstr "Sblocca l'accesso all'indice"
+
+#~ msgid "Ready to commit."
+#~ msgstr "Pronto per creare una nuova revisione."
+
+#~ msgid "Revert changes in these %i files?"
+#~ msgstr "Annullare le modifiche in questi %i file?"
+
+#~ msgid "Any unstaged changes will be permanently lost by the revert."
+#~ msgstr ""
+#~ "Tutte le modifiche non preparate per una nuova revisione saranno perse "
+#~ "per sempre."
+
+#~ msgid "Do Nothing"
+#~ msgstr "Non fare niente"
+
+#~ msgid ""
+#~ "Cannot merge while amending.\n"
+#~ "\n"
+#~ "You must finish amending this commit before starting any type of merge.\n"
+#~ msgstr ""
+#~ "Non posso effettuare fusioni durante una correzione.\n"
+#~ "\n"
+#~ "Bisogna finire di correggere questa revisione prima di iniziare una "
+#~ "qualunque fusione.\n"
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before a merge can be performed.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "L'ultimo stato analizzato non corrisponde allo stato dell'archivio.\n"
+#~ "\n"
+#~ "Un altro programma Git ha modificato questo archivio dall'ultima analisi."
+#~ "Bisogna effettuare una nuova analisi prima di poter effettuare una "
+#~ "fusione.\n"
+#~ "\n"
+#~ "La nuova analisi comincerà ora.\n"
+
+#~ msgid ""
+#~ "You are in the middle of a conflicted merge.\n"
+#~ "\n"
+#~ "File %s has merge conflicts.\n"
+#~ "\n"
+#~ "You must resolve them, stage the file, and commit to complete the current "
+#~ "merge.  Only then can you begin another merge.\n"
+#~ msgstr ""
+#~ "Sei nel mezzo di una fusione con conflitti.\n"
+#~ "\n"
+#~ "Il file %s ha dei conflitti.\n"
+#~ "\n"
+#~ "Bisogna risolvere i conflitti, preparare il file per una nuova revisione "
+#~ "ed infine crearla per completare la fusione attuale. Solo a questo punto "
+#~ "potrai iniziare un'altra fusione.\n"
+
+#~ msgid ""
+#~ "You are in the middle of a change.\n"
+#~ "\n"
+#~ "File %s is modified.\n"
+#~ "\n"
+#~ "You should complete the current commit before starting a merge.  Doing so "
+#~ "will help you abort a failed merge, should the need arise.\n"
+#~ msgstr ""
+#~ "Sei nel mezzo di una modifica.\n"
+#~ "\n"
+#~ "Il file %s è stato modificato.\n"
+#~ "\n"
+#~ "Bisogna completare la creazione della revisione attuale prima di iniziare "
+#~ "una fusione. In questo modo sarà più facile interrompere una fusione non "
+#~ "riuscita, nel caso ce ne fosse bisogno.\n"
+
+#~ msgid "%s of %s"
+#~ msgstr "%s di %s"
+
+#~ msgid "Merging %s and %s..."
+#~ msgstr "Fusione di %s e %s in corso..."
+
+#~ msgid "Merge completed successfully."
+#~ msgstr "Fusione completata con successo."
+
+#~ msgid "Merge failed.  Conflict resolution is required."
+#~ msgstr "Fusione non riuscita. Bisogna risolvere i conflitti."
+
+#~ msgid ""
+#~ "Cannot abort while amending.\n"
+#~ "\n"
+#~ "You must finish amending this commit.\n"
+#~ msgstr ""
+#~ "Interruzione impossibile durante una correzione.\n"
+#~ "\n"
+#~ "Bisogna finire di correggere questa revisione.\n"
+
+#~ msgid ""
+#~ "Reset changes?\n"
+#~ "\n"
+#~ "Resetting the changes will cause *ALL* uncommitted changes to be lost.\n"
+#~ "\n"
+#~ "Continue with resetting the current changes?"
+#~ msgstr ""
+#~ "Ripristinare la revisione corrente e annullare le modifiche?\n"
+#~ "\n"
+#~ "L'annullamento delle modifiche causerà la perdita di *TUTTE* le modifiche "
+#~ "non ancora presenti nell'archivio.\n"
+#~ "\n"
+#~ "Continuare con l'annullamento delle modifiche attuali?"
+
+#~ msgid "files reset"
+#~ msgstr "ripristino file"
+
+#~ msgid "Abort failed."
+#~ msgstr "Interruzione non riuscita."
+
+#~ msgid "Abort completed.  Ready."
+#~ msgstr "Interruzione completata. Pronto."
+
+#~ msgid "Restore Defaults"
+#~ msgstr "Ripristina valori predefiniti"
+
+#~ msgid "%s Repository"
+#~ msgstr "Archivio di %s"
+
+#~ msgid "Prune Tracking Branches During Fetch"
+#~ msgstr ""
+#~ "Effettua potatura dei duplicati locali di rami remoti durante il recupero"
+
+#~ msgid "Match Tracking Branches"
+#~ msgstr "Appaia duplicati locali di rami remoti"
+
+#~ msgid "New Branch Name Template"
+#~ msgstr "Modello per il nome di un nuovo ramo"
+
+#~ msgid "Spelling Dictionary:"
+#~ msgstr "Lingua dizionario:"
+
+#~ msgid "Change Font"
+#~ msgstr "Cambia caratteri"
+
+#~ msgid "pt."
+#~ msgstr "pt."
+
+#~ msgid "Failed to completely save options:"
+#~ msgstr "Impossibile salvare completamente le opzioni:"
+
+#~ msgid "From Repository"
+#~ msgstr "Da archivio"
+
+#~ msgid "Remote:"
+#~ msgstr "Remoto:"
+
+#~ msgid "Arbitrary URL:"
+#~ msgstr "URL specifico:"
+
+#~ msgid "Delete Only If"
+#~ msgstr "Elimina solo se"
+
+#~ msgid "Merged Into:"
+#~ msgstr "Fuso in:"
+
+#~ msgid "Always (Do not perform merge checks)"
+#~ msgstr "Sempre (non verificare le fusioni)"
+
+#~ msgid "A branch is required for 'Merged Into'."
+#~ msgstr "Si richiede un ramo per 'Fuso in'."
+
+#~ msgid ""
+#~ "The following branches are not completely merged into %s:\n"
+#~ "\n"
+#~ " - %s"
+#~ msgstr ""
+#~ "I rami seguenti non sono stati fusi completamente in %s:\n"
+#~ "\n"
+#~ " - %s"
+
+#~ msgid ""
+#~ "One or more of the merge tests failed because you have not fetched the "
+#~ "necessary commits.  Try fetching from %s first."
+#~ msgstr ""
+#~ "Impossibile verificare una o più fusioni: mancano le revisioni "
+#~ "necessarie. Prova prima a recuperarle da %s."
+
+#~ msgid "Please select one or more branches to delete."
+#~ msgstr "Scegliere uno o più rami da cancellare."
+
+#~ msgid ""
+#~ "Recovering deleted branches is difficult.\n"
+#~ "\n"
+#~ "Delete the selected branches?"
+#~ msgstr ""
+#~ "Ricomporre rami cancellati è difficile.\n"
+#~ "\n"
+#~ "Cancellare i rami selezionati?"
+
+#~ msgid "Prune from"
+#~ msgstr "Effettua potatura da"
+
+#~ msgid "Fetch from"
+#~ msgstr "Recupera da"
+
+#~ msgid "Push to"
+#~ msgstr "Propaga verso"
+
+#~ msgid "Cannot write shortcut:"
+#~ msgstr "Impossibile scrivere shortcut:"
+
+#~ msgid "Unsupported spell checker"
+#~ msgstr "Correttore ortografico non supportato"
+
+#~ msgid "Spell checking is unavailable"
+#~ msgstr "Correzione ortografica indisponibile"
+
+#~ msgid "Invalid spell checking configuration"
+#~ msgstr "La configurazione del correttore ortografico non è valida"
+
+#~ msgid "Reverting dictionary to %s."
+#~ msgstr "Il dizionario è stato reimpostato su %s."
+
+#~ msgid "Spell checker silently failed on startup"
+#~ msgstr "Il correttore ortografico ha riportato un errore all'avvio"
+
+#~ msgid "Unrecognized spell checker"
+#~ msgstr "Correttore ortografico sconosciuto"
+
+#~ msgid "No Suggestions"
+#~ msgstr "Nessun suggerimento"
+
+#~ msgid "Unexpected EOF from spell checker"
+#~ msgstr "Il correttore ortografico ha mandato un EOF inaspettato"
+
+#~ msgid "Spell Checker Failed"
+#~ msgstr "Errore nel correttore ortografico"
+
+#~ msgid "%s ... %*i of %*i %s (%3i%%)"
+#~ msgstr "%1$s ... %6$s: %2$*i di %4$*i (%7$3i%%)"
+
+#~ msgid "Fetching new changes from %s"
+#~ msgstr "Recupero nuove modifiche da %s"
+
+#~ msgid "remote prune %s"
+#~ msgstr "potatura remota di %s"
+
+#~ msgid "Pruning tracking branches deleted from %s"
+#~ msgstr ""
+#~ "Effettua potatura dei duplicati locali di rami remoti cancellati da %s"
+
+#~ msgid "push %s"
+#~ msgstr "propaga verso %s"
+
+#~ msgid "Pushing %s %s to %s"
+#~ msgstr "Propagazione %s %s a %s"
+
+#~ msgid "Push Branches"
+#~ msgstr "Propaga rami"
+
+#~ msgid "Source Branches"
+#~ msgstr "Rami di origine"
+
+#~ msgid "Destination Repository"
+#~ msgstr "Archivio di destinazione"
+
+#~ msgid "Transfer Options"
+#~ msgstr "Opzioni di trasferimento"
+
+#~ msgid "Force overwrite existing branch (may discard changes)"
+#~ msgstr ""
+#~ "Sovrascrivi ramo esistente (alcune modifiche potrebbero essere perse)"
+
+#~ msgid "Use thin pack (for slow network connections)"
+#~ msgstr "Utilizza 'thin pack' (per connessioni lente)"

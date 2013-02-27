@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: git-gui\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-14 07:18+0100\n"
+"POT-Creation-Date: 2013-02-26 23:01-0800\n"
 "PO-Revision-Date: 2008-03-15 20:12+0900\n"
 "Last-Translator: しらいし ななこ <nanako3@bluebottle.com>\n"
 "Language-Team: Japanese\n"
@@ -16,1239 +16,1269 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: git-gui.sh:41 git-gui.sh:634 git-gui.sh:648 git-gui.sh:661 git-gui.sh:744
-#: git-gui.sh:763
-msgid "git-gui: fatal error"
-msgstr "git-gui: 致命的なエラー"
-
-#: git-gui.sh:593
-#, tcl-format
-msgid "Invalid font specified in %s:"
-msgstr "%s に無効なフォントが指定されています:"
-
-#: git-gui.sh:620
-msgid "Main Font"
-msgstr "主フォント"
-
-#: git-gui.sh:621
-msgid "Diff/Console Font"
-msgstr "diff/コンソール・フォント"
-
-#: git-gui.sh:635
-msgid "Cannot find git in PATH."
-msgstr "PATH 中に git が見つかりません"
-
-#: git-gui.sh:662
-msgid "Cannot parse Git version string:"
-msgstr "Git バージョン名が理解できません:"
-
-#: git-gui.sh:680
-#, tcl-format
-msgid ""
-"Git version cannot be determined.\n"
-"\n"
-"%s claims it is version '%s'.\n"
-"\n"
-"%s requires at least Git 1.5.0 or later.\n"
-"\n"
-"Assume '%s' is version 1.5.0?\n"
+#: cola/bookmarks.py:32
+msgid "Bookmarks"
 msgstr ""
-"Git のバージョンが確認できません。\n"
-"\n"
-"%s はバージョン '%s' とのことです。\n"
-"\n"
-"%s は最低でも 1.5.0 かそれ以降の Git が必要です\n"
-"\n"
-"'%s' はバージョン 1.5.0 と思って良いですか？\n"
 
-#: git-gui.sh:918
-msgid "Git directory not found:"
-msgstr "Git ディレクトリが見つかりません:"
+#: cola/bookmarks.py:47
+msgid "Open"
+msgstr "開く"
 
-#: git-gui.sh:925
-msgid "Cannot move to top of working directory:"
-msgstr "作業ディレクトリの最上位に移動できません"
-
-#: git-gui.sh:932
-msgid "Cannot use funny .git directory:"
-msgstr "変な .git ディレクトリは使えません"
-
-#: git-gui.sh:937
-msgid "No working directory"
-msgstr "作業ディレクトリがありません"
-
-#: git-gui.sh:1084 lib/checkout_op.tcl:283
-msgid "Refreshing file status..."
-msgstr "ファイル状態を更新しています…"
-
-#: git-gui.sh:1149
-msgid "Scanning for modified files ..."
-msgstr "変更されたファイルをスキャンしています…"
-
-#: git-gui.sh:1324 lib/browser.tcl:246
-msgid "Ready."
-msgstr "準備完了"
-
-#: git-gui.sh:1590
-msgid "Unmodified"
-msgstr "変更無し"
-
-#: git-gui.sh:1592
-msgid "Modified, not staged"
-msgstr "変更あり、コミット未予定"
-
-#: git-gui.sh:1593 git-gui.sh:1598
-msgid "Staged for commit"
-msgstr "コミット予定済"
-
-#: git-gui.sh:1594 git-gui.sh:1599
-msgid "Portions staged for commit"
-msgstr "部分的にコミット予定済"
-
-#: git-gui.sh:1595 git-gui.sh:1600
-msgid "Staged for commit, missing"
-msgstr "コミット予定済、ファイル無し"
-
-#: git-gui.sh:1597
-msgid "Untracked, not staged"
-msgstr "管理外、コミット未予定"
-
-#: git-gui.sh:1602
-msgid "Missing"
-msgstr "ファイル無し"
-
-#: git-gui.sh:1603
-msgid "Staged for removal"
-msgstr "削除予定済"
-
-#: git-gui.sh:1604
-msgid "Staged for removal, still present"
-msgstr "削除予定済、ファイル未削除"
-
-#: git-gui.sh:1606 git-gui.sh:1607 git-gui.sh:1608 git-gui.sh:1609
-msgid "Requires merge resolution"
-msgstr "要マージ解決"
-
-#: git-gui.sh:1644
-msgid "Starting gitk... please wait..."
-msgstr "gitk を起動中…お待ち下さい…"
-
-#: git-gui.sh:1653
-#, tcl-format
-msgid ""
-"Unable to start gitk:\n"
-"\n"
-"%s does not exist"
+#: cola/bookmarks.py:53
+msgid "Add"
 msgstr ""
-"gitk を起動できません:\n"
-"\n"
-"%s がありません"
 
-#: git-gui.sh:1860 lib/choose_repository.tcl:36
-msgid "Repository"
-msgstr "リポジトリ"
-
-#: git-gui.sh:1861
-msgid "Edit"
-msgstr "編集"
-
-#: git-gui.sh:1863 lib/choose_rev.tcl:561
-msgid "Branch"
-msgstr "ブランチ"
-
-#: git-gui.sh:1866 lib/choose_rev.tcl:548
-msgid "Commit@@noun"
-msgstr "コミット"
-
-#: git-gui.sh:1869 lib/merge.tcl:120 lib/merge.tcl:149 lib/merge.tcl:167
-msgid "Merge"
-msgstr "マージ"
-
-#: git-gui.sh:1870 lib/choose_rev.tcl:557
-msgid "Remote"
-msgstr "リモート"
-
-#: git-gui.sh:1879
-msgid "Browse Current Branch's Files"
-msgstr "現在のブランチのファイルを見る"
-
-#: git-gui.sh:1883
-msgid "Browse Branch Files..."
-msgstr "ブランチのファイルを見る…"
-
-#: git-gui.sh:1888
-msgid "Visualize Current Branch's History"
-msgstr "現在のブランチの履歴を見る"
-
-#: git-gui.sh:1892
-msgid "Visualize All Branch History"
-msgstr "全てのブランチの履歴を見る"
-
-#: git-gui.sh:1899
-#, tcl-format
-msgid "Browse %s's Files"
-msgstr "ブランチ %s のファイルを見る"
-
-#: git-gui.sh:1901
-#, tcl-format
-msgid "Visualize %s's History"
-msgstr "ブランチ %s の履歴を見る"
-
-#: git-gui.sh:1906 lib/database.tcl:27 lib/database.tcl:67
-msgid "Database Statistics"
-msgstr "データベース統計"
-
-#: git-gui.sh:1909 lib/database.tcl:34
-msgid "Compress Database"
-msgstr "データベース圧縮"
-
-#: git-gui.sh:1912
-msgid "Verify Database"
-msgstr "データベース検証"
-
-#: git-gui.sh:1919 git-gui.sh:1923 git-gui.sh:1927 lib/shortcut.tcl:7
-#: lib/shortcut.tcl:39 lib/shortcut.tcl:71
-msgid "Create Desktop Icon"
-msgstr "デスクトップ・アイコンを作る"
-
-#: git-gui.sh:1932 lib/choose_repository.tcl:177 lib/choose_repository.tcl:185
-msgid "Quit"
-msgstr "終了"
-
-#: git-gui.sh:1939
-msgid "Undo"
-msgstr "元に戻す"
-
-#: git-gui.sh:1942
-msgid "Redo"
-msgstr "やり直し"
-
-#: git-gui.sh:1946 git-gui.sh:2443
-msgid "Cut"
-msgstr "切り取り"
-
-#: git-gui.sh:1949 git-gui.sh:2446 git-gui.sh:2520 git-gui.sh:2614
-#: lib/console.tcl:69
-msgid "Copy"
-msgstr "コピー"
-
-#: git-gui.sh:1952 git-gui.sh:2449
-msgid "Paste"
-msgstr "貼り付け"
-
-#: git-gui.sh:1955 git-gui.sh:2452 lib/branch_delete.tcl:26
-#: lib/remote_branch_delete.tcl:38
+#: cola/bookmarks.py:58 cola/widgets/editremotes.py:127
 msgid "Delete"
 msgstr "削除"
 
-#: git-gui.sh:1959 git-gui.sh:2456 git-gui.sh:2618 lib/console.tcl:71
-msgid "Select All"
-msgstr "全て選択"
+#: cola/bookmarks.py:65 cola/stash/view.py:42 cola/widgets/archive.py:65
+#: cola/widgets/browse.py:117
+msgid "Save"
+msgstr "保存"
 
-#: git-gui.sh:1968
-msgid "Create..."
-msgstr "作成…"
+#: cola/bookmarks.py:71 cola/difftool.py:96 cola/qt.py:50 cola/qt.py:232
+#: cola/prefs/view.py:238 cola/stash/view.py:50 cola/stash/view.py:51
+#: cola/widgets/about.py:66 cola/widgets/about.py:125
+#: cola/widgets/browse.py:116 cola/widgets/cfgactions.py:87
+#: cola/widgets/cfgactions.py:239 cola/widgets/compare.py:94
+#: cola/widgets/createbranch.py:159 cola/widgets/createtag.py:104
+#: cola/widgets/editremotes.py:55 cola/widgets/grep.py:74
+#: cola/widgets/recent.py:75 cola/widgets/remote.py:157
+#: cola/widgets/search.py:81 cola/widgets/selectcommits.py:59
+#: cola/widgets/startup.py:44
+msgid "Close"
+msgstr "閉じる"
 
-#: git-gui.sh:1974
-msgid "Checkout..."
-msgstr "チェックアウト"
+#: cola/bookmarks.py:102
+msgid "Bookmarks Saved"
+msgstr ""
 
-#: git-gui.sh:1980
-msgid "Rename..."
-msgstr "名前変更…"
+#: cola/bookmarks.py:103
+msgid "Successfully saved bookmarks"
+msgstr ""
 
-#: git-gui.sh:1985 git-gui.sh:2085
-msgid "Delete..."
-msgstr "削除…"
+#: cola/bookmarks.py:107
+#, fuzzy
+msgid "Path to git repository"
+msgstr "Git リポジトリではありません: %s"
 
-#: git-gui.sh:1990
-msgid "Reset..."
-msgstr "リセット…"
+#: cola/bookmarks.py:108
+#, fuzzy
+msgid "Enter Git Repository"
+msgstr "GIT リポジトリ"
 
-#: git-gui.sh:2002 git-gui.sh:2389
-msgid "New Commit"
-msgstr "新規コミット"
+#: cola/cmds.py:100
+msgid "Amend"
+msgstr ""
 
-#: git-gui.sh:2010 git-gui.sh:2396
-msgid "Amend Last Commit"
-msgstr "最新コミットを訂正"
+#: cola/cmds.py:135
+#, fuzzy
+msgid "Cannot Amend"
+msgstr "アイコンが書けません:"
 
-#: git-gui.sh:2019 git-gui.sh:2356 lib/remote_branch_delete.tcl:99
-msgid "Rescan"
-msgstr "再スキャン"
+#: cola/cmds.py:136
+msgid ""
+"You are in the middle of a merge.\n"
+"Cannot amend while merging."
+msgstr ""
 
-#: git-gui.sh:2025
-msgid "Stage To Commit"
-msgstr "コミット予定する"
+#: cola/cmds.py:205
+#, python-format
+msgid "PATCH %(current)d/%(count)d"
+msgstr ""
 
-#: git-gui.sh:2031
-msgid "Stage Changed Files To Commit"
-msgstr "変更されたファイルをコミット予定"
+#: cola/cmds.py:209
+msgid "Summary:"
+msgstr ""
 
-#: git-gui.sh:2037
-msgid "Unstage From Commit"
-msgstr "コミットから降ろす"
+#: cola/cmds.py:218
+msgid "Patch(es) Applied"
+msgstr ""
 
-#: git-gui.sh:2042 lib/index.tcl:395
-msgid "Revert Changes"
-msgstr "変更を元に戻す"
+#: cola/cmds.py:219
+#, python-format
+msgid "%d patch(es) applied."
+msgstr ""
 
-#: git-gui.sh:2049 git-gui.sh:2368 git-gui.sh:2467
-msgid "Sign Off"
-msgstr "署名"
+#: cola/cmds.py:323
+#, fuzzy, python-format
+msgid "Created commit: %s"
+msgstr "コミット %s を作成しました: %s"
 
-#: git-gui.sh:2053 git-gui.sh:2372
-msgid "Commit@@verb"
-msgstr "コミット"
+#: cola/cmds.py:325
+#, fuzzy, python-format
+msgid "Commit failed: %s"
+msgstr "コミットに失敗しました。"
 
-#: git-gui.sh:2064
-msgid "Local Merge..."
-msgstr "ローカル・マージ…"
+#: cola/cmds.py:370 cola/cmds.py:1125
+#, fuzzy
+msgid "Error"
+msgstr "エラー"
 
-#: git-gui.sh:2069
-msgid "Abort Merge..."
-msgstr "マージ中止…"
+#: cola/cmds.py:371
+#, python-format
+msgid "Deleting \"%s\" failed"
+msgstr ""
 
-#: git-gui.sh:2081
-msgid "Push..."
-msgstr "プッシュ…"
+#: cola/cmds.py:460 cola/widgets/grep.py:59 cola/widgets/recent.py:69
+msgid "Edit"
+msgstr "編集"
 
-#: git-gui.sh:2092 lib/choose_repository.tcl:41
-msgid "Apple"
-msgstr "りんご"
+#: cola/cmds.py:514
+msgid "Launch Diff Tool"
+msgstr ""
 
-#: git-gui.sh:2095 git-gui.sh:2117 lib/about.tcl:14
-#: lib/choose_repository.tcl:44 lib/choose_repository.tcl:50
-#, tcl-format
-msgid "About %s"
-msgstr "%s について"
+#: cola/cmds.py:528
+msgid "Launch Editor"
+msgstr ""
 
-#: git-gui.sh:2099
-msgid "Preferences..."
-msgstr "設定…"
+#: cola/cmds.py:549
+msgid "Error: Cannot find commit template"
+msgstr ""
 
-#: git-gui.sh:2107 git-gui.sh:2639
-msgid "Options..."
-msgstr "オプション…"
-
-#: git-gui.sh:2113 lib/choose_repository.tcl:47
-msgid "Help"
-msgstr "ヘルプ"
-
-#: git-gui.sh:2154
-msgid "Online Documentation"
-msgstr "オンライン・ドキュメント"
-
-#: git-gui.sh:2238
-#, tcl-format
-msgid "fatal: cannot stat path %s: No such file or directory"
+#: cola/cmds.py:550
+#, fuzzy, python-format
+msgid "%s: No such file or directory."
 msgstr ""
 "致命的: パス %s が stat できません。そのようなファイルやディレクトリはありま"
 "せん"
 
-#: git-gui.sh:2271
-msgid "Current Branch:"
-msgstr "現在のブランチ"
-
-#: git-gui.sh:2292
-msgid "Staged Changes (Will Commit)"
-msgstr "ステージングされた（コミット予定済の）変更"
-
-#: git-gui.sh:2312
-msgid "Unstaged Changes"
-msgstr "コミット予定に入っていない変更"
-
-#: git-gui.sh:2362
-msgid "Stage Changed"
-msgstr "変更をコミット予定に入れる"
-
-#: git-gui.sh:2378 lib/transport.tcl:93 lib/transport.tcl:182
-msgid "Push"
-msgstr "プッシュ"
-
-#: git-gui.sh:2408
-msgid "Initial Commit Message:"
-msgstr "最初のコミットメッセージ:"
-
-#: git-gui.sh:2409
-msgid "Amended Commit Message:"
-msgstr "訂正したコミットメッセージ:"
-
-#: git-gui.sh:2410
-msgid "Amended Initial Commit Message:"
-msgstr "訂正した最初のコミットメッセージ:"
-
-#: git-gui.sh:2411
-msgid "Amended Merge Commit Message:"
-msgstr "訂正したマージコミットメッセージ:"
-
-#: git-gui.sh:2412
-msgid "Merge Commit Message:"
-msgstr "マージコミットメッセージ:"
-
-#: git-gui.sh:2413
-msgid "Commit Message:"
-msgstr "コミットメッセージ:"
-
-#: git-gui.sh:2459 git-gui.sh:2622 lib/console.tcl:73
-msgid "Copy All"
-msgstr "全てコピー"
-
-#: git-gui.sh:2483 lib/blame.tcl:107
-msgid "File:"
-msgstr "ファイル:"
-
-#: git-gui.sh:2589
-msgid "Apply/Reverse Hunk"
-msgstr "パッチを適用/取り消す"
-
-#: git-gui.sh:2595
-msgid "Show Less Context"
-msgstr "文脈を少なく"
-
-#: git-gui.sh:2602
-msgid "Show More Context"
-msgstr "文脈を多く"
-
-#: git-gui.sh:2610
-msgid "Refresh"
-msgstr "再読み込み"
-
-#: git-gui.sh:2631
-msgid "Decrease Font Size"
-msgstr "フォントを小さく"
-
-#: git-gui.sh:2635
-msgid "Increase Font Size"
-msgstr "フォントを大きく"
-
-#: git-gui.sh:2646
-msgid "Unstage Hunk From Commit"
-msgstr "パッチをコミット予定から外す"
-
-#: git-gui.sh:2648
-msgid "Stage Hunk For Commit"
-msgstr "パッチをコミット予定に加える"
-
-#: git-gui.sh:2667
-msgid "Initializing..."
-msgstr "初期化しています…"
-
-#: git-gui.sh:2762
-#, tcl-format
-msgid ""
-"Possible environment issues exist.\n"
-"\n"
-"The following environment variables are probably\n"
-"going to be ignored by any Git subprocess run\n"
-"by %s:\n"
-"\n"
+#: cola/cmds.py:567
+msgid "Error: Unconfigured commit template"
 msgstr ""
-"環境に問題がある可能性があります\n"
-"\n"
-"以下の環境変数は %s が起動する Git サブプロセスによって無視されるでしょう:\n"
-"\n"
 
-#: git-gui.sh:2792
+#: cola/cmds.py:568
 msgid ""
-"\n"
-"This is due to a known issue with the\n"
-"Tcl binary distributed by Cygwin."
+"A commit template has not been configured.\n"
+"Use \"git config\" to define \"commit.template\"\n"
+"so that it points to a commit template."
 msgstr ""
-"\n"
-"これは Cygwin で配布されている Tcl バイナリに\n"
-"関しての既知の問題によります"
 
-#: git-gui.sh:2797
-#, tcl-format
-msgid ""
-"\n"
-"\n"
-"A good replacement for %s\n"
-"is placing values for the user.name and\n"
-"user.email settings into your personal\n"
-"~/.gitconfig file.\n"
+#: cola/cmds.py:637
+msgid "Open Using Default Application"
 msgstr ""
-"\n"
-"\n"
-"個人的な ~/.gitconfig ファイル内で user.name と user.email の値を設定\n"
-"するのが、%s の良い代用となります\n"
 
-#: lib/about.tcl:26
-msgid "git-gui - a graphical user interface for Git."
-msgstr "Git のグラフィカルUI git-gui"
+#: cola/cmds.py:660
+#, fuzzy
+msgid "Open Parent Directory"
+msgstr "最近使ったリポジトリを開く"
 
-#: lib/blame.tcl:77
-msgid "File Viewer"
-msgstr "ファイルピューワ"
+#: cola/cmds.py:700
+#, python-format
+msgid "Error: could not clone \"%s\""
+msgstr ""
 
-#: lib/blame.tcl:81
-msgid "Commit:"
-msgstr "コミット:"
+#: cola/cmds.py:701
+#, python-format
+msgid "git clone returned exit code %s"
+msgstr ""
 
-#: lib/blame.tcl:264
-msgid "Copy Commit"
-msgstr "コミットをコピー"
+#: cola/cmds.py:724 cola/widgets/action.py:19
+msgid "Rescan"
+msgstr "再スキャン"
 
-#: lib/blame.tcl:384
-#, tcl-format
-msgid "Reading %s..."
-msgstr "%s を読んでいます…"
+#: cola/cmds.py:752
+#, python-format
+msgid "Run \"%s\"?"
+msgstr ""
 
-#: lib/blame.tcl:488
-msgid "Loading copy/move tracking annotations..."
-msgstr "コピー・移動追跡データを読んでいます…"
-
-#: lib/blame.tcl:508
-msgid "lines annotated"
-msgstr "行を注釈しました"
-
-#: lib/blame.tcl:689
-msgid "Loading original location annotations..."
-msgstr "元位置行の注釈データを読んでいます…"
-
-#: lib/blame.tcl:692
-msgid "Annotation complete."
-msgstr "注釈完了しました"
-
-#: lib/blame.tcl:746
-msgid "Loading annotation..."
-msgstr "注釈を読み込んでいます…"
-
-#: lib/blame.tcl:802
-msgid "Author:"
-msgstr "作者:"
-
-#: lib/blame.tcl:806
-msgid "Committer:"
-msgstr "コミット者:"
-
-#: lib/blame.tcl:811
-msgid "Original File:"
-msgstr "元ファイル"
-
-#: lib/blame.tcl:925
-msgid "Originally By:"
-msgstr "原作者:"
-
-#: lib/blame.tcl:931
-msgid "In File:"
-msgstr "ファイル:"
-
-#: lib/blame.tcl:936
-msgid "Copied Or Moved Here By:"
-msgstr "複写・移動者:"
-
-#: lib/branch_checkout.tcl:14 lib/branch_checkout.tcl:19
-msgid "Checkout Branch"
-msgstr "ブランチをチェックアウト"
-
-#: lib/branch_checkout.tcl:23
-msgid "Checkout"
-msgstr "チェックアウト"
-
-#: lib/branch_checkout.tcl:27 lib/branch_create.tcl:35
-#: lib/branch_delete.tcl:32 lib/branch_rename.tcl:30 lib/browser.tcl:282
-#: lib/checkout_op.tcl:522 lib/choose_font.tcl:43 lib/merge.tcl:171
-#: lib/option.tcl:103 lib/remote_branch_delete.tcl:42 lib/transport.tcl:97
-msgid "Cancel"
-msgstr "中止"
-
-#: lib/branch_checkout.tcl:32 lib/browser.tcl:287
-msgid "Revision"
-msgstr "リビジョン"
-
-#: lib/branch_checkout.tcl:36 lib/branch_create.tcl:69 lib/option.tcl:242
-msgid "Options"
-msgstr "オプション"
-
-#: lib/branch_checkout.tcl:39 lib/branch_create.tcl:92
-msgid "Fetch Tracking Branch"
-msgstr "トラッキング・ブランチをフェッチ"
-
-#: lib/branch_checkout.tcl:44
-msgid "Detach From Local Branch"
-msgstr "ローカル・ブランチから削除"
-
-#: lib/branch_create.tcl:22
-msgid "Create Branch"
-msgstr "ブランチを作成"
-
-#: lib/branch_create.tcl:27
-msgid "Create New Branch"
-msgstr "ブランチを新規作成"
-
-#: lib/branch_create.tcl:31 lib/choose_repository.tcl:371
-msgid "Create"
-msgstr "作成"
-
-#: lib/branch_create.tcl:40
-msgid "Branch Name"
-msgstr "ブランチ名"
-
-#: lib/branch_create.tcl:43
-msgid "Name:"
-msgstr "名前:"
-
-#: lib/branch_create.tcl:58
-msgid "Match Tracking Branch Name"
-msgstr "トラッキング・ブランチ名を合わせる"
-
-#: lib/branch_create.tcl:66
-msgid "Starting Revision"
-msgstr "初期リビジョン"
-
-#: lib/branch_create.tcl:72
-msgid "Update Existing Branch:"
-msgstr "既存のブランチを更新:"
-
-#: lib/branch_create.tcl:75
-msgid "No"
-msgstr "いいえ"
-
-#: lib/branch_create.tcl:80
-msgid "Fast Forward Only"
-msgstr "早送りのみ"
-
-#: lib/branch_create.tcl:85 lib/checkout_op.tcl:514
-msgid "Reset"
-msgstr "リセット"
-
-#: lib/branch_create.tcl:97
-msgid "Checkout After Creation"
-msgstr "作成してすぐチェックアウト"
-
-#: lib/branch_create.tcl:131
-msgid "Please select a tracking branch."
+#: cola/cmds.py:759
+#, fuzzy
+msgid "Please select a file"
 msgstr "トラッキング・ブランチを選択して下さい。"
 
-#: lib/branch_create.tcl:140
-#, tcl-format
-msgid "Tracking branch %s is not a branch in the remote repository."
-msgstr "トラッキング・ブランチ %s は遠隔リポジトリのブランチではありません。"
+#: cola/cmds.py:760
+#, python-format
+msgid "\"%s\" requires a selected file."
+msgstr ""
 
-#: lib/branch_create.tcl:153 lib/branch_rename.tcl:86
-msgid "Please supply a branch name."
-msgstr "ブランチ名を指定して下さい。"
+#: cola/cmds.py:772
+#, fuzzy
+msgid "Invalid Revision"
+msgstr "無効なリビジョン: %s"
 
-#: lib/branch_create.tcl:164 lib/branch_rename.tcl:106
-#, tcl-format
-msgid "'%s' is not an acceptable branch name."
-msgstr "'%s' はブランチ名に使えません。"
+#: cola/cmds.py:773
+#, fuzzy
+msgid "The revision expression cannot be empty."
+msgstr "リビジョン式が空です。"
 
-#: lib/branch_delete.tcl:15
+#: cola/cmds.py:788
+#, python-format
+msgid "Running command: %s"
+msgstr ""
+
+#: cola/cmds.py:797 cola/cmds.py:968 cola/interaction.py:70
+#, python-format
+msgid "Output: %s"
+msgstr ""
+
+#: cola/cmds.py:798 cola/interaction.py:71 cola/widgets/startup.py:168
+#, python-format
+msgid "Errors: %s"
+msgstr ""
+
+#: cola/cmds.py:843
+msgid "Sign Off"
+msgstr "署名"
+
+#: cola/cmds.py:864
+msgid "unknown"
+msgstr ""
+
+#: cola/cmds.py:877 cola/widgets/action.py:17
+#, fuzzy
+msgid "Stage"
+msgstr "保存"
+
+#: cola/cmds.py:884
+#, fuzzy, python-format
+msgid "Staging: %s"
+msgstr "%s をスキャンしています…"
+
+#: cola/cmds.py:896
+msgid "Stage Modified"
+msgstr ""
+
+#: cola/cmds.py:910
+#, fuzzy
+msgid "Stage Unmerged"
+msgstr "変更をコミット予定に入れる"
+
+#: cola/cmds.py:924
+#, fuzzy
+msgid "Stage Untracked"
+msgstr "変更をコミット予定に入れる"
+
+#: cola/cmds.py:942
+#, python-format
+msgid "Tagging \"%(revision)s\" as \"%(name)s\""
+msgstr ""
+
+#: cola/cmds.py:950
+msgid "GPG-signed"
+msgstr ""
+
+#: cola/cmds.py:982 cola/widgets/action.py:18
+#, fuzzy
+msgid "Unstage"
+msgstr "コミット予定に入っていない変更"
+
+#: cola/cmds.py:989
+#, fuzzy, python-format
+msgid "Unstaging: %s"
+msgstr "コミットから '%s' を降ろす"
+
+#: cola/cmds.py:1016
+#, python-format
+msgid "Untracking: %s"
+msgstr ""
+
+#: cola/difftool.py:76
+msgid "git-cola diff"
+msgstr ""
+
+#: cola/difftool.py:92 cola/widgets/compare.py:90
+msgid "Compare"
+msgstr ""
+
+#: cola/gitcmds.py:394
+#, fuzzy
+msgid "Nothing to do"
+msgstr "%s から複製する内容はありません"
+
+#: cola/guicmds.py:26
 msgid "Delete Branch"
 msgstr "ブランチ削除"
 
-#: lib/branch_delete.tcl:20
-msgid "Delete Local Branch"
-msgstr "ローカル・ブランチを削除"
+#: cola/guicmds.py:42
+#, fuzzy
+msgid "Browse Revision..."
+msgstr "リビジョン"
 
-#: lib/branch_delete.tcl:37
-msgid "Local Branches"
-msgstr "ローカル・ブランチ"
+#: cola/guicmds.py:50
+msgid "Checkout Branch"
+msgstr "ブランチをチェックアウト"
 
-#: lib/branch_delete.tcl:52
-msgid "Delete Only If Merged Into"
-msgstr "マージ済みの時のみ削除"
+#: cola/guicmds.py:60
+#, fuzzy
+msgid "Cherry-Pick Commit"
+msgstr "コミットをコピー"
 
-#: lib/branch_delete.tcl:54
-msgid "Always (Do not perform merge test.)"
-msgstr "無条件(マージテストしない)"
-
-#: lib/branch_delete.tcl:103
-#, tcl-format
-msgid "The following branches are not completely merged into %s:"
-msgstr "以下のブランチは %s に完全にマージされていません:"
-
-#: lib/branch_delete.tcl:115
-msgid ""
-"Recovering deleted branches is difficult. \n"
-"\n"
-" Delete the selected branches?"
+#: cola/guicmds.py:74
+msgid "Path or URL to clone (Env. $VARS okay)"
 msgstr ""
-"ブランチを削除すると元に戻すのは困難です。 \n"
-"\n"
-" 選択したブランチを削除しますか？"
 
-#: lib/branch_delete.tcl:141
-#, tcl-format
-msgid ""
-"Failed to delete branches:\n"
-"%s"
+#: cola/guicmds.py:95
+#, fuzzy
+msgid "Error Cloning"
+msgstr "ファイルを読む際のエラーです:"
+
+#: cola/guicmds.py:96 cola/guicmds.py:97
+#, python-format
+msgid "Could not parse Git URL: \"%s\""
 msgstr ""
-"以下のブランチを削除できません:\n"
-"%s"
 
-#: lib/branch_rename.tcl:14 lib/branch_rename.tcl:22
-msgid "Rename Branch"
-msgstr "ブランチの名前変更"
-
-#: lib/branch_rename.tcl:26
-msgid "Rename"
-msgstr "名前変更"
-
-#: lib/branch_rename.tcl:36
-msgid "Branch:"
-msgstr "ブランチ:"
-
-#: lib/branch_rename.tcl:39
-msgid "New Name:"
-msgstr "新しい名前:"
-
-#: lib/branch_rename.tcl:75
-msgid "Please select a branch to rename."
-msgstr "名前を変更するブランチを選んで下さい。"
-
-#: lib/branch_rename.tcl:96 lib/checkout_op.tcl:179
-#, tcl-format
-msgid "Branch '%s' already exists."
-msgstr "'%s'というブランチは既に存在します。"
-
-#: lib/branch_rename.tcl:117
-#, tcl-format
-msgid "Failed to rename '%s'."
-msgstr "'%s'の名前変更に失敗しました。"
-
-#: lib/browser.tcl:17
-msgid "Starting..."
-msgstr "起動中…"
-
-#: lib/browser.tcl:26
-msgid "File Browser"
-msgstr "ファイル・ブラウザ"
-
-#: lib/browser.tcl:126 lib/browser.tcl:143
-#, tcl-format
-msgid "Loading %s..."
-msgstr "%s をロード中…"
-
-#: lib/browser.tcl:187
-msgid "[Up To Parent]"
-msgstr "[上位フォルダへ]"
-
-#: lib/browser.tcl:267 lib/browser.tcl:273
-msgid "Browse Branch Files"
-msgstr "現在のブランチのファイルを見る"
-
-#: lib/browser.tcl:278 lib/choose_repository.tcl:387
-#: lib/choose_repository.tcl:474 lib/choose_repository.tcl:484
-#: lib/choose_repository.tcl:987
-msgid "Browse"
-msgstr "ブラウズ"
-
-#: lib/checkout_op.tcl:79
-#, tcl-format
-msgid "Fetching %s from %s"
-msgstr "%s から %s をフェッチしています"
-
-#: lib/checkout_op.tcl:127
-#, tcl-format
-msgid "fatal: Cannot resolve %s"
-msgstr "致命的エラー: %s を解決できません"
-
-#: lib/checkout_op.tcl:140 lib/console.tcl:81 lib/database.tcl:31
-msgid "Close"
-msgstr "閉じる"
-
-#: lib/checkout_op.tcl:169
-#, tcl-format
-msgid "Branch '%s' does not exist."
-msgstr "ブランチ'%s'は存在しません。"
-
-#: lib/checkout_op.tcl:206
-#, tcl-format
-msgid ""
-"Branch '%s' already exists.\n"
-"\n"
-"It cannot fast-forward to %s.\n"
-"A merge is required."
+#: cola/guicmds.py:101
+msgid "Select a parent directory for the new clone"
 msgstr ""
-"ブランチ '%s' は既に存在します。\n"
-"\n"
-"%s に早送りできません。\n"
-"マージが必要です。"
 
-#: lib/checkout_op.tcl:220
-#, tcl-format
-msgid "Merge strategy '%s' not supported."
-msgstr "'%s' マージ戦略はサポートされていません。"
-
-#: lib/checkout_op.tcl:239
-#, tcl-format
-msgid "Failed to update '%s'."
-msgstr "'%s' の更新に失敗しました。"
-
-#: lib/checkout_op.tcl:251
-msgid "Staging area (index) is already locked."
-msgstr "インデックスは既にロックされています。"
-
-#: lib/checkout_op.tcl:266
-msgid ""
-"Last scanned state does not match repository state.\n"
-"\n"
-"Another Git program has modified this repository since the last scan.  A "
-"rescan must be performed before the current branch can be changed.\n"
-"\n"
-"The rescan will be automatically started now.\n"
+#: cola/guicmds.py:111
+#, python-format
+msgid "\"%s\" already exists, cola will create a new directory"
 msgstr ""
-"最後にスキャンした状態はリポジトリの状態と合致しません。\n"
-"\n"
-"最後にスキャンして以後、別の Git プログラムがリポジトリを変更しています。現在"
-"のブランチを変更する前に、再スキャンが必要です。\n"
-"\n"
-"自動的に再スキャンを開始します。\n"
 
-#: lib/checkout_op.tcl:322
-#, tcl-format
-msgid "Updating working directory to '%s'..."
-msgstr "作業ディレクトリを '%s' に更新しています…"
-
-#: lib/checkout_op.tcl:323
-msgid "files checked out"
-msgstr "チェックアウトされたファイル"
-
-#: lib/checkout_op.tcl:353
-#, tcl-format
-msgid "Aborted checkout of '%s' (file level merging is required)."
-msgstr "'%s' のチェックアウトを中止しました（ファイル毎のマージが必要です）。"
-
-#: lib/checkout_op.tcl:354
-msgid "File level merge required."
-msgstr "ファイル毎のマージが必要です。"
-
-#: lib/checkout_op.tcl:358
-#, tcl-format
-msgid "Staying on branch '%s'."
-msgstr "ブランチ '%s' に滞まります。"
-
-#: lib/checkout_op.tcl:429
-msgid ""
-"You are no longer on a local branch.\n"
-"\n"
-"If you wanted to be on a branch, create one now starting from 'This Detached "
-"Checkout'."
+#: cola/guicmds.py:127 cola/widgets/search.py:75
+msgid "Export Patches"
 msgstr ""
-"ローカル・ブランチから離れます。\n"
-"\n"
-"ブランチ上に滞まりたいときは、この「分離されたチェックアウト」から新規ブラン"
-"チを開始してください。"
 
-#: lib/checkout_op.tcl:446 lib/checkout_op.tcl:450
-#, tcl-format
-msgid "Checked out '%s'."
-msgstr "'%s' をチェックアウトしました"
-
-#: lib/checkout_op.tcl:478
-#, tcl-format
-msgid "Resetting '%s' to '%s' will lose the following commits:"
-msgstr "'%s' を '%s' にリセットすると、以下のコミットが失なわれます:"
-
-#: lib/checkout_op.tcl:500
-msgid "Recovering lost commits may not be easy."
-msgstr "失なわれたコミットを回復するのは簡単ではありません。"
-
-#: lib/checkout_op.tcl:505
-#, tcl-format
-msgid "Reset '%s'?"
-msgstr "'%s' をリセットしますか？"
-
-#: lib/checkout_op.tcl:510 lib/merge.tcl:163
-msgid "Visualize"
-msgstr "可視化"
-
-#: lib/checkout_op.tcl:578
-#, tcl-format
-msgid ""
-"Failed to set current branch.\n"
-"\n"
-"This working directory is only partially switched.  We successfully updated "
-"your files, but failed to update an internal Git file.\n"
-"\n"
-"This should not have occurred.  %s will now close and give up."
-msgstr ""
-"現在のブランチを設定できません。\n"
-"\n"
-"作業ディレクトリは部分的にしか切り替わっていません。ファイルの更新には成功し"
-"ましたが、 Git の内部データを更新できませんでした。\n"
-"起こるはずのないエラーです。あきらめて %s を終了します。"
-
-#: lib/choose_font.tcl:39
-msgid "Select"
-msgstr "選択"
-
-#: lib/choose_font.tcl:53
-msgid "Font Family"
-msgstr "フォント・ファミリー"
-
-#: lib/choose_font.tcl:74
-msgid "Font Size"
-msgstr "フォントの大きさ"
-
-#: lib/choose_font.tcl:91
-msgid "Font Example"
-msgstr "フォント・サンプル"
-
-#: lib/choose_font.tcl:103
-msgid ""
-"This is example text.\n"
-"If you like this text, it can be your font."
-msgstr ""
-"これはサンプル文です。\n"
-"このフォントが気に入ればお使いになれます。"
-
-#: lib/choose_repository.tcl:28
-msgid "Git Gui"
-msgstr "Git GUI"
-
-#: lib/choose_repository.tcl:81 lib/choose_repository.tcl:376
-msgid "Create New Repository"
-msgstr "新しいリポジトリを作る"
-
-#: lib/choose_repository.tcl:87
-msgid "New..."
-msgstr "新規…"
-
-#: lib/choose_repository.tcl:94 lib/choose_repository.tcl:460
-msgid "Clone Existing Repository"
-msgstr "既存リポジトリを複製する"
-
-#: lib/choose_repository.tcl:100
-msgid "Clone..."
-msgstr "複製…"
-
-#: lib/choose_repository.tcl:107 lib/choose_repository.tcl:976
-msgid "Open Existing Repository"
+#: cola/guicmds.py:156 cola/widgets/startup.py:126
+#, fuzzy
+msgid "Open Git Repository..."
 msgstr "既存リポジトリを開く"
 
-#: lib/choose_repository.tcl:113
+#: cola/guicmds.py:165 cola/main/view.py:165
+#, fuzzy
+msgid "Load Commit Message..."
+msgstr "コミットメッセージ:"
+
+#: cola/guicmds.py:173
+#, fuzzy
+msgid "Rebase Branch"
+msgstr "ブランチの名前変更"
+
+#: cola/guicmds.py:189
+#, fuzzy
+msgid "Select Branch to Review"
+msgstr "ブランチ削除"
+
+#: cola/guicmds.py:189
+msgid "Review"
+msgstr ""
+
+#: cola/inotify.py:45
+msgid ""
+"file notification: disabled\n"
+"Note: install pywin32 to enable.\n"
+msgstr ""
+
+#: cola/inotify.py:48
+msgid ""
+"inotify: disabled\n"
+"Note: install python-pyinotify to enable inotify.\n"
+msgstr ""
+
+#: cola/inotify.py:54
+msgid "On Debian systems try: sudo aptitude install python-pyinotify"
+msgstr ""
+
+#: cola/inotify.py:63
+#, fuzzy
+msgid "File notification enabled."
+msgstr "ファイル変更時刻を信頼する"
+
+#: cola/inotify.py:65
+msgid "inotify enabled."
+msgstr ""
+
+#: cola/interaction.py:53
+msgid "Continue"
+msgstr "続行"
+
+#: cola/interaction.py:63
+#, python-format
+msgid "Run %s?"
+msgstr ""
+
+#: cola/interaction.py:64
+#, python-format
+msgid "Run the \"%s\" command?"
+msgstr ""
+
+#: cola/interaction.py:65 cola/widgets/cfgactions.py:240
+msgid "Run"
+msgstr ""
+
+#: cola/interaction.py:72
+#, python-format
+msgid "Exit code: %s"
+msgstr ""
+
+#: cola/qt.py:57 cola/qt.py:93
+#, fuzzy
+msgid "Detach"
+msgstr "ブランチ削除"
+
+#: cola/qt.py:91
+msgid "Attach"
+msgstr ""
+
+#: cola/qtutils.py:396
+#, fuzzy
+msgid "Close..."
+msgstr "複製…"
+
+#: cola/classic/controller.py:69
+msgid "Select Previous Version"
+msgstr ""
+
+#: cola/classic/model.py:36 cola/widgets/createtag.py:51
+#: cola/widgets/editremotes.py:219
+#, fuzzy
+msgid "Name"
+msgstr "名前:"
+
+#: cola/classic/model.py:37 cola/main/view.py:93
+msgid "Status"
+msgstr ""
+
+#: cola/classic/model.py:38 cola/dag/view.py:366
+msgid "Age"
+msgstr ""
+
+#: cola/classic/model.py:39 cola/widgets/createtag.py:74
+#, fuzzy
+msgid "Message"
+msgstr "マージ"
+
+#: cola/classic/model.py:40 cola/dag/view.py:366
+#, fuzzy
+msgid "Author"
+msgstr "作者:"
+
+#: cola/classic/model.py:337
+#, python-format
+msgid "%d minutes ago"
+msgstr ""
+
+#: cola/classic/model.py:340
+#, python-format
+msgid "%d hours ago"
+msgstr ""
+
+#: cola/classic/model.py:341
+#, python-format
+msgid "%d days ago"
+msgstr ""
+
+#: cola/classic/model.py:354 cola/widgets/status.py:80
+#, fuzzy
+msgid "Unmerged"
+msgstr "マージ"
+
+#: cola/classic/model.py:356
+msgid "Partially Staged"
+msgstr ""
+
+#: cola/classic/model.py:358 cola/widgets/status.py:81
+#, fuzzy
+msgid "Modified"
+msgstr "変更無し"
+
+#: cola/classic/model.py:360 cola/widgets/status.py:79
+#, fuzzy
+msgid "Staged"
+msgstr "変更をコミット予定に入れる"
+
+#: cola/classic/model.py:362
+msgid "Changed Upstream"
+msgstr ""
+
+#: cola/classic/view.py:47 cola/main/view.py:512
+#, fuzzy, python-format
+msgid "Repository: %s"
+msgstr "リポジトリ:"
+
+#: cola/classic/view.py:49 cola/main/view.py:514
+#, fuzzy, python-format
+msgid "Branch: %s"
+msgstr "ブランチ:"
+
+#: cola/classic/view.py:54 cola/main/view.py:519
+msgid "Amending"
+msgstr ""
+
+#: cola/classic/view.py:79
+msgid "View History..."
+msgstr ""
+
+#: cola/classic/view.py:80
+msgid "View history for selected path(s)."
+msgstr ""
+
+#: cola/classic/view.py:84 cola/widgets/status.py:460
+#: cola/widgets/status.py:506 cola/widgets/status.py:559
+#, fuzzy
+msgid "Stage Selected"
+msgstr "選択"
+
+#: cola/classic/view.py:85
+#, fuzzy
+msgid "Stage selected path(s) for commit."
+msgstr "コミット予定済"
+
+#: cola/classic/view.py:90 cola/widgets/status.py:408
+#: cola/widgets/status.py:446
+msgid "Unstage Selected"
+msgstr ""
+
+#: cola/classic/view.py:91
+msgid "Remove selected path(s) from the staging area."
+msgstr ""
+
+#: cola/classic/view.py:96
+msgid "Untrack Selected"
+msgstr ""
+
+#: cola/classic/view.py:97
+msgid "Stop tracking path(s)"
+msgstr ""
+
+#: cola/classic/view.py:102
+msgid "Launch git-difftool on the current path."
+msgstr ""
+
+#: cola/classic/view.py:106
+msgid "Diff Against Predecessor..."
+msgstr ""
+
+#: cola/classic/view.py:107
+msgid "Launch git-difftool against previous versions."
+msgstr ""
+
+#: cola/classic/view.py:111
+#, fuzzy
+msgid "Revert Uncommitted Changes..."
+msgstr "変更を元に戻す"
+
+#: cola/classic/view.py:112
+#, fuzzy
+msgid "Revert changes to selected path(s)."
+msgstr "ファイル %s にした変更を元に戻しますか？"
+
+#: cola/classic/view.py:117
+msgid "Edit selected path(s)."
+msgstr ""
+
+#: cola/classic/view.py:293 cola/widgets/status.py:619
+#, fuzzy
+msgid "Revert Uncommitted Changes?"
+msgstr "変更を元に戻す"
+
+#: cola/classic/view.py:294 cola/widgets/diff.py:228 cola/widgets/diff.py:241
+#: cola/widgets/status.py:620
+msgid ""
+"This operation drops uncommitted changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+#: cola/classic/view.py:296 cola/widgets/diff.py:230 cola/widgets/diff.py:243
+#: cola/widgets/status.py:622
+msgid "Revert the uncommitted changes?"
+msgstr ""
+
+#: cola/classic/view.py:297 cola/widgets/status.py:623
+#, fuzzy
+msgid "Revert Uncommitted Changes"
+msgstr "変更を元に戻す"
+
+#: cola/dag/view.py:164
+#, fuzzy
+msgid "Loading..."
+msgstr "%s をロード中…"
+
+#: cola/dag/view.py:269
+msgid "Diff this -> selected"
+msgstr ""
+
+#: cola/dag/view.py:272
+msgid "Diff selected -> this"
+msgstr ""
+
+#: cola/dag/view.py:275 cola/widgets/createbranch.py:89
+#: cola/widgets/createbranch.py:98 cola/widgets/createbranch.py:155
+#: cola/widgets/createbranch.py:330
+msgid "Create Branch"
+msgstr "ブランチを作成"
+
+#: cola/dag/view.py:278
+#, fuzzy
+msgid "Create Patch"
+msgstr "ブランチを作成"
+
+#: cola/dag/view.py:281 cola/widgets/createtag.py:38
+#: cola/widgets/createtag.py:99
+#, fuzzy
+msgid "Create Tag"
+msgstr "作成"
+
+#: cola/dag/view.py:284 cola/main/view.py:168
+msgid "Save As Tarball/Zip..."
+msgstr ""
+
+#: cola/dag/view.py:287 cola/widgets/search.py:78
+msgid "Cherry Pick"
+msgstr ""
+
+#: cola/dag/view.py:290
+msgid "Grab File..."
+msgstr ""
+
+#: cola/dag/view.py:293
+#, fuzzy
+msgid "Copy SHA-1"
+msgstr "全てコピー"
+
+#: cola/dag/view.py:366
+msgid "Summary"
+msgstr ""
+
+#: cola/dag/view.py:373
+msgid "Go Up"
+msgstr ""
+
+#: cola/dag/view.py:376
+msgid "Go Down"
+msgstr ""
+
+#: cola/dag/view.py:506
+msgid "Display"
+msgstr ""
+
+#: cola/dag/view.py:1168
+msgid "Zoom In"
+msgstr ""
+
+#: cola/dag/view.py:1171
+msgid "Zoom Out"
+msgstr ""
+
+#: cola/dag/view.py:1174
+msgid "Zoom to Fit"
+msgstr ""
+
+#: cola/dag/view.py:1177
+#, fuzzy
+msgid "Select Parent"
+msgstr "選択"
+
+#: cola/dag/view.py:1180
+msgid "Select Oldest Parent"
+msgstr ""
+
+#: cola/dag/view.py:1183
+#, fuzzy
+msgid "Select Child"
+msgstr "全て選択"
+
+#: cola/dag/view.py:1186
+msgid "Select Newest Child"
+msgstr ""
+
+#: cola/main/view.py:80
+#, fuzzy
+msgid "Browser"
+msgstr "ブラウズ"
+
+#: cola/main/view.py:85
+#, fuzzy
+msgid "Action"
+msgstr "オプション"
+
+#: cola/main/view.py:101 cola/merge/view.py:45
+#, fuzzy
+msgid "Commit"
+msgstr "コミット:"
+
+#: cola/main/view.py:110
+#, fuzzy
+msgid "Console"
+msgstr "閉じる"
+
+#: cola/main/view.py:116 cola/main/view.py:342
+msgid "Diff"
+msgstr ""
+
+#: cola/main/view.py:122 cola/widgets/status.py:368
+msgid "Unstage All"
+msgstr ""
+
+#: cola/main/view.py:126
+msgid "Unstage From Commit"
+msgstr "コミットから降ろす"
+
+#: cola/main/view.py:130
+msgid "Diffstat"
+msgstr ""
+
+#: cola/main/view.py:133
+msgid "Stage Changed Files To Commit"
+msgstr "変更されたファイルをコミット予定"
+
+#: cola/main/view.py:138
+msgid "Stage All Untracked"
+msgstr ""
+
+#: cola/main/view.py:143
+msgid "Export Patches..."
+msgstr ""
+
+#: cola/main/view.py:145 cola/prefs/view.py:217
+msgid "Preferences"
+msgstr "設定"
+
+#: cola/main/view.py:149
+msgid "Edit Remotes..."
+msgstr ""
+
+#: cola/main/view.py:157
+#, fuzzy
+msgid "Recently Modified Files..."
+msgstr "変更されたファイルをスキャンしています…"
+
+#: cola/main/view.py:161
+#, fuzzy
+msgid "Cherry-Pick..."
+msgstr "チェックアウト"
+
+#: cola/main/view.py:171
+msgid "Quit"
+msgstr "終了"
+
+#: cola/main/view.py:173
+msgid "Bookmarks..."
+msgstr ""
+
+#: cola/main/view.py:175
+msgid "Grep"
+msgstr ""
+
+#: cola/main/view.py:177
+#, fuzzy
+msgid "Merge..."
+msgstr "マージ"
+
+#: cola/main/view.py:180 cola/merge/__init__.py:20
+msgid "Abort Merge..."
+msgstr "マージ中止…"
+
+#: cola/main/view.py:183 cola/widgets/action.py:20
+#, fuzzy
+msgid "Fetch..."
+msgstr "リセット…"
+
+#: cola/main/view.py:185 cola/widgets/action.py:21
+msgid "Push..."
+msgstr "プッシュ…"
+
+#: cola/main/view.py:187 cola/widgets/action.py:22
+#, fuzzy
+msgid "Pull..."
+msgstr "プッシュ…"
+
+#: cola/main/view.py:190 cola/widgets/startup.py:38
 msgid "Open..."
 msgstr "開く…"
 
-#: lib/choose_repository.tcl:126
-msgid "Recent Repositories"
-msgstr "最近使ったリポジトリ"
+#: cola/main/view.py:194 cola/widgets/action.py:23
+#, fuzzy
+msgid "Stash..."
+msgstr "プッシュ…"
 
-#: lib/choose_repository.tcl:132
-msgid "Open Recent Repository:"
+#: cola/main/view.py:197 cola/widgets/startup.py:41
+msgid "Clone..."
+msgstr "複製…"
+
+#: cola/main/view.py:201
+#, fuzzy
+msgid "Documentation"
+msgstr "オンライン・ドキュメント"
+
+#: cola/main/view.py:205
+msgid "Keyboard Shortcuts"
+msgstr ""
+
+#: cola/main/view.py:210
+#, fuzzy
+msgid "Visualize Current Branch..."
+msgstr "現在のブランチの履歴を見る"
+
+#: cola/main/view.py:213
+#, fuzzy
+msgid "Visualize All Branches..."
+msgstr "全てのブランチの履歴を見る"
+
+#: cola/main/view.py:216
+#, fuzzy
+msgid "Search..."
+msgstr "起動中…"
+
+#: cola/main/view.py:218
+#, fuzzy
+msgid "Browse Current Branch..."
+msgstr "現在のブランチのファイルを見る"
+
+#: cola/main/view.py:220
+#, fuzzy
+msgid "Browse Other Branch..."
+msgstr "ブランチのファイルを見る…"
+
+#: cola/main/view.py:222
+#, fuzzy
+msgid "Get Commit Message Template"
+msgstr "コミットメッセージのテキスト幅"
+
+#: cola/main/view.py:225
+#, fuzzy
+msgid "About"
+msgstr "%s について"
+
+#: cola/main/view.py:228
+#, fuzzy
+msgid "Expression..."
+msgstr "オプション…"
+
+#: cola/main/view.py:230
+#, fuzzy
+msgid "Branches..."
+msgstr "ブランチ"
+
+#: cola/main/view.py:233
+#, fuzzy
+msgid "Create Tag..."
+msgstr "作成…"
+
+#: cola/main/view.py:236
+msgid "Create..."
+msgstr "作成…"
+
+#: cola/main/view.py:239
+msgid "Delete..."
+msgstr "削除…"
+
+#: cola/main/view.py:242
+msgid "Checkout..."
+msgstr "チェックアウト"
+
+#: cola/main/view.py:244
+#, fuzzy
+msgid "Rebase..."
+msgstr "リセット…"
+
+#: cola/main/view.py:246
+#, fuzzy
+msgid "Review..."
+msgstr "リセット…"
+
+#: cola/main/view.py:249
+#, fuzzy
+msgid "Browser..."
+msgstr "ブラウズ"
+
+#: cola/main/view.py:253
+msgid "DAG..."
+msgstr ""
+
+#: cola/main/view.py:270
+#, fuzzy
+msgid "File"
+msgstr "ファイル:"
+
+#: cola/main/view.py:274
+#, fuzzy
+msgid "Open Recent"
 msgstr "最近使ったリポジトリを開く"
 
-#: lib/choose_repository.tcl:296 lib/choose_repository.tcl:303
-#: lib/choose_repository.tcl:310
-#, tcl-format
-msgid "Failed to create repository %s:"
-msgstr "リポジトリ %s を作製できません:"
+#: cola/main/view.py:293 cola/main/view.py:294 cola/widgets/commitmsg.py:49
+#: cola/widgets/commitmsg.py:65
+msgid "Commit@@verb"
+msgstr "コミット"
 
-#: lib/choose_repository.tcl:381 lib/choose_repository.tcl:478
-msgid "Directory:"
-msgstr "ディレクトリ:"
+#: cola/main/view.py:306
+msgid "Branch"
+msgstr "ブランチ"
 
-#: lib/choose_repository.tcl:412 lib/choose_repository.tcl:537
-#: lib/choose_repository.tcl:1011
-msgid "Git Repository"
-msgstr "GIT リポジトリ"
+#: cola/main/view.py:323
+#, fuzzy
+msgid "Actions"
+msgstr "オプション"
 
-#: lib/choose_repository.tcl:437
-#, tcl-format
-msgid "Directory %s already exists."
-msgstr "ディレクトリ '%s' は既に存在します。"
+#: cola/main/view.py:351
+msgid "Tools"
+msgstr ""
 
-#: lib/choose_repository.tcl:441
-#, tcl-format
-msgid "File %s already exists."
-msgstr "ファイル '%s' は既に存在します。"
+#: cola/main/view.py:362
+msgid "Help"
+msgstr "ヘルプ"
 
-#: lib/choose_repository.tcl:455
-msgid "Clone"
-msgstr "複製"
+#: cola/main/view.py:428
+#, python-format
+msgid "git-cola version %s"
+msgstr ""
 
-#: lib/choose_repository.tcl:468
-msgid "URL:"
-msgstr "URL:"
+#: cola/merge/__init__.py:21
+#, fuzzy
+msgid ""
+"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+"マージを中断しますか？\n"
+"\n"
+"現在のマージを中断すると、コミットしていない全ての変更が失われます。\n"
+"\n"
+"マージを中断してよろしいですか？"
 
-#: lib/choose_repository.tcl:489
-msgid "Clone Type:"
-msgstr "複製方式:"
+#: cola/merge/__init__.py:24
+msgid "Aborting the current merge?"
+msgstr ""
 
-#: lib/choose_repository.tcl:495
-msgid "Standard (Fast, Semi-Redundant, Hardlinks)"
-msgstr "標準(高速・中冗長度・ハードリンク)"
+#: cola/merge/__init__.py:25
+#, fuzzy
+msgid "Abort Merge"
+msgstr "マージ中止…"
 
-#: lib/choose_repository.tcl:501
-msgid "Full Copy (Slower, Redundant Backup)"
-msgstr "全複写(低速・冗長バックアップ)"
+#: cola/merge/view.py:23
+msgid "Revision To Merge"
+msgstr "マージするリビジョン"
 
-#: lib/choose_repository.tcl:507
-msgid "Shared (Fastest, Not Recommended, No Backup)"
-msgstr "共有(最高速・非推奨・バックアップ無し)"
-
-#: lib/choose_repository.tcl:543 lib/choose_repository.tcl:590
-#: lib/choose_repository.tcl:736 lib/choose_repository.tcl:806
-#: lib/choose_repository.tcl:1017 lib/choose_repository.tcl:1025
-#, tcl-format
-msgid "Not a Git repository: %s"
-msgstr "Git リポジトリではありません: %s"
-
-#: lib/choose_repository.tcl:579
-msgid "Standard only available for local repository."
-msgstr "標準方式は同一計算機上のリポジトリにのみ使えます。"
-
-#: lib/choose_repository.tcl:583
-msgid "Shared only available for local repository."
-msgstr "共有方式は同一計算機上のリポジトリにのみ使えます。"
-
-#: lib/choose_repository.tcl:604
-#, tcl-format
-msgid "Location %s already exists."
-msgstr "'%s' は既に存在します。"
-
-#: lib/choose_repository.tcl:615
-msgid "Failed to configure origin"
-msgstr "origin を設定できませんでした"
-
-#: lib/choose_repository.tcl:627
-msgid "Counting objects"
-msgstr "オブジェクトを数えています"
-
-#: lib/choose_repository.tcl:628
-msgid "buckets"
-msgstr "バケツ"
-
-#: lib/choose_repository.tcl:652
-#, tcl-format
-msgid "Unable to copy objects/info/alternates: %s"
-msgstr "objects/info/alternates を複写できません: %s"
-
-#: lib/choose_repository.tcl:688
-#, tcl-format
-msgid "Nothing to clone from %s."
-msgstr "%s から複製する内容はありません"
-
-#: lib/choose_repository.tcl:690 lib/choose_repository.tcl:904
-#: lib/choose_repository.tcl:916
-msgid "The 'master' branch has not been initialized."
-msgstr "'master' ブランチが初期化されていません"
-
-#: lib/choose_repository.tcl:703
-msgid "Hardlinks are unavailable.  Falling back to copying."
-msgstr "ハードリンクが作れないので、コピーします"
-
-#: lib/choose_repository.tcl:715
-#, tcl-format
-msgid "Cloning from %s"
-msgstr "%s から複製しています"
-
-#: lib/choose_repository.tcl:746
-msgid "Copying objects"
-msgstr "オブジェクトを複写しています"
-
-#: lib/choose_repository.tcl:747
-msgid "KiB"
-msgstr "KiB"
-
-#: lib/choose_repository.tcl:771
-#, tcl-format
-msgid "Unable to copy object: %s"
-msgstr "オブジェクトを複写できません: %s"
-
-#: lib/choose_repository.tcl:781
-msgid "Linking objects"
-msgstr "オブジェクトを連結しています"
-
-#: lib/choose_repository.tcl:782
-msgid "objects"
-msgstr "オブジェクト"
-
-#: lib/choose_repository.tcl:790
-#, tcl-format
-msgid "Unable to hardlink object: %s"
-msgstr "オブジェクトをハードリンクできません: %s"
-
-#: lib/choose_repository.tcl:845
-msgid "Cannot fetch branches and objects.  See console output for details."
-msgstr "ブランチやオブジェクトを取得できません。コンソール出力を見て下さい"
-
-#: lib/choose_repository.tcl:856
-msgid "Cannot fetch tags.  See console output for details."
-msgstr "タグを取得できません。コンソール出力を見て下さい"
-
-#: lib/choose_repository.tcl:880
-msgid "Cannot determine HEAD.  See console output for details."
-msgstr "HEAD を確定できません。コンソール出力を見て下さい"
-
-#: lib/choose_repository.tcl:889
-#, tcl-format
-msgid "Unable to cleanup %s"
-msgstr "%s を掃除できません"
-
-#: lib/choose_repository.tcl:895
-msgid "Clone failed."
-msgstr "複写に失敗しました。"
-
-#: lib/choose_repository.tcl:902
-msgid "No default branch obtained."
-msgstr "デフォールト・ブランチが取得されませんでした"
-
-#: lib/choose_repository.tcl:913
-#, tcl-format
-msgid "Cannot resolve %s as a commit."
-msgstr "%s をコミットとして解釈できません"
-
-#: lib/choose_repository.tcl:925
-msgid "Creating working directory"
-msgstr "作業ディレクトリを作成しています"
-
-#: lib/choose_repository.tcl:926 lib/index.tcl:65 lib/index.tcl:127
-#: lib/index.tcl:193
-msgid "files"
-msgstr "ファイル"
-
-#: lib/choose_repository.tcl:955
-msgid "Initial file checkout failed."
-msgstr "初期チェックアウトに失敗しました"
-
-#: lib/choose_repository.tcl:971
-msgid "Open"
-msgstr "開く"
-
-#: lib/choose_repository.tcl:981
-msgid "Repository:"
-msgstr "リポジトリ:"
-
-#: lib/choose_repository.tcl:1031
-#, tcl-format
-msgid "Failed to open repository %s:"
-msgstr "リポジトリ %s を開けません:"
-
-#: lib/choose_rev.tcl:53
-msgid "This Detached Checkout"
-msgstr "分離されたチェックアウト"
-
-#: lib/choose_rev.tcl:60
-msgid "Revision Expression:"
-msgstr "リビジョン式:"
-
-#: lib/choose_rev.tcl:74
+#: cola/merge/view.py:28 cola/widgets/cfgactions.py:220
+#: cola/widgets/createbranch.py:115 cola/widgets/remote.py:122
 msgid "Local Branch"
 msgstr "ローカル・ブランチ"
 
-#: lib/choose_rev.tcl:79
+#: cola/merge/view.py:31 cola/widgets/cfgactions.py:221
+#: cola/widgets/createbranch.py:119
 msgid "Tracking Branch"
 msgstr "トラッキング・ブランチ"
 
-#: lib/choose_rev.tcl:84 lib/choose_rev.tcl:538
+#: cola/merge/view.py:33 cola/widgets/cfgactions.py:222
+#: cola/widgets/createbranch.py:122
 msgid "Tag"
 msgstr "タグ"
 
-#: lib/choose_rev.tcl:317
-#, tcl-format
-msgid "Invalid revision: %s"
-msgstr "無効なリビジョン: %s"
+#: cola/merge/view.py:39
+msgid "Visualize"
+msgstr "可視化"
 
-#: lib/choose_rev.tcl:338
-msgid "No revision selected."
+#: cola/merge/view.py:42
+#, fuzzy
+msgid "Squash"
+msgstr "プッシュ"
+
+#: cola/merge/view.py:50 cola/widgets/archive.py:62
+#: cola/widgets/editremotes.py:204
+msgid "Cancel"
+msgstr "中止"
+
+#: cola/merge/view.py:53
+msgid "Merge"
+msgstr "マージ"
+
+#: cola/merge/view.py:115
+#, python-format
+msgid "Merge \"%(revision)s\" into \"%(branch)s\""
+msgstr ""
+
+#: cola/merge/view.py:118
+#, fuzzy, python-format
+msgid "Merge into \"%s\""
+msgstr "%s にマージ"
+
+#: cola/merge/view.py:162 cola/merge/view.py:171
+#, fuzzy
+msgid "No Revision Specified"
 msgstr "リビジョンが未選択です。"
 
-#: lib/choose_rev.tcl:346
-msgid "Revision expression is empty."
-msgstr "リビジョン式が空です。"
-
-#: lib/choose_rev.tcl:531
-msgid "Updated"
-msgstr "更新しました"
-
-#: lib/choose_rev.tcl:559
-msgid "URL"
-msgstr "URL"
-
-#: lib/commit.tcl:9
-msgid ""
-"There is nothing to amend.\n"
-"\n"
-"You are about to create the initial commit.  There is no commit before this "
-"to amend.\n"
+#: cola/merge/view.py:163
+msgid "You must specify a revision to view."
 msgstr ""
-"訂正するコミットがそもそもありません。\n"
-"\n"
-"これから作るのは最初のコミットです。その前にはまだ訂正するようなコミットはあ"
-"りません。\n"
 
-#: lib/commit.tcl:18
-msgid ""
-"Cannot amend while merging.\n"
-"\n"
-"You are currently in the middle of a merge that has not been fully "
-"completed.  You cannot amend the prior commit unless you first abort the "
-"current merge activity.\n"
+#: cola/merge/view.py:172
+msgid "You must specify a revision to merge."
 msgstr ""
-"マージ中にコミットの訂正はできません。\n"
-"\n"
-"現在はまだマージの途中です。先にこのマージを中止しないと、前のコミットの訂正"
-"はできません\n"
 
-#: lib/commit.tcl:49
-msgid "Error loading commit data for amend:"
-msgstr "訂正するコミットのデータを読めません:"
+#: cola/prefs/view.py:115
+msgid "User Name"
+msgstr "ユーザ名"
 
-#: lib/commit.tcl:76
-msgid "Unable to obtain your identity:"
-msgstr "ユーザの正体を確認できません:"
+#: cola/prefs/view.py:116
+msgid "Email Address"
+msgstr "電子メールアドレス"
 
-#: lib/commit.tcl:81
-msgid "Invalid GIT_COMMITTER_IDENT:"
-msgstr "GIT_COMMITTER_IDENT が無効です:"
+#: cola/prefs/view.py:117
+msgid "Merge Verbosity"
+msgstr "マージの冗長度"
 
-#: lib/commit.tcl:133
-msgid ""
-"Last scanned state does not match repository state.\n"
-"\n"
-"Another Git program has modified this repository since the last scan.  A "
-"rescan must be performed before another commit can be created.\n"
-"\n"
-"The rescan will be automatically started now.\n"
+#: cola/prefs/view.py:118
+msgid "Number of Diff Context Lines"
+msgstr "diff の文脈行数"
+
+#: cola/prefs/view.py:119
+msgid "Summarize Merge Commits"
+msgstr "マージコミットの要約"
+
+#: cola/prefs/view.py:120
+msgid "Show Diffstat After Merge"
+msgstr "マージ後に diffstat を表示"
+
+#: cola/prefs/view.py:160
+msgid "Fixed-Width Font"
 msgstr ""
-"最後にスキャンした状態はリポジトリの状態と合致しません。\n"
-"\n"
-"最後にスキャンして以後、別の Git プログラムがリポジトリを変更しています。新し"
-"くコミットする前に、再スキャンが必要です。\n"
-"\n"
-"自動的に再スキャンを開始します。\n"
 
-#: lib/commit.tcl:154
-#, tcl-format
-msgid ""
-"Unmerged files cannot be committed.\n"
-"\n"
-"File %s has merge conflicts.  You must resolve them and stage the file "
-"before committing.\n"
+#: cola/prefs/view.py:161
+msgid "Font Size"
+msgstr "フォントの大きさ"
+
+#: cola/prefs/view.py:162
+msgid "Tab Width"
 msgstr ""
-"マージしていないファイルはコミットできません。\n"
-"\n"
-"ファイル %s にはマージ衝突が残っています。まず解決してコミット予定に加える必"
-"要があります。\n"
 
-#: lib/commit.tcl:162
-#, tcl-format
-msgid ""
-"Unknown file state %s detected.\n"
-"\n"
-"File %s cannot be committed by this program.\n"
+#: cola/prefs/view.py:163
+msgid "Text Width"
 msgstr ""
-"不明なファイル状態 %s です。\n"
-"\n"
-"ファイル %s は本プログラムではコミットできません。\n"
 
-#: lib/commit.tcl:170
-msgid ""
-"No changes to commit.\n"
-"\n"
-"You must stage at least 1 file before you can commit.\n"
+#: cola/prefs/view.py:164 cola/widgets/commitmsg.py:86
+msgid "Auto-Wrap Lines"
 msgstr ""
-"コミットする変更がありません。\n"
-"\n"
-"最低一つの変更をコミット予定に加えてからコミットして下さい。\n"
 
-#: lib/commit.tcl:183
+#: cola/prefs/view.py:165
+#, fuzzy
+msgid "Editor"
+msgstr "編集"
+
+#: cola/prefs/view.py:166
+#, fuzzy
+msgid "History Browser"
+msgstr "ファイル・ブラウザ"
+
+#: cola/prefs/view.py:167
+msgid "Diff Tool"
+msgstr ""
+
+#: cola/prefs/view.py:168
+#, fuzzy
+msgid "Merge Tool"
+msgstr "マージ"
+
+#: cola/prefs/view.py:169
+msgid "Keep *.orig Merge Backups"
+msgstr ""
+
+#: cola/prefs/view.py:170
+msgid "Save GUI Settings"
+msgstr ""
+
+#: cola/prefs/view.py:224
+#, fuzzy
+msgid "All Repositories"
+msgstr "大域（全てのリポジトリ）"
+
+#: cola/prefs/view.py:225
+#, fuzzy
+msgid "Current Repository"
+msgstr "新しいリポジトリを作る"
+
+#: cola/prefs/view.py:226
+#, fuzzy
+msgid "Settings"
+msgstr "起動中…"
+
+#: cola/stash/view.py:28
+msgid "Stash"
+msgstr ""
+
+#: cola/stash/view.py:38
+#, fuzzy
+msgid "Apply"
+msgstr "りんご"
+
+#: cola/stash/view.py:39
+msgid "Apply the selected stash"
+msgstr ""
+
+#: cola/stash/view.py:43
+msgid "Save modified state to new stash"
+msgstr ""
+
+#: cola/stash/view.py:46
+msgid "Drop"
+msgstr ""
+
+#: cola/stash/view.py:47
+msgid "Drop the selected stash"
+msgstr ""
+
+#: cola/stash/view.py:54
+msgid "Keep Index"
+msgstr ""
+
+#: cola/stash/view.py:175
+msgid "Save Stash"
+msgstr ""
+
+#: cola/stash/view.py:176
+msgid "Enter a name for the stash"
+msgstr ""
+
+#: cola/stash/view.py:182
+msgid "Error: Stash exists"
+msgstr ""
+
+#: cola/stash/view.py:183
+#, fuzzy, python-format
+msgid "A stash named \"%s\" already exists"
+msgstr "ファイル '%s' は既に存在します。"
+
+#: cola/stash/view.py:198
+msgid "Drop Stash?"
+msgstr ""
+
+#: cola/stash/view.py:199
+#, fuzzy
+msgid "Recovering a dropped stash is not possible."
+msgstr "失なわれたコミットを回復するのは簡単ではありません。"
+
+#: cola/stash/view.py:200
+#, python-format
+msgid "Drop the \"%s\" stash?"
+msgstr ""
+
+#: cola/stash/view.py:201
+msgid "Drop Stash"
+msgstr ""
+
+#: cola/widgets/about.py:47
+msgid "About git-cola"
+msgstr ""
+
+#: cola/widgets/about.py:97
+msgid ""
+"This PyQt4 does not include QtWebKit.\n"
+"The keyboard shortcuts feature is unavailable."
+msgstr ""
+
+#: cola/widgets/archive.py:46
+msgid "Save Archive"
+msgstr ""
+
+#: cola/widgets/archive.py:69
+msgid "Prefix"
+msgstr ""
+
+#: cola/widgets/archive.py:74
+msgid "Advanced"
+msgstr ""
+
+#: cola/widgets/archive.py:141 cola/widgets/browse.py:49
+msgid "File Saved"
+msgstr ""
+
+#: cola/widgets/archive.py:142 cola/widgets/browse.py:50
+#, python-format
+msgid "File saved to \"%s\""
+msgstr ""
+
+#: cola/widgets/archive.py:149
+msgid "Overwrite File?"
+msgstr ""
+
+#: cola/widgets/archive.py:150
+#, python-format
+msgid "The file \"%s\" exists and will be overwritten."
+msgstr ""
+
+#: cola/widgets/archive.py:151
+#, python-format
+msgid "Overwrite \"%s\"?"
+msgstr ""
+
+#: cola/widgets/archive.py:152
+msgid "Overwrite"
+msgstr ""
+
+#: cola/widgets/browse.py:42
+#, python-format
+msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
+msgstr ""
+
+#: cola/widgets/browse.py:63
+#, fuzzy, python-format
+msgid "Browsing %s"
+msgstr "コミットに %s を加えています"
+
+#: cola/widgets/browse.py:81
+#, fuzzy, python-format
+msgid "Select file from \"%s\""
+msgstr "%s からブランチを削除しています。"
+
+#: cola/widgets/browse.py:90
+#, fuzzy
+msgid "Select File"
+msgstr "全て選択"
+
+#: cola/widgets/browse.py:117 cola/widgets/selectcommits.py:54
+msgid "Select"
+msgstr "選択"
+
+#: cola/widgets/cfgactions.py:85
+#, fuzzy
+msgid "Abort"
+msgstr "中断しています"
+
+#: cola/widgets/cfgactions.py:147 cola/widgets/cfgactions.py:151
+#, fuzzy
+msgid "Abort Action"
+msgstr "中断しています"
+
+#: cola/widgets/cfgactions.py:148
+msgid ""
+"An action is still running.\n"
+"Terminating it could result in data loss."
+msgstr ""
+
+#: cola/widgets/cfgactions.py:150
+msgid "Abort the action?"
+msgstr ""
+
+#: cola/widgets/cfgactions.py:201
+msgid "Arguments"
+msgstr ""
+
+#: cola/widgets/cfgactions.py:226 cola/widgets/createtag.py:85
+msgid "Revision"
+msgstr "リビジョン"
+
+#: cola/widgets/commitmsg.py:46
+#, fuzzy
+msgid "Sign off on this commit"
+msgstr "コミット予定済"
+
+#: cola/widgets/commitmsg.py:52
+#, fuzzy
+msgid "Commit staged changes"
+msgstr "変更点をコミット中・・・"
+
+#: cola/widgets/commitmsg.py:63
+msgid ""
+"Commit staged changes\n"
+"Shortcut: Ctrl+Enter"
+msgstr ""
+
+#: cola/widgets/commitmsg.py:71
+#, fuzzy
+msgid "Actions..."
+msgstr "オプション…"
+
+#: cola/widgets/commitmsg.py:80
+msgid "Amend Last Commit"
+msgstr "最新コミットを訂正"
+
+#: cola/widgets/commitmsg.py:91
+#, fuzzy
+msgid "Load Previous Commit Message"
+msgstr "マージコミットメッセージ:"
+
+#: cola/widgets/commitmsg.py:323
 msgid ""
 "Please supply a commit message.\n"
 "\n"
@@ -1266,704 +1296,1778 @@ msgstr ""
 "- 第２行: 空白\n"
 "- 残りの行: なぜ、この変更が良い変更か、の説明。\n"
 
-#: lib/commit.tcl:207
-#, tcl-format
-msgid "warning: Tcl does not support encoding '%s'."
-msgstr "警告: Tcl はエンコーディング '%s' をサポートしていません"
+#: cola/widgets/commitmsg.py:330
+#, fuzzy
+msgid "Missing Commit Message"
+msgstr "マージコミットメッセージ:"
 
-#: lib/commit.tcl:221
-msgid "Calling pre-commit hook..."
-msgstr "コミット前フックを実行中・・・"
-
-#: lib/commit.tcl:236
-msgid "Commit declined by pre-commit hook."
-msgstr "コミット前フックがコミットを拒否しました"
-
-#: lib/commit.tcl:259
-msgid "Calling commit-msg hook..."
-msgstr "コミット・メッセージ・フックを実行中・・・"
-
-#: lib/commit.tcl:274
-msgid "Commit declined by commit-msg hook."
-msgstr "コミット・メッセージ・フックがコミットを拒否しました"
-
-#: lib/commit.tcl:287
-msgid "Committing changes..."
-msgstr "変更点をコミット中・・・"
-
-#: lib/commit.tcl:303
-msgid "write-tree failed:"
-msgstr "write-tree が失敗しました:"
-
-#: lib/commit.tcl:304 lib/commit.tcl:348 lib/commit.tcl:368
-msgid "Commit failed."
-msgstr "コミットに失敗しました。"
-
-#: lib/commit.tcl:321
-#, tcl-format
-msgid "Commit %s appears to be corrupt"
-msgstr "コミット %s は壊れています"
-
-#: lib/commit.tcl:326
+#: cola/widgets/commitmsg.py:336
+#, fuzzy
 msgid ""
 "No changes to commit.\n"
 "\n"
-"No files were modified by this commit and it was not a merge commit.\n"
-"\n"
-"A rescan will be automatically started now.\n"
+"You must stage at least 1 file before you can commit."
 msgstr ""
 "コミットする変更がありません。\n"
 "\n"
-"マージでなく、また、一つも変更点がありません。\n"
-"\n"
-"自動的に再スキャンを開始します。\n"
+"最低一つの変更をコミット予定に加えてからコミットして下さい。\n"
 
-#: lib/commit.tcl:333
-msgid "No changes to commit."
+#: cola/widgets/commitmsg.py:340
+msgid "Would you like to stage and commit all modified files?"
+msgstr ""
+
+#: cola/widgets/commitmsg.py:342
+#, fuzzy
+msgid "Stage and commit?"
+msgstr "コミット予定済"
+
+#: cola/widgets/commitmsg.py:345
+#, fuzzy
+msgid "Stage and Commit"
+msgstr "コミット予定する"
+
+#: cola/widgets/commitmsg.py:350
+#, fuzzy
+msgid "Nothing to commit"
 msgstr "コミットする変更がありません。"
 
-#: lib/commit.tcl:347
-msgid "commit-tree failed:"
-msgstr "commit-tree が失敗しました:"
-
-#: lib/commit.tcl:367
-msgid "update-ref failed:"
-msgstr "update-ref が失敗しました:"
-
-#: lib/commit.tcl:454
-#, tcl-format
-msgid "Created commit %s: %s"
-msgstr "コミット %s を作成しました: %s"
-
-#: lib/console.tcl:59
-msgid "Working... please wait..."
-msgstr "実行中…お待ち下さい…"
-
-#: lib/console.tcl:186
-msgid "Success"
-msgstr "成功"
-
-#: lib/console.tcl:200
-msgid "Error: Command Failed"
-msgstr "エラー: コマンドが失敗しました"
-
-#: lib/database.tcl:43
-msgid "Number of loose objects"
-msgstr "ばらばらなオブジェクトの数"
-
-#: lib/database.tcl:44
-msgid "Disk space used by loose objects"
-msgstr "ばらばらなオブジェクトの使用するディスク量"
-
-#: lib/database.tcl:45
-msgid "Number of packed objects"
-msgstr "パックされたオブジェクトの数"
-
-#: lib/database.tcl:46
-msgid "Number of packs"
-msgstr "パックの数"
-
-#: lib/database.tcl:47
-msgid "Disk space used by packed objects"
-msgstr "パックされたオブジェクトの使用するディスク量"
-
-#: lib/database.tcl:48
-msgid "Packed objects waiting for pruning"
-msgstr "パックに存在するので捨てて良いオブジェクトの数"
-
-#: lib/database.tcl:49
-msgid "Garbage files"
-msgstr "ゴミファイル"
-
-#: lib/database.tcl:72
-msgid "Compressing the object database"
-msgstr "データベース圧縮"
-
-#: lib/database.tcl:83
-msgid "Verifying the object database with fsck-objects"
-msgstr "fsck-objects でオブジェクト・データベースを検証しています"
-
-#: lib/database.tcl:108
-#, tcl-format
-msgid ""
-"This repository currently has approximately %i loose objects.\n"
-"\n"
-"To maintain optimal performance it is strongly recommended that you compress "
-"the database when more than %i loose objects exist.\n"
-"\n"
-"Compress the database now?"
+#: cola/widgets/commitmsg.py:357
+msgid "Rewrite Published Commit?"
 msgstr ""
-"このリポジトリにはおおよそ %i 個の個別オブジェクトがあります\n"
-"\n"
-"最適な性能を保つために、%i 個以上の個別オブジェクトを作る毎にデータベースを圧"
-"縮することを推奨します\n"
-"\n"
-"データベースを圧縮しますか？"
 
-#: lib/date.tcl:25
-#, tcl-format
-msgid "Invalid date from Git: %s"
-msgstr "Git から出た無効な日付: %s"
-
-#: lib/diff.tcl:42
-#, tcl-format
+#: cola/widgets/commitmsg.py:358
 msgid ""
-"No differences detected.\n"
-"\n"
-"%s has no changes.\n"
-"\n"
-"The modification date of this file was updated by another application, but "
-"the content within the file was not changed.\n"
-"\n"
-"A rescan will be automatically started to find other files which may have "
-"the same state."
+"This commit has already been published.\n"
+"This operation will rewrite published history.\n"
+"You probably don't want to do this."
 msgstr ""
-"変更がありません。\n"
-"\n"
-"%s には変更がありません。\n"
-"\n"
-"このファイルの変更時刻は他のアプリケーションによって更新されていますがファイ"
-"ル内容には変更がありません。\n"
-"\n"
-"同様な状態のファイルを探すために、自動的に再スキャンを開始します。"
 
-#: lib/diff.tcl:81
-#, tcl-format
-msgid "Loading diff of %s..."
-msgstr "%s の変更点をロード中…"
-
-#: lib/diff.tcl:114 lib/diff.tcl:184
-#, tcl-format
-msgid "Unable to display %s"
-msgstr "%s を表示できません"
-
-#: lib/diff.tcl:115
-msgid "Error loading file:"
-msgstr "ファイルを読む際のエラーです:"
-
-#: lib/diff.tcl:122
-msgid "Git Repository (subproject)"
-msgstr "Git リポジトリ(サブプロジェクト)"
-
-#: lib/diff.tcl:134
-msgid "* Binary file (not showing content)."
-msgstr "* バイナリファイル(内容は表示しません)"
-
-#: lib/diff.tcl:185
-msgid "Error loading diff:"
-msgstr "diff を読む際のエラーです:"
-
-#: lib/diff.tcl:303
-msgid "Failed to unstage selected hunk."
-msgstr "選択されたパッチをコミット予定から外せません。"
-
-#: lib/diff.tcl:310
-msgid "Failed to stage selected hunk."
-msgstr "選択されたパッチをコミット予定に加えられません。"
-
-#: lib/error.tcl:20 lib/error.tcl:114
-msgid "error"
-msgstr "エラー"
-
-#: lib/error.tcl:36
-msgid "warning"
-msgstr "警告"
-
-#: lib/error.tcl:94
-msgid "You must correct the above errors before committing."
-msgstr "コミットする前に、以上のエラーを修正して下さい"
-
-#: lib/index.tcl:6
-msgid "Unable to unlock the index."
-msgstr "インデックスをロックできません"
-
-#: lib/index.tcl:15
-msgid "Index Error"
-msgstr "索引エラー"
-
-#: lib/index.tcl:21
-msgid ""
-"Updating the Git index failed.  A rescan will be automatically started to "
-"resynchronize git-gui."
+#: cola/widgets/commitmsg.py:361
+msgid "Amend the published commit?"
 msgstr ""
-"GIT インデックスの更新が失敗しました。git-gui と同期をとるために再スキャンし"
-"ます。"
 
-#: lib/index.tcl:27
-msgid "Continue"
-msgstr "続行"
+#: cola/widgets/commitmsg.py:362
+#, fuzzy
+msgid "Amend Commit"
+msgstr "最新コミットを訂正"
 
-#: lib/index.tcl:31
-msgid "Unlock Index"
-msgstr "インデックスのロック解除"
+#: cola/widgets/commitmsg.py:367
+#, fuzzy
+msgid "Commit failed"
+msgstr "コミットに失敗しました。"
 
-#: lib/index.tcl:282
-#, tcl-format
-msgid "Unstaging %s from commit"
-msgstr "コミットから '%s' を降ろす"
-
-#: lib/index.tcl:313
-msgid "Ready to commit."
-msgstr "コミット準備完了"
-
-#: lib/index.tcl:326
-#, tcl-format
-msgid "Adding %s"
-msgstr "コミットに %s を加えています"
-
-#: lib/index.tcl:381
-#, tcl-format
-msgid "Revert changes in file %s?"
-msgstr "ファイル %s にした変更を元に戻しますか？"
-
-#: lib/index.tcl:383
-#, tcl-format
-msgid "Revert changes in these %i files?"
-msgstr "これら %i 個のファイルにした変更を元に戻しますか？"
-
-#: lib/index.tcl:391
-msgid "Any unstaged changes will be permanently lost by the revert."
-msgstr "変更を元に戻すとコミット予定していない変更は全て失われます。"
-
-#: lib/index.tcl:394
-msgid "Do Nothing"
-msgstr "何もしない"
-
-#: lib/merge.tcl:13
-msgid ""
-"Cannot merge while amending.\n"
-"\n"
-"You must finish amending this commit before starting any type of merge.\n"
+#: cola/widgets/commitmsg.py:368
+#, python-format
+msgid "\"git commit\" returned exit code %s"
 msgstr ""
-"訂正中にはマージできません。\n"
-"\n"
-"訂正処理を完了するまでは新たにマージを開始できません。\n"
 
-#: lib/merge.tcl:27
-msgid ""
-"Last scanned state does not match repository state.\n"
-"\n"
-"Another Git program has modified this repository since the last scan.  A "
-"rescan must be performed before a merge can be performed.\n"
-"\n"
-"The rescan will be automatically started now.\n"
+#: cola/widgets/commitmsg.py:390
+#, fuzzy
+msgid "More..."
+msgstr "複製…"
+
+#: cola/widgets/commitmsg.py:394
+#, fuzzy
+msgid "Select Commit Message"
+msgstr "マージコミットメッセージ:"
+
+#: cola/widgets/commitmsg.py:404
+#, fuzzy
+msgid "Commit summary"
+msgstr "コミットメッセージ:"
+
+#: cola/widgets/commitmsg.py:433
+msgid "Extended description..."
 msgstr ""
-"最後にスキャンした状態はリポジトリの状態と合致しません。\n"
-"\n"
-"最後にスキャンして以後、別の Git プログラムがリポジトリを変更しています。マー"
-"ジを開始する前に、再スキャンが必要です。\n"
-"\n"
-"自動的に再スキャンを開始します。\n"
 
-#: lib/merge.tcl:44
-#, tcl-format
-msgid ""
-"You are in the middle of a conflicted merge.\n"
-"\n"
-"File %s has merge conflicts.\n"
-"\n"
-"You must resolve them, stage the file, and commit to complete the current "
-"merge.  Only then can you begin another merge.\n"
+#: cola/widgets/compare.py:37
+msgid "*** Branch Point ***"
 msgstr ""
-"衝突のあったマージの途中です。\n"
-"\n"
-"ファイル %s にはマージ中の衝突が残っています。\n"
-"\n"
-"このファイルの衝突を解決し、コミット予定に加えて、コミットすることでマージを"
-"完了します。そうやって始めて、新たなマージを開始できるようになります。\n"
 
-#: lib/merge.tcl:54
-#, tcl-format
-msgid ""
-"You are in the middle of a change.\n"
-"\n"
-"File %s is modified.\n"
-"\n"
-"You should complete the current commit before starting a merge.  Doing so "
-"will help you abort a failed merge, should the need arise.\n"
+#: cola/widgets/compare.py:38
+msgid "*** Sandbox ***"
 msgstr ""
-"変更の途中です。\n"
-"\n"
-"ファイル %s は変更中です。\n"
-"\n"
-"現在のコミットを完了してからマージを開始して下さい。そうする方がマージに失敗"
-"したときの回復が楽です。\n"
 
-#: lib/merge.tcl:106
-#, tcl-format
-msgid "%s of %s"
-msgstr "%s の %s ブランチ"
-
-#: lib/merge.tcl:119
-#, tcl-format
-msgid "Merging %s and %s..."
-msgstr "%s と %s をマージ中・・・"
-
-#: lib/merge.tcl:130
-msgid "Merge completed successfully."
-msgstr "マージが完了しました"
-
-#: lib/merge.tcl:132
-msgid "Merge failed.  Conflict resolution is required."
-msgstr "マージが失敗しました。衝突の解決が必要です。"
-
-#: lib/merge.tcl:157
-#, tcl-format
-msgid "Merge Into %s"
-msgstr "%s にマージ"
-
-#: lib/merge.tcl:176
-msgid "Revision To Merge"
-msgstr "マージするリビジョン"
-
-#: lib/merge.tcl:211
-msgid ""
-"Cannot abort while amending.\n"
-"\n"
-"You must finish amending this commit.\n"
+#: cola/widgets/compare.py:39 cola/widgets/compare.py:62
+#: cola/widgets/compare.py:68
+msgid "Local"
 msgstr ""
-"訂正中には中止できません。\n"
-"\n"
-"まず今のコミット訂正を完了させて下さい。\n"
 
-#: lib/merge.tcl:221
-msgid ""
-"Abort merge?\n"
-"\n"
-"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
-"\n"
-"Continue with aborting the current merge?"
+#: cola/widgets/compare.py:44
+msgid "Branch Diff Viewer"
 msgstr ""
-"マージを中断しますか？\n"
-"\n"
-"現在のマージを中断すると、コミットしていない全ての変更が失われます。\n"
-"\n"
-"マージを中断してよろしいですか？"
 
-#: lib/merge.tcl:227
-msgid ""
-"Reset changes?\n"
-"\n"
-"Resetting the changes will cause *ALL* uncommitted changes to be lost.\n"
-"\n"
-"Continue with resetting the current changes?"
-msgstr ""
-"変更点をリセットしますか？\n"
-"\n"
-"変更点をリセットすると、コミットしていない全ての変更が失われます。\n"
-"\n"
-"リセットしてよろしいですか？"
+#: cola/widgets/compare.py:63 cola/widgets/compare.py:69
+#: cola/widgets/remote.py:129
+msgid "Remote"
+msgstr "リモート"
 
-#: lib/merge.tcl:238
-msgid "Aborting"
-msgstr "中断しています"
-
-#: lib/merge.tcl:238
-msgid "files reset"
-msgstr "リセットしたファイル"
-
-#: lib/merge.tcl:265
-msgid "Abort failed."
-msgstr "中断に失敗しました。"
-
-#: lib/merge.tcl:267
-msgid "Abort completed.  Ready."
-msgstr "中断完了。"
-
-#: lib/option.tcl:95
-msgid "Restore Defaults"
-msgstr "既定値に戻す"
-
-#: lib/option.tcl:99
-msgid "Save"
-msgstr "保存"
-
-#: lib/option.tcl:109
-#, tcl-format
-msgid "%s Repository"
-msgstr "%s リポジトリ"
-
-#: lib/option.tcl:110
-msgid "Global (All Repositories)"
-msgstr "大域（全てのリポジトリ）"
-
-#: lib/option.tcl:116
-msgid "User Name"
-msgstr "ユーザ名"
-
-#: lib/option.tcl:117
-msgid "Email Address"
-msgstr "電子メールアドレス"
-
-#: lib/option.tcl:119
-msgid "Summarize Merge Commits"
-msgstr "マージコミットの要約"
-
-#: lib/option.tcl:120
-msgid "Merge Verbosity"
-msgstr "マージの冗長度"
-
-#: lib/option.tcl:121
-msgid "Show Diffstat After Merge"
-msgstr "マージ後に diffstat を表示"
-
-#: lib/option.tcl:123
-msgid "Trust File Modification Timestamps"
-msgstr "ファイル変更時刻を信頼する"
-
-#: lib/option.tcl:124
-msgid "Prune Tracking Branches During Fetch"
-msgstr "フェッチ中にトラッキングブランチを刈る"
-
-#: lib/option.tcl:125
-msgid "Match Tracking Branches"
-msgstr "トラッキングブランチを合わせる"
-
-#: lib/option.tcl:126
-msgid "Number of Diff Context Lines"
-msgstr "diff の文脈行数"
-
-#: lib/option.tcl:127
-msgid "Commit Message Text Width"
-msgstr "コミットメッセージのテキスト幅"
-
-#: lib/option.tcl:128
-msgid "New Branch Name Template"
-msgstr "新しいブランチ名のテンプレート"
-
-#: lib/option.tcl:192
-msgid "Spelling Dictionary:"
-msgstr "スペルチェック辞書"
-
-#: lib/option.tcl:216
-msgid "Change Font"
-msgstr "フォントを変更"
-
-#: lib/option.tcl:220
-#, tcl-format
-msgid "Choose %s"
-msgstr "%s を選択"
-
-#: lib/option.tcl:226
-msgid "pt."
-msgstr "ポイント"
-
-#: lib/option.tcl:240
-msgid "Preferences"
+#: cola/widgets/compare.py:98
+#, fuzzy
+msgid "File Differences"
 msgstr "設定"
 
-#: lib/option.tcl:275
-msgid "Failed to completely save options:"
-msgstr "完全にオプションを保存できません:"
+#: cola/widgets/createbranch.py:102
+msgid "Branch Name"
+msgstr "ブランチ名"
 
-#: lib/remote_branch_delete.tcl:29 lib/remote_branch_delete.tcl:34
-msgid "Delete Remote Branch"
-msgstr "リモート・ブランチを削除"
+#: cola/widgets/createbranch.py:107 cola/widgets/createbranch.py:178
+msgid "Starting Revision"
+msgstr "初期リビジョン"
 
-#: lib/remote_branch_delete.tcl:47
-msgid "From Repository"
-msgstr "元のリポジトリ"
+#: cola/widgets/createbranch.py:127
+msgid "Update Existing Branch:"
+msgstr "既存のブランチを更新:"
 
-#: lib/remote_branch_delete.tcl:50 lib/transport.tcl:123
-msgid "Remote:"
-msgstr "リモート:"
+#: cola/widgets/createbranch.py:130
+msgid "No"
+msgstr "いいえ"
 
-#: lib/remote_branch_delete.tcl:66 lib/transport.tcl:138
-msgid "Arbitrary URL:"
-msgstr "任意の URL:"
+#: cola/widgets/createbranch.py:133
+msgid "Fast Forward Only"
+msgstr "早送りのみ"
 
-#: lib/remote_branch_delete.tcl:84
-msgid "Branches"
+#: cola/widgets/createbranch.py:137
+msgid "Reset"
+msgstr "リセット"
+
+#: cola/widgets/createbranch.py:143
+msgid "Fetch Tracking Branch"
+msgstr "トラッキング・ブランチをフェッチ"
+
+#: cola/widgets/createbranch.py:148
+msgid "Checkout After Creation"
+msgstr "作成してすぐチェックアウト"
+
+#: cola/widgets/createbranch.py:194
+msgid "Options"
+msgstr "オプション"
+
+#: cola/widgets/createbranch.py:259
+#, fuzzy
+msgid "Missing Data"
+msgstr "ファイル無し"
+
+#: cola/widgets/createbranch.py:260
+msgid "Please provide both a branch name and revision expression."
+msgstr ""
+
+#: cola/widgets/createbranch.py:265
+#, fuzzy, python-format
+msgid "Branch \"%s\" already exists."
+msgstr "'%s'というブランチは既に存在します。"
+
+#: cola/widgets/createbranch.py:266 cola/widgets/createbranch.py:277
+#, fuzzy
+msgid "Branch Exists"
 msgstr "ブランチ"
 
-#: lib/remote_branch_delete.tcl:109
-msgid "Delete Only If"
-msgstr "条件付で削除"
+#: cola/widgets/createbranch.py:273
+#, fuzzy, python-format
+msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
+msgstr "'%s' を '%s' にリセットすると、以下のコミットが失なわれます:"
 
-#: lib/remote_branch_delete.tcl:111
-msgid "Merged Into:"
-msgstr "マージ先:"
-
-#: lib/remote_branch_delete.tcl:119
-msgid "Always (Do not perform merge checks)"
-msgstr "無条件（マージ検査をしない）"
-
-#: lib/remote_branch_delete.tcl:152
-msgid "A branch is required for 'Merged Into'."
-msgstr "'マージ先' にはブランチが必要です。"
-
-#: lib/remote_branch_delete.tcl:184
-#, tcl-format
-msgid ""
-"The following branches are not completely merged into %s:\n"
-"\n"
-" - %s"
+#: cola/widgets/createbranch.py:288
+#, python-format
+msgid "%d skipped"
 msgstr ""
-"以下のブランチは %s に完全にマージされていません:\n"
-"\n"
-" - %s"
 
-#: lib/remote_branch_delete.tcl:189
-#, tcl-format
-msgid ""
-"One or more of the merge tests failed because you have not fetched the "
-"necessary commits.  Try fetching from %s first."
+#: cola/widgets/createbranch.py:290
+msgid "Recovering lost commits may not be easy."
+msgstr "失なわれたコミットを回復するのは簡単ではありません。"
+
+#: cola/widgets/createbranch.py:292
+#, fuzzy
+msgid "Reset Branch?"
+msgstr "ブランチ削除"
+
+#: cola/widgets/createbranch.py:294
+#, python-format
+msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr ""
-"必要なコミットが不足しているために、マージ検査が失敗しました。まず %s から"
-"フェッチして下さい。"
 
-#: lib/remote_branch_delete.tcl:207
-msgid "Please select one or more branches to delete."
-msgstr "削除するブランチを選択して下さい。"
+#: cola/widgets/createbranch.py:296
+#, fuzzy
+msgid "Reset Branch"
+msgstr "ブランチ削除"
 
-#: lib/remote_branch_delete.tcl:216
-msgid ""
-"Recovering deleted branches is difficult.\n"
-"\n"
-"Delete the selected branches?"
+#: cola/widgets/createbranch.py:305
+#, fuzzy
+msgid "Updating..."
+msgstr "起動中…"
+
+#: cola/widgets/createbranch.py:321
+#, fuzzy
+msgid "Error Creating Branch"
+msgstr "ブランチを作成"
+
+#: cola/widgets/createbranch.py:322
+#, python-format
+msgid "\"%(command)s\" returned exit status \"%(status)d\""
 msgstr ""
-"削除したブランチを回復するのは困難です。\n"
+
+#: cola/widgets/createbranch.py:331
+#, fuzzy
+msgid "Branch created"
+msgstr "ブランチ名"
+
+#: cola/widgets/createtag.py:56
+msgid "Specifies the tag name"
+msgstr ""
+
+#: cola/widgets/createtag.py:62
+#, fuzzy
+msgid "Sign Tag"
+msgstr "署名"
+
+#: cola/widgets/createtag.py:67
+msgid "Whether to sign the tag (git tag -s)"
+msgstr ""
+
+#: cola/widgets/createtag.py:78
+msgid "Tag message..."
+msgstr ""
+
+#: cola/widgets/createtag.py:79
+msgid "Specifies the tag message"
+msgstr ""
+
+#: cola/widgets/createtag.py:91
+msgid "Specifies the SHA-1 to tag"
+msgstr ""
+
+#: cola/widgets/createtag.py:121
+#, fuzzy
+msgid "Missing Revision"
+msgstr "初期リビジョン"
+
+#: cola/widgets/createtag.py:122
+#, fuzzy
+msgid "Please specify a revision to tag."
+msgstr "名前を変更するブランチを選んで下さい。"
+
+#: cola/widgets/createtag.py:125
+#, fuzzy
+msgid "Missing Name"
+msgstr "ファイル無し"
+
+#: cola/widgets/createtag.py:126
+msgid "Please specify a name for the new tag."
+msgstr ""
+
+#: cola/widgets/createtag.py:129
+#, fuzzy
+msgid "Missing Tag Message"
+msgstr "マージするリビジョン"
+
+#: cola/widgets/createtag.py:130
+msgid "Tag-signing was requested but the tag message is empty."
+msgstr ""
+
+#: cola/widgets/createtag.py:132
+msgid ""
+"An unsigned, lightweight tag will be created instead.\n"
+"Create an unsigned tag?"
+msgstr ""
+
+#: cola/widgets/createtag.py:135
+msgid "Create Unsigned Tag"
+msgstr ""
+
+#: cola/widgets/createtag.py:142
+#, fuzzy
+msgid "Tag Created"
+msgstr "作成"
+
+#: cola/widgets/createtag.py:143
+#, python-format
+msgid "Created a new tag named \"%s\""
+msgstr ""
+
+#: cola/widgets/diff.py:22
+msgid "Process Section"
+msgstr ""
+
+#: cola/widgets/diff.py:25
+msgid "Process Selection"
+msgstr ""
+
+#: cola/widgets/diff.py:40
+msgid "Stage &Selected Lines"
+msgstr ""
+
+#: cola/widgets/diff.py:46
+msgid "Revert Selected Lines..."
+msgstr ""
+
+#: cola/widgets/diff.py:51
+#, fuzzy
+msgid "Unstage &Selected Lines"
+msgstr "コミット予定に入っていない変更"
+
+#: cola/widgets/diff.py:57
+msgid "Apply Diff Selection to Work Tree"
+msgstr ""
+
+#: cola/widgets/diff.py:81 cola/widgets/diff.py:103 cola/widgets/status.py:435
+#: cola/widgets/status.py:547
+msgid "Launch git-cola"
+msgstr ""
+
+#: cola/widgets/diff.py:86
+#, fuzzy
+msgid "Stage Section"
+msgstr "初期リビジョン"
+
+#: cola/widgets/diff.py:92
+msgid "Revert Section..."
+msgstr ""
+
+#: cola/widgets/diff.py:108
+msgid "Unstage Section"
+msgstr ""
+
+#: cola/widgets/diff.py:120
+msgid "Copy"
+msgstr "コピー"
+
+#: cola/widgets/diff.py:124
+msgid "Select All"
+msgstr "全て選択"
+
+#: cola/widgets/diff.py:227
+msgid "Revert Section?"
+msgstr ""
+
+#: cola/widgets/diff.py:231
+msgid "Revert Section"
+msgstr ""
+
+#: cola/widgets/diff.py:240
+#, fuzzy
+msgid "Revert Selected Lines?"
+msgstr "ファイル %s にした変更を元に戻しますか？"
+
+#: cola/widgets/diff.py:244
+msgid "Revert Selected Lines"
+msgstr ""
+
+#: cola/widgets/editremotes.py:22
+msgid ""
+"Add and remove remote repositories using the \n"
+"Add(+) and Delete(-) buttons on the left-hand side.\n"
 "\n"
-"選択したブランチを削除して良いですか？"
+"Remotes can be renamed by selecting one from the list\n"
+"and pressing \"enter\", or by double-clicking."
+msgstr ""
 
-#: lib/remote_branch_delete.tcl:226
-#, tcl-format
-msgid "Deleting branches from %s"
-msgstr "%s からブランチを削除しています。"
+#: cola/widgets/editremotes.py:32
+msgid "Remote git repositories - double-click to rename"
+msgstr ""
 
-#: lib/remote_branch_delete.tcl:286
+#: cola/widgets/editremotes.py:45
+#, fuzzy
+msgid "Add new remote git repository"
+msgstr "Git リポジトリではありません: %s"
+
+#: cola/widgets/editremotes.py:49 cola/widgets/grep.py:64
+#: cola/widgets/recent.py:52 cola/widgets/recent.py:121
+msgid "Refresh"
+msgstr "再読み込み"
+
+#: cola/widgets/editremotes.py:53
+#, fuzzy
+msgid "Delete remote"
+msgstr "リモート・ブランチを削除"
+
+#: cola/widgets/editremotes.py:116
+#, python-format
+msgid "Error creating remote \"%s\""
+msgstr ""
+
+#: cola/widgets/editremotes.py:124
+#, fuzzy
+msgid "Delete Remote"
+msgstr "リモート・ブランチを削除"
+
+#: cola/widgets/editremotes.py:125
+#, fuzzy
+msgid "Delete remote?"
+msgstr "リモート・ブランチを削除"
+
+#: cola/widgets/editremotes.py:126
+#, fuzzy, python-format
+msgid "Delete remote \"%s\""
+msgstr "リモート・ブランチを削除"
+
+#: cola/widgets/editremotes.py:134
+#, python-format
+msgid "Error deleting remote \"%s\""
+msgstr ""
+
+#: cola/widgets/editremotes.py:153
+#, fuzzy
+msgid "Rename Remote"
+msgstr "リモート"
+
+#: cola/widgets/editremotes.py:154
+#, fuzzy
+msgid "Rename remote?"
+msgstr "リモート"
+
+#: cola/widgets/editremotes.py:155
+#, python-format
+msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
+msgstr ""
+
+#: cola/widgets/editremotes.py:157
+msgid "Rename"
+msgstr "名前変更"
+
+#: cola/widgets/editremotes.py:169
+#, fuzzy, python-format
+msgid "Gathering info for \"%s\"..."
+msgstr "%s の変更点をロード中…"
+
+#: cola/widgets/editremotes.py:201
+#, fuzzy
+msgid "Add Remote"
+msgstr "リモート"
+
+#: cola/widgets/editremotes.py:213
+msgid "Name for the new remote"
+msgstr ""
+
+#: cola/widgets/editremotes.py:220
+msgid "URL"
+msgstr "URL"
+
+#: cola/widgets/grep.py:51
+msgid "command-line arguments"
+msgstr ""
+
+#: cola/widgets/grep.py:55
+msgid "grep result..."
+msgstr ""
+
+#: cola/widgets/grep.py:68
+msgid "Shell arguments"
+msgstr ""
+
+#: cola/widgets/grep.py:70
+msgid ""
+"Parse arguments using a shell.\n"
+"Queries with spaces will require \"double quotes\"."
+msgstr ""
+
+#: cola/widgets/log.py:34
+#, fuzzy, python-format
+msgid "exit code %s"
+msgstr "%s を取得"
+
+#: cola/widgets/recent.py:36
+msgid "Recently Modified Files"
+msgstr ""
+
+#: cola/widgets/recent.py:46
+msgid " commits ago"
+msgstr ""
+
+#: cola/widgets/recent.py:49
+#, fuzzy
+msgid "Showing changes since"
+msgstr "%s へ変更をプッシュしています"
+
+#: cola/widgets/recent.py:61
+msgid "Expand"
+msgstr ""
+
+#: cola/widgets/recent.py:65
+#, fuzzy
+msgid "Collapse"
+msgstr "閉じる"
+
+#: cola/widgets/remote.py:136
+#, fuzzy
+msgid "Remote Branch"
+msgstr "ブランチの名前変更"
+
+#: cola/widgets/remote.py:143
+#, fuzzy
+msgid "Fast Forward Only "
+msgstr "早送りのみ"
+
+#: cola/widgets/remote.py:147
+#, fuzzy
+msgid "Include tags "
+msgstr "タグを含める"
+
+#: cola/widgets/remote.py:150
+#, fuzzy
+msgid "Rebase "
+msgstr "リセット"
+
+#: cola/widgets/remote.py:314
+#, fuzzy, python-format
+msgid "URL: %s"
+msgstr "URL:"
+
+#: cola/widgets/remote.py:393
 msgid "No repository selected."
 msgstr "リポジトリが選択されていません。"
 
-#: lib/remote_branch_delete.tcl:291
-#, tcl-format
-msgid "Scanning %s..."
-msgstr "%s をスキャンしています…"
+#: cola/widgets/remote.py:406
+msgid "Push"
+msgstr "プッシュ"
 
-#: lib/remote.tcl:165
-msgid "Prune from"
-msgstr "から刈込む…"
+#: cola/widgets/remote.py:408
+#, python-format
+msgid ""
+"Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
+"A new remote branch will be published."
+msgstr ""
 
-#: lib/remote.tcl:170
-msgid "Fetch from"
-msgstr "取得元"
+#: cola/widgets/remote.py:410
+#, fuzzy
+msgid "Create a new remote branch?"
+msgstr "ブランチを新規作成"
 
-#: lib/remote.tcl:213
-msgid "Push to"
-msgstr "プッシュ先"
+#: cola/widgets/remote.py:411
+#, fuzzy
+msgid "Create Remote Branch"
+msgstr "リモート・ブランチを削除"
 
-#: lib/shortcut.tcl:20 lib/shortcut.tcl:61
-msgid "Cannot write shortcut:"
-msgstr "ショートカットが書けません:"
+#: cola/widgets/remote.py:419
+msgid "Force Fetch?"
+msgstr ""
 
-#: lib/shortcut.tcl:136
-msgid "Cannot write icon:"
-msgstr "アイコンが書けません:"
+#: cola/widgets/remote.py:420
+msgid "Non-fast-forward fetch overwrites local history!"
+msgstr ""
 
-#: lib/spellcheck.tcl:57
-msgid "Unsupported spell checker"
-msgstr "サポートされていないスペルチェッカーです"
+#: cola/widgets/remote.py:421
+#, fuzzy, python-format
+msgid "Force fetching from %s?"
+msgstr "%s から %s をフェッチしています"
 
-#: lib/spellcheck.tcl:65
-msgid "Spell checking is unavailable"
-msgstr "スペルチェック機能は使えません"
+#: cola/widgets/remote.py:422
+msgid "Force Fetch"
+msgstr ""
 
-#: lib/spellcheck.tcl:68
-msgid "Invalid spell checking configuration"
-msgstr "スペルチェックの設定が不正です"
+#: cola/widgets/remote.py:424
+msgid "Force Push?"
+msgstr ""
 
-#: lib/spellcheck.tcl:70
-#, tcl-format
-msgid "Reverting dictionary to %s."
-msgstr "辞書を %s に巻き戻します"
+#: cola/widgets/remote.py:425
+msgid ""
+"Non-fast-forward push overwrites published history!\n"
+"(Did you pull first?)"
+msgstr ""
 
-#: lib/spellcheck.tcl:73
-msgid "Spell checker silently failed on startup"
-msgstr "スペルチェッカーの起動に失敗しました"
+#: cola/widgets/remote.py:427
+#, python-format
+msgid "Force push to %s?"
+msgstr ""
 
-#: lib/spellcheck.tcl:80
-msgid "Unrecognized spell checker"
-msgstr "スペルチェッカーが判別できません"
+#: cola/widgets/remote.py:428
+msgid "Force Push"
+msgstr ""
 
-#: lib/spellcheck.tcl:180
-msgid "No Suggestions"
-msgstr "提案なし"
+#: cola/widgets/remote.py:462
+msgid "Already up-to-date."
+msgstr ""
 
-#: lib/spellcheck.tcl:381
-msgid "Unexpected EOF from spell checker"
-msgstr "スペルチェッカーが予想外の EOF を返しました"
+#: cola/widgets/remote.py:472 cola/widgets/startup.py:163
+#, python-format
+msgid "\"%(command)s\" returned exit status %(status)d"
+msgstr ""
 
-#: lib/spellcheck.tcl:385
-msgid "Spell Checker Failed"
-msgstr "スペルチェック失敗"
+#: cola/widgets/remote.py:486
+msgid "Have you rebased/pulled lately?"
+msgstr ""
 
-#: lib/status_bar.tcl:83
-#, tcl-format
-msgid "%s ... %*i of %*i %s (%3i%%)"
-msgstr "%1$s ... %4$*i %6$s 中の %2$*i (%7$3i%%)"
+#: cola/widgets/search.py:40 cola/widgets/search.py:58
+msgid "Search"
+msgstr ""
 
-#: lib/transport.tcl:6
-#, tcl-format
-msgid "fetch %s"
-msgstr "%s を取得"
+#: cola/widgets/search.py:44
+#, fuzzy
+msgid "Browse..."
+msgstr "ブラウズ"
 
-#: lib/transport.tcl:7
-#, tcl-format
-msgid "Fetching new changes from %s"
-msgstr "%s から新しい変更をフェッチしています"
+#: cola/widgets/search.py:50 cola/widgets/search.py:55
+msgid "yyyy-MM-dd"
+msgstr ""
 
-#: lib/transport.tcl:18
-#, tcl-format
-msgid "remote prune %s"
-msgstr "遠隔刈込 %s"
+#: cola/widgets/search.py:220
+#, fuzzy
+msgid "Search by Expression"
+msgstr "リビジョン式:"
 
-#: lib/transport.tcl:19
-#, tcl-format
-msgid "Pruning tracking branches deleted from %s"
-msgstr "%s から削除されたトラッキング・ブランチを刈っています"
+#: cola/widgets/search.py:221
+msgid "Search by Path"
+msgstr ""
 
-#: lib/transport.tcl:25 lib/transport.tcl:71
-#, tcl-format
-msgid "push %s"
-msgstr "%s をプッシュ"
+#: cola/widgets/search.py:222
+#, fuzzy
+msgid "Search Commit Messages"
+msgstr "マージコミットメッセージ:"
 
-#: lib/transport.tcl:26
-#, tcl-format
-msgid "Pushing changes to %s"
-msgstr "%s へ変更をプッシュしています"
+#: cola/widgets/search.py:223
+msgid "Search Diffs"
+msgstr ""
 
-#: lib/transport.tcl:72
-#, tcl-format
-msgid "Pushing %s %s to %s"
-msgstr "%3$s へ %1$s %2$s をプッシュしています"
+#: cola/widgets/search.py:224
+msgid "Search Authors"
+msgstr ""
 
-#: lib/transport.tcl:89
-msgid "Push Branches"
-msgstr "ブランチをプッシュ"
+#: cola/widgets/search.py:225
+#, fuzzy
+msgid "Search Committers"
+msgstr "コミット者:"
 
-#: lib/transport.tcl:103
-msgid "Source Branches"
-msgstr "元のブランチ"
+#: cola/widgets/search.py:226
+msgid "Search Date Range"
+msgstr ""
 
-#: lib/transport.tcl:120
-msgid "Destination Repository"
-msgstr "送り先リポジトリ"
+#: cola/widgets/search.py:319
+#, fuzzy
+msgid "Choose Path(s)"
+msgstr "%s を選択"
 
-#: lib/transport.tcl:158
-msgid "Transfer Options"
-msgstr "通信オプション"
+#: cola/widgets/selectcommits.py:50
+msgid "Revision Expression:"
+msgstr "リビジョン式:"
 
-#: lib/transport.tcl:160
-msgid "Force overwrite existing branch (may discard changes)"
-msgstr "既存ブランチを上書き(変更を破棄する可能性があります)"
+#: cola/widgets/selectcommits.py:101
+msgid "No commits exist in this branch."
+msgstr ""
 
-#: lib/transport.tcl:164
-msgid "Use thin pack (for slow network connections)"
-msgstr "Thin Pack を使う（遅いネットワーク接続）"
+#: cola/widgets/startup.py:28
+msgid "git-cola"
+msgstr ""
 
-#: lib/transport.tcl:168
-msgid "Include tags"
-msgstr "タグを含める"
+#: cola/widgets/startup.py:35
+msgid "New..."
+msgstr "新規…"
+
+#: cola/widgets/startup.py:58
+#, fuzzy
+msgid "Select Repository..."
+msgstr "GIT リポジトリ"
+
+#: cola/widgets/startup.py:63
+#, fuzzy
+msgid "Select manually..."
+msgstr "全て選択"
+
+#: cola/widgets/startup.py:162
+#, fuzzy
+msgid "Error Creating Repository"
+msgstr "新しいリポジトリを作る"
+
+#: cola/widgets/startup.py:165
+#, python-format
+msgid ""
+"Output:\n"
+"%s"
+msgstr ""
+
+#: cola/widgets/status.py:82
+#, fuzzy
+msgid "Untracked"
+msgstr "管理外、コミット未予定"
+
+#: cola/widgets/status.py:92
+#, fuzzy
+msgid "Stage / Unstage"
+msgstr "変更をコミット予定に入れる"
+
+#: cola/widgets/status.py:122
+msgid "Move Up"
+msgstr ""
+
+#: cola/widgets/status.py:124
+msgid "Move Down"
+msgstr ""
+
+#: cola/widgets/status.py:127
+msgid "Copy Path to Clipboard"
+msgstr ""
+
+#: cola/widgets/status.py:427 cola/widgets/status.py:514
+msgid "Revert Unstaged Edits..."
+msgstr ""
+
+#: cola/widgets/status.py:456
+msgid "Launch Merge Tool"
+msgstr ""
+
+#: cola/widgets/status.py:517
+msgid "Revert Uncommited Edits..."
+msgstr ""
+
+#: cola/widgets/status.py:535
+#, fuzzy
+msgid "Delete File(s)..."
+msgstr "削除…"
+
+#: cola/widgets/status.py:538
+msgid "Add to .gitignore"
+msgstr ""
+
+#: cola/widgets/status.py:574
+#, fuzzy
+msgid "Delete Files?"
+msgstr "削除"
+
+#: cola/widgets/status.py:575
+msgid "The following files will be deleted:"
+msgstr ""
+
+#: cola/widgets/status.py:582
+#, python-format
+msgid "Delete %d file(s)?"
+msgstr ""
+
+#: cola/widgets/status.py:583
+#, fuzzy
+msgid "Delete Files"
+msgstr "削除"
+
+#: cola/widgets/status.py:599
+#, fuzzy
+msgid "Revert Unstaged Changes?"
+msgstr "コミット予定に入っていない変更"
+
+#: cola/widgets/status.py:600
+msgid ""
+"This operation drops unstaged changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+#: cola/widgets/status.py:602
+#, fuzzy
+msgid "Revert the unstaged changes?"
+msgstr "コミット予定に入っていない変更"
+
+#: cola/widgets/status.py:603
+#, fuzzy
+msgid "Revert Unstaged Changes"
+msgstr "コミット予定に入っていない変更"
+
+#: cola/widgets/status.py:612 cola/widgets/status.py:629
+msgid "No files selected for checkout from HEAD."
+msgstr ""
+
+#~ msgid "git-gui: fatal error"
+#~ msgstr "git-gui: 致命的なエラー"
+
+#~ msgid "Invalid font specified in %s:"
+#~ msgstr "%s に無効なフォントが指定されています:"
+
+#~ msgid "Main Font"
+#~ msgstr "主フォント"
+
+#~ msgid "Diff/Console Font"
+#~ msgstr "diff/コンソール・フォント"
+
+#~ msgid "Cannot find git in PATH."
+#~ msgstr "PATH 中に git が見つかりません"
+
+#~ msgid "Cannot parse Git version string:"
+#~ msgstr "Git バージョン名が理解できません:"
+
+#~ msgid ""
+#~ "Git version cannot be determined.\n"
+#~ "\n"
+#~ "%s claims it is version '%s'.\n"
+#~ "\n"
+#~ "%s requires at least Git 1.5.0 or later.\n"
+#~ "\n"
+#~ "Assume '%s' is version 1.5.0?\n"
+#~ msgstr ""
+#~ "Git のバージョンが確認できません。\n"
+#~ "\n"
+#~ "%s はバージョン '%s' とのことです。\n"
+#~ "\n"
+#~ "%s は最低でも 1.5.0 かそれ以降の Git が必要です\n"
+#~ "\n"
+#~ "'%s' はバージョン 1.5.0 と思って良いですか？\n"
+
+#~ msgid "Git directory not found:"
+#~ msgstr "Git ディレクトリが見つかりません:"
+
+#~ msgid "Cannot move to top of working directory:"
+#~ msgstr "作業ディレクトリの最上位に移動できません"
+
+#~ msgid "Cannot use funny .git directory:"
+#~ msgstr "変な .git ディレクトリは使えません"
+
+#~ msgid "No working directory"
+#~ msgstr "作業ディレクトリがありません"
+
+#~ msgid "Refreshing file status..."
+#~ msgstr "ファイル状態を更新しています…"
+
+#~ msgid "Ready."
+#~ msgstr "準備完了"
+
+#~ msgid "Modified, not staged"
+#~ msgstr "変更あり、コミット未予定"
+
+#~ msgid "Portions staged for commit"
+#~ msgstr "部分的にコミット予定済"
+
+#~ msgid "Staged for commit, missing"
+#~ msgstr "コミット予定済、ファイル無し"
+
+#~ msgid "Staged for removal"
+#~ msgstr "削除予定済"
+
+#~ msgid "Staged for removal, still present"
+#~ msgstr "削除予定済、ファイル未削除"
+
+#~ msgid "Requires merge resolution"
+#~ msgstr "要マージ解決"
+
+#~ msgid "Starting gitk... please wait..."
+#~ msgstr "gitk を起動中…お待ち下さい…"
+
+#~ msgid ""
+#~ "Unable to start gitk:\n"
+#~ "\n"
+#~ "%s does not exist"
+#~ msgstr ""
+#~ "gitk を起動できません:\n"
+#~ "\n"
+#~ "%s がありません"
+
+#~ msgid "Repository"
+#~ msgstr "リポジトリ"
+
+#~ msgid "Commit@@noun"
+#~ msgstr "コミット"
+
+#~ msgid "Browse %s's Files"
+#~ msgstr "ブランチ %s のファイルを見る"
+
+#~ msgid "Visualize %s's History"
+#~ msgstr "ブランチ %s の履歴を見る"
+
+#~ msgid "Database Statistics"
+#~ msgstr "データベース統計"
+
+#~ msgid "Compress Database"
+#~ msgstr "データベース圧縮"
+
+#~ msgid "Verify Database"
+#~ msgstr "データベース検証"
+
+#~ msgid "Create Desktop Icon"
+#~ msgstr "デスクトップ・アイコンを作る"
+
+#~ msgid "Undo"
+#~ msgstr "元に戻す"
+
+#~ msgid "Redo"
+#~ msgstr "やり直し"
+
+#~ msgid "Cut"
+#~ msgstr "切り取り"
+
+#~ msgid "Paste"
+#~ msgstr "貼り付け"
+
+#~ msgid "Rename..."
+#~ msgstr "名前変更…"
+
+#~ msgid "New Commit"
+#~ msgstr "新規コミット"
+
+#~ msgid "Local Merge..."
+#~ msgstr "ローカル・マージ…"
+
+#~ msgid "Preferences..."
+#~ msgstr "設定…"
+
+#~ msgid "Current Branch:"
+#~ msgstr "現在のブランチ"
+
+#~ msgid "Staged Changes (Will Commit)"
+#~ msgstr "ステージングされた（コミット予定済の）変更"
+
+#~ msgid "Initial Commit Message:"
+#~ msgstr "最初のコミットメッセージ:"
+
+#~ msgid "Amended Commit Message:"
+#~ msgstr "訂正したコミットメッセージ:"
+
+#~ msgid "Amended Initial Commit Message:"
+#~ msgstr "訂正した最初のコミットメッセージ:"
+
+#~ msgid "Amended Merge Commit Message:"
+#~ msgstr "訂正したマージコミットメッセージ:"
+
+#~ msgid "Apply/Reverse Hunk"
+#~ msgstr "パッチを適用/取り消す"
+
+#~ msgid "Show Less Context"
+#~ msgstr "文脈を少なく"
+
+#~ msgid "Show More Context"
+#~ msgstr "文脈を多く"
+
+#~ msgid "Decrease Font Size"
+#~ msgstr "フォントを小さく"
+
+#~ msgid "Increase Font Size"
+#~ msgstr "フォントを大きく"
+
+#~ msgid "Unstage Hunk From Commit"
+#~ msgstr "パッチをコミット予定から外す"
+
+#~ msgid "Stage Hunk For Commit"
+#~ msgstr "パッチをコミット予定に加える"
+
+#~ msgid "Initializing..."
+#~ msgstr "初期化しています…"
+
+#~ msgid ""
+#~ "Possible environment issues exist.\n"
+#~ "\n"
+#~ "The following environment variables are probably\n"
+#~ "going to be ignored by any Git subprocess run\n"
+#~ "by %s:\n"
+#~ "\n"
+#~ msgstr ""
+#~ "環境に問題がある可能性があります\n"
+#~ "\n"
+#~ "以下の環境変数は %s が起動する Git サブプロセスによって無視されるでしょ"
+#~ "う:\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is due to a known issue with the\n"
+#~ "Tcl binary distributed by Cygwin."
+#~ msgstr ""
+#~ "\n"
+#~ "これは Cygwin で配布されている Tcl バイナリに\n"
+#~ "関しての既知の問題によります"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "A good replacement for %s\n"
+#~ "is placing values for the user.name and\n"
+#~ "user.email settings into your personal\n"
+#~ "~/.gitconfig file.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "個人的な ~/.gitconfig ファイル内で user.name と user.email の値を設定\n"
+#~ "するのが、%s の良い代用となります\n"
+
+#~ msgid "git-gui - a graphical user interface for Git."
+#~ msgstr "Git のグラフィカルUI git-gui"
+
+#~ msgid "File Viewer"
+#~ msgstr "ファイルピューワ"
+
+#~ msgid "Reading %s..."
+#~ msgstr "%s を読んでいます…"
+
+#~ msgid "Loading copy/move tracking annotations..."
+#~ msgstr "コピー・移動追跡データを読んでいます…"
+
+#~ msgid "lines annotated"
+#~ msgstr "行を注釈しました"
+
+#~ msgid "Loading original location annotations..."
+#~ msgstr "元位置行の注釈データを読んでいます…"
+
+#~ msgid "Annotation complete."
+#~ msgstr "注釈完了しました"
+
+#~ msgid "Loading annotation..."
+#~ msgstr "注釈を読み込んでいます…"
+
+#~ msgid "Original File:"
+#~ msgstr "元ファイル"
+
+#~ msgid "Originally By:"
+#~ msgstr "原作者:"
+
+#~ msgid "In File:"
+#~ msgstr "ファイル:"
+
+#~ msgid "Copied Or Moved Here By:"
+#~ msgstr "複写・移動者:"
+
+#~ msgid "Checkout"
+#~ msgstr "チェックアウト"
+
+#~ msgid "Detach From Local Branch"
+#~ msgstr "ローカル・ブランチから削除"
+
+#~ msgid "Match Tracking Branch Name"
+#~ msgstr "トラッキング・ブランチ名を合わせる"
+
+#~ msgid "Tracking branch %s is not a branch in the remote repository."
+#~ msgstr ""
+#~ "トラッキング・ブランチ %s は遠隔リポジトリのブランチではありません。"
+
+#~ msgid "Please supply a branch name."
+#~ msgstr "ブランチ名を指定して下さい。"
+
+#~ msgid "'%s' is not an acceptable branch name."
+#~ msgstr "'%s' はブランチ名に使えません。"
+
+#~ msgid "Delete Local Branch"
+#~ msgstr "ローカル・ブランチを削除"
+
+#~ msgid "Local Branches"
+#~ msgstr "ローカル・ブランチ"
+
+#~ msgid "Delete Only If Merged Into"
+#~ msgstr "マージ済みの時のみ削除"
+
+#~ msgid "Always (Do not perform merge test.)"
+#~ msgstr "無条件(マージテストしない)"
+
+#~ msgid "The following branches are not completely merged into %s:"
+#~ msgstr "以下のブランチは %s に完全にマージされていません:"
+
+#~ msgid ""
+#~ "Recovering deleted branches is difficult. \n"
+#~ "\n"
+#~ " Delete the selected branches?"
+#~ msgstr ""
+#~ "ブランチを削除すると元に戻すのは困難です。 \n"
+#~ "\n"
+#~ " 選択したブランチを削除しますか？"
+
+#~ msgid ""
+#~ "Failed to delete branches:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "以下のブランチを削除できません:\n"
+#~ "%s"
+
+#~ msgid "New Name:"
+#~ msgstr "新しい名前:"
+
+#~ msgid "Failed to rename '%s'."
+#~ msgstr "'%s'の名前変更に失敗しました。"
+
+#~ msgid "[Up To Parent]"
+#~ msgstr "[上位フォルダへ]"
+
+#~ msgid "Browse Branch Files"
+#~ msgstr "現在のブランチのファイルを見る"
+
+#~ msgid "fatal: Cannot resolve %s"
+#~ msgstr "致命的エラー: %s を解決できません"
+
+#~ msgid "Branch '%s' does not exist."
+#~ msgstr "ブランチ'%s'は存在しません。"
+
+#~ msgid ""
+#~ "Branch '%s' already exists.\n"
+#~ "\n"
+#~ "It cannot fast-forward to %s.\n"
+#~ "A merge is required."
+#~ msgstr ""
+#~ "ブランチ '%s' は既に存在します。\n"
+#~ "\n"
+#~ "%s に早送りできません。\n"
+#~ "マージが必要です。"
+
+#~ msgid "Merge strategy '%s' not supported."
+#~ msgstr "'%s' マージ戦略はサポートされていません。"
+
+#~ msgid "Failed to update '%s'."
+#~ msgstr "'%s' の更新に失敗しました。"
+
+#~ msgid "Staging area (index) is already locked."
+#~ msgstr "インデックスは既にロックされています。"
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before the current branch can be changed.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "最後にスキャンした状態はリポジトリの状態と合致しません。\n"
+#~ "\n"
+#~ "最後にスキャンして以後、別の Git プログラムがリポジトリを変更しています。"
+#~ "現在のブランチを変更する前に、再スキャンが必要です。\n"
+#~ "\n"
+#~ "自動的に再スキャンを開始します。\n"
+
+#~ msgid "Updating working directory to '%s'..."
+#~ msgstr "作業ディレクトリを '%s' に更新しています…"
+
+#~ msgid "files checked out"
+#~ msgstr "チェックアウトされたファイル"
+
+#~ msgid "Aborted checkout of '%s' (file level merging is required)."
+#~ msgstr ""
+#~ "'%s' のチェックアウトを中止しました（ファイル毎のマージが必要です）。"
+
+#~ msgid "File level merge required."
+#~ msgstr "ファイル毎のマージが必要です。"
+
+#~ msgid "Staying on branch '%s'."
+#~ msgstr "ブランチ '%s' に滞まります。"
+
+#~ msgid ""
+#~ "You are no longer on a local branch.\n"
+#~ "\n"
+#~ "If you wanted to be on a branch, create one now starting from 'This "
+#~ "Detached Checkout'."
+#~ msgstr ""
+#~ "ローカル・ブランチから離れます。\n"
+#~ "\n"
+#~ "ブランチ上に滞まりたいときは、この「分離されたチェックアウト」から新規ブラ"
+#~ "ンチを開始してください。"
+
+#~ msgid "Checked out '%s'."
+#~ msgstr "'%s' をチェックアウトしました"
+
+#~ msgid "Reset '%s'?"
+#~ msgstr "'%s' をリセットしますか？"
+
+#~ msgid ""
+#~ "Failed to set current branch.\n"
+#~ "\n"
+#~ "This working directory is only partially switched.  We successfully "
+#~ "updated your files, but failed to update an internal Git file.\n"
+#~ "\n"
+#~ "This should not have occurred.  %s will now close and give up."
+#~ msgstr ""
+#~ "現在のブランチを設定できません。\n"
+#~ "\n"
+#~ "作業ディレクトリは部分的にしか切り替わっていません。ファイルの更新には成功"
+#~ "しましたが、 Git の内部データを更新できませんでした。\n"
+#~ "起こるはずのないエラーです。あきらめて %s を終了します。"
+
+#~ msgid "Font Family"
+#~ msgstr "フォント・ファミリー"
+
+#~ msgid "Font Example"
+#~ msgstr "フォント・サンプル"
+
+#~ msgid ""
+#~ "This is example text.\n"
+#~ "If you like this text, it can be your font."
+#~ msgstr ""
+#~ "これはサンプル文です。\n"
+#~ "このフォントが気に入ればお使いになれます。"
+
+#~ msgid "Git Gui"
+#~ msgstr "Git GUI"
+
+#~ msgid "Clone Existing Repository"
+#~ msgstr "既存リポジトリを複製する"
+
+#~ msgid "Recent Repositories"
+#~ msgstr "最近使ったリポジトリ"
+
+#~ msgid "Failed to create repository %s:"
+#~ msgstr "リポジトリ %s を作製できません:"
+
+#~ msgid "Directory:"
+#~ msgstr "ディレクトリ:"
+
+#~ msgid "Directory %s already exists."
+#~ msgstr "ディレクトリ '%s' は既に存在します。"
+
+#~ msgid "Clone"
+#~ msgstr "複製"
+
+#~ msgid "Clone Type:"
+#~ msgstr "複製方式:"
+
+#~ msgid "Standard (Fast, Semi-Redundant, Hardlinks)"
+#~ msgstr "標準(高速・中冗長度・ハードリンク)"
+
+#~ msgid "Full Copy (Slower, Redundant Backup)"
+#~ msgstr "全複写(低速・冗長バックアップ)"
+
+#~ msgid "Shared (Fastest, Not Recommended, No Backup)"
+#~ msgstr "共有(最高速・非推奨・バックアップ無し)"
+
+#~ msgid "Standard only available for local repository."
+#~ msgstr "標準方式は同一計算機上のリポジトリにのみ使えます。"
+
+#~ msgid "Shared only available for local repository."
+#~ msgstr "共有方式は同一計算機上のリポジトリにのみ使えます。"
+
+#~ msgid "Location %s already exists."
+#~ msgstr "'%s' は既に存在します。"
+
+#~ msgid "Failed to configure origin"
+#~ msgstr "origin を設定できませんでした"
+
+#~ msgid "Counting objects"
+#~ msgstr "オブジェクトを数えています"
+
+#~ msgid "buckets"
+#~ msgstr "バケツ"
+
+#~ msgid "Unable to copy objects/info/alternates: %s"
+#~ msgstr "objects/info/alternates を複写できません: %s"
+
+#~ msgid "The 'master' branch has not been initialized."
+#~ msgstr "'master' ブランチが初期化されていません"
+
+#~ msgid "Hardlinks are unavailable.  Falling back to copying."
+#~ msgstr "ハードリンクが作れないので、コピーします"
+
+#~ msgid "Cloning from %s"
+#~ msgstr "%s から複製しています"
+
+#~ msgid "Copying objects"
+#~ msgstr "オブジェクトを複写しています"
+
+#~ msgid "KiB"
+#~ msgstr "KiB"
+
+#~ msgid "Unable to copy object: %s"
+#~ msgstr "オブジェクトを複写できません: %s"
+
+#~ msgid "Linking objects"
+#~ msgstr "オブジェクトを連結しています"
+
+#~ msgid "objects"
+#~ msgstr "オブジェクト"
+
+#~ msgid "Unable to hardlink object: %s"
+#~ msgstr "オブジェクトをハードリンクできません: %s"
+
+#~ msgid "Cannot fetch branches and objects.  See console output for details."
+#~ msgstr "ブランチやオブジェクトを取得できません。コンソール出力を見て下さい"
+
+#~ msgid "Cannot fetch tags.  See console output for details."
+#~ msgstr "タグを取得できません。コンソール出力を見て下さい"
+
+#~ msgid "Cannot determine HEAD.  See console output for details."
+#~ msgstr "HEAD を確定できません。コンソール出力を見て下さい"
+
+#~ msgid "Unable to cleanup %s"
+#~ msgstr "%s を掃除できません"
+
+#~ msgid "Clone failed."
+#~ msgstr "複写に失敗しました。"
+
+#~ msgid "No default branch obtained."
+#~ msgstr "デフォールト・ブランチが取得されませんでした"
+
+#~ msgid "Cannot resolve %s as a commit."
+#~ msgstr "%s をコミットとして解釈できません"
+
+#~ msgid "Creating working directory"
+#~ msgstr "作業ディレクトリを作成しています"
+
+#~ msgid "files"
+#~ msgstr "ファイル"
+
+#~ msgid "Initial file checkout failed."
+#~ msgstr "初期チェックアウトに失敗しました"
+
+#~ msgid "Failed to open repository %s:"
+#~ msgstr "リポジトリ %s を開けません:"
+
+#~ msgid "This Detached Checkout"
+#~ msgstr "分離されたチェックアウト"
+
+#~ msgid "Updated"
+#~ msgstr "更新しました"
+
+#~ msgid ""
+#~ "There is nothing to amend.\n"
+#~ "\n"
+#~ "You are about to create the initial commit.  There is no commit before "
+#~ "this to amend.\n"
+#~ msgstr ""
+#~ "訂正するコミットがそもそもありません。\n"
+#~ "\n"
+#~ "これから作るのは最初のコミットです。その前にはまだ訂正するようなコミットは"
+#~ "ありません。\n"
+
+#~ msgid ""
+#~ "Cannot amend while merging.\n"
+#~ "\n"
+#~ "You are currently in the middle of a merge that has not been fully "
+#~ "completed.  You cannot amend the prior commit unless you first abort the "
+#~ "current merge activity.\n"
+#~ msgstr ""
+#~ "マージ中にコミットの訂正はできません。\n"
+#~ "\n"
+#~ "現在はまだマージの途中です。先にこのマージを中止しないと、前のコミットの訂"
+#~ "正はできません\n"
+
+#~ msgid "Error loading commit data for amend:"
+#~ msgstr "訂正するコミットのデータを読めません:"
+
+#~ msgid "Unable to obtain your identity:"
+#~ msgstr "ユーザの正体を確認できません:"
+
+#~ msgid "Invalid GIT_COMMITTER_IDENT:"
+#~ msgstr "GIT_COMMITTER_IDENT が無効です:"
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before another commit can be created.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "最後にスキャンした状態はリポジトリの状態と合致しません。\n"
+#~ "\n"
+#~ "最後にスキャンして以後、別の Git プログラムがリポジトリを変更しています。"
+#~ "新しくコミットする前に、再スキャンが必要です。\n"
+#~ "\n"
+#~ "自動的に再スキャンを開始します。\n"
+
+#~ msgid ""
+#~ "Unmerged files cannot be committed.\n"
+#~ "\n"
+#~ "File %s has merge conflicts.  You must resolve them and stage the file "
+#~ "before committing.\n"
+#~ msgstr ""
+#~ "マージしていないファイルはコミットできません。\n"
+#~ "\n"
+#~ "ファイル %s にはマージ衝突が残っています。まず解決してコミット予定に加える"
+#~ "必要があります。\n"
+
+#~ msgid ""
+#~ "Unknown file state %s detected.\n"
+#~ "\n"
+#~ "File %s cannot be committed by this program.\n"
+#~ msgstr ""
+#~ "不明なファイル状態 %s です。\n"
+#~ "\n"
+#~ "ファイル %s は本プログラムではコミットできません。\n"
+
+#~ msgid "warning: Tcl does not support encoding '%s'."
+#~ msgstr "警告: Tcl はエンコーディング '%s' をサポートしていません"
+
+#~ msgid "Calling pre-commit hook..."
+#~ msgstr "コミット前フックを実行中・・・"
+
+#~ msgid "Commit declined by pre-commit hook."
+#~ msgstr "コミット前フックがコミットを拒否しました"
+
+#~ msgid "Calling commit-msg hook..."
+#~ msgstr "コミット・メッセージ・フックを実行中・・・"
+
+#~ msgid "Commit declined by commit-msg hook."
+#~ msgstr "コミット・メッセージ・フックがコミットを拒否しました"
+
+#~ msgid "write-tree failed:"
+#~ msgstr "write-tree が失敗しました:"
+
+#~ msgid "Commit %s appears to be corrupt"
+#~ msgstr "コミット %s は壊れています"
+
+#~ msgid ""
+#~ "No changes to commit.\n"
+#~ "\n"
+#~ "No files were modified by this commit and it was not a merge commit.\n"
+#~ "\n"
+#~ "A rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "コミットする変更がありません。\n"
+#~ "\n"
+#~ "マージでなく、また、一つも変更点がありません。\n"
+#~ "\n"
+#~ "自動的に再スキャンを開始します。\n"
+
+#~ msgid "commit-tree failed:"
+#~ msgstr "commit-tree が失敗しました:"
+
+#~ msgid "update-ref failed:"
+#~ msgstr "update-ref が失敗しました:"
+
+#~ msgid "Working... please wait..."
+#~ msgstr "実行中…お待ち下さい…"
+
+#~ msgid "Success"
+#~ msgstr "成功"
+
+#~ msgid "Error: Command Failed"
+#~ msgstr "エラー: コマンドが失敗しました"
+
+#~ msgid "Number of loose objects"
+#~ msgstr "ばらばらなオブジェクトの数"
+
+#~ msgid "Disk space used by loose objects"
+#~ msgstr "ばらばらなオブジェクトの使用するディスク量"
+
+#~ msgid "Number of packed objects"
+#~ msgstr "パックされたオブジェクトの数"
+
+#~ msgid "Number of packs"
+#~ msgstr "パックの数"
+
+#~ msgid "Disk space used by packed objects"
+#~ msgstr "パックされたオブジェクトの使用するディスク量"
+
+#~ msgid "Packed objects waiting for pruning"
+#~ msgstr "パックに存在するので捨てて良いオブジェクトの数"
+
+#~ msgid "Garbage files"
+#~ msgstr "ゴミファイル"
+
+#~ msgid "Compressing the object database"
+#~ msgstr "データベース圧縮"
+
+#~ msgid "Verifying the object database with fsck-objects"
+#~ msgstr "fsck-objects でオブジェクト・データベースを検証しています"
+
+#~ msgid ""
+#~ "This repository currently has approximately %i loose objects.\n"
+#~ "\n"
+#~ "To maintain optimal performance it is strongly recommended that you "
+#~ "compress the database when more than %i loose objects exist.\n"
+#~ "\n"
+#~ "Compress the database now?"
+#~ msgstr ""
+#~ "このリポジトリにはおおよそ %i 個の個別オブジェクトがあります\n"
+#~ "\n"
+#~ "最適な性能を保つために、%i 個以上の個別オブジェクトを作る毎にデータベース"
+#~ "を圧縮することを推奨します\n"
+#~ "\n"
+#~ "データベースを圧縮しますか？"
+
+#~ msgid "Invalid date from Git: %s"
+#~ msgstr "Git から出た無効な日付: %s"
+
+#~ msgid ""
+#~ "No differences detected.\n"
+#~ "\n"
+#~ "%s has no changes.\n"
+#~ "\n"
+#~ "The modification date of this file was updated by another application, "
+#~ "but the content within the file was not changed.\n"
+#~ "\n"
+#~ "A rescan will be automatically started to find other files which may have "
+#~ "the same state."
+#~ msgstr ""
+#~ "変更がありません。\n"
+#~ "\n"
+#~ "%s には変更がありません。\n"
+#~ "\n"
+#~ "このファイルの変更時刻は他のアプリケーションによって更新されていますがファ"
+#~ "イル内容には変更がありません。\n"
+#~ "\n"
+#~ "同様な状態のファイルを探すために、自動的に再スキャンを開始します。"
+
+#~ msgid "Unable to display %s"
+#~ msgstr "%s を表示できません"
+
+#~ msgid "Git Repository (subproject)"
+#~ msgstr "Git リポジトリ(サブプロジェクト)"
+
+#~ msgid "* Binary file (not showing content)."
+#~ msgstr "* バイナリファイル(内容は表示しません)"
+
+#~ msgid "Error loading diff:"
+#~ msgstr "diff を読む際のエラーです:"
+
+#~ msgid "Failed to unstage selected hunk."
+#~ msgstr "選択されたパッチをコミット予定から外せません。"
+
+#~ msgid "Failed to stage selected hunk."
+#~ msgstr "選択されたパッチをコミット予定に加えられません。"
+
+#~ msgid "warning"
+#~ msgstr "警告"
+
+#~ msgid "You must correct the above errors before committing."
+#~ msgstr "コミットする前に、以上のエラーを修正して下さい"
+
+#~ msgid "Unable to unlock the index."
+#~ msgstr "インデックスをロックできません"
+
+#~ msgid "Index Error"
+#~ msgstr "索引エラー"
+
+#~ msgid ""
+#~ "Updating the Git index failed.  A rescan will be automatically started to "
+#~ "resynchronize git-gui."
+#~ msgstr ""
+#~ "GIT インデックスの更新が失敗しました。git-gui と同期をとるために再スキャン"
+#~ "します。"
+
+#~ msgid "Unlock Index"
+#~ msgstr "インデックスのロック解除"
+
+#~ msgid "Ready to commit."
+#~ msgstr "コミット準備完了"
+
+#~ msgid "Revert changes in these %i files?"
+#~ msgstr "これら %i 個のファイルにした変更を元に戻しますか？"
+
+#~ msgid "Any unstaged changes will be permanently lost by the revert."
+#~ msgstr "変更を元に戻すとコミット予定していない変更は全て失われます。"
+
+#~ msgid "Do Nothing"
+#~ msgstr "何もしない"
+
+#~ msgid ""
+#~ "Cannot merge while amending.\n"
+#~ "\n"
+#~ "You must finish amending this commit before starting any type of merge.\n"
+#~ msgstr ""
+#~ "訂正中にはマージできません。\n"
+#~ "\n"
+#~ "訂正処理を完了するまでは新たにマージを開始できません。\n"
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before a merge can be performed.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "最後にスキャンした状態はリポジトリの状態と合致しません。\n"
+#~ "\n"
+#~ "最後にスキャンして以後、別の Git プログラムがリポジトリを変更しています。"
+#~ "マージを開始する前に、再スキャンが必要です。\n"
+#~ "\n"
+#~ "自動的に再スキャンを開始します。\n"
+
+#~ msgid ""
+#~ "You are in the middle of a conflicted merge.\n"
+#~ "\n"
+#~ "File %s has merge conflicts.\n"
+#~ "\n"
+#~ "You must resolve them, stage the file, and commit to complete the current "
+#~ "merge.  Only then can you begin another merge.\n"
+#~ msgstr ""
+#~ "衝突のあったマージの途中です。\n"
+#~ "\n"
+#~ "ファイル %s にはマージ中の衝突が残っています。\n"
+#~ "\n"
+#~ "このファイルの衝突を解決し、コミット予定に加えて、コミットすることでマージ"
+#~ "を完了します。そうやって始めて、新たなマージを開始できるようになります。\n"
+
+#~ msgid ""
+#~ "You are in the middle of a change.\n"
+#~ "\n"
+#~ "File %s is modified.\n"
+#~ "\n"
+#~ "You should complete the current commit before starting a merge.  Doing so "
+#~ "will help you abort a failed merge, should the need arise.\n"
+#~ msgstr ""
+#~ "変更の途中です。\n"
+#~ "\n"
+#~ "ファイル %s は変更中です。\n"
+#~ "\n"
+#~ "現在のコミットを完了してからマージを開始して下さい。そうする方がマージに失"
+#~ "敗したときの回復が楽です。\n"
+
+#~ msgid "%s of %s"
+#~ msgstr "%s の %s ブランチ"
+
+#~ msgid "Merging %s and %s..."
+#~ msgstr "%s と %s をマージ中・・・"
+
+#~ msgid "Merge completed successfully."
+#~ msgstr "マージが完了しました"
+
+#~ msgid "Merge failed.  Conflict resolution is required."
+#~ msgstr "マージが失敗しました。衝突の解決が必要です。"
+
+#~ msgid ""
+#~ "Cannot abort while amending.\n"
+#~ "\n"
+#~ "You must finish amending this commit.\n"
+#~ msgstr ""
+#~ "訂正中には中止できません。\n"
+#~ "\n"
+#~ "まず今のコミット訂正を完了させて下さい。\n"
+
+#~ msgid ""
+#~ "Reset changes?\n"
+#~ "\n"
+#~ "Resetting the changes will cause *ALL* uncommitted changes to be lost.\n"
+#~ "\n"
+#~ "Continue with resetting the current changes?"
+#~ msgstr ""
+#~ "変更点をリセットしますか？\n"
+#~ "\n"
+#~ "変更点をリセットすると、コミットしていない全ての変更が失われます。\n"
+#~ "\n"
+#~ "リセットしてよろしいですか？"
+
+#~ msgid "files reset"
+#~ msgstr "リセットしたファイル"
+
+#~ msgid "Abort failed."
+#~ msgstr "中断に失敗しました。"
+
+#~ msgid "Abort completed.  Ready."
+#~ msgstr "中断完了。"
+
+#~ msgid "Restore Defaults"
+#~ msgstr "既定値に戻す"
+
+#~ msgid "%s Repository"
+#~ msgstr "%s リポジトリ"
+
+#~ msgid "Prune Tracking Branches During Fetch"
+#~ msgstr "フェッチ中にトラッキングブランチを刈る"
+
+#~ msgid "Match Tracking Branches"
+#~ msgstr "トラッキングブランチを合わせる"
+
+#~ msgid "New Branch Name Template"
+#~ msgstr "新しいブランチ名のテンプレート"
+
+#~ msgid "Spelling Dictionary:"
+#~ msgstr "スペルチェック辞書"
+
+#~ msgid "Change Font"
+#~ msgstr "フォントを変更"
+
+#~ msgid "pt."
+#~ msgstr "ポイント"
+
+#~ msgid "Failed to completely save options:"
+#~ msgstr "完全にオプションを保存できません:"
+
+#~ msgid "From Repository"
+#~ msgstr "元のリポジトリ"
+
+#~ msgid "Remote:"
+#~ msgstr "リモート:"
+
+#~ msgid "Arbitrary URL:"
+#~ msgstr "任意の URL:"
+
+#~ msgid "Delete Only If"
+#~ msgstr "条件付で削除"
+
+#~ msgid "Merged Into:"
+#~ msgstr "マージ先:"
+
+#~ msgid "Always (Do not perform merge checks)"
+#~ msgstr "無条件（マージ検査をしない）"
+
+#~ msgid "A branch is required for 'Merged Into'."
+#~ msgstr "'マージ先' にはブランチが必要です。"
+
+#~ msgid ""
+#~ "The following branches are not completely merged into %s:\n"
+#~ "\n"
+#~ " - %s"
+#~ msgstr ""
+#~ "以下のブランチは %s に完全にマージされていません:\n"
+#~ "\n"
+#~ " - %s"
+
+#~ msgid ""
+#~ "One or more of the merge tests failed because you have not fetched the "
+#~ "necessary commits.  Try fetching from %s first."
+#~ msgstr ""
+#~ "必要なコミットが不足しているために、マージ検査が失敗しました。まず %s から"
+#~ "フェッチして下さい。"
+
+#~ msgid "Please select one or more branches to delete."
+#~ msgstr "削除するブランチを選択して下さい。"
+
+#~ msgid ""
+#~ "Recovering deleted branches is difficult.\n"
+#~ "\n"
+#~ "Delete the selected branches?"
+#~ msgstr ""
+#~ "削除したブランチを回復するのは困難です。\n"
+#~ "\n"
+#~ "選択したブランチを削除して良いですか？"
+
+#~ msgid "Prune from"
+#~ msgstr "から刈込む…"
+
+#~ msgid "Fetch from"
+#~ msgstr "取得元"
+
+#~ msgid "Push to"
+#~ msgstr "プッシュ先"
+
+#~ msgid "Cannot write shortcut:"
+#~ msgstr "ショートカットが書けません:"
+
+#~ msgid "Unsupported spell checker"
+#~ msgstr "サポートされていないスペルチェッカーです"
+
+#~ msgid "Spell checking is unavailable"
+#~ msgstr "スペルチェック機能は使えません"
+
+#~ msgid "Invalid spell checking configuration"
+#~ msgstr "スペルチェックの設定が不正です"
+
+#~ msgid "Reverting dictionary to %s."
+#~ msgstr "辞書を %s に巻き戻します"
+
+#~ msgid "Spell checker silently failed on startup"
+#~ msgstr "スペルチェッカーの起動に失敗しました"
+
+#~ msgid "Unrecognized spell checker"
+#~ msgstr "スペルチェッカーが判別できません"
+
+#~ msgid "No Suggestions"
+#~ msgstr "提案なし"
+
+#~ msgid "Unexpected EOF from spell checker"
+#~ msgstr "スペルチェッカーが予想外の EOF を返しました"
+
+#~ msgid "Spell Checker Failed"
+#~ msgstr "スペルチェック失敗"
+
+#~ msgid "%s ... %*i of %*i %s (%3i%%)"
+#~ msgstr "%1$s ... %4$*i %6$s 中の %2$*i (%7$3i%%)"
+
+#~ msgid "Fetching new changes from %s"
+#~ msgstr "%s から新しい変更をフェッチしています"
+
+#~ msgid "remote prune %s"
+#~ msgstr "遠隔刈込 %s"
+
+#~ msgid "Pruning tracking branches deleted from %s"
+#~ msgstr "%s から削除されたトラッキング・ブランチを刈っています"
+
+#~ msgid "push %s"
+#~ msgstr "%s をプッシュ"
+
+#~ msgid "Pushing %s %s to %s"
+#~ msgstr "%3$s へ %1$s %2$s をプッシュしています"
+
+#~ msgid "Push Branches"
+#~ msgstr "ブランチをプッシュ"
+
+#~ msgid "Source Branches"
+#~ msgstr "元のブランチ"
+
+#~ msgid "Destination Repository"
+#~ msgstr "送り先リポジトリ"
+
+#~ msgid "Transfer Options"
+#~ msgstr "通信オプション"
+
+#~ msgid "Force overwrite existing branch (may discard changes)"
+#~ msgstr "既存ブランチを上書き(変更を破棄する可能性があります)"
+
+#~ msgid "Use thin pack (for slow network connections)"
+#~ msgstr "Thin Pack を使う（遅いネットワーク接続）"
 
 #~ msgid "Not connected to aspell"
 #~ msgstr "aspell に接続していません"

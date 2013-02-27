@@ -7,1253 +7,1277 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-14 07:18+0100\n"
+"POT-Creation-Date: 2013-02-26 23:01-0800\n"
 "PO-Revision-Date: 2008-03-14 07:23+0100\n"
 "Last-Translator: Peter Karlsson <peter@softwolves.pp.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
 
-#: git-gui.sh:41 git-gui.sh:634 git-gui.sh:648 git-gui.sh:661 git-gui.sh:744
-#: git-gui.sh:763
-msgid "git-gui: fatal error"
-msgstr "git-gui: ödesdigert fel"
-
-#: git-gui.sh:593
-#, tcl-format
-msgid "Invalid font specified in %s:"
-msgstr "Ogiltigt teckensnitt angivet i %s:"
-
-#: git-gui.sh:620
-msgid "Main Font"
-msgstr "Huvudteckensnitt"
-
-#: git-gui.sh:621
-msgid "Diff/Console Font"
-msgstr "Diff/konsolteckensnitt"
-
-#: git-gui.sh:635
-msgid "Cannot find git in PATH."
-msgstr "Hittar inte git i PATH."
-
-#: git-gui.sh:662
-msgid "Cannot parse Git version string:"
-msgstr "Kan inte tolka versionssträng från Git:"
-
-#: git-gui.sh:680
-#, tcl-format
-msgid ""
-"Git version cannot be determined.\n"
-"\n"
-"%s claims it is version '%s'.\n"
-"\n"
-"%s requires at least Git 1.5.0 or later.\n"
-"\n"
-"Assume '%s' is version 1.5.0?\n"
+#: cola/bookmarks.py:32
+msgid "Bookmarks"
 msgstr ""
-"Kan inte avgöra Gits version.\n"
-"\n"
-"%s säger att dess version är \"%s\".\n"
-"\n"
-"%s kräver minst Git 1.5.0 eller senare.\n"
-"\n"
-"Anta att \"%s\" är version 1.5.0?\n"
 
-#: git-gui.sh:918
-msgid "Git directory not found:"
-msgstr "Git-katalogen hittades inte:"
-
-#: git-gui.sh:925
-msgid "Cannot move to top of working directory:"
-msgstr "Kan inte gå till början på arbetskatalogen:"
-
-#: git-gui.sh:932
-msgid "Cannot use funny .git directory:"
-msgstr "Kan inte använda underlig .git-katalog:"
-
-#: git-gui.sh:937
-msgid "No working directory"
-msgstr "Ingen arbetskatalog"
-
-#: git-gui.sh:1084 lib/checkout_op.tcl:283
-msgid "Refreshing file status..."
-msgstr "Uppdaterar filstatus..."
-
-#: git-gui.sh:1149
-msgid "Scanning for modified files ..."
-msgstr "Söker efter ändrade filer..."
-
-#: git-gui.sh:1324 lib/browser.tcl:246
-msgid "Ready."
-msgstr "Klar."
-
-#: git-gui.sh:1590
-msgid "Unmodified"
-msgstr "Oförändrade"
-
-#: git-gui.sh:1592
-msgid "Modified, not staged"
-msgstr "Förändrade, ej köade"
-
-#: git-gui.sh:1593 git-gui.sh:1598
-msgid "Staged for commit"
-msgstr "Köade för incheckning"
-
-#: git-gui.sh:1594 git-gui.sh:1599
-msgid "Portions staged for commit"
-msgstr "Delar köade för incheckning"
-
-#: git-gui.sh:1595 git-gui.sh:1600
-msgid "Staged for commit, missing"
-msgstr "Köade för incheckning, saknade"
-
-#: git-gui.sh:1597
-msgid "Untracked, not staged"
-msgstr "Ej spårade, ej köade"
-
-#: git-gui.sh:1602
-msgid "Missing"
-msgstr "Saknade"
-
-#: git-gui.sh:1603
-msgid "Staged for removal"
-msgstr "Köade för borttagning"
-
-#: git-gui.sh:1604
-msgid "Staged for removal, still present"
-msgstr "Köade för borttagning, fortfarande närvarande"
-
-#: git-gui.sh:1606 git-gui.sh:1607 git-gui.sh:1608 git-gui.sh:1609
-msgid "Requires merge resolution"
-msgstr "Kräver konflikthantering efter sammanslagning"
-
-#: git-gui.sh:1644
-msgid "Starting gitk... please wait..."
-msgstr "Startar gitk... vänta..."
-
-#: git-gui.sh:1653
-#, tcl-format
-msgid ""
-"Unable to start gitk:\n"
-"\n"
-"%s does not exist"
-msgstr ""
-"Kan inte starta gitk:\n"
-"\n"
-"%s finns inte"
-
-#: git-gui.sh:1860 lib/choose_repository.tcl:36
-msgid "Repository"
-msgstr "Arkiv"
-
-#: git-gui.sh:1861
-msgid "Edit"
-msgstr "Redigera"
-
-#: git-gui.sh:1863 lib/choose_rev.tcl:561
-msgid "Branch"
-msgstr "Gren"
-
-#: git-gui.sh:1866 lib/choose_rev.tcl:548
-msgid "Commit@@noun"
-msgstr "Incheckning"
-
-#: git-gui.sh:1869 lib/merge.tcl:120 lib/merge.tcl:149 lib/merge.tcl:167
-msgid "Merge"
-msgstr "Slå ihop"
-
-#: git-gui.sh:1870 lib/choose_rev.tcl:557
-msgid "Remote"
-msgstr "Fjärr"
-
-#: git-gui.sh:1879
-msgid "Browse Current Branch's Files"
-msgstr "Bläddra i grenens filer"
-
-#: git-gui.sh:1883
-msgid "Browse Branch Files..."
-msgstr "Bläddra filer på gren..."
-
-#: git-gui.sh:1888
-msgid "Visualize Current Branch's History"
-msgstr "Visualisera grenens historik"
-
-#: git-gui.sh:1892
-msgid "Visualize All Branch History"
-msgstr "Visualisera alla grenars historik"
-
-#: git-gui.sh:1899
-#, tcl-format
-msgid "Browse %s's Files"
-msgstr "Bläddra i filer för %s"
-
-#: git-gui.sh:1901
-#, tcl-format
-msgid "Visualize %s's History"
-msgstr "Visualisera historik för %s"
-
-#: git-gui.sh:1906 lib/database.tcl:27 lib/database.tcl:67
-msgid "Database Statistics"
-msgstr "Databasstatistik"
-
-#: git-gui.sh:1909 lib/database.tcl:34
-msgid "Compress Database"
-msgstr "Komprimera databas"
-
-#: git-gui.sh:1912
-msgid "Verify Database"
-msgstr "Verifiera databas"
-
-#: git-gui.sh:1919 git-gui.sh:1923 git-gui.sh:1927 lib/shortcut.tcl:7
-#: lib/shortcut.tcl:39 lib/shortcut.tcl:71
-msgid "Create Desktop Icon"
-msgstr "Skapa skrivbordsikon"
-
-#: git-gui.sh:1932 lib/choose_repository.tcl:177 lib/choose_repository.tcl:185
-msgid "Quit"
-msgstr "Avsluta"
-
-#: git-gui.sh:1939
-msgid "Undo"
-msgstr "Ångra"
-
-#: git-gui.sh:1942
-msgid "Redo"
-msgstr "Gör om"
-
-#: git-gui.sh:1946 git-gui.sh:2443
-msgid "Cut"
-msgstr "Klipp ut"
-
-#: git-gui.sh:1949 git-gui.sh:2446 git-gui.sh:2520 git-gui.sh:2614
-#: lib/console.tcl:69
-msgid "Copy"
-msgstr "Kopiera"
-
-#: git-gui.sh:1952 git-gui.sh:2449
-msgid "Paste"
-msgstr "Klistra in"
-
-#: git-gui.sh:1955 git-gui.sh:2452 lib/branch_delete.tcl:26
-#: lib/remote_branch_delete.tcl:38
-msgid "Delete"
-msgstr "Ta bort"
-
-#: git-gui.sh:1959 git-gui.sh:2456 git-gui.sh:2618 lib/console.tcl:71
-msgid "Select All"
-msgstr "Markera alla"
-
-#: git-gui.sh:1968
-msgid "Create..."
-msgstr "Skapa..."
-
-#: git-gui.sh:1974
-msgid "Checkout..."
-msgstr "Checka ut..."
-
-#: git-gui.sh:1980
-msgid "Rename..."
-msgstr "Byt namn..."
-
-#: git-gui.sh:1985 git-gui.sh:2085
-msgid "Delete..."
-msgstr "Ta bort..."
-
-#: git-gui.sh:1990
-msgid "Reset..."
-msgstr "Återställ..."
-
-#: git-gui.sh:2002 git-gui.sh:2389
-msgid "New Commit"
-msgstr "Ny incheckning"
-
-#: git-gui.sh:2010 git-gui.sh:2396
-msgid "Amend Last Commit"
-msgstr "Lägg till föregående incheckning"
-
-#: git-gui.sh:2019 git-gui.sh:2356 lib/remote_branch_delete.tcl:99
-msgid "Rescan"
-msgstr "Sök på nytt"
-
-#: git-gui.sh:2025
-msgid "Stage To Commit"
-msgstr "Köa för incheckning"
-
-#: git-gui.sh:2031
-msgid "Stage Changed Files To Commit"
-msgstr "Köa ändrade filer för incheckning"
-
-#: git-gui.sh:2037
-msgid "Unstage From Commit"
-msgstr "Ta bort från incheckningskö"
-
-#: git-gui.sh:2042 lib/index.tcl:395
-msgid "Revert Changes"
-msgstr "Återställ ändringar"
-
-#: git-gui.sh:2049 git-gui.sh:2368 git-gui.sh:2467
-msgid "Sign Off"
-msgstr "Skriv under"
-
-#: git-gui.sh:2053 git-gui.sh:2372
-msgid "Commit@@verb"
-msgstr "Checka in"
-
-#: git-gui.sh:2064
-msgid "Local Merge..."
-msgstr "Lokal sammanslagning..."
-
-#: git-gui.sh:2069
-msgid "Abort Merge..."
-msgstr "Avbryt sammanslagning..."
-
-#: git-gui.sh:2081
-msgid "Push..."
-msgstr "Sänd..."
-
-#: git-gui.sh:2092 lib/choose_repository.tcl:41
-msgid "Apple"
-msgstr "Äpple"
-
-#: git-gui.sh:2095 git-gui.sh:2117 lib/about.tcl:14
-#: lib/choose_repository.tcl:44 lib/choose_repository.tcl:50
-#, tcl-format
-msgid "About %s"
-msgstr "Om %s"
-
-#: git-gui.sh:2099
-msgid "Preferences..."
-msgstr "Inställningar..."
-
-#: git-gui.sh:2107 git-gui.sh:2639
-msgid "Options..."
-msgstr "Alternativ..."
-
-#: git-gui.sh:2113 lib/choose_repository.tcl:47
-msgid "Help"
-msgstr "Hjälp"
-
-#: git-gui.sh:2154
-msgid "Online Documentation"
-msgstr "Webbdokumentation"
-
-#: git-gui.sh:2238
-#, tcl-format
-msgid "fatal: cannot stat path %s: No such file or directory"
-msgstr ""
-"ödesdigert: kunde inte ta status på sökvägen %s: Fil eller katalog saknas"
-
-#: git-gui.sh:2271
-msgid "Current Branch:"
-msgstr "Aktuell gren:"
-
-#: git-gui.sh:2292
-msgid "Staged Changes (Will Commit)"
-msgstr "Köade ändringar (kommer att checkas in)"
-
-#: git-gui.sh:2312
-msgid "Unstaged Changes"
-msgstr "Oköade ändringar"
-
-#: git-gui.sh:2362
-msgid "Stage Changed"
-msgstr "Köa ändrade"
-
-#: git-gui.sh:2378 lib/transport.tcl:93 lib/transport.tcl:182
-msgid "Push"
-msgstr "Sänd"
-
-#: git-gui.sh:2408
-msgid "Initial Commit Message:"
-msgstr "Inledande incheckningsmeddelande:"
-
-#: git-gui.sh:2409
-msgid "Amended Commit Message:"
-msgstr "Utökat incheckningsmeddelande:"
-
-#: git-gui.sh:2410
-msgid "Amended Initial Commit Message:"
-msgstr "Utökat inledande incheckningsmeddelande:"
-
-#: git-gui.sh:2411
-msgid "Amended Merge Commit Message:"
-msgstr "Utökat incheckningsmeddelande för sammanslagning:"
-
-#: git-gui.sh:2412
-msgid "Merge Commit Message:"
-msgstr "Incheckningsmeddelande för sammanslagning:"
-
-#: git-gui.sh:2413
-msgid "Commit Message:"
-msgstr "Incheckningsmeddelande:"
-
-#: git-gui.sh:2459 git-gui.sh:2622 lib/console.tcl:73
-msgid "Copy All"
-msgstr "Kopiera alla"
-
-#: git-gui.sh:2483 lib/blame.tcl:107
-msgid "File:"
-msgstr "Fil:"
-
-#: git-gui.sh:2589
-msgid "Apply/Reverse Hunk"
-msgstr "Använd/återställ del"
-
-#: git-gui.sh:2595
-msgid "Show Less Context"
-msgstr "Visa mindre sammanhang"
-
-#: git-gui.sh:2602
-msgid "Show More Context"
-msgstr "Visa mer sammanhang"
-
-#: git-gui.sh:2610
-msgid "Refresh"
-msgstr "Uppdatera"
-
-#: git-gui.sh:2631
-msgid "Decrease Font Size"
-msgstr "Minska teckensnittsstorlek"
-
-#: git-gui.sh:2635
-msgid "Increase Font Size"
-msgstr "Öka teckensnittsstorlek"
-
-#: git-gui.sh:2646
-msgid "Unstage Hunk From Commit"
-msgstr "Ta bort del ur incheckningskö"
-
-#: git-gui.sh:2648
-msgid "Stage Hunk For Commit"
-msgstr "Ställ del i incheckningskö"
-
-#: git-gui.sh:2667
-msgid "Initializing..."
-msgstr "Initierar..."
-
-#: git-gui.sh:2762
-#, tcl-format
-msgid ""
-"Possible environment issues exist.\n"
-"\n"
-"The following environment variables are probably\n"
-"going to be ignored by any Git subprocess run\n"
-"by %s:\n"
-"\n"
-msgstr ""
-"Det finns möjliga problem med miljövariabler.\n"
-"\n"
-"Följande miljövariabler kommer troligen att\n"
-"ignoreras av alla Git-underprocesser som körs\n"
-"av %s:\n"
-"\n"
-
-#: git-gui.sh:2792
-msgid ""
-"\n"
-"This is due to a known issue with the\n"
-"Tcl binary distributed by Cygwin."
-msgstr ""
-"\n"
-"Detta beror på ett känt problem med\n"
-"Tcl-binären som följer med Cygwin."
-
-#: git-gui.sh:2797
-#, tcl-format
-msgid ""
-"\n"
-"\n"
-"A good replacement for %s\n"
-"is placing values for the user.name and\n"
-"user.email settings into your personal\n"
-"~/.gitconfig file.\n"
-msgstr ""
-"\n"
-"\n"
-"Du kan ersätta %s\n"
-"med att lägga in värden för inställningarna\n"
-"user.name och user.email i din personliga\n"
-"~/.gitconfig-fil.\n"
-
-#: lib/about.tcl:26
-msgid "git-gui - a graphical user interface for Git."
-msgstr "git-gui - ett grafiskt användargränssnitt för Git."
-
-#: lib/blame.tcl:77
-msgid "File Viewer"
-msgstr "Filvisare"
-
-#: lib/blame.tcl:81
-msgid "Commit:"
-msgstr "Incheckning:"
-
-#: lib/blame.tcl:264
-msgid "Copy Commit"
-msgstr "Kopiera incheckning"
-
-#: lib/blame.tcl:384
-#, tcl-format
-msgid "Reading %s..."
-msgstr "Läser %s..."
-
-#: lib/blame.tcl:488
-msgid "Loading copy/move tracking annotations..."
-msgstr "Läser annoteringar för kopiering/flyttning..."
-
-#: lib/blame.tcl:508
-msgid "lines annotated"
-msgstr "rader annoterade"
-
-#: lib/blame.tcl:689
-msgid "Loading original location annotations..."
-msgstr "Läser in annotering av originalplacering..."
-
-#: lib/blame.tcl:692
-msgid "Annotation complete."
-msgstr "Annotering fullbordad."
-
-#: lib/blame.tcl:746
-msgid "Loading annotation..."
-msgstr "Läser in annotering..."
-
-#: lib/blame.tcl:802
-msgid "Author:"
-msgstr "Författare:"
-
-#: lib/blame.tcl:806
-msgid "Committer:"
-msgstr "Incheckare:"
-
-#: lib/blame.tcl:811
-msgid "Original File:"
-msgstr "Ursprunglig fil:"
-
-#: lib/blame.tcl:925
-msgid "Originally By:"
-msgstr "Ursprungligen av:"
-
-#: lib/blame.tcl:931
-msgid "In File:"
-msgstr "I filen:"
-
-#: lib/blame.tcl:936
-msgid "Copied Or Moved Here By:"
-msgstr "Kopierad eller flyttad hit av:"
-
-#: lib/branch_checkout.tcl:14 lib/branch_checkout.tcl:19
-msgid "Checkout Branch"
-msgstr "Checka ut gren"
-
-#: lib/branch_checkout.tcl:23
-msgid "Checkout"
-msgstr "Checka ut"
-
-#: lib/branch_checkout.tcl:27 lib/branch_create.tcl:35
-#: lib/branch_delete.tcl:32 lib/branch_rename.tcl:30 lib/browser.tcl:282
-#: lib/checkout_op.tcl:522 lib/choose_font.tcl:43 lib/merge.tcl:171
-#: lib/option.tcl:103 lib/remote_branch_delete.tcl:42 lib/transport.tcl:97
-msgid "Cancel"
-msgstr "Avbryt"
-
-#: lib/branch_checkout.tcl:32 lib/browser.tcl:287
-msgid "Revision"
-msgstr "Revision"
-
-#: lib/branch_checkout.tcl:36 lib/branch_create.tcl:69 lib/option.tcl:242
-msgid "Options"
-msgstr "Alternativ"
-
-#: lib/branch_checkout.tcl:39 lib/branch_create.tcl:92
-msgid "Fetch Tracking Branch"
-msgstr "Hämta spårande gren"
-
-#: lib/branch_checkout.tcl:44
-msgid "Detach From Local Branch"
-msgstr "Koppla bort från lokal gren"
-
-#: lib/branch_create.tcl:22
-msgid "Create Branch"
-msgstr "Skapa gren"
-
-#: lib/branch_create.tcl:27
-msgid "Create New Branch"
-msgstr "Skapa ny gren"
-
-#: lib/branch_create.tcl:31 lib/choose_repository.tcl:371
-msgid "Create"
-msgstr "Skapa"
-
-#: lib/branch_create.tcl:40
-msgid "Branch Name"
-msgstr "Namn på gren"
-
-#: lib/branch_create.tcl:43
-msgid "Name:"
-msgstr "Namn:"
-
-#: lib/branch_create.tcl:58
-msgid "Match Tracking Branch Name"
-msgstr "Använd namn på spårad gren"
-
-#: lib/branch_create.tcl:66
-msgid "Starting Revision"
-msgstr "Inledande revision"
-
-#: lib/branch_create.tcl:72
-msgid "Update Existing Branch:"
-msgstr "Uppdatera befintlig gren:"
-
-#: lib/branch_create.tcl:75
-msgid "No"
-msgstr "Nej"
-
-#: lib/branch_create.tcl:80
-msgid "Fast Forward Only"
-msgstr "Endast snabbspolning"
-
-#: lib/branch_create.tcl:85 lib/checkout_op.tcl:514
-msgid "Reset"
-msgstr "Återställ"
-
-#: lib/branch_create.tcl:97
-msgid "Checkout After Creation"
-msgstr "Checka ut när skapad"
-
-#: lib/branch_create.tcl:131
-msgid "Please select a tracking branch."
-msgstr "Välj en gren att spåra."
-
-#: lib/branch_create.tcl:140
-#, tcl-format
-msgid "Tracking branch %s is not a branch in the remote repository."
-msgstr "Den spårade grenen %s är inte en gren i fjärrarkivet."
-
-#: lib/branch_create.tcl:153 lib/branch_rename.tcl:86
-msgid "Please supply a branch name."
-msgstr "Ange ett namn för grenen."
-
-#: lib/branch_create.tcl:164 lib/branch_rename.tcl:106
-#, tcl-format
-msgid "'%s' is not an acceptable branch name."
-msgstr "\"%s\" kan inte användas som namn på grenen."
-
-#: lib/branch_delete.tcl:15
-msgid "Delete Branch"
-msgstr "Ta bort gren"
-
-#: lib/branch_delete.tcl:20
-msgid "Delete Local Branch"
-msgstr "Ta bort lokal gren"
-
-#: lib/branch_delete.tcl:37
-msgid "Local Branches"
-msgstr "Lokala grenar"
-
-#: lib/branch_delete.tcl:52
-msgid "Delete Only If Merged Into"
-msgstr "Ta bara bort om sammanslagen med"
-
-#: lib/branch_delete.tcl:54
-msgid "Always (Do not perform merge test.)"
-msgstr "Alltid (utför inte sammanslagningstest)."
-
-#: lib/branch_delete.tcl:103
-#, tcl-format
-msgid "The following branches are not completely merged into %s:"
-msgstr "Följande grenar är inte till fullo sammanslagna med %s:"
-
-#: lib/branch_delete.tcl:115
-msgid ""
-"Recovering deleted branches is difficult. \n"
-"\n"
-" Delete the selected branches?"
-msgstr ""
-"Det är svårt att återställa borttagna grenar.\n"
-"\n"
-" Ta bort valda grenar?"
-
-#: lib/branch_delete.tcl:141
-#, tcl-format
-msgid ""
-"Failed to delete branches:\n"
-"%s"
-msgstr ""
-"Kunde inte ta bort grenar:\n"
-"%s"
-
-#: lib/branch_rename.tcl:14 lib/branch_rename.tcl:22
-msgid "Rename Branch"
-msgstr "Byt namn på gren"
-
-#: lib/branch_rename.tcl:26
-msgid "Rename"
-msgstr "Byt namn"
-
-#: lib/branch_rename.tcl:36
-msgid "Branch:"
-msgstr "Gren:"
-
-#: lib/branch_rename.tcl:39
-msgid "New Name:"
-msgstr "Nytt namn:"
-
-#: lib/branch_rename.tcl:75
-msgid "Please select a branch to rename."
-msgstr "Välj en gren att byta namn på."
-
-#: lib/branch_rename.tcl:96 lib/checkout_op.tcl:179
-#, tcl-format
-msgid "Branch '%s' already exists."
-msgstr "Grenen \"%s\" finns redan."
-
-#: lib/branch_rename.tcl:117
-#, tcl-format
-msgid "Failed to rename '%s'."
-msgstr "Kunde inte byta namn på \"%s\"."
-
-#: lib/browser.tcl:17
-msgid "Starting..."
-msgstr "Startar..."
-
-#: lib/browser.tcl:26
-msgid "File Browser"
-msgstr "Filbläddrare"
-
-#: lib/browser.tcl:126 lib/browser.tcl:143
-#, tcl-format
-msgid "Loading %s..."
-msgstr "Läser %s..."
-
-#: lib/browser.tcl:187
-msgid "[Up To Parent]"
-msgstr "[Upp till förälder]"
-
-#: lib/browser.tcl:267 lib/browser.tcl:273
-msgid "Browse Branch Files"
-msgstr "Bläddra filer på grenen"
-
-#: lib/browser.tcl:278 lib/choose_repository.tcl:387
-#: lib/choose_repository.tcl:474 lib/choose_repository.tcl:484
-#: lib/choose_repository.tcl:987
-msgid "Browse"
-msgstr "Bläddra"
-
-#: lib/checkout_op.tcl:79
-#, tcl-format
-msgid "Fetching %s from %s"
-msgstr "Hämtar %s från %s"
-
-#: lib/checkout_op.tcl:127
-#, tcl-format
-msgid "fatal: Cannot resolve %s"
-msgstr "ödesdigert: Kunde inte slå upp %s"
-
-#: lib/checkout_op.tcl:140 lib/console.tcl:81 lib/database.tcl:31
-msgid "Close"
-msgstr "Stäng"
-
-#: lib/checkout_op.tcl:169
-#, tcl-format
-msgid "Branch '%s' does not exist."
-msgstr "Grenen \"%s\" finns inte."
-
-#: lib/checkout_op.tcl:206
-#, tcl-format
-msgid ""
-"Branch '%s' already exists.\n"
-"\n"
-"It cannot fast-forward to %s.\n"
-"A merge is required."
-msgstr ""
-"Grenen \"%s\" finns redan.\n"
-"\n"
-"Den kan inte snabbspolas till %s.\n"
-"En sammanslagning krävs."
-
-#: lib/checkout_op.tcl:220
-#, tcl-format
-msgid "Merge strategy '%s' not supported."
-msgstr "Sammanslagningsstrategin \"%s\" stöds inte."
-
-#: lib/checkout_op.tcl:239
-#, tcl-format
-msgid "Failed to update '%s'."
-msgstr "Misslyckades med att uppdatera \"%s\"."
-
-#: lib/checkout_op.tcl:251
-msgid "Staging area (index) is already locked."
-msgstr "Köområdet (index) är redan låst."
-
-#: lib/checkout_op.tcl:266
-msgid ""
-"Last scanned state does not match repository state.\n"
-"\n"
-"Another Git program has modified this repository since the last scan.  A "
-"rescan must be performed before the current branch can be changed.\n"
-"\n"
-"The rescan will be automatically started now.\n"
-msgstr ""
-"Det senaste inlästa tillståndet motsvarar inte tillståndet i arkivet.\n"
-"\n"
-"Ett annat Git-program har ändrat arkivet sedan senaste avsökningen. Du måste "
-"utföra en ny sökning innan den aktuella grenen kan ändras.\n"
-"\n"
-"Sökningen kommer att startas automatiskt nu.\n"
-
-#: lib/checkout_op.tcl:322
-#, tcl-format
-msgid "Updating working directory to '%s'..."
-msgstr "Uppdaterar arbetskatalogen till \"%s\"..."
-
-#: lib/checkout_op.tcl:323
-msgid "files checked out"
-msgstr "filer utcheckade"
-
-#: lib/checkout_op.tcl:353
-#, tcl-format
-msgid "Aborted checkout of '%s' (file level merging is required)."
-msgstr "Avbryter utcheckning av \"%s\" (sammanslagning på filnivå krävs)."
-
-#: lib/checkout_op.tcl:354
-msgid "File level merge required."
-msgstr "Sammanslagning på filnivå krävs."
-
-#: lib/checkout_op.tcl:358
-#, tcl-format
-msgid "Staying on branch '%s'."
-msgstr "Stannar på grenen \"%s\"."
-
-#: lib/checkout_op.tcl:429
-msgid ""
-"You are no longer on a local branch.\n"
-"\n"
-"If you wanted to be on a branch, create one now starting from 'This Detached "
-"Checkout'."
-msgstr ""
-"Du är inte längre på en lokal gren.\n"
-"\n"
-"Om du ville vara på en gren skapar du en nu, baserad på \"Denna frånkopplade "
-"utcheckning\"."
-
-#: lib/checkout_op.tcl:446 lib/checkout_op.tcl:450
-#, tcl-format
-msgid "Checked out '%s'."
-msgstr "Checkade ut \"%s\"."
-
-#: lib/checkout_op.tcl:478
-#, tcl-format
-msgid "Resetting '%s' to '%s' will lose the following commits:"
-msgstr ""
-"Om du återställer \"%s\" till \"%s\" går följande incheckningar förlorade:"
-
-#: lib/checkout_op.tcl:500
-msgid "Recovering lost commits may not be easy."
-msgstr "Det kanske inte är så enkelt att återskapa förlorade incheckningar."
-
-#: lib/checkout_op.tcl:505
-#, tcl-format
-msgid "Reset '%s'?"
-msgstr "Återställa \"%s\"?"
-
-#: lib/checkout_op.tcl:510 lib/merge.tcl:163
-msgid "Visualize"
-msgstr "Visualisera"
-
-#: lib/checkout_op.tcl:578
-#, tcl-format
-msgid ""
-"Failed to set current branch.\n"
-"\n"
-"This working directory is only partially switched.  We successfully updated "
-"your files, but failed to update an internal Git file.\n"
-"\n"
-"This should not have occurred.  %s will now close and give up."
-msgstr ""
-"Kunde inte ställa in aktuell gren.\n"
-"\n"
-"Arbetskatalogen har bara växlats delvis. Vi uppdaterade filerna utan "
-"problem, men kunde inte uppdatera en intern fil i Git.\n"
-"\n"
-"Detta skulle inte ha hänt. %s kommer nu stängas och ge upp."
-
-#: lib/choose_font.tcl:39
-msgid "Select"
-msgstr "Välj"
-
-#: lib/choose_font.tcl:53
-msgid "Font Family"
-msgstr "Teckensnittsfamilj"
-
-#: lib/choose_font.tcl:74
-msgid "Font Size"
-msgstr "Storlek"
-
-#: lib/choose_font.tcl:91
-msgid "Font Example"
-msgstr "Exempel"
-
-#: lib/choose_font.tcl:103
-msgid ""
-"This is example text.\n"
-"If you like this text, it can be your font."
-msgstr ""
-"Detta är en exempeltext.\n"
-"Om du tycker om den här texten kan den vara ditt teckensnitt."
-
-#: lib/choose_repository.tcl:28
-msgid "Git Gui"
-msgstr "Git Gui"
-
-#: lib/choose_repository.tcl:81 lib/choose_repository.tcl:376
-msgid "Create New Repository"
-msgstr "Skapa nytt arkiv"
-
-#: lib/choose_repository.tcl:87
-msgid "New..."
-msgstr "Nytt..."
-
-#: lib/choose_repository.tcl:94 lib/choose_repository.tcl:460
-msgid "Clone Existing Repository"
-msgstr "Klona befintligt arkiv"
-
-#: lib/choose_repository.tcl:100
-msgid "Clone..."
-msgstr "Klona..."
-
-#: lib/choose_repository.tcl:107 lib/choose_repository.tcl:976
-msgid "Open Existing Repository"
-msgstr "Öppna befintligt arkiv"
-
-#: lib/choose_repository.tcl:113
-msgid "Open..."
-msgstr "Öppna..."
-
-#: lib/choose_repository.tcl:126
-msgid "Recent Repositories"
-msgstr "Senaste arkiven"
-
-#: lib/choose_repository.tcl:132
-msgid "Open Recent Repository:"
-msgstr "Öppna tidigare arkiv:"
-
-#: lib/choose_repository.tcl:296 lib/choose_repository.tcl:303
-#: lib/choose_repository.tcl:310
-#, tcl-format
-msgid "Failed to create repository %s:"
-msgstr "Kunde inte skapa arkivet %s:"
-
-#: lib/choose_repository.tcl:381 lib/choose_repository.tcl:478
-msgid "Directory:"
-msgstr "Katalog:"
-
-#: lib/choose_repository.tcl:412 lib/choose_repository.tcl:537
-#: lib/choose_repository.tcl:1011
-msgid "Git Repository"
-msgstr "Gitarkiv"
-
-#: lib/choose_repository.tcl:437
-#, tcl-format
-msgid "Directory %s already exists."
-msgstr "Katalogen %s finns redan."
-
-#: lib/choose_repository.tcl:441
-#, tcl-format
-msgid "File %s already exists."
-msgstr "Filen %s finns redan."
-
-#: lib/choose_repository.tcl:455
-msgid "Clone"
-msgstr "Klona"
-
-#: lib/choose_repository.tcl:468
-msgid "URL:"
-msgstr "Webbadress:"
-
-#: lib/choose_repository.tcl:489
-msgid "Clone Type:"
-msgstr "Typ av klon:"
-
-#: lib/choose_repository.tcl:495
-msgid "Standard (Fast, Semi-Redundant, Hardlinks)"
-msgstr "Standard (snabb, semiredundant, hårda länkar)"
-
-#: lib/choose_repository.tcl:501
-msgid "Full Copy (Slower, Redundant Backup)"
-msgstr "Full kopia (långsammare, redundant säkerhetskopia)"
-
-#: lib/choose_repository.tcl:507
-msgid "Shared (Fastest, Not Recommended, No Backup)"
-msgstr "Delad (snabbast, rekommenderas ej, ingen säkerhetskopia)"
-
-#: lib/choose_repository.tcl:543 lib/choose_repository.tcl:590
-#: lib/choose_repository.tcl:736 lib/choose_repository.tcl:806
-#: lib/choose_repository.tcl:1017 lib/choose_repository.tcl:1025
-#, tcl-format
-msgid "Not a Git repository: %s"
-msgstr "Inte ett Gitarkiv: %s"
-
-#: lib/choose_repository.tcl:579
-msgid "Standard only available for local repository."
-msgstr "Standard är endast tillgängligt för lokala arkiv."
-
-#: lib/choose_repository.tcl:583
-msgid "Shared only available for local repository."
-msgstr "Delat är endast tillgängligt för lokala arkiv."
-
-#: lib/choose_repository.tcl:604
-#, tcl-format
-msgid "Location %s already exists."
-msgstr "Platsen %s finns redan."
-
-#: lib/choose_repository.tcl:615
-msgid "Failed to configure origin"
-msgstr "Kunde inte konfigurera ursprung"
-
-#: lib/choose_repository.tcl:627
-msgid "Counting objects"
-msgstr "Räknar objekt"
-
-#: lib/choose_repository.tcl:628
-msgid "buckets"
-msgstr "hinkar"
-
-#: lib/choose_repository.tcl:652
-#, tcl-format
-msgid "Unable to copy objects/info/alternates: %s"
-msgstr "Kunde inte kopiera objekt/info/alternativ: %s"
-
-#: lib/choose_repository.tcl:688
-#, tcl-format
-msgid "Nothing to clone from %s."
-msgstr "Ingenting att klona från %s."
-
-#: lib/choose_repository.tcl:690 lib/choose_repository.tcl:904
-#: lib/choose_repository.tcl:916
-msgid "The 'master' branch has not been initialized."
-msgstr "Grenen \"master\" har inte initierats."
-
-#: lib/choose_repository.tcl:703
-msgid "Hardlinks are unavailable.  Falling back to copying."
-msgstr "Hårda länkar är inte tillgängliga. Faller tillbaka på kopiering."
-
-#: lib/choose_repository.tcl:715
-#, tcl-format
-msgid "Cloning from %s"
-msgstr "Klonar från %s"
-
-#: lib/choose_repository.tcl:746
-msgid "Copying objects"
-msgstr "Kopierar objekt"
-
-#: lib/choose_repository.tcl:747
-msgid "KiB"
-msgstr "KiB"
-
-#: lib/choose_repository.tcl:771
-#, tcl-format
-msgid "Unable to copy object: %s"
-msgstr "Kunde inte kopiera objekt: %s"
-
-#: lib/choose_repository.tcl:781
-msgid "Linking objects"
-msgstr "Länkar objekt"
-
-#: lib/choose_repository.tcl:782
-msgid "objects"
-msgstr "objekt"
-
-#: lib/choose_repository.tcl:790
-#, tcl-format
-msgid "Unable to hardlink object: %s"
-msgstr "Kunde inte hårdlänka objekt: %s"
-
-#: lib/choose_repository.tcl:845
-msgid "Cannot fetch branches and objects.  See console output for details."
-msgstr "Kunde inte hämta grenar och objekt. Se konsolutdata för detaljer."
-
-#: lib/choose_repository.tcl:856
-msgid "Cannot fetch tags.  See console output for details."
-msgstr "Kunde inte hämta taggar. Se konsolutdata för detaljer."
-
-#: lib/choose_repository.tcl:880
-msgid "Cannot determine HEAD.  See console output for details."
-msgstr "Kunde inte avgöra HEAD. Se konsolutdata för detaljer."
-
-#: lib/choose_repository.tcl:889
-#, tcl-format
-msgid "Unable to cleanup %s"
-msgstr "Kunde inte städa upp %s"
-
-#: lib/choose_repository.tcl:895
-msgid "Clone failed."
-msgstr "Kloning misslyckades."
-
-#: lib/choose_repository.tcl:902
-msgid "No default branch obtained."
-msgstr "Hämtade ingen standardgren."
-
-#: lib/choose_repository.tcl:913
-#, tcl-format
-msgid "Cannot resolve %s as a commit."
-msgstr "Kunde inte slå upp %s till någon incheckning."
-
-#: lib/choose_repository.tcl:925
-msgid "Creating working directory"
-msgstr "Skapar arbetskatalog"
-
-#: lib/choose_repository.tcl:926 lib/index.tcl:65 lib/index.tcl:127
-#: lib/index.tcl:193
-msgid "files"
-msgstr "filer"
-
-#: lib/choose_repository.tcl:955
-msgid "Initial file checkout failed."
-msgstr "Inledande filutcheckning misslyckades."
-
-#: lib/choose_repository.tcl:971
+#: cola/bookmarks.py:47
 msgid "Open"
 msgstr "Öppna"
 
-#: lib/choose_repository.tcl:981
-msgid "Repository:"
+#: cola/bookmarks.py:53
+msgid "Add"
+msgstr ""
+
+#: cola/bookmarks.py:58 cola/widgets/editremotes.py:127
+msgid "Delete"
+msgstr "Ta bort"
+
+#: cola/bookmarks.py:65 cola/stash/view.py:42 cola/widgets/archive.py:65
+#: cola/widgets/browse.py:117
+msgid "Save"
+msgstr "Spara"
+
+#: cola/bookmarks.py:71 cola/difftool.py:96 cola/qt.py:50 cola/qt.py:232
+#: cola/prefs/view.py:238 cola/stash/view.py:50 cola/stash/view.py:51
+#: cola/widgets/about.py:66 cola/widgets/about.py:125
+#: cola/widgets/browse.py:116 cola/widgets/cfgactions.py:87
+#: cola/widgets/cfgactions.py:239 cola/widgets/compare.py:94
+#: cola/widgets/createbranch.py:159 cola/widgets/createtag.py:104
+#: cola/widgets/editremotes.py:55 cola/widgets/grep.py:74
+#: cola/widgets/recent.py:75 cola/widgets/remote.py:157
+#: cola/widgets/search.py:81 cola/widgets/selectcommits.py:59
+#: cola/widgets/startup.py:44
+msgid "Close"
+msgstr "Stäng"
+
+#: cola/bookmarks.py:102
+msgid "Bookmarks Saved"
+msgstr ""
+
+#: cola/bookmarks.py:103
+msgid "Successfully saved bookmarks"
+msgstr ""
+
+#: cola/bookmarks.py:107
+#, fuzzy
+msgid "Path to git repository"
+msgstr "Inte ett Gitarkiv: %s"
+
+#: cola/bookmarks.py:108
+#, fuzzy
+msgid "Enter Git Repository"
+msgstr "Gitarkiv"
+
+#: cola/cmds.py:100
+msgid "Amend"
+msgstr ""
+
+#: cola/cmds.py:135
+#, fuzzy
+msgid "Cannot Amend"
+msgstr "Kan inte skriva ikon:"
+
+#: cola/cmds.py:136
+msgid ""
+"You are in the middle of a merge.\n"
+"Cannot amend while merging."
+msgstr ""
+
+#: cola/cmds.py:205
+#, python-format
+msgid "PATCH %(current)d/%(count)d"
+msgstr ""
+
+#: cola/cmds.py:209
+msgid "Summary:"
+msgstr ""
+
+#: cola/cmds.py:218
+msgid "Patch(es) Applied"
+msgstr ""
+
+#: cola/cmds.py:219
+#, python-format
+msgid "%d patch(es) applied."
+msgstr ""
+
+#: cola/cmds.py:323
+#, fuzzy, python-format
+msgid "Created commit: %s"
+msgstr "Skapade incheckningen %s: %s"
+
+#: cola/cmds.py:325
+#, fuzzy, python-format
+msgid "Commit failed: %s"
+msgstr "Incheckningen misslyckades."
+
+#: cola/cmds.py:370 cola/cmds.py:1125
+#, fuzzy
+msgid "Error"
+msgstr "fel"
+
+#: cola/cmds.py:371
+#, python-format
+msgid "Deleting \"%s\" failed"
+msgstr ""
+
+#: cola/cmds.py:460 cola/widgets/grep.py:59 cola/widgets/recent.py:69
+msgid "Edit"
+msgstr "Redigera"
+
+#: cola/cmds.py:514
+msgid "Launch Diff Tool"
+msgstr ""
+
+#: cola/cmds.py:528
+msgid "Launch Editor"
+msgstr ""
+
+#: cola/cmds.py:549
+msgid "Error: Cannot find commit template"
+msgstr ""
+
+#: cola/cmds.py:550
+#, fuzzy, python-format
+msgid "%s: No such file or directory."
+msgstr ""
+"ödesdigert: kunde inte ta status på sökvägen %s: Fil eller katalog saknas"
+
+#: cola/cmds.py:567
+msgid "Error: Unconfigured commit template"
+msgstr ""
+
+#: cola/cmds.py:568
+msgid ""
+"A commit template has not been configured.\n"
+"Use \"git config\" to define \"commit.template\"\n"
+"so that it points to a commit template."
+msgstr ""
+
+#: cola/cmds.py:637
+msgid "Open Using Default Application"
+msgstr ""
+
+#: cola/cmds.py:660
+#, fuzzy
+msgid "Open Parent Directory"
+msgstr "Öppna tidigare arkiv:"
+
+#: cola/cmds.py:700
+#, python-format
+msgid "Error: could not clone \"%s\""
+msgstr ""
+
+#: cola/cmds.py:701
+#, python-format
+msgid "git clone returned exit code %s"
+msgstr ""
+
+#: cola/cmds.py:724 cola/widgets/action.py:19
+msgid "Rescan"
+msgstr "Sök på nytt"
+
+#: cola/cmds.py:752
+#, python-format
+msgid "Run \"%s\"?"
+msgstr ""
+
+#: cola/cmds.py:759
+#, fuzzy
+msgid "Please select a file"
+msgstr "Välj en gren att spåra."
+
+#: cola/cmds.py:760
+#, python-format
+msgid "\"%s\" requires a selected file."
+msgstr ""
+
+#: cola/cmds.py:772
+#, fuzzy
+msgid "Invalid Revision"
+msgstr "Ogiltig revision: %s"
+
+#: cola/cmds.py:773
+#, fuzzy
+msgid "The revision expression cannot be empty."
+msgstr "Revisionsuttrycket är tomt."
+
+#: cola/cmds.py:788
+#, python-format
+msgid "Running command: %s"
+msgstr ""
+
+#: cola/cmds.py:797 cola/cmds.py:968 cola/interaction.py:70
+#, python-format
+msgid "Output: %s"
+msgstr ""
+
+#: cola/cmds.py:798 cola/interaction.py:71 cola/widgets/startup.py:168
+#, python-format
+msgid "Errors: %s"
+msgstr ""
+
+#: cola/cmds.py:843
+msgid "Sign Off"
+msgstr "Skriv under"
+
+#: cola/cmds.py:864
+msgid "unknown"
+msgstr ""
+
+#: cola/cmds.py:877 cola/widgets/action.py:17
+#, fuzzy
+msgid "Stage"
+msgstr "Spara"
+
+#: cola/cmds.py:884
+#, fuzzy, python-format
+msgid "Staging: %s"
+msgstr "Söker %s..."
+
+#: cola/cmds.py:896
+msgid "Stage Modified"
+msgstr ""
+
+#: cola/cmds.py:910
+#, fuzzy
+msgid "Stage Unmerged"
+msgstr "Köa ändrade"
+
+#: cola/cmds.py:924
+#, fuzzy
+msgid "Stage Untracked"
+msgstr "Köa ändrade"
+
+#: cola/cmds.py:942
+#, python-format
+msgid "Tagging \"%(revision)s\" as \"%(name)s\""
+msgstr ""
+
+#: cola/cmds.py:950
+msgid "GPG-signed"
+msgstr ""
+
+#: cola/cmds.py:982 cola/widgets/action.py:18
+#, fuzzy
+msgid "Unstage"
+msgstr "Oköade ändringar"
+
+#: cola/cmds.py:989
+#, fuzzy, python-format
+msgid "Unstaging: %s"
+msgstr "Tar bort %s för incheckningskön"
+
+#: cola/cmds.py:1016
+#, python-format
+msgid "Untracking: %s"
+msgstr ""
+
+#: cola/difftool.py:76
+msgid "git-cola diff"
+msgstr ""
+
+#: cola/difftool.py:92 cola/widgets/compare.py:90
+msgid "Compare"
+msgstr ""
+
+#: cola/gitcmds.py:394
+#, fuzzy
+msgid "Nothing to do"
+msgstr "Ingenting att klona från %s."
+
+#: cola/guicmds.py:26
+msgid "Delete Branch"
+msgstr "Ta bort gren"
+
+#: cola/guicmds.py:42
+#, fuzzy
+msgid "Browse Revision..."
+msgstr "Revision"
+
+#: cola/guicmds.py:50
+msgid "Checkout Branch"
+msgstr "Checka ut gren"
+
+#: cola/guicmds.py:60
+#, fuzzy
+msgid "Cherry-Pick Commit"
+msgstr "Kopiera incheckning"
+
+#: cola/guicmds.py:74
+msgid "Path or URL to clone (Env. $VARS okay)"
+msgstr ""
+
+#: cola/guicmds.py:95
+#, fuzzy
+msgid "Error Cloning"
+msgstr "Fel vid läsning av fil:"
+
+#: cola/guicmds.py:96 cola/guicmds.py:97
+#, python-format
+msgid "Could not parse Git URL: \"%s\""
+msgstr ""
+
+#: cola/guicmds.py:101
+msgid "Select a parent directory for the new clone"
+msgstr ""
+
+#: cola/guicmds.py:111
+#, python-format
+msgid "\"%s\" already exists, cola will create a new directory"
+msgstr ""
+
+#: cola/guicmds.py:127 cola/widgets/search.py:75
+msgid "Export Patches"
+msgstr ""
+
+#: cola/guicmds.py:156 cola/widgets/startup.py:126
+#, fuzzy
+msgid "Open Git Repository..."
+msgstr "Öppna befintligt arkiv"
+
+#: cola/guicmds.py:165 cola/main/view.py:165
+#, fuzzy
+msgid "Load Commit Message..."
+msgstr "Incheckningsmeddelande:"
+
+#: cola/guicmds.py:173
+#, fuzzy
+msgid "Rebase Branch"
+msgstr "Byt namn på gren"
+
+#: cola/guicmds.py:189
+#, fuzzy
+msgid "Select Branch to Review"
+msgstr "Ta bort gren"
+
+#: cola/guicmds.py:189
+msgid "Review"
+msgstr ""
+
+#: cola/inotify.py:45
+msgid ""
+"file notification: disabled\n"
+"Note: install pywin32 to enable.\n"
+msgstr ""
+
+#: cola/inotify.py:48
+msgid ""
+"inotify: disabled\n"
+"Note: install python-pyinotify to enable inotify.\n"
+msgstr ""
+
+#: cola/inotify.py:54
+msgid "On Debian systems try: sudo aptitude install python-pyinotify"
+msgstr ""
+
+#: cola/inotify.py:63
+#, fuzzy
+msgid "File notification enabled."
+msgstr "Lita på filändringstidsstämplar"
+
+#: cola/inotify.py:65
+msgid "inotify enabled."
+msgstr ""
+
+#: cola/interaction.py:53
+msgid "Continue"
+msgstr "Forstätt"
+
+#: cola/interaction.py:63
+#, python-format
+msgid "Run %s?"
+msgstr ""
+
+#: cola/interaction.py:64
+#, python-format
+msgid "Run the \"%s\" command?"
+msgstr ""
+
+#: cola/interaction.py:65 cola/widgets/cfgactions.py:240
+msgid "Run"
+msgstr ""
+
+#: cola/interaction.py:72
+#, python-format
+msgid "Exit code: %s"
+msgstr ""
+
+#: cola/qt.py:57 cola/qt.py:93
+#, fuzzy
+msgid "Detach"
+msgstr "Ta bort gren"
+
+#: cola/qt.py:91
+msgid "Attach"
+msgstr ""
+
+#: cola/qtutils.py:396
+#, fuzzy
+msgid "Close..."
+msgstr "Klona..."
+
+#: cola/classic/controller.py:69
+msgid "Select Previous Version"
+msgstr ""
+
+#: cola/classic/model.py:36 cola/widgets/createtag.py:51
+#: cola/widgets/editremotes.py:219
+#, fuzzy
+msgid "Name"
+msgstr "Namn:"
+
+#: cola/classic/model.py:37 cola/main/view.py:93
+msgid "Status"
+msgstr ""
+
+#: cola/classic/model.py:38 cola/dag/view.py:366
+msgid "Age"
+msgstr ""
+
+#: cola/classic/model.py:39 cola/widgets/createtag.py:74
+#, fuzzy
+msgid "Message"
+msgstr "Slå ihop"
+
+#: cola/classic/model.py:40 cola/dag/view.py:366
+#, fuzzy
+msgid "Author"
+msgstr "Författare:"
+
+#: cola/classic/model.py:337
+#, python-format
+msgid "%d minutes ago"
+msgstr ""
+
+#: cola/classic/model.py:340
+#, python-format
+msgid "%d hours ago"
+msgstr ""
+
+#: cola/classic/model.py:341
+#, python-format
+msgid "%d days ago"
+msgstr ""
+
+#: cola/classic/model.py:354 cola/widgets/status.py:80
+#, fuzzy
+msgid "Unmerged"
+msgstr "Slå ihop"
+
+#: cola/classic/model.py:356
+msgid "Partially Staged"
+msgstr ""
+
+#: cola/classic/model.py:358 cola/widgets/status.py:81
+#, fuzzy
+msgid "Modified"
+msgstr "Oförändrade"
+
+#: cola/classic/model.py:360 cola/widgets/status.py:79
+#, fuzzy
+msgid "Staged"
+msgstr "Köa ändrade"
+
+#: cola/classic/model.py:362
+msgid "Changed Upstream"
+msgstr ""
+
+#: cola/classic/view.py:47 cola/main/view.py:512
+#, fuzzy, python-format
+msgid "Repository: %s"
 msgstr "Arkiv:"
 
-#: lib/choose_repository.tcl:1031
-#, tcl-format
-msgid "Failed to open repository %s:"
-msgstr "Kunde inte öppna arkivet %s:"
+#: cola/classic/view.py:49 cola/main/view.py:514
+#, fuzzy, python-format
+msgid "Branch: %s"
+msgstr "Gren:"
 
-#: lib/choose_rev.tcl:53
-msgid "This Detached Checkout"
-msgstr "Denna frånkopplade utcheckning"
+#: cola/classic/view.py:54 cola/main/view.py:519
+msgid "Amending"
+msgstr ""
 
-#: lib/choose_rev.tcl:60
-msgid "Revision Expression:"
-msgstr "Revisionsuttryck:"
+#: cola/classic/view.py:79
+msgid "View History..."
+msgstr ""
 
-#: lib/choose_rev.tcl:74
+#: cola/classic/view.py:80
+msgid "View history for selected path(s)."
+msgstr ""
+
+#: cola/classic/view.py:84 cola/widgets/status.py:460
+#: cola/widgets/status.py:506 cola/widgets/status.py:559
+#, fuzzy
+msgid "Stage Selected"
+msgstr "Välj"
+
+#: cola/classic/view.py:85
+#, fuzzy
+msgid "Stage selected path(s) for commit."
+msgstr "Köade för incheckning"
+
+#: cola/classic/view.py:90 cola/widgets/status.py:408
+#: cola/widgets/status.py:446
+msgid "Unstage Selected"
+msgstr ""
+
+#: cola/classic/view.py:91
+msgid "Remove selected path(s) from the staging area."
+msgstr ""
+
+#: cola/classic/view.py:96
+msgid "Untrack Selected"
+msgstr ""
+
+#: cola/classic/view.py:97
+msgid "Stop tracking path(s)"
+msgstr ""
+
+#: cola/classic/view.py:102
+msgid "Launch git-difftool on the current path."
+msgstr ""
+
+#: cola/classic/view.py:106
+msgid "Diff Against Predecessor..."
+msgstr ""
+
+#: cola/classic/view.py:107
+msgid "Launch git-difftool against previous versions."
+msgstr ""
+
+#: cola/classic/view.py:111
+#, fuzzy
+msgid "Revert Uncommitted Changes..."
+msgstr "Återställ ändringar"
+
+#: cola/classic/view.py:112
+#, fuzzy
+msgid "Revert changes to selected path(s)."
+msgstr "Återställ ändringarna i filen %s?"
+
+#: cola/classic/view.py:117
+msgid "Edit selected path(s)."
+msgstr ""
+
+#: cola/classic/view.py:293 cola/widgets/status.py:619
+#, fuzzy
+msgid "Revert Uncommitted Changes?"
+msgstr "Återställ ändringar"
+
+#: cola/classic/view.py:294 cola/widgets/diff.py:228 cola/widgets/diff.py:241
+#: cola/widgets/status.py:620
+msgid ""
+"This operation drops uncommitted changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+#: cola/classic/view.py:296 cola/widgets/diff.py:230 cola/widgets/diff.py:243
+#: cola/widgets/status.py:622
+msgid "Revert the uncommitted changes?"
+msgstr ""
+
+#: cola/classic/view.py:297 cola/widgets/status.py:623
+#, fuzzy
+msgid "Revert Uncommitted Changes"
+msgstr "Återställ ändringar"
+
+#: cola/dag/view.py:164
+#, fuzzy
+msgid "Loading..."
+msgstr "Läser %s..."
+
+#: cola/dag/view.py:269
+msgid "Diff this -> selected"
+msgstr ""
+
+#: cola/dag/view.py:272
+msgid "Diff selected -> this"
+msgstr ""
+
+#: cola/dag/view.py:275 cola/widgets/createbranch.py:89
+#: cola/widgets/createbranch.py:98 cola/widgets/createbranch.py:155
+#: cola/widgets/createbranch.py:330
+msgid "Create Branch"
+msgstr "Skapa gren"
+
+#: cola/dag/view.py:278
+#, fuzzy
+msgid "Create Patch"
+msgstr "Skapa gren"
+
+#: cola/dag/view.py:281 cola/widgets/createtag.py:38
+#: cola/widgets/createtag.py:99
+#, fuzzy
+msgid "Create Tag"
+msgstr "Skapa"
+
+#: cola/dag/view.py:284 cola/main/view.py:168
+msgid "Save As Tarball/Zip..."
+msgstr ""
+
+#: cola/dag/view.py:287 cola/widgets/search.py:78
+msgid "Cherry Pick"
+msgstr ""
+
+#: cola/dag/view.py:290
+msgid "Grab File..."
+msgstr ""
+
+#: cola/dag/view.py:293
+#, fuzzy
+msgid "Copy SHA-1"
+msgstr "Kopiera alla"
+
+#: cola/dag/view.py:366
+msgid "Summary"
+msgstr ""
+
+#: cola/dag/view.py:373
+msgid "Go Up"
+msgstr ""
+
+#: cola/dag/view.py:376
+msgid "Go Down"
+msgstr ""
+
+#: cola/dag/view.py:506
+msgid "Display"
+msgstr ""
+
+#: cola/dag/view.py:1168
+msgid "Zoom In"
+msgstr ""
+
+#: cola/dag/view.py:1171
+msgid "Zoom Out"
+msgstr ""
+
+#: cola/dag/view.py:1174
+msgid "Zoom to Fit"
+msgstr ""
+
+#: cola/dag/view.py:1177
+#, fuzzy
+msgid "Select Parent"
+msgstr "Välj"
+
+#: cola/dag/view.py:1180
+msgid "Select Oldest Parent"
+msgstr ""
+
+#: cola/dag/view.py:1183
+#, fuzzy
+msgid "Select Child"
+msgstr "Markera alla"
+
+#: cola/dag/view.py:1186
+msgid "Select Newest Child"
+msgstr ""
+
+#: cola/main/view.py:80
+#, fuzzy
+msgid "Browser"
+msgstr "Bläddra"
+
+#: cola/main/view.py:85
+#, fuzzy
+msgid "Action"
+msgstr "Alternativ"
+
+#: cola/main/view.py:101 cola/merge/view.py:45
+#, fuzzy
+msgid "Commit"
+msgstr "Incheckning:"
+
+#: cola/main/view.py:110
+#, fuzzy
+msgid "Console"
+msgstr "Stäng"
+
+#: cola/main/view.py:116 cola/main/view.py:342
+msgid "Diff"
+msgstr ""
+
+#: cola/main/view.py:122 cola/widgets/status.py:368
+msgid "Unstage All"
+msgstr ""
+
+#: cola/main/view.py:126
+msgid "Unstage From Commit"
+msgstr "Ta bort från incheckningskö"
+
+#: cola/main/view.py:130
+msgid "Diffstat"
+msgstr ""
+
+#: cola/main/view.py:133
+msgid "Stage Changed Files To Commit"
+msgstr "Köa ändrade filer för incheckning"
+
+#: cola/main/view.py:138
+msgid "Stage All Untracked"
+msgstr ""
+
+#: cola/main/view.py:143
+msgid "Export Patches..."
+msgstr ""
+
+#: cola/main/view.py:145 cola/prefs/view.py:217
+msgid "Preferences"
+msgstr "Inställningar"
+
+#: cola/main/view.py:149
+msgid "Edit Remotes..."
+msgstr ""
+
+#: cola/main/view.py:157
+#, fuzzy
+msgid "Recently Modified Files..."
+msgstr "Söker efter ändrade filer..."
+
+#: cola/main/view.py:161
+#, fuzzy
+msgid "Cherry-Pick..."
+msgstr "Checka ut..."
+
+#: cola/main/view.py:171
+msgid "Quit"
+msgstr "Avsluta"
+
+#: cola/main/view.py:173
+msgid "Bookmarks..."
+msgstr ""
+
+#: cola/main/view.py:175
+msgid "Grep"
+msgstr ""
+
+#: cola/main/view.py:177
+#, fuzzy
+msgid "Merge..."
+msgstr "Slå ihop"
+
+#: cola/main/view.py:180 cola/merge/__init__.py:20
+msgid "Abort Merge..."
+msgstr "Avbryt sammanslagning..."
+
+#: cola/main/view.py:183 cola/widgets/action.py:20
+#, fuzzy
+msgid "Fetch..."
+msgstr "Återställ..."
+
+#: cola/main/view.py:185 cola/widgets/action.py:21
+msgid "Push..."
+msgstr "Sänd..."
+
+#: cola/main/view.py:187 cola/widgets/action.py:22
+#, fuzzy
+msgid "Pull..."
+msgstr "Sänd..."
+
+#: cola/main/view.py:190 cola/widgets/startup.py:38
+msgid "Open..."
+msgstr "Öppna..."
+
+#: cola/main/view.py:194 cola/widgets/action.py:23
+#, fuzzy
+msgid "Stash..."
+msgstr "Sänd..."
+
+#: cola/main/view.py:197 cola/widgets/startup.py:41
+msgid "Clone..."
+msgstr "Klona..."
+
+#: cola/main/view.py:201
+#, fuzzy
+msgid "Documentation"
+msgstr "Webbdokumentation"
+
+#: cola/main/view.py:205
+msgid "Keyboard Shortcuts"
+msgstr ""
+
+#: cola/main/view.py:210
+#, fuzzy
+msgid "Visualize Current Branch..."
+msgstr "Visualisera grenens historik"
+
+#: cola/main/view.py:213
+#, fuzzy
+msgid "Visualize All Branches..."
+msgstr "Visualisera alla grenars historik"
+
+#: cola/main/view.py:216
+#, fuzzy
+msgid "Search..."
+msgstr "Startar..."
+
+#: cola/main/view.py:218
+#, fuzzy
+msgid "Browse Current Branch..."
+msgstr "Bläddra i grenens filer"
+
+#: cola/main/view.py:220
+#, fuzzy
+msgid "Browse Other Branch..."
+msgstr "Bläddra filer på gren..."
+
+#: cola/main/view.py:222
+#, fuzzy
+msgid "Get Commit Message Template"
+msgstr "Textbredd för incheckningsmeddelande"
+
+#: cola/main/view.py:225
+#, fuzzy
+msgid "About"
+msgstr "Om %s"
+
+#: cola/main/view.py:228
+#, fuzzy
+msgid "Expression..."
+msgstr "Alternativ..."
+
+#: cola/main/view.py:230
+#, fuzzy
+msgid "Branches..."
+msgstr "Grenar"
+
+#: cola/main/view.py:233
+#, fuzzy
+msgid "Create Tag..."
+msgstr "Skapa..."
+
+#: cola/main/view.py:236
+msgid "Create..."
+msgstr "Skapa..."
+
+#: cola/main/view.py:239
+msgid "Delete..."
+msgstr "Ta bort..."
+
+#: cola/main/view.py:242
+msgid "Checkout..."
+msgstr "Checka ut..."
+
+#: cola/main/view.py:244
+#, fuzzy
+msgid "Rebase..."
+msgstr "Återställ..."
+
+#: cola/main/view.py:246
+#, fuzzy
+msgid "Review..."
+msgstr "Återställ..."
+
+#: cola/main/view.py:249
+#, fuzzy
+msgid "Browser..."
+msgstr "Bläddra"
+
+#: cola/main/view.py:253
+msgid "DAG..."
+msgstr ""
+
+#: cola/main/view.py:270
+#, fuzzy
+msgid "File"
+msgstr "Fil:"
+
+#: cola/main/view.py:274
+#, fuzzy
+msgid "Open Recent"
+msgstr "Öppna tidigare arkiv:"
+
+#: cola/main/view.py:293 cola/main/view.py:294 cola/widgets/commitmsg.py:49
+#: cola/widgets/commitmsg.py:65
+msgid "Commit@@verb"
+msgstr "Checka in"
+
+#: cola/main/view.py:306
+msgid "Branch"
+msgstr "Gren"
+
+#: cola/main/view.py:323
+#, fuzzy
+msgid "Actions"
+msgstr "Alternativ"
+
+#: cola/main/view.py:351
+msgid "Tools"
+msgstr ""
+
+#: cola/main/view.py:362
+msgid "Help"
+msgstr "Hjälp"
+
+#: cola/main/view.py:428
+#, python-format
+msgid "git-cola version %s"
+msgstr ""
+
+#: cola/merge/__init__.py:21
+#, fuzzy
+msgid ""
+"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+"Avbryt sammanslagning?\n"
+"\n"
+"Om du avbryter sammanslagningen kommer *ALLA* ej incheckade ändringar att gå "
+"förlorade.\n"
+"\n"
+"Gå vidare med att avbryta den aktuella sammanslagningen?"
+
+#: cola/merge/__init__.py:24
+msgid "Aborting the current merge?"
+msgstr ""
+
+#: cola/merge/__init__.py:25
+#, fuzzy
+msgid "Abort Merge"
+msgstr "Avbryt sammanslagning..."
+
+#: cola/merge/view.py:23
+msgid "Revision To Merge"
+msgstr "Revisioner att slå ihop"
+
+#: cola/merge/view.py:28 cola/widgets/cfgactions.py:220
+#: cola/widgets/createbranch.py:115 cola/widgets/remote.py:122
 msgid "Local Branch"
 msgstr "Lokal gren"
 
-#: lib/choose_rev.tcl:79
+#: cola/merge/view.py:31 cola/widgets/cfgactions.py:221
+#: cola/widgets/createbranch.py:119
 msgid "Tracking Branch"
 msgstr "Spårande gren"
 
-#: lib/choose_rev.tcl:84 lib/choose_rev.tcl:538
+#: cola/merge/view.py:33 cola/widgets/cfgactions.py:222
+#: cola/widgets/createbranch.py:122
 msgid "Tag"
 msgstr "Tagg"
 
-#: lib/choose_rev.tcl:317
-#, tcl-format
-msgid "Invalid revision: %s"
-msgstr "Ogiltig revision: %s"
+#: cola/merge/view.py:39
+msgid "Visualize"
+msgstr "Visualisera"
 
-#: lib/choose_rev.tcl:338
-msgid "No revision selected."
+#: cola/merge/view.py:42
+#, fuzzy
+msgid "Squash"
+msgstr "Sänd"
+
+#: cola/merge/view.py:50 cola/widgets/archive.py:62
+#: cola/widgets/editremotes.py:204
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: cola/merge/view.py:53
+msgid "Merge"
+msgstr "Slå ihop"
+
+#: cola/merge/view.py:115
+#, python-format
+msgid "Merge \"%(revision)s\" into \"%(branch)s\""
+msgstr ""
+
+#: cola/merge/view.py:118
+#, fuzzy, python-format
+msgid "Merge into \"%s\""
+msgstr "Slå ihop i %s"
+
+#: cola/merge/view.py:162 cola/merge/view.py:171
+#, fuzzy
+msgid "No Revision Specified"
 msgstr "Ingen revision vald."
 
-#: lib/choose_rev.tcl:346
-msgid "Revision expression is empty."
-msgstr "Revisionsuttrycket är tomt."
-
-#: lib/choose_rev.tcl:531
-msgid "Updated"
-msgstr "Uppdaterad"
-
-#: lib/choose_rev.tcl:559
-msgid "URL"
-msgstr "Webbadress"
-
-#: lib/commit.tcl:9
-msgid ""
-"There is nothing to amend.\n"
-"\n"
-"You are about to create the initial commit.  There is no commit before this "
-"to amend.\n"
+#: cola/merge/view.py:163
+msgid "You must specify a revision to view."
 msgstr ""
-"Det finns ingenting att utöka.\n"
-"\n"
-"Du håller på att skapa den inledande incheckningen. Det finns ingen tidigare "
-"incheckning att utöka.\n"
 
-#: lib/commit.tcl:18
-msgid ""
-"Cannot amend while merging.\n"
-"\n"
-"You are currently in the middle of a merge that has not been fully "
-"completed.  You cannot amend the prior commit unless you first abort the "
-"current merge activity.\n"
+#: cola/merge/view.py:172
+msgid "You must specify a revision to merge."
 msgstr ""
-"Kan inte utöka vid sammanslagning.\n"
-"\n"
-"Du är i mitten av en sammanslagning som inte är fullbordad. Du kan inte "
-"utöka tidigare incheckningar om du inte först avbryter den pågående "
-"sammanslagningen.\n"
 
-#: lib/commit.tcl:49
-msgid "Error loading commit data for amend:"
-msgstr "Fel vid inläsning av incheckningsdata för utökning:"
+#: cola/prefs/view.py:115
+msgid "User Name"
+msgstr "Användarnamn"
 
-#: lib/commit.tcl:76
-msgid "Unable to obtain your identity:"
-msgstr "Kunde inte hämta din identitet:"
+#: cola/prefs/view.py:116
+msgid "Email Address"
+msgstr "E-postadress"
 
-#: lib/commit.tcl:81
-msgid "Invalid GIT_COMMITTER_IDENT:"
-msgstr "Felaktig GIT_COMMITTER_IDENT:"
+#: cola/prefs/view.py:117
+msgid "Merge Verbosity"
+msgstr "Pratsamhet för sammanslagningar"
 
-#: lib/commit.tcl:133
-msgid ""
-"Last scanned state does not match repository state.\n"
-"\n"
-"Another Git program has modified this repository since the last scan.  A "
-"rescan must be performed before another commit can be created.\n"
-"\n"
-"The rescan will be automatically started now.\n"
+#: cola/prefs/view.py:118
+msgid "Number of Diff Context Lines"
+msgstr "Antal rader sammanhang i differenser"
+
+#: cola/prefs/view.py:119
+msgid "Summarize Merge Commits"
+msgstr "Summera sammanslagningsincheckningar"
+
+#: cola/prefs/view.py:120
+msgid "Show Diffstat After Merge"
+msgstr "Visa diffstatistik efter sammanslagning"
+
+#: cola/prefs/view.py:160
+msgid "Fixed-Width Font"
 msgstr ""
-"Det senaste inlästa tillståndet motsvarar inte tillståndet i arkivet.\n"
-"\n"
-"Ett annat Git-program har ändrat arkivet sedan senaste avsökningen. Du måste "
-"utföra en ny sökning innan du kan göra en ny incheckning.\n"
-"\n"
-"Sökningen kommer att startas automatiskt nu.\n"
 
-#: lib/commit.tcl:154
-#, tcl-format
-msgid ""
-"Unmerged files cannot be committed.\n"
-"\n"
-"File %s has merge conflicts.  You must resolve them and stage the file "
-"before committing.\n"
+#: cola/prefs/view.py:161
+msgid "Font Size"
+msgstr "Storlek"
+
+#: cola/prefs/view.py:162
+msgid "Tab Width"
 msgstr ""
-"Osammanslagna filer kan inte checkas in.\n"
-"\n"
-"Filen %s har sammanslagningskonflikter. Du måste lösa dem och köa filen "
-"innan du checkar in den.\n"
 
-#: lib/commit.tcl:162
-#, tcl-format
-msgid ""
-"Unknown file state %s detected.\n"
-"\n"
-"File %s cannot be committed by this program.\n"
+#: cola/prefs/view.py:163
+msgid "Text Width"
 msgstr ""
-"Okänd filstatus %s upptäckt.\n"
-"\n"
-"Filen %s kan inte checkas in av programmet.\n"
 
-#: lib/commit.tcl:170
-msgid ""
-"No changes to commit.\n"
-"\n"
-"You must stage at least 1 file before you can commit.\n"
+#: cola/prefs/view.py:164 cola/widgets/commitmsg.py:86
+msgid "Auto-Wrap Lines"
 msgstr ""
-"Inga ändringar att checka in.\n"
-"\n"
-"Du måste köa åtminstone en fil innan du kan checka in.\n"
 
-#: lib/commit.tcl:183
+#: cola/prefs/view.py:165
+#, fuzzy
+msgid "Editor"
+msgstr "Redigera"
+
+#: cola/prefs/view.py:166
+#, fuzzy
+msgid "History Browser"
+msgstr "Filbläddrare"
+
+#: cola/prefs/view.py:167
+msgid "Diff Tool"
+msgstr ""
+
+#: cola/prefs/view.py:168
+#, fuzzy
+msgid "Merge Tool"
+msgstr "Slå ihop"
+
+#: cola/prefs/view.py:169
+msgid "Keep *.orig Merge Backups"
+msgstr ""
+
+#: cola/prefs/view.py:170
+msgid "Save GUI Settings"
+msgstr ""
+
+#: cola/prefs/view.py:224
+#, fuzzy
+msgid "All Repositories"
+msgstr "Globalt (alla arkiv)"
+
+#: cola/prefs/view.py:225
+#, fuzzy
+msgid "Current Repository"
+msgstr "Skapa nytt arkiv"
+
+#: cola/prefs/view.py:226
+#, fuzzy
+msgid "Settings"
+msgstr "Startar..."
+
+#: cola/stash/view.py:28
+msgid "Stash"
+msgstr ""
+
+#: cola/stash/view.py:38
+#, fuzzy
+msgid "Apply"
+msgstr "Äpple"
+
+#: cola/stash/view.py:39
+msgid "Apply the selected stash"
+msgstr ""
+
+#: cola/stash/view.py:43
+msgid "Save modified state to new stash"
+msgstr ""
+
+#: cola/stash/view.py:46
+msgid "Drop"
+msgstr ""
+
+#: cola/stash/view.py:47
+msgid "Drop the selected stash"
+msgstr ""
+
+#: cola/stash/view.py:54
+msgid "Keep Index"
+msgstr ""
+
+#: cola/stash/view.py:175
+msgid "Save Stash"
+msgstr ""
+
+#: cola/stash/view.py:176
+msgid "Enter a name for the stash"
+msgstr ""
+
+#: cola/stash/view.py:182
+msgid "Error: Stash exists"
+msgstr ""
+
+#: cola/stash/view.py:183
+#, fuzzy, python-format
+msgid "A stash named \"%s\" already exists"
+msgstr "Filen %s finns redan."
+
+#: cola/stash/view.py:198
+msgid "Drop Stash?"
+msgstr ""
+
+#: cola/stash/view.py:199
+#, fuzzy
+msgid "Recovering a dropped stash is not possible."
+msgstr "Det kanske inte är så enkelt att återskapa förlorade incheckningar."
+
+#: cola/stash/view.py:200
+#, python-format
+msgid "Drop the \"%s\" stash?"
+msgstr ""
+
+#: cola/stash/view.py:201
+msgid "Drop Stash"
+msgstr ""
+
+#: cola/widgets/about.py:47
+msgid "About git-cola"
+msgstr ""
+
+#: cola/widgets/about.py:97
+msgid ""
+"This PyQt4 does not include QtWebKit.\n"
+"The keyboard shortcuts feature is unavailable."
+msgstr ""
+
+#: cola/widgets/archive.py:46
+msgid "Save Archive"
+msgstr ""
+
+#: cola/widgets/archive.py:69
+msgid "Prefix"
+msgstr ""
+
+#: cola/widgets/archive.py:74
+msgid "Advanced"
+msgstr ""
+
+#: cola/widgets/archive.py:141 cola/widgets/browse.py:49
+msgid "File Saved"
+msgstr ""
+
+#: cola/widgets/archive.py:142 cola/widgets/browse.py:50
+#, python-format
+msgid "File saved to \"%s\""
+msgstr ""
+
+#: cola/widgets/archive.py:149
+msgid "Overwrite File?"
+msgstr ""
+
+#: cola/widgets/archive.py:150
+#, python-format
+msgid "The file \"%s\" exists and will be overwritten."
+msgstr ""
+
+#: cola/widgets/archive.py:151
+#, python-format
+msgid "Overwrite \"%s\"?"
+msgstr ""
+
+#: cola/widgets/archive.py:152
+msgid "Overwrite"
+msgstr ""
+
+#: cola/widgets/browse.py:42
+#, python-format
+msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
+msgstr ""
+
+#: cola/widgets/browse.py:63
+#, fuzzy, python-format
+msgid "Browsing %s"
+msgstr "Lägger till %s"
+
+#: cola/widgets/browse.py:81
+#, fuzzy, python-format
+msgid "Select file from \"%s\""
+msgstr "Tar bort grenar från %s"
+
+#: cola/widgets/browse.py:90
+#, fuzzy
+msgid "Select File"
+msgstr "Markera alla"
+
+#: cola/widgets/browse.py:117 cola/widgets/selectcommits.py:54
+msgid "Select"
+msgstr "Välj"
+
+#: cola/widgets/cfgactions.py:85
+#, fuzzy
+msgid "Abort"
+msgstr "Avbryter"
+
+#: cola/widgets/cfgactions.py:147 cola/widgets/cfgactions.py:151
+#, fuzzy
+msgid "Abort Action"
+msgstr "Avbryter"
+
+#: cola/widgets/cfgactions.py:148
+msgid ""
+"An action is still running.\n"
+"Terminating it could result in data loss."
+msgstr ""
+
+#: cola/widgets/cfgactions.py:150
+msgid "Abort the action?"
+msgstr ""
+
+#: cola/widgets/cfgactions.py:201
+msgid "Arguments"
+msgstr ""
+
+#: cola/widgets/cfgactions.py:226 cola/widgets/createtag.py:85
+msgid "Revision"
+msgstr "Revision"
+
+#: cola/widgets/commitmsg.py:46
+#, fuzzy
+msgid "Sign off on this commit"
+msgstr "Köade för incheckning"
+
+#: cola/widgets/commitmsg.py:52
+#, fuzzy
+msgid "Commit staged changes"
+msgstr "Checkar in ändringar..."
+
+#: cola/widgets/commitmsg.py:63
+msgid ""
+"Commit staged changes\n"
+"Shortcut: Ctrl+Enter"
+msgstr ""
+
+#: cola/widgets/commitmsg.py:71
+#, fuzzy
+msgid "Actions..."
+msgstr "Alternativ..."
+
+#: cola/widgets/commitmsg.py:80
+msgid "Amend Last Commit"
+msgstr "Lägg till föregående incheckning"
+
+#: cola/widgets/commitmsg.py:91
+#, fuzzy
+msgid "Load Previous Commit Message"
+msgstr "Incheckningsmeddelande för sammanslagning:"
+
+#: cola/widgets/commitmsg.py:323
 msgid ""
 "Please supply a commit message.\n"
 "\n"
@@ -1271,710 +1295,1787 @@ msgstr ""
 "- Andra raden: Tom\n"
 "- Följande rader: Beskriv varför det här är en bra ändring.\n"
 
-#: lib/commit.tcl:207
-#, tcl-format
-msgid "warning: Tcl does not support encoding '%s'."
-msgstr "varning: Tcl stöder inte teckenkodningen \"%s\"."
+#: cola/widgets/commitmsg.py:330
+#, fuzzy
+msgid "Missing Commit Message"
+msgstr "Incheckningsmeddelande för sammanslagning:"
 
-#: lib/commit.tcl:221
-msgid "Calling pre-commit hook..."
-msgstr "Anropar krok före incheckning..."
-
-#: lib/commit.tcl:236
-msgid "Commit declined by pre-commit hook."
-msgstr "Incheckningen avvisades av krok före incheckning."
-
-#: lib/commit.tcl:259
-msgid "Calling commit-msg hook..."
-msgstr "Anropar krok för incheckningsmeddelande..."
-
-#: lib/commit.tcl:274
-msgid "Commit declined by commit-msg hook."
-msgstr "Incheckning avvisad av krok för incheckningsmeddelande."
-
-#: lib/commit.tcl:287
-msgid "Committing changes..."
-msgstr "Checkar in ändringar..."
-
-#: lib/commit.tcl:303
-msgid "write-tree failed:"
-msgstr "write-tree misslyckades:"
-
-#: lib/commit.tcl:304 lib/commit.tcl:348 lib/commit.tcl:368
-msgid "Commit failed."
-msgstr "Incheckningen misslyckades."
-
-#: lib/commit.tcl:321
-#, tcl-format
-msgid "Commit %s appears to be corrupt"
-msgstr "Incheckningen %s verkar vara trasig"
-
-#: lib/commit.tcl:326
+#: cola/widgets/commitmsg.py:336
+#, fuzzy
 msgid ""
 "No changes to commit.\n"
 "\n"
-"No files were modified by this commit and it was not a merge commit.\n"
-"\n"
-"A rescan will be automatically started now.\n"
+"You must stage at least 1 file before you can commit."
 msgstr ""
 "Inga ändringar att checka in.\n"
 "\n"
-"Inga filer ändrades av incheckningen och det var inte en sammanslagning.\n"
-"\n"
-"En sökning kommer att startas automatiskt nu.\n"
+"Du måste köa åtminstone en fil innan du kan checka in.\n"
 
-#: lib/commit.tcl:333
-msgid "No changes to commit."
+#: cola/widgets/commitmsg.py:340
+msgid "Would you like to stage and commit all modified files?"
+msgstr ""
+
+#: cola/widgets/commitmsg.py:342
+#, fuzzy
+msgid "Stage and commit?"
+msgstr "Köade för incheckning"
+
+#: cola/widgets/commitmsg.py:345
+#, fuzzy
+msgid "Stage and Commit"
+msgstr "Köa för incheckning"
+
+#: cola/widgets/commitmsg.py:350
+#, fuzzy
+msgid "Nothing to commit"
 msgstr "Inga ändringar att checka in."
 
-#: lib/commit.tcl:347
-msgid "commit-tree failed:"
-msgstr "commit-tree misslyckades:"
+#: cola/widgets/commitmsg.py:357
+msgid "Rewrite Published Commit?"
+msgstr ""
 
-#: lib/commit.tcl:367
-msgid "update-ref failed:"
-msgstr "update-ref misslyckades:"
-
-#: lib/commit.tcl:454
-#, tcl-format
-msgid "Created commit %s: %s"
-msgstr "Skapade incheckningen %s: %s"
-
-#: lib/console.tcl:59
-msgid "Working... please wait..."
-msgstr "Arbetar... vänta..."
-
-#: lib/console.tcl:186
-msgid "Success"
-msgstr "Lyckades"
-
-#: lib/console.tcl:200
-msgid "Error: Command Failed"
-msgstr "Fel: Kommando misslyckades"
-
-#: lib/database.tcl:43
-msgid "Number of loose objects"
-msgstr "Antal lösa objekt"
-
-#: lib/database.tcl:44
-msgid "Disk space used by loose objects"
-msgstr "Diskutrymme använt av lösa objekt"
-
-#: lib/database.tcl:45
-msgid "Number of packed objects"
-msgstr "Antal packade objekt"
-
-#: lib/database.tcl:46
-msgid "Number of packs"
-msgstr "Antal paket"
-
-#: lib/database.tcl:47
-msgid "Disk space used by packed objects"
-msgstr "Diskutrymme använt av packade objekt"
-
-#: lib/database.tcl:48
-msgid "Packed objects waiting for pruning"
-msgstr "Packade objekt som väntar på städning"
-
-#: lib/database.tcl:49
-msgid "Garbage files"
-msgstr "Skräpfiler"
-
-#: lib/database.tcl:72
-msgid "Compressing the object database"
-msgstr "Komprimerar objektdatabasen"
-
-#: lib/database.tcl:83
-msgid "Verifying the object database with fsck-objects"
-msgstr "Verifierar objektdatabasen med fsck-objects"
-
-#: lib/database.tcl:108
-#, tcl-format
+#: cola/widgets/commitmsg.py:358
 msgid ""
-"This repository currently has approximately %i loose objects.\n"
-"\n"
-"To maintain optimal performance it is strongly recommended that you compress "
-"the database when more than %i loose objects exist.\n"
-"\n"
-"Compress the database now?"
+"This commit has already been published.\n"
+"This operation will rewrite published history.\n"
+"You probably don't want to do this."
 msgstr ""
-"Arkivet har för närvarande omkring %i lösa objekt.\n"
-"\n"
-"För att bibehålla optimal prestanda rekommenderas det å det bestämdaste att "
-"du komprimerar databasen när den innehåller mer än %i lösa objekt.\n"
-"\n"
-"Komprimera databasen nu?"
 
-#: lib/date.tcl:25
-#, tcl-format
-msgid "Invalid date from Git: %s"
-msgstr "Ogiltigt datum från Git: %s"
-
-#: lib/diff.tcl:42
-#, tcl-format
-msgid ""
-"No differences detected.\n"
-"\n"
-"%s has no changes.\n"
-"\n"
-"The modification date of this file was updated by another application, but "
-"the content within the file was not changed.\n"
-"\n"
-"A rescan will be automatically started to find other files which may have "
-"the same state."
+#: cola/widgets/commitmsg.py:361
+msgid "Amend the published commit?"
 msgstr ""
-"Hittade inga skillnader.\n"
-"\n"
-"%s innehåller inga ändringar.\n"
-"\n"
-"Modifieringsdatum för filen uppdaterades av ett annat program, men "
-"innehållet i filen har inte ändrats.\n"
-"\n"
-"En sökning kommer automatiskt att startas för att hitta andra filer som kan "
-"vara i samma tillstånd."
 
-#: lib/diff.tcl:81
-#, tcl-format
-msgid "Loading diff of %s..."
-msgstr "Läser differens för %s..."
+#: cola/widgets/commitmsg.py:362
+#, fuzzy
+msgid "Amend Commit"
+msgstr "Lägg till föregående incheckning"
 
-#: lib/diff.tcl:114 lib/diff.tcl:184
-#, tcl-format
-msgid "Unable to display %s"
-msgstr "Kan inte visa %s"
+#: cola/widgets/commitmsg.py:367
+#, fuzzy
+msgid "Commit failed"
+msgstr "Incheckningen misslyckades."
 
-#: lib/diff.tcl:115
-msgid "Error loading file:"
-msgstr "Fel vid läsning av fil:"
-
-#: lib/diff.tcl:122
-msgid "Git Repository (subproject)"
-msgstr "Gitarkiv (underprojekt)"
-
-#: lib/diff.tcl:134
-msgid "* Binary file (not showing content)."
-msgstr "* Binärfil (visar inte innehållet)."
-
-#: lib/diff.tcl:185
-msgid "Error loading diff:"
-msgstr "Fel vid inläsning av differens:"
-
-#: lib/diff.tcl:303
-msgid "Failed to unstage selected hunk."
-msgstr "Kunde inte ta bort den valda delen från kön."
-
-#: lib/diff.tcl:310
-msgid "Failed to stage selected hunk."
-msgstr "Kunde inte lägga till den valda delen till kön."
-
-#: lib/error.tcl:20 lib/error.tcl:114
-msgid "error"
-msgstr "fel"
-
-#: lib/error.tcl:36
-msgid "warning"
-msgstr "varning"
-
-#: lib/error.tcl:94
-msgid "You must correct the above errors before committing."
-msgstr "Du måste rätta till felen ovan innan du checkar in."
-
-#: lib/index.tcl:6
-msgid "Unable to unlock the index."
-msgstr "Kunde inte låsa upp indexet."
-
-#: lib/index.tcl:15
-msgid "Index Error"
-msgstr "Indexfel"
-
-#: lib/index.tcl:21
-msgid ""
-"Updating the Git index failed.  A rescan will be automatically started to "
-"resynchronize git-gui."
+#: cola/widgets/commitmsg.py:368
+#, python-format
+msgid "\"git commit\" returned exit code %s"
 msgstr ""
-"Misslyckades med att uppdatera Gitindexet. En omsökning kommer att startas "
-"automatiskt för att synkronisera om git-gui."
 
-#: lib/index.tcl:27
-msgid "Continue"
-msgstr "Forstätt"
+#: cola/widgets/commitmsg.py:390
+#, fuzzy
+msgid "More..."
+msgstr "Klona..."
 
-#: lib/index.tcl:31
-msgid "Unlock Index"
-msgstr "Lås upp index"
+#: cola/widgets/commitmsg.py:394
+#, fuzzy
+msgid "Select Commit Message"
+msgstr "Incheckningsmeddelande för sammanslagning:"
 
-#: lib/index.tcl:282
-#, tcl-format
-msgid "Unstaging %s from commit"
-msgstr "Tar bort %s för incheckningskön"
+#: cola/widgets/commitmsg.py:404
+#, fuzzy
+msgid "Commit summary"
+msgstr "Incheckningsmeddelande:"
 
-#: lib/index.tcl:313
-msgid "Ready to commit."
-msgstr "Redo att checka in."
-
-#: lib/index.tcl:326
-#, tcl-format
-msgid "Adding %s"
-msgstr "Lägger till %s"
-
-#: lib/index.tcl:381
-#, tcl-format
-msgid "Revert changes in file %s?"
-msgstr "Återställ ändringarna i filen %s?"
-
-#: lib/index.tcl:383
-#, tcl-format
-msgid "Revert changes in these %i files?"
-msgstr "Återställ ändringarna i dessa %i filer?"
-
-#: lib/index.tcl:391
-msgid "Any unstaged changes will be permanently lost by the revert."
+#: cola/widgets/commitmsg.py:433
+msgid "Extended description..."
 msgstr ""
-"Alla oköade ändringar kommer permanent gå förlorade vid återställningen."
 
-#: lib/index.tcl:394
-msgid "Do Nothing"
-msgstr "Gör ingenting"
-
-#: lib/merge.tcl:13
-msgid ""
-"Cannot merge while amending.\n"
-"\n"
-"You must finish amending this commit before starting any type of merge.\n"
+#: cola/widgets/compare.py:37
+msgid "*** Branch Point ***"
 msgstr ""
-"Kan inte slå ihop vid utökning.\n"
-"\n"
-"Du måste göra färdig utökningen av incheckningen innan du påbörjar någon "
-"slags sammanslagning.\n"
 
-#: lib/merge.tcl:27
-msgid ""
-"Last scanned state does not match repository state.\n"
-"\n"
-"Another Git program has modified this repository since the last scan.  A "
-"rescan must be performed before a merge can be performed.\n"
-"\n"
-"The rescan will be automatically started now.\n"
+#: cola/widgets/compare.py:38
+msgid "*** Sandbox ***"
 msgstr ""
-"Det senaste inlästa tillståndet motsvarar inte tillståndet i arkivet.\n"
-"\n"
-"Ett annat Git-program har ändrat arkivet sedan senaste avsökningen. Du måste "
-"utföra en ny sökning innan du kan utföra en sammanslagning.\n"
-"\n"
-"Sökningen kommer att startas automatiskt nu.\n"
 
-#: lib/merge.tcl:44
-#, tcl-format
-msgid ""
-"You are in the middle of a conflicted merge.\n"
-"\n"
-"File %s has merge conflicts.\n"
-"\n"
-"You must resolve them, stage the file, and commit to complete the current "
-"merge.  Only then can you begin another merge.\n"
+#: cola/widgets/compare.py:39 cola/widgets/compare.py:62
+#: cola/widgets/compare.py:68
+msgid "Local"
 msgstr ""
-"Du är mitt i en sammanslagning med konflikter.\n"
-"\n"
-"Filen %s har sammanslagningskonflikter.\n"
-"\n"
-"Du måste lösa dem, köa filen och checka in för att fullborda den aktuella "
-"sammanslagningen. När du gjort det kan du påbörja en ny sammanslagning.\n"
 
-#: lib/merge.tcl:54
-#, tcl-format
-msgid ""
-"You are in the middle of a change.\n"
-"\n"
-"File %s is modified.\n"
-"\n"
-"You should complete the current commit before starting a merge.  Doing so "
-"will help you abort a failed merge, should the need arise.\n"
+#: cola/widgets/compare.py:44
+msgid "Branch Diff Viewer"
 msgstr ""
-"Du är mitt i en ändring.\n"
-"\n"
-"Filen %s har ändringar.\n"
-"\n"
-"Du bör fullborda den aktuella incheckningen innan du påbörjar en "
-"sammanslagning. Om du gör det blir det enklare att avbryta en misslyckad "
-"sammanslagning, om det skulle vara nödvändigt.\n"
 
-#: lib/merge.tcl:106
-#, tcl-format
-msgid "%s of %s"
-msgstr "%s av %s"
+#: cola/widgets/compare.py:63 cola/widgets/compare.py:69
+#: cola/widgets/remote.py:129
+msgid "Remote"
+msgstr "Fjärr"
 
-#: lib/merge.tcl:119
-#, tcl-format
-msgid "Merging %s and %s..."
-msgstr "Slår ihop %s och %s..."
-
-#: lib/merge.tcl:130
-msgid "Merge completed successfully."
-msgstr "Sammanslagningen avslutades framgångsrikt."
-
-#: lib/merge.tcl:132
-msgid "Merge failed.  Conflict resolution is required."
-msgstr "Sammanslagningen misslyckades. Du måste lösa konflikterna."
-
-#: lib/merge.tcl:157
-#, tcl-format
-msgid "Merge Into %s"
-msgstr "Slå ihop i %s"
-
-#: lib/merge.tcl:176
-msgid "Revision To Merge"
-msgstr "Revisioner att slå ihop"
-
-#: lib/merge.tcl:211
-msgid ""
-"Cannot abort while amending.\n"
-"\n"
-"You must finish amending this commit.\n"
-msgstr ""
-"Kan inte avbryta vid utökning.\n"
-"\n"
-"Du måste göra dig färdig med att utöka incheckningen.\n"
-
-#: lib/merge.tcl:221
-msgid ""
-"Abort merge?\n"
-"\n"
-"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
-"\n"
-"Continue with aborting the current merge?"
-msgstr ""
-"Avbryt sammanslagning?\n"
-"\n"
-"Om du avbryter sammanslagningen kommer *ALLA* ej incheckade ändringar att gå "
-"förlorade.\n"
-"\n"
-"Gå vidare med att avbryta den aktuella sammanslagningen?"
-
-#: lib/merge.tcl:227
-msgid ""
-"Reset changes?\n"
-"\n"
-"Resetting the changes will cause *ALL* uncommitted changes to be lost.\n"
-"\n"
-"Continue with resetting the current changes?"
-msgstr ""
-"Återställ ändringar?\n"
-"\n"
-"Om du återställer ändringarna kommer *ALLA* ej incheckade ändringar att gå "
-"förlorade.\n"
-"\n"
-"Gå vidare med att återställa de aktuella ändringarna?"
-
-#: lib/merge.tcl:238
-msgid "Aborting"
-msgstr "Avbryter"
-
-#: lib/merge.tcl:238
-msgid "files reset"
-msgstr "filer återställda"
-
-#: lib/merge.tcl:265
-msgid "Abort failed."
-msgstr "Misslyckades avbryta."
-
-#: lib/merge.tcl:267
-msgid "Abort completed.  Ready."
-msgstr "Avbrytning fullbordad. Redo."
-
-#: lib/option.tcl:95
-msgid "Restore Defaults"
-msgstr "Återställ standardvärden"
-
-#: lib/option.tcl:99
-msgid "Save"
-msgstr "Spara"
-
-#: lib/option.tcl:109
-#, tcl-format
-msgid "%s Repository"
-msgstr "Arkivet %s"
-
-#: lib/option.tcl:110
-msgid "Global (All Repositories)"
-msgstr "Globalt (alla arkiv)"
-
-#: lib/option.tcl:116
-msgid "User Name"
-msgstr "Användarnamn"
-
-#: lib/option.tcl:117
-msgid "Email Address"
-msgstr "E-postadress"
-
-#: lib/option.tcl:119
-msgid "Summarize Merge Commits"
-msgstr "Summera sammanslagningsincheckningar"
-
-#: lib/option.tcl:120
-msgid "Merge Verbosity"
-msgstr "Pratsamhet för sammanslagningar"
-
-#: lib/option.tcl:121
-msgid "Show Diffstat After Merge"
-msgstr "Visa diffstatistik efter sammanslagning"
-
-#: lib/option.tcl:123
-msgid "Trust File Modification Timestamps"
-msgstr "Lita på filändringstidsstämplar"
-
-#: lib/option.tcl:124
-msgid "Prune Tracking Branches During Fetch"
-msgstr "Städa spårade grenar vid hämtning"
-
-#: lib/option.tcl:125
-msgid "Match Tracking Branches"
-msgstr "Matcha spårade grenar"
-
-#: lib/option.tcl:126
-msgid "Number of Diff Context Lines"
-msgstr "Antal rader sammanhang i differenser"
-
-#: lib/option.tcl:127
-msgid "Commit Message Text Width"
-msgstr "Textbredd för incheckningsmeddelande"
-
-#: lib/option.tcl:128
-msgid "New Branch Name Template"
-msgstr "Mall för namn på nya grenar"
-
-#: lib/option.tcl:192
-msgid "Spelling Dictionary:"
-msgstr "Stavningsordlista:"
-
-#: lib/option.tcl:216
-msgid "Change Font"
-msgstr "Byt teckensnitt"
-
-#: lib/option.tcl:220
-#, tcl-format
-msgid "Choose %s"
-msgstr "Välj %s"
-
-#: lib/option.tcl:226
-msgid "pt."
-msgstr "p."
-
-#: lib/option.tcl:240
-msgid "Preferences"
+#: cola/widgets/compare.py:98
+#, fuzzy
+msgid "File Differences"
 msgstr "Inställningar"
 
-#: lib/option.tcl:275
-msgid "Failed to completely save options:"
-msgstr "Misslyckades med att helt spara alternativ:"
+#: cola/widgets/createbranch.py:102
+msgid "Branch Name"
+msgstr "Namn på gren"
 
-#: lib/remote_branch_delete.tcl:29 lib/remote_branch_delete.tcl:34
-msgid "Delete Remote Branch"
-msgstr "Ta bort fjärrgren"
+#: cola/widgets/createbranch.py:107 cola/widgets/createbranch.py:178
+msgid "Starting Revision"
+msgstr "Inledande revision"
 
-#: lib/remote_branch_delete.tcl:47
-msgid "From Repository"
-msgstr "Från arkiv"
+#: cola/widgets/createbranch.py:127
+msgid "Update Existing Branch:"
+msgstr "Uppdatera befintlig gren:"
 
-#: lib/remote_branch_delete.tcl:50 lib/transport.tcl:123
-msgid "Remote:"
-msgstr "Fjärr:"
+#: cola/widgets/createbranch.py:130
+msgid "No"
+msgstr "Nej"
 
-#: lib/remote_branch_delete.tcl:66 lib/transport.tcl:138
-msgid "Arbitrary URL:"
-msgstr "Godtycklig webbadress:"
+#: cola/widgets/createbranch.py:133
+msgid "Fast Forward Only"
+msgstr "Endast snabbspolning"
 
-#: lib/remote_branch_delete.tcl:84
-msgid "Branches"
+#: cola/widgets/createbranch.py:137
+msgid "Reset"
+msgstr "Återställ"
+
+#: cola/widgets/createbranch.py:143
+msgid "Fetch Tracking Branch"
+msgstr "Hämta spårande gren"
+
+#: cola/widgets/createbranch.py:148
+msgid "Checkout After Creation"
+msgstr "Checka ut när skapad"
+
+#: cola/widgets/createbranch.py:194
+msgid "Options"
+msgstr "Alternativ"
+
+#: cola/widgets/createbranch.py:259
+#, fuzzy
+msgid "Missing Data"
+msgstr "Saknade"
+
+#: cola/widgets/createbranch.py:260
+msgid "Please provide both a branch name and revision expression."
+msgstr ""
+
+#: cola/widgets/createbranch.py:265
+#, fuzzy, python-format
+msgid "Branch \"%s\" already exists."
+msgstr "Grenen \"%s\" finns redan."
+
+#: cola/widgets/createbranch.py:266 cola/widgets/createbranch.py:277
+#, fuzzy
+msgid "Branch Exists"
 msgstr "Grenar"
 
-#: lib/remote_branch_delete.tcl:109
-msgid "Delete Only If"
-msgstr "Ta endast bort om"
-
-#: lib/remote_branch_delete.tcl:111
-msgid "Merged Into:"
-msgstr "Sammanslagen i:"
-
-#: lib/remote_branch_delete.tcl:119
-msgid "Always (Do not perform merge checks)"
-msgstr "Alltid (utför inte sammanslagningstest)"
-
-#: lib/remote_branch_delete.tcl:152
-msgid "A branch is required for 'Merged Into'."
-msgstr "En gren krävs för \"Sammanslagen i\"."
-
-#: lib/remote_branch_delete.tcl:184
-#, tcl-format
-msgid ""
-"The following branches are not completely merged into %s:\n"
-"\n"
-" - %s"
+#: cola/widgets/createbranch.py:273
+#, fuzzy, python-format
+msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr ""
-"Följande grenar har inte helt slagits samman i %s:\n"
-"\n"
-" - %s"
+"Om du återställer \"%s\" till \"%s\" går följande incheckningar förlorade:"
 
-#: lib/remote_branch_delete.tcl:189
-#, tcl-format
-msgid ""
-"One or more of the merge tests failed because you have not fetched the "
-"necessary commits.  Try fetching from %s first."
+#: cola/widgets/createbranch.py:288
+#, python-format
+msgid "%d skipped"
 msgstr ""
-"En eller flera av sammanslagningstesterna misslyckades eftersom du inte har "
-"hämtat de nödvändiga incheckningarna. Försök hämta från %s först."
 
-#: lib/remote_branch_delete.tcl:207
-msgid "Please select one or more branches to delete."
-msgstr "Välj en eller flera grenar att ta bort."
+#: cola/widgets/createbranch.py:290
+msgid "Recovering lost commits may not be easy."
+msgstr "Det kanske inte är så enkelt att återskapa förlorade incheckningar."
 
-#: lib/remote_branch_delete.tcl:216
-msgid ""
-"Recovering deleted branches is difficult.\n"
-"\n"
-"Delete the selected branches?"
+#: cola/widgets/createbranch.py:292
+#, fuzzy
+msgid "Reset Branch?"
+msgstr "Ta bort gren"
+
+#: cola/widgets/createbranch.py:294
+#, python-format
+msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr ""
-"Det kan vara svårt att återställa borttagna grenar.\n"
+
+#: cola/widgets/createbranch.py:296
+#, fuzzy
+msgid "Reset Branch"
+msgstr "Ta bort gren"
+
+#: cola/widgets/createbranch.py:305
+#, fuzzy
+msgid "Updating..."
+msgstr "Startar..."
+
+#: cola/widgets/createbranch.py:321
+#, fuzzy
+msgid "Error Creating Branch"
+msgstr "Skapa gren"
+
+#: cola/widgets/createbranch.py:322
+#, python-format
+msgid "\"%(command)s\" returned exit status \"%(status)d\""
+msgstr ""
+
+#: cola/widgets/createbranch.py:331
+#, fuzzy
+msgid "Branch created"
+msgstr "Namn på gren"
+
+#: cola/widgets/createtag.py:56
+msgid "Specifies the tag name"
+msgstr ""
+
+#: cola/widgets/createtag.py:62
+#, fuzzy
+msgid "Sign Tag"
+msgstr "Skriv under"
+
+#: cola/widgets/createtag.py:67
+msgid "Whether to sign the tag (git tag -s)"
+msgstr ""
+
+#: cola/widgets/createtag.py:78
+msgid "Tag message..."
+msgstr ""
+
+#: cola/widgets/createtag.py:79
+msgid "Specifies the tag message"
+msgstr ""
+
+#: cola/widgets/createtag.py:91
+msgid "Specifies the SHA-1 to tag"
+msgstr ""
+
+#: cola/widgets/createtag.py:121
+#, fuzzy
+msgid "Missing Revision"
+msgstr "Inledande revision"
+
+#: cola/widgets/createtag.py:122
+#, fuzzy
+msgid "Please specify a revision to tag."
+msgstr "Välj en gren att byta namn på."
+
+#: cola/widgets/createtag.py:125
+#, fuzzy
+msgid "Missing Name"
+msgstr "Saknade"
+
+#: cola/widgets/createtag.py:126
+msgid "Please specify a name for the new tag."
+msgstr ""
+
+#: cola/widgets/createtag.py:129
+#, fuzzy
+msgid "Missing Tag Message"
+msgstr "Revisioner att slå ihop"
+
+#: cola/widgets/createtag.py:130
+msgid "Tag-signing was requested but the tag message is empty."
+msgstr ""
+
+#: cola/widgets/createtag.py:132
+msgid ""
+"An unsigned, lightweight tag will be created instead.\n"
+"Create an unsigned tag?"
+msgstr ""
+
+#: cola/widgets/createtag.py:135
+msgid "Create Unsigned Tag"
+msgstr ""
+
+#: cola/widgets/createtag.py:142
+#, fuzzy
+msgid "Tag Created"
+msgstr "Skapa"
+
+#: cola/widgets/createtag.py:143
+#, python-format
+msgid "Created a new tag named \"%s\""
+msgstr ""
+
+#: cola/widgets/diff.py:22
+msgid "Process Section"
+msgstr ""
+
+#: cola/widgets/diff.py:25
+msgid "Process Selection"
+msgstr ""
+
+#: cola/widgets/diff.py:40
+msgid "Stage &Selected Lines"
+msgstr ""
+
+#: cola/widgets/diff.py:46
+msgid "Revert Selected Lines..."
+msgstr ""
+
+#: cola/widgets/diff.py:51
+#, fuzzy
+msgid "Unstage &Selected Lines"
+msgstr "Oköade ändringar"
+
+#: cola/widgets/diff.py:57
+msgid "Apply Diff Selection to Work Tree"
+msgstr ""
+
+#: cola/widgets/diff.py:81 cola/widgets/diff.py:103 cola/widgets/status.py:435
+#: cola/widgets/status.py:547
+msgid "Launch git-cola"
+msgstr ""
+
+#: cola/widgets/diff.py:86
+#, fuzzy
+msgid "Stage Section"
+msgstr "Inledande revision"
+
+#: cola/widgets/diff.py:92
+msgid "Revert Section..."
+msgstr ""
+
+#: cola/widgets/diff.py:108
+msgid "Unstage Section"
+msgstr ""
+
+#: cola/widgets/diff.py:120
+msgid "Copy"
+msgstr "Kopiera"
+
+#: cola/widgets/diff.py:124
+msgid "Select All"
+msgstr "Markera alla"
+
+#: cola/widgets/diff.py:227
+msgid "Revert Section?"
+msgstr ""
+
+#: cola/widgets/diff.py:231
+msgid "Revert Section"
+msgstr ""
+
+#: cola/widgets/diff.py:240
+#, fuzzy
+msgid "Revert Selected Lines?"
+msgstr "Återställ ändringarna i filen %s?"
+
+#: cola/widgets/diff.py:244
+msgid "Revert Selected Lines"
+msgstr ""
+
+#: cola/widgets/editremotes.py:22
+msgid ""
+"Add and remove remote repositories using the \n"
+"Add(+) and Delete(-) buttons on the left-hand side.\n"
 "\n"
-"Ta bort de valda grenarna?"
+"Remotes can be renamed by selecting one from the list\n"
+"and pressing \"enter\", or by double-clicking."
+msgstr ""
 
-#: lib/remote_branch_delete.tcl:226
-#, tcl-format
-msgid "Deleting branches from %s"
-msgstr "Tar bort grenar från %s"
+#: cola/widgets/editremotes.py:32
+msgid "Remote git repositories - double-click to rename"
+msgstr ""
 
-#: lib/remote_branch_delete.tcl:286
+#: cola/widgets/editremotes.py:45
+#, fuzzy
+msgid "Add new remote git repository"
+msgstr "Inte ett Gitarkiv: %s"
+
+#: cola/widgets/editremotes.py:49 cola/widgets/grep.py:64
+#: cola/widgets/recent.py:52 cola/widgets/recent.py:121
+msgid "Refresh"
+msgstr "Uppdatera"
+
+#: cola/widgets/editremotes.py:53
+#, fuzzy
+msgid "Delete remote"
+msgstr "Ta bort fjärrgren"
+
+#: cola/widgets/editremotes.py:116
+#, python-format
+msgid "Error creating remote \"%s\""
+msgstr ""
+
+#: cola/widgets/editremotes.py:124
+#, fuzzy
+msgid "Delete Remote"
+msgstr "Ta bort fjärrgren"
+
+#: cola/widgets/editremotes.py:125
+#, fuzzy
+msgid "Delete remote?"
+msgstr "Ta bort fjärrgren"
+
+#: cola/widgets/editremotes.py:126
+#, fuzzy, python-format
+msgid "Delete remote \"%s\""
+msgstr "Ta bort fjärrgren"
+
+#: cola/widgets/editremotes.py:134
+#, python-format
+msgid "Error deleting remote \"%s\""
+msgstr ""
+
+#: cola/widgets/editremotes.py:153
+#, fuzzy
+msgid "Rename Remote"
+msgstr "Fjärr"
+
+#: cola/widgets/editremotes.py:154
+#, fuzzy
+msgid "Rename remote?"
+msgstr "Fjärr"
+
+#: cola/widgets/editremotes.py:155
+#, python-format
+msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
+msgstr ""
+
+#: cola/widgets/editremotes.py:157
+msgid "Rename"
+msgstr "Byt namn"
+
+#: cola/widgets/editremotes.py:169
+#, fuzzy, python-format
+msgid "Gathering info for \"%s\"..."
+msgstr "Läser differens för %s..."
+
+#: cola/widgets/editremotes.py:201
+#, fuzzy
+msgid "Add Remote"
+msgstr "Fjärr"
+
+#: cola/widgets/editremotes.py:213
+msgid "Name for the new remote"
+msgstr ""
+
+#: cola/widgets/editremotes.py:220
+msgid "URL"
+msgstr "Webbadress"
+
+#: cola/widgets/grep.py:51
+msgid "command-line arguments"
+msgstr ""
+
+#: cola/widgets/grep.py:55
+msgid "grep result..."
+msgstr ""
+
+#: cola/widgets/grep.py:68
+msgid "Shell arguments"
+msgstr ""
+
+#: cola/widgets/grep.py:70
+msgid ""
+"Parse arguments using a shell.\n"
+"Queries with spaces will require \"double quotes\"."
+msgstr ""
+
+#: cola/widgets/log.py:34
+#, fuzzy, python-format
+msgid "exit code %s"
+msgstr "hämta %s"
+
+#: cola/widgets/recent.py:36
+msgid "Recently Modified Files"
+msgstr ""
+
+#: cola/widgets/recent.py:46
+msgid " commits ago"
+msgstr ""
+
+#: cola/widgets/recent.py:49
+#, fuzzy
+msgid "Showing changes since"
+msgstr "Sänder ändringar till %s"
+
+#: cola/widgets/recent.py:61
+msgid "Expand"
+msgstr ""
+
+#: cola/widgets/recent.py:65
+#, fuzzy
+msgid "Collapse"
+msgstr "Stäng"
+
+#: cola/widgets/remote.py:136
+#, fuzzy
+msgid "Remote Branch"
+msgstr "Byt namn på gren"
+
+#: cola/widgets/remote.py:143
+#, fuzzy
+msgid "Fast Forward Only "
+msgstr "Endast snabbspolning"
+
+#: cola/widgets/remote.py:147
+#, fuzzy
+msgid "Include tags "
+msgstr "Ta med taggar"
+
+#: cola/widgets/remote.py:150
+#, fuzzy
+msgid "Rebase "
+msgstr "Återställ"
+
+#: cola/widgets/remote.py:314
+#, fuzzy, python-format
+msgid "URL: %s"
+msgstr "Webbadress:"
+
+#: cola/widgets/remote.py:393
 msgid "No repository selected."
 msgstr "Inget arkiv markerat."
 
-#: lib/remote_branch_delete.tcl:291
-#, tcl-format
-msgid "Scanning %s..."
-msgstr "Söker %s..."
+#: cola/widgets/remote.py:406
+msgid "Push"
+msgstr "Sänd"
 
-#: lib/remote.tcl:165
-msgid "Prune from"
-msgstr "Ta bort från"
+#: cola/widgets/remote.py:408
+#, python-format
+msgid ""
+"Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
+"A new remote branch will be published."
+msgstr ""
 
-#: lib/remote.tcl:170
-msgid "Fetch from"
-msgstr "Hämta från"
+#: cola/widgets/remote.py:410
+#, fuzzy
+msgid "Create a new remote branch?"
+msgstr "Skapa ny gren"
 
-#: lib/remote.tcl:213
-msgid "Push to"
-msgstr "Sänd till"
+#: cola/widgets/remote.py:411
+#, fuzzy
+msgid "Create Remote Branch"
+msgstr "Ta bort fjärrgren"
 
-#: lib/shortcut.tcl:20 lib/shortcut.tcl:61
-msgid "Cannot write shortcut:"
-msgstr "Kan inte skriva genväg:"
+#: cola/widgets/remote.py:419
+msgid "Force Fetch?"
+msgstr ""
 
-#: lib/shortcut.tcl:136
-msgid "Cannot write icon:"
-msgstr "Kan inte skriva ikon:"
+#: cola/widgets/remote.py:420
+msgid "Non-fast-forward fetch overwrites local history!"
+msgstr ""
 
-#: lib/spellcheck.tcl:57
-msgid "Unsupported spell checker"
-msgstr "Stavningskontrollprogrammet stöds inte"
+#: cola/widgets/remote.py:421
+#, fuzzy, python-format
+msgid "Force fetching from %s?"
+msgstr "Hämtar %s från %s"
 
-#: lib/spellcheck.tcl:65
-msgid "Spell checking is unavailable"
-msgstr "Stavningskontroll är ej tillgänglig"
+#: cola/widgets/remote.py:422
+msgid "Force Fetch"
+msgstr ""
 
-#: lib/spellcheck.tcl:68
-msgid "Invalid spell checking configuration"
-msgstr "Ogiltig inställning för stavningskontroll"
+#: cola/widgets/remote.py:424
+msgid "Force Push?"
+msgstr ""
 
-#: lib/spellcheck.tcl:70
-#, tcl-format
-msgid "Reverting dictionary to %s."
-msgstr "Återställer ordlistan till %s."
+#: cola/widgets/remote.py:425
+msgid ""
+"Non-fast-forward push overwrites published history!\n"
+"(Did you pull first?)"
+msgstr ""
 
-#: lib/spellcheck.tcl:73
-msgid "Spell checker silently failed on startup"
-msgstr "Stavningskontroll misslyckades tyst vid start"
+#: cola/widgets/remote.py:427
+#, python-format
+msgid "Force push to %s?"
+msgstr ""
 
-#: lib/spellcheck.tcl:80
-msgid "Unrecognized spell checker"
-msgstr "Stavningskontrollprogrammet känns inte igen"
+#: cola/widgets/remote.py:428
+msgid "Force Push"
+msgstr ""
 
-#: lib/spellcheck.tcl:180
-msgid "No Suggestions"
-msgstr "Inga förslag"
+#: cola/widgets/remote.py:462
+msgid "Already up-to-date."
+msgstr ""
 
-#: lib/spellcheck.tcl:381
-msgid "Unexpected EOF from spell checker"
-msgstr "Oväntat filslut från stavningskontroll"
+#: cola/widgets/remote.py:472 cola/widgets/startup.py:163
+#, python-format
+msgid "\"%(command)s\" returned exit status %(status)d"
+msgstr ""
 
-#: lib/spellcheck.tcl:385
-msgid "Spell Checker Failed"
-msgstr "Stavningskontroll misslyckades"
+#: cola/widgets/remote.py:486
+msgid "Have you rebased/pulled lately?"
+msgstr ""
 
-#: lib/status_bar.tcl:83
-#, tcl-format
-msgid "%s ... %*i of %*i %s (%3i%%)"
-msgstr "%s... %*i av %*i %s (%3i%%)"
+#: cola/widgets/search.py:40 cola/widgets/search.py:58
+msgid "Search"
+msgstr ""
 
-#: lib/transport.tcl:6
-#, tcl-format
-msgid "fetch %s"
-msgstr "hämta %s"
+#: cola/widgets/search.py:44
+#, fuzzy
+msgid "Browse..."
+msgstr "Bläddra"
 
-#: lib/transport.tcl:7
-#, tcl-format
-msgid "Fetching new changes from %s"
-msgstr "Hämtar nya ändringar från %s"
+#: cola/widgets/search.py:50 cola/widgets/search.py:55
+msgid "yyyy-MM-dd"
+msgstr ""
 
-#: lib/transport.tcl:18
-#, tcl-format
-msgid "remote prune %s"
-msgstr "fjärrborttagning %s"
+#: cola/widgets/search.py:220
+#, fuzzy
+msgid "Search by Expression"
+msgstr "Revisionsuttryck:"
 
-#: lib/transport.tcl:19
-#, tcl-format
-msgid "Pruning tracking branches deleted from %s"
-msgstr "Tar bort spårande grenar som tagits bort från %s"
+#: cola/widgets/search.py:221
+msgid "Search by Path"
+msgstr ""
 
-#: lib/transport.tcl:25 lib/transport.tcl:71
-#, tcl-format
-msgid "push %s"
-msgstr "sänd %s"
+#: cola/widgets/search.py:222
+#, fuzzy
+msgid "Search Commit Messages"
+msgstr "Incheckningsmeddelande för sammanslagning:"
 
-#: lib/transport.tcl:26
-#, tcl-format
-msgid "Pushing changes to %s"
-msgstr "Sänder ändringar till %s"
+#: cola/widgets/search.py:223
+msgid "Search Diffs"
+msgstr ""
 
-#: lib/transport.tcl:72
-#, tcl-format
-msgid "Pushing %s %s to %s"
-msgstr "Sänder %s %s till %s"
+#: cola/widgets/search.py:224
+msgid "Search Authors"
+msgstr ""
 
-#: lib/transport.tcl:89
-msgid "Push Branches"
-msgstr "Sänder grenar"
+#: cola/widgets/search.py:225
+#, fuzzy
+msgid "Search Committers"
+msgstr "Incheckare:"
 
-#: lib/transport.tcl:103
-msgid "Source Branches"
-msgstr "Källgrenar"
+#: cola/widgets/search.py:226
+msgid "Search Date Range"
+msgstr ""
 
-#: lib/transport.tcl:120
-msgid "Destination Repository"
-msgstr "Destinationsarkiv"
+#: cola/widgets/search.py:319
+#, fuzzy
+msgid "Choose Path(s)"
+msgstr "Välj %s"
 
-#: lib/transport.tcl:158
-msgid "Transfer Options"
-msgstr "Överföringsalternativ"
+#: cola/widgets/selectcommits.py:50
+msgid "Revision Expression:"
+msgstr "Revisionsuttryck:"
 
-#: lib/transport.tcl:160
-msgid "Force overwrite existing branch (may discard changes)"
-msgstr "Tvinga överskrivning av befintlig gren (kan kasta bort ändringar)"
+#: cola/widgets/selectcommits.py:101
+msgid "No commits exist in this branch."
+msgstr ""
 
-#: lib/transport.tcl:164
-msgid "Use thin pack (for slow network connections)"
-msgstr "Använd tunt paket (för långsamma nätverksanslutningar)"
+#: cola/widgets/startup.py:28
+msgid "git-cola"
+msgstr ""
 
-#: lib/transport.tcl:168
-msgid "Include tags"
-msgstr "Ta med taggar"
+#: cola/widgets/startup.py:35
+msgid "New..."
+msgstr "Nytt..."
+
+#: cola/widgets/startup.py:58
+#, fuzzy
+msgid "Select Repository..."
+msgstr "Gitarkiv"
+
+#: cola/widgets/startup.py:63
+#, fuzzy
+msgid "Select manually..."
+msgstr "Markera alla"
+
+#: cola/widgets/startup.py:162
+#, fuzzy
+msgid "Error Creating Repository"
+msgstr "Skapa nytt arkiv"
+
+#: cola/widgets/startup.py:165
+#, python-format
+msgid ""
+"Output:\n"
+"%s"
+msgstr ""
+
+#: cola/widgets/status.py:82
+#, fuzzy
+msgid "Untracked"
+msgstr "Ej spårade, ej köade"
+
+#: cola/widgets/status.py:92
+#, fuzzy
+msgid "Stage / Unstage"
+msgstr "Köa ändrade"
+
+#: cola/widgets/status.py:122
+msgid "Move Up"
+msgstr ""
+
+#: cola/widgets/status.py:124
+msgid "Move Down"
+msgstr ""
+
+#: cola/widgets/status.py:127
+msgid "Copy Path to Clipboard"
+msgstr ""
+
+#: cola/widgets/status.py:427 cola/widgets/status.py:514
+msgid "Revert Unstaged Edits..."
+msgstr ""
+
+#: cola/widgets/status.py:456
+msgid "Launch Merge Tool"
+msgstr ""
+
+#: cola/widgets/status.py:517
+msgid "Revert Uncommited Edits..."
+msgstr ""
+
+#: cola/widgets/status.py:535
+#, fuzzy
+msgid "Delete File(s)..."
+msgstr "Ta bort..."
+
+#: cola/widgets/status.py:538
+msgid "Add to .gitignore"
+msgstr ""
+
+#: cola/widgets/status.py:574
+#, fuzzy
+msgid "Delete Files?"
+msgstr "Ta bort"
+
+#: cola/widgets/status.py:575
+msgid "The following files will be deleted:"
+msgstr ""
+
+#: cola/widgets/status.py:582
+#, python-format
+msgid "Delete %d file(s)?"
+msgstr ""
+
+#: cola/widgets/status.py:583
+#, fuzzy
+msgid "Delete Files"
+msgstr "Ta bort"
+
+#: cola/widgets/status.py:599
+#, fuzzy
+msgid "Revert Unstaged Changes?"
+msgstr "Oköade ändringar"
+
+#: cola/widgets/status.py:600
+msgid ""
+"This operation drops unstaged changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+#: cola/widgets/status.py:602
+#, fuzzy
+msgid "Revert the unstaged changes?"
+msgstr "Oköade ändringar"
+
+#: cola/widgets/status.py:603
+#, fuzzy
+msgid "Revert Unstaged Changes"
+msgstr "Oköade ändringar"
+
+#: cola/widgets/status.py:612 cola/widgets/status.py:629
+msgid "No files selected for checkout from HEAD."
+msgstr ""
+
+#~ msgid "git-gui: fatal error"
+#~ msgstr "git-gui: ödesdigert fel"
+
+#~ msgid "Invalid font specified in %s:"
+#~ msgstr "Ogiltigt teckensnitt angivet i %s:"
+
+#~ msgid "Main Font"
+#~ msgstr "Huvudteckensnitt"
+
+#~ msgid "Diff/Console Font"
+#~ msgstr "Diff/konsolteckensnitt"
+
+#~ msgid "Cannot find git in PATH."
+#~ msgstr "Hittar inte git i PATH."
+
+#~ msgid "Cannot parse Git version string:"
+#~ msgstr "Kan inte tolka versionssträng från Git:"
+
+#~ msgid ""
+#~ "Git version cannot be determined.\n"
+#~ "\n"
+#~ "%s claims it is version '%s'.\n"
+#~ "\n"
+#~ "%s requires at least Git 1.5.0 or later.\n"
+#~ "\n"
+#~ "Assume '%s' is version 1.5.0?\n"
+#~ msgstr ""
+#~ "Kan inte avgöra Gits version.\n"
+#~ "\n"
+#~ "%s säger att dess version är \"%s\".\n"
+#~ "\n"
+#~ "%s kräver minst Git 1.5.0 eller senare.\n"
+#~ "\n"
+#~ "Anta att \"%s\" är version 1.5.0?\n"
+
+#~ msgid "Git directory not found:"
+#~ msgstr "Git-katalogen hittades inte:"
+
+#~ msgid "Cannot move to top of working directory:"
+#~ msgstr "Kan inte gå till början på arbetskatalogen:"
+
+#~ msgid "Cannot use funny .git directory:"
+#~ msgstr "Kan inte använda underlig .git-katalog:"
+
+#~ msgid "No working directory"
+#~ msgstr "Ingen arbetskatalog"
+
+#~ msgid "Refreshing file status..."
+#~ msgstr "Uppdaterar filstatus..."
+
+#~ msgid "Ready."
+#~ msgstr "Klar."
+
+#~ msgid "Modified, not staged"
+#~ msgstr "Förändrade, ej köade"
+
+#~ msgid "Portions staged for commit"
+#~ msgstr "Delar köade för incheckning"
+
+#~ msgid "Staged for commit, missing"
+#~ msgstr "Köade för incheckning, saknade"
+
+#~ msgid "Staged for removal"
+#~ msgstr "Köade för borttagning"
+
+#~ msgid "Staged for removal, still present"
+#~ msgstr "Köade för borttagning, fortfarande närvarande"
+
+#~ msgid "Requires merge resolution"
+#~ msgstr "Kräver konflikthantering efter sammanslagning"
+
+#~ msgid "Starting gitk... please wait..."
+#~ msgstr "Startar gitk... vänta..."
+
+#~ msgid ""
+#~ "Unable to start gitk:\n"
+#~ "\n"
+#~ "%s does not exist"
+#~ msgstr ""
+#~ "Kan inte starta gitk:\n"
+#~ "\n"
+#~ "%s finns inte"
+
+#~ msgid "Repository"
+#~ msgstr "Arkiv"
+
+#~ msgid "Commit@@noun"
+#~ msgstr "Incheckning"
+
+#~ msgid "Browse %s's Files"
+#~ msgstr "Bläddra i filer för %s"
+
+#~ msgid "Visualize %s's History"
+#~ msgstr "Visualisera historik för %s"
+
+#~ msgid "Database Statistics"
+#~ msgstr "Databasstatistik"
+
+#~ msgid "Compress Database"
+#~ msgstr "Komprimera databas"
+
+#~ msgid "Verify Database"
+#~ msgstr "Verifiera databas"
+
+#~ msgid "Create Desktop Icon"
+#~ msgstr "Skapa skrivbordsikon"
+
+#~ msgid "Undo"
+#~ msgstr "Ångra"
+
+#~ msgid "Redo"
+#~ msgstr "Gör om"
+
+#~ msgid "Cut"
+#~ msgstr "Klipp ut"
+
+#~ msgid "Paste"
+#~ msgstr "Klistra in"
+
+#~ msgid "Rename..."
+#~ msgstr "Byt namn..."
+
+#~ msgid "New Commit"
+#~ msgstr "Ny incheckning"
+
+#~ msgid "Local Merge..."
+#~ msgstr "Lokal sammanslagning..."
+
+#~ msgid "Preferences..."
+#~ msgstr "Inställningar..."
+
+#~ msgid "Current Branch:"
+#~ msgstr "Aktuell gren:"
+
+#~ msgid "Staged Changes (Will Commit)"
+#~ msgstr "Köade ändringar (kommer att checkas in)"
+
+#~ msgid "Initial Commit Message:"
+#~ msgstr "Inledande incheckningsmeddelande:"
+
+#~ msgid "Amended Commit Message:"
+#~ msgstr "Utökat incheckningsmeddelande:"
+
+#~ msgid "Amended Initial Commit Message:"
+#~ msgstr "Utökat inledande incheckningsmeddelande:"
+
+#~ msgid "Amended Merge Commit Message:"
+#~ msgstr "Utökat incheckningsmeddelande för sammanslagning:"
+
+#~ msgid "Apply/Reverse Hunk"
+#~ msgstr "Använd/återställ del"
+
+#~ msgid "Show Less Context"
+#~ msgstr "Visa mindre sammanhang"
+
+#~ msgid "Show More Context"
+#~ msgstr "Visa mer sammanhang"
+
+#~ msgid "Decrease Font Size"
+#~ msgstr "Minska teckensnittsstorlek"
+
+#~ msgid "Increase Font Size"
+#~ msgstr "Öka teckensnittsstorlek"
+
+#~ msgid "Unstage Hunk From Commit"
+#~ msgstr "Ta bort del ur incheckningskö"
+
+#~ msgid "Stage Hunk For Commit"
+#~ msgstr "Ställ del i incheckningskö"
+
+#~ msgid "Initializing..."
+#~ msgstr "Initierar..."
+
+#~ msgid ""
+#~ "Possible environment issues exist.\n"
+#~ "\n"
+#~ "The following environment variables are probably\n"
+#~ "going to be ignored by any Git subprocess run\n"
+#~ "by %s:\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Det finns möjliga problem med miljövariabler.\n"
+#~ "\n"
+#~ "Följande miljövariabler kommer troligen att\n"
+#~ "ignoreras av alla Git-underprocesser som körs\n"
+#~ "av %s:\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is due to a known issue with the\n"
+#~ "Tcl binary distributed by Cygwin."
+#~ msgstr ""
+#~ "\n"
+#~ "Detta beror på ett känt problem med\n"
+#~ "Tcl-binären som följer med Cygwin."
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "A good replacement for %s\n"
+#~ "is placing values for the user.name and\n"
+#~ "user.email settings into your personal\n"
+#~ "~/.gitconfig file.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Du kan ersätta %s\n"
+#~ "med att lägga in värden för inställningarna\n"
+#~ "user.name och user.email i din personliga\n"
+#~ "~/.gitconfig-fil.\n"
+
+#~ msgid "git-gui - a graphical user interface for Git."
+#~ msgstr "git-gui - ett grafiskt användargränssnitt för Git."
+
+#~ msgid "File Viewer"
+#~ msgstr "Filvisare"
+
+#~ msgid "Reading %s..."
+#~ msgstr "Läser %s..."
+
+#~ msgid "Loading copy/move tracking annotations..."
+#~ msgstr "Läser annoteringar för kopiering/flyttning..."
+
+#~ msgid "lines annotated"
+#~ msgstr "rader annoterade"
+
+#~ msgid "Loading original location annotations..."
+#~ msgstr "Läser in annotering av originalplacering..."
+
+#~ msgid "Annotation complete."
+#~ msgstr "Annotering fullbordad."
+
+#~ msgid "Loading annotation..."
+#~ msgstr "Läser in annotering..."
+
+#~ msgid "Original File:"
+#~ msgstr "Ursprunglig fil:"
+
+#~ msgid "Originally By:"
+#~ msgstr "Ursprungligen av:"
+
+#~ msgid "In File:"
+#~ msgstr "I filen:"
+
+#~ msgid "Copied Or Moved Here By:"
+#~ msgstr "Kopierad eller flyttad hit av:"
+
+#~ msgid "Checkout"
+#~ msgstr "Checka ut"
+
+#~ msgid "Detach From Local Branch"
+#~ msgstr "Koppla bort från lokal gren"
+
+#~ msgid "Match Tracking Branch Name"
+#~ msgstr "Använd namn på spårad gren"
+
+#~ msgid "Tracking branch %s is not a branch in the remote repository."
+#~ msgstr "Den spårade grenen %s är inte en gren i fjärrarkivet."
+
+#~ msgid "Please supply a branch name."
+#~ msgstr "Ange ett namn för grenen."
+
+#~ msgid "'%s' is not an acceptable branch name."
+#~ msgstr "\"%s\" kan inte användas som namn på grenen."
+
+#~ msgid "Delete Local Branch"
+#~ msgstr "Ta bort lokal gren"
+
+#~ msgid "Local Branches"
+#~ msgstr "Lokala grenar"
+
+#~ msgid "Delete Only If Merged Into"
+#~ msgstr "Ta bara bort om sammanslagen med"
+
+#~ msgid "Always (Do not perform merge test.)"
+#~ msgstr "Alltid (utför inte sammanslagningstest)."
+
+#~ msgid "The following branches are not completely merged into %s:"
+#~ msgstr "Följande grenar är inte till fullo sammanslagna med %s:"
+
+#~ msgid ""
+#~ "Recovering deleted branches is difficult. \n"
+#~ "\n"
+#~ " Delete the selected branches?"
+#~ msgstr ""
+#~ "Det är svårt att återställa borttagna grenar.\n"
+#~ "\n"
+#~ " Ta bort valda grenar?"
+
+#~ msgid ""
+#~ "Failed to delete branches:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Kunde inte ta bort grenar:\n"
+#~ "%s"
+
+#~ msgid "New Name:"
+#~ msgstr "Nytt namn:"
+
+#~ msgid "Failed to rename '%s'."
+#~ msgstr "Kunde inte byta namn på \"%s\"."
+
+#~ msgid "[Up To Parent]"
+#~ msgstr "[Upp till förälder]"
+
+#~ msgid "Browse Branch Files"
+#~ msgstr "Bläddra filer på grenen"
+
+#~ msgid "fatal: Cannot resolve %s"
+#~ msgstr "ödesdigert: Kunde inte slå upp %s"
+
+#~ msgid "Branch '%s' does not exist."
+#~ msgstr "Grenen \"%s\" finns inte."
+
+#~ msgid ""
+#~ "Branch '%s' already exists.\n"
+#~ "\n"
+#~ "It cannot fast-forward to %s.\n"
+#~ "A merge is required."
+#~ msgstr ""
+#~ "Grenen \"%s\" finns redan.\n"
+#~ "\n"
+#~ "Den kan inte snabbspolas till %s.\n"
+#~ "En sammanslagning krävs."
+
+#~ msgid "Merge strategy '%s' not supported."
+#~ msgstr "Sammanslagningsstrategin \"%s\" stöds inte."
+
+#~ msgid "Failed to update '%s'."
+#~ msgstr "Misslyckades med att uppdatera \"%s\"."
+
+#~ msgid "Staging area (index) is already locked."
+#~ msgstr "Köområdet (index) är redan låst."
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before the current branch can be changed.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "Det senaste inlästa tillståndet motsvarar inte tillståndet i arkivet.\n"
+#~ "\n"
+#~ "Ett annat Git-program har ändrat arkivet sedan senaste avsökningen. Du "
+#~ "måste utföra en ny sökning innan den aktuella grenen kan ändras.\n"
+#~ "\n"
+#~ "Sökningen kommer att startas automatiskt nu.\n"
+
+#~ msgid "Updating working directory to '%s'..."
+#~ msgstr "Uppdaterar arbetskatalogen till \"%s\"..."
+
+#~ msgid "files checked out"
+#~ msgstr "filer utcheckade"
+
+#~ msgid "Aborted checkout of '%s' (file level merging is required)."
+#~ msgstr "Avbryter utcheckning av \"%s\" (sammanslagning på filnivå krävs)."
+
+#~ msgid "File level merge required."
+#~ msgstr "Sammanslagning på filnivå krävs."
+
+#~ msgid "Staying on branch '%s'."
+#~ msgstr "Stannar på grenen \"%s\"."
+
+#~ msgid ""
+#~ "You are no longer on a local branch.\n"
+#~ "\n"
+#~ "If you wanted to be on a branch, create one now starting from 'This "
+#~ "Detached Checkout'."
+#~ msgstr ""
+#~ "Du är inte längre på en lokal gren.\n"
+#~ "\n"
+#~ "Om du ville vara på en gren skapar du en nu, baserad på \"Denna "
+#~ "frånkopplade utcheckning\"."
+
+#~ msgid "Checked out '%s'."
+#~ msgstr "Checkade ut \"%s\"."
+
+#~ msgid "Reset '%s'?"
+#~ msgstr "Återställa \"%s\"?"
+
+#~ msgid ""
+#~ "Failed to set current branch.\n"
+#~ "\n"
+#~ "This working directory is only partially switched.  We successfully "
+#~ "updated your files, but failed to update an internal Git file.\n"
+#~ "\n"
+#~ "This should not have occurred.  %s will now close and give up."
+#~ msgstr ""
+#~ "Kunde inte ställa in aktuell gren.\n"
+#~ "\n"
+#~ "Arbetskatalogen har bara växlats delvis. Vi uppdaterade filerna utan "
+#~ "problem, men kunde inte uppdatera en intern fil i Git.\n"
+#~ "\n"
+#~ "Detta skulle inte ha hänt. %s kommer nu stängas och ge upp."
+
+#~ msgid "Font Family"
+#~ msgstr "Teckensnittsfamilj"
+
+#~ msgid "Font Example"
+#~ msgstr "Exempel"
+
+#~ msgid ""
+#~ "This is example text.\n"
+#~ "If you like this text, it can be your font."
+#~ msgstr ""
+#~ "Detta är en exempeltext.\n"
+#~ "Om du tycker om den här texten kan den vara ditt teckensnitt."
+
+#~ msgid "Git Gui"
+#~ msgstr "Git Gui"
+
+#~ msgid "Clone Existing Repository"
+#~ msgstr "Klona befintligt arkiv"
+
+#~ msgid "Recent Repositories"
+#~ msgstr "Senaste arkiven"
+
+#~ msgid "Failed to create repository %s:"
+#~ msgstr "Kunde inte skapa arkivet %s:"
+
+#~ msgid "Directory:"
+#~ msgstr "Katalog:"
+
+#~ msgid "Directory %s already exists."
+#~ msgstr "Katalogen %s finns redan."
+
+#~ msgid "Clone"
+#~ msgstr "Klona"
+
+#~ msgid "Clone Type:"
+#~ msgstr "Typ av klon:"
+
+#~ msgid "Standard (Fast, Semi-Redundant, Hardlinks)"
+#~ msgstr "Standard (snabb, semiredundant, hårda länkar)"
+
+#~ msgid "Full Copy (Slower, Redundant Backup)"
+#~ msgstr "Full kopia (långsammare, redundant säkerhetskopia)"
+
+#~ msgid "Shared (Fastest, Not Recommended, No Backup)"
+#~ msgstr "Delad (snabbast, rekommenderas ej, ingen säkerhetskopia)"
+
+#~ msgid "Standard only available for local repository."
+#~ msgstr "Standard är endast tillgängligt för lokala arkiv."
+
+#~ msgid "Shared only available for local repository."
+#~ msgstr "Delat är endast tillgängligt för lokala arkiv."
+
+#~ msgid "Location %s already exists."
+#~ msgstr "Platsen %s finns redan."
+
+#~ msgid "Failed to configure origin"
+#~ msgstr "Kunde inte konfigurera ursprung"
+
+#~ msgid "Counting objects"
+#~ msgstr "Räknar objekt"
+
+#~ msgid "buckets"
+#~ msgstr "hinkar"
+
+#~ msgid "Unable to copy objects/info/alternates: %s"
+#~ msgstr "Kunde inte kopiera objekt/info/alternativ: %s"
+
+#~ msgid "The 'master' branch has not been initialized."
+#~ msgstr "Grenen \"master\" har inte initierats."
+
+#~ msgid "Hardlinks are unavailable.  Falling back to copying."
+#~ msgstr "Hårda länkar är inte tillgängliga. Faller tillbaka på kopiering."
+
+#~ msgid "Cloning from %s"
+#~ msgstr "Klonar från %s"
+
+#~ msgid "Copying objects"
+#~ msgstr "Kopierar objekt"
+
+#~ msgid "KiB"
+#~ msgstr "KiB"
+
+#~ msgid "Unable to copy object: %s"
+#~ msgstr "Kunde inte kopiera objekt: %s"
+
+#~ msgid "Linking objects"
+#~ msgstr "Länkar objekt"
+
+#~ msgid "objects"
+#~ msgstr "objekt"
+
+#~ msgid "Unable to hardlink object: %s"
+#~ msgstr "Kunde inte hårdlänka objekt: %s"
+
+#~ msgid "Cannot fetch branches and objects.  See console output for details."
+#~ msgstr "Kunde inte hämta grenar och objekt. Se konsolutdata för detaljer."
+
+#~ msgid "Cannot fetch tags.  See console output for details."
+#~ msgstr "Kunde inte hämta taggar. Se konsolutdata för detaljer."
+
+#~ msgid "Cannot determine HEAD.  See console output for details."
+#~ msgstr "Kunde inte avgöra HEAD. Se konsolutdata för detaljer."
+
+#~ msgid "Unable to cleanup %s"
+#~ msgstr "Kunde inte städa upp %s"
+
+#~ msgid "Clone failed."
+#~ msgstr "Kloning misslyckades."
+
+#~ msgid "No default branch obtained."
+#~ msgstr "Hämtade ingen standardgren."
+
+#~ msgid "Cannot resolve %s as a commit."
+#~ msgstr "Kunde inte slå upp %s till någon incheckning."
+
+#~ msgid "Creating working directory"
+#~ msgstr "Skapar arbetskatalog"
+
+#~ msgid "files"
+#~ msgstr "filer"
+
+#~ msgid "Initial file checkout failed."
+#~ msgstr "Inledande filutcheckning misslyckades."
+
+#~ msgid "Failed to open repository %s:"
+#~ msgstr "Kunde inte öppna arkivet %s:"
+
+#~ msgid "This Detached Checkout"
+#~ msgstr "Denna frånkopplade utcheckning"
+
+#~ msgid "Updated"
+#~ msgstr "Uppdaterad"
+
+#~ msgid ""
+#~ "There is nothing to amend.\n"
+#~ "\n"
+#~ "You are about to create the initial commit.  There is no commit before "
+#~ "this to amend.\n"
+#~ msgstr ""
+#~ "Det finns ingenting att utöka.\n"
+#~ "\n"
+#~ "Du håller på att skapa den inledande incheckningen. Det finns ingen "
+#~ "tidigare incheckning att utöka.\n"
+
+#~ msgid ""
+#~ "Cannot amend while merging.\n"
+#~ "\n"
+#~ "You are currently in the middle of a merge that has not been fully "
+#~ "completed.  You cannot amend the prior commit unless you first abort the "
+#~ "current merge activity.\n"
+#~ msgstr ""
+#~ "Kan inte utöka vid sammanslagning.\n"
+#~ "\n"
+#~ "Du är i mitten av en sammanslagning som inte är fullbordad. Du kan inte "
+#~ "utöka tidigare incheckningar om du inte först avbryter den pågående "
+#~ "sammanslagningen.\n"
+
+#~ msgid "Error loading commit data for amend:"
+#~ msgstr "Fel vid inläsning av incheckningsdata för utökning:"
+
+#~ msgid "Unable to obtain your identity:"
+#~ msgstr "Kunde inte hämta din identitet:"
+
+#~ msgid "Invalid GIT_COMMITTER_IDENT:"
+#~ msgstr "Felaktig GIT_COMMITTER_IDENT:"
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before another commit can be created.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "Det senaste inlästa tillståndet motsvarar inte tillståndet i arkivet.\n"
+#~ "\n"
+#~ "Ett annat Git-program har ändrat arkivet sedan senaste avsökningen. Du "
+#~ "måste utföra en ny sökning innan du kan göra en ny incheckning.\n"
+#~ "\n"
+#~ "Sökningen kommer att startas automatiskt nu.\n"
+
+#~ msgid ""
+#~ "Unmerged files cannot be committed.\n"
+#~ "\n"
+#~ "File %s has merge conflicts.  You must resolve them and stage the file "
+#~ "before committing.\n"
+#~ msgstr ""
+#~ "Osammanslagna filer kan inte checkas in.\n"
+#~ "\n"
+#~ "Filen %s har sammanslagningskonflikter. Du måste lösa dem och köa filen "
+#~ "innan du checkar in den.\n"
+
+#~ msgid ""
+#~ "Unknown file state %s detected.\n"
+#~ "\n"
+#~ "File %s cannot be committed by this program.\n"
+#~ msgstr ""
+#~ "Okänd filstatus %s upptäckt.\n"
+#~ "\n"
+#~ "Filen %s kan inte checkas in av programmet.\n"
+
+#~ msgid "warning: Tcl does not support encoding '%s'."
+#~ msgstr "varning: Tcl stöder inte teckenkodningen \"%s\"."
+
+#~ msgid "Calling pre-commit hook..."
+#~ msgstr "Anropar krok före incheckning..."
+
+#~ msgid "Commit declined by pre-commit hook."
+#~ msgstr "Incheckningen avvisades av krok före incheckning."
+
+#~ msgid "Calling commit-msg hook..."
+#~ msgstr "Anropar krok för incheckningsmeddelande..."
+
+#~ msgid "Commit declined by commit-msg hook."
+#~ msgstr "Incheckning avvisad av krok för incheckningsmeddelande."
+
+#~ msgid "write-tree failed:"
+#~ msgstr "write-tree misslyckades:"
+
+#~ msgid "Commit %s appears to be corrupt"
+#~ msgstr "Incheckningen %s verkar vara trasig"
+
+#~ msgid ""
+#~ "No changes to commit.\n"
+#~ "\n"
+#~ "No files were modified by this commit and it was not a merge commit.\n"
+#~ "\n"
+#~ "A rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "Inga ändringar att checka in.\n"
+#~ "\n"
+#~ "Inga filer ändrades av incheckningen och det var inte en sammanslagning.\n"
+#~ "\n"
+#~ "En sökning kommer att startas automatiskt nu.\n"
+
+#~ msgid "commit-tree failed:"
+#~ msgstr "commit-tree misslyckades:"
+
+#~ msgid "update-ref failed:"
+#~ msgstr "update-ref misslyckades:"
+
+#~ msgid "Working... please wait..."
+#~ msgstr "Arbetar... vänta..."
+
+#~ msgid "Success"
+#~ msgstr "Lyckades"
+
+#~ msgid "Error: Command Failed"
+#~ msgstr "Fel: Kommando misslyckades"
+
+#~ msgid "Number of loose objects"
+#~ msgstr "Antal lösa objekt"
+
+#~ msgid "Disk space used by loose objects"
+#~ msgstr "Diskutrymme använt av lösa objekt"
+
+#~ msgid "Number of packed objects"
+#~ msgstr "Antal packade objekt"
+
+#~ msgid "Number of packs"
+#~ msgstr "Antal paket"
+
+#~ msgid "Disk space used by packed objects"
+#~ msgstr "Diskutrymme använt av packade objekt"
+
+#~ msgid "Packed objects waiting for pruning"
+#~ msgstr "Packade objekt som väntar på städning"
+
+#~ msgid "Garbage files"
+#~ msgstr "Skräpfiler"
+
+#~ msgid "Compressing the object database"
+#~ msgstr "Komprimerar objektdatabasen"
+
+#~ msgid "Verifying the object database with fsck-objects"
+#~ msgstr "Verifierar objektdatabasen med fsck-objects"
+
+#~ msgid ""
+#~ "This repository currently has approximately %i loose objects.\n"
+#~ "\n"
+#~ "To maintain optimal performance it is strongly recommended that you "
+#~ "compress the database when more than %i loose objects exist.\n"
+#~ "\n"
+#~ "Compress the database now?"
+#~ msgstr ""
+#~ "Arkivet har för närvarande omkring %i lösa objekt.\n"
+#~ "\n"
+#~ "För att bibehålla optimal prestanda rekommenderas det å det bestämdaste "
+#~ "att du komprimerar databasen när den innehåller mer än %i lösa objekt.\n"
+#~ "\n"
+#~ "Komprimera databasen nu?"
+
+#~ msgid "Invalid date from Git: %s"
+#~ msgstr "Ogiltigt datum från Git: %s"
+
+#~ msgid ""
+#~ "No differences detected.\n"
+#~ "\n"
+#~ "%s has no changes.\n"
+#~ "\n"
+#~ "The modification date of this file was updated by another application, "
+#~ "but the content within the file was not changed.\n"
+#~ "\n"
+#~ "A rescan will be automatically started to find other files which may have "
+#~ "the same state."
+#~ msgstr ""
+#~ "Hittade inga skillnader.\n"
+#~ "\n"
+#~ "%s innehåller inga ändringar.\n"
+#~ "\n"
+#~ "Modifieringsdatum för filen uppdaterades av ett annat program, men "
+#~ "innehållet i filen har inte ändrats.\n"
+#~ "\n"
+#~ "En sökning kommer automatiskt att startas för att hitta andra filer som "
+#~ "kan vara i samma tillstånd."
+
+#~ msgid "Unable to display %s"
+#~ msgstr "Kan inte visa %s"
+
+#~ msgid "Git Repository (subproject)"
+#~ msgstr "Gitarkiv (underprojekt)"
+
+#~ msgid "* Binary file (not showing content)."
+#~ msgstr "* Binärfil (visar inte innehållet)."
+
+#~ msgid "Error loading diff:"
+#~ msgstr "Fel vid inläsning av differens:"
+
+#~ msgid "Failed to unstage selected hunk."
+#~ msgstr "Kunde inte ta bort den valda delen från kön."
+
+#~ msgid "Failed to stage selected hunk."
+#~ msgstr "Kunde inte lägga till den valda delen till kön."
+
+#~ msgid "warning"
+#~ msgstr "varning"
+
+#~ msgid "You must correct the above errors before committing."
+#~ msgstr "Du måste rätta till felen ovan innan du checkar in."
+
+#~ msgid "Unable to unlock the index."
+#~ msgstr "Kunde inte låsa upp indexet."
+
+#~ msgid "Index Error"
+#~ msgstr "Indexfel"
+
+#~ msgid ""
+#~ "Updating the Git index failed.  A rescan will be automatically started to "
+#~ "resynchronize git-gui."
+#~ msgstr ""
+#~ "Misslyckades med att uppdatera Gitindexet. En omsökning kommer att "
+#~ "startas automatiskt för att synkronisera om git-gui."
+
+#~ msgid "Unlock Index"
+#~ msgstr "Lås upp index"
+
+#~ msgid "Ready to commit."
+#~ msgstr "Redo att checka in."
+
+#~ msgid "Revert changes in these %i files?"
+#~ msgstr "Återställ ändringarna i dessa %i filer?"
+
+#~ msgid "Any unstaged changes will be permanently lost by the revert."
+#~ msgstr ""
+#~ "Alla oköade ändringar kommer permanent gå förlorade vid återställningen."
+
+#~ msgid "Do Nothing"
+#~ msgstr "Gör ingenting"
+
+#~ msgid ""
+#~ "Cannot merge while amending.\n"
+#~ "\n"
+#~ "You must finish amending this commit before starting any type of merge.\n"
+#~ msgstr ""
+#~ "Kan inte slå ihop vid utökning.\n"
+#~ "\n"
+#~ "Du måste göra färdig utökningen av incheckningen innan du påbörjar någon "
+#~ "slags sammanslagning.\n"
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before a merge can be performed.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "Det senaste inlästa tillståndet motsvarar inte tillståndet i arkivet.\n"
+#~ "\n"
+#~ "Ett annat Git-program har ändrat arkivet sedan senaste avsökningen. Du "
+#~ "måste utföra en ny sökning innan du kan utföra en sammanslagning.\n"
+#~ "\n"
+#~ "Sökningen kommer att startas automatiskt nu.\n"
+
+#~ msgid ""
+#~ "You are in the middle of a conflicted merge.\n"
+#~ "\n"
+#~ "File %s has merge conflicts.\n"
+#~ "\n"
+#~ "You must resolve them, stage the file, and commit to complete the current "
+#~ "merge.  Only then can you begin another merge.\n"
+#~ msgstr ""
+#~ "Du är mitt i en sammanslagning med konflikter.\n"
+#~ "\n"
+#~ "Filen %s har sammanslagningskonflikter.\n"
+#~ "\n"
+#~ "Du måste lösa dem, köa filen och checka in för att fullborda den aktuella "
+#~ "sammanslagningen. När du gjort det kan du påbörja en ny sammanslagning.\n"
+
+#~ msgid ""
+#~ "You are in the middle of a change.\n"
+#~ "\n"
+#~ "File %s is modified.\n"
+#~ "\n"
+#~ "You should complete the current commit before starting a merge.  Doing so "
+#~ "will help you abort a failed merge, should the need arise.\n"
+#~ msgstr ""
+#~ "Du är mitt i en ändring.\n"
+#~ "\n"
+#~ "Filen %s har ändringar.\n"
+#~ "\n"
+#~ "Du bör fullborda den aktuella incheckningen innan du påbörjar en "
+#~ "sammanslagning. Om du gör det blir det enklare att avbryta en misslyckad "
+#~ "sammanslagning, om det skulle vara nödvändigt.\n"
+
+#~ msgid "%s of %s"
+#~ msgstr "%s av %s"
+
+#~ msgid "Merging %s and %s..."
+#~ msgstr "Slår ihop %s och %s..."
+
+#~ msgid "Merge completed successfully."
+#~ msgstr "Sammanslagningen avslutades framgångsrikt."
+
+#~ msgid "Merge failed.  Conflict resolution is required."
+#~ msgstr "Sammanslagningen misslyckades. Du måste lösa konflikterna."
+
+#~ msgid ""
+#~ "Cannot abort while amending.\n"
+#~ "\n"
+#~ "You must finish amending this commit.\n"
+#~ msgstr ""
+#~ "Kan inte avbryta vid utökning.\n"
+#~ "\n"
+#~ "Du måste göra dig färdig med att utöka incheckningen.\n"
+
+#~ msgid ""
+#~ "Reset changes?\n"
+#~ "\n"
+#~ "Resetting the changes will cause *ALL* uncommitted changes to be lost.\n"
+#~ "\n"
+#~ "Continue with resetting the current changes?"
+#~ msgstr ""
+#~ "Återställ ändringar?\n"
+#~ "\n"
+#~ "Om du återställer ändringarna kommer *ALLA* ej incheckade ändringar att "
+#~ "gå förlorade.\n"
+#~ "\n"
+#~ "Gå vidare med att återställa de aktuella ändringarna?"
+
+#~ msgid "files reset"
+#~ msgstr "filer återställda"
+
+#~ msgid "Abort failed."
+#~ msgstr "Misslyckades avbryta."
+
+#~ msgid "Abort completed.  Ready."
+#~ msgstr "Avbrytning fullbordad. Redo."
+
+#~ msgid "Restore Defaults"
+#~ msgstr "Återställ standardvärden"
+
+#~ msgid "%s Repository"
+#~ msgstr "Arkivet %s"
+
+#~ msgid "Prune Tracking Branches During Fetch"
+#~ msgstr "Städa spårade grenar vid hämtning"
+
+#~ msgid "Match Tracking Branches"
+#~ msgstr "Matcha spårade grenar"
+
+#~ msgid "New Branch Name Template"
+#~ msgstr "Mall för namn på nya grenar"
+
+#~ msgid "Spelling Dictionary:"
+#~ msgstr "Stavningsordlista:"
+
+#~ msgid "Change Font"
+#~ msgstr "Byt teckensnitt"
+
+#~ msgid "pt."
+#~ msgstr "p."
+
+#~ msgid "Failed to completely save options:"
+#~ msgstr "Misslyckades med att helt spara alternativ:"
+
+#~ msgid "From Repository"
+#~ msgstr "Från arkiv"
+
+#~ msgid "Remote:"
+#~ msgstr "Fjärr:"
+
+#~ msgid "Arbitrary URL:"
+#~ msgstr "Godtycklig webbadress:"
+
+#~ msgid "Delete Only If"
+#~ msgstr "Ta endast bort om"
+
+#~ msgid "Merged Into:"
+#~ msgstr "Sammanslagen i:"
+
+#~ msgid "Always (Do not perform merge checks)"
+#~ msgstr "Alltid (utför inte sammanslagningstest)"
+
+#~ msgid "A branch is required for 'Merged Into'."
+#~ msgstr "En gren krävs för \"Sammanslagen i\"."
+
+#~ msgid ""
+#~ "The following branches are not completely merged into %s:\n"
+#~ "\n"
+#~ " - %s"
+#~ msgstr ""
+#~ "Följande grenar har inte helt slagits samman i %s:\n"
+#~ "\n"
+#~ " - %s"
+
+#~ msgid ""
+#~ "One or more of the merge tests failed because you have not fetched the "
+#~ "necessary commits.  Try fetching from %s first."
+#~ msgstr ""
+#~ "En eller flera av sammanslagningstesterna misslyckades eftersom du inte "
+#~ "har hämtat de nödvändiga incheckningarna. Försök hämta från %s först."
+
+#~ msgid "Please select one or more branches to delete."
+#~ msgstr "Välj en eller flera grenar att ta bort."
+
+#~ msgid ""
+#~ "Recovering deleted branches is difficult.\n"
+#~ "\n"
+#~ "Delete the selected branches?"
+#~ msgstr ""
+#~ "Det kan vara svårt att återställa borttagna grenar.\n"
+#~ "\n"
+#~ "Ta bort de valda grenarna?"
+
+#~ msgid "Prune from"
+#~ msgstr "Ta bort från"
+
+#~ msgid "Fetch from"
+#~ msgstr "Hämta från"
+
+#~ msgid "Push to"
+#~ msgstr "Sänd till"
+
+#~ msgid "Cannot write shortcut:"
+#~ msgstr "Kan inte skriva genväg:"
+
+#~ msgid "Unsupported spell checker"
+#~ msgstr "Stavningskontrollprogrammet stöds inte"
+
+#~ msgid "Spell checking is unavailable"
+#~ msgstr "Stavningskontroll är ej tillgänglig"
+
+#~ msgid "Invalid spell checking configuration"
+#~ msgstr "Ogiltig inställning för stavningskontroll"
+
+#~ msgid "Reverting dictionary to %s."
+#~ msgstr "Återställer ordlistan till %s."
+
+#~ msgid "Spell checker silently failed on startup"
+#~ msgstr "Stavningskontroll misslyckades tyst vid start"
+
+#~ msgid "Unrecognized spell checker"
+#~ msgstr "Stavningskontrollprogrammet känns inte igen"
+
+#~ msgid "No Suggestions"
+#~ msgstr "Inga förslag"
+
+#~ msgid "Unexpected EOF from spell checker"
+#~ msgstr "Oväntat filslut från stavningskontroll"
+
+#~ msgid "Spell Checker Failed"
+#~ msgstr "Stavningskontroll misslyckades"
+
+#~ msgid "%s ... %*i of %*i %s (%3i%%)"
+#~ msgstr "%s... %*i av %*i %s (%3i%%)"
+
+#~ msgid "Fetching new changes from %s"
+#~ msgstr "Hämtar nya ändringar från %s"
+
+#~ msgid "remote prune %s"
+#~ msgstr "fjärrborttagning %s"
+
+#~ msgid "Pruning tracking branches deleted from %s"
+#~ msgstr "Tar bort spårande grenar som tagits bort från %s"
+
+#~ msgid "push %s"
+#~ msgstr "sänd %s"
+
+#~ msgid "Pushing %s %s to %s"
+#~ msgstr "Sänder %s %s till %s"
+
+#~ msgid "Push Branches"
+#~ msgstr "Sänder grenar"
+
+#~ msgid "Source Branches"
+#~ msgstr "Källgrenar"
+
+#~ msgid "Destination Repository"
+#~ msgstr "Destinationsarkiv"
+
+#~ msgid "Transfer Options"
+#~ msgstr "Överföringsalternativ"
+
+#~ msgid "Force overwrite existing branch (may discard changes)"
+#~ msgstr "Tvinga överskrivning av befintlig gren (kan kasta bort ändringar)"
+
+#~ msgid "Use thin pack (for slow network connections)"
+#~ msgstr "Använd tunt paket (för långsamma nätverksanslutningar)"
 
 #~ msgid "Not connected to aspell"
 #~ msgstr "Inte ansluten till aspell"

@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: git-gui\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-14 07:18+0100\n"
+"POT-Creation-Date: 2013-02-26 23:01-0800\n"
 "PO-Revision-Date: 2007-07-21 01:23-0700\n"
 "Last-Translator: Eric Miao <eric.y.miao@gmail.com>\n"
 "Language-Team: Chinese\n"
@@ -33,1236 +33,1267 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: git-gui.sh:41 git-gui.sh:634 git-gui.sh:648 git-gui.sh:661 git-gui.sh:744
-#: git-gui.sh:763
-msgid "git-gui: fatal error"
-msgstr "git-gui: 致命错误"
-
-#: git-gui.sh:593
-#, tcl-format
-msgid "Invalid font specified in %s:"
-msgstr "%s 中指定的字体无效:"
-
-#: git-gui.sh:620
-msgid "Main Font"
-msgstr "主要字体"
-
-#: git-gui.sh:621
-msgid "Diff/Console Font"
-msgstr "Diff/控制终端字体"
-
-#: git-gui.sh:635
-msgid "Cannot find git in PATH."
-msgstr "PATH 中没有找到 git"
-
-#: git-gui.sh:662
-msgid "Cannot parse Git version string:"
-msgstr "无法解析 Git 的版本信息:"
-
-#: git-gui.sh:680
-#, tcl-format
-msgid ""
-"Git version cannot be determined.\n"
-"\n"
-"%s claims it is version '%s'.\n"
-"\n"
-"%s requires at least Git 1.5.0 or later.\n"
-"\n"
-"Assume '%s' is version 1.5.0?\n"
-msgstr ""
-"无法确定 Git 的版本.\n"
-"\n"
-"%s 声明其版本为 '%s'.\n"
-"\n"
-"而 %s 需要 1.5.0 或这以后的 Git 版本.\n"
-"\n"
-"是否假定 '%s' 为版本 1.5.0?\n"
-
-#: git-gui.sh:918
-msgid "Git directory not found:"
-msgstr "Git 目录无法找到:"
-
-#: git-gui.sh:925
-msgid "Cannot move to top of working directory:"
-msgstr "无法移动到工作根目录:"
-
-#: git-gui.sh:932
-msgid "Cannot use funny .git directory:"
-msgstr "无法使用 .git 目录:"
-
-#: git-gui.sh:937
-msgid "No working directory"
-msgstr "没有工作目录"
-
-#: git-gui.sh:1084 lib/checkout_op.tcl:283
-msgid "Refreshing file status..."
-msgstr "更新文件状态..."
-
-#: git-gui.sh:1149
-msgid "Scanning for modified files ..."
-msgstr "扫描修改过的文件 ..."
-
-#: git-gui.sh:1324 lib/browser.tcl:246
-msgid "Ready."
-msgstr "就绪"
-
-#: git-gui.sh:1590
-msgid "Unmodified"
-msgstr "未修改"
-
-#: git-gui.sh:1592
-msgid "Modified, not staged"
-msgstr "修改但未缓存"
-
-#: git-gui.sh:1593 git-gui.sh:1598
-msgid "Staged for commit"
-msgstr "缓存为提交"
-
-#: git-gui.sh:1594 git-gui.sh:1599
-msgid "Portions staged for commit"
-msgstr "部分缓存为提交"
-
-#: git-gui.sh:1595 git-gui.sh:1600
-msgid "Staged for commit, missing"
-msgstr "缓存为提交, 不存在"
-
-#: git-gui.sh:1597
-msgid "Untracked, not staged"
-msgstr "未跟踪, 未缓存"
-
-#: git-gui.sh:1602
-msgid "Missing"
-msgstr "不存在"
-
-#: git-gui.sh:1603
-msgid "Staged for removal"
-msgstr "缓存为删除"
-
-#: git-gui.sh:1604
-msgid "Staged for removal, still present"
-msgstr "缓存为删除, 但仍存在"
-
-#: git-gui.sh:1606 git-gui.sh:1607 git-gui.sh:1608 git-gui.sh:1609
-msgid "Requires merge resolution"
-msgstr "需要解决合并冲突"
-
-#: git-gui.sh:1644
-msgid "Starting gitk... please wait..."
-msgstr "启动 gitk... 请等待..."
-
-#: git-gui.sh:1653
-#, tcl-format
-msgid ""
-"Unable to start gitk:\n"
-"\n"
-"%s does not exist"
-msgstr ""
-"无法启动 gitk:\n"
-"\n"
-"%s 不存在"
-
-#: git-gui.sh:1860 lib/choose_repository.tcl:36
-msgid "Repository"
-msgstr "版本库(repository)"
-
-#: git-gui.sh:1861
-msgid "Edit"
-msgstr "编辑"
-
-#: git-gui.sh:1863 lib/choose_rev.tcl:561
-msgid "Branch"
-msgstr "分支(branch)"
-
-#: git-gui.sh:1866 lib/choose_rev.tcl:548
-msgid "Commit@@noun"
-msgstr "提交(commit)"
-
-#: git-gui.sh:1869 lib/merge.tcl:120 lib/merge.tcl:149 lib/merge.tcl:167
-msgid "Merge"
-msgstr "合并(merge)"
-
-#: git-gui.sh:1870 lib/choose_rev.tcl:557
-msgid "Remote"
-msgstr "远端(remote)"
-
-#: git-gui.sh:1879
-msgid "Browse Current Branch's Files"
-msgstr "浏览当前分支上的文件"
-
-#: git-gui.sh:1883
-msgid "Browse Branch Files..."
-msgstr "浏览分支上的文件..."
-
-#: git-gui.sh:1888
-msgid "Visualize Current Branch's History"
-msgstr "图示当前分支的历史"
-
-#: git-gui.sh:1892
-msgid "Visualize All Branch History"
-msgstr "图示所有分支的历史"
-
-#: git-gui.sh:1899
-#, tcl-format
-msgid "Browse %s's Files"
-msgstr "浏览 %s 上的文件"
-
-#: git-gui.sh:1901
-#, tcl-format
-msgid "Visualize %s's History"
-msgstr "图示 %s 分支的历史"
-
-#: git-gui.sh:1906 lib/database.tcl:27 lib/database.tcl:67
-msgid "Database Statistics"
-msgstr "数据库统计信息"
-
-#: git-gui.sh:1909 lib/database.tcl:34
-msgid "Compress Database"
-msgstr "压缩数据库"
-
-#: git-gui.sh:1912
-msgid "Verify Database"
-msgstr "验证数据库"
-
-#: git-gui.sh:1919 git-gui.sh:1923 git-gui.sh:1927 lib/shortcut.tcl:7
-#: lib/shortcut.tcl:39 lib/shortcut.tcl:71
-msgid "Create Desktop Icon"
-msgstr "创建桌面图标"
-
-#: git-gui.sh:1932 lib/choose_repository.tcl:177 lib/choose_repository.tcl:185
-msgid "Quit"
-msgstr "退出"
-
-#: git-gui.sh:1939
-msgid "Undo"
-msgstr "撤销"
-
-#: git-gui.sh:1942
-msgid "Redo"
-msgstr "重做"
-
-#: git-gui.sh:1946 git-gui.sh:2443
-msgid "Cut"
-msgstr "剪切"
-
-#: git-gui.sh:1949 git-gui.sh:2446 git-gui.sh:2520 git-gui.sh:2614
-#: lib/console.tcl:69
-msgid "Copy"
-msgstr "复制"
-
-#: git-gui.sh:1952 git-gui.sh:2449
-msgid "Paste"
-msgstr "粘贴"
-
-#: git-gui.sh:1955 git-gui.sh:2452 lib/branch_delete.tcl:26
-#: lib/remote_branch_delete.tcl:38
-msgid "Delete"
-msgstr "删除"
-
-#: git-gui.sh:1959 git-gui.sh:2456 git-gui.sh:2618 lib/console.tcl:71
-msgid "Select All"
-msgstr "全选"
-
-#: git-gui.sh:1968
-msgid "Create..."
-msgstr "新建..."
-
-#: git-gui.sh:1974
-msgid "Checkout..."
-msgstr "Checkout..."
-
-#: git-gui.sh:1980
-msgid "Rename..."
-msgstr "更名..."
-
-#: git-gui.sh:1985 git-gui.sh:2085
-msgid "Delete..."
-msgstr "删除..."
-
-#: git-gui.sh:1990
-msgid "Reset..."
-msgstr "复位(Reset)..."
-
-#: git-gui.sh:2002 git-gui.sh:2389
-msgid "New Commit"
-msgstr "新建提交"
-
-#: git-gui.sh:2010 git-gui.sh:2396
-msgid "Amend Last Commit"
-msgstr "修正上次提交"
-
-#: git-gui.sh:2019 git-gui.sh:2356 lib/remote_branch_delete.tcl:99
-msgid "Rescan"
-msgstr "重新扫描"
-
-#: git-gui.sh:2025
-msgid "Stage To Commit"
-msgstr "缓存为提交"
-
-#: git-gui.sh:2031
-msgid "Stage Changed Files To Commit"
-msgstr "缓存修改的文件为提交"
-
-#: git-gui.sh:2037
-msgid "Unstage From Commit"
-msgstr "从本次提交撤除"
-
-#: git-gui.sh:2042 lib/index.tcl:395
-msgid "Revert Changes"
-msgstr "撤销修改"
-
-#: git-gui.sh:2049 git-gui.sh:2368 git-gui.sh:2467
-msgid "Sign Off"
-msgstr "签名(Sign Off)"
-
-#: git-gui.sh:2053 git-gui.sh:2372
-msgid "Commit@@verb"
-msgstr "提交"
-
-#: git-gui.sh:2064
-msgid "Local Merge..."
-msgstr "本地合并..."
-
-#: git-gui.sh:2069
-msgid "Abort Merge..."
-msgstr "中止合并..."
-
-#: git-gui.sh:2081
-msgid "Push..."
-msgstr "上传..."
-
-#: git-gui.sh:2092 lib/choose_repository.tcl:41
-msgid "Apple"
-msgstr "苹果"
-
-#: git-gui.sh:2095 git-gui.sh:2117 lib/about.tcl:14
-#: lib/choose_repository.tcl:44 lib/choose_repository.tcl:50
-#, tcl-format
-msgid "About %s"
-msgstr "关于 %s"
-
-#: git-gui.sh:2099
-msgid "Preferences..."
-msgstr "首选项..."
-
-#: git-gui.sh:2107 git-gui.sh:2639
-msgid "Options..."
-msgstr "选项..."
-
-#: git-gui.sh:2113 lib/choose_repository.tcl:47
-msgid "Help"
-msgstr "帮助"
-
-#: git-gui.sh:2154
-msgid "Online Documentation"
-msgstr "在线文档"
-
-#: git-gui.sh:2238
-#, tcl-format
-msgid "fatal: cannot stat path %s: No such file or directory"
-msgstr "致命错误: 无法获取路径 %s 的信息: 该文件或目录不存在"
-
-#: git-gui.sh:2271
-msgid "Current Branch:"
-msgstr "当前分支:"
-
-#: git-gui.sh:2292
-msgid "Staged Changes (Will Commit)"
-msgstr "已缓存的改动 (将被提交)"
-
-#: git-gui.sh:2312
-msgid "Unstaged Changes"
-msgstr "未缓存的改动"
-
-#: git-gui.sh:2362
-msgid "Stage Changed"
-msgstr "缓存改动"
-
-#: git-gui.sh:2378 lib/transport.tcl:93 lib/transport.tcl:182
-msgid "Push"
-msgstr "上传"
-
-#: git-gui.sh:2408
-msgid "Initial Commit Message:"
-msgstr "初始的提交描述:"
-
-#: git-gui.sh:2409
-msgid "Amended Commit Message:"
-msgstr "修正的提交描述:"
-
-#: git-gui.sh:2410
-msgid "Amended Initial Commit Message:"
-msgstr "修正的初始提交描述:"
-
-#: git-gui.sh:2411
-msgid "Amended Merge Commit Message:"
-msgstr "修正的合并提交描述:"
-
-#: git-gui.sh:2412
-msgid "Merge Commit Message:"
-msgstr "合并提交描述:"
-
-#: git-gui.sh:2413
-msgid "Commit Message:"
-msgstr "提交描述:"
-
-#: git-gui.sh:2459 git-gui.sh:2622 lib/console.tcl:73
-msgid "Copy All"
-msgstr "全部复制"
-
-#: git-gui.sh:2483 lib/blame.tcl:107
-msgid "File:"
-msgstr "文件:"
-
-#: git-gui.sh:2589
-msgid "Apply/Reverse Hunk"
-msgstr "应用/撤消此修改块"
-
-#: git-gui.sh:2595
-msgid "Show Less Context"
-msgstr "显示更少上下文"
-
-#: git-gui.sh:2602
-msgid "Show More Context"
-msgstr "显示更多上下文"
-
-#: git-gui.sh:2610
-msgid "Refresh"
-msgstr "刷新"
-
-#: git-gui.sh:2631
-msgid "Decrease Font Size"
-msgstr "缩小字体"
-
-#: git-gui.sh:2635
-msgid "Increase Font Size"
-msgstr "放大字体"
-
-#: git-gui.sh:2646
-msgid "Unstage Hunk From Commit"
-msgstr "从提交中撤除修改块"
-
-#: git-gui.sh:2648
-msgid "Stage Hunk For Commit"
-msgstr "缓存修改块为提交"
-
-#: git-gui.sh:2667
-msgid "Initializing..."
-msgstr "初始化..."
-
-#: git-gui.sh:2762
-#, tcl-format
-msgid ""
-"Possible environment issues exist.\n"
-"\n"
-"The following environment variables are probably\n"
-"going to be ignored by any Git subprocess run\n"
-"by %s:\n"
-"\n"
-msgstr ""
-"可能存在环境变量的问题.\n"
-"\n"
-"由 %s 执行的 Git 子进程可能忽略下列环境变量:\n"
-"\n"
-
-#: git-gui.sh:2792
-msgid ""
-"\n"
-"This is due to a known issue with the\n"
-"Tcl binary distributed by Cygwin."
-msgstr ""
-"\n"
-"这是由 Cygwin 发布的 Tcl 代码中一个\n"
-"已知问题所引起."
-
-#: git-gui.sh:2797
-#, tcl-format
-msgid ""
-"\n"
-"\n"
-"A good replacement for %s\n"
-"is placing values for the user.name and\n"
-"user.email settings into your personal\n"
-"~/.gitconfig file.\n"
-msgstr ""
-"\n"
-"\n"
-"%s 的一个很好的替代方案是将 user.name 以及\n"
-"user.email 设置放在你的个人 ~/.gitconfig 文件中.\n"
-
-#: lib/about.tcl:26
-msgid "git-gui - a graphical user interface for Git."
-msgstr "git-gui - Git 的图形化用户界面"
-
-#: lib/blame.tcl:77
-msgid "File Viewer"
-msgstr "文件查看器"
-
-#: lib/blame.tcl:81
-msgid "Commit:"
-msgstr "提交:"
-
-#: lib/blame.tcl:264
-msgid "Copy Commit"
-msgstr "复制提交"
-
-#: lib/blame.tcl:384
-#, tcl-format
-msgid "Reading %s..."
-msgstr "读取 %s..."
-
-#: lib/blame.tcl:488
-msgid "Loading copy/move tracking annotations..."
-msgstr "装载复制/移动跟踪标注..."
-
-#: lib/blame.tcl:508
-msgid "lines annotated"
-msgstr "标注行"
-
-#: lib/blame.tcl:689
-msgid "Loading original location annotations..."
-msgstr "装载原始位置标注..."
-
-#: lib/blame.tcl:692
-msgid "Annotation complete."
-msgstr "标注完成."
-
-#: lib/blame.tcl:746
-msgid "Loading annotation..."
-msgstr "裝載标注..."
-
-#: lib/blame.tcl:802
-msgid "Author:"
-msgstr "作者:"
-
-#: lib/blame.tcl:806
-msgid "Committer:"
-msgstr "提交者:"
-
-#: lib/blame.tcl:811
-msgid "Original File:"
-msgstr "原始文件:"
-
-#: lib/blame.tcl:925
-msgid "Originally By:"
-msgstr "最初由:"
-
-#: lib/blame.tcl:931
-msgid "In File:"
-msgstr "在文件:"
-
-#: lib/blame.tcl:936
-msgid "Copied Or Moved Here By:"
-msgstr "由复制或移动至此:"
-
-#: lib/branch_checkout.tcl:14 lib/branch_checkout.tcl:19
-msgid "Checkout Branch"
-msgstr "Checkout 分支"
-
-#: lib/branch_checkout.tcl:23
-msgid "Checkout"
-msgstr "Checkout"
-
-#: lib/branch_checkout.tcl:27 lib/branch_create.tcl:35
-#: lib/branch_delete.tcl:32 lib/branch_rename.tcl:30 lib/browser.tcl:282
-#: lib/checkout_op.tcl:522 lib/choose_font.tcl:43 lib/merge.tcl:171
-#: lib/option.tcl:103 lib/remote_branch_delete.tcl:42 lib/transport.tcl:97
-msgid "Cancel"
-msgstr "取消"
-
-#: lib/branch_checkout.tcl:32 lib/browser.tcl:287
-msgid "Revision"
-msgstr "版本"
-
-#: lib/branch_checkout.tcl:36 lib/branch_create.tcl:69 lib/option.tcl:242
-msgid "Options"
-msgstr "选项..."
-
-#: lib/branch_checkout.tcl:39 lib/branch_create.tcl:92
-msgid "Fetch Tracking Branch"
-msgstr "获取跟踪分支"
-
-#: lib/branch_checkout.tcl:44
-msgid "Detach From Local Branch"
-msgstr "从本地分支脱离"
-
-#: lib/branch_create.tcl:22
-msgid "Create Branch"
-msgstr "创建分支"
-
-#: lib/branch_create.tcl:27
-msgid "Create New Branch"
-msgstr "新建分支"
-
-#: lib/branch_create.tcl:31 lib/choose_repository.tcl:371
-msgid "Create"
-msgstr "新建"
-
-#: lib/branch_create.tcl:40
-msgid "Branch Name"
-msgstr "分支名"
-
-#: lib/branch_create.tcl:43
-msgid "Name:"
-msgstr "名字:"
-
-#: lib/branch_create.tcl:58
-msgid "Match Tracking Branch Name"
-msgstr "匹配跟踪分支名字"
-
-#: lib/branch_create.tcl:66
-msgid "Starting Revision"
-msgstr "起始版本"
-
-#: lib/branch_create.tcl:72
-msgid "Update Existing Branch:"
-msgstr "更新已有分支:"
-
-#: lib/branch_create.tcl:75
-msgid "No"
-msgstr "号码"
-
-#: lib/branch_create.tcl:80
-msgid "Fast Forward Only"
-msgstr "仅快速合并"
-
-#: lib/branch_create.tcl:85 lib/checkout_op.tcl:514
-msgid "Reset"
-msgstr "复位"
-
-#: lib/branch_create.tcl:97
-msgid "Checkout After Creation"
-msgstr "在创建后Checkout"
-
-#: lib/branch_create.tcl:131
-msgid "Please select a tracking branch."
-msgstr "请选择某个跟踪分支."
-
-#: lib/branch_create.tcl:140
-#, tcl-format
-msgid "Tracking branch %s is not a branch in the remote repository."
-msgstr "跟踪分支 %s 并不是远端版本库中的一个分支"
-
-#: lib/branch_create.tcl:153 lib/branch_rename.tcl:86
-msgid "Please supply a branch name."
-msgstr "请提供分支名字."
-
-#: lib/branch_create.tcl:164 lib/branch_rename.tcl:106
-#, tcl-format
-msgid "'%s' is not an acceptable branch name."
-msgstr "'%s'不是一个可接受的分支名."
-
-#: lib/branch_delete.tcl:15
-msgid "Delete Branch"
-msgstr "删除分支"
-
-#: lib/branch_delete.tcl:20
-msgid "Delete Local Branch"
-msgstr "删除本地分支"
-
-#: lib/branch_delete.tcl:37
-msgid "Local Branches"
-msgstr "本地分支"
-
-#: lib/branch_delete.tcl:52
-msgid "Delete Only If Merged Into"
-msgstr "仅在合并后删除"
-
-#: lib/branch_delete.tcl:54
-msgid "Always (Do not perform merge test.)"
-msgstr "总是合并 (不作合并测试.)"
-
-#: lib/branch_delete.tcl:103
-#, tcl-format
-msgid "The following branches are not completely merged into %s:"
-msgstr "下列分支没有完全被合并到 %s:"
-
-#: lib/branch_delete.tcl:115
-msgid ""
-"Recovering deleted branches is difficult. \n"
-"\n"
-" Delete the selected branches?"
-msgstr ""
-"恢复被删除的分支非常困难.\n"
-"\n"
-"是否要删除所选分支?"
-
-#: lib/branch_delete.tcl:141
-#, tcl-format
-msgid ""
-"Failed to delete branches:\n"
-"%s"
-msgstr ""
-"无法删除分支:\n"
-"%s"
-
-#: lib/branch_rename.tcl:14 lib/branch_rename.tcl:22
-msgid "Rename Branch"
-msgstr "更改分支名:"
-
-#: lib/branch_rename.tcl:26
-msgid "Rename"
-msgstr "更名..."
-
-#: lib/branch_rename.tcl:36
-msgid "Branch:"
-msgstr "分支:"
-
-#: lib/branch_rename.tcl:39
-msgid "New Name:"
-msgstr "新名字:"
-
-#: lib/branch_rename.tcl:75
-msgid "Please select a branch to rename."
-msgstr "请选择分支更名."
-
-#: lib/branch_rename.tcl:96 lib/checkout_op.tcl:179
-#, tcl-format
-msgid "Branch '%s' already exists."
-msgstr "分支 '%s' 已经存在."
-
-#: lib/branch_rename.tcl:117
-#, tcl-format
-msgid "Failed to rename '%s'."
-msgstr "无法更名 '%s'."
-
-#: lib/browser.tcl:17
-msgid "Starting..."
-msgstr "开始..."
-
-#: lib/browser.tcl:26
-msgid "File Browser"
-msgstr "文件浏览器"
-
-#: lib/browser.tcl:126 lib/browser.tcl:143
-#, tcl-format
-msgid "Loading %s..."
-msgstr "装载 %s..."
-
-#: lib/browser.tcl:187
-msgid "[Up To Parent]"
-msgstr "[上层目录]"
-
-#: lib/browser.tcl:267 lib/browser.tcl:273
-msgid "Browse Branch Files"
-msgstr "浏览分支文件"
-
-#: lib/browser.tcl:278 lib/choose_repository.tcl:387
-#: lib/choose_repository.tcl:474 lib/choose_repository.tcl:484
-#: lib/choose_repository.tcl:987
-msgid "Browse"
-msgstr "浏览"
-
-#: lib/checkout_op.tcl:79
-#, tcl-format
-msgid "Fetching %s from %s"
-msgstr "获取 %s 自 %s"
-
-#: lib/checkout_op.tcl:127
-#, tcl-format
-msgid "fatal: Cannot resolve %s"
-msgstr "致命错误: 无法解决 %s"
-
-#: lib/checkout_op.tcl:140 lib/console.tcl:81 lib/database.tcl:31
-msgid "Close"
-msgstr "关闭"
-
-#: lib/checkout_op.tcl:169
-#, tcl-format
-msgid "Branch '%s' does not exist."
-msgstr "分支 '%s' 并不存在."
-
-#: lib/checkout_op.tcl:206
-#, tcl-format
-msgid ""
-"Branch '%s' already exists.\n"
-"\n"
-"It cannot fast-forward to %s.\n"
-"A merge is required."
-msgstr ""
-"分支 '%s' 已经存在.\n"
-"\n"
-"无法快速合并到 %s.\n"
-"需要普通合并."
-
-#: lib/checkout_op.tcl:220
-#, tcl-format
-msgid "Merge strategy '%s' not supported."
-msgstr "合并策略 '%s' 不支持."
-
-#: lib/checkout_op.tcl:239
-#, tcl-format
-msgid "Failed to update '%s'."
-msgstr "无法更新 '%s'."
-
-#: lib/checkout_op.tcl:251
-msgid "Staging area (index) is already locked."
-msgstr "缓存区域 (index) 已被锁定."
-
-#: lib/checkout_op.tcl:266
-msgid ""
-"Last scanned state does not match repository state.\n"
-"\n"
-"Another Git program has modified this repository since the last scan.  A "
-"rescan must be performed before the current branch can be changed.\n"
-"\n"
-"The rescan will be automatically started now.\n"
-msgstr ""
-"最后一次扫描的状态和当前版本库状态不符.\n"
-"\n"
-"另一 Git 程序自上次扫描后修改了本版本库. 在修改当前分支之前需要重新做一次扫"
-"描.\n"
-"\n"
-"重新扫描将自动开始.\n"
-
-#: lib/checkout_op.tcl:322
-#, tcl-format
-msgid "Updating working directory to '%s'..."
-msgstr "更新工作目录到 '%s'..."
-
-#: lib/checkout_op.tcl:323
-msgid "files checked out"
+#: cola/bookmarks.py:32
+msgid "Bookmarks"
 msgstr ""
 
-#: lib/checkout_op.tcl:353
-#, tcl-format
-msgid "Aborted checkout of '%s' (file level merging is required)."
-msgstr "中止 '%s' 的 checkout 操作 (需要做文件级合并)."
-
-#: lib/checkout_op.tcl:354
-msgid "File level merge required."
-msgstr "需要文件级合并."
-
-#: lib/checkout_op.tcl:358
-#, tcl-format
-msgid "Staying on branch '%s'."
-msgstr "停留在分支 '%s'."
-
-#: lib/checkout_op.tcl:429
-msgid ""
-"You are no longer on a local branch.\n"
-"\n"
-"If you wanted to be on a branch, create one now starting from 'This Detached "
-"Checkout'."
-msgstr ""
-"你不在某个本地分支上.\n"
-"\n"
-"如果你想位于某分支上, 从当前脱节的Checkout中创建一个新分支."
-
-#: lib/checkout_op.tcl:446 lib/checkout_op.tcl:450
-#, tcl-format
-msgid "Checked out '%s'."
-msgstr "'%s' 已被 checkout"
-
-#: lib/checkout_op.tcl:478
-#, tcl-format
-msgid "Resetting '%s' to '%s' will lose the following commits:"
-msgstr "复位 '%s' 到 '%s' 将导致下列提交的丢失:"
-
-#: lib/checkout_op.tcl:500
-msgid "Recovering lost commits may not be easy."
-msgstr "恢复丢失的提交是比较困难的."
-
-#: lib/checkout_op.tcl:505
-#, tcl-format
-msgid "Reset '%s'?"
-msgstr "复位 '%s'?"
-
-#: lib/checkout_op.tcl:510 lib/merge.tcl:163
-msgid "Visualize"
-msgstr "图示"
-
-#: lib/checkout_op.tcl:578
-#, tcl-format
-msgid ""
-"Failed to set current branch.\n"
-"\n"
-"This working directory is only partially switched.  We successfully updated "
-"your files, but failed to update an internal Git file.\n"
-"\n"
-"This should not have occurred.  %s will now close and give up."
-msgstr ""
-"无法设定当前分支.\n"
-"\n"
-"当前工作目录仅有部分被切换出, 我们已成功的更新了您的文件但是无法更新某个内部"
-"的Git文件.\n"
-"\n"
-"这本不该发生, %s 将关闭并放弃."
-
-#: lib/choose_font.tcl:39
-msgid "Select"
-msgstr "选择"
-
-#: lib/choose_font.tcl:53
-msgid "Font Family"
-msgstr "字体族"
-
-#: lib/choose_font.tcl:74
-msgid "Font Size"
-msgstr "字体大小"
-
-#: lib/choose_font.tcl:91
-msgid "Font Example"
-msgstr "字体样例"
-
-#: lib/choose_font.tcl:103
-msgid ""
-"This is example text.\n"
-"If you like this text, it can be your font."
-msgstr ""
-"这是样例文本.\n"
-"如果你喜欢, 你可以设置该字体."
-
-#: lib/choose_repository.tcl:28
-msgid "Git Gui"
-msgstr "Git Gui"
-
-#: lib/choose_repository.tcl:81 lib/choose_repository.tcl:376
-msgid "Create New Repository"
-msgstr "创建新的版本库"
-
-#: lib/choose_repository.tcl:87
-msgid "New..."
-msgstr "新建..."
-
-#: lib/choose_repository.tcl:94 lib/choose_repository.tcl:460
-msgid "Clone Existing Repository"
-msgstr "克隆已有版本库"
-
-#: lib/choose_repository.tcl:100
-msgid "Clone..."
-msgstr "克隆..."
-
-#: lib/choose_repository.tcl:107 lib/choose_repository.tcl:976
-msgid "Open Existing Repository"
-msgstr "打开已有版本库"
-
-#: lib/choose_repository.tcl:113
-msgid "Open..."
-msgstr "打开..."
-
-#: lib/choose_repository.tcl:126
-msgid "Recent Repositories"
-msgstr "最近版本库"
-
-#: lib/choose_repository.tcl:132
-msgid "Open Recent Repository:"
-msgstr "打开最近版本库"
-
-#: lib/choose_repository.tcl:296 lib/choose_repository.tcl:303
-#: lib/choose_repository.tcl:310
-#, tcl-format
-msgid "Failed to create repository %s:"
-msgstr "无法创建版本库 %s:"
-
-#: lib/choose_repository.tcl:381 lib/choose_repository.tcl:478
-msgid "Directory:"
-msgstr "目录:"
-
-#: lib/choose_repository.tcl:412 lib/choose_repository.tcl:537
-#: lib/choose_repository.tcl:1011
-msgid "Git Repository"
-msgstr "Git 版本库"
-
-#: lib/choose_repository.tcl:437
-#, tcl-format
-msgid "Directory %s already exists."
-msgstr "目录 %s 已经存在."
-
-#: lib/choose_repository.tcl:441
-#, tcl-format
-msgid "File %s already exists."
-msgstr "文件 %s 已经存在."
-
-#: lib/choose_repository.tcl:455
-msgid "Clone"
-msgstr "克隆"
-
-#: lib/choose_repository.tcl:468
-msgid "URL:"
-msgstr "URL:"
-
-#: lib/choose_repository.tcl:489
-msgid "Clone Type:"
-msgstr "克隆类型:"
-
-#: lib/choose_repository.tcl:495
-msgid "Standard (Fast, Semi-Redundant, Hardlinks)"
-msgstr "标准方式 (快速, 部分备份, 作硬连接)"
-
-#: lib/choose_repository.tcl:501
-msgid "Full Copy (Slower, Redundant Backup)"
-msgstr "全部复制 (较慢, 做备份)"
-
-#: lib/choose_repository.tcl:507
-msgid "Shared (Fastest, Not Recommended, No Backup)"
-msgstr "共享方式 (最快, 不推荐, 不做备份)"
-
-#: lib/choose_repository.tcl:543 lib/choose_repository.tcl:590
-#: lib/choose_repository.tcl:736 lib/choose_repository.tcl:806
-#: lib/choose_repository.tcl:1017 lib/choose_repository.tcl:1025
-#, tcl-format
-msgid "Not a Git repository: %s"
-msgstr "不是一个 Git 版本库: %s"
-
-#: lib/choose_repository.tcl:579
-msgid "Standard only available for local repository."
-msgstr "标准方式仅当是本地版本库时有效."
-
-#: lib/choose_repository.tcl:583
-msgid "Shared only available for local repository."
-msgstr "共享方式仅当是本地版本库时有效."
-
-#: lib/choose_repository.tcl:604
-#, tcl-format
-msgid "Location %s already exists."
-msgstr "位置 %s 已经存在."
-
-#: lib/choose_repository.tcl:615
-msgid "Failed to configure origin"
-msgstr "无法配置 origin"
-
-#: lib/choose_repository.tcl:627
-msgid "Counting objects"
-msgstr "清点对象"
-
-#: lib/choose_repository.tcl:628
-#, fuzzy
-msgid "buckets"
-msgstr "水桶??"
-
-#: lib/choose_repository.tcl:652
-#, tcl-format
-msgid "Unable to copy objects/info/alternates: %s"
-msgstr "无法复制 objects/info/alternates: %s"
-
-#: lib/choose_repository.tcl:688
-#, tcl-format
-msgid "Nothing to clone from %s."
-msgstr "没有东西可从 %s 克隆."
-
-#: lib/choose_repository.tcl:690 lib/choose_repository.tcl:904
-#: lib/choose_repository.tcl:916
-msgid "The 'master' branch has not been initialized."
-msgstr "'master'分支尚未初始化."
-
-#: lib/choose_repository.tcl:703
-msgid "Hardlinks are unavailable.  Falling back to copying."
-msgstr "硬连接不可用. 使用复制."
-
-#: lib/choose_repository.tcl:715
-#, tcl-format
-msgid "Cloning from %s"
-msgstr "从 %s 克隆"
-
-#: lib/choose_repository.tcl:746
-msgid "Copying objects"
-msgstr "复制 objects"
-
-#: lib/choose_repository.tcl:747
-msgid "KiB"
-msgstr "KiB"
-
-#: lib/choose_repository.tcl:771
-#, tcl-format
-msgid "Unable to copy object: %s"
-msgstr "无法复制 object: %s"
-
-#: lib/choose_repository.tcl:781
-msgid "Linking objects"
-msgstr "链接 objects"
-
-#: lib/choose_repository.tcl:782
-msgid "objects"
-msgstr "objects"
-
-#: lib/choose_repository.tcl:790
-#, tcl-format
-msgid "Unable to hardlink object: %s"
-msgstr "无法硬链接 object: %s"
-
-#: lib/choose_repository.tcl:845
-msgid "Cannot fetch branches and objects.  See console output for details."
-msgstr "无法获取分支和对象. 请查看控制终端的输出."
-
-#: lib/choose_repository.tcl:856
-msgid "Cannot fetch tags.  See console output for details."
-msgstr "无法获取标签. 请查看控制终端的输出."
-
-#: lib/choose_repository.tcl:880
-msgid "Cannot determine HEAD.  See console output for details."
-msgstr "无法确定 HEAD. 请查看控制终端的输出."
-
-#: lib/choose_repository.tcl:889
-#, tcl-format
-msgid "Unable to cleanup %s"
-msgstr "无法清理 %s"
-
-#: lib/choose_repository.tcl:895
-msgid "Clone failed."
-msgstr "克隆失败."
-
-#: lib/choose_repository.tcl:902
-msgid "No default branch obtained."
-msgstr "没有获取缺省分支"
-
-#: lib/choose_repository.tcl:913
-#, tcl-format
-msgid "Cannot resolve %s as a commit."
-msgstr "无法解析 %s 为提交."
-
-#: lib/choose_repository.tcl:925
-msgid "Creating working directory"
-msgstr "创建工作目录"
-
-#: lib/choose_repository.tcl:926 lib/index.tcl:65 lib/index.tcl:127
-#: lib/index.tcl:193
-msgid "files"
-msgstr "文件"
-
-#: lib/choose_repository.tcl:955
-msgid "Initial file checkout failed."
-msgstr "初始的文件checkout失败"
-
-#: lib/choose_repository.tcl:971
+#: cola/bookmarks.py:47
 msgid "Open"
 msgstr "打开"
 
-#: lib/choose_repository.tcl:981
-msgid "Repository:"
+#: cola/bookmarks.py:53
+msgid "Add"
+msgstr ""
+
+#: cola/bookmarks.py:58 cola/widgets/editremotes.py:127
+msgid "Delete"
+msgstr "删除"
+
+#: cola/bookmarks.py:65 cola/stash/view.py:42 cola/widgets/archive.py:65
+#: cola/widgets/browse.py:117
+msgid "Save"
+msgstr "保存"
+
+#: cola/bookmarks.py:71 cola/difftool.py:96 cola/qt.py:50 cola/qt.py:232
+#: cola/prefs/view.py:238 cola/stash/view.py:50 cola/stash/view.py:51
+#: cola/widgets/about.py:66 cola/widgets/about.py:125
+#: cola/widgets/browse.py:116 cola/widgets/cfgactions.py:87
+#: cola/widgets/cfgactions.py:239 cola/widgets/compare.py:94
+#: cola/widgets/createbranch.py:159 cola/widgets/createtag.py:104
+#: cola/widgets/editremotes.py:55 cola/widgets/grep.py:74
+#: cola/widgets/recent.py:75 cola/widgets/remote.py:157
+#: cola/widgets/search.py:81 cola/widgets/selectcommits.py:59
+#: cola/widgets/startup.py:44
+msgid "Close"
+msgstr "关闭"
+
+#: cola/bookmarks.py:102
+msgid "Bookmarks Saved"
+msgstr ""
+
+#: cola/bookmarks.py:103
+msgid "Successfully saved bookmarks"
+msgstr ""
+
+#: cola/bookmarks.py:107
+#, fuzzy
+msgid "Path to git repository"
+msgstr "不是一个 Git 版本库: %s"
+
+#: cola/bookmarks.py:108
+#, fuzzy
+msgid "Enter Git Repository"
+msgstr "Git 版本库"
+
+#: cola/cmds.py:100
+msgid "Amend"
+msgstr ""
+
+#: cola/cmds.py:135
+#, fuzzy
+msgid "Cannot Amend"
+msgstr "无法修改图标:"
+
+#: cola/cmds.py:136
+msgid ""
+"You are in the middle of a merge.\n"
+"Cannot amend while merging."
+msgstr ""
+
+#: cola/cmds.py:205
+#, python-format
+msgid "PATCH %(current)d/%(count)d"
+msgstr ""
+
+#: cola/cmds.py:209
+msgid "Summary:"
+msgstr ""
+
+#: cola/cmds.py:218
+msgid "Patch(es) Applied"
+msgstr ""
+
+#: cola/cmds.py:219
+#, python-format
+msgid "%d patch(es) applied."
+msgstr ""
+
+#: cola/cmds.py:323
+#, fuzzy, python-format
+msgid "Created commit: %s"
+msgstr "创建了 commit %s: %s"
+
+#: cola/cmds.py:325
+#, fuzzy, python-format
+msgid "Commit failed: %s"
+msgstr "克隆失败."
+
+#: cola/cmds.py:370 cola/cmds.py:1125
+#, fuzzy
+msgid "Error"
+msgstr "错误"
+
+#: cola/cmds.py:371
+#, python-format
+msgid "Deleting \"%s\" failed"
+msgstr ""
+
+#: cola/cmds.py:460 cola/widgets/grep.py:59 cola/widgets/recent.py:69
+msgid "Edit"
+msgstr "编辑"
+
+#: cola/cmds.py:514
+msgid "Launch Diff Tool"
+msgstr ""
+
+#: cola/cmds.py:528
+msgid "Launch Editor"
+msgstr ""
+
+#: cola/cmds.py:549
+msgid "Error: Cannot find commit template"
+msgstr ""
+
+#: cola/cmds.py:550
+#, fuzzy, python-format
+msgid "%s: No such file or directory."
+msgstr "致命错误: 无法获取路径 %s 的信息: 该文件或目录不存在"
+
+#: cola/cmds.py:567
+msgid "Error: Unconfigured commit template"
+msgstr ""
+
+#: cola/cmds.py:568
+msgid ""
+"A commit template has not been configured.\n"
+"Use \"git config\" to define \"commit.template\"\n"
+"so that it points to a commit template."
+msgstr ""
+
+#: cola/cmds.py:637
+msgid "Open Using Default Application"
+msgstr ""
+
+#: cola/cmds.py:660
+#, fuzzy
+msgid "Open Parent Directory"
+msgstr "打开最近版本库"
+
+#: cola/cmds.py:700
+#, python-format
+msgid "Error: could not clone \"%s\""
+msgstr ""
+
+#: cola/cmds.py:701
+#, python-format
+msgid "git clone returned exit code %s"
+msgstr ""
+
+#: cola/cmds.py:724 cola/widgets/action.py:19
+msgid "Rescan"
+msgstr "重新扫描"
+
+#: cola/cmds.py:752
+#, python-format
+msgid "Run \"%s\"?"
+msgstr ""
+
+#: cola/cmds.py:759
+#, fuzzy
+msgid "Please select a file"
+msgstr "请选择某个跟踪分支."
+
+#: cola/cmds.py:760
+#, python-format
+msgid "\"%s\" requires a selected file."
+msgstr ""
+
+#: cola/cmds.py:772
+#, fuzzy
+msgid "Invalid Revision"
+msgstr "无效版本: %s"
+
+#: cola/cmds.py:773
+#, fuzzy
+msgid "The revision expression cannot be empty."
+msgstr "版本表达式为空."
+
+#: cola/cmds.py:788
+#, python-format
+msgid "Running command: %s"
+msgstr ""
+
+#: cola/cmds.py:797 cola/cmds.py:968 cola/interaction.py:70
+#, python-format
+msgid "Output: %s"
+msgstr ""
+
+#: cola/cmds.py:798 cola/interaction.py:71 cola/widgets/startup.py:168
+#, python-format
+msgid "Errors: %s"
+msgstr ""
+
+#: cola/cmds.py:843
+msgid "Sign Off"
+msgstr "签名(Sign Off)"
+
+#: cola/cmds.py:864
+msgid "unknown"
+msgstr ""
+
+#: cola/cmds.py:877 cola/widgets/action.py:17
+#, fuzzy
+msgid "Stage"
+msgstr "保存"
+
+#: cola/cmds.py:884
+#, fuzzy, python-format
+msgid "Staging: %s"
+msgstr "正在扫描 %s..."
+
+#: cola/cmds.py:896
+msgid "Stage Modified"
+msgstr ""
+
+#: cola/cmds.py:910
+#, fuzzy
+msgid "Stage Unmerged"
+msgstr "缓存改动"
+
+#: cola/cmds.py:924
+#, fuzzy
+msgid "Stage Untracked"
+msgstr "缓存改动"
+
+#: cola/cmds.py:942
+#, python-format
+msgid "Tagging \"%(revision)s\" as \"%(name)s\""
+msgstr ""
+
+#: cola/cmds.py:950
+msgid "GPG-signed"
+msgstr ""
+
+#: cola/cmds.py:982 cola/widgets/action.py:18
+#, fuzzy
+msgid "Unstage"
+msgstr "未缓存的改动"
+
+#: cola/cmds.py:989
+#, fuzzy, python-format
+msgid "Unstaging: %s"
+msgstr "从提交缓存中删除 %s"
+
+#: cola/cmds.py:1016
+#, python-format
+msgid "Untracking: %s"
+msgstr ""
+
+#: cola/difftool.py:76
+msgid "git-cola diff"
+msgstr ""
+
+#: cola/difftool.py:92 cola/widgets/compare.py:90
+msgid "Compare"
+msgstr ""
+
+#: cola/gitcmds.py:394
+#, fuzzy
+msgid "Nothing to do"
+msgstr "没有东西可从 %s 克隆."
+
+#: cola/guicmds.py:26
+msgid "Delete Branch"
+msgstr "删除分支"
+
+#: cola/guicmds.py:42
+#, fuzzy
+msgid "Browse Revision..."
+msgstr "版本"
+
+#: cola/guicmds.py:50
+msgid "Checkout Branch"
+msgstr "Checkout 分支"
+
+#: cola/guicmds.py:60
+#, fuzzy
+msgid "Cherry-Pick Commit"
+msgstr "复制提交"
+
+#: cola/guicmds.py:74
+msgid "Path or URL to clone (Env. $VARS okay)"
+msgstr ""
+
+#: cola/guicmds.py:95
+#, fuzzy
+msgid "Error Cloning"
+msgstr "装载文件出错:"
+
+#: cola/guicmds.py:96 cola/guicmds.py:97
+#, python-format
+msgid "Could not parse Git URL: \"%s\""
+msgstr ""
+
+#: cola/guicmds.py:101
+msgid "Select a parent directory for the new clone"
+msgstr ""
+
+#: cola/guicmds.py:111
+#, python-format
+msgid "\"%s\" already exists, cola will create a new directory"
+msgstr ""
+
+#: cola/guicmds.py:127 cola/widgets/search.py:75
+msgid "Export Patches"
+msgstr ""
+
+#: cola/guicmds.py:156 cola/widgets/startup.py:126
+#, fuzzy
+msgid "Open Git Repository..."
+msgstr "打开已有版本库"
+
+#: cola/guicmds.py:165 cola/main/view.py:165
+#, fuzzy
+msgid "Load Commit Message..."
+msgstr "提交描述:"
+
+#: cola/guicmds.py:173
+#, fuzzy
+msgid "Rebase Branch"
+msgstr "更改分支名:"
+
+#: cola/guicmds.py:189
+#, fuzzy
+msgid "Select Branch to Review"
+msgstr "删除分支"
+
+#: cola/guicmds.py:189
+msgid "Review"
+msgstr ""
+
+#: cola/inotify.py:45
+msgid ""
+"file notification: disabled\n"
+"Note: install pywin32 to enable.\n"
+msgstr ""
+
+#: cola/inotify.py:48
+msgid ""
+"inotify: disabled\n"
+"Note: install python-pyinotify to enable inotify.\n"
+msgstr ""
+
+#: cola/inotify.py:54
+msgid "On Debian systems try: sudo aptitude install python-pyinotify"
+msgstr ""
+
+#: cola/inotify.py:63
+#, fuzzy
+msgid "File notification enabled."
+msgstr "相信文件的改动时间"
+
+#: cola/inotify.py:65
+msgid "inotify enabled."
+msgstr ""
+
+#: cola/interaction.py:53
+msgid "Continue"
+msgstr "继续"
+
+#: cola/interaction.py:63
+#, python-format
+msgid "Run %s?"
+msgstr ""
+
+#: cola/interaction.py:64
+#, python-format
+msgid "Run the \"%s\" command?"
+msgstr ""
+
+#: cola/interaction.py:65 cola/widgets/cfgactions.py:240
+msgid "Run"
+msgstr ""
+
+#: cola/interaction.py:72
+#, python-format
+msgid "Exit code: %s"
+msgstr ""
+
+#: cola/qt.py:57 cola/qt.py:93
+#, fuzzy
+msgid "Detach"
+msgstr "删除分支"
+
+#: cola/qt.py:91
+msgid "Attach"
+msgstr ""
+
+#: cola/qtutils.py:396
+#, fuzzy
+msgid "Close..."
+msgstr "克隆..."
+
+#: cola/classic/controller.py:69
+msgid "Select Previous Version"
+msgstr ""
+
+#: cola/classic/model.py:36 cola/widgets/createtag.py:51
+#: cola/widgets/editremotes.py:219
+#, fuzzy
+msgid "Name"
+msgstr "名字:"
+
+#: cola/classic/model.py:37 cola/main/view.py:93
+msgid "Status"
+msgstr ""
+
+#: cola/classic/model.py:38 cola/dag/view.py:366
+msgid "Age"
+msgstr ""
+
+#: cola/classic/model.py:39 cola/widgets/createtag.py:74
+#, fuzzy
+msgid "Message"
+msgstr "合并(merge)"
+
+#: cola/classic/model.py:40 cola/dag/view.py:366
+#, fuzzy
+msgid "Author"
+msgstr "作者:"
+
+#: cola/classic/model.py:337
+#, python-format
+msgid "%d minutes ago"
+msgstr ""
+
+#: cola/classic/model.py:340
+#, python-format
+msgid "%d hours ago"
+msgstr ""
+
+#: cola/classic/model.py:341
+#, python-format
+msgid "%d days ago"
+msgstr ""
+
+#: cola/classic/model.py:354 cola/widgets/status.py:80
+#, fuzzy
+msgid "Unmerged"
+msgstr "合并(merge)"
+
+#: cola/classic/model.py:356
+msgid "Partially Staged"
+msgstr ""
+
+#: cola/classic/model.py:358 cola/widgets/status.py:81
+#, fuzzy
+msgid "Modified"
+msgstr "未修改"
+
+#: cola/classic/model.py:360 cola/widgets/status.py:79
+#, fuzzy
+msgid "Staged"
+msgstr "缓存改动"
+
+#: cola/classic/model.py:362
+msgid "Changed Upstream"
+msgstr ""
+
+#: cola/classic/view.py:47 cola/main/view.py:512
+#, fuzzy, python-format
+msgid "Repository: %s"
 msgstr "版本库"
 
-#: lib/choose_repository.tcl:1031
-#, tcl-format
-msgid "Failed to open repository %s:"
-msgstr "无法打开版本库 %s:"
+#: cola/classic/view.py:49 cola/main/view.py:514
+#, fuzzy, python-format
+msgid "Branch: %s"
+msgstr "分支:"
 
-#: lib/choose_rev.tcl:53
-msgid "This Detached Checkout"
-msgstr "该脱节的Checkout"
+#: cola/classic/view.py:54 cola/main/view.py:519
+msgid "Amending"
+msgstr ""
 
-#: lib/choose_rev.tcl:60
-msgid "Revision Expression:"
-msgstr "版本表达式:"
+#: cola/classic/view.py:79
+msgid "View History..."
+msgstr ""
 
-#: lib/choose_rev.tcl:74
+#: cola/classic/view.py:80
+msgid "View history for selected path(s)."
+msgstr ""
+
+#: cola/classic/view.py:84 cola/widgets/status.py:460
+#: cola/widgets/status.py:506 cola/widgets/status.py:559
+#, fuzzy
+msgid "Stage Selected"
+msgstr "选择"
+
+#: cola/classic/view.py:85
+#, fuzzy
+msgid "Stage selected path(s) for commit."
+msgstr "缓存为提交"
+
+#: cola/classic/view.py:90 cola/widgets/status.py:408
+#: cola/widgets/status.py:446
+msgid "Unstage Selected"
+msgstr ""
+
+#: cola/classic/view.py:91
+msgid "Remove selected path(s) from the staging area."
+msgstr ""
+
+#: cola/classic/view.py:96
+msgid "Untrack Selected"
+msgstr ""
+
+#: cola/classic/view.py:97
+msgid "Stop tracking path(s)"
+msgstr ""
+
+#: cola/classic/view.py:102
+msgid "Launch git-difftool on the current path."
+msgstr ""
+
+#: cola/classic/view.py:106
+msgid "Diff Against Predecessor..."
+msgstr ""
+
+#: cola/classic/view.py:107
+msgid "Launch git-difftool against previous versions."
+msgstr ""
+
+#: cola/classic/view.py:111
+#, fuzzy
+msgid "Revert Uncommitted Changes..."
+msgstr "撤销修改"
+
+#: cola/classic/view.py:112
+#, fuzzy
+msgid "Revert changes to selected path(s)."
+msgstr "撤销文件 %s 中的改动?"
+
+#: cola/classic/view.py:117
+msgid "Edit selected path(s)."
+msgstr ""
+
+#: cola/classic/view.py:293 cola/widgets/status.py:619
+#, fuzzy
+msgid "Revert Uncommitted Changes?"
+msgstr "撤销修改"
+
+#: cola/classic/view.py:294 cola/widgets/diff.py:228 cola/widgets/diff.py:241
+#: cola/widgets/status.py:620
+msgid ""
+"This operation drops uncommitted changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+#: cola/classic/view.py:296 cola/widgets/diff.py:230 cola/widgets/diff.py:243
+#: cola/widgets/status.py:622
+msgid "Revert the uncommitted changes?"
+msgstr ""
+
+#: cola/classic/view.py:297 cola/widgets/status.py:623
+#, fuzzy
+msgid "Revert Uncommitted Changes"
+msgstr "撤销修改"
+
+#: cola/dag/view.py:164
+#, fuzzy
+msgid "Loading..."
+msgstr "装载 %s..."
+
+#: cola/dag/view.py:269
+msgid "Diff this -> selected"
+msgstr ""
+
+#: cola/dag/view.py:272
+msgid "Diff selected -> this"
+msgstr ""
+
+#: cola/dag/view.py:275 cola/widgets/createbranch.py:89
+#: cola/widgets/createbranch.py:98 cola/widgets/createbranch.py:155
+#: cola/widgets/createbranch.py:330
+msgid "Create Branch"
+msgstr "创建分支"
+
+#: cola/dag/view.py:278
+#, fuzzy
+msgid "Create Patch"
+msgstr "创建分支"
+
+#: cola/dag/view.py:281 cola/widgets/createtag.py:38
+#: cola/widgets/createtag.py:99
+#, fuzzy
+msgid "Create Tag"
+msgstr "新建"
+
+#: cola/dag/view.py:284 cola/main/view.py:168
+msgid "Save As Tarball/Zip..."
+msgstr ""
+
+#: cola/dag/view.py:287 cola/widgets/search.py:78
+msgid "Cherry Pick"
+msgstr ""
+
+#: cola/dag/view.py:290
+msgid "Grab File..."
+msgstr ""
+
+#: cola/dag/view.py:293
+#, fuzzy
+msgid "Copy SHA-1"
+msgstr "全部复制"
+
+#: cola/dag/view.py:366
+msgid "Summary"
+msgstr ""
+
+#: cola/dag/view.py:373
+msgid "Go Up"
+msgstr ""
+
+#: cola/dag/view.py:376
+msgid "Go Down"
+msgstr ""
+
+#: cola/dag/view.py:506
+msgid "Display"
+msgstr ""
+
+#: cola/dag/view.py:1168
+msgid "Zoom In"
+msgstr ""
+
+#: cola/dag/view.py:1171
+msgid "Zoom Out"
+msgstr ""
+
+#: cola/dag/view.py:1174
+msgid "Zoom to Fit"
+msgstr ""
+
+#: cola/dag/view.py:1177
+#, fuzzy
+msgid "Select Parent"
+msgstr "选择"
+
+#: cola/dag/view.py:1180
+msgid "Select Oldest Parent"
+msgstr ""
+
+#: cola/dag/view.py:1183
+#, fuzzy
+msgid "Select Child"
+msgstr "全选"
+
+#: cola/dag/view.py:1186
+msgid "Select Newest Child"
+msgstr ""
+
+#: cola/main/view.py:80
+#, fuzzy
+msgid "Browser"
+msgstr "浏览"
+
+#: cola/main/view.py:85
+#, fuzzy
+msgid "Action"
+msgstr "选项..."
+
+#: cola/main/view.py:101 cola/merge/view.py:45
+#, fuzzy
+msgid "Commit"
+msgstr "提交:"
+
+#: cola/main/view.py:110
+#, fuzzy
+msgid "Console"
+msgstr "关闭"
+
+#: cola/main/view.py:116 cola/main/view.py:342
+msgid "Diff"
+msgstr ""
+
+#: cola/main/view.py:122 cola/widgets/status.py:368
+msgid "Unstage All"
+msgstr ""
+
+#: cola/main/view.py:126
+msgid "Unstage From Commit"
+msgstr "从本次提交撤除"
+
+#: cola/main/view.py:130
+msgid "Diffstat"
+msgstr ""
+
+#: cola/main/view.py:133
+msgid "Stage Changed Files To Commit"
+msgstr "缓存修改的文件为提交"
+
+#: cola/main/view.py:138
+msgid "Stage All Untracked"
+msgstr ""
+
+#: cola/main/view.py:143
+msgid "Export Patches..."
+msgstr ""
+
+#: cola/main/view.py:145 cola/prefs/view.py:217
+msgid "Preferences"
+msgstr "首选项"
+
+#: cola/main/view.py:149
+msgid "Edit Remotes..."
+msgstr ""
+
+#: cola/main/view.py:157
+#, fuzzy
+msgid "Recently Modified Files..."
+msgstr "扫描修改过的文件 ..."
+
+#: cola/main/view.py:161
+#, fuzzy
+msgid "Cherry-Pick..."
+msgstr "Checkout..."
+
+#: cola/main/view.py:171
+msgid "Quit"
+msgstr "退出"
+
+#: cola/main/view.py:173
+msgid "Bookmarks..."
+msgstr ""
+
+#: cola/main/view.py:175
+msgid "Grep"
+msgstr ""
+
+#: cola/main/view.py:177
+#, fuzzy
+msgid "Merge..."
+msgstr "合并(merge)"
+
+#: cola/main/view.py:180 cola/merge/__init__.py:20
+msgid "Abort Merge..."
+msgstr "中止合并..."
+
+#: cola/main/view.py:183 cola/widgets/action.py:20
+#, fuzzy
+msgid "Fetch..."
+msgstr "复位(Reset)..."
+
+#: cola/main/view.py:185 cola/widgets/action.py:21
+msgid "Push..."
+msgstr "上传..."
+
+#: cola/main/view.py:187 cola/widgets/action.py:22
+#, fuzzy
+msgid "Pull..."
+msgstr "上传..."
+
+#: cola/main/view.py:190 cola/widgets/startup.py:38
+msgid "Open..."
+msgstr "打开..."
+
+#: cola/main/view.py:194 cola/widgets/action.py:23
+#, fuzzy
+msgid "Stash..."
+msgstr "上传..."
+
+#: cola/main/view.py:197 cola/widgets/startup.py:41
+msgid "Clone..."
+msgstr "克隆..."
+
+#: cola/main/view.py:201
+#, fuzzy
+msgid "Documentation"
+msgstr "在线文档"
+
+#: cola/main/view.py:205
+msgid "Keyboard Shortcuts"
+msgstr ""
+
+#: cola/main/view.py:210
+#, fuzzy
+msgid "Visualize Current Branch..."
+msgstr "图示当前分支的历史"
+
+#: cola/main/view.py:213
+#, fuzzy
+msgid "Visualize All Branches..."
+msgstr "图示所有分支的历史"
+
+#: cola/main/view.py:216
+#, fuzzy
+msgid "Search..."
+msgstr "开始..."
+
+#: cola/main/view.py:218
+#, fuzzy
+msgid "Browse Current Branch..."
+msgstr "浏览当前分支上的文件"
+
+#: cola/main/view.py:220
+#, fuzzy
+msgid "Browse Other Branch..."
+msgstr "浏览分支上的文件..."
+
+#: cola/main/view.py:222
+#, fuzzy
+msgid "Get Commit Message Template"
+msgstr "提交描述:"
+
+#: cola/main/view.py:225
+#, fuzzy
+msgid "About"
+msgstr "关于 %s"
+
+#: cola/main/view.py:228
+#, fuzzy
+msgid "Expression..."
+msgstr "选项..."
+
+#: cola/main/view.py:230
+#, fuzzy
+msgid "Branches..."
+msgstr "分支"
+
+#: cola/main/view.py:233
+#, fuzzy
+msgid "Create Tag..."
+msgstr "新建..."
+
+#: cola/main/view.py:236
+msgid "Create..."
+msgstr "新建..."
+
+#: cola/main/view.py:239
+msgid "Delete..."
+msgstr "删除..."
+
+#: cola/main/view.py:242
+msgid "Checkout..."
+msgstr "Checkout..."
+
+#: cola/main/view.py:244
+#, fuzzy
+msgid "Rebase..."
+msgstr "复位(Reset)..."
+
+#: cola/main/view.py:246
+#, fuzzy
+msgid "Review..."
+msgstr "复位(Reset)..."
+
+#: cola/main/view.py:249
+#, fuzzy
+msgid "Browser..."
+msgstr "浏览"
+
+#: cola/main/view.py:253
+msgid "DAG..."
+msgstr ""
+
+#: cola/main/view.py:270
+#, fuzzy
+msgid "File"
+msgstr "文件:"
+
+#: cola/main/view.py:274
+#, fuzzy
+msgid "Open Recent"
+msgstr "打开最近版本库"
+
+#: cola/main/view.py:293 cola/main/view.py:294 cola/widgets/commitmsg.py:49
+#: cola/widgets/commitmsg.py:65
+msgid "Commit@@verb"
+msgstr "提交"
+
+#: cola/main/view.py:306
+msgid "Branch"
+msgstr "分支(branch)"
+
+#: cola/main/view.py:323
+#, fuzzy
+msgid "Actions"
+msgstr "选项..."
+
+#: cola/main/view.py:351
+msgid "Tools"
+msgstr ""
+
+#: cola/main/view.py:362
+msgid "Help"
+msgstr "帮助"
+
+#: cola/main/view.py:428
+#, python-format
+msgid "git-cola version %s"
+msgstr ""
+
+#: cola/merge/__init__.py:21
+#, fuzzy
+msgid ""
+"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+"中止合并?\n"
+"\n"
+"中止当前的合并操作将导致 *所有* 尚未提交的改动丢失.\n"
+"\n"
+"是否要继续中止当前的合并操作?"
+
+#: cola/merge/__init__.py:24
+msgid "Aborting the current merge?"
+msgstr ""
+
+#: cola/merge/__init__.py:25
+#, fuzzy
+msgid "Abort Merge"
+msgstr "中止合并..."
+
+#: cola/merge/view.py:23
+msgid "Revision To Merge"
+msgstr "要合并的版本"
+
+#: cola/merge/view.py:28 cola/widgets/cfgactions.py:220
+#: cola/widgets/createbranch.py:115 cola/widgets/remote.py:122
 msgid "Local Branch"
 msgstr "本地分支"
 
-#: lib/choose_rev.tcl:79
+#: cola/merge/view.py:31 cola/widgets/cfgactions.py:221
+#: cola/widgets/createbranch.py:119
 msgid "Tracking Branch"
 msgstr "跟踪分支:"
 
-#: lib/choose_rev.tcl:84 lib/choose_rev.tcl:538
+#: cola/merge/view.py:33 cola/widgets/cfgactions.py:222
+#: cola/widgets/createbranch.py:122
 msgid "Tag"
 msgstr "标签"
 
-#: lib/choose_rev.tcl:317
-#, tcl-format
-msgid "Invalid revision: %s"
-msgstr "无效版本: %s"
+#: cola/merge/view.py:39
+msgid "Visualize"
+msgstr "图示"
 
-#: lib/choose_rev.tcl:338
-msgid "No revision selected."
+#: cola/merge/view.py:42
+#, fuzzy
+msgid "Squash"
+msgstr "上传"
+
+#: cola/merge/view.py:50 cola/widgets/archive.py:62
+#: cola/widgets/editremotes.py:204
+msgid "Cancel"
+msgstr "取消"
+
+#: cola/merge/view.py:53
+msgid "Merge"
+msgstr "合并(merge)"
+
+#: cola/merge/view.py:115
+#, python-format
+msgid "Merge \"%(revision)s\" into \"%(branch)s\""
+msgstr ""
+
+#: cola/merge/view.py:118
+#, fuzzy, python-format
+msgid "Merge into \"%s\""
+msgstr "合并到 %s"
+
+#: cola/merge/view.py:162 cola/merge/view.py:171
+#, fuzzy
+msgid "No Revision Specified"
 msgstr "没有选择版本."
 
-#: lib/choose_rev.tcl:346
-msgid "Revision expression is empty."
-msgstr "版本表达式为空."
-
-#: lib/choose_rev.tcl:531
-msgid "Updated"
-msgstr "已更新"
-
-#: lib/choose_rev.tcl:559
-msgid "URL"
-msgstr "URL"
-
-#: lib/commit.tcl:9
-msgid ""
-"There is nothing to amend.\n"
-"\n"
-"You are about to create the initial commit.  There is no commit before this "
-"to amend.\n"
+#: cola/merge/view.py:163
+msgid "You must specify a revision to view."
 msgstr ""
-"没有改动需要修正.\n"
-"\n"
-"你正在创建最初的提交. 在此之前没有提交可以修正.\n"
 
-#: lib/commit.tcl:18
-msgid ""
-"Cannot amend while merging.\n"
-"\n"
-"You are currently in the middle of a merge that has not been fully "
-"completed.  You cannot amend the prior commit unless you first abort the "
-"current merge activity.\n"
+#: cola/merge/view.py:172
+msgid "You must specify a revision to merge."
 msgstr ""
-"在合并时无法修正.\n"
-"\n"
-"你当前正在一次尚未完成的合并操作过程中. 除非中止当前合并活动,\n"
-"否则无法修正之前的提交.\n"
 
-#: lib/commit.tcl:49
-msgid "Error loading commit data for amend:"
-msgstr "为修正装载提交数据出错:"
+#: cola/prefs/view.py:115
+msgid "User Name"
+msgstr "用户名"
 
-#: lib/commit.tcl:76
-msgid "Unable to obtain your identity:"
-msgstr "无法获知你的身份:"
+#: cola/prefs/view.py:116
+msgid "Email Address"
+msgstr "Email 地址"
 
-#: lib/commit.tcl:81
-msgid "Invalid GIT_COMMITTER_IDENT:"
-msgstr "无效的 GIT_COMMITTER_IDENT"
+#: cola/prefs/view.py:117
+msgid "Merge Verbosity"
+msgstr "合并冗余度"
 
-#: lib/commit.tcl:133
-msgid ""
-"Last scanned state does not match repository state.\n"
-"\n"
-"Another Git program has modified this repository since the last scan.  A "
-"rescan must be performed before another commit can be created.\n"
-"\n"
-"The rescan will be automatically started now.\n"
+#: cola/prefs/view.py:118
+msgid "Number of Diff Context Lines"
+msgstr "Diff 上下文行数"
+
+#: cola/prefs/view.py:119
+msgid "Summarize Merge Commits"
+msgstr "概述合并提交:"
+
+#: cola/prefs/view.py:120
+msgid "Show Diffstat After Merge"
+msgstr "在合并后显示 Diffstat"
+
+#: cola/prefs/view.py:160
+msgid "Fixed-Width Font"
 msgstr ""
-"最后一次扫描的状态和当前版本库状态不符.\n"
-"\n"
-"另一 Git 程序自上次扫描后修改了本版本库. 在修改当前分支之前需要重新做一次扫"
-"描.\n"
-"\n"
-"重新扫描将自动开始.\n"
 
-#: lib/commit.tcl:154
-#, tcl-format
-msgid ""
-"Unmerged files cannot be committed.\n"
-"\n"
-"File %s has merge conflicts.  You must resolve them and stage the file "
-"before committing.\n"
+#: cola/prefs/view.py:161
+msgid "Font Size"
+msgstr "字体大小"
+
+#: cola/prefs/view.py:162
+msgid "Tab Width"
 msgstr ""
-"尚未合并的文件没有办法提交.\n"
-"\n"
-"文件 %s 有合并冲突, 你必须解决这些冲突并缓存该文件作提交.\n"
 
-#: lib/commit.tcl:162
-#, tcl-format
-msgid ""
-"Unknown file state %s detected.\n"
-"\n"
-"File %s cannot be committed by this program.\n"
+#: cola/prefs/view.py:163
+msgid "Text Width"
 msgstr ""
-"检测到未知文件状态 %s.\n"
-"\n"
-"文件 %s 无法由该程序提交.\n"
 
-#: lib/commit.tcl:170
-msgid ""
-"No changes to commit.\n"
-"\n"
-"You must stage at least 1 file before you can commit.\n"
+#: cola/prefs/view.py:164 cola/widgets/commitmsg.py:86
+msgid "Auto-Wrap Lines"
 msgstr ""
-"没有需要提交的变动.\n"
-"\n"
-"提交前你必须首先缓存至少一个文件.\n"
 
-#: lib/commit.tcl:183
+#: cola/prefs/view.py:165
+#, fuzzy
+msgid "Editor"
+msgstr "编辑"
+
+#: cola/prefs/view.py:166
+#, fuzzy
+msgid "History Browser"
+msgstr "文件浏览器"
+
+#: cola/prefs/view.py:167
+msgid "Diff Tool"
+msgstr ""
+
+#: cola/prefs/view.py:168
+#, fuzzy
+msgid "Merge Tool"
+msgstr "合并(merge)"
+
+#: cola/prefs/view.py:169
+msgid "Keep *.orig Merge Backups"
+msgstr ""
+
+#: cola/prefs/view.py:170
+msgid "Save GUI Settings"
+msgstr ""
+
+#: cola/prefs/view.py:224
+#, fuzzy
+msgid "All Repositories"
+msgstr "全局 (所有版本库)"
+
+#: cola/prefs/view.py:225
+#, fuzzy
+msgid "Current Repository"
+msgstr "创建新的版本库"
+
+#: cola/prefs/view.py:226
+#, fuzzy
+msgid "Settings"
+msgstr "开始..."
+
+#: cola/stash/view.py:28
+msgid "Stash"
+msgstr ""
+
+#: cola/stash/view.py:38
+#, fuzzy
+msgid "Apply"
+msgstr "苹果"
+
+#: cola/stash/view.py:39
+msgid "Apply the selected stash"
+msgstr ""
+
+#: cola/stash/view.py:43
+msgid "Save modified state to new stash"
+msgstr ""
+
+#: cola/stash/view.py:46
+msgid "Drop"
+msgstr ""
+
+#: cola/stash/view.py:47
+msgid "Drop the selected stash"
+msgstr ""
+
+#: cola/stash/view.py:54
+msgid "Keep Index"
+msgstr ""
+
+#: cola/stash/view.py:175
+msgid "Save Stash"
+msgstr ""
+
+#: cola/stash/view.py:176
+msgid "Enter a name for the stash"
+msgstr ""
+
+#: cola/stash/view.py:182
+msgid "Error: Stash exists"
+msgstr ""
+
+#: cola/stash/view.py:183
+#, fuzzy, python-format
+msgid "A stash named \"%s\" already exists"
+msgstr "文件 %s 已经存在."
+
+#: cola/stash/view.py:198
+msgid "Drop Stash?"
+msgstr ""
+
+#: cola/stash/view.py:199
+#, fuzzy
+msgid "Recovering a dropped stash is not possible."
+msgstr "恢复丢失的提交是比较困难的."
+
+#: cola/stash/view.py:200
+#, python-format
+msgid "Drop the \"%s\" stash?"
+msgstr ""
+
+#: cola/stash/view.py:201
+msgid "Drop Stash"
+msgstr ""
+
+#: cola/widgets/about.py:47
+msgid "About git-cola"
+msgstr ""
+
+#: cola/widgets/about.py:97
+msgid ""
+"This PyQt4 does not include QtWebKit.\n"
+"The keyboard shortcuts feature is unavailable."
+msgstr ""
+
+#: cola/widgets/archive.py:46
+msgid "Save Archive"
+msgstr ""
+
+#: cola/widgets/archive.py:69
+msgid "Prefix"
+msgstr ""
+
+#: cola/widgets/archive.py:74
+msgid "Advanced"
+msgstr ""
+
+#: cola/widgets/archive.py:141 cola/widgets/browse.py:49
+msgid "File Saved"
+msgstr ""
+
+#: cola/widgets/archive.py:142 cola/widgets/browse.py:50
+#, python-format
+msgid "File saved to \"%s\""
+msgstr ""
+
+#: cola/widgets/archive.py:149
+msgid "Overwrite File?"
+msgstr ""
+
+#: cola/widgets/archive.py:150
+#, python-format
+msgid "The file \"%s\" exists and will be overwritten."
+msgstr ""
+
+#: cola/widgets/archive.py:151
+#, python-format
+msgid "Overwrite \"%s\"?"
+msgstr ""
+
+#: cola/widgets/archive.py:152
+msgid "Overwrite"
+msgstr ""
+
+#: cola/widgets/browse.py:42
+#, python-format
+msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
+msgstr ""
+
+#: cola/widgets/browse.py:63
+#, fuzzy, python-format
+msgid "Browsing %s"
+msgstr "添加 %s"
+
+#: cola/widgets/browse.py:81
+#, fuzzy, python-format
+msgid "Select file from \"%s\""
+msgstr "从 %s 中删除分支"
+
+#: cola/widgets/browse.py:90
+#, fuzzy
+msgid "Select File"
+msgstr "全选"
+
+#: cola/widgets/browse.py:117 cola/widgets/selectcommits.py:54
+msgid "Select"
+msgstr "选择"
+
+#: cola/widgets/cfgactions.py:85
+#, fuzzy
+msgid "Abort"
+msgstr "中止"
+
+#: cola/widgets/cfgactions.py:147 cola/widgets/cfgactions.py:151
+#, fuzzy
+msgid "Abort Action"
+msgstr "中止"
+
+#: cola/widgets/cfgactions.py:148
+msgid ""
+"An action is still running.\n"
+"Terminating it could result in data loss."
+msgstr ""
+
+#: cola/widgets/cfgactions.py:150
+msgid "Abort the action?"
+msgstr ""
+
+#: cola/widgets/cfgactions.py:201
+msgid "Arguments"
+msgstr ""
+
+#: cola/widgets/cfgactions.py:226 cola/widgets/createtag.py:85
+msgid "Revision"
+msgstr "版本"
+
+#: cola/widgets/commitmsg.py:46
+#, fuzzy
+msgid "Sign off on this commit"
+msgstr "缓存为提交"
+
+#: cola/widgets/commitmsg.py:52
+#, fuzzy
+msgid "Commit staged changes"
+msgstr "未缓存的改动"
+
+#: cola/widgets/commitmsg.py:63
+msgid ""
+"Commit staged changes\n"
+"Shortcut: Ctrl+Enter"
+msgstr ""
+
+#: cola/widgets/commitmsg.py:71
+#, fuzzy
+msgid "Actions..."
+msgstr "选项..."
+
+#: cola/widgets/commitmsg.py:80
+msgid "Amend Last Commit"
+msgstr "修正上次提交"
+
+#: cola/widgets/commitmsg.py:91
+#, fuzzy
+msgid "Load Previous Commit Message"
+msgstr "合并提交描述:"
+
+#: cola/widgets/commitmsg.py:323
 msgid ""
 "Please supply a commit message.\n"
 "\n"
@@ -1280,698 +1311,1719 @@ msgstr ""
 "- 第二行: 空行\n"
 "- 剩余行: 请描述为什么你做的这些改动是好的.\n"
 
-#: lib/commit.tcl:207
-#, tcl-format
-msgid "warning: Tcl does not support encoding '%s'."
-msgstr "警告: Tcl 不支持编码方式 '%s'."
-
-#: lib/commit.tcl:221
-msgid "Calling pre-commit hook..."
-msgstr ""
-
-#: lib/commit.tcl:236
-msgid "Commit declined by pre-commit hook."
-msgstr ""
-
-#: lib/commit.tcl:259
-msgid "Calling commit-msg hook..."
-msgstr ""
-
-#: lib/commit.tcl:274
-msgid "Commit declined by commit-msg hook."
-msgstr ""
-
-#: lib/commit.tcl:287
-msgid "Committing changes..."
-msgstr ""
-
-#: lib/commit.tcl:303
-msgid "write-tree failed:"
-msgstr "write-tree 失败:"
-
-#: lib/commit.tcl:304 lib/commit.tcl:348 lib/commit.tcl:368
+#: cola/widgets/commitmsg.py:330
 #, fuzzy
-msgid "Commit failed."
-msgstr "克隆失败."
+msgid "Missing Commit Message"
+msgstr "合并提交描述:"
 
-#: lib/commit.tcl:321
-#, tcl-format
-msgid "Commit %s appears to be corrupt"
-msgstr "提交 %s 似乎已损坏"
-
-#: lib/commit.tcl:326
+#: cola/widgets/commitmsg.py:336
+#, fuzzy
 msgid ""
 "No changes to commit.\n"
 "\n"
-"No files were modified by this commit and it was not a merge commit.\n"
-"\n"
-"A rescan will be automatically started now.\n"
+"You must stage at least 1 file before you can commit."
 msgstr ""
-"没有改动提交.\n"
+"没有需要提交的变动.\n"
 "\n"
-"该提交没有改动任何文件也不是一个合并提交.\n"
-"\n"
-"重新扫描将自动开始.\n"
+"提交前你必须首先缓存至少一个文件.\n"
 
-#: lib/commit.tcl:333
-msgid "No changes to commit."
-msgstr "没有改动要提交."
-
-#: lib/commit.tcl:347
-msgid "commit-tree failed:"
-msgstr "commit-tree 失败:"
-
-#: lib/commit.tcl:367
-msgid "update-ref failed:"
-msgstr "update-ref 失败:"
-
-#: lib/commit.tcl:454
-#, tcl-format
-msgid "Created commit %s: %s"
-msgstr "创建了 commit %s: %s"
-
-#: lib/console.tcl:59
-msgid "Working... please wait..."
-msgstr "工作中... 请等待..."
-
-#: lib/console.tcl:186
-msgid "Success"
-msgstr "成功"
-
-#: lib/console.tcl:200
-msgid "Error: Command Failed"
-msgstr "错误: 命令失败"
-
-#: lib/database.tcl:43
-msgid "Number of loose objects"
-msgstr "松散对象的数量"
-
-#: lib/database.tcl:44
-msgid "Disk space used by loose objects"
-msgstr "松散对象所使用的磁盘空间"
-
-#: lib/database.tcl:45
-msgid "Number of packed objects"
-msgstr "压缩对象数量"
-
-#: lib/database.tcl:46
-msgid "Number of packs"
-msgstr "压缩包数量"
-
-#: lib/database.tcl:47
-msgid "Disk space used by packed objects"
-msgstr "压缩对象所使用的磁盘空间"
-
-#: lib/database.tcl:48
-msgid "Packed objects waiting for pruning"
-msgstr "压缩对象等待清理"
-
-#: lib/database.tcl:49
-msgid "Garbage files"
-msgstr "垃圾文件"
-
-#: lib/database.tcl:72
-msgid "Compressing the object database"
-msgstr "压缩对象数据库"
-
-#: lib/database.tcl:83
-msgid "Verifying the object database with fsck-objects"
-msgstr "使用 fsck-objects 验证对象数据库"
-
-#: lib/database.tcl:108
-#, tcl-format
-msgid ""
-"This repository currently has approximately %i loose objects.\n"
-"\n"
-"To maintain optimal performance it is strongly recommended that you compress "
-"the database when more than %i loose objects exist.\n"
-"\n"
-"Compress the database now?"
+#: cola/widgets/commitmsg.py:340
+msgid "Would you like to stage and commit all modified files?"
 msgstr ""
-"该版本库当前约有 %i 个松散对象.\n"
-"\n"
-"为达到较优的性能，强烈建议你在松散对象多于 %i 时压缩数据库.\n"
-"\n"
-"现在就压缩数据库么?"
 
-#: lib/date.tcl:25
-#, tcl-format
-msgid "Invalid date from Git: %s"
-msgstr "无效的日期: %s"
-
-#: lib/diff.tcl:42
-#, tcl-format
-msgid ""
-"No differences detected.\n"
-"\n"
-"%s has no changes.\n"
-"\n"
-"The modification date of this file was updated by another application, but "
-"the content within the file was not changed.\n"
-"\n"
-"A rescan will be automatically started to find other files which may have "
-"the same state."
-msgstr ""
-"未检测到改动.\n"
-"\n"
-"该文件的修改日期被另一个程序所更新, 但其内容并没有变化.\n"
-"\n"
-"对于类似情况的其他文件的重新扫描将自动开始."
-
-#: lib/diff.tcl:81
-#, fuzzy, tcl-format
-msgid "Loading diff of %s..."
-msgstr "装载 %s 的 diff ..."
-
-#: lib/diff.tcl:114 lib/diff.tcl:184
-#, tcl-format
-msgid "Unable to display %s"
-msgstr "无法显示 %s"
-
-#: lib/diff.tcl:115
-msgid "Error loading file:"
-msgstr "装载文件出错:"
-
-#: lib/diff.tcl:122
-msgid "Git Repository (subproject)"
-msgstr "Git 版本库 (子项目)"
-
-#: lib/diff.tcl:134
-msgid "* Binary file (not showing content)."
-msgstr "* 二进制文件 (不显示内容)."
-
-#: lib/diff.tcl:185
-msgid "Error loading diff:"
-msgstr "装载 diff 错误:"
-
-#: lib/diff.tcl:303
-msgid "Failed to unstage selected hunk."
-msgstr "无法将选择的代码段从缓存中删除."
-
-#: lib/diff.tcl:310
-msgid "Failed to stage selected hunk."
-msgstr "无法缓存所选代码段."
-
-#: lib/error.tcl:20 lib/error.tcl:114
-msgid "error"
-msgstr "错误"
-
-#: lib/error.tcl:36
-msgid "warning"
-msgstr "警告"
-
-#: lib/error.tcl:94
-msgid "You must correct the above errors before committing."
-msgstr "你必须在提交前修正上述错误."
-
-#: lib/index.tcl:6
-msgid "Unable to unlock the index."
-msgstr "无法解锁缓存 (index)"
-
-#: lib/index.tcl:15
-msgid "Index Error"
-msgstr "缓存(Index)错误"
-
-#: lib/index.tcl:21
-msgid ""
-"Updating the Git index failed.  A rescan will be automatically started to "
-"resynchronize git-gui."
-msgstr "更新 Git 缓存(Index)失败, 重新扫描将自动开始以重新同步 git-gui."
-
-#: lib/index.tcl:27
-msgid "Continue"
-msgstr "继续"
-
-#: lib/index.tcl:31
-msgid "Unlock Index"
-msgstr "解锁 Index"
-
-#: lib/index.tcl:282
-#, tcl-format
-msgid "Unstaging %s from commit"
-msgstr "从提交缓存中删除 %s"
-
-#: lib/index.tcl:313
+#: cola/widgets/commitmsg.py:342
 #, fuzzy
-msgid "Ready to commit."
+msgid "Stage and commit?"
 msgstr "缓存为提交"
 
-#: lib/index.tcl:326
-#, tcl-format
-msgid "Adding %s"
-msgstr "添加 %s"
-
-#: lib/index.tcl:381
-#, tcl-format
-msgid "Revert changes in file %s?"
-msgstr "撤销文件 %s 中的改动?"
-
-#: lib/index.tcl:383
-#, tcl-format
-msgid "Revert changes in these %i files?"
-msgstr "撤销这些 (%i个) 文件的改动?"
-
-#: lib/index.tcl:391
-msgid "Any unstaged changes will be permanently lost by the revert."
-msgstr "任何未缓存的改动将在这次撤销中永久丢失."
-
-#: lib/index.tcl:394
-msgid "Do Nothing"
-msgstr "不做操作"
-
-#: lib/merge.tcl:13
-msgid ""
-"Cannot merge while amending.\n"
-"\n"
-"You must finish amending this commit before starting any type of merge.\n"
-msgstr ""
-"修正时无法做合并.\n"
-"\n"
-"你必须完成对该提交的修正才能继续任何类型的合并操作.\n"
-
-#: lib/merge.tcl:27
-msgid ""
-"Last scanned state does not match repository state.\n"
-"\n"
-"Another Git program has modified this repository since the last scan.  A "
-"rescan must be performed before a merge can be performed.\n"
-"\n"
-"The rescan will be automatically started now.\n"
-msgstr ""
-"最后一次扫描的状态和当前版本库状态不符.\n"
-"\n"
-"另一 Git 程序自上次扫描后修改了本版本库. 在修改当前分支之前需要重新做一次扫"
-"描.\n"
-"\n"
-"重新扫描将自动开始.\n"
-
-#: lib/merge.tcl:44
-#, tcl-format
-msgid ""
-"You are in the middle of a conflicted merge.\n"
-"\n"
-"File %s has merge conflicts.\n"
-"\n"
-"You must resolve them, stage the file, and commit to complete the current "
-"merge.  Only then can you begin another merge.\n"
-msgstr ""
-"你正处在一个有冲突的合并操作中.\n"
-"\n"
-"文件 %s 有合并冲突.\n"
-"\n"
-"你必须解决这些冲突, 缓存该文件, 并提交来完成当前的合并.仅当这样后才能开始下一"
-"个合并操作.\n"
-
-#: lib/merge.tcl:54
-#, tcl-format
-msgid ""
-"You are in the middle of a change.\n"
-"\n"
-"File %s is modified.\n"
-"\n"
-"You should complete the current commit before starting a merge.  Doing so "
-"will help you abort a failed merge, should the need arise.\n"
-msgstr ""
-"你正处在一个改动当中.\n"
-"\n"
-"文件 %s 已被修改.\n"
-"\n"
-"你必须完成当前的提交后才能开始合并. 如果需要, 这么做将有助于中止一次失败的合"
-"并.\n"
-
-#: lib/merge.tcl:106
-#, tcl-format
-msgid "%s of %s"
-msgstr ""
-
-#: lib/merge.tcl:119
-#, fuzzy, tcl-format
-msgid "Merging %s and %s..."
-msgstr "合并 %s 和 %s"
-
-#: lib/merge.tcl:130
-msgid "Merge completed successfully."
-msgstr "合并成功完成."
-
-#: lib/merge.tcl:132
-msgid "Merge failed.  Conflict resolution is required."
-msgstr "合并失败. 需要解决冲突."
-
-#: lib/merge.tcl:157
-#, tcl-format
-msgid "Merge Into %s"
-msgstr "合并到 %s"
-
-#: lib/merge.tcl:176
-msgid "Revision To Merge"
-msgstr "要合并的版本"
-
-#: lib/merge.tcl:211
-msgid ""
-"Cannot abort while amending.\n"
-"\n"
-"You must finish amending this commit.\n"
-msgstr ""
-"修正操作中无法中止.\n"
-"\n"
-"你必须先完成本次修正操作.\n"
-
-#: lib/merge.tcl:221
-msgid ""
-"Abort merge?\n"
-"\n"
-"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
-"\n"
-"Continue with aborting the current merge?"
-msgstr ""
-"中止合并?\n"
-"\n"
-"中止当前的合并操作将导致 *所有* 尚未提交的改动丢失.\n"
-"\n"
-"是否要继续中止当前的合并操作?"
-
-#: lib/merge.tcl:227
-msgid ""
-"Reset changes?\n"
-"\n"
-"Resetting the changes will cause *ALL* uncommitted changes to be lost.\n"
-"\n"
-"Continue with resetting the current changes?"
-msgstr ""
-"是否复位当前改动?\n"
-"\n"
-"复位当前的改动将导致 *所有* 未提交的改动丢失.\n"
-"\n"
-"是否要继续复位当前的改动?"
-
-#: lib/merge.tcl:238
-msgid "Aborting"
-msgstr "中止"
-
-#: lib/merge.tcl:238
+#: cola/widgets/commitmsg.py:345
 #, fuzzy
-msgid "files reset"
-msgstr "文件"
+msgid "Stage and Commit"
+msgstr "缓存为提交"
 
-#: lib/merge.tcl:265
-msgid "Abort failed."
-msgstr "中止失败"
-
-#: lib/merge.tcl:267
-msgid "Abort completed.  Ready."
-msgstr "中止完成. 就绪."
-
-#: lib/option.tcl:95
-msgid "Restore Defaults"
-msgstr "恢复默认值"
-
-#: lib/option.tcl:99
-msgid "Save"
-msgstr "保存"
-
-#: lib/option.tcl:109
-#, tcl-format
-msgid "%s Repository"
-msgstr "%s 版本库"
-
-#: lib/option.tcl:110
-msgid "Global (All Repositories)"
-msgstr "全局 (所有版本库)"
-
-#: lib/option.tcl:116
-msgid "User Name"
-msgstr "用户名"
-
-#: lib/option.tcl:117
-msgid "Email Address"
-msgstr "Email 地址"
-
-#: lib/option.tcl:119
-msgid "Summarize Merge Commits"
-msgstr "概述合并提交:"
-
-#: lib/option.tcl:120
-msgid "Merge Verbosity"
-msgstr "合并冗余度"
-
-#: lib/option.tcl:121
-msgid "Show Diffstat After Merge"
-msgstr "在合并后显示 Diffstat"
-
-#: lib/option.tcl:123
-msgid "Trust File Modification Timestamps"
-msgstr "相信文件的改动时间"
-
-#: lib/option.tcl:124
-msgid "Prune Tracking Branches During Fetch"
-msgstr "获取时清除跟踪分支"
-
-#: lib/option.tcl:125
-msgid "Match Tracking Branches"
-msgstr "匹配跟踪分支"
-
-#: lib/option.tcl:126
-msgid "Number of Diff Context Lines"
-msgstr "Diff 上下文行数"
-
-#: lib/option.tcl:127
+#: cola/widgets/commitmsg.py:350
 #, fuzzy
-msgid "Commit Message Text Width"
+msgid "Nothing to commit"
+msgstr "没有改动要提交."
+
+#: cola/widgets/commitmsg.py:357
+msgid "Rewrite Published Commit?"
+msgstr ""
+
+#: cola/widgets/commitmsg.py:358
+msgid ""
+"This commit has already been published.\n"
+"This operation will rewrite published history.\n"
+"You probably don't want to do this."
+msgstr ""
+
+#: cola/widgets/commitmsg.py:361
+msgid "Amend the published commit?"
+msgstr ""
+
+#: cola/widgets/commitmsg.py:362
+#, fuzzy
+msgid "Amend Commit"
+msgstr "修正上次提交"
+
+#: cola/widgets/commitmsg.py:367
+#, fuzzy
+msgid "Commit failed"
+msgstr "克隆失败."
+
+#: cola/widgets/commitmsg.py:368
+#, python-format
+msgid "\"git commit\" returned exit code %s"
+msgstr ""
+
+#: cola/widgets/commitmsg.py:390
+#, fuzzy
+msgid "More..."
+msgstr "克隆..."
+
+#: cola/widgets/commitmsg.py:394
+#, fuzzy
+msgid "Select Commit Message"
+msgstr "合并提交描述:"
+
+#: cola/widgets/commitmsg.py:404
+#, fuzzy
+msgid "Commit summary"
 msgstr "提交描述:"
 
-#: lib/option.tcl:128
-msgid "New Branch Name Template"
-msgstr "新建分支命名模板"
-
-#: lib/option.tcl:192
-msgid "Spelling Dictionary:"
+#: cola/widgets/commitmsg.py:433
+msgid "Extended description..."
 msgstr ""
 
-#: lib/option.tcl:216
-msgid "Change Font"
-msgstr "更改字体"
+#: cola/widgets/compare.py:37
+msgid "*** Branch Point ***"
+msgstr ""
 
-#: lib/option.tcl:220
-#, tcl-format
-msgid "Choose %s"
-msgstr "选择 %s"
+#: cola/widgets/compare.py:38
+msgid "*** Sandbox ***"
+msgstr ""
 
-#: lib/option.tcl:226
-msgid "pt."
-msgstr "磅"
+#: cola/widgets/compare.py:39 cola/widgets/compare.py:62
+#: cola/widgets/compare.py:68
+msgid "Local"
+msgstr ""
 
-#: lib/option.tcl:240
-msgid "Preferences"
+#: cola/widgets/compare.py:44
+msgid "Branch Diff Viewer"
+msgstr ""
+
+#: cola/widgets/compare.py:63 cola/widgets/compare.py:69
+#: cola/widgets/remote.py:129
+msgid "Remote"
+msgstr "远端(remote)"
+
+#: cola/widgets/compare.py:98
+#, fuzzy
+msgid "File Differences"
 msgstr "首选项"
 
-#: lib/option.tcl:275
-msgid "Failed to completely save options:"
-msgstr "无法完全保存选项:"
+#: cola/widgets/createbranch.py:102
+msgid "Branch Name"
+msgstr "分支名"
 
-#: lib/remote_branch_delete.tcl:29 lib/remote_branch_delete.tcl:34
-msgid "Delete Remote Branch"
-msgstr "删除远端分支"
+#: cola/widgets/createbranch.py:107 cola/widgets/createbranch.py:178
+msgid "Starting Revision"
+msgstr "起始版本"
 
-#: lib/remote_branch_delete.tcl:47
-msgid "From Repository"
-msgstr "从版本库"
+#: cola/widgets/createbranch.py:127
+msgid "Update Existing Branch:"
+msgstr "更新已有分支:"
 
-#: lib/remote_branch_delete.tcl:50 lib/transport.tcl:123
-msgid "Remote:"
-msgstr "Remote:"
+#: cola/widgets/createbranch.py:130
+msgid "No"
+msgstr "号码"
 
-#: lib/remote_branch_delete.tcl:66 lib/transport.tcl:138
-msgid "Arbitrary URL:"
-msgstr "任意 URL:"
+#: cola/widgets/createbranch.py:133
+msgid "Fast Forward Only"
+msgstr "仅快速合并"
 
-#: lib/remote_branch_delete.tcl:84
-msgid "Branches"
+#: cola/widgets/createbranch.py:137
+msgid "Reset"
+msgstr "复位"
+
+#: cola/widgets/createbranch.py:143
+msgid "Fetch Tracking Branch"
+msgstr "获取跟踪分支"
+
+#: cola/widgets/createbranch.py:148
+msgid "Checkout After Creation"
+msgstr "在创建后Checkout"
+
+#: cola/widgets/createbranch.py:194
+msgid "Options"
+msgstr "选项..."
+
+#: cola/widgets/createbranch.py:259
+#, fuzzy
+msgid "Missing Data"
+msgstr "不存在"
+
+#: cola/widgets/createbranch.py:260
+msgid "Please provide both a branch name and revision expression."
+msgstr ""
+
+#: cola/widgets/createbranch.py:265
+#, fuzzy, python-format
+msgid "Branch \"%s\" already exists."
+msgstr "分支 '%s' 已经存在."
+
+#: cola/widgets/createbranch.py:266 cola/widgets/createbranch.py:277
+#, fuzzy
+msgid "Branch Exists"
 msgstr "分支"
 
-#: lib/remote_branch_delete.tcl:109
-msgid "Delete Only If"
-msgstr "删除仅当"
+#: cola/widgets/createbranch.py:273
+#, fuzzy, python-format
+msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
+msgstr "复位 '%s' 到 '%s' 将导致下列提交的丢失:"
 
-#: lib/remote_branch_delete.tcl:111
-msgid "Merged Into:"
-msgstr "合并到"
-
-#: lib/remote_branch_delete.tcl:119
-msgid "Always (Do not perform merge checks)"
-msgstr "总是合并 (不作合并检查)"
-
-#: lib/remote_branch_delete.tcl:152
-msgid "A branch is required for 'Merged Into'."
-msgstr "'合并到' 需要指定某个分支"
-
-#: lib/remote_branch_delete.tcl:184
-#, tcl-format
-msgid ""
-"The following branches are not completely merged into %s:\n"
-"\n"
-" - %s"
+#: cola/widgets/createbranch.py:288
+#, python-format
+msgid "%d skipped"
 msgstr ""
-"下列分支没有被全部合并到 %s 中:\n"
-"\n"
-" - %s"
 
-#: lib/remote_branch_delete.tcl:189
-#, tcl-format
-msgid ""
-"One or more of the merge tests failed because you have not fetched the "
-"necessary commits.  Try fetching from %s first."
+#: cola/widgets/createbranch.py:290
+msgid "Recovering lost commits may not be easy."
+msgstr "恢复丢失的提交是比较困难的."
+
+#: cola/widgets/createbranch.py:292
+#, fuzzy
+msgid "Reset Branch?"
+msgstr "删除分支"
+
+#: cola/widgets/createbranch.py:294
+#, python-format
+msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr ""
-"由于没有获取到必要的提交，一个或多个合并测试失败。请尝试从 %s 处先获取。"
 
-#: lib/remote_branch_delete.tcl:207
-msgid "Please select one or more branches to delete."
-msgstr "请选择某个或多个分支来删除"
+#: cola/widgets/createbranch.py:296
+#, fuzzy
+msgid "Reset Branch"
+msgstr "删除分支"
 
-#: lib/remote_branch_delete.tcl:216
-msgid ""
-"Recovering deleted branches is difficult.\n"
-"\n"
-"Delete the selected branches?"
+#: cola/widgets/createbranch.py:305
+#, fuzzy
+msgid "Updating..."
+msgstr "开始..."
+
+#: cola/widgets/createbranch.py:321
+#, fuzzy
+msgid "Error Creating Branch"
+msgstr "创建分支"
+
+#: cola/widgets/createbranch.py:322
+#, python-format
+msgid "\"%(command)s\" returned exit status \"%(status)d\""
 msgstr ""
-"恢复被删除的分支非常困难.\n"
+
+#: cola/widgets/createbranch.py:331
+#, fuzzy
+msgid "Branch created"
+msgstr "分支名"
+
+#: cola/widgets/createtag.py:56
+msgid "Specifies the tag name"
+msgstr ""
+
+#: cola/widgets/createtag.py:62
+#, fuzzy
+msgid "Sign Tag"
+msgstr "签名(Sign Off)"
+
+#: cola/widgets/createtag.py:67
+msgid "Whether to sign the tag (git tag -s)"
+msgstr ""
+
+#: cola/widgets/createtag.py:78
+msgid "Tag message..."
+msgstr ""
+
+#: cola/widgets/createtag.py:79
+msgid "Specifies the tag message"
+msgstr ""
+
+#: cola/widgets/createtag.py:91
+msgid "Specifies the SHA-1 to tag"
+msgstr ""
+
+#: cola/widgets/createtag.py:121
+#, fuzzy
+msgid "Missing Revision"
+msgstr "起始版本"
+
+#: cola/widgets/createtag.py:122
+#, fuzzy
+msgid "Please specify a revision to tag."
+msgstr "请选择分支更名."
+
+#: cola/widgets/createtag.py:125
+#, fuzzy
+msgid "Missing Name"
+msgstr "不存在"
+
+#: cola/widgets/createtag.py:126
+msgid "Please specify a name for the new tag."
+msgstr ""
+
+#: cola/widgets/createtag.py:129
+#, fuzzy
+msgid "Missing Tag Message"
+msgstr "要合并的版本"
+
+#: cola/widgets/createtag.py:130
+msgid "Tag-signing was requested but the tag message is empty."
+msgstr ""
+
+#: cola/widgets/createtag.py:132
+msgid ""
+"An unsigned, lightweight tag will be created instead.\n"
+"Create an unsigned tag?"
+msgstr ""
+
+#: cola/widgets/createtag.py:135
+msgid "Create Unsigned Tag"
+msgstr ""
+
+#: cola/widgets/createtag.py:142
+#, fuzzy
+msgid "Tag Created"
+msgstr "新建"
+
+#: cola/widgets/createtag.py:143
+#, python-format
+msgid "Created a new tag named \"%s\""
+msgstr ""
+
+#: cola/widgets/diff.py:22
+msgid "Process Section"
+msgstr ""
+
+#: cola/widgets/diff.py:25
+msgid "Process Selection"
+msgstr ""
+
+#: cola/widgets/diff.py:40
+msgid "Stage &Selected Lines"
+msgstr ""
+
+#: cola/widgets/diff.py:46
+msgid "Revert Selected Lines..."
+msgstr ""
+
+#: cola/widgets/diff.py:51
+#, fuzzy
+msgid "Unstage &Selected Lines"
+msgstr "未缓存的改动"
+
+#: cola/widgets/diff.py:57
+msgid "Apply Diff Selection to Work Tree"
+msgstr ""
+
+#: cola/widgets/diff.py:81 cola/widgets/diff.py:103 cola/widgets/status.py:435
+#: cola/widgets/status.py:547
+msgid "Launch git-cola"
+msgstr ""
+
+#: cola/widgets/diff.py:86
+#, fuzzy
+msgid "Stage Section"
+msgstr "起始版本"
+
+#: cola/widgets/diff.py:92
+msgid "Revert Section..."
+msgstr ""
+
+#: cola/widgets/diff.py:108
+msgid "Unstage Section"
+msgstr ""
+
+#: cola/widgets/diff.py:120
+msgid "Copy"
+msgstr "复制"
+
+#: cola/widgets/diff.py:124
+msgid "Select All"
+msgstr "全选"
+
+#: cola/widgets/diff.py:227
+msgid "Revert Section?"
+msgstr ""
+
+#: cola/widgets/diff.py:231
+msgid "Revert Section"
+msgstr ""
+
+#: cola/widgets/diff.py:240
+#, fuzzy
+msgid "Revert Selected Lines?"
+msgstr "撤销文件 %s 中的改动?"
+
+#: cola/widgets/diff.py:244
+msgid "Revert Selected Lines"
+msgstr ""
+
+#: cola/widgets/editremotes.py:22
+msgid ""
+"Add and remove remote repositories using the \n"
+"Add(+) and Delete(-) buttons on the left-hand side.\n"
 "\n"
-"是否要删除所选分支?"
+"Remotes can be renamed by selecting one from the list\n"
+"and pressing \"enter\", or by double-clicking."
+msgstr ""
 
-#: lib/remote_branch_delete.tcl:226
-#, tcl-format
-msgid "Deleting branches from %s"
-msgstr "从 %s 中删除分支"
+#: cola/widgets/editremotes.py:32
+msgid "Remote git repositories - double-click to rename"
+msgstr ""
 
-#: lib/remote_branch_delete.tcl:286
+#: cola/widgets/editremotes.py:45
+#, fuzzy
+msgid "Add new remote git repository"
+msgstr "不是一个 Git 版本库: %s"
+
+#: cola/widgets/editremotes.py:49 cola/widgets/grep.py:64
+#: cola/widgets/recent.py:52 cola/widgets/recent.py:121
+msgid "Refresh"
+msgstr "刷新"
+
+#: cola/widgets/editremotes.py:53
+#, fuzzy
+msgid "Delete remote"
+msgstr "删除远端分支"
+
+#: cola/widgets/editremotes.py:116
+#, python-format
+msgid "Error creating remote \"%s\""
+msgstr ""
+
+#: cola/widgets/editremotes.py:124
+#, fuzzy
+msgid "Delete Remote"
+msgstr "删除远端分支"
+
+#: cola/widgets/editremotes.py:125
+#, fuzzy
+msgid "Delete remote?"
+msgstr "删除远端分支"
+
+#: cola/widgets/editremotes.py:126
+#, fuzzy, python-format
+msgid "Delete remote \"%s\""
+msgstr "删除远端分支"
+
+#: cola/widgets/editremotes.py:134
+#, python-format
+msgid "Error deleting remote \"%s\""
+msgstr ""
+
+#: cola/widgets/editremotes.py:153
+#, fuzzy
+msgid "Rename Remote"
+msgstr "远端(remote)"
+
+#: cola/widgets/editremotes.py:154
+#, fuzzy
+msgid "Rename remote?"
+msgstr "远端(remote)"
+
+#: cola/widgets/editremotes.py:155
+#, python-format
+msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
+msgstr ""
+
+#: cola/widgets/editremotes.py:157
+msgid "Rename"
+msgstr "更名..."
+
+#: cola/widgets/editremotes.py:169
+#, fuzzy, python-format
+msgid "Gathering info for \"%s\"..."
+msgstr "装载 %s 的 diff ..."
+
+#: cola/widgets/editremotes.py:201
+#, fuzzy
+msgid "Add Remote"
+msgstr "远端(remote)"
+
+#: cola/widgets/editremotes.py:213
+msgid "Name for the new remote"
+msgstr ""
+
+#: cola/widgets/editremotes.py:220
+msgid "URL"
+msgstr "URL"
+
+#: cola/widgets/grep.py:51
+msgid "command-line arguments"
+msgstr ""
+
+#: cola/widgets/grep.py:55
+msgid "grep result..."
+msgstr ""
+
+#: cola/widgets/grep.py:68
+msgid "Shell arguments"
+msgstr ""
+
+#: cola/widgets/grep.py:70
+msgid ""
+"Parse arguments using a shell.\n"
+"Queries with spaces will require \"double quotes\"."
+msgstr ""
+
+#: cola/widgets/log.py:34
+#, fuzzy, python-format
+msgid "exit code %s"
+msgstr "获取(fetch)"
+
+#: cola/widgets/recent.py:36
+msgid "Recently Modified Files"
+msgstr ""
+
+#: cola/widgets/recent.py:46
+msgid " commits ago"
+msgstr ""
+
+#: cola/widgets/recent.py:49
+#, fuzzy
+msgid "Showing changes since"
+msgstr "上传改动到 %s"
+
+#: cola/widgets/recent.py:61
+msgid "Expand"
+msgstr ""
+
+#: cola/widgets/recent.py:65
+#, fuzzy
+msgid "Collapse"
+msgstr "关闭"
+
+#: cola/widgets/remote.py:136
+#, fuzzy
+msgid "Remote Branch"
+msgstr "更改分支名:"
+
+#: cola/widgets/remote.py:143
+#, fuzzy
+msgid "Fast Forward Only "
+msgstr "仅快速合并"
+
+#: cola/widgets/remote.py:147
+#, fuzzy
+msgid "Include tags "
+msgstr "包含标签"
+
+#: cola/widgets/remote.py:150
+#, fuzzy
+msgid "Rebase "
+msgstr "复位"
+
+#: cola/widgets/remote.py:314
+#, fuzzy, python-format
+msgid "URL: %s"
+msgstr "URL:"
+
+#: cola/widgets/remote.py:393
 msgid "No repository selected."
 msgstr "没有选择版本库"
 
-#: lib/remote_branch_delete.tcl:291
-#, tcl-format
-msgid "Scanning %s..."
-msgstr "正在扫描 %s..."
+#: cola/widgets/remote.py:406
+msgid "Push"
+msgstr "上传"
 
-#: lib/remote.tcl:165
-msgid "Prune from"
-msgstr "从..清除(prune)"
-
-#: lib/remote.tcl:170
-msgid "Fetch from"
-msgstr "从..获取(fetch)"
-
-#: lib/remote.tcl:213
-msgid "Push to"
-msgstr "上传到(push)"
-
-#: lib/shortcut.tcl:20 lib/shortcut.tcl:61
-msgid "Cannot write shortcut:"
-msgstr "无法修改快捷方式:"
-
-#: lib/shortcut.tcl:136
-msgid "Cannot write icon:"
-msgstr "无法修改图标:"
-
-#: lib/spellcheck.tcl:57
-msgid "Unsupported spell checker"
+#: cola/widgets/remote.py:408
+#, python-format
+msgid ""
+"Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
+"A new remote branch will be published."
 msgstr ""
 
-#: lib/spellcheck.tcl:65
-msgid "Spell checking is unavailable"
+#: cola/widgets/remote.py:410
+#, fuzzy
+msgid "Create a new remote branch?"
+msgstr "新建分支"
+
+#: cola/widgets/remote.py:411
+#, fuzzy
+msgid "Create Remote Branch"
+msgstr "删除远端分支"
+
+#: cola/widgets/remote.py:419
+msgid "Force Fetch?"
 msgstr ""
 
-#: lib/spellcheck.tcl:68
-msgid "Invalid spell checking configuration"
+#: cola/widgets/remote.py:420
+msgid "Non-fast-forward fetch overwrites local history!"
 msgstr ""
 
-#: lib/spellcheck.tcl:70
-#, tcl-format
-msgid "Reverting dictionary to %s."
+#: cola/widgets/remote.py:421
+#, fuzzy, python-format
+msgid "Force fetching from %s?"
+msgstr "获取 %s 自 %s"
+
+#: cola/widgets/remote.py:422
+msgid "Force Fetch"
 msgstr ""
 
-#: lib/spellcheck.tcl:73
-msgid "Spell checker silently failed on startup"
+#: cola/widgets/remote.py:424
+msgid "Force Push?"
 msgstr ""
 
-#: lib/spellcheck.tcl:80
-msgid "Unrecognized spell checker"
+#: cola/widgets/remote.py:425
+msgid ""
+"Non-fast-forward push overwrites published history!\n"
+"(Did you pull first?)"
 msgstr ""
 
-#: lib/spellcheck.tcl:180
-msgid "No Suggestions"
+#: cola/widgets/remote.py:427
+#, python-format
+msgid "Force push to %s?"
 msgstr ""
 
-#: lib/spellcheck.tcl:381
-msgid "Unexpected EOF from spell checker"
+#: cola/widgets/remote.py:428
+msgid "Force Push"
 msgstr ""
 
-#: lib/spellcheck.tcl:385
-msgid "Spell Checker Failed"
+#: cola/widgets/remote.py:462
+msgid "Already up-to-date."
 msgstr ""
 
-#: lib/status_bar.tcl:83
-#, tcl-format
-msgid "%s ... %*i of %*i %s (%3i%%)"
-msgstr "%s ... %*i of %*i %s (%3i%%)"
+#: cola/widgets/remote.py:472 cola/widgets/startup.py:163
+#, python-format
+msgid "\"%(command)s\" returned exit status %(status)d"
+msgstr ""
 
-#: lib/transport.tcl:6
-#, tcl-format
-msgid "fetch %s"
-msgstr "获取(fetch)"
+#: cola/widgets/remote.py:486
+msgid "Have you rebased/pulled lately?"
+msgstr ""
 
-#: lib/transport.tcl:7
-#, tcl-format
-msgid "Fetching new changes from %s"
-msgstr "从 %s 处获取新的改动"
+#: cola/widgets/search.py:40 cola/widgets/search.py:58
+msgid "Search"
+msgstr ""
 
-#: lib/transport.tcl:18
-#, tcl-format
-msgid "remote prune %s"
-msgstr "清除远端 %s"
+#: cola/widgets/search.py:44
+#, fuzzy
+msgid "Browse..."
+msgstr "浏览"
 
-#: lib/transport.tcl:19
-#, tcl-format
-msgid "Pruning tracking branches deleted from %s"
-msgstr "清除"
+#: cola/widgets/search.py:50 cola/widgets/search.py:55
+msgid "yyyy-MM-dd"
+msgstr ""
 
-#: lib/transport.tcl:25 lib/transport.tcl:71
-#, tcl-format
-msgid "push %s"
-msgstr "上传 %s"
+#: cola/widgets/search.py:220
+#, fuzzy
+msgid "Search by Expression"
+msgstr "版本表达式:"
 
-#: lib/transport.tcl:26
-#, tcl-format
-msgid "Pushing changes to %s"
-msgstr "上传改动到 %s"
+#: cola/widgets/search.py:221
+msgid "Search by Path"
+msgstr ""
 
-#: lib/transport.tcl:72
-#, tcl-format
-msgid "Pushing %s %s to %s"
-msgstr "上传 %s %s 到 %s"
+#: cola/widgets/search.py:222
+#, fuzzy
+msgid "Search Commit Messages"
+msgstr "合并提交描述:"
 
-#: lib/transport.tcl:89
-msgid "Push Branches"
-msgstr "上传分支"
+#: cola/widgets/search.py:223
+msgid "Search Diffs"
+msgstr ""
 
-#: lib/transport.tcl:103
-msgid "Source Branches"
-msgstr "源端分支:"
+#: cola/widgets/search.py:224
+msgid "Search Authors"
+msgstr ""
 
-#: lib/transport.tcl:120
-msgid "Destination Repository"
-msgstr "目标版本库"
+#: cola/widgets/search.py:225
+#, fuzzy
+msgid "Search Committers"
+msgstr "提交者:"
 
-#: lib/transport.tcl:158
-msgid "Transfer Options"
-msgstr "传输选项"
+#: cola/widgets/search.py:226
+msgid "Search Date Range"
+msgstr ""
 
-#: lib/transport.tcl:160
-msgid "Force overwrite existing branch (may discard changes)"
-msgstr "强制覆盖已有的分支 (可能会丢失改动)"
+#: cola/widgets/search.py:319
+#, fuzzy
+msgid "Choose Path(s)"
+msgstr "选择 %s"
 
-#: lib/transport.tcl:164
-msgid "Use thin pack (for slow network connections)"
-msgstr "使用 thin pack (适用于低速网络连接)"
+#: cola/widgets/selectcommits.py:50
+msgid "Revision Expression:"
+msgstr "版本表达式:"
 
-#: lib/transport.tcl:168
-msgid "Include tags"
-msgstr "包含标签"
+#: cola/widgets/selectcommits.py:101
+msgid "No commits exist in this branch."
+msgstr ""
+
+#: cola/widgets/startup.py:28
+msgid "git-cola"
+msgstr ""
+
+#: cola/widgets/startup.py:35
+msgid "New..."
+msgstr "新建..."
+
+#: cola/widgets/startup.py:58
+#, fuzzy
+msgid "Select Repository..."
+msgstr "Git 版本库"
+
+#: cola/widgets/startup.py:63
+#, fuzzy
+msgid "Select manually..."
+msgstr "全选"
+
+#: cola/widgets/startup.py:162
+#, fuzzy
+msgid "Error Creating Repository"
+msgstr "创建新的版本库"
+
+#: cola/widgets/startup.py:165
+#, python-format
+msgid ""
+"Output:\n"
+"%s"
+msgstr ""
+
+#: cola/widgets/status.py:82
+#, fuzzy
+msgid "Untracked"
+msgstr "未跟踪, 未缓存"
+
+#: cola/widgets/status.py:92
+#, fuzzy
+msgid "Stage / Unstage"
+msgstr "缓存改动"
+
+#: cola/widgets/status.py:122
+msgid "Move Up"
+msgstr ""
+
+#: cola/widgets/status.py:124
+msgid "Move Down"
+msgstr ""
+
+#: cola/widgets/status.py:127
+msgid "Copy Path to Clipboard"
+msgstr ""
+
+#: cola/widgets/status.py:427 cola/widgets/status.py:514
+msgid "Revert Unstaged Edits..."
+msgstr ""
+
+#: cola/widgets/status.py:456
+msgid "Launch Merge Tool"
+msgstr ""
+
+#: cola/widgets/status.py:517
+msgid "Revert Uncommited Edits..."
+msgstr ""
+
+#: cola/widgets/status.py:535
+#, fuzzy
+msgid "Delete File(s)..."
+msgstr "删除..."
+
+#: cola/widgets/status.py:538
+msgid "Add to .gitignore"
+msgstr ""
+
+#: cola/widgets/status.py:574
+#, fuzzy
+msgid "Delete Files?"
+msgstr "删除"
+
+#: cola/widgets/status.py:575
+msgid "The following files will be deleted:"
+msgstr ""
+
+#: cola/widgets/status.py:582
+#, python-format
+msgid "Delete %d file(s)?"
+msgstr ""
+
+#: cola/widgets/status.py:583
+#, fuzzy
+msgid "Delete Files"
+msgstr "删除"
+
+#: cola/widgets/status.py:599
+#, fuzzy
+msgid "Revert Unstaged Changes?"
+msgstr "未缓存的改动"
+
+#: cola/widgets/status.py:600
+msgid ""
+"This operation drops unstaged changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+#: cola/widgets/status.py:602
+#, fuzzy
+msgid "Revert the unstaged changes?"
+msgstr "未缓存的改动"
+
+#: cola/widgets/status.py:603
+#, fuzzy
+msgid "Revert Unstaged Changes"
+msgstr "未缓存的改动"
+
+#: cola/widgets/status.py:612 cola/widgets/status.py:629
+msgid "No files selected for checkout from HEAD."
+msgstr ""
+
+#~ msgid "git-gui: fatal error"
+#~ msgstr "git-gui: 致命错误"
+
+#~ msgid "Invalid font specified in %s:"
+#~ msgstr "%s 中指定的字体无效:"
+
+#~ msgid "Main Font"
+#~ msgstr "主要字体"
+
+#~ msgid "Diff/Console Font"
+#~ msgstr "Diff/控制终端字体"
+
+#~ msgid "Cannot find git in PATH."
+#~ msgstr "PATH 中没有找到 git"
+
+#~ msgid "Cannot parse Git version string:"
+#~ msgstr "无法解析 Git 的版本信息:"
+
+#~ msgid ""
+#~ "Git version cannot be determined.\n"
+#~ "\n"
+#~ "%s claims it is version '%s'.\n"
+#~ "\n"
+#~ "%s requires at least Git 1.5.0 or later.\n"
+#~ "\n"
+#~ "Assume '%s' is version 1.5.0?\n"
+#~ msgstr ""
+#~ "无法确定 Git 的版本.\n"
+#~ "\n"
+#~ "%s 声明其版本为 '%s'.\n"
+#~ "\n"
+#~ "而 %s 需要 1.5.0 或这以后的 Git 版本.\n"
+#~ "\n"
+#~ "是否假定 '%s' 为版本 1.5.0?\n"
+
+#~ msgid "Git directory not found:"
+#~ msgstr "Git 目录无法找到:"
+
+#~ msgid "Cannot move to top of working directory:"
+#~ msgstr "无法移动到工作根目录:"
+
+#~ msgid "Cannot use funny .git directory:"
+#~ msgstr "无法使用 .git 目录:"
+
+#~ msgid "No working directory"
+#~ msgstr "没有工作目录"
+
+#~ msgid "Refreshing file status..."
+#~ msgstr "更新文件状态..."
+
+#~ msgid "Ready."
+#~ msgstr "就绪"
+
+#~ msgid "Modified, not staged"
+#~ msgstr "修改但未缓存"
+
+#~ msgid "Portions staged for commit"
+#~ msgstr "部分缓存为提交"
+
+#~ msgid "Staged for commit, missing"
+#~ msgstr "缓存为提交, 不存在"
+
+#~ msgid "Staged for removal"
+#~ msgstr "缓存为删除"
+
+#~ msgid "Staged for removal, still present"
+#~ msgstr "缓存为删除, 但仍存在"
+
+#~ msgid "Requires merge resolution"
+#~ msgstr "需要解决合并冲突"
+
+#~ msgid "Starting gitk... please wait..."
+#~ msgstr "启动 gitk... 请等待..."
+
+#~ msgid ""
+#~ "Unable to start gitk:\n"
+#~ "\n"
+#~ "%s does not exist"
+#~ msgstr ""
+#~ "无法启动 gitk:\n"
+#~ "\n"
+#~ "%s 不存在"
+
+#~ msgid "Repository"
+#~ msgstr "版本库(repository)"
+
+#~ msgid "Commit@@noun"
+#~ msgstr "提交(commit)"
+
+#~ msgid "Browse %s's Files"
+#~ msgstr "浏览 %s 上的文件"
+
+#~ msgid "Visualize %s's History"
+#~ msgstr "图示 %s 分支的历史"
+
+#~ msgid "Database Statistics"
+#~ msgstr "数据库统计信息"
+
+#~ msgid "Compress Database"
+#~ msgstr "压缩数据库"
+
+#~ msgid "Verify Database"
+#~ msgstr "验证数据库"
+
+#~ msgid "Create Desktop Icon"
+#~ msgstr "创建桌面图标"
+
+#~ msgid "Undo"
+#~ msgstr "撤销"
+
+#~ msgid "Redo"
+#~ msgstr "重做"
+
+#~ msgid "Cut"
+#~ msgstr "剪切"
+
+#~ msgid "Paste"
+#~ msgstr "粘贴"
+
+#~ msgid "Rename..."
+#~ msgstr "更名..."
+
+#~ msgid "New Commit"
+#~ msgstr "新建提交"
+
+#~ msgid "Local Merge..."
+#~ msgstr "本地合并..."
+
+#~ msgid "Preferences..."
+#~ msgstr "首选项..."
+
+#~ msgid "Current Branch:"
+#~ msgstr "当前分支:"
+
+#~ msgid "Staged Changes (Will Commit)"
+#~ msgstr "已缓存的改动 (将被提交)"
+
+#~ msgid "Initial Commit Message:"
+#~ msgstr "初始的提交描述:"
+
+#~ msgid "Amended Commit Message:"
+#~ msgstr "修正的提交描述:"
+
+#~ msgid "Amended Initial Commit Message:"
+#~ msgstr "修正的初始提交描述:"
+
+#~ msgid "Amended Merge Commit Message:"
+#~ msgstr "修正的合并提交描述:"
+
+#~ msgid "Apply/Reverse Hunk"
+#~ msgstr "应用/撤消此修改块"
+
+#~ msgid "Show Less Context"
+#~ msgstr "显示更少上下文"
+
+#~ msgid "Show More Context"
+#~ msgstr "显示更多上下文"
+
+#~ msgid "Decrease Font Size"
+#~ msgstr "缩小字体"
+
+#~ msgid "Increase Font Size"
+#~ msgstr "放大字体"
+
+#~ msgid "Unstage Hunk From Commit"
+#~ msgstr "从提交中撤除修改块"
+
+#~ msgid "Stage Hunk For Commit"
+#~ msgstr "缓存修改块为提交"
+
+#~ msgid "Initializing..."
+#~ msgstr "初始化..."
+
+#~ msgid ""
+#~ "Possible environment issues exist.\n"
+#~ "\n"
+#~ "The following environment variables are probably\n"
+#~ "going to be ignored by any Git subprocess run\n"
+#~ "by %s:\n"
+#~ "\n"
+#~ msgstr ""
+#~ "可能存在环境变量的问题.\n"
+#~ "\n"
+#~ "由 %s 执行的 Git 子进程可能忽略下列环境变量:\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is due to a known issue with the\n"
+#~ "Tcl binary distributed by Cygwin."
+#~ msgstr ""
+#~ "\n"
+#~ "这是由 Cygwin 发布的 Tcl 代码中一个\n"
+#~ "已知问题所引起."
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "A good replacement for %s\n"
+#~ "is placing values for the user.name and\n"
+#~ "user.email settings into your personal\n"
+#~ "~/.gitconfig file.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "%s 的一个很好的替代方案是将 user.name 以及\n"
+#~ "user.email 设置放在你的个人 ~/.gitconfig 文件中.\n"
+
+#~ msgid "git-gui - a graphical user interface for Git."
+#~ msgstr "git-gui - Git 的图形化用户界面"
+
+#~ msgid "File Viewer"
+#~ msgstr "文件查看器"
+
+#~ msgid "Reading %s..."
+#~ msgstr "读取 %s..."
+
+#~ msgid "Loading copy/move tracking annotations..."
+#~ msgstr "装载复制/移动跟踪标注..."
+
+#~ msgid "lines annotated"
+#~ msgstr "标注行"
+
+#~ msgid "Loading original location annotations..."
+#~ msgstr "装载原始位置标注..."
+
+#~ msgid "Annotation complete."
+#~ msgstr "标注完成."
+
+#~ msgid "Loading annotation..."
+#~ msgstr "裝載标注..."
+
+#~ msgid "Original File:"
+#~ msgstr "原始文件:"
+
+#~ msgid "Originally By:"
+#~ msgstr "最初由:"
+
+#~ msgid "In File:"
+#~ msgstr "在文件:"
+
+#~ msgid "Copied Or Moved Here By:"
+#~ msgstr "由复制或移动至此:"
+
+#~ msgid "Checkout"
+#~ msgstr "Checkout"
+
+#~ msgid "Detach From Local Branch"
+#~ msgstr "从本地分支脱离"
+
+#~ msgid "Match Tracking Branch Name"
+#~ msgstr "匹配跟踪分支名字"
+
+#~ msgid "Tracking branch %s is not a branch in the remote repository."
+#~ msgstr "跟踪分支 %s 并不是远端版本库中的一个分支"
+
+#~ msgid "Please supply a branch name."
+#~ msgstr "请提供分支名字."
+
+#~ msgid "'%s' is not an acceptable branch name."
+#~ msgstr "'%s'不是一个可接受的分支名."
+
+#~ msgid "Delete Local Branch"
+#~ msgstr "删除本地分支"
+
+#~ msgid "Local Branches"
+#~ msgstr "本地分支"
+
+#~ msgid "Delete Only If Merged Into"
+#~ msgstr "仅在合并后删除"
+
+#~ msgid "Always (Do not perform merge test.)"
+#~ msgstr "总是合并 (不作合并测试.)"
+
+#~ msgid "The following branches are not completely merged into %s:"
+#~ msgstr "下列分支没有完全被合并到 %s:"
+
+#~ msgid ""
+#~ "Recovering deleted branches is difficult. \n"
+#~ "\n"
+#~ " Delete the selected branches?"
+#~ msgstr ""
+#~ "恢复被删除的分支非常困难.\n"
+#~ "\n"
+#~ "是否要删除所选分支?"
+
+#~ msgid ""
+#~ "Failed to delete branches:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "无法删除分支:\n"
+#~ "%s"
+
+#~ msgid "New Name:"
+#~ msgstr "新名字:"
+
+#~ msgid "Failed to rename '%s'."
+#~ msgstr "无法更名 '%s'."
+
+#~ msgid "[Up To Parent]"
+#~ msgstr "[上层目录]"
+
+#~ msgid "Browse Branch Files"
+#~ msgstr "浏览分支文件"
+
+#~ msgid "fatal: Cannot resolve %s"
+#~ msgstr "致命错误: 无法解决 %s"
+
+#~ msgid "Branch '%s' does not exist."
+#~ msgstr "分支 '%s' 并不存在."
+
+#~ msgid ""
+#~ "Branch '%s' already exists.\n"
+#~ "\n"
+#~ "It cannot fast-forward to %s.\n"
+#~ "A merge is required."
+#~ msgstr ""
+#~ "分支 '%s' 已经存在.\n"
+#~ "\n"
+#~ "无法快速合并到 %s.\n"
+#~ "需要普通合并."
+
+#~ msgid "Merge strategy '%s' not supported."
+#~ msgstr "合并策略 '%s' 不支持."
+
+#~ msgid "Failed to update '%s'."
+#~ msgstr "无法更新 '%s'."
+
+#~ msgid "Staging area (index) is already locked."
+#~ msgstr "缓存区域 (index) 已被锁定."
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before the current branch can be changed.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "最后一次扫描的状态和当前版本库状态不符.\n"
+#~ "\n"
+#~ "另一 Git 程序自上次扫描后修改了本版本库. 在修改当前分支之前需要重新做一次"
+#~ "扫描.\n"
+#~ "\n"
+#~ "重新扫描将自动开始.\n"
+
+#~ msgid "Updating working directory to '%s'..."
+#~ msgstr "更新工作目录到 '%s'..."
+
+#~ msgid "Aborted checkout of '%s' (file level merging is required)."
+#~ msgstr "中止 '%s' 的 checkout 操作 (需要做文件级合并)."
+
+#~ msgid "File level merge required."
+#~ msgstr "需要文件级合并."
+
+#~ msgid "Staying on branch '%s'."
+#~ msgstr "停留在分支 '%s'."
+
+#~ msgid ""
+#~ "You are no longer on a local branch.\n"
+#~ "\n"
+#~ "If you wanted to be on a branch, create one now starting from 'This "
+#~ "Detached Checkout'."
+#~ msgstr ""
+#~ "你不在某个本地分支上.\n"
+#~ "\n"
+#~ "如果你想位于某分支上, 从当前脱节的Checkout中创建一个新分支."
+
+#~ msgid "Checked out '%s'."
+#~ msgstr "'%s' 已被 checkout"
+
+#~ msgid "Reset '%s'?"
+#~ msgstr "复位 '%s'?"
+
+#~ msgid ""
+#~ "Failed to set current branch.\n"
+#~ "\n"
+#~ "This working directory is only partially switched.  We successfully "
+#~ "updated your files, but failed to update an internal Git file.\n"
+#~ "\n"
+#~ "This should not have occurred.  %s will now close and give up."
+#~ msgstr ""
+#~ "无法设定当前分支.\n"
+#~ "\n"
+#~ "当前工作目录仅有部分被切换出, 我们已成功的更新了您的文件但是无法更新某个内"
+#~ "部的Git文件.\n"
+#~ "\n"
+#~ "这本不该发生, %s 将关闭并放弃."
+
+#~ msgid "Font Family"
+#~ msgstr "字体族"
+
+#~ msgid "Font Example"
+#~ msgstr "字体样例"
+
+#~ msgid ""
+#~ "This is example text.\n"
+#~ "If you like this text, it can be your font."
+#~ msgstr ""
+#~ "这是样例文本.\n"
+#~ "如果你喜欢, 你可以设置该字体."
+
+#~ msgid "Git Gui"
+#~ msgstr "Git Gui"
+
+#~ msgid "Clone Existing Repository"
+#~ msgstr "克隆已有版本库"
+
+#~ msgid "Recent Repositories"
+#~ msgstr "最近版本库"
+
+#~ msgid "Failed to create repository %s:"
+#~ msgstr "无法创建版本库 %s:"
+
+#~ msgid "Directory:"
+#~ msgstr "目录:"
+
+#~ msgid "Directory %s already exists."
+#~ msgstr "目录 %s 已经存在."
+
+#~ msgid "Clone"
+#~ msgstr "克隆"
+
+#~ msgid "Clone Type:"
+#~ msgstr "克隆类型:"
+
+#~ msgid "Standard (Fast, Semi-Redundant, Hardlinks)"
+#~ msgstr "标准方式 (快速, 部分备份, 作硬连接)"
+
+#~ msgid "Full Copy (Slower, Redundant Backup)"
+#~ msgstr "全部复制 (较慢, 做备份)"
+
+#~ msgid "Shared (Fastest, Not Recommended, No Backup)"
+#~ msgstr "共享方式 (最快, 不推荐, 不做备份)"
+
+#~ msgid "Standard only available for local repository."
+#~ msgstr "标准方式仅当是本地版本库时有效."
+
+#~ msgid "Shared only available for local repository."
+#~ msgstr "共享方式仅当是本地版本库时有效."
+
+#~ msgid "Location %s already exists."
+#~ msgstr "位置 %s 已经存在."
+
+#~ msgid "Failed to configure origin"
+#~ msgstr "无法配置 origin"
+
+#~ msgid "Counting objects"
+#~ msgstr "清点对象"
+
+#, fuzzy
+#~ msgid "buckets"
+#~ msgstr "水桶??"
+
+#~ msgid "Unable to copy objects/info/alternates: %s"
+#~ msgstr "无法复制 objects/info/alternates: %s"
+
+#~ msgid "The 'master' branch has not been initialized."
+#~ msgstr "'master'分支尚未初始化."
+
+#~ msgid "Hardlinks are unavailable.  Falling back to copying."
+#~ msgstr "硬连接不可用. 使用复制."
+
+#~ msgid "Cloning from %s"
+#~ msgstr "从 %s 克隆"
+
+#~ msgid "Copying objects"
+#~ msgstr "复制 objects"
+
+#~ msgid "KiB"
+#~ msgstr "KiB"
+
+#~ msgid "Unable to copy object: %s"
+#~ msgstr "无法复制 object: %s"
+
+#~ msgid "Linking objects"
+#~ msgstr "链接 objects"
+
+#~ msgid "objects"
+#~ msgstr "objects"
+
+#~ msgid "Unable to hardlink object: %s"
+#~ msgstr "无法硬链接 object: %s"
+
+#~ msgid "Cannot fetch branches and objects.  See console output for details."
+#~ msgstr "无法获取分支和对象. 请查看控制终端的输出."
+
+#~ msgid "Cannot fetch tags.  See console output for details."
+#~ msgstr "无法获取标签. 请查看控制终端的输出."
+
+#~ msgid "Cannot determine HEAD.  See console output for details."
+#~ msgstr "无法确定 HEAD. 请查看控制终端的输出."
+
+#~ msgid "Unable to cleanup %s"
+#~ msgstr "无法清理 %s"
+
+#~ msgid "Clone failed."
+#~ msgstr "克隆失败."
+
+#~ msgid "No default branch obtained."
+#~ msgstr "没有获取缺省分支"
+
+#~ msgid "Cannot resolve %s as a commit."
+#~ msgstr "无法解析 %s 为提交."
+
+#~ msgid "Creating working directory"
+#~ msgstr "创建工作目录"
+
+#~ msgid "files"
+#~ msgstr "文件"
+
+#~ msgid "Initial file checkout failed."
+#~ msgstr "初始的文件checkout失败"
+
+#~ msgid "Failed to open repository %s:"
+#~ msgstr "无法打开版本库 %s:"
+
+#~ msgid "This Detached Checkout"
+#~ msgstr "该脱节的Checkout"
+
+#~ msgid "Updated"
+#~ msgstr "已更新"
+
+#~ msgid ""
+#~ "There is nothing to amend.\n"
+#~ "\n"
+#~ "You are about to create the initial commit.  There is no commit before "
+#~ "this to amend.\n"
+#~ msgstr ""
+#~ "没有改动需要修正.\n"
+#~ "\n"
+#~ "你正在创建最初的提交. 在此之前没有提交可以修正.\n"
+
+#~ msgid ""
+#~ "Cannot amend while merging.\n"
+#~ "\n"
+#~ "You are currently in the middle of a merge that has not been fully "
+#~ "completed.  You cannot amend the prior commit unless you first abort the "
+#~ "current merge activity.\n"
+#~ msgstr ""
+#~ "在合并时无法修正.\n"
+#~ "\n"
+#~ "你当前正在一次尚未完成的合并操作过程中. 除非中止当前合并活动,\n"
+#~ "否则无法修正之前的提交.\n"
+
+#~ msgid "Error loading commit data for amend:"
+#~ msgstr "为修正装载提交数据出错:"
+
+#~ msgid "Unable to obtain your identity:"
+#~ msgstr "无法获知你的身份:"
+
+#~ msgid "Invalid GIT_COMMITTER_IDENT:"
+#~ msgstr "无效的 GIT_COMMITTER_IDENT"
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before another commit can be created.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "最后一次扫描的状态和当前版本库状态不符.\n"
+#~ "\n"
+#~ "另一 Git 程序自上次扫描后修改了本版本库. 在修改当前分支之前需要重新做一次"
+#~ "扫描.\n"
+#~ "\n"
+#~ "重新扫描将自动开始.\n"
+
+#~ msgid ""
+#~ "Unmerged files cannot be committed.\n"
+#~ "\n"
+#~ "File %s has merge conflicts.  You must resolve them and stage the file "
+#~ "before committing.\n"
+#~ msgstr ""
+#~ "尚未合并的文件没有办法提交.\n"
+#~ "\n"
+#~ "文件 %s 有合并冲突, 你必须解决这些冲突并缓存该文件作提交.\n"
+
+#~ msgid ""
+#~ "Unknown file state %s detected.\n"
+#~ "\n"
+#~ "File %s cannot be committed by this program.\n"
+#~ msgstr ""
+#~ "检测到未知文件状态 %s.\n"
+#~ "\n"
+#~ "文件 %s 无法由该程序提交.\n"
+
+#~ msgid "warning: Tcl does not support encoding '%s'."
+#~ msgstr "警告: Tcl 不支持编码方式 '%s'."
+
+#~ msgid "write-tree failed:"
+#~ msgstr "write-tree 失败:"
+
+#~ msgid "Commit %s appears to be corrupt"
+#~ msgstr "提交 %s 似乎已损坏"
+
+#~ msgid ""
+#~ "No changes to commit.\n"
+#~ "\n"
+#~ "No files were modified by this commit and it was not a merge commit.\n"
+#~ "\n"
+#~ "A rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "没有改动提交.\n"
+#~ "\n"
+#~ "该提交没有改动任何文件也不是一个合并提交.\n"
+#~ "\n"
+#~ "重新扫描将自动开始.\n"
+
+#~ msgid "commit-tree failed:"
+#~ msgstr "commit-tree 失败:"
+
+#~ msgid "update-ref failed:"
+#~ msgstr "update-ref 失败:"
+
+#~ msgid "Working... please wait..."
+#~ msgstr "工作中... 请等待..."
+
+#~ msgid "Success"
+#~ msgstr "成功"
+
+#~ msgid "Error: Command Failed"
+#~ msgstr "错误: 命令失败"
+
+#~ msgid "Number of loose objects"
+#~ msgstr "松散对象的数量"
+
+#~ msgid "Disk space used by loose objects"
+#~ msgstr "松散对象所使用的磁盘空间"
+
+#~ msgid "Number of packed objects"
+#~ msgstr "压缩对象数量"
+
+#~ msgid "Number of packs"
+#~ msgstr "压缩包数量"
+
+#~ msgid "Disk space used by packed objects"
+#~ msgstr "压缩对象所使用的磁盘空间"
+
+#~ msgid "Packed objects waiting for pruning"
+#~ msgstr "压缩对象等待清理"
+
+#~ msgid "Garbage files"
+#~ msgstr "垃圾文件"
+
+#~ msgid "Compressing the object database"
+#~ msgstr "压缩对象数据库"
+
+#~ msgid "Verifying the object database with fsck-objects"
+#~ msgstr "使用 fsck-objects 验证对象数据库"
+
+#~ msgid ""
+#~ "This repository currently has approximately %i loose objects.\n"
+#~ "\n"
+#~ "To maintain optimal performance it is strongly recommended that you "
+#~ "compress the database when more than %i loose objects exist.\n"
+#~ "\n"
+#~ "Compress the database now?"
+#~ msgstr ""
+#~ "该版本库当前约有 %i 个松散对象.\n"
+#~ "\n"
+#~ "为达到较优的性能，强烈建议你在松散对象多于 %i 时压缩数据库.\n"
+#~ "\n"
+#~ "现在就压缩数据库么?"
+
+#~ msgid "Invalid date from Git: %s"
+#~ msgstr "无效的日期: %s"
+
+#~ msgid ""
+#~ "No differences detected.\n"
+#~ "\n"
+#~ "%s has no changes.\n"
+#~ "\n"
+#~ "The modification date of this file was updated by another application, "
+#~ "but the content within the file was not changed.\n"
+#~ "\n"
+#~ "A rescan will be automatically started to find other files which may have "
+#~ "the same state."
+#~ msgstr ""
+#~ "未检测到改动.\n"
+#~ "\n"
+#~ "该文件的修改日期被另一个程序所更新, 但其内容并没有变化.\n"
+#~ "\n"
+#~ "对于类似情况的其他文件的重新扫描将自动开始."
+
+#~ msgid "Unable to display %s"
+#~ msgstr "无法显示 %s"
+
+#~ msgid "Git Repository (subproject)"
+#~ msgstr "Git 版本库 (子项目)"
+
+#~ msgid "* Binary file (not showing content)."
+#~ msgstr "* 二进制文件 (不显示内容)."
+
+#~ msgid "Error loading diff:"
+#~ msgstr "装载 diff 错误:"
+
+#~ msgid "Failed to unstage selected hunk."
+#~ msgstr "无法将选择的代码段从缓存中删除."
+
+#~ msgid "Failed to stage selected hunk."
+#~ msgstr "无法缓存所选代码段."
+
+#~ msgid "warning"
+#~ msgstr "警告"
+
+#~ msgid "You must correct the above errors before committing."
+#~ msgstr "你必须在提交前修正上述错误."
+
+#~ msgid "Unable to unlock the index."
+#~ msgstr "无法解锁缓存 (index)"
+
+#~ msgid "Index Error"
+#~ msgstr "缓存(Index)错误"
+
+#~ msgid ""
+#~ "Updating the Git index failed.  A rescan will be automatically started to "
+#~ "resynchronize git-gui."
+#~ msgstr "更新 Git 缓存(Index)失败, 重新扫描将自动开始以重新同步 git-gui."
+
+#~ msgid "Unlock Index"
+#~ msgstr "解锁 Index"
+
+#, fuzzy
+#~ msgid "Ready to commit."
+#~ msgstr "缓存为提交"
+
+#~ msgid "Revert changes in these %i files?"
+#~ msgstr "撤销这些 (%i个) 文件的改动?"
+
+#~ msgid "Any unstaged changes will be permanently lost by the revert."
+#~ msgstr "任何未缓存的改动将在这次撤销中永久丢失."
+
+#~ msgid "Do Nothing"
+#~ msgstr "不做操作"
+
+#~ msgid ""
+#~ "Cannot merge while amending.\n"
+#~ "\n"
+#~ "You must finish amending this commit before starting any type of merge.\n"
+#~ msgstr ""
+#~ "修正时无法做合并.\n"
+#~ "\n"
+#~ "你必须完成对该提交的修正才能继续任何类型的合并操作.\n"
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before a merge can be performed.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "最后一次扫描的状态和当前版本库状态不符.\n"
+#~ "\n"
+#~ "另一 Git 程序自上次扫描后修改了本版本库. 在修改当前分支之前需要重新做一次"
+#~ "扫描.\n"
+#~ "\n"
+#~ "重新扫描将自动开始.\n"
+
+#~ msgid ""
+#~ "You are in the middle of a conflicted merge.\n"
+#~ "\n"
+#~ "File %s has merge conflicts.\n"
+#~ "\n"
+#~ "You must resolve them, stage the file, and commit to complete the current "
+#~ "merge.  Only then can you begin another merge.\n"
+#~ msgstr ""
+#~ "你正处在一个有冲突的合并操作中.\n"
+#~ "\n"
+#~ "文件 %s 有合并冲突.\n"
+#~ "\n"
+#~ "你必须解决这些冲突, 缓存该文件, 并提交来完成当前的合并.仅当这样后才能开始"
+#~ "下一个合并操作.\n"
+
+#~ msgid ""
+#~ "You are in the middle of a change.\n"
+#~ "\n"
+#~ "File %s is modified.\n"
+#~ "\n"
+#~ "You should complete the current commit before starting a merge.  Doing so "
+#~ "will help you abort a failed merge, should the need arise.\n"
+#~ msgstr ""
+#~ "你正处在一个改动当中.\n"
+#~ "\n"
+#~ "文件 %s 已被修改.\n"
+#~ "\n"
+#~ "你必须完成当前的提交后才能开始合并. 如果需要, 这么做将有助于中止一次失败的"
+#~ "合并.\n"
+
+#, fuzzy
+#~ msgid "Merging %s and %s..."
+#~ msgstr "合并 %s 和 %s"
+
+#~ msgid "Merge completed successfully."
+#~ msgstr "合并成功完成."
+
+#~ msgid "Merge failed.  Conflict resolution is required."
+#~ msgstr "合并失败. 需要解决冲突."
+
+#~ msgid ""
+#~ "Cannot abort while amending.\n"
+#~ "\n"
+#~ "You must finish amending this commit.\n"
+#~ msgstr ""
+#~ "修正操作中无法中止.\n"
+#~ "\n"
+#~ "你必须先完成本次修正操作.\n"
+
+#~ msgid ""
+#~ "Reset changes?\n"
+#~ "\n"
+#~ "Resetting the changes will cause *ALL* uncommitted changes to be lost.\n"
+#~ "\n"
+#~ "Continue with resetting the current changes?"
+#~ msgstr ""
+#~ "是否复位当前改动?\n"
+#~ "\n"
+#~ "复位当前的改动将导致 *所有* 未提交的改动丢失.\n"
+#~ "\n"
+#~ "是否要继续复位当前的改动?"
+
+#, fuzzy
+#~ msgid "files reset"
+#~ msgstr "文件"
+
+#~ msgid "Abort failed."
+#~ msgstr "中止失败"
+
+#~ msgid "Abort completed.  Ready."
+#~ msgstr "中止完成. 就绪."
+
+#~ msgid "Restore Defaults"
+#~ msgstr "恢复默认值"
+
+#~ msgid "%s Repository"
+#~ msgstr "%s 版本库"
+
+#~ msgid "Prune Tracking Branches During Fetch"
+#~ msgstr "获取时清除跟踪分支"
+
+#~ msgid "Match Tracking Branches"
+#~ msgstr "匹配跟踪分支"
+
+#~ msgid "New Branch Name Template"
+#~ msgstr "新建分支命名模板"
+
+#~ msgid "Change Font"
+#~ msgstr "更改字体"
+
+#~ msgid "pt."
+#~ msgstr "磅"
+
+#~ msgid "Failed to completely save options:"
+#~ msgstr "无法完全保存选项:"
+
+#~ msgid "From Repository"
+#~ msgstr "从版本库"
+
+#~ msgid "Remote:"
+#~ msgstr "Remote:"
+
+#~ msgid "Arbitrary URL:"
+#~ msgstr "任意 URL:"
+
+#~ msgid "Delete Only If"
+#~ msgstr "删除仅当"
+
+#~ msgid "Merged Into:"
+#~ msgstr "合并到"
+
+#~ msgid "Always (Do not perform merge checks)"
+#~ msgstr "总是合并 (不作合并检查)"
+
+#~ msgid "A branch is required for 'Merged Into'."
+#~ msgstr "'合并到' 需要指定某个分支"
+
+#~ msgid ""
+#~ "The following branches are not completely merged into %s:\n"
+#~ "\n"
+#~ " - %s"
+#~ msgstr ""
+#~ "下列分支没有被全部合并到 %s 中:\n"
+#~ "\n"
+#~ " - %s"
+
+#~ msgid ""
+#~ "One or more of the merge tests failed because you have not fetched the "
+#~ "necessary commits.  Try fetching from %s first."
+#~ msgstr ""
+#~ "由于没有获取到必要的提交，一个或多个合并测试失败。请尝试从 %s 处先获取。"
+
+#~ msgid "Please select one or more branches to delete."
+#~ msgstr "请选择某个或多个分支来删除"
+
+#~ msgid ""
+#~ "Recovering deleted branches is difficult.\n"
+#~ "\n"
+#~ "Delete the selected branches?"
+#~ msgstr ""
+#~ "恢复被删除的分支非常困难.\n"
+#~ "\n"
+#~ "是否要删除所选分支?"
+
+#~ msgid "Prune from"
+#~ msgstr "从..清除(prune)"
+
+#~ msgid "Fetch from"
+#~ msgstr "从..获取(fetch)"
+
+#~ msgid "Push to"
+#~ msgstr "上传到(push)"
+
+#~ msgid "Cannot write shortcut:"
+#~ msgstr "无法修改快捷方式:"
+
+#~ msgid "%s ... %*i of %*i %s (%3i%%)"
+#~ msgstr "%s ... %*i of %*i %s (%3i%%)"
+
+#~ msgid "Fetching new changes from %s"
+#~ msgstr "从 %s 处获取新的改动"
+
+#~ msgid "remote prune %s"
+#~ msgstr "清除远端 %s"
+
+#~ msgid "Pruning tracking branches deleted from %s"
+#~ msgstr "清除"
+
+#~ msgid "push %s"
+#~ msgstr "上传 %s"
+
+#~ msgid "Pushing %s %s to %s"
+#~ msgstr "上传 %s %s 到 %s"
+
+#~ msgid "Push Branches"
+#~ msgstr "上传分支"
+
+#~ msgid "Source Branches"
+#~ msgstr "源端分支:"
+
+#~ msgid "Destination Repository"
+#~ msgstr "目标版本库"
+
+#~ msgid "Transfer Options"
+#~ msgstr "传输选项"
+
+#~ msgid "Force overwrite existing branch (may discard changes)"
+#~ msgstr "强制覆盖已有的分支 (可能会丢失改动)"
+
+#~ msgid "Use thin pack (for slow network connections)"
+#~ msgstr "使用 thin pack (适用于低速网络连接)"
