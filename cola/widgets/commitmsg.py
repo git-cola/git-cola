@@ -79,6 +79,8 @@ class CommitMessageEditor(QtGui.QWidget):
         # Amend checkbox
         self.amend_action = self.actions_menu.addAction(N_('Amend Last Commit'))
         self.amend_action.setCheckable(True)
+        self.amend_action.setShortcut(cmds.AmendMode.SHORTCUT)
+        self.amend_action.setShortcutContext(Qt.ApplicationShortcut)
 
         # Line wrapping
         self.actions_menu.addSeparator()
