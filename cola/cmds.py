@@ -93,6 +93,8 @@ class Command(BaseCommand):
 class AmendMode(Command):
     """Try to amend a commit."""
 
+    SHORTCUT = 'Ctrl+M'
+
     LAST_MESSAGE = None
 
     @staticmethod
