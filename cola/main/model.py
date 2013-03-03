@@ -312,7 +312,7 @@ class MainModel(Observable):
                                       with_status=True,
                                       with_stderr=True)
         os.unlink(tmpfile)
-        return (status, out)
+        return (status, core.decode(out))
 
     def remote_url(self, name, action):
         if action == 'push':
