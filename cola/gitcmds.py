@@ -197,16 +197,14 @@ def tag_list():
     return tags
 
 
+def log(git, *args, **kwargs):
+    return core.decode(git.log(no_color=True,
+                               no_ext_diff=True,
+                               *args, **kwargs))
+
+
 def commit_diff(sha1, git=git):
-    commit = git.show(sha1)
-    first_newline = commit.index('\n')
-    if commit[first_newline+1:].startswith('Merge:'):
-        return (core.decode(commit) + '\n\n' +
-                core.decode(diff_helper(commit=sha1,
-                                        cached=False,
-                                        suppress_header=False)))
-    else:
-        return core.decode(commit)
+    return log(git, '-1', sha1) + '\n\n' + sha1_diff(git, sha1)
 
 
 def _common_diff_opts(config=config):
@@ -222,16 +220,15 @@ def _common_diff_opts(config=config):
     }
 
 
-def sha1_diff(sha1, git=git):
-    return core.decode(git.diff(sha1 + '^!', **_common_diff_opts()))
+def sha1_diff(git, sha1):
+    return core.decode(git.diff(sha1+'~', sha1, **_common_diff_opts()))
 
 
 def diff_info(sha1, git=git):
-    log = git.log('-1', '--pretty=format:%b', sha1)
-    decoded = core.decode(log).strip()
+    decoded = log(git, '-1', sha1, pretty='format:%b').strip()
     if decoded:
         decoded += '\n\n'
-    return decoded + sha1_diff(sha1)
+    return decoded + sha1_diff(git, sha1)
 
 
 def diff_helper(commit=None,
@@ -599,7 +596,7 @@ def log_helper(all=False, extra_args=None):
     args = []
     if extra_args:
         args = extra_args
-    output = git.log(pretty='oneline', no_color=True, all=all, *args)
+    output = log(git, pretty='oneline', all=all, *args)
     for line in map(core.decode, output.splitlines()):
         match = REV_LIST_REGEX.match(line)
         if match:
