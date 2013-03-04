@@ -23,6 +23,7 @@ INFO_EVENT_TYPE = QtCore.QEvent.User + 42
 
 class Columns(object):
     """Defines columns in the classic view"""
+
     NAME = 'Name'
     STATUS = 'Status'
     AGE = 'Age'
@@ -32,14 +33,18 @@ class Columns(object):
 
     @classmethod
     def text(cls, column):
-        mapping = {
-            cls.NAME: N_('Name'),
-            cls.STATUS: N_('Status'),
-            cls.AGE: N_('Age'),
-            cls.MESSAGE: N_('Message'),
-            cls.AUTHOR: N_('Author')
-        }
-        return mapping.get(column, column)
+        if column == cls.NAME:
+            return N_('Name')
+        elif column == cls.STATUS:
+            return N_('Status')
+        elif column == cls.AGE:
+            return N_('Age')
+        elif column == cls.MESSAGE:
+            return N_('Message')
+        elif column == cls.AUTHOR:
+            return N_('Author')
+        else:
+            raise NotImplemented('Mapping required for "%s"' % column)
 
 
 class GitRepoModel(QtGui.QStandardItemModel):
