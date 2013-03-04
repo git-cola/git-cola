@@ -18,6 +18,7 @@ Thanks
 * Ingo Weinhold
 * Ismael Juma
 * Iulian Udrea
+* Ivar Smolin
 * Johann Schmitz
 * Justin Lecher
 * Karl Bielefeldt
@@ -26,6 +27,7 @@ Thanks
 * Kerrick Staley
 * Kevin Kofler
 * Libor Jelinek
+* Maciej Filipiak
 * Mahmoud Hossam
 * Marco Costalba
 * Markus Heidelberg
