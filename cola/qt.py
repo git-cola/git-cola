@@ -32,6 +32,7 @@ def create_button(text='', layout=None, tooltip=None, icon=None):
 
 
 class DockTitleBarWidget(QtGui.QWidget):
+
     def __init__(self, parent, title):
         QtGui.QWidget.__init__(self, parent)
         self.label = label = QtGui.QLabel()
@@ -57,17 +58,18 @@ class DockTitleBarWidget(QtGui.QWidget):
         self.toggle_button.setToolTip(N_('Detach'))
 
         self.corner_layout = QtGui.QHBoxLayout()
-        self.corner_layout.setMargin(0)
+        self.corner_layout.setMargin(defs.no_margin)
         self.corner_layout.setSpacing(defs.spacing)
 
-        layout = QtGui.QHBoxLayout()
-        layout.setMargin(2)
-        layout.setSpacing(defs.spacing)
-        layout.addWidget(label)
-        layout.addStretch()
-        layout.addLayout(self.corner_layout)
-        layout.addWidget(self.toggle_button)
-        layout.addWidget(self.close_button)
+        self.main_layout = layout = QtGui.QHBoxLayout()
+        self.main_layout.setMargin(defs.small_margin)
+        self.main_layout.setSpacing(defs.spacing)
+
+        self.main_layout.addWidget(label)
+        self.main_layout.addStretch()
+        self.main_layout.addLayout(self.corner_layout)
+        self.main_layout.addWidget(self.toggle_button)
+        self.main_layout.addWidget(self.close_button)
         self.setLayout(layout)
 
         qtutils.connect_button(self.toggle_button, self.toggle_floating)
@@ -92,7 +94,6 @@ class DockTitleBarWidget(QtGui.QWidget):
         else:
             tooltip = N_('Detach')
         self.toggle_button.setToolTip(tooltip)
-
 
 
 def create_dock(title, parent):
@@ -232,7 +233,7 @@ class GitRefDialog(QtGui.QDialog):
         self.close_button.setText(N_('Close'))
 
         self.button_layout = QtGui.QHBoxLayout()
-        self.button_layout.setMargin(0)
+        self.button_layout.setMargin(defs.no_margin)
         self.button_layout.setSpacing(defs.button_spacing)
         self.button_layout.addStretch()
         self.button_layout.addWidget(self.ok_button)
