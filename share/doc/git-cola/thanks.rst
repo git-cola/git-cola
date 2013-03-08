@@ -14,6 +14,7 @@ Thanks
 * David Martínez Martí
 * Eric Drechsel
 * `GIT Hackers <http://git-scm.com/about>`_
+* Glen Mailer
 * Guillaume de Bure
 * Ingo Weinhold
 * Ismael Juma

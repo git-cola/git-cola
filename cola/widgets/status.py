@@ -51,6 +51,9 @@ class StatusWidget(QtGui.QWidget):
     def restore_size(self):
         self.setMaximumWidth(2 ** 13)
 
+    def refresh(self):
+        self.tree.show_selection()
+
 
 class StatusTreeWidget(QtGui.QTreeWidget):
     # Item categories
