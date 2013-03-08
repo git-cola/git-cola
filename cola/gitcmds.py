@@ -207,9 +207,18 @@ def commit_diff(sha1, git=git):
     return log(git, '-1', sha1) + '\n\n' + sha1_diff(git, sha1)
 
 
+_diff_overrides = {}
+def update_diff_overrides(space_at_eol, space_change,
+                          all_space, function_context):
+    _diff_overrides['ignore_space_at_eol'] = space_at_eol
+    _diff_overrides['ignore_space_change'] = space_change
+    _diff_overrides['ignore_all_space'] = all_space
+    _diff_overrides['function_context'] = function_context
+
+
 def _common_diff_opts(config=config):
     submodule = version.check('diff-submodule', version.git_version())
-    return {
+    opts = {
         'patience': True,
         'submodule': submodule,
         'no_color': True,
@@ -218,6 +227,8 @@ def _common_diff_opts(config=config):
         'with_stderr': True,
         'unified': config.get('gui.diffcontext', 3),
     }
+    opts.update(_diff_overrides)
+    return opts
 
 
 def sha1_diff(git, sha1):
