@@ -1,3 +1,19 @@
+git-cola v1.8.3 (DRAFT)
+===============
+Usability, bells and whistles
+-----------------------------
+* The diff viewer now has an "Options" menu which can be
+  used to set "git diff" options.  This can be used to
+  ignore whitespace changes or to show a change with its
+  surrounding function as context.
+
+  http://github.com/git-cola/git-cola/issues/150
+
+* Ctrl+M can now be used to toggle the "Amend last commit"
+  checkbox in the commit message editor.
+
+  https://github.com/git-cola/git-cola/pull/161
+
 git-cola v1.8.2
 ===============
 Usability, bells and whistles
