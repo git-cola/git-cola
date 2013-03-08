@@ -14,6 +14,12 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/161
 
+Fixes
+-----
+* We now avoid invoking external diffs when showing diffstats.
+
+  https://github.com/git-cola/git-cola/pull/163
+
 git-cola v1.8.2
 ===============
 Usability, bells and whistles

@@ -412,6 +412,7 @@ class Diffstat(Command):
         Command.__init__(self)
         diff = self.model.git.diff(self.model.head,
                                    unified=_config.get('diff.context', 3),
+                                   no_ext_diff=True,
                                    no_color=True,
                                    M=True,
                                    stat=True)
@@ -434,6 +435,7 @@ class DiffStagedSummary(Command):
         diff = self.model.git.diff(self.model.head,
                                    cached=True,
                                    no_color=True,
+                                   no_ext_diff=True,
                                    patch_with_stat=True,
                                    M=True)
         self.new_diff_text = core.decode(diff)

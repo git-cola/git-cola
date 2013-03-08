@@ -21,6 +21,7 @@ Thanks
 * Iulian Udrea
 * Ivar Smolin
 * Johann Schmitz
+* Jeff Dagenais
 * Justin Lecher
 * Karl Bielefeldt
 * Karthik Manamcheri
