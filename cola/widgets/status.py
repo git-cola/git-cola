@@ -429,6 +429,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             menu.addAction(qtutils.icon('undo.svg'),
                            N_('Revert Unstaged Edits...'),
                            lambda: self._revert_unstaged_edits(staged=True))
+
+            menu.addAction(qtutils.icon('undo.svg'),
+                           N_('Revert Uncommited Edits...'),
+                           self._revert_uncommitted_edits)
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
         return menu
@@ -516,9 +520,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 menu.addAction(qtutils.icon('undo.svg'),
                                N_('Revert Unstaged Edits...'),
                                self._revert_unstaged_edits)
-                menu.addAction(qtutils.icon('undo.svg'),
-                               N_('Revert Uncommited Edits...'),
-                               self._revert_uncommitted_edits)
 
         if self.unstaged() and not utils.is_win32():
             menu.addSeparator()
@@ -616,7 +617,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             Interaction.log(msg)
 
     def _revert_uncommitted_edits(self):
-        items_to_undo = self.modified()
+        items_to_undo = self.staged()
         if items_to_undo:
             if not qtutils.confirm(
                     N_('Revert Uncommitted Changes?'),
