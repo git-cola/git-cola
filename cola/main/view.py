@@ -464,7 +464,7 @@ class MainView(MainWindow):
         Interaction.log = self.logwidget.log
 
         Interaction.log(version.git_version_str() + '\n' +
-                        N_('git-cola version %s') % version.version())
+                        N_('git cola version %s') % version.version())
 
     def set_initial_size(self):
         self.statuswidget.set_initial_size()
