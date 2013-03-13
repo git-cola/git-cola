@@ -89,14 +89,18 @@ cola.browserdockable::
 	Whether to create a dock widget with the 'Browser' tool.
 	Defaults to 'false' to speedup startup time.
 
-cola.tabwidth::
-	The number of columns occupied by a tab character.
+cola.inotify::
+	Set to 'false' to disable inotify support.
+	Defaults to 'true' when the 'pyinotify' module is available.
 
 cola.linebreak::
 	Whether to automatically break long lines while editing commit
 	messages.  Defaults to 'true'.  This setting is configured using
 	the 'Preferences' dialog, but it can be toggled for one-off usage
 	using the commit message editor's settings sub-menu.
+
+cola.tabwidth::
+	The number of columns occupied by a tab character.
 
 cola.textwidth::
 	The number of columns used for line wrapping.

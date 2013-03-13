@@ -35,11 +35,19 @@ from PyQt4 import QtCore
 
 import cola
 from cola import core
+from cola import gitcfg
 from cola.compat import set
 
 _thread = None
 def start():
     global _thread
+
+    cfg = gitcfg.instance()
+    if not cfg.get('cola.inotify', True):
+        msg = N_('inotify is disabled because "cola.inotify" is false')
+        Interaction.log(msg)
+        return
+
     if not AVAILABLE:
         if utils.is_win32():
             msg = N_('file notification: disabled\n'
