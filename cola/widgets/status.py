@@ -429,6 +429,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             menu.addAction(qtutils.icon('undo.svg'),
                            N_('Revert Unstaged Edits...'),
                            lambda: self._revert_unstaged_edits(staged=True))
+            menu.addAction(qtutils.icon('undo.svg'),
+                           N_('Revert Uncommited Edits...'),
+                           lambda: self._revert_uncommitted_edits(
+                                        self.staged()))
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
         return menu
@@ -518,7 +522,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                self._revert_unstaged_edits)
                 menu.addAction(qtutils.icon('undo.svg'),
                                N_('Revert Uncommited Edits...'),
-                               self._revert_uncommitted_edits)
+                               lambda: self._revert_uncommitted_edits(
+                                            self.modified()))
 
         if self.unstaged() and not utils.is_win32():
             menu.addSeparator()
@@ -615,8 +620,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             msg = N_('No files selected for checkout from HEAD.')
             Interaction.log(msg)
 
-    def _revert_uncommitted_edits(self):
-        items_to_undo = self.modified()
+    def _revert_uncommitted_edits(self, items_to_undo):
         if items_to_undo:
             if not qtutils.confirm(
                     N_('Revert Uncommitted Changes?'),
