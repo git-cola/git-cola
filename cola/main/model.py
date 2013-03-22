@@ -125,6 +125,11 @@ class MainModel(Observable):
         self.commitmsg = msg
         self.notify_observers(self.message_commit_message_changed, msg)
 
+        commit_msg = core.encode(msg)
+        path = git.git.git_path("GIT_COLA_MSG")
+        with open(path, "w") as f:
+            f.write(commit_msg)
+
     def set_diff_text(self, txt):
         self.diff_text = txt
         self.notify_observers(self.message_diff_text_changed, txt)

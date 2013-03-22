@@ -437,6 +437,10 @@ class MainView(MainWindow):
         s = settings.Settings()
         s.add_recent(core.decode(os.getcwd()))
         qtutils.save_state(self, handler=s)
+
+        commit_msg = self.commitmsgeditor.commit_message(self)
+        self.model.set_commitmsg(commit_msg)
+
         MainWindow.closeEvent(self, event)
 
     def build_recent_menu(self):
@@ -635,3 +639,4 @@ class MainView(MainWindow):
             display = ('<span style="color: grey;">%s</span>' % display)
 
         self.position_label.setText(display)
+

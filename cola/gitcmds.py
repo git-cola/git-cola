@@ -604,6 +604,15 @@ def rev_list_range(start, end):
     return parse_rev_list(raw_revs)
 
 
+def commit_message_path():
+    """Return the path to .git/GIT_COLA_MSG"""
+    path = git.git_path("GIT_COLA_MSG")
+    if os.path.exists(path):
+        return path
+
+    return None
+
+
 def merge_message_path():
     """Return the path to .git/MERGE_MSG or .git/SQUASH_MSG."""
     for basename in ('MERGE_MSG', 'SQUASH_MSG'):
