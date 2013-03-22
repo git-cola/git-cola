@@ -8,15 +8,19 @@ import itertools
 
 from cola.decorators import interruptable
 
+from sys import getfilesystemencoding
+
 # Some files are not in UTF-8; some other aren't in any codification.
 # Remember that GIT doesn't care about encodings (saves binary data)
 _encoding_tests = [
+    getfilesystemencoding (),
     'utf-8',
     'iso-8859-15',
     'windows1252',
     'ascii',
     # <-- add encodings here
 ]
+
 
 def decode(enc, encoding=None):
     """decode(encoded_string) returns an unencoded unicode string
