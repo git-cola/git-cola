@@ -666,7 +666,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 parent_idx = idx.parent()
                 entry = (parent_idx.row(), idx.row())
             else:
-                entry = (-1, idx.row())
+                entry = (self.idx_header, idx.row())
             result.append(entry)
         return result
 
