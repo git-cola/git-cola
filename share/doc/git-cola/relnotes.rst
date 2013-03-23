@@ -20,6 +20,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/pull/163
 
+* The `Status` tool learned to reselect files when refreshing.
+
+  https://github.com/git-cola/git-cola/issues/165
+
 git-cola v1.8.2
 ===============
 Usability, bells and whistles
