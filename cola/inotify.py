@@ -105,7 +105,7 @@ class Handler():
         """Queues up filesystem events for broadcast"""
         with self._lock:
             if self._timer is None:
-                self._timer = Timer(0.333, self.broadcast)
+                self._timer = Timer(0.888, self.broadcast)
                 self._timer.start()
 
 
