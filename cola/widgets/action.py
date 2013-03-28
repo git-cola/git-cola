@@ -21,6 +21,7 @@ class ActionButtons(qt.QFlowLayoutWidget):
         self.push_button = create_button(text=N_('Push...'), layout=layout)
         self.pull_button = create_button(text=N_('Pull...'), layout=layout)
         self.stash_button = create_button(text=N_('Stash...'), layout=layout)
+        self.aspect_ratio = 0.4
         layout.addStretch()
         self.setMinimumHeight(30)
 

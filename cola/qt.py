@@ -146,10 +146,11 @@ class QFlowLayoutWidget(QtGui.QWidget):
                                    QtGui.QSizePolicy.Minimum)
         self.setSizePolicy(policy)
         self.setMinimumSize(QtCore.QSize(1, 1))
+        self.aspect_ratio = 0.8
 
     def resizeEvent(self, event):
         size = event.size()
-        if size.width() * 0.8 < size.height():
+        if size.width() * self.aspect_ratio < size.height():
             dxn = self._vertical
         else:
             dxn = self._horizontal
