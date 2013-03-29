@@ -112,12 +112,11 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                     cmds.OpenParentDir.SHORTCUT)
             self.open_parent_dir.setIcon(qtutils.open_file_icon())
 
-        self.up = qtutils.add_action(self,
-                N_('Move Up'), self.move_up,
-                Qt.Key_K, Qt.Key_Up)
-        self.down = qtutils.add_action(self,
-                N_('Move Down'), self.move_down,
-                Qt.Key_J, Qt.Key_Down)
+        self.up = qtutils.add_action(self, N_('Move Up'), self.move_up,
+                                     Qt.Key_K)
+
+        self.down = qtutils.add_action(self, N_('Move Down'), self.move_down,
+                                       Qt.Key_J)
 
         self.copy_path_action = qtutils.add_action(self,
                 N_('Copy Path to Clipboard'),
