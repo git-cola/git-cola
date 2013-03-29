@@ -119,14 +119,11 @@ class CommitMessageEditor(QtGui.QWidget):
         # Handle the one-off autowrapping
         connect_action_bool(self.autowrap_action, self.set_linebreak)
 
+        add_action(self.summary, N_('Move Down'), self.focus_description,
+                Qt.Key_Down, Qt.Key_Return, Qt.Key_Enter)
+
         self.model.add_observer(self.model.message_commit_message_changed,
                                 self.set_commit_message)
-
-        self.connect(self.summary, SIGNAL('returnPressed()'),
-                     self.focus_description)
-
-        self.connect(self.summary, SIGNAL('downPressed()'),
-                     self.focus_description)
 
         self.connect(self.summary, SIGNAL('cursorPosition(int,int)'),
                      self.emit_position)
@@ -406,20 +403,6 @@ class CommitSummaryLineEdit(HintedLineEdit):
         hint = N_('Commit summary')
         HintedLineEdit.__init__(self, hint, parent)
         self.extra_actions = []
-
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Down:
-            position = self.cursorPosition()
-            curtext = unicode(self.text())
-            if position == len(curtext):
-                self.emit(SIGNAL('downPressed()'))
-                event.accept()
-                return
-        if event.key() in (Qt.Key_Return, Qt.Key_Enter):
-            self.emit(SIGNAL('returnPressed()'))
-            event.accept()
-            return
-        HintedLineEdit.keyPressEvent(self, event)
 
     def contextMenuEvent(self, event):
         menu = self.createStandardContextMenu()
