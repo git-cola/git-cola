@@ -1,8 +1,8 @@
-# Copyright (c) 2012 David Aguilar
-"""Provide cola's version number"""
+# Copyright (c) David Aguilar
+"""Provide git-cola's version number"""
 
 # The current git-cola version
-_default_version = '1.8.2'
+_default_version = '1.8.3.rc1'
 
 
 import os
