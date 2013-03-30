@@ -107,6 +107,8 @@ class Grep(Dialog):
         self.connect(self.input_txt, SIGNAL('textChanged(QString)'),
                      self.input_txt_changed)
 
+        self.connect(self.result_txt, SIGNAL('leave()'),
+                     lambda: self.input_txt.setFocus())
 
         qtutils.add_action(self.input_txt, 'FocusResults',
                            lambda: self.result_txt.setFocus(),
@@ -230,6 +232,18 @@ class GrepTextView(HintedTextView):
             rect = self.cursorRect()
             painter = QtGui.QPainter(self.viewport())
             painter.fillRect(rect, Qt.SolidPattern)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Up:
+            cursor = self.textCursor()
+            position = cursor.position()
+            if position == 0 and not cursor.hasSelection():
+                # The cursor is at the beginning of the line.
+                # If we have selection then simply reset the cursor.
+                # Otherwise, emit a signal so that the parent can
+                # change focus.
+                self.emit(SIGNAL('leave()'))
+        return HintedTextView.keyPressEvent(self, event)
 
 
 def goto_grep(line):
