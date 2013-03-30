@@ -139,7 +139,7 @@ class CommitMessageEditor(QtGui.QWidget):
         self.connect(self.description, SIGNAL('textChanged()'),
                      self.commit_message_changed)
 
-        self.connect(self.description, SIGNAL('shiftTab()'),
+        self.connect(self.description, SIGNAL('leave()'),
                      self.focus_summary)
 
         self.setFont(diff_font())
@@ -420,8 +420,8 @@ class CommitMessageTextEdit(HintedTextEdit):
         self.extra_actions = []
         self.setMinimumSize(QtCore.QSize(1, 1))
 
-        self.action_emit_shift_tab = add_action(self,
-                'Shift Tab', self.emit_shift_tab, 'Shift+tab')
+        self.action_emit_leave = add_action(self,
+                'Shift Tab', self.emit_leave, 'Shift+tab')
 
         self.installEventFilter(self)
 
@@ -449,16 +449,23 @@ class CommitMessageTextEdit(HintedTextEdit):
             cursor = self.textCursor()
             position = cursor.position()
             if position == 0:
+                # The cursor is at the beginning of the line.
+                # If we have selection then simply reset the cursor.
+                # Otherwise, emit a signal so that the parent can
+                # change focus.
                 if cursor.hasSelection():
                     cursor.setPosition(0)
                     self.setTextCursor(cursor)
                 else:
-                    self.emit_shift_tab()
+                    self.emit_leave()
                 event.accept()
                 return
             text_before = unicode(self.toPlainText())[:position]
             lines_before = text_before.count('\n')
             if lines_before == 0:
+                # If we're on the first line, but not at the
+                # beginning, then move the cursor to the beginning
+                # of the line.
                 if event.modifiers() & Qt.ShiftModifier:
                     mode = QtGui.QTextCursor.KeepAnchor
                 else:
@@ -484,5 +491,5 @@ class CommitMessageTextEdit(HintedTextEdit):
                 return
         HintedTextEdit.keyPressEvent(self, event)
 
-    def emit_shift_tab(self):
-        self.emit(SIGNAL('shiftTab()'))
+    def emit_leave(self):
+        self.emit(SIGNAL('leave()'))
