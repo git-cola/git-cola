@@ -49,7 +49,7 @@ class Grep(Dialog):
         self.input_label.setFont(diff_font())
 
         hint = N_('command-line arguments')
-        self.input_txt = GrepLineEdit(hint, self)
+        self.input_txt = HintedLineEdit(hint, self)
         self.input_txt.enable_hint(True)
 
         hint = N_('grep result...')
@@ -107,9 +107,10 @@ class Grep(Dialog):
         self.connect(self.input_txt, SIGNAL('textChanged(QString)'),
                      self.input_txt_changed)
 
-        self.connect(self.input_txt, SIGNAL('returnPressed()'),
-                     lambda: self.result_txt.setFocus())
 
+        qtutils.add_action(self.input_txt, 'FocusResults',
+                           lambda: self.result_txt.setFocus(),
+                           Qt.Key_Down, Qt.Key_Enter, Qt.Key_Return)
         qtutils.connect_button(self.edit_button, self.edit)
         qtutils.connect_button(self.refresh_button, self.search)
         qtutils.connect_button(self.close_button, self.close)
@@ -146,17 +147,6 @@ class Grep(Dialog):
 
     def edit(self):
         goto_grep(self.result_txt.selected_line()),
-
-
-class GrepLineEdit(HintedLineEdit):
-    def __init__(self, hint, parent):
-        HintedLineEdit.__init__(self, hint, parent)
-
-    def keyPressEvent(self, event):
-        if event.key() in (Qt.Key_Return, Qt.Key_Enter):
-            self.emit(SIGNAL('returnPressed()'))
-        else:
-            HintedLineEdit.keyPressEvent(self, event)
 
 
 class GrepTextView(HintedTextView):
