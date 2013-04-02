@@ -40,13 +40,19 @@ def create_widget_class(Base):
                 self.move(state['x'], state['y'])
             except:
                 pass
+            if state.get('maximized', False):
+                self.showMaximized()
+
         def export_state(self):
             """Exports data for view save/restore"""
+            state = self.windowState()
+            maximized = bool(state & Qt.WindowMaximized)
             return {
                 'x': self.x(),
                 'y': self.y(),
                 'width': self.width(),
                 'height': self.height(),
+                'maximized': maximized,
             }
 
     return Widget

@@ -24,6 +24,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/165
 
+* We now remember whether `git cola` has been maximized and restore the
+  maximized state when `git cola` is restarted.
+
+  https://github.com/git-cola/git-cola/issues/172
+
 git-cola v1.8.2
 ===============
 Usability, bells and whistles
