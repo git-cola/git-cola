@@ -11,7 +11,7 @@ Out of cola?  Don't panic.
 
 Download
     Visit the
-    `git cola home page <http://git-cola.github.com/>`_
+    `git cola home page <http://git-cola.github.io/>`_
 
 Discuss
     `git cola mailing list <http://groups.google.com/group/git-cola>`_.

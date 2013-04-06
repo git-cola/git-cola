@@ -48,7 +48,7 @@ log.date::
 LINKS
 -----
 'git-cola' homepage::
-	http://git-cola.github.com/
+	http://git-cola.github.io/
 
 'git-cola' sources on github::
 	https://github.com/git-cola/git-cola/

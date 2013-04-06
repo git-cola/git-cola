@@ -15,7 +15,7 @@ class Gravatar(object):
     @staticmethod
     def url_for_email(email, imgsize):
         email_hash = hashlib.md5(email).hexdigest()
-        default_url = 'http://git-cola.github.com/images/git-64x64.jpg'
+        default_url = 'http://git-cola.github.io/images/git-64x64.jpg'
         encoded_url = urllib.quote(default_url, '')
         query = '?s=%d&d=%s' % (imgsize, encoded_url)
         url = 'http://gravatar.com/avatar/' + email_hash + query

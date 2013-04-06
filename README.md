@@ -21,14 +21,14 @@
 ## SCREENSHOTS
 
 Screenshots are available on the
-[git-cola screenshots page](http://git-cola.github.com/screenshots.html).
+[git-cola screenshots page](http://git-cola.github.io/screenshots.html).
 
 ## DOWNLOAD
 
     apt-get install git-cola python-pyinotify
 
 New releases are available on the
-[git-cola download page](http://git-cola.github.com/downloads.html).
+[git-cola download page](http://git-cola.github.io/downloads.html).
 
 ## FORK
 

@@ -74,7 +74,7 @@ def _run_setup():
           license='GPLv2',
           author='David Aguilar',
           author_email='davvid@gmail.com',
-          url='http://git-cola.github.com/',
+          url='http://git-cola.github.io/',
           scripts=scripts,
           cmdclass=cmdclass,
           platforms='any',
