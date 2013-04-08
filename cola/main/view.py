@@ -553,7 +553,7 @@ class MainView(MainWindow):
         msg += N_('Branch: %s') % branch
         self.commitdockwidget.setToolTip(msg)
 
-        title = '%s: %s' % (self.model.project, branch)
+        title = '%s: %s (%s)' % (self.model.project, branch, self.model.git.worktree())
         if self.mode == self.model.mode_amend:
             title += ' (%s)' %  N_('Amending')
         self.setWindowTitle(title)
