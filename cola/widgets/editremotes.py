@@ -16,7 +16,7 @@ class RemoteEditor(QtGui.QDialog):
     def __init__(self, parent):
         QtGui.QDialog.__init__(self, parent)
 
-        self.setWindowTitle('Edit Remotes')
+        self.setWindowTitle(N_('Edit Remotes'))
         self.setWindowModality(Qt.WindowModal)
 
         self.default_hint = N_(''
@@ -210,6 +210,7 @@ class AddRemoteWidget(QtGui.QDialog):
             widget.setMinimumWidth(metrics.width('_' * 32))
             return widget
 
+        self.setWindowTitle(N_('Add remote'))
         self.name = lineedit(N_('Name for the new remote'))
         self.url = lineedit('git://git.example.com/repo.git')
 

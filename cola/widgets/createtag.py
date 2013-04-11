@@ -52,7 +52,7 @@ class CreateTag(standard.Dialog):
         self.input_form_layt.setWidget(0, QtGui.QFormLayout.LabelRole,
                                        self.tag_name_label)
 
-        self.tag_name = text.HintedLineEdit('vX.Y.Z', self)
+        self.tag_name = text.HintedLineEdit(N_('vX.Y.Z'), self)
         self.tag_name.setToolTip(N_('Specifies the tag name'))
         self.input_form_layt.setWidget(0, QtGui.QFormLayout.FieldRole,
                                        self.tag_name)

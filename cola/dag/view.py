@@ -367,7 +367,7 @@ class CommitTreeWidget(ViewerMixin, QtGui.QTreeWidget):
         self.setAllColumnsShowFocus(True)
         self.setAlternatingRowColors(True)
         self.setRootIsDecorated(False)
-        self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Age')])
+        self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
 
         self.sha1map = {}
         self.notifier = notifier
@@ -621,9 +621,9 @@ class DAGView(Widget):
     def update_window_title(self):
         project = self.model.project
         if self.dag.ref:
-            self.setWindowTitle('%s: %s - DAG' % (project, self.dag.ref))
+            self.setWindowTitle(N_('%s: %s - DAG') % (project, self.dag.ref))
         else:
-            self.setWindowTitle(project + ' - DAG')
+            self.setWindowTitle(project + N_(' - DAG'))
 
     def export_state(self):
         state = Widget.export_state(self)

@@ -107,7 +107,7 @@ class RemoteActionDialog(standard.Dialog):
 
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowModality(Qt.WindowModal)
-        self.setWindowTitle(action)
+        self.setWindowTitle(N_(action))
 
         self.progress = QtGui.QProgressDialog(self)
         self.progress.setFont(prefs.diff_font())
@@ -150,7 +150,7 @@ class RemoteActionDialog(standard.Dialog):
         self.rebase_checkbox.setText(N_('Rebase '))
 
         self.action_button = QtGui.QPushButton()
-        self.action_button.setText(action)
+        self.action_button.setText(N_(action))
         self.action_button.setIcon(qtutils.ok_icon())
 
         self.close_button = QtGui.QPushButton()

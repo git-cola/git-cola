@@ -332,8 +332,8 @@ class MainView(MainWindow):
         self.menubar.addAction(self.file_menu.menuAction())
 
         # Commit Menu
-        self.commit_menu = create_menu(N_('Commit@@verb'), self.menubar)
-        self.commit_menu.setTitle(N_('Commit@@verb'))
+        self.commit_menu = create_menu(N_('Index'), self.menubar)
+        self.commit_menu.setTitle(N_('Index'))
         self.commit_menu.addAction(self.menu_stage_modified)
         self.commit_menu.addAction(self.menu_stage_untracked)
         self.commit_menu.addSeparator()

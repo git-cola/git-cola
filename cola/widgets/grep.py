@@ -44,6 +44,7 @@ class Grep(Dialog):
         Dialog.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowModality(Qt.WindowModal)
+        self.setWindowTitle(N_('Search'))
 
         self.input_label = QtGui.QLabel('git grep')
         self.input_label.setFont(diff_font())

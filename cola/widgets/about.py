@@ -101,7 +101,7 @@ def show_shortcuts():
     try:
         html = show_shortcuts.html
     except AttributeError:
-        hotkeys = resources.doc('hotkeys.html')
+        hotkeys = resources.doc(N_('hotkeys.html'))
         html = show_shortcuts.html = utils.slurp(hotkeys)
 
     try:
@@ -119,6 +119,7 @@ def show_shortcuts():
         layout.setSpacing(0)
         layout.addWidget(web)
 
+        widget.setWindowTitle(N_('Shortcuts'))
         widget.setLayout(layout)
         widget.resize(800, min(parent.height(), 600))
 

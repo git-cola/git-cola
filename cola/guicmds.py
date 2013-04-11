@@ -169,7 +169,7 @@ def open_repo():
 
 def load_commitmsg():
     """Load a commit message from a file."""
-    filename = qtutils.open_dialog(N_('Load Commit Message...'),
+    filename = qtutils.open_dialog(N_('Load Commit Message'),
                                    cola.model().getcwd())
     if filename:
         cmds.do(cmds.LoadCommitMessage, filename)

@@ -112,11 +112,11 @@ class CreateBranchDialog(Dialog):
             self.revision.setText(current)
 
         self.local_radio = QtGui.QRadioButton()
-        self.local_radio.setText(N_('Local Branch'))
+        self.local_radio.setText(N_('Local branch'))
         self.local_radio.setChecked(True)
 
         self.remote_radio = QtGui.QRadioButton()
-        self.remote_radio.setText(N_('Tracking Branch'))
+        self.remote_radio.setText(N_('Tracking branch'))
 
         self.tag_radio = QtGui.QRadioButton()
         self.tag_radio.setText(N_('Tag'))
