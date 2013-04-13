@@ -66,9 +66,7 @@ class FormWidget(QtGui.QWidget):
         return runner
 
     def update_from_config(self):
-        if self.source == 'repo':
-            getter = self.config.get_repo
-        elif self.source == 'user':
+        if self.source == 'user':
             getter = self.config.get_user
         else:
             getter = self.config.get
@@ -226,7 +224,7 @@ class PreferencesView(standard.Dialog):
         self._tabbar.addTab(N_('Settings'))
 
         self._user_form = RepoFormWidget(model, self, source='user')
-        self._repo_form = RepoFormWidget(model, self, source='all')
+        self._repo_form = RepoFormWidget(model, self, source='repo')
         self._options_form = SettingsFormWidget(model, self)
 
         self._stackedwidget = QtGui.QStackedWidget()
