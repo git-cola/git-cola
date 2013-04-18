@@ -228,9 +228,11 @@ def slurp(path, size=-1):
 
 def write(path, contents, encoding=None):
     """Writes a raw string to a file."""
-    fh = open(core.encode(path), 'wb')
-    core.write(fh, core.encode(contents, encoding=encoding))
-    fh.close()
+    with open(core.encode(path), 'wb') as fh:
+        try:
+            core.write(fh, core.encode(contents, encoding=encoding))
+        except IOError:
+            fh.close()
 
 
 def strip_prefix(prefix, string):
