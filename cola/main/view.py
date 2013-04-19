@@ -477,7 +477,7 @@ class MainView(MainWindow):
         s.add_recent(core.decode(os.getcwd()))
         qtutils.save_state(self, handler=s)
 
-        commit_msg = self.commitmsgeditor.commit_message(self)
+        commit_msg = self.commitmsgeditor.commit_message(raw=True)
         self.model.save_commitmsg(commit_msg)
 
         MainWindow.closeEvent(self, event)
