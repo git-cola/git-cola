@@ -9,6 +9,7 @@ from cola import core
 from cola import git
 from cola import gitcfg
 from cola import gitcmds
+from cola import utils
 from cola.compat import set
 from cola.observable import Observable
 from cola.decorators import memoize
@@ -124,6 +125,10 @@ class MainModel(Observable):
     def set_commitmsg(self, msg):
         self.commitmsg = msg
         self.notify_observers(self.message_commit_message_changed, msg)
+
+    def save_commitmsg(self, msg):
+        path = git.git.git_path('GIT_COLA_MSG')
+        utils.write(path, msg)
 
     def set_diff_text(self, txt):
         self.diff_text = txt
