@@ -8,6 +8,7 @@ from cola import cmds
 from cola import gitcmds
 from cola import utils
 from cola.cmds import Interaction
+from cola.gitcmds import commit_message_path
 from cola.i18n import N_
 from cola.qt import create_toolbutton
 from cola.qtutils import add_action
@@ -155,6 +156,13 @@ class CommitMessageEditor(QtGui.QWidget):
         self.set_tabwidth(tabwidth())
         self.set_textwidth(textwidth())
         self.set_linebreak(linebreak())
+
+        # Loading message
+        commit_msg = ""
+        commit_msg_path = commit_message_path()
+        if commit_msg_path:
+            commit_msg = utils.slurp(commit_msg_path)
+        self.set_commit_message(commit_msg)
 
         # Allow tab to jump from the summary to the description
         self.setTabOrder(self.summary, self.description)
