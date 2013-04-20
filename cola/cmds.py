@@ -29,6 +29,8 @@ _config = gitcfg.instance()
 class BaseCommand(object):
     """Base class for all commands; provides the command pattern"""
 
+    DISABLED = False
+
     def __init__(self):
         self.undoable = False
 
@@ -887,7 +889,12 @@ class Stage(Command):
     def do(self):
         msg = N_('Staging: %s') % (', '.join(self.paths))
         Interaction.log(msg)
-        self.model.stage_paths(self.paths)
+        # Prevent external updates while we are staging files.
+        # We update file stats at the end of this operation
+        # so there's no harm in ignoring updates from other threads
+        # (e.g. inotify).
+        with CommandDisabled(UpdateFileStatus):
+            self.model.stage_paths(self.paths)
 
 
 class StageModified(Stage):
@@ -992,7 +999,8 @@ class Unstage(Command):
     def do(self):
         msg = N_('Unstaging: %s') % (', '.join(self.paths))
         Interaction.log(msg)
-        self.model.unstage_paths(self.paths)
+        with CommandDisabled(UpdateFileStatus):
+            self.model.unstage_paths(self.paths)
 
 
 class UnstageAll(Command):
@@ -1019,7 +1027,8 @@ class Untrack(Command):
     def do(self):
         msg = N_('Untracking: %s') % (', '.join(self.paths))
         Interaction.log(msg)
-        status, out = self.model.untrack_paths(self.paths)
+        with CommandDisabled(UpdateFileStatus):
+            status, out = self.model.untrack_paths(self.paths)
         Interaction.log_status(status, out, '')
 
 
@@ -1113,12 +1122,28 @@ def run(cls, *args, **opts):
     return runner
 
 
+class CommandDisabled(object):
+
+    """Context manager to temporarily disable a command from running"""
+    def __init__(self, cmdclass):
+        self.cmdclass = cmdclass
+
+    def __enter__(self):
+        self.cmdclass.DISABLED = True
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.cmdclass.DISABLED = False
+
+
 def do(cls, *args, **opts):
     """Run a command in-place"""
     return do_cmd(cls(*args, **opts))
 
 
 def do_cmd(cmd):
+    if hasattr(cmd, 'DISABLED') and cmd.DISABLED:
+        return None
     try:
         return cmd.do()
     except StandardError, e:
