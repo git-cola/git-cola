@@ -127,7 +127,7 @@ class MainModel(Observable):
         self.notify_observers(self.message_commit_message_changed, msg)
 
     def save_commitmsg(self, msg):
-        path = git.git.git_path("GIT_COLA_MSG")
+        path = git.git.git_path('GIT_COLA_MSG')
         utils.write(path, msg)
 
     def set_diff_text(self, txt):
