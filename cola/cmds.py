@@ -714,20 +714,20 @@ class Clone(Command):
 
 
 class Rescan(Command):
-    """Rescans for changes."""
+    """Rescan for changes"""
 
     def do(self):
         self.model.update_status()
 
 
-class RescanAndRefresh(Command):
-    """Rescans for changes."""
+class Refresh(Command):
+    """Update refs and refresh the index"""
 
     SHORTCUT = 'Ctrl+R'
 
     @staticmethod
     def name():
-        return N_('Rescan')
+        return N_('Refresh')
 
     def do(self):
         self.model.update_status(update_index=True)

@@ -187,9 +187,9 @@ class MainView(MainWindow):
         self.menu_edit_remotes = add_action(self,
                 N_('Edit Remotes...'), lambda: editremotes.edit().exec_())
         self.menu_rescan = add_action(self,
-                cmds.RescanAndRefresh.name(),
-                cmds.run(cmds.RescanAndRefresh),
-                cmds.RescanAndRefresh.SHORTCUT)
+                cmds.Refresh.name(),
+                cmds.run(cmds.Refresh),
+                cmds.Refresh.SHORTCUT)
         self.menu_rescan.setIcon(qtutils.reload_icon())
 
         self.menu_browse_recent = add_action(self,
