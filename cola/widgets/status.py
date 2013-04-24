@@ -68,6 +68,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.setAnimated(True)
         self.setRootIsDecorated(False)
         self.setIndentation(0)
+        self.setAutoScroll(False)
 
         self.add_item(N_('Staged'), hide=True)
         self.add_item(N_('Unmerged'), hide=True)
