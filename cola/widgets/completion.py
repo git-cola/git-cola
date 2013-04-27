@@ -13,6 +13,7 @@ from cola.compat import set
 
 
 class CompletionLineEdit(QtGui.QLineEdit):
+
     def __init__(self, parent=None):
         from cola.prefs import diff_font
 
@@ -27,6 +28,9 @@ class CompletionLineEdit(QtGui.QLineEdit):
         self.connect(self, SIGNAL('textChanged(QString)'), self._text_changed)
         self._keys_to_ignore = set([Qt.Key_Enter, Qt.Key_Return,
                                     Qt.Key_Escape])
+
+    def popup(self):
+        return self._completer.popup()
 
     def value(self):
         return unicode(self.text())
@@ -90,11 +94,11 @@ class CompletionLineEdit(QtGui.QLineEdit):
     def event(self, event):
         if event.type() == QtCore.QEvent.KeyPress:
             if (event.key() == Qt.Key_Tab and
-                    self._completer.popup().isVisible()):
+                    self.popup().isVisible()):
                 event.ignore()
                 return True
             if (event.key() in (Qt.Key_Return, Qt.Key_Enter) and
-                    not self._completer.popup().isVisible()):
+                    not self.popup().isVisible()):
                 self.emit(SIGNAL('returnPressed()'))
                 event.accept()
                 return True
@@ -125,10 +129,9 @@ class CompletionLineEdit(QtGui.QLineEdit):
         prefix = self._last_word()
         if prefix != unicode(self._completer.completionPrefix()):
             self._update_popup_items(prefix)
+
         if len(event.text()) > 0 and len(prefix) > 0:
             self._completer.complete()
-        #if len(prefix) == 0:
-        #    self._completer.popup().hide()
 
     #: _drag: 0 - unclicked, 1 - clicked, 2 - dragged
     def mousePressEvent(self, event):
