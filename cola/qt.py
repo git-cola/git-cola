@@ -215,15 +215,17 @@ class ExpandableGroupBox(QtGui.QGroupBox):
             painter.drawPrimitive(style.PE_IndicatorArrowRight, option)
 
 
-class GitRefDialog(QtGui.QDialog):
-    def __init__(self, title, button_text, parent):
+class GitDialog(QtGui.QDialog):
+
+    def __init__(self, lineedit, title, button_text, parent):
         QtGui.QDialog.__init__(self, parent)
         self.setWindowTitle(title)
+        self.setMinimumWidth(333)
 
         self.label = QtGui.QLabel()
         self.label.setText(title)
 
-        self.lineedit = completion.GitRefLineEdit(self)
+        self.lineedit = lineedit(self)
         self.setFocusProxy(self.lineedit)
 
         self.ok_button = QtGui.QPushButton()
@@ -252,7 +254,7 @@ class GitRefDialog(QtGui.QDialog):
         qtutils.connect_button(self.ok_button, self.accept)
         qtutils.connect_button(self.close_button, self.reject)
 
-        self.connect(self.lineedit, SIGNAL('textChanged(QString)'),
+        self.connect(self.lineedit, SIGNAL('textChanged(const QString&)'),
                      self.text_changed)
 
         self.setWindowModality(Qt.WindowModal)
@@ -267,18 +269,51 @@ class GitRefDialog(QtGui.QDialog):
     def set_text(self, ref):
         self.lineedit.setText(ref)
 
-    @staticmethod
-    def ref(title, button_text, parent, default=None):
-        dlg = GitRefDialog(title, button_text, parent)
+    @classmethod
+    def get(cls, title, button_text, parent, default=None):
+        dlg = cls(title, button_text, parent)
         if default:
             dlg.set_text(default)
+
         dlg.show()
-        dlg.raise_()
-        dlg.setFocus()
-        if dlg.exec_() == GitRefDialog.Accepted:
+
+        def show_popup():
+            x = dlg.lineedit.x()
+            y = dlg.lineedit.y() + dlg.lineedit.height()
+            point = QtCore.QPoint(x, y)
+            mapped = dlg.mapToGlobal(point)
+            dlg.lineedit.popup().move(mapped.x(), mapped.y())
+            dlg.lineedit.popup().show()
+            dlg.lineedit.refresh()
+
+        QtCore.QTimer().singleShot(0, show_popup)
+
+        if dlg.exec_() == cls.Accepted:
             return dlg.text()
         else:
             return None
+
+
+class GitRefDialog(GitDialog):
+
+    def __init__(self, title, button_text, parent):
+        GitDialog.__init__(self, completion.GitRefLineEdit,
+                           title, button_text, parent)
+
+
+class GitBranchDialog(GitDialog):
+
+    def __init__(self, title, button_text, parent):
+        GitDialog.__init__(self, completion.GitBranchLineEdit,
+                           title, button_text, parent)
+
+
+class GitRemoteBranchDialog(GitDialog):
+
+    def __init__(self, title, button_text, parent):
+        GitDialog.__init__(self, completion.GitRemoteBranchLineEdit,
+                           title, button_text, parent)
+
 
 # Syntax highlighting
 
