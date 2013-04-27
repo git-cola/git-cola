@@ -14,20 +14,32 @@ from cola.compat import set
 
 class CompletionLineEdit(QtGui.QLineEdit):
 
-    def __init__(self, parent=None):
-        from cola.prefs import diff_font
-
+    def __init__(self, model, parent=None):
         QtGui.QLineEdit.__init__(self, parent)
 
+        from cola.prefs import diff_font
         self.setFont(diff_font())
         # used to hide the completion popup after a drag-select
         self._drag = 0
 
-        self._completer = None
-        self._delegate = HighlightDelegate(self)
-        self.connect(self, SIGNAL('textChanged(QString)'), self._text_changed)
         self._keys_to_ignore = set([Qt.Key_Enter, Qt.Key_Return,
                                     Qt.Key_Escape])
+
+        completion_model = model(self)
+        completer = Completer(completion_model, self)
+        completer.setWidget(self)
+        self._completer = completer
+
+        self._delegate = HighlightDelegate(self)
+        self.connect(self, SIGNAL('textChanged(QString)'),
+                     self._text_changed)
+
+        completer.popup().setItemDelegate(self._delegate)
+        self.connect(self._completer, SIGNAL('activated(QString)'),
+                     self._complete)
+
+    def refresh(self):
+        return self._completer.model().update()
 
     def popup(self):
         return self._completer.popup()
@@ -35,18 +47,14 @@ class CompletionLineEdit(QtGui.QLineEdit):
     def value(self):
         return unicode(self.text())
 
-    def setCompleter(self, completer):
-        self._completer = completer
-        completer.setWidget(self)
-        completer.popup().setItemDelegate(self._delegate)
-        self.connect(self._completer, SIGNAL('activated(QString)'),
-                     self._complete)
-
     def _is_case_sensitive(self, text):
         return bool([char for char in text if char.isupper()])
 
     def _text_changed(self, text):
         text = self._last_word()
+        self._do_text_changed(text)
+
+    def _do_text_changed(self, text):
         case_sensitive = self._is_case_sensitive(text)
         if case_sensitive:
             self._completer.setCaseSensitivity(Qt.CaseSensitive)
@@ -65,14 +73,19 @@ class CompletionLineEdit(QtGui.QLineEdit):
         This is the event handler for the QCompleter.activated(QString) signal,
         it is called when the user selects an item in the completer popup.
         """
+        completion = unicode(completion)
         if not completion:
+            self._do_text_changed('')
             return
         words = self._words()
         if words and not self._ends_with_whitespace():
             words.pop()
-        words.append(unicode(completion))
-        self.setText(subprocess.list2cmdline(words))
-        self.emit(SIGNAL('ref_changed'))
+
+        words.append(completion)
+        text = subprocess.list2cmdline(words)
+        self.setText(text)
+        self.emit(SIGNAL('changed()'))
+        self._do_text_changed('')
 
     def _words(self):
         return utils.shell_usplit(unicode(self.text()))
@@ -150,8 +163,8 @@ class CompletionLineEdit(QtGui.QLineEdit):
         return QtGui.QLineEdit.mouseReleaseEvent(self, event)
 
     def close_popup(self):
-        if self._completer.popup().isVisible():
-            self._completer.popup().close()
+        if self.popup().isVisible():
+            self.popup().close()
 
     def _update_popup_items(self, prefix):
         """
@@ -264,7 +277,6 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.update_thread = GatherCompletionsThread(self)
         self.connect(self.update_thread, SIGNAL('items_gathered'),
                      self.apply_matches)
-        self.set_match_text('', False)
 
     def lower_completion_cmp(self, a, b):
         return cmp(a.replace('.','').lower(), a.replace('.','').lower())
@@ -290,6 +302,7 @@ class CompletionModel(QtGui.QStandardItemModel):
         return ((), (), set())
 
     def apply_matches(self, match_tuple):
+        self.match_tuple = match_tuple
         matched_refs, matched_paths, dirs = match_tuple
         QStandardItem = QtGui.QStandardItem
         file_icon = qtutils.file_icon()
@@ -324,68 +337,101 @@ class CompletionModel(QtGui.QStandardItemModel):
 
 
 class Completer(QtGui.QCompleter):
-    def __init__(self, parent):
+
+    def __init__(self, model, parent):
         QtGui.QCompleter.__init__(self, parent)
-        self._model = None
-        self.setWidget(parent)
+        self._model = model
         self.setCompletionMode(QtGui.QCompleter.UnfilteredPopupCompletion)
         self.setCaseSensitivity(Qt.CaseInsensitive)
 
-    def setModel(self, model):
-        QtGui.QCompleter.setModel(self, model)
-        self.connect(model, SIGNAL('updated()'), self.updated)
-        self._model = model
+        self.connect(model, SIGNAL('update()'), self.update)
+        self.setModel(model)
 
-    def model(self):
-        return self._model
-
-    def updated(self):
-        self.model().update()
+    def update(self):
+        self._model.update()
 
     def dispose(self):
-        self.model().dispose()
+        self._model.dispose()
 
     def set_match_text(self, matched_text, case_sensitive):
-        self.model().set_match_text(matched_text, case_sensitive)
+        self._model.set_match_text(matched_text, case_sensitive)
 
 
-class GitRefCompletionModel(CompletionModel):
+class GitCompletionModel(CompletionModel):
+
     def __init__(self, parent):
         CompletionModel.__init__(self, parent)
         self.cola_model = model = cola.model()
         msg = model.message_updated
-        model.add_observer(msg, self.emit_updated)
+        model.add_observer(msg, self.emit_update)
 
-    def emit_updated(self):
-        self.emit(SIGNAL('updated()'))
+    def gather_matches(self, case_sensitive):
+        if case_sensitive:
+            transform = lambda x: x
+            compare = self.completion_cmp
+        else:
+            transform = lambda x: x.lower()
+            compare = self.lower_completion_cmp
+
+        matched_text = self.matched_text
+        if matched_text:
+            matched_refs = [r for r in self.matches()
+                            if transform(matched_text) in transform(r)]
+            # if we match nothing, still offer to complete something
+            if not matched_refs:
+                matched_refs = self.matches()
+        else:
+            matched_refs = self.matches()
+
+        matched_refs.sort(cmp=compare)
+        return (matched_refs, (), set())
+
+    def emit_update(self):
+        self.emit(SIGNAL('update()'))
+
+    def matches(self):
+        return []
+
+    def dispose(self):
+        self.cola_model.remove_observer(self.emit_update)
+
+
+class GitRefCompletionModel(GitCompletionModel):
+    """Completer for branches and tags"""
+
+    def __init__(self, parent):
+        GitCompletionModel.__init__(self, parent)
 
     def matches(self):
         model = self.cola_model
         return model.local_branches + model.remote_branches + model.tags
 
-    def dispose(self):
-        self.cola_model.remove_observer(self.emit_updated)
 
-    def gather_matches(self, case_sensitive):
-        refs = self.matches()
-        matched_text = self.matched_text
-        if matched_text:
-            if not case_sensitive:
-                matched_refs = [r for r in refs if matched_text in r]
-            else:
-                matched_refs = [r for r in refs
-                                    if matched_text.lower() in r.lower()]
-        else:
-            matched_refs = refs
+class GitBranchCompletionModel(GitCompletionModel):
+    """Completer for remote branches"""
 
-        if self.case_sensitive:
-            matched_refs.sort(cmp=self.completion_cmp)
-        else:
-            matched_refs.sort(cmp=self.lower_completion_cmp)
-        return (matched_refs, (), set())
+    def __init__(self, parent):
+        GitCompletionModel.__init__(self, parent)
+
+    def matches(self):
+        model = self.cola_model
+        return model.local_branches
+
+
+class GitRemoteBranchCompletionModel(GitCompletionModel):
+    """Completer for remote branches"""
+
+    def __init__(self, parent):
+        GitCompletionModel.__init__(self, parent)
+
+    def matches(self):
+        model = self.cola_model
+        return model.remote_branches
 
 
 class GitLogCompletionModel(GitRefCompletionModel):
+    """Completer for arguments suitable for git-log like commands"""
+
     def __init__(self, parent):
         GitRefCompletionModel.__init__(self, parent)
 
@@ -417,25 +463,18 @@ class GitLogCompletionModel(GitRefCompletionModel):
         return (matched_refs, matched_paths, dirs)
 
 
-class GitLogCompleter(Completer):
-    def __init__(self, parent):
-        Completer.__init__(self, parent)
-        self.setModel(GitLogCompletionModel(self))
+def bind_lineedit(model):
+    """Create a line edit bound against a specific model"""
 
+    class BoundLineEdit(CompletionLineEdit):
 
-class GitRefCompleter(Completer):
-    def __init__(self, parent):
-        Completer.__init__(self, parent)
-        self.setModel(GitRefCompletionModel(self))
+        def __init__(self, parent=None):
+            CompletionLineEdit.__init__(self, model, parent)
 
+    return BoundLineEdit
 
-class GitLogLineEdit(CompletionLineEdit):
-    def __init__(self, parent=None):
-        CompletionLineEdit.__init__(self, parent)
-        self.setCompleter(GitLogCompleter(self))
-
-
-class GitRefLineEdit(CompletionLineEdit):
-    def __init__(self, parent=None):
-        CompletionLineEdit.__init__(self, parent)
-        self.setCompleter(GitRefCompleter(self))
+# Concrete classes
+GitLogLineEdit = bind_lineedit(GitLogCompletionModel)
+GitRefLineEdit = bind_lineedit(GitRefCompletionModel)
+GitBranchLineEdit = bind_lineedit(GitBranchCompletionModel)
+GitRemoteBranchLineEdit = bind_lineedit(GitRemoteBranchCompletionModel)

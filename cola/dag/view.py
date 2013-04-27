@@ -591,7 +591,7 @@ class DAGView(Widget):
         self.connect(self.maxresults, SIGNAL('editingFinished()'),
                      self.display)
 
-        self.connect(self.revtext, SIGNAL('ref_changed'),
+        self.connect(self.revtext, SIGNAL('changed()'),
                      self.display)
 
         self.connect(self.revtext, SIGNAL('textChanged(QString)'),
