@@ -389,6 +389,38 @@ class DeleteBranch(Command):
         Interaction.log_status(status, output)
 
 
+class DeleteRemoteBranch(Command):
+    """Delete a remote git branch."""
+
+    def __init__(self, remote, branch):
+        Command.__init__(self)
+        self.remote = remote
+        self.branch = branch
+
+    def do(self):
+        status, output = self.model.git.push(self.remote, self.branch,
+                                             delete=True,
+                                             with_status=True,
+                                             with_stderr=True)
+        self.model.update_status()
+
+        Interaction.log_status(status, output)
+
+        if status == 0:
+            Interaction.information(
+                N_('Remote Branch Deleted'),
+                N_('"%(branch)s" has been deleted from "%(remote)s".')
+                    % dict(branch=self.branch, remote=self.remote))
+        else:
+            command = 'git push'
+            message = (N_('"%(command)s" returned exit status %(status)d') %
+                        dict(command=command, status=status))
+
+            Interaction.critical(N_('Error Deleting Remote Branch'),
+                                 message, output)
+
+
+
 class Diff(Command):
     """Perform a diff and set the model's current text."""
 
