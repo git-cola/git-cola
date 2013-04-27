@@ -255,6 +255,7 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
 
 
 class CompletionModel(QtGui.QStandardItemModel):
+
     def __init__(self, parent):
         QtGui.QStandardItemModel.__init__(self, parent)
         self.matched_text = ''
@@ -263,6 +264,7 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.update_thread = GatherCompletionsThread(self)
         self.connect(self.update_thread, SIGNAL('items_gathered'),
                      self.apply_matches)
+        self.set_match_text('', False)
 
     def lower_completion_cmp(self, a, b):
         return cmp(a.replace('.','').lower(), a.replace('.','').lower())
