@@ -395,22 +395,23 @@ class GitLogCompletionModel(GitRefCompletionModel):
         files = set(file_list)
         files_and_dirs = utils.add_parents(set(files))
 
+        if case_sensitive:
+            transform = lambda x: x
+            compare = self.completion_cmp
+        else:
+            transform = lambda x: x.lower()
+            compare = self.lower_completion_cmp
+
         dirs = files_and_dirs.difference(files)
         matched_text = self.matched_text
         if matched_text:
-            if case_sensitive:
-                matched_paths = [f for f in files_and_dirs
-                                        if matched_text in f]
-            else:
-                matched_paths = [f for f in files_and_dirs
-                                    if matched_text.lower() in f.lower()]
+            matched_paths = [f for f in files_and_dirs
+                             if transform(matched_text) in transform(f)]
         else:
             matched_paths = list(files_and_dirs)
 
-        if self.case_sensitive:
-            matched_paths.sort(cmp=self.completion_cmp)
-        else:
-            matched_paths.sort(cmp=self.lower_completion_cmp)
+        matched_paths.sort(cmp=compare)
+
         return (matched_refs, matched_paths, dirs)
 
 
