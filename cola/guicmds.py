@@ -11,20 +11,14 @@ from cola.git import git
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.widgets.browse import BrowseDialog
-from cola.widgets.combodlg import ComboDialog
 from cola.widgets.grep import run_grep
 from cola.widgets.selectcommits import select_commits
 
 
-def choose_from_combo(title, items):
-    """Quickly choose an item from a list using a combo box"""
-    return ComboDialog(qtutils.active_window(), title=title, items=items).selected()
 
-
-def branch_delete():
+def delete_branch():
     """Launch the 'Delete Branch' dialog."""
-    branch = choose_from_combo(N_('Delete Branch'),
-                               cola.model().local_branches)
+    branch = choose_branch(N_('Delete Branch'), N_('Delete'))
     if not branch:
         return
     cmds.do(cmds.DeleteBranch, branch)
@@ -39,7 +33,7 @@ def browse_current():
 def browse_other():
     """Prompt for a branch and inspect content at that point in time."""
     # Prompt for a branch to browse
-    branch = choose_from_combo(N_('Browse Revision...'), gitcmds.all_refs())
+    branch = choose_ref(N_('Browse Commits...'), N_('Browse'))
     if not branch:
         return
     BrowseDialog.browse(branch)
@@ -47,8 +41,7 @@ def browse_other():
 
 def checkout_branch():
     """Launch the 'Checkout Branch' dialog."""
-    branch = choose_from_combo(N_('Checkout Branch'),
-                               cola.model().local_branches)
+    branch = choose_branch(N_('Checkout Branch'), N_('Checkout'))
     if not branch:
         return
     cmds.do(cmds.CheckoutBranch, branch)
@@ -168,20 +161,34 @@ def load_commitmsg():
         cmds.do(cmds.LoadCommitMessage, filename)
 
 
+def choose_from_dialog(get, title, button_text, default):
+    parent = qtutils.active_window()
+    return get(title, button_text, parent, default=default)
+
+
+def choose_ref(title, button_text, default=None):
+    return choose_from_dialog(qt.GitRefDialog.get,
+                              title, button_text, default)
+
+
+def choose_branch(title, button_text, default=None):
+    return choose_from_dialog(qt.GitBranchDialog.get,
+                              title, button_text, default)
+
+
+def choose_remote_branch(title, button_text, default=None):
+    return choose_from_dialog(qt.GitRemoteBranchDialog.get,
+                              title, button_text, default)
+
+
 def rebase():
     """Rebase onto a branch."""
-    branch = choose_from_combo(N_('Rebase Branch'),
-                               cola.model().all_branches())
+    branch = choose_ref(N_('Select New Base'), N_('Rebase'))
     if not branch:
         return
     #TODO cmd
     status, output = git.rebase(branch, with_stderr=True, with_status=True)
     Interaction.log_status(status, output, '')
-
-
-def choose_ref(title, button_text, default=None):
-    parent = qtutils.active_window()
-    return qt.GitRefDialog.ref(title, button_text, parent, default=default)
 
 
 def review_branch():
