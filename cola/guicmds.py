@@ -1,4 +1,5 @@
 import os
+import re
 
 import cola
 from cola import cmds
@@ -22,6 +23,19 @@ def delete_branch():
     if not branch:
         return
     cmds.do(cmds.DeleteBranch, branch)
+
+
+def delete_remote_branch():
+    """Launch the 'Delete Remote Branch' dialog."""
+    branch = choose_remote_branch(N_('Delete Remote Branch'), N_('Delete'))
+    if not branch:
+        return
+    rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
+    match = rgx.match(branch)
+    if match:
+        remote = match.group('remote')
+        branch = match.group('branch')
+        cmds.do(cmds.DeleteRemoteBranch, remote, branch)
 
 
 def browse_current():

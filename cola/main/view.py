@@ -275,7 +275,10 @@ class MainView(MainWindow):
                 N_('Create...'), create_new_branch, 'Ctrl+B')
 
         self.menu_delete_branch = add_action(self,
-                N_('Delete...'), guicmds.branch_delete)
+                N_('Delete...'), guicmds.delete_branch)
+
+        self.menu_delete_remote_branch = add_action(self,
+                N_('Delete Remote Branch...'), guicmds.delete_remote_branch)
 
         self.menu_checkout_branch = add_action(self,
                 N_('Checkout...'), guicmds.checkout_branch, 'Alt+B')
@@ -349,6 +352,7 @@ class MainView(MainWindow):
         self.branch_menu.addAction(self.menu_checkout_branch)
         self.branch_menu.addAction(self.menu_rebase_branch)
         self.branch_menu.addAction(self.menu_delete_branch)
+        self.branch_menu.addAction(self.menu_delete_remote_branch)
         self.branch_menu.addSeparator()
         self.branch_menu.addAction(self.menu_browse_branch)
         self.branch_menu.addAction(self.menu_browse_other_branch)
