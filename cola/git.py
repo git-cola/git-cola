@@ -140,40 +140,19 @@ class Git(object):
                 with_exceptions=False,
                 with_raw_output=False,
                 with_status=False,
-                with_stderr=False,
-                cola_trace=GIT_COLA_TRACE):
+                with_stderr=False):
         """
         Execute a command and returns its output
 
-        ``command``
-            The command argument list to execute
-
-        ``istream``
-            Readable filehandle passed to subprocess.Popen.
-
-        ``cwd``
-            The working directory when running commands.
-            Default: os.getcwd()
-
-        ``with_status``
-            Whether to return a (status, unicode(output)) tuple.
-
-        ``with_stderr``
-            Whether to include stderr in the output stream
-
-        ``with_exceptions``
-            Whether to raise an exception when git returns a non-zero status.
-
-        ``with_raw_output``
-            Whether to avoid stripping off trailing whitespace.
-
-        Returns
-            unicode(stdout)                     # Default
-            unicode(stdout+stderr)              # with_stderr=True
-            tuple(int(status), unicode(output)) # with_status=True
+        :param command: argument list to execute.
+        :param istream: optional stdin filehandle.
+        :param cwd: working directory, defaults to current directory.
+        :param with_status: return a (status, unicode(output)) tuple.
+        :param with_stderr: include stderr in the output stream.
+        :param with_raw_output: do not strip trailing whitespace.
+        :returns bytes: command output
 
         """
-
         # Allow the user to have the command executed in their working dir.
         if not cwd:
             cwd = os.getcwd()
@@ -215,6 +194,7 @@ class Git(object):
         if not with_raw_output:
             output = output.rstrip('\n')
 
+        cola_trace = GIT_COLA_TRACE
         if cola_trace == 'trace':
             msg = 'trace: ' + subprocess.list2cmdline(command)
             Interaction.log_status(status, msg, '')
@@ -278,7 +258,6 @@ class Git(object):
         # otherwise they'll end up in args, which is bad.
         _kwargs = dict(cwd=self._git_cwd)
         execute_kwargs = ('cwd', 'istream',
-                          'with_exceptions',
                           'with_raw_output',
                           'with_status',
                           'with_stderr')
