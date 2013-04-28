@@ -661,7 +661,7 @@ class DAGView(Widget):
         self.old_ref = new_ref
         self.old_count = new_count
 
-        self.setEnabled(False)
+        self.displaybutton.setEnabled(False)
         self.thread.stop()
         self.clear()
         self.dag.set_ref(new_ref)
@@ -694,7 +694,7 @@ class DAGView(Widget):
         self.treewidget.add_commits(commits)
 
     def thread_done(self):
-        self.setEnabled(True)
+        self.displaybutton.setEnabled(True)
         self.graphview.setFocus()
         try:
             commit_obj = self.commit_list[-1]
