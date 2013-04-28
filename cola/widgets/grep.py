@@ -142,8 +142,14 @@ class Grep(Dialog):
         self.input_txt.set_value(txt)
         self.search()
 
-    def process_result(self, status, out):
-        self.result_txt.set_value(out)
+    def process_result(self, status, output):
+        if status == 0:
+            self.result_txt.set_value(output)
+        elif output:
+            self.result_txt.set_value('git grep: ' + output)
+        else:
+            self.result_txt.set_value('')
+
         self.edit_button.setEnabled(status == 0)
         self.refresh_button.setEnabled(status == 0)
 
