@@ -92,6 +92,7 @@ class DiffInfoTask(QtCore.QRunnable):
 
 
 class DiffWidget(QtGui.QWidget):
+
     def __init__(self, notifier, parent):
         QtGui.QWidget.__init__(self, parent)
 
@@ -198,6 +199,7 @@ class DiffWidget(QtGui.QWidget):
 
 class ViewerMixin(object):
     """Implementations must provide selected_items()"""
+
     def __init__(self):
         self.selected = None
         self.clicked = None
@@ -345,6 +347,7 @@ class ViewerMixin(object):
 
 
 class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
+
     def __init__(self, commit, parent=None):
         QtGui.QListWidgetItem.__init__(self, parent)
         self.commit = commit
@@ -353,7 +356,8 @@ class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
         self.setText(2, commit.authdate)
 
 
-class CommitTreeWidget(QtGui.QTreeWidget, ViewerMixin):
+class CommitTreeWidget(ViewerMixin, QtGui.QTreeWidget):
+
     def __init__(self, notifier, parent):
         QtGui.QTreeWidget.__init__(self, parent)
         ViewerMixin.__init__(self)
@@ -480,7 +484,7 @@ class DAGView(Widget):
         Widget.__init__(self, parent)
 
         self.setAttribute(Qt.WA_MacMetalStyle)
-        self.setMinimumSize(1, 1)
+        self.setMinimumSize(420, 420)
 
         # change when widgets are added/removed
         self.widget_version = 1
@@ -494,7 +498,7 @@ class DAGView(Widget):
         self.old_ref = None
         self.thread = ReaderThread(dag, self)
 
-        self.revtext = completion.GitLogLineEdit(parent=self)
+        self.revtext = completion.GitLogLineEdit()
 
         self.maxresults = QtGui.QSpinBox()
         self.maxresults.setMinimum(1)
@@ -916,6 +920,7 @@ class EdgeColor(object):
     def current(cls):
         return cls.colors[cls.current_color_index]
 
+
 class Commit(QtGui.QGraphicsItem):
     item_type = QtGui.QGraphicsItem.UserType + 2
     commit_radius = 12.0
@@ -1119,8 +1124,7 @@ class Label(QtGui.QGraphicsItem):
             current_width += text_rect.width() + 5
 
 
-
-class GraphView(QtGui.QGraphicsView, ViewerMixin):
+class GraphView(ViewerMixin, QtGui.QGraphicsView):
 
     x_max = 0
     y_min = 0
@@ -1197,7 +1201,7 @@ class GraphView(QtGui.QGraphicsView, ViewerMixin):
         self.y_min = 0
         self.commits = []
 
-    # ViewerMixin
+    # ViewerMixin interface
     def selected_items(self):
         """Return the currently selected items"""
         return self.scene().selectedItems()
