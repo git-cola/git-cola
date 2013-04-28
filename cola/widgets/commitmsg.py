@@ -6,6 +6,7 @@ from PyQt4.QtCore import SIGNAL
 import cola
 from cola import cmds
 from cola import gitcmds
+from cola import gitcfg
 from cola import utils
 from cola.cmds import Interaction
 from cola.gitcmds import commit_message_path
@@ -26,7 +27,7 @@ from cola.dag.model import DAG
 from cola.dag.model import RepoReader
 from cola.widgets.selectcommits import select_commits
 from cola.widgets.text import HintedLineEdit
-from cola.widgets.text import HintedTextEdit
+from cola.widgets.spellcheck import SpellCheckTextEdit
 
 
 class CommitMessageEditor(QtGui.QWidget):
@@ -35,6 +36,7 @@ class CommitMessageEditor(QtGui.QWidget):
 
         self.model = model
         self.notifying = False
+        self.spellcheck_initialized = False
 
         self._linebreak = None
         self._textwidth = None
@@ -78,10 +80,17 @@ class CommitMessageEditor(QtGui.QWidget):
         self.actions_menu.addSeparator()
 
         # Amend checkbox
-        self.amend_action = self.actions_menu.addAction(N_('Amend Last Commit'))
+        self.amend_action = self.actions_menu.addAction(
+                N_('Amend Last Commit'))
         self.amend_action.setCheckable(True)
         self.amend_action.setShortcut(cmds.AmendMode.SHORTCUT)
         self.amend_action.setShortcutContext(Qt.ApplicationShortcut)
+
+        # Spell checker
+        self.check_spelling_action = self.actions_menu.addAction(
+                N_('Check Spelling'))
+        self.check_spelling_action.setCheckable(True)
+        self.check_spelling_action.setChecked(False)
 
         # Line wrapping
         self.actions_menu.addSeparator()
@@ -116,6 +125,8 @@ class CommitMessageEditor(QtGui.QWidget):
 
         # Broadcast the amend mode
         connect_action_bool(self.amend_action, cmds.run(cmds.AmendMode))
+        connect_action_bool(self.check_spelling_action,
+                            self.toggle_check_spelling)
 
         # Handle the one-off autowrapping
         connect_action_bool(self.autowrap_action, self.set_linebreak)
@@ -405,6 +416,33 @@ class CommitMessageEditor(QtGui.QWidget):
         sha1 = sha1s[0]
         cmds.do(cmds.LoadPreviousMessage, sha1)
 
+    def toggle_check_spelling(self, enabled):
+        spellcheck = self.description.spellcheck
+
+        if enabled and not self.spellcheck_initialized:
+            # Add our name to the dictionary
+            self.spellcheck_initialized = True
+            cfg = gitcfg.instance()
+            user_name = cfg.get('user.name')
+            if user_name:
+                for part in user_name.split():
+                    spellcheck.add_word(part)
+
+            # Add our email address to the dictionary
+            user_email = cfg.get('user.email')
+            if user_email:
+                for part in user_email.split('@'):
+                    for elt in part.split('.'):
+                        spellcheck.add_word(elt)
+
+            # git jargon
+            spellcheck.add_word('Acked')
+            spellcheck.add_word('Signed')
+            spellcheck.add_word('Closes')
+            spellcheck.add_word('Fixes')
+
+        self.description.highlighter.enable(enabled)
+
 
 class CommitSummaryLineEdit(HintedLineEdit):
     def __init__(self, parent=None):
@@ -421,10 +459,10 @@ class CommitSummaryLineEdit(HintedLineEdit):
         menu.exec_(self.mapToGlobal(event.pos()))
 
 
-class CommitMessageTextEdit(HintedTextEdit):
+class CommitMessageTextEdit(SpellCheckTextEdit):
     def __init__(self, parent=None):
         hint = N_('Extended description...')
-        HintedTextEdit.__init__(self, hint, parent)
+        SpellCheckTextEdit.__init__(self, hint, parent)
         self.extra_actions = []
         self.setMinimumSize(QtCore.QSize(1, 1))
 
@@ -445,7 +483,7 @@ class CommitMessageTextEdit(HintedTextEdit):
         return False
 
     def contextMenuEvent(self, event):
-        menu = self.createStandardContextMenu()
+        menu, spell_menu = self.context_menu()
         if self.extra_actions:
             menu.addSeparator()
         for action in self.extra_actions:
@@ -497,7 +535,7 @@ class CommitMessageTextEdit(HintedTextEdit):
                 self.setTextCursor(cursor)
                 event.accept()
                 return
-        HintedTextEdit.keyPressEvent(self, event)
+        SpellCheckTextEdit.keyPressEvent(self, event)
 
     def emit_leave(self):
         self.emit(SIGNAL('leave()'))
