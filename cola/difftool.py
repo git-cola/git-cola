@@ -137,7 +137,7 @@ class FileDiffDialog(QtGui.QDialog):
 
     def refresh(self):
         if self.expr is not None:
-            self.diff_arg = utils.shell_usplit(self.expr)
+            self.diff_arg = utils.shell_split(self.expr)
         elif self.b is None:
             self.diff_arg = [self.a]
         else:

@@ -70,7 +70,7 @@ class DAG(Observable):
                 self.overrides['count'] = opts.count
 
         if args is not None:
-            ref = subprocess.list2cmdline([core.decode(a) for a in args])
+            ref = subprocess.list2cmdline(map(core.decode, args))
             if self.set_ref(ref):
                 self.overrides['ref'] = ref
 

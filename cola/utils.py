@@ -294,7 +294,7 @@ def tablength(word, tabwidth):
     return len(word.replace('\t', '')) + word.count('\t') * tabwidth
 
 
-def shell_split(s):
+def _shell_split(s):
     """Split string apart into utf-8 encoded words using shell syntax"""
     try:
         return shlex.split(core.encode(s))
@@ -302,9 +302,9 @@ def shell_split(s):
         return [s]
 
 
-def shell_usplit(s):
+def shell_split(s):
     """Returns a unicode list instead of encoded strings"""
-    return [core.decode(arg) for arg in shell_split(s)]
+    return [core.decode(arg) for arg in _shell_split(s)]
 
 
 def tmp_dir():

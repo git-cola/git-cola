@@ -88,7 +88,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
         self._do_text_changed('')
 
     def _words(self):
-        return utils.shell_usplit(unicode(self.text()))
+        return utils.shell_split(unicode(self.text()))
 
     def _ends_with_whitespace(self):
         text = unicode(self.text())
@@ -229,7 +229,7 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
             html = text.replace(self.highlight_text,
                                 '<strong>%s</strong>' % self.highlight_text)
         else:
-            match = re.match('(.*)(' + self.highlight_text + ')(.*)',
+            match = re.match('(.*)(%s)(.*)' % re.escape(self.highlight_text),
                              text, re.IGNORECASE)
             if match:
                 start = match.group(1) or ''
