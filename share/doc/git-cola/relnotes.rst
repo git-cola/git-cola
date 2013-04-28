@@ -9,10 +9,21 @@ Usability, bells and whistles
 
   http://github.com/git-cola/git-cola/issues/150
 
+* `git cola` now remembers your commit message and will restore it
+  when `git cola` is restarted.
+
+  https://github.com/git-cola/git-cola/pull/175
+
 * Ctrl+M can now be used to toggle the "Amend last commit"
   checkbox in the commit message editor.
 
   https://github.com/git-cola/git-cola/pull/161
+
+* Deleting remote branches can now be done from the "Branch" menu.
+
+  https://github.com/git-cola/git-cola/issues/152
+
+* The commit message editor now has a built-in spell checker.
 
 Fixes
 -----
@@ -24,10 +35,17 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/165
 
-* We now remember whether `git cola` has been maximized and restore the
+* `git cola` now remembers whether it has been maximized and will restore the
   maximized state when `git cola` is restarted.
 
   https://github.com/git-cola/git-cola/issues/172
+
+* Performance is now vastly improved when staging hundreds or
+  thousands of files.
+
+* `git cola` was not correctly saving repo-specific configuration.
+
+  https://github.com/git-cola/git-cola/issues/174
 
 git-cola v1.8.2
 ===============
