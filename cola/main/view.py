@@ -292,7 +292,7 @@ class MainView(MainWindow):
         self.menu_classic.setIcon(qtutils.git_icon())
 
         self.menu_dag = add_action(self,
-                N_('DAG...'), lambda: git_dag(self.model))
+                N_('DAG...'), lambda: git_dag(self.model).show())
         self.menu_dag.setIcon(qtutils.git_icon())
 
         # Relayed actions
