@@ -100,10 +100,6 @@ class NorvigSpellCheck(object):
             except IOError:
                 pass
         raise StopIteration
-try:
-    from enchant import Dict as SpellCheck
-except ImportError:
-    SpellCheck = NorvigSpellCheck
 
 
 class SpellCheckTextEdit(HintedTextEdit):
@@ -112,7 +108,7 @@ class SpellCheckTextEdit(HintedTextEdit):
         HintedTextEdit.__init__(self, hint, parent)
 
         # Default dictionary based on the current locale.
-        self.spellcheck = SpellCheck()
+        self.spellcheck = NorvigSpellCheck()
         self.highlighter = Highlighter(self.document(), self.spellcheck)
 
     def mousePressEvent(self, event):
