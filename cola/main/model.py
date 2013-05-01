@@ -239,7 +239,7 @@ class MainModel(Observable):
         # real-world values.
 
         max_arg_len = 32 * 4 * 1024
-        avg_filename_len = 200
+        avg_filename_len = 300
         size = max_arg_len / avg_filename_len
 
         full_status = 0
