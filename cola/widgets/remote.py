@@ -474,10 +474,12 @@ class RemoteActionDialog(standard.Dialog):
         if output:
             message += '\n\n' + output
 
-        # Force the status to 1 so that we always display the log
         Interaction.log(message)
 
         if status == 0:
+            Interaction.information(
+                    N_('Success'),
+                    N_('"git %s" succeeded.') % self.action.lower())
             self.accept()
             return
 
