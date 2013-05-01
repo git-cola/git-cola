@@ -6,6 +6,7 @@ Welcome to git-cola's Documentation
     intro
     tools
     mainwindow
+    custom
     thanks
 
 Release Notes
