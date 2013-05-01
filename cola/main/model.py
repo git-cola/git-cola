@@ -256,7 +256,8 @@ class MainModel(Observable):
 
     def _sliced_add(self, input_items):
         lambda_fn = lambda x: self.git.add('--',
-                                           v=True,
+                                           force=True,
+                                           verbose=True,
                                            with_stderr=True,
                                            with_status=True,
                                            *x)
