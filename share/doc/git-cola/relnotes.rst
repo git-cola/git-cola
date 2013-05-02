@@ -47,6 +47,8 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/174
 
+* Fix a UnicodeDecode in sphinxtogithub when building from source.
+
 git-cola v1.8.2
 ===============
 Usability, bells and whistles
