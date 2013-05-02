@@ -199,7 +199,7 @@ class LayoutFactory(object):
         self.force = force
 
     def create_layout(self, path):
-
+        path = str(path)
         contents = self.dir_helper.list_dir(path)
 
         renamer = self.file_helper.move
