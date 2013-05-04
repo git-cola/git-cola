@@ -283,6 +283,7 @@ class MainModel(Observable):
         return (status, output)
 
     def unstage_all(self):
+        """Unstage all files, even while amending"""
         status, output = self.git.reset(self.head, '--', '.',
                                         with_stderr=True,
                                         with_status=True)
