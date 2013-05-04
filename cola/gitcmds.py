@@ -204,7 +204,7 @@ def log(git, *args, **kwargs):
 
 
 def commit_diff(sha1, git=git):
-    return log(git, '-1', sha1) + '\n\n' + sha1_diff(git, sha1)
+    return log(git, '-1', sha1, '--') + '\n\n' + sha1_diff(git, sha1)
 
 
 _diff_overrides = {}
@@ -236,7 +236,7 @@ def sha1_diff(git, sha1):
 
 
 def diff_info(sha1, git=git):
-    decoded = log(git, '-1', sha1, pretty='format:%b').strip()
+    decoded = log(git, '-1', sha1, '--', pretty='format:%b').strip()
     if decoded:
         decoded += '\n\n'
     return decoded + sha1_diff(git, sha1)
@@ -476,8 +476,8 @@ def diff_index(head, cached=True):
     staged = []
     unmerged = []
 
-    status, output = git.diff_index(head, cached=cached,
-                                    z=True, with_status=True)
+    status, output = git.diff_index(head, '--',
+                                    cached=cached, z=True, with_status=True)
     if status != 0:
         # handle git init
         return all_files(), unmerged, submodules
