@@ -20,6 +20,7 @@ Thanks
 * Ismael Juma
 * Iulian Udrea
 * Ivar Smolin
+* Jakub Wilk
 * Johann Schmitz
 * Jeff Dagenais
 * Justin Lecher
@@ -33,6 +34,7 @@ Thanks
 * Mahmoud Hossam
 * Marco Costalba
 * Markus Heidelberg
+* Maarten Nieber
 * Matthew Levine
 * Michael Geddes
 * Michael Homer
