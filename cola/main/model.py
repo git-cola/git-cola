@@ -282,13 +282,6 @@ class MainModel(Observable):
         self.update_file_status()
         return (status, output)
 
-    def unstage_all(self):
-        status, output = self.git.reset(self.head, '--', '.',
-                                        with_stderr=True,
-                                        with_status=True)
-        self.update_file_status()
-        return (status, output)
-
     def stage_all(self):
         status, output = self.git.add(v=True,
                                       u=True,
@@ -483,7 +476,7 @@ class MainModel(Observable):
 
     def unstage_paths(self, paths):
         if not paths:
-            self.unstage_all()
+            self.reset()
             return
         gitcmds.unstage_paths(paths, head=self.head)
         self.update_file_status()
