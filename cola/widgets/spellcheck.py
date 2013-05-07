@@ -19,7 +19,7 @@ from PyQt4.Qt import QSyntaxHighlighter
 from PyQt4.Qt import QTextCharFormat
 from PyQt4.Qt import QTextCursor
 from PyQt4.Qt import Qt
-from PyQt4.QtCore import pyqtSignal
+from PyQt4.QtCore import SIGNAL
 
 from cola.compat import set
 from cola.i18n import N_
@@ -139,7 +139,7 @@ class SpellCheckTextEdit(HintedTextEdit):
                 spell_menu = QMenu(N_('Spelling Suggestions'))
                 for word in self.spellcheck.suggest(text):
                     action = SpellAction(word, spell_menu)
-                    action.correct.connect(self.correct)
+                    self.connect(action, SIGNAL('correct'), self.correct)
                     spell_menu.addAction(action)
                 # Only add the spelling suggests to the menu if there are
                 # suggestions.
@@ -195,13 +195,12 @@ class SpellAction(QAction):
     """QAction that returns the text in a signal.
     """
 
-    correct = pyqtSignal(unicode)
-
     def __init__(self, *args):
         QAction.__init__(self, *args)
+        self.connect(self, SIGNAL('triggered()'), self.correct)
 
-        self.triggered.connect(
-            lambda x: self.correct.emit(unicode(self.text())))
+    def correct(self):
+        self.emit(SIGNAL('correct'), unicode(self.text()))
 
 
 def main(args=sys.argv):
