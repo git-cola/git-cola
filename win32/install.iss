@@ -171,7 +171,7 @@ procedure BrowseForPythonFolder(Sender:TObject);
 var
     Path:string;
 begin
-    Path:=GetPreviousData('PythonPath', 'C:\Python26');
+    Path:=GetPreviousData('PythonPath', 'C:\Python27');
     EdtPython.Text:=Path;
     Path:=ExtractFilePath(EdtPython.Text);
     BrowseForFolder('Please select the Python folder:',Path,False);

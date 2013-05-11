@@ -19,7 +19,7 @@ fi
 # PYTHON environment variable.
 if test -z "$PYTHON"
 then
-	PYTHON="$(which pythonw.exe 2>/dev/null)"
+	PYTHON="$(which python.exe 2>/dev/null)"
 fi
 # The path to python can be specified in the
 # `cola.pythonlocation` git configuration variable.
@@ -43,7 +43,7 @@ for python in \
 do
 	if test -d "$python"
 	then
-		PATH="$python":"$PATH" exec "$python/pythonw.exe" "$COLA" "$@"
+		PATH="$python":"$PATH" exec "$python/python.exe" "$COLA" "$@"
 	fi
 done
 exit 1

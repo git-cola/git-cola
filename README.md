@@ -104,13 +104,13 @@ Download the latest stable Git, Python 2.x, and Py2x-PyQt4 installers
 Once these are installed you can run *git-cola* from the Start menu or
 by double-clicking on the `git-cola.pyw` script.
 
-You can also use `pythonw.exe` to invoke the `git-cola.pyw` script
+You can also use `python.exe` to invoke the `git-cola.pyw` script
 directly from the command-line.
 
 If you are developing *git-cola* on Windows you can run it from its
-source tree by using `pythonw.exe`.
+source tree by using `python.exe`.
 
-    pythonw.exe bin/git-cola
+    python.exe bin/git-cola
 
 If you want to build the `git-cola Installer` yourself run the provided script
 
