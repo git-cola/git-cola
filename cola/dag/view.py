@@ -509,13 +509,17 @@ class DAGView(Widget):
         self.displaybutton = QtGui.QPushButton()
         self.displaybutton.setText(N_('Display'))
 
+        self.zoom_out = QtGui.QPushButton()
+        self.zoom_out.setIcon(qtutils.theme_icon('zoom-out.png'))
+        self.zoom_out.setFlat(True)
+
         self.zoom_in = QtGui.QPushButton()
         self.zoom_in.setIcon(qtutils.theme_icon('zoom-in.png'))
         self.zoom_in.setFlat(True)
 
-        self.zoom_out = QtGui.QPushButton()
-        self.zoom_out.setIcon(qtutils.theme_icon('zoom-out.png'))
-        self.zoom_out.setFlat(True)
+        self.fit_view_to_selection = QtGui.QPushButton()
+        self.fit_view_to_selection.setIcon(qtutils.theme_icon('zoom-fit-best.png'))
+        self.fit_view_to_selection.setFlat(True)
 
         self.top_layout = QtGui.QHBoxLayout()
         self.top_layout.setMargin(defs.margin)
@@ -527,6 +531,7 @@ class DAGView(Widget):
         self.top_layout.addStretch()
         self.top_layout.addWidget(self.zoom_out)
         self.top_layout.addWidget(self.zoom_in)
+        self.top_layout.addWidget(self.fit_view_to_selection)
 
         self.notifier = notifier = observable.Observable()
         self.notifier.refs_updated = refs_updated = 'refs_updated'
@@ -572,8 +577,10 @@ class DAGView(Widget):
         self.maxresults.setValue(dag.count)
         self.update_window_title()
 
-        qtutils.connect_button(self.zoom_in, self.graphview.zoom_in)
         qtutils.connect_button(self.zoom_out, self.graphview.zoom_out)
+        qtutils.connect_button(self.zoom_in, self.graphview.zoom_in)
+        qtutils.connect_button(self.fit_view_to_selection, self.graphview.fit_view_to_selection)
+
         qtutils.connect_button(self.displaybutton, self.display)
 
         self.thread.connect(self.thread, self.thread.commits_ready,
