@@ -1,3 +1,9 @@
+git-cola v1.8.4 (DRAFT)
+=======================
+Usability, bells and whistles
+-----------------------------
+* Brand new German translation thanks to Sven Claussner.
+
 git-cola v1.8.3
 ===============
 Usability, bells and whistles
