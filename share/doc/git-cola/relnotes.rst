@@ -1,4 +1,4 @@
-git-cola v1.8.3 (DRAFT)
+git-cola v1.8.3
 ===============
 Usability, bells and whistles
 -----------------------------
