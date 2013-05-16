@@ -45,5 +45,6 @@ Thanks
 * Sergey Leschina
 * Stefan Naewe
 * Steffen Prohaska
+* Sven Claussner
 * Ugo Riboni
 * Uri Okrent
