@@ -327,6 +327,7 @@ class MainView(MainWindow):
         self.file_menu.addAction(self.menu_load_commitmsg_template)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_save_tarball)
+        self.file_menu.addAction(self.menu_export_patches)
         self.file_menu.addAction(self.menu_quit)
         # Add to menubar
         self.menubar.addAction(self.file_menu.menuAction())
@@ -339,8 +340,6 @@ class MainView(MainWindow):
         self.commit_menu.addSeparator()
         self.commit_menu.addAction(self.menu_unstage_all)
         self.commit_menu.addAction(self.menu_unstage_selected)
-        self.commit_menu.addSeparator()
-        self.commit_menu.addAction(self.menu_search_commits)
         # Add to menubar
         self.menubar.addAction(self.commit_menu.menuAction())
 
@@ -364,20 +363,18 @@ class MainView(MainWindow):
 
         # Actions menu
         self.actions_menu = create_menu(N_('Actions'), self.menubar)
-        self.actions_menu.addAction(self.menu_merge_local)
-        self.actions_menu.addAction(self.menu_stash)
-        self.actions_menu.addSeparator()
         self.actions_menu.addAction(self.menu_fetch)
         self.actions_menu.addAction(self.menu_push)
         self.actions_menu.addAction(self.menu_pull)
+        self.actions_menu.addAction(self.menu_stash)
         self.actions_menu.addSeparator()
         self.actions_menu.addAction(self.menu_create_tag)
-        self.actions_menu.addSeparator()
-        self.actions_menu.addAction(self.menu_export_patches)
         self.actions_menu.addAction(self.menu_cherry_pick)
-        self.actions_menu.addSeparator()
+        self.actions_menu.addAction(self.menu_merge_local)
         self.actions_menu.addAction(self.menu_merge_abort)
+        self.actions_menu.addSeparator()
         self.actions_menu.addAction(self.menu_grep)
+        self.actions_menu.addAction(self.menu_search_commits)
         # Add to menubar
         self.menubar.addAction(self.actions_menu.menuAction())
 
