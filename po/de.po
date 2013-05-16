@@ -7,12 +7,13 @@ msgstr ""
 "Project-Id-Version: git-gui\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-16 02:00-0700\n"
-"PO-Revision-Date: 2008-05-01 11:51+0200\n"
-"Last-Translator: Christian Stimming <stimming@tuhh.de>\n"
+"PO-Revision-Date: 2013-05-16 19:54+0100\n"
+"Last-Translator: Sven Claussner <<sclaussner@src.gnome.org>>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #: cola/bookmarks.py:32
 msgid "Bookmarks"
@@ -119,14 +120,13 @@ msgid "Deleting \"%s\" failed"
 msgstr "Fehler beim Löschen von \"%s\""
 
 #: cola/cmds.py:411
-#, fuzzy
 msgid "Remote Branch Deleted"
-msgstr "Externer Zweig"
+msgstr "Externer Zweig gelöscht"
 
 #: cola/cmds.py:412
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
-msgstr ""
+msgstr "\"%(branch)s\" wurde von \"%(remote)s\" gelöscht."
 
 #: cola/cmds.py:416 cola/widgets/remote.py:472 cola/widgets/startup.py:163
 #, python-format
@@ -134,9 +134,8 @@ msgid "\"%(command)s\" returned exit status %(status)d"
 msgstr "\"%(command)s\" wurde mit Code %(status)d beendet"
 
 #: cola/cmds.py:419
-#, fuzzy
 msgid "Error Deleting Remote Branch"
-msgstr "Externen Zweig löschen"
+msgstr "Fehler beim Löschen des externen Zweigs"
 
 #: cola/cmds.py:498 cola/widgets/grep.py:60 cola/widgets/recent.py:69
 msgid "Edit"
@@ -256,14 +255,12 @@ msgid "Stage Modified"
 msgstr "Vermerke Änderung"
 
 #: cola/cmds.py:953
-#, fuzzy
 msgid "Stage Unmerged"
-msgstr "Alles bereitstellen"
+msgstr "Nicht zusammengeführte Dateien vormerken"
 
 #: cola/cmds.py:967
-#, fuzzy
 msgid "Stage Untracked"
-msgstr "Alles bereitstellen"
+msgstr "Neue Dateien vormerken"
 
 #: cola/cmds.py:985
 #, python-format
@@ -380,7 +377,7 @@ msgstr "Vergleichen"
 
 #: cola/inotify.py:47
 msgid "inotify is disabled because \"cola.inotify\" is false"
-msgstr ""
+msgstr "Inotify ist deaktiviert, da \"cola.inotify\" auf FALSCH gesetzt ist."
 
 #: cola/inotify.py:53
 msgid ""
@@ -1312,7 +1309,7 @@ msgstr "Letzte Version nachbessern"
 
 #: cola/widgets/commitmsg.py:91
 msgid "Check Spelling"
-msgstr ""
+msgstr "Rechtschreibung prüfen"
 
 #: cola/widgets/commitmsg.py:103
 msgid "Load Previous Commit Message"
@@ -1651,7 +1648,7 @@ msgstr "Änderungen an ausgewählten Zeilen nicht vormerken"
 
 #: cola/widgets/diff.py:57
 msgid "Apply Diff Selection to Work Tree"
-msgstr ""
+msgstr "Auswahl auf den Arbeitsbereich anwenden"
 
 #: cola/widgets/diff.py:81 cola/widgets/diff.py:103 cola/widgets/status.py:489
 #: cola/widgets/status.py:602
@@ -1802,7 +1799,6 @@ msgid "Shell arguments"
 msgstr "Als Kommandozeilenargumente"
 
 #: cola/widgets/grep.py:71
-#, fuzzy
 msgid ""
 "Parse arguments using a shell.\n"
 "Queries with spaces will require \"double quotes\"."
@@ -1870,8 +1866,8 @@ msgid ""
 "Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
 "A new remote branch will be published."
 msgstr ""
-"Der Zweig \"%(branch)s\" existiert nicht im externen Projektarchiv \"%"
-"(remote)s\".\n"
+"Der Zweig \"%(branch)s\" existiert nicht im externen Projektarchiv "
+"\"%(remote)s\".\n"
 "Dort wird damit ein neuer Zweig angelegt."
 
 #: cola/widgets/remote.py:410
@@ -1932,7 +1928,7 @@ msgstr "Erfolgreich"
 #: cola/widgets/remote.py:482
 #, python-format
 msgid "\"git %s\" succeeded."
-msgstr ""
+msgstr "\"git %s\" erfolgreich ausgeführt."
 
 #: cola/widgets/remote.py:488
 msgid "Have you rebased/pulled lately?"
@@ -1940,9 +1936,8 @@ msgstr ""
 "Haben Sie neulich Änderungen abgeholt und ggf. den Zweiganfang verschoben?"
 
 #: cola/widgets/search.py:44
-#, fuzzy
 msgid "Browse..."
-msgstr "Blättern"
+msgstr "..."
 
 #: cola/widgets/search.py:50 cola/widgets/search.py:55
 msgid "yyyy-MM-dd"
@@ -1989,9 +1984,8 @@ msgid "No commits exist in this branch."
 msgstr "In diesem Zweig sind keine Versionen gespeichert"
 
 #: cola/widgets/spellcheck.py:139
-#, fuzzy
 msgid "Spelling Suggestions"
-msgstr "Keine Vorschläge"
+msgstr "Rechtschreibvorschläge"
 
 #: cola/widgets/startup.py:28
 msgid "git-cola"
