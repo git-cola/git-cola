@@ -643,10 +643,9 @@ class DAGView(Widget):
         try:
             count = state['count']
         except KeyError:
-            pass
-        else:
-            if not self.dag.overridden('count'):
-                self.dag.set_count(count)
+            count = self.dag.count
+        if not self.dag.overridden('count'):
+            self.dag.set_count(count)
 
     def emit_model_updated(self):
         self.emit(SIGNAL('model_updated'))
