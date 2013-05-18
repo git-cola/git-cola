@@ -60,8 +60,9 @@ class DAG(Observable):
 
     def set_count(self, count):
         changed = count != self.count
-        self.count = count
-        self.notify_observers(self.count_updated)
+        if changed:
+            self.count = count
+            self.notify_observers(self.count_updated)
         return changed
 
     def set_options(self, opts, args):
