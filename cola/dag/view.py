@@ -620,6 +620,9 @@ class DAGView(Widget):
         self.connect(self, SIGNAL('model_updated'),
                      self.model_updated)
 
+        qtutils.add_action(self, 'Focus search field',
+                           lambda: self.revtext.setFocus(), 'Ctrl+l')
+
         qtutils.add_close_action(self)
 
     def text_changed(self, txt):
