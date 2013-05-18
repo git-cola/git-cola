@@ -579,7 +579,8 @@ class DAGView(Widget):
 
         qtutils.connect_button(self.zoom_out, self.graphview.zoom_out)
         qtutils.connect_button(self.zoom_in, self.graphview.zoom_in)
-        qtutils.connect_button(self.fit_view_to_selection, self.graphview.fit_view_to_selection)
+        qtutils.connect_button(self.fit_view_to_selection,
+                               self.graphview.fit_view_to_selection)
 
         qtutils.connect_button(self.displaybutton, self.display)
 
