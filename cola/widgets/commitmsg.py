@@ -8,6 +8,7 @@ from cola import cmds
 from cola import gitcmds
 from cola import gitcfg
 from cola import utils
+from cola import textwrap
 from cola.cmds import Interaction
 from cola.gitcmds import commit_message_path
 from cola.i18n import N_
@@ -211,7 +212,7 @@ class CommitMessageEditor(QtGui.QWidget):
         text = self.description.value()
         if not self._linebreak:
             return text
-        return utils.word_wrap(text, self._tabwidth, self._textwidth)
+        return textwrap.word_wrap(text, self._tabwidth, self._textwidth)
 
     def commit_message_changed(self, value=None):
         """Update the model when values change"""
