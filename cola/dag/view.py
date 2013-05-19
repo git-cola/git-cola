@@ -19,13 +19,14 @@ from cola.compat import set
 from cola.dag import gravatar
 from cola.dag.model import RepoReader
 from cola.i18n import N_
+from cola.qt import create_menu
 from cola.widgets import completion
 from cola.widgets import defs
 from cola.widgets.createbranch import create_new_branch
 from cola.widgets.createtag import create_tag
 from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.browse import BrowseDialog
-from cola.widgets.standard import Widget
+from cola.widgets.standard import MainWindow
 from cola.widgets.text import DiffTextEdit
 
 
@@ -132,8 +133,8 @@ class DiffWidget(QtGui.QWidget):
         self.reflector = QtCore.QObject(self)
 
         self.info_layout = QtGui.QVBoxLayout()
-        self.info_layout.setMargin(0)
-        self.info_layout.setSpacing(0)
+        self.info_layout.setMargin(defs.no_margin)
+        self.info_layout.setSpacing(defs.no_spacing)
         self.info_layout.addWidget(self.author_label)
         self.info_layout.addWidget(self.summary_label)
         self.info_layout.addWidget(self.sha1_label)
@@ -145,7 +146,7 @@ class DiffWidget(QtGui.QWidget):
         self.logo_layout.addLayout(self.info_layout)
 
         self.main_layout = QtGui.QVBoxLayout()
-        self.main_layout.setMargin(0)
+        self.main_layout.setMargin(defs.no_margin)
         self.main_layout.setSpacing(defs.spacing)
         self.main_layout.addLayout(self.logo_layout)
         self.main_layout.addWidget(self.diff)
@@ -477,11 +478,11 @@ class CommitTreeWidget(ViewerMixin, QtGui.QTreeWidget):
         QtGui.QTreeWidget.mousePressEvent(self, event)
 
 
-class DAGView(Widget):
+class DAGView(MainWindow):
     """The git-dag widget."""
 
     def __init__(self, model, dag, parent=None, args=None):
-        Widget.__init__(self, parent)
+        MainWindow.__init__(self, parent)
 
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setMinimumSize(420, 420)
@@ -503,96 +504,99 @@ class DAGView(Widget):
         self.maxresults = QtGui.QSpinBox()
         self.maxresults.setMinimum(1)
         self.maxresults.setMaximum(99999)
-        self.maxresults.setPrefix('git log -')
+        self.maxresults.setPrefix('')
         self.maxresults.setSuffix('')
 
-        self.displaybutton = QtGui.QPushButton()
-        self.displaybutton.setText(N_('Display'))
+        self.zoom_out = qt.create_action_button(
+                N_('Zoom Out'), qtutils.theme_icon('zoom-out.png'))
 
-        self.zoom_out = QtGui.QPushButton()
-        self.zoom_out.setIcon(qtutils.theme_icon('zoom-out.png'))
-        self.zoom_out.setFlat(True)
+        self.zoom_in = qt.create_action_button(
+                N_('Zoom In'), qtutils.theme_icon('zoom-in.png'))
 
-        self.zoom_in = QtGui.QPushButton()
-        self.zoom_in.setIcon(qtutils.theme_icon('zoom-in.png'))
-        self.zoom_in.setFlat(True)
-
-        self.fit_view_to_selection = QtGui.QPushButton()
-        self.fit_view_to_selection.setIcon(qtutils.theme_icon('zoom-fit-best.png'))
-        self.fit_view_to_selection.setFlat(True)
-
-        self.top_layout = QtGui.QHBoxLayout()
-        self.top_layout.setMargin(defs.margin)
-        self.top_layout.setSpacing(defs.button_spacing)
-
-        self.top_layout.addWidget(self.maxresults)
-        self.top_layout.addWidget(self.revtext)
-        self.top_layout.addWidget(self.displaybutton)
-        self.top_layout.addStretch()
-        self.top_layout.addWidget(self.zoom_out)
-        self.top_layout.addWidget(self.zoom_in)
-        self.top_layout.addWidget(self.fit_view_to_selection)
+        self.zoom_to_fit = qt.create_action_button(
+                N_('Zoom to Fit'), qtutils.theme_icon('zoom-fit-best.png'))
 
         self.notifier = notifier = observable.Observable()
         self.notifier.refs_updated = refs_updated = 'refs_updated'
         self.notifier.add_observer(refs_updated, self.display)
 
-        self.graphview = GraphView(notifier, self)
         self.treewidget = CommitTreeWidget(notifier, self)
         self.diffwidget = DiffWidget(notifier, self)
+        self.graphview = GraphView(notifier, self)
 
-        self.splitter = QtGui.QSplitter()
-        self.splitter.setOrientation(Qt.Horizontal)
-        self.splitter.setChildrenCollapsible(True)
-        self.splitter.setHandleWidth(defs.handle_width)
+        self.controls_layout = QtGui.QHBoxLayout()
+        self.controls_layout.setMargin(defs.no_margin)
+        self.controls_layout.setSpacing(defs.spacing)
+        self.controls_layout.addWidget(self.revtext)
+        self.controls_layout.addWidget(self.maxresults)
 
-        self.left_splitter = QtGui.QSplitter()
-        self.left_splitter.setOrientation(Qt.Vertical)
-        self.left_splitter.setChildrenCollapsible(True)
-        self.left_splitter.setHandleWidth(defs.handle_width)
-        self.left_splitter.setStretchFactor(0, 1)
-        self.left_splitter.setStretchFactor(1, 1)
-        self.left_splitter.insertWidget(0, self.treewidget)
-        self.left_splitter.insertWidget(1, self.diffwidget)
+        self.controls_widget = QtGui.QWidget()
+        self.controls_widget.setLayout(self.controls_layout)
 
-        self.splitter.insertWidget(0, self.left_splitter)
-        self.splitter.insertWidget(1, self.graphview)
+        self.log_dock = qt.create_dock(N_('Log'), self, stretch=False)
+        self.log_dock.setWidget(self.treewidget)
+        log_dock_titlebar = self.log_dock.titleBarWidget()
+        log_dock_titlebar.add_corner_widget(self.controls_widget)
 
-        self.splitter.setStretchFactor(0, 1)
-        self.splitter.setStretchFactor(1, 1)
+        self.diff_dock = qt.create_dock(N_('Diff'), self)
+        self.diff_dock.setWidget(self.diffwidget)
 
-        self.main_layout = QtGui.QVBoxLayout()
-        self.main_layout.setMargin(0)
-        self.main_layout.setSpacing(0)
-        self.main_layout.addLayout(self.top_layout)
-        self.main_layout.addWidget(self.splitter)
-        self.setLayout(self.main_layout)
+        self.graph_controls_layout = QtGui.QHBoxLayout()
+        self.graph_controls_layout.setMargin(defs.no_margin)
+        self.graph_controls_layout.setSpacing(defs.button_spacing)
+        self.graph_controls_layout.addWidget(self.zoom_out)
+        self.graph_controls_layout.addWidget(self.zoom_in)
+        self.graph_controls_layout.addWidget(self.zoom_to_fit)
 
-        # Also re-loads dag.* from the saved state
-        if not qtutils.apply_state(self):
-            self.resize_to_desktop()
+        self.graph_controls_widget = QtGui.QWidget()
+        self.graph_controls_widget.setLayout(self.graph_controls_layout)
+
+        self.graphview_dock = qt.create_dock(N_('Graph'), self)
+        self.graphview_dock.setWidget(self.graphview)
+        graph_titlebar = self.graphview_dock.titleBarWidget()
+        graph_titlebar.add_corner_widget(self.graph_controls_widget)
+
+        # Create the application menu
+        self.menubar = QtGui.QMenuBar(self)
+
+        # View Menu
+        self.view_menu = create_menu(N_('View'), self.menubar)
+        self.view_menu.addAction(self.log_dock.toggleViewAction())
+        self.view_menu.addAction(self.graphview_dock.toggleViewAction())
+        self.view_menu.addAction(self.diff_dock.toggleViewAction())
+
+        self.menubar.addAction(self.view_menu.menuAction())
+        self.setMenuBar(self.menubar)
+
+        left = Qt.LeftDockWidgetArea
+        right = Qt.RightDockWidgetArea
+        bottom = Qt.BottomDockWidgetArea
+        self.addDockWidget(left, self.log_dock)
+        self.addDockWidget(right, self.graphview_dock)
+        self.addDockWidget(bottom, self.diff_dock)
+
+        self.graph_controls_widget.setMinimumHeight(
+                log_dock_titlebar.height() - defs.small_margin*2 - 1)
 
         # Update fields affected by model
         self.revtext.setText(dag.ref)
         self.maxresults.setValue(dag.count)
         self.update_window_title()
 
+        # Also re-loads dag.* from the saved state
+        if not qtutils.apply_state(self):
+            self.resize_to_desktop()
+
         qtutils.connect_button(self.zoom_out, self.graphview.zoom_out)
         qtutils.connect_button(self.zoom_in, self.graphview.zoom_in)
-        qtutils.connect_button(self.fit_view_to_selection,
-                               self.graphview.fit_view_to_selection)
-
-        qtutils.connect_button(self.displaybutton, self.display)
+        qtutils.connect_button(self.zoom_to_fit,
+                               self.graphview.zoom_to_fit)
 
         self.thread.connect(self.thread, self.thread.commits_ready,
                             self.add_commits)
 
         self.thread.connect(self.thread, self.thread.done,
                             self.thread_done)
-
-        self.connect(self.splitter, SIGNAL('splitterMoved(int,int)'),
-                     self.splitter_moved)
-
 
         self.connect(self.treewidget, SIGNAL('diff_commits'),
                      self.diff_commits)
@@ -637,18 +641,22 @@ class DAGView(Widget):
             self.setWindowTitle(project + N_(' - DAG'))
 
     def export_state(self):
-        state = Widget.export_state(self)
+        state = MainWindow.export_state(self)
         state['count'] = self.dag.count
         return state
 
     def apply_state(self, state):
-        Widget.apply_state(self, state)
+        self.Mixin.apply_state(self, state)
         try:
             count = state['count']
+            restored = True
+            if self.dag.overridden('count'):
+                count = self.dag.count
         except KeyError:
             count = self.dag.count
-        if not self.dag.overridden('count'):
-            self.dag.set_count(count)
+            restored = False
+        self.dag.set_count(count)
+        return restored
 
     def emit_model_updated(self):
         self.emit(SIGNAL('model_updated'))
@@ -675,7 +683,6 @@ class DAGView(Widget):
         self.old_ref = new_ref
         self.old_count = new_count
 
-        self.displaybutton.setEnabled(False)
         self.thread.stop()
         self.clear()
         self.dag.set_ref(new_ref)
@@ -683,12 +690,7 @@ class DAGView(Widget):
         self.thread.start()
 
     def show(self):
-        Widget.show(self)
-        self.splitter.setSizes([self.width()/2, self.width()/2])
-        self.left_splitter.setSizes([self.height()/4, self.height()*3/4])
-        self.treewidget.adjust_columns()
-
-    def splitter_moved(self, pos, idx):
+        self.Mixin.show(self)
         self.treewidget.adjust_columns()
 
     def clear(self):
@@ -708,7 +710,6 @@ class DAGView(Widget):
         self.treewidget.add_commits(commits)
 
     def thread_done(self):
-        self.displaybutton.setEnabled(True)
         self.graphview.setFocus()
         try:
             commit_obj = self.commit_list[-1]
@@ -736,10 +737,10 @@ class DAGView(Widget):
         self.revtext.close_popup()
         self.thread.stop()
         qtutils.save_state(self)
-        return Widget.closeEvent(self, event)
+        return self.Mixin.closeEvent(self, event)
 
     def resizeEvent(self, e):
-        Widget.resizeEvent(self, e)
+        self.Mixin.resizeEvent(self, e)
         self.treewidget.adjust_columns()
 
 
@@ -1186,7 +1187,7 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
                            self.zoom_out, Qt.Key_Minus)
 
         qtutils.add_action(self, N_('Zoom to Fit'),
-                           self.fit_view_to_selection, Qt.Key_F)
+                           self.zoom_to_fit, Qt.Key_F)
 
         qtutils.add_action(self, N_('Select Parent'),
                            self.select_parent, 'Shift+J')
@@ -1333,11 +1334,11 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
         self_commits = self.commits
         self_items = self.items
 
-        commits = self_commits[-10:]
+        commits = self_commits[-2:]
         items = [self_items[c.sha1] for c in commits]
         self.fit_view_to_items(items)
 
-    def fit_view_to_selection(self):
+    def zoom_to_fit(self):
         """Fit selected items into the viewport"""
 
         items = self.selected_items()
