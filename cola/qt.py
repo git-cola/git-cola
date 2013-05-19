@@ -31,9 +31,19 @@ def create_button(text='', layout=None, tooltip=None, icon=None):
     return button
 
 
+def create_action_button(tooltip, icon):
+    button = QtGui.QPushButton()
+    button.setCursor(QtCore.Qt.PointingHandCursor)
+    button.setFlat(True)
+    button.setIcon(icon)
+    button.setFixedSize(QtCore.QSize(16, 16))
+    button.setToolTip(tooltip)
+    return button
+
+
 class DockTitleBarWidget(QtGui.QWidget):
 
-    def __init__(self, parent, title):
+    def __init__(self, parent, title, stretch=True):
         QtGui.QWidget.__init__(self, parent)
         self.label = label = QtGui.QLabel()
         font = label.font()
@@ -43,34 +53,29 @@ class DockTitleBarWidget(QtGui.QWidget):
 
         self.setCursor(QtCore.Qt.OpenHandCursor)
 
-        self.close_button = QtGui.QPushButton()
-        self.close_button.setCursor(QtCore.Qt.PointingHandCursor)
-        self.close_button.setFlat(True)
-        self.close_button.setFixedSize(QtCore.QSize(16, 16))
-        self.close_button.setIcon(qtutils.titlebar_close_icon())
-        self.close_button.setToolTip(N_('Close'))
+        self.close_button = create_action_button(
+                N_('Close'), qtutils.titlebar_close_icon())
 
-        self.toggle_button = QtGui.QPushButton()
-        self.toggle_button.setCursor(QtCore.Qt.PointingHandCursor)
-        self.toggle_button.setFlat(True)
-        self.toggle_button.setFixedSize(QtCore.QSize(16, 16))
-        self.toggle_button.setIcon(qtutils.titlebar_normal_icon())
-        self.toggle_button.setToolTip(N_('Detach'))
+        self.toggle_button = create_action_button(
+                N_('Detach'),qtutils.titlebar_normal_icon())
 
         self.corner_layout = QtGui.QHBoxLayout()
         self.corner_layout.setMargin(defs.no_margin)
         self.corner_layout.setSpacing(defs.spacing)
 
-        self.main_layout = layout = QtGui.QHBoxLayout()
+        self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setMargin(defs.small_margin)
         self.main_layout.setSpacing(defs.spacing)
-
         self.main_layout.addWidget(label)
-        self.main_layout.addStretch()
+        self.main_layout.addSpacing(defs.spacing)
+        if stretch:
+            self.main_layout.addStretch()
         self.main_layout.addLayout(self.corner_layout)
+        self.main_layout.addSpacing(defs.spacing)
         self.main_layout.addWidget(self.toggle_button)
         self.main_layout.addWidget(self.close_button)
-        self.setLayout(layout)
+
+        self.setLayout(self.main_layout)
 
         qtutils.connect_button(self.toggle_button, self.toggle_floating)
         qtutils.connect_button(self.close_button, self.toggle_visibility)
@@ -96,12 +101,12 @@ class DockTitleBarWidget(QtGui.QWidget):
         self.toggle_button.setToolTip(tooltip)
 
 
-def create_dock(title, parent):
+def create_dock(title, parent, stretch=True):
     """Create a dock widget and set it up accordingly."""
     dock = QtGui.QDockWidget(parent)
     dock.setWindowTitle(title)
     dock.setObjectName(title)
-    titlebar = DockTitleBarWidget(dock, title)
+    titlebar = DockTitleBarWidget(dock, title, stretch=stretch)
     dock.setTitleBarWidget(titlebar)
     return dock
 

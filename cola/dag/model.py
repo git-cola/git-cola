@@ -54,8 +54,9 @@ class DAG(Observable):
 
     def set_ref(self, ref):
         changed = ref != self.ref
-        self.ref = ref
-        self.notify_observers(self.ref_updated)
+        if changed:
+            self.ref = ref
+            self.notify_observers(self.ref_updated)
         return changed
 
     def set_count(self, count):
