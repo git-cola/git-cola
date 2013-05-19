@@ -3,6 +3,8 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+from cola import qtcompat
+
 
 class WidgetMixin(object):
 
@@ -53,6 +55,13 @@ class WidgetMixin(object):
             'height': self.height(),
             'maximized': maximized,
         }
+
+
+class MainWindowMixin(WidgetMixin):
+    def __init__(self, QtClass):
+        WidgetMixin.__init__(self, QtClass)
+        # Dockwidget options
+        qtcompat.set_common_dock_options(self)
 
 
 class TreeMixin(object):
@@ -150,13 +159,14 @@ def bind_mixin(Mixin, QtClass):
         def __init__(self, parent=None):
             QtClass.__init__(self, parent)
             Mixin.__init__(self, QtClass)
+            self.Mixin = BoundMixin
 
     return BoundMixin
 
 
 Widget = bind_mixin(WidgetMixin, QtGui.QWidget)
 Dialog = bind_mixin(WidgetMixin, QtGui.QDialog)
-MainWindow = bind_mixin(WidgetMixin, QtGui.QMainWindow)
+MainWindow = bind_mixin(MainWindowMixin, QtGui.QMainWindow)
 
 TreeView = bind_mixin(TreeMixin, QtGui.QTreeView)
 TreeWidget = bind_mixin(TreeMixin, QtGui.QTreeWidget)

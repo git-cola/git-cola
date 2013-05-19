@@ -15,7 +15,6 @@ from cola import merge
 from cola import gitcfg
 from cola import prefs
 from cola import qtutils
-from cola import qtcompat
 from cola import resources
 from cola import settings
 from cola import stash
@@ -71,9 +70,6 @@ class MainView(MainWindow):
 
         self.setAcceptDrops(True)
         self.setAttribute(Qt.WA_MacMetalStyle)
-
-        # Dockwidget options
-        qtcompat.set_common_dock_options(self)
 
         cfg = gitcfg.instance()
         self.classic_dockable = (cfg.get('cola.browserdockable') or
