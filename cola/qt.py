@@ -31,6 +31,16 @@ def create_button(text='', layout=None, tooltip=None, icon=None):
     return button
 
 
+def create_action_button(tooltip, icon):
+    button = QtGui.QPushButton()
+    button.setCursor(QtCore.Qt.PointingHandCursor)
+    button.setFlat(True)
+    button.setIcon(icon)
+    button.setFixedSize(QtCore.QSize(16, 16))
+    button.setToolTip(tooltip)
+    return button
+
+
 class DockTitleBarWidget(QtGui.QWidget):
 
     def __init__(self, parent, title):
@@ -43,19 +53,11 @@ class DockTitleBarWidget(QtGui.QWidget):
 
         self.setCursor(QtCore.Qt.OpenHandCursor)
 
-        self.close_button = QtGui.QPushButton()
-        self.close_button.setCursor(QtCore.Qt.PointingHandCursor)
-        self.close_button.setFlat(True)
-        self.close_button.setFixedSize(QtCore.QSize(16, 16))
-        self.close_button.setIcon(qtutils.titlebar_close_icon())
-        self.close_button.setToolTip(N_('Close'))
+        self.close_button = create_action_button(
+                N_('Close'), qtutils.titlebar_close_icon())
 
-        self.toggle_button = QtGui.QPushButton()
-        self.toggle_button.setCursor(QtCore.Qt.PointingHandCursor)
-        self.toggle_button.setFlat(True)
-        self.toggle_button.setFixedSize(QtCore.QSize(16, 16))
-        self.toggle_button.setIcon(qtutils.titlebar_normal_icon())
-        self.toggle_button.setToolTip(N_('Detach'))
+        self.toggle_button = create_action_button(
+                N_('Detach'),qtutils.titlebar_normal_icon())
 
         self.corner_layout = QtGui.QHBoxLayout()
         self.corner_layout.setMargin(defs.no_margin)
