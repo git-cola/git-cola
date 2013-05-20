@@ -108,6 +108,8 @@ def create_dock(title, parent, stretch=True):
     dock.setObjectName(title)
     titlebar = DockTitleBarWidget(dock, title, stretch=stretch)
     dock.setTitleBarWidget(titlebar)
+    if hasattr(parent, 'dockwidgets'):
+        parent.dockwidgets.append(dock)
     return dock
 
 

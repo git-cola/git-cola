@@ -443,13 +443,6 @@ class MainView(MainWindow):
         self._config_task = None
         self.install_config_actions()
 
-        self.dockwidgets = (
-                self.logdockwidget,
-                self.commitdockwidget,
-                self.statusdockwidget,
-                self.diffdockwidget,
-                self.actionsdockwidget,
-        )
         # Restore saved settings
         if not qtutils.apply_state(self):
             self.set_initial_size()
@@ -459,7 +452,6 @@ class MainView(MainWindow):
         # Route command output here
         Interaction.log_status = self.logwidget.log_status
         Interaction.log = self.logwidget.log
-
         Interaction.log(version.git_version_str() + '\n' +
                         N_('git cola version %s') % version.version())
 

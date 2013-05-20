@@ -61,6 +61,7 @@ class MainWindowMixin(WidgetMixin):
     def __init__(self, QtClass):
         WidgetMixin.__init__(self, QtClass)
         # Dockwidget options
+        self.dockwidgets = []
         qtcompat.set_common_dock_options(self)
 
 
