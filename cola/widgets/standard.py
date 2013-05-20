@@ -1,9 +1,14 @@
+import os
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+from cola import core
 from cola import qtcompat
+from cola import qtutils
+from cola import settings
 
 
 class WidgetMixin(object):
@@ -33,16 +38,21 @@ class WidgetMixin(object):
 
     def apply_state(self, state):
         """Imports data for view save/restore"""
+        result = True
         try:
             self.resize(state['width'], state['height'])
         except:
-            pass
+            result = False
         try:
             self.move(state['x'], state['y'])
         except:
-            pass
-        if state.get('maximized', False):
-            self.showMaximized()
+            result = False
+        try:
+            if state['maximized']:
+                self.showMaximized()
+        except:
+            result = False
+        return result
 
     def export_state(self):
         """Exports data for view save/restore"""
@@ -56,13 +66,33 @@ class WidgetMixin(object):
             'maximized': maximized,
         }
 
+    def closeEvent(self, event):
+        s = settings.Settings()
+        s.add_recent(core.decode(os.getcwd()))
+        qtutils.save_state(self, handler=s)
+        self.QtClass.closeEvent(self)
+
 
 class MainWindowMixin(WidgetMixin):
+
     def __init__(self, QtClass):
         WidgetMixin.__init__(self, QtClass)
         # Dockwidget options
         self.dockwidgets = []
         qtcompat.set_common_dock_options(self)
+        self.widget_version = 0
+
+    def export_state(self):
+        """Exports data for save/restore"""
+        state = WidgetMixin.export_state(self)
+        return qtutils.export_window_state(self, state, self.widget_version)
+
+    def apply_state(self, state):
+        WidgetMixin.apply_state(self, state)
+        result = qtutils.apply_window_state(self, state, self.widget_version)
+        for widget in self.dockwidgets:
+            widget.titleBarWidget().update_tooltips()
+        return result
 
 
 class TreeMixin(object):

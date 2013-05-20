@@ -462,13 +462,8 @@ class MainView(MainWindow):
     # Qt overrides
     def closeEvent(self, event):
         """Save state in the settings manager."""
-        s = settings.Settings()
-        s.add_recent(core.decode(os.getcwd()))
-        qtutils.save_state(self, handler=s)
-
         commit_msg = self.commitmsgeditor.commit_message(raw=True)
         self.model.save_commitmsg(commit_msg)
-
         MainWindow.closeEvent(self, event)
 
     def build_recent_menu(self):
@@ -567,16 +562,10 @@ class MainView(MainWindow):
     def apply_state(self, state):
         """Imports data for save/restore"""
         # 1 is the widget version; change when widgets are added/removed
-        MainWindow.apply_state(self, state)
-        result = qtutils.apply_window_state(self, state, self.widget_version)
+        result = MainWindow.apply_state(self, state)
         for widget in self.dockwidgets:
             widget.titleBarWidget().update_tooltips()
         return result
-
-    def export_state(self):
-        """Exports data for save/restore"""
-        state = MainWindow.export_state(self)
-        return qtutils.export_window_state(self, state, self.widget_version)
 
     def setup_dockwidget_tools_menu(self):
         # Hotkeys for toggling the dock widgets

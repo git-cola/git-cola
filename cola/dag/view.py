@@ -641,22 +641,21 @@ class DAGView(MainWindow):
             self.setWindowTitle(project + N_(' - DAG'))
 
     def export_state(self):
-        state = MainWindow.export_state(self)
+        state = self.Mixin.export_state(self)
         state['count'] = self.dag.count
         return state
 
     def apply_state(self, state):
-        self.Mixin.apply_state(self, state)
+        result = self.Mixin.apply_state(self, state)
         try:
             count = state['count']
-            restored = True
             if self.dag.overridden('count'):
                 count = self.dag.count
-        except KeyError:
+        except:
             count = self.dag.count
-            restored = False
+            result = False
         self.dag.set_count(count)
-        return restored
+        return result
 
     def emit_model_updated(self):
         self.emit(SIGNAL('model_updated'))
@@ -736,8 +735,7 @@ class DAGView(MainWindow):
     def closeEvent(self, event):
         self.revtext.close_popup()
         self.thread.stop()
-        qtutils.save_state(self)
-        return self.Mixin.closeEvent(self, event)
+        self.Mixin.closeEvent(self, event)
 
     def resizeEvent(self, e):
         self.Mixin.resizeEvent(self, e)
