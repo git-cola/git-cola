@@ -575,9 +575,6 @@ class DAGView(MainWindow):
         self.addDockWidget(right, self.graphview_dock)
         self.addDockWidget(bottom, self.diff_dock)
 
-        self.graph_controls_widget.setMinimumHeight(
-                log_dock_titlebar.height() - defs.small_margin*2 - 1)
-
         # Update fields affected by model
         self.revtext.setText(dag.ref)
         self.maxresults.setValue(dag.count)
