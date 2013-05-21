@@ -70,7 +70,7 @@ class WidgetMixin(object):
         s = settings.Settings()
         s.add_recent(core.decode(os.getcwd()))
         qtutils.save_state(self, handler=s)
-        self.QtClass.closeEvent(self)
+        self.QtClass.closeEvent(self, event)
 
 
 class MainWindowMixin(WidgetMixin):
