@@ -477,9 +477,6 @@ class RemoteActionDialog(standard.Dialog):
         Interaction.log(message)
 
         if status == 0:
-            Interaction.information(
-                    N_('Success'),
-                    N_('"git %s" succeeded.') % self.action.lower())
             self.accept()
             return
 
