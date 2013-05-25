@@ -125,7 +125,7 @@ class TextWrapper(object):
             # First chunk on line is a space -- drop it, unless this
             # is the very beginning of the text (ie. no lines started yet).
             if self.drop_whitespace and chunks[-1] == ' ' and lines:
-                del chunks[-1]
+                chunks.pop()
 
             while chunks:
                 l = self.chunklen(chunks[-1])
@@ -146,7 +146,12 @@ class TextWrapper(object):
 
             # If the last chunk on this line is all a space, drop it.
             if self.drop_whitespace and cur_line and cur_line[-1] == ' ':
-                del cur_line[-1]
+                cur_line.pop()
+
+            # Avoid whitespace at the beginining of the line.
+            if (self.drop_whitespace and cur_line and
+                    cur_line[0] in (' ', '  ')):
+                cur_line.pop(0)
 
             # Convert current line back to a string and store it in list
             # of all lines (return value).

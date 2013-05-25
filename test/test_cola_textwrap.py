@@ -92,6 +92,13 @@ With-special-tag: Avoids word-wrap
 
         self.assertEqual(self.wrap(text), expect)
 
+    def test_word_wrap_space_at_start_of_wrap(self):
+        inputs = """0 1 2 3 4 5 6 7 8 9  0 1 2 3 4 5 6 7 8 """
+        expect = """0 1 2 3 4 5 6 7 8 9\n0 1 2 3 4 5 6 7 8"""
+        self.limit = 20
+        actual = self.wrap(inputs)
+        self.assertEqual(expect, actual)
+
 
 if __name__ == '__main__':
     unittest.main()
