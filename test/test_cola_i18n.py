@@ -19,14 +19,14 @@ class ColaI18nTestCase(unittest.TestCase):
         i18n.install('ja_JP')
         expect = (unichr(0x30b3) + unichr(0x30df) +
                   unichr(0x30c3) + unichr(0x30c8))
-        actual = N_('Commit@@noun')
+        actual = N_('Commit@@verb')
         self.assertEqual(expect, actual)
 
     def test_translates_verb(self):
         """Test that strings with @@verb are translated
         """
         i18n.install('de_DE')
-        expect = 'Eintragen'
+        expect = 'Version aufnehmen'
         actual = N_('Commit@@verb')
         self.assertEqual(expect, actual)
 
