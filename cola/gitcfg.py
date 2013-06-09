@@ -13,12 +13,16 @@ def instance():
     """Return a static GitConfig instance."""
     return GitConfig()
 
+_USER_CONFIG = os.path.expanduser(os.path.join('~', '.gitconfig'))
+_USER_XDG_CONFIG = os.path.expanduser(os.path.join(
+                os.environ.get('XDG_CONFIG_HOME', os.path.join('~', '.config')),
+                'git', 'config'))
 
 def _stat_info():
     # Try /etc/gitconfig as a fallback for the system config
-    userconfig = os.path.expanduser(os.path.join('~', '.gitconfig'))
     paths = (('system', '/etc/gitconfig'),
-             ('user', core.decode(userconfig)),
+             ('user', core.decode(_USER_XDG_CONFIG)),
+             ('user', core.decode(_USER_CONFIG)),
              ('repo', core.decode(git.instance().git_path('config'))))
     statinfo = []
     for category, path in paths:
@@ -31,9 +35,9 @@ def _stat_info():
 
 def _cache_key():
     # Try /etc/gitconfig as a fallback for the system config
-    userconfig = os.path.expanduser(os.path.join('~', '.gitconfig'))
     paths = ('/etc/gitconfig',
-             userconfig,
+             _USER_XDG_CONFIG,
+             _USER_CONFIG,
              git.instance().git_path('config'))
     mtimes = []
     for path in paths:
