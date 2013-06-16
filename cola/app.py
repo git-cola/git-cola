@@ -11,8 +11,8 @@ import subprocess
 
 # Make homebrew work by default
 if sys.platform == 'darwin':
-    version_info = sys.version_info
-    python_version = '%s.%s' % (version_info.major, version_info.minor)
+    from distutils import sysconfig
+    python_version = sysconfig.get_python_version()
     homebrew_mods = '/usr/local/lib/python%s/site-packages' % python_version
     if os.path.isdir(homebrew_mods):
         sys.path.append(homebrew_mods)
