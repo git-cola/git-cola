@@ -1,5 +1,6 @@
 import os
 
+from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt, SIGNAL
 
@@ -135,6 +136,32 @@ class DiffEditor(DiffTextEdit):
                                       Qt.NoModifier,
                                       event.orientation())
         return DiffTextEdit.wheelEvent(self, event)
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.RightButton:
+            # Intercept right-click to move the cursor to the current
+            # section.  We do this by emulating a left-click immediately
+            # before the right-click event.  This is not done when a selection
+            # exists, otherwise we'd lose that.
+            offset, selection = self.offset_and_selection()
+            if not selection:
+                press = QtGui.QMouseEvent(
+                        QtCore.QEvent.MouseButtonPress,
+                        event.pos(),
+                        Qt.LeftButton,
+                        event.buttons(),
+                        event.modifiers())
+                DiffTextEdit.mousePressEvent(self, press)
+
+                release = QtGui.QMouseEvent(
+                        QtCore.QEvent.MouseButtonRelease,
+                        event.pos(),
+                        Qt.LeftButton,
+                        event.buttons(),
+                        event.modifiers())
+                DiffTextEdit.mouseReleaseEvent(self, release)
+
+        return DiffTextEdit.mousePressEvent(self, event)
 
     def _mode_about_to_change(self, mode):
         self.mode = mode
