@@ -149,16 +149,16 @@ class DiffEditor(DiffTextEdit):
                         QtCore.QEvent.MouseButtonPress,
                         event.pos(),
                         Qt.LeftButton,
-                        event.buttons(),
-                        event.modifiers())
+                        Qt.LeftButton,
+                        Qt.NoModifier)
                 DiffTextEdit.mousePressEvent(self, press)
 
                 release = QtGui.QMouseEvent(
                         QtCore.QEvent.MouseButtonRelease,
                         event.pos(),
                         Qt.LeftButton,
-                        event.buttons(),
-                        event.modifiers())
+                        Qt.LeftButton,
+                        Qt.NoModifier)
                 DiffTextEdit.mouseReleaseEvent(self, release)
 
         return DiffTextEdit.mousePressEvent(self, event)
