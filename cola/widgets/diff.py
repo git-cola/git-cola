@@ -135,31 +135,18 @@ class DiffEditor(DiffTextEdit):
                                       Qt.NoButton,
                                       Qt.NoModifier,
                                       event.orientation())
+
         return DiffTextEdit.wheelEvent(self, event)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.RightButton:
-            # Intercept right-click to move the cursor to the current
-            # section.  We do this by emulating a left-click immediately
-            # before the right-click event.  This is not done when a selection
-            # exists, otherwise we'd lose that.
-            offset, selection = self.offset_and_selection()
+            # Intercept right-click to move the cursor to the current position.
+            # setTextCursor() clears the selection so this is only done when
+            # nothing is selected.
+            _, selection = self.offset_and_selection()
             if not selection:
-                press = QtGui.QMouseEvent(
-                        QtCore.QEvent.MouseButtonPress,
-                        event.pos(),
-                        Qt.LeftButton,
-                        Qt.LeftButton,
-                        Qt.NoModifier)
-                DiffTextEdit.mousePressEvent(self, press)
-
-                release = QtGui.QMouseEvent(
-                        QtCore.QEvent.MouseButtonRelease,
-                        event.pos(),
-                        Qt.LeftButton,
-                        Qt.LeftButton,
-                        Qt.NoModifier)
-                DiffTextEdit.mouseReleaseEvent(self, release)
+                cursor = self.cursorForPosition(event.pos())
+                self.setTextCursor(cursor)
 
         return DiffTextEdit.mousePressEvent(self, event)
 
