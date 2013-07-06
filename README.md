@@ -52,7 +52,7 @@ New releases are available on the
 
 ## INOTIFY
 
-[pyinotify](https://github.com/seb-m/pyinotify) >= 0.7.1
+[pyinotify](https://github.com/seb-m/pyinotify) 0.7.1 or newer
 enables inotify support on Linux.
 
 # BREWING INSTRUCTIONS
