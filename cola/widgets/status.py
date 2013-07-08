@@ -87,8 +87,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 cmds.Stage.SHORTCUT)
 
         self.launch_difftool = qtutils.add_action(self,
-                cmds.LaunchDifftool.name(),
-                cmds.run(cmds.LaunchDifftool),
+                N_('Launch External Diff'),
+                self.external_diff,
                 cmds.LaunchDifftool.SHORTCUT)
         self.launch_difftool.setIcon(qtutils.icon('git.svg'))
 
@@ -506,9 +506,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         return menu
 
     def _create_unmerged_context_menu(self, menu, s):
-        menu.addAction(qtutils.git_icon(),
-                       N_('Launch Merge Tool'),
-                       cmds.run(cmds.Mergetool, self.unmerged()))
+        action = menu.addAction(qtutils.git_icon(),
+                                N_('Launch Merge Tool'),
+                                cmds.run(cmds.Mergetool, self.unmerged()))
+        action.setShortcut(cmds.Mergetool.SHORTCUT)
 
         action = menu.addAction(qtutils.icon('add.svg'),
                                 N_('Stage Selected'),
@@ -930,3 +931,12 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         if filename is not None:
             curdir = os.getcwdu()
             qtutils.set_clipboard(os.path.join(curdir, filename))
+
+    def external_diff(self):
+        """Run difftool or mergetool on a path"""
+        s = self.selection()
+        if s.unmerged:
+            action = cmds.run(cmds.Mergetool, self.unmerged())
+        else:
+            action = cmds.run(cmds.LaunchDifftool)
+        action()

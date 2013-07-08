@@ -651,6 +651,7 @@ class Merge(Command):
 
 class Mergetool(Command):
     """Launch git-mergetool on a list of paths."""
+    SHORTCUT = 'Ctrl+D'
 
     def __init__(self, paths):
         Command.__init__(self)
