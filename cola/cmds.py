@@ -545,6 +545,7 @@ class FormatPatch(Command):
 
 
 class LaunchDifftool(BaseCommand):
+
     SHORTCUT = 'Ctrl+D'
 
     @staticmethod
@@ -555,7 +556,16 @@ class LaunchDifftool(BaseCommand):
         BaseCommand.__init__(self)
 
     def do(self):
-        difftool.run()
+        s = cola.selection()
+        if s.unmerged:
+            paths = s.unmerged
+            if utils.is_win32():
+                utils.fork(['git', 'mergetool', '--no-prompt', '--'] + paths)
+            else:
+                utils.fork(['xterm', '-e',
+                            'git', 'mergetool', '--no-prompt', '--'] + paths)
+        else:
+            difftool.run()
 
 
 class LaunchEditor(Edit):
@@ -647,24 +657,6 @@ class Merge(Command):
 
         Interaction.log_status(status, output, '')
         self.model.update_status()
-
-
-class Mergetool(Command):
-    """Launch git-mergetool on a list of paths."""
-    SHORTCUT = 'Ctrl+D'
-
-    def __init__(self, paths):
-        Command.__init__(self)
-        self.paths = paths
-
-    def do(self):
-        if not self.paths:
-            return
-        if utils.is_win32():
-            utils.fork(['git', 'mergetool', '--no-prompt', '--'] + self.paths)
-        else:
-            utils.fork(['xterm', '-e',
-                        'git', 'mergetool', '--no-prompt', '--'] + self.paths)
 
 
 class OpenDefaultApp(BaseCommand):
