@@ -442,15 +442,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         if s.staged[0] in self.m.submodules:
             return self._create_staged_submodule_context_menu(menu, s)
 
-        action = menu.addAction(qtutils.options_icon(),
-                                cmds.LaunchEditor.name(),
-                                cmds.run(cmds.LaunchEditor))
-        action.setShortcut(cmds.LaunchEditor.SHORTCUT)
-
-        action = menu.addAction(qtutils.git_icon(),
-                                cmds.LaunchDifftool.name(),
-                                cmds.run(cmds.LaunchDifftool))
-        action.setShortcut(cmds.LaunchDifftool.SHORTCUT)
+        menu.addAction(self.launch_editor)
+        menu.addAction(self.launch_difftool)
 
         if self.m.unstageable():
             menu.addSeparator()
@@ -490,36 +483,27 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                        cmds.run(cmds.OpenRepo,
                                 os.path.abspath(s.staged[0])))
 
-        action = menu.addAction(qtutils.options_icon(),
-                                cmds.LaunchEditor.name(),
-                                cmds.run(cmds.LaunchEditor))
-        action.setShortcut(cmds.LaunchEditor.SHORTCUT)
-
+        menu.addAction(self.launch_editor)
         menu.addSeparator()
+
         action = menu.addAction(qtutils.icon('remove.svg'),
                                 N_('Unstage Selected'),
                                 cmds.run(cmds.Unstage, self.staged()))
         action.setShortcut(cmds.Unstage.SHORTCUT)
-
         menu.addSeparator()
+
         menu.addAction(self.copy_path_action)
         return menu
 
     def _create_unmerged_context_menu(self, menu, s):
-        action = menu.addAction(qtutils.git_icon(),
-                                N_('Launch Merge Tool'),
-                                cmds.run(cmds.Mergetool, self.unmerged()))
-        action.setShortcut(cmds.Mergetool.SHORTCUT)
+        menu.addAction(self.launch_difftool)
 
         action = menu.addAction(qtutils.icon('add.svg'),
                                 N_('Stage Selected'),
                                 cmds.run(cmds.Stage, self.unstaged()))
         action.setShortcut(cmds.Stage.SHORTCUT)
         menu.addSeparator()
-        action = menu.addAction(qtutils.options_icon(),
-                                cmds.LaunchEditor.name(),
-                                cmds.run(cmds.LaunchEditor))
-        action.setShortcut(cmds.LaunchEditor.SHORTCUT)
+        menu.addAction(self.launch_editor)
 
         if not utils.is_win32():
             menu.addSeparator()
@@ -544,16 +528,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             return self._create_modified_submodule_context_menu(menu, s)
 
         if self.unstaged():
-            action = menu.addAction(qtutils.options_icon(),
-                                    cmds.LaunchEditor.name(),
-                                    cmds.run(cmds.LaunchEditor))
-            action.setShortcut(cmds.Edit.SHORTCUT)
+            menu.addAction(self.launch_editor)
 
         if s.modified and self.m.stageable():
-            action = menu.addAction(qtutils.git_icon(),
-                                    cmds.LaunchDifftool.name(),
-                                    cmds.run(cmds.LaunchDifftool))
-            action.setShortcut(cmds.LaunchDifftool.SHORTCUT)
+            menu.addAction(self.launch_difftool)
 
         if self.m.stageable():
             menu.addSeparator()
@@ -604,10 +582,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                        cmds.run(cmds.OpenRepo,
                             os.path.abspath(s.modified[0])))
 
-        action = menu.addAction(qtutils.options_icon(),
-                                cmds.LaunchEditor.name(),
-                                cmds.run(cmds.LaunchEditor))
-        action.setShortcut(cmds.Edit.SHORTCUT)
+        menu.addAction(self.launch_editor)
 
         if self.m.stageable():
             menu.addSeparator()
