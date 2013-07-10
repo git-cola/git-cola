@@ -17,6 +17,7 @@ from cola import gitcfg
 from cola import gitcmds
 from cola import utils
 from cola import difftool
+from cola.compat import set
 from cola.diffparse import DiffParser
 from cola.i18n import N_
 from cola.interaction import Interaction
@@ -1197,46 +1198,33 @@ def bg(parent, cls, *args, **opts):
     return runner
 
 
-# Holds a reference to background tasks to avoid PyQt4 segfaults
-ALL_TASKS = set()
-
-
 def background(parent, cls, *args, **opts):
     cmd = cls(*args, **opts)
     task = AsyncCommand(parent, cmd)
-    ALL_TASKS.add(task)
     QtCore.QThreadPool.globalInstance().start(task)
-
-
-
-class RunCommand(QtCore.QObject):
-
-    def __init__(self, cmd, task, parent):
-        QtCore.QObject.__init__(self, parent)
-        self.cmd = cmd
-        self.task = task
-        self.connect(self, SIGNAL('command_ready'), self.do)
-
-    def run(self):
-        self.cmd.prepare()
-        self.emit(SIGNAL('command_ready'))
-
-    def do(self):
-        do_cmd(self.cmd)
-        try:
-            ALL_TASKS.remove(self.task)
-        except:
-            pass
 
 
 class AsyncCommand(QtCore.QRunnable):
 
+    # Holds a reference to background tasks to avoid PyQt4 segfaults
+    INSTANCES = set()
+
     def __init__(self, parent, cmd):
         QtCore.QRunnable.__init__(self)
-        self.runner = RunCommand(cmd, self, parent)
+        self.__class__.INSTANCES.add(self)
+        self.cmd = cmd
+        self.qobj = QtCore.QObject(parent)
+        self.qobj.connect(self.qobj, SIGNAL('command_ready'), self.do)
 
     def run(self):
-        self.runner.run()
+        # background thread
+        self.cmd.prepare()
+        self.qobj.emit(SIGNAL('command_ready'))
+
+    def do(self):
+        # main thread
+        do_cmd(self.cmd)
+        self.__class__.INSTANCES.remove(self)
 
 
 def _exception_message(e):
