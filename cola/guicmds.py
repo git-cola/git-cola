@@ -115,6 +115,13 @@ def new_repo():
         return None
 
 
+def open_new_repo():
+    dirname = new_repo()
+    if not dirname:
+        return
+    cmds.do(cmds.OpenRepo, dirname)
+
+
 def clone_repo(spawn=True):
     """
     Present GUI controls for cloning a repository

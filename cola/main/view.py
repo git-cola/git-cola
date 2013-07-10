@@ -176,6 +176,11 @@ class MainView(MainWindow):
 
         self.menu_export_patches = add_action(self,
                 N_('Export Patches...'), guicmds.export_patches, 'Alt+E')
+
+        self.new_repository = add_action(self,
+                N_('New Repository...'), guicmds.open_new_repo)
+        self.new_repository.setIcon(qtutils.new_icon())
+
         self.menu_preferences = add_action(self,
                 N_('Preferences'), self.preferences,
                 QtGui.QKeySequence.Preferences, 'Ctrl+O')
@@ -306,8 +311,7 @@ class MainView(MainWindow):
 
         # File Menu
         self.file_menu = create_menu(N_('File'), self.menubar)
-        self.file_menu.addAction(self.menu_preferences)
-        self.file_menu.addSeparator()
+        self.file_menu.addAction(self.new_repository)
         self.file_menu.addAction(self.menu_open_repo)
         self.menu_open_recent = self.file_menu.addMenu(N_('Open Recent'))
         self.file_menu.addSeparator()
@@ -324,6 +328,8 @@ class MainView(MainWindow):
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_save_tarball)
         self.file_menu.addAction(self.menu_export_patches)
+        self.file_menu.addSeparator()
+        self.file_menu.addAction(self.menu_preferences)
         self.file_menu.addAction(self.menu_quit)
         # Add to menubar
         self.menubar.addAction(self.file_menu.menuAction())
