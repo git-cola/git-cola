@@ -11,14 +11,12 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-from cola import core
-from cola import git
 from cola import guicmds
 from cola import settings
 from cola import qtutils
-from cola import utils
 from cola.i18n import N_
 from cola.widgets import defs
+
 
 class StartupDialog(QtGui.QDialog):
     """Provides a GUI to Open or Clone a git repository."""
@@ -135,40 +133,9 @@ class StartupDialog(QtGui.QDialog):
             self.accept()
 
     def _new(self):
-        dlg = QtGui.QFileDialog(self)
-        dlg.setFileMode(QtGui.QFileDialog.Directory)
-        dlg.setOption(QtGui.QFileDialog.ShowDirsOnly)
-        if dlg.exec_() != QtGui.QFileDialog.Accepted:
-            return
-        paths = dlg.selectedFiles()
-        if not paths:
-            return
-        upath = unicode(paths[0])
-        if not upath:
-            return
-        path = core.encode(unicode(paths[0]))
-        # Avoid needlessly calling `git init`.
-        if git.is_git_dir(path):
-            # We could prompt here and confirm that they really didn't
-            # mean to open an existing repository, but I think
-            # treating it like an "Open" is a sensible DWIM answer.
-            self._gitdir = upath
-            self.accept()
-            return
-
-        os.chdir(path)
-        status, out, err = utils.run_command(['git', 'init'])
-        if status != 0:
-            title = N_('Error Creating Repository')
-            msg = (N_('"%(command)s" returned exit status %(status)d') %
-                   dict(command='git init', status=status))
-            details = N_('Output:\n%s') % out
-            if err:
-                details += '\n\n'
-                details += N_('Errors: %s') % err
-            qtutils.critical(title, msg, details)
-        else:
-            self._gitdir = upath
+        gitdir = guicmds.new_repo()
+        if gitdir:
+            self._gitdir = gitdir
             self.accept()
 
     def _open_bookmark(self, index):

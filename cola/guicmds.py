@@ -1,6 +1,8 @@
 import os
 import re
 
+from PyQt4 import QtGui
+
 import cola
 from cola import cmds
 from cola import core
@@ -8,6 +10,7 @@ from cola import difftool
 from cola import gitcmds
 from cola import qt
 from cola import qtutils
+from cola import utils
 from cola.git import git
 from cola.i18n import N_
 from cola.interaction import Interaction
@@ -69,6 +72,47 @@ def cherry_pick():
     if not commits:
         return
     cmds.do(cmds.CherryPick, commits)
+
+
+def new_repo():
+    """Prompt for a new directory and create a new Git repository
+
+    :returns str: repository path or None if no repository was created.
+
+    """
+    dlg = QtGui.QFileDialog()
+    dlg.setFileMode(QtGui.QFileDialog.Directory)
+    dlg.setOption(QtGui.QFileDialog.ShowDirsOnly)
+    dlg.show()
+    dlg.raise_()
+    if dlg.exec_() != QtGui.QFileDialog.Accepted:
+        return None
+    paths = dlg.selectedFiles()
+    if not paths:
+        return None
+    path = unicode(paths[0])
+    if not path:
+        return None
+    # Avoid needlessly calling `git init`.
+    if git.is_git_dir(core.encode(path)):
+        # We could prompt here and confirm that they really didn't
+        # mean to open an existing repository, but I think
+        # treating it like an "Open" is a sensible DWIM answer.
+        return path
+
+    status, out, err = utils.run_command(['git', 'init', path])
+    if status == 0:
+        return path
+    else:
+        title = N_('Error Creating Repository')
+        msg = (N_('"%(command)s" returned exit status %(status)d') %
+               dict(command='git init %s' % path, status=status))
+        details = N_('Output:\n%s') % out
+        if err:
+            details += '\n\n'
+            details += N_('Errors: %s') % err
+        qtutils.critical(title, msg, details)
+        return None
 
 
 def clone_repo(spawn=True):
