@@ -442,15 +442,14 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         if s.staged[0] in self.m.submodules:
             return self._create_staged_submodule_context_menu(menu, s)
 
-        menu.addAction(self.launch_editor)
-        menu.addAction(self.launch_difftool)
-
         if self.m.unstageable():
-            menu.addSeparator()
             action = menu.addAction(qtutils.icon('remove.svg'),
                                     N_('Unstage Selected'),
                                     cmds.run(cmds.Unstage, self.staged()))
             action.setShortcut(cmds.Unstage.SHORTCUT)
+
+        menu.addAction(self.launch_editor)
+        menu.addAction(self.launch_difftool)
 
         if not utils.is_win32():
             menu.addSeparator()
@@ -527,18 +526,17 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         if modified_submodule:
             return self._create_modified_submodule_context_menu(menu, s)
 
+        if self.m.stageable():
+            action = menu.addAction(qtutils.icon('add.svg'),
+                                    N_('Stage Selected'),
+                                    cmds.run(cmds.Stage, self.unstaged()))
+            action.setShortcut(cmds.Stage.SHORTCUT)
+
         if self.unstaged():
             menu.addAction(self.launch_editor)
 
         if s.modified and self.m.stageable():
             menu.addAction(self.launch_difftool)
-
-        if self.m.stageable():
-            menu.addSeparator()
-            action = menu.addAction(qtutils.icon('add.svg'),
-                                    N_('Stage Selected'),
-                                    cmds.run(cmds.Stage, self.unstaged()))
-            action.setShortcut(cmds.Stage.SHORTCUT)
 
         if s.modified and self.m.stageable():
             if self.m.undoable():
