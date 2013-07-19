@@ -111,6 +111,19 @@ class DiffParseTestCase(unittest.TestCase):
                          ([u'@@ -1 +1,4 @@\n bar\n+a\n+b\n+c\n\n'],
                           [0]))
 
+    def test_diff_at_end(self):
+        fwd = helper.fixture('diff-end.txt')
+        reverse = helper.fixture('diff-end-reverse.txt')
+
+        source = DiffSource(fwd, reverse)
+        model = DiffParseModel()
+        parser = DiffParser(model, filename='',
+                            cached=False, reverse=False,
+                            diff_source=source)
+
+        self.assertEqual(parser.diffs()[0][0], '@@ -1,39 +1 @@')
+        self.assertEqual(parser.offsets(), [1114])
+        self.assertEqual(parser.spans(), [[0, 1114]])
 
 if __name__ == '__main__':
     unittest.main()

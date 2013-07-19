@@ -17,13 +17,21 @@ class DiffSource(object):
 
 
 class DiffParser(object):
+
     """Handles parsing diff for use by the interactive index editor."""
+
+    BEGIN = 0
+    MIDDLE = 1
+    END = 2
+
     def __init__(self, model, filename='',
                  cached=True, reverse=False,
                  diff_source=None):
 
-        self._header_re = re.compile('^@@ -(\d+),(\d+) \+(\d+),(\d+) @@.*')
-        self._header_start_re = re.compile('^@@ -(\d+) \+(\d+),(\d+) @@.*')
+        self._header_begin_re = re.compile('^@@ -(\d+) \+(\d+),(\d+) @@.*')
+        self._header_middle_re = re.compile('^@@ -(\d+),(\d+) \+(\d+),(\d+) @@.*')
+        self._header_end_re = re.compile('^@@ -(\d+),(\d+) \+(\d+) @@.*')
+
         self._headers = []
 
         self._idx = -1
@@ -120,26 +128,35 @@ class DiffParser(object):
                     newdiff.append(line)
 
         diff_header = self._headers[diff]
-        diff_header_len = len(diff_header)
 
-        if diff_header_len == 4:
+        if diff_header[-1] == self.MIDDLE:
             new_count = diff_header[1] + adds - deletes
             if new_count != diff_header[3]:
                 header = '@@ -%d,%d +%d,%d @@' % (
                                 diff_header[0],
                                 diff_header[1],
                                 diff_header[2],
-                                new_count)
+                                abs(new_count))
                 newdiff[0] = header
-        elif diff_header_len == 3:
+
+        elif diff_header[-1] == self.BEGIN:
             new_count = adds - deletes
             if new_count != diff_header[2]:
                 header = '@@ -%d +%d,%d @@' % (
                                 diff_header[0],
                                 diff_header[1],
-                                new_count)
+                                abs(new_count))
                 newdiff[0] = header
 
+        elif diff_header[-1] == self.END:
+            new_count = diff_header[1] + adds - deletes
+            if new_count > diff_header[2]:
+                header = '@@ -%d,%d +%d,%d @@' % (
+                            diff_header[0],
+                            diff_header[1],
+                            diff_header[2],
+                            abs(new_count))
+                newdiff[0] = header
 
         return (self.header + '\n' + '\n'.join(newdiff) + '\n')
 
@@ -194,44 +211,44 @@ class DiffParser(object):
         self._idx = -1
         self._headers = []
 
-        for idx, line in enumerate(diff.split('\n')):
-            match = self._header_re.match(line)
-            match_start = None
-            if match is None:
-                match_start = self._header_start_re.match(line)
-            if match:
-                self._headers.append([
-                        int(match.group(1)),
-                        int(match.group(2)),
-                        int(match.group(3)),
-                        int(match.group(4))
-                        ])
+        for line in diff.split('\n'):
 
-            elif match_start:
-                self._headers.append([
-                        int(match_start.group(1)),
-                        int(match_start.group(2)),
-                        int(match_start.group(3))
-                        ])
+            header = False
 
-            if match or match_start:
-                self._diffs.append( [line] )
+            for where, rgx in ((self.BEGIN, self._header_begin_re),
+                               (self.MIDDLE, self._header_middle_re),
+                               (self.END, self._header_end_re)):
+
+                match = rgx.match(line)
+                if match is None:
+                    continue
+
+                header = True
+                self._headers.append(
+                        [int(i) for i in match.groups()] + [where])
+
+                self._diffs.append([line])
                 line_len = len(line) + 1 #\n
                 self._diff_spans.append([total_offset,
-                        total_offset + line_len])
+                                         total_offset + line_len])
                 total_offset += line_len
                 self._diff_offsets.append(total_offset)
                 self._idx += 1
-            else:
-                if self._idx < 0:
-                    errmsg = 'Malformed diff?: %s' % diff
-                    raise AssertionError(errmsg)
-                line_len = len(line) + 1
-                total_offset += line_len
+                break
 
-                self._diffs[self._idx].append(line)
-                self._diff_spans[-1][-1] += line_len
-                self._diff_offsets[self._idx] += line_len
+            if header:
+                continue
+
+            if self._idx < 0:
+                errmsg = 'Malformed diff?: %s' % diff
+                raise AssertionError(errmsg)
+
+            line_len = len(line) + 1
+            total_offset += line_len
+
+            self._diffs[self._idx].append(line)
+            self._diff_spans[-1][-1] += line_len
+            self._diff_offsets[self._idx] += line_len
 
     def process_diff_selection(self, selected, offset, selection,
                                apply_to_worktree=False):
