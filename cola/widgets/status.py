@@ -359,7 +359,12 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             self.setItemHidden(parent, False)
         else:
             self.setItemHidden(parent, True)
-        parent.takeChildren()
+
+        # sip v4.14.7 and below leak memory in parent.takeChildren()
+        # so we use this backwards-compatible construct instead
+        while parent.takeChild(0) is not None:
+            pass
+
         for item in items:
             treeitem = qtutils.create_treeitem(item,
                                                staged=staged,
