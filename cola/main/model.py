@@ -156,12 +156,10 @@ class MainModel(Observable):
 
     def apply_diff(self, filename):
         return self.git.apply(filename, index=True, cached=True,
-                              recount=True,
                               with_stderr=True, with_status=True)
 
     def apply_diff_to_worktree(self, filename):
         return self.git.apply(filename,
-                              recount=True,
                               with_stderr=True, with_status=True)
 
     def prev_commitmsg(self, *args):
