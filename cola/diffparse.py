@@ -6,6 +6,40 @@ from cola import gitcmds
 from cola import gitcfg
 
 
+class Range(object):
+
+    def __init__(self, begin, end):
+        self.begin = self._parse(begin)
+        self.end = self._parse(end)
+
+    def _parse(self, range_str):
+        if ',' in range_str:
+            begin, end = range_str.split(',')
+            return [int(begin), int(end)]
+        else:
+            return [int(range_str), int(range_str)]
+
+    def make(self):
+        return '@@ -%s +%s @@' % (self._span(self.begin), self._span(self.end))
+
+    def set_end(self, end):
+        if end != self.end[1]:
+            self.end[1] = end
+            if end == 1 and self.end[0] == 0:
+                # the file would be empty in the diff, but we're only
+                # partially applying it, and thus it's not a +0,0 diff
+                # anymore.
+                self.end[0] = 1
+
+    def _span(self, seq):
+        a = seq[0]
+        b = seq[1]
+        if a == b and a == 1:
+            return '%d' % a
+        else:
+            return '%d,%d' % (a, b)
+
+
 class DiffSource(object):
     def get(self, head, amending, filename, cached, reverse):
         return gitcmds.diff_helper(head=head,
@@ -20,24 +54,17 @@ class DiffParser(object):
 
     """Handles parsing diff for use by the interactive index editor."""
 
-    BEGIN = 0
-    MIDDLE = 1
-    END = 2
+    HEADER_RE = re.compile('^@@ -([0-9,]+) \+([0-9,]+) @@.*')
 
     def __init__(self, model, filename='',
                  cached=True, reverse=False,
                  diff_source=None):
 
-        self._header_begin_re = re.compile('^@@ -(\d+) \+(\d+),(\d+) @@.*')
-        self._header_middle_re = re.compile('^@@ -(\d+),(\d+) \+(\d+),(\d+) @@.*')
-        self._header_end_re = re.compile('^@@ -(\d+),(\d+) \+(\d+) @@.*')
-
-        self._headers = []
-
         self._idx = -1
         self._diffs = []
         self._diff_spans = []
         self._diff_offsets = []
+        self._ranges = []
 
         self.config = gitcfg.instance()
         self.head = model.head
@@ -75,6 +102,10 @@ class DiffParser(object):
             return True
         else:
             return False
+
+    def ranges(self):
+        """Return the diff header ranges"""
+        return self._ranges
 
     def diffs(self):
         """Returns the list of diffs."""
@@ -127,36 +158,11 @@ class DiffParser(object):
                 else:
                     newdiff.append(line)
 
-        diff_header = self._headers[diff]
+        diff_range = self._ranges[diff]
 
-        if diff_header[-1] == self.MIDDLE:
-            new_count = diff_header[1] + adds - deletes
-            if new_count != diff_header[3]:
-                header = '@@ -%d,%d +%d,%d @@' % (
-                                diff_header[0],
-                                diff_header[1],
-                                diff_header[2],
-                                abs(new_count))
-                newdiff[0] = header
-
-        elif diff_header[-1] == self.BEGIN:
-            new_count = adds - deletes
-            if new_count != diff_header[2]:
-                header = '@@ -%d +%d,%d @@' % (
-                                diff_header[0],
-                                diff_header[1],
-                                abs(new_count))
-                newdiff[0] = header
-
-        elif diff_header[-1] == self.END:
-            new_count = diff_header[1] + adds - deletes
-            if new_count > diff_header[2]:
-                header = '@@ -%d,%d +%d,%d @@' % (
-                            diff_header[0],
-                            diff_header[1],
-                            diff_header[2],
-                            abs(new_count))
-                newdiff[0] = header
+        new_end = diff_range.begin[1] + adds - deletes
+        diff_range.set_end(new_end)
+        newdiff[0] = diff_range.make()
 
         return (self.header + '\n' + '\n'.join(newdiff) + '\n')
 
@@ -209,34 +215,19 @@ class DiffParser(object):
         """
         total_offset = 0
         self._idx = -1
-        self._headers = []
 
         for line in diff.split('\n'):
-
-            header = False
-
-            for where, rgx in ((self.BEGIN, self._header_begin_re),
-                               (self.MIDDLE, self._header_middle_re),
-                               (self.END, self._header_end_re)):
-
-                match = rgx.match(line)
-                if match is None:
-                    continue
-
-                header = True
-                self._headers.append(
-                        [int(i) for i in match.groups()] + [where])
-
+            match = self.HEADER_RE.match(line)
+            if match:
+                self._ranges.append(Range(match.group(1), match.group(2)))
                 self._diffs.append([line])
+
                 line_len = len(line) + 1 #\n
                 self._diff_spans.append([total_offset,
                                          total_offset + line_len])
                 total_offset += line_len
                 self._diff_offsets.append(total_offset)
                 self._idx += 1
-                break
-
-            if header:
                 continue
 
             if self._idx < 0:

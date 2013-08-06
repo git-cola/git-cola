@@ -3,6 +3,7 @@ import unittest
 
 from cola import gitcmds
 from cola import utils
+from cola import diffparse
 from cola.diffparse import DiffParser
 
 import helper
@@ -110,6 +111,9 @@ class DiffParseTestCase(unittest.TestCase):
         self.assertEqual(parser.diffs_for_range(0, 10),
                          ([u'@@ -1 +1,4 @@\n bar\n+a\n+b\n+c\n\n'],
                           [0]))
+        self.assertEqual(parser.ranges()[0].begin, [1, 1])
+        self.assertEqual(parser.ranges()[0].end, [1, 4])
+        self.assertEqual(parser.ranges()[0].make(), '@@ -1 +1,4 @@')
 
     def test_diff_at_end(self):
         fwd = helper.fixture('diff-end.txt')
@@ -124,6 +128,52 @@ class DiffParseTestCase(unittest.TestCase):
         self.assertEqual(parser.diffs()[0][0], '@@ -1,39 +1 @@')
         self.assertEqual(parser.offsets(), [1114])
         self.assertEqual(parser.spans(), [[0, 1114]])
+        self.assertEqual(parser.ranges()[0].begin, [1, 39])
+        self.assertEqual(parser.ranges()[0].end, [1, 1])
+        self.assertEqual(parser.ranges()[0].make(), '@@ -1,39 +1 @@')
+
+    def test_diff_that_empties_file(self):
+        fwd = helper.fixture('diff-empty.txt')
+        reverse = helper.fixture('diff-empty-reverse.txt')
+
+        source = DiffSource(fwd, reverse)
+        model = DiffParseModel()
+        parser = DiffParser(model, filename='',
+                            cached=False, reverse=False,
+                            diff_source=source)
+
+        self.assertEqual(parser.diffs()[0][0], '@@ -1,2 +0,0 @@')
+        self.assertEqual(parser.offsets(), [33])
+        self.assertEqual(parser.spans(), [[0, 33]])
+        self.assertEqual(parser.diffs_for_range(0, 1),
+                         ([u'@@ -1,2 +0,0 @@\n-first\n-second\n\n'],
+                          [0]))
+
+        self.assertEqual(parser.ranges()[0].begin, [1, 2])
+        self.assertEqual(parser.ranges()[0].end, [0, 0])
+        self.assertEqual(parser.ranges()[0].make(), '@@ -1,2 +0,0 @@')
+
+
+class RangeTestCase(unittest.TestCase):
+
+    def test_empty_becomes_non_empty(self):
+        r = diffparse.Range('1,2', '0,0')
+        self.assertEqual(r.begin, [1,2])
+        self.assertEqual(r.end, [0, 0])
+        self.assertEqual(r.make(), '@@ -1,2 +0,0 @@')
+
+        r.set_end(1)
+        self.assertEqual(r.end, [1, 1])
+        self.assertEqual(r.make(), '@@ -1,2 +1 @@')
+
+    def test_single_line(self):
+        r = diffparse.Range('1', '1,2')
+        self.assertEqual(r.begin, [1, 1])
+        self.assertEqual(r.end, [1, 2])
+        self.assertEqual(r.make(), '@@ -1 +1,2 @@')
+        r.set_end(1)
+        self.assertEqual(r.make(), '@@ -1 +1 @@')
+
 
 if __name__ == '__main__':
     unittest.main()

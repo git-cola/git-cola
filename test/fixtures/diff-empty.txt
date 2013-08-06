@@ -1,0 +1,7 @@
+diff --git a/filename b/filename
+index c9317d7..e69de29 100644
+--- a/filename
++++ b/filename
+@@ -1,2 +0,0 @@
+-first
+-second
