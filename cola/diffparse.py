@@ -54,7 +54,7 @@ class DiffParser(object):
 
     """Handles parsing diff for use by the interactive index editor."""
 
-    HEADER_RE = re.compile('^@@ -([0-9,]+) \+([0-9,]+) @@.*')
+    HEADER_RE = re.compile(r'^@@ -([0-9,]+) \+([0-9,]+) @@.*')
 
     def __init__(self, model, filename='',
                  cached=True, reverse=False,
