@@ -1,4 +1,4 @@
-git-cola v1.8.4 (DRAFT)
+git-cola v1.8.4
 =======================
 Usability, bells and whistles
 -----------------------------
@@ -29,6 +29,9 @@ Usability, bells and whistles
   be used on unmerged paths.  Automatically using `git mergetool` when
   appropriate is the most intuitive and muscle-memory-friendly thing to do.
 
+* You can now right-click on folders in your standard file browser
+  and choose "Open With -> Git Cola"  (Linux-only).
+
 Fixes
 -----
 * Python 2.6 on Mac OS X Snow Leopard does not provide a namedtuple
@@ -38,6 +41,8 @@ Fixes
 * We now read the user's Git configuration from `~/.config/git/config`
   if that file is available, otherwise we use the traditional `~/.gitconfig`
   path, just like Git itself.
+
+* Some edge cases were fixed when applying partial/selected diffs.
 
 git-cola v1.8.3
 ===============
