@@ -242,7 +242,10 @@ def process_args(opts, args):
         compat.putenv('PATH', os.pathsep.join(path_entries))
 
     # Bail out if --repo is not a directory
-    repo = os.path.realpath(opts.repo)
+    repo = opts.repo
+    if repo.startswith('file:'):
+        repo = repo[len('file:'):]
+    repo = os.path.realpath(repo)
     if not os.path.isdir(repo):
         sys.stderr.write("fatal: '%s' is not a directory.  "
                          'Consider supplying -r <path>.\n' % repo)
