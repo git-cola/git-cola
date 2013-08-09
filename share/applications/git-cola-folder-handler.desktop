@@ -2,7 +2,7 @@
 Name=Git Cola
 TryExec=git-cola
 Exec=git-cola %u
-Icon=git-cola
+Icon=/usr/share/git-cola/icons/git.svg
 NoDisplay=true
 Terminal=false
 StartupNotify=true
