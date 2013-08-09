@@ -1,7 +1,8 @@
 [Desktop Entry]
 Name=Git Cola
 TryExec=git-cola
-Exec=git-cola %u
+Exec=git-cola --repo %u
+Path=%u
 Icon=/usr/share/git-cola/icons/git.svg
 NoDisplay=true
 Terminal=false
