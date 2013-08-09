@@ -2,17 +2,10 @@
 Name=Git Cola
 Comment=The highly caffeinated Git GUI
 TryExec=git-cola
-Exec=git-cola --repo %u
-Path=%u
+Exec=git-cola --prompt
 Icon=/usr/share/git-cola/icons/git.svg
-MimeType=inode/directory;
 StartupNotify=true
 Terminal=false
 Type=Application
 Categories=Development;RevisionControl;
 X-KDE-SubstituteUID=false
-Actions=Bookmarks;
-
-[Desktop Action Bookmarks]
-Name=Git Cola Bookmarks
-Exec=git-cola --prompt
