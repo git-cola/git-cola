@@ -79,6 +79,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.old_selection = None
         self.old_contents = None
         self.old_current_item = None
+        self.busy = False
 
         self.expanded_items = set()
 
@@ -134,16 +135,13 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.show_selection)
 
-        self.connect(self,
-                     SIGNAL('itemDoubleClicked(QTreeWidgetItem*,int)'),
+        self.connect(self, SIGNAL('itemDoubleClicked(QTreeWidgetItem*,int)'),
                      self.double_clicked)
 
-        self.connect(self,
-                     SIGNAL('itemCollapsed(QTreeWidgetItem*)'),
+        self.connect(self, SIGNAL('itemCollapsed(QTreeWidgetItem*)'),
                      lambda x: self.update_column_widths())
 
-        self.connect(self,
-                     SIGNAL('itemExpanded(QTreeWidgetItem*)'),
+        self.connect(self, SIGNAL('itemExpanded(QTreeWidgetItem*)'),
                      lambda x: self.update_column_widths())
 
     def add_item(self, txt, hide=False):
@@ -160,9 +158,13 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             self.setItemHidden(item, True)
 
     def restore_selection(self):
+        # clear() generates more callbacks, which we can safely ignore
+        if self.busy:
+            return
         if not self.old_selection or not self.old_contents:
             return
 
+        empty = True
         old_c = self.old_contents
         old_s = self.old_selection
         new_c = self.contents()
@@ -200,8 +202,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             category, idx = self.old_current_item
             if category == self.idx_header:
                 item = self.invisibleRootItem().child(idx)
-                self.setCurrentItem(item)
-                self.setItemSelected(item, True)
+                if item is not None:
+                    self.setCurrentItem(item)
+                    self.setItemSelected(item, True)
                 return
             # Reselect the current item
             selection_info = saved_selection[category]
@@ -214,6 +217,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 return
             if item in new:
                 reselect(item, current=True)
+                empty = False
 
         # Restore selection
         # When reselecting we only care that the items are selected;
@@ -224,6 +228,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             for item in selection:
                 if item in new:
                     reselect(item, current=False)
+                    empty = False
         self.blockSignals(False)
 
         for (new, old, selection, reselect) in saved_selection:
@@ -245,6 +250,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                     if j in new:
                         reselect(j, current=True)
                         return
+        if empty:
+            self.busy = True
+            self.clear()
+            self.busy = False
 
     def restore_scrollbar(self):
         vscroll = self.verticalScrollBar()
@@ -302,6 +311,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             self.old_scroll = None
 
     def current_item(self):
+        s = self.selected_indexes()
+        if not s:
+            return None
         current = self.currentItem()
         if not current:
             return None
@@ -354,6 +366,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                      untracked=False,
                      check=True):
         """Add a list of items to a treewidget item."""
+        self.blockSignals(True)
         parent = self.topLevelItem(idx)
         if items:
             self.setItemHidden(parent, False)
@@ -374,6 +387,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                                untracked=untracked)
             parent.addChild(treeitem)
         self.expand_items(idx, items)
+        self.blockSignals(False)
 
     def update_column_widths(self):
         self.resizeColumnToContents(0)
@@ -777,34 +791,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         item = self.topLevelItem(idx)
         return qtutils.tree_selection(item, items)
 
-    def mouseReleaseEvent(self, event):
-        result = QtGui.QTreeWidget.mouseReleaseEvent(self, event)
-        self.clicked()
-        return result
-
-    def clicked(self, item=None, idx=None):
-        """Called when a repo status tree item is clicked.
-
-        This handles the behavior where clicking on the icon invokes
-        the a context-specific action.
-
-        """
-        # Sync the selection model
-        s = self.selection()
-        cola.selection_model().set_selection(s)
-
-        # Clear the selection if an empty area was clicked
-        selection = self.selected_indexes()
-        if not selection:
-            if self.m.amending():
-                cmds.do(cmds.SetDiffText, '')
-            else:
-                cmds.do(cmds.ResetMode)
-            self.blockSignals(True)
-            self.clearSelection()
-            self.blockSignals(False)
-            return
-
     def double_clicked(self, item, idx):
         """Called when an item is double-clicked in the repo status tree."""
         self._process_selection()
@@ -832,13 +818,21 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         selection = self.selected_group()
         cmds.do(cmds.OpenParentDir, selection)
 
+    def clear(self):
+        if self.m.amending():
+            cmds.do(cmds.SetDiffText, '')
+        else:
+            cmds.do(cmds.ResetMode)
+
     def show_selection(self):
         """Show the selected item."""
         # Sync the selection model
-        cola.selection_model().set_selection(self.selection())
+        s = self.selection()
+        cola.selection_model().set_selection(s)
 
         selection = self.selected_indexes()
         if not selection:
+            self.clear()
             return
         category, idx = selection[0]
         # A header item e.g. 'Staged', 'Modified', etc.

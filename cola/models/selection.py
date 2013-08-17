@@ -50,6 +50,10 @@ class SelectionModel(Observable):
         self.modified = []
         self.untracked = []
 
+    def is_empty(self):
+        return not(bool(self.staged or self.unmerged or
+                        self.modified or self.untracked))
+
     def set_selection(self, s):
         """Set the new selection."""
         self.staged = s.staged

@@ -60,10 +60,15 @@ class DiffEditor(DiffTextEdit):
 
         model.add_observer(model.message_mode_about_to_change,
                            self._mode_about_to_change)
-        model.add_observer(model.message_diff_text_changed, self.setPlainText)
+        model.add_observer(model.message_diff_text_changed, self._emit_text)
 
         self.connect(self, SIGNAL('copyAvailable(bool)'),
                      self.enable_selection_actions)
+
+        self.connect(self, SIGNAL('set_text'), self.setPlainText)
+
+    def _emit_text(self, text):
+        self.emit(SIGNAL('set_text'), text)
 
     # Qt overrides
     def contextMenuEvent(self, event):

@@ -13,6 +13,7 @@ from cola import utils
 from cola.compat import set
 from cola.observable import Observable
 from cola.decorators import memoize
+from cola.models.selection import selection_model
 
 
 # Static GitConfig instance
@@ -190,6 +191,12 @@ class MainModel(Observable):
         self.untracked = state.get('untracked', [])
         self.submodules = state.get('submodules', set())
         self.upstream_changed = state.get('upstream_changed', [])
+        if self.is_empty() or selection_model().is_empty():
+            self.set_diff_text('')
+
+    def is_empty(self):
+        return not(bool(self.staged or self.modified or
+                        self.unmerged or self.untracked))
 
     def _update_refs(self):
         self.remotes = self.git.remote().splitlines()
