@@ -44,6 +44,10 @@ Fixes
 
 * Some edge cases were fixed when applying partial/selected diffs.
 
+* The diff viewer is now properly cleared when refreshing.
+
+  http://github.com/git-cola/git-cola/issues/194
+
 git-cola v1.8.3
 ===============
 Usability, bells and whistles
