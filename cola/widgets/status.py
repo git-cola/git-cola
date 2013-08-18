@@ -79,8 +79,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.old_selection = None
         self.old_contents = None
         self.old_current_item = None
-        self.busy = False
-
         self.expanded_items = set()
 
         self.process_selection = qtutils.add_action(self,
@@ -158,13 +156,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             self.setItemHidden(item, True)
 
     def restore_selection(self):
-        # clear() generates more callbacks, which we can safely ignore
-        if self.busy:
-            return
         if not self.old_selection or not self.old_contents:
             return
-
-        empty = True
         old_c = self.old_contents
         old_s = self.old_selection
         new_c = self.contents()
@@ -217,7 +210,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 return
             if item in new:
                 reselect(item, current=True)
-                empty = False
 
         # Restore selection
         # When reselecting we only care that the items are selected;
@@ -228,7 +220,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             for item in selection:
                 if item in new:
                     reselect(item, current=False)
-                    empty = False
         self.blockSignals(False)
 
         for (new, old, selection, reselect) in saved_selection:
@@ -250,10 +241,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                     if j in new:
                         reselect(j, current=True)
                         return
-        if empty:
-            self.busy = True
-            self.clear()
-            self.busy = False
 
     def restore_scrollbar(self):
         vscroll = self.verticalScrollBar()
@@ -339,7 +326,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.set_modified(self.m.modified)
         self.set_unmerged(self.m.unmerged)
         self.set_untracked(self.m.untracked)
-
         self.restore_selection()
         self.restore_scrollbar()
         self.update_column_widths()
@@ -818,21 +804,17 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         selection = self.selected_group()
         cmds.do(cmds.OpenParentDir, selection)
 
-    def clear(self):
-        if self.m.amending():
-            cmds.do(cmds.SetDiffText, '')
-        else:
-            cmds.do(cmds.ResetMode)
-
     def show_selection(self):
         """Show the selected item."""
         # Sync the selection model
         s = self.selection()
         cola.selection_model().set_selection(s)
-
         selection = self.selected_indexes()
         if not selection:
-            self.clear()
+            if self.m.amending():
+                cmds.do(cmds.SetDiffText, '')
+            else:
+                cmds.do(cmds.ResetMode)
             return
         category, idx = selection[0]
         # A header item e.g. 'Staged', 'Modified', etc.

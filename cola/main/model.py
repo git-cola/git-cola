@@ -191,7 +191,13 @@ class MainModel(Observable):
         self.untracked = state.get('untracked', [])
         self.submodules = state.get('submodules', set())
         self.upstream_changed = state.get('upstream_changed', [])
-        if self.is_empty() or selection_model().is_empty():
+
+        sel = selection_model()
+        if self.is_empty():
+            sel.reset()
+        else:
+            sel.update(self)
+        if selection_model().is_empty():
             self.set_diff_text('')
 
     def is_empty(self):
