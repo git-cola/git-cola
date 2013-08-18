@@ -271,5 +271,7 @@ class DiffEditor(DiffTextEdit):
                                reverse=False):
         """Implement un/staging of selected lines or sections."""
         offset, selection = self.offset_and_selection()
+        if cola.selection_model().is_empty():
+            return
         cmds.do(cmds.ApplyDiffSelection,
                 staged, selected, offset, selection, apply_to_worktree)
