@@ -177,13 +177,7 @@ class ApplyDiffSelection(Command):
                                       self.selection,
                                       apply_to_worktree=self.apply_to_worktree)
         Interaction.log_status(status, output, '')
-        # Redo the diff to show changes
-        if self.staged:
-            diffcmd = DiffStaged([self.model.filename])
-        else:
-            diffcmd = Diff([self.model.filename])
-        diffcmd.do()
-        self.model.update_file_status()
+        self.model.update_file_status(update_index=True)
 
 
 class ApplyPatches(Command):
