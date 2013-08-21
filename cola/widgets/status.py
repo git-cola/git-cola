@@ -361,10 +361,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         # sip v4.14.7 and below leak memory in parent.takeChildren()
         # so we use this backwards-compatible construct instead
-        count = parent.childCount()
-        while count > 0:
-            parent.takeChild(count - 1)
-            count = parent.childCount()
+        while parent.takeChild(0) is not None:
+            pass
 
         for item in items:
             treeitem = qtutils.create_treeitem(item,
