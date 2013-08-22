@@ -1,10 +1,6 @@
 # Copyright (c) David Aguilar
 """Provide git-cola's version number"""
 
-# The current git-cola version
-_default_version = '1.8.3'
-
-
 import os
 import sys
 
@@ -14,6 +10,8 @@ if __name__ == '__main__':
 
 from cola.git import git
 from cola.decorators import memoize
+from cola._version import VERSION
+
 
 # minimum version requirements
 _versions = {
@@ -35,7 +33,7 @@ def get(key):
 
 def version():
     """Returns the current version"""
-    return _default_version
+    return VERSION
 
 
 @memoize
