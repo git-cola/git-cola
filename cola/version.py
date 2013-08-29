@@ -12,7 +12,6 @@ from cola.git import git
 from cola.decorators import memoize
 from cola._version import VERSION
 
-
 # minimum version requirements
 _versions = {
     # git-diff learned --patience in 1.6.2

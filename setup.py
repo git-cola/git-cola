@@ -2,7 +2,6 @@
 
 import os
 import sys
-import platform
 from glob import glob
 from distutils.core import setup
 
@@ -10,53 +9,15 @@ from distutils.core import setup
 srcdir = os.path.dirname(os.path.abspath(__file__))
 
 from extras import cmdclass
-from cola import version
+
+here = os.path.dirname(__file__)
+version = os.path.join(here, 'cola', '_version.py')
+scope = {}
+exec(open(version).read(), scope)
+version = scope['VERSION']
 
 
 def main():
-    _check_python_version()
-    _check_git_version()
-    _check_pyqt_version()
-    _run_setup()
-
-
-def _check_python_version():
-    """Check the minimum Python version
-    """
-    pyver = platform.python_version()
-    if not version.check('python', pyver):
-        print >> sys.stderr, ('Python version %s or newer required.  '
-                              'Found %s' % (version.get('python'), pyver))
-        sys.exit(1)
-
-
-def _check_git_version():
-    """Check the minimum GIT version
-    """
-    git_version = version.git_version()
-    if not version.check('git', git_version):
-        print >> sys.stderr, ('GIT version %s or newer required.  '
-                              'Found %s' % (version.get('git'), git_version))
-        sys.exit(1)
-
-
-def _check_pyqt_version():
-    """Check the minimum PyQt version
-    """
-    pyqtver = 'None'
-    try:
-        from PyQt4 import QtCore
-        pyqtver = QtCore.PYQT_VERSION_STR
-        if version.check('pyqt', pyqtver):
-            return
-    except ImportError:
-        pass
-    print >> sys.stderr, ('PyQt4 version %s or newer required.  '
-                          'Found %s' % (version.get('pyqt'), pyqtver))
-    sys.exit(1)
-
-
-def _run_setup():
     """Runs distutils.setup()"""
 
     scripts = [
@@ -68,7 +29,7 @@ def _run_setup():
         scripts.append('win32/cola')
 
     setup(name='git-cola',
-          version=version.version(),
+          version=version,
           description='The highly caffeinated git GUI',
           long_description='A sleek and powerful git GUI',
           license='GPLv2',
