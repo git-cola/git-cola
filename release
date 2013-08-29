@@ -10,7 +10,8 @@ do_win32=false
 prefix="$WEB_SOURCE"
 win32_login=Administrator@localhost
 win32_ssh_port=2002
-win32_cola_dir=cola
+win32_cola_dir=git-cola
+win32_python=/c/Python27
 
 usage() {
 	echo "$(basename "$0") [options]"
@@ -26,6 +27,7 @@ usage() {
 	echo "--win32-port <port #>     - specify the win32 ssh port number"
 	echo "--win32-dir <dir>         - specify win32 release dir"
 	echo "--win32-cola-dir <dir>    - specify the win32 cola repo path"
+	echo "--win32-python-dir <dir>  - specify the win32 python directory"
 	exit 1
 }
 
@@ -44,7 +46,7 @@ build_win32_remotely() {
 	title Building win32 remotely
 
 	do_or_die ssh -p $win32_ssh_port "$win32_login" '
-		PATH=/c/Python26:$PATH
+		PATH=/c/Python27:$PATH
 		cd '"$win32_cola_dir"'
 		win32/create-installer.sh
 	'
@@ -89,6 +91,11 @@ while test $# -gt 0; do
 	--win32-cola-dir)
 		shift
 		win32_cola_dir="$1"
+		shift
+		;;
+	--win32-python-dir)
+		shift
+		win32_python_dir="$1"
 		shift
 		;;
 	--win32-port)
