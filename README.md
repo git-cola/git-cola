@@ -66,9 +66,9 @@ If you want to do a global install you can do
 You don't need to `make` to run it, though.
 *git-cola* is designed to run directly out of its source tree.
 
-    git clone git://github.com/git-cola/git-cola.git cola
-    cola/bin/git-cola
-    cola/bin/git-dag
+    git clone git://github.com/git-cola/git-cola.git
+    git-cola/bin/git-cola
+    git-cola/bin/git-dag
 
 ## MAC OS X
 
