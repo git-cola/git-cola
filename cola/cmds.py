@@ -847,7 +847,8 @@ class ShowUntracked(Command):
 
     def prepare(self):
         filenames = self.filenames
-        self.new_diff_text = self.diff_text_for(filenames[0])
+        if filenames:
+            self.new_diff_text = self.diff_text_for(filenames[0])
 
     def diff_text_for(self, filename):
         size = _config.get('cola.readsize', 1024 * 2)
