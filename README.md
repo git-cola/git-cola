@@ -81,8 +81,9 @@ and use it to install git-cola.
 
     brew install git-cola
 
-Once brew has installed git-cola (and its dependencies) you use
-`git-cola.app` or install from source using `make install`.
+Once brew has installed git-cola (and its dependencies) you either use
+`git-cola.app`, run from source, or install from source via `make install`.
+You can build `git-cola.app` by running `make git-cola.app`.
 
 Installing these packages also gives you a PyQt development
 environment which can be used for building your own applications
