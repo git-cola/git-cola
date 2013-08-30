@@ -22,14 +22,20 @@ class Range(object):
     def make(self):
         return '@@ -%s +%s @@' % (self._span(self.begin), self._span(self.end))
 
-    def set_end(self, end):
-        if end != self.end[1]:
-            self.end[1] = end
-            if end == 1 and self.end[0] == 0:
+    def set_begin_count(self, count):
+        self._set_count(self.begin, count)
+
+    def set_end_count(self, count):
+        self._set_count(self.end, count)
+
+    def _set_count(self, which, count):
+        if count != which[1]:
+            which[1] = count
+            if count == 1 and which[0] == 0:
                 # the file would be empty in the diff, but we're only
                 # partially applying it, and thus it's not a +0,0 diff
                 # anymore.
-                self.end[0] = 1
+                which[0] = 1
 
     def _span(self, seq):
         a = seq[0]
@@ -116,9 +122,14 @@ class DiffParser(object):
         """
         adds = 0
         deletes = 0
+        existing = 0
         newdiff = []
         local_offset = 0
         offset = self._diff_spans[diff][0]
+
+        ADD = '+'
+        DEL = '-'
+        NOP = ' '
 
         for line in self._diffs[diff]:
             line_start = offset + local_offset
@@ -127,41 +138,43 @@ class DiffParser(object):
             # |line1 |line2 |line3 |
             #   |--selection--|
             #   '-start       '-end
+
             # selection has head of diff (line3)
-            if start < line_start and end > line_start and end < line_end:
-                newdiff.append(line)
-                if line.startswith('+'):
-                    adds += 1
-                if line.startswith('-'):
-                    deletes += 1
+            has_head = start <= line_start and end > line_start and end <= line_end
             # selection has all of diff (line2)
-            elif start <= line_start and end >= line_end:
-                newdiff.append(line)
-                if line.startswith('+'):
-                    adds += 1
-                if line.startswith('-'):
-                    deletes += 1
+            has_all = start <= line_start and end >= line_end
             # selection has tail of diff (line1)
-            elif start >= line_start and start < line_end - 1:
+            has_tail = start >= line_start and start < line_end - 1
+
+            action = line[0:1]
+            if has_head or has_all or has_tail:
                 newdiff.append(line)
-                if line.startswith('+'):
+                if action == ADD:
                     adds += 1
-                if line.startswith('-'):
+                elif action == DEL:
                     deletes += 1
+                elif action == NOP:
+                    existing += 1
             else:
                 # Don't add new lines unless selected
-                if line.startswith('+'):
+                if action == ADD:
                     continue
-                elif line.startswith('-'):
+                elif action == DEL:
                     # Don't remove lines unless selected
                     newdiff.append(' ' + line[1:])
+                    existing += 1
+                elif action == NOP:
+                    newdiff.append(line)
+                    existing += 1
                 else:
                     newdiff.append(line)
 
         diff_range = self._ranges[diff]
+        begin_count = existing + deletes
+        end_count = existing + adds
 
-        new_end = diff_range.begin[1] + adds - deletes
-        diff_range.set_end(new_end)
+        diff_range.set_begin_count(begin_count)
+        diff_range.set_end_count(end_count)
         newdiff[0] = diff_range.make()
 
         return (self.header + '\n' + '\n'.join(newdiff) + '\n')

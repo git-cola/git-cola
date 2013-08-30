@@ -162,7 +162,7 @@ class RangeTestCase(unittest.TestCase):
         self.assertEqual(r.end, [0, 0])
         self.assertEqual(r.make(), '@@ -1,2 +0,0 @@')
 
-        r.set_end(1)
+        r.set_end_count(1)
         self.assertEqual(r.end, [1, 1])
         self.assertEqual(r.make(), '@@ -1,2 +1 @@')
 
@@ -171,7 +171,7 @@ class RangeTestCase(unittest.TestCase):
         self.assertEqual(r.begin, [1, 1])
         self.assertEqual(r.end, [1, 2])
         self.assertEqual(r.make(), '@@ -1 +1,2 @@')
-        r.set_end(1)
+        r.set_end_count(1)
         self.assertEqual(r.make(), '@@ -1 +1 @@')
 
 
