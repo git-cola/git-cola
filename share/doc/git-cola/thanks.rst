@@ -48,5 +48,6 @@ Thanks
 * Stefan Naewe
 * Steffen Prohaska
 * Sven Claussner
+* Taylor Braun-Jones
 * Ugo Riboni
 * Uri Okrent

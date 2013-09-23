@@ -1129,7 +1129,15 @@ class VisualizeRevision(Command):
         if self.paths:
             argv.append('--')
             argv.extend(self.paths)
-        utils.fork(argv)
+
+        try:
+            utils.fork(argv)
+        except Exception as e:
+            _, details = utils.format_exception(e)
+            title = N_('Error Launching History Browser')
+            msg = (N_('Cannot exec "%s": please configure a history browser') %
+                   ' '.join(argv))
+            Interaction.critical(title, message=msg, details=details)
 
 
 def run(cls, *args, **opts):
