@@ -8,6 +8,7 @@ Thanks
 * Boris W
 * Ben Boeckel
 * Christian Jann
+* Christopher Meng
 * Daniel King
 * Daniel Fahlke
 * David Aguilar
@@ -43,6 +44,7 @@ Thanks
 * Peter Júnoš
 * Rustam Safin
 * Sergey Leschina
+* Srinivasa Nallapati
 * Stefan Naewe
 * Steffen Prohaska
 * Sven Claussner

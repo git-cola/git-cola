@@ -523,7 +523,13 @@ class Edit(Command):
                     opts = opt
                     break
 
-        utils.fork(utils.shell_split(editor) + opts)
+        try:
+            utils.fork(utils.shell_split(editor) + opts)
+        except Exception as e:
+            message = (N_('Cannot exec "%s": please configure your editor') %
+                       editor)
+            Interaction.critical(N_('Error Editing File'),
+                                 message, str(e))
 
 
 class FormatPatch(Command):
