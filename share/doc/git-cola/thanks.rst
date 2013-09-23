@@ -13,6 +13,7 @@ Thanks
 * Daniel Fahlke
 * David Aguilar
 * David Martínez Martí
+* Dennis Gilmore
 * Eric Drechsel
 * `GIT Hackers <http://git-scm.com/about>`_
 * Glen Mailer
