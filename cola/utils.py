@@ -9,6 +9,7 @@ import shlex
 import subprocess
 import sys
 import time
+import traceback
 
 from cola import core
 from cola import resources
@@ -78,6 +79,17 @@ def file_icon(filename):
     filename"s contents.
     """
     return resources.icon(ident_file_type(filename))
+
+
+def format_exception(e):
+    exc_type, exc_value, exc_tb = sys.exc_info()
+    details = traceback.format_exception(exc_type, exc_value, exc_tb)
+    details = '\n'.join(details)
+    if hasattr(e, 'msg'):
+        msg = e.msg
+    else:
+        msg = str(e)
+    return (msg, details)
 
 
 @interruptable

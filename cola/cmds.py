@@ -1174,10 +1174,7 @@ def do_cmd(cmd):
     try:
         return cmd.do()
     except StandardError, e:
-        exc_type, exc_value, exc_tb = sys.exc_info()
-        details = traceback.format_exception(exc_type, exc_value, exc_tb)
-        details = '\n'.join(details)
-        msg = _exception_message(e)
+        msg, details = utils.format_exception(e)
         Interaction.critical(N_('Error'), message=msg, details=details)
         return None
 
@@ -1226,10 +1223,3 @@ class AsyncCommand(QtCore.QRunnable):
         # main thread
         do_cmd(self.cmd)
         self.__class__.INSTANCES.remove(self)
-
-
-def _exception_message(e):
-    if hasattr(e, 'msg'):
-        return e.msg
-    else:
-        return str(e)
