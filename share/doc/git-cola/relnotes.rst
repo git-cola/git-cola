@@ -1,3 +1,21 @@
+git-cola v1.8.5
+---------------
+Usability, bells and whistles
+-----------------------------
+* We now detect the editor or history browser are misconfigured.
+
+  http://github.com/git-cola/git-cola/issues/197
+
+  https://bugzilla.redhat.com/show_bug.cgi?id=886826
+
+Fixes
+-----
+* Unicode stash names are now supported
+
+  http://github.com/git-cola/git-cola/issues/198
+
+* The diffs produced when reverting workspace changes were made more robust.
+
 git-cola v1.8.4
 =======================
 Usability, bells and whistles
