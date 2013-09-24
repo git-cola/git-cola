@@ -8,6 +8,11 @@ Usability, bells and whistles
 
   https://bugzilla.redhat.com/show_bug.cgi?id=886826
 
+* Display of untracked files can be disabled from the Preferences dialog
+  or by setting the `gui.displayuntracked` configuration variable to `false`.
+
+  http://thread.gmane.org/gmane.comp.version-control.git/232683
+
 Fixes
 -----
 * Unicode stash names are now supported

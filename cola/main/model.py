@@ -112,6 +112,9 @@ class MainModel(Observable):
     def history_browser(self):
         return _config.get('gui.historybrowser', 'gitk')
 
+    def display_untracked(self):
+        return _config.get('gui.displayuntracked', True)
+
     def all_branches(self):
         return (self.local_branches + self.remote_branches)
 
@@ -183,8 +186,10 @@ class MainModel(Observable):
         self.notify_observers(self.message_updated)
 
     def _update_files(self, update_index=False):
+        display_untracked = self.display_untracked()
         state = gitcmds.worktree_state_dict(head=self.head,
-                                            update_index=update_index)
+                                            update_index=update_index,
+                                            display_untracked=display_untracked)
         self.staged = state.get('staged', [])
         self.modified = state.get('modified', [])
         self.unmerged = state.get('unmerged', [])

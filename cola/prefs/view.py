@@ -110,15 +110,20 @@ class RepoFormWidget(FormWidget):
         self.merge_diffstat = QtGui.QCheckBox()
         self.merge_diffstat.setChecked(True)
 
+        self.display_untracked = QtGui.QCheckBox()
+        self.display_untracked.setChecked(True)
+
         self.add_row(N_('User Name'), self.name)
         self.add_row(N_('Email Address'), self.email)
         self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
         self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
         self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
         self.add_row(N_('Show Diffstat After Merge'), self.merge_diffstat)
+        self.add_row(N_('Display Untracked Files'), self.display_untracked)
 
         self.set_config({
             'gui.diffcontext': (self.diff_context, 5),
+            'gui.displayuntracked': (self.display_untracked, True),
             'user.name': (self.name, ''),
             'user.email': (self.email, ''),
             'merge.diffstat': (self.merge_diffstat, True),

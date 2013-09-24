@@ -114,6 +114,9 @@ cola.readsize::
 gui.diffcontext::
 	The number of diff context lines used and displayed by 'git-cola'.
 
+gui.displayuntracked::
+	'git-cola' avoids showing untracked files when set to `false`.
+
 gui.editor::
 	The default text editor is controlled by `gui.editor`.
 	The config variable overrides the EDITOR environment variable.

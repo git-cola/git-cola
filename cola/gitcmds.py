@@ -419,7 +419,7 @@ def worktree_state(head='HEAD'):
            state.get('upstream_changed', []))
 
 
-def worktree_state_dict(head='HEAD', update_index=False):
+def worktree_state_dict(head='HEAD', update_index=False, display_untracked=True):
     """Return a dict of files in various states of being
 
     :rtype: dict, keys are staged, unstaged, untracked, unmerged,
@@ -431,7 +431,7 @@ def worktree_state_dict(head='HEAD', update_index=False):
 
     staged, unmerged, staged_submods = diff_index(head)
     modified, modified_submods = diff_worktree()
-    untracked = untracked_files()
+    untracked = display_untracked and untracked_files() or []
 
     # Remove unmerged paths from the modified list
     unmerged_set = set(unmerged)
