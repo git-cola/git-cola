@@ -1,17 +1,17 @@
 #!/bin/sh
 . $(dirname $0)/common.sh
+# Options
+prefix="$WEB_SOURCE"
+releases="$WEB_SOURCE/releases"
+win32_login=Administrator@localhost
+win32_ssh_port=2002
+win32_cola_dir=git-cola
+win32_python=/c/Python27
 
 do_docs=false
 do_website=false
 do_tarball=false
 do_win32=false
-
-# Options
-prefix="$WEB_SOURCE"
-win32_login=Administrator@localhost
-win32_ssh_port=2002
-win32_cola_dir=git-cola
-win32_python=/c/Python27
 
 usage() {
 	echo "$(basename "$0") [options]"
@@ -39,7 +39,9 @@ build_docs() {
 build_tarball() {
 	title Building tarball
 	do_or_die make dist
+	do_or_die mv git-cola-"$VERSION".tar.gz "$releases"
 	do_or_die make app-tarball
+	do_or_die mv git-cola-"$VERSION".app.tar.gz "$releases"
 }
 
 build_win32_remotely() {
@@ -55,6 +57,9 @@ build_win32_remotely() {
 
 	do_or_die ssh -p $win32_ssh_port \
 		"$win32_login" "/bin/rm '$win32_cola_dir'/*.exe"
+
+	do_or_die chmod 644 git-cola-"$VERSION".exe
+	do_or_die mv git-cola-"$VERSION".exe "$releases"
 }
 
 # Parse options
