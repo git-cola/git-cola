@@ -1,13 +1,7 @@
 #!/bin/sh
 . $(dirname $0)/common.sh
-# Options
-prefix="$WEB_SOURCE"
-releases="$WEB_SOURCE/releases"
-win32_login=Administrator@localhost
-win32_ssh_port=2002
-win32_cola_dir=git-cola
-win32_python=/c/Python27
 
+# Options
 do_docs=false
 do_website=false
 do_tarball=false
@@ -17,15 +11,14 @@ usage() {
 	echo "$(basename "$0") [options]"
 	echo
 	echo "options:"
-	echo "--prefix <dir>            - specify the installation prefix"
 	echo "--all                     - build tarball, win32, docs, and web"
 	echo "--tarball                 - build the tarball"
 	echo "--tarball-dir             - specify the tarball release directory"
 	echo "--doc                     - build the documentation"
+	echo "--doc-dir <dir>           - specify the documentation directory"
 	echo "--win32                   - build the win32 installer"
 	echo "--win32-login <user@host> - specify the win32 host"
 	echo "--win32-port <port #>     - specify the win32 ssh port number"
-	echo "--win32-dir <dir>         - specify win32 release dir"
 	echo "--win32-cola-dir <dir>    - specify the win32 cola repo path"
 	echo "--win32-python-dir <dir>  - specify the win32 python directory"
 	exit 1
@@ -33,41 +26,41 @@ usage() {
 
 build_docs() {
 	title Building docs
-	do_or_die make prefix="$prefix" install-doc
+	do_or_die make prefix="$DOCUMENT_ROOT" install-doc
 }
 
 build_tarball() {
 	title Building tarball
 	do_or_die make dist
-	do_or_die mv git-cola-"$VERSION".tar.gz "$releases"
+	do_or_die mv git-cola-"$VERSION".tar.gz "$RELEASES"
 	do_or_die make app-tarball
-	do_or_die mv git-cola-"$VERSION".app.tar.gz "$releases"
+	do_or_die mv git-cola-"$VERSION".app.tar.gz "$RELEASES"
 }
 
 build_win32_remotely() {
 	title Building win32 remotely
 
-	do_or_die ssh -p $win32_ssh_port "$win32_login" '
-		PATH=/c/Python27:$PATH
-		cd '"$win32_cola_dir"'
+	do_or_die ssh -p $WIN32_SSH_PORT "$WIN32_LOGIN" '
+		PATH='"$WIN32_PYTHON"':$PATH
+		cd '"$WIN32_COLA_DIR"'
 		win32/create-installer.sh
 	'
-	do_or_die scp -P $win32_ssh_port \
-		"$win32_login":"$win32_cola_dir"/"*.exe" .
+	do_or_die scp -P $WIN32_SSH_PORT \
+		"$WIN32_LOGIN":"$WIN32_COLA_DIR"/"*.exe" .
 
-	do_or_die ssh -p $win32_ssh_port \
-		"$win32_login" "/bin/rm '$win32_cola_dir'/*.exe"
+	do_or_die ssh -p $WIN32_SSH_PORT \
+		"$WIN32_LOGIN" "/bin/rm '$WIN32_COLA_DIR'/*.exe"
 
 	do_or_die chmod 644 git-cola-"$VERSION".exe
-	do_or_die mv git-cola-"$VERSION".exe "$releases"
+	do_or_die mv git-cola-"$VERSION".exe "$RELEASES"
 }
 
 # Parse options
 while test $# -gt 0; do
 	case "$1" in
-	--prefix)
+	--doc-dir)
 		shift
-		prefix="$1"
+		DOCUMENT_ROOT="$1"
 		shift
 		;;
 	--all)
@@ -90,27 +83,22 @@ while test $# -gt 0; do
 		;;
 	--win32-login)
 		shift
-		win32_login="$1"
+		WIN32_LOGIN="$1"
 		shift
 		;;
 	--win32-cola-dir)
 		shift
-		win32_cola_dir="$1"
+		WIN32_COLA_DIR="$1"
 		shift
 		;;
 	--win32-python-dir)
 		shift
-		win32_python_dir="$1"
+		WIN32_PYTHON="$1"
 		shift
 		;;
 	--win32-port)
 		shift
-		win32_ssh_port="$1"
-		shift
-		;;
-	--win32-dir)
-		shift
-		win32_dir="$1"
+		WIN32_SSH_PORT="$1"
 		shift
 		;;
 	--)
