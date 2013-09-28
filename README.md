@@ -32,7 +32,7 @@ New releases are available on the
 
 ## FORK
 
-    git clone git://github.com/git-cola/git-cola.git cola
+    git clone git://github.com/git-cola/git-cola.git
 
 [git-cola on github](https://github.com/git-cola/git-cola)
 
@@ -50,7 +50,7 @@ New releases are available on the
 
 * [PyQt4](http://www.riverbankcomputing.co.uk/software/pyqt/download) 4.4 or newer
 
-## INOTIFY
+## ADDITIVES
 
 [pyinotify](https://github.com/seb-m/pyinotify) 0.7.1 or newer
 enables inotify support on Linux.
@@ -66,9 +66,8 @@ If you want to do a global install you can do
 You don't need to `make` to run it, though.
 *git-cola* is designed to run directly out of its source tree.
 
-    git clone git://github.com/git-cola/git-cola.git
-    git-cola/bin/git-cola
-    git-cola/bin/git-dag
+    bin/git-cola
+    bin/git-dag
 
 ## MAC OS X
 
@@ -89,7 +88,6 @@ Installing these packages also gives you a PyQt development
 environment which can be used for building your own applications
 or hacking on cola itself.
 
-
 ## WINDOWS INSTALLATION
 
 Download the latest stable Git, Python 2.x, and Py2x-PyQt4 installers
@@ -105,11 +103,8 @@ Download the latest stable Git, Python 2.x, and Py2x-PyQt4 installers
 Once these are installed you can run *git-cola* from the Start menu or
 by double-clicking on the `git-cola.pyw` script.
 
-You can also use `python.exe` to invoke the `git-cola.pyw` script
-directly from the command-line.
-
-If you are developing *git-cola* on Windows you can run it from its
-source tree by using `python.exe`.
+If you are developing *git-cola* on Windows you can use `python.exe` to run
+*git-cola* directly from source.
 
     python.exe bin/git-cola
 
