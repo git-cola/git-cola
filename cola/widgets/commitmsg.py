@@ -404,8 +404,28 @@ class CommitMessageEditor(QtGui.QWidget):
                                  output)
             return
 
-        #if self.sync_toggle_button.isChecked():
+        if self.sync_toggle_button.isChecked():
             # Proceed to pull/rebase and push
+            status, output = self.model.git.pull('--rebase', 
+                                                 with_stderr=True,
+                                                 with_status=True)
+            if status != 0:
+                Interaction.critical(N_('Pull --rebase failed'),
+                     N_('"git pull --rebase" returned exit code %s') %
+                        (status,),
+                     output)
+                return
+            Interaction.log(output)
+            status, output = self.model.git.push(with_stderr=True,
+                                                 with_status=True)
+            if status != 0:
+                Interaction.critical(N_('Push failed'),
+                     N_('"git push" returned exit code %s') %
+                        (status,),
+                     output)
+                return
+            Interaction.log(output)
+
 
 
     def build_prev_commits_menu(self):
