@@ -70,7 +70,8 @@ class CommitMessageEditor(QtGui.QWidget):
         self.sync_toggle_button = create_toolbutton(tooltip=sync_toggle_button_tooltip,
                                                icon=sync_icon())
         self.sync_toggle_button.setCheckable(True)
-
+        self.connect(self.sync_toggle_button, SIGNAL('toggled(bool)'),
+                     self.update_commit_button_label)
 
         commit_button_tooltip = N_('Commit staged changes\n'
                                    'Shortcut: Ctrl+Enter')
@@ -236,6 +237,13 @@ class CommitMessageEditor(QtGui.QWidget):
         commit_enabled = bool(self.summary.value())
         self.commit_button.setEnabled(commit_enabled)
         self.commit_action.setEnabled(commit_enabled)
+
+    def update_commit_button_label(self, sync_button_is_checked):
+        if sync_button_is_checked:
+            self.commit_button.setText(N_('Commit + Sync@@verb'))
+        else:
+            self.commit_button.setText(N_('Commit@@verb'))
+
 
     def refresh_palettes(self):
         """Update the color palette for the hint text"""
