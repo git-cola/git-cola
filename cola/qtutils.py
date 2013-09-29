@@ -336,6 +336,10 @@ def save_icon():
     """Return a standard Save icon"""
     return cached_icon(QtGui.QStyle.SP_DialogSaveButton)
 
+def sync_icon():
+    """Return a Sync Code Icon"""
+    return cached_icon(QtGui.QStyle.SP_DriveNetIcon)
+
 
 
 def ok_icon():
