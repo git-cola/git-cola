@@ -19,6 +19,7 @@ from cola.qtutils import connect_action_bool
 from cola.qtutils import connect_button
 from cola.qtutils import options_icon
 from cola.qtutils import save_icon
+from cola.qtutils import sync_icon
 from cola.widgets import defs
 from cola.prefs import diff_font
 from cola.prefs import tabwidth
@@ -63,6 +64,14 @@ class CommitMessageEditor(QtGui.QWidget):
         self.description = CommitMessageTextEdit()
         self.description.extra_actions.append(self.signoff_action)
         self.description.extra_actions.append(self.commit_action)
+
+
+        sync_toggle_button_tooltip = N_('Toggle to Sync to upstream immediately on commit')
+        self.sync_toggle_button = create_toolbutton(tooltip=sync_toggle_button_tooltip,
+                                               icon=sync_icon())
+        self.sync_toggle_button.setCheckable(True)
+        self.connect(self.sync_toggle_button, SIGNAL('toggled(bool)'),
+                     self.update_commit_button_label)
 
         commit_button_tooltip = N_('Commit staged changes\n'
                                    'Shortcut: Ctrl+Enter')
@@ -110,6 +119,7 @@ class CommitMessageEditor(QtGui.QWidget):
         self.toplayout.setSpacing(defs.spacing)
         self.toplayout.addWidget(self.actions_button)
         self.toplayout.addWidget(self.summary)
+        self.toplayout.addWidget(self.sync_toggle_button)
         self.toplayout.addWidget(self.commit_button)
 
         self.mainlayout = QtGui.QVBoxLayout()
@@ -227,6 +237,13 @@ class CommitMessageEditor(QtGui.QWidget):
         commit_enabled = bool(self.summary.value())
         self.commit_button.setEnabled(commit_enabled)
         self.commit_action.setEnabled(commit_enabled)
+
+    def update_commit_button_label(self, sync_button_is_checked):
+        if sync_button_is_checked:
+            self.commit_button.setText(N_('Commit + Sync'))
+        else:
+            self.commit_button.setText(N_('Commit@@verb'))
+
 
     def refresh_palettes(self):
         """Update the color palette for the hint text"""
@@ -352,23 +369,29 @@ class CommitMessageEditor(QtGui.QWidget):
         msg = self.commit_message(raw=False)
 
         if not self.model.staged:
-            error_msg = N_(''
-                'No changes to commit.\n\n'
-                'You must stage at least 1 file before you can commit.')
-            if self.model.modified:
-                informative_text = N_('Would you like to stage and '
-                                      'commit all modified files?')
-                if not confirm(N_('Stage and commit?'),
-                               error_msg,
-                               informative_text,
-                               N_('Stage and Commit'),
-                               default=False,
-                               icon=save_icon()):
-                    return
+            if self.sync_toggle_button.isChecked():
+                # If sync is enabled, stage all changes to repo
+                cmds.do(cmds.StageModified)
+                cmds.do(cmds.StageUnmerged)
+                cmds.do(cmds.StageUntracked)
             else:
-                Interaction.information(N_('Nothing to commit'), error_msg)
-                return
-            cmds.do(cmds.StageModified)
+                error_msg = N_(''
+                    'No changes to commit.\n\n'
+                    'You must stage at least 1 file before you can commit.')
+                if self.model.modified:
+                    informative_text = N_('Would you like to stage and '
+                                          'commit all modified files?')
+                    if not confirm(N_('Stage and commit?'),
+                                   error_msg,
+                                   informative_text,
+                                   N_('Stage and Commit'),
+                                   default=False,
+                                   icon=save_icon()):
+                        return
+                else:
+                    Interaction.information(N_('Nothing to commit'), error_msg)
+                    return
+                cmds.do(cmds.StageModified)
 
         # Warn that amending published commits is generally bad
         amend = self.amend_action.isChecked()
@@ -387,6 +410,31 @@ class CommitMessageEditor(QtGui.QWidget):
                                  N_('"git commit" returned exit code %s') %
                                     (status,),
                                  output)
+            return
+
+        if self.sync_toggle_button.isChecked():
+            # Proceed to pull/rebase and push
+            status, output = self.model.git.pull('--rebase', 
+                                                 with_stderr=True,
+                                                 with_status=True)
+            if status != 0:
+                Interaction.critical(N_('Pull --rebase failed'),
+                     N_('"git pull --rebase" returned exit code %s') %
+                        (status,),
+                     output)
+                return
+            Interaction.log(output)
+            status, output = self.model.git.push(with_stderr=True,
+                                                 with_status=True)
+            if status != 0:
+                Interaction.critical(N_('Push failed'),
+                     N_('"git push" returned exit code %s') %
+                        (status,),
+                     output)
+                return
+            Interaction.log(output)
+
+
 
     def build_prev_commits_menu(self):
         dag = DAG('HEAD', 6)
