@@ -240,7 +240,7 @@ class CommitMessageEditor(QtGui.QWidget):
 
     def update_commit_button_label(self, sync_button_is_checked):
         if sync_button_is_checked:
-            self.commit_button.setText(N_('Commit + Sync@@verb'))
+            self.commit_button.setText(N_('Commit + Sync'))
         else:
             self.commit_button.setText(N_('Commit@@verb'))
 
