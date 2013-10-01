@@ -362,7 +362,7 @@ class CommitMessageEditor(QtGui.QWidget):
                                error_msg,
                                informative_text,
                                N_('Stage and Commit'),
-                               default=False,
+                               default=True,
                                icon=save_icon()):
                     return
             else:
