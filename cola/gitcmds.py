@@ -232,7 +232,7 @@ def _common_diff_opts(config=config):
 
 
 def sha1_diff(git, sha1):
-    return core.decode(git.diff(sha1+'~', sha1, **_common_diff_opts()))
+    return core.decode(git.diff(sha1+'^!', **_common_diff_opts()))
 
 
 def diff_info(sha1, git=git):
