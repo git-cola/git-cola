@@ -309,9 +309,7 @@ class MainView(MainWindow):
             self.addAction(status_tree.process_selection)
 
         self.lock_layout_action = add_action_bool(self,
-                N_('Lock Layout'), self.set_lock_layout)
-        self.lock_layout_action.setCheckable(True)
-        self.lock_layout_action.setChecked(False)
+                N_('Lock Layout'), self.set_lock_layout, False)
 
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)

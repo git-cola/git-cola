@@ -236,8 +236,11 @@ def set_clipboard(text):
     clipboard.setText(text, QtGui.QClipboard.Selection)
 
 
-def add_action_bool(widget, text, fn, *shortcuts):
-    return _add_action(widget, text, fn, connect_action_bool, *shortcuts)
+def add_action_bool(widget, text, fn, checked, *shortcuts):
+    action = _add_action(widget, text, fn, connect_action_bool, *shortcuts)
+    action.setCheckable(True)
+    action.setChecked(checked)
+    return action
 
 
 def add_action(widget, text, fn, *shortcuts):
