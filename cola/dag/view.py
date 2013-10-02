@@ -556,6 +556,9 @@ class DAGView(MainWindow):
         graph_titlebar = self.graphview_dock.titleBarWidget()
         graph_titlebar.add_corner_widget(self.graph_controls_widget)
 
+        self.lock_layout_action = qtutils.add_action_bool(self,
+                N_('Lock Layout'), self.set_lock_layout, False)
+
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)
 
@@ -564,6 +567,8 @@ class DAGView(MainWindow):
         self.view_menu.addAction(self.log_dock.toggleViewAction())
         self.view_menu.addAction(self.graphview_dock.toggleViewAction())
         self.view_menu.addAction(self.diff_dock.toggleViewAction())
+        self.view_menu.addSeparator()
+        self.view_menu.addAction(self.lock_layout_action)
 
         self.menubar.addAction(self.view_menu.menuAction())
         self.setMenuBar(self.menubar)
