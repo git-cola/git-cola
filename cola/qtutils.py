@@ -236,16 +236,23 @@ def set_clipboard(text):
     clipboard.setText(text, QtGui.QClipboard.Selection)
 
 
+def add_action_bool(widget, text, fn, *shortcuts):
+    return _add_action(widget, text, fn, connect_action_bool, *shortcuts)
+
+
 def add_action(widget, text, fn, *shortcuts):
+    return _add_action(widget, text, fn, connect_action, *shortcuts)
+
+
+def _add_action(widget, text, fn, connect, *shortcuts):
     action = QtGui.QAction(text, widget)
-    connect_action(action, fn)
+    connect(action, fn)
     if shortcuts:
         shortcuts = list(set(shortcuts))
         action.setShortcuts(shortcuts)
         action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
         widget.addAction(action)
     return action
-
 
 def set_selected_item(widget, idx):
     """Sets a the currently selected item to the item at index idx."""
