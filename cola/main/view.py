@@ -394,18 +394,18 @@ class MainView(MainWindow):
         # Add to menubar
         self.menubar.addAction(self.diff_menu.menuAction())
 
-        # Tools Menu
-        self.tools_menu = create_menu(N_('Tools'), self.menubar)
-        self.tools_menu.addAction(self.menu_classic)
-        self.tools_menu.addAction(self.menu_dag)
-        self.tools_menu.addSeparator()
+        # View Menu
+        self.view_menu = create_menu(N_('View'), self.menubar)
+        self.view_menu.addAction(self.menu_classic)
+        self.view_menu.addAction(self.menu_dag)
+        self.view_menu.addSeparator()
         if self.classic_dockable:
-            self.tools_menu.addAction(self.classicdockwidget.toggleViewAction())
+            self.view_menu.addAction(self.classicdockwidget.toggleViewAction())
 
-        self.setup_dockwidget_tools_menu()
-        self.tools_menu.addSeparator()
-        self.tools_menu.addAction(self.lock_layout_action)
-        self.menubar.addAction(self.tools_menu.menuAction())
+        self.setup_dockwidget_view_menu()
+        self.view_menu.addSeparator()
+        self.view_menu.addAction(self.lock_layout_action)
+        self.menubar.addAction(self.view_menu.menuAction())
 
         # Help Menu
         self.help_menu = create_menu(N_('Help'), self.menubar)
@@ -578,7 +578,7 @@ class MainView(MainWindow):
         self.lock_layout_action.setChecked(state.get('lock_layout', False))
         return result
 
-    def setup_dockwidget_tools_menu(self):
+    def setup_dockwidget_view_menu(self):
         # Hotkeys for toggling the dock widgets
         if utils.is_darwin():
             optkey = 'Meta'
@@ -595,7 +595,7 @@ class MainView(MainWindow):
             # Associate the action with the shortcut
             toggleview = dockwidget.toggleViewAction()
             toggleview.setShortcut(shortcut)
-            self.tools_menu.addAction(toggleview)
+            self.view_menu.addAction(toggleview)
             def showdock(show, dockwidget=dockwidget):
                 if show:
                     dockwidget.raise_()
