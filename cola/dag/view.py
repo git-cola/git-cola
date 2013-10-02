@@ -657,6 +657,7 @@ class DAGView(MainWindow):
             count = self.dag.count
             result = False
         self.dag.set_count(count)
+        self.lock_layout_action.setChecked(state.get('lock_layout', False))
         return result
 
     def emit_model_updated(self):
