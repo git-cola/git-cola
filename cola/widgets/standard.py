@@ -4,6 +4,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
+from PyQt4.QtGui import QDockWidget
 
 from cola import core
 from cola import qtcompat
@@ -79,20 +80,43 @@ class MainWindowMixin(WidgetMixin):
         WidgetMixin.__init__(self, QtClass)
         # Dockwidget options
         self.dockwidgets = []
+        self.lock_layout = False
         qtcompat.set_common_dock_options(self)
         self.widget_version = 0
 
     def export_state(self):
         """Exports data for save/restore"""
         state = WidgetMixin.export_state(self)
+        state['lock_layout'] = self.lock_layout
         return qtutils.export_window_state(self, state, self.widget_version)
 
     def apply_state(self, state):
         WidgetMixin.apply_state(self, state)
         result = qtutils.apply_window_state(self, state, self.widget_version)
+        self.lock_layout = state.get('lock_layout', self.lock_layout)
+        self.update_dockwidget_lock_state()
+        self.update_dockwidget_tooltips()
+        return result
+
+    def set_lock_layout(self, lock_layout):
+        self.lock_layout = lock_layout
+        self.update_dockwidget_lock_state()
+
+    def update_dockwidget_lock_state(self):
+        if self.lock_layout:
+            features = (QDockWidget.DockWidgetClosable |
+                        QDockWidget.DockWidgetFloatable)
+        else:
+            features = (QDockWidget.DockWidgetClosable |
+                        QDockWidget.DockWidgetFloatable |
+                        QDockWidget.DockWidgetMovable)
         for widget in self.dockwidgets:
             widget.titleBarWidget().update_tooltips()
-        return result
+            widget.setFeatures(features)
+
+    def update_dockwidget_tooltips(self):
+        for widget in self.dockwidgets:
+            widget.titleBarWidget().update_tooltips()
 
 
 class TreeMixin(object):

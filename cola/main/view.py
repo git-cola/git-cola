@@ -31,6 +31,7 @@ from cola.qt import create_dock
 from cola.qt import create_menu
 from cola.qt import create_toolbutton
 from cola.qtutils import add_action
+from cola.qtutils import add_action_bool
 from cola.qtutils import connect_action
 from cola.qtutils import connect_action_bool
 from cola.qtutils import options_icon
@@ -54,6 +55,7 @@ from cola.widgets.standard import MainWindow
 
 
 class MainView(MainWindow):
+
     def __init__(self, model, parent):
         MainWindow.__init__(self, parent)
         # Default size; this is thrown out when save/restore is used
@@ -61,7 +63,7 @@ class MainView(MainWindow):
         self.model = model
         self.prefs_model = prefs_model = prefs.PreferencesModel()
 
-        # Internal field used by import/export_state().
+        # The widget version is used by import/export_state().
         # Change this whenever dockwidgets are removed.
         self.widget_version = 2
 
@@ -306,6 +308,11 @@ class MainView(MainWindow):
             self.addAction(status_tree.down)
             self.addAction(status_tree.process_selection)
 
+        self.lock_layout_action = add_action_bool(self,
+                N_('Lock Layout'), self.set_lock_layout)
+        self.lock_layout_action.setCheckable(True)
+        self.lock_layout_action.setChecked(False)
+
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)
 
@@ -398,6 +405,8 @@ class MainView(MainWindow):
             self.tools_menu.addAction(self.classicdockwidget.toggleViewAction())
 
         self.setup_dockwidget_tools_menu()
+        self.tools_menu.addSeparator()
+        self.tools_menu.addAction(self.lock_layout_action)
         self.menubar.addAction(self.tools_menu.menuAction())
 
         # Help Menu
@@ -567,10 +576,8 @@ class MainView(MainWindow):
 
     def apply_state(self, state):
         """Imports data for save/restore"""
-        # 1 is the widget version; change when widgets are added/removed
         result = MainWindow.apply_state(self, state)
-        for widget in self.dockwidgets:
-            widget.titleBarWidget().update_tooltips()
+        self.lock_layout_action.setChecked(state.get('lock_layout', False))
         return result
 
     def setup_dockwidget_tools_menu(self):

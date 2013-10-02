@@ -46,6 +46,7 @@ Thanks
 * Rustam Safin
 * Sergey Leschina
 * Srinivasa Nallapati
+* Stanisław Halik
 * Stefan Naewe
 * Steffen Prohaska
 * Sven Claussner
