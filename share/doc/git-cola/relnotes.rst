@@ -1,3 +1,12 @@
+git-cola v1.8.6
+---------------
+Usability, bells and whistles
+-----------------------------
+* Tool widgets can be locked in place by using the "Tools/Lock Layout"
+  menu action.
+
+  http://github.com/git-cola/git-cola/issues/202
+
 git-cola v1.8.5
 ---------------
 Usability, bells and whistles
