@@ -67,6 +67,7 @@ class ActionTask(QtCore.QRunnable):
 
 
 class ProgressAnimationThread(QtCore.QThread):
+
     def __init__(self, txt, parent, timeout=0.25):
         QtCore.QThread.__init__(self, parent)
         self.running = False
@@ -117,7 +118,7 @@ class RemoteActionDialog(standard.Dialog):
         self.progress.setWindowTitle(action)
         self.progress.setWindowModality(Qt.WindowModal)
         self.progress.setLabelText('Updating..   ')
-        self.progress_thread = ProgressAnimationThread('Updating', self)
+        self.progress_thread = ProgressAnimationThread(N_('Updating'), self)
 
         self.local_label = QtGui.QLabel()
         self.local_label.setText(N_('Local Branch'))
