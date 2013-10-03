@@ -52,7 +52,31 @@ def run(RemoteDialog):
     return view
 
 
+def combine(result, existing):
+    if existing is None:
+        return result
+
+    if type(existing) is tuple:
+        if len(existing) == 2:
+            return (max(result[0], existing[0]),
+                    combine(existing[1], result[1]))
+        elif len(existing) == 3:
+            return (max(result[0], existing[0]),
+                    combine(existing[1], result[1]),
+                    combine(existing[2], result[2]))
+        else:
+            raise AssertionError('combine() with length %d' % len(existing))
+    else:
+        if existing and result:
+            return existing + '\n\n' + result
+        elif existing:
+            return existing
+        else:
+            return result
+
+
 class ActionTask(QtCore.QRunnable):
+
     def __init__(self, sender, model_action, remote, kwargs):
         QtCore.QRunnable.__init__(self)
         self.sender = sender
@@ -98,6 +122,7 @@ class ProgressAnimationThread(QtCore.QThread):
 
 
 class RemoteActionDialog(standard.Dialog):
+
     def __init__(self, model, action, parent):
         """Customizes the dialog based on the remote action
         """
@@ -106,6 +131,7 @@ class RemoteActionDialog(standard.Dialog):
         self.action = action
         self.tasks = []
         self.filtered_remote_branches = []
+        self.selected_remotes = []
 
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowModality(Qt.WindowModal)
@@ -132,6 +158,8 @@ class RemoteActionDialog(standard.Dialog):
 
         self.remote_name = QtGui.QLineEdit()
         self.remotes = QtGui.QListWidget()
+        if action == PUSH:
+            self.remotes.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
         self.remotes.addItems(self.model.remotes)
 
         self.remote_branch_label = QtGui.QLabel()
@@ -326,15 +354,24 @@ class RemoteActionDialog(standard.Dialog):
         remotes = self.model.remotes
         selection = qtutils.selected_item(widget, remotes)
         if not selection:
+            self.selected_remotes = []
             return
         self.set_remote_name(selection)
+        self.selected_remotes = qtutils.selected_items(self.remotes,
+                                                       self.model.remotes)
 
         all_branches = gitcmds.branch_list(remote=True)
         branches = []
-        pat = selection + '/*'
+        patterns = []
+        for remote in self.selected_remotes:
+            pat = remote + '/*'
+            patterns.append(pat)
+
         for branch in all_branches:
-            if fnmatch.fnmatch(branch, pat):
-                branches.append(branch)
+            for pat in patterns:
+                if fnmatch.fnmatch(branch, pat):
+                    branches.append(branch)
+                    break
         if branches:
             self.set_remote_branches(branches)
         else:
@@ -389,7 +426,7 @@ class RemoteActionDialog(standard.Dialog):
         if action == FETCH:
             model_action = self.model.fetch
         elif action == PUSH:
-            model_action = self.model.push
+            model_action = self.push_to_all
         else: # if action == PULL:
             model_action = self.model.pull
 
@@ -399,6 +436,8 @@ class RemoteActionDialog(standard.Dialog):
             Interaction.log(errmsg)
             return
         remote, kwargs = self.common_args()
+        self.selected_remotes = qtutils.selected_items(self.remotes,
+                                                       self.model.remotes)
 
         # Check if we're about to create a new branch and warn.
         remote_branch = unicode(self.remote_branch.text())
@@ -456,6 +495,14 @@ class RemoteActionDialog(standard.Dialog):
 
     def update_progress(self, txt):
         self.progress.setLabelText(txt)
+
+    def push_to_all(self, dummy_remote, *args, **kwargs):
+        selected_remotes = self.selected_remotes
+        all_results = None
+        for remote in selected_remotes:
+            result = self.model.push(remote, *args, **kwargs)
+            all_results = combine(result, all_results)
+        return all_results
 
     def action_completed(self, task, status, output):
         # Grab the results of the action and finish up
