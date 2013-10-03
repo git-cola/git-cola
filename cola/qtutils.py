@@ -200,6 +200,19 @@ def selected_item(list_widget, items):
         return None
 
 
+def selected_items(list_widget, items):
+    """Returns the selected item in a QListWidget."""
+    selection = []
+    widget_items = list_widget.selectedItems()
+    if not widget_items:
+        return selection
+    for widget_item in widget_items:
+        row = list_widget.row(widget_item)
+        if row < len(items):
+            selection.append(items[row])
+    return selection
+
+
 def open_dialog(title, filename=None):
     """Creates an Open File dialog and returns a filename."""
     return unicode(QtGui.QFileDialog
