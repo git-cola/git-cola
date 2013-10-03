@@ -117,7 +117,7 @@ class RemoteActionDialog(standard.Dialog):
         self.progress.setCancelButton(None)
         self.progress.setWindowTitle(action)
         self.progress.setWindowModality(Qt.WindowModal)
-        self.progress.setLabelText('Updating..   ')
+        self.progress.setLabelText(N_('Updating') + '..   ')
         self.progress_thread = ProgressAnimationThread(N_('Updating'), self)
 
         self.local_label = QtGui.QLabel()
