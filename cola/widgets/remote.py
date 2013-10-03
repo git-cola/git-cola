@@ -382,8 +382,8 @@ class RemoteActionDialog(standard.Dialog):
                     'tags': tags,
                 })
 
-    #+-------------------------------------------------------------
-    #+ Actions
+    # Actions
+
     def action_callback(self):
         action = self.action
         if action == FETCH:
@@ -441,13 +441,13 @@ class RemoteActionDialog(standard.Dialog):
                 return
 
         # Disable the GUI by default
-        self.setEnabled(False)
-        self.progress.setEnabled(True)
+        self.action_button.setEnabled(False)
+        self.close_button.setEnabled(False)
         QtGui.QApplication.setOverrideCursor(Qt.WaitCursor)
 
         # Show a nice progress bar
-        self.progress_thread.start()
         self.progress.show()
+        self.progress_thread.start()
 
         # Use a thread to update in the background
         task = ActionTask(self, model_action, remote, kwargs)
@@ -459,8 +459,13 @@ class RemoteActionDialog(standard.Dialog):
 
     def action_completed(self, task, status, output):
         # Grab the results of the action and finish up
+        self.action_button.setEnabled(True)
+        self.close_button.setEnabled(True)
+        QtGui.QApplication.restoreOverrideCursor()
+
         self.progress_thread.stop()
         self.progress_thread.wait()
+        self.progress.close()
         if task in self.tasks:
             self.tasks.remove(task)
 
@@ -468,10 +473,6 @@ class RemoteActionDialog(standard.Dialog):
 
         if not output: # git fetch --tags --verbose doesn't print anything...
             output = already_up_to_date
-
-        self.setEnabled(True)
-        self.progress.close()
-        QtGui.QApplication.restoreOverrideCursor()
 
         command = 'git %s' % self.action.lower()
         message = (N_('"%(command)s" returned exit status %(status)d') %
