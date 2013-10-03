@@ -301,10 +301,10 @@ class ViewerMixin(object):
     def update_menu_actions(self, event):
         selected_items = self.selected_items()
         clicked = self.itemAt(event.pos())
-        if clicked is None:
-            self.clicked = None
-        else:
+        if hasattr(clicked, 'commit'):
             self.clicked = clicked.commit
+        else:
+            self.clicked = clicked = None
 
         has_single_selection = len(selected_items) == 1
         has_selection = bool(selected_items)
