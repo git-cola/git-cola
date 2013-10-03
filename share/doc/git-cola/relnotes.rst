@@ -7,6 +7,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/202
 
+* You can now push to several remotes simultaneously by selecting
+  multiple remotes in the "Push" dialog.
+
+  https://github.com/git-cola/git-cola/issues/148
 
 Fixes
 -----
