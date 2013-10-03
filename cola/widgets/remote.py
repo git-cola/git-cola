@@ -7,6 +7,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
+from cola import core
 from cola import gitcmds
 from cola import prefs
 from cola import qtutils
@@ -62,7 +63,7 @@ class ActionTask(QtCore.QRunnable):
     def run(self):
         """Runs the model action and captures the result"""
         status, output = self.model_action(self.remote, **self.kwargs)
-        self.sender.emit(SIGNAL('action_completed'), self, status, output)
+        self.sender.emit(SIGNAL('action_completed'), self, status, core.decode(output))
 
 
 class ProgressAnimationThread(QtCore.QThread):
