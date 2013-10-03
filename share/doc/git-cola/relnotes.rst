@@ -7,6 +7,10 @@ Usability, bells and whistles
 
   http://github.com/git-cola/git-cola/issues/202
 
+Fixes
+-----
+* Support unicode in the output from `fetch`, `push`, and `pull`.
+
 git-cola v1.8.5
 ---------------
 Usability, bells and whistles
