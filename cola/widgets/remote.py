@@ -222,7 +222,10 @@ class RemoteActionDialog(standard.Dialog):
                      self.update_remote_branches)
 
         connect_button(self.action_button, self.action_callback)
-        connect_button(self.close_button, self.reject)
+        connect_button(self.close_button, self.close)
+
+        qtutils.add_action(self, N_('Close'),
+                      self.close, QtGui.QKeySequence.Close, 'Esc')
 
         self.connect(self, SIGNAL('action_completed'), self.action_completed)
         self.connect(self.progress_thread, SIGNAL('str'), self.update_progress)
