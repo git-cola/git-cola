@@ -982,7 +982,7 @@ Usability, bells and whistles
 * A dialog to allow opening or cloning a repository
   is presented when `git cola` is launched outside of a git repository.
 
-  https://github.com/git-cola/git-cola/issues/closed/#issue/22
+  https://github.com/git-cola/git-cola/issues/22
 
 * Warn when `push` is used to create a new branch
 
@@ -1032,11 +1032,11 @@ Fixes
 -----
 * Added missing 'Exit Diff Mode' button for 'Diff Expression' mode
 
-  https://github.com/git-cola/git-cola/issues/closed/#issue/31
+  https://github.com/git-cola/git-cola/issues/31
 
 * Fix a bug when initializing fonts on Windows
 
-  https://github.com/git-cola/git-cola/issues/closed/#issue/32
+  https://github.com/git-cola/git-cola/issues/32
 
 
 git-cola v1.4.0.1
@@ -1046,15 +1046,15 @@ Fixes
 * Keep entries in sorted order in the `cola classic` tool
 * Fix staging untracked files
 
-  https://github.com/git-cola/git-cola/issues/closed/#issue/27
+  https://github.com/git-cola/git-cola/issues/27
 
 * Fix the `show` command in the Stash dialog
 
-  https://github.com/git-cola/git-cola/issues/closed/#issue/29
+  https://github.com/git-cola/git-cola/issues/29
 
 * Fix a typo when loading merge commit messages
 
-  https://github.com/git-cola/git-cola/issues/closed/#issue/30
+  https://github.com/git-cola/git-cola/issues/30
 
 
 git-cola v1.4.0
