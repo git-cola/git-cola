@@ -300,16 +300,16 @@ class ViewerMixin(object):
 
     def update_menu_actions(self, event):
         selected_items = self.selected_items()
-        clicked = self.itemAt(event.pos())
-        if hasattr(clicked, 'commit'):
-            self.clicked = clicked.commit
+        item = self.itemAt(event.pos())
+        if item is None:
+            self.clicked = commit = None
         else:
-            self.clicked = clicked = None
+            self.clicked = commit = item.commit
 
         has_single_selection = len(selected_items) == 1
         has_selection = bool(selected_items)
-        can_diff = bool(clicked and has_single_selection and
-                        clicked is not selected_items[0].commit)
+        can_diff = bool(commit and has_single_selection and
+                        commit is not selected_items[0].commit)
 
         if can_diff:
             self.selected = selected_items[0].commit
@@ -813,6 +813,7 @@ class Edge(QtGui.QGraphicsItem):
         self.setAcceptedMouseButtons(Qt.NoButton)
         self.source = source
         self.dest = dest
+        self.commit = source.commit
         self.setZValue(-2)
 
         dest_pt = Commit.item_bbox.center()
@@ -1502,7 +1503,7 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
                 commit_item = self.items[commit.sha1]
             except KeyError:
                 # TODO - Handle truncated history viewing
-                pass
+                continue
             for parent in reversed(commit.parents):
                 try:
                     parent_item = self.items[parent.sha1]
