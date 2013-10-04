@@ -43,6 +43,7 @@ def main():
 
 def cola_data_files():
     data = [
+        _app_path('share/git-cola/bin', '*'),
         _app_path('share/git-cola/icons', '*.png'),
         _app_path('share/git-cola/icons', '*.svg'),
         _app_path('share/applications', '*.desktop'),
@@ -61,11 +62,6 @@ def cola_data_files():
 
     data.extend([_app_path(localedir, 'git-cola.mo')
                  for localedir in glob('share/locale/*/LC_MESSAGES')])
-
-    if sys.platform == 'darwin':
-        data.append(_app_path('share/git-cola/bin', 'ssh-askpass-darwin'))
-    else:
-        data.append(_app_path('share/git-cola/bin', 'ssh-askpass'))
     return data
 
 

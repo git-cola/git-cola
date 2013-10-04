@@ -151,6 +151,9 @@ class ColaApplication(object):
         """Wrap activeWindow()"""
         return self._app.activeWindow()
 
+    def desktop(self):
+        return self._app.desktop()
+
     def exec_(self):
         """Wrap exec_()"""
         return self._app.exec_()
@@ -263,25 +266,10 @@ def main(context):
     opts, args, context = parse_args(context)
     repo = process_args(opts, args)
 
-    # Allow Ctrl-C to exit
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
-
-    # Initialize the app
-    app = ColaApplication(sys.argv)
-
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
-    model = cola.model()
-    valid = model.set_worktree(repo) and not opts.prompt
-    while not valid:
-        startup_dlg = startup.StartupDialog(app.activeWindow())
-        gitdir = startup_dlg.find_git_repo()
-        if not gitdir:
-            sys.exit(-1)
-        valid = model.set_worktree(gitdir)
-
-    # Finally, go to the root of the git repo
-    os.chdir(model.git.worktree())
+    app = new_application()
+    model = new_model(app, repo, prompt=opts.prompt)
 
     # Show the GUI
     if context == 'archive':
@@ -371,6 +359,29 @@ def main(context):
     sys.exit(result)
 
     return view, task
+
+
+def new_application():
+    # Allow Ctrl-C to exit
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+    # Initialize the app
+    return ColaApplication(sys.argv)
+
+
+def new_model(app, repo, prompt=False):
+    model = cola.model()
+    valid = model.set_worktree(repo) and not prompt
+    while not valid:
+        startup_dlg = startup.StartupDialog(app.activeWindow())
+        gitdir = startup_dlg.find_git_repo()
+        if not gitdir:
+            sys.exit(-1)
+        valid = model.set_worktree(gitdir)
+
+    # Finally, go to the root of the git repo
+    os.chdir(model.git.worktree())
+    return model
 
 
 def _start_update_thread(model):

@@ -1,0 +1,325 @@
+#!/usr/bin/env python
+
+import os
+import optparse
+import sys
+import re
+
+from os.path import abspath
+from os.path import dirname
+
+
+def setup_environment():
+    prefix = dirname(dirname(dirname(dirname(abspath(__file__)))))
+    source_tree = os.path.join(prefix, 'cola', '__init__.py')
+    if os.path.exists(source_tree):
+        modules = prefix
+    else:
+        modules = os.path.join(prefix, 'share', 'git-cola', 'lib')
+    sys.path.insert(1, modules)
+setup_environment()
+
+from cola import app
+from cola import core
+from cola import qt
+from cola import qtutils
+from cola.i18n import N_
+from cola.widgets import defs
+from cola.widgets.text import MonoTextView
+from cola.widgets.tree import FlatTreeWidget
+
+from PyQt4 import QtGui
+from PyQt4.QtCore import Qt
+from PyQt4.QtCore import SIGNAL
+
+
+PICK = 'pick'
+FIXUP = 'fixup'
+SQUASH = 'squash'
+EDIT = 'edit'
+REWORD = 'reword'
+
+
+def rebase_commands():
+    return (PICK, REWORD, EDIT, SQUASH, FIXUP,)
+
+
+def rebase_commands_idx(name):
+    return {PICK: 0, REWORD: 1, EDIT: 2, SQUASH: 3, FIXUP: 4,}[name]
+
+
+def main():
+    opts, args = parse_args()
+    app.setup_environment()
+    new_app = app.new_application()
+    app.new_model(new_app, os.getcwd())
+
+    desktop = new_app.desktop()
+    window = new_window(args[0], opts.branch)
+    window.resize(desktop.width(), desktop.height())
+    window.show()
+    window.raise_()
+    new_app.exec_()
+    return window.status
+
+
+def parse_args():
+    default_branch = core.decode(os.getenv('GIT_COLA_REBASE_BRANCH', 'master'))
+    parser = optparse.OptionParser('%prog [options] <filename>')
+    parser.add_option('-b', '--branch', metavar='<branch>',
+                      default=default_branch, help='upstream branch')
+    opts, args = parser.parse_args()
+    if len(args) != 1:
+        parser.error(N_('error: <filename> is required'))
+        sys.exit(1)
+    return opts, args
+
+
+def new_window(branch, filename):
+    editor = Editor(branch, filename)
+    window = MainWindow(branch, editor)
+    return window
+
+
+class MainWindow(QtGui.QMainWindow):
+
+    def __init__(self, branch, editor, parent=None):
+        super(MainWindow, self).__init__(parent)
+        self.status = 1
+        self.setWindowTitle(N_('Rebase onto "%s"') % branch)
+        self.setCentralWidget(editor)
+        self.connect(editor, SIGNAL('exit(int)'), self.exit)
+        editor.setFocus()
+
+    def exit(self, status):
+        self.status = status
+        self.close()
+
+
+class Editor(QtGui.QWidget):
+
+    def __init__(self, filename, branch, parent=None):
+        super(Editor, self).__init__(parent)
+
+        self.filename = filename
+        self.tree = RebaseTreeWidget(self)
+        self.setFocusProxy(self.tree)
+
+        self.text = MonoTextView(self)
+        self.text.setTextInteractionFlags(Qt.NoTextInteraction)
+
+        self.rebase_button = qt.create_button(
+                text=N_('Rebase'),
+                tooltip=N_('Rebase onto "%s"') % branch,
+                icon=qtutils.apply_icon())
+
+        self.cancel_button = qt.create_button(
+                text=N_('Cancel'),
+                tooltip=N_('Abort the rebase'),
+                icon=qtutils.close_icon())
+
+        qtutils.connect_button(self.rebase_button, self.rebase)
+        qtutils.connect_button(self.cancel_button, self.cancel)
+
+        policy = self.tree.sizePolicy()
+        policy.setVerticalStretch(1)
+        self.tree.setSizePolicy(policy)
+
+        help_text = N_("""
+Commands:
+  pick = use commit
+  reword = use commit, but edit the commit message
+  edit = use commit, but stop for amending
+  squash = use commit, but meld into previous commit
+  fixup = like "squash", but discard this commit's log message
+  exec = run command (the rest of the line) using shell
+
+These lines can be re-ordered; they are executed from top to bottom.
+
+If you disable a line here THAT COMMIT WILL BE LOST.
+
+However, if you disable everything, the rebase will be aborted.
+""").strip()
+        self.text.setPlainText(help_text)
+
+        controls_layout = QtGui.QHBoxLayout()
+        controls_layout.setMargin(defs.no_margin)
+        controls_layout.setSpacing(defs.button_spacing)
+        controls_layout.addWidget(self.rebase_button)
+        controls_layout.addWidget(self.cancel_button)
+        controls_layout.addStretch()
+
+        layout = QtGui.QVBoxLayout()
+        layout.setMargin(defs.no_margin)
+        layout.setSpacing(defs.spacing)
+        layout.addWidget(self.text)
+        layout.addWidget(self.tree)
+        layout.addLayout(controls_layout)
+        self.setLayout(layout)
+
+        with open(filename) as f:
+            insns = core.decode(f.read())
+            self.parse_sequencer_instructions(insns)
+
+    def emit_exit(self, status):
+        self.emit(SIGNAL('exit(int)'), status)
+
+    def parse_sequencer_instructions(self, insns):
+        idx = 1
+        rebase_command = re.compile(
+                r'^(# )?(pick|fixup|squash) ([0-9a-f]{7,40}) (.+)$')
+        for line in insns.splitlines():
+            match = rebase_command.match(line)
+            if match is None:
+                continue
+            enabled = match.group(1) is None
+            command = match.group(2)
+            sha1hex = match.group(3)
+            summary = match.group(4)
+            self.tree.add_step(idx, enabled, command, sha1hex, summary)
+            idx += 1
+        self.tree.decorate()
+        self.tree.refit()
+
+    def cancel(self):
+        self.emit_exit(1)
+
+    def rebase(self):
+        try:
+            with open(self.filename, 'w') as f:
+                f.write(core.encode(self.sequencer_instructions()))
+                self.emit_exit(0)
+        except:
+            self.emit_exit(128)
+
+    def sequencer_instructions(self):
+        lines = [str(item) for item in self.tree.items()]
+        return '\n'.join(lines) + '\n'
+
+
+class RebaseTreeWidget(FlatTreeWidget):
+
+    def __init__(self, parent=None):
+        super(RebaseTreeWidget, self).__init__()
+        # header
+        self.setHeaderLabels([N_('#'),
+                              N_('Enabled'),
+                              N_('Command'),
+                              N_('SHA-1'),
+                              N_('Summary')])
+        self.header().setStretchLastSection(True)
+        self.setColumnCount(5)
+
+        # drag+drop
+        self.setSelectionMode(self.SingleSelection)
+        self.setDragEnabled(True)
+        self.setAcceptDrops(True)
+        self.setDropIndicatorShown(True)
+        self.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
+        self.model().setSupportedDragActions(Qt.MoveAction);
+
+        # actions
+        self.copy_sha1_action = qtutils.add_action(self,
+                N_('Copy SHA-1'), self.copy_sha1, QtGui.QKeySequence.Copy)
+
+        self.connect(self, SIGNAL('itemChanged(QTreeWidgetItem *, int)'),
+                     self.item_changed)
+
+    def dropEvent(self, event):
+        super(RebaseTreeWidget, self).dropEvent(event)
+        self.decorate()
+        self.refit()
+        self.validate()
+
+    def supportedDropActions(self):
+        return Qt.MoveAction
+
+    def add_step(self, idx, enabled, action, sha1hex, summary):
+        item = RebaseTreeWidgetItem(idx, enabled, action,
+                                    sha1hex, summary, self)
+        self.invisibleRootItem().addChild(item)
+
+    def decorate(self):
+        for item in self.items():
+            item.new_combo()
+
+    def refit(self):
+        self.resizeColumnToContents(0)
+        self.resizeColumnToContents(1)
+        self.resizeColumnToContents(2)
+        self.resizeColumnToContents(3)
+        self.resizeColumnToContents(4)
+
+    # actions
+    def item_changed(self, item, column):
+        if column == item.ENABLED_COLUMN:
+            self.validate()
+
+    def validate(self):
+        for item in self.items():
+            if not item.is_enabled():
+                continue
+            if item.command != PICK:
+                item.command = PICK
+                item.new_combo()
+            break
+
+    def copy_sha1(self):
+        items = self.selectedItems()
+        if not items:
+            return
+        sha1hex = items[0].sha1hex
+        qtutils.set_clipboard(sha1hex)
+
+    # Qt events
+    def contextMenuEvent(self, event):
+        menu = QtGui.QMenu(self)
+        menu.addAction(self.copy_sha1_action)
+        menu.exec_(self.mapToGlobal(event.pos()))
+
+
+class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
+
+    ENABLED_COLUMN = 1
+
+    def __init__(self, idx, enabled, command, sha1hex, summary, parent):
+        QtGui.QTreeWidgetItem.__init__(self, parent)
+        self.command = command
+        self.sha1hex = sha1hex
+        self.summary = summary
+        self.parent = parent
+        self.combo = None
+
+        self.setText(0, '%02d' % idx)
+        self.setCheckState(1, enabled and Qt.Checked or Qt.Unchecked)
+        # combo box on 2
+        self.setText(3, sha1hex)
+        self.setText(4, summary)
+        self.setFlags((self.flags() | Qt.ItemIsUserCheckable) &
+                      ~Qt.ItemIsDropEnabled)
+
+    def __str__(self):
+        return '%s %s %s %s' % (
+                not self.is_enabled() and '# ' or '',
+                self.command, self.sha1hex, self.summary)
+
+    def is_enabled(self):
+        return self.checkState(self.ENABLED_COLUMN) == Qt.Checked
+
+    def new_combo(self):
+        combo = QtGui.QComboBox()
+        combo.addItems(rebase_commands())
+        combo.setEditable(False)
+        combo.setCurrentIndex(rebase_commands_idx(self.command))
+        self.parent.setItemWidget(self, 2, combo)
+        self.parent.connect(combo,
+                            SIGNAL('currentIndexChanged(const QString &)'),
+                            self.combo_changed)
+
+    def combo_changed(self, value):
+        self.command = unicode(value)
+        self.parent.validate()
+
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -119,3 +119,11 @@ You have to make sure that the file
 exists. That is normally the case when you run the *msysGit bash* and
 not the *Git for Windows bash* (look [here](http://msysgit.github.com/)
 for the differences).
+
+## GOODIES
+
+*git-cola* ships with an interactive rebase editor called *git-xbase*.
+*git-xbase* can be used to reorder and choose commits and can be launched
+independently of the main *git-cola* interface, e.g.:
+
+    GIT_SEQUENCE_EDITOR=$PWD/share/git-cola/bin/git-xbase git rebase -i master
