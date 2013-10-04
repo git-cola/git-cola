@@ -350,7 +350,7 @@ class ViewerMixin(object):
 class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
 
     def __init__(self, commit, parent=None):
-        QtGui.QListWidgetItem.__init__(self, parent)
+        QtGui.QTreeWidgetItem.__init__(self, parent)
         self.commit = commit
         self.setText(0, commit.summary)
         self.setText(1, commit.author)
