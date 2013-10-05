@@ -27,6 +27,7 @@ from cola.widgets.createtag import create_tag
 from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.browse import BrowseDialog
 from cola.widgets.standard import MainWindow
+from cola.widgets.tree import FlatTreeWidget
 from cola.widgets.text import DiffTextEdit
 
 
@@ -357,17 +358,13 @@ class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
         self.setText(2, commit.authdate)
 
 
-class CommitTreeWidget(ViewerMixin, QtGui.QTreeWidget):
+class CommitTreeWidget(ViewerMixin, FlatTreeWidget):
 
     def __init__(self, notifier, parent):
-        QtGui.QTreeWidget.__init__(self, parent)
+        FlatTreeWidget.__init__(self, parent)
         ViewerMixin.__init__(self)
 
         self.setSelectionMode(self.ContiguousSelection)
-        self.setUniformRowHeights(True)
-        self.setAllColumnsShowFocus(True)
-        self.setAlternatingRowColors(True)
-        self.setRootIsDecorated(False)
         self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
 
         self.sha1map = {}
