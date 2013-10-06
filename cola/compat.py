@@ -20,14 +20,18 @@ except ImportError:
             obj.update(value)
             return obj
 
+
+from cola import core
+
+
 def setenv(key, value):
     """Compatibility wrapper for setting environment variables
 
     Why?  win32 requires putenv().  UNIX only requires os.environ.
 
     """
-    os.environ[key] = value
-    os.putenv(key, value)
+    os.environ[key] = core.encode(value)
+    os.putenv(key, core.encode(value))
 
 
 def unsetenv(key):
