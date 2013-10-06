@@ -1,7 +1,17 @@
-git-cola v1.8.6
+git-cola v1.9.0
 ---------------
 Usability, bells and whistles
 -----------------------------
+* We now ship a full-featured interactive `git rebase` editor.
+  The rebase todo file is edited using the `git xbase` script which
+  is provided at `$prefix/share/git-cola/bin/git-xbase`.
+  This script can be used standalone by setting the `$GIT_SEQUENCE_EDITOR`
+  before running `git rebase --interactive`.
+
+  https://github.com/git-cola/git-cola/issues/1
+
+* Fixup commit messages can now be loaded from the commit message editor.
+
 * Tool widgets can be locked in place by using the "Tools/Lock Layout"
   menu action.
 

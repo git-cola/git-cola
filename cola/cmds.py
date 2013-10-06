@@ -13,6 +13,7 @@ from cola import gitcfg
 from cola import gitcmds
 from cola import utils
 from cola import difftool
+from cola import resources
 from cola.compat import set
 from cola.diffparse import DiffParser
 from cola.i18n import N_
@@ -734,6 +735,89 @@ class Clone(Command):
             utils.fork([sys.executable, sys.argv[0],
                         '--repo', self.new_directory])
         return True
+
+
+class GitXBaseContext(object):
+
+    def __init__(self, **kwargs):
+        self.extras = kwargs
+
+    def __enter__(self):
+        compat.setenv('GIT_SEQUENCE_EDITOR',
+                      resources.share('bin', 'git-xbase'))
+        for var, value in self.extras.items():
+            compat.setenv(var, value)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        compat.unsetenv('GIT_SEQUENCE_EDITOR')
+        for var in self.extras:
+            compat.unsetenv(var)
+
+
+class Rebase(Command):
+
+    def __init__(self, branch):
+        Command.__init__(self)
+        self.branch = branch
+
+    def do(self):
+        branch = self.branch
+        if not branch:
+            return
+        with GitXBaseContext(
+                GIT_EDITOR=self.model.editor(),
+                GIT_XBASE_TITLE=N_('Rebase onto %s') % branch,
+                GIT_XBASE_ACTION=N_('Rebase')):
+            status, output = self.model.git.rebase(branch,
+                                        interactive=True, autosquash=True,
+                                        with_stderr=True, with_status=True)
+
+        Interaction.log_status(status, output, '')
+        self.model.update_status()
+
+
+class RebaseEditTodo(Command):
+
+    def do(self):
+        with GitXBaseContext(
+                GIT_XBASE_TITLE=N_('Edit Rebase'),
+                GIT_XBASE_ACTION=N_('Save')):
+            status, output = self.model.git.rebase(
+                                        edit_todo=True,
+                                        with_stderr=True, with_status=True)
+
+        Interaction.log_status(status, output, '')
+        self.model.update_status()
+
+
+class RebaseContinue(Command):
+
+    def do(self):
+        status, output = self.model.git.rebase('--continue',
+                                    with_stderr=True, with_status=True)
+        Interaction.log_status(status, output, '')
+        self.model.update_status()
+
+
+class RebaseSkip(Command):
+
+    def do(self):
+        status, output = self.model.git.rebase(
+                                    skip=True,
+                                    with_stderr=True, with_status=True)
+        Interaction.log_status(status, output, '')
+        self.model.update_status()
+
+
+class RebaseAbort(Command):
+
+    def do(self):
+        status, output = self.model.git.rebase(
+                                    abort=True,
+                                    with_stderr=True, with_status=True)
+        Interaction.log_status(status, output, '')
+        self.model.update_status()
 
 
 class Rescan(Command):

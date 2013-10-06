@@ -285,8 +285,6 @@ class MainView(MainWindow):
 
         self.menu_checkout_branch = add_action(self,
                 N_('Checkout...'), guicmds.checkout_branch, 'Alt+B')
-        self.menu_rebase_branch = add_action(self,
-                N_('Rebase...'), guicmds.rebase)
         self.menu_branch_review = add_action(self,
                 N_('Review...'), guicmds.review_branch)
 
@@ -297,6 +295,21 @@ class MainView(MainWindow):
         self.menu_dag = add_action(self,
                 N_('DAG...'), lambda: git_dag(self.model).show())
         self.menu_dag.setIcon(qtutils.git_icon())
+
+        self.rebase_start_action = add_action(self,
+                N_('Start Interactive Rebase...'), self.rebase_start)
+
+        self.rebase_edit_todo_action = add_action(self,
+                N_('Edit...'), self.rebase_edit_todo)
+
+        self.rebase_continue_action = add_action(self,
+                N_('Continue'), self.rebase_continue)
+
+        self.rebase_skip_action = add_action(self,
+                N_('Skip Current Patch'), self.rebase_skip)
+
+        self.rebase_abort_action = add_action(self,
+                N_('Abort'), self.rebase_abort)
 
         # Relayed actions
         if not self.classic_dockable:
@@ -387,6 +400,18 @@ class MainView(MainWindow):
         self.branch_menu.addAction(self.menu_visualize_current)
         self.branch_menu.addAction(self.menu_visualize_all)
         self.menubar.addAction(self.branch_menu.menuAction())
+
+        # Rebase menu
+        self.rebase_menu = create_menu(N_('Rebase'), self.actions_menu)
+        self.rebase_menu.addAction(self.rebase_start_action)
+        self.rebase_menu.addAction(self.rebase_edit_todo_action)
+        self.rebase_menu.addSeparator()
+        self.rebase_menu.addAction(self.rebase_continue_action)
+        self.rebase_menu.addAction(self.rebase_skip_action)
+        self.rebase_menu.addSeparator()
+        self.rebase_menu.addAction(self.rebase_abort_action)
+        self.menubar.addAction(self.rebase_menu.menuAction())
+
         # View Menu
         self.view_menu = create_menu(N_('View'), self.menubar)
         self.view_menu.addAction(self.menu_classic)
@@ -547,26 +572,28 @@ class MainView(MainWindow):
         msg += '\n'
         msg += N_('Branch: %s') % branch
         if is_rebasing:
-            msg += '\n'
-            msg += N_('This repository is in the middle of being rebased.\n'
-                      'Commit changes and run "Actions > Rebase > Continue".')
-
+            msg += '\n\n'
+            msg += N_('This repository is currently being rebased.\n'
+                      'Resolve conflicts, commit changes, and run:\n'
+                      '    Rebase > Continue')
         self.commitdockwidget.setToolTip(msg)
 
         alerts = []
         if is_rebasing:
-            alerts.append(N_('Rebasing'))
+            alerts.append(N_('Rebasing').upper())
         if self.mode == self.model.mode_amend:
-            alerts.append(N_('Amending'))
+            alerts.append(N_('Amending').upper())
 
-        title = ('%s: %s %s- %s' % (
+        l = unichr(0xab)
+        r = unichr(0xbb)
+        title = ('%s: %s %s%s' % (
                     self.model.project,
                     branch,
-                    alerts and ('(%s) ' % ', '.join(alerts)) or '',
+                    alerts and ((r+' %s '+l+' ') % ', '.join(alerts)) or '',
                     self.model.git.worktree()))
         self.setWindowTitle(title)
-
         self.commitmsgeditor.set_mode(self.mode)
+        self.update_rebase_actions(is_rebasing)
 
         if not self.model.amending():
             # Check if there's a message file in .git/
@@ -578,6 +605,14 @@ class MainView(MainWindow):
                 return
             self.merge_message_hash = merge_msg_hash
             cmds.do(cmds.LoadCommitMessage, core.decode(merge_msg_path))
+
+    def update_rebase_actions(self, is_rebasing):
+        can_rebase = not is_rebasing
+        self.rebase_start_action.setEnabled(can_rebase)
+        self.rebase_edit_todo_action.setEnabled(is_rebasing)
+        self.rebase_continue_action.setEnabled(is_rebasing)
+        self.rebase_skip_action.setEnabled(is_rebasing)
+        self.rebase_abort_action.setEnabled(is_rebasing)
 
     def apply_state(self, state):
         """Imports data for save/restore"""
@@ -688,3 +723,24 @@ class MainView(MainWindow):
             display = ('<span style="color: grey;">%s</span>' % display)
 
         self.position_label.setText(display)
+
+    def rebase_start(self):
+        branch = guicmds.choose_ref(N_('Select New Upstream'),
+                                    N_('Interactive Rebase'))
+        if not branch:
+            return None
+        self.model.is_rebasing = True
+        self._update_callback()
+        cmds.do(cmds.Rebase, branch)
+
+    def rebase_edit_todo(self):
+        cmds.do(cmds.RebaseEditTodo)
+
+    def rebase_continue(self):
+        cmds.do(cmds.RebaseContinue)
+
+    def rebase_skip(self):
+        cmds.do(cmds.RebaseSkip)
+
+    def rebase_abort(self):
+        cmds.do(cmds.RebaseAbort)

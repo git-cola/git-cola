@@ -246,16 +246,6 @@ def choose_remote_branch(title, button_text, default=None):
                               title, button_text, default)
 
 
-def rebase():
-    """Rebase onto a branch."""
-    branch = choose_ref(N_('Select New Base'), N_('Rebase'))
-    if not branch:
-        return
-    #TODO cmd
-    status, output = git.rebase(branch, with_stderr=True, with_status=True)
-    Interaction.log_status(status, output, '')
-
-
 def review_branch():
     """Diff against an arbitrary revision, branch, tag, etc."""
     branch = choose_ref(N_('Select Branch to Review'), N_('Review'))
