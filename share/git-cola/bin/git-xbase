@@ -55,7 +55,7 @@ def main():
     app.new_model(new_app, os.getcwd())
 
     desktop = new_app.desktop()
-    window = new_window(args[0], opts.branch)
+    window = new_window(args[0])
     window.resize(desktop.width(), desktop.height())
     window.show()
     window.raise_()
@@ -64,10 +64,7 @@ def main():
 
 
 def parse_args():
-    default_branch = core.decode(os.getenv('GIT_COLA_REBASE_BRANCH', 'master'))
-    parser = optparse.OptionParser('%prog [options] <filename>')
-    parser.add_option('-b', '--branch', metavar='<branch>',
-                      default=default_branch, help='upstream branch')
+    parser = optparse.OptionParser('%prog <filename>')
     opts, args = parser.parse_args()
     if len(args) != 1:
         parser.error(N_('error: <filename> is required'))
@@ -75,18 +72,25 @@ def parse_args():
     return opts, args
 
 
-def new_window(branch, filename):
-    editor = Editor(branch, filename)
-    window = MainWindow(branch, editor)
+def new_window(filename):
+    editor = Editor(filename)
+    window = MainWindow(editor)
     return window
+
+
+def env(var, default):
+    value = os.getenv(var)
+    return value and core.decode(value) or default
 
 
 class MainWindow(QtGui.QMainWindow):
 
-    def __init__(self, branch, editor, parent=None):
+    def __init__(self, editor, parent=None):
         super(MainWindow, self).__init__(parent)
         self.status = 1
-        self.setWindowTitle(N_('Rebase onto "%s"') % branch)
+        default_title = '%s - git xbase' % core.decode(os.getcwd())
+        title = env('GIT_XBASE_TITLE', default_title)
+        self.setWindowTitle(title)
         self.setCentralWidget(editor)
         self.connect(editor, SIGNAL('exit(int)'), self.exit)
         editor.setFocus()
@@ -98,7 +102,7 @@ class MainWindow(QtGui.QMainWindow):
 
 class Editor(QtGui.QWidget):
 
-    def __init__(self, filename, branch, parent=None):
+    def __init__(self, filename, parent=None):
         super(Editor, self).__init__(parent)
 
         self.filename = filename
@@ -109,13 +113,11 @@ class Editor(QtGui.QWidget):
         self.text.setTextInteractionFlags(Qt.NoTextInteraction)
 
         self.rebase_button = qt.create_button(
-                text=N_('Rebase'),
-                tooltip=N_('Rebase onto "%s"') % branch,
+                text=env('GIT_XBASE_ACTION', N_('Rebase')),
                 icon=qtutils.apply_icon())
 
         self.cancel_button = qt.create_button(
                 text=N_('Cancel'),
-                tooltip=N_('Abort the rebase'),
                 icon=qtutils.close_icon())
 
         qtutils.connect_button(self.rebase_button, self.rebase)
