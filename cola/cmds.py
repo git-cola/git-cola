@@ -594,6 +594,7 @@ class LoadCommitMessage(Command):
 
 class LoadCommitTemplate(LoadCommitMessage):
     """Loads the commit message template specified by commit.template."""
+
     def __init__(self):
         LoadCommitMessage.__init__(self, _config.get('commit.template'))
 
@@ -607,13 +608,15 @@ class LoadCommitTemplate(LoadCommitMessage):
         return LoadCommitMessage.do(self)
 
 
-class LoadPreviousMessage(Command):
-    """Try to amend a commit."""
-    def __init__(self, sha1):
+
+class LoadCommitMessage(Command):
+    """Load a previous commit message"""
+
+    def __init__(self, sha1, prefix=''):
         Command.__init__(self)
         self.sha1 = sha1
         self.old_commitmsg = self.model.commitmsg
-        self.new_commitmsg = self.model.prev_commitmsg(sha1)
+        self.new_commitmsg = prefix + self.model.prev_commitmsg(sha1)
         self.undoable = True
 
     def do(self):
@@ -621,6 +624,13 @@ class LoadPreviousMessage(Command):
 
     def undo(self):
         self.model.set_commitmsg(self.old_commitmsg)
+
+
+class LoadFixupMessage(LoadCommitMessage):
+    """Load a fixup message"""
+
+    def __init__(self, sha1):
+        LoadCommitMessage.__init__(self, sha1, prefix='fixup! ')
 
 
 class Merge(Command):

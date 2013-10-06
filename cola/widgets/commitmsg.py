@@ -94,16 +94,22 @@ class CommitMessageEditor(QtGui.QWidget):
         self.check_spelling_action.setChecked(False)
 
         # Line wrapping
-        self.actions_menu.addSeparator()
         self.autowrap_action = self.actions_menu.addAction(
                 N_('Auto-Wrap Lines'))
         self.autowrap_action.setCheckable(True)
         self.autowrap_action.setChecked(linebreak())
 
-        self.prev_commits_menu = self.actions_menu.addMenu(
+        # Commit message
+        self.actions_menu.addSeparator()
+        self.load_commitmsg_menu = self.actions_menu.addMenu(
                 N_('Load Previous Commit Message'))
-        self.connect(self.prev_commits_menu, SIGNAL('aboutToShow()'),
-                     self.build_prev_commits_menu)
+        self.connect(self.load_commitmsg_menu, SIGNAL('aboutToShow()'),
+                     self.build_commitmsg_menu)
+
+        self.fixup_commit_menu = self.actions_menu.addMenu(
+                N_('Fixup Previous Commit'))
+        self.connect(self.fixup_commit_menu, SIGNAL('aboutToShow()'),
+                     self.build_fixup_menu)
 
         self.toplayout = QtGui.QHBoxLayout()
         self.toplayout.setMargin(0)
@@ -388,7 +394,18 @@ class CommitMessageEditor(QtGui.QWidget):
                                     (status,),
                                  output)
 
-    def build_prev_commits_menu(self):
+    def build_fixup_menu(self):
+        self.build_commits_menu(cmds.LoadFixupMessage,
+                                self.fixup_commit_menu,
+                                self.choose_fixup_commit,
+                                prefix='fixup! ')
+
+    def build_commitmsg_menu(self):
+        self.build_commits_menu(cmds.LoadCommitMessage,
+                                self.load_commitmsg_menu,
+                                self.choose_commit_message)
+
+    def build_commits_menu(self, cmd, menu, chooser, prefix=''):
         dag = DAG('HEAD', 6)
         commits = RepoReader(dag)
 
@@ -398,24 +415,29 @@ class CommitMessageEditor(QtGui.QWidget):
             if idx > 5:
                 continue
 
-        menu = self.prev_commits_menu
         menu.clear()
         for c in menu_commits:
-            menu.addAction(c.summary,
-                           cmds.run(cmds.LoadPreviousMessage, c.sha1))
+            menu.addAction(prefix + c.summary, cmds.run(cmd, c.sha1))
 
         if len(commits) == 6:
             menu.addSeparator()
-            menu.addAction(N_('More...'), self.choose_commit)
+            menu.addAction(N_('More...'), chooser)
 
-    def choose_commit(self):
+
+    def choose_commit(self, cmd):
         revs, summaries = gitcmds.log_helper()
-        sha1s = select_commits(N_('Select Commit Message'), revs, summaries,
+        sha1s = select_commits(N_('Select Commit'), revs, summaries,
                                multiselect=False)
         if not sha1s:
             return
         sha1 = sha1s[0]
-        cmds.do(cmds.LoadPreviousMessage, sha1)
+        cmds.do(cmd, sha1)
+
+    def choose_commit_message(self):
+        self.choose_commit(cmds.LoadCommitMessage)
+
+    def choose_fixup_commit(self):
+        self.choose_commit(cmds.LoadFixupMessage)
 
     def toggle_check_spelling(self, enabled):
         spellcheck = self.description.spellcheck
