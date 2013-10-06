@@ -549,14 +549,29 @@ class MainView(MainWindow):
         """Update the title with the current branch and directory name."""
         branch = self.model.currentbranch
         curdir = core.decode(os.getcwd())
+        is_rebasing = self.model.is_rebasing
+
         msg = N_('Repository: %s') % curdir
         msg += '\n'
         msg += N_('Branch: %s') % branch
+        if is_rebasing:
+            msg += '\n'
+            msg += N_('This repository is in the middle of being rebased.\n'
+                      'Commit changes and run "Actions > Rebase > Continue".')
+
         self.commitdockwidget.setToolTip(msg)
 
-        title = '%s: %s (%s)' % (self.model.project, branch, self.model.git.worktree())
+        alerts = []
+        if is_rebasing:
+            alerts.append(N_('Rebasing'))
         if self.mode == self.model.mode_amend:
-            title += ' (%s)' %  N_('Amending')
+            alerts.append(N_('Amending'))
+
+        title = ('%s: %s %s- %s' % (
+                    self.model.project,
+                    branch,
+                    alerts and ('(%s) ' % ', '.join(alerts)) or '',
+                    self.model.git.worktree()))
         self.setWindowTitle(title)
 
         self.commitmsgeditor.set_mode(self.mode)

@@ -72,6 +72,7 @@ class MainModel(Observable):
         self.diff_text = ''
         self.mode = self.mode_none
         self.filename = None
+        self.is_rebasing = False
         self.currentbranch = ''
         self.directory = ''
         self.project = ''
@@ -131,7 +132,7 @@ class MainModel(Observable):
         self.notify_observers(self.message_commit_message_changed, msg)
 
     def save_commitmsg(self, msg):
-        path = git.git.git_path('GIT_COLA_MSG')
+        path = self.git.git_path('GIT_COLA_MSG')
         utils.write(path, msg)
 
     def set_diff_text(self, txt):
@@ -183,6 +184,7 @@ class MainModel(Observable):
         self._update_refs()
         self._update_branches_and_tags()
         self._update_branch_heads()
+        self._update_rebase_status()
         self.notify_observers(self.message_updated)
 
     def _update_files(self, update_index=False):
@@ -221,6 +223,9 @@ class MainModel(Observable):
         self.local_branches = local_branches
         self.remote_branches = remote_branches
         self.tags = tags
+
+    def _update_rebase_status(self):
+        self.is_rebasing = os.path.exists(self.git.git_path('rebase-merge'))
 
     def delete_branch(self, branch):
         return self.git.branch(branch,
