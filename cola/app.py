@@ -56,10 +56,10 @@ def setup_environment():
     bindir = os.path.dirname(os.path.abspath(__file__))
     path_entries.insert(0, bindir)
     path = os.pathsep.join(path_entries)
-    compat.putenv('PATH', path)
+    compat.setenv('PATH', path)
 
     # We don't ever want a pager
-    compat.putenv('GIT_PAGER', '')
+    compat.setenv('GIT_PAGER', '')
 
     # Setup *SSH_ASKPASS
     git_askpass = os.getenv('GIT_ASKPASS')
@@ -73,8 +73,8 @@ def setup_environment():
     else:
         askpass = resources.share('bin', 'ssh-askpass')
 
-    compat.putenv('GIT_ASKPASS', askpass)
-    compat.putenv('SSH_ASKPASS', askpass)
+    compat.setenv('GIT_ASKPASS', askpass)
+    compat.setenv('SSH_ASKPASS', askpass)
 
     # --- >8 --- >8 ---
     # Git v1.7.10 Release Notes
@@ -106,7 +106,7 @@ def setup_environment():
     # --- >8 --- >8 ---
     # Longer-term: Use `git merge --no-commit` so that we always
     # have a chance to explain our merges.
-    compat.putenv('GIT_MERGE_AUTOEDIT', 'no')
+    compat.setenv('GIT_MERGE_AUTOEDIT', 'no')
 
 
 @memoize
@@ -242,7 +242,7 @@ def process_args(opts, args):
         # Adds git to the PATH.  This is needed on Windows.
         path_entries = os.environ.get('PATH', '').split(os.pathsep)
         path_entries.insert(0, os.path.dirname(opts.git))
-        compat.putenv('PATH', os.pathsep.join(path_entries))
+        compat.setenv('PATH', os.pathsep.join(path_entries))
 
     # Bail out if --repo is not a directory
     repo = opts.repo

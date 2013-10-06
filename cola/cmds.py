@@ -791,7 +791,7 @@ class RunConfigAction(Command):
                         N_('Please select a file'),
                         N_('"%s" requires a selected file.') % cmd)
                 return False
-            compat.putenv('FILENAME', filename)
+            compat.setenv('FILENAME', filename)
 
         if opts.get('revprompt') or opts.get('argprompt'):
             while True:
@@ -813,9 +813,9 @@ class RunConfigAction(Command):
             if Interaction.question(title, prompt):
                 return
         if rev:
-            compat.putenv('REVISION', rev)
+            compat.setenv('REVISION', rev)
         if args:
-            compat.putenv('ARGS', args)
+            compat.setenv('ARGS', args)
         title = os.path.expandvars(cmd)
         Interaction.log(N_('Running command: %s') % title)
         cmd = ['sh', '-c', cmd]

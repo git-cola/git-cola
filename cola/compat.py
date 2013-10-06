@@ -20,7 +20,7 @@ except ImportError:
             obj.update(value)
             return obj
 
-def putenv(key, value):
+def setenv(key, value):
     """Compatibility wrapper for setting environment variables
 
     Why?  win32 requires putenv().  UNIX only requires os.environ.
