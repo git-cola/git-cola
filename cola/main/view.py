@@ -336,37 +336,7 @@ class MainView(MainWindow):
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.menu_preferences)
         self.file_menu.addAction(self.menu_quit)
-        # Add to menubar
         self.menubar.addAction(self.file_menu.menuAction())
-
-        # Commit Menu
-        self.commit_menu = create_menu(N_('Index'), self.menubar)
-        self.commit_menu.setTitle(N_('Index'))
-        self.commit_menu.addAction(self.menu_stage_modified)
-        self.commit_menu.addAction(self.menu_stage_untracked)
-        self.commit_menu.addSeparator()
-        self.commit_menu.addAction(self.menu_unstage_all)
-        self.commit_menu.addAction(self.menu_unstage_selected)
-        # Add to menubar
-        self.menubar.addAction(self.commit_menu.menuAction())
-
-        # Branch Menu
-        self.branch_menu = create_menu(N_('Branch'), self.menubar)
-        self.branch_menu.addAction(self.menu_branch_review)
-        self.branch_menu.addSeparator()
-        self.branch_menu.addAction(self.menu_create_branch)
-        self.branch_menu.addAction(self.menu_checkout_branch)
-        self.branch_menu.addAction(self.menu_rebase_branch)
-        self.branch_menu.addAction(self.menu_delete_branch)
-        self.branch_menu.addAction(self.menu_delete_remote_branch)
-        self.branch_menu.addSeparator()
-        self.branch_menu.addAction(self.menu_browse_branch)
-        self.branch_menu.addAction(self.menu_browse_other_branch)
-        self.branch_menu.addSeparator()
-        self.branch_menu.addAction(self.menu_visualize_current)
-        self.branch_menu.addAction(self.menu_visualize_all)
-        # Add to menubar
-        self.menubar.addAction(self.branch_menu.menuAction())
 
         # Actions menu
         self.actions_menu = create_menu(N_('Actions'), self.menubar)
@@ -382,8 +352,17 @@ class MainView(MainWindow):
         self.actions_menu.addSeparator()
         self.actions_menu.addAction(self.menu_grep)
         self.actions_menu.addAction(self.menu_search_commits)
-        # Add to menubar
         self.menubar.addAction(self.actions_menu.menuAction())
+
+        # Index Menu
+        self.commit_menu = create_menu(N_('Index'), self.menubar)
+        self.commit_menu.setTitle(N_('Index'))
+        self.commit_menu.addAction(self.menu_stage_modified)
+        self.commit_menu.addAction(self.menu_stage_untracked)
+        self.commit_menu.addSeparator()
+        self.commit_menu.addAction(self.menu_unstage_all)
+        self.commit_menu.addAction(self.menu_unstage_selected)
+        self.menubar.addAction(self.commit_menu.menuAction())
 
         # Diff Menu
         self.diff_menu = create_menu(N_('Diff'), self.menubar)
@@ -391,9 +370,23 @@ class MainView(MainWindow):
         self.diff_menu.addAction(self.menu_branch_compare)
         self.diff_menu.addSeparator()
         self.diff_menu.addAction(self.menu_show_diffstat)
-        # Add to menubar
         self.menubar.addAction(self.diff_menu.menuAction())
 
+        # Branch Menu
+        self.branch_menu = create_menu(N_('Branch'), self.menubar)
+        self.branch_menu.addAction(self.menu_branch_review)
+        self.branch_menu.addSeparator()
+        self.branch_menu.addAction(self.menu_create_branch)
+        self.branch_menu.addAction(self.menu_checkout_branch)
+        self.branch_menu.addAction(self.menu_delete_branch)
+        self.branch_menu.addAction(self.menu_delete_remote_branch)
+        self.branch_menu.addSeparator()
+        self.branch_menu.addAction(self.menu_browse_branch)
+        self.branch_menu.addAction(self.menu_browse_other_branch)
+        self.branch_menu.addSeparator()
+        self.branch_menu.addAction(self.menu_visualize_current)
+        self.branch_menu.addAction(self.menu_visualize_all)
+        self.menubar.addAction(self.branch_menu.menuAction())
         # View Menu
         self.view_menu = create_menu(N_('View'), self.menubar)
         self.view_menu.addAction(self.menu_classic)
@@ -412,7 +405,6 @@ class MainView(MainWindow):
         self.help_menu.addAction(self.menu_help_docs)
         self.help_menu.addAction(self.menu_help_shortcuts)
         self.help_menu.addAction(self.menu_help_about)
-        # Add to menubar
         self.menubar.addAction(self.help_menu.menuAction())
 
         # Set main menu
