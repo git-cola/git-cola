@@ -23,6 +23,7 @@ from cola import app
 from cola import core
 from cola import qt
 from cola import qtutils
+from cola import utils
 from cola.i18n import N_
 from cola.widgets import defs
 from cola.widgets.text import MonoTextView
@@ -191,7 +192,9 @@ However, if you disable everything, the rebase will be aborted.
             with open(self.filename, 'w') as f:
                 f.write(core.encode(self.sequencer_instructions()))
                 self.emit_exit(0)
-        except:
+        except Exception as e:
+            msg, details = utils.format_exception(e)
+            sys.stderr.write(N_('error: ') + msg + '\n\n' + details)
             self.emit_exit(128)
 
     def sequencer_instructions(self):
