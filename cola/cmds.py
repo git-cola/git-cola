@@ -1,13 +1,9 @@
 import os
 import sys
 import platform
-import traceback
 from fnmatch import fnmatch
 
 from cStringIO import StringIO
-
-from PyQt4 import QtCore
-from PyQt4.QtCore import SIGNAL
 
 import cola
 from cola import compat
@@ -42,15 +38,6 @@ class BaseCommand(object):
     @staticmethod
     def name(cls):
         return 'Unknown'
-
-    def prepare(self):
-        """Prepare to run the command.
-
-        This is performed in a separate thread before do()
-        is invoked.
-
-        """
-        pass
 
     def do(self):
         raise NotImplementedError('%s.do() is unimplemented' % self.__class__.__name__)
@@ -850,9 +837,6 @@ class ShowUntracked(Command):
         self.filenames = filenames
         self.new_mode = self.model.mode_untracked
         self.new_diff_text = ''
-
-    def prepare(self):
-        filenames = self.filenames
         if filenames:
             self.new_diff_text = self.diff_text_for(filenames[0])
 
@@ -1185,49 +1169,3 @@ def do_cmd(cmd):
         msg, details = utils.format_exception(e)
         Interaction.critical(N_('Error'), message=msg, details=details)
         return None
-
-
-def bg(parent, cls, *args, **opts):
-    """
-    Returns a callback that runs a command
-
-    If the caller of run() provides args or opts then those are
-    used instead of the ones provided by the invoker of the callback.
-
-    """
-    def runner(*local_args, **local_opts):
-        if args or opts:
-            background(parent, cls, *args, **opts)
-        else:
-            background(parent, cls, *local_args, **local_opts)
-
-    return runner
-
-
-def background(parent, cls, *args, **opts):
-    cmd = cls(*args, **opts)
-    task = AsyncCommand(parent, cmd)
-    QtCore.QThreadPool.globalInstance().start(task)
-
-
-class AsyncCommand(QtCore.QRunnable):
-
-    # Holds a reference to background tasks to avoid PyQt4 segfaults
-    INSTANCES = set()
-
-    def __init__(self, parent, cmd):
-        QtCore.QRunnable.__init__(self)
-        self.__class__.INSTANCES.add(self)
-        self.cmd = cmd
-        self.qobj = QtCore.QObject(parent)
-        self.qobj.connect(self.qobj, SIGNAL('command_ready'), self.do)
-
-    def run(self):
-        # background thread
-        self.cmd.prepare()
-        self.qobj.emit(SIGNAL('command_ready'))
-
-    def do(self):
-        # main thread
-        do_cmd(self.cmd)
-        self.__class__.INSTANCES.remove(self)
