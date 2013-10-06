@@ -198,7 +198,7 @@ However, if you disable everything, the rebase will be aborted.
             self.emit_exit(128)
 
     def sequencer_instructions(self):
-        lines = [str(item) for item in self.tree.items()]
+        lines = [item.value() for item in self.tree.items()]
         return '\n'.join(lines) + '\n'
 
 
@@ -303,7 +303,7 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
         self.setFlags((self.flags() | Qt.ItemIsUserCheckable) &
                       ~Qt.ItemIsDropEnabled)
 
-    def __str__(self):
+    def value(self):
         return '%s %s %s %s' % (
                 not self.is_enabled() and '# ' or '',
                 self.command, self.sha1hex, self.summary)
