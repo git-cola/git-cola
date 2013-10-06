@@ -72,10 +72,11 @@ def git_version_str():
 def git_version():
     """Returns the current GIT version"""
     parts = git_version_str().split()
-    if parts and len(parts) > 2:
+    if parts and len(parts) >= 3:
         return parts[2]
     else:
-        return 'v1.6.3' # minimum supported version
+        # minimum supported version
+        return '1.6.3'
 
 
 if __name__ == '__main__':
