@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- python-mode -*-
-"""Takes care of starting the main function
+"""git-cola: The highly caffeinated Git GUI
 """
 
 __copyright__ = """
