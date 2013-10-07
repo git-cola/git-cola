@@ -11,8 +11,7 @@ SYNOPSIS
 
 DESCRIPTION
 -----------
-'git-cola' is a sleek and powerful git GUI written in Python.
-See below for a full list of options and usage information.
+'git-cola' is a sleek and powerful git GUI.
 
 OPTIONS
 -------
@@ -28,7 +27,6 @@ OPTIONS
 	Run 'git-cola' on the git repository in <path>.
 	Defaults to the current directory.
 
--v::
 --version::
 	Print the 'git-cola' version and exit.
 
@@ -70,6 +68,8 @@ stash::
 tag::
 	Create tags.
 
+version::
+	Print the 'git-cola' version.
 
 CONFIG VARIABLES
 ----------------
