@@ -382,7 +382,6 @@ Commands:
   edit = use commit, but stop for amending
   squash = use commit, but meld into previous commit
   fixup = like "squash", but discard this commit's log message
-  exec = run command (the rest of the line) using shell
 
 These lines can be re-ordered; they are executed from top to bottom.
 
