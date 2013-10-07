@@ -27,7 +27,6 @@ from cola import qt
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
-from cola.interaction import Interaction
 from cola.dag.model import DAG
 from cola.dag.model import RepoReader
 from cola.widgets import defs
@@ -220,7 +219,8 @@ class Editor(QtGui.QWidget):
         if not items:
             return
         item = items[0]
-        difftool.launch([item.sha1hex + '^!'])
+        difftool.diff_expression(self, item.sha1hex + '^!',
+                                 hide_expr=True)
 
 
 class RebaseTreeWidget(FlatTreeWidget):

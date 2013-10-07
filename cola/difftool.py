@@ -54,8 +54,9 @@ def diff_commits(parent, a, b):
     return dlg.exec_() == QtGui.QDialog.Accepted
 
 
-def diff_expression(parent, expr, create_widget=False):
-    dlg = FileDiffDialog(parent, expr=expr)
+def diff_expression(parent, expr,
+                    create_widget=False, hide_expr=False):
+    dlg = FileDiffDialog(parent, expr=expr, hide_expr=hide_expr)
     if create_widget:
         return dlg
     dlg.show()
@@ -64,7 +65,8 @@ def diff_expression(parent, expr, create_widget=False):
 
 
 class FileDiffDialog(QtGui.QDialog):
-    def __init__(self, parent, a=None, b=None, expr=None, title=None):
+    def __init__(self, parent, a=None, b=None, expr=None, title=None,
+                 hide_expr=False):
         QtGui.QDialog.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
 
@@ -79,10 +81,11 @@ class FileDiffDialog(QtGui.QDialog):
         self.setWindowModality(QtCore.Qt.WindowModal)
 
         self._expr = completion.GitRefLineEdit(parent=self)
-        if expr is None:
-            self._expr.hide()
-        else:
+        if expr is not None:
             self._expr.setText(expr)
+
+        if expr is None or hide_expr:
+            self._expr.hide()
 
         self._tree = standard.TreeWidget(self)
         self._tree.setRootIsDecorated(False)
