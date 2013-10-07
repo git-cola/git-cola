@@ -283,6 +283,7 @@ class GitDialog(QtGui.QDialog):
             dlg.set_text(default)
 
         dlg.show()
+        dlg.raise_()
 
         def show_popup():
             x = dlg.lineedit.x()
