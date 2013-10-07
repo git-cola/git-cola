@@ -343,7 +343,7 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
         self.combo = None
 
         self.setText(0, '%02d' % idx)
-        self.setCheckState(1, enabled and Qt.Checked or Qt.Unchecked)
+        self.set_enabled(enabled)
         # combo box on 2
         self.setText(3, sha1hex)
         self.setText(4, summary)
@@ -357,6 +357,10 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
 
     def is_enabled(self):
         return self.checkState(self.ENABLED_COLUMN) == Qt.Checked
+
+    def set_enabled(self, enabled):
+        self.setCheckState(self.ENABLED_COLUMN,
+                           enabled and Qt.Checked or Qt.Unchecked)
 
     def new_combo(self):
         combo = QtGui.QComboBox()
