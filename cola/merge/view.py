@@ -11,6 +11,7 @@ from cola.widgets import defs
 
 class MergeView(QtGui.QDialog):
     """Provides a dialog for merging branches."""
+
     def __init__(self, model, parent=None):
         QtGui.QDialog.__init__(self, parent)
         self.model = model
