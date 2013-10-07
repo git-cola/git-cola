@@ -21,11 +21,18 @@ setup_environment()
 
 from cola import app
 from cola import core
+from cola import difftool
+from cola import observable
 from cola import qt
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
+from cola.interaction import Interaction
+from cola.dag.model import DAG
+from cola.dag.model import RepoReader
 from cola.widgets import defs
+from cola.widgets.diff import DiffWidget
+from cola.widgets.diff import COMMITS_SELECTED
 from cola.widgets.tree import FlatTreeWidget
 
 from PyQt4 import QtGui
@@ -96,6 +103,13 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(editor, SIGNAL('exit(int)'), self.exit)
         editor.setFocus()
 
+        self.show_help_action = qtutils.add_action(self,
+                N_('Interactive Rebase Help...'), show_help, Qt.Key_Question)
+
+        self.menubar = QtGui.QMenuBar(self)
+        self.help_menu = self.menubar.addMenu(N_('Help'))
+        self.help_menu.addAction(self.show_help_action)
+
     def exit(self, status):
         self.status = status
         self.close()
@@ -107,68 +121,64 @@ class Editor(QtGui.QWidget):
         super(Editor, self).__init__(parent)
 
         self.filename = filename
-        self.tree = RebaseTreeWidget(self)
+
+        self.notifier = notifier = observable.Observable()
+        self.tree = RebaseTreeWidget(notifier, self)
         self.setFocusProxy(self.tree)
 
-        self.text = QtGui.QLabel(self)
-        self.text.setTextInteractionFlags(Qt.NoTextInteraction)
+        self.diff = DiffWidget(notifier, self)
 
         self.rebase_button = qt.create_button(
                 text=env('GIT_XBASE_ACTION', N_('Rebase')),
                 icon=qtutils.apply_icon())
+        qtutils.connect_button(self.rebase_button, self.rebase)
+
+        self.external_diff_button = qt.create_button(text=N_('External Diff'))
+        qtutils.connect_button(self.external_diff_button, self.external_diff)
+        self.external_diff_button.setEnabled(False)
+
+        self.help_button = qt.create_button(
+                text=N_('Help'),
+                icon=qtutils.help_icon())
+        qtutils.connect_button(self.help_button, show_help)
 
         self.cancel_button = qt.create_button(
                 text=N_('Cancel'),
                 icon=qtutils.close_icon())
-
-        qtutils.connect_button(self.rebase_button, self.rebase)
         qtutils.connect_button(self.cancel_button, self.cancel)
 
         policy = self.tree.sizePolicy()
         policy.setVerticalStretch(1)
         self.tree.setSizePolicy(policy)
 
-        help_text = N_("""
-Commands:
-  pick = use commit
-  reword = use commit, but edit the commit message
-  edit = use commit, but stop for amending
-  squash = use commit, but meld into previous commit
-  fixup = like "squash", but discard this commit's log message
-  exec = run command (the rest of the line) using shell
-
-These lines can be re-ordered; they are executed from top to bottom.
-
-If you disable a line here THAT COMMIT WILL BE LOST.
-
-However, if you disable everything, the rebase will be aborted.
-""").strip()
-        self.text.setText(help_text)
-
         controls_layout = QtGui.QHBoxLayout()
         controls_layout.setMargin(defs.no_margin)
         controls_layout.setSpacing(defs.button_spacing)
         controls_layout.addWidget(self.rebase_button)
+        controls_layout.addWidget(self.external_diff_button)
+        controls_layout.addWidget(self.help_button)
         controls_layout.addStretch()
         controls_layout.addWidget(self.cancel_button)
-
-        text_layout = QtGui.QHBoxLayout()
-        text_layout.setMargin(defs.button_spacing)
-        text_layout.setSpacing(defs.spacing)
-        text_layout.addWidget(self.text)
 
         layout = QtGui.QVBoxLayout()
         layout.setMargin(defs.no_margin)
         layout.setSpacing(defs.spacing)
         layout.addWidget(self.tree)
-        layout.addLayout(text_layout)
+        layout.addWidget(self.diff)
         layout.addLayout(controls_layout)
         self.setLayout(layout)
+
+        notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
 
         with open(filename) as f:
             insns = core.decode(f.read())
             self.parse_sequencer_instructions(insns)
 
+    # notifier callbacks
+    def commits_selected(self, commits):
+        self.external_diff_button.setEnabled(bool(commits))
+
+    # helpers
     def emit_exit(self, status):
         self.emit(SIGNAL('exit(int)'), status)
 
@@ -189,28 +199,35 @@ However, if you disable everything, the rebase will be aborted.
         self.tree.decorate()
         self.tree.refit()
 
+    # actions
     def cancel(self):
         self.emit_exit(1)
 
     def rebase(self):
+        lines = [item.value() for item in self.tree.items()]
+        sequencer_instructions = '\n'.join(lines) + '\n'
         try:
             with open(self.filename, 'w') as f:
-                f.write(core.encode(self.sequencer_instructions()))
+                f.write(core.encode(sequencer_instructions))
                 self.emit_exit(0)
         except Exception as e:
             msg, details = utils.format_exception(e)
             sys.stderr.write(N_('error: ') + msg + '\n\n' + details)
             self.emit_exit(128)
 
-    def sequencer_instructions(self):
-        lines = [item.value() for item in self.tree.items()]
-        return '\n'.join(lines) + '\n'
+    def external_diff(self):
+        items = self.tree.selected_items()
+        if not items:
+            return
+        item = items[0]
+        difftool.launch([item.sha1hex + '^!'])
 
 
 class RebaseTreeWidget(FlatTreeWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, notifier, parent=None):
         super(RebaseTreeWidget, self).__init__()
+        self.notifier = notifier
         # header
         self.setHeaderLabels([N_('#'),
                               N_('Enabled'),
@@ -234,6 +251,9 @@ class RebaseTreeWidget(FlatTreeWidget):
 
         self.connect(self, SIGNAL('itemChanged(QTreeWidgetItem *, int)'),
                      self.item_changed)
+
+        self.connect(self, SIGNAL('itemSelectionChanged()'),
+                     self.selection_changed)
 
     def dropEvent(self, event):
         super(RebaseTreeWidget, self).dropEvent(event)
@@ -274,12 +294,27 @@ class RebaseTreeWidget(FlatTreeWidget):
                 item.new_combo()
             break
 
+    def selected_items(self):
+        return self.selectedItems()
+
     def copy_sha1(self):
-        items = self.selectedItems()
+        items = self.selected_items()
         if not items:
             return
         sha1hex = items[0].sha1hex
         qtutils.set_clipboard(sha1hex)
+
+    def selection_changed(self):
+        items = self.selected_items()
+        sha1hex = items[0].sha1hex
+        dag = DAG(sha1hex, 2)
+        repo = RepoReader(dag)
+        commits = []
+        for c in repo:
+            commits.append(c)
+        if commits:
+            commits = [commits[-1]]
+        self.notifier.notify_observers(COMMITS_SELECTED, [commits[-1]])
 
     # Qt events
     def contextMenuEvent(self, event):
@@ -329,6 +364,46 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
     def combo_changed(self, value):
         self.command = unicode(value)
         self.parent.validate()
+
+
+def show_help():
+    help_text = N_("""
+Commands:
+  pick = use commit
+  reword = use commit, but edit the commit message
+  edit = use commit, but stop for amending
+  squash = use commit, but meld into previous commit
+  fixup = like "squash", but discard this commit's log message
+  exec = run command (the rest of the line) using shell
+
+These lines can be re-ordered; they are executed from top to bottom.
+
+If you disable a line here THAT COMMIT WILL BE LOST.
+
+However, if you disable everything, the rebase will be aborted.
+""").strip()
+
+    parent = qtutils.active_window()
+    text = QtGui.QLabel(parent)
+    text.setText(help_text)
+    text.setTextInteractionFlags(Qt.NoTextInteraction)
+
+    layout = QtGui.QHBoxLayout()
+    layout.setMargin(defs.margin)
+    layout.setSpacing(defs.spacing)
+    layout.addWidget(text)
+
+    widget = QtGui.QDialog(parent)
+    widget.setWindowModality(Qt.WindowModal)
+    widget.setWindowTitle(N_('Help'))
+    widget.setLayout(layout)
+
+    qtutils.add_action(widget, N_('Close'), widget.accept,
+                       Qt.Key_Question,
+                       Qt.Key_Enter,
+                       Qt.Key_Return)
+    widget.show()
+    return widget
 
 
 if __name__ == '__main__':
