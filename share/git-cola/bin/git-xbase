@@ -26,7 +26,6 @@ from cola import qtutils
 from cola import utils
 from cola.i18n import N_
 from cola.widgets import defs
-from cola.widgets.text import MonoTextView
 from cola.widgets.tree import FlatTreeWidget
 
 from PyQt4 import QtGui
@@ -91,6 +90,7 @@ class MainWindow(QtGui.QMainWindow):
         self.status = 1
         default_title = '%s - git xbase' % core.decode(os.getcwd())
         title = env('GIT_XBASE_TITLE', default_title)
+        self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(title)
         self.setCentralWidget(editor)
         self.connect(editor, SIGNAL('exit(int)'), self.exit)
@@ -110,7 +110,7 @@ class Editor(QtGui.QWidget):
         self.tree = RebaseTreeWidget(self)
         self.setFocusProxy(self.tree)
 
-        self.text = MonoTextView(self)
+        self.text = QtGui.QLabel(self)
         self.text.setTextInteractionFlags(Qt.NoTextInteraction)
 
         self.rebase_button = qt.create_button(
@@ -143,20 +143,25 @@ If you disable a line here THAT COMMIT WILL BE LOST.
 
 However, if you disable everything, the rebase will be aborted.
 """).strip()
-        self.text.setPlainText(help_text)
+        self.text.setText(help_text)
 
         controls_layout = QtGui.QHBoxLayout()
         controls_layout.setMargin(defs.no_margin)
         controls_layout.setSpacing(defs.button_spacing)
         controls_layout.addWidget(self.rebase_button)
-        controls_layout.addWidget(self.cancel_button)
         controls_layout.addStretch()
+        controls_layout.addWidget(self.cancel_button)
+
+        text_layout = QtGui.QHBoxLayout()
+        text_layout.setMargin(defs.button_spacing)
+        text_layout.setSpacing(defs.spacing)
+        text_layout.addWidget(self.text)
 
         layout = QtGui.QVBoxLayout()
         layout.setMargin(defs.no_margin)
         layout.setSpacing(defs.spacing)
-        layout.addWidget(self.text)
         layout.addWidget(self.tree)
+        layout.addLayout(text_layout)
         layout.addLayout(controls_layout)
         self.setLayout(layout)
 
