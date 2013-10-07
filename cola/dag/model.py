@@ -160,7 +160,7 @@ class Commit(object):
                 "  summary: " + self.summary + "\n"
                 "  author: " + self.author + "\n"
                 "  authdate: " + self.authdate + "\n"
-                "  parents: [" + ', '.join(self.parents) + "]\n"
+                "  parents: [" + ', '.join([p.sha1 for p in self.parents]) + "]\n"
                 "  tags: [" + ', '.join(self.tags) + "]\n"
                 "}")
 
@@ -174,6 +174,7 @@ class Commit(object):
 
 
 class RepoReader(object):
+
     def __init__(self, dag, git=git):
         self.dag = dag
         self.git = git
