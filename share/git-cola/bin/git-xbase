@@ -20,6 +20,7 @@ def setup_environment():
 setup_environment()
 
 from cola import app
+from cola import cmds
 from cola import core
 from cola import difftool
 from cola import observable
@@ -130,21 +131,17 @@ class Editor(QtGui.QWidget):
         self.rebase_button = qt.create_button(
                 text=env('GIT_XBASE_ACTION', N_('Rebase')),
                 icon=qtutils.apply_icon())
-        qtutils.connect_button(self.rebase_button, self.rebase)
 
         self.external_diff_button = qt.create_button(text=N_('External Diff'))
-        qtutils.connect_button(self.external_diff_button, self.external_diff)
         self.external_diff_button.setEnabled(False)
 
         self.help_button = qt.create_button(
                 text=N_('Help'),
                 icon=qtutils.help_icon())
-        qtutils.connect_button(self.help_button, show_help)
 
         self.cancel_button = qt.create_button(
                 text=N_('Cancel'),
                 icon=qtutils.close_icon())
-        qtutils.connect_button(self.cancel_button, self.cancel)
 
         policy = self.tree.sizePolicy()
         policy.setVerticalStretch(1)
@@ -168,6 +165,13 @@ class Editor(QtGui.QWidget):
         self.setLayout(layout)
 
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
+
+        qtutils.connect_button(self.rebase_button, self.rebase)
+        qtutils.connect_button(self.external_diff_button, self.external_diff)
+        qtutils.connect_button(self.help_button, show_help)
+        qtutils.connect_button(self.cancel_button, self.cancel)
+        self.connect(self.tree, SIGNAL('external_diff()'), self.external_diff)
+
 
         with open(filename) as f:
             insns = core.decode(f.read())
@@ -248,21 +252,15 @@ class RebaseTreeWidget(TreeWidget):
         # actions
         self.copy_sha1_action = qtutils.add_action(self,
                 N_('Copy SHA-1'), self.copy_sha1, QtGui.QKeySequence.Copy)
+        self.external_diff_action = qtutils.add_action(self,
+                N_('External Diff'), self.external_diff,
+                cmds.LaunchDifftool.SHORTCUT)
 
         self.connect(self, SIGNAL('itemChanged(QTreeWidgetItem *, int)'),
                      self.item_changed)
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.selection_changed)
-
-    def dropEvent(self, event):
-        super(RebaseTreeWidget, self).dropEvent(event)
-        self.decorate()
-        self.refit()
-        self.validate()
-
-    def supportedDropActions(self):
-        return Qt.MoveAction
 
     def add_step(self, idx, enabled, action, sha1hex, summary):
         item = RebaseTreeWidgetItem(idx, enabled, action,
@@ -316,10 +314,23 @@ class RebaseTreeWidget(TreeWidget):
             commits = [commits[-1]]
         self.notifier.notify_observers(COMMITS_SELECTED, [commits[-1]])
 
+    def external_diff(self):
+        self.emit(SIGNAL('external_diff()'))
+
     # Qt events
+    def supportedDropActions(self):
+        return Qt.MoveAction
+
+    def dropEvent(self, event):
+        super(RebaseTreeWidget, self).dropEvent(event)
+        self.decorate()
+        self.refit()
+        self.validate()
+
     def contextMenuEvent(self, event):
         menu = QtGui.QMenu(self)
         menu.addAction(self.copy_sha1_action)
+        menu.addAction(self.external_diff_action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
 
