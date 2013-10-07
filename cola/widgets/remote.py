@@ -273,6 +273,8 @@ class RemoteActionDialog(standard.Dialog):
 
         self.remote_name.setFocus()
 
+    def set_rebase(self, value):
+        self.rebase_checkbox.setChecked(value)
 
     def set_field_defaults(self):
         # Default to "git fetch origin master"
