@@ -82,7 +82,7 @@ class ViewerMixin(object):
         sha1 = self.selected_sha1()
         if sha1 is None:
             return
-        create_tag(revision=sha1)
+        create_tag(ref=sha1)
 
     def create_tarball(self):
         sha1 = self.selected_sha1()

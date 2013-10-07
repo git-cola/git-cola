@@ -14,9 +14,9 @@ from cola.widgets import standard
 from cola.widgets import text
 
 
-def create_tag(revision=''):
+def create_tag(name='', ref='', sign=False):
     """Entry point for external callers."""
-    opts = TagOptions(revision)
+    opts = TagOptions(name, ref, sign)
     view = CreateTag(opts, qtutils.active_window())
     view.show()
     return view
@@ -26,11 +26,14 @@ def create_tag(revision=''):
 class TagOptions(object):
     """Simple data container for the CreateTag dialog."""
 
-    def __init__(self, revision):
-        self.revision = revision or 'HEAD'
+    def __init__(self, name, ref, sign):
+        self.name = name or ''
+        self.ref = ref or 'HEAD'
+        self.sign = sign
 
 
 class CreateTag(standard.Dialog):
+
     def __init__(self, opts, parent):
         standard.Dialog.__init__(self, parent=parent)
         self.setWindowModality(QtCore.Qt.WindowModal)
@@ -53,6 +56,7 @@ class CreateTag(standard.Dialog):
                                        self.tag_name_label)
 
         self.tag_name = text.HintedLineEdit(N_('vX.Y.Z'), self)
+        self.tag_name.set_value(opts.name)
         self.tag_name.setToolTip(N_('Specifies the tag name'))
         self.input_form_layt.setWidget(0, QtGui.QFormLayout.FieldRole,
                                        self.tag_name)
@@ -64,6 +68,7 @@ class CreateTag(standard.Dialog):
                                        self.sign_label)
 
         self.sign_tag = QtGui.QCheckBox(self)
+        self.sign_tag.setChecked(opts.sign)
         self.sign_tag.setToolTip(N_('Whether to sign the tag (git tag -s)'))
         self.input_form_layt.setWidget(1, QtGui.QFormLayout.FieldRole,
                                        self.sign_tag)
@@ -87,7 +92,7 @@ class CreateTag(standard.Dialog):
                                        self.rev_label)
 
         self.revision = completion.GitRefLineEdit()
-        self.revision.setText(self.opts.revision)
+        self.revision.setText(self.opts.ref)
         self.revision.setToolTip(N_('Specifies the SHA-1 to tag'))
         self.input_form_layt.setWidget(3, QtGui.QFormLayout.FieldRole,
                                        self.revision)
