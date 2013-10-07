@@ -56,7 +56,7 @@ from cola.widgets.standard import MainWindow
 
 class MainView(MainWindow):
 
-    def __init__(self, model, parent):
+    def __init__(self, model, parent=None):
         MainWindow.__init__(self, parent)
         # Default size; this is thrown out when save/restore is used
         self.resize(987, 610)
