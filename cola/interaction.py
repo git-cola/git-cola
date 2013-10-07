@@ -67,8 +67,8 @@ class Interaction(object):
     @classmethod
     def log_status(cls, status, out, err=None):
         msg = (
-           (out and ((N_('Output: %s') % out) + '\n') or '') +
-           (err and ((N_('Errors: %s') % err) + '\n') or '') +
+           (out and ((N_('Output: %s') % core.decode(out)) + '\n') or '') +
+           (err and ((N_('Errors: %s') % core.decode(err)) + '\n') or '') +
            N_('Exit code: %s') % status
         )
         cls.log(msg)
