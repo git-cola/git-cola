@@ -59,6 +59,9 @@ pull::
 push::
 	Push branches to remotes.
 
+rebase::
+	Start an interactive rebase.
+
 search::
 	Search for commits.
 

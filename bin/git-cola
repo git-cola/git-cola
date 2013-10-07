@@ -46,6 +46,7 @@ from cola import core
 from cola.app import add_common_arguments
 from cola.app import application_init
 from cola.app import application_start
+from cola.i18n import N_
 
 
 def main():
@@ -78,6 +79,7 @@ def parse_args():
     add_merge_command(cmds)
     add_pull_command(cmds)
     add_push_command(cmds)
+    add_rebase_command(cmds)
     add_remote_command(cmds)
     add_search_command(cmds)
     add_stash_command(cmds)
@@ -152,6 +154,12 @@ def add_pull_command(cmds):
 
 def add_push_command(cmds):
     add_command(cmds, 'push', 'push remote branches', push)
+
+
+def add_rebase_command(cmds):
+    parser = add_command(cmds, 'rebase', 'interactive rebase', rebase)
+    parser.add_argument('branch', metavar='<branch>',
+                        help='New upstream branch')
 
 
 def add_remote_command(cmds):
@@ -278,6 +286,14 @@ def push(args):
     from cola.widgets import remote
     view = remote.push()
     return application_start(context, view)
+
+
+def rebase(args):
+    from cola import cmds
+    status, out = cmds.do(cmds.Rebase, args.branch)
+    if out:
+        print(out)
+    return status
 
 
 def remote(args):

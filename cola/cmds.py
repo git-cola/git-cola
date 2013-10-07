@@ -765,6 +765,8 @@ class Rebase(Command):
         branch = self.branch
         if not branch:
             return
+        status = 1
+        output = ''
         with GitXBaseContext(
                 GIT_EDITOR=self.model.editor(),
                 GIT_XBASE_TITLE=N_('Rebase onto %s') % branch,
@@ -775,6 +777,7 @@ class Rebase(Command):
 
         Interaction.log_status(status, output, '')
         self.model.update_status()
+        return status, output
 
 
 class RebaseEditTodo(Command):
