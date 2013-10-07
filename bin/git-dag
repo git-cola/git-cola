@@ -20,8 +20,9 @@ GNU General Public License for more details.
 
 import os
 import sys
+from argparse import ArgumentParser
 
-def cola_init():
+def setup_environment():
     """Provides access to the cola modules"""
     # Try to detect where it is run from and set prefix and the search path.
     # It is assumed that the user installed Cola using the --prefix= option
@@ -37,10 +38,38 @@ def cola_init():
         # Install tree
         install_lib = os.path.join(prefix, 'share', 'git-cola', 'lib')
         sys.path.insert(1, install_lib)
+setup_environment()
+
+
+from cola.app import add_common_arguments
+from cola.app import application_init
+from cola.app import application_start
+
+
+def main():
+    args = parse_args()
+    return args.func(args)
+
+
+def parse_args():
+    parser = ArgumentParser()
+    parser.set_defaults(func=dag)
+
+    add_common_arguments(parser)
+    parser.add_argument('-c', '--count', metavar='<count>',
+                        type=int, default=1000,
+                        help='number of commits to display')
+    parser.add_argument('args', nargs='*', metavar='<args>',
+                        help='git log arguments')
+    return parser.parse_args()
+
+
+def dag(args):
+    context = application_init(args)
+    from cola.dag import git_dag
+    view = git_dag(context.model, args=args)
+    return application_start(context, view)
 
 
 if __name__ == '__main__':
-    # lights, cameras, action
-    cola_init()
-    from cola.app import main
-    main('git-dag')
+    sys.exit(main())

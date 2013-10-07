@@ -22,6 +22,12 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/148
 
+Packaging
+---------
+* `git cola` now depends on the `argparse` Python module.
+  This module is part of the stdlib in Python 2.7 and must
+  be installed separately when using Python 2.6 and below.
+
 Fixes
 -----
 * Support unicode in the output from `fetch`, `push`, and `pull`.

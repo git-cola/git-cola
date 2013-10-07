@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 import os
-import optparse
 import sys
 import re
+from argparse import ArgumentParser
 
 from os.path import abspath
 from os.path import dirname
@@ -56,13 +56,13 @@ def rebase_commands_idx(name):
 
 
 def main():
-    opts, args = parse_args()
+    args = parse_args()
     app.setup_environment()
     new_app = app.new_application()
     app.new_model(new_app, os.getcwd())
 
     desktop = new_app.desktop()
-    window = new_window(args[0])
+    window = new_window(args.filename)
     window.resize(desktop.width(), desktop.height())
     window.show()
     window.raise_()
@@ -71,12 +71,10 @@ def main():
 
 
 def parse_args():
-    parser = optparse.OptionParser('%prog <filename>')
-    opts, args = parser.parse_args()
-    if len(args) != 1:
-        parser.error(N_('error: <filename> is required'))
-        sys.exit(1)
-    return opts, args
+    parser = ArgumentParser()
+    parser.add_argument('filename', metavar='<filename>',
+                        help='git-rebase-todo file to edit')
+    return parser.parse_args()
 
 
 def new_window(filename):

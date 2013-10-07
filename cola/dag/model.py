@@ -66,13 +66,14 @@ class DAG(Observable):
             self.notify_observers(self.count_updated)
         return changed
 
-    def set_options(self, opts, args):
-        if opts is not None:
-            if self.set_count(opts.count):
-                self.overrides['count'] = opts.count
+    def set_arguments(self, args):
+        if args is None:
+            return
+        if self.set_count(args.count):
+            self.overrides['count'] = args.count
 
-        if args is not None:
-            ref = subprocess.list2cmdline(map(core.decode, args))
+        if args.args:
+            ref = subprocess.list2cmdline(map(core.decode, args.args))
             if self.set_ref(ref):
                 self.overrides['ref'] = ref
 

@@ -1,6 +1,6 @@
 # git-cola: The highly caffeinated git GUI
 
-    git-cola is a powerful git GUI with a slick and intuitive user interface.
+    git-cola is a powerful Git GUI with a slick and intuitive user interface.
 
     Copyright (C) 2007, 2008, 2009, 2010, 2011, 2012, 2013
     David Aguilar and contributors
@@ -49,6 +49,10 @@ New releases are available on the
 * [Python](http://python.org/) 2.5 through 2.7
 
 * [PyQt4](http://www.riverbankcomputing.co.uk/software/pyqt/download) 4.4 or newer
+
+* [argparse](https://pypi.python.org/pypi/argparse) 1.1 or newer
+  argparse is part of the stdlib in Python 2.7; install argparse separately if
+  you are running on Python 2.6 or below.
 
 ## ADDITIVES
 
