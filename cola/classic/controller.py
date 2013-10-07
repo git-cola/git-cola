@@ -28,6 +28,7 @@ def cola_classic(update=True):
     """Launch a new cola classic session."""
     view = widget(None, update=update)
     view.show()
+    view.raise_()
     return view
 
 
