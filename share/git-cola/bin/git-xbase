@@ -249,9 +249,14 @@ class RebaseTreeWidget(TreeWidget):
         # actions
         self.copy_sha1_action = qtutils.add_action(self,
                 N_('Copy SHA-1'), self.copy_sha1, QtGui.QKeySequence.Copy)
+
         self.external_diff_action = qtutils.add_action(self,
                 N_('External Diff'), self.external_diff,
                 cmds.LaunchDifftool.SHORTCUT)
+
+        self.toggle_enabled_action = qtutils.add_action(self,
+                N_('Toggle Enabled'), self.toggle_enabled,
+                Qt.Key_Space)
 
         self.connect(self, SIGNAL('itemChanged(QTreeWidgetItem *, int)'),
                      self.item_changed)
@@ -313,6 +318,12 @@ class RebaseTreeWidget(TreeWidget):
     def external_diff(self):
         self.emit(SIGNAL('external_diff()'))
 
+    def toggle_enabled(self):
+        item = self.selected_item()
+        if item is None:
+            return
+        item.toggle_enabled()
+
     # Qt events
     def supportedDropActions(self):
         return Qt.MoveAction
@@ -325,6 +336,8 @@ class RebaseTreeWidget(TreeWidget):
 
     def contextMenuEvent(self, event):
         menu = QtGui.QMenu(self)
+        menu.addAction(self.toggle_enabled_action)
+        menu.addSeparator()
         menu.addAction(self.copy_sha1_action)
         menu.addAction(self.external_diff_action)
         menu.exec_(self.mapToGlobal(event.pos()))
@@ -361,6 +374,9 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
     def set_enabled(self, enabled):
         self.setCheckState(self.ENABLED_COLUMN,
                            enabled and Qt.Checked or Qt.Unchecked)
+
+    def toggle_enabled(self):
+        self.set_enabled(not self.is_enabled())
 
     def new_combo(self):
         combo = QtGui.QComboBox()
