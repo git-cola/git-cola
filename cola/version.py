@@ -79,5 +79,9 @@ def git_version():
         return '1.6.3'
 
 
+def print_version():
+    print('cola version %s' % version())
+
+
 if __name__ == '__main__':
     print(version())
