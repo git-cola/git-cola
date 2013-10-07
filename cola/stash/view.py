@@ -11,7 +11,7 @@ from cola import utils
 from cola.i18n import N_
 from cola.stash.model import ApplyStash, SaveStash, DropStash
 from cola.widgets import defs
-from cola.widgets.text import DiffTextEdit
+from cola.widgets.diff import DiffTextEdit
 from cola.widgets.standard import Dialog
 
 

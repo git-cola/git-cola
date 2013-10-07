@@ -8,7 +8,7 @@ from cola import qtutils
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.widgets import defs
-from cola.widgets.text import DiffTextEdit
+from cola.widgets.diff import DiffTextEdit
 
 
 def select_commits(title, revs, summaries, multiselect=True):

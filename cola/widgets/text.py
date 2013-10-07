@@ -72,16 +72,6 @@ class MonoTextView(MonoTextEdit):
                                      Qt.TextSelectableByMouse)
 
 
-class DiffTextEdit(MonoTextView):
-    def __init__(self, parent, whitespace=True):
-        from cola.qt import DiffSyntaxHighlighter
-
-        MonoTextView.__init__(self, parent)
-        # Diff/patch syntax highlighter
-        self.highlighter = DiffSyntaxHighlighter(self.document(),
-                                                 whitespace=whitespace)
-
-
 class HintedTextWidgetEventFilter(QtCore.QObject):
     def __init__(self, parent):
         QtCore.QObject.__init__(self, parent)

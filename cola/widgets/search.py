@@ -18,7 +18,7 @@ from cola.qtutils import connect_button
 from cola.qtutils import dir_icon
 from cola.widgets import defs
 from cola.widgets import standard
-from cola.widgets.text import DiffTextEdit
+from cola.widgets.diff import DiffTextEdit
 
 
 def mkdate(timespec):
