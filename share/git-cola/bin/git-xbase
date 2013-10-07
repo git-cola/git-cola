@@ -289,19 +289,18 @@ class RebaseTreeWidget(TreeWidget):
                 item.new_combo()
             break
 
-    def selected_items(self):
-        return self.selectedItems()
-
     def copy_sha1(self):
-        items = self.selected_items()
-        if not items:
+        item = self.selected_item()
+        if item is None:
             return
-        sha1hex = items[0].sha1hex
+        sha1hex = item.sha1hex
         qtutils.set_clipboard(sha1hex)
 
     def selection_changed(self):
-        items = self.selected_items()
-        sha1hex = items[0].sha1hex
+        item = self.selected_item()
+        if item is None:
+            return
+        sha1hex = item.sha1hex
         dag = DAG(sha1hex, 2)
         repo = RepoReader(dag)
         commits = []
