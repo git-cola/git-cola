@@ -260,8 +260,8 @@ def goto_grep(line):
     do(cmds.Edit, [filename], line_number=line_number)
 
 
-def run_grep(txt=None, parent=None):
+def run_grep(text=None, parent=None):
     widget = Grep(parent)
-    if txt is not None:
-        widget.search_for(txt)
+    if text is not None:
+        widget.search_for(text)
     return widget
