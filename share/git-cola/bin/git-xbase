@@ -170,7 +170,6 @@ class Editor(QtGui.QWidget):
         qtutils.connect_button(self.cancel_button, self.cancel)
         self.connect(self.tree, SIGNAL('external_diff()'), self.external_diff)
 
-
         with open(filename) as f:
             insns = core.decode(f.read())
             self.parse_sequencer_instructions(insns)
