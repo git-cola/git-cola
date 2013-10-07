@@ -127,6 +127,7 @@ class TreeMixin(object):
         self.setUniformRowHeights(True)
         self.setAllColumnsShowFocus(True)
         self.setAnimated(True)
+        self.setRootIsDecorated(False)
 
     def keyPressEvent(self, event):
         """
@@ -173,20 +174,13 @@ class TreeMixin(object):
 
         # Re-read the event key to take the remappings into account
         key = event.key()
-
         result = self.QtClass.keyPressEvent(self, event)
 
         # Let others hook in here before we change the indexes
         self.emit(SIGNAL('indexAboutToChange()'))
 
-        # Try to select the first item if the model index is invalid
-        if not index.isValid():
-            index = self.model().index(0, 0, QtCore.QModelIndex())
-            if index.isValid():
-                self.setCurrentIndex(index)
-
         # Automatically select the first entry when expanding a directory
-        elif (key == Qt.Key_Right and was_collapsed and
+        if (key == Qt.Key_Right and was_collapsed and
                 self.isExpanded(index)):
             index = self.moveCursor(self.MoveDown, event.modifiers())
             self.setCurrentIndex(index)
@@ -202,7 +196,37 @@ class TreeMixin(object):
             elif was_collapsed:
                 self.setCurrentIndex(index.parent())
 
+        # If it's a movement key ensure we have a selection
+        elif key in (Qt.Key_Left, Qt.Key_Up, Qt.Key_Right, Qt.Key_Down):
+            # Try to select the first item if the model index is invalid
+            item = self.selected_item()
+            if item is None or not index.isValid():
+                index = self.model().index(0, 0, QtCore.QModelIndex())
+                if index.isValid():
+                    self.setCurrentIndex(index)
+
         return result
+
+    def items(self):
+        root = self.invisibleRootItem()
+        child = root.child
+        count = root.childCount()
+        return [child(i) for i in range(count)]
+
+    def selected_items(self):
+        """Return all selected items"""
+        if hasattr(self, 'selectedItems'):
+            return self.selectedItems()
+        else:
+            item_from_index = self.model().itemFromIndex
+            return [item_from_index(i) for i in self.selectedIndexes()]
+
+    def selected_item(self):
+        """Return the first selected item"""
+        selected_items = self.selected_items()
+        if not selected_items:
+            return None
+        return selected_items[0]
 
 
 def bind_mixin(Mixin, QtClass):

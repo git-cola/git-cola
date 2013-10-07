@@ -32,7 +32,7 @@ from cola.dag.model import RepoReader
 from cola.widgets import defs
 from cola.widgets.diff import DiffWidget
 from cola.widgets.diff import COMMITS_SELECTED
-from cola.widgets.tree import FlatTreeWidget
+from cola.widgets.standard import TreeWidget
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
@@ -223,7 +223,7 @@ class Editor(QtGui.QWidget):
                                  hide_expr=True)
 
 
-class RebaseTreeWidget(FlatTreeWidget):
+class RebaseTreeWidget(TreeWidget):
 
     def __init__(self, notifier, parent=None):
         super(RebaseTreeWidget, self).__init__()

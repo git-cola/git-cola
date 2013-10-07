@@ -24,7 +24,7 @@ from cola.widgets.createtag import create_tag
 from cola.widgets.archive import GitArchiveDialog
 from cola.widgets.browse import BrowseDialog
 from cola.widgets.standard import MainWindow
-from cola.widgets.tree import FlatTreeWidget
+from cola.widgets.standard import TreeWidget
 from cola.widgets.diff import COMMITS_SELECTED
 from cola.widgets.diff import DiffWidget
 
@@ -188,10 +188,10 @@ class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
         self.setText(2, commit.authdate)
 
 
-class CommitTreeWidget(ViewerMixin, FlatTreeWidget):
+class CommitTreeWidget(ViewerMixin, TreeWidget):
 
     def __init__(self, notifier, parent):
-        FlatTreeWidget.__init__(self, parent)
+        TreeWidget.__init__(self, parent)
         ViewerMixin.__init__(self)
 
         self.setSelectionMode(self.ContiguousSelection)
@@ -214,9 +214,6 @@ class CommitTreeWidget(ViewerMixin, FlatTreeWidget):
                      self.selection_changed)
 
     # ViewerMixin
-    def selected_items(self):
-        return self.selectedItems()
-
     def go_up(self):
         self.goto(self.itemAbove)
 

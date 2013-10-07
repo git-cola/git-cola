@@ -94,9 +94,8 @@ class CompareBranchesDialog(standard.Dialog):
         self.button_close.setText(N_('Close'))
         self.bottom_grid_layt.addWidget(self.button_close, 1, 3, 1, 1)
 
-        self.diff_files = QtGui.QTreeWidget(self.bottom_widget)
+        self.diff_files = standard.TreeWidget(self.bottom_widget)
         self.diff_files.headerItem().setText(0, N_('File Differences'))
-        self.diff_files.setRootIsDecorated(False)
 
         self.bottom_grid_layt.addWidget(self.diff_files, 0, 0, 1, 4)
         self.main_layt.addWidget(self.splitter)

@@ -65,6 +65,7 @@ def diff_expression(parent, expr,
 
 
 class FileDiffDialog(QtGui.QDialog):
+
     def __init__(self, parent, a=None, b=None, expr=None, title=None,
                  hide_expr=False):
         QtGui.QDialog.__init__(self, parent)
@@ -88,7 +89,6 @@ class FileDiffDialog(QtGui.QDialog):
             self._expr.hide()
 
         self._tree = standard.TreeWidget(self)
-        self._tree.setRootIsDecorated(False)
         self._tree.setSelectionMode(self._tree.ExtendedSelection)
         self._tree.setHeaderHidden(True)
 
