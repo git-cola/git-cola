@@ -357,10 +357,11 @@ class MainModel(Observable):
 
     def remote_url(self, name, action):
         if action == 'push':
-            url = self.git.config('remote.%s.pushurl' % name, get=True)
+            url = self.git.config('remote.%s.pushurl' % name,
+                                  get=True)[STDOUT]
             if url:
                 return url
-        return self.git.config('remote.%s.url' % name, get=True)
+        return self.git.config('remote.%s.url' % name, get=True)[STDOUT]
 
     def remote_args(self, remote,
                     local_branch='',
@@ -436,7 +437,7 @@ class MainModel(Observable):
 
     def is_commit_published(self):
         head = self.git.rev_parse('HEAD')[STDOUT]
-        return bool(self.git.branch(r=True, contains=head))
+        return bool(self.git.branch(r=True, contains=head)[STDOUT])
 
     def everything(self):
         """Returns a sorted list of all files, including untracked files."""
