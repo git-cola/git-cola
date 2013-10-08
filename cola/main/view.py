@@ -263,7 +263,7 @@ class MainView(MainWindow):
                 N_('Browse Other Branch...'), guicmds.browse_other)
         self.menu_load_commitmsg_template = add_action(self,
                 N_('Get Commit Message Template'),
-                cmds.run(cmds.LoadCommitTemplate))
+                cmds.run(cmds.LoadCommitMessageTemplate))
         self.menu_help_about = add_action(self,
                 N_('About'), launch_about_dialog)
 
@@ -605,7 +605,7 @@ class MainView(MainWindow):
             if merge_msg_hash == self.merge_message_hash:
                 return
             self.merge_message_hash = merge_msg_hash
-            cmds.do(cmds.LoadCommitMessage, merge_msg_path)
+            cmds.do(cmds.LoadCommitMessageFromFile, merge_msg_path)
 
     def update_rebase_actions(self, is_rebasing):
         can_rebase = not is_rebasing

@@ -401,7 +401,7 @@ class CommitMessageEditor(QtGui.QWidget):
                                 prefix='fixup! ')
 
     def build_commitmsg_menu(self):
-        self.build_commits_menu(cmds.LoadCommitMessage,
+        self.build_commits_menu(cmds.LoadCommitMessageFromSHA1,
                                 self.load_commitmsg_menu,
                                 self.choose_commit_message)
 
@@ -434,7 +434,7 @@ class CommitMessageEditor(QtGui.QWidget):
         cmds.do(cmd, sha1)
 
     def choose_commit_message(self):
-        self.choose_commit(cmds.LoadCommitMessage)
+        self.choose_commit(cmds.LoadCommitMessageFromSHA1)
 
     def choose_fixup_commit(self):
         self.choose_commit(cmds.LoadFixupMessage)

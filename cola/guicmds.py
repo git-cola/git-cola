@@ -222,7 +222,7 @@ def load_commitmsg():
     filename = qtutils.open_dialog(N_('Load Commit Message'),
                                    cola.model().getcwd())
     if filename:
-        cmds.do(cmds.LoadCommitMessage, filename)
+        cmds.do(cmds.LoadCommitMessageFromFile, filename)
 
 
 def choose_from_dialog(get, title, button_text, default):

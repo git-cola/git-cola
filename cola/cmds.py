@@ -566,7 +566,7 @@ class LaunchEditor(Edit):
         Edit.__init__(self, allfiles)
 
 
-class LoadCommitMessage(Command):
+class LoadCommitMessageFromFile(Command):
     """Loads a commit message from a path."""
 
     def __init__(self, path):
@@ -589,11 +589,12 @@ class LoadCommitMessage(Command):
         self.model.set_directory(self.old_directory)
 
 
-class LoadCommitTemplate(LoadCommitMessage):
+class LoadCommitMessageFromTemplate(LoadCommitMessageFromFile):
     """Loads the commit message template specified by commit.template."""
 
     def __init__(self):
-        LoadCommitMessage.__init__(self, _config.get('commit.template'))
+        template = _config.get('commit.template')
+        LoadCommitMessageFromFile.__init__(self, template)
 
     def do(self):
         if self.path is None:
@@ -602,11 +603,11 @@ class LoadCommitTemplate(LoadCommitMessage):
                     N_('A commit template has not been configured.\n'
                        'Use "git config" to define "commit.template"\n'
                        'so that it points to a commit template.'))
-        return LoadCommitMessage.do(self)
+        return LoadCommitMessageFromFile.do(self)
 
 
 
-class LoadCommitMessage(Command):
+class LoadCommitMessageFromSHA1(Command):
     """Load a previous commit message"""
 
     def __init__(self, sha1, prefix=''):
@@ -623,11 +624,11 @@ class LoadCommitMessage(Command):
         self.model.set_commitmsg(self.old_commitmsg)
 
 
-class LoadFixupMessage(LoadCommitMessage):
+class LoadFixupMessage(LoadCommitMessageFromSHA1):
     """Load a fixup message"""
 
     def __init__(self, sha1):
-        LoadCommitMessage.__init__(self, sha1, prefix='fixup! ')
+        LoadCommitMessageFromSHA1.__init__(self, sha1, prefix='fixup! ')
 
 
 class Merge(Command):
