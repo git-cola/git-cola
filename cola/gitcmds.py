@@ -514,8 +514,8 @@ def diff_upstream(head):
     tracked = tracked_branch()
     if not tracked:
         return []
-    merge_base = merge_base_to(head, tracked)
-    return diff_filenames(merge_base, tracked)
+    base = merge_base(head, tracked)
+    return diff_filenames(base, tracked)
 
 
 def _branch_status(branch):
@@ -530,7 +530,7 @@ def _branch_status(branch):
             'upstream_changed': staged}
 
 
-def merge_base_to(head, ref):
+def merge_base(head, ref):
     """Given `ref`, return $(git merge-base ref HEAD)..ref."""
     return git.merge_base(head, ref)[STDOUT]
 

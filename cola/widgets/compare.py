@@ -7,7 +7,6 @@ from PyQt4.QtCore import SIGNAL
 from cola import qtutils
 from cola import difftool
 from cola import gitcmds
-from cola.git import git
 from cola.i18n import N_
 from cola.qtutils import connect_button
 from cola.widgets import defs
@@ -198,15 +197,15 @@ class CompareBranchesDialog(standard.Dialog):
             branch = gitcmds.current_branch()
             tracked_branch = gitcmds.tracked_branch()
             if tracked_branch:
-                return git.merge_base(branch, tracked_branch)
+                return gitcmds.merge_base(branch, tracked_branch)
             else:
                 remote_branches = gitcmds.branch_list(remote=True)
                 remote_branch = 'origin/%s' % branch
                 if remote_branch in remote_branches:
-                    return git.merge_base(branch, remote_branch)
+                    return gitcmds.merge_base(branch, remote_branch)
 
                 elif 'origin/master' in remote_branches:
-                    return git.merge_base(branch, 'origin/master')
+                    return gitcmds.merge_base(branch, 'origin/master')
                 else:
                     return 'HEAD'
         else:
