@@ -546,7 +546,7 @@ def parse_ls_tree(rev):
     """Return a list of(mode, type, sha1, path) tuples."""
     output = []
     lines = git.ls_tree(rev, r=True)[STDOUT].splitlines()
-    regex = re.compile('^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
+    regex = re.compile(r'^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
     for line in lines:
         match = regex.match(line)
         if match:
@@ -559,7 +559,7 @@ def parse_ls_tree(rev):
 
 
 # A regex for matching the output of git(log|rev-list) --pretty=oneline
-REV_LIST_REGEX = re.compile('^([0-9a-f]{40}) (.*)$')
+REV_LIST_REGEX = re.compile(r'^([0-9a-f]{40}) (.*)$')
 
 def parse_rev_list(raw_revs):
     """Parse `git log --pretty=online` output into (SHA-1, summary) pairs."""

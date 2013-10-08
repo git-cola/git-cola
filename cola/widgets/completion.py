@@ -229,7 +229,7 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
             html = text.replace(self.highlight_text,
                                 '<strong>%s</strong>' % self.highlight_text)
         else:
-            match = re.match('(.*)(%s)(.*)' % re.escape(self.highlight_text),
+            match = re.match(r'(.*)(%s)(.*)' % re.escape(self.highlight_text),
                              text, re.IGNORECASE)
             if match:
                 start = match.group(1) or ''
