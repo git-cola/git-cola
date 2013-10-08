@@ -216,7 +216,7 @@ class Archive(BaseCommand):
         self.filename = filename
 
     def do(self):
-        fp = core.open(self.filename, 'wb')
+        fp = core.xopen(self.filename, 'wb')
         cmd = ['git', 'archive', '--format='+self.fmt]
         if self.fmt in ('tgz', 'tar.gz'):
             cmd.append('-9')
