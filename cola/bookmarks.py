@@ -1,12 +1,11 @@
 """Provides BookmarksDialog."""
-import os
 import sys
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-from cola import core
+from cola.core import getcwd
 from cola import qtutils
 from cola import settings
 from cola import utils
@@ -106,7 +105,7 @@ class BookmarksDialog(standard.Dialog):
     def add(self):
         path, ok = qtutils.prompt(N_('Path to git repository'),
                                   title=N_('Enter Git Repository'),
-                                  text=core.decode(os.getcwd()))
+                                  text=getcwd())
         if not ok:
             return
         self.model.bookmarks.append(path)

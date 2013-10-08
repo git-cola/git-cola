@@ -294,14 +294,14 @@ def set_items(widget, items):
 def icon_file(filename, staged=False, untracked=False):
     """Returns a file path representing a corresponding file path."""
     if staged:
-        if os.path.exists(core.encode(filename)):
+        if core.exists(filename):
             ifile = resources.icon('staged-item.png')
         else:
             ifile = resources.icon('removed.png')
     elif untracked:
         ifile = resources.icon('untracked.png')
     else:
-        ifile = utils.file_icon(core.encode(filename))
+        ifile = utils.file_icon(filename)
     return ifile
 
 

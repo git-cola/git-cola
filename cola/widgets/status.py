@@ -9,6 +9,7 @@ from PyQt4.QtCore import SIGNAL
 
 import cola
 from cola import cmds
+from cola import core
 from cola import qtutils
 from cola import utils
 from cola.compat import set
@@ -485,7 +486,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         menu.addAction(qtutils.git_icon(),
                        N_('Launch git-cola'),
                        cmds.run(cmds.OpenRepo,
-                                os.path.abspath(s.staged[0])))
+                                core.abspath(s.staged[0])))
 
         menu.addAction(self.launch_editor)
         menu.addSeparator()
@@ -582,8 +583,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def _create_modified_submodule_context_menu(self, menu, s):
         menu.addAction(qtutils.git_icon(),
                        N_('Launch git-cola'),
-                       cmds.run(cmds.OpenRepo,
-                            os.path.abspath(s.modified[0])))
+                       cmds.run(cmds.OpenRepo, core.abspath(s.modified[0])))
 
         menu.addAction(self.launch_editor)
 

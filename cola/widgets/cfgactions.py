@@ -93,8 +93,10 @@ class GitCommandWidget(standard.Dialog):
         self._layout.addWidget(self.button_box)
 
         # Connect the signals to the process
-        self.connect(self.proc, SIGNAL('readyReadStandardOutput()'), self.readOutput)
-        self.connect(self.proc, SIGNAL('readyReadStandardError()'), self.readErrors)
+        self.connect(self.proc, SIGNAL('readyReadStandardOutput()'),
+                self.read_stdout)
+        self.connect(self.proc, SIGNAL('readyReadStandardError()'),
+                self.read_stderr)
         self.connect(self.proc, SIGNAL('finished(int)'), self.finishProc)
         self.connect(self.proc, SIGNAL('stateChanged(QProcess::ProcessState)'), self.stateChanged)
 
@@ -111,26 +113,28 @@ class GitCommandWidget(standard.Dialog):
         """Runs the process"""
         self.proc.start(self.command[0], QtCore.QStringList(self.command[1:]))
 
-    def readOutput(self):
+    def read_stdout(self):
         rawbytes = self.proc.readAllStandardOutput()
         data = ''
         for b in rawbytes:
             data += b
-        self.out += data
-        self.append_text(data)
+        text = core.decode(data)
+        self.out += text
+        self.append_text(text)
 
-    def readErrors(self):
+    def read_stderr(self):
         rawbytes = self.proc.readAllStandardError()
         data = ''
         for b in rawbytes:
             data += b
-        self.err += data
-        self.append_text(data)
+        text = core.decode(data)
+        self.err += text
+        self.append_text(text)
 
-    def append_text(self, txt):
+    def append_text(self, text):
         cursor = self.output_text.textCursor()
         cursor.movePosition(cursor.End)
-        cursor.insertText(core.decode(txt))
+        cursor.insertText(text)
         cursor.movePosition(cursor.End)
         self.output_text.setTextCursor(cursor)
 

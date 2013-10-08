@@ -1,21 +1,16 @@
+import os
+
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import os
-import sys
-
-if __name__ == '__main__':
-    sys.path.insert(1,
-            os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-
 from cola import cmds
+from cola import core
 from cola import qtutils
 from cola.git import git
 from cola.i18n import N_
 from cola.qt import ExpandableGroupBox
 from cola.widgets import defs
-
 
 
 class GitArchiveDialog(QtGui.QDialog):
@@ -145,7 +140,7 @@ class GitArchiveDialog(QtGui.QDialog):
         filename = self.filename
         if not filename:
             return
-        if os.path.exists(filename):
+        if core.exists(filename):
             title = N_('Overwrite File?')
             msg = N_('The file "%s" exists and will be overwritten.') % filename
             info_txt = N_('Overwrite "%s"?') % filename

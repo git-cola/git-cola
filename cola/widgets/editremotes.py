@@ -94,7 +94,7 @@ class RemoteEditor(QtGui.QDialog):
                      self.selection_changed)
 
     def refresh(self):
-        remotes = core.decode(git.remote()).splitlines()
+        remotes = git.remote().splitlines()
         self.remotes.clear()
         self.remotes.addItems(remotes)
         self.remote_list = remotes
@@ -184,7 +184,6 @@ class RemoteInfoThread(QtCore.QThread):
             return
         status, out = git.remote('show', remote,
                                  with_stderr=True, with_status=True)
-        out = core.decode(out)
         # This call takes a long time and we may have selected a
         # different remote...
         if remote == self.remote:

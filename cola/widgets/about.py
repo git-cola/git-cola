@@ -2,9 +2,9 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 
 
+from cola import core
 from cola import resources
 from cola import qtutils
-from cola import utils
 from cola import version
 from cola.i18n import N_
 from cola.widgets import defs
@@ -102,7 +102,7 @@ def show_shortcuts():
         html = show_shortcuts.html
     except AttributeError:
         hotkeys = resources.doc(N_('hotkeys.html'))
-        html = show_shortcuts.html = utils.slurp(hotkeys)
+        html = show_shortcuts.html = core.read(hotkeys)
 
     try:
         widget = show_shortcuts.widget

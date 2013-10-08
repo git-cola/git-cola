@@ -53,12 +53,10 @@ def _get_locale_dir():
 def _install_custom_language():
     """Allow a custom language to be set in ~/.config/git-cola/language"""
     lang_file = xdg.config_home('language')
-    if not os.path.exists(lang_file):
+    if not core.exists(lang_file):
         return
     try:
-        fp = open(lang_file, 'r')
-        lang = core.read(fp).strip()
-        fp.close()
+        lang = core.read(lang_file).strip()
     except:
         return
     if lang:

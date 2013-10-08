@@ -5,9 +5,9 @@ from PyQt4.QtCore import SIGNAL
 
 import cola
 from cola import cmds
+from cola import core
 from cola import gitcmds
 from cola import gitcfg
-from cola import utils
 from cola import textwrap
 from cola.cmds import Interaction
 from cola.gitcmds import commit_message_path
@@ -176,10 +176,10 @@ class CommitMessageEditor(QtGui.QWidget):
         self.set_linebreak(linebreak())
 
         # Loading message
-        commit_msg = ""
+        commit_msg = ''
         commit_msg_path = commit_message_path()
         if commit_msg_path:
-            commit_msg = utils.slurp(commit_msg_path)
+            commit_msg = core.read(commit_msg_path)
         self.set_commit_message(commit_msg)
 
         # Allow tab to jump from the summary to the description

@@ -50,7 +50,7 @@ def diff(args):
 
 def _parse_diff_filenames(diff_zstr):
     if diff_zstr:
-        return core.decode(diff_zstr[:-1]).split('\0')
+        return diff_zstr[:-1].split('\0')
     else:
         return []
 
@@ -59,7 +59,7 @@ def all_files():
     """Return the names of all files in the repository"""
     ls_files = git.ls_files(z=True)
     if ls_files:
-        return core.decode(ls_files[:-1]).split('\0')
+        return ls_files[:-1].split('\0')
     else:
         return []
 
@@ -76,22 +76,22 @@ def clear_cache():
 
 def current_branch():
     """Return the current branch"""
-    decode = core.decode
     head = git.git_path('HEAD')
     try:
-        key = os.stat(head).st_mtime
+        key = core.stat(head).st_mtime
         if _current_branch.key == key:
             return _current_branch.value
     except OSError:
         pass
-    status, data = git.rev_parse('HEAD', symbolic_full_name=True, with_status=True)
+    status, data = git.rev_parse('HEAD', symbolic_full_name=True,
+                                 with_status=True)
     if status != 0:
         # git init -- read .git/HEAD.  We could do this unconditionally...
         data = _read_git_head(head)
 
     for refs_prefix in ('refs/heads/', 'refs/remotes/', 'refs/tags/'):
         if data.startswith(refs_prefix):
-            value = decode(data[len(refs_prefix):])
+            value = data[len(refs_prefix):]
             _current_branch.key = key
             _current_branch.value = value
             return value
@@ -102,15 +102,15 @@ def current_branch():
 def _read_git_head(head, default='master', git=git):
     """Pure-python .git/HEAD reader"""
     # Legacy .git/HEAD symlinks
-    if os.path.islink(head):
-        refs_heads = os.path.realpath(git.git_path('refs', 'heads'))
-        path = os.path.abspath(head).replace('\\', '/')
+    if core.islink(head):
+        refs_heads = core.realpath(git.git_path('refs', 'heads'))
+        path = core.abspath(head).replace('\\', '/')
         if path.startswith(refs_heads + '/'):
             return path[len(refs_heads)+1:]
 
     # Common .git/HEAD "ref: refs/heads/master" file
-    elif os.path.isfile(head):
-        data = utils.slurp(core.decode(head)).rstrip()
+    elif core.isfile(head):
+        data = core.read(head).rstrip()
         ref_prefix = 'ref: '
         if data.startswith(ref_prefix):
             return data[len(ref_prefix):]
@@ -136,7 +136,7 @@ def branch_list(remote=False):
 def for_each_ref_basename(refs, git=git):
     """Return refs starting with 'refs'."""
     git_output = git.for_each_ref(refs, format='%(refname)')
-    output = core.decode(git_output).splitlines()
+    output = git_output.splitlines()
     non_heads = filter(lambda x: not x.endswith('/HEAD'), output)
     return map(lambda x: x[len(refs) + 1:], non_heads)
 
@@ -150,7 +150,7 @@ def all_refs(split=False, git=git):
     query = (triple('refs/tags', tags),
              triple('refs/heads', local_branches),
              triple('refs/remotes', remote_branches))
-    cmdout = core.decode(git.for_each_ref(format='%(refname)'))
+    cmdout = git.for_each_ref(format='%(refname)')
     for ref in cmdout.splitlines():
         for prefix, prefix_len, dst in query:
             if ref.startswith(prefix) and not ref.endswith('/HEAD'):
@@ -186,7 +186,7 @@ def untracked_files(git=git):
     """Returns a sorted list of untracked files."""
     ls_files = git.ls_files(z=True, others=True, exclude_standard=True)
     if ls_files:
-        return core.decode(ls_files[:-1]).split('\0')
+        return ls_files[:-1].split('\0')
     return []
 
 
@@ -198,9 +198,7 @@ def tag_list():
 
 
 def log(git, *args, **kwargs):
-    return core.decode(git.log(no_color=True,
-                               no_ext_diff=True,
-                               *args, **kwargs))
+    return git.log(no_color=True, no_ext_diff=True, *args, **kwargs)
 
 
 def commit_diff(sha1, git=git):
@@ -232,7 +230,7 @@ def _common_diff_opts(config=config):
 
 
 def sha1_diff(git, sha1):
-    return core.decode(git.diff(sha1+'^!', **_common_diff_opts()))
+    return git.diff(sha1+'^!', **_common_diff_opts())
 
 
 def diff_info(sha1, git=git):
@@ -254,7 +252,6 @@ def diff_helper(commit=None,
                 reverse=False,
                 git=git):
     "Invokes git diff on a filepath."
-    encode = core.encode
     if commit:
         ref, endref = commit+'^', commit
     argv = []
@@ -275,14 +272,14 @@ def diff_helper(commit=None,
             argv.append(filename)
             encoding = config.file_encoding(filename)
 
-
     if filename is not None:
-        deleted = cached and not os.path.exists(encode(filename))
+        deleted = cached and not core.exists(filename)
     else:
         deleted = False
 
     status, diffoutput = git.diff(R=reverse, M=True, cached=cached,
                                   with_status=True,
+                                  _encoding=encoding,
                                   *argv, **_common_diff_opts())
     if status != 0:
         # git init
@@ -291,11 +288,11 @@ def diff_helper(commit=None,
         else:
             return ''
 
-    return extract_diff_header(status, deleted, encoding,
+    return extract_diff_header(status, deleted,
                                with_diff_header, suppress_header, diffoutput)
 
 
-def extract_diff_header(status, deleted, encoding,
+def extract_diff_header(status, deleted,
                         with_diff_header, suppress_header, diffoutput):
     encode = core.encode
     headers = []
@@ -310,7 +307,7 @@ def extract_diff_header(status, deleted, encoding,
     del_tag = 'deleted file mode '
     output = StringIO()
 
-    diff = core.decode(diffoutput, encoding=encoding).split('\n')
+    diff = diffoutput.split('\n')
     for line in diff:
         if not start and '@@' == line[:2] and '@@' in line[2:]:
             start = True
@@ -318,7 +315,7 @@ def extract_diff_header(status, deleted, encoding,
             output.write(encode(line) + '\n')
         else:
             if with_diff_header:
-                headers.append(encode(line))
+                headers.append(line)
             elif not suppress_header:
                 output.write(encode(line) + '\n')
 
@@ -471,7 +468,6 @@ def worktree_state_dict(head='HEAD', update_index=False, display_untracked=True)
 
 
 def diff_index(head, cached=True):
-    decode = core.decode
     submodules = set()
     staged = []
     unmerged = []
@@ -486,7 +482,6 @@ def diff_index(head, cached=True):
         rest, output = output.split('\0', 1)
         name, output = output.split('\0', 1)
         status = rest[-1]
-        name = decode(name)
         if '160000' in rest[1:14]:
             submodules.add(name)
         elif status  in 'DAMT':
@@ -504,7 +499,7 @@ def diff_worktree():
     status, output = git.diff_files(z=True, with_status=True)
     if status != 0:
         # handle git init
-        ls_files = core.decode(git.ls_files(modified=True, z=True))
+        ls_files = git.ls_files(modified=True, z=True)
         if ls_files:
             modified = ls_files[:-1].split('\0')
         return modified, submodules
@@ -513,7 +508,6 @@ def diff_worktree():
         rest, output = output.split('\0', 1)
         name, output = output.split('\0', 1)
         status = rest[-1]
-        name = core.decode(name)
         if '160000' in rest[1:14]:
             submodules.add(name)
         elif status in 'DAMT':
@@ -554,21 +548,6 @@ def merge_base_parent(branch):
     return 'HEAD'
 
 
-def eval_path(path):
-    """handles quoted paths."""
-    if path.startswith('"') and path.endswith('"'):
-        return core.decode(eval(path))
-    else:
-        return core.decode(path)
-
-
-def renamed_files(start, end, git=git):
-    difflines = git.diff('%s..%s' % (start, end), M=True,
-                         **_common_diff_opts()).splitlines()
-    return [eval_path(r[12:].rstrip())
-                for r in difflines if r.startswith('rename from ')]
-
-
 def parse_ls_tree(rev):
     """Return a list of(mode, type, sha1, path) tuples."""
     lines = git.ls_tree(rev, r=True).splitlines()
@@ -591,7 +570,7 @@ REV_LIST_REGEX = re.compile('^([0-9a-f]{40}) (.*)$')
 def parse_rev_list(raw_revs):
     """Parse `git log --pretty=online` output into (SHA-1, summary) pairs."""
     revs = []
-    for line in map(core.decode, raw_revs.splitlines()):
+    for line in raw_revs.splitlines():
         match = REV_LIST_REGEX.match(line)
         if match:
             rev_id = match.group(1)
@@ -608,7 +587,7 @@ def log_helper(all=False, extra_args=None):
     if extra_args:
         args = extra_args
     output = log(git, pretty='oneline', all=all, *args)
-    for line in map(core.decode, output.splitlines()):
+    for line in output.splitlines():
         match = REV_LIST_REGEX.match(line)
         if match:
             revs.append(match.group(1))
@@ -626,15 +605,16 @@ def rev_list_range(start, end):
 def commit_message_path():
     """Return the path to .git/GIT_COLA_MSG"""
     path = git.git_path("GIT_COLA_MSG")
-    if os.path.exists(path):
+    if core.exists(path):
         return path
+    return None
 
 
 def merge_message_path():
     """Return the path to .git/MERGE_MSG or .git/SQUASH_MSG."""
     for basename in ('MERGE_MSG', 'SQUASH_MSG'):
         path = git.git_path(basename)
-        if os.path.exists(path):
+        if core.exists(path):
             return path
     return None
 
@@ -645,18 +625,18 @@ def abort_merge():
     git.read_tree('HEAD', reset=True, u=True, v=True)
     # remove MERGE_HEAD
     merge_head = git.git_path('MERGE_HEAD')
-    if os.path.exists(merge_head):
-        os.unlink(merge_head)
+    if core.exists(merge_head):
+        core.unlink(merge_head)
     # remove MERGE_MESSAGE, etc.
     merge_msg_path = merge_message_path()
     while merge_msg_path:
-        os.unlink(merge_msg_path)
+        core.unlink(merge_msg_path)
         merge_msg_path = merge_message_path()
 
 
 def merge_message(revision):
     """Return a merge message for FETCH_HEAD."""
     fetch_head = git.git_path('FETCH_HEAD')
-    if os.path.exists(fetch_head):
+    if core.exists(fetch_head):
         return git.fmt_merge_msg('--file', fetch_head)
     return "Merge branch '%s'" % revision

@@ -4,7 +4,6 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import cmds
-from cola import core
 from cola import utils
 from cola import qtutils
 from cola.cmds import do
@@ -17,6 +16,7 @@ from cola.widgets.text import HintedTextView, HintedLineEdit
 
 
 class GrepThread(QtCore.QThread):
+
     def __init__(self, parent):
         QtCore.QThread.__init__(self, parent)
         self.txt = None
@@ -34,12 +34,13 @@ class GrepThread(QtCore.QThread):
         status, out = git.grep(with_status=True, with_stderr=True,
                                n=True, *args)
         if query == self.txt:
-            self.emit(SIGNAL('result'), status, core.decode(out))
+            self.emit(SIGNAL('result'), status, out)
         else:
             self.run()
 
 
 class Grep(Dialog):
+
     def __init__(self, parent):
         Dialog.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
@@ -256,12 +257,11 @@ class GrepTextView(HintedTextView):
 def goto_grep(line):
     """Called when Search -> Grep's right-click 'goto' action."""
     filename, line_number, contents = line.split(':', 2)
-    filename = core.encode(filename)
     do(cmds.Edit, [filename], line_number=line_number)
 
 
 def run_grep(text=None, parent=None):
     widget = Grep(parent)
-    if text is not None:
+    if text:
         widget.search_for(text)
     return widget

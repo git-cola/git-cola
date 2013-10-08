@@ -9,7 +9,6 @@ from cola import core
 from cola import git
 from cola import gitcfg
 from cola import gitcmds
-from cola import utils
 from cola.compat import set
 from cola.observable import Observable
 from cola.decorators import memoize
@@ -123,8 +122,7 @@ class MainModel(Observable):
         self.git.set_worktree(worktree)
         is_valid = self.git.is_valid()
         if is_valid:
-            basename = os.path.basename(self.git.worktree())
-            self.project = core.decode(basename)
+            self.project = os.path.basename(self.git.worktree())
         return is_valid
 
     def set_commitmsg(self, msg):
@@ -133,7 +131,7 @@ class MainModel(Observable):
 
     def save_commitmsg(self, msg):
         path = self.git.git_path('GIT_COLA_MSG')
-        utils.write(path, msg)
+        core.write(path, msg)
 
     def set_diff_text(self, txt):
         self.diff_text = txt
@@ -169,8 +167,8 @@ class MainModel(Observable):
 
     def prev_commitmsg(self, *args):
         """Queries git for the latest commit message."""
-        log = self.git.log('-1', no_color=True, pretty='format:%s%n%n%b', *args)
-        return core.decode(log)
+        return self.git.log('-1', no_color=True, pretty='format:%s%n%n%b',
+                            *args)
 
     def update_file_status(self, update_index=False):
         self.notify_observers(self.message_about_to_update)
@@ -225,7 +223,7 @@ class MainModel(Observable):
         self.tags = tags
 
     def _update_rebase_status(self):
-        self.is_rebasing = os.path.exists(self.git.git_path('rebase-merge'))
+        self.is_rebasing = core.exists(self.git.git_path('rebase-merge'))
 
     def delete_branch(self, branch):
         return self.git.branch(branch,
@@ -348,7 +346,6 @@ class MainModel(Observable):
             except:
                 # value-less entry in .gitconfig
                 continue
-            v = core.decode(v)
             k = k.replace('.','_') # git -> model
             if v == 'true' or v == 'false':
                 v = bool(eval(v.title()))
@@ -366,16 +363,14 @@ class MainModel(Observable):
             msg += '\n'
 
         # Create the commit message file
-        fh = open(tmpfile, 'w')
-        core.write(fh, msg)
-        fh.close()
+        core.write(tmpfile, msg)
 
         # Run 'git commit'
         status, out = self.git.commit(F=tmpfile, v=True, amend=amend,
                                       with_status=True,
                                       with_stderr=True)
-        os.unlink(tmpfile)
-        return (status, core.decode(out))
+        core.unlink(tmpfile)
+        return (status, out)
 
     def remote_url(self, name, action):
         if action == 'push':
@@ -472,7 +467,7 @@ class MainModel(Observable):
                                      cached=True,
                                      others=True,
                                      exclude_standard=True)
-        return sorted(map(core.decode, [f for f in ls_files.split('\0') if f]))
+        return sorted([f for f in ls_files.split('\0') if f])
 
     def stage_paths(self, paths):
         """Stages add/removals to git."""
@@ -484,7 +479,7 @@ class MainModel(Observable):
         remove = []
 
         for path in set(paths):
-            if os.path.exists(core.encode(path)):
+            if core.exists(path):
                 add.append(path)
             else:
                 remove.append(path)
@@ -521,4 +516,4 @@ class MainModel(Observable):
         """If we've chosen a directory then use it, otherwise os.getcwd()."""
         if self.directory:
             return self.directory
-        return os.getcwd()
+        return core.getcwd()

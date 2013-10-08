@@ -161,8 +161,8 @@ class GitNotifier(QtCore.QThread):
         """Set up a directory for monitoring by inotify"""
         if not self._wmgr:
             return
-        directory = os.path.realpath(directory)
-        if not os.path.exists(directory):
+        directory = core.realpath(directory)
+        if not core.exists(directory):
             return
         if directory not in self._dirs_seen:
             self._wmgr.add_watch(directory, self._mask)
@@ -197,8 +197,8 @@ class GitNotifier(QtCore.QThread):
         self._watch_directory(self._path)
 
         # Register files/directories known to git
-        for filename in core.decode(self._git.ls_files()).splitlines():
-            filename = os.path.realpath(filename)
+        for filename in self._git.ls_files().splitlines():
+            filename = core.realpath(filename)
             directory = os.path.dirname(filename)
             self._watch_directory(directory)
 

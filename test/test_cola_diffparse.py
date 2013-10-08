@@ -1,8 +1,8 @@
 import os
 import unittest
 
+from cola import core
 from cola import gitcmds
-from cola import utils
 from cola import diffparse
 from cola.diffparse import DiffParser
 
@@ -21,17 +21,17 @@ class DiffParseModel(object):
 
     def apply_diff_to_worktree(self, path):
         if os.path.exists(path):
-            self.last_worktree_diff = utils.slurp(path)
+            self.last_worktree_diff = core.read(path)
 
     def apply_diff(self, path):
         if os.path.exists(path):
-            self.last_diff = utils.slurp(path)
+            self.last_diff = core.read(path)
 
 
 class DiffSource(object):
     def __init__(self, fwd, reverse):
-        self.fwd = utils.slurp(fwd)
-        self.reverse = utils.slurp(reverse)
+        self.fwd = core.read(fwd)
+        self.reverse = core.read(reverse)
 
     def get(self, head, amending, filename, cached, reverse):
         if reverse:
@@ -41,7 +41,7 @@ class DiffSource(object):
 
     def parse(self, diffoutput):
         return gitcmds.extract_diff_header(
-                status=0, deleted=False, encoding=None,
+                status=0, deleted=False,
                 with_diff_header=True, suppress_header=False,
                 diffoutput=diffoutput)
 

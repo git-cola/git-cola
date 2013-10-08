@@ -1,9 +1,10 @@
 import os
 import re
 
-from cola import utils
+from cola import core
 from cola import gitcmds
 from cola import gitcfg
+from cola import utils
 
 
 class Range(object):
@@ -103,8 +104,8 @@ class DiffParser(object):
         if not noop and which < len(self.diff_sel):
             diff = self.diff_sel[which]
             encoding = self.config.file_encoding(self.filename)
-            utils.write(filename, self.header + '\n' + diff + '\n',
-                        encoding=encoding)
+            core.write(filename, self.header + '\n' + diff + '\n',
+                       encoding=encoding)
             return True
         else:
             return False
@@ -285,7 +286,7 @@ class DiffParser(object):
                 if not contents:
                     continue
                 tmpfile = utils.tmp_filename('selection')
-                utils.write(tmpfile, contents, encoding=encoding)
+                core.write(tmpfile, contents, encoding=encoding)
                 if apply_to_worktree:
                     stat, out = self.model.apply_diff_to_worktree(tmpfile)
                     output += out

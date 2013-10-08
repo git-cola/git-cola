@@ -6,6 +6,7 @@ from PyQt4.QtCore import Qt, SIGNAL
 
 import cola
 from cola import cmds
+from cola import core
 from cola import gitcmds
 from cola import gravatar
 from cola import qtutils
@@ -103,7 +104,7 @@ class DiffEditor(DiffTextEdit):
                 menu.addAction(qtutils.git_icon(),
                                N_('Launch git-cola'),
                                cmds.run(cmds.OpenRepo,
-                                    os.path.abspath(s.modified[0])))
+                                        core.abspath(s.modified[0])))
             elif s.modified:
                 action = menu.addAction(qtutils.icon('add.svg'),
                                         N_('Stage Section'),
@@ -125,7 +126,7 @@ class DiffEditor(DiffTextEdit):
                 menu.addAction(qtutils.git_icon(),
                                N_('Launch git-cola'),
                                cmds.do(cmds.OpenRepo,
-                                    os.path.abspath(s.staged[0])))
+                                       core.abspath(s.staged[0])))
             elif s.staged:
                 action = menu.addAction(qtutils.icon('remove.svg'),
                                         N_('Unstage Section'),

@@ -1,5 +1,4 @@
 import cola
-from cola import core
 from cola import observable
 from cola.git import git
 from cola.cmds import BaseCommand
@@ -11,7 +10,7 @@ class StashModel(observable.Observable):
         observable.Observable.__init__(self)
 
     def stash_list(self):
-        return core.decode(git.stash('list')).splitlines()
+        return git.stash('list').splitlines()
 
     def has_stashable_changes(self):
         model = cola.model()

@@ -3,6 +3,7 @@ import sys
 import errno
 import subprocess
 import threading
+from os.path import join
 
 from cola import core
 from cola.decorators import memoize
@@ -10,43 +11,40 @@ from cola.interaction import Interaction
 
 
 INDEX_LOCK = threading.Lock()
-GIT_COLA_TRACE = os.getenv('GIT_COLA_TRACE', '')
+GIT_COLA_TRACE = core.getenv('GIT_COLA_TRACE', '')
 
 
-def dashify(string):
-    return string.replace('_', '-')
+def dashify(s):
+    return s.replace('_', '-')
 
 
 def is_git_dir(d):
     """From git's setup.c:is_git_directory()."""
-    if (os.path.isdir(d)
-            and os.path.isdir(os.path.join(d, 'objects'))
-            and os.path.isdir(os.path.join(d, 'refs'))):
-        headref = os.path.join(d, 'HEAD')
-        return (os.path.isfile(headref)
-                or (os.path.islink(headref)
-                and os.readlink(headref).startswith('refs')))
+    if (core.isdir(d) and core.isdir(join(d, 'objects')) and
+            core.isdir(join(d, 'refs'))):
+        headref = join(d, 'HEAD')
+        return (core.isfile(headref) or
+                (core.islink(headref) and
+                    core.readlink(headref).startswith('refs')))
 
     return is_git_file(d)
 
 
 def is_git_file(f):
-    return os.path.isfile(f) and '.git' == os.path.basename(f)
+    return core.isfile(f) and '.git' == os.path.basename(f)
 
 
 def is_git_worktree(d):
-    return is_git_dir(os.path.join(d, '.git'))
+    return is_git_dir(join(d, '.git'))
 
 
-def read_git_file(f):
-    if f is None:
+def read_git_file(path):
+    if path is None:
         return None
-    if is_git_file(f):
-        fh = open(f)
-        data = core.decode(core.read(fh)).rstrip()
-        fh.close()
+    if is_git_file(path):
+        data = core.read(path)
         if data.startswith('gitdir: '):
-            return core.decode(data[len('gitdir: '):])
+            return data[len('gitdir: '):]
     return None
 
 
@@ -58,7 +56,7 @@ class Git(object):
         self._git_cwd = None #: The working directory used by execute()
         self._worktree = None
         self._git_file_path = None
-        self.set_worktree(os.getcwd())
+        self.set_worktree(core.getcwd())
 
     def set_worktree(self, path):
         self._git_dir = path
@@ -73,9 +71,9 @@ class Git(object):
         if self._git_dir:
             curdir = self._git_dir
         else:
-            curdir = os.getcwd()
+            curdir = core.getcwd()
 
-        if is_git_dir(os.path.join(curdir, '.git')):
+        if is_git_dir(join(curdir, '.git')):
             return curdir
 
         # Handle bare repositories
@@ -83,11 +81,11 @@ class Git(object):
                 and curdir.endswith('.git')):
             return curdir
         if 'GIT_WORK_TREE' in os.environ:
-            self._worktree = os.getenv('GIT_WORK_TREE')
-        if not self._worktree or not os.path.isdir(self._worktree):
+            self._worktree = core.getenv('GIT_WORK_TREE')
+        if not self._worktree or not core.isdir(self._worktree):
             if self._git_dir:
-                gitparent = os.path.join(os.path.abspath(self._git_dir), '..')
-                self._worktree = os.path.abspath(gitparent)
+                gitparent = join(core.abspath(self._git_dir), '..')
+                self._worktree = core.abspath(gitparent)
                 self.set_cwd(self._worktree)
         return self._worktree
 
@@ -96,25 +94,25 @@ class Git(object):
 
     def git_path(self, *paths):
         if self._git_file_path is None:
-            return os.path.join(self.git_dir(), *paths)
+            return join(self.git_dir(), *paths)
         else:
-            return os.path.join(self._git_file_path, *paths)
+            return join(self._git_file_path, *paths)
 
     def git_dir(self):
         if self.is_valid():
             return self._git_dir
         if 'GIT_DIR' in os.environ:
-            self._git_dir = os.getenv('GIT_DIR')
+            self._git_dir = core.getenv('GIT_DIR')
         if self._git_dir:
-            curpath = os.path.abspath(self._git_dir)
+            curpath = core.abspath(self._git_dir)
         else:
-            curpath = os.path.abspath(os.getcwd())
+            curpath = core.abspath(core.getcwd())
         # Search for a .git directory
         while curpath:
             if is_git_dir(curpath):
                 self._git_dir = curpath
                 break
-            gitpath = os.path.join(curpath, '.git')
+            gitpath = join(curpath, '.git')
             if is_git_dir(gitpath):
                 self._git_dir = gitpath
                 break
@@ -140,14 +138,15 @@ class Git(object):
                 with_exceptions=False,
                 with_raw_output=False,
                 with_status=False,
-                with_stderr=False):
+                with_stderr=False,
+                _encoding=None):
         """
         Execute a command and returns its output
 
         :param command: argument list to execute.
         :param istream: optional stdin filehandle.
         :param cwd: working directory, defaults to current directory.
-        :param with_status: return a (status, unicode(output)) tuple.
+        :param with_status: return a (status, output) tuple.
         :param with_stderr: include stderr in the output stream.
         :param with_raw_output: do not strip trailing whitespace.
         :returns bytes: command output
@@ -155,7 +154,7 @@ class Git(object):
         """
         # Allow the user to have the command executed in their working dir.
         if not cwd:
-            cwd = os.getcwd()
+            cwd = core.getcwd()
 
         extra = {}
         if sys.platform == 'win32':
@@ -166,8 +165,7 @@ class Git(object):
         # Guard against thread-unsafe .git/index.lock files
         INDEX_LOCK.acquire()
         # Some systems (e.g. darwin) interrupt system calls
-        count = 0
-        while count < 13:
+        while True:
             try:
                 proc = subprocess.Popen(command,
                                         cwd=cwd,
@@ -177,11 +175,12 @@ class Git(object):
                                         **extra)
                 # Wait for the process to return
                 out, err = proc.communicate()
+                out = core.decode(out, encoding=_encoding)
+                err = core.decode(err, encoding=_encoding)
                 status = proc.returncode
                 break
             except OSError, e:
                 if e.errno == errno.EINTR or e.errno == errno.ENOMEM:
-                    count += 1
                     continue
                 INDEX_LOCK.release()
                 raise
@@ -260,7 +259,8 @@ class Git(object):
         execute_kwargs = ('cwd', 'istream',
                           'with_raw_output',
                           'with_status',
-                          'with_stderr')
+                          'with_stderr',
+                          '_encoding')
 
         for kwarg in execute_kwargs:
             if kwarg in kwargs:
@@ -268,7 +268,7 @@ class Git(object):
 
         # Prepare the argument list
         opt_args = self.transform_kwargs(**kwargs)
-        ext_args = map(core.encode, args)
+        ext_args = [core.encode(a) for a in args]
         args = opt_args + ext_args
 
         call = ['git', dashify(cmd)]

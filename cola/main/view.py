@@ -565,7 +565,7 @@ class MainView(MainWindow):
     def _update_callback(self):
         """Update the title with the current branch and directory name."""
         branch = self.model.currentbranch
-        curdir = core.decode(os.getcwd())
+        curdir = core.getcwd()
         is_rebasing = self.model.is_rebasing
 
         msg = N_('Repository: %s') % curdir
@@ -600,11 +600,11 @@ class MainView(MainWindow):
             merge_msg_path = gitcmds.merge_message_path()
             if merge_msg_path is None:
                 return
-            merge_msg_hash = utils.checksum(core.decode(merge_msg_path))
+            merge_msg_hash = utils.checksum(merge_msg_path)
             if merge_msg_hash == self.merge_message_hash:
                 return
             self.merge_message_hash = merge_msg_hash
-            cmds.do(cmds.LoadCommitMessage, core.decode(merge_msg_path))
+            cmds.do(cmds.LoadCommitMessage, merge_msg_path)
 
     def update_rebase_actions(self, is_rebasing):
         can_rebase = not is_rebasing

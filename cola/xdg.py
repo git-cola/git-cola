@@ -2,9 +2,10 @@
 """XDG user dirs
 """
 import os
+from cola import core
 
 
 def config_home(*args):
-    config = os.getenv('XDG_CONFIG_HOME',
-                       os.path.join(os.path.expanduser('~'), '.config'))
+    config = core.getenv('XDG_CONFIG_HOME',
+                         os.path.join(core.expanduser('~'), '.config'))
     return os.path.join(config, 'git-cola', *args)

@@ -1,4 +1,5 @@
 import os
+from cola import core
 try:
     set = set
 except NameError:
@@ -21,7 +22,6 @@ except ImportError:
             return obj
 
 
-from cola import core
 
 
 def setenv(key, value):

@@ -121,7 +121,7 @@ class AmendMode(Command):
         """Leave/enter amend mode."""
         """Attempt to enter amend mode.  Do not allow this when merging."""
         if self.amending:
-            if os.path.exists(self.model.git.git_path('MERGE_HEAD')):
+            if core.exists(self.model.git.git_path('MERGE_HEAD')):
                 self.skip = True
                 _notifier.broadcast(_notifier.AMEND, False)
                 Interaction.information(
@@ -217,7 +217,7 @@ class Archive(BaseCommand):
         self.filename = filename
 
     def do(self):
-        fp = open(core.encode(self.filename), 'wb')
+        fp = core.open(self.filename, 'wb')
         cmd = ['git', 'archive', '--format='+self.fmt]
         if self.fmt in ('tgz', 'tar.gz'):
             cmd.append('-9')
@@ -297,13 +297,14 @@ class Commit(ResetMode):
     def __init__(self, amend, msg):
         ResetMode.__init__(self)
         self.amend = amend
-        self.msg = core.encode(msg)
+        self.msg = msg
         self.old_commitmsg = self.model.commitmsg
         self.new_commitmsg = ''
 
     def do(self):
         tmpfile = utils.tmp_filename('commit-message')
-        status, output = self.model.commit_with_msg(self.msg, tmpfile, amend=self.amend)
+        status, output = self.model.commit_with_msg(self.msg, tmpfile,
+                                                    amend=self.amend)
         if status == 0:
             ResetMode.do(self)
             self.model.set_commitmsg(self.new_commitmsg)
@@ -328,10 +329,10 @@ class Ignore(Command):
             new_additions = new_additions + fname + '\n'
         for_status = new_additions
         if new_additions:
-            if os.path.exists('.gitignore'):
-                current_list = utils.slurp('.gitignore')
+            if core.exists('.gitignore'):
+                current_list = core.read('.gitignore')
                 new_additions = new_additions + current_list
-            utils.write('.gitignore', new_additions)
+            core.write('.gitignore', new_additions)
             Interaction.log_status(
                     0, 'Added to .gitignore:\n%s' % for_status, '')
             self.model.update_file_status()
@@ -433,7 +434,7 @@ class Diffstat(Command):
                                    no_color=True,
                                    M=True,
                                    stat=True)
-        self.new_diff_text = core.decode(diff)
+        self.new_diff_text = diff
         self.new_mode = self.model.mode_worktree
 
 
@@ -455,7 +456,7 @@ class DiffStagedSummary(Command):
                                    no_ext_diff=True,
                                    patch_with_stat=True,
                                    M=True)
-        self.new_diff_text = core.decode(diff)
+        self.new_diff_text = diff
         self.new_mode = self.model.mode_index
 
 
@@ -489,7 +490,7 @@ class Edit(Command):
         if not self.filenames:
             return
         filename = self.filenames[0]
-        if not os.path.exists(filename):
+        if not core.exists(filename):
             return
         editor = self.model.editor()
         opts = []
@@ -582,11 +583,11 @@ class LoadCommitMessage(Command):
 
     def do(self):
         path = self.path
-        if not path or not os.path.isfile(path):
+        if not path or not core.isfile(path):
             raise errors.UsageError(N_('Error: Cannot find commit template'),
                                     N_('%s: No such file or directory.') % path)
         self.model.set_directory(os.path.dirname(path))
-        self.model.set_commitmsg(utils.slurp(path))
+        self.model.set_commitmsg(core.read(path))
 
     def undo(self):
         self.model.set_commitmsg(self.old_commitmsg)
@@ -940,7 +941,7 @@ class ShowUntracked(Command):
     def diff_text_for(self, filename):
         size = _config.get('cola.readsize', 1024 * 2)
         try:
-            result = utils.slurp(filename, size=size)
+            result = core.read(filename, size=size)
         except:
             result = ''
 
@@ -1053,7 +1054,7 @@ class Tag(Command):
     def __init__(self, name, revision, sign=False, message=''):
         Command.__init__(self)
         self._name = name
-        self._message = core.encode(message)
+        self._message = message
         self._revision = revision
         self._sign = sign
 
@@ -1063,7 +1064,7 @@ class Tag(Command):
         opts = {}
         if self._message:
             opts['F'] = utils.tmp_filename('tag-message')
-            utils.write(opts['F'], self._message)
+            core.write(opts['F'], self._message)
 
         if self._sign:
             log_msg += ' (%s)' % N_('GPG-signed')

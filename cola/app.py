@@ -28,6 +28,7 @@ except ImportError:
 
 # Import cola modules
 import cola
+from cola import core
 from cola import compat
 from cola import git
 from cola import inotify
@@ -48,8 +49,8 @@ def setup_environment():
     os.environ.setdefault('DISPLAY', ':0')
 
     # Setup the path so that git finds us when we run 'git cola'
-    path_entries = os.environ.get('PATH').split(os.pathsep)
-    bindir = os.path.dirname(os.path.abspath(__file__))
+    path_entries = core.getenv('PATH', '').split(os.pathsep)
+    bindir = os.path.dirname(core.abspath(__file__))
     path_entries.insert(0, bindir)
     path = os.pathsep.join(path_entries)
     compat.setenv('PATH', path)
@@ -58,8 +59,8 @@ def setup_environment():
     compat.setenv('GIT_PAGER', '')
 
     # Setup *SSH_ASKPASS
-    git_askpass = os.getenv('GIT_ASKPASS')
-    ssh_askpass = os.getenv('SSH_ASKPASS')
+    git_askpass = core.getenv('GIT_ASKPASS')
+    ssh_askpass = core.getenv('SSH_ASKPASS')
     if git_askpass:
         askpass = git_askpass
     elif ssh_askpass:
@@ -163,16 +164,16 @@ def process_args(args):
 
     if args.git_path:
         # Adds git to the PATH.  This is needed on Windows.
-        path_entries = os.environ.get('PATH', '').split(os.pathsep)
-        path_entries.insert(0, os.path.dirname(args.git_path))
+        path_entries = core.getenv('PATH', '').split(os.pathsep)
+        path_entries.insert(0, os.path.dirname(core.decode(args.git_path)))
         compat.setenv('PATH', os.pathsep.join(path_entries))
 
     # Bail out if --repo is not a directory
-    repo = args.repo
+    repo = core.decode(args.repo)
     if repo.startswith('file:'):
         repo = repo[len('file:'):]
-    repo = os.path.realpath(repo)
-    if not os.path.isdir(repo):
+    repo = core.realpath(repo)
+    if not core.isdir(repo):
         sys.stderr.write("fatal: '%s' is not a directory.  "
                          'Consider supplying -r <path>.\n' % repo)
         sys.exit(-1)

@@ -1,4 +1,3 @@
-import os
 import time
 
 from PyQt4 import QtCore
@@ -311,7 +310,7 @@ class GitRepoInfoTask(QRunnable):
                                             no_color=True,
                                             pretty='format:%ar%x01%s%x01%an')
             if log_line:
-                log_line = core.decode(log_line)
+                log_line = log_line
                 date, message, author = log_line.split(chr(0x01), 2)
                 self._data['date'] = date
                 self._data['message'] = message
@@ -334,8 +333,7 @@ class GitRepoInfoTask(QRunnable):
         'git log' information.
 
         """
-        encpath = core.encode(self.path)
-        st = os.stat(encpath)
+        st = core.stat(self.path)
         elapsed = time.time() - st.st_mtime
         minutes = int(elapsed / 60.)
         if minutes < 60:

@@ -28,15 +28,10 @@ class SaveBlob(BaseCommand):
 
     def do(self):
         model = self.model
-        ref = core.encode(model.ref)
-        relpath = core.encode(model.relpath)
-
-        cmd = ['git', 'show', '%s:%s' % (ref, relpath)]
-        fp = open(core.encode(model.filename), 'wb')
-        proc = utils.start_command(cmd, stdout=fp)
-
-        out, err = proc.communicate()
-        fp.close()
+        cmd = ['git', 'show', '%s:%s' % (model.ref, model.relpath)]
+        with core.xopen(model.filename, 'wb') as fp:
+            proc = utils.start_command(cmd, stdout=fp)
+            out, err = proc.communicate()
 
         status = proc.returncode
         msg = (N_('Saved "%(filename)s" from "%(ref)s" to "%(destination)s"') %

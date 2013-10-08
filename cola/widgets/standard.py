@@ -1,5 +1,3 @@
-import os
-
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
@@ -69,7 +67,7 @@ class WidgetMixin(object):
 
     def closeEvent(self, event):
         s = settings.Settings()
-        s.add_recent(core.decode(os.getcwd()))
+        s.add_recent(core.getcwd())
         qtutils.save_state(self, handler=s)
         self.QtClass.closeEvent(self, event)
 

@@ -83,18 +83,13 @@ def new_window(filename):
     return window
 
 
-def env(var, default):
-    value = os.getenv(var)
-    return value and core.decode(value) or default
-
-
 class MainWindow(QtGui.QMainWindow):
 
     def __init__(self, editor, parent=None):
         super(MainWindow, self).__init__(parent)
         self.status = 1
-        default_title = '%s - git xbase' % core.decode(os.getcwd())
-        title = env('GIT_XBASE_TITLE', default_title)
+        default_title = '%s - git xbase' % core.getcwd()
+        title = core.getenv('GIT_XBASE_TITLE', default_title)
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(title)
         self.setCentralWidget(editor)
@@ -127,7 +122,7 @@ class Editor(QtGui.QWidget):
         self.diff = DiffWidget(notifier, self)
 
         self.rebase_button = qt.create_button(
-                text=env('GIT_XBASE_ACTION', N_('Rebase')),
+                text=core.getenv('GIT_XBASE_ACTION', N_('Rebase')),
                 icon=qtutils.apply_icon())
 
         self.external_diff_button = qt.create_button(text=N_('External Diff'))
@@ -170,9 +165,8 @@ class Editor(QtGui.QWidget):
         qtutils.connect_button(self.cancel_button, self.cancel)
         self.connect(self.tree, SIGNAL('external_diff()'), self.external_diff)
 
-        with open(filename) as f:
-            insns = core.decode(f.read())
-            self.parse_sequencer_instructions(insns)
+        insns = core.read(filename)
+        self.parse_sequencer_instructions(insns)
 
     # notifier callbacks
     def commits_selected(self, commits):
@@ -207,12 +201,11 @@ class Editor(QtGui.QWidget):
         lines = [item.value() for item in self.tree.items()]
         sequencer_instructions = '\n'.join(lines) + '\n'
         try:
-            with open(self.filename, 'w') as f:
-                f.write(core.encode(sequencer_instructions))
-                self.emit_exit(0)
+            core.write(self.filename, sequencer_instructions)
+            self.emit_exit(0)
         except Exception as e:
             msg, details = utils.format_exception(e)
-            sys.stderr.write(N_('error: ') + msg + '\n\n' + details)
+            sys.stderr.write(msg + '\n\n' + details)
             self.emit_exit(128)
 
     def external_diff(self):

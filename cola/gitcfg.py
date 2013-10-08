@@ -1,6 +1,7 @@
 import os
 import copy
 import fnmatch
+from os.path import join
 
 from cola import core
 from cola import git
@@ -13,21 +14,21 @@ def instance():
     """Return a static GitConfig instance."""
     return GitConfig()
 
-_USER_CONFIG = os.path.expanduser(os.path.join('~', '.gitconfig'))
-_USER_XDG_CONFIG = os.path.expanduser(os.path.join(
-                os.environ.get('XDG_CONFIG_HOME', os.path.join('~', '.config')),
-                'git', 'config'))
+_USER_CONFIG = core.expanduser(join('~', '.gitconfig'))
+_USER_XDG_CONFIG = core.expanduser(
+        join(core.getenv('XDG_CONFIG_HOME', join('~', '.config')),
+             'git', 'config'))
 
 def _stat_info():
     # Try /etc/gitconfig as a fallback for the system config
     paths = (('system', '/etc/gitconfig'),
-             ('user', core.decode(_USER_XDG_CONFIG)),
-             ('user', core.decode(_USER_CONFIG)),
-             ('repo', core.decode(git.instance().git_path('config'))))
+             ('user', _USER_XDG_CONFIG),
+             ('user', _USER_CONFIG),
+             ('repo', git.instance().git_path('config')))
     statinfo = []
     for category, path in paths:
         try:
-            statinfo.append((category, path, os.stat(path).st_mtime))
+            statinfo.append((category, path, core.stat(path).st_mtime))
         except OSError:
             continue
     return statinfo
@@ -42,7 +43,7 @@ def _cache_key():
     mtimes = []
     for path in paths:
         try:
-            mtimes.append(os.stat(path).st_mtime)
+            mtimes.append(core.stat(path).st_mtime)
         except OSError:
             continue
     return mtimes
@@ -163,8 +164,6 @@ class GitConfig(observable.Observable):
                     continue
                 k = line
                 v = 'true'
-            k = core.decode(k)
-            v = core.decode(v)
 
             if v in ('true', 'yes'):
                 v = True
@@ -263,7 +262,6 @@ class GitConfig(observable.Observable):
                                           with_status=True)
         if status != 0:
             return None
-        out = core.decode(out)
         header = '%s: encoding: ' % path
         if out.startswith(header):
             encoding = out[len(header):].strip()

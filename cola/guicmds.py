@@ -94,7 +94,7 @@ def new_repo():
     if not path:
         return None
     # Avoid needlessly calling `git init`.
-    if git.is_git_dir(core.encode(path)):
+    if git.is_git_dir(path):
         # We could prompt here and confirm that they really didn't
         # mean to open an existing repository, but I think
         # treating it like an "Open" is a sensible DWIM answer.
@@ -130,7 +130,7 @@ def clone_repo(spawn=True):
 
     """
     url, ok = qtutils.prompt(N_('Path or URL to clone (Env. $VARS okay)'))
-    url = os.path.expandvars(core.encode(url))
+    url = os.path.expandvars(url)
     if not ok or not url:
         return None
     try:
@@ -145,7 +145,7 @@ def clone_repo(spawn=True):
             default = default[:-4]
         if url == '.':
             # The URL is the current repo
-            default = os.path.basename(os.getcwd())
+            default = os.path.basename(core.getcwd())
         if not default:
             raise
     except:
@@ -161,20 +161,19 @@ def clone_repo(spawn=True):
     if not dirname:
         return None
     count = 1
-    dirname = core.decode(dirname)
-    destdir = os.path.join(dirname, core.decode(default))
+    destdir = os.path.join(dirname, default)
     olddestdir = destdir
-    if os.path.exists(destdir):
+    if core.exists(destdir):
         # An existing path can be specified
         msg = (N_('"%s" already exists, cola will create a new directory') %
                destdir)
         Interaction.information('Directory Exists', msg)
 
     # Make sure the new destdir doesn't exist
-    while os.path.exists(destdir):
+    while core.exists(destdir):
         destdir = olddestdir + str(count)
         count += 1
-    if cmds.do(cmds.Clone, core.decode(url), destdir, spawn=spawn):
+    if cmds.do(cmds.Clone, url, destdir, spawn=spawn):
         return destdir
     return None
 

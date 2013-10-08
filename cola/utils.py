@@ -56,7 +56,7 @@ def add_parents(path_entry_set):
 
 def ident_file_type(filename):
     """Returns an icon based on the contents of filename."""
-    if os.path.exists(filename):
+    if core.exists(filename):
         filemimetype = mimetypes.guess_type(filename)
         if filemimetype[0] != None:
             for filetype, iconname in KNOWN_FILE_MIME_TYPES.iteritems():
@@ -229,23 +229,6 @@ def dirname(path):
     return path.rsplit('/', 1)[0]
 
 
-def slurp(path, size=-1):
-    """Slurps a filepath into a string."""
-    fh = open(core.encode(path))
-    slushy = core.read(fh, size=size)
-    fh.close()
-    return core.decode(slushy)
-
-
-def write(path, contents, encoding=None):
-    """Writes a raw string to a file."""
-    with open(core.encode(path), 'wb') as fh:
-        try:
-            core.write(fh, core.encode(contents, encoding=encoding))
-        except IOError:
-            fh.close()
-
-
 def strip_prefix(prefix, string):
     """Return string, without the prefix. Blow up if string doesn't
     start with prefix."""
@@ -275,7 +258,7 @@ def _shell_split(s):
     try:
         return shlex.split(core.encode(s))
     except ValueError:
-        return [s]
+        return [core.encode(s)]
 
 
 def shell_split(s):
@@ -285,7 +268,7 @@ def shell_split(s):
 
 def tmp_dir():
     # Allow TMPDIR/TMP with a fallback to /tmp
-    return os.environ.get('TMP', os.environ.get('TMPDIR', '/tmp'))
+    return core.getenv('TMP', core.getenv('TMPDIR', '/tmp'))
 
 
 def tmp_file_pattern():
@@ -293,7 +276,8 @@ def tmp_file_pattern():
 
 
 def tmp_filename(prefix):
-    randstr = ''.join([chr(random.randint(ord('a'), ord('z'))) for i in range(7)])
+    randstr = ''.join([chr(random.randint(ord('a'), ord('z')))
+                        for i in range(7)])
     prefix = prefix.replace('/', '-').replace('\\', '-')
     basename = 'git-cola-%s-%s-%s' % (os.getpid(), randstr, prefix)
     return os.path.join(tmp_dir(), basename)
@@ -322,7 +306,7 @@ def is_win32():
 def checksum(path):
     """Return a cheap md5 hexdigest for a path."""
     md5 = hashlib.new('md5')
-    md5.update(slurp(path))
+    md5.update(core.read(path))
     return md5.hexdigest()
 
 

@@ -1,9 +1,8 @@
-import os
 import subprocess
 
 from cola import core
-from cola.git import git
 from cola import utils
+from cola.git import git
 from cola.observable import Observable
 
 # put summary at the end b/c it can contain
@@ -85,8 +84,7 @@ class DAG(Observable):
         if '--' in all_refs:
             all_refs = all_refs[all_refs.index('--'):]
 
-        return [p for p in all_refs
-                    if p and os.path.exists(core.encode(p))]
+        return [p for p in all_refs if p and core.exists(p)]
 
 
 class Commit(object):
@@ -121,10 +119,10 @@ class Commit(object):
         (parents, tags, author, authdate, email, summary) = \
                 log_entry[41:].split(sep, 6)
 
-        self.summary = summary and core.decode(summary) or ''
-        self.author = author and core.decode(author) or ''
+        self.summary = summary and summary or ''
+        self.author = author and author or ''
         self.authdate = authdate or ''
-        self.email = email and core.decode(email) or ''
+        self.email = email and email or ''
 
         if parents:
             generation = None
@@ -147,7 +145,7 @@ class Commit(object):
                     tag = tag[11:] # refs/heads/
                 if tag.endswith('/HEAD'):
                     continue
-                self.tags.add(core.decode(tag))
+                self.tags.add(tag)
 
         self.parsed = True
         return self

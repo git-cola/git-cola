@@ -3,7 +3,7 @@
 
 __copyright__ = """
 2012, Peter Norvig (http://norvig.com/spell-correct.html)
-2013, David Aguilar
+2013, David Aguilar <davvid@gmail.com>
 """
 
 import collections
