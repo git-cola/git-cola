@@ -277,6 +277,7 @@ class DiffParser(object):
             selected = False
 
         output = ''
+        error = ''
         status = 0
         # Process diff selection only
         if selected:
@@ -288,12 +289,14 @@ class DiffParser(object):
                 tmpfile = utils.tmp_filename('selection')
                 core.write(tmpfile, contents, encoding=encoding)
                 if apply_to_worktree:
-                    stat, out = self.model.apply_diff_to_worktree(tmpfile)
+                    stat, out, err = self.model.apply_diff_to_worktree(tmpfile)
                     output += out
+                    error += err
                     status = max(status, stat)
                 else:
-                    stat, out = self.model.apply_diff(tmpfile)
+                    stat, out, err = self.model.apply_diff(tmpfile)
                     output += out
+                    error += err
                     status = max(status, stat)
                 os.unlink(tmpfile)
         # Process a complete hunk
@@ -303,12 +306,14 @@ class DiffParser(object):
                 if not self.write_diff(tmpfile,idx):
                     continue
                 if apply_to_worktree:
-                    stat, out = self.model.apply_diff_to_worktree(tmpfile)
+                    stat, out, err = self.model.apply_diff_to_worktree(tmpfile)
                     output += out
+                    error += err
                     status = max(status, stat)
                 else:
-                    stat, out = self.model.apply_diff(tmpfile)
+                    stat, out, err = self.model.apply_diff(tmpfile)
                     output += out
+                    error += err
                     status = max(status, stat)
                 os.unlink(tmpfile)
-        return status, output
+        return status, output, error

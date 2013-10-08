@@ -56,11 +56,8 @@ def combine(result, existing):
         return result
 
     if type(existing) is tuple:
-        if len(existing) == 2:
-            return (max(result[0], existing[0]),
-                    combine(existing[1], result[1]))
-        elif len(existing) == 3:
-            return (max(result[0], existing[0]),
+        if len(existing) == 3:
+            return (max(existing[0], result[0]),
                     combine(existing[1], result[1]),
                     combine(existing[2], result[2]))
         else:
@@ -85,8 +82,8 @@ class ActionTask(QtCore.QRunnable):
 
     def run(self):
         """Runs the model action and captures the result"""
-        status, output = self.model_action(self.remote, **self.kwargs)
-        self.sender.emit(SIGNAL('action_completed'), self, status, output)
+        status, out, err = self.model_action(self.remote, **self.kwargs)
+        self.sender.emit(SIGNAL('action_completed'), self, status, out, err)
 
 
 class ProgressAnimationThread(QtCore.QThread):
@@ -505,7 +502,7 @@ class RemoteActionDialog(standard.Dialog):
             all_results = combine(result, all_results)
         return all_results
 
-    def action_completed(self, task, status, output):
+    def action_completed(self, task, status, out, err):
         # Grab the results of the action and finish up
         self.action_button.setEnabled(True)
         self.close_button.setEnabled(True)
@@ -519,14 +516,16 @@ class RemoteActionDialog(standard.Dialog):
 
         already_up_to_date = N_('Already up-to-date.')
 
-        if not output: # git fetch --tags --verbose doesn't print anything...
-            output = already_up_to_date
+        if not out: # git fetch --tags --verbose doesn't print anything...
+            out = already_up_to_date
 
         command = 'git %s' % self.action.lower()
         message = (N_('"%(command)s" returned exit status %(status)d') %
                    dict(command=command, status=status))
-        if output:
-            message += '\n\n' + output
+        if out:
+            message += '\n\n' + out
+        if err:
+            message += '\n\n' + err
 
         Interaction.log(message)
 

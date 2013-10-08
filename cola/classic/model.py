@@ -13,6 +13,7 @@ from cola import qtutils
 from cola import version
 from cola import resources
 from cola.compat import set
+from cola.git import STDOUT
 from cola.i18n import N_
 
 
@@ -308,7 +309,8 @@ class GitRepoInfoTask(QRunnable):
                                             M=True,
                                             all=False,
                                             no_color=True,
-                                            pretty='format:%ar%x01%s%x01%an')
+                                            pretty='format:%ar%x01%s%x01%an'
+                                            )[STDOUT]
             if log_line:
                 log_line = log_line
                 date, message, author = log_line.split(chr(0x01), 2)

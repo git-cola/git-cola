@@ -1,4 +1,3 @@
-import os
 import copy
 import fnmatch
 from os.path import join
@@ -7,6 +6,7 @@ from cola import core
 from cola import git
 from cola import observable
 from cola.decorators import memoize
+from cola.git import STDOUT
 
 
 @memoize
@@ -154,7 +154,7 @@ class GitConfig(observable.Observable):
         """Return git config data from a path as a dictionary."""
         dest = {}
         args = ('--null', '--file', path, '--list')
-        config_lines = self.git.config(*args).split('\0')
+        config_lines = self.git.config(*args)[STDOUT].split('\0')
         for line in config_lines:
             try:
                 k, v = line.split('\n', 1)
@@ -258,8 +258,7 @@ class GitConfig(observable.Observable):
 
     def _file_encoding(self, path):
         """Return the file encoding for a path"""
-        status, out = self.git.check_attr('encoding', '--', path,
-                                          with_status=True)
+        status, out, err = self.git.check_attr('encoding', '--', path)
         if status != 0:
             return None
         header = '%s: encoding: ' % path

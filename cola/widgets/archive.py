@@ -8,6 +8,7 @@ from cola import cmds
 from cola import core
 from cola import qtutils
 from cola.git import git
+from cola.git import STDOUT
 from cola.i18n import N_
 from cola.qt import ExpandableGroupBox
 from cola.widgets import defs
@@ -48,7 +49,8 @@ class GitArchiveDialog(QtGui.QDialog):
         style = self.style()
         self.browse.setIcon(style.standardIcon(QtGui.QStyle.SP_DirIcon))
 
-        self.format_strings = git.archive('--list').rstrip().splitlines()
+        self.format_strings = (
+                git.archive('--list')[STDOUT].rstrip().splitlines())
         self.format_combo = QtGui.QComboBox()
         self.format_combo.setEditable(False)
         self.format_combo.addItems(self.format_strings)

@@ -387,12 +387,12 @@ class CommitMessageEditor(QtGui.QWidget):
                         N_('Amend Commit'),
                         default=False, icon=save_icon())):
             return
-        status, output = cmds.do(cmds.Commit, amend, msg)
+        status, out, err = cmds.do(cmds.Commit, amend, msg)
         if status != 0:
             Interaction.critical(N_('Commit failed'),
                                  N_('"git commit" returned exit code %s') %
                                     (status,),
-                                 output)
+                                 out + err)
 
     def build_fixup_menu(self):
         self.build_commits_menu(cmds.LoadFixupMessage,

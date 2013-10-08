@@ -10,6 +10,7 @@ from cola import git
 from cola import gitcfg
 from cola import gitcmds
 from cola.compat import set
+from cola.git import STDOUT
 from cola.observable import Observable
 from cola.decorators import memoize
 from cola.models.selection import selection_model
@@ -158,17 +159,15 @@ class MainModel(Observable):
         self.notify_observers(self.message_mode_changed, mode)
 
     def apply_diff(self, filename):
-        return self.git.apply(filename, index=True, cached=True,
-                              with_stderr=True, with_status=True)
+        return self.git.apply(filename, index=True, cached=True)
 
     def apply_diff_to_worktree(self, filename):
-        return self.git.apply(filename,
-                              with_stderr=True, with_status=True)
+        return self.git.apply(filename)
 
     def prev_commitmsg(self, *args):
         """Queries git for the latest commit message."""
         return self.git.log('-1', no_color=True, pretty='format:%s%n%n%b',
-                            *args)
+                            *args)[STDOUT]
 
     def update_file_status(self, update_index=False):
         self.notify_observers(self.message_about_to_update)
@@ -210,7 +209,7 @@ class MainModel(Observable):
                         self.unmerged or self.untracked))
 
     def _update_refs(self):
-        self.remotes = self.git.remote().splitlines()
+        self.remotes = self.git.remote()[STDOUT].splitlines()
 
     def _update_branch_heads(self):
         # Set these early since they are used to calculate 'upstream_changed'.
@@ -226,10 +225,7 @@ class MainModel(Observable):
         self.is_rebasing = core.exists(self.git.git_path('rebase-merge'))
 
     def delete_branch(self, branch):
-        return self.git.branch(branch,
-                               D=True,
-                               with_stderr=True,
-                               with_status=True)
+        return self.git.branch(branch, D=True)
 
     def _sliced_op(self, input_items, map_fn):
         """Slice input_items and call map_fn over every slice
@@ -263,61 +259,50 @@ class MainModel(Observable):
         avg_filename_len = 300
         size = max_arg_len / avg_filename_len
 
-        full_status = 0
-        full_output = []
+        status = 0
+        outs = []
+        errs = []
 
         items = copy.copy(input_items)
         while items:
-            status, output = map_fn(items[:size])
-            full_status = full_status or status
-            full_output.append(output)
+            stat, out, err = map_fn(items[:size])
+            status = max(stat, status)
+            outs.append(out)
+            errs.append(err)
             items = items[size:]
 
-        return (full_status, '\n'.join(full_output))
+        return (status, '\n'.join(outs), '\n'.join(errs))
 
     def _sliced_add(self, input_items):
-        lambda_fn = lambda x: self.git.add('--',
-                                           force=True,
-                                           verbose=True,
-                                           with_stderr=True,
-                                           with_status=True,
-                                           *x)
+        lambda_fn = lambda x: self.git.add('--', force=True, verbose=True, *x)
         return self._sliced_op(input_items, lambda_fn)
 
     def stage_modified(self):
-        status, output = self._sliced_add(self.modified)
+        status, out, err = self._sliced_add(self.modified)
         self.update_file_status()
-        return (status, output)
+        return (status, out, err)
 
     def stage_untracked(self):
-        status, output = self._sliced_add(self.untracked)
+        status, out, err = self._sliced_add(self.untracked)
         self.update_file_status()
-        return (status, output)
+        return (status, out, err)
 
     def reset(self, *items):
-        lambda_fn = lambda x: self.git.reset('--',
-                                             with_stderr=True,
-                                             with_status=True,
-                                             *x)
-        status, output = self._sliced_op(items, lambda_fn)
+        lambda_fn = lambda x: self.git.reset('--', *x)
+        status, out, err = self._sliced_op(items, lambda_fn)
         self.update_file_status()
-        return (status, output)
+        return (status, out, err)
 
     def unstage_all(self):
         """Unstage all files, even while amending"""
-        status, output = self.git.reset(self.head, '--', '.',
-                                        with_stderr=True,
-                                        with_status=True)
+        status, out, err = self.git.reset(self.head, '--', '.')
         self.update_file_status()
-        return (status, output)
+        return (status, out, err)
 
     def stage_all(self):
-        status, output = self.git.add(v=True,
-                                      u=True,
-                                      with_stderr=True,
-                                      with_status=True)
+        status, out, err = self.git.add(v=True, u=True)
         self.update_file_status()
-        return (status, output)
+        return (status, out, err)
 
     def config_set(self, key, value, local=True):
         # git config category.key value
@@ -338,7 +323,7 @@ class MainModel(Observable):
             'list': True,
             'global': not local, # global is a python keyword
         }
-        config_lines = self.git.config(**kwargs).splitlines()
+        config_lines = self.git.config(**kwargs)[STDOUT].splitlines()
         newdict = {}
         for line in config_lines:
             try:
@@ -366,11 +351,9 @@ class MainModel(Observable):
         core.write(tmpfile, msg)
 
         # Run 'git commit'
-        status, out = self.git.commit(F=tmpfile, v=True, amend=amend,
-                                      with_status=True,
-                                      with_stderr=True)
+        status, out, err = self.git.commit(F=tmpfile, v=True, amend=amend)
         core.unlink(tmpfile)
-        return (status, out)
+        return (status, out, err)
 
     def remote_url(self, name, action):
         if action == 'push':
@@ -406,8 +389,6 @@ class MainModel(Observable):
             'verbose': True,
             'tags': tags,
             'rebase': rebase,
-            'with_stderr': True,
-            'with_status': True,
         }
         return (args, kwargs)
 
@@ -429,26 +410,22 @@ class MainModel(Observable):
 
         Pass track=True to create a local tracking branch.
         """
-        return self.git.branch(name, base,
-                               track=track, force=force,
-                               with_stderr=True,
-                               with_status=True)
+        return self.git.branch(name, base, track=track, force=force)
 
     def cherry_pick_list(self, revs, **kwargs):
         """Cherry-picks each revision into the current branch.
         Returns a list of command output strings (1 per cherry pick)"""
         if not revs:
             return []
-        cherries = []
+        outs = []
+        errs = []
         status = 0
         for rev in revs:
-            newstatus, out = self.git.cherry_pick(rev,
-                                                  with_stderr=True,
-                                                  with_status=True)
-            if status == 0:
-                status += newstatus
-            cherries.append(out)
-        return (status, '\n'.join(cherries))
+            stat, out, err = self.git.cherry_pick(rev)
+            status = max(stat, status)
+            outs.append(out)
+            errs.append(err)
+        return (status, '\n'.join(outs), '\n'.join(errs))
 
     def pad(self, pstr, num=22):
         topad = num-len(pstr)
@@ -458,7 +435,7 @@ class MainModel(Observable):
             return pstr
 
     def is_commit_published(self):
-        head = self.git.rev_parse('HEAD')
+        head = self.git.rev_parse('HEAD')[STDOUT]
         return bool(self.git.branch(r=True, contains=head))
 
     def everything(self):
@@ -466,7 +443,7 @@ class MainModel(Observable):
         ls_files = self.git.ls_files(z=True,
                                      cached=True,
                                      others=True,
-                                     exclude_standard=True)
+                                     exclude_standard=True)[STDOUT]
         return sorted([f for f in ls_files.split('\0') if f])
 
     def stage_paths(self, paths):
@@ -494,7 +471,7 @@ class MainModel(Observable):
         # from the index.   We use `git add -u` for that.
         if remove:
             while remove:
-                self.git.add('--', u=True, with_stderr=True, *remove[:42])
+                self.git.add('--', u=True, *remove[:42])
                 remove = remove[42:]
 
         self._update_files()
@@ -508,9 +485,9 @@ class MainModel(Observable):
         self.update_file_status()
 
     def untrack_paths(self, paths):
-        status, out = gitcmds.untrack_paths(paths, head=self.head)
+        status, out, err = gitcmds.untrack_paths(paths, head=self.head)
         self.update_file_status()
-        return status, out
+        return status, out, err
 
     def getcwd(self):
         """If we've chosen a directory then use it, otherwise os.getcwd()."""

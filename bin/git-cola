@@ -291,9 +291,11 @@ def push(args):
 
 def rebase(args):
     from cola import cmds
-    status, out = cmds.do(cmds.Rebase, args.branch)
+    status, out, err = cmds.do(cmds.Rebase, args.branch)
     if out:
-        print(out)
+        core.stdout(out)
+    if err:
+        core.stderr(err)
     return status
 
 
@@ -323,6 +325,7 @@ def tag(args):
     from cola.widgets.createtag import create_tag
     view = create_tag(name=args.name, ref=args.ref, sign=args.sign)
     return application_start(context, view)
+
 
 if __name__ == '__main__':
     sys.exit(main())

@@ -5,6 +5,7 @@ e.g. when python raises an IOError or OSError with errno == EINTR.
 
 """
 import os
+import sys
 import itertools
 
 from cola.decorators import interruptable
@@ -104,6 +105,14 @@ def getenv(name, default=None):
 
 def xopen(path, mode='r', encoding=None):
     return open(encode(path, encoding=encoding), mode)
+
+
+def stdout(msg):
+    sys.stdout.write(encode(msg) + '\n')
+
+
+def stderr(msg):
+    sys.stderr.write(encode(msg) + '\n')
 
 
 abspath = wrap(encode, os.path.abspath, decorator=decode)

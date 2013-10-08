@@ -13,6 +13,7 @@ from cola import qtutils
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.git import git
+from cola.git import STDOUT
 from cola.qt import create_toolbutton
 from cola.qtutils import connect_button
 from cola.qtutils import dir_icon
@@ -151,7 +152,7 @@ class SearchEngine(object):
         return len(self.model.query) > 1
 
     def revisions(self, *args, **kwargs):
-        revlist = git.log(*args, **kwargs)
+        revlist = git.log(*args, **kwargs)[STDOUT]
         return gitcmds.parse_rev_list(revlist)
 
     def results(self):
@@ -193,7 +194,7 @@ class DiffSearch(SearchEngine):
     def results(self):
         query, kwargs = self.common_args()
         return gitcmds.parse_rev_list(
-            git.log('-S'+query, all=True, **kwargs))
+            git.log('-S'+query, all=True, **kwargs)[STDOUT])
 
 
 class DateRangeSearch(SearchEngine):
@@ -351,7 +352,7 @@ class Search(SearchWidget):
         if not selected or len(self.results) < row:
             return
         revision = self.results[row][0]
-        Interaction.log_status(*self.model.export_patchset(revision, revision))
+        Interaction.log_status(*gitcmds.export_patchset(revision, revision))
 
     def cherry_pick(self):
         widget = self.commit_list
@@ -359,9 +360,7 @@ class Search(SearchWidget):
         if not selected or len(self.results) < row:
             return
         revision = self.results[row][0]
-        Interaction.log_status(*git.cherry_pick(revision,
-                               with_stderr=True,
-                               with_status=True))
+        Interaction.log_status(*git.cherry_pick(revision))
 
 def search_commits(parent):
     opts = SearchOptions()

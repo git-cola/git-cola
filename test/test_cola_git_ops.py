@@ -31,13 +31,13 @@ class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
         model = MainModel(cwd=os.getcwd())
         value = model.git.config('section.key', get=True)
 
-        self.assertEqual(value, 'value')
+        self.assertEqual(value, (0, 'value', ''))
 
         #  Test config_set
         model.config_set('section.bool', True)
         value = model.git.config('section.bool', get=True)
 
-        self.assertEqual(value, 'true')
+        self.assertEqual(value, (0, 'true', ''))
         model.config_set('section.bool', False)
 
         # Test config_dict

@@ -16,6 +16,7 @@ from cola import difftool
 from cola import resources
 from cola.compat import set
 from cola.diffparse import DiffParser
+from cola.git import STDOUT
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import selection
@@ -159,12 +160,12 @@ class ApplyDiffSelection(Command):
                             filename=self.model.filename,
                             cached=self.staged,
                             reverse=self.apply_to_worktree)
-        status, output = \
+        status, out, err = \
         parser.process_diff_selection(self.selected,
                                       self.offset,
                                       self.selection,
                                       apply_to_worktree=self.apply_to_worktree)
-        Interaction.log_status(status, output, '')
+        Interaction.log_status(status, out, err)
         self.model.update_file_status(update_index=True)
 
 
@@ -178,23 +179,21 @@ class ApplyPatches(Command):
     def do(self):
         diff_text = ''
         num_patches = len(self.patches)
-        orig_head = self.model.git.rev_parse('HEAD')
+        orig_head = self.model.git.rev_parse('HEAD')[STDOUT]
 
         for idx, patch in enumerate(self.patches):
-            status, output = self.model.git.am(patch,
-                                               with_status=True,
-                                               with_stderr=True)
+            status, out, err = self.model.git.am(patch)
             # Log the git-am command
-            Interaction.log_status(status, output, '')
+            Interaction.log_status(status, out, err)
 
             if num_patches > 1:
-                diff = self.model.git.diff('HEAD^!', stat=True)
+                diff = self.model.git.diff('HEAD^!', stat=True)[STDOUT]
                 diff_text += (N_('PATCH %(current)d/%(count)d') %
                               dict(current=idx+1, count=num_patches))
                 diff_text += ' - %s:\n%s\n\n' % (os.path.basename(patch), diff)
 
         diff_text += N_('Summary:') + '\n'
-        diff_text += self.model.git.diff(orig_head, stat=True)
+        diff_text += self.model.git.diff(orig_head, stat=True)[STDOUT]
 
         # Display a diffstat
         self.model.set_diff_text(diff_text)
@@ -246,9 +245,8 @@ class Checkout(Command):
         self.new_diff_text = ''
 
     def do(self):
-        status, output = self.model.git.checkout(with_stderr=True,
-                                                 with_status=True, *self.argv)
-        Interaction.log_status(status, output, '')
+        status, out, err = self.model.git.checkout(*self.argv)
+        Interaction.log_status(status, out, err)
         if self.checkout_branch:
             self.model.update_status()
         else:
@@ -303,17 +301,17 @@ class Commit(ResetMode):
 
     def do(self):
         tmpfile = utils.tmp_filename('commit-message')
-        status, output = self.model.commit_with_msg(self.msg, tmpfile,
-                                                    amend=self.amend)
+        status, out, err = self.model.commit_with_msg(self.msg, tmpfile,
+                                                      amend=self.amend)
         if status == 0:
             ResetMode.do(self)
             self.model.set_commitmsg(self.new_commitmsg)
-            msg = N_('Created commit: %s') % output
+            msg = N_('Created commit: %s') % out
         else:
-            msg = N_('Commit failed: %s') % output
-        Interaction.log_status(status, msg, '')
+            msg = N_('Commit failed: %s') % out
+        Interaction.log_status(status, msg, err)
 
-        return status, output
+        return status, out, err
 
 
 class Ignore(Command):
@@ -369,8 +367,8 @@ class DeleteBranch(Command):
         self.branch = branch
 
     def do(self):
-        status, output = self.model.delete_branch(self.branch)
-        Interaction.log_status(status, output)
+        status, out, err = self.model.delete_branch(self.branch)
+        Interaction.log_status(status, out, err)
 
 
 class DeleteRemoteBranch(Command):
@@ -382,13 +380,10 @@ class DeleteRemoteBranch(Command):
         self.branch = branch
 
     def do(self):
-        status, output = self.model.git.push(self.remote, self.branch,
-                                             delete=True,
-                                             with_status=True,
-                                             with_stderr=True)
+        status, out, err = self.model.git.push(self.remote, self.branch,
+                                               delete=True)
+        Interaction.log_status(status, out, err)
         self.model.update_status()
-
-        Interaction.log_status(status, output)
 
         if status == 0:
             Interaction.information(
@@ -401,7 +396,7 @@ class DeleteRemoteBranch(Command):
                         dict(command=command, status=status))
 
             Interaction.critical(N_('Error Deleting Remote Branch'),
-                                 message, output)
+                                 message, out + err)
 
 
 
@@ -433,7 +428,7 @@ class Diffstat(Command):
                                    no_ext_diff=True,
                                    no_color=True,
                                    M=True,
-                                   stat=True)
+                                   stat=True)[STDOUT]
         self.new_diff_text = diff
         self.new_mode = self.model.mode_worktree
 
@@ -455,7 +450,7 @@ class DiffStagedSummary(Command):
                                    no_color=True,
                                    no_ext_diff=True,
                                    patch_with_stat=True,
-                                   M=True)
+                                   M=True)[STDOUT]
         self.new_diff_text = diff
         self.new_mode = self.model.mode_index
 
@@ -530,8 +525,8 @@ class FormatPatch(Command):
         self.revs = revs
 
     def do(self):
-        status, output = gitcmds.format_patchsets(self.to_export, self.revs)
-        Interaction.log_status(status, output, '')
+        status, out, err = gitcmds.format_patchsets(self.to_export, self.revs)
+        Interaction.log_status(status, out, err)
 
 
 class LaunchDifftool(BaseCommand):
@@ -648,14 +643,12 @@ class Merge(Command):
         no_commit = self.no_commit
         msg = gitcmds.merge_message(revision)
 
-        status, output = self.model.git.merge('-m', msg,
-                                              revision,
-                                              no_commit=no_commit,
-                                              squash=squash,
-                                              with_stderr=True,
-                                              with_status=True)
+        status, out, err = self.model.git.merge('-m', msg,
+                                                revision,
+                                                no_commit=no_commit,
+                                                squash=squash)
 
-        Interaction.log_status(status, output, '')
+        Interaction.log_status(status, out, err)
         self.model.update_status()
 
 
@@ -722,15 +715,12 @@ class Clone(Command):
         self.spawn = spawn
 
     def do(self):
-        status, out = self.model.git.clone(self.url,
-                                           self.new_directory,
-                                           with_stderr=True,
-                                           with_status=True)
+        status, out, err = self.model.git.clone(self.url, self.new_directory)
         if status != 0:
             Interaction.information(
                     N_('Error: could not clone "%s"') % self.url,
                     (N_('git clone returned exit code %s') % status) +
-                    (out and ('\n' + out) or ''))
+                    ((out+err) and ('\n\n' + out + err) or ''))
             return False
         if self.spawn:
             utils.fork([sys.executable, sys.argv[0],
@@ -767,18 +757,18 @@ class Rebase(Command):
         if not branch:
             return
         status = 1
-        output = ''
+        out = ''
+        err = ''
         with GitXBaseContext(
                 GIT_EDITOR=self.model.editor(),
                 GIT_XBASE_TITLE=N_('Rebase onto %s') % branch,
                 GIT_XBASE_ACTION=N_('Rebase')):
-            status, output = self.model.git.rebase(branch,
-                                        interactive=True, autosquash=True,
-                                        with_stderr=True, with_status=True)
-
-        Interaction.log_status(status, output, '')
+            status, out, err = self.model.git.rebase(branch,
+                                                     interactive=True,
+                                                     autosquash=True)
+        Interaction.log_status(status, out, err)
         self.model.update_status()
-        return status, output
+        return status, out, err
 
 
 class RebaseEditTodo(Command):
@@ -787,40 +777,32 @@ class RebaseEditTodo(Command):
         with GitXBaseContext(
                 GIT_XBASE_TITLE=N_('Edit Rebase'),
                 GIT_XBASE_ACTION=N_('Save')):
-            status, output = self.model.git.rebase(
-                                        edit_todo=True,
-                                        with_stderr=True, with_status=True)
-
-        Interaction.log_status(status, output, '')
+            status, out, err = self.model.git.rebase(edit_todo=True)
+        Interaction.log_status(status, out, err)
         self.model.update_status()
 
 
 class RebaseContinue(Command):
 
     def do(self):
-        status, output = self.model.git.rebase('--continue',
-                                    with_stderr=True, with_status=True)
-        Interaction.log_status(status, output, '')
+        status, out, err = self.model.git.rebase('--continue')
+        Interaction.log_status(status, out, err)
         self.model.update_status()
 
 
 class RebaseSkip(Command):
 
     def do(self):
-        status, output = self.model.git.rebase(
-                                    skip=True,
-                                    with_stderr=True, with_status=True)
-        Interaction.log_status(status, output, '')
+        status, out, err = self.model.git.rebase(skip=True)
+        Interaction.log_status(status, out, err)
         self.model.update_status()
 
 
 class RebaseAbort(Command):
 
     def do(self):
-        status, output = self.model.git.rebase(
-                                    abort=True,
-                                    with_stderr=True, with_status=True)
-        Interaction.log_status(status, output, '')
+        status, out, err = self.model.git.rebase(abort=True)
+        Interaction.log_status(status, out, err)
         self.model.update_status()
 
 
@@ -1069,25 +1051,19 @@ class Tag(Command):
         if self._sign:
             log_msg += ' (%s)' % N_('GPG-signed')
             opts['s'] = True
-            status, output = self.model.git.tag(self._name,
-                                                self._revision,
-                                                with_status=True,
-                                                with_stderr=True,
-                                                **opts)
+            status, output, err = self.model.git.tag(self._name,
+                                                     self._revision, **opts)
         else:
             opts['a'] = bool(self._message)
-            status, output = self.model.git.tag(self._name,
-                                                self._revision,
-                                                with_status=True,
-                                                with_stderr=True,
-                                                **opts)
+            status, output, err = self.model.git.tag(self._name,
+                                                     self._revision, **opts)
         if 'F' in opts:
             os.unlink(opts['F'])
 
         if output:
-            log_msg += '\n' + N_('Output: %s') % output
+            log_msg += '\n' + (N_('Output: %s') % output)
 
-        Interaction.log_status(status, log_msg, '')
+        Interaction.log_status(status, log_msg, err)
         if status == 0:
             self.model.update_status()
 
@@ -1137,8 +1113,8 @@ class Untrack(Command):
         msg = N_('Untracking: %s') % (', '.join(self.paths))
         Interaction.log(msg)
         with CommandDisabled(UpdateFileStatus):
-            status, out = self.model.untrack_paths(self.paths)
-        Interaction.log_status(status, out, '')
+            status, out, err = self.model.untrack_paths(self.paths)
+        Interaction.log_status(status, out, err)
 
 
 class UntrackedSummary(Command):

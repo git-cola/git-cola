@@ -9,6 +9,7 @@ if __name__ == '__main__':
     sys.path.insert(1, srcdir)
 
 from cola.git import git
+from cola.git import STDOUT
 from cola.decorators import memoize
 from cola._version import VERSION
 
@@ -66,7 +67,7 @@ def version_to_list(version):
 @memoize
 def git_version_str():
     """Returns the current GIT version"""
-    return git.version().strip()
+    return git.version()[STDOUT].strip()
 
 @memoize
 def git_version():

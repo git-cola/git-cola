@@ -297,16 +297,16 @@ class GitTreeModel(GitFileTreeModel):
 
     def _initialize(self):
         """Iterate over git-ls-tree and create GitTreeItems."""
-        status, output = git.ls_tree('--full-tree', '-r', '-t', '-z', self.ref,
-                                     with_status=True, with_stderr=True)
+        status, out, err = git.ls_tree('--full-tree', '-r', '-t', '-z',
+                                       self.ref)
         if status != 0:
-            Interaction.log_status(status, output, '')
+            Interaction.log_status(status, out, err)
             return
 
-        if not output:
+        if not out:
             return
 
-        for line in core.decode(output[:-1]).split('\0'):
+        for line in out[:-1].split('\0'):
             # .....6 ...4 ......................................40
             # 040000 tree c127cde9a0c644a3a8fef449a244f47d5272dfa6	relative
             # 100644 blob 139e42bf4acaa4927ec9be1ec55a252b97d3f1e2	relative/path

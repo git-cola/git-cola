@@ -25,6 +25,7 @@ from cola.classic import cola_classic
 from cola.classic import classic_widget
 from cola.dag import git_dag
 from cola.git import git
+from cola.git import STDOUT
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.qt import create_dock
@@ -674,7 +675,7 @@ class MainView(MainWindow):
         return prefs.preferences(model=self.prefs_model, parent=self)
 
     def save_archive(self):
-        ref = git.rev_parse('HEAD')
+        ref = git.rev_parse('HEAD')[STDOUT]
         shortref = ref[:7]
         GitArchiveDialog.save(ref, shortref, self)
 

@@ -12,6 +12,9 @@ from cola.interaction import Interaction
 
 INDEX_LOCK = threading.Lock()
 GIT_COLA_TRACE = core.getenv('GIT_COLA_TRACE', '')
+STATUS = 0
+STDOUT = 1
+STDERR = 2
 
 
 def dashify(s):
@@ -133,28 +136,26 @@ class Git(object):
 
     @staticmethod
     def execute(command,
-                cwd=None,
-                istream=None,
-                with_exceptions=False,
-                with_raw_output=False,
-                with_status=False,
-                with_stderr=False,
+                _cwd=None,
+                _stdin=None,
+                _raw=False,
+                _decode=True,
                 _encoding=None):
         """
         Execute a command and returns its output
 
         :param command: argument list to execute.
-        :param istream: optional stdin filehandle.
-        :param cwd: working directory, defaults to current directory.
-        :param with_status: return a (status, output) tuple.
-        :param with_stderr: include stderr in the output stream.
-        :param with_raw_output: do not strip trailing whitespace.
-        :returns bytes: command output
+        :param _cwd: working directory, defaults to the current directory.
+        :param _decode: whether to decode output, defaults to True.
+        :param _encoding: default encoding, defaults to None (utf-8).
+        :param _raw: do not strip trailing whitespace.
+        :param _stdin: optional stdin filehandle.
+        :returns (status, out, err): exit status, stdout, stderr
 
         """
         # Allow the user to have the command executed in their working dir.
-        if not cwd:
-            cwd = core.getcwd()
+        if not _cwd:
+            _cwd = core.getcwd()
 
         extra = {}
         if sys.platform == 'win32':
@@ -168,15 +169,16 @@ class Git(object):
         while True:
             try:
                 proc = subprocess.Popen(command,
-                                        cwd=cwd,
-                                        stdin=istream,
+                                        cwd=_cwd,
+                                        stdin=_stdin,
                                         stderr=subprocess.PIPE,
                                         stdout=subprocess.PIPE,
                                         **extra)
                 # Wait for the process to return
                 out, err = proc.communicate()
-                out = core.decode(out, encoding=_encoding)
-                err = core.decode(err, encoding=_encoding)
+                if _decode:
+                    out = core.decode(out, encoding=_encoding)
+                    err = core.decode(err, encoding=_encoding)
                 status = proc.returncode
                 break
             except OSError, e:
@@ -189,32 +191,27 @@ class Git(object):
                 raise
         # Let the next thread in
         INDEX_LOCK.release()
-        output = with_stderr and (out+err) or out
-        if not with_raw_output:
-            output = output.rstrip('\n')
+        if not _raw:
+            out = out.rstrip('\n')
 
         cola_trace = GIT_COLA_TRACE
         if cola_trace == 'trace':
             msg = 'trace: ' + subprocess.list2cmdline(command)
             Interaction.log_status(status, msg, '')
         elif cola_trace == 'full':
-            if output:
-                print("%s -> %d: '%s'" % (command, status, output))
+            if out:
+                core.stderr("%s -> %d: '%s' '%s'" %
+                            (' '.join(command), status, out, err))
             else:
-                print("%s -> %d" % (command, status))
+                core.stderr("%s -> %d" % (' '.join(command), status))
         elif cola_trace:
-            print(' '.join(command))
+            core.stderr(' '.join(command))
 
         # Allow access to the command's status code
-        if with_status:
-            return (status, output)
-        else:
-            return output
+        return (status, out, err)
 
     def transform_kwargs(self, **kwargs):
-        """
-        Transforms Python style kwargs into git command line options.
-        """
+        """Transform kwargs into git command line options"""
         args = []
         for k, v in kwargs.items():
             if len(k) == 1:
@@ -230,38 +227,10 @@ class Git(object):
         return args
 
     def _call_process(self, cmd, *args, **kwargs):
-        """
-        Run the given git command with the specified arguments and return
-        the result as a String
-
-        ``cmd``
-            is the command
-
-        ``args``
-            is the list of arguments
-
-        ``kwargs``
-            is a dict of keyword arguments.
-            This function accepts the same optional keyword arguments
-            as execute().
-
-        Examples
-            git.rev_list('master', max_count=10, header=True)
-
-        Returns
-            Same as execute()
-
-        """
-
         # Handle optional arguments prior to calling transform_kwargs
         # otherwise they'll end up in args, which is bad.
-        _kwargs = dict(cwd=self._git_cwd)
-        execute_kwargs = ('cwd', 'istream',
-                          'with_raw_output',
-                          'with_status',
-                          'with_stderr',
-                          '_encoding')
-
+        _kwargs = dict(_cwd=self._git_cwd)
+        execute_kwargs = ('_cwd', '_stdin', '_decode', '_encoding', '_raw')
         for kwarg in execute_kwargs:
             if kwarg in kwargs:
                 _kwargs[kwarg] = kwargs.pop(kwarg)
@@ -302,7 +271,8 @@ git = instance()
 Git command singleton
 
 >>> from cola.git import git
->>> 'git' == git.version()[:3].lower()
+>>> from cola.git import STDOUT
+>>> 'git' == git.version()[STDOUT][:3].lower()
 True
 
 """

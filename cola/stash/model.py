@@ -1,6 +1,7 @@
 import cola
 from cola import observable
 from cola.git import git
+from cola.git import STDOUT
 from cola.cmds import BaseCommand
 from cola.interaction import Interaction
 
@@ -10,7 +11,7 @@ class StashModel(observable.Observable):
         observable.Observable.__init__(self)
 
     def stash_list(self):
-        return git.stash('list').splitlines()
+        return git.stash('list')[STDOUT].splitlines()
 
     def has_stashable_changes(self):
         model = cola.model()
@@ -25,8 +26,8 @@ class StashModel(observable.Observable):
         return stashes, revids, names
 
     def stash_diff(self, rev):
-        diffstat = git.stash('show', rev)
-        diff = git.stash('show', '-p', rev)
+        diffstat = git.stash('show', rev)[STDOUT]
+        diff = git.stash('show', '-p', rev)[STDOUT]
         return diffstat + '\n\n' + diff
 
 
@@ -41,8 +42,8 @@ class ApplyStash(BaseCommand):
             args = ['apply', '--index', self.selection]
         else:
             args = ['apply', self.selection]
-        status, output = git.stash(with_stderr=True, with_status=True, *args)
-        Interaction.log_status(status, output, '')
+        status, out, err = git.stash(*args)
+        Interaction.log_status(status, out, err)
 
 
 class DropStash(BaseCommand):
@@ -51,9 +52,8 @@ class DropStash(BaseCommand):
         self.stash_sha1 = stash_sha1
 
     def do(self):
-        status, output = git.stash('drop', self.stash_sha1,
-                                   with_stderr=True, with_status=True)
-        Interaction.log_status(status, output, '')
+        status, out, err = git.stash('drop', self.stash_sha1)
+        Interaction.log_status(status, out, err)
 
 
 class SaveStash(BaseCommand):
@@ -67,5 +67,5 @@ class SaveStash(BaseCommand):
             args = ['save', '--keep-index', self.stash_name]
         else:
             args = ['save', self.stash_name]
-        status, output = git.stash(with_stderr=True, with_status=True, *args)
-        Interaction.log_status(status, output, '')
+        status, out, err = git.stash(*args)
+        Interaction.log_status(status, out, err)

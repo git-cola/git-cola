@@ -31,10 +31,9 @@ class GrepThread(QtCore.QThread):
             args = utils.shell_split(query)
         else:
             args = [query]
-        status, out = git.grep(with_status=True, with_stderr=True,
-                               n=True, *args)
+        status, out, err = git.grep(n=True, *args)
         if query == self.txt:
-            self.emit(SIGNAL('result'), status, out)
+            self.emit(SIGNAL('result'), status, out, err)
         else:
             self.run()
 
@@ -144,11 +143,11 @@ class Grep(Dialog):
         self.input_txt.set_value(txt)
         self.search()
 
-    def process_result(self, status, output):
+    def process_result(self, status, out, err):
         if status == 0:
-            self.result_txt.set_value(output)
-        elif output:
-            self.result_txt.set_value('git grep: ' + output)
+            self.result_txt.set_value(out)
+        elif out + err:
+            self.result_txt.set_value('git grep: ' + out + err)
         else:
             self.result_txt.set_value('')
 
