@@ -26,7 +26,7 @@ darwin_python = /System/Library/Frameworks/Python.framework/Resources/Python.app
 cola_base := git-cola
 cola_app_base= $(cola_base).app
 cola_app = $(CURDIR)/$(cola_app_base)
-cola_version = $(shell env TERM=dummy $(PYTHON) cola/version.py)
+cola_version = $(shell $(PYTHON) cola/version.py)
 cola_dist := $(cola_base)-$(cola_version)
 
 test_flags =
