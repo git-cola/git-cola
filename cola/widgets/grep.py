@@ -114,6 +114,9 @@ class Grep(Dialog):
         qtutils.add_action(self.input_txt, 'FocusResults',
                            lambda: self.result_txt.setFocus(),
                            Qt.Key_Down, Qt.Key_Enter, Qt.Key_Return)
+        qtutils.add_action(self, 'FocusSearch',
+                           lambda: self.input_txt.setFocus(),
+                           'Ctrl+l')
         qtutils.connect_button(self.edit_button, self.edit)
         qtutils.connect_button(self.refresh_button, self.search)
         qtutils.connect_button(self.close_button, self.close)
