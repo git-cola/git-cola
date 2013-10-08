@@ -312,12 +312,12 @@ def checksum(path):
 
 def error(msg, *args):
     """Print an error message to stderr."""
-    print >> sys.stderr, "ERROR:", msg % args
+    sys.stderr.write('error: ' + (msg % args) + '\n')
 
 
 def warn(msg, *args):
     """Print a warning message to stderr."""
-    print >> sys.stderr, "warning:", msg % args
+    sys.stderr.write('warning: ' + (msg % args) + '\n')
 
 
 def die(msg, *args):
@@ -376,7 +376,8 @@ class ProgressIndicator(object):
 
 def start_command(args, cwd=None, shell=False, add_env=None,
                   universal_newlines=False,
-                  stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                  stdin=subprocess.PIPE,
+                  stdout=subprocess.PIPE,
                   stderr=subprocess.PIPE):
     """Start the given command, and return a subprocess object.
 
@@ -409,6 +410,8 @@ def run_command(args, cwd=None, shell=False, add_env=None,
     """
     process = start_command(args, cwd, shell, add_env)
     (output, errors) = process.communicate()
+    output = core.decode(output)
+    errors = core.decode(errors)
     exit_code = process.returncode
     if flag_error and errors:
         error("'%s' returned errors:\n---\n%s---", " ".join(args), errors)

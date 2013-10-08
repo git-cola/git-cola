@@ -493,7 +493,7 @@ class DAGView(MainWindow):
             return
         if not self.model.currentbranch:
             return
-        self.revtext.setText(self.model.currentbranch)
+        self.revtext.setText(self.model.currentbranch + ' --')
         self.display()
 
     def display(self):
