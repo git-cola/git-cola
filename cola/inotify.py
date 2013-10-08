@@ -6,6 +6,7 @@ from threading import Timer
 from threading import Lock
 from cola import utils
 from cola import cmds
+from cola.git import STDOUT
 from cola.i18n import N_
 from cola.interaction import Interaction
 
@@ -197,7 +198,7 @@ class GitNotifier(QtCore.QThread):
         self._watch_directory(self._path)
 
         # Register files/directories known to git
-        for filename in self._git.ls_files().splitlines():
+        for filename in self._git.ls_files()[STDOUT].splitlines():
             filename = core.realpath(filename)
             directory = os.path.dirname(filename)
             self._watch_directory(directory)
