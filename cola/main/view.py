@@ -263,7 +263,7 @@ class MainView(MainWindow):
                 N_('Browse Other Branch...'), guicmds.browse_other)
         self.menu_load_commitmsg_template = add_action(self,
                 N_('Get Commit Message Template'),
-                cmds.run(cmds.LoadCommitMessageTemplate))
+                cmds.run(cmds.LoadCommitMessageFromTemplate))
         self.menu_help_about = add_action(self,
                 N_('About'), launch_about_dialog)
 
