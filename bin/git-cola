@@ -22,14 +22,16 @@ import os
 import sys
 import subprocess
 from argparse import ArgumentParser
+from os.path import abspath
+from os.path import dirname
+from os.path import realpath
 
 
 def setup_environment():
     """Provides access to the cola modules"""
     # Try to detect where it is run from and set prefix and the search path.
     # It is assumed that the user installed Cola using the --prefix= option
-    prefix = os.path.dirname(os.path.dirname(
-        os.path.realpath(os.path.abspath(__file__))))
+    prefix = dirname(dirname(realpath(abspath(__file__))))
 
     # Look for modules in the source or install trees
     cola_mod = os.path.join(prefix, 'cola', '__init__.py')
@@ -46,7 +48,6 @@ from cola import core
 from cola.app import add_common_arguments
 from cola.app import application_init
 from cola.app import application_start
-from cola.i18n import N_
 
 
 def main():
