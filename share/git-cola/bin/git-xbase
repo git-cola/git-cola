@@ -199,6 +199,7 @@ class Editor(QtGui.QWidget):
             idx += 1
         self.tree.decorate()
         self.tree.refit()
+        self.tree.select_first()
 
     # actions
     def cancel(self):
@@ -323,6 +324,14 @@ class RebaseTreeWidget(TreeWidget):
         if item is None:
             return
         item.toggle_enabled()
+
+    def select_first(self):
+        items = self.items()
+        if not items:
+            return
+        idx = self.model().index(0, 0)
+        if idx.isValid():
+            self.setCurrentIndex(idx)
 
     # Qt events
     def supportedDropActions(self):
