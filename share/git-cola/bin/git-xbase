@@ -114,13 +114,13 @@ class Editor(QtGui.QWidget):
     def __init__(self, filename, parent=None):
         super(Editor, self).__init__(parent)
 
+        self.widget_version = 1
         self.filename = filename
 
         self.notifier = notifier = observable.Observable()
+        self.diff = DiffWidget(notifier, self)
         self.tree = RebaseTreeWidget(notifier, self)
         self.setFocusProxy(self.tree)
-
-        self.diff = DiffWidget(notifier, self)
 
         self.rebase_button = qt.create_button(
                 text=core.getenv('GIT_XBASE_ACTION', N_('Rebase')),
@@ -133,13 +133,20 @@ class Editor(QtGui.QWidget):
                 text=N_('Help'),
                 icon=qtutils.help_icon())
 
-        self.cancel_button = qt.create_button(
-                text=N_('Cancel'),
-                icon=qtutils.close_icon())
+        self.cancel_button = qt.create_button(text=N_('Cancel'),
+                                              icon=qtutils.close_icon())
 
         policy = self.tree.sizePolicy()
         policy.setVerticalStretch(1)
         self.tree.setSizePolicy(policy)
+
+        splitter = QtGui.QSplitter()
+        splitter.setHandleWidth(defs.handle_width)
+        splitter.setOrientation(Qt.Vertical)
+        splitter.insertWidget(0, self.tree)
+        splitter.insertWidget(1, self.diff)
+        splitter.setStretchFactor(0, 1)
+        splitter.setStretchFactor(1, 1)
 
         controls_layout = QtGui.QHBoxLayout()
         controls_layout.setMargin(defs.no_margin)
@@ -153,8 +160,7 @@ class Editor(QtGui.QWidget):
         layout = QtGui.QVBoxLayout()
         layout.setMargin(defs.no_margin)
         layout.setSpacing(defs.spacing)
-        layout.addWidget(self.tree)
-        layout.addWidget(self.diff)
+        layout.addWidget(splitter)
         layout.addLayout(controls_layout)
         self.setLayout(layout)
 
