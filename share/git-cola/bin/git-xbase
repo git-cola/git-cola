@@ -96,7 +96,7 @@ class MainWindow(QtGui.QMainWindow):
         editor.setFocus()
 
         self.show_help_action = qtutils.add_action(self,
-                N_('Interactive Rebase Help...'), show_help, Qt.Key_Question)
+                N_('Show Help'), show_help, Qt.Key_Question)
 
         self.menubar = QtGui.QMenuBar(self)
         self.help_menu = self.menubar.addMenu(N_('Help'))
@@ -125,18 +125,25 @@ class Editor(QtGui.QWidget):
 
         self.rebase_button = qt.create_button(
                 text=core.getenv('GIT_XBASE_ACTION', N_('Rebase')),
+                tooltip=N_('Accept changes and rebase\n'
+                           'Shortcut: Ctrl+Enter'),
                 icon=qtutils.apply_icon())
 
-        self.external_diff_button = qt.create_button(text=N_('External Diff'))
+        self.external_diff_button = qt.create_button(
+                text=N_('External Diff'),
+                tooltip=N_('Launch external diff\n'
+                           'Shortcut: Ctrl+D'))
         self.external_diff_button.setEnabled(False)
 
-        self.help_button = qt.create_button(
-                text=N_('Help'),
-                icon=qtutils.help_icon())
+        self.help_button = qt.create_button(text=N_('Help'),
+                                            tooltip=N_('Show help\n'
+                                                       'Shortcut: ?'),
+                                            icon=qtutils.help_icon())
 
         self.cancel_button = qt.create_button(text=N_('Cancel'),
+                                              tooltip=N_('Cancel rebase\n'
+                                                         'Shortcut: Ctrl+Q'),
                                               icon=qtutils.close_icon())
-
         splitter = QtGui.QSplitter()
         splitter.setHandleWidth(defs.handle_width)
         splitter.setOrientation(Qt.Vertical)
@@ -560,18 +567,21 @@ However, if you disable everything, the rebase will be aborted.
 
 Keyboard Shortcuts
 ------------------
+? = show help
 j = move down
 k = move up
 J = shift row down
 K = shift row up
 
-spacebar = toggle enabled
 1, p = pick
 2, r = reword
 3, e = edit
 4, f = fixup
 5, s = squash
-? = show help
+spacebar = toggle enabled
+
+ctrl+q     = cancel and abort the rebase
+ctrl+d     = launch external diff
 """)
 
     parent = qtutils.active_window()
@@ -587,7 +597,7 @@ spacebar = toggle enabled
 
     widget = QtGui.QDialog(parent)
     widget.setWindowModality(Qt.WindowModal)
-    widget.setWindowTitle(N_('Help'))
+    widget.setWindowTitle(N_('Help - git-xbase'))
     widget.setLayout(layout)
 
     qtutils.add_action(widget, N_('Close'), widget.accept,
