@@ -4,15 +4,11 @@
 
 import os
 import sys
-try:
-    import simplejson
-    json = simplejson
-except ImportError:
-    import json
 
 from cola import core
 from cola import git
 from cola import xdg
+from cola.compat import json
 
 
 def mkdict(obj):

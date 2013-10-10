@@ -7,6 +7,11 @@ except NameError:
     set = set
 
 try:
+    import simplejson as json
+except ImportError:
+    import json
+
+try:
     import hashlib
 except ImportError:
     import md5
@@ -20,8 +25,6 @@ except ImportError:
             obj = md5.new()
             obj.update(value)
             return obj
-
-
 
 
 def setenv(key, value):
