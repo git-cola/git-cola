@@ -280,6 +280,12 @@ class RebaseTreeWidget(TreeWidget):
                 N_('Squash'), lambda: self.set_selected_to(SQUASH),
                 Qt.Key_5, Qt.Key_S)
 
+        self.action_shift_down = qtutils.add_action(self,
+                N_('Shift Down'), self.shift_down, 'Shift+j')
+
+        self.action_shift_up = qtutils.add_action(self,
+                N_('Shift Up'), self.shift_up, 'Shift+k')
+
         self.connect(self, SIGNAL('itemChanged(QTreeWidgetItem *, int)'),
                      self.item_changed)
 
@@ -375,6 +381,24 @@ class RebaseTreeWidget(TreeWidget):
         idx = self.model().index(0, 0)
         if idx.isValid():
             self.setCurrentIndex(idx)
+
+    def shift_down(self):
+        item = self.selected_item()
+        if item is None:
+            return
+        items = self.items()
+        idx = items.index(item)
+        if idx < len(items) - 1:
+            self.emit(SIGNAL('move'), [idx], idx + 1)
+
+    def shift_up(self):
+        item = self.selected_item()
+        if item is None:
+            return
+        items = self.items()
+        idx = items.index(item)
+        if idx > 0:
+            self.emit(SIGNAL('move'), [idx], idx - 1)
 
     # Qt events
     def mimeTypes(self):
@@ -536,9 +560,12 @@ However, if you disable everything, the rebase will be aborted.
 
 Keyboard Shortcuts
 ------------------
-spacebar = toggle enabled
 j = move down
 k = move up
+J = shift row down
+K = shift row up
+
+spacebar = toggle enabled
 1, p = pick
 2, r = reword
 3, e = edit
