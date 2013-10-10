@@ -260,6 +260,26 @@ class RebaseTreeWidget(TreeWidget):
                 N_('Toggle Enabled'), self.toggle_enabled,
                 Qt.Key_Space)
 
+        self.action_pick = qtutils.add_action(self,
+                N_('Pick'), lambda: self.set_selected_to(PICK),
+                Qt.Key_1, Qt.Key_P)
+
+        self.action_reword = qtutils.add_action(self,
+                N_('Reword'), lambda: self.set_selected_to(REWORD),
+                Qt.Key_2, Qt.Key_R)
+
+        self.action_edit = qtutils.add_action(self,
+                N_('Edit'), lambda: self.set_selected_to(EDIT),
+                Qt.Key_3, Qt.Key_E)
+
+        self.action_fixup = qtutils.add_action(self,
+                N_('Fixup'), lambda: self.set_selected_to(FIXUP),
+                Qt.Key_4, Qt.Key_F)
+
+        self.action_squash = qtutils.add_action(self,
+                N_('Squash'), lambda: self.set_selected_to(SQUASH),
+                Qt.Key_5, Qt.Key_S)
+
         self.connect(self, SIGNAL('itemChanged(QTreeWidgetItem *, int)'),
                      self.item_changed)
 
@@ -306,6 +326,12 @@ class RebaseTreeWidget(TreeWidget):
         combo.connect(combo, SIGNAL('currentIndexChanged(const QString &)'),
                 lambda s: self.set_command(item, unicode(s)))
         self.setItemWidget(item, item.COMMAND_COLUMN, combo)
+
+    def set_selected_to(self, command):
+        for i in self.selected_items():
+            i.command = command
+            i.combo.setCurrentIndex(COMMAND_TO_IDX[command])
+        self.validate()
 
     def set_command(self, item, command):
         item.command = command
@@ -430,6 +456,12 @@ class RebaseTreeWidget(TreeWidget):
 
     def contextMenuEvent(self, event):
         menu = QtGui.QMenu(self)
+        menu.addAction(self.action_pick)
+        menu.addAction(self.action_reword)
+        menu.addAction(self.action_edit)
+        menu.addAction(self.action_fixup)
+        menu.addAction(self.action_squash)
+        menu.addSeparator()
         menu.addAction(self.toggle_enabled_action)
         menu.addSeparator()
         menu.addAction(self.copy_sha1_action)
@@ -501,7 +533,19 @@ These lines can be re-ordered; they are executed from top to bottom.
 If you disable a line here THAT COMMIT WILL BE LOST.
 
 However, if you disable everything, the rebase will be aborted.
-""").strip()
+
+Keyboard Shortcuts
+------------------
+spacebar = toggle enabled
+j = move down
+k = move up
+1, p = pick
+2, r = reword
+3, e = edit
+4, f = fixup
+5, s = squash
+? = show help
+""")
 
     parent = qtutils.active_window()
     text = QtGui.QLabel(parent)
