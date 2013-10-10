@@ -104,6 +104,8 @@ class MainWindow(QtGui.QMainWindow):
         self.help_menu.addAction(self.show_help_action)
         self.setMenuBar(self.menubar)
 
+        qtutils.add_close_action(self)
+
     def exit(self, status):
         self.status = status
         self.close()
