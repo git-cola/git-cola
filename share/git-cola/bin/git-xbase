@@ -44,20 +44,14 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 
+XBASE_MIMETYPE = 'application/git-xbase-items'
 PICK = 'pick'
+REWORD = 'reword'
+EDIT = 'edit'
 FIXUP = 'fixup'
 SQUASH = 'squash'
-EDIT = 'edit'
-REWORD = 'reword'
-REBASE_MIMETYPE = 'application/git-xbase-items'
-
-
-def rebase_commands():
-    return (PICK, REWORD, EDIT, SQUASH, FIXUP,)
-
-
-def rebase_commands_idx(name):
-    return {PICK: 0, REWORD: 1, EDIT: 2, SQUASH: 3, FIXUP: 4,}[name]
+COMMANDS = (PICK, REWORD, EDIT, FIXUP, SQUASH,)
+COMMAND_TO_IDX = dict([(cmd, idx) for idx, cmd in enumerate(COMMANDS)])
 
 
 def main():
@@ -274,14 +268,14 @@ class RebaseTreeWidget(TreeWidget):
 
         self.connect(self, SIGNAL('move'), self.move)
 
-    def add_step(self, idx, enabled, action, sha1hex, summary):
-        item = RebaseTreeWidgetItem(idx, enabled, action,
-                                    sha1hex, summary, self)
+    def add_step(self, idx, enabled, command, sha1hex, summary):
+        item = RebaseTreeWidgetItem(idx, enabled, command,
+                                    sha1hex, summary)
         self.invisibleRootItem().addChild(item)
 
     def decorate(self):
         for item in self.items():
-            item.new_combo()
+            self.decorate_item(item)
 
     def refit(self):
         self.resizeColumnToContents(0)
@@ -301,8 +295,22 @@ class RebaseTreeWidget(TreeWidget):
                 continue
             if item.command != PICK:
                 item.command = PICK
-                item.new_combo()
+                self.decorate_item(item)
             break
+
+    def decorate_item(self, item):
+        item.combo = combo = QtGui.QComboBox()
+        combo.addItems(COMMANDS)
+        combo.setEditable(False)
+        combo.setCurrentIndex(COMMAND_TO_IDX[item.command])
+        combo.connect(combo, SIGNAL('currentIndexChanged(const QString &)'),
+                lambda s: self.set_command(item, unicode(s)))
+        self.setItemWidget(item, item.COMMAND_COLUMN, combo)
+
+    def set_command(self, item, command):
+        item.command = command
+        item.combo.setCurrentIndex(COMMAND_TO_IDX[command])
+        self.validate()
 
     def copy_sha1(self):
         item = self.selected_item()
@@ -344,7 +352,7 @@ class RebaseTreeWidget(TreeWidget):
 
     # Qt events
     def mimeTypes(self):
-        return [REBASE_MIMETYPE]
+        return [XBASE_MIMETYPE]
 
     def mousePressEvent(self, event):
         self.clicked_item = self.itemAt(event.pos())
@@ -365,7 +373,7 @@ class RebaseTreeWidget(TreeWidget):
     def mimeData(self, items):
         mime = QtCore.QMimeData()
         data = [i.copy() for i in self.selected_items()]
-        mime.setData(REBASE_MIMETYPE, json.dumps(data))
+        mime.setData(XBASE_MIMETYPE, json.dumps(data))
         self.dragged_items = self.selected_items()
         return mime
 
@@ -410,8 +418,7 @@ class RebaseTreeWidget(TreeWidget):
             self.invisibleRootItem().takeChild(idx)
             item = RebaseTreeWidgetItem(data['idx'], data['enabled'],
                                         data['command'], data['sha1hex'],
-                                        data['summary'], None)
-            item.parent = self
+                                        data['summary'])
             new_items.insert(0, item)
 
         if new_items:
@@ -419,7 +426,6 @@ class RebaseTreeWidget(TreeWidget):
             self.setCurrentItem(new_items[0])
 
         self.decorate()
-        self.refit()
         self.validate()
 
     def contextMenuEvent(self, event):
@@ -434,13 +440,13 @@ class RebaseTreeWidget(TreeWidget):
 class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
 
     ENABLED_COLUMN = 1
+    COMMAND_COLUMN = 2
 
-    def __init__(self, idx, enabled, command, sha1hex, summary, parent):
+    def __init__(self, idx, enabled, command, sha1hex, summary, parent=None):
         QtGui.QTreeWidgetItem.__init__(self, parent)
         self.combo = None
         self.command = command
         self.idx = idx
-        self.parent = parent
         self.sha1hex = sha1hex
         self.summary = summary
 
@@ -478,20 +484,6 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
 
     def toggle_enabled(self):
         self.set_enabled(not self.is_enabled())
-
-    def new_combo(self):
-        combo = QtGui.QComboBox()
-        combo.addItems(rebase_commands())
-        combo.setEditable(False)
-        combo.setCurrentIndex(rebase_commands_idx(self.command))
-        self.parent.setItemWidget(self, 2, combo)
-        self.parent.connect(combo,
-                            SIGNAL('currentIndexChanged(const QString &)'),
-                            self.combo_changed)
-
-    def combo_changed(self, value):
-        self.command = unicode(value)
-        self.parent.validate()
 
 
 def show_help():
