@@ -27,6 +27,7 @@ from cola import observable
 from cola import qt
 from cola import qtutils
 from cola import utils
+from cola.compat import json
 from cola.i18n import N_
 from cola.dag.model import DAG
 from cola.dag.model import RepoReader
@@ -35,6 +36,7 @@ from cola.widgets.diff import DiffWidget
 from cola.widgets.diff import COMMITS_SELECTED
 from cola.widgets.standard import TreeWidget
 
+from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
@@ -45,6 +47,7 @@ FIXUP = 'fixup'
 SQUASH = 'squash'
 EDIT = 'edit'
 REWORD = 'reword'
+REBASE_MIMETYPE = 'application/git-xbase-items'
 
 
 def rebase_commands():
@@ -137,10 +140,6 @@ class Editor(QtGui.QWidget):
 
         self.cancel_button = qt.create_button(text=N_('Cancel'),
                                               icon=qtutils.close_icon())
-
-        policy = self.tree.sizePolicy()
-        policy.setVerticalStretch(1)
-        self.tree.setSizePolicy(policy)
 
         splitter = QtGui.QSplitter()
         splitter.setHandleWidth(defs.handle_width)
@@ -244,6 +243,8 @@ class RebaseTreeWidget(TreeWidget):
         # drag+drop
         self.clicked_item = None
         self.clicked_idx = -1
+        self.dragged_items = []
+        self.inner_drag = False
         self.setSelectionMode(self.SingleSelection)
         self.setDragEnabled(True)
         self.setAcceptDrops(True)
@@ -268,6 +269,8 @@ class RebaseTreeWidget(TreeWidget):
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.selection_changed)
+
+        self.connect(self, SIGNAL('move'), self.move)
 
     def add_step(self, idx, enabled, action, sha1hex, summary):
         item = RebaseTreeWidgetItem(idx, enabled, action,
@@ -317,8 +320,8 @@ class RebaseTreeWidget(TreeWidget):
         for c in repo:
             commits.append(c)
         if commits:
-            commits = [commits[-1]]
-        self.notifier.notify_observers(COMMITS_SELECTED, [commits[-1]])
+            commits = commits[-1:]
+        self.notifier.notify_observers(COMMITS_SELECTED, commits)
 
     def external_diff(self):
         self.emit(SIGNAL('external_diff()'))
@@ -338,40 +341,84 @@ class RebaseTreeWidget(TreeWidget):
             self.setCurrentIndex(idx)
 
     # Qt events
+    def mimeTypes(self):
+        return [REBASE_MIMETYPE]
 
     def mousePressEvent(self, event):
         self.clicked_item = self.itemAt(event.pos())
-        if self.clicked_item is not None:
+        if self.clicked_item:
             self.clicked_idx = self.items().index(self.clicked_item)
         else:
             self.clicked_idx = -1
+            self.clearSelection()
         super(RebaseTreeWidget, self).mousePressEvent(event)
+        return QtGui.QTreeWidget.mousePressEvent(self, event)
 
     def supportedDropActions(self):
-        return Qt.MoveAction
+        return Qt.CopyAction
+
+    def dropMimeData(self, parent, index, data, action):
+        return False
+
+    def mimeData(self, items):
+        mime = QtCore.QMimeData()
+        data = [i.copy() for i in self.selected_items()]
+        mime.setData(REBASE_MIMETYPE, json.dumps(data))
+        self.dragged_items = self.selected_items()
+        return mime
+
+    def dragEnterEvent(self, event):
+        """Detect drag enter events to flag internal moves."""
+        self.inner_drag = event.source() == self
+        event.accept()
+        return super(RebaseTreeWidget, self).dragEnterEvent(event)
+
+    def dragLeaveEvent(self, event):
+        """Detect when drags leave so that we can flag it."""
+        self.inner_drag = False
+        return super(RebaseTreeWidget, self).dragLeaveEvent(event)
 
     def dropEvent(self, event):
         # Qt's default action is losing items so we handle the internal
         # move ourselves.  Ignore the event and reorder the tree.
-        event.ignore()
+        event.accept()
 
         if self.clicked_item is None:
             return
 
         drop_pos = event.pos()
-        dest_item = self.itemAt(drop_pos)
-        if not dest_item:
-            return
+        dst_item = self.itemAt(drop_pos)
+        if dst_item:
+            dst_idx = self.items().index(dst_item)
+        else:
+            dst_idx = len(self.items())
 
-        root = self.invisibleRootItem()
-        dest_idx = self.items().index(dest_item)
-        clicked_item = root.takeChild(self.clicked_idx)
-        root.insertChild(dest_idx, clicked_item)
+        src_idxs = [self.items().index(i) for i in self.dragged_items]
+        if src_idxs:
+            self.emit(SIGNAL('move'), src_idxs, dst_idx)
+
+        self.viewport().update()
+        self.dragged_items = []
+
+    def move(self, src_idxs, dst_idx):
+        new_items = []
+        items = self.items()
+        for idx in reversed(sorted(src_idxs)):
+            data = items[idx].copy()
+            self.invisibleRootItem().takeChild(idx)
+            item = RebaseTreeWidgetItem(data['idx'], data['enabled'],
+                                        data['command'], data['sha1hex'],
+                                        data['summary'], None)
+            item.parent = self
+            new_items.insert(0, item)
+
+        if new_items:
+            self.invisibleRootItem().insertChildren(dst_idx, new_items)
+            self.setCurrentItem(new_items[0])
 
         self.decorate()
         self.refit()
         self.validate()
-        self.setCurrentItem(clicked_item)
 
     def contextMenuEvent(self, event):
         menu = QtGui.QMenu(self)
@@ -388,21 +435,32 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
 
     def __init__(self, idx, enabled, command, sha1hex, summary, parent):
         QtGui.QTreeWidgetItem.__init__(self, parent)
+        self.combo = None
         self.command = command
+        self.idx = idx
+        self.parent = parent
         self.sha1hex = sha1hex
         self.summary = summary
-        self.parent = parent
-        self.combo = None
 
         self.setText(0, '%02d' % idx)
         self.set_enabled(enabled)
         # combo box on 2
         self.setText(3, sha1hex)
         self.setText(4, summary)
+
         flags = self.flags() | Qt.ItemIsUserCheckable
         flags = flags | Qt.ItemIsDragEnabled
         flags = flags & ~Qt.ItemIsDropEnabled
         self.setFlags(flags)
+
+    def copy(self):
+        return {
+            'command': self.command,
+            'enabled': self.is_enabled(),
+            'idx': self.idx,
+            'sha1hex': self.sha1hex,
+            'summary': self.summary,
+        }
 
     def value(self):
         return '%s %s %s %s' % (
