@@ -29,8 +29,10 @@ from cola import qtutils
 from cola import utils
 from cola.compat import json
 from cola.i18n import N_
+# TODO move these next 3 somewhere more neutral
 from cola.dag.model import DAG
 from cola.dag.model import RepoReader
+from cola.prefs.view import diff_font
 from cola.widgets import defs
 from cola.widgets.diff import DiffWidget
 from cola.widgets.diff import COMMITS_SELECTED
@@ -494,12 +496,13 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
 
 def show_help():
     help_text = N_("""
-Commands:
-  pick = use commit
-  reword = use commit, but edit the commit message
-  edit = use commit, but stop for amending
-  squash = use commit, but meld into previous commit
-  fixup = like "squash", but discard this commit's log message
+Commands
+--------
+pick = use commit
+reword = use commit, but edit the commit message
+edit = use commit, but stop for amending
+squash = use commit, but meld into previous commit
+fixup = like "squash", but discard this commit's log message
 
 These lines can be re-ordered; they are executed from top to bottom.
 
@@ -510,6 +513,7 @@ However, if you disable everything, the rebase will be aborted.
 
     parent = qtutils.active_window()
     text = QtGui.QLabel(parent)
+    text.setFont(diff_font())
     text.setText(help_text)
     text.setTextInteractionFlags(Qt.NoTextInteraction)
 
