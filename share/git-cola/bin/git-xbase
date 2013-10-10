@@ -168,6 +168,9 @@ class Editor(QtGui.QWidget):
         layout.addLayout(controls_layout)
         self.setLayout(layout)
 
+        self.action_rebase = qtutils.add_action(self,
+                N_('Rebase'), self.rebase, 'Ctrl+Return')
+
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
 
         qtutils.connect_button(self.rebase_button, self.rebase)
@@ -580,6 +583,7 @@ K = shift row up
 5, s = squash
 spacebar = toggle enabled
 
+ctrl+enter = accept changes and rebase
 ctrl+q     = cancel and abort the rebase
 ctrl+d     = launch external diff
 """)
