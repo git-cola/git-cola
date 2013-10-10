@@ -79,7 +79,7 @@ def interruptable(func, *args, **opts):
                 continue
             raise e
         except OSError, e:
-            if e.errno == errno.EINTR:
+            if e.errno in (errno.EINTR, errno.EINVAL):
                 continue
             raise e
         else:
