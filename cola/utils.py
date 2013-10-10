@@ -13,6 +13,7 @@ import traceback
 
 from cola import core
 from cola import resources
+from cola.decorators import interruptable
 from cola.compat import hashlib
 from cola.decorators import interruptable
 
@@ -374,6 +375,7 @@ class ProgressIndicator(object):
         self(msg, True)
 
 
+@interruptable
 def start_command(args, cwd=None, shell=False, add_env=None,
                   universal_newlines=False,
                   stdin=subprocess.PIPE,
