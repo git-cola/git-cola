@@ -228,8 +228,8 @@ class RepoReader(object):
 
         log_entry = core.readline(self._proc.stdout).rstrip()
         if not log_entry:
-            del self._proc
             self._cached = True
+            self._proc.wait()
             self._proc = None
             raise StopIteration
 
