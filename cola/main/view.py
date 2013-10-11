@@ -11,7 +11,6 @@ from cola import cmds
 from cola import core
 from cola import gitcmds
 from cola import guicmds
-from cola import merge
 from cola import gitcfg
 from cola import qtutils
 from cola import resources
@@ -49,6 +48,7 @@ from cola.widgets.createbranch import create_new_branch
 from cola.widgets.dag import git_dag
 from cola.widgets.diff import DiffEditor
 from cola.widgets.log import LogWidget
+from cola.widgets import merge
 from cola.widgets.recent import browse_recent
 from cola.widgets.status import StatusWidget
 from cola.widgets.search import search

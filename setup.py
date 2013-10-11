@@ -52,7 +52,6 @@ def cola_data_files():
         _package('cola'),
         _package('cola.classic'),
         _package('cola.main'),
-        _package('cola.merge'),
         _package('cola.models'),
         _package('cola.stash'),
         _package('cola.widgets'),

@@ -262,8 +262,8 @@ def grep(args):
 
 def merge(args):
     context = application_init(args, update=True)
-    from cola.merge import view
-    view = view.MergeView(context.model, parent=None)
+    from cola.widgets.merge import MergeView
+    view = MergeView(context.model, parent=None)
     return application_start(context, view)
 
 
