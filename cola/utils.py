@@ -15,7 +15,6 @@ from cola import core
 from cola import resources
 from cola.decorators import interruptable
 from cola.compat import hashlib
-from cola.decorators import interruptable
 
 random.seed(hash(time.time()))
 
