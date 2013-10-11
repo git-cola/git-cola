@@ -22,7 +22,7 @@ def preferences(model=None, parent=None):
     view = PreferencesView(model, parent=parent)
     view.show()
     view.raise_()
-    return prefs
+    return view
 
 
 class FormWidget(QtGui.QWidget):

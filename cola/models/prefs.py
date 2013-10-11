@@ -3,7 +3,7 @@ from cola import observable
 
 
 FONTDIFF = 'cola.fontdiff'
-DIFF_CONTEXT = 'gui.diffcontext'
+DIFFCONTEXT = 'gui.diffcontext'
 DIFFTOOL = 'diff.tool'
 DISPLAY_UNTRACKED = 'gui.displayuntracked'
 EDITOR = 'gui.editor'
