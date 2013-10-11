@@ -146,13 +146,39 @@ class Grep(Dialog):
         self.input_txt.set_value(txt)
         self.search()
 
+    def text_scroll(self):
+        scrollbar = self.result_txt.verticalScrollBar()
+        if scrollbar:
+            return scrollbar.value()
+        return None
+
+    def set_text_scroll(self, scroll):
+        scrollbar = self.result_txt.verticalScrollBar()
+        if scrollbar and scroll is not None:
+            scrollbar.setValue(scroll)
+
+    def text_offset(self):
+        return self.result_txt.textCursor().position()
+
+    def set_text_offset(self, offset):
+        cursor = self.result_txt.textCursor()
+        cursor.setPosition(offset)
+        self.result_txt.setTextCursor(cursor)
+
     def process_result(self, status, out, err):
+        # save scrollbar and text cursor
+        scroll = self.text_scroll()
+        offset = self.text_offset()
+
         if status == 0:
             self.result_txt.set_value(out)
         elif out + err:
             self.result_txt.set_value('git grep: ' + out + err)
         else:
             self.result_txt.set_value('')
+        # restore
+        self.set_text_scroll(scroll)
+        self.set_text_offset(offset)
 
         self.edit_button.setEnabled(status == 0)
         self.refresh_button.setEnabled(status == 0)
