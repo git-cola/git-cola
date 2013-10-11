@@ -11,7 +11,7 @@ from cola import qtutils
 from cola.cmds import run
 from cola.compat import set
 from cola.i18n import N_
-from cola.qt import DiffSyntaxHighlighter
+from cola.qtutils import DiffSyntaxHighlighter
 from cola.widgets import defs
 from cola.widgets.text import MonoTextView
 

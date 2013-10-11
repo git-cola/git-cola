@@ -14,8 +14,8 @@ from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.git import git
 from cola.git import STDOUT
-from cola.qt import create_toolbutton
 from cola.qtutils import connect_button
+from cola.qtutils import create_toolbutton
 from cola.qtutils import dir_icon
 from cola.widgets import defs
 from cola.widgets import standard

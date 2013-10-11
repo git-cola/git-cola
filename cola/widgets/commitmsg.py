@@ -17,11 +17,11 @@ from cola.models.dag import RepoReader
 from cola.models.prefs import tabwidth
 from cola.models.prefs import textwidth
 from cola.models.prefs import linebreak
-from cola.qt import create_toolbutton
 from cola.qtutils import add_action
 from cola.qtutils import confirm
 from cola.qtutils import connect_action_bool
 from cola.qtutils import connect_button
+from cola.qtutils import create_toolbutton
 from cola.qtutils import diff_font
 from cola.qtutils import options_icon
 from cola.qtutils import save_icon

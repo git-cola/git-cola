@@ -5,7 +5,6 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
 from cola import cmds
-from cola import qt
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
@@ -106,7 +105,7 @@ class StashView(Dialog):
         cmds.do(cmds.Rescan)
 
     def toolbutton(self, text, tooltip, icon):
-        return qt.create_toolbutton(text=text, tooltip=tooltip, icon=icon)
+        return qtutils.create_toolbutton(text=text, tooltip=tooltip, icon=icon)
 
     def pushbutton(self, text, tooltip, icon):
         btn = QtGui.QPushButton(self)

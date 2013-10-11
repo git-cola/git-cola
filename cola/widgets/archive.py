@@ -1,5 +1,6 @@
 import os
 
+from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
@@ -10,11 +11,67 @@ from cola import qtutils
 from cola.git import git
 from cola.git import STDOUT
 from cola.i18n import N_
-from cola.qt import ExpandableGroupBox
 from cola.widgets import defs
 
 
+class ExpandableGroupBox(QtGui.QGroupBox):
+    def __init__(self, parent=None):
+        QtGui.QGroupBox.__init__(self, parent)
+        self.setFlat(True)
+        self.expanded = True
+        self.click_pos = None
+        self.arrow_icon_size = 16
+
+    def set_expanded(self, expanded):
+        if expanded == self.expanded:
+            self.emit(SIGNAL('expanded(bool)'), expanded)
+            return
+        self.expanded = expanded
+        for widget in self.findChildren(QtGui.QWidget):
+            widget.setHidden(not expanded)
+        self.emit(SIGNAL('expanded(bool)'), expanded)
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            option = QtGui.QStyleOptionGroupBox()
+            self.initStyleOption(option)
+            icon_size = self.arrow_icon_size
+            button_area = QtCore.QRect(0, 0, icon_size, icon_size)
+            offset = self.arrow_icon_size + defs.spacing
+            adjusted = option.rect.adjusted(0, 0, -offset, 0)
+            top_left = adjusted.topLeft()
+            button_area.moveTopLeft(QtCore.QPoint(top_left))
+            self.click_pos = event.pos()
+        QtGui.QGroupBox.mousePressEvent(self, event)
+
+    def mouseReleaseEvent(self, event):
+        if (event.button() == Qt.LeftButton and
+            self.click_pos == event.pos()):
+            self.set_expanded(not self.expanded)
+        QtGui.QGroupBox.mouseReleaseEvent(self, event)
+
+    def paintEvent(self, event):
+        painter = QtGui.QStylePainter(self)
+        option = QtGui.QStyleOptionGroupBox()
+        self.initStyleOption(option)
+        painter.save()
+        painter.translate(self.arrow_icon_size + defs.spacing, 0)
+        painter.drawText(option.rect, Qt.AlignLeft, self.title())
+        painter.restore()
+
+        style = QtGui.QStyle
+        point = option.rect.adjusted(0, -4, 0, 0).topLeft()
+        icon_size = self.arrow_icon_size
+        option.rect = QtCore.QRect(point.x(), point.y(), icon_size, icon_size)
+        if self.expanded:
+            painter.drawPrimitive(style.PE_IndicatorArrowDown, option)
+        else:
+            painter.drawPrimitive(style.PE_IndicatorArrowRight, option)
+
+
+
 class GitArchiveDialog(QtGui.QDialog):
+
     @staticmethod
     def save(ref, shortref, parent=None):
         dlg = GitArchiveDialog(ref, shortref, parent)
@@ -193,12 +250,3 @@ class GitArchiveDialog(QtGui.QDialog):
             self.prefix_text.setFocus()
         else:
             self.filetext.setFocus()
-
-
-if __name__ == '__main__':
-    from cola.app import ColaApplication
-    app = ColaApplication([])
-    dlg = GitArchiveDialog('master')
-    dlg.show()
-    dlg.raise_()
-    app.exec_()

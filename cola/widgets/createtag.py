@@ -3,7 +3,6 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
 from cola import cmds
-from cola import qt
 from cola import qtutils
 from cola.i18n import N_
 from cola.qtutils import connect_button
@@ -101,12 +100,12 @@ class CreateTag(standard.Dialog):
         self.button_hbox_layt = QtGui.QHBoxLayout()
         self.button_hbox_layt.addStretch()
 
-        self.create_button = qt.create_button(text=N_('Create Tag'),
-                                              icon=qtutils.git_icon())
+        self.create_button = qtutils.create_button(text=N_('Create Tag'),
+                                                   icon=qtutils.git_icon())
         self.button_hbox_layt.addWidget(self.create_button)
         self.main_layt.addLayout(self.button_hbox_layt)
 
-        self.close_button = qt.create_button(text=N_('Close'))
+        self.close_button = qtutils.create_button(text=N_('Close'))
         self.button_hbox_layt.addWidget(self.close_button)
 
         connect_button(self.close_button, self.accept)

@@ -24,7 +24,6 @@ from cola import cmds
 from cola import core
 from cola import difftool
 from cola import observable
-from cola import qt
 from cola import qtutils
 from cola import utils
 from cola.compat import json
@@ -122,27 +121,27 @@ class Editor(QtGui.QWidget):
         self.tree = RebaseTreeWidget(notifier, self)
         self.setFocusProxy(self.tree)
 
-        self.rebase_button = qt.create_button(
+        self.rebase_button = qtutils.create_button(
                 text=core.getenv('GIT_XBASE_ACTION', N_('Rebase')),
                 tooltip=N_('Accept changes and rebase\n'
                            'Shortcut: Ctrl+Enter'),
                 icon=qtutils.apply_icon())
 
-        self.external_diff_button = qt.create_button(
+        self.external_diff_button = qtutils.create_button(
                 text=N_('External Diff'),
                 tooltip=N_('Launch external diff\n'
                            'Shortcut: Ctrl+D'))
         self.external_diff_button.setEnabled(False)
 
-        self.help_button = qt.create_button(text=N_('Help'),
-                                            tooltip=N_('Show help\n'
-                                                       'Shortcut: ?'),
-                                            icon=qtutils.help_icon())
+        self.help_button = qtutils.create_button(
+                text=N_('Help'),
+                tooltip=N_('Show help\nShortcut: ?'),
+                icon=qtutils.help_icon())
 
-        self.cancel_button = qt.create_button(text=N_('Cancel'),
-                                              tooltip=N_('Cancel rebase\n'
-                                                         'Shortcut: Ctrl+Q'),
-                                              icon=qtutils.close_icon())
+        self.cancel_button = qtutils.create_button(
+                text=N_('Cancel'),
+                tooltip=N_('Cancel rebase\nShortcut: Ctrl+Q'),
+                icon=qtutils.close_icon())
         splitter = QtGui.QSplitter()
         splitter.setHandleWidth(defs.handle_width)
         splitter.setOrientation(Qt.Vertical)

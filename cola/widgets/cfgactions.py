@@ -7,10 +7,10 @@ from PyQt4.QtCore import SIGNAL
 from cola import core
 from cola import gitcfg
 from cola import gitcmds
-from cola import qt
 from cola import qtutils
 from cola.i18n import N_
 from cola.interaction import Interaction
+from cola.qtutils import create_button
 from cola.widgets import defs
 from cola.widgets import completion
 from cola.widgets import standard
@@ -240,8 +240,8 @@ class ActionDialog(standard.Dialog):
         # Close/Run buttons
         self.btnlayt = QtGui.QHBoxLayout()
         self.btnlayt.addStretch()
-        self.closebtn = qt.create_button(text=N_('Close'), layout=self.btnlayt)
-        self.runbtn = qt.create_button(text=N_('Run'), layout=self.btnlayt)
+        self.closebtn = create_button(text=N_('Close'), layout=self.btnlayt)
+        self.runbtn = create_button(text=N_('Run'), layout=self.btnlayt)
         self.runbtn.setDefault(True)
         self.layt.addLayout(self.btnlayt)
 

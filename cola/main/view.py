@@ -27,13 +27,13 @@ from cola.git import STDOUT
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import prefs
-from cola.qt import create_dock
-from cola.qt import create_menu
-from cola.qt import create_toolbutton
 from cola.qtutils import add_action
 from cola.qtutils import add_action_bool
 from cola.qtutils import connect_action
 from cola.qtutils import connect_action_bool
+from cola.qtutils import create_dock
+from cola.qtutils import create_menu
+from cola.qtutils import create_toolbutton
 from cola.qtutils import options_icon
 from cola.widgets import action
 from cola.widgets import cfgactions

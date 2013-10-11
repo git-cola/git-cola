@@ -8,12 +8,12 @@ from cola import cmds
 from cola import core
 from cola import difftool
 from cola import gitcmds
-from cola import qt
 from cola import qtutils
 from cola import utils
 from cola.git import git
 from cola.i18n import N_
 from cola.interaction import Interaction
+from cola.widgets import completion
 from cola.widgets.browse import BrowseDialog
 from cola.widgets.grep import run_grep
 from cola.widgets.selectcommits import select_commits
@@ -231,17 +231,17 @@ def choose_from_dialog(get, title, button_text, default):
 
 
 def choose_ref(title, button_text, default=None):
-    return choose_from_dialog(qt.GitRefDialog.get,
+    return choose_from_dialog(completion.GitRefDialog.get,
                               title, button_text, default)
 
 
 def choose_branch(title, button_text, default=None):
-    return choose_from_dialog(qt.GitBranchDialog.get,
+    return choose_from_dialog(completion.GitBranchDialog.get,
                               title, button_text, default)
 
 
 def choose_remote_branch(title, button_text, default=None):
-    return choose_from_dialog(qt.GitRemoteBranchDialog.get,
+    return choose_from_dialog(completion.GitRemoteBranchDialog.get,
                               title, button_text, default)
 
 

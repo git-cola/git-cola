@@ -12,12 +12,10 @@ from PyQt4.QtCore import QRectF
 from cola import cmds
 from cola import difftool
 from cola import observable
-from cola import qt
 from cola import qtutils
 from cola.i18n import N_
 from cola.models.dag import DAG
 from cola.models.dag import RepoReader
-from cola.qt import create_menu
 from cola.widgets import completion
 from cola.widgets import defs
 from cola.widgets.createbranch import create_new_branch
@@ -346,13 +344,13 @@ class DAGView(MainWindow):
         self.maxresults.setPrefix('')
         self.maxresults.setSuffix('')
 
-        self.zoom_out = qt.create_action_button(
+        self.zoom_out = qtutils.create_action_button(
                 N_('Zoom Out'), qtutils.theme_icon('zoom-out.png'))
 
-        self.zoom_in = qt.create_action_button(
+        self.zoom_in = qtutils.create_action_button(
                 N_('Zoom In'), qtutils.theme_icon('zoom-in.png'))
 
-        self.zoom_to_fit = qt.create_action_button(
+        self.zoom_to_fit = qtutils.create_action_button(
                 N_('Zoom to Fit'), qtutils.theme_icon('zoom-fit-best.png'))
 
         self.notifier = notifier = observable.Observable()
@@ -372,12 +370,12 @@ class DAGView(MainWindow):
         self.controls_widget = QtGui.QWidget()
         self.controls_widget.setLayout(self.controls_layout)
 
-        self.log_dock = qt.create_dock(N_('Log'), self, stretch=False)
+        self.log_dock = qtutils.create_dock(N_('Log'), self, stretch=False)
         self.log_dock.setWidget(self.treewidget)
         log_dock_titlebar = self.log_dock.titleBarWidget()
         log_dock_titlebar.add_corner_widget(self.controls_widget)
 
-        self.diff_dock = qt.create_dock(N_('Diff'), self)
+        self.diff_dock = qtutils.create_dock(N_('Diff'), self)
         self.diff_dock.setWidget(self.diffwidget)
 
         self.graph_controls_layout = QtGui.QHBoxLayout()
@@ -390,7 +388,7 @@ class DAGView(MainWindow):
         self.graph_controls_widget = QtGui.QWidget()
         self.graph_controls_widget.setLayout(self.graph_controls_layout)
 
-        self.graphview_dock = qt.create_dock(N_('Graph'), self)
+        self.graphview_dock = qtutils.create_dock(N_('Graph'), self)
         self.graphview_dock.setWidget(self.graphview)
         graph_titlebar = self.graphview_dock.titleBarWidget()
         graph_titlebar.add_corner_widget(self.graph_controls_widget)
@@ -402,7 +400,7 @@ class DAGView(MainWindow):
         self.menubar = QtGui.QMenuBar(self)
 
         # View Menu
-        self.view_menu = create_menu(N_('View'), self.menubar)
+        self.view_menu = qtutils.create_menu(N_('View'), self.menubar)
         self.view_menu.addAction(self.log_dock.toggleViewAction())
         self.view_menu.addAction(self.graphview_dock.toggleViewAction())
         self.view_menu.addAction(self.diff_dock.toggleViewAction())
@@ -752,7 +750,7 @@ class EdgeColor(object):
                 QtGui.QColor(Qt.cyan),
                 QtGui.QColor(Qt.magenta),
                 # Orange; Qt.yellow is too low-contrast
-                qt.rgba(0xff, 0x66, 0x00),
+                qtutils.rgba(0xff, 0x66, 0x00),
                 QtGui.QColor(Qt.gray),
                 QtGui.QColor(Qt.darkCyan),
                 QtGui.QColor(Qt.darkMagenta),

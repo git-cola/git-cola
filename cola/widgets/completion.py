@@ -7,9 +7,11 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
+from cola.i18n import N_
 from cola import qtutils
 from cola import utils
 from cola.compat import set
+from cola.widgets import defs
 
 
 class CompletionLineEdit(QtGui.QLineEdit):
@@ -477,3 +479,104 @@ GitLogLineEdit = bind_lineedit(GitLogCompletionModel)
 GitRefLineEdit = bind_lineedit(GitRefCompletionModel)
 GitBranchLineEdit = bind_lineedit(GitBranchCompletionModel)
 GitRemoteBranchLineEdit = bind_lineedit(GitRemoteBranchCompletionModel)
+
+
+class GitDialog(QtGui.QDialog):
+
+    def __init__(self, lineedit, title, button_text, parent):
+        QtGui.QDialog.__init__(self, parent)
+        self.setWindowTitle(title)
+        self.setMinimumWidth(333)
+
+        self.label = QtGui.QLabel()
+        self.label.setText(title)
+
+        self.lineedit = lineedit(self)
+        self.setFocusProxy(self.lineedit)
+
+        self.ok_button = QtGui.QPushButton()
+        self.ok_button.setText(button_text)
+        self.ok_button.setIcon(qtutils.apply_icon())
+
+        self.close_button = QtGui.QPushButton()
+        self.close_button.setText(N_('Close'))
+
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.setMargin(defs.no_margin)
+        self.button_layout.setSpacing(defs.button_spacing)
+        self.button_layout.addStretch()
+        self.button_layout.addWidget(self.ok_button)
+        self.button_layout.addWidget(self.close_button)
+
+        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout.setMargin(defs.margin)
+        self.main_layout.setSpacing(defs.spacing)
+
+        self.main_layout.addWidget(self.label)
+        self.main_layout.addWidget(self.lineedit)
+        self.main_layout.addLayout(self.button_layout)
+        self.setLayout(self.main_layout)
+
+        qtutils.connect_button(self.ok_button, self.accept)
+        qtutils.connect_button(self.close_button, self.reject)
+
+        self.connect(self.lineedit, SIGNAL('textChanged(const QString&)'),
+                     self.text_changed)
+
+        self.setWindowModality(Qt.WindowModal)
+        self.ok_button.setEnabled(False)
+
+    def text(self):
+        return unicode(self.lineedit.text())
+
+    def text_changed(self, txt):
+        self.ok_button.setEnabled(bool(self.text()))
+
+    def set_text(self, ref):
+        self.lineedit.setText(ref)
+
+    @classmethod
+    def get(cls, title, button_text, parent, default=None):
+        dlg = cls(title, button_text, parent)
+        if default:
+            dlg.set_text(default)
+
+        dlg.show()
+        dlg.raise_()
+
+        def show_popup():
+            x = dlg.lineedit.x()
+            y = dlg.lineedit.y() + dlg.lineedit.height()
+            point = QtCore.QPoint(x, y)
+            mapped = dlg.mapToGlobal(point)
+            dlg.lineedit.popup().move(mapped.x(), mapped.y())
+            dlg.lineedit.popup().show()
+            dlg.lineedit.refresh()
+
+        QtCore.QTimer().singleShot(0, show_popup)
+
+        if dlg.exec_() == cls.Accepted:
+            return dlg.text()
+        else:
+            return None
+
+
+class GitRefDialog(GitDialog):
+
+    def __init__(self, title, button_text, parent):
+        GitDialog.__init__(self, GitRefLineEdit,
+                           title, button_text, parent)
+
+
+class GitBranchDialog(GitDialog):
+
+    def __init__(self, title, button_text, parent):
+        GitDialog.__init__(self, GitBranchLineEdit,
+                           title, button_text, parent)
+
+
+class GitRemoteBranchDialog(GitDialog):
+
+    def __init__(self, title, button_text, parent):
+        GitDialog.__init__(self, GitRemoteBranchLineEdit,
+                           title, button_text, parent)

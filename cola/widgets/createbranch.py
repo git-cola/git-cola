@@ -5,7 +5,6 @@ from PyQt4.QtCore import SIGNAL
 
 import cola
 from cola import gitcmds
-from cola import qt
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
@@ -148,11 +147,11 @@ class CreateBranchDialog(Dialog):
         self.options_bottom_layout.addLayout(self.options_checkbox_layout)
         self.options_bottom_layout.addStretch()
 
-        self.create_button = qt.create_button(text=N_('Create Branch'),
-                                              icon=qtutils.git_icon())
+        self.create_button = qtutils.create_button(text=N_('Create Branch'),
+                                                   icon=qtutils.git_icon())
         self.create_button.setDefault(True)
 
-        self.close_button = qt.create_button(text=N_('Close'))
+        self.close_button = qtutils.create_button(text=N_('Close'))
 
         self.branch_name_layout = QtGui.QHBoxLayout()
         self.branch_name_layout.addWidget(self.branch_name_label)

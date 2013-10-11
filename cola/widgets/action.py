@@ -1,18 +1,51 @@
 """The "Actions" widget"""
 
+from PyQt4 import QtCore
+from PyQt4 import QtGui
+
 import cola
 from cola import cmds
-from cola import qt
 from cola import stash
 from cola.i18n import N_
+from cola.widgets import defs
 from cola.widgets import remote
-from cola.qt import create_button
+from cola.qtutils import create_button
 from cola.qtutils import connect_button
 
 
-class ActionButtons(qt.QFlowLayoutWidget):
+class QFlowLayoutWidget(QtGui.QWidget):
+
+    _horizontal = QtGui.QBoxLayout.LeftToRight
+    _vertical = QtGui.QBoxLayout.TopToBottom
+
+    def __init__(self, parent):
+        QtGui.QWidget.__init__(self, parent)
+        self._direction = self._vertical
+        self._layout = layout = QtGui.QBoxLayout(self._direction)
+        layout.setSpacing(defs.spacing)
+        layout.setMargin(defs.margin)
+        self.setLayout(layout)
+        policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum,
+                                   QtGui.QSizePolicy.Minimum)
+        self.setSizePolicy(policy)
+        self.setMinimumSize(QtCore.QSize(1, 1))
+        self.aspect_ratio = 0.8
+
+    def resizeEvent(self, event):
+        size = event.size()
+        if size.width() * self.aspect_ratio < size.height():
+            dxn = self._vertical
+        else:
+            dxn = self._horizontal
+
+        if dxn != self._direction:
+            self._direction = dxn
+            self.layout().setDirection(dxn)
+
+
+class ActionButtons(QFlowLayoutWidget):
     def __init__(self, parent=None):
-        qt.QFlowLayoutWidget.__init__(self, parent)
+        QFlowLayoutWidget.__init__(self, parent)
         layout = self.layout()
         self.stage_button = create_button(text=N_('Stage'), layout=layout)
         self.unstage_button = create_button(text=N_('Unstage'), layout=layout)
