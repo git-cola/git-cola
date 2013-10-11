@@ -1,6 +1,5 @@
 from cola import gitcfg
 from cola import observable
-from cola.basecmd import BaseCommand
 
 
 FONTDIFF = 'cola.fontdiff'
@@ -75,16 +74,17 @@ class PreferencesModel(observable.Observable):
             return self.config.get(config)
 
 
-class SetConfig(BaseCommand):
+class SetConfig(object):
 
     def __init__(self, model, source, config, value):
-        BaseCommand.__init__(self)
-        self.undoable = True
         self.source = source
         self.config = config
         self.value = value
         self.old_value = None
         self.model = model
+
+    def is_undoable(self):
+        return True
 
     def do(self):
         self.old_value = self.model.get_config(self.source, self.config)

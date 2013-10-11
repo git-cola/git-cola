@@ -14,7 +14,6 @@ from cola import gitcmds
 from cola import utils
 from cola import difftool
 from cola import resources
-from cola.basecmd import BaseCommand
 from cola.compat import set
 from cola.diffparse import DiffParser
 from cola.git import STDOUT
@@ -25,6 +24,29 @@ from cola.models import selection
 
 _notifier = cola.notifier()
 _config = gitcfg.instance()
+
+
+class BaseCommand(object):
+    """Base class for all commands; provides the command pattern"""
+
+    DISABLED = False
+
+    def __init__(self):
+        self.undoable = False
+
+    def is_undoable(self):
+        """Can this be undone?"""
+        return self.undoable
+
+    @staticmethod
+    def name(cls):
+        return 'Unknown'
+
+    def do(self):
+        raise NotImplementedError('%s.do() is unimplemented' % self.__class__.__name__)
+
+    def undo(self):
+        raise NotImplementedError('%s.undo() is unimplemented' % self.__class__.__name__)
 
 
 class Command(BaseCommand):

@@ -2,7 +2,6 @@ import cola
 from cola import observable
 from cola.git import git
 from cola.git import STDOUT
-from cola.cmds import BaseCommand
 from cola.interaction import Interaction
 
 
@@ -31,11 +30,13 @@ class StashModel(observable.Observable):
         return diffstat + '\n\n' + diff
 
 
-class ApplyStash(BaseCommand):
+class ApplyStash(object):
     def __init__(self, selection, index):
-        BaseCommand.__init__(self)
         self.selection = selection
         self.index = index
+
+    def is_undoable(self):
+        return False
 
     def do(self):
         if self.index:
@@ -46,21 +47,26 @@ class ApplyStash(BaseCommand):
         Interaction.log_status(status, out, err)
 
 
-class DropStash(BaseCommand):
+class DropStash(object):
     def __init__(self, stash_sha1):
-        BaseCommand.__init__(self)
         self.stash_sha1 = stash_sha1
+
+    def is_undoable(self):
+        return False
 
     def do(self):
         status, out, err = git.stash('drop', self.stash_sha1)
         Interaction.log_status(status, out, err)
 
 
-class SaveStash(BaseCommand):
+class SaveStash(object):
+
     def __init__(self, stash_name, keep_index):
-        BaseCommand.__init__(self)
         self.stash_name = stash_name
         self.keep_index = keep_index
+
+    def is_undoable(self):
+        return False
 
     def do(self):
         if self.keep_index:
