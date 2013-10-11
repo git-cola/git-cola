@@ -315,7 +315,7 @@ def search(args):
 
 def stash(args):
     context = application_init(args)
-    from cola.stash import stash as stashwidget
+    from cola.widgets.stash import stash as stashwidget
     view = stashwidget()
     return application_start(context, view)
 

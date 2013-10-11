@@ -15,7 +15,6 @@ from cola import gitcfg
 from cola import qtutils
 from cola import resources
 from cola import settings
-from cola import stash
 from cola import utils
 from cola import version
 from cola.bookmarks import manage_bookmarks
@@ -53,6 +52,7 @@ from cola.widgets.recent import browse_recent
 from cola.widgets.status import StatusWidget
 from cola.widgets.search import search
 from cola.widgets.standard import MainWindow
+from cola.widgets.stash import stash
 
 
 class MainView(MainWindow):
@@ -234,7 +234,7 @@ class MainView(MainWindow):
         self.menu_open_repo.setIcon(qtutils.open_icon())
 
         self.menu_stash = add_action(self,
-                N_('Stash...'), stash.stash, 'Alt+Shift+S')
+                N_('Stash...'), stash, 'Alt+Shift+S')
 
         self.menu_clone_repo = add_action(self,
                 N_('Clone...'), guicmds.clone_repo)

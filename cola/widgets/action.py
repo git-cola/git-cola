@@ -5,10 +5,10 @@ from PyQt4 import QtGui
 
 import cola
 from cola import cmds
-from cola import stash
 from cola.i18n import N_
 from cola.widgets import defs
 from cola.widgets import remote
+from cola.widgets import stash
 from cola.qtutils import create_button
 from cola.qtutils import connect_button
 

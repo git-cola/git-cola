@@ -8,10 +8,23 @@ from cola import cmds
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
-from cola.stash.model import ApplyStash, SaveStash, DropStash
+from cola.models.stash import StashModel
+from cola.models.stash import ApplyStash
+from cola.models.stash import SaveStash
+from cola.models.stash import DropStash
 from cola.widgets import defs
 from cola.widgets.diff import DiffTextEdit
 from cola.widgets.standard import Dialog
+
+
+def stash():
+    """Launches a stash dialog using the provided model + view
+    """
+    model = StashModel()
+    view = StashView(model, qtutils.active_window())
+    view.show()
+    view.raise_()
+    return view
 
 
 class StashView(Dialog):
