@@ -29,9 +29,9 @@ from cola import qtutils
 from cola import utils
 from cola.compat import json
 from cola.i18n import N_
-# TODO move these next 3 somewhere more neutral
-from cola.dag.model import DAG
-from cola.dag.model import RepoReader
+from cola.models.dag import DAG
+from cola.models.dag import RepoReader
+# TODO move this somewhere more neutral
 from cola.prefs.view import diff_font
 from cola.widgets import defs
 from cola.widgets.diff import DiffWidget

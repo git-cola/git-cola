@@ -12,6 +12,12 @@ from cola import textwrap
 from cola.cmds import Interaction
 from cola.gitcmds import commit_message_path
 from cola.i18n import N_
+from cola.models.dag import DAG
+from cola.models.dag import RepoReader
+from cola.prefs import diff_font
+from cola.prefs import tabwidth
+from cola.prefs import textwidth
+from cola.prefs import linebreak
 from cola.qt import create_toolbutton
 from cola.qtutils import add_action
 from cola.qtutils import confirm
@@ -20,15 +26,9 @@ from cola.qtutils import connect_button
 from cola.qtutils import options_icon
 from cola.qtutils import save_icon
 from cola.widgets import defs
-from cola.prefs import diff_font
-from cola.prefs import tabwidth
-from cola.prefs import textwidth
-from cola.prefs import linebreak
-from cola.dag.model import DAG
-from cola.dag.model import RepoReader
 from cola.widgets.selectcommits import select_commits
-from cola.widgets.text import HintedLineEdit
 from cola.widgets.spellcheck import SpellCheckTextEdit
+from cola.widgets.text import HintedLineEdit
 
 
 class CommitMessageEditor(QtGui.QWidget):

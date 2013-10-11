@@ -68,7 +68,7 @@ def parse_args():
 
 def dag(args):
     context = application_init(args)
-    from cola.dag import git_dag
+    from cola.widgets.dag import git_dag
     view = git_dag(context.model, args=args)
     return application_start(context, view)
 

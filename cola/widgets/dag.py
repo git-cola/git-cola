@@ -14,8 +14,9 @@ from cola import difftool
 from cola import observable
 from cola import qt
 from cola import qtutils
-from cola.dag.model import RepoReader
 from cola.i18n import N_
+from cola.models.dag import DAG
+from cola.models.dag import RepoReader
 from cola.qt import create_menu
 from cola.widgets import completion
 from cola.widgets import defs
@@ -27,6 +28,20 @@ from cola.widgets.standard import MainWindow
 from cola.widgets.standard import TreeWidget
 from cola.widgets.diff import COMMITS_SELECTED
 from cola.widgets.diff import DiffWidget
+
+
+def git_dag(model, args=None):
+    """Return a pre-populated git DAG widget."""
+    branch = model.currentbranch
+    # disambiguate between branch names and filenames by using '--'
+    branch_doubledash = branch and (branch + ' --') or ''
+    dag = DAG(branch_doubledash, 1000)
+    dag.set_arguments(args)
+
+    view = DAGView(model, dag, None)
+    if dag.ref:
+        view.display()
+    return view
 
 
 class ViewerMixin(object):

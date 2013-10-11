@@ -51,7 +51,6 @@ def cola_data_files():
         _app_path('share/doc/git-cola', '*.html'),
         _package('cola'),
         _package('cola.classic'),
-        _package('cola.dag'),
         _package('cola.main'),
         _package('cola.merge'),
         _package('cola.models'),
