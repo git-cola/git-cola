@@ -98,30 +98,30 @@ def add_command(parent, name, description, func):
 
 
 def add_cola_command(cmds):
-    add_command(cmds, 'cola', 'start git-cola', cola)
+    add_command(cmds, 'cola', 'start git-cola', cmd_cola)
 
 
 def add_archive_command(parent):
-    parser = add_command(parent, 'archive', 'save an archive', archive)
+    parser = add_command(parent, 'archive', 'save an archive', cmd_archive)
     parser.add_argument('ref', metavar='<ref>', nargs='?', default=None,
                         help='SHA-1 to archive')
 
 
 def add_branch_command(cmds):
-    add_command(cmds, 'branch', 'create a branch', branch)
+    add_command(cmds, 'branch', 'create a branch', cmd_branch)
 
 
 def add_browse_command(cmds):
-    add_command(cmds, 'browse', 'browse repository', browse)
-    add_command(cmds, 'classic', 'browse repository', browse)
+    add_command(cmds, 'browse', 'browse repository', cmd_browse)
+    add_command(cmds, 'classic', 'browse repository', cmd_browse)
 
 
 def add_config_command(cmds):
-    add_command(cmds, 'config', 'edit configuration', config)
+    add_command(cmds, 'config', 'edit configuration', cmd_config)
 
 
 def add_dag_command(cmds):
-    parser = add_command(cmds, 'dag', 'start git-dag', dag)
+    parser = add_command(cmds, 'dag', 'start git-dag', cmd_dag)
     parser.add_argument('-c', '--count', metavar='<count>',
                         type=int, default=1000,
                         help='number of commits to display')
@@ -129,54 +129,54 @@ def add_dag_command(cmds):
                         help='git log arguments')
 
 def add_diff_command(cmds):
-    parser = add_command(cmds, 'diff', 'view diffs', diff)
+    parser = add_command(cmds, 'diff', 'view diffs', cmd_diff)
     parser.add_argument('args', nargs='*', metavar='<args>',
                         help='git diff arguments')
 
 
 def add_fetch_command(cmds):
-    add_command(cmds, 'fetch', 'fetch remotes', fetch)
+    add_command(cmds, 'fetch', 'fetch remotes', cmd_fetch)
 
 
 def add_grep_command(cmds):
-    parser = add_command(cmds, 'grep', 'grep source', grep)
+    parser = add_command(cmds, 'grep', 'grep source', cmd_grep)
     parser.add_argument('args', nargs='*', metavar='<args>',
                         help='git grep arguments')
 
 def add_merge_command(cmds):
-    add_command(cmds, 'merge', 'merge branches', merge)
+    add_command(cmds, 'merge', 'merge branches', cmd_merge)
 
 
 def add_pull_command(cmds):
-    parser = add_command(cmds, 'pull', 'pull remote branches', pull)
+    parser = add_command(cmds, 'pull', 'pull remote branches', cmd_pull)
     parser.add_argument('--rebase', default=False, action='store_true',
                         help='rebase local branch when pulling')
 
 
 def add_push_command(cmds):
-    add_command(cmds, 'push', 'push remote branches', push)
+    add_command(cmds, 'push', 'push remote branches', cmd_push)
 
 
 def add_rebase_command(cmds):
-    parser = add_command(cmds, 'rebase', 'interactive rebase', rebase)
+    parser = add_command(cmds, 'rebase', 'interactive rebase', cmd_rebase)
     parser.add_argument('branch', metavar='<branch>',
                         help='New upstream branch')
 
 
 def add_remote_command(cmds):
-    add_command(cmds, 'remote', 'edit remotes', remote)
+    add_command(cmds, 'remote', 'edit remotes', cmd_remote)
 
 
 def add_search_command(cmds):
-    add_command(cmds, 'search', 'search commits', search)
+    add_command(cmds, 'search', 'search commits', cmd_search)
 
 
 def add_stash_command(cmds):
-    add_command(cmds, 'stash', 'stash and unstash changes', stash)
+    add_command(cmds, 'stash', 'stash and unstash changes', cmd_stash)
 
 
 def add_tag_command(cmds):
-    parser = add_command(cmds, 'tag', 'create tags', tag)
+    parser = add_command(cmds, 'tag', 'create tags', cmd_tag)
     parser.add_argument('name', metavar='<name>', nargs='?', default=None,
                         help='tag name')
     parser.add_argument('ref', metavar='<ref>', nargs='?', default=None,
@@ -185,18 +185,18 @@ def add_tag_command(cmds):
                         help='annotated and GPG-signed tag')
 
 def add_version_command(cmds):
-    add_command(cmds, 'version', 'print the git-cola version', print_version)
+    add_command(cmds, 'version', 'print the git-cola version', cmd_version)
 
 # entry points
 
-def cola(args):
+def cmd_cola(args):
     context = application_init(args)
     from cola.main.view import MainView
     view = MainView(context.model)
     return application_start(context, view)
 
 
-def archive(args):
+def cmd_archive(args):
     context = application_init(args, update=True)
     if args.ref is None:
         args.ref = context.model.currentbranch
@@ -206,35 +206,35 @@ def archive(args):
     return application_start(context, view)
 
 
-def branch(args):
+def cmd_branch(args):
     context = application_init(args, update=True)
     from cola.widgets.createbranch import create_new_branch
     view = create_new_branch()
     return application_start(context, view)
 
 
-def browse(args):
+def cmd_browse(args):
     context = application_init(args)
     from cola.classic import cola_classic
     view = cola_classic(update=False)
     return application_start(context, view)
 
 
-def config(args):
+def cmd_config(args):
     context = application_init(args)
     from cola.widgets.prefs import preferences
     view = preferences()
     return application_start(context, view)
 
 
-def dag(args):
+def cmd_dag(args):
     context = application_init(args)
     from cola.widgets.dag import git_dag
     view = git_dag(context.model, args=args)
     return application_start(context, view)
 
 
-def diff(args):
+def cmd_diff(args):
     context = application_init(args)
     from cola.difftool import diff_expression
     expr = subprocess.list2cmdline(map(core.decode, args.args))
@@ -242,7 +242,7 @@ def diff(args):
     return application_start(context, view)
 
 
-def fetch(args):
+def cmd_fetch(args):
     # TODO: the calls to update_status() can be done asynchronously
     # by hooking into the message_updated notification.
     context = application_init(args)
@@ -252,7 +252,7 @@ def fetch(args):
     return application_start(context, view)
 
 
-def grep(args):
+def cmd_grep(args):
     context = application_init(args)
     from cola.widgets import grep
     text = subprocess.list2cmdline(map(core.decode, args.args))
@@ -260,20 +260,20 @@ def grep(args):
     return application_start(context, view)
 
 
-def merge(args):
+def cmd_merge(args):
     context = application_init(args, update=True)
     from cola.widgets.merge import MergeView
     view = MergeView(context.model, parent=None)
     return application_start(context, view)
 
 
-def print_version(args):
+def cmd_version(args):
     from cola import version
     version.print_version()
     return 0
 
 
-def pull(args):
+def cmd_pull(args):
     context = application_init(args, update=True)
     from cola.widgets import remote
     view = remote.pull()
@@ -282,14 +282,14 @@ def pull(args):
     return application_start(context, view)
 
 
-def push(args):
+def cmd_push(args):
     context = application_init(args, update=True)
     from cola.widgets import remote
     view = remote.push()
     return application_start(context, view)
 
 
-def rebase(args):
+def cmd_rebase(args):
     from cola import cmds
     status, out, err = cmds.do(cmds.Rebase, args.branch)
     if out:
@@ -299,28 +299,28 @@ def rebase(args):
     return status
 
 
-def remote(args):
+def cmd_remote(args):
     context = application_init(args)
     from cola.widgets import editremotes
     view = editremotes.edit()
     return application_start(context, view)
 
 
-def search(args):
+def cmd_search(args):
     context = application_init(args)
-    from cola.widgets.search import search as searchwidget
-    view = searchwidget()
+    from cola.widgets.search import search
+    view = search()
     return application_start(context, view)
 
 
-def stash(args):
+def cmd_stash(args):
     context = application_init(args)
-    from cola.widgets.stash import stash as stashwidget
-    view = stashwidget()
+    from cola.widgets.stash import stash
+    view = stash()
     return application_start(context, view)
 
 
-def tag(args):
+def cmd_tag(args):
     context = application_init(args)
     from cola.widgets.createtag import create_tag
     view = create_tag(name=args.name, ref=args.ref, sign=args.sign)
