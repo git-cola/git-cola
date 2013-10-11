@@ -17,6 +17,7 @@ from cola.compat import set
 from cola.decorators import memoize
 from cola.i18n import N_
 from cola.interaction import Interaction
+from cola.models.prefs import FONTDIFF
 
 
 def connect_action(action, callback):
@@ -487,6 +488,21 @@ def default_monospace_font():
     if utils.is_darwin():
         family = 'Monaco'
     font.setFamily(family)
+    return font
+
+
+def diff_font_str():
+    font_str = gitcfg.instance().get(FONTDIFF)
+    if font_str is None:
+        font = default_monospace_font()
+        font_str = unicode(font.toString())
+    return font_str
+
+
+def diff_font():
+    font_str = diff_font_str()
+    font = QtGui.QFont()
+    font.fromString(font_str)
     return font
 
 

@@ -1,6 +1,56 @@
 from cola import gitcfg
 from cola import observable
-from cola.cmds import BaseCommand
+from cola.basecmd import BaseCommand
+
+
+FONTDIFF = 'cola.fontdiff'
+DIFF_CONTEXT = 'gui.diffcontext'
+DIFFTOOL = 'diff.tool'
+DISPLAY_UNTRACKED = 'gui.displayuntracked'
+EDITOR = 'gui.editor'
+LINEBREAK = 'cola.linebreak'
+TABWIDTH = 'cola.tabwidth'
+TEXTWIDTH = 'cola.textwidth'
+HISTORY_BROWSER = 'gui.historybrowser'
+MERGE_SUMMARY = 'merge.summary'
+MERGE_DIFFSTAT = 'merge.diffstat'
+MERGE_KEEPBACKUP = 'merge.keepbackup'
+MERGE_VERBOSITY = 'merge.verbosity'
+MERGETOOL = 'merge.tool'
+SAVEWINDOWSETTINGS = 'cola.savewindowsettings'
+USER_EMAIL = 'user.email'
+USER_NAME = 'user.name'
+
+
+
+def config():
+    return gitcfg.instance()
+
+
+def display_untracked():
+    return config().get(DISPLAY_UNTRACKED, True)
+
+
+def editor():
+    app = config().get(EDITOR, 'gvim')
+    return {'vim': 'gvim'}.get(app, app)
+
+
+def history_browser():
+    return config().get(HISTORY_BROWSER, 'gitk')
+
+
+def linebreak():
+    return config().get(LINEBREAK, True)
+
+
+def tabwidth():
+    return config().get(TABWIDTH, 8)
+
+
+def textwidth():
+    return config().get(TEXTWIDTH, 72)
+
 
 
 class PreferencesModel(observable.Observable):
@@ -26,6 +76,7 @@ class PreferencesModel(observable.Observable):
 
 
 class SetConfig(BaseCommand):
+
     def __init__(self, model, source, config, value):
         BaseCommand.__init__(self)
         self.undoable = True

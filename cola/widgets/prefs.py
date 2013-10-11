@@ -8,9 +8,21 @@ from cola import cmds
 from cola import qtutils
 from cola import gitcfg
 from cola.i18n import N_
+from cola.models import prefs
+from cola.models.prefs import PreferencesModel
+from cola.models.prefs import SetConfig
+from cola.qtutils import diff_font
 from cola.widgets import defs
 from cola.widgets import standard
-from cola.prefs.model import SetConfig
+
+
+def preferences(model=None, parent=None):
+    if model is None:
+        model = PreferencesModel()
+    view = PreferencesView(model, parent=parent)
+    view.show()
+    view.raise_()
+    return prefs
 
 
 class FormWidget(QtGui.QWidget):
@@ -122,13 +134,13 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Display Untracked Files'), self.display_untracked)
 
         self.set_config({
-            'gui.diffcontext': (self.diff_context, 5),
-            'gui.displayuntracked': (self.display_untracked, True),
-            'user.name': (self.name, ''),
-            'user.email': (self.email, ''),
-            'merge.diffstat': (self.merge_diffstat, True),
-            'merge.summary': (self.merge_summary, True),
-            'merge.verbosity': (self.merge_verbosity, 5),
+            prefs.DIFFCONTEXT: (self.diff_context, 5),
+            prefs.DISPLAY_UNTRACKED: (self.display_untracked, True),
+            prefs.USER_NAME: (self.name, ''),
+            prefs.USER_EMAIL: (self.email, ''),
+            prefs.MERGE_DIFFSTAT: (self.merge_diffstat, True),
+            prefs.MERGE_SUMMARY: (self.merge_summary, True),
+            prefs.MERGE_VERBOSITY: (self.merge_verbosity, 5),
         })
 
 
@@ -173,15 +185,15 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Save GUI Settings'), self.save_gui_settings)
 
         self.set_config({
-            'cola.savewindowsettings': (self.save_gui_settings, True),
-            'cola.tabwidth': (self.tabwidth, 8),
-            'cola.textwidth': (self.textwidth, 72),
-            'cola.linebreak': (self.linebreak, True),
-            'diff.tool': (self.difftool, 'xxdiff'),
-            'gui.editor': (self.editor, os.getenv('VISUAL', 'gvim')),
-            'gui.historybrowser': (self.historybrowser, 'gitk'),
-            'merge.keepbackup': (self.keep_merge_backups, True),
-            'merge.tool': (self.mergetool, 'xxdiff'),
+            prefs.SAVEWINDOWSETTINGS: (self.save_gui_settings, True),
+            prefs.TABWIDTH: (self.tabwidth, 8),
+            prefs.TEXTWIDTH: (self.textwidth, 72),
+            prefs.LINEBREAK: (self.linebreak, True),
+            prefs.DIFFTOOL: (self.difftool, 'xxdiff'),
+            prefs.EDITOR: (self.editor, os.getenv('VISUAL', 'gvim')),
+            prefs.HISTORY_BROWSER: (self.historybrowser, 'gitk'),
+            prefs.MERGE_KEEPBACKUP: (self.keep_merge_backups, True),
+            prefs.MERGETOOL: (self.mergetool, 'xxdiff'),
         })
 
         self.connect(self.fixed_font, SIGNAL('currentFontChanged(const QFont &)'),
@@ -207,11 +219,11 @@ class SettingsFormWidget(FormWidget):
         font = self.fixed_font.currentFont()
         font.setPointSize(size)
         cmds.do(SetConfig, self.model,
-                'user', 'cola.fontdiff', unicode(font.toString()))
+                'user', FONTDIFF, unicode(font.toString()))
 
     def current_font_changed(self, font):
         cmds.do(SetConfig, self.model,
-                'user', 'cola.fontdiff', unicode(font.toString()))
+                'user', FONTDIFF, unicode(font.toString()))
 
 
 class PreferencesView(standard.Dialog):
@@ -269,39 +281,3 @@ class PreferencesView(standard.Dialog):
     def update_widget(self, idx):
         widget = self._stackedwidget.widget(idx)
         widget.update_from_config()
-
-
-def tabwidth():
-    return gitcfg.instance().get('cola.tabwidth', 8)
-
-
-def textwidth():
-    return gitcfg.instance().get('cola.textwidth', 72)
-
-
-def linebreak():
-    return gitcfg.instance().get('cola.linebreak', True)
-
-
-def diff_font_str():
-    font_str = gitcfg.instance().get('cola.fontdiff')
-    if font_str is None:
-        font = qtutils.default_monospace_font()
-        font_str = unicode(font.toString())
-    return font_str
-
-
-def diff_font():
-    font_str = diff_font_str()
-    font = QtGui.QFont()
-    font.fromString(font_str)
-    return font
-
-
-if __name__ == '__main__':
-    import sys
-    from cola.prefs import preferences
-
-    app = QtGui.QApplication(sys.argv)
-    view = preferences()
-    sys.exit(app.exec_())

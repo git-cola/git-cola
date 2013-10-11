@@ -8,7 +8,6 @@ from PyQt4.QtCore import SIGNAL
 
 import cola
 from cola import gitcmds
-from cola import prefs
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
@@ -134,7 +133,7 @@ class RemoteActionDialog(standard.Dialog):
         self.setWindowTitle(N_(action))
 
         self.progress = QtGui.QProgressDialog(self)
-        self.progress.setFont(prefs.diff_font())
+        self.progress.setFont(qtutils.diff_font())
         self.progress.setRange(0, 0)
         self.progress.setCancelButton(None)
         self.progress.setWindowTitle(action)

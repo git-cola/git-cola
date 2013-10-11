@@ -14,6 +14,7 @@ from cola.git import STDOUT
 from cola.observable import Observable
 from cola.decorators import memoize
 from cola.models.selection import selection_model
+from cola.models import prefs
 
 
 # Static GitConfig instance
@@ -106,16 +107,6 @@ class MainModel(Observable):
         """Whether staging should be allowed."""
         return self.mode in self.modes_stageable
 
-    def editor(self):
-        app = _config.get('gui.editor', 'gvim')
-        return {'vim': 'gvim'}.get(app, app)
-
-    def history_browser(self):
-        return _config.get('gui.historybrowser', 'gitk')
-
-    def display_untracked(self):
-        return _config.get('gui.displayuntracked', True)
-
     def all_branches(self):
         return (self.local_branches + self.remote_branches)
 
@@ -185,7 +176,7 @@ class MainModel(Observable):
         self.notify_observers(self.message_updated)
 
     def _update_files(self, update_index=False):
-        display_untracked = self.display_untracked()
+        display_untracked = prefs.display_untracked()
         state = gitcmds.worktree_state_dict(head=self.head,
                                             update_index=update_index,
                                             display_untracked=display_untracked)

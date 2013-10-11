@@ -31,8 +31,7 @@ from cola.compat import json
 from cola.i18n import N_
 from cola.models.dag import DAG
 from cola.models.dag import RepoReader
-# TODO move this somewhere more neutral
-from cola.prefs.view import diff_font
+from cola.qtutils import diff_font
 from cola.widgets import defs
 from cola.widgets.diff import DiffWidget
 from cola.widgets.diff import COMMITS_SELECTED

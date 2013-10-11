@@ -13,7 +13,6 @@ from cola import gitcmds
 from cola import guicmds
 from cola import merge
 from cola import gitcfg
-from cola import prefs
 from cola import qtutils
 from cola import resources
 from cola import settings
@@ -27,6 +26,7 @@ from cola.git import git
 from cola.git import STDOUT
 from cola.i18n import N_
 from cola.interaction import Interaction
+from cola.models import prefs
 from cola.qt import create_dock
 from cola.qt import create_menu
 from cola.qt import create_toolbutton
@@ -511,7 +511,7 @@ class MainView(MainWindow):
     mode = property(lambda self: self.model.mode)
 
     def _config_updated(self, source, config, value):
-        if config == 'cola.fontdiff':
+        if config == prefs.FONTDIFF:
             # The diff font
             font = QtGui.QFont()
             if not font.fromString(value):
@@ -520,16 +520,16 @@ class MainView(MainWindow):
             self.diffeditor.setFont(font)
             self.commitmsgeditor.setFont(font)
 
-        elif config == 'cola.tabwidth':
+        elif config == prefs.TABWIDTH:
             # variable-tab-width setting
             self.diffeditor.set_tabwidth(value)
             self.commitmsgeditor.set_tabwidth(value)
 
-        elif config == 'cola.linebreak':
+        elif config == prefs.LINEBREAK:
             # enables automatic line breaks
             self.commitmsgeditor.set_linebreak(value)
 
-        elif config == 'cola.textwidth':
+        elif config == prefs.TEXTWIDTH:
             # text width used for line wrapping
             self.commitmsgeditor.set_textwidth(value)
 

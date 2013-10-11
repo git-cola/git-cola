@@ -17,8 +17,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
     def __init__(self, model, parent=None):
         QtGui.QLineEdit.__init__(self, parent)
 
-        from cola.prefs import diff_font
-        self.setFont(diff_font())
+        self.setFont(qtutils.diff_font())
         # used to hide the completion popup after a drag-select
         self._drag = 0
 

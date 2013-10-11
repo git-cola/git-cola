@@ -222,7 +222,7 @@ def browse(args):
 
 def config(args):
     context = application_init(args)
-    from cola.prefs import preferences
+    from cola.widgets.prefs import preferences
     view = preferences()
     return application_start(context, view)
 

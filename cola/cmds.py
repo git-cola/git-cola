@@ -14,38 +14,17 @@ from cola import gitcmds
 from cola import utils
 from cola import difftool
 from cola import resources
+from cola.basecmd import BaseCommand
 from cola.compat import set
 from cola.diffparse import DiffParser
 from cola.git import STDOUT
 from cola.i18n import N_
 from cola.interaction import Interaction
+from cola.models import prefs
 from cola.models import selection
 
 _notifier = cola.notifier()
 _config = gitcfg.instance()
-
-
-class BaseCommand(object):
-    """Base class for all commands; provides the command pattern"""
-
-    DISABLED = False
-
-    def __init__(self):
-        self.undoable = False
-
-    def is_undoable(self):
-        """Can this be undone?"""
-        return self.undoable
-
-    @staticmethod
-    def name(cls):
-        return 'Unknown'
-
-    def do(self):
-        raise NotImplementedError('%s.do() is unimplemented' % self.__class__.__name__)
-
-    def undo(self):
-        raise NotImplementedError('%s.undo() is unimplemented' % self.__class__.__name__)
 
 
 class Command(BaseCommand):
@@ -487,7 +466,7 @@ class Edit(Command):
         filename = self.filenames[0]
         if not core.exists(filename):
             return
-        editor = self.model.editor()
+        editor = prefs.editor()
         opts = []
 
         if self.line_number is None:
@@ -761,7 +740,7 @@ class Rebase(Command):
         out = ''
         err = ''
         with GitXBaseContext(
-                GIT_EDITOR=self.model.editor(),
+                GIT_EDITOR=prefs.editor(),
                 GIT_XBASE_TITLE=N_('Rebase onto %s') % branch,
                 GIT_XBASE_ACTION=N_('Rebase')):
             status, out, err = self.model.git.rebase(branch,
@@ -1146,7 +1125,7 @@ class VisualizeAll(Command):
     """Visualize all branches."""
 
     def do(self):
-        browser = utils.shell_split(self.model.history_browser())
+        browser = utils.shell_split(prefs.history_browser())
         utils.fork(browser + ['--all'])
 
 
@@ -1154,7 +1133,7 @@ class VisualizeCurrent(Command):
     """Visualize all branches."""
 
     def do(self):
-        browser = utils.shell_split(self.model.history_browser())
+        browser = utils.shell_split(prefs.history_browser())
         utils.fork(browser + [self.model.currentbranch])
 
 
@@ -1163,7 +1142,7 @@ class VisualizePaths(Command):
 
     def __init__(self, paths):
         Command.__init__(self)
-        browser = utils.shell_split(self.model.history_browser())
+        browser = utils.shell_split(prefs.history_browser())
         if paths:
             self.argv = browser + paths
         else:
@@ -1182,7 +1161,7 @@ class VisualizeRevision(Command):
         self.paths = paths
 
     def do(self):
-        argv = utils.shell_split(self.model.history_browser())
+        argv = utils.shell_split(prefs.history_browser())
         if self.revision:
             argv.append(self.revision)
         if self.paths:

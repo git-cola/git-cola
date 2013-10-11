@@ -9,7 +9,7 @@ from cola import qtutils
 from cola.cmds import do
 from cola.git import git
 from cola.i18n import N_
-from cola.prefs import diff_font
+from cola.qtutils import diff_font
 from cola.widgets import defs
 from cola.widgets.standard import Dialog
 from cola.widgets.text import HintedTextView, HintedLineEdit
@@ -166,16 +166,19 @@ class Grep(Dialog):
         self.result_txt.setTextCursor(cursor)
 
     def process_result(self, status, out, err):
-        # save scrollbar and text cursor
-        scroll = self.text_scroll()
-        offset = self.text_offset()
 
         if status == 0:
-            self.result_txt.set_value(out)
+            value = out + err
         elif out + err:
-            self.result_txt.set_value('git grep: ' + out + err)
+            value = 'git grep: ' + out + err
         else:
-            self.result_txt.set_value('')
+            value = ''
+
+        # save scrollbar and text cursor
+        scroll = self.text_scroll()
+        offset = min(len(value), self.text_offset())
+
+        self.result_txt.set_value(value)
         # restore
         self.set_text_scroll(scroll)
         self.set_text_offset(offset)
