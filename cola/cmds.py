@@ -224,7 +224,7 @@ class Archive(BaseCommand):
         if self.prefix:
             cmd.append('--prefix=' + self.prefix)
         cmd.append(self.ref)
-        proc = utils.start_command(cmd, stdout=fp)
+        proc = core.start_command(cmd, stdout=fp)
         out, err = proc.communicate()
         fp.close()
         status = proc.returncode
@@ -509,7 +509,7 @@ class Edit(Command):
                     break
 
         try:
-            utils.fork(utils.shell_split(editor) + opts)
+            core.fork(utils.shell_split(editor) + opts)
         except Exception as e:
             message = (N_('Cannot exec "%s": please configure your editor') %
                        editor)
@@ -546,10 +546,10 @@ class LaunchDifftool(BaseCommand):
         if s.unmerged:
             paths = s.unmerged
             if utils.is_win32():
-                utils.fork(['git', 'mergetool', '--no-prompt', '--'] + paths)
+                core.fork(['git', 'mergetool', '--no-prompt', '--'] + paths)
             else:
-                utils.fork(['xterm', '-e',
-                            'git', 'mergetool', '--no-prompt', '--'] + paths)
+                core.fork(['xterm', '-e',
+                           'git', 'mergetool', '--no-prompt', '--'] + paths)
         else:
             difftool.run()
 
@@ -674,7 +674,7 @@ class OpenDefaultApp(BaseCommand):
     def do(self):
         if not self.filenames:
             return
-        utils.fork([self.launcher] + self.filenames)
+        core.fork([self.launcher] + self.filenames)
 
 
 class OpenParentDir(OpenDefaultApp):
@@ -692,7 +692,7 @@ class OpenParentDir(OpenDefaultApp):
         if not self.filenames:
             return
         dirs = set(map(os.path.dirname, self.filenames))
-        utils.fork([self.launcher] + dirs)
+        core.fork([self.launcher] + dirs)
 
 
 class OpenRepo(Command):
@@ -704,7 +704,7 @@ class OpenRepo(Command):
 
     def do(self):
         self.model.set_directory(self.repo_path)
-        utils.fork([sys.executable, sys.argv[0], '--repo', self.repo_path])
+        core.fork([sys.executable, sys.argv[0], '--repo', self.repo_path])
 
 
 class Clone(Command):
@@ -725,8 +725,8 @@ class Clone(Command):
                     ((out+err) and ('\n\n' + out + err) or ''))
             return False
         if self.spawn:
-            utils.fork([sys.executable, sys.argv[0],
-                        '--repo', self.new_directory])
+            core.fork([sys.executable, sys.argv[0],
+                       '--repo', self.new_directory])
         return True
 
 
@@ -890,7 +890,7 @@ class RunConfigAction(Command):
         cmd = ['sh', '-c', cmd]
 
         if opts.get('noconsole'):
-            status, out, err = utils.run_command(cmd)
+            status, out, err = core.run_command(cmd)
         else:
             status, out, err = Interaction.run_command(title, cmd)
 
@@ -1148,7 +1148,7 @@ class VisualizeAll(Command):
 
     def do(self):
         browser = utils.shell_split(prefs.history_browser())
-        utils.fork(browser + ['--all'])
+        core.fork(browser + ['--all'])
 
 
 class VisualizeCurrent(Command):
@@ -1156,7 +1156,7 @@ class VisualizeCurrent(Command):
 
     def do(self):
         browser = utils.shell_split(prefs.history_browser())
-        utils.fork(browser + [self.model.currentbranch])
+        core.fork(browser + [self.model.currentbranch])
 
 
 class VisualizePaths(Command):
@@ -1171,7 +1171,7 @@ class VisualizePaths(Command):
             self.argv = browser
 
     def do(self):
-        utils.fork(self.argv)
+        core.fork(self.argv)
 
 
 class VisualizeRevision(Command):
@@ -1191,7 +1191,7 @@ class VisualizeRevision(Command):
             argv.extend(self.paths)
 
         try:
-            utils.fork(argv)
+            core.fork(argv)
         except Exception as e:
             _, details = utils.format_exception(e)
             title = N_('Error Launching History Browser')

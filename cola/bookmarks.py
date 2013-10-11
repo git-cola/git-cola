@@ -5,10 +5,9 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-from cola.core import getcwd
+from cola import core
 from cola import qtutils
 from cola import settings
-from cola import utils
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.widgets import defs
@@ -105,7 +104,7 @@ class BookmarksDialog(standard.Dialog):
     def add(self):
         path, ok = qtutils.prompt(N_('Path to git repository'),
                                   title=N_('Enter Git Repository'),
-                                  text=getcwd())
+                                  text=core.getcwd())
         if not ok:
             return
         self.model.bookmarks.append(path)
@@ -115,7 +114,7 @@ class BookmarksDialog(standard.Dialog):
     def open_repo(self):
         """Opens a new git-cola session on a bookmark"""
         for repo in self.selection():
-            utils.fork([sys.executable, sys.argv[0], '--repo', repo])
+            core.fork([sys.executable, sys.argv[0], '--repo', repo])
 
     def delete(self):
         """Removes a bookmark from the bookmarks list"""

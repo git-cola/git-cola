@@ -7,6 +7,7 @@ e.g. when python raises an IOError or OSError with errno == EINTR.
 import os
 import sys
 import itertools
+import subprocess
 
 from cola.decorators import interruptable
 
@@ -81,6 +82,93 @@ def wait(proc):
 @interruptable
 def readline(fh, encoding=None):
     return decode(fh.readline(), encoding=encoding)
+
+
+@interruptable
+def start_command(args, cwd=None, shell=False, add_env=None,
+                  universal_newlines=False,
+                  stdin=subprocess.PIPE,
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.PIPE):
+    """Start the given command, and return a subprocess object.
+
+    This provides a simpler interface to the subprocess module.
+
+    """
+    env = None
+    if add_env is not None:
+        env = os.environ.copy()
+        env.update(add_env)
+    return subprocess.Popen(args, bufsize=1, stdin=stdin, stdout=stdout,
+                            stderr=stderr, cwd=cwd, shell=shell, env=env,
+                            universal_newlines=universal_newlines)
+
+
+def run_command(args, cwd=None, shell=False, add_env=None):
+    """Run the given command to completion, and return its results.
+
+    This provides a simpler interface to the subprocess module.
+    The results are formatted as a 3-tuple: (exit_code, output, errors)
+    The other arguments are passed on to start_command().
+
+    """
+    process = start_command(args, cwd, shell, add_env)
+    (output, errors) = process.communicate()
+    output = decode(output)
+    errors = decode(errors)
+    exit_code = process.returncode
+    return (exit_code, output, errors)
+
+
+@interruptable
+def _fork_posix(args):
+    """Launch a process in the background."""
+    encoded_args = [encode(arg) for arg in args]
+    return subprocess.Popen(encoded_args).pid
+
+
+def _fork_win32(args):
+    """Launch a background process using crazy win32 voodoo."""
+    # This is probably wrong, but it works.  Windows.. wow.
+    if args[0] == 'git-dag':
+        # win32 can't exec python scripts
+        args = [sys.executable] + args
+
+    enc_args = [encode(arg) for arg in args]
+    abspath = _win32_abspath(enc_args[0])
+    if abspath:
+        # e.g. fork(['git', 'difftool', '--no-prompt', '--', 'path'])
+        enc_args[0] = abspath
+    else:
+        # e.g. fork(['gitk', '--all'])
+        cmdstr = subprocess.list2cmdline(enc_args)
+        sh_exe = _win32_abspath('sh')
+        enc_args = [sh_exe, '-c', cmdstr]
+
+    DETACHED_PROCESS = 0x00000008 # Amazing!
+    return subprocess.Popen(enc_args, creationflags=DETACHED_PROCESS).pid
+
+
+def _win32_abspath(exe):
+    """Return the absolute path to an .exe if it exists"""
+    if exists(exe):
+        return exe
+    if not exe.endswith('.exe'):
+        exe += '.exe'
+    if exists(exe):
+        return exe
+    for path in getenv('PATH', '').split(os.pathsep):
+        abspath = os.path.join(path, exe)
+        if exists(abspath):
+            return abspath
+    return None
+
+
+# Portability wrappers
+if sys.platform == 'win32' or sys.platform == 'cygwin':
+    fork = _fork_win32
+else:
+    fork = _fork_posix
 
 
 def wrap(action, fn, decorator=None):

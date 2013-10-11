@@ -1,7 +1,6 @@
 import os
 import subprocess
 from cola import core
-from cola import utils
 from cola.i18n import N_
 
 
@@ -55,7 +54,7 @@ class Interaction(object):
     @classmethod
     def run_command(cls, title, cmd):
         cls.log('$ ' + subprocess.list2cmdline(cmd))
-        status, out, err = utils.run_command(cmd)
+        status, out, err = core.run_command(cmd)
         cls.log_status(status, out, err)
 
     @classmethod

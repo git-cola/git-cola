@@ -1,4 +1,4 @@
-__all__ = ('decorated', 'deprecator', 'memoize', 'interruptable')
+__all__ = ('decorator', 'memoize', 'interruptable')
 
 import errno
 
@@ -23,15 +23,6 @@ def decorator(caller, func=None):
         def _decorated(*args, **opts):
             return caller(func, *args, **opts)
         return _decorated
-
-
-@decorator
-def deprecated(func, *args, **kw):
-    "A decorator for deprecated functions"
-    import warnings
-    warnings.warn('Calling deprecated function %r' % func.__name__,
-                  DeprecationWarning, stacklevel=3)
-    return func(*args, **kw)
 
 
 def memoize(func):

@@ -9,7 +9,6 @@ from cola import core
 from cola import difftool
 from cola import gitcmds
 from cola import qtutils
-from cola import utils
 from cola.git import git
 from cola.i18n import N_
 from cola.interaction import Interaction
@@ -100,7 +99,7 @@ def new_repo():
         # treating it like an "Open" is a sensible DWIM answer.
         return path
 
-    status, out, err = utils.run_command(['git', 'init', path])
+    status, out, err = core.run_command(['git', 'init', path])
     if status == 0:
         return path
     else:

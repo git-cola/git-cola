@@ -4,6 +4,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 import cola
+from cola import core
 from cola import utils
 from cola import qtutils
 from cola import gitcmds
@@ -44,7 +45,7 @@ def launch(args):
     """Launches 'git difftool' with args"""
     difftool_args = ['git', 'difftool', '--no-prompt']
     difftool_args.extend(args)
-    utils.fork(difftool_args)
+    core.fork(difftool_args)
 
 
 def diff_commits(parent, a, b):

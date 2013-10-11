@@ -6,14 +6,12 @@ import os
 import random
 import re
 import shlex
-import subprocess
 import sys
 import time
 import traceback
 
 from cola import core
 from cola import resources
-from cola.decorators import interruptable
 from cola.compat import hashlib
 
 random.seed(hash(time.time()))
@@ -91,49 +89,6 @@ def format_exception(e):
         msg = str(e)
     return (msg, details)
 
-
-@interruptable
-def _fork_posix(args):
-    """Launch a process in the background."""
-    encoded_args = [core.encode(arg) for arg in args]
-    return subprocess.Popen(encoded_args).pid
-
-
-def _fork_win32(args):
-    """Launch a background process using crazy win32 voodoo."""
-    # This is probably wrong, but it works.  Windows.. wow.
-    if args[0] == 'git-dag':
-        # win32 can't exec python scripts
-        args = [sys.executable] + args
-
-    enc_args = map(core.encode, args)
-    abspath = win32_abspath(enc_args[0])
-    if abspath:
-        # e.g. fork(['git', 'difftool', '--no-prompt', '--', 'path'])
-        enc_args[0] = abspath
-    else:
-        # e.g. fork(['gitk', '--all'])
-        cmdstr = subprocess.list2cmdline(enc_args)
-        sh_exe = win32_abspath('sh')
-        enc_args = [sh_exe, '-c', cmdstr]
-
-    DETACHED_PROCESS = 0x00000008 # Amazing!
-    return subprocess.Popen(enc_args, creationflags=DETACHED_PROCESS).pid
-
-
-def win32_abspath(exe):
-    """Return the absolute path to an .exe if it exists"""
-    if os.path.exists(exe):
-        return exe
-    if not exe.endswith('.exe'):
-        exe += '.exe'
-    if os.path.exists(exe):
-        return exe
-    for path in os.environ['PATH'].split(os.pathsep):
-        abspath = os.path.join(path, exe)
-        if os.path.exists(abspath):
-            return abspath
-    return None
 
 def sublist(a,b):
     """Subtracts list b from list a and returns the resulting list."""
@@ -310,22 +265,6 @@ def checksum(path):
     return md5.hexdigest()
 
 
-def error(msg, *args):
-    """Print an error message to stderr."""
-    sys.stderr.write('error: ' + (msg % args) + '\n')
-
-
-def warn(msg, *args):
-    """Print a warning message to stderr."""
-    sys.stderr.write('warning: ' + (msg % args) + '\n')
-
-
-def die(msg, *args):
-    """Print as error message to stderr and exit the program."""
-    error(msg, *args)
-    sys.exit(1)
-
-
 class ProgressIndicator(object):
 
     """Simple progress indicator.
@@ -372,57 +311,3 @@ class ProgressIndicator(object):
         if noprefix:
             self.prefix = ""
         self(msg, True)
-
-
-@interruptable
-def start_command(args, cwd=None, shell=False, add_env=None,
-                  universal_newlines=False,
-                  stdin=subprocess.PIPE,
-                  stdout=subprocess.PIPE,
-                  stderr=subprocess.PIPE):
-    """Start the given command, and return a subprocess object.
-
-    This provides a simpler interface to the subprocess module.
-
-    """
-    env = None
-    if add_env is not None:
-        env = os.environ.copy()
-        env.update(add_env)
-    return subprocess.Popen(args, bufsize=1, stdin=stdin, stdout=stdout,
-                            stderr=stderr, cwd=cwd, shell=shell, env=env,
-                            universal_newlines=universal_newlines)
-
-
-def run_command(args, cwd=None, shell=False, add_env=None,
-                flag_error=False):
-    """Run the given command to completion, and return its results.
-
-    This provides a simpler interface to the subprocess module.
-
-    The results are formatted as a 3-tuple: (exit_code, output, errors)
-
-    If flag_error is enabled, Error messages will be produced if the
-    subprocess terminated with a non-zero exit code and/or stderr
-    output.
-
-    The other arguments are passed on to start_command().
-
-    """
-    process = start_command(args, cwd, shell, add_env)
-    (output, errors) = process.communicate()
-    output = core.decode(output)
-    errors = core.decode(errors)
-    exit_code = process.returncode
-    if flag_error and errors:
-        error("'%s' returned errors:\n---\n%s---", " ".join(args), errors)
-    if flag_error and exit_code:
-        error("'%s' returned exit code %i", " ".join(args), exit_code)
-    return (exit_code, output, errors)
-
-
-# Portability wrappers
-if is_win32():
-    fork = _fork_win32
-else:
-    fork = _fork_posix

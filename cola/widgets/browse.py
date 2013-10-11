@@ -30,7 +30,7 @@ class SaveBlob(BaseCommand):
         model = self.model
         cmd = ['git', 'show', '%s:%s' % (model.ref, model.relpath)]
         with core.xopen(model.filename, 'wb') as fp:
-            proc = utils.start_command(cmd, stdout=fp)
+            proc = core.start_command(cmd, stdout=fp)
             out, err = proc.communicate()
 
         status = proc.returncode

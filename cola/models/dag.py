@@ -223,7 +223,7 @@ class RepoReader(object):
         if self._proc is None:
             ref_args = utils.shell_split(self.dag.ref)
             cmd = self._cmd + ['-%d' % self.dag.count] + ref_args
-            self._proc = utils.start_command(cmd)
+            self._proc = core.start_command(cmd)
             self._topo_list = []
 
         log_entry = core.readline(self._proc.stdout).rstrip()
