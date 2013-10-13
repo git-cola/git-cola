@@ -34,6 +34,10 @@ def connect_button(button, fn):
     button.connect(button, SIGNAL('clicked()'), fn)
 
 
+def connect_toggle(toggle, fn):
+    toggle.connect(toggle, SIGNAL('toggled(bool)'), fn)
+
+
 def active_window():
     return QtGui.QApplication.activeWindow()
 
