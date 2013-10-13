@@ -20,6 +20,7 @@ class GrepThread(QtCore.QThread):
     def __init__(self, parent):
         QtCore.QThread.__init__(self, parent)
         self.txt = None
+        self.regexp_mode = '--basic-regexp'
         self.shell = False
 
     def run(self):
@@ -31,7 +32,7 @@ class GrepThread(QtCore.QThread):
             args = utils.shell_split(query)
         else:
             args = [query]
-        status, out, err = git.grep(n=True, *args)
+        status, out, err = git.grep(self.regexp_mode, n=True, *args)
         if query == self.txt:
             self.emit(SIGNAL('result'), status, out, err)
         else:
@@ -52,6 +53,22 @@ class Grep(Dialog):
         hint = N_('command-line arguments')
         self.input_txt = HintedLineEdit(hint, self)
         self.input_txt.enable_hint(True)
+
+        self.regexp_combo = combo = QtGui.QComboBox()
+        combo.setToolTip(
+                N_('Choose the "git grep" regular expression mode:\n'
+                   'Basic - use POSIX basic regexp (--basic-regexp)\n'
+                   'Extended - use POSIX extended regexp (--extended-regexp)\n'
+                   'Fixed - search for fixed strings (--fixed-strings)'))
+        combo.addItems([N_('Basic'), N_('Extended'), N_('Fixed')])
+        combo.setItemData(0, N_('POSIX basic regexp'), Qt.ToolTipRole)
+        combo.setItemData(0, '--basic-regexp', Qt.UserRole)
+        combo.setItemData(1, N_('POSIX extended regexp'), Qt.ToolTipRole)
+        combo.setItemData(1, '--extended-regexp', Qt.UserRole)
+        combo.setItemData(2, N_('Search for fixed strings'), Qt.ToolTipRole)
+        combo.setItemData(2, '--fixed-strings', Qt.UserRole)
+        combo.setCurrentIndex(0)
+        combo.setEditable(False)
 
         hint = N_('grep result...')
         self.result_txt = GrepTextView(hint, self)
@@ -88,6 +105,7 @@ class Grep(Dialog):
 
         self.input_layout.addWidget(self.input_label)
         self.input_layout.addWidget(self.input_txt)
+        self.input_layout.addWidget(self.regexp_combo)
 
         self.bottom_layout.addWidget(self.edit_button)
         self.bottom_layout.addWidget(self.refresh_button)
@@ -107,6 +125,9 @@ class Grep(Dialog):
 
         self.connect(self.input_txt, SIGNAL('textChanged(QString)'),
                      self.input_txt_changed)
+
+        self.connect(self.regexp_combo, SIGNAL('currentIndexChanged(int)'),
+                     lambda x: self.search())
 
         self.connect(self.result_txt, SIGNAL('leave()'),
                      lambda: self.input_txt.setFocus())
@@ -135,12 +156,18 @@ class Grep(Dialog):
         if has_query:
             self.search()
 
+    def regexp_mode(self):
+        idx = self.regexp_combo.currentIndex()
+        data = self.regexp_combo.itemData(idx, Qt.UserRole).toPyObject()
+        return unicode(data)
+
     def search(self):
         self.edit_button.setEnabled(False)
         self.refresh_button.setEnabled(False)
 
         self.grep_thread.txt = self.input_txt.as_unicode()
         self.grep_thread.shell = self.shell_checkbox.isChecked()
+        self.grep_thread.regexp_mode = self.regexp_mode()
         self.grep_thread.start()
 
     def search_for(self, txt):

@@ -22,6 +22,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/148
 
+* The `grep` tool learned to search using three different modes:
+  basic regular expressions (default), extended regular expressions,
+  and fixed strings.
+
 Packaging
 ---------
 * `git cola` now depends on the `argparse` Python module.
