@@ -22,16 +22,16 @@ from cola.models.prefs import FONTDIFF
 from cola.widgets import defs
 
 
-def connect_action(action, callback):
-    action.connect(action, SIGNAL('triggered()'), callback)
+def connect_action(action, fn):
+    action.connect(action, SIGNAL('triggered()'), fn)
 
 
-def connect_action_bool(action, callback):
-    action.connect(action, SIGNAL('triggered(bool)'), callback)
+def connect_action_bool(action, fn):
+    action.connect(action, SIGNAL('triggered(bool)'), fn)
 
 
-def connect_button(button, callback):
-    button.connect(button, SIGNAL('clicked()'), callback)
+def connect_button(button, fn):
+    button.connect(button, SIGNAL('clicked()'), fn)
 
 
 def active_window():
