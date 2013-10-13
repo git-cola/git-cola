@@ -119,6 +119,7 @@ class Grep(Dialog):
                            'Ctrl+l')
         qtutils.connect_button(self.edit_button, self.edit)
         qtutils.connect_button(self.refresh_button, self.search)
+        qtutils.connect_toggle(self.shell_checkbox, lambda x: self.search())
         qtutils.connect_button(self.close_button, self.close)
         qtutils.add_close_action(self)
 
