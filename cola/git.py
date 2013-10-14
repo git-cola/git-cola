@@ -1,6 +1,5 @@
 import os
 import sys
-import errno
 import subprocess
 import threading
 from os.path import join
@@ -165,32 +164,13 @@ class Git(object):
         # Start the process
         # Guard against thread-unsafe .git/index.lock files
         INDEX_LOCK.acquire()
-        # Some systems (e.g. darwin) interrupt system calls
-        while True:
-            try:
-                proc = subprocess.Popen(command,
-                                        cwd=_cwd,
-                                        stdin=_stdin,
-                                        stderr=subprocess.PIPE,
-                                        stdout=subprocess.PIPE,
-                                        **extra)
-                # Wait for the process to return
-                out, err = proc.communicate()
-                if _decode:
-                    out = core.decode(out, encoding=_encoding)
-                    err = core.decode(err, encoding=_encoding)
-                status = proc.returncode
-                break
-            except OSError, e:
-                if e.errno == errno.EINTR or e.errno == errno.ENOMEM:
-                    continue
-                INDEX_LOCK.release()
-                raise
-            except:
-                INDEX_LOCK.release()
-                raise
+        status, out, err = core.run_command(command,
+                                            cwd=_cwd, stdin=_stdin, **extra)
         # Let the next thread in
         INDEX_LOCK.release()
+        if _decode:
+            out = core.decode(out, encoding=_encoding)
+            err = core.decode(err, encoding=_encoding)
         if not _raw:
             out = out.rstrip('\n')
 
