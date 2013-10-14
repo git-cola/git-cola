@@ -19,21 +19,20 @@ class GrepThread(QtCore.QThread):
 
     def __init__(self, parent):
         QtCore.QThread.__init__(self, parent)
-        self.txt = None
-        self.regexp_mode = '--basic-regexp'
+        self.query = None
         self.shell = False
+        self.regexp_mode = '--basic-regexp'
 
     def run(self):
-        if self.txt is None:
+        if self.query is None:
             return
-        query = self.txt
-
+        query = self.query
         if self.shell:
             args = utils.shell_split(query)
         else:
             args = [query]
         status, out, err = git.grep(self.regexp_mode, n=True, *args)
-        if query == self.txt:
+        if query == self.query:
             self.emit(SIGNAL('result'), status, out, err)
         else:
             self.run()
@@ -125,7 +124,7 @@ class Grep(Dialog):
                      self.process_result)
 
         self.connect(self.input_txt, SIGNAL('textChanged(QString)'),
-                     self.input_txt_changed)
+                     lambda s: self.search())
 
         self.connect(self.regexp_combo, SIGNAL('currentIndexChanged(int)'),
                      lambda x: self.search())
@@ -152,11 +151,6 @@ class Grep(Dialog):
         qtutils.save_state(self)
         return Dialog.done(self, exit_code)
 
-    def input_txt_changed(self, txt):
-        has_query = len(unicode(txt)) > 1
-        if has_query:
-            self.search()
-
     def regexp_mode(self):
         idx = self.regexp_combo.currentIndex()
         data = self.regexp_combo.itemData(idx, Qt.UserRole).toPyObject()
@@ -165,8 +159,11 @@ class Grep(Dialog):
     def search(self):
         self.edit_button.setEnabled(False)
         self.refresh_button.setEnabled(False)
-
-        self.grep_thread.txt = self.input_txt.as_unicode()
+        query = self.input_txt.value()
+        if len(query) < 2:
+            self.result_txt.set_value('')
+            return
+        self.grep_thread.query = query
         self.grep_thread.shell = self.shell_checkbox.isChecked()
         self.grep_thread.regexp_mode = self.regexp_mode()
         self.grep_thread.start()
