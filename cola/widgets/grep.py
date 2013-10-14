@@ -50,28 +50,29 @@ class Grep(Dialog):
         self.input_label = QtGui.QLabel('git grep')
         self.input_label.setFont(diff_font())
 
-        hint = N_('command-line arguments')
-        self.input_txt = HintedLineEdit(hint, self)
+        self.input_txt = HintedLineEdit(N_('command-line arguments'), self)
         self.input_txt.enable_hint(True)
 
         self.regexp_combo = combo = QtGui.QComboBox()
-        combo.setToolTip(
-                N_('Choose the "git grep" regular expression mode:\n'
-                   'Basic - use POSIX basic regexp (--basic-regexp)\n'
-                   'Extended - use POSIX extended regexp (--extended-regexp)\n'
-                   'Fixed - search for fixed strings (--fixed-strings)'))
-        combo.addItems([N_('Basic'), N_('Extended'), N_('Fixed')])
-        combo.setItemData(0, N_('POSIX basic regexp'), Qt.ToolTipRole)
-        combo.setItemData(0, '--basic-regexp', Qt.UserRole)
-        combo.setItemData(1, N_('POSIX extended regexp'), Qt.ToolTipRole)
-        combo.setItemData(1, '--extended-regexp', Qt.UserRole)
-        combo.setItemData(2, N_('Search for fixed strings'), Qt.ToolTipRole)
-        combo.setItemData(2, '--fixed-strings', Qt.UserRole)
+        combo.setToolTip(N_('Choose the "git grep" regular expression mode'))
+        items = [N_('Basic Regexp'), N_('Extended Regexp'), N_('Fixed String')]
+        combo.addItems(items)
         combo.setCurrentIndex(0)
         combo.setEditable(False)
+        combo.setItemData(0,
+                N_('Search using a POSIX basic regular expression'),
+                Qt.ToolTipRole)
+        combo.setItemData(1,
+                N_('Search using a POSIX extended regular expression'),
+                Qt.ToolTipRole)
+        combo.setItemData(2,
+                N_('Search for a fixed string'),
+                Qt.ToolTipRole)
+        combo.setItemData(0, '--basic-regexp', Qt.UserRole)
+        combo.setItemData(1, '--extended-regexp', Qt.UserRole)
+        combo.setItemData(2, '--fixed-strings', Qt.UserRole)
 
-        hint = N_('grep result...')
-        self.result_txt = GrepTextView(hint, self)
+        self.result_txt = GrepTextView(N_('grep result...'), self)
         self.result_txt.enable_hint(True)
 
         self.edit_button = QtGui.QPushButton(N_('Edit'))
@@ -219,6 +220,7 @@ class Grep(Dialog):
 
 
 class GrepTextView(HintedTextView):
+
     def __init__(self, hint, parent):
         HintedTextView.__init__(self, hint, parent)
         self.goto_action = qtutils.add_action(self, 'Launch Editor', self.edit)
