@@ -75,4 +75,4 @@ class Interaction(object):
     @classmethod
     def log(cls, message):
         if cls.VERBOSE:
-            print(core.encode(message))
+            core.stdout(message)
