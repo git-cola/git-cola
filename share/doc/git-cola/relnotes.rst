@@ -40,7 +40,7 @@ git-cola v1.8.5
 ---------------
 Usability, bells and whistles
 -----------------------------
-* We now detect the editor or history browser are misconfigured.
+* We now detect when the editor or history browser are misconfigured.
 
   https://github.com/git-cola/git-cola/issues/197
 
