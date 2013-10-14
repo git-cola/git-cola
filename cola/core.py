@@ -85,7 +85,7 @@ def readline(fh, encoding=None):
 
 
 @interruptable
-def start_command(args, cwd=None, shell=False, add_env=None,
+def start_command(cmd, cwd=None, shell=False, add_env=None,
                   universal_newlines=False,
                   stdin=subprocess.PIPE,
                   stdout=subprocess.PIPE,
@@ -99,12 +99,12 @@ def start_command(args, cwd=None, shell=False, add_env=None,
     if add_env is not None:
         env = os.environ.copy()
         env.update(add_env)
-    return subprocess.Popen(args, bufsize=1, stdin=stdin, stdout=stdout,
+    return subprocess.Popen(cmd, bufsize=1, stdin=stdin, stdout=stdout,
                             stderr=stderr, cwd=cwd, shell=shell, env=env,
                             universal_newlines=universal_newlines)
 
 
-def run_command(args, cwd=None, shell=False, add_env=None):
+def run_command(cmd, *args, **kwargs):
     """Run the given command to completion, and return its results.
 
     This provides a simpler interface to the subprocess module.
@@ -112,7 +112,7 @@ def run_command(args, cwd=None, shell=False, add_env=None):
     The other arguments are passed on to start_command().
 
     """
-    process = start_command(args, cwd, shell, add_env)
+    process = start_command(cmd, *args, **kwargs)
     (output, errors) = process.communicate()
     output = decode(output)
     errors = decode(errors)
