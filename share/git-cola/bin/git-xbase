@@ -27,6 +27,7 @@ from cola import observable
 from cola import qtutils
 from cola import utils
 from cola.compat import json
+from cola.compat import set
 from cola.i18n import N_
 from cola.models.dag import DAG
 from cola.models.dag import RepoReader
@@ -324,10 +325,11 @@ class RebaseTreeWidget(TreeWidget):
             self.validate()
 
     def validate(self):
+        invalid_first_choice = set([FIXUP, SQUASH])
         for item in self.items():
             if not item.is_enabled():
                 continue
-            if item.command != PICK:
+            if item.command in invalid_first_choice:
                 item.command = PICK
                 self.decorate_item(item)
             break
