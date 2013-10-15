@@ -1,0 +1,228 @@
+#!/usr/bin/env python
+
+import argparse
+import json
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+import github
+from cola import core
+from cola.interaction import Interaction
+
+
+def main():
+    args = parse_args()
+    return args.func(args)
+
+
+def usage(args):
+    print(args)
+    return 0
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-u', '--user', help='github user',
+                        metavar='<user>', default='git-cola')
+    parser.add_argument('-r', '--repo', help='github repo',
+                        metavar='<repo>', default='git-cola')
+    subparsers = parser.add_subparsers()
+
+    listcmd = subparsers.add_parser('list')
+    listcmd.set_defaults(func=print_releases)
+
+    create = subparsers.add_parser('create')
+    create.set_defaults(func=create_release)
+    add_release_arguments(create)
+
+    edit = subparsers.add_parser('edit')
+    edit.set_defaults(func=edit_release)
+    add_version_arguments(edit)
+    add_release_arguments(edit)
+
+    delete = subparsers.add_parser('delete')
+    delete.set_defaults(func=delete_release)
+    add_version_arguments(delete)
+
+    identify = subparsers.add_parser('identify')
+    identify.set_defaults(func=identify_release)
+    add_version_arguments(identify)
+    identify.add_argument('--full', action='store_true', default=False,
+                          help='show full release details')
+
+    upload = subparsers.add_parser('upload')
+    upload.set_defaults(func=upload_file)
+    add_version_arguments(upload)
+    upload.add_argument('filename', metavar='<filename>',
+                        help='file to upload')
+
+    return parser.parse_args()
+
+
+def add_version_arguments(parser):
+    parser.add_argument('version', metavar='<version>',
+                         help='release version')
+
+def add_release_arguments(parser):
+    add_version_arguments(parser)
+    parser.add_argument('sha1', metavar='<SHA-1>', nargs='?', default=None,
+                        help='SHA-1 for the release')
+    parser.add_argument('--draft', action='store_true', default=False,
+                        help='create draft (unpublished) release')
+    parser.add_argument('--prerelease', action='store_true', default=False,
+                        help='create preview release')
+
+# commands
+
+def print_releases(args):
+    api = github.GithubAPI()
+    resp = api.get('/repos/%s/%s/releases' % (args.user, args.repo))
+    print_response(resp)
+    return 0
+
+
+def create_release(args):
+    add_sha1(args)
+    print_release_info(args)
+    if not Interaction.confirm('Creating release %s' % args.version,
+                               'This will create a new release on github.',
+                               'After creation, assets can be uploaded.',
+                               'Create release'):
+        return 1
+    data = new_release_data(args)
+    url = '/repos/%s/%s/releases' % (args.user, args.repo)
+    api = github.GithubAPI()
+    resp = api.post(url, data=json.dumps(data))
+    print_response(resp)
+    return 0
+
+
+def edit_release(args):
+    add_sha1(args)
+    details = release_details(args)
+    if details is None:
+        return 1
+    release_id = details['id']
+    print_release_info(args)
+    if not Interaction.confirm('Editing release %s' % args.version,
+                               'This will edit an existing release on github.',
+                               'The release must exist before editing.',
+                               'Edit release'):
+        return 1
+    data = new_release_data(args)
+    url = '/repos/%s/%s/releases/%s' % (args.user, args.repo, release_id)
+    api = github.GithubAPI()
+    resp = api.patch(url, data=json.dumps(data))
+    print_response(resp)
+    return 0
+
+
+def delete_release(args):
+    details = release_details(args)
+    if details is None:
+        return 1
+    release_id = details['id']
+    if not Interaction.confirm('Deleting release %s' % args.version,
+                               'This will delete a release from github.',
+                               'This cannot be undone.',
+                               'Delete release'):
+        return 1
+
+    url = '/repos/%s/%s/releases/%s' % (args.user, args.repo, release_id)
+    api = github.GithubAPI()
+    resp = api.delete(url)
+    print_response(resp)
+    return 0
+
+
+def identify_release(args):
+    details = release_details(args)
+    if details is None:
+        core.stderr('error: could not identify %s' % args.version)
+        return 1
+    if args.full:
+        core.stdout(json.dumps(details, indent=4, sort_keys=True))
+    else:
+        core.stdout(str(details['id']))
+    return 0
+
+
+def upload_file(args):
+    details = release_details(args)
+    if details is None:
+        return 1
+    filename = args.filename
+    url = details['upload_url'].replace('{', '').replace('}', '')
+
+    api = github.GithubAPI()
+    headers = api.upload_headers(filename)
+
+    cmd = ['curl', '--verbose']
+    for header in headers:
+        cmd.append('--header')
+        cmd.append(header)
+    cmd.append('--data-binary')
+    cmd.append('@' + filename)
+    cmd.append(url + '=' + os.path.basename(filename))
+
+    status, out, err = core.run_command(cmd)
+    if out:
+        core.stdout(out)
+    if err:
+        core.stderr(err)
+    return status
+
+# helpers
+
+def beautify(jsonstr):
+    try:
+        return json.dumps(json.loads(jsonstr), indent=4, sort_keys=True)
+    except:
+        return jsonstr
+
+
+def print_response(resp, printer=core.stdout):
+    printer('/* %s */' % resp.status_code)
+    printer(beautify(resp.text))
+
+
+def add_sha1(args):
+    if args.sha1:
+        return
+    cmd = ['git', 'rev-parse', args.version+'^{commit}']
+    status, out, err = core.run_command(cmd)
+    args.sha1 = out.strip('\n')
+
+
+def print_release_info(args):
+    data = new_release_data(args)
+    json.dump(data, sys.stdout, indent=4, sort_keys=True)
+
+
+def new_release_data(args):
+    data = {}
+    data['draft'] = args.draft
+    data['description'] = 'git-cola %s' % args.version
+    data['name'] = args.version
+    data['prerelease'] = args.prerelease
+    data['tag_name'] = args.version
+    data['target_commitish'] = args.sha1
+    return data
+
+
+def release_details(args):
+    api = github.GithubAPI()
+    resp = api.get('/repos/%s/%s/releases' % (args.user, args.repo))
+    if resp.status_code != 200:
+        print_response(resp, printer=core.stderr)
+        return None
+    releases = json.loads(resp.text)
+    for release in releases:
+        if release['tag_name'] == args.version:
+            return release
+    return None
+
+
+if __name__ == '__main__':
+    sys.exit(main())
