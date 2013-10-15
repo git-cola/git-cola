@@ -22,6 +22,7 @@ RELEASES="$DOCUMENT_ROOT/releases"
 if test -e bin/git-cola && test -z "$VERSION"
 then
 	VERSION=$(bin/git-cola version | awk '{print $3}')
+	vVERSION="v$VERSION"
 fi
 
 if test -e "$META/config"
@@ -40,7 +41,7 @@ do_or_die() {
 
 title() {
 	echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-	echo "    $@"
+	echo "$*"
 	echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 }
 

@@ -158,7 +158,7 @@ def upload_file(args):
     api = github.GithubAPI()
     headers = api.upload_headers(filename)
 
-    cmd = ['curl', '--verbose']
+    cmd = ['curl']
     for header in headers:
         cmd.append('--header')
         cmd.append(header)
@@ -166,6 +166,7 @@ def upload_file(args):
     cmd.append('@' + filename)
     cmd.append(url + '=' + os.path.basename(filename))
 
+    core.stdout('$ ' + ' '.join(cmd))
     status, out, err = core.run_command(cmd)
     if out:
         core.stdout(out)

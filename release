@@ -35,11 +35,11 @@ build_docs() {
 
 build_tarball() {
 	title Building tarball
-	do_or_die make dist
+	#do_or_die make dist
 	do_or_die make app-tarball
 	if $do_upload
 	then
-		upload_file git-cola-"$VERSION".tar.gz
+		#upload_file git-cola-"$VERSION".tar.gz
 		upload_file git-cola-"$VERSION".app.tar.gz
 	fi
 }
@@ -59,15 +59,17 @@ build_win32_remotely() {
 		"$WIN32_LOGIN" "/bin/rm '$WIN32_COLA_DIR'/*.exe"
 
 	do_or_die chmod 644 git-cola-"$VERSION".exe
+	do_or_die zip -9 git-cola-"$VERSION".windows.zip \
+		-xi git-cola-"$VERSION".exe
 	if $do_upload
 	then
-		upload_file git-cola-"$VERSION".exe
+		upload_file git-cola-"$VERSION".windows.zip
 	fi
 }
 
 upload_file () {
 	filename="$1"
-	"$META/github-release" upload "$VERSION" "$filename"
+	do_or_die "$META/github-release" upload "$vVERSION" "$filename"
 }
 
 # Parse options
