@@ -6,6 +6,7 @@ do_docs=false
 do_website=false
 do_tarball=false
 do_win32=false
+do_upload=false
 
 usage() {
 	echo "$(basename "$0") [options]"
@@ -21,6 +22,9 @@ usage() {
 	echo "--win32-port <port #>     - specify the win32 ssh port number"
 	echo "--win32-cola-dir <dir>    - specify the win32 cola repo path"
 	echo "--win32-python-dir <dir>  - specify the win32 python directory"
+	echo "--version <version>       - specify the version number"
+	echo "--upload                  - upload release assets to github"
+	echo "--upload-file <path>      - upload one release asset"
 	exit 1
 }
 
@@ -32,9 +36,12 @@ build_docs() {
 build_tarball() {
 	title Building tarball
 	do_or_die make dist
-	do_or_die mv git-cola-"$VERSION".tar.gz "$RELEASES"
 	do_or_die make app-tarball
-	do_or_die mv git-cola-"$VERSION".app.tar.gz "$RELEASES"
+	if $do_upload
+	then
+		upload_file git-cola-"$VERSION".tar.gz
+		upload_file git-cola-"$VERSION".app.tar.gz
+	fi
 }
 
 build_win32_remotely() {
@@ -52,11 +59,20 @@ build_win32_remotely() {
 		"$WIN32_LOGIN" "/bin/rm '$WIN32_COLA_DIR'/*.exe"
 
 	do_or_die chmod 644 git-cola-"$VERSION".exe
-	do_or_die mv git-cola-"$VERSION".exe "$RELEASES"
+	if $do_upload
+	then
+		upload_file git-cola-"$VERSION".exe
+	fi
+}
+
+upload_file () {
+	filename="$1"
+	"$META/github-release" upload "$VERSION" "$filename"
 }
 
 # Parse options
-while test $# -gt 0; do
+while test $# -gt 0
+do
 	case "$1" in
 	--doc-dir)
 		shift
@@ -68,6 +84,7 @@ while test $# -gt 0; do
 		do_tarball=true
 		do_win32=true
 		do_docs=true
+		do_upload=true
 		;;
 	--tarball)
 		shift
@@ -76,6 +93,11 @@ while test $# -gt 0; do
 	--doc)
 		shift
 		do_docs=true
+		;;
+	--version)
+		shift
+		VERSION="$1"
+		shift
 		;;
 	--win32)
 		shift
@@ -101,6 +123,15 @@ while test $# -gt 0; do
 		WIN32_SSH_PORT="$1"
 		shift
 		;;
+	--upload)
+		shift
+		do_upload=true
+		;;
+	--upload-file)
+		shift
+		upload_file "$1"
+		shift
+		;;
 	--)
 		shift
 		break
@@ -112,14 +143,17 @@ while test $# -gt 0; do
 done
 
 
-if $do_tarball; then
+if $do_tarball
+then
 	build_tarball
 fi
 
-if $do_win32; then
+if $do_win32
+then
 	build_win32_remotely
 fi
 
-if $do_docs; then
+if $do_docs
+then
 	build_docs
 fi

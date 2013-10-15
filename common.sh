@@ -1,13 +1,13 @@
 #!/bin/sh
 unset CDPATH
-top=$(git rev-parse --show-toplevel)
+COLA_TOP=$(git rev-parse --show-toplevel)
 curdir=$(pwd)
 cd "$(dirname "$0")"
 META=$(pwd)
 cd "$curdir"
 unset curdir
 
-# This variable must be defined in config.sh
+# This variable must be defined in config
 GITHUB_TOKEN=UNDEFINED
 
 WIN32_LOGIN=Administrator@localhost
@@ -15,18 +15,18 @@ WIN32_SSH_PORT=2002
 WIN32_COLA_DIR=git-cola
 WIN32_PYTHON=/c/Python27
 
-DOCUMENT_ROOT="$top/../git-cola.github.com"
+DOCUMENT_ROOT="$COLA_TOP/../git-cola.github.com"
 RELEASES="$DOCUMENT_ROOT/releases"
 
 # _the_ cola version
-if test -e bin/git-cola
+if test -e bin/git-cola && test -z "$VERSION"
 then
 	VERSION=$(bin/git-cola version | awk '{print $3}')
 fi
 
-if test -e "$META/config.sh"
+if test -e "$META/config"
 then
-	. "$META/config.sh"
+	. "$META/config"
 fi
 
 do_or_die() {
