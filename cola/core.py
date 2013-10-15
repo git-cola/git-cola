@@ -211,7 +211,10 @@ isdir = wrap(encode, os.path.isdir)
 isfile = wrap(encode, os.path.isfile)
 islink = wrap(encode, os.path.islink)
 makedirs = wrap(encode, os.makedirs)
-readlink = wrap(encode, os.readlink, decorator=decode)
+try:
+    readlink = wrap(encode, os.readlink, decorator=decode)
+except AttributeError:
+    readlink = lambda p: p
 realpath = wrap(encode, os.path.realpath, decorator=decode)
 stat = wrap(encode, os.stat)
 unlink = wrap(encode, os.unlink)
