@@ -1,2 +1,3 @@
 *.swp
-/config.sh
+*.py[cod]
+/config
