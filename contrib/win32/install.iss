@@ -1,5 +1,5 @@
 #define APP_NAME     'git-cola'
-#define APP_LONGNAME 'git-cola - The highly caffeinated git GUI'
+#define APP_LONGNAME 'git-cola - The highly caffeinated Git GUI'
 #define APP_VERSION  '%APPVERSION%'
 #define APP_URL      'http://git-cola.github.io/'
 
