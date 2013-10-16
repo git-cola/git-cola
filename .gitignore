@@ -8,7 +8,9 @@
 /tags
 .DS_Store
 .noseids
-*.py[co]
+*.gz
+*.py[cod]
 *.qm
 *.swp
+*.zip
 *~
