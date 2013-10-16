@@ -80,8 +80,11 @@ def git_version():
         return '1.6.3'
 
 
-def print_version():
-    print('cola version %s' % version())
+def print_version(brief=False):
+    if brief:
+        print('%s' % version())
+    else:
+        print('cola version %s' % version())
 
 
 if __name__ == '__main__':

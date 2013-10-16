@@ -185,7 +185,9 @@ def add_tag_command(cmds):
                         help='annotated and GPG-signed tag')
 
 def add_version_command(cmds):
-    add_command(cmds, 'version', 'print the git-cola version', cmd_version)
+    parser = add_command(cmds, 'version', 'print the version', cmd_version)
+    parser.add_argument('--brief', action='store_true', default=False,
+                        help='print the version number only')
 
 # entry points
 
@@ -269,7 +271,7 @@ def cmd_merge(args):
 
 def cmd_version(args):
     from cola import version
-    version.print_version()
+    version.print_version(brief=args.brief)
     return 0
 
 
