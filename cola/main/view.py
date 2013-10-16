@@ -48,6 +48,7 @@ from cola.widgets.dag import git_dag
 from cola.widgets.diff import DiffEditor
 from cola.widgets.log import LogWidget
 from cola.widgets import merge
+from cola.widgets.prefs import preferences
 from cola.widgets.recent import browse_recent
 from cola.widgets.status import StatusWidget
 from cola.widgets.search import search
@@ -672,7 +673,7 @@ class MainView(MainWindow):
         self.statuswidget.refresh()
 
     def preferences(self):
-        return prefs.preferences(model=self.prefs_model, parent=self)
+        return preferences(model=self.prefs_model, parent=self)
 
     def save_archive(self):
         ref = git.rev_parse('HEAD')[STDOUT]
