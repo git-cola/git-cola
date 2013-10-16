@@ -105,6 +105,11 @@ def start_command(cmd, cwd=None, shell=False, add_env=None,
                             universal_newlines=universal_newlines)
 
 
+@interruptable
+def communicate(proc):
+    return proc.communicate()
+
+
 def run_command(cmd, *args, **kwargs):
     """Run the given command to completion, and return its results.
 
@@ -114,7 +119,7 @@ def run_command(cmd, *args, **kwargs):
 
     """
     process = start_command(cmd, *args, **kwargs)
-    (output, errors) = process.communicate()
+    (output, errors) = communicate(process)
     output = decode(output)
     errors = decode(errors)
     exit_code = process.returncode
