@@ -114,7 +114,7 @@ If you are developing *git-cola* on Windows you can use `python.exe` to run
 
 If you want to build the `git-cola Installer` yourself run the provided script
 
-    win32/create-installer.sh
+    contrib/win32/create-installer.sh
 
 You have to make sure that the file
 

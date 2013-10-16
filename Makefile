@@ -116,10 +116,10 @@ mo:
 git-cola.app:
 	$(MKDIR_P) $(cola_app)/Contents/MacOS
 	$(MKDIR_P) $(cola_app)/Contents/Resources
-	$(CP) darwin/git-cola $(cola_app)/Contents/MacOS
-	$(CP) darwin/Info.plist darwin/PkgInfo $(cola_app)/Contents
+	$(CP) contrib/darwin/Info.plist darwin/PkgInfo $(cola_app)/Contents
+	$(CP) contrib/darwin/git-cola $(cola_app)/Contents/MacOS
+	$(CP) contrib/darwin/git-cola.icns $(cola_app)/Contents/Resources
 	$(MAKE) prefix=$(cola_app)/Contents/Resources install install-doc
-	$(CP) darwin/git-cola.icns $(cola_app)/Contents/Resources
 	$(LN) -sf $(darwin_python) $(cola_app)/Contents/Resources/git-cola
 
 app-tarball: git-cola.app

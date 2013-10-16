@@ -26,7 +26,7 @@ def main():
     ]
 
     if sys.platform == 'win32':
-        scripts.append('win32/cola')
+        scripts.append('contrib/win32/cola')
 
     setup(name='git-cola',
           version=version,
