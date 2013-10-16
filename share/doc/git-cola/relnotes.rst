@@ -1,3 +1,16 @@
+git-cola v1.9.1
+---------------
+Packaging
+---------
+* `git cola version --brief` now prints the brief version number.
+
+Fixes
+-----
+* Resurrected the "make dist" target, for those that prefer to create
+  their own tarballs.
+
+* Fixed the typo that broke the preferences dialog.
+
 git-cola v1.9.0
 ---------------
 Usability, bells and whistles
