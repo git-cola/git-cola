@@ -159,7 +159,7 @@ class Git(object):
         extra = {}
         if sys.platform == 'win32':
             command = map(replace_carot, command)
-            extra = {'shell': True}
+            extra['shell'] = True
 
         # Start the process
         # Guard against thread-unsafe .git/index.lock files
@@ -217,12 +217,8 @@ class Git(object):
 
         # Prepare the argument list
         opt_args = self.transform_kwargs(**kwargs)
-        ext_args = [core.encode(a) for a in args]
-        args = opt_args + ext_args
-
-        call = ['git', dashify(cmd)]
+        call = ['git', dashify(cmd)] + opt_args
         call.extend(args)
-
         return self.execute(call, **_kwargs)
 
 

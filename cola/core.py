@@ -99,6 +99,7 @@ def start_command(cmd, cwd=None, shell=False, add_env=None,
     if add_env is not None:
         env = os.environ.copy()
         env.update(add_env)
+    cmd = [encode(c) for c in cmd]
     return subprocess.Popen(cmd, bufsize=1, stdin=stdin, stdout=stdout,
                             stderr=stderr, cwd=cwd, shell=shell, env=env,
                             universal_newlines=universal_newlines)
