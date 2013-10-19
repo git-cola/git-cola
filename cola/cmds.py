@@ -7,7 +7,6 @@ from cStringIO import StringIO
 
 from cola import compat
 from cola import core
-from cola import errors
 from cola import gitcfg
 from cola import gitcmds
 from cola import notification
@@ -25,6 +24,14 @@ from cola.models import selection
 
 _notifier = notification.notifier()
 _config = gitcfg.instance()
+
+
+class UsageError(StandardError):
+    """Exception class for usage errors."""
+    def __init__(self, title, message):
+        StandardError.__init__(self, message)
+        self.title = title
+        self.msg = message
 
 
 class BaseCommand(object):
@@ -582,8 +589,8 @@ class LoadCommitMessageFromFile(Command):
     def do(self):
         path = self.path
         if not path or not core.isfile(path):
-            raise errors.UsageError(N_('Error: Cannot find commit template'),
-                                    N_('%s: No such file or directory.') % path)
+            raise UsageError(N_('Error: Cannot find commit template'),
+                             N_('%s: No such file or directory.') % path)
         self.model.set_directory(os.path.dirname(path))
         self.model.set_commitmsg(core.read(path))
 
@@ -601,7 +608,7 @@ class LoadCommitMessageFromTemplate(LoadCommitMessageFromFile):
 
     def do(self):
         if self.path is None:
-            raise errors.UsageError(
+            raise UsageError(
                     N_('Error: Unconfigured commit template'),
                     N_('A commit template has not been configured.\n'
                        'Use "git config" to define "commit.template"\n'
