@@ -7,7 +7,7 @@ import sys
 
 from cola import core
 from cola import git
-from cola import xdg
+from cola import resources
 from cola.compat import json
 
 
@@ -26,7 +26,7 @@ def mklist(obj):
 
 
 class Settings(object):
-    _file = xdg.config_home('settings')
+    _file = resources.config_home('settings')
 
     def __init__(self, verify=git.is_git_worktree):
         """Load existing settings if they exist"""

@@ -7,7 +7,6 @@ import sys
 from cola import compat
 from cola import core
 from cola import resources
-from cola import xdg
 
 _null_translation = _gettext.NullTranslations()
 _translation = _null_translation
@@ -52,7 +51,7 @@ def _get_locale_dir():
 
 def _install_custom_language():
     """Allow a custom language to be set in ~/.config/git-cola/language"""
-    lang_file = xdg.config_home('language')
+    lang_file = resources.config_home('language')
     if not core.exists(lang_file):
         return
     try:

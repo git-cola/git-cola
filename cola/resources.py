@@ -5,6 +5,7 @@ from os.path import dirname
 
 from cola import core
 
+
 _modpath = core.abspath(__file__)
 if os.path.join('share', 'git-cola', 'lib') in _modpath:
     # this is the release tree
@@ -54,3 +55,9 @@ def icon(basename):
 def icon_dir():
     """Return the path to the style dir within the cola install tree."""
     return share('icons')
+
+
+def config_home(*args):
+    config = core.getenv('XDG_CONFIG_HOME',
+                         os.path.join(core.expanduser('~'), '.config'))
+    return os.path.join(config, 'git-cola', *args)
