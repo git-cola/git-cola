@@ -11,6 +11,7 @@ from cola import qtutils
 from cola.cmds import run
 from cola.compat import set
 from cola.i18n import N_
+from cola.models.selection import single_selection
 from cola.qtutils import DiffSyntaxHighlighter
 from cola.widgets import defs
 from cola.widgets.text import MonoTextView
@@ -228,14 +229,14 @@ class DiffEditor(DiffTextEdit):
         self.action_stage_selection.setEnabled(enabled)
 
     def apply_section(self):
-        s = cola.single_selection()
+        s = single_selection()
         if self.model.stageable() and s.modified:
             self.stage_section()
         elif self.model.unstageable():
             self.unstage_section()
 
     def apply_selection(self):
-        s = cola.single_selection()
+        s = single_selection()
         if self.model.stageable() and s.modified:
             self.stage_selection()
         elif self.model.unstageable():
