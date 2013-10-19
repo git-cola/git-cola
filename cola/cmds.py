@@ -5,7 +5,6 @@ from fnmatch import fnmatch
 
 from cStringIO import StringIO
 
-import cola
 from cola import compat
 from cola import core
 from cola import errors
@@ -20,6 +19,7 @@ from cola.diffparse import DiffParser
 from cola.git import STDOUT
 from cola.i18n import N_
 from cola.interaction import Interaction
+from cola.models import main
 from cola.models import prefs
 from cola.models import selection
 
@@ -57,7 +57,7 @@ class Command(BaseCommand):
         """Initialize the command and stash away values for use in do()"""
         # These are commonly used so let's make it easier to write new commands.
         BaseCommand.__init__(self)
-        self.model = cola.model()
+        self.model = main.model()
 
         self.old_diff_text = self.model.diff_text
         self.old_filename = self.model.filename
@@ -836,7 +836,7 @@ class RunConfigAction(Command):
     def __init__(self, action_name):
         Command.__init__(self)
         self.action_name = action_name
-        self.model = cola.model()
+        self.model = main.model()
 
     def do(self):
         for env in ('FILENAME', 'REVISION', 'ARGS'):

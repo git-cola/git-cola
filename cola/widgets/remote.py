@@ -6,13 +6,12 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import cola
 from cola import gitcmds
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
 from cola.interaction import Interaction
-from cola.models.main import MainModel
+from cola.models import main
 from cola.qtutils import connect_button
 from cola.widgets import defs
 from cola.widgets import standard
@@ -37,8 +36,8 @@ def pull():
 def run(RemoteDialog):
     """Launches fetch/push/pull dialogs."""
     # Copy global stuff over to speedup startup
-    model = MainModel()
-    global_model = cola.model()
+    model = main.MainModel()
+    global_model = main.model()
     model.currentbranch = global_model.currentbranch
     model.local_branches = global_model.local_branches
     model.remote_branches = global_model.remote_branches

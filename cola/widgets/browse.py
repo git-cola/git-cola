@@ -5,7 +5,6 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import cola
 from cola import cmds
 from cola import core
 from cola import difftool
@@ -17,14 +16,15 @@ from cola.compat import set
 from cola.git import git
 from cola.i18n import N_
 from cola.interaction import Interaction
-from cola.widgets import defs
-from cola.widgets import standard
-from cola.widgets.selectcommits import select_commits
+from cola.models import main
 from cola.models.browse import GitRepoModel
 from cola.models.browse import GitRepoEntryManager
 from cola.models.browse import GitRepoNameItem
 from cola.models.selection import State
 from cola.models.selection import selection_model
+from cola.widgets import defs
+from cola.widgets import standard
+from cola.widgets.selectcommits import select_commits
 
 
 def worktree_browser_widget(parent, update=True):
@@ -54,7 +54,7 @@ class Browser(standard.Widget):
         self.resize(720, 420)
 
         self.connect(self, SIGNAL('updated'), self._updated_callback)
-        self.model = cola.model()
+        self.model = main.model()
         self.model.add_observer(self.model.message_updated, self.model_updated)
         qtutils.add_close_action(self)
         if update:
@@ -90,7 +90,7 @@ class RepoTreeView(standard.TreeView):
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 
         # Observe model updates
-        model = cola.model()
+        model = main.model()
         model.add_observer(model.message_updated, self.update_actions)
 
         # The non-Qt cola application model
@@ -196,7 +196,7 @@ class RepoTreeView(standard.TreeView):
         state = State(staged, unmerged, modified, untracked)
 
         paths = self.selected_paths()
-        model = cola.model()
+        model = main.model()
         model_staged = utils.add_parents(set(model.staged))
         model_modified = utils.add_parents(set(model.modified))
         model_unmerged = utils.add_parents(set(model.unmerged))
@@ -224,7 +224,7 @@ class RepoTreeView(standard.TreeView):
         paths = self.sync_selection()
 
         if paths and self.model().path_is_interesting(paths[0]):
-            cached = paths[0] in cola.model().staged
+            cached = paths[0] in main.model().staged
             cmds.do(cmds.Diff, paths, cached)
         return result
 
@@ -248,14 +248,14 @@ class RepoTreeView(standard.TreeView):
         """Return selected staged paths."""
         if not selection:
             selection = self.selected_paths()
-        staged = utils.add_parents(set(cola.model().staged))
+        staged = utils.add_parents(set(main.model().staged))
         return [p for p in selection if p in staged]
 
     def selected_modified_paths(self, selection=None):
         """Return selected modified paths."""
         if not selection:
             selection = self.selected_paths()
-        model = cola.model()
+        model = main.model()
         modified = utils.add_parents(set(model.modified))
         return [p for p in selection if p in modified]
 
@@ -263,7 +263,7 @@ class RepoTreeView(standard.TreeView):
         """Return selected unstaged paths."""
         if not selection:
             selection = self.selected_paths()
-        model = cola.model()
+        model = main.model()
         modified = utils.add_parents(set(model.modified))
         untracked = utils.add_parents(set(model.untracked))
         unstaged = modified.union(untracked)
@@ -273,7 +273,7 @@ class RepoTreeView(standard.TreeView):
         """Return selected tracked paths."""
         if not selection:
             selection = self.selected_paths()
-        model = cola.model()
+        model = main.model()
         staged = set(self.selected_staged_paths())
         modified = set(self.selected_modified_paths())
         untracked = utils.add_parents(set(model.untracked))
@@ -338,7 +338,7 @@ class RepoTreeView(standard.TreeView):
 class BrowserController(QtCore.QObject):
     def __init__(self, view=None):
         QtCore.QObject.__init__(self, view)
-        self.model = cola.model()
+        self.model = main.model()
         self.view = view
         self.updated = set()
         self.connect(view, SIGNAL('history(QStringList)'),

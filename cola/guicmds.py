@@ -3,7 +3,6 @@ import re
 
 from PyQt4 import QtGui
 
-import cola
 from cola import cmds
 from cola import core
 from cola import difftool
@@ -12,6 +11,7 @@ from cola import qtutils
 from cola.git import git
 from cola.i18n import N_
 from cola.interaction import Interaction
+from cola.models import main
 from cola.widgets import completion
 from cola.widgets.browse import BrowseDialog
 from cola.widgets.grep import run_grep
@@ -156,7 +156,7 @@ def clone_repo(spawn=True):
 
     # Prompt the user for a directory to use as the parent directory
     msg = N_('Select a parent directory for the new clone')
-    dirname = qtutils.opendir_dialog(msg, cola.model().getcwd())
+    dirname = qtutils.opendir_dialog(msg, main.model().getcwd())
     if not dirname:
         return None
     count = 1
@@ -210,7 +210,7 @@ def grep():
 def open_repo():
     """Spawn a new cola session."""
     dirname = qtutils.opendir_dialog(N_('Open Git Repository...'),
-                                     cola.model().getcwd())
+                                     main.model().getcwd())
     if not dirname:
         return
     cmds.do(cmds.OpenRepo, dirname)
@@ -219,7 +219,7 @@ def open_repo():
 def load_commitmsg():
     """Load a commit message from a file."""
     filename = qtutils.open_dialog(N_('Load Commit Message'),
-                                   cola.model().getcwd())
+                                   main.model().getcwd())
     if filename:
         cmds.do(cmds.LoadCommitMessageFromFile, filename)
 

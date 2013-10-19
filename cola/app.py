@@ -27,7 +27,6 @@ except ImportError:
 
 
 # Import cola modules
-import cola
 from cola import core
 from cola import compat
 from cola import git
@@ -40,6 +39,7 @@ from cola import utils
 from cola import version
 from cola.decorators import memoize
 from cola.interaction import Interaction
+from cola.models import main
 from cola.widgets import cfgactions
 from cola.widgets import startup
 
@@ -257,7 +257,7 @@ def new_application():
 
 
 def new_model(app, repo, prompt=False):
-    model = cola.model()
+    model = main.model()
     valid = model.set_worktree(repo) and not prompt
     while not valid:
         startup_dlg = startup.StartupDialog(app.activeWindow())

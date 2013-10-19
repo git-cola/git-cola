@@ -5,7 +5,6 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import cola
 from cola import gitcfg
 from cola import core
 from cola import utils
@@ -15,6 +14,7 @@ from cola import resources
 from cola.compat import set
 from cola.git import STDOUT
 from cola.i18n import N_
+from cola.models import main
 
 
 # Custom event type for GitRepoInfoEvents
@@ -55,7 +55,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         self._known_paths = set()
 
         self.connect(self, SIGNAL('updated'), self._updated_callback)
-        model = cola.model()
+        model = main.model()
         model.add_observer(model.message_updated, self._model_updated)
         self._dir_rows = {}
         self.setColumnCount(len(Columns.ALL))
@@ -136,9 +136,9 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def _get_paths(self):
         """Return paths of interest; e.g. paths with a status."""
-        model = cola.model()
+        model = main.model()
         paths = set(model.staged + model.unstaged)
-        return cola.utils.add_parents(paths)
+        return utils.add_parents(paths)
 
     def _model_updated(self):
         """Observes model changes and updates paths accordingly."""
@@ -156,7 +156,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def _initialize(self):
         """Iterate over the cola model and create GitRepoItems."""
-        for path in cola.model().everything():
+        for path in main.model().everything():
             self.add_file(path)
 
     def add_file(self, path, insert=False):
@@ -305,7 +305,7 @@ class GitRepoInfoTask(QRunnable):
 
         """
         if not self._data:
-            log_line = cola.model().git.log('-1', '--', self.path,
+            log_line = main.model().git.log('-1', '--', self.path,
                                             M=True,
                                             all=False,
                                             no_color=True,
@@ -348,7 +348,7 @@ class GitRepoInfoTask(QRunnable):
     def status(self):
         """Return the status for the entry's path."""
 
-        model = cola.model()
+        model = main.model()
         unmerged = utils.add_parents(set(model.unmerged))
         modified = utils.add_parents(set(model.modified))
         staged = utils.add_parents(set(model.staged))

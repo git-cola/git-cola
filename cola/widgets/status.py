@@ -7,7 +7,6 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import cola
 from cola import cmds
 from cola import core
 from cola import qtutils
@@ -15,6 +14,7 @@ from cola import utils
 from cola.compat import set
 from cola.i18n import N_
 from cola.interaction import Interaction
+from cola.models import main
 from cola.models import selection
 
 
@@ -126,7 +126,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.connect(self, SIGNAL('about_to_update'), self._about_to_update)
         self.connect(self, SIGNAL('updated'), self._updated)
 
-        self.m = cola.model()
+        self.m = main.model()
         self.m.add_observer(self.m.message_about_to_update,
                             self.about_to_update)
         self.m.add_observer(self.m.message_updated, self.updated)

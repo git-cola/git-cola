@@ -2,18 +2,18 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import cola
 from cola import cmds
 from cola import gitcmds
 from cola import qtutils
 from cola.i18n import N_
+from cola.models import main
 from cola.widgets import completion
 from cola.widgets import defs
 
 
 def local_merge():
     """Provides a dialog for merging branches"""
-    model = cola.model()
+    model = main.model()
     view = MergeView(model, qtutils.active_window())
     view.show()
     view.raise_()

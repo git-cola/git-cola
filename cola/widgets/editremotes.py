@@ -3,13 +3,20 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import cola.app
 from cola import qtutils
 from cola.git import git
 from cola.git import STDOUT
 from cola.i18n import N_
+from cola.models import main
 from cola.widgets import defs
 from cola.widgets import text
+
+
+def edit():
+    window = RemoteEditor(qtutils.active_window())
+    window.show()
+    window.raise_()
+    return window
 
 
 class RemoteEditor(QtGui.QDialog):
@@ -132,7 +139,7 @@ class RemoteEditor(QtGui.QDialog):
         if status != 0:
             qtutils.critical(N_('Error deleting remote "%s"') % remote,
                              out + err)
-        cola.model().update_status()
+        main.model().update_status()
         self.refresh()
 
     def remote_renamed(self, item):
@@ -253,14 +260,3 @@ class AddRemoteWidget(QtGui.QDialog):
         self.show()
         self.raise_()
         return self.exec_() == QtGui.QDialog.Accepted
-
-
-def edit():
-    window = RemoteEditor(qtutils.active_window())
-    window.show()
-    window.raise_()
-    return window
-
-if __name__ == '__main__':
-    app = cola.app.ColaApplication([])
-    edit().exec_()

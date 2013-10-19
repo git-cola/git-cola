@@ -6,11 +6,11 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import cola
 from cola.i18n import N_
 from cola import qtutils
 from cola import utils
 from cola.compat import set
+from cola.models import main
 from cola.widgets import defs
 
 
@@ -362,7 +362,7 @@ class GitCompletionModel(CompletionModel):
 
     def __init__(self, parent):
         CompletionModel.__init__(self, parent)
-        self.cola_model = model = cola.model()
+        self.main_model = model = main.model()
         msg = model.message_updated
         model.add_observer(msg, self.emit_update)
 
@@ -394,7 +394,7 @@ class GitCompletionModel(CompletionModel):
         return []
 
     def dispose(self):
-        self.cola_model.remove_observer(self.emit_update)
+        self.main_model.remove_observer(self.emit_update)
 
 
 class GitRefCompletionModel(GitCompletionModel):
@@ -404,7 +404,7 @@ class GitRefCompletionModel(GitCompletionModel):
         GitCompletionModel.__init__(self, parent)
 
     def matches(self):
-        model = self.cola_model
+        model = self.main_model
         return model.local_branches + model.remote_branches + model.tags
 
 
@@ -415,7 +415,7 @@ class GitBranchCompletionModel(GitCompletionModel):
         GitCompletionModel.__init__(self, parent)
 
     def matches(self):
-        model = self.cola_model
+        model = self.main_model
         return model.local_branches
 
 
@@ -426,7 +426,7 @@ class GitRemoteBranchCompletionModel(GitCompletionModel):
         GitCompletionModel.__init__(self, parent)
 
     def matches(self):
-        model = self.cola_model
+        model = self.main_model
         return model.remote_branches
 
 
@@ -440,7 +440,7 @@ class GitLogCompletionModel(GitRefCompletionModel):
         (matched_refs, dummy_paths, dummy_dirs) =\
                 GitRefCompletionModel.gather_matches(self, case_sensitive)
 
-        file_list = self.cola_model.everything()
+        file_list = self.main_model.everything()
         files = set(file_list)
         files_and_dirs = utils.add_parents(set(files))
 

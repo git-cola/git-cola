@@ -3,13 +3,12 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import cola
 from cola import gitcmds
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
 from cola.interaction import Interaction
-from cola.models.main import MainModel
+from cola.models import main
 from cola.widgets import defs
 from cola.widgets import completion
 from cola.widgets.standard import Dialog
@@ -17,7 +16,7 @@ from cola.widgets.standard import Dialog
 
 def create_new_branch(revision=''):
     """Launches a dialog for creating a new branch"""
-    model = MainModel()
+    model = main.MainModel()
     model.update_status()
     view = CreateBranchDialog(model, qtutils.active_window())
     if revision:
@@ -70,7 +69,7 @@ class CreateThread(QtCore.QThread):
             self.emit(SIGNAL('command'), status, out, err)
             results.append(('checkout', status, out, err))
 
-        cola.model().update_status()
+        main.model().update_status()
         self.emit(SIGNAL('done'), results)
 
 

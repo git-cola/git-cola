@@ -2,7 +2,6 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt, SIGNAL
 
-import cola
 from cola import cmds
 from cola import core
 from cola import gitcmds
@@ -11,6 +10,7 @@ from cola import qtutils
 from cola.cmds import run
 from cola.compat import set
 from cola.i18n import N_
+from cola.models import main
 from cola.models import selection
 from cola.qtutils import DiffSyntaxHighlighter
 from cola.widgets import defs
@@ -33,7 +33,7 @@ class DiffEditor(DiffTextEdit):
 
     def __init__(self, parent):
         DiffTextEdit.__init__(self, parent)
-        self.model = model = cola.model()
+        self.model = model = main.model()
         self.mode = self.model.mode_none
 
         self.action_process_section = qtutils.add_action(self,
@@ -95,7 +95,7 @@ class DiffEditor(DiffTextEdit):
         s = selection.selection()
 
         if self.model.stageable():
-            if s.modified and s.modified[0] in cola.model().submodules:
+            if s.modified and s.modified[0] in main.model().submodules:
                 action = menu.addAction(qtutils.icon('add.svg'),
                                         cmds.Stage.name(),
                                         cmds.run(cmds.Stage, s.modified))
@@ -117,7 +117,7 @@ class DiffEditor(DiffTextEdit):
                 menu.addAction(self.action_revert_selection)
 
         if self.model.unstageable():
-            if s.staged and s.staged[0] in cola.model().submodules:
+            if s.staged and s.staged[0] in main.model().submodules:
                 action = menu.addAction(qtutils.icon('remove.svg'),
                                         cmds.Unstage.name(),
                                         cmds.do(cmds.Unstage, s.staged))

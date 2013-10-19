@@ -4,11 +4,6 @@
 import os
 from threading import Timer
 from threading import Lock
-from cola import utils
-from cola import cmds
-from cola.git import STDOUT
-from cola.i18n import N_
-from cola.interaction import Interaction
 
 try:
     import pyinotify
@@ -21,6 +16,7 @@ except ImportError:
     ProcessEvent = object
     AVAILABLE = False
 
+from cola import utils
 if utils.is_win32():
     try:
         import win32file
@@ -34,12 +30,18 @@ if utils.is_win32():
 
 from PyQt4 import QtCore
 
-import cola
-from cola import core
 from cola import gitcfg
+from cola import cmds
+from cola import core
 from cola.compat import set
+from cola.git import STDOUT
+from cola.i18n import N_
+from cola.interaction import Interaction
+from cola.models import main
+
 
 _thread = None
+
 def start():
     global _thread
 
@@ -73,6 +75,7 @@ def start():
     else:
         msg = N_('inotify enabled.')
     Interaction.log(msg)
+
 
 def stop():
     if not has_inotify():
@@ -134,7 +137,7 @@ class GitNotifier(QtCore.QThread):
         """Set up the pyinotify thread"""
         QtCore.QThread.__init__(self)
         ## Git command object
-        self._git = cola.model().git
+        self._git = main.model().git
         ## pyinotify timeout
         self._timeout = timeout
         ## Path to monitor

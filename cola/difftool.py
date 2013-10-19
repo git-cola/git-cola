@@ -3,12 +3,12 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import cola
 from cola import core
 from cola import utils
 from cola import qtutils
 from cola import gitcmds
 from cola.i18n import N_
+from cola.models import main
 from cola.models import selection
 from cola.widgets import completion
 from cola.widgets import defs
@@ -20,7 +20,7 @@ def run():
     if not files:
         return
     s = selection.selection()
-    model = cola.model()
+    model = main.model()
     launch_with_head(files, bool(s.staged), model.head)
 
 

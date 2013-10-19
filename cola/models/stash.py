@@ -1,8 +1,8 @@
-import cola
 from cola import observable
 from cola.git import git
 from cola.git import STDOUT
 from cola.interaction import Interaction
+from cola.models import main
 
 
 class StashModel(observable.Observable):
@@ -13,7 +13,7 @@ class StashModel(observable.Observable):
         return git.stash('list')[STDOUT].splitlines()
 
     def has_stashable_changes(self):
-        model = cola.model()
+        model = main.model()
         return bool(model.modified + model.staged)
 
     def stash_info(self, revids=False, names=False):
