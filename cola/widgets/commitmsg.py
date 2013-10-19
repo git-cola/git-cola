@@ -3,11 +3,11 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-import cola
 from cola import cmds
 from cola import core
 from cola import gitcmds
 from cola import gitcfg
+from cola import notification
 from cola import textwrap
 from cola.cmds import Interaction
 from cola.gitcmds import commit_message_path
@@ -127,7 +127,7 @@ class CommitMessageEditor(QtGui.QWidget):
 
         connect_button(self.commit_button, self.commit)
 
-        notifier = cola.notifier()
+        notifier = notification.notifier()
         notifier.connect(notifier.AMEND, self.amend_action.setChecked)
 
         # Broadcast the amend mode

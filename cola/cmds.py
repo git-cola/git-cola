@@ -11,6 +11,7 @@ from cola import core
 from cola import errors
 from cola import gitcfg
 from cola import gitcmds
+from cola import notification
 from cola import utils
 from cola import difftool
 from cola import resources
@@ -22,7 +23,7 @@ from cola.interaction import Interaction
 from cola.models import prefs
 from cola.models import selection
 
-_notifier = cola.notifier()
+_notifier = notification.notifier()
 _config = gitcfg.instance()
 
 
