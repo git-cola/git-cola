@@ -1,3 +1,11 @@
+git-cola v1.9.2
+---------------
+Packaging
+---------
+* Most of the git-cola sub-packages have been removed.
+  The only remaining packages are `cola`, `cola.models`,
+  and `cola.widgets`.
+
 git-cola v1.9.1
 ---------------
 Packaging
