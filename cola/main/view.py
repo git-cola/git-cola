@@ -18,8 +18,6 @@ from cola import settings
 from cola import utils
 from cola import version
 from cola.bookmarks import manage_bookmarks
-from cola.classic import cola_classic
-from cola.classic import classic_widget
 from cola.git import git
 from cola.git import STDOUT
 from cola.i18n import N_
@@ -40,6 +38,8 @@ from cola.widgets import remote
 from cola.widgets.about import launch_about_dialog
 from cola.widgets.about import show_shortcuts
 from cola.widgets.archive import GitArchiveDialog
+from cola.widgets.browse import worktree_browser
+from cola.widgets.browse import worktree_browser_widget
 from cola.widgets.commitmsg import CommitMessageEditor
 from cola.widgets.compare import compare_branches
 from cola.widgets.createtag import create_tag
@@ -76,12 +76,12 @@ class MainView(MainWindow):
         self.setAttribute(Qt.WA_MacMetalStyle)
 
         cfg = gitcfg.instance()
-        self.classic_dockable = (cfg.get('cola.browserdockable') or
+        self.browser_dockable = (cfg.get('cola.browserdockable') or
                                  cfg.get('cola.classicdockable'))
-        if self.classic_dockable:
-            self.classicdockwidget = create_dock(N_('Browser'), self)
-            self.classicwidget = classic_widget(self)
-            self.classicdockwidget.setWidget(self.classicwidget)
+        if self.browser_dockable:
+            self.browserdockwidget = create_dock(N_('Browser'), self)
+            self.browserwidget = worktree_browser_widget(self)
+            self.browserdockwidget.setWidget(self.browserwidget)
 
         # "Actions" widget
         self.actionsdockwidget = create_dock(N_('Actions'), self)
@@ -290,9 +290,9 @@ class MainView(MainWindow):
         self.menu_branch_review = add_action(self,
                 N_('Review...'), guicmds.review_branch)
 
-        self.menu_classic = add_action(self,
-                N_('Browser...'), cola_classic)
-        self.menu_classic.setIcon(qtutils.git_icon())
+        self.menu_browse = add_action(self,
+                N_('Browser...'), worktree_browser)
+        self.menu_browse.setIcon(qtutils.git_icon())
 
         self.menu_dag = add_action(self,
                 N_('DAG...'), lambda: git_dag(self.model).show())
@@ -314,7 +314,7 @@ class MainView(MainWindow):
                 N_('Abort'), self.rebase_abort)
 
         # Relayed actions
-        if not self.classic_dockable:
+        if not self.browser_dockable:
             # These shortcuts conflict with those from the
             # 'Browser' widget so don't register them when
             # the browser is a dockable tool.
@@ -416,11 +416,11 @@ class MainView(MainWindow):
 
         # View Menu
         self.view_menu = create_menu(N_('View'), self.menubar)
-        self.view_menu.addAction(self.menu_classic)
+        self.view_menu.addAction(self.menu_browse)
         self.view_menu.addAction(self.menu_dag)
         self.view_menu.addSeparator()
-        if self.classic_dockable:
-            self.view_menu.addAction(self.classicdockwidget.toggleViewAction())
+        if self.browser_dockable:
+            self.view_menu.addAction(self.browserdockwidget.toggleViewAction())
 
         self.setup_dockwidget_view_menu()
         self.view_menu.addSeparator()
@@ -443,9 +443,9 @@ class MainView(MainWindow):
         bottom = Qt.BottomDockWidgetArea
 
         self.addDockWidget(left, self.commitdockwidget)
-        if self.classic_dockable:
-            self.addDockWidget(left, self.classicdockwidget)
-            self.tabifyDockWidget(self.classicdockwidget, self.commitdockwidget)
+        if self.browser_dockable:
+            self.addDockWidget(left, self.browserdockwidget)
+            self.tabifyDockWidget(self.browserdockwidget, self.commitdockwidget)
         self.addDockWidget(left, self.diffdockwidget)
         self.addDockWidget(bottom, self.actionsdockwidget)
         self.addDockWidget(bottom, self.logdockwidget)

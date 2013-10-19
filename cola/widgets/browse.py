@@ -1,18 +1,380 @@
+import os
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+import cola
 from cola import cmds
 from cola import core
+from cola import difftool
+from cola import gitcmds
 from cola import utils
 from cola import qtutils
 from cola.cmds import BaseCommand
+from cola.compat import set
 from cola.git import git
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.widgets import defs
-from cola.widgets.standard import TreeView
+from cola.widgets import standard
+from cola.widgets.selectcommits import select_commits
+from cola.models.browse import GitRepoModel
+from cola.models.browse import GitRepoEntryManager
+from cola.models.browse import GitRepoNameItem
+from cola.models.selection import State
+
+
+def worktree_browser_widget(parent, update=True):
+    """Return a widget for immediate use."""
+    view = Browser(parent, update=update)
+    view.tree.setModel(GitRepoModel(view.tree))
+    view.ctl = BrowserController(view.tree)
+    return view
+
+
+def worktree_browser(update=True):
+    """Launch a new worktree browser session."""
+    view = worktree_browser_widget(None, update=update)
+    view.show()
+    return view
+
+
+class Browser(standard.Widget):
+    def __init__(self, parent, update=True):
+        standard.Widget.__init__(self, parent)
+        self.tree = RepoTreeView(self)
+        self.mainlayout = QtGui.QHBoxLayout()
+        self.setLayout(self.mainlayout)
+        self.mainlayout.setMargin(0)
+        self.mainlayout.setSpacing(defs.spacing)
+        self.mainlayout.addWidget(self.tree)
+        self.resize(720, 420)
+
+        self.connect(self, SIGNAL('updated'), self._updated_callback)
+        self.model = cola.model()
+        self.model.add_observer(self.model.message_updated, self.model_updated)
+        qtutils.add_close_action(self)
+        if update:
+            self.model_updated()
+
+    # Read-only mode property
+    mode = property(lambda self: self.model.mode)
+
+    def model_updated(self):
+        """Update the title with the current branch and directory name."""
+        self.emit(SIGNAL('updated'))
+
+    def _updated_callback(self):
+        branch = self.model.currentbranch
+        curdir = os.getcwd()
+        msg = N_('Repository: %s') % curdir
+        msg += '\n'
+        msg += N_('Branch: %s') % branch
+        self.setToolTip(msg)
+
+        title = N_('%s: %s - Browse') % (self.model.project, branch)
+        if self.mode == self.model.mode_amend:
+            title += ' (%s)' % N_('Amending')
+        self.setWindowTitle(title)
+
+
+class RepoTreeView(standard.TreeView):
+    """Provides a filesystem-like view of a git repository."""
+    def __init__(self, parent):
+        standard.TreeView.__init__(self, parent)
+
+        self.setSortingEnabled(False)
+        self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+
+        # Observe model updates
+        model = cola.model()
+        model.add_observer(model.message_updated, self.update_actions)
+
+        # The non-Qt cola application model
+        self.connect(self, SIGNAL('expanded(QModelIndex)'), self.size_columns)
+        self.connect(self, SIGNAL('collapsed(QModelIndex)'), self.size_columns)
+
+        # Sync selection before the key press event changes the model index
+        self.connect(self, SIGNAL('indexAboutToChange()'), self.sync_selection)
+
+        self.action_history =\
+                self._create_action(
+                        N_('View History...'),
+                        N_('View history for selected path(s).'),
+                        self.view_history,
+                        'Shift+Ctrl+H')
+        self.action_stage =\
+                self._create_action(N_('Stage Selected'),
+                                    N_('Stage selected path(s) for commit.'),
+                                    self.stage_selected,
+                                    cmds.Stage.SHORTCUT)
+        self.action_unstage =\
+                self._create_action(
+                        N_('Unstage Selected'),
+                        N_('Remove selected path(s) from the staging area.'),
+                        self.unstage_selected,
+                        'Ctrl+U')
+
+        self.action_untrack =\
+                self._create_action(N_('Untrack Selected'),
+                                    N_('Stop tracking path(s)'),
+                                    self.untrack_selected)
+
+        self.action_difftool =\
+                self._create_action(cmds.LaunchDifftool.name(),
+                                    N_('Launch git-difftool on the current path.'),
+                                    cmds.run(cmds.LaunchDifftool),
+                                    cmds.LaunchDifftool.SHORTCUT)
+        self.action_difftool_predecessor =\
+                self._create_action(N_('Diff Against Predecessor...'),
+                                    N_('Launch git-difftool against previous versions.'),
+                                    self.difftool_predecessor,
+                                    'Shift+Ctrl+D')
+        self.action_revert =\
+                self._create_action(N_('Revert Uncommitted Changes...'),
+                                    N_('Revert changes to selected path(s).'),
+                                    self.revert,
+                                    'Ctrl+Z')
+        self.action_editor =\
+                self._create_action(cmds.LaunchEditor.name(),
+                                    N_('Edit selected path(s).'),
+                                    cmds.run(cmds.LaunchEditor),
+                                    cmds.LaunchDifftool.SHORTCUT)
+
+    def size_columns(self):
+        """Set the column widths."""
+        self.resizeColumnToContents(0)
+
+    def update_actions(self):
+        """Enable/disable actions."""
+        selection = self.selected_paths()
+        selected = bool(selection)
+        staged = bool(self.selected_staged_paths(selection=selection))
+        modified = bool(self.selected_modified_paths(selection=selection))
+        unstaged = bool(self.selected_unstaged_paths(selection=selection))
+        tracked = bool(self.selected_tracked_paths())
+
+        self.action_history.setEnabled(selected)
+        self.action_stage.setEnabled(unstaged)
+        self.action_unstage.setEnabled(staged)
+        self.action_untrack.setEnabled(tracked)
+        self.action_difftool.setEnabled(staged or modified)
+        self.action_difftool_predecessor.setEnabled(tracked)
+        self.action_revert.setEnabled(tracked)
+
+    def contextMenuEvent(self, event):
+        """Create a context menu."""
+        self.update_actions()
+        menu = QtGui.QMenu(self)
+        menu.addAction(self.action_editor)
+        menu.addAction(self.action_stage)
+        menu.addAction(self.action_unstage)
+        menu.addSeparator()
+        menu.addAction(self.action_history)
+        menu.addAction(self.action_difftool)
+        menu.addAction(self.action_difftool_predecessor)
+        menu.addSeparator()
+        menu.addAction(self.action_revert)
+        menu.addAction(self.action_untrack)
+        menu.exec_(self.mapToGlobal(event.pos()))
+
+    def mousePressEvent(self, event):
+        """Synchronize the selection on mouse-press."""
+        result = QtGui.QTreeView.mousePressEvent(self, event)
+        self.sync_selection()
+        return result
+
+    def sync_selection(self):
+        """Push selection into the selection model."""
+        staged = []
+        unmerged = []
+        modified = []
+        untracked = []
+        state = State(staged, unmerged, modified, untracked)
+
+        paths = self.selected_paths()
+        model = cola.model()
+        model_staged = utils.add_parents(set(model.staged))
+        model_modified = utils.add_parents(set(model.modified))
+        model_unmerged = utils.add_parents(set(model.unmerged))
+        model_untracked = utils.add_parents(set(model.untracked))
+
+        for path in paths:
+            if path in model_unmerged:
+                unmerged.append(path)
+            elif path in model_untracked:
+                untracked.append(path)
+            elif path in model_staged:
+                staged.append(path)
+            elif path in model_modified:
+                modified.append(path)
+            else:
+                staged.append(path)
+        # Push the new selection into the model.
+        cola.selection_model().set_selection(state)
+        return paths
+
+    def selectionChanged(self, old_selection, new_selection):
+        """Override selectionChanged to update available actions."""
+        result = QtGui.QTreeView.selectionChanged(self, old_selection, new_selection)
+        self.update_actions()
+        paths = self.sync_selection()
+
+        if paths and self.model().path_is_interesting(paths[0]):
+            cached = paths[0] in cola.model().staged
+            cmds.do(cmds.Diff, paths, cached)
+        return result
+
+    def setModel(self, model):
+        """Set the concrete QAbstractItemModel instance."""
+        QtGui.QTreeView.setModel(self, model)
+        self.size_columns()
+
+    def item_from_index(self, model_index):
+        """Return the name item corresponding to the model index."""
+        index = model_index.sibling(model_index.row(), 0)
+        return self.model().itemFromIndex(index)
+
+    def selected_paths(self):
+        """Return the selected paths."""
+        items = map(self.model().itemFromIndex, self.selectedIndexes())
+        return [i.path for i in items
+                    if i.type() == GitRepoNameItem.TYPE]
+
+    def selected_staged_paths(self, selection=None):
+        """Return selected staged paths."""
+        if not selection:
+            selection = self.selected_paths()
+        staged = utils.add_parents(set(cola.model().staged))
+        return [p for p in selection if p in staged]
+
+    def selected_modified_paths(self, selection=None):
+        """Return selected modified paths."""
+        if not selection:
+            selection = self.selected_paths()
+        model = cola.model()
+        modified = utils.add_parents(set(model.modified))
+        return [p for p in selection if p in modified]
+
+    def selected_unstaged_paths(self, selection=None):
+        """Return selected unstaged paths."""
+        if not selection:
+            selection = self.selected_paths()
+        model = cola.model()
+        modified = utils.add_parents(set(model.modified))
+        untracked = utils.add_parents(set(model.untracked))
+        unstaged = modified.union(untracked)
+        return [p for p in selection if p in unstaged]
+
+    def selected_tracked_paths(self, selection=None):
+        """Return selected tracked paths."""
+        if not selection:
+            selection = self.selected_paths()
+        model = cola.model()
+        staged = set(self.selected_staged_paths())
+        modified = set(self.selected_modified_paths())
+        untracked = utils.add_parents(set(model.untracked))
+        tracked = staged.union(modified)
+        return [p for p in selection
+                if p not in untracked or p in tracked]
+
+    def _create_action(self, name, tooltip, slot, shortcut=None):
+        """Create an action with a shortcut, tooltip, and callback slot."""
+        action = QtGui.QAction(name, self)
+        action.setStatusTip(tooltip)
+        if shortcut is not None:
+            if hasattr(Qt, 'WidgetWithChildrenShortcut'):
+                action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
+            action.setShortcut(shortcut)
+        self.addAction(action)
+        qtutils.connect_action(action, slot)
+        return action
+
+    def view_history(self):
+        """Signal that we should view history for paths."""
+        self.emit(SIGNAL('history(QStringList)'), self.selected_paths())
+
+    def stage_selected(self):
+        """Signal that we should stage selected paths."""
+        cmds.do(cmds.Stage, self.selected_unstaged_paths())
+
+    def unstage_selected(self):
+        """Signal that we should stage selected paths."""
+        cmds.do(cmds.Unstage, self.selected_staged_paths())
+
+    def untrack_selected(self):
+        """untrack selected paths."""
+        cmds.do(cmds.Untrack, self.selected_tracked_paths())
+
+    def difftool_predecessor(self):
+        """Diff paths against previous versions."""
+        paths = self.selected_tracked_paths()
+        self.emit(SIGNAL('difftool_predecessor'), paths)
+
+    def revert(self):
+        """Signal that we should revert changes to a path."""
+        if not qtutils.confirm(N_('Revert Uncommitted Changes?'),
+                               N_('This operation drops uncommitted changes.\n'
+                                  'These changes cannot be recovered.'),
+                               N_('Revert the uncommitted changes?'),
+                               N_('Revert Uncommitted Changes'),
+                               default=True,
+                               icon=qtutils.icon('undo.svg')):
+            return
+        paths = self.selected_tracked_paths()
+        cmds.do(cmds.Checkout, ['HEAD', '--'] + paths)
+
+    def current_path(self):
+        """Return the path for the current item."""
+        index = self.currentIndex()
+        if not index.isValid():
+            return None
+        return self.item_from_index(index).path
+
+
+class BrowserController(QtCore.QObject):
+    def __init__(self, view=None):
+        QtCore.QObject.__init__(self, view)
+        self.model = cola.model()
+        self.view = view
+        self.updated = set()
+        self.connect(view, SIGNAL('history(QStringList)'),
+                     self.view_history)
+        self.connect(view, SIGNAL('expanded(QModelIndex)'),
+                     self.query_model)
+        self.connect(view, SIGNAL('difftool_predecessor'),
+                     self.difftool_predecessor)
+
+    def view_history(self, entries):
+        """Launch the configured history browser path-limited to entries."""
+        entries = map(unicode, entries)
+        cmds.do(cmds.VisualizePaths, entries)
+
+    def query_model(self, model_index):
+        """Update information about a directory as it is expanded."""
+        item = self.view.item_from_index(model_index)
+        path = item.path
+        if path in self.updated:
+            return
+        self.updated.add(path)
+        GitRepoEntryManager.entry(path).update()
+        entry = GitRepoEntryManager.entry
+        for row in xrange(item.rowCount()):
+            path = item.child(row, 0).path
+            entry(path).update()
+
+    def difftool_predecessor(self, paths):
+        """Prompt for an older commit and launch difftool against it."""
+        args = ['--'] + paths
+        revs, summaries = gitcmds.log_helper(all=False, extra_args=args)
+        commits = select_commits(N_('Select Previous Version'),
+                                 revs, summaries, multiselect=False)
+        if not commits:
+            return
+        commit = commits[0]
+        difftool.launch([commit, '--'] + paths)
 
 
 class BrowseModel(object):
@@ -176,9 +538,9 @@ class BrowseDialog(QtGui.QDialog):
         self.save.setEnabled(bool(filenames))
 
 
-class GitTreeWidget(TreeView):
+class GitTreeWidget(standard.TreeView):
     def __init__(self, ref, parent=None):
-        TreeView.__init__(self, parent)
+        standard.TreeView.__init__(self, parent)
         self.setHeaderHidden(True)
 
         self.connect(self, SIGNAL('doubleClicked(const QModelIndex &)'),

@@ -22,7 +22,7 @@ INFO_EVENT_TYPE = QtCore.QEvent.User + 42
 
 
 class Columns(object):
-    """Defines columns in the classic view"""
+    """Defines columns in the worktree browser"""
 
     NAME = 'Name'
     STATUS = 'Status'
