@@ -11,6 +11,7 @@ from cola import qtutils
 from cola.cmds import run
 from cola.compat import set
 from cola.i18n import N_
+from cola.models.selection import selection_model
 from cola.models.selection import single_selection
 from cola.qtutils import DiffSyntaxHighlighter
 from cola.widgets import defs
@@ -289,7 +290,7 @@ class DiffEditor(DiffTextEdit):
                                reverse=False):
         """Implement un/staging of selected lines or sections."""
         offset, selection = self.offset_and_selection()
-        if cola.selection_model().is_empty():
+        if selection_model().is_empty():
             return
         cmds.do(cmds.ApplyDiffSelection,
                 staged, selected, offset, selection, apply_to_worktree)

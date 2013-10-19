@@ -3,9 +3,9 @@
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 
-import cola
 from cola import cmds
 from cola.i18n import N_
+from cola.models.selection import selection_model
 from cola.widgets import defs
 from cola.widgets import remote
 from cola.widgets import stash
@@ -69,7 +69,7 @@ class ActionButtons(QFlowLayoutWidget):
 
     def stage(self):
         """Stage selected files, or all files if no selection exists."""
-        paths = cola.selection_model().unstaged
+        paths = selection_model().unstaged
         if not paths:
             cmds.do(cmds.StageModified)
         else:
@@ -77,7 +77,7 @@ class ActionButtons(QFlowLayoutWidget):
 
     def unstage(self):
         """Unstage selected files, or all files if no selection exists."""
-        paths = cola.selection_model().staged
+        paths = selection_model().staged
         if not paths:
             cmds.do(cmds.UnstageAll)
         else:

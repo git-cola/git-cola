@@ -1102,7 +1102,7 @@ class UnstageSelected(Unstage):
     """Unstage selected files."""
 
     def __init__(self):
-        Unstage.__init__(self, cola.selection_model().staged)
+        Unstage.__init__(self, selection.selection_model().staged)
 
 
 class Untrack(Command):

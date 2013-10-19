@@ -16,6 +16,7 @@ from cola.compat import set
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models.selection import State
+from cola.models.selection import selection_model
 
 
 class StatusWidget(QtGui.QWidget):
@@ -806,7 +807,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         """Show the selected item."""
         # Sync the selection model
         s = self.selection()
-        cola.selection_model().set_selection(s)
+        selection_model().set_selection(s)
         selection = self.selected_indexes()
         if not selection:
             if self.m.amending():
@@ -881,7 +882,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def copy_path(self):
         """Copy a selected path to the clipboard"""
-        filename = cola.selection_model().filename()
+        filename = selection_model().filename()
         if filename is not None:
             curdir = os.getcwdu()
             qtutils.set_clipboard(os.path.join(curdir, filename))

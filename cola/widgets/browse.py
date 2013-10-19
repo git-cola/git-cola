@@ -24,6 +24,7 @@ from cola.models.browse import GitRepoModel
 from cola.models.browse import GitRepoEntryManager
 from cola.models.browse import GitRepoNameItem
 from cola.models.selection import State
+from cola.models.selection import selection_model
 
 
 def worktree_browser_widget(parent, update=True):
@@ -213,7 +214,7 @@ class RepoTreeView(standard.TreeView):
             else:
                 staged.append(path)
         # Push the new selection into the model.
-        cola.selection_model().set_selection(state)
+        selection_model().set_selection(state)
         return paths
 
     def selectionChanged(self, old_selection, new_selection):
