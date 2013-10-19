@@ -83,9 +83,11 @@ class Browser(standard.Widget):
 
 class RepoTreeView(standard.TreeView):
     """Provides a filesystem-like view of a git repository."""
+
     def __init__(self, parent):
         standard.TreeView.__init__(self, parent)
 
+        self.setRootIsDecorated(True)
         self.setSortingEnabled(False)
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 
