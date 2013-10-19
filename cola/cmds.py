@@ -148,12 +148,13 @@ class AmendMode(Command):
 
 class ApplyDiffSelection(Command):
 
-    def __init__(self, staged, selected, offset, selection, apply_to_worktree):
+    def __init__(self, staged, selected, offset, selection_text,
+                 apply_to_worktree):
         Command.__init__(self)
         self.staged = staged
         self.selected = selected
         self.offset = offset
-        self.selection = selection
+        self.selection_text = selection_text
         self.apply_to_worktree = apply_to_worktree
 
     def do(self):
@@ -165,7 +166,7 @@ class ApplyDiffSelection(Command):
         status, out, err = \
         parser.process_diff_selection(self.selected,
                                       self.offset,
-                                      self.selection,
+                                      self.selection_text,
                                       apply_to_worktree=self.apply_to_worktree)
         Interaction.log_status(status, out, err)
         self.model.update_file_status(update_index=True)
@@ -543,7 +544,7 @@ class LaunchDifftool(BaseCommand):
         BaseCommand.__init__(self)
 
     def do(self):
-        s = cola.selection()
+        s = selection.selection()
         if s.unmerged:
             paths = s.unmerged
             if utils.is_win32():
@@ -563,7 +564,7 @@ class LaunchEditor(Edit):
         return N_('Launch Editor')
 
     def __init__(self):
-        s = cola.selection()
+        s = selection.selection()
         allfiles = s.staged + s.unmerged + s.modified + s.untracked
         Edit.__init__(self, allfiles)
 

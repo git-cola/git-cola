@@ -11,8 +11,7 @@ from cola import qtutils
 from cola.cmds import run
 from cola.compat import set
 from cola.i18n import N_
-from cola.models.selection import selection_model
-from cola.models.selection import single_selection
+from cola.models import selection
 from cola.qtutils import DiffSyntaxHighlighter
 from cola.widgets import defs
 from cola.widgets.text import MonoTextView
@@ -93,7 +92,7 @@ class DiffEditor(DiffTextEdit):
     def contextMenuEvent(self, event):
         """Create the context menu for the diff display."""
         menu = QtGui.QMenu(self)
-        s = cola.selection()
+        s = selection.selection()
 
         if self.model.stageable():
             if s.modified and s.modified[0] in cola.model().submodules:
@@ -166,8 +165,8 @@ class DiffEditor(DiffTextEdit):
             # Intercept right-click to move the cursor to the current position.
             # setTextCursor() clears the selection so this is only done when
             # nothing is selected.
-            _, selection = self.offset_and_selection()
-            if not selection:
+            _, selection_text = self.offset_and_selection()
+            if not selection_text:
                 cursor = self.cursorForPosition(event.pos())
                 self.setTextCursor(cursor)
 
@@ -191,18 +190,18 @@ class DiffEditor(DiffTextEdit):
         if text is None:
             return
 
-        offset, selection = self.offset_and_selection()
+        offset, selection_text = self.offset_and_selection()
         old_text = unicode(self.toPlainText())
 
         DiffTextEdit.setPlainText(self, text)
 
         # If the old selection exists in the new text then
         # re-select it.
-        if selection and selection in text:
-            idx = text.index(selection)
+        if selection_text and selection_text in text:
+            idx = text.index(selection_text)
             cursor = self.textCursor()
             cursor.setPosition(idx)
-            cursor.setPosition(idx + len(selection),
+            cursor.setPosition(idx + len(selection_text),
                                QtGui.QTextCursor.KeepAnchor)
             self.setTextCursor(cursor)
 
@@ -219,8 +218,8 @@ class DiffEditor(DiffTextEdit):
     def offset_and_selection(self):
         cursor = self.textCursor()
         offset = cursor.position()
-        selection = unicode(cursor.selection().toPlainText())
-        return offset, selection
+        selection_text = unicode(cursor.selection().toPlainText())
+        return offset, selection_text
 
     # Mutators
     def enable_selection_actions(self, enabled):
@@ -230,14 +229,14 @@ class DiffEditor(DiffTextEdit):
         self.action_stage_selection.setEnabled(enabled)
 
     def apply_section(self):
-        s = single_selection()
+        s = selection.single_selection()
         if self.model.stageable() and s.modified:
             self.stage_section()
         elif self.model.unstageable():
             self.unstage_section()
 
     def apply_selection(self):
-        s = single_selection()
+        s = selection.single_selection()
         if self.model.stageable() and s.modified:
             self.stage_selection()
         elif self.model.unstageable():
@@ -289,11 +288,11 @@ class DiffEditor(DiffTextEdit):
                                staged=True, apply_to_worktree=False,
                                reverse=False):
         """Implement un/staging of selected lines or sections."""
-        offset, selection = self.offset_and_selection()
-        if selection_model().is_empty():
+        if selection.selection_model().is_empty():
             return
+        offset, selection_text = self.offset_and_selection()
         cmds.do(cmds.ApplyDiffSelection,
-                staged, selected, offset, selection, apply_to_worktree)
+                staged, selected, offset, selection_text, apply_to_worktree)
 
 
 
