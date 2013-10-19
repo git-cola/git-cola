@@ -33,6 +33,20 @@ def filename():
     return selection_model().filename()
 
 
+def pick(s):
+    if s.staged:
+        files = s.staged
+    elif s.unmerged:
+        files = s.unmerged
+    elif s.modified:
+        files = s.modified
+    elif s.untracked:
+        files = s.untracked
+    else:
+        files = []
+    return files
+
+
 def _filter(a, b):
     b_set = set(b)
     a_copy = list(a)
@@ -113,14 +127,4 @@ class SelectionModel(Observable):
 
     def group(self):
         """A list of selected files in various states of being"""
-        selection = []
-        s = self.selection()
-        if s.staged:
-            selection = s.staged
-        elif s.unmerged:
-            selection = s.unmerged
-        elif s.modified:
-            selection = s.modified
-        elif s.untracked:
-            selection = s.untracked
-        return selection
+        return pick(self.selection())

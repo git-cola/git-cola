@@ -9,24 +9,17 @@ from cola import utils
 from cola import qtutils
 from cola import gitcmds
 from cola.i18n import N_
-from cola.models.selection import selection
+from cola.models import selection
 from cola.widgets import completion
 from cola.widgets import defs
 from cola.widgets import standard
 
 
 def run():
-    s = selection()
-    if s.staged:
-        files = s.staged
-    elif s.unmerged:
-        files = s.unmerged
-    elif s.modified:
-        files = s.modified
-    elif s.untracked:
-        files = s.untracked
-    else:
+    files = selection.selected_group()
+    if not files:
         return
+    s = selection.selection()
     model = cola.model()
     launch_with_head(files, bool(s.staged), model.head)
 

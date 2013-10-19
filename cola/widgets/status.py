@@ -15,8 +15,7 @@ from cola import utils
 from cola.compat import set
 from cola.i18n import N_
 from cola.interaction import Interaction
-from cola.models.selection import State
-from cola.models.selection import selection_model
+from cola.models import selection
 
 
 class StatusWidget(QtGui.QWidget):
@@ -404,9 +403,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         s = self.selection()
         menu = QtGui.QMenu(self)
 
-        selection = self.selected_indexes()
-        if selection:
-            category, idx = selection[0]
+        selected_indexes = self.selected_indexes()
+        if selected_indexes:
+            category, idx = selected_indexes[0]
             # A header item e.g. 'Staged', 'Modified', etc.
             if category == self.idx_header:
                 return self._create_header_context_menu(menu, idx)
@@ -680,7 +679,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         elif s.untracked:
             ut = s.untracked[0]
 
-        return State(st, um, m, ut)
+        return selection.State(st, um, m, ut)
 
     def selected_indexes(self):
         """Returns a list of (category, row) representing the tree selection."""
@@ -697,12 +696,12 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def selection(self):
         """Return the current selection in the repo status tree."""
-        return State(self.staged(), self.unmerged(),
-                     self.modified(), self.untracked())
+        return selection.State(self.staged(), self.unmerged(),
+                               self.modified(), self.untracked())
 
     def contents(self):
-        return State(self.m.staged, self.m.unmerged,
-                     self.m.modified, self.m.untracked)
+        return selection.State(self.m.staged, self.m.unmerged,
+                               self.m.modified, self.m.untracked)
 
     def all_files(self):
         c = self.contents()
@@ -710,17 +709,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def selected_group(self):
         """A list of selected files in various states of being"""
-        selection = []
-        s = self.selection()
-        if s.staged:
-            selection = s.staged
-        elif s.unmerged:
-            selection = s.unmerged
-        elif s.modified:
-            selection = s.modified
-        elif s.untracked:
-            selection = s.untracked
-        return selection
+        return selection.pick(self.selection())
 
     def selected_idx(self):
         c = self.contents()
@@ -796,26 +785,23 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             cmds.do(cmds.Stage, unstaged)
 
     def _open_using_default_app(self):
-        selection = self.selected_group()
-        cmds.do(cmds.OpenDefaultApp, selection)
+        cmds.do(cmds.OpenDefaultApp, self.selected_group())
 
     def _open_parent_dir(self):
-        selection = self.selected_group()
-        cmds.do(cmds.OpenParentDir, selection)
+        cmds.do(cmds.OpenParentDir, self.selected_group())
 
     def show_selection(self):
         """Show the selected item."""
         # Sync the selection model
-        s = self.selection()
-        selection_model().set_selection(s)
-        selection = self.selected_indexes()
-        if not selection:
+        selection.selection_model().set_selection(self.selection())
+        selected_indexes = self.selected_indexes()
+        if not selected_indexes:
             if self.m.amending():
                 cmds.do(cmds.SetDiffText, '')
             else:
                 cmds.do(cmds.ResetMode)
             return
-        category, idx = selection[0]
+        category, idx = selected_indexes[0]
         # A header item e.g. 'Staged', 'Modified', etc.
         if category == self.idx_header:
             cls = {
@@ -844,9 +830,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         idx = self.selected_idx()
         all_files = self.all_files()
         if idx is None:
-            selection = self.selected_indexes()
-            if selection:
-                category, toplevel_idx = selection[0]
+            selected_indexes = self.selected_indexes()
+            if selected_indexes:
+                category, toplevel_idx = selected_indexes[0]
                 if category == self.idx_header:
                     item = self.itemAbove(self.topLevelItem(toplevel_idx))
                     if item is not None:
@@ -864,9 +850,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         idx = self.selected_idx()
         all_files = self.all_files()
         if idx is None:
-            selection = self.selected_indexes()
-            if selection:
-                category, toplevel_idx = selection[0]
+            selected_indexes = self.selected_indexes()
+            if selected_indexes:
+                category, toplevel_idx = selected_indexes[0]
                 if category == self.idx_header:
                     item = self.itemBelow(self.topLevelItem(toplevel_idx))
                     if item is not None:
@@ -882,7 +868,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def copy_path(self):
         """Copy a selected path to the clipboard"""
-        filename = selection_model().filename()
+        filename = selection.selection_model().filename()
         if filename is not None:
             curdir = os.getcwdu()
             qtutils.set_clipboard(os.path.join(curdir, filename))
