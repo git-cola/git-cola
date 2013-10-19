@@ -9,10 +9,10 @@ from cola import qtutils
 from cola import utils
 from cola.i18n import N_
 from cola.interaction import Interaction
+from cola.models.main import MainModel
 from cola.widgets import defs
 from cola.widgets import completion
 from cola.widgets.standard import Dialog
-from cola.main.model import MainModel
 
 
 def create_new_branch(revision=''):

@@ -2,7 +2,7 @@ import os
 import unittest
 
 import helper
-from cola.main.model import MainModel
+from cola.models.main import MainModel
 
 
 class MainModelTestCase(helper.GitRepositoryTestCase):

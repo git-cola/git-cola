@@ -193,7 +193,7 @@ def add_version_command(cmds):
 
 def cmd_cola(args):
     context = application_init(args)
-    from cola.main.view import MainView
+    from cola.widgets.main import MainView
     view = MainView(context.model)
     return application_start(context, view)
 

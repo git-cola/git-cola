@@ -3,7 +3,7 @@ import os
 
 import helper
 from cola import gitcmds
-from cola.main.model import MainModel
+from cola.models.main import MainModel
 
 
 class ClassicModelTestCase(helper.GitRepositoryTestCase):

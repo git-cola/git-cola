@@ -1,1 +1,1 @@
-from cola.main.model import model
+from cola.models.main import model

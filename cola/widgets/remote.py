@@ -12,10 +12,10 @@ from cola import qtutils
 from cola import utils
 from cola.i18n import N_
 from cola.interaction import Interaction
+from cola.models.main import MainModel
 from cola.qtutils import connect_button
 from cola.widgets import defs
 from cola.widgets import standard
-from cola.main.model import MainModel
 
 FETCH = 'Fetch'
 PUSH = 'Push'
