@@ -27,6 +27,9 @@ def mklist(obj):
 
 class Settings(object):
     _file = resources.config_home('settings')
+    bookmarks = property(lambda self: mklist(self.values['bookmarks']))
+    gui_state = property(lambda self: mkdict(self.values['gui_state']))
+    recent = property(lambda self: mklist(self.values['recent']))
 
     def __init__(self, verify=git.is_git_worktree):
         """Load existing settings if they exist"""
@@ -38,7 +41,6 @@ class Settings(object):
         self.verify = verify
         self.load()
         self.remove_missing()
-
 
     def remove_missing(self):
         missing_bookmarks = []
@@ -63,20 +65,6 @@ class Settings(object):
                 self.recent.remove(recent)
             except:
                 pass
-
-    # properties
-    def _get_bookmarks(self):
-        return mklist(self.values['bookmarks'])
-
-    def _get_gui_state(self):
-        return mkdict(self.values['gui_state'])
-
-    def _get_recent(self):
-        return mklist(self.values['recent'])
-
-    bookmarks = property(_get_bookmarks)
-    gui_state = property(_get_gui_state)
-    recent = property(_get_recent)
 
     def add_bookmark(self, bookmark):
         """Adds a bookmark to the saved settings"""
