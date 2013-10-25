@@ -329,8 +329,10 @@ class CommitMessageEditor(QtGui.QWidget):
         self.description.setFont(font)
 
     def set_mode(self, mode):
+        can_amend = not self.model.is_merging
         checked = (mode == self.model.mode_amend)
         blocksignals = self.amend_action.blockSignals(True)
+        self.amend_action.setEnabled(can_amend)
         self.amend_action.setChecked(checked)
         self.amend_action.blockSignals(blocksignals)
 
