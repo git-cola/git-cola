@@ -7,7 +7,6 @@ from cola import cmds
 from cola import core
 from cola import gitcmds
 from cola import gitcfg
-from cola import notification
 from cola import textwrap
 from cola.cmds import Interaction
 from cola.gitcmds import commit_message_path
@@ -126,9 +125,6 @@ class CommitMessageEditor(QtGui.QWidget):
         self.setLayout(self.mainlayout)
 
         connect_button(self.commit_button, self.commit)
-
-        notifier = notification.notifier()
-        notifier.connect(notifier.AMEND, self.amend_action.setChecked)
 
         # Broadcast the amend mode
         connect_action_bool(self.amend_action, cmds.run(cmds.AmendMode))

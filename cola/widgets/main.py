@@ -454,7 +454,8 @@ class MainView(MainWindow):
         self.addDockWidget(right, self.statusdockwidget)
 
         # Listen for model notifications
-        model.add_observer(model.message_updated, self._update_view)
+        model.add_observer(model.message_updated, self._update)
+        model.add_observer(model.message_mode_changed, lambda x: self._update())
 
         prefs_model.add_observer(prefs_model.message_config_updated,
                                  self._config_updated)
@@ -561,7 +562,7 @@ class MainView(MainWindow):
         for name in names:
             menu.addAction(name, cmds.run(cmds.RunConfigAction, name))
 
-    def _update_view(self):
+    def _update(self):
         self.emit(SIGNAL('update'))
 
     def _update_callback(self):

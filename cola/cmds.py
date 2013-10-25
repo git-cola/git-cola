@@ -9,7 +9,6 @@ from cola import compat
 from cola import core
 from cola import gitcfg
 from cola import gitcmds
-from cola import notification
 from cola import utils
 from cola import difftool
 from cola import resources
@@ -22,7 +21,6 @@ from cola.models import main
 from cola.models import prefs
 from cola.models import selection
 
-_notifier = notification.notifier()
 _config = gitcfg.instance()
 
 
@@ -108,6 +106,7 @@ class AmendMode(Command):
         self.skip = False
         self.amending = amend
         self.old_commitmsg = self.model.commitmsg
+        self.old_mode = self.model.mode
 
         if self.amending:
             self.new_mode = self.model.mode_amend
@@ -131,18 +130,17 @@ class AmendMode(Command):
         """Leave/enter amend mode."""
         """Attempt to enter amend mode.  Do not allow this when merging."""
         if self.amending:
-            if core.exists(self.model.git.git_path('MERGE_HEAD')):
+            if self.model.is_merging:
                 self.skip = True
-                _notifier.broadcast(_notifier.AMEND, False)
+                self.model.set_mode(self.old_mode)
                 Interaction.information(
                         N_('Cannot Amend'),
                         N_('You are in the middle of a merge.\n'
                            'Cannot amend while merging.'))
                 return
         self.skip = False
-        _notifier.broadcast(_notifier.AMEND, self.amending)
-        self.model.set_commitmsg(self.new_commitmsg)
         Command.do(self)
+        self.model.set_commitmsg(self.new_commitmsg)
         self.model.update_file_status()
 
     def undo(self):
