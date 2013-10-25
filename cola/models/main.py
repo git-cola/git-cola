@@ -73,6 +73,7 @@ class MainModel(Observable):
         self.diff_text = ''
         self.mode = self.mode_none
         self.filename = None
+        self.is_merging = False
         self.is_rebasing = False
         self.currentbranch = ''
         self.directory = ''
@@ -146,6 +147,8 @@ class MainModel(Observable):
         if self.amending():
             if mode != self.mode_none:
                 return
+        if self.is_merging and mode == self.mode_amend:
+            mode = self.mode
         self.mode = mode
         self.notify_observers(self.message_mode_changed, mode)
 
@@ -172,7 +175,7 @@ class MainModel(Observable):
         self._update_refs()
         self._update_branches_and_tags()
         self._update_branch_heads()
-        self._update_rebase_status()
+        self._update_merge_rebase_status()
         self.notify_observers(self.message_updated)
 
     def _update_files(self, update_index=False):
@@ -212,7 +215,8 @@ class MainModel(Observable):
         self.remote_branches = remote_branches
         self.tags = tags
 
-    def _update_rebase_status(self):
+    def _update_merge_rebase_status(self):
+        self.is_merging = core.exists(self.git.git_path('MERGE_HEAD'))
         self.is_rebasing = core.exists(self.git.git_path('rebase-merge'))
 
     def delete_branch(self, branch):
