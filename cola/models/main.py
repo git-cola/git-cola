@@ -171,11 +171,11 @@ class MainModel(Observable):
     def update_status(self, update_index=False):
         # Give observers a chance to respond
         self.notify_observers(self.message_about_to_update)
+        self._update_merge_rebase_status()
         self._update_files(update_index=update_index)
         self._update_refs()
         self._update_branches_and_tags()
         self._update_branch_heads()
-        self._update_merge_rebase_status()
         self.notify_observers(self.message_updated)
 
     def _update_files(self, update_index=False):
@@ -218,6 +218,8 @@ class MainModel(Observable):
     def _update_merge_rebase_status(self):
         self.is_merging = core.exists(self.git.git_path('MERGE_HEAD'))
         self.is_rebasing = core.exists(self.git.git_path('rebase-merge'))
+        if self.is_merging and self.mode == self.mode_amend:
+            self.set_mode(self.mode_none)
 
     def delete_branch(self, branch):
         return self.git.branch(branch, D=True)
