@@ -566,25 +566,31 @@ class MainView(MainWindow):
 
     def _update_callback(self):
         """Update the title with the current branch and directory name."""
+        alerts = []
         branch = self.model.currentbranch
         curdir = core.getcwd()
+        is_merging = self.model.is_merging
         is_rebasing = self.model.is_rebasing
 
         msg = N_('Repository: %s') % curdir
         msg += '\n'
         msg += N_('Branch: %s') % branch
+
         if is_rebasing:
             msg += '\n\n'
             msg += N_('This repository is currently being rebased.\n'
                       'Resolve conflicts, commit changes, and run:\n'
                       '    Rebase > Continue')
-        self.commitdockwidget.setToolTip(msg)
+            alerts.append(N_('Rebasing'))
 
-        alerts = []
-        if is_rebasing:
-            alerts.append(N_('Rebasing').upper())
+        elif is_merging:
+            msg += '\n\n'
+            msg += N_('This repository is in the middle of a merge.\n'
+                      'Resolve conflicts and commit changes.')
+            alerts.append(N_('Merging'))
+
         if self.mode == self.model.mode_amend:
-            alerts.append(N_('Amending').upper())
+            alerts.append(N_('Amending'))
 
         l = unichr(0xab)
         r = unichr(0xbb)
@@ -593,9 +599,11 @@ class MainView(MainWindow):
                     branch,
                     alerts and ((r+' %s '+l+' ') % ', '.join(alerts)) or '',
                     self.model.git.worktree()))
+
         self.setWindowTitle(title)
+        self.commitdockwidget.setToolTip(msg)
         self.commitmsgeditor.set_mode(self.mode)
-        self.update_rebase_actions(is_rebasing)
+        self.update_actions()
 
         if not self.model.amending():
             # Check if there's a message file in .git/
@@ -608,7 +616,8 @@ class MainView(MainWindow):
             self.merge_message_hash = merge_msg_hash
             cmds.do(cmds.LoadCommitMessageFromFile, merge_msg_path)
 
-    def update_rebase_actions(self, is_rebasing):
+    def update_actions(self):
+        is_rebasing = self.model.is_rebasing
         can_rebase = not is_rebasing
         self.rebase_start_action.setEnabled(can_rebase)
         self.rebase_edit_todo_action.setEnabled(is_rebasing)
