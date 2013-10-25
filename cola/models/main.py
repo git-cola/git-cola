@@ -36,7 +36,6 @@ class MainModel(Observable):
     message_diff_text_changed = 'diff_text_changed'
     message_directory_changed = 'directory_changed'
     message_filename_changed = 'filename_changed'
-    message_head_changed = 'head_changed'
     message_mode_about_to_change = 'mode_about_to_change'
     message_mode_changed = 'mode_changed'
     message_updated = 'updated'
@@ -138,17 +137,18 @@ class MainModel(Observable):
         self.filename = filename
         self.notify_observers(self.message_filename_changed, filename)
 
-    def set_head(self, head):
-        self.head = head
-        self.notify_observers(self.message_head_changed, head)
-
     def set_mode(self, mode):
-        self.notify_observers(self.message_mode_about_to_change, mode)
         if self.amending():
             if mode != self.mode_none:
                 return
         if self.is_merging and mode == self.mode_amend:
             mode = self.mode
+        if mode == self.mode_amend:
+            head = 'HEAD^'
+        else:
+            head = 'HEAD'
+        self.notify_observers(self.message_mode_about_to_change, mode)
+        self.head = head
         self.mode = mode
         self.notify_observers(self.message_mode_changed, mode)
 

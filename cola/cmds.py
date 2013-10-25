@@ -67,17 +67,14 @@ class Command(BaseCommand):
         self.old_diff_text = self.model.diff_text
         self.old_filename = self.model.filename
         self.old_mode = self.model.mode
-        self.old_head = self.model.head
 
         self.new_diff_text = self.old_diff_text
         self.new_filename = self.old_filename
-        self.new_head = self.old_head
         self.new_mode = self.old_mode
 
     def do(self):
         """Perform the operation."""
         self.model.set_filename(self.new_filename)
-        self.model.set_head(self.new_head)
         self.model.set_mode(self.new_mode)
         self.model.set_diff_text(self.new_diff_text)
 
@@ -85,7 +82,6 @@ class Command(BaseCommand):
         """Undo the operation."""
         self.model.set_diff_text(self.old_diff_text)
         self.model.set_filename(self.old_filename)
-        self.model.set_head(self.old_head)
         self.model.set_mode(self.old_mode)
 
 
@@ -110,13 +106,11 @@ class AmendMode(Command):
 
         if self.amending:
             self.new_mode = self.model.mode_amend
-            self.new_head = 'HEAD^'
             self.new_commitmsg = self.model.prev_commitmsg()
             AmendMode.LAST_MESSAGE = self.model.commitmsg
             return
         # else, amend unchecked, regular commit
         self.new_mode = self.model.mode_none
-        self.new_head = 'HEAD'
         self.new_diff_text = ''
         self.new_commitmsg = self.model.commitmsg
         # If we're going back into new-commit-mode then search the
@@ -287,7 +281,6 @@ class ResetMode(Command):
     def __init__(self):
         Command.__init__(self)
         self.new_mode = self.model.mode_none
-        self.new_head = 'HEAD'
         self.new_diff_text = ''
 
     def do(self):
