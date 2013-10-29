@@ -127,4 +127,4 @@
     Also notice that a real name is used in the Signed-off-by: line. Please
     don't hide your real name.
 
-## Fork the repo on Github and create make pull request.
+## Fork the repo on Github and create a pull request.
