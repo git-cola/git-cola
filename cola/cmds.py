@@ -1,6 +1,5 @@
 import os
 import sys
-import platform
 from fnmatch import fnmatch
 
 from cStringIO import StringIO
@@ -963,7 +962,7 @@ class SignOff(Command):
             user = os.getenv('USER', N_('unknown'))
 
         name = _config.get('user.name', user)
-        email = _config.get('user.email', '%s@%s' % (user, platform.node()))
+        email = _config.get('user.email', '%s@%s' % (user, core.node()))
         return '\nSigned-off-by: %s <%s>' % (name, email)
 
 

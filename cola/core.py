@@ -7,6 +7,7 @@ e.g. when python raises an IOError or OSError with errno == EINTR.
 import os
 import sys
 import itertools
+import platform
 import subprocess
 
 from cola.decorators import interruptable
@@ -207,6 +208,11 @@ def stdout(msg):
 
 def stderr(msg):
     sys.stderr.write(encode(msg) + '\n')
+
+
+@interruptable
+def node():
+    return platform.node()
 
 
 abspath = wrap(encode, os.path.abspath, decorator=decode)
