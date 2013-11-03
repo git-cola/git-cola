@@ -648,7 +648,7 @@ class MainView(MainWindow):
         for shortcut, dockwidget in dockwidgets:
             # Associate the action with the shortcut
             toggleview = dockwidget.toggleViewAction()
-            toggleview.setShortcut(shortcut)
+            toggleview.setShortcut('Shift+' + shortcut)
             self.view_menu.addAction(toggleview)
             def showdock(show, dockwidget=dockwidget):
                 if show:
@@ -661,7 +661,7 @@ class MainView(MainWindow):
 
             # Create a new shortcut Shift+<shortcut> that gives focus
             toggleview = QtGui.QAction(self)
-            toggleview.setShortcut('Shift+' + shortcut)
+            toggleview.setShortcut(shortcut)
             def focusdock(dockwidget=dockwidget, showdock=showdock):
                 if dockwidget.toggleViewAction().isChecked():
                     showdock(True)
