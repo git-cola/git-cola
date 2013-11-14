@@ -520,12 +520,16 @@ class RemoteActionDialog(standard.Dialog):
         command = 'git %s' % self.action.lower()
         message = (N_('"%(command)s" returned exit status %(status)d') %
                    dict(command=command, status=status))
+        details = ''
         if out:
-            message += '\n\n' + out
+            details = out
         if err:
-            message += '\n\n' + err
+            details += '\n\n' + err
 
-        Interaction.log(message)
+        log_message = message
+        if details:
+            log_message += '\n\n' + details
+        Interaction.log(log_message)
 
         if status == 0:
             self.accept()
@@ -536,7 +540,7 @@ class RemoteActionDialog(standard.Dialog):
             message += N_('Have you rebased/pulled lately?')
 
         Interaction.critical(self.windowTitle(),
-                             message=message, details=output)
+                             message=message, details=details)
 
 
 # Use distinct classes so that each saves its own set of preferences
