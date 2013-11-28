@@ -60,7 +60,7 @@ build_win32_remotely () {
 	title Building win32 remotely
 
 	do_or_die ssh -p $WIN32_SSH_PORT "$WIN32_LOGIN" '
-		PATH='"$WIN32_PYTHON"':$PATH
+		PATH='"$WIN32_PYTHON"':'"$WIN32_GIT"':$PATH
 		cd '"$WIN32_COLA_DIR"'
 		contrib/win32/create-installer.sh
 	'

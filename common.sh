@@ -14,6 +14,7 @@ WIN32_LOGIN=Administrator@localhost
 WIN32_SSH_PORT=2002
 WIN32_COLA_DIR=git-cola
 WIN32_PYTHON=/c/Python27
+WIN32_GIT="/c/Progra~1/Git/bin"
 
 DOCUMENT_ROOT="$COLA_TOP/../git-cola.github.com"
 RELEASES="$DOCUMENT_ROOT/releases"
