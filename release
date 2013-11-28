@@ -62,7 +62,7 @@ build_win32_remotely () {
 	do_or_die ssh -p $WIN32_SSH_PORT "$WIN32_LOGIN" '
 		PATH='"$WIN32_PYTHON"':$PATH
 		cd '"$WIN32_COLA_DIR"'
-		win32/create-installer.sh
+		contrib/win32/create-installer.sh
 	'
 	do_or_die scp -P $WIN32_SSH_PORT \
 		"$WIN32_LOGIN":"$WIN32_COLA_DIR"/"*.exe" .
