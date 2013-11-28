@@ -68,7 +68,7 @@ git shortlog $tag.. >> $NOTES
 
 # LF -> CRLF
 vim -c "set ff=dos" -c "wq" $NOTES
-sed -e "s/%APPVERSION%/$VERSION/" -e "s@%OUTPUTDIR%@""$PWD""@" \
+sed -e "s/%APPVERSION%/$VERSION/" -e "s/%OUTPUTDIR%/../" \
 	< "$WIN32/install.iss" > "$BASENAME/install.iss" &&
 (
 	cd "$BASENAME" &&
