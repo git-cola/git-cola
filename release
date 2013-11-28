@@ -8,7 +8,7 @@ do_tarball=false
 do_win32=false
 do_upload=false
 
-usage() {
+usage () {
 	echo "$(basename "$0") [options]"
 	echo
 	echo "options:"
@@ -28,12 +28,24 @@ usage() {
 	exit 1
 }
 
-build_docs() {
+init_release () {
+	if test -z "$vVERSION"
+	then
+		return 1
+	fi
+	if ! "$META/github-release" identify "$vVERSION"
+	then
+		commit=$(git rev-parse "$vVERSION""^{commit}")
+		do_or_die "$META/github-release" create "$vVERSION" "$commit"
+	fi
+}
+
+build_docs () {
 	title Building docs
 	do_or_die make prefix="$DOCUMENT_ROOT" install-doc
 }
 
-build_tarball() {
+build_tarball () {
 	title Building tarball
 	#do_or_die make dist
 	do_or_die make app-tarball
@@ -44,7 +56,7 @@ build_tarball() {
 	fi
 }
 
-build_win32_remotely() {
+build_win32_remotely () {
 	title Building win32 remotely
 
 	do_or_die ssh -p $WIN32_SSH_PORT "$WIN32_LOGIN" '
@@ -59,7 +71,7 @@ build_win32_remotely() {
 		"$WIN32_LOGIN" "/bin/rm '$WIN32_COLA_DIR'/*.exe"
 
 	do_or_die chmod 644 git-cola-"$VERSION".exe
-	do_or_die zip -9 git-cola-"$VERSION".windows.zip \
+	do_or_die zip -9 -m git-cola-"$VERSION".windows.zip \
 		-xi git-cola-"$VERSION".exe
 	if $do_upload
 	then
@@ -83,7 +95,7 @@ do
 		;;
 	--all)
 		shift
-		do_tarball=true
+		#do_tarball=true
 		do_win32=true
 		do_docs=true
 		do_upload=true
@@ -143,6 +155,11 @@ do
 		;;
 	esac
 done
+
+if $do_tarball || $do_win32
+then
+	init_release
+fi
 
 
 if $do_tarball
