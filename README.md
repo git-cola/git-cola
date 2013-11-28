@@ -75,22 +75,15 @@ You don't need to `make` to run it, though.
 
 ## MAC OS X
 
-Whether you install cola yourself with `make install` or
-use the `git-cola.app` bundle, you will need to install
-*Qt4* and *PyQt4*.
-
-The easiest way to do this is to [install homebrew](http://mxcl.github.com/homebrew/)
-and use it to install git-cola.
+[Homebrew](http://mxcl.github.com/homebrew/) is the easiest way to install
+git-cola, *Qt4* and *PyQt4*.
 
     brew install git-cola
 
-Once brew has installed git-cola (and its dependencies) you either use
-`git-cola.app`, run from source, or install from source via `make install`.
-You can build `git-cola.app` by running `make git-cola.app`.
+Once brew has installed git-cola you can build a `git-cola.app`
+application bundle from source and copy it to `/Applications`.
 
-Installing these packages also gives you a PyQt development
-environment which can be used for building your own applications
-or hacking on cola itself.
+    make git-cola.app
 
 ## WINDOWS INSTALLATION
 
