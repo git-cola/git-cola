@@ -11,6 +11,7 @@ from cola.i18n import N_
 from cola.models import prefs
 from cola.models.prefs import PreferencesModel
 from cola.models.prefs import SetConfig
+from cola.models.prefs import FONTDIFF
 from cola.qtutils import diff_font
 from cola.widgets import defs
 from cola.widgets import standard
