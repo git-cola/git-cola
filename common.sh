@@ -21,7 +21,7 @@ RELEASES="$DOCUMENT_ROOT/releases"
 # _the_ cola version
 if test -e bin/git-cola && test -z "$VERSION"
 then
-	VERSION=$(bin/git-cola version | awk '{print $3}')
+	VERSION=$(bin/git-cola version --brief)
 	vVERSION="v$VERSION"
 fi
 
