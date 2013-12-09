@@ -24,6 +24,7 @@ Thanks
 * Iulian Udrea
 * Ivar Smolin
 * Jakub Wilk
+* Jérôme Carretero
 * Johann Schmitz
 * Jeff Dagenais
 * Justin Lecher

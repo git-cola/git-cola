@@ -44,7 +44,7 @@ def read_git_file(path):
     if path is None:
         return None
     if is_git_file(path):
-        data = core.read(path)
+        data = core.read(path).strip()
         if data.startswith('gitdir: '):
             return data[len('gitdir: '):]
     return None
