@@ -34,7 +34,6 @@ class DiffEditor(DiffTextEdit):
     def __init__(self, parent):
         DiffTextEdit.__init__(self, parent)
         self.model = model = main.model()
-        self.mode = self.model.mode_none
 
         self.action_process_section = qtutils.add_action(self,
                 N_('Process Section'),
@@ -76,8 +75,6 @@ class DiffEditor(DiffTextEdit):
                 self.stage_selection)
         self.action_apply_selection.setIcon(qtutils.apply_icon())
 
-        model.add_observer(model.message_mode_about_to_change,
-                           self._mode_about_to_change)
         model.add_observer(model.message_diff_text_changed, self._emit_text)
 
         self.connect(self, SIGNAL('copyAvailable(bool)'),
@@ -172,13 +169,11 @@ class DiffEditor(DiffTextEdit):
 
         return DiffTextEdit.mousePressEvent(self, event)
 
-    def _mode_about_to_change(self, mode):
-        self.mode = mode
-
     def setPlainText(self, text):
         """setPlainText(str) while retaining scrollbar positions"""
-        highlight = (self.mode != self.model.mode_none and
-                     self.mode != self.model.mode_untracked)
+        mode = self.model.mode
+        highlight = (mode != self.model.mode_none and
+                     mode != self.model.mode_untracked)
         self.highlighter.set_enabled(highlight)
 
         scrollbar = self.verticalScrollBar()
