@@ -45,6 +45,7 @@ def setup_environment():
 setup_environment()
 
 from cola import core
+from cola import cmds
 from cola.app import add_common_arguments
 from cola.app import application_init
 from cola.app import application_start
@@ -66,26 +67,26 @@ def main():
 
 def parse_args():
     parser = ArgumentParser()
-    cmds = parser.add_subparsers(title='valid commands')
+    subparser = parser.add_subparsers(title='valid commands')
 
-    add_cola_command(cmds)
-    add_archive_command(cmds)
-    add_branch_command(cmds)
-    add_browse_command(cmds)
-    add_config_command(cmds)
-    add_dag_command(cmds)
-    add_diff_command(cmds)
-    add_fetch_command(cmds)
-    add_grep_command(cmds)
-    add_merge_command(cmds)
-    add_pull_command(cmds)
-    add_push_command(cmds)
-    add_rebase_command(cmds)
-    add_remote_command(cmds)
-    add_search_command(cmds)
-    add_stash_command(cmds)
-    add_tag_command(cmds)
-    add_version_command(cmds)
+    add_cola_command(subparser)
+    add_archive_command(subparser)
+    add_branch_command(subparser)
+    add_browse_command(subparser)
+    add_config_command(subparser)
+    add_dag_command(subparser)
+    add_diff_command(subparser)
+    add_fetch_command(subparser)
+    add_grep_command(subparser)
+    add_merge_command(subparser)
+    add_pull_command(subparser)
+    add_push_command(subparser)
+    add_rebase_command(subparser)
+    add_remote_command(subparser)
+    add_search_command(subparser)
+    add_stash_command(subparser)
+    add_tag_command(subparser)
+    add_version_command(subparser)
 
     return parser.parse_args()
 
@@ -97,8 +98,8 @@ def add_command(parent, name, description, func):
     return parser
 
 
-def add_cola_command(cmds):
-    add_command(cmds, 'cola', 'start git-cola', cmd_cola)
+def add_cola_command(subparser):
+    parser = add_command(subparser, 'cola', 'start git-cola', cmd_cola)
 
 
 def add_archive_command(parent):
@@ -107,76 +108,76 @@ def add_archive_command(parent):
                         help='SHA-1 to archive')
 
 
-def add_branch_command(cmds):
-    add_command(cmds, 'branch', 'create a branch', cmd_branch)
+def add_branch_command(subparser):
+    add_command(subparser, 'branch', 'create a branch', cmd_branch)
 
 
-def add_browse_command(cmds):
-    add_command(cmds, 'browse', 'browse repository', cmd_browse)
-    add_command(cmds, 'classic', 'browse repository', cmd_browse)
+def add_browse_command(subparser):
+    add_command(subparser, 'browse', 'browse repository', cmd_browse)
+    add_command(subparser, 'classic', 'browse repository', cmd_browse)
 
 
-def add_config_command(cmds):
-    add_command(cmds, 'config', 'edit configuration', cmd_config)
+def add_config_command(subparser):
+    add_command(subparser, 'config', 'edit configuration', cmd_config)
 
 
-def add_dag_command(cmds):
-    parser = add_command(cmds, 'dag', 'start git-dag', cmd_dag)
+def add_dag_command(subparser):
+    parser = add_command(subparser, 'dag', 'start git-dag', cmd_dag)
     parser.add_argument('-c', '--count', metavar='<count>',
                         type=int, default=1000,
                         help='number of commits to display')
     parser.add_argument('args', nargs='*', metavar='<args>',
                         help='git log arguments')
 
-def add_diff_command(cmds):
-    parser = add_command(cmds, 'diff', 'view diffs', cmd_diff)
+def add_diff_command(subparser):
+    parser = add_command(subparser, 'diff', 'view diffs', cmd_diff)
     parser.add_argument('args', nargs='*', metavar='<args>',
                         help='git diff arguments')
 
 
-def add_fetch_command(cmds):
-    add_command(cmds, 'fetch', 'fetch remotes', cmd_fetch)
+def add_fetch_command(subparser):
+    add_command(subparser, 'fetch', 'fetch remotes', cmd_fetch)
 
 
-def add_grep_command(cmds):
-    parser = add_command(cmds, 'grep', 'grep source', cmd_grep)
+def add_grep_command(subparser):
+    parser = add_command(subparser, 'grep', 'grep source', cmd_grep)
     parser.add_argument('args', nargs='*', metavar='<args>',
                         help='git grep arguments')
 
-def add_merge_command(cmds):
-    add_command(cmds, 'merge', 'merge branches', cmd_merge)
+def add_merge_command(subparser):
+    add_command(subparser, 'merge', 'merge branches', cmd_merge)
 
 
-def add_pull_command(cmds):
-    parser = add_command(cmds, 'pull', 'pull remote branches', cmd_pull)
+def add_pull_command(subparser):
+    parser = add_command(subparser, 'pull', 'pull remote branches', cmd_pull)
     parser.add_argument('--rebase', default=False, action='store_true',
                         help='rebase local branch when pulling')
 
 
-def add_push_command(cmds):
-    add_command(cmds, 'push', 'push remote branches', cmd_push)
+def add_push_command(subparser):
+    add_command(subparser, 'push', 'push remote branches', cmd_push)
 
 
-def add_rebase_command(cmds):
-    parser = add_command(cmds, 'rebase', 'interactive rebase', cmd_rebase)
+def add_rebase_command(subparser):
+    parser = add_command(subparser, 'rebase', 'interactive rebase', cmd_rebase)
     parser.add_argument('branch', metavar='<branch>',
                         help='New upstream branch')
 
 
-def add_remote_command(cmds):
-    add_command(cmds, 'remote', 'edit remotes', cmd_remote)
+def add_remote_command(subparser):
+    add_command(subparser, 'remote', 'edit remotes', cmd_remote)
 
 
-def add_search_command(cmds):
-    add_command(cmds, 'search', 'search commits', cmd_search)
+def add_search_command(subparser):
+    add_command(subparser, 'search', 'search commits', cmd_search)
 
 
-def add_stash_command(cmds):
-    add_command(cmds, 'stash', 'stash and unstash changes', cmd_stash)
+def add_stash_command(subparser):
+    add_command(subparser, 'stash', 'stash and unstash changes', cmd_stash)
 
 
-def add_tag_command(cmds):
-    parser = add_command(cmds, 'tag', 'create tags', cmd_tag)
+def add_tag_command(subparser):
+    parser = add_command(subparser, 'tag', 'create tags', cmd_tag)
     parser.add_argument('name', metavar='<name>', nargs='?', default=None,
                         help='tag name')
     parser.add_argument('ref', metavar='<ref>', nargs='?', default=None,
@@ -184,8 +185,8 @@ def add_tag_command(cmds):
     parser.add_argument('-s', '--sign', default=False, action='store_true',
                         help='annotated and GPG-signed tag')
 
-def add_version_command(cmds):
-    parser = add_command(cmds, 'version', 'print the version', cmd_version)
+def add_version_command(subparser):
+    parser = add_command(subparser, 'version', 'print the version', cmd_version)
     parser.add_argument('--brief', action='store_true', default=False,
                         help='print the version number only')
 
@@ -292,7 +293,6 @@ def cmd_push(args):
 
 
 def cmd_rebase(args):
-    from cola import cmds
     status, out, err = cmds.do(cmds.Rebase, args.branch)
     if out:
         core.stdout(out)
