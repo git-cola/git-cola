@@ -117,6 +117,25 @@ exists. That is normally the case when you run the *msysGit bash* and
 not the *Git for Windows bash* (look [here](http://msysgit.github.com/)
 for the differences).
 
+##Linux
+Linux is it! Your distro has probably already packaged git-cola. If not, please file a bug against your distribution ;-) 
+
+arch	»	yaourt -S git-cola
+
+debian	»	apt-get install git-cola
+
+fedora	»	yum install git-cola
+
+gentoo	»	emerge git-cola
+
+opensuse	»	use the one-click install link
+
+ubuntu	»	apt-get install git-cola
+
+More? Contact the list if you've packaged git-cola for other distributions.
+
+
+
 ## GOODIES
 
 *git-cola* ships with an interactive rebase editor called *git-xbase*.
