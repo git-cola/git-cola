@@ -1,3 +1,15 @@
+git-cola v1.9.3
+---------------
+Fixes
+-----
+* Stray whitespace in `.git` files is now ignored.
+
+  https://github.com/git-cola/git-cola/issues/213
+
+* Fix "known incorrect sRGB profile" in `staged-item.png`.
+
+  http://comments.gmane.org/gmane.linux.gentoo.devel/85066
+
 git-cola v1.9.2
 ---------------
 Fixes
