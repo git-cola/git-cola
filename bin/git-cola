@@ -100,6 +100,8 @@ def add_command(parent, name, description, func):
 
 def add_cola_command(subparser):
     parser = add_command(subparser, 'cola', 'start git-cola', cmd_cola)
+    parser.add_argument('--amend', default=False, action='store_true',
+                        help='start in amend mode')
 
 
 def add_archive_command(parent):
@@ -196,6 +198,8 @@ def cmd_cola(args):
     context = application_init(args)
     from cola.widgets.main import MainView
     view = MainView(context.model)
+    if args.amend:
+        cmds.do(cmds.AmendMode, True)
     return application_start(context, view)
 
 

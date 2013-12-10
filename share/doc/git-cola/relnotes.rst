@@ -2,6 +2,9 @@ git-cola v1.9.3
 ---------------
 Usability, bells and whistles
 -----------------------------
+* `git cola --amend` now starts the editor in `amend` mode.
+
+  https://github.com/git-cola/git-cola/issues/187
 
 * Multiple lines of text can now be pasted into the `summary` field.
   All text beyond the first newline will be automatically moved to the

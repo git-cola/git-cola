@@ -42,6 +42,7 @@ Thanks
 * Matthew Levine
 * Michael Geddes
 * Michael Homer
+* Nicolas Dietrich
 * Omega Weapon
 * Paolo G. Giarrusso
 * Peter Júnoš

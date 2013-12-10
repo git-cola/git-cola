@@ -15,6 +15,9 @@ DESCRIPTION
 
 OPTIONS
 -------
+--amend::
+	Start 'git-cola' in amend mode.
+
 -g::
 --git-path::
 	Specifies the path to the 'git' binary.
