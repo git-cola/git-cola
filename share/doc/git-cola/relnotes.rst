@@ -1,5 +1,14 @@
 git-cola v1.9.3
 ---------------
+Usability, bells and whistles
+-----------------------------
+
+* Multiple lines of text can now be pasted into the `summary` field.
+  All text beyond the first newline will be automatically moved to the
+  `extended description` field.
+
+  https://github.com/git-cola/git-cola/issues/212
+
 Fixes
 -----
 * Stray whitespace in `.git` files is now ignored.

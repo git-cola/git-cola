@@ -149,7 +149,7 @@ class CommitMessageEditor(QtGui.QWidget):
 
         # Keep model informed of changes
         self.connect(self.summary, SIGNAL('textChanged(QString)'),
-                     self.commit_message_changed)
+                     self.commit_summary_changed)
 
         self.connect(self.description, SIGNAL('textChanged()'),
                      self.commit_message_changed)
@@ -215,6 +215,30 @@ class CommitMessageEditor(QtGui.QWidget):
         if not self._linebreak:
             return text
         return textwrap.word_wrap(text, self._tabwidth, self._textwidth)
+
+    def commit_summary_changed(self, value):
+        """Respond to changes to the `summary` field
+
+        Newlines can enter the `summary` field when pasting, which is
+        undesirable.  Break the pasted value apart into the separate
+        (summary, description) values and move the description over to the
+        "extended description" field.
+
+        """
+        value = unicode(value)
+        if '\n' in value:
+            summary, description = value.split('\n', 1)
+            description = description.lstrip('\n')
+            cur_description = self.description.value()
+            if cur_description:
+                description = description + '\n' + cur_description
+            # this callback is triggered by changing `summary`
+            # so disable signals for `summary` only.
+            self.summary.blockSignals(True)
+            self.summary.set_value(summary)
+            self.summary.blockSignals(False)
+            self.description.set_value(description)
+        self.commit_message_changed()
 
     def commit_message_changed(self, value=None):
         """Update the model when values change"""
