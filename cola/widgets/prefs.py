@@ -220,11 +220,11 @@ class SettingsFormWidget(FormWidget):
         font = self.fixed_font.currentFont()
         font.setPointSize(size)
         cmds.do(SetConfig, self.model,
-                'user', FONTDIFF, unicode(font.toString()))
+                'user', prefs.FONTDIFF, unicode(font.toString()))
 
     def current_font_changed(self, font):
         cmds.do(SetConfig, self.model,
-                'user', FONTDIFF, unicode(font.toString()))
+                'user', prefs.FONTDIFF, unicode(font.toString()))
 
 
 class PreferencesView(standard.Dialog):
