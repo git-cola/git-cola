@@ -124,7 +124,7 @@ class FileSysEvent(ProcessEvent):
 
     def process_default(self, event):
         """Queues up inotify events for broadcast"""
-        if event.name:
+        if not event.name:
             return
         path = os.path.join(event.path, event.name)
         if os.path.exists(path):
