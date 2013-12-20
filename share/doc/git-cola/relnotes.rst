@@ -7,6 +7,8 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/215
 
+* A new `git cola am` sub-command was added for applying patches.
+
 Fixes
 -----
 * Fixed a typo that caused inotify events to be silently ignored.
