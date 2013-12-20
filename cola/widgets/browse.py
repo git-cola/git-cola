@@ -473,7 +473,7 @@ class BrowseDialog(QtGui.QDialog):
         self.model = model
 
         # widgets
-        self.tree = GitTreeWidget(model.ref, parent=self)
+        self.tree = GitTreeWidget(parent=self)
         self.close = QtGui.QPushButton(N_('Close'))
         self.save = QtGui.QPushButton(select_file and N_('Select') or N_('Save'))
         self.save.setDefault(True)
@@ -543,7 +543,7 @@ class BrowseDialog(QtGui.QDialog):
 
 
 class GitTreeWidget(standard.TreeView):
-    def __init__(self, ref, parent=None):
+    def __init__(self, parent=None):
         standard.TreeView.__init__(self, parent)
         self.setHeaderHidden(True)
 

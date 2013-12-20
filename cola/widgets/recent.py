@@ -53,7 +53,7 @@ class RecentFileDialog(standard.Dialog):
         self.refresh_button.setIcon(qtutils.reload_icon())
         self.refresh_button.setEnabled(False)
 
-        self.tree = GitTreeWidget(None, parent=self)
+        self.tree = GitTreeWidget(parent=self)
         self.tree_model = GitFileTreeModel(self)
         self.tree.setModel(self.tree_model)
 
