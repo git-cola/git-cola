@@ -49,6 +49,7 @@ from cola.widgets.diff import DiffEditor
 from cola.widgets.grep import grep
 from cola.widgets.log import LogWidget
 from cola.widgets import merge
+from cola.widgets.patch import apply_patches
 from cola.widgets.prefs import preferences
 from cola.widgets.recent import browse_recent
 from cola.widgets.status import StatusWidget
@@ -61,6 +62,8 @@ class MainView(MainWindow):
 
     def __init__(self, model, parent=None):
         MainWindow.__init__(self, parent)
+        self.setAttribute(Qt.WA_MacMetalStyle)
+
         # Default size; this is thrown out when save/restore is used
         self.resize(987, 610)
         self.model = model
@@ -72,9 +75,6 @@ class MainView(MainWindow):
 
         # Keeps track of merge messages we've seen
         self.merge_message_hash = ''
-
-        self.setAcceptDrops(True)
-        self.setAttribute(Qt.WA_MacMetalStyle)
 
         cfg = gitcfg.instance()
         self.browser_dockable = (cfg.get('cola.browserdockable') or
@@ -178,6 +178,9 @@ class MainView(MainWindow):
                 N_('Stage All Untracked'),
                 cmds.run(cmds.StageUntracked), 'Alt+U')
         self.stage_untracked_action.setIcon(qtutils.icon('add.svg'))
+
+        self.apply_patches_action = add_action(self,
+                N_('Apply Patches...'), apply_patches)
 
         self.export_patches_action = add_action(self,
                 N_('Export Patches...'), guicmds.export_patches, 'Alt+E')
@@ -340,14 +343,15 @@ class MainView(MainWindow):
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.rescan_action)
         self.file_menu.addAction(self.edit_remotes_action)
+        self.file_menu.addAction(self.browse_recently_modified_action)
         self.file_menu.addAction(self.manage_bookmarks_action)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.load_commitmsg_action)
         self.file_menu.addAction(self.load_commitmsg_template_action)
         self.file_menu.addSeparator()
-        self.file_menu.addAction(self.save_tarball_action)
+        self.file_menu.addAction(self.apply_patches_action)
         self.file_menu.addAction(self.export_patches_action)
-        self.file_menu.addAction(self.browse_recently_modified_action)
+        self.file_menu.addAction(self.save_tarball_action)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.preferences_action)
         self.file_menu.addAction(self.quit_action)
@@ -689,33 +693,6 @@ class MainView(MainWindow):
         ref = git.rev_parse('HEAD')[STDOUT]
         shortref = ref[:7]
         GitArchiveDialog.save(ref, shortref, self)
-
-    def dragEnterEvent(self, event):
-        """Accepts drops"""
-        MainWindow.dragEnterEvent(self, event)
-        event.acceptProposedAction()
-
-    def dropEvent(self, event):
-        """Apply dropped patches with git-am"""
-        event.accept()
-        urls = event.mimeData().urls()
-        if not urls:
-            return
-        paths = map(lambda x: unicode(x.path()), urls)
-        patches = [p for p in paths if p.endswith('.patch')]
-        dirs = [p for p in paths if os.path.isdir(p)]
-        dirs.sort()
-        for d in dirs:
-            patches.extend(self._gather_patches(d))
-        cmds.do(cmds.ApplyPatches, patches)
-
-    def _gather_patches(self, path):
-        """Find patches in a subdirectory"""
-        patches = []
-        for root, subdirs, files in os.walk(path):
-            for name in [f for f in files if f.endswith('.patch')]:
-                patches.append(os.path.join(root, name))
-        return patches
 
     def show_cursor_position(self, rows, cols):
         display = '&nbsp;%02d:%02d&nbsp;' % (rows, cols)

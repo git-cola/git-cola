@@ -174,7 +174,6 @@ class ApplyPatches(Command):
 
     def __init__(self, patches):
         Command.__init__(self)
-        patches.sort()
         self.patches = patches
 
     def do(self):

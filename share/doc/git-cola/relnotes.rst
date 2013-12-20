@@ -1,3 +1,12 @@
+git-cola v1.9.4
+---------------
+Usability, bells and whistles
+-----------------------------
+* There is now a dedicated dialog for applying patches.
+  See the ``File -> Apply Patches`` menu item.
+
+  https://github.com/git-cola/git-cola/issues/215
+
 git-cola v1.9.3
 ---------------
 Usability, bells and whistles

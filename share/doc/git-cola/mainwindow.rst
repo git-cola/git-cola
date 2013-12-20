@@ -7,16 +7,17 @@ choosing ``Help -> Keyboard shortcuts`` from the main menu,
 or by consulting the
 `git cola keyboard shortcuts reference <../hotkeys.html>`_.
 
-Drag and Drop `git am`
-======================
+Apply Patches using `git am`
+============================
+Use the ``File -> Apply Patches`` menu item to begin applying patches.
+
 Dragging and dropping patches onto the `git cola` interface
-applies patches using
+adds the patches to the list of patches to apply using
 `git am <http://schacon.github.com/git/git-am.html>`_.
 
 You can drag either a set of patches or a directory containing patches.
-All files are sorted alphanumerically before being applied.
-This means that patches named ``0001-foo.patch`` are applied
-before ``0002-bar.patch``.
+Patches can be sorted using in the interface and are applied in the
+same order as is listed in the list.
 
 When a directory is dropped `git cola` walks the directory
 tree in search of patches.  `git cola` sorts the list of
