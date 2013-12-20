@@ -226,6 +226,12 @@ def open_file(title, directory=None):
                         .getOpenFileName(active_window(), title, directory))
 
 
+def open_files(title, directory=None, filter=None):
+    """Creates an Open File dialog and returns a list of filenames."""
+    return (QtGui.QFileDialog
+            .getOpenFileNames(active_window(), title, directory, filter))
+
+
 def opendir_dialog(title, path):
     """Prompts for a directory path"""
 
