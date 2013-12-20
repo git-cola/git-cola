@@ -230,3 +230,4 @@ except AttributeError:
 realpath = wrap(encode, os.path.realpath, decorator=decode)
 stat = wrap(encode, os.stat)
 unlink = wrap(encode, os.unlink)
+walk = wrap(encode, os.walk)
