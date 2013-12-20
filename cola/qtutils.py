@@ -220,10 +220,10 @@ def selected_items(list_widget, items):
     return selection
 
 
-def open_dialog(title, filename=None):
+def open_file(title, directory=None):
     """Creates an Open File dialog and returns a filename."""
     return unicode(QtGui.QFileDialog
-                        .getOpenFileName(active_window(), title, filename))
+                        .getOpenFileName(active_window(), title, directory))
 
 
 def opendir_dialog(title, path):
