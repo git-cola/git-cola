@@ -14,7 +14,6 @@ from cola.interaction import Interaction
 from cola.models import main
 from cola.widgets import completion
 from cola.widgets.browse import BrowseDialog
-from cola.widgets.grep import run_grep
 from cola.widgets.selectcommits import select_commits
 
 
@@ -197,14 +196,6 @@ def diff_expression():
     else:
         ref = 'origin/master..'
     difftool.diff_expression(qtutils.active_window(), ref)
-
-
-def grep():
-    """Prompt and use 'git grep' to find the content."""
-    widget = run_grep(parent=qtutils.active_window())
-    widget.show()
-    widget.raise_()
-    return widget
 
 
 def open_repo():

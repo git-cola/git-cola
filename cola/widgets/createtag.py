@@ -13,11 +13,19 @@ from cola.widgets import standard
 from cola.widgets import text
 
 
-def create_tag(name='', ref='', sign=False):
+def new_create_tag(name='', ref='', sign=False, parent=None):
     """Entry point for external callers."""
     opts = TagOptions(name, ref, sign)
-    view = CreateTag(opts, qtutils.active_window())
+    view = CreateTag(opts, parent=parent)
+    return view
+
+
+def create_tag(name='', ref='', sign=False):
+    """Entry point for external callers."""
+    view = new_create_tag(name=name, ref=ref, sign=sign,
+                          parent=qtutils.active_window())
     view.show()
+    view.raise_()
     return view
 
 
@@ -33,11 +41,12 @@ class TagOptions(object):
 
 class CreateTag(standard.Dialog):
 
-    def __init__(self, opts, parent):
+    def __init__(self, opts, parent=None):
         standard.Dialog.__init__(self, parent=parent)
-        self.setWindowModality(QtCore.Qt.WindowModal)
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(N_('Create Tag'))
+        if parent is not None:
+            self.setWindowModality(QtCore.Qt.WindowModal)
 
         self.opts = opts
 

@@ -15,6 +15,27 @@ from cola.widgets.standard import Dialog
 from cola.widgets.text import HintedTextView, HintedLineEdit
 
 
+def grep():
+    """Prompt and use 'git grep' to find the content."""
+    widget = new_grep(parent=qtutils.active_window())
+    widget.show()
+    widget.raise_()
+    return widget
+
+
+def new_grep(text=None, parent=None):
+    widget = Grep(parent=parent)
+    if text:
+        widget.search_for(text)
+    return widget
+
+
+def goto_grep(line):
+    """Called when Search -> Grep's right-click 'goto' action."""
+    filename, line_number, contents = line.split(':', 2)
+    do(cmds.Edit, [filename], line_number=line_number)
+
+
 class GrepThread(QtCore.QThread):
 
     def __init__(self, parent):
@@ -40,11 +61,12 @@ class GrepThread(QtCore.QThread):
 
 class Grep(Dialog):
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         Dialog.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
-        self.setWindowModality(Qt.WindowModal)
         self.setWindowTitle(N_('Search'))
+        if parent is not None:
+            self.setWindowModality(Qt.WindowModal)
 
         self.input_label = QtGui.QLabel('git grep')
         self.input_label.setFont(diff_font())
@@ -310,16 +332,3 @@ class GrepTextView(HintedTextView):
                 # change focus.
                 self.emit(SIGNAL('leave()'))
         return HintedTextView.keyPressEvent(self, event)
-
-
-def goto_grep(line):
-    """Called when Search -> Grep's right-click 'goto' action."""
-    filename, line_number, contents = line.split(':', 2)
-    do(cmds.Edit, [filename], line_number=line_number)
-
-
-def run_grep(text=None, parent=None):
-    widget = Grep(parent)
-    if text:
-        widget.search_for(text)
-    return widget

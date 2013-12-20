@@ -46,6 +46,7 @@ from cola.widgets.createtag import create_tag
 from cola.widgets.createbranch import create_new_branch
 from cola.widgets.dag import git_dag
 from cola.widgets.diff import DiffEditor
+from cola.widgets.grep import grep
 from cola.widgets.log import LogWidget
 from cola.widgets import merge
 from cola.widgets.prefs import preferences
@@ -216,7 +217,7 @@ class MainView(MainWindow):
         self.manage_bookmarks_action = add_action(self,
                 N_('Bookmarks...'), manage_bookmarks)
         self.grep_action = add_action(self,
-                N_('Grep'), guicmds.grep, 'Ctrl+G')
+                N_('Grep'), grep, 'Ctrl+G')
         self.merge_local_action = add_action(self,
                 N_('Merge...'), merge.local_merge)
 

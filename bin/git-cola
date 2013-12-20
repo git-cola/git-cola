@@ -263,7 +263,7 @@ def cmd_grep(args):
     context = application_init(args)
     from cola.widgets import grep
     text = subprocess.list2cmdline(map(core.decode, args.args))
-    view = grep.run_grep(text=text, parent=None)
+    view = grep.new_grep(text=text, parent=None)
     return application_start(context, view)
 
 
@@ -308,7 +308,7 @@ def cmd_rebase(args):
 def cmd_remote(args):
     context = application_init(args)
     from cola.widgets import editremotes
-    view = editremotes.edit()
+    view = editremotes.new_remote_editor()
     return application_start(context, view)
 
 
@@ -328,8 +328,8 @@ def cmd_stash(args):
 
 def cmd_tag(args):
     context = application_init(args)
-    from cola.widgets.createtag import create_tag
-    view = create_tag(name=args.name, ref=args.ref, sign=args.sign)
+    from cola.widgets.createtag import new_create_tag
+    view = new_create_tag(name=args.name, ref=args.ref, sign=args.sign)
     return application_start(context, view)
 
 

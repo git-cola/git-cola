@@ -228,10 +228,12 @@ class SettingsFormWidget(FormWidget):
 
 
 class PreferencesView(standard.Dialog):
+
     def __init__(self, model, parent=None):
         standard.Dialog.__init__(self, parent=parent)
         self.setWindowTitle(N_('Preferences'))
-        self.setWindowModality(QtCore.Qt.WindowModal)
+        if parent is not None:
+            self.setWindowModality(QtCore.Qt.WindowModal)
 
         self.resize(600, 360)
 

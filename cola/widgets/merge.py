@@ -40,7 +40,8 @@ class MergeView(QtGui.QDialog):
     def __init__(self, model, parent=None):
         QtGui.QDialog.__init__(self, parent)
         self.model = model
-        self.setWindowModality(Qt.WindowModal)
+        if parent is not None:
+            self.setWindowModality(Qt.WindowModal)
         self.resize(700, 400)
 
         # Widgets

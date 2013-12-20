@@ -23,12 +23,13 @@ def manage_bookmarks():
 
 class BookmarksDialog(standard.Dialog):
     def __init__(self, parent):
-        standard.Dialog.__init__(self, parent)
+        standard.Dialog.__init__(self, parent=parent)
         self.model = settings.Settings()
 
         self.resize(494, 238)
         self.setWindowTitle(N_('Bookmarks'))
-        self.setWindowModality(Qt.WindowModal)
+        if parent is not None:
+            self.setWindowModality(Qt.WindowModal)
         self.layt = QtGui.QVBoxLayout(self)
         self.layt.setMargin(defs.margin)
         self.layt.setSpacing(defs.spacing)

@@ -78,9 +78,10 @@ class CreateBranchDialog(Dialog):
 
     def __init__(self, model, parent=None):
         Dialog.__init__(self, parent=parent)
-        self.setWindowModality(Qt.WindowModal)
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(N_('Create Branch'))
+        if parent is not None:
+            self.setWindowModality(Qt.WindowModal)
 
         self.model = model
         self.opts = CreateOpts(model)

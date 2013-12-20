@@ -12,19 +12,24 @@ from cola.widgets import defs
 from cola.widgets import text
 
 
-def edit():
-    window = RemoteEditor(qtutils.active_window())
-    window.show()
-    window.raise_()
-    return window
+def remote_editor():
+    view= new_remote_editor(parent=qtutils.active_window())
+    view.show()
+    view.raise_()
+    return view
+
+
+def new_remote_editor(parent=None):
+    return RemoteEditor(parent=parent)
 
 
 class RemoteEditor(QtGui.QDialog):
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         QtGui.QDialog.__init__(self, parent)
 
         self.setWindowTitle(N_('Edit Remotes'))
-        self.setWindowModality(Qt.WindowModal)
+        if parent is not None:
+            self.setWindowModality(Qt.WindowModal)
 
         self.default_hint = N_(''
             'Add and remove remote repositories using the \n'

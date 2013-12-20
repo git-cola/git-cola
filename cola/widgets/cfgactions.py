@@ -56,10 +56,9 @@ class GitCommandWidget(standard.Dialog):
     # Keep us in scope otherwise PyQt kills the widget
     def __init__(self, title, parent=None):
         standard.Dialog.__init__(self, parent)
-        self.resize(720, 420)
-
         self.setWindowTitle(title)
-        self.setWindowModality(Qt.ApplicationModal)
+        if parent is not None:
+            self.setWindowModality(Qt.ApplicationModal)
 
         # Construct the process
         self.proc = QtCore.QProcess(self)
@@ -105,6 +104,7 @@ class GitCommandWidget(standard.Dialog):
 
         qtutils.connect_button(self.button_abort, self.abortProc)
         qtutils.connect_button(self.button_close, self.close)
+        self.resize(720, 420)
 
     def set_command(self, command):
         self.command = command
