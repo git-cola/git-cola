@@ -157,146 +157,146 @@ class MainView(MainWindow):
         titlebar.add_corner_widget(self.diffopts_button)
 
         # All Actions
-        self.menu_unstage_all = add_action(self,
+        self.unstage_all_action = add_action(self,
                 N_('Unstage All'), cmds.run(cmds.UnstageAll))
-        self.menu_unstage_all.setIcon(qtutils.icon('remove.svg'))
+        self.unstage_all_action.setIcon(qtutils.icon('remove.svg'))
 
-        self.menu_unstage_selected = add_action(self,
+        self.unstage_selected_action = add_action(self,
                 N_('Unstage From Commit'), cmds.run(cmds.UnstageSelected))
-        self.menu_unstage_selected.setIcon(qtutils.icon('remove.svg'))
+        self.unstage_selected_action.setIcon(qtutils.icon('remove.svg'))
 
-        self.menu_show_diffstat = add_action(self,
+        self.show_diffstat_action = add_action(self,
                 N_('Diffstat'), cmds.run(cmds.Diffstat), 'Alt+D')
 
-        self.menu_stage_modified = add_action(self,
+        self.stage_modified_action = add_action(self,
                 N_('Stage Changed Files To Commit'),
                 cmds.run(cmds.StageModified), 'Alt+A')
-        self.menu_stage_modified.setIcon(qtutils.icon('add.svg'))
+        self.stage_modified_action.setIcon(qtutils.icon('add.svg'))
 
-        self.menu_stage_untracked = add_action(self,
+        self.stage_untracked_action = add_action(self,
                 N_('Stage All Untracked'),
                 cmds.run(cmds.StageUntracked), 'Alt+U')
-        self.menu_stage_untracked.setIcon(qtutils.icon('add.svg'))
+        self.stage_untracked_action.setIcon(qtutils.icon('add.svg'))
 
-        self.menu_export_patches = add_action(self,
+        self.export_patches_action = add_action(self,
                 N_('Export Patches...'), guicmds.export_patches, 'Alt+E')
 
-        self.new_repository = add_action(self,
+        self.new_repository_action = add_action(self,
                 N_('New Repository...'), guicmds.open_new_repo)
-        self.new_repository.setIcon(qtutils.new_icon())
+        self.new_repository_action.setIcon(qtutils.new_icon())
 
-        self.menu_preferences = add_action(self,
+        self.preferences_action = add_action(self,
                 N_('Preferences'), self.preferences,
                 QtGui.QKeySequence.Preferences, 'Ctrl+O')
 
-        self.menu_edit_remotes = add_action(self,
+        self.edit_remotes_action = add_action(self,
                 N_('Edit Remotes...'), lambda: editremotes.edit().exec_())
-        self.menu_rescan = add_action(self,
+        self.rescan_action = add_action(self,
                 cmds.Refresh.name(),
                 cmds.run(cmds.Refresh),
                 cmds.Refresh.SHORTCUT)
-        self.menu_rescan.setIcon(qtutils.reload_icon())
+        self.rescan_action.setIcon(qtutils.reload_icon())
 
-        self.menu_browse_recent = add_action(self,
+        self.browse_recently_modified_action = add_action(self,
                 N_('Recently Modified Files...'),
                 browse_recent, 'Shift+Ctrl+E')
 
-        self.menu_cherry_pick = add_action(self,
+        self.cherry_pick_action = add_action(self,
                 N_('Cherry-Pick...'),
                 guicmds.cherry_pick, 'Ctrl+P')
 
-        self.menu_load_commitmsg = add_action(self,
+        self.load_commitmsg_action = add_action(self,
                 N_('Load Commit Message...'), guicmds.load_commitmsg)
 
-        self.menu_save_tarball = add_action(self,
+        self.save_tarball_action = add_action(self,
                 N_('Save As Tarball/Zip...'), self.save_archive)
 
-        self.menu_quit = add_action(self,
+        self.quit_action = add_action(self,
                 N_('Quit'), self.close, 'Ctrl+Q')
-        self.menu_manage_bookmarks = add_action(self,
+        self.manage_bookmarks_action = add_action(self,
                 N_('Bookmarks...'), manage_bookmarks)
-        self.menu_grep = add_action(self,
+        self.grep_action = add_action(self,
                 N_('Grep'), guicmds.grep, 'Ctrl+G')
-        self.menu_merge_local = add_action(self,
+        self.merge_local_action = add_action(self,
                 N_('Merge...'), merge.local_merge)
 
-        self.menu_merge_abort = add_action(self,
+        self.merge_abort_action = add_action(self,
                 N_('Abort Merge...'), merge.abort_merge)
 
-        self.menu_fetch = add_action(self,
+        self.fetch_action = add_action(self,
                 N_('Fetch...'), remote.fetch)
-        self.menu_push = add_action(self,
+        self.push_action = add_action(self,
                 N_('Push...'), remote.push)
-        self.menu_pull = add_action(self,
+        self.pull_action = add_action(self,
                 N_('Pull...'), remote.pull)
 
-        self.menu_open_repo = add_action(self,
+        self.open_repo_action = add_action(self,
                 N_('Open...'), guicmds.open_repo)
-        self.menu_open_repo.setIcon(qtutils.open_icon())
+        self.open_repo_action.setIcon(qtutils.open_icon())
 
-        self.menu_stash = add_action(self,
+        self.stash_action = add_action(self,
                 N_('Stash...'), stash, 'Alt+Shift+S')
 
-        self.menu_clone_repo = add_action(self,
+        self.clone_repo_action = add_action(self,
                 N_('Clone...'), guicmds.clone_repo)
-        self.menu_clone_repo.setIcon(qtutils.git_icon())
+        self.clone_repo_action.setIcon(qtutils.git_icon())
 
-        self.menu_help_docs = add_action(self,
+        self.help_docs_action = add_action(self,
                 N_('Documentation'), resources.show_html_docs,
                 QtGui.QKeySequence.HelpContents)
 
-        self.menu_help_shortcuts = add_action(self,
+        self.help_shortcuts_action = add_action(self,
                 N_('Keyboard Shortcuts'),
                 show_shortcuts,
                 QtCore.Qt.Key_Question)
 
-        self.menu_visualize_current = add_action(self,
+        self.visualize_current_action = add_action(self,
                 N_('Visualize Current Branch...'),
                 cmds.run(cmds.VisualizeCurrent))
-        self.menu_visualize_all = add_action(self,
+        self.visualize_all_action = add_action(self,
                 N_('Visualize All Branches...'),
                 cmds.run(cmds.VisualizeAll))
-        self.menu_search_commits = add_action(self,
+        self.search_commits_action = add_action(self,
                 N_('Search...'), search)
-        self.menu_browse_branch = add_action(self,
+        self.browse_branch_action = add_action(self,
                 N_('Browse Current Branch...'), guicmds.browse_current)
-        self.menu_browse_other_branch = add_action(self,
+        self.browse_other_branch_action = add_action(self,
                 N_('Browse Other Branch...'), guicmds.browse_other)
-        self.menu_load_commitmsg_template = add_action(self,
+        self.load_commitmsg_template_action = add_action(self,
                 N_('Get Commit Message Template'),
                 cmds.run(cmds.LoadCommitMessageFromTemplate))
-        self.menu_help_about = add_action(self,
+        self.help_about_action = add_action(self,
                 N_('About'), launch_about_dialog)
 
-        self.menu_diff_expression = add_action(self,
+        self.diff_expression_action = add_action(self,
                 N_('Expression...'), guicmds.diff_expression)
-        self.menu_branch_compare = add_action(self,
+        self.branch_compare_action = add_action(self,
                 N_('Branches...'), compare_branches)
 
-        self.menu_create_tag = add_action(self,
+        self.create_tag_action = add_action(self,
                 N_('Create Tag...'), create_tag)
 
-        self.menu_create_branch = add_action(self,
+        self.create_branch_action = add_action(self,
                 N_('Create...'), create_new_branch, 'Ctrl+B')
 
-        self.menu_delete_branch = add_action(self,
+        self.delete_branch_action = add_action(self,
                 N_('Delete...'), guicmds.delete_branch)
 
-        self.menu_delete_remote_branch = add_action(self,
+        self.delete_remote_branch_action = add_action(self,
                 N_('Delete Remote Branch...'), guicmds.delete_remote_branch)
 
-        self.menu_checkout_branch = add_action(self,
+        self.checkout_branch_action = add_action(self,
                 N_('Checkout...'), guicmds.checkout_branch, 'Alt+B')
-        self.menu_branch_review = add_action(self,
+        self.branch_review_action = add_action(self,
                 N_('Review...'), guicmds.review_branch)
 
-        self.menu_browse = add_action(self,
+        self.browse_action = add_action(self,
                 N_('Browser...'), worktree_browser)
-        self.menu_browse.setIcon(qtutils.git_icon())
+        self.browse_action.setIcon(qtutils.git_icon())
 
-        self.menu_dag = add_action(self,
+        self.dag_action = add_action(self,
                 N_('DAG...'), lambda: git_dag(self.model).show())
-        self.menu_dag.setIcon(qtutils.git_icon())
+        self.dag_action.setIcon(qtutils.git_icon())
 
         self.rebase_start_action = add_action(self,
                 N_('Start Interactive Rebase...'), self.rebase_start)
@@ -331,76 +331,75 @@ class MainView(MainWindow):
 
         # File Menu
         self.file_menu = create_menu(N_('File'), self.menubar)
-        self.file_menu.addAction(self.new_repository)
-        self.file_menu.addAction(self.menu_open_repo)
-        self.menu_open_recent = self.file_menu.addMenu(N_('Open Recent'))
+        self.file_menu.addAction(self.open_repo_action)
+        self.open_recent_action = self.file_menu.addMenu(N_('Open Recent'))
+        self.open_recent_action.setIcon(qtutils.open_icon())
+        self.file_menu.addAction(self.clone_repo_action)
+        self.file_menu.addAction(self.new_repository_action)
         self.file_menu.addSeparator()
-        self.file_menu.addAction(self.menu_clone_repo)
-        self.file_menu.addAction(self.menu_manage_bookmarks)
+        self.file_menu.addAction(self.rescan_action)
+        self.file_menu.addAction(self.edit_remotes_action)
+        self.file_menu.addAction(self.manage_bookmarks_action)
         self.file_menu.addSeparator()
-        self.file_menu.addAction(self.menu_edit_remotes)
-        self.file_menu.addAction(self.menu_rescan)
+        self.file_menu.addAction(self.load_commitmsg_action)
+        self.file_menu.addAction(self.load_commitmsg_template_action)
         self.file_menu.addSeparator()
-        self.file_menu.addAction(self.menu_browse_recent)
+        self.file_menu.addAction(self.save_tarball_action)
+        self.file_menu.addAction(self.export_patches_action)
+        self.file_menu.addAction(self.browse_recently_modified_action)
         self.file_menu.addSeparator()
-        self.file_menu.addAction(self.menu_load_commitmsg)
-        self.file_menu.addAction(self.menu_load_commitmsg_template)
-        self.file_menu.addSeparator()
-        self.file_menu.addAction(self.menu_save_tarball)
-        self.file_menu.addAction(self.menu_export_patches)
-        self.file_menu.addSeparator()
-        self.file_menu.addAction(self.menu_preferences)
-        self.file_menu.addAction(self.menu_quit)
+        self.file_menu.addAction(self.preferences_action)
+        self.file_menu.addAction(self.quit_action)
         self.menubar.addAction(self.file_menu.menuAction())
 
         # Actions menu
         self.actions_menu = create_menu(N_('Actions'), self.menubar)
-        self.actions_menu.addAction(self.menu_fetch)
-        self.actions_menu.addAction(self.menu_push)
-        self.actions_menu.addAction(self.menu_pull)
-        self.actions_menu.addAction(self.menu_stash)
+        self.actions_menu.addAction(self.fetch_action)
+        self.actions_menu.addAction(self.push_action)
+        self.actions_menu.addAction(self.pull_action)
+        self.actions_menu.addAction(self.stash_action)
         self.actions_menu.addSeparator()
-        self.actions_menu.addAction(self.menu_create_tag)
-        self.actions_menu.addAction(self.menu_cherry_pick)
-        self.actions_menu.addAction(self.menu_merge_local)
-        self.actions_menu.addAction(self.menu_merge_abort)
+        self.actions_menu.addAction(self.create_tag_action)
+        self.actions_menu.addAction(self.cherry_pick_action)
+        self.actions_menu.addAction(self.merge_local_action)
+        self.actions_menu.addAction(self.merge_abort_action)
         self.actions_menu.addSeparator()
-        self.actions_menu.addAction(self.menu_grep)
-        self.actions_menu.addAction(self.menu_search_commits)
+        self.actions_menu.addAction(self.grep_action)
+        self.actions_menu.addAction(self.search_commits_action)
         self.menubar.addAction(self.actions_menu.menuAction())
 
         # Index Menu
         self.commit_menu = create_menu(N_('Index'), self.menubar)
         self.commit_menu.setTitle(N_('Index'))
-        self.commit_menu.addAction(self.menu_stage_modified)
-        self.commit_menu.addAction(self.menu_stage_untracked)
+        self.commit_menu.addAction(self.stage_modified_action)
+        self.commit_menu.addAction(self.stage_untracked_action)
         self.commit_menu.addSeparator()
-        self.commit_menu.addAction(self.menu_unstage_all)
-        self.commit_menu.addAction(self.menu_unstage_selected)
+        self.commit_menu.addAction(self.unstage_all_action)
+        self.commit_menu.addAction(self.unstage_selected_action)
         self.menubar.addAction(self.commit_menu.menuAction())
 
         # Diff Menu
         self.diff_menu = create_menu(N_('Diff'), self.menubar)
-        self.diff_menu.addAction(self.menu_diff_expression)
-        self.diff_menu.addAction(self.menu_branch_compare)
+        self.diff_menu.addAction(self.diff_expression_action)
+        self.diff_menu.addAction(self.branch_compare_action)
         self.diff_menu.addSeparator()
-        self.diff_menu.addAction(self.menu_show_diffstat)
+        self.diff_menu.addAction(self.show_diffstat_action)
         self.menubar.addAction(self.diff_menu.menuAction())
 
         # Branch Menu
         self.branch_menu = create_menu(N_('Branch'), self.menubar)
-        self.branch_menu.addAction(self.menu_branch_review)
+        self.branch_menu.addAction(self.branch_review_action)
         self.branch_menu.addSeparator()
-        self.branch_menu.addAction(self.menu_create_branch)
-        self.branch_menu.addAction(self.menu_checkout_branch)
-        self.branch_menu.addAction(self.menu_delete_branch)
-        self.branch_menu.addAction(self.menu_delete_remote_branch)
+        self.branch_menu.addAction(self.create_branch_action)
+        self.branch_menu.addAction(self.checkout_branch_action)
+        self.branch_menu.addAction(self.delete_branch_action)
+        self.branch_menu.addAction(self.delete_remote_branch_action)
         self.branch_menu.addSeparator()
-        self.branch_menu.addAction(self.menu_browse_branch)
-        self.branch_menu.addAction(self.menu_browse_other_branch)
+        self.branch_menu.addAction(self.browse_branch_action)
+        self.branch_menu.addAction(self.browse_other_branch_action)
         self.branch_menu.addSeparator()
-        self.branch_menu.addAction(self.menu_visualize_current)
-        self.branch_menu.addAction(self.menu_visualize_all)
+        self.branch_menu.addAction(self.visualize_current_action)
+        self.branch_menu.addAction(self.visualize_all_action)
         self.menubar.addAction(self.branch_menu.menuAction())
 
         # Rebase menu
@@ -416,8 +415,8 @@ class MainView(MainWindow):
 
         # View Menu
         self.view_menu = create_menu(N_('View'), self.menubar)
-        self.view_menu.addAction(self.menu_browse)
-        self.view_menu.addAction(self.menu_dag)
+        self.view_menu.addAction(self.browse_action)
+        self.view_menu.addAction(self.dag_action)
         self.view_menu.addSeparator()
         if self.browser_dockable:
             self.view_menu.addAction(self.browserdockwidget.toggleViewAction())
@@ -429,9 +428,9 @@ class MainView(MainWindow):
 
         # Help Menu
         self.help_menu = create_menu(N_('Help'), self.menubar)
-        self.help_menu.addAction(self.menu_help_docs)
-        self.help_menu.addAction(self.menu_help_shortcuts)
-        self.help_menu.addAction(self.menu_help_about)
+        self.help_menu.addAction(self.help_docs_action)
+        self.help_menu.addAction(self.help_shortcuts_action)
+        self.help_menu.addAction(self.help_about_action)
         self.menubar.addAction(self.help_menu.menuAction())
 
         # Set main menu
@@ -463,7 +462,7 @@ class MainView(MainWindow):
         # Set a default value
         self.show_cursor_position(1, 0)
 
-        self.connect(self.menu_open_recent, SIGNAL('aboutToShow()'),
+        self.connect(self.open_recent_action, SIGNAL('aboutToShow()'),
                      self.build_recent_menu)
 
         self.connect(self.commitmsgeditor, SIGNAL('cursorPosition(int,int)'),
@@ -501,7 +500,7 @@ class MainView(MainWindow):
 
     def build_recent_menu(self):
         recent = settings.Settings().recent
-        menu = self.menu_open_recent
+        menu = self.open_recent_action
         menu.clear()
         for r in recent:
             name = os.path.basename(r)
