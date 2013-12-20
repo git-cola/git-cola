@@ -7,6 +7,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/215
 
+Fixes
+-----
+* Fixed a typo that caused inotify events to be silently ignored.
+
 git-cola v1.9.3
 ---------------
 Usability, bells and whistles
