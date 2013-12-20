@@ -383,6 +383,14 @@ def help_icon():
     return cached_icon(QtGui.QStyle.SP_DialogHelpButton)
 
 
+def add_icon():
+    return icon('add.svg')
+
+
+def remove_icon():
+    return icon('remove.svg')
+
+
 def open_file_icon():
     return icon('open.svg')
 

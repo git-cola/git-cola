@@ -53,15 +53,15 @@ class RemoteEditor(QtGui.QDialog):
         self.info_thread = RemoteInfoThread(self)
 
         self.add_btn = QtGui.QToolButton()
-        self.add_btn.setIcon(qtutils.icon('add.svg'))
+        self.add_btn.setIcon(qtutils.add_icon())
         self.add_btn.setToolTip(N_('Add new remote git repository'))
 
         self.refresh_btn = QtGui.QToolButton()
-        self.refresh_btn.setIcon(qtutils.icon('view-refresh.svg'))
+        self.refresh_btn.setIcon(qtutils.reload_icon())
         self.refresh_btn.setToolTip(N_('Refresh'))
 
         self.delete_btn = QtGui.QToolButton()
-        self.delete_btn.setIcon(qtutils.icon('remove.svg'))
+        self.delete_btn.setIcon(qtutils.remove_icon())
         self.delete_btn.setToolTip(N_('Delete remote'))
 
         self.close_btn = QtGui.QPushButton(N_('Close'))
