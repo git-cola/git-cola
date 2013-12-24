@@ -3,6 +3,7 @@ Thanks
 `git-cola` was made possible thanks to the contributions of the following people:
 
 * Aaron Cook
+* Alexander Kozienko
 * Andreas Sommer
 * Audrius Karabanovas
 * Barry Roberts

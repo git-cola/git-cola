@@ -44,11 +44,15 @@ def setup_environment():
         sys.path.insert(1, install_lib)
 setup_environment()
 
-from cola import core
-from cola import cmds
 from cola.app import add_common_arguments
 from cola.app import application_init
 from cola.app import application_start
+
+# NOTE: these must be imported *after* cola.app.
+# PyQt4 may not be available until after cola.app has gotten a chance to
+# install the homebrew modules in sys.path.
+from cola import core
+from cola import cmds
 
 
 def main():

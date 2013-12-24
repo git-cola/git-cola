@@ -13,6 +13,10 @@ Fixes
 -----
 * Fixed a typo that caused inotify events to be silently ignored.
 
+* Fixed the sys.path setup for Mac OS X (Homebrew).
+
+  https://github.com/git-cola/git-cola/issues/221
+
 git-cola v1.9.3
 ---------------
 Usability, bells and whistles
