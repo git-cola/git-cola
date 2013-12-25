@@ -20,7 +20,7 @@ result=$(osascript \
 	-e 'tell application "Finder"' \
 	-e "activate"  \
 	-e "$DIALOG" \
-	-e 'end tell')
+	-e 'end tell' 2>/dev/null)
 
 if test -z "$result"; then
     exit 1
