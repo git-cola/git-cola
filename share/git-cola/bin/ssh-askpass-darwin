@@ -5,12 +5,14 @@ DIALOG="$DIALOG with icon caution"
 
 yesno=
 if echo "$1" | grep "'yes'" 2>&1 >/dev/null ||
-   echo "$1" | grep "yes/no" 2>&1 >/dev/null; then
+	echo "$1" | grep "yes/no" 2>&1 >/dev/null
+then
 	yesno=true
 fi
 
 
-if test -z "$yesno"; then
+if test -z "$yesno"
+then
 	DIALOG="$DIALOG with hidden answer"
 fi
 
