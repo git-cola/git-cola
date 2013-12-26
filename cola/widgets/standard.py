@@ -227,6 +227,63 @@ class TreeMixin(object):
         return selected_items[0]
 
 
+class DraggableTreeMixin(TreeMixin):
+    """A tree widget with internal drag+drop reordering of rows"""
+
+    def __init__(self, QtClass):
+        super(DraggableTreeMixin, self).__init__(QtClass)
+        self._inner_drag = False
+        self.setAcceptDrops(True)
+        self.setSelectionMode(self.SingleSelection)
+        self.setDragEnabled(True)
+        self.setDropIndicatorShown(True)
+        self.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
+        self.setSortingEnabled(False)
+
+    def dragEnterEvent(self, event):
+        """Accept internal drags only"""
+        self.QtClass.dragEnterEvent(self, event)
+        self._inner_drag = event.source() == self
+        if self._inner_drag:
+            event.acceptProposedAction()
+        else:
+            event.ignore()
+
+    def dragLeaveEvent(self, event):
+        self.QtClass.dragLeaveEvent(self, event)
+        if self._inner_drag:
+            event.accept()
+        else:
+            event.ignore()
+        self._inner_drag = False
+
+    def dropEvent(self, event):
+        """Add dropped patches"""
+        if not self._inner_drag:
+            event.ignore()
+            return
+
+        clicked_items = self.selected_items()
+
+        event.setDropAction(Qt.MoveAction)
+        self.QtClass.dropEvent(self, event)
+
+        if clicked_items:
+            self.clearSelection()
+            for item in clicked_items:
+                self.setItemSelected(item, True)
+
+        self._inner_drag = False
+        event.accept() # must be called after dropEvent()
+
+    def mousePressEvent(self, event):
+        clicked_item = self.itemAt(event.pos())
+        if clicked_item is None:
+            self.clearSelection()
+
+        return self.QtClass.mousePressEvent(self, event)
+
+
 def bind_mixin(Mixin, QtClass):
     """Construct a class which composes the Mixin over the Qt class"""
 
@@ -247,3 +304,4 @@ MainWindow = bind_mixin(MainWindowMixin, QtGui.QMainWindow)
 
 TreeView = bind_mixin(TreeMixin, QtGui.QTreeView)
 TreeWidget = bind_mixin(TreeMixin, QtGui.QTreeWidget)
+DraggableTreeWidget = bind_mixin(DraggableTreeMixin, QtGui.QTreeWidget)
