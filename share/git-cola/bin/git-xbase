@@ -469,8 +469,8 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
         }
 
     def value(self):
-        return '%s %s %s %s' % (
-                not self.is_enabled() and '# ' or '',
+        return '%s%s %s %s' % (
+                (not self.is_enabled() and '# ' or ''),
                 self.command, self.sha1hex, self.summary)
 
     def is_enabled(self):
