@@ -286,6 +286,36 @@ class ResetMode(Command):
         self.model.update_file_status()
 
 
+class RevertUnstagedEdits(Command):
+
+    SHORTCUT = 'Ctrl+U'
+
+    def do(self):
+        if not self.model.undoable():
+            return
+        s = selection.selection()
+        if s.staged:
+            items_to_undo = s.staged
+        else:
+            items_to_undo = s.modified
+        if items_to_undo:
+            if not Interaction.confirm(N_('Revert Unstaged Changes?'),
+                                   N_('This operation drops unstaged changes.\n'
+                                      'These changes cannot be recovered.'),
+                                   N_('Revert the unstaged changes?'),
+                                   N_('Revert Unstaged Changes'),
+                                   default=True,
+                                   icon=resources.icon('undo.svg')):
+                return
+            args = []
+            if not s.staged and self.model.amending():
+                args.append(self.model.head)
+            do(Checkout, args + ['--'] + items_to_undo)
+        else:
+            msg = N_('No files selected for checkout from HEAD.')
+            Interaction.log(msg)
+
+
 class Commit(ResetMode):
     """Attempt to create a new commit."""
 
