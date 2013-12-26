@@ -102,7 +102,7 @@ def critical(title, message=None, details=None):
         message = title
     mbox = QtGui.QMessageBox(active_window())
     mbox.setWindowTitle(title)
-    mbox.setTextFormat(QtCore.Qt.PlainText)
+    mbox.setTextFormat(Qt.PlainText)
     mbox.setText(message)
     mbox.setIcon(QtGui.QMessageBox.Critical)
     mbox.setStandardButtons(QtGui.QMessageBox.Close)
@@ -120,8 +120,8 @@ def information(title, message=None, details=None, informative_text=None):
     mbox.setStandardButtons(QtGui.QMessageBox.Close)
     mbox.setDefaultButton(QtGui.QMessageBox.Close)
     mbox.setWindowTitle(title)
-    mbox.setWindowModality(QtCore.Qt.WindowModal)
-    mbox.setTextFormat(QtCore.Qt.PlainText)
+    mbox.setWindowModality(Qt.WindowModal)
+    mbox.setTextFormat(Qt.PlainText)
     mbox.setText(message)
     if informative_text:
         mbox.setInformativeText(informative_text)
@@ -130,7 +130,7 @@ def information(title, message=None, details=None, informative_text=None):
     # Render git.svg into a 1-inch wide pixmap
     pixmap = QtGui.QPixmap(resources.icon('git.svg'))
     xres = pixmap.physicalDpiX()
-    pixmap = pixmap.scaledToHeight(xres, QtCore.Qt.SmoothTransformation)
+    pixmap = pixmap.scaledToHeight(xres, Qt.SmoothTransformation)
     mbox.setIconPixmap(pixmap)
     mbox.exec_()
 
@@ -156,7 +156,7 @@ def selected_treeitem(tree_widget):
     selected = False
     item = tree_widget.currentItem()
     if item:
-        id_number = item.data(0, QtCore.Qt.UserRole).toInt()[0]
+        id_number = item.data(0, Qt.UserRole).toInt()[0]
         selected = True
     return(id_number, selected)
 
@@ -544,7 +544,7 @@ def create_button(text='', layout=None, tooltip=None, icon=None):
 
 def create_action_button(tooltip, icon):
     button = QtGui.QPushButton()
-    button.setCursor(QtCore.Qt.PointingHandCursor)
+    button.setCursor(Qt.PointingHandCursor)
     button.setFlat(True)
     button.setIcon(icon)
     button.setFixedSize(QtCore.QSize(16, 16))
@@ -562,7 +562,7 @@ class DockTitleBarWidget(QtGui.QWidget):
         label.setFont(font)
         label.setText(title)
 
-        self.setCursor(QtCore.Qt.OpenHandCursor)
+        self.setCursor(Qt.OpenHandCursor)
 
         self.close_button = create_action_button(
                 N_('Close'), titlebar_close_icon())
