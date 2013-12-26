@@ -336,6 +336,13 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.restore_selection()
         self.restore_scrollbar()
         self.update_column_widths()
+        self.update_actions()
+
+    def update_actions(self, selected=None):
+        if selected is None:
+            selected = selection.selection()
+        can_revert_unstaged_edits = bool(selected.staged or selected.modified)
+        self.revert_unstaged_edits_action.setEnabled(can_revert_unstaged_edits)
 
     def set_staged(self, items):
         """Adds items to the 'Staged' subtree."""
@@ -770,7 +777,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def show_selection(self):
         """Show the selected item."""
         # Sync the selection model
-        selection.selection_model().set_selection(self.selection())
+        selected = self.selection()
+        selection.selection_model().set_selection(selected)
+        self.update_actions(selected=selected)
+
         selected_indexes = self.selected_indexes()
         if not selected_indexes:
             if self.m.amending():
