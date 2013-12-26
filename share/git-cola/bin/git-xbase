@@ -234,7 +234,7 @@ class Editor(QtGui.QWidget):
 class RebaseTreeWidget(TreeWidget):
 
     def __init__(self, notifier, parent=None):
-        super(RebaseTreeWidget, self).__init__()
+        super(RebaseTreeWidget, self).__init__(parent=parent)
         self.notifier = notifier
         # header
         self.setHeaderLabels([N_('#'),
