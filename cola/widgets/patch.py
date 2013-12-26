@@ -10,7 +10,7 @@ from cola import qtutils
 from cola.i18n import N_
 from cola.widgets import defs
 from cola.widgets.standard import Dialog
-from cola.widgets.standard import TreeWidget
+from cola.widgets.standard import DraggableTreeWidget
 
 
 def apply_patches():
@@ -173,17 +173,10 @@ class ApplyPatches(Dialog):
         self.tree.add_paths(paths)
 
 
-class PatchTreeWidget(TreeWidget):
+class PatchTreeWidget(DraggableTreeWidget):
 
     def __init__(self, parent=None):
-        TreeWidget.__init__(self, parent=parent)
-        self.inner_drag = False
-        self.setSelectionMode(self.SingleSelection)
-        self.setDragEnabled(True)
-        self.setAcceptDrops(True)
-        self.setDropIndicatorShown(True)
-        self.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
-        self.setSortingEnabled(False)
+        super(PatchTreeWidget, self).__init__(parent=parent)
 
     def add_paths(self, paths):
         patches = get_patches_from_paths(paths)
@@ -207,39 +200,3 @@ class PatchTreeWidget(TreeWidget):
         rows = [idx.row() for idx in idxs]
         for row in reversed(sorted(rows)):
             self.invisibleRootItem().takeChild(row)
-
-    def dragEnterEvent(self, event):
-        """Accepts drops if the mimedata contains patches"""
-        TreeWidget.dragEnterEvent(self, event)
-        self.inner_drag = event.source() == self
-        if self.inner_drag:
-            event.acceptProposedAction()
-        else:
-            event.ignore()
-
-    def dragLeaveEvent(self, event):
-        self.inner_drag = False
-        TreeWidget.dragLeaveEvent(self, event)
-        event.ignore()
-
-    def dropEvent(self, event):
-        """Add dropped patches"""
-        if not self.inner_drag:
-            event.ignore()
-            return
-
-        clicked_items = self.selected_items()
-
-        event.setDropAction(Qt.MoveAction)
-        TreeWidget.dropEvent(self, event)
-
-        if clicked_items:
-            self.clearSelection()
-            for item in clicked_items:
-                self.setItemSelected(item, True)
-
-        self.inner_drag = False
-        event.accept() # must be called after dropEvent()
-
-    def mousePressEvent(self, event):
-        return TreeWidget.mousePressEvent(self, event)
