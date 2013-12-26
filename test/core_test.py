@@ -27,6 +27,12 @@ class CoreColaUnicodeTestCase(unittest.TestCase):
         actual = core.encode(core.read(filename).strip())
         self.assertEqual(expect, actual)
 
+    def test_decode_None(self):
+        """Ensure that decode(None) returns None"""
+        expect = None
+        actual = core.decode(None)
+        self.assertEqual(expect, actual)
+
 
 if __name__ == '__main__':
     unittest.main()

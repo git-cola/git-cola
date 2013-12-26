@@ -25,7 +25,7 @@ _encoding_tests = [
 def decode(enc, encoding=None):
     """decode(encoded_string) returns an unencoded unicode string
     """
-    if type(enc) is unicode:
+    if enc is None or type(enc) is unicode:
         return enc
 
     if encoding is None:
