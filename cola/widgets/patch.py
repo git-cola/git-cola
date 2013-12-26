@@ -60,7 +60,7 @@ def get_patches_from_dir(path):
 class ApplyPatches(Dialog):
 
     def __init__(self, parent=None):
-        Dialog.__init__(self, parent=parent)
+        super(ApplyPatches, self).__init__(parent=parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(N_('Apply Patches'))
         self.setAcceptDrops(True)
@@ -156,13 +156,10 @@ class ApplyPatches(Dialog):
 
     def dragEnterEvent(self, event):
         """Accepts drops if the mimedata contains patches"""
-        Dialog.dragEnterEvent(self, event)
+        super(ApplyPatches, self).dragEnterEvent(event)
         patches = get_patches_from_mimedata(event.mimeData())
         if patches:
             event.acceptProposedAction()
-
-    def dragLeaveEvent(self, event):
-        Dialog.dragLeaveEvent(self, event)
 
     def dropEvent(self, event):
         """Add dropped patches"""
