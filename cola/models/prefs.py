@@ -32,7 +32,7 @@ def display_untracked():
 
 def editor():
     app = config().get(EDITOR, 'gvim')
-    return {'vim': 'gvim'}.get(app, app)
+    return {'vim': 'gvim -f'}.get(app, app)
 
 
 def history_browser():
