@@ -168,13 +168,11 @@ class Git(object):
         INDEX_LOCK.acquire()
         status, out, err = core.run_command(command,
                                             cwd=_cwd,
+                                            encoding=_encoding,
                                             stdin=_stdin, stdout=_stdout, stderr=_stderr,
                                             **extra)
         # Let the next thread in
         INDEX_LOCK.release()
-        if _decode:
-            out = core.decode(out, encoding=_encoding)
-            err = core.decode(err, encoding=_encoding)
         if not _raw and out is not None:
             out = out.rstrip('\n')
 
