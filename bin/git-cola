@@ -315,7 +315,7 @@ def cmd_push(args):
 
 
 def cmd_rebase(args):
-    status, out, err = cmds.do(cmds.Rebase, args.branch)
+    status, out, err = cmds.do(cmds.Rebase, args.branch, capture_output=False)
     if out:
         core.stdout(out)
     if err:

@@ -748,9 +748,10 @@ class GitXBaseContext(object):
 
 class Rebase(Command):
 
-    def __init__(self, branch):
+    def __init__(self, branch, capture_output=True):
         Command.__init__(self)
         self.branch = branch
+        self.capture_output = capture_output
 
     def do(self):
         branch = self.branch
@@ -759,6 +760,10 @@ class Rebase(Command):
         status = 1
         out = ''
         err = ''
+        extra = {}
+        if self.capture_output:
+            extra['_stderr'] = None
+            extra['_stdout'] = None
         with GitXBaseContext(
                 GIT_EDITOR=prefs.editor(),
                 GIT_XBASE_TITLE=N_('Rebase onto %s') % branch,
@@ -766,8 +771,7 @@ class Rebase(Command):
             status, out, err = self.model.git.rebase(branch,
                                                      interactive=True,
                                                      autosquash=True,
-                                                     _stderr=None,
-                                                     _stdout=None)
+                                                     **extra)
         Interaction.log_status(status, out, err)
         self.model.update_status()
         return status, out, err
