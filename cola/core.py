@@ -111,7 +111,7 @@ def communicate(proc):
     return proc.communicate()
 
 
-def run_command(cmd, *args, **kwargs):
+def run_command(cmd, encoding=None, *args, **kwargs):
     """Run the given command to completion, and return its results.
 
     This provides a simpler interface to the subprocess module.
@@ -121,8 +121,8 @@ def run_command(cmd, *args, **kwargs):
     """
     process = start_command(cmd, *args, **kwargs)
     (output, errors) = communicate(process)
-    output = decode(output)
-    errors = decode(errors)
+    output = decode(output, encoding=encoding)
+    errors = decode(errors, encoding=encoding)
     exit_code = process.returncode
     return (exit_code, output, errors)
 
