@@ -765,7 +765,9 @@ class Rebase(Command):
                 GIT_XBASE_ACTION=N_('Rebase')):
             status, out, err = self.model.git.rebase(branch,
                                                      interactive=True,
-                                                     autosquash=True)
+                                                     autosquash=True,
+                                                     _stderr=None,
+                                                     _stdout=None)
         Interaction.log_status(status, out, err)
         self.model.update_status()
         return status, out, err
