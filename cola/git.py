@@ -136,10 +136,12 @@ class Git(object):
     @staticmethod
     def execute(command,
                 _cwd=None,
-                _stdin=None,
-                _raw=False,
                 _decode=True,
-                _encoding=None):
+                _encoding=None,
+                _raw=False,
+                _stdin=None,
+                _stderr=subprocess.PIPE,
+                _stdout=subprocess.PIPE):
         """
         Execute a command and returns its output
 
@@ -165,13 +167,15 @@ class Git(object):
         # Guard against thread-unsafe .git/index.lock files
         INDEX_LOCK.acquire()
         status, out, err = core.run_command(command,
-                                            cwd=_cwd, stdin=_stdin, **extra)
+                                            cwd=_cwd,
+                                            stdin=_stdin, stdout=_stdout, stderr=_stderr,
+                                            **extra)
         # Let the next thread in
         INDEX_LOCK.release()
         if _decode:
             out = core.decode(out, encoding=_encoding)
             err = core.decode(err, encoding=_encoding)
-        if not _raw:
+        if not _raw and out is not None:
             out = out.rstrip('\n')
 
         cola_trace = GIT_COLA_TRACE
@@ -210,7 +214,8 @@ class Git(object):
         # Handle optional arguments prior to calling transform_kwargs
         # otherwise they'll end up in args, which is bad.
         _kwargs = dict(_cwd=self._git_cwd)
-        execute_kwargs = ('_cwd', '_stdin', '_decode', '_encoding', '_raw')
+        execute_kwargs = ('_cwd', '_decode', '_encoding',
+                '_stdin', '_stdout', '_stderr', '_raw')
         for kwarg in execute_kwargs:
             if kwarg in kwargs:
                 _kwargs[kwarg] = kwargs.pop(kwarg)
