@@ -26,7 +26,6 @@ from cola import difftool
 from cola import observable
 from cola import qtutils
 from cola import utils
-from cola.compat import json
 from cola.compat import set
 from cola.i18n import N_
 from cola.models.dag import DAG
@@ -35,15 +34,13 @@ from cola.qtutils import diff_font
 from cola.widgets import defs
 from cola.widgets.diff import DiffWidget
 from cola.widgets.diff import COMMITS_SELECTED
-from cola.widgets.standard import TreeWidget
+from cola.widgets.standard import DraggableTreeWidget
 
-from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 
-XBASE_MIMETYPE = 'application/git-xbase-items'
 PICK = 'pick'
 REWORD = 'reword'
 EDIT = 'edit'
@@ -231,7 +228,7 @@ class Editor(QtGui.QWidget):
                                  hide_expr=True)
 
 
-class RebaseTreeWidget(TreeWidget):
+class RebaseTreeWidget(DraggableTreeWidget):
 
     def __init__(self, notifier, parent=None):
         super(RebaseTreeWidget, self).__init__(parent=parent)
@@ -244,18 +241,6 @@ class RebaseTreeWidget(TreeWidget):
                               N_('Summary')])
         self.header().setStretchLastSection(True)
         self.setColumnCount(5)
-
-        # drag+drop
-        self.clicked_item = None
-        self.clicked_idx = -1
-        self.dragged_items = []
-        self.inner_drag = False
-        self.setSelectionMode(self.SingleSelection)
-        self.setDragEnabled(True)
-        self.setAcceptDrops(True)
-        self.setDropIndicatorShown(True)
-        self.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
-        self.setSortingEnabled(False)
 
         # actions
         self.copy_sha1_action = qtutils.add_action(self,
@@ -410,66 +395,6 @@ class RebaseTreeWidget(TreeWidget):
         if idx > 0:
             self.emit(SIGNAL('move'), [idx], idx - 1)
 
-    # Qt events
-    def mimeTypes(self):
-        return [XBASE_MIMETYPE]
-
-    def mousePressEvent(self, event):
-        self.clicked_item = self.itemAt(event.pos())
-        if self.clicked_item:
-            self.clicked_idx = self.items().index(self.clicked_item)
-        else:
-            self.clicked_idx = -1
-            self.clearSelection()
-        super(RebaseTreeWidget, self).mousePressEvent(event)
-        return QtGui.QTreeWidget.mousePressEvent(self, event)
-
-    def supportedDropActions(self):
-        return Qt.CopyAction
-
-    def dropMimeData(self, parent, index, data, action):
-        return False
-
-    def mimeData(self, items):
-        mime = QtCore.QMimeData()
-        data = [i.copy() for i in self.selected_items()]
-        mime.setData(XBASE_MIMETYPE, json.dumps(data))
-        self.dragged_items = self.selected_items()
-        return mime
-
-    def dragEnterEvent(self, event):
-        """Detect drag enter events to flag internal moves."""
-        self.inner_drag = event.source() == self
-        event.accept()
-        return super(RebaseTreeWidget, self).dragEnterEvent(event)
-
-    def dragLeaveEvent(self, event):
-        """Detect when drags leave so that we can flag it."""
-        self.inner_drag = False
-        return super(RebaseTreeWidget, self).dragLeaveEvent(event)
-
-    def dropEvent(self, event):
-        # Qt's default action is losing items so we handle the internal
-        # move ourselves.  Ignore the event and reorder the tree.
-        event.accept()
-
-        if self.clicked_item is None:
-            return
-
-        drop_pos = event.pos()
-        dst_item = self.itemAt(drop_pos)
-        if dst_item:
-            dst_idx = self.items().index(dst_item)
-        else:
-            dst_idx = len(self.items())
-
-        src_idxs = [self.items().index(i) for i in self.dragged_items]
-        if src_idxs:
-            self.emit(SIGNAL('move'), src_idxs, dst_idx)
-
-        self.viewport().update()
-        self.dragged_items = []
-
     def move(self, src_idxs, dst_idx):
         new_items = []
         items = self.items()
@@ -485,6 +410,13 @@ class RebaseTreeWidget(TreeWidget):
             self.invisibleRootItem().insertChildren(dst_idx, new_items)
             self.setCurrentItem(new_items[0])
 
+        self.decorate()
+        self.validate()
+
+    # Qt events
+
+    def dropEvent(self, event):
+        super(RebaseTreeWidget, self).dropEvent(event)
         self.decorate()
         self.validate()
 
