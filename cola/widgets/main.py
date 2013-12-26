@@ -318,11 +318,12 @@ class MainView(MainWindow):
                 N_('Abort'), self.rebase_abort)
 
         # Relayed actions
+        status_tree = self.statusdockwidget.widget().tree
+        self.addAction(status_tree.revert_unstaged_edits_action)
         if not self.browser_dockable:
             # These shortcuts conflict with those from the
             # 'Browser' widget so don't register them when
             # the browser is a dockable tool.
-            status_tree = self.statusdockwidget.widget().tree
             self.addAction(status_tree.up)
             self.addAction(status_tree.down)
             self.addAction(status_tree.process_selection)
