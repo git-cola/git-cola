@@ -81,6 +81,7 @@ def confirm(title, text, informative_text, ok_text,
     elif icon and isinstance(icon, basestring):
         icon = QtGui.QIcon(icon)
     msgbox = QtGui.QMessageBox(active_window())
+    msgbox.setWindowModality(Qt.WindowModal)
     msgbox.setWindowTitle(title)
     msgbox.setText(text)
     msgbox.setInformativeText(informative_text)
