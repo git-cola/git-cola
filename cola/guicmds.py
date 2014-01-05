@@ -199,12 +199,20 @@ def diff_expression():
 
 
 def open_repo():
-    """Spawn a new cola session."""
     dirname = qtutils.opendir_dialog(N_('Open Git Repository...'),
                                      main.model().getcwd())
     if not dirname:
         return
     cmds.do(cmds.OpenRepo, dirname)
+
+
+def open_repo_in_new_window():
+    """Spawn a new cola session."""
+    dirname = qtutils.opendir_dialog(N_('Open Git Repository...'),
+                                     main.model().getcwd())
+    if not dirname:
+        return
+    cmds.do(cmds.OpenNewRepo, dirname)
 
 
 def load_commitmsg():

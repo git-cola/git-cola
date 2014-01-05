@@ -238,6 +238,10 @@ class MainView(MainWindow):
                 N_('Open...'), guicmds.open_repo)
         self.open_repo_action.setIcon(qtutils.open_icon())
 
+        self.open_repo_new_action = add_action(self,
+                N_('Open in New Window...'), guicmds.open_repo_in_new_window)
+        self.open_repo_new_action.setIcon(qtutils.open_icon())
+
         self.stash_action = add_action(self,
                 N_('Stash...'), stash, 'Alt+Shift+S')
 
@@ -336,9 +340,12 @@ class MainView(MainWindow):
 
         # File Menu
         self.file_menu = create_menu(N_('File'), self.menubar)
+        self.open_recent_menu = self.file_menu.addMenu(N_('Open Recent'))
+        self.open_recent_menu.setIcon(qtutils.open_icon())
+        self.open_recent_new_menu = self.file_menu.addMenu(N_('Open Recent in New Window'))
+        self.open_recent_new_menu.setIcon(qtutils.open_icon())
         self.file_menu.addAction(self.open_repo_action)
-        self.open_recent_action = self.file_menu.addMenu(N_('Open Recent'))
-        self.open_recent_action.setIcon(qtutils.open_icon())
+        self.file_menu.addAction(self.open_repo_new_action)
         self.file_menu.addAction(self.clone_repo_action)
         self.file_menu.addAction(self.new_repository_action)
         self.file_menu.addSeparator()
@@ -468,8 +475,10 @@ class MainView(MainWindow):
         # Set a default value
         self.show_cursor_position(1, 0)
 
-        self.connect(self.open_recent_action, SIGNAL('aboutToShow()'),
+        self.connect(self.open_recent_menu, SIGNAL('aboutToShow()'),
                      self.build_recent_menu)
+        self.connect(self.open_recent_new_menu, SIGNAL('aboutToShow()'),
+                     self.build_recent_new_menu)
 
         self.connect(self.commitmsgeditor, SIGNAL('cursorPosition(int,int)'),
                      self.show_cursor_position)
@@ -505,14 +514,21 @@ class MainView(MainWindow):
         MainWindow.closeEvent(self, event)
 
     def build_recent_menu(self):
+        self._build_recent_menu(self.open_recent_menu, cmds.OpenRepo)
+
+    def build_recent_new_menu(self):
+        self._build_recent_menu(self.open_recent_new_menu, cmds.OpenNewRepo)
+
+    def _build_recent_menu(self, menu, cmd):
         recent = settings.Settings().recent
-        menu = self.open_recent_action
         menu.clear()
         for r in recent:
             name = os.path.basename(r)
             directory = os.path.dirname(r)
             text = '%s %s %s' % (name, unichr(0x2192), directory)
-            menu.addAction(text, cmds.run(cmds.OpenRepo, r))
+            menu.addAction(text, cmds.run(cmd, r))
+
+
 
     # Accessors
     mode = property(lambda self: self.model.mode)

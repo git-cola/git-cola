@@ -723,7 +723,7 @@ class OpenParentDir(OpenDefaultApp):
         core.fork([self.launcher] + dirs)
 
 
-class OpenRepo(Command):
+class OpenNewRepo(Command):
     """Launches git-cola on a repo."""
 
     def __init__(self, repo_path):
@@ -733,6 +733,25 @@ class OpenRepo(Command):
     def do(self):
         self.model.set_directory(self.repo_path)
         core.fork([sys.executable, sys.argv[0], '--repo', self.repo_path])
+
+
+class OpenRepo(Command):
+    def __init__(self, repo_path):
+        Command.__init__(self)
+        self.repo_path = repo_path
+
+    def do(self):
+        git = self.model.git
+        old_worktree = git.worktree()
+        new_worktree = git.set_worktree(self.repo_path)
+        if not git.is_valid():
+            git.set_worktree(old_worktree)
+            return
+        core.chdir(new_worktree)
+        self.model.set_directory(self.repo_path)
+        _config.reset()
+        self.model.set_mode(self.model.mode_none)
+        self.model.update_status()
 
 
 class Clone(Command):
