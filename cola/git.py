@@ -64,7 +64,7 @@ class Git(object):
         self._git_dir = path
         self._git_file_path = None
         self._worktree = None
-        self.worktree()
+        return self.worktree()
 
     def worktree(self):
         if self._worktree:
