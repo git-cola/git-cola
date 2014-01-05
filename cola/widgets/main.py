@@ -17,7 +17,6 @@ from cola import resources
 from cola import settings
 from cola import utils
 from cola import version
-from cola.bookmarks import manage_bookmarks
 from cola.git import git
 from cola.git import STDOUT
 from cola.i18n import N_
@@ -39,6 +38,8 @@ from cola.widgets import remote
 from cola.widgets.about import launch_about_dialog
 from cola.widgets.about import show_shortcuts
 from cola.widgets.archive import GitArchiveDialog
+from cola.widgets.bookmarks import manage_bookmarks
+from cola.widgets.bookmarks import BookmarksWidget
 from cola.widgets.browse import worktree_browser
 from cola.widgets.browse import worktree_browser_widget
 from cola.widgets.commitmsg import CommitMessageEditor
@@ -95,6 +96,11 @@ class MainView(MainWindow):
         self.statuswidget = StatusWidget(self)
         self.statusdockwidget = create_dock(N_('Status'), self)
         self.statusdockwidget.setWidget(self.statuswidget)
+
+        # "Switch Repository" widget
+        self.bookmarksdockwidget = create_dock(N_('Bookmarks'), self)
+        self.bookmarkswidget = BookmarksWidget(parent=self.bookmarksdockwidget)
+        self.bookmarksdockwidget.setWidget(self.bookmarkswidget)
 
         # "Commit Message Editor" widget
         self.position_label = QtGui.QLabel()
@@ -216,7 +222,7 @@ class MainView(MainWindow):
         self.quit_action = add_action(self,
                 N_('Quit'), self.close, 'Ctrl+Q')
         self.manage_bookmarks_action = add_action(self,
-                N_('Bookmarks...'), manage_bookmarks)
+                N_('Bookmarks...'), self.manage_bookmarks)
         self.grep_action = add_action(self,
                 N_('Grep'), grep, 'Ctrl+G')
         self.merge_local_action = add_action(self,
@@ -457,11 +463,12 @@ class MainView(MainWindow):
             self.addDockWidget(left, self.browserdockwidget)
             self.tabifyDockWidget(self.browserdockwidget, self.commitdockwidget)
         self.addDockWidget(left, self.diffdockwidget)
+        self.addDockWidget(right, self.statusdockwidget)
+        self.addDockWidget(right, self.bookmarksdockwidget)
         self.addDockWidget(bottom, self.actionsdockwidget)
         self.addDockWidget(bottom, self.logdockwidget)
         self.tabifyDockWidget(self.actionsdockwidget, self.logdockwidget)
 
-        self.addDockWidget(right, self.statusdockwidget)
 
         # Listen for model notifications
         model.add_observer(model.message_updated, self._update)
@@ -525,8 +532,6 @@ class MainView(MainWindow):
             directory = os.path.dirname(r)
             text = '%s %s %s' % (name, unichr(0x2192), directory)
             menu.addAction(text, cmds.run(cmd, r))
-
-
 
     # Accessors
     mode = property(lambda self: self.model.mode)
@@ -663,6 +668,7 @@ class MainView(MainWindow):
             (optkey + '+2', self.statusdockwidget),
             (optkey + '+3', self.diffdockwidget),
             (optkey + '+4', self.actionsdockwidget),
+            (optkey + '+5', self.bookmarksdockwidget),
         )
         for shortcut, dockwidget in dockwidgets:
             # Associate the action with the shortcut
@@ -727,6 +733,10 @@ class MainView(MainWindow):
             display = ('<span style="color: grey;">%s</span>' % display)
 
         self.position_label.setText(display)
+
+    def manage_bookmarks(self):
+        manage_bookmarks()
+        self.bookmarkswidget.refresh()
 
     def rebase_start(self):
         branch = guicmds.choose_ref(N_('Select New Upstream'),

@@ -743,10 +743,10 @@ class OpenRepo(Command):
     def do(self):
         git = self.model.git
         old_worktree = git.worktree()
-        new_worktree = git.set_worktree(self.repo_path)
-        if not git.is_valid():
-            git.set_worktree(old_worktree)
+        if not self.model.set_worktree(self.repo_path):
+            self.model.set_worktree(old_worktree)
             return
+        new_worktree = git.worktree()
         core.chdir(new_worktree)
         self.model.set_directory(self.repo_path)
         _config.reset()

@@ -631,11 +631,13 @@ def create_menu(title, parent):
     return qmenu
 
 
-def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
+def create_toolbutton(text=None, layout=None, tooltip=None, icon=None,
+                      fill_background=True):
     button = QtGui.QToolButton()
-    button.setAutoRaise(True)
-    button.setAutoFillBackground(True)
     button.setCursor(Qt.PointingHandCursor)
+    button.setAutoRaise(True)
+    if fill_background:
+        button.setAutoFillBackground(True)
     if icon:
         button.setIcon(icon)
     if text:

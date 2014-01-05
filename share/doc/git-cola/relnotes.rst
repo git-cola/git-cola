@@ -2,6 +2,8 @@ git-cola v1.9.4
 ---------------
 Usability, bells and whistles
 -----------------------------
+* The new `Bookmarks` tool makes it really easy to switch between repositories.
+
 * There is now a dedicated dialog for applying patches.
   See the ``File -> Apply Patches`` menu item.
 

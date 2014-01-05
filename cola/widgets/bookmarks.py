@@ -1,15 +1,18 @@
-"""Provides BookmarksDialog."""
+"""Provides widgets related to bookmarks"""
+import os
 import sys
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+
+from cola import cmds
 from cola import core
 from cola import qtutils
 from cola import settings
 from cola.i18n import N_
-from cola.interaction import Interaction
+from cola.settings import Settings
 from cola.widgets import defs
 from cola.widgets import standard
 
@@ -42,15 +45,13 @@ class BookmarksDialog(standard.Dialog):
         self.layt.addWidget(self.bookmarks)
         self.button_layout = QtGui.QHBoxLayout()
 
-        self.open_button = QtGui.QPushButton(self)
-        self.open_button.setText(N_('Open'))
-        self.open_button.setIcon(qtutils.open_icon())
+        self.open_button = qtutils.create_button(text=N_('Open'),
+                icon=qtutils.open_icon())
         self.open_button.setEnabled(False)
         self.button_layout.addWidget(self.open_button)
 
-        self.add_button = QtGui.QPushButton(self)
-        self.add_button.setText(N_('Add'))
-        self.add_button.setIcon(qtutils.icon('add.svg'))
+        self.add_button = qtutils.create_button(text=N_('Add'),
+                icon=qtutils.add_icon())
         self.button_layout.addWidget(self.add_button)
 
         self.delete_button = QtGui.QPushButton(self)
@@ -98,8 +99,6 @@ class BookmarksDialog(standard.Dialog):
     def save(self):
         """Saves the bookmarks settings and exits"""
         self.model.save()
-        Interaction.information(N_('Bookmarks Saved'),
-                                N_('Successfully saved bookmarks'))
         self.save_button.setEnabled(False)
 
     def add(self):
@@ -126,3 +125,105 @@ class BookmarksDialog(standard.Dialog):
             self.model.remove_bookmark(repo)
         self.update_bookmarks()
         self.save_button.setEnabled(True)
+
+
+class BookmarksWidget(QtGui.QWidget):
+
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
+
+        self.tree = BookmarksTreeWidget(parent=self)
+        self.open_button = qtutils.create_action_button(
+                N_('Open'), qtutils.open_icon())
+        self.open_button.setEnabled(False)
+
+        self.open_action = qtutils.add_action(self,
+                N_('Open'), self.open_repo, 'Return')
+        self.open_action.setEnabled(False)
+
+        self.edit_button = qtutils.create_action_button(
+                N_('Bookmarks...'), qtutils.add_icon())
+
+        qtutils.connect_button(self.open_button, self.open_repo)
+        qtutils.connect_button(self.edit_button, self.manage_bookmarks)
+
+        self.connect(self.tree, SIGNAL('itemSelectionChanged()'),
+                     self._tree_selection_changed)
+
+        self.connect(self.tree,
+                     SIGNAL('itemDoubleClicked(QTreeWidgetItem*,int)'),
+                     self._tree_double_clicked)
+
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.setMargin(defs.no_margin)
+        self.button_layout.setSpacing(defs.spacing)
+        self.button_layout.addWidget(self.open_button)
+        self.button_layout.addWidget(self.edit_button)
+
+        self.layout = QtGui.QVBoxLayout()
+        self.layout.setMargin(defs.no_margin)
+        self.layout.setSpacing(defs.spacing)
+        self.layout.addWidget(self.tree)
+        self.setLayout(self.layout)
+
+        self.corner_widget = QtGui.QWidget(self)
+        self.corner_widget.setLayout(self.button_layout)
+        titlebar = parent.titleBarWidget()
+        titlebar.add_corner_widget(self.corner_widget)
+
+    def _tree_selection_changed(self):
+        enabled = bool(self.tree.selected_item())
+        self.open_button.setEnabled(enabled)
+        self.open_action.setEnabled(enabled)
+
+    def open_repo(self):
+        item = self.tree.selected_item()
+        if not item:
+            return
+        cmds.do(cmds.OpenRepo, item.path)
+
+    def _tree_double_clicked(self, item, column):
+        cmds.do(cmds.OpenRepo, item.path)
+
+    def manage_bookmarks(self):
+        manage_bookmarks()
+        self.refresh()
+
+    def refresh(self):
+        self.tree.refresh()
+
+
+class BookmarksTreeWidget(standard.TreeWidget):
+
+    def __init__(self, parent=None):
+        standard.TreeWidget.__init__(self, parent=parent)
+        self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+        self.setHeaderHidden(True)
+        self.refresh()
+
+    def refresh(self):
+        self.clear()
+        settings = Settings()
+        items = []
+        icon = qtutils.dir_icon()
+        for path in settings.bookmarks + settings.recent:
+            item = BookmarksTreeWidgetItem(path, icon)
+            items.append(item)
+        self.addTopLevelItems(items)
+
+    def clear(self):
+        # sip v4.14.7 and below leak memory in parent.takeChildren()
+        # so we use this backwards-compatible construct instead
+        parent = self.invisibleRootItem()
+        while parent.takeChild(0) is not None:
+            pass
+
+
+class BookmarksTreeWidgetItem(QtGui.QTreeWidgetItem):
+
+    def __init__(self, path, icon):
+        QtGui.QTreeWidgetItem.__init__(self)
+        self.path = path
+        self.setIcon(0, icon)
+        self.setText(0, os.path.basename(path))
+        self.setToolTip(0, path)
