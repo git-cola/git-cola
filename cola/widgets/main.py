@@ -27,13 +27,14 @@ from cola.qtutils import add_action
 from cola.qtutils import add_action_bool
 from cola.qtutils import connect_action
 from cola.qtutils import connect_action_bool
+from cola.qtutils import create_action_button
 from cola.qtutils import create_dock
 from cola.qtutils import create_menu
-from cola.qtutils import create_toolbutton
 from cola.qtutils import options_icon
 from cola.widgets import action
 from cola.widgets import cfgactions
 from cola.widgets import editremotes
+from cola.widgets import merge
 from cola.widgets import remote
 from cola.widgets.about import launch_about_dialog
 from cola.widgets.about import show_shortcuts
@@ -48,7 +49,6 @@ from cola.widgets.dag import git_dag
 from cola.widgets.diff import DiffEditor
 from cola.widgets.grep import grep
 from cola.widgets.log import LogWidget
-from cola.widgets import merge
 from cola.widgets.patch import apply_patches
 from cola.widgets.prefs import preferences
 from cola.widgets.recent import browse_recent
@@ -141,9 +141,8 @@ class MainView(MainWindow):
                 self._update_diff_opts)
         self.diff_function_context_action.setCheckable(True)
 
-        self.diffopts_button = create_toolbutton(text=N_('Options'),
-                                                 icon=options_icon(),
-                                                 tooltip=N_('Diff Options'))
+        self.diffopts_button = create_action_button(
+                N_('Diff Options'), options_icon())
         self.diffopts_menu = create_menu(N_('Diff Options'),
                                          self.diffopts_button)
 
@@ -152,7 +151,6 @@ class MainView(MainWindow):
         self.diffopts_menu.addAction(self.diff_ignore_all_space_action)
         self.diffopts_menu.addAction(self.diff_function_context_action)
         self.diffopts_button.setMenu(self.diffopts_menu)
-        self.diffopts_button.setPopupMode(QtGui.QToolButton.InstantPopup)
 
         titlebar = self.diffdockwidget.titleBarWidget()
         titlebar.add_corner_widget(self.diffopts_button)
