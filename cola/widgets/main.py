@@ -51,7 +51,7 @@ from cola.widgets.grep import grep
 from cola.widgets.log import LogWidget
 from cola.widgets.patch import apply_patches
 from cola.widgets.prefs import preferences
-from cola.widgets.recent import browse_recent
+from cola.widgets.recent import browse_recent_files
 from cola.widgets.status import StatusWidget
 from cola.widgets.search import search
 from cola.widgets.standard import MainWindow
@@ -201,7 +201,7 @@ class MainView(MainWindow):
 
         self.browse_recently_modified_action = add_action(self,
                 N_('Recently Modified Files...'),
-                browse_recent, 'Shift+Ctrl+E')
+                browse_recent_files, 'Shift+Ctrl+E')
 
         self.cherry_pick_action = add_action(self,
                 N_('Cherry-Pick...'),

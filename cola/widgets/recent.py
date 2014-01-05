@@ -1,5 +1,6 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import cmds
@@ -12,7 +13,7 @@ from cola.widgets.browse import GitTreeWidget
 from cola.widgets.browse import GitFileTreeModel
 
 
-def browse_recent():
+def browse_recent_files():
     parent = qtutils.active_window()
     dialog = RecentFileDialog(parent)
     dialog.resize(parent.width(), min(parent.height(), 420))
@@ -34,7 +35,7 @@ class RecentFileDialog(standard.Dialog):
     def __init__(self, parent):
         standard.Dialog.__init__(self, parent)
         self.setWindowTitle(N_('Recently Modified Files'))
-        self.setWindowModality(QtCore.Qt.WindowModal)
+        self.setWindowModality(Qt.WindowModal)
 
         count = 8
         self.update_thread = UpdateFileListThread(count)
