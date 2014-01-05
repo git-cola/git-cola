@@ -216,6 +216,7 @@ def node():
 
 
 abspath = wrap(encode, os.path.abspath, decorator=decode)
+chdir = wrap(encode, os.chdir)
 exists = wrap(encode, os.path.exists)
 expanduser = wrap(encode, os.path.expanduser, decorator=decode)
 getcwd = decorate(decode, os.getcwd)
