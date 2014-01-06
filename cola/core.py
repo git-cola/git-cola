@@ -128,32 +128,32 @@ def run_command(cmd, encoding=None, *args, **kwargs):
 
 
 @interruptable
-def _fork_posix(args):
+def _fork_posix(args, cwd=None):
     """Launch a process in the background."""
     encoded_args = [encode(arg) for arg in args]
-    return subprocess.Popen(encoded_args).pid
+    return subprocess.Popen(encoded_args, cwd=cwd).pid
 
 
-def _fork_win32(args):
+def _fork_win32(args, cwd=None):
     """Launch a background process using crazy win32 voodoo."""
     # This is probably wrong, but it works.  Windows.. wow.
     if args[0] == 'git-dag':
         # win32 can't exec python scripts
         args = [sys.executable] + args
 
-    enc_args = [encode(arg) for arg in args]
-    abspath = _win32_abspath(enc_args[0])
+    argv = [encode(arg) for arg in args]
+    abspath = _win32_abspath(argv[0])
     if abspath:
         # e.g. fork(['git', 'difftool', '--no-prompt', '--', 'path'])
-        enc_args[0] = abspath
+        cmd[0] = abspath
     else:
         # e.g. fork(['gitk', '--all'])
-        cmdstr = subprocess.list2cmdline(enc_args)
+        cmdstr = subprocess.list2cmdline(argv)
         sh_exe = _win32_abspath('sh')
-        enc_args = [sh_exe, '-c', cmdstr]
+        argv = [sh_exe, '-c', cmdstr]
 
     DETACHED_PROCESS = 0x00000008 # Amazing!
-    return subprocess.Popen(enc_args, creationflags=DETACHED_PROCESS).pid
+    return subprocess.Popen(argv, cwd=cwd, creationflags=DETACHED_PROCESS).pid
 
 
 def _win32_abspath(exe):
