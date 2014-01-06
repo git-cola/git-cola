@@ -11,6 +11,7 @@ from cola import cmds
 from cola import core
 from cola import qtutils
 from cola import settings
+from cola.compat import set
 from cola.i18n import N_
 from cola.settings import Settings
 from cola.widgets import defs
@@ -207,7 +208,13 @@ class BookmarksTreeWidget(standard.TreeWidget):
         settings = Settings()
         items = []
         icon = qtutils.dir_icon()
-        for path in settings.bookmarks + settings.recent:
+        recents = set(settings.recent)
+        for path in settings.recent:
+            item = BookmarksTreeWidgetItem(path, icon)
+            items.append(item)
+        for path in settings.bookmarks:
+            if path in recents: # avoid duplicates
+                continue
             item = BookmarksTreeWidgetItem(path, icon)
             items.append(item)
         self.addTopLevelItems(items)
