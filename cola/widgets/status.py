@@ -223,13 +223,13 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         # we do not need to rerun the callbacks which were triggered
         # above.  Block signals to skip the callbacks.
         self.blockSignals(True)
-        for (new, old, selection, reselect) in saved_selection:
-            for item in selection:
+        for (new, old, sel, reselect) in saved_selection:
+            for item in sel:
                 if item in new:
                     reselect(item, current=False)
         self.blockSignals(False)
 
-        for (new, old, selection, reselect) in saved_selection:
+        for (new, old, sel, reselect) in saved_selection:
             # When modified is staged, select the next modified item
             # When unmerged is staged, select the next unmerged item
             # When unstaging, select the next staged item
@@ -237,7 +237,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             if len(new) >= len(old):
                 # The list did not shrink so it is not one of these cases.
                 continue
-            for item in selection:
+            for item in sel:
                 # The item still exists so ignore it
                 if item in new or item not in old:
                     continue
