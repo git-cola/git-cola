@@ -170,6 +170,7 @@ class BookmarksWidget(QtGui.QWidget):
         self.corner_widget.setLayout(self.button_layout)
         titlebar = parent.titleBarWidget()
         titlebar.add_corner_widget(self.corner_widget)
+        self.setFocusProxy(self.tree)
 
     def _tree_selection_changed(self):
         enabled = bool(self.tree.selected_item())
