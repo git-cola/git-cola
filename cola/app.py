@@ -48,6 +48,12 @@ def setup_environment():
     # Spoof an X11 display for SSH
     os.environ.setdefault('DISPLAY', ':0')
 
+    if not core.getenv('SHELL', ''):
+        for shell in ('/bin/zsh', '/bin/bash', '/bin/sh'):
+            if os.path.exists(shell):
+                core.setenv('SHELL', shell)
+                break
+
     # Setup the path so that git finds us when we run 'git cola'
     path_entries = core.getenv('PATH', '').split(os.pathsep)
     bindir = os.path.dirname(core.abspath(__file__))

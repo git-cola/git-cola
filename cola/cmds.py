@@ -582,6 +582,24 @@ class LaunchDifftool(BaseCommand):
             difftool.run()
 
 
+class LaunchTerminal(BaseCommand):
+
+    SHORTCUT = 'Ctrl+t'
+
+    @staticmethod
+    def name():
+        return N_('Launch Terminal')
+
+    def __init__(self, path):
+        self.path = path
+
+    def do(self):
+        cmd = _config.get('cola.terminal', 'xterm -e $SHELL')
+        cmd = os.path.expandvars(cmd)
+        argv = utils.shell_split(cmd)
+        core.fork(argv, cwd=self.path)
+
+
 class LaunchEditor(Edit):
     SHORTCUT = 'Ctrl+E'
 
