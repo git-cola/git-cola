@@ -750,7 +750,6 @@ class OpenRepo(Command):
         core.chdir(new_worktree)
         self.model.set_directory(self.repo_path)
         _config.reset()
-        self.model.set_mode(self.model.mode_none)
         self.model.update_status()
 
 
