@@ -138,22 +138,14 @@ class BookmarksWidget(QtGui.QWidget):
                 N_('Open'), qtutils.open_icon())
         self.open_button.setEnabled(False)
 
-        self.open_action = qtutils.add_action(self,
-                N_('Open'), self.open_repo, 'Return')
-        self.open_action.setEnabled(False)
-
         self.edit_button = qtutils.create_action_button(
                 N_('Bookmarks...'), qtutils.add_icon())
 
-        qtutils.connect_button(self.open_button, self.open_repo)
+        qtutils.connect_button(self.open_button, self.tree.open_repo)
         qtutils.connect_button(self.edit_button, self.manage_bookmarks)
 
         self.connect(self.tree, SIGNAL('itemSelectionChanged()'),
                      self._tree_selection_changed)
-
-        self.connect(self.tree,
-                     SIGNAL('itemDoubleClicked(QTreeWidgetItem*,int)'),
-                     self._tree_double_clicked)
 
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.setMargin(defs.no_margin)
@@ -176,16 +168,6 @@ class BookmarksWidget(QtGui.QWidget):
     def _tree_selection_changed(self):
         enabled = bool(self.tree.selected_item())
         self.open_button.setEnabled(enabled)
-        self.open_action.setEnabled(enabled)
-
-    def open_repo(self):
-        item = self.tree.selected_item()
-        if not item:
-            return
-        cmds.do(cmds.OpenRepo, item.path)
-
-    def _tree_double_clicked(self, item, column):
-        cmds.do(cmds.OpenRepo, item.path)
 
     def manage_bookmarks(self):
         manage_bookmarks()
@@ -201,6 +183,36 @@ class BookmarksTreeWidget(standard.TreeWidget):
         standard.TreeWidget.__init__(self, parent=parent)
         self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
+
+        self.open_action = qtutils.add_action(self,
+                N_('Open'), self.open_repo, 'Return')
+        self.open_action.setEnabled(False)
+
+        self.open_default_action = qtutils.add_action(self,
+                cmds.OpenDefaultApp.name(), self.open_default,
+                cmds.OpenDefaultApp.SHORTCUT)
+        self.open_default_action.setEnabled(False)
+
+        self.launch_editor_action = qtutils.add_action(self,
+                cmds.Edit.name(), self.launch_editor,
+                cmds.Edit.SHORTCUT)
+        self.launch_editor_action.setEnabled(False)
+
+        self.launch_terminal_action = qtutils.add_action(self,
+                cmds.LaunchTerminal.name(), self.launch_terminal,
+                cmds.LaunchTerminal.SHORTCUT)
+        self.launch_terminal_action.setEnabled(False)
+
+        self.copy_action = qtutils.add_action(self,
+                N_('Copy'), self.copy, QtGui.QKeySequence.Copy)
+        self.copy_action.setEnabled(False)
+
+        self.connect(self, SIGNAL('itemSelectionChanged()'),
+                     self._tree_selection_changed)
+
+        self.connect(self, SIGNAL('itemDoubleClicked(QTreeWidgetItem*,int)'),
+                     self._tree_double_clicked)
+
         self.refresh()
 
     def refresh(self):
@@ -218,6 +230,57 @@ class BookmarksTreeWidget(standard.TreeWidget):
             item = BookmarksTreeWidgetItem(path, icon)
             items.append(item)
         self.addTopLevelItems(items)
+
+    def contextMenuEvent(self, event):
+        menu = QtGui.QMenu(self)
+        menu.addAction(self.copy_action)
+        menu.addAction(self.open_action)
+        menu.addAction(self.open_default_action)
+        menu.addSeparator()
+        menu.addAction(self.launch_editor_action)
+        menu.addAction(self.launch_terminal_action)
+        menu.exec_(self.mapToGlobal(event.pos()))
+
+    def copy(self):
+        item = self.selected_item()
+        if not item:
+            return
+        qtutils.set_clipboard(item.path)
+
+    def open_default(self):
+        item = self.selected_item()
+        if not item:
+            return
+        cmds.do(cmds.OpenDefaultApp, [item.path])
+
+    def open_repo(self):
+        item = self.selected_item()
+        if not item:
+            return
+        cmds.do(cmds.OpenRepo, item.path)
+
+    def launch_editor(self):
+        item = self.selected_item()
+        if not item:
+            return
+        cmds.do(cmds.Edit, [item.path])
+
+    def launch_terminal(self):
+        item = self.selected_item()
+        if not item:
+            return
+        cmds.do(cmds.LaunchTerminal, item.path)
+
+    def _tree_selection_changed(self):
+        enabled = bool(self.selected_item())
+        self.open_action.setEnabled(enabled)
+        self.copy_action.setEnabled(enabled)
+        self.launch_editor_action.setEnabled(enabled)
+        self.launch_terminal_action.setEnabled(enabled)
+        self.open_default_action.setEnabled(enabled)
+
+    def _tree_double_clicked(self, item, column):
+        cmds.do(cmds.OpenRepo, item.path)
 
 
 class BookmarksTreeWidgetItem(QtGui.QTreeWidgetItem):
