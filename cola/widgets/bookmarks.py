@@ -212,13 +212,6 @@ class BookmarksTreeWidget(standard.TreeWidget):
             items.append(item)
         self.addTopLevelItems(items)
 
-    def clear(self):
-        # sip v4.14.7 and below leak memory in parent.takeChildren()
-        # so we use this backwards-compatible construct instead
-        parent = self.invisibleRootItem()
-        while parent.takeChild(0) is not None:
-            pass
-
 
 class BookmarksTreeWidgetItem(QtGui.QTreeWidgetItem):
 
