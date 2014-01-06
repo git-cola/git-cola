@@ -346,8 +346,6 @@ class MainView(MainWindow):
         self.file_menu = create_menu(N_('File'), self.menubar)
         self.open_recent_menu = self.file_menu.addMenu(N_('Open Recent'))
         self.open_recent_menu.setIcon(qtutils.open_icon())
-        self.open_recent_new_menu = self.file_menu.addMenu(N_('Open Recent in New Window'))
-        self.open_recent_new_menu.setIcon(qtutils.open_icon())
         self.file_menu.addAction(self.open_repo_action)
         self.file_menu.addAction(self.open_repo_new_action)
         self.file_menu.addAction(self.clone_repo_action)
@@ -482,8 +480,6 @@ class MainView(MainWindow):
 
         self.connect(self.open_recent_menu, SIGNAL('aboutToShow()'),
                      self.build_recent_menu)
-        self.connect(self.open_recent_new_menu, SIGNAL('aboutToShow()'),
-                     self.build_recent_new_menu)
 
         self.connect(self.commitmsgeditor, SIGNAL('cursorPosition(int,int)'),
                      self.show_cursor_position)
@@ -519,13 +515,9 @@ class MainView(MainWindow):
         MainWindow.closeEvent(self, event)
 
     def build_recent_menu(self):
-        self._build_recent_menu(self.open_recent_menu, cmds.OpenRepo)
-
-    def build_recent_new_menu(self):
-        self._build_recent_menu(self.open_recent_new_menu, cmds.OpenNewRepo)
-
-    def _build_recent_menu(self, menu, cmd):
         recent = settings.Settings().recent
+        cmd = cmds.OpenRepo
+        menu = self.open_recent_menu
         menu.clear()
         for r in recent:
             name = os.path.basename(r)
