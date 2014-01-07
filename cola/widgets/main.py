@@ -149,6 +149,14 @@ class MainView(MainWindow):
 
         self.diffopts_button = create_action_button(
                 tooltip=N_('Diff Options'), icon=options_icon())
+        self.diffopts_button.setStyleSheet("""
+                QPushButton::menu-indicator {
+                    image: none;
+                }
+                QPushButton {
+                    border-style: none;
+                }
+            """)
         self.diffopts_menu = create_menu(N_('Diff Options'),
                                          self.diffopts_button)
 
