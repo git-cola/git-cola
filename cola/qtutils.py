@@ -542,13 +542,16 @@ def create_button(text='', layout=None, tooltip=None, icon=None):
     return button
 
 
-def create_action_button(tooltip, icon):
+def create_action_button(tooltip=None, icon=None):
     button = QtGui.QPushButton()
+    button.setFixedSize(QtCore.QSize(16, 16))
     button.setCursor(Qt.PointingHandCursor)
     button.setFlat(True)
-    button.setIcon(icon)
-    button.setFixedSize(QtCore.QSize(16, 16))
-    button.setToolTip(tooltip)
+    if tooltip is not None:
+        button.setToolTip(tooltip)
+    if icon is not None:
+        pixmap = icon.pixmap(QtCore.QSize(16, 16))
+        button.setIcon(QtGui.QIcon(pixmap))
     return button
 
 
@@ -565,10 +568,10 @@ class DockTitleBarWidget(QtGui.QWidget):
         self.setCursor(Qt.OpenHandCursor)
 
         self.close_button = create_action_button(
-                N_('Close'), titlebar_close_icon())
+                tooltip=N_('Close'), icon=titlebar_close_icon())
 
         self.toggle_button = create_action_button(
-                N_('Detach'), titlebar_normal_icon())
+                tooltip=N_('Detach'), icon=titlebar_normal_icon())
 
         self.corner_layout = QtGui.QHBoxLayout()
         self.corner_layout.setMargin(defs.no_margin)

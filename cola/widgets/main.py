@@ -148,7 +148,7 @@ class MainView(MainWindow):
         self.diff_function_context_action.setCheckable(True)
 
         self.diffopts_button = create_action_button(
-                N_('Diff Options'), options_icon())
+                tooltip=N_('Diff Options'), icon=options_icon())
         self.diffopts_menu = create_menu(N_('Diff Options'),
                                          self.diffopts_button)
 

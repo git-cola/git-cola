@@ -345,13 +345,16 @@ class DAGView(MainWindow):
         self.maxresults.setSuffix('')
 
         self.zoom_out = qtutils.create_action_button(
-                N_('Zoom Out'), qtutils.theme_icon('zoom-out.png'))
+                tooltip=N_('Zoom Out'),
+                icon=qtutils.theme_icon('zoom-out.png'))
 
         self.zoom_in = qtutils.create_action_button(
-                N_('Zoom In'), qtutils.theme_icon('zoom-in.png'))
+                tooltip=N_('Zoom In'),
+                icon=qtutils.theme_icon('zoom-in.png'))
 
         self.zoom_to_fit = qtutils.create_action_button(
-                N_('Zoom to Fit'), qtutils.theme_icon('zoom-fit-best.png'))
+                tooltip=N_('Zoom to Fit'),
+                icon=qtutils.theme_icon('zoom-fit-best.png'))
 
         self.notifier = notifier = observable.Observable()
         self.notifier.refs_updated = refs_updated = 'refs_updated'

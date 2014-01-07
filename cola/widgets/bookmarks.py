@@ -135,11 +135,11 @@ class BookmarksWidget(QtGui.QWidget):
 
         self.tree = BookmarksTreeWidget(parent=self)
         self.open_button = qtutils.create_action_button(
-                N_('Open'), qtutils.open_icon())
+                tooltip=N_('Open'), icon=qtutils.open_icon())
         self.open_button.setEnabled(False)
 
         self.edit_button = qtutils.create_action_button(
-                N_('Bookmarks...'), qtutils.add_icon())
+                tooltip=N_('Bookmarks...'), icon=qtutils.add_icon())
 
         qtutils.connect_button(self.open_button, self.tree.open_repo)
         qtutils.connect_button(self.edit_button, self.manage_bookmarks)
