@@ -61,6 +61,7 @@ class Interaction(object):
     def confirm_config_action(cls, name, opts):
         return cls.confirm(N_('Run %s?') % name,
                            N_('Run the "%s" command?') % name,
+                           '',
                            ok_text=N_('Run'))
 
     @classmethod
