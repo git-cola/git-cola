@@ -145,7 +145,7 @@ def _fork_win32(args, cwd=None):
     abspath = _win32_abspath(argv[0])
     if abspath:
         # e.g. fork(['git', 'difftool', '--no-prompt', '--', 'path'])
-        cmd[0] = abspath
+        argv[0] = abspath
     else:
         # e.g. fork(['gitk', '--all'])
         cmdstr = subprocess.list2cmdline(argv)
