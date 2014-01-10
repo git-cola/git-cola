@@ -185,8 +185,13 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.setHeaderHidden(True)
 
         self.open_action = qtutils.add_action(self,
-                N_('Open'), self.open_repo, 'Return')
+                N_('Open'), self.open_repo, QtGui.QKeySequence.Open)
         self.open_action.setEnabled(False)
+
+        self.open_new_action = qtutils.add_action(self,
+                N_('Open in New Window'), self.open_new_repo,
+                QtGui.QKeySequence.New)
+        self.open_new_action.setEnabled(False)
 
         self.open_default_action = qtutils.add_action(self,
                 cmds.OpenDefaultApp.name(), self.open_default,
@@ -233,10 +238,11 @@ class BookmarksTreeWidget(standard.TreeWidget):
 
     def contextMenuEvent(self, event):
         menu = QtGui.QMenu(self)
-        menu.addAction(self.copy_action)
         menu.addAction(self.open_action)
+        menu.addAction(self.open_new_action)
         menu.addAction(self.open_default_action)
         menu.addSeparator()
+        menu.addAction(self.copy_action)
         menu.addAction(self.launch_editor_action)
         menu.addAction(self.launch_terminal_action)
         menu.exec_(self.mapToGlobal(event.pos()))
@@ -259,6 +265,12 @@ class BookmarksTreeWidget(standard.TreeWidget):
             return
         cmds.do(cmds.OpenRepo, item.path)
 
+    def open_new_repo(self):
+        item = self.selected_item()
+        if not item:
+            return
+        cmds.do(cmds.OpenNewRepo, item.path)
+
     def launch_editor(self):
         item = self.selected_item()
         if not item:
@@ -274,6 +286,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
     def _tree_selection_changed(self):
         enabled = bool(self.selected_item())
         self.open_action.setEnabled(enabled)
+        self.open_new_action.setEnabled(enabled)
         self.copy_action.setEnabled(enabled)
         self.launch_editor_action.setEnabled(enabled)
         self.launch_terminal_action.setEnabled(enabled)
