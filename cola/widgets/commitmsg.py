@@ -505,27 +505,14 @@ class CommitSummaryLineEdit(HintedLineEdit):
 
 
 class CommitMessageTextEdit(SpellCheckTextEdit):
+
     def __init__(self, parent=None):
         hint = N_('Extended description...')
         SpellCheckTextEdit.__init__(self, hint, parent)
         self.extra_actions = []
-        self.setMinimumSize(QtCore.QSize(1, 1))
 
         self.action_emit_leave = add_action(self,
                 'Shift Tab', self.emit_leave, 'Shift+tab')
-
-        self.installEventFilter(self)
-
-    def eventFilter(self, obj, event):
-        if event.type() == QtCore.QEvent.FocusIn:
-            height = QtGui.QFontMetrics(self.font()).height() * 3
-            height += defs.spacing * 4
-            self.setMinimumSize(QtCore.QSize(1, height))
-
-        elif event.type() == QtCore.QEvent.FocusOut:
-            self.setMinimumSize(QtCore.QSize(1, 1))
-
-        return False
 
     def contextMenuEvent(self, event):
         menu, spell_menu = self.context_menu()
@@ -584,3 +571,8 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
 
     def emit_leave(self):
         self.emit(SIGNAL('leave()'))
+
+    def setFont(self, font):
+        SpellCheckTextEdit.setFont(self, font)
+        fm = self.fontMetrics()
+        self.setMinimumSize(QtCore.QSize(1, fm.height() * 2))
