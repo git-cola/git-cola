@@ -73,7 +73,7 @@ class ExpandableGroupBox(QtGui.QGroupBox):
 class GitArchiveDialog(QtGui.QDialog):
 
     @staticmethod
-    def save(ref, shortref, parent=None):
+    def save_hashed_objects(ref, shortref, parent=None):
         dlg = GitArchiveDialog(ref, shortref, parent)
         if dlg.exec_() != dlg.Accepted:
             return None

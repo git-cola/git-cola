@@ -102,7 +102,7 @@ class ViewerMixin(object):
         if sha1 is None:
             return
         short_sha1 = sha1[:7]
-        GitArchiveDialog.save(sha1, short_sha1, self)
+        GitArchiveDialog.save_hashed_objects(sha1, short_sha1, self)
 
     def save_blob_dialog(self):
         sha1 = self.selected_sha1()
