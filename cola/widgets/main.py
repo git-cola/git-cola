@@ -107,6 +107,13 @@ class MainView(MainWindow):
         font = qtutils.default_monospace_font()
         font.setPointSize(int(font.pointSize() * 0.8))
         self.position_label.setFont(font)
+
+        # make the position label fixed size to avoid layout issues
+        fm = self.position_label.fontMetrics()
+        width = fm.width('999:999')
+        height = self.position_label.sizeHint().height()
+        self.position_label.setFixedSize(width, height)
+
         self.commitdockwidget = create_dock(N_('Commit'), self)
         titlebar = self.commitdockwidget.titleBarWidget()
         titlebar.add_corner_widget(self.position_label)
