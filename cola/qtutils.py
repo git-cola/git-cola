@@ -555,6 +555,17 @@ def create_action_button(tooltip=None, icon=None):
     return button
 
 
+def hide_button_menu_indicator(button):
+    button.setStyleSheet("""
+        QPushButton::menu-indicator {
+            image: none;
+        }
+        QPushButton {
+            border-style: none;
+        }
+        """)
+
+
 class DockTitleBarWidget(QtGui.QWidget):
 
     def __init__(self, parent, title, stretch=True):
