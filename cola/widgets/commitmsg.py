@@ -22,6 +22,7 @@ from cola.qtutils import connect_action_bool
 from cola.qtutils import connect_button
 from cola.qtutils import create_toolbutton
 from cola.qtutils import diff_font
+from cola.qtutils import hide_button_menu_indicator
 from cola.qtutils import options_icon
 from cola.qtutils import save_icon
 from cola.widgets import defs
@@ -74,6 +75,7 @@ class CommitMessageEditor(QtGui.QWidget):
                                                 tooltip=N_('Actions...'))
         self.actions_button.setMenu(self.actions_menu)
         self.actions_button.setPopupMode(QtGui.QToolButton.InstantPopup)
+        hide_button_menu_indicator(self.actions_button)
 
         self.actions_menu.addAction(self.signoff_action)
         self.actions_menu.addAction(self.commit_action)
