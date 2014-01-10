@@ -12,7 +12,11 @@ from cola.compat import set
 from cola.i18n import N_
 from cola.models import main
 from cola.models import selection
+from cola.qtutils import add_action
+from cola.qtutils import create_action_button
+from cola.qtutils import create_menu
 from cola.qtutils import DiffSyntaxHighlighter
+from cola.qtutils import options_icon
 from cola.widgets import defs
 from cola.widgets.text import MonoTextView
 
@@ -34,6 +38,42 @@ class DiffEditor(DiffTextEdit):
     def __init__(self, parent):
         DiffTextEdit.__init__(self, parent)
         self.model = model = main.model()
+
+        # "Diff Options" tool menu
+        self.diff_ignore_space_at_eol_action = add_action(self,
+                N_('Ignore changes in whitespace at EOL'),
+                self._update_diff_opts)
+        self.diff_ignore_space_at_eol_action.setCheckable(True)
+
+        self.diff_ignore_space_change_action = add_action(self,
+                N_('Ignore changes in amount of whitespace'),
+                self._update_diff_opts)
+        self.diff_ignore_space_change_action.setCheckable(True)
+
+        self.diff_ignore_all_space_action = add_action(self,
+                N_('Ignore all whitespace'),
+                self._update_diff_opts)
+        self.diff_ignore_all_space_action.setCheckable(True)
+
+        self.diff_function_context_action = add_action(self,
+                N_('Show whole surrounding functions of changes'),
+                self._update_diff_opts)
+        self.diff_function_context_action.setCheckable(True)
+
+        self.diffopts_button = create_action_button(
+                tooltip=N_('Diff Options'), icon=options_icon())
+        self.diffopts_menu = create_menu(N_('Diff Options'),
+                                         self.diffopts_button)
+
+        self.diffopts_menu.addAction(self.diff_ignore_space_at_eol_action)
+        self.diffopts_menu.addAction(self.diff_ignore_space_change_action)
+        self.diffopts_menu.addAction(self.diff_ignore_all_space_action)
+        self.diffopts_menu.addAction(self.diff_function_context_action)
+        self.diffopts_button.setMenu(self.diffopts_menu)
+        qtutils.hide_button_menu_indicator(self.diffopts_button)
+
+        titlebar = parent.titleBarWidget()
+        titlebar.add_corner_widget(self.diffopts_button)
 
         self.action_process_section = qtutils.add_action(self,
                 N_('Process Section'),
@@ -84,6 +124,18 @@ class DiffEditor(DiffTextEdit):
 
     def _emit_text(self, text):
         self.emit(SIGNAL('set_text'), text)
+
+    def _update_diff_opts(self):
+        space_at_eol = self.diff_ignore_space_at_eol_action.isChecked()
+        space_change = self.diff_ignore_space_change_action.isChecked()
+        all_space = self.diff_ignore_all_space_action.isChecked()
+        function_context = self.diff_function_context_action.isChecked()
+
+        gitcmds.update_diff_overrides(space_at_eol,
+                                      space_change,
+                                      all_space,
+                                      function_context)
+        self.emit(SIGNAL('diff_options_updated()'))
 
     # Qt overrides
     def contextMenuEvent(self, event):
