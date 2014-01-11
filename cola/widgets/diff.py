@@ -22,6 +22,7 @@ from cola.widgets.text import MonoTextView
 
 
 COMMITS_SELECTED = 'COMMITS_SELECTED'
+FILES_SELECTED = 'FILES_SELECTED'
 
 
 class DiffTextEdit(MonoTextView):
@@ -404,6 +405,7 @@ class DiffWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
+        notifier.add_observer(FILES_SELECTED, self.files_selected)
         self.connect(self.reflector, SIGNAL('diff'), self.diff.setText)
         self.connect(self.reflector, SIGNAL('task_done'), self.task_done)
 
@@ -413,9 +415,9 @@ class DiffWidget(QtGui.QWidget):
         except:
             pass
 
-    def set_diff_sha1(self, sha1):
+    def set_diff_sha1(self, sha1, file_name=None):
         self.diff.setText('+++ ' + N_('Loading...'))
-        task = DiffInfoTask(sha1, self.reflector)
+        task = DiffInfoTask(sha1, self.reflector, file_name)
         self.tasks.add(task)
         QtCore.QThreadPool.globalInstance().start(task)
 
@@ -423,7 +425,7 @@ class DiffWidget(QtGui.QWidget):
         if len(commits) != 1:
             return
         commit = commits[0]
-        sha1 = commit.sha1
+        self.sha1 = commit.sha1
 
         email = commit.email or ''
         summary = commit.summary or ''
@@ -443,11 +445,15 @@ class DiffWidget(QtGui.QWidget):
         author_template = '%(author)s <%(email)s>' % template_args
         self.author_label.set_template(author_text, author_template)
         self.summary_label.set_text(summary)
-        self.sha1_label.set_text(sha1)
+        self.sha1_label.set_text(self.sha1)
 
-        self.set_diff_sha1(sha1)
+        self.set_diff_sha1(self.sha1)
         self.gravatar_label.set_email(email)
 
+    def files_selected(self, file_names):
+        if len(file_names) != 1:
+            return
+        self.set_diff_sha1(self.sha1, file_names[0])
 
 class TextLabel(QtGui.QLabel):
     def __init__(self, parent=None):
@@ -498,11 +504,12 @@ class TextLabel(QtGui.QLabel):
 
 
 class DiffInfoTask(QtCore.QRunnable):
-    def __init__(self, sha1, reflector):
+    def __init__(self, sha1, reflector, file_name=None):
         QtCore.QRunnable.__init__(self)
         self.sha1 = sha1
         self.reflector = reflector
+        self.file_name = file_name
 
     def run(self):
-        diff = gitcmds.diff_info(self.sha1)
+        diff = gitcmds.diff_info(self.sha1, self.file_name)
         self.reflector.emit(SIGNAL('diff'), diff)
