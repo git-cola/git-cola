@@ -26,6 +26,7 @@ from cola.widgets.standard import MainWindow
 from cola.widgets.standard import TreeWidget
 from cola.widgets.diff import COMMITS_SELECTED
 from cola.widgets.diff import DiffWidget
+from cola.widgets.file import FileWidget
 
 
 def git_dag(model, args=None):
@@ -362,6 +363,7 @@ class DAGView(MainWindow):
 
         self.treewidget = CommitTreeWidget(notifier, self)
         self.diffwidget = DiffWidget(notifier, self)
+        self.filewidget = FileWidget(notifier, self)
         self.graphview = GraphView(notifier, self)
 
         self.controls_layout = QtGui.QHBoxLayout()
@@ -377,6 +379,9 @@ class DAGView(MainWindow):
         self.log_dock.setWidget(self.treewidget)
         log_dock_titlebar = self.log_dock.titleBarWidget()
         log_dock_titlebar.add_corner_widget(self.controls_widget)
+
+        self.file_dock = qtutils.create_dock(N_('File'), self)
+        self.file_dock.setWidget(self.filewidget)
 
         self.diff_dock = qtutils.create_dock(N_('Diff'), self)
         self.diff_dock.setWidget(self.diffwidget)
@@ -407,6 +412,7 @@ class DAGView(MainWindow):
         self.view_menu.addAction(self.log_dock.toggleViewAction())
         self.view_menu.addAction(self.graphview_dock.toggleViewAction())
         self.view_menu.addAction(self.diff_dock.toggleViewAction())
+        self.view_menu.addAction(self.file_dock.toggleViewAction())
         self.view_menu.addSeparator()
         self.view_menu.addAction(self.lock_layout_action)
 
@@ -418,6 +424,7 @@ class DAGView(MainWindow):
         bottom = Qt.BottomDockWidgetArea
         self.addDockWidget(left, self.log_dock)
         self.addDockWidget(right, self.graphview_dock)
+        self.addDockWidget(right, self.file_dock)
         self.addDockWidget(bottom, self.diff_dock)
 
         # Update fields affected by model
