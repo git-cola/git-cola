@@ -46,6 +46,7 @@ Thanks
 * Minarto Margoliono
 * Nicolas Dietrich
 * Omega Weapon
+* Owen Healy
 * Paolo G. Giarrusso
 * Peter Júnoš
 * Rustam Safin

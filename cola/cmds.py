@@ -351,18 +351,16 @@ class Ignore(Command):
         self.filenames = filenames
 
     def do(self):
-        new_additions = ''
-        for fname in self.filenames:
-            new_additions = new_additions + fname + '\n'
+        if not self.filenames:
+            return
+        new_additions = '\n'.join(self.filenames) + '\n'
         for_status = new_additions
-        if new_additions:
-            if core.exists('.gitignore'):
-                current_list = core.read('.gitignore')
-                new_additions = new_additions + current_list
-            core.write('.gitignore', new_additions)
-            Interaction.log_status(
-                    0, 'Added to .gitignore:\n%s' % for_status, '')
-            self.model.update_file_status()
+        if core.exists('.gitignore'):
+            current_list = core.read('.gitignore')
+            new_additions = current_list.rstrip() + '\n' + new_additions
+        core.write('.gitignore', new_additions)
+        Interaction.log_status(0, 'Added to .gitignore:\n%s' % for_status, '')
+        self.model.update_file_status()
 
 
 class Delete(Command):
