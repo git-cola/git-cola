@@ -1,25 +1,23 @@
-from PyQt4 import QtCore
 from PyQt4 import QtGui
-from PyQt4.QtCore import Qt, SIGNAL
+from PyQt4.QtCore import SIGNAL
 
 from cola.i18n import N_
 from cola.git import git
-from cola.git import STDOUT
 from cola.widgets.standard import TreeWidget
 from cola.widgets.diff import COMMITS_SELECTED
 from cola.widgets.diff import FILES_SELECTED
+
 
 class FileWidget(TreeWidget):
 
     def __init__(self, notifier, parent):
         TreeWidget.__init__(self, parent)
         self.notifier = notifier
-        self.setHeaderLabels([N_('File Name'), N_('Addition'), N_('Deletion')])
+        self.setHeaderLabels([N_('Filename'), N_('Additions'), N_('Deletions')])
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.selection_changed)
-
 
     def selection_changed(self):
         items = self.selected_items()
@@ -27,19 +25,27 @@ class FileWidget(TreeWidget):
                                        [i.file_name for i in items])
 
     def commits_selected(self, commits):
-        if len(commits) != 1:
+        if not commits:
             return
         commit = commits[0]
         sha1 = commit.sha1
-        files_log = git.show(sha1, "--numstat", "--oneline")[STDOUT].splitlines()[1:]
-        self.list_files(files_log)
+        status, out, err = git.show(sha1, numstat=True, oneline=True)
+        if status == 0:
+            paths = [f for f in out.splitlines() if f]
+            if paths:
+                paths = paths[1:]
+        else:
+            paths = []
+        self.list_files(paths)
 
     def list_files(self, files_log):
+        self.clear()
+        if not files_log:
+            return
         files = []
         for f in files_log:
-            file = FileTreeWidgetItem(f)
-            files.append(file)
-        self.clear()
+            item = FileTreeWidgetItem(f)
+            files.append(item)
         self.insertTopLevelItems(0, files)
 
     def adjust_columns(self):
@@ -61,7 +67,7 @@ class FileTreeWidgetItem(QtGui.QTreeWidgetItem):
 
     def __init__(self, file_log, parent=None):
         QtGui.QTreeWidgetItem.__init__(self, parent)
-        texts = file_log.split("\t")
+        texts = file_log.split('\t')
         self.file_name = texts[2]
         self.setText(0, self.file_name) # file name
         self.setText(1, texts[0]) # addition

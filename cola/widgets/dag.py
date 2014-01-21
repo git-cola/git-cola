@@ -26,7 +26,7 @@ from cola.widgets.standard import MainWindow
 from cola.widgets.standard import TreeWidget
 from cola.widgets.diff import COMMITS_SELECTED
 from cola.widgets.diff import DiffWidget
-from cola.widgets.file import FileWidget
+from cola.widgets.filelist import FileWidget
 
 
 def git_dag(model, args=None):
