@@ -29,7 +29,8 @@ class FileWidget(TreeWidget):
             return
         commit = commits[0]
         sha1 = commit.sha1
-        status, out, err = git.show(sha1, numstat=True, oneline=True)
+        status, out, err = git.show(sha1,
+                                    numstat=True, oneline=True, no_renames=True)
         if status == 0:
             paths = [f for f in out.splitlines() if f]
             if paths:
