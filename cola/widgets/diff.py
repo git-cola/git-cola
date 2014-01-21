@@ -415,9 +415,9 @@ class DiffWidget(QtGui.QWidget):
         except:
             pass
 
-    def set_diff_sha1(self, sha1, file_name=None):
+    def set_diff_sha1(self, sha1, filename=None):
         self.diff.setText('+++ ' + N_('Loading...'))
-        task = DiffInfoTask(sha1, self.reflector, file_name)
+        task = DiffInfoTask(sha1, self.reflector, filename=filename)
         self.tasks.add(task)
         QtCore.QThreadPool.globalInstance().start(task)
 
@@ -450,12 +450,14 @@ class DiffWidget(QtGui.QWidget):
         self.set_diff_sha1(self.sha1)
         self.gravatar_label.set_email(email)
 
-    def files_selected(self, file_names):
-        if len(file_names) != 1:
+    def files_selected(self, filenames):
+        if not filenames:
             return
-        self.set_diff_sha1(self.sha1, file_names[0])
+        self.set_diff_sha1(self.sha1, filenames[0])
+
 
 class TextLabel(QtGui.QLabel):
+
     def __init__(self, parent=None):
         QtGui.QLabel.__init__(self, parent)
         self.setTextInteractionFlags(Qt.TextSelectableByMouse |
@@ -504,12 +506,13 @@ class TextLabel(QtGui.QLabel):
 
 
 class DiffInfoTask(QtCore.QRunnable):
-    def __init__(self, sha1, reflector, file_name=None):
+
+    def __init__(self, sha1, reflector, filename=None):
         QtCore.QRunnable.__init__(self)
         self.sha1 = sha1
         self.reflector = reflector
-        self.file_name = file_name
+        self.filename = filename
 
     def run(self):
-        diff = gitcmds.diff_info(self.sha1, self.file_name)
+        diff = gitcmds.diff_info(self.sha1, filename=self.filename)
         self.reflector.emit(SIGNAL('diff'), diff)

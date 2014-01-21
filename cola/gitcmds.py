@@ -227,18 +227,18 @@ def common_diff_opts(config=config):
     return opts
 
 
-def sha1_diff(git, sha1, file_name=None):
-    if file_name == None:
+def sha1_diff(git, sha1, filename=None):
+    if filename is None:
         return git.diff(sha1+'^!', **common_diff_opts())[STDOUT]
     else:
-        return git.diff(sha1+'^!', file_name,  **common_diff_opts())[STDOUT]
+        return git.diff(sha1+'^!', filename, **common_diff_opts())[STDOUT]
 
 
-def diff_info(sha1, file_name=None, git=git):
+def diff_info(sha1, git=git, filename=None):
     decoded = log(git, '-1', sha1, '--', pretty='format:%b').strip()
     if decoded:
         decoded += '\n\n'
-    return decoded + sha1_diff(git, sha1, file_name)
+    return decoded + sha1_diff(git, sha1, filename=filename)
 
 
 def diff_helper(commit=None,

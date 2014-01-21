@@ -380,7 +380,7 @@ class DAGView(MainWindow):
         log_dock_titlebar = self.log_dock.titleBarWidget()
         log_dock_titlebar.add_corner_widget(self.controls_widget)
 
-        self.file_dock = qtutils.create_dock(N_('File'), self)
+        self.file_dock = qtutils.create_dock(N_('Files'), self)
         self.file_dock.setWidget(self.filewidget)
 
         self.diff_dock = qtutils.create_dock(N_('Diff'), self)
