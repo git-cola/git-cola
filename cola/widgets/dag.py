@@ -37,7 +37,7 @@ def git_dag(model, args=None):
     dag = DAG(branch_doubledash, 1000)
     dag.set_arguments(args)
 
-    view = DAGView(model, dag, None)
+    view = DAGView(model, dag)
     if dag.ref:
         view.display()
     return view
@@ -319,7 +319,7 @@ class CommitTreeWidget(ViewerMixin, TreeWidget):
 class DAGView(MainWindow):
     """The git-dag widget."""
 
-    def __init__(self, model, dag, parent=None, args=None):
+    def __init__(self, model, dag, parent=None):
         MainWindow.__init__(self, parent)
 
         self.setAttribute(Qt.WA_MacMetalStyle)
