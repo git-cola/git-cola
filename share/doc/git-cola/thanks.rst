@@ -9,6 +9,7 @@ Thanks
 * Barry Roberts
 * Boris W
 * Ben Boeckel
+* Benoît Nouyrigat
 * Christian Jann
 * Christopher Meng
 * Daniel King

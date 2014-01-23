@@ -1216,7 +1216,7 @@ class VisualizeAll(Command):
 
     def do(self):
         browser = utils.shell_split(prefs.history_browser())
-        core.fork(browser + ['--all'])
+        launch_history_browser(browser + ['--all'])
 
 
 class VisualizeCurrent(Command):
@@ -1224,7 +1224,7 @@ class VisualizeCurrent(Command):
 
     def do(self):
         browser = utils.shell_split(prefs.history_browser())
-        core.fork(browser + [self.model.currentbranch])
+        launch_history_browser(browser + [self.model.currentbranch])
 
 
 class VisualizePaths(Command):
@@ -1239,7 +1239,7 @@ class VisualizePaths(Command):
             self.argv = browser
 
     def do(self):
-        core.fork(self.argv)
+        launch_history_browser(self.argv)
 
 
 class VisualizeRevision(Command):
@@ -1257,15 +1257,18 @@ class VisualizeRevision(Command):
         if self.paths:
             argv.append('--')
             argv.extend(self.paths)
+        launch_history_browser(argv)
 
-        try:
-            core.fork(argv)
-        except Exception as e:
-            _, details = utils.format_exception(e)
-            title = N_('Error Launching History Browser')
-            msg = (N_('Cannot exec "%s": please configure a history browser') %
-                   ' '.join(argv))
-            Interaction.critical(title, message=msg, details=details)
+
+def launch_history_browser(argv):
+    try:
+        core.fork(argv)
+    except Exception as e:
+        _, details = utils.format_exception(e)
+        title = N_('Error Launching History Browser')
+        msg = (N_('Cannot exec "%s": please configure a history browser') %
+               ' '.join(argv))
+        Interaction.critical(title, message=msg, details=details)
 
 
 def run(cls, *args, **opts):
