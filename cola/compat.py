@@ -40,7 +40,7 @@ def setenv(key, value):
 def unsetenv(key):
     """Compatibility wrapper for unsetting environment variables"""
     try:
-        del os.environment[key]
+        del os.environ[key]
     except:
         pass
     if hasattr(os, 'unsetenv'):

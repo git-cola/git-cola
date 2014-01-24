@@ -284,24 +284,43 @@ class DraggableTreeMixin(TreeMixin):
         return self.QtClass.mousePressEvent(self, event)
 
 
-def bind_mixin(Mixin, QtClass):
-    """Construct a class which composes the Mixin over the Qt class"""
+class Widget(WidgetMixin, QtGui.QWidget):
 
-    class BoundMixin(Mixin, QtClass):
-        """A concrete class tied to a specific Qt class"""
-
-        def __init__(self, parent=None):
-            QtClass.__init__(self, parent)
-            Mixin.__init__(self, QtClass)
-            self.Mixin = BoundMixin
-
-    return BoundMixin
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
+        WidgetMixin.__init__(self, QtGui.QWidget)
 
 
-Widget = bind_mixin(WidgetMixin, QtGui.QWidget)
-Dialog = bind_mixin(WidgetMixin, QtGui.QDialog)
-MainWindow = bind_mixin(MainWindowMixin, QtGui.QMainWindow)
+class Dialog(WidgetMixin, QtGui.QDialog):
 
-TreeView = bind_mixin(TreeMixin, QtGui.QTreeView)
-TreeWidget = bind_mixin(TreeMixin, QtGui.QTreeWidget)
-DraggableTreeWidget = bind_mixin(DraggableTreeMixin, QtGui.QTreeWidget)
+    def __init__(self, parent=None):
+        QtGui.QDialog.__init__(self, parent)
+        WidgetMixin.__init__(self, QtGui.QDialog)
+
+
+class MainWindow(MainWindowMixin, QtGui.QMainWindow):
+
+    def __init__(self, parent=None):
+        QtGui.QMainWindow.__init__(self, parent)
+        MainWindowMixin.__init__(self, QtGui.QMainWindow)
+
+
+class TreeView(TreeMixin, QtGui.QTreeView):
+
+    def __init__(self, parent=None):
+        QtGui.QTreeView.__init__(self, parent)
+        TreeMixin.__init__(self, QtGui.QTreeView)
+
+
+class TreeWidget(TreeMixin, QtGui.QTreeWidget):
+
+    def __init__(self, parent=None):
+        QtGui.QTreeWidget.__init__(self, parent)
+        TreeMixin.__init__(self, QtGui.QTreeWidget)
+
+
+class DraggableTreeWidget(DraggableTreeMixin, QtGui.QTreeWidget):
+    
+    def __init__(self, parent=None):
+        QtGui.QTreeWidget.__init__(self, parent)
+        DraggableTreeMixin.__init__(self, QtGui.QTreeWidget)

@@ -44,7 +44,7 @@ class Columns(object):
         elif column == cls.AUTHOR:
             return N_('Author')
         else:
-            raise NotImplemented('Mapping required for "%s"' % column)
+            raise NotImplementedError('Mapping required for "%s"' % column)
 
 
 class GitRepoModel(QtGui.QStandardItemModel):
