@@ -2042,3 +2042,15 @@ msgstr ""
 #: cola/widgets/status.py:646 cola/widgets/status.py:662
 msgid "No files selected for checkout from HEAD."
 msgstr ""
+
+#: cola/widgets/file.py:17
+msgid "Filename"
+msgstr ""
+
+#: cola/widgets/file.py:17
+msgid "Additions"
+msgstr ""
+
+#: cola/widgets/file.py:17
+msgid "Deletions"
+msgstr ""

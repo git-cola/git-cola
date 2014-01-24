@@ -61,6 +61,10 @@ proc finish {} {
 }
 
 wm title . "OpenSSH"
+set OS [lindex $tcl_platform(os) 0]
+if { $OS == "Linux" } {
+	wm attribute . "-type" "dialog"
+}
 tk::PlaceWindow .
 vwait rc
 exit $rc

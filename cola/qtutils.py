@@ -96,11 +96,33 @@ def confirm(title, text, informative_text, ok_text,
     return msgbox.clickedButton() == ok
 
 
+class ResizeableMessageBox(QtGui.QMessageBox):
+
+    def __init__(self, parent):
+        QtGui.QMessageBox.__init__(self, parent)
+        self.setMouseTracking(True)
+        self.setSizeGripEnabled(True)
+
+    def event(self, event):
+        res = QtGui.QMessageBox.event(self, event)
+        event_type = event.type()
+        if (event_type == QtCore.QEvent.MouseMove or
+                event_type == QtCore.QEvent.MouseButtonPress):
+            maxi = QtCore.QSize(1024*4, 1024*4)
+            self.setMaximumSize(maxi)
+            text = self.findChild(QtGui.QTextEdit)
+            if text is not None:
+                expand = QtGui.QSizePolicy.Expanding
+                text.setSizePolicy(QtGui.QSizePolicy(expand, expand))
+                text.setMaximumSize(maxi)
+        return res
+
+
 def critical(title, message=None, details=None):
     """Show a warning with the provided title and message."""
     if message is None:
         message = title
-    mbox = QtGui.QMessageBox(active_window())
+    mbox = ResizeableMessageBox(active_window())
     mbox.setWindowTitle(title)
     mbox.setTextFormat(Qt.PlainText)
     mbox.setText(message)
@@ -553,6 +575,23 @@ def create_action_button(tooltip=None, icon=None):
         pixmap = icon.pixmap(QtCore.QSize(16, 16))
         button.setIcon(QtGui.QIcon(pixmap))
     return button
+
+
+def hide_button_menu_indicator(button):
+    cls = type(button)
+    name = cls.__name__
+    stylesheet = """
+        %(name)s::menu-indicator {
+            image: none;
+        }
+    """
+    if name == 'QPushButton':
+        stylesheet += """
+            %(name)s {
+                border-style: none;
+            }
+        """
+    button.setStyleSheet(stylesheet % {'name': name})
 
 
 class DockTitleBarWidget(QtGui.QWidget):

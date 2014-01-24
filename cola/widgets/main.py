@@ -26,10 +26,8 @@ from cola.qtutils import add_action
 from cola.qtutils import add_action_bool
 from cola.qtutils import connect_action
 from cola.qtutils import connect_action_bool
-from cola.qtutils import create_action_button
 from cola.qtutils import create_dock
 from cola.qtutils import create_menu
-from cola.qtutils import options_icon
 from cola.widgets import action
 from cola.widgets import cfgactions
 from cola.widgets import editremotes
@@ -107,6 +105,13 @@ class MainView(MainWindow):
         font = qtutils.default_monospace_font()
         font.setPointSize(int(font.pointSize() * 0.8))
         self.position_label.setFont(font)
+
+        # make the position label fixed size to avoid layout issues
+        fm = self.position_label.fontMetrics()
+        width = fm.width('999:999')
+        height = self.position_label.sizeHint().height()
+        self.position_label.setFixedSize(width, height)
+
         self.commitdockwidget = create_dock(N_('Commit'), self)
         titlebar = self.commitdockwidget.titleBarWidget()
         titlebar.add_corner_widget(self.position_label)
@@ -125,49 +130,6 @@ class MainView(MainWindow):
         self.diffdockwidget = create_dock(N_('Diff'), self)
         self.diffeditor = DiffEditor(self.diffdockwidget)
         self.diffdockwidget.setWidget(self.diffeditor)
-
-        # "Diff Options" tool menu
-        self.diff_ignore_space_at_eol_action = add_action(self,
-                N_('Ignore changes in whitespace at EOL'),
-                self._update_diff_opts)
-        self.diff_ignore_space_at_eol_action.setCheckable(True)
-
-        self.diff_ignore_space_change_action = add_action(self,
-                N_('Ignore changes in amount of whitespace'),
-                self._update_diff_opts)
-        self.diff_ignore_space_change_action.setCheckable(True)
-
-        self.diff_ignore_all_space_action = add_action(self,
-                N_('Ignore all whitespace'),
-                self._update_diff_opts)
-        self.diff_ignore_all_space_action.setCheckable(True)
-
-        self.diff_function_context_action = add_action(self,
-                N_('Show whole surrounding functions of changes'),
-                self._update_diff_opts)
-        self.diff_function_context_action.setCheckable(True)
-
-        self.diffopts_button = create_action_button(
-                tooltip=N_('Diff Options'), icon=options_icon())
-        self.diffopts_button.setStyleSheet("""
-                QPushButton::menu-indicator {
-                    image: none;
-                }
-                QPushButton {
-                    border-style: none;
-                }
-            """)
-        self.diffopts_menu = create_menu(N_('Diff Options'),
-                                         self.diffopts_button)
-
-        self.diffopts_menu.addAction(self.diff_ignore_space_at_eol_action)
-        self.diffopts_menu.addAction(self.diff_ignore_space_change_action)
-        self.diffopts_menu.addAction(self.diff_ignore_all_space_action)
-        self.diffopts_menu.addAction(self.diff_function_context_action)
-        self.diffopts_button.setMenu(self.diffopts_menu)
-
-        titlebar = self.diffdockwidget.titleBarWidget()
-        titlebar.add_corner_widget(self.diffopts_button)
 
         # All Actions
         self.unstage_all_action = add_action(self,
@@ -491,6 +453,10 @@ class MainView(MainWindow):
 
         self.connect(self.commitmsgeditor, SIGNAL('cursorPosition(int,int)'),
                      self.show_cursor_position)
+
+        self.connect(self.diffeditor, SIGNAL('diff_options_updated()'),
+                     self.statuswidget.refresh)
+
         self.connect(self, SIGNAL('update'), self._update_callback)
         self.connect(self, SIGNAL('install_config_actions'),
                      self._install_config_actions)
@@ -694,18 +660,6 @@ class MainView(MainWindow):
                     dockwidget.toggleViewAction().trigger()
             self.addAction(toggleview)
             connect_action(toggleview, focusdock)
-
-    def _update_diff_opts(self):
-        space_at_eol = self.diff_ignore_space_at_eol_action.isChecked()
-        space_change = self.diff_ignore_space_change_action.isChecked()
-        all_space = self.diff_ignore_all_space_action.isChecked()
-        function_context = self.diff_function_context_action.isChecked()
-
-        gitcmds.update_diff_overrides(space_at_eol,
-                                      space_change,
-                                      all_space,
-                                      function_context)
-        self.statuswidget.refresh()
 
     def preferences(self):
         return preferences(model=self.prefs_model, parent=self)

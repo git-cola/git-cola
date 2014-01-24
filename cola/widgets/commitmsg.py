@@ -22,6 +22,7 @@ from cola.qtutils import connect_action_bool
 from cola.qtutils import connect_button
 from cola.qtutils import create_toolbutton
 from cola.qtutils import diff_font
+from cola.qtutils import hide_button_menu_indicator
 from cola.qtutils import options_icon
 from cola.qtutils import save_icon
 from cola.widgets import defs
@@ -74,6 +75,7 @@ class CommitMessageEditor(QtGui.QWidget):
                                                 tooltip=N_('Actions...'))
         self.actions_button.setMenu(self.actions_menu)
         self.actions_button.setPopupMode(QtGui.QToolButton.InstantPopup)
+        hide_button_menu_indicator(self.actions_button)
 
         self.actions_menu.addAction(self.signoff_action)
         self.actions_menu.addAction(self.commit_action)
@@ -505,27 +507,14 @@ class CommitSummaryLineEdit(HintedLineEdit):
 
 
 class CommitMessageTextEdit(SpellCheckTextEdit):
+
     def __init__(self, parent=None):
         hint = N_('Extended description...')
         SpellCheckTextEdit.__init__(self, hint, parent)
         self.extra_actions = []
-        self.setMinimumSize(QtCore.QSize(1, 1))
 
         self.action_emit_leave = add_action(self,
                 'Shift Tab', self.emit_leave, 'Shift+tab')
-
-        self.installEventFilter(self)
-
-    def eventFilter(self, obj, event):
-        if event.type() == QtCore.QEvent.FocusIn:
-            height = QtGui.QFontMetrics(self.font()).height() * 3
-            height += defs.spacing * 4
-            self.setMinimumSize(QtCore.QSize(1, height))
-
-        elif event.type() == QtCore.QEvent.FocusOut:
-            self.setMinimumSize(QtCore.QSize(1, 1))
-
-        return False
 
     def contextMenuEvent(self, event):
         menu, spell_menu = self.context_menu()
@@ -584,3 +573,8 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
 
     def emit_leave(self):
         self.emit(SIGNAL('leave()'))
+
+    def setFont(self, font):
+        SpellCheckTextEdit.setFont(self, font)
+        fm = self.fontMetrics()
+        self.setMinimumSize(QtCore.QSize(1, fm.height() * 2))
