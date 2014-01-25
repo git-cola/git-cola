@@ -14,14 +14,14 @@ Download
     `git cola home page <http://git-cola.github.io/>`_
 
 Discuss
-    `git cola mailing list <http://groups.google.com/group/git-cola>`_.
+    `git cola mailing list <https://groups.google.com/group/git-cola>`_.
 
 Improve
     Submit issues and enhancement requests to the
-    `git cola issue tracker <http://github.com/git-cola/git-cola/issues>`_.
+    `git cola issue tracker <https://github.com/git-cola/git-cola/issues>`_.
 
 Contribute
-    `git cola on github <http://github.com/git-cola/git-cola/>`_
+    `git cola on github <https://github.com/git-cola/git-cola/>`_
 
     .. sourcecode:: sh
 
