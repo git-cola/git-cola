@@ -35,6 +35,12 @@ OPTIONS
 
 SUB-COMMANDS
 ------------
+am::
+	Apply patches.
+
+archive::
+	Export tarballs from Git.
+
 branch::
 	Create branches.
 
@@ -43,6 +49,9 @@ browse::
 
 config::
 	Configure 'git-cola' settings.
+
+dag::
+	Start the 'git-dag' visualizer.
 
 diff::
 	Diff changed files.
@@ -64,6 +73,9 @@ push::
 
 rebase::
 	Start an interactive rebase.
+
+remote::
+	Create and edit remotes.
 
 search::
 	Search for commits.
