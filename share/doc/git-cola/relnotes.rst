@@ -19,6 +19,8 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/221
 
+* Lots of pylint fixes thanks to Alex Chernetz.
+
 git-cola v1.9.3
 ---------------
 Usability, bells and whistles
