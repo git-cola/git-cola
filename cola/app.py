@@ -51,7 +51,7 @@ def setup_environment():
     if not core.getenv('SHELL', ''):
         for shell in ('/bin/zsh', '/bin/bash', '/bin/sh'):
             if os.path.exists(shell):
-                core.setenv('SHELL', shell)
+                compat.setenv('SHELL', shell)
                 break
 
     # Setup the path so that git finds us when we run 'git cola'

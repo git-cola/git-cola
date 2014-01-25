@@ -168,7 +168,7 @@ class MainView(MainWindow):
                 QtGui.QKeySequence.Preferences, 'Ctrl+O')
 
         self.edit_remotes_action = add_action(self,
-                N_('Edit Remotes...'), lambda: editremotes.edit().exec_())
+                N_('Edit Remotes...'), lambda: editremotes.remote_editor().exec_())
         self.rescan_action = add_action(self,
                 cmds.Refresh.name(),
                 cmds.run(cmds.Refresh),
@@ -667,7 +667,7 @@ class MainView(MainWindow):
     def save_archive(self):
         ref = git.rev_parse('HEAD')[STDOUT]
         shortref = ref[:7]
-        GitArchiveDialog.save(ref, shortref, self)
+        GitArchiveDialog.save_hashed_objects(ref, shortref, self)
 
     def show_cursor_position(self, rows, cols):
         display = '&nbsp;%02d:%02d&nbsp;' % (rows, cols)
