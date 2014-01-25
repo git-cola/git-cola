@@ -735,7 +735,7 @@ class OpenParentDir(OpenDefaultApp):
     def do(self):
         if not self.filenames:
             return
-        dirs = set(map(os.path.dirname, self.filenames))
+        dirs = list(set(map(os.path.dirname, self.filenames)))
         core.fork([self.launcher] + dirs)
 
 
