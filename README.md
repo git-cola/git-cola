@@ -1,4 +1,4 @@
-# git-cola: The highly caffeinated git GUI
+# git-cola: The highly caffeinated Git GUI
 
     git-cola is a powerful Git GUI with a slick and intuitive user interface.
 
