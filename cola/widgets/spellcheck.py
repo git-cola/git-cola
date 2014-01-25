@@ -150,7 +150,7 @@ class SpellCheckTextEdit(HintedTextEdit):
         return popup_menu, spell_menu
 
     def contextMenuEvent(self, event):
-        popup_menu = self.context_menu()
+        popup_menu, _spell_menu = self.context_menu()
         popup_menu.exec_(self.mapToGlobal(event.pos()))
 
     def correct(self, word):
