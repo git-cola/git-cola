@@ -490,12 +490,12 @@ class DAGView(MainWindow):
             self.setWindowTitle(project + N_(' - DAG'))
 
     def export_state(self):
-        state = self.Mixin.export_state(self)
+        state = MainWindow.export_state(self)
         state['count'] = self.dag.count
         return state
 
     def apply_state(self, state):
-        result = self.Mixin.apply_state(self, state)
+        result = MainWindow.apply_state(self, state)
         try:
             count = state['count']
             if self.dag.overridden('count'):
@@ -539,7 +539,7 @@ class DAGView(MainWindow):
         self.thread.start()
 
     def show(self):
-        self.Mixin.show(self)
+        MainWindow.show(self)
         self.treewidget.adjust_columns()
 
     def clear(self):
@@ -585,10 +585,10 @@ class DAGView(MainWindow):
     def closeEvent(self, event):
         self.revtext.close_popup()
         self.thread.stop()
-        self.Mixin.closeEvent(self, event)
+        MainWindow.closeEvent(self, event)
 
     def resizeEvent(self, e):
-        self.Mixin.resizeEvent(self, e)
+        MainWindow.resizeEvent(self, e)
         self.treewidget.adjust_columns()
 
 
