@@ -166,11 +166,11 @@ class Grep(Dialog):
         qtutils.connect_button(self.close_button, self.close)
         qtutils.add_close_action(self)
 
-        if not qtutils.apply_state(self):
+        if not self.restore_state():
             self.resize(666, 420)
 
     def done(self, exit_code):
-        qtutils.save_state(self)
+        self.save_state()
         return Dialog.done(self, exit_code)
 
     def regexp_mode(self):

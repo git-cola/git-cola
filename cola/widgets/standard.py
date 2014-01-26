@@ -5,21 +5,21 @@ from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import QDockWidget
 
 from cola import core
+from cola import gitcfg
 from cola import qtcompat
-from cola import qtutils
 from cola import settings
 
 
 class WidgetMixin(object):
+    """Mix-in for common utilities and serialization of widget state"""
 
-    # not exported
     def __init__(self, QtClass):
         self.QtClass = QtClass
+        self._apply_state_applied = False
 
-    # Mix-in for standard view operations
     def show(self):
         """Automatically centers dialogs"""
-        if self.parent():
+        if not self._apply_state_applied and self.parent() is not None:
             left = self.parent().x()
             width = self.parent().width()
             center_x = left + width/2
@@ -34,6 +34,16 @@ class WidgetMixin(object):
     def name(self):
         """Returns the name of the view class"""
         return self.__class__.__name__.lower()
+
+    def save_state(self, handler=None):
+        if handler is None:
+            handler = settings.Settings()
+        if gitcfg.instance().get('cola.savewindowsettings', True):
+            handler.save_gui_state(self)
+
+    def restore_state(self):
+        state = settings.Settings().get_gui_state(self)
+        return bool(state) and self.apply_state(state)
 
     def apply_state(self, state):
         """Imports data for view save/restore"""
@@ -51,6 +61,7 @@ class WidgetMixin(object):
                 self.showMaximized()
         except:
             result = False
+        self._apply_state_applied = result
         return result
 
     def export_state(self):
@@ -68,7 +79,7 @@ class WidgetMixin(object):
     def closeEvent(self, event):
         s = settings.Settings()
         s.add_recent(core.getcwd())
-        qtutils.save_state(self, handler=s)
+        self.save_state(handler=s)
         self.QtClass.closeEvent(self, event)
 
 
@@ -79,18 +90,25 @@ class MainWindowMixin(WidgetMixin):
         # Dockwidget options
         self.dockwidgets = []
         self.lock_layout = False
-        qtcompat.set_common_dock_options(self)
         self.widget_version = 0
+        qtcompat.set_common_dock_options(self)
 
     def export_state(self):
         """Exports data for save/restore"""
         state = WidgetMixin.export_state(self)
+        windowstate = self.saveState(self.widget_version)
         state['lock_layout'] = self.lock_layout
-        return qtutils.export_window_state(self, state, self.widget_version)
+        state['windowstate'] = unicode(windowstate.toBase64().data())
+        return state
 
     def apply_state(self, state):
-        WidgetMixin.apply_state(self, state)
-        result = qtutils.apply_window_state(self, state, self.widget_version)
+        result = WidgetMixin.apply_state(self, state)
+        windowstate = state.get('windowstate', None)
+        if windowstate is None:
+            result = False
+        else:
+            result = self.restoreState(QtCore.QByteArray.fromBase64(str(windowstate)),
+                                       self.widget_version) and result
         self.lock_layout = state.get('lock_layout', self.lock_layout)
         self.update_dockwidget_lock_state()
         self.update_dockwidget_tooltips()
@@ -232,13 +250,13 @@ class DraggableTreeMixin(TreeMixin):
 
     def __init__(self, QtClass):
         super(DraggableTreeMixin, self).__init__(QtClass)
-        self._inner_drag = False
         self.setAcceptDrops(True)
         self.setSelectionMode(self.SingleSelection)
         self.setDragEnabled(True)
         self.setDropIndicatorShown(True)
         self.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
         self.setSortingEnabled(False)
+        self._inner_drag = False
 
     def dragEnterEvent(self, event):
         """Accept internal drags only"""
@@ -258,13 +276,11 @@ class DraggableTreeMixin(TreeMixin):
         self._inner_drag = False
 
     def dropEvent(self, event):
-        """Add dropped patches"""
+        """Re-select selected items after an internal move"""
         if not self._inner_drag:
             event.ignore()
             return
-
         clicked_items = self.selected_items()
-
         event.setDropAction(Qt.MoveAction)
         self.QtClass.dropEvent(self, event)
 
@@ -272,15 +288,14 @@ class DraggableTreeMixin(TreeMixin):
             self.clearSelection()
             for item in clicked_items:
                 self.setItemSelected(item, True)
-
         self._inner_drag = False
         event.accept() # must be called after dropEvent()
 
     def mousePressEvent(self, event):
+        """Clear the selection when a mouse click hits no item"""
         clicked_item = self.itemAt(event.pos())
         if clicked_item is None:
             self.clearSelection()
-
         return self.QtClass.mousePressEvent(self, event)
 
 

@@ -12,7 +12,6 @@ from PyQt4.QtCore import SIGNAL
 from cola import core
 from cola import gitcfg
 from cola import utils
-from cola import settings
 from cola import resources
 from cola.compat import set
 from cola.decorators import memoize
@@ -476,35 +475,6 @@ def center_on_screen(widget):
     cy = rect.height()/2
     cx = rect.width()/2
     widget.move(cx - widget.width()/2, cy - widget.height()/2)
-
-
-def save_state(widget, handler=None):
-    if handler is None:
-        handler = settings.Settings()
-    if gitcfg.instance().get('cola.savewindowsettings', True):
-        handler.save_gui_state(widget)
-
-
-def export_window_state(widget, state, version):
-    # Save the window state
-    windowstate = widget.saveState(version)
-    state['windowstate'] = unicode(windowstate.toBase64().data())
-    return state
-
-
-def apply_window_state(widget, state, version):
-    # Restore the dockwidget, etc. window state
-    try:
-        windowstate = state['windowstate']
-        return widget.restoreState(QtCore.QByteArray.fromBase64(str(windowstate)),
-                                   version)
-    except KeyError:
-        return False
-
-
-def apply_state(widget):
-    state = settings.Settings().get_gui_state(widget)
-    return bool(state) and widget.apply_state(state)
 
 
 @memoize

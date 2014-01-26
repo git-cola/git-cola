@@ -133,7 +133,7 @@ class ApplyPatches(Dialog):
         qtutils.connect_button(self.apply_button, self.apply_patches)
         qtutils.connect_button(self.close_button, self.close)
 
-        if not qtutils.apply_state(self):
+        if not self.restore_state():
             self.resize(666, 420)
 
     def apply_patches(self):

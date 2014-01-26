@@ -64,7 +64,6 @@ class MainView(MainWindow):
         self.setAttribute(Qt.WA_MacMetalStyle)
 
         # Default size; this is thrown out when save/restore is used
-        self.resize(987, 610)
         self.model = model
         self.prefs_model = prefs_model = prefs.PreferencesModel()
 
@@ -466,7 +465,8 @@ class MainView(MainWindow):
         self.install_config_actions()
 
         # Restore saved settings
-        if not qtutils.apply_state(self):
+        if not self.restore_state():
+            self.resize(987, 610)
             self.set_initial_size()
 
         self.statusdockwidget.widget().setFocus()

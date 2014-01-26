@@ -263,7 +263,7 @@ class RemoteActionDialog(standard.Dialog):
         else:
             self.rebase_checkbox.hide()
 
-        if not qtutils.apply_state(self):
+        if not self.restore_state():
             self.resize(666, 420)
 
         self.remote_name.setFocus()
@@ -560,13 +560,14 @@ class Pull(RemoteActionDialog):
         RemoteActionDialog.__init__(self, model, PULL, parent=parent)
 
     def apply_state(self, state):
-        RemoteActionDialog.apply_state(self, state)
+        result = RemoteActionDialog.apply_state(self, state)
         try:
             rebase = state['rebase']
         except KeyError:
-            pass
+            result = False
         else:
             self.rebase_checkbox.setChecked(rebase)
+        return result
 
     def export_state(self):
         state = RemoteActionDialog.export_state(self)
@@ -574,5 +575,5 @@ class Pull(RemoteActionDialog):
         return state
 
     def done(self, exit_code):
-        qtutils.save_state(self)
+        self.save_state()
         return RemoteActionDialog.done(self, exit_code)

@@ -433,7 +433,7 @@ class DAGView(MainWindow):
         self.update_window_title()
 
         # Also re-loads dag.* from the saved state
-        if not qtutils.apply_state(self):
+        if not self.restore_state():
             self.resize_to_desktop()
 
         qtutils.connect_button(self.zoom_out, self.graphview.zoom_out)
