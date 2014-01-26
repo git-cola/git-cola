@@ -42,7 +42,7 @@ class MergeView(QtGui.QDialog):
         self.model = model
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
-        self.resize(700, 400)
+        self.setAttribute(Qt.WA_MacMetalStyle)
 
         # Widgets
         self.title_label = QtGui.QLabel()
@@ -129,6 +129,7 @@ class MergeView(QtGui.QDialog):
         # Observer messages
         model.add_observer(model.message_updated, self.update_all)
         self.update_all()
+        self.resize(700, 400)
 
     def update_all(self):
         """Set the branch name for the window title and label."""
