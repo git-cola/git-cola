@@ -1,2 +1,2 @@
 # The current git-cola version
-VERSION = '1.9.3'
+VERSION = '1.9.4'
