@@ -268,7 +268,7 @@ class DiffParser(object):
                 if special_selection in self.fwd_diff:
                     selection = special_selection
                 else:
-                    return 0, ''
+                    return 0, '', ''
             start = self.fwd_diff.index(selection)
             end = start + len(selection)
             self.set_diffs_to_range(start, end)
