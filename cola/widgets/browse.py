@@ -389,6 +389,7 @@ class BrowseModel(object):
 
 class SaveBlob(BaseCommand):
     def __init__(self, model):
+        BaseCommand.__init__(self)
         self.model = model
 
     def do(self):
