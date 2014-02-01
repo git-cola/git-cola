@@ -44,7 +44,7 @@ class BaseCommand(object):
         return self.undoable
 
     @staticmethod
-    def name(cls):
+    def name():
         return 'Unknown'
 
     def do(self):
