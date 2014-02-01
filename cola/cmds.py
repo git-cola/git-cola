@@ -589,6 +589,7 @@ class LaunchTerminal(BaseCommand):
         return N_('Launch Terminal')
 
     def __init__(self, path):
+        BaseCommand.__init__(self)
         self.path = path
 
     def do(self):
