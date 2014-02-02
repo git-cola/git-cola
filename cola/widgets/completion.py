@@ -134,9 +134,9 @@ class CompletionLineEdit(QtGui.QLineEdit):
 
         elif (event.key() == Qt.Key_Down and
               self._completer.completionCount() > 0):
-                event.accept()
-                self.do_completion()
-                return
+            event.accept()
+            self.do_completion()
+            return
 
         QtGui.QLineEdit.keyPressEvent(self, event)
 
