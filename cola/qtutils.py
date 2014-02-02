@@ -833,7 +833,7 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
                                              diff_head,
                                              diff_head))
         if self.whitespace:
-            self.create_rules('(..*?)(\\s+)$', (None, bad_ws))
+            self.create_rules(r'(..*?)(\s+)$', (None, bad_ws))
 
 
 def install():

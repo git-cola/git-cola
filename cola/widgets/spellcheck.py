@@ -166,7 +166,7 @@ class SpellCheckTextEdit(HintedTextEdit):
 
 class Highlighter(QSyntaxHighlighter):
 
-    WORDS = "(?iu)[\\w']+"
+    WORDS = r"(?iu)[\w']+"
 
     def __init__(self, doc, spellcheck):
         QSyntaxHighlighter.__init__(self, doc)
