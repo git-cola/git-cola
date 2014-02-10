@@ -116,7 +116,7 @@ mo:
 git-cola.app:
 	$(MKDIR_P) $(cola_app)/Contents/MacOS
 	$(MKDIR_P) $(cola_app)/Contents/Resources
-	$(CP) contrib/darwin/Info.plist darwin/PkgInfo $(cola_app)/Contents
+	$(CP) contrib/darwin/Info.plist contrib/darwin/PkgInfo $(cola_app)/Contents
 	$(CP) contrib/darwin/git-cola $(cola_app)/Contents/MacOS
 	$(CP) contrib/darwin/git-cola.icns $(cola_app)/Contents/Resources
 	$(MAKE) prefix=$(cola_app)/Contents/Resources install install-doc
