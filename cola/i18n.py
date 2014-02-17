@@ -32,6 +32,7 @@ def install(locale):
     if sys.platform == 'win32':
         _check_win32_locale()
     if locale:
+        compat.setenv('LANGUAGE', locale)
         compat.setenv('LANG', locale)
         compat.setenv('LC_MESSAGES', locale)
     _install_custom_language()
