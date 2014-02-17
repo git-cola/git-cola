@@ -62,3 +62,4 @@ Thanks
 * Taylor Braun-Jones
 * Ugo Riboni
 * Uri Okrent
+* Virgil Dupras
