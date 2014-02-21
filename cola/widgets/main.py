@@ -1,5 +1,7 @@
 """This view provides the main git-cola user interface.
 """
+from __future__ import division
+
 import os
 
 from PyQt4 import QtCore

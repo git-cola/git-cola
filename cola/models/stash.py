@@ -1,3 +1,5 @@
+from __future__ import division
+
 from cola import observable
 from cola.git import git
 from cola.git import STDOUT

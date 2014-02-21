@@ -1,3 +1,5 @@
+from __future__ import division
+
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
@@ -47,8 +49,8 @@ class ComboDialog(standard.Dialog):
         width = geom.width()
         height = geom.height()
         if self.parent():
-            x = self.parent().x() + self.parent().width()/2 - self.width()/2
-            y = self.parent().y() + self.parent().height()/3 - self.height()/2
+            x = self.parent().x() + self.parent().width()//2 - self.width()//2
+            y = self.parent().y() + self.parent().height()//3 - self.height()//2
             self.move(x, y)
         self.show()
         if self.exec_() == QtGui.QDialog.Accepted:

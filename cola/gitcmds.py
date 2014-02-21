@@ -1,4 +1,6 @@
 """Provides commands and queries for Git."""
+from __future__ import division
+
 import re
 from cStringIO import StringIO
 

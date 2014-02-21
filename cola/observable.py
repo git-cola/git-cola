@@ -1,5 +1,6 @@
 # Copyright (c) 2008 David Aguilar
 """This module provides the Observable class"""
+from __future__ import division
 
 from cola.compat import set
 

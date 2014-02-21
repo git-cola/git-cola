@@ -1,4 +1,5 @@
 """Provides the StashView dialog."""
+from __future__ import division
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui
@@ -95,7 +96,7 @@ class StashView(Dialog):
         self.main_layt.addLayout(self.btn_layt)
         self.setLayout(self.main_layt)
 
-        self.splitter.setSizes([self.width()/3, self.width()*2/3])
+        self.splitter.setSizes([self.width()//3, self.width()*2//3])
 
         self.update_from_model()
         self.update_actions()

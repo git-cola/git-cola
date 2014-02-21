@@ -1,3 +1,5 @@
+from __future__ import division
+
 import os
 import subprocess
 from cola import core

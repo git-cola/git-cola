@@ -1,6 +1,7 @@
 # Copyright (c) 2008 David Aguilar
 """This handles saving complex settings such as bookmarks, etc.
 """
+from __future__ import division
 
 import os
 import sys

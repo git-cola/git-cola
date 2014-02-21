@@ -1,3 +1,5 @@
+from __future__ import division
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
@@ -22,9 +24,9 @@ class WidgetMixin(object):
         if not self._apply_state_applied and self.parent() is not None:
             left = self.parent().x()
             width = self.parent().width()
-            center_x = left + width/2
+            center_x = left + width//2
 
-            x = center_x - self.width()/2
+            x = center_x - self.width()//2
             y = self.parent().y()
 
             self.move(x, y)

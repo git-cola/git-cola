@@ -1,3 +1,5 @@
+from __future__ import division
+
 from cola import gitcfg
 from cola import observable
 

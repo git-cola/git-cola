@@ -1,4 +1,6 @@
 """Provides the prefix() function for finding cola resources"""
+from __future__ import division
+
 import os
 import webbrowser
 from os.path import dirname

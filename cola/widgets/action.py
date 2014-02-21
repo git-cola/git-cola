@@ -1,4 +1,5 @@
 """The "Actions" widget"""
+from __future__ import division
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui

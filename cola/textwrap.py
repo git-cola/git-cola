@@ -1,5 +1,6 @@
 """Text wrapping and filling.
 """
+from __future__ import division
 
 # Copyright (C) 1999-2001 Gregory P. Ward.
 # Copyright (C) 2002, 2003 Python Software Foundation.

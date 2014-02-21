@@ -1,3 +1,5 @@
+from __future__ import division
+
 import collections
 import math
 import sys
@@ -274,8 +276,8 @@ class CommitTreeWidget(ViewerMixin, TreeWidget):
 
     def adjust_columns(self):
         width = self.width()-20
-        zero = width*2/3
-        onetwo = width/6
+        zero = width*2//3
+        onetwo = width//6
         self.setColumnWidth(0, zero)
         self.setColumnWidth(1, onetwo)
         self.setColumnWidth(2, onetwo)
@@ -1311,9 +1313,9 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
             max_ = scrollbar.maximum()
             range_ = max_ - min_
             distance = value - min_
-            nonzero_range = float(range_) > 0.1
+            nonzero_range = range_ > 0.1
             if nonzero_range:
-                scrolloffset = distance/float(range_)
+                scrolloffset = distance/range_
             else:
                 adjust_scrollbars = False
 

@@ -1,3 +1,5 @@
+from __future__ import division
+
 import os
 from PyQt4 import QtCore
 from PyQt4 import QtGui

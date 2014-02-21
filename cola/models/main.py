@@ -1,6 +1,7 @@
 # Copyright (c) 2008 David Aguilar
 """This module provides the central cola model.
 """
+from __future__ import division
 
 import os
 import copy
@@ -254,7 +255,7 @@ class MainModel(Observable):
 
         max_arg_len = 32 * 4 * 1024
         avg_filename_len = 300
-        size = max_arg_len / avg_filename_len
+        size = max_arg_len // avg_filename_len
 
         status = 0
         outs = []

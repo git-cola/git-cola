@@ -1,4 +1,6 @@
 """A widget for searching git commits"""
+from __future__ import division
+
 import os
 import time
 import subprocess

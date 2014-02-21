@@ -1,3 +1,5 @@
+from __future__ import division
+
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
@@ -72,7 +74,7 @@ class RemoteEditor(QtGui.QDialog):
         self._top_layout.addWidget(self.remotes)
         self._top_layout.addWidget(self.info)
         width = self._top_layout.width()
-        self._top_layout.setSizes([width/4, width*3/4])
+        self._top_layout.setSizes([width//4, width*3//4])
 
         self._button_layout = QtGui.QHBoxLayout()
         self._button_layout.addWidget(self.add_btn)

@@ -1,3 +1,5 @@
+from __future__ import division
+
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
@@ -278,11 +280,11 @@ class GrepTextView(HintedTextView):
                 Qt.Key_W)
 
         qtutils.add_action(self, 'PageUp',
-                lambda: self.page(-self.height()/2),
+                lambda: self.page(-self.height()//2),
                 'Shift+Space')
 
         qtutils.add_action(self, 'PageDown',
-                lambda: self.page(self.height()/2),
+                lambda: self.page(self.height()//2),
                 Qt.Key_Space)
 
     def contextMenuEvent(self, event):

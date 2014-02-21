@@ -5,6 +5,8 @@ The startup dialog is presented when no repositories can be
 found at startup.
 
 """
+from __future__ import division
+
 import os
 
 from PyQt4 import QtGui

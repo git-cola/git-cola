@@ -1,3 +1,5 @@
+from __future__ import division
+
 import time
 
 from PyQt4 import QtCore
@@ -337,13 +339,13 @@ class GitRepoInfoTask(QRunnable):
         """
         st = core.stat(self.path)
         elapsed = time.time() - st.st_mtime
-        minutes = int(elapsed / 60.)
+        minutes = int(elapsed / 60)
         if minutes < 60:
             return N_('%d minutes ago') % minutes
-        hours = int(elapsed / 60. / 60.)
+        hours = int(elapsed / 60 / 60)
         if hours < 24:
             return N_('%d hours ago') % hours
-        return N_('%d days ago') % int(elapsed / 60. / 60. / 24.)
+        return N_('%d days ago') % int(elapsed / 60 / 60 / 24)
 
     def status(self):
         """Return the status for the entry's path."""

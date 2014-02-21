@@ -1,3 +1,5 @@
+from __future__ import division
+
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
@@ -51,8 +53,8 @@ class FileWidget(TreeWidget):
 
     def adjust_columns(self):
         width = self.width()-20
-        zero = width*2/3
-        onetwo = width/6
+        zero = width*2//3
+        onetwo = width//6
         self.setColumnWidth(0, zero)
         self.setColumnWidth(1, onetwo)
         self.setColumnWidth(2, onetwo)

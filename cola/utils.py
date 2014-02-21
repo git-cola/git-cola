@@ -1,5 +1,6 @@
 # Copyright (c) 2008 David Aguilar
 """This module provides miscellaneous utility functions."""
+from __future__ import division
 
 import mimetypes
 import os

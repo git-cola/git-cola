@@ -1,6 +1,8 @@
 # Copyright (c) 2008 David Aguilar
 """This module provides miscellaneous Qt utility functions.
 """
+from __future__ import division
+
 import os
 import re
 
@@ -472,9 +474,9 @@ def center_on_screen(widget):
     """Move widget to the center of the default screen"""
     desktop = QtGui.QApplication.instance().desktop()
     rect = desktop.screenGeometry(QtGui.QCursor().pos())
-    cy = rect.height()/2
-    cx = rect.width()/2
-    widget.move(cx - widget.width()/2, cy - widget.height()/2)
+    cy = rect.height()//2
+    cx = rect.width()//2
+    widget.move(cx - widget.width()//2, cy - widget.height()//2)
 
 
 @memoize

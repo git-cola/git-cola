@@ -1,4 +1,6 @@
 """Provides widgets related to bookmarks"""
+from __future__ import division
+
 import os
 import sys
 

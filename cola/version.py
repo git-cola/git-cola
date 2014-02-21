@@ -1,5 +1,6 @@
 # Copyright (c) David Aguilar
 """Provide git-cola's version number"""
+from __future__ import division
 
 import os
 import sys

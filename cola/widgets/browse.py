@@ -1,3 +1,5 @@
+from __future__ import division
+
 import os
 
 from PyQt4 import QtGui
@@ -423,7 +425,7 @@ class BrowseDialog(QtGui.QDialog):
         dlg.setModel(dlg_model)
         dlg.setWindowTitle(N_('Browsing %s') % model.ref)
         if hasattr(parent, 'width'):
-            dlg.resize(parent.width()*3/4, 333)
+            dlg.resize(parent.width()*3//4, 333)
         else:
             dlg.resize(420, 333)
         dlg.show()
@@ -440,7 +442,7 @@ class BrowseDialog(QtGui.QDialog):
         dlg_model = GitTreeModel(ref, dlg)
         dlg.setModel(dlg_model)
         dlg.setWindowTitle(N_('Select file from "%s"') % model.ref)
-        dlg.resize(parent.width()*3/4, 333)
+        dlg.resize(parent.width()*3//4, 333)
         dlg.show()
         dlg.raise_()
         if dlg.exec_() != dlg.Accepted:
@@ -457,7 +459,7 @@ class BrowseDialog(QtGui.QDialog):
         dlg.setModel(dlg_model)
         dlg.expandAll()
         dlg.setWindowTitle(title)
-        dlg.resize(parent.width()*3/4, 333)
+        dlg.resize(parent.width()*3//4, 333)
         dlg.show()
         dlg.raise_()
         if dlg.exec_() != dlg.Accepted:
