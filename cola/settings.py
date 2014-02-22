@@ -93,7 +93,7 @@ class Settings(object):
             parent = os.path.dirname(path)
             if not core.isdir(parent):
                 core.makedirs(parent)
-            with core.xopen(path, 'wb') as fp:
+            with core.xopen(path, 'wt') as fp:
                 json.dump(self.values, fp, indent=4)
         except:
             sys.stderr.write('git-cola: error writing "%s"\n' % path)
@@ -106,7 +106,7 @@ class Settings(object):
         if not core.exists(path):
             return self._load_dot_cola()
         try:
-            fp = core.xopen(path, 'rb')
+            fp = core.xopen(path, 'rt')
             return mkdict(json.load(fp))
         except: # bad json
             return {}

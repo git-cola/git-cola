@@ -5,6 +5,7 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
 from cola.widgets import standard
+from cola.compat import ustr
 
 
 class ComboDialog(standard.Dialog):
@@ -41,7 +42,7 @@ class ComboDialog(standard.Dialog):
         return self.items_widget.currentIndex()
 
     def value(self):
-        return unicode(self.items_widget.currentText())
+        return ustr(self.items_widget.currentText())
 
     def selected(self):
         """Present the dialog and return the chosen item."""

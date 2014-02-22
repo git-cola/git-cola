@@ -13,6 +13,7 @@ import platform
 import subprocess
 
 from cola.decorators import interruptable
+from cola.compat import ustr
 
 # Some files are not in UTF-8; some other aren't in any codification.
 # Remember that GIT doesn't care about encodings (saves binary data)
@@ -27,7 +28,7 @@ _encoding_tests = [
 def decode(enc, encoding=None):
     """decode(encoded_string) returns an unencoded unicode string
     """
-    if enc is None or type(enc) is unicode:
+    if enc is None or type(enc) is ustr:
         return enc
 
     if encoding is None:
@@ -41,13 +42,13 @@ def decode(enc, encoding=None):
         except:
             pass
     # this shouldn't ever happen... FIXME
-    return unicode(enc)
+    return ustr(enc)
 
 
 def encode(string, encoding=None):
     """encode(unencoded_string) returns a string encoded in utf-8
     """
-    if type(string) is not unicode:
+    if type(string) is not ustr:
         return string
     return string.encode(encoding or 'utf-8', 'replace')
 
@@ -197,7 +198,7 @@ def decorate(decorator, fn):
 
 
 def getenv(name, default=None):
-    return decode(os.getenv(encode(name), default))
+    return decode(os.getenv(name, default))
 
 
 def xopen(path, mode='r', encoding=None):

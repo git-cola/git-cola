@@ -57,6 +57,7 @@ from cola.widgets.status import StatusWidget
 from cola.widgets.search import search
 from cola.widgets.standard import MainWindow
 from cola.widgets.stash import stash
+from cola.compat import unichr
 
 
 class MainView(MainWindow):

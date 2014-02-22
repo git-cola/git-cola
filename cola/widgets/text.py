@@ -5,6 +5,7 @@ from PyQt4.QtCore import Qt, SIGNAL
 
 from cola.models.prefs import tabwidth
 from cola.qtutils import diff_font
+from cola.compat import ustr
 
 
 class MonoTextEdit(QtGui.QTextEdit):
@@ -45,7 +46,7 @@ class MonoTextEdit(QtGui.QTextEdit):
     def selected_line(self):
         cursor = self.textCursor()
         offset = cursor.position()
-        contents = unicode(self.toPlainText())
+        contents = ustr(self.toPlainText())
         while (offset >= 1
                 and contents[offset-1]
                 and contents[offset-1] != '\n'):
@@ -169,7 +170,7 @@ class HintedTextEditMixin(HintedTextWidgetMixin):
                      self.emit_position)
 
     def as_unicode(self):
-        return unicode(self.toPlainText())
+        return ustr(self.toPlainText())
 
     def set_value(self, value):
         self.setPlainText(value)
@@ -223,7 +224,7 @@ class HintedLineEdit(QtGui.QLineEdit, HintedTextWidgetMixin):
         self.refresh_palette()
 
     def as_unicode(self):
-        return unicode(self.text())
+        return ustr(self.text())
 
     def reset_cursor(self):
         self.setCursorPosition(0)

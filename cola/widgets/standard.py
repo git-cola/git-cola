@@ -10,6 +10,7 @@ from cola import core
 from cola import gitcfg
 from cola import qtcompat
 from cola import settings
+from cola.compat import ustr
 
 
 class WidgetMixin(object):
@@ -100,7 +101,7 @@ class MainWindowMixin(WidgetMixin):
         state = WidgetMixin.export_state(self)
         windowstate = self.saveState(self.widget_version)
         state['lock_layout'] = self.lock_layout
-        state['windowstate'] = unicode(windowstate.toBase64().data())
+        state['windowstate'] = ustr(windowstate.toBase64().data())
         return state
 
     def apply_state(self, state):

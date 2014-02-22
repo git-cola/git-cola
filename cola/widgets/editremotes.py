@@ -12,6 +12,7 @@ from cola.i18n import N_
 from cola.models import main
 from cola.widgets import defs
 from cola.widgets import text
+from cola.compat import ustr
 
 
 def remote_editor():
@@ -157,7 +158,7 @@ class RemoteEditor(QtGui.QDialog):
             return
 
         old_name = self.remote_list[idx]
-        new_name = unicode(item.text())
+        new_name = ustr(item.text())
         if new_name == old_name:
             return
         if not new_name:

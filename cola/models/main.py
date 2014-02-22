@@ -15,6 +15,7 @@ from cola.observable import Observable
 from cola.decorators import memoize
 from cola.models.selection import selection_model
 from cola.models import prefs
+from cola.compat import ustr
 
 
 # Static GitConfig instance
@@ -303,7 +304,7 @@ class MainModel(Observable):
 
     def config_set(self, key, value, local=True):
         # git config category.key value
-        strval = unicode(value)
+        strval = ustr(value)
         if type(value) is bool:
             # git uses "true" and "false"
             strval = strval.lower()

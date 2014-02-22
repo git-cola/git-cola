@@ -58,11 +58,11 @@ def ident_file_type(filename):
     if core.exists(filename):
         filemimetype = mimetypes.guess_type(filename)
         if filemimetype[0] != None:
-            for filetype, iconname in KNOWN_FILE_MIME_TYPES.iteritems():
+            for filetype, iconname in KNOWN_FILE_MIME_TYPES.items():
                 if filetype in filemimetype[0].lower():
                     return iconname
         filename = filename.lower()
-        for fileext, iconname in KNOWN_FILE_EXTENSION.iteritems():
+        for fileext, iconname in KNOWN_FILE_EXTENSION.items():
             if filename.endswith(fileext):
                 return iconname
         return 'generic.png'
@@ -217,9 +217,13 @@ def _shell_split(s):
         return [core.encode(s)]
 
 
-def shell_split(s):
-    """Returns a unicode list instead of encoded strings"""
-    return [core.decode(arg) for arg in _shell_split(s)]
+if sys.version_info[0] == 3:
+    # In Python 3, we don't need the encode/decode dance
+    shell_split = shlex.split
+else:
+    def shell_split(s):
+        """Returns a unicode list instead of encoded strings"""
+        return [core.decode(arg) for arg in _shell_split(s)]
 
 
 def tmp_dir():
@@ -262,5 +266,5 @@ def is_win32():
 def checksum(path):
     """Return a cheap md5 hexdigest for a path."""
     md5 = hashlib.new('md5')
-    md5.update(core.read(path))
+    md5.update(open(path, 'rb').read())
     return md5.hexdigest()

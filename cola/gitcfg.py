@@ -9,7 +9,7 @@ from cola import git
 from cola import observable
 from cola.decorators import memoize
 from cola.git import STDOUT
-
+from cola.compat import ustr
 
 @memoize
 def instance():
@@ -209,7 +209,7 @@ class GitConfig(observable.Observable):
             else:
                 return 'false'
         if type(value) is int:
-            return unicode(value)
+            return ustr(value)
         return value
 
     def set_user(self, key, value):

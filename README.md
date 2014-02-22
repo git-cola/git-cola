@@ -46,7 +46,7 @@ New releases are available on the
 
 * [git](http://git-scm.com/) 1.6.3 or newer
 
-* [Python](http://python.org/) 2.6 and 2.7
+* [Python](http://python.org/) 2.6+ and 3.2+
 
 * [PyQt4](http://www.riverbankcomputing.co.uk/software/pyqt/download) 4.4 or newer
 

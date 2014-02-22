@@ -1,5 +1,29 @@
 import os
-from cola import core
+
+try:
+    ustr = unicode
+except NameError:
+    # Python 3
+    ustr = str
+
+try:
+    unichr = unichr
+except NameError:
+    # Python 3
+    unichr = chr
+
+try:
+    from cStringIO import StringIO
+except ImportError:
+    # Python 3
+    from io import StringIO
+
+try:
+    # Python 3
+    from urllib import parse
+    urllib = parse
+except ImportError:
+    import urllib
 
 def setenv(key, value):
     """Compatibility wrapper for setting environment variables
@@ -7,8 +31,8 @@ def setenv(key, value):
     Why?  win32 requires putenv().  UNIX only requires os.environ.
 
     """
-    os.environ[key] = core.encode(value)
-    os.putenv(key, core.encode(value))
+    os.environ[key] = value
+    os.putenv(key, value)
 
 
 def unsetenv(key):

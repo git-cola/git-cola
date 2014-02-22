@@ -244,6 +244,8 @@ class RepoReader(object):
             self._topo_list.append(c)
             return c
 
+    __next__ = next # for Python 3
+
     def __getitem__(self, sha1):
         return self._objects[sha1]
 

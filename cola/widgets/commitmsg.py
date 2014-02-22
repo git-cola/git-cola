@@ -31,6 +31,7 @@ from cola.widgets import defs
 from cola.widgets.selectcommits import select_commits
 from cola.widgets.spellcheck import SpellCheckTextEdit
 from cola.widgets.text import HintedLineEdit
+from cola.compat import ustr
 
 
 class CommitMessageEditor(QtGui.QWidget):
@@ -229,7 +230,7 @@ class CommitMessageEditor(QtGui.QWidget):
         "extended description" field.
 
         """
-        value = unicode(value)
+        value = ustr(value)
         if '\n' in value:
             summary, description = value.split('\n', 1)
             description = description.lstrip('\n')
@@ -271,7 +272,7 @@ class CommitMessageEditor(QtGui.QWidget):
             return
 
         # Parse the "summary" and "description" fields
-        umsg = unicode(message)
+        umsg = ustr(message)
         lines = umsg.splitlines()
 
         num_lines = len(lines)
@@ -542,7 +543,7 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
                     self.emit_leave()
                 event.accept()
                 return
-            text_before = unicode(self.toPlainText())[:position]
+            text_before = ustr(self.toPlainText())[:position]
             lines_before = text_before.count('\n')
             if lines_before == 0:
                 # If we're on the first line, but not at the
@@ -559,7 +560,7 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
         elif event.key() == Qt.Key_Down:
             cursor = self.textCursor()
             position = cursor.position()
-            all_text = unicode(self.toPlainText())
+            all_text = ustr(self.toPlainText())
             text_after = all_text[position:]
             lines_after = text_after.count('\n')
             if lines_after == 0:

@@ -96,7 +96,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
             return
         # Entries exist so try to find an a good insertion point
         done = False
-        for idx in xrange(parent.rowCount()):
+        for idx in range(parent.rowCount()):
             child = parent.child(idx, 0)
             if child.rowCount() > 0:
                 continue
@@ -121,9 +121,11 @@ class GitRepoModel(QtGui.QStandardItemModel):
         row_items[0].setIcon(qtutils.dir_icon())
 
         # Insert directories before file paths
-        row = self._dir_rows.setdefault(parent, 0)
+        # TODO: have self._dir_rows's keys based on something less flaky than
+        # QStandardItem instances.
+        row = self._dir_rows.setdefault(id(parent), 0)
         parent.insertRow(row, row_items)
-        self._dir_rows[parent] += 1
+        self._dir_rows[id(parent)] += 1
 
         # Update the 'name' column for this entry
         self.entry(path).update_name()

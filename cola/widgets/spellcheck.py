@@ -24,6 +24,7 @@ from PyQt4.QtCore import SIGNAL
 
 from cola.i18n import N_
 from cola.widgets.text import HintedTextEdit
+from cola.compat import ustr
 
 
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
@@ -134,7 +135,7 @@ class SpellCheckTextEdit(HintedTextEdit):
         # suggestions if it is.
         spell_menu = None
         if self.textCursor().hasSelection():
-            text = unicode(self.textCursor().selectedText())
+            text = ustr(self.textCursor().selectedText())
             if not self.spellcheck.check(text):
                 spell_menu = QMenu(N_('Spelling Suggestions'))
                 for word in self.spellcheck.suggest(text):
@@ -180,7 +181,7 @@ class Highlighter(QSyntaxHighlighter):
     def highlightBlock(self, text):
         if not self.enabled:
             return
-        text = unicode(text)
+        text = ustr(text)
         fmt = QTextCharFormat()
         fmt.setUnderlineColor(Qt.red)
         fmt.setUnderlineStyle(QTextCharFormat.SpellCheckUnderline)
@@ -200,7 +201,7 @@ class SpellAction(QAction):
         self.connect(self, SIGNAL('triggered()'), self.correct)
 
     def correct(self):
-        self.emit(SIGNAL('correct'), unicode(self.text()))
+        self.emit(SIGNAL('correct'), ustr(self.text()))
 
 
 def main(args=sys.argv):

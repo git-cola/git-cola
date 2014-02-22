@@ -2,7 +2,6 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import re
-from cStringIO import StringIO
 
 from cola import core
 from cola import gitcfg
@@ -11,11 +10,12 @@ from cola import version
 from cola.git import git
 from cola.git import STDOUT
 from cola.i18n import N_
+from cola.compat import StringIO
 
 config = gitcfg.instance()
 
 
-class InvalidRepositoryError(StandardError):
+class InvalidRepositoryError(Exception):
     pass
 
 
@@ -138,7 +138,7 @@ def for_each_ref_basename(refs, git=git):
     out = git.for_each_ref(refs, format='%(refname)')[STDOUT]
     output = out.splitlines()
     non_heads = filter(lambda x: not x.endswith('/HEAD'), output)
-    return map(lambda x: x[len(refs) + 1:], non_heads)
+    return list(map(lambda x: x[len(refs) + 1:], non_heads))
 
 
 def all_refs(split=False, git=git):
@@ -192,9 +192,7 @@ def untracked_files(git=git):
 
 def tag_list():
     """Return a list of tags."""
-    tags = for_each_ref_basename('refs/tags')
-    tags.reverse()
-    return tags
+    return list(reversed(for_each_ref_basename('refs/tags')))
 
 
 def log(git, *args, **kwargs):
@@ -296,7 +294,6 @@ def diff_helper(commit=None,
 
 def extract_diff_header(status, deleted,
                         with_diff_header, suppress_header, diffoutput):
-    encode = core.encode
     headers = []
 
     if diffoutput.startswith('Submodule'):
@@ -314,14 +311,14 @@ def extract_diff_header(status, deleted,
         if not start and '@@' == line[:2] and '@@' in line[2:]:
             start = True
         if start or (deleted and del_tag in line):
-            output.write(encode(line) + '\n')
+            output.write(line + '\n')
         else:
             if with_diff_header:
                 headers.append(line)
             elif not suppress_header:
-                output.write(encode(line) + '\n')
+                output.write(line + '\n')
 
-    result = core.decode(output.getvalue())
+    result = output.getvalue()
     output.close()
 
     if with_diff_header:

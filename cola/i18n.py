@@ -10,6 +10,10 @@ from cola import core
 from cola import resources
 
 _null_translation = _gettext.NullTranslations()
+# Python 3 compat
+if not hasattr(_null_translation, 'ugettext'):
+    _null_translation.ugettext = _null_translation.gettext
+    _null_translation.ungettext = _null_translation.ngettext
 _translation = _null_translation
 
 
@@ -41,6 +45,10 @@ def install(locale):
     _translation = _gettext.translation('git-cola',
                                         localedir=_get_locale_dir(),
                                         fallback=True)
+    # Python 3 compat
+    if not hasattr(_translation, 'ugettext'):
+        _translation.ugettext = _translation.gettext
+        _translation.ungettext = _translation.ngettext
 
 def uninstall():
     global _translation

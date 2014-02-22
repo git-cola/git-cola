@@ -26,6 +26,7 @@ from cola.models.selection import selection_model
 from cola.widgets import defs
 from cola.widgets import standard
 from cola.widgets.selectcommits import select_commits
+from cola.compat import ustr
 
 
 def worktree_browser_widget(parent, update=True):
@@ -353,7 +354,7 @@ class BrowserController(QtCore.QObject):
 
     def view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
-        entries = map(unicode, entries)
+        entries = map(ustr, entries)
         cmds.do(cmds.VisualizePaths, entries)
 
     def query_model(self, model_index):
@@ -365,7 +366,7 @@ class BrowserController(QtCore.QObject):
         self.updated.add(path)
         GitRepoEntryManager.entry(path).update()
         entry = GitRepoEntryManager.entry
-        for row in xrange(item.rowCount()):
+        for row in range(item.rowCount()):
             path = item.child(row, 0).path
             entry(path).update()
 

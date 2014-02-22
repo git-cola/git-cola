@@ -10,6 +10,8 @@ from __future__ import division, absolute_import, unicode_literals
 
 import re
 
+from cola.compat import ustr
+
 
 class TextWrapper(object):
     """
@@ -81,7 +83,7 @@ class TextWrapper(object):
           'use', ' ', 'the', ' ', '-b', ' ', option!'
         otherwise.
         """
-        if isinstance(text, unicode):
+        if isinstance(text, ustr):
             if self.break_on_hyphens:
                 pat = self.wordsep_re_uni
             else:
@@ -92,7 +94,7 @@ class TextWrapper(object):
             else:
                 pat = self.wordsep_simple_re
         chunks = pat.split(text)
-        chunks = filter(None, chunks)  # remove empty chunks
+        chunks = list(filter(None, chunks))  # remove empty chunks
         return chunks
 
     def _wrap_chunks(self, chunks):
@@ -111,7 +113,7 @@ class TextWrapper(object):
 
         # Arrange in reverse order so items can be efficiently popped
         # from a stack of chucks.
-        chunks.reverse()
+        chunks = list(reversed(chunks))
 
         while chunks:
 

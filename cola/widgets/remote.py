@@ -17,6 +17,7 @@ from cola.models import main
 from cola.qtutils import connect_button
 from cola.widgets import defs
 from cola.widgets import standard
+from cola.compat import ustr
 
 FETCH = 'Fetch'
 PUSH = 'Push'
@@ -322,7 +323,7 @@ class RemoteActionDialog(standard.Dialog):
         if item:
             self.remotes.setItemSelected(item, True)
             self.remotes.setCurrentItem(item)
-            self.set_remote_name(unicode(item.text()))
+            self.set_remote_name(ustr(item.text()))
             return True
         else:
             return False
@@ -401,9 +402,9 @@ class RemoteActionDialog(standard.Dialog):
 
     def common_args(self):
         """Returns git arguments common to fetch/push/pulll"""
-        remote_name = unicode(self.remote_name.text())
-        local_branch = unicode(self.local_branch.text())
-        remote_branch = unicode(self.remote_branch.text())
+        remote_name = ustr(self.remote_name.text())
+        local_branch = ustr(self.local_branch.text())
+        remote_branch = ustr(self.remote_branch.text())
 
         ffwd_only = self.ffwd_only_checkbox.isChecked()
         rebase = self.rebase_checkbox.isChecked()
@@ -429,7 +430,7 @@ class RemoteActionDialog(standard.Dialog):
         else: # if action == PULL:
             model_action = self.model.pull
 
-        remote_name = unicode(self.remote_name.text())
+        remote_name = ustr(self.remote_name.text())
         if not remote_name:
             errmsg = N_('No repository selected.')
             Interaction.log(errmsg)
@@ -439,8 +440,8 @@ class RemoteActionDialog(standard.Dialog):
                                                        self.model.remotes)
 
         # Check if we're about to create a new branch and warn.
-        remote_branch = unicode(self.remote_branch.text())
-        local_branch = unicode(self.local_branch.text())
+        remote_branch = ustr(self.remote_branch.text())
+        local_branch = ustr(self.local_branch.text())
 
         if action == PUSH and not remote_branch:
             branch = local_branch

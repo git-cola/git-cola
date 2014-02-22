@@ -20,6 +20,7 @@ from cola.qtutils import DiffSyntaxHighlighter
 from cola.qtutils import options_icon
 from cola.widgets import defs
 from cola.widgets.text import MonoTextView
+from cola.compat import ustr
 
 
 COMMITS_SELECTED = 'COMMITS_SELECTED'
@@ -240,7 +241,7 @@ class DiffEditor(DiffTextEdit):
             return
 
         offset, selection_text = self.offset_and_selection()
-        old_text = unicode(self.toPlainText())
+        old_text = ustr(self.toPlainText())
 
         DiffTextEdit.setPlainText(self, text)
 
@@ -267,7 +268,7 @@ class DiffEditor(DiffTextEdit):
     def offset_and_selection(self):
         cursor = self.textCursor()
         offset = cursor.position()
-        selection_text = unicode(cursor.selection().toPlainText())
+        selection_text = ustr(cursor.selection().toPlainText())
         return offset, selection_text
 
     # Mutators
@@ -489,7 +490,7 @@ class TextLabel(QtGui.QLabel):
             return
         text = self._metrics.elidedText(self._template,
                                         Qt.ElideRight, width-2)
-        if unicode(text) != self._template:
+        if ustr(text) != self._template:
             self._display = text
 
     # Qt overrides

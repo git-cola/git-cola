@@ -4,8 +4,6 @@ import os
 import sys
 from fnmatch import fnmatch
 
-from cStringIO import StringIO
-
 from cola import compat
 from cola import core
 from cola import gitcfg
@@ -24,10 +22,10 @@ from cola.models import selection
 _config = gitcfg.instance()
 
 
-class UsageError(StandardError):
+class UsageError(Exception):
     """Exception class for usage errors."""
     def __init__(self, title, message):
-        StandardError.__init__(self, message)
+        Exception.__init__(self, message)
         self.title = title
         self.msg = message
 
@@ -1196,7 +1194,7 @@ class UntrackedSummary(Command):
         Command.__init__(self)
         untracked = self.model.untracked
         suffix = len(untracked) > 1 and 's' or ''
-        io = StringIO()
+        io = compat.StringIO()
         io.write('# %s untracked file%s\n' % (len(untracked), suffix))
         if untracked:
             io.write('# possible .gitignore rule%s:\n' % suffix)
@@ -1314,7 +1312,7 @@ def do_cmd(cmd):
         return None
     try:
         return cmd.do()
-    except StandardError, e:
+    except Exception as e:
         msg, details = utils.format_exception(e)
         Interaction.critical(N_('Error'), message=msg, details=details)
         return None

@@ -2,6 +2,8 @@ from __future__ import division, absolute_import, unicode_literals
 
 from PyQt4 import QtCore, QtGui
 
+from cola.compat import ustr
+
 have_pygments = True
 try:
     from pygments.styles import get_style_by_name
@@ -59,7 +61,7 @@ def highlight_document(edit, filename):
         token_formats[token] = format
         return format
 
-    text = unicode(doc.toPlainText())
+    text = ustr(doc.toPlainText())
 
     block_count = 0
     block = doc.firstBlock()

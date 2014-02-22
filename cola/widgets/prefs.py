@@ -17,6 +17,7 @@ from cola.models.prefs import FONTDIFF
 from cola.qtutils import diff_font
 from cola.widgets import defs
 from cola.widgets import standard
+from cola.compat import ustr
 
 
 def preferences(model=None, parent=None):
@@ -76,7 +77,7 @@ class FormWidget(QtGui.QWidget):
 
     def _text_config_changed(self, config):
         def runner():
-            value = unicode(self.sender().text())
+            value = ustr(self.sender().text())
             cmds.do(SetConfig, self.model, self.source, config, value)
         return runner
 
@@ -222,11 +223,11 @@ class SettingsFormWidget(FormWidget):
         font = self.fixed_font.currentFont()
         font.setPointSize(size)
         cmds.do(SetConfig, self.model,
-                'user', FONTDIFF, unicode(font.toString()))
+                'user', FONTDIFF, ustr(font.toString()))
 
     def current_font_changed(self, font):
         cmds.do(SetConfig, self.model,
-                'user', FONTDIFF, unicode(font.toString()))
+                'user', FONTDIFF, ustr(font.toString()))
 
 
 class PreferencesView(standard.Dialog):
