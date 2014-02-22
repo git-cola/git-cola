@@ -1,7 +1,7 @@
 # Copyright (c) 2008 David Aguilar
 """This module provides miscellaneous Qt utility functions.
 """
-from __future__ import division
+from __future__ import division, absolute_import
 
 import os
 import re

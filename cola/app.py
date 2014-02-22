@@ -1,7 +1,7 @@
 # Copyright (C) 2009, 2010, 2011, 2012, 2013
 # David Aguilar <davvid@gmail.com>
 """Provides the main() routine and ColaApplicaiton"""
-from __future__ import division
+from __future__ import division, absolute_import
 
 import glob
 import os

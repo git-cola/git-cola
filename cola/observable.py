@@ -1,6 +1,6 @@
 # Copyright (c) 2008 David Aguilar
 """This module provides the Observable class"""
-from __future__ import division
+from __future__ import division, absolute_import
 
 class Observable(object):
     """Handles subject/observer notifications."""

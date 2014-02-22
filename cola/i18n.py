@@ -1,5 +1,5 @@
 """i18n and l10n support for git-cola"""
-from __future__ import division
+from __future__ import division, absolute_import
 
 import gettext as _gettext
 import os

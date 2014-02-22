@@ -1,6 +1,6 @@
 """This view provides the main git-cola user interface.
 """
-from __future__ import division
+from __future__ import division, absolute_import
 
 import os
 

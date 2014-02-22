@@ -1,5 +1,5 @@
 """Provides dialogs for comparing branches and commits."""
-from __future__ import division
+from __future__ import division, absolute_import
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui

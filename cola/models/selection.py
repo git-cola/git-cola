@@ -1,5 +1,5 @@
 """Provides a selection model to handle selection."""
-from __future__ import division
+from __future__ import division, absolute_import
 
 import collections
 
