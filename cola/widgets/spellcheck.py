@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, unicode_literals
 
 __copyright__ = """
 2012, Peter Norvig (http://norvig.com/spell-correct.html)

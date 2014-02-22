@@ -1,7 +1,7 @@
 # Copyright (c) 2008 David Aguilar
 """This module provides the central cola model.
 """
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, unicode_literals
 
 import os
 import copy

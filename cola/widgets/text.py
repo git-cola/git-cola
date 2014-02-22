@@ -1,4 +1,4 @@
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, unicode_literals
 
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import Qt, SIGNAL
@@ -134,7 +134,7 @@ class HintedTextWidgetMixin(object):
     def value(self):
         text = self.strip()
         if text == self._hint:
-            return u''
+            return ''
         else:
             return text
 

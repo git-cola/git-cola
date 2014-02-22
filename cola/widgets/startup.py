@@ -5,7 +5,7 @@ The startup dialog is presented when no repositories can be
 found at startup.
 
 """
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, unicode_literals
 
 import os
 

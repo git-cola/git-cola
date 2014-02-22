@@ -1,4 +1,4 @@
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, unicode_literals
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt

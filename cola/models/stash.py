@@ -1,4 +1,4 @@
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, unicode_literals
 
 from cola import observable
 from cola.git import git

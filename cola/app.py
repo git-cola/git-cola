@@ -1,7 +1,7 @@
 # Copyright (C) 2009, 2010, 2011, 2012, 2013
 # David Aguilar <davvid@gmail.com>
 """Provides the main() routine and ColaApplicaiton"""
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, unicode_literals
 
 import glob
 import os
@@ -25,7 +25,6 @@ except ImportError:
     sys.stderr.write('Please install it before using git-cola.\n')
     sys.stderr.write('e.g.: sudo apt-get install python-qt4\n')
     sys.exit(-1)
-
 
 # Import cola modules
 from cola import core

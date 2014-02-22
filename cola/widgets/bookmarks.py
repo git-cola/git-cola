@@ -1,5 +1,5 @@
 """Provides widgets related to bookmarks"""
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, unicode_literals
 
 import os
 import sys

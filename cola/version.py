@@ -1,6 +1,6 @@
 # Copyright (c) David Aguilar
 """Provide git-cola's version number"""
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, unicode_literals
 
 import os
 import sys

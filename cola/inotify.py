@@ -1,6 +1,6 @@
 # Copyright (c) 2008 David Aguilar
 """Provides an inotify plugin for Linux and other systems with pyinotify"""
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, unicode_literals
 
 import os
 from threading import Timer

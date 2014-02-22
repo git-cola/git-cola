@@ -1,4 +1,4 @@
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, unicode_literals
 
 import re
 import subprocess
@@ -98,12 +98,12 @@ class CompletionLineEdit(QtGui.QLineEdit):
 
     def _last_word(self):
         if self._ends_with_whitespace():
-            return u''
+            return ''
         words = self._words()
         if not words:
             return unicode(self.text())
         if not words[-1]:
-            return u''
+            return ''
         return words[-1]
 
     def event(self, event):
