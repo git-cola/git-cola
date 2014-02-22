@@ -1,31 +1,5 @@
 import os
 from cola import core
-try:
-    set = set
-except NameError:
-    from sets import Set as set
-    set = set
-
-try:
-    import simplejson as json
-except ImportError:
-    import json
-
-try:
-    import hashlib
-except ImportError:
-    import md5
-    class hashlib(object):
-        @staticmethod
-        def new(*args):
-            return md5.new()
-
-        @classmethod
-        def md5(cls, value=''):
-            obj = md5.new()
-            obj.update(value)
-            return obj
-
 
 def setenv(key, value):
     """Compatibility wrapper for setting environment variables

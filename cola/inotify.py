@@ -34,7 +34,6 @@ from PyQt4 import QtCore
 from cola import gitcfg
 from cola import cmds
 from cola import core
-from cola.compat import set
 from cola.git import STDOUT
 from cola.i18n import N_
 from cola.interaction import Interaction

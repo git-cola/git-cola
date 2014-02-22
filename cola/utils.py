@@ -13,7 +13,7 @@ import traceback
 
 from cola import core
 from cola import resources
-from cola.compat import hashlib
+import hashlib
 
 random.seed(hash(time.time()))
 

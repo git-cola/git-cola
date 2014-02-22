@@ -11,7 +11,6 @@ from PyQt4.QtCore import SIGNAL
 from cola.i18n import N_
 from cola import qtutils
 from cola import utils
-from cola.compat import set
 from cola.models import main
 from cola.widgets import defs
 

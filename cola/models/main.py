@@ -10,7 +10,6 @@ from cola import core
 from cola import git
 from cola import gitcfg
 from cola import gitcmds
-from cola.compat import set
 from cola.git import STDOUT
 from cola.observable import Observable
 from cola.decorators import memoize

@@ -2,8 +2,6 @@
 """This module provides the Observable class"""
 from __future__ import division
 
-from cola.compat import set
-
 class Observable(object):
     """Handles subject/observer notifications."""
     def __init__(self):

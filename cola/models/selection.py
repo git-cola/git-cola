@@ -3,7 +3,6 @@ from __future__ import division
 
 import collections
 
-from cola.compat import set
 from cola.observable import Observable
 from cola.decorators import memoize
 

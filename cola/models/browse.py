@@ -13,7 +13,6 @@ from cola import utils
 from cola import qtutils
 from cola import version
 from cola import resources
-from cola.compat import set
 from cola.git import STDOUT
 from cola.i18n import N_
 from cola.models import main

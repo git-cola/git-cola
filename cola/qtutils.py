@@ -15,7 +15,6 @@ from cola import core
 from cola import gitcfg
 from cola import utils
 from cola import resources
-from cola.compat import set
 from cola.decorators import memoize
 from cola.i18n import N_
 from cola.interaction import Interaction

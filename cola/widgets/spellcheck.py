@@ -22,7 +22,6 @@ from PyQt4.Qt import QTextCursor
 from PyQt4.Qt import Qt
 from PyQt4.QtCore import SIGNAL
 
-from cola.compat import set
 from cola.i18n import N_
 from cola.widgets.text import HintedTextEdit
 

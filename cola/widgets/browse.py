@@ -14,7 +14,6 @@ from cola import gitcmds
 from cola import utils
 from cola import qtutils
 from cola.cmds import BaseCommand
-from cola.compat import set
 from cola.git import git
 from cola.i18n import N_
 from cola.interaction import Interaction

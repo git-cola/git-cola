@@ -10,7 +10,6 @@ from cola import gitcmds
 from cola import gravatar
 from cola import qtutils
 from cola.cmds import run
-from cola.compat import set
 from cola.i18n import N_
 from cola.models import main
 from cola.models import selection

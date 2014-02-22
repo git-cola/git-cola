@@ -9,7 +9,7 @@ import sys
 from cola import core
 from cola import git
 from cola import resources
-from cola.compat import json
+import json
 
 
 def mkdict(obj):

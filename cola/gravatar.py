@@ -10,7 +10,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import resources
-from cola.compat import hashlib
+import hashlib
 
 
 class Gravatar(object):

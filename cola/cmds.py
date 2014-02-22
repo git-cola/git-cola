@@ -13,7 +13,6 @@ from cola import gitcmds
 from cola import utils
 from cola import difftool
 from cola import resources
-from cola.compat import set
 from cola.diffparse import DiffParser
 from cola.git import STDOUT
 from cola.i18n import N_
