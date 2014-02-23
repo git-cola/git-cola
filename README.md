@@ -44,13 +44,13 @@ New releases are available on the
 
 ## ACTIVE INGREDIENTS
 
-* [git](http://git-scm.com/) 1.6.3 or newer
+* [git](http://git-scm.com/) 1.6.3 or newer.
 
-* [Python](http://python.org/) 2.6+ and 3.2+
+* [Python](http://python.org/) 2.6, 2.7, and 3.2 or newer.
 
 * [PyQt4](http://www.riverbankcomputing.co.uk/software/pyqt/download) 4.4 or newer
 
-* [argparse](https://pypi.python.org/pypi/argparse) 1.1 or newer
+* [argparse](https://pypi.python.org/pypi/argparse) 1.1 or newer.
   argparse is part of the stdlib in Python 2.7; install argparse separately if
   you are running on Python 2.6.
 
