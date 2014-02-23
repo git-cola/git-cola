@@ -3,6 +3,7 @@ from __future__ import division, absolute_import, unicode_literals
 import os
 import sys
 from fnmatch import fnmatch
+from io import StringIO
 
 from cola import compat
 from cola import core
@@ -1194,13 +1195,13 @@ class UntrackedSummary(Command):
         Command.__init__(self)
         untracked = self.model.untracked
         suffix = len(untracked) > 1 and 's' or ''
-        io = compat.StringIO()
+        io = StringIO()
         io.write('# %s untracked file%s\n' % (len(untracked), suffix))
         if untracked:
             io.write('# possible .gitignore rule%s:\n' % suffix)
             for u in untracked:
-                io.write('/'+core.encode(u)+'\n')
-        self.new_diff_text = core.decode(io.getvalue())
+                io.write('/'+u+'\n')
+        self.new_diff_text = io.getvalue()
         self.new_mode = self.model.mode_untracked
 
 

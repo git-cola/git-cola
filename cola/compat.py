@@ -13,12 +13,6 @@ except NameError:
     unichr = chr
 
 try:
-    from cStringIO import StringIO
-except ImportError:
-    # Python 3
-    from io import StringIO
-
-try:
     # Python 3
     from urllib import parse
     urllib = parse
