@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 import time
 
 from PyQt4 import QtCore
@@ -11,7 +13,6 @@ from cola import utils
 from cola import qtutils
 from cola import version
 from cola import resources
-from cola.compat import set
 from cola.git import STDOUT
 from cola.i18n import N_
 from cola.models import main
@@ -95,7 +96,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
             return
         # Entries exist so try to find an a good insertion point
         done = False
-        for idx in xrange(parent.rowCount()):
+        for idx in range(parent.rowCount()):
             child = parent.child(idx, 0)
             if child.rowCount() > 0:
                 continue
@@ -120,9 +121,11 @@ class GitRepoModel(QtGui.QStandardItemModel):
         row_items[0].setIcon(qtutils.dir_icon())
 
         # Insert directories before file paths
-        row = self._dir_rows.setdefault(parent, 0)
+        # TODO: have self._dir_rows's keys based on something less flaky than
+        # QStandardItem instances.
+        row = self._dir_rows.setdefault(id(parent), 0)
         parent.insertRow(row, row_items)
-        self._dir_rows[parent] += 1
+        self._dir_rows[id(parent)] += 1
 
         # Update the 'name' column for this entry
         self.entry(path).update_name()
@@ -337,13 +340,13 @@ class GitRepoInfoTask(QRunnable):
         """
         st = core.stat(self.path)
         elapsed = time.time() - st.st_mtime
-        minutes = int(elapsed / 60.)
+        minutes = int(elapsed / 60)
         if minutes < 60:
             return N_('%d minutes ago') % minutes
-        hours = int(elapsed / 60. / 60.)
+        hours = int(elapsed / 60 / 60)
         if hours < 24:
             return N_('%d hours ago') % hours
-        return N_('%d days ago') % int(elapsed / 60. / 60. / 24.)
+        return N_('%d days ago') % int(elapsed / 60 / 60 / 24)
 
     def status(self):
         """Return the status for the entry's path."""

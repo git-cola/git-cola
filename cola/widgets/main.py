@@ -1,5 +1,7 @@
 """This view provides the main git-cola user interface.
 """
+from __future__ import division, absolute_import, unicode_literals
+
 import os
 
 from PyQt4 import QtCore
@@ -55,6 +57,7 @@ from cola.widgets.status import StatusWidget
 from cola.widgets.search import search
 from cola.widgets.standard import MainWindow
 from cola.widgets.stash import stash
+from cola.compat import unichr
 
 
 class MainView(MainWindow):

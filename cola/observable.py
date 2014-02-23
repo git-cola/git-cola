@@ -1,7 +1,6 @@
 # Copyright (c) 2008 David Aguilar
 """This module provides the Observable class"""
-
-from cola.compat import set
+from __future__ import division, absolute_import, unicode_literals
 
 class Observable(object):
     """Handles subject/observer notifications."""

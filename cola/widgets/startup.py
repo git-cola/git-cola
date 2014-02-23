@@ -5,6 +5,8 @@ The startup dialog is presented when no repositories can be
 found at startup.
 
 """
+from __future__ import division, absolute_import, unicode_literals
+
 import os
 
 from PyQt4 import QtGui
@@ -16,6 +18,7 @@ from cola import settings
 from cola import qtutils
 from cola.i18n import N_
 from cola.widgets import defs
+from cola.compat import ustr
 
 
 class StartupDialog(QtGui.QDialog):
@@ -142,12 +145,12 @@ class StartupDialog(QtGui.QDialog):
         if(index.row() == 0):
             self._open()
         else:
-            self._gitdir = unicode(self._bookmark_model.data(index).toString())
+            self._gitdir = ustr(self._bookmark_model.data(index).toString())
             if self._gitdir:
                 self.accept()
 
     def _get_selected_bookmark(self):
         selected = self._bookmark_list.selectedIndexes()
         if(len(selected) > 0 and selected[0].row() != 0):
-            return unicode(self._bookmark_model.data(selected[0]).toString())
+            return ustr(self._bookmark_model.data(selected[0]).toString())
         return None

@@ -1,5 +1,6 @@
 # Copyright (c) 2008 David Aguilar
 """This module provides miscellaneous utility functions."""
+from __future__ import division, absolute_import, unicode_literals
 
 import mimetypes
 import os
@@ -12,7 +13,7 @@ import traceback
 
 from cola import core
 from cola import resources
-from cola.compat import hashlib
+import hashlib
 
 random.seed(hash(time.time()))
 
@@ -57,11 +58,11 @@ def ident_file_type(filename):
     if core.exists(filename):
         filemimetype = mimetypes.guess_type(filename)
         if filemimetype[0] != None:
-            for filetype, iconname in KNOWN_FILE_MIME_TYPES.iteritems():
+            for filetype, iconname in KNOWN_FILE_MIME_TYPES.items():
                 if filetype in filemimetype[0].lower():
                     return iconname
         filename = filename.lower()
-        for fileext, iconname in KNOWN_FILE_EXTENSION.iteritems():
+        for fileext, iconname in KNOWN_FILE_EXTENSION.items():
             if filename.endswith(fileext):
                 return iconname
         return 'generic.png'
@@ -216,9 +217,13 @@ def _shell_split(s):
         return [core.encode(s)]
 
 
-def shell_split(s):
-    """Returns a unicode list instead of encoded strings"""
-    return [core.decode(arg) for arg in _shell_split(s)]
+if sys.version_info[0] == 3:
+    # In Python 3, we don't need the encode/decode dance
+    shell_split = shlex.split
+else:
+    def shell_split(s):
+        """Returns a unicode list instead of encoded strings"""
+        return [core.decode(arg) for arg in _shell_split(s)]
 
 
 def tmp_dir():
@@ -261,53 +266,5 @@ def is_win32():
 def checksum(path):
     """Return a cheap md5 hexdigest for a path."""
     md5 = hashlib.new('md5')
-    md5.update(core.read(path))
+    md5.update(open(path, 'rb').read())
     return md5.hexdigest()
-
-
-class ProgressIndicator(object):
-
-    """Simple progress indicator.
-
-    Displayed as a spinning character by default, but can be customized
-    by passing custom messages that overrides the spinning character.
-
-    """
-
-    States = ("|", "/", "-", "\\")
-
-    def __init__(self, prefix="", f=sys.stdout):
-        """Create a new ProgressIndicator, bound to the given file object."""
-        self.n = 0  # Simple progress counter
-        self.f = f  # Progress is written to this file object
-        self.prev_len = 0  # Length of previous msg (to be overwritten)
-        self.prefix = prefix  # Prefix prepended to each progress message
-        self.prefix_lens = [] # Stack of prefix string lengths
-
-    def pushprefix(self, prefix):
-        """Append the given prefix onto the prefix stack."""
-        self.prefix_lens.append(len(self.prefix))
-        self.prefix += prefix
-
-    def popprefix(self):
-        """Remove the last prefix from the prefix stack."""
-        prev_len = self.prefix_lens.pop()
-        self.prefix = self.prefix[:prev_len]
-
-    def __call__(self, msg = None, lf=False):
-        """Indicate progress, possibly with a custom message."""
-        if msg is None:
-            msg = self.States[self.n % len(self.States)]
-        msg = self.prefix + msg
-        print >> self.f, "\r%-*s" % (self.prev_len, msg),
-        self.prev_len = len(msg.expandtabs())
-        if lf:
-            print >> self.f
-            self.prev_len = 0
-        self.n += 1
-
-    def finish (self, msg="done", noprefix=False):
-        """Finalize progress indication with the given message."""
-        if noprefix:
-            self.prefix = ""
-        self(msg, True)

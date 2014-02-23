@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 import re
 import subprocess
 
@@ -9,9 +11,9 @@ from PyQt4.QtCore import SIGNAL
 from cola.i18n import N_
 from cola import qtutils
 from cola import utils
-from cola.compat import set
 from cola.models import main
 from cola.widgets import defs
+from cola.compat import ustr
 
 
 class CompletionLineEdit(QtGui.QLineEdit):
@@ -46,7 +48,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
         return self._completer.popup()
 
     def value(self):
-        return unicode(self.text())
+        return ustr(self.text())
 
     def _is_case_sensitive(self, text):
         return bool([char for char in text if char.isupper()])
@@ -74,7 +76,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
         This is the event handler for the QCompleter.activated(QString) signal,
         it is called when the user selects an item in the completer popup.
         """
-        completion = unicode(completion)
+        completion = ustr(completion)
         if not completion:
             self._do_text_changed('')
             return
@@ -89,20 +91,20 @@ class CompletionLineEdit(QtGui.QLineEdit):
         self._do_text_changed('')
 
     def _words(self):
-        return utils.shell_split(unicode(self.text()))
+        return utils.shell_split(ustr(self.text()))
 
     def _ends_with_whitespace(self):
-        text = unicode(self.text())
+        text = ustr(self.text())
         return text.rstrip() != text
 
     def _last_word(self):
         if self._ends_with_whitespace():
-            return u''
+            return ''
         words = self._words()
         if not words:
-            return unicode(self.text())
+            return ustr(self.text())
         if not words[-1]:
-            return u''
+            return ''
         return words[-1]
 
     def event(self, event):
@@ -141,7 +143,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
         QtGui.QLineEdit.keyPressEvent(self, event)
 
         prefix = self._last_word()
-        if prefix != unicode(self._completer.completionPrefix()):
+        if prefix != ustr(self._completer.completionPrefix()):
             self._update_popup_items(prefix)
 
         if len(event.text()) > 0 and len(prefix) > 0:
@@ -225,7 +227,7 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
         if not self.highlight_text:
             return QtGui.QStyledItemDelegate.paint(self, painter, option, index)
 
-        text = unicode(index.data().toPyObject())
+        text = ustr(index.data().toPyObject())
         if self.case_sensitive:
             html = text.replace(self.highlight_text,
                                 '<strong>%s</strong>' % self.highlight_text)
@@ -279,11 +281,11 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.connect(self.update_thread, SIGNAL('items_gathered'),
                      self.apply_matches)
 
-    def lower_completion_cmp(self, a, b):
-        return cmp(a.replace('.','').lower(), a.replace('.','').lower())
+    def lower_completion_key(self, x):
+        return x.replace('.','').lower()
 
-    def completion_cmp(self, a, b):
-        return cmp(a.replace('.',''), a.replace('.',''))
+    def completion_key(self, x):
+        return x.replace('.','')
 
     def update(self):
         case_sensitive = self.update_thread.case_sensitive
@@ -369,10 +371,10 @@ class GitCompletionModel(CompletionModel):
     def gather_matches(self, case_sensitive):
         if case_sensitive:
             transform = lambda x: x
-            compare = self.completion_cmp
+            keyfunc = self.completion_key
         else:
             transform = lambda x: x.lower()
-            compare = self.lower_completion_cmp
+            keyfunc = self.lower_completion_key
 
         matched_text = self.matched_text
         if matched_text:
@@ -384,7 +386,7 @@ class GitCompletionModel(CompletionModel):
         else:
             matched_refs = self.matches()
 
-        matched_refs.sort(cmp=compare)
+        matched_refs.sort(key=keyfunc)
         return (matched_refs, (), set())
 
     def emit_update(self):
@@ -446,10 +448,10 @@ class GitLogCompletionModel(GitRefCompletionModel):
 
         if case_sensitive:
             transform = lambda x: x
-            compare = self.completion_cmp
+            keyfunc = self.completion_key
         else:
             transform = lambda x: x.lower()
-            compare = self.lower_completion_cmp
+            keyfunc = self.lower_completion_key
 
         dirs = files_and_dirs.difference(files)
         matched_text = self.matched_text
@@ -459,7 +461,7 @@ class GitLogCompletionModel(GitRefCompletionModel):
         else:
             matched_paths = list(files_and_dirs)
 
-        matched_paths.sort(cmp=compare)
+        matched_paths.sort(key=keyfunc)
 
         return (matched_refs, matched_paths, dirs)
 
@@ -527,7 +529,7 @@ class GitDialog(QtGui.QDialog):
         self.ok_button.setEnabled(False)
 
     def text(self):
-        return unicode(self.lineedit.text())
+        return ustr(self.lineedit.text())
 
     def text_changed(self, txt):
         self.ok_button.setEnabled(bool(self.text()))

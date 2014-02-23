@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 import os
 from PyQt4 import QtCore
 from PyQt4 import QtGui
@@ -14,6 +16,7 @@ from cola.qtutils import create_button
 from cola.widgets import defs
 from cola.widgets import completion
 from cola.widgets import standard
+from cola.compat import ustr
 
 
 def install():
@@ -31,10 +34,10 @@ def confirm_config_action(name, opts):
     dlg.show()
     if dlg.exec_() != QtGui.QDialog.Accepted:
         return False
-    rev = unicode(dlg.revision())
+    rev = ustr(dlg.revision())
     if rev:
         opts['revision'] = rev
-    args = unicode(dlg.args())
+    args = ustr(dlg.args())
     if args:
         opts['args'] = args
     return True
@@ -313,7 +316,7 @@ class RevisionSelector(QtGui.QWidget):
         self._rev_label.setText(txt)
 
     def _set_revision_list(self):
-        sender = unicode(self.sender().objectName())
+        sender = ustr(self.sender().objectName())
         revs = self._revdict[sender]
         qtutils.set_items(self._rev_list, revs)
 

@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 import os
 import re
 
@@ -15,7 +17,7 @@ from cola.models import main
 from cola.widgets import completion
 from cola.widgets.browse import BrowseDialog
 from cola.widgets.selectcommits import select_commits
-
+from cola.compat import ustr
 
 
 def delete_branch():
@@ -88,7 +90,7 @@ def new_repo():
     paths = dlg.selectedFiles()
     if not paths:
         return None
-    path = unicode(paths[0])
+    path = ustr(paths[0])
     if not path:
         return None
     # Avoid needlessly calling `git init`.
@@ -182,9 +184,7 @@ def export_patches():
     to_export = select_commits(N_('Export Patches'), revs, summaries)
     if not to_export:
         return
-    to_export.reverse()
-    revs.reverse()
-    cmds.do(cmds.FormatPatch, to_export, revs)
+    cmds.do(cmds.FormatPatch, reversed(to_export), reversed(revs))
 
 
 def diff_expression():

@@ -1,6 +1,7 @@
 # Copyright (C) 2009, 2010, 2011, 2012, 2013
 # David Aguilar <davvid@gmail.com>
 """Provides the main() routine and ColaApplicaiton"""
+from __future__ import division, absolute_import, unicode_literals
 
 import glob
 import os
@@ -15,6 +16,15 @@ if sys.platform == 'darwin':
     if os.path.isdir(homebrew_mods):
         sys.path.append(homebrew_mods)
 
+import sip
+sip.setapi('QString', 1)
+sip.setapi('QDate', 1)
+sip.setapi('QDateTime', 1)
+sip.setapi('QTextStream', 1)
+sip.setapi('QTime', 1)
+sip.setapi('QUrl', 1)
+sip.setapi('QVariant', 1)
+
 try:
     from PyQt4 import QtGui
     from PyQt4 import QtCore
@@ -24,7 +34,6 @@ except ImportError:
     sys.stderr.write('Please install it before using git-cola.\n')
     sys.stderr.write('e.g.: sudo apt-get install python-qt4\n')
     sys.exit(-1)
-
 
 # Import cola modules
 from cola import core

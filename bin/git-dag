@@ -3,6 +3,8 @@
 """git-dag: An advanced git DAG visualizer
 """
 
+from __future__ import division, absolute_import, unicode_literals
+
 __copyright__ = """
 Copyright (C) 2007, 2008, 2009, 2010, 2011, 2012, 2013
 David Aguilar <davvid@gmail.com> and contributors

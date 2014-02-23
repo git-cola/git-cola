@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 import time
 
 from PyQt4 import QtGui

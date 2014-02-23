@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
@@ -13,6 +15,7 @@ from cola.models import selection
 from cola.widgets import completion
 from cola.widgets import defs
 from cola.widgets import standard
+from cola.compat import ustr
 
 
 def run():
@@ -130,7 +133,7 @@ class FileDiffDialog(QtGui.QDialog):
         self.refresh()
 
     def text_changed(self, txt):
-        self.expr = unicode(txt)
+        self.expr = ustr(txt)
         self.refresh()
 
     def refresh(self):
@@ -167,7 +170,7 @@ class FileDiffDialog(QtGui.QDialog):
 
     def _tree_double_clicked(self, item, column):
         path = item.data(0, QtCore.Qt.UserRole).toPyObject()
-        launch(self.diff_arg + ['--', unicode(path)])
+        launch(self.diff_arg + ['--', ustr(path)])
 
     def diff(self):
         items = self._tree.selectedItems()
@@ -175,4 +178,4 @@ class FileDiffDialog(QtGui.QDialog):
             return
         paths = [i.data(0, QtCore.Qt.UserRole).toPyObject() for i in items]
         for path in paths:
-            launch(self.diff_arg + ['--', unicode(path)])
+            launch(self.diff_arg + ['--', ustr(path)])

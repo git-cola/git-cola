@@ -1,6 +1,8 @@
 # Copyright (c) 2008 David Aguilar
 """This module provides miscellaneous Qt utility functions.
 """
+from __future__ import division, absolute_import, unicode_literals
+
 import os
 import re
 
@@ -13,12 +15,12 @@ from cola import core
 from cola import gitcfg
 from cola import utils
 from cola import resources
-from cola.compat import set
 from cola.decorators import memoize
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models.prefs import FONTDIFF
 from cola.widgets import defs
+from cola.compat import ustr
 
 
 def connect_action(action, fn):
@@ -47,7 +49,7 @@ def prompt(msg, title=None, text=''):
         title = msg
     result = QtGui.QInputDialog.getText(active_window(), msg, title,
                                         QtGui.QLineEdit.Normal, text)
-    return (unicode(result[0]), result[1])
+    return (ustr(result[0]), result[1])
 
 
 def create_listwidget_item(text, filename):
@@ -77,7 +79,7 @@ def confirm(title, text, informative_text, ok_text,
     """Confirm that an action should take place"""
     if icon is None:
         icon = ok_icon()
-    elif icon and isinstance(icon, basestring):
+    elif icon and isinstance(icon, ustr):
         icon = QtGui.QIcon(icon)
     msgbox = QtGui.QMessageBox(active_window())
     msgbox.setWindowModality(Qt.WindowModal)
@@ -244,7 +246,7 @@ def selected_items(list_widget, items):
 
 def open_file(title, directory=None):
     """Creates an Open File dialog and returns a filename."""
-    return unicode(QtGui.QFileDialog
+    return ustr(QtGui.QFileDialog
                         .getOpenFileName(active_window(), title, directory))
 
 
@@ -259,14 +261,14 @@ def opendir_dialog(title, path):
 
     flags = (QtGui.QFileDialog.ShowDirsOnly |
              QtGui.QFileDialog.DontResolveSymlinks)
-    return unicode(QtGui.QFileDialog
+    return ustr(QtGui.QFileDialog
                         .getExistingDirectory(active_window(),
                                               title, path, flags))
 
 
 def save_as(filename, title='Save As...'):
     """Creates a Save File dialog and returns a filename."""
-    return unicode(QtGui.QFileDialog
+    return ustr(QtGui.QFileDialog
                         .getSaveFileName(active_window(), title, filename))
 
 
@@ -299,7 +301,6 @@ def _add_action(widget, text, fn, connect, *shortcuts):
     action = QtGui.QAction(text, widget)
     connect(action, fn)
     if shortcuts:
-        shortcuts = list(set(shortcuts))
         action.setShortcuts(shortcuts)
         action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
         widget.addAction(action)
@@ -472,9 +473,9 @@ def center_on_screen(widget):
     """Move widget to the center of the default screen"""
     desktop = QtGui.QApplication.instance().desktop()
     rect = desktop.screenGeometry(QtGui.QCursor().pos())
-    cy = rect.height()/2
-    cx = rect.width()/2
-    widget.move(cx - widget.width()/2, cy - widget.height()/2)
+    cy = rect.height()//2
+    cx = rect.width()//2
+    widget.move(cx - widget.width()//2, cy - widget.height()//2)
 
 
 @memoize
@@ -508,7 +509,7 @@ def diff_font_str():
     font_str = gitcfg.instance().get(FONTDIFF)
     if font_str is None:
         font = default_monospace_font()
-        font_str = unicode(font.toString())
+        font_str = ustr(font.toString())
     return font_str
 
 
@@ -744,7 +745,7 @@ class GenericSyntaxHighligher(QtGui.QSyntaxHighlighter):
     def highlightBlock(self, qstr):
         if not self.enabled:
             return
-        ascii = unicode(qstr)
+        ascii = ustr(qstr)
         if not ascii:
             return
         formats = self.formats(ascii)

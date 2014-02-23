@@ -1,5 +1,6 @@
+from __future__ import division, absolute_import, unicode_literals
+
 import time
-import urllib
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -8,13 +9,15 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import resources
-from cola.compat import hashlib
+from cola import core
+from cola.compat import ustr, urllib
+import hashlib
 
 
 class Gravatar(object):
     @staticmethod
     def url_for_email(email, imgsize):
-        email_hash = hashlib.md5(email).hexdigest()
+        email_hash = hashlib.md5(core.encode(email)).hexdigest()
         default_url = 'http://git-cola.github.io/images/git-64x64.jpg'
         encoded_url = urllib.quote(default_url, '')
         query = '?s=%d&d=%s' % (imgsize, encoded_url)
@@ -72,8 +75,8 @@ class GravatarLabel(QtGui.QLabel):
         header = QtCore.QByteArray('Location')
         raw_header = reply.rawHeader(header)
         if raw_header:
-            location = unicode(QtCore.QString(raw_header)).strip()
-            request_location = unicode(
+            location = ustr(QtCore.QString(raw_header)).strip()
+            request_location = ustr(
                     Gravatar.url_for_email(self.email, self.imgsize))
             relocated = location != request_location
         else:
@@ -99,7 +102,7 @@ class GravatarLabel(QtGui.QLabel):
         # email address.  We can't blindly trust self.email else
         # we may add cache entries for thee wrong email address.
         url = Gravatar.url_for_email(email, self.imgsize)
-        if url == unicode(reply.url().toString()):
+        if url == ustr(reply.url().toString()):
             self.pixmaps[email] = pixmap
 
     def set_pixmap_from_response(self):

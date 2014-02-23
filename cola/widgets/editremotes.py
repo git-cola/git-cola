@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
@@ -10,6 +12,7 @@ from cola.i18n import N_
 from cola.models import main
 from cola.widgets import defs
 from cola.widgets import text
+from cola.compat import ustr
 
 
 def remote_editor():
@@ -72,7 +75,7 @@ class RemoteEditor(QtGui.QDialog):
         self._top_layout.addWidget(self.remotes)
         self._top_layout.addWidget(self.info)
         width = self._top_layout.width()
-        self._top_layout.setSizes([width/4, width*3/4])
+        self._top_layout.setSizes([width//4, width*3//4])
 
         self._button_layout = QtGui.QHBoxLayout()
         self._button_layout.addWidget(self.add_btn)
@@ -155,7 +158,7 @@ class RemoteEditor(QtGui.QDialog):
             return
 
         old_name = self.remote_list[idx]
-        new_name = unicode(item.text())
+        new_name = ustr(item.text())
         if new_name == old_name:
             return
         if not new_name:

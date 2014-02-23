@@ -26,7 +26,7 @@ from cola import difftool
 from cola import observable
 from cola import qtutils
 from cola import utils
-from cola.compat import set
+from cola.compat import ustr
 from cola.i18n import N_
 from cola.models.dag import DAG
 from cola.models.dag import RepoReader
@@ -325,7 +325,7 @@ class RebaseTreeWidget(DraggableTreeWidget):
         combo.setEditable(False)
         combo.setCurrentIndex(COMMAND_TO_IDX[item.command])
         combo.connect(combo, SIGNAL('currentIndexChanged(const QString &)'),
-                lambda s: self.set_command(item, unicode(s)))
+                lambda s: self.set_command(item, ustr(s)))
         self.setItemWidget(item, item.COMMAND_COLUMN, combo)
 
     def set_selected_to(self, command):

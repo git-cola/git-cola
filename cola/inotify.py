@@ -1,5 +1,6 @@
 # Copyright (c) 2008 David Aguilar
 """Provides an inotify plugin for Linux and other systems with pyinotify"""
+from __future__ import division, absolute_import, unicode_literals
 
 import os
 from threading import Timer
@@ -33,7 +34,6 @@ from PyQt4 import QtCore
 from cola import gitcfg
 from cola import cmds
 from cola import core
-from cola.compat import set
 from cola.git import STDOUT
 from cola.i18n import N_
 from cola.interaction import Interaction

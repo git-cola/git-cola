@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 import collections
 import math
 import sys
@@ -27,6 +29,7 @@ from cola.widgets.standard import TreeWidget
 from cola.widgets.diff import COMMITS_SELECTED
 from cola.widgets.diff import DiffWidget
 from cola.widgets.filelist import FileWidget
+from cola.compat import ustr
 
 
 def git_dag(model, args=None):
@@ -274,8 +277,8 @@ class CommitTreeWidget(ViewerMixin, TreeWidget):
 
     def adjust_columns(self):
         width = self.width()-20
-        zero = width*2/3
-        onetwo = width/6
+        zero = width*2//3
+        onetwo = width//6
         self.setColumnWidth(0, zero)
         self.setColumnWidth(1, onetwo)
         self.setColumnWidth(2, onetwo)
@@ -300,8 +303,7 @@ class CommitTreeWidget(ViewerMixin, TreeWidget):
         items = self.selectedItems()
         if not items:
             return
-        items.reverse()
-        sha1s = [item.commit.sha1 for item in items]
+        sha1s = [item.commit.sha1 for item in reversed(items)]
         all_sha1s = [c.sha1 for c in self.commits]
         cmds.do(cmds.FormatPatch, sha1s, all_sha1s)
 
@@ -479,7 +481,7 @@ class DAGView(MainWindow):
         qtutils.add_close_action(self)
 
     def text_changed(self, txt):
-        self.dag.ref = unicode(txt)
+        self.dag.ref = ustr(txt)
         self.update_window_title()
 
     def update_window_title(self):
@@ -520,7 +522,7 @@ class DAGView(MainWindow):
         self.display()
 
     def display(self):
-        new_ref = unicode(self.revtext.text())
+        new_ref = ustr(self.revtext.text())
         if not new_ref:
             return
         new_count = self.maxresults.value()
@@ -1311,9 +1313,9 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
             max_ = scrollbar.maximum()
             range_ = max_ - min_
             distance = value - min_
-            nonzero_range = float(range_) > 0.1
+            nonzero_range = range_ > 0.1
             if nonzero_range:
-                scrolloffset = distance/float(range_)
+                scrolloffset = distance/range_
             else:
                 adjust_scrollbars = False
 
@@ -1384,7 +1386,7 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
                 # shift them to the right to avoid overlapping edges
                 child_gens = [c.generation for c in node.children]
                 maxgen = max(child_gens)
-                for g in xrange(generation + 1, maxgen):
+                for g in range(generation + 1, maxgen):
                     x_offsets[g] += x_off
 
             if len(node.parents) == 1:
@@ -1426,7 +1428,7 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
     def sort_by_generation(self, commits):
         if len(commits) < 2:
             return commits
-        commits.sort(cmp=lambda a, b: cmp(a.generation, b.generation))
+        commits.sort(key=lambda x: x.generation)
         return commits
 
     # Qt overrides

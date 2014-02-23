@@ -1,4 +1,6 @@
 """A widget for searching git commits"""
+from __future__ import division, absolute_import, unicode_literals
+
 import os
 import time
 import subprocess
@@ -20,6 +22,7 @@ from cola.qtutils import dir_icon
 from cola.widgets import defs
 from cola.widgets import standard
 from cola.widgets.diff import DiffTextEdit
+from cola.compat import ustr
 
 
 def mkdate(timespec):
@@ -301,7 +304,7 @@ class Search(SearchWidget):
 
     def search_callback(self, *args):
         engineclass = self.engines[self.mode()]
-        self.model.query = unicode(self.query.text())
+        self.model.query = ustr(self.query.text())
         self.model.max_count = self.max_count.value()
 
         fmt = QtCore.Qt.ISODate
@@ -322,7 +325,7 @@ class Search(SearchWidget):
             return
         filepaths = []
         lenprefix = len(os.getcwd()) + 1
-        for path in map(lambda x: unicode(x), paths):
+        for path in map(lambda x: ustr(x), paths):
             if not path.startswith(os.getcwd()):
                 continue
             filepaths.append(path[lenprefix:])

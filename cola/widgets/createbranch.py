@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
@@ -12,6 +14,7 @@ from cola.models import main
 from cola.widgets import defs
 from cola.widgets import completion
 from cola.widgets.standard import Dialog
+from cola.compat import ustr
 
 
 def create_new_branch(revision=''):
@@ -234,7 +237,7 @@ class CreateBranchDialog(Dialog):
 
     def getopts(self):
         self.opts.revision = self.revision.value()
-        self.opts.branch = unicode(self.branch_name.text())
+        self.opts.branch = ustr(self.branch_name.text())
         self.opts.checkout = self.checkout_checkbox.isChecked()
         self.opts.reset = self.reset_radio.isChecked()
         self.opts.fetch = self.fetch_checkbox.isChecked()

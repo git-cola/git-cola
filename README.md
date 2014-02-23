@@ -46,13 +46,13 @@ New releases are available on the
 
 * [git](http://git-scm.com/) 1.6.3 or newer
 
-* [Python](http://python.org/) 2.5 through 2.7
+* [Python](http://python.org/) 2.6+ and 3.2+
 
 * [PyQt4](http://www.riverbankcomputing.co.uk/software/pyqt/download) 4.4 or newer
 
 * [argparse](https://pypi.python.org/pypi/argparse) 1.1 or newer
   argparse is part of the stdlib in Python 2.7; install argparse separately if
-  you are running on Python 2.6 or below.
+  you are running on Python 2.6.
 
 ## ADDITIVES
 

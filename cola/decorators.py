@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 __all__ = ('decorator', 'memoize', 'interruptable')
 
 import errno
@@ -65,11 +67,11 @@ def interruptable(func, *args, **opts):
     while True:
         try:
             result = func(*args, **opts)
-        except IOError, e:
+        except IOError as e:
             if e.errno == errno.EINTR:
                 continue
             raise e
-        except OSError, e:
+        except OSError as e:
             if e.errno in (errno.EINTR, errno.EINVAL):
                 continue
             raise e

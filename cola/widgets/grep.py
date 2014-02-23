@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
@@ -13,6 +15,7 @@ from cola.qtutils import diff_font
 from cola.widgets import defs
 from cola.widgets.standard import Dialog
 from cola.widgets.text import HintedTextView, HintedLineEdit
+from cola.compat import ustr
 
 
 def grep():
@@ -176,7 +179,7 @@ class Grep(Dialog):
     def regexp_mode(self):
         idx = self.regexp_combo.currentIndex()
         data = self.regexp_combo.itemData(idx, Qt.UserRole).toPyObject()
-        return unicode(data)
+        return ustr(data)
 
     def search(self):
         self.edit_button.setEnabled(False)
@@ -278,11 +281,11 @@ class GrepTextView(HintedTextView):
                 Qt.Key_W)
 
         qtutils.add_action(self, 'PageUp',
-                lambda: self.page(-self.height()/2),
+                lambda: self.page(-self.height()//2),
                 'Shift+Space')
 
         qtutils.add_action(self, 'PageDown',
-                lambda: self.page(self.height()/2),
+                lambda: self.page(self.height()//2),
                 Qt.Key_Space)
 
     def contextMenuEvent(self, event):

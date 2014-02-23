@@ -10,7 +10,7 @@ __contact__ = "http://github.com/michaeljones"
 __homepage__ = "http://github.com/michaeljones/sphinx-to-github"
 __docformat__ = "restructuredtext"
 
-from sphinxtogithub import (
+from .sphinxtogithub import (
     setup,
     sphinx_extension,
     LayoutFactory,

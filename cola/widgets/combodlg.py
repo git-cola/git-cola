@@ -1,8 +1,11 @@
+from __future__ import division, absolute_import, unicode_literals
+
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
 from cola.widgets import standard
+from cola.compat import ustr
 
 
 class ComboDialog(standard.Dialog):
@@ -39,7 +42,7 @@ class ComboDialog(standard.Dialog):
         return self.items_widget.currentIndex()
 
     def value(self):
-        return unicode(self.items_widget.currentText())
+        return ustr(self.items_widget.currentText())
 
     def selected(self):
         """Present the dialog and return the chosen item."""
@@ -47,8 +50,8 @@ class ComboDialog(standard.Dialog):
         width = geom.width()
         height = geom.height()
         if self.parent():
-            x = self.parent().x() + self.parent().width()/2 - self.width()/2
-            y = self.parent().y() + self.parent().height()/3 - self.height()/2
+            x = self.parent().x() + self.parent().width()//2 - self.width()//2
+            y = self.parent().y() + self.parent().height()//3 - self.height()//2
             self.move(x, y)
         self.show()
         if self.exec_() == QtGui.QDialog.Accepted:

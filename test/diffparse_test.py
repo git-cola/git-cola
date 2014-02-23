@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import os
 import unittest
 
@@ -109,7 +110,7 @@ class DiffParseTestCase(unittest.TestCase):
         self.assertEqual(parser.offsets(), [30])
         self.assertEqual(parser.spans(), [[0, 30]])
         self.assertEqual(parser.diffs_for_range(0, 10),
-                         ([u'@@ -1 +1,4 @@\n bar\n+a\n+b\n+c\n\n'],
+                         (['@@ -1 +1,4 @@\n bar\n+a\n+b\n+c\n\n'],
                           [0]))
         self.assertEqual(parser.ranges()[0].begin, [1, 1])
         self.assertEqual(parser.ranges()[0].end, [1, 4])
@@ -146,7 +147,7 @@ class DiffParseTestCase(unittest.TestCase):
         self.assertEqual(parser.offsets(), [33])
         self.assertEqual(parser.spans(), [[0, 33]])
         self.assertEqual(parser.diffs_for_range(0, 1),
-                         ([u'@@ -1,2 +0,0 @@\n-first\n-second\n\n'],
+                         (['@@ -1,2 +0,0 @@\n-first\n-second\n\n'],
                           [0]))
 
         self.assertEqual(parser.ranges()[0].begin, [1, 2])

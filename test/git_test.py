@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """Tests various operations using the cola.git module
 """
+from __future__ import unicode_literals
 
 import time
 import signal

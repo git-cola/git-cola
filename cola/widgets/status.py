@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 import os
 import subprocess
 import itertools
@@ -11,7 +13,6 @@ from cola import cmds
 from cola import core
 from cola import qtutils
 from cola import utils
-from cola.compat import set
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main

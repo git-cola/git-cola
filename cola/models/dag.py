@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 import subprocess
 
 from cola import core
@@ -241,6 +243,8 @@ class RepoReader(object):
             self._objects[c.sha1] = c
             self._topo_list.append(c)
             return c
+
+    __next__ = next # for Python 3
 
     def __getitem__(self, sha1):
         return self._objects[sha1]

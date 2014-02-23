@@ -1,4 +1,6 @@
 """Provides widgets related to bookmarks"""
+from __future__ import division, absolute_import, unicode_literals
+
 import os
 import sys
 
@@ -11,7 +13,6 @@ from cola import cmds
 from cola import core
 from cola import qtutils
 from cola import settings
-from cola.compat import set
 from cola.i18n import N_
 from cola.settings import Settings
 from cola.widgets import defs

@@ -1,5 +1,6 @@
 #! /usr/bin/env python
- 
+from __future__ import print_function
+
 from optparse import OptionParser
 import warnings
 import os
@@ -275,12 +276,12 @@ def sphinx_extension(app, exception):
 
     if not app.config.sphinx_to_github:
         if app.config.sphinx_to_github_verbose:
-            print "Sphinx-to-github: Disabled, doing nothing."
+            print("Sphinx-to-github: Disabled, doing nothing.")
         return
 
     if exception:
         if app.config.sphinx_to_github_verbose:
-            print "Sphinx-to-github: Exception raised in main build, doing nothing."
+            print("Sphinx-to-github: Exception raised in main build, doing nothing.")
         return
 
     dir_helper = DirHelper(

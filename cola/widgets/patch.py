@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 import os
 
 from PyQt4 import QtCore
@@ -11,6 +13,7 @@ from cola.i18n import N_
 from cola.widgets import defs
 from cola.widgets.standard import Dialog
 from cola.widgets.standard import DraggableTreeWidget
+from cola.compat import ustr
 
 
 def apply_patches():
@@ -44,7 +47,7 @@ def get_patches_from_mimedata(mimedata):
     urls = mimedata.urls()
     if not urls:
         return []
-    paths = map(lambda x: unicode(x.path()), urls)
+    paths = map(lambda x: ustr(x.path()), urls)
     return get_patches_from_paths(paths)
 
 
@@ -140,7 +143,7 @@ class ApplyPatches(Dialog):
         items = self.tree.items()
         if not items:
             return
-        patches = [unicode(i.data(0, Qt.UserRole).toPyObject()) for i in items]
+        patches = [ustr(i.data(0, Qt.UserRole).toPyObject()) for i in items]
         cmds.do(cmds.ApplyPatches, patches)
         self.accept()
 
@@ -150,7 +153,7 @@ class ApplyPatches(Dialog):
                                    filter='Patches (*.patch *.mbox)')
         if not files:
             return
-        files = [unicode(f) for f in files]
+        files = [ustr(f) for f in files]
         self.curdir = os.path.dirname(files[0])
         self.add_paths([os.path.relpath(f) for f in files])
 

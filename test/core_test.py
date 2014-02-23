@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
+from __future__ import unicode_literals
 import unittest
 
 import helper
@@ -15,7 +16,7 @@ class CoreColaUnicodeTestCase(unittest.TestCase):
         """Test the core.decode function
         """
         filename = helper.fixture('unicode.txt')
-        expect = core.decode(core.encode(u'unicøde'))
+        expect = core.decode(core.encode('unicøde'))
         actual = core.read(filename).strip()
         self.assertEqual(expect, actual)
 
@@ -23,7 +24,7 @@ class CoreColaUnicodeTestCase(unittest.TestCase):
         """Test the core.encode function
         """
         filename = helper.fixture('unicode.txt')
-        expect = core.encode(u'unicøde')
+        expect = core.encode('unicøde')
         actual = core.encode(core.read(filename).strip())
         self.assertEqual(expect, actual)
 

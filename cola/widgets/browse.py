@@ -1,3 +1,5 @@
+from __future__ import division, absolute_import, unicode_literals
+
 import os
 
 from PyQt4 import QtGui
@@ -12,7 +14,6 @@ from cola import gitcmds
 from cola import utils
 from cola import qtutils
 from cola.cmds import BaseCommand
-from cola.compat import set
 from cola.git import git
 from cola.i18n import N_
 from cola.interaction import Interaction
@@ -25,6 +26,7 @@ from cola.models.selection import selection_model
 from cola.widgets import defs
 from cola.widgets import standard
 from cola.widgets.selectcommits import select_commits
+from cola.compat import ustr
 
 
 def worktree_browser_widget(parent, update=True):
@@ -352,7 +354,7 @@ class BrowserController(QtCore.QObject):
 
     def view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
-        entries = map(unicode, entries)
+        entries = map(ustr, entries)
         cmds.do(cmds.VisualizePaths, entries)
 
     def query_model(self, model_index):
@@ -364,7 +366,7 @@ class BrowserController(QtCore.QObject):
         self.updated.add(path)
         GitRepoEntryManager.entry(path).update()
         entry = GitRepoEntryManager.entry
-        for row in xrange(item.rowCount()):
+        for row in range(item.rowCount()):
             path = item.child(row, 0).path
             entry(path).update()
 
@@ -423,7 +425,7 @@ class BrowseDialog(QtGui.QDialog):
         dlg.setModel(dlg_model)
         dlg.setWindowTitle(N_('Browsing %s') % model.ref)
         if hasattr(parent, 'width'):
-            dlg.resize(parent.width()*3/4, 333)
+            dlg.resize(parent.width()*3//4, 333)
         else:
             dlg.resize(420, 333)
         dlg.show()
@@ -440,7 +442,7 @@ class BrowseDialog(QtGui.QDialog):
         dlg_model = GitTreeModel(ref, dlg)
         dlg.setModel(dlg_model)
         dlg.setWindowTitle(N_('Select file from "%s"') % model.ref)
-        dlg.resize(parent.width()*3/4, 333)
+        dlg.resize(parent.width()*3//4, 333)
         dlg.show()
         dlg.raise_()
         if dlg.exec_() != dlg.Accepted:
@@ -457,7 +459,7 @@ class BrowseDialog(QtGui.QDialog):
         dlg.setModel(dlg_model)
         dlg.expandAll()
         dlg.setWindowTitle(title)
-        dlg.resize(parent.width()*3/4, 333)
+        dlg.resize(parent.width()*3//4, 333)
         dlg.show()
         dlg.raise_()
         if dlg.exec_() != dlg.Accepted:

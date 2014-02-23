@@ -1,6 +1,7 @@
 # Copyright (c) 2008 David Aguilar
 """This module provides the central cola model.
 """
+from __future__ import division, absolute_import, unicode_literals
 
 import os
 import copy
@@ -9,12 +10,12 @@ from cola import core
 from cola import git
 from cola import gitcfg
 from cola import gitcmds
-from cola.compat import set
 from cola.git import STDOUT
 from cola.observable import Observable
 from cola.decorators import memoize
 from cola.models.selection import selection_model
 from cola.models import prefs
+from cola.compat import ustr
 
 
 # Static GitConfig instance
@@ -254,7 +255,7 @@ class MainModel(Observable):
 
         max_arg_len = 32 * 4 * 1024
         avg_filename_len = 300
-        size = max_arg_len / avg_filename_len
+        size = max_arg_len // avg_filename_len
 
         status = 0
         outs = []
@@ -303,7 +304,7 @@ class MainModel(Observable):
 
     def config_set(self, key, value, local=True):
         # git config category.key value
-        strval = unicode(value)
+        strval = ustr(value)
         if type(value) is bool:
             # git uses "true" and "false"
             strval = strval.lower()

@@ -1,5 +1,6 @@
 # Copyright (c) David Aguilar
 """Provide git-cola's version number"""
+from __future__ import division, absolute_import, unicode_literals
 
 import os
 import sys
@@ -19,7 +20,7 @@ _versions = {
     # git-mergetool learned --no-prompt in 1.6.2
     # git-difftool moved out of contrib in git 1.6.3
     'git': '1.6.3',
-    'python': '2.4',
+    'python': '2.6',
     'pyqt': '4.4',
     'pyqt_qrunnable': '4.4',
     'diff-submodule': '1.6.6',

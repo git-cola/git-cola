@@ -1,4 +1,6 @@
 """Covers interfaces used by the classic view."""
+from __future__ import unicode_literals
+
 import os
 
 import helper

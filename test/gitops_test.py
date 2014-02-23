@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 """Tests basic git operations: commit, log, config"""
+from __future__ import unicode_literals
+
 import os
 import unittest
 

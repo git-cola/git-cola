@@ -1,10 +1,16 @@
 # -*- encoding: utf-8 -*-
+from __future__ import unicode_literals
+
+import sip
+sip.setapi('QString', 1)
+
 import unittest
 
 from PyQt4 import QtCore
 
 from cola import i18n
 from cola.i18n import N_
+from cola.compat import unichr
 
 
 class ColaI18nTestCase(unittest.TestCase):
