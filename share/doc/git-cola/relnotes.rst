@@ -1,5 +1,5 @@
 git-cola v1.9.4
----------------
+===============
 Usability, bells and whistles
 -----------------------------
 * The new `Bookmarks` tool makes it really easy to switch between repositories.
@@ -22,7 +22,7 @@ Fixes
 * Lots of pylint fixes thanks to Alex Chernetz.
 
 git-cola v1.9.3
----------------
+===============
 Usability, bells and whistles
 -----------------------------
 * `git cola --amend` now starts the editor in `amend` mode.
@@ -46,7 +46,7 @@ Fixes
   http://comments.gmane.org/gmane.linux.gentoo.devel/85066
 
 git-cola v1.9.2
----------------
+===============
 Fixes
 -----
 * Fix a traceback when `git push` fails.
@@ -65,7 +65,7 @@ Packaging
   https://github.com/git-cola/git-cola/issues/209
 
 git-cola v1.9.1
----------------
+===============
 Packaging
 ---------
 * `git cola version --brief` now prints the brief version number.
@@ -78,7 +78,7 @@ Fixes
 * Fixed the typo that broke the preferences dialog.
 
 git-cola v1.9.0
----------------
+===============
 Usability, bells and whistles
 -----------------------------
 * We now ship a full-featured interactive `git rebase` editor.
@@ -116,7 +116,7 @@ Fixes
 * Support unicode in the output from `fetch`, `push`, and `pull`.
 
 git-cola v1.8.5
----------------
+===============
 Usability, bells and whistles
 -----------------------------
 * We now detect when the editor or history browser are misconfigured.
