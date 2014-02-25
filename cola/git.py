@@ -63,7 +63,7 @@ class Git(object):
         self.set_worktree(core.getcwd())
 
     def set_worktree(self, path):
-        self._git_dir = path
+        self._git_dir = core.decode(path)
         self._git_file_path = None
         self._worktree = None
         return self.worktree()
