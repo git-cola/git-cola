@@ -14,16 +14,14 @@
 # Set COLA_NUM_JOBS to control the number of cores used to build.
 # This script defaults to 2.
 # The only real trick was the python compile options for the utf.
-# You should run "make prefix=$HOME/apps/git-cola install" in the
-# git-cola repo after running this script.
+# You should run
+# "make prefix=$HOME/apps/git-cola PYTHON=$HOME/apps/git-cola/bin/python install"
+# in the git-cola repo after running this script.
 
-# To run git cola, I just created another script that adds the proper paths:
-# !/bin/sh
-# COLA_PREFIX="$HOME/apps/git-cola"
-# PATH="$COLA_PREFIX/bin:$PATH"
-# PYTHONPATH="$COLA_PREFIX/Python:$PYTHONPATH"
-# export PATH PYTHONPATH
-# $COLA_PREFIX/bin/git-cola
+# To run git cola, use it directly through $COLA_PREFIX/bin/git-cola.
+# There is also a softlink at $COLA_PREFIX/bin/cola.
+# You can add the $COLA_PREFIX/bin to your PATH or softlink git-cola (or cola)
+# from a directory that is already in your PATH.
 
 # This is the directory where git-cola will be installed
 COLA_PREFIX=${COLA_PREFIX:-"$HOME/apps/git-cola"}
@@ -47,16 +45,16 @@ tar -zxvf "$COLA_PYTHON".tgz
 compile_top="$PWD"
 
 cd "$compile_top/$COLA_QT"
-./configure -prefix $install_dir -confirm-license
+./configure -prefix $COLA_PREFIX -confirm-license
 make -j "$COLA_NUM_JOBS" && make install
 
 cd "$compile_top/$COLA_PYTHON"
-./configure --prefix=$install_dir --enable-unicode=ucs4
+./configure --prefix=$COLA_PREFIX --enable-unicode=ucs4
 make -j "$COLA_NUM_JOBS" && make install
 
 pybin="$COLA_PREFIX/bin/python"
 
-cd "$COMPILE_TOP/$COLA_SIP"
+cd "$compile_top/$COLA_SIP"
 "$pybin" ./configure.py &&
 make -j "$COLA_NUM_JOBS" && make install
 
