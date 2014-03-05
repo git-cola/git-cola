@@ -338,7 +338,10 @@ class GitRepoInfoTask(QRunnable):
         'git log' information.
 
         """
-        st = core.stat(self.path)
+        try:
+            st = core.stat(self.path)
+        except:
+            return N_('%d minutes ago') % 0
         elapsed = time.time() - st.st_mtime
         minutes = int(elapsed / 60)
         if minutes < 60:
