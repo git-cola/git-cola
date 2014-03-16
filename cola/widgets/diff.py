@@ -145,6 +145,7 @@ class DiffEditor(DiffTextEdit):
         """Create the context menu for the diff display."""
         menu = QtGui.QMenu(self)
         s = selection.selection()
+        filename = selection.filename()
 
         if self.model.stageable():
             if s.modified and s.modified[0] in main.model().submodules:
@@ -186,8 +187,13 @@ class DiffEditor(DiffTextEdit):
                 menu.addAction(self.action_unstage_selection)
 
         if self.model.stageable() or self.model.unstageable():
-            menu.addSeparator()
-            menu.addAction(self.launch_editor)
+            # Do not show the "edit" action when the file does not exist.
+            # Untracked files exist by definition.
+            if filename and core.exists(filename):
+                menu.addSeparator()
+                menu.addAction(self.launch_editor)
+
+            # Removed files can still be diffed.
             menu.addAction(self.launch_difftool)
 
         menu.addSeparator()
