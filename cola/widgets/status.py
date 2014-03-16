@@ -468,10 +468,15 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                     cmds.run(cmds.Unstage, self.staged()))
             action.setShortcut(cmds.Unstage.SHORTCUT)
 
-        menu.addAction(self.launch_editor)
-        menu.addAction(self.launch_difftool)
+        # Do all of the selected items exist?
+        staged_items = self.staged_items()
+        all_exist = all([i.exists for i in staged_items])
 
-        if not utils.is_win32():
+        if all_exist:
+            menu.addAction(self.launch_editor)
+            menu.addAction(self.launch_difftool)
+
+        if all_exist and not utils.is_win32():
             menu.addSeparator()
             action = menu.addAction(qtutils.file_icon(),
                     cmds.OpenDefaultApp.name(),
@@ -550,10 +555,14 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                     cmds.run(cmds.Stage, self.unstaged()))
             action.setShortcut(cmds.Stage.SHORTCUT)
 
-        if self.unstaged():
+        # Do all of the selected items exist?
+        unstaged_items = self.unstaged_items()
+        all_exist = all([i.exists for i in unstaged_items])
+
+        if all_exist and self.unstaged():
             menu.addAction(self.launch_editor)
 
-        if s.modified and self.m.stageable():
+        if all_exist and s.modified and self.m.stageable():
             menu.addAction(self.launch_difftool)
 
         if s.modified and self.m.stageable():
@@ -565,7 +574,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                lambda: self._revert_uncommitted_edits(
                                             self.modified()))
 
-        if self.unstaged() and not utils.is_win32():
+        if all_exist and self.unstaged() and not utils.is_win32():
             menu.addSeparator()
             action = menu.addAction(qtutils.file_icon(),
                     cmds.OpenDefaultApp.name(),
@@ -577,7 +586,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                     self._open_parent_dir)
             action.setShortcut(cmds.OpenParentDir.SHORTCUT)
 
-        if s.untracked:
+        if all_exist and s.untracked:
             menu.addSeparator()
             menu.addAction(qtutils.discard_icon(),
                            N_('Delete File(s)...'), self._delete_files)
@@ -746,9 +755,29 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def untracked(self):
         return self._subtree_selection(self.idx_untracked, self.m.untracked)
 
+    def staged_items(self):
+        return self._subtree_selection_items(self.idx_staged)
+
+    def unstaged_items(self):
+        return (self.unmerged_items() + self.modified_items() +
+                self.untracked_items())
+
+    def modified_items(self):
+        return self._subtree_selection_items(self.idx_modified)
+
+    def unmerged_items(self):
+        return self._subtree_selection_items(self.idx_unmerged)
+
+    def untracked_items(self):
+        return self._subtree_selection_items(self.idx_untracked)
+
     def _subtree_selection(self, idx, items):
         item = self.topLevelItem(idx)
         return qtutils.tree_selection(item, items)
+
+    def _subtree_selection_items(self, idx):
+        item = self.topLevelItem(idx)
+        return qtutils.tree_selection_items(item)
 
     def double_clicked(self, item, idx):
         """Called when an item is double-clicked in the repo status tree."""

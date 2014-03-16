@@ -1,5 +1,12 @@
 git-cola v2.0.1
 ===============
+Usability, bells and whistles
+-----------------------------
+* Some context menu actions are now hidden when selected
+  files do not exist.
+
+  https://github.com/git-cola/git-cola/issues/238
+
 Fixes
 -----
 * The build-git-cola.sh contrib script was improved.
