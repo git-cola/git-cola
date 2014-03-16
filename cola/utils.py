@@ -53,9 +53,9 @@ def add_parents(path_entry_set):
     return path_entry_set
 
 
-def ident_file_type(filename):
+def ident_file_type(filename, exists):
     """Returns an icon based on the contents of filename."""
-    if core.exists(filename):
+    if exists:
         filemimetype = mimetypes.guess_type(filename)
         if filemimetype[0] != None:
             for filetype, iconname in KNOWN_FILE_MIME_TYPES.items():
@@ -77,7 +77,8 @@ def file_icon(filename):
     Returns the full path to an icon file corresponding to
     filename"s contents.
     """
-    return resources.icon(ident_file_type(filename))
+    exists = core.exists(filename)
+    return (resources.icon(ident_file_type(filename, exists)), exists)
 
 
 def format_exception(e):

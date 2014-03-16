@@ -60,13 +60,18 @@ def create_listwidget_item(text, filename):
     return item
 
 
-def create_treewidget_item(text, filename):
+class TreeWidgetItem(QtGui.QTreeWidgetItem):
+
+    def __init__(self, text, filename, exists):
+        QtGui.QTreeWidgetItem.__init__(self)
+        self.exists = exists
+        self.setIcon(0, cached_icon_from_path(filename))
+        self.setText(0, text)
+
+
+def create_treewidget_item(text, filename, exists=True):
     """Creates a QTreeWidgetItem with text and the icon at filename."""
-    icon = cached_icon_from_path(filename)
-    item = QtGui.QTreeWidgetItem()
-    item.setIcon(0, icon)
-    item.setText(0, text)
-    return item
+    return TreeWidgetItem(text, filename, exists)
 
 
 @memoize
@@ -209,11 +214,23 @@ def selection_list(listwidget, items):
 def tree_selection(treeitem, items):
     """Returns model items that correspond to selected widget indices"""
     itemcount = treeitem.childCount()
-    widgetitems = [ treeitem.child(idx) for idx in range(itemcount) ]
+    widgetitems = [treeitem.child(idx) for idx in range(itemcount)]
     selected = []
     for item, widgetitem in zip(items[:len(widgetitems)], widgetitems):
         if widgetitem.isSelected():
             selected.append(item)
+
+    return selected
+
+
+def tree_selection_items(item):
+    """Returns selected widget items"""
+    count = item.childCount()
+    childitems = [item.child(idx) for idx in range(count)]
+    selected = []
+    for child in childitems:
+        if child.isSelected():
+            selected.append(child)
 
     return selected
 
@@ -329,16 +346,18 @@ def set_items(widget, items):
 
 def icon_file(filename, staged=False, untracked=False):
     """Returns a file path representing a corresponding file path."""
+    exists = True
     if staged:
-        if core.exists(filename):
+        exists = core.exists(filename)
+        if exists:
             ifile = resources.icon('staged-item.png')
         else:
             ifile = resources.icon('removed.png')
     elif untracked:
         ifile = resources.icon('untracked.png')
     else:
-        ifile = utils.file_icon(filename)
-    return ifile
+        (ifile, exists) = utils.file_icon(filename)
+    return (ifile, exists)
 
 
 def icon_for_file(filename, staged=False, untracked=False):
@@ -352,10 +371,12 @@ def create_treeitem(filename, staged=False, untracked=False, check=True):
     for adding to a QListWidget.  "staged" and "untracked"
     controls whether to use the appropriate icons."""
     if check:
-        ifile = icon_file(filename, staged=staged, untracked=untracked)
+        (ifile, exists) = icon_file(filename,
+                                    staged=staged, untracked=untracked)
     else:
+        exists = True
         ifile = resources.icon('staged.png')
-    return create_treewidget_item(filename, ifile)
+    return create_treewidget_item(filename, ifile, exists=exists)
 
 
 def update_file_icons(widget, items, staged=True,
