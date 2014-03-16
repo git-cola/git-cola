@@ -9,8 +9,9 @@ Tools can be hidden and rearranged however you like.
 `git cola` carefully remembers your window layout and restores
 it the next time it is launched.
 
+The `Control-{1,2,3,..}` hotkey gives focus to a specific tool.
 A hidden tool can be re-opened using the `Tools` menu as well
-as the `Alt-1,2,3,...`, shortcut keys.
+as the `Shift+Control-{1,2,3,.}`, shortcut keys.
 
 .. _status:
 
