@@ -1,3 +1,21 @@
+git-cola v2.0.1
+===============
+Fixes
+-----
+* The build-git-cola.sh contrib script was improved.
+
+  https://github.com/git-cola/git-cola/pull/235
+
+* Non-ascii worktrees work properly again.
+
+  https://github.com/git-cola/git-cola/issues/234
+
+* The browser now guards itself against missing files.
+
+* Saving widget state now works under Python3.
+
+  https://github.com/git-cola/git-cola/pull/236
+
 git-cola v2.0.0
 ===============
 Portability
