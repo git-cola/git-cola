@@ -19,6 +19,8 @@ Fixes
 
 * The browser now guards itself against missing files.
 
+  https://bugzilla.redhat.com/show_bug.cgi?id=1071378
+
 * Saving widget state now works under Python3.
 
   https://github.com/git-cola/git-cola/pull/236
