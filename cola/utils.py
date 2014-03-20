@@ -155,16 +155,16 @@ def strip_one(path):
     """Strip one level of directory
 
     >>> strip_one('/usr/bin/git')
-    'bin/git'
+    u'bin/git'
 
     >>> strip_one('local/bin/git')
-    'bin/git'
+    u'bin/git'
 
     >>> strip_one('bin/git')
-    'git'
+    u'git'
 
     >>> strip_one('git')
-    'git'
+    u'git'
 
     """
     return path.strip('/').split('/', 1)[-1]

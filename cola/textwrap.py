@@ -203,14 +203,14 @@ def word_wrap(text, tabwidth, limit):
 
     >>> text = 'a bb ccc dddd\neeeee'
     >>> word_wrap(text, 8, 2)
-    'a\nbb\nccc\ndddd\neeeee'
+    u'a\nbb\nccc\ndddd\neeeee'
 
     >>> word_wrap(text, 8, 4)
-    'a bb\nccc\ndddd\neeeee'
+    u'a bb\nccc\ndddd\neeeee'
 
     >>> text = 'a bb ccc dddd\n\teeeee'
     >>> word_wrap(text, 8, 4)
-    'a bb\nccc\ndddd\n\t\neeeee'
+    u'a bb\nccc\ndddd\n\t\neeeee'
 
     """
 
