@@ -126,10 +126,8 @@ class FileSysEvent(ProcessEvent):
         """Queues up inotify events for broadcast"""
         if not event.name:
             return
-        path = os.path.join(event.path, event.name)
-        if os.path.exists(path):
-            path = os.path.relpath(path)
-            self._handler.handle(path)
+        path = os.path.relpath(os.path.join(event.path, event.name))
+        self._handler.handle(path)
 
 
 class GitNotifier(QtCore.QThread):
@@ -154,6 +152,7 @@ class GitNotifier(QtCore.QThread):
         if utils.is_linux():
             self._mask = (EventsCodes.ALL_FLAGS['IN_ATTRIB'] |
                           EventsCodes.ALL_FLAGS['IN_CLOSE_WRITE'] |
+                          EventsCodes.ALL_FLAGS['IN_CREATE'] |
                           EventsCodes.ALL_FLAGS['IN_DELETE'] |
                           EventsCodes.ALL_FLAGS['IN_MODIFY'] |
                           EventsCodes.ALL_FLAGS['IN_MOVED_TO'])
@@ -165,14 +164,14 @@ class GitNotifier(QtCore.QThread):
 
     def _watch_directory(self, directory):
         """Set up a directory for monitoring by inotify"""
-        if not self._wmgr:
+        if self._wmgr is None:
             return
         directory = core.realpath(directory)
-        if not core.exists(directory):
+        if directory in self._dirs_seen:
             return
-        if directory not in self._dirs_seen:
+        self._dirs_seen.add(directory)
+        if core.exists(directory):
             self._wmgr.add_watch(directory, self._mask)
-            self._dirs_seen.add(directory)
 
     def _is_pyinotify_08x(self):
         """Is this pyinotify 0.8.x?

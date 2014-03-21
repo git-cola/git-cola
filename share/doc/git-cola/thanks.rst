@@ -48,7 +48,7 @@ Thanks
 * Michael Homer
 * Minarto Margoliono
 * Nicolas Dietrich
-* Omega Weapon
+* OmegaPhil (Omega Weapon)
 * Owen Healy
 * Paolo G. Giarrusso
 * Peter Júnoš
