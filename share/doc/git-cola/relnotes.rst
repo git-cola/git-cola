@@ -1,3 +1,16 @@
+git-cola v2.0.2
+===============
+Usability, bells and whistles
+-----------------------------
+* Better inotify support for file creation and deletion.
+
+  https://github.com/git-cola/git-cola/issues/240
+
+Fixes
+-----
+* Reworked the git-dag gravatar icon code to avoid a unicode
+  error in Python 2.
+
 git-cola v2.0.1
 ===============
 Usability, bells and whistles
