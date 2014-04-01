@@ -11,6 +11,10 @@ Fixes
 * Reworked the git-dag gravatar icon code to avoid a unicode
   error in Python 2.
 
+* Commit message line-wrapping was made to better match the GUI editor.
+
+  https://github.com/git-cola/git-cola/issues/242
+
 git-cola v2.0.1
 ===============
 Usability, bells and whistles

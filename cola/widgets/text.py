@@ -27,13 +27,13 @@ class MonoTextEdit(QtGui.QTextEdit):
         self._tabwidth = width
         font = self.font()
         fm = QtGui.QFontMetrics(font)
-        pixels = fm.width('m' * width)
+        pixels = fm.width('M' * width)
         self.setTabStopWidth(pixels)
 
     def set_textwidth(self, width):
         font = self.font()
         fm = QtGui.QFontMetrics(font)
-        pixels = fm.width('m' * (width + 2))
+        pixels = fm.width('M' * (width + 1)) + 1
         self.setLineWrapColumnOrWidth(pixels)
 
     def set_linebreak(self, brk):
