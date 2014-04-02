@@ -49,6 +49,7 @@ from cola import version
 from cola.decorators import memoize
 from cola.interaction import Interaction
 from cola.models import main
+from cola.settings import Settings
 from cola.widgets import cfgactions
 from cola.widgets import startup
 
@@ -159,6 +160,9 @@ class ColaApplication(object):
             }
             """)
 
+        # Override Qt method
+        self._app.commitData = self.commit_data
+
     def activeWindow(self):
         """Wrap activeWindow()"""
         return self._app.activeWindow()
@@ -169,6 +173,24 @@ class ColaApplication(object):
     def exec_(self):
         """Wrap exec_()"""
         return self._app.exec_()
+
+    def commit_data(self, session_manager):
+        """
+        Store the current path in the settings file.
+
+        This method is used to override QApplication.commit_data() to
+        store the state of the application on a window manager sesssion
+        logout while the application is running. This way the state can
+        be restored when the user logs back in and the application is
+        restarted by the window manager.
+        Note: The session handling can be tested with xsm.
+        More about sessions and the use of xsm:
+            http://qt-project.org/doc/qt-4.8/session.html
+        """
+        current_path = main.model().git.worktree()
+        settings = Settings()
+        settings.session = current_path
+        settings.save()
 
 
 def process_args(args):
@@ -274,6 +296,17 @@ def new_application():
 def new_model(app, repo, prompt=False):
     model = main.model()
     valid = model.set_worktree(repo) and not prompt
+
+    if not valid:
+        # Try to load a stored session
+        settings = Settings()
+        session = settings.session
+        if session:
+            valid = model.set_worktree(session)
+            # Remove the session from the settings so it is only restored once
+            settings.session = None
+            settings.save()
+
     while not valid:
         startup_dlg = startup.StartupDialog(app.activeWindow())
         gitdir = startup_dlg.find_git_repo()
