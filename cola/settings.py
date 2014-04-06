@@ -26,6 +26,25 @@ def mklist(obj):
         return []
 
 
+def read_json(path):
+    try:
+        with core.xopen(path, 'rt') as fp:
+            return mkdict(json.load(fp))
+    except: # bad path or json
+        return {}
+
+
+def write_json(values, path):
+    try:
+        parent = os.path.dirname(path)
+        if not core.isdir(parent):
+            core.makedirs(parent)
+        with core.xopen(path, 'wt') as fp:
+            json.dump(values, fp, indent=4)
+    except:
+        sys.stderr.write('git-cola: error writing "%s"\n' % path)
+
+
 class Settings(object):
     _file = resources.config_home('settings')
     bookmarks = property(lambda self: mklist(self.values['bookmarks']))
@@ -88,15 +107,7 @@ class Settings(object):
         return self._file
 
     def save(self):
-        path = self.path()
-        try:
-            parent = os.path.dirname(path)
-            if not core.isdir(parent):
-                core.makedirs(parent)
-            with core.xopen(path, 'wt') as fp:
-                json.dump(self.values, fp, indent=4)
-        except:
-            sys.stderr.write('git-cola: error writing "%s"\n' % path)
+        write_json(self.values, self.path())
 
     def load(self):
         self.values.update(self._load())
@@ -105,11 +116,7 @@ class Settings(object):
         path = self.path()
         if not core.exists(path):
             return self._load_dot_cola()
-        try:
-            fp = core.xopen(path, 'rt')
-            return mkdict(json.load(fp))
-        except: # bad json
-            return {}
+        return read_json(path)
 
     def reload_recent(self):
         values = self._load()
@@ -118,21 +125,13 @@ class Settings(object):
     def _load_dot_cola(self):
         values = {}
         path = os.path.join(core.expanduser('~'), '.cola')
-        if not core.exists(path):
-            return {}
-        try:
-            with core.xopen(path, 'r') as fp:
-                json_values = json.load(fp)
-        except: # bad json
-            return {}
-
+        json_values = read_json(path)
         # Keep only the entries we care about
         for key in self.values:
             try:
                 values[key] = json_values[key]
             except KeyError:
                 pass
-
         return values
 
     def save_gui_state(self, gui):
@@ -142,7 +141,7 @@ class Settings(object):
         self.save()
 
     def get_gui_state(self, gui):
-        """Returns the state for a gui"""
+        """Returns the saved state for a gui"""
         try:
             state = mkdict(self.gui_state[gui.name()])
         except KeyError:
