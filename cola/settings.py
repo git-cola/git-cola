@@ -146,3 +146,34 @@ class Settings(object):
         except KeyError:
             state = self.gui_state[gui.name()] = {}
         return state
+
+
+class Session(Settings):
+    """Store per-session settings"""
+
+    _sessions_dir = resources.config_home('sessions')
+
+    git_path = property(lambda self: self.values['git_path'])
+    repo = property(lambda self: self.values['repo'])
+
+    def __init__(self, session_id, repo=None, git_path=None):
+        Settings.__init__(self)
+        self.session_id = session_id
+        self.values.update({
+                'git_path': git_path,
+                'repo': repo,
+        })
+
+    def path(self):
+        return os.path.join(self._sessions_dir, self.session_id)
+
+    def load(self):
+        path = self.path()
+        if core.exists(path):
+            self.values.update(read_json(path))
+            try:
+                os.unlink(path)
+            except:
+                pass
+            return True
+        return False
