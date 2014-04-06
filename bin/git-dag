@@ -48,6 +48,7 @@ setup_environment()
 from cola.app import add_common_arguments
 from cola.app import application_init
 from cola.app import application_start
+from cola.widgets.dag import git_dag
 
 
 def main():
@@ -57,7 +58,7 @@ def main():
 
 def parse_args():
     parser = ArgumentParser()
-    parser.set_defaults(func=dag)
+    parser.set_defaults(func=cmd_dag)
 
     add_common_arguments(parser)
     parser.add_argument('-c', '--count', metavar='<count>',
@@ -68,9 +69,8 @@ def parse_args():
     return parser.parse_args()
 
 
-def dag(args):
+def cmd_dag(args):
     context = application_init(args)
-    from cola.widgets.dag import git_dag
     view = git_dag(context.model, args=args)
     return application_start(context, view)
 

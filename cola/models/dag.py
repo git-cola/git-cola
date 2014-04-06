@@ -73,7 +73,7 @@ class DAG(Observable):
         if self.set_count(args.count):
             self.overrides['count'] = args.count
 
-        if args.args:
+        if hasattr(args, 'args') and args.args:
             ref = subprocess.list2cmdline(map(core.decode, args.args))
             if self.set_ref(ref):
                 self.overrides['ref'] = ref
