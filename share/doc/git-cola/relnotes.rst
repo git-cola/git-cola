@@ -6,6 +6,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/240
 
+* `git cola` now supports the X11 Session Management Protocol
+  and remembers its state across logout/reboot.
+
+  https://github.com/git-cola/git-cola/issues/164
+
 Fixes
 -----
 * Reworked the git-dag gravatar icon code to avoid a unicode

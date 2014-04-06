@@ -32,7 +32,7 @@ from cola.widgets.filelist import FileWidget
 from cola.compat import ustr
 
 
-def git_dag(model, args=None):
+def git_dag(model, args=None, settings=None):
     """Return a pre-populated git DAG widget."""
     branch = model.currentbranch
     # disambiguate between branch names and filenames by using '--'
@@ -40,7 +40,7 @@ def git_dag(model, args=None):
     dag = DAG(branch_doubledash, 1000)
     dag.set_arguments(args)
 
-    view = DAGView(model, dag)
+    view = GitDAG(model, dag, settings=settings)
     if dag.ref:
         view.display()
     return view
@@ -318,10 +318,10 @@ class CommitTreeWidget(ViewerMixin, TreeWidget):
         QtGui.QTreeWidget.mousePressEvent(self, event)
 
 
-class DAGView(MainWindow):
+class GitDAG(MainWindow):
     """The git-dag widget."""
 
-    def __init__(self, model, dag, parent=None):
+    def __init__(self, model, dag, parent=None, settings=None):
         MainWindow.__init__(self, parent)
 
         self.setAttribute(Qt.WA_MacMetalStyle)
@@ -331,6 +331,7 @@ class DAGView(MainWindow):
         self.widget_version = 1
         self.model = model
         self.dag = dag
+        self.settings = settings
 
         self.commits = {}
         self.commit_list = []
@@ -435,7 +436,7 @@ class DAGView(MainWindow):
         self.update_window_title()
 
         # Also re-loads dag.* from the saved state
-        if not self.restore_state():
+        if not self.restore_state(settings=settings):
             self.resize_to_desktop()
 
         qtutils.connect_button(self.zoom_out, self.graphview.zoom_out)

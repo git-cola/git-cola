@@ -210,7 +210,7 @@ def add_version_command(subparser):
 def cmd_cola(args):
     context = application_init(args)
     from cola.widgets.main import MainView
-    view = MainView(context.model)
+    view = MainView(context.model, settings=args.settings)
     if args.amend:
         cmds.do(cmds.AmendMode, True)
     return application_start(context, view)
@@ -257,7 +257,7 @@ def cmd_config(args):
 def cmd_dag(args):
     context = application_init(args)
     from cola.widgets.dag import git_dag
-    view = git_dag(context.model, args=args)
+    view = git_dag(context.model, args=args, settings=args.settings)
     return application_start(context, view)
 
 

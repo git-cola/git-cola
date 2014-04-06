@@ -62,12 +62,13 @@ from cola.widgets.stash import stash
 
 class MainView(MainWindow):
 
-    def __init__(self, model, parent=None):
+    def __init__(self, model, parent=None, settings=None):
         MainWindow.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
 
         # Default size; this is thrown out when save/restore is used
         self.model = model
+        self.settings = settings
         self.prefs_model = prefs_model = prefs.PreferencesModel()
 
         # The widget version is used by import/export_state().
@@ -278,8 +279,7 @@ class MainView(MainWindow):
                 N_('Browser...'), worktree_browser)
         self.browse_action.setIcon(qtutils.git_icon())
 
-        self.dag_action = add_action(self,
-                N_('DAG...'), lambda: git_dag(self.model).show())
+        self.dag_action = add_action(self, N_('DAG...'), self.git_dag)
         self.dag_action.setIcon(qtutils.git_icon())
 
         self.rebase_start_action = add_action(self,
@@ -468,7 +468,7 @@ class MainView(MainWindow):
         self.install_config_actions()
 
         # Restore saved settings
-        if not self.restore_state():
+        if not self.restore_state(settings=settings):
             self.resize(987, 610)
             self.set_initial_size()
 
@@ -668,6 +668,9 @@ class MainView(MainWindow):
 
     def preferences(self):
         return preferences(model=self.prefs_model, parent=self)
+
+    def git_dag(self):
+        git_dag(self.model)
 
     def save_archive(self):
         ref = git.rev_parse('HEAD')[STDOUT]

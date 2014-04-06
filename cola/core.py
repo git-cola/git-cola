@@ -197,6 +197,10 @@ def decorate(decorator, fn):
     return decorated
 
 
+def exists(path, encoding=None):
+    return os.path.exists(encode(path), encoding=encoding)
+
+
 def getenv(name, default=None):
     return decode(os.getenv(name, default))
 
