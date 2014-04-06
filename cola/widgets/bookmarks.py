@@ -12,7 +12,6 @@ from PyQt4.QtCore import SIGNAL
 from cola import cmds
 from cola import core
 from cola import qtutils
-from cola import settings
 from cola.i18n import N_
 from cola.settings import Settings
 from cola.widgets import defs
@@ -29,7 +28,8 @@ def manage_bookmarks():
 class BookmarksDialog(standard.Dialog):
     def __init__(self, parent):
         standard.Dialog.__init__(self, parent=parent)
-        self.model = settings.Settings()
+        self.settings = Settings()
+        self.settings.load()
 
         self.resize(494, 238)
         self.setWindowTitle(N_('Bookmarks'))
@@ -88,10 +88,10 @@ class BookmarksDialog(standard.Dialog):
 
     def update_bookmarks(self):
         self.bookmarks.clear()
-        self.bookmarks.addItems(self.model.bookmarks)
+        self.bookmarks.addItems(self.settings.bookmarks)
 
     def selection(self):
-        return qtutils.selection_list(self.bookmarks, self.model.bookmarks)
+        return qtutils.selection_list(self.bookmarks, self.settings.bookmarks)
 
     def item_selection_changed(self):
         has_selection = bool(self.selection())
@@ -100,7 +100,7 @@ class BookmarksDialog(standard.Dialog):
 
     def save(self):
         """Saves the bookmarks settings and exits"""
-        self.model.save()
+        self.settings.save()
         self.save_button.setEnabled(False)
 
     def add(self):
@@ -109,7 +109,7 @@ class BookmarksDialog(standard.Dialog):
                                   text=core.getcwd())
         if not ok:
             return
-        self.model.bookmarks.append(path)
+        self.settings.bookmarks.append(path)
         self.update_bookmarks()
         self.save()
 
@@ -124,7 +124,7 @@ class BookmarksDialog(standard.Dialog):
         if not selection:
             return
         for repo in selection:
-            self.model.remove_bookmark(repo)
+            self.settings.remove_bookmark(repo)
         self.update_bookmarks()
         self.save_button.setEnabled(True)
 

@@ -9,7 +9,7 @@ from PyQt4.QtGui import QDockWidget
 from cola import core
 from cola import gitcfg
 from cola import qtcompat
-from cola import settings
+from cola.settings import Settings
 
 
 class WidgetMixin(object):
@@ -37,14 +37,18 @@ class WidgetMixin(object):
         """Returns the name of the view class"""
         return self.__class__.__name__.lower()
 
-    def save_state(self, handler=None):
-        if handler is None:
-            handler = settings.Settings()
+    def save_state(self, settings=None):
+        if settings is None:
+            settings = Settings()
+            settings.load()
         if gitcfg.instance().get('cola.savewindowsettings', True):
-            handler.save_gui_state(self)
+            settings.save_gui_state(self)
 
-    def restore_state(self):
-        state = settings.Settings().get_gui_state(self)
+    def restore_state(self, settings=None):
+        if settings is None:
+            settings = Settings()
+            settings.load()
+        state = settings.get_gui_state(self)
         return bool(state) and self.apply_state(state)
 
     def apply_state(self, state):
@@ -79,9 +83,10 @@ class WidgetMixin(object):
         }
 
     def closeEvent(self, event):
-        s = settings.Settings()
-        s.add_recent(core.getcwd())
-        self.save_state(handler=s)
+        settings = Settings()
+        settings.load()
+        settings.add_recent(core.getcwd())
+        self.save_state(settings=settings)
         self.QtClass.closeEvent(self, event)
 
 

@@ -16,9 +16,9 @@ from cola import guicmds
 from cola import gitcfg
 from cola import qtutils
 from cola import resources
-from cola import settings
 from cola import utils
 from cola import version
+from cola.compat import unichr
 from cola.git import git
 from cola.git import STDOUT
 from cola.i18n import N_
@@ -30,6 +30,7 @@ from cola.qtutils import connect_action
 from cola.qtutils import connect_action_bool
 from cola.qtutils import create_dock
 from cola.qtutils import create_menu
+from cola.settings import Settings
 from cola.widgets import action
 from cola.widgets import cfgactions
 from cola.widgets import editremotes
@@ -57,7 +58,6 @@ from cola.widgets.status import StatusWidget
 from cola.widgets.search import search
 from cola.widgets.standard import MainWindow
 from cola.widgets.stash import stash
-from cola.compat import unichr
 
 
 class MainView(MainWindow):
@@ -492,7 +492,9 @@ class MainView(MainWindow):
         MainWindow.closeEvent(self, event)
 
     def build_recent_menu(self):
-        recent = settings.Settings().recent
+        settings = Settings()
+        settings.load()
+        recent = settings.recent
         cmd = cmds.OpenRepo
         menu = self.open_recent_menu
         menu.clear()

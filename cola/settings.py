@@ -59,8 +59,6 @@ class Settings(object):
                 'recent': [],
         }
         self.verify = verify
-        self.load()
-        self.remove_missing()
 
     def remove_missing(self):
         missing_bookmarks = []
@@ -111,6 +109,7 @@ class Settings(object):
 
     def load(self):
         self.values.update(self._load())
+        self.remove_missing()
 
     def _load(self):
         path = self.path()
