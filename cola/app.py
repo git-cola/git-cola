@@ -56,6 +56,9 @@ from cola.settings import Session
 
 
 def setup_environment():
+    # Allow Ctrl-C to exit
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+
     # Session management wants an absolute path when restarting
     sys.argv[0] = core.abspath(sys.argv[0])
 
@@ -244,22 +247,20 @@ def restore_session(args):
 def application_init(args, update=False):
     """Parses the command-line arguments and starts git-cola
     """
+    # Ensure that we're working in a valid git repository.
+    # If not, try to find one.  When found, chdir there.
     setup_environment()
     process_args(args)
 
-    # Ensure that we're working in a valid git repository.
-    # If not, try to find one.  When found, chdir there.
-    app = new_application(args.git_path)
+    app = new_application(args)
     model = new_model(app, args.repo, prompt=args.prompt)
     if update:
         model.update_status()
-
     return ApplicationContext(args, app, model)
 
 
 def application_start(context, view):
     """Show the GUI and start the main event loop"""
-
     # Store the view for session management
     context.app.set_view(view)
 
@@ -315,12 +316,9 @@ def add_common_arguments(parser):
                         help='restore a saved session')
 
 
-def new_application(git_path):
-    # Allow Ctrl-C to exit
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
-
+def new_application(args):
     # Initialize the app
-    return ColaApplication(sys.argv, git_path=git_path)
+    return ColaApplication(sys.argv, git_path=args.git_path)
 
 
 def new_model(app, repo, prompt=False):

@@ -52,16 +52,14 @@ COMMAND_TO_IDX = dict([(cmd, idx) for idx, cmd in enumerate(COMMANDS)])
 
 def main():
     args = parse_args()
-    app.setup_environment()
-    new_app = app.new_application()
-    app.new_model(new_app, os.getcwd())
+    context = app.application_init(args)
 
-    desktop = new_app.desktop()
+    desktop = context.app.desktop()
     window = new_window(args.filename)
     window.resize(desktop.width(), desktop.height())
     window.show()
     window.raise_()
-    new_app.exec_()
+    context.app.exec_()
     return window.status
 
 
@@ -69,6 +67,7 @@ def parse_args():
     parser = ArgumentParser()
     parser.add_argument('filename', metavar='<filename>',
                         help='git-rebase-todo file to edit')
+    app.add_common_arguments(parser)
     return parser.parse_args()
 
 
