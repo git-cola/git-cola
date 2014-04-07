@@ -297,21 +297,21 @@ def application_start(context, view):
 def add_common_arguments(parser):
     # We also accept 'git cola version'
     parser.add_argument('--version', default=False, action='store_true',
-                        help='prints the version')
+                        help='print version number')
 
     # Specifies a git repository to open
     parser.add_argument('-r', '--repo', metavar='<repo>', default=os.getcwd(),
-                        help='specifies the path to a git repository')
+                        help='open the specified git repository')
 
     # Specifies that we should prompt for a repository at startup
     parser.add_argument('--prompt', action='store_true', default=False,
-                        help='prompts for a repository')
+                        help='prompt for a repository')
 
     # Used on Windows for adding 'git' to the path
     parser.add_argument('-g', '--git-path', metavar='<path>', default=None,
-                        help='specifies the path to the git binary')
+                        help='use the specified git executable')
 
-    # Used for restoring sessions
+    # Resume a session X Session Management
     parser.add_argument('-session', metavar='<session>', default=None,
                         help='restore a saved session')
 
