@@ -224,6 +224,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
     def refresh(self):
         self.clear()
         settings = Settings()
+        settings.load()
         items = []
         icon = qtutils.dir_icon()
         recents = set(settings.recent)
