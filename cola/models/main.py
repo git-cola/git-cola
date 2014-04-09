@@ -124,7 +124,10 @@ class MainModel(Observable):
 
     def save_commitmsg(self, msg):
         path = self.git.git_path('GIT_COLA_MSG')
-        core.write(path, msg)
+        try:
+            core.write(path, msg)
+        except:
+            pass
 
     def set_diff_text(self, txt):
         self.diff_text = txt
