@@ -6,7 +6,7 @@ mandir ?= $(prefix)/share/man/man1
 
 SED ?= sed
 RSYNC ?= rsync
-MKDIR_P ?= $(MKDIR_P)
+MKDIR_P ?= mkdir -p
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
