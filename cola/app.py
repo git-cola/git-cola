@@ -311,7 +311,7 @@ def add_common_arguments(parser):
     parser.add_argument('-g', '--git-path', metavar='<path>', default=None,
                         help='use the specified git executable')
 
-    # Resume a session X Session Management
+    # Resume an X Session Management session
     parser.add_argument('-session', metavar='<session>', default=None,
                         help='restore a saved session')
 
