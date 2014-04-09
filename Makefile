@@ -45,6 +45,7 @@ ifdef DESTDIR
     setup_args += --root=$(DESTDIR)
     export DESTDIR
 endif
+export prefix
 
 all::
 	$(PYTHON) setup.py build
@@ -62,16 +63,22 @@ dist:
 		$(GZIP) -f -9 - >$(cola_dist).tar.gz
 
 doc:
-	$(MAKE) -C share/doc/git-cola prefix=$(prefix) all
+	$(MAKE) -C share/doc/git-cola all
 
 html:
-	$(MAKE) -C share/doc/git-cola prefix=$(prefix) html
+	$(MAKE) -C share/doc/git-cola html
+
+man:
+	$(MAKE) -C share/doc/git-cola man
 
 install-doc:
-	$(MAKE) -C share/doc/git-cola prefix=$(prefix) install
+	$(MAKE) -C share/doc/git-cola install
 
 install-html:
-	$(MAKE) -C share/doc/git-cola prefix=$(prefix) install-html
+	$(MAKE) -C share/doc/git-cola install-html
+
+install-man:
+	$(MAKE) -C share/doc/git-cola install-man
 
 uninstall:
 	$(RM) $(DESTDIR)$(prefix)/bin/git-cola
@@ -101,7 +108,7 @@ clean:
 	$(MAKE) -C share/doc/git-cola clean
 	$(FIND) . -name .noseids -print0 | xargs -0 rm -f
 	$(FIND) . -name '*.py[co]' -print0 | xargs -0 rm -f
-	$(RM_R) build dist tmp tags git-cola.app
+	$(RM_R) build dist tags git-cola.app
 	$(RM_R) share/locale
 
 tags:

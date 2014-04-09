@@ -1,11 +1,12 @@
 prefix ?= $(CURDIR)
 docdir ?= $(prefix)/share/doc/git-cola
 htmldir ?= $(docdir)/html
+mandir ?= $(prefix)/share/man/man1
+# DESTDIR =
+
 SED ?= sed
 RSYNC ?= rsync
-# DESTDIR =
-# Makefile for Sphinx documentation
-#
+MKDIR_P ?= $(MKDIR_P)
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
@@ -17,11 +18,15 @@ PAPEROPT_a4     = -D latex_paper_size=a4
 PAPEROPT_letter = -D latex_paper_size=letter
 ALLSPHINXOPTS   = -d _build/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
-.PHONY: help clean html dirhtml pickle json htmlhelp qthelp latex changes linkcheck doctest
+.PHONY: all help clean html man dirhtml pickle json htmlhelp qthelp latex changes linkcheck doctest
+
+# The default target of this makefile is...
+all:: html man
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
 	@echo "  html      to make standalone HTML files"
+	@echo "  man       to make manual pages"
 	@echo "  dirhtml   to make HTML files named index.html in directories"
 	@echo "  pickle    to make pickle files"
 	@echo "  json      to make JSON files"
@@ -33,79 +38,51 @@ help:
 	@echo "  doctest   to run all doctests embedded in the documentation (if enabled)"
 
 clean:
-	-rm -rf _build
-	$(MAKE) -f Makefile.asciidoc clean
+	-rm -rf _build/doctrees _build/man _build/html/*
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) _build/html
-	@echo
-	@echo "Build finished. The HTML pages are in _build/html."
+
+man:
+	$(SPHINXBUILD) -b man $(ALLSPHINXOPTS) _build/man
 
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) _build/dirhtml
-	@echo
-	@echo "Build finished. The HTML pages are in _build/dirhtml."
 
 pickle:
 	$(SPHINXBUILD) -b pickle $(ALLSPHINXOPTS) _build/pickle
-	@echo
-	@echo "Build finished; now you can process the pickle files."
 
 json:
 	$(SPHINXBUILD) -b json $(ALLSPHINXOPTS) _build/json
-	@echo
-	@echo "Build finished; now you can process the JSON files."
 
 htmlhelp:
 	$(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) _build/htmlhelp
-	@echo
-	@echo "Build finished; now you can run HTML Help Workshop with the" \
-	      ".hhp project file in _build/htmlhelp."
 
 qthelp:
 	$(SPHINXBUILD) -b qthelp $(ALLSPHINXOPTS) _build/qthelp
-	@echo
-	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
-	      ".qhcp project file in _build/qthelp, like this:"
-	@echo "# qcollectiongenerator _build/qthelp/git-cola.qhcp"
-	@echo "To view the help file:"
-	@echo "# assistant -collectionFile _build/qthelp/git-cola.qhc"
 
 latex:
 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) _build/latex
-	@echo
-	@echo "Build finished; the LaTeX files are in _build/latex."
-	@echo "Run \`make all-pdf' or \`make all-ps' in that directory to" \
-	      "run these through (pdf)latex."
 
 changes:
 	$(SPHINXBUILD) -b changes $(ALLSPHINXOPTS) _build/changes
-	@echo
-	@echo "The overview file is in _build/changes."
 
 linkcheck:
 	$(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) _build/linkcheck
-	@echo
-	@echo "Link check complete; look for any errors in the above output " \
-	      "or in _build/linkcheck/output.txt."
 
 doctest:
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) _build/doctest
-	@echo "Testing of doctests in the sources finished, look at the " \
-	      "results in _build/doctest/output.txt."
-
-all: html
-	$(MAKE) -f Makefile.asciidoc all
 
 install: install-html install-man
-	test  -d $(DESTDIR)$(docdir) || mkdir -p $(DESTDIR)$(docdir)
-	cp *.txt $(DESTDIR)$(docdir)
-	cp *.html $(DESTDIR)$(docdir)
+	$(MKDIR_P) $(DESTDIR)$(docdir)
+	cp *.rst $(DESTDIR)$(docdir)
 
 install-html: html
-	test  -d $(DESTDIR)$(htmldir) || mkdir -p $(DESTDIR)$(htmldir)
+	$(MKDIR_P) $(DESTDIR)$(htmldir)
 	$(RSYNC) -ar --delete _build/html/ $(DESTDIR)$(htmldir)/
-	$(MAKE) -f Makefile.asciidoc prefix=$(prefix) install-html
+	cp *.html $(DESTDIR)$(docdir)
 
-install-man:
-	$(MAKE) -f Makefile.asciidoc prefix=$(prefix) install
+install-man: man
+	$(MKDIR_P) $(DESTDIR)$(mandir)
+	cp _build/man/git-cola.1 $(DESTDIR)$(mandir)
+	cp _build/man/git-dag.1 $(DESTDIR)$(mandir)

@@ -11,6 +11,12 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/164
 
+Packaging
+---------
+* Building the documentation no longer requires `asciidoc`.
+  We now use `Sphinx <http://sphinx-doc.org/>`_ for building
+  html documentation and man pages.
+
 Fixes
 -----
 * Reworked the git-dag gravatar icon code to avoid a unicode

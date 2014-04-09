@@ -1,12 +1,10 @@
-===================================
-Welcome to git-cola's Documentation
-===================================
+======================
+Git Cola Documentation
+======================
 .. toctree::
 
-    intro
-    tools
-    mainwindow
-    custom
+    git-cola
+    git-dag
     thanks
 
 Release Notes
@@ -20,5 +18,4 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
