@@ -11,6 +11,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/164
 
+* `git cola` has a new icon.
+
+  https://github.com/git-cola/git-cola/issues/190
+
 Packaging
 ---------
 * Building the documentation no longer requires `asciidoc`.
