@@ -144,17 +144,17 @@ def _fork_win32(args, cwd=None):
         # win32 can't exec python scripts
         args = [sys.executable] + args
 
-    argv = [encode(arg) for arg in args]
-    abspath = _win32_abspath(argv[0])
+    abspath = _win32_abspath(args[0])
     if abspath:
         # e.g. fork(['git', 'difftool', '--no-prompt', '--', 'path'])
-        argv[0] = abspath
+        args[0] = abspath
     else:
         # e.g. fork(['gitk', '--all'])
-        cmdstr = subprocess.list2cmdline(argv)
-        sh_exe = _win32_abspath('sh')
+        cmdstr = subprocess.list2cmdline(args)
+        sh_exe = _win32_abspath('sh') or 'sh'
         argv = [sh_exe, '-c', cmdstr]
 
+    argv = [encode(arg) for arg in args]
     DETACHED_PROCESS = 0x00000008 # Amazing!
     return subprocess.Popen(argv, cwd=cwd, creationflags=DETACHED_PROCESS).pid
 
