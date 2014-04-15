@@ -30,6 +30,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/242
 
+* Better support for Python3 on Windows
+
+  https://github.com/git-cola/git-cola/issues/246
+
 git-cola v2.0.1
 ===============
 Usability, bells and whistles

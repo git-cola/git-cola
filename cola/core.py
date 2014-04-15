@@ -103,7 +103,13 @@ def start_command(cmd, cwd=None, shell=False, add_env=None,
     if add_env is not None:
         env = os.environ.copy()
         env.update(add_env)
-    cmd = [encode(c) for c in cmd]
+    if sys.platform == 'win32':
+        # Python on windows always goes through list2cmdline() internally inside
+        # of subprocess.py so we must provide unicode strings here otherwise
+        # Python3 breaks when bytes are provided.
+        cmd = [decode(c) for c in cmd]
+    else:
+        cmd = [encode(c) for c in cmd]
     return subprocess.Popen(cmd, bufsize=1, stdin=stdin, stdout=stdout,
                             stderr=stderr, cwd=cwd, shell=shell, env=env,
                             universal_newlines=universal_newlines)
