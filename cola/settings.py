@@ -108,30 +108,29 @@ class Settings(object):
         write_json(self.values, self.path())
 
     def load(self):
-        self.values.update(self._load())
+        self.values.update(self.asdict())
         self.remove_missing()
 
-    def _load(self):
+    def asdict(self):
         path = self.path()
-        if not core.exists(path):
-            return self._load_dot_cola()
-        return read_json(path)
-
-    def reload_recent(self):
-        values = self._load()
-        self.values['recent'] = mklist(values.get('recent', []))
-
-    def _load_dot_cola(self):
+        if core.exists(path):
+            return read_json(path)
+        # We couldn't find ~/.config/git-cola, try ~/.cola
         values = {}
         path = os.path.join(core.expanduser('~'), '.cola')
-        json_values = read_json(path)
-        # Keep only the entries we care about
-        for key in self.values:
-            try:
-                values[key] = json_values[key]
-            except KeyError:
-                pass
+        if core.exists(path):
+            json_values = read_json(path)
+            # Keep only the entries we care about
+            for key in self.values:
+                try:
+                    values[key] = json_values[key]
+                except KeyError:
+                    pass
         return values
+
+    def reload_recent(self):
+        values = self.asdict()
+        self.values['recent'] = mklist(values.get('recent', []))
 
     def save_gui_state(self, gui):
         """Saves settings for a cola view"""
