@@ -83,13 +83,14 @@ class GitCommandTest(unittest.TestCase):
     def test_it_handles_interrupted_syscalls(self):
         """Test that we handle interrupted system calls"""
         # send ourselves a signal that causes EINTR
-        prev_handler = signal.signal(signal.SIGALRM, lambda x,y: 1)
+        prev_handler = signal.signal(signal.SIGALRM, lambda x, y: 1)
         signal.alarm(1)
-        time.sleep(0.5)
+        time.sleep(0.1)
         status, out, err = git.Git.execute(['sleep', '1'])
         self.assertEqual(status, 0)
 
         signal.signal(signal.SIGALRM, prev_handler)
+
 
 if __name__ == '__main__':
     unittest.main()
