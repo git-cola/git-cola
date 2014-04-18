@@ -182,7 +182,7 @@ class Git(object):
             msg = 'trace: ' + subprocess.list2cmdline(command)
             Interaction.log_status(status, msg, '')
         elif cola_trace == 'full':
-            if out:
+            if out or err:
                 core.stderr("%s -> %d: '%s' '%s'" %
                             (' '.join(command), status, out, err))
             else:
