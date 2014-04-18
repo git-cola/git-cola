@@ -3,6 +3,7 @@
 """Provides the main() routine and ColaApplicaiton"""
 from __future__ import division, absolute_import, unicode_literals
 
+import argparse
 import glob
 import os
 import signal
@@ -313,7 +314,7 @@ def add_common_arguments(parser):
 
     # Resume an X Session Management session
     parser.add_argument('-session', metavar='<session>', default=None,
-                        help='restore a saved session')
+                        help=argparse.SUPPRESS)
 
 
 def new_application(args):
