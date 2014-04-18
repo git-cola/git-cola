@@ -20,10 +20,10 @@ GNU General Public License for more details.
 
 """
 
+import argparse
 import os
 import sys
 import subprocess
-from argparse import ArgumentParser
 from os.path import abspath
 from os.path import dirname
 from os.path import realpath
@@ -72,7 +72,7 @@ def main():
 
 
 def parse_args():
-    parser = ArgumentParser()
+    parser = argparse.ArgumentParser()
     subparser = parser.add_subparsers(title='valid commands')
 
     add_cola_command(subparser)
@@ -177,6 +177,8 @@ def add_rebase_command(subparser):
     parser = add_command(subparser, 'rebase', 'interactive rebase', cmd_rebase)
     parser.add_argument('branch', metavar='<branch>',
                         help='New upstream branch')
+    parser.add_argument('-i', '--interactive', default=True, action='store_true',
+                        help=argparse.SUPPRESS)
 
 
 def add_remote_command(subparser):
