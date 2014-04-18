@@ -1,5 +1,6 @@
 from __future__ import division, absolute_import, unicode_literals
 
+import functools
 import os
 import sys
 import subprocess
@@ -131,9 +132,9 @@ class Git(object):
         self._git_cwd = path
 
     def __getattr__(self, name):
-        if name[:1] == '_':
-            raise AttributeError(name)
-        return lambda *args, **kwargs: self._call_process(name, *args, **kwargs)
+        git_cmd = functools.partial(self.git, name)
+        setattr(self, name, git_cmd)
+        return git_cmd
 
     @staticmethod
     def execute(command,
@@ -209,7 +210,7 @@ class Git(object):
                     args.append("--%s=%s" % (dashify(k), v))
         return args
 
-    def _call_process(self, cmd, *args, **kwargs):
+    def git(self, cmd, *args, **kwargs):
         # Handle optional arguments prior to calling transform_kwargs
         # otherwise they'll end up in args, which is bad.
         _kwargs = dict(_cwd=self._git_cwd)
