@@ -1,6 +1,7 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import functools
+import errno
 import os
 import sys
 import subprocess
@@ -224,7 +225,15 @@ class Git(object):
         opt_args = self.transform_kwargs(**kwargs)
         call = ['git', dashify(cmd)] + opt_args
         call.extend(args)
-        return self.execute(call, **_kwargs)
+        try:
+            return self.execute(call, **_kwargs)
+        except OSError as e:
+            if e.errno != errno.ENOENT:
+                raise e
+            core.stderr("ERROR: Unable to execute 'git'.\n"
+                        "Ensure that 'git' is in your $PATH, or specify the "
+                        "path to 'git' using the --git-path argument.")
+            sys.exit(1)
 
 
 def replace_carot(cmd_arg):
