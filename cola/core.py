@@ -14,6 +14,7 @@ import subprocess
 
 from cola.decorators import interruptable
 from cola.compat import ustr
+from cola.compat import PY3
 
 # Some files are not in UTF-8; some other aren't in any codification.
 # Remember that GIT doesn't care about encodings (saves binary data)
@@ -103,10 +104,14 @@ def start_command(cmd, cwd=None, shell=False, add_env=None,
     if add_env is not None:
         env = os.environ.copy()
         env.update(add_env)
-    if sys.platform == 'win32':
-        # Python on windows always goes through list2cmdline() internally inside
+    if PY3:
+        # Python3 on windows always goes through list2cmdline() internally inside
         # of subprocess.py so we must provide unicode strings here otherwise
         # Python3 breaks when bytes are provided.
+        #
+        # Additionally, the preferred usage on Python3 is to pass unicode
+        # strings to subprocess.  Python will automatically encode into the
+        # default encoding (utf-8) when it gets unicode strings.
         cmd = [decode(c) for c in cmd]
     else:
         cmd = [encode(c) for c in cmd]
