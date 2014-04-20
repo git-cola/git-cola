@@ -34,6 +34,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/246
 
+Packaging
+---------
+* git-cola no longer depends on Asciidoc for building its documentation
+  and man-pages.  We now depend on [Sphinx](http://sphinx-doc.org/) only.
+
 git-cola v2.0.1
 ===============
 Usability, bells and whistles
