@@ -670,7 +670,9 @@ class MainView(MainWindow):
         return preferences(model=self.prefs_model, parent=self)
 
     def git_dag(self):
-        git_dag(self.model)
+        view = git_dag(self.model)
+        view.show()
+        view.raise_()
 
     def save_archive(self):
         ref = git.rev_parse('HEAD')[STDOUT]
