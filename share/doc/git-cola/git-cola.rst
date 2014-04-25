@@ -185,7 +185,7 @@ Clicking individual files sends diffs to the `Diff Display`.
 
 Double-clicking individual files adds and removes their content from the index.
 
-Various actions that are available through the right-click context menu.
+Various actions are available through the right-click context menu.
 Different actions are available depending a file's status.
 
 Stage Selected
