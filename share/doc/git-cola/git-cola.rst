@@ -114,8 +114,8 @@ The editor used by `Ctrl-e` is configured from the Preferences screen.
 The environment variable `$VISUAL` is consulted when no editor has been
 configured.
 
-*ProTip*: Setting `gvim -p -f` as your configured editor opens
-multiple files using tabs (and `gvim -o -f` uses splits).
+*ProTip*: Configuring your editor to `gvim -f -p` will open multiple tabs
+when editing files.  `gvim -f -o` uses splits.
 
 `git cola` is {vim, emacs, textpad, notepad++}-aware.
 When you select a line in the `grep` screen and press any of
@@ -460,6 +460,7 @@ You can make `git cola` use an alternative language by creating a
 `~/.config/git-cola/language` file containing the standard two-letter
 gettext language code, e.g. "en", "de", "ja", "zh", etc.::
 
+    mkdir -p ~/.config/git-cola &&
     echo en >~/.config/git-cola/language
 
 
