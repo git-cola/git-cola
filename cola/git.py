@@ -165,6 +165,7 @@ class Git(object):
         extra = {}
         if sys.platform == 'win32':
             command = map(replace_carot, command)
+            extra['shell'] = True
 
         # Start the process
         # Guard against thread-unsafe .git/index.lock files
