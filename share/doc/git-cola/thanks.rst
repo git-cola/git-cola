@@ -13,8 +13,9 @@ Thanks
 * Benoît Nouyrigat
 * Christian Jann
 * Christopher Meng
-* Daniel King
 * Daniel Fahlke
+* Daniel Harding
+* Daniel King
 * David Aguilar
 * David Martínez Martí
 * Dennis Gilmore
