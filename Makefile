@@ -85,6 +85,7 @@ uninstall:
 	$(RM) $(DESTDIR)$(prefix)/bin/git-dag
 	$(RM) $(DESTDIR)$(prefix)/bin/cola
 	$(RM) $(DESTDIR)$(prefix)/share/applications/git-cola.desktop
+	$(RM) $(DESTDIR)$(prefix)/share/applications/git-cola-folder-handler.desktop
 	$(RM) $(DESTDIR)$(prefix)/share/applications/git-dag.desktop
 	$(RM_R) $(DESTDIR)$(prefix)/share/git-cola
 	$(RM_R) $(DESTDIR)$(prefix)/share/doc/git-cola
