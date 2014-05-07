@@ -1,3 +1,12 @@
+git-cola v2.0.3
+===============
+Fixes
+-----
+* `git dag` no longer relies on `sys.maxint`, which is
+  not available in Python3.
+
+  https://github.com/git-cola/git-cola/issues/249
+
 git-cola v2.0.2
 ===============
 Usability, bells and whistles
