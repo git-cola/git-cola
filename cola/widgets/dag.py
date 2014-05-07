@@ -1200,10 +1200,11 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
         if not items:
             rect = self.scene().itemsBoundingRect()
         else:
-            x_min = sys.maxint
-            y_min = sys.maxint
-            x_max = -sys.maxint
-            ymax = -sys.maxint
+            maxint = 9223372036854775807
+            x_min = maxint
+            y_min = maxint
+            x_max = -maxint
+            ymax = -maxint
             for item in items:
                 pos = item.pos()
                 item_rect = item.boundingRect()

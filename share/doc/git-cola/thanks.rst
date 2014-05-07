@@ -39,6 +39,7 @@ Thanks
 * Kerrick Staley
 * Kevin Kofler
 * Libor Jelinek
+* Liviu Cristian Mirea-Ghiban
 * Maciej Filipiak
 * Mahmoud Hossam
 * Maicon D. Filippsen
