@@ -1,11 +1,21 @@
 git-cola v2.0.3
 ===============
+Usability, bells and whistles
+-----------------------------
+* `git cola` no longer prompts after successfully creating a new branch.
+
+  https://github.com/git-cola/git-cola/pull/251
+
 Fixes
 -----
 * `git dag` no longer relies on `sys.maxint`, which is
   not available in Python3.
 
   https://github.com/git-cola/git-cola/issues/249
+
+* More Python3-on-Windows-related fixes.
+
+  https://github.com/git-cola/git-cola/pull/250
 
 git-cola v2.0.2
 ===============
