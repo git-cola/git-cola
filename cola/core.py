@@ -225,11 +225,17 @@ def xopen(path, mode='r', encoding=None):
 
 
 def stdout(msg):
-    sys.stdout.write(encode(msg) + '\n')
+    msg = msg + '\n'
+    if not PY3:
+        msg = encode(msg, sys.stdout.encoding)
+    sys.stdout.write(msg)
 
 
 def stderr(msg):
-    sys.stderr.write(encode(msg) + '\n')
+    msg = msg + '\n'
+    if not PY3:
+        msg = encode(msg, sys.stderr.encoding)
+    sys.stderr.write(msg)
 
 
 @interruptable
