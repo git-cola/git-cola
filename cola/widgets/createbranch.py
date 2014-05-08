@@ -312,7 +312,6 @@ class CreateBranchDialog(Dialog):
         self.progress.close()
         QtGui.QApplication.restoreOverrideCursor()
 
-        detail_lines = []
         for (cmd, status, out, err) in results:
             if status != 0:
                 Interaction.critical(
@@ -320,17 +319,7 @@ class CreateBranchDialog(Dialog):
                         (N_('"%(command)s" returned exit status "%(status)d"') %
                          dict(command='git '+cmd, status=status)))
                 return
-            line = '"git %s" returned exit status %d' % (cmd, status)
-            detail_lines.append(line)
-            if out:
-                detail_lines.append(out)
-            if err:
-                detail_lines.append(err)
-            detail_lines.append('')
-        details = '\n'.join(detail_lines)
-        qtutils.information(N_('Create Branch'),
-                            N_('Branch created'),
-                            details=details)
+
         self.accept()
 
     def branch_item_changed(self, *rest):
