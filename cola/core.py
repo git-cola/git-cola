@@ -154,16 +154,7 @@ def _fork_win32(args, cwd=None):
     if args[0] == 'git-dag':
         # win32 can't exec python scripts
         args = [sys.executable] + args
-
-    abspath = _win32_abspath(args[0])
-    if abspath:
-        # e.g. fork(['git', 'difftool', '--no-prompt', '--', 'path'])
-        args[0] = abspath
-    else:
-        # e.g. fork(['gitk', '--all'])
-        cmdstr = subprocess.list2cmdline(args)
-        sh_exe = _win32_abspath('sh') or 'sh'
-        argv = [sh_exe, '-c', cmdstr]
+    args[0] = _win32_find_exe(args[0])
 
     if PY3:
         # see comment in start_command()
@@ -174,19 +165,39 @@ def _fork_win32(args, cwd=None):
     return subprocess.Popen(argv, cwd=cwd, creationflags=DETACHED_PROCESS).pid
 
 
-def _win32_abspath(exe):
-    """Return the absolute path to an .exe if it exists"""
-    if exists(exe):
-        return exe
-    if not exe.endswith('.exe'):
-        exe += '.exe'
-    if exists(exe):
-        return exe
-    for path in getenv('PATH', '').split(os.pathsep):
-        abspath = os.path.join(path, exe)
-        if exists(abspath):
-            return abspath
-    return None
+def _win32_find_exe(exe):
+    """Find the actual file for a Windows executable.
+
+    This function goes through the same process that the Windows shell uses to
+    locate an executable, taking into account the PATH and PATHEXT environment
+    variables.  This allows us to avoid passing shell=True to subprocess.Popen.
+
+    For reference, see:
+    http://technet.microsoft.com/en-us/library/cc723564.aspx#XSLTsection127121120120
+    """
+    # try the argument itself
+    candidates = [exe]
+    # if argument does not have an extension, also try it with each of the
+    # extensions specified in PATHEXT
+    if not '.' in exe:
+        candidates.extend(exe + ext
+                for ext in getenv('PATHEXT', '').split(os.pathsep)
+                if ext.startswith('.'))
+    # search the current directory first
+    for candidate in candidates:
+        if exists(candidate):
+            return candidate
+    # if the argument does not include a path separator, search each of the
+    # directories on the PATH
+    if not os.path.dirname(exe):
+        for path in getenv('PATH').split(os.pathsep):
+            if path:
+                for candidate in candidates:
+                    full_path = os.path.join(path, candidate)
+                    if exists(full_path):
+                        return full_path
+    # not found, punt and return the argument unchanged
+    return exe
 
 
 # Portability wrappers
