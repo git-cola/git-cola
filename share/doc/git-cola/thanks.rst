@@ -63,6 +63,7 @@ Thanks
 * Steffen Prohaska
 * Sven Claussner
 * Taylor Braun-Jones
+* Thomas Kluyver
 * Ugo Riboni
 * Uri Okrent
 * Virgil Dupras
