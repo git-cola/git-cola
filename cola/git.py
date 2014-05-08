@@ -164,8 +164,14 @@ class Git(object):
 
         extra = {}
         if sys.platform == 'win32':
-            command = map(replace_carot, command)
-            extra['shell'] = True
+            # If git-cola is invoked on Windows using "start pythonw git-cola",
+            # a console window will briefly flash on the screen each time
+            # git-cola invokes git, which is very annoying.  The code below
+            # prevents this by ensuring that any window will be hidden.
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags = subprocess.STARTF_USESHOWWINDOW
+            startupinfo.wShowWindow = subprocess.SW_HIDE
+            extra['startupinfo'] = startupinfo
 
         # Start the process
         # Guard against thread-unsafe .git/index.lock files
@@ -235,20 +241,6 @@ class Git(object):
                         "Ensure that 'git' is in your $PATH, or specify the "
                         "path to 'git' using the --git-path argument.")
             sys.exit(1)
-
-
-def replace_carot(cmd_arg):
-    """
-    Guard against the windows command shell.
-
-    In the Windows shell, a carat character (^) may be used for
-    line continuation.  To guard against this, escape the carat
-    by using two of them.
-
-    http://technet.microsoft.com/en-us/library/cc723564.aspx
-
-    """
-    return cmd_arg.replace('^', '^^')
 
 
 @memoize

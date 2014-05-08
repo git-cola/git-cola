@@ -90,11 +90,12 @@ def readline(fh, encoding=None):
 
 
 @interruptable
-def start_command(cmd, cwd=None, shell=False, add_env=None,
+def start_command(cmd, cwd=None, add_env=None,
                   universal_newlines=False,
                   stdin=subprocess.PIPE,
                   stdout=subprocess.PIPE,
-                  stderr=subprocess.PIPE):
+                  stderr=subprocess.PIPE,
+                  **extra):
     """Start the given command, and return a subprocess object.
 
     This provides a simpler interface to the subprocess module.
@@ -116,8 +117,8 @@ def start_command(cmd, cwd=None, shell=False, add_env=None,
     else:
         cmd = [encode(c) for c in cmd]
     return subprocess.Popen(cmd, bufsize=1, stdin=stdin, stdout=stdout,
-                            stderr=stderr, cwd=cwd, shell=shell, env=env,
-                            universal_newlines=universal_newlines)
+                            stderr=stderr, cwd=cwd, env=env,
+                            universal_newlines=universal_newlines, **extra)
 
 
 @interruptable
