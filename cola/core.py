@@ -165,7 +165,11 @@ def _fork_win32(args, cwd=None):
         sh_exe = _win32_abspath('sh') or 'sh'
         argv = [sh_exe, '-c', cmdstr]
 
-    argv = [encode(arg) for arg in args]
+    if PY3:
+        # see comment in start_command()
+        argv = [decode(arg) for arg in args]
+    else:
+        argv = [encode(arg) for arg in args]
     DETACHED_PROCESS = 0x00000008 # Amazing!
     return subprocess.Popen(argv, cwd=cwd, creationflags=DETACHED_PROCESS).pid
 
