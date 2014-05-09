@@ -6,6 +6,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/251
 
+* Hitting enter on simple dialogs now accepts them.
+
+  https://github.com/git-cola/git-cola/pull/255
+
 Fixes
 -----
 * `git dag` no longer relies on `sys.maxint`, which is
@@ -13,9 +17,17 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/249
 
-* More Python3-on-Windows-related fixes.
+* Python3-related fixes.
+
+  https://github.com/git-cola/git-cola/pull/254
+
+* Python3-on-Windows-related fixes.
 
   https://github.com/git-cola/git-cola/pull/250
+
+  https://github.com/git-cola/git-cola/pull/252
+
+  https://github.com/git-cola/git-cola/pull/253
 
 git-cola v2.0.2
 ===============
