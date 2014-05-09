@@ -524,6 +524,7 @@ class GitDialog(QtGui.QDialog):
 
         self.connect(self.lineedit, SIGNAL('textChanged(const QString&)'),
                      self.text_changed)
+        self.connect(self.lineedit, SIGNAL('returnPressed()'), self.accept)
 
         self.setWindowModality(Qt.WindowModal)
         self.ok_button.setEnabled(False)
