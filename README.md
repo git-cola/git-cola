@@ -150,7 +150,7 @@ for the differences).
 
 * [git-dag manual](share/doc/git-cola/git-dag.rst)
 
-* [Keyboard shortcuts](share/doc/git-cola/hotkeys.html)
+* [Keyboard shortcuts](http://git-cola.github.io/share/doc/git-cola/hotkeys.html)
 
 * [Contributing guidelines](CONTRIBUTING.md)
 
