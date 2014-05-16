@@ -11,6 +11,7 @@ Thanks
 * Boris W
 * Ben Boeckel
 * Benoît Nouyrigat
+* Charles 101
 * Christian Jann
 * Christopher Meng
 * Daniel Fahlke

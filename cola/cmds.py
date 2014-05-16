@@ -9,6 +9,7 @@ from cola import compat
 from cola import core
 from cola import gitcfg
 from cola import gitcmds
+from cola import inotify
 from cola import utils
 from cola import difftool
 from cola import resources
@@ -767,6 +768,8 @@ class OpenRepo(Command):
         core.chdir(new_worktree)
         self.model.set_directory(self.repo_path)
         _config.reset()
+        inotify.stop()
+        inotify.start()
         self.model.update_status()
 
 

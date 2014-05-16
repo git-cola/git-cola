@@ -37,6 +37,7 @@ except ImportError:
     sys.exit(-1)
 
 # Import cola modules
+from cola import cmds
 from cola import core
 from cola import compat
 from cola import git
@@ -142,6 +143,9 @@ class ColaApplication(object):
         i18n.install(locale)
         qtcompat.install()
         qtutils.install()
+
+        # Call _update_files when inotify detects changes
+        inotify.observer(_update_files)
 
         # Add the default style dir so that we find our icons
         icon_dir = resources.icon_dir()
@@ -361,6 +365,11 @@ def _send_msg():
                '"plumbing" API and are not intended for typical '
                'day-to-day use.  Here be dragons')
         Interaction.log(msg)
+
+
+def _update_files():
+    # Respond to inotify updates
+    cmds.do(cmds.UpdateFileStatus)
 
 
 class ApplicationContext(object):

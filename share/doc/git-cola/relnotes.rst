@@ -29,6 +29,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/pull/253
 
+* Switching repositories using the bookmarks widget was not
+  refreshing the inotify watcher.
+
+  https://github.com/git-cola/git-cola/pull/256
+
 git-cola v2.0.2
 ===============
 Usability, bells and whistles

@@ -32,7 +32,6 @@ if utils.is_win32():
 from PyQt4 import QtCore
 
 from cola import gitcfg
-from cola import cmds
 from cola import core
 from cola.git import STDOUT
 from cola.i18n import N_
@@ -41,6 +40,12 @@ from cola.models import main
 
 
 _thread = None
+_observers = []
+
+
+def observer(fn):
+    _observers.append(fn)
+
 
 def start():
     global _thread
@@ -102,7 +107,8 @@ class Handler():
     def broadcast(self):
         """Broadcasts a list of all files touched since last broadcast"""
         with self._lock:
-            cmds.do(cmds.UpdateFileStatus)
+            for observer in _observers:
+                observer()
             self._timer = None
 
     def handle(self, path):
