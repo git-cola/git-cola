@@ -369,7 +369,7 @@ def _send_msg():
 
 def _update_files():
     # Respond to inotify updates
-    cmds.do(cmds.UpdateFileStatus)
+    cmds.do(cmds.Refresh)
 
 
 class ApplicationContext(object):
