@@ -34,6 +34,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/pull/256
 
+* Special commit messages trailers (e.g. "Acked-by:") are now special-cased to
+  fix word wrapping lines that start with "foo:".
+
+  https://github.com/git-cola/git-cola/issues/257
+
 git-cola v2.0.2
 ===============
 Usability, bells and whistles

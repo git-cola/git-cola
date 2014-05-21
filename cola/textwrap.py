@@ -217,7 +217,42 @@ def word_wrap(text, tabwidth, limit):
     lines = []
 
     # Acked-by:, Signed-off-by:, Helped-by:, etc.
-    special_tag_rgx = re.compile('^[a-zA-Z_-]+:')
+    special_tag_rgx = re.compile(
+            r'^('
+            r'Acked-by|'
+            r"Ack'd-by|"
+            r'Based-on-patch-by|'
+            r'Cheered-on-by|'
+            r'Co-authored-by|'
+            r'Comments-by|'
+            r'Confirmed-by|'
+            r'Contributions-by|'
+            r'Debugged-by|'
+            r'Discovered-by|'
+            r'Explained-by|'
+            r'Backtraced-by|'
+            r'Helped-by|'
+            r'Liked-by|'
+            r'Improved-by|'
+            r'Inspired-by|'
+            r'Initial-patch-by|'
+            r'Noticed-by|'
+            r'Original-patch-by|'
+            r'Originally-by|'
+            r'Mentored-by|'
+            r'Patch-by|'
+            r'Proposed-by|'
+            r'Reported-by|'
+            r'Requested-by|'
+            r'Reviewed-by|'
+            r'Signed-off-by|'
+            r'Signed-Off-by|'
+            r'Spotted-by|'
+            r'Suggested-by|'
+            r'Tested-by|'
+            r'Tested-on-([a-zA-Z-_]+)-by|'
+            r'With-suggestions-by'
+            r'):')
 
     w = TextWrapper(width=limit,
                     tabwidth=tabwidth,
