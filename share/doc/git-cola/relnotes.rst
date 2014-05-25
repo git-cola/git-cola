@@ -1,3 +1,10 @@
+git-cola v2.0.4
+===============
+Fixes
+-----
+* We now use bold fonts instead of SmallCaps to avoid
+  artifacts on several configurations.
+
 git-cola v2.0.3
 ===============
 Usability, bells and whistles

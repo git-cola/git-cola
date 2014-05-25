@@ -592,7 +592,7 @@ class DockTitleBarWidget(QtGui.QWidget):
         QtGui.QWidget.__init__(self, parent)
         self.label = label = QtGui.QLabel()
         font = label.font()
-        font.setCapitalization(QtGui.QFont.SmallCaps)
+        font.setBold(True)
         label.setFont(font)
         label.setText(title)
 

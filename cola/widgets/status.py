@@ -155,7 +155,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         # TODO no icon
         font = self.font()
         font.setBold(True)
-        font.setCapitalization(QtGui.QFont.SmallCaps)
 
         item = QtGui.QTreeWidgetItem(self)
         item.setFont(0, font)

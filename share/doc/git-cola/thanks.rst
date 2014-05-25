@@ -39,6 +39,7 @@ Thanks
 * Kelvie Wong
 * Kerrick Staley
 * Kevin Kofler
+* Leho Kraav
 * Libor Jelinek
 * Liviu Cristian Mirea-Ghiban
 * Maciej Filipiak
