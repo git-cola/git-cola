@@ -75,7 +75,7 @@ else:
         text = """
 This test is so meta, even this sentence
 
-With-special-tag: Avoids word-wrap
+Cheered-on-by: Avoids word-wrap
 """
 
         expect = """
@@ -88,7 +88,7 @@ even
 this
 sentence
 
-With-special-tag: Avoids word-wrap
+Cheered-on-by: Avoids word-wrap
 """
 
         self.assertEqual(self.wrap(text), expect)
