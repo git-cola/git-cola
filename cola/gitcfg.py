@@ -63,6 +63,7 @@ class GitConfig(observable.Observable):
         self._map = {}
         self._system = {}
         self._user = {}
+        self._user_or_system = {}
         self._repo = {}
         self._all = {}
         self._cache_key = None
@@ -76,6 +77,7 @@ class GitConfig(observable.Observable):
         self._map.clear()
         self._system.clear()
         self._user.clear()
+        self._user_or_system.clear()
         self._repo.clear()
         self._all.clear()
         self._cache_key = None
@@ -134,6 +136,7 @@ class GitConfig(observable.Observable):
         self._map.clear()
         self._system.clear()
         self._user.clear()
+        self._user_or_system.clear()
         self._repo.clear()
         self._all.clear()
 
@@ -148,6 +151,9 @@ class GitConfig(observable.Observable):
         if 'repo' in self._config_files:
             self._repo.update(
                     self.read_config(self._config_files['repo']))
+
+        for dct in (self._system, self._user):
+            self._user_or_system.update(dct)
 
         for dct in (self._system, self._user, self._repo):
             self._all.update(dct)
@@ -212,15 +218,7 @@ class GitConfig(observable.Observable):
         return self._get(self._repo, key, default)
 
     def get_user_or_system(self, key, default=None):
-        self.update()
-        try:
-            value = self._get_with_fallback(self._user, key)
-        except KeyError:
-            try:
-                value = self._get_with_fallback(self._system, key)
-            except KeyError:
-                value = default
-        return value
+        return self._get(self._user_or_system, key, default)
 
     def python_to_git(self, value):
         if type(value) is bool:
