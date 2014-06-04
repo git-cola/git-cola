@@ -5,6 +5,10 @@ Fixes
 * We now use bold fonts instead of SmallCaps to avoid
   artifacts on several configurations.
 
+* Better support for unicode paths when using inotify.
+
+  https://bugzilla.redhat.com/show_bug.cgi?id=1104181
+
 git-cola v2.0.3
 ===============
 Usability, bells and whistles
