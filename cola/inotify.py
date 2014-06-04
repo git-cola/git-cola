@@ -177,7 +177,7 @@ class GitNotifier(QtCore.QThread):
             return
         self._dirs_seen.add(directory)
         if core.exists(directory):
-            self._wmgr.add_watch(directory, self._mask)
+            self._wmgr.add_watch(core.encode(directory), self._mask)
 
     def _is_pyinotify_08x(self):
         """Is this pyinotify 0.8.x?
