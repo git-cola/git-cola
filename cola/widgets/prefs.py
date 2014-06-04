@@ -83,7 +83,7 @@ class FormWidget(QtGui.QWidget):
 
     def update_from_config(self):
         if self.source == 'user':
-            getter = self.config.get_user
+            getter = self.config.get_user_or_system
         else:
             getter = self.config.get
 

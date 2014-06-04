@@ -5,6 +5,11 @@ Fixes
 * We now use bold fonts instead of SmallCaps to avoid
   artifacts on several configurations.
 
+* We now pickup `user.email`, `cola.tabwidth`, and similar settings
+  when defined in /etc/gitconfig.
+
+  https://github.com/git-cola/git-cola/pull/259
+
 * Better support for unicode paths when using inotify.
 
   https://bugzilla.redhat.com/show_bug.cgi?id=1104181

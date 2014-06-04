@@ -183,6 +183,13 @@ class GitConfig(observable.Observable):
     def _get(self, src, key, default):
         self.update()
         try:
+            value = self._get_with_fallback(src, key)
+        except KeyError:
+            value = default
+        return value
+
+    def _get_with_fallback(self, src, key):
+        try:
             return src[key]
         except KeyError:
             pass
@@ -190,7 +197,9 @@ class GitConfig(observable.Observable):
         try:
             return src[key]
         except KeyError:
-            return src.get(key.lower(), default)
+            pass
+        # Allow the final KeyError to bubble up
+        return src[key.lower()]
 
     def get(self, key, default=None):
         """Return the string value for a config key."""
@@ -201,6 +210,17 @@ class GitConfig(observable.Observable):
 
     def get_repo(self, key, default=None):
         return self._get(self._repo, key, default)
+
+    def get_user_or_system(self, key, default=None):
+        self.update()
+        try:
+            value = self._get_with_fallback(self._user, key)
+        except KeyError:
+            try:
+                value = self._get_with_fallback(self._system, key)
+            except KeyError:
+                value = default
+        return value
 
     def python_to_git(self, value):
         if type(value) is bool:
