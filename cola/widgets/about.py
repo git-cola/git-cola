@@ -103,7 +103,7 @@ def show_shortcuts():
     try:
         html = show_shortcuts.html
     except AttributeError:
-        hotkeys = resources.doc(N_('hotkeys.html'))
+        hotkeys = resources.doc('hotkeys.html')
         html = show_shortcuts.html = core.read(hotkeys)
 
     try:
