@@ -167,7 +167,7 @@ def clone_repo(spawn=True):
         # An existing path can be specified
         msg = (N_('"%s" already exists, cola will create a new directory') %
                destdir)
-        Interaction.information('Directory Exists', msg)
+        Interaction.information(N_('Directory Exists'), msg)
 
     # Make sure the new destdir doesn't exist
     while core.exists(destdir):
