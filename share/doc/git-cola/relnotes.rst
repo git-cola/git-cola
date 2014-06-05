@@ -8,7 +8,7 @@ Fixes
 * We now pickup `user.email`, `cola.tabwidth`, and similar settings
   when defined in /etc/gitconfig.
 
-  https://github.com/git-cola/git-cola/pull/259
+  https://github.com/git-cola/git-cola/issues/259
 
 * Better support for unicode paths when using inotify.
 
