@@ -183,7 +183,7 @@ class GitNotifier(QtCore.QThread):
         if core.exists(directory):
             encoded_dir = core.encode(directory)
             try:
-                self._wmgr.add_watch(encoded_dir, self._mask)
+                self._wmgr.add_watch(encoded_dir, self._mask, quiet=False)
             except WatchManagerError as e:
                 self._add_watch_failed = True
                 self._add_watch_failed_warning(directory, e)
