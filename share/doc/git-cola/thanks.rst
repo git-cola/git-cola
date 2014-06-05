@@ -69,4 +69,5 @@ Thanks
 * Thomas Kluyver
 * Ugo Riboni
 * Uri Okrent
+* Ｖ字龍 (Vdragon)
 * Virgil Dupras

@@ -7,6 +7,8 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/263
 
+* Better zh_TW localization thanks to Vdragon.
+
 Fixes
 -----
 * We now use bold fonts instead of SmallCaps to avoid
