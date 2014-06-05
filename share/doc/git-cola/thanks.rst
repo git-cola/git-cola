@@ -48,6 +48,7 @@ Thanks
 * Marco Costalba
 * Markus Heidelberg
 * Maarten Nieber
+* Matěj Šmíd
 * Matthew Levine
 * Michael Geddes
 * Michael Homer

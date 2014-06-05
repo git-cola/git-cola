@@ -1,5 +1,12 @@
 git-cola v2.0.4
 ===============
+Usability, bells and whistles
+-----------------------------
+* We now handle the case when inotify `add_watch()` fails
+  and display instructions on how to increase the number of watches.
+
+  https://github.com/git-cola/git-cola/issues/263
+
 Fixes
 -----
 * We now use bold fonts instead of SmallCaps to avoid

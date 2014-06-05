@@ -10,6 +10,7 @@ try:
     import pyinotify
     from pyinotify import ProcessEvent
     from pyinotify import WatchManager
+    from pyinotify import WatchManagerError
     from pyinotify import Notifier
     from pyinotify import EventsCodes
     AVAILABLE = True
@@ -33,6 +34,7 @@ from PyQt4 import QtCore
 
 from cola import gitcfg
 from cola import core
+from cola.compat import ustr
 from cola.git import STDOUT
 from cola.i18n import N_
 from cola.interaction import Interaction
@@ -154,6 +156,8 @@ class GitNotifier(QtCore.QThread):
         self._dirs_seen = set()
         ## The inotify watch manager instantiated in run()
         self._wmgr = None
+        ## Has add_watch() failed?
+        self._add_watch_failed = False
         ## Events to capture
         if utils.is_linux():
             self._mask = (EventsCodes.ALL_FLAGS['IN_ATTRIB'] |
@@ -170,14 +174,30 @@ class GitNotifier(QtCore.QThread):
 
     def _watch_directory(self, directory):
         """Set up a directory for monitoring by inotify"""
-        if self._wmgr is None:
+        if self._wmgr is None or self._add_watch_failed:
             return
         directory = core.realpath(directory)
         if directory in self._dirs_seen:
             return
         self._dirs_seen.add(directory)
         if core.exists(directory):
-            self._wmgr.add_watch(core.encode(directory), self._mask)
+            encoded_dir = core.encode(directory)
+            try:
+                self._wmgr.add_watch(encoded_dir, self._mask)
+            except WatchManagerError as e:
+                self._add_watch_failed = True
+                self._add_watch_failed_warning(directory, e)
+
+    def _add_watch_failed_warning(self, directory, e):
+        core.stderr('inotify: failed to watch "%s"' % directory)
+        core.stderr(ustr(e))
+        core.stderr('')
+        core.stderr('If you have run out of watches then you may be able to')
+        core.stderr('increase the number of allowed watches by running:')
+        core.stderr('')
+        core.stderr('    echo fs.inotify.max_user_watches=100000 |')
+        core.stderr('    sudo tee -a /etc/sysctl.conf &&')
+        core.stderr('    sudo sysctl -p\n')
 
     def _is_pyinotify_08x(self):
         """Is this pyinotify 0.8.x?
