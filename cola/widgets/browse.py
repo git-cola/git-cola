@@ -79,7 +79,7 @@ class Browser(standard.Widget):
 
         title = N_('%s: %s - Browse') % (self.model.project, branch)
         if self.mode == self.model.mode_amend:
-            title += ' (%s)' % N_('Amending')
+            title += ' %s' % N_('(Amending)')
         self.setWindowTitle(title)
 
 
