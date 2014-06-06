@@ -116,7 +116,7 @@ tags:
 	$(FIND) . -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
 
 pot:
-	$(PYTHON) setup.py build_pot -N -d .
+	$(PYTHON) setup.py build_pot -N -d po
 
 mo:
 	$(PYTHON) setup.py build_mo -f
