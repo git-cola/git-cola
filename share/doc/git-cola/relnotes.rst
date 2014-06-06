@@ -7,7 +7,21 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/263
 
-* Better zh_TW localization thanks to Vdragon.
+* New and improved zh_TW localization thanks to Vdragon.
+
+  https://github.com/git-cola/git-cola/pull/265
+
+  https://github.com/git-cola/git-cola/pull/267
+
+  https://github.com/git-cola/git-cola/pull/268
+
+  https://github.com/git-cola/git-cola/issues/269
+
+  https://github.com/git-cola/git-cola/pull/270
+
+  https://github.com/git-cola/git-cola/pull/271
+
+  https://github.com/git-cola/git-cola/pull/272
 
 Fixes
 -----
@@ -22,6 +36,12 @@ Fixes
 * Better support for unicode paths when using inotify.
 
   https://bugzilla.redhat.com/show_bug.cgi?id=1104181
+
+* Unicode fixes for non-ascii locales
+
+  https://github.com/git-cola/git-cola/issues/266
+
+  https://github.com/git-cola/git-cola/issues/273
 
 git-cola v2.0.3
 ===============
