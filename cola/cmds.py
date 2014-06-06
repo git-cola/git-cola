@@ -1237,6 +1237,8 @@ class VisualizePaths(Command):
     def __init__(self, paths):
         Command.__init__(self)
         browser = utils.shell_split(prefs.history_browser())
+        if isinstance(paths, map):
+            paths = [x for x in paths]
         if paths:
             self.argv = browser + paths
         else:
