@@ -488,7 +488,7 @@ class GitDAG(MainWindow):
     def update_window_title(self):
         project = self.model.project
         if self.dag.ref:
-            self.setWindowTitle(N_('%s: %s - DAG') % (project, self.dag.ref))
+            self.setWindowTitle(N_('%(project)s: %(ref)s - DAG') % dict(project=project, ref=self.dag.ref))
         else:
             self.setWindowTitle(project + N_(' - DAG'))
 

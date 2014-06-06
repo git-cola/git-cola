@@ -77,7 +77,7 @@ class Browser(standard.Widget):
         msg += N_('Branch: %s') % branch
         self.setToolTip(msg)
 
-        title = N_('%s: %s - Browse') % (self.model.project, branch)
+        title = N_('%(project)s: %(branch)s - Browse') % dict(project=self.model.project, branch=branch)
         if self.mode == self.model.mode_amend:
             title += ' (%s)' % N_('Amending')
         self.setWindowTitle(title)
