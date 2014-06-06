@@ -791,7 +791,7 @@ msgstr "檢視"
 
 #: cola/widgets/main.py:417
 msgid "Help"
-msgstr "幫助"
+msgstr "尋求幫助"
 
 #: cola/widgets/main.py:481
 #, python-format
