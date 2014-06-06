@@ -61,11 +61,11 @@ class RecentFileDialog(standard.Dialog):
         self.tree.setModel(self.tree_model)
 
         self.expand_button = QtGui.QPushButton()
-        self.expand_button.setText(N_('Expand'))
+        self.expand_button.setText(N_('Expand all'))
         self.expand_button.setIcon(qtutils.open_icon())
 
         self.collapse_button = QtGui.QPushButton()
-        self.collapse_button.setText(N_('Collapse'))
+        self.collapse_button.setText(N_('Collapse all'))
         self.collapse_button.setIcon(qtutils.dir_close_icon())
 
         self.edit_button = QtGui.QPushButton()
