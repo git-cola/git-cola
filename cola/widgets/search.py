@@ -300,7 +300,7 @@ class Search(SearchWidget):
         self.end_date.setVisible(date_shown)
 
     def mode(self):
-        return str(self.mode_combo.currentText())
+        return ustr(self.mode_combo.currentText())
 
     def search_callback(self, *args):
         engineclass = self.engines[self.mode()]
