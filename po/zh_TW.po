@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: git-gui\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-06 12:59+0800\n"
-"PO-Revision-Date: 2014-06-06 13:28+0800\n"
+"PO-Revision-Date: 2014-06-06 13:54+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese Traditional <>\n"
 "Language: zh_TW\n"
@@ -791,7 +791,7 @@ msgstr "檢視"
 
 #: cola/widgets/main.py:417
 msgid "Help"
-msgstr "幫助"
+msgstr "尋求幫助"
 
 #: cola/widgets/main.py:481
 #, python-format
