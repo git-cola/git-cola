@@ -276,7 +276,7 @@ class MainView(MainWindow):
                 N_('Review...'), guicmds.review_branch)
 
         self.browse_action = add_action(self,
-                N_('Browser...'), worktree_browser)
+                N_('File Browser...'), worktree_browser)
         self.browse_action.setIcon(qtutils.git_icon())
 
         self.dag_action = add_action(self, N_('DAG...'), self.git_dag)
