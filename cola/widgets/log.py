@@ -28,13 +28,14 @@ class LogWidget(QtGui.QWidget):
         self.output_text.setText(output)
 
     def log_status(self, status, out, err=None):
-        msg = out
+        msg = []
+        if out:
+            msg.append(out)
         if err:
-            msg += '\n' + err
-        if status != 0:
-            msg += '\n'
-            msg += N_('exit code %s') % status
-        self.log(msg)
+            msg.append(err)
+        if status:
+            msg.append(N_('exit code %s') % status)
+        self.log('\n'.join(msg))
 
     def log(self, msg):
         if not msg:
