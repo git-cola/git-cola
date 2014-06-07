@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: git-gui\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-06 12:59+0800\n"
-"PO-Revision-Date: 2014-06-06 13:28+0800\n"
+"POT-Creation-Date: 2014-06-07 20:21+0800\n"
+"PO-Revision-Date: 2014-06-07 22:42+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese Traditional <>\n"
 "Language: zh_TW\n"
@@ -1831,7 +1831,7 @@ msgstr "與過去版本比較內容差異"
 
 #: cola/widgets/browse.py:137
 msgid "Launch git-difftool against previous versions."
-msgstr "對過去的版本啟動 git-difftool 。"
+msgstr "對先前的版本啟動 git-difftool 。"
 
 #: cola/widgets/browse.py:141
 msgid "Revert Uncommitted Changes..."
@@ -1902,11 +1902,11 @@ msgstr "檢查拼字"
 
 #: cola/widgets/commitmsg.py:109
 msgid "Load Previous Commit Message"
-msgstr "載入前一個版本提交(commit)的訊息"
+msgstr "載入先前的版本提交(commit)的訊息"
 
 #: cola/widgets/commitmsg.py:114
 msgid "Fixup Previous Commit"
-msgstr "修正前一個版本提交(commit)"
+msgstr "修正先前的版本提交(commit)"
 
 #: cola/widgets/commitmsg.py:375
 msgid ""
