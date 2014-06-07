@@ -37,11 +37,15 @@ Fixes
 
   https://bugzilla.redhat.com/show_bug.cgi?id=1104181
 
-* Unicode fixes for non-ascii locales
+* Unicode fixes for non-ascii locales.
 
   https://github.com/git-cola/git-cola/issues/266
 
   https://github.com/git-cola/git-cola/issues/273
+
+* Fix viewing history from the file browser on Python3.
+
+  https://github.com/git-cola/git-cola/issues/274
 
 git-cola v2.0.3
 ===============

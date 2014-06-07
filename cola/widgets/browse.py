@@ -354,7 +354,7 @@ class BrowserController(QtCore.QObject):
 
     def view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
-        entries = map(ustr, entries)
+        entries = list(map(ustr, entries))
         cmds.do(cmds.VisualizePaths, entries)
 
     def query_model(self, model_index):

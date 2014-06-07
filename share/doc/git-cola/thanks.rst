@@ -10,6 +10,7 @@ Thanks
 * Barry Roberts
 * Boris W
 * Ben Boeckel
+* Ben Cole
 * Benoît Nouyrigat
 * Charles 101
 * Christian Jann
