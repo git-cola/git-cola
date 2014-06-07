@@ -23,12 +23,15 @@ try:
 except ImportError:
     import urllib
 
+
 def setenv(key, value):
     """Compatibility wrapper for setting environment variables
 
     Why?  win32 requires putenv().  UNIX only requires os.environ.
 
     """
+    if not PY3 and type(value) is ustr:
+        value = value.encode('utf-8', 'replace')
     os.environ[key] = value
     os.putenv(key, value)
 
