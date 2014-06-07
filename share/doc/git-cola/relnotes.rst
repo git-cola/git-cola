@@ -26,6 +26,10 @@ Usability, bells and whistles
 * New hotkeys: Ctrl+f for fetch, Ctrl+p for push,
   and Ctrl-shift-p for pull.
 
+* The bookmarks widget's context menu actions were made clearer.
+
+  https://github.com/git-cola/git-cola/issues/281
+
 Fixes
 -----
 * We now use bold fonts instead of SmallCaps to avoid
