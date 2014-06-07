@@ -23,6 +23,9 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/272
 
+* New hotkeys: Ctrl+f for fetch, Ctrl+p for push,
+  and Ctrl-shift-p for pull.
+
 Fixes
 -----
 * We now use bold fonts instead of SmallCaps to avoid
