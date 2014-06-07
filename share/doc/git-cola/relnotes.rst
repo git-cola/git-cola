@@ -50,6 +50,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/274
 
+* setup.py was fixed to install the `*.rst` documentation.
+
+  https://github.com/git-cola/git-cola/issues/279
+
 git-cola v2.0.3
 ===============
 Usability, bells and whistles
