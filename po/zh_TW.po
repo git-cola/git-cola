@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: git-gui\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-07 20:21+0800\n"
-"PO-Revision-Date: 2014-06-07 22:42+0800\n"
+"PO-Revision-Date: 2014-06-07 22:49+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese Traditional <>\n"
 "Language: zh_TW\n"
@@ -1482,7 +1482,7 @@ msgstr "圖"
 #: cola/widgets/dag.py:491
 #, python-format
 msgid "%(project)s: %(ref)s - DAG"
-msgstr "%s: %s - DAG"
+msgstr "%(project)s: %(ref)s - DAG"
 
 #: cola/widgets/dag.py:493
 msgid " - DAG"
@@ -1791,7 +1791,7 @@ msgstr "您最近有作 rebase/pull 嗎？"
 #: cola/widgets/browse.py:80
 #, python-format
 msgid "%(project)s: %(branch)s - Browse"
-msgstr "%s：%s - 瀏覽"
+msgstr "%(project)s：%(branch)s - 瀏覽"
 
 #: cola/widgets/browse.py:82
 msgid "(Amending)"
