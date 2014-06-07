@@ -132,6 +132,7 @@ class RepoTreeView(standard.TreeView):
                                     N_('Launch git-difftool on the current path.'),
                                     cmds.run(cmds.LaunchDifftool),
                                     cmds.LaunchDifftool.SHORTCUT)
+
         self.action_difftool_predecessor =\
                 self._create_action(N_('Diff Against Predecessor...'),
                                     N_('Launch git-difftool against previous versions.'),
@@ -146,7 +147,7 @@ class RepoTreeView(standard.TreeView):
                 self._create_action(cmds.LaunchEditor.name(),
                                     N_('Edit selected path(s).'),
                                     cmds.run(cmds.LaunchEditor),
-                                    cmds.LaunchDifftool.SHORTCUT)
+                                    cmds.LaunchEditor.SHORTCUT)
 
     def size_columns(self):
         """Set the column widths."""
