@@ -50,6 +50,8 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/273
 
+  https://github.com/git-cola/git-cola/issues/282
+
 * Fix viewing history from the file browser on Python3.
 
   https://github.com/git-cola/git-cola/issues/274
