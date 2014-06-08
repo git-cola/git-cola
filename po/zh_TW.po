@@ -1937,7 +1937,7 @@ msgid ""
 "\n"
 "You must stage at least 1 file before you can commit."
 msgstr ""
-"沒有可以提交的內容變動.\n"
+"沒有可以提交的內容變動。\n"
 "\n"
 "提交前你必須至少將至少一個檔案移入版本提交準備區域。"
 
