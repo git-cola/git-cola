@@ -143,7 +143,7 @@ class BookmarksWidget(QtGui.QWidget):
                 tooltip=N_('Bookmarks...'), icon=qtutils.add_icon())
 
         qtutils.connect_button(self.open_button, self.tree.open_repo)
-        qtutils.connect_button(self.edit_button, self.manage_bookmarks)
+        qtutils.connect_button(self.edit_button, self.tree.edit_bookmarks)
 
         self.connect(self.tree, SIGNAL('itemSelectionChanged()'),
                      self._tree_selection_changed)
@@ -170,12 +170,8 @@ class BookmarksWidget(QtGui.QWidget):
         enabled = bool(self.tree.selected_item())
         self.open_button.setEnabled(enabled)
 
-    def manage_bookmarks(self):
-        manage_bookmarks()
-        self.refresh()
-
-    def refresh(self):
-        self.tree.refresh()
+    def edit_bookmarks(self):
+        self.tree.edit_bookmarks()
 
 
 class BookmarksTreeWidget(standard.TreeWidget):
@@ -198,6 +194,10 @@ class BookmarksTreeWidget(standard.TreeWidget):
                 cmds.OpenDefaultApp.name(), self.open_default,
                 cmds.OpenDefaultApp.SHORTCUT)
         self.open_default_action.setEnabled(False)
+
+        self.edit_bookmarks_action = qtutils.add_action(self,
+                N_('Edit'), self.edit_bookmarks)
+        self.edit_bookmarks_action.setEnabled(False)
 
         self.launch_editor_action = qtutils.add_action(self,
                 cmds.Edit.name(), self.launch_editor,
@@ -243,6 +243,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         menu.addAction(self.open_action)
         menu.addAction(self.open_new_action)
         menu.addAction(self.open_default_action)
+        menu.addAction(self.edit_bookmarks_action)
         menu.addSeparator()
         menu.addAction(self.copy_action)
         menu.addAction(self.launch_editor_action)
@@ -273,6 +274,10 @@ class BookmarksTreeWidget(standard.TreeWidget):
             return
         cmds.do(cmds.OpenNewRepo, item.path)
 
+    def edit_bookmarks(self):
+        manage_bookmarks()
+        self.refresh()
+
     def launch_editor(self):
         item = self.selected_item()
         if not item:
@@ -293,6 +298,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.launch_editor_action.setEnabled(enabled)
         self.launch_terminal_action.setEnabled(enabled)
         self.open_default_action.setEnabled(enabled)
+        self.edit_bookmarks_action.setEnabled(enabled)
 
     def _tree_double_clicked(self, item, column):
         cmds.do(cmds.OpenRepo, item.path)

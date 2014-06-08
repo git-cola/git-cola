@@ -503,7 +503,7 @@ class Edit(Command):
 
     @staticmethod
     def name():
-        return N_('Edit')
+        return N_('Launch Editor')
 
     def __init__(self, filenames, line_number=None):
         Command.__init__(self)
@@ -1238,7 +1238,7 @@ class VisualizePaths(Command):
         Command.__init__(self)
         browser = utils.shell_split(prefs.history_browser())
         if paths:
-            self.argv = browser + paths
+            self.argv = browser + list(paths)
         else:
             self.argv = browser
 

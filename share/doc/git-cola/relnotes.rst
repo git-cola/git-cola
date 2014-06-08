@@ -23,6 +23,13 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/272
 
+* New hotkeys: Ctrl+f for fetch, Ctrl+p for push,
+  and Ctrl-shift-p for pull.
+
+* The bookmarks widget's context menu actions were made clearer.
+
+  https://github.com/git-cola/git-cola/issues/281
+
 Fixes
 -----
 * We now use bold fonts instead of SmallCaps to avoid
@@ -37,11 +44,23 @@ Fixes
 
   https://bugzilla.redhat.com/show_bug.cgi?id=1104181
 
-* Unicode fixes for non-ascii locales
+* Unicode fixes for non-ascii locales.
 
   https://github.com/git-cola/git-cola/issues/266
 
   https://github.com/git-cola/git-cola/issues/273
+
+  https://github.com/git-cola/git-cola/issues/276
+
+  https://github.com/git-cola/git-cola/issues/282
+
+* Fix viewing history from the file browser on Python3.
+
+  https://github.com/git-cola/git-cola/issues/274
+
+* setup.py was fixed to install the `*.rst` documentation.
+
+  https://github.com/git-cola/git-cola/issues/279
 
 git-cola v2.0.3
 ===============
