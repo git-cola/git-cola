@@ -152,9 +152,9 @@ class CreateTag(standard.Dialog):
                                     icon=qtutils.save_icon())):
             return
 
-        cmds.do(cmds.Tag, tag_name, revision,
-                sign=sign_tag, message=tag_msg)
-        information(N_('Tag Created'),
-                    N_('Created a new tag named "%s"') % tag_name,
-                    details=tag_msg or None)
-        self.accept()
+        if (cmds.do(cmds.Tag, tag_name, revision,
+                sign=sign_tag, message=tag_msg)):
+            information(N_('Tag Created'),
+                        N_('Created a new tag named "%s"') % tag_name,
+                        details=tag_msg or None)
+            self.accept()
