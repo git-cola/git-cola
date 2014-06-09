@@ -1,11 +1,11 @@
-# Translation of git-gui glossary to Simplified Chinese
+# Translation of git-cola glossary to Simplified Chinese
 # Copyright (C) 2007 Shawn Pearce, et al.
-# This file is distributed under the same license as the git package.
+# This file is distributed under the same license as the git-cola package.
 # Xudong Guan <xudong.guan@gmail.com> and the zh-kernel.org mailing list, 2007
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: git-gui glossary\n"
+"Project-Id-Version: git-cola glossary\n"
 "PO-Revision-Date: 2007-07-23 22:07+0200\n"
 "Last-Translator: Xudong Guan <xudong.guan@gmail.com>\n"
 "Language-Team: Simplified Chinese \n"

@@ -1,18 +1,17 @@
-# Translation of git-gui to Italian
-# Copyright (C) 2007 Shawn Pearce
-# This file is distributed under the same license as the git-gui package.
+# Translation of git-cola to Italian
+# Copyright (C) 2007 Shawn Pearce at el.
+# This file is distributed under the same license as the git-cola package.
 # Paolo Ciarrocchi <paolo.ciarrocchi@gmail.com>, 2007
 # Michele Ballabio <barra_cuda@katamail.com>, 2007.
-# 
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: git-gui\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: git-cola VERSION\n"
+"Report-Msgid-Bugs-To: https://github.com/git-cola/git-cola/issues\n"
 "POT-Creation-Date: 2014-01-30 20:54-0800\n"
 "PO-Revision-Date: 2008-03-12 22:12+0100\n"
-"Last-Translator: Michele Ballabio <barra_cuda@katamail.com>\n"
-"Language-Team: Italian <tp@lists.linux.it>\n"
+"Last-Translator: David Aguilar <davvid@gmail.com>\n"
+"Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
