@@ -463,15 +463,14 @@ gettext language code, e.g. "en", "de", "ja", "zh", etc.::
     mkdir -p ~/.config/git-cola &&
     echo en >~/.config/git-cola/language
 
-Alternatively you may also use LANGAUGE environmental variable to temporarily change `git cola`'s language just as other gettext-based program, for example:
+Alternatively you may also use LANGAUGE environmental variable to temporarily change `git cola`'s language just as other gettext-based program, for example to temporarily changes `git cola`'s language to English::
 
     LANGUAGE=en git cola
     
-temporarily changes `git cola`'s language to English.
+To make `git cola` displays zh_TW translation first, then zh_HK, zh, en as fallback.::
 
     LANGUAGE=zh_TW:zh_HK:zh:en git cola
 
-will make `git cola` displays zh_TW translation first, then zh_HK, zh, en as fallback.
 
 CUSTOM GUI ACTIONS
 ==================
