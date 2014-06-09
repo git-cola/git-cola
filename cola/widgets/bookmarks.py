@@ -310,5 +310,6 @@ class BookmarksTreeWidgetItem(QtGui.QTreeWidgetItem):
         QtGui.QTreeWidgetItem.__init__(self)
         self.path = path
         self.setIcon(0, icon)
-        self.setText(0, os.path.basename(path))
+        normpath = os.path.normpath(path)
+        self.setText(0, os.path.basename(normpath))
         self.setToolTip(0, path)
