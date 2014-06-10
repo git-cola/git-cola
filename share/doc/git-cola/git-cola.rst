@@ -242,8 +242,8 @@ Staging content for commit
 --------------------------
 The ``@@`` patterns denote a new diff region.  Selecting lines of diff
 and using the `Stage Selected` command will stage just the selected lines.
-Clicking within a diff region and selecting `Stage Section` stages the
-entire patch region.
+Clicking within a diff region and selecting `Stage Diff Region` stages the
+entire patch diff region.
 
 The corresponding opposite commands can be performed on staged files as well,
 e.g. staged content can be selectively removed from the index when we are
