@@ -30,6 +30,21 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/281
 
+* The term "Staging Area" is used consistently in the UI
+  to allow for better localization.
+
+  https://github.com/git-cola/git-cola/issues/283
+
+* The "Section" term is now referred to as "Diff Region"
+  in the UI.
+
+  https://github.com/git-cola/git-cola/issues/297
+
+* The localization documentation related to the LANGUAGE
+  environment variable was improved.
+
+  https://github.com/git-cola/git-cola/pull/293
+
 Fixes
 -----
 * We now use bold fonts instead of SmallCaps to avoid
@@ -54,13 +69,21 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/282
 
-* Fix viewing history from the file browser on Python3.
+* Viewing history from the file browser was fixed for Python3.
 
   https://github.com/git-cola/git-cola/issues/274
 
 * setup.py was fixed to install the `*.rst` documentation.
 
   https://github.com/git-cola/git-cola/issues/279
+
+* Patch export was fixed for Python3.
+
+  https://github.com/git-cola/git-cola/issues/290
+
+* Fixed adding a bookmark with trailing slashes.
+
+  https://github.com/git-cola/git-cola/pull/295
 
 git-cola v2.0.3
 ===============
