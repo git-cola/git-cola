@@ -310,3 +310,6 @@ class GitConfig(observable.Observable):
         suffix = len('.cmd')
         return sorted([name[prefix:-suffix]
                         for (name, cmd) in guitools.items()])
+
+    def terminal(self):
+        return self.get('cola.terminal', 'xterm -e')

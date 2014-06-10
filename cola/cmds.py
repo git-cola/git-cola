@@ -575,8 +575,11 @@ class LaunchDifftool(BaseCommand):
             if utils.is_win32():
                 core.fork(['git', 'mergetool', '--no-prompt', '--'] + paths)
             else:
-                core.fork(['xterm', '-e',
-                           'git', 'mergetool', '--no-prompt', '--'] + paths)
+                cmd = _config.terminal()
+                argv = utils.shell_split(cmd)
+                argv.extend(['git', 'mergetool', '--no-prompt', '--'])
+                argv.extend(paths)
+                core.fork(argv)
         else:
             difftool.run()
 
@@ -594,9 +597,9 @@ class LaunchTerminal(BaseCommand):
         self.path = path
 
     def do(self):
-        cmd = _config.get('cola.terminal', 'xterm -e $SHELL')
-        cmd = os.path.expandvars(cmd)
+        cmd = _config.terminal()
         argv = utils.shell_split(cmd)
+        argv.append(os.getenv('SHELL', '/bin/sh'))
         core.fork(argv, cwd=self.path)
 
 
