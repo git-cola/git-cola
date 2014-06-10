@@ -1365,7 +1365,7 @@ msgid "Diff Options"
 msgstr "Настройки"
 
 #: cola/widgets/diff.py:80
-msgid "Process Section"
+msgid "Process Diff Region"
 msgstr ""
 
 #: cola/widgets/diff.py:83
@@ -1396,15 +1396,15 @@ msgstr ""
 
 #: cola/widgets/diff.py:159
 #, fuzzy
-msgid "Stage Section"
+msgid "Stage Diff Region"
 msgstr "Начальная версия"
 
 #: cola/widgets/diff.py:165
-msgid "Revert Section..."
+msgid "Revert Diff Region..."
 msgstr ""
 
 #: cola/widgets/diff.py:181
-msgid "Unstage Section"
+msgid "Unstage Diff Region"
 msgstr ""
 
 #: cola/widgets/diff.py:197
@@ -1412,11 +1412,11 @@ msgid "Select All"
 msgstr "Выделить все"
 
 #: cola/widgets/diff.py:311
-msgid "Revert Section?"
+msgid "Revert Diff Region?"
 msgstr ""
 
 #: cola/widgets/diff.py:315
-msgid "Revert Section"
+msgid "Revert Diff Region"
 msgstr ""
 
 #: cola/widgets/diff.py:324
