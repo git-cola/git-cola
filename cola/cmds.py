@@ -1142,7 +1142,7 @@ class Tag(Command):
             self.model.update_status()
             return True
         else:
-            Interaction.information(
+            Interaction.critical(
                     N_('Error: could not create tag "%s"') % self.name,
                     (N_('git tag returned exit code %s') % status) +
                     ((output+err) and ('\n\n' + output + err) or ''))
