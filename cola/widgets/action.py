@@ -44,17 +44,23 @@ class QFlowLayoutWidget(QtGui.QWidget):
             self.layout().setDirection(dxn)
 
 
+def tooltip_button(text, layout):
+    button = create_button(text, layout=layout)
+    button.setToolTip(text)
+    return button
+
+
 class ActionButtons(QFlowLayoutWidget):
     def __init__(self, parent=None):
         QFlowLayoutWidget.__init__(self, parent)
         layout = self.layout()
-        self.stage_button = create_button(text=N_('Stage'), layout=layout)
-        self.unstage_button = create_button(text=N_('Unstage'), layout=layout)
-        self.refresh_button = create_button(text=N_('Refresh'), layout=layout)
-        self.fetch_button = create_button(text=N_('Fetch...'), layout=layout)
-        self.push_button = create_button(text=N_('Push...'), layout=layout)
-        self.pull_button = create_button(text=N_('Pull...'), layout=layout)
-        self.stash_button = create_button(text=N_('Stash...'), layout=layout)
+        self.stage_button = tooltip_button(N_('Stage'), layout)
+        self.unstage_button = tooltip_button(N_('Unstage'), layout)
+        self.refresh_button = tooltip_button(N_('Refresh'), layout)
+        self.fetch_button = tooltip_button(N_('Fetch...'), layout)
+        self.push_button = tooltip_button(N_('Push...'), layout)
+        self.pull_button = tooltip_button(N_('Pull...'), layout)
+        self.stash_button = tooltip_button(N_('Stash...'), layout)
         self.aspect_ratio = 0.4
         layout.addStretch()
         self.setMinimumHeight(30)

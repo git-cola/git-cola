@@ -7,7 +7,7 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/263
 
-* New and improved zh_TW localization thanks to Vdragon.
+* New and improved zh_TW localization thanks to Ｖ字龍(Vdragon).
 
   https://github.com/git-cola/git-cola/pull/265
 
@@ -44,6 +44,11 @@ Usability, bells and whistles
   environment variable was improved.
 
   https://github.com/git-cola/git-cola/pull/293
+
+* The "Actions" panel now contains tooltips for each button
+  in case the button labels gets truncated by Qt.
+
+  https://github.com/git-cola/git-cola/issues/292
 
 Fixes
 -----
