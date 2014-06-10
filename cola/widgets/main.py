@@ -355,9 +355,9 @@ class MainView(MainWindow):
         self.actions_menu.addAction(self.search_commits_action)
         self.menubar.addAction(self.actions_menu.menuAction())
 
-        # Index Menu
-        self.commit_menu = create_menu(N_('Index'), self.menubar)
-        self.commit_menu.setTitle(N_('Index'))
+        # Stage Menu
+        self.commit_menu = create_menu(N_('Stage'), self.menubar)
+        self.commit_menu.setTitle(N_('Stage'))
         self.commit_menu.addAction(self.stage_modified_action)
         self.commit_menu.addAction(self.stage_untracked_action)
         self.commit_menu.addSeparator()
