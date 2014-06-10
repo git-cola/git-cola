@@ -1140,13 +1140,7 @@ class Tag(Command):
         Interaction.log_status(status, log_msg, err)
         if status == 0:
             self.model.update_status()
-            return True
-        else:
-            Interaction.critical(
-                    N_('Error: could not create tag "%s"') % self.name,
-                    (N_('git tag returned exit code %s') % status) +
-                    ((output+err) and ('\n\n' + output + err) or ''))
-            return False
+        return (status, output, err)
 
 
 class Unstage(Command):
