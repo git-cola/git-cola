@@ -131,6 +131,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/257
 
+* `git dag` sometimes left behind selection artifacts.
+  We now refresh the view to avoid them.
+
+  https://github.com/git-cola/git-cola/issues/204
+
 git-cola v2.0.2
 ===============
 Usability, bells and whistles

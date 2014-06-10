@@ -2,7 +2,6 @@ from __future__ import division, absolute_import, unicode_literals
 
 import collections
 import math
-import sys
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -1238,10 +1237,10 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
             item.setSelected(True)
 
     def handle_event(self, event_handler, event):
-        self.update()
         self.save_selection(event)
         event_handler(self, event)
         self.restore_selection(event)
+        self.update()
 
     def set_selecting(self, selecting):
         self.selecting = selecting
