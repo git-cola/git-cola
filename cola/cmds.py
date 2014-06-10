@@ -549,8 +549,8 @@ class FormatPatch(Command):
 
     def __init__(self, to_export, revs):
         Command.__init__(self)
-        self.to_export = to_export
-        self.revs = revs
+        self.to_export = list(to_export)
+        self.revs = list(revs)
 
     def do(self):
         status, out, err = gitcmds.format_patchsets(self.to_export, self.revs)
