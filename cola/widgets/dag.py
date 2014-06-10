@@ -1458,6 +1458,8 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
         self.last_mouse[0] = pos.x()
         self.last_mouse[1] = pos.y()
         self.handle_event(QtGui.QGraphicsView.mouseMoveEvent, event)
+        if self.pressed:
+            self.viewport().repaint()
 
     def mouseReleaseEvent(self, event):
         self.pressed = False
@@ -1466,6 +1468,7 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
             return
         self.handle_event(QtGui.QGraphicsView.mouseReleaseEvent, event)
         self.selection_list = []
+        self.viewport().repaint()
 
     def wheelEvent(self, event):
         """Handle Qt mouse wheel events."""
