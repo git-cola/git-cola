@@ -79,7 +79,7 @@ class DiffEditor(DiffTextEdit):
         titlebar.add_corner_widget(self.diffopts_button)
 
         self.action_process_section = qtutils.add_action(self,
-                N_('Process Section'),
+                N_('Process Diff Region'),
                 self.apply_section, Qt.Key_H)
         self.action_process_selection = qtutils.add_action(self,
                 N_('Process Selection'),
@@ -159,13 +159,13 @@ class DiffEditor(DiffTextEdit):
                                         core.abspath(s.modified[0])))
             elif s.modified:
                 action = menu.addAction(qtutils.icon('add.svg'),
-                                        N_('Stage Section'),
+                                        N_('Stage Diff Region'),
                                         self.stage_section)
                 action.setShortcut(Qt.Key_H)
                 menu.addAction(self.action_stage_selection)
                 menu.addSeparator()
                 menu.addAction(qtutils.icon('undo.svg'),
-                               N_('Revert Section...'),
+                               N_('Revert Diff Region...'),
                                self.revert_section)
                 menu.addAction(self.action_revert_selection)
 
@@ -181,7 +181,7 @@ class DiffEditor(DiffTextEdit):
                                        core.abspath(s.staged[0])))
             elif s.staged:
                 action = menu.addAction(qtutils.icon('remove.svg'),
-                                        N_('Unstage Section'),
+                                        N_('Unstage Diff Region'),
                                         self.unstage_section)
                 action.setShortcut(Qt.Key_H)
                 menu.addAction(self.action_unstage_selection)
@@ -316,11 +316,11 @@ class DiffEditor(DiffTextEdit):
 
     def revert_section(self):
         """Destructively remove a section from a worktree file."""
-        if not qtutils.confirm(N_('Revert Section?'),
+        if not qtutils.confirm(N_('Revert Diff Region?'),
                                N_('This operation drops uncommitted changes.\n'
                                   'These changes cannot be recovered.'),
                                N_('Revert the uncommitted changes?'),
-                               N_('Revert Section'),
+                               N_('Revert Diff Region'),
                                default=True,
                                icon=qtutils.icon('undo.svg')):
             return
