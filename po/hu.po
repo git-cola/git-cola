@@ -1,11 +1,11 @@
-# Hungarian translations for git-gui-i package.
-# Copyright (C) 2007 THE git-gui-i'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the git-gui-i package.
+# Hungarian translations for git-cola package.
+# Copyright (C) 2007 THE git-cola'S Miklos Vajna at el.
+# This file is distributed under the same license as the git-cola package.
 # Miklos Vajna <vmiklos@frugalware.org>, 2007.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: git-gui-i 18n\n"
+"Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-01-30 20:54-0800\n"
 "PO-Revision-Date: 2008-03-14 17:24+0100\n"

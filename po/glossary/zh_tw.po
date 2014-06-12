@@ -1,4 +1,6 @@
 # Translation of git-cola glossary to Traditional Chinese(Taiwan)
+# Copyright (C) 2007 Shawn Pearce, et al.
+# This file is distributed under the same license as the git-cola package.
 # Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>, 2014.
 msgid ""
 msgstr ""

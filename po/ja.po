@@ -1,13 +1,13 @@
-# Translation of git-gui to Japanese
-# Copyright (C) 2007 Shawn Pearce
-# This file is distributed under the same license as the git-gui package.
+# Translation of git-cola to Japanese
+# Copyright (C) 2007 Shawn Pearce at el.
+# This file is distributed under the same license as the git-cola package.
 # しらいし ななこ <nanako3@bluebottle.com>, 2007.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: git-gui\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: git-cola VERSION\n"
+"Report-Msgid-Bugs-To: https://github.com/git-cola/git-cola/issues\n"
 "POT-Creation-Date: 2014-01-30 20:54-0800\n"
 "PO-Revision-Date: 2008-03-15 20:12+0900\n"
 "Last-Translator: しらいし ななこ <nanako3@bluebottle.com>\n"

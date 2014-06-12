@@ -1,11 +1,11 @@
-# Translation of git-gui glossary to Italian
+# Translation of git-cola glossary to Italian
 # Copyright (C) 2007 Shawn Pearce, et al.
-# This file is distributed under the same license as the git package.
+# This file is distributed under the same license as the git-cola package.
 # Christian Stimming <stimming@tuhh.de>, 2007
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: git-gui glossary\n"
+"Project-Id-Version: git-cola glossary\n"
 "POT-Creation-Date: 2007-10-19 21:43+0200\n"
 "PO-Revision-Date: 2007-10-10 15:24+0200\n"
 "Last-Translator: Michele Ballabio <barra_cuda@katamail.com>\n"

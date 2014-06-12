@@ -1,16 +1,18 @@
 # Translation of git-cola to Traditional Chinese(Taiwan)
+# Copyright (C) 2007, 2008 Shawn Pearce at el.
 # This file is distributed under the same license as the git-cola package.
-# This file is originally converted to zh_TW from zh_CN.po, made from Eric Miao <eric.y.miao@gmail.com> etc.
+# Xudong Guan <xudong.guan@gmail.com>, 2007.
+# Eric Miao <eric.y.miao@gmail.com>, 2008.
+# Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>, 2014.
 #
 # 敬請參考 glossary/zh_tw.po 的辭彙翻譯
-# 2008-01-06 Eric Miao <eric.y.miao@gmail.com>
-# Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>, 2014.
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: git-gui\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-07 20:21+0800\n"
-"PO-Revision-Date: 2014-06-07 22:49+0800\n"
+"Project-Id-Version: git-cola VERSION\n"
+"Report-Msgid-Bugs-To: https://github.com/git-cola/git-cola/issues\n"
+"POT-Creation-Date: 2014-06-06 12:59+0800\n"
+"PO-Revision-Date: 2014-06-06 13:28+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese Traditional <>\n"
 "Language: zh_TW\n"
