@@ -13,7 +13,6 @@ from cola import inotify
 from cola import utils
 from cola import difftool
 from cola import resources
-from cola.compat import ustr
 from cola.diffparse import DiffParser
 from cola.git import STDOUT
 from cola.i18n import N_
@@ -539,9 +538,10 @@ class Edit(Command):
         try:
             core.fork(utils.shell_split(editor) + opts)
         except Exception as e:
-            message = (N_('Cannot exec "%s": please configure your editor') %
-                       editor)
-            Interaction.critical(N_('Error Editing File'), message, ustr(e))
+            message = (N_('Cannot exec "%s": please configure your editor')
+                       % editor)
+            details = core.decode(e.strerror)
+            Interaction.critical(N_('Error Editing File'), message, details)
 
 
 class FormatPatch(Command):
