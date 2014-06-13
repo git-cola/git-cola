@@ -1774,7 +1774,7 @@ msgstr ""
 #: cola/widgets/remote.py:471
 #, python-format
 msgid "Force push to %s?"
-msgstr "強制推送到遠端分支"
+msgstr "要強制推送至 %s 遠端分支嗎？"
 
 #: cola/widgets/remote.py:472
 msgid "Force Push"
