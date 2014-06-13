@@ -327,7 +327,7 @@ class GitDAG(MainWindow):
         self.setMinimumSize(420, 420)
 
         # change when widgets are added/removed
-        self.widget_version = 1
+        self.widget_version = 2
         self.model = model
         self.dag = dag
         self.settings = settings
@@ -423,11 +423,10 @@ class GitDAG(MainWindow):
 
         left = Qt.LeftDockWidgetArea
         right = Qt.RightDockWidgetArea
-        bottom = Qt.BottomDockWidgetArea
         self.addDockWidget(left, self.log_dock)
+        self.addDockWidget(left, self.diff_dock)
         self.addDockWidget(right, self.graphview_dock)
         self.addDockWidget(right, self.file_dock)
-        self.addDockWidget(bottom, self.diff_dock)
 
         # Update fields affected by model
         self.revtext.setText(dag.ref)

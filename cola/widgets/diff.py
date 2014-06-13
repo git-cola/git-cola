@@ -363,7 +363,7 @@ class DiffWidget(QtGui.QWidget):
         summary_font = QtGui.QFont(author_font)
         summary_font.setWeight(QtGui.QFont.Bold)
 
-        policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,
+        policy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding,
                                    QtGui.QSizePolicy.Minimum)
 
         self.gravatar_label = gravatar.GravatarLabel()

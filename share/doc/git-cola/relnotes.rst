@@ -92,6 +92,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/pull/295
 
+* The default `git dag` layout is now setup so that its widgets
+  can be freely resized on Linux.
+
+  https://github.com/git-cola/git-cola/pull/299
+
 git-cola v2.0.3
 ===============
 Usability, bells and whistles
