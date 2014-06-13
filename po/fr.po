@@ -1,13 +1,14 @@
-# translation of fr.po to French
-# Translation of git-gui to French.
-# Copyright (C) 2008 Shawn Pearce, et al.
-# This file is distributed under the same license as the git package.
+# Translation of git-cola to French.
+# Copyright (C) 2008, 2011 Shawn Pearce, et al.
+# This file is distributed under the same license as the git-cola package.
 #
-# Christian Couder <chriscool@tuxfamily.org>, 2008.
+# Christian Couder <chriscool@tuxfamily.org>, 2008
+# David Aguilar <davvid@gmail.com>, 2011
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: fr\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: git-cola VERSION\n"
+"Report-Msgid-Bugs-To: https://github.com/git-cola/git-cola/issues\n"
 "POT-Creation-Date: 2014-01-30 20:54-0800\n"
 "PO-Revision-Date: 2008-04-04 22:05+0200\n"
 "Last-Translator: Christian Couder <chriscool@tuxfamily.org>\n"
