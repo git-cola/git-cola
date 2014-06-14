@@ -97,6 +97,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/299
 
+* Invalid tag names are now reported when creating tags.
+
+  https://github.com/git-cola/git-cola/pull/296
+
 git-cola v2.0.3
 ===============
 Usability, bells and whistles
