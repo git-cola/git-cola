@@ -152,9 +152,16 @@ class CreateTag(standard.Dialog):
                                     icon=qtutils.save_icon())):
             return
 
-        cmds.do(cmds.Tag, tag_name, revision,
-                sign=sign_tag, message=tag_msg)
-        information(N_('Tag Created'),
-                    N_('Created a new tag named "%s"') % tag_name,
-                    details=tag_msg or None)
-        self.accept()
+        status, output, err = cmds.do(cmds.Tag, tag_name, revision,
+                                      sign=sign_tag, message=tag_msg)
+
+        if status == 0:
+            information(N_('Tag Created'),
+                        N_('Created a new tag named "%s"') % tag_name,
+                        details=tag_msg or None)
+            self.accept()
+        else:
+            critical(N_('Error: could not create tag "%s"') % tag_name,
+                    (N_('git tag returned exit code %s') % status) +
+                    ((output+err) and ('\n\n' + output + err) or ''))
+

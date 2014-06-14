@@ -1143,6 +1143,7 @@ class Tag(Command):
         Interaction.log_status(status, log_msg, err)
         if status == 0:
             self.model.update_status()
+        return (status, output, err)
 
 
 class Unstage(Command):
