@@ -70,7 +70,7 @@ class ApplyPatches(Dialog):
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
-        self.curdir = os.getcwd()
+        self.curdir = core.getcwd()
         self.inner_drag = False
 
         self.usage = QtGui.QLabel()

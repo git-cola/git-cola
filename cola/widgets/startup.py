@@ -7,12 +7,11 @@ found at startup.
 """
 from __future__ import division, absolute_import, unicode_literals
 
-import os
-
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+from cola import core
 from cola import guicmds
 from cola import qtutils
 from cola.compat import ustr
@@ -126,7 +125,7 @@ class StartupDialog(QtGui.QDialog):
         self._gitdir = self._get_selected_bookmark()
         if not self._gitdir:
             self._gitdir = qtutils.opendir_dialog(N_('Open Git Repository...'),
-                                                  os.getcwd())
+                                                  core.getcwd())
         if self._gitdir:
             self.accept()
 

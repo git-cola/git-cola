@@ -2,10 +2,10 @@
 """Tests basic git operations: commit, log, config"""
 from __future__ import unicode_literals
 
-import os
 import unittest
 
 import helper
+from cola import core
 from cola.models.main import MainModel
 
 class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
@@ -21,7 +21,7 @@ class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
             git add A B
             """)
 
-        model = MainModel(cwd=os.getcwd())
+        model = MainModel(cwd=core.getcwd())
         model.git.commit(m='commit test')
         log = helper.pipe('git log --pretty=oneline | wc -l')
 
@@ -30,7 +30,7 @@ class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
     def test_git_config(self):
         """Test cola.git.config()"""
         self.shell('git config section.key value')
-        model = MainModel(cwd=os.getcwd())
+        model = MainModel(cwd=core.getcwd())
         value = model.git.config('section.key', get=True)
 
         self.assertEqual(value, (0, 'value', ''))

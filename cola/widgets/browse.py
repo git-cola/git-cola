@@ -1,7 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
 
-import os
-
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
@@ -71,7 +69,7 @@ class Browser(standard.Widget):
 
     def _updated_callback(self):
         branch = self.model.currentbranch
-        curdir = os.getcwd()
+        curdir = core.getcwd()
         msg = N_('Repository: %s') % curdir
         msg += '\n'
         msg += N_('Branch: %s') % branch

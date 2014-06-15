@@ -1,9 +1,8 @@
 """Covers interfaces used by the classic view."""
 from __future__ import unicode_literals
 
-import os
-
 import helper
+from cola import core
 from cola import gitcmds
 from cola.models.main import MainModel
 
@@ -13,7 +12,7 @@ class ClassicModelTestCase(helper.GitRepositoryTestCase):
 
     def setUp(self):
         helper.GitRepositoryTestCase.setUp(self, commit=False)
-        self.model = MainModel(cwd=os.getcwd())
+        self.model = MainModel(cwd=core.getcwd())
 
     def test_everything(self):
         """Test the MainModel.everything() method."""

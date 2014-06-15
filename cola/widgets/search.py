@@ -1,7 +1,6 @@
 """A widget for searching git commits"""
 from __future__ import division, absolute_import, unicode_literals
 
-import os
 import time
 import subprocess
 
@@ -9,6 +8,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
+from cola import core
 from cola import gitcmds
 from cola import utils
 from cola import qtutils
@@ -324,9 +324,9 @@ class Search(SearchWidget):
         if not paths:
             return
         filepaths = []
-        lenprefix = len(os.getcwd()) + 1
+        lenprefix = len(core.getcwd()) + 1
         for path in map(lambda x: ustr(x), paths):
-            if not path.startswith(os.getcwd()):
+            if not path.startswith(core.getcwd()):
                 continue
             filepaths.append(path[lenprefix:])
         query = subprocess.list2cmdline(filepaths)

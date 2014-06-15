@@ -4,6 +4,7 @@ import os
 import unittest
 
 import helper
+from cola import core
 from cola.models.main import MainModel
 
 
@@ -12,7 +13,7 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
 
     def setUp(self):
         helper.GitRepositoryTestCase.setUp(self)
-        self.model = MainModel(cwd=os.getcwd())
+        self.model = MainModel(cwd=core.getcwd())
 
     def test_project(self):
         """Test the 'project' attribute."""

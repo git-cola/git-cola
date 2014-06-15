@@ -492,7 +492,7 @@ class MainModel(Observable):
         return status, out, err
 
     def getcwd(self):
-        """If we've chosen a directory then use it, otherwise os.getcwd()."""
+        """If we've chosen a directory then use it, otherwise use current"""
         if self.directory:
             return self.directory
         return core.getcwd()

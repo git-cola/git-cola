@@ -307,7 +307,7 @@ def add_common_arguments(parser):
                         help='print version number')
 
     # Specifies a git repository to open
-    parser.add_argument('-r', '--repo', metavar='<repo>', default=os.getcwd(),
+    parser.add_argument('-r', '--repo', metavar='<repo>', default=os.getcwdu(),
                         help='open the specified git repository')
 
     # Specifies that we should prompt for a repository at startup
