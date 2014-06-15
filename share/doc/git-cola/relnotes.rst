@@ -78,6 +78,8 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/302
 
+  https://github.com/git-cola/git-cola/issues/303
+
 * Viewing history from the file browser was fixed for Python3.
 
   https://github.com/git-cola/git-cola/issues/274
