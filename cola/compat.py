@@ -2,7 +2,9 @@ import os
 import sys
 
 
+PY2 = sys.version_info[0] == 2
 PY3 = sys.version_info[0] >= 3
+WIN32 = sys.platform == 'win32' or sys.platform == 'cygwin'
 
 try:
     ustr = unicode
