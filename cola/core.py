@@ -275,7 +275,7 @@ abspath = wrap(mkpath, os.path.abspath, decorator=decode)
 chdir = wrap(mkpath, os.chdir)
 exists = wrap(mkpath, os.path.exists)
 expanduser = wrap(encode, os.path.expanduser, decorator=decode)
-getcwd = decorate(decode, os.getcwd)
+getcwd = os.getcwdu
 isdir = wrap(mkpath, os.path.isdir)
 isfile = wrap(mkpath, os.path.isfile)
 islink = wrap(mkpath, os.path.islink)
