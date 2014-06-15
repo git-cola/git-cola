@@ -321,12 +321,13 @@ class GitConfig(observable.Observable):
 
     def file_encoding(self, path):
         if not self.is_per_file_attrs_enabled():
-            return None
+            return self.gui_encoding()
         cache = self._attr_cache
         try:
             value = cache[path]
         except KeyError:
-            value = cache[path] = self._file_encoding(path)
+            value = cache[path] = (self._file_encoding(path) or
+                                   self.gui_encoding())
         return value
 
     def _file_encoding(self, path):
