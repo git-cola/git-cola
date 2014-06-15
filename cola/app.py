@@ -50,6 +50,7 @@ from cola import utils
 from cola import version
 from cola.compat import ustr
 from cola.decorators import memoize
+from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
 from cola.widgets import cfgactions
@@ -228,8 +229,9 @@ def process_args(args):
         repo = repo[len('file:'):]
     repo = core.realpath(repo)
     if not core.isdir(repo):
-        sys.stderr.write("fatal: '%s' is not a directory.  "
-                         'Consider supplying -r <path>.\n' % repo)
+        errmsg = N_('fatal: "%s" is not a directory.  '
+                    'Please specify --repo <path>.') % repo
+        core.stderr(errmsg)
         sys.exit(-1)
 
     # We do everything relative to the repo root
