@@ -255,14 +255,14 @@ def xopen(path, mode='r', encoding=None):
 def stdout(msg):
     msg = msg + '\n'
     if PY2:
-        msg = encode(msg, sys.stdout.encoding)
+        msg = encode(msg, encoding='utf-8')
     sys.stdout.write(msg)
 
 
 def stderr(msg):
     msg = msg + '\n'
     if PY2:
-        msg = encode(msg, sys.stderr.encoding)
+        msg = encode(msg, encoding='utf-8')
     sys.stderr.write(msg)
 
 
