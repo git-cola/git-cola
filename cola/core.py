@@ -262,7 +262,7 @@ def stdout(msg):
 def stderr(msg):
     msg = msg + '\n'
     if PY2:
-        msg = encode(msg, sys.stderr.encoding)
+        msg = msg.encode('utf-8')
     sys.stderr.write(msg)
 
 
