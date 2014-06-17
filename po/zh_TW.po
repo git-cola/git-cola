@@ -2035,7 +2035,7 @@ msgid ""
 "Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
 "A new remote branch will be published."
 msgstr ""
-"「%(branch)s」分支並無存在於「\"%(remote)s\"」遠端版本倉庫。\n"
+"「%(branch)s」分支並無存在於「%(remote)s」遠端版本倉庫。\n"
 "一個新的遠端方支將被發佈。"
 
 #: cola/widgets/remote.py:454
