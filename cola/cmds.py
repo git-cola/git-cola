@@ -325,7 +325,7 @@ class Commit(ResetMode):
     def __init__(self, amend, msg):
         ResetMode.__init__(self)
         self.amend = amend
-        self.msg = msg
+        self.msg = self.strip_comments(msg)
         self.old_commitmsg = self.model.commitmsg
         self.new_commitmsg = ''
 
@@ -342,6 +342,17 @@ class Commit(ResetMode):
         Interaction.log_status(status, msg, err)
 
         return status, out, err
+
+    @staticmethod
+    def strip_comments(msg):
+        # Strip off comments
+        message_lines = [line for line in msg.split('\n')
+                            if not line.startswith('#')]
+        msg = '\n'.join(message_lines)
+        if not msg.endswith('\n'):
+            msg += '\n'
+
+        return msg
 
 
 class Ignore(Command):

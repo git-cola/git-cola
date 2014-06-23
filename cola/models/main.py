@@ -345,9 +345,6 @@ class MainModel(Observable):
     def commit_with_msg(self, msg, tmpfile, amend=False):
         """Creates a git commit."""
 
-        if not msg.endswith('\n'):
-            msg += '\n'
-
         # Create the commit message file
         core.write(tmpfile, msg)
 
