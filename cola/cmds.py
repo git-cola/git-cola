@@ -325,14 +325,21 @@ class Commit(ResetMode):
     def __init__(self, amend, msg):
         ResetMode.__init__(self)
         self.amend = amend
-        self.msg = self.strip_comments(msg)
+        self.msg = msg
         self.old_commitmsg = self.model.commitmsg
         self.new_commitmsg = ''
 
     def do(self):
+        # Create the commit message file
+        msg = self.strip_comments(self.msg)
         tmpfile = utils.tmp_filename('commit-message')
-        status, out, err = self.model.commit_with_msg(self.msg, tmpfile,
-                                                      amend=self.amend)
+        core.write(tmpfile, msg)
+
+        # Run 'git commit'
+        status, out, err = self.model.git.commit(F=tmpfile, v=True,
+                                                 amend=self.amend)
+        core.unlink(tmpfile)
+
         if status == 0:
             ResetMode.do(self)
             self.model.set_commitmsg(self.new_commitmsg)

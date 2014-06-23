@@ -342,17 +342,6 @@ class MainModel(Observable):
             newdict[k]=v
         return newdict
 
-    def commit_with_msg(self, msg, tmpfile, amend=False):
-        """Creates a git commit."""
-
-        # Create the commit message file
-        core.write(tmpfile, msg)
-
-        # Run 'git commit'
-        status, out, err = self.git.commit(F=tmpfile, v=True, amend=amend)
-        core.unlink(tmpfile)
-        return (status, out, err)
-
     def remote_url(self, name, action):
         if action == 'push':
             url = self.git.config('remote.%s.pushurl' % name,
