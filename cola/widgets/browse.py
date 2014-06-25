@@ -93,7 +93,9 @@ class RepoTreeView(standard.TreeView):
 
         # Observe model updates
         model = main.model()
-        model.add_observer(model.message_updated, self.update_actions)
+        model.add_observer(model.message_updated, self.emit_update)
+
+        self.connect(self, SIGNAL('update()'), self.update_actions)
 
         # The non-Qt cola application model
         self.connect(self, SIGNAL('expanded(QModelIndex)'), self.size_columns)
@@ -150,6 +152,9 @@ class RepoTreeView(standard.TreeView):
     def size_columns(self):
         """Set the column widths."""
         self.resizeColumnToContents(0)
+
+    def emit_update(self):
+        self.emit(SIGNAL('update()'))
 
     def update_actions(self):
         """Enable/disable actions."""
