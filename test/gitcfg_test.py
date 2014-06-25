@@ -54,6 +54,18 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
         self.assertEqual(self.config.get('does.not.exist'), None)
         self.assertEqual(self.config.get('does.not.exist', default=42), 42)
 
+    def test_guitool_opts(self):
+        self.shell('git config guitool."hello world".cmd "hello world"')
+        opts = self.config.get_guitool_opts('hello world')
+        expect = 'hello world'
+        actual = opts['cmd']
+        self.assertEqual(expect, actual)
+
+    def test_guitool_names(self):
+        self.shell('git config guitool."hello meow".cmd "hello meow"')
+        names = self.config.get_guitool_names()
+        self.assertTrue('hello meow' in names)
+
 
 if __name__ == '__main__':
     unittest.main()

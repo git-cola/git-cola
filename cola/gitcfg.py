@@ -344,19 +344,17 @@ class GitConfig(observable.Observable):
                 return encoding
         return None
 
-    guitool_opts = ('cmd', 'needsfile', 'noconsole', 'norescan', 'confirm',
-                    'argprompt', 'revprompt', 'revunmerged', 'title', 'prompt')
-
     def get_guitool_opts(self, name):
-        """Return the guitool.<name> namespace as a dict"""
-        keyprefix = 'guitool.' + name + '.'
-        opts = {}
-        for cfg in self.guitool_opts:
-            value = self.get(keyprefix + cfg)
-            if value is None:
-                continue
-            opts[cfg] = value
-        return opts
+        """Return the guitool.<name> namespace as a dict
+
+        The dict keys are simplified so that "guitool.$name.cmd" is accessible
+        as `opts[cmd]`.
+
+        """
+        prefix = len('guitool.%s.' % name)
+        guitools = self.find('guitool.%s.*' % name)
+        return dict([(key[prefix:], value)
+                        for (key, value) in guitools.items()])
 
     def get_guitool_names(self):
         guitools = self.find('guitool.*.cmd')
