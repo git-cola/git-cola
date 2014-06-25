@@ -66,7 +66,7 @@ def mkpath(path, encoding=None):
 
 def read(filename, size=-1, encoding=None):
     """Read filename and return contents"""
-    with xopen(filename, 'r') as fh:
+    with xopen(filename, 'rb') as fh:
         return fread(fh, size=size, encoding=encoding)
 
 
