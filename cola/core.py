@@ -195,15 +195,16 @@ def _win32_find_exe(exe):
 
     For reference, see:
     http://technet.microsoft.com/en-us/library/cc723564.aspx#XSLTsection127121120120
+
     """
     # try the argument itself
     candidates = [exe]
     # if argument does not have an extension, also try it with each of the
     # extensions specified in PATHEXT
-    if not '.' in exe:
-        candidates.extend(exe + ext
-                for ext in getenv('PATHEXT', '').split(os.pathsep)
-                if ext.startswith('.'))
+    if '.' not in exe:
+        extensions = getenv('PATHEXT', '').split(os.pathsep)
+        candidates.extend([exe+ext for ext in extensions
+                            if ext.startswith('.')])
     # search the current directory first
     for candidate in candidates:
         if exists(candidate):
