@@ -982,7 +982,10 @@ class RunConfigAction(Command):
         Interaction.log(N_('Running command: %s') % title)
         cmd = ['sh', '-c', cmd]
 
-        if opts.get('noconsole'):
+        if opts.get('background'):
+            core.fork(cmd)
+            status, out, err = (0, '', '')
+        elif opts.get('noconsole'):
             status, out, err = core.run_command(cmd)
         else:
             status, out, err = Interaction.run_command(title, cmd)
@@ -991,7 +994,7 @@ class RunConfigAction(Command):
                                out and (N_('Output: %s') % out) or '',
                                err and (N_('Errors: %s') % err) or '')
 
-        if not opts.get('norescan'):
+        if not opts.get('background') and not opts.get('norescan'):
             self.model.update_status()
         return status
 

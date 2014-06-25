@@ -489,6 +489,12 @@ receives the name of the tool as GIT_GUITOOL, the name of the currently
 selected file as FILENAME, and the name of the current branch as CUR_BRANCH
 (if the head is detached, CUR_BRANCH is empty).
 
+guitool.<name>.background
+-------------------------
+Run the command in the background (similar to editing and difftool actions).
+This avoids blocking the GUI.  Setting `background` to `true` implies
+`noconsole` and `norescan`.
+
 guitool.<name>.needsfile
 ------------------------
 Run the tool only if a diff is selected in the GUI. It guarantees that

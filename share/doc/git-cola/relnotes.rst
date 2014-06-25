@@ -50,6 +50,9 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/292
 
+* Custom `git config`-defined actions can now be run in the
+  background by setting `guitool.<name>.background` to `true`.
+
 Fixes
 -----
 * We now use bold fonts instead of SmallCaps to avoid
