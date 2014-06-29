@@ -72,3 +72,4 @@ Thanks
 * Uri Okrent
 * Ｖ字龍 (Vdragon)
 * Virgil Dupras
+* Vitor Lobo
