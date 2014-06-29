@@ -72,7 +72,7 @@ msgstr ""
 
 #: cola/cmds.py:316 cola/widgets/status.py:655
 msgid "No files selected for checkout from HEAD."
-msgstr ""
+msgstr "Arquivos não selecionados para checkout do cabeçalho"
 
 #: cola/cmds.py:339
 #, python-format
@@ -192,7 +192,7 @@ msgstr ""
 #: cola/widgets/grep.py:107 cola/widgets/recent.py:55
 #: cola/widgets/recent.py:124
 msgid "Refresh"
-msgstr ""
+msgstr "Recarregar"
 
 #: cola/cmds.py:928
 #, python-format
@@ -399,7 +399,7 @@ msgstr "Abrir o Repositório Git"
 
 #: cola/guicmds.py:220
 msgid "Load Commit Message"
-msgstr ""
+msgstr "Carregar a Mensagem do Commit"
 
 #: cola/guicmds.py:248
 msgid "Select Branch to Review"
@@ -1169,7 +1169,7 @@ msgstr ""
 
 #: cola/widgets/dag.py:134 cola/widgets/main.py:193
 msgid "Save As Tarball/Zip..."
-msgstr ""
+msgstr "Salvar Como Tarball/Zip..."
 
 #: cola/widgets/dag.py:137 cola/widgets/search.py:82
 msgid "Cherry Pick"
@@ -1536,11 +1536,11 @@ msgstr ""
 
 #: cola/widgets/main.py:160
 msgid "Apply Patches..."
-msgstr ""
+msgstr "Aplicar Patches..."
 
 #: cola/widgets/main.py:163
 msgid "Export Patches..."
-msgstr ""
+msgstr "Exportar Patches..."
 
 #: cola/widgets/main.py:166
 msgid "New Repository..."
@@ -1624,7 +1624,7 @@ msgstr ""
 
 #: cola/widgets/main.py:251
 msgid "Get Commit Message Template"
-msgstr ""
+msgstr "Obter a Mensagem do Template do Commit"
 
 #: cola/widgets/main.py:254
 msgid "About"
