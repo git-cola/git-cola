@@ -276,7 +276,10 @@ abspath = wrap(mkpath, os.path.abspath, decorator=decode)
 chdir = wrap(mkpath, os.chdir)
 exists = wrap(mkpath, os.path.exists)
 expanduser = wrap(encode, os.path.expanduser, decorator=decode)
-getcwd = os.getcwdu
+try:  # Python 2
+    getcwd = os.getcwdu
+except AttributeError:
+    getcwd = os.getcwd
 isdir = wrap(mkpath, os.path.isdir)
 isfile = wrap(mkpath, os.path.isfile)
 islink = wrap(mkpath, os.path.islink)
