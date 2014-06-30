@@ -1,3 +1,9 @@
+git-cola v2.0.5
+===============
+Usability, bells and whistles
+-----------------------------
+* New Brazillian Portuguese translation thanks to Vitor Lobo.
+
 git-cola v2.0.4
 ===============
 Usability, bells and whistles
