@@ -60,6 +60,7 @@ Thanks
 * Paolo G. Giarrusso
 * Peter Júnoš
 * Rustam Safin
+* Samsul Ma'arif
 * Sergey Leschina
 * Srinivasa Nallapati
 * Stanisław Halik
@@ -73,3 +74,4 @@ Thanks
 * Ｖ字龍 (Vdragon)
 * Virgil Dupras
 * Vitor Lobo
+* Zhang Han

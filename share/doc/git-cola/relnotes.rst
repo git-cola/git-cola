@@ -4,6 +4,14 @@ Usability, bells and whistles
 -----------------------------
 * New Brazillian Portuguese translation thanks to Vitor Lobo.
 
+* New Indonesian translation thanks to Samsul Ma'arif.
+
+* Updated Simplified Chinese translation thanks to Zhang Han.
+
+Fixes
+-----
+* We now use `os.getcwd()` on Python3.
+
 git-cola v2.0.4
 ===============
 Usability, bells and whistles
