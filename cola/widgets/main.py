@@ -205,11 +205,11 @@ class MainView(MainWindow):
                 N_('Abort Merge...'), merge.abort_merge)
 
         self.fetch_action = add_action(self,
-                N_('Fetch...'), remote.fetch, 'Ctrl+f')
+                N_('Fetch...'), remote.fetch, 'Ctrl+F')
         self.push_action = add_action(self,
-                N_('Push...'), remote.push, 'Ctrl+p')
+                N_('Push...'), remote.push, 'Ctrl+P')
         self.pull_action = add_action(self,
-                N_('Pull...'), remote.pull, 'Ctrl+Shift+p')
+                N_('Pull...'), remote.pull, 'Shift+Ctrl+P')
 
         self.open_repo_action = add_action(self,
                 N_('Open...'), guicmds.open_repo)
