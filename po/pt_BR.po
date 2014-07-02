@@ -1,4 +1,4 @@
-# Brazillian translation of git-cola.
+# Brazilian translation of git-cola.
 # Copyright (C) 2007, 2008 Shawn Pearce, et al.
 # This file is distributed under the same license as the git-cola package.
 # Vitor Lobo <lobocode@gmail.com>, 2013-2014.
@@ -86,12 +86,12 @@ msgstr ""
 
 #: cola/cmds.py:384 cola/cmds.py:1325
 msgid "Error"
-msgstr ""
+msgstr "Erro"
 
 #: cola/cmds.py:385
 #, python-format
 msgid "Deleting \"%s\" failed"
-msgstr ""
+msgstr "Deletando \"%s\" failed"
 
 #: cola/cmds.py:418
 msgid "Remote Branch Deleted"
@@ -139,7 +139,7 @@ msgstr ""
 #: cola/cmds.py:633
 #, python-format
 msgid "%s: No such file or directory."
-msgstr ""
+msgstr "%s: Não existe o arquivo ou diretório"
 
 #: cola/cmds.py:652
 msgid "Error: Unconfigured commit template"
@@ -163,7 +163,7 @@ msgstr ""
 #: cola/cmds.py:792
 #, python-format
 msgid "Error: could not clone \"%s\""
-msgstr ""
+msgstr "Erro: não é possível clonar \"%s\""
 
 #: cola/cmds.py:793
 #, python-format
@@ -290,7 +290,7 @@ msgstr "Histórico de lançamento de erros do Browser"
 #: cola/cmds.py:1277
 #, python-format
 msgid "Cannot exec \"%s\": please configure a history browser"
-msgstr ""
+msgstr "Não é possivel exec \"%s\": por favor configure o histórico do navegador 
 
 #: cola/difftool.py:77
 msgid "git-cola diff"
@@ -298,7 +298,7 @@ msgstr ""
 
 #: cola/difftool.py:93 cola/widgets/compare.py:91
 msgid "Compare"
-msgstr "Comparar"
+msgstr ""
 
 #: cola/difftool.py:97 cola/qtutils.py:602 cola/widgets/about.py:68
 #: cola/widgets/about.py:128 cola/widgets/bookmarks.py:73
@@ -316,7 +316,7 @@ msgstr "Fechar"
 
 #: cola/gitcmds.py:396
 msgid "Nothing to do"
-msgstr "Nada a ver"
+msgstr ""
 
 #: cola/guicmds.py:25
 msgid "Delete Branch"
@@ -383,7 +383,7 @@ msgstr ""
 #: cola/guicmds.py:168
 #, python-format
 msgid "\"%s\" already exists, cola will create a new directory"
-msgstr ""
+msgstr ""\"%s\" já existe, o cola já criou um novo diretório"
 
 #: cola/guicmds.py:170
 msgid "Directory Exists"
