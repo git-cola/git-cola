@@ -184,7 +184,7 @@ class MainView(MainWindow):
 
         self.cherry_pick_action = add_action(self,
                 N_('Cherry-Pick...'),
-                guicmds.cherry_pick, 'Ctrl+P')
+                guicmds.cherry_pick, 'Shift+Ctrl+C')
 
         self.load_commitmsg_action = add_action(self,
                 N_('Load Commit Message...'), guicmds.load_commitmsg)
