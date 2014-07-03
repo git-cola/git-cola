@@ -1189,14 +1189,14 @@ msgid "Created a new tag named \"%s\""
 msgstr "建立了一個名為「%s」的新標籤"
 
 #: cola/widgets/createtag.py:164
-#, fuzzy, python-format
+#, python-format
 msgid "Error: could not create tag \"%s\""
-msgstr "錯誤：無法克隆「%s」版本倉庫"
+msgstr "錯誤：無法建立標籤「%s」"
 
 #: cola/widgets/createtag.py:165
-#, fuzzy, python-format
+#, python-format
 msgid "git tag returned exit code %s"
-msgstr "git clone 命令傳回了 %s 錯誤狀態碼"
+msgstr "git tag 命令傳回了 %s 錯誤狀態碼"
 
 #: cola/widgets/dag.py:119
 msgid "Diff this -> selected"
@@ -1324,9 +1324,8 @@ msgid "Diff Options"
 msgstr "內容差異選項"
 
 #: cola/widgets/diff.py:82
-#, fuzzy
 msgid "Process Diff Region"
-msgstr "處理此區塊"
+msgstr "處理內容差異區域"
 
 #: cola/widgets/diff.py:85
 msgid "Process Selection"
@@ -1354,33 +1353,28 @@ msgid "Launch git-cola"
 msgstr "啟動 git-cola"
 
 #: cola/widgets/diff.py:162
-#, fuzzy
 msgid "Stage Diff Region"
-msgstr "將此區域變更移入版本提交準備區域"
+msgstr "將此內容差異區域移入版本提交準備區域"
 
 #: cola/widgets/diff.py:168
-#, fuzzy
 msgid "Revert Diff Region..."
-msgstr "撤銷選取區域的內容變更……"
+msgstr "撤銷此內容差異區域的內容變更……"
 
 #: cola/widgets/diff.py:184
-#, fuzzy
 msgid "Unstage Diff Region"
-msgstr "將此區塊移出版本提交準備區域"
+msgstr "將此內容差異區域移出版本提交準備區域"
 
 #: cola/widgets/diff.py:205
 msgid "Select All"
 msgstr "全選"
 
 #: cola/widgets/diff.py:319
-#, fuzzy
 msgid "Revert Diff Region?"
-msgstr "要撤銷選取區域的內容變更嗎？"
+msgstr "要撤銷選取內容差異區域的內容變更嗎？"
 
 #: cola/widgets/diff.py:323
-#, fuzzy
 msgid "Revert Diff Region"
-msgstr "撤銷選取區域的內容變更"
+msgstr "撤銷選取內容差異區域的內容變更"
 
 #: cola/widgets/diff.py:332
 msgid "Revert Selected Lines?"
@@ -1747,9 +1741,8 @@ msgid "Open Recent"
 msgstr "打開最近使用的版本倉庫"
 
 #: cola/widgets/main.py:359 cola/widgets/main.py:360
-#, fuzzy
 msgid "Staging Area"
-msgstr "移動到版本提交準備區域：%s..."
+msgstr "版本提交準備區域"
 
 #: cola/widgets/main.py:377
 msgid "Branch"
