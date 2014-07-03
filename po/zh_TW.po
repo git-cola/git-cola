@@ -25,7 +25,7 @@ msgstr ""
 #: cola/app.py:232
 #, python-format
 msgid "fatal: \"%s\" is not a directory.  Please specify --repo <path>."
-msgstr ""
+msgstr "致命錯誤：「%s」並不是個目錄。請指定 --repo 〈路徑〉。"
 
 #: cola/cmds.py:97
 msgid "Amend"
@@ -187,7 +187,7 @@ msgstr "git clone 命令傳回了 %s 錯誤狀態碼"
 #: cola/cmds.py:840
 #, python-format
 msgid "Rebase onto %s"
-msgstr ""
+msgstr "Rebase 至 %s 版本"
 
 #: cola/cmds.py:841 cola/widgets/main.py:393
 msgid "Rebase"
@@ -363,7 +363,7 @@ msgstr "取出"
 
 #: cola/guicmds.py:70
 msgid "Cherry-Pick Commit"
-msgstr ""
+msgstr "挑取(cherry-pick)版本提交"
 
 #: cola/guicmds.py:107
 msgid "Error Creating Repository"
@@ -1216,7 +1216,7 @@ msgstr "保存為 Tarball/Zip 封存檔…"
 
 #: cola/widgets/dag.py:137 cola/widgets/search.py:82
 msgid "Cherry Pick"
-msgstr ""
+msgstr "挑取(cherry-pick)"
 
 #: cola/widgets/dag.py:140
 msgid "Grab File..."
@@ -1610,7 +1610,7 @@ msgstr "最近修改過的檔案……"
 
 #: cola/widgets/main.py:186
 msgid "Cherry-Pick..."
-msgstr ""
+msgstr "挑取(cherry-pick)……"
 
 #: cola/widgets/main.py:190
 msgid "Load Commit Message..."
