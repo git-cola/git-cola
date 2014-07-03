@@ -290,7 +290,7 @@ msgstr "Histórico de lançamento de erros do Browser"
 #: cola/cmds.py:1277
 #, python-format
 msgid "Cannot exec \"%s\": please configure a history browser"
-msgstr "Não é possivel exec \"%s\": por favor configure o histórico do navegador 
+msgstr "Não é possivel exec \"%s\": por favor configure o histórico do navegador"
 
 #: cola/difftool.py:77
 msgid "git-cola diff"
@@ -383,7 +383,7 @@ msgstr ""
 #: cola/guicmds.py:168
 #, python-format
 msgid "\"%s\" already exists, cola will create a new directory"
-msgstr ""\"%s\" já existe, o cola já criou um novo diretório"
+msgstr "\"%s\" já existe, o cola já criou um novo diretório"
 
 #: cola/guicmds.py:170
 msgid "Directory Exists"
