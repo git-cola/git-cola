@@ -230,7 +230,7 @@ def process_args(args):
     repo = core.realpath(repo)
     if not core.isdir(repo):
         errmsg = N_('fatal: "%s" is not a directory.  '
-                    'Please specify --repo <path>.') % repo
+                    'Please specify a correct --repo <path>.') % repo
         core.stderr(errmsg)
         sys.exit(-1)
 
