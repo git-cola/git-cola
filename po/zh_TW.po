@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-15 16:33-0700\n"
-"PO-Revision-Date: 2014-06-06 13:28+0800\n"
+"PO-Revision-Date: 2014-07-03 09:14+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -1915,7 +1915,7 @@ msgstr "在合併後顯示內容差異"
 
 #: cola/widgets/prefs.py:138
 msgid "Display Untracked Files"
-msgstr "未納入版本追蹤的檔案"
+msgstr "顯示未納入版本追蹤的檔案"
 
 #: cola/widgets/prefs.py:179
 msgid "Fixed-Width Font"
