@@ -49,10 +49,12 @@ class BaseCommand(object):
         return 'Unknown'
 
     def do(self):
-        raise NotImplementedError('%s.do() is unimplemented' % self.__class__.__name__)
+        raise NotImplementedError('%s.do() is unimplemented'
+                                  % self.__class__.__name__)
 
     def undo(self):
-        raise NotImplementedError('%s.undo() is unimplemented' % self.__class__.__name__)
+        raise NotImplementedError('%s.undo() is unimplemented'
+                                  % self.__class__.__name__)
 
 
 class Command(BaseCommand):
