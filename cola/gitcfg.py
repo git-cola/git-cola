@@ -301,7 +301,7 @@ class GitConfig(observable.Observable):
         result = {}
         self.update()
         for key, val in self._all.items():
-            if match(key, pat):
+            if match(key.lower(), pat):
                 result[key] = val
         return result
 

@@ -66,6 +66,14 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
         names = self.config.get_guitool_names()
         self.assertTrue('hello meow' in names)
 
+    def test_guitool_names_mixed_case(self):
+        self.shell('git config guitool."Meow Cat".cmd "cat hello"')
+        names = self.config.get_guitool_names()
+        self.assertTrue('Meow Cat' in names)
+
+        opts = self.config.find('guitool.Meow Cat.*')
+        self.assertEqual(opts['guitool.Meow Cat.cmd'], 'cat hello')
+
 
 if __name__ == '__main__':
     unittest.main()
