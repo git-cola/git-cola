@@ -304,9 +304,9 @@ class MainView(MainWindow):
             # These shortcuts conflict with those from the
             # 'Browser' widget so don't register them when
             # the browser is a dockable tool.
-            self.addAction(status_tree.up)
-            self.addAction(status_tree.down)
-            self.addAction(status_tree.process_selection)
+            self.addAction(status_tree.up_action)
+            self.addAction(status_tree.down_action)
+            self.addAction(status_tree.process_selection_action)
 
         self.lock_layout_action = add_action_bool(self,
                 N_('Lock Layout'), self.set_lock_layout, False)
