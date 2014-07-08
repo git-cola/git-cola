@@ -130,6 +130,11 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 self.copy_path, QtGui.QKeySequence.Copy)
         self.copy_path_action.setIcon(qtutils.theme_icon('edit-copy.svg'))
 
+        self.delete_untracked_files_action = qtutils.add_action(self,
+                N_('Delete File(s)...'),
+                self._delete_untracked_files, cmds.Delete.SHORTCUT)
+        self.delete_untracked_files_action.setIcon(qtutils.discard_icon())
+
         self.connect(self, SIGNAL('about_to_update'), self._about_to_update)
         self.connect(self, SIGNAL('updated'), self._updated)
 
@@ -587,8 +592,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         if all_exist and s.untracked:
             menu.addSeparator()
-            menu.addAction(qtutils.discard_icon(),
-                           N_('Delete File(s)...'), self._delete_files)
+            menu.addAction(self.delete_untracked_files_action)
             menu.addSeparator()
             menu.addAction(qtutils.icon('edit-clear.svg'),
                            N_('Add to .gitignore'),
@@ -617,10 +621,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         return menu
 
 
-    def _delete_files(self):
+    def _delete_untracked_files(self):
         files = self.untracked()
-        count = len(files)
-        if count == 0:
+        if not files:
             return
 
         title = N_('Delete Files?')
@@ -631,6 +634,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             fileinfo = fileinfo[:2048].rstrip() + '...'
         msg += fileinfo
 
+        count = len(files)
         info_txt = N_('Delete %d file(s)?') % count
         ok_txt = N_('Delete Files')
 

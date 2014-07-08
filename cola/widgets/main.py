@@ -300,6 +300,8 @@ class MainView(MainWindow):
         # Relayed actions
         status_tree = self.statusdockwidget.widget().tree
         self.addAction(status_tree.revert_unstaged_edits_action)
+        self.addAction(status_tree.delete_untracked_files_action)
+
         if not self.browser_dockable:
             # These shortcuts conflict with those from the
             # 'Browser' widget so don't register them when

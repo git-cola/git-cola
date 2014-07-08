@@ -8,6 +8,9 @@ Usability, bells and whistles
 
 * Updated Simplified Chinese translation thanks to Zhang Han.
 
+* `Ctrl+Backspace` is now a hotkey for "delete untracked files" in
+  the status widget.
+
 Fixes
 -----
 * We now use `os.getcwd()` on Python3.

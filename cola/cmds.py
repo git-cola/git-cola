@@ -387,6 +387,8 @@ class Ignore(Command):
 class Delete(Command):
     """Delete files."""
 
+    SHORTCUT = 'Ctrl+Backspace'
+
     def __init__(self, filenames):
         Command.__init__(self)
         self.filenames = filenames
