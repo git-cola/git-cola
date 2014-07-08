@@ -369,7 +369,7 @@ class Ignore(Command):
 
     def __init__(self, filenames):
         Command.__init__(self)
-        self.filenames = filenames
+        self.filenames = list(filenames)
 
     def do(self):
         if not self.filenames:
