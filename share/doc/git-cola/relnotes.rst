@@ -42,8 +42,8 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/272
 
-* New hotkeys: Ctrl+f for fetch, Ctrl+p for push,
-  and Ctrl-shift-p for pull.
+* New hotkeys: `Ctrl+F` for fetch, `Ctrl+P` for push,
+  and `Shift+Ctrl+P` for pull.
 
 * The bookmarks widget's context menu actions were made clearer.
 
@@ -474,7 +474,7 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/175
 
-* Ctrl+M can now be used to toggle the "Amend last commit"
+* `Ctrl+M` can now be used to toggle the "Amend last commit"
   checkbox in the commit message editor.
 
   https://github.com/git-cola/git-cola/pull/161
@@ -559,9 +559,9 @@ Usability, bells and whistles
 -----------------------------
 * `git dag` got a big visual upgrade.
 
-* Ctrl+G now launches the "Grep" tool.
+* `Ctrl+G` now launches the "Grep" tool.
 
-* Ctrl+D launches difftool and Ctrl+E launches your editor
+* `Ctrl+D` launches difftool and `Ctrl+E` launches your editor
   when in the diff panel.
 
 * git-cola can now be told to use an alternative language.
