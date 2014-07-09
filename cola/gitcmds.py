@@ -226,11 +226,28 @@ def common_diff_opts(config=config):
     return opts
 
 
+def _add_filename(args, filename):
+    if filename:
+        args.extend(['--', filename])
+
+
 def sha1_diff(git, sha1, filename=None):
-    if filename is None:
-        return git.diff(sha1+'^!', **common_diff_opts())[STDOUT]
-    else:
-        return git.diff(sha1+'^!', filename, **common_diff_opts())[STDOUT]
+    """Return the diff for a sha1"""
+    # Naively "$sha1^!" is what we'd like to use but that doesn't
+    # give the correct result for merges--the diff is reversed.
+    # Be explicit and compare sha1 against its first parent.
+    args = [sha1 + '~', sha1]
+    opts = common_diff_opts()
+    _add_filename(args, filename)
+    status, out, err = git.diff(*args, **opts)
+    if status != 0:
+        # We probably don't have "$sha1~" because this is the root commit.
+        # "git show" is clever enough to handle the root commit.
+        args = [sha1 + '^!']
+        _add_filename(args, filename)
+        status, out, err = git.show(pretty='format:', *args, **opts)
+        out = out.lstrip()
+    return out
 
 
 def diff_info(sha1, git=git, filename=None):
