@@ -1184,7 +1184,7 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
         self_commits = self.commits
         self_items = self.items
 
-        commits = self_commits[-2:]
+        commits = self_commits[-8:]
         items = [self_items[c.sha1] for c in commits]
         self.fit_view_to_items(items)
 
