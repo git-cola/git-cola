@@ -224,11 +224,13 @@ class RemoteActionDialog(standard.Dialog):
         self.main_layout.addLayout(self.options_layout)
         self.setLayout(self.main_layout)
 
+        default_remote = gitcmds.default_remote() or 'origin'
+
         remotes = self.model.remotes
-        if 'origin' in remotes:
-            idx = remotes.index('origin')
+        if default_remote in remotes:
+            idx = remotes.index(default_remote)
             if self.select_remote(idx):
-                self.remote_name.setText('origin')
+                self.remote_name.setText(default_remote)
         else:
             if self.select_first_remote():
                 self.remote_name.setText(remotes[0])
