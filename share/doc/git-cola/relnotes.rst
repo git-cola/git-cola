@@ -11,6 +11,11 @@ Usability, bells and whistles
 * `Ctrl+Backspace` is now a hotkey for "delete untracked files" in
   the status widget.
 
+* Fetch/Push/Pull dialogs now use the configured remote of the current
+  branch by default.
+
+  https://github.com/git-cola/git-cola/pull/324
+
 Fixes
 -----
 * We now use `os.getcwd()` on Python3.
