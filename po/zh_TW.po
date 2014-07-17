@@ -1461,7 +1461,7 @@ msgstr "更名..."
 #: cola/widgets/editremotes.py:185
 #, python-format
 msgid "Gathering info for \"%s\"..."
-msgstr "正在蒐集「%s」的資訊……"
+msgstr "正在蒐集「%s」遠端版本倉庫的資訊……"
 
 #: cola/widgets/editremotes.py:215
 msgid "Add Remote"
