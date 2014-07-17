@@ -916,15 +916,15 @@ msgstr ""
 
 #: cola/widgets/commitmsg.py:392
 msgid "Would you like to stage and commit all modified files?"
-msgstr "您要將所有被修改的檔案移入版本提交(commit)轉備區域並提交出去嗎？"
+msgstr "您要將所有被修改的檔案移入版本提交(commit)準備區域並提交出去嗎？"
 
 #: cola/widgets/commitmsg.py:394
 msgid "Stage and commit?"
-msgstr "要移入版本提交(commit)轉備區域並提交出去嗎？"
+msgstr "要移入版本提交(commit)準備區域並提交出去嗎？"
 
 #: cola/widgets/commitmsg.py:397
 msgid "Stage and Commit"
-msgstr "移入版本提交(commit)轉備區域並提交出去"
+msgstr "移入版本提交(commit)準備區域並提交出去"
 
 #: cola/widgets/commitmsg.py:402
 msgid "Nothing to commit"
