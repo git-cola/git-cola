@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-15 16:33-0700\n"
+"POT-Creation-Date: 2014-07-18 16:22-0700\n"
 "PO-Revision-Date: 2008-03-14 17:24+0100\n"
 "Last-Translator: Miklos Vajna <vmiklos@frugalware.org>\n"
 "Language-Team: Hungarian\n"
@@ -18,327 +18,71 @@ msgstr ""
 
 #: cola/app.py:232
 #, python-format
-msgid "fatal: \"%s\" is not a directory.  Please specify --repo <path>."
-msgstr ""
-
-#: cola/cmds.py:97
-msgid "Amend"
-msgstr ""
-
-#: cola/cmds.py:131
-#, fuzzy
-msgid "Cannot Amend"
-msgstr "Nem sikerült írni az ikont:"
-
-#: cola/cmds.py:132
 msgid ""
-"You are in the middle of a merge.\n"
-"Cannot amend while merging."
+"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
 msgstr ""
 
-#: cola/cmds.py:192
+#: cola/interaction.py:54 cola/widgets/main.py:292
+msgid "Continue"
+msgstr "Folytatás"
+
+#: cola/interaction.py:64
 #, python-format
-msgid "PATCH %(current)d/%(count)d"
+msgid "Run %s?"
 msgstr ""
 
-#: cola/cmds.py:196
-msgid "Summary:"
-msgstr ""
-
-#: cola/cmds.py:205
-msgid "Patch(es) Applied"
-msgstr ""
-
-#: cola/cmds.py:206
+#: cola/interaction.py:65
 #, python-format
-msgid "%d patch(es) applied."
+msgid "Run the \"%s\" command?"
 msgstr ""
 
-#: cola/cmds.py:303
-#, fuzzy
-msgid "Revert Unstaged Changes?"
-msgstr "Kiválasztatlan változtatások"
-
-#: cola/cmds.py:304
-msgid ""
-"This operation drops unstaged changes.\n"
-"These changes cannot be recovered."
+#: cola/interaction.py:67 cola/widgets/cfgactions.py:247
+msgid "Run"
 msgstr ""
 
-#: cola/cmds.py:306
-#, fuzzy
-msgid "Revert the unstaged changes?"
-msgstr "Kiválasztatlan változtatások"
-
-#: cola/cmds.py:307
-#, fuzzy
-msgid "Revert Unstaged Changes"
-msgstr "Kiválasztatlan változtatások"
-
-#: cola/cmds.py:316 cola/widgets/status.py:655
-msgid "No files selected for checkout from HEAD."
-msgstr ""
-
-#: cola/cmds.py:339
-#, fuzzy, python-format
-msgid "Created commit: %s"
-msgstr "Létrejött a %s commit: %s"
-
-#: cola/cmds.py:341
-#, fuzzy, python-format
-msgid "Commit failed: %s"
-msgstr "A commit nem sikerült."
-
-#: cola/cmds.py:384 cola/cmds.py:1325
-#, fuzzy
-msgid "Error"
-msgstr "hiba"
-
-#: cola/cmds.py:385
-#, python-format
-msgid "Deleting \"%s\" failed"
-msgstr ""
-
-#: cola/cmds.py:418
-#, fuzzy
-msgid "Remote Branch Deleted"
-msgstr "Branch átnevezése"
-
-#: cola/cmds.py:419
-#, python-format
-msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
-msgstr ""
-
-#: cola/cmds.py:423 cola/guicmds.py:108 cola/widgets/remote.py:525
-#, python-format
-msgid "\"%(command)s\" returned exit status %(status)d"
-msgstr ""
-
-#: cola/cmds.py:426
-#, fuzzy
-msgid "Error Deleting Remote Branch"
-msgstr "Branch létrehozása"
-
-#: cola/cmds.py:505 cola/cmds.py:611
-msgid "Launch Editor"
-msgstr ""
-
-#: cola/cmds.py:541
-#, python-format
-msgid "Cannot exec \"%s\": please configure your editor"
-msgstr ""
-
-#: cola/cmds.py:544
-#, fuzzy
-msgid "Error Editing File"
-msgstr "Hiba a diff betöltése közben:"
-
-#: cola/cmds.py:566
-msgid "Launch Diff Tool"
-msgstr ""
-
-#: cola/cmds.py:593
-msgid "Launch Terminal"
-msgstr ""
-
-#: cola/cmds.py:632
-msgid "Error: Cannot find commit template"
-msgstr ""
-
-#: cola/cmds.py:633
-#, fuzzy, python-format
-msgid "%s: No such file or directory."
-msgstr ""
-"végzetes hiba: nem érhető el a(z) %s útvonal: Nincs ilyen fájl vagy könyvtár"
-
-#: cola/cmds.py:652
-msgid "Error: Unconfigured commit template"
-msgstr ""
-
-#: cola/cmds.py:653
-msgid ""
-"A commit template has not been configured.\n"
-"Use \"git config\" to define \"commit.template\"\n"
-"so that it points to a commit template."
-msgstr ""
-
-#: cola/cmds.py:712
-msgid "Open Using Default Application"
-msgstr ""
-
-#: cola/cmds.py:735
-#, fuzzy
-msgid "Open Parent Directory"
-msgstr "Legutóbbi repók megnyitása:"
-
-#: cola/cmds.py:792
-#, python-format
-msgid "Error: could not clone \"%s\""
-msgstr ""
-
-#: cola/cmds.py:793
-#, python-format
-msgid "git clone returned exit code %s"
-msgstr ""
-
-#: cola/cmds.py:840
-#, fuzzy, python-format
-msgid "Rebase onto %s"
-msgstr "Visszaállítás"
-
-#: cola/cmds.py:841 cola/widgets/main.py:393
-#, fuzzy
-msgid "Rebase"
-msgstr "Visszaállítás"
-
-#: cola/cmds.py:855
-#, fuzzy
-msgid "Edit Rebase"
-msgstr "Visszaállítás"
-
-#: cola/cmds.py:856 cola/widgets/archive.py:123 cola/widgets/bookmarks.py:67
-#: cola/widgets/browse.py:480 cola/widgets/stash.py:55
-msgid "Save"
-msgstr "Mentés"
-
-#: cola/cmds.py:900 cola/widgets/action.py:59 cola/widgets/editremotes.py:64
-#: cola/widgets/grep.py:107 cola/widgets/recent.py:55
-#: cola/widgets/recent.py:124
-msgid "Refresh"
-msgstr "Frissítés"
-
-#: cola/cmds.py:928
-#, python-format
-msgid "Run \"%s\"?"
-msgstr ""
-
-#: cola/cmds.py:935
-#, fuzzy
-msgid "Please select a file"
-msgstr "Válasszunk ki egy követő branchet."
-
-#: cola/cmds.py:936
-#, python-format
-msgid "\"%s\" requires a selected file."
-msgstr ""
-
-#: cola/cmds.py:948
-#, fuzzy
-msgid "Invalid Revision"
-msgstr "Érvénytelen revízió: %s"
-
-#: cola/cmds.py:949
-#, fuzzy
-msgid "The revision expression cannot be empty."
-msgstr "A revízió kifejezés üres."
-
-#: cola/cmds.py:964
-#, python-format
-msgid "Running command: %s"
-msgstr ""
-
-#: cola/cmds.py:973 cola/cmds.py:1141 cola/interaction.py:72
+#: cola/interaction.py:72 cola/cmds.py:1001 cola/cmds.py:1169
 #, python-format
 msgid "Output: %s"
 msgstr ""
 
-#: cola/cmds.py:974 cola/guicmds.py:113 cola/interaction.py:73
+#: cola/interaction.py:73 cola/guicmds.py:113 cola/cmds.py:1002
 #, python-format
 msgid "Errors: %s"
 msgstr ""
 
-#: cola/cmds.py:1017
-msgid "Sign Off"
-msgstr "Aláír"
-
-#: cola/cmds.py:1038
-msgid "unknown"
-msgstr ""
-
-#: cola/cmds.py:1051 cola/widgets/action.py:57
-#, fuzzy
-msgid "Stage"
-msgstr "Mentés"
-
-#: cola/cmds.py:1058
-#, fuzzy, python-format
-msgid "Staging: %s"
-msgstr "Keresés itt: %s..."
-
-#: cola/cmds.py:1075
-msgid "Stage Modified"
-msgstr ""
-
-#: cola/cmds.py:1089
-#, fuzzy
-msgid "Stage Unmerged"
-msgstr "Változtatások kiválasztása"
-
-#: cola/cmds.py:1103
-#, fuzzy
-msgid "Stage Untracked"
-msgstr "Változtatások kiválasztása"
-
-#: cola/cmds.py:1121
+#: cola/interaction.py:74
 #, python-format
-msgid "Tagging \"%(revision)s\" as \"%(name)s\""
+msgid "Exit code: %s"
 msgstr ""
 
-#: cola/cmds.py:1129
-msgid "GPG-signed"
+#: cola/inotify.py:57
+msgid "inotify is disabled because \"cola.inotify\" is false"
 msgstr ""
 
-#: cola/cmds.py:1156 cola/widgets/action.py:58
+#: cola/inotify.py:63
+msgid ""
+"file notification: disabled\n"
+"Note: install pywin32 to enable.\n"
+msgstr ""
+
+#: cola/inotify.py:66
+msgid ""
+"inotify: disabled\n"
+"Note: install python-pyinotify to enable inotify.\n"
+msgstr ""
+
+#: cola/inotify.py:72
+msgid "On Debian systems try: sudo aptitude install python-pyinotify"
+msgstr ""
+
+#: cola/inotify.py:81
 #, fuzzy
-msgid "Unstage"
-msgstr "Kiválasztatlan változtatások"
+msgid "File notification enabled."
+msgstr "A fájl módosítási dátumok megbízhatóak"
 
-#: cola/cmds.py:1163
-#, fuzzy, python-format
-msgid "Unstaging: %s"
-msgstr "A(z) %s commitba való kiválasztásának visszavonása"
-
-#: cola/cmds.py:1191
-#, python-format
-msgid "Untracking: %s"
+#: cola/inotify.py:83
+msgid "inotify enabled."
 msgstr ""
-
-#: cola/cmds.py:1276
-#, fuzzy
-msgid "Error Launching History Browser"
-msgstr "Fájl böngésző"
-
-#: cola/cmds.py:1277
-#, python-format
-msgid "Cannot exec \"%s\": please configure a history browser"
-msgstr ""
-
-#: cola/difftool.py:77
-msgid "git-cola diff"
-msgstr ""
-
-#: cola/difftool.py:93 cola/widgets/compare.py:91
-msgid "Compare"
-msgstr ""
-
-#: cola/difftool.py:97 cola/qtutils.py:602 cola/widgets/about.py:68
-#: cola/widgets/about.py:128 cola/widgets/bookmarks.py:73
-#: cola/widgets/browse.py:479 cola/widgets/cfgactions.py:89
-#: cola/widgets/cfgactions.py:246 cola/widgets/compare.py:95
-#: cola/widgets/completion.py:504 cola/widgets/createbranch.py:157
-#: cola/widgets/createtag.py:119 cola/widgets/editremotes.py:70
-#: cola/widgets/grep.py:117 cola/widgets/patch.py:99 cola/widgets/prefs.py:259
-#: cola/widgets/recent.py:78 cola/widgets/remote.py:185
-#: cola/widgets/remote.py:253 cola/widgets/search.py:85
-#: cola/widgets/selectcommits.py:61 cola/widgets/startup.py:44
-#: cola/widgets/stash.py:63 cola/widgets/stash.py:64
-msgid "Close"
-msgstr "Bezárás"
-
-#: cola/gitcmds.py:396
-#, fuzzy
-msgid "Nothing to do"
-msgstr "Semmi másolni való nincs innen: %s"
 
 #: cola/guicmds.py:25
 msgid "Delete Branch"
@@ -381,6 +125,11 @@ msgstr "Commit másolása"
 #, fuzzy
 msgid "Error Creating Repository"
 msgstr "Új repó létrehozása"
+
+#: cola/guicmds.py:108 cola/cmds.py:445 cola/widgets/remote.py:527
+#, python-format
+msgid "\"%(command)s\" returned exit status %(status)d"
+msgstr ""
 
 #: cola/guicmds.py:110
 #, python-format
@@ -440,62 +189,302 @@ msgstr "Branch törlése"
 msgid "Review"
 msgstr ""
 
-#: cola/inotify.py:57
-msgid "inotify is disabled because \"cola.inotify\" is false"
+#: cola/cmds.py:99
+msgid "Amend"
 msgstr ""
 
-#: cola/inotify.py:63
-msgid ""
-"file notification: disabled\n"
-"Note: install pywin32 to enable.\n"
-msgstr ""
-
-#: cola/inotify.py:66
-msgid ""
-"inotify: disabled\n"
-"Note: install python-pyinotify to enable inotify.\n"
-msgstr ""
-
-#: cola/inotify.py:72
-msgid "On Debian systems try: sudo aptitude install python-pyinotify"
-msgstr ""
-
-#: cola/inotify.py:81
+#: cola/cmds.py:133
 #, fuzzy
-msgid "File notification enabled."
-msgstr "A fájl módosítási dátumok megbízhatóak"
+msgid "Cannot Amend"
+msgstr "Nem sikerült írni az ikont:"
 
-#: cola/inotify.py:83
-msgid "inotify enabled."
+#: cola/cmds.py:134
+msgid ""
+"You are in the middle of a merge.\n"
+"Cannot amend while merging."
 msgstr ""
 
-#: cola/interaction.py:54 cola/widgets/main.py:292
-msgid "Continue"
-msgstr "Folytatás"
-
-#: cola/interaction.py:64
+#: cola/cmds.py:194
 #, python-format
-msgid "Run %s?"
+msgid "PATCH %(current)d/%(count)d"
 msgstr ""
 
-#: cola/interaction.py:65
+#: cola/cmds.py:198
+msgid "Summary:"
+msgstr ""
+
+#: cola/cmds.py:207
+msgid "Patch(es) Applied"
+msgstr ""
+
+#: cola/cmds.py:208
 #, python-format
-msgid "Run the \"%s\" command?"
+msgid "%d patch(es) applied."
 msgstr ""
 
-#: cola/interaction.py:67 cola/widgets/cfgactions.py:247
-msgid "Run"
+#: cola/cmds.py:305
+#, fuzzy
+msgid "Revert Unstaged Changes?"
+msgstr "Kiválasztatlan változtatások"
+
+#: cola/cmds.py:306
+msgid ""
+"This operation drops unstaged changes.\n"
+"These changes cannot be recovered."
 msgstr ""
 
-#: cola/interaction.py:74
+#: cola/cmds.py:308
+#, fuzzy
+msgid "Revert the unstaged changes?"
+msgstr "Kiválasztatlan változtatások"
+
+#: cola/cmds.py:309
+#, fuzzy
+msgid "Revert Unstaged Changes"
+msgstr "Kiválasztatlan változtatások"
+
+#: cola/cmds.py:318 cola/widgets/status.py:659
+msgid "No files selected for checkout from HEAD."
+msgstr ""
+
+#: cola/cmds.py:348
+#, fuzzy, python-format
+msgid "Created commit: %s"
+msgstr "Létrejött a %s commit: %s"
+
+#: cola/cmds.py:350
+#, fuzzy, python-format
+msgid "Commit failed: %s"
+msgstr "A commit nem sikerült."
+
+#: cola/cmds.py:406 cola/cmds.py:1353
+#, fuzzy
+msgid "Error"
+msgstr "hiba"
+
+#: cola/cmds.py:407
 #, python-format
-msgid "Exit code: %s"
+msgid "Deleting \"%s\" failed"
+msgstr ""
+
+#: cola/cmds.py:440
+#, fuzzy
+msgid "Remote Branch Deleted"
+msgstr "Branch átnevezése"
+
+#: cola/cmds.py:441
+#, python-format
+msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
+msgstr ""
+
+#: cola/cmds.py:448
+#, fuzzy
+msgid "Error Deleting Remote Branch"
+msgstr "Branch létrehozása"
+
+#: cola/cmds.py:527 cola/cmds.py:633
+msgid "Launch Editor"
+msgstr ""
+
+#: cola/cmds.py:563
+#, python-format
+msgid "Cannot exec \"%s\": please configure your editor"
+msgstr ""
+
+#: cola/cmds.py:566
+#, fuzzy
+msgid "Error Editing File"
+msgstr "Hiba a diff betöltése közben:"
+
+#: cola/cmds.py:588
+msgid "Launch Diff Tool"
+msgstr ""
+
+#: cola/cmds.py:615
+msgid "Launch Terminal"
+msgstr ""
+
+#: cola/cmds.py:654
+msgid "Error: Cannot find commit template"
+msgstr ""
+
+#: cola/cmds.py:655
+#, fuzzy, python-format
+msgid "%s: No such file or directory."
+msgstr ""
+"végzetes hiba: nem érhető el a(z) %s útvonal: Nincs ilyen fájl vagy könyvtár"
+
+#: cola/cmds.py:674
+msgid "Error: Unconfigured commit template"
+msgstr ""
+
+#: cola/cmds.py:675
+msgid ""
+"A commit template has not been configured.\n"
+"Use \"git config\" to define \"commit.template\"\n"
+"so that it points to a commit template."
+msgstr ""
+
+#: cola/cmds.py:737
+msgid "Open Using Default Application"
+msgstr ""
+
+#: cola/cmds.py:760
+#, fuzzy
+msgid "Open Parent Directory"
+msgstr "Legutóbbi repók megnyitása:"
+
+#: cola/cmds.py:817
+#, python-format
+msgid "Error: could not clone \"%s\""
+msgstr ""
+
+#: cola/cmds.py:818
+#, python-format
+msgid "git clone returned exit code %s"
+msgstr ""
+
+#: cola/cmds.py:865
+#, fuzzy, python-format
+msgid "Rebase onto %s"
+msgstr "Visszaállítás"
+
+#: cola/cmds.py:866 cola/widgets/main.py:395
+#, fuzzy
+msgid "Rebase"
+msgstr "Visszaállítás"
+
+#: cola/cmds.py:880
+#, fuzzy
+msgid "Edit Rebase"
+msgstr "Visszaállítás"
+
+#: cola/cmds.py:881 cola/widgets/archive.py:123 cola/widgets/bookmarks.py:67
+#: cola/widgets/browse.py:485 cola/widgets/stash.py:55
+msgid "Save"
+msgstr "Mentés"
+
+#: cola/cmds.py:925 cola/widgets/action.py:59 cola/widgets/recent.py:55
+#: cola/widgets/recent.py:124 cola/widgets/editremotes.py:64
+#: cola/widgets/grep.py:107
+msgid "Refresh"
+msgstr "Frissítés"
+
+#: cola/cmds.py:953
+#, python-format
+msgid "Run \"%s\"?"
+msgstr ""
+
+#: cola/cmds.py:960
+#, fuzzy
+msgid "Please select a file"
+msgstr "Válasszunk ki egy követő branchet."
+
+#: cola/cmds.py:961
+#, python-format
+msgid "\"%s\" requires a selected file."
+msgstr ""
+
+#: cola/cmds.py:973
+#, fuzzy
+msgid "Invalid Revision"
+msgstr "Érvénytelen revízió: %s"
+
+#: cola/cmds.py:974
+#, fuzzy
+msgid "The revision expression cannot be empty."
+msgstr "A revízió kifejezés üres."
+
+#: cola/cmds.py:989
+#, python-format
+msgid "Running command: %s"
+msgstr ""
+
+#: cola/cmds.py:1045
+msgid "Sign Off"
+msgstr "Aláír"
+
+#: cola/cmds.py:1066
+msgid "unknown"
+msgstr ""
+
+#: cola/cmds.py:1079 cola/widgets/action.py:57
+#, fuzzy
+msgid "Stage"
+msgstr "Mentés"
+
+#: cola/cmds.py:1086
+#, fuzzy, python-format
+msgid "Staging: %s"
+msgstr "Keresés itt: %s..."
+
+#: cola/cmds.py:1103
+msgid "Stage Modified"
+msgstr ""
+
+#: cola/cmds.py:1117
+#, fuzzy
+msgid "Stage Unmerged"
+msgstr "Változtatások kiválasztása"
+
+#: cola/cmds.py:1131
+#, fuzzy
+msgid "Stage Untracked"
+msgstr "Változtatások kiválasztása"
+
+#: cola/cmds.py:1149
+#, python-format
+msgid "Tagging \"%(revision)s\" as \"%(name)s\""
+msgstr ""
+
+#: cola/cmds.py:1157
+msgid "GPG-signed"
+msgstr ""
+
+#: cola/cmds.py:1184 cola/widgets/action.py:58
+#, fuzzy
+msgid "Unstage"
+msgstr "Kiválasztatlan változtatások"
+
+#: cola/cmds.py:1191
+#, fuzzy, python-format
+msgid "Unstaging: %s"
+msgstr "A(z) %s commitba való kiválasztásának visszavonása"
+
+#: cola/cmds.py:1219
+#, python-format
+msgid "Untracking: %s"
+msgstr ""
+
+#: cola/cmds.py:1304
+#, fuzzy
+msgid "Error Launching History Browser"
+msgstr "Fájl böngésző"
+
+#: cola/cmds.py:1305
+#, python-format
+msgid "Cannot exec \"%s\": please configure a history browser"
 msgstr ""
 
 #: cola/qtutils.py:489
 #, fuzzy
 msgid "Close..."
 msgstr "Másolás..."
+
+#: cola/qtutils.py:602 cola/difftool.py:97 cola/widgets/patch.py:99
+#: cola/widgets/prefs.py:259 cola/widgets/createtag.py:119
+#: cola/widgets/bookmarks.py:73 cola/widgets/search.py:85
+#: cola/widgets/startup.py:44 cola/widgets/recent.py:78
+#: cola/widgets/browse.py:484 cola/widgets/stash.py:63
+#: cola/widgets/stash.py:64 cola/widgets/selectcommits.py:61
+#: cola/widgets/completion.py:504 cola/widgets/createbranch.py:157
+#: cola/widgets/about.py:68 cola/widgets/about.py:128
+#: cola/widgets/compare.py:95 cola/widgets/editremotes.py:70
+#: cola/widgets/grep.py:117 cola/widgets/cfgactions.py:89
+#: cola/widgets/cfgactions.py:246 cola/widgets/remote.py:185
+#: cola/widgets/remote.py:255
+msgid "Close"
+msgstr "Bezárás"
 
 #: cola/qtutils.py:605 cola/qtutils.py:645
 #, fuzzy
@@ -504,6 +493,19 @@ msgstr "Branch törlése"
 
 #: cola/qtutils.py:643
 msgid "Attach"
+msgstr ""
+
+#: cola/gitcmds.py:413
+#, fuzzy
+msgid "Nothing to do"
+msgstr "Semmi másolni való nincs innen: %s"
+
+#: cola/difftool.py:77
+msgid "git-cola diff"
+msgstr ""
+
+#: cola/difftool.py:93 cola/widgets/compare.py:91
+msgid "Compare"
 msgstr ""
 
 #: cola/models/browse.py:38 cola/widgets/createtag.py:64
@@ -568,300 +570,48 @@ msgstr "Változtatások kiválasztása"
 msgid "Changed Upstream"
 msgstr ""
 
-#: cola/widgets/about.py:49
-msgid "About git-cola"
+#: cola/widgets/patch.py:68
+msgid "Apply Patches"
 msgstr ""
 
-#: cola/widgets/about.py:99
+#: cola/widgets/patch.py:77
 msgid ""
-"This PyQt4 does not include QtWebKit.\n"
-"The keyboard shortcuts feature is unavailable."
+"\n"
+"            <p>\n"
+"                Drag and drop or use the <strong>Add</strong> button to add\n"
+"                patches to the list\n"
+"            </p>\n"
+"            "
 msgstr ""
 
-#: cola/widgets/about.py:106
-msgid "hotkeys.html"
-msgstr ""
-
-#: cola/widgets/about.py:124
-msgid "Shortcuts"
-msgstr ""
-
-#: cola/widgets/action.py:60 cola/widgets/main.py:208
-#, fuzzy
-msgid "Fetch..."
-msgstr "Visszaállítás..."
-
-#: cola/widgets/action.py:61 cola/widgets/main.py:210
-msgid "Push..."
-msgstr "Push..."
-
-#: cola/widgets/action.py:62 cola/widgets/main.py:212
-#, fuzzy
-msgid "Pull..."
-msgstr "Push..."
-
-#: cola/widgets/action.py:63 cola/widgets/main.py:223
-#, fuzzy
-msgid "Stash..."
-msgstr "Push..."
-
-#: cola/widgets/archive.py:103
-msgid "Save Archive"
-msgstr ""
-
-#: cola/widgets/archive.py:120 cola/widgets/editremotes.py:218
-#: cola/widgets/merge.py:80
-msgid "Cancel"
-msgstr "Mégsem"
-
-#: cola/widgets/archive.py:127
-msgid "Prefix"
-msgstr ""
-
-#: cola/widgets/archive.py:132
-msgid "Advanced"
-msgstr ""
-
-#: cola/widgets/archive.py:199 cola/widgets/browse.py:411
-msgid "File Saved"
-msgstr ""
-
-#: cola/widgets/archive.py:200 cola/widgets/browse.py:412
-#, python-format
-msgid "File saved to \"%s\""
-msgstr ""
-
-#: cola/widgets/archive.py:207
-msgid "Overwrite File?"
-msgstr ""
-
-#: cola/widgets/archive.py:208
-#, python-format
-msgid "The file \"%s\" exists and will be overwritten."
-msgstr ""
-
-#: cola/widgets/archive.py:209
-#, python-format
-msgid "Overwrite \"%s\"?"
-msgstr ""
-
-#: cola/widgets/archive.py:210
-msgid "Overwrite"
-msgstr ""
-
-#: cola/widgets/bookmarks.py:35 cola/widgets/main.py:102
-msgid "Bookmarks"
-msgstr ""
-
-#: cola/widgets/bookmarks.py:50 cola/widgets/bookmarks.py:139
-#: cola/widgets/bookmarks.py:185
-msgid "Open"
-msgstr "Megnyitás"
-
-#: cola/widgets/bookmarks.py:55 cola/widgets/patch.py:88
-#: cola/widgets/patch.py:102
+#: cola/widgets/patch.py:88 cola/widgets/patch.py:102
+#: cola/widgets/bookmarks.py:55
 msgid "Add"
 msgstr ""
 
-#: cola/widgets/bookmarks.py:107
+#: cola/widgets/patch.py:89
+msgid "Add patches (+)"
+msgstr ""
+
+#: cola/widgets/patch.py:92 cola/widgets/patch.py:106
 #, fuzzy
-msgid "Path to git repository"
-msgstr "Nem Git repó: %s"
+msgid "Remove"
+msgstr "Távoli"
 
-#: cola/widgets/bookmarks.py:108
+#: cola/widgets/patch.py:93
 #, fuzzy
-msgid "Enter Git Repository"
-msgstr "Git repó"
+msgid "Remove selected (Delete)"
+msgstr "Branch átnevezése"
 
-#: cola/widgets/bookmarks.py:143 cola/widgets/main.py:198
-msgid "Bookmarks..."
-msgstr ""
-
-#: cola/widgets/bookmarks.py:189
-msgid "Open in New Window"
-msgstr ""
-
-#: cola/widgets/bookmarks.py:199 cola/widgets/grep.py:102
-#: cola/widgets/recent.py:72
-msgid "Edit"
-msgstr "Szerkesztés"
-
-#: cola/widgets/bookmarks.py:213 cola/widgets/diff.py:201
-msgid "Copy"
-msgstr "Másolás"
-
-#: cola/widgets/browse.py:73 cola/widgets/main.py:571
-#, fuzzy, python-format
-msgid "Repository: %s"
-msgstr "Repó:"
-
-#: cola/widgets/browse.py:75 cola/widgets/main.py:573
-#, fuzzy, python-format
-msgid "Branch: %s"
-msgstr "Branch:"
-
-#: cola/widgets/browse.py:78
-#, python-format
-msgid "%(project)s: %(branch)s - Browse"
-msgstr ""
-
-#: cola/widgets/browse.py:80
-msgid "(Amending)"
-msgstr ""
-
-#: cola/widgets/browse.py:107
-msgid "View History..."
-msgstr ""
-
-#: cola/widgets/browse.py:108
-msgid "View history for selected path(s)."
-msgstr ""
-
-#: cola/widgets/browse.py:112 cola/widgets/status.py:523
-#: cola/widgets/status.py:553 cola/widgets/status.py:611
+#: cola/widgets/patch.py:96 cola/widgets/stash.py:51
 #, fuzzy
-msgid "Stage Selected"
-msgstr "Kiválaszt"
+msgid "Apply"
+msgstr "Apple"
 
-#: cola/widgets/browse.py:113
+#: cola/widgets/patch.py:151
 #, fuzzy
-msgid "Stage selected path(s) for commit."
-msgstr "Kiválasztva commitolásra"
-
-#: cola/widgets/browse.py:118 cola/widgets/status.py:466
-#: cola/widgets/status.py:511
-msgid "Unstage Selected"
-msgstr ""
-
-#: cola/widgets/browse.py:119
-msgid "Remove selected path(s) from the staging area."
-msgstr ""
-
-#: cola/widgets/browse.py:124
-msgid "Untrack Selected"
-msgstr ""
-
-#: cola/widgets/browse.py:125
-msgid "Stop tracking path(s)"
-msgstr ""
-
-#: cola/widgets/browse.py:130
-msgid "Launch git-difftool on the current path."
-msgstr ""
-
-#: cola/widgets/browse.py:135
-msgid "Diff Against Predecessor..."
-msgstr ""
-
-#: cola/widgets/browse.py:136
-msgid "Launch git-difftool against previous versions."
-msgstr ""
-
-#: cola/widgets/browse.py:140
-#, fuzzy
-msgid "Revert Uncommitted Changes..."
-msgstr "Változtatások visszaállítása"
-
-#: cola/widgets/browse.py:141
-#, fuzzy
-msgid "Revert changes to selected path(s)."
-msgstr "Visszaállítja a változtatásokat a(z) %s fájlban?"
-
-#: cola/widgets/browse.py:146
-msgid "Edit selected path(s)."
-msgstr ""
-
-#: cola/widgets/browse.py:322 cola/widgets/status.py:645
-#, fuzzy
-msgid "Revert Uncommitted Changes?"
-msgstr "Változtatások visszaállítása"
-
-#: cola/widgets/browse.py:323 cola/widgets/diff.py:320
-#: cola/widgets/diff.py:333 cola/widgets/status.py:646
-msgid ""
-"This operation drops uncommitted changes.\n"
-"These changes cannot be recovered."
-msgstr ""
-
-#: cola/widgets/browse.py:325 cola/widgets/diff.py:322
-#: cola/widgets/diff.py:335 cola/widgets/status.py:648
-msgid "Revert the uncommitted changes?"
-msgstr ""
-
-#: cola/widgets/browse.py:326 cola/widgets/status.py:649
-#, fuzzy
-msgid "Revert Uncommitted Changes"
-msgstr "Változtatások visszaállítása"
-
-#: cola/widgets/browse.py:376
-msgid "Select Previous Version"
-msgstr ""
-
-#: cola/widgets/browse.py:404
-#, python-format
-msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
-msgstr ""
-
-#: cola/widgets/browse.py:425
-#, fuzzy, python-format
-msgid "Browsing %s"
-msgstr "A(z) %s hozzáadása..."
-
-#: cola/widgets/browse.py:443
-#, fuzzy, python-format
-msgid "Select file from \"%s\""
-msgstr "Brancek törlése innen: %s"
-
-#: cola/widgets/browse.py:452
-#, fuzzy
-msgid "Select File"
-msgstr "Mindent kiválaszt"
-
-#: cola/widgets/browse.py:480 cola/widgets/selectcommits.py:56
-msgid "Select"
-msgstr "Kiválaszt"
-
-#: cola/widgets/cfgactions.py:87 cola/widgets/main.py:298
-#, fuzzy
-msgid "Abort"
-msgstr "Félbeszakítás"
-
-#: cola/widgets/cfgactions.py:154 cola/widgets/cfgactions.py:158
-#, fuzzy
-msgid "Abort Action"
-msgstr "Félbeszakítás"
-
-#: cola/widgets/cfgactions.py:155
-msgid ""
-"An action is still running.\n"
-"Terminating it could result in data loss."
-msgstr ""
-
-#: cola/widgets/cfgactions.py:157
-msgid "Abort the action?"
-msgstr ""
-
-#: cola/widgets/cfgactions.py:208
-msgid "Arguments"
-msgstr ""
-
-#: cola/widgets/cfgactions.py:227 cola/widgets/merge.py:58
-#: cola/widgets/remote.py:148
-msgid "Local Branch"
-msgstr "Helyi branch"
-
-#: cola/widgets/cfgactions.py:228 cola/widgets/merge.py:61
-msgid "Tracking Branch"
-msgstr "Követő branch"
-
-#: cola/widgets/cfgactions.py:229 cola/widgets/createbranch.py:120
-#: cola/widgets/merge.py:63
-msgid "Tag"
-msgstr "Tag"
-
-#: cola/widgets/cfgactions.py:233 cola/widgets/createtag.py:100
-msgid "Revision"
-msgstr "Revízió"
+msgid "Select patch file(s)..."
+msgstr "Törlés..."
 
 #: cola/widgets/commitmsg.py:53
 #, fuzzy
@@ -910,7 +660,7 @@ msgstr "Merge commit üzenet:"
 msgid "Fixup Previous Commit"
 msgstr "Merge commit üzenet:"
 
-#: cola/widgets/commitmsg.py:142 cola/widgets/status.py:125
+#: cola/widgets/commitmsg.py:142 cola/widgets/status.py:126
 msgid "Move Down"
 msgstr ""
 
@@ -1016,37 +766,901 @@ msgstr "Commit üzenet:"
 msgid "Extended description..."
 msgstr ""
 
-#: cola/widgets/compare.py:38
-msgid "*** Branch Point ***"
+#: cola/widgets/prefs.py:132
+msgid "User Name"
+msgstr "Felhasználónév"
+
+#: cola/widgets/prefs.py:133
+msgid "Email Address"
+msgstr "Email cím"
+
+#: cola/widgets/prefs.py:134
+msgid "Merge Verbosity"
+msgstr "Merge beszédesség"
+
+#: cola/widgets/prefs.py:135
+msgid "Number of Diff Context Lines"
+msgstr "A diff környezeti sorok száma"
+
+#: cola/widgets/prefs.py:136
+msgid "Summarize Merge Commits"
+msgstr "A merge commitok összegzése"
+
+#: cola/widgets/prefs.py:137
+msgid "Show Diffstat After Merge"
+msgstr "Diffstat mutatása merge után"
+
+#: cola/widgets/prefs.py:138
+msgid "Display Untracked Files"
 msgstr ""
 
-#: cola/widgets/compare.py:39
-msgid "*** Sandbox ***"
+#: cola/widgets/prefs.py:179
+msgid "Fixed-Width Font"
 msgstr ""
 
-#: cola/widgets/compare.py:40 cola/widgets/compare.py:63
-#: cola/widgets/compare.py:69
-msgid "Local"
+#: cola/widgets/prefs.py:180
+msgid "Font Size"
+msgstr "Font méret"
+
+#: cola/widgets/prefs.py:181
+msgid "Tab Width"
 msgstr ""
 
-#: cola/widgets/compare.py:45
-msgid "Branch Diff Viewer"
+#: cola/widgets/prefs.py:182
+msgid "Text Width"
 msgstr ""
 
-#: cola/widgets/compare.py:64 cola/widgets/compare.py:70
-#: cola/widgets/remote.py:155
-msgid "Remote"
-msgstr "Távoli"
-
-#: cola/widgets/compare.py:99
+#: cola/widgets/prefs.py:184
 #, fuzzy
-msgid "File Differences"
+msgid "Editor"
+msgstr "Szerkesztés"
+
+#: cola/widgets/prefs.py:185
+#, fuzzy
+msgid "History Browser"
+msgstr "Fájl böngésző"
+
+#: cola/widgets/prefs.py:186
+msgid "Diff Tool"
+msgstr ""
+
+#: cola/widgets/prefs.py:187
+#, fuzzy
+msgid "Merge Tool"
+msgstr "Merge"
+
+#: cola/widgets/prefs.py:188
+msgid "Keep *.orig Merge Backups"
+msgstr ""
+
+#: cola/widgets/prefs.py:189
+msgid "Save GUI Settings"
+msgstr ""
+
+#: cola/widgets/prefs.py:237 cola/widgets/main.py:170
+msgid "Preferences"
 msgstr "Beállítások"
 
-#: cola/widgets/createbranch.py:85 cola/widgets/createbranch.py:96
-#: cola/widgets/createbranch.py:153 cola/widgets/dag.py:125
+#: cola/widgets/prefs.py:245
+#, fuzzy
+msgid "All Repositories"
+msgstr "Globális (minden repó)"
+
+#: cola/widgets/prefs.py:246
+#, fuzzy
+msgid "Current Repository"
+msgstr "Új repó létrehozása"
+
+#: cola/widgets/prefs.py:247
+#, fuzzy
+msgid "Settings"
+msgstr "Indítás..."
+
+#: cola/widgets/action.py:60 cola/widgets/main.py:208
+#, fuzzy
+msgid "Fetch..."
+msgstr "Visszaállítás..."
+
+#: cola/widgets/action.py:61 cola/widgets/main.py:210
+msgid "Push..."
+msgstr "Push..."
+
+#: cola/widgets/action.py:62 cola/widgets/main.py:212
+#, fuzzy
+msgid "Pull..."
+msgstr "Push..."
+
+#: cola/widgets/action.py:63 cola/widgets/main.py:223
+#, fuzzy
+msgid "Stash..."
+msgstr "Push..."
+
+#: cola/widgets/archive.py:103
+msgid "Save Archive"
+msgstr ""
+
+#: cola/widgets/archive.py:120 cola/widgets/merge.py:85
+#: cola/widgets/editremotes.py:218
+msgid "Cancel"
+msgstr "Mégsem"
+
+#: cola/widgets/archive.py:127
+msgid "Prefix"
+msgstr ""
+
+#: cola/widgets/archive.py:132
+msgid "Advanced"
+msgstr ""
+
+#: cola/widgets/archive.py:199 cola/widgets/browse.py:416
+msgid "File Saved"
+msgstr ""
+
+#: cola/widgets/archive.py:200 cola/widgets/browse.py:417
+#, python-format
+msgid "File saved to \"%s\""
+msgstr ""
+
+#: cola/widgets/archive.py:207
+msgid "Overwrite File?"
+msgstr ""
+
+#: cola/widgets/archive.py:208
+#, python-format
+msgid "The file \"%s\" exists and will be overwritten."
+msgstr ""
+
+#: cola/widgets/archive.py:209
+#, python-format
+msgid "Overwrite \"%s\"?"
+msgstr ""
+
+#: cola/widgets/archive.py:210
+msgid "Overwrite"
+msgstr ""
+
+#: cola/widgets/filelist.py:18
+#, fuzzy
+msgid "Filename"
+msgstr "Átnevezés"
+
+#: cola/widgets/filelist.py:18
+#, fuzzy
+msgid "Additions"
+msgstr "Opciók"
+
+#: cola/widgets/filelist.py:18
+#, fuzzy
+msgid "Deletions"
+msgstr "Törlés"
+
+#: cola/widgets/createtag.py:49 cola/widgets/createtag.py:114
+#: cola/widgets/dag.py:131
+#, fuzzy
+msgid "Create Tag"
+msgstr "Létrehozás"
+
+#: cola/widgets/createtag.py:68
+msgid "vX.Y.Z"
+msgstr ""
+
+#: cola/widgets/createtag.py:70
+msgid "Specifies the tag name"
+msgstr ""
+
+#: cola/widgets/createtag.py:76
+#, fuzzy
+msgid "Sign Tag"
+msgstr "Aláír"
+
+#: cola/widgets/createtag.py:82
+msgid "Whether to sign the tag (git tag -s)"
+msgstr ""
+
+#: cola/widgets/createtag.py:93
+msgid "Tag message..."
+msgstr ""
+
+#: cola/widgets/createtag.py:94
+msgid "Specifies the tag message"
+msgstr ""
+
+#: cola/widgets/createtag.py:100 cola/widgets/cfgactions.py:233
+msgid "Revision"
+msgstr "Revízió"
+
+#: cola/widgets/createtag.py:106
+msgid "Specifies the SHA-1 to tag"
+msgstr ""
+
+#: cola/widgets/createtag.py:136
+#, fuzzy
+msgid "Missing Revision"
+msgstr "A következő revíziótól"
+
+#: cola/widgets/createtag.py:137
+#, fuzzy
+msgid "Please specify a revision to tag."
+msgstr "Válasszunk ki egy átnevezendő branchet."
+
+#: cola/widgets/createtag.py:140
+#, fuzzy
+msgid "Missing Name"
+msgstr "Hiányzó"
+
+#: cola/widgets/createtag.py:141
+msgid "Please specify a name for the new tag."
+msgstr ""
+
+#: cola/widgets/createtag.py:144
+#, fuzzy
+msgid "Missing Tag Message"
+msgstr "Merge-ölni szándékozott revízió"
+
+#: cola/widgets/createtag.py:145
+msgid "Tag-signing was requested but the tag message is empty."
+msgstr ""
+
+#: cola/widgets/createtag.py:147
+msgid ""
+"An unsigned, lightweight tag will be created instead.\n"
+"Create an unsigned tag?"
+msgstr ""
+
+#: cola/widgets/createtag.py:150
+msgid "Create Unsigned Tag"
+msgstr ""
+
+#: cola/widgets/createtag.py:159
+#, fuzzy
+msgid "Tag Created"
+msgstr "Létrehozás"
+
+#: cola/widgets/createtag.py:160
+#, python-format
+msgid "Created a new tag named \"%s\""
+msgstr ""
+
+#: cola/widgets/createtag.py:164
+#, python-format
+msgid "Error: could not create tag \"%s\""
+msgstr ""
+
+#: cola/widgets/createtag.py:165
+#, python-format
+msgid "git tag returned exit code %s"
+msgstr ""
+
+#: cola/widgets/bookmarks.py:35 cola/widgets/main.py:102
+msgid "Bookmarks"
+msgstr ""
+
+#: cola/widgets/bookmarks.py:50 cola/widgets/bookmarks.py:139
+#: cola/widgets/bookmarks.py:185
+msgid "Open"
+msgstr "Megnyitás"
+
+#: cola/widgets/bookmarks.py:107
+#, fuzzy
+msgid "Path to git repository"
+msgstr "Nem Git repó: %s"
+
+#: cola/widgets/bookmarks.py:108
+#, fuzzy
+msgid "Enter Git Repository"
+msgstr "Git repó"
+
+#: cola/widgets/bookmarks.py:143 cola/widgets/main.py:198
+msgid "Bookmarks..."
+msgstr ""
+
+#: cola/widgets/bookmarks.py:189
+msgid "Open in New Window"
+msgstr ""
+
+#: cola/widgets/bookmarks.py:199 cola/widgets/recent.py:72
+#: cola/widgets/grep.py:102
+msgid "Edit"
+msgstr "Szerkesztés"
+
+#: cola/widgets/bookmarks.py:213 cola/widgets/diff.py:201
+msgid "Copy"
+msgstr "Másolás"
+
+#: cola/widgets/search.py:44 cola/widgets/search.py:62 cola/widgets/grep.py:70
+msgid "Search"
+msgstr ""
+
+#: cola/widgets/search.py:48
+#, fuzzy
+msgid "Browse..."
+msgstr "Böngészés"
+
+#: cola/widgets/search.py:54 cola/widgets/search.py:59
+msgid "yyyy-MM-dd"
+msgstr ""
+
+#: cola/widgets/search.py:82 cola/widgets/dag.py:137
+msgid "Cherry Pick"
+msgstr ""
+
+#: cola/widgets/search.py:224
+#, fuzzy
+msgid "Search by Expression"
+msgstr "Revízió kifejezés:"
+
+#: cola/widgets/search.py:225
+msgid "Search by Path"
+msgstr ""
+
+#: cola/widgets/search.py:226
+#, fuzzy
+msgid "Search Commit Messages"
+msgstr "Merge commit üzenet:"
+
+#: cola/widgets/search.py:227
+msgid "Search Diffs"
+msgstr ""
+
+#: cola/widgets/search.py:228
+msgid "Search Authors"
+msgstr ""
+
+#: cola/widgets/search.py:229
+#, fuzzy
+msgid "Search Committers"
+msgstr "Commiter:"
+
+#: cola/widgets/search.py:230
+msgid "Search Date Range"
+msgstr ""
+
+#: cola/widgets/search.py:323
+#, fuzzy
+msgid "Choose Path(s)"
+msgstr "%s választása"
+
+#: cola/widgets/log.py:37
+#, fuzzy, python-format
+msgid "exit code %s"
+msgstr "a(z) %s letöltése"
+
+#: cola/widgets/startup.py:28
+msgid "git-cola"
+msgstr ""
+
+#: cola/widgets/startup.py:35
+msgid "New..."
+msgstr "Új..."
+
+#: cola/widgets/startup.py:38 cola/widgets/main.py:215
+msgid "Open..."
+msgstr "Meggyitás..."
+
+#: cola/widgets/startup.py:41 cola/widgets/main.py:226
+msgid "Clone..."
+msgstr "Másolás..."
+
+#: cola/widgets/startup.py:59
+#, fuzzy
+msgid "Select Repository..."
+msgstr "Git repó"
+
+#: cola/widgets/startup.py:64
+#, fuzzy
+msgid "Select manually..."
+msgstr "Mindent kiválaszt"
+
+#: cola/widgets/recent.py:39
+msgid "Recently Modified Files"
+msgstr ""
+
+#: cola/widgets/recent.py:49
+msgid " commits ago"
+msgstr ""
+
+#: cola/widgets/recent.py:52
+#, fuzzy
+msgid "Showing changes since"
+msgstr "Változások pusholása ide: %s"
+
+#: cola/widgets/recent.py:64
+msgid "Expand all"
+msgstr ""
+
+#: cola/widgets/recent.py:68
+#, fuzzy
+msgid "Collapse all"
+msgstr "Bezárás"
+
+#: cola/widgets/merge.py:29 cola/widgets/main.py:205
+msgid "Abort Merge..."
+msgstr "Merge megszakítása..."
+
+#: cola/widgets/merge.py:30
+#, fuzzy
+msgid ""
+"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+"Megszakítjuk a merge-t?\n"
+"\n"
+"A jelenlegi merge megszakítása *MINDEN* nem commitolt változtatás "
+"elvesztését jelenti.\n"
+"\n"
+"Folytatjuk a jelenlegi merge megszakítását?"
+
+#: cola/widgets/merge.py:33
+msgid "Aborting the current merge?"
+msgstr ""
+
+#: cola/widgets/merge.py:34
+#, fuzzy
+msgid "Abort Merge"
+msgstr "Merge megszakítása..."
+
+#: cola/widgets/merge.py:53
+msgid "Revision To Merge"
+msgstr "Merge-ölni szándékozott revízió"
+
+#: cola/widgets/merge.py:58 cola/widgets/cfgactions.py:227
+#: cola/widgets/remote.py:148
+msgid "Local Branch"
+msgstr "Helyi branch"
+
+#: cola/widgets/merge.py:61 cola/widgets/cfgactions.py:228
+msgid "Tracking Branch"
+msgstr "Követő branch"
+
+#: cola/widgets/merge.py:63 cola/widgets/createbranch.py:120
+#: cola/widgets/cfgactions.py:229
+msgid "Tag"
+msgstr "Tag"
+
+#: cola/widgets/merge.py:69
+msgid "Visualize"
+msgstr "Vizualizálás"
+
+#: cola/widgets/merge.py:72
+#, fuzzy
+msgid "Squash"
+msgstr "Push"
+
+#: cola/widgets/merge.py:75
+#, fuzzy
+msgid "No fast forward"
+msgstr "Csak fast forward"
+
+#: cola/widgets/merge.py:80 cola/widgets/main.py:118
+#, fuzzy
+msgid "Commit"
+msgstr "Commit:"
+
+#: cola/widgets/merge.py:88
+msgid "Merge"
+msgstr "Merge"
+
+#: cola/widgets/merge.py:152
+#, python-format
+msgid "Merge \"%(revision)s\" into \"%(branch)s\""
+msgstr ""
+
+#: cola/widgets/merge.py:155
+#, fuzzy, python-format
+msgid "Merge into \"%s\""
+msgstr "Merge-ölés a következőbe: %s"
+
+#: cola/widgets/merge.py:206 cola/widgets/merge.py:215
+#, fuzzy
+msgid "No Revision Specified"
+msgstr "Nincs kiválasztva revízió."
+
+#: cola/widgets/merge.py:207
+msgid "You must specify a revision to view."
+msgstr ""
+
+#: cola/widgets/merge.py:216
+msgid "You must specify a revision to merge."
+msgstr ""
+
+#: cola/widgets/browse.py:73 cola/widgets/main.py:573
+#, fuzzy, python-format
+msgid "Repository: %s"
+msgstr "Repó:"
+
+#: cola/widgets/browse.py:75 cola/widgets/main.py:575
+#, fuzzy, python-format
+msgid "Branch: %s"
+msgstr "Branch:"
+
+#: cola/widgets/browse.py:78
+#, python-format
+msgid "%(project)s: %(branch)s - Browse"
+msgstr ""
+
+#: cola/widgets/browse.py:80
+msgid "(Amending)"
+msgstr ""
+
+#: cola/widgets/browse.py:109
+msgid "View History..."
+msgstr ""
+
+#: cola/widgets/browse.py:110
+msgid "View history for selected path(s)."
+msgstr ""
+
+#: cola/widgets/browse.py:114 cola/widgets/status.py:528
+#: cola/widgets/status.py:558 cola/widgets/status.py:615
+#, fuzzy
+msgid "Stage Selected"
+msgstr "Kiválaszt"
+
+#: cola/widgets/browse.py:115
+#, fuzzy
+msgid "Stage selected path(s) for commit."
+msgstr "Kiválasztva commitolásra"
+
+#: cola/widgets/browse.py:120 cola/widgets/status.py:471
+#: cola/widgets/status.py:516
+msgid "Unstage Selected"
+msgstr ""
+
+#: cola/widgets/browse.py:121
+msgid "Remove selected path(s) from the staging area."
+msgstr ""
+
+#: cola/widgets/browse.py:126
+msgid "Untrack Selected"
+msgstr ""
+
+#: cola/widgets/browse.py:127
+msgid "Stop tracking path(s)"
+msgstr ""
+
+#: cola/widgets/browse.py:132
+msgid "Launch git-difftool on the current path."
+msgstr ""
+
+#: cola/widgets/browse.py:137
+msgid "Diff Against Predecessor..."
+msgstr ""
+
+#: cola/widgets/browse.py:138
+msgid "Launch git-difftool against previous versions."
+msgstr ""
+
+#: cola/widgets/browse.py:142
+#, fuzzy
+msgid "Revert Uncommitted Changes..."
+msgstr "Változtatások visszaállítása"
+
+#: cola/widgets/browse.py:143
+#, fuzzy
+msgid "Revert changes to selected path(s)."
+msgstr "Visszaállítja a változtatásokat a(z) %s fájlban?"
+
+#: cola/widgets/browse.py:148
+msgid "Edit selected path(s)."
+msgstr ""
+
+#: cola/widgets/browse.py:327 cola/widgets/status.py:649
+#, fuzzy
+msgid "Revert Uncommitted Changes?"
+msgstr "Változtatások visszaállítása"
+
+#: cola/widgets/browse.py:328 cola/widgets/diff.py:320
+#: cola/widgets/diff.py:333 cola/widgets/status.py:650
+msgid ""
+"This operation drops uncommitted changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+#: cola/widgets/browse.py:330 cola/widgets/diff.py:322
+#: cola/widgets/diff.py:335 cola/widgets/status.py:652
+msgid "Revert the uncommitted changes?"
+msgstr ""
+
+#: cola/widgets/browse.py:331 cola/widgets/status.py:653
+#, fuzzy
+msgid "Revert Uncommitted Changes"
+msgstr "Változtatások visszaállítása"
+
+#: cola/widgets/browse.py:381
+msgid "Select Previous Version"
+msgstr ""
+
+#: cola/widgets/browse.py:409
+#, python-format
+msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
+msgstr ""
+
+#: cola/widgets/browse.py:430
+#, fuzzy, python-format
+msgid "Browsing %s"
+msgstr "A(z) %s hozzáadása..."
+
+#: cola/widgets/browse.py:448
+#, fuzzy, python-format
+msgid "Select file from \"%s\""
+msgstr "Brancek törlése innen: %s"
+
+#: cola/widgets/browse.py:457
+#, fuzzy
+msgid "Select File"
+msgstr "Mindent kiválaszt"
+
+#: cola/widgets/browse.py:485 cola/widgets/selectcommits.py:56
+msgid "Select"
+msgstr "Kiválaszt"
+
+#: cola/widgets/stash.py:39
+msgid "Stash"
+msgstr ""
+
+#: cola/widgets/stash.py:52
+msgid "Apply the selected stash"
+msgstr ""
+
+#: cola/widgets/stash.py:56
+msgid "Save modified state to new stash"
+msgstr ""
+
+#: cola/widgets/stash.py:59
+msgid "Drop"
+msgstr ""
+
+#: cola/widgets/stash.py:60
+msgid "Drop the selected stash"
+msgstr ""
+
+#: cola/widgets/stash.py:67
+msgid "Keep Index"
+msgstr ""
+
+#: cola/widgets/stash.py:188
+msgid "Save Stash"
+msgstr ""
+
+#: cola/widgets/stash.py:189
+msgid "Enter a name for the stash"
+msgstr ""
+
+#: cola/widgets/stash.py:195
+msgid "Error: Stash exists"
+msgstr ""
+
+#: cola/widgets/stash.py:196
+#, fuzzy, python-format
+msgid "A stash named \"%s\" already exists"
+msgstr "A(z) '%s' fájl már létezik."
+
+#: cola/widgets/stash.py:211
+msgid "Drop Stash?"
+msgstr ""
+
+#: cola/widgets/stash.py:212
+#, fuzzy
+msgid "Recovering a dropped stash is not possible."
+msgstr "Az elveszett commitok helyreállítása nem biztos, hogy egyszerű."
+
+#: cola/widgets/stash.py:213
+#, python-format
+msgid "Drop the \"%s\" stash?"
+msgstr ""
+
+#: cola/widgets/stash.py:214
+msgid "Drop Stash"
+msgstr ""
+
+#: cola/widgets/selectcommits.py:52
+msgid "Revision Expression:"
+msgstr "Revízió kifejezés:"
+
+#: cola/widgets/selectcommits.py:103
+msgid "No commits exist in this branch."
+msgstr ""
+
+#: cola/widgets/diff.py:47
+msgid "Ignore changes in whitespace at EOL"
+msgstr ""
+
+#: cola/widgets/diff.py:52
+msgid "Ignore changes in amount of whitespace"
+msgstr ""
+
+#: cola/widgets/diff.py:57
+msgid "Ignore all whitespace"
+msgstr ""
+
+#: cola/widgets/diff.py:62
+msgid "Show whole surrounding functions of changes"
+msgstr ""
+
+#: cola/widgets/diff.py:67 cola/widgets/diff.py:68
+#, fuzzy
+msgid "Diff Options"
+msgstr "Opciók"
+
+#: cola/widgets/diff.py:82
+msgid "Process Diff Region"
+msgstr ""
+
+#: cola/widgets/diff.py:85
+msgid "Process Selection"
+msgstr ""
+
+#: cola/widgets/diff.py:100
+msgid "Stage &Selected Lines"
+msgstr ""
+
+#: cola/widgets/diff.py:106
+msgid "Revert Selected Lines..."
+msgstr ""
+
+#: cola/widgets/diff.py:111
+#, fuzzy
+msgid "Unstage &Selected Lines"
+msgstr "Kiválasztatlan változtatások"
+
+#: cola/widgets/diff.py:117
+msgid "Apply Diff Selection to Work Tree"
+msgstr ""
+
+#: cola/widgets/diff.py:157 cola/widgets/diff.py:179
+#: cola/widgets/status.py:508 cola/widgets/status.py:607
+msgid "Launch git-cola"
+msgstr ""
+
+#: cola/widgets/diff.py:162
+#, fuzzy
+msgid "Stage Diff Region"
+msgstr "A következő revíziótól"
+
+#: cola/widgets/diff.py:168
+msgid "Revert Diff Region..."
+msgstr ""
+
+#: cola/widgets/diff.py:184
+msgid "Unstage Diff Region"
+msgstr ""
+
+#: cola/widgets/diff.py:205
+msgid "Select All"
+msgstr "Mindent kiválaszt"
+
+#: cola/widgets/diff.py:319
+msgid "Revert Diff Region?"
+msgstr ""
+
+#: cola/widgets/diff.py:323
+msgid "Revert Diff Region"
+msgstr ""
+
+#: cola/widgets/diff.py:332
+#, fuzzy
+msgid "Revert Selected Lines?"
+msgstr "Visszaállítja a változtatásokat a(z) %s fájlban?"
+
+#: cola/widgets/diff.py:336
+msgid "Revert Selected Lines"
+msgstr ""
+
+#: cola/widgets/diff.py:427
+#, fuzzy
+msgid "Loading..."
+msgstr "A(z) %s betöltése..."
+
+#: cola/widgets/dag.py:119
+msgid "Diff this -> selected"
+msgstr ""
+
+#: cola/widgets/dag.py:122
+msgid "Diff selected -> this"
+msgstr ""
+
+#: cola/widgets/dag.py:125 cola/widgets/createbranch.py:85
+#: cola/widgets/createbranch.py:96 cola/widgets/createbranch.py:153
 msgid "Create Branch"
 msgstr "Branch létrehozása"
+
+#: cola/widgets/dag.py:128
+#, fuzzy
+msgid "Create Patch"
+msgstr "Branch létrehozása"
+
+#: cola/widgets/dag.py:134 cola/widgets/main.py:193
+msgid "Save As Tarball/Zip..."
+msgstr ""
+
+#: cola/widgets/dag.py:140
+msgid "Grab File..."
+msgstr ""
+
+#: cola/widgets/dag.py:143
+#, fuzzy
+msgid "Copy SHA-1"
+msgstr "Összes másolása"
+
+#: cola/widgets/dag.py:214
+msgid "Summary"
+msgstr ""
+
+#: cola/widgets/dag.py:214
+msgid "Date, Time"
+msgstr ""
+
+#: cola/widgets/dag.py:221
+msgid "Go Up"
+msgstr ""
+
+#: cola/widgets/dag.py:224
+msgid "Go Down"
+msgstr ""
+
+#: cola/widgets/dag.py:351 cola/widgets/dag.py:1036
+msgid "Zoom Out"
+msgstr ""
+
+#: cola/widgets/dag.py:355 cola/widgets/dag.py:1033
+msgid "Zoom In"
+msgstr ""
+
+#: cola/widgets/dag.py:359 cola/widgets/dag.py:1039
+msgid "Zoom to Fit"
+msgstr ""
+
+#: cola/widgets/dag.py:380
+msgid "Log"
+msgstr ""
+
+#: cola/widgets/dag.py:385
+#, fuzzy
+msgid "Files"
+msgstr "Fájl:"
+
+#: cola/widgets/dag.py:388 cola/widgets/main.py:133 cola/widgets/main.py:371
+msgid "Diff"
+msgstr ""
+
+#: cola/widgets/dag.py:401
+msgid "Graph"
+msgstr ""
+
+#: cola/widgets/dag.py:407 cola/widgets/main.py:314
+msgid "Lock Layout"
+msgstr ""
+
+#: cola/widgets/dag.py:413 cola/widgets/main.py:406
+msgid "View"
+msgstr ""
+
+#: cola/widgets/dag.py:489
+#, python-format
+msgid "%(project)s: %(ref)s - DAG"
+msgstr ""
+
+#: cola/widgets/dag.py:491
+msgid " - DAG"
+msgstr ""
+
+#: cola/widgets/dag.py:1042
+#, fuzzy
+msgid "Select Parent"
+msgstr "Kiválaszt"
+
+#: cola/widgets/dag.py:1045
+msgid "Select Oldest Parent"
+msgstr ""
+
+#: cola/widgets/dag.py:1048
+#, fuzzy
+msgid "Select Child"
+msgstr "Mindent kiválaszt"
+
+#: cola/widgets/dag.py:1051
+msgid "Select Newest Child"
+msgstr ""
 
 #: cola/widgets/createbranch.py:100
 msgid "Branch Name"
@@ -1158,487 +1772,123 @@ msgstr "Branch létrehozása"
 msgid "\"%(command)s\" returned exit status \"%(status)d\""
 msgstr ""
 
-#: cola/widgets/createtag.py:49 cola/widgets/createtag.py:114
-#: cola/widgets/dag.py:131
-#, fuzzy
-msgid "Create Tag"
-msgstr "Létrehozás"
-
-#: cola/widgets/createtag.py:68
-msgid "vX.Y.Z"
+#: cola/widgets/about.py:49
+msgid "About git-cola"
 msgstr ""
 
-#: cola/widgets/createtag.py:70
-msgid "Specifies the tag name"
-msgstr ""
-
-#: cola/widgets/createtag.py:76
-#, fuzzy
-msgid "Sign Tag"
-msgstr "Aláír"
-
-#: cola/widgets/createtag.py:82
-msgid "Whether to sign the tag (git tag -s)"
-msgstr ""
-
-#: cola/widgets/createtag.py:93
-msgid "Tag message..."
-msgstr ""
-
-#: cola/widgets/createtag.py:94
-msgid "Specifies the tag message"
-msgstr ""
-
-#: cola/widgets/createtag.py:106
-msgid "Specifies the SHA-1 to tag"
-msgstr ""
-
-#: cola/widgets/createtag.py:136
-#, fuzzy
-msgid "Missing Revision"
-msgstr "A következő revíziótól"
-
-#: cola/widgets/createtag.py:137
-#, fuzzy
-msgid "Please specify a revision to tag."
-msgstr "Válasszunk ki egy átnevezendő branchet."
-
-#: cola/widgets/createtag.py:140
-#, fuzzy
-msgid "Missing Name"
-msgstr "Hiányzó"
-
-#: cola/widgets/createtag.py:141
-msgid "Please specify a name for the new tag."
-msgstr ""
-
-#: cola/widgets/createtag.py:144
-#, fuzzy
-msgid "Missing Tag Message"
-msgstr "Merge-ölni szándékozott revízió"
-
-#: cola/widgets/createtag.py:145
-msgid "Tag-signing was requested but the tag message is empty."
-msgstr ""
-
-#: cola/widgets/createtag.py:147
+#: cola/widgets/about.py:99
 msgid ""
-"An unsigned, lightweight tag will be created instead.\n"
-"Create an unsigned tag?"
+"This PyQt4 does not include QtWebKit.\n"
+"The keyboard shortcuts feature is unavailable."
 msgstr ""
 
-#: cola/widgets/createtag.py:150
-msgid "Create Unsigned Tag"
+#: cola/widgets/about.py:106
+msgid "hotkeys.html"
 msgstr ""
 
-#: cola/widgets/createtag.py:159
-#, fuzzy
-msgid "Tag Created"
-msgstr "Létrehozás"
-
-#: cola/widgets/createtag.py:160
-#, python-format
-msgid "Created a new tag named \"%s\""
+#: cola/widgets/about.py:124
+msgid "Shortcuts"
 msgstr ""
 
-#: cola/widgets/createtag.py:164
-#, python-format
-msgid "Error: could not create tag \"%s\""
+#: cola/widgets/compare.py:38
+msgid "*** Branch Point ***"
 msgstr ""
 
-#: cola/widgets/createtag.py:165
-#, python-format
-msgid "git tag returned exit code %s"
+#: cola/widgets/compare.py:39
+msgid "*** Sandbox ***"
 msgstr ""
 
-#: cola/widgets/dag.py:119
-msgid "Diff this -> selected"
+#: cola/widgets/compare.py:40 cola/widgets/compare.py:63
+#: cola/widgets/compare.py:69
+msgid "Local"
 msgstr ""
 
-#: cola/widgets/dag.py:122
-msgid "Diff selected -> this"
+#: cola/widgets/compare.py:45
+msgid "Branch Diff Viewer"
 msgstr ""
 
-#: cola/widgets/dag.py:128
-#, fuzzy
-msgid "Create Patch"
-msgstr "Branch létrehozása"
-
-#: cola/widgets/dag.py:134 cola/widgets/main.py:193
-msgid "Save As Tarball/Zip..."
-msgstr ""
-
-#: cola/widgets/dag.py:137 cola/widgets/search.py:82
-msgid "Cherry Pick"
-msgstr ""
-
-#: cola/widgets/dag.py:140
-msgid "Grab File..."
-msgstr ""
-
-#: cola/widgets/dag.py:143
-#, fuzzy
-msgid "Copy SHA-1"
-msgstr "Összes másolása"
-
-#: cola/widgets/dag.py:214
-msgid "Summary"
-msgstr ""
-
-#: cola/widgets/dag.py:214
-msgid "Date, Time"
-msgstr ""
-
-#: cola/widgets/dag.py:221
-msgid "Go Up"
-msgstr ""
-
-#: cola/widgets/dag.py:224
-msgid "Go Down"
-msgstr ""
-
-#: cola/widgets/dag.py:351 cola/widgets/dag.py:1036
-msgid "Zoom Out"
-msgstr ""
-
-#: cola/widgets/dag.py:355 cola/widgets/dag.py:1033
-msgid "Zoom In"
-msgstr ""
-
-#: cola/widgets/dag.py:359 cola/widgets/dag.py:1039
-msgid "Zoom to Fit"
-msgstr ""
-
-#: cola/widgets/dag.py:380
-msgid "Log"
-msgstr ""
-
-#: cola/widgets/dag.py:385
-#, fuzzy
-msgid "Files"
-msgstr "Fájl:"
-
-#: cola/widgets/dag.py:388 cola/widgets/main.py:133 cola/widgets/main.py:369
-msgid "Diff"
-msgstr ""
-
-#: cola/widgets/dag.py:401
-msgid "Graph"
-msgstr ""
-
-#: cola/widgets/dag.py:407 cola/widgets/main.py:312
-msgid "Lock Layout"
-msgstr ""
-
-#: cola/widgets/dag.py:413 cola/widgets/main.py:404
-msgid "View"
-msgstr ""
-
-#: cola/widgets/dag.py:489
-#, python-format
-msgid "%(project)s: %(ref)s - DAG"
-msgstr ""
-
-#: cola/widgets/dag.py:491
-msgid " - DAG"
-msgstr ""
-
-#: cola/widgets/dag.py:1042
-#, fuzzy
-msgid "Select Parent"
-msgstr "Kiválaszt"
-
-#: cola/widgets/dag.py:1045
-msgid "Select Oldest Parent"
-msgstr ""
-
-#: cola/widgets/dag.py:1048
-#, fuzzy
-msgid "Select Child"
-msgstr "Mindent kiválaszt"
-
-#: cola/widgets/dag.py:1051
-msgid "Select Newest Child"
-msgstr ""
-
-#: cola/widgets/diff.py:47
-msgid "Ignore changes in whitespace at EOL"
-msgstr ""
-
-#: cola/widgets/diff.py:52
-msgid "Ignore changes in amount of whitespace"
-msgstr ""
-
-#: cola/widgets/diff.py:57
-msgid "Ignore all whitespace"
-msgstr ""
-
-#: cola/widgets/diff.py:62
-msgid "Show whole surrounding functions of changes"
-msgstr ""
-
-#: cola/widgets/diff.py:67 cola/widgets/diff.py:68
-#, fuzzy
-msgid "Diff Options"
-msgstr "Opciók"
-
-#: cola/widgets/diff.py:82
-msgid "Process Diff Region"
-msgstr ""
-
-#: cola/widgets/diff.py:85
-msgid "Process Selection"
-msgstr ""
-
-#: cola/widgets/diff.py:100
-msgid "Stage &Selected Lines"
-msgstr ""
-
-#: cola/widgets/diff.py:106
-msgid "Revert Selected Lines..."
-msgstr ""
-
-#: cola/widgets/diff.py:111
-#, fuzzy
-msgid "Unstage &Selected Lines"
-msgstr "Kiválasztatlan változtatások"
-
-#: cola/widgets/diff.py:117
-msgid "Apply Diff Selection to Work Tree"
-msgstr ""
-
-#: cola/widgets/diff.py:157 cola/widgets/diff.py:179
-#: cola/widgets/status.py:503 cola/widgets/status.py:603
-msgid "Launch git-cola"
-msgstr ""
-
-#: cola/widgets/diff.py:162
-#, fuzzy
-msgid "Stage Diff Region"
-msgstr "A következő revíziótól"
-
-#: cola/widgets/diff.py:168
-msgid "Revert Diff Region..."
-msgstr ""
-
-#: cola/widgets/diff.py:184
-msgid "Unstage Diff Region"
-msgstr ""
-
-#: cola/widgets/diff.py:205
-msgid "Select All"
-msgstr "Mindent kiválaszt"
-
-#: cola/widgets/diff.py:319
-msgid "Revert Diff Region?"
-msgstr ""
-
-#: cola/widgets/diff.py:323
-msgid "Revert Diff Region"
-msgstr ""
-
-#: cola/widgets/diff.py:332
-#, fuzzy
-msgid "Revert Selected Lines?"
-msgstr "Visszaállítja a változtatásokat a(z) %s fájlban?"
-
-#: cola/widgets/diff.py:336
-msgid "Revert Selected Lines"
-msgstr ""
-
-#: cola/widgets/diff.py:427
-#, fuzzy
-msgid "Loading..."
-msgstr "A(z) %s betöltése..."
-
-#: cola/widgets/editremotes.py:33
-#, fuzzy
-msgid "Edit Remotes"
+#: cola/widgets/compare.py:64 cola/widgets/compare.py:70
+#: cola/widgets/remote.py:155
+msgid "Remote"
 msgstr "Távoli"
 
-#: cola/widgets/editremotes.py:37
-msgid ""
-"Add and remove remote repositories using the \n"
-"Add(+) and Delete(-) buttons on the left-hand side.\n"
-"\n"
-"Remotes can be renamed by selecting one from the list\n"
-"and pressing \"enter\", or by double-clicking."
+#: cola/widgets/compare.py:99
+#, fuzzy
+msgid "File Differences"
+msgstr "Beállítások"
+
+#: cola/widgets/status.py:77
+#, fuzzy
+msgid "Untracked"
+msgstr "Nem követett, nem kiválasztott"
+
+#: cola/widgets/status.py:87
+#, fuzzy
+msgid "Stage / Unstage"
+msgstr "Változtatások kiválasztása"
+
+#: cola/widgets/status.py:91
+msgid "Revert Unstaged Edits..."
 msgstr ""
 
-#: cola/widgets/editremotes.py:47
-msgid "Remote git repositories - double-click to rename"
+#: cola/widgets/status.py:123
+msgid "Move Up"
 msgstr ""
 
-#: cola/widgets/editremotes.py:60
-#, fuzzy
-msgid "Add new remote git repository"
-msgstr "Nem Git repó: %s"
-
-#: cola/widgets/editremotes.py:68
-#, fuzzy
-msgid "Delete remote"
-msgstr "Távoli branch törlése"
-
-#: cola/widgets/editremotes.py:130
-#, python-format
-msgid "Error creating remote \"%s\""
+#: cola/widgets/status.py:129
+msgid "Copy Path to Clipboard"
 msgstr ""
 
-#: cola/widgets/editremotes.py:139
+#: cola/widgets/status.py:134
 #, fuzzy
-msgid "Delete Remote"
-msgstr "Távoli branch törlése"
+msgid "Delete File(s)..."
+msgstr "Törlés..."
 
-#: cola/widgets/editremotes.py:140
-#, fuzzy
-msgid "Delete remote?"
-msgstr "Távoli branch törlése"
-
-#: cola/widgets/editremotes.py:141
-#, fuzzy, python-format
-msgid "Delete remote \"%s\""
-msgstr "Távoli branch törlése"
-
-#: cola/widgets/editremotes.py:148
-#, python-format
-msgid "Error deleting remote \"%s\""
+#: cola/widgets/status.py:442 cola/widgets/main.py:139
+msgid "Unstage All"
 msgstr ""
 
-#: cola/widgets/editremotes.py:168
-#, fuzzy
-msgid "Rename Remote"
-msgstr "Távoli"
-
-#: cola/widgets/editremotes.py:169
-#, fuzzy
-msgid "Rename remote?"
-msgstr "Távoli"
-
-#: cola/widgets/editremotes.py:170
-#, python-format
-msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
+#: cola/widgets/status.py:499 cola/widgets/status.py:577
+msgid "Revert Uncommited Edits..."
 msgstr ""
 
-#: cola/widgets/editremotes.py:172
-msgid "Rename"
-msgstr "Átnevezés"
-
-#: cola/widgets/editremotes.py:185
-#, fuzzy, python-format
-msgid "Gathering info for \"%s\"..."
-msgstr "A(z) %s diff-jének betöltése..."
-
-#: cola/widgets/editremotes.py:215
-#, fuzzy
-msgid "Add Remote"
-msgstr "Távoli"
-
-#: cola/widgets/editremotes.py:227
-#, fuzzy
-msgid "Add remote"
-msgstr "Távoli"
-
-#: cola/widgets/editremotes.py:228
-msgid "Name for the new remote"
+#: cola/widgets/status.py:598
+msgid "Add to .gitignore"
 msgstr ""
 
-#: cola/widgets/editremotes.py:235
-msgid "URL"
-msgstr "URL"
-
-#: cola/widgets/filelist.py:18
+#: cola/widgets/status.py:629
 #, fuzzy
-msgid "Filename"
-msgstr "Átnevezés"
-
-#: cola/widgets/filelist.py:18
-#, fuzzy
-msgid "Additions"
-msgstr "Opciók"
-
-#: cola/widgets/filelist.py:18
-#, fuzzy
-msgid "Deletions"
+msgid "Delete Files?"
 msgstr "Törlés"
 
-#: cola/widgets/grep.py:70 cola/widgets/search.py:44 cola/widgets/search.py:62
-msgid "Search"
+#: cola/widgets/status.py:630
+msgid "The following files will be deleted:"
 msgstr ""
 
-#: cola/widgets/grep.py:77
-msgid "command-line arguments"
+#: cola/widgets/status.py:638
+#, python-format
+msgid "Delete %d file(s)?"
 msgstr ""
 
-#: cola/widgets/grep.py:81
-msgid "Choose the \"git grep\" regular expression mode"
-msgstr ""
-
-#: cola/widgets/grep.py:82
-msgid "Basic Regexp"
-msgstr ""
-
-#: cola/widgets/grep.py:82
-msgid "Extended Regexp"
-msgstr ""
-
-#: cola/widgets/grep.py:82
-msgid "Fixed String"
-msgstr ""
-
-#: cola/widgets/grep.py:87
-msgid "Search using a POSIX basic regular expression"
-msgstr ""
-
-#: cola/widgets/grep.py:90
-msgid "Search using a POSIX extended regular expression"
-msgstr ""
-
-#: cola/widgets/grep.py:93
-msgid "Search for a fixed string"
-msgstr ""
-
-#: cola/widgets/grep.py:99
-msgid "grep result..."
-msgstr ""
-
-#: cola/widgets/grep.py:111
-msgid "Shell arguments"
-msgstr ""
-
-#: cola/widgets/grep.py:113
-msgid ""
-"Parse arguments using a shell.\n"
-"Queries with spaces will require \"double quotes\"."
-msgstr ""
-
-#: cola/widgets/log.py:37
-#, fuzzy, python-format
-msgid "exit code %s"
-msgstr "a(z) %s letöltése"
+#: cola/widgets/status.py:639
+#, fuzzy
+msgid "Delete Files"
+msgstr "Törlés"
 
 #: cola/widgets/main.py:85
 #, fuzzy
 msgid "Browser"
 msgstr "Böngészés"
 
-#: cola/widgets/main.py:90 cola/widgets/main.py:343
+#: cola/widgets/main.py:90 cola/widgets/main.py:345
 #, fuzzy
 msgid "Actions"
 msgstr "Opciók"
-
-#: cola/widgets/main.py:118 cola/widgets/merge.py:75
-#, fuzzy
-msgid "Commit"
-msgstr "Commit:"
 
 #: cola/widgets/main.py:127
 #, fuzzy
 msgid "Console"
 msgstr "Bezárás"
-
-#: cola/widgets/main.py:139 cola/widgets/status.py:437
-msgid "Unstage All"
-msgstr ""
 
 #: cola/widgets/main.py:143
 msgid "Unstage From Commit"
@@ -1668,10 +1918,6 @@ msgstr ""
 #, fuzzy
 msgid "New Repository..."
 msgstr "Git repó"
-
-#: cola/widgets/main.py:170 cola/widgets/prefs.py:237
-msgid "Preferences"
-msgstr "Beállítások"
 
 #: cola/widgets/main.py:174
 msgid "Edit Remotes..."
@@ -1705,22 +1951,10 @@ msgstr ""
 msgid "Merge..."
 msgstr "Merge"
 
-#: cola/widgets/main.py:205 cola/widgets/merge.py:29
-msgid "Abort Merge..."
-msgstr "Merge megszakítása..."
-
-#: cola/widgets/main.py:215 cola/widgets/startup.py:38
-msgid "Open..."
-msgstr "Meggyitás..."
-
 #: cola/widgets/main.py:219
 #, fuzzy
 msgid "Open in New Window..."
 msgstr "Létező könyvtár megnyitása"
-
-#: cola/widgets/main.py:226 cola/widgets/startup.py:41
-msgid "Clone..."
-msgstr "Másolás..."
 
 #: cola/widgets/main.py:230
 #, fuzzy
@@ -1826,277 +2060,234 @@ msgstr "Szerkesztés"
 msgid "Skip Current Patch"
 msgstr "Branch létrehozása"
 
-#: cola/widgets/main.py:318
+#: cola/widgets/main.py:298 cola/widgets/cfgactions.py:87
+#, fuzzy
+msgid "Abort"
+msgstr "Félbeszakítás"
+
+#: cola/widgets/main.py:320
 #, fuzzy
 msgid "File"
 msgstr "Fájl:"
 
-#: cola/widgets/main.py:319
+#: cola/widgets/main.py:321
 #, fuzzy
 msgid "Open Recent"
 msgstr "Legutóbbi repók megnyitása:"
 
-#: cola/widgets/main.py:359 cola/widgets/main.py:360
+#: cola/widgets/main.py:361 cola/widgets/main.py:362
 #, fuzzy
 msgid "Staging Area"
 msgstr "Keresés itt: %s..."
 
-#: cola/widgets/main.py:377
+#: cola/widgets/main.py:379
 msgid "Branch"
 msgstr "Branch"
 
-#: cola/widgets/main.py:417
+#: cola/widgets/main.py:419
 msgid "Help"
 msgstr "Segítség"
 
-#: cola/widgets/main.py:481
+#: cola/widgets/main.py:483
 #, python-format
 msgid "git cola version %s"
 msgstr ""
 
-#: cola/widgets/main.py:577
+#: cola/widgets/main.py:579
 msgid ""
 "This repository is currently being rebased.\n"
 "Resolve conflicts, commit changes, and run:\n"
 "    Rebase > Continue"
 msgstr ""
 
-#: cola/widgets/main.py:580
+#: cola/widgets/main.py:582
 #, fuzzy
 msgid "Rebasing"
 msgstr "Visszaállítás"
 
-#: cola/widgets/main.py:584
+#: cola/widgets/main.py:586
 msgid ""
 "This repository is in the middle of a merge.\n"
 "Resolve conflicts and commit changes."
 msgstr ""
 
-#: cola/widgets/main.py:586
+#: cola/widgets/main.py:588
 #, fuzzy
 msgid "Merging"
 msgstr "Merge"
 
-#: cola/widgets/main.py:589
+#: cola/widgets/main.py:591
 msgid "Amending"
 msgstr ""
 
-#: cola/widgets/main.py:706
+#: cola/widgets/main.py:708
 #, fuzzy
 msgid "Select New Upstream"
 msgstr "Kiválaszt"
 
-#: cola/widgets/main.py:707
+#: cola/widgets/main.py:709
 msgid "Interactive Rebase"
 msgstr ""
 
-#: cola/widgets/merge.py:30
+#: cola/widgets/editremotes.py:33
 #, fuzzy
-msgid ""
-"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
-"Recovering uncommitted changes is not possible."
-msgstr ""
-"Megszakítjuk a merge-t?\n"
-"\n"
-"A jelenlegi merge megszakítása *MINDEN* nem commitolt változtatás "
-"elvesztését jelenti.\n"
-"\n"
-"Folytatjuk a jelenlegi merge megszakítását?"
-
-#: cola/widgets/merge.py:33
-msgid "Aborting the current merge?"
-msgstr ""
-
-#: cola/widgets/merge.py:34
-#, fuzzy
-msgid "Abort Merge"
-msgstr "Merge megszakítása..."
-
-#: cola/widgets/merge.py:53
-msgid "Revision To Merge"
-msgstr "Merge-ölni szándékozott revízió"
-
-#: cola/widgets/merge.py:69
-msgid "Visualize"
-msgstr "Vizualizálás"
-
-#: cola/widgets/merge.py:72
-#, fuzzy
-msgid "Squash"
-msgstr "Push"
-
-#: cola/widgets/merge.py:83
-msgid "Merge"
-msgstr "Merge"
-
-#: cola/widgets/merge.py:146
-#, python-format
-msgid "Merge \"%(revision)s\" into \"%(branch)s\""
-msgstr ""
-
-#: cola/widgets/merge.py:149
-#, fuzzy, python-format
-msgid "Merge into \"%s\""
-msgstr "Merge-ölés a következőbe: %s"
-
-#: cola/widgets/merge.py:193 cola/widgets/merge.py:202
-#, fuzzy
-msgid "No Revision Specified"
-msgstr "Nincs kiválasztva revízió."
-
-#: cola/widgets/merge.py:194
-msgid "You must specify a revision to view."
-msgstr ""
-
-#: cola/widgets/merge.py:203
-msgid "You must specify a revision to merge."
-msgstr ""
-
-#: cola/widgets/patch.py:68
-msgid "Apply Patches"
-msgstr ""
-
-#: cola/widgets/patch.py:77
-msgid ""
-"\n"
-"            <p>\n"
-"                Drag and drop or use the <strong>Add</strong> button to add\n"
-"                patches to the list\n"
-"            </p>\n"
-"            "
-msgstr ""
-
-#: cola/widgets/patch.py:89
-msgid "Add patches (+)"
-msgstr ""
-
-#: cola/widgets/patch.py:92 cola/widgets/patch.py:106
-#, fuzzy
-msgid "Remove"
+msgid "Edit Remotes"
 msgstr "Távoli"
 
-#: cola/widgets/patch.py:93
-#, fuzzy
-msgid "Remove selected (Delete)"
-msgstr "Branch átnevezése"
-
-#: cola/widgets/patch.py:96 cola/widgets/stash.py:51
-#, fuzzy
-msgid "Apply"
-msgstr "Apple"
-
-#: cola/widgets/patch.py:151
-#, fuzzy
-msgid "Select patch file(s)..."
-msgstr "Törlés..."
-
-#: cola/widgets/prefs.py:132
-msgid "User Name"
-msgstr "Felhasználónév"
-
-#: cola/widgets/prefs.py:133
-msgid "Email Address"
-msgstr "Email cím"
-
-#: cola/widgets/prefs.py:134
-msgid "Merge Verbosity"
-msgstr "Merge beszédesség"
-
-#: cola/widgets/prefs.py:135
-msgid "Number of Diff Context Lines"
-msgstr "A diff környezeti sorok száma"
-
-#: cola/widgets/prefs.py:136
-msgid "Summarize Merge Commits"
-msgstr "A merge commitok összegzése"
-
-#: cola/widgets/prefs.py:137
-msgid "Show Diffstat After Merge"
-msgstr "Diffstat mutatása merge után"
-
-#: cola/widgets/prefs.py:138
-msgid "Display Untracked Files"
+#: cola/widgets/editremotes.py:37
+msgid ""
+"Add and remove remote repositories using the \n"
+"Add(+) and Delete(-) buttons on the left-hand side.\n"
+"\n"
+"Remotes can be renamed by selecting one from the list\n"
+"and pressing \"enter\", or by double-clicking."
 msgstr ""
 
-#: cola/widgets/prefs.py:179
-msgid "Fixed-Width Font"
+#: cola/widgets/editremotes.py:47
+msgid "Remote git repositories - double-click to rename"
 msgstr ""
 
-#: cola/widgets/prefs.py:180
-msgid "Font Size"
-msgstr "Font méret"
-
-#: cola/widgets/prefs.py:181
-msgid "Tab Width"
-msgstr ""
-
-#: cola/widgets/prefs.py:182
-msgid "Text Width"
-msgstr ""
-
-#: cola/widgets/prefs.py:184
+#: cola/widgets/editremotes.py:60
 #, fuzzy
-msgid "Editor"
-msgstr "Szerkesztés"
+msgid "Add new remote git repository"
+msgstr "Nem Git repó: %s"
 
-#: cola/widgets/prefs.py:185
+#: cola/widgets/editremotes.py:68
 #, fuzzy
-msgid "History Browser"
-msgstr "Fájl böngésző"
+msgid "Delete remote"
+msgstr "Távoli branch törlése"
 
-#: cola/widgets/prefs.py:186
-msgid "Diff Tool"
+#: cola/widgets/editremotes.py:130
+#, python-format
+msgid "Error creating remote \"%s\""
 msgstr ""
 
-#: cola/widgets/prefs.py:187
+#: cola/widgets/editremotes.py:139
 #, fuzzy
-msgid "Merge Tool"
-msgstr "Merge"
+msgid "Delete Remote"
+msgstr "Távoli branch törlése"
 
-#: cola/widgets/prefs.py:188
-msgid "Keep *.orig Merge Backups"
+#: cola/widgets/editremotes.py:140
+#, fuzzy
+msgid "Delete remote?"
+msgstr "Távoli branch törlése"
+
+#: cola/widgets/editremotes.py:141
+#, fuzzy, python-format
+msgid "Delete remote \"%s\""
+msgstr "Távoli branch törlése"
+
+#: cola/widgets/editremotes.py:148
+#, python-format
+msgid "Error deleting remote \"%s\""
 msgstr ""
 
-#: cola/widgets/prefs.py:189
-msgid "Save GUI Settings"
+#: cola/widgets/editremotes.py:168
+#, fuzzy
+msgid "Rename Remote"
+msgstr "Távoli"
+
+#: cola/widgets/editremotes.py:169
+#, fuzzy
+msgid "Rename remote?"
+msgstr "Távoli"
+
+#: cola/widgets/editremotes.py:170
+#, python-format
+msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr ""
 
-#: cola/widgets/prefs.py:245
-#, fuzzy
-msgid "All Repositories"
-msgstr "Globális (minden repó)"
+#: cola/widgets/editremotes.py:172
+msgid "Rename"
+msgstr "Átnevezés"
 
-#: cola/widgets/prefs.py:246
-#, fuzzy
-msgid "Current Repository"
-msgstr "Új repó létrehozása"
+#: cola/widgets/editremotes.py:185
+#, fuzzy, python-format
+msgid "Gathering info for \"%s\"..."
+msgstr "A(z) %s diff-jének betöltése..."
 
-#: cola/widgets/prefs.py:247
+#: cola/widgets/editremotes.py:215
 #, fuzzy
-msgid "Settings"
-msgstr "Indítás..."
+msgid "Add Remote"
+msgstr "Távoli"
 
-#: cola/widgets/recent.py:39
-msgid "Recently Modified Files"
+#: cola/widgets/editremotes.py:227
+#, fuzzy
+msgid "Add remote"
+msgstr "Távoli"
+
+#: cola/widgets/editremotes.py:228
+msgid "Name for the new remote"
 msgstr ""
 
-#: cola/widgets/recent.py:49
-msgid " commits ago"
+#: cola/widgets/editremotes.py:235
+msgid "URL"
+msgstr "URL"
+
+#: cola/widgets/grep.py:77
+msgid "command-line arguments"
 msgstr ""
 
-#: cola/widgets/recent.py:52
-#, fuzzy
-msgid "Showing changes since"
-msgstr "Változások pusholása ide: %s"
-
-#: cola/widgets/recent.py:64
-msgid "Expand all"
+#: cola/widgets/grep.py:81
+msgid "Choose the \"git grep\" regular expression mode"
 msgstr ""
 
-#: cola/widgets/recent.py:68
+#: cola/widgets/grep.py:82
+msgid "Basic Regexp"
+msgstr ""
+
+#: cola/widgets/grep.py:82
+msgid "Extended Regexp"
+msgstr ""
+
+#: cola/widgets/grep.py:82
+msgid "Fixed String"
+msgstr ""
+
+#: cola/widgets/grep.py:87
+msgid "Search using a POSIX basic regular expression"
+msgstr ""
+
+#: cola/widgets/grep.py:90
+msgid "Search using a POSIX extended regular expression"
+msgstr ""
+
+#: cola/widgets/grep.py:93
+msgid "Search for a fixed string"
+msgstr ""
+
+#: cola/widgets/grep.py:99
+msgid "grep result..."
+msgstr ""
+
+#: cola/widgets/grep.py:111
+msgid "Shell arguments"
+msgstr ""
+
+#: cola/widgets/grep.py:113
+msgid ""
+"Parse arguments using a shell.\n"
+"Queries with spaces will require \"double quotes\"."
+msgstr ""
+
+#: cola/widgets/cfgactions.py:154 cola/widgets/cfgactions.py:158
 #, fuzzy
-msgid "Collapse all"
-msgstr "Bezárás"
+msgid "Abort Action"
+msgstr "Félbeszakítás"
+
+#: cola/widgets/cfgactions.py:155
+msgid ""
+"An action is still running.\n"
+"Terminating it could result in data loss."
+msgstr ""
+
+#: cola/widgets/cfgactions.py:157
+msgid "Abort the action?"
+msgstr ""
+
+#: cola/widgets/cfgactions.py:208
+msgid "Arguments"
+msgstr ""
 
 #: cola/widgets/remote.py:144 cola/widgets/remote.py:145
 #, fuzzy
@@ -2123,268 +2314,84 @@ msgstr "Tageket is"
 msgid "Rebase "
 msgstr "Visszaállítás"
 
-#: cola/widgets/remote.py:347
+#: cola/widgets/remote.py:349
 #, fuzzy, python-format
 msgid "URL: %s"
 msgstr "URL:"
 
-#: cola/widgets/remote.py:435
+#: cola/widgets/remote.py:437
 msgid "No repository selected."
 msgstr "Nincs kiválasztott repó."
 
-#: cola/widgets/remote.py:450
+#: cola/widgets/remote.py:452
 msgid "Push"
 msgstr "Push"
 
-#: cola/widgets/remote.py:452
+#: cola/widgets/remote.py:454
 #, python-format
 msgid ""
 "Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
 "A new remote branch will be published."
 msgstr ""
 
-#: cola/widgets/remote.py:454
+#: cola/widgets/remote.py:456
 #, fuzzy
 msgid "Create a new remote branch?"
 msgstr "Új branch létrehozása"
 
-#: cola/widgets/remote.py:455
+#: cola/widgets/remote.py:457
 #, fuzzy
 msgid "Create Remote Branch"
 msgstr "Távoli branch törlése"
 
-#: cola/widgets/remote.py:463
+#: cola/widgets/remote.py:465
 msgid "Force Fetch?"
 msgstr ""
 
-#: cola/widgets/remote.py:464
+#: cola/widgets/remote.py:466
 msgid "Non-fast-forward fetch overwrites local history!"
 msgstr ""
 
-#: cola/widgets/remote.py:465
+#: cola/widgets/remote.py:467
 #, fuzzy, python-format
 msgid "Force fetching from %s?"
 msgstr "A(z) %s letöltése innen: %s"
 
-#: cola/widgets/remote.py:466
+#: cola/widgets/remote.py:468
 msgid "Force Fetch"
 msgstr ""
 
-#: cola/widgets/remote.py:468
+#: cola/widgets/remote.py:470
 msgid "Force Push?"
 msgstr ""
 
-#: cola/widgets/remote.py:469
+#: cola/widgets/remote.py:471
 msgid ""
 "Non-fast-forward push overwrites published history!\n"
 "(Did you pull first?)"
 msgstr ""
 
-#: cola/widgets/remote.py:471
+#: cola/widgets/remote.py:473
 #, fuzzy, python-format
 msgid "Force push to %s?"
 msgstr "Pusholás ide: %s..."
 
-#: cola/widgets/remote.py:472
+#: cola/widgets/remote.py:474
 msgid "Force Push"
 msgstr ""
 
-#: cola/widgets/remote.py:519
+#: cola/widgets/remote.py:521
 msgid "Already up-to-date."
 msgstr ""
 
-#: cola/widgets/remote.py:544
+#: cola/widgets/remote.py:546
 msgid "Have you rebased/pulled lately?"
-msgstr ""
-
-#: cola/widgets/search.py:48
-#, fuzzy
-msgid "Browse..."
-msgstr "Böngészés"
-
-#: cola/widgets/search.py:54 cola/widgets/search.py:59
-msgid "yyyy-MM-dd"
-msgstr ""
-
-#: cola/widgets/search.py:224
-#, fuzzy
-msgid "Search by Expression"
-msgstr "Revízió kifejezés:"
-
-#: cola/widgets/search.py:225
-msgid "Search by Path"
-msgstr ""
-
-#: cola/widgets/search.py:226
-#, fuzzy
-msgid "Search Commit Messages"
-msgstr "Merge commit üzenet:"
-
-#: cola/widgets/search.py:227
-msgid "Search Diffs"
-msgstr ""
-
-#: cola/widgets/search.py:228
-msgid "Search Authors"
-msgstr ""
-
-#: cola/widgets/search.py:229
-#, fuzzy
-msgid "Search Committers"
-msgstr "Commiter:"
-
-#: cola/widgets/search.py:230
-msgid "Search Date Range"
-msgstr ""
-
-#: cola/widgets/search.py:323
-#, fuzzy
-msgid "Choose Path(s)"
-msgstr "%s választása"
-
-#: cola/widgets/selectcommits.py:52
-msgid "Revision Expression:"
-msgstr "Revízió kifejezés:"
-
-#: cola/widgets/selectcommits.py:103
-msgid "No commits exist in this branch."
 msgstr ""
 
 #: cola/widgets/spellcheck.py:140
 #, fuzzy
 msgid "Spelling Suggestions"
 msgstr "Nincs javaslat"
-
-#: cola/widgets/startup.py:28
-msgid "git-cola"
-msgstr ""
-
-#: cola/widgets/startup.py:35
-msgid "New..."
-msgstr "Új..."
-
-#: cola/widgets/startup.py:59
-#, fuzzy
-msgid "Select Repository..."
-msgstr "Git repó"
-
-#: cola/widgets/startup.py:64
-#, fuzzy
-msgid "Select manually..."
-msgstr "Mindent kiválaszt"
-
-#: cola/widgets/stash.py:39
-msgid "Stash"
-msgstr ""
-
-#: cola/widgets/stash.py:52
-msgid "Apply the selected stash"
-msgstr ""
-
-#: cola/widgets/stash.py:56
-msgid "Save modified state to new stash"
-msgstr ""
-
-#: cola/widgets/stash.py:59
-msgid "Drop"
-msgstr ""
-
-#: cola/widgets/stash.py:60
-msgid "Drop the selected stash"
-msgstr ""
-
-#: cola/widgets/stash.py:67
-msgid "Keep Index"
-msgstr ""
-
-#: cola/widgets/stash.py:188
-msgid "Save Stash"
-msgstr ""
-
-#: cola/widgets/stash.py:189
-msgid "Enter a name for the stash"
-msgstr ""
-
-#: cola/widgets/stash.py:195
-msgid "Error: Stash exists"
-msgstr ""
-
-#: cola/widgets/stash.py:196
-#, fuzzy, python-format
-msgid "A stash named \"%s\" already exists"
-msgstr "A(z) '%s' fájl már létezik."
-
-#: cola/widgets/stash.py:211
-msgid "Drop Stash?"
-msgstr ""
-
-#: cola/widgets/stash.py:212
-#, fuzzy
-msgid "Recovering a dropped stash is not possible."
-msgstr "Az elveszett commitok helyreállítása nem biztos, hogy egyszerű."
-
-#: cola/widgets/stash.py:213
-#, python-format
-msgid "Drop the \"%s\" stash?"
-msgstr ""
-
-#: cola/widgets/stash.py:214
-msgid "Drop Stash"
-msgstr ""
-
-#: cola/widgets/status.py:77
-#, fuzzy
-msgid "Untracked"
-msgstr "Nem követett, nem kiválasztott"
-
-#: cola/widgets/status.py:87
-#, fuzzy
-msgid "Stage / Unstage"
-msgstr "Változtatások kiválasztása"
-
-#: cola/widgets/status.py:91
-msgid "Revert Unstaged Edits..."
-msgstr ""
-
-#: cola/widgets/status.py:122
-msgid "Move Up"
-msgstr ""
-
-#: cola/widgets/status.py:129
-msgid "Copy Path to Clipboard"
-msgstr ""
-
-#: cola/widgets/status.py:494 cola/widgets/status.py:572
-msgid "Revert Uncommited Edits..."
-msgstr ""
-
-#: cola/widgets/status.py:591
-#, fuzzy
-msgid "Delete File(s)..."
-msgstr "Törlés..."
-
-#: cola/widgets/status.py:594
-msgid "Add to .gitignore"
-msgstr ""
-
-#: cola/widgets/status.py:626
-#, fuzzy
-msgid "Delete Files?"
-msgstr "Törlés"
-
-#: cola/widgets/status.py:627
-msgid "The following files will be deleted:"
-msgstr ""
-
-#: cola/widgets/status.py:634
-#, python-format
-msgid "Delete %d file(s)?"
-msgstr ""
-
-#: cola/widgets/status.py:635
-#, fuzzy
-msgid "Delete Files"
-msgstr "Törlés"
 
 #, fuzzy
 #~ msgid "Branch created"

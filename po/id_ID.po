@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-15 16:33-0700\n"
+"POT-Creation-Date: 2014-07-18 16:22-0700\n"
 "PO-Revision-Date: 2014-06-30 14:21+0700\n"
 "Last-Translator: Samsul Ma'arif <mail@samsul.web.id>\n"
 "Language-Team: Indonesian\n"
@@ -17,314 +17,75 @@ msgstr ""
 "Language: id\n"
 
 #: cola/app.py:232
-#, python-format
-msgid "fatal: \"%s\" is not a directory.  Please specify --repo <path>."
+#, fuzzy, python-format
+msgid ""
+"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
 msgstr "fatal: \"%s\" bukan direktori. Silahkan tentukan --repo <path>."
 
-#: cola/cmds.py:97
-msgid "Amend"
-msgstr "Ubah"
+#: cola/interaction.py:54 cola/widgets/main.py:292
+msgid "Continue"
+msgstr "Lanjutkan"
 
-#: cola/cmds.py:131
-msgid "Cannot Amend"
-msgstr "Tidak dapat diubah"
-
-#: cola/cmds.py:132
-msgid ""
-"You are in the middle of a merge.\n"
-"Cannot amend while merging."
-msgstr ""
-"Anda sedang melakukan merjer.\n"
-"Tidak dapat mengubah ketika merjer"
-
-#: cola/cmds.py:192
+#: cola/interaction.py:64
 #, python-format
-msgid "PATCH %(current)d/%(count)d"
-msgstr "PATCH %(current)d/%(count)d"
+msgid "Run %s?"
+msgstr "Jalankan %s?"
 
-#: cola/cmds.py:196
-msgid "Summary:"
-msgstr "Ringkasan:"
-
-#: cola/cmds.py:205
-msgid "Patch(es) Applied"
-msgstr "Patch Diterapkan"
-
-#: cola/cmds.py:206
+#: cola/interaction.py:65
 #, python-format
-msgid "%d patch(es) applied."
-msgstr "%d patch diterapkan."
+msgid "Run the \"%s\" command?"
+msgstr "Jalankan perintah \"%s\"?"
 
-#: cola/cmds.py:303
-msgid "Revert Unstaged Changes?"
-msgstr "Kembalikan Perubahan Belum Distag?"
+#: cola/interaction.py:67 cola/widgets/cfgactions.py:247
+msgid "Run"
+msgstr "Jalankan"
 
-#: cola/cmds.py:304
-msgid ""
-"This operation drops unstaged changes.\n"
-"These changes cannot be recovered."
-msgstr ""
-"Operasi ini membuang perubahan belum distag.\n"
-"Perubahan ini tidak dapat dikembalikan"
-
-#: cola/cmds.py:306
-msgid "Revert the unstaged changes?"
-msgstr "Kembalikan perubahan belum distag?"
-
-#: cola/cmds.py:307
-msgid "Revert Unstaged Changes"
-msgstr "Kembalikan Perubahan Belum Distag"
-
-#: cola/cmds.py:316 cola/widgets/status.py:655
-msgid "No files selected for checkout from HEAD."
-msgstr "Tidak ada berkas terpilih untuk checkout dari HEAD."
-
-#: cola/cmds.py:339
-#, python-format
-msgid "Created commit: %s"
-msgstr "Buat commit: %s"
-
-#: cola/cmds.py:341
-#, python-format
-msgid "Commit failed: %s"
-msgstr "Commit gagal: %s"
-
-#: cola/cmds.py:384 cola/cmds.py:1325
-msgid "Error"
-msgstr "Error"
-
-#: cola/cmds.py:385
-#, python-format
-msgid "Deleting \"%s\" failed"
-msgstr "Gagal menghapus \"%s\""
-
-#: cola/cmds.py:418
-msgid "Remote Branch Deleted"
-msgstr "Cabang Hulu Dihapus"
-
-#: cola/cmds.py:419
-#, python-format
-msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
-msgstr "\"%(branch)s\" telah dihapus dari \"%(remote)s\"."
-
-#: cola/cmds.py:423 cola/guicmds.py:108 cola/widgets/remote.py:525
-#, python-format
-msgid "\"%(command)s\" returned exit status %(status)d"
-msgstr "\"%(command)s\" keluar dengan status %(status)d"
-
-#: cola/cmds.py:426
-msgid "Error Deleting Remote Branch"
-msgstr "Error menghapus Cabang Hulu"
-
-#: cola/cmds.py:505 cola/cmds.py:611
-msgid "Launch Editor"
-msgstr "Jalankan Penyunting"
-
-#: cola/cmds.py:541
-#, python-format
-msgid "Cannot exec \"%s\": please configure your editor"
-msgstr "Tidak dapat mengeksekusi \"%s\": silahkan konfigurasi editor Anda"
-
-#: cola/cmds.py:544
-msgid "Error Editing File"
-msgstr "Error Menyunting Berkas"
-
-#: cola/cmds.py:566
-msgid "Launch Diff Tool"
-msgstr "Jalankan Alat Diff"
-
-#: cola/cmds.py:593
-msgid "Launch Terminal"
-msgstr "Jalankan Terminal"
-
-#: cola/cmds.py:632
-msgid "Error: Cannot find commit template"
-msgstr "Error: Tidak dapat melakukan commit templat"
-
-#: cola/cmds.py:633
-#, python-format
-msgid "%s: No such file or directory."
-msgstr "%s: Berkas atau direktori tidak ada."
-
-#: cola/cmds.py:652
-msgid "Error: Unconfigured commit template"
-msgstr "Error: Commit templat belum dikonfigurasi"
-
-#: cola/cmds.py:653
-msgid ""
-"A commit template has not been configured.\n"
-"Use \"git config\" to define \"commit.template\"\n"
-"so that it points to a commit template."
-msgstr ""
-"Templat commit belum dikonfigurasi.\n"
-"Gunakan \"git config\" untuk menentukan \"commit.template\"\n"
-"agar mengarah ke templat commit."
-
-#: cola/cmds.py:712
-msgid "Open Using Default Application"
-msgstr "Buka dengan Aplikasi Bawaan"
-
-#: cola/cmds.py:735
-msgid "Open Parent Directory"
-msgstr "Bukan Direktori di Atasnya"
-
-#: cola/cmds.py:792
-#, python-format
-msgid "Error: could not clone \"%s\""
-msgstr "Error: tidak bisa kloning \"%s\""
-
-#: cola/cmds.py:793
-#, python-format
-msgid "git clone returned exit code %s"
-msgstr "git clone keluar kode %s"
-
-#: cola/cmds.py:840
-#, python-format
-msgid "Rebase onto %s"
-msgstr "Rebase ke %s"
-
-#: cola/cmds.py:841 cola/widgets/main.py:393
-msgid "Rebase"
-msgstr "Rebase"
-
-#: cola/cmds.py:855
-msgid "Edit Rebase"
-msgstr "Sunting Rebase"
-
-#: cola/cmds.py:856 cola/widgets/archive.py:123 cola/widgets/bookmarks.py:67
-#: cola/widgets/browse.py:480 cola/widgets/stash.py:55
-msgid "Save"
-msgstr "Simpan"
-
-#: cola/cmds.py:900 cola/widgets/action.py:59 cola/widgets/editremotes.py:64
-#: cola/widgets/grep.py:107 cola/widgets/recent.py:55
-#: cola/widgets/recent.py:124
-msgid "Refresh"
-msgstr "Segarkan"
-
-#: cola/cmds.py:928
-#, python-format
-msgid "Run \"%s\"?"
-msgstr "Jalankan \"%s\"?"
-
-#: cola/cmds.py:935
-msgid "Please select a file"
-msgstr "Silahkan pilih berkas"
-
-#: cola/cmds.py:936
-#, python-format
-msgid "\"%s\" requires a selected file."
-msgstr "\"%s\" berkas terpilih diperlukan."
-
-#: cola/cmds.py:948
-msgid "Invalid Revision"
-msgstr "Revisi Salah"
-
-#: cola/cmds.py:949
-msgid "The revision expression cannot be empty."
-msgstr "Ekspresi revisi tidak boleh kosong."
-
-#: cola/cmds.py:964
-#, python-format
-msgid "Running command: %s"
-msgstr "Menjalankan perintah: %s"
-
-#: cola/cmds.py:973 cola/cmds.py:1141 cola/interaction.py:72
+#: cola/interaction.py:72 cola/cmds.py:1001 cola/cmds.py:1169
 #, python-format
 msgid "Output: %s"
 msgstr "Keluaran: %s"
 
-#: cola/cmds.py:974 cola/guicmds.py:113 cola/interaction.py:73
+#: cola/interaction.py:73 cola/guicmds.py:113 cola/cmds.py:1002
 #, python-format
 msgid "Errors: %s"
 msgstr "Error: %s"
 
-#: cola/cmds.py:1017
-msgid "Sign Off"
-msgstr "Sign Off"
-
-#: cola/cmds.py:1038
-msgid "unknown"
-msgstr "tidak diketahui"
-
-#: cola/cmds.py:1051 cola/widgets/action.py:57
-msgid "Stage"
-msgstr "Stage"
-
-#: cola/cmds.py:1058
+#: cola/interaction.py:74
 #, python-format
-msgid "Staging: %s"
-msgstr "Staging: %s"
+msgid "Exit code: %s"
+msgstr "Kode exit: %s"
 
-#: cola/cmds.py:1075
-msgid "Stage Modified"
-msgstr "Stage Berubah"
+#: cola/inotify.py:57
+msgid "inotify is disabled because \"cola.inotify\" is false"
+msgstr "inotify dinonaktifkan karena \"cola.inotify\" ialah false"
 
-#: cola/cmds.py:1089
-msgid "Stage Unmerged"
-msgstr "Stage Tak Termerge"
+#: cola/inotify.py:63
+msgid ""
+"file notification: disabled\n"
+"Note: install pywin32 to enable.\n"
+msgstr ""
+"berkas pemberitahuan: dinonaktifkan\n"
+"Catatan: install pywin32 untuk mengaktifkan.\n"
 
-#: cola/cmds.py:1103
-msgid "Stage Untracked"
-msgstr "Stage Tak Terlacak"
+#: cola/inotify.py:66
+msgid ""
+"inotify: disabled\n"
+"Note: install python-pyinotify to enable inotify.\n"
+msgstr ""
+"inotify: dinonaktifkan\n"
+"Catatan: install python-pyinotify untuk mengaktifkan inotify.\n"
 
-#: cola/cmds.py:1121
-#, python-format
-msgid "Tagging \"%(revision)s\" as \"%(name)s\""
-msgstr "Menandai \"%(revision)s\" sebagai \"%(name)s\""
+#: cola/inotify.py:72
+msgid "On Debian systems try: sudo aptitude install python-pyinotify"
+msgstr "Pada sistem Debian: sudo aptitude install python-pyinotify"
 
-#: cola/cmds.py:1129
-msgid "GPG-signed"
-msgstr "tandatangan-GPG"
+#: cola/inotify.py:81
+msgid "File notification enabled."
+msgstr "Pemberitahuan berkas diaktifkan."
 
-#: cola/cmds.py:1156 cola/widgets/action.py:58
-msgid "Unstage"
-msgstr "Unstage"
-
-#: cola/cmds.py:1163
-#, python-format
-msgid "Unstaging: %s"
-msgstr "Unstaging: %s"
-
-#: cola/cmds.py:1191
-#, python-format
-msgid "Untracking: %s"
-msgstr "Untracking: %s"
-
-#: cola/cmds.py:1276
-msgid "Error Launching History Browser"
-msgstr "Errot Menjalankan Peramban Histori"
-
-#: cola/cmds.py:1277
-#, python-format
-msgid "Cannot exec \"%s\": please configure a history browser"
-msgstr "Tidak dapat menjalankan \"%s\": silahkan konfigurasi peramban histori"
-
-#: cola/difftool.py:77
-msgid "git-cola diff"
-msgstr "git-cola diff"
-
-#: cola/difftool.py:93 cola/widgets/compare.py:91
-msgid "Compare"
-msgstr "Bandingkan"
-
-#: cola/difftool.py:97 cola/qtutils.py:602 cola/widgets/about.py:68
-#: cola/widgets/about.py:128 cola/widgets/bookmarks.py:73
-#: cola/widgets/browse.py:479 cola/widgets/cfgactions.py:89
-#: cola/widgets/cfgactions.py:246 cola/widgets/compare.py:95
-#: cola/widgets/completion.py:504 cola/widgets/createbranch.py:157
-#: cola/widgets/createtag.py:119 cola/widgets/editremotes.py:70
-#: cola/widgets/grep.py:117 cola/widgets/patch.py:99 cola/widgets/prefs.py:259
-#: cola/widgets/recent.py:78 cola/widgets/remote.py:185
-#: cola/widgets/remote.py:253 cola/widgets/search.py:85
-#: cola/widgets/selectcommits.py:61 cola/widgets/startup.py:44
-#: cola/widgets/stash.py:63 cola/widgets/stash.py:64
-msgid "Close"
-msgstr "Tutup"
-
-#: cola/gitcmds.py:396
-msgid "Nothing to do"
-msgstr "Tak ada yang perlu dilakukan"
+#: cola/inotify.py:83
+msgid "inotify enabled."
+msgstr "inotify diaktifkan."
 
 #: cola/guicmds.py:25
 msgid "Delete Branch"
@@ -362,6 +123,11 @@ msgstr "Commit Cherry-Pick"
 #: cola/guicmds.py:107
 msgid "Error Creating Repository"
 msgstr "Error Membuat Repositori"
+
+#: cola/guicmds.py:108 cola/cmds.py:445 cola/widgets/remote.py:527
+#, python-format
+msgid "\"%(command)s\" returned exit status %(status)d"
+msgstr "\"%(command)s\" keluar dengan status %(status)d"
 
 #: cola/guicmds.py:110
 #, python-format
@@ -418,64 +184,288 @@ msgstr "Pilih Cabang untuk Ditinjau"
 msgid "Review"
 msgstr "Tinjau"
 
-#: cola/inotify.py:57
-msgid "inotify is disabled because \"cola.inotify\" is false"
-msgstr "inotify dinonaktifkan karena \"cola.inotify\" ialah false"
+#: cola/cmds.py:99
+msgid "Amend"
+msgstr "Ubah"
 
-#: cola/inotify.py:63
+#: cola/cmds.py:133
+msgid "Cannot Amend"
+msgstr "Tidak dapat diubah"
+
+#: cola/cmds.py:134
 msgid ""
-"file notification: disabled\n"
-"Note: install pywin32 to enable.\n"
+"You are in the middle of a merge.\n"
+"Cannot amend while merging."
 msgstr ""
-"berkas pemberitahuan: dinonaktifkan\n"
-"Catatan: install pywin32 untuk mengaktifkan.\n"
+"Anda sedang melakukan merjer.\n"
+"Tidak dapat mengubah ketika merjer"
 
-#: cola/inotify.py:66
+#: cola/cmds.py:194
+#, python-format
+msgid "PATCH %(current)d/%(count)d"
+msgstr "PATCH %(current)d/%(count)d"
+
+#: cola/cmds.py:198
+msgid "Summary:"
+msgstr "Ringkasan:"
+
+#: cola/cmds.py:207
+msgid "Patch(es) Applied"
+msgstr "Patch Diterapkan"
+
+#: cola/cmds.py:208
+#, python-format
+msgid "%d patch(es) applied."
+msgstr "%d patch diterapkan."
+
+#: cola/cmds.py:305
+msgid "Revert Unstaged Changes?"
+msgstr "Kembalikan Perubahan Belum Distag?"
+
+#: cola/cmds.py:306
 msgid ""
-"inotify: disabled\n"
-"Note: install python-pyinotify to enable inotify.\n"
+"This operation drops unstaged changes.\n"
+"These changes cannot be recovered."
 msgstr ""
-"inotify: dinonaktifkan\n"
-"Catatan: install python-pyinotify untuk mengaktifkan inotify.\n"
+"Operasi ini membuang perubahan belum distag.\n"
+"Perubahan ini tidak dapat dikembalikan"
 
-#: cola/inotify.py:72
-msgid "On Debian systems try: sudo aptitude install python-pyinotify"
-msgstr "Pada sistem Debian: sudo aptitude install python-pyinotify"
+#: cola/cmds.py:308
+msgid "Revert the unstaged changes?"
+msgstr "Kembalikan perubahan belum distag?"
 
-#: cola/inotify.py:81
-msgid "File notification enabled."
-msgstr "Pemberitahuan berkas diaktifkan."
+#: cola/cmds.py:309
+msgid "Revert Unstaged Changes"
+msgstr "Kembalikan Perubahan Belum Distag"
 
-#: cola/inotify.py:83
-msgid "inotify enabled."
-msgstr "inotify diaktifkan."
+#: cola/cmds.py:318 cola/widgets/status.py:659
+msgid "No files selected for checkout from HEAD."
+msgstr "Tidak ada berkas terpilih untuk checkout dari HEAD."
 
-#: cola/interaction.py:54 cola/widgets/main.py:292
-msgid "Continue"
-msgstr "Lanjutkan"
-
-#: cola/interaction.py:64
+#: cola/cmds.py:348
 #, python-format
-msgid "Run %s?"
-msgstr "Jalankan %s?"
+msgid "Created commit: %s"
+msgstr "Buat commit: %s"
 
-#: cola/interaction.py:65
+#: cola/cmds.py:350
 #, python-format
-msgid "Run the \"%s\" command?"
-msgstr "Jalankan perintah \"%s\"?"
+msgid "Commit failed: %s"
+msgstr "Commit gagal: %s"
 
-#: cola/interaction.py:67 cola/widgets/cfgactions.py:247
-msgid "Run"
-msgstr "Jalankan"
+#: cola/cmds.py:406 cola/cmds.py:1353
+msgid "Error"
+msgstr "Error"
 
-#: cola/interaction.py:74
+#: cola/cmds.py:407
 #, python-format
-msgid "Exit code: %s"
-msgstr "Kode exit: %s"
+msgid "Deleting \"%s\" failed"
+msgstr "Gagal menghapus \"%s\""
+
+#: cola/cmds.py:440
+msgid "Remote Branch Deleted"
+msgstr "Cabang Hulu Dihapus"
+
+#: cola/cmds.py:441
+#, python-format
+msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
+msgstr "\"%(branch)s\" telah dihapus dari \"%(remote)s\"."
+
+#: cola/cmds.py:448
+msgid "Error Deleting Remote Branch"
+msgstr "Error menghapus Cabang Hulu"
+
+#: cola/cmds.py:527 cola/cmds.py:633
+msgid "Launch Editor"
+msgstr "Jalankan Penyunting"
+
+#: cola/cmds.py:563
+#, python-format
+msgid "Cannot exec \"%s\": please configure your editor"
+msgstr "Tidak dapat mengeksekusi \"%s\": silahkan konfigurasi editor Anda"
+
+#: cola/cmds.py:566
+msgid "Error Editing File"
+msgstr "Error Menyunting Berkas"
+
+#: cola/cmds.py:588
+msgid "Launch Diff Tool"
+msgstr "Jalankan Alat Diff"
+
+#: cola/cmds.py:615
+msgid "Launch Terminal"
+msgstr "Jalankan Terminal"
+
+#: cola/cmds.py:654
+msgid "Error: Cannot find commit template"
+msgstr "Error: Tidak dapat melakukan commit templat"
+
+#: cola/cmds.py:655
+#, python-format
+msgid "%s: No such file or directory."
+msgstr "%s: Berkas atau direktori tidak ada."
+
+#: cola/cmds.py:674
+msgid "Error: Unconfigured commit template"
+msgstr "Error: Commit templat belum dikonfigurasi"
+
+#: cola/cmds.py:675
+msgid ""
+"A commit template has not been configured.\n"
+"Use \"git config\" to define \"commit.template\"\n"
+"so that it points to a commit template."
+msgstr ""
+"Templat commit belum dikonfigurasi.\n"
+"Gunakan \"git config\" untuk menentukan \"commit.template\"\n"
+"agar mengarah ke templat commit."
+
+#: cola/cmds.py:737
+msgid "Open Using Default Application"
+msgstr "Buka dengan Aplikasi Bawaan"
+
+#: cola/cmds.py:760
+msgid "Open Parent Directory"
+msgstr "Bukan Direktori di Atasnya"
+
+#: cola/cmds.py:817
+#, python-format
+msgid "Error: could not clone \"%s\""
+msgstr "Error: tidak bisa kloning \"%s\""
+
+#: cola/cmds.py:818
+#, python-format
+msgid "git clone returned exit code %s"
+msgstr "git clone keluar kode %s"
+
+#: cola/cmds.py:865
+#, python-format
+msgid "Rebase onto %s"
+msgstr "Rebase ke %s"
+
+#: cola/cmds.py:866 cola/widgets/main.py:395
+msgid "Rebase"
+msgstr "Rebase"
+
+#: cola/cmds.py:880
+msgid "Edit Rebase"
+msgstr "Sunting Rebase"
+
+#: cola/cmds.py:881 cola/widgets/archive.py:123 cola/widgets/bookmarks.py:67
+#: cola/widgets/browse.py:485 cola/widgets/stash.py:55
+msgid "Save"
+msgstr "Simpan"
+
+#: cola/cmds.py:925 cola/widgets/action.py:59 cola/widgets/recent.py:55
+#: cola/widgets/recent.py:124 cola/widgets/editremotes.py:64
+#: cola/widgets/grep.py:107
+msgid "Refresh"
+msgstr "Segarkan"
+
+#: cola/cmds.py:953
+#, python-format
+msgid "Run \"%s\"?"
+msgstr "Jalankan \"%s\"?"
+
+#: cola/cmds.py:960
+msgid "Please select a file"
+msgstr "Silahkan pilih berkas"
+
+#: cola/cmds.py:961
+#, python-format
+msgid "\"%s\" requires a selected file."
+msgstr "\"%s\" berkas terpilih diperlukan."
+
+#: cola/cmds.py:973
+msgid "Invalid Revision"
+msgstr "Revisi Salah"
+
+#: cola/cmds.py:974
+msgid "The revision expression cannot be empty."
+msgstr "Ekspresi revisi tidak boleh kosong."
+
+#: cola/cmds.py:989
+#, python-format
+msgid "Running command: %s"
+msgstr "Menjalankan perintah: %s"
+
+#: cola/cmds.py:1045
+msgid "Sign Off"
+msgstr "Sign Off"
+
+#: cola/cmds.py:1066
+msgid "unknown"
+msgstr "tidak diketahui"
+
+#: cola/cmds.py:1079 cola/widgets/action.py:57
+msgid "Stage"
+msgstr "Stage"
+
+#: cola/cmds.py:1086
+#, python-format
+msgid "Staging: %s"
+msgstr "Staging: %s"
+
+#: cola/cmds.py:1103
+msgid "Stage Modified"
+msgstr "Stage Berubah"
+
+#: cola/cmds.py:1117
+msgid "Stage Unmerged"
+msgstr "Stage Tak Termerge"
+
+#: cola/cmds.py:1131
+msgid "Stage Untracked"
+msgstr "Stage Tak Terlacak"
+
+#: cola/cmds.py:1149
+#, python-format
+msgid "Tagging \"%(revision)s\" as \"%(name)s\""
+msgstr "Menandai \"%(revision)s\" sebagai \"%(name)s\""
+
+#: cola/cmds.py:1157
+msgid "GPG-signed"
+msgstr "tandatangan-GPG"
+
+#: cola/cmds.py:1184 cola/widgets/action.py:58
+msgid "Unstage"
+msgstr "Unstage"
+
+#: cola/cmds.py:1191
+#, python-format
+msgid "Unstaging: %s"
+msgstr "Unstaging: %s"
+
+#: cola/cmds.py:1219
+#, python-format
+msgid "Untracking: %s"
+msgstr "Untracking: %s"
+
+#: cola/cmds.py:1304
+msgid "Error Launching History Browser"
+msgstr "Errot Menjalankan Peramban Histori"
+
+#: cola/cmds.py:1305
+#, python-format
+msgid "Cannot exec \"%s\": please configure a history browser"
+msgstr "Tidak dapat menjalankan \"%s\": silahkan konfigurasi peramban histori"
 
 #: cola/qtutils.py:489
 msgid "Close..."
 msgstr "Tutup..."
+
+#: cola/qtutils.py:602 cola/difftool.py:97 cola/widgets/patch.py:99
+#: cola/widgets/prefs.py:259 cola/widgets/createtag.py:119
+#: cola/widgets/bookmarks.py:73 cola/widgets/search.py:85
+#: cola/widgets/startup.py:44 cola/widgets/recent.py:78
+#: cola/widgets/browse.py:484 cola/widgets/stash.py:63
+#: cola/widgets/stash.py:64 cola/widgets/selectcommits.py:61
+#: cola/widgets/completion.py:504 cola/widgets/createbranch.py:157
+#: cola/widgets/about.py:68 cola/widgets/about.py:128
+#: cola/widgets/compare.py:95 cola/widgets/editremotes.py:70
+#: cola/widgets/grep.py:117 cola/widgets/cfgactions.py:89
+#: cola/widgets/cfgactions.py:246 cola/widgets/remote.py:185
+#: cola/widgets/remote.py:255
+msgid "Close"
+msgstr "Tutup"
 
 #: cola/qtutils.py:605 cola/qtutils.py:645
 msgid "Detach"
@@ -484,6 +474,18 @@ msgstr "Lepaskan"
 #: cola/qtutils.py:643
 msgid "Attach"
 msgstr "Lampirkan"
+
+#: cola/gitcmds.py:413
+msgid "Nothing to do"
+msgstr "Tak ada yang perlu dilakukan"
+
+#: cola/difftool.py:77
+msgid "git-cola diff"
+msgstr "git-cola diff"
+
+#: cola/difftool.py:93 cola/widgets/compare.py:91
+msgid "Compare"
+msgstr "Bandingkan"
 
 #: cola/models/browse.py:38 cola/widgets/createtag.py:64
 #: cola/widgets/editremotes.py:234
@@ -541,292 +543,51 @@ msgstr "Stagged"
 msgid "Changed Upstream"
 msgstr "Ubah Upstream"
 
-#: cola/widgets/about.py:49
-msgid "About git-cola"
-msgstr "Tentang git-cola"
+#: cola/widgets/patch.py:68
+msgid "Apply Patches"
+msgstr "Terapkan Patch"
 
-#: cola/widgets/about.py:99
+#: cola/widgets/patch.py:77
 msgid ""
-"This PyQt4 does not include QtWebKit.\n"
-"The keyboard shortcuts feature is unavailable."
+"\n"
+"            <p>\n"
+"                Drag and drop or use the <strong>Add</strong> button to add\n"
+"                patches to the list\n"
+"            </p>\n"
+"            "
 msgstr ""
-"PyQt4 ini tidak menyertakan QtWebKit.\n"
-"Fitur pintasan papan tik tak tersedia."
+"\n"
+"            <p>\n"
+"                Drag dan drop atau gunakan tombol <strong>Tambah</strong> "
+"untuk menambah\n"
+"                patch ke daftar\n"
+"            </p>\n"
+"            "
 
-#: cola/widgets/about.py:106
-msgid "hotkeys.html"
-msgstr "hotkeys.html"
-
-#: cola/widgets/about.py:124
-msgid "Shortcuts"
-msgstr "Pintasan"
-
-#: cola/widgets/action.py:60 cola/widgets/main.py:208
-msgid "Fetch..."
-msgstr "Ambil..."
-
-#: cola/widgets/action.py:61 cola/widgets/main.py:210
-msgid "Push..."
-msgstr "Tekan..."
-
-#: cola/widgets/action.py:62 cola/widgets/main.py:212
-msgid "Pull..."
-msgstr "Tarik..."
-
-#: cola/widgets/action.py:63 cola/widgets/main.py:223
-msgid "Stash..."
-msgstr "Stash..."
-
-#: cola/widgets/archive.py:103
-msgid "Save Archive"
-msgstr "Simpan Arsip"
-
-#: cola/widgets/archive.py:120 cola/widgets/editremotes.py:218
-#: cola/widgets/merge.py:80
-msgid "Cancel"
-msgstr "Batalkan"
-
-#: cola/widgets/archive.py:127
-msgid "Prefix"
-msgstr "Awalan"
-
-#: cola/widgets/archive.py:132
-msgid "Advanced"
-msgstr "Mahir"
-
-#: cola/widgets/archive.py:199 cola/widgets/browse.py:411
-msgid "File Saved"
-msgstr "Berkas Tersimpan"
-
-#: cola/widgets/archive.py:200 cola/widgets/browse.py:412
-#, python-format
-msgid "File saved to \"%s\""
-msgstr "Berkas disimpan di \"%s\""
-
-#: cola/widgets/archive.py:207
-msgid "Overwrite File?"
-msgstr "Timpa Berkas?"
-
-#: cola/widgets/archive.py:208
-#, python-format
-msgid "The file \"%s\" exists and will be overwritten."
-msgstr "Berkas \"%s\" sudah ada dan akan ditimpa."
-
-#: cola/widgets/archive.py:209
-#, python-format
-msgid "Overwrite \"%s\"?"
-msgstr "Timpa \"%s\""
-
-#: cola/widgets/archive.py:210
-msgid "Overwrite"
-msgstr "Timpa"
-
-#: cola/widgets/bookmarks.py:35 cola/widgets/main.py:102
-msgid "Bookmarks"
-msgstr "Markah"
-
-#: cola/widgets/bookmarks.py:50 cola/widgets/bookmarks.py:139
-#: cola/widgets/bookmarks.py:185
-msgid "Open"
-msgstr "Buka"
-
-#: cola/widgets/bookmarks.py:55 cola/widgets/patch.py:88
-#: cola/widgets/patch.py:102
+#: cola/widgets/patch.py:88 cola/widgets/patch.py:102
+#: cola/widgets/bookmarks.py:55
 msgid "Add"
 msgstr "Tambah"
 
-#: cola/widgets/bookmarks.py:107
-msgid "Path to git repository"
-msgstr "Lokasi repositori git"
+#: cola/widgets/patch.py:89
+msgid "Add patches (+)"
+msgstr "Tambahkan patch (+)"
 
-#: cola/widgets/bookmarks.py:108
-msgid "Enter Git Repository"
-msgstr "Masukkan Repositori Git"
+#: cola/widgets/patch.py:92 cola/widgets/patch.py:106
+msgid "Remove"
+msgstr "Hapus"
 
-#: cola/widgets/bookmarks.py:143 cola/widgets/main.py:198
-msgid "Bookmarks..."
-msgstr "Markah..."
+#: cola/widgets/patch.py:93
+msgid "Remove selected (Delete)"
+msgstr "Hapus yang terpilih (Hapus)"
 
-#: cola/widgets/bookmarks.py:189
-msgid "Open in New Window"
-msgstr "Bukan di Jendela Baru"
+#: cola/widgets/patch.py:96 cola/widgets/stash.py:51
+msgid "Apply"
+msgstr "Terapkan"
 
-#: cola/widgets/bookmarks.py:199 cola/widgets/grep.py:102
-#: cola/widgets/recent.py:72
-msgid "Edit"
-msgstr "Sunting"
-
-#: cola/widgets/bookmarks.py:213 cola/widgets/diff.py:201
-msgid "Copy"
-msgstr "Salin"
-
-#: cola/widgets/browse.py:73 cola/widgets/main.py:571
-#, python-format
-msgid "Repository: %s"
-msgstr "Repositori: %s"
-
-#: cola/widgets/browse.py:75 cola/widgets/main.py:573
-#, python-format
-msgid "Branch: %s"
-msgstr "Cabang: %s"
-
-#: cola/widgets/browse.py:78
-#, python-format
-msgid "%(project)s: %(branch)s - Browse"
-msgstr "%(project)s: %(branch)s - Jelajah"
-
-#: cola/widgets/browse.py:80
-msgid "(Amending)"
-msgstr "(Mengubah)"
-
-#: cola/widgets/browse.py:107
-msgid "View History..."
-msgstr "Tampilkan Histori..."
-
-#: cola/widgets/browse.py:108
-msgid "View history for selected path(s)."
-msgstr "Tampilkan histori untuk lokasi terpilih."
-
-#: cola/widgets/browse.py:112 cola/widgets/status.py:523
-#: cola/widgets/status.py:553 cola/widgets/status.py:611
-msgid "Stage Selected"
-msgstr "Stage Terpilih"
-
-#: cola/widgets/browse.py:113
-msgid "Stage selected path(s) for commit."
-msgstr "Stage lokasi terpilih untuk commit."
-
-#: cola/widgets/browse.py:118 cola/widgets/status.py:466
-#: cola/widgets/status.py:511
-msgid "Unstage Selected"
-msgstr "Unstage Terpilih"
-
-#: cola/widgets/browse.py:119
-msgid "Remove selected path(s) from the staging area."
-msgstr "Buang lokasi terpilih dari staging area."
-
-#: cola/widgets/browse.py:124
-msgid "Untrack Selected"
-msgstr "Jangan Lacak Terpilih"
-
-#: cola/widgets/browse.py:125
-msgid "Stop tracking path(s)"
-msgstr "Hentikan melacak lokasi"
-
-#: cola/widgets/browse.py:130
-msgid "Launch git-difftool on the current path."
-msgstr "Jalankan git-difftool pada lokasi saat ini."
-
-#: cola/widgets/browse.py:135
-msgid "Diff Against Predecessor..."
-msgstr "Diff Pada Predessor..."
-
-#: cola/widgets/browse.py:136
-msgid "Launch git-difftool against previous versions."
-msgstr "Jalankan git-difftool pada versi sebelumnya."
-
-#: cola/widgets/browse.py:140
-msgid "Revert Uncommitted Changes..."
-msgstr "Kembalikan Perubahan Tak Tercommit..."
-
-#: cola/widgets/browse.py:141
-msgid "Revert changes to selected path(s)."
-msgstr "Kembalikan perubahan ke lokasi terpilih."
-
-#: cola/widgets/browse.py:146
-msgid "Edit selected path(s)."
-msgstr "Sunting lokasi terpilih."
-
-#: cola/widgets/browse.py:322 cola/widgets/status.py:645
-msgid "Revert Uncommitted Changes?"
-msgstr "Kembalikan Perubahan Tak Tercommit?"
-
-#: cola/widgets/browse.py:323 cola/widgets/diff.py:320
-#: cola/widgets/diff.py:333 cola/widgets/status.py:646
-msgid ""
-"This operation drops uncommitted changes.\n"
-"These changes cannot be recovered."
-msgstr ""
-"Operasi ini akan menghilangkan perubahan tak tercommit.\n"
-"Perubahan ini tidak dapat direkoveri."
-
-#: cola/widgets/browse.py:325 cola/widgets/diff.py:322
-#: cola/widgets/diff.py:335 cola/widgets/status.py:648
-msgid "Revert the uncommitted changes?"
-msgstr "Kembalikan perubahan tak tercommit?"
-
-#: cola/widgets/browse.py:326 cola/widgets/status.py:649
-msgid "Revert Uncommitted Changes"
-msgstr "Kembalikan Perubahan Tak Tercommit"
-
-#: cola/widgets/browse.py:376
-msgid "Select Previous Version"
-msgstr "Pilih Versi Sebelumnya"
-
-#: cola/widgets/browse.py:404
-#, python-format
-msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
-msgstr "Simpan \"%(filename)s\" dari \"%(ref)s\" ke \"%(destination)s\""
-
-#: cola/widgets/browse.py:425
-#, python-format
-msgid "Browsing %s"
-msgstr "Ramban %s"
-
-#: cola/widgets/browse.py:443
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "Pilih berkas dari \"%s\""
-
-#: cola/widgets/browse.py:452
-msgid "Select File"
-msgstr "Pilih Berkas"
-
-#: cola/widgets/browse.py:480 cola/widgets/selectcommits.py:56
-msgid "Select"
-msgstr "Pilih"
-
-#: cola/widgets/cfgactions.py:87 cola/widgets/main.py:298
-msgid "Abort"
-msgstr "Batal"
-
-#: cola/widgets/cfgactions.py:154 cola/widgets/cfgactions.py:158
-msgid "Abort Action"
-msgstr "Batalkan Aksi"
-
-#: cola/widgets/cfgactions.py:155
-msgid ""
-"An action is still running.\n"
-"Terminating it could result in data loss."
-msgstr ""
-"Aksi ini masih berjalan.\n"
-"Mengakhiri ini dapat menghilangkan data."
-
-#: cola/widgets/cfgactions.py:157
-msgid "Abort the action?"
-msgstr "Batalkan aksi?"
-
-#: cola/widgets/cfgactions.py:208
-msgid "Arguments"
-msgstr "Argumen"
-
-#: cola/widgets/cfgactions.py:227 cola/widgets/merge.py:58
-#: cola/widgets/remote.py:148
-msgid "Local Branch"
-msgstr "Cabang Lokal"
-
-#: cola/widgets/cfgactions.py:228 cola/widgets/merge.py:61
-msgid "Tracking Branch"
-msgstr "Melacak Cabang"
-
-#: cola/widgets/cfgactions.py:229 cola/widgets/createbranch.py:120
-#: cola/widgets/merge.py:63
-msgid "Tag"
-msgstr "Tag"
-
-#: cola/widgets/cfgactions.py:233 cola/widgets/createtag.py:100
-msgid "Revision"
-msgstr "Revisi"
+#: cola/widgets/patch.py:151
+msgid "Select patch file(s)..."
+msgstr "Pilih berkas patch..."
 
 #: cola/widgets/commitmsg.py:53
 msgid "Sign off on this commit"
@@ -872,7 +633,7 @@ msgstr "Muat Pesan Commit Sebelumnya"
 msgid "Fixup Previous Commit"
 msgstr "Perbaiki Commit Sebelumnya"
 
-#: cola/widgets/commitmsg.py:142 cola/widgets/status.py:125
+#: cola/widgets/commitmsg.py:142 cola/widgets/status.py:126
 msgid "Move Down"
 msgstr "Pindah Ke Bawah"
 
@@ -971,36 +732,848 @@ msgstr "Ringkasan commit"
 msgid "Extended description..."
 msgstr "Perluaskan penjelasan..."
 
-#: cola/widgets/compare.py:38
-msgid "*** Branch Point ***"
-msgstr "*** Poin Cabang ***"
+#: cola/widgets/prefs.py:132
+msgid "User Name"
+msgstr "Nama Pengguna"
 
-#: cola/widgets/compare.py:39
-msgid "*** Sandbox ***"
-msgstr "*** Bak Pasir ***"
+#: cola/widgets/prefs.py:133
+msgid "Email Address"
+msgstr "Alamat Email"
 
-#: cola/widgets/compare.py:40 cola/widgets/compare.py:63
-#: cola/widgets/compare.py:69
-msgid "Local"
-msgstr "Lokal"
+#: cola/widgets/prefs.py:134
+msgid "Merge Verbosity"
+msgstr "Verbositas Merge"
 
-#: cola/widgets/compare.py:45
-msgid "Branch Diff Viewer"
-msgstr "Penampil Diff Cabang"
+#: cola/widgets/prefs.py:135
+msgid "Number of Diff Context Lines"
+msgstr "Jumlah Baris Context Diff"
 
-#: cola/widgets/compare.py:64 cola/widgets/compare.py:70
-#: cola/widgets/remote.py:155
-msgid "Remote"
-msgstr "Hulu"
+#: cola/widgets/prefs.py:136
+msgid "Summarize Merge Commits"
+msgstr "Ringkasan Merge Commit"
 
-#: cola/widgets/compare.py:99
-msgid "File Differences"
-msgstr "Perbedaan Berkas"
+#: cola/widgets/prefs.py:137
+msgid "Show Diffstat After Merge"
+msgstr "Tampilkan Diffstat setelah Merge"
 
-#: cola/widgets/createbranch.py:85 cola/widgets/createbranch.py:96
-#: cola/widgets/createbranch.py:153 cola/widgets/dag.py:125
+#: cola/widgets/prefs.py:138
+msgid "Display Untracked Files"
+msgstr "Tampilkan Berkas Tak Terlacak"
+
+#: cola/widgets/prefs.py:179
+msgid "Fixed-Width Font"
+msgstr "Lebar-Tetap Font"
+
+#: cola/widgets/prefs.py:180
+msgid "Font Size"
+msgstr "Ukuran Font"
+
+#: cola/widgets/prefs.py:181
+msgid "Tab Width"
+msgstr "Lebar Tab"
+
+#: cola/widgets/prefs.py:182
+msgid "Text Width"
+msgstr "Lebar Teks"
+
+#: cola/widgets/prefs.py:184
+msgid "Editor"
+msgstr "Penyunting"
+
+#: cola/widgets/prefs.py:185
+msgid "History Browser"
+msgstr "Penjelajah Histori"
+
+#: cola/widgets/prefs.py:186
+msgid "Diff Tool"
+msgstr "Alat Diff"
+
+#: cola/widgets/prefs.py:187
+msgid "Merge Tool"
+msgstr "Alat Merger"
+
+#: cola/widgets/prefs.py:188
+msgid "Keep *.orig Merge Backups"
+msgstr "Biarkan *.orig Merge Backup"
+
+#: cola/widgets/prefs.py:189
+msgid "Save GUI Settings"
+msgstr "Simpan Pengaturan GUI"
+
+#: cola/widgets/prefs.py:237 cola/widgets/main.py:170
+msgid "Preferences"
+msgstr "Preferensi"
+
+#: cola/widgets/prefs.py:245
+msgid "All Repositories"
+msgstr "Semua Repositori"
+
+#: cola/widgets/prefs.py:246
+msgid "Current Repository"
+msgstr "Repositori Saat Ini"
+
+#: cola/widgets/prefs.py:247
+msgid "Settings"
+msgstr "Pengaturan"
+
+#: cola/widgets/action.py:60 cola/widgets/main.py:208
+msgid "Fetch..."
+msgstr "Ambil..."
+
+#: cola/widgets/action.py:61 cola/widgets/main.py:210
+msgid "Push..."
+msgstr "Tekan..."
+
+#: cola/widgets/action.py:62 cola/widgets/main.py:212
+msgid "Pull..."
+msgstr "Tarik..."
+
+#: cola/widgets/action.py:63 cola/widgets/main.py:223
+msgid "Stash..."
+msgstr "Stash..."
+
+#: cola/widgets/archive.py:103
+msgid "Save Archive"
+msgstr "Simpan Arsip"
+
+#: cola/widgets/archive.py:120 cola/widgets/merge.py:85
+#: cola/widgets/editremotes.py:218
+msgid "Cancel"
+msgstr "Batalkan"
+
+#: cola/widgets/archive.py:127
+msgid "Prefix"
+msgstr "Awalan"
+
+#: cola/widgets/archive.py:132
+msgid "Advanced"
+msgstr "Mahir"
+
+#: cola/widgets/archive.py:199 cola/widgets/browse.py:416
+msgid "File Saved"
+msgstr "Berkas Tersimpan"
+
+#: cola/widgets/archive.py:200 cola/widgets/browse.py:417
+#, python-format
+msgid "File saved to \"%s\""
+msgstr "Berkas disimpan di \"%s\""
+
+#: cola/widgets/archive.py:207
+msgid "Overwrite File?"
+msgstr "Timpa Berkas?"
+
+#: cola/widgets/archive.py:208
+#, python-format
+msgid "The file \"%s\" exists and will be overwritten."
+msgstr "Berkas \"%s\" sudah ada dan akan ditimpa."
+
+#: cola/widgets/archive.py:209
+#, python-format
+msgid "Overwrite \"%s\"?"
+msgstr "Timpa \"%s\""
+
+#: cola/widgets/archive.py:210
+msgid "Overwrite"
+msgstr "Timpa"
+
+#: cola/widgets/filelist.py:18
+msgid "Filename"
+msgstr "Namaberkas"
+
+#: cola/widgets/filelist.py:18
+msgid "Additions"
+msgstr "Penambahan"
+
+#: cola/widgets/filelist.py:18
+msgid "Deletions"
+msgstr "Penghapusan"
+
+#: cola/widgets/createtag.py:49 cola/widgets/createtag.py:114
+#: cola/widgets/dag.py:131
+msgid "Create Tag"
+msgstr "Buat Tag"
+
+#: cola/widgets/createtag.py:68
+msgid "vX.Y.Z"
+msgstr "vX.Y.Z"
+
+#: cola/widgets/createtag.py:70
+msgid "Specifies the tag name"
+msgstr "Tentukan nama tag"
+
+#: cola/widgets/createtag.py:76
+msgid "Sign Tag"
+msgstr "Tandai Tag"
+
+#: cola/widgets/createtag.py:82
+msgid "Whether to sign the tag (git tag -s)"
+msgstr "Kalau menandai tag (git tag -s)"
+
+#: cola/widgets/createtag.py:93
+msgid "Tag message..."
+msgstr "Pesan tag..."
+
+#: cola/widgets/createtag.py:94
+msgid "Specifies the tag message"
+msgstr "Tentukan pesan tag"
+
+#: cola/widgets/createtag.py:100 cola/widgets/cfgactions.py:233
+msgid "Revision"
+msgstr "Revisi"
+
+#: cola/widgets/createtag.py:106
+msgid "Specifies the SHA-1 to tag"
+msgstr "Tentukan SHA-1 untuk di-tag"
+
+#: cola/widgets/createtag.py:136
+msgid "Missing Revision"
+msgstr "Revisi Tidak Ditemukan"
+
+#: cola/widgets/createtag.py:137
+msgid "Please specify a revision to tag."
+msgstr "Tentukan revisi untuk di-tag"
+
+#: cola/widgets/createtag.py:140
+msgid "Missing Name"
+msgstr "Nama Tidak Ditemukan"
+
+#: cola/widgets/createtag.py:141
+msgid "Please specify a name for the new tag."
+msgstr "Silahkan tentukan nama untuk tag baru."
+
+#: cola/widgets/createtag.py:144
+msgid "Missing Tag Message"
+msgstr "Pesan Tag Tidak Ditemukan"
+
+#: cola/widgets/createtag.py:145
+msgid "Tag-signing was requested but the tag message is empty."
+msgstr "Penandaan tag diperlukan tetapi pesan tag kosong."
+
+#: cola/widgets/createtag.py:147
+msgid ""
+"An unsigned, lightweight tag will be created instead.\n"
+"Create an unsigned tag?"
+msgstr ""
+"Tak bertanda, tag ringan akan dibuat.\n"
+"Buat tag tak bertanda?"
+
+#: cola/widgets/createtag.py:150
+msgid "Create Unsigned Tag"
+msgstr "Buat Tag tak Bertanda"
+
+#: cola/widgets/createtag.py:159
+msgid "Tag Created"
+msgstr "Tag Telah Dibuat"
+
+#: cola/widgets/createtag.py:160
+#, python-format
+msgid "Created a new tag named \"%s\""
+msgstr "Buat tag baru bernama \"%s\""
+
+#: cola/widgets/createtag.py:164
+#, python-format
+msgid "Error: could not create tag \"%s\""
+msgstr "Error: tidak dapat membuat tag \"%s\""
+
+#: cola/widgets/createtag.py:165
+#, python-format
+msgid "git tag returned exit code %s"
+msgstr "git tag menghasilkan kode exit %s"
+
+#: cola/widgets/bookmarks.py:35 cola/widgets/main.py:102
+msgid "Bookmarks"
+msgstr "Markah"
+
+#: cola/widgets/bookmarks.py:50 cola/widgets/bookmarks.py:139
+#: cola/widgets/bookmarks.py:185
+msgid "Open"
+msgstr "Buka"
+
+#: cola/widgets/bookmarks.py:107
+msgid "Path to git repository"
+msgstr "Lokasi repositori git"
+
+#: cola/widgets/bookmarks.py:108
+msgid "Enter Git Repository"
+msgstr "Masukkan Repositori Git"
+
+#: cola/widgets/bookmarks.py:143 cola/widgets/main.py:198
+msgid "Bookmarks..."
+msgstr "Markah..."
+
+#: cola/widgets/bookmarks.py:189
+msgid "Open in New Window"
+msgstr "Bukan di Jendela Baru"
+
+#: cola/widgets/bookmarks.py:199 cola/widgets/recent.py:72
+#: cola/widgets/grep.py:102
+msgid "Edit"
+msgstr "Sunting"
+
+#: cola/widgets/bookmarks.py:213 cola/widgets/diff.py:201
+msgid "Copy"
+msgstr "Salin"
+
+#: cola/widgets/search.py:44 cola/widgets/search.py:62 cola/widgets/grep.py:70
+msgid "Search"
+msgstr "Cari"
+
+#: cola/widgets/search.py:48
+msgid "Browse..."
+msgstr "Jelajah..."
+
+#: cola/widgets/search.py:54 cola/widgets/search.py:59
+msgid "yyyy-MM-dd"
+msgstr "dd-MM-yyyy"
+
+#: cola/widgets/search.py:82 cola/widgets/dag.py:137
+msgid "Cherry Pick"
+msgstr "Cherry Pick"
+
+#: cola/widgets/search.py:224
+msgid "Search by Expression"
+msgstr "Cari berdasarkan Ekspresi"
+
+#: cola/widgets/search.py:225
+msgid "Search by Path"
+msgstr "Cari berdasarkan Lokasi"
+
+#: cola/widgets/search.py:226
+msgid "Search Commit Messages"
+msgstr "Cari Pesan Commit"
+
+#: cola/widgets/search.py:227
+msgid "Search Diffs"
+msgstr "Cari Diff"
+
+#: cola/widgets/search.py:228
+msgid "Search Authors"
+msgstr "Cari Penulis"
+
+#: cola/widgets/search.py:229
+msgid "Search Committers"
+msgstr "Cari Commiter"
+
+#: cola/widgets/search.py:230
+msgid "Search Date Range"
+msgstr "Cari Rentang Tanggal"
+
+#: cola/widgets/search.py:323
+msgid "Choose Path(s)"
+msgstr "Pilih Lokasi"
+
+#: cola/widgets/log.py:37
+#, python-format
+msgid "exit code %s"
+msgstr "kode keluar %s"
+
+#: cola/widgets/startup.py:28
+msgid "git-cola"
+msgstr "git-cola"
+
+#: cola/widgets/startup.py:35
+msgid "New..."
+msgstr "Baru..."
+
+#: cola/widgets/startup.py:38 cola/widgets/main.py:215
+msgid "Open..."
+msgstr "Buka..."
+
+#: cola/widgets/startup.py:41 cola/widgets/main.py:226
+msgid "Clone..."
+msgstr "Clon...."
+
+#: cola/widgets/startup.py:59
+msgid "Select Repository..."
+msgstr "Pilih Repository..."
+
+#: cola/widgets/startup.py:64
+msgid "Select manually..."
+msgstr "Pilih secara manual..."
+
+#: cola/widgets/recent.py:39
+msgid "Recently Modified Files"
+msgstr "Berkas yang Baru Dimodifikasi"
+
+#: cola/widgets/recent.py:49
+msgid " commits ago"
+msgstr " commit yang lalu"
+
+#: cola/widgets/recent.py:52
+msgid "Showing changes since"
+msgstr "Menampilkan perubahan sejak"
+
+#: cola/widgets/recent.py:64
+msgid "Expand all"
+msgstr "Bentangkan semua"
+
+#: cola/widgets/recent.py:68
+msgid "Collapse all"
+msgstr "Gulung semua"
+
+#: cola/widgets/merge.py:29 cola/widgets/main.py:205
+msgid "Abort Merge..."
+msgstr "Batalkan Penggabungan..."
+
+#: cola/widgets/merge.py:30
+msgid ""
+"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+"Membatalkan merge saat ini akan menghilangkan *SEMUA* perubahan commit.\n"
+"Mengembalikan perubahan yang belum dicommit tidak dimungkinkan."
+
+#: cola/widgets/merge.py:33
+msgid "Aborting the current merge?"
+msgstr "Batalkan merge saat ini?"
+
+#: cola/widgets/merge.py:34
+msgid "Abort Merge"
+msgstr "Batalkan Merge"
+
+#: cola/widgets/merge.py:53
+msgid "Revision To Merge"
+msgstr "Revisi untuk Dimerge"
+
+#: cola/widgets/merge.py:58 cola/widgets/cfgactions.py:227
+#: cola/widgets/remote.py:148
+msgid "Local Branch"
+msgstr "Cabang Lokal"
+
+#: cola/widgets/merge.py:61 cola/widgets/cfgactions.py:228
+msgid "Tracking Branch"
+msgstr "Melacak Cabang"
+
+#: cola/widgets/merge.py:63 cola/widgets/createbranch.py:120
+#: cola/widgets/cfgactions.py:229
+msgid "Tag"
+msgstr "Tag"
+
+#: cola/widgets/merge.py:69
+msgid "Visualize"
+msgstr "Visualisasikan"
+
+#: cola/widgets/merge.py:72
+msgid "Squash"
+msgstr "Squash"
+
+#: cola/widgets/merge.py:75
+#, fuzzy
+msgid "No fast forward"
+msgstr "Hanya Fast Forward"
+
+#: cola/widgets/merge.py:80 cola/widgets/main.py:118
+msgid "Commit"
+msgstr "Commit"
+
+#: cola/widgets/merge.py:88
+msgid "Merge"
+msgstr "Merge"
+
+#: cola/widgets/merge.py:152
+#, python-format
+msgid "Merge \"%(revision)s\" into \"%(branch)s\""
+msgstr "Merge \"%(revision)s\" ke \"%(branch)s\""
+
+#: cola/widgets/merge.py:155
+#, python-format
+msgid "Merge into \"%s\""
+msgstr "Merge ke \"%s\""
+
+#: cola/widgets/merge.py:206 cola/widgets/merge.py:215
+msgid "No Revision Specified"
+msgstr "Revisi tidak Ditentukan"
+
+#: cola/widgets/merge.py:207
+msgid "You must specify a revision to view."
+msgstr "Anda harus tentukan revisi untuk ditampilkan."
+
+#: cola/widgets/merge.py:216
+msgid "You must specify a revision to merge."
+msgstr "Anda harus tentukan revisi untuk dimerge."
+
+#: cola/widgets/browse.py:73 cola/widgets/main.py:573
+#, python-format
+msgid "Repository: %s"
+msgstr "Repositori: %s"
+
+#: cola/widgets/browse.py:75 cola/widgets/main.py:575
+#, python-format
+msgid "Branch: %s"
+msgstr "Cabang: %s"
+
+#: cola/widgets/browse.py:78
+#, python-format
+msgid "%(project)s: %(branch)s - Browse"
+msgstr "%(project)s: %(branch)s - Jelajah"
+
+#: cola/widgets/browse.py:80
+msgid "(Amending)"
+msgstr "(Mengubah)"
+
+#: cola/widgets/browse.py:109
+msgid "View History..."
+msgstr "Tampilkan Histori..."
+
+#: cola/widgets/browse.py:110
+msgid "View history for selected path(s)."
+msgstr "Tampilkan histori untuk lokasi terpilih."
+
+#: cola/widgets/browse.py:114 cola/widgets/status.py:528
+#: cola/widgets/status.py:558 cola/widgets/status.py:615
+msgid "Stage Selected"
+msgstr "Stage Terpilih"
+
+#: cola/widgets/browse.py:115
+msgid "Stage selected path(s) for commit."
+msgstr "Stage lokasi terpilih untuk commit."
+
+#: cola/widgets/browse.py:120 cola/widgets/status.py:471
+#: cola/widgets/status.py:516
+msgid "Unstage Selected"
+msgstr "Unstage Terpilih"
+
+#: cola/widgets/browse.py:121
+msgid "Remove selected path(s) from the staging area."
+msgstr "Buang lokasi terpilih dari staging area."
+
+#: cola/widgets/browse.py:126
+msgid "Untrack Selected"
+msgstr "Jangan Lacak Terpilih"
+
+#: cola/widgets/browse.py:127
+msgid "Stop tracking path(s)"
+msgstr "Hentikan melacak lokasi"
+
+#: cola/widgets/browse.py:132
+msgid "Launch git-difftool on the current path."
+msgstr "Jalankan git-difftool pada lokasi saat ini."
+
+#: cola/widgets/browse.py:137
+msgid "Diff Against Predecessor..."
+msgstr "Diff Pada Predessor..."
+
+#: cola/widgets/browse.py:138
+msgid "Launch git-difftool against previous versions."
+msgstr "Jalankan git-difftool pada versi sebelumnya."
+
+#: cola/widgets/browse.py:142
+msgid "Revert Uncommitted Changes..."
+msgstr "Kembalikan Perubahan Tak Tercommit..."
+
+#: cola/widgets/browse.py:143
+msgid "Revert changes to selected path(s)."
+msgstr "Kembalikan perubahan ke lokasi terpilih."
+
+#: cola/widgets/browse.py:148
+msgid "Edit selected path(s)."
+msgstr "Sunting lokasi terpilih."
+
+#: cola/widgets/browse.py:327 cola/widgets/status.py:649
+msgid "Revert Uncommitted Changes?"
+msgstr "Kembalikan Perubahan Tak Tercommit?"
+
+#: cola/widgets/browse.py:328 cola/widgets/diff.py:320
+#: cola/widgets/diff.py:333 cola/widgets/status.py:650
+msgid ""
+"This operation drops uncommitted changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+"Operasi ini akan menghilangkan perubahan tak tercommit.\n"
+"Perubahan ini tidak dapat direkoveri."
+
+#: cola/widgets/browse.py:330 cola/widgets/diff.py:322
+#: cola/widgets/diff.py:335 cola/widgets/status.py:652
+msgid "Revert the uncommitted changes?"
+msgstr "Kembalikan perubahan tak tercommit?"
+
+#: cola/widgets/browse.py:331 cola/widgets/status.py:653
+msgid "Revert Uncommitted Changes"
+msgstr "Kembalikan Perubahan Tak Tercommit"
+
+#: cola/widgets/browse.py:381
+msgid "Select Previous Version"
+msgstr "Pilih Versi Sebelumnya"
+
+#: cola/widgets/browse.py:409
+#, python-format
+msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
+msgstr "Simpan \"%(filename)s\" dari \"%(ref)s\" ke \"%(destination)s\""
+
+#: cola/widgets/browse.py:430
+#, python-format
+msgid "Browsing %s"
+msgstr "Ramban %s"
+
+#: cola/widgets/browse.py:448
+#, python-format
+msgid "Select file from \"%s\""
+msgstr "Pilih berkas dari \"%s\""
+
+#: cola/widgets/browse.py:457
+msgid "Select File"
+msgstr "Pilih Berkas"
+
+#: cola/widgets/browse.py:485 cola/widgets/selectcommits.py:56
+msgid "Select"
+msgstr "Pilih"
+
+#: cola/widgets/stash.py:39
+msgid "Stash"
+msgstr "Stash"
+
+#: cola/widgets/stash.py:52
+msgid "Apply the selected stash"
+msgstr "Terapkan stash terpilih"
+
+#: cola/widgets/stash.py:56
+msgid "Save modified state to new stash"
+msgstr "Simpan perubahan ke stash baru"
+
+#: cola/widgets/stash.py:59
+msgid "Drop"
+msgstr "Buang"
+
+#: cola/widgets/stash.py:60
+msgid "Drop the selected stash"
+msgstr "Buang stash terpilih"
+
+#: cola/widgets/stash.py:67
+msgid "Keep Index"
+msgstr "Pertahankan Index"
+
+#: cola/widgets/stash.py:188
+msgid "Save Stash"
+msgstr "Simpan Stash"
+
+#: cola/widgets/stash.py:189
+msgid "Enter a name for the stash"
+msgstr "Masukkan nama untuk stash"
+
+#: cola/widgets/stash.py:195
+msgid "Error: Stash exists"
+msgstr "Error: Stash sudah ada"
+
+#: cola/widgets/stash.py:196
+#, python-format
+msgid "A stash named \"%s\" already exists"
+msgstr "Stash dengan nama \"%s\" sudah ada"
+
+#: cola/widgets/stash.py:211
+msgid "Drop Stash?"
+msgstr "Buang Stash?"
+
+#: cola/widgets/stash.py:212
+msgid "Recovering a dropped stash is not possible."
+msgstr "Tidak mungkin mengembalikan stash yang dibuang."
+
+#: cola/widgets/stash.py:213
+#, python-format
+msgid "Drop the \"%s\" stash?"
+msgstr "Buang stash \"%s\"?"
+
+#: cola/widgets/stash.py:214
+msgid "Drop Stash"
+msgstr "Buang Stash"
+
+#: cola/widgets/selectcommits.py:52
+msgid "Revision Expression:"
+msgstr "Ekspresi Revisi:"
+
+#: cola/widgets/selectcommits.py:103
+msgid "No commits exist in this branch."
+msgstr "Tidak ada commit di cabang ini."
+
+#: cola/widgets/diff.py:47
+msgid "Ignore changes in whitespace at EOL"
+msgstr "Abaikan perubahan spasi pada EOL"
+
+#: cola/widgets/diff.py:52
+msgid "Ignore changes in amount of whitespace"
+msgstr "Abaikan perubahan jumlah spasi"
+
+#: cola/widgets/diff.py:57
+msgid "Ignore all whitespace"
+msgstr "Abaikan semua spasi"
+
+#: cola/widgets/diff.py:62
+msgid "Show whole surrounding functions of changes"
+msgstr "Tampilkan seluruh sekitar fungsi perubahan"
+
+#: cola/widgets/diff.py:67 cola/widgets/diff.py:68
+msgid "Diff Options"
+msgstr "Pilihan Diff"
+
+#: cola/widgets/diff.py:82
+msgid "Process Diff Region"
+msgstr "Proses Area Diff"
+
+#: cola/widgets/diff.py:85
+msgid "Process Selection"
+msgstr "Proses Pilihan"
+
+#: cola/widgets/diff.py:100
+msgid "Stage &Selected Lines"
+msgstr "Stage Batis &Terpilih"
+
+#: cola/widgets/diff.py:106
+msgid "Revert Selected Lines..."
+msgstr "Kembalikan Baris Terpilih..."
+
+#: cola/widgets/diff.py:111
+msgid "Unstage &Selected Lines"
+msgstr "Unstage Baris &Terpilih"
+
+#: cola/widgets/diff.py:117
+msgid "Apply Diff Selection to Work Tree"
+msgstr "Terapkan Diff Terpilih ke Work Tree"
+
+#: cola/widgets/diff.py:157 cola/widgets/diff.py:179
+#: cola/widgets/status.py:508 cola/widgets/status.py:607
+msgid "Launch git-cola"
+msgstr "Jalankan git-cola"
+
+#: cola/widgets/diff.py:162
+msgid "Stage Diff Region"
+msgstr "Stage Area Diff"
+
+#: cola/widgets/diff.py:168
+msgid "Revert Diff Region..."
+msgstr "Kembalikan Area Diff..."
+
+#: cola/widgets/diff.py:184
+msgid "Unstage Diff Region"
+msgstr "Unstage Area Diff"
+
+#: cola/widgets/diff.py:205
+msgid "Select All"
+msgstr "Pilih Semua"
+
+#: cola/widgets/diff.py:319
+msgid "Revert Diff Region?"
+msgstr "Kembalikan Area Diff?"
+
+#: cola/widgets/diff.py:323
+msgid "Revert Diff Region"
+msgstr "Kembalikan Area Diff"
+
+#: cola/widgets/diff.py:332
+msgid "Revert Selected Lines?"
+msgstr "Kembalikan Baris Terpilih?"
+
+#: cola/widgets/diff.py:336
+msgid "Revert Selected Lines"
+msgstr "Kembalikan Baris Terpilih"
+
+#: cola/widgets/diff.py:427
+msgid "Loading..."
+msgstr "Memuat..."
+
+#: cola/widgets/dag.py:119
+msgid "Diff this -> selected"
+msgstr "Diff ini -> terpilih"
+
+#: cola/widgets/dag.py:122
+msgid "Diff selected -> this"
+msgstr "Diff terpilih -> ini"
+
+#: cola/widgets/dag.py:125 cola/widgets/createbranch.py:85
+#: cola/widgets/createbranch.py:96 cola/widgets/createbranch.py:153
 msgid "Create Branch"
 msgstr "Buat Cabang"
+
+#: cola/widgets/dag.py:128
+msgid "Create Patch"
+msgstr "Buat Patch"
+
+#: cola/widgets/dag.py:134 cola/widgets/main.py:193
+msgid "Save As Tarball/Zip..."
+msgstr "Simpan Sebagai Tarball/Zip.."
+
+#: cola/widgets/dag.py:140
+msgid "Grab File..."
+msgstr "Ambil Berkas..."
+
+#: cola/widgets/dag.py:143
+msgid "Copy SHA-1"
+msgstr "Salin SHA-1"
+
+#: cola/widgets/dag.py:214
+msgid "Summary"
+msgstr "Ringkasan"
+
+#: cola/widgets/dag.py:214
+msgid "Date, Time"
+msgstr "Tanggal, Waktu"
+
+#: cola/widgets/dag.py:221
+msgid "Go Up"
+msgstr "Ke Atas"
+
+#: cola/widgets/dag.py:224
+msgid "Go Down"
+msgstr "Ke Bawah"
+
+#: cola/widgets/dag.py:351 cola/widgets/dag.py:1036
+msgid "Zoom Out"
+msgstr "Perkecil"
+
+#: cola/widgets/dag.py:355 cola/widgets/dag.py:1033
+msgid "Zoom In"
+msgstr "Perbesar"
+
+#: cola/widgets/dag.py:359 cola/widgets/dag.py:1039
+msgid "Zoom to Fit"
+msgstr "Zoom agar Sesuai"
+
+#: cola/widgets/dag.py:380
+msgid "Log"
+msgstr "Log"
+
+#: cola/widgets/dag.py:385
+msgid "Files"
+msgstr "Berkas"
+
+#: cola/widgets/dag.py:388 cola/widgets/main.py:133 cola/widgets/main.py:371
+msgid "Diff"
+msgstr "Diff"
+
+#: cola/widgets/dag.py:401
+msgid "Graph"
+msgstr "Grafik"
+
+#: cola/widgets/dag.py:407 cola/widgets/main.py:314
+msgid "Lock Layout"
+msgstr "Kunci Tata Letak"
+
+#: cola/widgets/dag.py:413 cola/widgets/main.py:406
+msgid "View"
+msgstr "Tampil"
+
+#: cola/widgets/dag.py:489
+#, python-format
+msgid "%(project)s: %(ref)s - DAG"
+msgstr ""
+
+#: cola/widgets/dag.py:491
+msgid " - DAG"
+msgstr " - DAG"
+
+#: cola/widgets/dag.py:1042
+msgid "Select Parent"
+msgstr "Pilih Indukan"
+
+#: cola/widgets/dag.py:1045
+msgid "Select Oldest Parent"
+msgstr "Pilih Indukan Tertua"
+
+#: cola/widgets/dag.py:1048
+msgid "Select Child"
+msgstr "Pilih Anakan"
+
+#: cola/widgets/dag.py:1051
+msgid "Select Newest Child"
+msgstr "Pilih Anakan Terbaru"
 
 #: cola/widgets/createbranch.py:100
 msgid "Branch Name"
@@ -1066,7 +1639,8 @@ msgstr "Cabang Sudah Ada"
 #: cola/widgets/createbranch.py:271
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
-msgstr "Mengatur ulang \"%(branch)s\" ke \"%(revision)s\" akan menghilangkan commit."
+msgstr ""
+"Mengatur ulang \"%(branch)s\" ke \"%(revision)s\" akan menghilangkan commit."
 
 #: cola/widgets/createbranch.py:286
 #, python-format
@@ -1103,463 +1677,116 @@ msgstr "Erroe Membuat Cabang"
 msgid "\"%(command)s\" returned exit status \"%(status)d\""
 msgstr "\"%(command)s\" menghasilkan exit status \"%(status)d\""
 
-#: cola/widgets/createtag.py:49 cola/widgets/createtag.py:114
-#: cola/widgets/dag.py:131
-msgid "Create Tag"
-msgstr "Buat Tag"
+#: cola/widgets/about.py:49
+msgid "About git-cola"
+msgstr "Tentang git-cola"
 
-#: cola/widgets/createtag.py:68
-msgid "vX.Y.Z"
-msgstr "vX.Y.Z"
-
-#: cola/widgets/createtag.py:70
-msgid "Specifies the tag name"
-msgstr "Tentukan nama tag"
-
-#: cola/widgets/createtag.py:76
-msgid "Sign Tag"
-msgstr "Tandai Tag"
-
-#: cola/widgets/createtag.py:82
-msgid "Whether to sign the tag (git tag -s)"
-msgstr "Kalau menandai tag (git tag -s)"
-
-#: cola/widgets/createtag.py:93
-msgid "Tag message..."
-msgstr "Pesan tag..."
-
-#: cola/widgets/createtag.py:94
-msgid "Specifies the tag message"
-msgstr "Tentukan pesan tag"
-
-#: cola/widgets/createtag.py:106
-msgid "Specifies the SHA-1 to tag"
-msgstr "Tentukan SHA-1 untuk di-tag"
-
-#: cola/widgets/createtag.py:136
-msgid "Missing Revision"
-msgstr "Revisi Tidak Ditemukan"
-
-#: cola/widgets/createtag.py:137
-msgid "Please specify a revision to tag."
-msgstr "Tentukan revisi untuk di-tag"
-
-#: cola/widgets/createtag.py:140
-msgid "Missing Name"
-msgstr "Nama Tidak Ditemukan"
-
-#: cola/widgets/createtag.py:141
-msgid "Please specify a name for the new tag."
-msgstr "Silahkan tentukan nama untuk tag baru."
-
-#: cola/widgets/createtag.py:144
-msgid "Missing Tag Message"
-msgstr "Pesan Tag Tidak Ditemukan"
-
-#: cola/widgets/createtag.py:145
-msgid "Tag-signing was requested but the tag message is empty."
-msgstr "Penandaan tag diperlukan tetapi pesan tag kosong."
-
-#: cola/widgets/createtag.py:147
+#: cola/widgets/about.py:99
 msgid ""
-"An unsigned, lightweight tag will be created instead.\n"
-"Create an unsigned tag?"
+"This PyQt4 does not include QtWebKit.\n"
+"The keyboard shortcuts feature is unavailable."
 msgstr ""
-"Tak bertanda, tag ringan akan dibuat.\n"
-"Buat tag tak bertanda?"
+"PyQt4 ini tidak menyertakan QtWebKit.\n"
+"Fitur pintasan papan tik tak tersedia."
 
-#: cola/widgets/createtag.py:150
-msgid "Create Unsigned Tag"
-msgstr "Buat Tag tak Bertanda"
+#: cola/widgets/about.py:106
+msgid "hotkeys.html"
+msgstr "hotkeys.html"
 
-#: cola/widgets/createtag.py:159
-msgid "Tag Created"
-msgstr "Tag Telah Dibuat"
+#: cola/widgets/about.py:124
+msgid "Shortcuts"
+msgstr "Pintasan"
 
-#: cola/widgets/createtag.py:160
+#: cola/widgets/compare.py:38
+msgid "*** Branch Point ***"
+msgstr "*** Poin Cabang ***"
+
+#: cola/widgets/compare.py:39
+msgid "*** Sandbox ***"
+msgstr "*** Bak Pasir ***"
+
+#: cola/widgets/compare.py:40 cola/widgets/compare.py:63
+#: cola/widgets/compare.py:69
+msgid "Local"
+msgstr "Lokal"
+
+#: cola/widgets/compare.py:45
+msgid "Branch Diff Viewer"
+msgstr "Penampil Diff Cabang"
+
+#: cola/widgets/compare.py:64 cola/widgets/compare.py:70
+#: cola/widgets/remote.py:155
+msgid "Remote"
+msgstr "Hulu"
+
+#: cola/widgets/compare.py:99
+msgid "File Differences"
+msgstr "Perbedaan Berkas"
+
+#: cola/widgets/status.py:77
+msgid "Untracked"
+msgstr "Tak Terlacak"
+
+#: cola/widgets/status.py:87
+msgid "Stage / Unstage"
+msgstr "Stage / Unstage"
+
+#: cola/widgets/status.py:91
+msgid "Revert Unstaged Edits..."
+msgstr "Kembalikan Suntingan tak distag..."
+
+#: cola/widgets/status.py:123
+msgid "Move Up"
+msgstr "Pindah Ke Atas"
+
+#: cola/widgets/status.py:129
+msgid "Copy Path to Clipboard"
+msgstr "Salin Lokasi ke Papan klip"
+
+#: cola/widgets/status.py:134
+msgid "Delete File(s)..."
+msgstr "Hapus Berkas...?"
+
+#: cola/widgets/status.py:442 cola/widgets/main.py:139
+msgid "Unstage All"
+msgstr "Unstage Semua"
+
+#: cola/widgets/status.py:499 cola/widgets/status.py:577
+msgid "Revert Uncommited Edits..."
+msgstr "Kembalikan Suntingan Belum dicommmit..."
+
+#: cola/widgets/status.py:598
+msgid "Add to .gitignore"
+msgstr "Tambahkan ke .gitignore"
+
+#: cola/widgets/status.py:629
+msgid "Delete Files?"
+msgstr "Hapus Berkas?"
+
+#: cola/widgets/status.py:630
+msgid "The following files will be deleted:"
+msgstr "Berkas berikut akan dihapus:"
+
+#: cola/widgets/status.py:638
 #, python-format
-msgid "Created a new tag named \"%s\""
-msgstr "Buat tag baru bernama \"%s\""
-
-#: cola/widgets/createtag.py:164
-#, python-format
-msgid "Error: could not create tag \"%s\""
-msgstr "Error: tidak dapat membuat tag \"%s\""
-
-#: cola/widgets/createtag.py:165
-#, python-format
-msgid "git tag returned exit code %s"
-msgstr "git tag menghasilkan kode exit %s"
-
-#: cola/widgets/dag.py:119
-msgid "Diff this -> selected"
-msgstr "Diff ini -> terpilih"
-
-#: cola/widgets/dag.py:122
-msgid "Diff selected -> this"
-msgstr "Diff terpilih -> ini"
-
-#: cola/widgets/dag.py:128
-msgid "Create Patch"
-msgstr "Buat Patch"
-
-#: cola/widgets/dag.py:134 cola/widgets/main.py:193
-msgid "Save As Tarball/Zip..."
-msgstr "Simpan Sebagai Tarball/Zip.."
-
-#: cola/widgets/dag.py:137 cola/widgets/search.py:82
-msgid "Cherry Pick"
-msgstr "Cherry Pick"
-
-#: cola/widgets/dag.py:140
-msgid "Grab File..."
-msgstr "Ambil Berkas..."
-
-#: cola/widgets/dag.py:143
-msgid "Copy SHA-1"
-msgstr "Salin SHA-1"
-
-#: cola/widgets/dag.py:214
-msgid "Summary"
-msgstr "Ringkasan"
-
-#: cola/widgets/dag.py:214
-msgid "Date, Time"
-msgstr "Tanggal, Waktu"
-
-#: cola/widgets/dag.py:221
-msgid "Go Up"
-msgstr "Ke Atas"
-
-#: cola/widgets/dag.py:224
-msgid "Go Down"
-msgstr "Ke Bawah"
-
-#: cola/widgets/dag.py:351 cola/widgets/dag.py:1036
-msgid "Zoom Out"
-msgstr "Perkecil"
-
-#: cola/widgets/dag.py:355 cola/widgets/dag.py:1033
-msgid "Zoom In"
-msgstr "Perbesar"
-
-#: cola/widgets/dag.py:359 cola/widgets/dag.py:1039
-msgid "Zoom to Fit"
-msgstr "Zoom agar Sesuai"
-
-#: cola/widgets/dag.py:380
-msgid "Log"
-msgstr "Log"
-
-#: cola/widgets/dag.py:385
-msgid "Files"
-msgstr "Berkas"
-
-#: cola/widgets/dag.py:388 cola/widgets/main.py:133 cola/widgets/main.py:369
-msgid "Diff"
-msgstr "Diff"
-
-#: cola/widgets/dag.py:401
-msgid "Graph"
-msgstr "Grafik"
-
-#: cola/widgets/dag.py:407 cola/widgets/main.py:312
-msgid "Lock Layout"
-msgstr "Kunci Tata Letak"
-
-#: cola/widgets/dag.py:413 cola/widgets/main.py:404
-msgid "View"
-msgstr "Tampil"
-
-#: cola/widgets/dag.py:489
-#, python-format
-msgid "%(project)s: %(ref)s - DAG"
-msgstr ""
-
-#: cola/widgets/dag.py:491
-msgid " - DAG"
-msgstr " - DAG"
-
-#: cola/widgets/dag.py:1042
-msgid "Select Parent"
-msgstr "Pilih Indukan"
-
-#: cola/widgets/dag.py:1045
-msgid "Select Oldest Parent"
-msgstr "Pilih Indukan Tertua"
-
-#: cola/widgets/dag.py:1048
-msgid "Select Child"
-msgstr "Pilih Anakan"
-
-#: cola/widgets/dag.py:1051
-msgid "Select Newest Child"
-msgstr "Pilih Anakan Terbaru"
-
-#: cola/widgets/diff.py:47
-msgid "Ignore changes in whitespace at EOL"
-msgstr "Abaikan perubahan spasi pada EOL"
-
-#: cola/widgets/diff.py:52
-msgid "Ignore changes in amount of whitespace"
-msgstr "Abaikan perubahan jumlah spasi"
-
-#: cola/widgets/diff.py:57
-msgid "Ignore all whitespace"
-msgstr "Abaikan semua spasi"
-
-#: cola/widgets/diff.py:62
-msgid "Show whole surrounding functions of changes"
-msgstr "Tampilkan seluruh sekitar fungsi perubahan"
-
-#: cola/widgets/diff.py:67 cola/widgets/diff.py:68
-msgid "Diff Options"
-msgstr "Pilihan Diff"
-
-#: cola/widgets/diff.py:82
-msgid "Process Diff Region"
-msgstr "Proses Area Diff"
-
-#: cola/widgets/diff.py:85
-msgid "Process Selection"
-msgstr "Proses Pilihan"
-
-#: cola/widgets/diff.py:100
-msgid "Stage &Selected Lines"
-msgstr "Stage Batis &Terpilih"
-
-#: cola/widgets/diff.py:106
-msgid "Revert Selected Lines..."
-msgstr "Kembalikan Baris Terpilih..."
-
-#: cola/widgets/diff.py:111
-msgid "Unstage &Selected Lines"
-msgstr "Unstage Baris &Terpilih"
-
-#: cola/widgets/diff.py:117
-msgid "Apply Diff Selection to Work Tree"
-msgstr "Terapkan Diff Terpilih ke Work Tree"
-
-#: cola/widgets/diff.py:157 cola/widgets/diff.py:179
-#: cola/widgets/status.py:503 cola/widgets/status.py:603
-msgid "Launch git-cola"
-msgstr "Jalankan git-cola"
-
-#: cola/widgets/diff.py:162
-msgid "Stage Diff Region"
-msgstr "Stage Area Diff"
-
-#: cola/widgets/diff.py:168
-msgid "Revert Diff Region..."
-msgstr "Kembalikan Area Diff..."
-
-#: cola/widgets/diff.py:184
-msgid "Unstage Diff Region"
-msgstr "Unstage Area Diff"
-
-#: cola/widgets/diff.py:205
-msgid "Select All"
-msgstr "Pilih Semua"
-
-#: cola/widgets/diff.py:319
-msgid "Revert Diff Region?"
-msgstr "Kembalikan Area Diff?"
-
-#: cola/widgets/diff.py:323
-msgid "Revert Diff Region"
-msgstr "Kembalikan Area Diff"
-
-#: cola/widgets/diff.py:332
-msgid "Revert Selected Lines?"
-msgstr "Kembalikan Baris Terpilih?"
-
-#: cola/widgets/diff.py:336
-msgid "Revert Selected Lines"
-msgstr "Kembalikan Baris Terpilih"
-
-#: cola/widgets/diff.py:427
-msgid "Loading..."
-msgstr "Memuat..."
-
-#: cola/widgets/editremotes.py:33
-msgid "Edit Remotes"
-msgstr "Sunting Hulu"
-
-#: cola/widgets/editremotes.py:37
-msgid ""
-"Add and remove remote repositories using the \n"
-"Add(+) and Delete(-) buttons on the left-hand side.\n"
-"\n"
-"Remotes can be renamed by selecting one from the list\n"
-"and pressing \"enter\", or by double-clicking."
-msgstr ""
-"Tambah dan hapus repositori hulu menggunakan tombol \n"
-"Tambah(+) dan Hapus(-) pada sisi sebelah kiri."
-"\n"
-"Hulu dapat diganti nama dengan memilih salah satu dari \n"
-"daftar dan tekan \"enter\", atau dobel-klik."
-
-#: cola/widgets/editremotes.py:47
-msgid "Remote git repositories - double-click to rename"
-msgstr "Repositori hulu git - dobel-klik untuk mengganti nama"
-
-#: cola/widgets/editremotes.py:60
-msgid "Add new remote git repository"
-msgstr "Tambahkan repositori git hulu"
-
-#: cola/widgets/editremotes.py:68
-msgid "Delete remote"
-msgstr "Hapus hulu"
-
-#: cola/widgets/editremotes.py:130
-#, python-format
-msgid "Error creating remote \"%s\""
-msgstr "Error membuat hulu \"%s\""
-
-#: cola/widgets/editremotes.py:139
-msgid "Delete Remote"
-msgstr "Hapus Hulu"
-
-#: cola/widgets/editremotes.py:140
-msgid "Delete remote?"
-msgstr "Hapus hulu?"
-
-#: cola/widgets/editremotes.py:141
-#, python-format
-msgid "Delete remote \"%s\""
-msgstr "Hapus hulu \"%s\""
-
-#: cola/widgets/editremotes.py:148
-#, python-format
-msgid "Error deleting remote \"%s\""
-msgstr "Error menghapus hulu \"%s\""
-
-#: cola/widgets/editremotes.py:168
-msgid "Rename Remote"
-msgstr "Ganti Nama Hulu"
-
-#: cola/widgets/editremotes.py:169
-msgid "Rename remote?"
-msgstr "Ganti nama hulu?"
-
-#: cola/widgets/editremotes.py:170
-#, python-format
-msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
-msgstr "Ganti nama hulu \"%(current)s\" ke \"%(new)s\"?"
-
-#: cola/widgets/editremotes.py:172
-msgid "Rename"
-msgstr "Ganti nama"
-
-#: cola/widgets/editremotes.py:185
-#, python-format
-msgid "Gathering info for \"%s\"..."
-msgstr "Mengumpulkan info untuk \"%s\"..."
-
-#: cola/widgets/editremotes.py:215
-msgid "Add Remote"
-msgstr "Tambahkan Hulu"
-
-#: cola/widgets/editremotes.py:227
-msgid "Add remote"
-msgstr "Tambahkan hulu"
-
-#: cola/widgets/editremotes.py:228
-msgid "Name for the new remote"
-msgstr "Nama untuk hulu baru"
-
-#: cola/widgets/editremotes.py:235
-msgid "URL"
-msgstr "URL"
-
-#: cola/widgets/filelist.py:18
-msgid "Filename"
-msgstr "Namaberkas"
-
-#: cola/widgets/filelist.py:18
-msgid "Additions"
-msgstr "Penambahan"
-
-#: cola/widgets/filelist.py:18
-msgid "Deletions"
-msgstr "Penghapusan"
-
-#: cola/widgets/grep.py:70 cola/widgets/search.py:44 cola/widgets/search.py:62
-msgid "Search"
-msgstr "Cari"
-
-#: cola/widgets/grep.py:77
-msgid "command-line arguments"
-msgstr "argumen baris-perintah"
-
-#: cola/widgets/grep.py:81
-msgid "Choose the \"git grep\" regular expression mode"
-msgstr "Pilih mode ekspresi reguler \"git grep\""
-
-#: cola/widgets/grep.py:82
-msgid "Basic Regexp"
-msgstr "Regexp Dasar"
-
-#: cola/widgets/grep.py:82
-msgid "Extended Regexp"
-msgstr "Regexp Perluasan"
-
-#: cola/widgets/grep.py:82
-msgid "Fixed String"
-msgstr "String Tetap"
-
-#: cola/widgets/grep.py:87
-msgid "Search using a POSIX basic regular expression"
-msgstr "Cari menggunakan ekspresi reguler POSIX dasar"
-
-#: cola/widgets/grep.py:90
-msgid "Search using a POSIX extended regular expression"
-msgstr "Cari menggunakan ekspresi reguler POSIX perluasan"
-
-#: cola/widgets/grep.py:93
-msgid "Search for a fixed string"
-msgstr "Cari teks tetap"
-
-#: cola/widgets/grep.py:99
-msgid "grep result..."
-msgstr "hasil grep..."
-
-#: cola/widgets/grep.py:111
-msgid "Shell arguments"
-msgstr "Argumen shell"
-
-#: cola/widgets/grep.py:113
-msgid ""
-"Parse arguments using a shell.\n"
-"Queries with spaces will require \"double quotes\"."
-msgstr ""
-"Uraikan argumen menggunakan sebuah shell.\n"
-"Queri dengan spasi memerlukan \"tanda kutip dua\"."
-
-#: cola/widgets/log.py:37
-#, python-format
-msgid "exit code %s"
-msgstr "kode keluar %s"
+msgid "Delete %d file(s)?"
+msgstr "Hapus %d berkas?"
+
+#: cola/widgets/status.py:639
+msgid "Delete Files"
+msgstr "Hapus Berkas"
 
 #: cola/widgets/main.py:85
 msgid "Browser"
 msgstr "Jelajah"
 
-#: cola/widgets/main.py:90 cola/widgets/main.py:343
+#: cola/widgets/main.py:90 cola/widgets/main.py:345
 msgid "Actions"
 msgstr "Aksi"
-
-#: cola/widgets/main.py:118 cola/widgets/merge.py:75
-msgid "Commit"
-msgstr "Commit"
 
 #: cola/widgets/main.py:127
 msgid "Console"
 msgstr "Konsol"
-
-#: cola/widgets/main.py:139 cola/widgets/status.py:437
-msgid "Unstage All"
-msgstr "Unstage Semua"
 
 #: cola/widgets/main.py:143
 msgid "Unstage From Commit"
@@ -1589,10 +1816,6 @@ msgstr "Ekspor Patch..."
 msgid "New Repository..."
 msgstr "Repositori Baru..."
 
-#: cola/widgets/main.py:170 cola/widgets/prefs.py:237
-msgid "Preferences"
-msgstr "Preferensi"
-
 #: cola/widgets/main.py:174
 msgid "Edit Remotes..."
 msgstr "Sunting Hulu..."
@@ -1621,21 +1844,9 @@ msgstr "Grep"
 msgid "Merge..."
 msgstr "Gabung..."
 
-#: cola/widgets/main.py:205 cola/widgets/merge.py:29
-msgid "Abort Merge..."
-msgstr "Batalkan Penggabungan..."
-
-#: cola/widgets/main.py:215 cola/widgets/startup.py:38
-msgid "Open..."
-msgstr "Buka..."
-
 #: cola/widgets/main.py:219
 msgid "Open in New Window..."
 msgstr "Buka di Jendela Baru..."
-
-#: cola/widgets/main.py:226 cola/widgets/startup.py:41
-msgid "Clone..."
-msgstr "Clon...."
 
 #: cola/widgets/main.py:230
 msgid "Documentation"
@@ -1725,32 +1936,36 @@ msgstr "Sunting..."
 msgid "Skip Current Patch"
 msgstr "Lewati Cabang Saat Ini"
 
-#: cola/widgets/main.py:318
+#: cola/widgets/main.py:298 cola/widgets/cfgactions.py:87
+msgid "Abort"
+msgstr "Batal"
+
+#: cola/widgets/main.py:320
 msgid "File"
 msgstr "Berkas"
 
-#: cola/widgets/main.py:319
+#: cola/widgets/main.py:321
 msgid "Open Recent"
 msgstr "Buka yang Terkini"
 
-#: cola/widgets/main.py:359 cola/widgets/main.py:360
+#: cola/widgets/main.py:361 cola/widgets/main.py:362
 msgid "Staging Area"
 msgstr "Area Stagnan"
 
-#: cola/widgets/main.py:377
+#: cola/widgets/main.py:379
 msgid "Branch"
 msgstr "Cabang"
 
-#: cola/widgets/main.py:417
+#: cola/widgets/main.py:419
 msgid "Help"
 msgstr "Bantuan"
 
-#: cola/widgets/main.py:481
+#: cola/widgets/main.py:483
 #, python-format
 msgid "git cola version %s"
 msgstr "git cola versi %s"
 
-#: cola/widgets/main.py:577
+#: cola/widgets/main.py:579
 msgid ""
 "This repository is currently being rebased.\n"
 "Resolve conflicts, commit changes, and run:\n"
@@ -1760,11 +1975,11 @@ msgstr ""
 "Perbaiki konflik, commitkan perubahan, dan jalankan:\n"
 "    Rebase > Lanjutkan"
 
-#: cola/widgets/main.py:580
+#: cola/widgets/main.py:582
 msgid "Rebasing"
 msgstr "Me-rebase"
 
-#: cola/widgets/main.py:584
+#: cola/widgets/main.py:586
 msgid ""
 "This repository is in the middle of a merge.\n"
 "Resolve conflicts and commit changes."
@@ -1772,215 +1987,179 @@ msgstr ""
 "Repositori ini sedang dimerge.\n"
 "Perbaiki konflik dan commitkan perubahan."
 
-#: cola/widgets/main.py:586
+#: cola/widgets/main.py:588
 msgid "Merging"
 msgstr "Menggabungkan"
 
-#: cola/widgets/main.py:589
+#: cola/widgets/main.py:591
 msgid "Amending"
 msgstr "Mengubah"
 
-#: cola/widgets/main.py:706
+#: cola/widgets/main.py:708
 msgid "Select New Upstream"
 msgstr "Pilih Upstream Baru"
 
-#: cola/widgets/main.py:707
+#: cola/widgets/main.py:709
 msgid "Interactive Rebase"
 msgstr "rebase Interaktif"
 
-#: cola/widgets/merge.py:30
+#: cola/widgets/editremotes.py:33
+msgid "Edit Remotes"
+msgstr "Sunting Hulu"
+
+#: cola/widgets/editremotes.py:37
 msgid ""
-"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
-"Recovering uncommitted changes is not possible."
+"Add and remove remote repositories using the \n"
+"Add(+) and Delete(-) buttons on the left-hand side.\n"
+"\n"
+"Remotes can be renamed by selecting one from the list\n"
+"and pressing \"enter\", or by double-clicking."
 msgstr ""
-"Membatalkan merge saat ini akan menghilangkan *SEMUA* perubahan commit.\n"
-"Mengembalikan perubahan yang belum dicommit tidak dimungkinkan."
+"Tambah dan hapus repositori hulu menggunakan tombol \n"
+"Tambah(+) dan Hapus(-) pada sisi sebelah kiri.\n"
+"Hulu dapat diganti nama dengan memilih salah satu dari \n"
+"daftar dan tekan \"enter\", atau dobel-klik."
 
-#: cola/widgets/merge.py:33
-msgid "Aborting the current merge?"
-msgstr "Batalkan merge saat ini?"
+#: cola/widgets/editremotes.py:47
+msgid "Remote git repositories - double-click to rename"
+msgstr "Repositori hulu git - dobel-klik untuk mengganti nama"
 
-#: cola/widgets/merge.py:34
-msgid "Abort Merge"
-msgstr "Batalkan Merge"
+#: cola/widgets/editremotes.py:60
+msgid "Add new remote git repository"
+msgstr "Tambahkan repositori git hulu"
 
-#: cola/widgets/merge.py:53
-msgid "Revision To Merge"
-msgstr "Revisi untuk Dimerge"
+#: cola/widgets/editremotes.py:68
+msgid "Delete remote"
+msgstr "Hapus hulu"
 
-#: cola/widgets/merge.py:69
-msgid "Visualize"
-msgstr "Visualisasikan"
-
-#: cola/widgets/merge.py:72
-msgid "Squash"
-msgstr "Squash"
-
-#: cola/widgets/merge.py:83
-msgid "Merge"
-msgstr "Merge"
-
-#: cola/widgets/merge.py:146
+#: cola/widgets/editremotes.py:130
 #, python-format
-msgid "Merge \"%(revision)s\" into \"%(branch)s\""
-msgstr "Merge \"%(revision)s\" ke \"%(branch)s\""
+msgid "Error creating remote \"%s\""
+msgstr "Error membuat hulu \"%s\""
 
-#: cola/widgets/merge.py:149
+#: cola/widgets/editremotes.py:139
+msgid "Delete Remote"
+msgstr "Hapus Hulu"
+
+#: cola/widgets/editremotes.py:140
+msgid "Delete remote?"
+msgstr "Hapus hulu?"
+
+#: cola/widgets/editremotes.py:141
 #, python-format
-msgid "Merge into \"%s\""
-msgstr "Merge ke \"%s\""
+msgid "Delete remote \"%s\""
+msgstr "Hapus hulu \"%s\""
 
-#: cola/widgets/merge.py:193 cola/widgets/merge.py:202
-msgid "No Revision Specified"
-msgstr "Revisi tidak Ditentukan"
+#: cola/widgets/editremotes.py:148
+#, python-format
+msgid "Error deleting remote \"%s\""
+msgstr "Error menghapus hulu \"%s\""
 
-#: cola/widgets/merge.py:194
-msgid "You must specify a revision to view."
-msgstr "Anda harus tentukan revisi untuk ditampilkan."
+#: cola/widgets/editremotes.py:168
+msgid "Rename Remote"
+msgstr "Ganti Nama Hulu"
 
-#: cola/widgets/merge.py:203
-msgid "You must specify a revision to merge."
-msgstr "Anda harus tentukan revisi untuk dimerge."
+#: cola/widgets/editremotes.py:169
+msgid "Rename remote?"
+msgstr "Ganti nama hulu?"
 
-#: cola/widgets/patch.py:68
-msgid "Apply Patches"
-msgstr "Terapkan Patch"
+#: cola/widgets/editremotes.py:170
+#, python-format
+msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
+msgstr "Ganti nama hulu \"%(current)s\" ke \"%(new)s\"?"
 
-#: cola/widgets/patch.py:77
+#: cola/widgets/editremotes.py:172
+msgid "Rename"
+msgstr "Ganti nama"
+
+#: cola/widgets/editremotes.py:185
+#, python-format
+msgid "Gathering info for \"%s\"..."
+msgstr "Mengumpulkan info untuk \"%s\"..."
+
+#: cola/widgets/editremotes.py:215
+msgid "Add Remote"
+msgstr "Tambahkan Hulu"
+
+#: cola/widgets/editremotes.py:227
+msgid "Add remote"
+msgstr "Tambahkan hulu"
+
+#: cola/widgets/editremotes.py:228
+msgid "Name for the new remote"
+msgstr "Nama untuk hulu baru"
+
+#: cola/widgets/editremotes.py:235
+msgid "URL"
+msgstr "URL"
+
+#: cola/widgets/grep.py:77
+msgid "command-line arguments"
+msgstr "argumen baris-perintah"
+
+#: cola/widgets/grep.py:81
+msgid "Choose the \"git grep\" regular expression mode"
+msgstr "Pilih mode ekspresi reguler \"git grep\""
+
+#: cola/widgets/grep.py:82
+msgid "Basic Regexp"
+msgstr "Regexp Dasar"
+
+#: cola/widgets/grep.py:82
+msgid "Extended Regexp"
+msgstr "Regexp Perluasan"
+
+#: cola/widgets/grep.py:82
+msgid "Fixed String"
+msgstr "String Tetap"
+
+#: cola/widgets/grep.py:87
+msgid "Search using a POSIX basic regular expression"
+msgstr "Cari menggunakan ekspresi reguler POSIX dasar"
+
+#: cola/widgets/grep.py:90
+msgid "Search using a POSIX extended regular expression"
+msgstr "Cari menggunakan ekspresi reguler POSIX perluasan"
+
+#: cola/widgets/grep.py:93
+msgid "Search for a fixed string"
+msgstr "Cari teks tetap"
+
+#: cola/widgets/grep.py:99
+msgid "grep result..."
+msgstr "hasil grep..."
+
+#: cola/widgets/grep.py:111
+msgid "Shell arguments"
+msgstr "Argumen shell"
+
+#: cola/widgets/grep.py:113
 msgid ""
-"\n"
-"            <p>\n"
-"                Drag and drop or use the <strong>Add</strong> button to add\n"
-"                patches to the list\n"
-"            </p>\n"
-"            "
+"Parse arguments using a shell.\n"
+"Queries with spaces will require \"double quotes\"."
 msgstr ""
-"\n"
-"            <p>\n"
-"                Drag dan drop atau gunakan tombol <strong>Tambah</strong> untuk menambah\n"
-"                patch ke daftar\n"
-"            </p>\n"
-"            "
+"Uraikan argumen menggunakan sebuah shell.\n"
+"Queri dengan spasi memerlukan \"tanda kutip dua\"."
 
-#: cola/widgets/patch.py:89
-msgid "Add patches (+)"
-msgstr "Tambahkan patch (+)"
+#: cola/widgets/cfgactions.py:154 cola/widgets/cfgactions.py:158
+msgid "Abort Action"
+msgstr "Batalkan Aksi"
 
-#: cola/widgets/patch.py:92 cola/widgets/patch.py:106
-msgid "Remove"
-msgstr "Hapus"
+#: cola/widgets/cfgactions.py:155
+msgid ""
+"An action is still running.\n"
+"Terminating it could result in data loss."
+msgstr ""
+"Aksi ini masih berjalan.\n"
+"Mengakhiri ini dapat menghilangkan data."
 
-#: cola/widgets/patch.py:93
-msgid "Remove selected (Delete)"
-msgstr "Hapus yang terpilih (Hapus)"
+#: cola/widgets/cfgactions.py:157
+msgid "Abort the action?"
+msgstr "Batalkan aksi?"
 
-#: cola/widgets/patch.py:96 cola/widgets/stash.py:51
-msgid "Apply"
-msgstr "Terapkan"
-
-#: cola/widgets/patch.py:151
-msgid "Select patch file(s)..."
-msgstr "Pilih berkas patch..."
-
-#: cola/widgets/prefs.py:132
-msgid "User Name"
-msgstr "Nama Pengguna"
-
-#: cola/widgets/prefs.py:133
-msgid "Email Address"
-msgstr "Alamat Email"
-
-#: cola/widgets/prefs.py:134
-msgid "Merge Verbosity"
-msgstr "Verbositas Merge"
-
-#: cola/widgets/prefs.py:135
-msgid "Number of Diff Context Lines"
-msgstr "Jumlah Baris Context Diff"
-
-#: cola/widgets/prefs.py:136
-msgid "Summarize Merge Commits"
-msgstr "Ringkasan Merge Commit"
-
-#: cola/widgets/prefs.py:137
-msgid "Show Diffstat After Merge"
-msgstr "Tampilkan Diffstat setelah Merge"
-
-#: cola/widgets/prefs.py:138
-msgid "Display Untracked Files"
-msgstr "Tampilkan Berkas Tak Terlacak"
-
-#: cola/widgets/prefs.py:179
-msgid "Fixed-Width Font"
-msgstr "Lebar-Tetap Font"
-
-#: cola/widgets/prefs.py:180
-msgid "Font Size"
-msgstr "Ukuran Font"
-
-#: cola/widgets/prefs.py:181
-msgid "Tab Width"
-msgstr "Lebar Tab"
-
-#: cola/widgets/prefs.py:182
-msgid "Text Width"
-msgstr "Lebar Teks"
-
-#: cola/widgets/prefs.py:184
-msgid "Editor"
-msgstr "Penyunting"
-
-#: cola/widgets/prefs.py:185
-msgid "History Browser"
-msgstr "Penjelajah Histori"
-
-#: cola/widgets/prefs.py:186
-msgid "Diff Tool"
-msgstr "Alat Diff"
-
-#: cola/widgets/prefs.py:187
-msgid "Merge Tool"
-msgstr "Alat Merger"
-
-#: cola/widgets/prefs.py:188
-msgid "Keep *.orig Merge Backups"
-msgstr "Biarkan *.orig Merge Backup"
-
-#: cola/widgets/prefs.py:189
-msgid "Save GUI Settings"
-msgstr "Simpan Pengaturan GUI"
-
-#: cola/widgets/prefs.py:245
-msgid "All Repositories"
-msgstr "Semua Repositori"
-
-#: cola/widgets/prefs.py:246
-msgid "Current Repository"
-msgstr "Repositori Saat Ini"
-
-#: cola/widgets/prefs.py:247
-msgid "Settings"
-msgstr "Pengaturan"
-
-#: cola/widgets/recent.py:39
-msgid "Recently Modified Files"
-msgstr "Berkas yang Baru Dimodifikasi"
-
-#: cola/widgets/recent.py:49
-msgid " commits ago"
-msgstr " commit yang lalu"
-
-#: cola/widgets/recent.py:52
-msgid "Showing changes since"
-msgstr "Menampilkan perubahan sejak"
-
-#: cola/widgets/recent.py:64
-msgid "Expand all"
-msgstr "Bentangkan semua"
-
-#: cola/widgets/recent.py:68
-msgid "Collapse all"
-msgstr "Gulung semua"
+#: cola/widgets/cfgactions.py:208
+msgid "Arguments"
+msgstr "Argumen"
 
 #: cola/widgets/remote.py:144 cola/widgets/remote.py:145
 msgid "Updating"
@@ -2002,20 +2181,20 @@ msgstr "Sertakan tag "
 msgid "Rebase "
 msgstr "Rebase"
 
-#: cola/widgets/remote.py:347
+#: cola/widgets/remote.py:349
 #, python-format
 msgid "URL: %s"
 msgstr "URL: %s"
 
-#: cola/widgets/remote.py:435
+#: cola/widgets/remote.py:437
 msgid "No repository selected."
 msgstr "Tidak ada repositori terpilih"
 
-#: cola/widgets/remote.py:450
+#: cola/widgets/remote.py:452
 msgid "Push"
 msgstr "Push"
 
-#: cola/widgets/remote.py:452
+#: cola/widgets/remote.py:454
 #, python-format
 msgid ""
 "Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
@@ -2024,36 +2203,36 @@ msgstr ""
 "Cabang \"%(branch)s\" tidak ada di \"%(remote)s\".\n"
 "Cabang hulu baru akan di publikasikan."
 
-#: cola/widgets/remote.py:454
+#: cola/widgets/remote.py:456
 msgid "Create a new remote branch?"
 msgstr "Buat cabang baru di hulu?"
 
-#: cola/widgets/remote.py:455
+#: cola/widgets/remote.py:457
 msgid "Create Remote Branch"
 msgstr "Buat Cabang Hulu"
 
-#: cola/widgets/remote.py:463
+#: cola/widgets/remote.py:465
 msgid "Force Fetch?"
 msgstr "Paksa Fetch?"
 
-#: cola/widgets/remote.py:464
+#: cola/widgets/remote.py:466
 msgid "Non-fast-forward fetch overwrites local history!"
 msgstr "Nonfast-forward fetch menimpa histori lokal!"
 
-#: cola/widgets/remote.py:465
+#: cola/widgets/remote.py:467
 #, python-format
 msgid "Force fetching from %s?"
 msgstr "Paksa fetch dari %s?"
 
-#: cola/widgets/remote.py:466
+#: cola/widgets/remote.py:468
 msgid "Force Fetch"
 msgstr "Paksa Fetch"
 
-#: cola/widgets/remote.py:468
+#: cola/widgets/remote.py:470
 msgid "Force Push?"
 msgstr "Paksa Push?"
 
-#: cola/widgets/remote.py:469
+#: cola/widgets/remote.py:471
 msgid ""
 "Non-fast-forward push overwrites published history!\n"
 "(Did you pull first?)"
@@ -2061,194 +2240,23 @@ msgstr ""
 "Non-fast-forward push menimpa histori terpublikasi!\n"
 "(Apakah sudah ditarik sebelumnya?)"
 
-#: cola/widgets/remote.py:471
+#: cola/widgets/remote.py:473
 #, python-format
 msgid "Force push to %s?"
 msgstr "Paksa push ke %s?"
 
-#: cola/widgets/remote.py:472
+#: cola/widgets/remote.py:474
 msgid "Force Push"
 msgstr "Paksa Push"
 
-#: cola/widgets/remote.py:519
+#: cola/widgets/remote.py:521
 msgid "Already up-to-date."
 msgstr "Sudah up-to-date."
 
-#: cola/widgets/remote.py:544
+#: cola/widgets/remote.py:546
 msgid "Have you rebased/pulled lately?"
 msgstr "Sudahkan Anda rebase/tarik baru-baru ini?"
-
-#: cola/widgets/search.py:48
-msgid "Browse..."
-msgstr "Jelajah..."
-
-#: cola/widgets/search.py:54 cola/widgets/search.py:59
-msgid "yyyy-MM-dd"
-msgstr "dd-MM-yyyy"
-
-#: cola/widgets/search.py:224
-msgid "Search by Expression"
-msgstr "Cari berdasarkan Ekspresi"
-
-#: cola/widgets/search.py:225
-msgid "Search by Path"
-msgstr "Cari berdasarkan Lokasi"
-
-#: cola/widgets/search.py:226
-msgid "Search Commit Messages"
-msgstr "Cari Pesan Commit"
-
-#: cola/widgets/search.py:227
-msgid "Search Diffs"
-msgstr "Cari Diff"
-
-#: cola/widgets/search.py:228
-msgid "Search Authors"
-msgstr "Cari Penulis"
-
-#: cola/widgets/search.py:229
-msgid "Search Committers"
-msgstr "Cari Commiter"
-
-#: cola/widgets/search.py:230
-msgid "Search Date Range"
-msgstr "Cari Rentang Tanggal"
-
-#: cola/widgets/search.py:323
-msgid "Choose Path(s)"
-msgstr "Pilih Lokasi"
-
-#: cola/widgets/selectcommits.py:52
-msgid "Revision Expression:"
-msgstr "Ekspresi Revisi:"
-
-#: cola/widgets/selectcommits.py:103
-msgid "No commits exist in this branch."
-msgstr "Tidak ada commit di cabang ini."
 
 #: cola/widgets/spellcheck.py:140
 msgid "Spelling Suggestions"
 msgstr "Saran Ejaan"
-
-#: cola/widgets/startup.py:28
-msgid "git-cola"
-msgstr "git-cola"
-
-#: cola/widgets/startup.py:35
-msgid "New..."
-msgstr "Baru..."
-
-#: cola/widgets/startup.py:59
-msgid "Select Repository..."
-msgstr "Pilih Repository..."
-
-#: cola/widgets/startup.py:64
-msgid "Select manually..."
-msgstr "Pilih secara manual..."
-
-#: cola/widgets/stash.py:39
-msgid "Stash"
-msgstr "Stash"
-
-#: cola/widgets/stash.py:52
-msgid "Apply the selected stash"
-msgstr "Terapkan stash terpilih"
-
-#: cola/widgets/stash.py:56
-msgid "Save modified state to new stash"
-msgstr "Simpan perubahan ke stash baru"
-
-#: cola/widgets/stash.py:59
-msgid "Drop"
-msgstr "Buang"
-
-#: cola/widgets/stash.py:60
-msgid "Drop the selected stash"
-msgstr "Buang stash terpilih"
-
-#: cola/widgets/stash.py:67
-msgid "Keep Index"
-msgstr "Pertahankan Index"
-
-#: cola/widgets/stash.py:188
-msgid "Save Stash"
-msgstr "Simpan Stash"
-
-#: cola/widgets/stash.py:189
-msgid "Enter a name for the stash"
-msgstr "Masukkan nama untuk stash"
-
-#: cola/widgets/stash.py:195
-msgid "Error: Stash exists"
-msgstr "Error: Stash sudah ada"
-
-#: cola/widgets/stash.py:196
-#, python-format
-msgid "A stash named \"%s\" already exists"
-msgstr "Stash dengan nama \"%s\" sudah ada"
-
-#: cola/widgets/stash.py:211
-msgid "Drop Stash?"
-msgstr "Buang Stash?"
-
-#: cola/widgets/stash.py:212
-msgid "Recovering a dropped stash is not possible."
-msgstr "Tidak mungkin mengembalikan stash yang dibuang."
-
-#: cola/widgets/stash.py:213
-#, python-format
-msgid "Drop the \"%s\" stash?"
-msgstr "Buang stash \"%s\"?"
-
-#: cola/widgets/stash.py:214
-msgid "Drop Stash"
-msgstr "Buang Stash"
-
-#: cola/widgets/status.py:77
-msgid "Untracked"
-msgstr "Tak Terlacak"
-
-#: cola/widgets/status.py:87
-msgid "Stage / Unstage"
-msgstr "Stage / Unstage"
-
-#: cola/widgets/status.py:91
-msgid "Revert Unstaged Edits..."
-msgstr "Kembalikan Suntingan tak distag..."
-
-#: cola/widgets/status.py:122
-msgid "Move Up"
-msgstr "Pindah Ke Atas"
-
-#: cola/widgets/status.py:129
-msgid "Copy Path to Clipboard"
-msgstr "Salin Lokasi ke Papan klip"
-
-#: cola/widgets/status.py:494 cola/widgets/status.py:572
-msgid "Revert Uncommited Edits..."
-msgstr "Kembalikan Suntingan Belum dicommmit..."
-
-#: cola/widgets/status.py:591
-msgid "Delete File(s)..."
-msgstr "Hapus Berkas...?"
-
-#: cola/widgets/status.py:594
-msgid "Add to .gitignore"
-msgstr "Tambahkan ke .gitignore"
-
-#: cola/widgets/status.py:626
-msgid "Delete Files?"
-msgstr "Hapus Berkas?"
-
-#: cola/widgets/status.py:627
-msgid "The following files will be deleted:"
-msgstr "Berkas berikut akan dihapus:"
-
-#: cola/widgets/status.py:634
-#, python-format
-msgid "Delete %d file(s)?"
-msgstr "Hapus %d berkas?"
-
-#: cola/widgets/status.py:635
-msgid "Delete Files"
-msgstr "Hapus Berkas"
