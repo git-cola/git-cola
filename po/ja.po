@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-15 16:33-0700\n"
+"POT-Creation-Date: 2014-07-18 16:22-0700\n"
 "PO-Revision-Date: 2008-03-15 20:12+0900\n"
 "Last-Translator: しらいし ななこ <nanako3@bluebottle.com>\n"
 "Language-Team: Japanese\n"
@@ -18,328 +18,71 @@ msgstr ""
 
 #: cola/app.py:232
 #, python-format
-msgid "fatal: \"%s\" is not a directory.  Please specify --repo <path>."
-msgstr ""
-
-#: cola/cmds.py:97
-msgid "Amend"
-msgstr ""
-
-#: cola/cmds.py:131
-#, fuzzy
-msgid "Cannot Amend"
-msgstr "アイコンが書けません:"
-
-#: cola/cmds.py:132
 msgid ""
-"You are in the middle of a merge.\n"
-"Cannot amend while merging."
+"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
 msgstr ""
 
-#: cola/cmds.py:192
+#: cola/interaction.py:54 cola/widgets/main.py:292
+msgid "Continue"
+msgstr "続行"
+
+#: cola/interaction.py:64
 #, python-format
-msgid "PATCH %(current)d/%(count)d"
+msgid "Run %s?"
 msgstr ""
 
-#: cola/cmds.py:196
-msgid "Summary:"
-msgstr ""
-
-#: cola/cmds.py:205
-msgid "Patch(es) Applied"
-msgstr ""
-
-#: cola/cmds.py:206
+#: cola/interaction.py:65
 #, python-format
-msgid "%d patch(es) applied."
+msgid "Run the \"%s\" command?"
 msgstr ""
 
-#: cola/cmds.py:303
-#, fuzzy
-msgid "Revert Unstaged Changes?"
-msgstr "コミット予定に入っていない変更"
-
-#: cola/cmds.py:304
-msgid ""
-"This operation drops unstaged changes.\n"
-"These changes cannot be recovered."
+#: cola/interaction.py:67 cola/widgets/cfgactions.py:247
+msgid "Run"
 msgstr ""
 
-#: cola/cmds.py:306
-#, fuzzy
-msgid "Revert the unstaged changes?"
-msgstr "コミット予定に入っていない変更"
-
-#: cola/cmds.py:307
-#, fuzzy
-msgid "Revert Unstaged Changes"
-msgstr "コミット予定に入っていない変更"
-
-#: cola/cmds.py:316 cola/widgets/status.py:655
-msgid "No files selected for checkout from HEAD."
-msgstr ""
-
-#: cola/cmds.py:339
-#, fuzzy, python-format
-msgid "Created commit: %s"
-msgstr "コミット %s を作成しました: %s"
-
-#: cola/cmds.py:341
-#, fuzzy, python-format
-msgid "Commit failed: %s"
-msgstr "コミットに失敗しました。"
-
-#: cola/cmds.py:384 cola/cmds.py:1325
-#, fuzzy
-msgid "Error"
-msgstr "エラー"
-
-#: cola/cmds.py:385
-#, python-format
-msgid "Deleting \"%s\" failed"
-msgstr ""
-
-#: cola/cmds.py:418
-#, fuzzy
-msgid "Remote Branch Deleted"
-msgstr "ブランチの名前変更"
-
-#: cola/cmds.py:419
-#, python-format
-msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
-msgstr ""
-
-#: cola/cmds.py:423 cola/guicmds.py:108 cola/widgets/remote.py:525
-#, python-format
-msgid "\"%(command)s\" returned exit status %(status)d"
-msgstr ""
-
-#: cola/cmds.py:426
-#, fuzzy
-msgid "Error Deleting Remote Branch"
-msgstr "ブランチを作成"
-
-#: cola/cmds.py:505 cola/cmds.py:611
-msgid "Launch Editor"
-msgstr ""
-
-#: cola/cmds.py:541
-#, python-format
-msgid "Cannot exec \"%s\": please configure your editor"
-msgstr ""
-
-#: cola/cmds.py:544
-#, fuzzy
-msgid "Error Editing File"
-msgstr "diff を読む際のエラーです:"
-
-#: cola/cmds.py:566
-msgid "Launch Diff Tool"
-msgstr ""
-
-#: cola/cmds.py:593
-msgid "Launch Terminal"
-msgstr ""
-
-#: cola/cmds.py:632
-msgid "Error: Cannot find commit template"
-msgstr ""
-
-#: cola/cmds.py:633
-#, fuzzy, python-format
-msgid "%s: No such file or directory."
-msgstr ""
-"致命的: パス %s が stat できません。そのようなファイルやディレクトリはありま"
-"せん"
-
-#: cola/cmds.py:652
-msgid "Error: Unconfigured commit template"
-msgstr ""
-
-#: cola/cmds.py:653
-msgid ""
-"A commit template has not been configured.\n"
-"Use \"git config\" to define \"commit.template\"\n"
-"so that it points to a commit template."
-msgstr ""
-
-#: cola/cmds.py:712
-msgid "Open Using Default Application"
-msgstr ""
-
-#: cola/cmds.py:735
-#, fuzzy
-msgid "Open Parent Directory"
-msgstr "最近使ったリポジトリを開く"
-
-#: cola/cmds.py:792
-#, python-format
-msgid "Error: could not clone \"%s\""
-msgstr ""
-
-#: cola/cmds.py:793
-#, python-format
-msgid "git clone returned exit code %s"
-msgstr ""
-
-#: cola/cmds.py:840
-#, fuzzy, python-format
-msgid "Rebase onto %s"
-msgstr "リセット"
-
-#: cola/cmds.py:841 cola/widgets/main.py:393
-#, fuzzy
-msgid "Rebase"
-msgstr "リセット"
-
-#: cola/cmds.py:855
-#, fuzzy
-msgid "Edit Rebase"
-msgstr "リセット"
-
-#: cola/cmds.py:856 cola/widgets/archive.py:123 cola/widgets/bookmarks.py:67
-#: cola/widgets/browse.py:480 cola/widgets/stash.py:55
-msgid "Save"
-msgstr "保存"
-
-#: cola/cmds.py:900 cola/widgets/action.py:59 cola/widgets/editremotes.py:64
-#: cola/widgets/grep.py:107 cola/widgets/recent.py:55
-#: cola/widgets/recent.py:124
-msgid "Refresh"
-msgstr "再読み込み"
-
-#: cola/cmds.py:928
-#, python-format
-msgid "Run \"%s\"?"
-msgstr ""
-
-#: cola/cmds.py:935
-#, fuzzy
-msgid "Please select a file"
-msgstr "トラッキング・ブランチを選択して下さい。"
-
-#: cola/cmds.py:936
-#, python-format
-msgid "\"%s\" requires a selected file."
-msgstr ""
-
-#: cola/cmds.py:948
-#, fuzzy
-msgid "Invalid Revision"
-msgstr "無効なリビジョン: %s"
-
-#: cola/cmds.py:949
-#, fuzzy
-msgid "The revision expression cannot be empty."
-msgstr "リビジョン式が空です。"
-
-#: cola/cmds.py:964
-#, python-format
-msgid "Running command: %s"
-msgstr ""
-
-#: cola/cmds.py:973 cola/cmds.py:1141 cola/interaction.py:72
+#: cola/interaction.py:72 cola/cmds.py:1001 cola/cmds.py:1169
 #, python-format
 msgid "Output: %s"
 msgstr ""
 
-#: cola/cmds.py:974 cola/guicmds.py:113 cola/interaction.py:73
+#: cola/interaction.py:73 cola/guicmds.py:113 cola/cmds.py:1002
 #, python-format
 msgid "Errors: %s"
 msgstr ""
 
-#: cola/cmds.py:1017
-msgid "Sign Off"
-msgstr "署名"
-
-#: cola/cmds.py:1038
-msgid "unknown"
-msgstr ""
-
-#: cola/cmds.py:1051 cola/widgets/action.py:57
-#, fuzzy
-msgid "Stage"
-msgstr "保存"
-
-#: cola/cmds.py:1058
-#, fuzzy, python-format
-msgid "Staging: %s"
-msgstr "%s をスキャンしています…"
-
-#: cola/cmds.py:1075
-msgid "Stage Modified"
-msgstr ""
-
-#: cola/cmds.py:1089
-#, fuzzy
-msgid "Stage Unmerged"
-msgstr "変更をコミット予定に入れる"
-
-#: cola/cmds.py:1103
-#, fuzzy
-msgid "Stage Untracked"
-msgstr "変更をコミット予定に入れる"
-
-#: cola/cmds.py:1121
+#: cola/interaction.py:74
 #, python-format
-msgid "Tagging \"%(revision)s\" as \"%(name)s\""
+msgid "Exit code: %s"
 msgstr ""
 
-#: cola/cmds.py:1129
-msgid "GPG-signed"
+#: cola/inotify.py:57
+msgid "inotify is disabled because \"cola.inotify\" is false"
 msgstr ""
 
-#: cola/cmds.py:1156 cola/widgets/action.py:58
+#: cola/inotify.py:63
+msgid ""
+"file notification: disabled\n"
+"Note: install pywin32 to enable.\n"
+msgstr ""
+
+#: cola/inotify.py:66
+msgid ""
+"inotify: disabled\n"
+"Note: install python-pyinotify to enable inotify.\n"
+msgstr ""
+
+#: cola/inotify.py:72
+msgid "On Debian systems try: sudo aptitude install python-pyinotify"
+msgstr ""
+
+#: cola/inotify.py:81
 #, fuzzy
-msgid "Unstage"
-msgstr "コミット予定に入っていない変更"
+msgid "File notification enabled."
+msgstr "ファイル変更時刻を信頼する"
 
-#: cola/cmds.py:1163
-#, fuzzy, python-format
-msgid "Unstaging: %s"
-msgstr "コミットから '%s' を降ろす"
-
-#: cola/cmds.py:1191
-#, python-format
-msgid "Untracking: %s"
+#: cola/inotify.py:83
+msgid "inotify enabled."
 msgstr ""
-
-#: cola/cmds.py:1276
-#, fuzzy
-msgid "Error Launching History Browser"
-msgstr "ファイル・ブラウザ"
-
-#: cola/cmds.py:1277
-#, python-format
-msgid "Cannot exec \"%s\": please configure a history browser"
-msgstr ""
-
-#: cola/difftool.py:77
-msgid "git-cola diff"
-msgstr ""
-
-#: cola/difftool.py:93 cola/widgets/compare.py:91
-msgid "Compare"
-msgstr ""
-
-#: cola/difftool.py:97 cola/qtutils.py:602 cola/widgets/about.py:68
-#: cola/widgets/about.py:128 cola/widgets/bookmarks.py:73
-#: cola/widgets/browse.py:479 cola/widgets/cfgactions.py:89
-#: cola/widgets/cfgactions.py:246 cola/widgets/compare.py:95
-#: cola/widgets/completion.py:504 cola/widgets/createbranch.py:157
-#: cola/widgets/createtag.py:119 cola/widgets/editremotes.py:70
-#: cola/widgets/grep.py:117 cola/widgets/patch.py:99 cola/widgets/prefs.py:259
-#: cola/widgets/recent.py:78 cola/widgets/remote.py:185
-#: cola/widgets/remote.py:253 cola/widgets/search.py:85
-#: cola/widgets/selectcommits.py:61 cola/widgets/startup.py:44
-#: cola/widgets/stash.py:63 cola/widgets/stash.py:64
-msgid "Close"
-msgstr "閉じる"
-
-#: cola/gitcmds.py:396
-#, fuzzy
-msgid "Nothing to do"
-msgstr "%s から複製する内容はありません"
 
 #: cola/guicmds.py:25
 msgid "Delete Branch"
@@ -382,6 +125,11 @@ msgstr "コミットをコピー"
 #, fuzzy
 msgid "Error Creating Repository"
 msgstr "新しいリポジトリを作る"
+
+#: cola/guicmds.py:108 cola/cmds.py:445 cola/widgets/remote.py:527
+#, python-format
+msgid "\"%(command)s\" returned exit status %(status)d"
+msgstr ""
 
 #: cola/guicmds.py:110
 #, python-format
@@ -441,62 +189,303 @@ msgstr "ブランチ削除"
 msgid "Review"
 msgstr ""
 
-#: cola/inotify.py:57
-msgid "inotify is disabled because \"cola.inotify\" is false"
+#: cola/cmds.py:99
+msgid "Amend"
 msgstr ""
 
-#: cola/inotify.py:63
-msgid ""
-"file notification: disabled\n"
-"Note: install pywin32 to enable.\n"
-msgstr ""
-
-#: cola/inotify.py:66
-msgid ""
-"inotify: disabled\n"
-"Note: install python-pyinotify to enable inotify.\n"
-msgstr ""
-
-#: cola/inotify.py:72
-msgid "On Debian systems try: sudo aptitude install python-pyinotify"
-msgstr ""
-
-#: cola/inotify.py:81
+#: cola/cmds.py:133
 #, fuzzy
-msgid "File notification enabled."
-msgstr "ファイル変更時刻を信頼する"
+msgid "Cannot Amend"
+msgstr "アイコンが書けません:"
 
-#: cola/inotify.py:83
-msgid "inotify enabled."
+#: cola/cmds.py:134
+msgid ""
+"You are in the middle of a merge.\n"
+"Cannot amend while merging."
 msgstr ""
 
-#: cola/interaction.py:54 cola/widgets/main.py:292
-msgid "Continue"
-msgstr "続行"
-
-#: cola/interaction.py:64
+#: cola/cmds.py:194
 #, python-format
-msgid "Run %s?"
+msgid "PATCH %(current)d/%(count)d"
 msgstr ""
 
-#: cola/interaction.py:65
+#: cola/cmds.py:198
+msgid "Summary:"
+msgstr ""
+
+#: cola/cmds.py:207
+msgid "Patch(es) Applied"
+msgstr ""
+
+#: cola/cmds.py:208
 #, python-format
-msgid "Run the \"%s\" command?"
+msgid "%d patch(es) applied."
 msgstr ""
 
-#: cola/interaction.py:67 cola/widgets/cfgactions.py:247
-msgid "Run"
+#: cola/cmds.py:305
+#, fuzzy
+msgid "Revert Unstaged Changes?"
+msgstr "コミット予定に入っていない変更"
+
+#: cola/cmds.py:306
+msgid ""
+"This operation drops unstaged changes.\n"
+"These changes cannot be recovered."
 msgstr ""
 
-#: cola/interaction.py:74
+#: cola/cmds.py:308
+#, fuzzy
+msgid "Revert the unstaged changes?"
+msgstr "コミット予定に入っていない変更"
+
+#: cola/cmds.py:309
+#, fuzzy
+msgid "Revert Unstaged Changes"
+msgstr "コミット予定に入っていない変更"
+
+#: cola/cmds.py:318 cola/widgets/status.py:659
+msgid "No files selected for checkout from HEAD."
+msgstr ""
+
+#: cola/cmds.py:348
+#, fuzzy, python-format
+msgid "Created commit: %s"
+msgstr "コミット %s を作成しました: %s"
+
+#: cola/cmds.py:350
+#, fuzzy, python-format
+msgid "Commit failed: %s"
+msgstr "コミットに失敗しました。"
+
+#: cola/cmds.py:406 cola/cmds.py:1353
+#, fuzzy
+msgid "Error"
+msgstr "エラー"
+
+#: cola/cmds.py:407
 #, python-format
-msgid "Exit code: %s"
+msgid "Deleting \"%s\" failed"
+msgstr ""
+
+#: cola/cmds.py:440
+#, fuzzy
+msgid "Remote Branch Deleted"
+msgstr "ブランチの名前変更"
+
+#: cola/cmds.py:441
+#, python-format
+msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
+msgstr ""
+
+#: cola/cmds.py:448
+#, fuzzy
+msgid "Error Deleting Remote Branch"
+msgstr "ブランチを作成"
+
+#: cola/cmds.py:527 cola/cmds.py:633
+msgid "Launch Editor"
+msgstr ""
+
+#: cola/cmds.py:563
+#, python-format
+msgid "Cannot exec \"%s\": please configure your editor"
+msgstr ""
+
+#: cola/cmds.py:566
+#, fuzzy
+msgid "Error Editing File"
+msgstr "diff を読む際のエラーです:"
+
+#: cola/cmds.py:588
+msgid "Launch Diff Tool"
+msgstr ""
+
+#: cola/cmds.py:615
+msgid "Launch Terminal"
+msgstr ""
+
+#: cola/cmds.py:654
+msgid "Error: Cannot find commit template"
+msgstr ""
+
+#: cola/cmds.py:655
+#, fuzzy, python-format
+msgid "%s: No such file or directory."
+msgstr ""
+"致命的: パス %s が stat できません。そのようなファイルやディレクトリはありま"
+"せん"
+
+#: cola/cmds.py:674
+msgid "Error: Unconfigured commit template"
+msgstr ""
+
+#: cola/cmds.py:675
+msgid ""
+"A commit template has not been configured.\n"
+"Use \"git config\" to define \"commit.template\"\n"
+"so that it points to a commit template."
+msgstr ""
+
+#: cola/cmds.py:737
+msgid "Open Using Default Application"
+msgstr ""
+
+#: cola/cmds.py:760
+#, fuzzy
+msgid "Open Parent Directory"
+msgstr "最近使ったリポジトリを開く"
+
+#: cola/cmds.py:817
+#, python-format
+msgid "Error: could not clone \"%s\""
+msgstr ""
+
+#: cola/cmds.py:818
+#, python-format
+msgid "git clone returned exit code %s"
+msgstr ""
+
+#: cola/cmds.py:865
+#, fuzzy, python-format
+msgid "Rebase onto %s"
+msgstr "リセット"
+
+#: cola/cmds.py:866 cola/widgets/main.py:395
+#, fuzzy
+msgid "Rebase"
+msgstr "リセット"
+
+#: cola/cmds.py:880
+#, fuzzy
+msgid "Edit Rebase"
+msgstr "リセット"
+
+#: cola/cmds.py:881 cola/widgets/archive.py:123 cola/widgets/bookmarks.py:67
+#: cola/widgets/browse.py:485 cola/widgets/stash.py:55
+msgid "Save"
+msgstr "保存"
+
+#: cola/cmds.py:925 cola/widgets/action.py:59 cola/widgets/recent.py:55
+#: cola/widgets/recent.py:124 cola/widgets/editremotes.py:64
+#: cola/widgets/grep.py:107
+msgid "Refresh"
+msgstr "再読み込み"
+
+#: cola/cmds.py:953
+#, python-format
+msgid "Run \"%s\"?"
+msgstr ""
+
+#: cola/cmds.py:960
+#, fuzzy
+msgid "Please select a file"
+msgstr "トラッキング・ブランチを選択して下さい。"
+
+#: cola/cmds.py:961
+#, python-format
+msgid "\"%s\" requires a selected file."
+msgstr ""
+
+#: cola/cmds.py:973
+#, fuzzy
+msgid "Invalid Revision"
+msgstr "無効なリビジョン: %s"
+
+#: cola/cmds.py:974
+#, fuzzy
+msgid "The revision expression cannot be empty."
+msgstr "リビジョン式が空です。"
+
+#: cola/cmds.py:989
+#, python-format
+msgid "Running command: %s"
+msgstr ""
+
+#: cola/cmds.py:1045
+msgid "Sign Off"
+msgstr "署名"
+
+#: cola/cmds.py:1066
+msgid "unknown"
+msgstr ""
+
+#: cola/cmds.py:1079 cola/widgets/action.py:57
+#, fuzzy
+msgid "Stage"
+msgstr "保存"
+
+#: cola/cmds.py:1086
+#, fuzzy, python-format
+msgid "Staging: %s"
+msgstr "%s をスキャンしています…"
+
+#: cola/cmds.py:1103
+msgid "Stage Modified"
+msgstr ""
+
+#: cola/cmds.py:1117
+#, fuzzy
+msgid "Stage Unmerged"
+msgstr "変更をコミット予定に入れる"
+
+#: cola/cmds.py:1131
+#, fuzzy
+msgid "Stage Untracked"
+msgstr "変更をコミット予定に入れる"
+
+#: cola/cmds.py:1149
+#, python-format
+msgid "Tagging \"%(revision)s\" as \"%(name)s\""
+msgstr ""
+
+#: cola/cmds.py:1157
+msgid "GPG-signed"
+msgstr ""
+
+#: cola/cmds.py:1184 cola/widgets/action.py:58
+#, fuzzy
+msgid "Unstage"
+msgstr "コミット予定に入っていない変更"
+
+#: cola/cmds.py:1191
+#, fuzzy, python-format
+msgid "Unstaging: %s"
+msgstr "コミットから '%s' を降ろす"
+
+#: cola/cmds.py:1219
+#, python-format
+msgid "Untracking: %s"
+msgstr ""
+
+#: cola/cmds.py:1304
+#, fuzzy
+msgid "Error Launching History Browser"
+msgstr "ファイル・ブラウザ"
+
+#: cola/cmds.py:1305
+#, python-format
+msgid "Cannot exec \"%s\": please configure a history browser"
 msgstr ""
 
 #: cola/qtutils.py:489
 #, fuzzy
 msgid "Close..."
 msgstr "複製…"
+
+#: cola/qtutils.py:602 cola/difftool.py:97 cola/widgets/patch.py:99
+#: cola/widgets/prefs.py:259 cola/widgets/createtag.py:119
+#: cola/widgets/bookmarks.py:73 cola/widgets/search.py:85
+#: cola/widgets/startup.py:44 cola/widgets/recent.py:78
+#: cola/widgets/browse.py:484 cola/widgets/stash.py:63
+#: cola/widgets/stash.py:64 cola/widgets/selectcommits.py:61
+#: cola/widgets/completion.py:504 cola/widgets/createbranch.py:157
+#: cola/widgets/about.py:68 cola/widgets/about.py:128
+#: cola/widgets/compare.py:95 cola/widgets/editremotes.py:70
+#: cola/widgets/grep.py:117 cola/widgets/cfgactions.py:89
+#: cola/widgets/cfgactions.py:246 cola/widgets/remote.py:185
+#: cola/widgets/remote.py:255
+msgid "Close"
+msgstr "閉じる"
 
 #: cola/qtutils.py:605 cola/qtutils.py:645
 #, fuzzy
@@ -505,6 +494,19 @@ msgstr "ブランチ削除"
 
 #: cola/qtutils.py:643
 msgid "Attach"
+msgstr ""
+
+#: cola/gitcmds.py:413
+#, fuzzy
+msgid "Nothing to do"
+msgstr "%s から複製する内容はありません"
+
+#: cola/difftool.py:77
+msgid "git-cola diff"
+msgstr ""
+
+#: cola/difftool.py:93 cola/widgets/compare.py:91
+msgid "Compare"
 msgstr ""
 
 #: cola/models/browse.py:38 cola/widgets/createtag.py:64
@@ -569,300 +571,48 @@ msgstr "変更をコミット予定に入れる"
 msgid "Changed Upstream"
 msgstr ""
 
-#: cola/widgets/about.py:49
-msgid "About git-cola"
+#: cola/widgets/patch.py:68
+msgid "Apply Patches"
 msgstr ""
 
-#: cola/widgets/about.py:99
+#: cola/widgets/patch.py:77
 msgid ""
-"This PyQt4 does not include QtWebKit.\n"
-"The keyboard shortcuts feature is unavailable."
+"\n"
+"            <p>\n"
+"                Drag and drop or use the <strong>Add</strong> button to add\n"
+"                patches to the list\n"
+"            </p>\n"
+"            "
 msgstr ""
 
-#: cola/widgets/about.py:106
-msgid "hotkeys.html"
-msgstr ""
-
-#: cola/widgets/about.py:124
-msgid "Shortcuts"
-msgstr ""
-
-#: cola/widgets/action.py:60 cola/widgets/main.py:208
-#, fuzzy
-msgid "Fetch..."
-msgstr "リセット…"
-
-#: cola/widgets/action.py:61 cola/widgets/main.py:210
-msgid "Push..."
-msgstr "プッシュ…"
-
-#: cola/widgets/action.py:62 cola/widgets/main.py:212
-#, fuzzy
-msgid "Pull..."
-msgstr "プッシュ…"
-
-#: cola/widgets/action.py:63 cola/widgets/main.py:223
-#, fuzzy
-msgid "Stash..."
-msgstr "プッシュ…"
-
-#: cola/widgets/archive.py:103
-msgid "Save Archive"
-msgstr ""
-
-#: cola/widgets/archive.py:120 cola/widgets/editremotes.py:218
-#: cola/widgets/merge.py:80
-msgid "Cancel"
-msgstr "中止"
-
-#: cola/widgets/archive.py:127
-msgid "Prefix"
-msgstr ""
-
-#: cola/widgets/archive.py:132
-msgid "Advanced"
-msgstr ""
-
-#: cola/widgets/archive.py:199 cola/widgets/browse.py:411
-msgid "File Saved"
-msgstr ""
-
-#: cola/widgets/archive.py:200 cola/widgets/browse.py:412
-#, python-format
-msgid "File saved to \"%s\""
-msgstr ""
-
-#: cola/widgets/archive.py:207
-msgid "Overwrite File?"
-msgstr ""
-
-#: cola/widgets/archive.py:208
-#, python-format
-msgid "The file \"%s\" exists and will be overwritten."
-msgstr ""
-
-#: cola/widgets/archive.py:209
-#, python-format
-msgid "Overwrite \"%s\"?"
-msgstr ""
-
-#: cola/widgets/archive.py:210
-msgid "Overwrite"
-msgstr ""
-
-#: cola/widgets/bookmarks.py:35 cola/widgets/main.py:102
-msgid "Bookmarks"
-msgstr ""
-
-#: cola/widgets/bookmarks.py:50 cola/widgets/bookmarks.py:139
-#: cola/widgets/bookmarks.py:185
-msgid "Open"
-msgstr "開く"
-
-#: cola/widgets/bookmarks.py:55 cola/widgets/patch.py:88
-#: cola/widgets/patch.py:102
+#: cola/widgets/patch.py:88 cola/widgets/patch.py:102
+#: cola/widgets/bookmarks.py:55
 msgid "Add"
 msgstr ""
 
-#: cola/widgets/bookmarks.py:107
+#: cola/widgets/patch.py:89
+msgid "Add patches (+)"
+msgstr ""
+
+#: cola/widgets/patch.py:92 cola/widgets/patch.py:106
 #, fuzzy
-msgid "Path to git repository"
-msgstr "Git リポジトリではありません: %s"
+msgid "Remove"
+msgstr "リモート"
 
-#: cola/widgets/bookmarks.py:108
+#: cola/widgets/patch.py:93
 #, fuzzy
-msgid "Enter Git Repository"
-msgstr "GIT リポジトリ"
+msgid "Remove selected (Delete)"
+msgstr "ブランチの名前変更"
 
-#: cola/widgets/bookmarks.py:143 cola/widgets/main.py:198
-msgid "Bookmarks..."
-msgstr ""
-
-#: cola/widgets/bookmarks.py:189
-msgid "Open in New Window"
-msgstr ""
-
-#: cola/widgets/bookmarks.py:199 cola/widgets/grep.py:102
-#: cola/widgets/recent.py:72
-msgid "Edit"
-msgstr "編集"
-
-#: cola/widgets/bookmarks.py:213 cola/widgets/diff.py:201
-msgid "Copy"
-msgstr "コピー"
-
-#: cola/widgets/browse.py:73 cola/widgets/main.py:571
-#, fuzzy, python-format
-msgid "Repository: %s"
-msgstr "リポジトリ:"
-
-#: cola/widgets/browse.py:75 cola/widgets/main.py:573
-#, fuzzy, python-format
-msgid "Branch: %s"
-msgstr "ブランチ:"
-
-#: cola/widgets/browse.py:78
-#, python-format
-msgid "%(project)s: %(branch)s - Browse"
-msgstr ""
-
-#: cola/widgets/browse.py:80
-msgid "(Amending)"
-msgstr ""
-
-#: cola/widgets/browse.py:107
-msgid "View History..."
-msgstr ""
-
-#: cola/widgets/browse.py:108
-msgid "View history for selected path(s)."
-msgstr ""
-
-#: cola/widgets/browse.py:112 cola/widgets/status.py:523
-#: cola/widgets/status.py:553 cola/widgets/status.py:611
+#: cola/widgets/patch.py:96 cola/widgets/stash.py:51
 #, fuzzy
-msgid "Stage Selected"
-msgstr "選択"
+msgid "Apply"
+msgstr "りんご"
 
-#: cola/widgets/browse.py:113
+#: cola/widgets/patch.py:151
 #, fuzzy
-msgid "Stage selected path(s) for commit."
-msgstr "コミット予定済"
-
-#: cola/widgets/browse.py:118 cola/widgets/status.py:466
-#: cola/widgets/status.py:511
-msgid "Unstage Selected"
-msgstr ""
-
-#: cola/widgets/browse.py:119
-msgid "Remove selected path(s) from the staging area."
-msgstr ""
-
-#: cola/widgets/browse.py:124
-msgid "Untrack Selected"
-msgstr ""
-
-#: cola/widgets/browse.py:125
-msgid "Stop tracking path(s)"
-msgstr ""
-
-#: cola/widgets/browse.py:130
-msgid "Launch git-difftool on the current path."
-msgstr ""
-
-#: cola/widgets/browse.py:135
-msgid "Diff Against Predecessor..."
-msgstr ""
-
-#: cola/widgets/browse.py:136
-msgid "Launch git-difftool against previous versions."
-msgstr ""
-
-#: cola/widgets/browse.py:140
-#, fuzzy
-msgid "Revert Uncommitted Changes..."
-msgstr "変更を元に戻す"
-
-#: cola/widgets/browse.py:141
-#, fuzzy
-msgid "Revert changes to selected path(s)."
-msgstr "ファイル %s にした変更を元に戻しますか？"
-
-#: cola/widgets/browse.py:146
-msgid "Edit selected path(s)."
-msgstr ""
-
-#: cola/widgets/browse.py:322 cola/widgets/status.py:645
-#, fuzzy
-msgid "Revert Uncommitted Changes?"
-msgstr "変更を元に戻す"
-
-#: cola/widgets/browse.py:323 cola/widgets/diff.py:320
-#: cola/widgets/diff.py:333 cola/widgets/status.py:646
-msgid ""
-"This operation drops uncommitted changes.\n"
-"These changes cannot be recovered."
-msgstr ""
-
-#: cola/widgets/browse.py:325 cola/widgets/diff.py:322
-#: cola/widgets/diff.py:335 cola/widgets/status.py:648
-msgid "Revert the uncommitted changes?"
-msgstr ""
-
-#: cola/widgets/browse.py:326 cola/widgets/status.py:649
-#, fuzzy
-msgid "Revert Uncommitted Changes"
-msgstr "変更を元に戻す"
-
-#: cola/widgets/browse.py:376
-msgid "Select Previous Version"
-msgstr ""
-
-#: cola/widgets/browse.py:404
-#, python-format
-msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
-msgstr ""
-
-#: cola/widgets/browse.py:425
-#, fuzzy, python-format
-msgid "Browsing %s"
-msgstr "コミットに %s を加えています"
-
-#: cola/widgets/browse.py:443
-#, fuzzy, python-format
-msgid "Select file from \"%s\""
-msgstr "%s からブランチを削除しています。"
-
-#: cola/widgets/browse.py:452
-#, fuzzy
-msgid "Select File"
-msgstr "全て選択"
-
-#: cola/widgets/browse.py:480 cola/widgets/selectcommits.py:56
-msgid "Select"
-msgstr "選択"
-
-#: cola/widgets/cfgactions.py:87 cola/widgets/main.py:298
-#, fuzzy
-msgid "Abort"
-msgstr "中断しています"
-
-#: cola/widgets/cfgactions.py:154 cola/widgets/cfgactions.py:158
-#, fuzzy
-msgid "Abort Action"
-msgstr "中断しています"
-
-#: cola/widgets/cfgactions.py:155
-msgid ""
-"An action is still running.\n"
-"Terminating it could result in data loss."
-msgstr ""
-
-#: cola/widgets/cfgactions.py:157
-msgid "Abort the action?"
-msgstr ""
-
-#: cola/widgets/cfgactions.py:208
-msgid "Arguments"
-msgstr ""
-
-#: cola/widgets/cfgactions.py:227 cola/widgets/merge.py:58
-#: cola/widgets/remote.py:148
-msgid "Local Branch"
-msgstr "ローカル・ブランチ"
-
-#: cola/widgets/cfgactions.py:228 cola/widgets/merge.py:61
-msgid "Tracking Branch"
-msgstr "トラッキング・ブランチ"
-
-#: cola/widgets/cfgactions.py:229 cola/widgets/createbranch.py:120
-#: cola/widgets/merge.py:63
-msgid "Tag"
-msgstr "タグ"
-
-#: cola/widgets/cfgactions.py:233 cola/widgets/createtag.py:100
-msgid "Revision"
-msgstr "リビジョン"
+msgid "Select patch file(s)..."
+msgstr "削除…"
 
 #: cola/widgets/commitmsg.py:53
 #, fuzzy
@@ -911,7 +661,7 @@ msgstr "マージコミットメッセージ:"
 msgid "Fixup Previous Commit"
 msgstr "マージコミットメッセージ:"
 
-#: cola/widgets/commitmsg.py:142 cola/widgets/status.py:125
+#: cola/widgets/commitmsg.py:142 cola/widgets/status.py:126
 msgid "Move Down"
 msgstr ""
 
@@ -1017,37 +767,900 @@ msgstr "コミットメッセージ:"
 msgid "Extended description..."
 msgstr ""
 
-#: cola/widgets/compare.py:38
-msgid "*** Branch Point ***"
+#: cola/widgets/prefs.py:132
+msgid "User Name"
+msgstr "ユーザ名"
+
+#: cola/widgets/prefs.py:133
+msgid "Email Address"
+msgstr "電子メールアドレス"
+
+#: cola/widgets/prefs.py:134
+msgid "Merge Verbosity"
+msgstr "マージの冗長度"
+
+#: cola/widgets/prefs.py:135
+msgid "Number of Diff Context Lines"
+msgstr "diff の文脈行数"
+
+#: cola/widgets/prefs.py:136
+msgid "Summarize Merge Commits"
+msgstr "マージコミットの要約"
+
+#: cola/widgets/prefs.py:137
+msgid "Show Diffstat After Merge"
+msgstr "マージ後に diffstat を表示"
+
+#: cola/widgets/prefs.py:138
+msgid "Display Untracked Files"
 msgstr ""
 
-#: cola/widgets/compare.py:39
-msgid "*** Sandbox ***"
+#: cola/widgets/prefs.py:179
+msgid "Fixed-Width Font"
 msgstr ""
 
-#: cola/widgets/compare.py:40 cola/widgets/compare.py:63
-#: cola/widgets/compare.py:69
-msgid "Local"
+#: cola/widgets/prefs.py:180
+msgid "Font Size"
+msgstr "フォントの大きさ"
+
+#: cola/widgets/prefs.py:181
+msgid "Tab Width"
 msgstr ""
 
-#: cola/widgets/compare.py:45
-msgid "Branch Diff Viewer"
+#: cola/widgets/prefs.py:182
+msgid "Text Width"
 msgstr ""
 
-#: cola/widgets/compare.py:64 cola/widgets/compare.py:70
-#: cola/widgets/remote.py:155
-msgid "Remote"
-msgstr "リモート"
-
-#: cola/widgets/compare.py:99
+#: cola/widgets/prefs.py:184
 #, fuzzy
-msgid "File Differences"
+msgid "Editor"
+msgstr "編集"
+
+#: cola/widgets/prefs.py:185
+#, fuzzy
+msgid "History Browser"
+msgstr "ファイル・ブラウザ"
+
+#: cola/widgets/prefs.py:186
+msgid "Diff Tool"
+msgstr ""
+
+#: cola/widgets/prefs.py:187
+#, fuzzy
+msgid "Merge Tool"
+msgstr "マージ"
+
+#: cola/widgets/prefs.py:188
+msgid "Keep *.orig Merge Backups"
+msgstr ""
+
+#: cola/widgets/prefs.py:189
+msgid "Save GUI Settings"
+msgstr ""
+
+#: cola/widgets/prefs.py:237 cola/widgets/main.py:170
+msgid "Preferences"
 msgstr "設定"
 
-#: cola/widgets/createbranch.py:85 cola/widgets/createbranch.py:96
-#: cola/widgets/createbranch.py:153 cola/widgets/dag.py:125
+#: cola/widgets/prefs.py:245
+#, fuzzy
+msgid "All Repositories"
+msgstr "大域（全てのリポジトリ）"
+
+#: cola/widgets/prefs.py:246
+#, fuzzy
+msgid "Current Repository"
+msgstr "新しいリポジトリを作る"
+
+#: cola/widgets/prefs.py:247
+#, fuzzy
+msgid "Settings"
+msgstr "起動中…"
+
+#: cola/widgets/action.py:60 cola/widgets/main.py:208
+#, fuzzy
+msgid "Fetch..."
+msgstr "リセット…"
+
+#: cola/widgets/action.py:61 cola/widgets/main.py:210
+msgid "Push..."
+msgstr "プッシュ…"
+
+#: cola/widgets/action.py:62 cola/widgets/main.py:212
+#, fuzzy
+msgid "Pull..."
+msgstr "プッシュ…"
+
+#: cola/widgets/action.py:63 cola/widgets/main.py:223
+#, fuzzy
+msgid "Stash..."
+msgstr "プッシュ…"
+
+#: cola/widgets/archive.py:103
+msgid "Save Archive"
+msgstr ""
+
+#: cola/widgets/archive.py:120 cola/widgets/merge.py:85
+#: cola/widgets/editremotes.py:218
+msgid "Cancel"
+msgstr "中止"
+
+#: cola/widgets/archive.py:127
+msgid "Prefix"
+msgstr ""
+
+#: cola/widgets/archive.py:132
+msgid "Advanced"
+msgstr ""
+
+#: cola/widgets/archive.py:199 cola/widgets/browse.py:416
+msgid "File Saved"
+msgstr ""
+
+#: cola/widgets/archive.py:200 cola/widgets/browse.py:417
+#, python-format
+msgid "File saved to \"%s\""
+msgstr ""
+
+#: cola/widgets/archive.py:207
+msgid "Overwrite File?"
+msgstr ""
+
+#: cola/widgets/archive.py:208
+#, python-format
+msgid "The file \"%s\" exists and will be overwritten."
+msgstr ""
+
+#: cola/widgets/archive.py:209
+#, python-format
+msgid "Overwrite \"%s\"?"
+msgstr ""
+
+#: cola/widgets/archive.py:210
+msgid "Overwrite"
+msgstr ""
+
+#: cola/widgets/filelist.py:18
+#, fuzzy
+msgid "Filename"
+msgstr "名前変更"
+
+#: cola/widgets/filelist.py:18
+#, fuzzy
+msgid "Additions"
+msgstr "オプション"
+
+#: cola/widgets/filelist.py:18
+#, fuzzy
+msgid "Deletions"
+msgstr "削除"
+
+#: cola/widgets/createtag.py:49 cola/widgets/createtag.py:114
+#: cola/widgets/dag.py:131
+#, fuzzy
+msgid "Create Tag"
+msgstr "作成"
+
+#: cola/widgets/createtag.py:68
+msgid "vX.Y.Z"
+msgstr ""
+
+#: cola/widgets/createtag.py:70
+msgid "Specifies the tag name"
+msgstr ""
+
+#: cola/widgets/createtag.py:76
+#, fuzzy
+msgid "Sign Tag"
+msgstr "署名"
+
+#: cola/widgets/createtag.py:82
+msgid "Whether to sign the tag (git tag -s)"
+msgstr ""
+
+#: cola/widgets/createtag.py:93
+msgid "Tag message..."
+msgstr ""
+
+#: cola/widgets/createtag.py:94
+msgid "Specifies the tag message"
+msgstr ""
+
+#: cola/widgets/createtag.py:100 cola/widgets/cfgactions.py:233
+msgid "Revision"
+msgstr "リビジョン"
+
+#: cola/widgets/createtag.py:106
+msgid "Specifies the SHA-1 to tag"
+msgstr ""
+
+#: cola/widgets/createtag.py:136
+#, fuzzy
+msgid "Missing Revision"
+msgstr "初期リビジョン"
+
+#: cola/widgets/createtag.py:137
+#, fuzzy
+msgid "Please specify a revision to tag."
+msgstr "名前を変更するブランチを選んで下さい。"
+
+#: cola/widgets/createtag.py:140
+#, fuzzy
+msgid "Missing Name"
+msgstr "ファイル無し"
+
+#: cola/widgets/createtag.py:141
+msgid "Please specify a name for the new tag."
+msgstr ""
+
+#: cola/widgets/createtag.py:144
+#, fuzzy
+msgid "Missing Tag Message"
+msgstr "マージするリビジョン"
+
+#: cola/widgets/createtag.py:145
+msgid "Tag-signing was requested but the tag message is empty."
+msgstr ""
+
+#: cola/widgets/createtag.py:147
+msgid ""
+"An unsigned, lightweight tag will be created instead.\n"
+"Create an unsigned tag?"
+msgstr ""
+
+#: cola/widgets/createtag.py:150
+msgid "Create Unsigned Tag"
+msgstr ""
+
+#: cola/widgets/createtag.py:159
+#, fuzzy
+msgid "Tag Created"
+msgstr "作成"
+
+#: cola/widgets/createtag.py:160
+#, python-format
+msgid "Created a new tag named \"%s\""
+msgstr ""
+
+#: cola/widgets/createtag.py:164
+#, python-format
+msgid "Error: could not create tag \"%s\""
+msgstr ""
+
+#: cola/widgets/createtag.py:165
+#, python-format
+msgid "git tag returned exit code %s"
+msgstr ""
+
+#: cola/widgets/bookmarks.py:35 cola/widgets/main.py:102
+msgid "Bookmarks"
+msgstr ""
+
+#: cola/widgets/bookmarks.py:50 cola/widgets/bookmarks.py:139
+#: cola/widgets/bookmarks.py:185
+msgid "Open"
+msgstr "開く"
+
+#: cola/widgets/bookmarks.py:107
+#, fuzzy
+msgid "Path to git repository"
+msgstr "Git リポジトリではありません: %s"
+
+#: cola/widgets/bookmarks.py:108
+#, fuzzy
+msgid "Enter Git Repository"
+msgstr "GIT リポジトリ"
+
+#: cola/widgets/bookmarks.py:143 cola/widgets/main.py:198
+msgid "Bookmarks..."
+msgstr ""
+
+#: cola/widgets/bookmarks.py:189
+msgid "Open in New Window"
+msgstr ""
+
+#: cola/widgets/bookmarks.py:199 cola/widgets/recent.py:72
+#: cola/widgets/grep.py:102
+msgid "Edit"
+msgstr "編集"
+
+#: cola/widgets/bookmarks.py:213 cola/widgets/diff.py:201
+msgid "Copy"
+msgstr "コピー"
+
+#: cola/widgets/search.py:44 cola/widgets/search.py:62 cola/widgets/grep.py:70
+msgid "Search"
+msgstr ""
+
+#: cola/widgets/search.py:48
+#, fuzzy
+msgid "Browse..."
+msgstr "ブラウズ"
+
+#: cola/widgets/search.py:54 cola/widgets/search.py:59
+msgid "yyyy-MM-dd"
+msgstr ""
+
+#: cola/widgets/search.py:82 cola/widgets/dag.py:137
+msgid "Cherry Pick"
+msgstr ""
+
+#: cola/widgets/search.py:224
+#, fuzzy
+msgid "Search by Expression"
+msgstr "リビジョン式:"
+
+#: cola/widgets/search.py:225
+msgid "Search by Path"
+msgstr ""
+
+#: cola/widgets/search.py:226
+#, fuzzy
+msgid "Search Commit Messages"
+msgstr "マージコミットメッセージ:"
+
+#: cola/widgets/search.py:227
+msgid "Search Diffs"
+msgstr ""
+
+#: cola/widgets/search.py:228
+msgid "Search Authors"
+msgstr ""
+
+#: cola/widgets/search.py:229
+#, fuzzy
+msgid "Search Committers"
+msgstr "コミット者:"
+
+#: cola/widgets/search.py:230
+msgid "Search Date Range"
+msgstr ""
+
+#: cola/widgets/search.py:323
+#, fuzzy
+msgid "Choose Path(s)"
+msgstr "%s を選択"
+
+#: cola/widgets/log.py:37
+#, fuzzy, python-format
+msgid "exit code %s"
+msgstr "%s を取得"
+
+#: cola/widgets/startup.py:28
+msgid "git-cola"
+msgstr ""
+
+#: cola/widgets/startup.py:35
+msgid "New..."
+msgstr "新規…"
+
+#: cola/widgets/startup.py:38 cola/widgets/main.py:215
+msgid "Open..."
+msgstr "開く…"
+
+#: cola/widgets/startup.py:41 cola/widgets/main.py:226
+msgid "Clone..."
+msgstr "複製…"
+
+#: cola/widgets/startup.py:59
+#, fuzzy
+msgid "Select Repository..."
+msgstr "GIT リポジトリ"
+
+#: cola/widgets/startup.py:64
+#, fuzzy
+msgid "Select manually..."
+msgstr "全て選択"
+
+#: cola/widgets/recent.py:39
+msgid "Recently Modified Files"
+msgstr ""
+
+#: cola/widgets/recent.py:49
+msgid " commits ago"
+msgstr ""
+
+#: cola/widgets/recent.py:52
+#, fuzzy
+msgid "Showing changes since"
+msgstr "%s へ変更をプッシュしています"
+
+#: cola/widgets/recent.py:64
+msgid "Expand all"
+msgstr ""
+
+#: cola/widgets/recent.py:68
+#, fuzzy
+msgid "Collapse all"
+msgstr "閉じる"
+
+#: cola/widgets/merge.py:29 cola/widgets/main.py:205
+msgid "Abort Merge..."
+msgstr "マージ中止…"
+
+#: cola/widgets/merge.py:30
+#, fuzzy
+msgid ""
+"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+"マージを中断しますか？\n"
+"\n"
+"現在のマージを中断すると、コミットしていない全ての変更が失われます。\n"
+"\n"
+"マージを中断してよろしいですか？"
+
+#: cola/widgets/merge.py:33
+msgid "Aborting the current merge?"
+msgstr ""
+
+#: cola/widgets/merge.py:34
+#, fuzzy
+msgid "Abort Merge"
+msgstr "マージ中止…"
+
+#: cola/widgets/merge.py:53
+msgid "Revision To Merge"
+msgstr "マージするリビジョン"
+
+#: cola/widgets/merge.py:58 cola/widgets/cfgactions.py:227
+#: cola/widgets/remote.py:148
+msgid "Local Branch"
+msgstr "ローカル・ブランチ"
+
+#: cola/widgets/merge.py:61 cola/widgets/cfgactions.py:228
+msgid "Tracking Branch"
+msgstr "トラッキング・ブランチ"
+
+#: cola/widgets/merge.py:63 cola/widgets/createbranch.py:120
+#: cola/widgets/cfgactions.py:229
+msgid "Tag"
+msgstr "タグ"
+
+#: cola/widgets/merge.py:69
+msgid "Visualize"
+msgstr "可視化"
+
+#: cola/widgets/merge.py:72
+#, fuzzy
+msgid "Squash"
+msgstr "プッシュ"
+
+#: cola/widgets/merge.py:75
+#, fuzzy
+msgid "No fast forward"
+msgstr "早送りのみ"
+
+#: cola/widgets/merge.py:80 cola/widgets/main.py:118
+#, fuzzy
+msgid "Commit"
+msgstr "コミット:"
+
+#: cola/widgets/merge.py:88
+msgid "Merge"
+msgstr "マージ"
+
+#: cola/widgets/merge.py:152
+#, python-format
+msgid "Merge \"%(revision)s\" into \"%(branch)s\""
+msgstr ""
+
+#: cola/widgets/merge.py:155
+#, fuzzy, python-format
+msgid "Merge into \"%s\""
+msgstr "%s にマージ"
+
+#: cola/widgets/merge.py:206 cola/widgets/merge.py:215
+#, fuzzy
+msgid "No Revision Specified"
+msgstr "リビジョンが未選択です。"
+
+#: cola/widgets/merge.py:207
+msgid "You must specify a revision to view."
+msgstr ""
+
+#: cola/widgets/merge.py:216
+msgid "You must specify a revision to merge."
+msgstr ""
+
+#: cola/widgets/browse.py:73 cola/widgets/main.py:573
+#, fuzzy, python-format
+msgid "Repository: %s"
+msgstr "リポジトリ:"
+
+#: cola/widgets/browse.py:75 cola/widgets/main.py:575
+#, fuzzy, python-format
+msgid "Branch: %s"
+msgstr "ブランチ:"
+
+#: cola/widgets/browse.py:78
+#, python-format
+msgid "%(project)s: %(branch)s - Browse"
+msgstr ""
+
+#: cola/widgets/browse.py:80
+msgid "(Amending)"
+msgstr ""
+
+#: cola/widgets/browse.py:109
+msgid "View History..."
+msgstr ""
+
+#: cola/widgets/browse.py:110
+msgid "View history for selected path(s)."
+msgstr ""
+
+#: cola/widgets/browse.py:114 cola/widgets/status.py:528
+#: cola/widgets/status.py:558 cola/widgets/status.py:615
+#, fuzzy
+msgid "Stage Selected"
+msgstr "選択"
+
+#: cola/widgets/browse.py:115
+#, fuzzy
+msgid "Stage selected path(s) for commit."
+msgstr "コミット予定済"
+
+#: cola/widgets/browse.py:120 cola/widgets/status.py:471
+#: cola/widgets/status.py:516
+msgid "Unstage Selected"
+msgstr ""
+
+#: cola/widgets/browse.py:121
+msgid "Remove selected path(s) from the staging area."
+msgstr ""
+
+#: cola/widgets/browse.py:126
+msgid "Untrack Selected"
+msgstr ""
+
+#: cola/widgets/browse.py:127
+msgid "Stop tracking path(s)"
+msgstr ""
+
+#: cola/widgets/browse.py:132
+msgid "Launch git-difftool on the current path."
+msgstr ""
+
+#: cola/widgets/browse.py:137
+msgid "Diff Against Predecessor..."
+msgstr ""
+
+#: cola/widgets/browse.py:138
+msgid "Launch git-difftool against previous versions."
+msgstr ""
+
+#: cola/widgets/browse.py:142
+#, fuzzy
+msgid "Revert Uncommitted Changes..."
+msgstr "変更を元に戻す"
+
+#: cola/widgets/browse.py:143
+#, fuzzy
+msgid "Revert changes to selected path(s)."
+msgstr "ファイル %s にした変更を元に戻しますか？"
+
+#: cola/widgets/browse.py:148
+msgid "Edit selected path(s)."
+msgstr ""
+
+#: cola/widgets/browse.py:327 cola/widgets/status.py:649
+#, fuzzy
+msgid "Revert Uncommitted Changes?"
+msgstr "変更を元に戻す"
+
+#: cola/widgets/browse.py:328 cola/widgets/diff.py:320
+#: cola/widgets/diff.py:333 cola/widgets/status.py:650
+msgid ""
+"This operation drops uncommitted changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+#: cola/widgets/browse.py:330 cola/widgets/diff.py:322
+#: cola/widgets/diff.py:335 cola/widgets/status.py:652
+msgid "Revert the uncommitted changes?"
+msgstr ""
+
+#: cola/widgets/browse.py:331 cola/widgets/status.py:653
+#, fuzzy
+msgid "Revert Uncommitted Changes"
+msgstr "変更を元に戻す"
+
+#: cola/widgets/browse.py:381
+msgid "Select Previous Version"
+msgstr ""
+
+#: cola/widgets/browse.py:409
+#, python-format
+msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
+msgstr ""
+
+#: cola/widgets/browse.py:430
+#, fuzzy, python-format
+msgid "Browsing %s"
+msgstr "コミットに %s を加えています"
+
+#: cola/widgets/browse.py:448
+#, fuzzy, python-format
+msgid "Select file from \"%s\""
+msgstr "%s からブランチを削除しています。"
+
+#: cola/widgets/browse.py:457
+#, fuzzy
+msgid "Select File"
+msgstr "全て選択"
+
+#: cola/widgets/browse.py:485 cola/widgets/selectcommits.py:56
+msgid "Select"
+msgstr "選択"
+
+#: cola/widgets/stash.py:39
+msgid "Stash"
+msgstr ""
+
+#: cola/widgets/stash.py:52
+msgid "Apply the selected stash"
+msgstr ""
+
+#: cola/widgets/stash.py:56
+msgid "Save modified state to new stash"
+msgstr ""
+
+#: cola/widgets/stash.py:59
+msgid "Drop"
+msgstr ""
+
+#: cola/widgets/stash.py:60
+msgid "Drop the selected stash"
+msgstr ""
+
+#: cola/widgets/stash.py:67
+msgid "Keep Index"
+msgstr ""
+
+#: cola/widgets/stash.py:188
+msgid "Save Stash"
+msgstr ""
+
+#: cola/widgets/stash.py:189
+msgid "Enter a name for the stash"
+msgstr ""
+
+#: cola/widgets/stash.py:195
+msgid "Error: Stash exists"
+msgstr ""
+
+#: cola/widgets/stash.py:196
+#, fuzzy, python-format
+msgid "A stash named \"%s\" already exists"
+msgstr "ファイル '%s' は既に存在します。"
+
+#: cola/widgets/stash.py:211
+msgid "Drop Stash?"
+msgstr ""
+
+#: cola/widgets/stash.py:212
+#, fuzzy
+msgid "Recovering a dropped stash is not possible."
+msgstr "失なわれたコミットを回復するのは簡単ではありません。"
+
+#: cola/widgets/stash.py:213
+#, python-format
+msgid "Drop the \"%s\" stash?"
+msgstr ""
+
+#: cola/widgets/stash.py:214
+msgid "Drop Stash"
+msgstr ""
+
+#: cola/widgets/selectcommits.py:52
+msgid "Revision Expression:"
+msgstr "リビジョン式:"
+
+#: cola/widgets/selectcommits.py:103
+msgid "No commits exist in this branch."
+msgstr ""
+
+#: cola/widgets/diff.py:47
+msgid "Ignore changes in whitespace at EOL"
+msgstr ""
+
+#: cola/widgets/diff.py:52
+msgid "Ignore changes in amount of whitespace"
+msgstr ""
+
+#: cola/widgets/diff.py:57
+msgid "Ignore all whitespace"
+msgstr ""
+
+#: cola/widgets/diff.py:62
+msgid "Show whole surrounding functions of changes"
+msgstr ""
+
+#: cola/widgets/diff.py:67 cola/widgets/diff.py:68
+#, fuzzy
+msgid "Diff Options"
+msgstr "オプション"
+
+#: cola/widgets/diff.py:82
+msgid "Process Diff Region"
+msgstr ""
+
+#: cola/widgets/diff.py:85
+msgid "Process Selection"
+msgstr ""
+
+#: cola/widgets/diff.py:100
+msgid "Stage &Selected Lines"
+msgstr ""
+
+#: cola/widgets/diff.py:106
+msgid "Revert Selected Lines..."
+msgstr ""
+
+#: cola/widgets/diff.py:111
+#, fuzzy
+msgid "Unstage &Selected Lines"
+msgstr "コミット予定に入っていない変更"
+
+#: cola/widgets/diff.py:117
+msgid "Apply Diff Selection to Work Tree"
+msgstr ""
+
+#: cola/widgets/diff.py:157 cola/widgets/diff.py:179
+#: cola/widgets/status.py:508 cola/widgets/status.py:607
+msgid "Launch git-cola"
+msgstr ""
+
+#: cola/widgets/diff.py:162
+#, fuzzy
+msgid "Stage Diff Region"
+msgstr "初期リビジョン"
+
+#: cola/widgets/diff.py:168
+msgid "Revert Diff Region..."
+msgstr ""
+
+#: cola/widgets/diff.py:184
+msgid "Unstage Diff Region"
+msgstr ""
+
+#: cola/widgets/diff.py:205
+msgid "Select All"
+msgstr "全て選択"
+
+#: cola/widgets/diff.py:319
+msgid "Revert Diff Region?"
+msgstr ""
+
+#: cola/widgets/diff.py:323
+msgid "Revert Diff Region"
+msgstr ""
+
+#: cola/widgets/diff.py:332
+#, fuzzy
+msgid "Revert Selected Lines?"
+msgstr "ファイル %s にした変更を元に戻しますか？"
+
+#: cola/widgets/diff.py:336
+msgid "Revert Selected Lines"
+msgstr ""
+
+#: cola/widgets/diff.py:427
+#, fuzzy
+msgid "Loading..."
+msgstr "%s をロード中…"
+
+#: cola/widgets/dag.py:119
+msgid "Diff this -> selected"
+msgstr ""
+
+#: cola/widgets/dag.py:122
+msgid "Diff selected -> this"
+msgstr ""
+
+#: cola/widgets/dag.py:125 cola/widgets/createbranch.py:85
+#: cola/widgets/createbranch.py:96 cola/widgets/createbranch.py:153
 msgid "Create Branch"
 msgstr "ブランチを作成"
+
+#: cola/widgets/dag.py:128
+#, fuzzy
+msgid "Create Patch"
+msgstr "ブランチを作成"
+
+#: cola/widgets/dag.py:134 cola/widgets/main.py:193
+msgid "Save As Tarball/Zip..."
+msgstr ""
+
+#: cola/widgets/dag.py:140
+msgid "Grab File..."
+msgstr ""
+
+#: cola/widgets/dag.py:143
+#, fuzzy
+msgid "Copy SHA-1"
+msgstr "全てコピー"
+
+#: cola/widgets/dag.py:214
+msgid "Summary"
+msgstr ""
+
+#: cola/widgets/dag.py:214
+msgid "Date, Time"
+msgstr ""
+
+#: cola/widgets/dag.py:221
+msgid "Go Up"
+msgstr ""
+
+#: cola/widgets/dag.py:224
+msgid "Go Down"
+msgstr ""
+
+#: cola/widgets/dag.py:351 cola/widgets/dag.py:1036
+msgid "Zoom Out"
+msgstr ""
+
+#: cola/widgets/dag.py:355 cola/widgets/dag.py:1033
+msgid "Zoom In"
+msgstr ""
+
+#: cola/widgets/dag.py:359 cola/widgets/dag.py:1039
+msgid "Zoom to Fit"
+msgstr ""
+
+#: cola/widgets/dag.py:380
+msgid "Log"
+msgstr ""
+
+#: cola/widgets/dag.py:385
+#, fuzzy
+msgid "Files"
+msgstr "ファイル:"
+
+#: cola/widgets/dag.py:388 cola/widgets/main.py:133 cola/widgets/main.py:371
+msgid "Diff"
+msgstr ""
+
+#: cola/widgets/dag.py:401
+msgid "Graph"
+msgstr ""
+
+#: cola/widgets/dag.py:407 cola/widgets/main.py:314
+msgid "Lock Layout"
+msgstr ""
+
+#: cola/widgets/dag.py:413 cola/widgets/main.py:406
+msgid "View"
+msgstr ""
+
+#: cola/widgets/dag.py:489
+#, python-format
+msgid "%(project)s: %(ref)s - DAG"
+msgstr ""
+
+#: cola/widgets/dag.py:491
+msgid " - DAG"
+msgstr ""
+
+#: cola/widgets/dag.py:1042
+#, fuzzy
+msgid "Select Parent"
+msgstr "選択"
+
+#: cola/widgets/dag.py:1045
+msgid "Select Oldest Parent"
+msgstr ""
+
+#: cola/widgets/dag.py:1048
+#, fuzzy
+msgid "Select Child"
+msgstr "全て選択"
+
+#: cola/widgets/dag.py:1051
+msgid "Select Newest Child"
+msgstr ""
 
 #: cola/widgets/createbranch.py:100
 msgid "Branch Name"
@@ -1158,487 +1771,123 @@ msgstr "ブランチを作成"
 msgid "\"%(command)s\" returned exit status \"%(status)d\""
 msgstr ""
 
-#: cola/widgets/createtag.py:49 cola/widgets/createtag.py:114
-#: cola/widgets/dag.py:131
-#, fuzzy
-msgid "Create Tag"
-msgstr "作成"
-
-#: cola/widgets/createtag.py:68
-msgid "vX.Y.Z"
+#: cola/widgets/about.py:49
+msgid "About git-cola"
 msgstr ""
 
-#: cola/widgets/createtag.py:70
-msgid "Specifies the tag name"
-msgstr ""
-
-#: cola/widgets/createtag.py:76
-#, fuzzy
-msgid "Sign Tag"
-msgstr "署名"
-
-#: cola/widgets/createtag.py:82
-msgid "Whether to sign the tag (git tag -s)"
-msgstr ""
-
-#: cola/widgets/createtag.py:93
-msgid "Tag message..."
-msgstr ""
-
-#: cola/widgets/createtag.py:94
-msgid "Specifies the tag message"
-msgstr ""
-
-#: cola/widgets/createtag.py:106
-msgid "Specifies the SHA-1 to tag"
-msgstr ""
-
-#: cola/widgets/createtag.py:136
-#, fuzzy
-msgid "Missing Revision"
-msgstr "初期リビジョン"
-
-#: cola/widgets/createtag.py:137
-#, fuzzy
-msgid "Please specify a revision to tag."
-msgstr "名前を変更するブランチを選んで下さい。"
-
-#: cola/widgets/createtag.py:140
-#, fuzzy
-msgid "Missing Name"
-msgstr "ファイル無し"
-
-#: cola/widgets/createtag.py:141
-msgid "Please specify a name for the new tag."
-msgstr ""
-
-#: cola/widgets/createtag.py:144
-#, fuzzy
-msgid "Missing Tag Message"
-msgstr "マージするリビジョン"
-
-#: cola/widgets/createtag.py:145
-msgid "Tag-signing was requested but the tag message is empty."
-msgstr ""
-
-#: cola/widgets/createtag.py:147
+#: cola/widgets/about.py:99
 msgid ""
-"An unsigned, lightweight tag will be created instead.\n"
-"Create an unsigned tag?"
+"This PyQt4 does not include QtWebKit.\n"
+"The keyboard shortcuts feature is unavailable."
 msgstr ""
 
-#: cola/widgets/createtag.py:150
-msgid "Create Unsigned Tag"
+#: cola/widgets/about.py:106
+msgid "hotkeys.html"
 msgstr ""
 
-#: cola/widgets/createtag.py:159
-#, fuzzy
-msgid "Tag Created"
-msgstr "作成"
-
-#: cola/widgets/createtag.py:160
-#, python-format
-msgid "Created a new tag named \"%s\""
+#: cola/widgets/about.py:124
+msgid "Shortcuts"
 msgstr ""
 
-#: cola/widgets/createtag.py:164
-#, python-format
-msgid "Error: could not create tag \"%s\""
+#: cola/widgets/compare.py:38
+msgid "*** Branch Point ***"
 msgstr ""
 
-#: cola/widgets/createtag.py:165
-#, python-format
-msgid "git tag returned exit code %s"
+#: cola/widgets/compare.py:39
+msgid "*** Sandbox ***"
 msgstr ""
 
-#: cola/widgets/dag.py:119
-msgid "Diff this -> selected"
+#: cola/widgets/compare.py:40 cola/widgets/compare.py:63
+#: cola/widgets/compare.py:69
+msgid "Local"
 msgstr ""
 
-#: cola/widgets/dag.py:122
-msgid "Diff selected -> this"
+#: cola/widgets/compare.py:45
+msgid "Branch Diff Viewer"
 msgstr ""
 
-#: cola/widgets/dag.py:128
-#, fuzzy
-msgid "Create Patch"
-msgstr "ブランチを作成"
-
-#: cola/widgets/dag.py:134 cola/widgets/main.py:193
-msgid "Save As Tarball/Zip..."
-msgstr ""
-
-#: cola/widgets/dag.py:137 cola/widgets/search.py:82
-msgid "Cherry Pick"
-msgstr ""
-
-#: cola/widgets/dag.py:140
-msgid "Grab File..."
-msgstr ""
-
-#: cola/widgets/dag.py:143
-#, fuzzy
-msgid "Copy SHA-1"
-msgstr "全てコピー"
-
-#: cola/widgets/dag.py:214
-msgid "Summary"
-msgstr ""
-
-#: cola/widgets/dag.py:214
-msgid "Date, Time"
-msgstr ""
-
-#: cola/widgets/dag.py:221
-msgid "Go Up"
-msgstr ""
-
-#: cola/widgets/dag.py:224
-msgid "Go Down"
-msgstr ""
-
-#: cola/widgets/dag.py:351 cola/widgets/dag.py:1036
-msgid "Zoom Out"
-msgstr ""
-
-#: cola/widgets/dag.py:355 cola/widgets/dag.py:1033
-msgid "Zoom In"
-msgstr ""
-
-#: cola/widgets/dag.py:359 cola/widgets/dag.py:1039
-msgid "Zoom to Fit"
-msgstr ""
-
-#: cola/widgets/dag.py:380
-msgid "Log"
-msgstr ""
-
-#: cola/widgets/dag.py:385
-#, fuzzy
-msgid "Files"
-msgstr "ファイル:"
-
-#: cola/widgets/dag.py:388 cola/widgets/main.py:133 cola/widgets/main.py:369
-msgid "Diff"
-msgstr ""
-
-#: cola/widgets/dag.py:401
-msgid "Graph"
-msgstr ""
-
-#: cola/widgets/dag.py:407 cola/widgets/main.py:312
-msgid "Lock Layout"
-msgstr ""
-
-#: cola/widgets/dag.py:413 cola/widgets/main.py:404
-msgid "View"
-msgstr ""
-
-#: cola/widgets/dag.py:489
-#, python-format
-msgid "%(project)s: %(ref)s - DAG"
-msgstr ""
-
-#: cola/widgets/dag.py:491
-msgid " - DAG"
-msgstr ""
-
-#: cola/widgets/dag.py:1042
-#, fuzzy
-msgid "Select Parent"
-msgstr "選択"
-
-#: cola/widgets/dag.py:1045
-msgid "Select Oldest Parent"
-msgstr ""
-
-#: cola/widgets/dag.py:1048
-#, fuzzy
-msgid "Select Child"
-msgstr "全て選択"
-
-#: cola/widgets/dag.py:1051
-msgid "Select Newest Child"
-msgstr ""
-
-#: cola/widgets/diff.py:47
-msgid "Ignore changes in whitespace at EOL"
-msgstr ""
-
-#: cola/widgets/diff.py:52
-msgid "Ignore changes in amount of whitespace"
-msgstr ""
-
-#: cola/widgets/diff.py:57
-msgid "Ignore all whitespace"
-msgstr ""
-
-#: cola/widgets/diff.py:62
-msgid "Show whole surrounding functions of changes"
-msgstr ""
-
-#: cola/widgets/diff.py:67 cola/widgets/diff.py:68
-#, fuzzy
-msgid "Diff Options"
-msgstr "オプション"
-
-#: cola/widgets/diff.py:82
-msgid "Process Diff Region"
-msgstr ""
-
-#: cola/widgets/diff.py:85
-msgid "Process Selection"
-msgstr ""
-
-#: cola/widgets/diff.py:100
-msgid "Stage &Selected Lines"
-msgstr ""
-
-#: cola/widgets/diff.py:106
-msgid "Revert Selected Lines..."
-msgstr ""
-
-#: cola/widgets/diff.py:111
-#, fuzzy
-msgid "Unstage &Selected Lines"
-msgstr "コミット予定に入っていない変更"
-
-#: cola/widgets/diff.py:117
-msgid "Apply Diff Selection to Work Tree"
-msgstr ""
-
-#: cola/widgets/diff.py:157 cola/widgets/diff.py:179
-#: cola/widgets/status.py:503 cola/widgets/status.py:603
-msgid "Launch git-cola"
-msgstr ""
-
-#: cola/widgets/diff.py:162
-#, fuzzy
-msgid "Stage Diff Region"
-msgstr "初期リビジョン"
-
-#: cola/widgets/diff.py:168
-msgid "Revert Diff Region..."
-msgstr ""
-
-#: cola/widgets/diff.py:184
-msgid "Unstage Diff Region"
-msgstr ""
-
-#: cola/widgets/diff.py:205
-msgid "Select All"
-msgstr "全て選択"
-
-#: cola/widgets/diff.py:319
-msgid "Revert Diff Region?"
-msgstr ""
-
-#: cola/widgets/diff.py:323
-msgid "Revert Diff Region"
-msgstr ""
-
-#: cola/widgets/diff.py:332
-#, fuzzy
-msgid "Revert Selected Lines?"
-msgstr "ファイル %s にした変更を元に戻しますか？"
-
-#: cola/widgets/diff.py:336
-msgid "Revert Selected Lines"
-msgstr ""
-
-#: cola/widgets/diff.py:427
-#, fuzzy
-msgid "Loading..."
-msgstr "%s をロード中…"
-
-#: cola/widgets/editremotes.py:33
-#, fuzzy
-msgid "Edit Remotes"
+#: cola/widgets/compare.py:64 cola/widgets/compare.py:70
+#: cola/widgets/remote.py:155
+msgid "Remote"
 msgstr "リモート"
 
-#: cola/widgets/editremotes.py:37
-msgid ""
-"Add and remove remote repositories using the \n"
-"Add(+) and Delete(-) buttons on the left-hand side.\n"
-"\n"
-"Remotes can be renamed by selecting one from the list\n"
-"and pressing \"enter\", or by double-clicking."
+#: cola/widgets/compare.py:99
+#, fuzzy
+msgid "File Differences"
+msgstr "設定"
+
+#: cola/widgets/status.py:77
+#, fuzzy
+msgid "Untracked"
+msgstr "管理外、コミット未予定"
+
+#: cola/widgets/status.py:87
+#, fuzzy
+msgid "Stage / Unstage"
+msgstr "変更をコミット予定に入れる"
+
+#: cola/widgets/status.py:91
+msgid "Revert Unstaged Edits..."
 msgstr ""
 
-#: cola/widgets/editremotes.py:47
-msgid "Remote git repositories - double-click to rename"
+#: cola/widgets/status.py:123
+msgid "Move Up"
 msgstr ""
 
-#: cola/widgets/editremotes.py:60
-#, fuzzy
-msgid "Add new remote git repository"
-msgstr "Git リポジトリではありません: %s"
-
-#: cola/widgets/editremotes.py:68
-#, fuzzy
-msgid "Delete remote"
-msgstr "リモート・ブランチを削除"
-
-#: cola/widgets/editremotes.py:130
-#, python-format
-msgid "Error creating remote \"%s\""
+#: cola/widgets/status.py:129
+msgid "Copy Path to Clipboard"
 msgstr ""
 
-#: cola/widgets/editremotes.py:139
+#: cola/widgets/status.py:134
 #, fuzzy
-msgid "Delete Remote"
-msgstr "リモート・ブランチを削除"
+msgid "Delete File(s)..."
+msgstr "削除…"
 
-#: cola/widgets/editremotes.py:140
-#, fuzzy
-msgid "Delete remote?"
-msgstr "リモート・ブランチを削除"
-
-#: cola/widgets/editremotes.py:141
-#, fuzzy, python-format
-msgid "Delete remote \"%s\""
-msgstr "リモート・ブランチを削除"
-
-#: cola/widgets/editremotes.py:148
-#, python-format
-msgid "Error deleting remote \"%s\""
+#: cola/widgets/status.py:442 cola/widgets/main.py:139
+msgid "Unstage All"
 msgstr ""
 
-#: cola/widgets/editremotes.py:168
-#, fuzzy
-msgid "Rename Remote"
-msgstr "リモート"
-
-#: cola/widgets/editremotes.py:169
-#, fuzzy
-msgid "Rename remote?"
-msgstr "リモート"
-
-#: cola/widgets/editremotes.py:170
-#, python-format
-msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
+#: cola/widgets/status.py:499 cola/widgets/status.py:577
+msgid "Revert Uncommited Edits..."
 msgstr ""
 
-#: cola/widgets/editremotes.py:172
-msgid "Rename"
-msgstr "名前変更"
-
-#: cola/widgets/editremotes.py:185
-#, fuzzy, python-format
-msgid "Gathering info for \"%s\"..."
-msgstr "%s の変更点をロード中…"
-
-#: cola/widgets/editremotes.py:215
-#, fuzzy
-msgid "Add Remote"
-msgstr "リモート"
-
-#: cola/widgets/editremotes.py:227
-#, fuzzy
-msgid "Add remote"
-msgstr "リモート"
-
-#: cola/widgets/editremotes.py:228
-msgid "Name for the new remote"
+#: cola/widgets/status.py:598
+msgid "Add to .gitignore"
 msgstr ""
 
-#: cola/widgets/editremotes.py:235
-msgid "URL"
-msgstr "URL"
-
-#: cola/widgets/filelist.py:18
+#: cola/widgets/status.py:629
 #, fuzzy
-msgid "Filename"
-msgstr "名前変更"
-
-#: cola/widgets/filelist.py:18
-#, fuzzy
-msgid "Additions"
-msgstr "オプション"
-
-#: cola/widgets/filelist.py:18
-#, fuzzy
-msgid "Deletions"
+msgid "Delete Files?"
 msgstr "削除"
 
-#: cola/widgets/grep.py:70 cola/widgets/search.py:44 cola/widgets/search.py:62
-msgid "Search"
+#: cola/widgets/status.py:630
+msgid "The following files will be deleted:"
 msgstr ""
 
-#: cola/widgets/grep.py:77
-msgid "command-line arguments"
+#: cola/widgets/status.py:638
+#, python-format
+msgid "Delete %d file(s)?"
 msgstr ""
 
-#: cola/widgets/grep.py:81
-msgid "Choose the \"git grep\" regular expression mode"
-msgstr ""
-
-#: cola/widgets/grep.py:82
-msgid "Basic Regexp"
-msgstr ""
-
-#: cola/widgets/grep.py:82
-msgid "Extended Regexp"
-msgstr ""
-
-#: cola/widgets/grep.py:82
-msgid "Fixed String"
-msgstr ""
-
-#: cola/widgets/grep.py:87
-msgid "Search using a POSIX basic regular expression"
-msgstr ""
-
-#: cola/widgets/grep.py:90
-msgid "Search using a POSIX extended regular expression"
-msgstr ""
-
-#: cola/widgets/grep.py:93
-msgid "Search for a fixed string"
-msgstr ""
-
-#: cola/widgets/grep.py:99
-msgid "grep result..."
-msgstr ""
-
-#: cola/widgets/grep.py:111
-msgid "Shell arguments"
-msgstr ""
-
-#: cola/widgets/grep.py:113
-msgid ""
-"Parse arguments using a shell.\n"
-"Queries with spaces will require \"double quotes\"."
-msgstr ""
-
-#: cola/widgets/log.py:37
-#, fuzzy, python-format
-msgid "exit code %s"
-msgstr "%s を取得"
+#: cola/widgets/status.py:639
+#, fuzzy
+msgid "Delete Files"
+msgstr "削除"
 
 #: cola/widgets/main.py:85
 #, fuzzy
 msgid "Browser"
 msgstr "ブラウズ"
 
-#: cola/widgets/main.py:90 cola/widgets/main.py:343
+#: cola/widgets/main.py:90 cola/widgets/main.py:345
 #, fuzzy
 msgid "Actions"
 msgstr "オプション"
-
-#: cola/widgets/main.py:118 cola/widgets/merge.py:75
-#, fuzzy
-msgid "Commit"
-msgstr "コミット:"
 
 #: cola/widgets/main.py:127
 #, fuzzy
 msgid "Console"
 msgstr "閉じる"
-
-#: cola/widgets/main.py:139 cola/widgets/status.py:437
-msgid "Unstage All"
-msgstr ""
 
 #: cola/widgets/main.py:143
 msgid "Unstage From Commit"
@@ -1668,10 +1917,6 @@ msgstr ""
 #, fuzzy
 msgid "New Repository..."
 msgstr "GIT リポジトリ"
-
-#: cola/widgets/main.py:170 cola/widgets/prefs.py:237
-msgid "Preferences"
-msgstr "設定"
 
 #: cola/widgets/main.py:174
 msgid "Edit Remotes..."
@@ -1705,22 +1950,10 @@ msgstr ""
 msgid "Merge..."
 msgstr "マージ"
 
-#: cola/widgets/main.py:205 cola/widgets/merge.py:29
-msgid "Abort Merge..."
-msgstr "マージ中止…"
-
-#: cola/widgets/main.py:215 cola/widgets/startup.py:38
-msgid "Open..."
-msgstr "開く…"
-
 #: cola/widgets/main.py:219
 #, fuzzy
 msgid "Open in New Window..."
 msgstr "既存リポジトリを開く"
-
-#: cola/widgets/main.py:226 cola/widgets/startup.py:41
-msgid "Clone..."
-msgstr "複製…"
 
 #: cola/widgets/main.py:230
 #, fuzzy
@@ -1826,276 +2059,234 @@ msgstr "編集"
 msgid "Skip Current Patch"
 msgstr "ブランチを作成"
 
-#: cola/widgets/main.py:318
+#: cola/widgets/main.py:298 cola/widgets/cfgactions.py:87
+#, fuzzy
+msgid "Abort"
+msgstr "中断しています"
+
+#: cola/widgets/main.py:320
 #, fuzzy
 msgid "File"
 msgstr "ファイル:"
 
-#: cola/widgets/main.py:319
+#: cola/widgets/main.py:321
 #, fuzzy
 msgid "Open Recent"
 msgstr "最近使ったリポジトリを開く"
 
-#: cola/widgets/main.py:359 cola/widgets/main.py:360
+#: cola/widgets/main.py:361 cola/widgets/main.py:362
 #, fuzzy
 msgid "Staging Area"
 msgstr "%s をスキャンしています…"
 
-#: cola/widgets/main.py:377
+#: cola/widgets/main.py:379
 msgid "Branch"
 msgstr "ブランチ"
 
-#: cola/widgets/main.py:417
+#: cola/widgets/main.py:419
 msgid "Help"
 msgstr "ヘルプ"
 
-#: cola/widgets/main.py:481
+#: cola/widgets/main.py:483
 #, python-format
 msgid "git cola version %s"
 msgstr ""
 
-#: cola/widgets/main.py:577
+#: cola/widgets/main.py:579
 msgid ""
 "This repository is currently being rebased.\n"
 "Resolve conflicts, commit changes, and run:\n"
 "    Rebase > Continue"
 msgstr ""
 
-#: cola/widgets/main.py:580
+#: cola/widgets/main.py:582
 #, fuzzy
 msgid "Rebasing"
 msgstr "リセット"
 
-#: cola/widgets/main.py:584
+#: cola/widgets/main.py:586
 msgid ""
 "This repository is in the middle of a merge.\n"
 "Resolve conflicts and commit changes."
 msgstr ""
 
-#: cola/widgets/main.py:586
+#: cola/widgets/main.py:588
 #, fuzzy
 msgid "Merging"
 msgstr "マージ"
 
-#: cola/widgets/main.py:589
+#: cola/widgets/main.py:591
 msgid "Amending"
 msgstr ""
 
-#: cola/widgets/main.py:706
+#: cola/widgets/main.py:708
 #, fuzzy
 msgid "Select New Upstream"
 msgstr "選択"
 
-#: cola/widgets/main.py:707
+#: cola/widgets/main.py:709
 msgid "Interactive Rebase"
 msgstr ""
 
-#: cola/widgets/merge.py:30
+#: cola/widgets/editremotes.py:33
 #, fuzzy
-msgid ""
-"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
-"Recovering uncommitted changes is not possible."
-msgstr ""
-"マージを中断しますか？\n"
-"\n"
-"現在のマージを中断すると、コミットしていない全ての変更が失われます。\n"
-"\n"
-"マージを中断してよろしいですか？"
-
-#: cola/widgets/merge.py:33
-msgid "Aborting the current merge?"
-msgstr ""
-
-#: cola/widgets/merge.py:34
-#, fuzzy
-msgid "Abort Merge"
-msgstr "マージ中止…"
-
-#: cola/widgets/merge.py:53
-msgid "Revision To Merge"
-msgstr "マージするリビジョン"
-
-#: cola/widgets/merge.py:69
-msgid "Visualize"
-msgstr "可視化"
-
-#: cola/widgets/merge.py:72
-#, fuzzy
-msgid "Squash"
-msgstr "プッシュ"
-
-#: cola/widgets/merge.py:83
-msgid "Merge"
-msgstr "マージ"
-
-#: cola/widgets/merge.py:146
-#, python-format
-msgid "Merge \"%(revision)s\" into \"%(branch)s\""
-msgstr ""
-
-#: cola/widgets/merge.py:149
-#, fuzzy, python-format
-msgid "Merge into \"%s\""
-msgstr "%s にマージ"
-
-#: cola/widgets/merge.py:193 cola/widgets/merge.py:202
-#, fuzzy
-msgid "No Revision Specified"
-msgstr "リビジョンが未選択です。"
-
-#: cola/widgets/merge.py:194
-msgid "You must specify a revision to view."
-msgstr ""
-
-#: cola/widgets/merge.py:203
-msgid "You must specify a revision to merge."
-msgstr ""
-
-#: cola/widgets/patch.py:68
-msgid "Apply Patches"
-msgstr ""
-
-#: cola/widgets/patch.py:77
-msgid ""
-"\n"
-"            <p>\n"
-"                Drag and drop or use the <strong>Add</strong> button to add\n"
-"                patches to the list\n"
-"            </p>\n"
-"            "
-msgstr ""
-
-#: cola/widgets/patch.py:89
-msgid "Add patches (+)"
-msgstr ""
-
-#: cola/widgets/patch.py:92 cola/widgets/patch.py:106
-#, fuzzy
-msgid "Remove"
+msgid "Edit Remotes"
 msgstr "リモート"
 
-#: cola/widgets/patch.py:93
-#, fuzzy
-msgid "Remove selected (Delete)"
-msgstr "ブランチの名前変更"
-
-#: cola/widgets/patch.py:96 cola/widgets/stash.py:51
-#, fuzzy
-msgid "Apply"
-msgstr "りんご"
-
-#: cola/widgets/patch.py:151
-#, fuzzy
-msgid "Select patch file(s)..."
-msgstr "削除…"
-
-#: cola/widgets/prefs.py:132
-msgid "User Name"
-msgstr "ユーザ名"
-
-#: cola/widgets/prefs.py:133
-msgid "Email Address"
-msgstr "電子メールアドレス"
-
-#: cola/widgets/prefs.py:134
-msgid "Merge Verbosity"
-msgstr "マージの冗長度"
-
-#: cola/widgets/prefs.py:135
-msgid "Number of Diff Context Lines"
-msgstr "diff の文脈行数"
-
-#: cola/widgets/prefs.py:136
-msgid "Summarize Merge Commits"
-msgstr "マージコミットの要約"
-
-#: cola/widgets/prefs.py:137
-msgid "Show Diffstat After Merge"
-msgstr "マージ後に diffstat を表示"
-
-#: cola/widgets/prefs.py:138
-msgid "Display Untracked Files"
+#: cola/widgets/editremotes.py:37
+msgid ""
+"Add and remove remote repositories using the \n"
+"Add(+) and Delete(-) buttons on the left-hand side.\n"
+"\n"
+"Remotes can be renamed by selecting one from the list\n"
+"and pressing \"enter\", or by double-clicking."
 msgstr ""
 
-#: cola/widgets/prefs.py:179
-msgid "Fixed-Width Font"
+#: cola/widgets/editremotes.py:47
+msgid "Remote git repositories - double-click to rename"
 msgstr ""
 
-#: cola/widgets/prefs.py:180
-msgid "Font Size"
-msgstr "フォントの大きさ"
-
-#: cola/widgets/prefs.py:181
-msgid "Tab Width"
-msgstr ""
-
-#: cola/widgets/prefs.py:182
-msgid "Text Width"
-msgstr ""
-
-#: cola/widgets/prefs.py:184
+#: cola/widgets/editremotes.py:60
 #, fuzzy
-msgid "Editor"
-msgstr "編集"
+msgid "Add new remote git repository"
+msgstr "Git リポジトリではありません: %s"
 
-#: cola/widgets/prefs.py:185
+#: cola/widgets/editremotes.py:68
 #, fuzzy
-msgid "History Browser"
-msgstr "ファイル・ブラウザ"
+msgid "Delete remote"
+msgstr "リモート・ブランチを削除"
 
-#: cola/widgets/prefs.py:186
-msgid "Diff Tool"
+#: cola/widgets/editremotes.py:130
+#, python-format
+msgid "Error creating remote \"%s\""
 msgstr ""
 
-#: cola/widgets/prefs.py:187
+#: cola/widgets/editremotes.py:139
 #, fuzzy
-msgid "Merge Tool"
-msgstr "マージ"
+msgid "Delete Remote"
+msgstr "リモート・ブランチを削除"
 
-#: cola/widgets/prefs.py:188
-msgid "Keep *.orig Merge Backups"
+#: cola/widgets/editremotes.py:140
+#, fuzzy
+msgid "Delete remote?"
+msgstr "リモート・ブランチを削除"
+
+#: cola/widgets/editremotes.py:141
+#, fuzzy, python-format
+msgid "Delete remote \"%s\""
+msgstr "リモート・ブランチを削除"
+
+#: cola/widgets/editremotes.py:148
+#, python-format
+msgid "Error deleting remote \"%s\""
 msgstr ""
 
-#: cola/widgets/prefs.py:189
-msgid "Save GUI Settings"
+#: cola/widgets/editremotes.py:168
+#, fuzzy
+msgid "Rename Remote"
+msgstr "リモート"
+
+#: cola/widgets/editremotes.py:169
+#, fuzzy
+msgid "Rename remote?"
+msgstr "リモート"
+
+#: cola/widgets/editremotes.py:170
+#, python-format
+msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr ""
 
-#: cola/widgets/prefs.py:245
-#, fuzzy
-msgid "All Repositories"
-msgstr "大域（全てのリポジトリ）"
+#: cola/widgets/editremotes.py:172
+msgid "Rename"
+msgstr "名前変更"
 
-#: cola/widgets/prefs.py:246
-#, fuzzy
-msgid "Current Repository"
-msgstr "新しいリポジトリを作る"
+#: cola/widgets/editremotes.py:185
+#, fuzzy, python-format
+msgid "Gathering info for \"%s\"..."
+msgstr "%s の変更点をロード中…"
 
-#: cola/widgets/prefs.py:247
+#: cola/widgets/editremotes.py:215
 #, fuzzy
-msgid "Settings"
-msgstr "起動中…"
+msgid "Add Remote"
+msgstr "リモート"
 
-#: cola/widgets/recent.py:39
-msgid "Recently Modified Files"
+#: cola/widgets/editremotes.py:227
+#, fuzzy
+msgid "Add remote"
+msgstr "リモート"
+
+#: cola/widgets/editremotes.py:228
+msgid "Name for the new remote"
 msgstr ""
 
-#: cola/widgets/recent.py:49
-msgid " commits ago"
+#: cola/widgets/editremotes.py:235
+msgid "URL"
+msgstr "URL"
+
+#: cola/widgets/grep.py:77
+msgid "command-line arguments"
 msgstr ""
 
-#: cola/widgets/recent.py:52
-#, fuzzy
-msgid "Showing changes since"
-msgstr "%s へ変更をプッシュしています"
-
-#: cola/widgets/recent.py:64
-msgid "Expand all"
+#: cola/widgets/grep.py:81
+msgid "Choose the \"git grep\" regular expression mode"
 msgstr ""
 
-#: cola/widgets/recent.py:68
+#: cola/widgets/grep.py:82
+msgid "Basic Regexp"
+msgstr ""
+
+#: cola/widgets/grep.py:82
+msgid "Extended Regexp"
+msgstr ""
+
+#: cola/widgets/grep.py:82
+msgid "Fixed String"
+msgstr ""
+
+#: cola/widgets/grep.py:87
+msgid "Search using a POSIX basic regular expression"
+msgstr ""
+
+#: cola/widgets/grep.py:90
+msgid "Search using a POSIX extended regular expression"
+msgstr ""
+
+#: cola/widgets/grep.py:93
+msgid "Search for a fixed string"
+msgstr ""
+
+#: cola/widgets/grep.py:99
+msgid "grep result..."
+msgstr ""
+
+#: cola/widgets/grep.py:111
+msgid "Shell arguments"
+msgstr ""
+
+#: cola/widgets/grep.py:113
+msgid ""
+"Parse arguments using a shell.\n"
+"Queries with spaces will require \"double quotes\"."
+msgstr ""
+
+#: cola/widgets/cfgactions.py:154 cola/widgets/cfgactions.py:158
 #, fuzzy
-msgid "Collapse all"
-msgstr "閉じる"
+msgid "Abort Action"
+msgstr "中断しています"
+
+#: cola/widgets/cfgactions.py:155
+msgid ""
+"An action is still running.\n"
+"Terminating it could result in data loss."
+msgstr ""
+
+#: cola/widgets/cfgactions.py:157
+msgid "Abort the action?"
+msgstr ""
+
+#: cola/widgets/cfgactions.py:208
+msgid "Arguments"
+msgstr ""
 
 #: cola/widgets/remote.py:144 cola/widgets/remote.py:145
 #, fuzzy
@@ -2122,268 +2313,84 @@ msgstr "タグを含める"
 msgid "Rebase "
 msgstr "リセット"
 
-#: cola/widgets/remote.py:347
+#: cola/widgets/remote.py:349
 #, fuzzy, python-format
 msgid "URL: %s"
 msgstr "URL:"
 
-#: cola/widgets/remote.py:435
+#: cola/widgets/remote.py:437
 msgid "No repository selected."
 msgstr "リポジトリが選択されていません。"
 
-#: cola/widgets/remote.py:450
+#: cola/widgets/remote.py:452
 msgid "Push"
 msgstr "プッシュ"
 
-#: cola/widgets/remote.py:452
+#: cola/widgets/remote.py:454
 #, python-format
 msgid ""
 "Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
 "A new remote branch will be published."
 msgstr ""
 
-#: cola/widgets/remote.py:454
+#: cola/widgets/remote.py:456
 #, fuzzy
 msgid "Create a new remote branch?"
 msgstr "ブランチを新規作成"
 
-#: cola/widgets/remote.py:455
+#: cola/widgets/remote.py:457
 #, fuzzy
 msgid "Create Remote Branch"
 msgstr "リモート・ブランチを削除"
 
-#: cola/widgets/remote.py:463
+#: cola/widgets/remote.py:465
 msgid "Force Fetch?"
 msgstr ""
 
-#: cola/widgets/remote.py:464
+#: cola/widgets/remote.py:466
 msgid "Non-fast-forward fetch overwrites local history!"
 msgstr ""
 
-#: cola/widgets/remote.py:465
+#: cola/widgets/remote.py:467
 #, fuzzy, python-format
 msgid "Force fetching from %s?"
 msgstr "%s から %s をフェッチしています"
 
-#: cola/widgets/remote.py:466
+#: cola/widgets/remote.py:468
 msgid "Force Fetch"
 msgstr ""
 
-#: cola/widgets/remote.py:468
+#: cola/widgets/remote.py:470
 msgid "Force Push?"
 msgstr ""
 
-#: cola/widgets/remote.py:469
+#: cola/widgets/remote.py:471
 msgid ""
 "Non-fast-forward push overwrites published history!\n"
 "(Did you pull first?)"
 msgstr ""
 
-#: cola/widgets/remote.py:471
+#: cola/widgets/remote.py:473
 #, python-format
 msgid "Force push to %s?"
 msgstr ""
 
-#: cola/widgets/remote.py:472
+#: cola/widgets/remote.py:474
 msgid "Force Push"
 msgstr ""
 
-#: cola/widgets/remote.py:519
+#: cola/widgets/remote.py:521
 msgid "Already up-to-date."
 msgstr ""
 
-#: cola/widgets/remote.py:544
+#: cola/widgets/remote.py:546
 msgid "Have you rebased/pulled lately?"
-msgstr ""
-
-#: cola/widgets/search.py:48
-#, fuzzy
-msgid "Browse..."
-msgstr "ブラウズ"
-
-#: cola/widgets/search.py:54 cola/widgets/search.py:59
-msgid "yyyy-MM-dd"
-msgstr ""
-
-#: cola/widgets/search.py:224
-#, fuzzy
-msgid "Search by Expression"
-msgstr "リビジョン式:"
-
-#: cola/widgets/search.py:225
-msgid "Search by Path"
-msgstr ""
-
-#: cola/widgets/search.py:226
-#, fuzzy
-msgid "Search Commit Messages"
-msgstr "マージコミットメッセージ:"
-
-#: cola/widgets/search.py:227
-msgid "Search Diffs"
-msgstr ""
-
-#: cola/widgets/search.py:228
-msgid "Search Authors"
-msgstr ""
-
-#: cola/widgets/search.py:229
-#, fuzzy
-msgid "Search Committers"
-msgstr "コミット者:"
-
-#: cola/widgets/search.py:230
-msgid "Search Date Range"
-msgstr ""
-
-#: cola/widgets/search.py:323
-#, fuzzy
-msgid "Choose Path(s)"
-msgstr "%s を選択"
-
-#: cola/widgets/selectcommits.py:52
-msgid "Revision Expression:"
-msgstr "リビジョン式:"
-
-#: cola/widgets/selectcommits.py:103
-msgid "No commits exist in this branch."
 msgstr ""
 
 #: cola/widgets/spellcheck.py:140
 #, fuzzy
 msgid "Spelling Suggestions"
 msgstr "提案なし"
-
-#: cola/widgets/startup.py:28
-msgid "git-cola"
-msgstr ""
-
-#: cola/widgets/startup.py:35
-msgid "New..."
-msgstr "新規…"
-
-#: cola/widgets/startup.py:59
-#, fuzzy
-msgid "Select Repository..."
-msgstr "GIT リポジトリ"
-
-#: cola/widgets/startup.py:64
-#, fuzzy
-msgid "Select manually..."
-msgstr "全て選択"
-
-#: cola/widgets/stash.py:39
-msgid "Stash"
-msgstr ""
-
-#: cola/widgets/stash.py:52
-msgid "Apply the selected stash"
-msgstr ""
-
-#: cola/widgets/stash.py:56
-msgid "Save modified state to new stash"
-msgstr ""
-
-#: cola/widgets/stash.py:59
-msgid "Drop"
-msgstr ""
-
-#: cola/widgets/stash.py:60
-msgid "Drop the selected stash"
-msgstr ""
-
-#: cola/widgets/stash.py:67
-msgid "Keep Index"
-msgstr ""
-
-#: cola/widgets/stash.py:188
-msgid "Save Stash"
-msgstr ""
-
-#: cola/widgets/stash.py:189
-msgid "Enter a name for the stash"
-msgstr ""
-
-#: cola/widgets/stash.py:195
-msgid "Error: Stash exists"
-msgstr ""
-
-#: cola/widgets/stash.py:196
-#, fuzzy, python-format
-msgid "A stash named \"%s\" already exists"
-msgstr "ファイル '%s' は既に存在します。"
-
-#: cola/widgets/stash.py:211
-msgid "Drop Stash?"
-msgstr ""
-
-#: cola/widgets/stash.py:212
-#, fuzzy
-msgid "Recovering a dropped stash is not possible."
-msgstr "失なわれたコミットを回復するのは簡単ではありません。"
-
-#: cola/widgets/stash.py:213
-#, python-format
-msgid "Drop the \"%s\" stash?"
-msgstr ""
-
-#: cola/widgets/stash.py:214
-msgid "Drop Stash"
-msgstr ""
-
-#: cola/widgets/status.py:77
-#, fuzzy
-msgid "Untracked"
-msgstr "管理外、コミット未予定"
-
-#: cola/widgets/status.py:87
-#, fuzzy
-msgid "Stage / Unstage"
-msgstr "変更をコミット予定に入れる"
-
-#: cola/widgets/status.py:91
-msgid "Revert Unstaged Edits..."
-msgstr ""
-
-#: cola/widgets/status.py:122
-msgid "Move Up"
-msgstr ""
-
-#: cola/widgets/status.py:129
-msgid "Copy Path to Clipboard"
-msgstr ""
-
-#: cola/widgets/status.py:494 cola/widgets/status.py:572
-msgid "Revert Uncommited Edits..."
-msgstr ""
-
-#: cola/widgets/status.py:591
-#, fuzzy
-msgid "Delete File(s)..."
-msgstr "削除…"
-
-#: cola/widgets/status.py:594
-msgid "Add to .gitignore"
-msgstr ""
-
-#: cola/widgets/status.py:626
-#, fuzzy
-msgid "Delete Files?"
-msgstr "削除"
-
-#: cola/widgets/status.py:627
-msgid "The following files will be deleted:"
-msgstr ""
-
-#: cola/widgets/status.py:634
-#, python-format
-msgid "Delete %d file(s)?"
-msgstr ""
-
-#: cola/widgets/status.py:635
-#, fuzzy
-msgid "Delete Files"
-msgstr "削除"
 
 #, fuzzy
 #~ msgid "Branch created"
