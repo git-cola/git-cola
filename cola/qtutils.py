@@ -294,6 +294,13 @@ def icon(basename):
     return QtGui.QIcon(resources.icon(basename))
 
 
+def copy_path(filename):
+        """Copy a filename prefixed by current directory to the clipboard"""
+        if filename is not None:
+            curdir = core.getcwd()
+            set_clipboard(os.path.join(curdir, filename))
+
+
 def set_clipboard(text):
     """Sets the copy/paste buffer to text."""
     if not text:
