@@ -890,5 +890,5 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         """Copy a selected path to the clipboard"""
         filename = selection.selection_model().filename()
         if filename is not None:
-            curdir = os.getcwdu()
+            curdir = core.getcwd()
             qtutils.set_clipboard(os.path.join(curdir, filename))
