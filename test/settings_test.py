@@ -3,8 +3,9 @@ from __future__ import unicode_literals
 import unittest
 import os
 
-import helper
 from cola.settings import Settings
+
+from test import helper
 
 
 class SettingsTestCase(unittest.TestCase):

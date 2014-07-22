@@ -3,9 +3,10 @@ from __future__ import unicode_literals
 import os
 import unittest
 
-import helper
 from cola import core
 from cola.models.main import MainModel
+
+from test import helper
 
 
 class MainModelTestCase(helper.GitRepositoryTestCase):

@@ -2,8 +2,9 @@ from __future__ import unicode_literals
 
 import unittest
 
-import helper
 from cola import gitcfg
+
+from test import helper
 
 
 class GitConfigTestCase(helper.GitRepositoryTestCase):

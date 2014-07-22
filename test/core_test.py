@@ -3,9 +3,9 @@
 from __future__ import unicode_literals
 import unittest
 
-import helper
-
 from cola import core
+
+from test import helper
 
 
 class CoreColaUnicodeTestCase(unittest.TestCase):

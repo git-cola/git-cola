@@ -4,9 +4,11 @@ from __future__ import unicode_literals
 
 import unittest
 
-import helper
 from cola import core
 from cola.models.main import MainModel
+
+from test import helper
+
 
 class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
 

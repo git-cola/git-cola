@@ -1,10 +1,11 @@
 """Covers interfaces used by the classic view."""
 from __future__ import unicode_literals
 
-import helper
 from cola import core
 from cola import gitcmds
 from cola.models.main import MainModel
+
+from test import helper
 
 
 class ClassicModelTestCase(helper.GitRepositoryTestCase):

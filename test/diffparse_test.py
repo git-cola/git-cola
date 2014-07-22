@@ -7,7 +7,7 @@ from cola import gitcmds
 from cola import diffparse
 from cola.diffparse import DiffParser
 
-import helper
+from test import helper
 
 
 class DiffParseModel(object):

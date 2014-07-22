@@ -3,9 +3,10 @@ from __future__ import unicode_literals
 import os
 import unittest
 
-import helper
 from cola import gitcmds
 from cola import gitcfg
+
+from test import helper
 
 
 class GitCmdsTestCase(helper.GitRepositoryTestCase):
