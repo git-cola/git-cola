@@ -58,6 +58,7 @@ Thanks
 * OmegaPhil (Omega Weapon)
 * Owen Healy
 * Paolo G. Giarrusso
+* Paul Hildebrandt
 * Peter Júnoš
 * Rustam Safin
 * Samsul Ma'arif
