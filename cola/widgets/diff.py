@@ -113,11 +113,6 @@ class DiffEditor(DiffTextEdit):
         self.action_unstage_selection.setIcon(qtutils.icon('remove.svg'))
         self.action_unstage_selection.setShortcut(Qt.Key_S)
 
-        self.action_apply_selection = qtutils.add_action(self,
-                N_('Apply Diff Selection to Work Tree'),
-                self.stage_selection)
-        self.action_apply_selection.setIcon(qtutils.apply_icon())
-
         model.add_observer(model.message_diff_text_changed, self._emit_text)
 
         self.connect(self, SIGNAL('copyAvailable(bool)'),
@@ -279,7 +274,6 @@ class DiffEditor(DiffTextEdit):
 
     # Mutators
     def enable_selection_actions(self, enabled):
-        self.action_apply_selection.setEnabled(enabled)
         self.action_revert_selection.setEnabled(enabled)
         self.action_unstage_selection.setEnabled(enabled)
         self.action_stage_selection.setEnabled(enabled)
