@@ -204,7 +204,7 @@ class ColaQApplication(QtGui.QApplication):
         skey = ustr(session_mgr.sessionKey())
         session_id = '%s_%s' % (sid, skey)
         session = Session(session_id,
-                          repo=os.getcwdu(), git_path=self.git_path)
+                          repo=core.getcwd(), git_path=self.git_path)
         self.view.save_state(settings=session)
 
 

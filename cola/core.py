@@ -128,7 +128,7 @@ def start_command(cmd, cwd=None, add_env=None,
     else:
         cmd = [encode(c) for c in cmd]
 
-    if WIN32 and cwd == os.getcwdu():
+    if WIN32 and cwd == getcwd():
         # Windows cannot deal with passing a cwd that contains unicode
         # but we luckily can pass None when the supplied cwd is the same
         # as our current directory and get the same effect.
