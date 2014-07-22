@@ -20,6 +20,10 @@ Fixes
 -----
 * We now use `os.getcwd()` on Python3.
 
+  https://github.com/git-cola/git-cola/pull/316
+
+  https://github.com/git-cola/git-cola/pull/326
+
 * The `Ctrl+P` hotkey was overloaded to both "push" and "cherry-pick",
   so "cherry-pick" was moved to `Shift+Ctrl+C`.
 
