@@ -4,7 +4,7 @@ import unittest
 from PyQt4 import QtGui
 
 from cola import qtutils
-from test.support import run_unittest
+from test.helper import run_unittest
 
 
 class QtUtilsTestCase(unittest.TestCase):

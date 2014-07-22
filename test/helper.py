@@ -31,6 +31,10 @@ def pipe(cmd):
     return out
 
 
+def run_unittest(suite):
+    return unittest.TextTestRunner(verbosity=2).run(suite)
+
+
 class TmpPathTestCase(unittest.TestCase):
     def setUp(self):
         self._testdir = tempfile.mkdtemp('_cola_test')
