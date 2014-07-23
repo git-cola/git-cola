@@ -84,6 +84,7 @@ class DiffEditor(DiffTextEdit):
         self.action_process_selection = qtutils.add_action(self,
                 N_('Process Selection'),
                 self.apply_selection, Qt.Key_S)
+        self.action_process_selection.setEnabled(False)
 
         self.launch_editor = qtutils.add_action(self,
                 cmds.LaunchEditor.name(), run(cmds.LaunchEditor),
@@ -101,22 +102,20 @@ class DiffEditor(DiffTextEdit):
                 self.stage_selection)
         self.action_stage_selection.setIcon(qtutils.icon('add.svg'))
         self.action_stage_selection.setShortcut(Qt.Key_S)
+        self.action_stage_selection.setEnabled(False)
 
         self.action_revert_selection = qtutils.add_action(self,
                 N_('Revert Selected Lines...'),
                 self.revert_selection)
         self.action_revert_selection.setIcon(qtutils.icon('undo.svg'))
+        self.action_revert_selection.setEnabled(False)
 
         self.action_unstage_selection = qtutils.add_action(self,
                 N_('Unstage &Selected Lines'),
                 self.unstage_selection)
         self.action_unstage_selection.setIcon(qtutils.icon('remove.svg'))
         self.action_unstage_selection.setShortcut(Qt.Key_S)
-
-        self.action_apply_selection = qtutils.add_action(self,
-                N_('Apply Diff Selection to Work Tree'),
-                self.stage_selection)
-        self.action_apply_selection.setIcon(qtutils.apply_icon())
+        self.action_unstage_selection.setEnabled(False)
 
         model.add_observer(model.message_diff_text_changed, self._emit_text)
 
@@ -279,7 +278,7 @@ class DiffEditor(DiffTextEdit):
 
     # Mutators
     def enable_selection_actions(self, enabled):
-        self.action_apply_selection.setEnabled(enabled)
+        self.action_process_selection.setEnabled(enabled)
         self.action_revert_selection.setEnabled(enabled)
         self.action_unstage_selection.setEnabled(enabled)
         self.action_stage_selection.setEnabled(enabled)
