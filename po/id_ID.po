@@ -1405,7 +1405,7 @@ msgid "Diff Options"
 msgstr "Pilihan Diff"
 
 #: cola/widgets/diff.py:82
-msgid "Process Diff Region"
+msgid "Process Diff Hunk"
 msgstr "Proses Area Diff"
 
 #: cola/widgets/diff.py:85
@@ -1434,15 +1434,15 @@ msgid "Launch git-cola"
 msgstr "Jalankan git-cola"
 
 #: cola/widgets/diff.py:162
-msgid "Stage Diff Region"
+msgid "Stage Diff Hunk"
 msgstr "Stage Area Diff"
 
 #: cola/widgets/diff.py:168
-msgid "Revert Diff Region..."
+msgid "Revert Diff Hunk..."
 msgstr "Kembalikan Area Diff..."
 
 #: cola/widgets/diff.py:184
-msgid "Unstage Diff Region"
+msgid "Unstage Diff Hunk"
 msgstr "Unstage Area Diff"
 
 #: cola/widgets/diff.py:205
@@ -1450,11 +1450,11 @@ msgid "Select All"
 msgstr "Pilih Semua"
 
 #: cola/widgets/diff.py:319
-msgid "Revert Diff Region?"
+msgid "Revert Diff Hunk?"
 msgstr "Kembalikan Area Diff?"
 
 #: cola/widgets/diff.py:323
-msgid "Revert Diff Region"
+msgid "Revert Diff Hunk"
 msgstr "Kembalikan Area Diff"
 
 #: cola/widgets/diff.py:332

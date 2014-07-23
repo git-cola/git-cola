@@ -1432,7 +1432,7 @@ msgid "Diff Options"
 msgstr "Vergleichsoptionen"
 
 #: cola/widgets/diff.py:82
-msgid "Process Diff Region"
+msgid "Process Diff Hunk"
 msgstr "Abschnitt verarbeiten"
 
 #: cola/widgets/diff.py:85
@@ -1461,15 +1461,15 @@ msgid "Launch git-cola"
 msgstr "Starte git-cola"
 
 #: cola/widgets/diff.py:162
-msgid "Stage Diff Region"
+msgid "Stage Diff Hunk"
 msgstr "Änderungen am Abschnitt vormerken"
 
 #: cola/widgets/diff.py:168
-msgid "Revert Diff Region..."
+msgid "Revert Diff Hunk..."
 msgstr "Abschnitt verwerfen..."
 
 #: cola/widgets/diff.py:184
-msgid "Unstage Diff Region"
+msgid "Unstage Diff Hunk"
 msgstr "Änderungen am Abschnitt nicht vormerken"
 
 #: cola/widgets/diff.py:205
@@ -1477,11 +1477,11 @@ msgid "Select All"
 msgstr "Alle auswählen"
 
 #: cola/widgets/diff.py:319
-msgid "Revert Diff Region?"
+msgid "Revert Diff Hunk?"
 msgstr "Möchten Sie den Abschnitt verwerfen?"
 
 #: cola/widgets/diff.py:323
-msgid "Revert Diff Region"
+msgid "Revert Diff Hunk"
 msgstr "Abschnitt verwerfen"
 
 #: cola/widgets/diff.py:332

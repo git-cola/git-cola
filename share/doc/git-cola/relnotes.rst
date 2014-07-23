@@ -29,6 +29,11 @@ Fixes
 
 * Custom GUI tools with mixed-case names are now properly supported.
 
+* "Diff Region" is now referred to as "Diff Hunk" for consistency
+  with common terminology from diff/patch tools.
+
+  https://github.com/git-cola/git-cola/issues/328
+
 git-cola v2.0.4
 ===============
 Usability, bells and whistles

@@ -1410,7 +1410,7 @@ msgid "Diff Options"
 msgstr "內容差異選項"
 
 #: cola/widgets/diff.py:82
-msgid "Process Diff Region"
+msgid "Process Diff Hunk"
 msgstr "處理內容差異區域"
 
 #: cola/widgets/diff.py:85
@@ -1439,15 +1439,15 @@ msgid "Launch git-cola"
 msgstr "啟動 git-cola"
 
 #: cola/widgets/diff.py:162
-msgid "Stage Diff Region"
+msgid "Stage Diff Hunk"
 msgstr "將此內容差異區域移入版本提交準備區域"
 
 #: cola/widgets/diff.py:168
-msgid "Revert Diff Region..."
+msgid "Revert Diff Hunk..."
 msgstr "撤銷此內容差異區域的內容變更……"
 
 #: cola/widgets/diff.py:184
-msgid "Unstage Diff Region"
+msgid "Unstage Diff Hunk"
 msgstr "將此內容差異區域移出版本提交準備區域"
 
 #: cola/widgets/diff.py:205
@@ -1455,11 +1455,11 @@ msgid "Select All"
 msgstr "全選"
 
 #: cola/widgets/diff.py:319
-msgid "Revert Diff Region?"
+msgid "Revert Diff Hunk?"
 msgstr "要撤銷選取內容差異區域的內容變更嗎？"
 
 #: cola/widgets/diff.py:323
-msgid "Revert Diff Region"
+msgid "Revert Diff Hunk"
 msgstr "撤銷選取內容差異區域的內容變更"
 
 #: cola/widgets/diff.py:332
