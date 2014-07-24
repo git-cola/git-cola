@@ -222,8 +222,7 @@ class DiffEditor(DiffTextEdit):
             # Intercept right-click to move the cursor to the current position.
             # setTextCursor() clears the selection so this is only done when
             # nothing is selected.
-            _, selection_text = self.offset_and_selection()
-            if not selection_text:
+            if not self.has_selection():
                 cursor = self.cursorForPosition(event.pos())
                 self.setTextCursor(cursor)
 
@@ -269,6 +268,10 @@ class DiffEditor(DiffTextEdit):
 
         if scrollbar and scrollvalue is not None:
             scrollbar.setValue(scrollvalue)
+
+    def has_selection(self):
+        cursor = self.textCursor()
+        return cursor.selectionStart() != cursor.selectionEnd()
 
     def offset_and_selection(self):
         cursor = self.textCursor()
