@@ -146,8 +146,8 @@ class DiffEditor(DiffTextEdit):
         s = selection.selection()
         filename = selection.filename()
 
-        if self.model.stageable():
-            if s.modified and s.modified[0] in main.model().submodules:
+        if self.model.stageable() and s.modified:
+            if s.modified[0] in main.model().submodules:
                 action = menu.addAction(qtutils.icon('add.svg'),
                                         cmds.Stage.name(),
                                         cmds.run(cmds.Stage, s.modified))
@@ -156,7 +156,7 @@ class DiffEditor(DiffTextEdit):
                                N_('Launch git-cola'),
                                cmds.run(cmds.OpenRepo,
                                         core.abspath(s.modified[0])))
-            elif s.modified:
+            else:
                 action = menu.addAction(qtutils.icon('add.svg'),
                                         N_('Stage Diff Hunk'),
                                         self.stage_section)
