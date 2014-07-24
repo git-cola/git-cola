@@ -275,7 +275,7 @@ class DiffEditor(DiffTextEdit):
 
     def offset_and_selection(self):
         cursor = self.textCursor()
-        offset = cursor.position()
+        offset = cursor.selectionStart()
         selection_text = ustr(cursor.selection().toPlainText())
         return offset, selection_text
 
