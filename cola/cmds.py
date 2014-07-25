@@ -149,11 +149,9 @@ class AmendMode(Command):
 
 class ApplyDiffSelection(Command):
 
-    def __init__(self, staged, selected, offset, selection_text,
-                 apply_to_worktree):
+    def __init__(self, staged, offset, selection_text, apply_to_worktree):
         Command.__init__(self)
         self.staged = staged
-        self.selected = selected
         self.offset = offset
         self.selection_text = selection_text
         self.apply_to_worktree = apply_to_worktree
@@ -165,8 +163,7 @@ class ApplyDiffSelection(Command):
                             cached=self.staged,
                             reverse=self.apply_to_worktree)
         status, out, err = \
-        parser.process_diff_selection(self.selected,
-                                      self.offset,
+        parser.process_diff_selection(self.offset,
                                       self.selection_text,
                                       apply_to_worktree=self.apply_to_worktree)
         Interaction.log_status(status, out, err)

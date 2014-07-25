@@ -78,13 +78,12 @@ class DiffEditor(DiffTextEdit):
         titlebar = parent.titleBarWidget()
         titlebar.add_corner_widget(self.diffopts_button)
 
-        self.action_process_section = qtutils.add_action(self,
-                N_('Process Diff Hunk'),
-                self.apply_section, Qt.Key_H)
-        self.action_process_selection = qtutils.add_action(self,
-                N_('Process Selection'),
+        self.action_apply_selection = qtutils.add_action(self, '',
                 self.apply_selection, Qt.Key_S)
-        self.action_process_selection.setEnabled(False)
+
+        self.action_revert_selection = qtutils.add_action(self, '',
+                self.revert_selection)
+        self.action_revert_selection.setIcon(qtutils.icon('undo.svg'))
 
         self.launch_editor = qtutils.add_action(self,
                 cmds.LaunchEditor.name(), run(cmds.LaunchEditor),
@@ -97,30 +96,7 @@ class DiffEditor(DiffTextEdit):
                 cmds.LaunchDifftool.SHORTCUT)
         self.launch_difftool.setIcon(qtutils.icon('git.svg'))
 
-        self.action_stage_selection = qtutils.add_action(self,
-                N_('Stage &Selected Lines'),
-                self.stage_selection)
-        self.action_stage_selection.setIcon(qtutils.icon('add.svg'))
-        self.action_stage_selection.setShortcut(Qt.Key_S)
-        self.action_stage_selection.setEnabled(False)
-
-        self.action_revert_selection = qtutils.add_action(self,
-                N_('Revert Selected Lines...'),
-                self.revert_selection)
-        self.action_revert_selection.setIcon(qtutils.icon('undo.svg'))
-        self.action_revert_selection.setEnabled(False)
-
-        self.action_unstage_selection = qtutils.add_action(self,
-                N_('Unstage &Selected Lines'),
-                self.unstage_selection)
-        self.action_unstage_selection.setIcon(qtutils.icon('remove.svg'))
-        self.action_unstage_selection.setShortcut(Qt.Key_S)
-        self.action_unstage_selection.setEnabled(False)
-
         model.add_observer(model.message_diff_text_changed, self._emit_text)
-
-        self.connect(self, SIGNAL('copyAvailable(bool)'),
-                     self.enable_selection_actions)
 
         self.connect(self, SIGNAL('set_text'), self.setPlainText)
 
@@ -157,15 +133,19 @@ class DiffEditor(DiffTextEdit):
                                cmds.run(cmds.OpenRepo,
                                         core.abspath(s.modified[0])))
             else:
-                action = menu.addAction(qtutils.icon('add.svg'),
-                                        N_('Stage Diff Hunk'),
-                                        self.stage_section)
-                action.setShortcut(Qt.Key_H)
-                menu.addAction(self.action_stage_selection)
-                menu.addSeparator()
-                menu.addAction(qtutils.icon('undo.svg'),
-                               N_('Revert Diff Hunk...'),
-                               self.revert_section)
+                if self.has_selection():
+                    apply_text = N_('Stage Selected Lines')
+                    revert_text = N_('Revert Selected Lines...')
+                else:
+                    apply_text = N_('Stage Diff Hunk')
+                    revert_text = N_('Revert Diff Hunk...')
+
+                self.action_apply_selection.setText(apply_text)
+                self.action_apply_selection.setIcon(qtutils.icon('add.svg'))
+
+                self.action_revert_selection.setText(revert_text)
+
+                menu.addAction(self.action_apply_selection)
                 menu.addAction(self.action_revert_selection)
 
         if self.model.unstageable():
@@ -179,11 +159,15 @@ class DiffEditor(DiffTextEdit):
                                cmds.do(cmds.OpenRepo,
                                        core.abspath(s.staged[0])))
             elif s.staged:
-                action = menu.addAction(qtutils.icon('remove.svg'),
-                                        N_('Unstage Diff Hunk'),
-                                        self.unstage_section)
-                action.setShortcut(Qt.Key_H)
-                menu.addAction(self.action_unstage_selection)
+                if self.has_selection():
+                    apply_text = N_('Unstage Selected Lines')
+                else:
+                    apply_text = N_('Unstage Diff Hunk')
+
+                self.action_apply_selection.setText(apply_text)
+                self.action_apply_selection.setIcon(qtutils.icon('remove.svg'))
+
+                menu.addAction(self.action_apply_selection)
 
         if self.model.stageable() or self.model.unstageable():
             # Do not show the "edit" action when the file does not exist.
@@ -279,76 +263,40 @@ class DiffEditor(DiffTextEdit):
         selection_text = ustr(cursor.selection().toPlainText())
         return offset, selection_text
 
-    # Mutators
-    def enable_selection_actions(self, enabled):
-        self.action_process_selection.setEnabled(enabled)
-        self.action_revert_selection.setEnabled(enabled)
-        self.action_unstage_selection.setEnabled(enabled)
-        self.action_stage_selection.setEnabled(enabled)
-
-    def apply_section(self):
-        s = selection.single_selection()
-        if self.model.stageable() and s.modified:
-            self.stage_section()
-        elif self.model.unstageable():
-            self.unstage_section()
-
     def apply_selection(self):
         s = selection.single_selection()
         if self.model.stageable() and s.modified:
-            self.stage_selection()
+            self.process_diff_selection(staged=False)
         elif self.model.unstageable():
-            self.unstage_selection()
+            self.process_diff_selection(staged=True)
 
-    def stage_section(self):
-        """Stage a specific section."""
-        self.process_diff_selection(staged=False)
+    def revert_selection(self):
+        """Destructively revert selected lines or hunk from a worktree file."""
 
-    def stage_selection(self):
-        """Stage selected lines."""
-        self.process_diff_selection(staged=False, selected=True)
+        if self.has_selection():
+            title = N_('Revert Selected Lines?')
+            ok_text = N_('Revert Selected Lines')
+        else:
+            title = N_('Revert Diff Hunk?')
+            ok_text = N_('Revert Diff Hunk')
 
-    def unstage_section(self, cached=True):
-        """Unstage a section."""
-        self.process_diff_selection(staged=True)
-
-    def unstage_selection(self):
-        """Unstage selected lines."""
-        self.process_diff_selection(staged=True, selected=True)
-
-    def revert_section(self):
-        """Destructively remove a section from a worktree file."""
-        if not qtutils.confirm(N_('Revert Diff Hunk?'),
+        if not qtutils.confirm(title,
                                N_('This operation drops uncommitted changes.\n'
                                   'These changes cannot be recovered.'),
                                N_('Revert the uncommitted changes?'),
-                               N_('Revert Diff Hunk'),
+                               ok_text,
                                default=True,
                                icon=qtutils.icon('undo.svg')):
             return
         self.process_diff_selection(staged=False, apply_to_worktree=True)
 
-    def revert_selection(self):
-        """Destructively check out content for the selected file from $head."""
-        if not qtutils.confirm(N_('Revert Selected Lines?'),
-                               N_('This operation drops uncommitted changes.\n'
-                                  'These changes cannot be recovered.'),
-                               N_('Revert the uncommitted changes?'),
-                               N_('Revert Selected Lines'),
-                               default=True,
-                               icon=qtutils.icon('undo.svg')):
-            return
-        self.process_diff_selection(staged=False, apply_to_worktree=True,
-                                    selected=True)
-
-    def process_diff_selection(self, selected=False,
-                               staged=True, apply_to_worktree=False):
+    def process_diff_selection(self, staged=True, apply_to_worktree=False):
         """Implement un/staging of selected lines or sections."""
         if selection.selection_model().is_empty():
             return
         offset, selection_text = self.offset_and_selection()
         cmds.do(cmds.ApplyDiffSelection,
-                staged, selected, offset, selection_text, apply_to_worktree)
+                staged, offset, selection_text, apply_to_worktree)
 
 
 
