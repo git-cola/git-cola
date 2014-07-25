@@ -17,21 +17,19 @@ class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
 
     def test_git_commit(self):
         """Test running 'git commit' via cola.git"""
-        self.shell("""
-            echo A > A
-            echo B > B
-            git add A B
-            """)
+        self.write_file('A', 'A')
+        self.write_file('B', 'B')
+        self.git('add', 'A', 'B')
 
         model = MainModel(cwd=core.getcwd())
         model.git.commit(m='commit test')
-        log = helper.pipe('git log --pretty=oneline | wc -l')
+        log = self.git('log', '--pretty=oneline')
 
-        self.assertEqual(log.strip(), '1')
+        self.assertEqual(len(log.splitlines()), 1)
 
     def test_git_config(self):
         """Test cola.git.config()"""
-        self.shell('git config section.key value')
+        self.git('config', 'section.key', 'value')
         model = MainModel(cwd=core.getcwd())
         value = model.git.config('section.key', get=True)
 

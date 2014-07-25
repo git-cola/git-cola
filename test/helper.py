@@ -4,6 +4,7 @@ import os
 import shutil
 import stat
 import unittest
+import subprocess
 import tempfile
 
 from cola import core
@@ -19,17 +20,6 @@ def tmp_path(*paths):
 
 def fixture(*paths):
     return os.path.join(os.path.dirname(__file__), 'fixtures', *paths)
-
-
-def shell(cmd):
-    return os.system(cmd)
-
-
-def pipe(cmd):
-    p = os.popen(cmd)
-    out = core.fread(p).strip()
-    p.close()
-    return out
 
 
 def run_unittest(suite):
@@ -58,9 +48,20 @@ class TmpPathTestCase(unittest.TestCase):
         os.chdir(tmp_path())
         shutil.rmtree(path, onerror=remove_readonly)
 
-    def shell(self, cmd):
-        result = shell(cmd)
-        self.failIf(result != 0)
+    @staticmethod
+    def touch(*paths):
+        for path in paths:
+            open(path, 'a').close()
+
+    @staticmethod
+    def write_file(path, content):
+        with open(path, 'w') as f:
+            f.write(content)
+
+    @staticmethod
+    def append_file(path, content):
+        with open(path, 'a') as f:
+            f.write(content)
 
     def test_path(self, *paths):
         return os.path.join(self._testdir, *paths)
@@ -77,12 +78,17 @@ class GitRepositoryTestCase(TmpPathTestCase):
         gitcfg.instance().reset()
         gitcmds.clear_cache()
 
+    def git(self, *args):
+        p = subprocess.Popen(['git'] + list(args), stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+        output, error = p.communicate()
+        self.failIf(p.returncode != 0)
+        return output.strip()
+
     def initialize_repo(self):
-        self.shell("""
-            git init > /dev/null &&
-            touch A B &&
-            git add A B
-        """)
+        self.git('init')
+        self.touch('A', 'B')
+        self.git('add', 'A', 'B')
 
     def commit_files(self):
-        self.shell('git commit -m"Initial commit" > /dev/null')
+        self.git('commit', '-m', 'intitial commit')
