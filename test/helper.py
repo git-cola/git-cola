@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import os
 import shutil
+import stat
 import unittest
 import tempfile
 
@@ -35,6 +36,17 @@ def run_unittest(suite):
     return unittest.TextTestRunner(verbosity=2).run(suite)
 
 
+# shutil.rmtree() can't remove read-only files on Windows.  This onerror
+# handler, adapted from <http://stackoverflow.com/a/1889686/357338>, works
+# around this by changing such files to be writable and then re-trying.
+def remove_readonly(func, path, exc_info):
+    if func == os.remove and not os.access(path, os.W_OK):
+        os.chmod(path, stat.S_IWRITE)
+        func(path)
+    else:
+        raise
+
+
 class TmpPathTestCase(unittest.TestCase):
     def setUp(self):
         self._testdir = tempfile.mkdtemp('_cola_test')
@@ -44,7 +56,7 @@ class TmpPathTestCase(unittest.TestCase):
         """Remove the test directory and return to the tmp root."""
         path = self._testdir
         os.chdir(tmp_path())
-        shutil.rmtree(path)
+        shutil.rmtree(path, onerror=remove_readonly)
 
     def shell(self, cmd):
         result = shell(cmd)
