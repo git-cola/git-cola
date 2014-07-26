@@ -323,8 +323,7 @@ class DiffEditor(DiffTextEdit):
                                default=True,
                                icon=qtutils.icon('undo.svg')):
             return
-        self.process_diff_selection(staged=False, apply_to_worktree=True,
-                                    reverse=True)
+        self.process_diff_selection(staged=False, apply_to_worktree=True)
 
     def revert_selection(self):
         """Destructively check out content for the selected file from $head."""
@@ -337,11 +336,10 @@ class DiffEditor(DiffTextEdit):
                                icon=qtutils.icon('undo.svg')):
             return
         self.process_diff_selection(staged=False, apply_to_worktree=True,
-                                    reverse=True, selected=True)
+                                    selected=True)
 
     def process_diff_selection(self, selected=False,
-                               staged=True, apply_to_worktree=False,
-                               reverse=False):
+                               staged=True, apply_to_worktree=False):
         """Implement un/staging of selected lines or sections."""
         if selection.selection_model().is_empty():
             return
