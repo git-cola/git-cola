@@ -34,6 +34,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/328
 
+* git-cola's test suite is now portable to MS Windows.
+
+  https://github.com/git-cola/git-cola/pull/332
+
 git-cola v2.0.4
 ===============
 Usability, bells and whistles
