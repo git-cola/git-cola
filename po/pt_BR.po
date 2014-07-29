@@ -604,7 +604,7 @@ msgstr "Verificar Ortografia"
 
 #: cola/widgets/commitmsg.py:102 cola/widgets/prefs.py:183
 msgid "Auto-Wrap Lines"
-msgstr ""
+msgstr "Auto-Quebra de Linhas"
 
 #: cola/widgets/commitmsg.py:109
 msgid "Load Previous Commit Message"
@@ -734,15 +734,15 @@ msgstr ""
 
 #: cola/widgets/prefs.py:180
 msgid "Font Size"
-msgstr ""
+msgstr "Tamanho de Fonte"
 
 #: cola/widgets/prefs.py:181
 msgid "Tab Width"
-msgstr ""
+msgstr "Largura da Aba"
 
 #: cola/widgets/prefs.py:182
 msgid "Text Width"
-msgstr ""
+msgstr "Largura do Texto"
 
 #: cola/widgets/prefs.py:184
 msgid "Editor"
@@ -750,7 +750,7 @@ msgstr ""
 
 #: cola/widgets/prefs.py:185
 msgid "History Browser"
-msgstr ""
+msgstr "Histórico do Browser"
 
 #: cola/widgets/prefs.py:186
 msgid "Diff Tool"
@@ -969,7 +969,7 @@ msgstr "Marcadores..."
 
 #: cola/widgets/bookmarks.py:189
 msgid "Open in New Window"
-msgstr "Abrir uma Nova Janela"
+msgstr "Abrir em uma Nova Janela"
 
 #: cola/widgets/bookmarks.py:199 cola/widgets/recent.py:72
 #: cola/widgets/grep.py:102
@@ -1805,7 +1805,7 @@ msgstr ""
 
 #: cola/widgets/main.py:219
 msgid "Open in New Window..."
-msgstr ""
+msgstr "Abrir em uma Nova Janela"
 
 #: cola/widgets/main.py:230
 msgid "Documentation"
@@ -1813,7 +1813,7 @@ msgstr "Documentação"
 
 #: cola/widgets/main.py:234
 msgid "Keyboard Shortcuts"
-msgstr ""
+msgstr "Teclas de Atalho"
 
 #: cola/widgets/main.py:239
 msgid "Visualize Current Branch..."
@@ -1905,7 +1905,7 @@ msgstr "Arquivo"
 
 #: cola/widgets/main.py:321
 msgid "Open Recent"
-msgstr ""
+msgstr "Aberto Recentemente"
 
 #: cola/widgets/main.py:361 cola/widgets/main.py:362
 msgid "Staging Area"
