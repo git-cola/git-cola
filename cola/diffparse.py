@@ -272,7 +272,7 @@ class DiffParser(object):
             self._diff_spans[-1][-1] += line_len
             self._diff_offsets[self._idx] += line_len
 
-    def process_diff_selection(self, selected, offset, selection,
+    def process_diff_selection(self, offset, selection,
                                apply_to_worktree=False):
         """Processes a diff selection and applies changes to git."""
         if selection:
@@ -291,13 +291,12 @@ class DiffParser(object):
             self.set_diffs_to_range(start, end)
         else:
             self.set_diff_to_offset(offset)
-            selected = False
 
         output = ''
         error = ''
         status = 0
         # Process diff selection only
-        if selected:
+        if selection:
             encoding = self.config.file_encoding(self.filename)
             for idx in self.selected:
                 contents = self.diff_subset(idx, start, end)
