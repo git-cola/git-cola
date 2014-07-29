@@ -263,8 +263,7 @@ class DiffEditor(DiffTextEdit):
             scrollbar.setValue(scrollvalue)
 
     def has_selection(self):
-        cursor = self.textCursor()
-        return cursor.selectionStart() != cursor.selectionEnd()
+        return self.textCursor().hasSelection()
 
     def offset_and_selection(self):
         cursor = self.textCursor()
