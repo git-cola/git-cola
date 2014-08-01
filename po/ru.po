@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-18 16:22-0700\n"
+"POT-Creation-Date: 2014-08-01 13:07-0700\n"
 "PO-Revision-Date: 2007-10-22 22:30-0200\n"
 "Last-Translator: Alex Riesen <raa.lkml@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -40,12 +40,12 @@ msgstr ""
 msgid "Run"
 msgstr ""
 
-#: cola/interaction.py:72 cola/cmds.py:1001 cola/cmds.py:1169
+#: cola/interaction.py:72 cola/cmds.py:998 cola/cmds.py:1166
 #, python-format
 msgid "Output: %s"
 msgstr ""
 
-#: cola/interaction.py:73 cola/guicmds.py:113 cola/cmds.py:1002
+#: cola/interaction.py:73 cola/guicmds.py:113 cola/cmds.py:999
 #, python-format
 msgid "Errors: %s"
 msgstr ""
@@ -126,7 +126,7 @@ msgstr "Скопировать SHA-1"
 msgid "Error Creating Repository"
 msgstr "Создать новый репозиторий"
 
-#: cola/guicmds.py:108 cola/cmds.py:445 cola/widgets/remote.py:527
+#: cola/guicmds.py:108 cola/cmds.py:442 cola/widgets/remote.py:527
 #, python-format
 msgid "\"%(command)s\" returned exit status %(status)d"
 msgstr ""
@@ -204,273 +204,273 @@ msgid ""
 "Cannot amend while merging."
 msgstr ""
 
-#: cola/cmds.py:194
+#: cola/cmds.py:191
 #, python-format
 msgid "PATCH %(current)d/%(count)d"
 msgstr ""
 
-#: cola/cmds.py:198
+#: cola/cmds.py:195
 msgid "Summary:"
 msgstr ""
 
-#: cola/cmds.py:207
+#: cola/cmds.py:204
 msgid "Patch(es) Applied"
 msgstr ""
 
-#: cola/cmds.py:208
+#: cola/cmds.py:205
 #, python-format
 msgid "%d patch(es) applied."
 msgstr ""
 
-#: cola/cmds.py:305
+#: cola/cmds.py:302
 #, fuzzy
 msgid "Revert Unstaged Changes?"
 msgstr "Изменено (не будет сохранено)"
 
-#: cola/cmds.py:306
+#: cola/cmds.py:303
 msgid ""
 "This operation drops unstaged changes.\n"
 "These changes cannot be recovered."
 msgstr ""
 
-#: cola/cmds.py:308
+#: cola/cmds.py:305
 #, fuzzy
 msgid "Revert the unstaged changes?"
 msgstr "Изменено (не будет сохранено)"
 
-#: cola/cmds.py:309
+#: cola/cmds.py:306
 #, fuzzy
 msgid "Revert Unstaged Changes"
 msgstr "Изменено (не будет сохранено)"
 
-#: cola/cmds.py:318 cola/widgets/status.py:659
+#: cola/cmds.py:315 cola/widgets/status.py:659
 msgid "No files selected for checkout from HEAD."
 msgstr ""
 
-#: cola/cmds.py:348
+#: cola/cmds.py:345
 #, fuzzy, python-format
 msgid "Created commit: %s"
 msgstr "Создано состояние %s: %s "
 
-#: cola/cmds.py:350
+#: cola/cmds.py:347
 #, fuzzy, python-format
 msgid "Commit failed: %s"
 msgstr "Сохранить состояние не удалось."
 
-#: cola/cmds.py:406 cola/cmds.py:1353
+#: cola/cmds.py:403 cola/cmds.py:1350
 #, fuzzy
 msgid "Error"
 msgstr "ошибка"
 
-#: cola/cmds.py:407
+#: cola/cmds.py:404
 #, python-format
 msgid "Deleting \"%s\" failed"
 msgstr ""
 
-#: cola/cmds.py:440
+#: cola/cmds.py:437
 #, fuzzy
 msgid "Remote Branch Deleted"
 msgstr "Переименование ветви"
 
-#: cola/cmds.py:441
+#: cola/cmds.py:438
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr ""
 
-#: cola/cmds.py:448
+#: cola/cmds.py:445
 #, fuzzy
 msgid "Error Deleting Remote Branch"
 msgstr "Создание ветви"
 
-#: cola/cmds.py:527 cola/cmds.py:633
+#: cola/cmds.py:524 cola/cmds.py:630
 msgid "Launch Editor"
 msgstr ""
 
-#: cola/cmds.py:563
+#: cola/cmds.py:560
 #, python-format
 msgid "Cannot exec \"%s\": please configure your editor"
 msgstr ""
 
-#: cola/cmds.py:566
+#: cola/cmds.py:563
 #, fuzzy
 msgid "Error Editing File"
 msgstr "Ошибка загрузки diff:"
 
-#: cola/cmds.py:588
+#: cola/cmds.py:585
 msgid "Launch Diff Tool"
 msgstr ""
 
-#: cola/cmds.py:615
+#: cola/cmds.py:612
 msgid "Launch Terminal"
 msgstr ""
 
-#: cola/cmds.py:654
+#: cola/cmds.py:651
 msgid "Error: Cannot find commit template"
 msgstr ""
 
-#: cola/cmds.py:655
+#: cola/cmds.py:652
 #, fuzzy, python-format
 msgid "%s: No such file or directory."
 msgstr "критическая ошибка: %s: нет такого файла или каталога"
 
-#: cola/cmds.py:674
+#: cola/cmds.py:671
 msgid "Error: Unconfigured commit template"
 msgstr ""
 
-#: cola/cmds.py:675
+#: cola/cmds.py:672
 msgid ""
 "A commit template has not been configured.\n"
 "Use \"git config\" to define \"commit.template\"\n"
 "so that it points to a commit template."
 msgstr ""
 
-#: cola/cmds.py:737
+#: cola/cmds.py:734
 msgid "Open Using Default Application"
 msgstr ""
 
-#: cola/cmds.py:760
+#: cola/cmds.py:757
 #, fuzzy
 msgid "Open Parent Directory"
 msgstr "Открыть последний репозиторий"
 
-#: cola/cmds.py:817
+#: cola/cmds.py:814
 #, python-format
 msgid "Error: could not clone \"%s\""
 msgstr ""
 
-#: cola/cmds.py:818
+#: cola/cmds.py:815
 #, python-format
 msgid "git clone returned exit code %s"
 msgstr ""
 
-#: cola/cmds.py:865
+#: cola/cmds.py:862
 #, fuzzy, python-format
 msgid "Rebase onto %s"
 msgstr "Сброс"
 
-#: cola/cmds.py:866 cola/widgets/main.py:395
+#: cola/cmds.py:863 cola/widgets/main.py:395
 #, fuzzy
 msgid "Rebase"
 msgstr "Сброс"
 
-#: cola/cmds.py:880
+#: cola/cmds.py:877
 #, fuzzy
 msgid "Edit Rebase"
 msgstr "Сброс"
 
-#: cola/cmds.py:881 cola/widgets/archive.py:123 cola/widgets/bookmarks.py:67
+#: cola/cmds.py:878 cola/widgets/archive.py:123 cola/widgets/bookmarks.py:67
 #: cola/widgets/browse.py:485 cola/widgets/stash.py:55
 msgid "Save"
 msgstr "Сохранить"
 
-#: cola/cmds.py:925 cola/widgets/action.py:59 cola/widgets/recent.py:55
+#: cola/cmds.py:922 cola/widgets/action.py:59 cola/widgets/recent.py:55
 #: cola/widgets/recent.py:124 cola/widgets/editremotes.py:64
 #: cola/widgets/grep.py:107
 msgid "Refresh"
 msgstr "Обновить"
 
-#: cola/cmds.py:953
+#: cola/cmds.py:950
 #, python-format
 msgid "Run \"%s\"?"
 msgstr ""
 
-#: cola/cmds.py:960
+#: cola/cmds.py:957
 #, fuzzy
 msgid "Please select a file"
 msgstr "Укажите ветвь слежения."
 
-#: cola/cmds.py:961
+#: cola/cmds.py:958
 #, python-format
 msgid "\"%s\" requires a selected file."
 msgstr ""
 
-#: cola/cmds.py:973
+#: cola/cmds.py:970
 #, fuzzy
 msgid "Invalid Revision"
 msgstr "Неверная версия: %s"
 
-#: cola/cmds.py:974
+#: cola/cmds.py:971
 #, fuzzy
 msgid "The revision expression cannot be empty."
 msgstr "Пустое выражение для определения версии."
 
-#: cola/cmds.py:989
+#: cola/cmds.py:986
 #, python-format
 msgid "Running command: %s"
 msgstr ""
 
-#: cola/cmds.py:1045
+#: cola/cmds.py:1042
 msgid "Sign Off"
 msgstr "Подписать"
 
-#: cola/cmds.py:1066
+#: cola/cmds.py:1063
 msgid "unknown"
 msgstr ""
 
-#: cola/cmds.py:1079 cola/widgets/action.py:57
+#: cola/cmds.py:1076 cola/widgets/action.py:57
 #, fuzzy
 msgid "Stage"
 msgstr "Сохранить"
 
-#: cola/cmds.py:1086
+#: cola/cmds.py:1083
 #, fuzzy, python-format
 msgid "Staging: %s"
 msgstr "Перечитывание %s... "
 
-#: cola/cmds.py:1103
+#: cola/cmds.py:1100
 msgid "Stage Modified"
 msgstr ""
 
-#: cola/cmds.py:1117
+#: cola/cmds.py:1114
 #, fuzzy
 msgid "Stage Unmerged"
 msgstr "Подготовить все"
 
-#: cola/cmds.py:1131
+#: cola/cmds.py:1128
 #, fuzzy
 msgid "Stage Untracked"
 msgstr "Подготовить все"
 
-#: cola/cmds.py:1149
+#: cola/cmds.py:1146
 #, python-format
 msgid "Tagging \"%(revision)s\" as \"%(name)s\""
 msgstr ""
 
-#: cola/cmds.py:1157
+#: cola/cmds.py:1154
 msgid "GPG-signed"
 msgstr ""
 
-#: cola/cmds.py:1184 cola/widgets/action.py:58
+#: cola/cmds.py:1181 cola/widgets/action.py:58
 #, fuzzy
 msgid "Unstage"
 msgstr "Изменено (не будет сохранено)"
 
-#: cola/cmds.py:1191
+#: cola/cmds.py:1188
 #, fuzzy, python-format
 msgid "Unstaging: %s"
 msgstr "Удаление %s из подготовленного"
 
-#: cola/cmds.py:1219
+#: cola/cmds.py:1216
 #, python-format
 msgid "Untracking: %s"
 msgstr ""
 
-#: cola/cmds.py:1304
+#: cola/cmds.py:1301
 #, fuzzy
 msgid "Error Launching History Browser"
 msgstr "Просмотр списка файлов"
 
-#: cola/cmds.py:1305
+#: cola/cmds.py:1302
 #, python-format
 msgid "Cannot exec \"%s\": please configure a history browser"
 msgstr ""
 
-#: cola/qtutils.py:489
+#: cola/qtutils.py:496
 #, fuzzy
 msgid "Close..."
 msgstr "Склонировать..."
 
-#: cola/qtutils.py:602 cola/difftool.py:97 cola/widgets/patch.py:99
+#: cola/qtutils.py:609 cola/difftool.py:97 cola/widgets/patch.py:99
 #: cola/widgets/prefs.py:259 cola/widgets/createtag.py:119
 #: cola/widgets/bookmarks.py:73 cola/widgets/search.py:85
 #: cola/widgets/startup.py:44 cola/widgets/recent.py:78
@@ -485,12 +485,12 @@ msgstr "Склонировать..."
 msgid "Close"
 msgstr "Закрыть"
 
-#: cola/qtutils.py:605 cola/qtutils.py:645
+#: cola/qtutils.py:612 cola/qtutils.py:652
 #, fuzzy
 msgid "Detach"
 msgstr "Удаление ветви"
 
-#: cola/qtutils.py:643
+#: cola/qtutils.py:650
 msgid "Attach"
 msgstr ""
 
@@ -1061,7 +1061,7 @@ msgstr ""
 msgid "Edit"
 msgstr "Редактировать"
 
-#: cola/widgets/bookmarks.py:213 cola/widgets/diff.py:201
+#: cola/widgets/bookmarks.py:213 cola/widgets/diff.py:184
 msgid "Copy"
 msgstr "Копировать"
 
@@ -1346,15 +1346,15 @@ msgstr ""
 msgid "Revert Uncommitted Changes?"
 msgstr "Отменить изменения"
 
-#: cola/widgets/browse.py:328 cola/widgets/diff.py:320
-#: cola/widgets/diff.py:333 cola/widgets/status.py:650
+#: cola/widgets/browse.py:328 cola/widgets/diff.py:284
+#: cola/widgets/status.py:650
 msgid ""
 "This operation drops uncommitted changes.\n"
 "These changes cannot be recovered."
 msgstr ""
 
-#: cola/widgets/browse.py:330 cola/widgets/diff.py:322
-#: cola/widgets/diff.py:335 cola/widgets/status.py:652
+#: cola/widgets/browse.py:330 cola/widgets/diff.py:286
+#: cola/widgets/status.py:652
 msgid "Revert the uncommitted changes?"
 msgstr ""
 
@@ -1479,71 +1479,60 @@ msgstr ""
 msgid "Diff Options"
 msgstr "Настройки"
 
-#: cola/widgets/diff.py:82
-msgid "Process Diff Hunk"
-msgstr ""
-
-#: cola/widgets/diff.py:85
-msgid "Process Selection"
-msgstr ""
-
-#: cola/widgets/diff.py:100
-msgid "Stage &Selected Lines"
-msgstr ""
-
-#: cola/widgets/diff.py:106
-msgid "Revert Selected Lines..."
-msgstr ""
-
-#: cola/widgets/diff.py:111
-#, fuzzy
-msgid "Unstage &Selected Lines"
-msgstr "Изменено (не будет сохранено)"
-
-#: cola/widgets/diff.py:117
-msgid "Apply Diff Selection to Work Tree"
-msgstr ""
-
-#: cola/widgets/diff.py:157 cola/widgets/diff.py:179
+#: cola/widgets/diff.py:132 cola/widgets/diff.py:158
 #: cola/widgets/status.py:508 cola/widgets/status.py:607
 msgid "Launch git-cola"
 msgstr ""
 
-#: cola/widgets/diff.py:162
+#: cola/widgets/diff.py:137
+#, fuzzy
+msgid "Stage Selected Lines"
+msgstr "Изменено (не будет сохранено)"
+
+#: cola/widgets/diff.py:138
+msgid "Revert Selected Lines..."
+msgstr ""
+
+#: cola/widgets/diff.py:140
 #, fuzzy
 msgid "Stage Diff Hunk"
 msgstr "Начальная версия"
 
-#: cola/widgets/diff.py:168
+#: cola/widgets/diff.py:141
 msgid "Revert Diff Hunk..."
 msgstr ""
 
-#: cola/widgets/diff.py:184
+#: cola/widgets/diff.py:163
+#, fuzzy
+msgid "Unstage Selected Lines"
+msgstr "Изменено (не будет сохранено)"
+
+#: cola/widgets/diff.py:165
 msgid "Unstage Diff Hunk"
 msgstr ""
 
-#: cola/widgets/diff.py:205
+#: cola/widgets/diff.py:188
 msgid "Select All"
 msgstr "Выделить все"
 
-#: cola/widgets/diff.py:319
-msgid "Revert Diff Hunk?"
-msgstr ""
-
-#: cola/widgets/diff.py:323
-msgid "Revert Diff Hunk"
-msgstr ""
-
-#: cola/widgets/diff.py:332
+#: cola/widgets/diff.py:277
 #, fuzzy
 msgid "Revert Selected Lines?"
 msgstr "Отменить изменения в файле %s?"
 
-#: cola/widgets/diff.py:336
+#: cola/widgets/diff.py:278
 msgid "Revert Selected Lines"
 msgstr ""
 
-#: cola/widgets/diff.py:427
+#: cola/widgets/diff.py:280
+msgid "Revert Diff Hunk?"
+msgstr ""
+
+#: cola/widgets/diff.py:281
+msgid "Revert Diff Hunk"
+msgstr ""
+
+#: cola/widgets/diff.py:375
 #, fuzzy
 msgid "Loading..."
 msgstr "Загрузка %s..."
