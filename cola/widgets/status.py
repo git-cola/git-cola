@@ -1,6 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
 
-import os
 import subprocess
 import itertools
 
@@ -70,6 +69,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.setAnimated(True)
         self.setRootIsDecorated(False)
         self.setIndentation(0)
+        self.setDragEnabled(True)
 
         self.add_item(N_('Staged'), hide=True)
         self.add_item(N_('Unmerged'), hide=True)
@@ -890,3 +890,11 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         """Copy a selected path to the clipboard"""
         filename = selection.selection_model().filename()
         qtutils.copy_path(filename)
+
+    def mimeData(self, indexes):
+        """Add a list of selected files to the mime data"""
+        urls = [QtCore.QUrl(core.abspath(path))
+                for path in selection.union(self.selection())]
+        mimedata = QtCore.QMimeData()
+        mimedata.setUrls(urls)
+        return mimedata

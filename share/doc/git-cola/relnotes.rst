@@ -4,6 +4,10 @@ Usability, bells and whistles
 -----------------------------
 * Updated Brazillian Portuguese translation.
 
+* The status widget now allows drag and drop into external applications.
+
+  https://github.com/git-cola/git-cola/issue/335
+
 git-cola v2.0.5
 ===============
 Usability, bells and whistles
