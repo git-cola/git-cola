@@ -131,6 +131,8 @@ def clone_repo(spawn=True):
     """
     url, ok = qtutils.prompt(N_('Path or URL to clone (Env. $VARS okay)'))
     url = os.path.expandvars(url)
+    if url.startswith('~'):
+        url = os.path.expanduser(url)
     if not ok or not url:
         return None
     try:
