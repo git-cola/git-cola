@@ -18,6 +18,8 @@ from cola.qtutils import connect_button
 from cola.widgets import defs
 from cola.widgets import standard
 from cola.widgets.progress import ProgressDialog
+from cola.widgets.tasks import Task
+from cola.widgets.tasks import TaskRunner
 
 
 FETCH = 'FETCH'
@@ -73,11 +75,10 @@ def combine(result, existing):
             return result
 
 
-class ActionTask(QtCore.QRunnable):
+class ActionTask(Task):
 
     def __init__(self, sender, model_action, remote, kwargs):
-        QtCore.QRunnable.__init__(self)
-        self.sender = sender
+        Task.__init__(self, sender)
         self.model_action = model_action
         self.remote = remote
         self.kwargs = kwargs
@@ -85,7 +86,7 @@ class ActionTask(QtCore.QRunnable):
     def run(self):
         """Runs the model action and captures the result"""
         status, out, err = self.model_action(self.remote, **self.kwargs)
-        self.sender.emit(SIGNAL('action_completed'), self, status, out, err)
+        self.finish(status, out, err)
 
 
 class RemoteActionDialog(standard.Dialog):
@@ -96,7 +97,6 @@ class RemoteActionDialog(standard.Dialog):
         standard.Dialog.__init__(self, parent=parent)
         self.model = model
         self.action = action
-        self.tasks = []
         self.filtered_remote_branches = []
         self.selected_remotes = []
 
@@ -105,6 +105,7 @@ class RemoteActionDialog(standard.Dialog):
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
+        self.task_runner = TaskRunner(self)
         self.progress = ProgressDialog(title, N_('Updating'), self)
 
         self.local_label = QtGui.QLabel()
@@ -217,8 +218,6 @@ class RemoteActionDialog(standard.Dialog):
 
         qtutils.add_action(self, N_('Close'),
                       self.close, QtGui.QKeySequence.Close, 'Esc')
-
-        self.connect(self, SIGNAL('action_completed'), self.action_completed)
 
         if action == PULL:
             self.tags_checkbox.hide()
@@ -451,9 +450,8 @@ class RemoteActionDialog(standard.Dialog):
         self.progress.show()
 
         # Use a thread to update in the background
-        task = ActionTask(self, model_action, remote, kwargs)
-        self.tasks.append(task)
-        QtCore.QThreadPool.globalInstance().start(task)
+        task = ActionTask(self.task_runner, model_action, remote, kwargs)
+        self.task_runner.start(task, self.action_completed)
 
     def push_to_all(self, dummy_remote, *args, **kwargs):
         selected_remotes = self.selected_remotes
@@ -469,8 +467,6 @@ class RemoteActionDialog(standard.Dialog):
         self.close_button.setEnabled(True)
 
         self.progress.hide()
-        if task in self.tasks:
-            self.tasks.remove(task)
 
         already_up_to_date = N_('Already up-to-date.')
 

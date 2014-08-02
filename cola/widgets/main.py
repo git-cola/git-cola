@@ -741,7 +741,7 @@ class MainView(MainWindow):
         self.clone_progress.setEnabled(True)
         self.clone_progress.show()
 
-        # Use a thread to update in the background
+        # Clone the repository using a background task
         url, destdir = result
         task = CloneTask(self.task_runner, url, destdir, True)
         self.task_runner.start(task, self.clone_task_done)
