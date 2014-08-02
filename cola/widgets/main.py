@@ -53,11 +53,14 @@ from cola.widgets.grep import grep
 from cola.widgets.log import LogWidget
 from cola.widgets.patch import apply_patches
 from cola.widgets.prefs import preferences
+from cola.widgets.progress import ProgressDialog
 from cola.widgets.recent import browse_recent_files
 from cola.widgets.status import StatusWidget
 from cola.widgets.search import search
 from cola.widgets.standard import MainWindow
 from cola.widgets.stash import stash
+from cola.widgets.tasks import TaskRunner
+from cola.widgets.tasks import CloneTask
 
 
 class MainView(MainWindow):
@@ -77,6 +80,11 @@ class MainView(MainWindow):
 
         # Keeps track of merge messages we've seen
         self.merge_message_hash = ''
+
+        # Runs asynchronous tasks
+        self.task_runner = TaskRunner(self)
+        self.clone_progress = ProgressDialog(N_('Clone Repository'),
+                                             N_('Cloning'), self)
 
         cfg = gitcfg.instance()
         self.browser_dockable = (cfg.get('cola.browserdockable') or
@@ -223,7 +231,7 @@ class MainView(MainWindow):
                 N_('Stash...'), stash, 'Alt+Shift+S')
 
         self.clone_repo_action = add_action(self,
-                N_('Clone...'), guicmds.clone_repo)
+                N_('Clone...'), self.clone_repo)
         self.clone_repo_action.setIcon(qtutils.git_icon())
 
         self.help_docs_action = add_action(self,
@@ -724,3 +732,26 @@ class MainView(MainWindow):
 
     def rebase_abort(self):
         cmds.do(cmds.RebaseAbort)
+
+    def clone_repo(self):
+        result = guicmds.prompt_for_clone()
+        if result is None:
+            return
+        self.setEnabled(False)
+        self.clone_progress.setEnabled(True)
+        self.clone_progress.show()
+
+        # Use a thread to update in the background
+        url, destdir = result
+        task = CloneTask(self.task_runner, url, destdir, True)
+        self.task_runner.start(task, self.clone_task_done)
+
+    def clone_task_done(self, task):
+        """Continuation function called when the clone is complete"""
+        self.setEnabled(True)
+        self.clone_progress.hide()
+        if task.cmd is None:
+            return
+        if not task.cmd.ok:
+            Interaction.information(task.cmd.error_message,
+                                    task.cmd.error_details)

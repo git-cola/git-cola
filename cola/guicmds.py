@@ -122,11 +122,11 @@ def open_new_repo():
     cmds.do(cmds.OpenRepo, dirname)
 
 
-def clone_repo(spawn=True):
+def prompt_for_clone():
     """
-    Present GUI controls for cloning a repository
+    Present a GUI for cloning a repository.
 
-    A new cola session is invoked when 'spawn' is True.
+    Returns the target directory and URL
 
     """
     url, ok = qtutils.prompt(N_('Path or URL to clone (Env. $VARS okay)'))
@@ -175,9 +175,8 @@ def clone_repo(spawn=True):
     while core.exists(destdir):
         destdir = olddestdir + str(count)
         count += 1
-    if cmds.do(cmds.Clone, url, destdir, spawn=spawn):
-        return destdir
-    return None
+
+    return url, destdir
 
 
 def export_patches():

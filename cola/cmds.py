@@ -807,18 +807,25 @@ class Clone(Command):
         self.new_directory = new_directory
         self.spawn = spawn
 
+        self.ok = False
+        self.error_message = ''
+        self.error_details = ''
+
     def do(self):
         status, out, err = self.model.git.clone(self.url, self.new_directory)
-        if status != 0:
-            Interaction.information(
-                    N_('Error: could not clone "%s"') % self.url,
+        self.ok = status == 0
+
+        if self.ok:
+            if self.spawn:
+                core.fork([sys.executable, sys.argv[0],
+                           '--repo', self.new_directory])
+        else:
+            self.error_message = N_('Error: could not clone "%s"') % self.url
+            self.error_details = (
                     (N_('git clone returned exit code %s') % status) +
-                    ((out+err) and ('\n\n' + out + err) or ''))
-            return False
-        if self.spawn:
-            core.fork([sys.executable, sys.argv[0],
-                       '--repo', self.new_directory])
-        return True
+                     ((out+err) and ('\n\n' + out + err) or ''))
+
+        return self
 
 
 class GitXBaseContext(object):

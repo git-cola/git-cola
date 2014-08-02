@@ -9,6 +9,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issue/335
 
+* We now show a progress bar when cloning repositories.
+
+  https://github.com/git-cola/git-cola/issue/312
+
 git-cola v2.0.5
 ===============
 Usability, bells and whistles
