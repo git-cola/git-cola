@@ -19,9 +19,10 @@ from cola.widgets import defs
 from cola.widgets import standard
 from cola.compat import ustr
 
-FETCH = 'Fetch'
-PUSH = 'Push'
-PULL = 'Pull'
+
+FETCH = 'FETCH'
+PUSH = 'PUSH'
+PULL = 'PULL'
 
 
 def fetch():
@@ -120,7 +121,7 @@ class ProgressAnimationThread(QtCore.QThread):
 
 class RemoteActionDialog(standard.Dialog):
 
-    def __init__(self, model, action, parent=None):
+    def __init__(self, model, action, title, parent=None):
         """Customizes the dialog based on the remote action
         """
         standard.Dialog.__init__(self, parent=parent)
@@ -131,7 +132,7 @@ class RemoteActionDialog(standard.Dialog):
         self.selected_remotes = []
 
         self.setAttribute(Qt.WA_MacMetalStyle)
-        self.setWindowTitle(N_(action))
+        self.setWindowTitle(title)
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
@@ -178,7 +179,7 @@ class RemoteActionDialog(standard.Dialog):
         self.rebase_checkbox.setText(N_('Rebase '))
 
         self.action_button = QtGui.QPushButton()
-        self.action_button.setText(N_(action))
+        self.action_button.setText(title)
         self.action_button.setIcon(qtutils.ok_icon())
 
         self.close_button = QtGui.QPushButton()
@@ -552,17 +553,20 @@ class RemoteActionDialog(standard.Dialog):
 # Use distinct classes so that each saves its own set of preferences
 class Fetch(RemoteActionDialog):
     def __init__(self, model, parent=None):
-        RemoteActionDialog.__init__(self, model, FETCH, parent=parent)
+        RemoteActionDialog.__init__(self, model, FETCH, N_('Fetch'),
+                                    parent=parent)
 
 
 class Push(RemoteActionDialog):
     def __init__(self, model, parent=None):
-        RemoteActionDialog.__init__(self, model, PUSH, parent=parent)
+        RemoteActionDialog.__init__(self, model, PUSH, N_('Push'),
+                                    parent=parent)
 
 
 class Pull(RemoteActionDialog):
     def __init__(self, model, parent=None):
-        RemoteActionDialog.__init__(self, model, PULL, parent=parent)
+        RemoteActionDialog.__init__(self, model, PULL, N_('Pull'),
+                                    parent=parent)
 
     def apply_state(self, state):
         result = RemoteActionDialog.apply_state(self, state)
