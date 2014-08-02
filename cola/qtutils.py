@@ -303,8 +303,8 @@ def opendir_dialog(title, path):
     flags = (QtGui.QFileDialog.ShowDirsOnly |
              QtGui.QFileDialog.DontResolveSymlinks)
     return ustr(QtGui.QFileDialog
-                        .getExistingDirectory(active_window(),
-                                              title, path, flags))
+                     .getExistingDirectory(active_window(),
+                                           title, path, flags))
 
 
 def save_as(filename, title='Save As...'):
