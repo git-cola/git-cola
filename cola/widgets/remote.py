@@ -1,7 +1,6 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import fnmatch
-import time
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui
@@ -11,13 +10,14 @@ from PyQt4.QtCore import SIGNAL
 from cola import gitcmds
 from cola import qtutils
 from cola import utils
+from cola.compat import ustr
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
 from cola.qtutils import connect_button
 from cola.widgets import defs
 from cola.widgets import standard
-from cola.compat import ustr
+from cola.widgets.progress import ProgressDialog
 
 
 FETCH = 'FETCH'
@@ -88,37 +88,6 @@ class ActionTask(QtCore.QRunnable):
         self.sender.emit(SIGNAL('action_completed'), self, status, out, err)
 
 
-class ProgressAnimationThread(QtCore.QThread):
-
-    def __init__(self, txt, parent, timeout=0.25):
-        QtCore.QThread.__init__(self, parent)
-        self.running = False
-        self.txt = txt
-        self.timeout = timeout
-        self.symbols = [
-            '..   ',
-            '...  ',
-            '.... ',
-            '.....',
-            '.... ',
-            '...  '
-        ]
-        self.idx = -1
-
-    def next(self):
-        self.idx = (self.idx + 1) % len(self.symbols)
-        return self.txt + self.symbols[self.idx]
-
-    def stop(self):
-        self.running = False
-
-    def run(self):
-        self.running = True
-        while self.running:
-            self.emit(SIGNAL('str'), self.next())
-            time.sleep(self.timeout)
-
-
 class RemoteActionDialog(standard.Dialog):
 
     def __init__(self, model, action, title, parent=None):
@@ -136,14 +105,7 @@ class RemoteActionDialog(standard.Dialog):
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
-        self.progress = QtGui.QProgressDialog(self)
-        self.progress.setFont(qtutils.diff_font())
-        self.progress.setRange(0, 0)
-        self.progress.setCancelButton(None)
-        self.progress.setWindowTitle(action)
-        self.progress.setWindowModality(Qt.WindowModal)
-        self.progress.setLabelText(N_('Updating') + '..   ')
-        self.progress_thread = ProgressAnimationThread(N_('Updating'), self)
+        self.progress = ProgressDialog(title, N_('Updating'), self)
 
         self.local_label = QtGui.QLabel()
         self.local_label.setText(N_('Local Branch'))
@@ -257,7 +219,6 @@ class RemoteActionDialog(standard.Dialog):
                       self.close, QtGui.QKeySequence.Close, 'Esc')
 
         self.connect(self, SIGNAL('action_completed'), self.action_completed)
-        self.connect(self.progress_thread, SIGNAL('str'), self.update_progress)
 
         if action == PULL:
             self.tags_checkbox.hide()
@@ -485,19 +446,14 @@ class RemoteActionDialog(standard.Dialog):
         # Disable the GUI by default
         self.action_button.setEnabled(False)
         self.close_button.setEnabled(False)
-        QtGui.QApplication.setOverrideCursor(Qt.WaitCursor)
 
         # Show a nice progress bar
         self.progress.show()
-        self.progress_thread.start()
 
         # Use a thread to update in the background
         task = ActionTask(self, model_action, remote, kwargs)
         self.tasks.append(task)
         QtCore.QThreadPool.globalInstance().start(task)
-
-    def update_progress(self, txt):
-        self.progress.setLabelText(txt)
 
     def push_to_all(self, dummy_remote, *args, **kwargs):
         selected_remotes = self.selected_remotes
@@ -511,11 +467,8 @@ class RemoteActionDialog(standard.Dialog):
         # Grab the results of the action and finish up
         self.action_button.setEnabled(True)
         self.close_button.setEnabled(True)
-        QtGui.QApplication.restoreOverrideCursor()
 
-        self.progress_thread.stop()
-        self.progress_thread.wait()
-        self.progress.close()
+        self.progress.hide()
         if task in self.tasks:
             self.tasks.remove(task)
 
