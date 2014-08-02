@@ -62,16 +62,40 @@ def create_listwidget_item(text, filename):
 
 class TreeWidgetItem(QtGui.QTreeWidgetItem):
 
-    def __init__(self, text, filename, exists):
+    TYPE = QtGui.QStandardItem.UserType + 101
+
+    def __init__(self, path, icon, exists):
         QtGui.QTreeWidgetItem.__init__(self)
+        self.path = path
         self.exists = exists
-        self.setIcon(0, cached_icon_from_path(filename))
-        self.setText(0, text)
+        self.setIcon(0, cached_icon_from_path(icon))
+        self.setText(0, path)
+
+    def type(self):
+        return self.TYPE
 
 
 def create_treewidget_item(text, filename, exists=True):
     """Creates a QTreeWidgetItem with text and the icon at filename."""
     return TreeWidgetItem(text, filename, exists)
+
+
+def paths_from_indexes(model, indexes,
+                       item_type=TreeWidgetItem.TYPE,
+                       item_filter=None):
+    """Return paths from a list of QStandardItemModel indexes"""
+    items = [model.itemFromIndex(i) for i in indexes]
+    return paths_from_items(items, item_type=item_type, item_filter=item_filter)
+
+
+def paths_from_items(items,
+                     item_type=TreeWidgetItem.TYPE,
+                     item_filter=None):
+    """Return a list of paths from a list of items"""
+    if item_filter is None:
+        item_filter = lambda x: True
+    return [i.path for i in items
+            if i.type() == item_type and item_filter(i)]
 
 
 @memoize
@@ -688,6 +712,13 @@ def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
         layout.addWidget(button)
     return button
 
+
+def mimedata_from_paths(paths):
+    """Return mimedata with a list of absolute path URLs"""
+    urls = [QtCore.QUrl(core.abspath(path)) for path in paths]
+    mimedata = QtCore.QMimeData()
+    mimedata.setUrls(urls)
+    return mimedata
 
 # Syntax highlighting
 

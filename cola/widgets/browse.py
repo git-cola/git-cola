@@ -87,6 +87,7 @@ class RepoTreeView(standard.TreeView):
     def __init__(self, parent):
         standard.TreeView.__init__(self, parent)
 
+        self.setDragEnabled(True)
         self.setRootIsDecorated(True)
         self.setSortingEnabled(False)
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
@@ -246,11 +247,13 @@ class RepoTreeView(standard.TreeView):
         index = model_index.sibling(model_index.row(), 0)
         return self.model().itemFromIndex(index)
 
+    def paths_from_indexes(self, indexes):
+        return qtutils.paths_from_indexes(self.model(), indexes,
+                                          item_type=GitRepoNameItem.TYPE)
+
     def selected_paths(self):
         """Return the selected paths."""
-        items = map(self.model().itemFromIndex, self.selectedIndexes())
-        return [i.path for i in items
-                    if i.type() == GitRepoNameItem.TYPE]
+        return self.paths_from_indexes(self.selectedIndexes())
 
     def selected_staged_paths(self, selection=None):
         """Return selected staged paths."""

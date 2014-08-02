@@ -891,10 +891,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         filename = selection.selection_model().filename()
         qtutils.copy_path(filename)
 
-    def mimeData(self, indexes):
-        """Add a list of selected files to the mime data"""
-        urls = [QtCore.QUrl(core.abspath(path))
-                for path in selection.union(self.selection())]
-        mimedata = QtCore.QMimeData()
-        mimedata.setUrls(urls)
-        return mimedata
+    def mimeData(self, items):
+        """Return a list of absolute-path URLs"""
+        paths = qtutils.paths_from_items(items, item_filter=lambda x: x.exists)
+        return qtutils.mimedata_from_paths(paths)
