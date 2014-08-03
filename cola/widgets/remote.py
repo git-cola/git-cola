@@ -17,7 +17,7 @@ from cola.models import main
 from cola.qtutils import connect_button
 from cola.widgets import defs
 from cola.widgets import standard
-from cola.widgets.progress import ProgressDialog
+from cola.widgets.standard import ProgressDialog
 from cola.widgets.tasks import Task
 from cola.widgets.tasks import TaskRunner
 

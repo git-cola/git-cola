@@ -21,7 +21,7 @@ from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.settings import Settings
 from cola.widgets import defs
-from cola.widgets.progress import ProgressDialog
+from cola.widgets.standard import ProgressDialog
 from cola.widgets.tasks import TaskRunner
 from cola.widgets.tasks import CloneTask
 

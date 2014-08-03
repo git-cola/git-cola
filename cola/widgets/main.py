@@ -52,8 +52,8 @@ from cola.widgets.grep import grep
 from cola.widgets.log import LogWidget
 from cola.widgets.patch import apply_patches
 from cola.widgets.prefs import preferences
-from cola.widgets.progress import ProgressDialog
 from cola.widgets.recent import browse_recent_files
+from cola.widgets.standard import ProgressDialog
 from cola.widgets.status import StatusWidget
 from cola.widgets.search import search
 from cola.widgets.standard import MainWindow
