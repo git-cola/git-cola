@@ -10,6 +10,7 @@ from cola import core
 from cola import difftool
 from cola import gitcmds
 from cola import qtutils
+from cola import utils
 from cola.git import git
 from cola.i18n import N_
 from cola.interaction import Interaction
@@ -130,9 +131,7 @@ def prompt_for_clone():
 
     """
     url, ok = qtutils.prompt(N_('Path or URL to clone (Env. $VARS okay)'))
-    url = os.path.expandvars(url)
-    if url.startswith('~'):
-        url = os.path.expanduser(url)
+    url = utils.expandpath(url)
     if not ok or not url:
         return None
     try:
