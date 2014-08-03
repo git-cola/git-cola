@@ -21,6 +21,7 @@ from cola import version
 from cola.compat import unichr
 from cola.git import git
 from cola.git import STDOUT
+from cola.guicmds import TaskRunner
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import prefs
@@ -58,8 +59,6 @@ from cola.widgets.status import StatusWidget
 from cola.widgets.search import search
 from cola.widgets.standard import MainWindow
 from cola.widgets.stash import stash
-from cola.widgets.tasks import TaskRunner
-from cola.widgets.tasks import CloneTask
 
 
 class MainView(MainWindow):
@@ -82,8 +81,7 @@ class MainView(MainWindow):
 
         # Runs asynchronous tasks
         self.task_runner = TaskRunner(self)
-        self.clone_progress = ProgressDialog(N_('Clone Repository'),
-                                             N_('Cloning'), self)
+        self.progress = ProgressDialog('', '', self)
 
         cfg = gitcfg.instance()
         self.browser_dockable = (cfg.get('cola.browserdockable') or
@@ -726,24 +724,5 @@ class MainView(MainWindow):
         cmds.do(cmds.RebaseAbort)
 
     def clone_repo(self):
-        result = guicmds.prompt_for_clone()
-        if result is None:
-            return
-        self.setEnabled(False)
-        self.clone_progress.setEnabled(True)
-        self.clone_progress.show()
-
-        # Clone the repository using a background task
-        url, destdir = result
-        task = CloneTask(self.task_runner, url, destdir, True)
-        self.task_runner.start(task, self.clone_task_done)
-
-    def clone_task_done(self, task):
-        """Continuation function called when the clone is complete"""
-        self.setEnabled(True)
-        self.clone_progress.hide()
-        if task.cmd is None:
-            return
-        if not task.cmd.ok:
-            Interaction.information(task.cmd.error_message,
-                                    task.cmd.error_details)
+        guicmds.clone_repo(self.task_runner, self.progress,
+                           guicmds.report_clone_repo_errors, True)

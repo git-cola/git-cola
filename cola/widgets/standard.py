@@ -366,13 +366,18 @@ class ProgressDialog(QtGui.QProgressDialog):
         self.setFont(qtutils.diff_font())
         self.setRange(0, 0)
         self.setCancelButton(None)
-        self.setWindowTitle(title)
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
-        self.setLabelText(label + '     ')
         self.progress_thread = ProgressAnimationThread(label, self)
         self.connect(self.progress_thread,
                      SIGNAL('update_progress'), self.update_progress)
+
+        self.set_details(title, label)
+
+    def set_details(self, title, label):
+        self.setWindowTitle(title)
+        self.setLabelText(label + '     ')
+        self.progress_thread.set_text(label)
 
     def update_progress(self, txt):
         self.setLabelText(txt)
@@ -409,6 +414,9 @@ class ProgressAnimationThread(QtCore.QThread):
             '  ...',
         ]
         self.idx = -1
+
+    def set_text(self, txt):
+        self.txt = txt
 
     def next(self):
         self.idx = (self.idx + 1) % len(self.symbols)

@@ -3,7 +3,9 @@ from __future__ import division, absolute_import, unicode_literals
 import os
 import re
 
+from PyQt4 import QtCore
 from PyQt4 import QtGui
+from PyQt4.QtCore import SIGNAL
 
 from cola import cmds
 from cola import core
@@ -250,3 +252,95 @@ def review_branch():
         return
     merge_base = gitcmds.merge_base_parent(branch)
     difftool.diff_commits(qtutils.active_window(), merge_base, branch)
+
+
+class TaskRunner(QtCore.QObject):
+    """Runs QRunnable instances and transfers control when they finish"""
+
+    def __init__(self, parent):
+        QtCore.QObject.__init__(self, parent)
+        self.tasks = []
+        self.task_details = {}
+        self.connect(self, Task.FINISHED, self.finish)
+
+    def start(self, task, progress=None, finish=None):
+        """Start the task and register a callback"""
+        if progress is not None:
+            progress.show()
+        # prevents garbage collection bugs in certain PyQt4 versions
+        self.tasks.append(task)
+        task_id = id(task)
+        self.task_details[task_id] = (progress, finish)
+        QtCore.QThreadPool.globalInstance().start(task)
+
+    def finish(self, task, *args, **kwargs):
+        task_id = id(task)
+        try:
+            self.tasks.remove(task)
+        except:
+            pass
+        try:
+            progress, finish = self.task_details[task_id]
+            del self.task_details[task_id]
+        except KeyError:
+            finish = progress = None
+
+        if progress is not None:
+            progress.hide()
+
+        if finish is not None:
+            finish(task, *args, **kwargs)
+
+
+class Task(QtCore.QRunnable):
+    """Base class for concrete tasks"""
+
+    FINISHED = SIGNAL('finished')
+
+    def __init__(self, sender):
+        QtCore.QRunnable.__init__(self)
+        self.sender = sender
+
+    def finish(self, *args, **kwargs):
+        self.sender.emit(self.FINISHED, self, *args, **kwargs)
+
+
+class CloneTask(Task):
+    """Clones a Git repository"""
+
+    def __init__(self, sender, url, destdir, spawn):
+        Task.__init__(self, sender)
+        self.url = url
+        self.destdir = destdir
+        self.spawn = spawn
+        self.cmd = None
+
+    def run(self):
+        """Runs the model action and captures the result"""
+        self.cmd = cmds.do(cmds.Clone, self.url, self.destdir,
+                           spawn=self.spawn)
+        self.finish()
+
+
+def clone_repo(task_runner, progress, finish, spawn):
+    """Clone a repostiory asynchronously with progress animation"""
+    result = prompt_for_clone()
+    if result is None:
+        return
+    # Use a thread to update in the background
+    url, destdir = result
+    progress.set_details(N_('Clone Repository'),
+                         N_('Cloning repository at %s') % url)
+    task = CloneTask(task_runner, url, destdir, spawn)
+    task_runner.start(task,
+                      finish=finish,
+                      progress=progress)
+
+
+def report_clone_repo_errors(task):
+    """Report errors from the clone task if they exist"""
+    if task.cmd is None or task.cmd.ok:
+        return
+    Interaction.critical(task.cmd.error_message,
+                         message=task.cmd.error_message,
+                         details=task.cmd.error_details)

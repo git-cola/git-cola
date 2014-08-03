@@ -7,23 +7,19 @@ found at startup.
 """
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-from cola import cmds
 from cola import core
 from cola import guicmds
 from cola import qtutils
 from cola.compat import ustr
+from cola.guicmds import TaskRunner
 from cola.i18n import N_
-from cola.interaction import Interaction
 from cola.settings import Settings
 from cola.widgets import defs
 from cola.widgets.standard import ProgressDialog
-from cola.widgets.tasks import TaskRunner
-from cola.widgets.tasks import CloneTask
 
 
 class StartupDialog(QtGui.QDialog):
@@ -35,6 +31,7 @@ class StartupDialog(QtGui.QDialog):
 
         self.repodir = None
         self.task_runner = TaskRunner(self)
+        self.progress = ProgressDialog('', '', self)
 
         self.new_button = QtGui.QPushButton(N_('New...'))
         self.new_button.setIcon(qtutils.new_icon())
@@ -52,14 +49,6 @@ class StartupDialog(QtGui.QDialog):
 
         self.bookmarks_label = QtGui.QLabel(N_('Select Repository...'))
         self.bookmarks_label.setAlignment(Qt.AlignCenter)
-
-        # Gather widgets for easy enable/disable swapping
-        self.widgets = [
-                self.new_button,
-                self.open_button,
-                self.clone_button,
-                self.close_button,
-        ]
 
         self.bookmarks_model = QtGui.QStandardItemModel()
 
@@ -108,9 +97,6 @@ class StartupDialog(QtGui.QDialog):
         self.main_layout.addLayout(self.button_layout)
         self.setLayout(self.main_layout)
 
-        self.progress = ProgressDialog(N_('Clone Repository'),
-                                       N_('Cloning'), self)
-
         qtutils.connect_button(self.open_button, self.open_repo)
         qtutils.connect_button(self.clone_button, self.clone_repo)
         qtutils.connect_button(self.new_button, self.new_repo)
@@ -145,34 +131,15 @@ class StartupDialog(QtGui.QDialog):
             self.accept()
 
     def clone_repo(self):
-        result = guicmds.prompt_for_clone()
-        if result is None:
-            return
+        guicmds.clone_repo(self.task_runner, self.progress,
+                           self.clone_repo_done, False)
 
-        for widget in self.widgets:
-            widget.setEnabled(False)
-
-        # Show a nice progress bar
-        self.progress.show()
-
-        # Use a thread to update in the background
-        url, destdir = result
-        task = CloneTask(self.task_runner, url, destdir, False)
-        self.task_runner.start(task, self.clone_task_done)
-
-    def clone_task_done(self, task):
-        for widget in self.widgets:
-            widget.setEnabled(True)
-        self.progress.hide()
-
-        if task.cmd is None:
-            return
-        if task.cmd.ok:
+    def clone_repo_done(self, task):
+        if task.cmd and task.cmd.ok:
             self.repodir = task.destdir
             self.accept()
         else:
-            Interaction.information(task.cmd.error_message,
-                                    task.cmd.error_details)
+            guicmds.report_clone_repo_errors(task)
 
     def new_repo(self):
         repodir = guicmds.new_repo()

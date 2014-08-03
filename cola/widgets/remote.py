@@ -2,7 +2,6 @@ from __future__ import division, absolute_import, unicode_literals
 
 import fnmatch
 
-from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
@@ -11,6 +10,8 @@ from cola import gitcmds
 from cola import qtutils
 from cola import utils
 from cola.compat import ustr
+from cola.guicmds import Task
+from cola.guicmds import TaskRunner
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
@@ -18,8 +19,6 @@ from cola.qtutils import connect_button
 from cola.widgets import defs
 from cola.widgets import standard
 from cola.widgets.standard import ProgressDialog
-from cola.widgets.tasks import Task
-from cola.widgets.tasks import TaskRunner
 
 
 FETCH = 'FETCH'
@@ -384,6 +383,14 @@ class RemoteActionDialog(standard.Dialog):
 
     # Actions
 
+    def push_to_all(self, dummy_remote, *args, **kwargs):
+        selected_remotes = self.selected_remotes
+        all_results = None
+        for remote in selected_remotes:
+            result = self.model.push(remote, *args, **kwargs)
+            all_results = combine(result, all_results)
+        return all_results
+
     def action_callback(self):
         action = self.action
         if action == FETCH:
@@ -446,27 +453,16 @@ class RemoteActionDialog(standard.Dialog):
         self.action_button.setEnabled(False)
         self.close_button.setEnabled(False)
 
-        # Show a nice progress bar
-        self.progress.show()
-
         # Use a thread to update in the background
         task = ActionTask(self.task_runner, model_action, remote, kwargs)
-        self.task_runner.start(task, self.action_completed)
-
-    def push_to_all(self, dummy_remote, *args, **kwargs):
-        selected_remotes = self.selected_remotes
-        all_results = None
-        for remote in selected_remotes:
-            result = self.model.push(remote, *args, **kwargs)
-            all_results = combine(result, all_results)
-        return all_results
+        self.task_runner.start(task,
+                               progress=self.progress,
+                               finish=self.action_completed)
 
     def action_completed(self, task, status, out, err):
         # Grab the results of the action and finish up
         self.action_button.setEnabled(True)
         self.close_button.setEnabled(True)
-
-        self.progress.hide()
 
         already_up_to_date = N_('Already up-to-date.')
 
