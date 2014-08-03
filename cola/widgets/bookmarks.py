@@ -134,7 +134,8 @@ class BookmarksWidget(QtGui.QWidget):
     def __init__(self, parent=None):
         QtGui.QWidget.__init__(self, parent)
 
-        self.tree = BookmarksTreeWidget(parent=self)
+        self.settings = Settings()
+        self.tree = BookmarksTreeWidget(self.settings, parent=self)
         self.open_button = qtutils.create_action_button(
                 tooltip=N_('Open'), icon=qtutils.open_icon())
         self.open_button.setEnabled(False)
@@ -146,7 +147,7 @@ class BookmarksWidget(QtGui.QWidget):
         qtutils.connect_button(self.edit_button, self.tree.edit_bookmarks)
 
         self.connect(self.tree, SIGNAL('itemSelectionChanged()'),
-                     self._tree_selection_changed)
+                     self.tree_item_selection_changed)
 
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.setMargin(defs.no_margin)
@@ -166,7 +167,14 @@ class BookmarksWidget(QtGui.QWidget):
         titlebar.add_corner_widget(self.corner_widget)
         self.setFocusProxy(self.tree)
 
-    def _tree_selection_changed(self):
+        QtCore.QTimer.singleShot(0, self.reload_bookmarks)
+
+    def reload_bookmarks(self):
+        # Called once after the GUI is initialized
+        self.settings.load()
+        self.tree.refresh()
+
+    def tree_item_selection_changed(self):
         enabled = bool(self.tree.selected_item())
         self.open_button.setEnabled(enabled)
 
@@ -176,8 +184,10 @@ class BookmarksWidget(QtGui.QWidget):
 
 class BookmarksTreeWidget(standard.TreeWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, settings, parent=None):
         standard.TreeWidget.__init__(self, parent=parent)
+        self.settings = settings
+
         self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
 
@@ -214,28 +224,24 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.copy_action.setEnabled(False)
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
-                     self._tree_selection_changed)
+                     self.item_selection_changed)
 
         self.connect(self, SIGNAL('itemDoubleClicked(QTreeWidgetItem*,int)'),
-                     self._tree_double_clicked)
-
-        self.refresh()
+                     self.tree_double_clicked)
 
     def refresh(self):
-        self.clear()
-        settings = Settings()
-        settings.load()
-        items = []
         icon = qtutils.dir_icon()
-        recents = set(settings.recent)
-        for path in settings.recent:
-            item = BookmarksTreeWidgetItem(path, icon)
-            items.append(item)
-        for path in settings.bookmarks:
-            if path in recents: # avoid duplicates
-                continue
-            item = BookmarksTreeWidgetItem(path, icon)
-            items.append(item)
+        settings = self.settings
+        bookmarked = set(settings.bookmarks)
+
+        # bookmarks
+        items = [BookmarksTreeWidgetItem(path, icon)
+                    for path in settings.bookmarks]
+        # recent items
+        items += [BookmarksTreeWidgetItem(path, icon)
+                    for path in settings.recent
+                        if path not in bookmarked] # avoid duplicates
+        self.clear()
         self.addTopLevelItems(items)
 
     def contextMenuEvent(self, event):
@@ -290,7 +296,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
             return
         cmds.do(cmds.LaunchTerminal, item.path)
 
-    def _tree_selection_changed(self):
+    def item_selection_changed(self):
         enabled = bool(self.selected_item())
         self.open_action.setEnabled(enabled)
         self.open_new_action.setEnabled(enabled)
@@ -300,7 +306,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.open_default_action.setEnabled(enabled)
         self.edit_bookmarks_action.setEnabled(enabled)
 
-    def _tree_double_clicked(self, item, column):
+    def tree_double_clicked(self, item, column):
         cmds.do(cmds.OpenRepo, item.path)
 
 
@@ -311,5 +317,6 @@ class BookmarksTreeWidgetItem(QtGui.QTreeWidgetItem):
         self.path = path
         self.setIcon(0, icon)
         normpath = os.path.normpath(path)
-        self.setText(0, os.path.basename(normpath))
+        basename = os.path.basename(normpath)
+        self.setText(0, basename)
         self.setToolTip(0, path)
