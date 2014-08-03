@@ -13,6 +13,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issue/312
 
+* The bookmarks widget was simplified to not need a
+  separate dialog.
+
+  https://github.com/git-cola/git-cola/issue/289
+
 git-cola v2.0.5
 ===============
 Usability, bells and whistles

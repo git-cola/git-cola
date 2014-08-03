@@ -39,7 +39,6 @@ from cola.widgets import remote
 from cola.widgets.about import launch_about_dialog
 from cola.widgets.about import show_shortcuts
 from cola.widgets.archive import GitArchiveDialog
-from cola.widgets.bookmarks import manage_bookmarks
 from cola.widgets.bookmarks import BookmarksWidget
 from cola.widgets.browse import worktree_browser
 from cola.widgets.browse import worktree_browser_widget
@@ -202,8 +201,6 @@ class MainView(MainWindow):
 
         self.quit_action = add_action(self,
                 N_('Quit'), self.close, 'Ctrl+Q')
-        self.manage_bookmarks_action = add_action(self,
-                N_('Bookmarks...'), self.manage_bookmarks)
         self.grep_action = add_action(self,
                 N_('Grep'), grep, 'Ctrl+G')
         self.merge_local_action = add_action(self,
@@ -336,7 +333,6 @@ class MainView(MainWindow):
         self.file_menu.addAction(self.rescan_action)
         self.file_menu.addAction(self.edit_remotes_action)
         self.file_menu.addAction(self.browse_recently_modified_action)
-        self.file_menu.addAction(self.manage_bookmarks_action)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.load_commitmsg_action)
         self.file_menu.addAction(self.load_commitmsg_template_action)
@@ -707,10 +703,6 @@ class MainView(MainWindow):
             display = ('<span style="color: grey;">%s</span>' % display)
 
         self.position_label.setText(display)
-
-    def manage_bookmarks(self):
-        manage_bookmarks()
-        self.bookmarkswidget.refresh()
 
     def rebase_start(self):
         branch = guicmds.choose_ref(N_('Select New Upstream'),
