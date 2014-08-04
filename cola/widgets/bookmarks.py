@@ -123,15 +123,8 @@ class BookmarksTreeWidget(standard.TreeWidget):
     def refresh(self):
         icon = qtutils.dir_icon()
         settings = self.settings
-        bookmarked = set(settings.bookmarks)
-
-        # bookmarks
         items = [BookmarksTreeWidgetItem(path, icon)
                     for path in settings.bookmarks]
-        # recent items
-        items += [BookmarksTreeWidgetItem(path, icon)
-                    for path in settings.recent
-                        if path not in bookmarked] # avoid duplicates
         self.clear()
         self.addTopLevelItems(items)
 
@@ -216,7 +209,6 @@ class BookmarksTreeWidget(standard.TreeWidget):
             return
         repo = item.path
         self.settings.remove_bookmark(repo)
-        self.settings.remove_recent(repo)
         self.settings.save()
         self.refresh()
 
