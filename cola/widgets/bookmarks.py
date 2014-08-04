@@ -14,6 +14,7 @@ from cola import git
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
+from cola.interaction import Interaction
 from cola.settings import Settings
 from cola.widgets import defs
 from cola.widgets import standard
@@ -208,6 +209,13 @@ class BookmarksTreeWidget(standard.TreeWidget):
         if not item:
             return
         repo = item.path
+        title = N_('Delete Bookmark?')
+        msg = N_('Delete Bookmark?')
+        info_text = N_('%s will be removed from your bookmarks.') % repo
+        ok_text = N_('Delete Bookmark')
+        if not Interaction.confirm(title, msg, info_text, ok_text,
+                                   icon=qtutils.discard_icon()):
+            return
         self.settings.remove_bookmark(repo)
         self.settings.save()
         self.refresh()
