@@ -128,7 +128,7 @@ msgstr "挑取(cherry-pick)版本提交"
 
 #: cola/guicmds.py:107
 msgid "Error Creating Repository"
-msgstr "無法建立新的版本庫"
+msgstr "無法建立新的版本倉庫"
 
 #: cola/guicmds.py:108 cola/cmds.py:442 cola/widgets/remote.py:527
 #, python-format
