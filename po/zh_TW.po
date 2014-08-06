@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-01 13:07-0700\n"
-"PO-Revision-Date: 2014-08-07 07:11+0800\n"
+"PO-Revision-Date: 2014-08-07 07:21+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -63,15 +63,15 @@ msgstr "結束狀態碼：%s"
 
 #: cola/inotify.py:57
 msgid "inotify is disabled because \"cola.inotify\" is false"
-msgstr "因為「cola.inotify」設定值被設為 false inotify 被停用"
+msgstr "因為「cola.inotify」 Git 設定值被設定為 false，inotify 檔案變更通知功能被停用"
 
 #: cola/inotify.py:63
 msgid ""
 "file notification: disabled\n"
 "Note: install pywin32 to enable.\n"
 msgstr ""
-"檔案變動通知：停用\n"
-"注意：安裝 pywin32 以啟用檔案變動通知。\n"
+"inotify 檔案變更通知：停用\n"
+"注意：安裝 pywin32 以啟用此功能。\n"
 
 #: cola/inotify.py:66
 msgid ""
@@ -79,11 +79,11 @@ msgid ""
 "Note: install python-pyinotify to enable inotify.\n"
 msgstr ""
 "inotify：停用\n"
-"注意：安裝 python-pyinotify 軟體包以啟用 inotify。\n"
+"注意：安裝 python-pyinotify 軟體包以啟用 inotify 檔案變更通知功能。\n"
 
 #: cola/inotify.py:72
 msgid "On Debian systems try: sudo aptitude install python-pyinotify"
-msgstr "於 Debian 系統中嘗試：sudo aptitude install python-pyinotify"
+msgstr "於 Debian 系統中嘗試於終端機下執行：sudo aptitude install python-pyinotify"
 
 #: cola/inotify.py:81
 msgid "File notification enabled."
@@ -124,7 +124,7 @@ msgstr "取出"
 
 #: cola/guicmds.py:70
 msgid "Cherry-Pick Commit"
-msgstr "挑取(cherry-pick)版本提交"
+msgstr "挑取(cherry-pick)版本提交並合併至當前分支"
 
 #: cola/guicmds.py:107
 msgid "Error Creating Repository"
@@ -624,7 +624,7 @@ msgstr "修正上次提交"
 
 #: cola/widgets/commitmsg.py:96
 msgid "Check Spelling"
-msgstr "檢查拼字"
+msgstr "檢查拼字問題"
 
 #: cola/widgets/commitmsg.py:102 cola/widgets/prefs.py:183
 msgid "Auto-Wrap Lines"
@@ -1008,7 +1008,7 @@ msgstr "書籤……"
 
 #: cola/widgets/bookmarks.py:189
 msgid "Open in New Window"
-msgstr "於新視窗中開啟"
+msgstr "於新 git-cola 視窗中開啟"
 
 #: cola/widgets/bookmarks.py:199 cola/widgets/recent.py:72
 #: cola/widgets/grep.py:102
@@ -1839,7 +1839,7 @@ msgstr "分支合併(merge)……"
 
 #: cola/widgets/main.py:219
 msgid "Open in New Window..."
-msgstr "於新視窗中開啟版本倉庫……"
+msgstr "於新 git-cola 視窗中開啟版本倉庫……"
 
 #: cola/widgets/main.py:230
 msgid "Documentation"
