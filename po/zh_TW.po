@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-01 13:07-0700\n"
-"PO-Revision-Date: 2014-07-17 09:00+0800\n"
+"PO-Revision-Date: 2014-08-07 06:58+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -23,10 +23,10 @@ msgstr ""
 "X-Generator: Lokalize 1.5\n"
 
 #: cola/app.py:232
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
-msgstr "致命錯誤：「%s」並不是個目錄。請指定 --repo 〈路徑〉。"
+msgstr "致命錯誤：「%s」並不是個目錄。請指定一個正確的 --repo 〈路徑〉。"
 
 #: cola/interaction.py:54 cola/widgets/main.py:292
 msgid "Continue"
@@ -1415,7 +1415,6 @@ msgid "Launch git-cola"
 msgstr "啟動 git-cola"
 
 #: cola/widgets/diff.py:137
-#, fuzzy
 msgid "Stage Selected Lines"
 msgstr "將選取的行移入版本提交準備區域(&S)"
 
@@ -1432,7 +1431,6 @@ msgid "Revert Diff Hunk..."
 msgstr "撤銷此內容差異區域的內容變更……"
 
 #: cola/widgets/diff.py:163
-#, fuzzy
 msgid "Unstage Selected Lines"
 msgstr "將被選取的行移出版本提交準備區域"
 
