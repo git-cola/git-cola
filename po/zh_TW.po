@@ -108,7 +108,7 @@ msgstr "移除遠端分支"
 
 #: cola/guicmds.py:53
 msgid "Browse Commits..."
-msgstr "瀏覽版本提交(commit)……"
+msgstr "瀏覽版本提交……"
 
 #: cola/guicmds.py:53
 msgid "Browse"
@@ -180,7 +180,7 @@ msgstr "開啟一個 Git 版本倉庫"
 
 #: cola/guicmds.py:220
 msgid "Load Commit Message"
-msgstr "自檔案載入版本提交(commit)訊息"
+msgstr "自檔案載入版本提交訊息"
 
 #: cola/guicmds.py:248
 msgid "Select Branch to Review"
@@ -192,11 +192,11 @@ msgstr "審視(review)"
 
 #: cola/cmds.py:99
 msgid "Amend"
-msgstr "修正前一次的版本提交(commit)"
+msgstr "修正前一次的版本提交"
 
 #: cola/cmds.py:133
 msgid "Cannot Amend"
-msgstr "無法修正前一次的版本提交(commit)"
+msgstr "無法修正前一次的版本提交"
 
 #: cola/cmds.py:134
 msgid ""
@@ -204,7 +204,7 @@ msgid ""
 "Cannot amend while merging."
 msgstr ""
 "您現在正在進行分支合併(merge)。\n"
-"您不能在進行分支合併(merge)時修正前一次的版本提交(commit)。"
+"您不能在進行分支合併(merge)時修正前一次的版本提交。"
 
 #: cola/cmds.py:191
 #, python-format
@@ -251,7 +251,7 @@ msgstr "沒有選取任何需要自 HEAD 取出的檔案"
 #: cola/cmds.py:345
 #, python-format
 msgid "Created commit: %s"
-msgstr "建立了一個新的版本提交(commit)：%s"
+msgstr "建立了一個新的版本提交：%s"
 
 #: cola/cmds.py:347
 #, python-format
@@ -303,7 +303,7 @@ msgstr "啟動終端機"
 
 #: cola/cmds.py:651
 msgid "Error: Cannot find commit template"
-msgstr "錯誤：無法找到版本提交(commit)範本"
+msgstr "錯誤：無法找到版本提交範本"
 
 #: cola/cmds.py:652
 #, python-format
@@ -312,7 +312,7 @@ msgstr "%s：無此檔案或目錄。"
 
 #: cola/cmds.py:671
 msgid "Error: Unconfigured commit template"
-msgstr "錯誤：未被設定的版本提交(commit)範本"
+msgstr "錯誤：未被設定的版本提交範本"
 
 #: cola/cmds.py:672
 msgid ""
@@ -320,9 +320,9 @@ msgid ""
 "Use \"git config\" to define \"commit.template\"\n"
 "so that it points to a commit template."
 msgstr ""
-"版本提交(commit)範本尚未被設定。\n"
+"版本提交範本尚未被設定。\n"
 "使用「git config」命令來定義「commit.template」設定值\n"
-"使其指向一個版本提交(commit)範本。"
+"使其指向一個版本提交範本。"
 
 #: cola/cmds.py:734
 msgid "Open Using Default Application"
@@ -596,7 +596,7 @@ msgstr "選擇修正檔……"
 
 #: cola/widgets/commitmsg.py:53
 msgid "Sign off on this commit"
-msgstr "於此版本提交(commit)上簽名"
+msgstr "於此版本提交上簽名"
 
 #: cola/widgets/commitmsg.py:56 cola/widgets/commitmsg.py:72
 msgid "Commit@@verb"
@@ -632,11 +632,11 @@ msgstr "自動折行"
 
 #: cola/widgets/commitmsg.py:109
 msgid "Load Previous Commit Message"
-msgstr "載入先前的版本提交(commit)的訊息"
+msgstr "載入先前的版本提交的訊息"
 
 #: cola/widgets/commitmsg.py:114
 msgid "Fixup Previous Commit"
-msgstr "修正先前的版本提交(commit)"
+msgstr "修正先前的版本提交"
 
 #: cola/widgets/commitmsg.py:142 cola/widgets/status.py:126
 msgid "Move Down"
@@ -652,9 +652,9 @@ msgid ""
 "- Second line: Blank\n"
 "- Remaining lines: Describe why this change is good.\n"
 msgstr ""
-"請提供一條版本提交(commit)訊息。\n"
+"請提供一條版本提交訊息。\n"
 "\n"
-"一條好的版本提交(commit)有下列格式：\n"
+"一條好的版本提交有下列格式：\n"
 "\n"
 "- 第一行: 一句話概括您所做的變更。\n"
 "- 第二行: 空行\n"
@@ -662,7 +662,7 @@ msgstr ""
 
 #: cola/widgets/commitmsg.py:382
 msgid "Missing Commit Message"
-msgstr "缺少版本提交(commit)訊息"
+msgstr "缺少版本提交訊息"
 
 #: cola/widgets/commitmsg.py:388
 msgid ""
@@ -676,15 +676,15 @@ msgstr ""
 
 #: cola/widgets/commitmsg.py:392
 msgid "Would you like to stage and commit all modified files?"
-msgstr "您要將所有被修改的檔案移入版本提交(commit)準備區域並提交出去嗎？"
+msgstr "您要將所有被修改的檔案移入版本提交準備區域並提交出去嗎？"
 
 #: cola/widgets/commitmsg.py:394
 msgid "Stage and commit?"
-msgstr "要移入版本提交(commit)準備區域並提交出去嗎？"
+msgstr "要移入版本提交準備區域並提交出去嗎？"
 
 #: cola/widgets/commitmsg.py:397
 msgid "Stage and Commit"
-msgstr "移入版本提交(commit)準備區域並提交出去"
+msgstr "移入版本提交準備區域並提交出去"
 
 #: cola/widgets/commitmsg.py:402
 msgid "Nothing to commit"
@@ -692,7 +692,7 @@ msgstr "沒有東西可以提交"
 
 #: cola/widgets/commitmsg.py:409
 msgid "Rewrite Published Commit?"
-msgstr "要重寫已推送出去的版本提交(commit)嗎？"
+msgstr "要重寫已推送出去的版本提交嗎？"
 
 #: cola/widgets/commitmsg.py:410
 msgid ""
@@ -700,17 +700,17 @@ msgid ""
 "This operation will rewrite published history.\n"
 "You probably don't want to do this."
 msgstr ""
-"此版本提交(commit)已經被推送到遠端版本倉庫。\n"
+"此版本提交已經被推送到遠端版本倉庫。\n"
 "此操作將會重寫已推送出去的變更紀錄。\n"
 "您可能不想要做此操作。"
 
 #: cola/widgets/commitmsg.py:413
 msgid "Amend the published commit?"
-msgstr "要修正已被推送出去的版本提交(commit)嗎？"
+msgstr "要修正已被推送出去的版本提交嗎？"
 
 #: cola/widgets/commitmsg.py:414
 msgid "Amend Commit"
-msgstr "修正前一個版本提交(commit)"
+msgstr "修正前一個版本提交"
 
 #: cola/widgets/commitmsg.py:419
 msgid "Commit failed"
@@ -727,11 +727,11 @@ msgstr "更多……"
 
 #: cola/widgets/commitmsg.py:456
 msgid "Select Commit"
-msgstr "選取版本提交(commit)"
+msgstr "選取版本提交"
 
 #: cola/widgets/commitmsg.py:499
 msgid "Commit summary"
-msgstr "版本提交(commit)描述"
+msgstr "版本提交描述"
 
 #: cola/widgets/commitmsg.py:515
 msgid "Extended description..."
@@ -1046,7 +1046,7 @@ msgstr "以路徑搜尋"
 
 #: cola/widgets/search.py:226
 msgid "Search Commit Messages"
-msgstr "搜尋版本提交(commit)訊息"
+msgstr "搜尋版本提交訊息"
 
 #: cola/widgets/search.py:227
 msgid "Search Diffs"
@@ -1103,7 +1103,7 @@ msgstr "最近修改過的檔案"
 
 #: cola/widgets/recent.py:49
 msgid " commits ago"
-msgstr " 個版本提交(commit)"
+msgstr " 個版本提交"
 
 #: cola/widgets/recent.py:52
 msgid "Showing changes since"
@@ -1170,7 +1170,7 @@ msgstr "僅可快速前移式合併者"
 
 #: cola/widgets/merge.py:80 cola/widgets/main.py:118
 msgid "Commit"
-msgstr "版本提交(commit)"
+msgstr "版本提交"
 
 #: cola/widgets/merge.py:88
 msgid "Merge"
@@ -1215,7 +1215,7 @@ msgstr "%(project)s：%(branch)s - 瀏覽"
 
 #: cola/widgets/browse.py:80
 msgid "(Amending)"
-msgstr "（正在修正前一個版本提交(commit)）"
+msgstr "（正在修正前一個版本提交）"
 
 #: cola/widgets/browse.py:109
 msgid "View History..."
@@ -1232,7 +1232,7 @@ msgstr "將被選取的項目移入版本提交準備區域"
 
 #: cola/widgets/browse.py:115
 msgid "Stage selected path(s) for commit."
-msgstr "將已被選取的路徑移進 staging area 準備版本提交(commit)。"
+msgstr "將已被選取的路徑移進 staging area 準備版本提交。"
 
 #: cola/widgets/browse.py:120 cola/widgets/status.py:471
 #: cola/widgets/status.py:516
@@ -1265,7 +1265,7 @@ msgstr "對先前的版本啟動 git-difftool 。"
 
 #: cola/widgets/browse.py:142
 msgid "Revert Uncommitted Changes..."
-msgstr "撤銷尚未建立版本提交(commit)的內容變動"
+msgstr "撤銷尚未建立版本提交的內容變動"
 
 #: cola/widgets/browse.py:143
 msgid "Revert changes to selected path(s)."
@@ -1388,7 +1388,7 @@ msgstr "版本表達式："
 
 #: cola/widgets/selectcommits.py:103
 msgid "No commits exist in this branch."
-msgstr "此分支中無任何版本提交(commit)。"
+msgstr "此分支中無任何版本提交。"
 
 #: cola/widgets/diff.py:47
 msgid "Ignore changes in whitespace at EOL"
@@ -1634,7 +1634,7 @@ msgstr "分支已存在"
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr ""
-"重置「%(branch)s」分支到「%(revision)s」版本將導致版本提交(commit)的丟失。"
+"重置「%(branch)s」分支到「%(revision)s」版本將導致版本提交的丟失。"
 
 #: cola/widgets/createbranch.py:286
 #, python-format
@@ -1824,7 +1824,7 @@ msgstr "挑取(cherry-pick)……"
 
 #: cola/widgets/main.py:190
 msgid "Load Commit Message..."
-msgstr "自檔案載入版本提交(commit)訊息"
+msgstr "自檔案載入版本提交訊息"
 
 #: cola/widgets/main.py:196
 msgid "Quit"
@@ -1872,7 +1872,7 @@ msgstr "瀏覽其他分支中的檔案……"
 
 #: cola/widgets/main.py:251
 msgid "Get Commit Message Template"
-msgstr "取得版本提交(commit)訊息範本"
+msgstr "取得版本提交訊息範本"
 
 #: cola/widgets/main.py:254
 msgid "About"
@@ -1987,7 +1987,7 @@ msgstr "正在進行分支合併"
 
 #: cola/widgets/main.py:591
 msgid "Amending"
-msgstr "正在修正前一個版本提交(commit)"
+msgstr "正在修正前一個版本提交"
 
 #: cola/widgets/main.py:708
 msgid "Select New Upstream"
