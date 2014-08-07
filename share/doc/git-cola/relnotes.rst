@@ -18,6 +18,8 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issue/289
 
+* Updated Traditional Chinese translation.
+
 git-cola v2.0.5
 ===============
 Usability, bells and whistles
