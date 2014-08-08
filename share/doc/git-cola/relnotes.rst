@@ -20,6 +20,10 @@ Usability, bells and whistles
 
 * Updated Traditional Chinese translation.
 
+* We now display a warning when trying to rebase with uncommitted changes.
+
+  https://github.com/git-cola/git-cola/issue/338
+
 git-cola v2.0.5
 ===============
 Usability, bells and whistles

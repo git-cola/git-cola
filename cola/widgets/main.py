@@ -703,6 +703,11 @@ class MainView(MainWindow):
         self.position_label.setText(display)
 
     def rebase_start(self):
+        if self.model.staged or self.model.unmerged or self.model.modified:
+            Interaction.information(
+                    N_('Unable to rebase'),
+                    N_('You cannot rebase with uncommitted changes.'))
+            return
         branch = guicmds.choose_ref(N_('Select New Upstream'),
                                     N_('Interactive Rebase'))
         if not branch:
