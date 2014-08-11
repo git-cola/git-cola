@@ -240,10 +240,10 @@ that use either the cursor location or text selection.
 
 Staging content for commit
 --------------------------
-The ``@@`` patterns denote a new diff region.  Selecting lines of diff
-and using the `Stage Selected` command will stage just the selected lines.
-Clicking within a diff region and selecting `Stage Section` stages the
-entire patch region.
+The ``@@`` patterns denote a new diff hunk.  Selecting lines of diff
+and using the `Stage Selected Lines` command will stage just the selected
+lines.  Clicking within a diff hunk and selecting `Stage Diff Hunk` stages the
+entire patch diff hunk.
 
 The corresponding opposite commands can be performed on staged files as well,
 e.g. staged content can be selectively removed from the index when we are
@@ -463,6 +463,17 @@ gettext language code, e.g. "en", "de", "ja", "zh", etc.::
     mkdir -p ~/.config/git-cola &&
     echo en >~/.config/git-cola/language
 
+Alternatively you may also use LANGAUGE environmental variable to temporarily
+change `git cola`'s language just like any other gettext-based program.  For
+example to temporarily change `git cola`'s language to English::
+
+    LANGUAGE=en git cola
+
+To make `git cola` use the zh_TW translation with zh_HK, zh, and en as a
+fallback.::
+
+    LANGUAGE=zh_TW:zh_HK:zh:en git cola
+
 
 CUSTOM GUI ACTIONS
 ==================
@@ -477,6 +488,12 @@ executed from the root of the working directory, and in the environment it
 receives the name of the tool as GIT_GUITOOL, the name of the currently
 selected file as FILENAME, and the name of the current branch as CUR_BRANCH
 (if the head is detached, CUR_BRANCH is empty).
+
+guitool.<name>.background
+-------------------------
+Run the command in the background (similar to editing and difftool actions).
+This avoids blocking the GUI.  Setting `background` to `true` implies
+`noconsole` and `norescan`.
 
 guitool.<name>.needsfile
 ------------------------

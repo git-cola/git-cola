@@ -47,6 +47,11 @@ def pick(s):
     return files
 
 
+def union(s):
+    """Return the union of all selected items in a sorted list"""
+    return list(sorted(set(s.staged + s.unmerged + s.modified + s.untracked)))
+
+
 def _filter(a, b):
     b_set = set(b)
     a_copy = list(a)

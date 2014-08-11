@@ -21,6 +21,7 @@ from cola import version
 from cola.compat import unichr
 from cola.git import git
 from cola.git import STDOUT
+from cola.guicmds import TaskRunner
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import prefs
@@ -39,7 +40,6 @@ from cola.widgets import remote
 from cola.widgets.about import launch_about_dialog
 from cola.widgets.about import show_shortcuts
 from cola.widgets.archive import GitArchiveDialog
-from cola.widgets.bookmarks import manage_bookmarks
 from cola.widgets.bookmarks import BookmarksWidget
 from cola.widgets.browse import worktree_browser
 from cola.widgets.browse import worktree_browser_widget
@@ -54,6 +54,7 @@ from cola.widgets.log import LogWidget
 from cola.widgets.patch import apply_patches
 from cola.widgets.prefs import preferences
 from cola.widgets.recent import browse_recent_files
+from cola.widgets.standard import ProgressDialog
 from cola.widgets.status import StatusWidget
 from cola.widgets.search import search
 from cola.widgets.standard import MainWindow
@@ -77,6 +78,10 @@ class MainView(MainWindow):
 
         # Keeps track of merge messages we've seen
         self.merge_message_hash = ''
+
+        # Runs asynchronous tasks
+        self.task_runner = TaskRunner(self)
+        self.progress = ProgressDialog('', '', self)
 
         cfg = gitcfg.instance()
         self.browser_dockable = (cfg.get('cola.browserdockable') or
@@ -184,7 +189,7 @@ class MainView(MainWindow):
 
         self.cherry_pick_action = add_action(self,
                 N_('Cherry-Pick...'),
-                guicmds.cherry_pick, 'Ctrl+P')
+                guicmds.cherry_pick, 'Shift+Ctrl+C')
 
         self.load_commitmsg_action = add_action(self,
                 N_('Load Commit Message...'), guicmds.load_commitmsg)
@@ -194,8 +199,6 @@ class MainView(MainWindow):
 
         self.quit_action = add_action(self,
                 N_('Quit'), self.close, 'Ctrl+Q')
-        self.manage_bookmarks_action = add_action(self,
-                N_('Bookmarks...'), self.manage_bookmarks)
         self.grep_action = add_action(self,
                 N_('Grep'), grep, 'Ctrl+G')
         self.merge_local_action = add_action(self,
@@ -205,11 +208,11 @@ class MainView(MainWindow):
                 N_('Abort Merge...'), merge.abort_merge)
 
         self.fetch_action = add_action(self,
-                N_('Fetch...'), remote.fetch)
+                N_('Fetch...'), remote.fetch, 'Ctrl+F')
         self.push_action = add_action(self,
-                N_('Push...'), remote.push)
+                N_('Push...'), remote.push, 'Ctrl+P')
         self.pull_action = add_action(self,
-                N_('Pull...'), remote.pull)
+                N_('Pull...'), remote.pull, 'Shift+Ctrl+P')
 
         self.open_repo_action = add_action(self,
                 N_('Open...'), guicmds.open_repo)
@@ -223,7 +226,7 @@ class MainView(MainWindow):
                 N_('Stash...'), stash, 'Alt+Shift+S')
 
         self.clone_repo_action = add_action(self,
-                N_('Clone...'), guicmds.clone_repo)
+                N_('Clone...'), self.clone_repo)
         self.clone_repo_action.setIcon(qtutils.git_icon())
 
         self.help_docs_action = add_action(self,
@@ -300,13 +303,15 @@ class MainView(MainWindow):
         # Relayed actions
         status_tree = self.statusdockwidget.widget().tree
         self.addAction(status_tree.revert_unstaged_edits_action)
+        self.addAction(status_tree.delete_untracked_files_action)
+
         if not self.browser_dockable:
             # These shortcuts conflict with those from the
             # 'Browser' widget so don't register them when
             # the browser is a dockable tool.
-            self.addAction(status_tree.up)
-            self.addAction(status_tree.down)
-            self.addAction(status_tree.process_selection)
+            self.addAction(status_tree.up_action)
+            self.addAction(status_tree.down_action)
+            self.addAction(status_tree.process_selection_action)
 
         self.lock_layout_action = add_action_bool(self,
                 N_('Lock Layout'), self.set_lock_layout, False)
@@ -326,7 +331,6 @@ class MainView(MainWindow):
         self.file_menu.addAction(self.rescan_action)
         self.file_menu.addAction(self.edit_remotes_action)
         self.file_menu.addAction(self.browse_recently_modified_action)
-        self.file_menu.addAction(self.manage_bookmarks_action)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.load_commitmsg_action)
         self.file_menu.addAction(self.load_commitmsg_template_action)
@@ -355,9 +359,9 @@ class MainView(MainWindow):
         self.actions_menu.addAction(self.search_commits_action)
         self.menubar.addAction(self.actions_menu.menuAction())
 
-        # Index Menu
-        self.commit_menu = create_menu(N_('Index'), self.menubar)
-        self.commit_menu.setTitle(N_('Index'))
+        # Staging Area Menu
+        self.commit_menu = create_menu(N_('Staging Area'), self.menubar)
+        self.commit_menu.setTitle(N_('Staging Area'))
         self.commit_menu.addAction(self.stage_modified_action)
         self.commit_menu.addAction(self.stage_untracked_action)
         self.commit_menu.addSeparator()
@@ -698,11 +702,12 @@ class MainView(MainWindow):
 
         self.position_label.setText(display)
 
-    def manage_bookmarks(self):
-        manage_bookmarks()
-        self.bookmarkswidget.refresh()
-
     def rebase_start(self):
+        if self.model.staged or self.model.unmerged or self.model.modified:
+            Interaction.information(
+                    N_('Unable to rebase'),
+                    N_('You cannot rebase with uncommitted changes.'))
+            return
         branch = guicmds.choose_ref(N_('Select New Upstream'),
                                     N_('Interactive Rebase'))
         if not branch:
@@ -722,3 +727,7 @@ class MainView(MainWindow):
 
     def rebase_abort(self):
         cmds.do(cmds.RebaseAbort)
+
+    def clone_repo(self):
+        guicmds.clone_repo(self.task_runner, self.progress,
+                           guicmds.report_clone_repo_errors, True)

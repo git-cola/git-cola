@@ -2,7 +2,6 @@ from __future__ import division, absolute_import, unicode_literals
 
 import collections
 import math
-import sys
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -328,7 +327,7 @@ class GitDAG(MainWindow):
         self.setMinimumSize(420, 420)
 
         # change when widgets are added/removed
-        self.widget_version = 1
+        self.widget_version = 2
         self.model = model
         self.dag = dag
         self.settings = settings
@@ -424,11 +423,10 @@ class GitDAG(MainWindow):
 
         left = Qt.LeftDockWidgetArea
         right = Qt.RightDockWidgetArea
-        bottom = Qt.BottomDockWidgetArea
         self.addDockWidget(left, self.log_dock)
+        self.addDockWidget(left, self.diff_dock)
         self.addDockWidget(right, self.graphview_dock)
         self.addDockWidget(right, self.file_dock)
-        self.addDockWidget(bottom, self.diff_dock)
 
         # Update fields affected by model
         self.revtext.setText(dag.ref)
@@ -1186,7 +1184,7 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
         self_commits = self.commits
         self_items = self.items
 
-        commits = self_commits[-2:]
+        commits = self_commits[-8:]
         items = [self_items[c.sha1] for c in commits]
         self.fit_view_to_items(items)
 
@@ -1238,10 +1236,10 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
             item.setSelected(True)
 
     def handle_event(self, event_handler, event):
-        self.update()
         self.save_selection(event)
         event_handler(self, event)
         self.restore_selection(event)
+        self.update()
 
     def set_selecting(self, selecting):
         self.selecting = selecting
@@ -1459,6 +1457,8 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
         self.last_mouse[0] = pos.x()
         self.last_mouse[1] = pos.y()
         self.handle_event(QtGui.QGraphicsView.mouseMoveEvent, event)
+        if self.pressed:
+            self.viewport().repaint()
 
     def mouseReleaseEvent(self, event):
         self.pressed = False
@@ -1467,6 +1467,7 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
             return
         self.handle_event(QtGui.QGraphicsView.mouseReleaseEvent, event)
         self.selection_list = []
+        self.viewport().repaint()
 
     def wheelEvent(self, event):
         """Handle Qt mouse wheel events."""

@@ -90,15 +90,20 @@ class Settings(object):
             self.bookmarks.append(bookmark)
 
     def remove_bookmark(self, bookmark):
-        """Removes a bookmark from the saved settings"""
+        """Remove a bookmark"""
         if bookmark in self.bookmarks:
             self.bookmarks.remove(bookmark)
+
+    def remove_recent(self, entry):
+        """Removes an item from the recent items list"""
+        if entry in self.recent:
+            self.recent.remove(entry)
 
     def add_recent(self, entry):
         if entry in self.recent:
             self.recent.remove(entry)
         self.recent.insert(0, entry)
-        if len(self.recent) > 8:
+        if len(self.recent) >= 8:
             self.recent.pop()
 
     def path(self):

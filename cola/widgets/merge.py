@@ -71,6 +71,11 @@ class MergeView(QtGui.QDialog):
         self.checkbox_squash = QtGui.QCheckBox(self)
         self.checkbox_squash.setText(N_('Squash'))
 
+        self.checkbox_noff = QtGui.QCheckBox(self)
+        self.checkbox_noff.setText(N_('No fast forward'))
+        self.checkbox_noff.setChecked(False)
+        self.checkbox_noff_state = False
+
         self.checkbox_commit = QtGui.QCheckBox(self)
         self.checkbox_commit.setText(N_('Commit'))
         self.checkbox_commit.setChecked(True)
@@ -99,6 +104,7 @@ class MergeView(QtGui.QDialog):
         self.buttonlayt.addWidget(self.button_viz)
         self.buttonlayt.addStretch()
         self.buttonlayt.addWidget(self.checkbox_squash)
+        self.buttonlayt.addWidget(self.checkbox_noff)
         self.buttonlayt.addWidget(self.checkbox_commit)
         self.buttonlayt.addWidget(self.button_cancel)
         self.buttonlayt.addWidget(self.button_merge)
@@ -157,7 +163,14 @@ class MergeView(QtGui.QDialog):
                 self.checkbox_commit.checkState()
             self.checkbox_commit.setCheckState(Qt.Unchecked)
             self.checkbox_commit.setDisabled(True)
+            self.checkbox_noff_state =\
+                self.checkbox_noff.checkState()
+            self.checkbox_noff.setCheckState(Qt.Unchecked)
+            self.checkbox_noff.setDisabled(True)
         else:
+            self.checkbox_noff.setDisabled(False)
+            oldstateff = self.checkbox_noff_state
+            self.checkbox_noff.setCheckState(oldstateff)
             self.checkbox_commit.setDisabled(False)
             oldstate = self.checkbox_commit_state
             self.checkbox_commit.setCheckState(oldstate)
@@ -203,7 +216,8 @@ class MergeView(QtGui.QDialog):
                                 N_('You must specify a revision to merge.'))
             return
 
+        noff = self.checkbox_noff.isChecked()
         do_commit = self.checkbox_commit.isChecked()
         squash = self.checkbox_squash.isChecked()
-        cmds.do(cmds.Merge, revision, not(do_commit), squash)
+        cmds.do(cmds.Merge, revision, not(do_commit), squash, noff)
         self.accept()

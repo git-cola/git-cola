@@ -1,3 +1,69 @@
+git-cola v2.0.6
+===============
+Usability, bells and whistles
+-----------------------------
+* Updated Brazillian Portuguese translation.
+
+* The status and browse widgets now allow drag-and-drop into
+  external applications.
+
+  https://github.com/git-cola/git-cola/issue/335
+
+* We now show a progress bar when cloning repositories.
+
+  https://github.com/git-cola/git-cola/issue/312
+
+* The bookmarks widget was simplified to not need a
+  separate dialog.
+
+  https://github.com/git-cola/git-cola/issue/289
+
+* Updated Traditional Chinese translation.
+
+* We now display a warning when trying to rebase with uncommitted changes.
+
+  https://github.com/git-cola/git-cola/issue/338
+
+git-cola v2.0.5
+===============
+Usability, bells and whistles
+-----------------------------
+* New Brazillian Portuguese translation thanks to Vitor Lobo.
+
+* New Indonesian translation thanks to Samsul Ma'arif.
+
+* Updated Simplified Chinese translation thanks to Zhang Han.
+
+* `Ctrl+Backspace` is now a hotkey for "delete untracked files" in
+  the status widget.
+
+* Fetch/Push/Pull dialogs now use the configured remote of the current
+  branch by default.
+
+  https://github.com/git-cola/git-cola/pull/324
+
+Fixes
+-----
+* We now use `os.getcwd()` on Python3.
+
+  https://github.com/git-cola/git-cola/pull/316
+
+  https://github.com/git-cola/git-cola/pull/326
+
+* The `Ctrl+P` hotkey was overloaded to both "push" and "cherry-pick",
+  so "cherry-pick" was moved to `Shift+Ctrl+C`.
+
+* Custom GUI tools with mixed-case names are now properly supported.
+
+* "Diff Region" is now referred to as "Diff Hunk" for consistency
+  with common terminology from diff/patch tools.
+
+  https://github.com/git-cola/git-cola/issues/328
+
+* git-cola's test suite is now portable to MS Windows.
+
+  https://github.com/git-cola/git-cola/pull/332
+
 git-cola v2.0.4
 ===============
 Usability, bells and whistles
@@ -7,7 +73,7 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/263
 
-* New and improved zh_TW localization thanks to Vdragon.
+* New and improved zh_TW localization thanks to Ｖ字龍(Vdragon).
 
   https://github.com/git-cola/git-cola/pull/265
 
@@ -23,6 +89,36 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/272
 
+* New hotkeys: `Ctrl+F` for fetch, `Ctrl+P` for push,
+  and `Shift+Ctrl+P` for pull.
+
+* The bookmarks widget's context menu actions were made clearer.
+
+  https://github.com/git-cola/git-cola/issues/281
+
+* The term "Staging Area" is used consistently in the UI
+  to allow for better localization.
+
+  https://github.com/git-cola/git-cola/issues/283
+
+* The "Section" term is now referred to as "Diff Region"
+  in the UI.
+
+  https://github.com/git-cola/git-cola/issues/297
+
+* The localization documentation related to the LANGUAGE
+  environment variable was improved.
+
+  https://github.com/git-cola/git-cola/pull/293
+
+* The "Actions" panel now contains tooltips for each button
+  in case the button labels gets truncated by Qt.
+
+  https://github.com/git-cola/git-cola/issues/292
+
+* Custom `git config`-defined actions can now be run in the
+  background by setting `guitool.<name>.background` to `true`.
+
 Fixes
 -----
 * We now use bold fonts instead of SmallCaps to avoid
@@ -37,11 +133,48 @@ Fixes
 
   https://bugzilla.redhat.com/show_bug.cgi?id=1104181
 
-* Unicode fixes for non-ascii locales
+* Unicode fixes for non-ascii locales.
 
   https://github.com/git-cola/git-cola/issues/266
 
   https://github.com/git-cola/git-cola/issues/273
+
+  https://github.com/git-cola/git-cola/issues/276
+
+  https://github.com/git-cola/git-cola/issues/282
+
+  https://github.com/git-cola/git-cola/issues/298
+
+  https://github.com/git-cola/git-cola/issues/302
+
+  https://github.com/git-cola/git-cola/issues/303
+
+  https://github.com/git-cola/git-cola/issues/305
+
+* Viewing history from the file browser was fixed for Python3.
+
+  https://github.com/git-cola/git-cola/issues/274
+
+* setup.py was fixed to install the `*.rst` documentation.
+
+  https://github.com/git-cola/git-cola/issues/279
+
+* Patch export was fixed for Python3.
+
+  https://github.com/git-cola/git-cola/issues/290
+
+* Fixed adding a bookmark with trailing slashes.
+
+  https://github.com/git-cola/git-cola/pull/295
+
+* The default `git dag` layout is now setup so that its widgets
+  can be freely resized on Linux.
+
+  https://github.com/git-cola/git-cola/issues/299
+
+* Invalid tag names are now reported when creating tags.
+
+  https://github.com/git-cola/git-cola/pull/296
 
 git-cola v2.0.3
 ===============
@@ -83,6 +216,11 @@ Fixes
   fix word wrapping lines that start with "foo:".
 
   https://github.com/git-cola/git-cola/issues/257
+
+* `git dag` sometimes left behind selection artifacts.
+  We now refresh the view to avoid them.
+
+  https://github.com/git-cola/git-cola/issues/204
 
 git-cola v2.0.2
 ===============
@@ -383,7 +521,7 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/175
 
-* Ctrl+M can now be used to toggle the "Amend last commit"
+* `Ctrl+M` can now be used to toggle the "Amend last commit"
   checkbox in the commit message editor.
 
   https://github.com/git-cola/git-cola/pull/161
@@ -468,9 +606,9 @@ Usability, bells and whistles
 -----------------------------
 * `git dag` got a big visual upgrade.
 
-* Ctrl+G now launches the "Grep" tool.
+* `Ctrl+G` now launches the "Grep" tool.
 
-* Ctrl+D launches difftool and Ctrl+E launches your editor
+* `Ctrl+D` launches difftool and `Ctrl+E` launches your editor
   when in the diff panel.
 
 * git-cola can now be told to use an alternative language.

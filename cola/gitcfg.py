@@ -2,6 +2,8 @@ from __future__ import division, absolute_import, unicode_literals
 
 import copy
 import fnmatch
+import os
+import re
 from os.path import join
 
 from cola import core
@@ -10,6 +12,8 @@ from cola import observable
 from cola.decorators import memoize
 from cola.git import STDOUT
 from cola.compat import ustr
+
+BUILTIN_READER = os.environ.get('GIT_COLA_BUILTIN_CONFIG_READER', False)
 
 @memoize
 def instance():
@@ -49,6 +53,34 @@ def _cache_key():
         except OSError:
             continue
     return mtimes
+
+
+def _config_to_python(v):
+    """Convert a Git config string into a Python value"""
+
+    if v in ('true', 'yes'):
+        v = True
+    elif v in ('false', 'no'):
+        v = False
+    else:
+        try:
+            v = int(v)
+        except ValueError:
+            pass
+    return v
+
+
+def _config_key_value(line, splitchar):
+    """Split a config line into a (key, value) pair"""
+
+    try:
+        k, v = line.split(splitchar, 1)
+    except ValueError:
+        # the user has a emptyentry in their git config,
+        # which Git interprets as meaning "true"
+        k = line
+        v = 'true'
+    return k, _config_to_python(v)
 
 
 class GitConfig(observable.Observable):
@@ -160,31 +192,52 @@ class GitConfig(observable.Observable):
 
     def read_config(self, path):
         """Return git config data from a path as a dictionary."""
+
+        if BUILTIN_READER:
+            return self._read_config_file(path)
+
         dest = {}
         args = ('--null', '--file', path, '--list')
         config_lines = self.git.config(*args)[STDOUT].split('\0')
         for line in config_lines:
-            try:
-                k, v = line.split('\n', 1)
-            except ValueError:
+            if not line:
                 # the user has an invalid entry in their git config
-                if not line:
-                    continue
-                k = line
-                v = 'true'
-
-            if v in ('true', 'yes'):
-                v = True
-            elif v in ('false', 'no'):
-                v = False
-            else:
-                try:
-                    v = int(v)
-                except ValueError:
-                    pass
+                continue
+            k, v = _config_key_value(line, '\n')
             self._map[k.lower()] = k
             dest[k] = v
         return dest
+
+    def _read_config_file(self, path):
+        """Read a .gitconfig file into a dict"""
+
+        config = {}
+        header_simple = re.compile(r'^\[(\s+)]$')
+        header_subkey = re.compile(r'^\[(\s+) "(\s+)"\]$')
+
+        with core.xopen(path, 'rt') as f:
+            lines = filter(bool, [line.strip() for line in f.readlines()])
+
+        prefix = ''
+        for line in lines:
+            if line.startswith('#'):
+                continue
+
+            match = header_simple.match(line)
+            if match:
+                prefix = match.group(1) + '.'
+                continue
+            match = header_subkey.match(line)
+            if match:
+                prefix = match.group(1) + '.' + match.group(2) + '.'
+                continue
+
+            k, v = _config_key_value(line, '=')
+            k = prefix + k
+            self._map[k.lower()] = k
+            config[k] = v
+
+        return config
 
     def _get(self, src, key, default):
         self.update()
@@ -248,7 +301,7 @@ class GitConfig(observable.Observable):
         result = {}
         self.update()
         for key, val in self._all.items():
-            if match(key, pat):
+            if match(key.lower(), pat):
                 result[key] = val
         return result
 
@@ -268,12 +321,13 @@ class GitConfig(observable.Observable):
 
     def file_encoding(self, path):
         if not self.is_per_file_attrs_enabled():
-            return None
+            return self.gui_encoding()
         cache = self._attr_cache
         try:
             value = cache[path]
         except KeyError:
-            value = cache[path] = self._file_encoding(path)
+            value = cache[path] = (self._file_encoding(path) or
+                                   self.gui_encoding())
         return value
 
     def _file_encoding(self, path):
@@ -290,19 +344,17 @@ class GitConfig(observable.Observable):
                 return encoding
         return None
 
-    guitool_opts = ('cmd', 'needsfile', 'noconsole', 'norescan', 'confirm',
-                    'argprompt', 'revprompt', 'revunmerged', 'title', 'prompt')
-
     def get_guitool_opts(self, name):
-        """Return the guitool.<name> namespace as a dict"""
-        keyprefix = 'guitool.' + name + '.'
-        opts = {}
-        for cfg in self.guitool_opts:
-            value = self.get(keyprefix + cfg)
-            if value is None:
-                continue
-            opts[cfg] = value
-        return opts
+        """Return the guitool.<name> namespace as a dict
+
+        The dict keys are simplified so that "guitool.$name.cmd" is accessible
+        as `opts[cmd]`.
+
+        """
+        prefix = len('guitool.%s.' % name)
+        guitools = self.find('guitool.%s.*' % name)
+        return dict([(key[prefix:], value)
+                        for (key, value) in guitools.items()])
 
     def get_guitool_names(self):
         guitools = self.find('guitool.*.cmd')
@@ -310,3 +362,6 @@ class GitConfig(observable.Observable):
         suffix = len('.cmd')
         return sorted([name[prefix:-suffix]
                         for (name, cmd) in guitools.items()])
+
+    def terminal(self):
+        return self.get('cola.terminal', 'xterm -e')

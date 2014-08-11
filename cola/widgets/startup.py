@@ -7,18 +7,19 @@ found at startup.
 """
 from __future__ import division, absolute_import, unicode_literals
 
-import os
-
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+from cola import core
 from cola import guicmds
 from cola import qtutils
 from cola.compat import ustr
+from cola.guicmds import TaskRunner
 from cola.i18n import N_
 from cola.settings import Settings
 from cola.widgets import defs
+from cola.widgets.standard import ProgressDialog
 
 
 class StartupDialog(QtGui.QDialog):
@@ -27,44 +28,33 @@ class StartupDialog(QtGui.QDialog):
     def __init__(self, parent=None):
         QtGui.QDialog.__init__(self, parent)
         self.setWindowTitle(N_('git-cola'))
-        self._gitdir = None
 
-        self._layt = QtGui.QHBoxLayout()
-        self._layt.setMargin(defs.margin)
-        self._layt.setSpacing(defs.spacing)
+        self.repodir = None
+        self.task_runner = TaskRunner(self)
+        self.progress = ProgressDialog('', '', self)
 
-        self._new_btn = QtGui.QPushButton(N_('New...'))
-        self._new_btn.setIcon(qtutils.new_icon())
+        self.new_button = QtGui.QPushButton(N_('New...'))
+        self.new_button.setIcon(qtutils.new_icon())
 
-        self._open_btn = QtGui.QPushButton(N_('Open...'))
-        self._open_btn.setIcon(qtutils.open_icon())
+        self.open_button = QtGui.QPushButton(N_('Open...'))
+        self.open_button.setIcon(qtutils.open_icon())
 
-        self._clone_btn = QtGui.QPushButton(N_('Clone...'))
-        self._clone_btn.setIcon(qtutils.git_icon())
+        self.clone_button = QtGui.QPushButton(N_('Clone...'))
+        self.clone_button.setIcon(qtutils.git_icon())
 
-        self._close_btn = QtGui.QPushButton(N_('Close'))
-
-        self._layt.addWidget(self._open_btn)
-        self._layt.addWidget(self._clone_btn)
-        self._layt.addWidget(self._new_btn)
-        self._layt.addStretch()
-        self._layt.addWidget(self._close_btn)
+        self.close_button = QtGui.QPushButton(N_('Close'))
 
         settings = Settings()
         settings.load()
 
-        self._vlayt = QtGui.QVBoxLayout()
-        self._vlayt.setMargin(defs.margin)
-        self._vlayt.setSpacing(defs.margin)
+        self.bookmarks_label = QtGui.QLabel(N_('Select Repository...'))
+        self.bookmarks_label.setAlignment(Qt.AlignCenter)
 
-        self._bookmark_label = QtGui.QLabel(N_('Select Repository...'))
-        self._bookmark_label.setAlignment(Qt.AlignCenter)
-
-        self._bookmark_model = QtGui.QStandardItemModel()
+        self.bookmarks_model = QtGui.QStandardItemModel()
 
         item = QtGui.QStandardItem(N_('Select manually...'))
         item.setEditable(False)
-        self._bookmark_model.appendRow(item)
+        self.bookmarks_model.appendRow(item)
 
         added = set()
         all_repos = settings.bookmarks + settings.recent
@@ -75,36 +65,46 @@ class StartupDialog(QtGui.QDialog):
             added.add(repo)
             item = QtGui.QStandardItem(repo)
             item.setEditable(False)
-            self._bookmark_model.appendRow(item)
+            self.bookmarks_model.appendRow(item)
 
         selection_mode = QtGui.QAbstractItemView.SingleSelection
 
-        self._bookmark_list = QtGui.QListView()
-        self._bookmark_list.setSelectionMode(selection_mode)
-        self._bookmark_list.setAlternatingRowColors(True)
-        self._bookmark_list.setModel(self._bookmark_model)
+        self.bookmarks = QtGui.QListView()
+        self.bookmarks.setSelectionMode(selection_mode)
+        self.bookmarks.setAlternatingRowColors(True)
+        self.bookmarks.setModel(self.bookmarks_model)
 
         if not all_repos:
-            self._bookmark_label.setMinimumHeight(1)
-            self._bookmark_list.setMinimumHeight(1)
-            self._bookmark_label.hide()
-            self._bookmark_list.hide()
+            self.bookmarks_label.setMinimumHeight(1)
+            self.bookmarks.setMinimumHeight(1)
+            self.bookmarks_label.hide()
+            self.bookmarks.hide()
 
-        self._vlayt.addWidget(self._bookmark_label)
-        self._vlayt.addWidget(self._bookmark_list)
-        self._vlayt.addLayout(self._layt)
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.setMargin(defs.margin)
+        self.button_layout.setSpacing(defs.spacing)
+        self.button_layout.addWidget(self.open_button)
+        self.button_layout.addWidget(self.clone_button)
+        self.button_layout.addWidget(self.new_button)
+        self.button_layout.addStretch()
+        self.button_layout.addWidget(self.close_button)
 
-        self.setLayout(self._vlayt)
+        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout.setMargin(defs.margin)
+        self.main_layout.setSpacing(defs.margin)
+        self.main_layout.addWidget(self.bookmarks_label)
+        self.main_layout.addWidget(self.bookmarks)
+        self.main_layout.addLayout(self.button_layout)
+        self.setLayout(self.main_layout)
 
-        qtutils.connect_button(self._open_btn, self._open)
-        qtutils.connect_button(self._clone_btn, self._clone)
-        qtutils.connect_button(self._new_btn, self._new)
-        qtutils.connect_button(self._close_btn, self.reject)
+        qtutils.connect_button(self.open_button, self.open_repo)
+        qtutils.connect_button(self.clone_button, self.clone_repo)
+        qtutils.connect_button(self.new_button, self.new_repo)
+        qtutils.connect_button(self.close_button, self.reject)
 
-        self.connect(self._bookmark_list,
+        self.connect(self.bookmarks,
                      SIGNAL('activated(const QModelIndex &)'),
-                     self._open_bookmark)
-
+                     self.open_bookmark)
 
     def find_git_repo(self):
         """
@@ -119,39 +119,44 @@ class StartupDialog(QtGui.QDialog):
         self.show()
         self.raise_()
         if self.exec_() == QtGui.QDialog.Accepted:
-            return self._gitdir
+            return self.repodir
         return None
 
-    def _open(self):
-        self._gitdir = self._get_selected_bookmark()
-        if not self._gitdir:
-            self._gitdir = qtutils.opendir_dialog(N_('Open Git Repository...'),
-                                                  os.getcwd())
-        if self._gitdir:
+    def open_repo(self):
+        self.repodir = self.get_selected_bookmark()
+        if not self.repodir:
+            self.repodir = qtutils.opendir_dialog(N_('Open Git Repository...'),
+                                                  core.getcwd())
+        if self.repodir:
             self.accept()
 
-    def _clone(self):
-        gitdir = guicmds.clone_repo(spawn=False)
-        if gitdir:
-            self._gitdir = gitdir
-            self.accept()
+    def clone_repo(self):
+        guicmds.clone_repo(self.task_runner, self.progress,
+                           self.clone_repo_done, False)
 
-    def _new(self):
-        gitdir = guicmds.new_repo()
-        if gitdir:
-            self._gitdir = gitdir
+    def clone_repo_done(self, task):
+        if task.cmd and task.cmd.ok:
+            self.repodir = task.destdir
             self.accept()
-
-    def _open_bookmark(self, index):
-        if(index.row() == 0):
-            self._open()
         else:
-            self._gitdir = ustr(self._bookmark_model.data(index).toString())
-            if self._gitdir:
+            guicmds.report_clone_repo_errors(task)
+
+    def new_repo(self):
+        repodir = guicmds.new_repo()
+        if repodir:
+            self.repodir = repodir
+            self.accept()
+
+    def open_bookmark(self, index):
+        if(index.row() == 0):
+            self.open_repo()
+        else:
+            self.repodir = ustr(self.bookmarks_model.data(index).toString())
+            if self.repodir:
                 self.accept()
 
-    def _get_selected_bookmark(self):
-        selected = self._bookmark_list.selectedIndexes()
+    def get_selected_bookmark(self):
+        selected = self.bookmarks.selectedIndexes()
         if(len(selected) > 0 and selected[0].row() != 0):
-            return ustr(self._bookmark_model.data(selected[0]).toString())
+            return ustr(self.bookmarks_model.data(selected[0]).toString())
         return None

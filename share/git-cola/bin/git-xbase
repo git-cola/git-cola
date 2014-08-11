@@ -274,10 +274,10 @@ class RebaseTreeWidget(DraggableTreeWidget):
                 Qt.Key_5, Qt.Key_S)
 
         self.action_shift_down = qtutils.add_action(self,
-                N_('Shift Down'), self.shift_down, 'Shift+j')
+                N_('Shift Down'), self.shift_down, 'Shift+J')
 
         self.action_shift_up = qtutils.add_action(self,
-                N_('Shift Up'), self.shift_up, 'Shift+k')
+                N_('Shift Up'), self.shift_up, 'Shift+K')
 
         self.connect(self, SIGNAL('itemChanged(QTreeWidgetItem *, int)'),
                      self.item_changed)

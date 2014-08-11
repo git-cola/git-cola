@@ -14,7 +14,9 @@ import subprocess
 
 from cola.decorators import interruptable
 from cola.compat import ustr
+from cola.compat import PY2
 from cola.compat import PY3
+from cola.compat import WIN32
 
 # Some files are not in UTF-8; some other aren't in any codification.
 # Remember that GIT doesn't care about encodings (saves binary data)
@@ -54,9 +56,17 @@ def encode(string, encoding=None):
     return string.encode(encoding or 'utf-8', 'replace')
 
 
+def mkpath(path, encoding=None):
+    # The Windows API requires unicode strings regardless of python version
+    if WIN32:
+        return decode(path, encoding=encoding)
+    # UNIX prefers bytes
+    return encode(path, encoding=encoding)
+
+
 def read(filename, size=-1, encoding=None):
     """Read filename and return contents"""
-    with xopen(filename, 'r') as fh:
+    with xopen(filename, 'rb') as fh:
         return fread(fh, size=size, encoding=encoding)
 
 
@@ -105,6 +115,7 @@ def start_command(cmd, cwd=None, add_env=None,
     if add_env is not None:
         env = os.environ.copy()
         env.update(add_env)
+
     if PY3:
         # Python3 on windows always goes through list2cmdline() internally inside
         # of subprocess.py so we must provide unicode strings here otherwise
@@ -116,6 +127,15 @@ def start_command(cmd, cwd=None, add_env=None,
         cmd = [decode(c) for c in cmd]
     else:
         cmd = [encode(c) for c in cmd]
+
+    if WIN32 and cwd == getcwd():
+        # Windows cannot deal with passing a cwd that contains unicode
+        # but we luckily can pass None when the supplied cwd is the same
+        # as our current directory and get the same effect.
+        # Not doing this causes unicode encoding errors when launching
+        # the subprocess.
+        cwd = None
+
     return subprocess.Popen(cmd, bufsize=1, stdin=stdin, stdout=stdout,
                             stderr=stderr, cwd=cwd, env=env,
                             universal_newlines=universal_newlines, **extra)
@@ -175,15 +195,16 @@ def _win32_find_exe(exe):
 
     For reference, see:
     http://technet.microsoft.com/en-us/library/cc723564.aspx#XSLTsection127121120120
+
     """
     # try the argument itself
     candidates = [exe]
     # if argument does not have an extension, also try it with each of the
     # extensions specified in PATHEXT
-    if not '.' in exe:
-        candidates.extend(exe + ext
-                for ext in getenv('PATHEXT', '').split(os.pathsep)
-                if ext.startswith('.'))
+    if '.' not in exe:
+        extensions = getenv('PATHEXT', '').split(os.pathsep)
+        candidates.extend([exe+ext for ext in extensions
+                            if ext.startswith('.')])
     # search the current directory first
     for candidate in candidates:
         if exists(candidate):
@@ -224,29 +245,25 @@ def decorate(decorator, fn):
     return decorated
 
 
-def exists(path, encoding=None):
-    return os.path.exists(encode(path), encoding=encoding)
-
-
 def getenv(name, default=None):
     return decode(os.getenv(name, default))
 
 
 def xopen(path, mode='r', encoding=None):
-    return open(encode(path, encoding=encoding), mode)
+    return open(mkpath(path, encoding=encoding), mode)
 
 
 def stdout(msg):
     msg = msg + '\n'
-    if not PY3:
-        msg = encode(msg, sys.stdout.encoding)
+    if PY2:
+        msg = encode(msg, encoding='utf-8')
     sys.stdout.write(msg)
 
 
 def stderr(msg):
     msg = msg + '\n'
-    if not PY3:
-        msg = encode(msg, sys.stderr.encoding)
+    if PY2:
+        msg = encode(msg, encoding='utf-8')
     sys.stderr.write(msg)
 
 
@@ -255,20 +272,23 @@ def node():
     return platform.node()
 
 
-abspath = wrap(encode, os.path.abspath, decorator=decode)
-chdir = wrap(encode, os.chdir)
-exists = wrap(encode, os.path.exists)
+abspath = wrap(mkpath, os.path.abspath, decorator=decode)
+chdir = wrap(mkpath, os.chdir)
+exists = wrap(mkpath, os.path.exists)
 expanduser = wrap(encode, os.path.expanduser, decorator=decode)
-getcwd = decorate(decode, os.getcwd)
-isdir = wrap(encode, os.path.isdir)
-isfile = wrap(encode, os.path.isfile)
-islink = wrap(encode, os.path.islink)
-makedirs = wrap(encode, os.makedirs)
+try:  # Python 2
+    getcwd = os.getcwdu
+except AttributeError:
+    getcwd = os.getcwd
+isdir = wrap(mkpath, os.path.isdir)
+isfile = wrap(mkpath, os.path.isfile)
+islink = wrap(mkpath, os.path.islink)
+makedirs = wrap(mkpath, os.makedirs)
 try:
-    readlink = wrap(encode, os.readlink, decorator=decode)
+    readlink = wrap(mkpath, os.readlink, decorator=decode)
 except AttributeError:
     readlink = lambda p: p
-realpath = wrap(encode, os.path.realpath, decorator=decode)
-stat = wrap(encode, os.stat)
-unlink = wrap(encode, os.unlink)
-walk = wrap(encode, os.walk)
+realpath = wrap(mkpath, os.path.realpath, decorator=decode)
+stat = wrap(mkpath, os.stat)
+unlink = wrap(mkpath, os.unlink)
+walk = wrap(mkpath, os.walk)

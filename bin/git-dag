@@ -25,22 +25,29 @@ import sys
 from argparse import ArgumentParser
 from os.path import abspath
 from os.path import dirname
+from os.path import join
 from os.path import realpath
+
 
 def setup_environment():
     """Provides access to the cola modules"""
     # Try to detect where it is run from and set prefix and the search path.
     # It is assumed that the user installed Cola using the --prefix= option
+    python2 = sys.version_info[0] == 2
     prefix = dirname(dirname(realpath(abspath(__file__))))
+    if python2:
+        cola_mod = join(prefix, str('cola'), str('__init__.py'))
+        install_lib = join(prefix, str('share'), str('git-cola'), str('lib'))
+    else:
+        # Look for modules in the source or install trees
+        cola_mod = os.path.join(prefix, 'cola', '__init__.py')
+        install_lib = os.path.join(prefix, 'share', 'git-cola', 'lib')
 
-    # Look for modules in the source or install trees
-    cola_mod = os.path.join(prefix, 'cola', '__init__.py')
     if os.path.exists(cola_mod):
         # Source tree
         sys.path.insert(1, prefix)
     else:
         # Install tree
-        install_lib = os.path.join(prefix, 'share', 'git-cola', 'lib')
         sys.path.insert(1, install_lib)
 setup_environment()
 

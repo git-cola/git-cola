@@ -1,9 +1,7 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import fnmatch
-import time
 
-from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
@@ -11,17 +9,21 @@ from PyQt4.QtCore import SIGNAL
 from cola import gitcmds
 from cola import qtutils
 from cola import utils
+from cola.compat import ustr
+from cola.guicmds import Task
+from cola.guicmds import TaskRunner
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
 from cola.qtutils import connect_button
 from cola.widgets import defs
 from cola.widgets import standard
-from cola.compat import ustr
+from cola.widgets.standard import ProgressDialog
 
-FETCH = 'Fetch'
-PUSH = 'Push'
-PULL = 'Pull'
+
+FETCH = 'FETCH'
+PUSH = 'PUSH'
+PULL = 'PULL'
 
 
 def fetch():
@@ -72,11 +74,10 @@ def combine(result, existing):
             return result
 
 
-class ActionTask(QtCore.QRunnable):
+class ActionTask(Task):
 
     def __init__(self, sender, model_action, remote, kwargs):
-        QtCore.QRunnable.__init__(self)
-        self.sender = sender
+        Task.__init__(self, sender)
         self.model_action = model_action
         self.remote = remote
         self.kwargs = kwargs
@@ -84,65 +85,27 @@ class ActionTask(QtCore.QRunnable):
     def run(self):
         """Runs the model action and captures the result"""
         status, out, err = self.model_action(self.remote, **self.kwargs)
-        self.sender.emit(SIGNAL('action_completed'), self, status, out, err)
-
-
-class ProgressAnimationThread(QtCore.QThread):
-
-    def __init__(self, txt, parent, timeout=0.25):
-        QtCore.QThread.__init__(self, parent)
-        self.running = False
-        self.txt = txt
-        self.timeout = timeout
-        self.symbols = [
-            '..   ',
-            '...  ',
-            '.... ',
-            '.....',
-            '.... ',
-            '...  '
-        ]
-        self.idx = -1
-
-    def next(self):
-        self.idx = (self.idx + 1) % len(self.symbols)
-        return self.txt + self.symbols[self.idx]
-
-    def stop(self):
-        self.running = False
-
-    def run(self):
-        self.running = True
-        while self.running:
-            self.emit(SIGNAL('str'), self.next())
-            time.sleep(self.timeout)
+        self.finish(status, out, err)
 
 
 class RemoteActionDialog(standard.Dialog):
 
-    def __init__(self, model, action, parent=None):
+    def __init__(self, model, action, title, parent=None):
         """Customizes the dialog based on the remote action
         """
         standard.Dialog.__init__(self, parent=parent)
         self.model = model
         self.action = action
-        self.tasks = []
         self.filtered_remote_branches = []
         self.selected_remotes = []
 
         self.setAttribute(Qt.WA_MacMetalStyle)
-        self.setWindowTitle(N_(action))
+        self.setWindowTitle(title)
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
-        self.progress = QtGui.QProgressDialog(self)
-        self.progress.setFont(qtutils.diff_font())
-        self.progress.setRange(0, 0)
-        self.progress.setCancelButton(None)
-        self.progress.setWindowTitle(action)
-        self.progress.setWindowModality(Qt.WindowModal)
-        self.progress.setLabelText(N_('Updating') + '..   ')
-        self.progress_thread = ProgressAnimationThread(N_('Updating'), self)
+        self.task_runner = TaskRunner(self)
+        self.progress = ProgressDialog(title, N_('Updating'), self)
 
         self.local_label = QtGui.QLabel()
         self.local_label.setText(N_('Local Branch'))
@@ -178,7 +141,7 @@ class RemoteActionDialog(standard.Dialog):
         self.rebase_checkbox.setText(N_('Rebase '))
 
         self.action_button = QtGui.QPushButton()
-        self.action_button.setText(N_(action))
+        self.action_button.setText(title)
         self.action_button.setIcon(qtutils.ok_icon())
 
         self.close_button = QtGui.QPushButton()
@@ -224,11 +187,13 @@ class RemoteActionDialog(standard.Dialog):
         self.main_layout.addLayout(self.options_layout)
         self.setLayout(self.main_layout)
 
+        default_remote = gitcmds.default_remote() or 'origin'
+
         remotes = self.model.remotes
-        if 'origin' in remotes:
-            idx = remotes.index('origin')
+        if default_remote in remotes:
+            idx = remotes.index(default_remote)
             if self.select_remote(idx):
-                self.remote_name.setText('origin')
+                self.remote_name.setText(default_remote)
         else:
             if self.select_first_remote():
                 self.remote_name.setText(remotes[0])
@@ -252,9 +217,6 @@ class RemoteActionDialog(standard.Dialog):
 
         qtutils.add_action(self, N_('Close'),
                       self.close, QtGui.QKeySequence.Close, 'Esc')
-
-        self.connect(self, SIGNAL('action_completed'), self.action_completed)
-        self.connect(self.progress_thread, SIGNAL('str'), self.update_progress)
 
         if action == PULL:
             self.tags_checkbox.hide()
@@ -421,6 +383,14 @@ class RemoteActionDialog(standard.Dialog):
 
     # Actions
 
+    def push_to_all(self, dummy_remote, *args, **kwargs):
+        selected_remotes = self.selected_remotes
+        all_results = None
+        for remote in selected_remotes:
+            result = self.model.push(remote, *args, **kwargs)
+            all_results = combine(result, all_results)
+        return all_results
+
     def action_callback(self):
         action = self.action
         if action == FETCH:
@@ -482,39 +452,17 @@ class RemoteActionDialog(standard.Dialog):
         # Disable the GUI by default
         self.action_button.setEnabled(False)
         self.close_button.setEnabled(False)
-        QtGui.QApplication.setOverrideCursor(Qt.WaitCursor)
-
-        # Show a nice progress bar
-        self.progress.show()
-        self.progress_thread.start()
 
         # Use a thread to update in the background
-        task = ActionTask(self, model_action, remote, kwargs)
-        self.tasks.append(task)
-        QtCore.QThreadPool.globalInstance().start(task)
-
-    def update_progress(self, txt):
-        self.progress.setLabelText(txt)
-
-    def push_to_all(self, dummy_remote, *args, **kwargs):
-        selected_remotes = self.selected_remotes
-        all_results = None
-        for remote in selected_remotes:
-            result = self.model.push(remote, *args, **kwargs)
-            all_results = combine(result, all_results)
-        return all_results
+        task = ActionTask(self.task_runner, model_action, remote, kwargs)
+        self.task_runner.start(task,
+                               progress=self.progress,
+                               finish=self.action_completed)
 
     def action_completed(self, task, status, out, err):
         # Grab the results of the action and finish up
         self.action_button.setEnabled(True)
         self.close_button.setEnabled(True)
-        QtGui.QApplication.restoreOverrideCursor()
-
-        self.progress_thread.stop()
-        self.progress_thread.wait()
-        self.progress.close()
-        if task in self.tasks:
-            self.tasks.remove(task)
 
         already_up_to_date = N_('Already up-to-date.')
 
@@ -550,17 +498,20 @@ class RemoteActionDialog(standard.Dialog):
 # Use distinct classes so that each saves its own set of preferences
 class Fetch(RemoteActionDialog):
     def __init__(self, model, parent=None):
-        RemoteActionDialog.__init__(self, model, FETCH, parent=parent)
+        RemoteActionDialog.__init__(self, model, FETCH, N_('Fetch'),
+                                    parent=parent)
 
 
 class Push(RemoteActionDialog):
     def __init__(self, model, parent=None):
-        RemoteActionDialog.__init__(self, model, PUSH, parent=parent)
+        RemoteActionDialog.__init__(self, model, PUSH, N_('Push'),
+                                    parent=parent)
 
 
 class Pull(RemoteActionDialog):
     def __init__(self, model, parent=None):
-        RemoteActionDialog.__init__(self, model, PULL, parent=parent)
+        RemoteActionDialog.__init__(self, model, PULL, N_('Pull'),
+                                    parent=parent)
 
     def apply_state(self, state):
         result = RemoteActionDialog.apply_state(self, state)

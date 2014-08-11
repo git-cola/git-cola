@@ -50,6 +50,7 @@ from cola import utils
 from cola import version
 from cola.compat import ustr
 from cola.decorators import memoize
+from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
 from cola.widgets import cfgactions
@@ -203,7 +204,7 @@ class ColaQApplication(QtGui.QApplication):
         skey = ustr(session_mgr.sessionKey())
         session_id = '%s_%s' % (sid, skey)
         session = Session(session_id,
-                          repo=os.getcwdu(), git_path=self.git_path)
+                          repo=core.getcwd(), git_path=self.git_path)
         self.view.save_state(settings=session)
 
 
@@ -228,8 +229,9 @@ def process_args(args):
         repo = repo[len('file:'):]
     repo = core.realpath(repo)
     if not core.isdir(repo):
-        sys.stderr.write("fatal: '%s' is not a directory.  "
-                         'Consider supplying -r <path>.\n' % repo)
+        errmsg = N_('fatal: "%s" is not a directory.  '
+                    'Please specify a correct --repo <path>.') % repo
+        core.stderr(errmsg)
         sys.exit(-1)
 
     # We do everything relative to the repo root
@@ -305,7 +307,7 @@ def add_common_arguments(parser):
                         help='print version number')
 
     # Specifies a git repository to open
-    parser.add_argument('-r', '--repo', metavar='<repo>', default=os.getcwd(),
+    parser.add_argument('-r', '--repo', metavar='<repo>', default=core.getcwd(),
                         help='open the specified git repository')
 
     # Specifies that we should prompt for a repository at startup

@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 import os
 import unittest
 
-import helper
+from cola import core
 from cola.models.main import MainModel
+
+from test import helper
 
 
 class MainModelTestCase(helper.GitRepositoryTestCase):
@@ -12,7 +14,7 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
 
     def setUp(self):
         helper.GitRepositoryTestCase.setUp(self)
-        self.model = MainModel(cwd=os.getcwd())
+        self.model = MainModel(cwd=core.getcwd())
 
     def test_project(self):
         """Test the 'project' attribute."""
@@ -29,47 +31,45 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
         self.model.update_status()
         self.assertEqual(self.model.remote_branches, [])
 
-        self.shell("""
-                git remote add origin .
-                git fetch origin > /dev/null 2>&1
-        """)
+        self.git('remote', 'add', 'origin', '.')
+        self.git('fetch', 'origin')
         self.model.update_status()
         self.assertEqual(self.model.remote_branches, ['origin/master'])
 
     def test_modified(self):
         """Test the 'modified' attribute."""
-        self.shell('echo change > A')
+        self.write_file('A', 'change')
         self.model.update_status()
         self.assertEqual(self.model.modified, ['A'])
 
     def test_unstaged(self):
         """Test the 'unstaged' attribute."""
-        self.shell('echo change > A')
-        self.shell('echo C > C')
+        self.write_file('A', 'change')
+        self.write_file('C', 'C')
         self.model.update_status()
         self.assertEqual(self.model.unstaged, ['A', 'C'])
 
     def test_untracked(self):
         """Test the 'untracked' attribute."""
-        self.shell('echo C > C')
+        self.write_file('C', 'C')
         self.model.update_status()
         self.assertEqual(self.model.untracked, ['C'])
 
     def test_remotes(self):
         """Test the 'remote' attribute."""
-        self.shell('git remote add origin .')
+        self.git('remote', 'add', 'origin', '.')
         self.model.update_status()
         self.assertEqual(self.model.remotes, ['origin'])
 
     def test_currentbranch(self):
         """Test the 'currentbranch' attribute."""
-        self.shell('git checkout -b test > /dev/null 2>&1')
+        self.git('checkout', '-b', 'test')
         self.model.update_status()
         self.assertEqual(self.model.currentbranch, 'test')
 
     def test_tags(self):
         """Test the 'tags' attribute."""
-        self.shell('git tag test')
+        self.git('tag', 'test')
         self.model.update_status()
         self.assertEqual(self.model.tags, ['test'])
 

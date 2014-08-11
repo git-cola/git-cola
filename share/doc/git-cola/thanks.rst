@@ -10,6 +10,7 @@ Thanks
 * Barry Roberts
 * Boris W
 * Ben Boeckel
+* Ben Cole
 * Benoît Nouyrigat
 * Charles 101
 * Christian Jann
@@ -57,8 +58,11 @@ Thanks
 * OmegaPhil (Omega Weapon)
 * Owen Healy
 * Paolo G. Giarrusso
+* Paul Hildebrandt
 * Peter Júnoš
+* Raghavendra Karunanidhi
 * Rustam Safin
+* Samsul Ma'arif
 * Sergey Leschina
 * Srinivasa Nallapati
 * Stanisław Halik
@@ -71,3 +75,5 @@ Thanks
 * Uri Okrent
 * Ｖ字龍 (Vdragon)
 * Virgil Dupras
+* Vitor Lobo
+* Zhang Han

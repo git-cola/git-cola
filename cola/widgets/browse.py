@@ -1,7 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
 
-import os
-
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
@@ -71,7 +69,7 @@ class Browser(standard.Widget):
 
     def _updated_callback(self):
         branch = self.model.currentbranch
-        curdir = os.getcwd()
+        curdir = core.getcwd()
         msg = N_('Repository: %s') % curdir
         msg += '\n'
         msg += N_('Branch: %s') % branch
@@ -89,13 +87,16 @@ class RepoTreeView(standard.TreeView):
     def __init__(self, parent):
         standard.TreeView.__init__(self, parent)
 
+        self.setDragEnabled(True)
         self.setRootIsDecorated(True)
         self.setSortingEnabled(False)
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 
         # Observe model updates
         model = main.model()
-        model.add_observer(model.message_updated, self.update_actions)
+        model.add_observer(model.message_updated, self.emit_update)
+
+        self.connect(self, SIGNAL('update()'), self.update_actions)
 
         # The non-Qt cola application model
         self.connect(self, SIGNAL('expanded(QModelIndex)'), self.size_columns)
@@ -132,6 +133,7 @@ class RepoTreeView(standard.TreeView):
                                     N_('Launch git-difftool on the current path.'),
                                     cmds.run(cmds.LaunchDifftool),
                                     cmds.LaunchDifftool.SHORTCUT)
+
         self.action_difftool_predecessor =\
                 self._create_action(N_('Diff Against Predecessor...'),
                                     N_('Launch git-difftool against previous versions.'),
@@ -146,11 +148,14 @@ class RepoTreeView(standard.TreeView):
                 self._create_action(cmds.LaunchEditor.name(),
                                     N_('Edit selected path(s).'),
                                     cmds.run(cmds.LaunchEditor),
-                                    cmds.LaunchDifftool.SHORTCUT)
+                                    cmds.LaunchEditor.SHORTCUT)
 
     def size_columns(self):
         """Set the column widths."""
         self.resizeColumnToContents(0)
+
+    def emit_update(self):
+        self.emit(SIGNAL('update()'))
 
     def update_actions(self):
         """Enable/disable actions."""
@@ -242,11 +247,13 @@ class RepoTreeView(standard.TreeView):
         index = model_index.sibling(model_index.row(), 0)
         return self.model().itemFromIndex(index)
 
+    def paths_from_indexes(self, indexes):
+        return qtutils.paths_from_indexes(self.model(), indexes,
+                                          item_type=GitRepoNameItem.TYPE)
+
     def selected_paths(self):
         """Return the selected paths."""
-        items = map(self.model().itemFromIndex, self.selectedIndexes())
-        return [i.path for i in items
-                    if i.type() == GitRepoNameItem.TYPE]
+        return self.paths_from_indexes(self.selectedIndexes())
 
     def selected_staged_paths(self, selection=None):
         """Return selected staged paths."""
@@ -354,7 +361,7 @@ class BrowserController(QtCore.QObject):
 
     def view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
-        entries = map(ustr, entries)
+        entries = list(map(ustr, entries))
         cmds.do(cmds.VisualizePaths, entries)
 
     def query_model(self, model_index):

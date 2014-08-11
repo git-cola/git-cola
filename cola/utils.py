@@ -269,3 +269,11 @@ def checksum(path):
     md5 = hashlib.new('md5')
     md5.update(open(path, 'rb').read())
     return md5.hexdigest()
+
+
+def expandpath(path):
+    """Expand ~user/ and environment $variables"""
+    path = os.path.expandvars(path)
+    if path.startswith('~'):
+        path = os.path.expanduser(path)
+    return path

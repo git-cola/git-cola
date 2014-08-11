@@ -95,7 +95,7 @@ class GitArchiveDialog(QtGui.QDialog):
         # outputs
         self.fmt = None
 
-        filename = '%s-%s' % (os.path.basename(os.getcwd()), shortref)
+        filename = '%s-%s' % (os.path.basename(core.getcwd()), shortref)
         self.prefix = filename + '/'
         self.filename = filename
 

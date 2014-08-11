@@ -2,7 +2,9 @@ from __future__ import unicode_literals
 
 import os
 import shutil
+import stat
 import unittest
+import subprocess
 import tempfile
 
 from cola import core
@@ -20,15 +22,19 @@ def fixture(*paths):
     return os.path.join(os.path.dirname(__file__), 'fixtures', *paths)
 
 
-def shell(cmd):
-    return os.system(cmd)
+def run_unittest(suite):
+    return unittest.TextTestRunner(verbosity=2).run(suite)
 
 
-def pipe(cmd):
-    p = os.popen(cmd)
-    out = core.fread(p).strip()
-    p.close()
-    return out
+# shutil.rmtree() can't remove read-only files on Windows.  This onerror
+# handler, adapted from <http://stackoverflow.com/a/1889686/357338>, works
+# around this by changing such files to be writable and then re-trying.
+def remove_readonly(func, path, exc_info):
+    if func == os.remove and not os.access(path, os.W_OK):
+        os.chmod(path, stat.S_IWRITE)
+        func(path)
+    else:
+        raise
 
 
 class TmpPathTestCase(unittest.TestCase):
@@ -40,11 +46,22 @@ class TmpPathTestCase(unittest.TestCase):
         """Remove the test directory and return to the tmp root."""
         path = self._testdir
         os.chdir(tmp_path())
-        shutil.rmtree(path)
+        shutil.rmtree(path, onerror=remove_readonly)
 
-    def shell(self, cmd):
-        result = shell(cmd)
-        self.failIf(result != 0)
+    @staticmethod
+    def touch(*paths):
+        for path in paths:
+            open(path, 'a').close()
+
+    @staticmethod
+    def write_file(path, content):
+        with open(path, 'w') as f:
+            f.write(content)
+
+    @staticmethod
+    def append_file(path, content):
+        with open(path, 'a') as f:
+            f.write(content)
 
     def test_path(self, *paths):
         return os.path.join(self._testdir, *paths)
@@ -61,12 +78,17 @@ class GitRepositoryTestCase(TmpPathTestCase):
         gitcfg.instance().reset()
         gitcmds.clear_cache()
 
+    def git(self, *args):
+        p = subprocess.Popen(['git'] + list(args), stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+        output, error = p.communicate()
+        self.failIf(p.returncode != 0)
+        return output.strip()
+
     def initialize_repo(self):
-        self.shell("""
-            git init > /dev/null &&
-            touch A B &&
-            git add A B
-        """)
+        self.git('init')
+        self.touch('A', 'B')
+        self.git('add', 'A', 'B')
 
     def commit_files(self):
-        self.shell('git commit -m"Initial commit" > /dev/null')
+        self.git('commit', '-m', 'intitial commit')

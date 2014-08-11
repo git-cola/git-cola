@@ -11,9 +11,10 @@ from cola import utils
 
 class Range(object):
 
-    def __init__(self, begin, end):
+    def __init__(self, begin, end, heading=''):
         self.begin = self._parse(begin)
         self.end = self._parse(end)
+        self.heading = heading
 
     def _parse(self, range_str):
         if ',' in range_str:
@@ -23,7 +24,8 @@ class Range(object):
             return [int(range_str), int(range_str)]
 
     def make(self):
-        return '@@ -%s +%s @@' % (self._span(self.begin), self._span(self.end))
+        return '@@ -%s +%s @@%s' % (self._span(self.begin),
+                self._span(self.end), self.heading)
 
     def set_begin_count(self, count):
         self._set_count(self.begin, count)
@@ -63,7 +65,7 @@ class DiffParser(object):
 
     """Handles parsing diff for use by the interactive index editor."""
 
-    HEADER_RE = re.compile(r'^@@ -([0-9,]+) \+([0-9,]+) @@.*')
+    HEADER_RE = re.compile(r'^@@ -([0-9,]+) \+([0-9,]+) @@(.*)')
 
     def __init__(self, model, filename='',
                  cached=True, reverse=False,
@@ -86,20 +88,19 @@ class DiffParser(object):
         self.filename = filename
         self.diff_source = diff_source or DiffSource()
 
-        (header, diff) = self.diff_source.get(self.head, self.amending,
-                                              filename, cached,
-                                              cached or reverse)
-        self.model = model
-        self.diff = diff
-        self.header = header
-        self.parse_diff(diff)
+        if cached:
+            reverse = True
 
-        # Always index into the non-reversed diff
-        self.fwd_header, self.fwd_diff = \
-                self.diff_source.get(self.head,
-                                     self.amending,
-                                     filename,
-                                     cached, False)
+        header, diff = self.diff_source.get(self.head, self.amending,
+                                            filename, cached, reverse=False)
+        if reverse:
+            header, _ = self.diff_source.get(self.head, self.amending,
+                                             filename, cached, reverse=True)
+
+        self.model = model
+        self.fwd_diff = diff
+        self.header = header
+        self.parse_diff(diff, reverse)
 
     def write_diff(self,filename,which,selected=False,noop=False):
         """Writes a new diff corresponding to the user's selection."""
@@ -226,7 +227,7 @@ class DiffParser(object):
                 indices.append(idx)
         return diffs, indices
 
-    def parse_diff(self, diff):
+    def parse_diff(self, diff, reverse):
         """Parses a diff and extracts headers, offsets, hunks, etc.
         """
         total_offset = 0
@@ -235,7 +236,15 @@ class DiffParser(object):
         for line in diff.split('\n'):
             match = self.HEADER_RE.match(line)
             if match:
-                self._ranges.append(Range(match.group(1), match.group(2)))
+                range1 = match.group(1)
+                range2 = match.group(2)
+                heading = match.group(3)
+                if reverse:
+                    range = Range(range2, range1, heading)
+                else:
+                    range = Range(range1, range2, heading)
+                self._ranges.append(range)
+                line = range.make()
                 self._diffs.append([line])
 
                 line_len = len(line) + 1 #\n
@@ -250,6 +259,12 @@ class DiffParser(object):
                 errmsg = 'Malformed diff?: %s' % diff
                 raise AssertionError(errmsg)
 
+            if reverse:
+                if line.startswith('+'):
+                    line = line.replace('+', '-', 1)
+                elif line.startswith('-'):
+                    line = line.replace('-', '+', 1)
+
             line_len = len(line) + 1
             total_offset += line_len
 
@@ -257,7 +272,7 @@ class DiffParser(object):
             self._diff_spans[-1][-1] += line_len
             self._diff_offsets[self._idx] += line_len
 
-    def process_diff_selection(self, selected, offset, selection,
+    def process_diff_selection(self, offset, selection,
                                apply_to_worktree=False):
         """Processes a diff selection and applies changes to git."""
         if selection:
@@ -276,13 +291,12 @@ class DiffParser(object):
             self.set_diffs_to_range(start, end)
         else:
             self.set_diff_to_offset(offset)
-            selected = False
 
         output = ''
         error = ''
         status = 0
         # Process diff selection only
-        if selected:
+        if selection:
             encoding = self.config.file_encoding(self.filename)
             for idx in self.selected:
                 contents = self.diff_subset(idx, start, end)
