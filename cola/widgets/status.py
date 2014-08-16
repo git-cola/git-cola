@@ -12,6 +12,8 @@ from cola import cmds
 from cola import core
 from cola import qtutils
 from cola import utils
+from cola.qtutils import create_toolbutton
+from cola.qtutils import connect_button
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
@@ -31,7 +33,9 @@ class StatusWidget(QtGui.QWidget):
         self.layout = QtGui.QVBoxLayout(self)
         self.setLayout(self.layout)
 
+        self.filter_widget = StatusFilterWidget(self)
         self.tree = StatusTreeWidget(self)
+        self.layout.addWidget(self.filter_widget)
         self.layout.addWidget(self.tree)
         self.layout.setContentsMargins(0, 0, 0, 0)
 
@@ -895,3 +899,22 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         """Return a list of absolute-path URLs"""
         paths = qtutils.paths_from_items(items, item_filter=lambda x: x.exists)
         return qtutils.mimedata_from_paths(paths)
+
+
+class StatusFilterWidget(QtGui.QWidget):
+    def __init__(self, parent):
+        QtGui.QWidget.__init__(self,parent)
+        self.m = main.model()
+
+        self.filter_input = QtGui.QLineEdit(self)
+        self.filter_button = create_toolbutton(text = N_("Filter"))
+        self.filter_layout = QtGui.QHBoxLayout()        
+        self.filter_layout.addWidget(self.filter_input)
+        self.filter_layout.addWidget(self.filter_button)
+        self.setLayout(self.filter_layout)
+
+        connect_button(self.filter_button, self.apply_filter)
+
+    def apply_filter(self):
+        path_filter = self.filter_input.text()
+        self.m.update_path_filter(path_filter)

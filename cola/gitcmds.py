@@ -429,7 +429,7 @@ def worktree_state(head='HEAD'):
            state.get('upstream_changed', []))
 
 
-def worktree_state_dict(head='HEAD', update_index=False, display_untracked=True):
+def worktree_state_dict(head='HEAD', update_index=False, display_untracked=True, path=''):
     """Return a dict of files in various states of being
 
     :rtype: dict, keys are staged, unstaged, untracked, unmerged,
@@ -439,8 +439,8 @@ def worktree_state_dict(head='HEAD', update_index=False, display_untracked=True)
     if update_index:
         git.update_index(refresh=True)
 
-    staged, unmerged, staged_submods = diff_index(head)
-    modified, modified_submods = diff_worktree()
+    staged, unmerged, staged_submods = diff_index(head, path=path)
+    modified, modified_submods = diff_worktree(path)
     untracked = display_untracked and untracked_files() or []
 
     # Remove unmerged paths from the modified list
@@ -480,12 +480,12 @@ def worktree_state_dict(head='HEAD', update_index=False, display_untracked=True)
             'submodules': submodules}
 
 
-def diff_index(head, cached=True):
+def diff_index(head, path='', cached=True):
     submodules = set()
     staged = []
     unmerged = []
 
-    status, out, err = git.diff_index(head, '--', cached=cached, z=True)
+    status, out, err = git.diff_index(head, '--', path, cached=cached, z=True)
     if status != 0:
         # handle git init
         return all_files(), unmerged, submodules
@@ -504,11 +504,11 @@ def diff_index(head, cached=True):
     return staged, unmerged, submodules
 
 
-def diff_worktree():
+def diff_worktree(path=''):
     modified = []
     submodules = set()
 
-    status, out, err = git.diff_files(z=True)
+    status, out, err = git.diff_files('--', path, z=True)
     if status != 0:
         # handle git init
         out = git.ls_files(modified=True, z=True)[STDOUT]
