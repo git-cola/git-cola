@@ -432,16 +432,13 @@ class GitRemoteBranchCompletionModel(GitCompletionModel):
         return model.remote_branches
 
 
-class GitLogCompletionModel(GitRefCompletionModel):
-    """Completer for arguments suitable for git-log like commands"""
+class GitPathCompletionModel(GitCompletionModel):
+    """Completer for files and folders path"""
 
     def __init__(self, parent):
-        GitRefCompletionModel.__init__(self, parent)
+        GitCompletionModel.__init__(self, parent)
 
     def gather_matches(self, case_sensitive):
-        (matched_refs, dummy_paths, dummy_dirs) =\
-                GitRefCompletionModel.gather_matches(self, case_sensitive)
-
         file_list = self.main_model.everything()
         files = set(file_list)
         files_and_dirs = utils.add_parents(set(files))
@@ -463,8 +460,22 @@ class GitLogCompletionModel(GitRefCompletionModel):
 
         matched_paths.sort(key=keyfunc)
 
-        return (matched_refs, matched_paths, dirs)
+        return ((), matched_paths, dirs)
 
+class GitLogCompletionModel(GitRefCompletionModel):
+    """Completer for arguments suitable for git-log like commands"""
+
+    def __init__(self, parent):
+        GitRefCompletionModel.__init__(self, parent)
+
+    def gather_matches(self, case_sensitive):
+        (matched_refs, dummy_paths, dummy_dirs) =\
+                GitRefCompletionModel.gather_matches(self, case_sensitive)
+
+        (dummy_refs, matched_paths, dirs) =\
+                GitPathCompletionModel.gather_matches(self, case_sensitive)
+
+        return (matched_refs, matched_paths, dirs)
 
 def bind_lineedit(model):
     """Create a line edit bound against a specific model"""
@@ -478,6 +489,7 @@ def bind_lineedit(model):
 
 # Concrete classes
 GitLogLineEdit = bind_lineedit(GitLogCompletionModel)
+GitPathLineEdit = bind_lineedit(GitPathCompletionModel)
 GitRefLineEdit = bind_lineedit(GitRefCompletionModel)
 GitBranchLineEdit = bind_lineedit(GitBranchCompletionModel)
 GitRemoteBranchLineEdit = bind_lineedit(GitRemoteBranchCompletionModel)

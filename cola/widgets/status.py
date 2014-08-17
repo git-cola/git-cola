@@ -19,6 +19,7 @@ from cola.interaction import Interaction
 from cola.models import main
 from cola.models import selection
 from cola.compat import ustr
+from cola.widgets import completion
 
 
 class StatusWidget(QtGui.QWidget):
@@ -907,7 +908,7 @@ class StatusFilterWidget(QtGui.QWidget):
         QtGui.QWidget.__init__(self,parent)
         self.m = main.model()
 
-        self.filter_input = QtGui.QLineEdit(self)
+        self.filter_input = completion.GitPathLineEdit()
         self.filter_button = create_toolbutton(text = N_("Filter"))
         self.filter_layout = QtGui.QHBoxLayout()
         self.filter_layout.addWidget(self.filter_input)
