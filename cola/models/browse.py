@@ -146,7 +146,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
     def _get_paths(self):
         """Return paths of interest; e.g. paths with a status."""
         model = main.model()
-        paths = set(model.staged + model.unstaged)
+        paths = model.staged + model.unstaged
         return utils.add_parents(paths)
 
     def _model_updated(self):
@@ -361,11 +361,11 @@ class GitRepoInfoTask(QRunnable):
         """Return the status for the entry's path."""
 
         model = main.model()
-        unmerged = utils.add_parents(set(model.unmerged))
-        modified = utils.add_parents(set(model.modified))
-        staged = utils.add_parents(set(model.staged))
-        untracked = utils.add_parents(set(model.untracked))
-        upstream_changed = utils.add_parents(set(model.upstream_changed))
+        unmerged = utils.add_parents(model.unmerged)
+        modified = utils.add_parents(model.modified)
+        staged = utils.add_parents(model.staged)
+        untracked = utils.add_parents(model.untracked)
+        upstream_changed = utils.add_parents(model.upstream_changed)
 
         if self.path in unmerged:
             return (resources.icon('modified.png'), N_('Unmerged'))

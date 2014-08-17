@@ -360,7 +360,7 @@ def gather_path_matches(matched_text, file_list, case_sensitive):
     """Return matching completions from a list of candidate files"""
 
     files = set(file_list)
-    files_and_dirs = utils.add_parents(set(files))
+    files_and_dirs = utils.add_parents(files)
     dirs = files_and_dirs.difference(files)
 
     paths = gather_matches(matched_text, files_and_dirs, case_sensitive)

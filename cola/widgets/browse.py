@@ -206,10 +206,10 @@ class RepoTreeView(standard.TreeView):
 
         paths = self.selected_paths()
         model = main.model()
-        model_staged = utils.add_parents(set(model.staged))
-        model_modified = utils.add_parents(set(model.modified))
-        model_unmerged = utils.add_parents(set(model.unmerged))
-        model_untracked = utils.add_parents(set(model.untracked))
+        model_staged = utils.add_parents(model.staged)
+        model_modified = utils.add_parents(model.modified)
+        model_unmerged = utils.add_parents(model.unmerged)
+        model_untracked = utils.add_parents(model.untracked)
 
         for path in paths:
             if path in model_unmerged:
@@ -259,7 +259,7 @@ class RepoTreeView(standard.TreeView):
         """Return selected staged paths."""
         if not selection:
             selection = self.selected_paths()
-        staged = utils.add_parents(set(main.model().staged))
+        staged = utils.add_parents(main.model().staged)
         return [p for p in selection if p in staged]
 
     def selected_modified_paths(self, selection=None):
@@ -267,7 +267,7 @@ class RepoTreeView(standard.TreeView):
         if not selection:
             selection = self.selected_paths()
         model = main.model()
-        modified = utils.add_parents(set(model.modified))
+        modified = utils.add_parents(model.modified)
         return [p for p in selection if p in modified]
 
     def selected_unstaged_paths(self, selection=None):
@@ -275,8 +275,8 @@ class RepoTreeView(standard.TreeView):
         if not selection:
             selection = self.selected_paths()
         model = main.model()
-        modified = utils.add_parents(set(model.modified))
-        untracked = utils.add_parents(set(model.untracked))
+        modified = utils.add_parents(model.modified)
+        untracked = utils.add_parents(model.untracked)
         unstaged = modified.union(untracked)
         return [p for p in selection if p in unstaged]
 
@@ -287,7 +287,7 @@ class RepoTreeView(standard.TreeView):
         model = main.model()
         staged = set(self.selected_staged_paths())
         modified = set(self.selected_modified_paths())
-        untracked = utils.add_parents(set(model.untracked))
+        untracked = utils.add_parents(model.untracked)
         tracked = staged.union(modified)
         return [p for p in selection
                 if p not in untracked or p in tracked]
