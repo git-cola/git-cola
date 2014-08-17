@@ -185,8 +185,11 @@ def tracked_branch(branch=None, config=None):
 def untracked_files(git=git, paths=None):
     """Returns a sorted list of untracked files."""
 
-    filter_paths = paths or []
-    out = git.ls_files('--', *filter_paths, z=True, others=True, exclude_standard=True)[STDOUT]
+    if paths is None:
+        paths = []
+    filter_paths = ['--'] + paths
+    out = git.ls_files(z=True, others=True, exclude_standard=True,
+                       *filter_paths)[STDOUT]
     if out:
         return out[:-1].split('\0')
     return []
@@ -431,7 +434,10 @@ def worktree_state(head='HEAD'):
            state.get('upstream_changed', []))
 
 
-def worktree_state_dict(head='HEAD', update_index=False, display_untracked=True, paths=None):
+def worktree_state_dict(head='HEAD',
+                        update_index=False,
+                        display_untracked=True,
+                        paths=None):
     """Return a dict of files in various states of being
 
     :rtype: dict, keys are staged, unstaged, untracked, unmerged,
@@ -482,13 +488,16 @@ def worktree_state_dict(head='HEAD', update_index=False, display_untracked=True,
             'submodules': submodules}
 
 
-def diff_index(head, paths=None, cached=True):
+def diff_index(head, cached=True, paths=None):
     submodules = set()
     staged = []
     unmerged = []
 
-    filter_paths = paths or []
-    status, out, err = git.diff_index(head, '--', *filter_paths, cached=cached, z=True)
+    if paths is None:
+        paths = []
+    filter_paths = [head, '--'] + paths
+    status, out, err = git.diff_index(cached=cached, z=True,
+                                      *filter_paths)
     if status != 0:
         # handle git init
         return all_files(), unmerged, submodules
@@ -511,8 +520,10 @@ def diff_worktree(paths=None):
     modified = []
     submodules = set()
 
-    filter_paths = paths or []
-    status, out, err = git.diff_files('--', *filter_paths, z=True)
+    if paths is None:
+        paths = []
+    filter_paths = ['--'] + paths
+    status, out, err = git.diff_files(z=True, *filter_paths)
     if status != 0:
         # handle git init
         out = git.ls_files(modified=True, z=True)[STDOUT]

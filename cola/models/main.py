@@ -79,7 +79,7 @@ class MainModel(Observable):
         self.directory = ''
         self.project = ''
         self.remotes = []
-        self.filter_paths = ''
+        self.filter_paths = None
 
         self.commitmsg = ''
         self.modified = []
