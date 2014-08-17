@@ -18,6 +18,7 @@ from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
 from cola.models import selection
+from cola.compat import ustr
 
 
 class StatusWidget(QtGui.QWidget):
@@ -908,7 +909,7 @@ class StatusFilterWidget(QtGui.QWidget):
 
         self.filter_input = QtGui.QLineEdit(self)
         self.filter_button = create_toolbutton(text = N_("Filter"))
-        self.filter_layout = QtGui.QHBoxLayout()        
+        self.filter_layout = QtGui.QHBoxLayout()
         self.filter_layout.addWidget(self.filter_input)
         self.filter_layout.addWidget(self.filter_button)
         self.setLayout(self.filter_layout)
@@ -916,5 +917,6 @@ class StatusFilterWidget(QtGui.QWidget):
         connect_button(self.filter_button, self.apply_filter)
 
     def apply_filter(self):
-        path_filter = self.filter_input.text()
-        self.m.update_path_filter(path_filter)
+        filter_text = ustr(self.filter_input.text())
+        filter_paths = utils.shell_split(filter_text)
+        self.m.update_path_filter(filter_paths)

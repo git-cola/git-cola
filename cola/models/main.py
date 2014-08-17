@@ -79,7 +79,7 @@ class MainModel(Observable):
         self.directory = ''
         self.project = ''
         self.remotes = []
-        self.path_filter = ''
+        self.filter_paths = ''
 
         self.commitmsg = ''
         self.modified = []
@@ -168,8 +168,8 @@ class MainModel(Observable):
         return self.git.log('-1', no_color=True, pretty='format:%s%n%n%b',
                             *args)[STDOUT]
 
-    def update_path_filter(self, path_filter):
-        self.path_filter = path_filter
+    def update_path_filter(self, filter_paths):
+        self.filter_paths = filter_paths
         self.update_file_status()
 
     def update_file_status(self, update_index=False):
@@ -192,7 +192,7 @@ class MainModel(Observable):
         state = gitcmds.worktree_state_dict(head=self.head,
                                             update_index=update_index,
                                             display_untracked=display_untracked,
-                                            path=self.path_filter)
+                                            paths=self.filter_paths)
         self.staged = state.get('staged', [])
         self.modified = state.get('modified', [])
         self.unmerged = state.get('unmerged', [])
