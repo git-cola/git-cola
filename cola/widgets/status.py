@@ -20,6 +20,7 @@ from cola.models import main
 from cola.models import selection
 from cola.compat import ustr
 from cola.widgets import completion
+from cola.widgets import defs
 
 
 class StatusWidget(QtGui.QWidget):
@@ -32,14 +33,16 @@ class StatusWidget(QtGui.QWidget):
     """
     def __init__(self, parent=None):
         QtGui.QWidget.__init__(self, parent)
-        self.layout = QtGui.QVBoxLayout(self)
-        self.setLayout(self.layout)
+        self.main_layout = QtGui.QVBoxLayout(self)
+        self.main_layout.setMargin(defs.no_margin)
+        self.main_layout.setSpacing(defs.no_spacing)
+        self.setLayout(self.main_layout)
 
         self.filter_widget = StatusFilterWidget(self)
         self.tree = StatusTreeWidget(self)
-        self.layout.addWidget(self.filter_widget)
-        self.layout.addWidget(self.tree)
-        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout.addWidget(self.filter_widget)
+        self.main_layout.addWidget(self.tree)
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
 
     def set_initial_size(self):
         self.setMaximumWidth(222)
@@ -908,9 +911,11 @@ class StatusFilterWidget(QtGui.QWidget):
         QtGui.QWidget.__init__(self,parent)
         self.m = main.model()
 
-        self.filter_input = completion.GitPathLineEdit()
+        self.filter_input = completion.GitStatusFilterLineEdit(parent=self)
         self.filter_button = create_toolbutton(text = N_("Filter"))
         self.filter_layout = QtGui.QHBoxLayout()
+        self.filter_layout.setMargin(defs.margin)
+        self.filter_layout.setSpacing(defs.spacing)
         self.filter_layout.addWidget(self.filter_input)
         self.filter_layout.addWidget(self.filter_button)
         self.setLayout(self.filter_layout)

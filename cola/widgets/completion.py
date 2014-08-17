@@ -281,12 +281,6 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.connect(self.update_thread, SIGNAL('items_gathered'),
                      self.apply_matches)
 
-    def lower_completion_key(self, x):
-        return x.replace('.','').lower()
-
-    def completion_key(self, x):
-        return x.replace('.','')
-
     def update(self):
         case_sensitive = self.update_thread.case_sensitive
         self.update_matches(case_sensitive)
@@ -339,6 +333,40 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.invisibleRootItem().appendRows(items)
 
 
+def gather_matches(matched_text, candidates, case_sensitive):
+    """Filter candidates and return the matches"""
+
+    if case_sensitive:
+        transform = lambda x: x
+        keyfunc = lambda x: x.replace('.', '')
+    else:
+        transform = lambda x: x.lower()
+        keyfunc = lambda x: x.replace('.', '').lower()
+
+    if matched_text:
+        matches = [r for r in candidates
+                    if transform(matched_text) in transform(r)]
+        # if we match nothing, still offer to complete something
+        if not matches:
+            matches = list(candidates)
+    else:
+        matches = list(candidates)
+
+    matches.sort(key=keyfunc)
+    return matches
+
+
+def gather_path_matches(matched_text, file_list, case_sensitive):
+    """Return matching completions from a list of candidate files"""
+
+    files = set(file_list)
+    files_and_dirs = utils.add_parents(set(files))
+    dirs = files_and_dirs.difference(files)
+
+    paths = gather_matches(matched_text, files_and_dirs, case_sensitive)
+    return (paths, dirs)
+
+
 class Completer(QtGui.QCompleter):
 
     def __init__(self, model, parent):
@@ -369,25 +397,8 @@ class GitCompletionModel(CompletionModel):
         model.add_observer(msg, self.emit_update)
 
     def gather_matches(self, case_sensitive):
-        if case_sensitive:
-            transform = lambda x: x
-            keyfunc = self.completion_key
-        else:
-            transform = lambda x: x.lower()
-            keyfunc = self.lower_completion_key
-
-        matched_text = self.matched_text
-        if matched_text:
-            matched_refs = [r for r in self.matches()
-                            if transform(matched_text) in transform(r)]
-            # if we match nothing, still offer to complete something
-            if not matched_refs:
-                matched_refs = self.matches()
-        else:
-            matched_refs = self.matches()
-
-        matched_refs.sort(key=keyfunc)
-        return (matched_refs, (), set())
+        refs = gather_matches(self.matched_text, self.matches(), case_sensitive)
+        return (refs, (), set())
 
     def emit_update(self):
         self.emit(SIGNAL('update()'))
@@ -433,34 +444,32 @@ class GitRemoteBranchCompletionModel(GitCompletionModel):
 
 
 class GitPathCompletionModel(GitCompletionModel):
-    """Completer for files and folders path"""
+    """Base class for path completion"""
 
     def __init__(self, parent):
         GitCompletionModel.__init__(self, parent)
 
+    def candidate_paths(self):
+        return []
+
     def gather_matches(self, case_sensitive):
-        file_list = self.main_model.everything()
-        files = set(file_list)
-        files_and_dirs = utils.add_parents(set(files))
+        paths, dirs = gather_path_matches(self.matched_text,
+                                          self.candidate_paths(),
+                                          case_sensitive)
+        return ((), paths, dirs)
 
-        if case_sensitive:
-            transform = lambda x: x
-            keyfunc = self.completion_key
-        else:
-            transform = lambda x: x.lower()
-            keyfunc = self.lower_completion_key
 
-        dirs = files_and_dirs.difference(files)
-        matched_text = self.matched_text
-        if matched_text:
-            matched_paths = [f for f in files_and_dirs
-                             if transform(matched_text) in transform(f)]
-        else:
-            matched_paths = list(files_and_dirs)
+class GitStatusFilterCompletionModel(GitPathCompletionModel):
+    """Completer for modified files and folders for status filtering"""
 
-        matched_paths.sort(key=keyfunc)
+    def __init__(self, parent):
+        GitPathCompletionModel.__init__(self, parent)
 
-        return ((), matched_paths, dirs)
+    def candidate_paths(self):
+        model = self.main_model
+        return (model.staged + model.unmerged +
+                model.modified + model.untracked)
+
 
 class GitLogCompletionModel(GitRefCompletionModel):
     """Completer for arguments suitable for git-log like commands"""
@@ -469,13 +478,12 @@ class GitLogCompletionModel(GitRefCompletionModel):
         GitRefCompletionModel.__init__(self, parent)
 
     def gather_matches(self, case_sensitive):
-        (matched_refs, dummy_paths, dummy_dirs) =\
-                GitRefCompletionModel.gather_matches(self, case_sensitive)
+        refs = gather_matches(self.matched_text, self.matches(), case_sensitive)
+        paths, dirs = gather_path_matches(self.matched_text,
+                                          self.main_model.everything(),
+                                          case_sensitive)
+        return (refs, paths, dirs)
 
-        (dummy_refs, matched_paths, dirs) =\
-                GitPathCompletionModel.gather_matches(self, case_sensitive)
-
-        return (matched_refs, matched_paths, dirs)
 
 def bind_lineedit(model):
     """Create a line edit bound against a specific model"""
@@ -487,12 +495,13 @@ def bind_lineedit(model):
 
     return BoundLineEdit
 
+
 # Concrete classes
 GitLogLineEdit = bind_lineedit(GitLogCompletionModel)
-GitPathLineEdit = bind_lineedit(GitPathCompletionModel)
 GitRefLineEdit = bind_lineedit(GitRefCompletionModel)
 GitBranchLineEdit = bind_lineedit(GitBranchCompletionModel)
 GitRemoteBranchLineEdit = bind_lineedit(GitRemoteBranchCompletionModel)
+GitStatusFilterLineEdit = bind_lineedit(GitStatusFilterCompletionModel)
 
 
 class GitDialog(QtGui.QDialog):
