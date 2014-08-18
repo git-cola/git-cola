@@ -32,6 +32,10 @@ Defaults to the current directory.
 ---------
 Print the `git dag` version and exit.
 
+-h, --help
+----------
+Show usage and optional arguments.
+
 Log Options
 ===========
 The `Log` prompt allows you to pass arguments to `git log`.

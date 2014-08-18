@@ -37,6 +37,14 @@ Apply the path filter to the status widget.
 ---------
 Print the `git cola` version and exit.
 
+-h, --help
+----------
+Show usage and optional arguments.
+
+--help-commands
+---------------
+Show available sub-commands.
+
 SUB-COMMANDS
 ============
 
