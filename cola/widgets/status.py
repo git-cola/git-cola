@@ -50,7 +50,7 @@ class StatusWidget(QtGui.QWidget):
 
         self.toggle_action = qtutils.add_action(self,
                 N_('Toggle the paths filter'), self.toggle_filter,
-                'Shift+Ctrl+f')
+                'Shift+Ctrl+F')
 
         titlebar.add_corner_widget(self.filter_button)
         qtutils.connect_button(self.filter_button, self.toggle_filter)
