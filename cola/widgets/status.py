@@ -18,7 +18,6 @@ from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
 from cola.models import selection
-from cola.compat import ustr
 from cola.widgets import completion
 from cola.widgets import defs
 
@@ -923,6 +922,6 @@ class StatusFilterWidget(QtGui.QWidget):
         connect_button(self.filter_button, self.apply_filter)
 
     def apply_filter(self):
-        filter_text = ustr(self.filter_input.text())
+        filter_text = self.filter_input.value()
         filter_paths = utils.shell_split(filter_text)
         self.m.update_path_filter(filter_paths)

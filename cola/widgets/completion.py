@@ -91,18 +91,17 @@ class CompletionLineEdit(QtGui.QLineEdit):
         self._do_text_changed('')
 
     def _words(self):
-        return utils.shell_split(ustr(self.text()))
+        return utils.shell_split(self.value())
 
     def _ends_with_whitespace(self):
-        text = ustr(self.text())
-        return text.rstrip() != text
+        return self.value() != self.value().rstrip()
 
     def _last_word(self):
         if self._ends_with_whitespace():
             return ''
         words = self._words()
         if not words:
-            return ustr(self.text())
+            return self.value()
         if not words[-1]:
             return ''
         return words[-1]
