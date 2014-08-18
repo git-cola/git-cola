@@ -3,21 +3,26 @@ from __future__ import division, absolute_import, unicode_literals
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
+
+def patch(obj, attr, value):
+    if not hasattr(obj, attr):
+        setattr(obj, attr, value)
+
+
 def install():
-    if not hasattr(QtGui.QHBoxLayout, 'setContentsMargins'):
-        QtGui.QHBoxLayout.setContentsMargins = lambda *args: True
+    set_contents_margins = (
+            lambda self, left, top, right, bottom: self.setMargin(left))
 
-    if not hasattr(QtGui.QVBoxLayout, 'setContentsMargins'):
-        QtGui.QVBoxLayout.setContentsMargins = lambda *args: True
+    patch(QtGui.QHBoxLayout, 'setContentsMargins', set_contents_margins)
+    patch(QtGui.QVBoxLayout, 'setContentsMargins', set_contents_margins)
 
-    if not hasattr(QtGui.QKeySequence, 'Preferences'):
-        QtGui.QKeySequence.Preferences = 'Ctrl+O'
+    set_margin = lambda self, x: self.setContentsMargins(x, x, x, x)
+    patch(QtGui.QHBoxLayout, 'setMargin', set_margin)
+    patch(QtGui.QVBoxLayout, 'setMargin', set_margin)
 
-    if not hasattr(QtGui.QGraphicsItem, 'mapRectToScene'):
-        QtGui.QGraphicsItem.mapRectToScene = _map_rect_to_scene
-
-    if not hasattr(QtCore.QCoreApplication, 'setStyleSheet'):
-        QtCore.QCoreApplication.setStyleSheet = lambda *args: None
+    patch(QtGui.QKeySequence, 'Preferences', 'Ctrl+O')
+    patch(QtGui.QGraphicsItem, 'mapRectToScene', _map_rect_to_scene)
+    patch(QtCore.QCoreApplication, 'setStyleSheet', lambda *args: None)
 
 
 def add_search_path(prefix, path):
