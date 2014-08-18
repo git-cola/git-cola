@@ -13,13 +13,14 @@ from cola import qtutils
 from cola import utils
 from cola.models import main
 from cola.widgets import defs
+from cola.widgets import text
 from cola.compat import ustr
 
 
-class CompletionLineEdit(QtGui.QLineEdit):
+class CompletionLineEdit(text.HintedLineEdit):
 
-    def __init__(self, model, parent=None):
-        QtGui.QLineEdit.__init__(self, parent)
+    def __init__(self, model, hint='', parent=None):
+        text.HintedLineEdit.__init__(self, hint=hint, parent=parent)
 
         self.setFont(qtutils.diff_font())
         # used to hide the completion popup after a drag-select
@@ -126,7 +127,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
                 return True
         if event.type() == QtCore.QEvent.Hide:
             self.close_popup()
-        return QtGui.QLineEdit.event(self, event)
+        return text.HintedLineEdit.event(self, event)
 
     def do_completion(self):
         self._completer.popup().setCurrentIndex(
@@ -146,7 +147,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
             self.do_completion()
             return
 
-        QtGui.QLineEdit.keyPressEvent(self, event)
+        text.HintedLineEdit.keyPressEvent(self, event)
 
         prefix = self._last_word()
         if prefix != ustr(self._completer.completionPrefix()):
@@ -158,18 +159,18 @@ class CompletionLineEdit(QtGui.QLineEdit):
     #: _drag: 0 - unclicked, 1 - clicked, 2 - dragged
     def mousePressEvent(self, event):
         self._drag = 1
-        return QtGui.QLineEdit.mousePressEvent(self, event)
+        return text.HintedLineEdit.mousePressEvent(self, event)
 
     def mouseMoveEvent(self, event):
         if self._drag == 1:
             self._drag = 2
-        return QtGui.QLineEdit.mouseMoveEvent(self, event)
+        return text.HintedLineEdit.mouseMoveEvent(self, event)
 
     def mouseReleaseEvent(self, event):
         if self._drag != 2 and event.button() != Qt.RightButton:
             self.do_completion()
         self._drag = 0
-        return QtGui.QLineEdit.mouseReleaseEvent(self, event)
+        return text.HintedLineEdit.mouseReleaseEvent(self, event)
 
     def close_popup(self):
         if self.popup().isVisible():
@@ -494,8 +495,9 @@ def bind_lineedit(model):
 
     class BoundLineEdit(CompletionLineEdit):
 
-        def __init__(self, parent=None):
-            CompletionLineEdit.__init__(self, model, parent)
+        def __init__(self, hint='', parent=None):
+            CompletionLineEdit.__init__(self, model,
+                                        hint=hint, parent=parent)
 
     return BoundLineEdit
 
