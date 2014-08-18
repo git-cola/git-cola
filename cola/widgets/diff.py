@@ -35,10 +35,23 @@ class DiffTextEdit(MonoTextView):
         self.highlighter = DiffSyntaxHighlighter(self.document(),
                                                  whitespace=whitespace)
 
+class DiffEditorWidget(QtGui.QWidget):
+
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
+
+        self.editor = DiffEditor(self, parent.titleBarWidget())
+
+        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout.setSpacing(defs.spacing)
+        self.main_layout.setMargin(defs.no_margin)
+        self.main_layout.addWidget(self.editor)
+        self.setLayout(self.main_layout)
+
 
 class DiffEditor(DiffTextEdit):
 
-    def __init__(self, parent):
+    def __init__(self, parent, titlebar):
         DiffTextEdit.__init__(self, parent)
         self.model = model = main.model()
 
@@ -75,7 +88,6 @@ class DiffEditor(DiffTextEdit):
         self.diffopts_button.setMenu(self.diffopts_menu)
         qtutils.hide_button_menu_indicator(self.diffopts_button)
 
-        titlebar = parent.titleBarWidget()
         titlebar.add_corner_widget(self.diffopts_button)
 
         self.action_apply_selection = qtutils.add_action(self, '',

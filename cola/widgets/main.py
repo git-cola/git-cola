@@ -48,7 +48,7 @@ from cola.widgets.compare import compare_branches
 from cola.widgets.createtag import create_tag
 from cola.widgets.createbranch import create_new_branch
 from cola.widgets.dag import git_dag
-from cola.widgets.diff import DiffEditor
+from cola.widgets.diff import DiffEditorWidget
 from cola.widgets.grep import grep
 from cola.widgets.log import LogWidget
 from cola.widgets.patch import apply_patches
@@ -136,8 +136,9 @@ class MainView(MainWindow):
 
         # "Diff Viewer" widget
         self.diffdockwidget = create_dock(N_('Diff'), self)
-        self.diffeditor = DiffEditor(self.diffdockwidget)
-        self.diffdockwidget.setWidget(self.diffeditor)
+        self.diffeditorwidget = DiffEditorWidget(self.diffdockwidget)
+        self.diffeditor = self.diffeditorwidget.editor
+        self.diffdockwidget.setWidget(self.diffeditorwidget)
 
         # All Actions
         self.unstage_all_action = add_action(self,

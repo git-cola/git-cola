@@ -913,7 +913,7 @@ class StatusFilterWidget(QtGui.QWidget):
         self.filter_input = completion.GitStatusFilterLineEdit(parent=self)
         self.filter_button = create_toolbutton(text = N_("Filter"))
         self.filter_layout = QtGui.QHBoxLayout()
-        self.filter_layout.setMargin(defs.margin)
+        self.filter_layout.setMargin(defs.no_margin)
         self.filter_layout.setSpacing(defs.spacing)
         self.filter_layout.addWidget(self.filter_input)
         self.filter_layout.addWidget(self.filter_button)
