@@ -41,6 +41,12 @@ class CompletionLineEdit(QtGui.QLineEdit):
         self.connect(self._completer, SIGNAL('activated(QString)'),
                      self._complete)
 
+    def __del__(self):
+        self.dispose()
+
+    def dispose(self):
+        self._completer.dispose()
+
     def refresh(self):
         return self._completer.model().update()
 
@@ -54,17 +60,18 @@ class CompletionLineEdit(QtGui.QLineEdit):
         return bool([char for char in text if char.isupper()])
 
     def _text_changed(self, text):
-        text = self._last_word()
-        self._do_text_changed(text)
+        match_text = self._last_word()
+        full_text = ustr(text)
+        self._do_text_changed(full_text, match_text)
 
-    def _do_text_changed(self, text):
-        case_sensitive = self._is_case_sensitive(text)
+    def _do_text_changed(self, full_text, match_text):
+        case_sensitive = self._is_case_sensitive(match_text)
         if case_sensitive:
             self._completer.setCaseSensitivity(Qt.CaseSensitive)
         else:
             self._completer.setCaseSensitivity(Qt.CaseInsensitive)
-        self._delegate.set_highlight_text(text, case_sensitive)
-        self._completer.set_match_text(text, case_sensitive)
+        self._delegate.set_highlight_text(match_text, case_sensitive)
+        self._completer.set_match_text(full_text, match_text, case_sensitive)
 
     def update_matches(self):
         text = self._last_word()
@@ -78,7 +85,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
         """
         completion = ustr(completion)
         if not completion:
-            self._do_text_changed('')
+            self._do_text_changed('', '')
             return
         words = self._words()
         if words and not self._ends_with_whitespace():
@@ -88,7 +95,7 @@ class CompletionLineEdit(QtGui.QLineEdit):
         text = subprocess.list2cmdline(words)
         self.setText(text)
         self.emit(SIGNAL('changed()'))
-        self._do_text_changed('')
+        self._do_text_changed(text, '')
 
     def _words(self):
         return utils.shell_split(self.value())
@@ -177,14 +184,9 @@ class CompletionLineEdit(QtGui.QLineEdit):
         self._completer.popup().setCurrentIndex(
                 self._completer.model().index(0,0))
 
-    def __del__(self):
-        self.dispose()
-
-    def dispose(self):
-        self._completer.dispose()
-
 
 class GatherCompletionsThread(QtCore.QThread):
+
     def __init__(self, model):
         QtCore.QThread.__init__(self)
         self.model = model
@@ -194,9 +196,9 @@ class GatherCompletionsThread(QtCore.QThread):
         text = None
         # Loop when the matched text changes between the start and end time.
         # This happens when gather_matches() takes too long and the
-        # model's matched_text changes in-between.
-        while text != self.model.matched_text:
-            text = self.model.matched_text
+        # model's match_text changes in-between.
+        while text != self.model.match_text:
+            text = self.model.match_text
             items = self.model.gather_matches(self.case_sensitive)
 
         if text is not None:
@@ -273,7 +275,8 @@ class CompletionModel(QtGui.QStandardItemModel):
 
     def __init__(self, parent):
         QtGui.QStandardItemModel.__init__(self, parent)
-        self.matched_text = ''
+        self.match_text = ''
+        self.full_text = ''
         self.case_sensitive = False
 
         self.update_thread = GatherCompletionsThread(self)
@@ -284,8 +287,9 @@ class CompletionModel(QtGui.QStandardItemModel):
         case_sensitive = self.update_thread.case_sensitive
         self.update_matches(case_sensitive)
 
-    def set_match_text(self, matched_text, case_sensitive):
-        self.matched_text = matched_text
+    def set_match_text(self, full_text, match_text, case_sensitive):
+        self.full_text = full_text
+        self.match_text = match_text
         self.update_matches(case_sensitive)
 
     def update_matches(self, case_sensitive):
@@ -305,18 +309,11 @@ class CompletionModel(QtGui.QStandardItemModel):
         dir_icon = qtutils.dir_icon()
         git_icon = qtutils.git_icon()
 
-        matched_text = self.matched_text
         items = []
         for ref in matched_refs:
             item = QStandardItem()
             item.setText(ref)
             item.setIcon(git_icon)
-            items.append(item)
-
-        if matched_paths and (not matched_text or matched_text in '--'):
-            item = QStandardItem()
-            item.setText('--')
-            item.setIcon(file_icon)
             items.append(item)
 
         for match in matched_paths:
@@ -332,7 +329,7 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.invisibleRootItem().appendRows(items)
 
 
-def gather_matches(matched_text, candidates, case_sensitive):
+def filter_matches(match_text, candidates, case_sensitive):
     """Filter candidates and return the matches"""
 
     if case_sensitive:
@@ -342,9 +339,9 @@ def gather_matches(matched_text, candidates, case_sensitive):
         transform = lambda x: x.lower()
         keyfunc = lambda x: x.replace('.', '').lower()
 
-    if matched_text:
+    if match_text:
         matches = [r for r in candidates
-                    if transform(matched_text) in transform(r)]
+                    if transform(match_text) in transform(r)]
         # if we match nothing, still offer to complete something
         if not matches:
             matches = list(candidates)
@@ -355,14 +352,14 @@ def gather_matches(matched_text, candidates, case_sensitive):
     return matches
 
 
-def gather_path_matches(matched_text, file_list, case_sensitive):
+def filter_path_matches(match_text, file_list, case_sensitive):
     """Return matching completions from a list of candidate files"""
 
     files = set(file_list)
     files_and_dirs = utils.add_parents(files)
     dirs = files_and_dirs.difference(files)
 
-    paths = gather_matches(matched_text, files_and_dirs, case_sensitive)
+    paths = filter_matches(match_text, files_and_dirs, case_sensitive)
     return (paths, dirs)
 
 
@@ -383,8 +380,8 @@ class Completer(QtGui.QCompleter):
     def dispose(self):
         self._model.dispose()
 
-    def set_match_text(self, matched_text, case_sensitive):
-        self._model.set_match_text(matched_text, case_sensitive)
+    def set_match_text(self, full_text, match_text, case_sensitive):
+        self._model.set_match_text(full_text, match_text, case_sensitive)
 
 
 class GitCompletionModel(CompletionModel):
@@ -396,7 +393,7 @@ class GitCompletionModel(CompletionModel):
         model.add_observer(msg, self.emit_update)
 
     def gather_matches(self, case_sensitive):
-        refs = gather_matches(self.matched_text, self.matches(), case_sensitive)
+        refs = filter_matches(self.match_text, self.matches(), case_sensitive)
         return (refs, (), set())
 
     def emit_update(self):
@@ -452,7 +449,7 @@ class GitPathCompletionModel(GitCompletionModel):
         return []
 
     def gather_matches(self, case_sensitive):
-        paths, dirs = gather_path_matches(self.matched_text,
+        paths, dirs = filter_path_matches(self.match_text,
                                           self.candidate_paths(),
                                           case_sensitive)
         return ((), paths, dirs)
@@ -477,10 +474,18 @@ class GitLogCompletionModel(GitRefCompletionModel):
         GitRefCompletionModel.__init__(self, parent)
 
     def gather_matches(self, case_sensitive):
-        refs = gather_matches(self.matched_text, self.matches(), case_sensitive)
-        paths, dirs = gather_path_matches(self.matched_text,
+        refs = filter_matches(self.match_text, self.matches(), case_sensitive)
+        paths, dirs = filter_path_matches(self.match_text,
                                           self.main_model.everything(),
                                           case_sensitive)
+        has_doubledash = (self.match_text == '--' or
+                          self.full_text.startswith('-- ') or
+                          ' -- ' in self.full_text)
+        if refs and has_doubledash:
+            refs = []
+        if paths and not has_doubledash:
+            paths.insert(0, '--')
+
         return (refs, paths, dirs)
 
 
