@@ -99,8 +99,9 @@ class MainView(MainWindow):
         self.actionsdockwidget.hide()
 
         # "Repository Status" widget
-        self.statuswidget = StatusWidget(self)
         self.statusdockwidget = create_dock(N_('Status'), self)
+        self.statuswidget = StatusWidget(self.statusdockwidget.titleBarWidget(),
+                                         parent=self.statusdockwidget)
         self.statusdockwidget.setWidget(self.statuswidget)
 
         # "Switch Repository" widget

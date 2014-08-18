@@ -481,6 +481,11 @@ def options_icon():
     return icon('options.svg')
 
 
+def filter_icon():
+    """Return a filter icon"""
+    return icon('view-filter.png')
+
+
 def dir_close_icon():
     """Return a standard closed directory icon"""
     return cached_icon(QtGui.QStyle.SP_DirClosedIcon)
