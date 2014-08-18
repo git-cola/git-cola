@@ -921,6 +921,12 @@ class StatusFilterWidget(QtGui.QWidget):
 
         connect_button(self.filter_button, self.apply_filter)
 
+        self.connect(self.filter_input, SIGNAL('changed()'),
+                     self.apply_filter)
+
+        self.connect(self.filter_input, SIGNAL('returnPressed()'),
+                     self.apply_filter)
+
     def apply_filter(self):
         filter_text = self.filter_input.value()
         filter_paths = utils.shell_split(filter_text)
