@@ -59,6 +59,9 @@ New releases are available on the
 [pyinotify](https://github.com/seb-m/pyinotify) 0.7.1 or newer
 enables inotify support on Linux.
 
+[send2trash](https://github.com/hsoft/send2trash) enables cross-platform
+"Send to Trash" functionality.
+
 # BREWING INSTRUCTIONS
 
 Normally you can just do "make install" to install *git-cola*

@@ -31,6 +31,12 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/339
 
+* The status widget learned to move files to the trash
+  when the `send2trash <https://github.com/hsoft/send2trash>`_
+  module is installed.
+
+  https://github.com/git-cola/git-cola/issues/341
+
 git-cola v2.0.5
 ===============
 Usability, bells and whistles

@@ -158,9 +158,19 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 self.copy_path, QtGui.QKeySequence.Copy)
         self.copy_path_action.setIcon(qtutils.theme_icon('edit-copy.svg'))
 
+        if cmds.MoveToTrash.AVAILABLE:
+            self.move_to_trash_action = qtutils.add_action(self,
+                    N_('Move file(s) to trash'),
+                    self._trash_untracked_files, cmds.MoveToTrash.SHORTCUT)
+            self.move_to_trash_action.setIcon(qtutils.discard_icon())
+            delete_shortcut = cmds.Delete.SHORTCUT
+        else:
+            self.move_to_trash_action = None
+            delete_shortcut = cmds.Delete.ALT_SHORTCUT
+
         self.delete_untracked_files_action = qtutils.add_action(self,
                 N_('Delete File(s)...'),
-                self._delete_untracked_files, cmds.Delete.SHORTCUT)
+                self._delete_untracked_files, delete_shortcut)
         self.delete_untracked_files_action.setIcon(qtutils.discard_icon())
 
         self.connect(self, SIGNAL('about_to_update'), self._about_to_update)
@@ -620,6 +630,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         if all_exist and s.untracked:
             menu.addSeparator()
+            if self.move_to_trash_action is not None:
+                menu.addAction(self.move_to_trash_action)
             menu.addAction(self.delete_untracked_files_action)
             menu.addSeparator()
             menu.addAction(qtutils.icon('edit-clear.svg'),
@@ -650,26 +662,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
 
     def _delete_untracked_files(self):
-        files = self.untracked()
-        if not files:
-            return
+        cmds.do(cmds.Delete, self.untracked())
 
-        title = N_('Delete Files?')
-        msg = N_('The following files will be deleted:') + '\n\n'
-
-        fileinfo = subprocess.list2cmdline(files)
-        if len(fileinfo) > 2048:
-            fileinfo = fileinfo[:2048].rstrip() + '...'
-        msg += fileinfo
-
-        count = len(files)
-        info_txt = N_('Delete %d file(s)?') % count
-        ok_txt = N_('Delete Files')
-
-        if qtutils.confirm(title, msg, info_txt, ok_txt,
-                           default=True,
-                           icon=qtutils.discard_icon()):
-            cmds.do(cmds.Delete, files)
+    def _trash_untracked_files(self):
+        cmds.do(cmds.MoveToTrash, self.untracked())
 
     def _revert_uncommitted_edits(self, items_to_undo):
         if items_to_undo:
