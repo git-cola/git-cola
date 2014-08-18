@@ -918,19 +918,16 @@ class StatusFilterWidget(QtGui.QWidget):
         self.filter_layout = QtGui.QHBoxLayout()
         self.filter_layout.setMargin(defs.no_margin)
         self.filter_layout.setSpacing(defs.spacing)
-        self.filter_layout.addWidget(self.filter_input)
-        self.filter_layout.addWidget(self.filter_button)
+        self.filter_layout.addWidget(self.filter_text)
         self.setLayout(self.filter_layout)
 
-        connect_button(self.filter_button, self.apply_filter)
-
-        self.connect(self.filter_input, SIGNAL('changed()'),
+        self.connect(self.filter_text, SIGNAL('changed()'),
                      self.apply_filter)
 
-        self.connect(self.filter_input, SIGNAL('returnPressed()'),
+        self.connect(self.filter_text, SIGNAL('returnPressed()'),
                      self.apply_filter)
 
     def apply_filter(self):
-        filter_text = self.filter_input.value()
+        filter_text = self.filter_text.value()
         filter_paths = utils.shell_split(filter_text)
         self.m.update_path_filter(filter_paths)
