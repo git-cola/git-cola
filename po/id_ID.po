@@ -1766,6 +1766,10 @@ msgstr "Hapus %d berkas?"
 msgid "Delete Files"
 msgstr "Hapus Berkas"
 
+#: cola/cmds.py:315 cola/widgets/status.py:910
+msgid "Filter"
+msgstr "Saring"
+
 #: cola/widgets/main.py:85
 msgid "Browser"
 msgstr "Jelajah"

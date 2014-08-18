@@ -206,7 +206,7 @@ class HintedTextView(MonoTextView, HintedTextEditMixin):
 
 class HintedLineEdit(QtGui.QLineEdit, HintedTextWidgetMixin):
 
-    def __init__(self, hint, parent=None):
+    def __init__(self, hint='', parent=None):
         QtGui.QLineEdit.__init__(self, parent)
         HintedTextWidgetMixin.__init__(self, hint)
 

@@ -36,12 +36,16 @@ class ColaUtilsTestCase(unittest.TestCase):
 
     def test_add_parents(self):
         """Test the utils.add_parents() function."""
-        path_set = set(['foo///bar///baz'])
-        utils.add_parents(path_set)
+        paths = set(['foo///bar///baz'])
+        path_set = utils.add_parents(paths)
 
         self.assertTrue('foo/bar/baz' in path_set)
         self.assertTrue('foo/bar' in path_set)
         self.assertTrue('foo' in path_set)
+
+        # Ensure that the original set is unchanged
+        expect = set(['foo///bar///baz'])
+        self.assertEqual(expect, paths)
 
 
 if __name__ == '__main__':

@@ -521,7 +521,7 @@ class GitDAG(MainWindow):
         self.display()
 
     def display(self):
-        new_ref = ustr(self.revtext.text())
+        new_ref = self.revtext.value()
         if not new_ref:
             return
         new_count = self.maxresults.value()

@@ -16,6 +16,8 @@ from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
 from cola.models import selection
+from cola.widgets import completion
+from cola.widgets import defs
 
 
 class StatusWidget(QtGui.QWidget):
@@ -26,14 +28,32 @@ class StatusWidget(QtGui.QWidget):
     Qt signals.
 
     """
-    def __init__(self, parent=None):
+    def __init__(self, titlebar, parent=None):
         QtGui.QWidget.__init__(self, parent)
-        self.layout = QtGui.QVBoxLayout(self)
-        self.setLayout(self.layout)
+
+        self.filter_button = qtutils.create_action_button(
+                tooltip=N_('Toggle the paths filter'),
+                icon=qtutils.filter_icon())
+
+        self.filter_widget = StatusFilterWidget(self)
+        self.filter_widget.hide()
 
         self.tree = StatusTreeWidget(self)
-        self.layout.addWidget(self.tree)
-        self.layout.setContentsMargins(0, 0, 0, 0)
+
+        self.main_layout = QtGui.QVBoxLayout(self)
+        self.main_layout.setMargin(defs.no_margin)
+        self.main_layout.setSpacing(defs.no_spacing)
+
+        self.main_layout.addWidget(self.filter_widget)
+        self.main_layout.addWidget(self.tree)
+        self.setLayout(self.main_layout)
+
+        titlebar.add_corner_widget(self.filter_button)
+        qtutils.connect_button(self.filter_button, self.toggle_filter)
+
+    def toggle_filter(self):
+        shown = self.filter_widget.isVisible()
+        self.filter_widget.setVisible(not shown)
 
     def set_initial_size(self):
         self.setMaximumWidth(222)
@@ -895,3 +915,28 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         """Return a list of absolute-path URLs"""
         paths = qtutils.paths_from_items(items, item_filter=lambda x: x.exists)
         return qtutils.mimedata_from_paths(paths)
+
+
+class StatusFilterWidget(QtGui.QWidget):
+
+    def __init__(self, parent):
+        QtGui.QWidget.__init__(self,parent)
+        self.m = main.model()
+
+        hint = N_('Filter paths...')
+        self.text = completion.GitStatusFilterLineEdit(hint=hint, parent=self)
+        self.text.enable_hint(True)
+
+        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout.setMargin(defs.no_margin)
+        self.main_layout.setSpacing(defs.spacing)
+        self.main_layout.addWidget(self.text)
+        self.setLayout(self.main_layout)
+
+        self.connect(self.text, SIGNAL('changed()'), self.apply_filter)
+        self.connect(self.text, SIGNAL('returnPressed()'), self.apply_filter)
+
+    def apply_filter(self):
+        text = self.text.value()
+        paths = utils.shell_split(text)
+        self.m.update_path_filter(paths)
