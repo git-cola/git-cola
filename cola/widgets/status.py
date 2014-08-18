@@ -31,8 +31,9 @@ class StatusWidget(QtGui.QWidget):
     def __init__(self, titlebar, parent=None):
         QtGui.QWidget.__init__(self, parent)
 
+        tooltip = N_('Toggle the paths filter')
         self.filter_button = qtutils.create_action_button(
-                tooltip=N_('Toggle the paths filter'),
+                tooltip=tooltip,
                 icon=qtutils.filter_icon())
 
         self.filter_widget = StatusFilterWidget(self)
@@ -48,9 +49,8 @@ class StatusWidget(QtGui.QWidget):
         self.main_layout.addWidget(self.tree)
         self.setLayout(self.main_layout)
 
-        self.toggle_action = qtutils.add_action(self,
-                N_('Toggle the paths filter'), self.toggle_filter,
-                'Shift+Ctrl+F')
+        self.toggle_action = qtutils.add_action(self, tooltip,
+                self.toggle_filter, 'Shift+Ctrl+F')
 
         titlebar.add_corner_widget(self.filter_button)
         qtutils.connect_button(self.filter_button, self.toggle_filter)
@@ -929,7 +929,7 @@ class StatusFilterWidget(QtGui.QWidget):
 
     def __init__(self, parent):
         QtGui.QWidget.__init__(self,parent)
-        self.m = main.model()
+        self.main_model = main.model()
 
         hint = N_('Filter paths...')
         self.text = completion.GitStatusFilterLineEdit(hint=hint, parent=self)
@@ -949,4 +949,4 @@ class StatusFilterWidget(QtGui.QWidget):
     def apply_filter(self):
         text = self.text.value()
         paths = utils.shell_split(text)
-        self.m.update_path_filter(paths)
+        self.main_model.update_path_filter(paths)
