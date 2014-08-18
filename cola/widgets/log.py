@@ -5,6 +5,7 @@ import time
 from PyQt4 import QtGui
 
 from cola.i18n import N_
+from cola.widgets import defs
 from cola.widgets.text import MonoTextView
 
 
@@ -14,7 +15,7 @@ class LogWidget(QtGui.QWidget):
         QtGui.QWidget.__init__(self, parent)
 
         self._layout = QtGui.QVBoxLayout(self)
-        self._layout.setMargin(0)
+        self._layout.setMargin(defs.no_margin)
 
         self.output_text = MonoTextView(self)
         self._layout.addWidget(self.output_text)

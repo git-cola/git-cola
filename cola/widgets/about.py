@@ -73,7 +73,7 @@ class AboutView(QtGui.QDialog):
         self.button_layout.addWidget(self.close_button)
 
         self.main_layout = QtGui.QVBoxLayout()
-        self.main_layout.setMargin(0)
+        self.main_layout.setMargin(defs.no_margin)
         self.main_layout.setSpacing(defs.spacing)
 
         self.main_layout.addWidget(self.label)
@@ -117,8 +117,8 @@ def show_shortcuts():
         web.setHtml(html)
 
         layout = QtGui.QHBoxLayout()
-        layout.setMargin(0)
-        layout.setSpacing(0)
+        layout.setMargin(defs.no_margin)
+        layout.setSpacing(defs.no_spacing)
         layout.addWidget(web)
 
         widget.setWindowTitle(N_('Shortcuts'))

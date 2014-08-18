@@ -167,7 +167,7 @@ class CreateBranchDialog(Dialog):
         self.rev_start_radiobtn_layout.addStretch()
 
         self.rev_start_textinput_layout = QtGui.QHBoxLayout()
-        self.rev_start_textinput_layout.setMargin(0)
+        self.rev_start_textinput_layout.setMargin(defs.no_margin)
         self.rev_start_textinput_layout.setSpacing(defs.spacing)
         self.rev_start_textinput_layout.addWidget(self.rev_label)
         self.rev_start_textinput_layout.addWidget(self.revision)

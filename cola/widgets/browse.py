@@ -48,7 +48,7 @@ class Browser(standard.Widget):
         self.tree = RepoTreeView(self)
         self.mainlayout = QtGui.QHBoxLayout()
         self.setLayout(self.mainlayout)
-        self.mainlayout.setMargin(0)
+        self.mainlayout.setMargin(defs.no_margin)
         self.mainlayout.setSpacing(defs.spacing)
         self.mainlayout.addWidget(self.tree)
         self.resize(720, 420)

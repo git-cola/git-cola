@@ -235,7 +235,7 @@ class AddRemoteWidget(QtGui.QDialog):
         self._form.addRow(N_('URL'), self.url)
 
         self._btn_layout = QtGui.QHBoxLayout()
-        self._btn_layout.setMargin(0)
+        self._btn_layout.setMargin(defs.no_margin)
         self._btn_layout.setSpacing(defs.button_spacing)
         self._btn_layout.addStretch()
         self._btn_layout.addWidget(self.add_btn)

@@ -85,7 +85,7 @@ class SearchWidget(standard.Dialog):
         self.button_close.setText(N_('Close'))
 
         self.top_layout = QtGui.QHBoxLayout()
-        self.top_layout.setMargin(0)
+        self.top_layout.setMargin(defs.no_margin)
         self.top_layout.setSpacing(defs.button_spacing)
 
         self.top_layout.addWidget(self.query)
@@ -105,7 +105,7 @@ class SearchWidget(standard.Dialog):
         self.splitter.addWidget(self.commit_text)
 
         self.bottom_layout = QtGui.QHBoxLayout()
-        self.bottom_layout.setMargin(0)
+        self.bottom_layout.setMargin(defs.no_margin)
         self.bottom_layout.setSpacing(defs.spacing)
         self.bottom_layout.addWidget(self.button_export)
         self.bottom_layout.addWidget(self.button_cherrypick)

@@ -73,7 +73,7 @@ class StashView(Dialog):
         self.main_layt.setSpacing(defs.spacing)
 
         self.btn_layt = QtGui.QHBoxLayout()
-        self.btn_layt.setMargin(0)
+        self.btn_layt.setMargin(defs.no_margin)
         self.btn_layt.setSpacing(defs.spacing)
 
         self.splitter = QtGui.QSplitter()

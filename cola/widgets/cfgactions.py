@@ -269,11 +269,11 @@ class RevisionSelector(QtGui.QWidget):
         self._revdict = dict(revs)
 
         self._layt = QtGui.QVBoxLayout()
-        self._layt.setMargin(0)
+        self._layt.setMargin(defs.no_margin)
         self.setLayout(self._layt)
 
         self._rev_layt = QtGui.QHBoxLayout()
-        self._rev_layt.setMargin(0)
+        self._rev_layt.setMargin(defs.no_margin)
 
         self._rev_label = QtGui.QLabel()
         self._rev_layt.addWidget(self._rev_label)

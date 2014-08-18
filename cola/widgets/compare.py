@@ -56,7 +56,7 @@ class CompareBranchesDialog(standard.Dialog):
         self.top_widget = QtGui.QWidget(self.splitter)
 
         self.top_grid_layt = QtGui.QGridLayout(self.top_widget)
-        self.top_grid_layt.setMargin(0)
+        self.top_grid_layt.setMargin(defs.no_margin)
         self.top_grid_layt.setSpacing(defs.spacing)
 
         self.left_combo = QtGui.QComboBox(self.top_widget)
@@ -79,7 +79,7 @@ class CompareBranchesDialog(standard.Dialog):
 
         self.bottom_widget = QtGui.QWidget(self.splitter)
         self.bottom_grid_layt = QtGui.QGridLayout(self.bottom_widget)
-        self.bottom_grid_layt.setMargin(0)
+        self.bottom_grid_layt.setMargin(defs.no_margin)
         self.bottom_grid_layt.setSpacing(defs.button_spacing)
 
         self.button_spacer = QtGui.QSpacerItem(1, 1,
