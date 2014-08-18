@@ -73,6 +73,11 @@ class StatusWidget(QtGui.QWidget):
     def refresh(self):
         self.tree.show_selection()
 
+    def set_filter(self, txt):
+        self.filter_widget.setVisible(True)
+        self.filter_widget.text.set_value(txt)
+        self.filter_widget.apply_filter()
+
 
 class StatusTreeWidget(QtGui.QTreeWidget):
     # Item categories

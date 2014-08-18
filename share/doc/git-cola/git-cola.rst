@@ -29,6 +29,10 @@ Prompt for a Git repository.  Defaults to the current directory.
 -----------------
 Open the Git repository at `<path>`.  Defaults to the current directory.
 
+-s, --status-filter <filter>
+----------------------------
+Apply the path filter to the status widget.
+
 --version
 ---------
 Print the `git cola` version and exit.

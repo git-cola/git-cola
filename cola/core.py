@@ -289,6 +289,7 @@ try:
 except AttributeError:
     readlink = lambda p: p
 realpath = wrap(mkpath, os.path.realpath, decorator=decode)
+relpath = wrap(mkpath, os.path.relpath, decorator=decode)
 stat = wrap(mkpath, os.stat)
 unlink = wrap(mkpath, os.unlink)
 walk = wrap(mkpath, os.walk)

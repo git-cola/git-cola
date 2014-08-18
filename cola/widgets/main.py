@@ -490,6 +490,9 @@ class MainView(MainWindow):
         self.statuswidget.set_initial_size()
         self.commitmsgeditor.set_initial_size()
 
+    def set_filter(self, txt):
+        self.statuswidget.set_filter(txt)
+
     # Qt overrides
     def closeEvent(self, event):
         """Save state in the settings manager."""
