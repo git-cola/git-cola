@@ -48,12 +48,20 @@ class StatusWidget(QtGui.QWidget):
         self.main_layout.addWidget(self.tree)
         self.setLayout(self.main_layout)
 
+        self.toggle_action = qtutils.add_action(self,
+                N_('Toggle the paths filter'), self.toggle_filter,
+                'Shift+Ctrl+f')
+
         titlebar.add_corner_widget(self.filter_button)
         qtutils.connect_button(self.filter_button, self.toggle_filter)
 
     def toggle_filter(self):
-        shown = self.filter_widget.isVisible()
-        self.filter_widget.setVisible(not shown)
+        shown = not self.filter_widget.isVisible()
+        self.filter_widget.setVisible(shown)
+        if shown:
+            self.filter_widget.setFocus(True)
+        else:
+            self.tree.setFocus(True)
 
     def set_initial_size(self):
         self.setMaximumWidth(222)
@@ -926,6 +934,7 @@ class StatusFilterWidget(QtGui.QWidget):
         hint = N_('Filter paths...')
         self.text = completion.GitStatusFilterLineEdit(hint=hint, parent=self)
         self.text.enable_hint(True)
+        self.setFocusProxy(self.text)
 
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setMargin(defs.no_margin)
