@@ -69,7 +69,7 @@ class SelectCommitsDialog(QtGui.QDialog):
         self.splitter.addWidget(self.commit_text)
 
         self.input_layout = QtGui.QHBoxLayout()
-        self.input_layout.setMargin(0)
+        self.input_layout.setMargin(defs.no_margin)
         self.input_layout.setSpacing(defs.spacing)
         self.input_layout.addWidget(self.label)
         self.input_layout.addWidget(self.revision)

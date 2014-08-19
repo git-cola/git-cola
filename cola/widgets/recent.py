@@ -78,7 +78,7 @@ class RecentFileDialog(standard.Dialog):
         self.close_button.setText(N_('Close'))
 
         toplayout = QtGui.QHBoxLayout()
-        toplayout.setMargin(0)
+        toplayout.setMargin(defs.no_margin)
         toplayout.setSpacing(defs.spacing)
         toplayout.addWidget(self.count_label)
         toplayout.addWidget(self.count)
@@ -86,7 +86,7 @@ class RecentFileDialog(standard.Dialog):
         toplayout.addWidget(self.refresh_button)
 
         btnlayout = QtGui.QHBoxLayout()
-        btnlayout.setMargin(0)
+        btnlayout.setMargin(defs.no_margin)
         btnlayout.setSpacing(defs.spacing)
         btnlayout.addWidget(self.expand_button)
         btnlayout.addWidget(self.collapse_button)

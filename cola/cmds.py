@@ -1,9 +1,15 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import os
+import subprocess
 import sys
 from fnmatch import fnmatch
 from io import StringIO
+
+try:
+    from send2trash import send2trash
+except ImportError:
+    send2trash = None
 
 from cola import compat
 from cola import core
@@ -381,29 +387,86 @@ class Ignore(Command):
         self.model.update_file_status()
 
 
-class Delete(Command):
-    """Delete files."""
+def file_summary(files):
+    txt = subprocess.list2cmdline(files)
+    if len(txt) > 2048:
+        txt = txt[:2048].rstrip() + '...'
+    return txt
 
-    SHORTCUT = 'Ctrl+Backspace'
 
-    def __init__(self, filenames):
+class RemoveFiles(Command):
+    """Removes files."""
+
+    def __init__(self, remover, filenames):
         Command.__init__(self)
+        if remover is None:
+            remover = os.remove
+        self.remover = remover
         self.filenames = filenames
         # We could git-hash-object stuff and provide undo-ability
         # as an option.  Heh.
+
     def do(self):
+        files = self.filenames
+        if not files:
+            return
+
         rescan = False
-        for filename in self.filenames:
+        bad_filenames = []
+        remove = self.remover
+        for filename in files:
             if filename:
                 try:
-                    os.remove(filename)
+                    remove(filename)
                     rescan=True
                 except:
-                    Interaction.information(
-                            N_('Error'),
-                            N_('Deleting "%s" failed') % filename)
+                    bad_filenames.append(filename)
+
+        if bad_filenames:
+            Interaction.information(
+                    N_('Error'),
+                    N_('Deleting "%s" failed') % file_summary(files))
+
         if rescan:
             self.model.update_file_status()
+
+
+class Delete(RemoveFiles):
+    """Delete files."""
+
+    SHORTCUT = 'Ctrl+Shift+Backspace'
+    ALT_SHORTCUT = 'Ctrl+Backspace'
+
+    def __init__(self, filenames):
+        RemoveFiles.__init__(self, os.remove, filenames)
+
+    def do(self):
+        files = self.filenames
+        if not files:
+            return
+
+        title = N_('Delete Files?')
+        msg = N_('The following files will be deleted:') + '\n\n'
+        msg += file_summary(files)
+        info_txt = N_('Delete %d file(s)?') % len(files)
+        ok_txt = N_('Delete Files')
+
+        if not Interaction.confirm(title, msg, info_txt, ok_txt,
+                                   default=True,
+                                   icon=resources.icon('remove.svg')):
+            return
+
+        return RemoveFiles.do(self)
+
+
+class MoveToTrash(RemoveFiles):
+    """Move files to the trash using send2trash"""
+
+    SHORTCUT = 'Ctrl+Backspace'
+    AVAILABLE = send2trash is not None
+
+    def __init__(self, filenames):
+        RemoveFiles.__init__(self, send2trash, filenames)
 
 
 class DeleteBranch(Command):

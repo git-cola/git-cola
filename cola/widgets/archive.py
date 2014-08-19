@@ -133,7 +133,7 @@ class GitArchiveDialog(QtGui.QDialog):
 
         # layouts
         self.filelayt = QtGui.QHBoxLayout()
-        self.filelayt.setMargin(0)
+        self.filelayt.setMargin(defs.no_margin)
         self.filelayt.setSpacing(defs.spacing)
         self.filelayt.addWidget(self.browse)
         self.filelayt.addWidget(self.filetext)
@@ -148,7 +148,7 @@ class GitArchiveDialog(QtGui.QDialog):
         self.prefix_group.set_expanded(False)
 
         self.btnlayt = QtGui.QHBoxLayout()
-        self.btnlayt.setMargin(0)
+        self.btnlayt.setMargin(defs.no_margin)
         self.btnlayt.setSpacing(defs.spacing)
         self.btnlayt.addStretch()
         self.btnlayt.addWidget(self.cancel)
@@ -156,7 +156,7 @@ class GitArchiveDialog(QtGui.QDialog):
 
         self.mainlayt = QtGui.QVBoxLayout()
         self.mainlayt.setMargin(defs.margin)
-        self.mainlayt.setSpacing(0)
+        self.mainlayt.setSpacing(defs.no_spacing)
         self.mainlayt.addLayout(self.filelayt)
         self.mainlayt.addWidget(self.prefix_group)
         self.mainlayt.addStretch()

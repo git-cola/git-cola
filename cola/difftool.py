@@ -98,7 +98,7 @@ class FileDiffDialog(QtGui.QDialog):
         self._close_btn.setIcon(qtutils.close_icon())
 
         self._button_layt = QtGui.QHBoxLayout()
-        self._button_layt.setMargin(0)
+        self._button_layt.setMargin(defs.no_margin)
         self._button_layt.addStretch()
         self._button_layt.addWidget(self._diff_btn)
         self._button_layt.addWidget(self._close_btn)

@@ -260,7 +260,7 @@ class PreferencesView(standard.Dialog):
         self.close_button.setIcon(qtutils.close_icon())
 
         self._button_layt = QtGui.QHBoxLayout()
-        self._button_layt.setMargin(0)
+        self._button_layt.setMargin(defs.no_margin)
         self._button_layt.setSpacing(defs.spacing)
         self._button_layt.addStretch()
         self._button_layt.addWidget(self.close_button)

@@ -117,11 +117,11 @@ class Grep(Dialog):
         self.close_button = QtGui.QPushButton(N_('Close'))
 
         self.input_layout = QtGui.QHBoxLayout()
-        self.input_layout.setMargin(0)
+        self.input_layout.setMargin(defs.no_margin)
         self.input_layout.setSpacing(defs.button_spacing)
 
         self.bottom_layout = QtGui.QHBoxLayout()
-        self.bottom_layout.setMargin(0)
+        self.bottom_layout.setMargin(defs.no_margin)
         self.bottom_layout.setSpacing(defs.button_spacing)
 
         self.mainlayout = QtGui.QVBoxLayout()

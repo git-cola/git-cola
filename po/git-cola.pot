@@ -1719,6 +1719,10 @@ msgstr ""
 msgid "Delete Files"
 msgstr ""
 
+#: cola/cmds.py:315 cola/widgets/status.py:910
+msgid "Filter"
+msgstr ""
+
 #: cola/widgets/main.py:85
 msgid "Browser"
 msgstr ""

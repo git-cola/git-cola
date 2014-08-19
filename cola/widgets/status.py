@@ -16,6 +16,8 @@ from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
 from cola.models import selection
+from cola.widgets import completion
+from cola.widgets import defs
 
 
 class StatusWidget(QtGui.QWidget):
@@ -26,14 +28,40 @@ class StatusWidget(QtGui.QWidget):
     Qt signals.
 
     """
-    def __init__(self, parent=None):
+    def __init__(self, titlebar, parent=None):
         QtGui.QWidget.__init__(self, parent)
-        self.layout = QtGui.QVBoxLayout(self)
-        self.setLayout(self.layout)
+
+        tooltip = N_('Toggle the paths filter')
+        self.filter_button = qtutils.create_action_button(
+                tooltip=tooltip,
+                icon=qtutils.filter_icon())
+
+        self.filter_widget = StatusFilterWidget(self)
+        self.filter_widget.hide()
 
         self.tree = StatusTreeWidget(self)
-        self.layout.addWidget(self.tree)
-        self.layout.setContentsMargins(0, 0, 0, 0)
+
+        self.main_layout = QtGui.QVBoxLayout(self)
+        self.main_layout.setMargin(defs.no_margin)
+        self.main_layout.setSpacing(defs.no_spacing)
+
+        self.main_layout.addWidget(self.filter_widget)
+        self.main_layout.addWidget(self.tree)
+        self.setLayout(self.main_layout)
+
+        self.toggle_action = qtutils.add_action(self, tooltip,
+                self.toggle_filter, 'Shift+Ctrl+F')
+
+        titlebar.add_corner_widget(self.filter_button)
+        qtutils.connect_button(self.filter_button, self.toggle_filter)
+
+    def toggle_filter(self):
+        shown = not self.filter_widget.isVisible()
+        self.filter_widget.setVisible(shown)
+        if shown:
+            self.filter_widget.setFocus(True)
+        else:
+            self.tree.setFocus(True)
 
     def set_initial_size(self):
         self.setMaximumWidth(222)
@@ -44,6 +72,11 @@ class StatusWidget(QtGui.QWidget):
 
     def refresh(self):
         self.tree.show_selection()
+
+    def set_filter(self, txt):
+        self.filter_widget.setVisible(True)
+        self.filter_widget.text.set_value(txt)
+        self.filter_widget.apply_filter()
 
 
 class StatusTreeWidget(QtGui.QTreeWidget):
@@ -130,9 +163,19 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 self.copy_path, QtGui.QKeySequence.Copy)
         self.copy_path_action.setIcon(qtutils.theme_icon('edit-copy.svg'))
 
+        if cmds.MoveToTrash.AVAILABLE:
+            self.move_to_trash_action = qtutils.add_action(self,
+                    N_('Move file(s) to trash'),
+                    self._trash_untracked_files, cmds.MoveToTrash.SHORTCUT)
+            self.move_to_trash_action.setIcon(qtutils.discard_icon())
+            delete_shortcut = cmds.Delete.SHORTCUT
+        else:
+            self.move_to_trash_action = None
+            delete_shortcut = cmds.Delete.ALT_SHORTCUT
+
         self.delete_untracked_files_action = qtutils.add_action(self,
                 N_('Delete File(s)...'),
-                self._delete_untracked_files, cmds.Delete.SHORTCUT)
+                self._delete_untracked_files, delete_shortcut)
         self.delete_untracked_files_action.setIcon(qtutils.discard_icon())
 
         self.connect(self, SIGNAL('about_to_update'), self._about_to_update)
@@ -592,6 +635,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         if all_exist and s.untracked:
             menu.addSeparator()
+            if self.move_to_trash_action is not None:
+                menu.addAction(self.move_to_trash_action)
             menu.addAction(self.delete_untracked_files_action)
             menu.addSeparator()
             menu.addAction(qtutils.icon('edit-clear.svg'),
@@ -622,26 +667,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
 
     def _delete_untracked_files(self):
-        files = self.untracked()
-        if not files:
-            return
+        cmds.do(cmds.Delete, self.untracked())
 
-        title = N_('Delete Files?')
-        msg = N_('The following files will be deleted:') + '\n\n'
-
-        fileinfo = subprocess.list2cmdline(files)
-        if len(fileinfo) > 2048:
-            fileinfo = fileinfo[:2048].rstrip() + '...'
-        msg += fileinfo
-
-        count = len(files)
-        info_txt = N_('Delete %d file(s)?') % count
-        ok_txt = N_('Delete Files')
-
-        if qtutils.confirm(title, msg, info_txt, ok_txt,
-                           default=True,
-                           icon=qtutils.discard_icon()):
-            cmds.do(cmds.Delete, files)
+    def _trash_untracked_files(self):
+        cmds.do(cmds.MoveToTrash, self.untracked())
 
     def _revert_uncommitted_edits(self, items_to_undo):
         if items_to_undo:
@@ -895,3 +924,30 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         """Return a list of absolute-path URLs"""
         paths = qtutils.paths_from_items(items, item_filter=lambda x: x.exists)
         return qtutils.mimedata_from_paths(paths)
+
+
+class StatusFilterWidget(QtGui.QWidget):
+
+    def __init__(self, parent):
+        QtGui.QWidget.__init__(self,parent)
+        self.main_model = main.model()
+
+        hint = N_('Filter paths...')
+        self.text = completion.GitStatusFilterLineEdit(hint=hint, parent=self)
+        self.text.setToolTip(hint)
+        self.text.enable_hint(True)
+        self.setFocusProxy(self.text)
+
+        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout.setMargin(defs.no_margin)
+        self.main_layout.setSpacing(defs.spacing)
+        self.main_layout.addWidget(self.text)
+        self.setLayout(self.main_layout)
+
+        self.connect(self.text, SIGNAL('changed()'), self.apply_filter)
+        self.connect(self.text, SIGNAL('returnPressed()'), self.apply_filter)
+
+    def apply_filter(self):
+        text = self.text.value()
+        paths = utils.shell_split(text)
+        self.main_model.update_path_filter(paths)

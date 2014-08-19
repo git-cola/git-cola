@@ -481,6 +481,11 @@ def options_icon():
     return icon('options.svg')
 
 
+def filter_icon():
+    """Return a filter icon"""
+    return icon('view-filter.png')
+
+
 def dir_close_icon():
     """Return a standard closed directory icon"""
     return cached_icon(QtGui.QStyle.SP_DirClosedIcon)
@@ -578,7 +583,7 @@ def create_button(text='', layout=None, tooltip=None, icon=None):
     button.setCursor(Qt.PointingHandCursor)
     if text:
         button.setText(text)
-    if icon:
+    if icon is not None:
         button.setIcon(icon)
     if tooltip is not None:
         button.setToolTip(tooltip)

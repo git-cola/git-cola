@@ -60,6 +60,7 @@ class CommitMessageEditor(QtGui.QWidget):
 
         # Widgets
         self.summary = CommitSummaryLineEdit()
+        self.summary.setMinimumHeight(defs.tool_button_height)
         self.summary.extra_actions.append(self.signoff_action)
         self.summary.extra_actions.append(self.commit_action)
 
@@ -116,14 +117,16 @@ class CommitMessageEditor(QtGui.QWidget):
                      self.build_fixup_menu)
 
         self.toplayout = QtGui.QHBoxLayout()
-        self.toplayout.setMargin(0)
+        self.toplayout.setMargin(defs.no_margin)
+        self.toplayout.setContentsMargins(defs.margin, defs.no_margin,
+                                          defs.no_margin, defs.no_margin)
         self.toplayout.setSpacing(defs.spacing)
         self.toplayout.addWidget(self.actions_button)
         self.toplayout.addWidget(self.summary)
         self.toplayout.addWidget(self.commit_button)
 
         self.mainlayout = QtGui.QVBoxLayout()
-        self.mainlayout.setMargin(defs.margin)
+        self.mainlayout.setMargin(defs.no_margin)
         self.mainlayout.setSpacing(defs.spacing)
         self.mainlayout.addLayout(self.toplayout)
         self.mainlayout.addWidget(self.description)

@@ -71,8 +71,10 @@ def main():
     # routes them to the 'cola' parser by default.
     if (len(sys.argv) < 2 or
             sys.argv[1].startswith('-') and
-            sys.argv[1] not in ('-h', '--help')):
+            '--help-commands' not in sys.argv):
         sys.argv.insert(1, 'cola')
+    elif '--help-commands' in sys.argv:
+        sys.argv.append('--help')
     args = parse_args()
     return args.func(args)
 
@@ -115,6 +117,10 @@ def add_cola_command(subparser):
     parser = add_command(subparser, 'cola', 'start git-cola', cmd_cola)
     parser.add_argument('--amend', default=False, action='store_true',
                         help='start in amend mode')
+    parser.add_argument('--help-commands', default=False, action='store_true',
+                        help='show available sub-commands')
+    parser.add_argument('--status-filter', '-s', metavar='<path>',
+                        default='', help='status path filter')
 
 
 def add_am_command(parent):
@@ -216,11 +222,19 @@ def add_version_command(subparser):
 # entry points
 
 def cmd_cola(args):
+    status_filter = args.status_filter
+    if status_filter:
+        status_filter = core.abspath(status_filter)
+
     context = application_init(args)
     from cola.widgets.main import MainView
     view = MainView(context.model, settings=args.settings)
     if args.amend:
         cmds.do(cmds.AmendMode, True)
+
+    if status_filter:
+        view.set_filter(core.relpath(status_filter))
+
     return application_start(context, view)
 
 

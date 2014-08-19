@@ -48,7 +48,7 @@ from cola.widgets.compare import compare_branches
 from cola.widgets.createtag import create_tag
 from cola.widgets.createbranch import create_new_branch
 from cola.widgets.dag import git_dag
-from cola.widgets.diff import DiffEditor
+from cola.widgets.diff import DiffEditorWidget
 from cola.widgets.grep import grep
 from cola.widgets.log import LogWidget
 from cola.widgets.patch import apply_patches
@@ -99,8 +99,9 @@ class MainView(MainWindow):
         self.actionsdockwidget.hide()
 
         # "Repository Status" widget
-        self.statuswidget = StatusWidget(self)
         self.statusdockwidget = create_dock(N_('Status'), self)
+        self.statuswidget = StatusWidget(self.statusdockwidget.titleBarWidget(),
+                                         parent=self.statusdockwidget)
         self.statusdockwidget.setWidget(self.statuswidget)
 
         # "Switch Repository" widget
@@ -136,8 +137,9 @@ class MainView(MainWindow):
 
         # "Diff Viewer" widget
         self.diffdockwidget = create_dock(N_('Diff'), self)
-        self.diffeditor = DiffEditor(self.diffdockwidget)
-        self.diffdockwidget.setWidget(self.diffeditor)
+        self.diffeditorwidget = DiffEditorWidget(self.diffdockwidget)
+        self.diffeditor = self.diffeditorwidget.editor
+        self.diffdockwidget.setWidget(self.diffeditorwidget)
 
         # All Actions
         self.unstage_all_action = add_action(self,
@@ -488,6 +490,9 @@ class MainView(MainWindow):
         self.statuswidget.set_initial_size()
         self.commitmsgeditor.set_initial_size()
 
+    def set_filter(self, txt):
+        self.statuswidget.set_filter(txt)
+
     # Qt overrides
     def closeEvent(self, event):
         """Save state in the settings manager."""
@@ -625,10 +630,19 @@ class MainView(MainWindow):
         self.rebase_skip_action.setEnabled(is_rebasing)
         self.rebase_abort_action.setEnabled(is_rebasing)
 
+    def export_state(self):
+        state = MainWindow.export_state(self)
+        show_status_filter = self.statuswidget.filter_widget.isVisible()
+        state['show_status_filter'] = show_status_filter
+        return state
+
     def apply_state(self, state):
         """Imports data for save/restore"""
         result = MainWindow.apply_state(self, state)
         self.lock_layout_action.setChecked(state.get('lock_layout', False))
+
+        show_status_filter = state.get('show_status_filter', False)
+        self.statuswidget.filter_widget.setVisible(show_status_filter)
         return result
 
     def setup_dockwidget_view_menu(self):
