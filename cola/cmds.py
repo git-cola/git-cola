@@ -55,22 +55,27 @@ class BaseCommand(object):
         return 'Unknown'
 
     def do(self):
-        raise NotImplementedError('%s.do() is unimplemented'
-                                  % self.__class__.__name__)
+        pass
 
     def undo(self):
-        raise NotImplementedError('%s.undo() is unimplemented'
-                                  % self.__class__.__name__)
+        pass
 
 
-class Command(BaseCommand):
+class ModelCommand(BaseCommand):
+    """Commands that manipulate the main models"""
+
+    def __init__(self):
+        BaseCommand.__init__(self)
+        self.model = main.model()
+
+
+class Command(ModelCommand):
     """Base class for commands that modify the main model"""
 
     def __init__(self):
         """Initialize the command and stash away values for use in do()"""
         # These are commonly used so let's make it easier to write new commands.
-        BaseCommand.__init__(self)
-        self.model = main.model()
+        ModelCommand.__init__(self)
 
         self.old_diff_text = self.model.diff_text
         self.old_filename = self.model.filename
@@ -97,7 +102,6 @@ class AmendMode(Command):
     """Try to amend a commit."""
 
     SHORTCUT = 'Ctrl+M'
-
     LAST_MESSAGE = None
 
     @staticmethod
