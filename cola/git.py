@@ -208,22 +208,29 @@ class Git(object):
         for k, v in kwargs.items():
             if len(k) == 1:
                 if v is True:
-                    args.append("-%s" % k)
+                    args.append('-%s' % k)
                 elif type(v) is not bool:
-                    args.append("-%s%s" % (k, v))
+                    args.append('-%s%s' % (k, v))
             else:
                 if v is True:
-                    args.append("--%s" % dashify(k))
+                    args.append('--%s' % dashify(k))
                 elif type(v) is not bool:
-                    args.append("--%s=%s" % (dashify(k), v))
+                    args.append('--%s=%s' % (dashify(k), v))
         return args
 
     def git(self, cmd, *args, **kwargs):
         # Handle optional arguments prior to calling transform_kwargs
         # otherwise they'll end up in args, which is bad.
         _kwargs = dict(_cwd=self._git_cwd)
-        execute_kwargs = ('_cwd', '_decode', '_encoding',
-                '_stdin', '_stdout', '_stderr', '_raw')
+        execute_kwargs = (
+                '_cwd',
+                '_decode',
+                '_encoding',
+                '_stdin',
+                '_stdout',
+                '_stderr',
+                '_raw',
+                )
         for kwarg in execute_kwargs:
             if kwarg in kwargs:
                 _kwargs[kwarg] = kwargs.pop(kwarg)
