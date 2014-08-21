@@ -5,11 +5,11 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+from cola import cmds
 from cola import qtutils
 from cola.git import git
 from cola.git import STDOUT
 from cola.i18n import N_
-from cola.models import main
 from cola.widgets import defs
 from cola.widgets import text
 from cola.compat import ustr
@@ -125,29 +125,14 @@ class RemoteEditor(QtGui.QDialog):
             return
         name = widget.name.value()
         url = widget.url.value()
-        status, out, err = git.remote('add', name, url)
-        if status != 0:
-            qtutils.critical(N_('Error creating remote "%s"') % name,
-                             out + err)
+        cmds.do(cmds.RemoteAdd, name, url)
         self.refresh()
 
     def delete(self):
         remote = qtutils.selected_item(self.remotes, self.remote_list)
         if remote is None:
             return
-
-        title = N_('Delete Remote')
-        question = N_('Delete remote?')
-        info = N_('Delete remote "%s"') % remote
-        ok_btn = N_('Delete')
-        if not qtutils.confirm(title, question, info, ok_btn):
-            return
-
-        status, out, err = git.remote('rm', remote)
-        if status != 0:
-            qtutils.critical(N_('Error deleting remote "%s"') % remote,
-                             out + err)
-        main.model().update_status()
+        cmds.do(cmds.RemoteRemove, remote)
         self.refresh()
 
     def remote_renamed(self, item):
@@ -164,17 +149,9 @@ class RemoteEditor(QtGui.QDialog):
         if not new_name:
             item.setText(old_name)
             return
-
-        title = N_('Rename Remote')
-        question = N_('Rename remote?')
-        info = (N_('Rename remote "%(current)s" to "%(new)s"?') %
-                dict(current=old_name, new=new_name))
-        ok_btn = N_('Rename')
-
-        if qtutils.confirm(title, question, info, ok_btn):
-            status, out, err = git.remote('rename', old_name, new_name)
-            if status == 0:
-                self.remote_list[idx] = new_name
+        status, out, err = cmds.do(cmds.RemoteRename, old_name, new_name)
+        if status == 0:
+            self.remote_list[idx] = new_name
         else:
             item.setText(old_name)
 
@@ -208,6 +185,7 @@ class RemoteInfoThread(QtCore.QThread):
 
 
 class AddRemoteWidget(QtGui.QDialog):
+
     def __init__(self, parent):
         QtGui.QDialog.__init__(self, parent)
         self.setWindowModality(Qt.WindowModal)

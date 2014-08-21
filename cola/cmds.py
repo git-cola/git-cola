@@ -398,6 +398,85 @@ def file_summary(files):
     return txt
 
 
+class RemoteCommand(ModelCommand):
+
+    def __init__(self, remote):
+        ModelCommand.__init__(self)
+        self.remote = remote
+
+    def error_message(self):
+        return ''
+
+    def do_remote(self):
+        return (-1, '', '')
+
+    def confirm(self):
+        return True
+
+    def do(self):
+        if not self.confirm():
+            return (-1, '', '')
+        status, out, err = self.do_remote()
+        if status == 0:
+            self.model.update_remotes()
+        else:
+            title = msg = self.error_message()
+            details = out + err
+            Interaction.critical(title, message=msg, details=details)
+
+        return status, out, err
+
+
+class RemoteAdd(RemoteCommand):
+
+    def __init__(self, remote, url):
+        RemoteCommand.__init__(self, remote)
+        self.url = url
+
+    def do_remote(self):
+        git = self.model.git
+        return git.remote('add', self.remote, self.url)
+
+    def error_message(self):
+        return N_('Error creating remote "%s"') % self.remote
+
+
+class RemoteRemove(RemoteCommand):
+
+    def confirm(self):
+        title = N_('Delete Remote')
+        question = N_('Delete remote?')
+        info = N_('Delete remote "%s"') % self.remote
+        ok_btn = N_('Delete')
+        return Interaction.confirm(title, question, info, ok_btn)
+
+    def do_remote(self):
+        git = self.model.git
+        return git.remote('rm', self.remote)
+
+    def error_message(self):
+        return N_('Error deleting remote "%s"') % self.remote
+
+
+class RemoteRename(RemoteCommand):
+
+    def __init__(self, remote, new_remote):
+        RemoteCommand.__init__(self, remote)
+        self.new_remote = new_remote
+
+    def confirm(self):
+        title = N_('Rename Remote')
+        question = N_('Rename remote?')
+        info = (N_('Rename remote "%(current)s" to "%(new)s"?') %
+                dict(current=self.remote, new=self.new_remote))
+        ok_btn = N_('Rename')
+        return Interaction.confirm(title, question, info, ok_btn)
+
+    def do_remote(self):
+        git = self.model.git
+        return git.remote('rename', self.remote, self.new_remote)
+
+
 class RemoveFiles(Command):
     """Removes files."""
 
