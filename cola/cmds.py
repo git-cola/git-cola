@@ -501,6 +501,46 @@ class RemoteRename(RemoteCommand):
         return git.remote('rename', self.remote, self.new_remote)
 
 
+class RemoveFromSettings(ConfirmAction):
+
+    def __init__(self, settings, repo, icon=None):
+        ConfirmAction.__init__(self)
+        self.settings = settings
+        self.repo = repo
+        self.icon = icon
+
+    def success(self):
+        self.settings.save()
+
+
+class RemoveBookmark(RemoveFromSettings):
+
+    def confirm(self):
+        repo = self.repo
+        title = msg = N_('Delete Bookmark?')
+        info = N_('%s will be removed from your bookmarks.') % repo
+        ok_text = N_('Delete Bookmark')
+        return Interaction.confirm(title, msg, info, ok_text, icon=self.icon)
+
+    def action(self):
+        self.settings.remove_bookmark(self.repo)
+        return (0, '', '')
+
+
+class RemoveRecent(RemoveFromSettings):
+
+    def confirm(self):
+        repo = self.repo
+        title = msg = N_('Remove %s from the recent list?') % repo
+        info = N_('%s will be removed from your recent repositories.') % repo
+        ok_text = N_('Remove')
+        return Interaction.confirm(title, msg, info, ok_text, icon=self.icon)
+
+    def action(self):
+        self.settings.remove_recent(self.repo)
+        return (0, '', '')
+
+
 class RemoveFiles(Command):
     """Removes files."""
 
