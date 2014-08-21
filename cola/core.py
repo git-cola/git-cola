@@ -159,7 +159,7 @@ def run_command(cmd, encoding=None, *args, **kwargs):
     output = decode(output, encoding=encoding)
     errors = decode(errors, encoding=encoding)
     exit_code = process.returncode
-    return (exit_code, output, errors)
+    return (exit_code, output or '', errors or '')
 
 
 @interruptable
