@@ -37,6 +37,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/341
 
+* "Recent repositories" is now a dedicated widget.
+
+  https://github.com/git-cola/git-cola/issues/342
+
 Fixes
 -----
 * Newly added remotes are now properly seen by the fetch/push/pull dialogs.

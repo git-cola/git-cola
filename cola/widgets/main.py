@@ -33,6 +33,7 @@ from cola.qtutils import create_dock
 from cola.qtutils import create_menu
 from cola.settings import Settings
 from cola.widgets import action
+from cola.widgets import bookmarks
 from cola.widgets import cfgactions
 from cola.widgets import editremotes
 from cola.widgets import merge
@@ -40,7 +41,6 @@ from cola.widgets import remote
 from cola.widgets.about import launch_about_dialog
 from cola.widgets.about import show_shortcuts
 from cola.widgets.archive import GitArchiveDialog
-from cola.widgets.bookmarks import BookmarksWidget
 from cola.widgets.browse import worktree_browser
 from cola.widgets.browse import worktree_browser_widget
 from cola.widgets.commitmsg import CommitMessageEditor
@@ -104,10 +104,17 @@ class MainView(MainWindow):
                                          parent=self.statusdockwidget)
         self.statusdockwidget.setWidget(self.statuswidget)
 
-        # "Switch Repository" widget
+        # "Switch Repository" widgets
         self.bookmarksdockwidget = create_dock(N_('Bookmarks'), self)
-        self.bookmarkswidget = BookmarksWidget(parent=self.bookmarksdockwidget)
+        self.bookmarkswidget = bookmarks.BookmarksWidget(
+                bookmarks.BOOKMARKS, parent=self.bookmarksdockwidget)
         self.bookmarksdockwidget.setWidget(self.bookmarkswidget)
+
+        self.recentdockwidget = create_dock(N_('Recent'), self)
+        self.recentwidget = bookmarks.BookmarksWidget(
+                bookmarks.RECENT_REPOS, parent=self.recentdockwidget)
+        self.recentdockwidget.setWidget(self.recentwidget)
+        self.recentdockwidget.hide()
 
         # "Commit Message Editor" widget
         self.position_label = QtGui.QLabel()
@@ -441,6 +448,7 @@ class MainView(MainWindow):
         self.addDockWidget(left, self.diffdockwidget)
         self.addDockWidget(right, self.statusdockwidget)
         self.addDockWidget(right, self.bookmarksdockwidget)
+        self.addDockWidget(right, self.recentdockwidget)
         self.addDockWidget(bottom, self.actionsdockwidget)
         self.addDockWidget(bottom, self.logdockwidget)
         self.tabifyDockWidget(self.actionsdockwidget, self.logdockwidget)
@@ -658,6 +666,7 @@ class MainView(MainWindow):
             (optkey + '+3', self.diffdockwidget),
             (optkey + '+4', self.actionsdockwidget),
             (optkey + '+5', self.bookmarksdockwidget),
+            (optkey + '+6', self.recentdockwidget),
         )
         for shortcut, dockwidget in dockwidgets:
             # Associate the action with the shortcut
