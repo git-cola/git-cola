@@ -61,6 +61,48 @@ class BaseCommand(object):
         pass
 
 
+class ConfirmAction(BaseCommand):
+
+    def __init__(self):
+        BaseCommand.__init__(self)
+
+    def confirm(self):
+        return True
+
+    def action(self):
+        return (-1, '', '')
+
+    def ok(self, status):
+        return status == 0
+
+    def success(self):
+        pass
+
+    def fail(self, status, out, err):
+        title = msg = self.error_message()
+        details = self.error_details() or out + err
+        Interaction.critical(title, message=msg, details=details)
+
+    def error_message(self):
+        return ''
+
+    def error_details(self):
+        return ''
+
+    def do(self):
+        status = -1
+        out = err = ''
+        ok = self.confirm()
+        if ok:
+            status, out, err = self.action()
+            if self.ok(status):
+                self.success()
+            else:
+                self.fail(status, out, err)
+
+        return ok, status, out, err
+
+
 class ModelCommand(BaseCommand):
     """Commands that manipulate the main models"""
 
@@ -398,33 +440,15 @@ def file_summary(files):
     return txt
 
 
-class RemoteCommand(ModelCommand):
+class RemoteCommand(ConfirmAction):
 
     def __init__(self, remote):
-        ModelCommand.__init__(self)
+        ConfirmAction.__init__(self)
+        self.model = main.model()
         self.remote = remote
 
-    def error_message(self):
-        return ''
-
-    def do_remote(self):
-        return (-1, '', '')
-
-    def confirm(self):
-        return True
-
-    def do(self):
-        if not self.confirm():
-            return (-1, '', '')
-        status, out, err = self.do_remote()
-        if status == 0:
-            self.model.update_remotes()
-        else:
-            title = msg = self.error_message()
-            details = out + err
-            Interaction.critical(title, message=msg, details=details)
-
-        return status, out, err
+    def success(self):
+        self.model.update_remotes()
 
 
 class RemoteAdd(RemoteCommand):
@@ -433,7 +457,7 @@ class RemoteAdd(RemoteCommand):
         RemoteCommand.__init__(self, remote)
         self.url = url
 
-    def do_remote(self):
+    def action(self):
         git = self.model.git
         return git.remote('add', self.remote, self.url)
 
@@ -450,7 +474,7 @@ class RemoteRemove(RemoteCommand):
         ok_btn = N_('Delete')
         return Interaction.confirm(title, question, info, ok_btn)
 
-    def do_remote(self):
+    def action(self):
         git = self.model.git
         return git.remote('rm', self.remote)
 
@@ -472,7 +496,7 @@ class RemoteRename(RemoteCommand):
         ok_btn = N_('Rename')
         return Interaction.confirm(title, question, info, ok_btn)
 
-    def do_remote(self):
+    def action(self):
         git = self.model.git
         return git.remote('rename', self.remote, self.new_remote)
 

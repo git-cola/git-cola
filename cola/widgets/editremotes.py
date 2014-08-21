@@ -152,8 +152,8 @@ class RemoteEditor(QtGui.QDialog):
         if not new_name:
             item.setText(old_name)
             return
-        status, out, err = cmds.do(cmds.RemoteRename, old_name, new_name)
-        if status == 0:
+        ok, status, out, err = cmds.do(cmds.RemoteRename, old_name, new_name)
+        if ok and status == 0:
             self.remote_list[idx] = new_name
         else:
             item.setText(old_name)
