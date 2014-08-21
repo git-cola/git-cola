@@ -33,6 +33,9 @@ class RemoteEditor(QtGui.QDialog):
         self.setWindowTitle(N_('Edit Remotes'))
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
+            width = max(640, parent.width())
+            height = max(480, parent.height())
+            self.resize(width, height)
 
         self.default_hint = N_(''
             'Add and remove remote repositories using the \n'
