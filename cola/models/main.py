@@ -362,18 +362,17 @@ class MainModel(Observable):
                     ffwd=True,
                     tags=False,
                     rebase=False,
+                    pull=False,
                     push=False):
-        # Swap the branches in push mode (reverse of fetch)
         if push:
-            tmp = local_branch
-            local_branch = remote_branch
-            remote_branch = tmp
+            # Swap the branches in push mode (reverse of fetch)
+            local_branch, remote_branch = remote_branch, local_branch
         if ffwd:
             branch_arg = '%s:%s' % (remote_branch, local_branch)
         else:
             branch_arg = '+%s:%s' % (remote_branch, local_branch)
         args = [remote]
-        if local_branch and remote_branch:
+        if local_branch and remote_branch and not pull:
             args.append(branch_arg)
         elif local_branch:
             args.append(local_branch)
@@ -397,7 +396,7 @@ class MainModel(Observable):
         return self.run_remote_action(self.git.push, remote, push=True, **opts)
 
     def pull(self, remote, **opts):
-        return self.run_remote_action(self.git.pull, remote, push=True, **opts)
+        return self.run_remote_action(self.git.pull, remote, pull=True, **opts)
 
     def create_branch(self, name, base, track=False, force=False):
         """Create a branch named 'name' from revision 'base'
