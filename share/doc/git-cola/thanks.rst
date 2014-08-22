@@ -60,6 +60,7 @@ Thanks
 * Paolo G. Giarrusso
 * Paul Hildebrandt
 * Peter Júnoš
+* Pilar Molina Lopez
 * Raghavendra Karunanidhi
 * Rustam Safin
 * Samsul Ma'arif

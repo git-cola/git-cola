@@ -55,22 +55,69 @@ class BaseCommand(object):
         return 'Unknown'
 
     def do(self):
-        raise NotImplementedError('%s.do() is unimplemented'
-                                  % self.__class__.__name__)
+        pass
 
     def undo(self):
-        raise NotImplementedError('%s.undo() is unimplemented'
-                                  % self.__class__.__name__)
+        pass
 
 
-class Command(BaseCommand):
+class ConfirmAction(BaseCommand):
+
+    def __init__(self):
+        BaseCommand.__init__(self)
+
+    def confirm(self):
+        return True
+
+    def action(self):
+        return (-1, '', '')
+
+    def ok(self, status):
+        return status == 0
+
+    def success(self):
+        pass
+
+    def fail(self, status, out, err):
+        title = msg = self.error_message()
+        details = self.error_details() or out + err
+        Interaction.critical(title, message=msg, details=details)
+
+    def error_message(self):
+        return ''
+
+    def error_details(self):
+        return ''
+
+    def do(self):
+        status = -1
+        out = err = ''
+        ok = self.confirm()
+        if ok:
+            status, out, err = self.action()
+            if self.ok(status):
+                self.success()
+            else:
+                self.fail(status, out, err)
+
+        return ok, status, out, err
+
+
+class ModelCommand(BaseCommand):
+    """Commands that manipulate the main models"""
+
+    def __init__(self):
+        BaseCommand.__init__(self)
+        self.model = main.model()
+
+
+class Command(ModelCommand):
     """Base class for commands that modify the main model"""
 
     def __init__(self):
         """Initialize the command and stash away values for use in do()"""
         # These are commonly used so let's make it easier to write new commands.
-        BaseCommand.__init__(self)
-        self.model = main.model()
+        ModelCommand.__init__(self)
 
         self.old_diff_text = self.model.diff_text
         self.old_filename = self.model.filename
@@ -97,7 +144,6 @@ class AmendMode(Command):
     """Try to amend a commit."""
 
     SHORTCUT = 'Ctrl+M'
-
     LAST_MESSAGE = None
 
     @staticmethod
@@ -392,6 +438,107 @@ def file_summary(files):
     if len(txt) > 2048:
         txt = txt[:2048].rstrip() + '...'
     return txt
+
+
+class RemoteCommand(ConfirmAction):
+
+    def __init__(self, remote):
+        ConfirmAction.__init__(self)
+        self.model = main.model()
+        self.remote = remote
+
+    def success(self):
+        self.model.update_remotes()
+
+
+class RemoteAdd(RemoteCommand):
+
+    def __init__(self, remote, url):
+        RemoteCommand.__init__(self, remote)
+        self.url = url
+
+    def action(self):
+        git = self.model.git
+        return git.remote('add', self.remote, self.url)
+
+    def error_message(self):
+        return N_('Error creating remote "%s"') % self.remote
+
+
+class RemoteRemove(RemoteCommand):
+
+    def confirm(self):
+        title = N_('Delete Remote')
+        question = N_('Delete remote?')
+        info = N_('Delete remote "%s"') % self.remote
+        ok_btn = N_('Delete')
+        return Interaction.confirm(title, question, info, ok_btn)
+
+    def action(self):
+        git = self.model.git
+        return git.remote('rm', self.remote)
+
+    def error_message(self):
+        return N_('Error deleting remote "%s"') % self.remote
+
+
+class RemoteRename(RemoteCommand):
+
+    def __init__(self, remote, new_remote):
+        RemoteCommand.__init__(self, remote)
+        self.new_remote = new_remote
+
+    def confirm(self):
+        title = N_('Rename Remote')
+        question = N_('Rename remote?')
+        info = (N_('Rename remote "%(current)s" to "%(new)s"?') %
+                dict(current=self.remote, new=self.new_remote))
+        ok_btn = N_('Rename')
+        return Interaction.confirm(title, question, info, ok_btn)
+
+    def action(self):
+        git = self.model.git
+        return git.remote('rename', self.remote, self.new_remote)
+
+
+class RemoveFromSettings(ConfirmAction):
+
+    def __init__(self, settings, repo, icon=None):
+        ConfirmAction.__init__(self)
+        self.settings = settings
+        self.repo = repo
+        self.icon = icon
+
+    def success(self):
+        self.settings.save()
+
+
+class RemoveBookmark(RemoveFromSettings):
+
+    def confirm(self):
+        repo = self.repo
+        title = msg = N_('Delete Bookmark?')
+        info = N_('%s will be removed from your bookmarks.') % repo
+        ok_text = N_('Delete Bookmark')
+        return Interaction.confirm(title, msg, info, ok_text, icon=self.icon)
+
+    def action(self):
+        self.settings.remove_bookmark(self.repo)
+        return (0, '', '')
+
+
+class RemoveRecent(RemoveFromSettings):
+
+    def confirm(self):
+        repo = self.repo
+        title = msg = N_('Remove %s from the recent list?') % repo
+        info = N_('%s will be removed from your recent repositories.') % repo
+        ok_text = N_('Remove')
+        return Interaction.confirm(title, msg, info, ok_text, icon=self.icon)
+
+    def action(self):
+        self.settings.remove_recent(self.repo)
+        return (0, '', '')
 
 
 class RemoveFiles(Command):

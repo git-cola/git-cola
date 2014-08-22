@@ -14,19 +14,22 @@ from cola import git
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
-from cola.interaction import Interaction
 from cola.settings import Settings
 from cola.widgets import defs
 from cola.widgets import standard
 
+BOOKMARKS = 0
+RECENT_REPOS = 1
+
 
 class BookmarksWidget(QtGui.QWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, style=BOOKMARKS, parent=None):
         QtGui.QWidget.__init__(self, parent)
 
+        self.style = style
         self.settings = Settings()
-        self.tree = BookmarksTreeWidget(self.settings, parent=self)
+        self.tree = BookmarksTreeWidget(style, self.settings, parent=self)
 
         self.add_button = qtutils.create_action_button(
                 tooltip=N_('Add'), icon=qtutils.add_icon())
@@ -38,13 +41,6 @@ class BookmarksWidget(QtGui.QWidget):
         self.open_button = qtutils.create_action_button(
                 tooltip=N_('Open'), icon=qtutils.open_icon())
         self.open_button.setEnabled(False)
-
-        qtutils.connect_button(self.add_button, self.tree.add_bookmark)
-        qtutils.connect_button(self.delete_button, self.tree.delete_bookmark)
-        qtutils.connect_button(self.open_button, self.tree.open_repo)
-
-        self.connect(self.tree, SIGNAL('itemSelectionChanged()'),
-                     self.tree_item_selection_changed)
 
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.setMargin(defs.no_margin)
@@ -63,7 +59,20 @@ class BookmarksWidget(QtGui.QWidget):
         self.corner_widget.setLayout(self.button_layout)
         titlebar = parent.titleBarWidget()
         titlebar.add_corner_widget(self.corner_widget)
+
         self.setFocusProxy(self.tree)
+        if style == BOOKMARKS:
+            self.setToolTip(N_('Bookmarked repositories'))
+        elif style == RECENT_REPOS:
+            self.setToolTip(N_('Recent repositories'))
+            self.add_button.hide()
+
+        qtutils.connect_button(self.add_button, self.tree.add_bookmark)
+        qtutils.connect_button(self.delete_button, self.tree.delete_bookmark)
+        qtutils.connect_button(self.open_button, self.tree.open_repo)
+
+        self.connect(self.tree, SIGNAL('itemSelectionChanged()'),
+                     self.tree_item_selection_changed)
 
         QtCore.QTimer.singleShot(0, self.reload_bookmarks)
 
@@ -80,8 +89,9 @@ class BookmarksWidget(QtGui.QWidget):
 
 class BookmarksTreeWidget(standard.TreeWidget):
 
-    def __init__(self, settings, parent=None):
+    def __init__(self, style, settings, parent=None):
         standard.TreeWidget.__init__(self, parent=parent)
+        self.style = style
         self.settings = settings
 
         self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
@@ -124,8 +134,17 @@ class BookmarksTreeWidget(standard.TreeWidget):
     def refresh(self):
         icon = qtutils.dir_icon()
         settings = self.settings
-        items = [BookmarksTreeWidgetItem(path, icon)
-                    for path in settings.bookmarks]
+
+        # bookmarks
+        if self.style == BOOKMARKS:
+            items = [BookmarksTreeWidgetItem(path, icon)
+                        for path in settings.bookmarks]
+        elif self.style == RECENT_REPOS:
+            # recent items
+            items = [BookmarksTreeWidgetItem(path, icon)
+                        for path in settings.recent]
+        else:
+            items = []
         self.clear()
         self.addTopLevelItems(items)
 
@@ -208,17 +227,16 @@ class BookmarksTreeWidget(standard.TreeWidget):
         item = self.selected_item()
         if not item:
             return
-        repo = item.path
-        title = N_('Delete Bookmark?')
-        msg = N_('Delete Bookmark?')
-        info_text = N_('%s will be removed from your bookmarks.') % repo
-        ok_text = N_('Delete Bookmark')
-        if not Interaction.confirm(title, msg, info_text, ok_text,
-                                   icon=qtutils.discard_icon()):
+        if self.style == BOOKMARKS:
+            cmd = cmds.RemoveBookmark
+        elif self.style == RECENT_REPOS:
+            cmd = cmds.RemoveRecent
+        else:
             return
-        self.settings.remove_bookmark(repo)
-        self.settings.save()
-        self.refresh()
+        ok, status, out, err = cmds.do(cmd, self.settings, item.path,
+                                       icon=qtutils.discard_icon())
+        if ok:
+            self.refresh()
 
 
 class BookmarksTreeWidgetItem(QtGui.QTreeWidgetItem):

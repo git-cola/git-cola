@@ -37,6 +37,20 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/341
 
+* "Recent repositories" is now a dedicated widget.
+
+  https://github.com/git-cola/git-cola/issues/342
+
+* New Spanish translation thanks to Pilar Molina Lopez.
+
+  https://github.com/git-cola/git-cola/pull/344
+
+Fixes
+-----
+* Newly added remotes are now properly seen by the fetch/push/pull dialogs.
+
+  https://github.com/git-cola/git-cola/issues/343
+
 git-cola v2.0.5
 ===============
 Usability, bells and whistles
