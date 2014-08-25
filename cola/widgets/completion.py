@@ -42,10 +42,9 @@ class CompletionLineEdit(text.HintedLineEdit):
         self.connect(self._completer, SIGNAL('activated(QString)'),
                      self._complete)
 
-    def __del__(self):
-        self.dispose()
+        self.connect(self, SIGNAL('destroyed(QObject*)'), self.dispose)
 
-    def dispose(self):
+    def dispose(self, *args):
         self._completer.dispose()
 
     def refresh(self):
