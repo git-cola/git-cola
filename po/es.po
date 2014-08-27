@@ -1,5 +1,6 @@
 # Translation of git-cola to Spanish.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2014 Pilar Molina Lopez
+# Copyright (C) 2014 David Aguilar
 # This file is distributed under the same license as the git-cola package.
 #
 # Pilar Molina Lopez <pilarmolinalopez@gmail.com>, 2014.
