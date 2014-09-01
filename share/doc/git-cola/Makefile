@@ -19,7 +19,9 @@ PAPEROPT_a4     = -D latex_paper_size=a4
 PAPEROPT_letter = -D latex_paper_size=letter
 ALLSPHINXOPTS   = -d _build/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
-.PHONY: all help clean html man dirhtml pickle json htmlhelp qthelp latex changes linkcheck doctest
+.PHONY: all help clean html man dirhtml pickle json
+.PHONY: htmlhelp qthelp latex changes linkcheck doctest
+.PHONY: install install-files install-html install-man
 
 # The default target of this makefile is...
 all:: html man
