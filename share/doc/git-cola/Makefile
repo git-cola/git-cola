@@ -7,6 +7,7 @@ mandir ?= $(prefix)/share/man/man1
 SED ?= sed
 RSYNC ?= rsync
 MKDIR_P ?= mkdir -p
+INSTALL ?= install
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
@@ -73,16 +74,18 @@ linkcheck:
 doctest:
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) _build/doctest
 
-install: install-html install-man
-	$(MKDIR_P) $(DESTDIR)$(docdir)
-	cp *.rst $(DESTDIR)$(docdir)
+install: install-files install-html install-man
 
-install-html: html
+install-files:
+	$(MKDIR_P) $(DESTDIR)$(docdir)
+	$(INSTALL) -m 644 *.html $(DESTDIR)$(docdir)
+	$(INSTALL) -m 644 *.rst $(DESTDIR)$(docdir)
+
+install-html: install-files html
 	$(MKDIR_P) $(DESTDIR)$(htmldir)
 	$(RSYNC) -ar --delete _build/html/ $(DESTDIR)$(htmldir)/
-	cp *.html $(DESTDIR)$(docdir)
 
 install-man: man
 	$(MKDIR_P) $(DESTDIR)$(mandir)
-	cp _build/man/git-cola.1 $(DESTDIR)$(mandir)
-	cp _build/man/git-dag.1 $(DESTDIR)$(mandir)
+	$(INSTALL) -m 644 _build/man/git-cola.1 $(DESTDIR)$(mandir)
+	$(INSTALL) -m 644 _build/man/git-dag.1 $(DESTDIR)$(mandir)
