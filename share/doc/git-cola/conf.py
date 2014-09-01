@@ -14,7 +14,8 @@
 import sys, os
 
 # Add the cola source directory to sys.path
-docdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+abspath = os.path.abspath(os.path.realpath(__file__))
+docdir = os.path.dirname(os.path.dirname(abspath))
 srcdir = os.path.dirname(os.path.dirname(docdir))
 extrasdir = os.path.join(srcdir, 'extras')
 
