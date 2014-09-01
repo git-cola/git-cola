@@ -1,11 +1,11 @@
 #! /usr/bin/env python
-from __future__ import print_function
-
+ 
 from optparse import OptionParser
-import warnings
+
 import os
 import sys
 import shutil
+import codecs
 
 
 class DirHelper(object):
@@ -49,7 +49,7 @@ class FileHandler(object):
 
     def process(self):
 
-        text = self.opener(self.name).read()
+        text = self.opener(self.name, "r").read()
 
         for replacer in self.replacers:
             text = replacer.process( text )
@@ -107,7 +107,7 @@ class DirectoryHandler(object):
         self.renamer = renamer
 
     def path(self):
-        
+
         return os.path.join(self.root, self.name)
 
     def relative_path(self, directory, filename):
@@ -200,7 +200,7 @@ class LayoutFactory(object):
         self.force = force
 
     def create_layout(self, path):
-        path = str(path)
+
         contents = self.dir_helper.list_dir(path)
 
         renamer = self.file_helper.move
@@ -276,12 +276,12 @@ def sphinx_extension(app, exception):
 
     if not app.config.sphinx_to_github:
         if app.config.sphinx_to_github_verbose:
-            print("Sphinx-to-github: Disabled, doing nothing.")
+            print "Sphinx-to-github: Disabled, doing nothing."
         return
 
     if exception:
         if app.config.sphinx_to_github_verbose:
-            print("Sphinx-to-github: Exception raised in main build, doing nothing.")
+            print "Sphinx-to-github: Exception raised in main build, doing nothing."
         return
 
     dir_helper = DirHelper(
@@ -292,12 +292,12 @@ def sphinx_extension(app, exception):
             )
 
     file_helper = FileSystemHelper(
-            open,
+            lambda f, mode: codecs.open(f, mode, app.config.sphinx_to_github_encoding),
             os.path.join,
             shutil.move,
             os.path.exists
             )
-    
+
     operations_factory = OperationsFactory()
     handler_factory = HandlerFactory()
 
@@ -318,12 +318,10 @@ def sphinx_extension(app, exception):
 def setup(app):
     "Setup function for Sphinx Extension"
 
-    if (not hasattr(app, 'add_config_value') or
-        not hasattr(app, 'connect')):
-        warnings.warn('Could not call add_config_value() in sphinxtogithub')
-        return
     app.add_config_value("sphinx_to_github", True, '')
     app.add_config_value("sphinx_to_github_verbose", True, '')
+    app.add_config_value("sphinx_to_github_encoding", 'utf-8', '')
+
     app.connect("build-finished", sphinx_extension)
 
 
@@ -333,6 +331,8 @@ def main(args):
     parser = OptionParser(usage=usage)
     parser.add_option("-v","--verbose", action="store_true",
             dest="verbose", default=False, help="Provides verbose output")
+    parser.add_option("-e","--encoding", action="store",
+            dest="encoding", default="utf-8", help="Encoding for reading and writing files")
     opts, args = parser.parse_args(args)
 
     try:
@@ -352,7 +352,7 @@ def main(args):
             )
 
     file_helper = FileSystemHelper(
-            open,
+            lambda f, mode: codecs.open(f, mode, opts.encoding),
             os.path.join,
             shutil.move,
             os.path.exists
