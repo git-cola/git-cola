@@ -143,7 +143,10 @@ class CommitMessageEditor(QtGui.QWidget):
         connect_action_bool(self.autowrap_action, self.set_linebreak)
 
         add_action(self.summary, N_('Move Down'), self.focus_description,
-                Qt.Key_Down, Qt.Key_Return, Qt.Key_Enter)
+                   Qt.Key_Return, Qt.Key_Enter)
+
+        add_action(self.summary, N_('Move Down'),
+                   self.summary_cursor_down, Qt.Key_Down)
 
         self.model.add_observer(self.model.message_commit_message_changed,
                                 self.set_commit_message)
@@ -201,6 +204,21 @@ class CommitMessageEditor(QtGui.QWidget):
 
     def focus_description(self):
         self.description.setFocus()
+
+    def summary_cursor_down(self):
+        """Handle the down key in the summary field
+
+        If the cursor is at the end of the line then focus the description.
+        Otherwise, move the cursor to the end of the line so that a
+        subsequence "down" press moves to the end of the line.
+
+        """
+        cur_position = self.summary.cursorPosition()
+        end_position = len(self.summary.value())
+        if cur_position == end_position:
+            self.focus_description()
+        else:
+            self.summary.setCursorPosition(end_position)
 
     def commit_message(self, raw=True):
         """Return the commit message as a unicode string"""
