@@ -475,7 +475,7 @@ class GitDAG(MainWindow):
                      self.model_updated)
 
         qtutils.add_action(self, 'Focus search field',
-                           lambda: self.revtext.setFocus(), 'Ctrl+l')
+                           lambda: self.revtext.setFocus(), 'Ctrl+L')
 
         qtutils.add_close_action(self)
 
