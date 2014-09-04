@@ -98,7 +98,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.setHeaderHidden(True)
 
         self.open_action = qtutils.add_action(self,
-                N_('Open'), self.open_repo)
+                N_('Open'), self.open_repo, QtGui.QKeySequence.Open)
         self.open_action.setEnabled(False)
 
         self.open_new_action = qtutils.add_action(self,

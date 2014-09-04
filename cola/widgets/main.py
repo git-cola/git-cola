@@ -182,7 +182,7 @@ class MainView(MainWindow):
 
         self.preferences_action = add_action(self,
                 N_('Preferences'), self.preferences,
-                QtGui.QKeySequence.Preferences, 'Ctrl+O')
+                QtGui.QKeySequence.Preferences)
 
         self.edit_remotes_action = add_action(self,
                 N_('Edit Remotes...'), lambda: editremotes.remote_editor().exec_())
