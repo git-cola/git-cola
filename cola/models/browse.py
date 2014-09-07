@@ -1,5 +1,6 @@
 from __future__ import division, absolute_import, unicode_literals
 
+import collections
 import time
 
 from PyQt4 import QtCore
@@ -48,6 +49,16 @@ class Columns(object):
             raise NotImplementedError('Mapping required for "%s"' % column)
 
 
+def _item_path(item):
+    """Return the item's path"""
+    try:
+        path = item.path
+    except AttributeError:
+        # the root QStandardItem does not have a 'path' attribute
+        path = ''
+    return path
+
+
 class GitRepoModel(QtGui.QStandardItemModel):
     """Provides an interface into a git repository for browsing purposes."""
 
@@ -59,7 +70,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         self.connect(self, SIGNAL('updated'), self._updated_callback)
         model = main.model()
         model.add_observer(model.message_updated, self._model_updated)
-        self._dir_rows = {}
+        self._dir_rows = collections.defaultdict(int)
         self.setColumnCount(len(Columns.ALL))
         for idx, header in enumerate(Columns.ALL):
             text = Columns.text(header)
@@ -129,9 +140,10 @@ class GitRepoModel(QtGui.QStandardItemModel):
         # Insert directories before file paths
         # TODO: have self._dir_rows's keys based on something less flaky than
         # QStandardItem instances.
-        row = self._dir_rows.setdefault(id(parent), 0)
+        parent_path = _item_path(parent)
+        row = self._dir_rows[parent_path]
         parent.insertRow(row, row_items)
-        self._dir_rows[id(parent)] += 1
+        self._dir_rows[parent_path] += 1
 
         # Update the 'name' column for this entry
         self.entry(path).update_name()
@@ -193,9 +205,9 @@ class GitRepoModel(QtGui.QStandardItemModel):
         for entry in entries:
             curdir_append(entry)
             path = '/'.join(curdir)
-            if path in direntries:
+            try:
                 parent = direntries[path]
-            else:
+            except KeyError:
                 grandparent = parent
                 parent = self_add_directory(grandparent, path)
                 direntries[path] = parent
@@ -419,6 +431,7 @@ class GitRepoItem(QtGui.QStandardItem):
     """
     def __init__(self, column, path):
         QtGui.QStandardItem.__init__(self)
+        self.path = path
         self.setDragEnabled(False)
         self.setEditable(False)
         entry = GitRepoEntryManager.entry(path)
