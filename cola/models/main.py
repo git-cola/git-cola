@@ -18,10 +18,6 @@ from cola.models import prefs
 from cola.compat import ustr
 
 
-# Static GitConfig instance
-_config = gitcfg.instance()
-
-
 @memoize
 def model():
     """Returns the main model singleton"""
@@ -213,7 +209,11 @@ class MainModel(Observable):
                         self.unmerged or self.untracked))
 
     def _update_remotes(self):
-        self.remotes = self.git.remote()[STDOUT].splitlines()
+        cfg = gitcfg.instance()
+        remotes = cfg.find('remote.*.url')
+        prefix = len('remote.')
+        suffix = len('.url')
+        self.remotes = [remote[prefix:-suffix] for remote in remotes]
 
     def _update_branch_heads(self):
         # Set these early since they are used to calculate 'upstream_changed'.
