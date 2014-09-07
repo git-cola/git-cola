@@ -11,7 +11,7 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
     """Tests the cola.gitcmds module."""
     def setUp(self):
         helper.GitRepositoryTestCase.setUp(self)
-        self.config = gitcfg.instance()
+        self.config = gitcfg.current()
 
     def test_string(self):
         """Test string values in get()."""

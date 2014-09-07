@@ -27,8 +27,6 @@ from cola.models import main
 from cola.models import prefs
 from cola.models import selection
 
-_config = gitcfg.instance()
-
 
 class UsageError(Exception):
     """Exception class for usage errors."""
@@ -680,8 +678,10 @@ class Diffstat(Command):
 
     def __init__(self):
         Command.__init__(self)
+        cfg = gitcfg.current()
+        diff_context = cfg.get('diff.context', 3)
         diff = self.model.git.diff(self.model.head,
-                                   unified=_config.get('diff.context', 3),
+                                   unified=diff_context,
                                    no_ext_diff=True,
                                    no_color=True,
                                    M=True,
@@ -804,7 +804,8 @@ class LaunchDifftool(BaseCommand):
             if utils.is_win32():
                 core.fork(['git', 'mergetool', '--no-prompt', '--'] + paths)
             else:
-                cmd = _config.terminal()
+                cfg = gitcfg.current()
+                cmd = cfg.terminal()
                 argv = utils.shell_split(cmd)
                 argv.extend(['git', 'mergetool', '--no-prompt', '--'])
                 argv.extend(paths)
@@ -826,7 +827,8 @@ class LaunchTerminal(BaseCommand):
         self.path = path
 
     def do(self):
-        cmd = _config.terminal()
+        cfg = gitcfg.current()
+        cmd = cfg.terminal()
         argv = utils.shell_split(cmd)
         argv.append(os.getenv('SHELL', '/bin/sh'))
         core.fork(argv, cwd=self.path)
@@ -872,7 +874,8 @@ class LoadCommitMessageFromTemplate(LoadCommitMessageFromFile):
     """Loads the commit message template specified by commit.template."""
 
     def __init__(self):
-        template = _config.get('commit.template')
+        cfg = gitcfg.current()
+        template = cfg.get('commit.template')
         LoadCommitMessageFromFile.__init__(self, template)
 
     def do(self):
@@ -1002,7 +1005,8 @@ class OpenRepo(Command):
         new_worktree = git.worktree()
         core.chdir(new_worktree)
         self.model.set_directory(self.repo_path)
-        _config.reset()
+        cfg = gitcfg.current()
+        cfg.reset()
         inotify.stop()
         inotify.start()
         self.model.update_status()
@@ -1158,7 +1162,8 @@ class RunConfigAction(Command):
                 pass
         rev = None
         args = None
-        opts = _config.get_guitool_opts(self.action_name)
+        cfg = gitcfg.current()
+        opts = cfg.get_guitool_opts(self.action_name)
         cmd = opts.get('cmd')
         if 'title' not in opts:
             opts['title'] = cmd
@@ -1240,7 +1245,8 @@ class ShowUntracked(Command):
             self.new_diff_text = self.diff_text_for(filenames[0])
 
     def diff_text_for(self, filename):
-        size = _config.get('cola.readsize', 1024 * 2)
+        cfg = gitcfg.current()
+        size = cfg.get('cola.readsize', 1024 * 2)
         try:
             result = core.read(filename, size=size)
         except:
@@ -1279,8 +1285,9 @@ class SignOff(Command):
         except ImportError:
             user = os.getenv('USER', N_('unknown'))
 
-        name = _config.get('user.name', user)
-        email = _config.get('user.email', '%s@%s' % (user, core.node()))
+        cfg = gitcfg.current()
+        name = cfg.get('user.name', user)
+        email = cfg.get('user.email', '%s@%s' % (user, core.node()))
         return '\nSigned-off-by: %s <%s>' % (name, email)
 
 

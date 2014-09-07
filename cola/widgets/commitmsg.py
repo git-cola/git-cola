@@ -493,7 +493,7 @@ class CommitMessageEditor(QtGui.QWidget):
         if enabled and not self.spellcheck_initialized:
             # Add our name to the dictionary
             self.spellcheck_initialized = True
-            cfg = gitcfg.instance()
+            cfg = gitcfg.current()
             user_name = cfg.get('user.name')
             if user_name:
                 for part in user_name.split():

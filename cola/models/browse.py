@@ -208,13 +208,13 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
 class GitRepoEntryManager(object):
     """
-    Provides access to static instances of GitRepoEntry and model data.
+    Provides access to shared GitRepoEntry items and model data.
     """
     static_entries = {}
 
     @classmethod
     def entry(cls, path, _static_entries=static_entries):
-        """Return a static instance of a GitRepoEntry."""
+        """Return the shared GitRepoEntry for a path."""
         try:
             e = _static_entries[path]
         except KeyError:
@@ -223,10 +223,10 @@ class GitRepoEntryManager(object):
 
 
 class TaskRunner(object):
-    """Manages QRunnable task instances to avoid python's garbage collector
+    """Manages QRunnable tasks to avoid python's garbage collector
 
-    When PyQt stops referencing a QRunnable instance Python cleans it up
-    which leads to segfaults, e.g. the dreaded "C++ object has gone away".
+    When PyQt stops referencing a QRunnable Python cleans it up which leads to
+    segfaults, e.g. the dreaded "C++ object has gone away".
 
     This class keeps track of tasks and cleans up references to them as they
     complete.
@@ -235,7 +235,7 @@ class TaskRunner(object):
     singleton = None
 
     @classmethod
-    def instance(cls):
+    def current(cls):
         if cls.singleton is None:
             cls.singleton = TaskRunner()
         return cls.singleton
@@ -280,7 +280,7 @@ class GitRepoEntry(QtCore.QObject):
         """Starts a GitRepoInfoTask to calculate info for entries."""
         # GitRepoInfoTask handles expensive lookups
         task = GitRepoInfoTask(self.path)
-        TaskRunner.instance().run(task)
+        TaskRunner.current().run(task)
 
     def event(self, e):
         """Receive GitRepoInfoEvents and emit corresponding Qt signals."""
@@ -303,7 +303,7 @@ class GitRepoInfoTask(QRunnable):
     def __init__(self, path):
         QRunnable.__init__(self)
         self.path = path
-        self._cfg = gitcfg.instance()
+        self._cfg = gitcfg.current()
         self._data = {}
 
     def data(self, key):
@@ -394,7 +394,7 @@ class GitRepoInfoTask(QRunnable):
         app.postEvent(entry,
                 GitRepoInfoEvent(Columns.STATUS, self.status()))
 
-        TaskRunner.instance().cleanup_task(self)
+        TaskRunner.current().cleanup_task(self)
 
 
 class GitRepoInfoEvent(QtCore.QEvent):

@@ -36,7 +36,7 @@ class FormWidget(QtGui.QWidget):
         self.config_to_widget = {}
         self.widget_to_config = {}
         self.source = source
-        self.config = gitcfg.instance()
+        self.config = gitcfg.current()
         self.defaults = {}
         self.setLayout(QtGui.QFormLayout())
 

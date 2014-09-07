@@ -83,7 +83,7 @@ class MainView(MainWindow):
         self.task_runner = TaskRunner(self)
         self.progress = ProgressDialog('', '', self)
 
-        cfg = gitcfg.instance()
+        cfg = gitcfg.current()
         self.browser_dockable = (cfg.get('cola.browserdockable') or
                                  cfg.get('cola.classicdockable'))
         if self.browser_dockable:

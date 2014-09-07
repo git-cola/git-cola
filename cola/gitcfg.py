@@ -16,8 +16,8 @@ from cola.compat import ustr
 BUILTIN_READER = os.environ.get('GIT_COLA_BUILTIN_CONFIG_READER', False)
 
 @memoize
-def instance():
-    """Return a static GitConfig instance."""
+def current():
+    """Return the GitConfig singleton."""
     return GitConfig()
 
 _USER_CONFIG = core.expanduser(join('~', '.gitconfig'))
@@ -30,7 +30,7 @@ def _stat_info():
     paths = (('system', '/etc/gitconfig'),
              ('user', _USER_XDG_CONFIG),
              ('user', _USER_CONFIG),
-             ('repo', git.instance().git_path('config')))
+             ('repo', git.current().git_path('config')))
     statinfo = []
     for category, path in paths:
         try:
@@ -45,7 +45,7 @@ def _cache_key():
     paths = ('/etc/gitconfig',
              _USER_XDG_CONFIG,
              _USER_CONFIG,
-             git.instance().git_path('config'))
+             git.current().git_path('config'))
     mtimes = []
     for path in paths:
         try:
@@ -91,7 +91,7 @@ class GitConfig(observable.Observable):
 
     def __init__(self):
         observable.Observable.__init__(self)
-        self.git = git.instance()
+        self.git = git.current()
         self._map = {}
         self._system = {}
         self._user = {}

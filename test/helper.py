@@ -74,9 +74,9 @@ class GitRepositoryTestCase(TmpPathTestCase):
         self.initialize_repo()
         if commit:
             self.commit_files()
-        git.instance().set_worktree(core.getcwd())
-        gitcfg.instance().reset()
-        gitcmds.clear_cache()
+        git.current().set_worktree(core.getcwd())
+        gitcfg.current().reset()
+        gitcmds.reset()
 
     def git(self, *args):
         p = subprocess.Popen(['git'] + list(args), stdout=subprocess.PIPE,

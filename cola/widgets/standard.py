@@ -45,7 +45,7 @@ class WidgetMixin(object):
         if settings is None:
             settings = Settings()
             settings.load()
-        if gitcfg.instance().get('cola.savewindowsettings', True):
+        if gitcfg.current().get('cola.savewindowsettings', True):
             settings.save_gui_state(self)
 
     def restore_state(self, settings=None):

@@ -12,8 +12,6 @@ from cola.git import git
 from cola.git import STDOUT
 from cola.i18n import N_
 
-config = gitcfg.instance()
-
 
 class InvalidRepositoryError(Exception):
     pass
@@ -22,7 +20,7 @@ class InvalidRepositoryError(Exception):
 def default_remote(config=None):
     """Return the remote tracked by the current branch."""
     if config is None:
-        config = gitcfg.instance()
+        config = gitcfg.current()
     return config.get('branch.%s.remote' % current_branch())
 
 
@@ -71,7 +69,7 @@ class _current_branch:
     value = None
 
 
-def clear_cache():
+def reset():
     _current_branch.key = None
 
 
@@ -165,7 +163,7 @@ def all_refs(split=False, git=git):
 def tracked_branch(branch=None, config=None):
     """Return the remote branch associated with 'branch'."""
     if config is None:
-        config = gitcfg.instance()
+        config = gitcfg.current()
     if branch is None:
         branch = current_branch()
     if branch is None:
@@ -217,7 +215,9 @@ def update_diff_overrides(space_at_eol, space_change,
     _diff_overrides['function_context'] = function_context
 
 
-def common_diff_opts(config=config):
+def common_diff_opts(config=None):
+    if config is None:
+        config = gitcfg.current()
     submodule = version.check('diff-submodule', version.git_version())
     opts = {
         'patience': True,
@@ -292,7 +292,8 @@ def diff_helper(commit=None,
             argv.extend(filename)
         else:
             argv.append(filename)
-            encoding = config.file_encoding(filename)
+            cfg = gitcfg.current()
+            encoding = cfg.file_encoding(filename)
 
     if filename is not None:
         deleted = cached and not core.exists(filename)

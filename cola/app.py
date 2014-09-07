@@ -153,7 +153,7 @@ class ColaApplication(object):
         qtcompat.add_search_path(os.path.basename(icon_dir), icon_dir)
 
         if gui:
-            self._app = instance(tuple(argv), git_path)
+            self._app = current(tuple(argv), git_path)
             self._app.setWindowIcon(qtutils.git_icon())
         else:
             self._app = QtCore.QCoreApplication(argv)
@@ -185,7 +185,7 @@ class ColaApplication(object):
 
 
 @memoize
-def instance(argv, git_path=None):
+def current(argv, git_path=None):
     return ColaQApplication(list(argv), git_path)
 
 

@@ -63,7 +63,7 @@ class MainModel(Observable):
         Observable.__init__(self)
 
         # Initialize the git command object
-        self.git = git.instance()
+        self.git = git.current()
 
         self.head = 'HEAD'
         self.diff_text = ''
@@ -209,7 +209,7 @@ class MainModel(Observable):
                         self.unmerged or self.untracked))
 
     def _update_remotes(self):
-        cfg = gitcfg.instance()
+        cfg = gitcfg.current()
         remotes = cfg.find('remote.*.url')
         prefix = len('remote.')
         suffix = len('.url')
