@@ -121,7 +121,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 cmds.Stage.SHORTCUT)
 
         self.revert_unstaged_edits_action = qtutils.add_action(self,
-                N_('Revert Unstaged Edits...'),
+                cmds.RevertUnstagedEdits.name(),
                 cmds.run(cmds.RevertUnstagedEdits),
                 cmds.RevertUnstagedEdits.SHORTCUT)
         self.revert_unstaged_edits_action.setIcon(qtutils.icon('undo.svg'))

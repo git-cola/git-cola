@@ -339,36 +339,6 @@ class ResetMode(Command):
         self.model.update_file_status()
 
 
-class RevertUnstagedEdits(Command):
-
-    SHORTCUT = 'Ctrl+U'
-
-    def do(self):
-        if not self.model.undoable():
-            return
-        s = selection.selection()
-        if s.staged:
-            items_to_undo = s.staged
-        else:
-            items_to_undo = s.modified
-        if items_to_undo:
-            if not Interaction.confirm(N_('Revert Unstaged Changes?'),
-                                   N_('This operation drops unstaged changes.\n'
-                                      'These changes cannot be recovered.'),
-                                   N_('Revert the unstaged changes?'),
-                                   N_('Revert Unstaged Changes'),
-                                   default=True,
-                                   icon=resources.icon('undo.svg')):
-                return
-            args = []
-            if not s.staged and self.model.amending():
-                args.append(self.model.head)
-            do(Checkout, args + ['--'] + items_to_undo)
-        else:
-            msg = N_('No files selected for checkout from HEAD.')
-            Interaction.log(msg)
-
-
 class Commit(ResetMode):
     """Attempt to create a new commit."""
 
@@ -1147,6 +1117,67 @@ class Refresh(Command):
 
     def do(self):
         self.model.update_status(update_index=True)
+
+
+class RevertEditsCommand(ConfirmAction):
+
+    def __init__(self):
+        ConfirmAction.__init__(self)
+        self.model = main.model()
+        self.icon = resources.icon('undo.svg')
+
+    def ok_to_run(self):
+        return self.model.undoable()
+
+    def checkout_from_head(self):
+        return False
+
+    def checkout_args(self):
+        args = []
+        s = selection.selection()
+        if self.checkout_from_head():
+            args.append(self.model.head)
+        args.append('--')
+
+        if s.staged:
+            items = s.staged
+        else:
+            items = s.modified
+        args.extend(items)
+
+        return args
+
+    def action(self):
+        git = self.model.git
+        checkout_args = self.checkout_args()
+        return git.checkout(*checkout_args)
+
+    def success(self):
+        self.model.update_file_status()
+
+
+class RevertUnstagedEdits(RevertEditsCommand):
+
+    SHORTCUT = 'Ctrl+U'
+
+    @staticmethod
+    def name():
+        return N_('Revert Unstaged Edits...')
+
+    def checkout_from_head(self):
+        # If we are amending and a modified file is selected
+        # then we should include "HEAD^" on the command-line.
+        selected = selection.selection()
+        return not selected.staged and self.model.amending()
+
+    def confirm(self):
+        title = N_('Revert Unstaged Changes?')
+        text = N_('This operation drops unstaged changes.\n'
+                  'These changes cannot be recovered.')
+        info = N_('Revert the unstaged changes?')
+        ok_text = N_('Revert Unstaged Changes')
+        return Interaction.confirm(title, text, info, ok_text,
+                                   default=True, icon=self.icon)
 
 
 class RunConfigAction(Command):
