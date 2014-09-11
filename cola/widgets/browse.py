@@ -164,7 +164,7 @@ class RepoTreeView(standard.TreeView):
         staged = bool(self.selected_staged_paths(selection=selection))
         modified = bool(self.selected_modified_paths(selection=selection))
         unstaged = bool(self.selected_unstaged_paths(selection=selection))
-        tracked = bool(self.selected_tracked_paths())
+        tracked = bool(self.selected_tracked_paths(selection=selection))
 
         self.action_history.setEnabled(selected)
         self.action_stage.setEnabled(unstaged)
@@ -257,14 +257,14 @@ class RepoTreeView(standard.TreeView):
 
     def selected_staged_paths(self, selection=None):
         """Return selected staged paths."""
-        if not selection:
+        if selection is None:
             selection = self.selected_paths()
         staged = utils.add_parents(main.model().staged)
         return [p for p in selection if p in staged]
 
     def selected_modified_paths(self, selection=None):
         """Return selected modified paths."""
-        if not selection:
+        if selection is None:
             selection = self.selected_paths()
         model = main.model()
         modified = utils.add_parents(model.modified)
@@ -272,7 +272,7 @@ class RepoTreeView(standard.TreeView):
 
     def selected_unstaged_paths(self, selection=None):
         """Return selected unstaged paths."""
-        if not selection:
+        if selection is None:
             selection = self.selected_paths()
         model = main.model()
         modified = utils.add_parents(model.modified)
@@ -282,11 +282,11 @@ class RepoTreeView(standard.TreeView):
 
     def selected_tracked_paths(self, selection=None):
         """Return selected tracked paths."""
-        if not selection:
+        if selection is None:
             selection = self.selected_paths()
         model = main.model()
-        staged = set(self.selected_staged_paths())
-        modified = set(self.selected_modified_paths())
+        staged = set(self.selected_staged_paths(selection=selection))
+        modified = set(self.selected_modified_paths(selection=selection))
         untracked = utils.add_parents(model.untracked)
         tracked = staged.union(modified)
         return [p for p in selection
