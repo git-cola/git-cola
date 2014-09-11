@@ -105,44 +105,45 @@ class RepoTreeView(standard.TreeView):
         # Sync selection before the key press event changes the model index
         self.connect(self, SIGNAL('indexAboutToChange()'), self.sync_selection)
 
-        self.action_history =\
-                self._create_action(
-                        N_('View History...'),
-                        N_('View history for selected path(s).'),
-                        self.view_history,
-                        'Shift+Ctrl+H')
+        self.action_history = self._create_action(
+                N_('View History...'),
+                N_('View history for selected path(s)'),
+                self.view_history,
+                'Shift+Ctrl+H')
 
-        self.action_untrack =\
-                self._create_action(N_('Untrack Selected'),
-                                    N_('Stop tracking path(s)'),
-                                    self.untrack_selected)
         self.action_stage = self._create_action(
                 cmds.StageOrUnstage.name(),
                 N_('Stage/unstage selected path(s) for commit'),
                 cmds.run(cmds.StageOrUnstage),
                 cmds.StageOrUnstage.SHORTCUT)
 
-        self.action_difftool =\
-                self._create_action(cmds.LaunchDifftool.name(),
-                                    N_('Launch git-difftool on the current path.'),
-                                    cmds.run(cmds.LaunchDifftool),
-                                    cmds.LaunchDifftool.SHORTCUT)
+        self.action_untrack = self._create_action(
+                N_('Untrack Selected'),
+                N_('Stop tracking path(s)'),
+                self.untrack_selected)
 
-        self.action_difftool_predecessor =\
-                self._create_action(N_('Diff Against Predecessor...'),
-                                    N_('Launch git-difftool against previous versions.'),
-                                    self.difftool_predecessor,
-                                    'Shift+Ctrl+D')
         self.action_revert =\
                 self._create_action(N_('Revert Uncommitted Changes...'),
                                     N_('Revert changes to selected path(s).'),
                                     self.revert,
                                     'Ctrl+Z')
-        self.action_editor =\
-                self._create_action(cmds.LaunchEditor.name(),
-                                    N_('Edit selected path(s).'),
-                                    cmds.run(cmds.LaunchEditor),
-                                    cmds.LaunchEditor.SHORTCUT)
+        self.action_difftool = self._create_action(
+                cmds.LaunchDifftool.name(),
+                N_('Launch git-difftool on the current path.'),
+                cmds.run(cmds.LaunchDifftool),
+                cmds.LaunchDifftool.SHORTCUT)
+
+        self.action_difftool_predecessor =self._create_action(
+                N_('Diff Against Predecessor...'),
+                N_('Launch git-difftool against previous versions.'),
+                self.difftool_predecessor,
+                'Shift+Ctrl+D')
+
+        self.action_editor = self._create_action(
+                cmds.LaunchEditor.name(),
+                N_('Edit selected path(s).'),
+                cmds.run(cmds.LaunchEditor),
+                cmds.LaunchEditor.SHORTCUT)
 
     def size_columns(self):
         """Set the column widths."""
