@@ -243,9 +243,7 @@ class MainView(MainWindow):
                 QtGui.QKeySequence.HelpContents)
 
         self.help_shortcuts_action = add_action(self,
-                N_('Keyboard Shortcuts'),
-                show_shortcuts,
-                QtCore.Qt.Key_Question)
+                N_('Keyboard Shortcuts'), show_shortcuts, Qt.Key_Question)
 
         self.visualize_current_action = add_action(self,
                 N_('Visualize Current Branch...'),

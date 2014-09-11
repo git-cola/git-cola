@@ -354,6 +354,7 @@ def _add_action(widget, text, fn, connect, *shortcuts):
         widget.addAction(action)
     return action
 
+
 def set_selected_item(widget, idx):
     """Sets a the currently selected item to the item at index idx."""
     if type(widget) is QtGui.QTreeWidget:
