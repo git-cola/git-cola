@@ -122,11 +122,6 @@ class RepoTreeView(standard.TreeView):
                 N_('Stop tracking path(s)'),
                 self.untrack_selected)
 
-        self.action_revert =\
-                self._create_action(N_('Revert Uncommitted Changes...'),
-                                    N_('Revert changes to selected path(s).'),
-                                    self.revert,
-                                    'Ctrl+Z')
         self.action_difftool = self._create_action(
                 cmds.LaunchDifftool.name(),
                 N_('Launch git-difftool on the current path.'),
@@ -138,6 +133,18 @@ class RepoTreeView(standard.TreeView):
                 N_('Launch git-difftool against previous versions.'),
                 self.difftool_predecessor,
                 'Shift+Ctrl+D')
+
+        self.action_revert_unstaged = self._create_action(
+                cmds.RevertUnstagedEdits.name(),
+                N_('Revert unstaged changes to selected paths.'),
+                cmds.run(cmds.RevertUnstagedEdits),
+                cmds.RevertUnstagedEdits.SHORTCUT)
+
+        self.action_revert_uncommitted = self._create_action(
+                cmds.RevertUncommittedEdits.name(),
+                N_('Revert uncommitted changes to selected paths.'),
+                cmds.run(cmds.RevertUncommittedEdits),
+                cmds.RevertUncommittedEdits.SHORTCUT)
 
         self.action_editor = self._create_action(
                 cmds.LaunchEditor.name(),
@@ -160,13 +167,15 @@ class RepoTreeView(standard.TreeView):
         modified = bool(self.selected_modified_paths(selection=selection))
         unstaged = bool(self.selected_unstaged_paths(selection=selection))
         tracked = bool(self.selected_tracked_paths(selection=selection))
+        revertable = staged or modified
 
         self.action_history.setEnabled(selected)
         self.action_stage.setEnabled(staged or unstaged)
         self.action_untrack.setEnabled(tracked)
         self.action_difftool.setEnabled(staged or modified)
         self.action_difftool_predecessor.setEnabled(tracked)
-        self.action_revert.setEnabled(tracked)
+        self.action_revert_unstaged.setEnabled(revertable)
+        self.action_revert_uncommitted.setEnabled(revertable)
 
     def contextMenuEvent(self, event):
         """Create a context menu."""
@@ -179,7 +188,8 @@ class RepoTreeView(standard.TreeView):
         menu.addAction(self.action_difftool)
         menu.addAction(self.action_difftool_predecessor)
         menu.addSeparator()
-        menu.addAction(self.action_revert)
+        menu.addAction(self.action_revert_unstaged)
+        menu.addAction(self.action_revert_uncommitted)
         menu.addAction(self.action_untrack)
         menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -309,19 +319,6 @@ class RepoTreeView(standard.TreeView):
         """Diff paths against previous versions."""
         paths = self.selected_tracked_paths()
         self.emit(SIGNAL('difftool_predecessor'), paths)
-
-    def revert(self):
-        """Signal that we should revert changes to a path."""
-        if not qtutils.confirm(N_('Revert Uncommitted Changes?'),
-                               N_('This operation drops uncommitted changes.\n'
-                                  'These changes cannot be recovered.'),
-                               N_('Revert the uncommitted changes?'),
-                               N_('Revert Uncommitted Changes'),
-                               default=True,
-                               icon=qtutils.icon('undo.svg')):
-            return
-        paths = self.selected_tracked_paths()
-        cmds.do(cmds.Checkout, ['HEAD', '--'] + paths)
 
     def current_path(self):
         """Return the path for the current item."""

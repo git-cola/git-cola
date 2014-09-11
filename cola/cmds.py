@@ -1180,6 +1180,27 @@ class RevertUnstagedEdits(RevertEditsCommand):
                                    default=True, icon=self.icon)
 
 
+class RevertUncommittedEdits(RevertEditsCommand):
+
+    SHORTCUT = 'Ctrl+Z'
+
+    @staticmethod
+    def name():
+        return N_('Revert Uncommitted Edits...')
+
+    def checkout_from_head(self):
+        return True
+
+    def confirm(self):
+        title = N_('Revert Uncommitted Changes?')
+        text = N_('This operation drops uncommitted changes.\n'
+                  'These changes cannot be recovered.')
+        info = N_('Revert the uncommitted changes?')
+        ok_text = N_('Revert Uncommitted Changes')
+        return Interaction.confirm(title, text, info, ok_text,
+                                   default=True, icon=self.icon)
+
+
 class RunConfigAction(Command):
     """Run a user-configured action, typically from the "Tools" menu"""
 
