@@ -1,6 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
 
-import subprocess
 import itertools
 
 from PyQt4 import QtCore
@@ -117,8 +116,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.expanded_items = set()
 
         self.process_selection_action = qtutils.add_action(self,
-                N_('Stage / Unstage'), self._process_selection,
-                cmds.Stage.SHORTCUT)
+                cmds.StageOrUnstage.name(),
+                cmds.run(cmds.StageOrUnstage),
+                cmds.StageOrUnstage.SHORTCUT)
 
         self.revert_unstaged_edits_action = qtutils.add_action(self,
                 cmds.RevertUnstagedEdits.name(),
@@ -813,22 +813,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def double_clicked(self, item, idx):
         """Called when an item is double-clicked in the repo status tree."""
-        self._process_selection()
-
-    def _process_selection(self):
-        s = self.selection()
-        if s.staged:
-            cmds.do(cmds.Unstage, s.staged)
-
-        unstaged = []
-        if s.unmerged:
-            unstaged.extend(s.unmerged)
-        if s.modified:
-            unstaged.extend(s.modified)
-        if s.untracked:
-            unstaged.extend(s.untracked)
-        if unstaged:
-            cmds.do(cmds.Stage, unstaged)
+        cmds.do(cmds.StageOrUnstage)
 
     def _open_using_default_app(self):
         cmds.do(cmds.OpenDefaultApp, self.selected_group())

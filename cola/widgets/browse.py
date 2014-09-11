@@ -111,22 +111,16 @@ class RepoTreeView(standard.TreeView):
                         N_('View history for selected path(s).'),
                         self.view_history,
                         'Shift+Ctrl+H')
-        self.action_stage =\
-                self._create_action(N_('Stage Selected'),
-                                    N_('Stage selected path(s) for commit.'),
-                                    self.stage_selected,
-                                    cmds.Stage.SHORTCUT)
-        self.action_unstage =\
-                self._create_action(
-                        N_('Unstage Selected'),
-                        N_('Remove selected path(s) from the staging area.'),
-                        self.unstage_selected,
-                        'Ctrl+U')
 
         self.action_untrack =\
                 self._create_action(N_('Untrack Selected'),
                                     N_('Stop tracking path(s)'),
                                     self.untrack_selected)
+        self.action_stage = self._create_action(
+                cmds.StageOrUnstage.name(),
+                N_('Stage/unstage selected path(s) for commit'),
+                cmds.run(cmds.StageOrUnstage),
+                cmds.StageOrUnstage.SHORTCUT)
 
         self.action_difftool =\
                 self._create_action(cmds.LaunchDifftool.name(),
@@ -167,8 +161,7 @@ class RepoTreeView(standard.TreeView):
         tracked = bool(self.selected_tracked_paths(selection=selection))
 
         self.action_history.setEnabled(selected)
-        self.action_stage.setEnabled(unstaged)
-        self.action_unstage.setEnabled(staged)
+        self.action_stage.setEnabled(staged or unstaged)
         self.action_untrack.setEnabled(tracked)
         self.action_difftool.setEnabled(staged or modified)
         self.action_difftool_predecessor.setEnabled(tracked)
@@ -180,7 +173,6 @@ class RepoTreeView(standard.TreeView):
         menu = QtGui.QMenu(self)
         menu.addAction(self.action_editor)
         menu.addAction(self.action_stage)
-        menu.addAction(self.action_unstage)
         menu.addSeparator()
         menu.addAction(self.action_history)
         menu.addAction(self.action_difftool)
@@ -307,14 +299,6 @@ class RepoTreeView(standard.TreeView):
     def view_history(self):
         """Signal that we should view history for paths."""
         self.emit(SIGNAL('history(QStringList)'), self.selected_paths())
-
-    def stage_selected(self):
-        """Signal that we should stage selected paths."""
-        cmds.do(cmds.Stage, self.selected_unstaged_paths())
-
-    def unstage_selected(self):
-        """Signal that we should stage selected paths."""
-        cmds.do(cmds.Unstage, self.selected_staged_paths())
 
     def untrack_selected(self):
         """untrack selected paths."""

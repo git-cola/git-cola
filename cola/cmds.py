@@ -1390,6 +1390,31 @@ class StageUntracked(Stage):
         self.paths = self.model.untracked
 
 
+class StageOrUnstage(Command):
+    """If the selection is staged, unstage it, otherwise stage"""
+
+    SHORTCUT = 'Ctrl+S'
+
+    @staticmethod
+    def name():
+        return N_('Stage / Unstage')
+
+    def do(self):
+        s = selection.selection()
+        if s.staged:
+            do(Unstage, s.staged)
+
+        unstaged = []
+        if s.unmerged:
+            unstaged.extend(s.unmerged)
+        if s.modified:
+            unstaged.extend(s.modified)
+        if s.untracked:
+            unstaged.extend(s.untracked)
+        if unstaged:
+            do(Stage, unstaged)
+
+
 class Tag(Command):
     """Create a tag object."""
 
