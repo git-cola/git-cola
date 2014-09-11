@@ -211,7 +211,7 @@ class MainView(MainWindow):
         self.grep_action = add_action(self,
                 N_('Grep'), grep, 'Ctrl+G')
         self.merge_local_action = add_action(self,
-                N_('Merge...'), merge.local_merge)
+                N_('Merge...'), merge.local_merge, 'Shift+Ctrl+M')
 
         self.merge_abort_action = add_action(self,
                 N_('Abort Merge...'), merge.abort_merge)
