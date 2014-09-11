@@ -1,3 +1,9 @@
+git-cola v2.0.7
+===============
+Usability, bells and whistles
+-----------------------------
+* New hotkey: `Shift+Ctrl+M` merges branches.
+
 git-cola v2.0.6
 ===============
 Usability, bells and whistles
