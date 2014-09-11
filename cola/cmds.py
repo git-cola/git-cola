@@ -64,6 +64,9 @@ class ConfirmAction(BaseCommand):
     def __init__(self):
         BaseCommand.__init__(self)
 
+    def ok_to_run(self):
+        return True
+
     def confirm(self):
         return True
 
@@ -90,7 +93,7 @@ class ConfirmAction(BaseCommand):
     def do(self):
         status = -1
         out = err = ''
-        ok = self.confirm()
+        ok = self.ok_to_run() and self.confirm()
         if ok:
             status, out, err = self.action()
             if self.ok(status):
