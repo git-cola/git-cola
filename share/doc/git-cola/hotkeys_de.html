@@ -50,11 +50,6 @@ span.title {
     <td class="title">Version</td>
 </tr>
 <tr>
-    <td class="shortcut">Ctrl + m</td>
-    <td>:</td>
-    <td>Letzte Version nachbessern</td>
-</tr>
-<tr>
     <td class="shortcut">Ctrl + Return</td>
     <td>:</td>
     <td>Vorgemerkte Änderungen versionieren</td>
@@ -81,9 +76,25 @@ span.title {
     <td>Revert unstaged edits</td>
 </tr>
 <tr>
-    <td class="shortcut">Ctrl + r</td>
+    <td class="shortcut">Ctrl + z</td>
     <td>:</td>
-    <td>Ansicht aktualisieren</td>
+    <td>Nicht versionierte Änderungen verwerfen</td>
+</tr>
+<tr>
+    <td class="shortcut">Shift + Ctrl + m</td>
+    <td>:</td>
+    <!-- TODO -->
+    <td>Merge branches</td>
+</tr>
+<tr>
+    <td class="shortcut">Ctrl + m</td>
+    <td>:</td>
+    <td>Letzte Version nachbessern</td>
+</tr>
+<tr>
+    <td class="shortcut">Shift + Ctrl + c</td>
+    <td>:</td>
+    <td>Einzelne Version übernehmen</td>
 </tr>
 </table>
 
@@ -120,11 +131,6 @@ span.title {
     <td>Patches exportieren</td>
 </tr>
 <tr>
-    <td class="shortcut">Shift + Ctrl + c</td>
-    <td>:</td>
-    <td>Einzelne Version übernehmen</td>
-</tr>
-<tr>
     <td class="shortcut">Shift + Alt + s</td>
     <td>:</td>
     <td>Weglegen und zurückholen</td>
@@ -137,7 +143,12 @@ span.title {
 <tr>
     <td class="shortcut">Shift + Ctrl + f</td>
     <td>:</td>
-    <td>Toggle the paths filter</td>
+    <td>Toggle paths filter</td>
+</tr>
+<tr>
+    <td class="shortcut">Ctrl + r</td>
+    <td>:</td>
+    <td>Ansicht aktualisieren</td>
 </tr>
 <tr>
     <td class="shortcut">?</td>
@@ -190,51 +201,7 @@ span.title {
 </tr>
 </table>
 
-<!-- Browser actions -->
-<table class="center">
-<tr>
-    <td width="35%">&nbsp;</td>
-    <td>&nbsp;</td>
-    <td class="title">Browser-Befehle</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + e</td>
-    <td>:</td>
-    <td>Im Editor bearbeiten</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + s</td>
-    <td>:</td>
-    <td>Auswahl vormerken</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + u</td>
-    <td>:</td>
-    <td>Vormerkung für Auswahl aufheben</td>
-</tr>
-<tr>
-    <td class="shortcut">Shift + Ctrl + h</td>
-    <td>:</td>
-    <td>Verlauf anzeigen</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + d</td>
-    <td>:</td>
-    <td>Mithilfe von `git difftool` ansehen</td>
-</tr>
-<tr>
-    <td class="shortcut">Shift + Ctrl + d</td>
-    <td>:</td>
-    <td>Mit Vorgänger vergleichen</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + z</td>
-    <td>:</td>
-    <td>Nicht versionierte Änderungen verwerfen</td>
-</tr>
-</table>
-
-<!-- Diff Viewer -->
+<!-- Diff -->
 <table class="center">
 <tr>
     <td width="35%">&nbsp;</td>
@@ -247,11 +214,25 @@ span.title {
     <td>Auswahl vormerken; falls nichts ausgewählt ist, siehe <strong><em>h</em></strong>
     </td>
 </tr>
+</table>
+
+
+<!-- Browser actions -->
+<table class="center">
 <tr>
-    <td class="shortcut">h</td>
+    <td width="35%">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td class="title">Browser-Befehle</td>
+</tr>
+<tr>
+    <td class="shortcut">Shift + Ctrl + h</td>
     <td>:</td>
-    <td>Änderung am Cursor vormerken
-    </td>
+    <td>Verlauf anzeigen</td>
+</tr>
+<tr>
+    <td class="shortcut">Shift + Ctrl + d</td>
+    <td>:</td>
+    <td>Mit Vorgänger vergleichen</td>
 </tr>
 </table>
 
@@ -282,5 +263,11 @@ span.title {
     <td>:</td>
     <td>Nach rechts/ausklappen</td>
 </tr>
+<tr>
+    <td class="shortcut">Ctrl + l</td>
+    <td>:</td>
+    <td>Focus the DAG input field</td>
+</tr>
 </table>
+
 </body>
