@@ -44,6 +44,9 @@ class CompletionLineEdit(text.HintedLineEdit):
 
         self.connect(self, SIGNAL('destroyed(QObject*)'), self.dispose)
 
+    def __del__(self):
+        self.dispose()
+
     def dispose(self, *args):
         self._completer.dispose()
 
