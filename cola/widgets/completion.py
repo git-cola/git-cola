@@ -26,11 +26,6 @@ class CompletionLineEdit(text.HintedLineEdit):
         text.HintedLineEdit.__init__(self, hint=hint, parent=parent)
 
         self.setFont(qtutils.diff_font())
-        # used to hide the completion popup after a drag-select
-        self._drag = 0
-
-        self._keys_to_ignore = set([Qt.Key_Enter, Qt.Key_Return,
-                                    Qt.Key_Escape])
 
         completion_model = model(self)
         completer = Completer(completion_model, self)
@@ -120,62 +115,26 @@ class CompletionLineEdit(text.HintedLineEdit):
         return words[-1]
 
     def event(self, event):
-        if event.type() == QtCore.QEvent.KeyPress:
-            if (event.key() == Qt.Key_Tab and
-                    self.popup().isVisible()):
-                event.ignore()
-                return True
-            if (event.key() in (Qt.Key_Return, Qt.Key_Enter) and
-                    not self.popup().isVisible()):
-                self.emit(SIGNAL('returnPressed()'))
-                event.accept()
-                return True
         if event.type() == QtCore.QEvent.Hide:
             self.close_popup()
         return text.HintedLineEdit.event(self, event)
 
     def do_completion(self):
-        self._completer.popup().setCurrentIndex(
-                self._completer.model().index(0,0))
         self._completer.complete()
+        self.popup().setCurrentIndex(self._completer.model().index(0, 0))
+        self.popup().scrollToTop()
 
-    def keyPressEvent(self, event):
-        if self._completer.popup().isVisible():
-            if event.key() in self._keys_to_ignore:
-                event.ignore()
-                self._complete(self._last_word())
-                return
+    def keyReleaseEvent(self, event):
 
-        elif (event.key() == Qt.Key_Down and
-              self._completer.completionCount() > 0):
-            event.accept()
-            self.do_completion()
+        text.HintedLineEdit.keyReleaseEvent(self, event)
+
+        if event.key() in (Qt.Key_Tab, Qt.Key_Enter, Qt.Key_Return,
+                           Qt.Key_Escape):
             return
 
-        text.HintedLineEdit.keyPressEvent(self, event)
-
         prefix = self._last_word()
-        if prefix != ustr(self._completer.completionPrefix()):
-            self._update_popup_items(prefix)
-
-        if len(event.text()) > 0 and len(prefix) > 0:
-            self._completer.complete()
-
-    #: _drag: 0 - unclicked, 1 - clicked, 2 - dragged
-    def mousePressEvent(self, event):
-        self._drag = 1
-        return text.HintedLineEdit.mousePressEvent(self, event)
-
-    def mouseMoveEvent(self, event):
-        if self._drag == 1:
-            self._drag = 2
-        return text.HintedLineEdit.mouseMoveEvent(self, event)
-
-    def mouseReleaseEvent(self, event):
-        if self._drag != 2 and event.button() != Qt.RightButton:
-            self.do_completion()
-        self._drag = 0
-        return text.HintedLineEdit.mouseReleaseEvent(self, event)
+        self._update_popup_items(prefix)
+        self.do_completion()
 
     def close_popup(self):
         if self.popup().isVisible():
@@ -187,8 +146,6 @@ class CompletionLineEdit(text.HintedLineEdit):
         with the given prefix.
         """
         self._completer.setCompletionPrefix(prefix)
-        self._completer.popup().setCurrentIndex(
-                self._completer.model().index(0,0))
 
 
 class GatherCompletionsThread(QtCore.QThread):
