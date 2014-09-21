@@ -4,6 +4,8 @@ Usability, bells and whistles
 -----------------------------
 * New hotkey: `Shift+Ctrl+M` merges branches.
 
+* New hotkey: `Ctrl+R` refreshes the DAG viewer.
+
 git-cola v2.0.6
 ===============
 Usability, bells and whistles

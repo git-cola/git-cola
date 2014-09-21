@@ -336,8 +336,6 @@ class GitDAG(MainWindow):
         self.commits = {}
         self.commit_list = []
 
-        self.old_count = None
-        self.old_ref = None
         self.thread = ReaderThread(dag, self)
         self.revtext = completion.GitLogLineEdit()
         self.maxresults = standard.SpinBox()
@@ -395,11 +393,16 @@ class GitDAG(MainWindow):
         self.lock_layout_action = qtutils.add_action_bool(self,
                 N_('Lock Layout'), self.set_lock_layout, False)
 
+        self.refresh_action = qtutils.add_action(self,
+                N_('Refresh'), self.refresh, 'Ctrl+R')
+
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)
 
         # View Menu
         self.view_menu = qtutils.create_menu(N_('View'), self.menubar)
+        self.view_menu.addAction(self.refresh_action)
+
         self.view_menu.addAction(self.log_dock.toggleViewAction())
         self.view_menu.addAction(self.graphview_dock.toggleViewAction())
         self.view_menu.addAction(self.diff_dock.toggleViewAction())
@@ -501,31 +504,20 @@ class GitDAG(MainWindow):
         self.emit(SIGNAL('model_updated'))
 
     def model_updated(self):
-        if self.dag.ref:
-            self.revtext.update_matches()
-            return
-        if not self.model.currentbranch:
-            return
-        self.revtext.setText(self.model.currentbranch + ' --')
         self.display()
+
+    def refresh(self):
+        cmds.do(cmds.Refresh)
 
     def display(self):
         new_ref = self.revtext.value()
-        if not new_ref:
-            return
         new_count = self.maxresults.value()
-        old_ref = self.old_ref
-        old_count = self.old_count
-        if old_ref == new_ref and old_count == new_count:
-            return
-
-        self.old_ref = new_ref
-        self.old_count = new_count
 
         self.thread.stop()
-        self.clear()
         self.dag.set_ref(new_ref)
-        self.dag.set_count(self.maxresults.value())
+        self.dag.set_count(new_count)
+
+        self.clear()
         self.thread.start()
 
     def show(self):
