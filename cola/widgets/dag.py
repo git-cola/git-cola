@@ -368,11 +368,8 @@ class GitDAG(MainWindow):
         self.filewidget = FileWidget(notifier, self)
         self.graphview = GraphView(notifier, self)
 
-        self.controls_layout = QtGui.QHBoxLayout()
-        self.controls_layout.setMargin(defs.no_margin)
-        self.controls_layout.setSpacing(defs.spacing)
-        self.controls_layout.addWidget(self.revtext)
-        self.controls_layout.addWidget(self.maxresults)
+        self.controls_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                            self.revtext, self.maxresults)
 
         self.controls_widget = QtGui.QWidget()
         self.controls_widget.setLayout(self.controls_layout)
@@ -388,12 +385,9 @@ class GitDAG(MainWindow):
         self.diff_dock = qtutils.create_dock(N_('Diff'), self)
         self.diff_dock.setWidget(self.diffwidget)
 
-        self.graph_controls_layout = QtGui.QHBoxLayout()
-        self.graph_controls_layout.setMargin(defs.no_margin)
-        self.graph_controls_layout.setSpacing(defs.button_spacing)
-        self.graph_controls_layout.addWidget(self.zoom_out)
-        self.graph_controls_layout.addWidget(self.zoom_in)
-        self.graph_controls_layout.addWidget(self.zoom_to_fit)
+        self.graph_controls_layout = qtutils.hbox(
+                defs.no_margin, defs.button_spacing,
+                self.zoom_out, self.zoom_in, self.zoom_to_fit)
 
         self.graph_controls_widget = QtGui.QWidget()
         self.graph_controls_widget.setLayout(self.graph_controls_layout)

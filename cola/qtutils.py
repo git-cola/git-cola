@@ -43,6 +43,32 @@ def active_window():
     return QtGui.QApplication.activeWindow()
 
 
+def hbox(margin, spacing, *items):
+    return box(QtGui.QHBoxLayout, margin, spacing, *items)
+
+
+def vbox(margin, spacing, *items):
+    return box(QtGui.QVBoxLayout, margin, spacing, *items)
+
+
+STRETCH = object()
+
+def box(cls, margin, spacing, *items):
+    stretch = STRETCH
+    layout = cls()
+    layout.setMargin(margin)
+    layout.setSpacing(spacing)
+    for i in items:
+        if i is stretch:
+            layout.addStretch()
+        elif isinstance(i, QtGui.QWidget):
+            layout.addWidget(i)
+        elif isinstance(i, (QtGui.QHBoxLayout, QtGui.QVBoxLayout)):
+            layout.addItem(i)
+
+    return layout
+
+
 def prompt(msg, title=None, text=''):
     """Presents the user with an input widget and returns the input."""
     if title is None:
