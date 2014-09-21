@@ -306,9 +306,6 @@ def filter_matches(match_text, candidates, case_sensitive):
     if match_text:
         matches = [r for r in candidates
                     if transform(match_text) in transform(r)]
-        # if we match nothing, still offer to complete something
-        if not matches:
-            matches = list(candidates)
     else:
         matches = list(candidates)
 
@@ -452,9 +449,9 @@ class GitLogCompletionModel(GitRefCompletionModel):
         has_doubledash = (self.match_text == '--' or
                           self.full_text.startswith('-- ') or
                           ' -- ' in self.full_text)
-        if refs and has_doubledash:
+        if has_doubledash:
             refs = []
-        if paths and not has_doubledash:
+        elif refs and paths:
             paths.insert(0, '--')
 
         return (refs, paths, dirs)
