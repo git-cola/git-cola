@@ -19,6 +19,7 @@ from cola.models.dag import DAG
 from cola.models.dag import RepoReader
 from cola.widgets import completion
 from cola.widgets import defs
+from cola.widgets import standard
 from cola.widgets.createbranch import create_new_branch
 from cola.widgets.createtag import create_tag
 from cola.widgets.archive import GitArchiveDialog
@@ -338,14 +339,8 @@ class GitDAG(MainWindow):
         self.old_count = None
         self.old_ref = None
         self.thread = ReaderThread(dag, self)
-
         self.revtext = completion.GitLogLineEdit()
-
-        self.maxresults = QtGui.QSpinBox()
-        self.maxresults.setMinimum(1)
-        self.maxresults.setMaximum(99999)
-        self.maxresults.setPrefix('')
-        self.maxresults.setSuffix('')
+        self.maxresults = standard.SpinBox()
 
         self.zoom_out = qtutils.create_action_button(
                 tooltip=N_('Zoom Out'),

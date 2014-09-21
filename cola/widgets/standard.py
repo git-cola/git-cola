@@ -430,3 +430,12 @@ class ProgressAnimationThread(QtCore.QThread):
         while self.running:
             self.emit(SIGNAL('update_progress'), self.next())
             time.sleep(self.timeout)
+
+
+class SpinBox(QtGui.QSpinBox):
+    def __init__(self, parent=None):
+        QtGui.QSpinBox.__init__(self, parent)
+        self.setMinimum(1)
+        self.setMaximum(99999)
+        self.setPrefix('')
+        self.setSuffix('')
