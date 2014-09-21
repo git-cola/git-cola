@@ -17,6 +17,9 @@ from cola.widgets import text
 from cola.compat import ustr
 
 
+UPDATE_SIGNAL = 'update()'
+
+
 class CompletionLineEdit(text.HintedLineEdit):
 
     def __init__(self, model, hint='', parent=None):
@@ -374,7 +377,7 @@ class Completer(QtGui.QCompleter):
         self.setCompletionMode(QtGui.QCompleter.UnfilteredPopupCompletion)
         self.setCaseSensitivity(Qt.CaseInsensitive)
 
-        self.connect(model, SIGNAL('update()'), self.update)
+        self.connect(model, SIGNAL(UPDATE_SIGNAL), self.update)
         self.setModel(model)
 
     def update(self):
@@ -400,7 +403,7 @@ class GitCompletionModel(CompletionModel):
         return (refs, (), set())
 
     def emit_update(self):
-        self.emit(SIGNAL('update()'))
+        self.emit(SIGNAL(UPDATE_SIGNAL))
 
     def matches(self):
         return []
@@ -475,11 +478,18 @@ class GitLogCompletionModel(GitRefCompletionModel):
 
     def __init__(self, parent):
         GitRefCompletionModel.__init__(self, parent)
+        self.connect(self, SIGNAL(UPDATE_SIGNAL), self.gather_paths)
+        self._paths = []
+        self._updated = False
+
+    def gather_paths(self):
+        self._paths = self.main_model.everything()
 
     def gather_matches(self, case_sensitive):
+        if not self._paths:
+            self.gather_paths()
         refs = filter_matches(self.match_text, self.matches(), case_sensitive)
-        paths, dirs = filter_path_matches(self.match_text,
-                                          self.main_model.everything(),
+        paths, dirs = filter_path_matches(self.match_text, self._paths,
                                           case_sensitive)
         has_doubledash = (self.match_text == '--' or
                           self.full_text.startswith('-- ') or
