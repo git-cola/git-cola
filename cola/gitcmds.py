@@ -54,13 +54,22 @@ def _parse_diff_filenames(out):
         return []
 
 
-def all_files():
+def tracked_files():
     """Return the names of all files in the repository"""
     out = git.ls_files(z=True)[STDOUT]
     if out:
-        return out[:-1].split('\0')
+        return sorted(out[:-1].split('\0'))
     else:
         return []
+
+
+def all_files():
+    """Returns a sorted list of all files, including untracked files."""
+    ls_files = git.ls_files(z=True,
+                            cached=True,
+                            others=True,
+                            exclude_standard=True)[STDOUT]
+    return sorted([f for f in ls_files.split('\0') if f])
 
 
 class _current_branch:
@@ -501,7 +510,7 @@ def diff_index(head, cached=True, paths=None):
                                       *filter_paths)
     if status != 0:
         # handle git init
-        return all_files(), unmerged, submodules
+        return tracked_files(), unmerged, submodules
 
     while out:
         rest, out = out.split('\0', 1)

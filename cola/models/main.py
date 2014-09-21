@@ -435,14 +435,6 @@ class MainModel(Observable):
         head = self.git.rev_parse('HEAD')[STDOUT]
         return bool(self.git.branch(r=True, contains=head)[STDOUT])
 
-    def everything(self):
-        """Returns a sorted list of all files, including untracked files."""
-        ls_files = self.git.ls_files(z=True,
-                                     cached=True,
-                                     others=True,
-                                     exclude_standard=True)[STDOUT]
-        return sorted([f for f in ls_files.split('\0') if f])
-
     def stage_paths(self, paths):
         """Stages add/removals to git."""
         if not paths:

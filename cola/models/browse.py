@@ -9,6 +9,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import gitcfg
+from cola import gitcmds
 from cola import core
 from cola import utils
 from cola import qtutils
@@ -177,7 +178,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def _initialize(self):
         """Iterate over the cola model and create GitRepoItems."""
-        for path in main.model().everything():
+        for path in gitcmds.all_files():
             self.add_file(path)
 
     def add_file(self, path, insert=False):

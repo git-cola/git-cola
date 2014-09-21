@@ -8,6 +8,7 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+from cola import gitcmds
 from cola.i18n import N_
 from cola import qtutils
 from cola import utils
@@ -440,7 +441,7 @@ class GitLogCompletionModel(GitRefCompletionModel):
         self._updated = False
 
     def gather_paths(self):
-        self._paths = self.main_model.everything()
+        self._paths = gitcmds.tracked_files()
 
     def gather_matches(self, case_sensitive):
         if not self._paths:
