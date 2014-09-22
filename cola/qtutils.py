@@ -52,19 +52,28 @@ def vbox(margin, spacing, *items):
 
 
 STRETCH = object()
+SKIPPED = object()
+
 
 def box(cls, margin, spacing, *items):
     stretch = STRETCH
+    skipped = SKIPPED
     layout = cls()
     layout.setMargin(margin)
     layout.setSpacing(spacing)
+
     for i in items:
         if i is stretch:
             layout.addStretch()
+        elif i is skipped:
+            continue
         elif isinstance(i, QtGui.QWidget):
             layout.addWidget(i)
-        elif isinstance(i, (QtGui.QHBoxLayout, QtGui.QVBoxLayout)):
-            layout.addItem(i)
+        elif isinstance(i, (QtGui.QHBoxLayout, QtGui.QVBoxLayout,
+                            QtGui.QFormLayout, QtGui.QLayout)):
+            layout.addLayout(i)
+        elif isinstance(i, (int, long)):
+            layout.addSpacing(i)
 
     return layout
 
