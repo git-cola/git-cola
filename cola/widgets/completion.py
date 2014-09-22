@@ -487,7 +487,7 @@ class GitDialog(QtGui.QDialog):
         self.label = QtGui.QLabel()
         self.label.setText(title)
 
-        self.lineedit = lineedit(self)
+        self.lineedit = lineedit()
         self.setFocusProxy(self.lineedit)
 
         self.ok_button = QtGui.QPushButton()
