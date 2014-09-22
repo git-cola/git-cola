@@ -46,11 +46,8 @@ class Browser(standard.Widget):
     def __init__(self, parent, update=True):
         standard.Widget.__init__(self, parent)
         self.tree = RepoTreeView(self)
-        self.mainlayout = QtGui.QHBoxLayout()
+        self.mainlayout = qtutils.hbox(defs.no_margin, defs.spacing, self.tree)
         self.setLayout(self.mainlayout)
-        self.mainlayout.setMargin(defs.no_margin)
-        self.mainlayout.setSpacing(defs.spacing)
-        self.mainlayout.addWidget(self.tree)
         self.resize(720, 420)
 
         self.connect(self, SIGNAL('updated'), self._updated_callback)
@@ -472,16 +469,11 @@ class BrowseDialog(QtGui.QDialog):
         self.save.setEnabled(False)
 
         # layouts
-        self.btnlayt = QtGui.QHBoxLayout()
-        self.btnlayt.addStretch()
-        self.btnlayt.addWidget(self.close)
-        self.btnlayt.addWidget(self.save)
+        self.btnlayt = qtutils.hbox(defs.margin, defs.spacing,
+                                    qtutils.STRETCH, self.close, self.save)
 
-        self.layt = QtGui.QVBoxLayout()
-        self.layt.setMargin(defs.margin)
-        self.layt.setSpacing(defs.spacing)
-        self.layt.addWidget(self.tree)
-        self.layt.addLayout(self.btnlayt)
+        self.layt = qtutils.vbox(defs.margin, defs.spacing,
+                                 self.tree, self.btnlayt)
         self.setLayout(self.layt)
 
         # connections

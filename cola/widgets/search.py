@@ -6,6 +6,7 @@ import subprocess
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import core
@@ -40,7 +41,7 @@ class SearchOptions(object):
 class SearchWidget(standard.Dialog):
     def __init__(self, parent):
         standard.Dialog.__init__(self, parent)
-        self.setAttribute(QtCore.Qt.WA_MacMetalStyle)
+        self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(N_('Search'))
 
         self.mode_combo = QtGui.QComboBox()
@@ -84,40 +85,23 @@ class SearchWidget(standard.Dialog):
         self.button_close = QtGui.QPushButton()
         self.button_close.setText(N_('Close'))
 
-        self.top_layout = QtGui.QHBoxLayout()
-        self.top_layout.setMargin(defs.no_margin)
-        self.top_layout.setSpacing(defs.button_spacing)
+        self.top_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                       self.query, self.start_date,
+                                       self.end_date, self.browse_button,
+                                       self.search_button, qtutils.STRETCH,
+                                       self.mode_combo, self.max_count)
 
-        self.top_layout.addWidget(self.query)
-        self.top_layout.addWidget(self.start_date)
-        self.top_layout.addWidget(self.end_date)
-        self.top_layout.addWidget(self.browse_button)
-        self.top_layout.addWidget(self.search_button)
-        self.top_layout.addStretch()
-        self.top_layout.addWidget(self.mode_combo)
-        self.top_layout.addWidget(self.max_count)
+        self.splitter = qtutils.splitter(Qt.Vertical,
+                                         self.commit_list, self.commit_text)
 
-        self.splitter = QtGui.QSplitter()
-        self.splitter.setHandleWidth(defs.handle_width)
-        self.splitter.setOrientation(QtCore.Qt.Vertical)
-        self.splitter.setChildrenCollapsible(True)
-        self.splitter.addWidget(self.commit_list)
-        self.splitter.addWidget(self.commit_text)
+        self.bottom_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                          self.button_export,
+                                          self.button_cherrypick,
+                                          qtutils.STRETCH, self.button_close)
 
-        self.bottom_layout = QtGui.QHBoxLayout()
-        self.bottom_layout.setMargin(defs.no_margin)
-        self.bottom_layout.setSpacing(defs.spacing)
-        self.bottom_layout.addWidget(self.button_export)
-        self.bottom_layout.addWidget(self.button_cherrypick)
-        self.bottom_layout.addStretch()
-        self.bottom_layout.addWidget(self.button_close)
-
-        self.main_layout = QtGui.QVBoxLayout()
-        self.main_layout.setMargin(defs.margin)
-        self.main_layout.setSpacing(defs.spacing)
-        self.main_layout.addLayout(self.top_layout)
-        self.main_layout.addWidget(self.splitter)
-        self.main_layout.addLayout(self.bottom_layout)
+        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
+                                        self.top_layout, self.splitter,
+                                        self.bottom_layout)
         self.setLayout(self.main_layout)
 
         if self.parent():
@@ -281,7 +265,7 @@ class Search(SearchWidget):
         self.set_date(self.end_date, datestr)
 
     def set_date(self, widget, datestr):
-        fmt = QtCore.Qt.ISODate
+        fmt = Qt.ISODate
         date = QtCore.QDate.fromString(datestr, fmt)
         if date:
             widget.setDate(date)
@@ -307,7 +291,7 @@ class Search(SearchWidget):
         self.model.query = ustr(self.query.text())
         self.model.max_count = self.max_count.value()
 
-        fmt = QtCore.Qt.ISODate
+        fmt = Qt.ISODate
         self.model.start_date = str(self.start_date.date().toString(fmt))
         self.model.end_date = str(self.end_date.date().toString(fmt))
 

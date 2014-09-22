@@ -53,6 +53,7 @@ class MergeView(QtGui.QDialog):
         self.revision_label.setText(N_('Revision To Merge'))
 
         self.revision = completion.GitRefLineEdit()
+        self.revision.setFocus()
 
         self.radio_local = QtGui.QRadioButton()
         self.radio_local.setText(N_('Local Branch'))
@@ -88,37 +89,24 @@ class MergeView(QtGui.QDialog):
         self.button_merge.setText(N_('Merge'))
 
         # Layouts
-        self.revlayt = QtGui.QHBoxLayout()
-        self.revlayt.addWidget(self.revision_label)
-        self.revlayt.addWidget(self.revision)
-        self.revlayt.addStretch()
-        self.revlayt.addWidget(self.title_label)
+        self.revlayt = qtutils.hbox(defs.no_margin, defs.spacing,
+                                    self.revision_label, self.revision,
+                                    qtutils.STRETCH, self.title_label)
 
-        self.radiolayt = QtGui.QHBoxLayout()
-        self.radiolayt.addWidget(self.radio_local)
-        self.radiolayt.addWidget(self.radio_remote)
-        self.radiolayt.addWidget(self.radio_tag)
+        self.radiolayt = qtutils.hbox(defs.no_margin, defs.spacing,
+                                      self.radio_local, self.radio_remote,
+                                      self.radio_tag)
 
-        self.buttonlayt = QtGui.QHBoxLayout()
-        self.buttonlayt.setSpacing(defs.button_spacing)
-        self.buttonlayt.addWidget(self.button_viz)
-        self.buttonlayt.addStretch()
-        self.buttonlayt.addWidget(self.checkbox_squash)
-        self.buttonlayt.addWidget(self.checkbox_noff)
-        self.buttonlayt.addWidget(self.checkbox_commit)
-        self.buttonlayt.addWidget(self.button_cancel)
-        self.buttonlayt.addWidget(self.button_merge)
+        self.buttonlayt = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                       self.button_viz, qtutils.STRETCH,
+                                       self.checkbox_squash, self.checkbox_noff,
+                                       self.checkbox_commit, self.button_cancel,
+                                       self.button_merge)
 
-        self.mainlayt = QtGui.QVBoxLayout()
-        self.mainlayt.setMargin(defs.margin)
-        self.mainlayt.setSpacing(defs.spacing)
-        self.mainlayt.addLayout(self.radiolayt)
-        self.mainlayt.addWidget(self.revisions)
-        self.mainlayt.addLayout(self.revlayt)
-        self.mainlayt.addLayout(self.buttonlayt)
+        self.mainlayt = qtutils.vbox(defs.margin, defs.spacing,
+                                     self.radiolayt, self.revisions,
+                                     self.revlayt, self.buttonlayt)
         self.setLayout(self.mainlayt)
-
-        self.revision.setFocus()
 
         # Signal/slot connections
         self.connect(self.revision, SIGNAL('textChanged(QString)'),

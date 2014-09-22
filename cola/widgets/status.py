@@ -12,7 +12,6 @@ from cola import core
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
-from cola.interaction import Interaction
 from cola.models import main
 from cola.models import selection
 from cola.widgets import completion
@@ -35,17 +34,12 @@ class StatusWidget(QtGui.QWidget):
                 tooltip=tooltip,
                 icon=qtutils.filter_icon())
 
-        self.filter_widget = StatusFilterWidget(self)
+        self.filter_widget = StatusFilterWidget()
         self.filter_widget.hide()
+        self.tree = StatusTreeWidget()
 
-        self.tree = StatusTreeWidget(self)
-
-        self.main_layout = QtGui.QVBoxLayout(self)
-        self.main_layout.setMargin(defs.no_margin)
-        self.main_layout.setSpacing(defs.no_spacing)
-
-        self.main_layout.addWidget(self.filter_widget)
-        self.main_layout.addWidget(self.tree)
+        self.main_layout = qtutils.vbox(defs.no_margin, defs.no_spacing,
+                                        self.filter_widget, self.tree)
         self.setLayout(self.main_layout)
 
         self.toggle_action = qtutils.add_action(self, tooltip,
@@ -90,7 +84,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     # Read-only access to the mode state
     mode = property(lambda self: self.m.mode)
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         QtGui.QTreeWidget.__init__(self, parent)
 
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
@@ -899,8 +893,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
 class StatusFilterWidget(QtGui.QWidget):
 
-    def __init__(self, parent):
-        QtGui.QWidget.__init__(self,parent)
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
         self.main_model = main.model()
 
         hint = N_('Filter paths...')
@@ -909,10 +903,7 @@ class StatusFilterWidget(QtGui.QWidget):
         self.text.enable_hint(True)
         self.setFocusProxy(self.text)
 
-        self.main_layout = QtGui.QHBoxLayout()
-        self.main_layout.setMargin(defs.no_margin)
-        self.main_layout.setSpacing(defs.spacing)
-        self.main_layout.addWidget(self.text)
+        self.main_layout = qtutils.hbox(defs.no_margin, defs.spacing, self.text)
         self.setLayout(self.main_layout)
 
         self.connect(self.text, SIGNAL('changed()'), self.apply_filter)

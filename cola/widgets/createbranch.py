@@ -134,21 +134,13 @@ class CreateBranchDialog(Dialog):
         self.reset_radio = QtGui.QRadioButton()
         self.reset_radio.setText(N_('Reset'))
 
-        self.options_bottom_layout = QtGui.QHBoxLayout()
-        self.options_checkbox_layout = QtGui.QVBoxLayout()
-
         self.fetch_checkbox = QtGui.QCheckBox()
         self.fetch_checkbox.setText(N_('Fetch Tracking Branch'))
         self.fetch_checkbox.setChecked(True)
-        self.options_checkbox_layout.addWidget(self.fetch_checkbox)
 
         self.checkout_checkbox = QtGui.QCheckBox()
         self.checkout_checkbox.setText(N_('Checkout After Creation'))
         self.checkout_checkbox.setChecked(True)
-        self.options_checkbox_layout.addWidget(self.checkout_checkbox)
-
-        self.options_bottom_layout.addLayout(self.options_checkbox_layout)
-        self.options_bottom_layout.addStretch()
 
         self.create_button = qtutils.create_button(text=N_('Create Branch'),
                                                    icon=qtutils.git_icon())
@@ -156,65 +148,63 @@ class CreateBranchDialog(Dialog):
 
         self.close_button = qtutils.create_button(text=N_('Close'))
 
-        self.branch_name_layout = QtGui.QHBoxLayout()
-        self.branch_name_layout.addWidget(self.branch_name_label)
-        self.branch_name_layout.addWidget(self.branch_name)
-
-        self.rev_start_radiobtn_layout = QtGui.QHBoxLayout()
-        self.rev_start_radiobtn_layout.addWidget(self.local_radio)
-        self.rev_start_radiobtn_layout.addWidget(self.remote_radio)
-        self.rev_start_radiobtn_layout.addWidget(self.tag_radio)
-        self.rev_start_radiobtn_layout.addStretch()
-
-        self.rev_start_textinput_layout = QtGui.QHBoxLayout()
-        self.rev_start_textinput_layout.setMargin(defs.no_margin)
-        self.rev_start_textinput_layout.setSpacing(defs.spacing)
-        self.rev_start_textinput_layout.addWidget(self.rev_label)
-        self.rev_start_textinput_layout.addWidget(self.revision)
-
         self.rev_start_group = QtGui.QGroupBox()
         self.rev_start_group.setTitle(N_('Starting Revision'))
-
-        self.rev_start_layout = QtGui.QVBoxLayout(self.rev_start_group)
-        self.rev_start_layout.setMargin(defs.margin)
-        self.rev_start_layout.setSpacing(defs.spacing)
-        self.rev_start_layout.addLayout(self.rev_start_radiobtn_layout)
-        self.rev_start_layout.addWidget(self.branch_list)
-        self.rev_start_layout.addLayout(self.rev_start_textinput_layout)
-
-        self.options_radio_layout = QtGui.QHBoxLayout()
-        self.options_radio_layout.addWidget(self.update_existing_label)
-        self.options_radio_layout.addWidget(self.no_update_radio)
-        self.options_radio_layout.addWidget(self.ffwd_only_radio)
-        self.options_radio_layout.addWidget(self.reset_radio)
 
         self.option_group = QtGui.QGroupBox()
         self.option_group.setTitle(N_('Options'))
 
-        self.options_grp_layout = QtGui.QVBoxLayout(self.option_group)
-        self.options_grp_layout.setMargin(defs.margin)
-        self.options_grp_layout.setSpacing(defs.spacing)
-        self.options_grp_layout.addLayout(self.options_radio_layout)
-        self.options_grp_layout.addLayout(self.options_bottom_layout)
+        self.options_checkbox_layout = qtutils.vbox(defs.margin, defs.spacing,
+                                                    self.fetch_checkbox,
+                                                    self.checkout_checkbox)
 
-        self.buttons_layout = QtGui.QHBoxLayout()
-        self.buttons_layout.setMargin(defs.margin)
-        self.buttons_layout.setSpacing(defs.spacing)
-        self.buttons_layout.addWidget(self.create_button)
-        self.buttons_layout.addWidget(self.close_button)
+        self.options_bottom_layout = qtutils.hbox(defs.margin, defs.spacing,
+                                                  self.options_checkbox_layout,
+                                                  qtutils.STRETCH)
 
-        self.options_section_layout = QtGui.QHBoxLayout()
-        self.options_section_layout.setMargin(defs.margin)
-        self.options_section_layout.setSpacing(defs.spacing)
-        self.options_section_layout.addWidget(self.option_group)
-        self.options_section_layout.addLayout(self.buttons_layout)
+        self.branch_name_layout = qtutils.hbox(defs.margin, defs.spacing,
+                                               self.branch_name_label,
+                                               self.branch_name)
 
-        self.main_layout = QtGui.QVBoxLayout()
-        self.main_layout.setMargin(defs.margin)
-        self.main_layout.setSpacing(defs.spacing)
-        self.main_layout.addLayout(self.branch_name_layout)
-        self.main_layout.addWidget(self.rev_start_group)
-        self.main_layout.addLayout(self.options_section_layout)
+        self.rev_start_radiobtn_layout = qtutils.hbox(defs.margin, defs.spacing,
+                                                      self.local_radio,
+                                                      self.remote_radio,
+                                                      self.tag_radio,
+                                                      qtutils.STRETCH)
+
+        self.rev_start_textinput_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                                       self.rev_label,
+                                                       self.revision)
+
+        self.rev_start_layout = qtutils.vbox(defs.no_margin, defs.spacing,
+                                             self.rev_start_radiobtn_layout,
+                                             self.branch_list,
+                                             self.rev_start_textinput_layout)
+        self.rev_start_group.setLayout(self.rev_start_layout)
+
+        self.options_radio_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                                 self.update_existing_label,
+                                                 self.no_update_radio,
+                                                 self.ffwd_only_radio,
+                                                 self.reset_radio)
+
+        self.options_grp_layout = qtutils.vbox(defs.no_margin, defs.spacing,
+                                               self.options_radio_layout,
+                                               self.options_bottom_layout)
+        self.option_group.setLayout(self.options_grp_layout)
+
+        self.buttons_layout = qtutils.hbox(defs.margin, defs.spacing,
+                                           self.create_button,
+                                           self.close_button)
+
+        self.options_section_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                                   self.option_group,
+                                                   self.buttons_layout)
+
+        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
+                                        self.branch_name_layout,
+                                        self.rev_start_group,
+                                        self.options_section_layout)
         self.setLayout(self.main_layout)
 
         qtutils.connect_button(self.close_button, self.reject)

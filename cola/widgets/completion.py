@@ -497,20 +497,13 @@ class GitDialog(QtGui.QDialog):
         self.close_button = QtGui.QPushButton()
         self.close_button.setText(N_('Close'))
 
-        self.button_layout = QtGui.QHBoxLayout()
-        self.button_layout.setMargin(defs.no_margin)
-        self.button_layout.setSpacing(defs.button_spacing)
-        self.button_layout.addStretch()
-        self.button_layout.addWidget(self.ok_button)
-        self.button_layout.addWidget(self.close_button)
+        self.button_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                          qtutils.STRETCH,
+                                          self.ok_button, self.close_button)
 
-        self.main_layout = QtGui.QVBoxLayout()
-        self.main_layout.setMargin(defs.margin)
-        self.main_layout.setSpacing(defs.spacing)
-
-        self.main_layout.addWidget(self.label)
-        self.main_layout.addWidget(self.lineedit)
-        self.main_layout.addLayout(self.button_layout)
+        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
+                                        self.label, self.lineedit,
+                                        self.button_layout)
         self.setLayout(self.main_layout)
 
         qtutils.connect_button(self.ok_button, self.accept)

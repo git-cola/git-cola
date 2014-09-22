@@ -77,30 +77,20 @@ class RecentFileDialog(standard.Dialog):
         self.close_button = QtGui.QPushButton()
         self.close_button.setText(N_('Close'))
 
-        toplayout = QtGui.QHBoxLayout()
-        toplayout.setMargin(defs.no_margin)
-        toplayout.setSpacing(defs.spacing)
-        toplayout.addWidget(self.count_label)
-        toplayout.addWidget(self.count)
-        toplayout.addStretch()
-        toplayout.addWidget(self.refresh_button)
+        self.top_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                       self.count_label, self.count,
+                                       qtutils.STRETCH, self.refresh_button)
 
-        btnlayout = QtGui.QHBoxLayout()
-        btnlayout.setMargin(defs.no_margin)
-        btnlayout.setSpacing(defs.spacing)
-        btnlayout.addWidget(self.expand_button)
-        btnlayout.addWidget(self.collapse_button)
-        btnlayout.addStretch()
-        btnlayout.addWidget(self.edit_button)
-        btnlayout.addWidget(self.close_button)
+        self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                          self.expand_button,
+                                          self.collapse_button,
+                                          qtutils.STRETCH,
+                                          self.edit_button, self.close_button)
 
-        layout = QtGui.QVBoxLayout()
-        layout.setMargin(defs.margin)
-        layout.setSpacing(defs.spacing)
-        layout.addLayout(toplayout)
-        layout.addWidget(self.tree)
-        layout.addLayout(btnlayout)
-        self.setLayout(layout)
+        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
+                                        self.top_layout, self.tree,
+                                        self.button_layout)
+        self.setLayout(self.main_layout)
 
         self.connect(self.tree, SIGNAL('selectionChanged()'),
                      self.selection_changed)

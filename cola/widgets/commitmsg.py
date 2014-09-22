@@ -10,6 +10,7 @@ from cola import core
 from cola import gitcmds
 from cola import gitcfg
 from cola import textwrap
+from cola import qtutils
 from cola.cmds import Interaction
 from cola.gitcmds import commit_message_path
 from cola.i18n import N_
@@ -116,20 +117,14 @@ class CommitMessageEditor(QtGui.QWidget):
         self.connect(self.fixup_commit_menu, SIGNAL('aboutToShow()'),
                      self.build_fixup_menu)
 
-        self.toplayout = QtGui.QHBoxLayout()
-        self.toplayout.setMargin(defs.no_margin)
+        self.toplayout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                      self.actions_button, self.summary,
+                                      self.commit_button)
         self.toplayout.setContentsMargins(defs.margin, defs.no_margin,
                                           defs.no_margin, defs.no_margin)
-        self.toplayout.setSpacing(defs.spacing)
-        self.toplayout.addWidget(self.actions_button)
-        self.toplayout.addWidget(self.summary)
-        self.toplayout.addWidget(self.commit_button)
 
-        self.mainlayout = QtGui.QVBoxLayout()
-        self.mainlayout.setMargin(defs.no_margin)
-        self.mainlayout.setSpacing(defs.spacing)
-        self.mainlayout.addLayout(self.toplayout)
-        self.mainlayout.addWidget(self.description)
+        self.mainlayout = qtutils.vbox(defs.no_margin, defs.spacing,
+                                       self.toplayout, self.description)
         self.setLayout(self.mainlayout)
 
         connect_button(self.commit_button, self.commit)
