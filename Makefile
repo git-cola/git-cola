@@ -107,13 +107,12 @@ coverage:
 
 clean:
 	$(MAKE) -C share/doc/git-cola clean
-	$(FIND) . -name .noseids -print0 | xargs -0 rm -f
-	$(FIND) . -name '*.py[co]' -print0 | xargs -0 rm -f
+	$(FIND) cola test -name '*.py[cod]' -print0 | xargs -0 rm -f
 	$(RM_R) build dist tags git-cola.app
 	$(RM_R) share/locale
 
 tags:
-	$(FIND) . -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
+	$(FIND) cola test -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
 
 pot:
 	$(PYTHON) setup.py build_pot -N -d po
