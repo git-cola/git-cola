@@ -134,7 +134,7 @@ def confirm(title, text, informative_text, ok_text,
     """Confirm that an action should take place"""
     if icon is None:
         icon = ok_icon()
-    elif icon and isinstance(icon, ustr):
+    elif icon and isinstance(icon, (str, ustr)):
         icon = QtGui.QIcon(icon)
     msgbox = QtGui.QMessageBox(active_window())
     msgbox.setWindowModality(Qt.WindowModal)
