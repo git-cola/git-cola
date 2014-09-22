@@ -78,6 +78,48 @@ def box(cls, margin, spacing, *items):
     return layout
 
 
+def form(margin, spacing, *widgets):
+    layout = QtGui.QFormLayout()
+    layout.setMargin(margin)
+    layout.setSpacing(spacing)
+    layout.setFieldGrowthPolicy(QtGui.QFormLayout.ExpandingFieldsGrow)
+
+    for idx, (label, widget) in enumerate(widgets):
+        if isinstance(label, (str, ustr)):
+            layout.addRow(label, widget)
+        else:
+            layout.setWidget(idx, QtGui.QFormLayout.LabelRole, label)
+            layout.setWidget(idx, QtGui.QFormLayout.FieldRole, widget)
+
+    return layout
+
+
+def grid(margin, spacing, *widgets):
+    layout = QtGui.QGridLayout()
+    layout.setMargin(defs.no_margin)
+    layout.setSpacing(defs.spacing)
+
+    for row in widgets:
+        item = row[0]
+        if isinstance(item, QtGui.QWidget):
+            layout.addWidget(*row)
+        elif isinstance(item, QtGui.QLayoutItem):
+            layout.addItem(*row)
+
+    return layout
+
+
+def splitter(orientation, *widgets):
+    layout = QtGui.QSplitter()
+    layout.setOrientation(orientation)
+    layout.setHandleWidth(defs.handle_width)
+    layout.setChildrenCollapsible(True)
+    for idx, widget in enumerate(widgets):
+        layout.addWidget(widget)
+        layout.setStretchFactor(idx, 1)
+
+    return layout
+
 def prompt(msg, title=None, text=''):
     """Presents the user with an input widget and returns the input."""
     if title is None:
@@ -676,22 +718,16 @@ class DockTitleBarWidget(QtGui.QWidget):
         self.toggle_button = create_action_button(
                 tooltip=N_('Detach'), icon=titlebar_normal_icon())
 
-        self.corner_layout = QtGui.QHBoxLayout()
-        self.corner_layout.setMargin(defs.no_margin)
-        self.corner_layout.setSpacing(defs.spacing)
+        self.corner_layout = hbox(defs.no_margin, defs.spacing)
 
-        self.main_layout = QtGui.QHBoxLayout()
-        self.main_layout.setMargin(defs.small_margin)
-        self.main_layout.setSpacing(defs.spacing)
-        self.main_layout.addWidget(label)
-        self.main_layout.addSpacing(defs.spacing)
         if stretch:
-            self.main_layout.addStretch()
-        self.main_layout.addLayout(self.corner_layout)
-        self.main_layout.addSpacing(defs.spacing)
-        self.main_layout.addWidget(self.toggle_button)
-        self.main_layout.addWidget(self.close_button)
+            separator = STRETCH
+        else:
+            separator = SKIPPED
 
+        self.main_layout = hbox(defs.small_margin, defs.spacing,
+                                label, separator, self.corner_layout,
+                                self.toggle_button, self.close_button)
         self.setLayout(self.main_layout)
 
         connect_button(self.toggle_button, self.toggle_floating)
