@@ -539,7 +539,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         if self.m.undoable():
             menu.addSeparator()
             menu.addAction(self.revert_unstaged_edits_action)
-            menu.addAction(self.revert_uncommitted_edits_action)
 
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
