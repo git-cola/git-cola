@@ -6,6 +6,22 @@ Usability, bells and whistles
 
 * New hotkey: `Ctrl+R` refreshes the DAG viewer.
 
+  https://github.com/git-cola/git-cola/issue/347
+
+Fixes
+-----
+* We now use `git config` to parse the list of remotes
+  instead of parsing the output of `git remote`, which
+  is a Git porcelain and should not be used by scripts.
+
+* Avoid "C++ object has been deleted" errors from PyQt4.
+
+  https://github.com/git-cola/git-cola/issue/346
+
+Packaging
+---------
+* The `make install` target now uses `install` instead of `cp`.
+
 git-cola v2.0.6
 ===============
 Usability, bells and whistles
