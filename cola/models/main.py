@@ -209,11 +209,7 @@ class MainModel(Observable):
                         self.unmerged or self.untracked))
 
     def _update_remotes(self):
-        cfg = gitcfg.current()
-        remotes = cfg.find('remote.*.url')
-        prefix = len('remote.')
-        suffix = len('.url')
-        self.remotes = [remote[prefix:-suffix] for remote in remotes]
+        self.remotes = self.git.remote()[STDOUT].splitlines()
 
     def _update_branch_heads(self):
         # Set these early since they are used to calculate 'upstream_changed'.
