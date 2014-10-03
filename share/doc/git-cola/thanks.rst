@@ -59,6 +59,7 @@ Thanks
 * Owen Healy
 * Paolo G. Giarrusso
 * Paul Hildebrandt
+* Paul Weingardt
 * Peter Júnoš
 * Pilar Molina Lopez
 * Raghavendra Karunanidhi
