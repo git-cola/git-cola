@@ -1,3 +1,11 @@
+git-cola v2.0.8
+===============
+Fixes
+-----
+* `sphinxtogithub.py` was fixed for Python3.
+
+  https://github.com/git-cola/git-cola/pull/353
+
 git-cola v2.0.7
 ===============
 Usability, bells and whistles
