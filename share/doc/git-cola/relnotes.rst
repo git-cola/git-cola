@@ -6,6 +6,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/pull/353
 
+* The commit that changed how we read remotes from `git remote`
+  to parsing `git config` was reverted since it created problems
+  for some users.
+
 git-cola v2.0.7
 ===============
 Usability, bells and whistles
