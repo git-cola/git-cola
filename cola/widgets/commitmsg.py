@@ -93,6 +93,13 @@ class CommitMessageEditor(QtGui.QWidget):
         self.amend_action.setShortcut(cmds.AmendMode.SHORTCUT)
         self.amend_action.setShortcutContext(Qt.ApplicationShortcut)
 
+        # Sign commits
+        cfg = gitcfg.current()
+        self.sign_action = self.actions_menu.addAction(
+                N_('Create Signed Commit'))
+        self.sign_action.setCheckable(True)
+        self.sign_action.setChecked(cfg.get('cola.signcommits', False))
+
         # Spell checker
         self.check_spelling_action = self.actions_menu.addAction(
                 N_('Check Spelling'))
@@ -430,7 +437,8 @@ class CommitMessageEditor(QtGui.QWidget):
                         N_('Amend Commit'),
                         default=False, icon=save_icon())):
             return
-        status, out, err = cmds.do(cmds.Commit, amend, msg)
+        sign = self.sign_action.isChecked()
+        status, out, err = cmds.do(cmds.Commit, amend, msg, sign)
         if status != 0:
             Interaction.critical(N_('Commit failed'),
                                  N_('"git commit" returned exit code %s') %

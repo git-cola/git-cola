@@ -344,10 +344,11 @@ class Commit(ResetMode):
 
     SHORTCUT = 'Ctrl+Return'
 
-    def __init__(self, amend, msg):
+    def __init__(self, amend, msg, sign):
         ResetMode.__init__(self)
         self.amend = amend
         self.msg = msg
+        self.sign = sign
         self.old_commitmsg = self.model.commitmsg
         self.new_commitmsg = ''
 
@@ -358,7 +359,9 @@ class Commit(ResetMode):
         core.write(tmpfile, msg)
 
         # Run 'git commit'
-        status, out, err = self.model.git.commit(F=tmpfile, v=True,
+        status, out, err = self.model.git.commit(F=tmpfile,
+                                                 v=True,
+                                                 gpg_sign=self.sign,
                                                  amend=self.amend)
         core.unlink(tmpfile)
 
