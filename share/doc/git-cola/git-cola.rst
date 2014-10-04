@@ -330,6 +330,15 @@ into the commit message editor when this option is selected.
 
 The `Status` tool will display all of the changes for the amended commit.
 
+Create Signed Commit
+--------------------
+Tell `git commit` to use GPG to sign commits.
+Using this option is equivalent to passing the ``-S`` option
+to `git commit <http://git-scm.com/docs/git-commit>`_.
+
+This option's default value can be configured using the `cola.signcommits`
+configuration variable.
+
 APPLY PATCHES
 =============
 Use the ``File -> Apply Patches`` menu item to begin applying patches.
@@ -407,6 +416,11 @@ cola.readsize
 `git cola` avoids reading large binary untracked files.
 The maximum size to read is controlled by `cola.readsize`
 and defaults to `2048`.
+
+cola.signcommits
+----------------
+`git cola` will sign commits using `git commit -S` by default when set `true`.
+See the section below on setting up GPG for more details.
 
 gui.diffcontext
 ---------------
@@ -554,6 +568,55 @@ guitool.<name>.prompt
 Specifies the general prompt string to display at the top of the dialog,
 before subsections for argprompt and revprompt.
 The default value includes the actual command.
+
+SETTING UP GPG FOR SIGNED COMMITS
+=================================
+When creating signed commits `gpg` will attempt to read your password from the
+terminal from which `git cola` was launched.
+The way to make this work smoothly is to use a GPG agent so that you can avoid
+needing to re-enter your password every time you commit.
+
+This also gets you a graphical passphrase prompt instead of getting prompted
+for your password in the terminal.
+
+Install gpg-agent and friends
+-----------------------------
+On Mac OS X, you may need to `brew install gpg-agent` and install the
+`Mac GPG Suite <https://gpgtools.org/macgpg2/>`_.
+
+On Linux use your package manager to install gnupg-agent and pinentry-qt4, e.g.::
+
+    sudo apt-get install gnupg-agent pinentry-qt4
+
+Configure gpg-agent and a pin-entry program
+-------------------------------------------
+Edit `~/.gnupg/gpg.conf` to include the line,::
+
+    use-agent
+
+Edit `~/.gnupg/gpg-agent.conf` to contain a pinentry-program line pointing to
+the pin-entry program for your platform.
+
+The following example `gpg-agent.conf` shows how to use pinentry-qt4 on Linux::
+
+    pinentry-program /usr/bin/pinentry-qt4
+    default-cache-ttl 3600
+    enable-ssh-support
+    use-standard-socket
+
+This following example `gpg-agent.conf` shows how to use MacGPG2's
+pinentry app on On Mac OS X::
+
+    pinentry-program /usr/local/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac
+    default-cache-ttl 3600
+    enable-ssh-support
+    use-standard-socket
+
+Once this has been setup then you will need to eval the output
+of `gpg-agent --daemon` in your shell prior to launching git-cola.::
+
+    eval $(gpg-agent --daemon)
+    bin/git-cola
 
 LINKS
 =====

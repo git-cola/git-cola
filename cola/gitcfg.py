@@ -15,15 +15,16 @@ from cola.compat import ustr
 
 BUILTIN_READER = os.environ.get('GIT_COLA_BUILTIN_CONFIG_READER', False)
 
+_USER_CONFIG = core.expanduser(join('~', '.gitconfig'))
+_USER_XDG_CONFIG = core.expanduser(
+        join(core.getenv('XDG_CONFIG_HOME', join('~', '.config')),
+             'git', 'config'))
+
 @memoize
 def current():
     """Return the GitConfig singleton."""
     return GitConfig()
 
-_USER_CONFIG = core.expanduser(join('~', '.gitconfig'))
-_USER_XDG_CONFIG = core.expanduser(
-        join(core.getenv('XDG_CONFIG_HOME', join('~', '.config')),
-             'git', 'config'))
 
 def _stat_info():
     # Try /etc/gitconfig as a fallback for the system config

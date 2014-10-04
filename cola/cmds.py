@@ -344,10 +344,11 @@ class Commit(ResetMode):
 
     SHORTCUT = 'Ctrl+Return'
 
-    def __init__(self, amend, msg):
+    def __init__(self, amend, msg, sign):
         ResetMode.__init__(self)
         self.amend = amend
         self.msg = msg
+        self.sign = sign
         self.old_commitmsg = self.model.commitmsg
         self.new_commitmsg = ''
 
@@ -358,7 +359,9 @@ class Commit(ResetMode):
         core.write(tmpfile, msg)
 
         # Run 'git commit'
-        status, out, err = self.model.git.commit(F=tmpfile, v=True,
+        status, out, err = self.model.git.commit(F=tmpfile,
+                                                 v=True,
+                                                 gpg_sign=self.sign,
                                                  amend=self.amend)
         core.unlink(tmpfile)
 
@@ -887,26 +890,29 @@ class LoadFixupMessage(LoadCommitMessageFromSHA1):
 
 
 class Merge(Command):
-    def __init__(self, revision, no_commit, squash, noff):
+    """Merge commits"""
+
+    def __init__(self, revision, no_commit, squash, noff, sign):
         Command.__init__(self)
         self.revision = revision
         self.no_ff = noff
         self.no_commit = no_commit
         self.squash = squash
+        self.sign = sign
 
     def do(self):
         squash = self.squash
         revision = self.revision
         no_ff = self.no_ff
         no_commit = self.no_commit
+        sign = self.sign
         msg = gitcmds.merge_message(revision)
 
-        status, out, err = self.model.git.merge('-m', msg,
-                                                revision,
+        status, out, err = self.model.git.merge('-m', msg, revision,
+                                                gpg_sign=sign,
                                                 no_ff=no_ff,
                                                 no_commit=no_commit,
                                                 squash=squash)
-
         Interaction.log_status(status, out, err)
         self.model.update_status()
 

@@ -51,6 +51,7 @@ Thanks
 * Maarten Nieber
 * Matěj Šmíd
 * Matthew Levine
+* Micha Rosenbaum
 * Michael Geddes
 * Michael Homer
 * Minarto Margoliono
