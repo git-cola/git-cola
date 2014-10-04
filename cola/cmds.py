@@ -890,26 +890,29 @@ class LoadFixupMessage(LoadCommitMessageFromSHA1):
 
 
 class Merge(Command):
-    def __init__(self, revision, no_commit, squash, noff):
+    """Merge commits"""
+
+    def __init__(self, revision, no_commit, squash, noff, sign):
         Command.__init__(self)
         self.revision = revision
         self.no_ff = noff
         self.no_commit = no_commit
         self.squash = squash
+        self.sign = sign
 
     def do(self):
         squash = self.squash
         revision = self.revision
         no_ff = self.no_ff
         no_commit = self.no_commit
+        sign = self.sign
         msg = gitcmds.merge_message(revision)
 
-        status, out, err = self.model.git.merge('-m', msg,
-                                                revision,
+        status, out, err = self.model.git.merge('-m', msg, revision,
+                                                gpg_sign=sign,
                                                 no_ff=no_ff,
                                                 no_commit=no_commit,
                                                 squash=squash)
-
         Interaction.log_status(status, out, err)
         self.model.update_status()
 

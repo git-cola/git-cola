@@ -5,6 +5,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import cmds
+from cola import gitcfg
 from cola import gitcmds
 from cola import qtutils
 from cola.i18n import N_
@@ -17,7 +18,8 @@ from cola.compat import ustr
 def local_merge():
     """Provides a dialog for merging branches"""
     model = main.model()
-    view = MergeView(model, qtutils.active_window())
+    cfg = gitcfg.current()
+    view = MergeView(cfg, model, qtutils.active_window())
     view.show()
     view.raise_()
     return view
@@ -40,8 +42,9 @@ def abort_merge():
 class MergeView(QtGui.QDialog):
     """Provides a dialog for merging branches."""
 
-    def __init__(self, model, parent=None):
+    def __init__(self, cfg, model, parent=None):
         QtGui.QDialog.__init__(self, parent)
+        self.cfg = cfg
         self.model = model
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
@@ -82,6 +85,10 @@ class MergeView(QtGui.QDialog):
         self.checkbox_commit.setChecked(True)
         self.checkbox_commit_state = True
 
+        self.checkbox_sign = QtGui.QCheckBox()
+        self.checkbox_sign.setText(N_('Create Signed Commit'))
+        self.checkbox_sign.setChecked(cfg.get('cola.signcommits', False))
+
         self.button_cancel = QtGui.QPushButton()
         self.button_cancel.setText(N_('Cancel'))
 
@@ -100,8 +107,8 @@ class MergeView(QtGui.QDialog):
         self.buttonlayt = qtutils.hbox(defs.no_margin, defs.button_spacing,
                                        self.button_viz, qtutils.STRETCH,
                                        self.checkbox_squash, self.checkbox_noff,
-                                       self.checkbox_commit, self.button_cancel,
-                                       self.button_merge)
+                                       self.checkbox_commit, self.checkbox_sign,
+                                       self.button_cancel, self.button_merge)
 
         self.mainlayt = qtutils.vbox(defs.margin, defs.spacing,
                                      self.radiolayt, self.revisions,
@@ -207,5 +214,6 @@ class MergeView(QtGui.QDialog):
         noff = self.checkbox_noff.isChecked()
         do_commit = self.checkbox_commit.isChecked()
         squash = self.checkbox_squash.isChecked()
-        cmds.do(cmds.Merge, revision, not(do_commit), squash, noff)
+        sign = self.checkbox_sign.isChecked()
+        cmds.do(cmds.Merge, revision, not(do_commit), squash, noff, sign)
         self.accept()
