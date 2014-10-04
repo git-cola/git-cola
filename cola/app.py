@@ -41,6 +41,7 @@ from cola import cmds
 from cola import core
 from cola import compat
 from cola import git
+from cola import gitcfg
 from cola import inotify
 from cola import i18n
 from cola import qtcompat
@@ -263,7 +264,8 @@ def application_init(args, update=False):
     model = new_model(app, args.repo, prompt=args.prompt)
     if update:
         model.update_status()
-    return ApplicationContext(args, app, model)
+    cfg = gitcfg.current()
+    return ApplicationContext(args, app, cfg, model)
 
 
 def application_start(context, view):
@@ -376,7 +378,8 @@ def _update_files():
 
 class ApplicationContext(object):
 
-    def __init__(self, args, app, model):
+    def __init__(self, args, app, cfg, model):
         self.args = args
         self.app = app
+        self.cfg = cfg
         self.model = model
