@@ -1,5 +1,13 @@
 git-cola v2.0.8
 ===============
+Usability, bells and whistles
+-----------------------------
+* `git cola` can now create GPG-signed commits and merges.
+
+  https://github.com/git-cola/git-cola/issue/149
+
+  See the documentation for details about setting up a GPG agent.
+
 Fixes
 -----
 * `sphinxtogithub.py` was fixed for Python3.
