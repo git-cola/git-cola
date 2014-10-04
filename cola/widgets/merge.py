@@ -66,26 +66,26 @@ class MergeView(QtGui.QDialog):
         self.revisions = QtGui.QListWidget()
         self.revisions.setAlternatingRowColors(True)
 
-        self.button_viz = QtGui.QPushButton(self)
+        self.button_viz = QtGui.QPushButton()
         self.button_viz.setText(N_('Visualize'))
 
-        self.checkbox_squash = QtGui.QCheckBox(self)
+        self.checkbox_squash = QtGui.QCheckBox()
         self.checkbox_squash.setText(N_('Squash'))
 
-        self.checkbox_noff = QtGui.QCheckBox(self)
+        self.checkbox_noff = QtGui.QCheckBox()
         self.checkbox_noff.setText(N_('No fast forward'))
         self.checkbox_noff.setChecked(False)
         self.checkbox_noff_state = False
 
-        self.checkbox_commit = QtGui.QCheckBox(self)
+        self.checkbox_commit = QtGui.QCheckBox()
         self.checkbox_commit.setText(N_('Commit'))
         self.checkbox_commit.setChecked(True)
         self.checkbox_commit_state = True
 
-        self.button_cancel = QtGui.QPushButton(self)
+        self.button_cancel = QtGui.QPushButton()
         self.button_cancel.setText(N_('Cancel'))
 
-        self.button_merge = QtGui.QPushButton(self)
+        self.button_merge = QtGui.QPushButton()
         self.button_merge.setText(N_('Merge'))
 
         # Layouts
