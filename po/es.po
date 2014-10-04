@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-31 18:31-0700\n"
+"POT-Creation-Date: 2014-10-04 16:32-0700\n"
 "PO-Revision-Date: 2014-07-18 16:22-0700\n"
 "Last-Translator: Pilar Molina Lopez <pilarmolinalopez@gmail.com>\n"
 "Language-Team: Spanish\n"
@@ -17,372 +17,398 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: cola/app.py:232
+#: cola/app.py:233
 #, python-format
 msgid ""
 "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
 msgstr ""
 
-#: cola/cmds.py:151
+#: cola/cmds.py:152
 msgid "Amend"
 msgstr ""
 
-#: cola/cmds.py:185
+#: cola/cmds.py:186
 msgid "Cannot Amend"
 msgstr ""
 
-#: cola/cmds.py:186
+#: cola/cmds.py:187
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
 msgstr ""
 
-#: cola/cmds.py:243
+#: cola/cmds.py:244
 #, python-format
 msgid "PATCH %(current)d/%(count)d"
 msgstr ""
 
-#: cola/cmds.py:247
+#: cola/cmds.py:248
 msgid "Summary:"
 msgstr "Resumen:"
 
-#: cola/cmds.py:256
+#: cola/cmds.py:257
 msgid "Patch(es) Applied"
 msgstr ""
 
-#: cola/cmds.py:257
+#: cola/cmds.py:258
 #, python-format
 msgid "%d patch(es) applied."
 msgstr ""
 
-#: cola/cmds.py:354
-msgid "Revert Unstaged Changes?"
-msgstr ""
-
-#: cola/cmds.py:355
-msgid ""
-"This operation drops unstaged changes.\n"
-"These changes cannot be recovered."
-msgstr ""
-
-#: cola/cmds.py:357
-msgid "Revert the unstaged changes?"
-msgstr ""
-
-#: cola/cmds.py:358
-msgid "Revert Unstaged Changes"
-msgstr ""
-
-#: cola/cmds.py:367 cola/widgets/status.py:688
-msgid "No files selected for checkout from HEAD."
-msgstr ""
-
-#: cola/cmds.py:397
+#: cola/cmds.py:371
 #, python-format
 msgid "Created commit: %s"
 msgstr ""
 
-#: cola/cmds.py:399
+#: cola/cmds.py:373
 #, python-format
 msgid "Commit failed: %s"
 msgstr ""
 
-#: cola/cmds.py:465
+#: cola/cmds.py:439
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "Error al crear el repositorio remoto \"%s\""
 
-#: cola/cmds.py:471
+#: cola/cmds.py:445
 msgid "Delete Remote"
 msgstr "Eliminar Repositorio Remoto"
 
-#: cola/cmds.py:472
+#: cola/cmds.py:446
 msgid "Delete remote?"
 msgstr "Desea eliminar el repositorio remoto?"
 
-#: cola/cmds.py:473
+#: cola/cmds.py:447
 #, python-format
 msgid "Delete remote \"%s\""
 msgstr "Eliminar repositorio remoto \"%s\""
 
-#: cola/cmds.py:474 cola/guicmds.py:28 cola/guicmds.py:36
+#: cola/cmds.py:448 cola/guicmds.py:28 cola/guicmds.py:36
 #: cola/widgets/bookmarks.py:38
 msgid "Delete"
 msgstr "Eliminar"
 
-#: cola/cmds.py:482
+#: cola/cmds.py:456
 #, python-format
 msgid "Error deleting remote \"%s\""
 msgstr "Error al eliminar el repositorio remoto \"%s\""
 
-#: cola/cmds.py:492
+#: cola/cmds.py:466
 msgid "Rename Remote"
 msgstr "Renombrar Repositorio Remoto"
 
-#: cola/cmds.py:493
+#: cola/cmds.py:467
 msgid "Rename remote?"
 msgstr "Desea renombrar el repositorio remoto?"
 
-#: cola/cmds.py:494
+#: cola/cmds.py:468
 #, python-format
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr ""
 "Desea renombrar el repositorio remoto \"%(current)s\" como \"%(new)s\"?"
 
-#: cola/cmds.py:496
+#: cola/cmds.py:470
 msgid "Rename"
 msgstr "Renombrar"
 
-#: cola/cmds.py:520
+#: cola/cmds.py:494
 #, fuzzy
 msgid "Delete Bookmark?"
 msgstr "Favoritos"
 
-#: cola/cmds.py:521
+#: cola/cmds.py:495
 #, python-format
 msgid "%s will be removed from your bookmarks."
 msgstr ""
 
-#: cola/cmds.py:522
+#: cola/cmds.py:496
 #, fuzzy
 msgid "Delete Bookmark"
 msgstr "Favoritos"
 
-#: cola/cmds.py:534
+#: cola/cmds.py:508
 #, python-format
 msgid "Remove %s from the recent list?"
 msgstr ""
 
-#: cola/cmds.py:535
+#: cola/cmds.py:509
 #, python-format
 msgid "%s will be removed from your recent repositories."
 msgstr ""
 
-#: cola/cmds.py:536 cola/widgets/patch.py:92 cola/widgets/patch.py:106
+#: cola/cmds.py:510 cola/widgets/patch.py:92 cola/widgets/patch.py:105
 msgid "Remove"
 msgstr "Eliminar"
 
-#: cola/cmds.py:574 cola/cmds.py:1567 cola/widgets/bookmarks.py:222
+#: cola/cmds.py:548 cola/cmds.py:1660 cola/widgets/bookmarks.py:217
 msgid "Error"
 msgstr ""
 
-#: cola/cmds.py:575
+#: cola/cmds.py:549
 #, python-format
 msgid "Deleting \"%s\" failed"
 msgstr "Fallo intentando eliminar \"%s\""
 
-#: cola/cmds.py:595
+#: cola/cmds.py:569
 msgid "Delete Files?"
 msgstr "Eliminar Archivos?"
 
-#: cola/cmds.py:596
+#: cola/cmds.py:570
 msgid "The following files will be deleted:"
 msgstr "Se eliminarán los siguientes archivos:"
 
-#: cola/cmds.py:598
+#: cola/cmds.py:572
 #, python-format
 msgid "Delete %d file(s)?"
 msgstr "Desea eliminar %d archivos(s)?"
 
-#: cola/cmds.py:599
+#: cola/cmds.py:573
 msgid "Delete Files"
 msgstr "Eliminar Archivos"
 
-#: cola/cmds.py:647
+#: cola/cmds.py:621
 msgid "Remote Branch Deleted"
 msgstr "Rama Remota Eliminada"
 
-#: cola/cmds.py:648
+#: cola/cmds.py:622
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr "\"%(branch)s\" ha sido eliminado de \"%(remote)s\"."
 
-#: cola/cmds.py:652 cola/guicmds.py:111 cola/widgets/remote.py:473
+#: cola/cmds.py:626 cola/guicmds.py:111 cola/widgets/remote.py:470
 #, python-format
 msgid "\"%(command)s\" returned exit status %(status)d"
 msgstr ""
 
-#: cola/cmds.py:655
+#: cola/cmds.py:629
 msgid "Error Deleting Remote Branch"
 msgstr "Error al Eliminar Rama Remota"
 
-#: cola/cmds.py:734 cola/cmds.py:840
+#: cola/cmds.py:710 cola/cmds.py:818
 msgid "Launch Editor"
 msgstr "Abrir Editor"
 
-#: cola/cmds.py:770
+#: cola/cmds.py:746
 #, python-format
 msgid "Cannot exec \"%s\": please configure your editor"
 msgstr "No se pudo ejecutar \"%s\": por favor, configure su editor"
 
-#: cola/cmds.py:773
+#: cola/cmds.py:749
 msgid "Error Editing File"
 msgstr "Error al Editar Archivo"
 
-#: cola/cmds.py:795
+#: cola/cmds.py:771
 msgid "Launch Diff Tool"
 msgstr "Abrir Herramienta de Comparación"
 
-#: cola/cmds.py:822
+#: cola/cmds.py:799
 msgid "Launch Terminal"
 msgstr "Abrir Terminal"
 
-#: cola/cmds.py:861
+#: cola/cmds.py:839
 msgid "Error: Cannot find commit template"
 msgstr ""
 
-#: cola/cmds.py:862
+#: cola/cmds.py:840
 #, python-format
 msgid "%s: No such file or directory."
 msgstr "%s: El directorio o archivo no existe."
 
-#: cola/cmds.py:881
+#: cola/cmds.py:860
 msgid "Error: Unconfigured commit template"
 msgstr ""
 
-#: cola/cmds.py:882
+#: cola/cmds.py:861
 msgid ""
 "A commit template has not been configured.\n"
 "Use \"git config\" to define \"commit.template\"\n"
 "so that it points to a commit template."
 msgstr ""
 
-#: cola/cmds.py:944
+#: cola/cmds.py:926
 msgid "Open Using Default Application"
 msgstr "Abrir Usando Aplicación por Defecto"
 
-#: cola/cmds.py:967
+#: cola/cmds.py:949
 msgid "Open Parent Directory"
 msgstr "Abrir Directorio Padre"
 
-#: cola/cmds.py:1033
+#: cola/cmds.py:1016
 #, python-format
 msgid "Error: could not clone \"%s\""
 msgstr "Error: no se pudo clonar \"%s\""
 
-#: cola/cmds.py:1035
+#: cola/cmds.py:1018
 #, python-format
 msgid "git clone returned exit code %s"
 msgstr ""
 
-#: cola/cmds.py:1079
+#: cola/cmds.py:1062
 #, python-format
 msgid "Rebase onto %s"
 msgstr ""
 
-#: cola/cmds.py:1080 cola/widgets/main.py:406
+#: cola/cmds.py:1063 cola/widgets/main.py:405
 msgid "Rebase"
 msgstr ""
 
-#: cola/cmds.py:1094
+#: cola/cmds.py:1077
 msgid "Edit Rebase"
 msgstr ""
 
-#: cola/cmds.py:1095 cola/widgets/archive.py:123 cola/widgets/browse.py:488
-#: cola/widgets/stash.py:55
+#: cola/cmds.py:1078 cola/widgets/archive.py:123 cola/widgets/browse.py:467
+#: cola/widgets/stash.py:56
 msgid "Save"
 msgstr "Guardar"
 
-#: cola/cmds.py:1139 cola/widgets/action.py:59 cola/widgets/editremotes.py:67
-#: cola/widgets/grep.py:107 cola/widgets/recent.py:55
-#: cola/widgets/recent.py:124
+#: cola/cmds.py:1122 cola/widgets/action.py:59 cola/widgets/dag.py:397
+#: cola/widgets/editremotes.py:69 cola/widgets/grep.py:107
+#: cola/widgets/recent.py:55 cola/widgets/recent.py:114
 msgid "Refresh"
 msgstr "Refrescar"
 
-#: cola/cmds.py:1167
+#: cola/cmds.py:1171
+msgid "Revert Unstaged Edits..."
+msgstr ""
+
+#: cola/cmds.py:1180
+msgid "Revert Unstaged Changes?"
+msgstr ""
+
+#: cola/cmds.py:1181
+msgid ""
+"This operation drops unstaged changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+#: cola/cmds.py:1183
+msgid "Revert the unstaged changes?"
+msgstr ""
+
+#: cola/cmds.py:1184
+msgid "Revert Unstaged Changes"
+msgstr ""
+
+#: cola/cmds.py:1195
+msgid "Revert Uncommitted Edits..."
+msgstr ""
+
+#: cola/cmds.py:1201
+msgid "Revert Uncommitted Changes?"
+msgstr ""
+
+#: cola/cmds.py:1202 cola/widgets/diff.py:293
+msgid ""
+"This operation drops uncommitted changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+#: cola/cmds.py:1204 cola/widgets/diff.py:295
+msgid "Revert the uncommitted changes?"
+msgstr ""
+
+#: cola/cmds.py:1205
+msgid "Revert Uncommitted Changes"
+msgstr ""
+
+#: cola/cmds.py:1233
 #, python-format
 msgid "Run \"%s\"?"
 msgstr "Desea ejecutar \"%s\"?"
 
-#: cola/cmds.py:1174
+#: cola/cmds.py:1240
 msgid "Please select a file"
 msgstr "Por favor, seleccione un archivo"
 
-#: cola/cmds.py:1175
+#: cola/cmds.py:1241
 #, python-format
 msgid "\"%s\" requires a selected file."
 msgstr "\"%s\" requiere que seleccione un archivo"
 
-#: cola/cmds.py:1187
+#: cola/cmds.py:1253
 msgid "Invalid Revision"
 msgstr "Revisión inválida"
 
-#: cola/cmds.py:1188
+#: cola/cmds.py:1254
 msgid "The revision expression cannot be empty."
 msgstr ""
 
-#: cola/cmds.py:1203
+#: cola/cmds.py:1269
 #, python-format
 msgid "Running command: %s"
 msgstr "Ejecutando comando: %s"
 
-#: cola/cmds.py:1215 cola/cmds.py:1383 cola/interaction.py:72
+#: cola/cmds.py:1281 cola/cmds.py:1476 cola/interaction.py:72
 #, python-format
 msgid "Output: %s"
 msgstr "Resultado: %s"
 
-#: cola/cmds.py:1216 cola/guicmds.py:116 cola/interaction.py:73
+#: cola/cmds.py:1282 cola/guicmds.py:116 cola/interaction.py:73
 #, python-format
 msgid "Errors: %s"
 msgstr "Errores: %s"
 
-#: cola/cmds.py:1259
+#: cola/cmds.py:1326
 msgid "Sign Off"
 msgstr ""
 
-#: cola/cmds.py:1280
+#: cola/cmds.py:1347
 msgid "unknown"
 msgstr "desconocido"
 
-#: cola/cmds.py:1293 cola/widgets/action.py:57
+#: cola/cmds.py:1361 cola/widgets/action.py:57
 msgid "Stage"
 msgstr ""
 
-#: cola/cmds.py:1300
+#: cola/cmds.py:1368
 #, python-format
 msgid "Staging: %s"
 msgstr ""
 
-#: cola/cmds.py:1317
+#: cola/cmds.py:1385
 msgid "Stage Modified"
 msgstr ""
 
-#: cola/cmds.py:1331
+#: cola/cmds.py:1399
 msgid "Stage Unmerged"
 msgstr ""
 
-#: cola/cmds.py:1345
+#: cola/cmds.py:1413
 msgid "Stage Untracked"
 msgstr ""
 
-#: cola/cmds.py:1363
+#: cola/cmds.py:1427
+msgid "Stage / Unstage"
+msgstr ""
+
+#: cola/cmds.py:1456
 #, python-format
 msgid "Tagging \"%(revision)s\" as \"%(name)s\""
 msgstr "Etiquetando \"%(revision)s\" como \"%(name)s\""
 
-#: cola/cmds.py:1371
+#: cola/cmds.py:1464
 msgid "GPG-signed"
 msgstr ""
 
-#: cola/cmds.py:1398 cola/widgets/action.py:58
+#: cola/cmds.py:1491 cola/widgets/action.py:58
 msgid "Unstage"
 msgstr ""
 
-#: cola/cmds.py:1405
+#: cola/cmds.py:1498
 #, python-format
 msgid "Unstaging: %s"
 msgstr ""
 
-#: cola/cmds.py:1433
+#: cola/cmds.py:1526
 #, python-format
 msgid "Untracking: %s"
 msgstr ""
 
-#: cola/cmds.py:1518
+#: cola/cmds.py:1611
 msgid "Error Launching History Browser"
 msgstr ""
 
-#: cola/cmds.py:1519
+#: cola/cmds.py:1612
 #, python-format
 msgid "Cannot exec \"%s\": please configure a history browser"
 msgstr ""
@@ -391,25 +417,25 @@ msgstr ""
 msgid "git-cola diff"
 msgstr ""
 
-#: cola/difftool.py:93 cola/widgets/compare.py:91
+#: cola/difftool.py:93 cola/widgets/compare.py:68
 msgid "Compare"
 msgstr "Comparar"
 
-#: cola/difftool.py:97 cola/qtutils.py:638 cola/widgets/about.py:68
-#: cola/widgets/about.py:128 cola/widgets/browse.py:487
-#: cola/widgets/cfgactions.py:89 cola/widgets/cfgactions.py:246
-#: cola/widgets/compare.py:95 cola/widgets/completion.py:530
-#: cola/widgets/createbranch.py:157 cola/widgets/createtag.py:119
-#: cola/widgets/editremotes.py:73 cola/widgets/grep.py:117
+#: cola/difftool.py:97 cola/qtutils.py:716 cola/widgets/about.py:68
+#: cola/widgets/about.py:119 cola/widgets/browse.py:466
+#: cola/widgets/cfgactions.py:84 cola/widgets/cfgactions.py:229
+#: cola/widgets/compare.py:71 cola/widgets/completion.py:498
+#: cola/widgets/createbranch.py:149 cola/widgets/createtag.py:90
+#: cola/widgets/editremotes.py:75 cola/widgets/grep.py:117
 #: cola/widgets/patch.py:99 cola/widgets/prefs.py:259
 #: cola/widgets/recent.py:78 cola/widgets/remote.py:148
-#: cola/widgets/remote.py:218 cola/widgets/search.py:85
+#: cola/widgets/remote.py:215 cola/widgets/search.py:86
 #: cola/widgets/selectcommits.py:61 cola/widgets/startup.py:45
-#: cola/widgets/stash.py:63 cola/widgets/stash.py:64
+#: cola/widgets/stash.py:64 cola/widgets/stash.py:65
 msgid "Close"
 msgstr "Cerrar"
 
-#: cola/gitcmds.py:418
+#: cola/gitcmds.py:428
 msgid "Nothing to do"
 msgstr ""
 
@@ -480,11 +506,11 @@ msgstr "\"%s\" ya existe, cola creará un nuevo directorio"
 msgid "Directory Exists"
 msgstr "El Directorio ya Existe"
 
-#: cola/guicmds.py:186 cola/widgets/search.py:79
+#: cola/guicmds.py:186 cola/widgets/search.py:80
 msgid "Export Patches"
 msgstr "Exportar Parches"
 
-#: cola/guicmds.py:204 cola/guicmds.py:213 cola/widgets/startup.py:128
+#: cola/guicmds.py:204 cola/guicmds.py:213 cola/widgets/startup.py:121
 msgid "Open Git Repository..."
 msgstr "Abrir Repositorio Git..."
 
@@ -543,7 +569,7 @@ msgstr "Notificación de archivo activada."
 msgid "inotify enabled."
 msgstr "inotify activado."
 
-#: cola/interaction.py:54 cola/widgets/main.py:304
+#: cola/interaction.py:54 cola/widgets/main.py:302
 msgid "Continue"
 msgstr "Continuar"
 
@@ -557,7 +583,7 @@ msgstr "Desea ejecutar %s?"
 msgid "Run the \"%s\" command?"
 msgstr "Desea ejecutar el comando %s?"
 
-#: cola/interaction.py:67 cola/widgets/cfgactions.py:247
+#: cola/interaction.py:67 cola/widgets/cfgactions.py:230
 msgid "Run"
 msgstr "Ejecutar"
 
@@ -566,71 +592,71 @@ msgstr "Ejecutar"
 msgid "Exit code: %s"
 msgstr ""
 
-#: cola/qtutils.py:525
+#: cola/qtutils.py:603
 msgid "Close..."
 msgstr "Cerrar..."
 
-#: cola/qtutils.py:641 cola/qtutils.py:681
+#: cola/qtutils.py:719 cola/qtutils.py:753
 msgid "Detach"
 msgstr ""
 
-#: cola/qtutils.py:679
+#: cola/qtutils.py:751
 msgid "Attach"
 msgstr ""
 
-#: cola/models/browse.py:38 cola/widgets/createtag.py:64
-#: cola/widgets/editremotes.py:215
+#: cola/models/browse.py:40 cola/widgets/createtag.py:59
+#: cola/widgets/editremotes.py:207
 msgid "Name"
 msgstr "Nombre"
 
-#: cola/models/browse.py:40 cola/widgets/main.py:102
+#: cola/models/browse.py:42 cola/widgets/main.py:102
 msgid "Status"
 msgstr "Estado"
 
-#: cola/models/browse.py:42
+#: cola/models/browse.py:44
 msgid "Age"
 msgstr "Edad"
 
-#: cola/models/browse.py:44 cola/widgets/createtag.py:89
+#: cola/models/browse.py:46 cola/widgets/createtag.py:75
 msgid "Message"
 msgstr "Mensaje"
 
-#: cola/models/browse.py:46 cola/widgets/dag.py:214
+#: cola/models/browse.py:48 cola/widgets/dag.py:215
 msgid "Author"
 msgstr "Autor"
 
-#: cola/models/browse.py:350 cola/models/browse.py:354
+#: cola/models/browse.py:363 cola/models/browse.py:367
 #, python-format
 msgid "%d minutes ago"
 msgstr "Hace %d minutos"
 
-#: cola/models/browse.py:357
+#: cola/models/browse.py:370
 #, python-format
 msgid "%d hours ago"
 msgstr "Hace %d horas"
 
-#: cola/models/browse.py:358
+#: cola/models/browse.py:371
 #, python-format
 msgid "%d days ago"
 msgstr "Hace %d días"
 
-#: cola/models/browse.py:371 cola/widgets/status.py:108
+#: cola/models/browse.py:384 cola/widgets/status.py:101
 msgid "Unmerged"
 msgstr ""
 
-#: cola/models/browse.py:373
+#: cola/models/browse.py:386
 msgid "Partially Staged"
 msgstr ""
 
-#: cola/models/browse.py:375 cola/widgets/status.py:109
+#: cola/models/browse.py:388 cola/widgets/status.py:102
 msgid "Modified"
 msgstr "Modificado"
 
-#: cola/models/browse.py:377 cola/widgets/status.py:107
+#: cola/models/browse.py:390 cola/widgets/status.py:100
 msgid "Staged"
 msgstr ""
 
-#: cola/models/browse.py:379
+#: cola/models/browse.py:392
 msgid "Changed Upstream"
 msgstr ""
 
@@ -638,7 +664,7 @@ msgstr ""
 msgid "About git-cola"
 msgstr "Sobre git-cola"
 
-#: cola/widgets/about.py:99
+#: cola/widgets/about.py:94
 msgid ""
 "This PyQt4 does not include QtWebKit.\n"
 "The keyboard shortcuts feature is unavailable."
@@ -646,11 +672,11 @@ msgstr ""
 "Este PyQt4 no incluye QtWebKit.\n"
 "Los atajos de teclado no están disponibles."
 
-#: cola/widgets/about.py:106
+#: cola/widgets/about.py:101
 msgid "hotkeys.html"
 msgstr ""
 
-#: cola/widgets/about.py:124
+#: cola/widgets/about.py:110
 msgid "Shortcuts"
 msgstr "Atajos"
 
@@ -674,8 +700,8 @@ msgstr ""
 msgid "Save Archive"
 msgstr ""
 
-#: cola/widgets/archive.py:120 cola/widgets/editremotes.py:199
-#: cola/widgets/merge.py:85
+#: cola/widgets/archive.py:120 cola/widgets/editremotes.py:193
+#: cola/widgets/merge.py:93
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -687,30 +713,30 @@ msgstr "Prefijo"
 msgid "Advanced"
 msgstr ""
 
-#: cola/widgets/archive.py:199 cola/widgets/browse.py:419
+#: cola/widgets/archive.py:185 cola/widgets/browse.py:398
 msgid "File Saved"
 msgstr "Archivo Guardado"
 
-#: cola/widgets/archive.py:200 cola/widgets/browse.py:420
+#: cola/widgets/archive.py:186 cola/widgets/browse.py:399
 #, python-format
 msgid "File saved to \"%s\""
 msgstr "Archivo guardado en \"%s\""
 
-#: cola/widgets/archive.py:207
+#: cola/widgets/archive.py:193
 msgid "Overwrite File?"
 msgstr "Desea sobreescribir el archivo?"
 
-#: cola/widgets/archive.py:208
+#: cola/widgets/archive.py:194
 #, python-format
 msgid "The file \"%s\" exists and will be overwritten."
 msgstr "El archivo \"%s\" ya existe y será sobreescrito."
 
-#: cola/widgets/archive.py:209
+#: cola/widgets/archive.py:195
 #, python-format
 msgid "Overwrite \"%s\"?"
 msgstr "Desea sobreescribir \"%s\"?"
 
-#: cola/widgets/archive.py:210
+#: cola/widgets/archive.py:196
 msgid "Overwrite"
 msgstr "Sobreescribir"
 
@@ -719,174 +745,140 @@ msgstr "Sobreescribir"
 msgid "Add"
 msgstr "Añadir"
 
-#: cola/widgets/bookmarks.py:42 cola/widgets/bookmarks.py:101
+#: cola/widgets/bookmarks.py:42 cola/widgets/bookmarks.py:96
 msgid "Open"
 msgstr "Abrir"
 
-#: cola/widgets/bookmarks.py:65
+#: cola/widgets/bookmarks.py:47
 #, fuzzy
 msgid "Bookmarked repositories"
 msgstr "Todos los Repositorios"
 
-#: cola/widgets/bookmarks.py:67
+#: cola/widgets/bookmarks.py:49
 #, fuzzy
 msgid "Recent repositories"
 msgstr "Todos los Repositorios"
 
-#: cola/widgets/bookmarks.py:105
+#: cola/widgets/bookmarks.py:100
 msgid "Open in New Window"
 msgstr "Abrir en una Ventana Nueva"
 
-#: cola/widgets/bookmarks.py:125 cola/widgets/diff.py:196
+#: cola/widgets/bookmarks.py:120 cola/widgets/diff.py:193
 msgid "Copy"
 msgstr "Copiar"
 
-#: cola/widgets/bookmarks.py:211
+#: cola/widgets/bookmarks.py:206
 msgid "Path to git repository"
 msgstr ""
 
-#: cola/widgets/bookmarks.py:212
+#: cola/widgets/bookmarks.py:207
 msgid "Enter Git Repository"
 msgstr ""
 
-#: cola/widgets/bookmarks.py:223
+#: cola/widgets/bookmarks.py:218
 #, fuzzy, python-format
 msgid "%s is not a Git repository."
 msgstr "Abrir Repositorio Git..."
 
-#: cola/widgets/browse.py:73 cola/widgets/main.py:588
+#: cola/widgets/browse.py:70 cola/widgets/main.py:587
 #, python-format
 msgid "Repository: %s"
 msgstr "Repositorio: %s"
 
-#: cola/widgets/browse.py:75 cola/widgets/main.py:590
+#: cola/widgets/browse.py:72 cola/widgets/main.py:589
 #, python-format
 msgid "Branch: %s"
 msgstr "Rama: %s"
 
-#: cola/widgets/browse.py:78
+#: cola/widgets/browse.py:75
 #, python-format
 msgid "%(project)s: %(branch)s - Browse"
 msgstr ""
 
-#: cola/widgets/browse.py:80
+#: cola/widgets/browse.py:77
 msgid "(Amending)"
 msgstr ""
 
-#: cola/widgets/browse.py:110
+#: cola/widgets/browse.py:106
 msgid "View History..."
 msgstr "Ver Historial..."
 
-#: cola/widgets/browse.py:111
-msgid "View history for selected path(s)."
+#: cola/widgets/browse.py:107
+msgid "View history for selected path(s)"
 msgstr ""
 
-#: cola/widgets/browse.py:115 cola/widgets/status.py:571
-#: cola/widgets/status.py:601 cola/widgets/status.py:660
-msgid "Stage Selected"
+#: cola/widgets/browse.py:113
+msgid "Stage/unstage selected path(s) for commit"
 msgstr ""
 
-#: cola/widgets/browse.py:116
-msgid "Stage selected path(s) for commit."
-msgstr ""
-
-#: cola/widgets/browse.py:121 cola/widgets/status.py:514
-#: cola/widgets/status.py:559
-msgid "Unstage Selected"
-msgstr ""
-
-#: cola/widgets/browse.py:122
-msgid "Remove selected path(s) from the staging area."
-msgstr ""
-
-#: cola/widgets/browse.py:127
+#: cola/widgets/browse.py:118
 msgid "Untrack Selected"
 msgstr ""
 
-#: cola/widgets/browse.py:128
+#: cola/widgets/browse.py:119
 msgid "Stop tracking path(s)"
 msgstr ""
 
-#: cola/widgets/browse.py:133
+#: cola/widgets/browse.py:124
 msgid "Launch git-difftool on the current path."
 msgstr ""
 
-#: cola/widgets/browse.py:138
+#: cola/widgets/browse.py:129
 msgid "Diff Against Predecessor..."
 msgstr ""
 
-#: cola/widgets/browse.py:139
+#: cola/widgets/browse.py:130
 msgid "Launch git-difftool against previous versions."
 msgstr ""
 
-#: cola/widgets/browse.py:143
-msgid "Revert Uncommitted Changes..."
+#: cola/widgets/browse.py:136
+msgid "Revert unstaged changes to selected paths."
 msgstr ""
 
-#: cola/widgets/browse.py:144
-msgid "Revert changes to selected path(s)."
+#: cola/widgets/browse.py:142
+msgid "Revert uncommitted changes to selected paths."
 msgstr ""
 
-#: cola/widgets/browse.py:149
+#: cola/widgets/browse.py:148
 msgid "Edit selected path(s)."
 msgstr ""
 
-#: cola/widgets/browse.py:330 cola/widgets/status.py:678
-msgid "Revert Uncommitted Changes?"
-msgstr ""
-
-#: cola/widgets/browse.py:331 cola/widgets/diff.py:296
-#: cola/widgets/status.py:679
-msgid ""
-"This operation drops uncommitted changes.\n"
-"These changes cannot be recovered."
-msgstr ""
-
-#: cola/widgets/browse.py:333 cola/widgets/diff.py:298
-#: cola/widgets/status.py:681
-msgid "Revert the uncommitted changes?"
-msgstr ""
-
-#: cola/widgets/browse.py:334 cola/widgets/status.py:682
-msgid "Revert Uncommitted Changes"
-msgstr ""
-
-#: cola/widgets/browse.py:384
+#: cola/widgets/browse.py:363
 msgid "Select Previous Version"
 msgstr ""
 
-#: cola/widgets/browse.py:412
+#: cola/widgets/browse.py:391
 #, python-format
 msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
 msgstr "Se guardó \"%(filename)s\" de \"%(ref)s\" en \"%(destination)s\""
 
-#: cola/widgets/browse.py:433
+#: cola/widgets/browse.py:412
 #, python-format
 msgid "Browsing %s"
 msgstr ""
 
-#: cola/widgets/browse.py:451
+#: cola/widgets/browse.py:430
 #, python-format
 msgid "Select file from \"%s\""
 msgstr "Seleccionar archivo de \"%s\""
 
-#: cola/widgets/browse.py:460
+#: cola/widgets/browse.py:439
 msgid "Select File"
 msgstr "Seleccionar Archivo"
 
-#: cola/widgets/browse.py:488 cola/widgets/selectcommits.py:56
+#: cola/widgets/browse.py:467 cola/widgets/selectcommits.py:56
 msgid "Select"
 msgstr "Seleccionar"
 
-#: cola/widgets/cfgactions.py:87 cola/widgets/main.py:310
+#: cola/widgets/cfgactions.py:82 cola/widgets/main.py:308
 msgid "Abort"
 msgstr "Abortar"
 
-#: cola/widgets/cfgactions.py:154 cola/widgets/cfgactions.py:158
+#: cola/widgets/cfgactions.py:153 cola/widgets/cfgactions.py:157
 msgid "Abort Action"
 msgstr "Abortar Acción"
 
-#: cola/widgets/cfgactions.py:155
+#: cola/widgets/cfgactions.py:154
 msgid ""
 "An action is still running.\n"
 "Terminating it could result in data loss."
@@ -894,79 +886,84 @@ msgstr ""
 "Una acción está siendo ejecutada.\n"
 "Cancelarla podría resultar en pérdida de información."
 
-#: cola/widgets/cfgactions.py:157
+#: cola/widgets/cfgactions.py:156
 msgid "Abort the action?"
 msgstr "Desea abortar la acción?"
 
-#: cola/widgets/cfgactions.py:208
+#: cola/widgets/cfgactions.py:199
 msgid "Arguments"
 msgstr "Argumentos"
 
-#: cola/widgets/cfgactions.py:227 cola/widgets/merge.py:58
+#: cola/widgets/cfgactions.py:213 cola/widgets/merge.py:62
 #: cola/widgets/remote.py:111
 msgid "Local Branch"
 msgstr "Rama Local"
 
-#: cola/widgets/cfgactions.py:228 cola/widgets/merge.py:61
+#: cola/widgets/cfgactions.py:214 cola/widgets/merge.py:65
 msgid "Tracking Branch"
 msgstr ""
 
-#: cola/widgets/cfgactions.py:229 cola/widgets/createbranch.py:120
-#: cola/widgets/merge.py:63
+#: cola/widgets/cfgactions.py:215 cola/widgets/createbranch.py:120
+#: cola/widgets/merge.py:67
 msgid "Tag"
 msgstr "Etiqueta"
 
-#: cola/widgets/cfgactions.py:233 cola/widgets/createtag.py:100
+#: cola/widgets/cfgactions.py:219 cola/widgets/createtag.py:82
 msgid "Revision"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:53
+#: cola/widgets/commitmsg.py:54
 msgid "Sign off on this commit"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:56 cola/widgets/commitmsg.py:73
+#: cola/widgets/commitmsg.py:57 cola/widgets/commitmsg.py:74
 msgid "Commit@@verb"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:59
+#: cola/widgets/commitmsg.py:60
 msgid "Commit staged changes"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:71
+#: cola/widgets/commitmsg.py:72
 msgid ""
 "Commit staged changes\n"
 "Shortcut: Ctrl+Enter"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:79
+#: cola/widgets/commitmsg.py:80
 msgid "Actions..."
 msgstr "Acciones..."
 
-#: cola/widgets/commitmsg.py:90
+#: cola/widgets/commitmsg.py:91
 msgid "Amend Last Commit"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:97
+#: cola/widgets/commitmsg.py:99 cola/widgets/merge.py:89
+msgid "Create Signed Commit"
+msgstr ""
+
+#: cola/widgets/commitmsg.py:105
 msgid "Check Spelling"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:103 cola/widgets/prefs.py:183
+#: cola/widgets/commitmsg.py:111 cola/widgets/prefs.py:183
 msgid "Auto-Wrap Lines"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:110
+#: cola/widgets/commitmsg.py:118
 msgid "Load Previous Commit Message"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:115
+#: cola/widgets/commitmsg.py:123
 msgid "Fixup Previous Commit"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:145 cola/widgets/status.py:159
+#: cola/widgets/commitmsg.py:147 cola/widgets/commitmsg.py:150
+#: cola/widgets/status.py:159
 msgid "Move Down"
 msgstr "Bajar"
 
-#: cola/widgets/commitmsg.py:378
+#: cola/widgets/commitmsg.py:398
 msgid ""
 "Please supply a commit message.\n"
 "\n"
@@ -977,74 +974,74 @@ msgid ""
 "- Remaining lines: Describe why this change is good.\n"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:385
+#: cola/widgets/commitmsg.py:405
 msgid "Missing Commit Message"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:391
+#: cola/widgets/commitmsg.py:411
 msgid ""
 "No changes to commit.\n"
 "\n"
 "You must stage at least 1 file before you can commit."
 msgstr ""
 
-#: cola/widgets/commitmsg.py:395
+#: cola/widgets/commitmsg.py:415
 msgid "Would you like to stage and commit all modified files?"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:397
+#: cola/widgets/commitmsg.py:417
 msgid "Stage and commit?"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:400
+#: cola/widgets/commitmsg.py:420
 msgid "Stage and Commit"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:405
+#: cola/widgets/commitmsg.py:425
 msgid "Nothing to commit"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:412
+#: cola/widgets/commitmsg.py:432
 msgid "Rewrite Published Commit?"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:413
+#: cola/widgets/commitmsg.py:433
 msgid ""
 "This commit has already been published.\n"
 "This operation will rewrite published history.\n"
 "You probably don't want to do this."
 msgstr ""
 
-#: cola/widgets/commitmsg.py:416
+#: cola/widgets/commitmsg.py:436
 msgid "Amend the published commit?"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:417
+#: cola/widgets/commitmsg.py:437
 msgid "Amend Commit"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:422
+#: cola/widgets/commitmsg.py:443
 msgid "Commit failed"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:423
+#: cola/widgets/commitmsg.py:444
 #, python-format
 msgid "\"git commit\" returned exit code %s"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:454
+#: cola/widgets/commitmsg.py:475
 msgid "More..."
 msgstr "Más..."
 
-#: cola/widgets/commitmsg.py:459
+#: cola/widgets/commitmsg.py:480
 msgid "Select Commit"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:502
+#: cola/widgets/commitmsg.py:523
 msgid "Commit summary"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:518
+#: cola/widgets/commitmsg.py:539
 msgid "Extended description..."
 msgstr "Descripción extendida..."
 
@@ -1056,26 +1053,26 @@ msgstr ""
 msgid "*** Sandbox ***"
 msgstr ""
 
-#: cola/widgets/compare.py:40 cola/widgets/compare.py:63
-#: cola/widgets/compare.py:69
+#: cola/widgets/compare.py:40 cola/widgets/compare.py:51
+#: cola/widgets/compare.py:56
 msgid "Local"
 msgstr ""
 
-#: cola/widgets/compare.py:45
+#: cola/widgets/compare.py:42
 msgid "Branch Diff Viewer"
 msgstr ""
 
-#: cola/widgets/compare.py:64 cola/widgets/compare.py:70
+#: cola/widgets/compare.py:52 cola/widgets/compare.py:57
 #: cola/widgets/remote.py:118
 msgid "Remote"
 msgstr "Repositorio Remoto"
 
-#: cola/widgets/compare.py:99
+#: cola/widgets/compare.py:74
 msgid "File Differences"
 msgstr ""
 
 #: cola/widgets/createbranch.py:85 cola/widgets/createbranch.py:96
-#: cola/widgets/createbranch.py:153 cola/widgets/dag.py:125
+#: cola/widgets/createbranch.py:145 cola/widgets/dag.py:126
 msgid "Create Branch"
 msgstr "Crear Rama"
 
@@ -1083,7 +1080,7 @@ msgstr "Crear Rama"
 msgid "Branch Name"
 msgstr "Nombre de la Rama"
 
-#: cola/widgets/createbranch.py:105 cola/widgets/createbranch.py:176
+#: cola/widgets/createbranch.py:105 cola/widgets/createbranch.py:152
 msgid "Starting Revision"
 msgstr ""
 
@@ -1111,336 +1108,336 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: cola/widgets/createbranch.py:141
+#: cola/widgets/createbranch.py:138
 msgid "Fetch Tracking Branch"
 msgstr ""
 
-#: cola/widgets/createbranch.py:146
+#: cola/widgets/createbranch.py:142
 msgid "Checkout After Creation"
 msgstr ""
 
-#: cola/widgets/createbranch.py:192
+#: cola/widgets/createbranch.py:155
 msgid "Options"
 msgstr "Opciones"
 
-#: cola/widgets/createbranch.py:257
+#: cola/widgets/createbranch.py:247
 msgid "Missing Data"
 msgstr "Datos Incompletos"
 
-#: cola/widgets/createbranch.py:258
+#: cola/widgets/createbranch.py:248
 msgid "Please provide both a branch name and revision expression."
 msgstr ""
 
-#: cola/widgets/createbranch.py:263
+#: cola/widgets/createbranch.py:253
 #, python-format
 msgid "Branch \"%s\" already exists."
 msgstr "La rama \"%s\" ya existe."
 
-#: cola/widgets/createbranch.py:264 cola/widgets/createbranch.py:275
+#: cola/widgets/createbranch.py:254 cola/widgets/createbranch.py:265
 msgid "Branch Exists"
 msgstr "Rama Existe"
 
-#: cola/widgets/createbranch.py:271
+#: cola/widgets/createbranch.py:261
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr ""
 
-#: cola/widgets/createbranch.py:286
+#: cola/widgets/createbranch.py:276
 #, python-format
 msgid "%d skipped"
 msgstr ""
 
-#: cola/widgets/createbranch.py:288
+#: cola/widgets/createbranch.py:278
 msgid "Recovering lost commits may not be easy."
 msgstr ""
 
-#: cola/widgets/createbranch.py:290
+#: cola/widgets/createbranch.py:280
 msgid "Reset Branch?"
 msgstr ""
 
-#: cola/widgets/createbranch.py:292
+#: cola/widgets/createbranch.py:282
 #, python-format
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr ""
 
-#: cola/widgets/createbranch.py:294
+#: cola/widgets/createbranch.py:284
 msgid "Reset Branch"
 msgstr ""
 
-#: cola/widgets/createbranch.py:303
+#: cola/widgets/createbranch.py:293
 msgid "Updating..."
 msgstr "Actualizando..."
 
-#: cola/widgets/createbranch.py:318
+#: cola/widgets/createbranch.py:308
 msgid "Error Creating Branch"
 msgstr "Error al Crear Rama"
 
-#: cola/widgets/createbranch.py:319
+#: cola/widgets/createbranch.py:309
 #, python-format
 msgid "\"%(command)s\" returned exit status \"%(status)d\""
 msgstr ""
 
-#: cola/widgets/createtag.py:49 cola/widgets/createtag.py:114
-#: cola/widgets/dag.py:131
+#: cola/widgets/createtag.py:53 cola/widgets/createtag.py:88
+#: cola/widgets/dag.py:132
 msgid "Create Tag"
 msgstr "Crear Etiqueta"
 
-#: cola/widgets/createtag.py:68
+#: cola/widgets/createtag.py:61
 msgid "vX.Y.Z"
 msgstr ""
 
-#: cola/widgets/createtag.py:70
+#: cola/widgets/createtag.py:63
 msgid "Specifies the tag name"
 msgstr ""
 
-#: cola/widgets/createtag.py:76
+#: cola/widgets/createtag.py:67
 msgid "Sign Tag"
 msgstr ""
 
-#: cola/widgets/createtag.py:82
+#: cola/widgets/createtag.py:71
 msgid "Whether to sign the tag (git tag -s)"
 msgstr ""
 
-#: cola/widgets/createtag.py:93
+#: cola/widgets/createtag.py:77
 msgid "Tag message..."
 msgstr ""
 
-#: cola/widgets/createtag.py:94
+#: cola/widgets/createtag.py:78
 msgid "Specifies the tag message"
 msgstr ""
 
-#: cola/widgets/createtag.py:106
+#: cola/widgets/createtag.py:86
 msgid "Specifies the SHA-1 to tag"
 msgstr ""
 
-#: cola/widgets/createtag.py:136
+#: cola/widgets/createtag.py:121
 msgid "Missing Revision"
 msgstr ""
 
-#: cola/widgets/createtag.py:137
+#: cola/widgets/createtag.py:122
 msgid "Please specify a revision to tag."
 msgstr ""
 
-#: cola/widgets/createtag.py:140
+#: cola/widgets/createtag.py:125
 msgid "Missing Name"
 msgstr ""
 
-#: cola/widgets/createtag.py:141
+#: cola/widgets/createtag.py:126
 msgid "Please specify a name for the new tag."
 msgstr "Por favor, especifique un nombre para la nueva etiqueta"
 
-#: cola/widgets/createtag.py:144
+#: cola/widgets/createtag.py:129
 msgid "Missing Tag Message"
 msgstr ""
 
-#: cola/widgets/createtag.py:145
+#: cola/widgets/createtag.py:130
 msgid "Tag-signing was requested but the tag message is empty."
 msgstr ""
 
-#: cola/widgets/createtag.py:147
+#: cola/widgets/createtag.py:132
 msgid ""
 "An unsigned, lightweight tag will be created instead.\n"
 "Create an unsigned tag?"
 msgstr ""
 
-#: cola/widgets/createtag.py:150
+#: cola/widgets/createtag.py:135
 msgid "Create Unsigned Tag"
 msgstr ""
 
-#: cola/widgets/createtag.py:159
+#: cola/widgets/createtag.py:144
 msgid "Tag Created"
 msgstr "Etiqueta Creada"
 
-#: cola/widgets/createtag.py:160
+#: cola/widgets/createtag.py:145
 #, python-format
 msgid "Created a new tag named \"%s\""
 msgstr "Se creó una nueva etiqueta con nombre \"%s\""
 
-#: cola/widgets/createtag.py:164
+#: cola/widgets/createtag.py:149
 #, python-format
 msgid "Error: could not create tag \"%s\""
 msgstr "Error: no se pudo crear la etiqueta \"%s\""
 
-#: cola/widgets/createtag.py:165
+#: cola/widgets/createtag.py:150
 #, python-format
 msgid "git tag returned exit code %s"
 msgstr ""
 
-#: cola/widgets/dag.py:119
+#: cola/widgets/dag.py:120
 msgid "Diff this -> selected"
 msgstr "Diferencia de esta -> seleccionada"
 
-#: cola/widgets/dag.py:122
+#: cola/widgets/dag.py:123
 msgid "Diff selected -> this"
 msgstr "Diferencia de seleccionada -> esta"
 
-#: cola/widgets/dag.py:128
+#: cola/widgets/dag.py:129
 msgid "Create Patch"
 msgstr "Crear Parche"
 
-#: cola/widgets/dag.py:134 cola/widgets/main.py:207
+#: cola/widgets/dag.py:135 cola/widgets/main.py:207
 msgid "Save As Tarball/Zip..."
 msgstr "Guardar Como Tarball/Zip..."
 
-#: cola/widgets/dag.py:137 cola/widgets/search.py:82
+#: cola/widgets/dag.py:138 cola/widgets/search.py:83
 msgid "Cherry Pick"
 msgstr ""
 
-#: cola/widgets/dag.py:140
+#: cola/widgets/dag.py:141
 msgid "Grab File..."
 msgstr ""
 
-#: cola/widgets/dag.py:143
+#: cola/widgets/dag.py:144
 msgid "Copy SHA-1"
 msgstr ""
 
-#: cola/widgets/dag.py:214
+#: cola/widgets/dag.py:215
 msgid "Summary"
 msgstr "Resumen"
 
-#: cola/widgets/dag.py:214
+#: cola/widgets/dag.py:215
 msgid "Date, Time"
 msgstr "Fecha, Hora"
 
-#: cola/widgets/dag.py:221
+#: cola/widgets/dag.py:222
 msgid "Go Up"
 msgstr "Subir"
 
-#: cola/widgets/dag.py:224
+#: cola/widgets/dag.py:225
 msgid "Go Down"
 msgstr "Bajar"
 
-#: cola/widgets/dag.py:351 cola/widgets/dag.py:1036
+#: cola/widgets/dag.py:344 cola/widgets/dag.py:1017
 msgid "Zoom Out"
 msgstr ""
 
-#: cola/widgets/dag.py:355 cola/widgets/dag.py:1033
+#: cola/widgets/dag.py:348 cola/widgets/dag.py:1014
 msgid "Zoom In"
 msgstr ""
 
-#: cola/widgets/dag.py:359 cola/widgets/dag.py:1039
+#: cola/widgets/dag.py:352 cola/widgets/dag.py:1020
 msgid "Zoom to Fit"
 msgstr ""
 
-#: cola/widgets/dag.py:380
+#: cola/widgets/dag.py:370
 msgid "Log"
 msgstr ""
 
-#: cola/widgets/dag.py:385
+#: cola/widgets/dag.py:375
 msgid "Files"
 msgstr "Archivos"
 
-#: cola/widgets/dag.py:388 cola/widgets/main.py:146 cola/widgets/main.py:382
+#: cola/widgets/dag.py:378 cola/widgets/main.py:146 cola/widgets/main.py:381
 msgid "Diff"
 msgstr "Diferencia"
 
-#: cola/widgets/dag.py:401
+#: cola/widgets/dag.py:388
 msgid "Graph"
 msgstr ""
 
-#: cola/widgets/dag.py:407 cola/widgets/main.py:326
+#: cola/widgets/dag.py:394 cola/widgets/main.py:325
 msgid "Lock Layout"
 msgstr ""
 
-#: cola/widgets/dag.py:413 cola/widgets/main.py:417
+#: cola/widgets/dag.py:403 cola/widgets/main.py:416
 msgid "View"
 msgstr "Ver"
 
-#: cola/widgets/dag.py:489
+#: cola/widgets/dag.py:481
 #, python-format
 msgid "%(project)s: %(ref)s - DAG"
 msgstr ""
 
-#: cola/widgets/dag.py:491
+#: cola/widgets/dag.py:483
 msgid " - DAG"
 msgstr ""
 
-#: cola/widgets/dag.py:1042
+#: cola/widgets/dag.py:1023
 msgid "Select Parent"
 msgstr "Seleccionar Padre"
 
-#: cola/widgets/dag.py:1045
+#: cola/widgets/dag.py:1026
 msgid "Select Oldest Parent"
 msgstr "Seleccionar padre más antiguo"
 
-#: cola/widgets/dag.py:1048
+#: cola/widgets/dag.py:1029
 msgid "Select Child"
 msgstr "Seleccionar Hijo"
 
-#: cola/widgets/dag.py:1051
+#: cola/widgets/dag.py:1032
 msgid "Select Newest Child"
 msgstr "Seleccionar hijo más reciente"
 
-#: cola/widgets/diff.py:60
+#: cola/widgets/diff.py:57
 msgid "Ignore changes in whitespace at EOL"
 msgstr ""
 
-#: cola/widgets/diff.py:65
+#: cola/widgets/diff.py:62
 msgid "Ignore changes in amount of whitespace"
 msgstr ""
 
-#: cola/widgets/diff.py:70
+#: cola/widgets/diff.py:67
 msgid "Ignore all whitespace"
 msgstr ""
 
-#: cola/widgets/diff.py:75
+#: cola/widgets/diff.py:72
 msgid "Show whole surrounding functions of changes"
 msgstr ""
 
-#: cola/widgets/diff.py:80 cola/widgets/diff.py:81
+#: cola/widgets/diff.py:77 cola/widgets/diff.py:78
 msgid "Diff Options"
 msgstr ""
 
-#: cola/widgets/diff.py:144 cola/widgets/diff.py:170
-#: cola/widgets/status.py:551 cola/widgets/status.py:652
+#: cola/widgets/diff.py:141 cola/widgets/diff.py:167
+#: cola/widgets/status.py:549 cola/widgets/status.py:647
 msgid "Launch git-cola"
 msgstr "Ejecutar git-cola"
 
-#: cola/widgets/diff.py:149
+#: cola/widgets/diff.py:146
 msgid "Stage Selected Lines"
 msgstr ""
 
-#: cola/widgets/diff.py:150
+#: cola/widgets/diff.py:147
 msgid "Revert Selected Lines..."
 msgstr ""
 
-#: cola/widgets/diff.py:152
+#: cola/widgets/diff.py:149
 msgid "Stage Diff Hunk"
 msgstr ""
 
-#: cola/widgets/diff.py:153
+#: cola/widgets/diff.py:150
 msgid "Revert Diff Hunk..."
 msgstr ""
 
-#: cola/widgets/diff.py:175
+#: cola/widgets/diff.py:172
 msgid "Unstage Selected Lines"
 msgstr ""
 
-#: cola/widgets/diff.py:177
+#: cola/widgets/diff.py:174
 msgid "Unstage Diff Hunk"
 msgstr ""
 
-#: cola/widgets/diff.py:200
+#: cola/widgets/diff.py:197
 msgid "Select All"
 msgstr ""
 
-#: cola/widgets/diff.py:289
+#: cola/widgets/diff.py:286
 msgid "Revert Selected Lines?"
 msgstr ""
 
-#: cola/widgets/diff.py:290
+#: cola/widgets/diff.py:287
 msgid "Revert Selected Lines"
 msgstr ""
 
-#: cola/widgets/diff.py:292
+#: cola/widgets/diff.py:289
 msgid "Revert Diff Hunk?"
 msgstr ""
 
-#: cola/widgets/diff.py:293
+#: cola/widgets/diff.py:290
 msgid "Revert Diff Hunk"
 msgstr ""
 
-#: cola/widgets/diff.py:387
+#: cola/widgets/diff.py:376
 msgid "Loading..."
 msgstr ""
 
@@ -1448,7 +1445,7 @@ msgstr ""
 msgid "Edit Remotes"
 msgstr "Editar Repositorios Remotos"
 
-#: cola/widgets/editremotes.py:40
+#: cola/widgets/editremotes.py:42
 msgid ""
 "Add and remove remote repositories using the \n"
 "Add(+) and Delete(-) buttons on the left-hand side.\n"
@@ -1463,36 +1460,36 @@ msgstr ""
 "seleccionando uno en la lista \n"
 "y presionando \"enter\", o haciendo doble-click."
 
-#: cola/widgets/editremotes.py:50
+#: cola/widgets/editremotes.py:52
 msgid "Remote git repositories - double-click to rename"
 msgstr "Repositorios de git remotos - doble click para renombrar"
 
-#: cola/widgets/editremotes.py:63
+#: cola/widgets/editremotes.py:65
 msgid "Add new remote git repository"
 msgstr "Añadir nuevo repositorio de git remoto"
 
-#: cola/widgets/editremotes.py:71
+#: cola/widgets/editremotes.py:73
 msgid "Delete remote"
 msgstr "Elimiar repositorio remoto"
 
-#: cola/widgets/editremotes.py:165
+#: cola/widgets/editremotes.py:158
 #, python-format
 msgid "Gathering info for \"%s\"..."
 msgstr "Runiendo información para \"%s\"..."
 
-#: cola/widgets/editremotes.py:196
+#: cola/widgets/editremotes.py:189
 msgid "Add Remote"
 msgstr "Añadir Repositorio Remoto"
 
-#: cola/widgets/editremotes.py:208
+#: cola/widgets/editremotes.py:202
 msgid "Add remote"
 msgstr "Añadir repositorio remoto"
 
-#: cola/widgets/editremotes.py:209
+#: cola/widgets/editremotes.py:203
 msgid "Name for the new remote"
 msgstr "Nombre para el nuevo repositorio remoto"
 
-#: cola/widgets/editremotes.py:216
+#: cola/widgets/editremotes.py:208
 msgid "URL"
 msgstr ""
 
@@ -1508,7 +1505,7 @@ msgstr ""
 msgid "Deletions"
 msgstr ""
 
-#: cola/widgets/grep.py:70 cola/widgets/search.py:44 cola/widgets/search.py:62
+#: cola/widgets/grep.py:70 cola/widgets/search.py:45 cola/widgets/search.py:63
 msgid "Search"
 msgstr "Buscar"
 
@@ -1571,7 +1568,7 @@ msgstr ""
 msgid "Browser"
 msgstr "Navegador"
 
-#: cola/widgets/main.py:95 cola/widgets/main.py:356
+#: cola/widgets/main.py:95 cola/widgets/main.py:355
 msgid "Actions"
 msgstr "Acciones"
 
@@ -1584,7 +1581,7 @@ msgstr "Favoritos"
 msgid "Recent"
 msgstr "Abrir Recientes"
 
-#: cola/widgets/main.py:131 cola/widgets/merge.py:80
+#: cola/widgets/main.py:131 cola/widgets/merge.py:84
 msgid "Commit"
 msgstr ""
 
@@ -1592,7 +1589,7 @@ msgstr ""
 msgid "Console"
 msgstr "Terminal"
 
-#: cola/widgets/main.py:153 cola/widgets/status.py:485
+#: cola/widgets/main.py:153 cola/widgets/status.py:486
 msgid "Unstage All"
 msgstr ""
 
@@ -1656,7 +1653,7 @@ msgstr ""
 msgid "Merge..."
 msgstr ""
 
-#: cola/widgets/main.py:217 cola/widgets/merge.py:29
+#: cola/widgets/main.py:217 cola/widgets/merge.py:31
 msgid "Abort Merge..."
 msgstr ""
 
@@ -1680,205 +1677,205 @@ msgstr "Documentación"
 msgid "Keyboard Shortcuts"
 msgstr "Atajos de Teclado"
 
-#: cola/widgets/main.py:251
+#: cola/widgets/main.py:249
 msgid "Visualize Current Branch..."
 msgstr "Visualizar Rama Actual..."
 
-#: cola/widgets/main.py:254
+#: cola/widgets/main.py:252
 msgid "Visualize All Branches..."
 msgstr "Visualizar Todas las Ramas..."
 
-#: cola/widgets/main.py:257
+#: cola/widgets/main.py:255
 msgid "Search..."
 msgstr "Buscar..."
 
-#: cola/widgets/main.py:259
+#: cola/widgets/main.py:257
 msgid "Browse Current Branch..."
 msgstr "Explorar Rama Actual..."
 
-#: cola/widgets/main.py:261
+#: cola/widgets/main.py:259
 msgid "Browse Other Branch..."
 msgstr "Explorar Otra Rama..."
 
-#: cola/widgets/main.py:263
+#: cola/widgets/main.py:261
 msgid "Get Commit Message Template"
 msgstr ""
 
-#: cola/widgets/main.py:266
+#: cola/widgets/main.py:264
 msgid "About"
 msgstr "Sobre git-cola"
 
-#: cola/widgets/main.py:269
+#: cola/widgets/main.py:267
 msgid "Expression..."
 msgstr "Expresión..."
 
-#: cola/widgets/main.py:271
+#: cola/widgets/main.py:269
 msgid "Branches..."
 msgstr "Ramas..."
 
-#: cola/widgets/main.py:274
+#: cola/widgets/main.py:272
 msgid "Create Tag..."
 msgstr "Crear Etiqueta..."
 
-#: cola/widgets/main.py:277
+#: cola/widgets/main.py:275
 msgid "Create..."
 msgstr "Crear..."
 
-#: cola/widgets/main.py:280
+#: cola/widgets/main.py:278
 msgid "Delete..."
 msgstr "Eliminar..."
 
-#: cola/widgets/main.py:283
+#: cola/widgets/main.py:281
 msgid "Delete Remote Branch..."
 msgstr "Eliminar Rama Remota"
 
-#: cola/widgets/main.py:286
+#: cola/widgets/main.py:284
 msgid "Checkout..."
 msgstr ""
 
-#: cola/widgets/main.py:288
+#: cola/widgets/main.py:286
 msgid "Review..."
 msgstr ""
 
-#: cola/widgets/main.py:291
+#: cola/widgets/main.py:289
 msgid "File Browser..."
 msgstr "Navegador de Archivos..."
 
-#: cola/widgets/main.py:294
+#: cola/widgets/main.py:292
 msgid "DAG..."
 msgstr ""
 
-#: cola/widgets/main.py:298
+#: cola/widgets/main.py:296
 msgid "Start Interactive Rebase..."
 msgstr ""
 
-#: cola/widgets/main.py:301
+#: cola/widgets/main.py:299
 msgid "Edit..."
 msgstr "Editar..."
 
-#: cola/widgets/main.py:307
+#: cola/widgets/main.py:305
 msgid "Skip Current Patch"
 msgstr "Ignorar Parche Actual"
 
-#: cola/widgets/main.py:332
+#: cola/widgets/main.py:331
 msgid "File"
 msgstr "Archivo"
 
-#: cola/widgets/main.py:333
+#: cola/widgets/main.py:332
 msgid "Open Recent"
 msgstr "Abrir Recientes"
 
-#: cola/widgets/main.py:372 cola/widgets/main.py:373
+#: cola/widgets/main.py:371 cola/widgets/main.py:372
 msgid "Staging Area"
 msgstr ""
 
-#: cola/widgets/main.py:390
+#: cola/widgets/main.py:389
 msgid "Branch"
 msgstr "Rama"
 
-#: cola/widgets/main.py:430
+#: cola/widgets/main.py:429
 msgid "Help"
 msgstr "Ayuda"
 
-#: cola/widgets/main.py:495
+#: cola/widgets/main.py:494
 #, python-format
 msgid "git cola version %s"
 msgstr "versión de git cola %s"
 
-#: cola/widgets/main.py:594
+#: cola/widgets/main.py:593
 msgid ""
 "This repository is currently being rebased.\n"
 "Resolve conflicts, commit changes, and run:\n"
 "    Rebase > Continue"
 msgstr ""
 
-#: cola/widgets/main.py:597
+#: cola/widgets/main.py:596
 msgid "Rebasing"
 msgstr ""
 
-#: cola/widgets/main.py:601
+#: cola/widgets/main.py:600
 msgid ""
 "This repository is in the middle of a merge.\n"
 "Resolve conflicts and commit changes."
 msgstr ""
 
-#: cola/widgets/main.py:603
+#: cola/widgets/main.py:602
 msgid "Merging"
 msgstr ""
 
-#: cola/widgets/main.py:606
+#: cola/widgets/main.py:605
 msgid "Amending"
 msgstr ""
 
-#: cola/widgets/main.py:731
+#: cola/widgets/main.py:730
 msgid "Unable to rebase"
 msgstr ""
 
-#: cola/widgets/main.py:732
+#: cola/widgets/main.py:731
 msgid "You cannot rebase with uncommitted changes."
 msgstr ""
 
-#: cola/widgets/main.py:734
+#: cola/widgets/main.py:733
 msgid "Select New Upstream"
 msgstr ""
 
-#: cola/widgets/main.py:735
+#: cola/widgets/main.py:734
 msgid "Interactive Rebase"
 msgstr ""
 
-#: cola/widgets/merge.py:30
+#: cola/widgets/merge.py:32
 msgid ""
 "Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
 
-#: cola/widgets/merge.py:33
+#: cola/widgets/merge.py:35
 msgid "Aborting the current merge?"
 msgstr ""
 
-#: cola/widgets/merge.py:34
+#: cola/widgets/merge.py:36
 msgid "Abort Merge"
 msgstr ""
 
-#: cola/widgets/merge.py:53
+#: cola/widgets/merge.py:56
 msgid "Revision To Merge"
 msgstr ""
 
-#: cola/widgets/merge.py:69
+#: cola/widgets/merge.py:73
 msgid "Visualize"
 msgstr ""
 
-#: cola/widgets/merge.py:72
+#: cola/widgets/merge.py:76
 msgid "Squash"
 msgstr ""
 
-#: cola/widgets/merge.py:75
+#: cola/widgets/merge.py:79
 msgid "No fast forward"
 msgstr ""
 
-#: cola/widgets/merge.py:88
+#: cola/widgets/merge.py:96
 msgid "Merge"
 msgstr ""
 
-#: cola/widgets/merge.py:152
+#: cola/widgets/merge.py:147
 #, python-format
 msgid "Merge \"%(revision)s\" into \"%(branch)s\""
 msgstr ""
 
-#: cola/widgets/merge.py:155
+#: cola/widgets/merge.py:150
 #, python-format
 msgid "Merge into \"%s\""
 msgstr ""
 
-#: cola/widgets/merge.py:206 cola/widgets/merge.py:215
+#: cola/widgets/merge.py:201 cola/widgets/merge.py:210
 msgid "No Revision Specified"
 msgstr ""
 
-#: cola/widgets/merge.py:207
+#: cola/widgets/merge.py:202
 msgid "You must specify a revision to view."
 msgstr ""
 
-#: cola/widgets/merge.py:216
+#: cola/widgets/merge.py:211
 msgid "You must specify a revision to merge."
 msgstr ""
 
@@ -1911,11 +1908,11 @@ msgstr "Añadir parches (+)"
 msgid "Remove selected (Delete)"
 msgstr "Eliminar seleccionados (Delete)"
 
-#: cola/widgets/patch.py:96 cola/widgets/stash.py:51
+#: cola/widgets/patch.py:96 cola/widgets/stash.py:52
 msgid "Apply"
 msgstr "Aplicar"
 
-#: cola/widgets/patch.py:151
+#: cola/widgets/patch.py:138
 msgid "Select patch file(s)..."
 msgstr "Seleccionar archivo(s) de parche..."
 
@@ -2039,20 +2036,20 @@ msgstr "Incluir etiquetas "
 msgid "Rebase "
 msgstr ""
 
-#: cola/widgets/remote.py:309
+#: cola/widgets/remote.py:306
 #, python-format
 msgid "URL: %s"
 msgstr ""
 
-#: cola/widgets/remote.py:405
+#: cola/widgets/remote.py:402
 msgid "No repository selected."
 msgstr "Ningún repositorio ha sido seleccionado."
 
-#: cola/widgets/remote.py:420 cola/widgets/remote.py:507
+#: cola/widgets/remote.py:417 cola/widgets/remote.py:504
 msgid "Push"
 msgstr ""
 
-#: cola/widgets/remote.py:422
+#: cola/widgets/remote.py:419
 #, python-format
 msgid ""
 "Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
@@ -2061,103 +2058,103 @@ msgstr ""
 "La rama \"%(branch)s\" no existe en \"%(remote)s\".\n"
 "Se publicará una nueva rama remota."
 
-#: cola/widgets/remote.py:424
+#: cola/widgets/remote.py:421
 msgid "Create a new remote branch?"
 msgstr "Desea crear una nueva rama remota?"
 
-#: cola/widgets/remote.py:425
+#: cola/widgets/remote.py:422
 msgid "Create Remote Branch"
 msgstr "Crear Rama Remota"
 
-#: cola/widgets/remote.py:433
+#: cola/widgets/remote.py:430
 msgid "Force Fetch?"
 msgstr ""
 
-#: cola/widgets/remote.py:434
+#: cola/widgets/remote.py:431
 msgid "Non-fast-forward fetch overwrites local history!"
 msgstr ""
 
-#: cola/widgets/remote.py:435
+#: cola/widgets/remote.py:432
 #, python-format
 msgid "Force fetching from %s?"
 msgstr ""
 
-#: cola/widgets/remote.py:436
+#: cola/widgets/remote.py:433
 msgid "Force Fetch"
 msgstr ""
 
-#: cola/widgets/remote.py:438
+#: cola/widgets/remote.py:435
 msgid "Force Push?"
 msgstr ""
 
-#: cola/widgets/remote.py:439
+#: cola/widgets/remote.py:436
 msgid ""
 "Non-fast-forward push overwrites published history!\n"
 "(Did you pull first?)"
 msgstr ""
 
-#: cola/widgets/remote.py:441
+#: cola/widgets/remote.py:438
 #, python-format
 msgid "Force push to %s?"
 msgstr ""
 
-#: cola/widgets/remote.py:442
+#: cola/widgets/remote.py:439
 msgid "Force Push"
 msgstr ""
 
-#: cola/widgets/remote.py:467
+#: cola/widgets/remote.py:464
 msgid "Already up-to-date."
 msgstr ""
 
-#: cola/widgets/remote.py:492
+#: cola/widgets/remote.py:489
 msgid "Have you rebased/pulled lately?"
 msgstr ""
 
-#: cola/widgets/remote.py:501
+#: cola/widgets/remote.py:498
 msgid "Fetch"
 msgstr ""
 
-#: cola/widgets/remote.py:513
+#: cola/widgets/remote.py:510
 msgid "Pull"
 msgstr ""
 
-#: cola/widgets/search.py:48
+#: cola/widgets/search.py:49
 msgid "Browse..."
 msgstr ""
 
-#: cola/widgets/search.py:54 cola/widgets/search.py:59
+#: cola/widgets/search.py:55 cola/widgets/search.py:60
 msgid "yyyy-MM-dd"
 msgstr ""
 
-#: cola/widgets/search.py:224
+#: cola/widgets/search.py:208
 msgid "Search by Expression"
 msgstr ""
 
-#: cola/widgets/search.py:225
+#: cola/widgets/search.py:209
 msgid "Search by Path"
 msgstr ""
 
-#: cola/widgets/search.py:226
+#: cola/widgets/search.py:210
 msgid "Search Commit Messages"
 msgstr ""
 
-#: cola/widgets/search.py:227
+#: cola/widgets/search.py:211
 msgid "Search Diffs"
 msgstr ""
 
-#: cola/widgets/search.py:228
+#: cola/widgets/search.py:212
 msgid "Search Authors"
 msgstr ""
 
-#: cola/widgets/search.py:229
+#: cola/widgets/search.py:213
 msgid "Search Committers"
 msgstr ""
 
-#: cola/widgets/search.py:230
+#: cola/widgets/search.py:214
 msgid "Search Date Range"
 msgstr ""
 
-#: cola/widgets/search.py:323
+#: cola/widgets/search.py:307
 msgid "Choose Path(s)"
 msgstr ""
 
@@ -2165,7 +2162,7 @@ msgstr ""
 msgid "Revision Expression:"
 msgstr ""
 
-#: cola/widgets/selectcommits.py:103
+#: cola/widgets/selectcommits.py:87
 msgid "No commits exist in this branch."
 msgstr ""
 
@@ -2189,78 +2186,70 @@ msgstr "Seleccionar Repositorio..."
 msgid "Select manually..."
 msgstr "Seleccionar manualmente..."
 
-#: cola/widgets/stash.py:39
+#: cola/widgets/stash.py:40
 msgid "Stash"
 msgstr ""
 
-#: cola/widgets/stash.py:52
+#: cola/widgets/stash.py:53
 msgid "Apply the selected stash"
 msgstr ""
 
-#: cola/widgets/stash.py:56
+#: cola/widgets/stash.py:57
 msgid "Save modified state to new stash"
 msgstr ""
 
-#: cola/widgets/stash.py:59
+#: cola/widgets/stash.py:60
 msgid "Drop"
 msgstr ""
 
-#: cola/widgets/stash.py:60
+#: cola/widgets/stash.py:61
 msgid "Drop the selected stash"
 msgstr ""
 
-#: cola/widgets/stash.py:67
+#: cola/widgets/stash.py:68
 msgid "Keep Index"
 msgstr ""
 
-#: cola/widgets/stash.py:188
+#: cola/widgets/stash.py:173
 msgid "Save Stash"
 msgstr ""
 
-#: cola/widgets/stash.py:189
+#: cola/widgets/stash.py:174
 msgid "Enter a name for the stash"
 msgstr ""
 
-#: cola/widgets/stash.py:195
+#: cola/widgets/stash.py:180
 msgid "Error: Stash exists"
 msgstr ""
 
-#: cola/widgets/stash.py:196
+#: cola/widgets/stash.py:181
 #, python-format
 msgid "A stash named \"%s\" already exists"
 msgstr ""
 
-#: cola/widgets/stash.py:211
+#: cola/widgets/stash.py:196
 msgid "Drop Stash?"
 msgstr ""
 
-#: cola/widgets/stash.py:212
+#: cola/widgets/stash.py:197
 msgid "Recovering a dropped stash is not possible."
 msgstr ""
 
-#: cola/widgets/stash.py:213
+#: cola/widgets/stash.py:198
 #, python-format
 msgid "Drop the \"%s\" stash?"
 msgstr ""
 
-#: cola/widgets/stash.py:214
+#: cola/widgets/stash.py:199
 msgid "Drop Stash"
 msgstr ""
 
-#: cola/widgets/status.py:34
+#: cola/widgets/status.py:32
 msgid "Toggle the paths filter"
 msgstr ""
 
-#: cola/widgets/status.py:110
+#: cola/widgets/status.py:103
 msgid "Untracked"
-msgstr ""
-
-#: cola/widgets/status.py:120
-msgid "Stage / Unstage"
-msgstr ""
-
-#: cola/widgets/status.py:124
-msgid "Revert Unstaged Edits..."
 msgstr ""
 
 #: cola/widgets/status.py:156
@@ -2279,15 +2268,20 @@ msgstr ""
 msgid "Delete File(s)..."
 msgstr "Eliminar Archivo(s)..."
 
-#: cola/widgets/status.py:542 cola/widgets/status.py:620
-msgid "Revert Uncommited Edits..."
+#: cola/widgets/status.py:515 cola/widgets/status.py:557
+msgid "Unstage Selected"
 msgstr ""
 
-#: cola/widgets/status.py:643
+#: cola/widgets/status.py:569 cola/widgets/status.py:599
+#: cola/widgets/status.py:655
+msgid "Stage Selected"
+msgstr ""
+
+#: cola/widgets/status.py:638
 msgid "Add to .gitignore"
 msgstr "Añadir a .gitignore"
 
-#: cola/widgets/status.py:935
+#: cola/widgets/status.py:899
 #, fuzzy
 msgid "Filter paths..."
 msgstr "Navegador de Archivos..."
