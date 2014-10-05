@@ -358,7 +358,10 @@ class GitCompletionModel(CompletionModel):
         return (refs, (), set())
 
     def emit_update(self):
-        self.emit(SIGNAL(UPDATE_SIGNAL))
+        try:
+            self.emit(SIGNAL(UPDATE_SIGNAL))
+        except RuntimeError: # C++ object has been deleted
+            self.dispose()
 
     def matches(self):
         return []

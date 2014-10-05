@@ -18,6 +18,10 @@ Fixes
   to parsing `git config` was reverted since it created problems
   for some users.
 
+* Fixed a crash when using the `rebase edit` feature.
+
+  https://github.com/git-cola/git-cola/issue/351
+
 git-cola v2.0.7
 ===============
 Usability, bells and whistles
