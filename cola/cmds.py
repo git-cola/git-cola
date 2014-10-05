@@ -1047,13 +1047,13 @@ class Rebase(Command):
         self.capture_output = capture_output
 
     def do(self):
-        branch = self.branch
-        if not branch:
-            return
         status = 1
         out = ''
         err = ''
         extra = {}
+        branch = self.branch
+        if not branch:
+            return status, out, err
         if self.capture_output:
             extra['_stderr'] = None
             extra['_stdout'] = None
