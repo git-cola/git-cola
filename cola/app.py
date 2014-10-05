@@ -146,8 +146,10 @@ class ColaApplication(object):
         qtcompat.install()
         qtutils.install()
 
+        self.notifier = QtCore.QObject()
+        self.notifier.connect(self.notifier, SIGNAL('update_files'), self._update_files)
         # Call _update_files when inotify detects changes
-        inotify.observer(_update_files)
+        inotify.observer(self._update_files_notifier)
 
         # Add the default style dir so that we find our icons
         icon_dir = resources.icon_dir()
@@ -183,6 +185,13 @@ class ColaApplication(object):
     def set_view(self, view):
         if hasattr(self._app, 'view'):
             self._app.view = view
+
+    def _update_files(self):
+        # Respond to inotify updates
+        cmds.do(cmds.Refresh)
+
+    def _update_files_notifier(self):
+        self.notifier.emit(SIGNAL('update_files'))
 
 
 @memoize
@@ -369,11 +378,6 @@ def _send_msg():
                '"plumbing" API and are not intended for typical '
                'day-to-day use.  Here be dragons')
         Interaction.log(msg)
-
-
-def _update_files():
-    # Respond to inotify updates
-    cmds.do(cmds.Refresh)
 
 
 class ApplicationContext(object):
