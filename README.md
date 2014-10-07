@@ -25,7 +25,7 @@ Screenshots are available on the
 
 ## DOWNLOAD
 
-    apt-get install git-cola python-pyinotify
+    apt-get install git-cola python-pyinotify xterm
 
 New releases are available on the
 [git-cola download page](http://git-cola.github.io/downloads.html).
@@ -87,7 +87,7 @@ If not, please file a bug against your distribution ;-)
 
 ### debian, ubuntu
 
-    apt-get install git-cola
+    apt-get install git-cola xterm
 
 ### fedora
 
