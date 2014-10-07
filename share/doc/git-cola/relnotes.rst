@@ -22,6 +22,13 @@ Fixes
 
   https://github.com/git-cola/git-cola/issue/351
 
+Packaging
+---------
+* The `git-cola-folder-handler.desktop` file handler was fixed
+  to pass validation by `desktop-file-validate`.
+
+  https://github.com/git-cola/git-cola/issue/356
+
 git-cola v2.0.7
 ===============
 Usability, bells and whistles
