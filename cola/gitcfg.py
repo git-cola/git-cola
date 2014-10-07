@@ -9,6 +9,7 @@ from os.path import join
 from cola import core
 from cola import git
 from cola import observable
+from cola import utils
 from cola.decorators import memoize
 from cola.git import STDOUT
 from cola.compat import ustr
@@ -365,4 +366,13 @@ class GitConfig(observable.Observable):
                         for (name, cmd) in guitools.items()])
 
     def terminal(self):
-        return self.get('cola.terminal', 'xterm -e')
+        term = self.get('cola.terminal', None)
+        if not term:
+            # find a suitable default terminal
+            term = 'xterm -e' # for mac osx
+            candidates = ('gnome-terminal', 'xfce4-terminal', 'konsole')
+            for basename in candidates:
+                if core.exists('/usr/bin/%s' % basename):
+                    term = '%s -e' % basename
+                    break
+        return term

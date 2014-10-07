@@ -419,9 +419,13 @@ The number of columns occupied by a tab character.  Defaults to 8.
 
 cola.terminal
 -------------
-The command to use when launching commands via a terminal.
+The command to use when launching commands within a graphical terminal.
+
 `cola.terminal` defaults to `xterm -e` when unset.
 e.g. when opening a shell, `git cola` will run `xterm -e $SHELL`.
+
+If either `gnome-terminal`, `xfce4-terminal`, or `konsole` are installed
+then they will be preferred over `xterm` when `cola.terminal` is unset.
 
 cola.textwidth
 --------------
