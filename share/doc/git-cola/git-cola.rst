@@ -370,10 +370,10 @@ CONFIGURATION VARIABLES
 =======================
 These variables can be set using `git config` or from the settings.
 
-cola.savewindowsettings
------------------------
-`git cola` will remember its window settings when set to `true`.
-Window settings and X11 sessions are saved in `$HOME/.config/git-cola`.
+cola.browserdockable
+--------------------
+Whether to create a dock widget with the `Browser` tool.
+Defaults to `false` to speedup startup time.
 
 cola.fileattributes
 -------------------
@@ -384,11 +384,6 @@ and applying diffs.
 cola.fontdiff
 -------------
 Specifies the font to use for `git cola`'s diff display.
-
-cola.browserdockable
---------------------
-Whether to create a dock widget with the `Browser` tool.
-Defaults to `false` to speedup startup time.
 
 cola.inotify
 ------------
@@ -402,6 +397,22 @@ Defaults to `true`.  This setting is configured using the `Preferences`
 dialog, but it can be toggled for one-off usage using the commit message
 editor's options sub-menu.
 
+cola.readsize
+-------------
+`git cola` avoids reading large binary untracked files.
+The maximum size to read is controlled by `cola.readsize`
+and defaults to `2048`.
+
+cola.savewindowsettings
+-----------------------
+`git cola` will remember its window settings when set to `true`.
+Window settings and X11 sessions are saved in `$HOME/.config/git-cola`.
+
+cola.signcommits
+----------------
+`git cola` will sign commits using `git commit -S` by default when set `true`.
+See the section below on setting up GPG for more details.
+
 cola.tabwidth
 -------------
 The number of columns occupied by a tab character.  Defaults to 8.
@@ -410,17 +421,6 @@ cola.textwidth
 --------------
 The number of columns used for line wrapping.
 Tabs are counted according to `cola.tabwidth`.
-
-cola.readsize
--------------
-`git cola` avoids reading large binary untracked files.
-The maximum size to read is controlled by `cola.readsize`
-and defaults to `2048`.
-
-cola.signcommits
-----------------
-`git cola` will sign commits using `git commit -S` by default when set `true`.
-See the section below on setting up GPG for more details.
 
 gui.diffcontext
 ---------------
