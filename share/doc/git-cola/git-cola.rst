@@ -332,9 +332,11 @@ The `Status` tool will display all of the changes for the amended commit.
 
 Create Signed Commit
 --------------------
-Tell `git commit` to use GPG to sign commits.
-Using this option is equivalent to passing the ``-S`` option
-to `git commit <http://git-scm.com/docs/git-commit>`_.
+Tell `git commit` and `git merge` to sign commits using GPG.
+
+Using this option is equivalent to passing the ``--gpg-sign`` option to
+`git commit <http://git-scm.com/docs/git-commit>`_ and
+`git merge <http://git-scm.com/docs/git-merge>`_.
 
 This option's default value can be configured using the `cola.signcommits`
 configuration variable.
@@ -410,7 +412,7 @@ Window settings and X11 sessions are saved in `$HOME/.config/git-cola`.
 
 cola.signcommits
 ----------------
-`git cola` will sign commits using `git commit -S` by default when set `true`.
+`git cola` will sign commits by default when set `true`. Defaults to `false`.
 See the section below on setting up GPG for more details.
 
 cola.tabwidth
