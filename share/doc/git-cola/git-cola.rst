@@ -417,6 +417,12 @@ cola.tabwidth
 -------------
 The number of columns occupied by a tab character.  Defaults to 8.
 
+cola.terminal
+-------------
+The command to use when launching commands via a terminal.
+`cola.terminal` defaults to `xterm -e` when unset.
+e.g. when opening a shell, `git cola` will run `xterm -e $SHELL`.
+
 cola.textwidth
 --------------
 The number of columns used for line wrapping.
