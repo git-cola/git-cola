@@ -395,11 +395,13 @@ def icon(basename):
     return QtGui.QIcon(resources.icon(basename))
 
 
-def copy_path(filename):
-        """Copy a filename prefixed by current directory to the clipboard"""
-        if filename is not None:
-            curdir = core.getcwd()
-            set_clipboard(os.path.join(curdir, filename))
+def copy_path(filename, absolute=True):
+    """Copy a filename to the clipboard"""
+    if filename is None:
+        return
+    if absolute:
+        filename = core.abspath(filename)
+    set_clipboard(filename)
 
 
 def set_clipboard(text):

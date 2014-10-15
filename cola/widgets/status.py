@@ -163,6 +163,11 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 self.copy_path, QtGui.QKeySequence.Copy)
         self.copy_path_action.setIcon(qtutils.theme_icon('edit-copy.svg'))
 
+        self.copy_relpath_action = qtutils.add_action(self,
+                N_('Copy Relative Path to Clipboard'),
+                self.copy_relpath, QtGui.QKeySequence.Cut)
+        self.copy_relpath_action.setIcon(qtutils.theme_icon('edit-copy.svg'))
+
         if cmds.MoveToTrash.AVAILABLE:
             self.move_to_trash_action = qtutils.add_action(self,
                     N_('Move file(s) to trash'),
@@ -542,6 +547,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
+        menu.addAction(self.copy_relpath_action)
         return menu
 
     def _create_staged_submodule_context_menu(self, menu, s):
@@ -560,6 +566,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         menu.addSeparator()
 
         menu.addAction(self.copy_path_action)
+        menu.addAction(self.copy_relpath_action)
         return menu
 
     def _create_unmerged_context_menu(self, menu, s):
@@ -586,6 +593,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
+        menu.addAction(self.copy_relpath_action)
         return menu
 
     def _create_unstaged_context_menu(self, menu, s):
@@ -640,6 +648,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                                 map(lambda x: '/' + x, self.untracked())))
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
+        menu.addAction(self.copy_relpath_action)
         return menu
 
     def _create_modified_submodule_context_menu(self, menu, s):
@@ -658,6 +667,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
+        menu.addAction(self.copy_relpath_action)
         return menu
 
 
@@ -879,10 +889,14 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         else:
             self.select_by_index(0)
 
-    def copy_path(self):
+    def copy_path(self, absolute=True):
         """Copy a selected path to the clipboard"""
         filename = selection.selection_model().filename()
-        qtutils.copy_path(filename)
+        qtutils.copy_path(filename, absolute=absolute)
+
+    def copy_relpath(self):
+        """Copy a selected relative path to the clipboard"""
+        self.copy_path(absolute=False)
 
     def mimeData(self, items):
         """Return a list of absolute-path URLs"""

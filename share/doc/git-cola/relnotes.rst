@@ -8,6 +8,10 @@ Usability, bells and whistles
 
   See the documentation for details about setting up a GPG agent.
 
+* The status widget learned to copy relative paths when `Ctrl+x` is pressed.
+
+  https://github.com/git-cola/git-cola/issue/358
+
 Fixes
 -----
 * `sphinxtogithub.py` was fixed for Python3.
