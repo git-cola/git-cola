@@ -26,7 +26,7 @@ def install():
 
 def get_config_actions():
     cfg = gitcfg.current()
-    return cfg.get_guitool_names()
+    return cfg.get_guitool_names_and_shortcuts()
 
 
 def confirm_config_action(name, opts):

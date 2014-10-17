@@ -581,6 +581,18 @@ Specifies the general prompt string to display at the top of the dialog,
 before subsections for argprompt and revprompt.
 The default value includes the actual command.
 
+guitool.<name>.shortcut
+-----------------------
+Specifies a keyboard shortcut for the custom tool.
+
+The value must be a valid string understood by the `QAction::setShortcut()` API.
+See http://qt-project.org/doc/qt-4.8/qkeysequence.html#QKeySequence-2
+for more details about the supported values.
+
+Avoid creating shortcuts that conflict with existing built-in `git cola`
+shortcuts.  Creating a conflict will result in no action when the shortcut
+is used.
+
 SETTING UP GPG FOR SIGNED COMMITS
 =================================
 When creating signed commits `gpg` will attempt to read your password from the

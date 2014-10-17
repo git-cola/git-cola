@@ -12,6 +12,13 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issue/358
 
+* Custom GUI actions can now define their own keyboard shortcuts by
+  setting `guitool.$name.shortcut` to a string understood by Qt's
+  `QAction::setShortcut()` API, e.g. `Alt+x`.
+
+  See http://qt-project.org/doc/qt-4.8/qkeysequence.html#QKeySequence-2
+  for more details about the supported values.
+
 Fixes
 -----
 * `sphinxtogithub.py` was fixed for Python3.

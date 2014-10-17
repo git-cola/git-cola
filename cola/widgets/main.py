@@ -557,21 +557,23 @@ class MainView(MainWindow):
                 QtCore.QRunnable.__init__(self)
                 self._sender = sender
             def run(self):
-                names = cfgactions.get_config_actions()
-                self._sender.emit(SIGNAL('install_config_actions'), names)
+                actions = cfgactions.get_config_actions()
+                self._sender.emit(SIGNAL('install_config_actions'), actions)
 
         task = ConfigActionsTask(self)
         QtCore.QThreadPool.globalInstance().start(task)
         return task
 
-    def _install_config_actions(self, names):
+    def _install_config_actions(self, names_and_shortcuts):
         """Install .gitconfig-defined actions"""
-        if not names:
+        if not names_and_shortcuts:
             return
         menu = self.actions_menu
         menu.addSeparator()
-        for name in names:
-            menu.addAction(name, cmds.run(cmds.RunConfigAction, name))
+        for (name, shortcut) in names_and_shortcuts:
+            action = menu.addAction(name, cmds.run(cmds.RunConfigAction, name))
+            if shortcut:
+                action.setShortcut(shortcut)
 
     def _update(self):
         self.emit(SIGNAL('update'))

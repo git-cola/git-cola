@@ -365,6 +365,11 @@ class GitConfig(observable.Observable):
         return sorted([name[prefix:-suffix]
                         for (name, cmd) in guitools.items()])
 
+    def get_guitool_names_and_shortcuts(self):
+        """Return guitool names and their configured shortcut"""
+        names = self.get_guitool_names()
+        return [(name, self.get('guitool.%s.shortcut' % name)) for name in names]
+
     def terminal(self):
         term = self.get('cola.terminal', None)
         if not term:
