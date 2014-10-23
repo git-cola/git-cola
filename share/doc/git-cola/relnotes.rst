@@ -4,13 +4,13 @@ Usability, bells and whistles
 -----------------------------
 * `git cola` can now create GPG-signed commits and merges.
 
-  https://github.com/git-cola/git-cola/issue/149
+  https://github.com/git-cola/git-cola/issues/149
 
   See the documentation for details about setting up a GPG agent.
 
 * The status widget learned to copy relative paths when `Ctrl+x` is pressed.
 
-  https://github.com/git-cola/git-cola/issue/358
+  https://github.com/git-cola/git-cola/issues/358
 
 * Custom GUI actions can now define their own keyboard shortcuts by
   setting `guitool.$name.shortcut` to a string understood by Qt's
@@ -31,14 +31,14 @@ Fixes
 
 * Fixed a crash when using the `rebase edit` feature.
 
-  https://github.com/git-cola/git-cola/issue/351
+  https://github.com/git-cola/git-cola/issues/351
 
 Packaging
 ---------
 * The `git-cola-folder-handler.desktop` file handler was fixed
   to pass validation by `desktop-file-validate`.
 
-  https://github.com/git-cola/git-cola/issue/356
+  https://github.com/git-cola/git-cola/issues/356
 
 git-cola v2.0.7
 ===============
@@ -48,7 +48,7 @@ Usability, bells and whistles
 
 * New hotkey: `Ctrl+R` refreshes the DAG viewer.
 
-  https://github.com/git-cola/git-cola/issue/347
+  https://github.com/git-cola/git-cola/issues/347
 
 Fixes
 -----
@@ -58,7 +58,7 @@ Fixes
 
 * Avoid "C++ object has been deleted" errors from PyQt4.
 
-  https://github.com/git-cola/git-cola/issue/346
+  https://github.com/git-cola/git-cola/issues/346
 
 Packaging
 ---------
@@ -73,22 +73,22 @@ Usability, bells and whistles
 * The status and browse widgets now allow drag-and-drop into
   external applications.
 
-  https://github.com/git-cola/git-cola/issue/335
+  https://github.com/git-cola/git-cola/issues/335
 
 * We now show a progress bar when cloning repositories.
 
-  https://github.com/git-cola/git-cola/issue/312
+  https://github.com/git-cola/git-cola/issues/312
 
 * The bookmarks widget was simplified to not need a
   separate dialog.
 
-  https://github.com/git-cola/git-cola/issue/289
+  https://github.com/git-cola/git-cola/issues/289
 
 * Updated Traditional Chinese translation.
 
 * We now display a warning when trying to rebase with uncommitted changes.
 
-  https://github.com/git-cola/git-cola/issue/338
+  https://github.com/git-cola/git-cola/issues/338
 
 * The status widget learned to filter paths.
   `Shift+Ctrl+s` toggles the filter widget.
