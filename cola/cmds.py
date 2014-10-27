@@ -601,6 +601,7 @@ class DeleteBranch(Command):
         status, out, err = self.model.delete_branch(self.branch)
         Interaction.log_status(status, out, err)
 
+
 class RenameBranch(Command):
     """Rename a git branch."""
 

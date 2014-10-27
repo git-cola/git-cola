@@ -231,7 +231,9 @@ class MainModel(Observable):
         self._update_branches_and_tags()
 
     def delete_branch(self, branch):
-        return self.git.branch(branch, D=True)
+        status, out, err = self.git.branch(branch, D=True)
+        self._update_branches_and_tags()
+        return status, out, err
 
     def rename_branch(self, branch, new_branch):
         status, out, err = self.git.branch(branch, new_branch, M=True)
