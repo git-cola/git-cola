@@ -19,6 +19,12 @@ Usability, bells and whistles
   See http://qt-project.org/doc/qt-4.8/qkeysequence.html#QKeySequence-2
   for more details about the supported values.
 
+* `git cola` learned to rename branches.
+
+  https://github.com/git-cola/git-cola/pull/364
+
+  https://github.com/git-cola/git-cola/issues/278
+
 Fixes
 -----
 * `sphinxtogithub.py` was fixed for Python3.
