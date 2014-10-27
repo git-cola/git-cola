@@ -233,6 +233,11 @@ class MainModel(Observable):
     def delete_branch(self, branch):
         return self.git.branch(branch, D=True)
 
+    def rename_branch(self, branch, new_branch):
+        status, out, err = self.git.branch(branch, new_branch, M=True)
+        self._update_branches_and_tags()
+        return status, out, err
+
     def _sliced_op(self, input_items, map_fn):
         """Slice input_items and call map_fn over every slice
 

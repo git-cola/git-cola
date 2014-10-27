@@ -601,6 +601,17 @@ class DeleteBranch(Command):
         status, out, err = self.model.delete_branch(self.branch)
         Interaction.log_status(status, out, err)
 
+class RenameBranch(Command):
+    """Rename a git branch."""
+
+    def __init__(self, branch, new_branch):
+        Command.__init__(self)
+        self.branch = branch
+        self.new_branch = new_branch
+
+    def do(self):
+        status, out, err = self.model.rename_branch(self.branch, self.new_branch)
+        Interaction.log_status(status, out, err)
 
 class DeleteRemoteBranch(Command):
     """Delete a remote git branch."""

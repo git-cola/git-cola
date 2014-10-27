@@ -280,6 +280,9 @@ class MainView(MainWindow):
         self.delete_remote_branch_action = add_action(self,
                 N_('Delete Remote Branch...'), guicmds.delete_remote_branch)
 
+        self.rename_branch_action = add_action(self,
+                N_('Rename Branch...'), guicmds.rename_branch)
+
         self.checkout_branch_action = add_action(self,
                 N_('Checkout...'), guicmds.checkout_branch, 'Alt+B')
         self.branch_review_action = add_action(self,
@@ -393,6 +396,7 @@ class MainView(MainWindow):
         self.branch_menu.addAction(self.checkout_branch_action)
         self.branch_menu.addAction(self.delete_branch_action)
         self.branch_menu.addAction(self.delete_remote_branch_action)
+        self.branch_menu.addAction(self.rename_branch_action)
         self.branch_menu.addSeparator()
         self.branch_menu.addAction(self.browse_branch_action)
         self.branch_menu.addAction(self.browse_other_branch_action)

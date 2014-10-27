@@ -443,6 +443,18 @@ msgstr ""
 msgid "Delete Remote Branch"
 msgstr ""
 
+#: cola/guicmds.py:349
+msgid "Rename Existing Branch"
+msgstr ""
+
+#: cola/guicmds.py:352
+msgid "Enter Branch New Name"
+msgstr ""
+
+#: cola/guicmds.py:352
+msgid "Rename"
+msgstr ""
+
 #: cola/guicmds.py:56
 msgid "Browse Commits..."
 msgstr ""
@@ -1702,6 +1714,10 @@ msgstr ""
 
 #: cola/widgets/main.py:281
 msgid "Delete Remote Branch..."
+msgstr ""
+
+#: cola/widgets/main.py:281
+msgid "Rename Branch..."
 msgstr ""
 
 #: cola/widgets/main.py:284
