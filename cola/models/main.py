@@ -236,8 +236,11 @@ class MainModel(Observable):
         return status, out, err
 
     def rename_branch(self, branch, new_branch):
-        status, out, err = self.git.branch(branch, new_branch, M=True)
+        status, out, err = self.git.branch(branch, new_branch, M=True) 
+        self.notify_observers(self.message_about_to_update)
+        self._update_branch_heads()
         self._update_branches_and_tags()
+        self.notify_observers(self.message_updated)
         return status, out, err
 
     def _sliced_op(self, input_items, map_fn):
