@@ -1493,6 +1493,10 @@ msgstr ""
 msgid "Deletions"
 msgstr ""
 
+#: cola/widgets/filelist.py:72
+msgid "Show history"
+msgstr ""
+
 #: cola/widgets/grep.py:70 cola/widgets/search.py:45 cola/widgets/search.py:63
 msgid "Search"
 msgstr ""
