@@ -103,7 +103,7 @@ class DiffEditor(DiffTextEdit):
         self.launch_difftool = qtutils.add_action(self,
                 cmds.LaunchDifftool.name(), run(cmds.LaunchDifftool),
                 cmds.LaunchDifftool.SHORTCUT)
-        self.launch_difftool.setIcon(qtutils.icon('git.svg'))
+        self.launch_difftool.setIcon(qtutils.git_icon())
 
         model.add_observer(model.message_diff_text_changed, self._emit_text)
 

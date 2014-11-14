@@ -4,6 +4,7 @@ all::
 # The external commands used by this Makefile are...
 CTAGS = ctags
 CP = cp
+LNS = ln -s
 FIND = find
 GIT = git
 GZIP = gzip
@@ -52,6 +53,7 @@ all::
 
 install: all
 	$(PYTHON) setup.py install $(setup_args)
+	$(LNS) $(DESTDIR)$(prefix)/share/git-cola/icons/git.svg $(prefix)/share/icons/hicolor/scalable/apps/git-cola.svg
 	(cd $(DESTDIR)$(bindir) && \
 	! test -e cola && $(LN) -s git-cola cola) || true
 	$(RM_R) $(DESTDIR)$(coladir)/git_cola*
@@ -87,6 +89,7 @@ uninstall:
 	$(RM) $(DESTDIR)$(prefix)/share/applications/git-cola.desktop
 	$(RM) $(DESTDIR)$(prefix)/share/applications/git-cola-folder-handler.desktop
 	$(RM) $(DESTDIR)$(prefix)/share/applications/git-dag.desktop
+	$(RM) $(DESTDIR)$(prefix)/share/icons/hicolor/scalable/apps/git-cola.svg
 	$(RM_R) $(DESTDIR)$(prefix)/share/git-cola
 	$(RM_R) $(DESTDIR)$(prefix)/share/doc/git-cola
 	$(RM) $(DESTDIR)$(prefix)/share/locale/*/LC_MESSAGES/git-cola.mo

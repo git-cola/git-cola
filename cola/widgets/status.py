@@ -130,7 +130,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 cmds.LaunchDifftool.name(),
                 cmds.run(cmds.LaunchDifftool),
                 cmds.LaunchDifftool.SHORTCUT)
-        self.launch_difftool_action.setIcon(qtutils.icon('git.svg'))
+        self.launch_difftool_action.setIcon(qtutils.git_icon())
 
         self.launch_editor_action = qtutils.add_action(self,
                 cmds.LaunchEditor.name(),
