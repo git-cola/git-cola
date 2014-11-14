@@ -53,6 +53,7 @@ all::
 
 install: all
 	$(PYTHON) setup.py install $(setup_args)
+	$(MKDIR_P) $(prefix)/share/icons/hicolor/scalable/apps
 	$(LNS) $(DESTDIR)$(prefix)/share/git-cola/icons/git.svg $(prefix)/share/icons/hicolor/scalable/apps/git-cola.svg
 	(cd $(DESTDIR)$(bindir) && \
 	! test -e cola && $(LN) -s git-cola cola) || true
