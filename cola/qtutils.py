@@ -5,6 +5,7 @@ from __future__ import division, absolute_import, unicode_literals
 
 import os
 import re
+import subprocess
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -796,9 +797,12 @@ def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
 
 def mimedata_from_paths(paths):
     """Return mimedata with a list of absolute path URLs"""
-    urls = [QtCore.QUrl(core.abspath(path)) for path in paths]
+    abspaths = [core.abspath(path) for path in paths]
+    urls = [QtCore.QUrl(path) for path in abspaths]
+    text = subprocess.list2cmdline([core.encode(path) for path in abspaths])
     mimedata = QtCore.QMimeData()
     mimedata.setUrls(urls)
+    mimedata.setText(text)
     return mimedata
 
 # Syntax highlighting
