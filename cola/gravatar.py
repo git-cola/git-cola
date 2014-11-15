@@ -8,7 +8,7 @@ from PyQt4 import QtNetwork
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
-from cola import resources
+from cola import qtutils
 from cola import core
 from cola.compat import ustr, urllib
 import hashlib
@@ -60,8 +60,7 @@ class GravatarLabel(QtGui.QLabel):
 
     def default_pixmap_as_bytes(self):
         xres = self.imgsize
-        pixmap = QtGui.QPixmap(resources.icon('git.svg'))
-        pixmap = pixmap.scaledToHeight(xres, Qt.SmoothTransformation)
+        pixmap = qtutils.git_icon().pixmap(xres)
         byte_array = QtCore.QByteArray()
         buf = QtCore.QBuffer(byte_array)
         buf.open(QtCore.QIODevice.WriteOnly)
