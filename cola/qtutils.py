@@ -805,6 +805,10 @@ def mimedata_from_paths(paths):
     mimedata.setText(text)
     return mimedata
 
+
+def mimetypes():
+    return ['text/plain', 'text/uri-list']
+
 # Syntax highlighting
 
 def TERMINAL(pattern):

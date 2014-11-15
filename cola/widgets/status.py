@@ -903,6 +903,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         paths = qtutils.paths_from_items(items, item_filter=lambda x: x.exists)
         return qtutils.mimedata_from_paths(paths)
 
+    def mimeTypes(self):
+        return qtutils.mimetypes()
+
 
 class StatusFilterWidget(QtGui.QWidget):
 

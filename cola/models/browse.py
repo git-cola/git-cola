@@ -85,6 +85,9 @@ class GitRepoModel(QtGui.QStandardItemModel):
                                            item_type=GitRepoNameItem.TYPE)
         return qtutils.mimedata_from_paths(paths)
 
+    def mimeTypes(self):
+        return qtutils.mimetypes()
+
     def _create_column(self, col, path):
         """Creates a StandardItem for use in a treeview cell."""
         # GitRepoNameItem is the only one that returns a custom type(),
