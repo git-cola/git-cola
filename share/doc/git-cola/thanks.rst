@@ -79,4 +79,5 @@ Thanks
 * Ｖ字龍 (Vdragon)
 * Virgil Dupras
 * Vitor Lobo
+* v.paritskiy
 * Zhang Han
