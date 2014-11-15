@@ -4,7 +4,7 @@ all::
 # The external commands used by this Makefile are...
 CTAGS = ctags
 CP = cp
-LNS = ln -s
+LNS = ln -s -f
 FIND = find
 GIT = git
 GZIP = gzip
@@ -20,7 +20,9 @@ TAR = tar
 # These values can be overridden on the command-line or via config.mak
 prefix = $(HOME)
 bindir = $(prefix)/bin
-coladir = $(prefix)/share/git-cola/lib
+datadir = $(prefix)/share/git-cola
+coladir = $(datadir)/lib
+hicolordir = $(prefix)/share/icons/hicolor/scalable/apps
 darwin_python = /System/Library/Frameworks/Python.framework/Resources/Python.app/Contents/MacOS/Python
 # DESTDIR =
 
@@ -53,8 +55,8 @@ all::
 
 install: all
 	$(PYTHON) setup.py install $(setup_args)
-	$(MKDIR_P) $(prefix)/share/icons/hicolor/scalable/apps
-	$(LNS) $(DESTDIR)$(prefix)/share/git-cola/icons/git.svg $(prefix)/share/icons/hicolor/scalable/apps/git-cola.svg
+	$(MKDIR_P) $(DESTDIR)$(hicolordir)
+	$(LNS) $(datadir)/icons/git-cola.svg $(DESTDIR)$(hicolordir)/git-cola.svg
 	(cd $(DESTDIR)$(bindir) && \
 	! test -e cola && $(LN) -s git-cola cola) || true
 	$(RM_R) $(DESTDIR)$(coladir)/git_cola*

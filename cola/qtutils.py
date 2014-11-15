@@ -256,7 +256,7 @@ def information(title, message=None, details=None, informative_text=None):
         mbox.setInformativeText(informative_text)
     if details:
         mbox.setDetailedText(details)
-    # Render git.svg into a 1-inch wide pixmap
+    # Render git-cola.svg into a 1-inch wide pixmap
     pixmap = git_icon().pixmap(96)
     mbox.setIconPixmap(pixmap)
     mbox.exec_()
@@ -584,7 +584,7 @@ def git_icon():
     Return git-cola icon from X11 theme if it exists.
     Else fallback to default hardcoded icon.
     """
-    return QtGui.QIcon.fromTheme('git-cola', icon('git.svg'))
+    return QtGui.QIcon.fromTheme('git-cola', icon('git-cola.svg'))
 
 
 def reload_icon():
