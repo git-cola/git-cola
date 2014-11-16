@@ -39,12 +39,19 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/351
 
+* Better drag-and-drop behavior when dropping into gnome-terminal.
+
+  https://github.com/git-cola/git-cola/issues/373
+
 Packaging
 ---------
 * The `git-cola-folder-handler.desktop` file handler was fixed
   to pass validation by `desktop-file-validate`.
 
   https://github.com/git-cola/git-cola/issues/356
+
+* The `git.svg` icon was renamed to `git-cola.svg`, and `git cola` was taught
+  to prefer icons from the desktop theme when available.
 
 git-cola v2.0.7
 ===============

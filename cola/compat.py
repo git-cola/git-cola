@@ -13,6 +13,12 @@ except NameError:
     ustr = str
 
 try:
+    bytes = bytes
+except NameError:
+    # older Python2
+    bytes = str
+
+try:
     unichr = unichr
 except NameError:
     # Python 3
