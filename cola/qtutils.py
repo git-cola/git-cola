@@ -21,6 +21,7 @@ from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models.prefs import FONTDIFF
 from cola.widgets import defs
+from cola.compat import bytes
 from cola.compat import ustr
 
 
@@ -797,17 +798,43 @@ def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
 
 def mimedata_from_paths(paths):
     """Return mimedata with a list of absolute path URLs"""
+
     abspaths = [core.abspath(path) for path in paths]
-    urls = [QtCore.QUrl(path) for path in abspaths]
-    text = subprocess.list2cmdline([core.encode(path) for path in abspaths])
+    urls = [QtCore.QUrl.fromLocalFile(path) for path in abspaths]
+    unicode_urls = [core.decode(bytes(url.toEncoded().data())) for url in urls]
+
+    raw_text = core.encode('\r\n'.join(unicode_urls) + '\r\n')
+    text = QtCore.QByteArray(raw_text)
+
     mimedata = QtCore.QMimeData()
     mimedata.setUrls(urls)
-    mimedata.setText(text)
+    mimedata.setData('text/plain', text)
+    mimedata.setData('UTF8_STRING', text)
+    mimedata.setData('COMPOUND_TEXT', text)
+    mimedata.setData('TEXT', text)
+    mimedata.setData('STRING', text)
+    mimedata.setData('text/plain;charset=utf-8', text)
+
+    # The text/x-moz-list format is raw text encoded in utf-16.
+    # Failure to encode prevents gnome-terminal from getting the right paths.
+    moz_text = subprocess.list2cmdline(abspaths)
+    moz_text = core.encode(moz_text, encoding='utf-16')
+    mimedata.setData('text/x-moz-url', moz_text)
+
     return mimedata
 
 
 def mimetypes():
-    return ['text/plain', 'text/uri-list']
+    return [
+            'text/x-moz-url',
+            'text/uri-list',
+            'UTF8_STRING',
+            'text/plain',
+            'COMPOUND_TEXT',
+            'TEXT',
+            'STRING',
+            'text/plain;charset=utf-8',
+            ]
 
 # Syntax highlighting
 
