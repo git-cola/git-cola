@@ -586,7 +586,7 @@ def git_icon():
     Return git-cola icon from X11 theme if it exists.
     Else fallback to default hardcoded icon.
     """
-    return QtGui.QIcon.fromTheme('git-cola', icon('git-cola.svg'))
+    return theme_icon('git-cola.svg')
 
 
 def reload_icon():
