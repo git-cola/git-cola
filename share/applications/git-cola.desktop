@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Git Cola
 Comment=The highly caffeinated Git GUI
+Comment[zh_TW]=高咖啡因含量的 Git 圖形介面
 TryExec=git-cola
 Exec=git-cola --prompt
 Icon=git-cola
