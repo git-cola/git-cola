@@ -399,6 +399,14 @@ Defaults to `true`.  This setting is configured using the `Preferences`
 dialog, but it can be toggled for one-off usage using the commit message
 editor's options sub-menu.
 
+cola.dragencoding
+-----------------
+`git cola` encodes paths dragged from its widgets into `utf-16` when adding
+them to the drag-and-drop mime data (specifically, the `text/x-moz-url` entry).
+`utf-16` is used to make `gnome-terminal` see the right paths, but other
+terminals may expect a different encoding.  If you are using a terminal that
+expects a modern encoding, e.g. `terminator`, then set this value to `utf-8`.
+
 cola.readsize
 -------------
 `git cola` avoids reading large binary untracked files.

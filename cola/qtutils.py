@@ -21,7 +21,6 @@ from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models.prefs import FONTDIFF
 from cola.widgets import defs
-from cola.compat import bytes
 from cola.compat import ustr
 
 
@@ -801,40 +800,27 @@ def mimedata_from_paths(paths):
 
     abspaths = [core.abspath(path) for path in paths]
     urls = [QtCore.QUrl.fromLocalFile(path) for path in abspaths]
-    unicode_urls = [core.decode(bytes(url.toEncoded().data())) for url in urls]
-
-    raw_text = core.encode('\r\n'.join(unicode_urls) + '\r\n')
-    text = QtCore.QByteArray(raw_text)
 
     mimedata = QtCore.QMimeData()
     mimedata.setUrls(urls)
-    mimedata.setData('text/plain', text)
-    mimedata.setData('UTF8_STRING', text)
-    mimedata.setData('COMPOUND_TEXT', text)
-    mimedata.setData('TEXT', text)
-    mimedata.setData('STRING', text)
-    mimedata.setData('text/plain;charset=utf-8', text)
 
-    # The text/x-moz-list format is raw text encoded in utf-16.
-    # Failure to encode prevents gnome-terminal from getting the right paths.
-    moz_text = subprocess.list2cmdline(abspaths)
-    moz_text = core.encode(moz_text, encoding='utf-16')
+    # The text/x-moz-list format is always included by Qt, and doing
+    # mimedata.removeFormat('text/x-moz-url') has no effect.
+    # C.f. http://www.qtcentre.org/threads/44643-Dragging-text-uri-list-Qt-inserts-garbage
+    #
+    # gnome-terminal expects utf-16 encoded text, but other terminals,
+    # e.g. terminator, prefer utf-8, so allow cola.dragencoding
+    # to override the default.
+    paths_text = subprocess.list2cmdline(abspaths)
+    encoding = gitcfg.current().get('cola.dragencoding', 'utf-16')
+    moz_text = core.encode(paths_text, encoding=encoding)
     mimedata.setData('text/x-moz-url', moz_text)
 
     return mimedata
 
 
 def mimetypes():
-    return [
-            'text/x-moz-url',
-            'text/uri-list',
-            'UTF8_STRING',
-            'text/plain',
-            'COMPOUND_TEXT',
-            'TEXT',
-            'STRING',
-            'text/plain;charset=utf-8',
-            ]
+    return ['text/uri-list', 'text/x-moz-url']
 
 # Syntax highlighting
 
