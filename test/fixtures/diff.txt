@@ -1,7 +1,3 @@
-diff --git a/cola/diffparse.py b/cola/diffparse.py
-index a680f4b..33a892e 100644
---- a/cola/diffparse.py
-+++ b/cola/diffparse.py
 @@ -6,10 +6,21 @@ from cola import gitcmds
  from cola import gitcfg
  

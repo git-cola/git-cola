@@ -1,335 +1,172 @@
 from __future__ import division, absolute_import, unicode_literals
 
-import os
 import re
 
-from cola import core
-from cola import gitcmds
-from cola import gitcfg
-from cola import utils
+from collections import defaultdict
 
 
-class Range(object):
+_HUNK_HEADER_RE = re.compile(r'^@@ -([0-9,]+) \+([0-9,]+) @@(.*)')
 
-    def __init__(self, begin, end, heading=''):
-        self.begin = self._parse(begin)
-        self.end = self._parse(end)
+
+class _DiffHunk(object):
+    def __init__(self, old_start, old_count, new_start, new_count, heading,
+                 first_line_idx, lines):
+        self.old_start = old_start
+        self.old_count = old_count
+        self.new_start = new_start
+        self.new_count = new_count
         self.heading = heading
+        self.first_line_idx = first_line_idx
+        self.lines = lines
 
-    def _parse(self, range_str):
-        if ',' in range_str:
-            begin, end = range_str.split(',')
-            return [int(begin), int(end)]
-        else:
-            return [int(range_str), int(range_str)]
-
-    def make(self):
-        return '@@ -%s +%s @@%s' % (self._span(self.begin),
-                self._span(self.end), self.heading)
-
-    def set_begin_count(self, count):
-        self._set_count(self.begin, count)
-
-    def set_end_count(self, count):
-        self._set_count(self.end, count)
-
-    def _set_count(self, which, count):
-        if count != which[1]:
-            which[1] = count
-            if count == 1 and which[0] == 0:
-                # the file would be empty in the diff, but we're only
-                # partially applying it, and thus it's not a +0,0 diff
-                # anymore.
-                which[0] = 1
-
-    def _span(self, seq):
-        a = seq[0]
-        b = seq[1]
-        if a == b and a == 1:
-            return '%d' % a
-        else:
-            return '%d,%d' % (a, b)
+    @property
+    def last_line_idx(self):
+        return self.first_line_idx + len(self.lines) - 1
 
 
-class DiffSource(object):
-    def get(self, head, amending, filename, cached, reverse):
-        return gitcmds.diff_helper(head=head,
-                                   amending=amending,
-                                   filename=filename,
-                                   with_diff_header=True,
-                                   cached=cached,
-                                   reverse=reverse)
+def _parse_range_str(range_str):
+    if ',' in range_str:
+        begin, end = range_str.split(',', 1)
+        return int(begin), int(end)
+    else:
+        return int(range_str), 1
+
+
+def _format_range(start, count):
+    if count == 1:
+        return str(start)
+    else:
+        return '%d,%d' % (start, count)
+
+
+def _format_hunk_header(old_start, old_count,
+                       new_start, new_count,
+                       heading=''):
+    return '@@ -%s +%s @@%s' % (_format_range(old_start, old_count),
+                                _format_range(new_start, new_count),
+                                heading)
+
+
+def _parse_diff(diff_text):
+    hunks = []
+    for line_idx, line in enumerate(diff_text.split('\n')):
+        match = _HUNK_HEADER_RE.match(line)
+        if match:
+            old_start, old_count = _parse_range_str(match.group(1))
+            new_start, new_count = _parse_range_str(match.group(2))
+            heading = match.group(3)
+            hunks.append(_DiffHunk(old_start, old_count,
+                                   new_start, new_count,
+                                   heading, line_idx, lines=[line]))
+        elif not hunks:
+            # first line of the diff is not a header line
+            errmsg = 'Malformed diff?: %s' % diff_text
+            raise AssertionError(errmsg)
+        elif line:
+            hunks[-1].lines.append(line)
+    return hunks
 
 
 class DiffParser(object):
 
-    """Handles parsing diff for use by the interactive index editor."""
-
-    HEADER_RE = re.compile(r'^@@ -([0-9,]+) \+([0-9,]+) @@(.*)')
-
-    def __init__(self, model, filename='',
-                 cached=True, reverse=False,
-                 diff_source=None):
-
-        self._idx = -1
-        self._diffs = []
-        self._diff_spans = []
-        self._diff_offsets = []
-        self._ranges = []
-
-        self.config = gitcfg.current()
-        self.head = model.head
-        self.amending = model.amending()
-        self.start = None
-        self.end = None
-        self.offset = None
-        self.diff_sel = []
-        self.selected = []
+    def __init__(self, filename, diff_text):
         self.filename = filename
-        self.diff_source = diff_source or DiffSource()
+        self.hunks = _parse_diff(diff_text)
 
-        if cached:
-            reverse = True
+    def generate_patch(self, first_line_idx, last_line_idx,
+                       reverse=False):
+        """Return a patch containing a subset of the diff"""
 
-        header, diff = self.diff_source.get(self.head, self.amending,
-                                            filename, cached, reverse=False)
-        if reverse:
-            header, _ = self.diff_source.get(self.head, self.amending,
-                                             filename, cached, reverse=True)
+        ADDITION = '+'
+        DELETION = '-'
+        CONTEXT = ' '
+        NO_NEWLINE = '\\'
 
-        self.model = model
-        self.fwd_diff = diff
-        self.header = header
-        self.parse_diff(diff, reverse)
+        lines = ['--- a/%s' % self.filename, '+++ b/%s' % self.filename]
 
-    def write_diff(self,filename,which,selected=False,noop=False):
-        """Writes a new diff corresponding to the user's selection."""
-        if not noop and which < len(self.diff_sel):
-            diff = self.diff_sel[which]
-            encoding = self.config.file_encoding(self.filename)
-            core.write(filename, self.header + '\n' + diff + '\n',
-                       encoding=encoding)
-            return True
-        else:
-            return False
+        start_offset = 0
 
-    def ranges(self):
-        """Return the diff header ranges"""
-        return self._ranges
+        for hunk in self.hunks:
+            # skip hunks until we get to the one that contains the first
+            # selected line
+            if hunk.last_line_idx < first_line_idx:
+                continue
+            # once we have processed the hunk that contains the last selected
+            # line, we can stop
+            if hunk.first_line_idx > last_line_idx:
+                break
 
-    def diffs(self):
-        """Returns the list of diffs."""
-        return self._diffs
+            prev_skipped = False
+            counts = defaultdict(int)
+            filtered_lines = []
 
-    def diff_subset(self, diff, start, end):
-        """Processes the diffs and returns a selected subset from that diff.
-        """
-        adds = 0
-        deletes = 0
-        existing = 0
-        newdiff = []
-        local_offset = 0
-        offset = self._diff_spans[diff][0]
+            for line_idx, line in enumerate(hunk.lines[1:],
+                                            start=hunk.first_line_idx + 1):
+                line_type, line_content = line[:1], line[1:]
 
-        ADD = '+'
-        DEL = '-'
-        NOP = ' '
-
-        for line in self._diffs[diff]:
-            line_start = offset + local_offset
-            local_offset += len(line) + 1 #\n
-            line_end = offset + local_offset
-            # |line1 |line2 |line3 |
-            #   |--selection--|
-            #   '-start       '-end
-
-            # selection has head of diff (line3)
-            has_head = start <= line_start and end > line_start and end <= line_end
-            # selection has all of diff (line2)
-            has_all = start <= line_start and end >= line_end
-            # selection has tail of diff (line1)
-            has_tail = start >= line_start and start < line_end - 1
-
-            action = line[0:1]
-            if has_head or has_all or has_tail:
-                newdiff.append(line)
-                if action == ADD:
-                    adds += 1
-                elif action == DEL:
-                    deletes += 1
-                elif action == NOP:
-                    existing += 1
-            else:
-                # Don't add new lines unless selected
-                if action == ADD:
-                    continue
-                elif action == DEL:
-                    # Don't remove lines unless selected
-                    newdiff.append(' ' + line[1:])
-                    existing += 1
-                elif action == NOP:
-                    newdiff.append(line)
-                    existing += 1
-                else:
-                    newdiff.append(line)
-
-        diff_range = self._ranges[diff]
-        begin_count = existing + deletes
-        end_count = existing + adds
-
-        diff_range.set_begin_count(begin_count)
-        diff_range.set_end_count(end_count)
-        newdiff[0] = diff_range.make()
-
-        return (self.header + '\n' + '\n'.join(newdiff) + '\n')
-
-    def spans(self):
-        """Returns the line spans of each hunk."""
-        return self._diff_spans
-
-    def offsets(self):
-        """Returns the offsets."""
-        return self._diff_offsets
-
-    def set_diff_to_offset(self, offset):
-        """Sets the diff selection to be the hunk at a particular offset."""
-        self.offset = offset
-        self.diff_sel, self.selected = self.diff_for_offset(offset)
-
-    def set_diffs_to_range(self, start, end):
-        """Sets the diff selection to be a range of hunks."""
-        self.start = start
-        self.end = end
-        self.diff_sel, self.selected = self.diffs_for_range(start,end)
-
-    def diff_for_offset(self, offset):
-        """Returns the hunks for a particular offset."""
-        for idx, diff_offset in enumerate(self._diff_offsets):
-            if offset < diff_offset:
-                return (['\n'.join(self._diffs[idx])], [idx])
-        return ([],[])
-
-    def diffs_for_range(self, start, end):
-        """Returns the hunks for a selected range."""
-        diffs = []
-        indices = []
-        for idx, span in enumerate(self._diff_spans):
-            has_end_of_diff = start >= span[0] and start < span[1]
-            has_all_of_diff = start <= span[0] and end >= span[1]
-            has_head_of_diff = end >= span[0] and end <= span[1]
-
-            selected_diff =(has_end_of_diff
-                    or has_all_of_diff
-                    or has_head_of_diff)
-            if selected_diff:
-                diff = '\n'.join(self._diffs[idx])
-                diffs.append(diff)
-                indices.append(idx)
-        return diffs, indices
-
-    def parse_diff(self, diff, reverse):
-        """Parses a diff and extracts headers, offsets, hunks, etc.
-        """
-        total_offset = 0
-        self._idx = -1
-
-        for line in diff.split('\n'):
-            match = self.HEADER_RE.match(line)
-            if match:
-                range1 = match.group(1)
-                range2 = match.group(2)
-                heading = match.group(3)
                 if reverse:
-                    range = Range(range2, range1, heading)
-                else:
-                    range = Range(range1, range2, heading)
-                self._ranges.append(range)
-                line = range.make()
-                self._diffs.append([line])
+                    if line_type == ADDITION:
+                        line_type = DELETION
+                    elif line_type == DELETION:
+                        line_type = ADDITION
 
-                line_len = len(line) + 1 #\n
-                self._diff_spans.append([total_offset,
-                                         total_offset + line_len])
-                total_offset += line_len
-                self._diff_offsets.append(total_offset)
-                self._idx += 1
+                if not (first_line_idx <= line_idx <= last_line_idx):
+                    if line_type == ADDITION:
+                        # Skip additions that are not selected.
+                        prev_skipped = True
+                        continue
+                    elif line_type == DELETION:
+                        # Change deletions that are not selected to context.
+                        line_type = CONTEXT
+                if line_type == NO_NEWLINE and prev_skipped:
+                    # If the line immediately before a "No newline" line was
+                    # skipped (because it was an unselected addition) skip
+                    # the "No newline" line as well.
+                    continue
+                filtered_lines.append(line_type + line_content)
+                counts[line_type] += 1
+                prev_skipped = False
+
+            # Do not include hunks that, after filtering, have only context
+            # lines (no additions or deletions).
+            if not counts[ADDITION] and not counts[DELETION]:
                 continue
 
-            if self._idx < 0:
-                errmsg = 'Malformed diff?: %s' % diff
-                raise AssertionError(errmsg)
+            old_count = counts[CONTEXT] + counts[DELETION]
+            new_count = counts[CONTEXT] + counts[ADDITION]
 
             if reverse:
-                if line.startswith('+'):
-                    line = line.replace('+', '-', 1)
-                elif line.startswith('-'):
-                    line = line.replace('-', '+', 1)
+                old_start = hunk.new_start
+            else:
+                old_start = hunk.old_start
+            new_start = old_start + start_offset
+            if old_count == 0:
+                new_start += 1
+            if new_count == 0:
+                new_start -= 1
 
-            line_len = len(line) + 1
-            total_offset += line_len
+            start_offset += counts[ADDITION] - counts[DELETION]
 
-            self._diffs[self._idx].append(line)
-            self._diff_spans[-1][-1] += line_len
-            self._diff_offsets[self._idx] += line_len
+            lines.append(_format_hunk_header(old_start, old_count,
+                                             new_start, new_count,
+                                             hunk.heading))
+            lines.extend(filtered_lines)
 
-    def process_diff_selection(self, offset, selection,
-                               apply_to_worktree=False):
-        """Processes a diff selection and applies changes to git."""
-        if selection:
-            # qt destroys \r\n and makes it \n with no way of going back.
-            # boo!  we work around that here.
-            # I think this was win32-specific.  We might want to do
-            # this on win32 only (TODO verify)
-            if selection not in self.fwd_diff:
-                special_selection = selection.replace('\n', '\r\n')
-                if special_selection in self.fwd_diff:
-                    selection = special_selection
-                else:
-                    return 0, '', ''
-            start = self.fwd_diff.index(selection)
-            end = start + len(selection)
-            self.set_diffs_to_range(start, end)
+        # If there are only two lines, that means we did not include any hunks,
+        # so return None.
+        if len(lines) == 2:
+            return None
         else:
-            self.set_diff_to_offset(offset)
+            lines.append('')
+            return '\n'.join(lines)
 
-        output = ''
-        error = ''
-        status = 0
-        # Process diff selection only
-        if selection:
-            encoding = self.config.file_encoding(self.filename)
-            for idx in self.selected:
-                contents = self.diff_subset(idx, start, end)
-                if not contents:
-                    continue
-                tmpfile = utils.tmp_filename('selection')
-                core.write(tmpfile, contents, encoding=encoding)
-                if apply_to_worktree:
-                    stat, out, err = self.model.apply_diff_to_worktree(tmpfile)
-                    output += out
-                    error += err
-                    status = max(status, stat)
-                else:
-                    stat, out, err = self.model.apply_diff(tmpfile)
-                    output += out
-                    error += err
-                    status = max(status, stat)
-                os.unlink(tmpfile)
-        # Process a complete hunk
-        else:
-            for idx, diff in enumerate(self.diff_sel):
-                tmpfile = utils.tmp_filename('patch%02d' % idx)
-                if not self.write_diff(tmpfile,idx):
-                    continue
-                if apply_to_worktree:
-                    stat, out, err = self.model.apply_diff_to_worktree(tmpfile)
-                    output += out
-                    error += err
-                    status = max(status, stat)
-                else:
-                    stat, out, err = self.model.apply_diff(tmpfile)
-                    output += out
-                    error += err
-                    status = max(status, stat)
-                os.unlink(tmpfile)
-        return status, output, error
+    def generate_hunk_patch(self, line_idx, reverse=False):
+        """Return a patch containing only the hunk corresponding to the
+        specified line."""
+        if not self.hunks:
+            return None
+        for hunk in self.hunks:
+            if line_idx <= hunk.last_line_idx:
+                break
+        return self.generate_patch(hunk.first_line_idx, hunk.last_line_idx,
+                                   reverse=reverse)
