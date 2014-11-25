@@ -184,10 +184,10 @@ class MainModel(Observable):
 
     def _update_files(self, update_index=False):
         display_untracked = prefs.display_untracked()
-        state = gitcmds.worktree_state_dict(head=self.head,
-                                            update_index=update_index,
-                                            display_untracked=display_untracked,
-                                            paths=self.filter_paths)
+        state = gitcmds.worktree_state(head=self.head,
+                                       update_index=update_index,
+                                       display_untracked=display_untracked,
+                                       paths=self.filter_paths)
         self.staged = state.get('staged', [])
         self.modified = state.get('modified', [])
         self.unmerged = state.get('unmerged', [])

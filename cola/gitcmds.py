@@ -429,25 +429,10 @@ def untrack_paths(args, head='HEAD'):
     return git.update_index('--', force_remove=True, *set(args))
 
 
-def worktree_state(head='HEAD'):
-    """Return a tuple of files in various states of being
-
-    Can be staged, unstaged, untracked, unmerged, or changed
-    upstream.
-
-    """
-    state = worktree_state_dict(head=head)
-    return(state.get('staged', []),
-           state.get('modified', []),
-           state.get('unmerged', []),
-           state.get('untracked', []),
-           state.get('upstream_changed', []))
-
-
-def worktree_state_dict(head='HEAD',
-                        update_index=False,
-                        display_untracked=True,
-                        paths=None):
+def worktree_state(head='HEAD',
+                   update_index=False,
+                   display_untracked=True,
+                   paths=None):
     """Return a dict of files in various states of being
 
     :rtype: dict, keys are staged, unstaged, untracked, unmerged,
