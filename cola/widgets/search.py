@@ -319,7 +319,7 @@ class Search(SearchWidget):
             self.search_callback()
 
     def display_results(self):
-        commit_list = map(lambda x: x[1], self.results)
+        commit_list = [result[1] for result in self.results]
         self.set_commit_list(commit_list)
 
     def display(self, *args):
