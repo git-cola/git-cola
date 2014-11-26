@@ -278,15 +278,6 @@ def question(title, msg, default=True):
     return result == QtGui.QMessageBox.Yes
 
 
-def selected_row(list_widget):
-    """Returns a(row_number, is_selected) tuple for a QListWidget."""
-    items = list_widget.selectedItems()
-    if not items:
-        return (-1, False)
-    item = items[0]
-    return (list_widget.row(item), True)
-
-
 def tree_selection(tree_item, items):
     """Returns an array of model items that correspond to the selected
     QTreeWidgetItem children"""
