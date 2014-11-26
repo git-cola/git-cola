@@ -477,8 +477,8 @@ def worktree_state_dict(head='HEAD',
     modified_submods = modified_submods.difference(staged_submods)
 
     # Add submodules to the staged and unstaged lists
-    staged.extend(list(staged_submods))
-    modified.extend(list(modified_submods))
+    staged.extend(staged_submods)
+    modified.extend(modified_submods)
 
     # Look for upstream modified files if this is a tracking branch
     upstream_changed = diff_upstream(head)
