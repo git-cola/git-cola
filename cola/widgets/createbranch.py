@@ -317,12 +317,10 @@ class CreateBranchDialog(Dialog):
         # When the branch selection changes then we should update
         # the "Revision Expression" accordingly.
         qlist = self.branch_list
-        (row, selected) = qtutils.selected_row(qlist)
-        if not selected:
+        rev = qtutils.selected_item(qlist, self.branch_sources())
+        if rev is None:
             return
         # Update the model with the selection
-        sources = self.branch_sources()
-        rev = sources[row]
         self.revision.setText(rev)
 
         # Set the branch field if we're branching from a remote branch.

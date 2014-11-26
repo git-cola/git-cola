@@ -179,9 +179,8 @@ class MergeView(QtGui.QDialog):
         """Update the revision field when a list item is selected"""
         revlist = self.current_revisions()
         widget = self.revisions
-        row, selected = qtutils.selected_row(widget)
-        if selected and row < len(revlist):
-            revision = revlist[row]
+        revision = qtutils.selected_item(widget, revlist)
+        if revision is not None:
             self.revision.setText(revision)
 
     def current_revisions(self):

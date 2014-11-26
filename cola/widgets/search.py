@@ -322,32 +322,33 @@ class Search(SearchWidget):
         commit_list = map(lambda x: x[1], self.results)
         self.set_commit_list(commit_list)
 
+    def selected_revision(self):
+        result = qtutils.selected_item(self.commit_list, self.results)
+        if result is None:
+            return None
+        else:
+            return result[0]
+
     def display(self, *args):
-        widget = self.commit_list
-        row, selected = qtutils.selected_row(widget)
-        if not selected or len(self.results) < row:
+        revision = self.selected_revision()
+        if revision is None:
             self.commit_text.setText('')
-            return
-        revision = self.results[row][0]
-        qtutils.set_clipboard(revision)
-        diff = gitcmds.commit_diff(revision)
-        self.commit_text.setText(diff)
+        else:
+            qtutils.set_clipboard(revision)
+            diff = gitcmds.commit_diff(revision)
+            self.commit_text.setText(diff)
 
     def export_patch(self):
-        widget = self.commit_list
-        row, selected = qtutils.selected_row(widget)
-        if not selected or len(self.results) < row:
-            return
-        revision = self.results[row][0]
-        Interaction.log_status(*gitcmds.export_patchset(revision, revision))
+        revision = self.selected_revision()
+        if revision is not None:
+            Interaction.log_status(*gitcmds.export_patchset(revision,
+                                                            revision))
 
     def cherry_pick(self):
-        widget = self.commit_list
-        row, selected = qtutils.selected_row(widget)
-        if not selected or len(self.results) < row:
-            return
-        revision = self.results[row][0]
-        Interaction.log_status(*git.cherry_pick(revision))
+        revision = self.selected_revision()
+        if revision is not None:
+            Interaction.log_status(*git.cherry_pick(revision))
+
 
 def search_commits(parent):
     opts = SearchOptions()

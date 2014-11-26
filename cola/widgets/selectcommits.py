@@ -26,9 +26,6 @@ class Model(object):
         self.revisions = revs
         self.summaries = summaries
 
-    def revision_sha1(self, idx):
-        return self.revisions[idx]
-
 
 class SelectCommitsDialog(QtGui.QDialog):
     def __init__(self, model,
@@ -92,17 +89,16 @@ class SelectCommitsDialog(QtGui.QDialog):
         if self.exec_() != QtGui.QDialog.Accepted:
             return []
         revs = self.model.revisions
-        return qtutils.selection_list(self.commit_list, revs)
+        return qtutils.selected_items(self.commit_list, revs)
 
     def commit_sha1_selected(self):
-        row, selected = qtutils.selected_row(self.commit_list)
+        sha1  = qtutils.selected_item(self.commit_list, self.model.revisions)
+        selected = (sha1 is not None)
         self.select_button.setEnabled(selected)
         if not selected:
             self.commit_text.setText('')
             self.revision.setText('')
             return
-        # Get the sha1 and put it in the revision line
-        sha1 = self.model.revision_sha1(row)
         self.revision.setText(sha1)
         self.revision.selectAll()
 

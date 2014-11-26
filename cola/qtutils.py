@@ -278,57 +278,23 @@ def question(title, msg, default=True):
     return result == QtGui.QMessageBox.Yes
 
 
-def selected_treeitem(tree_widget):
-    """Returns a(id_number, is_selected) for a QTreeWidget."""
-    id_number = None
-    selected = False
-    item = tree_widget.currentItem()
-    if item:
-        id_number = item.data(0, Qt.UserRole).toInt()[0]
-        selected = True
-    return(id_number, selected)
-
-
-def selected_row(list_widget):
-    """Returns a(row_number, is_selected) tuple for a QListWidget."""
-    items = list_widget.selectedItems()
-    if not items:
-        return (-1, False)
-    item = items[0]
-    return (list_widget.row(item), True)
-
-
-def selection_list(listwidget, items):
-    """Returns an array of model items that correspond to
-    the selected QListWidget indices."""
+def tree_selection(tree_item, items):
+    """Returns an array of model items that correspond to the selected
+    QTreeWidgetItem children"""
     selected = []
-    itemcount = listwidget.count()
-    widgetitems = [ listwidget.item(idx) for idx in range(itemcount) ]
-
-    for item, widgetitem in zip(items, widgetitems):
-        if widgetitem.isSelected():
-            selected.append(item)
-    return selected
-
-
-def tree_selection(treeitem, items):
-    """Returns model items that correspond to selected widget indices"""
-    itemcount = treeitem.childCount()
-    widgetitems = [treeitem.child(idx) for idx in range(itemcount)]
-    selected = []
-    for item, widgetitem in zip(items[:len(widgetitems)], widgetitems):
-        if widgetitem.isSelected():
-            selected.append(item)
+    count = min(tree_item.childCount(), len(items))
+    for idx in range(count):
+        if tree_item.child(idx).isSelected():
+            selected.append(items[idx])
 
     return selected
 
 
-def tree_selection_items(item):
+def tree_selection_items(tree_item):
     """Returns selected widget items"""
-    count = item.childCount()
-    childitems = [item.child(idx) for idx in range(count)]
     selected = []
-    for child in childitems:
+    for idx in range(tree_item.childCount()):
+        child = tree_item.child(idx)
         if child.isSelected():
             selected.append(child)
 
@@ -336,7 +302,8 @@ def tree_selection_items(item):
 
 
 def selected_item(list_widget, items):
-    """Returns the selected item in a QListWidget."""
+    """Returns the model item that corresponds to the selected QListWidget
+    row."""
     widget_items = list_widget.selectedItems()
     if not widget_items:
         return None
@@ -349,16 +316,15 @@ def selected_item(list_widget, items):
 
 
 def selected_items(list_widget, items):
-    """Returns the selected item in a QListWidget."""
-    selection = []
-    widget_items = list_widget.selectedItems()
-    if not widget_items:
-        return selection
-    for widget_item in widget_items:
+    """Returns an array of model items that correspond to the selected
+    QListWidget rows."""
+    item_count = len(items)
+    selected = []
+    for widget_item in list_widget.selectedItems():
         row = list_widget.row(widget_item)
-        if row < len(items):
-            selection.append(items[row])
-    return selection
+        if row < item_count:
+            selected.append(items[row])
+    return selected
 
 
 def open_file(title, directory=None):
