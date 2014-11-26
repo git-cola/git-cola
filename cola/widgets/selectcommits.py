@@ -92,7 +92,7 @@ class SelectCommitsDialog(QtGui.QDialog):
         if self.exec_() != QtGui.QDialog.Accepted:
             return []
         revs = self.model.revisions
-        return qtutils.selection_list(self.commit_list, revs)
+        return qtutils.selected_items(self.commit_list, revs)
 
     def commit_sha1_selected(self):
         row, selected = qtutils.selected_row(self.commit_list)

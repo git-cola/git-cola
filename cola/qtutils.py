@@ -287,19 +287,6 @@ def selected_row(list_widget):
     return (list_widget.row(item), True)
 
 
-def selection_list(listwidget, items):
-    """Returns an array of model items that correspond to
-    the selected QListWidget indices."""
-    selected = []
-    itemcount = listwidget.count()
-    widgetitems = [ listwidget.item(idx) for idx in range(itemcount) ]
-
-    for item, widgetitem in zip(items, widgetitems):
-        if widgetitem.isSelected():
-            selected.append(item)
-    return selected
-
-
 def tree_selection(treeitem, items):
     """Returns model items that correspond to selected widget indices"""
     itemcount = treeitem.childCount()
