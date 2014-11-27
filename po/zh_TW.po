@@ -1911,7 +1911,7 @@ msgstr "合併「%(revision)s」版本至「%(branch)s」分支中"
 #: cola/widgets/merge.py:150
 #, python-format
 msgid "Merge into \"%s\""
-msgstr "合併到「%s」"
+msgstr "合併到「%s」分支"
 
 #: cola/widgets/merge.py:201 cola/widgets/merge.py:210
 msgid "No Revision Specified"
@@ -1941,13 +1941,13 @@ msgstr ""
 "\n"
 "            <p>\n"
 "                拖放或使用<strong>新增</strong>按鈕以將\n"
-"                修正加到清單中\n"
+"                修正檔加到清單中\n"
 "            </p>\n"
 "            "
 
 #: cola/widgets/patch.py:89
 msgid "Add patches (+)"
-msgstr "加入修正 (+)"
+msgstr "加入修正檔 (+)"
 
 #: cola/widgets/patch.py:93
 msgid "Remove selected (Delete)"
@@ -1967,7 +1967,7 @@ msgstr "用戶名"
 
 #: cola/widgets/prefs.py:133
 msgid "Email Address"
-msgstr "Email 地址"
+msgstr "電子郵件地址"
 
 #: cola/widgets/prefs.py:134
 msgid "Merge Verbosity"
