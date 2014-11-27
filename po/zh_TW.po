@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-10-04 16:32-0700\n"
-"PO-Revision-Date: 2014-08-07 07:21+0800\n"
+"PO-Revision-Date: 2014-11-28 02:22+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -2146,11 +2146,11 @@ msgstr ""
 #: cola/widgets/remote.py:438
 #, python-format
 msgid "Force push to %s?"
-msgstr "要強制推送至 %s 遠端分支嗎？"
+msgstr "要強制推送至 %s 遠端版本倉庫嗎？"
 
 #: cola/widgets/remote.py:439
 msgid "Force Push"
-msgstr "強制推送到遠端分支"
+msgstr "強制推送"
 
 #: cola/widgets/remote.py:464
 msgid "Already up-to-date."
