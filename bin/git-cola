@@ -107,7 +107,7 @@ def parse_args():
 
 
 def add_command(parent, name, description, func):
-    parser = parent.add_parser(name, help=description)
+    parser = parent.add_parser(str(name), help=description)
     parser.set_defaults(func=func)
     add_common_arguments(parser)
     return parser
@@ -312,7 +312,7 @@ def cmd_grep(args):
 def cmd_merge(args):
     context = application_init(args, update=True)
     from cola.widgets.merge import MergeView
-    view = MergeView(context.model, parent=None)
+    view = MergeView(context.cfg, context.model, parent=None)
     return application_start(context, view)
 
 

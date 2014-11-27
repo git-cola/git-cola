@@ -148,43 +148,40 @@ class RemoteActionDialog(standard.Dialog):
         self.close_button.setText(N_('Close'))
         self.close_button.setIcon(qtutils.close_icon())
 
-        self.local_branch_layout = QtGui.QHBoxLayout()
-        self.local_branch_layout.addWidget(self.local_label)
-        self.local_branch_layout.addWidget(self.local_branch)
+        self.local_branch_layout = qtutils.hbox(defs.small_margin, defs.spacing,
+                                                self.local_label,
+                                                self.local_branch)
 
-        self.remote_branch_layout = QtGui.QHBoxLayout()
-        self.remote_branch_layout.addWidget(self.remote_label)
-        self.remote_branch_layout.addWidget(self.remote_name)
+        self.remote_branch_layout = qtutils.hbox(defs.small_margin, defs.spacing,
+                                                 self.remote_label,
+                                                 self.remote_name)
 
-        self.remote_branches_layout = QtGui.QHBoxLayout()
-        self.remote_branches_layout.addWidget(self.remote_branch_label)
-        self.remote_branches_layout.addWidget(self.remote_branch)
+        self.remote_branches_layout = qtutils.hbox(defs.small_margin, defs.spacing,
+                                                   self.remote_branch_label,
+                                                   self.remote_branch)
 
-        self.options_layout = QtGui.QHBoxLayout()
-        self.options_layout.setSpacing(defs.button_spacing)
-        self.options_layout.addStretch()
-        self.options_layout.addWidget(self.ffwd_only_checkbox)
-        self.options_layout.addWidget(self.tags_checkbox)
-        self.options_layout.addWidget(self.rebase_checkbox)
-        self.options_layout.addWidget(self.action_button)
-        self.options_layout.addWidget(self.close_button)
-
-        self.main_layout = QtGui.QVBoxLayout()
-        self.main_layout.setMargin(defs.margin)
-        self.main_layout.setSpacing(defs.spacing)
-        self.main_layout.addLayout(self.remote_branch_layout)
-        self.main_layout.addWidget(self.remotes)
+        self.options_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                           qtutils.STRETCH,
+                                           self.ffwd_only_checkbox,
+                                           self.tags_checkbox,
+                                           self.rebase_checkbox,
+                                           self.action_button,
+                                           self.close_button)
         if action == PUSH:
-            self.main_layout.addLayout(self.local_branch_layout)
-            self.main_layout.addWidget(self.local_branches)
-            self.main_layout.addLayout(self.remote_branches_layout)
-            self.main_layout.addWidget(self.remote_branches)
+            widgets = (
+                    self.remote_branch_layout, self.remotes,
+                    self.local_branch_layout, self.local_branches,
+                    self.remote_branches_layout, self.remote_branches,
+                    self.options_layout,
+            )
         else: # fetch and pull
-            self.main_layout.addLayout(self.remote_branches_layout)
-            self.main_layout.addWidget(self.remote_branches)
-            self.main_layout.addLayout(self.local_branch_layout)
-            self.main_layout.addWidget(self.local_branches)
-        self.main_layout.addLayout(self.options_layout)
+            widgets = (
+                    self.remote_branch_layout, self.remotes,
+                    self.remote_branches_layout, self.remote_branches,
+                    self.local_branch_layout, self.local_branches,
+                    self.options_layout,
+            )
+        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, *widgets)
         self.setLayout(self.main_layout)
 
         default_remote = gitcmds.default_remote() or 'origin'

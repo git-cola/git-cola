@@ -10,6 +10,7 @@ from cola import core
 from cola import gitcmds
 from cola import gitcfg
 from cola import textwrap
+from cola import qtutils
 from cola.cmds import Interaction
 from cola.gitcmds import commit_message_path
 from cola.i18n import N_
@@ -92,6 +93,13 @@ class CommitMessageEditor(QtGui.QWidget):
         self.amend_action.setShortcut(cmds.AmendMode.SHORTCUT)
         self.amend_action.setShortcutContext(Qt.ApplicationShortcut)
 
+        # Sign commits
+        cfg = gitcfg.current()
+        self.sign_action = self.actions_menu.addAction(
+                N_('Create Signed Commit'))
+        self.sign_action.setCheckable(True)
+        self.sign_action.setChecked(cfg.get('cola.signcommits', False))
+
         # Spell checker
         self.check_spelling_action = self.actions_menu.addAction(
                 N_('Check Spelling'))
@@ -116,20 +124,14 @@ class CommitMessageEditor(QtGui.QWidget):
         self.connect(self.fixup_commit_menu, SIGNAL('aboutToShow()'),
                      self.build_fixup_menu)
 
-        self.toplayout = QtGui.QHBoxLayout()
-        self.toplayout.setMargin(defs.no_margin)
+        self.toplayout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                      self.actions_button, self.summary,
+                                      self.commit_button)
         self.toplayout.setContentsMargins(defs.margin, defs.no_margin,
                                           defs.no_margin, defs.no_margin)
-        self.toplayout.setSpacing(defs.spacing)
-        self.toplayout.addWidget(self.actions_button)
-        self.toplayout.addWidget(self.summary)
-        self.toplayout.addWidget(self.commit_button)
 
-        self.mainlayout = QtGui.QVBoxLayout()
-        self.mainlayout.setMargin(defs.no_margin)
-        self.mainlayout.setSpacing(defs.spacing)
-        self.mainlayout.addLayout(self.toplayout)
-        self.mainlayout.addWidget(self.description)
+        self.mainlayout = qtutils.vbox(defs.no_margin, defs.spacing,
+                                       self.toplayout, self.description)
         self.setLayout(self.mainlayout)
 
         connect_button(self.commit_button, self.commit)
@@ -143,7 +145,10 @@ class CommitMessageEditor(QtGui.QWidget):
         connect_action_bool(self.autowrap_action, self.set_linebreak)
 
         add_action(self.summary, N_('Move Down'), self.focus_description,
-                Qt.Key_Down, Qt.Key_Return, Qt.Key_Enter)
+                   Qt.Key_Return, Qt.Key_Enter)
+
+        add_action(self.summary, N_('Move Down'),
+                   self.summary_cursor_down, Qt.Key_Down)
 
         self.model.add_observer(self.model.message_commit_message_changed,
                                 self.set_commit_message)
@@ -201,6 +206,21 @@ class CommitMessageEditor(QtGui.QWidget):
 
     def focus_description(self):
         self.description.setFocus()
+
+    def summary_cursor_down(self):
+        """Handle the down key in the summary field
+
+        If the cursor is at the end of the line then focus the description.
+        Otherwise, move the cursor to the end of the line so that a
+        subsequence "down" press moves to the end of the line.
+
+        """
+        cur_position = self.summary.cursorPosition()
+        end_position = len(self.summary.value())
+        if cur_position == end_position:
+            self.focus_description()
+        else:
+            self.summary.setCursorPosition(end_position)
 
     def commit_message(self, raw=True):
         """Return the commit message as a unicode string"""
@@ -417,7 +437,8 @@ class CommitMessageEditor(QtGui.QWidget):
                         N_('Amend Commit'),
                         default=False, icon=save_icon())):
             return
-        status, out, err = cmds.do(cmds.Commit, amend, msg)
+        sign = self.sign_action.isChecked()
+        status, out, err = cmds.do(cmds.Commit, amend, msg, sign)
         if status != 0:
             Interaction.critical(N_('Commit failed'),
                                  N_('"git commit" returned exit code %s') %
@@ -475,7 +496,7 @@ class CommitMessageEditor(QtGui.QWidget):
         if enabled and not self.spellcheck_initialized:
             # Add our name to the dictionary
             self.spellcheck_initialized = True
-            cfg = gitcfg.instance()
+            cfg = gitcfg.current()
             user_name = cfg.get('user.name')
             if user_name:
                 for part in user_name.split():

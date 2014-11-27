@@ -8,7 +8,6 @@ import copy
 
 from cola import core
 from cola import git
-from cola import gitcfg
 from cola import gitcmds
 from cola.git import STDOUT
 from cola.observable import Observable
@@ -16,10 +15,6 @@ from cola.decorators import memoize
 from cola.models.selection import selection_model
 from cola.models import prefs
 from cola.compat import ustr
-
-
-# Static GitConfig instance
-_config = gitcfg.instance()
 
 
 @memoize
@@ -67,7 +62,7 @@ class MainModel(Observable):
         Observable.__init__(self)
 
         # Initialize the git command object
-        self.git = git.instance()
+        self.git = git.current()
 
         self.head = 'HEAD'
         self.diff_text = ''
@@ -236,7 +231,17 @@ class MainModel(Observable):
         self._update_branches_and_tags()
 
     def delete_branch(self, branch):
-        return self.git.branch(branch, D=True)
+        status, out, err = self.git.branch(branch, D=True)
+        self._update_branches_and_tags()
+        return status, out, err
+
+    def rename_branch(self, branch, new_branch):
+        status, out, err = self.git.branch(branch, new_branch, M=True)
+        self.notify_observers(self.message_about_to_update)
+        self._update_branches_and_tags()
+        self._update_branch_heads()
+        self.notify_observers(self.message_updated)
+        return status, out, err
 
     def _sliced_op(self, input_items, map_fn):
         """Slice input_items and call map_fn over every slice
@@ -434,14 +439,6 @@ class MainModel(Observable):
     def is_commit_published(self):
         head = self.git.rev_parse('HEAD')[STDOUT]
         return bool(self.git.branch(r=True, contains=head)[STDOUT])
-
-    def everything(self):
-        """Returns a sorted list of all files, including untracked files."""
-        ls_files = self.git.ls_files(z=True,
-                                     cached=True,
-                                     others=True,
-                                     exclude_standard=True)[STDOUT]
-        return sorted([f for f in ls_files.split('\0') if f])
 
     def stage_paths(self, paths):
         """Stages add/removals to git."""

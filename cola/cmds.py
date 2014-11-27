@@ -27,8 +27,6 @@ from cola.models import main
 from cola.models import prefs
 from cola.models import selection
 
-_config = gitcfg.instance()
-
 
 class UsageError(Exception):
     """Exception class for usage errors."""
@@ -66,6 +64,9 @@ class ConfirmAction(BaseCommand):
     def __init__(self):
         BaseCommand.__init__(self)
 
+    def ok_to_run(self):
+        return True
+
     def confirm(self):
         return True
 
@@ -92,7 +93,7 @@ class ConfirmAction(BaseCommand):
     def do(self):
         status = -1
         out = err = ''
-        ok = self.confirm()
+        ok = self.ok_to_run() and self.confirm()
         if ok:
             status, out, err = self.action()
             if self.ok(status):
@@ -338,45 +339,16 @@ class ResetMode(Command):
         self.model.update_file_status()
 
 
-class RevertUnstagedEdits(Command):
-
-    SHORTCUT = 'Ctrl+U'
-
-    def do(self):
-        if not self.model.undoable():
-            return
-        s = selection.selection()
-        if s.staged:
-            items_to_undo = s.staged
-        else:
-            items_to_undo = s.modified
-        if items_to_undo:
-            if not Interaction.confirm(N_('Revert Unstaged Changes?'),
-                                   N_('This operation drops unstaged changes.\n'
-                                      'These changes cannot be recovered.'),
-                                   N_('Revert the unstaged changes?'),
-                                   N_('Revert Unstaged Changes'),
-                                   default=True,
-                                   icon=resources.icon('undo.svg')):
-                return
-            args = []
-            if not s.staged and self.model.amending():
-                args.append(self.model.head)
-            do(Checkout, args + ['--'] + items_to_undo)
-        else:
-            msg = N_('No files selected for checkout from HEAD.')
-            Interaction.log(msg)
-
-
 class Commit(ResetMode):
     """Attempt to create a new commit."""
 
     SHORTCUT = 'Ctrl+Return'
 
-    def __init__(self, amend, msg):
+    def __init__(self, amend, msg, sign):
         ResetMode.__init__(self)
         self.amend = amend
         self.msg = msg
+        self.sign = sign
         self.old_commitmsg = self.model.commitmsg
         self.new_commitmsg = ''
 
@@ -387,7 +359,9 @@ class Commit(ResetMode):
         core.write(tmpfile, msg)
 
         # Run 'git commit'
-        status, out, err = self.model.git.commit(F=tmpfile, v=True,
+        status, out, err = self.model.git.commit(F=tmpfile,
+                                                 v=True,
+                                                 gpg_sign=self.sign,
                                                  amend=self.amend)
         core.unlink(tmpfile)
 
@@ -628,6 +602,18 @@ class DeleteBranch(Command):
         Interaction.log_status(status, out, err)
 
 
+class RenameBranch(Command):
+    """Rename a git branch."""
+
+    def __init__(self, branch, new_branch):
+        Command.__init__(self)
+        self.branch = branch
+        self.new_branch = new_branch
+
+    def do(self):
+        status, out, err = self.model.rename_branch(self.branch, self.new_branch)
+        Interaction.log_status(status, out, err)
+
 class DeleteRemoteBranch(Command):
     """Delete a remote git branch."""
 
@@ -680,8 +666,10 @@ class Diffstat(Command):
 
     def __init__(self):
         Command.__init__(self)
+        cfg = gitcfg.current()
+        diff_context = cfg.get('diff.context', 3)
         diff = self.model.git.diff(self.model.head,
-                                   unified=_config.get('diff.context', 3),
+                                   unified=diff_context,
                                    no_ext_diff=True,
                                    no_color=True,
                                    M=True,
@@ -804,7 +792,8 @@ class LaunchDifftool(BaseCommand):
             if utils.is_win32():
                 core.fork(['git', 'mergetool', '--no-prompt', '--'] + paths)
             else:
-                cmd = _config.terminal()
+                cfg = gitcfg.current()
+                cmd = cfg.terminal()
                 argv = utils.shell_split(cmd)
                 argv.extend(['git', 'mergetool', '--no-prompt', '--'])
                 argv.extend(paths)
@@ -826,7 +815,8 @@ class LaunchTerminal(BaseCommand):
         self.path = path
 
     def do(self):
-        cmd = _config.terminal()
+        cfg = gitcfg.current()
+        cmd = cfg.terminal()
         argv = utils.shell_split(cmd)
         argv.append(os.getenv('SHELL', '/bin/sh'))
         core.fork(argv, cwd=self.path)
@@ -872,7 +862,8 @@ class LoadCommitMessageFromTemplate(LoadCommitMessageFromFile):
     """Loads the commit message template specified by commit.template."""
 
     def __init__(self):
-        template = _config.get('commit.template')
+        cfg = gitcfg.current()
+        template = cfg.get('commit.template')
         LoadCommitMessageFromFile.__init__(self, template)
 
     def do(self):
@@ -911,26 +902,29 @@ class LoadFixupMessage(LoadCommitMessageFromSHA1):
 
 
 class Merge(Command):
-    def __init__(self, revision, no_commit, squash, noff):
+    """Merge commits"""
+
+    def __init__(self, revision, no_commit, squash, noff, sign):
         Command.__init__(self)
         self.revision = revision
         self.no_ff = noff
         self.no_commit = no_commit
         self.squash = squash
+        self.sign = sign
 
     def do(self):
         squash = self.squash
         revision = self.revision
         no_ff = self.no_ff
         no_commit = self.no_commit
+        sign = self.sign
         msg = gitcmds.merge_message(revision)
 
-        status, out, err = self.model.git.merge('-m', msg,
-                                                revision,
+        status, out, err = self.model.git.merge('-m', msg, revision,
+                                                gpg_sign=sign,
                                                 no_ff=no_ff,
                                                 no_commit=no_commit,
                                                 squash=squash)
-
         Interaction.log_status(status, out, err)
         self.model.update_status()
 
@@ -1002,7 +996,8 @@ class OpenRepo(Command):
         new_worktree = git.worktree()
         core.chdir(new_worktree)
         self.model.set_directory(self.repo_path)
-        _config.reset()
+        cfg = gitcfg.current()
+        cfg.reset()
         inotify.stop()
         inotify.start()
         self.model.update_status()
@@ -1064,13 +1059,13 @@ class Rebase(Command):
         self.capture_output = capture_output
 
     def do(self):
-        branch = self.branch
-        if not branch:
-            return
         status = 1
         out = ''
         err = ''
         extra = {}
+        branch = self.branch
+        if not branch:
+            return status, out, err
         if self.capture_output:
             extra['_stderr'] = None
             extra['_stdout'] = None
@@ -1142,6 +1137,88 @@ class Refresh(Command):
         self.model.update_status(update_index=True)
 
 
+class RevertEditsCommand(ConfirmAction):
+
+    def __init__(self):
+        ConfirmAction.__init__(self)
+        self.model = main.model()
+        self.icon = resources.icon('undo.svg')
+
+    def ok_to_run(self):
+        return self.model.undoable()
+
+    def checkout_from_head(self):
+        return False
+
+    def checkout_args(self):
+        args = []
+        s = selection.selection()
+        if self.checkout_from_head():
+            args.append(self.model.head)
+        args.append('--')
+
+        if s.staged:
+            items = s.staged
+        else:
+            items = s.modified
+        args.extend(items)
+
+        return args
+
+    def action(self):
+        git = self.model.git
+        checkout_args = self.checkout_args()
+        return git.checkout(*checkout_args)
+
+    def success(self):
+        self.model.update_file_status()
+
+
+class RevertUnstagedEdits(RevertEditsCommand):
+
+    SHORTCUT = 'Ctrl+U'
+
+    @staticmethod
+    def name():
+        return N_('Revert Unstaged Edits...')
+
+    def checkout_from_head(self):
+        # If we are amending and a modified file is selected
+        # then we should include "HEAD^" on the command-line.
+        selected = selection.selection()
+        return not selected.staged and self.model.amending()
+
+    def confirm(self):
+        title = N_('Revert Unstaged Changes?')
+        text = N_('This operation drops unstaged changes.\n'
+                  'These changes cannot be recovered.')
+        info = N_('Revert the unstaged changes?')
+        ok_text = N_('Revert Unstaged Changes')
+        return Interaction.confirm(title, text, info, ok_text,
+                                   default=True, icon=self.icon)
+
+
+class RevertUncommittedEdits(RevertEditsCommand):
+
+    SHORTCUT = 'Ctrl+Z'
+
+    @staticmethod
+    def name():
+        return N_('Revert Uncommitted Edits...')
+
+    def checkout_from_head(self):
+        return True
+
+    def confirm(self):
+        title = N_('Revert Uncommitted Changes?')
+        text = N_('This operation drops uncommitted changes.\n'
+                  'These changes cannot be recovered.')
+        info = N_('Revert the uncommitted changes?')
+        ok_text = N_('Revert Uncommitted Changes')
+        return Interaction.confirm(title, text, info, ok_text,
+                                   default=True, icon=self.icon)
+
+
 class RunConfigAction(Command):
     """Run a user-configured action, typically from the "Tools" menu"""
 
@@ -1158,7 +1235,8 @@ class RunConfigAction(Command):
                 pass
         rev = None
         args = None
-        opts = _config.get_guitool_opts(self.action_name)
+        cfg = gitcfg.current()
+        opts = cfg.get_guitool_opts(self.action_name)
         cmd = opts.get('cmd')
         if 'title' not in opts:
             opts['title'] = cmd
@@ -1240,7 +1318,8 @@ class ShowUntracked(Command):
             self.new_diff_text = self.diff_text_for(filenames[0])
 
     def diff_text_for(self, filename):
-        size = _config.get('cola.readsize', 1024 * 2)
+        cfg = gitcfg.current()
+        size = cfg.get('cola.readsize', 1024 * 2)
         try:
             result = core.read(filename, size=size)
         except:
@@ -1279,8 +1358,9 @@ class SignOff(Command):
         except ImportError:
             user = os.getenv('USER', N_('unknown'))
 
-        name = _config.get('user.name', user)
-        email = _config.get('user.email', '%s@%s' % (user, core.node()))
+        cfg = gitcfg.current()
+        name = cfg.get('user.name', user)
+        email = cfg.get('user.email', '%s@%s' % (user, core.node()))
         return '\nSigned-off-by: %s <%s>' % (name, email)
 
 
@@ -1347,6 +1427,31 @@ class StageUntracked(Stage):
     def __init__(self):
         Stage.__init__(self, None)
         self.paths = self.model.untracked
+
+
+class StageOrUnstage(Command):
+    """If the selection is staged, unstage it, otherwise stage"""
+
+    SHORTCUT = 'Ctrl+S'
+
+    @staticmethod
+    def name():
+        return N_('Stage / Unstage')
+
+    def do(self):
+        s = selection.selection()
+        if s.staged:
+            do(Unstage, s.staged)
+
+        unstaged = []
+        if s.unmerged:
+            unstaged.extend(s.unmerged)
+        if s.modified:
+            unstaged.extend(s.modified)
+        if s.untracked:
+            unstaged.extend(s.untracked)
+        if unstaged:
+            do(Stage, unstaged)
 
 
 class Tag(Command):

@@ -50,11 +50,6 @@ span.title {
     <td class="title">提交</td>
 </tr>
 <tr>
-    <td class="shortcut">Ctrl + m</td>
-    <td>:</td>
-    <td>修正前一次提交</td>
-</tr>
-<tr>
     <td class="shortcut">Ctrl + Return</td>
     <td>:</td>
     <td>提交已缓存变更</td>
@@ -80,9 +75,26 @@ span.title {
     <td>还原缓存改动</td>
 </tr>
 <tr>
-    <td class="shortcut">Ctrl + r</td>
+    <td class="shortcut">Ctrl + z</td>
     <td>:</td>
-    <td>重新整理</td>
+    <td>撤销未缓存变更</td>
+</tr>
+<tr>
+    <td class="shortcut">Shift + Ctrl + m</td>
+    <td>:</td>
+    <!-- TODO -->
+    <td>Merge branches</td>
+</tr>
+<tr>
+    <td class="shortcut">Ctrl + m</td>
+    <td>:</td>
+    <td>修正前一次提交</td>
+</tr>
+<tr>
+    <td class="shortcut">Shift + Ctrl + c</td>
+    <td>:</td>
+    <!-- TODO -->
+    <td>Cherry pick</td>
 </tr>
 </table>
 
@@ -119,11 +131,6 @@ span.title {
     <td>导出差异</td>
 </tr>
 <tr>
-    <td class="shortcut">Shift + Ctrl + c</td>
-    <td>:</td>
-    <td>Cherry pick</td>
-</tr>
-<tr>
     <td class="shortcut">Shift + Alt + s</td>
     <td>:</td>
     <td>缓存</td>
@@ -136,7 +143,12 @@ span.title {
 <tr>
     <td class="shortcut">Shift + Ctrl + f</td>
     <td>:</td>
-    <td>Toggle the paths filter</td>
+    <td>Toggle paths filter</td>
+</tr>
+<tr>
+    <td class="shortcut">Ctrl + r</td>
+    <td>:</td>
+    <td>重新整理</td>
 </tr>
 <tr>
     <td class="shortcut">?</td>
@@ -189,51 +201,7 @@ span.title {
 </tr>
 </table>
 
-<!-- Browser actions -->
-<table class="center">
-<tr>
-    <td width="35%">&nbsp;</td>
-    <td>&nbsp;</td>
-    <td class="title">「浏览器」窗口操作</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + e</td>
-    <td>:</td>
-    <td>启动文本编辑器</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + s</td>
-    <td>:</td>
-    <td>缓存所选项目</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + u</td>
-    <td>:</td>
-    <td>缓存已更改项目</td>
-</tr>
-<tr>
-    <td class="shortcut">Shift + Ctrl + h</td>
-    <td>:</td>
-    <td>查看变更历史</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + d</td>
-    <td>:</td>
-    <td>使用「git difftool」命令查看内容差异</td>
-</tr>
-<tr>
-    <td class="shortcut">Shift + Ctrl + d</td>
-    <td>:</td>
-    <td>与之前版本比较差异</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + z</td>
-    <td>:</td>
-    <td>撤销未缓存变更</td>
-</tr>
-</table>
-
-<!-- Diff Viewer -->
+<!-- Diff -->
 <table class="center">
 <tr>
     <td width="35%">&nbsp;</td>
@@ -246,11 +214,25 @@ span.title {
     <td>缓存所选项目，未选择项目时与<strong><em>h</em></strong>作用相同
     </td>
 </tr>
+</table>
+
+
+<!-- Browser actions -->
+<table class="center">
 <tr>
-    <td class="shortcut">h</td>
+    <td width="35%">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td class="title">「浏览器」窗口操作</td>
+</tr>
+<tr>
+    <td class="shortcut">Shift + Ctrl + h</td>
     <td>:</td>
-    <td>缓存光标下的差异区域
-    </td>
+    <td>查看变更历史</td>
+</tr>
+<tr>
+    <td class="shortcut">Shift + Ctrl + d</td>
+    <td>:</td>
+    <td>与之前版本比较差异</td>
 </tr>
 </table>
 

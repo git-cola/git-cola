@@ -77,7 +77,7 @@ class DiffParser(object):
         self._diff_offsets = []
         self._ranges = []
 
-        self.config = gitcfg.instance()
+        self.config = gitcfg.current()
         self.head = model.head
         self.amending = model.amending()
         self.start = None

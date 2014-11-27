@@ -12,8 +12,6 @@ from cola.git import git
 from cola.git import STDOUT
 from cola.i18n import N_
 
-config = gitcfg.instance()
-
 
 class InvalidRepositoryError(Exception):
     pass
@@ -22,7 +20,7 @@ class InvalidRepositoryError(Exception):
 def default_remote(config=None):
     """Return the remote tracked by the current branch."""
     if config is None:
-        config = gitcfg.instance()
+        config = gitcfg.current()
     return config.get('branch.%s.remote' % current_branch())
 
 
@@ -56,13 +54,22 @@ def _parse_diff_filenames(out):
         return []
 
 
-def all_files():
+def tracked_files():
     """Return the names of all files in the repository"""
     out = git.ls_files(z=True)[STDOUT]
     if out:
-        return out[:-1].split('\0')
+        return sorted(out[:-1].split('\0'))
     else:
         return []
+
+
+def all_files():
+    """Returns a sorted list of all files, including untracked files."""
+    ls_files = git.ls_files(z=True,
+                            cached=True,
+                            others=True,
+                            exclude_standard=True)[STDOUT]
+    return sorted([f for f in ls_files.split('\0') if f])
 
 
 class _current_branch:
@@ -71,7 +78,7 @@ class _current_branch:
     value = None
 
 
-def clear_cache():
+def reset():
     _current_branch.key = None
 
 
@@ -165,7 +172,7 @@ def all_refs(split=False, git=git):
 def tracked_branch(branch=None, config=None):
     """Return the remote branch associated with 'branch'."""
     if config is None:
-        config = gitcfg.instance()
+        config = gitcfg.current()
     if branch is None:
         branch = current_branch()
     if branch is None:
@@ -217,7 +224,9 @@ def update_diff_overrides(space_at_eol, space_change,
     _diff_overrides['function_context'] = function_context
 
 
-def common_diff_opts(config=config):
+def common_diff_opts(config=None):
+    if config is None:
+        config = gitcfg.current()
     submodule = version.check('diff-submodule', version.git_version())
     opts = {
         'patience': True,
@@ -292,7 +301,8 @@ def diff_helper(commit=None,
             argv.extend(filename)
         else:
             argv.append(filename)
-            encoding = config.file_encoding(filename)
+            cfg = gitcfg.current()
+            encoding = cfg.file_encoding(filename)
 
     if filename is not None:
         deleted = cached and not core.exists(filename)
@@ -461,14 +471,9 @@ def worktree_state_dict(head='HEAD',
     # All submodules
     submodules = staged_submods.union(modified_submods)
 
-    # Only include the submodule in the staged list once it has
-    # been staged.  Otherwise, we'll see the submodule as being
-    # both modified and staged.
-    modified_submods = modified_submods.difference(staged_submods)
-
     # Add submodules to the staged and unstaged lists
-    staged.extend(list(staged_submods))
-    modified.extend(list(modified_submods))
+    staged.extend(staged_submods)
+    modified.extend(modified_submods)
 
     # Look for upstream modified files if this is a tracking branch
     upstream_changed = diff_upstream(head)
@@ -500,7 +505,7 @@ def diff_index(head, cached=True, paths=None):
                                       *filter_paths)
     if status != 0:
         # handle git init
-        return all_files(), unmerged, submodules
+        return tracked_files(), unmerged, submodules
 
     while out:
         rest, out = out.split('\0', 1)

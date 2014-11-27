@@ -20,7 +20,7 @@ def install():
     patch(QtGui.QHBoxLayout, 'setMargin', set_margin)
     patch(QtGui.QVBoxLayout, 'setMargin', set_margin)
 
-    patch(QtGui.QKeySequence, 'Preferences', 'Ctrl+O')
+    patch(QtGui.QKeySequence, 'Preferences', 'Ctrl+,')
     patch(QtGui.QGraphicsItem, 'mapRectToScene', _map_rect_to_scene)
     patch(QtCore.QCoreApplication, 'setStyleSheet', lambda *args: None)
 

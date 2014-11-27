@@ -251,12 +251,12 @@ class Git(object):
 
 
 @memoize
-def instance():
+def current():
     """Return the Git singleton"""
     return Git()
 
 
-git = instance()
+git = current()
 """
 Git command singleton
 

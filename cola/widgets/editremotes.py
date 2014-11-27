@@ -36,6 +36,8 @@ class RemoteEditor(QtGui.QDialog):
             width = max(640, parent.width())
             height = max(480, parent.height())
             self.resize(width, height)
+        else:
+            self.resize(720, 300)
 
         self.default_hint = N_(''
             'Add and remove remote repositories using the \n'
@@ -52,7 +54,7 @@ class RemoteEditor(QtGui.QDialog):
         self.info = text.HintedTextView(self.default_hint, self)
         font = self.info.font()
         metrics = QtGui.QFontMetrics(font)
-        width = metrics.width('_' * 72)
+        width = metrics.width('_' * 42)
         height = metrics.height() * 13
         self.info.setMinimumWidth(width)
         self.info.setMinimumHeight(height)
@@ -72,28 +74,19 @@ class RemoteEditor(QtGui.QDialog):
 
         self.close_btn = QtGui.QPushButton(N_('Close'))
 
-        self._top_layout = QtGui.QSplitter()
-        self._top_layout.setOrientation(Qt.Horizontal)
-        self._top_layout.setHandleWidth(defs.handle_width)
-        self._top_layout.addWidget(self.remotes)
-        self._top_layout.addWidget(self.info)
+        self._top_layout = qtutils.splitter(Qt.Horizontal,
+                                            self.remotes, self.info)
         width = self._top_layout.width()
         self._top_layout.setSizes([width//4, width*3//4])
 
-        self._button_layout = QtGui.QHBoxLayout()
-        self._button_layout.addWidget(self.add_btn)
-        self._button_layout.addWidget(self.delete_btn)
-        self._button_layout.addWidget(self.refresh_btn)
-        self._button_layout.addStretch()
-        self._button_layout.addWidget(self.close_btn)
+        self._button_layout = qtutils.hbox(defs.margin, defs.spacing,
+                                           self.add_btn, self.delete_btn,
+                                           self.refresh_btn, qtutils.STRETCH,
+                                           self.close_btn)
 
-        self._layout = QtGui.QVBoxLayout()
-        self._layout.setMargin(defs.margin)
-        self._layout.setSpacing(defs.spacing)
-        self._layout.addWidget(self._top_layout)
-        self._layout.addLayout(self._button_layout)
+        self._layout = qtutils.vbox(defs.margin, defs.spacing,
+                                    self._top_layout, self._button_layout)
         self.setLayout(self._layout)
-
         self.refresh()
 
         qtutils.connect_button(self.add_btn, self.add)
@@ -195,6 +188,7 @@ class AddRemoteWidget(QtGui.QDialog):
 
         self.add_btn = QtGui.QPushButton(N_('Add Remote'))
         self.add_btn.setIcon(qtutils.apply_icon())
+        self.add_btn.setEnabled(False)
 
         self.cancel_btn = QtGui.QPushButton(N_('Cancel'))
 
@@ -209,33 +203,20 @@ class AddRemoteWidget(QtGui.QDialog):
         self.name = lineedit(N_('Name for the new remote'))
         self.url = lineedit('git://git.example.com/repo.git')
 
-        self._form = QtGui.QFormLayout()
-        self._form.setMargin(defs.margin)
-        self._form.setSpacing(defs.spacing)
-        self._form.addRow(N_('Name'), self.name)
-        self._form.addRow(N_('URL'), self.url)
+        self._form = qtutils.form(defs.margin, defs.spacing,
+                                  (N_('Name'), self.name),
+                                  (N_('URL'), self.url))
 
-        self._btn_layout = QtGui.QHBoxLayout()
-        self._btn_layout.setMargin(defs.no_margin)
-        self._btn_layout.setSpacing(defs.button_spacing)
-        self._btn_layout.addStretch()
-        self._btn_layout.addWidget(self.add_btn)
-        self._btn_layout.addWidget(self.cancel_btn)
+        self._btn_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                        qtutils.STRETCH,
+                                        self.add_btn, self.cancel_btn)
 
-        self._layout = QtGui.QVBoxLayout()
-        self._layout.setMargin(defs.margin)
-        self._layout.setSpacing(defs.margin)
-        self._layout.addLayout(self._form)
-        self._layout.addLayout(self._btn_layout)
+        self._layout = qtutils.vbox(defs.margin, defs.spacing,
+                                    self._form, self._btn_layout)
         self.setLayout(self._layout)
 
-        self.connect(self.name, SIGNAL('textChanged(QString)'),
-                     self.validate)
-
-        self.connect(self.url, SIGNAL('textChanged(QString)'),
-                     self.validate)
-
-        self.add_btn.setEnabled(False)
+        self.connect(self.name, SIGNAL('textChanged(QString)'), self.validate)
+        self.connect(self.url, SIGNAL('textChanged(QString)'), self.validate)
 
         qtutils.connect_button(self.add_btn, self.accept)
         qtutils.connect_button(self.cancel_btn, self.reject)

@@ -83,7 +83,7 @@ class MainView(MainWindow):
         self.task_runner = TaskRunner(self)
         self.progress = ProgressDialog('', '', self)
 
-        cfg = gitcfg.instance()
+        cfg = gitcfg.current()
         self.browser_dockable = (cfg.get('cola.browserdockable') or
                                  cfg.get('cola.classicdockable'))
         if self.browser_dockable:
@@ -182,7 +182,7 @@ class MainView(MainWindow):
 
         self.preferences_action = add_action(self,
                 N_('Preferences'), self.preferences,
-                QtGui.QKeySequence.Preferences, 'Ctrl+O')
+                QtGui.QKeySequence.Preferences)
 
         self.edit_remotes_action = add_action(self,
                 N_('Edit Remotes...'), lambda: editremotes.remote_editor().exec_())
@@ -211,7 +211,7 @@ class MainView(MainWindow):
         self.grep_action = add_action(self,
                 N_('Grep'), grep, 'Ctrl+G')
         self.merge_local_action = add_action(self,
-                N_('Merge...'), merge.local_merge)
+                N_('Merge...'), merge.local_merge, 'Shift+Ctrl+M')
 
         self.merge_abort_action = add_action(self,
                 N_('Abort Merge...'), merge.abort_merge)
@@ -243,9 +243,7 @@ class MainView(MainWindow):
                 QtGui.QKeySequence.HelpContents)
 
         self.help_shortcuts_action = add_action(self,
-                N_('Keyboard Shortcuts'),
-                show_shortcuts,
-                QtCore.Qt.Key_Question)
+                N_('Keyboard Shortcuts'), show_shortcuts, Qt.Key_Question)
 
         self.visualize_current_action = add_action(self,
                 N_('Visualize Current Branch...'),
@@ -282,6 +280,9 @@ class MainView(MainWindow):
         self.delete_remote_branch_action = add_action(self,
                 N_('Delete Remote Branch...'), guicmds.delete_remote_branch)
 
+        self.rename_branch_action = add_action(self,
+                N_('Rename Branch...'), guicmds.rename_branch)
+
         self.checkout_branch_action = add_action(self,
                 N_('Checkout...'), guicmds.checkout_branch, 'Alt+B')
         self.branch_review_action = add_action(self,
@@ -311,13 +312,14 @@ class MainView(MainWindow):
 
         # Relayed actions
         status_tree = self.statusdockwidget.widget().tree
-        self.addAction(status_tree.revert_unstaged_edits_action)
         self.addAction(status_tree.delete_untracked_files_action)
 
         if not self.browser_dockable:
             # These shortcuts conflict with those from the
             # 'Browser' widget so don't register them when
             # the browser is a dockable tool.
+            self.addAction(status_tree.revert_unstaged_edits_action)
+            self.addAction(status_tree.revert_uncommitted_edits_action)
             self.addAction(status_tree.up_action)
             self.addAction(status_tree.down_action)
             self.addAction(status_tree.process_selection_action)
@@ -394,6 +396,7 @@ class MainView(MainWindow):
         self.branch_menu.addAction(self.checkout_branch_action)
         self.branch_menu.addAction(self.delete_branch_action)
         self.branch_menu.addAction(self.delete_remote_branch_action)
+        self.branch_menu.addAction(self.rename_branch_action)
         self.branch_menu.addSeparator()
         self.branch_menu.addAction(self.browse_branch_action)
         self.branch_menu.addAction(self.browse_other_branch_action)
@@ -558,21 +561,23 @@ class MainView(MainWindow):
                 QtCore.QRunnable.__init__(self)
                 self._sender = sender
             def run(self):
-                names = cfgactions.get_config_actions()
-                self._sender.emit(SIGNAL('install_config_actions'), names)
+                actions = cfgactions.get_config_actions()
+                self._sender.emit(SIGNAL('install_config_actions'), actions)
 
         task = ConfigActionsTask(self)
         QtCore.QThreadPool.globalInstance().start(task)
         return task
 
-    def _install_config_actions(self, names):
+    def _install_config_actions(self, names_and_shortcuts):
         """Install .gitconfig-defined actions"""
-        if not names:
+        if not names_and_shortcuts:
             return
         menu = self.actions_menu
         menu.addSeparator()
-        for name in names:
-            menu.addAction(name, cmds.run(cmds.RunConfigAction, name))
+        for (name, shortcut) in names_and_shortcuts:
+            action = menu.addAction(name, cmds.run(cmds.RunConfigAction, name))
+            if shortcut:
+                action.setShortcut(shortcut)
 
     def _update(self):
         self.emit(SIGNAL('update'))

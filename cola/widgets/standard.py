@@ -45,7 +45,7 @@ class WidgetMixin(object):
         if settings is None:
             settings = Settings()
             settings.load()
-        if gitcfg.instance().get('cola.savewindowsettings', True):
+        if gitcfg.current().get('cola.savewindowsettings', True):
             settings.save_gui_state(self)
 
     def restore_state(self, settings=None):
@@ -430,3 +430,12 @@ class ProgressAnimationThread(QtCore.QThread):
         while self.running:
             self.emit(SIGNAL('update_progress'), self.next())
             time.sleep(self.timeout)
+
+
+class SpinBox(QtGui.QSpinBox):
+    def __init__(self, parent=None):
+        QtGui.QSpinBox.__init__(self, parent)
+        self.setMinimum(1)
+        self.setMaximum(99999)
+        self.setPrefix('')
+        self.setSuffix('')

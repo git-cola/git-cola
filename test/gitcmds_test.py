@@ -63,6 +63,14 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.touch('C', 'D', 'E')
         self.assertEqual(gitcmds.untracked_files(), ['C', 'D', 'E'])
 
+    def test_all_files(self):
+        self.touch('other-file')
+        all_files = gitcmds.all_files()
+
+        self.assertTrue('A' in all_files)
+        self.assertTrue('B' in all_files)
+        self.assertTrue('other-file' in all_files)
+
     def test_tag_list(self):
         """Test tag_list()."""
         self.git('tag', 'a')

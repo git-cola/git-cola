@@ -36,7 +36,7 @@ class FormWidget(QtGui.QWidget):
         self.config_to_widget = {}
         self.widget_to_config = {}
         self.source = source
-        self.config = gitcfg.instance()
+        self.config = gitcfg.current()
         self.defaults = {}
         self.setLayout(QtGui.QFormLayout())
 
@@ -240,43 +240,37 @@ class PreferencesView(standard.Dialog):
 
         self.resize(600, 360)
 
-        self._tabbar = QtGui.QTabBar()
-        self._tabbar.setDrawBase(False)
-        self._tabbar.addTab(N_('All Repositories'))
-        self._tabbar.addTab(N_('Current Repository'))
-        self._tabbar.addTab(N_('Settings'))
+        self.tab_bar = QtGui.QTabBar()
+        self.tab_bar.setDrawBase(False)
+        self.tab_bar.addTab(N_('All Repositories'))
+        self.tab_bar.addTab(N_('Current Repository'))
+        self.tab_bar.addTab(N_('Settings'))
 
-        self._user_form = RepoFormWidget(model, self, source='user')
-        self._repo_form = RepoFormWidget(model, self, source='repo')
-        self._options_form = SettingsFormWidget(model, self)
+        self.user_form = RepoFormWidget(model, self, source='user')
+        self.repo_form = RepoFormWidget(model, self, source='repo')
+        self.options_form = SettingsFormWidget(model, self)
 
-        self._stackedwidget = QtGui.QStackedWidget()
-        self._stackedwidget.addWidget(self._user_form)
-        self._stackedwidget.addWidget(self._repo_form)
-        self._stackedwidget.addWidget(self._options_form)
+        self.stack_widget = QtGui.QStackedWidget()
+        self.stack_widget.addWidget(self.user_form)
+        self.stack_widget.addWidget(self.repo_form)
+        self.stack_widget.addWidget(self.options_form)
 
         self.close_button = QtGui.QPushButton(self)
         self.close_button.setText(N_('Close'))
         self.close_button.setIcon(qtutils.close_icon())
 
-        self._button_layt = QtGui.QHBoxLayout()
-        self._button_layt.setMargin(defs.no_margin)
-        self._button_layt.setSpacing(defs.spacing)
-        self._button_layt.addStretch()
-        self._button_layt.addWidget(self.close_button)
+        self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                          qtutils.STRETCH, self.close_button)
 
-        self._layt = QtGui.QVBoxLayout()
-        self._layt.setMargin(defs.margin)
-        self._layt.setSpacing(defs.spacing)
-        self._layt.addWidget(self._tabbar)
-        self._layt.addWidget(self._stackedwidget)
-        self._layt.addLayout(self._button_layt)
-        self.setLayout(self._layt)
+        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
+                                        self.tab_bar, self.stack_widget,
+                                        self.button_layout)
+        self.setLayout(self.main_layout)
 
-        self.connect(self._tabbar, SIGNAL('currentChanged(int)'),
-                     self._stackedwidget.setCurrentIndex)
+        self.connect(self.tab_bar, SIGNAL('currentChanged(int)'),
+                     self.stack_widget.setCurrentIndex)
 
-        self.connect(self._stackedwidget, SIGNAL('currentChanged(int)'),
+        self.connect(self.stack_widget, SIGNAL('currentChanged(int)'),
                      self.update_widget)
 
         qtutils.connect_button(self.close_button, self.accept)
@@ -285,5 +279,5 @@ class PreferencesView(standard.Dialog):
         self.update_widget(0)
 
     def update_widget(self, idx):
-        widget = self._stackedwidget.widget(idx)
+        widget = self.stack_widget.widget(idx)
         widget.update_from_config()

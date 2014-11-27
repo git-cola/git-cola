@@ -41,6 +41,7 @@ from cola import cmds
 from cola import core
 from cola import compat
 from cola import git
+from cola import gitcfg
 from cola import inotify
 from cola import i18n
 from cola import qtcompat
@@ -145,15 +146,17 @@ class ColaApplication(object):
         qtcompat.install()
         qtutils.install()
 
+        self.notifier = QtCore.QObject()
+        self.notifier.connect(self.notifier, SIGNAL('update_files'), self._update_files)
         # Call _update_files when inotify detects changes
-        inotify.observer(_update_files)
+        inotify.observer(self._update_files_notifier)
 
         # Add the default style dir so that we find our icons
         icon_dir = resources.icon_dir()
         qtcompat.add_search_path(os.path.basename(icon_dir), icon_dir)
 
         if gui:
-            self._app = instance(tuple(argv), git_path)
+            self._app = current(tuple(argv), git_path)
             self._app.setWindowIcon(qtutils.git_icon())
         else:
             self._app = QtCore.QCoreApplication(argv)
@@ -183,9 +186,16 @@ class ColaApplication(object):
         if hasattr(self._app, 'view'):
             self._app.view = view
 
+    def _update_files(self):
+        # Respond to inotify updates
+        cmds.do(cmds.Refresh)
+
+    def _update_files_notifier(self):
+        self.notifier.emit(SIGNAL('update_files'))
+
 
 @memoize
-def instance(argv, git_path=None):
+def current(argv, git_path=None):
     return ColaQApplication(list(argv), git_path)
 
 
@@ -263,7 +273,8 @@ def application_init(args, update=False):
     model = new_model(app, args.repo, prompt=args.prompt)
     if update:
         model.update_status()
-    return ApplicationContext(args, app, model)
+    cfg = gitcfg.current()
+    return ApplicationContext(args, app, cfg, model)
 
 
 def application_start(context, view):
@@ -369,14 +380,10 @@ def _send_msg():
         Interaction.log(msg)
 
 
-def _update_files():
-    # Respond to inotify updates
-    cmds.do(cmds.Refresh)
-
-
 class ApplicationContext(object):
 
-    def __init__(self, args, app, model):
+    def __init__(self, args, app, cfg, model):
         self.args = args
         self.app = app
+        self.cfg = cfg
         self.model = model

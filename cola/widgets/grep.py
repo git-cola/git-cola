@@ -116,31 +116,18 @@ class Grep(Dialog):
 
         self.close_button = QtGui.QPushButton(N_('Close'))
 
-        self.input_layout = QtGui.QHBoxLayout()
-        self.input_layout.setMargin(defs.no_margin)
-        self.input_layout.setSpacing(defs.button_spacing)
+        self.input_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                         self.input_label, self.input_txt,
+                                         self.regexp_combo)
 
-        self.bottom_layout = QtGui.QHBoxLayout()
-        self.bottom_layout.setMargin(defs.no_margin)
-        self.bottom_layout.setSpacing(defs.button_spacing)
+        self.bottom_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                          self.edit_button, self.refresh_button,
+                                          self.shell_checkbox, qtutils.STRETCH,
+                                          self.close_button)
 
-        self.mainlayout = QtGui.QVBoxLayout()
-        self.mainlayout.setMargin(defs.margin)
-        self.mainlayout.setSpacing(defs.spacing)
-
-        self.input_layout.addWidget(self.input_label)
-        self.input_layout.addWidget(self.input_txt)
-        self.input_layout.addWidget(self.regexp_combo)
-
-        self.bottom_layout.addWidget(self.edit_button)
-        self.bottom_layout.addWidget(self.refresh_button)
-        self.bottom_layout.addWidget(self.shell_checkbox)
-        self.bottom_layout.addStretch()
-        self.bottom_layout.addWidget(self.close_button)
-
-        self.mainlayout.addLayout(self.input_layout)
-        self.mainlayout.addWidget(self.result_txt)
-        self.mainlayout.addLayout(self.bottom_layout)
+        self.mainlayout = qtutils.vbox(defs.margin, defs.no_spacing,
+                                       self.input_layout, self.result_txt,
+                                       self.bottom_layout)
         self.setLayout(self.mainlayout)
 
         self.grep_thread = GrepThread(self)

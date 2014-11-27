@@ -124,11 +124,11 @@ class Editor(QtGui.QWidget):
                            'Shortcut: Ctrl+Enter'),
                 icon=qtutils.apply_icon())
 
-        self.external_diff_button = qtutils.create_button(
+        self.extdiff_button = qtutils.create_button(
                 text=N_('External Diff'),
                 tooltip=N_('Launch external diff\n'
                            'Shortcut: Ctrl+D'))
-        self.external_diff_button.setEnabled(False)
+        self.extdiff_button.setEnabled(False)
 
         self.help_button = qtutils.create_button(
                 text=N_('Help'),
@@ -139,28 +139,15 @@ class Editor(QtGui.QWidget):
                 text=N_('Cancel'),
                 tooltip=N_('Cancel rebase\nShortcut: Ctrl+Q'),
                 icon=qtutils.close_icon())
-        splitter = QtGui.QSplitter()
-        splitter.setHandleWidth(defs.handle_width)
-        splitter.setOrientation(Qt.Vertical)
-        splitter.insertWidget(0, self.tree)
-        splitter.insertWidget(1, self.diff)
-        splitter.setStretchFactor(0, 1)
-        splitter.setStretchFactor(1, 1)
 
-        controls_layout = QtGui.QHBoxLayout()
-        controls_layout.setMargin(defs.no_margin)
-        controls_layout.setSpacing(defs.button_spacing)
-        controls_layout.addWidget(self.rebase_button)
-        controls_layout.addWidget(self.external_diff_button)
-        controls_layout.addWidget(self.help_button)
-        controls_layout.addStretch()
-        controls_layout.addWidget(self.cancel_button)
+        splitter = qtutils.splitter(Qt.Vertical, self.tree, self.diff)
 
-        layout = QtGui.QVBoxLayout()
-        layout.setMargin(defs.no_margin)
-        layout.setSpacing(defs.spacing)
-        layout.addWidget(splitter)
-        layout.addLayout(controls_layout)
+        controls_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                       self.rebase_button, self.extdiff_button,
+                                       self.help_button, qtutils.STRETCH,
+                                       self.cancel_button)
+        layout = qtutils.vbox(defs.no_margin, defs.spacing,
+                              splitter, controls_layout)
         self.setLayout(layout)
 
         self.action_rebase = qtutils.add_action(self,
@@ -169,7 +156,7 @@ class Editor(QtGui.QWidget):
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
 
         qtutils.connect_button(self.rebase_button, self.rebase)
-        qtutils.connect_button(self.external_diff_button, self.external_diff)
+        qtutils.connect_button(self.extdiff_button, self.external_diff)
         qtutils.connect_button(self.help_button, show_help)
         qtutils.connect_button(self.cancel_button, self.cancel)
         self.connect(self.tree, SIGNAL('external_diff()'), self.external_diff)
@@ -179,7 +166,7 @@ class Editor(QtGui.QWidget):
 
     # notifier callbacks
     def commits_selected(self, commits):
-        self.external_diff_button.setEnabled(bool(commits))
+        self.extdiff_button.setEnabled(bool(commits))
 
     # helpers
     def emit_exit(self, status):
@@ -525,20 +512,15 @@ ctrl+d     = launch external diff
     text.setText(help_text)
     text.setTextInteractionFlags(Qt.NoTextInteraction)
 
-    layout = QtGui.QHBoxLayout()
-    layout.setMargin(defs.margin)
-    layout.setSpacing(defs.spacing)
-    layout.addWidget(text)
-
     widget = QtGui.QDialog(parent)
     widget.setWindowModality(Qt.WindowModal)
     widget.setWindowTitle(N_('Help - git-xbase'))
+
+    layout = qtutils.hbox(defs.margin, defs.spacing, text)
     widget.setLayout(layout)
 
     qtutils.add_action(widget, N_('Close'), widget.accept,
-                       Qt.Key_Question,
-                       Qt.Key_Enter,
-                       Qt.Key_Return)
+                       Qt.Key_Question, Qt.Key_Enter, Qt.Key_Return)
     widget.show()
     return widget
 

@@ -7,6 +7,7 @@ mandir ?= $(prefix)/share/man/man1
 SED ?= sed
 RSYNC ?= rsync
 MKDIR_P ?= mkdir -p
+INSTALL ?= install
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
@@ -18,7 +19,9 @@ PAPEROPT_a4     = -D latex_paper_size=a4
 PAPEROPT_letter = -D latex_paper_size=letter
 ALLSPHINXOPTS   = -d _build/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
-.PHONY: all help clean html man dirhtml pickle json htmlhelp qthelp latex changes linkcheck doctest
+.PHONY: all help clean html man dirhtml pickle json
+.PHONY: htmlhelp qthelp latex changes linkcheck doctest
+.PHONY: install install-files install-html install-man
 
 # The default target of this makefile is...
 all:: html man
@@ -73,16 +76,18 @@ linkcheck:
 doctest:
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) _build/doctest
 
-install: install-html install-man
-	$(MKDIR_P) $(DESTDIR)$(docdir)
-	cp *.rst $(DESTDIR)$(docdir)
+install: install-files install-html install-man
 
-install-html: html
+install-files:
+	$(MKDIR_P) $(DESTDIR)$(docdir)
+	$(INSTALL) -m 644 *.html $(DESTDIR)$(docdir)
+	$(INSTALL) -m 644 *.rst $(DESTDIR)$(docdir)
+
+install-html: install-files html
 	$(MKDIR_P) $(DESTDIR)$(htmldir)
-	$(RSYNC) -ar --delete _build/html/ $(DESTDIR)$(htmldir)/
-	cp *.html $(DESTDIR)$(docdir)
+	$(RSYNC) -r --delete _build/html/ $(DESTDIR)$(htmldir)/
 
 install-man: man
 	$(MKDIR_P) $(DESTDIR)$(mandir)
-	cp _build/man/git-cola.1 $(DESTDIR)$(mandir)
-	cp _build/man/git-dag.1 $(DESTDIR)$(mandir)
+	$(INSTALL) -m 644 _build/man/git-cola.1 $(DESTDIR)$(mandir)
+	$(INSTALL) -m 644 _build/man/git-dag.1 $(DESTDIR)$(mandir)

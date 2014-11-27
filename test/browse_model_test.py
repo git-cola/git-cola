@@ -15,15 +15,6 @@ class ClassicModelTestCase(helper.GitRepositoryTestCase):
         helper.GitRepositoryTestCase.setUp(self, commit=False)
         self.model = MainModel(cwd=core.getcwd())
 
-    def test_everything(self):
-        """Test the MainModel.everything() method."""
-        self.touch('other-file')
-        everything = self.model.everything()
-
-        self.assertTrue('A' in everything)
-        self.assertTrue('B' in everything)
-        self.assertTrue('other-file' in everything)
-
     def test_stage_paths_untracked(self):
         """Test stage_paths() with an untracked file."""
         core.makedirs('foo/bar')

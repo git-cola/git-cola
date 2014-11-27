@@ -24,33 +24,29 @@ USER_NAME = 'user.name'
 
 
 
-def config():
-    return gitcfg.instance()
-
-
 def display_untracked():
-    return config().get(DISPLAY_UNTRACKED, True)
+    return gitcfg.current().get(DISPLAY_UNTRACKED, True)
 
 
 def editor():
-    app = config().get(EDITOR, 'gvim')
+    app = gitcfg.current().get(EDITOR, 'gvim')
     return {'vim': 'gvim -f'}.get(app, app)
 
 
 def history_browser():
-    return config().get(HISTORY_BROWSER, 'gitk')
+    return gitcfg.current().get(HISTORY_BROWSER, 'gitk')
 
 
 def linebreak():
-    return config().get(LINEBREAK, True)
+    return gitcfg.current().get(LINEBREAK, True)
 
 
 def tabwidth():
-    return config().get(TABWIDTH, 8)
+    return gitcfg.current().get(TABWIDTH, 8)
 
 
 def textwidth():
-    return config().get(TEXTWIDTH, 72)
+    return gitcfg.current().get(TEXTWIDTH, 72)
 
 
 
@@ -59,7 +55,7 @@ class PreferencesModel(observable.Observable):
 
     def __init__(self):
         observable.Observable.__init__(self)
-        self.config = gitcfg.instance()
+        self.config = gitcfg.current()
 
     def set_config(self, source, config, value):
         if source == 'repo':

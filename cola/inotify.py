@@ -52,7 +52,7 @@ def observer(fn):
 def start():
     global _thread
 
-    cfg = gitcfg.instance()
+    cfg = gitcfg.current()
     if not cfg.get('cola.inotify', True):
         msg = N_('inotify is disabled because "cola.inotify" is false')
         Interaction.log(msg)

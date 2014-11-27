@@ -2,7 +2,7 @@
 from __future__ import division, absolute_import, unicode_literals
 
 from PyQt4 import QtGui
-from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import gitcmds
@@ -25,9 +25,6 @@ class Model(object):
     def __init__(self, revs, summaries):
         self.revisions = revs
         self.summaries = summaries
-
-    def revision_sha1(self, idx):
-        return self.revisions[idx]
 
 
 class SelectCommitsDialog(QtGui.QDialog):
@@ -61,26 +58,16 @@ class SelectCommitsDialog(QtGui.QDialog):
         self.close_button = QtGui.QPushButton(N_('Close'))
 
         # Make the list widget slighty larger
-        self.splitter = QtGui.QSplitter()
-        self.splitter.setOrientation(QtCore.Qt.Vertical)
-        self.splitter.setHandleWidth(defs.handle_width)
+        self.splitter = qtutils.splitter(Qt.Vertical,
+                                         self.commit_list, self.commit_text)
         self.splitter.setSizes([100, 150])
-        self.splitter.addWidget(self.commit_list)
-        self.splitter.addWidget(self.commit_text)
 
-        self.input_layout = QtGui.QHBoxLayout()
-        self.input_layout.setMargin(defs.no_margin)
-        self.input_layout.setSpacing(defs.spacing)
-        self.input_layout.addWidget(self.label)
-        self.input_layout.addWidget(self.revision)
-        self.input_layout.addWidget(self.select_button)
-        self.input_layout.addWidget(self.close_button)
+        self.input_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                         self.label, self.revision,
+                                         self.select_button, self.close_button)
 
-        self.main_layout = QtGui.QVBoxLayout()
-        self.main_layout.setMargin(defs.margin)
-        self.main_layout.setSpacing(defs.margin)
-        self.main_layout.addWidget(self.splitter)
-        self.main_layout.addLayout(self.input_layout)
+        self.main_layout = qtutils.vbox(defs.margin, defs.margin,
+                                        self.splitter, self.input_layout)
         self.setLayout(self.main_layout)
 
         self.connect(self.commit_list,
@@ -88,12 +75,6 @@ class SelectCommitsDialog(QtGui.QDialog):
 
         qtutils.connect_button(self.select_button, self.accept)
         qtutils.connect_button(self.close_button, self.reject)
-
-        #self.setTabOrder(self.commit_list, self.commit_text)
-        #self.setTabOrder(self.commit_text, self.revision)
-        #self.setTabOrder(self.revision, self.select_button)
-        #self.setTabOrder(self.select_button, self.close_button)
-        #self.setTabOrder(self.close_button, self.commit_list)
 
         self.resize(700, 420)
 
@@ -108,17 +89,16 @@ class SelectCommitsDialog(QtGui.QDialog):
         if self.exec_() != QtGui.QDialog.Accepted:
             return []
         revs = self.model.revisions
-        return qtutils.selection_list(self.commit_list, revs)
+        return qtutils.selected_items(self.commit_list, revs)
 
     def commit_sha1_selected(self):
-        row, selected = qtutils.selected_row(self.commit_list)
+        sha1  = qtutils.selected_item(self.commit_list, self.model.revisions)
+        selected = (sha1 is not None)
         self.select_button.setEnabled(selected)
         if not selected:
             self.commit_text.setText('')
             self.revision.setText('')
             return
-        # Get the sha1 and put it in the revision line
-        sha1 = self.model.revision_sha1(row)
         self.revision.setText(sha1)
         self.revision.selectAll()
 

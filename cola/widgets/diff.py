@@ -41,11 +41,8 @@ class DiffEditorWidget(QtGui.QWidget):
         QtGui.QWidget.__init__(self, parent)
 
         self.editor = DiffEditor(self, parent.titleBarWidget())
-
-        self.main_layout = QtGui.QVBoxLayout()
-        self.main_layout.setSpacing(defs.spacing)
-        self.main_layout.setMargin(defs.no_margin)
-        self.main_layout.addWidget(self.editor)
+        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
+                                        self.editor)
         self.setLayout(self.main_layout)
 
 
@@ -106,7 +103,7 @@ class DiffEditor(DiffTextEdit):
         self.launch_difftool = qtutils.add_action(self,
                 cmds.LaunchDifftool.name(), run(cmds.LaunchDifftool),
                 cmds.LaunchDifftool.SHORTCUT)
-        self.launch_difftool.setIcon(qtutils.icon('git.svg'))
+        self.launch_difftool.setIcon(qtutils.git_icon())
 
         model.add_observer(model.message_diff_text_changed, self._emit_text)
 
@@ -352,24 +349,16 @@ class DiffWidget(QtGui.QWidget):
         self.tasks = set()
         self.reflector = QtCore.QObject(self)
 
-        self.info_layout = QtGui.QVBoxLayout()
-        self.info_layout.setMargin(defs.no_margin)
-        self.info_layout.setSpacing(defs.no_spacing)
-        self.info_layout.addWidget(self.author_label)
-        self.info_layout.addWidget(self.summary_label)
-        self.info_layout.addWidget(self.sha1_label)
+        self.info_layout = qtutils.vbox(defs.no_margin, defs.no_spacing,
+                                        self.author_label, self.summary_label,
+                                        self.sha1_label)
 
-        self.logo_layout = QtGui.QHBoxLayout()
+        self.logo_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                        self.gravatar_label, self.info_layout)
         self.logo_layout.setContentsMargins(defs.margin, 0, defs.margin, 0)
-        self.logo_layout.setSpacing(defs.button_spacing)
-        self.logo_layout.addWidget(self.gravatar_label)
-        self.logo_layout.addLayout(self.info_layout)
 
-        self.main_layout = QtGui.QVBoxLayout()
-        self.main_layout.setMargin(defs.no_margin)
-        self.main_layout.setSpacing(defs.spacing)
-        self.main_layout.addLayout(self.logo_layout)
-        self.main_layout.addWidget(self.diff)
+        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
+                                        self.logo_layout, self.diff)
         self.setLayout(self.main_layout)
 
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)

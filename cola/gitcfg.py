@@ -9,28 +9,30 @@ from os.path import join
 from cola import core
 from cola import git
 from cola import observable
+from cola import utils
 from cola.decorators import memoize
 from cola.git import STDOUT
 from cola.compat import ustr
 
 BUILTIN_READER = os.environ.get('GIT_COLA_BUILTIN_CONFIG_READER', False)
 
-@memoize
-def instance():
-    """Return a static GitConfig instance."""
-    return GitConfig()
-
 _USER_CONFIG = core.expanduser(join('~', '.gitconfig'))
 _USER_XDG_CONFIG = core.expanduser(
         join(core.getenv('XDG_CONFIG_HOME', join('~', '.config')),
              'git', 'config'))
+
+@memoize
+def current():
+    """Return the GitConfig singleton."""
+    return GitConfig()
+
 
 def _stat_info():
     # Try /etc/gitconfig as a fallback for the system config
     paths = (('system', '/etc/gitconfig'),
              ('user', _USER_XDG_CONFIG),
              ('user', _USER_CONFIG),
-             ('repo', git.instance().git_path('config')))
+             ('repo', git.current().git_path('config')))
     statinfo = []
     for category, path in paths:
         try:
@@ -45,7 +47,7 @@ def _cache_key():
     paths = ('/etc/gitconfig',
              _USER_XDG_CONFIG,
              _USER_CONFIG,
-             git.instance().git_path('config'))
+             git.current().git_path('config'))
     mtimes = []
     for path in paths:
         try:
@@ -91,7 +93,7 @@ class GitConfig(observable.Observable):
 
     def __init__(self):
         observable.Observable.__init__(self)
-        self.git = git.instance()
+        self.git = git.current()
         self._map = {}
         self._system = {}
         self._user = {}
@@ -363,5 +365,19 @@ class GitConfig(observable.Observable):
         return sorted([name[prefix:-suffix]
                         for (name, cmd) in guitools.items()])
 
+    def get_guitool_names_and_shortcuts(self):
+        """Return guitool names and their configured shortcut"""
+        names = self.get_guitool_names()
+        return [(name, self.get('guitool.%s.shortcut' % name)) for name in names]
+
     def terminal(self):
-        return self.get('cola.terminal', 'xterm -e')
+        term = self.get('cola.terminal', None)
+        if not term:
+            # find a suitable default terminal
+            term = 'xterm -e' # for mac osx
+            candidates = ('gnome-terminal', 'xfce4-terminal', 'konsole')
+            for basename in candidates:
+                if core.exists('/usr/bin/%s' % basename):
+                    term = '%s -e' % basename
+                    break
+        return term

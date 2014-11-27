@@ -132,35 +132,21 @@ class GitArchiveDialog(QtGui.QDialog):
         self.prefix_group.setTitle(N_('Advanced'))
 
         # layouts
-        self.filelayt = QtGui.QHBoxLayout()
-        self.filelayt.setMargin(defs.no_margin)
-        self.filelayt.setSpacing(defs.spacing)
-        self.filelayt.addWidget(self.browse)
-        self.filelayt.addWidget(self.filetext)
-        self.filelayt.addWidget(self.format_combo)
+        self.filelayt = qtutils.hbox(defs.no_margin, defs.spacing,
+                                     self.browse, self.filetext,
+                                     self.format_combo)
 
-        self.prefixlayt = QtGui.QHBoxLayout()
-        self.prefixlayt.setMargin(defs.margin)
-        self.prefixlayt.setSpacing(defs.spacing)
-        self.prefixlayt.addWidget(self.prefix_label)
-        self.prefixlayt.addWidget(self.prefix_text)
+        self.prefixlayt = qtutils.hbox(defs.margin, defs.spacing,
+                                       self.prefix_label, self.prefix_text)
         self.prefix_group.setLayout(self.prefixlayt)
         self.prefix_group.set_expanded(False)
 
-        self.btnlayt = QtGui.QHBoxLayout()
-        self.btnlayt.setMargin(defs.no_margin)
-        self.btnlayt.setSpacing(defs.spacing)
-        self.btnlayt.addStretch()
-        self.btnlayt.addWidget(self.cancel)
-        self.btnlayt.addWidget(self.save)
+        self.btnlayt = qtutils.hbox(defs.no_margin, defs.spacing,
+                                    qtutils.STRETCH, self.cancel, self.save)
 
-        self.mainlayt = QtGui.QVBoxLayout()
-        self.mainlayt.setMargin(defs.margin)
-        self.mainlayt.setSpacing(defs.no_spacing)
-        self.mainlayt.addLayout(self.filelayt)
-        self.mainlayt.addWidget(self.prefix_group)
-        self.mainlayt.addStretch()
-        self.mainlayt.addLayout(self.btnlayt)
+        self.mainlayt = qtutils.vbox(defs.margin, defs.no_spacing,
+                                     self.filelayt, self.prefix_group,
+                                     qtutils.STRETCH, self.btnlayt)
         self.setLayout(self.mainlayt)
         self.resize(555, 0)
 

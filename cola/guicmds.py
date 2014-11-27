@@ -43,7 +43,6 @@ def delete_remote_branch():
         branch = match.group('branch')
         cmds.do(cmds.DeleteRemoteBranch, remote, branch)
 
-
 def browse_current():
     """Launch the 'Browse Current Branch' dialog."""
     branch = gitcmds.current_branch()
@@ -344,3 +343,15 @@ def report_clone_repo_errors(task):
     Interaction.critical(task.cmd.error_message,
                          message=task.cmd.error_message,
                          details=task.cmd.error_details)
+
+def rename_branch():
+    """Launch the 'Rename Branch' dialogs."""
+    branch = choose_branch(N_('Rename Existing Branch'), N_('Select'))
+    if not branch:
+        return
+    new_branch = choose_branch(N_('Enter Branch New Name'), N_('Rename'))
+    if not new_branch:
+        return
+    cmds.do(cmds.RenameBranch, branch, new_branch)
+
+

@@ -99,37 +99,24 @@ class ApplyPatches(Dialog):
                 text=N_('Close'), icon=qtutils.close_icon())
 
         self.add_action = qtutils.add_action(self,
-                N_('Add'), self.add_files,
-                Qt.Key_Plus)
+                N_('Add'), self.add_files, Qt.Key_Plus)
 
         self.remove_action = qtutils.add_action(self,
                 N_('Remove'), self.tree.remove_selected,
-                QtGui.QKeySequence.Delete, Qt.Key_Backspace,
-                Qt.Key_Minus)
+                QtGui.QKeySequence.Delete, Qt.Key_Backspace, Qt.Key_Minus)
 
-        layout = QtGui.QVBoxLayout()
-        layout.setMargin(defs.margin)
-        layout.setSpacing(defs.spacing)
+        self.top_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                       self.add_button, self.remove_button,
+                                       qtutils.STRETCH, self.usage)
 
-        top = QtGui.QHBoxLayout()
-        top.setMargin(defs.no_margin)
-        top.setSpacing(defs.button_spacing)
-        top.addWidget(self.add_button)
-        top.addWidget(self.remove_button)
-        top.addStretch()
-        top.addWidget(self.usage)
+        self.bottom_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                          self.apply_button, qtutils.STRETCH,
+                                          self.close_button)
 
-        bottom = QtGui.QHBoxLayout()
-        bottom.setMargin(defs.no_margin)
-        bottom.setSpacing(defs.button_spacing)
-        bottom.addWidget(self.apply_button)
-        bottom.addStretch()
-        bottom.addWidget(self.close_button)
-
-        layout.addLayout(top)
-        layout.addWidget(self.tree)
-        layout.addLayout(bottom)
-        self.setLayout(layout)
+        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
+                                        self.top_layout, self.tree,
+                                        self.bottom_layout)
+        self.setLayout(self.main_layout)
 
         qtutils.connect_button(self.add_button, self.add_files)
         qtutils.connect_button(self.remove_button, self.tree.remove_selected)

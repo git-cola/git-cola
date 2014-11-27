@@ -330,6 +330,17 @@ into the commit message editor when this option is selected.
 
 The `Status` tool will display all of the changes for the amended commit.
 
+Create Signed Commit
+--------------------
+Tell `git commit` and `git merge` to sign commits using GPG.
+
+Using this option is equivalent to passing the ``--gpg-sign`` option to
+`git commit <http://git-scm.com/docs/git-commit>`_ and
+`git merge <http://git-scm.com/docs/git-merge>`_.
+
+This option's default value can be configured using the `cola.signcommits`
+configuration variable.
+
 APPLY PATCHES
 =============
 Use the ``File -> Apply Patches`` menu item to begin applying patches.
@@ -361,10 +372,10 @@ CONFIGURATION VARIABLES
 =======================
 These variables can be set using `git config` or from the settings.
 
-cola.savewindowsettings
------------------------
-`git cola` will remember its window settings when set to `true`.
-Window settings and X11 sessions are saved in `$HOME/.config/git-cola`.
+cola.browserdockable
+--------------------
+Whether to create a dock widget with the `Browser` tool.
+Defaults to `false` to speedup startup time.
 
 cola.fileattributes
 -------------------
@@ -375,11 +386,6 @@ and applying diffs.
 cola.fontdiff
 -------------
 Specifies the font to use for `git cola`'s diff display.
-
-cola.browserdockable
---------------------
-Whether to create a dock widget with the `Browser` tool.
-Defaults to `false` to speedup startup time.
 
 cola.inotify
 ------------
@@ -393,20 +399,48 @@ Defaults to `true`.  This setting is configured using the `Preferences`
 dialog, but it can be toggled for one-off usage using the commit message
 editor's options sub-menu.
 
-cola.tabwidth
--------------
-The number of columns occupied by a tab character.  Defaults to 8.
-
-cola.textwidth
---------------
-The number of columns used for line wrapping.
-Tabs are counted according to `cola.tabwidth`.
+cola.dragencoding
+-----------------
+`git cola` encodes paths dragged from its widgets into `utf-16` when adding
+them to the drag-and-drop mime data (specifically, the `text/x-moz-url` entry).
+`utf-16` is used to make `gnome-terminal` see the right paths, but other
+terminals may expect a different encoding.  If you are using a terminal that
+expects a modern encoding, e.g. `terminator`, then set this value to `utf-8`.
 
 cola.readsize
 -------------
 `git cola` avoids reading large binary untracked files.
 The maximum size to read is controlled by `cola.readsize`
 and defaults to `2048`.
+
+cola.savewindowsettings
+-----------------------
+`git cola` will remember its window settings when set to `true`.
+Window settings and X11 sessions are saved in `$HOME/.config/git-cola`.
+
+cola.signcommits
+----------------
+`git cola` will sign commits by default when set `true`. Defaults to `false`.
+See the section below on setting up GPG for more details.
+
+cola.tabwidth
+-------------
+The number of columns occupied by a tab character.  Defaults to 8.
+
+cola.terminal
+-------------
+The command to use when launching commands within a graphical terminal.
+
+`cola.terminal` defaults to `xterm -e` when unset.
+e.g. when opening a shell, `git cola` will run `xterm -e $SHELL`.
+
+If either `gnome-terminal`, `xfce4-terminal`, or `konsole` are installed
+then they will be preferred over `xterm` when `cola.terminal` is unset.
+
+cola.textwidth
+--------------
+The number of columns used for line wrapping.
+Tabs are counted according to `cola.tabwidth`.
 
 gui.diffcontext
 ---------------
@@ -554,6 +588,67 @@ guitool.<name>.prompt
 Specifies the general prompt string to display at the top of the dialog,
 before subsections for argprompt and revprompt.
 The default value includes the actual command.
+
+guitool.<name>.shortcut
+-----------------------
+Specifies a keyboard shortcut for the custom tool.
+
+The value must be a valid string understood by the `QAction::setShortcut()` API.
+See http://qt-project.org/doc/qt-4.8/qkeysequence.html#QKeySequence-2
+for more details about the supported values.
+
+Avoid creating shortcuts that conflict with existing built-in `git cola`
+shortcuts.  Creating a conflict will result in no action when the shortcut
+is used.
+
+SETTING UP GPG FOR SIGNED COMMITS
+=================================
+When creating signed commits `gpg` will attempt to read your password from the
+terminal from which `git cola` was launched.
+The way to make this work smoothly is to use a GPG agent so that you can avoid
+needing to re-enter your password every time you commit.
+
+This also gets you a graphical passphrase prompt instead of getting prompted
+for your password in the terminal.
+
+Install gpg-agent and friends
+-----------------------------
+On Mac OS X, you may need to `brew install gpg-agent` and install the
+`Mac GPG Suite <https://gpgtools.org/macgpg2/>`_.
+
+On Linux use your package manager to install gnupg-agent and pinentry-qt4, e.g.::
+
+    sudo apt-get install gnupg-agent pinentry-qt4
+
+Configure gpg-agent and a pin-entry program
+-------------------------------------------
+Edit `~/.gnupg/gpg.conf` to include the line,::
+
+    use-agent
+
+Edit `~/.gnupg/gpg-agent.conf` to contain a pinentry-program line pointing to
+the pin-entry program for your platform.
+
+The following example `gpg-agent.conf` shows how to use pinentry-qt4 on Linux::
+
+    pinentry-program /usr/bin/pinentry-qt4
+    default-cache-ttl 3600
+    enable-ssh-support
+    use-standard-socket
+
+This following example `gpg-agent.conf` shows how to use MacGPG2's
+pinentry app on On Mac OS X::
+
+    pinentry-program /usr/local/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac
+    default-cache-ttl 3600
+    enable-ssh-support
+    use-standard-socket
+
+Once this has been setup then you will need to eval the output
+of `gpg-agent --daemon` in your shell prior to launching git-cola.::
+
+    eval $(gpg-agent --daemon)
+    bin/git-cola
 
 LINKS
 =====

@@ -51,6 +51,7 @@ Thanks
 * Maarten Nieber
 * Matěj Šmíd
 * Matthew Levine
+* Micha Rosenbaum
 * Michael Geddes
 * Michael Homer
 * Minarto Margoliono
@@ -59,6 +60,7 @@ Thanks
 * Owen Healy
 * Paolo G. Giarrusso
 * Paul Hildebrandt
+* Paul Weingardt
 * Peter Júnoš
 * Pilar Molina Lopez
 * Raghavendra Karunanidhi
@@ -77,4 +79,5 @@ Thanks
 * Ｖ字龍 (Vdragon)
 * Virgil Dupras
 * Vitor Lobo
+* v.paritskiy
 * Zhang Han

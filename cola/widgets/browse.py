@@ -46,11 +46,8 @@ class Browser(standard.Widget):
     def __init__(self, parent, update=True):
         standard.Widget.__init__(self, parent)
         self.tree = RepoTreeView(self)
-        self.mainlayout = QtGui.QHBoxLayout()
+        self.mainlayout = qtutils.hbox(defs.no_margin, defs.spacing, self.tree)
         self.setLayout(self.mainlayout)
-        self.mainlayout.setMargin(defs.no_margin)
-        self.mainlayout.setSpacing(defs.spacing)
-        self.mainlayout.addWidget(self.tree)
         self.resize(720, 420)
 
         self.connect(self, SIGNAL('updated'), self._updated_callback)
@@ -105,50 +102,52 @@ class RepoTreeView(standard.TreeView):
         # Sync selection before the key press event changes the model index
         self.connect(self, SIGNAL('indexAboutToChange()'), self.sync_selection)
 
-        self.action_history =\
-                self._create_action(
-                        N_('View History...'),
-                        N_('View history for selected path(s).'),
-                        self.view_history,
-                        'Shift+Ctrl+H')
-        self.action_stage =\
-                self._create_action(N_('Stage Selected'),
-                                    N_('Stage selected path(s) for commit.'),
-                                    self.stage_selected,
-                                    cmds.Stage.SHORTCUT)
-        self.action_unstage =\
-                self._create_action(
-                        N_('Unstage Selected'),
-                        N_('Remove selected path(s) from the staging area.'),
-                        self.unstage_selected,
-                        'Ctrl+U')
+        self.action_history = self._create_action(
+                N_('View History...'),
+                N_('View history for selected path(s)'),
+                self.view_history,
+                'Shift+Ctrl+H')
 
-        self.action_untrack =\
-                self._create_action(N_('Untrack Selected'),
-                                    N_('Stop tracking path(s)'),
-                                    self.untrack_selected)
+        self.action_stage = self._create_action(
+                cmds.StageOrUnstage.name(),
+                N_('Stage/unstage selected path(s) for commit'),
+                cmds.run(cmds.StageOrUnstage),
+                cmds.StageOrUnstage.SHORTCUT)
 
-        self.action_difftool =\
-                self._create_action(cmds.LaunchDifftool.name(),
-                                    N_('Launch git-difftool on the current path.'),
-                                    cmds.run(cmds.LaunchDifftool),
-                                    cmds.LaunchDifftool.SHORTCUT)
+        self.action_untrack = self._create_action(
+                N_('Untrack Selected'),
+                N_('Stop tracking path(s)'),
+                self.untrack_selected)
 
-        self.action_difftool_predecessor =\
-                self._create_action(N_('Diff Against Predecessor...'),
-                                    N_('Launch git-difftool against previous versions.'),
-                                    self.difftool_predecessor,
-                                    'Shift+Ctrl+D')
-        self.action_revert =\
-                self._create_action(N_('Revert Uncommitted Changes...'),
-                                    N_('Revert changes to selected path(s).'),
-                                    self.revert,
-                                    'Ctrl+Z')
-        self.action_editor =\
-                self._create_action(cmds.LaunchEditor.name(),
-                                    N_('Edit selected path(s).'),
-                                    cmds.run(cmds.LaunchEditor),
-                                    cmds.LaunchEditor.SHORTCUT)
+        self.action_difftool = self._create_action(
+                cmds.LaunchDifftool.name(),
+                N_('Launch git-difftool on the current path.'),
+                cmds.run(cmds.LaunchDifftool),
+                cmds.LaunchDifftool.SHORTCUT)
+
+        self.action_difftool_predecessor =self._create_action(
+                N_('Diff Against Predecessor...'),
+                N_('Launch git-difftool against previous versions.'),
+                self.difftool_predecessor,
+                'Shift+Ctrl+D')
+
+        self.action_revert_unstaged = self._create_action(
+                cmds.RevertUnstagedEdits.name(),
+                N_('Revert unstaged changes to selected paths.'),
+                cmds.run(cmds.RevertUnstagedEdits),
+                cmds.RevertUnstagedEdits.SHORTCUT)
+
+        self.action_revert_uncommitted = self._create_action(
+                cmds.RevertUncommittedEdits.name(),
+                N_('Revert uncommitted changes to selected paths.'),
+                cmds.run(cmds.RevertUncommittedEdits),
+                cmds.RevertUncommittedEdits.SHORTCUT)
+
+        self.action_editor = self._create_action(
+                cmds.LaunchEditor.name(),
+                N_('Edit selected path(s).'),
+                cmds.run(cmds.LaunchEditor),
+                cmds.LaunchEditor.SHORTCUT)
 
     def size_columns(self):
         """Set the column widths."""
@@ -164,15 +163,16 @@ class RepoTreeView(standard.TreeView):
         staged = bool(self.selected_staged_paths(selection=selection))
         modified = bool(self.selected_modified_paths(selection=selection))
         unstaged = bool(self.selected_unstaged_paths(selection=selection))
-        tracked = bool(self.selected_tracked_paths())
+        tracked = bool(self.selected_tracked_paths(selection=selection))
+        revertable = staged or modified
 
         self.action_history.setEnabled(selected)
-        self.action_stage.setEnabled(unstaged)
-        self.action_unstage.setEnabled(staged)
+        self.action_stage.setEnabled(staged or unstaged)
         self.action_untrack.setEnabled(tracked)
         self.action_difftool.setEnabled(staged or modified)
         self.action_difftool_predecessor.setEnabled(tracked)
-        self.action_revert.setEnabled(tracked)
+        self.action_revert_unstaged.setEnabled(revertable)
+        self.action_revert_uncommitted.setEnabled(revertable)
 
     def contextMenuEvent(self, event):
         """Create a context menu."""
@@ -180,13 +180,13 @@ class RepoTreeView(standard.TreeView):
         menu = QtGui.QMenu(self)
         menu.addAction(self.action_editor)
         menu.addAction(self.action_stage)
-        menu.addAction(self.action_unstage)
         menu.addSeparator()
         menu.addAction(self.action_history)
         menu.addAction(self.action_difftool)
         menu.addAction(self.action_difftool_predecessor)
         menu.addSeparator()
-        menu.addAction(self.action_revert)
+        menu.addAction(self.action_revert_unstaged)
+        menu.addAction(self.action_revert_uncommitted)
         menu.addAction(self.action_untrack)
         menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -257,14 +257,14 @@ class RepoTreeView(standard.TreeView):
 
     def selected_staged_paths(self, selection=None):
         """Return selected staged paths."""
-        if not selection:
+        if selection is None:
             selection = self.selected_paths()
         staged = utils.add_parents(main.model().staged)
         return [p for p in selection if p in staged]
 
     def selected_modified_paths(self, selection=None):
         """Return selected modified paths."""
-        if not selection:
+        if selection is None:
             selection = self.selected_paths()
         model = main.model()
         modified = utils.add_parents(model.modified)
@@ -272,7 +272,7 @@ class RepoTreeView(standard.TreeView):
 
     def selected_unstaged_paths(self, selection=None):
         """Return selected unstaged paths."""
-        if not selection:
+        if selection is None:
             selection = self.selected_paths()
         model = main.model()
         modified = utils.add_parents(model.modified)
@@ -282,11 +282,11 @@ class RepoTreeView(standard.TreeView):
 
     def selected_tracked_paths(self, selection=None):
         """Return selected tracked paths."""
-        if not selection:
+        if selection is None:
             selection = self.selected_paths()
         model = main.model()
-        staged = set(self.selected_staged_paths())
-        modified = set(self.selected_modified_paths())
+        staged = set(self.selected_staged_paths(selection=selection))
+        modified = set(self.selected_modified_paths(selection=selection))
         untracked = utils.add_parents(model.untracked)
         tracked = staged.union(modified)
         return [p for p in selection
@@ -308,14 +308,6 @@ class RepoTreeView(standard.TreeView):
         """Signal that we should view history for paths."""
         self.emit(SIGNAL('history(QStringList)'), self.selected_paths())
 
-    def stage_selected(self):
-        """Signal that we should stage selected paths."""
-        cmds.do(cmds.Stage, self.selected_unstaged_paths())
-
-    def unstage_selected(self):
-        """Signal that we should stage selected paths."""
-        cmds.do(cmds.Unstage, self.selected_staged_paths())
-
     def untrack_selected(self):
         """untrack selected paths."""
         cmds.do(cmds.Untrack, self.selected_tracked_paths())
@@ -324,19 +316,6 @@ class RepoTreeView(standard.TreeView):
         """Diff paths against previous versions."""
         paths = self.selected_tracked_paths()
         self.emit(SIGNAL('difftool_predecessor'), paths)
-
-    def revert(self):
-        """Signal that we should revert changes to a path."""
-        if not qtutils.confirm(N_('Revert Uncommitted Changes?'),
-                               N_('This operation drops uncommitted changes.\n'
-                                  'These changes cannot be recovered.'),
-                               N_('Revert the uncommitted changes?'),
-                               N_('Revert Uncommitted Changes'),
-                               default=True,
-                               icon=qtutils.icon('undo.svg')):
-            return
-        paths = self.selected_tracked_paths()
-        cmds.do(cmds.Checkout, ['HEAD', '--'] + paths)
 
     def current_path(self):
         """Return the path for the current item."""
@@ -490,16 +469,11 @@ class BrowseDialog(QtGui.QDialog):
         self.save.setEnabled(False)
 
         # layouts
-        self.btnlayt = QtGui.QHBoxLayout()
-        self.btnlayt.addStretch()
-        self.btnlayt.addWidget(self.close)
-        self.btnlayt.addWidget(self.save)
+        self.btnlayt = qtutils.hbox(defs.margin, defs.spacing,
+                                    qtutils.STRETCH, self.close, self.save)
 
-        self.layt = QtGui.QVBoxLayout()
-        self.layt.setMargin(defs.margin)
-        self.layt.setSpacing(defs.spacing)
-        self.layt.addWidget(self.tree)
-        self.layt.addLayout(self.btnlayt)
+        self.layt = qtutils.vbox(defs.margin, defs.spacing,
+                                 self.tree, self.btnlayt)
         self.setLayout(self.layt)
 
         # connections

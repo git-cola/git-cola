@@ -2,6 +2,7 @@
 """This module provides the Observable class"""
 from __future__ import division, absolute_import, unicode_literals
 
+
 class Observable(object):
     """Handles subject/observer notifications."""
     def __init__(self):
@@ -23,6 +24,7 @@ class Observable(object):
         """Pythonic signals and slots."""
         if not self.notification_enabled:
             return
-        observers = self.observers.get(message, ())
+        # observers can remove themselves during their callback so grab a copy
+        observers = set(self.observers.get(message, set()))
         for method in observers:
             method(*args, **opts)

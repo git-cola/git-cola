@@ -50,11 +50,6 @@ span.title {
     <td class="title">Commit</td>
 </tr>
 <tr>
-    <td class="shortcut">Ctrl + m</td>
-    <td>:</td>
-    <td>Amend last commit</td>
-</tr>
-<tr>
     <td class="shortcut">Ctrl + Return</td>
     <td>:</td>
     <td>Commit staged changes</td>
@@ -62,7 +57,7 @@ span.title {
 <tr>
     <td class="shortcut">Ctrl + s</td>
     <td>:</td>
-    <td>Stage selected files</td>
+    <td>Stage / unstage selected files</td>
 </tr>
 <tr>
     <td class="shortcut">Alt + a</td>
@@ -80,9 +75,24 @@ span.title {
     <td>Revert unstaged edits</td>
 </tr>
 <tr>
-    <td class="shortcut">Ctrl + r</td>
+    <td class="shortcut">Ctrl + z</td>
     <td>:</td>
-    <td>Refresh</td>
+    <td>Revert uncommitted changes</td>
+</tr>
+<tr>
+    <td class="shortcut">Shift + Ctrl + m</td>
+    <td>:</td>
+    <td>Merge branches</td>
+</tr>
+<tr>
+    <td class="shortcut">Ctrl + m</td>
+    <td>:</td>
+    <td>Amend last commit</td>
+</tr>
+<tr>
+    <td class="shortcut">Shift + Ctrl + c</td>
+    <td>:</td>
+    <td>Cherry pick</td>
 </tr>
 </table>
 
@@ -119,11 +129,6 @@ span.title {
     <td>Export patches</td>
 </tr>
 <tr>
-    <td class="shortcut">Shift + Ctrl + c</td>
-    <td>:</td>
-    <td>Cherry pick</td>
-</tr>
-<tr>
     <td class="shortcut">Shift + Alt + s</td>
     <td>:</td>
     <td>Stash</td>
@@ -136,7 +141,12 @@ span.title {
 <tr>
     <td class="shortcut">Shift + Ctrl + f</td>
     <td>:</td>
-    <td>Toggle the paths filter</td>
+    <td>Toggle paths filter</td>
+</tr>
+<tr>
+    <td class="shortcut">Ctrl + r</td>
+    <td>:</td>
+    <td>Refresh</td>
 </tr>
 <tr>
     <td class="shortcut">?</td>
@@ -189,6 +199,21 @@ span.title {
 </tr>
 </table>
 
+<!-- Diff -->
+<table class="center">
+<tr>
+    <td width="35%">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td class="title">Diff</td>
+</tr>
+<tr>
+    <td class="shortcut">s</td>
+    <td>:</td>
+    <td>Stage the selected lines, or the diff hunk beneath the text cursor when
+    nothing is selected</td>
+</tr>
+</table>
+
 <!-- Browser actions -->
 <table class="center">
 <tr>
@@ -197,54 +222,14 @@ span.title {
     <td class="title">Browser actions</td>
 </tr>
 <tr>
-    <td class="shortcut">Ctrl + e</td>
-    <td>:</td>
-    <td>Launch editor</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + s</td>
-    <td>:</td>
-    <td>Stage selected</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + u</td>
-    <td>:</td>
-    <td>Unstage selected</td>
-</tr>
-<tr>
     <td class="shortcut">Shift + Ctrl + h</td>
     <td>:</td>
     <td>View history</td>
 </tr>
 <tr>
-    <td class="shortcut">Ctrl + d</td>
-    <td>:</td>
-    <td>View diff using `git difftool`</td>
-</tr>
-<tr>
     <td class="shortcut">Shift + Ctrl + d</td>
     <td>:</td>
     <td>View diff against predecessor</td>
-</tr>
-<tr>
-    <td class="shortcut">Ctrl + z</td>
-    <td>:</td>
-    <td>Revert uncommitted changes</td>
-</tr>
-</table>
-
-<!-- Diff Viewer -->
-<table class="center">
-<tr>
-    <td width="35%">&nbsp;</td>
-    <td>&nbsp;</td>
-    <td class="title">Diff viewer</td>
-</tr>
-<tr>
-    <td class="shortcut">s</td>
-    <td>:</td>
-    <td>Stage the selected lines, or the diff hunk beneath the text cursor when
-    nothing is selected</td>
 </tr>
 </table>
 
@@ -281,4 +266,5 @@ span.title {
     <td>Focus the DAG input field</td>
 </tr>
 </table>
+
 </body>

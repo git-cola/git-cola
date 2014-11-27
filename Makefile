@@ -4,6 +4,7 @@ all::
 # The external commands used by this Makefile are...
 CTAGS = ctags
 CP = cp
+LNS = ln -s -f
 FIND = find
 GIT = git
 GZIP = gzip
@@ -19,7 +20,9 @@ TAR = tar
 # These values can be overridden on the command-line or via config.mak
 prefix = $(HOME)
 bindir = $(prefix)/bin
-coladir = $(prefix)/share/git-cola/lib
+datadir = $(prefix)/share/git-cola
+coladir = $(datadir)/lib
+hicolordir = $(prefix)/share/icons/hicolor/scalable/apps
 darwin_python = /System/Library/Frameworks/Python.framework/Resources/Python.app/Contents/MacOS/Python
 # DESTDIR =
 
@@ -52,6 +55,8 @@ all::
 
 install: all
 	$(PYTHON) setup.py install $(setup_args)
+	$(MKDIR_P) $(DESTDIR)$(hicolordir)
+	$(LNS) $(datadir)/icons/git-cola.svg $(DESTDIR)$(hicolordir)/git-cola.svg
 	(cd $(DESTDIR)$(bindir) && \
 	! test -e cola && $(LN) -s git-cola cola) || true
 	$(RM_R) $(DESTDIR)$(coladir)/git_cola*
@@ -87,6 +92,7 @@ uninstall:
 	$(RM) $(DESTDIR)$(prefix)/share/applications/git-cola.desktop
 	$(RM) $(DESTDIR)$(prefix)/share/applications/git-cola-folder-handler.desktop
 	$(RM) $(DESTDIR)$(prefix)/share/applications/git-dag.desktop
+	$(RM) $(DESTDIR)$(prefix)/share/icons/hicolor/scalable/apps/git-cola.svg
 	$(RM_R) $(DESTDIR)$(prefix)/share/git-cola
 	$(RM_R) $(DESTDIR)$(prefix)/share/doc/git-cola
 	$(RM) $(DESTDIR)$(prefix)/share/locale/*/LC_MESSAGES/git-cola.mo
@@ -107,13 +113,12 @@ coverage:
 
 clean:
 	$(MAKE) -C share/doc/git-cola clean
-	$(FIND) . -name .noseids -print0 | xargs -0 rm -f
-	$(FIND) . -name '*.py[co]' -print0 | xargs -0 rm -f
+	$(FIND) cola test -name '*.py[cod]' -print0 | xargs -0 rm -f
 	$(RM_R) build dist tags git-cola.app
 	$(RM_R) share/locale
 
 tags:
-	$(FIND) . -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
+	$(FIND) cola test -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
 
 pot:
 	$(PYTHON) setup.py build_pot -N -d po

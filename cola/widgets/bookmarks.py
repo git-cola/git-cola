@@ -42,17 +42,18 @@ class BookmarksWidget(QtGui.QWidget):
                 tooltip=N_('Open'), icon=qtutils.open_icon())
         self.open_button.setEnabled(False)
 
-        self.button_layout = QtGui.QHBoxLayout()
-        self.button_layout.setMargin(defs.no_margin)
-        self.button_layout.setSpacing(defs.spacing)
-        self.button_layout.addWidget(self.open_button)
-        self.button_layout.addWidget(self.add_button)
-        self.button_layout.addWidget(self.delete_button)
+        self.setFocusProxy(self.tree)
+        if style == BOOKMARKS:
+            self.setToolTip(N_('Bookmarked repositories'))
+        elif style == RECENT_REPOS:
+            self.setToolTip(N_('Recent repositories'))
+            self.add_button.hide()
 
-        self.main_layout = QtGui.QVBoxLayout()
-        self.main_layout.setMargin(defs.no_margin)
-        self.main_layout.setSpacing(defs.spacing)
-        self.main_layout.addWidget(self.tree)
+        self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                          self.open_button, self.add_button,
+                                          self.delete_button)
+
+        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.tree)
         self.setLayout(self.main_layout)
 
         self.corner_widget = QtGui.QWidget(self)
@@ -60,12 +61,6 @@ class BookmarksWidget(QtGui.QWidget):
         titlebar = parent.titleBarWidget()
         titlebar.add_corner_widget(self.corner_widget)
 
-        self.setFocusProxy(self.tree)
-        if style == BOOKMARKS:
-            self.setToolTip(N_('Bookmarked repositories'))
-        elif style == RECENT_REPOS:
-            self.setToolTip(N_('Recent repositories'))
-            self.add_button.hide()
 
         qtutils.connect_button(self.add_button, self.tree.add_bookmark)
         qtutils.connect_button(self.delete_button, self.tree.delete_bookmark)

@@ -25,8 +25,8 @@ def install():
 
 
 def get_config_actions():
-    cfg = gitcfg.instance()
-    return cfg.get_guitool_names()
+    cfg = gitcfg.current()
+    return cfg.get_guitool_names_and_shortcuts()
 
 
 def confirm_config_action(name, opts):
@@ -69,9 +69,6 @@ class GitCommandWidget(standard.Dialog):
         self.out = ''
         self.err = ''
 
-        self._layout = QtGui.QVBoxLayout(self)
-        self._layout.setContentsMargins(3, 3, 3, 3)
-
         # Create the text browser
         self.output_text = QtGui.QTextBrowser(self)
         self.output_text.setAcceptDrops(False)
@@ -79,8 +76,6 @@ class GitCommandWidget(standard.Dialog):
         self.output_text.setUndoRedoEnabled(False)
         self.output_text.setReadOnly(True)
         self.output_text.setAcceptRichText(False)
-
-        self._layout.addWidget(self.output_text)
 
         # Create abort / close buttons
         self.button_abort = QtGui.QPushButton(self)
@@ -92,7 +87,6 @@ class GitCommandWidget(standard.Dialog):
         self.button_box = QtGui.QDialogButtonBox(self)
         self.button_box.addButton(self.button_abort, QtGui.QDialogButtonBox.RejectRole)
         self.button_box.addButton(self.button_close, QtGui.QDialogButtonBox.AcceptRole)
-        self._layout.addWidget(self.button_box)
 
         # Connect the signals to the process
         self.connect(self.proc, SIGNAL('readyReadStandardOutput()'),
@@ -107,6 +101,11 @@ class GitCommandWidget(standard.Dialog):
 
         qtutils.connect_button(self.button_abort, self.abortProc)
         qtutils.connect_button(self.button_close, self.close)
+
+        self._layout = qtutils.vbox(defs.margin, defs.spacing,
+                                    self.output_text, self.button_box)
+        self.setLayout(self._layout)
+
         self.resize(720, 420)
 
     def set_command(self, command):
@@ -186,36 +185,23 @@ class ActionDialog(standard.Dialog):
 
         self.setWindowModality(Qt.ApplicationModal)
 
-        self.layt = QtGui.QVBoxLayout()
-        self.layt.setMargin(defs.margin)
-        self.layt.setSpacing(defs.spacing)
-        self.setLayout(self.layt)
-
         title = opts.get('title')
         if title:
             self.setWindowTitle(os.path.expandvars(title))
 
         self.prompt = QtGui.QLabel()
-
         prompt = opts.get('prompt')
         if prompt:
             self.prompt.setText(os.path.expandvars(prompt))
-        self.layt.addWidget(self.prompt)
-
 
         self.argslabel = QtGui.QLabel()
         if 'argprompt' not in opts or opts.get('argprompt') is True:
             argprompt = N_('Arguments')
         else:
             argprompt = opts.get('argprompt')
-
         self.argslabel.setText(argprompt)
 
         self.argstxt = QtGui.QLineEdit()
-        self.argslayt = QtGui.QHBoxLayout()
-        self.argslayt.addWidget(self.argslabel)
-        self.argslayt.addWidget(self.argstxt)
-        self.layt.addLayout(self.argslayt)
 
         if not self.opts.get('argprompt'):
             self.argslabel.setMinimumSize(1, 1)
@@ -235,18 +221,25 @@ class ActionDialog(standard.Dialog):
             revprompt = opts.get('revprompt')
         self.revselect = RevisionSelector(self, revs)
         self.revselect.set_revision_label(revprompt)
-        self.layt.addWidget(self.revselect)
 
         if not opts.get('revprompt'):
             self.revselect.hide()
 
         # Close/Run buttons
-        self.btnlayt = QtGui.QHBoxLayout()
-        self.btnlayt.addStretch()
-        self.closebtn = create_button(text=N_('Close'), layout=self.btnlayt)
-        self.runbtn = create_button(text=N_('Run'), layout=self.btnlayt)
+        self.closebtn = create_button(text=N_('Close'))
+        self.runbtn = create_button(text=N_('Run'))
         self.runbtn.setDefault(True)
-        self.layt.addLayout(self.btnlayt)
+
+        self.argslayt = qtutils.hbox(defs.margin, defs.spacing,
+                                     self.argslabel, self.argstxt)
+
+        self.btnlayt = qtutils.hbox(defs.margin, defs.spacing,
+                                    qtutils.STRETCH, self.closebtn, self.runbtn)
+
+        self.layt = qtutils.vbox(defs.margin, defs.spacing,
+                                 self.prompt, self.argslayt,
+                                 self.revselect, self.btnlayt)
+        self.setLayout(self.layt)
 
         # Widen the dialog by default
         self.resize(666, self.height())
@@ -262,49 +255,43 @@ class ActionDialog(standard.Dialog):
 
 
 class RevisionSelector(QtGui.QWidget):
+
     def __init__(self, parent, revs):
         QtGui.QWidget.__init__(self, parent)
 
         self._revs = revs
         self._revdict = dict(revs)
 
-        self._layt = QtGui.QVBoxLayout()
-        self._layt.setMargin(defs.no_margin)
-        self.setLayout(self._layt)
-
-        self._rev_layt = QtGui.QHBoxLayout()
-        self._rev_layt.setMargin(defs.no_margin)
-
         self._rev_label = QtGui.QLabel()
-        self._rev_layt.addWidget(self._rev_label)
-
         self._revision = completion.GitRefLineEdit()
-        self._rev_layt.addWidget(self._revision)
-
-        self._layt.addLayout(self._rev_layt)
-
-        self._radio_layt = QtGui.QHBoxLayout()
-        self._radio_btns = {}
 
         # Create the radio buttons
+        radio_btns = []
+        self._radio_btns = {}
         for label, rev_list in self._revs:
             radio = QtGui.QRadioButton()
             radio.setText(label)
             radio.setObjectName(label)
             qtutils.connect_button(radio, self._set_revision_list)
-            self._radio_layt.addWidget(radio)
+            radio_btns.append(radio)
             self._radio_btns[label] = radio
-
-        self._radio_layt.addStretch()
-
-        self._layt.addLayout(self._radio_layt)
+        radio_btns.append(qtutils.STRETCH)
 
         self._rev_list = QtGui.QListWidget()
-        self._layt.addWidget(self._rev_list)
-
         label, rev_list = self._revs[0]
         self._radio_btns[label].setChecked(True)
         qtutils.set_items(self._rev_list, rev_list)
+
+        self._rev_layt = qtutils.hbox(defs.no_margin, defs.spacing,
+                                      self._rev_label, self._revision)
+
+        self._radio_layt = qtutils.hbox(defs.margin, defs.spacing,
+                                        *radio_btns)
+
+        self._layt = qtutils.vbox(defs.no_margin, defs.spacing,
+                                  self._rev_layt, self._radio_layt,
+                                  self._rev_list)
+        self.setLayout(self._layt)
 
         self.connect(self._rev_list, SIGNAL('itemSelectionChanged()'),
                      self._rev_list_selection_changed)

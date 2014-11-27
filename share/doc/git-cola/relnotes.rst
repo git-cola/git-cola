@@ -1,3 +1,82 @@
+git-cola v2.0.8
+===============
+Usability, bells and whistles
+-----------------------------
+* `git cola` can now create GPG-signed commits and merges.
+
+  https://github.com/git-cola/git-cola/issues/149
+
+  See the documentation for details about setting up a GPG agent.
+
+* The status widget learned to copy relative paths when `Ctrl+x` is pressed.
+
+  https://github.com/git-cola/git-cola/issues/358
+
+* Custom GUI actions can now define their own keyboard shortcuts by
+  setting `guitool.$name.shortcut` to a string understood by Qt's
+  `QAction::setShortcut()` API, e.g. `Alt+x`.
+
+  See http://qt-project.org/doc/qt-4.8/qkeysequence.html#QKeySequence-2
+  for more details about the supported values.
+
+* `git cola` learned to rename branches.
+
+  https://github.com/git-cola/git-cola/pull/364
+
+  https://github.com/git-cola/git-cola/issues/278
+
+Fixes
+-----
+* `sphinxtogithub.py` was fixed for Python3.
+
+  https://github.com/git-cola/git-cola/pull/353
+
+* The commit that changed how we read remotes from `git remote`
+  to parsing `git config` was reverted since it created problems
+  for some users.
+
+* Fixed a crash when using the `rebase edit` feature.
+
+  https://github.com/git-cola/git-cola/issues/351
+
+* Better drag-and-drop behavior when dropping into gnome-terminal.
+
+  https://github.com/git-cola/git-cola/issues/373
+
+Packaging
+---------
+* The `git-cola-folder-handler.desktop` file handler was fixed
+  to pass validation by `desktop-file-validate`.
+
+  https://github.com/git-cola/git-cola/issues/356
+
+* The `git.svg` icon was renamed to `git-cola.svg`, and `git cola` was taught
+  to prefer icons from the desktop theme when available.
+
+git-cola v2.0.7
+===============
+Usability, bells and whistles
+-----------------------------
+* New hotkey: `Shift+Ctrl+M` merges branches.
+
+* New hotkey: `Ctrl+R` refreshes the DAG viewer.
+
+  https://github.com/git-cola/git-cola/issues/347
+
+Fixes
+-----
+* We now use `git config` to parse the list of remotes
+  instead of parsing the output of `git remote`, which
+  is a Git porcelain and should not be used by scripts.
+
+* Avoid "C++ object has been deleted" errors from PyQt4.
+
+  https://github.com/git-cola/git-cola/issues/346
+
+Packaging
+---------
+* The `make install` target now uses `install` instead of `cp`.
+
 git-cola v2.0.6
 ===============
 Usability, bells and whistles
@@ -7,22 +86,22 @@ Usability, bells and whistles
 * The status and browse widgets now allow drag-and-drop into
   external applications.
 
-  https://github.com/git-cola/git-cola/issue/335
+  https://github.com/git-cola/git-cola/issues/335
 
 * We now show a progress bar when cloning repositories.
 
-  https://github.com/git-cola/git-cola/issue/312
+  https://github.com/git-cola/git-cola/issues/312
 
 * The bookmarks widget was simplified to not need a
   separate dialog.
 
-  https://github.com/git-cola/git-cola/issue/289
+  https://github.com/git-cola/git-cola/issues/289
 
 * Updated Traditional Chinese translation.
 
 * We now display a warning when trying to rebase with uncommitted changes.
 
-  https://github.com/git-cola/git-cola/issue/338
+  https://github.com/git-cola/git-cola/issues/338
 
 * The status widget learned to filter paths.
   `Shift+Ctrl+s` toggles the filter widget.

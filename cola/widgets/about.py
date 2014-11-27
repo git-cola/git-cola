@@ -68,17 +68,12 @@ class AboutView(QtGui.QDialog):
         self.close_button.setText(N_('Close'))
         self.close_button.setDefault(True)
 
-        self.button_layout = QtGui.QHBoxLayout()
-        self.button_layout.addStretch()
-        self.button_layout.addWidget(self.close_button)
+        self.button_layout = qtutils.hbox(defs.spacing, defs.margin,
+                                          qtutils.STRETCH, self.close_button)
 
-        self.main_layout = QtGui.QVBoxLayout()
-        self.main_layout.setMargin(defs.no_margin)
-        self.main_layout.setSpacing(defs.spacing)
-
-        self.main_layout.addWidget(self.label)
-        self.main_layout.addWidget(self.text)
-        self.main_layout.addLayout(self.button_layout)
+        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
+                                        self.label, self.text,
+                                        self.button_layout)
         self.setLayout(self.main_layout)
 
         self.resize(666, 420)
@@ -112,22 +107,16 @@ def show_shortcuts():
         parent = qtutils.active_window()
         widget = show_shortcuts.widget = QtGui.QDialog(parent)
         widget.setWindowModality(Qt.WindowModal)
+        widget.setWindowTitle(N_('Shortcuts'))
 
         web = QtWebKit.QWebView(parent)
         web.setHtml(html)
 
-        layout = QtGui.QHBoxLayout()
-        layout.setMargin(defs.no_margin)
-        layout.setSpacing(defs.no_spacing)
-        layout.addWidget(web)
-
-        widget.setWindowTitle(N_('Shortcuts'))
+        layout = qtutils.hbox(defs.no_margin, defs.spacing, web)
         widget.setLayout(layout)
         widget.resize(800, min(parent.height(), 600))
 
         qtutils.add_action(widget, N_('Close'), widget.accept,
-                           Qt.Key_Question,
-                           Qt.Key_Enter,
-                           Qt.Key_Return)
+                           Qt.Key_Question, Qt.Key_Enter, Qt.Key_Return)
     widget.show()
     return widget

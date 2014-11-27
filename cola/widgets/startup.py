@@ -80,21 +80,14 @@ class StartupDialog(QtGui.QDialog):
             self.bookmarks_label.hide()
             self.bookmarks.hide()
 
-        self.button_layout = QtGui.QHBoxLayout()
-        self.button_layout.setMargin(defs.margin)
-        self.button_layout.setSpacing(defs.spacing)
-        self.button_layout.addWidget(self.open_button)
-        self.button_layout.addWidget(self.clone_button)
-        self.button_layout.addWidget(self.new_button)
-        self.button_layout.addStretch()
-        self.button_layout.addWidget(self.close_button)
+        self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                          self.open_button, self.clone_button,
+                                          self.new_button, qtutils.STRETCH,
+                                          self.close_button)
 
-        self.main_layout = QtGui.QVBoxLayout()
-        self.main_layout.setMargin(defs.margin)
-        self.main_layout.setSpacing(defs.margin)
-        self.main_layout.addWidget(self.bookmarks_label)
-        self.main_layout.addWidget(self.bookmarks)
-        self.main_layout.addLayout(self.button_layout)
+        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
+                                        self.bookmarks_label, self.bookmarks,
+                                        self.button_layout)
         self.setLayout(self.main_layout)
 
         qtutils.connect_button(self.open_button, self.open_repo)

@@ -3,6 +3,7 @@ from __future__ import division, absolute_import, unicode_literals
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import cmds
@@ -68,32 +69,16 @@ class StashView(Dialog):
         self.keep_index.setChecked(True)
 
         # Arrange layouts
-        self.main_layt = QtGui.QVBoxLayout()
-        self.main_layt.setMargin(defs.margin)
-        self.main_layt.setSpacing(defs.spacing)
+        self.splitter = qtutils.splitter(Qt.Horizontal,
+                                         self.stash_list, self.stash_text)
 
-        self.btn_layt = QtGui.QHBoxLayout()
-        self.btn_layt.setMargin(defs.no_margin)
-        self.btn_layt.setSpacing(defs.spacing)
+        self.btn_layt = qtutils.hbox(defs.no_margin, defs.spacing,
+                                     self.button_save, self.button_apply,
+                                     self.button_drop, self.keep_index,
+                                     qtutils.STRETCH, self.button_close)
 
-        self.splitter = QtGui.QSplitter()
-        self.splitter.setHandleWidth(defs.handle_width)
-        self.splitter.setOrientation(QtCore.Qt.Horizontal)
-        self.splitter.setChildrenCollapsible(True)
-        self.splitter.setStretchFactor(0, 1)
-        self.splitter.setStretchFactor(1, 1)
-        self.splitter.insertWidget(0, self.stash_list)
-        self.splitter.insertWidget(1, self.stash_text)
-
-        self.btn_layt.addWidget(self.button_save)
-        self.btn_layt.addWidget(self.button_apply)
-        self.btn_layt.addWidget(self.button_drop)
-        self.btn_layt.addWidget(self.keep_index)
-        self.btn_layt.addStretch()
-        self.btn_layt.addWidget(self.button_close)
-
-        self.main_layt.addWidget(self.splitter)
-        self.main_layt.addLayout(self.btn_layt)
+        self.main_layt = qtutils.vbox(defs.margin, defs.spacing,
+                                      self.splitter, self.btn_layt)
         self.setLayout(self.main_layt)
 
         self.splitter.setSizes([self.width()//3, self.width()*2//3])
