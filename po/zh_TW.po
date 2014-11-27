@@ -411,12 +411,12 @@ msgstr "移出版本提交準備區域"
 #: cola/cmds.py:1498
 #, python-format
 msgid "Unstaging: %s"
-msgstr "正在將 %s 移出版本提交準備區域"
+msgstr "正在將「%s」移出版本提交準備區域"
 
 #: cola/cmds.py:1526
 #, python-format
 msgid "Untracking: %s"
-msgstr "正在將 %s 移出版本提交準備區域"
+msgstr "正在將「%s」移出版本提交準備區域"
 
 #: cola/cmds.py:1611
 msgid "Error Launching History Browser"
@@ -2125,7 +2125,7 @@ msgstr "非快速前移式的撈取(fetch)將會覆寫本地版本倉庫的變�
 #: cola/widgets/remote.py:432
 #, python-format
 msgid "Force fetching from %s?"
-msgstr "是否要強制自 %s 撈取(fetch)？"
+msgstr "是否要強制自「%s」撈取(fetch)？"
 
 #: cola/widgets/remote.py:433
 msgid "Force Fetch"
@@ -2146,7 +2146,7 @@ msgstr ""
 #: cola/widgets/remote.py:438
 #, python-format
 msgid "Force push to %s?"
-msgstr "要強制推送至 %s 遠端版本倉庫嗎？"
+msgstr "要強制推送至「%s」遠端版本倉庫嗎？"
 
 #: cola/widgets/remote.py:439
 msgid "Force Push"
