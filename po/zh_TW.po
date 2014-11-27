@@ -118,29 +118,27 @@ msgid "Rename"
 msgstr "更名..."
 
 #: cola/cmds.py:494
-#, fuzzy
 msgid "Delete Bookmark?"
-msgstr "書籤"
+msgstr "要刪除書籤嗎？"
 
 #: cola/cmds.py:495
 #, python-format
 msgid "%s will be removed from your bookmarks."
-msgstr ""
+msgstr "「%s」版本倉庫將會從您的書籤中被刪除。"
 
 #: cola/cmds.py:496
-#, fuzzy
 msgid "Delete Bookmark"
-msgstr "書籤"
+msgstr "刪除書籤"
 
 #: cola/cmds.py:508
 #, python-format
 msgid "Remove %s from the recent list?"
-msgstr ""
+msgstr "要將「%s」版本倉庫從最近使用的版本倉庫清單中移除嗎？"
 
 #: cola/cmds.py:509
 #, python-format
 msgid "%s will be removed from your recent repositories."
-msgstr ""
+msgstr "「%s」版本倉庫將從您最近使用的版本倉庫中移除。"
 
 #: cola/cmds.py:510 cola/widgets/patch.py:92 cola/widgets/patch.py:105
 msgid "Remove"
@@ -1420,7 +1418,7 @@ msgstr "忽略所有的空白"
 
 #: cola/widgets/diff.py:72
 msgid "Show whole surrounding functions of changes"
-msgstr ""
+msgstr "秀出整個包含變更的函式內容"
 
 #: cola/widgets/diff.py:77 cola/widgets/diff.py:78
 msgid "Diff Options"
@@ -1616,9 +1614,8 @@ msgid "Bookmarks"
 msgstr "書籤"
 
 #: cola/widgets/main.py:113
-#, fuzzy
 msgid "Recent"
-msgstr "重置"
+msgstr "最近使用的版本倉庫"
 
 #: cola/widgets/main.py:131 cola/widgets/merge.py:84
 msgid "Commit"
@@ -1895,7 +1892,7 @@ msgstr "視覺化顯示"
 
 #: cola/widgets/merge.py:76
 msgid "Squash"
-msgstr ""
+msgstr "合併為單一版本提交"
 
 #: cola/widgets/merge.py:79
 #, fuzzy
@@ -2314,7 +2311,7 @@ msgstr "將路徑複製到剪貼簿"
 
 #: cola/widgets/status.py:168
 msgid "Move file(s) to trash"
-msgstr ""
+msgstr "將檔案移動到資源回收筒"
 
 #: cola/widgets/status.py:177
 msgid "Delete File(s)..."
