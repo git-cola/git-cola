@@ -1601,7 +1601,7 @@ msgstr ""
 #: cola/widgets/log.py:38
 #, python-format
 msgid "exit code %s"
-msgstr "結束狀態碼為%s"
+msgstr "程式以 %s 狀態碼結束"
 
 #: cola/widgets/main.py:90
 msgid "Browser"
