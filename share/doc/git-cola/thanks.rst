@@ -74,6 +74,7 @@ Thanks
 * Sven Claussner
 * Taylor Braun-Jones
 * Thomas Kluyver
+* Trevor Alexander
 * Ugo Riboni
 * Uri Okrent
 * Ｖ字龍 (Vdragon)

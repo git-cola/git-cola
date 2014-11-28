@@ -14,7 +14,7 @@ try:
     from pyinotify import Notifier
     from pyinotify import EventsCodes
     AVAILABLE = True
-except ImportError:
+except:
     ProcessEvent = object
     AVAILABLE = False
 
