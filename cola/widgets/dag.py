@@ -1,6 +1,7 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import collections
+import subprocess
 import math
 
 from PyQt4 import QtGui
@@ -28,6 +29,7 @@ from cola.widgets.standard import MainWindow
 from cola.widgets.standard import TreeWidget
 from cola.widgets.diff import COMMITS_SELECTED
 from cola.widgets.diff import DiffWidget
+from cola.widgets.filelist import HISTORIES_SELECTED
 from cola.widgets.filelist import FileWidget
 from cola.compat import ustr
 
@@ -355,6 +357,7 @@ class GitDAG(MainWindow):
         self.notifier = notifier = observable.Observable()
         self.notifier.refs_updated = refs_updated = 'refs_updated'
         self.notifier.add_observer(refs_updated, self.display)
+        self.notifier.add_observer(HISTORIES_SELECTED, self.histories_selected)
 
         self.treewidget = CommitTreeWidget(notifier, self)
         self.diffwidget = DiffWidget(notifier, self)
@@ -573,6 +576,12 @@ class GitDAG(MainWindow):
         MainWindow.resizeEvent(self, e)
         self.treewidget.adjust_columns()
 
+    def histories_selected(self, histories):
+        argv = [self.model.currentbranch, '--']
+        argv.extend(histories)
+        text = subprocess.list2cmdline(argv)
+        self.revtext.setText(text)
+        self.display()
 
 class ReaderThread(QtCore.QThread):
     commits_ready = SIGNAL('commits_ready')

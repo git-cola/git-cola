@@ -5,10 +5,12 @@ from PyQt4.QtCore import SIGNAL
 
 from cola.i18n import N_
 from cola.git import git
+from cola import qtutils
 from cola.widgets.standard import TreeWidget
 from cola.widgets.diff import COMMITS_SELECTED
 from cola.widgets.diff import FILES_SELECTED
 
+HISTORIES_SELECTED = 'HISTORIES_SELECTED'
 
 class FileWidget(TreeWidget):
 
@@ -65,6 +67,16 @@ class FileWidget(TreeWidget):
     def resizeEvent(self, e):
         self.adjust_columns()
 
+    def contextMenuEvent(self, event):
+        menu = QtGui.QMenu(self)
+        menu.addAction(qtutils.add_action(self, N_('Show history'),
+                               self.show_file_history))
+        menu.exec_(self.mapToGlobal(event.pos()))
+
+    def show_file_history(self):
+        items = self.selected_items()
+        self.notifier.notify_observers(HISTORIES_SELECTED,
+                                       [i.file_name for i in items])
 
 class FileTreeWidgetItem(QtGui.QTreeWidgetItem):
 
