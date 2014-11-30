@@ -25,6 +25,9 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/278
 
+* `git dag` now has a "Show history" context menu which can be used to filter
+  history using the selected paths.
+
 Fixes
 -----
 * `sphinxtogithub.py` was fixed for Python3.
