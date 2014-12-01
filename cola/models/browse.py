@@ -86,7 +86,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         return qtutils.mimedata_from_paths(paths)
 
     def mimeTypes(self):
-        return qtutils.mimetypes()
+        return qtutils.path_mimetypes()
 
     def _create_column(self, col, path):
         """Creates a StandardItem for use in a treeview cell."""

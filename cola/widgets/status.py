@@ -904,7 +904,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         return qtutils.mimedata_from_paths(paths)
 
     def mimeTypes(self):
-        return qtutils.mimetypes()
+        return qtutils.path_mimetypes()
 
 
 class StatusFilterWidget(QtGui.QWidget):

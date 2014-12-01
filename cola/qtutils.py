@@ -771,7 +771,7 @@ def mimedata_from_paths(paths):
     return mimedata
 
 
-def mimetypes():
+def path_mimetypes():
     return ['text/uri-list', 'text/x-moz-url']
 
 # Syntax highlighting
