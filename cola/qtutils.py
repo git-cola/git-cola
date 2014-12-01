@@ -436,12 +436,6 @@ def icon_file(filename, staged=False, untracked=False):
     return (ifile, exists)
 
 
-def icon_for_file(filename, staged=False, untracked=False):
-    """Returns a QIcon for a particular file path."""
-    ifile = icon_file(filename, staged=staged, untracked=untracked)
-    return icon(ifile)
-
-
 def create_treeitem(filename, staged=False, untracked=False, check=True):
     """Given a filename, return a QListWidgetItem suitable
     for adding to a QListWidget.  "staged" and "untracked"
@@ -454,14 +448,6 @@ def create_treeitem(filename, staged=False, untracked=False, check=True):
         ifile = resources.icon('staged.png')
     return create_treewidget_item(filename, ifile, exists=exists)
 
-
-def update_file_icons(widget, items, staged=True,
-                      untracked=False, offset=0):
-    """Populate a QListWidget with custom icon items."""
-    for idx, model_item in enumerate(items):
-        item = widget.item(idx+offset)
-        if item:
-            item.setIcon(icon_for_file(model_item, staged, untracked))
 
 @memoize
 def cached_icon(key):
