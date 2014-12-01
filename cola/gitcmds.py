@@ -517,13 +517,6 @@ def diff_worktree(paths=None):
         paths = []
     args = ['--'] + paths
     status, out, err = git.diff_files(z=True, *args)
-    if status != 0:
-        # handle git init
-        out = git.ls_files(modified=True, z=True)[STDOUT]
-        if out:
-            modified = out[:-1].split('\0')
-        return modified, submodules
-
     while out:
         rest, out = out.split('\0', 1)
         name, out = out.split('\0', 1)
