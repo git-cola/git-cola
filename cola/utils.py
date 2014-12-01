@@ -2,7 +2,6 @@
 """This module provides miscellaneous utility functions."""
 from __future__ import division, absolute_import, unicode_literals
 
-import mimetypes
 import os
 import random
 import re
@@ -12,30 +11,9 @@ import time
 import traceback
 
 from cola import core
-from cola import resources
 import hashlib
 
 random.seed(hash(time.time()))
-
-
-KNOWN_FILE_MIME_TYPES = [
-    ('text',    'script.png'),
-    ('image',   'image.png'),
-    ('python',  'script.png'),
-    ('ruby',    'script.png'),
-    ('shell',   'script.png'),
-    ('perl',    'script.png'),
-    ('octet',   'binary.png'),
-]
-
-KNOWN_FILE_EXTENSIONS = {
-    '.java':    'script.png',
-    '.groovy':  'script.png',
-    '.cpp':     'script.png',
-    '.c':       'script.png',
-    '.h':       'script.png',
-    '.cxx':     'script.png',
-}
 
 
 def add_parents(paths):
@@ -52,27 +30,6 @@ def add_parents(paths):
                 path_entry_set.add(parent_dir)
                 parent_dir = dirname(parent_dir)
     return path_entry_set
-
-
-def ident_file_type(filename):
-    """Returns an icon name based on the filename."""
-    mimetype = mimetypes.guess_type(filename)[0]
-    if mimetype is not None:
-        mimetype = mimetype.lower()
-        for filetype, icon_name in KNOWN_FILE_MIME_TYPES:
-            if filetype in mimetype:
-                return icon_name
-    extension = os.path.splitext(filename)[1]
-    return KNOWN_FILE_EXTENSIONS.get(extension.lower(), 'generic.png')
-
-
-def file_icon(filename):
-    """
-    Returns the full path to an icon file corresponding to
-    filename"s contents.
-    """
-    exists = core.exists(filename)
-    return (resources.icon(ident_file_type(filename, exists)), exists)
 
 
 def format_exception(e):

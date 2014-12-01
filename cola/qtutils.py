@@ -3,6 +3,7 @@
 """
 from __future__ import division, absolute_import, unicode_literals
 
+import mimetypes
 import os
 import re
 import subprocess
@@ -22,6 +23,26 @@ from cola.interaction import Interaction
 from cola.models.prefs import FONTDIFF
 from cola.widgets import defs
 from cola.compat import ustr
+
+
+KNOWN_FILE_MIME_TYPES = [
+    ('text',    'script.png'),
+    ('image',   'image.png'),
+    ('python',  'script.png'),
+    ('ruby',    'script.png'),
+    ('shell',   'script.png'),
+    ('perl',    'script.png'),
+    ('octet',   'binary.png'),
+]
+
+KNOWN_FILE_EXTENSIONS = {
+    '.java':    'script.png',
+    '.groovy':  'script.png',
+    '.cpp':     'script.png',
+    '.c':       'script.png',
+    '.h':       'script.png',
+    '.cxx':     'script.png',
+}
 
 
 def connect_action(action, fn):
@@ -420,6 +441,18 @@ def set_items(widget, items):
     add_items(widget, items)
 
 
+def ident_file_type(filename):
+    """Returns an icon name based on the filename."""
+    mimetype = mimetypes.guess_type(filename)[0]
+    if mimetype is not None:
+        mimetype = mimetype.lower()
+        for filetype, icon_name in KNOWN_FILE_MIME_TYPES:
+            if filetype in mimetype:
+                return icon_name
+    extension = os.path.splitext(filename)[1]
+    return KNOWN_FILE_EXTENSIONS.get(extension.lower(), 'generic.png')
+
+
 def icon_file(filename, staged=False, untracked=False):
     """Returns a file path representing a corresponding file path."""
     exists = True
@@ -432,7 +465,11 @@ def icon_file(filename, staged=False, untracked=False):
     elif untracked:
         ifile = resources.icon('untracked.png')
     else:
-        (ifile, exists) = utils.file_icon(filename)
+        exists = core.exists(filename)
+        if exists:
+            ifile = resources.icon(ident_file_type(filename))
+        else:
+            ifile = resources.icon('removed.png')
     return (ifile, exists)
 
 
