@@ -194,9 +194,9 @@ def untracked_files(git=git, paths=None):
 
     if paths is None:
         paths = []
-    filter_paths = ['--'] + paths
+    args = ['--'] + paths
     out = git.ls_files(z=True, others=True, exclude_standard=True,
-                       *filter_paths)[STDOUT]
+                       *args)[STDOUT]
     if out:
         return out[:-1].split('\0')
     return []
@@ -485,9 +485,8 @@ def diff_index(head, cached=True, paths=None):
 
     if paths is None:
         paths = []
-    filter_paths = [head, '--'] + paths
-    status, out, err = git.diff_index(cached=cached, z=True,
-                                      *filter_paths)
+    args = [head, '--'] + paths
+    status, out, err = git.diff_index(cached=cached, z=True, *args)
     if status != 0:
         # handle git init
         return tracked_files(), unmerged, submodules
@@ -512,8 +511,8 @@ def diff_worktree(paths=None):
 
     if paths is None:
         paths = []
-    filter_paths = ['--'] + paths
-    status, out, err = git.diff_files(z=True, *filter_paths)
+    args = ['--'] + paths
+    status, out, err = git.diff_files(z=True, *args)
     if status != 0:
         # handle git init
         out = git.ls_files(modified=True, z=True)[STDOUT]
