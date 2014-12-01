@@ -13,6 +13,9 @@ from cola.git import STDOUT
 from cola.i18n import N_
 
 
+EMPTY_TREE_SHA1 = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+
+
 class InvalidRepositoryError(Exception):
     pass
 
@@ -489,7 +492,8 @@ def diff_index(head, cached=True, paths=None):
     status, out, err = git.diff_index(cached=cached, z=True, *args)
     if status != 0:
         # handle git init
-        return tracked_files(), unmerged, submodules
+        args[0] = EMPTY_TREE_SHA1
+        status, out, err = git.diff_index(cached=cached, z=True, *args)
 
     while out:
         rest, out = out.split('\0', 1)
