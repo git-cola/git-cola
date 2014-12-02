@@ -459,18 +459,18 @@ def icon_file(filename, staged=False, untracked=False):
     if staged:
         exists = core.exists(filename)
         if exists:
-            ifile = resources.icon('staged-item.png')
+            icon_name = 'staged-item.png'
         else:
-            ifile = resources.icon('removed.png')
+            icon_name = 'removed.png'
     elif untracked:
-        ifile = resources.icon('untracked.png')
+        icon_name = 'untracked.png'
     else:
         exists = core.exists(filename)
         if exists:
-            ifile = resources.icon(ident_file_type(filename))
+            icon_name = ident_file_type(filename)
         else:
-            ifile = resources.icon('removed.png')
-    return (ifile, exists)
+            icon_name = 'removed.png'
+    return (icon_name, exists)
 
 
 def create_treeitem(filename, staged=False, untracked=False, check=True):
@@ -478,12 +478,13 @@ def create_treeitem(filename, staged=False, untracked=False, check=True):
     for adding to a QListWidget.  "staged" and "untracked"
     controls whether to use the appropriate icons."""
     if check:
-        (ifile, exists) = icon_file(filename,
-                                    staged=staged, untracked=untracked)
+        (icon_name, exists) = icon_file(filename, staged=staged,
+                                        untracked=untracked)
     else:
         exists = True
-        ifile = resources.icon('staged.png')
-    return create_treewidget_item(filename, ifile, exists=exists)
+        icon_name = 'staged.png'
+    return create_treewidget_item(filename, resources.icon(icon_name),
+                                  exists=exists)
 
 
 @memoize
