@@ -441,7 +441,7 @@ def set_items(widget, items):
     add_items(widget, items)
 
 
-def ident_file_type(filename):
+def icon_name_for_filename(filename):
     """Returns an icon name based on the filename."""
     mimetype = mimetypes.guess_type(filename)[0]
     if mimetype is not None:
@@ -453,7 +453,7 @@ def ident_file_type(filename):
     return KNOWN_FILE_EXTENSIONS.get(extension.lower(), 'generic.png')
 
 
-def icon_file(filename, staged=False, untracked=False):
+def icon_name_for_file(filename, staged=False, untracked=False):
     """Returns a file path representing a corresponding file path."""
     exists = True
     if staged:
@@ -467,7 +467,7 @@ def icon_file(filename, staged=False, untracked=False):
     else:
         exists = core.exists(filename)
         if exists:
-            icon_name = ident_file_type(filename)
+            icon_name = icon_name_for_filename(filename)
         else:
             icon_name = 'removed.png'
     return (icon_name, exists)
@@ -478,8 +478,8 @@ def create_treeitem(filename, staged=False, untracked=False, check=True):
     for adding to a QListWidget.  "staged" and "untracked"
     controls whether to use the appropriate icons."""
     if check:
-        (icon_name, exists) = icon_file(filename, staged=staged,
-                                        untracked=untracked)
+        (icon_name, exists) = icon_name_for_file(filename, staged=staged,
+                                                 untracked=untracked)
     else:
         exists = True
         icon_name = 'staged.png'
