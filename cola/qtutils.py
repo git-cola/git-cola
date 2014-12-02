@@ -482,7 +482,7 @@ def create_treeitem(filename, staged=False, untracked=False, check=True):
                                                  untracked=untracked)
     else:
         exists = True
-        icon_name = 'staged.png'
+        icon_name = 'staged-item.png'
     return create_treewidget_item(filename, resources.icon(icon_name),
                                   exists=exists)
 
