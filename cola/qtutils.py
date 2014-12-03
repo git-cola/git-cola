@@ -163,10 +163,10 @@ class TreeWidgetItem(QtGui.QTreeWidgetItem):
 
     TYPE = QtGui.QStandardItem.UserType + 101
 
-    def __init__(self, path, icon, exists):
+    def __init__(self, path, icon, deleted):
         QtGui.QTreeWidgetItem.__init__(self)
         self.path = path
-        self.exists = exists
+        self.deleted = deleted
         self.setIcon(0, cached_icon_from_path(icon))
         self.setText(0, path)
 
@@ -448,37 +448,19 @@ def icon_name_for_filename(filename):
     return KNOWN_FILE_EXTENSIONS.get(extension.lower(), 'generic.png')
 
 
-def icon_name_for_file(filename, staged=False, untracked=False):
-    """Returns a file path representing a corresponding file path."""
-    exists = True
-    if staged:
-        exists = core.exists(filename)
-        if exists:
-            icon_name = 'staged-item.png'
-        else:
-            icon_name = 'removed.png'
+def create_treeitem(filename, staged=False, deleted=False, untracked=False):
+    """Given a filename, return a TreeListItem suitable for adding to a
+    QListWidget.  "staged", "deleted, and "untracked" control whether to use
+    the appropriate icons."""
+    if deleted:
+        icon_name = 'removed.png'
+    elif staged:
+        icon_name = 'staged-item.png'
     elif untracked:
         icon_name = 'untracked.png'
     else:
-        exists = core.exists(filename)
-        if exists:
-            icon_name = icon_name_for_filename(filename)
-        else:
-            icon_name = 'removed.png'
-    return (icon_name, exists)
-
-
-def create_treeitem(filename, staged=False, untracked=False, check=True):
-    """Given a filename, return a QListWidgetItem suitable
-    for adding to a QListWidget.  "staged" and "untracked"
-    controls whether to use the appropriate icons."""
-    if check:
-        (icon_name, exists) = icon_name_for_file(filename, staged=staged,
-                                                 untracked=untracked)
-    else:
-        exists = True
-        icon_name = 'staged-item.png'
-    return TreeWidgetItem(filename, resources.icon(icon_name), exists=exists)
+        icon_name = icon_name_for_filename(filename)
+    return TreeWidgetItem(filename, resources.icon(icon_name), deleted=deleted)
 
 
 @memoize

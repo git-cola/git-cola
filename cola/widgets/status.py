@@ -401,11 +401,12 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def set_staged(self, items):
         """Adds items to the 'Staged' subtree."""
         self._set_subtree(items, self.idx_staged, staged=True,
-                          check=not self.m.amending())
+                          deleted_set=self.m.staged_deleted)
 
     def set_modified(self, items):
         """Adds items to the 'Modified' subtree."""
-        self._set_subtree(items, self.idx_modified)
+        self._set_subtree(items, self.idx_modified,
+                          deleted_set=self.m.unstaged_deleted)
 
     def set_unmerged(self, items):
         """Adds items to the 'Unmerged' subtree."""
@@ -418,7 +419,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def _set_subtree(self, items, idx,
                      staged=False,
                      untracked=False,
-                     check=True):
+                     deleted_set=None):
         """Add a list of items to a treewidget item."""
         self.blockSignals(True)
         parent = self.topLevelItem(idx)
@@ -433,9 +434,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             pass
 
         for item in items:
+            deleted = (deleted_set is not None and item in deleted_set)
             treeitem = qtutils.create_treeitem(item,
                                                staged=staged,
-                                               check=check,
+                                               deleted=deleted,
                                                untracked=untracked)
             parent.addChild(treeitem)
         self.expand_items(idx, items)
@@ -522,8 +524,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             action.setShortcut(cmds.Unstage.SHORTCUT)
 
         # Do all of the selected items exist?
-        staged_items = self.staged_items()
-        all_exist = all([i.exists for i in staged_items])
+        all_exist = all(not i in self.m.staged_deleted and core.exists(i)
+                        for i in self.staged())
 
         if all_exist:
             menu.addAction(self.launch_editor_action)
@@ -609,8 +611,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             action.setShortcut(cmds.Stage.SHORTCUT)
 
         # Do all of the selected items exist?
-        unstaged_items = self.unstaged_items()
-        all_exist = all([i.exists for i in unstaged_items])
+        all_exist = all(not i in self.m.unstaged_deleted and core.exists(i)
+                        for i in self.staged())
 
         if all_exist and self.unstaged():
             menu.addAction(self.launch_editor_action)
@@ -837,17 +839,21 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             cmds.do(cls)
         # A staged file
         elif category == self.idx_staged:
-            cmds.do(cmds.DiffStaged, self.staged()[0])
+            item = self.staged_items()[0]
+            cmds.do(cmds.DiffStaged, item.path, item.deleted)
 
         # A modified file
         elif category == self.idx_modified:
-            cmds.do(cmds.Diff, self.modified()[0])
+            item = self.modified_items()[0]
+            cmds.do(cmds.Diff, item.path, item.deleted)
 
         elif category == self.idx_unmerged:
-            cmds.do(cmds.Diff, self.unmerged()[0])
+            item = self.unmerged_items()[0]
+            cmds.do(cmds.Diff, item.path)
 
         elif category == self.idx_untracked:
-            cmds.do(cmds.ShowUntracked, self.unstaged()[0])
+            item = self.unstaged_items()[0]
+            cmds.do(cmds.ShowUntracked, item.path)
 
     def move_up(self):
         idx = self.selected_idx()
@@ -900,7 +906,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def mimeData(self, items):
         """Return a list of absolute-path URLs"""
-        paths = qtutils.paths_from_items(items, item_filter=lambda x: x.exists)
+        paths = qtutils.paths_from_items(items, item_filter=lambda item:
+                                                    not item.deleted
+                                                    and core.exists(item.path))
         return qtutils.mimedata_from_paths(paths)
 
     def mimeTypes(self):

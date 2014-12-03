@@ -646,7 +646,7 @@ class DeleteRemoteBranch(Command):
 class Diff(Command):
     """Perform a diff and set the model's current text."""
 
-    def __init__(self, filename, cached=False):
+    def __init__(self, filename, cached=False, deleted=False):
         Command.__init__(self)
         opts = {}
         if cached:
@@ -654,7 +654,9 @@ class Diff(Command):
         self.new_filename = filename
         self.new_mode = self.model.mode_worktree
         self.new_diff_text = gitcmds.diff_helper(filename=filename,
-                                                 cached=cached, **opts)
+                                                 cached=cached,
+                                                 deleted=deleted,
+                                                 **opts)
 
 
 class Diffstat(Command):
@@ -677,8 +679,8 @@ class Diffstat(Command):
 class DiffStaged(Diff):
     """Perform a staged diff on a file."""
 
-    def __init__(self, filename):
-        Diff.__init__(self, filename, cached=True)
+    def __init__(self, filename, deleted=None):
+        Diff.__init__(self, filename, cached=True, deleted=deleted)
         self.new_mode = self.model.mode_index
 
 

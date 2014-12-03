@@ -82,6 +82,8 @@ class MainModel(Observable):
         self.untracked = []
         self.unmerged = []
         self.upstream_changed = []
+        self.staged_deleted = set()
+        self.unstaged_deleted = set()
         self.submodules = set()
 
         self.local_branches = []
@@ -192,8 +194,10 @@ class MainModel(Observable):
         self.modified = state.get('modified', [])
         self.unmerged = state.get('unmerged', [])
         self.untracked = state.get('untracked', [])
-        self.submodules = state.get('submodules', set())
         self.upstream_changed = state.get('upstream_changed', [])
+        self.staged_deleted = state.get('staged_deleted', set())
+        self.unstaged_deleted = state.get('unstaged_deleted', set())
+        self.submodules = state.get('submodules', set())
 
         sel = selection_model()
         if self.is_empty():

@@ -279,6 +279,7 @@ def diff_helper(commit=None,
                 endref=None,
                 filename=None,
                 cached=True,
+                deleted=False,
                 head=None,
                 amending=False,
                 with_diff_header=False,
@@ -306,11 +307,6 @@ def diff_helper(commit=None,
             argv.append(filename)
             cfg = gitcfg.current()
             encoding = cfg.file_encoding(filename)
-
-    if filename is not None:
-        deleted = cached and not core.exists(filename)
-    else:
-        deleted = False
 
     status, out, err = git.diff(R=reverse, M=True, cached=cached,
                                 _encoding=encoding,
@@ -445,8 +441,9 @@ def worktree_state(head='HEAD',
     if update_index:
         git.update_index(refresh=True)
 
-    staged, unmerged, staged_submods = diff_index(head, paths=paths)
-    modified, modified_submods = diff_worktree(paths)
+    staged, unmerged, staged_deleted, staged_submods = diff_index(head,
+                                                                  paths=paths)
+    modified, unstaged_deleted, modified_submods = diff_worktree(paths)
     untracked = display_untracked and untracked_files(paths=paths) or []
 
     # Remove unmerged paths from the modified list
@@ -469,6 +466,8 @@ def worktree_state(head='HEAD',
             'unmerged': unmerged,
             'untracked': untracked,
             'upstream_changed': upstream_changed,
+            'staged_deleted': staged_deleted,
+            'unstaged_deleted': unstaged_deleted,
             'submodules': staged_submods | modified_submods}
 
 
@@ -481,9 +480,10 @@ def _parse_raw_diff(out):
 
 
 def diff_index(head, cached=True, paths=None):
-    submodules = set()
     staged = []
     unmerged = []
+    deleted = set()
+    submodules = set()
 
     if paths is None:
         paths = []
@@ -499,14 +499,17 @@ def diff_index(head, cached=True, paths=None):
             submodules.add(path)
         if status in 'DAMT':
             staged.append(path)
+            if status == 'D':
+                deleted.add(path)
         elif status == 'U':
             unmerged.append(path)
 
-    return staged, unmerged, submodules
+    return staged, unmerged, deleted, submodules
 
 
 def diff_worktree(paths=None):
     modified = []
+    deleted = set()
     submodules = set()
 
     if paths is None:
@@ -518,8 +521,10 @@ def diff_worktree(paths=None):
             submodules.add(path)
         if status in 'DAMT':
             modified.append(path)
+            if status == 'D':
+                deleted.add(path)
 
-    return modified, submodules
+    return modified, deleted, submodules
 
 
 def diff_upstream(head):
