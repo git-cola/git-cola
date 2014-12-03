@@ -174,11 +174,6 @@ class TreeWidgetItem(QtGui.QTreeWidgetItem):
         return self.TYPE
 
 
-def create_treewidget_item(text, filename, exists=True):
-    """Creates a QTreeWidgetItem with text and the icon at filename."""
-    return TreeWidgetItem(text, filename, exists)
-
-
 def paths_from_indexes(model, indexes,
                        item_type=TreeWidgetItem.TYPE,
                        item_filter=None):
@@ -483,8 +478,7 @@ def create_treeitem(filename, staged=False, untracked=False, check=True):
     else:
         exists = True
         icon_name = 'staged-item.png'
-    return create_treewidget_item(filename, resources.icon(icon_name),
-                                  exists=exists)
+    return TreeWidgetItem(filename, resources.icon(icon_name), exists=exists)
 
 
 @memoize
