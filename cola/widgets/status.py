@@ -413,7 +413,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def set_untracked(self, items):
         """Adds items to the 'Untracked' subtree."""
-        self._set_subtree(items, self.idx_untracked)
+        self._set_subtree(items, self.idx_untracked, untracked=True)
 
     def _set_subtree(self, items, idx,
                      staged=False,
