@@ -3,6 +3,7 @@
 """
 from __future__ import division, absolute_import, unicode_literals
 
+import mimetypes
 import os
 import re
 import subprocess
@@ -22,6 +23,26 @@ from cola.interaction import Interaction
 from cola.models.prefs import FONTDIFF
 from cola.widgets import defs
 from cola.compat import ustr
+
+
+KNOWN_FILE_MIME_TYPES = [
+    ('text',    'script.png'),
+    ('image',   'image.png'),
+    ('python',  'script.png'),
+    ('ruby',    'script.png'),
+    ('shell',   'script.png'),
+    ('perl',    'script.png'),
+    ('octet',   'binary.png'),
+]
+
+KNOWN_FILE_EXTENSIONS = {
+    '.java':    'script.png',
+    '.groovy':  'script.png',
+    '.cpp':     'script.png',
+    '.c':       'script.png',
+    '.h':       'script.png',
+    '.cxx':     'script.png',
+}
 
 
 def connect_action(action, fn):
@@ -420,26 +441,36 @@ def set_items(widget, items):
     add_items(widget, items)
 
 
-def icon_file(filename, staged=False, untracked=False):
+def icon_name_for_filename(filename):
+    """Returns an icon name based on the filename."""
+    mimetype = mimetypes.guess_type(filename)[0]
+    if mimetype is not None:
+        mimetype = mimetype.lower()
+        for filetype, icon_name in KNOWN_FILE_MIME_TYPES:
+            if filetype in mimetype:
+                return icon_name
+    extension = os.path.splitext(filename)[1]
+    return KNOWN_FILE_EXTENSIONS.get(extension.lower(), 'generic.png')
+
+
+def icon_name_for_file(filename, staged=False, untracked=False):
     """Returns a file path representing a corresponding file path."""
     exists = True
     if staged:
         exists = core.exists(filename)
         if exists:
-            ifile = resources.icon('staged-item.png')
+            icon_name = 'staged-item.png'
         else:
-            ifile = resources.icon('removed.png')
+            icon_name = 'removed.png'
     elif untracked:
-        ifile = resources.icon('untracked.png')
+        icon_name = 'untracked.png'
     else:
-        (ifile, exists) = utils.file_icon(filename)
-    return (ifile, exists)
-
-
-def icon_for_file(filename, staged=False, untracked=False):
-    """Returns a QIcon for a particular file path."""
-    ifile = icon_file(filename, staged=staged, untracked=untracked)
-    return icon(ifile)
+        exists = core.exists(filename)
+        if exists:
+            icon_name = icon_name_for_filename(filename)
+        else:
+            icon_name = 'removed.png'
+    return (icon_name, exists)
 
 
 def create_treeitem(filename, staged=False, untracked=False, check=True):
@@ -447,21 +478,14 @@ def create_treeitem(filename, staged=False, untracked=False, check=True):
     for adding to a QListWidget.  "staged" and "untracked"
     controls whether to use the appropriate icons."""
     if check:
-        (ifile, exists) = icon_file(filename,
-                                    staged=staged, untracked=untracked)
+        (icon_name, exists) = icon_name_for_file(filename, staged=staged,
+                                                 untracked=untracked)
     else:
         exists = True
-        ifile = resources.icon('staged.png')
-    return create_treewidget_item(filename, ifile, exists=exists)
+        icon_name = 'staged-item.png'
+    return create_treewidget_item(filename, resources.icon(icon_name),
+                                  exists=exists)
 
-
-def update_file_icons(widget, items, staged=True,
-                      untracked=False, offset=0):
-    """Populate a QListWidget with custom icon items."""
-    for idx, model_item in enumerate(items):
-        item = widget.item(idx+offset)
-        if item:
-            item.setIcon(icon_for_file(model_item, staged, untracked))
 
 @memoize
 def cached_icon(key):
@@ -785,7 +809,7 @@ def mimedata_from_paths(paths):
     return mimedata
 
 
-def mimetypes():
+def path_mimetypes():
     return ['text/uri-list', 'text/x-moz-url']
 
 # Syntax highlighting
