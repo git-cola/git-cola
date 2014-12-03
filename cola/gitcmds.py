@@ -481,6 +481,14 @@ def worktree_state(head='HEAD',
             'submodules': submodules}
 
 
+def _parse_raw_diff(out):
+    while out:
+        info, path, out = out.split('\0', 2)
+        status = info[-1]
+        is_submodule = ('160000' in info[1:14])
+        yield (path, status, is_submodule)
+
+
 def diff_index(head, cached=True, paths=None):
     submodules = set()
     staged = []
@@ -495,16 +503,13 @@ def diff_index(head, cached=True, paths=None):
         args[0] = EMPTY_TREE_SHA1
         status, out, err = git.diff_index(cached=cached, z=True, *args)
 
-    while out:
-        rest, out = out.split('\0', 1)
-        name, out = out.split('\0', 1)
-        status = rest[-1]
-        if '160000' in rest[1:14]:
-            submodules.add(name)
-        elif status  in 'DAMT':
-            staged.append(name)
+    for path, status, is_submodule in _parse_raw_diff(out):
+        if is_submodule:
+            submodules.add(path)
+        elif status in 'DAMT':
+            staged.append(path)
         elif status == 'U':
-            unmerged.append(name)
+            unmerged.append(path)
 
     return staged, unmerged, submodules
 
@@ -517,14 +522,11 @@ def diff_worktree(paths=None):
         paths = []
     args = ['--'] + paths
     status, out, err = git.diff_files(z=True, *args)
-    while out:
-        rest, out = out.split('\0', 1)
-        name, out = out.split('\0', 1)
-        status = rest[-1]
-        if '160000' in rest[1:14]:
-            submodules.add(name)
+    for path, status, is_submodule in _parse_raw_diff(out):
+        if is_submodule:
+            submodules.add(path)
         elif status in 'DAMT':
-            modified.append(name)
+            modified.append(path)
 
     return modified, submodules
 
