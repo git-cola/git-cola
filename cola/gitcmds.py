@@ -456,13 +456,6 @@ def worktree_state(head='HEAD',
     for path in modified_unmerged:
         modified.remove(path)
 
-    # All submodules
-    submodules = staged_submods.union(modified_submods)
-
-    # Add submodules to the staged and unstaged lists
-    staged.extend(staged_submods)
-    modified.extend(modified_submods)
-
     # Look for upstream modified files if this is a tracking branch
     upstream_changed = diff_upstream(head)
 
@@ -478,7 +471,7 @@ def worktree_state(head='HEAD',
             'unmerged': unmerged,
             'untracked': untracked,
             'upstream_changed': upstream_changed,
-            'submodules': submodules}
+            'submodules': staged_submods | modified_submods}
 
 
 def _parse_raw_diff(out):
@@ -506,7 +499,7 @@ def diff_index(head, cached=True, paths=None):
     for path, status, is_submodule in _parse_raw_diff(out):
         if is_submodule:
             submodules.add(path)
-        elif status in 'DAMT':
+        if status in 'DAMT':
             staged.append(path)
         elif status == 'U':
             unmerged.append(path)
@@ -525,7 +518,7 @@ def diff_worktree(paths=None):
     for path, status, is_submodule in _parse_raw_diff(out):
         if is_submodule:
             submodules.add(path)
-        elif status in 'DAMT':
+        if status in 'DAMT':
             modified.append(path)
 
     return modified, submodules
