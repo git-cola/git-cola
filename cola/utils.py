@@ -18,17 +18,17 @@ import hashlib
 random.seed(hash(time.time()))
 
 
-KNOWN_FILE_MIME_TYPES = {
-    'text':      'script.png',
-    'image':     'image.png',
-    'python':    'script.png',
-    'ruby':      'script.png',
-    'shell':     'script.png',
-    'perl':      'script.png',
-    'octet':     'binary.png',
-}
+KNOWN_FILE_MIME_TYPES = [
+    ('text',    'script.png'),
+    ('image',   'image.png'),
+    ('python',  'script.png'),
+    ('ruby',    'script.png'),
+    ('shell',   'script.png'),
+    ('perl',    'script.png'),
+    ('octet',   'binary.png'),
+]
 
-KNOWN_FILE_EXTENSION = {
+KNOWN_FILE_EXTENSIONS = {
     '.java':    'script.png',
     '.groovy':  'script.png',
     '.cpp':     'script.png',
@@ -54,23 +54,16 @@ def add_parents(paths):
     return path_entry_set
 
 
-def ident_file_type(filename, exists):
-    """Returns an icon based on the contents of filename."""
-    if exists:
-        filemimetype = mimetypes.guess_type(filename)
-        if filemimetype[0] != None:
-            for filetype, iconname in KNOWN_FILE_MIME_TYPES.items():
-                if filetype in filemimetype[0].lower():
-                    return iconname
-        filename = filename.lower()
-        for fileext, iconname in KNOWN_FILE_EXTENSION.items():
-            if filename.endswith(fileext):
-                return iconname
-        return 'generic.png'
-    else:
-        return 'removed.png'
-    # Fallback for modified files of an unknown type
-    return 'generic.png'
+def ident_file_type(filename):
+    """Returns an icon name based on the filename."""
+    mimetype = mimetypes.guess_type(filename)[0]
+    if mimetype is not None:
+        mimetype = mimetype.lower()
+        for filetype, icon_name in KNOWN_FILE_MIME_TYPES:
+            if filetype in mimetype:
+                return icon_name
+    extension = os.path.splitext(filename)[1]
+    return KNOWN_FILE_EXTENSIONS.get(extension.lower(), 'generic.png')
 
 
 def file_icon(filename):
