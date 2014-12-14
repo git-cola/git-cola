@@ -206,9 +206,9 @@ class GitNotifier(QtCore.QThread):
         This allows us to maintain backwards compatibility.
         """
         if hasattr(pyinotify, '__version__'):
-            if pyinotify.__version__[:3] == '0.8':
-                return True
-        return False
+            if pyinotify.__version__[:3] < '0.8':
+                return False
+        return True
 
     def run(self):
         """Create the inotify WatchManager and generate FileSysEvents"""
