@@ -34,7 +34,7 @@ from PyQt4 import QtCore
 
 from cola import gitcfg
 from cola import core
-from cola.compat import ustr
+from cola.compat import ustr, PY3
 from cola.git import STDOUT
 from cola.i18n import N_
 from cola.interaction import Interaction
@@ -181,9 +181,9 @@ class GitNotifier(QtCore.QThread):
             return
         self._dirs_seen.add(directory)
         if core.exists(directory):
-            encoded_dir = core.encode(directory)
+            dir_arg = directory if PY3 else core.encode(directory)
             try:
-                self._wmgr.add_watch(encoded_dir, self._mask, quiet=False)
+                self._wmgr.add_watch(dir_arg, self._mask, quiet=False)
             except WatchManagerError as e:
                 self._add_watch_failed = True
                 self._add_watch_failed_warning(directory, e)
@@ -206,9 +206,9 @@ class GitNotifier(QtCore.QThread):
         This allows us to maintain backwards compatibility.
         """
         if hasattr(pyinotify, '__version__'):
-            if pyinotify.__version__[:3] == '0.8':
-                return True
-        return False
+            if pyinotify.__version__[:3] < '0.8':
+                return False
+        return True
 
     def run(self):
         """Create the inotify WatchManager and generate FileSysEvents"""
