@@ -646,17 +646,14 @@ class DeleteRemoteBranch(Command):
 class Diff(Command):
     """Perform a diff and set the model's current text."""
 
-    def __init__(self, filenames, cached=False):
+    def __init__(self, filename, cached=False):
         Command.__init__(self)
-        # Guard against the list of files being empty
-        if not filenames:
-            return
         opts = {}
         if cached:
             opts['ref'] = self.model.head
-        self.new_filename = filenames[0]
+        self.new_filename = filename
         self.new_mode = self.model.mode_worktree
-        self.new_diff_text = gitcmds.diff_helper(filename=self.new_filename,
+        self.new_diff_text = gitcmds.diff_helper(filename=filename,
                                                  cached=cached, **opts)
 
 
@@ -680,8 +677,8 @@ class Diffstat(Command):
 class DiffStaged(Diff):
     """Perform a staged diff on a file."""
 
-    def __init__(self, filenames):
-        Diff.__init__(self, filenames, cached=True)
+    def __init__(self, filename):
+        Diff.__init__(self, filename, cached=True)
         self.new_mode = self.model.mode_index
 
 
@@ -1308,13 +1305,11 @@ class SetDiffText(Command):
 class ShowUntracked(Command):
     """Show an untracked file."""
 
-    def __init__(self, filenames):
+    def __init__(self, filename):
         Command.__init__(self)
-        self.filenames = filenames
+        self.new_filename = filename
         self.new_mode = self.model.mode_untracked
-        self.new_diff_text = ''
-        if filenames:
-            self.new_diff_text = self.diff_text_for(filenames[0])
+        self.new_diff_text = self.diff_text_for(filename)
 
     def diff_text_for(self, filename):
         cfg = gitcfg.current()

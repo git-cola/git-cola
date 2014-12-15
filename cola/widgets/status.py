@@ -837,17 +837,17 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             cmds.do(cls)
         # A staged file
         elif category == self.idx_staged:
-            cmds.do(cmds.DiffStaged, self.staged())
+            cmds.do(cmds.DiffStaged, self.staged()[0])
 
         # A modified file
         elif category == self.idx_modified:
-            cmds.do(cmds.Diff, self.modified())
+            cmds.do(cmds.Diff, self.modified()[0])
 
         elif category == self.idx_unmerged:
-            cmds.do(cmds.Diff, self.unmerged())
+            cmds.do(cmds.Diff, self.unmerged()[0])
 
         elif category == self.idx_untracked:
-            cmds.do(cmds.ShowUntracked, self.unstaged())
+            cmds.do(cmds.ShowUntracked, self.unstaged()[0])
 
     def move_up(self):
         idx = self.selected_idx()
