@@ -450,11 +450,9 @@ def worktree_state(head='HEAD',
     untracked = display_untracked and untracked_files(paths=paths) or []
 
     # Remove unmerged paths from the modified list
-    unmerged_set = set(unmerged)
-    modified_set = set(modified)
-    modified_unmerged = modified_set.intersection(unmerged_set)
-    for path in modified_unmerged:
-        modified.remove(path)
+    if unmerged:
+        unmerged_set = set(unmerged)
+        modified = [path for path in modified if path not in unmerged_set]
 
     # Look for upstream modified files if this is a tracking branch
     upstream_changed = diff_upstream(head)
