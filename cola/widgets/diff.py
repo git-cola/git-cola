@@ -141,7 +141,7 @@ class DiffEditor(DiffTextEdit):
                                N_('Launch git-cola'),
                                cmds.run(cmds.OpenRepo,
                                         core.abspath(s.modified[0])))
-            else:
+            elif s.modified[0] not in main.model().unstaged_deleted:
                 if self.has_selection():
                     apply_text = N_('Stage Selected Lines')
                     revert_text = N_('Revert Selected Lines...')
@@ -167,7 +167,7 @@ class DiffEditor(DiffTextEdit):
                                N_('Launch git-cola'),
                                cmds.do(cmds.OpenRepo,
                                        core.abspath(s.staged[0])))
-            else:
+            elif s.staged[0] not in main.model().staged_deleted:
                 if self.has_selection():
                     apply_text = N_('Unstage Selected Lines')
                 else:
