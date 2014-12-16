@@ -840,12 +840,12 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         # A staged file
         elif category == self.idx_staged:
             item = self.staged_items()[0]
-            cmds.do(cmds.DiffStaged, item.path, item.deleted)
+            cmds.do(cmds.DiffStaged, item.path, deleted=item.deleted)
 
         # A modified file
         elif category == self.idx_modified:
             item = self.modified_items()[0]
-            cmds.do(cmds.Diff, item.path, item.deleted)
+            cmds.do(cmds.Diff, item.path, deleted=item.deleted)
 
         elif category == self.idx_unmerged:
             item = self.unmerged_items()[0]
