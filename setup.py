@@ -35,7 +35,7 @@ def main():
           license='GPLv2',
           author='David Aguilar',
           author_email='davvid@gmail.com',
-          url='http://git-cola.github.io/',
+          url='https://git-cola.github.io/',
           scripts=scripts,
           cmdclass=cmdclass,
           platforms='any',

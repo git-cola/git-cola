@@ -659,7 +659,7 @@ https://github.com/git-cola/git-cola/
 
 Git Cola Homepage
 -----------------
-http://git-cola.github.io/
+https://git-cola.github.io/
 
 Mailing List
 ------------
