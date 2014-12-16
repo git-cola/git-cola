@@ -82,6 +82,8 @@ class MainModel(Observable):
         self.untracked = []
         self.unmerged = []
         self.upstream_changed = []
+        self.staged_deleted = set()
+        self.unstaged_deleted = set()
         self.submodules = set()
 
         self.local_branches = []
@@ -184,16 +186,18 @@ class MainModel(Observable):
 
     def _update_files(self, update_index=False):
         display_untracked = prefs.display_untracked()
-        state = gitcmds.worktree_state_dict(head=self.head,
-                                            update_index=update_index,
-                                            display_untracked=display_untracked,
-                                            paths=self.filter_paths)
+        state = gitcmds.worktree_state(head=self.head,
+                                       update_index=update_index,
+                                       display_untracked=display_untracked,
+                                       paths=self.filter_paths)
         self.staged = state.get('staged', [])
         self.modified = state.get('modified', [])
         self.unmerged = state.get('unmerged', [])
         self.untracked = state.get('untracked', [])
-        self.submodules = state.get('submodules', set())
         self.upstream_changed = state.get('upstream_changed', [])
+        self.staged_deleted = state.get('staged_deleted', set())
+        self.unstaged_deleted = state.get('unstaged_deleted', set())
+        self.submodules = state.get('submodules', set())
 
         sel = selection_model()
         if self.is_empty():

@@ -234,7 +234,7 @@ class RepoTreeView(standard.TreeView):
 
         if paths and self.model().path_is_interesting(paths[0]):
             cached = paths[0] in main.model().staged
-            cmds.do(cmds.Diff, paths, cached)
+            cmds.do(cmds.Diff, paths[0], cached)
         return result
 
     def setModel(self, model):
