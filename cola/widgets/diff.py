@@ -131,7 +131,7 @@ class DiffEditor(DiffTextEdit):
         s = selection.selection()
         filename = selection.filename()
 
-        if self.model.stageable() and s.modified:
+        if s.modified and self.model.stageable():
             if s.modified[0] in main.model().submodules:
                 action = menu.addAction(qtutils.icon('add.svg'),
                                         cmds.Stage.name(),
@@ -141,7 +141,7 @@ class DiffEditor(DiffTextEdit):
                                N_('Launch git-cola'),
                                cmds.run(cmds.OpenRepo,
                                         core.abspath(s.modified[0])))
-            else:
+            elif s.modified[0] not in main.model().unstaged_deleted:
                 if self.has_selection():
                     apply_text = N_('Stage Selected Lines')
                     revert_text = N_('Revert Selected Lines...')
@@ -157,8 +157,8 @@ class DiffEditor(DiffTextEdit):
                 menu.addAction(self.action_apply_selection)
                 menu.addAction(self.action_revert_selection)
 
-        if self.model.unstageable():
-            if s.staged and s.staged[0] in main.model().submodules:
+        if s.staged and self.model.unstageable():
+            if s.staged[0] in main.model().submodules:
                 action = menu.addAction(qtutils.icon('remove.svg'),
                                         cmds.Unstage.name(),
                                         cmds.do(cmds.Unstage, s.staged))
@@ -167,7 +167,7 @@ class DiffEditor(DiffTextEdit):
                                N_('Launch git-cola'),
                                cmds.do(cmds.OpenRepo,
                                        core.abspath(s.staged[0])))
-            elif s.staged:
+            elif s.staged[0] not in main.model().staged_deleted:
                 if self.has_selection():
                     apply_text = N_('Unstage Selected Lines')
                 else:
