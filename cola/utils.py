@@ -180,7 +180,7 @@ else:
 
 
 def tmp_file_pattern():
-    return os.path.join(tempfile.gettempdir(), 'git-cola-%s-.*' % os.getpid())
+    return os.path.join(tempfile.gettempdir(), 'git-cola-%s-*' % os.getpid())
 
 
 def tmp_filename(label):
