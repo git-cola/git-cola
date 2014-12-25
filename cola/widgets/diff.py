@@ -263,8 +263,7 @@ class DiffEditor(DiffTextEdit):
             scrollbar.setValue(scrollvalue)
 
     def has_selection(self):
-        cursor = self.textCursor()
-        return cursor.selectionStart() != cursor.selectionEnd()
+        return self.textCursor().hasSelection()
 
     def offset_and_selection(self):
         cursor = self.textCursor()
@@ -272,12 +271,29 @@ class DiffEditor(DiffTextEdit):
         selection_text = ustr(cursor.selection().toPlainText())
         return offset, selection_text
 
+    def selected_lines(self):
+        cursor = self.textCursor()
+        selection_start = cursor.selectionStart()
+        selection_end = cursor.selectionEnd()
+
+        line_start = 0
+        for line_idx, line in enumerate(ustr(self.toPlainText()).split('\n')):
+            line_end = line_start + len(line)
+            if line_start <= selection_start <= line_end:
+                first_line_idx = line_idx
+            if line_start <= selection_end <= line_end:
+                last_line_idx = line_idx
+                break
+            line_start = line_end + 1
+
+        return first_line_idx, last_line_idx
+
     def apply_selection(self):
         s = selection.single_selection()
         if self.model.stageable() and s.modified:
-            self.process_diff_selection(staged=False)
+            self.process_diff_selection()
         elif self.model.unstageable():
-            self.process_diff_selection(staged=True)
+            self.process_diff_selection(reverse=True)
 
     def revert_selection(self):
         """Destructively revert selected lines or hunk from a worktree file."""
@@ -297,15 +313,15 @@ class DiffEditor(DiffTextEdit):
                                default=True,
                                icon=qtutils.icon('undo.svg')):
             return
-        self.process_diff_selection(staged=False, apply_to_worktree=True)
+        self.process_diff_selection(reverse=True, apply_to_worktree=True)
 
-    def process_diff_selection(self, staged=True, apply_to_worktree=False):
-        """Implement un/staging of selected lines or sections."""
+    def process_diff_selection(self, reverse=False, apply_to_worktree=False):
+        """Implement un/staging of the selected line(s) or hunk."""
         if selection.selection_model().is_empty():
             return
-        offset, selection_text = self.offset_and_selection()
-        cmds.do(cmds.ApplyDiffSelection,
-                staged, offset, selection_text, apply_to_worktree)
+        first_line_idx, last_line_idx = self.selected_lines()
+        cmds.do(cmds.ApplyDiffSelection, first_line_idx, last_line_idx,
+                self.has_selection(), reverse, apply_to_worktree)
 
 
 

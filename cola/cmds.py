@@ -202,23 +202,38 @@ class AmendMode(Command):
 
 class ApplyDiffSelection(Command):
 
-    def __init__(self, staged, offset, selection_text, apply_to_worktree):
+    def __init__(self, first_line_idx, last_line_idx, has_selection,
+                 reverse, apply_to_worktree):
         Command.__init__(self)
-        self.staged = staged
-        self.offset = offset
-        self.selection_text = selection_text
+        self.first_line_idx = first_line_idx
+        self.last_line_idx = last_line_idx
+        self.has_selection = has_selection
+        self.reverse = reverse
         self.apply_to_worktree = apply_to_worktree
 
     def do(self):
-        # The normal worktree vs index scenario
-        parser = DiffParser(self.model,
-                            filename=self.model.filename,
-                            cached=self.staged,
-                            reverse=self.apply_to_worktree)
-        status, out, err = \
-        parser.process_diff_selection(self.offset,
-                                      self.selection_text,
-                                      apply_to_worktree=self.apply_to_worktree)
+        parser = DiffParser(self.model.filename, self.model.diff_text)
+        if self.has_selection:
+            patch = parser.generate_patch(self.first_line_idx,
+                                          self.last_line_idx,
+                                          reverse=self.reverse)
+        else:
+            patch = parser.generate_hunk_patch(self.first_line_idx,
+                                               reverse=self.reverse)
+        if patch is None:
+            return
+
+        cfg = gitcfg.current()
+        tmp_path = utils.tmp_filename('patch')
+        try:
+            core.write(tmp_path, patch,
+                       encoding=cfg.file_encoding(self.model.filename))
+            if self.apply_to_worktree:
+                status, out, err = self.model.apply_diff_to_worktree(tmp_path)
+            else:
+                status, out, err = self.model.apply_diff(tmp_path)
+        finally:
+            os.unlink(tmp_path)
         Interaction.log_status(status, out, err)
         self.model.update_file_status(update_index=True)
 

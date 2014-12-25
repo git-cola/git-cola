@@ -1,179 +1,142 @@
 from __future__ import unicode_literals
-import os
 import unittest
 
 from cola import core
-from cola import gitcmds
-from cola import diffparse
-from cola.diffparse import DiffParser
+from cola.diffparse import _parse_range_str, DiffParser
 
 from test import helper
 
 
-class DiffParseModel(object):
-    def __init__(self):
-        self.last_worktree_diff = None
-        self.last_diff = None
-        self.head = 'HEAD'
-        self.amend = False
-
-    def amending(self):
-        return self.amend
-
-    def apply_diff_to_worktree(self, path):
-        if os.path.exists(path):
-            self.last_worktree_diff = core.read(path)
-
-    def apply_diff(self, path):
-        if os.path.exists(path):
-            self.last_diff = core.read(path)
-
-
-class DiffSource(object):
-    def __init__(self, fwd, reverse):
-        self.fwd = core.read(fwd)
-        self.reverse = core.read(reverse)
-
-    def get(self, head, amending, filename, cached, reverse):
-        if reverse:
-            return self.parse(self.reverse)
-        else:
-            return self.parse(self.fwd)
-
-    def parse(self, diffoutput):
-        return gitcmds.extract_diff_header(
-                status=0, deleted=False,
-                with_diff_header=True, suppress_header=False,
-                diffoutput=diffoutput)
-
-
-class DiffParseTestCase(unittest.TestCase):
-    def setUp(self):
-        self.model = DiffParseModel()
-
+class ParseDiffTestCase(unittest.TestCase):
     def test_diff(self):
-        fwd = helper.fixture('diff.txt')
-        reverse = helper.fixture('diff-reverse.txt')
-        source = DiffSource(fwd, reverse)
-        model = DiffParseModel()
-        parser = DiffParser(model, filename='',
-                            cached=False, reverse=False,
-                            diff_source=source)
+        fixture_path = helper.fixture('diff.txt')
+        parser = DiffParser('cola/diffparse.py', core.read(fixture_path))
+        hunks = parser.hunks
 
-        self.assertEqual(parser.offsets(),
-                [916, 1798, 2550])
-        self.assertEqual(parser.spans(),
-                [[0, 916], [916, 1798], [1798, 2550]])
+        self.assertEqual(len(hunks), 3)
 
-        diffs = parser.diffs()
-        self.assertEqual(len(diffs), 3)
-
-        self.assertEqual(len(diffs[0]), 23)
-        self.assertEqual(diffs[0][0],
+        self.assertEqual(hunks[0].first_line_idx, 0)
+        self.assertEqual(len(hunks[0].lines), 23)
+        self.assertEqual(hunks[0].lines[0],
                 '@@ -6,10 +6,21 @@ from cola import gitcmds')
-        self.assertEqual(diffs[0][1],
+        self.assertEqual(hunks[0].lines[1],
                 ' from cola import gitcfg')
-        self.assertEqual(diffs[0][2],
+        self.assertEqual(hunks[0].lines[2],
                 ' ')
-        self.assertEqual(diffs[0][3],
+        self.assertEqual(hunks[0].lines[3],
                 ' ')
-        self.assertEqual(diffs[0][4],
+        self.assertEqual(hunks[0].lines[4],
                 '+class DiffSource(object):')
+        self.assertEqual(hunks[0].lines[-1],
+                "         self._header_start_re = re.compile('^@@ -(\d+)"
+                " \+(\d+),(\d+) @@.*')")
 
-        self.assertEqual(len(diffs[1]), 18)
-        self.assertEqual(diffs[1][0],
+        self.assertEqual(hunks[1].first_line_idx, 23)
+        self.assertEqual(len(hunks[1].lines), 18)
+        self.assertEqual(hunks[1].lines[0],
                 '@@ -29,13 +40,11 @@ class DiffParser(object):')
-        self.assertEqual(diffs[1][1],
+        self.assertEqual(hunks[1].lines[1],
                 '         self.diff_sel = []')
-        self.assertEqual(diffs[1][2],
+        self.assertEqual(hunks[1].lines[2],
                 '         self.selected = []')
-        self.assertEqual(diffs[1][3],
+        self.assertEqual(hunks[1].lines[3],
                 '         self.filename = filename')
-        self.assertEqual(diffs[1][4],
+        self.assertEqual(hunks[1].lines[4],
                 '+        self.diff_source = diff_source or DiffSource()')
+        self.assertEqual(hunks[1].lines[-1],
+                '         self.header = header')
 
-        self.assertEqual(len(diffs[2]), 18)
-        self.assertEqual(diffs[2][0],
+        self.assertEqual(hunks[2].first_line_idx, 41)
+        self.assertEqual(len(hunks[2].lines), 16)
+        self.assertEqual(hunks[2].lines[0],
                 '@@ -43,11 +52,10 @@ class DiffParser(object):')
+        self.assertEqual(hunks[2].lines[-1],
+                '         """Writes a new diff corresponding to the user\'s'
+                ' selection."""')
 
     def test_diff_at_start(self):
-        fwd = helper.fixture('diff-start.txt')
-        reverse = helper.fixture('diff-start-reverse.txt')
+        fixture_path = helper.fixture('diff-start.txt')
+        parser = DiffParser('foo bar/a', core.read(fixture_path))
+        hunks = parser.hunks
 
-        source = DiffSource(fwd, reverse)
-        model = DiffParseModel()
-        parser = DiffParser(model, filename='',
-                            cached=False, reverse=False,
-                            diff_source=source)
-
-        self.assertEqual(parser.diffs()[0][0], '@@ -1 +1,4 @@')
-        self.assertEqual(parser.offsets(), [30])
-        self.assertEqual(parser.spans(), [[0, 30]])
-        self.assertEqual(parser.diffs_for_range(0, 10),
-                         (['@@ -1 +1,4 @@\n bar\n+a\n+b\n+c\n\n'],
-                          [0]))
-        self.assertEqual(parser.ranges()[0].begin, [1, 1])
-        self.assertEqual(parser.ranges()[0].end, [1, 4])
-        self.assertEqual(parser.ranges()[0].make(), '@@ -1 +1,4 @@')
+        self.assertEqual(hunks[0].lines[0], '@@ -1 +1,4 @@')
+        self.assertEqual(hunks[-1].lines[-1], '+c')
+        self.assertEqual(hunks[0].old_start, 1)
+        self.assertEqual(hunks[0].old_count, 1)
+        self.assertEqual(hunks[0].new_start, 1)
+        self.assertEqual(hunks[0].new_count, 4)
+        self.assertEqual(parser.generate_patch(1, 3),
+                         '--- a/foo bar/a\n'
+                         '+++ b/foo bar/a\n'
+                         '@@ -1 +1,3 @@\n'
+                         ' bar\n'
+                         '+a\n'
+                         '+b\n')
+        self.assertEqual(parser.generate_patch(0, 4),
+                         '--- a/foo bar/a\n'
+                         '+++ b/foo bar/a\n'
+                         '@@ -1 +1,4 @@\n'
+                         ' bar\n'
+                         '+a\n'
+                         '+b\n'
+                         '+c\n')
 
     def test_diff_at_end(self):
-        fwd = helper.fixture('diff-end.txt')
-        reverse = helper.fixture('diff-end-reverse.txt')
+        fixture_path = helper.fixture('diff-end.txt')
+        parser = DiffParser('rijndael.js', core.read(fixture_path))
+        hunks = parser.hunks
 
-        source = DiffSource(fwd, reverse)
-        model = DiffParseModel()
-        parser = DiffParser(model, filename='',
-                            cached=False, reverse=False,
-                            diff_source=source)
-
-        self.assertEqual(parser.diffs()[0][0], '@@ -1,39 +1 @@')
-        self.assertEqual(parser.offsets(), [1114])
-        self.assertEqual(parser.spans(), [[0, 1114]])
-        self.assertEqual(parser.ranges()[0].begin, [1, 39])
-        self.assertEqual(parser.ranges()[0].end, [1, 1])
-        self.assertEqual(parser.ranges()[0].make(), '@@ -1,39 +1 @@')
+        self.assertEqual(hunks[0].lines[0],
+                '@@ -1,39 +1 @@')
+        self.assertEqual(hunks[-1].lines[-1],
+                "+module.exports = require('./build/Release/rijndael');")
+        self.assertEqual(hunks[0].old_start, 1)
+        self.assertEqual(hunks[0].old_count, 39)
+        self.assertEqual(hunks[0].new_start, 1)
+        self.assertEqual(hunks[0].new_count, 1)
 
     def test_diff_that_empties_file(self):
-        fwd = helper.fixture('diff-empty.txt')
-        reverse = helper.fixture('diff-empty-reverse.txt')
+        fixture_path = helper.fixture('diff-empty.txt')
+        parser = DiffParser('filename', core.read(fixture_path))
+        hunks = parser.hunks
 
-        source = DiffSource(fwd, reverse)
-        model = DiffParseModel()
-        parser = DiffParser(model, filename='',
-                            cached=False, reverse=False,
-                            diff_source=source)
+        self.assertEqual(hunks[0].lines[0],
+                '@@ -1,2 +0,0 @@')
+        self.assertEqual(hunks[-1].lines[-1],
+                '-second')
+        self.assertEqual(hunks[0].old_start, 1)
+        self.assertEqual(hunks[0].old_count, 2)
+        self.assertEqual(hunks[0].new_start, 0)
+        self.assertEqual(hunks[0].new_count, 0)
+        self.assertEqual(parser.generate_patch(1, 1),
+                         '--- a/filename\n'
+                         '+++ b/filename\n'
+                         '@@ -1,2 +1 @@\n'
+                         '-first\n'
+                         ' second\n')
+        self.assertEqual(parser.generate_patch(0, 2),
+                         '--- a/filename\n'
+                         '+++ b/filename\n'
+                         '@@ -1,2 +0,0 @@\n'
+                         '-first\n'
+                         '-second\n')
 
-        self.assertEqual(parser.diffs()[0][0], '@@ -1,2 +0,0 @@')
-        self.assertEqual(parser.offsets(), [33])
-        self.assertEqual(parser.spans(), [[0, 33]])
-        self.assertEqual(parser.diffs_for_range(0, 1),
-                         (['@@ -1,2 +0,0 @@\n-first\n-second\n\n'],
-                          [0]))
 
-        self.assertEqual(parser.ranges()[0].begin, [1, 2])
-        self.assertEqual(parser.ranges()[0].end, [0, 0])
-        self.assertEqual(parser.ranges()[0].make(), '@@ -1,2 +0,0 @@')
+class ParseRangeStrTestCase(unittest.TestCase):
+    def test_parse_range_str(self):
+        start, count = _parse_range_str('1,2')
+        self.assertEqual(start, 1)
+        self.assertEqual(count, 2)
 
+    def test_parse_range_str_single_line(self):
+        start, count = _parse_range_str('2')
+        self.assertEqual(start, 2)
+        self.assertEqual(count, 1)
 
-class RangeTestCase(unittest.TestCase):
-
-    def test_empty_becomes_non_empty(self):
-        r = diffparse.Range('1,2', '0,0')
-        self.assertEqual(r.begin, [1,2])
-        self.assertEqual(r.end, [0, 0])
-        self.assertEqual(r.make(), '@@ -1,2 +0,0 @@')
-
-        r.set_end_count(1)
-        self.assertEqual(r.end, [1, 1])
-        self.assertEqual(r.make(), '@@ -1,2 +1 @@')
-
-    def test_single_line(self):
-        r = diffparse.Range('1', '1,2')
-        self.assertEqual(r.begin, [1, 1])
-        self.assertEqual(r.end, [1, 2])
-        self.assertEqual(r.make(), '@@ -1 +1,2 @@')
-        r.set_end_count(1)
-        self.assertEqual(r.make(), '@@ -1 +1 @@')
+    def test_parse_range_str_empty(self):
+        start, count = _parse_range_str('0,0')
+        self.assertEqual(start, 0)
+        self.assertEqual(count, 0)
 
 
 if __name__ == '__main__':
