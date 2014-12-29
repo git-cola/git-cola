@@ -371,14 +371,16 @@ class Commit(ResetMode):
         # Create the commit message file
         msg = self.strip_comments(self.msg)
         tmpfile = utils.tmp_filename('commit-message')
-        core.write(tmpfile, msg)
+        try:
+            core.write(tmpfile, msg)
 
-        # Run 'git commit'
-        status, out, err = self.model.git.commit(F=tmpfile,
-                                                 v=True,
-                                                 gpg_sign=self.sign,
-                                                 amend=self.amend)
-        core.unlink(tmpfile)
+            # Run 'git commit'
+            status, out, err = self.model.git.commit(F=tmpfile,
+                                                     v=True,
+                                                     gpg_sign=self.sign,
+                                                     amend=self.amend)
+        finally:
+            core.unlink(tmpfile)
 
         if status == 0:
             ResetMode.do(self)
@@ -1479,21 +1481,21 @@ class Tag(Command):
         log_msg = (N_('Tagging "%(revision)s" as "%(name)s"') %
                    dict(revision=self._revision, name=self._name))
         opts = {}
-        if self._message:
-            opts['F'] = utils.tmp_filename('tag-message')
-            core.write(opts['F'], self._message)
+        try:
+            if self._message:
+                opts['F'] = utils.tmp_filename('tag-message')
+                core.write(opts['F'], self._message)
 
-        if self._sign:
-            log_msg += ' (%s)' % N_('GPG-signed')
-            opts['s'] = True
+            if self._sign:
+                log_msg += ' (%s)' % N_('GPG-signed')
+                opts['s'] = True
+            else:
+                opts['a'] = bool(self._message)
             status, output, err = self.model.git.tag(self._name,
                                                      self._revision, **opts)
-        else:
-            opts['a'] = bool(self._message)
-            status, output, err = self.model.git.tag(self._name,
-                                                     self._revision, **opts)
-        if 'F' in opts:
-            os.unlink(opts['F'])
+        finally:
+            if 'F' in opts:
+                os.unlink(opts['F'])
 
         if output:
             log_msg += '\n' + (N_('Output: %s') % output)

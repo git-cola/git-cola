@@ -7,6 +7,7 @@ import random
 import re
 import shlex
 import sys
+import tempfile
 import time
 import traceback
 
@@ -178,21 +179,16 @@ else:
         return [core.decode(arg) for arg in _shell_split(s)]
 
 
-def tmp_dir():
-    # Allow TMPDIR/TMP with a fallback to /tmp
-    return core.getenv('TMP', core.getenv('TMPDIR', '/tmp'))
-
-
 def tmp_file_pattern():
-    return os.path.join(tmp_dir(), 'git-cola-%s-.*' % os.getpid())
+    return os.path.join(tempfile.gettempdir(), 'git-cola-%s-*' % os.getpid())
 
 
-def tmp_filename(prefix):
-    randstr = ''.join([chr(random.randint(ord('a'), ord('z')))
-                        for i in range(7)])
-    prefix = prefix.replace('/', '-').replace('\\', '-')
-    basename = 'git-cola-%s-%s-%s' % (os.getpid(), randstr, prefix)
-    return os.path.join(tmp_dir(), basename)
+def tmp_filename(label):
+    prefix = 'git-cola-%s-' % (os.getpid())
+    suffix = '-%s' % label.replace('/', '-').replace('\\', '-')
+    fd, path = tempfile.mkstemp(suffix, prefix)
+    os.close(fd)
+    return path
 
 
 def is_linux():
