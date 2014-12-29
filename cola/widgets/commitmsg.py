@@ -524,6 +524,10 @@ class CommitSummaryLineEdit(HintedLineEdit):
         HintedLineEdit.__init__(self, hint, parent)
         self.extra_actions = []
 
+        regex = QtCore.QRegExp(r'^[^#].*')
+        self._validator = QtGui.QRegExpValidator(regex, self)
+        self.setValidator(self._validator)
+
     def contextMenuEvent(self, event):
         menu = self.createStandardContextMenu()
         if self.extra_actions:
