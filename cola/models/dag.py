@@ -70,8 +70,8 @@ class DAG(Observable):
     def set_arguments(self, args):
         if args is None:
             return
-        if self.set_count(args.max_count):
-            self.overrides['count'] = args.max_count
+        if self.set_count(args.count):
+            self.overrides['count'] = args.count
 
         if hasattr(args, 'args') and args.args:
             ref = subprocess.list2cmdline(map(core.decode, args.args))
