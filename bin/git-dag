@@ -73,7 +73,12 @@ def parse_args():
                         help='number of commits to display')
     parser.add_argument('args', nargs='*', metavar='<args>',
                         help='git log arguments')
-    return parser.parse_args()
+    args, rest = parser.parse_known_args()
+    if rest:
+        # splice unknown arguments to the beginning ~
+        # these are forwarded to git-log(1).
+        args.args[:0] = rest
+    return args
 
 
 def cmd_dag(args):

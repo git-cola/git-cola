@@ -2,6 +2,10 @@ git-cola v2.1.0
 ===============
 Usability, bells and whistles
 -----------------------------
+* `git dag` now forwards all unknown arguments along to `git log`.
+
+  https://github.com/git-cola/git-cola/issues/389
+
 * Line-by-line interactive staging was made more precise.
 
 git-cola v2.0.8
