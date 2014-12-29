@@ -105,7 +105,7 @@ class MainView(MainWindow):
         self.statusdockwidget.setWidget(self.statuswidget)
 
         # "Switch Repository" widgets
-        self.bookmarksdockwidget = create_dock(N_('Bookmarks'), self)
+        self.bookmarksdockwidget = create_dock(N_('Favorites'), self)
         self.bookmarkswidget = bookmarks.BookmarksWidget(
                 bookmarks.BOOKMARKS, parent=self.bookmarksdockwidget)
         self.bookmarksdockwidget.setWidget(self.bookmarkswidget)

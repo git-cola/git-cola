@@ -44,7 +44,7 @@ class BookmarksWidget(QtGui.QWidget):
 
         self.setFocusProxy(self.tree)
         if style == BOOKMARKS:
-            self.setToolTip(N_('Bookmarked repositories'))
+            self.setToolTip(N_('Favorite repositories'))
         elif style == RECENT_REPOS:
             self.setToolTip(N_('Recent repositories'))
             self.add_button.hide()

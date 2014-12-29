@@ -10,6 +10,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/399
 
+* "Bookmarks" was renamed to "Favorites".
+
+  https://github.com/git-cola/git-cola/issues/392
+
 git-cola v2.0.8
 ===============
 Usability, bells and whistles
