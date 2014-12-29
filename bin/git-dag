@@ -68,7 +68,7 @@ def parse_args():
     parser.set_defaults(func=cmd_dag)
 
     add_common_arguments(parser)
-    parser.add_argument('-c', '--count', metavar='<count>',
+    parser.add_argument('-c', '--max-count', metavar='<count>',
                         type=int, default=1000,
                         help='number of commits to display')
     parser.add_argument('args', nargs='*', metavar='<args>',
