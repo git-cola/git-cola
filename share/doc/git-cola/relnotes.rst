@@ -1,3 +1,9 @@
+git-cola v2.1.0
+===============
+Usability, bells and whistles
+-----------------------------
+* Line-by-line interactive staging was made more precise.
+
 git-cola v2.0.8
 ===============
 Usability, bells and whistles
