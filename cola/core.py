@@ -28,7 +28,7 @@ _encoding_tests = [
     # <-- add encodings here
 ]
 
-def decode(enc, encoding=None):
+def decode(enc, encoding=None, errors='strict'):
     """decode(encoded_string) returns an unencoded unicode string
     """
     if enc is None or type(enc) is ustr:
@@ -41,7 +41,7 @@ def decode(enc, encoding=None):
 
     for encoding in encoding_tests:
         try:
-            return enc.decode(encoding)
+            return enc.decode(encoding, errors)
         except:
             pass
     # this shouldn't ever happen... FIXME
@@ -64,10 +64,10 @@ def mkpath(path, encoding=None):
     return encode(path, encoding=encoding)
 
 
-def read(filename, size=-1, encoding=None):
+def read(filename, size=-1, encoding=None, errors='strict'):
     """Read filename and return contents"""
     with xopen(filename, 'rb') as fh:
-        return fread(fh, size=size, encoding=encoding)
+        return fread(fh, size=size, encoding=encoding, errors=errors)
 
 
 def write(path, contents, encoding=None):
@@ -77,9 +77,9 @@ def write(path, contents, encoding=None):
 
 
 @interruptable
-def fread(fh, size=-1, encoding=None):
+def fread(fh, size=-1, encoding=None, errors='strict'):
     """Read from a filehandle and retry when interrupted"""
-    return decode(fh.read(size), encoding=encoding)
+    return decode(fh.read(size), encoding=encoding, errors=errors)
 
 
 @interruptable
