@@ -8,6 +8,8 @@ Usability, bells and whistles
 
 * Line-by-line interactive staging was made more precise.
 
+  https://github.com/git-cola/git-cola/pull/399
+
 git-cola v2.0.8
 ===============
 Usability, bells and whistles
