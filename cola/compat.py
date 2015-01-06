@@ -18,6 +18,11 @@ except NameError:
     # Python 3
     unichr = chr
 
+if PY3:
+    bchr = lambda i: bytes([i])
+else:
+    bchr = chr
+
 try:
     # Python 3
     from urllib import parse

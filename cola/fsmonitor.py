@@ -1,11 +1,15 @@
 # Copyright (c) 2008 David Aguilar
-"""Provides an inotify plugin for Linux and other systems with pyinotify"""
+# Copyright (c) 2015 Daniel Harding
+"""Provides an filesystem monitoring for Linux (via inotify) and for Windows
+(via pywin32 and the ReadDirectoryChanges function)"""
 from __future__ import division, absolute_import, unicode_literals
 
+import errno
 import os
+import os.path
+import select
 from threading import Timer
 from threading import Lock
-
 
 from cola import utils
 
@@ -21,18 +25,13 @@ if utils.is_win32():
         pass
     else:
         AVAILABLE = 'pywin32'
-else:
+elif utils.is_linux():
     try:
-        import pyinotify
-        from pyinotify import EventsCodes
-        from pyinotify import Notifier
-        from pyinotify import ProcessEvent
-        from pyinotify import WatchManager
-        from pyinotify import WatchManagerError
-    except Exception:
+        from cola import inotify
+    except ImportError:
         pass
     else:
-        AVAILABLE = 'pyinotify'
+        AVAILABLE = 'inotify'
 
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
@@ -40,7 +39,7 @@ from PyQt4.QtCore import SIGNAL
 from cola import core
 from cola import gitcfg
 from cola import gitcmds
-from cola.compat import ustr, PY3
+from cola.compat import bchr
 from cola.git import git
 from cola.i18n import N_
 from cola.interaction import Interaction
@@ -70,7 +69,6 @@ class _BaseThread(QtCore.QThread):
     def __init__(self, monitor):
         QtCore.QThread.__init__(self)
         self._monitor = monitor
-        self._timeout = 333
         self._running = True
         ## Timer used to prevent notification floods
         self._timer = None
@@ -90,112 +88,129 @@ class _BaseThread(QtCore.QThread):
         with self._lock:
             self._timer = None
 
-    def stop(self):
-        self._timeout = 0
-        self._running = False
-        self.wait()
+    @staticmethod
+    def _log_enabled_message():
+        msg = N_('File system change monitoring: enabled.\n')
+        Interaction.safe_log(msg)
 
 
-if AVAILABLE == 'pyinotify':
+if AVAILABLE == 'inotify':
     class _InotifyThread(_BaseThread):
-        ## Events to capture
-        _MASK = (EventsCodes.ALL_FLAGS['IN_ATTRIB'] |
-                 EventsCodes.ALL_FLAGS['IN_CLOSE_WRITE'] |
-                 EventsCodes.ALL_FLAGS['IN_CREATE'] |
-                 EventsCodes.ALL_FLAGS['IN_DELETE'] |
-                 EventsCodes.ALL_FLAGS['IN_MODIFY'] |
-                 EventsCodes.ALL_FLAGS['IN_MOVED_TO'])
-
-        class _EventHandler(ProcessEvent):
-            def __init__(self, monitor):
-                ProcessEvent.__init__(self)
-                self._monitor = monitor
-
-            def process_default(self, event):
-                if event.name:
-                    self._monitor.trigger()
+        _TRIGGER_MASK = (
+                inotify.IN_ATTRIB |
+                inotify.IN_CLOSE_WRITE |
+                inotify.IN_CREATE |
+                inotify.IN_DELETE |
+                inotify.IN_MODIFY |
+                inotify.IN_MOVED_FROM |
+                inotify.IN_MOVED_TO
+        )
+        _ADD_MASK = (
+                _TRIGGER_MASK |
+                inotify.IN_EXCL_UNLINK |
+                inotify.IN_ONLYDIR
+        )
 
         def __init__(self, monitor):
-            """Set up the pyinotify thread"""
             _BaseThread.__init__(self, monitor)
-            ## Directories to watching
-            self._dirs_seen = set()
-            ## The inotify watch manager instantiated in run()
-            self._manager = None
-            ## Has add_watch() failed?
-            self._add_watch_failed = False
+            self._inotify_fd = None
+            self._pipe_lock = Lock()
+            self._pipe_r = None
+            self._pipe_w = None
+            self._wd_map = {}
 
         @staticmethod
-        def _is_pyinotify_08x():
-            """Is this pyinotify 0.8.x?
-
-            The pyinotify API changed between 0.7.x and 0.8.x.
-            This allows us to maintain backwards compatibility.
-            """
-            if hasattr(pyinotify, '__version__'):
-                if pyinotify.__version__[:3] < '0.8':
-                    return False
-            return True
-
-        def _watch_directory(self, directory):
-            """Set up a directory for monitoring by inotify"""
-            if self._manager is None or self._add_watch_failed:
-                return
-            directory = core.realpath(directory)
-            if directory in self._dirs_seen:
-                return
-            self._dirs_seen.add(directory)
-            if core.exists(directory):
-                dir_arg = directory if PY3 else core.encode(directory)
-                try:
-                    self._manager.add_watch(dir_arg, self._MASK, quiet=False)
-                except WatchManagerError as e:
-                    self._add_watch_failed = True
-                    self._add_watch_failed_warning(directory, e)
-
-        @staticmethod
-        def _add_watch_failed_warning(directory, e):
-            msg = ('inotify: failed to watch "{}": {}\n'
-                   'If you have run out of watches then you may be able to'
-                       ' increase the number of allowed watches by running:\n'
-                   '\n'
-                   '    echo fs.inotify.max_user_watches=100000 |'
-                       ' sudo tee -a /etc/sysctl.conf &&'
-                       ' sudo sysctl -p\n'.format(directory, e))
+        def _log_out_of_wds_message():
+            msg = N_('File system change monitoring: disabled because the'
+                         ' limit on the total number of inotify watches was'
+                         ' reached.  You may be able to increase the limit on'
+                         ' the number of watches by running:\n'
+                     '\n'
+                     '    echo fs.inotify.max_user_watches=100000 |'
+                         ' sudo tee -a /etc/sysctl.conf &&'
+                         ' sudo sysctl -p\n')
             Interaction.safe_log(msg)
+
+        def _watch_dir(self, path):
+            if path in self._wd_map:
+                return
+            try:
+                wd = inotify.add_watch(self._inotify_fd, core.encode(path),
+                                       self._ADD_MASK)
+            except OSError as e:
+                if e.errno == errno.ENOENT or e.errno == errno.ENOTDIR:
+                    # These two errors should only occur as a result of race
+                    # conditions:  the first if the directory referenced by
+                    # path was removed or renamed before the call to
+                    # inotify.add_watch(); the second if the directory
+                    # referenced by path was replaced with a file before the
+                    # call to inotify.add_watch().  Therefore we simply ignore
+                    # them.
+                    pass
+                else:
+                    raise
+            else:
+                self._wd_map[path] = wd
 
         def run(self):
-            # Only capture events that git cares about
-            self._manager = WatchManager()
-            event_handler = self._EventHandler(self)
-            if self._is_pyinotify_08x():
-                notifier = Notifier(self._manager, event_handler,
-                                    timeout=self._timeout)
-            else:
-                notifier = Notifier(self._manager, event_handler)
+            try:
+                self._inotify_fd = inotify.init()
 
-            self._watch_directory(self._worktree)
+                with self._pipe_lock:
+                    self._pipe_r, self._pipe_w = os.pipe()
 
-            # Register files/directories known to git
-            for filename in gitcmds.tracked_files():
-                self._watch_directory(os.path.dirname(filename))
+                poll_obj = select.poll()
+                poll_obj.register(self._inotify_fd, select.POLLIN)
+                poll_obj.register(self._pipe_r, select.POLLIN)
 
-            msg = N_('inotify enabled.')
-            Interaction.safe_log(msg)
+                for path in gitcmds.tracked_files():
+                    try:
+                        self._watch_dir(os.path.dirname(path))
+                    except OSError as e:
+                        if e.errno == errno.ENOSPC:
+                            self._log_out_of_wds_message()
+                            self._running = False
+                            break
+                        else:
+                            raise
 
-            # self._running signals app termination.  The timeout is a tradeoff
-            # between fast notification response and waiting too long to exit.
-            while self._running:
-                if self._is_pyinotify_08x():
-                    check = notifier.check_events()
-                else:
-                    check = notifier.check_events(timeout=self._timeout)
-                if not self._running:
-                    break
-                if check:
-                    notifier.read_events()
-                    notifier.process_events()
-            notifier.stop()
+                self._log_enabled_message()
+
+                while self._running:
+                    try:
+                        events = poll_obj.poll()
+                    except OSError as e:
+                        if e.errno == errno.EINTR:
+                            continue
+                        else:
+                            raise
+                    else:
+                        for fd, event in events:
+                            if fd == self._inotify_fd and self._running:
+                                self._handle_events()
+            finally:
+                if self._inotify_fd is not None:
+                    os.close(self._inotify_fd)
+                    self._inotify_fd = None
+                with self._pipe_lock:
+                    if self._pipe_r is not None:
+                        os.close(self._pipe_r)
+                        self._pipe_r = None
+                        os.close(self._pipe_w)
+                        self._pipe_w = None
+
+        def _handle_events(self):
+            for wd, mask, cookie, name in \
+                    inotify.read_events(self._inotify_fd):
+                if mask & self._TRIGGER_MASK:
+                    self.trigger()
+
+        def stop(self):
+            self._running = False
+            with self._pipe_lock:
+                if self._pipe_w is not None:
+                    os.write(self._pipe_w, bchr(0))
+            self.wait()
 
 
 if AVAILABLE == 'pywin32':
@@ -211,6 +226,7 @@ if AVAILABLE == 'pywin32':
             _BaseThread.__init__(self, monitor)
             self._worktree = self._transform_path(core.abspath(git.worktree()))
             self._git_dir = self._transform_path(git.git_dir())
+            self._timeout = 333
 
         @staticmethod
         def _transform_path(path):
@@ -231,8 +247,7 @@ if AVAILABLE == 'pywin32':
             overlapped = pywintypes.OVERLAPPED()
             overlapped.hEvent = win32event.CreateEvent(None, 0, 0, None)
 
-            msg = N_('File notification enabled.')
-            Interaction.safe_log(msg)
+            self._log_enabled_message()
 
             while self._running:
                 win32file.ReadDirectoryChangesW(hdir, buf, True, self._FLAGS,
@@ -254,6 +269,11 @@ if AVAILABLE == 'pywin32':
                             and not path.startswith(self._git_dir + '/')):
                         self.trigger()
 
+        def stop(self):
+            self._timeout = 0
+            self._running = False
+            self.wait()
+
 
 _instance = None
 
@@ -268,22 +288,20 @@ def _create_instance():
     thread_class = None
     cfg = gitcfg.current()
     if not cfg.get('cola.inotify', True):
-        msg = N_('inotify is disabled because "cola.inotify" is false')
+        msg = N_('File system change monitoring: disabled because'
+                 ' "cola.inotify" is false.\n')
         Interaction.log(msg)
-    elif AVAILABLE == 'pyinotify':
+    elif AVAILABLE == 'inotify':
         thread_class = _InotifyThread
     elif AVAILABLE == 'pywin32':
         thread_class = _Win32Thread
     else:
         if utils.is_win32():
-            msg = N_('file notification: disabled\n'
-                     'Note: install pywin32 to enable.\n')
+            msg = N_('File system change monitoring: disabled because pywin32'
+                     ' is not installed.\n')
             Interaction.log(msg)
         elif utils.is_linux():
-            msg = N_('inotify: disabled\n'
-                     'Note: install python-pyinotify to enable inotify.\n')
-            if utils.is_debian():
-                msg += N_('On Debian-based systems '
-                          'try: sudo apt-get install python-pyinotify\n')
+            msg = N_('File system change monitoring: disabled because libc'
+                     ' does not support the inotify system calls.\n')
             Interaction.log(msg)
     return _Monitor(thread_class)

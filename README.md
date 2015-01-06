@@ -24,7 +24,7 @@ Screenshots are available on the
 
 ## DOWNLOAD
 
-    apt-get install git-cola python-pyinotify
+    apt-get install git-cola
 
 New releases are available on the
 [git-cola download page](https://git-cola.github.io/downloads.html).
@@ -59,9 +59,6 @@ New releases are available on the
 
 *git-cola* enables additional features when the following
 Python modules are installed.
-
-[pyinotify](https://github.com/seb-m/pyinotify) 0.7.1 or newer
-enables inotify support on Linux.
 
 [send2trash](https://github.com/hsoft/send2trash) enables cross-platform
 "Send to Trash" functionality.
