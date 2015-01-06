@@ -16,4 +16,5 @@ install:
   - sudo pip install argparse
 
 script:
-  - make
+  - make all doc
+
