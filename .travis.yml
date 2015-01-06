@@ -20,7 +20,7 @@ install:
   # Build and install SIP and PyQt4
   - wget "http://sourceforge.net/projects/pyqt/files/sip/sip-4.16.5/sip-4.16.5.tar.gz"
   - tar --verbose --extract --file sip-4.16.5.tar.gz
-  - cd sip-4.16.5.tar.gz
+  - cd sip-4.16.5
   - python configure.py
   - make -j4
   - make install
