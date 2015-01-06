@@ -14,9 +14,9 @@ before_install:
 # command to install dependencies, git and python are pre-installed in build box thus are ignored
 install:
   # according to Debian control file from Ubuntu 12.04
-  - sudo apt-get install python-support pyqt4-dev-tools python-sphinx rsync gettext asciidoc xmlto
+  - sudo apt-get install python-support rsync gettext asciidoc xmlto
   # Additional dependency for python 2.6
-  - pip install argparse
+  - pip install argparse pyqt4 sphinx 
 
 script:
   - make all doc
