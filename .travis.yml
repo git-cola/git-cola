@@ -6,9 +6,14 @@ python:
   - "3.2"
   - "3.3"
   - "3.4"
-# command to install dependencies
+
+# command to install dependencies, git and python are pre-installed in build box thus are ignored
 install:
-  - sudo apt-get build-dep git-cola
+  # according to Debian control file from Ubuntu 12.04
+  - sudo apt-get install python python-support pyqt4-dev-tools python-sphinx rsync git-core gettext asciidoc xmlto
+  # Additional dependency for python 2.6
+  - sudo apt-get install pip
+  - sudo pip install argparse
 
 script:
   - make
