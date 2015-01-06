@@ -3,6 +3,7 @@ from __future__ import division, absolute_import, unicode_literals
 import time
 
 from PyQt4 import QtGui
+from PyQt4.QtCore import SIGNAL
 
 from cola.i18n import N_
 from cola.widgets import defs
@@ -21,6 +22,7 @@ class LogWidget(QtGui.QWidget):
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
                                         self.output_text)
         self.setLayout(self.main_layout)
+        self.connect(self, SIGNAL('log'), self.log)
 
     def clear(self):
         self.output_text.clear()
@@ -50,3 +52,8 @@ class LogWidget(QtGui.QWidget):
         cursor.insertText('\n')
         cursor.movePosition(cursor.End)
         text.setTextCursor(cursor)
+
+    def safe_log(self, msg):
+        """A version of the log() method that can be called from other
+        threads."""
+        self.emit(SIGNAL('log'), msg)
