@@ -15,8 +15,26 @@ before_install:
 install:
   # according to Debian control file from Ubuntu 12.04
   - sudo apt-get install python-support rsync gettext asciidoc xmlto
+  - pip install sphinx
+  
+  # Build and install SIP and PyQt4
+  - wget "http://sourceforge.net/projects/pyqt/files/sip/sip-4.16.5/sip-4.16.5.tar.gz"
+  - tar --verbose --extract --file sip-4.16.5.tar.gz
+  - cd sip-4.16.5.tar.gz
+  - python configure.py
+  - make -j4
+  - make install
+  - cd ..
+  - wget "http://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.11.3/PyQt-x11-gpl-4.11.3.tar.gz"
+  - tar --verbose --extract --file PyQt-x11-gpl-4.11.3.tar.gz
+  - cd PyQt-x11-gpl-4.11.3
+  - python configure.py
+  - make -j4
+  - make install
+  - cd ..
+  
   # Additional dependency for python 2.6
-  - pip install argparse pyqt4 sphinx 
+  - pip install argparse 
 
 script:
   - make all doc
