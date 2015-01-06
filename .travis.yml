@@ -7,6 +7,10 @@ python:
   - "3.3"
   - "3.4"
 
+before_install:
+  # Update APT cache data since it may outdated
+  - sudo apt-get update
+
 # command to install dependencies, git and python are pre-installed in build box thus are ignored
 install:
   # according to Debian control file from Ubuntu 12.04
