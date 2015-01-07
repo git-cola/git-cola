@@ -40,3 +40,4 @@ install:
 script:
   - make all
   - make doc
+  - make test
