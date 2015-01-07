@@ -38,5 +38,5 @@ install:
   - pip install argparse 
 
 script:
-  - make all doc
-
+  - make all
+  - make doc
