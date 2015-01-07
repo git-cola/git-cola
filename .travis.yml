@@ -40,5 +40,4 @@ install:
 script:
   - make all
   - make doc
-#  - make test
-  - nosetests --with-doctest --exclude=sphinxtogithub --verbose # TODO: Temporarily used instead of `make test`, will be dropped in future
+#  - make test # Disabled due to issue #404
