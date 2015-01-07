@@ -3,7 +3,7 @@ language: python
 python:
   - "2.6"
   - "2.7"
-#  - "3.2" Pygments 2.0 requires Python 3.3+ and is not Git Cola's issue
+#  - "3.2" Sphinx depends on Pygments, which only supports Python 3.3+
   - "3.3"
   - "3.4"
 
