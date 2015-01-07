@@ -25,6 +25,7 @@ install:
   - make -j4
   - sudo make install
   - cd ..
+  
   - wget "http://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.11.3/PyQt-x11-gpl-4.11.3.tar.gz"
   - tar --verbose --extract --file PyQt-x11-gpl-4.11.3.tar.gz
   - cd PyQt-x11-gpl-4.11.3
