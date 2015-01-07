@@ -14,7 +14,7 @@ before_install:
 # command to install dependencies, git and python are pre-installed in build box thus are ignored
 install:
   # according to Debian control file from Ubuntu 12.04
-  - sudo apt-get install python-support rsync gettext asciidoc xmlto
+  - sudo apt-get install python-support rsync gettext
   - pip install sphinx
   
   # Build and install Git Cola's dependency, SIP and PyQt4
