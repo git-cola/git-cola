@@ -17,7 +17,7 @@ install:
   - sudo apt-get install python-support rsync gettext asciidoc xmlto
   - pip install sphinx
   
-  # Build and install SIP and PyQt4
+  # Build and install Git Cola's dependency, SIP and PyQt4
   - wget "http://sourceforge.net/projects/pyqt/files/sip/sip-4.16.5/sip-4.16.5.tar.gz"
   - tar --verbose --extract --file sip-4.16.5.tar.gz
   - cd sip-4.16.5
