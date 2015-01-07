@@ -40,4 +40,5 @@ install:
 script:
   - make all
   - make doc
-  - make test
+#  - make test
+  - nosetests --with-doctest --exclude=sphinxtogithub --verbose # TODO: Temporarily used instead of `make test`, will be dropped in future
