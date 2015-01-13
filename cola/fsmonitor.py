@@ -71,7 +71,6 @@ class _BaseThread(QtCore.QThread):
         QtCore.QThread.__init__(self)
         self._monitor = monitor
         self._timeout = 333
-        self._path = git.worktree()
         self._running = True
         ## Timer used to prevent notification floods
         self._timer = None
@@ -175,7 +174,7 @@ if AVAILABLE == 'pyinotify':
             else:
                 notifier = Notifier(self._manager, event_handler)
 
-            self._watch_directory(self._path)
+            self._watch_directory(self._worktree)
 
             # Register files/directories known to git
             for filename in git.ls_files()[STDOUT].splitlines():
@@ -210,9 +209,18 @@ if AVAILABLE == 'pywin32':
                   win32con.FILE_NOTIFY_CHANGE_LAST_WRITE |
                   win32con.FILE_NOTIFY_CHANGE_SECURITY)
 
+        def __init__(self, monitor):
+            _BaseThread.__init__(self, monitor)
+            self._worktree = self._transform_path(core.abspath(git.worktree()))
+            self._git_dir = self._transform_path(git.git_dir())
+
+        @staticmethod
+        def _transform_path(path):
+            return path.replace('\\', '/').lower()
+
         def run(self):
             hdir = win32file.CreateFile(
-                    self._path,
+                    self._worktree,
                     0x0001,
                     win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE,
                     None,
@@ -243,9 +251,9 @@ if AVAILABLE == 'pywin32':
                 for action, path in results:
                     if not self._running:
                         break
-                    path = path.replace('\\', '/')
-                    if (not path.startswith('.git/') and
-                            '/.git/' not in path and os.path.isfile(path)):
+                    path = self._worktree + '/' + self._transform_path(path)
+                    if (path != self._git_dir
+                            and not path.startswith(self._git_dir + '/')):
                         self.trigger()
 
 
