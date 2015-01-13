@@ -226,6 +226,9 @@ if AVAILABLE == 'pywin32':
             _BaseThread.__init__(self, monitor)
             self._worktree = self._transform_path(core.abspath(git.worktree()))
             self._git_dir = self._transform_path(git.git_dir())
+            self._dir_handle = None
+            self._buffer = None
+            self._overlapped = None
             self._timeout = 333
 
         @staticmethod
@@ -233,41 +236,52 @@ if AVAILABLE == 'pywin32':
             return path.replace('\\', '/').lower()
 
         def run(self):
-            hdir = win32file.CreateFileW(
-                    self._worktree,
-                    0x0001,
-                    win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE,
-                    None,
-                    win32con.OPEN_EXISTING,
-                    win32con.FILE_FLAG_BACKUP_SEMANTICS |
-                    win32con.FILE_FLAG_OVERLAPPED,
-                    None)
+            try:
+                self._dir_handle = win32file.CreateFileW(
+                        self._worktree,
+                        0x0001, # FILE_LIST_DIRECTORY
+                        win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE,
+                        None,
+                        win32con.OPEN_EXISTING,
+                        win32con.FILE_FLAG_BACKUP_SEMANTICS |
+                        win32con.FILE_FLAG_OVERLAPPED,
+                        None)
 
-            buf = win32file.AllocateReadBuffer(8192)
-            overlapped = pywintypes.OVERLAPPED()
-            overlapped.hEvent = win32event.CreateEvent(None, True, False, None)
+                self._buffer = win32file.AllocateReadBuffer(8192)
+                self._overlapped = pywintypes.OVERLAPPED()
+                self._overlapped.hEvent = win32event.CreateEvent(None, True,
+                                                                 False, None)
 
-            self._log_enabled_message()
+                self._log_enabled_message()
 
-            while self._running:
-                win32file.ReadDirectoryChangesW(hdir, buf, True, self._FLAGS,
-                                                overlapped)
+                while self._running:
+                    win32file.ReadDirectoryChangesW(self._dir_handle,
+                                                    self._buffer, True,
+                                                    self._FLAGS,
+                                                    self._overlapped)
 
-                rc = win32event.WaitForSingleObject(overlapped.hEvent,
-                                                    self._timeout)
-                if rc != win32event.WAIT_OBJECT_0:
-                    continue
-                nbytes = win32file.GetOverlappedResult(hdir, overlapped, False)
-                if not nbytes:
-                    continue
-                results = win32file.FILE_NOTIFY_INFORMATION(buf, nbytes)
-                for action, path in results:
-                    if not self._running:
-                        break
-                    path = self._worktree + '/' + self._transform_path(path)
-                    if (path != self._git_dir
-                            and not path.startswith(self._git_dir + '/')):
-                        self.trigger()
+                    rc = win32event.WaitForSingleObject(
+                            self._overlapped.hEvent, self._timeout)
+                    if rc == win32event.WAIT_OBJECT_0:
+                        self._handle_results()
+            finally:
+                if self._dir_handle is not None:
+                    win32file.CancelIo(self._dir_handle)
+                    win32file.CloseHandle(self._dir_handle)
+                if self._overlapped is not None and self._overlapped.hEvent:
+                    win32file.CloseHandle(self._overlapped.hEvent)
+
+        def _handle_results(self):
+            nbytes = win32file.GetOverlappedResult(self._dir_handle,
+                                                   self._overlapped, False)
+            results = win32file.FILE_NOTIFY_INFORMATION(self._buffer, nbytes)
+            for action, path in results:
+                if not self._running:
+                    break
+                path = self._worktree + '/' + self._transform_path(path)
+                if (path != self._git_dir
+                        and not path.startswith(self._git_dir + '/')):
+                    self.trigger()
 
         def stop(self):
             self._timeout = 0
