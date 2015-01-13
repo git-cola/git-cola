@@ -229,7 +229,8 @@ if AVAILABLE == 'pywin32':
             self._dir_handle = None
             self._buffer = None
             self._overlapped = None
-            self._timeout = 333
+            self._stop_event_lock = Lock()
+            self._stop_event = None
 
         @staticmethod
         def _transform_path(path):
@@ -237,6 +238,10 @@ if AVAILABLE == 'pywin32':
 
         def run(self):
             try:
+                with self._stop_event_lock:
+                    self._stop_event = win32event.CreateEvent(None, True,
+                                                              False, None)
+
                 self._dir_handle = win32file.CreateFileW(
                         self._worktree,
                         0x0001, # FILE_LIST_DIRECTORY
@@ -244,7 +249,7 @@ if AVAILABLE == 'pywin32':
                         None,
                         win32con.OPEN_EXISTING,
                         win32con.FILE_FLAG_BACKUP_SEMANTICS |
-                        win32con.FILE_FLAG_OVERLAPPED,
+                            win32con.FILE_FLAG_OVERLAPPED,
                         None)
 
                 self._buffer = win32file.AllocateReadBuffer(8192)
@@ -260,11 +265,17 @@ if AVAILABLE == 'pywin32':
                                                     self._FLAGS,
                                                     self._overlapped)
 
-                    rc = win32event.WaitForSingleObject(
-                            self._overlapped.hEvent, self._timeout)
-                    if rc == win32event.WAIT_OBJECT_0:
-                        self._handle_results()
+                    win32event.WaitForMultipleObjects(
+                            [self._overlapped.hEvent, self._stop_event], False,
+                            win32event.INFINITE)
+                    if not self._running:
+                        break
+                    self._handle_results()
             finally:
+                with self._stop_event_lock:
+                    if self._stop_event is not None:
+                        win32file.CloseHandle(self._stop_event)
+                        self._stop_event = None
                 if self._dir_handle is not None:
                     win32file.CancelIo(self._dir_handle)
                     win32file.CloseHandle(self._dir_handle)
@@ -284,8 +295,10 @@ if AVAILABLE == 'pywin32':
                     self.trigger()
 
         def stop(self):
-            self._timeout = 0
             self._running = False
+            with self._stop_event_lock:
+                if self._stop_event is not None:
+                    win32event.SetEvent(self._stop_event)
             self.wait()
 
 
