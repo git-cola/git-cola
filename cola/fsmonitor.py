@@ -245,7 +245,7 @@ if AVAILABLE == 'pywin32':
 
             buf = win32file.AllocateReadBuffer(8192)
             overlapped = pywintypes.OVERLAPPED()
-            overlapped.hEvent = win32event.CreateEvent(None, 0, 0, None)
+            overlapped.hEvent = win32event.CreateEvent(None, True, False, None)
 
             self._log_enabled_message()
 
@@ -257,7 +257,7 @@ if AVAILABLE == 'pywin32':
                                                     self._timeout)
                 if rc != win32event.WAIT_OBJECT_0:
                     continue
-                nbytes = win32file.GetOverlappedResult(hdir, overlapped, True)
+                nbytes = win32file.GetOverlappedResult(hdir, overlapped, False)
                 if not nbytes:
                     continue
                 results = win32file.FILE_NOTIFY_INFORMATION(buf, nbytes)
