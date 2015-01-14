@@ -14,6 +14,12 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/392
 
+Fixes
+=====
+* `git dag` was triggering a traceback on Fedora when parsing Git logs.
+
+  https://bugzilla.redhat.com/show_bug.cgi?id=1181686
+
 git-cola v2.0.8
 ===============
 Usability, bells and whistles

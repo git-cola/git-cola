@@ -119,7 +119,7 @@ class Commit(object):
     def parse(self, log_entry, sep=logsep):
         self.sha1 = log_entry[:40]
         (parents, tags, author, authdate, email, summary) = \
-                log_entry[41:].split(sep, 6)
+                log_entry[41:].split(sep, 5)
 
         self.summary = summary and summary or ''
         self.author = author and author or ''
