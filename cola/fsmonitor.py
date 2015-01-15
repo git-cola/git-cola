@@ -233,7 +233,7 @@ if AVAILABLE == 'pywin32':
             return path.replace('\\', '/').lower()
 
         def run(self):
-            hdir = win32file.CreateFile(
+            hdir = win32file.CreateFileW(
                     self._worktree,
                     0x0001,
                     win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE,
