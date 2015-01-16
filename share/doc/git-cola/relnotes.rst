@@ -6,7 +6,7 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/389
 
-* Line-by-line interactive staging was made more precise.
+* Line-by-line interactive staging was made more robust.
 
   https://github.com/git-cola/git-cola/pull/399
 
@@ -14,11 +14,23 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/392
 
+* Untracked files are now displayed using a unique icon.
+
+  https://github.com/git-cola/git-cola/pull/388
+
 Fixes
 =====
 * `git dag` was triggering a traceback on Fedora when parsing Git logs.
 
   https://bugzilla.redhat.com/show_bug.cgi?id=1181686
+
+* inotify expects unicode paths on Python3.
+
+  https://github.com/git-cola/git-cola/pull/393
+
+* Untracked files are now assumed to be utf-8 encoded.
+
+  https://github.com/git-cola/git-cola/issues/401
 
 git-cola v2.0.8
 ===============
