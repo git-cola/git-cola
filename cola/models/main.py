@@ -369,47 +369,16 @@ class MainModel(Observable):
                 return url
         return self.git.config('remote.%s.url' % name, get=True)[STDOUT]
 
-    def remote_args(self, remote,
-                    local_branch='',
-                    remote_branch='',
-                    ffwd=True,
-                    tags=False,
-                    rebase=False,
-                    pull=False,
-                    push=False):
-        if push:
-            # Swap the branches in push mode (reverse of fetch)
-            local_branch, remote_branch = remote_branch, local_branch
-        if ffwd:
-            branch_arg = '%s:%s' % (remote_branch, local_branch)
-        else:
-            branch_arg = '+%s:%s' % (remote_branch, local_branch)
-        args = [remote]
-        if local_branch and remote_branch and not pull:
-            args.append(branch_arg)
-        elif local_branch:
-            args.append(local_branch)
-        elif remote_branch:
-            args.append(remote_branch)
-        kwargs = {
-            'verbose': True,
-            'tags': tags,
-            'rebase': rebase,
-        }
-        return (args, kwargs)
-
-    def run_remote_action(self, action, remote, push=False, **kwargs):
-        args, kwargs = self.remote_args(remote, push=push, **kwargs)
-        return action(*args, **kwargs)
-
     def fetch(self, remote, **opts):
-        return self.run_remote_action(self.git.fetch, remote, **opts)
+        return run_remote_action(self.git.fetch, remote, **opts)
 
-    def push(self, remote, **opts):
-        return self.run_remote_action(self.git.push, remote, push=True, **opts)
+    def push(self, remote, remote_branch='', local_branch='', **opts):
+        # Swap the branches in push mode (reverse of fetch)
+        opts.update(dict(local_branch=remote_branch, remote_branch=local_branch))
+        return run_remote_action(self.git.push, remote, **opts)
 
     def pull(self, remote, **opts):
-        return self.run_remote_action(self.git.pull, remote, pull=True, **opts)
+        return run_remote_action(self.git.pull, remote, pull=True, **opts)
 
     def create_branch(self, name, base, track=False, force=False):
         """Create a branch named 'name' from revision 'base'
@@ -492,3 +461,46 @@ class MainModel(Observable):
         if self.directory:
             return self.directory
         return core.getcwd()
+
+
+# Helpers
+def remote_args(remote,
+                local_branch='',
+                remote_branch='',
+                ffwd=True,
+                tags=False,
+                rebase=False,
+                pull=False):
+    """Return arguments for git fetch/push/pull"""
+
+    args = [remote]
+    what = refspec_arg(local_branch, remote_branch, ffwd, pull)
+    if what:
+        args.append(what)
+    kwargs = {
+        'verbose': True,
+        'tags': tags,
+        'rebase': rebase,
+    }
+    return (args, kwargs)
+
+
+def refspec(src, dst, ffwd):
+    spec = '%s:%s' % (src, dst)
+    if not ffwd:
+        spec = '+' + spec
+    return spec
+
+
+def refspec_arg(local_branch, remote_branch, ffwd, pull):
+    """Return the refspec for a fetch or pull command"""
+    if not pull and local_branch and remote_branch:
+        what = refspec(remote_branch, local_branch, ffwd)
+    else:
+        what = local_branch or remote_branch or None
+    return what
+
+
+def run_remote_action(action, remote, **kwargs):
+    args, kwargs = remote_args(remote, **kwargs)
+    return action(*args, **kwargs)
