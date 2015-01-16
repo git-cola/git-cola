@@ -33,7 +33,7 @@ cola_version = $(shell $(PYTHON) bin/git-cola version --brief)
 cola_dist := $(cola_base)-$(cola_version)
 
 test_flags =
-all_test_flags = --with-doctest --exclude=sphinxtogithub $(test_flags)
+nose_args ?= --with-doctest --exclude=sphinxtogithub $(test_flags)
 
 # User customizations
 -include config.mak
@@ -106,10 +106,10 @@ uninstall:
 	-$(RMDIR) $(DESTDIR)$(prefix) 2>/dev/null
 
 test: all
-	$(NOSETESTS) $(all_test_flags)
+	$(NOSETESTS) $(nose_args) cola test
 
 coverage:
-	$(NOSETESTS) --with-coverage --cover-package=cola $(all_test_flags)
+	$(NOSETESTS) --with-coverage --cover-package=cola $(nose_args) cola test
 
 clean:
 	$(MAKE) -C share/doc/git-cola clean
