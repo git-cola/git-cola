@@ -46,7 +46,7 @@ class ClassicModelTestCase(helper.GitRepositoryTestCase):
 
     def test_unstage_paths_subdir(self):
         """Test unstage_paths() in a subdirectory."""
-        self.git('commit', '-m', 'intitial commit')
+        self.git('commit', '-m', 'initial commit')
         core.makedirs('foo/bar')
         self.touch('foo/bar/baz')
         self.git('add', 'foo/bar/baz')
