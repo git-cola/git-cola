@@ -91,4 +91,4 @@ class GitRepositoryTestCase(TmpPathTestCase):
         self.git('add', 'A', 'B')
 
     def commit_files(self):
-        self.git('commit', '-m', 'intitial commit')
+        self.git('commit', '-m', 'initial commit')
