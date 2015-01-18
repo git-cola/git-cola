@@ -19,7 +19,7 @@ install:
   
   # Build and install Git Cola's dependency, SIP and PyQt4
   - wget "http://sourceforge.net/projects/pyqt/files/sip/sip-4.16.5/sip-4.16.5.tar.gz"
-  - tar --verbose --extract --file sip-4.16.5.tar.gz
+  - tar xzf sip-4.16.5.tar.gz
   - cd sip-4.16.5
   - python configure.py
   - make -j4
@@ -27,7 +27,7 @@ install:
   - cd ..
   
   - wget "http://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.11.3/PyQt-x11-gpl-4.11.3.tar.gz"
-  - tar --verbose --extract --file PyQt-x11-gpl-4.11.3.tar.gz
+  - tar xzf PyQt-x11-gpl-4.11.3.tar.gz
   - cd PyQt-x11-gpl-4.11.3
   - printf "yes\n" | python configure.py # Configure script requires accepting license
   - make -j4
