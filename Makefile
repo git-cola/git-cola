@@ -50,8 +50,12 @@ ifdef DESTDIR
 endif
 export prefix
 
-all::
+all:: build
+.PHONY: all
+
+build:
 	$(PYTHON) setup.py build
+.PHONY: build
 
 install: all
 	$(PYTHON) setup.py install $(setup_args)
@@ -61,29 +65,37 @@ install: all
 	! test -e cola && $(LN) -s git-cola cola) || true
 	$(RM_R) $(DESTDIR)$(coladir)/git_cola*
 	$(RM_R) git_cola.egg-info
+.PHONY: install
 
 # Maintainer's dist target
 dist:
 	$(GIT) archive --format=tar --prefix=$(cola_dist)/ HEAD^{tree} | \
 		$(GZIP) -f -9 - >$(cola_dist).tar.gz
+.PHONY: dist
 
 doc:
 	$(MAKE) -C share/doc/git-cola all
+.PHONY: doc
 
 html:
 	$(MAKE) -C share/doc/git-cola html
+.PHONY: html
 
 man:
 	$(MAKE) -C share/doc/git-cola man
+.PHONY: man
 
 install-doc:
 	$(MAKE) -C share/doc/git-cola install
+.PHONY: install-doc
 
 install-html:
 	$(MAKE) -C share/doc/git-cola install-html
+.PHONY: install-html
 
 install-man:
 	$(MAKE) -C share/doc/git-cola install-man
+.PHONY: install-man
 
 uninstall:
 	$(RM) $(DESTDIR)$(prefix)/bin/git-cola
@@ -104,27 +116,34 @@ uninstall:
 	-$(RMDIR) $(DESTDIR)$(prefix)/share 2>/dev/null
 	-$(RMDIR) $(DESTDIR)$(prefix)/bin 2>/dev/null
 	-$(RMDIR) $(DESTDIR)$(prefix) 2>/dev/null
+.PHONY: uninstall
 
 test: all
 	$(NOSETESTS) $(nose_args) cola test
+.PHONY: test
 
 coverage:
 	$(NOSETESTS) --with-coverage --cover-package=cola $(nose_args) cola test
+.PHONY: coverage
 
 clean:
 	$(MAKE) -C share/doc/git-cola clean
 	$(FIND) cola test -name '*.py[cod]' -print0 | xargs -0 rm -f
 	$(RM_R) build dist tags git-cola.app
 	$(RM_R) share/locale
+.PHONY: clean
 
 tags:
 	$(FIND) cola test -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
+.PHONY: tags
 
 pot:
 	$(PYTHON) setup.py build_pot -N -d po
+.PHONY: pot
 
 mo:
 	$(PYTHON) setup.py build_mo -f
+.PHONY: mo
 
 git-cola.app:
 	$(MKDIR_P) $(cola_app)/Contents/MacOS
@@ -134,9 +153,8 @@ git-cola.app:
 	$(CP) contrib/darwin/git-cola.icns $(cola_app)/Contents/Resources
 	$(MAKE) prefix=$(cola_app)/Contents/Resources install install-doc
 	$(LN) -sf $(darwin_python) $(cola_app)/Contents/Resources/git-cola
+.PHONY: git-cola.app
 
 app-tarball: git-cola.app
 	$(TAR) czf $(cola_dist).app.tar.gz $(cola_app_base)
-
-.PHONY: all install doc install-doc install-html test clean tags
-.PHONY: git-cola.app app-tarball
+.PHONY: app-tarball
