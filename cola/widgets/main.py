@@ -696,13 +696,13 @@ class MainView(standard.MainWindow):
             # Create a new shortcut Shift+<shortcut> that gives focus
             toggleview = QtGui.QAction(self)
             toggleview.setShortcut(shortcut)
-            def focusdock(dockwidget=dockwidget, showdock=showdock):
-                if dockwidget.toggleViewAction().isChecked():
-                    showdock(True)
-                else:
-                    dockwidget.toggleViewAction().trigger()
+            def focusdock(dockwidget=dockwidget):
+                focus_dock(dockwidget)
             self.addAction(toggleview)
             connect_action(toggleview, focusdock)
+
+        qtutils.add_action(self, 'Focus Commit Message',
+                           lambda: focus_dock(self.commitdockwidget), 'Ctrl+L')
 
     def preferences(self):
         return prefs_widget.preferences(model=self.prefs_model, parent=self)
@@ -765,3 +765,15 @@ class MainView(standard.MainWindow):
     def clone_repo(self):
         guicmds.clone_repo(self.task_runner, self.progress,
                            guicmds.report_clone_repo_errors, True)
+
+
+def show_dock(dockwidget):
+    dockwidget.raise_()
+    dockwidget.widget().setFocus()
+
+
+def focus_dock(dockwidget):
+    if dockwidget.toggleViewAction().isChecked():
+        show_dock(dockwidget)
+    else:
+        dockwidget.toggleViewAction().trigger()
