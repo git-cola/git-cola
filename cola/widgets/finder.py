@@ -72,7 +72,7 @@ class Finder(standard.Dialog):
         self.input_txt = completion.GitTrackedLineEdit(hint=N_('<path> ...'))
         self.input_txt.enable_hint(True)
 
-        self.tree = FinderTree(parent=self)
+        self.tree = filetree.FileTree(parent=self)
 
         self.edit_button = QtGui.QPushButton(N_('Edit'))
         self.edit_button.setIcon(qtutils.open_file_icon())
@@ -167,27 +167,3 @@ class Finder(standard.Dialog):
     def open_default(self):
         paths = self.tree.selected_filenames()
         cmds.do(cmds.OpenDefaultApp, paths)
-
-
-class FinderTree(filetree.FileTree):
-
-    def __init__(self, parent=None):
-        filetree.FileTree.__init__(self, parent=parent)
-
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Up:
-            idxs = self.selectedIndexes()
-            rows = [idx.row() for idx in idxs]
-            if len(rows) == 1 and rows[0] == 0:
-                # The cursor is at the beginning of the line.
-                # If we have selection then simply reset the cursor.
-                # Otherwise, emit a signal so that the parent can
-                # change focus.
-                event.accept()
-                self.emit(SIGNAL('up()'))
-
-        if event.key() == Qt.Key_Space:
-            event.accept()
-            self.emit(SIGNAL('space()'))
-            return
-        return filetree.FileTree.keyPressEvent(self, event)

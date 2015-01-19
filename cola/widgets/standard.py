@@ -201,6 +201,19 @@ class TreeMixin(object):
 
         # Re-read the event key to take the remappings into account
         key = event.key()
+        if key == Qt.Key_Up:
+            idxs = self.selectedIndexes()
+            rows = [idx.row() for idx in idxs]
+            if len(rows) == 1 and rows[0] == 0:
+                # The cursor is at the beginning of the line.
+                # If we have selection then simply reset the cursor.
+                # Otherwise, emit a signal so that the parent can
+                # change focus.
+                self.emit(SIGNAL('up()'))
+
+        elif key == Qt.Key_Space:
+            self.emit(SIGNAL('space()'))
+
         result = self.QtClass.keyPressEvent(self, event)
 
         # Let others hook in here before we change the indexes
