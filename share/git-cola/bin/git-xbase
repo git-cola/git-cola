@@ -33,6 +33,7 @@ from cola.qtutils import diff_font
 from cola.widgets import defs
 from cola.widgets import diff
 from cola.widgets import standard
+from cola.widgets import text
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
@@ -503,24 +504,8 @@ ctrl+enter = accept changes and rebase
 ctrl+q     = cancel and abort the rebase
 ctrl+d     = launch external diff
 """)
-
-    parent = qtutils.active_window()
-    text = QtGui.QLabel(parent)
-    text.setFont(diff_font())
-    text.setText(help_text)
-    text.setTextInteractionFlags(Qt.NoTextInteraction)
-
-    widget = QtGui.QDialog(parent)
-    widget.setWindowModality(Qt.WindowModal)
-    widget.setWindowTitle(N_('Help - git-xbase'))
-
-    layout = qtutils.hbox(defs.margin, defs.spacing, text)
-    widget.setLayout(layout)
-
-    qtutils.add_action(widget, N_('Close'), widget.accept,
-                       Qt.Key_Question, Qt.Key_Enter, Qt.Key_Return)
-    widget.show()
-    return widget
+    title = N_('Help - git-xbase')
+    return text.text_dialog(help_text, title)
 
 
 if __name__ == '__main__':

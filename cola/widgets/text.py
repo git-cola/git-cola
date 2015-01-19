@@ -5,7 +5,9 @@ from PyQt4.QtCore import Qt, SIGNAL
 
 from cola import qtutils
 from cola.compat import ustr
+from cola.i18n import N_
 from cola.models import prefs
+from cola.widgets import defs
 
 
 class MonoTextEdit(QtGui.QTextEdit):
@@ -228,3 +230,24 @@ class HintedLineEdit(QtGui.QLineEdit, HintedTextWidgetMixin):
 
     def reset_cursor(self):
         self.setCursorPosition(0)
+
+
+def text_dialog(text, title):
+    """Show a wall of text in a dialog"""
+    parent = qtutils.active_window()
+    label = QtGui.QLabel(parent)
+    label.setFont(qtutils.diff_font())
+    label.setText(text)
+    label.setTextInteractionFlags(Qt.NoTextInteraction)
+
+    widget = QtGui.QDialog(parent)
+    widget.setWindowModality(Qt.WindowModal)
+    widget.setWindowTitle(title)
+
+    layout = qtutils.hbox(defs.margin, defs.spacing, label)
+    widget.setLayout(layout)
+
+    qtutils.add_action(widget, N_('Close'), widget.accept,
+                       Qt.Key_Question, Qt.Key_Enter, Qt.Key_Return)
+    widget.show()
+    return widget
