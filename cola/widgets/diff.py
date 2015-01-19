@@ -44,6 +44,7 @@ class DiffEditorWidget(QtGui.QWidget):
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
                                         self.editor)
         self.setLayout(self.main_layout)
+        self.setFocusProxy(self.editor)
 
 
 class DiffEditor(DiffTextEdit):
