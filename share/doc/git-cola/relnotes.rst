@@ -1,3 +1,11 @@
+git-cola v2.1.1 (BETA)
+======================
+Usability, bells and whistles
+-----------------------------
+* `git cola` now remembers the text cursor's position when staging
+  interactively with the keyboard.  This makes it easier to use the keyboard
+  arrows to select and stage lines.
+
 git-cola v2.1.0
 ===============
 Usability, bells and whistles
