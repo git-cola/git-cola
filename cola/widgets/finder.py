@@ -100,26 +100,27 @@ class Finder(standard.Dialog):
                                           qtutils.STRETCH,
                                           self.close_button)
 
-        self.mainlayout = qtutils.vbox(defs.margin, defs.no_spacing,
+        self.main_layout = qtutils.vbox(defs.margin, defs.no_spacing,
                                        self.input_layout,
                                        self.tree,
                                        self.bottom_layout)
-        self.setLayout(self.mainlayout)
+        self.setLayout(self.main_layout)
+        self.setFocusProxy(self.input_txt)
 
         self.worker_thread = FindFilesThread(self)
         self.connect(self.worker_thread, SIGNAL('result'), self.process_result)
 
         self.connect(self.input_txt, SIGNAL('textChanged(QString)'),
                      lambda s: self.search())
-        self.connect(self.input_txt, SIGNAL('down()'), self.focus_tree)
-        self.connect(self.input_txt, SIGNAL('return()'), self.focus_tree)
-        self.connect(self.input_txt, SIGNAL('enter()'), self.focus_tree)
         self.connect(self.input_txt, SIGNAL('activated()'), self.focus_tree)
+        self.connect(self.input_txt, SIGNAL('down()'), self.focus_tree)
+        self.connect(self.input_txt, SIGNAL('enter()'), self.focus_tree)
+        self.connect(self.input_txt, SIGNAL('return()'), self.focus_tree)
 
         self.connect(self.tree, SIGNAL('up()'), self.focus_input)
         self.connect(self.tree, SIGNAL('space()'), self.open_default)
 
-        qtutils.add_action(self, 'Focus input', self.focus_input,
+        qtutils.add_action(self, 'Focus Input', self.focus_input,
                            'Ctrl+L', 'Ctrl+T')
 
         qtutils.connect_button(self.edit_button, self.edit)
@@ -151,7 +152,7 @@ class Finder(standard.Dialog):
 
     def search_for(self, txt):
         self.input_txt.set_value(txt)
-        self.search()
+        self.focus_input()
 
     def process_result(self, filenames):
         enabled = len(filenames) > 0
