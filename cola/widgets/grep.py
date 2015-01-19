@@ -302,15 +302,6 @@ class GrepTextView(HintedTextView):
         if cursor.movePosition(direction):
             self.set_text_cursor(cursor)
 
-    def paintEvent(self, event):
-        HintedTextView.paintEvent(self, event)
-        if self.hasFocus():
-            # Qt doesn't redraw the cursor when using movePosition().
-            # So.. draw our own cursor.
-            rect = self.cursorRect()
-            painter = QtGui.QPainter(self.viewport())
-            painter.fillRect(rect, Qt.SolidPattern)
-
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Up:
             cursor = self.textCursor()
