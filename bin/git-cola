@@ -92,6 +92,7 @@ def parse_args():
     add_dag_command(subparser)
     add_diff_command(subparser)
     add_fetch_command(subparser)
+    add_find_command(subparser)
     add_grep_command(subparser)
     add_merge_command(subparser)
     add_pull_command(subparser)
@@ -164,6 +165,12 @@ def add_diff_command(subparser):
 
 def add_fetch_command(subparser):
     add_command(subparser, 'fetch', 'fetch remotes', cmd_fetch)
+
+
+def add_find_command(subparser):
+    parser = add_command(subparser, 'find', 'find files', cmd_find)
+    parser.add_argument('args', nargs='*', metavar='<args>',
+                        help='git ls-files arguments')
 
 
 def add_grep_command(subparser):
@@ -298,6 +305,14 @@ def cmd_fetch(args):
     from cola.widgets import remote
     context.model.update_status()
     view = remote.fetch()
+    return application_start(context, view)
+
+
+def cmd_find(args):
+    context = application_init(args)
+    from cola.widgets import finder
+    pathspec = subprocess.list2cmdline(map(core.decode, args.args))
+    view = finder.finder(pathspec=pathspec)
     return application_start(context, view)
 
 

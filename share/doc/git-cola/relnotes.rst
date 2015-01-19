@@ -5,6 +5,8 @@ Usability, bells and whistles
 * A new "Find files" widget was added, and can be activated by
   using the `Ctrl+t` or `t` hotkeys.
 
+* A new `git cola find` sub-command was added for finding files.
+
 * `git cola` now remembers the text cursor's position when staging
   interactively with the keyboard.  This makes it easier to use the keyboard
   arrows to select and stage lines.
