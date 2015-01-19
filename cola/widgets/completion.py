@@ -444,7 +444,8 @@ class GitCompletionModel(CompletionModel):
         model.add_observer(msg, self.emit_update)
 
     def gather_matches(self, case_sensitive):
-        refs = filter_matches(self.match_text, self.matches(), case_sensitive)
+        refs = filter_matches(self.match_text, self.matches(), case_sensitive,
+                              cmp=cmp_refs)
         return (refs, (), set())
 
     def emit_update(self):
