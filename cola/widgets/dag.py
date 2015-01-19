@@ -452,19 +452,23 @@ class GitDAG(standard.MainWindow):
 
         self.connect(self.revtext, SIGNAL('activated()'), self.display)
         self.connect(self.revtext, SIGNAL('return()'), self.display)
+        self.connect(self.revtext, SIGNAL('down()'), self.focus_tree)
 
         # The model is updated in another thread so use
         # signals/slots to bring control back to the main GUI thread
         self.model.add_observer(self.model.message_updated,
                                 self.emit_model_updated)
 
-        self.connect(self, SIGNAL('model_updated'),
-                     self.model_updated)
+        self.connect(self, SIGNAL('model_updated'), self.model_updated)
 
-        qtutils.add_action(self, 'Focus search field',
-                           lambda: self.revtext.setFocus(), 'Ctrl+L')
-
+        qtutils.add_action(self, 'Focus Input', self.focus_input, 'Ctrl+L')
         qtutils.add_close_action(self)
+
+    def focus_input(self):
+        self.revtext.setFocus()
+
+    def focus_tree(self):
+        self.treewidget.setFocus()
 
     def text_changed(self, txt):
         self.ctx.ref = ustr(txt)
@@ -537,7 +541,7 @@ class GitDAG(standard.MainWindow):
         self.treewidget.add_commits(commits)
 
     def thread_done(self):
-        self.treewidget.setFocus()
+        self.focus_tree()
         try:
             commit_obj = self.commit_list[-1]
         except IndexError:
