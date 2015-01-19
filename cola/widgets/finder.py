@@ -16,6 +16,7 @@ from cola.widgets import completion
 from cola.widgets import defs
 from cola.widgets import filetree
 from cola.widgets import standard
+from cola.widgets import text
 
 
 def finder(paths=None):
@@ -38,6 +39,24 @@ def add_wildcards(arg):
     if not arg.endswith('*'):
         arg = arg + '*'
     return arg
+
+
+def show_help():
+    help_text = N_("""
+Keyboard Shortcuts
+------------------
+J, Down     = Move Down
+K, Up       = Move Up
+Enter       = Edit Selected Files
+Spacebar    = Open File Using Default Application
+Ctrl+L      = Focus Text Entry Field
+?           = Show Help
+
+The up and down arrows change focus between the text entry field
+and the results.
+""")
+    title = N_('Help - Find Files')
+    return text.text_dialog(help_text, title)
 
 
 class FindFilesThread(QtCore.QThread):
@@ -88,6 +107,11 @@ class Finder(standard.Dialog):
         self.refresh_button.setIcon(qtutils.reload_icon())
         self.refresh_button.setShortcut(QtGui.QKeySequence.Refresh)
 
+        self.help_button = qtutils.create_button(
+                text=N_('Help'),
+                tooltip=N_('Show help\nShortcut: ?'),
+                icon=qtutils.help_icon())
+
         self.close_button = QtGui.QPushButton(N_('Close'))
 
         self.input_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
@@ -97,6 +121,7 @@ class Finder(standard.Dialog):
                                           self.edit_button,
                                           self.open_default_button,
                                           self.refresh_button,
+                                          self.help_button,
                                           qtutils.STRETCH,
                                           self.close_button)
 
@@ -123,9 +148,13 @@ class Finder(standard.Dialog):
         qtutils.add_action(self, 'Focus Input', self.focus_input,
                            'Ctrl+L', 'Ctrl+T')
 
+        self.show_help_action = qtutils.add_action(self,
+                N_('Show Help'), show_help, Qt.Key_Question)
+
         qtutils.connect_button(self.edit_button, self.edit)
         qtutils.connect_button(self.open_default_button, self.open_default)
         qtutils.connect_button(self.refresh_button, self.search)
+        qtutils.connect_button(self.help_button, show_help)
         qtutils.connect_button(self.close_button, self.close)
         qtutils.add_close_action(self)
 
