@@ -130,10 +130,8 @@ class Grep(Dialog):
                                        self.bottom_layout)
         self.setLayout(self.mainlayout)
 
-        self.grep_thread = GrepThread(self)
-
-        self.connect(self.grep_thread, SIGNAL('result'),
-                     self.process_result)
+        self.worker_thread = GrepThread(self)
+        self.connect(self.worker_thread, SIGNAL('result'), self.process_result)
 
         self.connect(self.input_txt, SIGNAL('textChanged(QString)'),
                      lambda s: self.search())
@@ -144,12 +142,10 @@ class Grep(Dialog):
         self.connect(self.result_txt, SIGNAL('leave()'),
                      lambda: self.input_txt.setFocus())
 
-        qtutils.add_action(self.input_txt, 'FocusResults',
-                           lambda: self.result_txt.setFocus(),
+        qtutils.add_action(self.input_txt, 'Focus Results', self.focus_results,
                            Qt.Key_Down, Qt.Key_Enter, Qt.Key_Return)
-        qtutils.add_action(self, 'FocusSearch',
-                           lambda: self.input_txt.setFocus(),
-                           'Ctrl+L')
+        qtutils.add_action(self, 'Focus Input', self.focus_input, 'Ctrl+L')
+
         qtutils.connect_button(self.edit_button, self.edit)
         qtutils.connect_button(self.refresh_button, self.search)
         qtutils.connect_toggle(self.shell_checkbox, lambda x: self.search())
@@ -158,6 +154,12 @@ class Grep(Dialog):
 
         if not self.restore_state():
             self.resize(666, 420)
+
+    def focus_input(self):
+        self.input_txt.setFocus()
+
+    def focus_results(self):
+        self.result_txt.setFocus()
 
     def done(self, exit_code):
         self.save_state()
@@ -175,14 +177,13 @@ class Grep(Dialog):
         if len(query) < 2:
             self.result_txt.set_value('')
             return
-        self.grep_thread.query = query
-        self.grep_thread.shell = self.shell_checkbox.isChecked()
-        self.grep_thread.regexp_mode = self.regexp_mode()
-        self.grep_thread.start()
+        self.worker_thread.query = query
+        self.worker_thread.shell = self.shell_checkbox.isChecked()
+        self.worker_thread.regexp_mode = self.regexp_mode()
+        self.worker_thread.start()
 
     def search_for(self, txt):
         self.input_txt.set_value(txt)
-        self.search()
 
     def text_scroll(self):
         scrollbar = self.result_txt.verticalScrollBar()
@@ -312,4 +313,7 @@ class GrepTextView(HintedTextView):
                 # Otherwise, emit a signal so that the parent can
                 # change focus.
                 self.emit(SIGNAL('leave()'))
+            elif self.value()[:position].count('\n') == 0:
+                cursor.movePosition(QtGui.QTextCursor.StartOfLine)
+                self.setTextCursor(cursor)
         return HintedTextView.keyPressEvent(self, event)
