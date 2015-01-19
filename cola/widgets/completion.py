@@ -23,24 +23,46 @@ UPDATE_SIGNAL = 'update()'
 
 
 class CompletionLineEdit(text.HintedLineEdit):
+    """An lineedit with advanced completion abilities"""
 
-    def __init__(self, model, hint='', parent=None):
+    # Activation keys will cause a selected completion item to be chosen
+    ACTIVATION_KEYS = (Qt.Key_Return, Qt.Key_Enter)
+
+    # Navigation keys trigger signals that widgets can use for customization
+    NAVIGATION_KEYS = {
+            Qt.Key_Return: 'return()',
+            Qt.Key_Enter: 'enter()',
+            Qt.Key_Up: 'up()',
+            Qt.Key_Down: 'down()',
+    }
+
+    def __init__(self, model_factory, hint='', parent=None):
         text.HintedLineEdit.__init__(self, hint=hint, parent=parent)
+        # Tracks when the completion popup was active during key events
+        self._was_visible = False
+        # The most recently selected completion item
+        self._selection = None
 
         self.setFont(qtutils.diff_font())
 
-        completion_model = model(self)
+        # Create a completion model
+        completion_model = model_factory(self)
         completer = Completer(completion_model, self)
         completer.setWidget(self)
         self._completer = completer
+        self._completion_model = completion_model
 
+        # The delegate highlights matching completion text in the popup widget
         self._delegate = HighlightDelegate(self)
-        self.connect(self, SIGNAL('textChanged(QString)'),
-                     self._text_changed)
-
         completer.popup().setItemDelegate(self._delegate)
+
+        self.connect(self, SIGNAL('textChanged(QString)'), self._text_changed)
+
         self.connect(self._completer, SIGNAL('activated(QString)'),
-                     self._complete)
+                     self.choose_completion)
+
+        self.connect(self._completion_model, SIGNAL('updated()'),
+                     self._completions_updated)
 
         self.connect(self, SIGNAL('destroyed(QObject*)'), self.dispose)
 
@@ -50,14 +72,25 @@ class CompletionLineEdit(text.HintedLineEdit):
     def dispose(self, *args):
         self._completer.dispose()
 
+    def was_visible(self):
+        """Was the popup visible during the last keypress event?"""
+        return self._was_visible
+
+    def completion_selection(self):
+        """Return the last completion's selection"""
+        return self._selection
+
+    def complete(self):
+        """Trigger the completion popup to appear and offer completions"""
+        self._completer.complete()
+
     def refresh(self):
+        """Refresh the completion model"""
         return self._completer.model().update()
 
     def popup(self):
+        """Return the completer's popup"""
         return self._completer.popup()
-
-    def value(self):
-        return ustr(self.text())
 
     def _is_case_sensitive(self, text):
         return bool([char for char in text if char.isupper()])
@@ -66,6 +99,7 @@ class CompletionLineEdit(text.HintedLineEdit):
         match_text = self._last_word()
         full_text = ustr(text)
         self._do_text_changed(full_text, match_text)
+        self.complete_last_word()
 
     def _do_text_changed(self, full_text, match_text):
         case_sensitive = self._is_case_sensitive(match_text)
@@ -79,9 +113,10 @@ class CompletionLineEdit(text.HintedLineEdit):
     def update_matches(self):
         text = self._last_word()
         case_sensitive = self._is_case_sensitive(text)
+        self._completer.setCompletionPrefix(text)
         self._completer.model().update_matches(case_sensitive)
 
-    def _complete(self, completion):
+    def choose_completion(self, completion):
         """
         This is the event handler for the QCompleter.activated(QString) signal,
         it is called when the user selects an item in the completer popup.
@@ -99,6 +134,7 @@ class CompletionLineEdit(text.HintedLineEdit):
         self.setText(text)
         self.emit(SIGNAL('changed()'))
         self._do_text_changed(text, '')
+        self.popup().hide()
 
     def _words(self):
         return utils.shell_split(self.value())
@@ -121,25 +157,9 @@ class CompletionLineEdit(text.HintedLineEdit):
             self.close_popup()
         return text.HintedLineEdit.event(self, event)
 
-    def do_completion(self):
-        self._completer.complete()
-        idx = self._completer.model().index(0, 0)
-        popup = self.popup()
-        popup.setCurrentIndex(idx)
-        popup.scrollToTop()
-
-    def keyReleaseEvent(self, event):
-        text.HintedLineEdit.keyReleaseEvent(self, event)
-
-        if event.key() in (Qt.Key_Tab, Qt.Key_Enter, Qt.Key_Return,
-                           Qt.Key_Escape):
-            return
-        self.complete_last_word()
-
     def complete_last_word(self):
-        prefix = self._last_word()
-        self._update_popup_items(prefix)
-        self.do_completion()
+        self.update_matches()
+        self.complete()
 
     def close_popup(self):
         if self.popup().isVisible():
@@ -151,6 +171,66 @@ class CompletionLineEdit(text.HintedLineEdit):
         with the given prefix.
         """
         self._completer.setCompletionPrefix(prefix)
+
+    def _completions_updated(self):
+        popup = self.popup()
+        if not popup.isVisible():
+            return
+        # Select the first item
+        idx = self._completion_model.index(0, 0)
+        selection = QtGui.QItemSelection(idx, idx)
+        mode = QtGui.QItemSelectionModel.Select
+        popup.selectionModel().select(selection, mode)
+
+    def selected_completion(self):
+        popup = self.popup()
+        if not popup.isVisible():
+            return None
+        model = popup.selectionModel()
+        indexes = model.selectedIndexes()
+        if not indexes:
+            return None
+        idx = indexes[0]
+        item = self._completion_model.itemFromIndex(idx)
+        if not item:
+            return
+        return ustr(item.text())
+
+    # Qt events
+    def keyPressEvent(self, event):
+        self._was_visible = visible = self.popup().isVisible()
+        if visible:
+            self._selection = self.selected_completion()
+        else:
+            self._selection = None
+            if event.key() in self.ACTIVATION_KEYS:
+                event.accept()
+                return
+        return text.HintedLineEdit.keyPressEvent(self, event)
+
+    def keyReleaseEvent(self, event):
+        """React to release events, handle completion"""
+        key = event.key()
+        visible = self.was_visible()
+        if not visible:
+            # If it's a navigation key then emit a signal
+            try:
+                msg = self.NAVIGATION_KEYS[key]
+                event.accept()
+                self.emit(SIGNAL(msg))
+                return
+            except KeyError:
+                pass
+        # Run the real release event
+        result = text.HintedLineEdit.keyReleaseEvent(self, event)
+        # If the popup was visible and we have a selected popup item
+        # then choose that completion.
+        selection = self.completion_selection()
+        if visible and selection and key in self.ACTIVATION_KEYS:
+            self.choose_completion(selection)
+            self.emit(SIGNAL('activated()'))
+            return
+        return result
 
 
 class GatherCompletionsThread(QtCore.QThread):
@@ -302,6 +382,7 @@ class CompletionModel(QtGui.QStandardItemModel):
 
         self.clear()
         self.invisibleRootItem().appendRows(items)
+        self.emit(SIGNAL('updated()'))
 
 
 def filter_matches(match_text, candidates, case_sensitive, cmp=None):
@@ -549,7 +630,7 @@ class GitDialog(QtGui.QDialog):
 
         self.connect(self.lineedit, SIGNAL('textChanged(const QString&)'),
                      self.text_changed)
-        self.connect(self.lineedit, SIGNAL('returnPressed()'), self.accept)
+        self.connect(self.lineedit, SIGNAL('return()'), self.accept)
 
         self.setWindowModality(Qt.WindowModal)
         self.ok_button.setEnabled(False)

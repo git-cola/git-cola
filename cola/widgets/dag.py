@@ -436,8 +436,7 @@ class GitDAG(standard.MainWindow):
         self.thread.connect(self.thread, self.thread.commits_ready,
                             self.add_commits)
 
-        self.thread.connect(self.thread, self.thread.done,
-                            self.thread_done)
+        self.thread.connect(self.thread, self.thread.done, self.thread_done)
 
         self.connect(self.treewidget, SIGNAL('diff_commits'),
                      self.diff_commits)
@@ -448,14 +447,11 @@ class GitDAG(standard.MainWindow):
         self.connect(self.maxresults, SIGNAL('editingFinished()'),
                      self.display)
 
-        self.connect(self.revtext, SIGNAL('changed()'),
-                     self.display)
-
         self.connect(self.revtext, SIGNAL('textChanged(QString)'),
                      self.text_changed)
 
-        self.connect(self.revtext, SIGNAL('returnPressed()'),
-                     self.display)
+        self.connect(self.revtext, SIGNAL('activated()'), self.display)
+        self.connect(self.revtext, SIGNAL('return()'), self.display)
 
         # The model is updated in another thread so use
         # signals/slots to bring control back to the main GUI thread
@@ -541,7 +537,7 @@ class GitDAG(standard.MainWindow):
         self.treewidget.add_commits(commits)
 
     def thread_done(self):
-        self.graphview.setFocus()
+        self.treewidget.setFocus()
         try:
             commit_obj = self.commit_list[-1]
         except IndexError:
@@ -579,6 +575,7 @@ class GitDAG(standard.MainWindow):
         text = subprocess.list2cmdline(argv)
         self.revtext.setText(text)
         self.display()
+
 
 class ReaderThread(QtCore.QThread):
     commits_ready = SIGNAL('commits_ready')

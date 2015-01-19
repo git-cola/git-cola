@@ -6,6 +6,9 @@ Usability, bells and whistles
   interactively with the keyboard.  This makes it easier to use the keyboard
   arrows to select and stage lines.
 
+* The completion widgets will now select the top completion item
+  when `Enter` or `Return` are pressed.
+
 git-cola v2.1.0
 ===============
 Usability, bells and whistles
