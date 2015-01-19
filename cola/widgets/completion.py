@@ -239,6 +239,13 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
         painter.restore()
 
 
+def cmp_refs(a, b):
+    """Prefer shorter refs, otherwise alphabetize them"""
+    if len(a) == len(b):
+        return cmp(a, b)
+    return cmp(len(a), len(b))
+
+
 class CompletionModel(QtGui.QStandardItemModel):
 
     def __init__(self, parent):
@@ -297,7 +304,7 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.invisibleRootItem().appendRows(items)
 
 
-def filter_matches(match_text, candidates, case_sensitive):
+def filter_matches(match_text, candidates, case_sensitive, cmp=None):
     """Filter candidates and return the matches"""
 
     if case_sensitive:
@@ -313,7 +320,7 @@ def filter_matches(match_text, candidates, case_sensitive):
     else:
         matches = list(candidates)
 
-    matches.sort(key=keyfunc)
+    matches.sort(key=keyfunc, cmp=cmp)
     return matches
 
 
@@ -472,7 +479,8 @@ class GitLogCompletionModel(GitRefCompletionModel):
     def gather_matches(self, case_sensitive):
         if not self._paths:
             self.gather_paths()
-        refs = filter_matches(self.match_text, self.matches(), case_sensitive)
+        refs = filter_matches(self.match_text, self.matches(), case_sensitive,
+                              cmp=cmp_refs)
         paths, dirs = filter_path_matches(self.match_text, self._paths,
                                           case_sensitive)
         has_doubledash = (self.match_text == '--' or
