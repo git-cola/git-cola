@@ -8,6 +8,7 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+from cola import decorators
 from cola import gitcmds
 from cola.i18n import N_
 from cola import qtutils
@@ -245,6 +246,7 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.match_text = ''
         self.full_text = ''
         self.case_sensitive = False
+        self.icon_from_filename = decorators.memoize(qtutils.icon_from_filename)
 
         self.update_thread = GatherCompletionsThread(self)
         self.connect(self.update_thread, SIGNAL('items_gathered'),
@@ -272,7 +274,6 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.match_tuple = match_tuple
         matched_refs, matched_paths, dirs = match_tuple
         QStandardItem = QtGui.QStandardItem
-        file_icon = qtutils.file_icon()
         dir_icon = qtutils.dir_icon()
         git_icon = qtutils.git_icon()
 
@@ -289,7 +290,7 @@ class CompletionModel(QtGui.QStandardItemModel):
             if match in dirs:
                 item.setIcon(dir_icon)
             else:
-                item.setIcon(file_icon)
+                item.setIcon(self.icon_from_filename(match))
             items.append(item)
 
         self.clear()
