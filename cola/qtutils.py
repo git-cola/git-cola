@@ -448,6 +448,11 @@ def icon_name_for_filename(filename):
     return KNOWN_FILE_EXTENSIONS.get(extension.lower(), 'generic.png')
 
 
+def icon_from_filename(filename):
+    icon_name = icon_name_for_filename(filename)
+    return cached_icon_from_path(resources.icon(icon_name))
+
+
 def create_treeitem(filename, staged=False, deleted=False, untracked=False):
     """Given a filename, return a TreeListItem suitable for adding to a
     QListWidget.  "staged", "deleted, and "untracked" control whether to use
