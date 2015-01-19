@@ -332,12 +332,12 @@ class MainView(standard.MainWindow):
 
         # File Menu
         self.file_menu = create_menu(N_('File'), self.menubar)
+        self.file_menu.addAction(self.new_repository_action)
         self.open_recent_menu = self.file_menu.addMenu(N_('Open Recent'))
         self.open_recent_menu.setIcon(qtutils.open_icon())
         self.file_menu.addAction(self.open_repo_action)
         self.file_menu.addAction(self.open_repo_new_action)
         self.file_menu.addAction(self.clone_repo_action)
-        self.file_menu.addAction(self.new_repository_action)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.rescan_action)
         self.file_menu.addAction(self.edit_remotes_action)
