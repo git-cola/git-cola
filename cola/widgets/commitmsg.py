@@ -14,20 +14,8 @@ from cola import qtutils
 from cola.cmds import Interaction
 from cola.gitcmds import commit_message_path
 from cola.i18n import N_
-from cola.models.dag import DAG
-from cola.models.dag import RepoReader
-from cola.models.prefs import tabwidth
-from cola.models.prefs import textwidth
-from cola.models.prefs import linebreak
-from cola.qtutils import add_action
-from cola.qtutils import confirm
-from cola.qtutils import connect_action_bool
-from cola.qtutils import connect_button
-from cola.qtutils import create_toolbutton
-from cola.qtutils import diff_font
-from cola.qtutils import hide_button_menu_indicator
-from cola.qtutils import options_icon
-from cola.qtutils import save_icon
+from cola.models import dag
+from cola.models import prefs
 from cola.widgets import defs
 from cola.widgets.selectcommits import select_commits
 from cola.widgets.spellcheck import SpellCheckTextEdit
@@ -48,15 +36,15 @@ class CommitMessageEditor(QtGui.QWidget):
         self._tabwidth = None
 
         # Actions
-        self.signoff_action = add_action(self, cmds.SignOff.name(),
-                                         cmds.run(cmds.SignOff),
-                                         cmds.SignOff.SHORTCUT)
+        self.signoff_action = qtutils.add_action(self, cmds.SignOff.name(),
+                                                 cmds.run(cmds.SignOff),
+                                                 cmds.SignOff.SHORTCUT)
         self.signoff_action.setToolTip(N_('Sign off on this commit'))
 
-        self.commit_action = add_action(self,
-                                        N_('Commit@@verb'),
-                                        self.commit,
-                                        cmds.Commit.SHORTCUT)
+        self.commit_action = qtutils.add_action(self,
+                                                N_('Commit@@verb'),
+                                                self.commit,
+                                                cmds.Commit.SHORTCUT)
         self.commit_action.setToolTip(N_('Commit staged changes'))
 
         # Widgets
@@ -71,16 +59,16 @@ class CommitMessageEditor(QtGui.QWidget):
 
         commit_button_tooltip = N_('Commit staged changes\n'
                                    'Shortcut: Ctrl+Enter')
-        self.commit_button = create_toolbutton(text=N_('Commit@@verb'),
-                                               tooltip=commit_button_tooltip,
-                                               icon=save_icon())
+        self.commit_button = qtutils.create_toolbutton(
+                text=N_('Commit@@verb'), tooltip=commit_button_tooltip,
+                icon=qtutils.save_icon())
 
         self.actions_menu = QtGui.QMenu()
-        self.actions_button = create_toolbutton(icon=options_icon(),
-                                                tooltip=N_('Actions...'))
+        self.actions_button = qtutils.create_toolbutton(
+                icon=qtutils.options_icon(), tooltip=N_('Actions...'))
         self.actions_button.setMenu(self.actions_menu)
         self.actions_button.setPopupMode(QtGui.QToolButton.InstantPopup)
-        hide_button_menu_indicator(self.actions_button)
+        qtutils.hide_button_menu_indicator(self.actions_button)
 
         self.actions_menu.addAction(self.signoff_action)
         self.actions_menu.addAction(self.commit_action)
@@ -110,7 +98,7 @@ class CommitMessageEditor(QtGui.QWidget):
         self.autowrap_action = self.actions_menu.addAction(
                 N_('Auto-Wrap Lines'))
         self.autowrap_action.setCheckable(True)
-        self.autowrap_action.setChecked(linebreak())
+        self.autowrap_action.setChecked(prefs.linebreak())
 
         # Commit message
         self.actions_menu.addSeparator()
@@ -134,21 +122,23 @@ class CommitMessageEditor(QtGui.QWidget):
                                        self.toplayout, self.description)
         self.setLayout(self.mainlayout)
 
-        connect_button(self.commit_button, self.commit)
+        qtutils.connect_button(self.commit_button, self.commit)
 
         # Broadcast the amend mode
-        connect_action_bool(self.amend_action, cmds.run(cmds.AmendMode))
-        connect_action_bool(self.check_spelling_action,
-                            self.toggle_check_spelling)
+        qtutils.connect_action_bool(self.amend_action, cmds.run(cmds.AmendMode))
+        qtutils.connect_action_bool(self.check_spelling_action,
+                                    self.toggle_check_spelling)
 
         # Handle the one-off autowrapping
-        connect_action_bool(self.autowrap_action, self.set_linebreak)
+        qtutils.connect_action_bool(self.autowrap_action, self.set_linebreak)
 
-        add_action(self.summary, N_('Move Down'), self.focus_description,
-                   Qt.Key_Return, Qt.Key_Enter)
+        qtutils.add_action(self.summary, N_('Move Down'),
+                           self.focus_description,
+                           Qt.Key_Return, Qt.Key_Enter)
 
-        add_action(self.summary, N_('Move Down'),
-                   self.summary_cursor_down, Qt.Key_Down)
+        qtutils.add_action(self.summary, N_('Move Down'),
+                           self.summary_cursor_down,
+                           Qt.Key_Down)
 
         self.model.add_observer(self.model.message_commit_message_changed,
                                 self.set_commit_message)
@@ -170,7 +160,7 @@ class CommitMessageEditor(QtGui.QWidget):
         self.connect(self.description, SIGNAL('leave()'),
                      self.focus_summary)
 
-        self.setFont(diff_font())
+        self.setFont(qtutils.diff_font())
 
         self.summary.enable_hint(True)
         self.description.enable_hint(True)
@@ -180,9 +170,9 @@ class CommitMessageEditor(QtGui.QWidget):
 
         self.setFocusProxy(self.summary)
 
-        self.set_tabwidth(tabwidth())
-        self.set_textwidth(textwidth())
-        self.set_linebreak(linebreak())
+        self.set_tabwidth(prefs.tabwidth())
+        self.set_textwidth(prefs.textwidth())
+        self.set_linebreak(prefs.linebreak())
 
         # Loading message
         commit_msg = ''
@@ -414,12 +404,12 @@ class CommitMessageEditor(QtGui.QWidget):
             if self.model.modified:
                 informative_text = N_('Would you like to stage and '
                                       'commit all modified files?')
-                if not confirm(N_('Stage and commit?'),
-                               error_msg,
-                               informative_text,
-                               N_('Stage and Commit'),
-                               default=True,
-                               icon=save_icon()):
+                if not qtutils.confirm(
+                        N_('Stage and commit?'),
+                        error_msg, informative_text,
+                        N_('Stage and Commit'),
+                        default=True,
+                        icon=qtutils.save_icon()):
                     return
             else:
                 Interaction.information(N_('Nothing to commit'), error_msg)
@@ -429,13 +419,14 @@ class CommitMessageEditor(QtGui.QWidget):
         # Warn that amending published commits is generally bad
         amend = self.amend_action.isChecked()
         if (amend and self.model.is_commit_published() and
-            not confirm(N_('Rewrite Published Commit?'),
+            not qtutils.confirm(
+                        N_('Rewrite Published Commit?'),
                         N_('This commit has already been published.\n'
                            'This operation will rewrite published history.\n'
                            'You probably don\'t want to do this.'),
                         N_('Amend the published commit?'),
                         N_('Amend Commit'),
-                        default=False, icon=save_icon())):
+                        default=False, icon=qtutils.save_icon())):
             return
         sign = self.sign_action.isChecked()
         status, out, err = cmds.do(cmds.Commit, amend, msg, sign)
@@ -457,8 +448,8 @@ class CommitMessageEditor(QtGui.QWidget):
                                 self.choose_commit_message)
 
     def build_commits_menu(self, cmd, menu, chooser, prefix=''):
-        dag = DAG('HEAD', 6)
-        commits = RepoReader(dag)
+        ctx = dag.DAG('HEAD', 6)
+        commits = dag.RepoReader(ctx)
 
         menu_commits = []
         for idx, c in enumerate(commits):
@@ -544,7 +535,7 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
         SpellCheckTextEdit.__init__(self, hint, parent)
         self.extra_actions = []
 
-        self.action_emit_leave = add_action(self,
+        self.action_emit_leave = qtutils.add_action(self,
                 'Shift Tab', self.emit_leave, 'Shift+tab')
 
     def contextMenuEvent(self, event):
