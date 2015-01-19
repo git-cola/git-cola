@@ -169,8 +169,8 @@ def add_fetch_command(subparser):
 
 def add_find_command(subparser):
     parser = add_command(subparser, 'find', 'find files', cmd_find)
-    parser.add_argument('args', nargs='*', metavar='<args>',
-                        help='git ls-files arguments')
+    parser.add_argument('paths', nargs='*', metavar='<path>',
+                        help='filter by path')
 
 
 def add_grep_command(subparser):
@@ -311,8 +311,8 @@ def cmd_fetch(args):
 def cmd_find(args):
     context = application_init(args)
     from cola.widgets import finder
-    pathspec = subprocess.list2cmdline(map(core.decode, args.args))
-    view = finder.finder(pathspec=pathspec)
+    paths = subprocess.list2cmdline(map(core.decode, args.paths))
+    view = finder.finder(paths=paths)
     return application_start(context, view)
 
 

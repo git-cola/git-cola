@@ -193,7 +193,7 @@ class MainView(standard.MainWindow):
         self.rescan_action.setIcon(qtutils.reload_icon())
 
         self.find_files_action = add_action(self,
-                N_('Find files'), finder.finder, 'Ctrl+T', 'T')
+                N_('Find Files'), finder.finder, 'Ctrl+T', 'T')
         self.find_files_action.setIcon(qtutils.theme_icon('zoom-in.png'))
 
         self.browse_recently_modified_action = add_action(self,

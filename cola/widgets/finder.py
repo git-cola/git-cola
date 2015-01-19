@@ -18,17 +18,17 @@ from cola.widgets import filetree
 from cola.widgets import standard
 
 
-def finder(pathspec=None):
+def finder(paths=None):
     """Prompt and use 'git grep' to find the content."""
-    widget = new_finder(pathspec=pathspec, parent=qtutils.active_window())
+    widget = new_finder(paths=paths, parent=qtutils.active_window())
     widget.show()
     widget.raise_()
     return widget
 
 
-def new_finder(pathspec=None, parent=None):
+def new_finder(paths=None, parent=None):
     widget = Finder(parent=parent)
-    widget.search_for(pathspec or '')
+    widget.search_for(paths or '')
     return widget
 
 
@@ -64,16 +64,14 @@ class Finder(standard.Dialog):
     def __init__(self, parent=None):
         standard.Dialog.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
-        self.setWindowTitle(N_('Find files'))
-
+        self.setWindowTitle(N_('Find Files'))
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
         self.input_label = QtGui.QLabel(os.path.basename(core.getcwd()) + '/')
         self.input_label.setFont(qtutils.diff_font())
 
-        self.input_txt = completion.GitTrackedLineEdit(hint=N_('paths...'),
-                                                       parent=self)
+        self.input_txt = completion.GitTrackedLineEdit(hint=N_('<path> ...'))
         self.input_txt.enable_hint(True)
 
         self.tree = FinderTree(parent=self)
