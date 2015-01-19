@@ -113,16 +113,27 @@ class FileDiffDialog(QtGui.QDialog):
 
         self.connect(self.expr, SIGNAL('textChanged(QString)'),
                      self.text_changed)
+        self.connect(self.tree, SIGNAL('up()'), self.focus_input)
 
-        self.connect(self.expr, SIGNAL('returnPressed()'),
-                     self.refresh)
+        self.connect(self.expr, SIGNAL('activated()'), self.focus_tree)
+        self.connect(self.expr, SIGNAL('down()'), self.focus_tree)
+        self.connect(self.expr, SIGNAL('enter()'), self.focus_tree)
+        self.connect(self.expr, SIGNAL('return()'), self.focus_tree)
 
         qtutils.connect_button(self.diff_button, self.diff)
         qtutils.connect_button(self.close_button, self.close)
+
+        qtutils.add_action(self, 'Focus Input', self.focus_input, 'Ctrl+L')
         qtutils.add_close_action(self)
 
         self.resize(720, 420)
         self.refresh()
+
+    def focus_tree(self):
+        self.tree.setFocus()
+
+    def focus_input(self):
+        self.expr.setFocus()
 
     def text_changed(self, txt):
         self.diff_expr = ustr(txt)
