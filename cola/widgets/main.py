@@ -44,6 +44,7 @@ from cola.widgets import createbranch
 from cola.widgets import createtag
 from cola.widgets import dag
 from cola.widgets import diff
+from cola.widgets import finder
 from cola.widgets import editremotes
 from cola.widgets import grep
 from cola.widgets import log
@@ -190,6 +191,10 @@ class MainView(standard.MainWindow):
                 cmds.run(cmds.Refresh),
                 cmds.Refresh.SHORTCUT)
         self.rescan_action.setIcon(qtutils.reload_icon())
+
+        self.find_files_action = add_action(self,
+                N_('Find files'), finder.finder, 'Ctrl+T', 'T')
+        self.find_files_action.setIcon(qtutils.theme_icon('zoom-in.png'))
 
         self.browse_recently_modified_action = add_action(self,
                 N_('Recently Modified Files...'),
@@ -340,6 +345,7 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.clone_repo_action)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.rescan_action)
+        self.file_menu.addAction(self.find_files_action)
         self.file_menu.addAction(self.edit_remotes_action)
         self.file_menu.addAction(self.browse_recently_modified_action)
         self.file_menu.addSeparator()
