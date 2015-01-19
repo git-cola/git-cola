@@ -57,18 +57,19 @@ def _parse_diff_filenames(out):
         return []
 
 
-def tracked_files():
+def tracked_files(*args):
     """Return the names of all files in the repository"""
-    out = git.ls_files(z=True)[STDOUT]
+    out = git.ls_files('--', *args, z=True)[STDOUT]
     if out:
         return sorted(out[:-1].split('\0'))
     else:
         return []
 
 
-def all_files():
+def all_files(*args):
     """Returns a sorted list of all files, including untracked files."""
-    ls_files = git.ls_files(z=True,
+    ls_files = git.ls_files('--', *args,
+                            z=True,
                             cached=True,
                             others=True,
                             exclude_standard=True)[STDOUT]
