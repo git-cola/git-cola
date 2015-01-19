@@ -3,9 +3,9 @@ from __future__ import division, absolute_import, unicode_literals
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import Qt, SIGNAL
 
-from cola.models.prefs import tabwidth
-from cola.qtutils import diff_font
+from cola import qtutils
 from cola.compat import ustr
+from cola.models import prefs
 
 
 class MonoTextEdit(QtGui.QTextEdit):
@@ -16,8 +16,8 @@ class MonoTextEdit(QtGui.QTextEdit):
         self.setMinimumSize(QtCore.QSize(1, 1))
         self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.setAcceptRichText(False)
-        self.setFont(diff_font())
-        self.set_tabwidth(tabwidth())
+        self.setFont(qtutils.diff_font())
+        self.set_tabwidth(prefs.tabwidth())
         self.setCursorWidth(2)
 
     def tabwidth(self):
@@ -210,7 +210,7 @@ class HintedLineEdit(QtGui.QLineEdit, HintedTextWidgetMixin):
         QtGui.QLineEdit.__init__(self, parent)
         HintedTextWidgetMixin.__init__(self, hint)
 
-        self.setFont(diff_font())
+        self.setFont(qtutils.diff_font())
         self.connect(self,
                      SIGNAL('cursorPositionChanged(int,int)'),
                      lambda x, y: self.emit_position())
