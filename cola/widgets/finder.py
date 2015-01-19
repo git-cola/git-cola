@@ -69,8 +69,6 @@ class Finder(standard.Dialog):
             self.setWindowModality(Qt.WindowModal)
 
         self.input_label = QtGui.QLabel(os.path.basename(core.getcwd()) + '/')
-        self.input_label.setFont(qtutils.diff_font())
-
         self.input_txt = completion.GitTrackedLineEdit(hint=N_('<path> ...'))
         self.input_txt.enable_hint(True)
 

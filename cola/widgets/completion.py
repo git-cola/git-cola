@@ -43,8 +43,6 @@ class CompletionLineEdit(text.HintedLineEdit):
         # The most recently selected completion item
         self._selection = None
 
-        self.setFont(qtutils.diff_font())
-
         # Create a completion model
         completion_model = model_factory(self)
         completer = Completer(completion_model, self)
