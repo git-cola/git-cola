@@ -28,13 +28,11 @@ from cola import qtutils
 from cola import utils
 from cola.compat import ustr
 from cola.i18n import N_
-from cola.models.dag import DAG
-from cola.models.dag import RepoReader
+from cola.models import dag
 from cola.qtutils import diff_font
 from cola.widgets import defs
-from cola.widgets.diff import DiffWidget
-from cola.widgets.diff import COMMITS_SELECTED
-from cola.widgets.standard import DraggableTreeWidget
+from cola.widgets import diff
+from cola.widgets import standard
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
@@ -114,7 +112,7 @@ class Editor(QtGui.QWidget):
         self.filename = filename
 
         self.notifier = notifier = observable.Observable()
-        self.diff = DiffWidget(notifier, self)
+        self.diff = diff.DiffWidget(notifier, self)
         self.tree = RebaseTreeWidget(notifier, self)
         self.setFocusProxy(self.tree)
 
@@ -153,7 +151,7 @@ class Editor(QtGui.QWidget):
         self.action_rebase = qtutils.add_action(self,
                 N_('Rebase'), self.rebase, 'Ctrl+Return')
 
-        notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
+        notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
         qtutils.connect_button(self.rebase_button, self.rebase)
         qtutils.connect_button(self.extdiff_button, self.external_diff)
@@ -214,7 +212,7 @@ class Editor(QtGui.QWidget):
                                  hide_expr=True)
 
 
-class RebaseTreeWidget(DraggableTreeWidget):
+class RebaseTreeWidget(standard.DraggableTreeWidget):
 
     def __init__(self, notifier, parent=None):
         super(RebaseTreeWidget, self).__init__(parent=parent)
@@ -337,14 +335,14 @@ class RebaseTreeWidget(DraggableTreeWidget):
         if item is None:
             return
         sha1hex = item.sha1hex
-        dag = DAG(sha1hex, 2)
-        repo = RepoReader(dag)
+        ctx = dag.DAG(sha1hex, 2)
+        repo = dag.RepoReader(ctx)
         commits = []
         for c in repo:
             commits.append(c)
         if commits:
             commits = commits[-1:]
-        self.notifier.notify_observers(COMMITS_SELECTED, commits)
+        self.notifier.notify_observers(diff.COMMITS_SELECTED, commits)
 
     def external_diff(self):
         self.emit(SIGNAL('external_diff()'))
