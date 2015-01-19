@@ -159,7 +159,8 @@ class Finder(standard.Dialog):
         qtutils.add_close_action(self)
 
         if not self.restore_state():
-            self.resize(666, 420)
+            width, height = qtutils.default_size(parent, 666, 420)
+            self.resize(width, height)
 
     def focus_tree(self):
         self.tree.setFocus()
