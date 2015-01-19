@@ -14,7 +14,7 @@ from cola.models import main
 from cola.models import selection
 from cola.widgets import completion
 from cola.widgets import defs
-from cola.widgets import standard
+from cola.widgets import filetree
 from cola.compat import ustr
 
 
@@ -86,9 +86,7 @@ class FileDiffDialog(QtGui.QDialog):
         if expr is None or hide_expr:
             self.expr.hide()
 
-        self.tree = standard.TreeWidget(self)
-        self.tree.setSelectionMode(self.tree.ExtendedSelection)
-        self.tree.setHeaderHidden(True)
+        self.tree = filetree.FileTree(parent=self)
 
         self.diff_button = QtGui.QPushButton(N_('Compare'))
         self.diff_button.setIcon(qtutils.ok_icon())
@@ -140,36 +138,20 @@ class FileDiffDialog(QtGui.QDialog):
         self.refresh_filenames()
 
     def refresh_filenames(self):
-        self.tree.clear()
-
         if self.a and self.b is None:
             filenames = gitcmds.diff_index_filenames(self.a)
         else:
             filenames = gitcmds.diff(self.diff_arg)
-        if not filenames:
-            return
-
-        icon = qtutils.file_icon()
-        items = []
-        for filename in filenames:
-            item = QtGui.QTreeWidgetItem()
-            item.setIcon(0, icon)
-            item.setText(0, filename)
-            item.setData(0, QtCore.Qt.UserRole, QtCore.QVariant(filename))
-            items.append(item)
-        self.tree.addTopLevelItems(items)
+        self.tree.set_filenames(filenames, select=True)
 
     def tree_selection_changed(self):
-        self.diff_button.setEnabled(bool(self.tree.selectedItems()))
+        self.diff_button.setEnabled(self.tree.has_selection())
 
     def tree_double_clicked(self, item, column):
-        path = item.data(0, QtCore.Qt.UserRole).toPyObject()
-        launch(self.diff_arg + ['--', ustr(path)])
+        path = self.tree.filename_from_item(item)
+        launch(self.diff_arg + ['--', path])
 
     def diff(self):
-        items = self.tree.selectedItems()
-        if not items:
-            return
-        paths = [i.data(0, QtCore.Qt.UserRole).toPyObject() for i in items]
+        paths = self.tree.selected_filenames()
         for path in paths:
             launch(self.diff_arg + ['--', ustr(path)])
