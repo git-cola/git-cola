@@ -16,21 +16,16 @@ from cola import difftool
 from cola import observable
 from cola import qtutils
 from cola.i18n import N_
-from cola.models.dag import DAG
-from cola.models.dag import RepoReader
+from cola.models import dag
+from cola.widgets import archive
+from cola.widgets import browse
 from cola.widgets import completion
+from cola.widgets import createbranch
+from cola.widgets import createtag
 from cola.widgets import defs
+from cola.widgets import diff
+from cola.widgets import filelist
 from cola.widgets import standard
-from cola.widgets.createbranch import create_new_branch
-from cola.widgets.createtag import create_tag
-from cola.widgets.archive import GitArchiveDialog
-from cola.widgets.browse import BrowseDialog
-from cola.widgets.standard import MainWindow
-from cola.widgets.standard import TreeWidget
-from cola.widgets.diff import COMMITS_SELECTED
-from cola.widgets.diff import DiffWidget
-from cola.widgets.filelist import HISTORIES_SELECTED
-from cola.widgets.filelist import FileWidget
 from cola.compat import ustr
 
 
@@ -39,11 +34,11 @@ def git_dag(model, args=None, settings=None):
     branch = model.currentbranch
     # disambiguate between branch names and filenames by using '--'
     branch_doubledash = branch and (branch + ' --') or ''
-    dag = DAG(branch_doubledash, 1000)
-    dag.set_arguments(args)
+    ctx = dag.DAG(branch_doubledash, 1000)
+    ctx.set_arguments(args)
 
-    view = GitDAG(model, dag, settings=settings)
-    if dag.ref:
+    view = GitDAG(model, ctx, settings=settings)
+    if ctx.ref:
         view.display()
     return view
 
@@ -95,26 +90,26 @@ class ViewerMixin(object):
         sha1 = self.selected_sha1()
         if sha1 is None:
             return
-        create_new_branch(revision=sha1)
+        createbranch.create_new_branch(revision=sha1)
 
     def create_tag(self):
         sha1 = self.selected_sha1()
         if sha1 is None:
             return
-        create_tag(ref=sha1)
+        createtag.create_tag(ref=sha1)
 
     def create_tarball(self):
         sha1 = self.selected_sha1()
         if sha1 is None:
             return
         short_sha1 = sha1[:7]
-        GitArchiveDialog.save_hashed_objects(sha1, short_sha1, self)
+        archive.GitArchiveDialog.save_hashed_objects(sha1, short_sha1, self)
 
     def save_blob_dialog(self):
         sha1 = self.selected_sha1()
         if sha1 is None:
             return
-        return BrowseDialog.browse(sha1)
+        return browse.BrowseDialog.browse(sha1)
 
     def context_menu_actions(self):
         return {
@@ -207,10 +202,10 @@ class CommitTreeWidgetItem(QtGui.QTreeWidgetItem):
         self.setText(2, commit.authdate)
 
 
-class CommitTreeWidget(ViewerMixin, TreeWidget):
+class CommitTreeWidget(ViewerMixin, standard.TreeWidget):
 
     def __init__(self, notifier, parent):
-        TreeWidget.__init__(self, parent)
+        standard.TreeWidget.__init__(self, parent)
         ViewerMixin.__init__(self)
 
         self.setSelectionMode(self.ContiguousSelection)
@@ -227,7 +222,7 @@ class CommitTreeWidget(ViewerMixin, TreeWidget):
         self.action_down = qtutils.add_action(self, N_('Go Down'), self.go_down,
                                               Qt.Key_J)
 
-        notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
+        notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.selection_changed)
@@ -256,7 +251,7 @@ class CommitTreeWidget(ViewerMixin, TreeWidget):
         if not items:
             return
         self.set_selecting(True)
-        self.notifier.notify_observers(COMMITS_SELECTED,
+        self.notifier.notify_observers(diff.COMMITS_SELECTED,
                                        [i.commit for i in items])
         self.set_selecting(False)
 
@@ -320,11 +315,11 @@ class CommitTreeWidget(ViewerMixin, TreeWidget):
         QtGui.QTreeWidget.mousePressEvent(self, event)
 
 
-class GitDAG(MainWindow):
+class GitDAG(standard.MainWindow):
     """The git-dag widget."""
 
-    def __init__(self, model, dag, parent=None, settings=None):
-        MainWindow.__init__(self, parent)
+    def __init__(self, model, ctx, parent=None, settings=None):
+        standard.MainWindow.__init__(self, parent)
 
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setMinimumSize(420, 420)
@@ -332,13 +327,13 @@ class GitDAG(MainWindow):
         # change when widgets are added/removed
         self.widget_version = 2
         self.model = model
-        self.dag = dag
+        self.ctx = ctx
         self.settings = settings
 
         self.commits = {}
         self.commit_list = []
 
-        self.thread = ReaderThread(dag, self)
+        self.thread = ReaderThread(ctx, self)
         self.revtext = completion.GitLogLineEdit()
         self.maxresults = standard.SpinBox()
 
@@ -357,11 +352,12 @@ class GitDAG(MainWindow):
         self.notifier = notifier = observable.Observable()
         self.notifier.refs_updated = refs_updated = 'refs_updated'
         self.notifier.add_observer(refs_updated, self.display)
-        self.notifier.add_observer(HISTORIES_SELECTED, self.histories_selected)
+        self.notifier.add_observer(filelist.HISTORIES_SELECTED,
+                                   self.histories_selected)
 
         self.treewidget = CommitTreeWidget(notifier, self)
-        self.diffwidget = DiffWidget(notifier, self)
-        self.filewidget = FileWidget(notifier, self)
+        self.diffwidget = diff.DiffWidget(notifier, self)
+        self.filewidget = filelist.FileWidget(notifier, self)
         self.graphview = GraphView(notifier, self)
 
         self.controls_layout = qtutils.hbox(defs.no_margin, defs.spacing,
@@ -424,8 +420,8 @@ class GitDAG(MainWindow):
         self.addDockWidget(right, self.file_dock)
 
         # Update fields affected by model
-        self.revtext.setText(dag.ref)
-        self.maxresults.setValue(dag.count)
+        self.revtext.setText(ctx.ref)
+        self.maxresults.setValue(ctx.count)
         self.update_window_title()
 
         # Also re-loads dag.* from the saved state
@@ -475,31 +471,32 @@ class GitDAG(MainWindow):
         qtutils.add_close_action(self)
 
     def text_changed(self, txt):
-        self.dag.ref = ustr(txt)
+        self.ctx.ref = ustr(txt)
         self.update_window_title()
 
     def update_window_title(self):
         project = self.model.project
-        if self.dag.ref:
-            self.setWindowTitle(N_('%(project)s: %(ref)s - DAG') % dict(project=project, ref=self.dag.ref))
+        if self.ctx.ref:
+            self.setWindowTitle(N_('%(project)s: %(ref)s - DAG')
+                                % dict(project=project, ref=self.ctx.ref))
         else:
             self.setWindowTitle(project + N_(' - DAG'))
 
     def export_state(self):
-        state = MainWindow.export_state(self)
-        state['count'] = self.dag.count
+        state = standard.MainWindow.export_state(self)
+        state['count'] = self.ctx.count
         return state
 
     def apply_state(self, state):
-        result = MainWindow.apply_state(self, state)
+        result = standard.MainWindow.apply_state(self, state)
         try:
             count = state['count']
-            if self.dag.overridden('count'):
-                count = self.dag.count
+            if self.ctx.overridden('count'):
+                count = self.ctx.count
         except:
-            count = self.dag.count
+            count = self.ctx.count
             result = False
-        self.dag.set_count(count)
+        self.ctx.set_count(count)
         self.lock_layout_action.setChecked(state.get('lock_layout', False))
         return result
 
@@ -517,14 +514,14 @@ class GitDAG(MainWindow):
         new_count = self.maxresults.value()
 
         self.thread.stop()
-        self.dag.set_ref(new_ref)
-        self.dag.set_count(new_count)
+        self.ctx.set_ref(new_ref)
+        self.ctx.set_count(new_count)
 
         self.clear()
         self.thread.start()
 
     def show(self):
-        MainWindow.show(self)
+        standard.MainWindow.show(self)
         self.treewidget.adjust_columns()
 
     def clear(self):
@@ -549,7 +546,7 @@ class GitDAG(MainWindow):
             commit_obj = self.commit_list[-1]
         except IndexError:
             return
-        self.notifier.notify_observers(COMMITS_SELECTED, [commit_obj])
+        self.notifier.notify_observers(diff.COMMITS_SELECTED, [commit_obj])
         self.graphview.update_scene_rect()
         self.graphview.set_initial_view()
 
@@ -560,7 +557,7 @@ class GitDAG(MainWindow):
         self.resize(width, height)
 
     def diff_commits(self, a, b):
-        paths = self.dag.paths()
+        paths = self.ctx.paths()
         if paths:
             difftool.launch([a, b, '--'] + paths)
         else:
@@ -570,10 +567,10 @@ class GitDAG(MainWindow):
     def closeEvent(self, event):
         self.revtext.close_popup()
         self.thread.stop()
-        MainWindow.closeEvent(self, event)
+        standard.MainWindow.closeEvent(self, event)
 
     def resizeEvent(self, e):
-        MainWindow.resizeEvent(self, e)
+        standard.MainWindow.resizeEvent(self, e)
         self.treewidget.adjust_columns()
 
     def histories_selected(self, histories):
@@ -587,16 +584,16 @@ class ReaderThread(QtCore.QThread):
     commits_ready = SIGNAL('commits_ready')
     done = SIGNAL('done')
 
-    def __init__(self, dag, parent):
+    def __init__(self, ctx, parent):
         QtCore.QThread.__init__(self, parent)
-        self.dag = dag
+        self.ctx = ctx
         self._abort = False
         self._stop = False
         self._mutex = QtCore.QMutex()
         self._condition = QtCore.QWaitCondition()
 
     def run(self):
-        repo = RepoReader(self.dag)
+        repo = dag.RepoReader(self.ctx)
         repo.reset()
         commits = []
         for c in repo:
@@ -843,7 +840,7 @@ class Commit(QtGui.QGraphicsItem):
             selected_items = self.scene().selectedItems()
             commits = [item.commit for item in selected_items]
             self.scene().parent().set_selecting(True)
-            self.notifier.notify_observers(COMMITS_SELECTED, commits)
+            self.notifier.notify_observers(diff.COMMITS_SELECTED, commits)
             self.scene().parent().set_selecting(False)
 
             # Cache the pen for use in paint()
@@ -1041,7 +1038,7 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
         qtutils.add_action(self, N_('Select Newest Child'),
                            self.select_newest_child, Qt.Key_K)
 
-        notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
+        notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
     def clear(self):
         self.scene().clear()
