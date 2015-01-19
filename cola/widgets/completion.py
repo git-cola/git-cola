@@ -122,17 +122,20 @@ class CompletionLineEdit(text.HintedLineEdit):
 
     def do_completion(self):
         self._completer.complete()
-        self.popup().setCurrentIndex(self._completer.model().index(0, 0))
-        self.popup().scrollToTop()
+        idx = self._completer.model().index(0, 0)
+        popup = self.popup()
+        popup.setCurrentIndex(idx)
+        popup.scrollToTop()
 
     def keyReleaseEvent(self, event):
-
         text.HintedLineEdit.keyReleaseEvent(self, event)
 
         if event.key() in (Qt.Key_Tab, Qt.Key_Enter, Qt.Key_Return,
                            Qt.Key_Escape):
             return
+        self.complete_last_word()
 
+    def complete_last_word(self):
         prefix = self._last_word()
         self._update_popup_items(prefix)
         self.do_completion()
@@ -431,6 +434,28 @@ class GitStatusFilterCompletionModel(GitPathCompletionModel):
                 model.modified + model.untracked)
 
 
+class GitTrackedCompletionModel(GitPathCompletionModel):
+    """Completer for tracked files and folders"""
+
+    def __init__(self, parent):
+        GitPathCompletionModel.__init__(self, parent)
+        self.connect(self, SIGNAL(UPDATE_SIGNAL), self.gather_paths)
+        self._paths = []
+        self._updated = False
+
+    def gather_paths(self):
+        self._paths = gitcmds.tracked_files()
+
+    def gather_matches(self, case_sensitive):
+        if not self._paths:
+            self.gather_paths()
+
+        refs = []
+        paths, dirs = filter_path_matches(self.match_text, self._paths,
+                                          case_sensitive)
+        return (refs, paths, dirs)
+
+
 class GitLogCompletionModel(GitRefCompletionModel):
     """Completer for arguments suitable for git-log like commands"""
 
@@ -478,6 +503,7 @@ GitRefLineEdit = bind_lineedit(GitRefCompletionModel)
 GitBranchLineEdit = bind_lineedit(GitBranchCompletionModel)
 GitRemoteBranchLineEdit = bind_lineedit(GitRemoteBranchCompletionModel)
 GitStatusFilterLineEdit = bind_lineedit(GitStatusFilterCompletionModel)
+GitTrackedLineEdit = bind_lineedit(GitTrackedCompletionModel)
 
 
 class GitDialog(QtGui.QDialog):
