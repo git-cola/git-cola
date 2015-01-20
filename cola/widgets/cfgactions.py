@@ -178,10 +178,18 @@ class GitCommandWidget(standard.Dialog):
 
 
 class ActionDialog(standard.Dialog):
+
+    VALUES = {}
+
     def __init__(self, parent, name, opts):
         standard.Dialog.__init__(self, parent)
         self.name = name
         self.opts = opts
+
+        try:
+            values = self.VALUES[name]
+        except KeyError:
+            values = self.VALUES[name] = {}
 
         self.setWindowModality(Qt.ApplicationModal)
 
@@ -202,8 +210,14 @@ class ActionDialog(standard.Dialog):
         self.argslabel.setText(argprompt)
 
         self.argstxt = QtGui.QLineEdit()
-
-        if not self.opts.get('argprompt'):
+        if self.opts.get('argprompt'):
+            try:
+                # Remember the previous value
+                saved_value = values['argstxt']
+                self.argstxt.setText(saved_value)
+            except KeyError:
+                pass
+        else:
             self.argslabel.setMinimumSize(1, 1)
             self.argstxt.setMinimumSize(1, 1)
             self.argstxt.hide()
@@ -241,17 +255,24 @@ class ActionDialog(standard.Dialog):
                                  self.revselect, self.btnlayt)
         self.setLayout(self.layt)
 
-        # Widen the dialog by default
-        self.resize(666, self.height())
+        self.connect(self.argstxt, SIGNAL('textChanged(QString)'),
+                     self._argstxt_changed)
 
         qtutils.connect_button(self.closebtn, self.reject)
         qtutils.connect_button(self.runbtn, self.accept)
+
+        # Widen the dialog by default
+        self.resize(666, self.height())
 
     def revision(self):
         return self.revselect.revision()
 
     def args(self):
         return self.argstxt.text()
+
+    def _argstxt_changed(self, value):
+        """Store the argstxt value so that we can remember it between calls"""
+        self.VALUES[self.name]['argstxt'] = ustr(value)
 
 
 class RevisionSelector(QtGui.QWidget):
