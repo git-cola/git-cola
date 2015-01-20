@@ -178,9 +178,7 @@ if AVAILABLE == 'pyinotify':
 
             # Register files/directories known to git
             for filename in gitcmds.tracked_files():
-                filename = core.realpath(filename)
-                directory = os.path.dirname(filename)
-                self._watch_directory(directory)
+                self._watch_directory(os.path.dirname(filename))
 
             msg = N_('inotify enabled.')
             Interaction.safe_log(msg)
