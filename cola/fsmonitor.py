@@ -37,11 +37,11 @@ else:
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 
-from cola import gitcfg
 from cola import core
+from cola import gitcfg
+from cola import gitcmds
 from cola.compat import ustr, PY3
 from cola.git import git
-from cola.git import STDOUT
 from cola.i18n import N_
 from cola.interaction import Interaction
 
@@ -177,7 +177,7 @@ if AVAILABLE == 'pyinotify':
             self._watch_directory(self._worktree)
 
             # Register files/directories known to git
-            for filename in git.ls_files()[STDOUT].splitlines():
+            for filename in gitcmds.tracked_files():
                 filename = core.realpath(filename)
                 directory = os.path.dirname(filename)
                 self._watch_directory(directory)
