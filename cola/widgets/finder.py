@@ -142,6 +142,8 @@ class Finder(standard.Dialog):
         self.connect(self.input_txt, SIGNAL('enter()'), self.focus_tree)
         self.connect(self.input_txt, SIGNAL('return()'), self.focus_tree)
 
+        self.connect(self.tree, SIGNAL('itemSelectionChanged()'),
+                     self.tree_item_selection_changed)
         self.connect(self.tree, SIGNAL('up()'), self.focus_input)
         self.connect(self.tree, SIGNAL('space()'), self.open_default)
 
@@ -185,11 +187,8 @@ class Finder(standard.Dialog):
         self.focus_input()
 
     def process_result(self, filenames):
-        enabled = len(filenames) > 0
-        self.edit_button.setEnabled(enabled)
-        self.open_default_button.setEnabled(enabled)
-        self.refresh_button.setEnabled(enabled)
         self.tree.set_filenames(filenames, select=True)
+        self.refresh_button.setEnabled(True)
 
     def edit(self):
         paths = self.tree.selected_filenames()
@@ -198,3 +197,8 @@ class Finder(standard.Dialog):
     def open_default(self):
         paths = self.tree.selected_filenames()
         cmds.do(cmds.OpenDefaultApp, paths)
+
+    def tree_item_selection_changed(self):
+        enabled = bool(self.tree.selected_item())
+        self.edit_button.setEnabled(enabled)
+        self.open_default_button.setEnabled(enabled)
