@@ -392,6 +392,12 @@ cola.inotify
 Set to `false` to disable inotify support.
 Defaults to `true` when the `pyinotify` module is available.
 
+cola.refreshonfocus
+----------------------
+Set to `true` to automatically refresh when `git cola` gains focus.  Defaults
+to `false` because this can cause a pause whenever switching to `git cola` from
+another application.
+
 cola.linebreak
 --------------
 Whether to automatically break long lines while editing commit messages.
