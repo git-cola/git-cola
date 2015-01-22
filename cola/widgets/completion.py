@@ -387,19 +387,17 @@ def filter_matches(match_text, candidates, case_sensitive, cmp=None):
     """Filter candidates and return the matches"""
 
     if case_sensitive:
-        transform = lambda x: x
-        keyfunc = lambda x: x.replace('.', '')
+        case_transform = lambda x: x
     else:
-        transform = lambda x: x.lower()
-        keyfunc = lambda x: x.replace('.', '').lower()
+        case_transform = lambda x: x.lower()
 
     if match_text:
         matches = [r for r in candidates
-                    if transform(match_text) in transform(r)]
+                    if case_transform(match_text) in case_transform(r)]
     else:
         matches = list(candidates)
 
-    matches.sort(key=keyfunc, cmp=cmp)
+    matches.sort(key=case_transform, cmp=cmp)
     return matches
 
 
