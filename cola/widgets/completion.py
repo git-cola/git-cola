@@ -392,8 +392,8 @@ def filter_matches(match_text, candidates, case_sensitive, cmp=None):
         case_transform = lambda x: x.lower()
 
     if match_text:
-        matches = [r for r in candidates
-                    if case_transform(match_text) in case_transform(r)]
+        match_text = case_transform(match_text)
+        matches = [r for r in candidates if match_text in case_transform(r)]
     else:
         matches = list(candidates)
 
