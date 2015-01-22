@@ -206,6 +206,13 @@ class ColaQApplication(QtGui.QApplication):
         self.git_path = git_path
         self.view = None ## injected by application_start()
 
+    def event(self, e):
+        if e.type() == QtCore.QEvent.ApplicationActivate:
+            cfg = gitcfg.current()
+            if cfg.get('cola.refreshonfocus', False):
+                cmds.do(cmds.Refresh)
+        return QtGui.QApplication.event(self, e)
+
     def commitData(self, session_mgr):
         """Save session data"""
         if self.view is None:
