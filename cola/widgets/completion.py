@@ -317,11 +317,11 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
         painter.restore()
 
 
-def cmp_refs(a, b):
-    """Prefer shorter refs, otherwise alphabetize them"""
-    if len(a) == len(b):
-        return cmp(a, b)
-    return cmp(len(a), len(b))
+def ref_sort_key(ref):
+    """Sort key function that causes shorter refs to sort first, but
+    alphabetizes refs of equal length (in order to make local branches sort
+    before remote ones)."""
+    return len(ref), ref
 
 
 class CompletionModel(QtGui.QStandardItemModel):
@@ -383,7 +383,8 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.emit(SIGNAL('updated()'))
 
 
-def filter_matches(match_text, candidates, case_sensitive, cmp=None):
+def filter_matches(match_text, candidates, case_sensitive,
+                   sort_key=lambda x: x):
     """Filter candidates and return the matches"""
 
     if case_sensitive:
@@ -397,7 +398,7 @@ def filter_matches(match_text, candidates, case_sensitive, cmp=None):
     else:
         matches = list(candidates)
 
-    matches.sort(key=case_transform, cmp=cmp)
+    matches.sort(key=lambda x: sort_key(case_transform(x)))
     return matches
 
 
@@ -443,7 +444,7 @@ class GitCompletionModel(CompletionModel):
 
     def gather_matches(self, case_sensitive):
         refs = filter_matches(self.match_text, self.matches(), case_sensitive,
-                              cmp=cmp_refs)
+                              sort_key=ref_sort_key)
         return (refs, (), set())
 
     def emit_update(self):
@@ -558,7 +559,7 @@ class GitLogCompletionModel(GitRefCompletionModel):
         if not self._paths:
             self.gather_paths()
         refs = filter_matches(self.match_text, self.matches(), case_sensitive,
-                              cmp=cmp_refs)
+                              sort_key=ref_sort_key)
         paths, dirs = filter_path_matches(self.match_text, self._paths,
                                           case_sensitive)
         has_doubledash = (self.match_text == '--' or
