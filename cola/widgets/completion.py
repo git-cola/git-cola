@@ -317,11 +317,11 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
         painter.restore()
 
 
-def cmp_refs(a, b):
-    """Prefer shorter refs, otherwise alphabetize them"""
-    if len(a) == len(b):
-        return cmp(a, b)
-    return cmp(len(a), len(b))
+def ref_sort_key(ref):
+    """Sort key function that causes shorter refs to sort first, but
+    alphabetizes refs of equal length (in order to make local branches sort
+    before remote ones)."""
+    return len(ref), ref
 
 
 class CompletionModel(QtGui.QStandardItemModel):
@@ -383,23 +383,22 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.emit(SIGNAL('updated()'))
 
 
-def filter_matches(match_text, candidates, case_sensitive, cmp=None):
+def filter_matches(match_text, candidates, case_sensitive,
+                   sort_key=lambda x: x):
     """Filter candidates and return the matches"""
 
     if case_sensitive:
-        transform = lambda x: x
-        keyfunc = lambda x: x.replace('.', '')
+        case_transform = lambda x: x
     else:
-        transform = lambda x: x.lower()
-        keyfunc = lambda x: x.replace('.', '').lower()
+        case_transform = lambda x: x.lower()
 
     if match_text:
-        matches = [r for r in candidates
-                    if transform(match_text) in transform(r)]
+        match_text = case_transform(match_text)
+        matches = [r for r in candidates if match_text in case_transform(r)]
     else:
         matches = list(candidates)
 
-    matches.sort(key=keyfunc, cmp=cmp)
+    matches.sort(key=lambda x: sort_key(case_transform(x)))
     return matches
 
 
@@ -445,7 +444,7 @@ class GitCompletionModel(CompletionModel):
 
     def gather_matches(self, case_sensitive):
         refs = filter_matches(self.match_text, self.matches(), case_sensitive,
-                              cmp=cmp_refs)
+                              sort_key=ref_sort_key)
         return (refs, (), set())
 
     def emit_update(self):
@@ -560,7 +559,7 @@ class GitLogCompletionModel(GitRefCompletionModel):
         if not self._paths:
             self.gather_paths()
         refs = filter_matches(self.match_text, self.matches(), case_sensitive,
-                              cmp=cmp_refs)
+                              sort_key=ref_sort_key)
         paths, dirs = filter_path_matches(self.match_text, self._paths,
                                           case_sensitive)
         has_doubledash = (self.match_text == '--' or
