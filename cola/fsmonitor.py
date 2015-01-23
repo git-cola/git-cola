@@ -115,11 +115,15 @@ if AVAILABLE == 'inotify':
         def __init__(self, monitor):
             _BaseThread.__init__(self, monitor)
             self._worktree = core.abspath(git.worktree())
+            self._git_dir = git.git_dir()
             self._lock = Lock()
             self._inotify_fd = None
             self._pipe_r = None
             self._pipe_w = None
-            self._wd_map = {}
+            self._worktree_wds = set()
+            self._worktree_wd_map = {}
+            self._git_dir_wds = set()
+            self._git_dir_wd_map = {}
 
         @staticmethod
         def _log_out_of_wds_message():
@@ -183,51 +187,74 @@ if AVAILABLE == 'inotify':
             with self._lock:
                 if self._inotify_fd is None:
                     return
-                watched_dirs = set(self._wd_map)
-                tracked_dirs = set(os.path.dirname(os.path.join(self._worktree,
-                                                                path))
-                                   for path in gitcmds.tracked_files())
-                for path in watched_dirs - tracked_dirs:
-                    wd = self._wd_map.pop(path)
-                    try:
-                        inotify.rm_watch(self._inotify_fd, wd)
-                    except OSError as e:
-                        if e.errno == errno.EINVAL:
-                            # This error can occur if the target of the wd was
-                            # removed on the filesystem before we call
-                            # inotify.rm_watch() so ignore it.
-                            pass
-                        else:
-                            raise
-                for path in tracked_dirs - watched_dirs:
-                    try:
-                        wd = inotify.add_watch(self._inotify_fd,
-                                               core.encode(path),
-                                               self._ADD_MASK)
-                    except OSError as e:
-                        if e.errno == errno.ENOSPC:
-                            self._log_out_of_wds_message()
-                            self._running = False
-                            break
-                        elif e.errno in (errno.ENOENT, errno.ENOTDIR):
-                            # These two errors should only occur as a result of
-                            # race conditions:  the first if the directory
-                            # referenced by path was removed or renamed before
-                            # the call to inotify.add_watch(); the second if
-                            # the directory referenced by path was replaced
-                            # with a file before the call to
-                            # inotify.add_watch().  Therefore we simply ignore
-                            # them.
-                            pass
-                        else:
-                            raise
+                try:
+                    tracked_dirs = set(os.path.dirname(
+                                           os.path.join(self._worktree, path))
+                                       for path in gitcmds.tracked_files())
+                    self._refresh_watches(tracked_dirs, self._worktree_wds,
+                                          self._worktree_wd_map)
+                    git_dirs = set()
+                    git_dirs.add(self._git_dir)
+                    for dirpath, dirnames, filenames in core.walk(
+                            os.path.join(self._git_dir, 'refs')):
+                        git_dirs.add(dirpath)
+                    self._refresh_watches(git_dirs, self._git_dir_wds,
+                                          self._git_dir_wd_map)
+                except OSError as e:
+                    if e.errno == errno.ENOSPC:
+                        self._log_out_of_wds_message()
+                        self._running = False
                     else:
-                        self._wd_map[path] = wd
+                        raise
+
+        def _refresh_watches(self, paths_to_watch, wd_set, wd_map):
+            watched_paths = set(wd_map)
+            for path in watched_paths - paths_to_watch:
+                wd = wd_map.pop(path)
+                wd_set.remove(wd)
+                try:
+                    inotify.rm_watch(self._inotify_fd, wd)
+                except OSError as e:
+                    if e.errno == errno.EINVAL:
+                        # This error can occur if the target of the wd was
+                        # removed on the filesystem before we call
+                        # inotify.rm_watch() so ignore it.
+                        pass
+                    else:
+                        raise
+            for path in paths_to_watch - watched_paths:
+                try:
+                    wd = inotify.add_watch(self._inotify_fd, core.encode(path),
+                                           self._ADD_MASK)
+                except OSError as e:
+                    if e.errno in (errno.ENOENT, errno.ENOTDIR):
+                        # These two errors should only occur as a result of
+                        # race conditions:  the first if the directory
+                        # referenced by path was removed or renamed before the
+                        # call to inotify.add_watch(); the second if the
+                        # directory referenced by path was replaced with a file
+                        # before the call to inotify.add_watch().  Therefore we
+                        # simply ignore them.
+                        pass
+                    else:
+                        raise
+                else:
+                    wd_set.add(wd)
+                    wd_map[path] = wd
 
         def _handle_events(self):
             for wd, mask, cookie, name in \
                     inotify.read_events(self._inotify_fd):
-                if mask & self._TRIGGER_MASK:
+                if (mask & self._TRIGGER_MASK
+                        and (wd in self._worktree_wds
+                            or (wd in self._git_dir_wds
+                                and not mask & inotify.IN_ISDIR
+                                and not core.decode(name).endswith('.lock')))):
+                    # Enable a pending refresh iff:
+                    # 1) the wd was for the worktree or
+                    # 2) the wd was for the git dir and
+                    #    a) the event was for a file, not a directory, and
+                    #    b) the file name does not end with ".lock"
                     self._pending = True
 
         def stop(self):
@@ -239,6 +266,56 @@ if AVAILABLE == 'inotify':
 
 
 if AVAILABLE == 'pywin32':
+    class _Win32Watch(object):
+        def __init__(self, path, flags):
+            self.flags = flags
+
+            self.handle = None
+            self.event = None
+
+            try:
+                self.handle = win32file.CreateFileW(
+                        path,
+                        0x0001, # FILE_LIST_DIRECTORY
+                        win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE,
+                        None,
+                        win32con.OPEN_EXISTING,
+                        win32con.FILE_FLAG_BACKUP_SEMANTICS |
+                            win32con.FILE_FLAG_OVERLAPPED,
+                        None)
+
+                self.buffer = win32file.AllocateReadBuffer(8192)
+                self.event = win32event.CreateEvent(None, True, False, None)
+                self.overlapped = pywintypes.OVERLAPPED()
+                self.overlapped.hEvent = self.event
+                self._start()
+            except:
+                self.close()
+                raise
+
+        def _start(self):
+            win32file.ReadDirectoryChangesW(self.handle, self.buffer, True,
+                                            self.flags, self.overlapped)
+
+        def read(self):
+            if win32event.WaitForSingleObject(self.event, 0) \
+                    == win32event.WAIT_TIMEOUT:
+                result = []
+            else:
+                nbytes = win32file.GetOverlappedResult(self.handle,
+                                                       self.overlapped, False)
+                result = win32file.FILE_NOTIFY_INFORMATION(self.buffer, nbytes)
+                self._start()
+            return result
+
+        def close(self):
+            if self.handle is not None:
+                win32file.CancelIo(self.handle)
+                win32file.CloseHandle(self.handle)
+            if self.event is not None:
+                win32file.CloseHandle(self.event)
+
+
     class _Win32Thread(_BaseThread):
         _FLAGS = (win32con.FILE_NOTIFY_CHANGE_FILE_NAME |
                   win32con.FILE_NOTIFY_CHANGE_DIR_NAME |
@@ -250,10 +327,9 @@ if AVAILABLE == 'pywin32':
         def __init__(self, monitor):
             _BaseThread.__init__(self, monitor)
             self._worktree = self._transform_path(core.abspath(git.worktree()))
-            self._git_dir = self._transform_path(git.git_dir())
-            self._dir_handle = None
-            self._buffer = None
-            self._overlapped = None
+            self._worktree_watch = None
+            self._git_dir = self._transform_path(core.abspath(git.git_dir()))
+            self._git_dir_watch = None
             self._stop_event_lock = Lock()
             self._stop_event = None
 
@@ -261,41 +337,36 @@ if AVAILABLE == 'pywin32':
         def _transform_path(path):
             return path.replace('\\', '/').lower()
 
+        def _read_watch(self, watch):
+            if win32event.WaitForSingleObject(watch.event, 0) \
+                    == win32event.WAIT_TIMEOUT:
+                nbytes = 0
+            else:
+                nbytes = win32file.GetOverlappedResult(watch.handle,
+                                                       watch.overlapped, False)
+            return win32file.FILE_NOTIFY_INFORMATION(watch.buffer, nbytes)
+
         def run(self):
             try:
                 with self._stop_event_lock:
                     self._stop_event = win32event.CreateEvent(None, True,
                                                               False, None)
 
-                self._dir_handle = win32file.CreateFileW(
-                        self._worktree,
-                        0x0001, # FILE_LIST_DIRECTORY
-                        win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE,
-                        None,
-                        win32con.OPEN_EXISTING,
-                        win32con.FILE_FLAG_BACKUP_SEMANTICS |
-                            win32con.FILE_FLAG_OVERLAPPED,
-                        None)
-
-                self._buffer = win32file.AllocateReadBuffer(8192)
-                self._overlapped = pywintypes.OVERLAPPED()
-                self._overlapped.hEvent = win32event.CreateEvent(None, True,
-                                                                 False, None)
+                self._worktree_watch = _Win32Watch(self._worktree, self._FLAGS)
+                self._git_dir_watch = _Win32Watch(self._git_dir, self._FLAGS)
 
                 self._log_enabled_message()
 
+                events = [self._worktree_watch.event,
+                          self._git_dir_watch.event,
+                          self._stop_event]
                 while self._running:
-                    win32file.ReadDirectoryChangesW(self._dir_handle,
-                                                    self._buffer, True,
-                                                    self._FLAGS,
-                                                    self._overlapped)
                     if self._pending:
                         timeout = self._NOTIFICATION_DELAY
                     else:
                         timeout = win32event.INFINITE
-                    rc = win32event.WaitForMultipleObjects(
-                            [self._overlapped.hEvent, self._stop_event], False,
-                            timeout)
+                    rc = win32event.WaitForMultipleObjects(events, False,
+                                                           timeout)
                     if not self._running:
                         break
                     elif rc == win32event.WAIT_TIMEOUT:
@@ -307,22 +378,23 @@ if AVAILABLE == 'pywin32':
                     if self._stop_event is not None:
                         win32file.CloseHandle(self._stop_event)
                         self._stop_event = None
-                if self._dir_handle is not None:
-                    win32file.CancelIo(self._dir_handle)
-                    win32file.CloseHandle(self._dir_handle)
-                if self._overlapped is not None and self._overlapped.hEvent:
-                    win32file.CloseHandle(self._overlapped.hEvent)
+                if self._worktree_watch is not None:
+                    self._worktree_watch.close()
+                if self._git_dir_watch is not None:
+                    self._git_dir_watch.close()
 
         def _handle_results(self):
-            nbytes = win32file.GetOverlappedResult(self._dir_handle,
-                                                   self._overlapped, False)
-            results = win32file.FILE_NOTIFY_INFORMATION(self._buffer, nbytes)
-            for action, path in results:
+            for action, path in self._worktree_watch.read():
                 if not self._running:
                     break
                 path = self._worktree + '/' + self._transform_path(path)
                 if (path != self._git_dir
                         and not path.startswith(self._git_dir + '/')):
+                    self._pending = True
+            for action, path in self._git_dir_watch.read():
+                if not self._running:
+                    break
+                if not path.endswith('.lock'):
                     self._pending = True
 
         def stop(self):

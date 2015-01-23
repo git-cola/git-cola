@@ -17,6 +17,7 @@ IN_DELETE       = 0x00000200
 
 IN_ONLYDIR      = 0x01000000
 IN_EXCL_UNLINK  = 0x04000000
+IN_ISDIR        = 0x80000000
 
 
 class inotify_event(ctypes.Structure):
