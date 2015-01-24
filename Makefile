@@ -4,11 +4,12 @@ all::
 # The external commands used by this Makefile are...
 CTAGS = ctags
 CP = cp
-LNS = ln -s -f
 FIND = find
 GIT = git
 GZIP = gzip
 LN = ln
+LN_S = $(LN) -s -f
+MARKDOWN = markdown
 MKDIR_P = mkdir -p
 NOSETESTS = nosetests
 PYTHON = python
@@ -32,13 +33,12 @@ cola_app = $(CURDIR)/$(cola_app_base)
 cola_version = $(shell $(PYTHON) bin/git-cola version --brief)
 cola_dist := $(cola_base)-$(cola_version)
 
-test_flags =
-nose_args ?= --with-doctest --exclude=sphinxtogithub $(test_flags)
+# Allows e.g. "make test flags=--stop"
+flags =
+NOSE ?= $(NOSETESTS) --with-doctest --exclude=sphinxtogithub $(flags)
 
-# User customizations
--include config.mak
-
-setup_args = --prefix=$(prefix)
+SETUP ?= $(PYTHON) setup.py
+setup_args += --prefix=$(prefix)
 setup_args += --quiet
 setup_args += --force
 setup_args += --install-scripts=$(bindir)
@@ -50,19 +50,24 @@ ifdef DESTDIR
 endif
 export prefix
 
+PYTHON_DIRS = cola
+PYTHON_DIRS += tests
+
+# User customizations
+-include config.mak
+
 all:: build
 .PHONY: all
 
 build:
-	$(PYTHON) setup.py build
+	$(SETUP) build
 .PHONY: build
 
 install: all
-	$(PYTHON) setup.py install $(setup_args)
+	$(SETUP) install $(setup_args)
 	$(MKDIR_P) $(DESTDIR)$(hicolordir)
-	$(LNS) $(datadir)/icons/git-cola.svg $(DESTDIR)$(hicolordir)/git-cola.svg
-	(cd $(DESTDIR)$(bindir) && \
-	! test -e cola && $(LN) -s git-cola cola) || true
+	$(LN_S) $(datadir)/icons/git-cola.svg $(DESTDIR)$(hicolordir)/git-cola.svg
+	$(LN_S) git-cola $(DESTDIR)$(bindir)/cola
 	$(RM_R) $(DESTDIR)$(coladir)/git_cola*
 	$(RM_R) git_cola.egg-info
 .PHONY: install
@@ -119,30 +124,30 @@ uninstall:
 .PHONY: uninstall
 
 test: all
-	$(NOSETESTS) $(nose_args) cola test
+	$(NOSE) $(PYTHON_DIRS)
 .PHONY: test
 
 coverage:
-	$(NOSETESTS) --with-coverage --cover-package=cola $(nose_args) cola test
+	$(NOSE) --with-coverage --cover-package=cola $(PYTHON_DIRS)
 .PHONY: coverage
 
 clean:
-	$(MAKE) -C share/doc/git-cola clean
-	$(FIND) cola test -name '*.py[cod]' -print0 | xargs -0 rm -f
+	$(FIND) $(PYTHON_DIRS) -name '*.py[cod]' -print0 | xargs -0 rm -f
 	$(RM_R) build dist tags git-cola.app
 	$(RM_R) share/locale
+	$(MAKE) -C share/doc/git-cola clean
 .PHONY: clean
 
 tags:
-	$(FIND) cola test -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
+	$(FIND) $(PYTHON_DIRS) -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
 .PHONY: tags
 
 pot:
-	$(PYTHON) setup.py build_pot -N -d po
+	$(SETUP) build_pot -N -d po
 .PHONY: pot
 
 mo:
-	$(PYTHON) setup.py build_mo -f
+	$(SETUP) build_mo -f
 .PHONY: mo
 
 git-cola.app:
@@ -152,7 +157,7 @@ git-cola.app:
 	$(CP) contrib/darwin/git-cola $(cola_app)/Contents/MacOS
 	$(CP) contrib/darwin/git-cola.icns $(cola_app)/Contents/Resources
 	$(MAKE) prefix=$(cola_app)/Contents/Resources install install-doc
-	$(LN) -sf $(darwin_python) $(cola_app)/Contents/Resources/git-cola
+	$(LN_S) $(darwin_python) $(cola_app)/Contents/Resources/git-cola
 .PHONY: git-cola.app
 
 app-tarball: git-cola.app
