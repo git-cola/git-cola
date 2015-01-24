@@ -190,3 +190,47 @@ You can also launch *git-xbase* via the *git-cola* rebase sub-command
 (as well as various other sub-commands):
 
     ./bin/git-cola rebase origin/master
+
+# COMMAND-LINE TOOLS
+
+The *git-cola* command exposes various sub-commands that allow you to quickly
+launch tools that are available from within the *git-cola* interface.
+For example, `./bin/git-cola find` launches the file finder,
+and `./bin/git-cola grep` launches the grep tool.
+
+See `./bin/git-cola --help-commands` for the full list of commands.
+
+    $ ./bin/git-cola --help-commands
+    usage: git-cola [-h]
+    
+                    {cola,am,archive,branch,browse,classic,config,
+                     dag,diff,fetch,find,grep,merge,pull,push,
+                     rebase,remote,search,stash,tag,version}
+                    ...
+    
+    valid commands:
+      {cola,am,archive,branch,browse,classic,config,
+       dag,diff,fetch,find,grep,merge,pull,push,
+       rebase,remote,search,stash,tag,version}
+
+        cola                start git-cola
+        am                  apply patches using "git am"
+        archive             save an archive
+        branch              create a branch
+        browse              browse repository
+        classic             browse repository
+        config              edit configuration
+        dag                 start git-dag
+        diff                view diffs
+        fetch               fetch remotes
+        find                find files
+        grep                grep source
+        merge               merge branches
+        pull                pull remote branches
+        push                push remote branches
+        rebase              interactive rebase
+        remote              edit remotes
+        search              search commits
+        stash               stash and unstash changes
+        tag                 create tags
+        version             print the version
