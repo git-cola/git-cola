@@ -55,6 +55,9 @@ New releases are available on the
 
 ## ADDITIVES
 
+*git-cola* enables additional features when the following
+Python modules are installed.
+
 [pyinotify](https://github.com/seb-m/pyinotify) 0.7.1 or newer
 enables inotify support on Linux.
 
@@ -63,17 +66,37 @@ enables inotify support on Linux.
 
 # BREWING INSTRUCTIONS
 
+## RUN FROM SOURCE
+
+You don't need to install *git-cola* to run it.
+Running *git-cola* from its source tree is the easiest
+way to try the latest version.
+
+    git clone git://github.com/git-cola/git-cola.git
+    cd git-cola
+    ./bin/git-cola
+    ./bin/git-dag
+
+Having *git-cola*'s *bin/* directory in your path allows you to run
+*git-cola* like a built-in Git command:
+
+    PATH=$PWD/bin:"$PATH"
+    export PATH
+    git cola
+    git dag
+
+# INSTALLATION
+
 Normally you can just do "make install" to install *git-cola*
 in your `$HOME` directory (`$HOME/bin`, `$HOME/share`, etc).
 If you want to do a global install you can do
 
     make prefix=/usr install
 
-You don't need to `make` to run it, though.
-*git-cola* is designed to run directly out of its source tree.
-
-    bin/git-cola
-    bin/git-dag
+There are also platform-specific installation methods.
+You'll probably want to use one of these anyways since they
+have a nice side-effect of installing *git-cola*'s PyQt4
+and argparse dependencies.
 
 ## LINUX
 
@@ -130,21 +153,17 @@ by double-clicking on the `git-cola.pyw` script.
 If you are developing *git-cola* on Windows you can use `python.exe` to run
 *git-cola* directly from source.
 
-    python.exe bin/git-cola
+    python.exe ./bin/git-cola
 
 If you want to build the `git-cola Installer` yourself run the provided script
 
-    contrib/win32/create-installer.sh
+    ./contrib/win32/create-installer.sh
 
-You have to make sure that the file
+You have to make sure that the file */share/InnoSetup/ISCC.exe* exists.
+That is normally the case when you run the *msysGit bash* and not the
+*Git for Windows bash* (look [here](http://msysgit.github.com/) for the differences).
 
-    /share/InnoSetup/ISCC.exe
-
-exists. That is normally the case when you run the *msysGit bash* and
-not the *Git for Windows bash* (look [here](http://msysgit.github.com/)
-for the differences).
-
-## DOCUMENTATION
+# DOCUMENTATION
 
 * [HTML documentation](https://git-cola.readthedocs.org/en/latest/)
 
@@ -156,7 +175,7 @@ for the differences).
 
 * [Contributing guidelines](CONTRIBUTING.md)
 
-## GOODIES
+# GOODIES
 
 *git-cola* ships with an interactive rebase editor called *git-xbase*.
 *git-xbase* can be used to reorder and choose commits and is typically
@@ -170,4 +189,4 @@ by telling `git rebase` to use it as its editor:
 You can also launch *git-xbase* via the *git-cola* rebase sub-command
 (as well as various other sub-commands):
 
-    bin/git-cola rebase origin/master
+    ./bin/git-cola rebase origin/master
