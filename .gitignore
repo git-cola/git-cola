@@ -6,6 +6,7 @@
 /share/locale
 /test/tmp
 /tags
+/*.html
 .DS_Store
 .noseids
 *.gz

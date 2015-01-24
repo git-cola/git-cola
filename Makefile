@@ -163,3 +163,7 @@ git-cola.app:
 app-tarball: git-cola.app
 	$(TAR) czf $(cola_dist).app.tar.gz $(cola_app_base)
 .PHONY: app-tarball
+
+# Preview the markdown using "make README.html"
+%.html: %.md
+	$(MARKDOWN) $< >$@
