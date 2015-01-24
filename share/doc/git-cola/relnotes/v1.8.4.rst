@@ -1,0 +1,49 @@
+git-cola v1.8.4
+=======================
+Usability, bells and whistles
+-----------------------------
+* Brand new German translation thanks to Sven Claussner.
+
+* The "File" menu now provides a "New Repository..." menu action.
+
+* `git dag` now uses a dock-widget interface so that its widgets can
+  be layed-out and arranged.  Customizations are saved and restored
+  the next time `git dag` is launched.
+
+* `git dag` now has a "Zoom Best Fit" button next alongside the
+  "Zoom In" and "Zoom Out" buttons.
+
+* `Ctrl+L` now focuses the "Search" field in the `git dag` tool.
+
+* Right-clicking in the "diff" viewer now updates the cursor position
+  before performing actions, which makes it much easier to click around
+  and selectively stage sections.  Previously, the current cursor position
+  was used which meant that it required two clicks (left-click to update
+  the position followed by right-click to get the context menu) for the
+  desired section to be used.  This is now a single right-click operation.
+
+* The `Ctrl+D` "Launch Diff Tool" action learned to automatically choose
+  between `git difftool` and `git mergetool`.  If the file is unmerged then
+  we automatically launch `git mergetool` on the path, otherwise we use
+  `git difftool`.  We do this because `git difftool` is not intended to
+  be used on unmerged paths.  Automatically using `git mergetool` when
+  appropriate is the most intuitive and muscle-memory-friendly thing to do.
+
+* You can now right-click on folders in your standard file browser
+  and choose "Open With -> Git Cola"  (Linux-only).
+
+Fixes
+-----
+* Python 2.6 on Mac OS X Snow Leopard does not provide a namedtuple
+  at `sys.version_info`.  We now avoid using that variable for better
+  portability.
+
+* We now read the user's Git configuration from `~/.config/git/config`
+  if that file is available, otherwise we use the traditional `~/.gitconfig`
+  path, just like Git itself.
+
+* Some edge cases were fixed when applying partial/selected diffs.
+
+* The diff viewer is now properly cleared when refreshing.
+
+  https://github.com/git-cola/git-cola/issues/194

@@ -1,0 +1,46 @@
+git-cola v1.4.1.2
+=================
+Usability, bells and whistles
+-----------------------------
+* It is now possible to checkout from the index as well
+  as from `HEAD`.  This corresponds to the
+  `Removed Unstaged Changes` action in the `Repository Status` tool.
+* The `remote` dialogs (fetch, push, pull) are now slightly
+  larger by default.
+* Bookmarks can be selected when `git cola` is run outside of a git repository.
+* Added more user documentation.  We now include many links to
+  external git resources.
+* Added `git dag` to the available tools.
+  `git dag` is a node-based DAG history browser.
+  It doesn't do much yet, but it's been merged so that we can start
+  building and improving upon it.
+
+Fixes
+-----
+* Fixed a missing ``import`` when showing `right-click` actions
+  for unmerged files in the `Repository Status` tool.
+* ``git update-index --refresh`` is no longer run everytime
+  ``git cola version`` is run.
+* Don't try to watch non-existant directories when using `inotify`.
+* Use ``git rev-parse --symbolic-full-name`` plumbing to find
+  the name of the current branch.
+
+Packaging
+---------
+* The ``Makefile`` will now conditionally include a ``config.mak``
+  file located at the root of the project.  This allows for user
+  customizations such as changes to the `prefix` variable
+  to be stored in a file so that custom settings do not need to
+  be specified every time on the command-line.
+* The build scripts no longer require a ``.git`` directory to
+  generate the ``builtin_version.py`` module.  The release tarballs
+  now include a ``version`` file at the root of the project which
+  is used in lieu of having the git repository available.
+  This allows for ``make clean && make`` to function outside of
+  a git repository.
+* Added maintainer's ``make dist`` target to the ``Makefile``.
+* The built-in `simplejson` and `jsonpickle` libraries can be
+  excluded from ``make install`` by specifying the ``standalone=true``
+  `make` variable.  For example, ``make standalone=true install``.
+  This corresponds to the ``--standalone`` option to ``setup.py``.
+

@@ -1,0 +1,12 @@
+git-cola v1.4.0.2
+=================
+Fixes
+-----
+* Added missing 'Exit Diff Mode' button for 'Diff Expression' mode
+
+  https://github.com/git-cola/git-cola/issues/31
+
+* Fix a bug when initializing fonts on Windows
+
+  https://github.com/git-cola/git-cola/issues/32
+

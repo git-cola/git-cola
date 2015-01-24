@@ -1,0 +1,35 @@
+git-cola v1.4.1
+===============
+This feature release adds two new features directly from
+`git cola`'s github issues backlog.  On the developer
+front, further work was done towards modularizing the code base.
+
+Usability, bells and whistles
+-----------------------------
+* Dragging and dropping patches invokes `git am`
+
+  https://github.com/git-cola/git-cola/issues/3
+
+* A dialog to allow opening or cloning a repository
+  is presented when `git cola` is launched outside of a git repository.
+
+  https://github.com/git-cola/git-cola/issues/22
+
+* Warn when `push` is used to create a new branch
+
+  https://github.com/git-cola/git-cola/issues/35
+
+* Optimized startup time by removing several calls to `git`.
+
+
+Portability
+-----------
+* `git cola` is once again compatible with PyQt 4.3.x.
+
+Developer
+---------
+* `cola.gitcmds` was added to factor out git command-line utilities
+* `cola.gitcfg` was added for interacting with `git config`
+* `cola.models.browser` was added to factor out repobrowser data
+* Added more tests
+

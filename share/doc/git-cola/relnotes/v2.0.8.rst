@@ -1,0 +1,57 @@
+git-cola v2.0.8
+===============
+Usability, bells and whistles
+-----------------------------
+* `git cola` can now create GPG-signed commits and merges.
+
+  https://github.com/git-cola/git-cola/issues/149
+
+  See the documentation for details about setting up a GPG agent.
+
+* The status widget learned to copy relative paths when `Ctrl+x` is pressed.
+
+  https://github.com/git-cola/git-cola/issues/358
+
+* Custom GUI actions can now define their own keyboard shortcuts by
+  setting `guitool.$name.shortcut` to a string understood by Qt's
+  `QAction::setShortcut()` API, e.g. `Alt+x`.
+
+  See http://qt-project.org/doc/qt-4.8/qkeysequence.html#QKeySequence-2
+  for more details about the supported values.
+
+* `git cola` learned to rename branches.
+
+  https://github.com/git-cola/git-cola/pull/364
+
+  https://github.com/git-cola/git-cola/issues/278
+
+* `git dag` now has a "Show history" context menu which can be used to filter
+  history using the selected paths.
+
+Fixes
+-----
+* `sphinxtogithub.py` was fixed for Python3.
+
+  https://github.com/git-cola/git-cola/pull/353
+
+* The commit that changed how we read remotes from `git remote`
+  to parsing `git config` was reverted since it created problems
+  for some users.
+
+* Fixed a crash when using the `rebase edit` feature.
+
+  https://github.com/git-cola/git-cola/issues/351
+
+* Better drag-and-drop behavior when dropping into gnome-terminal.
+
+  https://github.com/git-cola/git-cola/issues/373
+
+Packaging
+---------
+* The `git-cola-folder-handler.desktop` file handler was fixed
+  to pass validation by `desktop-file-validate`.
+
+  https://github.com/git-cola/git-cola/issues/356
+
+* The `git.svg` icon was renamed to `git-cola.svg`, and `git cola` was taught
+  to prefer icons from the desktop theme when available.

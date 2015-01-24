@@ -1,0 +1,23 @@
+git-cola v1.4.2.3
+=================
+Usability, bells and whistles
+-----------------------------
+* Allow un/staging by right-clicking top-level items
+
+  https://github.com/git-cola/git-cola/issues/57
+
+* Running 'commit' with no staged changes prompts to allow
+  staging all files.
+
+  https://github.com/git-cola/git-cola/issues/55
+
+* Fetch, Push, and Pull are now available via the menus
+
+  https://github.com/git-cola/git-cola/issues/58
+
+Fixes
+-----
+* Simplified the actions widget to work around a regression
+  in PyQt4 4.7.4.
+
+  https://github.com/git-cola/git-cola/issues/62

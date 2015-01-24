@@ -1,0 +1,40 @@
+git-cola v2.0.2
+===============
+Usability, bells and whistles
+-----------------------------
+* Better inotify support for file creation and deletion.
+
+  https://github.com/git-cola/git-cola/issues/240
+
+* `git cola` now supports the X11 Session Management Protocol
+  and remembers its state across logout/reboot.
+
+  https://github.com/git-cola/git-cola/issues/164
+
+* `git cola` has a new icon.
+
+  https://github.com/git-cola/git-cola/issues/190
+
+Packaging
+---------
+* Building the documentation no longer requires `asciidoc`.
+  We now use `Sphinx <http://sphinx-doc.org/>`_ for building
+  html documentation and man pages.
+
+Fixes
+-----
+* Reworked the git-dag gravatar icon code to avoid a unicode
+  error in Python 2.
+
+* Commit message line-wrapping was made to better match the GUI editor.
+
+  https://github.com/git-cola/git-cola/issues/242
+
+* Better support for Python3 on Windows
+
+  https://github.com/git-cola/git-cola/issues/246
+
+Packaging
+---------
+* git-cola no longer depends on Asciidoc for building its documentation
+  and man-pages.  We now depend on [Sphinx](http://sphinx-doc.org/) only.

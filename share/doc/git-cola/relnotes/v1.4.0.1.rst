@@ -1,0 +1,17 @@
+git-cola v1.4.0.1
+=================
+Fixes
+-----
+* Keep entries in sorted order in the `cola classic` tool
+* Fix staging untracked files
+
+  https://github.com/git-cola/git-cola/issues/27
+
+* Fix the `show` command in the Stash dialog
+
+  https://github.com/git-cola/git-cola/issues/29
+
+* Fix a typo when loading merge commit messages
+
+  https://github.com/git-cola/git-cola/issues/30
+

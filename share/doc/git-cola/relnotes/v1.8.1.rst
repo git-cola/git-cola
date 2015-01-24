@@ -1,0 +1,34 @@
+git-cola v1.8.1
+===============
+Usability, bells and whistles
+-----------------------------
+* `git dag` got a big visual upgrade.
+
+* `Ctrl+G` now launches the "Grep" tool.
+
+* `Ctrl+D` launches difftool and `Ctrl+E` launches your editor
+  when in the diff panel.
+
+* git-cola can now be told to use an alternative language.
+  For example, if the native language is German and we want git-cola to
+  use English then we can create a `~/.config/git-cola/language` file with
+  "en" as its contents:
+
+  $ echo en >~/.config/git-cola/language
+
+  https://github.com/git-cola/git-cola/issues/140
+
+* A new `git cola merge` sub-command was added for merging branches.
+
+* Less blocking in the main UI
+
+Fixes
+-----
+* Autocomplete issues on KDE
+
+  https://github.com/git-cola/git-cola/issues/144
+
+* The "recently opened repositories" startup dialog did not
+  display itself in the absence of bookmarks.
+
+  https://github.com/git-cola/git-cola/issues/139

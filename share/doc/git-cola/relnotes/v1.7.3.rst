@@ -1,0 +1,39 @@
+git-cola v1.7.3
+===============
+Usability, bells and whistles
+-----------------------------
+* `git cola` learned a few new sub commands:
+
+.. sourcecode:: sh
+
+    git cola dag
+    git cola branch
+    git cola search
+
+* `Return` in the summary field jumps to the extended description.
+
+* `Ctrl+Return` is now a shortcut for 'Commit'.
+
+* Better French translation for 'Sign-off'.
+
+* The 'Search' widget now has a much simpler and streamlined
+  user interface.
+
+* vim-style `h,j,k,l` navigation shortcuts were added to the DAG widget.
+
+* `git dag` no longer prompts for files when diffing commits if the
+  text field contains paths.
+
+* General user interface and performance improvements.
+
+Fixes
+-----
+* The diff viewer no longer changes font size when holding `Control`
+  while scrolling with the mouse wheel.
+
+* Files with a typechange (e.g. symlinks that become files, etc.)
+  are now correctly identified as being modified.
+
+Packaging
+---------
+* The `cola.controllers` and `cola.views` packages were removed.

@@ -1,0 +1,24 @@
+git-cola v2.0.0
+===============
+Portability
+-----------
+* git-cola now runs on Python 3 thanks to Virgil Dupras.
+
+  https://github.com/git-cola/git-cola/pull/233
+
+* Python 2.6, 2.7, and 3.2+ are now supported.
+  Python 2.5 is no longer supported.
+
+Fixes
+-----
+* i18n test fixes thanks to Virgil Dupras.
+
+  https://github.com/git-cola/git-cola/pull/231
+
+* git-cola.app build fixes thanks to Maicon D. Filippsen.
+
+  https://github.com/git-cola/git-cola/pull/230
+
+* Lots of pylint improvements thanks to Alex Chernetz.
+
+  https://github.com/git-cola/git-cola/pull/229

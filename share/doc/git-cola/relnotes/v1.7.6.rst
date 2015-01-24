@@ -1,0 +1,21 @@
+git-cola v1.7.6
+===============
+Usability, bells and whistles
+-----------------------------
+* `git dag` learned to color-code branchy edges.
+  The edge colors change when a new branch is detected,
+  which makes the history much easier to follow.
+  A huge thanks to Uri Okrent for making it happen.
+
+* New GUI for editing remote repositories.
+
+* New `git cola archive` and `git cola remote` sub-commands.
+
+* `git cola browser` learned an 'Untrack' command.
+
+* The diff editor learned to staged/unstaged while amending.
+
+* The status tool can now scroll horizontally.
+
+* New git repositories can be created by clicking 'New' on the
+  `git cola --prompt` startup screen.

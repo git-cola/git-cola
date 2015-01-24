@@ -1,0 +1,45 @@
+git-cola v2.0.3
+===============
+Usability, bells and whistles
+-----------------------------
+* `git cola` no longer prompts after successfully creating a new branch.
+
+  https://github.com/git-cola/git-cola/pull/251
+
+* Hitting enter on simple dialogs now accepts them.
+
+  https://github.com/git-cola/git-cola/pull/255
+
+Fixes
+-----
+* `git dag` no longer relies on `sys.maxint`, which is
+  not available in Python3.
+
+  https://github.com/git-cola/git-cola/issues/249
+
+* Python3-related fixes.
+
+  https://github.com/git-cola/git-cola/pull/254
+
+* Python3-on-Windows-related fixes.
+
+  https://github.com/git-cola/git-cola/pull/250
+
+  https://github.com/git-cola/git-cola/pull/252
+
+  https://github.com/git-cola/git-cola/pull/253
+
+* Switching repositories using the bookmarks widget was not
+  refreshing the inotify watcher.
+
+  https://github.com/git-cola/git-cola/pull/256
+
+* Special commit messages trailers (e.g. "Acked-by:") are now special-cased to
+  fix word wrapping lines that start with "foo:".
+
+  https://github.com/git-cola/git-cola/issues/257
+
+* `git dag` sometimes left behind selection artifacts.
+  We now refresh the view to avoid them.
+
+  https://github.com/git-cola/git-cola/issues/204

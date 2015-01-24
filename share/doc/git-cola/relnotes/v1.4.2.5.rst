@@ -1,0 +1,23 @@
+git-cola v1.4.2.5
+=================
+Usability, bells and whistles
+-----------------------------
+* Clicking on paths in the status widget copies them into the
+  copy/paste buffer for easy middle-clicking into terminals.
+
+* `Ctrl+C` in diff viewer copies the selected diff to the clipboard.
+
+Fixes
+-----
+* Fixed the disappearing actions buttons on PyQt 4.7.4
+  as reported by Arch and Ubuntu 10.10.
+
+  https://github.com/git-cola/git-cola/issues/62
+
+* Fixed mouse interaction with the status widget where some
+  items could not be de-selected.
+
+Packaging
+---------
+* Removed hard-coded reference to lib/ when calculating Python's
+  site-packages directory.

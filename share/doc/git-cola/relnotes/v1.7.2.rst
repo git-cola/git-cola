@@ -1,0 +1,59 @@
+git-cola v1.7.2
+===============
+Usability, bells and whistles
+-----------------------------
+* `git cola` can now launch sub commands, e.g.:
+
+.. sourcecode:: sh
+
+    git cola classic
+    git cola stash
+    git cola fetch
+    git cola push
+    git cola pull
+    git cola tag
+
+* `git dag` is more responsive when gathering auto-completions.
+
+* Keyboard shortcuts are displayed when the '?' key is pressed.
+
+* Various keyboard shortcuts were added for improved usability.
+
+* The status widget now lists unmerged files before modified files.
+
+* vim-style `h,j,k,l` navigation shortcuts were added to the status widget.
+
+* A 'Recently Modified Files...' tool was added.
+
+* Tools can now be hidden with `Alt + #` (where `#` is a keyboard number)
+  and focused with `Shift + Alt + #`.
+
+* The syntax highlighting colors for diffs was made less intrusive.
+
+* The commit message editor was redesigned to have a more compact
+  and keyboard-convenient user interface.
+  
+* Keyboard shortcuts for adding a Signed-off-by (`Ctrl + i`)
+  and creating a commit (`Ctrl + m`) were added.
+
+* The status widget was adjusted to use less screen real-estate.
+
+Fixes
+-----
+* Avoid updating the index when responding to inotify events.
+  This avoids interfering with operations such as `git rebase --interactive`.
+
+  https://github.com/git-cola/git-cola/issues/99
+
+Packaging
+---------
+* Create `git-dag.pyw` in the win32 installer.
+
+* win32 shortcuts now contain explicit calls to `pythonw.exe` instead of
+  calling the `.pyw` file directly.
+
+Deprecated Features
+-------------------
+* The 'Apply Changes from Branch...' feature was removed.
+  `git dag`'s 'Grab File...' feature used alongside the index/worktree editor
+  is a simpler alternative.

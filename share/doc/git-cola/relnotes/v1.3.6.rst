@@ -1,0 +1,29 @@
+git-cola v1.3.6
+===============
+Subsystems
+----------
+* Added support for Kompare in `git difftool`
+* Added a separate configuration namespace for `git difftool`
+* Added the `diff.tool` configuration variable to define the default diff tool
+
+Usability, bells and whistles
+-----------------------------
+* The stash dialog allows passing the `--keep-index` option to `git stash`
+* Amending a published commit warns at commit time
+* Simplified the file-across-revisions comparison dialog
+* `origin` is selected by default in fetch/push/pull
+* Removed the search field from the log widget
+* The log window moved into a drawer widget at the bottom of the UI
+* Log window display can be configured with
+  `cola.showoutput` = `{never, always, errors}`.  `errors` is the default.
+* `NOTE` -- `cola.showoutput` was removed with the GUI rewrite in 1.4.0.
+
+Developer
+---------
+* Improved nose unittest usage
+
+Packaging
+---------
+* Added a Windows/msysGit installer
+* Included private versions of `simplejson` and `jsonpickle`
+  for ease of installation and development

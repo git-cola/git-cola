@@ -1,0 +1,22 @@
+git-cola v1.9.4
+===============
+Usability, bells and whistles
+-----------------------------
+* The new `Bookmarks` tool makes it really easy to switch between repositories.
+
+* There is now a dedicated dialog for applying patches.
+  See the ``File -> Apply Patches`` menu item.
+
+  https://github.com/git-cola/git-cola/issues/215
+
+* A new `git cola am` sub-command was added for applying patches.
+
+Fixes
+-----
+* Fixed a typo that caused inotify events to be silently ignored.
+
+* Fixed the sys.path setup for Mac OS X (Homebrew).
+
+  https://github.com/git-cola/git-cola/issues/221
+
+* Lots of pylint fixes thanks to Alex Chernetz.
