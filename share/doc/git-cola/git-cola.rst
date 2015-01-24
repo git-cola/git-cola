@@ -142,7 +142,7 @@ KEYBOARD SHORTCUTS
 
 You can see the available shortcuts by pressing the ``?`` key,
 choosing ``Help -> Keyboard shortcuts`` from the main menu,
-or by consulting the `keyboard shortcuts reference <../hotkeys.html>`_.
+or by consulting the `git cola keyboard shortcuts reference <https://git-cola.github.io/share/doc/git-cola/hotkeys.html>`_.
 
 TOOLS
 =====
