@@ -146,7 +146,7 @@ for the differences).
 
 ## DOCUMENTATION
 
-* [HTML documentation](https://git-cola.github.io/share/doc/git-cola/html/index.html)
+* [HTML documentation](https://git-cola.readthedocs.org/en/latest/)
 
 * [git-cola manual](share/doc/git-cola/git-cola.rst)
 
