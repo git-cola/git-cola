@@ -189,7 +189,7 @@ class MainView(standard.MainWindow):
         self.rescan_action = add_action(self,
                 cmds.Refresh.name(),
                 cmds.run(cmds.Refresh),
-                cmds.Refresh.SHORTCUT)
+                *cmds.Refresh.SHORTCUTS)
         self.rescan_action.setIcon(qtutils.reload_icon())
 
         self.find_files_action = add_action(self,
