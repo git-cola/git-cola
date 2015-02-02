@@ -1142,7 +1142,7 @@ class Rescan(Command):
 class Refresh(Command):
     """Update refs and refresh the index"""
 
-    SHORTCUT = 'Ctrl+R'
+    SHORTCUTS = ('Ctrl+R', 'F5')
 
     @staticmethod
     def name():
