@@ -14,3 +14,4 @@ Usability, bells and whistles
 * The completion widgets will now select the top completion item
   when `Enter` or `Return` are pressed.
 
+* You can now refresh using `F5` in addition to the existing `Ctrl+R` hotkey.

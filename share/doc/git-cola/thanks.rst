@@ -15,6 +15,7 @@ Thanks
 * Charles 101
 * Christian Jann
 * Christopher Meng
+* Clément Pit--Claudel
 * Daniel Fahlke
 * Daniel Harding
 * Daniel King
