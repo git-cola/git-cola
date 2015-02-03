@@ -81,10 +81,12 @@ class GitCommandTest(unittest.TestCase):
         self.assertEqual(out, '\0' * (1024 * 16 + 1))
         self.assertEqual(err, '\0' * (1024 * 16 + 1))
 
-    @unittest.skipIf(WIN32, 'SIGALRM not supported on Windows')
     def test_it_handles_interrupted_syscalls(self):
         """Test that we handle interrupted system calls"""
         # send ourselves a signal that causes EINTR
+        if WIN32:
+            # SIGALRM not supported on Windows
+            return
         prev_handler = signal.signal(signal.SIGALRM, lambda x, y: 1)
         signal.alarm(1)
         time.sleep(0.1)
