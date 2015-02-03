@@ -50,8 +50,8 @@ ifdef DESTDIR
 endif
 export prefix
 
-PYTHON_DIRS = cola
-PYTHON_DIRS += tests
+PYTHON_DIRS = test
+PYTHON_DIRS += cola
 
 # User customizations
 -include config.mak
