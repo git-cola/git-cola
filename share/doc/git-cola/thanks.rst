@@ -82,4 +82,5 @@ Thanks
 * Virgil Dupras
 * Vitor Lobo
 * v.paritskiy
+* Wolfgang Ocker
 * Zhang Han
