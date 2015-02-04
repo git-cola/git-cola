@@ -212,7 +212,8 @@ def tag_list():
 
 
 def log(git, *args, **kwargs):
-    return git.log(no_color=True, no_ext_diff=True, *args, **kwargs)[STDOUT]
+    return git.log(no_color=True, no_abbrev_commit=True,
+                   no_ext_diff=True, *args, **kwargs)[STDOUT]
 
 
 def commit_diff(sha1, git=git):
