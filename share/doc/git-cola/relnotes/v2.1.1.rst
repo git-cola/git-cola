@@ -1,5 +1,6 @@
-git-cola v2.1.1 (BETA)
-======================
+git-cola v2.1.1
+===============
+
 Usability, bells and whistles
 -----------------------------
 * A new "Find files" widget was added, and can be activated by
@@ -15,3 +16,8 @@ Usability, bells and whistles
   when `Enter` or `Return` are pressed.
 
 * You can now refresh using `F5` in addition to the existing `Ctrl+R` hotkey.
+
+Fixes
+-----
+* `git cola` now passes `--no-abbrev-commit` to `git log` to override
+  having `log.abbrevCommit = true` set in `.gitconfig`.
