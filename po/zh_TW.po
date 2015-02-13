@@ -177,7 +177,7 @@ msgstr "已移除遠端分支"
 #: cola/cmds.py:634
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
-msgstr "「%(branch)s」分支已自「%(remote)s」版本倉庫中移除。"
+msgstr "「%(branch)s」分支已從「%(remote)s」版本倉庫中移除。"
 
 #: cola/cmds.py:638 cola/guicmds.py:110 cola/widgets/remote.py:470
 #, python-format
@@ -1092,11 +1092,11 @@ msgstr "延伸描述"
 
 #: cola/widgets/compare.py:38
 msgid "*** Branch Point ***"
-msgstr ""
+msgstr "*** 分支點 ***"
 
 #: cola/widgets/compare.py:39
 msgid "*** Sandbox ***"
-msgstr ""
+msgstr "*** 沙盒 ***"
 
 #: cola/widgets/compare.py:40 cola/widgets/compare.py:51
 #: cola/widgets/compare.py:56
@@ -1123,7 +1123,7 @@ msgstr "建立一個新的分支"
 
 #: cola/widgets/createbranch.py:100
 msgid "Branch Name"
-msgstr "分支名"
+msgstr "分支名稱"
 
 #: cola/widgets/createbranch.py:105 cola/widgets/createbranch.py:152
 msgid "Starting Revision"
@@ -1151,7 +1151,7 @@ msgstr "僅可快速前移式合併者"
 
 #: cola/widgets/createbranch.py:135
 msgid "Reset"
-msgstr "重置"
+msgstr "重設"
 
 #: cola/widgets/createbranch.py:138
 msgid "Fetch Tracking Branch"
@@ -1198,12 +1198,12 @@ msgstr "恢復丟失的提交是比較困難的."
 
 #: cola/widgets/createbranch.py:280
 msgid "Reset Branch?"
-msgstr "要重置分支嗎？"
+msgstr "要重設分支嗎？"
 
 #: cola/widgets/createbranch.py:282
 #, python-format
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
-msgstr "要重置「%(branch)s」分支到 「%(revision)s」版本嗎？"
+msgstr "要重設「%(branch)s」分支到 「%(revision)s」版本嗎？"
 
 #: cola/widgets/createbranch.py:284
 msgid "Reset Branch"
@@ -1887,8 +1887,8 @@ msgid ""
 "Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
-"中止目前的分支合併操作將導致 *所有* 尚未提交到版本倉庫的內容變動丟失。\n"
-"救出尚未提交到版本倉庫的內容變動是不可能的。"
+"中止目前的分支合併操作將導致 *所有* 尚未提交到版本倉庫的內容變更遺失，\n"
+"且所有遺失的變更將無法被復原或找回。"
 
 #: cola/widgets/merge.py:35
 msgid "Aborting the current merge?"
@@ -1987,7 +1987,7 @@ msgstr "電子郵件地址"
 
 #: cola/widgets/prefs.py:134
 msgid "Merge Verbosity"
-msgstr ""
+msgstr "合併資訊詳細程度"
 
 #: cola/widgets/prefs.py:135
 msgid "Number of Diff Context Lines"
