@@ -17,16 +17,16 @@ if sys.platform == 'darwin':
     if os.path.isdir(homebrew_mods):
         sys.path.append(homebrew_mods)
 
-import sip
-sip.setapi('QString', 1)
-sip.setapi('QDate', 1)
-sip.setapi('QDateTime', 1)
-sip.setapi('QTextStream', 1)
-sip.setapi('QTime', 1)
-sip.setapi('QUrl', 1)
-sip.setapi('QVariant', 1)
-
 try:
+    import sip
+    sip.setapi('QString', 1)
+    sip.setapi('QDate', 1)
+    sip.setapi('QDateTime', 1)
+    sip.setapi('QTextStream', 1)
+    sip.setapi('QTime', 1)
+    sip.setapi('QUrl', 1)
+    sip.setapi('QVariant', 1)
+
     from PyQt4 import QtGui
     from PyQt4 import QtCore
     from PyQt4.QtCore import SIGNAL
