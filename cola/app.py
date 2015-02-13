@@ -379,10 +379,7 @@ def _start_update_thread(model):
 
 def _send_msg():
     if git.GIT_COLA_TRACE == 'trace':
-        msg = ('info: Trace enabled.  '
-               'Many of commands reported with "trace" use git\'s stable '
-               '"plumbing" API and are not intended for typical '
-               'day-to-day use.  Here be dragons')
+        msg = 'info: debug mode enabled using GIT_COLA_TRACE=trace'
         Interaction.log(msg)
 
 
