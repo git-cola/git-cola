@@ -158,18 +158,17 @@ class ColaApplication(object):
         if gui:
             self._app = current(tuple(argv), git_path)
             self._app.setWindowIcon(qtutils.git_icon())
+            self._app.setStyleSheet("""
+                QMainWindow::separator {
+                    width: 3px;
+                    height: 3px;
+                }
+                QMainWindow::separator:hover {
+                    background: white;
+                }
+                """)
         else:
             self._app = QtCore.QCoreApplication(argv)
-
-        self._app.setStyleSheet("""
-            QMainWindow::separator {
-                width: 3px;
-                height: 3px;
-            }
-            QMainWindow::separator:hover {
-                background: white;
-            }
-            """)
 
     def activeWindow(self):
         """Wrap activeWindow()"""
