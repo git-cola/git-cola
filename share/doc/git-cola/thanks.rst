@@ -62,6 +62,7 @@ Thanks
 * Paolo G. Giarrusso
 * Paul Hildebrandt
 * Paul Weingardt
+* Peter Dave Hello
 * Peter Júnoš
 * Pilar Molina Lopez
 * Raghavendra Karunanidhi
