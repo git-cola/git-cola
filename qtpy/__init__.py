@@ -1,13 +1,29 @@
 # -*- coding: utf-8 -*-
-#
-# Copyright © 2011-2012 Pierre Raybaut
-#           © 2012-2014 anatoly techtonik
-# Licensed under the terms of the MIT License
-# (see spyderlib/__init__.py for details)
+"""
+**QtPyqt** is a shim over the various qt bindings. It is used to write
+qt bindings indenpendent library or application.
 
-"""Transitional package (PyQt4 --> PySide)"""
+The shim will automatically select the first available API (PyQt5, PyQt4 and
+finally PySide).
+
+You can force the use of one specific bindings (e.g. if your application is
+using one specific bindings and you need to use library that use pyqode.qt) by
+setting up the `QT_API` environment variable.
+
+PyQt5
+=====
+
+For pyqt5, you don't have to set anything as it will be used automatically::
+    >>> from qtpy import QtGui, QtWidgets, QtCore
+    >>> print(QtWidgets.QWidget)
+
+"""
+
 
 import os
+
+__version__ = '1.0.1'
+
 
 os.environ.setdefault('QT_API', 'pyqt')
 assert os.environ['QT_API'] in ('pyqt5', 'pyqt', 'pyside')
