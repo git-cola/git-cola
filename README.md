@@ -1,4 +1,7 @@
 [![PyPI version](https://badge.fury.io/py/QtPy.svg)](http://badge.fury.io/py/QtPy)
+[![Number of PyPI downloads](https://pypip.in/download/QtPy/badge.svg)](https://pypi.python.org/pypi/QtPy/)
+[![Supported Python versions](https://pypip.in/py_versions/QtPy/badge.svg)](https://pypi.python.org/pypi/QtPy/)
+[![License](https://pypip.in/license/QtPy/badge.svg)](http://opensource.org/licenses/MIT)
 
 About
 -----
@@ -16,7 +19,7 @@ Basically, you write your code as if you were using PyQt5 but import qt from
 Attribution and acknowledgements
 --------------------------------
 
-This project is based on the **[pyqode.qt](https://github.com/pyQode/pyqode.qt)** project and the *[spyderlib](https://github.com/spyder-ide/spyder/tree/master/spyderlib/qt).qt*
+This project is based on the **[pyqode.qt](https://github.com/pyQode/pyqode.qt)** project and the *[spyderlib.qt](https://github.com/spyder-ide/spyder/tree/master/spyderlib/qt)*
 module from the **[spyder](https://github.com/spyder-ide/spyder)** project.
 
 Unlike **pyqode.qt** this is not a namespace package so it is not *tied*
