@@ -1,21 +1,54 @@
 language: python
 python:
+  # We don't actually use the Travis Python, but this keeps it organized.
   - "2.7"
   - "3.2"
   - "3.3"
   - "3.4"
+os:
+  - linux
+#  - osx
+env:
+  matrix:
+    - USE_QT_API=PyQt5
+    - USE_QT_API=PyQt4
+    - USE_QT_API=PySide
 before_install:
+  - sudo apt-get update
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
-install: 
-  - pip install .
-  - pip install nose coverage
-  - pip install coveralls
-# # command to run tests, e.g. python setup.py test
-script:  
-  - python setup.py nosetests --with-coverage --cover-package pypiview
+install:
+  # You may want to periodically update this, although the conda update
+  # conda line below will keep everything up-to-date.  We do this
+  # conditionally because it saves us some downloading if the version is
+  # the same.
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget http://repo.continuum.io/miniconda/Miniconda-3.8.3-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget http://repo.continuum.io/miniconda/Miniconda3-3.8.3-Linux-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
 
-after_sucess:
-  coveralls
+  # Test environments for different Qt bindings
+  - if [[ "$USE_QT_API" == "PyQt5" ]]; then
+      conda config --add channels dsdale24
+      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION qt5 pyqt5
+    elif [[ "$USE_QT_API" == "PyQt4" ]]; then
+      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION qt4 pyqt4
+    elif [[ "$USE_QT_API" == "PySide" ]]; then
+      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION qt4 pyside
+    fi
+  - source activate test-environment
+  - python setup.py install
+before_script:
+  - cd example
+script:  
+  - python example.py
+
 
