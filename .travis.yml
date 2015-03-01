@@ -8,10 +8,9 @@ os:
   - linux
 #  - osx
 env:
-  matrix:
-    - USE_QT_API=PyQt5
-    - USE_QT_API=PyQt4
-    - USE_QT_API=PySide
+  - USE_QT_API=PyQt5
+  - USE_QT_API=PyQt4
+  - USE_QT_API=PySide
 matrix:
   exclude:
     - python: 3.3
