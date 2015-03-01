@@ -47,8 +47,8 @@ install:
   - source activate test-environment
   - python setup.py install
 before_script:
-  - cd example
+  - cd tests
 script:  
-  - python example.py
+  - python travis.py
 
 
