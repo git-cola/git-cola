@@ -4,11 +4,23 @@
 # Licensed under the terms of the MIT License
 # (see spyderlib/__init__.py for details)
 
-import os
+"""
+Provides QtSvg classes and functions.
+"""
 
-if os.environ['QT_API'] == 'pyqt5':
+import os
+from qtpy import QT_API
+from qtpy import PYQT5_API
+from qtpy import PYQT4_API
+from qtpy import PYSIDE_API
+
+
+if os.environ[QT_API] in PYQT5_API:
     from PyQt5.QtSvg import *                                 # analysis:ignore
-elif os.environ['QT_API'] == 'pyqt':
+elif os.environ[QT_API] in PYQT4_API:
     from PyQt4.QtSvg import *                                 # analysis:ignore
-else:
+elif os.environ[QT_API] in PYSIDE_API:
     from PySide.QtSvg import *                                # analysis:ignore
+else:
+    # Raise error
+
