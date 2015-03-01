@@ -37,12 +37,12 @@ install:
 
   # Test environments for different Qt bindings
   - if [[ "$USE_QT_API" == "PyQt5" ]]; then
-      conda config --add channels dsdale24
-      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION qt5 pyqt5
+      conda config --add channels dsdale24;
+      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION qt5 pyqt5;
     elif [[ "$USE_QT_API" == "PyQt4" ]]; then
-      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION qt4 pyqt4
+      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION qt4 pyqt4;
     elif [[ "$USE_QT_API" == "PySide" ]]; then
-      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION qt4 pyside
+      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION qt4 pyside;
     fi
   - source activate test-environment
   - python setup.py install
