@@ -1,16 +1,12 @@
 language: python
-#python:
-#  # We don't actually use the Travis Python, but this keeps it organized.
-#  - "2.7"
-#  - "3.3"
-#  - "3.4"
 os:
   - linux
-#  - osx
-#env:
-#  - USE_QT_API=PyQt5
-#  - USE_QT_API=PyQt4
-#  - USE_QT_API=PySide
+  - osx
+env:
+  global:
+    - MINCONDA_VERSION="3.8.3"
+    - MINCONDA_LINUX="Linux-x86_64"
+    - MINCONDA_OSX="MacOSX-x86_64"
 matrix:
   include:
     - python: "2.7"
@@ -28,14 +24,20 @@ before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
 install:
+  # Define the value to download
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      MINCONDA_OS = $MINCONDA_LINUX
+    elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      MINCONDA_OS = $MINCONDA_OSX
+    fi
   # You may want to periodically update this, although the conda update
   # conda line below will keep everything up-to-date.  We do this
   # conditionally because it saves us some downloading if the version is
   # the same.
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget http://repo.continuum.io/miniconda/Miniconda-3.8.3-Linux-x86_64.sh -O miniconda.sh;
+      wget "http://repo.continuum.io/miniconda/Miniconda-$MINCONDA_VERSION-$MINCONDA_OS.sh -O miniconda.sh;
     else
-      wget http://repo.continuum.io/miniconda/Miniconda3-3.8.3-Linux-x86_64.sh -O miniconda.sh;
+      wget http://repo.continuum.io/miniconda/Miniconda3-$MINCONDA_VERSION-$MINCONDA_OS.sh -O miniconda.sh;
     fi
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
