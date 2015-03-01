@@ -19,26 +19,28 @@ def readme():
 
 
 setup(
-    name='pyqode.qt',
+    name='QtPy',
     version=read_version(),
-    packages=[p for p in find_packages() if 'test' not in p],
-    keywords=["qt PyQt4 PyQt5 PySide"],
-    url='https://github.com/goanpeca/qtpy',
+    packages=find_packages(exclude=['contrib', 'docs', 'tests*'])
+    keywords=["qt PyQt4 PyQt5 PySide Widget QWidget"],
+    url='https://github.com/goanpeca/QtPy',
     license='MIT',
     author='Gonzalo Peña-Castellanos',
     author_email='goanpeca@gmail.com',
     description='Provides an abstraction layer on top of the various Qt '
-                'bindings (PyQt5, PyQt4 and PySide)',
+                'bindings (PyQt5, PyQt4 and PySide) and additional custom '
+                'QWidgets.'
     long_description=readme(),
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 4 - Beta',
         'Environment :: X11 Applications :: Qt',
         'Environment :: Win32 (MS Windows)',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
-        'Operating System :: Microsoft :: Windows',
-        'Operating System :: POSIX :: Linux',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
