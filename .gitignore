@@ -6,3 +6,5 @@
 
 # PyPi configuration
 .pypirc
+setup.cfg
+
