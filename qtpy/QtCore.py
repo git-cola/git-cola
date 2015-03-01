@@ -1,27 +1,45 @@
 # -*- coding: utf-8 -*-
 #
+# Copyright © 2014-2015 Colin Duquesnoy
 # Copyright © 2011 Pierre Raybaut
+#
 # Licensed under the terms of the MIT License
-# (see spyderlib/__init__.py for details)
+# (see LICENSE.txt for details)
+
+"""
+Provides QtCore classes and functions.
+"""
 
 import os
+from pyqode.qt import QT_API
+from pyqode.qt import PYQT5_API
+from pyqode.qt import PYQT4_API
+from pyqode.qt import PYSIDE_API
 
-if os.environ['QT_API'] == 'pyqt5':
+
+if os.environ[QT_API] in PYQT5_API:
     from PyQt5.QtCore import *                                # analysis:ignore
-    from PyQt5.QtCore import QCoreApplication
+    # compatibility with pyside
     from PyQt5.QtCore import pyqtSignal as Signal
     from PyQt5.QtCore import pyqtSlot as Slot
     from PyQt5.QtCore import pyqtProperty as Property
+    # use a common __version__
     from PyQt5.QtCore import QT_VERSION_STR as __version__
-elif os.environ['QT_API'] == 'pyqt':
+elif os.environ[QT_API] in PYQT4_API:
     from PyQt4.QtCore import *                                # analysis:ignore
-    from PyQt4.Qt import QCoreApplication                     # analysis:ignore
-    from PyQt4.Qt import Qt                                   # analysis:ignore
-    from PyQt4.QtCore import pyqtSignal as Signal             # analysis:ignore
-    from PyQt4.QtCore import pyqtSlot as Slot                 # analysis:ignore
-    from PyQt4.QtCore import pyqtProperty as Property         # analysis:ignore
-    from PyQt4.QtCore import QT_VERSION_STR as __version__    # analysis:ignore
-else:
-    import PySide.QtCore
-    __version__ = PySide.QtCore.__version__                   # analysis:ignore
+    # compatibility with pyside
+    from PyQt4.QtCore import pyqtSignal as Signal
+    from PyQt4.QtCore import pyqtSlot as Slot
+    from PyQt4.QtCore import pyqtProperty as Property
+    from PyQt4.QtGui import QSortFilterProxyModel
+    # use a common __version__
+    from PyQt4.QtCore import QT_VERSION_STR as __version__
+elif os.environ[QT_API] in PYSIDE_API:
     from PySide.QtCore import *                               # analysis:ignore
+    from PySide.QtGui import QSortFilterProxyModel
+    # use a common __version__
+    import PySide.QtCore
+    __version__ = PySide.QtCore.__version__
+else:
+    # Raise error
+

@@ -1,20 +1,30 @@
 # -*- coding: utf-8 -*-
 #
+# Copyright © 2014-2015 Colin Duquesnoy
 # Copyright © 2011 Pierre Raybaut
+#
 # Licensed under the terms of the MIT License
-# (see spyderlib/__init__.py for details)
+# (see LICENSE.txt for details)
 
+"""
+Provides QtGui classes and functions.
+.. warning:: All PyQt4/PySide gui classes are exposed but when you use
+    PyQt5, those classes are not available. Therefore, you should treat/use
+    this package as if it was ``PyQt5.QtGui`` module.
+"""
 import os
+from qtpy import QT_API
+from qtpy import PYQT5_API
+from qtpy import PYQT4_API
+from qtpy import PYSIDE_API
 
-if os.environ['QT_API'] == 'pyqt5':
-    from PyQt5.QtCore import QSortFilterProxyModel            # analysis:ignore
-    from PyQt5.QtPrintSupport import (QPrinter, QPrintDialog, # analysis:ignore
-                                      QAbstractPrintDialog)
-    from PyQt5.QtPrintSupport import QPrintPreviewDialog      # analysis:ignore
+
+if os.environ[QT_API] in PYQT5_API:
     from PyQt5.QtGui import *                                 # analysis:ignore
-    from PyQt5.QtWidgets import *                             # analysis:ignore
-elif os.environ['QT_API'] == 'pyqt':
-    from PyQt4.Qt import QKeySequence, QTextCursor            # analysis:ignore
+elif os.environ[QT_API] in PYQT4_API:
     from PyQt4.QtGui import *                                 # analysis:ignore
-else:
+elif os.environ[QT_API] in PYSIDE_API:
     from PySide.QtGui import *                                # analysis:ignore
+else:
+    # Raise error
+
