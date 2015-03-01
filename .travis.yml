@@ -38,9 +38,9 @@ install:
   # conditionally because it saves us some downloading if the version is
   # the same.
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget "http://repo.continuum.io/miniconda/Miniconda-$MINCONDA_VERSION-$MINCONDA_OS.sh -O miniconda.sh;
+      wget "http://repo.continuum.io/miniconda/Miniconda-$MINCONDA_VERSION-$MINCONDA_OS.sh" -O miniconda.sh;
     else
-      wget http://repo.continuum.io/miniconda/Miniconda3-$MINCONDA_VERSION-$MINCONDA_OS.sh -O miniconda.sh;
+      wget http://repo.continuum.io/miniconda/Miniconda3-$MINCONDA_VERSION-$MINCONDA_OS.sh" -O miniconda.sh;
     fi
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
