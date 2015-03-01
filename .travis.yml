@@ -12,6 +12,7 @@ env:
     - USE_QT_API=PyQt5
     - USE_QT_API=PyQt4
     - USE_QT_API=PySide
+matrix:
   exclude:
     - python: 3.3
       env: USE_QT_API=PySide
