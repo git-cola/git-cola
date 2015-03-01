@@ -22,22 +22,6 @@ matrix:
     - python: "3.4"
       env: USE_QT_API=PyQt4
       os: linux
-    # OSX
-    - python: "2.7"
-      env: USE_QT_API=PyQt5
-      os: osx
-    - python: "2.7"
-      env: USE_QT_API=PyQt4
-      os: osx
-    - python: "2.7"
-      env: USE_QT_API=PySide
-      os: osx
-    - python: "3.3"
-      env: USE_QT_API=PyQt4
-      os: osx
-    - python: "3.4"
-      env: USE_QT_API=PyQt4
-      os: osx
 before_install:
   - sudo apt-get update
   - "export DISPLAY=:99.0"
@@ -45,9 +29,9 @@ before_install:
 install:
   # Define the value to download
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      MINCONDA_OS = $MINCONDA_LINUX;
+      MINCONDA_OS=$MINCONDA_LINUX;
     elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      MINCONDA_OS = $MINCONDA_OSX;
+      MINCONDA_OS=$MINCONDA_OSX;
     fi
   # You may want to periodically update this, although the conda update
   # conda line below will keep everything up-to-date.  We do this
