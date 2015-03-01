@@ -1,9 +1,9 @@
 
 About
 -----
-**QtPy** (pronounced *'cutie pie'*) is an abstraction layer that lets you
-write applications using a single api call to PyQt and PySide. **QtPy** also
-provides a set of additional QWidgets.
+**QtPy** (pronounced *'cutie pie'*) is a small abstraction layer that lets you
+write applications using a single api call to either PyQt or PySide. **QtPy**
+also provides a set of additional QWidgets.
 
 It provides support for PyQt5, PyQt4 and PySide using the PyQt5 layout (where
 the QtGui module has been split into QtGui and QtWidgets).

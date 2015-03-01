@@ -2,7 +2,7 @@
 #
 # Copyright © 2012 Pierre Raybaut
 # Licensed under the terms of the MIT License
-# (see spyderlib/__init__.py for details)
+# (see LICENSE.txt for details)
 
 """
 Provides QtSvg classes and functions.
