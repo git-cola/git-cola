@@ -1,3 +1,5 @@
+[![PyPI version](https://badge.fury.io/py/QtPy.svg)](http://badge.fury.io/py/QtPy)
+
 About
 -----
 
