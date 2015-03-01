@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 """
 Setup script for qtpy
 """
+
 from setuptools import setup, find_packages
 
 
@@ -21,7 +23,7 @@ def readme():
 setup(
     name='QtPy',
     version=read_version(),
-    packages=find_packages(exclude=['contrib', 'docs', 'tests*'])
+    packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     keywords=["qt PyQt4 PyQt5 PySide Widget QWidget"],
     url='https://github.com/goanpeca/QtPy',
     license='MIT',
@@ -29,7 +31,7 @@ setup(
     author_email='goanpeca@gmail.com',
     description='Provides an abstraction layer on top of the various Qt '
                 'bindings (PyQt5, PyQt4 and PySide) and additional custom '
-                'QWidgets.'
+                'QWidgets.',
     long_description=readme(),
     classifiers=[
         'Development Status :: 4 - Beta',

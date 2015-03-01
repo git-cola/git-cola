@@ -1,6 +1,6 @@
-
 About
 -----
+
 **QtPy** (pronounced *'cutie pie'*) is a small abstraction layer that lets you
 write applications using a single api call to either PyQt or PySide. **QtPy**
 also provides a set of additional QWidgets.
@@ -13,6 +13,7 @@ Basically, you write your code as if you were using PyQt5 but import qt from
 
 Attribution and acknowledgements
 --------------------------------
+
 This project is based on the **[pyqode.qt](https://github.com/pyQode/pyqode.qt)** project and the *[spyderlib](https://github.com/spyder-ide/spyder/tree/master/spyderlib/qt).qt*
 module from the **[spyder](https://github.com/spyder-ide/spyder)** project.
 
@@ -21,6 +22,7 @@ to a particular project, or namespace.
 
 License
 -------
+
 This project is licensed under the MIT license.
 
 Requirements
