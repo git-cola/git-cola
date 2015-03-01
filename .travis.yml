@@ -1,0 +1,21 @@
+language: python
+python:
+  - "2.7"
+  - "3.2"
+  - "3.3"
+  - "3.4"
+before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+install: 
+  - pip install .
+  - pip install nose coverage
+  - pip install coveralls
+# # command to run tests, e.g. python setup.py test
+script:  
+  - python setup.py nosetests --with-coverage --cover-package pypiview
+
+after_sucess:
+  coveralls
+

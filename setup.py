@@ -17,7 +17,7 @@ def read_version():
 
 
 def readme():
-    return str(open('README.md').read())
+    return str(open('README.rst').read())
 
 
 setup(
@@ -27,8 +27,10 @@ setup(
     keywords=["qt PyQt4 PyQt5 PySide Widget QWidget"],
     url='https://github.com/goanpeca/QtPy',
     license='MIT',
-    author='Gonzalo Peña-Castellanos',
+    author='Colin Duquesnoy, Pierre Raybaut, Gonzalo Peña-Castellanos',
     author_email='goanpeca@gmail.com',
+    maintainer='Gonzalo Peña-Castellanos',
+    maintainer_email='goanpeca@gmail.com',
     description='Provides an abstraction layer on top of the various Qt '
                 'bindings (PyQt5, PyQt4 and PySide) and additional custom '
                 'QWidgets.',
@@ -47,3 +49,4 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Topic :: Software Development :: Widget Sets'])
+
