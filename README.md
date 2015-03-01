@@ -13,8 +13,8 @@ Basically, you write your code as if you were using PyQt5 but import qt from
 
 Attribution and acknowledgements
 --------------------------------
-This project is based on the **pyqode.qt** project and the *spyderlib.qt*
-module from the **spyder** project.
+This project is based on the **[pyqode.qt](https://github.com/pyQode/pyqode.qt)** project and the *[spyderlib](https://github.com/spyder-ide/spyder/tree/master/spyderlib/qt).qt*
+module from the **[spyder](https://github.com/spyder-ide/spyder)** project.
 
 Unlike **pyqode.qt** this is not a namespace package so it is not *tied*
 to a particular project, or namespace.
