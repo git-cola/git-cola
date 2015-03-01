@@ -1,2 +1,8 @@
 # Python compiled files
-*.py[co]
+*.py[oc]
+
+# Gedit files
+*~
+
+# PyPi configuration
+.pypirc
