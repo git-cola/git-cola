@@ -11,11 +11,14 @@ Provides QtTest and functions
 .. warning:: PySide is not supported here, that's why there is not unit tests
     running with PySide.
 """
+
 import os
-from pyqode.qt import QT_API
-from pyqode.qt import PYQT5_API
-from pyqode.qt import PYQT4_API
-from pyqode.qt import PYSIDE_API
+from qtpy import QT_API
+from qtpy import PYQT5_API
+from qtpy import PYQT4_API
+from qtpy import PYSIDE_API
+from qtpy import PythonQtError
+
 
 if os.environ[QT_API] in PYQT5_API:
     from PyQt5.QtTest import QTest
@@ -29,5 +32,5 @@ elif os.environ[QT_API] in PYQT4_API:
 elif os.environ[QT_API] in PYSIDE_API:
     raise ImportError('QtTest support is incomplete for PySide')
 else:
-    # Raise error
+    raise PythonQtError('No Qt bindings could be found')
 

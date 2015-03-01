@@ -12,11 +12,13 @@ Provides QtGui classes and functions.
     PyQt5, those classes are not available. Therefore, you should treat/use
     this package as if it was ``PyQt5.QtGui`` module.
 """
+
 import os
 from qtpy import QT_API
 from qtpy import PYQT5_API
 from qtpy import PYQT4_API
 from qtpy import PYSIDE_API
+from qtpy import PythonQtError
 
 
 if os.environ[QT_API] in PYQT5_API:
@@ -26,5 +28,5 @@ elif os.environ[QT_API] in PYQT4_API:
 elif os.environ[QT_API] in PYSIDE_API:
     from PySide.QtGui import *                                # analysis:ignore
 else:
-    # Raise error
+    raise PythonQtError('No Qt bindings could be found')
 
