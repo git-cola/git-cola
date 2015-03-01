@@ -1,14 +1,14 @@
 Maintainer
 ==========
 
-Gonzalo Peña-Castellanos (@goanpeca) <goanpeca@gmail.com>
+Gonzalo Peña-Castellanos [@goanpeca](http://github.com/goanpeca) <goanpeca@gmail.com>
 
 Main Authors
 ============
 
-Colin Duquesnoy (@ColinDuquesnoy) <colin.duquesnoy@gmail.com>
+Colin Duquesnoy [@ColinDuquesnoy](http://github.com/goanpeca) <colin.duquesnoy@gmail.com>
 
-PierreRaybaut (@PierreColinDuquesnoy)
+PierreRaybaut [@PierreRaybaut](http://github.com/goanpeca)
 
 Code Contributors
 =================
