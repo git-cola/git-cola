@@ -11,8 +11,8 @@ the QtGui module has been split into QtGui and QtWidgets).
 Basically, you write your code as if you were using PyQt5 but import qt from
 ``qtpy`` instead of ``PyQt5``.
 
-Attribution and acknowledgemnts
--------------------------------
+Attribution and acknowledgements
+--------------------------------
 This project is based on the **pyqode.qt** project and the *spyderlib.qt*
 module from the **spyder** project.
 
