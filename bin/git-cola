@@ -225,6 +225,8 @@ def add_rebase_command(subparser):
                         default=False, action='store_true',
                         help='allow rerere to update index with '
                              'resolved conflicts')
+    parser.add_argument('--root', default=False, action='store_true',
+                        help='rebase all reachable commits up to the root(s)')
     parser.add_argument('upstream', nargs='?', default=None, metavar='<upstream>',
                         help='the upstream configured in branch.<name>.remote'
                              ' and branch.<name>.merge options will be used'
@@ -406,6 +408,7 @@ def cmd_rebase(args):
                                no_stat=args.no_stat,
                                verify=args.verify,
                                rerere_autoupdate=args.rerere_autoupdate,
+                               root=args.root,
                                upstream=args.upstream,
                                branch=args.branch,
                                capture_output=False)
