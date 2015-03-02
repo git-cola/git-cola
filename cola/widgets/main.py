@@ -742,13 +742,14 @@ class MainView(standard.MainWindow):
                     N_('Unable to rebase'),
                     N_('You cannot rebase with uncommitted changes.'))
             return
-        branch = guicmds.choose_ref(N_('Select New Upstream'),
-                                    N_('Interactive Rebase'))
-        if not branch:
+        upstream = guicmds.choose_ref(N_('Select New Upstream'),
+                                      N_('Interactive Rebase'),
+                                      default='@{upstream}')
+        if not upstream:
             return None
         self.model.is_rebasing = True
         self._update_callback()
-        cmds.do(cmds.Rebase, branch)
+        cmds.do(cmds.Rebase, upstream=upstream)
 
     def rebase_edit_todo(self):
         cmds.do(cmds.RebaseEditTodo)
