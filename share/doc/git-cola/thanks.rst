@@ -60,6 +60,7 @@ Thanks
 * OmegaPhil (Omega Weapon)
 * Owen Healy
 * Paolo G. Giarrusso
+* Patrick Browne
 * Paul Hildebrandt
 * Paul Weingardt
 * Peter Dave Hello
