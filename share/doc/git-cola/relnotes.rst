@@ -5,6 +5,7 @@ Releases
     :maxdepth: 1
     :titlesonly:
 
+    relnotes/unreleased
     relnotes/v2.1.1
     relnotes/v2.1.0
     relnotes/v2.0.8
