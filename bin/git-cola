@@ -196,6 +196,8 @@ def add_rebase_command(subparser):
     parser = add_command(subparser, 'rebase', 'interactive rebase', cmd_rebase)
     parser.add_argument('-i', '--interactive', default=True, action='store_true',
                         help=argparse.SUPPRESS)
+    parser.add_argument('--autostash', default=False, action='store_true',
+                        help='automatically stash/stash pop before and after')
     parser.add_argument('--onto', default=None, metavar='<newbase>',
                         help='rebase onto given branch instead of upstream')
     parser.add_argument('upstream', nargs='?', default=None, metavar='<upstream>',
@@ -366,6 +368,7 @@ def cmd_push(args):
 
 def cmd_rebase(args):
     status, out, err = cmds.do(cmds.Rebase,
+                               autostash=args.autostash,
                                onto=args.onto,
                                upstream=args.upstream,
                                branch=args.branch,
