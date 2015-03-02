@@ -202,6 +202,9 @@ def add_rebase_command(subparser):
                         help="use 'merge-base --fork-point' to refine upstream")
     parser.add_argument('--onto', default=None, metavar='<newbase>',
                         help='rebase onto given branch instead of upstream')
+    parser.add_argument('-p', '--preserve-merges',
+                        default=False, action='store_true',
+                        help='try to recreate merges instead of ignoring them')
     parser.add_argument('upstream', nargs='?', default=None, metavar='<upstream>',
                         help='the upstream configured in branch.<name>.remote'
                              ' and branch.<name>.merge options will be used'
@@ -372,6 +375,7 @@ def cmd_rebase(args):
     status, out, err = cmds.do(cmds.Rebase,
                                autostash=args.autostash,
                                fork_point=args.fork_point,
+                               preserve_merges=args.preserve_merges,
                                onto=args.onto,
                                upstream=args.upstream,
                                branch=args.branch,
