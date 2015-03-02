@@ -737,16 +737,18 @@ class MainView(standard.MainWindow):
         self.position_label.setText(display)
 
     def rebase_start(self):
-        if self.model.staged or self.model.unmerged or self.model.modified:
-            Interaction.information(
-                    N_('Unable to rebase'),
-                    N_('You cannot rebase with uncommitted changes.'))
-            return
+        cfg = gitcfg.current()
+        if not cfg.get('rebase.autostash', False):
+            if self.model.staged or self.model.unmerged or self.model.modified:
+                Interaction.information(
+                        N_('Unable to rebase'),
+                        N_('You cannot rebase with uncommitted changes.'))
+                return
         upstream = guicmds.choose_ref(N_('Select New Upstream'),
                                       N_('Interactive Rebase'),
                                       default='@{upstream}')
         if not upstream:
-            return None
+            return
         self.model.is_rebasing = True
         self._update_callback()
         cmds.do(cmds.Rebase, upstream=upstream)
