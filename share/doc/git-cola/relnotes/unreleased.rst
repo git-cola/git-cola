@@ -14,6 +14,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/357
 
+* We now prevent the "Delete Files" action from creating a dialog that does
+  not fit on screen.
+
+  https://github.com/git-cola/git-cola/issues/378
+
 Fixes
 -----
 * `git cola` will now allow starting an interactive rebase with a dirty

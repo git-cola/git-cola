@@ -428,8 +428,8 @@ class Ignore(Command):
 
 def file_summary(files):
     txt = subprocess.list2cmdline(files)
-    if len(txt) > 2048:
-        txt = txt[:2048].rstrip() + '...'
+    if len(txt) > 768:
+        txt = txt[:768].rstrip() + '...'
     return txt
 
 
