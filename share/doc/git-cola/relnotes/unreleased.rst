@@ -19,6 +19,9 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/378
 
+* `git xbase` learned to edit rebase instruction sheets that contain
+  `exec` commands.
+
 Fixes
 -----
 * `git cola` will now allow starting an interactive rebase with a dirty

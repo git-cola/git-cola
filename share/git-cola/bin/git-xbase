@@ -44,8 +44,9 @@ REWORD = 'reword'
 EDIT = 'edit'
 FIXUP = 'fixup'
 SQUASH = 'squash'
+EXEC = 'exec'
 COMMANDS = (PICK, REWORD, EDIT, FIXUP, SQUASH,)
-COMMAND_TO_IDX = dict([(cmd, idx) for idx, cmd in enumerate(COMMANDS)])
+COMMAND_IDX = dict([(cmd, idx) for idx, cmd in enumerate(COMMANDS)])
 
 
 def main():
@@ -174,16 +175,29 @@ class Editor(QtGui.QWidget):
         idx = 1
         rebase_command = re.compile(
                 r'^(# )?(pick|fixup|squash) ([0-9a-f]{7,40}) (.+)$')
+
+        exec_command = re.compile(r'^(# )?(exec) (.+)$')
+
         for line in insns.splitlines():
             match = rebase_command.match(line)
-            if match is None:
+            if match:
+                enabled = match.group(1) is None
+                command = match.group(2)
+                sha1hex = match.group(3)
+                summary = match.group(4)
+                self.tree.add_step(idx, enabled, command,
+                                   sha1hex=sha1hex, summary=summary)
+                idx += 1
                 continue
-            enabled = match.group(1) is None
-            command = match.group(2)
-            sha1hex = match.group(3)
-            summary = match.group(4)
-            self.tree.add_step(idx, enabled, command, sha1hex, summary)
-            idx += 1
+            match = exec_command.match(line)
+            if match:
+                enabled = match.group(1) is None
+                command = match.group(2)
+                cmdexec = match.group(3)
+                self.tree.add_step(idx, enabled, command, cmdexec=cmdexec)
+                idx += 1
+                continue
+
         self.tree.decorate()
         self.tree.refit()
         self.tree.select_first()
@@ -272,9 +286,11 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
 
         self.connect(self, SIGNAL('move'), self.move)
 
-    def add_step(self, idx, enabled, command, sha1hex, summary):
+    def add_step(self, idx, enabled, command,
+                 sha1hex='', summary='', cmdexec=''):
         item = RebaseTreeWidgetItem(idx, enabled, command,
-                                    sha1hex, summary)
+                                    sha1hex=sha1hex, summary=summary,
+                                    cmdexec=cmdexec)
         self.invisibleRootItem().addChild(item)
 
     def decorate(self):
@@ -296,7 +312,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
     def validate(self):
         invalid_first_choice = set([FIXUP, SQUASH])
         for item in self.items():
-            if not item.is_enabled():
+            if not item.is_enabled() or item.is_exec():
                 continue
             if item.command in invalid_first_choice:
                 item.command = PICK
@@ -305,34 +321,47 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
 
     def decorate_item(self, item):
         item.combo = combo = QtGui.QComboBox()
-        combo.addItems(COMMANDS)
         combo.setEditable(False)
-        combo.setCurrentIndex(COMMAND_TO_IDX[item.command])
-        combo.connect(combo, SIGNAL('currentIndexChanged(const QString &)'),
-                lambda s: self.set_command(item, ustr(s)))
+
+        if item.is_commit():
+            items = COMMANDS
+            idx = COMMAND_IDX[item.command]
+            combo.connect(combo, SIGNAL('currentIndexChanged(const QString &)'),
+                          lambda s: self.set_command(item, ustr(s)))
+        elif item.is_exec():
+            items = [EXEC]
+            idx = 0
+        else:
+            raise AssertionError('unhandled command: %s' % item.command)
+
+        combo.setEnabled(item.is_commit())
+        combo.addItems(items)
+        combo.setCurrentIndex(idx)
         self.setItemWidget(item, item.COMMAND_COLUMN, combo)
 
     def set_selected_to(self, command):
         for i in self.selected_items():
-            i.command = command
-            i.combo.setCurrentIndex(COMMAND_TO_IDX[command])
+            if i.is_commit():
+                i.command = command
+                i.combo.setCurrentIndex(COMMAND_IDX[command])
         self.validate()
 
     def set_command(self, item, command):
-        item.command = command
-        item.combo.setCurrentIndex(COMMAND_TO_IDX[command])
-        self.validate()
+        if item.is_commit():
+            item.command = command
+            item.combo.setCurrentIndex(COMMAND_IDX[command])
+            self.validate()
 
     def copy_sha1(self):
         item = self.selected_item()
         if item is None:
             return
-        sha1hex = item.sha1hex
-        qtutils.set_clipboard(sha1hex)
+        clipboard = item.sha1hex or item.cmdexec
+        qtutils.set_clipboard(clipboard)
 
     def selection_changed(self):
         item = self.selected_item()
-        if item is None:
+        if item is None or not item.is_commit():
             return
         sha1hex = item.sha1hex
         ctx = dag.DAG(sha1hex, 2)
@@ -385,9 +414,11 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         for idx in reversed(sorted(src_idxs)):
             data = items[idx].copy()
             self.invisibleRootItem().takeChild(idx)
-            item = RebaseTreeWidgetItem(data['idx'], data['enabled'],
-                                        data['command'], data['sha1hex'],
-                                        data['summary'])
+            item = RebaseTreeWidgetItem(data['idx'],
+                                        data['enabled'], data['command'],
+                                        sha1hex=data['sha1hex'],
+                                        summary=data['summary'],
+                                        cmdexec=data['cmdexec'])
             new_items.insert(0, item)
 
         if new_items:
@@ -423,28 +454,48 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
 
     ENABLED_COLUMN = 1
     COMMAND_COLUMN = 2
+    SHA1LEN = 7
 
-    def __init__(self, idx, enabled, command, sha1hex, summary, parent=None):
+    def __init__(self, idx, enabled, command,
+                 sha1hex='', summary='', cmdexec='', parent=None):
         QtGui.QTreeWidgetItem.__init__(self, parent)
         self.combo = None
         self.command = command
         self.idx = idx
         self.sha1hex = sha1hex
         self.summary = summary
+        self.cmdexec = cmdexec
+
+        # if core.abbrev is set to a higher value then we will notice by
+        # simply tracking the longest sha1 we've seen
+        sha1len = self.__class__.SHA1LEN
+        sha1len = self.__class__.SHA1LEN = max(len(sha1hex), sha1len)
 
         self.setText(0, '%02d' % idx)
         self.set_enabled(enabled)
+        # checkbox on 1
         # combo box on 2
-        self.setText(3, sha1hex)
-        self.setText(4, summary)
+        if self.is_exec():
+            self.setText(3, '')
+            self.setText(4, cmdexec)
+        else:
+            self.setText(3, sha1hex)
+            self.setText(4, summary)
 
         flags = self.flags() | Qt.ItemIsUserCheckable
         flags = flags | Qt.ItemIsDragEnabled
         flags = flags & ~Qt.ItemIsDropEnabled
         self.setFlags(flags)
 
+    def is_exec(self):
+        return self.command == EXEC
+
+    def is_commit(self):
+        return bool(self.command != EXEC and self.sha1hex and self.summary)
+
     def copy(self):
         return {
+            'cmdexec': self.cmdexec,
             'command': self.command,
             'enabled': self.is_enabled(),
             'idx': self.idx,
@@ -452,10 +503,19 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
             'summary': self.summary,
         }
 
+    def comment(self):
+        if self.is_enabled():
+            return ''
+        else:
+            return '# '
+
     def value(self):
-        return '%s%s %s %s' % (
-                (not self.is_enabled() and '# ' or ''),
-                self.command, self.sha1hex, self.summary)
+        if self.is_exec():
+            return ('%s%s %s' %
+                    (self.comment(), self.command, self.cmdexec))
+
+        return ('%s%s %s %s' %
+                (self.comment(), self.command, self.sha1hex, self.summary))
 
     def is_enabled(self):
         return self.checkState(self.ENABLED_COLUMN) == Qt.Checked
@@ -477,6 +537,7 @@ reword = use commit, but edit the commit message
 edit = use commit, but stop for amending
 squash = use commit, but meld into previous commit
 fixup = like "squash", but discard this commit's log message
+exec = run command (the rest of the line) using shell
 
 These lines can be re-ordered; they are executed from top to bottom.
 
