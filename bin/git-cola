@@ -227,6 +227,12 @@ def add_rebase_command(subparser):
                              'resolved conflicts')
     parser.add_argument('--root', default=False, action='store_true',
                         help='rebase all reachable commits up to the root(s)')
+    parser.add_argument('--committer-date-is-author-date',
+                        default=False, action='store_true',
+                        help="passed to 'git am' by 'git rebase'")
+    parser.add_argument('--ignore-date', default=False, action='store_true',
+                        help="passed to 'git am' by 'git rebase'")
+
     parser.add_argument('upstream', nargs='?', default=None, metavar='<upstream>',
                         help='the upstream configured in branch.<name>.remote'
                              ' and branch.<name>.merge options will be used'
@@ -409,6 +415,8 @@ def cmd_rebase(args):
                                verify=args.verify,
                                rerere_autoupdate=args.rerere_autoupdate,
                                root=args.root,
+                               committer_date_is_author_date=args.committer_date_is_author_date,
+                               ignore_date=args.ignore_date,
                                upstream=args.upstream,
                                branch=args.branch,
                                capture_output=False)
