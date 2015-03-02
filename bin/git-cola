@@ -215,6 +215,8 @@ def add_rebase_command(subparser):
                         help='cherry-pick all commits, even if unchanged')
     parser.add_argument('-m', '--merge', default=False, action='store_true',
                         help='use merging strategies to rebase')
+    parser.add_argument('-k', '--keep-empty', default=False, action='store_true',
+                        help='preserve empty commits during rebase')
     parser.add_argument('-f', '--force-rebase', default=False, action='store_true',
                         help='force rebase even if branch is up to date')
     parser.add_argument('-X', '--strategy-option', default=None, metavar='<arg>',
@@ -430,6 +432,7 @@ def cmd_rebase(args):
             'strategy': args.strategy,
             'no_ff': args.no_ff,
             'merge': args.merge,
+            'keep_empty': args.keep_empty,
             'force_rebase': args.force_rebase,
             'strategy_option': args.strategy_option,
             'stat': args.stat,
