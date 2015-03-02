@@ -194,6 +194,10 @@ def add_push_command(subparser):
 
 def add_rebase_command(subparser):
     parser = add_command(subparser, 'rebase', 'interactive rebase', cmd_rebase)
+    parser.add_argument('-v', '--verbose', default=False, action='store_true',
+                        help='display a diffstat of what changed upstream')
+    parser.add_argument('-q', '--quiet', default=False, action='store_true',
+                        help='be quiet. implies --no-stat')
     parser.add_argument('-i', '--interactive', default=True, action='store_true',
                         help=argparse.SUPPRESS)
     parser.add_argument('--autostash', default=False, action='store_true',
@@ -407,6 +411,8 @@ def cmd_push(args):
 
 def cmd_rebase(args):
     status, out, err = cmds.do(cmds.Rebase,
+                               verbose=args.verbose,
+                               quiet=args.quiet,
                                autostash=args.autostash,
                                fork_point=args.fork_point,
                                onto=args.onto,
