@@ -9,6 +9,7 @@ import threading
 from os.path import join
 
 from cola import core
+from cola.compat import ustr
 from cola.decorators import memoize
 from cola.interaction import Interaction
 
@@ -203,19 +204,36 @@ class Git(object):
         return (status, out, err)
 
     def transform_kwargs(self, **kwargs):
-        """Transform kwargs into git command line options"""
+        """Transform kwargs into git command line options
+
+        Callers can assume the following behavior:
+
+        Passing foo=None ignores foo, so that callers can
+        use default values of None that are ignored unless
+        set explicitly.
+
+        Passing foo=False ignore foo, for the same reason.
+
+        Passing foo={string-or-number} results in ['--foo=<value>']
+        in the resulting arguments.
+
+        """
         args = []
+        types_to_stringify = (ustr, int, long, float, str)
+
         for k, v in kwargs.items():
             if len(k) == 1:
-                if v is True:
-                    args.append('-%s' % k)
-                elif type(v) is not bool:
-                    args.append('-%s%s' % (k, v))
+                dashes = '-'
+                join = ''
             else:
-                if v is True:
-                    args.append('--%s' % dashify(k))
-                elif type(v) is not bool:
-                    args.append('--%s=%s' % (dashify(k), v))
+                dashes = '--'
+                join = '='
+            type_of_value = type(v)
+            if v is True:
+                args.append('%s%s' % (dashes, dashify(k)))
+            elif type_of_value in types_to_stringify:
+                args.append('%s%s%s%s' % (dashes, dashify(k), join, v))
+
         return args
 
     def git(self, cmd, *args, **kwargs):
