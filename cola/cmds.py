@@ -1085,22 +1085,36 @@ class Rebase(Command):
         self.capture_output = capture_output
         self.kwargs = kwargs
 
-    def do(self):
-        status = 1
-        out = ''
-        err = ''
+    def prepare_arguments(self):
         args = []
-        kwargs = dict(interactive=True, autosquash=True)
-        kwargs.update(self.kwargs)
+        kwargs = {}
 
         if self.capture_output:
             kwargs['_stderr'] = None
             kwargs['_stdout'] = None
+
+        # Rebase actions must be the only option specified
+        for action in ('continue', 'abort', 'skip', 'edit_todo'):
+            if self.kwargs.get(action, False):
+                kwargs[action] = self.kwargs[action]
+                return args, kwargs
+
+        kwargs['interactive'] = True
+        kwargs['autosquash'] = True
+        kwargs.update(self.kwargs)
+
         if self.upstream:
             args.append(self.upstream)
         if self.branch:
             args.append(self.branch)
 
+        return args, kwargs
+
+    def do(self):
+        status = 1
+        out = ''
+        err = ''
+        args, kwargs = self.prepare_arguments()
         upstream_title = self.upstream or '@{upstream}'
         with GitXBaseContext(
                 GIT_EDITOR=prefs.editor(),

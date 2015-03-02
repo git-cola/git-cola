@@ -243,6 +243,16 @@ def add_rebase_command(subparser):
     parser.add_argument('-C', dest='context_lines', default=None, metavar='<n>',
                         help="passed to 'git apply' by 'git rebase'")
 
+    actions = parser.add_argument_group('Actions')
+    actions.add_argument('--continue', default=False, action='store_true',
+                        help='continue')
+    actions.add_argument('--abort', default=False, action='store_true',
+                        help='abort and check out the original branch')
+    actions.add_argument('--skip', default=False, action='store_true',
+                        help='skip current patch and continue')
+    actions.add_argument('--edit-todo', default=False, action='store_true',
+                        help='edit the todo list during an interactive rebase')
+
     parser.add_argument('upstream', nargs='?', default=None, metavar='<upstream>',
                         help='the upstream configured in branch.<name>.remote'
                              ' and branch.<name>.merge options will be used'
@@ -432,6 +442,11 @@ def cmd_rebase(args):
             'whitespace': args.whitespace,
             'ignore_whitespace': args.ignore_whitespace,
             'C': args.context_lines,
+            # "continue" is a python keyword
+            'continue': getattr(args, 'continue', False),
+            'abort': args.abort,
+            'skip': args.skip,
+            'edit_todo': args.edit_todo,
             'upstream': args.upstream,
             'branch': args.branch,
             'capture_output': False,
