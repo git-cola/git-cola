@@ -29,7 +29,6 @@ from cola import utils
 from cola.compat import ustr
 from cola.i18n import N_
 from cola.models import dag
-from cola.qtutils import diff_font
 from cola.widgets import defs
 from cola.widgets import diff
 from cola.widgets import standard
