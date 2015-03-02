@@ -410,31 +410,33 @@ def cmd_push(args):
 
 
 def cmd_rebase(args):
-    status, out, err = cmds.do(cmds.Rebase,
-                               verbose=args.verbose,
-                               quiet=args.quiet,
-                               autostash=args.autostash,
-                               fork_point=args.fork_point,
-                               onto=args.onto,
-                               preserve_merges=args.preserve_merges,
-                               strategy=args.strategy,
-                               no_ff=args.no_ff,
-                               merge=args.merge,
-                               force_rebase=args.force_rebase,
-                               strategy_option=args.strategy_option,
-                               stat=args.stat,
-                               no_stat=args.no_stat,
-                               verify=args.verify,
-                               rerere_autoupdate=args.rerere_autoupdate,
-                               root=args.root,
-                               committer_date_is_author_date=args.committer_date_is_author_date,
-                               ignore_date=args.ignore_date,
-                               whitespace=args.whitespace,
-                               ignore_whitespace=args.ignore_whitespace,
-                               C=args.context_lines,
-                               upstream=args.upstream,
-                               branch=args.branch,
-                               capture_output=False)
+    kwargs = {
+            'verbose': args.verbose,
+            'quiet': args.quiet,
+            'autostash': args.autostash,
+            'fork_point': args.fork_point,
+            'onto': args.onto,
+            'preserve_merges': args.preserve_merges,
+            'strategy': args.strategy,
+            'no_ff': args.no_ff,
+            'merge': args.merge,
+            'force_rebase': args.force_rebase,
+            'strategy_option': args.strategy_option,
+            'stat': args.stat,
+            'no_stat': args.no_stat,
+            'verify': args.verify,
+            'rerere_autoupdate': args.rerere_autoupdate,
+            'root': args.root,
+            'committer_date_is_author_date': args.committer_date_is_author_date,
+            'ignore_date': args.ignore_date,
+            'whitespace': args.whitespace,
+            'ignore_whitespace': args.ignore_whitespace,
+            'C': args.context_lines,
+            'upstream': args.upstream,
+            'branch': args.branch,
+            'capture_output': False,
+    }
+    status, out, err = cmds.do(cmds.Rebase, **kwargs)
     if out:
         core.stdout(out)
     if err:
