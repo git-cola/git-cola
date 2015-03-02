@@ -1070,6 +1070,14 @@ class Rebase(Command):
 
     def __init__(self,
                  upstream=None, branch=None, capture_output=True, **kwargs):
+        """Start an interactive rebase session
+
+        :param upstream: upstream branch
+        :param branch: optional branch to checkout
+        :param capture_output: whether to capture stdout and stderr
+        :param kwargs: forwarded directly to `git.rebase()`
+
+        """
         Command.__init__(self)
 
         self.upstream = upstream
