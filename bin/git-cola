@@ -221,6 +221,10 @@ def add_rebase_command(subparser):
                         help='do not show diffstat of what changed upstream')
     parser.add_argument('--verify', default=False, action='store_true',
                         help='allow pre-rebase hook to run')
+    parser.add_argument('--rerere-autoupdate',
+                        default=False, action='store_true',
+                        help='allow rerere to update index with '
+                             'resolved conflicts')
     parser.add_argument('upstream', nargs='?', default=None, metavar='<upstream>',
                         help='the upstream configured in branch.<name>.remote'
                              ' and branch.<name>.merge options will be used'
@@ -401,6 +405,7 @@ def cmd_rebase(args):
                                stat=args.stat,
                                no_stat=args.no_stat,
                                verify=args.verify,
+                               rerere_autoupdate=args.rerere_autoupdate,
                                upstream=args.upstream,
                                branch=args.branch,
                                capture_output=False)
