@@ -213,6 +213,8 @@ def add_rebase_command(subparser):
                         help='use merging strategies to rebase')
     parser.add_argument('-f', '--force-rebase', default=False, action='store_true',
                         help='force rebase even if branch is up to date')
+    parser.add_argument('-X', '--strategy-option', default=None, metavar='<arg>',
+                        help='pass the argument through to the merge strategy')
     parser.add_argument('upstream', nargs='?', default=None, metavar='<upstream>',
                         help='the upstream configured in branch.<name>.remote'
                              ' and branch.<name>.merge options will be used'
@@ -388,6 +390,7 @@ def cmd_rebase(args):
                                no_ff=args.no_ff,
                                merge=args.merge,
                                force_rebase=args.force_rebase,
+                               strategy_option=args.strategy_option,
                                onto=args.onto,
                                upstream=args.upstream,
                                branch=args.branch,
