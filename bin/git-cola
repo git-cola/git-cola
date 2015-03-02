@@ -232,6 +232,12 @@ def add_rebase_command(subparser):
                         help="passed to 'git am' by 'git rebase'")
     parser.add_argument('--ignore-date', default=False, action='store_true',
                         help="passed to 'git am' by 'git rebase'")
+    parser.add_argument('--whitespace', default=False, action='store_true',
+                        help="passed to 'git apply' by 'git rebase'")
+    parser.add_argument('--ignore-whitespace', default=False, action='store_true',
+                        help="passed to 'git apply' by 'git rebase'")
+    parser.add_argument('-C', dest='context_lines', default=None, metavar='<n>',
+                        help="passed to 'git apply' by 'git rebase'")
 
     parser.add_argument('upstream', nargs='?', default=None, metavar='<upstream>',
                         help='the upstream configured in branch.<name>.remote'
@@ -417,6 +423,9 @@ def cmd_rebase(args):
                                root=args.root,
                                committer_date_is_author_date=args.committer_date_is_author_date,
                                ignore_date=args.ignore_date,
+                               whitespace=args.whitespace,
+                               ignore_whitespace=args.ignore_whitespace,
+                               C=args.context_lines,
                                upstream=args.upstream,
                                branch=args.branch,
                                capture_output=False)
