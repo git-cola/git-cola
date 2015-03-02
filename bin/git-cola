@@ -205,6 +205,8 @@ def add_rebase_command(subparser):
     parser.add_argument('-p', '--preserve-merges',
                         default=False, action='store_true',
                         help='try to recreate merges instead of ignoring them')
+    parser.add_argument('-s', '--strategy', default=None, metavar='<strategy>',
+                        help='use the given merge strategy')
     parser.add_argument('upstream', nargs='?', default=None, metavar='<upstream>',
                         help='the upstream configured in branch.<name>.remote'
                              ' and branch.<name>.merge options will be used'
@@ -376,6 +378,7 @@ def cmd_rebase(args):
                                autostash=args.autostash,
                                fork_point=args.fork_point,
                                preserve_merges=args.preserve_merges,
+                               strategy=args.strategy,
                                onto=args.onto,
                                upstream=args.upstream,
                                branch=args.branch,
