@@ -1100,7 +1100,7 @@ class Rebase(Command):
                 return args, kwargs
 
         kwargs['interactive'] = True
-        kwargs['autosquash'] = True
+        kwargs['autosquash'] = self.kwargs.get('autosquash', True)
         kwargs.update(self.kwargs)
 
         if self.upstream:

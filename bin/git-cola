@@ -233,6 +233,13 @@ def add_rebase_command(subparser):
                              'resolved conflicts')
     parser.add_argument('--root', default=False, action='store_true',
                         help='rebase all reachable commits up to the root(s)')
+    parser.add_argument('--autosquash', default=True, action='store_true',
+                        help='move commits that begin with '
+                             'squash!/fixup! under -i')
+    parser.add_argument('--no-autosquash', default=True, action='store_false',
+                        dest='autosquash',
+                        help='do not move commits that begin with '
+                             'squash!/fixup! under -i')
     parser.add_argument('--committer-date-is-author-date',
                         default=False, action='store_true',
                         help="passed to 'git am' by 'git rebase'")
@@ -440,6 +447,7 @@ def cmd_rebase(args):
             'verify': args.verify,
             'rerere_autoupdate': args.rerere_autoupdate,
             'root': args.root,
+            'autosquash': args.autosquash,
             'committer_date_is_author_date': args.committer_date_is_author_date,
             'ignore_date': args.ignore_date,
             'whitespace': args.whitespace,
