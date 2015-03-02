@@ -1069,15 +1069,13 @@ class GitXBaseContext(object):
 class Rebase(Command):
 
     def __init__(self,
-                 onto=None,
-                 upstream=None,
-                 branch=None,
-                 capture_output=True):
+                 upstream=None, branch=None, capture_output=True, **kwargs):
         Command.__init__(self)
-        self.onto = onto
+
         self.upstream = upstream
         self.branch = branch
         self.capture_output = capture_output
+        self.kwargs = kwargs
 
     def do(self):
         status = 1
@@ -1085,8 +1083,8 @@ class Rebase(Command):
         err = ''
         args = []
         kwargs = dict(interactive=True, autosquash=True)
-        if self.onto:
-            kwargs['onto'] = self.onto
+        kwargs.update(self.kwargs)
+
         if self.capture_output:
             kwargs['_stderr'] = None
             kwargs['_stdout'] = None
