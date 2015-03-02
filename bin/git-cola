@@ -219,6 +219,8 @@ def add_rebase_command(subparser):
                         help='display a diffstat of what changed upstream')
     parser.add_argument('-n', '--no-stat', default=False, action='store_true',
                         help='do not show diffstat of what changed upstream')
+    parser.add_argument('--verify', default=False, action='store_true',
+                        help='allow pre-rebase hook to run')
     parser.add_argument('upstream', nargs='?', default=None, metavar='<upstream>',
                         help='the upstream configured in branch.<name>.remote'
                              ' and branch.<name>.merge options will be used'
@@ -398,6 +400,7 @@ def cmd_rebase(args):
                                strategy_option=args.strategy_option,
                                stat=args.stat,
                                no_stat=args.no_stat,
+                               verify=args.verify,
                                upstream=args.upstream,
                                branch=args.branch,
                                capture_output=False)
