@@ -198,6 +198,8 @@ def add_rebase_command(subparser):
                         help=argparse.SUPPRESS)
     parser.add_argument('--autostash', default=False, action='store_true',
                         help='automatically stash/stash pop before and after')
+    parser.add_argument('--fork-point', default=False, action='store_true',
+                        help="use 'merge-base --fork-point' to refine upstream")
     parser.add_argument('--onto', default=None, metavar='<newbase>',
                         help='rebase onto given branch instead of upstream')
     parser.add_argument('upstream', nargs='?', default=None, metavar='<upstream>',
@@ -369,6 +371,7 @@ def cmd_push(args):
 def cmd_rebase(args):
     status, out, err = cmds.do(cmds.Rebase,
                                autostash=args.autostash,
+                               fork_point=args.fork_point,
                                onto=args.onto,
                                upstream=args.upstream,
                                branch=args.branch,
