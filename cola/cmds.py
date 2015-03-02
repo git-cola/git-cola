@@ -359,11 +359,12 @@ class Commit(ResetMode):
 
     SHORTCUT = 'Ctrl+Return'
 
-    def __init__(self, amend, msg, sign):
+    def __init__(self, amend, msg, sign, no_verify=False):
         ResetMode.__init__(self)
         self.amend = amend
         self.msg = msg
         self.sign = sign
+        self.no_verify = no_verify
         self.old_commitmsg = self.model.commitmsg
         self.new_commitmsg = ''
 
@@ -378,7 +379,8 @@ class Commit(ResetMode):
             status, out, err = self.model.git.commit(F=tmpfile,
                                                      v=True,
                                                      gpg_sign=self.sign,
-                                                     amend=self.amend)
+                                                     amend=self.amend,
+                                                     no_verify=self.no_verify)
         finally:
             core.unlink(tmpfile)
 

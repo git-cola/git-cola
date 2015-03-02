@@ -81,6 +81,12 @@ class CommitMessageEditor(QtGui.QWidget):
         self.amend_action.setShortcut(cmds.AmendMode.SHORTCUT)
         self.amend_action.setShortcutContext(Qt.ApplicationShortcut)
 
+        # Bypass hooks
+        self.bypass_commit_hooks_action = self.actions_menu.addAction(
+                N_('Bypass Commit Hooks'))
+        self.bypass_commit_hooks_action.setCheckable(True)
+        self.bypass_commit_hooks_action.setChecked(False)
+
         # Sign commits
         cfg = gitcfg.current()
         self.sign_action = self.actions_menu.addAction(
@@ -428,8 +434,10 @@ class CommitMessageEditor(QtGui.QWidget):
                         N_('Amend Commit'),
                         default=False, icon=qtutils.save_icon())):
             return
+        no_verify = self.bypass_commit_hooks_action.isChecked()
         sign = self.sign_action.isChecked()
-        status, out, err = cmds.do(cmds.Commit, amend, msg, sign)
+        status, out, err = cmds.do(cmds.Commit, amend, msg, sign,
+                                   no_verify=no_verify)
         if status != 0:
             Interaction.critical(N_('Commit failed'),
                                  N_('"git commit" returned exit code %s') %
