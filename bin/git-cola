@@ -194,10 +194,21 @@ def add_push_command(subparser):
 
 def add_rebase_command(subparser):
     parser = add_command(subparser, 'rebase', 'interactive rebase', cmd_rebase)
-    parser.add_argument('branch', metavar='<branch>',
-                        help='New upstream branch')
     parser.add_argument('-i', '--interactive', default=True, action='store_true',
                         help=argparse.SUPPRESS)
+    parser.add_argument('--onto', default=None, metavar='<newbase>',
+                        help='rebase onto given branch instead of upstream')
+    parser.add_argument('upstream', nargs='?', default=None, metavar='<upstream>',
+                        help='the upstream configured in branch.<name>.remote'
+                             ' and branch.<name>.merge options will be used'
+                             ' when <upstream> is omitted; see git-rebase(1)'
+                             ' for details. If you are currently not on any'
+                             ' branch or if the current branch does not have'
+                             ' a configured upstream, the rebase will abort.')
+    parser.add_argument('branch', nargs='?', default=None, metavar='<branch>',
+                        help='git rebase will perform an automatic'
+                             ' "git checkout <branch>" before doing anything'
+                             ' else when <branch> is specified')
 
 
 def add_remote_command(subparser):
@@ -354,7 +365,11 @@ def cmd_push(args):
 
 
 def cmd_rebase(args):
-    status, out, err = cmds.do(cmds.Rebase, args.branch, capture_output=False)
+    status, out, err = cmds.do(cmds.Rebase,
+                               onto=args.onto,
+                               upstream=args.upstream,
+                               branch=args.branch,
+                               capture_output=False)
     if out:
         core.stdout(out)
     if err:

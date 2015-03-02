@@ -1068,8 +1068,14 @@ class GitXBaseContext(object):
 
 class Rebase(Command):
 
-    def __init__(self, branch, capture_output=True):
+    def __init__(self,
+                 onto=None,
+                 upstream=None,
+                 branch=None,
+                 capture_output=True):
         Command.__init__(self)
+        self.onto = onto
+        self.upstream = upstream
         self.branch = branch
         self.capture_output = capture_output
 
@@ -1077,21 +1083,25 @@ class Rebase(Command):
         status = 1
         out = ''
         err = ''
-        extra = {}
-        branch = self.branch
-        if not branch:
-            return status, out, err
+        args = []
+        kwargs = dict(interactive=True, autosquash=True)
+        if self.onto:
+            kwargs['onto'] = self.onto
         if self.capture_output:
-            extra['_stderr'] = None
-            extra['_stdout'] = None
+            kwargs['_stderr'] = None
+            kwargs['_stdout'] = None
+        if self.upstream:
+            args.append(self.upstream)
+        if self.branch:
+            args.append(self.branch)
+
+        upstream_title = self.upstream or '@{upstream}'
         with GitXBaseContext(
                 GIT_EDITOR=prefs.editor(),
-                GIT_XBASE_TITLE=N_('Rebase onto %s') % branch,
+                GIT_XBASE_TITLE=N_('Rebase onto %s') % upstream_title,
                 GIT_XBASE_ACTION=N_('Rebase')):
-            status, out, err = self.model.git.rebase(branch,
-                                                     interactive=True,
-                                                     autosquash=True,
-                                                     **extra)
+            status, out, err = self.model.git.rebase(*args, **kwargs)
+
         Interaction.log_status(status, out, err)
         self.model.update_status()
         return status, out, err
