@@ -320,37 +320,32 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             break
 
     def decorate_item(self, item):
-        item.combo = combo = QtGui.QComboBox()
-        combo.setEditable(False)
-
         if item.is_commit():
             items = COMMANDS
             idx = COMMAND_IDX[item.command]
-            combo.connect(combo, SIGNAL('currentIndexChanged(const QString &)'),
-                          lambda s: self.set_command(item, ustr(s)))
         elif item.is_exec():
             items = [EXEC]
             idx = 0
         else:
             raise AssertionError('unhandled command: %s' % item.command)
 
-        combo.setEnabled(item.is_commit())
+        combo = item.combo = QtGui.QComboBox()
+        combo.setEditable(False)
         combo.addItems(items)
         combo.setCurrentIndex(idx)
+        combo.setEnabled(item.is_commit())
+        combo.connect(combo, SIGNAL('currentIndexChanged(const QString &)'),
+                      lambda s: self.set_command(item, s))
         self.setItemWidget(item, item.COMMAND_COLUMN, combo)
 
     def set_selected_to(self, command):
         for i in self.selected_items():
-            if i.is_commit():
-                i.command = command
-                i.combo.setCurrentIndex(COMMAND_IDX[command])
+            i.set_command(command)
         self.validate()
 
     def set_command(self, item, command):
-        if item.is_commit():
-            item.command = command
-            item.combo.setCurrentIndex(COMMAND_IDX[command])
-            self.validate()
+        item.set_command(command)
+        self.validate()
 
     def copy_sha1(self):
         item = self.selected_item()
@@ -412,13 +407,8 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         new_items = []
         items = self.items()
         for idx in reversed(sorted(src_idxs)):
-            data = items[idx].copy()
+            item = items[idx].copy()
             self.invisibleRootItem().takeChild(idx)
-            item = RebaseTreeWidgetItem(data['idx'],
-                                        data['enabled'], data['command'],
-                                        sha1hex=data['sha1hex'],
-                                        summary=data['summary'],
-                                        cmdexec=data['cmdexec'])
             new_items.insert(0, item)
 
         if new_items:
@@ -487,35 +477,27 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
         flags = flags & ~Qt.ItemIsDropEnabled
         self.setFlags(flags)
 
+    def copy(self):
+        return self.__class__(self.idx, self.is_enabled(), self.command,
+                              sha1hex=self.sha1hex, summary=self.summary,
+                              cmdexec=self.cmdexec)
+
     def is_exec(self):
         return self.command == EXEC
 
     def is_commit(self):
         return bool(self.command != EXEC and self.sha1hex and self.summary)
 
-    def copy(self):
-        return {
-            'cmdexec': self.cmdexec,
-            'command': self.command,
-            'enabled': self.is_enabled(),
-            'idx': self.idx,
-            'sha1hex': self.sha1hex,
-            'summary': self.summary,
-        }
-
-    def comment(self):
-        if self.is_enabled():
-            return ''
-        else:
-            return '# '
-
     def value(self):
+        """Return the serialized representation of an item"""
+        if self.is_enabled():
+            comment = ''
+        else:
+            comment = '# '
         if self.is_exec():
-            return ('%s%s %s' %
-                    (self.comment(), self.command, self.cmdexec))
-
+            return ('%s%s %s' % (comment, self.command, self.cmdexec))
         return ('%s%s %s %s' %
-                (self.comment(), self.command, self.sha1hex, self.summary))
+                (comment, self.command, self.sha1hex, self.summary))
 
     def is_enabled(self):
         return self.checkState(self.ENABLED_COLUMN) == Qt.Checked
@@ -526,6 +508,14 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
 
     def toggle_enabled(self):
         self.set_enabled(not self.is_enabled())
+
+    def set_command(self, command):
+        """Set the item to a different command, no-op for exec items"""
+        if self.is_exec():
+            return
+        command = ustr(command)
+        self.command = command
+        self.combo.setCurrentIndex(COMMAND_IDX[command])
 
 
 def show_help():
