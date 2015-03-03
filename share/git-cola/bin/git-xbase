@@ -186,9 +186,10 @@ class Editor(QtGui.QWidget):
 
     def parse_sequencer_instructions(self, insns):
         idx = 1
-        exec_rgx = re.compile(r'^(# )?(x|exec) (.+)$')
-        pick_rgx = re.compile(r'^(# )?(p|pick|r|reword|e|edit|f|fixup|s|squash)'
-                              r' ([0-9a-f]{7,40}) (.+)$')
+        exec_rgx = re.compile(r'^\s*(#)?\s*(x|exec)\s+(.+)$')
+        pick_rgx = re.compile(r'^\s*(#)?\s*'
+                              r'(p|pick|r|reword|e|edit|f|fixup|s|squash)'
+                              r'\s+([0-9a-f]{7,40})\s+(.+)$')
         for line in insns.splitlines():
             match = pick_rgx.match(line)
             if match:
