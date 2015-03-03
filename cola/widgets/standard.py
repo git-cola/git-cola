@@ -272,6 +272,8 @@ class TreeMixin(object):
 class DraggableTreeMixin(TreeMixin):
     """A tree widget with internal drag+drop reordering of rows"""
 
+    ITEMS_MOVED_SIGNAL = 'items_moved'
+
     def __init__(self, QtClass):
         super(DraggableTreeMixin, self).__init__(QtClass)
         self.setAcceptDrops(True)
@@ -312,6 +314,7 @@ class DraggableTreeMixin(TreeMixin):
             self.clearSelection()
             for item in clicked_items:
                 self.setItemSelected(item, True)
+            self.emit(SIGNAL(self.ITEMS_MOVED_SIGNAL), clicked_items)
         self._inner_drag = False
         event.accept() # must be called after dropEvent()
 
