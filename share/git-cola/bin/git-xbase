@@ -197,7 +197,7 @@ class Editor(QtGui.QWidget):
                 command = unabbrev(match.group(2))
                 sha1hex = match.group(3)
                 summary = match.group(4)
-                self.tree.add_step(idx, enabled, command,
+                self.tree.add_item(idx, enabled, command,
                                    sha1hex=sha1hex, summary=summary)
                 idx += 1
                 continue
@@ -206,7 +206,7 @@ class Editor(QtGui.QWidget):
                 enabled = match.group(1) is None
                 command = unabbrev(match.group(2))
                 cmdexec = match.group(3)
-                self.tree.add_step(idx, enabled, command, cmdexec=cmdexec)
+                self.tree.add_item(idx, enabled, command, cmdexec=cmdexec)
                 idx += 1
                 continue
 
@@ -298,7 +298,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
 
         self.connect(self, SIGNAL('move'), self.move)
 
-    def add_step(self, idx, enabled, command,
+    def add_item(self, idx, enabled, command,
                  sha1hex='', summary='', cmdexec=''):
         item = RebaseTreeWidgetItem(idx, enabled, command,
                                     sha1hex=sha1hex, summary=summary,
