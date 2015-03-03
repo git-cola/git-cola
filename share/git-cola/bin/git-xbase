@@ -47,6 +47,14 @@ SQUASH = 'squash'
 EXEC = 'exec'
 COMMANDS = (PICK, REWORD, EDIT, FIXUP, SQUASH,)
 COMMAND_IDX = dict([(cmd, idx) for idx, cmd in enumerate(COMMANDS)])
+ABBREV = {
+    'p': PICK,
+    'r': REWORD,
+    'e': EDIT,
+    'f': FIXUP,
+    's': SQUASH,
+    'x': EXEC,
+}
 
 
 def main():
@@ -74,6 +82,11 @@ def new_window(filename):
     editor = Editor(filename)
     window = MainWindow(editor)
     return window
+
+
+def unabbrev(cmd):
+    """Expand shorthand commands into their full name"""
+    return ABBREV.get(cmd, cmd)
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -173,26 +186,24 @@ class Editor(QtGui.QWidget):
 
     def parse_sequencer_instructions(self, insns):
         idx = 1
-        rebase_command = re.compile(
-                r'^(# )?(pick|fixup|squash) ([0-9a-f]{7,40}) (.+)$')
-
-        exec_command = re.compile(r'^(# )?(exec) (.+)$')
-
+        exec_rgx = re.compile(r'^(# )?(x|exec) (.+)$')
+        pick_rgx = re.compile(r'^(# )?(p|pick|r|reword|e|edit|f|fixup|s|squash)'
+                              r' ([0-9a-f]{7,40}) (.+)$')
         for line in insns.splitlines():
-            match = rebase_command.match(line)
+            match = pick_rgx.match(line)
             if match:
                 enabled = match.group(1) is None
-                command = match.group(2)
+                command = unabbrev(match.group(2))
                 sha1hex = match.group(3)
                 summary = match.group(4)
                 self.tree.add_step(idx, enabled, command,
                                    sha1hex=sha1hex, summary=summary)
                 idx += 1
                 continue
-            match = exec_command.match(line)
+            match = exec_rgx.match(line)
             if match:
                 enabled = match.group(1) is None
-                command = match.group(2)
+                command = unabbrev(match.group(2))
                 cmdexec = match.group(3)
                 self.tree.add_step(idx, enabled, command, cmdexec=cmdexec)
                 idx += 1
