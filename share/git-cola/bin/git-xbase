@@ -210,7 +210,7 @@ class Editor(QtGui.QWidget):
                 idx += 1
                 continue
 
-        self.tree.decorate()
+        self.tree.decorate(self.tree.items())
         self.tree.refit()
         self.tree.select_first()
 
@@ -297,6 +297,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
                      self.selection_changed)
 
         self.connect(self, SIGNAL('move'), self.move)
+        self.connect(self, SIGNAL(self.ITEMS_MOVED_SIGNAL), self.decorate)
 
     def add_item(self, idx, enabled, command,
                  sha1hex='', summary='', cmdexec=''):
@@ -305,9 +306,9 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
                                     cmdexec=cmdexec)
         self.invisibleRootItem().addChild(item)
 
-    def decorate(self):
-        for item in self.items():
-            self.decorate_item(item)
+    def decorate(self, items):
+        for item in items:
+            item.decorate(self)
 
     def refit(self):
         self.resizeColumnToContents(0)
@@ -324,31 +325,10 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
     def validate(self):
         invalid_first_choice = set([FIXUP, SQUASH])
         for item in self.items():
-            if not item.is_enabled() or item.is_exec():
-                continue
-            if item.command in invalid_first_choice:
-                item.command = PICK
-                self.decorate_item(item)
-            break
-
-    def decorate_item(self, item):
-        if item.is_commit():
-            items = COMMANDS
-            idx = COMMAND_IDX[item.command]
-        elif item.is_exec():
-            items = [EXEC]
-            idx = 0
-        else:
-            raise AssertionError('unhandled command: %s' % item.command)
-
-        combo = item.combo = QtGui.QComboBox()
-        combo.setEditable(False)
-        combo.addItems(items)
-        combo.setCurrentIndex(idx)
-        combo.setEnabled(item.is_commit())
-        combo.connect(combo, SIGNAL('currentIndexChanged(const QString &)'),
-                      lambda s: self.set_command(item, s))
-        self.setItemWidget(item, item.COMMAND_COLUMN, combo)
+            if item.is_enabled() and item.is_commit():
+                if item.command in invalid_first_choice:
+                    item.set_command(PICK)
+                break
 
     def set_selected_to(self, command):
         for i in self.selected_items():
@@ -426,15 +406,18 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         if new_items:
             self.invisibleRootItem().insertChildren(dst_idx, new_items)
             self.setCurrentItem(new_items[0])
-
-        self.decorate()
+            # If we've moved to the top then we need to re-decorate all items.
+            # Otherwise, we can decorate just the new items.
+            if dst_idx == 0:
+                self.decorate(self.items())
+            else:
+                self.decorate(new_items)
         self.validate()
 
     # Qt events
 
     def dropEvent(self, event):
         super(RebaseTreeWidget, self).dropEvent(event)
-        self.decorate()
         self.validate()
 
     def contextMenuEvent(self, event):
@@ -493,6 +476,20 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
         return self.__class__(self.idx, self.is_enabled(), self.command,
                               sha1hex=self.sha1hex, summary=self.summary,
                               cmdexec=self.cmdexec)
+
+    def decorate(self, parent):
+        if self.is_exec():
+            items = [EXEC]
+            idx = 0
+        else:
+            items = COMMANDS
+            idx = COMMAND_IDX[self.command]
+        combo = self.combo = QtGui.QComboBox()
+        combo.setEditable(False)
+        combo.addItems(items)
+        combo.setCurrentIndex(idx)
+        combo.setEnabled(self.is_commit())
+        parent.setItemWidget(self, self.COMMAND_COLUMN, combo)
 
     def is_exec(self):
         return self.command == EXEC
