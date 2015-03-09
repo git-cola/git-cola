@@ -820,19 +820,14 @@ def rgba(r, g, b, a=255):
     c.setAlpha(a)
     return c
 
-default_colors = {
-    'color_text':           rgba(0x00, 0x00, 0x00),
-    'color_add':            rgba(0xcd, 0xff, 0xe0),
-    'color_remove':         rgba(0xff, 0xd0, 0xd0),
-    'color_header':         rgba(0xbb, 0xbb, 0xbb),
-}
-
 
 class GenericSyntaxHighligher(QtGui.QSyntaxHighlighter):
     def __init__(self, doc, *args, **kwargs):
         QtGui.QSyntaxHighlighter.__init__(self, doc)
-        for attr, val in default_colors.items():
-            setattr(self, attr, val)
+        self.color_text = rgba(0x00, 0x00, 0x00)
+        self.color_add = rgba(0xdf, 0xff, 0xe9)
+        self.color_remove = rgba(0xfe, 0xe8, 0xea)
+        self.color_header = rgba(0xbb, 0xbb, 0xbb)
         self._rules = []
         self.enabled = True
         self.generate_rules()
