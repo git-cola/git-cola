@@ -879,10 +879,10 @@ class GenericSyntaxHighligher(QtGui.QSyntaxHighlighter):
     def highlightBlock(self, qstr):
         if not self.enabled:
             return
-        ascii = ustr(qstr)
-        if not ascii:
+        text = ustr(qstr)
+        if not text:
             return
-        formats = self.formats(ascii)
+        formats = self.formats(text)
         if not formats:
             return
         for match, fmts in formats:
@@ -892,7 +892,7 @@ class GenericSyntaxHighligher(QtGui.QSyntaxHighlighter):
             # No groups in the regex, assume this is a single rule
             # that spans the entire line
             if not groups:
-                self.setFormat(0, len(ascii), fmts)
+                self.setFormat(0, len(text), fmts)
                 continue
 
             # Groups exist, rule is a tuple corresponding to group
@@ -900,9 +900,8 @@ class GenericSyntaxHighligher(QtGui.QSyntaxHighlighter):
                 # allow empty matches
                 if not group:
                     continue
-                # allow None as a no-op format
                 length = len(group)
-                if fmts[grpidx]:
+                if fmts[grpidx]:  # None -> no-op
                     self.setFormat(start, start+length,
                             fmts[grpidx])
                 start += length
@@ -928,9 +927,7 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
 
         diff_add = self.mkformat(fg=self.color_text, bg=self.color_add)
         diff_remove = self.mkformat(fg=self.color_text, bg=self.color_remove)
-
-        if self.whitespace:
-            bad_ws = self.mkformat(fg=Qt.black, bg=Qt.red)
+        bad_ws = self.mkformat(fg=Qt.black, bg=Qt.red)
 
         # We specify the whitespace rule last so that it is
         # applied after the diff addition/removal rules.
@@ -950,6 +947,10 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
         diff_sum_rgx = (r'(\s+\d+ files changed[^\d]*)'
                         r'(:?\d+ insertions[^\d]*)'
                         r'(:?\d+ deletions.*)$')
+        if self.whitespace:
+            # bad_ws_rgx = r'(..*?)(\s+)$'
+            diff_add_ws_rgx = TERMINAL(r'^(\+.*?)(\s+)$')
+            self.create_rules(diff_add_ws_rgx,  (diff_add, bad_ws))
 
         self.create_rules(diff_old_rgx,     diff_head,
                           diff_new_rgx,     diff_head,
@@ -967,8 +968,6 @@ class DiffSyntaxHighlighter(GenericSyntaxHighligher):
                           diff_sum_rgx,     (diff_head,
                                              diff_head,
                                              diff_head))
-        if self.whitespace:
-            self.create_rules(r'(..*?)(\s+)$', (None, bad_ws))
 
 
 def install():
