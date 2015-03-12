@@ -927,14 +927,20 @@ class StatusFilterWidget(QtGui.QWidget):
         self.text.setToolTip(hint)
         self.text.enable_hint(True)
         self.setFocusProxy(self.text)
+        self._filter = None
 
         self.main_layout = qtutils.hbox(defs.no_margin, defs.spacing, self.text)
         self.setLayout(self.main_layout)
 
         self.connect(self.text, SIGNAL('changed()'), self.apply_filter)
-        self.connect(self.text, SIGNAL('returnPressed()'), self.apply_filter)
+        self.connect(self.text, SIGNAL('cleared()'), self.apply_filter)
+        self.connect(self.text, SIGNAL('return()'), self.apply_filter)
+        self.connect(self.text, SIGNAL('editingFinished()'), self.apply_filter)
 
     def apply_filter(self):
         text = self.text.value()
+        if text == self._filter:
+            return
+        self._filter = text
         paths = utils.shell_split(text)
         self.main_model.update_path_filter(paths)
