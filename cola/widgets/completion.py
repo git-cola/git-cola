@@ -197,6 +197,9 @@ class CompletionLineEdit(text.HintedLineEdit):
     # Qt events
     def keyPressEvent(self, event):
         self._was_visible = visible = self.popup().isVisible()
+        key = event.key()
+        was_empty = not bool(self.value())
+
         if visible:
             self._selection = self.selected_completion()
         else:
@@ -204,7 +207,17 @@ class CompletionLineEdit(text.HintedLineEdit):
             if event.key() in self.ACTIVATION_KEYS:
                 event.accept()
                 return
-        return text.HintedLineEdit.keyPressEvent(self, event)
+
+        result = text.HintedLineEdit.keyPressEvent(self, event)
+
+        # Backspace at the beginning of the line should hide the popup
+        if was_empty and visible and key == Qt.Key_Backspace:
+            self.popup().hide()
+        # Clearing a line should always emit a signal
+        is_empty = not bool(self.value())
+        if is_empty:
+            self.emit(SIGNAL('cleared()'))
+        return result
 
     def keyReleaseEvent(self, event):
         """React to release events, handle completion"""
