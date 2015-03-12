@@ -37,6 +37,7 @@ class StatusWidget(QtGui.QWidget):
         self.filter_widget = StatusFilterWidget()
         self.filter_widget.hide()
         self.tree = StatusTreeWidget()
+        self.setFocusProxy(self.tree)
 
         self.main_layout = qtutils.vbox(defs.no_margin, defs.no_spacing,
                                         self.filter_widget, self.tree)
