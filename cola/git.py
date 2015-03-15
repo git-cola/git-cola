@@ -9,7 +9,7 @@ import threading
 from os.path import join
 
 from cola import core
-from cola.compat import ustr
+from cola.compat import ustr, PY3
 from cola.decorators import memoize
 from cola.interaction import Interaction
 
@@ -219,7 +219,9 @@ class Git(object):
 
         """
         args = []
-        types_to_stringify = (ustr, int, long, float, str)
+        types_to_stringify = (ustr, int, float, str)
+        if not PY3:
+            types_to_stringify += (long,)
 
         for k, v in kwargs.items():
             if len(k) == 1:
