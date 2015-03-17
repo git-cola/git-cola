@@ -14,6 +14,10 @@ if os.path.join('share', 'git-cola', 'lib') in _modpath:
     # __file__ = '$prefix/share/git-cola/lib/cola/__file__.py'
     _lib_dir = dirname(dirname(_modpath))
     _prefix = dirname(dirname(dirname(_lib_dir)))
+elif os.path.join('pkgs', 'cola') in _modpath:
+    # Windows release tree
+    # __file__ = $installdir/pkgs/cola/resources.py
+    _prefix = dirname(dirname(dirname(_modpath)))
 else:
     # this is the source tree
     # __file__ = '$prefix/cola/__file__.py'
