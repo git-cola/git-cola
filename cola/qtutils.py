@@ -821,13 +821,19 @@ def rgba(r, g, b, a=255):
     return c
 
 
+def RGB(args):
+    return rgba(*args)
+
+
 class GenericSyntaxHighligher(QtGui.QSyntaxHighlighter):
     def __init__(self, doc, *args, **kwargs):
         QtGui.QSyntaxHighlighter.__init__(self, doc)
-        self.color_text = rgba(0x00, 0x00, 0x00)
-        self.color_add = rgba(0xdf, 0xff, 0xe9)
-        self.color_remove = rgba(0xfe, 0xe8, 0xea)
-        self.color_header = rgba(0xbb, 0xbb, 0xbb)
+        cfg = gitcfg.current()
+
+        self.color_text = RGB(cfg.color('text', '030303'))
+        self.color_add = RGB(cfg.color('add', 'd2ffe4'))
+        self.color_remove = RGB(cfg.color('remove', 'fee0e4'))
+        self.color_header = RGB(cfg.color('header', 'bbbbbb'))
         self._rules = []
         self.enabled = True
         self.generate_rules()

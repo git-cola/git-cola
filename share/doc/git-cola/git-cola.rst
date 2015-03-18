@@ -448,6 +448,26 @@ cola.textwidth
 The number of columns used for line wrapping.
 Tabs are counted according to `cola.tabwidth`.
 
+cola.color.text
+---------------
+The default diff text color, in hexadecimal RRGGBB notation.
+Defaults to "030303".
+
+cola.color.add
+--------------
+The default diff "add" background color, in hexadecimal RRGGBB notation.
+Defaults to "d9ffe9".
+
+cola.color.remove
+-----------------
+The default diff "remove" background color, in hexadecimal RRGGBB notation.
+Defaults to "fee2e6".
+
+cola.color.remove
+-----------------
+The default diff header text color, in hexadecimal RRGGBB notation.
+Defaults to "bbbbbb".
+
 gui.diffcontext
 ---------------
 The number of diff context lines to display.

@@ -22,6 +22,11 @@ Usability, bells and whistles
 * `git xbase` learned to edit rebase instruction sheets that contain
   `exec` commands.
 
+* The diff colors are now configurable.  `cola.color.{text,add,remove,header}`
+  can now be set with 6-digit hexadecimal colors.
+  See the `git cola manual <https://git-cola.readthedocs.org/en/latest/git-cola.html#configuration-variables>_`
+  for more details.
+
 Fixes
 -----
 * `git cola` will now allow starting an interactive rebase with a dirty

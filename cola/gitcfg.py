@@ -4,12 +4,12 @@ import copy
 import fnmatch
 import os
 import re
+import struct
 from os.path import join
 
 from cola import core
 from cola import git
 from cola import observable
-from cola import utils
 from cola.decorators import memoize
 from cola.git import STDOUT
 from cola.compat import ustr
@@ -381,3 +381,14 @@ class GitConfig(observable.Observable):
                     term = '%s -e' % basename
                     break
         return term
+
+    def color(self, key, default):
+        string = self.get('cola.color.%s' % key, default)
+        string = core.encode(string)
+        default = core.encode(default)
+        struct_layout = core.encode('BBB')
+        try:
+            r, g, b = struct.unpack(struct_layout, string.decode('hex'))
+        except:
+            r, g, b = struct.unpack(struct_layout, default.decode('hex'))
+        return (r, g, b)
