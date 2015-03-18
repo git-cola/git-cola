@@ -5,6 +5,7 @@ import fnmatch
 import os
 import re
 import struct
+from binascii import unhexlify
 from os.path import join
 
 from cola import core
@@ -388,7 +389,7 @@ class GitConfig(observable.Observable):
         default = core.encode(default)
         struct_layout = core.encode('BBB')
         try:
-            r, g, b = struct.unpack(struct_layout, string.decode('hex'))
-        except:
-            r, g, b = struct.unpack(struct_layout, default.decode('hex'))
+            r, g, b = struct.unpack(struct_layout, unhexlify(string))
+        except Exception:
+            r, g, b = struct.unpack(struct_layout, unhexlify(default))
         return (r, g, b)
