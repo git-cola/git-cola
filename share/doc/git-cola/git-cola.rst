@@ -456,14 +456,14 @@ Defaults to "030303".
 cola.color.add
 --------------
 The default diff "add" background color, in hexadecimal RRGGBB notation.
-Defaults to "d9ffe9".
+Defaults to "d2ffe4".
 
 cola.color.remove
 -----------------
 The default diff "remove" background color, in hexadecimal RRGGBB notation.
-Defaults to "fee2e6".
+Defaults to "fee0e4".
 
-cola.color.remove
+cola.color.header
 -----------------
 The default diff header text color, in hexadecimal RRGGBB notation.
 Defaults to "bbbbbb".
