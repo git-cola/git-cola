@@ -34,6 +34,7 @@ Thanks
 * James Geiger
 * Jérôme Carretero
 * Johann Schmitz
+* Josh Taylor
 * Jeff Dagenais
 * Justin Lecher
 * Karl Bielefeldt
@@ -71,6 +72,7 @@ Thanks
 * Samsul Ma'arif
 * Sergey Leschina
 * Srinivasa Nallapati
+* Stan Angeloff
 * Stanisław Halik
 * Stefan Naewe
 * Steffen Prohaska
