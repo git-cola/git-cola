@@ -130,10 +130,10 @@ git-cola, *Qt4* and *PyQt4*.
 
     brew install git-cola
 
-Once brew has installed git-cola you can build a `git-cola.app`
-application bundle from source and copy it to `/Applications`.
-
-    make git-cola.app
+Once brew has installed git-cola you can:
+ 1. Clone git-cola from the repo (git clone git://github.com/git-cola/git-cola.git)
+ 2. build the git-cola.app application bundle (make git-cola.app)
+ 3. copy it to `/Applications` (cp git-cola.app /Applications)
 
 ## WINDOWS INSTALLATION
 
