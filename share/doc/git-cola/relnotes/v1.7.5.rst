@@ -1,3 +1,5 @@
+.. _v1.7.5:
+
 git-cola v1.7.5
 ===============
 Usability, bells and whistles

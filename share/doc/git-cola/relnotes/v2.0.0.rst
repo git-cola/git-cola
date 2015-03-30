@@ -1,3 +1,5 @@
+.. _v2.0.0:
+
 git-cola v2.0.0
 ===============
 Portability

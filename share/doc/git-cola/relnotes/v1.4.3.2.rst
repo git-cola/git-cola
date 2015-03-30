@@ -1,3 +1,5 @@
+.. _v1.4.3.2:
+
 git-cola v1.4.3.2
 =================
 Usability, bells and whistles

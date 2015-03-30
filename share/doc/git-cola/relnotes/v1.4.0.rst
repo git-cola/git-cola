@@ -1,3 +1,5 @@
+.. _v1.4.0:
+
 git-cola v1.4.0
 ===============
 This release focuses on a redesign of the git-cola user interface,

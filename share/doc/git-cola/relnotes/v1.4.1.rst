@@ -1,3 +1,5 @@
+.. _v1.4.1:
+
 git-cola v1.4.1
 ===============
 This feature release adds two new features directly from

@@ -1,3 +1,5 @@
+.. _v1.8.4:
+
 git-cola v1.8.4
 =======================
 Usability, bells and whistles
