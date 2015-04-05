@@ -28,7 +28,7 @@ class StashModel(observable.Observable):
 
     def stash_diff(self, rev):
         diffstat = git.stash('show', rev)[STDOUT]
-        diff = git.stash('show', '-p', rev)[STDOUT]
+        diff = git.stash('show', '-p', '--no-ext-diff', rev)[STDOUT]
         return diffstat + '\n\n' + diff
 
 
