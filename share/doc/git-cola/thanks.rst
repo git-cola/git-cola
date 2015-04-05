@@ -4,6 +4,7 @@ Thanks
 
 * Aaron Cook
 * Adrien be
+* AJ Bagwell
 * Alex Chernetz
 * Alexander Kozienko
 * Andreas Sommer
