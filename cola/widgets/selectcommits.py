@@ -28,6 +28,7 @@ class Model(object):
 
 
 class SelectCommitsDialog(QtGui.QDialog):
+
     def __init__(self, model,
                  parent=None, title=None, multiselect=True, syntax=True):
         QtGui.QDialog.__init__(self, parent)
@@ -73,10 +74,20 @@ class SelectCommitsDialog(QtGui.QDialog):
         self.connect(self.commit_list,
                      SIGNAL('itemSelectionChanged()'), self.commit_sha1_selected)
 
+        self.connect(self.commit_list,
+                     SIGNAL('itemDoubleClicked(QListWidgetItem*)'),
+                     self.commit_sha1_double_clicked)
+
         qtutils.connect_button(self.select_button, self.accept)
         qtutils.connect_button(self.close_button, self.reject)
 
         self.resize(700, 420)
+
+    def selected_commit(self):
+        return qtutils.selected_item(self.commit_list, self.model.revisions)
+
+    def selected_commits(self):
+        return qtutils.selected_items(self.commit_list, self.model.revisions)
 
     def select_commits(self):
         summaries = self.model.summaries
@@ -88,12 +99,11 @@ class SelectCommitsDialog(QtGui.QDialog):
         self.show()
         if self.exec_() != QtGui.QDialog.Accepted:
             return []
-        revs = self.model.revisions
-        return qtutils.selected_items(self.commit_list, revs)
+        return self.selected_commits()
 
     def commit_sha1_selected(self):
-        sha1  = qtutils.selected_item(self.commit_list, self.model.revisions)
-        selected = (sha1 is not None)
+        sha1  = self.selected_commit()
+        selected = sha1 is not None
         self.select_button.setEnabled(selected)
         if not selected:
             self.commit_text.setText('')
@@ -101,7 +111,11 @@ class SelectCommitsDialog(QtGui.QDialog):
             return
         self.revision.setText(sha1)
         self.revision.selectAll()
-
         # Display the sha1's commit
         commit_diff = gitcmds.commit_diff(sha1)
         self.commit_text.setText(commit_diff)
+
+    def commit_sha1_double_clicked(self, item):
+        sha1 = self.selected_commit()
+        if sha1:
+            self.accept()
