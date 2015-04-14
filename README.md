@@ -142,7 +142,7 @@ Once brew has installed git-cola you can:
 
 3. Copy it to _/Applications_
 
-    `rm -fr /Application/git-cola.app && cp -r git-cola.app /Applications`
+    `rm -fr /Applications/git-cola.app && cp -r git-cola.app /Applications`
 
 ## WINDOWS INSTALLATION
 
