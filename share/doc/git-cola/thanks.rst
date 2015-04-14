@@ -86,6 +86,7 @@ Thanks
 * Ugo Riboni
 * Uri Okrent
 * Ｖ字龍 (Vdragon)
+* Vaibhav Sagar
 * Virgil Dupras
 * Vitor Lobo
 * v.paritskiy
