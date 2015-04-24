@@ -1678,9 +1678,10 @@ msgstr ""
 msgid "Recent"
 msgstr "最近使用的版本倉庫"
 
+# Ｖ字龍：注意此應翻譯為動詞。
 #: cola/widgets/main.py:130 cola/widgets/merge.py:84
 msgid "Commit"
-msgstr "版本提交"
+msgstr "提交變更"
 
 #: cola/widgets/main.py:139
 msgid "Console"
