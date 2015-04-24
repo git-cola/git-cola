@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-02-12 16:17-0800\n"
-"PO-Revision-Date: 2014-11-28 02:22+0800\n"
+"PO-Revision-Date: 2015-04-25 07:31+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -300,9 +300,8 @@ msgid "Revert Unstaged Changes"
 msgstr "撤銷尚未移入版本提交準備區域的內容變動"
 
 #: cola/cmds.py:1222
-#, fuzzy
 msgid "Revert Uncommitted Edits..."
-msgstr "撤銷尚未提交到版本倉庫的內容修改……"
+msgstr "撤銷尚未提交到版本倉庫的內容變更……"
 
 #: cola/cmds.py:1228
 msgid "Revert Uncommitted Changes?"
@@ -540,19 +539,17 @@ msgid "Review"
 msgstr "審視(review)"
 
 #: cola/guicmds.py:331
-#, fuzzy
 msgid "Clone Repository"
-msgstr "克隆已有版本庫"
+msgstr "克隆版本倉庫"
 
 #: cola/guicmds.py:332
-#, fuzzy, python-format
+#, python-format
 msgid "Cloning repository at %s"
-msgstr "克隆已有版本庫"
+msgstr "克隆位於 %s 的版本倉庫"
 
 #: cola/guicmds.py:349
-#, fuzzy
 msgid "Rename Existing Branch"
-msgstr "更新已有分支:"
+msgstr "重新命名已存在的分支"
 
 #: cola/guicmds.py:349 cola/widgets/browse.py:467
 #: cola/widgets/selectcommits.py:53
@@ -560,9 +557,8 @@ msgid "Select"
 msgstr "選擇"
 
 #: cola/guicmds.py:352
-#, fuzzy
 msgid "Enter Branch New Name"
-msgstr "分支名"
+msgstr "輸入新的分支名稱"
 
 #: cola/inotify.py:57
 msgid "inotify is disabled because \"cola.inotify\" is false"
@@ -780,14 +776,12 @@ msgid "Open"
 msgstr "開啟"
 
 #: cola/widgets/bookmarks.py:47
-#, fuzzy
 msgid "Favorite repositories"
-msgstr "最近版本庫"
+msgstr "喜愛的版本倉庫"
 
 #: cola/widgets/bookmarks.py:49
-#, fuzzy
 msgid "Recent repositories"
-msgstr "最近版本庫"
+msgstr "最近使用的版本倉庫"
 
 #: cola/widgets/bookmarks.py:100
 msgid "Open in New Window"
@@ -806,9 +800,9 @@ msgid "Enter Git Repository"
 msgstr "請輸入 Git 版本倉庫的路徑"
 
 #: cola/widgets/bookmarks.py:218
-#, fuzzy, python-format
+#, python-format
 msgid "%s is not a Git repository."
-msgstr "請輸入 Git 版本倉庫的路徑"
+msgstr "%s 不是一個 Git 版本倉庫"
 
 #: cola/widgets/browse.py:70 cola/widgets/main.py:599
 #, python-format
@@ -834,14 +828,12 @@ msgid "View History..."
 msgstr "檢視變更紀錄"
 
 #: cola/widgets/browse.py:107
-#, fuzzy
 msgid "View history for selected path(s)"
-msgstr "檢視被選取的路徑的變更紀錄"
+msgstr "檢視被選取的路徑（們）的變更紀錄"
 
 #: cola/widgets/browse.py:113
-#, fuzzy
 msgid "Stage/unstage selected path(s) for commit"
-msgstr "將已被選取的路徑移進 staging area 準備版本提交。"
+msgstr "將被選取的路徑移進／移出版本提交準備區域"
 
 #: cola/widgets/browse.py:118
 msgid "Untrack Selected"
@@ -864,14 +856,12 @@ msgid "Launch git-difftool against previous versions."
 msgstr "對先前的版本啟動 git-difftool 。"
 
 #: cola/widgets/browse.py:136
-#, fuzzy
 msgid "Revert unstaged changes to selected paths."
-msgstr "撤銷已選取的路徑的內容變更。"
+msgstr "撤銷被選取的路徑尚未移入版本提交準備區域的內容變更。"
 
 #: cola/widgets/browse.py:142
-#, fuzzy
 msgid "Revert uncommitted changes to selected paths."
-msgstr "撤銷已選取的路徑的內容變更。"
+msgstr "撤銷被選取的路徑尚未被提交的內容變更。"
 
 #: cola/widgets/browse.py:148
 msgid "Edit selected path(s)."
@@ -971,9 +961,8 @@ msgid "Amend Last Commit"
 msgstr "修正上次提交"
 
 #: cola/widgets/commitmsg.py:87 cola/widgets/merge.py:89
-#, fuzzy
 msgid "Create Signed Commit"
-msgstr "建立了一個新的版本提交：%s"
+msgstr "建立經 GPG 簽署過的版本提交"
 
 #: cola/widgets/commitmsg.py:93
 msgid "Check Spelling"
@@ -1571,19 +1560,30 @@ msgid ""
 "The up and down arrows change focus between the text entry field\n"
 "and the results.\n"
 msgstr ""
+"\n"
+"鍵盤快捷鍵\n"
+"------------------\n"
+"J, Down     = 往下移動\n"
+"K, Up       = 往上移動\n"
+"Enter       = 編輯選取的檔案\n"
+"Spacebar    = 以預設應用軟體開啟檔案\n"
+"Ctrl+L      = Focus Text Entry Field\n"
+"?           = 顯示幫助訊息\n"
+"\n"
+"The up and down arrows change focus between the text entry field\n"
+"and the results.\n"
 
 #: cola/widgets/finder.py:58
 msgid "Help - Find Files"
 msgstr ""
 
 #: cola/widgets/finder.py:86 cola/widgets/main.py:196
-#, fuzzy
 msgid "Find Files"
-msgstr "檔案"
+msgstr "尋找檔案"
 
 #: cola/widgets/finder.py:91
 msgid "<path> ..."
-msgstr ""
+msgstr "〈路徑〉……"
 
 #: cola/widgets/finder.py:96 cola/widgets/grep.py:102
 #: cola/widgets/recent.py:72
@@ -1599,11 +1599,12 @@ msgid ""
 "Show help\n"
 "Shortcut: ?"
 msgstr ""
+"顯示幫助訊息\n"
+"鍵盤快捷鍵：?"
 
 #: cola/widgets/finder.py:154
-#, fuzzy
 msgid "Show Help"
-msgstr "尋求幫助"
+msgstr "顯示幫助訊息"
 
 #: cola/widgets/grep.py:70 cola/widgets/search.py:45 cola/widgets/search.py:63
 msgid "Search"
@@ -1672,7 +1673,7 @@ msgstr "操作"
 
 #: cola/widgets/main.py:107
 msgid "Favorites"
-msgstr ""
+msgstr "喜愛的版本倉庫"
 
 #: cola/widgets/main.py:112
 msgid "Recent"
@@ -1828,9 +1829,8 @@ msgid "Delete Remote Branch..."
 msgstr "移除遠端分支"
 
 #: cola/widgets/main.py:289
-#, fuzzy
 msgid "Rename Branch..."
-msgstr "遠端分支名"
+msgstr "重新命名分支……"
 
 #: cola/widgets/main.py:292
 msgid "Checkout..."
@@ -1912,14 +1912,12 @@ msgid "Amending"
 msgstr "正在修正前一個版本提交"
 
 #: cola/widgets/main.py:742
-#, fuzzy
 msgid "Unable to rebase"
-msgstr "無法清理 %s"
+msgstr "無法 rebase"
 
 #: cola/widgets/main.py:743
-#, fuzzy
 msgid "You cannot rebase with uncommitted changes."
-msgstr "要撤銷尚未提交至版本倉庫的內容變更嗎？"
+msgstr "您不能在還有尚未提交至版本倉庫的內容變更的時候進行 rebase。"
 
 #: cola/widgets/main.py:745
 msgid "Select New Upstream"
@@ -2221,14 +2219,12 @@ msgid "Have you rebased/pulled lately?"
 msgstr "您最近有作 rebase/pull 嗎？"
 
 #: cola/widgets/remote.py:498
-#, fuzzy
 msgid "Fetch"
-msgstr "自遠端版本倉庫撈取(fetch)……"
+msgstr "自遠端版本倉庫撈取(fetch)"
 
 #: cola/widgets/remote.py:510
-#, fuzzy
 msgid "Pull"
-msgstr "自遠端分支撈取並合併(pull)……"
+msgstr "自遠端分支撈取並合併(pull)"
 
 #: cola/widgets/search.py:49
 msgid "Browse..."
@@ -2373,9 +2369,8 @@ msgid "Copy Path to Clipboard"
 msgstr "將路徑複製到剪貼簿"
 
 #: cola/widgets/status.py:167
-#, fuzzy
 msgid "Copy Relative Path to Clipboard"
-msgstr "將路徑複製到剪貼簿"
+msgstr "將相對路徑複製到剪貼簿"
 
 #: cola/widgets/status.py:173
 msgid "Move file(s) to trash"
@@ -2399,9 +2394,8 @@ msgid "Add to .gitignore"
 msgstr "新增到 Git 忽略規則(.gitignore)"
 
 #: cola/widgets/status.py:924
-#, fuzzy
 msgid "Filter paths..."
-msgstr "自遠端版本倉庫撈取(fetch)……"
+msgstr "過濾檔案路徑……"
 
 #~ msgid "Bookmarks"
 #~ msgstr "書籤"
