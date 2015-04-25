@@ -23,11 +23,22 @@ Please install it before using git-cola.
 e.g.: sudo apt-get install python-qt4
 """
 
+# /usr/include/sysexits.h
+#define EX_OK           0   /* successful termination */
+#define EX_USAGE        64  /* command line usage error */
+#define EX_NOINPUT      66  /* cannot open input */
+#define EX_UNAVAILABLE  69  /* service unavailable */
+EX_OK = 0
+EX_USAGE = 64
+EX_NOINPUT = 66
+EX_UNAVAILABLE = 69
+
+
 try:
     import sip
 except ImportError:
     sys.stderr.write(errmsg)
-    sys.exit(2)
+    sys.exit(EX_UNAVAILABLE)
 
 sip.setapi('QString', 1)
 sip.setapi('QDate', 1)
@@ -41,7 +52,7 @@ try:
     from PyQt4 import QtCore
 except ImportError:
     sys.stderr.write(errmsg)
-    sys.exit(2)
+    sys.exit(EX_UNAVAILABLE)
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
@@ -240,7 +251,7 @@ def process_args(args):
     if args.version:
         # Accept 'git cola --version' or 'git cola version'
         version.print_version()
-        sys.exit(0)
+        sys.exit(EX_OK)
 
     # Handle session management
     restore_session(args)
@@ -260,7 +271,7 @@ def process_args(args):
         errmsg = N_('fatal: "%s" is not a directory.  '
                     'Please specify a correct --repo <path>.') % repo
         core.stderr(errmsg)
-        sys.exit(-1)
+        sys.exit(EX_USAGE)
 
     # We do everything relative to the repo root
     os.chdir(args.repo)
@@ -364,7 +375,7 @@ def new_model(app, repo, prompt=False):
         startup_dlg = startup.StartupDialog(app.activeWindow())
         gitdir = startup_dlg.find_git_repo()
         if not gitdir:
-            sys.exit(-1)
+            sys.exit(EX_NOINPUT)
         valid = model.set_worktree(gitdir)
 
     # Finally, go to the root of the git repo
