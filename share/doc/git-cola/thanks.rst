@@ -21,6 +21,7 @@ Thanks
 * Daniel Fahlke
 * Daniel Harding
 * Daniel King
+* Dave Thomas
 * David Aguilar
 * David Martínez Martí
 * Dennis Gilmore

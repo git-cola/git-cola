@@ -3,8 +3,8 @@
 """
 from __future__ import division, absolute_import, unicode_literals
 
-import os
 import copy
+import os
 
 from cola import core
 from cola import git
@@ -76,12 +76,15 @@ class MainModel(Observable):
         self.remotes = []
         self.filter_paths = None
 
-        self.commitmsg = ''
-        self.modified = []
+        self.commitmsg = ''  # current commit message
+        self._auto_commitmsg = ''  # e.g. .git/MERGE_MSG
+        self._prev_commitmsg = '' # saved here when clobbered by .git/MERGE_MSG
+
+        self.modified = []  # modified, staged, untracked, unmerged paths
         self.staged = []
         self.untracked = []
         self.unmerged = []
-        self.upstream_changed = []
+        self.upstream_changed = []  # paths that've changed upstream
         self.staged_deleted = set()
         self.unstaged_deleted = set()
         self.submodules = set()
@@ -182,6 +185,7 @@ class MainModel(Observable):
         self._update_remotes()
         self._update_branches_and_tags()
         self._update_branch_heads()
+        self._update_commitmsg()
         self.notify_observers(self.message_updated)
 
     def _update_files(self, update_index=False):
@@ -229,6 +233,23 @@ class MainModel(Observable):
         self.is_rebasing = core.exists(self.git.git_path('rebase-merge'))
         if self.is_merging and self.mode == self.mode_amend:
             self.set_mode(self.mode_none)
+
+    def _update_commitmsg(self):
+        """Check for git merge message files, or clear it when the merge completes"""
+        if self.amending():
+            return
+        # Check if there's a message file in .git/
+        merge_msg_path = gitcmds.merge_message_path()
+        if merge_msg_path:
+            msg = core.read(merge_msg_path)
+            if msg != self._auto_commitmsg:
+                self._auto_commitmsg = msg
+                self._prev_commitmsg = self.commitmsg
+                self.set_commitmsg(msg)
+
+        elif self._auto_commitmsg and self._auto_commitmsg == self.commitmsg:
+            self._auto_commitmsg = ''
+            self.set_commitmsg(self._prev_commitmsg)
 
     def update_remotes(self):
         self._update_remotes()

@@ -11,7 +11,6 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import cmds
 from cola import core
-from cola import gitcmds
 from cola import guicmds
 from cola import gitcfg
 from cola import qtutils
@@ -73,9 +72,6 @@ class MainView(standard.MainWindow):
         # The widget version is used by import/export_state().
         # Change this whenever dockwidgets are removed.
         self.widget_version = 2
-
-        # Keeps track of merge messages we've seen
-        self.merge_message_hash = ''
 
         # Runs asynchronous tasks
         self.task_runner = TaskRunner(self)
@@ -630,17 +626,6 @@ class MainView(standard.MainWindow):
         self.commitdockwidget.setToolTip(msg)
         self.commitmsgeditor.set_mode(self.mode)
         self.update_actions()
-
-        if not self.model.amending():
-            # Check if there's a message file in .git/
-            merge_msg_path = gitcmds.merge_message_path()
-            if merge_msg_path is None:
-                return
-            merge_msg_hash = utils.checksum(merge_msg_path)
-            if merge_msg_hash == self.merge_message_hash:
-                return
-            self.merge_message_hash = merge_msg_hash
-            cmds.do(cmds.LoadCommitMessageFromFile, merge_msg_path)
 
     def update_actions(self):
         is_rebasing = self.model.is_rebasing

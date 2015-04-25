@@ -12,7 +12,6 @@ import time
 import traceback
 
 from cola import core
-import hashlib
 
 random.seed(hash(time.time()))
 
@@ -209,13 +208,6 @@ def is_darwin():
 def is_win32():
     """Return True on win32"""
     return sys.platform == 'win32' or sys.platform == 'cygwin'
-
-
-def checksum(path):
-    """Return a cheap md5 hexdigest for a path."""
-    md5 = hashlib.new('md5')
-    md5.update(open(path, 'rb').read())
-    return md5.hexdigest()
 
 
 def expandpath(path):
