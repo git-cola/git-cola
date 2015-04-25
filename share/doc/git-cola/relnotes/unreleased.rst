@@ -19,6 +19,9 @@ Unreleased Topics
   its previous state.  It is only reset if the editor contains a message
   that was read from the file and has not been manually edited by the user.
 
+* The commit message editor's context menu now has a "Clear..." action for
+  clearing the message across both the summary and description fields.
+
 Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``

@@ -46,14 +46,19 @@ class CommitMessageEditor(QtGui.QWidget):
                                                 self.commit,
                                                 cmds.Commit.SHORTCUT)
         self.commit_action.setToolTip(N_('Commit staged changes'))
+        self.clear_action = qtutils.add_action(self, N_('Clear...'), self.clear)
 
         # Widgets
         self.summary = CommitSummaryLineEdit()
         self.summary.setMinimumHeight(defs.tool_button_height)
+        self.summary.extra_actions.append(self.clear_action)
+        self.summary.extra_actions.append(None)
         self.summary.extra_actions.append(self.signoff_action)
         self.summary.extra_actions.append(self.commit_action)
 
         self.description = CommitMessageTextEdit()
+        self.description.extra_actions.append(self.clear_action)
+        self.description.extra_actions.append(None)
         self.description.extra_actions.append(self.signoff_action)
         self.description.extra_actions.append(self.commit_action)
 
@@ -272,6 +277,17 @@ class CommitMessageEditor(QtGui.QWidget):
         self.refresh_palettes()
         self.notifying = False
         self.update_actions()
+
+    def clear(self):
+        if not qtutils.confirm(
+                N_('Clear commit message?'),
+                N_('The commit message will be cleared.'),
+                N_('This cannot be undone.  Clear commit message?'),
+                N_('Clear commit message'),
+                default=True,
+                icon=qtutils.discard_icon()):
+            return
+        self.model.set_commitmsg('')
 
     def update_actions(self):
         commit_enabled = bool(self.summary.value())
@@ -532,7 +548,10 @@ class CommitSummaryLineEdit(HintedLineEdit):
         if self.extra_actions:
             menu.addSeparator()
         for action in self.extra_actions:
-            menu.addAction(action)
+            if action is None:
+                menu.addSeparator()
+            else:
+                menu.addAction(action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
 
@@ -551,7 +570,10 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
         if self.extra_actions:
             menu.addSeparator()
         for action in self.extra_actions:
-            menu.addAction(action)
+            if action is None:
+                menu.addSeparator()
+            else:
+                menu.addAction(action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def keyPressEvent(self, event):
