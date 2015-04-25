@@ -459,7 +459,8 @@ class GitDAG(standard.MainWindow):
         self.model.add_observer(self.model.message_updated,
                                 self.emit_model_updated)
 
-        self.connect(self, SIGNAL('model_updated'), self.model_updated)
+        self.connect(self, SIGNAL('model_updated()'), self.model_updated,
+                     Qt.QueuedConnection)
 
         qtutils.add_action(self, 'Focus Input', self.focus_input, 'Ctrl+L')
         qtutils.add_close_action(self)
@@ -501,7 +502,7 @@ class GitDAG(standard.MainWindow):
         return result
 
     def emit_model_updated(self):
-        self.emit(SIGNAL('model_updated'))
+        self.emit(SIGNAL('model_updated()'))
 
     def model_updated(self):
         self.display()

@@ -482,7 +482,9 @@ class MainView(standard.MainWindow):
         self.connect(self.diffeditor, SIGNAL('diff_options_updated()'),
                      self.statuswidget.refresh)
 
-        self.connect(self, SIGNAL('update'), self._update_callback)
+        self.connect(self, SIGNAL('update()'),
+                     self._update_callback, Qt.QueuedConnection)
+
         self.connect(self, SIGNAL('install_config_actions'),
                      self._install_config_actions)
 
@@ -586,7 +588,7 @@ class MainView(standard.MainWindow):
                 action.setShortcut(shortcut)
 
     def _update(self):
-        self.emit(SIGNAL('update'))
+        self.emit(SIGNAL('update()'))
 
     def _update_callback(self):
         """Update the title with the current branch and directory name."""

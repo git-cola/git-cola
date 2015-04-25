@@ -36,6 +36,8 @@ except ImportError:
     sys.stderr.write('e.g.: sudo apt-get install python-qt4\n')
     sys.exit(-1)
 
+from PyQt4.QtCore import Qt
+
 # Import cola modules
 from cola import cmds
 from cola import core
@@ -147,7 +149,8 @@ class ColaApplication(object):
         qtutils.install()
 
         self.notifier = QtCore.QObject()
-        self.notifier.connect(self.notifier, SIGNAL('update_files'), self._update_files)
+        self.notifier.connect(self.notifier, SIGNAL('update_files()'),
+                              self._update_files, Qt.QueuedConnection)
         # Call _update_files when inotify detects changes
         inotify.observer(self._update_files_notifier)
 
@@ -190,7 +193,7 @@ class ColaApplication(object):
         cmds.do(cmds.Refresh)
 
     def _update_files_notifier(self):
-        self.notifier.emit(SIGNAL('update_files'))
+        self.notifier.emit(SIGNAL('update_files()'))
 
 
 @memoize
