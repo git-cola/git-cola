@@ -582,8 +582,8 @@ msgstr ""
 
 #: cola/inotify.py:72
 #, fuzzy
-msgid "On Debian-based systems try: sudo aptitude install python-pyinotify"
-msgstr "Pada sistem Debian: sudo aptitude install python-pyinotify"
+msgid "On Debian-based systems try: sudo apt-get install python-pyinotify"
+msgstr "Pada sistem Debian: sudo apt-get install python-pyinotify"
 
 #: cola/inotify.py:81
 msgid "File notification enabled."

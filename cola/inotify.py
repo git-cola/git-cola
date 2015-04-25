@@ -70,7 +70,7 @@ def start():
 
         if utils.is_debian():
             msg += N_('On Debian-based systems '
-                      'try: sudo aptitude install python-pyinotify')
+                      'try: sudo apt-get install python-pyinotify')
         Interaction.log(msg)
         return
 

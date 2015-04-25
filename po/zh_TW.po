@@ -582,9 +582,9 @@ msgstr ""
 "注意：安裝 python-pyinotify 軟體包以啟用 inotify 檔案變更通知功能。\n"
 
 #: cola/inotify.py:72
-msgid "On Debian-based systems try: sudo aptitude install python-pyinotify"
+msgid "On Debian-based systems try: sudo apt-get install python-pyinotify"
 msgstr ""
-"於基於 Debian 的系統中嘗試於終端機下執行：sudo aptitude install python-"
+"於基於 Debian 的系統中嘗試於終端機下執行：sudo apt-get install python-"
 "pyinotify"
 
 #: cola/inotify.py:81

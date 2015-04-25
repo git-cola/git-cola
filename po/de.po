@@ -590,10 +590,10 @@ msgstr ""
 
 #: cola/inotify.py:72
 #, fuzzy
-msgid "On Debian-based systems try: sudo aptitude install python-pyinotify"
+msgid "On Debian-based systems try: sudo apt-get install python-pyinotify"
 msgstr ""
 "Wenn Sie git-cola auf einem Debian-System gestartet haben, versuchen Sie es "
-"mit \"sudo aptitude install python-pyinotify\" "
+"mit \"sudo apt-get install python-pyinotify\" "
 
 #: cola/inotify.py:81
 msgid "File notification enabled."

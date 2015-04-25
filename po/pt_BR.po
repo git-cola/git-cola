@@ -568,7 +568,7 @@ msgid ""
 msgstr ""
 
 #: cola/inotify.py:72
-msgid "On Debian-based systems try: sudo aptitude install python-pyinotify"
+msgid "On Debian-based systems try: sudo apt-get install python-pyinotify"
 msgstr ""
 
 #: cola/inotify.py:81

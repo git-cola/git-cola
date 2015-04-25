@@ -38,6 +38,7 @@ Thanks
 * James Geiger
 * Jérôme Carretero
 * Johann Schmitz
+* Jordan Bedwell
 * Josh Taylor
 * Jeff Dagenais
 * Justin Lecher
