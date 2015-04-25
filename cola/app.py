@@ -17,26 +17,35 @@ if sys.platform == 'darwin':
     if os.path.isdir(homebrew_mods):
         sys.path.append(homebrew_mods)
 
+
+errmsg = """Sorry, you do not seem to have PyQt4 installed.
+Please install it before using git-cola.
+e.g.: sudo apt-get install python-qt4
+"""
+
 try:
     import sip
-    sip.setapi('QString', 1)
-    sip.setapi('QDate', 1)
-    sip.setapi('QDateTime', 1)
-    sip.setapi('QTextStream', 1)
-    sip.setapi('QTime', 1)
-    sip.setapi('QUrl', 1)
-    sip.setapi('QVariant', 1)
-
-    from PyQt4 import QtGui
-    from PyQt4 import QtCore
-    from PyQt4.QtCore import SIGNAL
 except ImportError:
-    sys.stderr.write('Sorry, you do not seem to have PyQt4 installed.\n')
-    sys.stderr.write('Please install it before using git-cola.\n')
-    sys.stderr.write('e.g.: sudo apt-get install python-qt4\n')
-    sys.exit(-1)
+    sys.stderr.write(errmsg)
+    sys.exit(2)
 
+sip.setapi('QString', 1)
+sip.setapi('QDate', 1)
+sip.setapi('QDateTime', 1)
+sip.setapi('QTextStream', 1)
+sip.setapi('QTime', 1)
+sip.setapi('QUrl', 1)
+sip.setapi('QVariant', 1)
+
+try:
+    from PyQt4 import QtCore
+except ImportError:
+    sys.stderr.write(errmsg)
+    sys.exit(2)
+
+from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
+from PyQt4.QtCore import SIGNAL
 
 # Import cola modules
 from cola import cmds
