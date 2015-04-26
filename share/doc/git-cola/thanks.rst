@@ -28,7 +28,7 @@ Thanks
 * Dmitry Kann
 * Eric Drechsel
 * Geoffrey van Wyk
-* `GIT Hackers <http://git-scm.com/about>`_
+* `Git Hackers <http://git-scm.com/about>`_
 * Glen Mailer
 * Guillaume de Bure
 * Ingo Weinhold
@@ -37,12 +37,12 @@ Thanks
 * Ivar Smolin
 * Jakub Wilk
 * James Geiger
+* Jeff Dagenais
 * Jérôme Carretero
 * JiCiT
 * Johann Schmitz
 * Jordan Bedwell
 * Josh Taylor
-* Jeff Dagenais
 * Justin Lecher
 * Karl Bielefeldt
 * Karthik Manamcheri
@@ -53,12 +53,12 @@ Thanks
 * Libor Jelinek
 * Liviu Cristian Mirea-Ghiban
 * Luke Bakken
+* Maarten Nieber
 * Maciej Filipiak
 * Mahmoud Hossam
 * Maicon D. Filippsen
 * Marco Costalba
 * Markus Heidelberg
-* Maarten Nieber
 * Matěj Šmíd
 * Matthew Levine
 * Micha Rosenbaum
@@ -68,9 +68,9 @@ Thanks
 * Nicolas Dietrich
 * OmegaPhil (Omega Weapon)
 * Owen Healy
+* Pamela Strucker
 * Paolo G. Giarrusso
 * Patrick Browne
-* Pamela Strucker
 * Paul Hildebrandt
 * Paul Weingardt
 * Peter Dave Hello
