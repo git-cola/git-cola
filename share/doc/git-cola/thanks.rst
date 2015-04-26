@@ -27,6 +27,7 @@ Thanks
 * Dennis Gilmore
 * Dmitry Kann
 * Eric Drechsel
+* Geoffrey van Wyk
 * `GIT Hackers <http://git-scm.com/about>`_
 * Glen Mailer
 * Guillaume de Bure
@@ -37,6 +38,7 @@ Thanks
 * Jakub Wilk
 * James Geiger
 * Jérôme Carretero
+* JiCiT
 * Johann Schmitz
 * Jordan Bedwell
 * Josh Taylor
@@ -50,6 +52,7 @@ Thanks
 * Leho Kraav
 * Libor Jelinek
 * Liviu Cristian Mirea-Ghiban
+* Luke Bakken
 * Maciej Filipiak
 * Mahmoud Hossam
 * Maicon D. Filippsen
@@ -67,6 +70,7 @@ Thanks
 * Owen Healy
 * Paolo G. Giarrusso
 * Patrick Browne
+* Pamela Strucker
 * Paul Hildebrandt
 * Paul Weingardt
 * Peter Dave Hello

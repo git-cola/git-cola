@@ -22,6 +22,22 @@ Unreleased Topics
 * The commit message editor's context menu now has a "Clear..." action for
   clearing the message across both the summary and description fields.
 
+* `git cola` now uses the `setsid()` system call to ensure that the
+  `GIT_ASKPASS` and `SSH_ASKPASS` helper programs are used when pushing
+  changes using `git`.  The askpass helpers will now be used even when
+  `git cola` is launched from a terminal.
+
+  The behavior without `setsid()` is that `git cola` can appear to hang while
+  pushing changes.  The hang happens when `git` prompts the user for a
+  password using the terminal, but the user never sees the prompt.  `setsid()`
+  detaches the terminal, which ensures that the askpass helpers are used.
+
+  https://github.com/git-cola/git-cola/issues/218
+
+  https://github.com/git-cola/git-cola/issues/262
+
+  https://github.com/git-cola/git-cola/issues/377
+
 Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
