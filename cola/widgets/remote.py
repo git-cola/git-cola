@@ -421,7 +421,6 @@ class RemoteActionDialog(standard.Dialog):
                 info_txt= N_('Create a new remote branch?')
                 ok_text = N_('Create Remote Branch')
                 if not qtutils.confirm(title, msg, info_txt, ok_text,
-                                       default=False,
                                        icon=qtutils.git_icon()):
                     return
 
