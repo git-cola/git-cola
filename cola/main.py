@@ -463,7 +463,7 @@ def windows_find_git():
 
     pf = os.environ.get('ProgramFiles', 'C:\\Program Files')
     pf32 = os.environ.get('ProgramFiles(x86)', 'C:\\Program Files (x86)')
-    for p in [pf32, pf]:
+    for p in [pf32, pf, 'C:\\']:
         candidate = os.path.join(p, 'Git\\bin')
         if os.path.isdir(candidate):
             return os.path.join(candidate, 'git')
