@@ -33,10 +33,10 @@ class FileWidget(TreeWidget):
             return
         commit = commits[0]
         sha1 = commit.sha1
-        status, out, err = git.show(sha1,
-                                    numstat=True, oneline=True, no_renames=True)
+        status, out, err = git.show(sha1, z=True, numstat=True,
+                                    oneline=True, no_renames=True)
         if status == 0:
-            paths = [f for f in out.splitlines() if f]
+            paths = out.rstrip('\0').split('\0')
             if paths:
                 paths = paths[1:]
         else:
@@ -54,9 +54,9 @@ class FileWidget(TreeWidget):
         self.insertTopLevelItems(0, files)
 
     def adjust_columns(self):
-        width = self.width()-20
-        zero = width*2//3
-        onetwo = width//6
+        width = self.width() - 20
+        zero = width*2 // 3
+        onetwo = width // 6
         self.setColumnWidth(0, zero)
         self.setColumnWidth(1, onetwo)
         self.setColumnWidth(2, onetwo)

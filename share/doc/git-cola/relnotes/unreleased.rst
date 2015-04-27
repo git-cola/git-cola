@@ -38,6 +38,8 @@ Unreleased Topics
 
   https://github.com/git-cola/git-cola/issues/377
 
+* `git dag`'s file list tool was updated to properly handle unicode paths.
+
 Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
