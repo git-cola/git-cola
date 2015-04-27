@@ -17,6 +17,9 @@ from cola.widgets.standard import Dialog
 from cola.compat import ustr
 
 
+COMMAND_SIGNAL = 'command(PyQt_PyObject,PyQt_PyObject,PyQt_PyObject)'
+
+
 def create_new_branch(revision=''):
     """Launches a dialog for creating a new branch"""
     model = main.MainModel()
@@ -57,23 +60,23 @@ class CreateThread(QtCore.QThread):
         if track and '/' in revision:
             remote = revision.split('/', 1)[0]
             status, out, err = model.git.fetch(remote)
-            self.emit(SIGNAL('command'), status, out, err)
+            self.emit(SIGNAL(COMMAND_SIGNAL), status, out, err)
             results.append(('fetch', status, out, err))
 
         if status == 0:
             status, out, err = model.create_branch(branch, revision,
                                                    force=reset,
                                                    track=track)
-            self.emit(SIGNAL('command'), status, out, err)
+            self.emit(SIGNAL(COMMAND_SIGNAL), status, out, err)
 
         results.append(('branch', status, out, err))
         if status == 0 and checkout:
             status, out, err = model.git.checkout(branch)
-            self.emit(SIGNAL('command'), status, out, err)
+            self.emit(SIGNAL(COMMAND_SIGNAL), status, out, err)
             results.append(('checkout', status, out, err))
 
         main.model().update_status()
-        self.emit(SIGNAL('done'), results)
+        self.emit(SIGNAL('done(PyQt_PyObject)'), results)
 
 
 class CreateBranchDialog(Dialog):
@@ -216,8 +219,11 @@ class CreateBranchDialog(Dialog):
         self.connect(self.branch_list, SIGNAL('itemSelectionChanged()'),
                      self.branch_item_changed)
 
-        self.connect(self.thread, SIGNAL('command'), self.thread_command)
-        self.connect(self.thread, SIGNAL('done'), self.thread_done)
+        self.connect(self.thread, SIGNAL(COMMAND_SIGNAL),
+                     self.thread_command, Qt.QueuedConnection)
+
+        self.connect(self.thread, SIGNAL('done(PyQt_PyObject)'),
+                     self.thread_done, Qt.QueuedConnection)
 
         self.resize(555, 333)
         self.display_model()

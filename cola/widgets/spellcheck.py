@@ -140,7 +140,8 @@ class SpellCheckTextEdit(HintedTextEdit):
                 spell_menu = QMenu(N_('Spelling Suggestions'))
                 for word in self.spellcheck.suggest(text):
                     action = SpellAction(word, spell_menu)
-                    self.connect(action, SIGNAL('correct'), self.correct)
+                    self.connect(action, SIGNAL('correct(PyQt_PyObject)'),
+                                 self.correct)
                     spell_menu.addAction(action)
                 # Only add the spelling suggests to the menu if there are
                 # suggestions.
@@ -201,7 +202,7 @@ class SpellAction(QAction):
         self.connect(self, SIGNAL('triggered()'), self.correct)
 
     def correct(self):
-        self.emit(SIGNAL('correct'), ustr(self.text()))
+        self.emit(SIGNAL('correct(PyQt_PyObject)'), ustr(self.text()))
 
 
 def main(args=sys.argv):

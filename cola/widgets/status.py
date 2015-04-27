@@ -184,8 +184,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 self._delete_untracked_files, delete_shortcut)
         self.delete_untracked_files_action.setIcon(qtutils.discard_icon())
 
-        self.connect(self, SIGNAL('about_to_update'), self._about_to_update)
-        self.connect(self, SIGNAL('updated'), self._updated)
+        self.connect(self, SIGNAL('about_to_update()'),
+                     self._about_to_update, Qt.QueuedConnection)
+        self.connect(self, SIGNAL('updated()'),
+                     self._updated, Qt.QueuedConnection)
 
         self.m = main.model()
         self.m.add_observer(self.m.message_about_to_update,
@@ -345,7 +347,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         return parent.child(itemidx)
 
     def about_to_update(self):
-        self.emit(SIGNAL('about_to_update'))
+        self.emit(SIGNAL('about_to_update()'))
 
     def _about_to_update(self):
         self.save_selection()
@@ -380,7 +382,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def updated(self):
         """Update display from model data."""
-        self.emit(SIGNAL('updated'))
+        self.emit(SIGNAL('updated()'))
 
     def _updated(self):
         self.set_staged(self.m.staged)

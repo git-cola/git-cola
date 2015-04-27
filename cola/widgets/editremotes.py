@@ -94,8 +94,8 @@ class RemoteEditor(QtGui.QDialog):
         qtutils.connect_button(self.refresh_btn, self.refresh)
         qtutils.connect_button(self.close_btn, self.close)
 
-        self.connect(self.info_thread, SIGNAL('info'),
-                     self.info.set_value)
+        self.connect(self.info_thread, SIGNAL('info(PyQt_PyObject)'),
+                     self.info.set_value, Qt.QueuedConnection)
 
         self.connect(self.remotes,
                      SIGNAL('itemChanged(QListWidgetItem*)'),
@@ -175,7 +175,7 @@ class RemoteInfoThread(QtCore.QThread):
         # This call takes a long time and we may have selected a
         # different remote...
         if remote == self.remote:
-            self.emit(SIGNAL('info'), out + err)
+            self.emit(SIGNAL('info(PyQt_PyObject)'), out + err)
         else:
             self.run()
 

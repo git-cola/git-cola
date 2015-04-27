@@ -68,7 +68,8 @@ class GitRepoModel(QtGui.QStandardItemModel):
         self._interesting_paths = self._get_paths()
         self._known_paths = set()
 
-        self.connect(self, SIGNAL('updated'), self._updated_callback)
+        self.connect(self, SIGNAL('updated()'),
+                     self._updated_callback, Qt.QueuedConnection)
         model = main.model()
         model.add_observer(model.message_updated, self._model_updated)
         self._dir_rows = collections.defaultdict(int)
@@ -167,7 +168,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def _model_updated(self):
         """Observes model changes and updates paths accordingly."""
-        self.emit(SIGNAL('updated'))
+        self.emit(SIGNAL('updated()'))
 
     def _updated_callback(self):
         old_paths = self._interesting_paths
@@ -260,7 +261,8 @@ class TaskRunner(object):
         self.tasks = set()
         self.threadpool = QtCore.QThreadPool.globalInstance()
         self.notifier = QtCore.QObject()
-        self.notifier.connect(self.notifier, SIGNAL('task_done'), self.task_done)
+        self.notifier.connect(self.notifier, SIGNAL('task_done(PyQt_PyObject)'),
+                              self.task_done, Qt.QueuedConnection)
 
     def run(self, task):
         self.tasks.add(task)
@@ -271,7 +273,7 @@ class TaskRunner(object):
             self.tasks.remove(task)
 
     def cleanup_task(self, task):
-        self.notifier.emit(SIGNAL('task_done'), task)
+        self.notifier.emit(SIGNAL('task_done(PyQt_PyObject)'), task)
 
 
 class GitRepoEntry(QtCore.QObject):

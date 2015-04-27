@@ -57,7 +57,8 @@ class GrepThread(QtCore.QThread):
             args = [query]
         status, out, err = git.grep(self.regexp_mode, n=True, *args)
         if query == self.query:
-            self.emit(SIGNAL('result'), status, out, err)
+            self.emit(SIGNAL('result(PyQt_PyObject,PyQt_PyObject,PyQt_PyObject)'),
+                      status, out, err)
         else:
             self.run()
 
@@ -131,7 +132,9 @@ class Grep(Dialog):
         self.setLayout(self.mainlayout)
 
         self.worker_thread = GrepThread(self)
-        self.connect(self.worker_thread, SIGNAL('result'), self.process_result)
+        self.connect(self.worker_thread,
+                     SIGNAL('result(PyQt_PyObject,PyQt_PyObject,PyQt_PyObject)'),
+                     self.process_result, Qt.QueuedConnection)
 
         self.connect(self.input_txt, SIGNAL('textChanged(QString)'),
                      lambda s: self.search())

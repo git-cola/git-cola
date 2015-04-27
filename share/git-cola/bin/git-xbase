@@ -296,7 +296,8 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.selection_changed)
 
-        self.connect(self, SIGNAL('move'), self.move)
+        self.connect(self, SIGNAL('move(PyQt_PyObject,PyQt_PyObject)'),
+                     self.move)
         self.connect(self, SIGNAL(self.ITEMS_MOVED_SIGNAL), self.decorate)
 
     def add_item(self, idx, enabled, command,
@@ -384,7 +385,8 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         items = self.items()
         idx = items.index(item)
         if idx < len(items) - 1:
-            self.emit(SIGNAL('move'), [idx], idx + 1)
+            self.emit(SIGNAL('move(PyQt_PyObject,PyQt_PyObject)'),
+                      [idx], idx + 1)
 
     def shift_up(self):
         item = self.selected_item()
@@ -393,7 +395,8 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         items = self.items()
         idx = items.index(item)
         if idx > 0:
-            self.emit(SIGNAL('move'), [idx], idx - 1)
+            self.emit(SIGNAL('move(PyQt_PyObject,PyQt_PyObject)'),
+                      [idx], idx - 1)
 
     def move(self, src_idxs, dst_idx):
         new_items = []

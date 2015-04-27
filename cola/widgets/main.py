@@ -481,8 +481,8 @@ class MainView(standard.MainWindow):
         self.connect(self, SIGNAL('update()'),
                      self._update_callback, Qt.QueuedConnection)
 
-        self.connect(self, SIGNAL('install_config_actions'),
-                     self._install_config_actions)
+        self.connect(self, SIGNAL('install_cfg_actions(PyQt_PyObject)'),
+                     self._install_config_actions, Qt.QueuedConnection)
 
         # Install .git-config-defined actions
         self._config_task = None
@@ -566,7 +566,8 @@ class MainView(standard.MainWindow):
                 self._sender = sender
             def run(self):
                 actions = cfgactions.get_config_actions()
-                self._sender.emit(SIGNAL('install_config_actions'), actions)
+                self._sender.emit(SIGNAL('install_cfg_actions(PyQt_PyObject)'),
+                                  actions)
 
         task = ConfigActionsTask(self)
         QtCore.QThreadPool.globalInstance().start(task)

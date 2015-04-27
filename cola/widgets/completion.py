@@ -60,7 +60,7 @@ class CompletionLineEdit(text.HintedLineEdit):
                      self.choose_completion)
 
         self.connect(self._completion_model, SIGNAL('updated()'),
-                     self._completions_updated)
+                     self._completions_updated, Qt.QueuedConnection)
 
         self.connect(self, SIGNAL('destroyed(QObject*)'), self.dispose)
 
@@ -261,7 +261,7 @@ class GatherCompletionsThread(QtCore.QThread):
             items = self.model.gather_matches(self.case_sensitive)
 
         if text is not None:
-            self.emit(SIGNAL('items_gathered'), items)
+            self.emit(SIGNAL('items_gathered(PyQt_PyObject)'), items)
 
 
 class HighlightDelegate(QtGui.QStyledItemDelegate):
@@ -347,8 +347,9 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.icon_from_filename = decorators.memoize(qtutils.icon_from_filename)
 
         self.update_thread = GatherCompletionsThread(self)
-        self.connect(self.update_thread, SIGNAL('items_gathered'),
-                     self.apply_matches)
+        self.connect(self.update_thread,
+                     SIGNAL('items_gathered(PyQt_PyObject)'),
+                     self.apply_matches, Qt.QueuedConnection)
 
     def update(self):
         case_sensitive = self.update_thread.case_sensitive
@@ -434,7 +435,8 @@ class Completer(QtGui.QCompleter):
         self.setCompletionMode(QtGui.QCompleter.UnfilteredPopupCompletion)
         self.setCaseSensitivity(Qt.CaseInsensitive)
 
-        self.connect(model, SIGNAL(UPDATE_SIGNAL), self.update)
+        self.connect(model, SIGNAL(UPDATE_SIGNAL),
+                     self.update, Qt.QueuedConnection)
         self.setModel(model)
 
     def update(self):
@@ -539,7 +541,8 @@ class GitTrackedCompletionModel(GitPathCompletionModel):
 
     def __init__(self, parent):
         GitPathCompletionModel.__init__(self, parent)
-        self.connect(self, SIGNAL(UPDATE_SIGNAL), self.gather_paths)
+        self.connect(self, SIGNAL(UPDATE_SIGNAL),
+                     self.gather_paths, Qt.QueuedConnection)
         self._paths = []
         self._updated = False
 
@@ -561,7 +564,8 @@ class GitLogCompletionModel(GitRefCompletionModel):
 
     def __init__(self, parent):
         GitRefCompletionModel.__init__(self, parent)
-        self.connect(self, SIGNAL(UPDATE_SIGNAL), self.gather_paths)
+        self.connect(self, SIGNAL(UPDATE_SIGNAL),
+                     self.gather_paths, Qt.QueuedConnection)
         self._paths = []
         self._updated = False
 

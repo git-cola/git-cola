@@ -30,7 +30,7 @@ class UpdateFileListThread(QtCore.QThread):
     def run(self):
         ref = 'HEAD~%d' % self.count
         filenames = gitcmds.diff_index_filenames(ref)
-        self.emit(SIGNAL('filenames'), filenames)
+        self.emit(SIGNAL('filenames(PyQt_PyObject)'), filenames)
 
 
 class RecentFileDialog(standard.Dialog):
@@ -95,15 +95,16 @@ class RecentFileDialog(standard.Dialog):
         self.connect(self.tree, SIGNAL('selectionChanged()'),
                      self.selection_changed)
 
-        self.connect(self.tree, SIGNAL('path_chosen'), self.edit_file)
+        self.connect(self.tree, SIGNAL('path_chosen(PyQt_PyObject)'),
+                     self.edit_file)
 
         self.connect(self.count, SIGNAL('valueChanged(int)'),
                      self.count_changed)
 
         self.connect(self.count, SIGNAL('editingFinished()'), self.refresh)
 
-        self.connect(self.update_thread, SIGNAL('filenames'),
-                     self.set_filenames)
+        self.connect(self.update_thread, SIGNAL('filenames(PyQt_PyObject)'),
+                     self.set_filenames, Qt.QueuedConnection)
 
         qtutils.connect_button(self.refresh_button, self.refresh)
         qtutils.connect_button(self.expand_button, self.tree.expandAll)

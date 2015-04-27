@@ -50,7 +50,8 @@ class Browser(standard.Widget):
         self.setLayout(self.mainlayout)
         self.resize(720, 420)
 
-        self.connect(self, SIGNAL('updated'), self._updated_callback)
+        self.connect(self, SIGNAL('updated()'),
+                     self._updated_callback, Qt.QueuedConnection)
         self.model = main.model()
         self.model.add_observer(self.model.message_updated, self.model_updated)
         qtutils.add_close_action(self)
@@ -62,7 +63,7 @@ class Browser(standard.Widget):
 
     def model_updated(self):
         """Update the title with the current branch and directory name."""
-        self.emit(SIGNAL('updated'))
+        self.emit(SIGNAL('updated()'))
 
     def _updated_callback(self):
         branch = self.model.currentbranch
@@ -306,7 +307,7 @@ class RepoTreeView(standard.TreeView):
 
     def view_history(self):
         """Signal that we should view history for paths."""
-        self.emit(SIGNAL('history(QStringList)'), self.selected_paths())
+        self.emit(SIGNAL('history(PyQt_PyObject)'), self.selected_paths())
 
     def untrack_selected(self):
         """untrack selected paths."""
@@ -315,7 +316,7 @@ class RepoTreeView(standard.TreeView):
     def difftool_predecessor(self):
         """Diff paths against previous versions."""
         paths = self.selected_tracked_paths()
-        self.emit(SIGNAL('difftool_predecessor'), paths)
+        self.emit(SIGNAL('difftool_predecessor(PyQt_PyObject)'), paths)
 
     def current_path(self):
         """Return the path for the current item."""
@@ -331,11 +332,11 @@ class BrowserController(QtCore.QObject):
         self.model = main.model()
         self.view = view
         self.updated = set()
-        self.connect(view, SIGNAL('history(QStringList)'),
+        self.connect(view, SIGNAL('history(PyQt_PyObject)'),
                      self.view_history)
         self.connect(view, SIGNAL('expanded(QModelIndex)'),
                      self.query_model)
-        self.connect(view, SIGNAL('difftool_predecessor'),
+        self.connect(view, SIGNAL('difftool_predecessor(PyQt_PyObject)'),
                      self.difftool_predecessor)
 
     def view_history(self, entries):
@@ -478,9 +479,11 @@ class BrowseDialog(QtGui.QDialog):
 
         # connections
         if select_file:
-            self.connect(self.tree, SIGNAL('path_chosen'), self.path_chosen)
+            self.connect(self.tree, SIGNAL('path_chosen(PyQt_PyObject)'),
+                         self.path_chosen)
         else:
-            self.connect(self.tree, SIGNAL('path_chosen'), self.save_path)
+            self.connect(self.tree, SIGNAL('path_chosen(PyQt_PyObject)'),
+                         self.save_path)
 
         self.connect(self.tree, SIGNAL('selectionChanged()'),
                      self.selection_changed)
@@ -540,7 +543,7 @@ class GitTreeWidget(standard.TreeView):
             return
         if item.is_dir:
             return
-        self.emit(SIGNAL('path_chosen'), item.path)
+        self.emit(SIGNAL('path_chosen(PyQt_PyObject)'), item.path)
 
     def selected_files(self):
         items = map(self.model().itemFromIndex, self.selectedIndexes())

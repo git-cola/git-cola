@@ -386,7 +386,8 @@ class ProgressDialog(QtGui.QProgressDialog):
             self.setWindowModality(Qt.WindowModal)
         self.progress_thread = ProgressAnimationThread(label, self)
         self.connect(self.progress_thread,
-                     SIGNAL('update_progress'), self.update_progress)
+                     SIGNAL('update_progress(PyQt_PyObject)'),
+                     self.update_progress, Qt.QueuedConnection)
 
         self.set_details(title, label)
 
@@ -444,7 +445,7 @@ class ProgressAnimationThread(QtCore.QThread):
     def run(self):
         self.running = True
         while self.running:
-            self.emit(SIGNAL('update_progress'), self.next())
+            self.emit(SIGNAL('update_progress(PyQt_PyObject)'), self.next())
             time.sleep(self.timeout)
 
 

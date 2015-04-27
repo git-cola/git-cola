@@ -108,10 +108,10 @@ class DiffEditor(DiffTextEdit):
 
         model.add_observer(model.message_diff_text_changed, self._emit_text)
 
-        self.connect(self, SIGNAL('set_text'), self.setPlainText)
+        self.connect(self, SIGNAL('set_text(PyQt_PyObject)'), self.setPlainText)
 
     def _emit_text(self, text):
-        self.emit(SIGNAL('set_text'), text)
+        self.emit(SIGNAL('set_text(PyQt_PyObject)'), text)
 
     def _update_diff_opts(self):
         space_at_eol = self.diff_ignore_space_at_eol_action.isChecked()
@@ -386,8 +386,10 @@ class DiffWidget(QtGui.QWidget):
 
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
         notifier.add_observer(FILES_SELECTED, self.files_selected)
-        self.connect(self.reflector, SIGNAL('diff'), self.diff.setText)
-        self.connect(self.reflector, SIGNAL('task_done'), self.task_done)
+        self.connect(self.reflector, SIGNAL('diff(PyQt_PyObject)'),
+                     self.diff.setText, Qt.QueuedConnection)
+        self.connect(self.reflector, SIGNAL('task_done(PyQt_PyObject)'),
+                     self.task_done, Qt.QueuedConnection)
 
     def task_done(self, task):
         try:
@@ -495,4 +497,4 @@ class DiffInfoTask(QtCore.QRunnable):
 
     def run(self):
         diff = gitcmds.diff_info(self.sha1, filename=self.filename)
-        self.reflector.emit(SIGNAL('diff'), diff)
+        self.reflector.emit(SIGNAL('diff(PyQt_PyObject)'), diff)

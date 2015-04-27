@@ -73,7 +73,7 @@ class FindFilesThread(QtCore.QThread):
             args = [add_wildcards(arg) for arg in utils.shell_split(query)]
         filenames = gitcmds.tracked_files(*args)
         if query == self.query:
-            self.emit(SIGNAL('result'), filenames)
+            self.emit(SIGNAL('result(PyQt_PyObject)'), filenames)
         else:
             self.run()
 
@@ -133,7 +133,8 @@ class Finder(standard.Dialog):
         self.setFocusProxy(self.input_txt)
 
         self.worker_thread = FindFilesThread(self)
-        self.connect(self.worker_thread, SIGNAL('result'), self.process_result)
+        self.connect(self.worker_thread, SIGNAL('result(PyQt_PyObject)'),
+                     self.process_result, Qt.QueuedConnection)
 
         self.connect(self.input_txt, SIGNAL('textChanged(QString)'),
                      lambda s: self.search())
