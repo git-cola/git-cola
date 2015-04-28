@@ -36,7 +36,7 @@ class FileWidget(TreeWidget):
         status, out, err = git.show(sha1, z=True, numstat=True,
                                     oneline=True, no_renames=True)
         if status == 0:
-            paths = out.rstrip('\0').split('\0')
+            paths = [f for f in out.rstrip('\0').split('\0') if f]
             if paths:
                 paths = paths[1:]
         else:
