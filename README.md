@@ -243,3 +243,16 @@ See `./bin/git-cola --help-commands` for the full list of commands.
         stash               stash and unstash changes
         tag                 create tags
         version             print the version
+
+# BUILDING WINDOWS INSTALLERS
+
+Windows installers are built using [Pynsist](http://pynsist.readthedocs.org/en/latest/).
+[NSIS](http://nsis.sourceforge.net/Main_Page) is also needed.
+
+To build:
+
+1. (If building from a non-Windows platform), run `./contrib/win32/fetch_pyqt_windows.sh`.
+   This will download a PyQt binary installer for Windows and unpack its files
+   into `pynsist_pkgs/`.
+2. Run `pynsist windows-installer.cfg`. The installer will be built in
+   `build/nsis/`.
