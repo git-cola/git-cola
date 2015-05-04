@@ -12,8 +12,8 @@
    
 .. image:: https://pypip.in/license/QtPy/badge.svg
 
-.. image:: https://travis-ci.org/goanpeca/QtPy.svg?branch=master
-   :target: https://travis-ci.org/goanpeca/QtPy
+.. image:: https://travis-ci.org/spyder-ide/qtpy.svg?branch=master
+   :target: https://travis-ci.org/spyder-ide/qtpy
    :alt: Travis-CI build status
 
 About
