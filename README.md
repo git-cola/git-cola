@@ -2,7 +2,7 @@
 [![Number of PyPI downloads](https://pypip.in/download/QtPy/badge.svg)](https://pypi.python.org/pypi/QtPy/)
 [![Supported Python versions](https://pypip.in/py_versions/QtPy/badge.svg)](https://pypi.python.org/pypi/QtPy/)
 [![License](https://pypip.in/license/QtPy/badge.svg)](http://opensource.org/licenses/MIT)
-[![Travis-CI build status](https://travis-ci.org/goanpeca/QtPy.svg?branch=master)](https://travis-ci.org/goanpeca/QtPy)
+[![Travis-CI build status](https://travis-ci.org/spyder-ide/qtpy.svg?branch=master)](https://travis-ci.org/spyder-ide/qtpy)
 
 
 About
