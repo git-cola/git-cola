@@ -15,10 +15,6 @@ graphical interface.
 OPTIONS
 =======
 
--g, --git-path <path>
----------------------
-Specifies the path to the 'git' binary.
-
 --prompt
 --------
 Prompt for a Git repository instead of using the current directory.

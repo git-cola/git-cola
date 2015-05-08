@@ -11,8 +11,10 @@ from cola.app import application_start
 # NOTE: these must be imported *after* cola.app.
 # PyQt4 may not be available until after cola.app has gotten a chance to
 # install the homebrew modules in sys.path.
-from cola import core
 from cola import cmds
+from cola import compat
+from cola import core
+from cola import utils
 
 
 def main(argv=None):
@@ -456,17 +458,31 @@ def cmd_tag(args):
 
 # Windows shortcut launch features:
 
-def windows_find_git():
+def find_git():
     """Return the path of git.exe, or None if we can't find it."""
-    # For now, we assume that git is installed in one of the typical
-    # locations. This should be smarter.
+    if not utils.is_win32():
+        return None  # UNIX systems have git in their $PATH
 
+    # If the user wants to use a Git/bin/ directory from a non-standard
+    # directory then they can write its location into
+    # ~/.config/git-cola/git-bindir
+    git_bindir = os.path.expanduser(os.path.join('~', '.config', 'git-cola',
+                                                 'git-bindir'))
+    if core.exists(git_bindir):
+        custom_path = core.read(git_bindir).strip()
+        if custom_path and core.exists(custom_path):
+            return custom_path
+
+    # Try to find Git's bin/ directory in one of the typical locations
     pf = os.environ.get('ProgramFiles', 'C:\\Program Files')
     pf32 = os.environ.get('ProgramFiles(x86)', 'C:\\Program Files (x86)')
     for p in [pf32, pf, 'C:\\']:
         candidate = os.path.join(p, 'Git\\bin')
         if os.path.isdir(candidate):
-            return os.path.join(candidate, 'git')
+            return candidate
+
+    return None
+
 
 def shortcut_launch():
     """Launch from a shortcut
@@ -474,7 +490,17 @@ def shortcut_launch():
     Prompt for the repository by default, and try to find git.
     """
     argv = ['cola', '--prompt']
-    git_path = windows_find_git()
-    if git_path is not None:
-        argv += ['--git-path', git_path]
-    main(argv)
+    git_path = find_git()
+    if git_path:
+        prepend_path(git_path)
+
+    return main(argv)
+
+
+def prepend_path(path):
+    # Adds git to the PATH.  This is needed on Windows.
+    path = core.decode(path)
+    path_entries = core.getenv('PATH', '').split(os.pathsep)
+    if path not in path_entries:
+        path_entries.insert(0, path)
+        compat.setenv('PATH', os.pathsep.join(path_entries))

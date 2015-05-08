@@ -17,10 +17,6 @@ OPTIONS
 -------
 Start `git cola` in amend mode.
 
--g, --git-path <path>
----------------------
-Path to the `git` binary.  Defaults to the `git` command found in `$PATH`.
-
 --prompt
 --------
 Prompt for a Git repository.  Defaults to the current directory.

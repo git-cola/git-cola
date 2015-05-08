@@ -38,15 +38,15 @@ Source: "*"; DestDir: "{app}"; Excludes: "\*.bmp, \install.*, \tmp.*, \bin\*inst
 Source: "etc\ReleaseNotes.txt"; DestDir: "{app}\etc"; Flags: isreadme
 
 [Icons]
-Name: "{group}\git-cola"; Filename: "{code:GetPythonExe}"; Parameters: """{app}\bin\git-cola.pyw"" --prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"
-Name: "{group}\git-dag"; Filename: "{code:GetPythonExe}"; Parameters: """{app}\bin\git-dag.pyw"" --prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"
+Name: "{group}\git-cola"; Filename: "{code:GetPythonExe}"; Parameters: """{app}\bin\git-cola.pyw"" --prompt"; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"
+Name: "{group}\git-dag"; Filename: "{code:GetPythonExe}"; Parameters: """{app}\bin\git-dag.pyw"" --prompt"; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"
 Name: "{group}\git-cola Homepage"; Filename: "{#emit APP_URL}"; WorkingDir: "%USERPROFILE%";
 Name: "{group}\Release Notes"; Filename: "{app}\etc\ReleaseNotes.txt"; WorkingDir: "%USERPROFILE%";
 Name: "{group}\License"; Filename: "{app}\etc\gpl-2.0.rtf"; WorkingDir: "%USERPROFILE%";
 Name: "{group}\Uninstall git-cola"; Filename: "{uninstallexe}"
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\git-cola"; Filename: "{code:GetPythonExe}"; Parameters: """{app}\bin\git-cola.pyw"" --prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"; Tasks: quicklaunchicon
-Name: "{code:GetShellFolder|desktop}\git-cola"; Filename: "{code:GetPythonExe}"; Parameters: """{app}\bin\git-cola.pyw"" --prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"; Tasks: desktopicon
-Name: "{code:GetShellFolder|desktop}\git-dag"; Filename: "{code:GetPythonExe}"; Parameters: """{app}\bin\git-dag.pyw"" --prompt --git-path ""{code:GetGitExe}"""; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"; Tasks: desktopicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\git-cola"; Filename: "{code:GetPythonExe}"; Parameters: """{app}\bin\git-cola.pyw"" --prompt"; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"; Tasks: quicklaunchicon
+Name: "{code:GetShellFolder|desktop}\git-cola"; Filename: "{code:GetPythonExe}"; Parameters: """{app}\bin\git-cola.pyw"" --prompt"; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"; Tasks: desktopicon
+Name: "{code:GetShellFolder|desktop}\git-dag"; Filename: "{code:GetPythonExe}"; Parameters: """{app}\bin\git-dag.pyw"" --prompt"; WorkingDir: "%USERPROFILE%"; IconFilename: "{app}\etc\git.ico"; Tasks: desktopicon
 
 [Messages]
 BeveledLabel={#emit APP_URL}
@@ -77,9 +77,7 @@ Type: dirifempty; Name: "{app}\bin"
 
 var
     PythonPage:TWizardPage;
-    GitPage:TWizardPage;
     EdtPython:TEdit;
-    EdtGit:TEdit;
 
 function GetEnvStrings(VarName:string;AllUsers:Boolean):TArrayOfString;
 var
@@ -176,50 +174,12 @@ begin
     Result:=EdtPython.Text;
 end;
 
-procedure BrowseForGitFolder(Sender:TObject);
-var
-    Path:string;
-    OldPath:string;
-begin
-    Path:=GetPreviousData('GitPath', 'C:\Program Files\Git');
-    EdtGit.Text:=Path;
-    Path:=ExtractFilePath(EdtGit.Text);
-    BrowseForFolder('Please select the Git folder:',Path,False);
-    OldPath:=Path;
-
-    {
-        Check for both $DIR\git.exe and $DIR\bin\git.exe
-    }
-
-    Path:=OldPath+'\bin\git.exe';
-    if FileExists(Path) then begin
-        EdtGit.Text:=Path;
-        Exit; 
-    end;
-
-    Path:=OldPath+'\git.exe';
-    if FileExists(Path) then begin
-        EdtGit.Text:=Path;
-    end else begin
-        MsgBox('Please enter a valid path to git.exe.',mbError,MB_OK);
-    end;
-end;
-
-
-function GetGitExe(Param: String): String;
-begin
-    Result:=EdtGit.Text;
-end;
-
 procedure RegisterPreviousData(PreviousDataKey:Integer);
 var
     Path:string;
 begin
     Path:=ExtractFilePath(EdtPython.Text);
     SetPreviousData(PreviousDataKey, 'PythonPath', Path);
-
-    Path:=ExtractFilePath(ExtractFilePath(EdtGit.Text));
-    SetPreviousData(PreviousDataKey, 'GitPath', Path);
 end;
 
 {
@@ -230,9 +190,7 @@ end;
 procedure InitializeWizard;
 var
     BtnPython:TButton;
-    BtnGit:TButton;
     LblPython:TLabel;
-    LblGit:TLabel;
 begin
     // Create a custom page for finding Python
     PythonPage:=CreateCustomPage(
@@ -275,48 +233,6 @@ begin
         Width:=ScaleX(21);
         Height:=ScaleY(21);
     end;
-
-    // Create a custom page for finding Git
-    GitPage:=CreateCustomPage(
-        wpSelectTasks,
-        'Setup Git',
-        'Where is your Git folder?'
-    );
-
-    LblGit:=TLabel.Create(GitPage);
-    with LblGit do begin
-        Parent:=GitPage.Surface;
-        Caption:= 'Please provide the path to git.exe.';
-        Left:=ScaleX(28);
-        Top:=ScaleY(100);
-        Width:=ScaleX(316);
-        Height:=ScaleY(39);
-    end;
-
-    EdtGit:=TEdit.Create(GitPage);
-    with EdtGit do begin
-        Parent:=GitPage.Surface;
-        Text:=GetPreviousData('GitPath', 'C:\Program Files\Git');
-        Text:=Text+'git.exe';
-        if not FileExists(Text) then begin
-            Text:='';
-        end;
-        Left:=ScaleX(28);
-        Top:=ScaleY(148);
-        Width:=ScaleX(316);
-        Height:=ScaleY(13);
-    end;
-
-    BtnGit:=TButton.Create(GitPage);
-    with BtnGit do begin
-        Parent:=GitPage.Surface;
-        Caption:='...';
-        OnClick:=@BrowseForGitFolder;
-        Left:=ScaleX(348);
-        Top:=ScaleY(148);
-        Width:=ScaleX(21);
-        Height:=ScaleY(21);
-    end;
 end;
 
 function NextButtonClick(CurPageID:Integer):Boolean;
@@ -326,15 +242,6 @@ begin
 
         if not Result then begin
             MsgBox('Please enter a valid path to pythonw.exe.',mbError,MB_OK);
-        end;
-        Exit;
-    end;
-
-    if CurPageID = GitPage.ID then begin
-        Result:=FileExists(EdtGit.Text);
-
-        if not Result then begin
-            MsgBox('Please enter a valid path to git.exe.',mbError,MB_OK);
         end;
         Exit;
     end;
@@ -401,7 +308,7 @@ begin
 
     if IsTaskSelected('guiextension') then begin
         if (not RegWriteStringValue(RootKey,'SOFTWARE\Classes\Directory\shell\git_cola','','Git &Cola Here'))
-        or (not RegWriteStringValue(RootKey,'SOFTWARE\Classes\Directory\shell\git_cola\command','','"'+EdtPython.Text+'" "'+AppDir+'\bin\git-cola.pyw" "--repo" "%1" "--git-path" "'+EdtGit.Text+'"')) then begin
+        or (not RegWriteStringValue(RootKey,'SOFTWARE\Classes\Directory\shell\git_cola\command','','"'+EdtPython.Text+'" "'+AppDir+'\bin\git-cola.pyw" "--repo" "%1"')) then begin
             Msg:='Line {#emit __LINE__}: Unable to create "Git Cola Here" shell extension.';
             MsgBox(Msg,mbError,MB_OK);
             Log(Msg);

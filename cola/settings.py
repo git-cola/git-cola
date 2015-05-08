@@ -157,16 +157,12 @@ class Session(Settings):
 
     _sessions_dir = resources.config_home('sessions')
 
-    git_path = property(lambda self: self.values['git_path'])
     repo = property(lambda self: self.values['repo'])
 
-    def __init__(self, session_id, repo=None, git_path=None):
+    def __init__(self, session_id, repo=None):
         Settings.__init__(self)
         self.session_id = session_id
-        self.values.update({
-                'git_path': git_path,
-                'repo': repo,
-        })
+        self.values.update({'repo': repo})
 
     def path(self):
         return os.path.join(self._sessions_dir, self.session_id)

@@ -162,7 +162,7 @@ class ColaApplication(object):
     ColaApplication handles i18n of user-visible data
     """
 
-    def __init__(self, argv, locale=None, gui=True, git_path=None):
+    def __init__(self, argv, locale=None, gui=True):
         cfgactions.install()
         i18n.install(locale)
         qtcompat.install()
@@ -179,7 +179,7 @@ class ColaApplication(object):
         qtcompat.add_search_path(os.path.basename(icon_dir), icon_dir)
 
         if gui:
-            self._app = current(tuple(argv), git_path)
+            self._app = current(tuple(argv))
             self._app.setWindowIcon(qtutils.git_icon())
             self._app.setStyleSheet("""
                 QMainWindow::separator {
@@ -217,15 +217,14 @@ class ColaApplication(object):
 
 
 @memoize
-def current(argv, git_path=None):
-    return ColaQApplication(list(argv), git_path)
+def current(argv):
+    return ColaQApplication(list(argv))
 
 
 class ColaQApplication(QtGui.QApplication):
 
-    def __init__(self, argv, git_path=None):
+    def __init__(self, argv):
         QtGui.QApplication.__init__(self, argv)
-        self.git_path = git_path
         self.view = None ## injected by application_start()
 
     def event(self, e):
@@ -242,8 +241,7 @@ class ColaQApplication(QtGui.QApplication):
         sid = ustr(session_mgr.sessionId())
         skey = ustr(session_mgr.sessionKey())
         session_id = '%s_%s' % (sid, skey)
-        session = Session(session_id,
-                          repo=core.getcwd(), git_path=self.git_path)
+        session = Session(session_id, repo=core.getcwd())
         self.view.save_state(settings=session)
 
 
@@ -255,12 +253,6 @@ def process_args(args):
 
     # Handle session management
     restore_session(args)
-
-    if args.git_path:
-        # Adds git to the PATH.  This is needed on Windows.
-        path_entries = core.getenv('PATH', '').split(os.pathsep)
-        path_entries.insert(0, os.path.dirname(core.decode(args.git_path)))
-        compat.setenv('PATH', os.pathsep.join(path_entries))
 
     # Bail out if --repo is not a directory
     repo = core.decode(args.repo)
@@ -287,7 +279,6 @@ def restore_session(args):
     if session.load():
         args.settings = session
         args.repo = session.repo
-        args.git_path = session.git_path
 
 
 def application_init(args, update=False):
@@ -354,10 +345,6 @@ def add_common_arguments(parser):
     parser.add_argument('--prompt', action='store_true', default=False,
                         help='prompt for a repository')
 
-    # Used on Windows for adding 'git' to the path
-    parser.add_argument('-g', '--git-path', metavar='<path>', default=None,
-                        help='use the specified git executable')
-
     # Resume an X Session Management session
     parser.add_argument('-session', metavar='<session>', default=None,
                         help=argparse.SUPPRESS)
@@ -365,7 +352,7 @@ def add_common_arguments(parser):
 
 def new_application(args):
     # Initialize the app
-    return ColaApplication(sys.argv, git_path=args.git_path)
+    return ColaApplication(sys.argv)
 
 
 def new_model(app, repo, prompt=False):
