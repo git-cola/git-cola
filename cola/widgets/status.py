@@ -121,12 +121,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 cmds.RevertUnstagedEdits.SHORTCUT)
         self.revert_unstaged_edits_action.setIcon(qtutils.icon('undo.svg'))
 
-        self.revert_uncommitted_edits_action = qtutils.add_action(self,
-                cmds.RevertUncommittedEdits.name(),
-                cmds.run(cmds.RevertUncommittedEdits),
-                cmds.RevertUncommittedEdits.SHORTCUT)
-        self.revert_uncommitted_edits_action.setIcon(qtutils.icon('undo.svg'))
-
         self.launch_difftool_action = qtutils.add_action(self,
                 cmds.LaunchDifftool.name(),
                 cmds.run(cmds.LaunchDifftool),
@@ -399,7 +393,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             selected = selection.selection()
         can_revert_edits = bool(selected.staged or selected.modified)
         self.revert_unstaged_edits_action.setEnabled(can_revert_edits)
-        self.revert_uncommitted_edits_action.setEnabled(can_revert_edits)
 
     def set_staged(self, items):
         """Adds items to the 'Staged' subtree."""
@@ -627,7 +620,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             if self.m.undoable():
                 menu.addSeparator()
                 menu.addAction(self.revert_unstaged_edits_action)
-                menu.addAction(self.revert_uncommitted_edits_action)
 
         if all_exist and self.unstaged() and not utils.is_win32():
             menu.addSeparator()

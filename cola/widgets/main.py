@@ -320,7 +320,6 @@ class MainView(standard.MainWindow):
             # 'Browser' widget so don't register them when
             # the browser is a dockable tool.
             self.addAction(status_tree.revert_unstaged_edits_action)
-            self.addAction(status_tree.revert_uncommitted_edits_action)
             self.addAction(status_tree.up_action)
             self.addAction(status_tree.down_action)
             self.addAction(status_tree.process_selection_action)
