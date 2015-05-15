@@ -85,7 +85,7 @@ install-files:
 
 install-html: install-files html
 	$(MKDIR_P) $(DESTDIR)$(htmldir)
-	$(RSYNC) -r --delete _build/html/ $(DESTDIR)$(htmldir)/
+	$(RSYNC) -r --delete --delete-excluded --exclude=.buildinfo --exclude=.gitignore _build/html/ $(DESTDIR)$(htmldir)/
 
 install-man: man
 	$(MKDIR_P) $(DESTDIR)$(mandir)
