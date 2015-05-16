@@ -94,6 +94,7 @@ Thanks
 * Uri Okrent
 * Ｖ字龍 (Vdragon)
 * Vaibhav Sagar
+* Ville Skyttä
 * Virgil Dupras
 * Vitor Lobo
 * v.paritskiy
