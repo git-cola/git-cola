@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-04-25 03:48-0700\n"
-"PO-Revision-Date: 2015-04-25 07:31+0800\n"
+"PO-Revision-Date: 2015-05-21 03:41+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -945,9 +945,8 @@ msgid "Commit staged changes"
 msgstr "提交版本提交準備區域中的變更"
 
 #: cola/widgets/commitmsg.py:49
-#, fuzzy
 msgid "Clear..."
-msgstr "關閉……"
+msgstr "清除……"
 
 #: cola/widgets/commitmsg.py:65
 msgid ""
@@ -967,7 +966,7 @@ msgstr "修正上次提交"
 
 #: cola/widgets/commitmsg.py:91
 msgid "Bypass Commit Hooks"
-msgstr ""
+msgstr "不執行提交掛勾程式"
 
 #: cola/widgets/commitmsg.py:98 cola/widgets/merge.py:89
 msgid "Create Signed Commit"
@@ -995,23 +994,20 @@ msgid "Move Down"
 msgstr "往下移動"
 
 #: cola/widgets/commitmsg.py:283
-#, fuzzy
 msgid "Clear commit message?"
-msgstr "搜尋版本提交訊息"
+msgstr "清除版本提交訊息？"
 
 #: cola/widgets/commitmsg.py:284
-#, fuzzy
 msgid "The commit message will be cleared."
-msgstr "下列檔案將會被移除："
+msgstr "版本提交訊息將會被移除。"
 
 #: cola/widgets/commitmsg.py:285
 msgid "This cannot be undone.  Clear commit message?"
-msgstr ""
+msgstr "此操作將無法復原。要清除提交訊息嗎？"
 
 #: cola/widgets/commitmsg.py:286
-#, fuzzy
 msgid "Clear commit message"
-msgstr "搜尋版本提交訊息"
+msgstr "清除版本提交訊息"
 
 #: cola/widgets/commitmsg.py:410
 msgid ""
@@ -1986,7 +1982,7 @@ msgstr "合併為單一版本提交"
 #: cola/widgets/merge.py:79
 #, fuzzy
 msgid "No fast forward"
-msgstr "僅可快速前移式合併者"
+msgstr "不進行快速前移式合併"
 
 #: cola/widgets/merge.py:96
 msgid "Merge"
@@ -2382,7 +2378,7 @@ msgstr "丟棄 stash"
 
 #: cola/widgets/status.py:32
 msgid "Toggle the paths filter"
-msgstr ""
+msgstr "切換路徑過濾器開關"
 
 #: cola/widgets/status.py:104
 msgid "Untracked"
