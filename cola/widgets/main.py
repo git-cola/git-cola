@@ -146,11 +146,11 @@ class MainView(standard.MainWindow):
         # All Actions
         self.unstage_all_action = add_action(self,
                 N_('Unstage All'), cmds.run(cmds.UnstageAll))
-        self.unstage_all_action.setIcon(qtutils.icon('remove.svg'))
+        self.unstage_all_action.setIcon(qtutils.remove_icon())
 
         self.unstage_selected_action = add_action(self,
                 N_('Unstage From Commit'), cmds.run(cmds.UnstageSelected))
-        self.unstage_selected_action.setIcon(qtutils.icon('remove.svg'))
+        self.unstage_selected_action.setIcon(qtutils.remove_icon())
 
         self.show_diffstat_action = add_action(self,
                 N_('Diffstat'), cmds.run(cmds.Diffstat), 'Alt+D')
@@ -158,12 +158,12 @@ class MainView(standard.MainWindow):
         self.stage_modified_action = add_action(self,
                 N_('Stage Changed Files To Commit'),
                 cmds.run(cmds.StageModified), 'Alt+A')
-        self.stage_modified_action.setIcon(qtutils.icon('add.svg'))
+        self.stage_modified_action.setIcon(qtutils.add_icon())
 
         self.stage_untracked_action = add_action(self,
                 N_('Stage All Untracked'),
                 cmds.run(cmds.StageUntracked), 'Alt+U')
-        self.stage_untracked_action.setIcon(qtutils.icon('add.svg'))
+        self.stage_untracked_action.setIcon(qtutils.add_icon())
 
         self.apply_patches_action = add_action(self,
                 N_('Apply Patches...'), patch.apply_patches)
