@@ -35,7 +35,7 @@ def abort_merge():
     info_txt = N_('Aborting the current merge?')
     ok_txt = N_('Abort Merge')
     if qtutils.confirm(title, txt, info_txt, ok_txt,
-                       default=False, icon=qtutils.icon('undo.svg')):
+                       default=False, icon=qtutils.theme_icon('edit-undo.svg')):
         gitcmds.abort_merge()
 
 

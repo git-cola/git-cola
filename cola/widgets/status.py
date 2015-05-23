@@ -119,7 +119,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 cmds.RevertUnstagedEdits.name(),
                 cmds.run(cmds.RevertUnstagedEdits),
                 cmds.RevertUnstagedEdits.SHORTCUT)
-        self.revert_unstaged_edits_action.setIcon(qtutils.icon('undo.svg'))
+        self.revert_unstaged_edits_action.setIcon(qtutils.theme_icon('edit-undo.svg'))
 
         self.launch_difftool_action = qtutils.add_action(self,
                 cmds.LaunchDifftool.name(),

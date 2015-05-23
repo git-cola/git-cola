@@ -289,7 +289,7 @@ class CreateBranchDialog(Dialog):
                                     dict(branch=branch, revision=revision)),
                                    N_('Reset Branch'),
                                    default=False,
-                                   icon=qtutils.icon('undo.svg')):
+                                   icon=qtutils.theme_icon('edit-undo.svg')):
                 return
         self.setEnabled(False)
         self.progress.setEnabled(True)
