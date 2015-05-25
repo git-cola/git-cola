@@ -515,20 +515,20 @@ def help_icon():
 
 
 def add_icon():
-    return QtGui.QIcon.fromTheme("list-add", icon('add.svg'))
+    return QtGui.QIcon.fromTheme('list-add', icon('add.svg'))
 
 
 def remove_icon():
-    return QtGui.QIcon.fromTheme("list-remove", icon('remove.svg'))
+    return QtGui.QIcon.fromTheme('list-remove', icon('remove.svg'))
 
 
 def open_file_icon():
-    return QtGui.QIcon.fromTheme("document-open", icon('open.svg'))
+    return QtGui.QIcon.fromTheme('document-open', icon('open.svg'))
 
 
 def options_icon():
     """Return a standard open directory icon"""
-    return QtGui.QIcon.fromTheme("configure", icon('options.svg'))
+    return QtGui.QIcon.fromTheme('configure', icon('options.svg'))
 
 
 def filter_icon():
