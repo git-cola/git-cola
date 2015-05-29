@@ -94,7 +94,9 @@ def current_branch():
         if _current_branch.key == key:
             return _current_branch.value
     except OSError:
-        pass
+        # OSError means we can't use the stat cache
+        key = 0
+
     status, data, err = git.rev_parse('HEAD', symbolic_full_name=True)
     if status != 0:
         # git init -- read .git/HEAD.  We could do this unconditionally...
