@@ -45,6 +45,8 @@ Unreleased Topics
 
   https://github.com/git-cola/git-cola/issues/456
 
+* Traditional Chinese (Taiwan) translation updates.
+
 Development version
 ===================
 

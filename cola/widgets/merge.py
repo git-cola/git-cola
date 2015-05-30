@@ -53,16 +53,19 @@ class MergeView(QtGui.QDialog):
         # Widgets
         self.title_label = QtGui.QLabel()
         self.revision_label = QtGui.QLabel()
-        self.revision_label.setText(N_('Revision To Merge'))
+        self.revision_label.setText(N_('Revision to Merge'))
 
         self.revision = completion.GitRefLineEdit()
         self.revision.setFocus()
+        self.revision.setToolTip(N_('Revision to Merge'))
 
         self.radio_local = QtGui.QRadioButton()
         self.radio_local.setText(N_('Local Branch'))
         self.radio_local.setChecked(True)
+
         self.radio_remote = QtGui.QRadioButton()
         self.radio_remote.setText(N_('Tracking Branch'))
+
         self.radio_tag = QtGui.QRadioButton()
         self.radio_tag.setText(N_('Tag'))
 
@@ -72,22 +75,31 @@ class MergeView(QtGui.QDialog):
         self.button_viz = QtGui.QPushButton()
         self.button_viz.setText(N_('Visualize'))
 
+        tooltip = N_('Squash the merged commit(s) into a single commit')
         self.checkbox_squash = QtGui.QCheckBox()
         self.checkbox_squash.setText(N_('Squash'))
+        self.checkbox_squash.setToolTip(tooltip)
 
+        tooltip = N_('Always create a merge commit when enabled, '
+                     'even when the merge is a fast-foward update')
         self.checkbox_noff = QtGui.QCheckBox()
         self.checkbox_noff.setText(N_('No fast forward'))
+        self.checkbox_noff.setToolTip(tooltip)
         self.checkbox_noff.setChecked(False)
         self.checkbox_noff_state = False
 
+        tooltip = N_('Commit the merge if there are no conflicts.  '
+                     'Uncheck to leave the merge uncommitted')
         self.checkbox_commit = QtGui.QCheckBox()
         self.checkbox_commit.setText(N_('Commit'))
+        self.checkbox_commit.setToolTip(tooltip)
         self.checkbox_commit.setChecked(True)
         self.checkbox_commit_state = True
 
         self.checkbox_sign = QtGui.QCheckBox()
         self.checkbox_sign.setText(N_('Create Signed Commit'))
         self.checkbox_sign.setChecked(cfg.get('cola.signcommits', False))
+        self.checkbox_sign.setToolTip(N_('GPG-sign the merge commit'))
 
         self.button_cancel = QtGui.QPushButton()
         self.button_cancel.setText(N_('Cancel'))
