@@ -254,5 +254,4 @@ To build:
 1. (If building from a non-Windows platform), run `./contrib/win32/fetch_pyqt_windows.sh`.
    This will download a PyQt binary installer for Windows and unpack its files
    into `pynsist_pkgs/`.
-2. Run `pynsist windows-installer.cfg`. The installer will be built in
-   `build/nsis/`.
+2. Run `pynsist pynsist.cfg`. The installer will be built in `build/nsis/`.
