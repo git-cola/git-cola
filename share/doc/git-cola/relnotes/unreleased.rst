@@ -47,6 +47,16 @@ Unreleased Topics
 
 * Traditional Chinese (Taiwan) translation updates.
 
+* The interactive rebase feature was not always setting `$GIT_EDITOR`
+  to the value of `gui.editor`, thus there could be instances where rebase
+  will seem to not stop, or hang, when performing "reword" actions.
+
+  We now set the `$GIT_EDITOR` environment variable when performing the
+  "Continue", "Skip", and "Edit Todo" rebase actions so that the correct
+  editor is used during the rebase.
+
+  https://github.com/git-cola/git-cola/issues/445
+
 Development version
 ===================
 
