@@ -154,12 +154,10 @@ class MergeView(QtGui.QDialog):
     def toggle_squash(self):
         """Toggles the commit checkbox based on the squash checkbox."""
         if self.checkbox_squash.isChecked():
-            self.checkbox_commit_state =\
-                self.checkbox_commit.checkState()
+            self.checkbox_commit_state = self.checkbox_commit.checkState()
             self.checkbox_commit.setCheckState(Qt.Unchecked)
             self.checkbox_commit.setDisabled(True)
-            self.checkbox_noff_state =\
-                self.checkbox_noff.checkState()
+            self.checkbox_noff_state = self.checkbox_noff.checkState()
             self.checkbox_noff.setCheckState(Qt.Unchecked)
             self.checkbox_noff.setDisabled(True)
         else:
