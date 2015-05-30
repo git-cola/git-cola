@@ -1053,18 +1053,19 @@ class Clone(Command):
 class GitXBaseContext(object):
 
     def __init__(self, **kwargs):
-        self.extras = kwargs
+        self.env = {'GIT_EDITOR': prefs.editor()}
+        self.env.update(kwargs)
 
     def __enter__(self):
         compat.setenv('GIT_SEQUENCE_EDITOR',
                       resources.share('bin', 'git-xbase'))
-        for var, value in self.extras.items():
+        for var, value in self.env.items():
             compat.setenv(var, value)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         compat.unsetenv('GIT_SEQUENCE_EDITOR')
-        for var in self.extras:
+        for var in self.env:
             compat.unsetenv(var)
 
 
@@ -1119,7 +1120,6 @@ class Rebase(Command):
         args, kwargs = self.prepare_arguments()
         upstream_title = self.upstream or '@{upstream}'
         with GitXBaseContext(
-                GIT_EDITOR=prefs.editor(),
                 GIT_XBASE_TITLE=N_('Rebase onto %s') % upstream_title,
                 GIT_XBASE_ACTION=N_('Rebase')):
             status, out, err = self.model.git.rebase(*args, **kwargs)
