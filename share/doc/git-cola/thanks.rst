@@ -61,6 +61,7 @@ Thanks
 * Markus Heidelberg
 * Matěj Šmíd
 * Matthew Levine
+* Matthias Mailänder
 * Micha Rosenbaum
 * Michael Geddes
 * Michael Homer
