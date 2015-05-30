@@ -1114,16 +1114,13 @@ class Rebase(Command):
         return args, kwargs
 
     def do(self):
-        status = 1
-        out = ''
-        err = ''
+        (status, out, err) = (1, '', '')
         args, kwargs = self.prepare_arguments()
         upstream_title = self.upstream or '@{upstream}'
         with GitXBaseContext(
                 GIT_XBASE_TITLE=N_('Rebase onto %s') % upstream_title,
                 GIT_XBASE_ACTION=N_('Rebase')):
             status, out, err = self.model.git.rebase(*args, **kwargs)
-
         Interaction.log_status(status, out, err)
         self.model.update_status()
         return status, out, err
@@ -1132,28 +1129,40 @@ class Rebase(Command):
 class RebaseEditTodo(Command):
 
     def do(self):
+        (status, out, err) = (1, '', '')
         with GitXBaseContext(
                 GIT_XBASE_TITLE=N_('Edit Rebase'),
                 GIT_XBASE_ACTION=N_('Save')):
             status, out, err = self.model.git.rebase(edit_todo=True)
         Interaction.log_status(status, out, err)
         self.model.update_status()
+        return status, out, err
 
 
 class RebaseContinue(Command):
 
     def do(self):
-        status, out, err = self.model.git.rebase('--continue')
+        (status, out, err) = (1, '', '')
+        with GitXBaseContext(
+                GIT_XBASE_TITLE=N_('Rebase'),
+                GIT_XBASE_ACTION=N_('Rebase')):
+            status, out, err = self.model.git.rebase('--continue')
         Interaction.log_status(status, out, err)
         self.model.update_status()
+        return status, out, err
 
 
 class RebaseSkip(Command):
 
     def do(self):
-        status, out, err = self.model.git.rebase(skip=True)
+        (status, out, err) = (1, '', '')
+        with GitXBaseContext(
+                GIT_XBASE_TITLE=N_('Rebase'),
+                GIT_XBASE_ACTION=N_('Rebase')):
+            status, out, err = self.model.git.rebase(skip=True)
         Interaction.log_status(status, out, err)
         self.model.update_status()
+        return status, out, err
 
 
 class RebaseAbort(Command):
