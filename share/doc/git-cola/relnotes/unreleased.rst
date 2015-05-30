@@ -40,6 +40,11 @@ Unreleased Topics
 
 * `git dag`'s file list tool was updated to properly handle unicode paths.
 
+* `gnome-terminal` is no longer used by default when `cola.terminal` is unset.
+  It is broken, as was detailed in #456.
+
+  https://github.com/git-cola/git-cola/issues/456
+
 Development version
 ===================
 

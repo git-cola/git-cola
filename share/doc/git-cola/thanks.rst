@@ -31,6 +31,7 @@ Thanks
 * `Git Hackers <http://git-scm.com/about>`_
 * Glen Mailer
 * Guillaume de Bure
+* Harro Verton
 * Ingo Weinhold
 * Ismael Juma
 * Iulian Udrea
