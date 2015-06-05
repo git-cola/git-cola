@@ -152,7 +152,9 @@ class CommitMessageEditor(QtGui.QWidget):
                            Qt.Key_Down)
 
         self.model.add_observer(self.model.message_commit_message_changed,
-                                self.set_commit_message)
+                                self._set_commit_message)
+        self.connect(self, SIGNAL('set_commit_message(PyQt_PyObject'),
+                     self.set_commit_message)
 
         self.connect(self.summary, SIGNAL('cursorPosition(int,int)'),
                      self.emit_position)
@@ -298,6 +300,9 @@ class CommitMessageEditor(QtGui.QWidget):
         """Update the color palette for the hint text"""
         self.summary.refresh_palette()
         self.description.refresh_palette()
+
+    def _set_commit_message(self, message):
+        self.emit(SIGNAL('set_commit_message(PyQt_PyObject)'), message)
 
     def set_commit_message(self, message):
         """Set the commit message to match the observed model"""
