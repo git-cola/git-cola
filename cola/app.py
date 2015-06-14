@@ -1,6 +1,6 @@
 # Copyright (C) 2009, 2010, 2011, 2012, 2013
 # David Aguilar <davvid@gmail.com>
-"""Provides the main() routine and ColaApplicaiton"""
+"""Provides the main() routine and ColaApplication"""
 from __future__ import division, absolute_import, unicode_literals
 
 import argparse
