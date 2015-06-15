@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-30 03:17-0700\n"
+"POT-Creation-Date: 2015-06-14 23:20-0700\n"
 "PO-Revision-Date: 2008-03-12 22:12+0100\n"
 "Last-Translator: David Aguilar <davvid@gmail.com>\n"
 "Language-Team: Italian\n"
@@ -144,7 +144,7 @@ msgstr ""
 msgid "Remove"
 msgstr "Remoto"
 
-#: cola/cmds.py:567 cola/cmds.py:1718 cola/widgets/bookmarks.py:217
+#: cola/cmds.py:567 cola/cmds.py:1727 cola/widgets/bookmarks.py:217
 #, fuzzy
 msgid "Error"
 msgstr "errore"
@@ -256,190 +256,191 @@ msgstr ""
 msgid "git clone returned exit code %s"
 msgstr ""
 
-#: cola/cmds.py:1123
+#: cola/cmds.py:1121
 #, fuzzy, python-format
 msgid "Rebase onto %s"
 msgstr "Ripristina"
 
-#: cola/cmds.py:1124 cola/widgets/main.py:410
+#: cola/cmds.py:1122 cola/cmds.py:1147 cola/cmds.py:1148 cola/cmds.py:1160
+#: cola/cmds.py:1161 cola/widgets/main.py:410
 #, fuzzy
 msgid "Rebase"
 msgstr "Ripristina"
 
-#: cola/cmds.py:1136
+#: cola/cmds.py:1134
 #, fuzzy
 msgid "Edit Rebase"
 msgstr "Ripristina"
 
-#: cola/cmds.py:1137 cola/widgets/archive.py:123 cola/widgets/browse.py:468
+#: cola/cmds.py:1135 cola/widgets/archive.py:123 cola/widgets/browse.py:468
 #: cola/widgets/stash.py:56
 msgid "Save"
 msgstr "Salva"
 
-#: cola/cmds.py:1181 cola/widgets/action.py:59 cola/widgets/dag.py:398
+#: cola/cmds.py:1190 cola/widgets/action.py:59 cola/widgets/dag.py:398
 #: cola/widgets/editremotes.py:69 cola/widgets/finder.py:106
 #: cola/widgets/grep.py:108 cola/widgets/recent.py:55
 #: cola/widgets/recent.py:115
 msgid "Refresh"
 msgstr "Rinfresca"
 
-#: cola/cmds.py:1230
+#: cola/cmds.py:1239
 msgid "Revert Unstaged Edits..."
 msgstr ""
 
-#: cola/cmds.py:1239
+#: cola/cmds.py:1248
 #, fuzzy
 msgid "Revert Unstaged Changes?"
 msgstr "Modifiche non preparate"
 
-#: cola/cmds.py:1240
+#: cola/cmds.py:1249
 msgid ""
 "This operation drops unstaged changes.\n"
 "These changes cannot be recovered."
 msgstr ""
 
-#: cola/cmds.py:1242
+#: cola/cmds.py:1251
 #, fuzzy
 msgid "Revert the unstaged changes?"
 msgstr "Modifiche non preparate"
 
-#: cola/cmds.py:1243
+#: cola/cmds.py:1252
 #, fuzzy
 msgid "Revert Unstaged Changes"
 msgstr "Modifiche non preparate"
 
-#: cola/cmds.py:1254
+#: cola/cmds.py:1263
 #, fuzzy
 msgid "Revert Uncommitted Edits..."
 msgstr "Annulla modifiche"
 
-#: cola/cmds.py:1260
+#: cola/cmds.py:1269
 #, fuzzy
 msgid "Revert Uncommitted Changes?"
 msgstr "Annulla modifiche"
 
-#: cola/cmds.py:1261 cola/widgets/diff.py:316
+#: cola/cmds.py:1270 cola/widgets/diff.py:316
 msgid ""
 "This operation drops uncommitted changes.\n"
 "These changes cannot be recovered."
 msgstr ""
 
-#: cola/cmds.py:1263 cola/widgets/diff.py:318
+#: cola/cmds.py:1272 cola/widgets/diff.py:318
 msgid "Revert the uncommitted changes?"
 msgstr ""
 
-#: cola/cmds.py:1264
+#: cola/cmds.py:1273
 #, fuzzy
 msgid "Revert Uncommitted Changes"
 msgstr "Annulla modifiche"
 
-#: cola/cmds.py:1292
+#: cola/cmds.py:1301
 #, python-format
 msgid "Run \"%s\"?"
 msgstr ""
 
-#: cola/cmds.py:1299
+#: cola/cmds.py:1308
 #, fuzzy
 msgid "Please select a file"
 msgstr "Scegliere un duplicato locale di ramo remoto"
 
-#: cola/cmds.py:1300
+#: cola/cmds.py:1309
 #, python-format
 msgid "\"%s\" requires a selected file."
 msgstr ""
 
-#: cola/cmds.py:1312
+#: cola/cmds.py:1321
 #, fuzzy
 msgid "Invalid Revision"
 msgstr "Revisione non valida: %s"
 
-#: cola/cmds.py:1313
+#: cola/cmds.py:1322
 #, fuzzy
 msgid "The revision expression cannot be empty."
 msgstr "L'espressione di revisione è vuota."
 
-#: cola/cmds.py:1328
+#: cola/cmds.py:1337
 #, python-format
 msgid "Running command: %s"
 msgstr ""
 
-#: cola/cmds.py:1340 cola/cmds.py:1534 cola/interaction.py:72
+#: cola/cmds.py:1349 cola/cmds.py:1543 cola/interaction.py:72
 #, python-format
 msgid "Output: %s"
 msgstr ""
 
-#: cola/cmds.py:1341 cola/guicmds.py:115 cola/interaction.py:73
+#: cola/cmds.py:1350 cola/guicmds.py:115 cola/interaction.py:73
 #, python-format
 msgid "Errors: %s"
 msgstr ""
 
-#: cola/cmds.py:1384
+#: cola/cmds.py:1393
 msgid "Sign Off"
 msgstr "Sign Off"
 
-#: cola/cmds.py:1405
+#: cola/cmds.py:1414
 msgid "unknown"
 msgstr ""
 
-#: cola/cmds.py:1419 cola/widgets/action.py:57
+#: cola/cmds.py:1428 cola/widgets/action.py:57
 #, fuzzy
 msgid "Stage"
 msgstr "Salva"
 
-#: cola/cmds.py:1426
+#: cola/cmds.py:1435
 #, fuzzy, python-format
 msgid "Staging: %s"
 msgstr "Analisi in corso %s..."
 
-#: cola/cmds.py:1443
+#: cola/cmds.py:1452
 msgid "Stage Modified"
 msgstr ""
 
-#: cola/cmds.py:1457
+#: cola/cmds.py:1466
 #, fuzzy
 msgid "Stage Unmerged"
 msgstr "Prepara modificati"
 
-#: cola/cmds.py:1471
+#: cola/cmds.py:1480
 #, fuzzy
 msgid "Stage Untracked"
 msgstr "Prepara modificati"
 
-#: cola/cmds.py:1485
+#: cola/cmds.py:1494
 #, fuzzy
 msgid "Stage / Unstage"
 msgstr "Prepara modificati"
 
-#: cola/cmds.py:1514
+#: cola/cmds.py:1523
 #, python-format
 msgid "Tagging \"%(revision)s\" as \"%(name)s\""
 msgstr ""
 
-#: cola/cmds.py:1523
+#: cola/cmds.py:1532
 msgid "GPG-signed"
 msgstr ""
 
-#: cola/cmds.py:1549 cola/widgets/action.py:58
+#: cola/cmds.py:1558 cola/widgets/action.py:58
 #, fuzzy
 msgid "Unstage"
 msgstr "Modifiche non preparate"
 
-#: cola/cmds.py:1556
+#: cola/cmds.py:1565
 #, fuzzy, python-format
 msgid "Unstaging: %s"
 msgstr "%s non farà parte della prossima revisione"
 
-#: cola/cmds.py:1584
+#: cola/cmds.py:1593
 #, python-format
 msgid "Untracking: %s"
 msgstr ""
 
-#: cola/cmds.py:1669
+#: cola/cmds.py:1678
 #, fuzzy
 msgid "Error Launching History Browser"
 msgstr "File browser"
 
-#: cola/cmds.py:1670
+#: cola/cmds.py:1679
 #, python-format
 msgid "Cannot exec \"%s\": please configure a history browser"
 msgstr ""
@@ -1041,26 +1042,26 @@ msgstr "Messaggio di fusione:"
 msgid "Move Down"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:283
+#: cola/widgets/commitmsg.py:285
 #, fuzzy
 msgid "Clear commit message?"
 msgstr "Messaggio di fusione:"
 
-#: cola/widgets/commitmsg.py:284
+#: cola/widgets/commitmsg.py:286
 #, fuzzy
 msgid "The commit message will be cleared."
 msgstr "Larghezza del messaggio di revisione"
 
-#: cola/widgets/commitmsg.py:285
+#: cola/widgets/commitmsg.py:287
 msgid "This cannot be undone.  Clear commit message?"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:286
+#: cola/widgets/commitmsg.py:288
 #, fuzzy
 msgid "Clear commit message"
 msgstr "Messaggio di fusione:"
 
-#: cola/widgets/commitmsg.py:410
+#: cola/widgets/commitmsg.py:415
 msgid ""
 "Please supply a commit message.\n"
 "\n"
@@ -1078,12 +1079,12 @@ msgstr ""
 "- Seconda linea: vuota.\n"
 "- Terza linea: spiega a cosa serve la tua modifica.\n"
 
-#: cola/widgets/commitmsg.py:417
+#: cola/widgets/commitmsg.py:422
 #, fuzzy
 msgid "Missing Commit Message"
 msgstr "Messaggio di fusione:"
 
-#: cola/widgets/commitmsg.py:423
+#: cola/widgets/commitmsg.py:428
 #, fuzzy
 msgid ""
 "No changes to commit.\n"
@@ -1095,71 +1096,71 @@ msgstr ""
 "Devi preparare per una nuova revisione almeno 1 file prima di effettuare "
 "questa operazione.\n"
 
-#: cola/widgets/commitmsg.py:427
+#: cola/widgets/commitmsg.py:432
 msgid "Would you like to stage and commit all modified files?"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:430
+#: cola/widgets/commitmsg.py:435
 #, fuzzy
 msgid "Stage and commit?"
 msgstr "Preparato per una nuova revisione"
 
-#: cola/widgets/commitmsg.py:432
+#: cola/widgets/commitmsg.py:437
 #, fuzzy
 msgid "Stage and Commit"
 msgstr "Prepara per una nuova revisione"
 
-#: cola/widgets/commitmsg.py:437
+#: cola/widgets/commitmsg.py:442
 #, fuzzy
 msgid "Nothing to commit"
 msgstr "Nessuna modifica per la nuova revisione."
 
-#: cola/widgets/commitmsg.py:445
+#: cola/widgets/commitmsg.py:450
 msgid "Rewrite Published Commit?"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:446
+#: cola/widgets/commitmsg.py:451
 msgid ""
 "This commit has already been published.\n"
 "This operation will rewrite published history.\n"
 "You probably don't want to do this."
 msgstr ""
 
-#: cola/widgets/commitmsg.py:449
+#: cola/widgets/commitmsg.py:454
 msgid "Amend the published commit?"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:450
+#: cola/widgets/commitmsg.py:455
 #, fuzzy
 msgid "Amend Commit"
 msgstr "Correggi l'ultima revisione"
 
-#: cola/widgets/commitmsg.py:458
+#: cola/widgets/commitmsg.py:463
 #, fuzzy
 msgid "Commit failed"
 msgstr "Impossibile creare una nuova revisione."
 
-#: cola/widgets/commitmsg.py:459
+#: cola/widgets/commitmsg.py:464
 #, python-format
 msgid "\"git commit\" returned exit code %s"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:490
+#: cola/widgets/commitmsg.py:495
 #, fuzzy
 msgid "More..."
 msgstr "Clona..."
 
-#: cola/widgets/commitmsg.py:495
+#: cola/widgets/commitmsg.py:500
 #, fuzzy
 msgid "Select Commit"
 msgstr "Messaggio di fusione:"
 
-#: cola/widgets/commitmsg.py:538
+#: cola/widgets/commitmsg.py:543
 #, fuzzy
 msgid "Commit summary"
 msgstr "Messaggio di revisione:"
 
-#: cola/widgets/commitmsg.py:561
+#: cola/widgets/commitmsg.py:566
 msgid "Extended description..."
 msgstr ""
 

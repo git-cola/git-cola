@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-30 03:17-0700\n"
+"POT-Creation-Date: 2015-06-14 23:20-0700\n"
 "PO-Revision-Date: 2015-05-21 03:41+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
@@ -144,7 +144,7 @@ msgstr "「%s」版本倉庫將從您最近使用的版本倉庫中移除。"
 msgid "Remove"
 msgstr "移除"
 
-#: cola/cmds.py:567 cola/cmds.py:1718 cola/widgets/bookmarks.py:217
+#: cola/cmds.py:567 cola/cmds.py:1727 cola/widgets/bookmarks.py:217
 msgid "Error"
 msgstr "發生錯誤"
 
@@ -250,40 +250,41 @@ msgstr "錯誤：無法克隆「%s」版本倉庫"
 msgid "git clone returned exit code %s"
 msgstr "git clone 命令傳回了 %s 錯誤狀態碼"
 
-#: cola/cmds.py:1123
+#: cola/cmds.py:1121
 #, python-format
 msgid "Rebase onto %s"
 msgstr "Rebase 至 %s 版本"
 
-#: cola/cmds.py:1124 cola/widgets/main.py:410
+#: cola/cmds.py:1122 cola/cmds.py:1147 cola/cmds.py:1148 cola/cmds.py:1160
+#: cola/cmds.py:1161 cola/widgets/main.py:410
 msgid "Rebase"
 msgstr "Rebase"
 
-#: cola/cmds.py:1136
+#: cola/cmds.py:1134
 msgid "Edit Rebase"
 msgstr "編輯 Rebase"
 
-#: cola/cmds.py:1137 cola/widgets/archive.py:123 cola/widgets/browse.py:468
+#: cola/cmds.py:1135 cola/widgets/archive.py:123 cola/widgets/browse.py:468
 #: cola/widgets/stash.py:56
 msgid "Save"
 msgstr "保存"
 
-#: cola/cmds.py:1181 cola/widgets/action.py:59 cola/widgets/dag.py:398
+#: cola/cmds.py:1190 cola/widgets/action.py:59 cola/widgets/dag.py:398
 #: cola/widgets/editremotes.py:69 cola/widgets/finder.py:106
 #: cola/widgets/grep.py:108 cola/widgets/recent.py:55
 #: cola/widgets/recent.py:115
 msgid "Refresh"
 msgstr "重新整理"
 
-#: cola/cmds.py:1230
+#: cola/cmds.py:1239
 msgid "Revert Unstaged Edits..."
 msgstr "撤銷尚未移入版本提交準備區域的內容修改……"
 
-#: cola/cmds.py:1239
+#: cola/cmds.py:1248
 msgid "Revert Unstaged Changes?"
 msgstr "要撤銷尚未移入版本提交準備區域的內容變動嗎？"
 
-#: cola/cmds.py:1240
+#: cola/cmds.py:1249
 msgid ""
 "This operation drops unstaged changes.\n"
 "These changes cannot be recovered."
@@ -291,23 +292,23 @@ msgstr ""
 "此操作將丟棄尚未移入版本提交準備區域的內容變動。\n"
 "這些內容變動將無法被還原。"
 
-#: cola/cmds.py:1242
+#: cola/cmds.py:1251
 msgid "Revert the unstaged changes?"
 msgstr "要撤銷尚未移入版本提交準備區域的內容變動嗎？"
 
-#: cola/cmds.py:1243
+#: cola/cmds.py:1252
 msgid "Revert Unstaged Changes"
 msgstr "撤銷尚未移入版本提交準備區域的內容變動"
 
-#: cola/cmds.py:1254
+#: cola/cmds.py:1263
 msgid "Revert Uncommitted Edits..."
 msgstr "撤銷尚未提交到版本倉庫的內容變更……"
 
-#: cola/cmds.py:1260
+#: cola/cmds.py:1269
 msgid "Revert Uncommitted Changes?"
 msgstr "要撤銷尚未提交至版本倉庫的內容變更嗎？"
 
-#: cola/cmds.py:1261 cola/widgets/diff.py:316
+#: cola/cmds.py:1270 cola/widgets/diff.py:316
 msgid ""
 "This operation drops uncommitted changes.\n"
 "These changes cannot be recovered."
@@ -315,112 +316,112 @@ msgstr ""
 "此操作將會丟棄尚未提交至版本倉庫的內容變更。\n"
 "這些內容變更將無法被救回。"
 
-#: cola/cmds.py:1263 cola/widgets/diff.py:318
+#: cola/cmds.py:1272 cola/widgets/diff.py:318
 msgid "Revert the uncommitted changes?"
 msgstr "要撤銷尚未提交至版本倉庫的內容變更嗎？"
 
-#: cola/cmds.py:1264
+#: cola/cmds.py:1273
 msgid "Revert Uncommitted Changes"
 msgstr "撤銷尚未提交至版本倉庫的內容變更"
 
-#: cola/cmds.py:1292
+#: cola/cmds.py:1301
 #, python-format
 msgid "Run \"%s\"?"
 msgstr "要執行「%s」操作嗎？"
 
-#: cola/cmds.py:1299
+#: cola/cmds.py:1308
 msgid "Please select a file"
 msgstr "請選擇一個檔案"
 
-#: cola/cmds.py:1300
+#: cola/cmds.py:1309
 #, python-format
 msgid "\"%s\" requires a selected file."
 msgstr "「%s」操作需要有選取檔案才能執行。"
 
-#: cola/cmds.py:1312
+#: cola/cmds.py:1321
 msgid "Invalid Revision"
 msgstr "無效的版本"
 
-#: cola/cmds.py:1313
+#: cola/cmds.py:1322
 msgid "The revision expression cannot be empty."
 msgstr "版本表達式不可以是空的。"
 
-#: cola/cmds.py:1328
+#: cola/cmds.py:1337
 #, python-format
 msgid "Running command: %s"
 msgstr "執行命令：%s"
 
-#: cola/cmds.py:1340 cola/cmds.py:1534 cola/interaction.py:72
+#: cola/cmds.py:1349 cola/cmds.py:1543 cola/interaction.py:72
 #, python-format
 msgid "Output: %s"
 msgstr "輸出：%s"
 
-#: cola/cmds.py:1341 cola/guicmds.py:115 cola/interaction.py:73
+#: cola/cmds.py:1350 cola/guicmds.py:115 cola/interaction.py:73
 #, python-format
 msgid "Errors: %s"
 msgstr "錯誤：%s"
 
-#: cola/cmds.py:1384
+#: cola/cmds.py:1393
 msgid "Sign Off"
 msgstr "簽名(Sign Off)"
 
-#: cola/cmds.py:1405
+#: cola/cmds.py:1414
 msgid "unknown"
 msgstr "未知使用者"
 
-#: cola/cmds.py:1419 cola/widgets/action.py:57
+#: cola/cmds.py:1428 cola/widgets/action.py:57
 msgid "Stage"
 msgstr "移動到版本提交準備區域"
 
-#: cola/cmds.py:1426
+#: cola/cmds.py:1435
 #, python-format
 msgid "Staging: %s"
 msgstr "移動到版本提交準備區域：%s..."
 
-#: cola/cmds.py:1443
+#: cola/cmds.py:1452
 msgid "Stage Modified"
 msgstr "將已變更的項目移入版本提交準備區域"
 
-#: cola/cmds.py:1457
+#: cola/cmds.py:1466
 msgid "Stage Unmerged"
 msgstr "將尚未合併的檔案移動到版本提交準備區域"
 
-#: cola/cmds.py:1471
+#: cola/cmds.py:1480
 msgid "Stage Untracked"
 msgstr "將尚未追蹤其版本的項目移動到版本提交準備區域"
 
-#: cola/cmds.py:1485
+#: cola/cmds.py:1494
 msgid "Stage / Unstage"
 msgstr "移入／移出版本提交準備區域"
 
-#: cola/cmds.py:1514
+#: cola/cmds.py:1523
 #, python-format
 msgid "Tagging \"%(revision)s\" as \"%(name)s\""
 msgstr "將「%(revision)s」版本加上「%(name)s」標籤"
 
-#: cola/cmds.py:1523
+#: cola/cmds.py:1532
 msgid "GPG-signed"
 msgstr "已簽署 GPG 簽章"
 
-#: cola/cmds.py:1549 cola/widgets/action.py:58
+#: cola/cmds.py:1558 cola/widgets/action.py:58
 msgid "Unstage"
 msgstr "移出版本提交準備區域"
 
-#: cola/cmds.py:1556
+#: cola/cmds.py:1565
 #, python-format
 msgid "Unstaging: %s"
 msgstr "正在將「%s」移出版本提交準備區域"
 
-#: cola/cmds.py:1584
+#: cola/cmds.py:1593
 #, python-format
 msgid "Untracking: %s"
 msgstr "正在將「%s」移出版本提交準備區域"
 
-#: cola/cmds.py:1669
+#: cola/cmds.py:1678
 msgid "Error Launching History Browser"
 msgstr "無法啟動變動紀錄瀏覽器"
 
-#: cola/cmds.py:1670
+#: cola/cmds.py:1679
 #, python-format
 msgid "Cannot exec \"%s\": please configure a history browser"
 msgstr "無法執行「%s」：請設定一個變動紀錄瀏覽器"
@@ -993,23 +994,23 @@ msgstr "修正先前的版本提交"
 msgid "Move Down"
 msgstr "往下移動"
 
-#: cola/widgets/commitmsg.py:283
+#: cola/widgets/commitmsg.py:285
 msgid "Clear commit message?"
 msgstr "清除版本提交訊息？"
 
-#: cola/widgets/commitmsg.py:284
+#: cola/widgets/commitmsg.py:286
 msgid "The commit message will be cleared."
 msgstr "版本提交訊息將會被移除。"
 
-#: cola/widgets/commitmsg.py:285
+#: cola/widgets/commitmsg.py:287
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "此操作將無法復原。要清除提交訊息嗎？"
 
-#: cola/widgets/commitmsg.py:286
+#: cola/widgets/commitmsg.py:288
 msgid "Clear commit message"
 msgstr "清除版本提交訊息"
 
-#: cola/widgets/commitmsg.py:410
+#: cola/widgets/commitmsg.py:415
 msgid ""
 "Please supply a commit message.\n"
 "\n"
@@ -1027,11 +1028,11 @@ msgstr ""
 "- 第二行: 空行\n"
 "- 剩餘行: 描述為什麼您所做的變更是好的。\n"
 
-#: cola/widgets/commitmsg.py:417
+#: cola/widgets/commitmsg.py:422
 msgid "Missing Commit Message"
 msgstr "缺少版本提交訊息"
 
-#: cola/widgets/commitmsg.py:423
+#: cola/widgets/commitmsg.py:428
 msgid ""
 "No changes to commit.\n"
 "\n"
@@ -1041,27 +1042,27 @@ msgstr ""
 "\n"
 "提交前你必須至少將至少一個檔案移入版本提交準備區域。"
 
-#: cola/widgets/commitmsg.py:427
+#: cola/widgets/commitmsg.py:432
 msgid "Would you like to stage and commit all modified files?"
 msgstr "您要將所有被修改的檔案移入版本提交準備區域並提交出去嗎？"
 
-#: cola/widgets/commitmsg.py:430
+#: cola/widgets/commitmsg.py:435
 msgid "Stage and commit?"
 msgstr "要移入版本提交準備區域並提交出去嗎？"
 
-#: cola/widgets/commitmsg.py:432
+#: cola/widgets/commitmsg.py:437
 msgid "Stage and Commit"
 msgstr "移入版本提交準備區域並提交出去"
 
-#: cola/widgets/commitmsg.py:437
+#: cola/widgets/commitmsg.py:442
 msgid "Nothing to commit"
 msgstr "沒有東西可以提交"
 
-#: cola/widgets/commitmsg.py:445
+#: cola/widgets/commitmsg.py:450
 msgid "Rewrite Published Commit?"
 msgstr "要重寫已推送出去的版本提交嗎？"
 
-#: cola/widgets/commitmsg.py:446
+#: cola/widgets/commitmsg.py:451
 msgid ""
 "This commit has already been published.\n"
 "This operation will rewrite published history.\n"
@@ -1071,36 +1072,36 @@ msgstr ""
 "此操作將會重寫已推送出去的變更紀錄。\n"
 "您可能不想要做此操作。"
 
-#: cola/widgets/commitmsg.py:449
+#: cola/widgets/commitmsg.py:454
 msgid "Amend the published commit?"
 msgstr "要修正已被推送出去的版本提交嗎？"
 
-#: cola/widgets/commitmsg.py:450
+#: cola/widgets/commitmsg.py:455
 msgid "Amend Commit"
 msgstr "修正前一個版本提交"
 
-#: cola/widgets/commitmsg.py:458
+#: cola/widgets/commitmsg.py:463
 msgid "Commit failed"
 msgstr "提交失敗"
 
-#: cola/widgets/commitmsg.py:459
+#: cola/widgets/commitmsg.py:464
 #, python-format
 msgid "\"git commit\" returned exit code %s"
 msgstr "「git commit」命令傳回 %s 結束狀態碼"
 
-#: cola/widgets/commitmsg.py:490
+#: cola/widgets/commitmsg.py:495
 msgid "More..."
 msgstr "更多……"
 
-#: cola/widgets/commitmsg.py:495
+#: cola/widgets/commitmsg.py:500
 msgid "Select Commit"
 msgstr "選取版本提交"
 
-#: cola/widgets/commitmsg.py:538
+#: cola/widgets/commitmsg.py:543
 msgid "Commit summary"
 msgstr "版本提交描述"
 
-#: cola/widgets/commitmsg.py:561
+#: cola/widgets/commitmsg.py:566
 msgid "Extended description..."
 msgstr "延伸描述"
 
