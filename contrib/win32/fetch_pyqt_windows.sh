@@ -1,22 +1,24 @@
-#!/usr/bin/env bash
-# Download and the PyQt4 Windows installer and unpack files from it into
-# pynsist_pkgs
+#!/bin/bash
 
 set -e
 
-cd "$( dirname "${BASH_SOURCE[0]}" )"
+# Download and the PyQt4 Windows installer and unpack files from it into
+# pynsist_pkgs
 
-PY_VERSION=3.4
-PYQT_VERSION=4.11.3
-QT_VERSION=4.8.6
+cd "$(dirname "0")"
+
+PY_VERSION=2.7
+PYQT_VERSION=4.11.4
+QT_VERSION=4.8.7
 BITNESS=32
 
 INSTALLER_FILE=PyQt4-${PYQT_VERSION}-gpl-Py${PY_VERSION}-Qt${QT_VERSION}-x${BITNESS}.exe
 URL=http://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-${PYQT_VERSION}/${INSTALLER_FILE}
 
-if [ ! -e "$INSTALLER_FILE" ]
+if ! test -e "$INSTALLER_FILE"
 then
-    wget -O "$INSTALLER_FILE" "$URL"
+    echo "Downloading $URL"
+    curl --location "$URL/download" -o "$INSTALLER_FILE"
 fi
 
 rm -rf pyqt4-windows
@@ -30,7 +32,6 @@ mkdir $PKGS
 echo "Rearranging files into pynsist_pkgs..."
 mv 'pyqt4-windows/Lib/site-packages'/* $PKGS
 rm $PKGS/PyQt4/assistant.exe $PKGS/PyQt4/designer.exe
-mv 'pyqt4-windows/$_OUTDIR/'*.pyd $PKGS/PyQt4/
 
 rm -r pyqt4-windows
 echo "Done"
