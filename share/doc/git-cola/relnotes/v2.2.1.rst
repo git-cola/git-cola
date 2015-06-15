@@ -1,0 +1,8 @@
+.. _v2.2.1:
+
+git-cola v2.2.1
+===============
+
+Fixes
+-----
+* Fixed the "Sign off" feature in the commit message editor.
