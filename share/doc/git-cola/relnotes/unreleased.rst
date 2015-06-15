@@ -40,6 +40,10 @@ Unreleased Topics
 
 * `git dag`'s file list tool was updated to properly handle unicode paths.
 
+* The system theme's icons are now used whereever possible.
+
+  https://github.com/git-cola/git-cola/pull/458
+
 Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
