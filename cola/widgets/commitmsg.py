@@ -28,7 +28,6 @@ class CommitMessageEditor(QtGui.QWidget):
         QtGui.QWidget.__init__(self, parent)
 
         self.model = model
-        self.notifying = False
         self.spellcheck_initialized = False
 
         self._linebreak = None
@@ -153,8 +152,8 @@ class CommitMessageEditor(QtGui.QWidget):
 
         self.model.add_observer(self.model.message_commit_message_changed,
                                 self._set_commit_message)
-        self.connect(self, SIGNAL('set_commit_message(PyQt_PyObject'),
-                     self.set_commit_message)
+        self.connect(self, SIGNAL('set_commit_message(PyQt_PyObject)'),
+                     self.set_commit_message, Qt.QueuedConnection)
 
         self.connect(self.summary, SIGNAL('cursorPosition(int,int)'),
                      self.emit_position)
@@ -273,11 +272,9 @@ class CommitMessageEditor(QtGui.QWidget):
 
     def commit_message_changed(self, value=None):
         """Update the model when values change"""
-        self.notifying = True
         message = self.commit_message()
-        self.model.set_commitmsg(message)
+        self.model.set_commitmsg(message, notify=False)
         self.refresh_palettes()
-        self.notifying = False
         self.update_actions()
 
     def clear(self):
@@ -306,11 +303,6 @@ class CommitMessageEditor(QtGui.QWidget):
 
     def set_commit_message(self, message):
         """Set the commit message to match the observed model"""
-        if self.notifying:
-            # Calling self.model.set_commitmsg(message) causes us to
-            # loop around so break the loop
-            return
-
         # Parse the "summary" and "description" fields
         umsg = ustr(message)
         lines = umsg.splitlines()

@@ -119,9 +119,10 @@ class MainModel(Observable):
             self.project = os.path.basename(self.git.worktree())
         return is_valid
 
-    def set_commitmsg(self, msg):
+    def set_commitmsg(self, msg, notify=True):
         self.commitmsg = msg
-        self.notify_observers(self.message_commit_message_changed, msg)
+        if notify:
+            self.notify_observers(self.message_commit_message_changed, msg)
 
     def save_commitmsg(self, msg):
         path = self.git.git_path('GIT_COLA_MSG')
