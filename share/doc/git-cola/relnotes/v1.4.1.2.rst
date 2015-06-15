@@ -21,9 +21,9 @@ Fixes
 -----
 * Fixed a missing ``import`` when showing `right-click` actions
   for unmerged files in the `Repository Status` tool.
-* ``git update-index --refresh`` is no longer run everytime
+* ``git update-index --refresh`` is no longer run every time
   ``git cola version`` is run.
-* Don't try to watch non-existant directories when using `inotify`.
+* Don't try to watch non-existent directories when using `inotify`.
 * Use ``git rev-parse --symbolic-full-name`` plumbing to find
   the name of the current branch.
 

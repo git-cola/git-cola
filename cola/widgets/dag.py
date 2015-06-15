@@ -929,7 +929,7 @@ class Label(QtGui.QGraphicsItem):
         self.setZValue(-1)
 
         # Starts with enough space for two tags. Any more and the commit
-        # needs to be taller to accomodate.
+        # needs to be taller to accommodate.
         self.commit = commit
 
         if 'HEAD' in commit.tags:

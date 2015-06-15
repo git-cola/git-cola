@@ -73,7 +73,7 @@ Packaging
   tree now has the common ``share/locale/$lang/LC_MESSAGES/git-cola.mo``
   layout in use by several projects.
 
-* Started trying to accomodate Mac OSX 10.6 (Snow Leopard)
+* Started trying to accommodate Mac OSX 10.6 (Snow Leopard)
   in the ``darwin/`` build scripts but our tester is yet to
   report success building a `.app` bundle.
 

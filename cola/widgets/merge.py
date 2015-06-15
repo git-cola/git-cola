@@ -81,7 +81,7 @@ class MergeView(QtGui.QDialog):
         self.checkbox_squash.setToolTip(tooltip)
 
         tooltip = N_('Always create a merge commit when enabled, '
-                     'even when the merge is a fast-foward update')
+                     'even when the merge is a fast-forward update')
         self.checkbox_noff = QtGui.QCheckBox()
         self.checkbox_noff.setText(N_('No fast forward'))
         self.checkbox_noff.setToolTip(tooltip)

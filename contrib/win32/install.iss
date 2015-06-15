@@ -267,7 +267,7 @@ begin
         Modify the environment
 
         This must happen no later than ssPostInstall to make
-        "ChangesEnvironment=yes" not happend before the change!
+        "ChangesEnvironment=yes" not happen before the change!
     }
 
     // Get the current user's directories in PATH.

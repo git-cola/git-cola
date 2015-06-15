@@ -2095,7 +2095,7 @@ msgstr "Push"
 #: cola/widgets/merge.py:83
 msgid ""
 "Always create a merge commit when enabled, even when the merge is a fast-"
-"foward update"
+"forward update"
 msgstr ""
 
 #: cola/widgets/merge.py:86
