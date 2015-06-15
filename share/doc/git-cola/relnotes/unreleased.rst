@@ -3,7 +3,7 @@
 Latest Release
 ==============
 
-:ref:`v2.2 <v2.2>` is the latest stable release.
+:ref:`v2.2.1 <v2.2.1>` is the latest stable release.
 
 Unreleased Topics
 =================
