@@ -93,7 +93,7 @@ class DiffEditor(DiffTextEdit):
 
         self.action_revert_selection = qtutils.add_action(self, '',
                 self.revert_selection)
-        self.action_revert_selection.setIcon(qtutils.icon('undo.svg'))
+        self.action_revert_selection.setIcon(qtutils.theme_icon('edit-undo.svg'))
 
         self.launch_editor = qtutils.add_action(self,
                 cmds.LaunchEditor.name(), run(cmds.LaunchEditor),
@@ -134,7 +134,7 @@ class DiffEditor(DiffTextEdit):
 
         if s.modified and self.model.stageable():
             if s.modified[0] in main.model().submodules:
-                action = menu.addAction(qtutils.icon('add.svg'),
+                action = menu.addAction(qtutils.add_icon(),
                                         cmds.Stage.name(),
                                         cmds.run(cmds.Stage, s.modified))
                 action.setShortcut(cmds.Stage.SHORTCUT)
@@ -151,7 +151,7 @@ class DiffEditor(DiffTextEdit):
                     revert_text = N_('Revert Diff Hunk...')
 
                 self.action_apply_selection.setText(apply_text)
-                self.action_apply_selection.setIcon(qtutils.icon('add.svg'))
+                self.action_apply_selection.setIcon(qtutils.add_icon())
 
                 self.action_revert_selection.setText(revert_text)
 
@@ -160,7 +160,7 @@ class DiffEditor(DiffTextEdit):
 
         if s.staged and self.model.unstageable():
             if s.staged[0] in main.model().submodules:
-                action = menu.addAction(qtutils.icon('remove.svg'),
+                action = menu.addAction(qtutils.remove_icon(),
                                         cmds.Unstage.name(),
                                         cmds.do(cmds.Unstage, s.staged))
                 action.setShortcut(cmds.Unstage.SHORTCUT)
@@ -175,7 +175,7 @@ class DiffEditor(DiffTextEdit):
                     apply_text = N_('Unstage Diff Hunk')
 
                 self.action_apply_selection.setText(apply_text)
-                self.action_apply_selection.setIcon(qtutils.icon('remove.svg'))
+                self.action_apply_selection.setIcon(qtutils.remove_icon())
 
                 menu.addAction(self.action_apply_selection)
 
@@ -190,11 +190,11 @@ class DiffEditor(DiffTextEdit):
             menu.addAction(self.launch_difftool)
 
         menu.addSeparator()
-        action = menu.addAction(qtutils.icon('edit-copy.svg'),
+        action = menu.addAction(qtutils.theme_icon('edit-copy.svg'),
                                 N_('Copy'), self.copy)
         action.setShortcut(QtGui.QKeySequence.Copy)
 
-        action = menu.addAction(qtutils.icon('edit-select-all.svg'),
+        action = menu.addAction(qtutils.theme_icon('edit-select-all.svg'),
                                 N_('Select All'), self.selectAll)
         action.setShortcut(QtGui.QKeySequence.SelectAll)
         menu.exec_(self.mapToGlobal(event.pos()))
@@ -318,7 +318,7 @@ class DiffEditor(DiffTextEdit):
                                N_('Revert the uncommitted changes?'),
                                ok_text,
                                default=True,
-                               icon=qtutils.icon('undo.svg')):
+                               icon=qtutils.theme_icon('edit-undo.svg')):
             return
         self.process_diff_selection(reverse=True, apply_to_worktree=True)
 

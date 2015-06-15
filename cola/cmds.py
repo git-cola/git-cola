@@ -1198,7 +1198,7 @@ class RevertEditsCommand(ConfirmAction):
     def __init__(self):
         ConfirmAction.__init__(self)
         self.model = main.model()
-        self.icon = resources.icon('undo.svg')
+        self.icon = resources.icon('edit-undo.svg')
 
     def ok_to_run(self):
         return self.model.undoable()

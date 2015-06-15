@@ -515,25 +515,25 @@ def help_icon():
 
 
 def add_icon():
-    return icon('add.svg')
+    return theme_icon('list-add', fallback='add.svg')
 
 
 def remove_icon():
-    return icon('remove.svg')
+    return theme_icon('list-remove', fallback='remove.svg')
 
 
 def open_file_icon():
-    return icon('open.svg')
+    return theme_icon('document-open', fallback='open.svg')
 
 
 def options_icon():
     """Return a standard open directory icon"""
-    return icon('options.svg')
+    return theme_icon('configure', fallback='options.svg')
 
 
 def filter_icon():
     """Return a filter icon"""
-    return icon('view-filter.png')
+    return theme_icon('view-filter.png')
 
 
 def dir_close_icon():
@@ -597,21 +597,21 @@ def default_size(parent, width, height):
     return (width, height)
 
 @memoize
-def theme_icon(name):
+def theme_icon(name, fallback=None):
     """Grab an icon from the current theme with a fallback
 
-    Support older versions of Qt by catching AttributeError and
-    falling back to our default icons.
+    Support older versions of Qt checking for fromTheme's availability.
 
     """
-    try:
+    if hasattr(QtGui.QIcon, 'fromTheme'):
         base, ext = os.path.splitext(name)
-        qicon = QtGui.QIcon.fromTheme(base)
+        if fallback:
+            qicon = QtGui.QIcon.fromTheme(base, icon(fallback))
+        else:
+            qicon = QtGui.QIcon.fromTheme(base)
         if not qicon.isNull():
             return qicon
-    except AttributeError:
-        pass
-    return icon(name)
+    return icon(fallback or name)
 
 
 def default_monospace_font():

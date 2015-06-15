@@ -57,6 +57,10 @@ Unreleased Topics
 
   https://github.com/git-cola/git-cola/issues/445
 
+* The system theme's icons are now used whereever possible.
+
+  https://github.com/git-cola/git-cola/pull/458
+
 Development version
 ===================
 
