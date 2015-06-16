@@ -5,7 +5,6 @@ from __future__ import division, absolute_import, unicode_literals
 
 import mimetypes
 import os
-import re
 import subprocess
 
 from PyQt4 import QtGui
@@ -802,18 +801,6 @@ def path_mimetypes():
 
 # Syntax highlighting
 
-def TERMINAL(pattern):
-    """
-    Denotes that a pattern is the final pattern that should
-    be matched.  If this pattern matches no other formats
-    will be applied, even if they would have matched.
-    """
-    return '__TERMINAL__:%s' % pattern
-
-# Cache the results of re.compile so that we don't keep
-# rebuilding the same regexes whenever stylesheets change
-_RGX_CACHE = {}
-
 def rgba(r, g, b, a=255):
     c = QtGui.QColor()
     c.setRgb(r, g, b)
@@ -825,155 +812,15 @@ def RGB(args):
     return rgba(*args)
 
 
-class GenericSyntaxHighligher(QtGui.QSyntaxHighlighter):
-    def __init__(self, doc, *args, **kwargs):
-        QtGui.QSyntaxHighlighter.__init__(self, doc)
-        cfg = gitcfg.current()
-
-        self.color_text = RGB(cfg.color('text', '030303'))
-        self.color_add = RGB(cfg.color('add', 'd2ffe4'))
-        self.color_remove = RGB(cfg.color('remove', 'fee0e4'))
-        self.color_header = RGB(cfg.color('header', 'bbbbbb'))
-        self._rules = []
-        self.enabled = True
-        self.generate_rules()
-
-    def generate_rules(self):
-        pass
-
-    def set_enabled(self, enabled):
-        self.enabled = enabled
-
-    def create_rules(self, *rules):
-        if len(rules) % 2:
-            raise Exception('create_rules requires an even '
-                            'number of arguments.')
-        for idx, rule in enumerate(rules):
-            if idx % 2:
-                continue
-            formats = rules[idx+1]
-            terminal = rule.startswith(TERMINAL(''))
-            if terminal:
-                rule = rule[len(TERMINAL('')):]
-            try:
-                regex = _RGX_CACHE[rule]
-            except KeyError:
-                regex = _RGX_CACHE[rule] = re.compile(rule)
-            self._rules.append((regex, formats, terminal,))
-
-    def formats(self, line):
-        matched = []
-        for regex, fmts, terminal in self._rules:
-            match = regex.match(line)
-            if not match:
-                continue
-            matched.append([match, fmts])
-            if terminal:
-                return matched
-        return matched
-
-    def mkformat(self, fg=None, bg=None, bold=False):
-        fmt = QtGui.QTextCharFormat()
-        if fg:
-            fmt.setForeground(fg)
-        if bg:
-            fmt.setBackground(bg)
-        if bold:
-            fmt.setFontWeight(QtGui.QFont.Bold)
-        return fmt
-
-    def highlightBlock(self, qstr):
-        if not self.enabled:
-            return
-        text = ustr(qstr)
-        if not text:
-            return
-        formats = self.formats(text)
-        if not formats:
-            return
-        for match, fmts in formats:
-            start = match.start()
-            groups = match.groups()
-
-            # No groups in the regex, assume this is a single rule
-            # that spans the entire line
-            if not groups:
-                self.setFormat(0, len(text), fmts)
-                continue
-
-            # Groups exist, rule is a tuple corresponding to group
-            for grpidx, group in enumerate(groups):
-                # allow empty matches
-                if not group:
-                    continue
-                length = len(group)
-                if fmts[grpidx]:  # None -> no-op
-                    self.setFormat(start, start+length,
-                            fmts[grpidx])
-                start += length
-
-    def set_colors(self, colordict):
-        for attr, val in colordict.items():
-            setattr(self, attr, val)
-
-
-class DiffSyntaxHighlighter(GenericSyntaxHighligher):
-    """Implements the diff syntax highlighting
-
-    This class is used by widgets that display diffs.
-
-    """
-    def __init__(self, doc, whitespace=True):
-        self.whitespace = whitespace
-        GenericSyntaxHighligher.__init__(self, doc)
-
-    def generate_rules(self):
-        diff_head = self.mkformat(fg=self.color_header)
-        diff_head_bold = self.mkformat(fg=self.color_header, bold=True)
-
-        diff_add = self.mkformat(fg=self.color_text, bg=self.color_add)
-        diff_remove = self.mkformat(fg=self.color_text, bg=self.color_remove)
-        bad_ws = self.mkformat(fg=Qt.black, bg=Qt.red)
-
-        # We specify the whitespace rule last so that it is
-        # applied after the diff addition/removal rules.
-        # The rules for the header
-        diff_old_rgx = TERMINAL(r'^--- ')
-        diff_new_rgx = TERMINAL(r'^\+\+\+ ')
-        diff_ctx_rgx = TERMINAL(r'^@@ ')
-
-        diff_hd1_rgx = TERMINAL(r'^diff --git a/.*b/.*')
-        diff_hd2_rgx = TERMINAL(r'^index \S+\.\.\S+')
-        diff_hd3_rgx = TERMINAL(r'^new file mode')
-        diff_hd4_rgx = TERMINAL(r'^deleted file mode')
-        diff_add_rgx = TERMINAL(r'^\+')
-        diff_rmv_rgx = TERMINAL(r'^-')
-        diff_bar_rgx = TERMINAL(r'^([ ]+.*)(\|[ ]+\d+[ ]+[+-]+)$')
-        diff_sts_rgx = (r'(.+\|.+?)(\d+)(.+?)([\+]*?)([-]*?)$')
-        diff_sum_rgx = (r'(\s+\d+ files changed[^\d]*)'
-                        r'(:?\d+ insertions[^\d]*)'
-                        r'(:?\d+ deletions.*)$')
-        if self.whitespace:
-            # bad_ws_rgx = r'(..*?)(\s+)$'
-            diff_add_ws_rgx = TERMINAL(r'^(\+.*?)(\s+)$')
-            self.create_rules(diff_add_ws_rgx,  (diff_add, bad_ws))
-
-        self.create_rules(diff_old_rgx,     diff_head,
-                          diff_new_rgx,     diff_head,
-                          diff_ctx_rgx,     diff_head_bold,
-                          diff_bar_rgx,     (diff_head_bold, diff_head),
-                          diff_hd1_rgx,     diff_head,
-                          diff_hd2_rgx,     diff_head,
-                          diff_hd3_rgx,     diff_head,
-                          diff_hd4_rgx,     diff_head,
-                          diff_add_rgx,     diff_add,
-                          diff_rmv_rgx,     diff_remove,
-                          diff_sts_rgx,     (None, diff_head,
-                                             None, diff_head,
-                                             diff_head),
-                          diff_sum_rgx,     (diff_head,
-                                             diff_head,
-                                             diff_head))
+def make_format(fg=None, bg=None, bold=False):
+    fmt = QtGui.QTextCharFormat()
+    if fg:
+        fmt.setForeground(fg)
+    if bg:
+        fmt.setBackground(bg)
+    if bold:
+        fmt.setFontWeight(QtGui.QFont.Bold)
+    return fmt
 
 
 def install():

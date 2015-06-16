@@ -1,11 +1,14 @@
 from __future__ import division, absolute_import, unicode_literals
 
+import re
+
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt, SIGNAL
 
 from cola import cmds
 from cola import core
+from cola import gitcfg
 from cola import gitcmds
 from cola import gravatar
 from cola import qtutils
@@ -16,7 +19,7 @@ from cola.models import selection
 from cola.qtutils import add_action
 from cola.qtutils import create_action_button
 from cola.qtutils import create_menu
-from cola.qtutils import DiffSyntaxHighlighter
+from cola.qtutils import RGB, make_format
 from cola.qtutils import options_icon
 from cola.widgets import defs
 from cola.widgets.text import MonoTextView
@@ -25,6 +28,92 @@ from cola.compat import ustr
 
 COMMITS_SELECTED = 'COMMITS_SELECTED'
 FILES_SELECTED = 'FILES_SELECTED'
+
+
+class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
+    """Implements the diff syntax highlighting"""
+
+    DIFFSTAT_STATE = 0
+    DIFF_FILE_HEADER_STATE = 1
+    DIFF_STATE = 2
+
+    DIFF_FILE_HEADER_START_RGX = re.compile(r'^diff --git a/.* b/.*$')
+    DIFF_HUNK_HEADER_RGX = re.compile(r'^@@ -[0-9,]+ \+[0-9,]+ @@')
+    BAD_WHITESPACE_RGX = re.compile(r'\s+$')
+
+    def __init__(self, doc, whitespace=True):
+        QtGui.QSyntaxHighlighter.__init__(self, doc)
+        self.whitespace = whitespace
+        self.enabled = True
+
+        cfg = gitcfg.current()
+        self.color_text = RGB(cfg.color('text', '030303'))
+        self.color_add = RGB(cfg.color('add', 'd2ffe4'))
+        self.color_remove = RGB(cfg.color('remove', 'fee0e4'))
+        self.color_header = RGB(cfg.color('header', 'bbbbbb'))
+
+        self.diff_header_fmt = make_format(fg=self.color_header)
+        self.bold_diff_header_fmt = make_format(fg=self.color_header,
+                                                  bold=True)
+
+        self.diff_add_fmt = make_format(fg=self.color_text,
+                                          bg=self.color_add)
+        self.diff_remove_fmt = make_format(fg=self.color_text,
+                                             bg=self.color_remove)
+        self.bad_whitespace_fmt = make_format(bg=Qt.red)
+
+    def set_enabled(self, enabled):
+        self.enabled = enabled
+
+    def highlightBlock(self, text):
+        if not self.enabled:
+            return
+
+        text = ustr(text)
+        if not text:
+            return
+
+        state = self.previousBlockState()
+        if state == -1:
+            state = self.DIFFSTAT_STATE
+
+        if state == self.DIFFSTAT_STATE:
+            if self.DIFF_FILE_HEADER_START_RGX.match(text):
+                state = self.DIFF_FILE_HEADER_STATE
+                self.setFormat(0, len(text), self.diff_header_fmt)
+            elif self.DIFF_HUNK_HEADER_RGX.match(text):
+                state = self.DIFF_STATE
+                self.setFormat(0, len(text), self.bold_diff_header_fmt)
+            elif '|' in text:
+                i = text.index('|')
+                self.setFormat(0, i, self.bold_diff_header_fmt)
+                self.setFormat(i, len(text) - i, self.diff_header_fmt)
+            else:
+                self.setFormat(0, len(text), self.diff_header_fmt)
+        elif state == self.DIFF_FILE_HEADER_STATE:
+            if self.DIFF_HUNK_HEADER_RGX.match(text):
+                state = self.DIFF_STATE
+                self.setFormat(0, len(text), self.bold_diff_header_fmt)
+            else:
+                self.setFormat(0, len(text), self.diff_header_fmt)
+        elif state == self.DIFF_STATE:
+            if self.DIFF_FILE_HEADER_START_RGX.match(text):
+                state = self.DIFF_FILE_HEADER_STATE
+                self.setFormat(0, len(text), self.diff_header_fmt)
+            elif self.DIFF_HUNK_HEADER_RGX.match(text):
+                self.setFormat(0, len(text), self.bold_diff_header_fmt)
+            elif text.startswith('-'):
+                self.setFormat(0, len(text), self.diff_remove_fmt)
+            elif text.startswith('+'):
+                self.setFormat(0, len(text), self.diff_add_fmt)
+                if self.whitespace:
+                    m = self.BAD_WHITESPACE_RGX.search(text)
+                    if m is not None:
+                        i = m.start()
+                        self.setFormat(i, len(text) - i,
+                                       self.bad_whitespace_fmt)
+
+        self.setCurrentBlockState(state)
 
 
 class DiffTextEdit(MonoTextView):
