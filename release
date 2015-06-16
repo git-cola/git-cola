@@ -47,11 +47,9 @@ build_docs () {
 
 build_tarball () {
 	title Building tarball
-	#do_or_die make dist
 	do_or_die make app-tarball
-	if $do_upload
+	if test "$do_upload" = true
 	then
-		#upload_file git-cola-"$VERSION".tar.gz
 		upload_file git-cola-"$VERSION".app.tar.gz
 	fi
 }
@@ -60,20 +58,23 @@ build_win32_remotely () {
 	title Building win32 remotely
 
 	do_or_die ssh -p $WIN32_SSH_PORT "$WIN32_LOGIN" '
-		PATH='"$WIN32_PYTHON"':'"$WIN32_GIT"':$PATH
-		cd '"$WIN32_COLA_DIR"'
-		contrib/win32/create-installer.sh
+		PATH='"$WIN32_PYTHON"':'"$WIN32_PYTHON/Scripts"':'"$WIN32_GIT"':'"$WIN32_NSIS"':"$PATH"
+		export PATH
+		cd '"$WIN32_COLA_DIR"' &&
+		rm -rf build/nsis &&
+		pynsist pynsist.cfg
 	'
 	do_or_die scp -P $WIN32_SSH_PORT \
-		"$WIN32_LOGIN":"$WIN32_COLA_DIR"/"*.exe" .
+		"$WIN32_LOGIN":"$WIN32_COLA_DIR"/build/nsis/"*.exe" .
 
 	do_or_die ssh -p $WIN32_SSH_PORT \
-		"$WIN32_LOGIN" "/bin/rm '$WIN32_COLA_DIR'/*.exe"
+		"$WIN32_LOGIN" "/bin/rm '$WIN32_COLA_DIR'/build/nsis/*.exe"
 
+	do_or_die mv git-cola_"$VERSION".exe git-cola-"$VERSION".exe
 	do_or_die chmod 644 git-cola-"$VERSION".exe
 	do_or_die zip -9 -m git-cola-"$VERSION".windows.zip \
 		-xi git-cola-"$VERSION".exe
-	if $do_upload
+	if test "$do_upload" = true
 	then
 		upload_file git-cola-"$VERSION".windows.zip
 	fi
@@ -95,7 +96,8 @@ do
 		;;
 	--all)
 		shift
-		#do_tarball=true
+		# we no longer release the Mac OS X app.tar.gz
+		# do_tarball=true
 		do_win32=true
 		do_docs=true
 		do_upload=true
@@ -141,6 +143,10 @@ do
 		shift
 		do_upload=true
 		;;
+	--no-upload)
+		shift
+		do_upload=false
+		;;
 	--upload-file)
 		shift
 		upload_file "$1"
@@ -156,23 +162,23 @@ do
 	esac
 done
 
-if $do_tarball || $do_win32
+if test "$do_tarball" = true || test "$do_upload" = true
 then
 	init_release
 fi
 
 
-if $do_tarball
+if test "$do_tarball" = true
 then
 	build_tarball
 fi
 
-if $do_win32
+if test "$do_win32" = true
 then
 	build_win32_remotely
 fi
 
-if $do_docs
+if test "$do_docs" = true
 then
 	build_docs
 fi
