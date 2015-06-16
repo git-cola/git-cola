@@ -1,3 +1,8 @@
+git-cola's release scripts
+==========================
+
+Creating a new release
+----------------------
 From the top of the git-cola repository a release can then be created by
 running:
 
@@ -13,3 +18,35 @@ structure should look roughly like this:
 	$HOME/src/git-cola.github.com
 
 "$HOME/src" can be any arbitrary directory.
+
+Release checklist
+-----------------
+The following steps should be taken when creating a new release.
+
+* Update `cola/_version.py` with the new version number
+
+* Update `pynsist.cfg` with the new version number
+
+* Create `doc/relnotes/$VERSION.rst` from the pre-release notes in
+  `doc/relnotes/unreleased.rst`.
+
+* Update `doc/relnotes.rst` to point to the new stable version.
+
+* Commit the above changes as `git commit -sm'git-cola vX.Y'`
+
+* Tag the repo, `git tag -sm'git-cola X.Y'`
+
+* Push the changes to make them available to github for the release.
+
+    git push git-cola master &&
+    git push --tags git-cola &&
+    git push origin master &&
+    git push --tags origin
+
+* Start a Windows VM session
+
+* Run `Meta/release --all` to build the installers and update
+  the sibling `git-cola.github.com` repository.
+
+* Commit `git-cola.github.com` changes, `git commit -sm'git-cola vX.Y'`
+  and push them to github.
