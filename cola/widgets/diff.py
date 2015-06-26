@@ -37,8 +37,9 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
     DIFF_FILE_HEADER_STATE = 1
     DIFF_STATE = 2
 
-    DIFF_FILE_HEADER_START_RGX = re.compile(r'^diff --git a/.* b/.*$')
-    DIFF_HUNK_HEADER_RGX = re.compile(r'^@@ -[0-9,]+ \+[0-9,]+ @@')
+    DIFF_FILE_HEADER_START_RGX = re.compile(r'diff --git a/.* b/.*')
+    DIFF_HUNK_HEADER_RGX = re.compile(r'(?:@@ -[0-9,]+ \+[0-9,]+ @@)|'
+                                      r'(?:@@@ (?:-[0-9,]+ ){2}\+[0-9,]+ @@@)')
     BAD_WHITESPACE_RGX = re.compile(r'\s+$')
 
     def __init__(self, doc, whitespace=True):
