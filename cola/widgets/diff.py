@@ -33,9 +33,11 @@ FILES_SELECTED = 'FILES_SELECTED'
 class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
     """Implements the diff syntax highlighting"""
 
+    INITIAL_STATE = -1
     DIFFSTAT_STATE = 0
     DIFF_FILE_HEADER_STATE = 1
     DIFF_STATE = 2
+    SUBMODULE_STATE = 3
 
     DIFF_FILE_HEADER_START_RGX = re.compile(r'diff --git a/.* b/.*')
     DIFF_HUNK_HEADER_RGX = re.compile(r'(?:@@ -[0-9,]+ \+[0-9,]+ @@)|'
@@ -75,8 +77,11 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
             return
 
         state = self.previousBlockState()
-        if state == -1:
-            state = self.DIFFSTAT_STATE
+        if state == self.INITIAL_STATE:
+            if text.startswith('Submodule '):
+                state = self.SUBMODULE_STATE
+            else:
+                state = self.DIFFSTAT_STATE
 
         if state == self.DIFFSTAT_STATE:
             if self.DIFF_FILE_HEADER_START_RGX.match(text):
