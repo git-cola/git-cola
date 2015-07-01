@@ -8,7 +8,14 @@ Latest Release
 Unreleased Topics
 =================
 
-* Coming soon...
+* The Interactive Rebase feature now works on Windows!
+
+  https://github.com/git-cola/git-cola/issues/463
+
+* Diff syntax highlighting was improved to handle more edge cases
+  and false positives.
+
+  https://github.com/git-cola/git-cola/pull/467
 
 Development version
 ===================
