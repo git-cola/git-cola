@@ -7,6 +7,10 @@ do_website=false
 do_tarball=false
 do_win32=false
 do_upload=false
+file_to_upload=
+
+# Commands
+GH_RELEASE="$META/github-release"
 
 usage () {
 	echo "$(basename "$0") [options]"
@@ -33,10 +37,10 @@ init_release () {
 	then
 		return 1
 	fi
-	if ! "$META/github-release" identify "$vVERSION"
+	if ! "$GH_RELEASE" identify "$vVERSION"
 	then
 		commit=$(git rev-parse "$vVERSION""^{commit}")
-		do_or_die "$META/github-release" create "$vVERSION" "$commit"
+		do_or_die "$GH_RELEASE" create "$vVERSION" "$commit"
 	fi
 }
 
@@ -82,7 +86,7 @@ build_win32_remotely () {
 
 upload_file () {
 	filename="$1"
-	do_or_die "$META/github-release" upload "$vVERSION" "$filename"
+	do_or_die "$GH_RELEASE" upload "$vVERSION" "$filename"
 }
 
 # Parse options
@@ -90,66 +94,67 @@ while test $# -gt 0
 do
 	case "$1" in
 	--doc-dir)
+		DOCUMENT_ROOT="$2"
 		shift
-		DOCUMENT_ROOT="$1"
 		shift
 		;;
 	--all)
-		shift
 		# we no longer release the Mac OS X app.tar.gz
 		# do_tarball=true
 		do_win32=true
 		do_docs=true
 		do_upload=true
+		shift
 		;;
 	--tarball)
-		shift
 		do_tarball=true
+		shift
 		;;
 	--doc)
-		shift
 		do_docs=true
+		shift
 		;;
 	--version)
+		VERSION="$2"
 		shift
-		VERSION="$1"
 		shift
 		;;
 	--win32)
-		shift
 		do_win32=true
+		shift
 		;;
 	--win32-login)
+		WIN32_LOGIN="$2"
 		shift
-		WIN32_LOGIN="$1"
 		shift
 		;;
 	--win32-cola-dir)
+		WIN32_COLA_DIR="$2"
 		shift
-		WIN32_COLA_DIR="$1"
 		shift
 		;;
 	--win32-python-dir)
+		WIN32_PYTHON="$2"
 		shift
-		WIN32_PYTHON="$1"
 		shift
 		;;
 	--win32-port)
+		WIN32_SSH_PORT="$2"
 		shift
-		WIN32_SSH_PORT="$1"
 		shift
 		;;
 	--upload)
-		shift
 		do_upload=true
+		shift
 		;;
 	--no-upload)
-		shift
 		do_upload=false
+		shift
 		;;
 	--upload-file)
+		do_upload=true
+		file_to_upload="$2"
 		shift
-		upload_file "$1"
 		shift
 		;;
 	--)
@@ -181,4 +186,9 @@ fi
 if test "$do_docs" = true
 then
 	build_docs
+fi
+
+if test "$do_upload" = true && test -n "$file_to_upload"
+then
+	upload_file "$file_to_upload"
 fi
