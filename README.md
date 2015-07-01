@@ -30,7 +30,7 @@ The following steps should be taken when creating a new release.
 * Create `doc/relnotes/$VERSION.rst` from the pre-release notes in
   `doc/relnotes/unreleased.rst`.
 
-* Update `doc/relnotes.rst` to point to the new stable version.
+* Update `doc/relnotes/unreleased.rst` to point to the new stable version.
 
 * Commit the above changes as `git commit -sm'git-cola vX.Y'`
 
