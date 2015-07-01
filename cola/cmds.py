@@ -1050,6 +1050,19 @@ class Clone(Command):
         return self
 
 
+def unix_path(path, is_win32=utils.is_win32):
+    """Git for Windows requires unix paths, so force them here
+    """
+    unix_path = path
+    if is_win32():
+        first = path[0]
+        second = path[1]
+        if second == ':': # sanity check, this better be a Windows-style path
+            unix_path = '/' + first + path[2:].replace('\\', '/')
+
+    return unix_path
+
+
 class GitXBaseContext(object):
 
     def __init__(self, **kwargs):
@@ -1058,7 +1071,7 @@ class GitXBaseContext(object):
 
     def __enter__(self):
         compat.setenv('GIT_SEQUENCE_EDITOR',
-                      resources.share('bin', 'git-xbase'))
+                      unix_path(resources.share('bin', 'git-xbase')))
         for var, value in self.env.items():
             compat.setenv(var, value)
         return self

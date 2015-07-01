@@ -91,6 +91,7 @@ Thanks
 * Steffen Prohaska
 * Sven Claussner
 * Taylor Braun-Jones
+* Thiemo van Engelen
 * Thomas Kluyver
 * Trevor Alexander
 * Ugo Riboni

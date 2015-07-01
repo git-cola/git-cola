@@ -28,6 +28,18 @@ class CmdsTestCase(unittest.TestCase):
         actual = cmds.Commit.strip_comments(msg)
         self.assertEqual(expect, actual)
 
+    def test_unix_path_win32(self):
+        path = r'Z:\Program Files\git-cola\bin\git-dag'
+        expect = '/Z/Program Files/git-cola/bin/git-dag'
+        actual = cmds.unix_path(path, is_win32=lambda: True)
+        self.assertEqual(expect, actual)
+
+    def test_unix_path_is_a_noop_on_sane_platforms(self):
+        path = r'/:we/don\t/need/no/stinking/badgers!'
+        expect = path
+        actual = cmds.unix_path(path, is_win32=lambda: False)
+        self.assertEqual(expect, actual)
+
 
 if __name__ == '__main__':
     unittest.main()
