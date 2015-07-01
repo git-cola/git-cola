@@ -1,0 +1,148 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+import sys
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('version')
+    args = parser.parse_args()
+    version = args.version
+
+    PyVersion(version).update()
+    PyNsistVersion(version).update()
+    RelnotesVersion(version).update()
+    RelnotesUnreleasedVersion(version).update()
+
+    return 0
+
+
+def warn(msg):
+    sys.stderr.write('warning: %s\n' % msg)
+
+
+class Version(object):
+
+    path = None
+
+    def __init__(self, version):
+        self.raw_version = version
+
+        num_version = version
+        if num_version.startswith('v'):
+            num_version = num_version[1:]
+        self.num_version = num_version
+
+        v_version = version
+        if not v_version.startswith('v'):
+            v_version = 'v' + v_version
+        self.v_version = v_version
+
+    def match(self):
+        return False
+
+    def replacement(self, line):
+        return line
+
+    def update(self):
+
+        with open(self.path, 'r') as f:
+            content = f.read()
+
+        final_content = []
+        for line in content.splitlines():
+            if self.match(line):
+                final_content.append(self.replacement(line))
+            else:
+                final_content.append(line)
+
+        with open(self.path, 'w') as f:
+            f.write('\n'.join(final_content) + '\n')
+
+        self.warn()
+
+    def warn(self):
+        pass
+
+
+class PyVersion(Version):
+
+    path = 'cola/_version.py'
+
+    def match(self, line):
+        return line.startswith('VERSION =')
+
+    def replacement(self, line):
+        return "VERSION = '%s'" % self.num_version
+
+
+class PyNsistVersion(Version):
+
+    path = 'pynsist.cfg'
+
+    def __init__(self, version):
+        super(PyNsistVersion, self).__init__(version)
+        self.section = ''
+
+    def match(self, line):
+        if line.startswith('['):
+            self.section = line[1:-1]
+            return False
+        return self.section == 'Application' and line.startswith('version=')
+
+    def replacement(self, line):
+        return 'version=%s' % self.num_version
+
+
+class RelnotesVersion(Version):
+
+    path = 'share/doc/git-cola/relnotes.rst'
+
+    def __init__(self, version):
+        super(RelnotesVersion, self).__init__(version)
+        self.last_line = ''
+
+    def match(self, line):
+        result = (self.last_line.endswith('relnotes/unreleased')
+                  and not line.endswith('relnotes/%s' % self.v_version))
+        self.last_line = line
+        return result
+
+    def replacement(self, line):
+        return '    relnotes/%s\n%s' % (self.v_version, line)
+
+
+class RelnotesUnreleasedVersion(Version):
+
+    path = 'share/doc/git-cola/relnotes/unreleased.rst'
+
+    def __init__(self, version):
+        super(RelnotesUnreleasedVersion, self).__init__(version)
+        self.last_line = ''
+        self.section = ''
+
+    def match(self, line):
+        if line.startswith('=') and line.endswith('='):
+            self.section = self.last_line
+            return False
+
+        result = (self.section == 'Latest Release' and
+                  line.startswith(':ref:`v'))
+        self.last_line = line
+        return result
+
+    def replacement(self, line):
+        version = self.v_version
+        return (r':ref:`%s <%s>` is the latest stable release.'
+                % (version, version))
+
+    def warn(self):
+        path = 'share/doc/git-cola/relnotes/%s.rst' % self.v_version
+        if not os.path.exists(path):
+            warn('%s does not exist!' % path)
+
+
+if __name__ == '__main__':
+    sys.exit(main())

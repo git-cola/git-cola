@@ -23,14 +23,17 @@ Release checklist
 -----------------
 The following steps should be taken when creating a new release.
 
-* Update `cola/_version.py` with the new version number
+* Run `./Meta/set-version vX.Y.Z`, or perform the following three steps
+  manually by editing the corresponding file:
 
-* Update `pynsist.cfg` with the new version number
+  * Update `cola/_version.py` with the new version number
+
+  * Update `pynsist.cfg` with the new version number
+
+  * Update `doc/relnotes/unreleased.rst` to point to the new stable version.
 
 * Create `doc/relnotes/$VERSION.rst` from the pre-release notes in
   `doc/relnotes/unreleased.rst`.
-
-* Update `doc/relnotes/unreleased.rst` to point to the new stable version.
 
 * Commit the above changes as `git commit -sm'git-cola vX.Y'`
 
