@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the git-cola package.
 # Xudong Guan <xudong.guan@gmail.com>, 2007.
 # Eric Miao <eric.y.miao@gmail.com>, 2008.
-# ZH <zhanghan@gmx.cn>, 2014.
+# ZH <zhanghan@gmx.cn>, 2014-2015.
 #
 # Please use the following translation throughout the file for consistence:
 #
@@ -14,16 +14,16 @@
 # 	tag		标签
 # 	annotation	标注
 # 	merge		合并
-# 	fast forward	快速合并(??)
+# 	fast forward	快进合并
 # 	stage		缓存 (译自 index/cache)
 # 	amend		修正
 # 	reset		复位
 # 	checkout	签出
+# 	cherry-pick	挑取
 #
 # Refer to 术语表 / Git Community Book 中文版
 #          http://gitbook.liuhui998.com/7_8.html
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
@@ -40,10 +40,10 @@ msgstr ""
 "X-Source-Language: C\n"
 
 #: cola/app.py:263
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
-msgstr "致命错误: \"%s\" 不是有效目录. 请用 --repo <path> 指定."
+msgstr "致命错误: \"%s\" 不是有效目录. 请用 --repo <路径> 指定."
 
 #: cola/cmds.py:152
 msgid "Amend"
@@ -135,29 +135,27 @@ msgid "Rename"
 msgstr "更名"
 
 #: cola/cmds.py:513
-#, fuzzy
 msgid "Delete Bookmark?"
-msgstr "书签"
+msgstr "删除书签吗?"
 
 #: cola/cmds.py:514
 #, python-format
 msgid "%s will be removed from your bookmarks."
-msgstr ""
+msgstr "%s 会将从收藏夹中移除"
 
 #: cola/cmds.py:515
-#, fuzzy
 msgid "Delete Bookmark"
-msgstr "书签"
+msgstr "删除书签"
 
 #: cola/cmds.py:527
 #, python-format
 msgid "Remove %s from the recent list?"
-msgstr ""
+msgstr "将 %s 从最近使用列表中移除吗?"
 
 #: cola/cmds.py:528
 #, python-format
 msgid "%s will be removed from your recent repositories."
-msgstr ""
+msgstr "%s 将从最近使用的版本库列表中移除"
 
 #: cola/cmds.py:529 cola/widgets/patch.py:92 cola/widgets/patch.py:105
 msgid "Remove"
@@ -320,7 +318,6 @@ msgid "Revert Unstaged Changes"
 msgstr "恢复未缓存的改动"
 
 #: cola/cmds.py:1263
-#, fuzzy
 msgid "Revert Uncommitted Edits..."
 msgstr "撤销未缓存修订..."
 
@@ -498,7 +495,7 @@ msgstr "Checkout"
 
 #: cola/guicmds.py:72
 msgid "Cherry-Pick Commit"
-msgstr "挑出提交"
+msgstr "挑取(Cherry-Pick)提交"
 
 #: cola/guicmds.py:109
 msgid "Error Creating Repository"
@@ -560,19 +557,17 @@ msgid "Review"
 msgstr "审阅"
 
 #: cola/guicmds.py:331
-#, fuzzy
 msgid "Clone Repository"
 msgstr "克隆已有版本库"
 
 #: cola/guicmds.py:332
-#, fuzzy, python-format
+#, python-format
 msgid "Cloning repository at %s"
-msgstr "克隆已有版本库"
+msgstr "克隆位于 %s 的已有版本库"
 
 #: cola/guicmds.py:349
-#, fuzzy
 msgid "Rename Existing Branch"
-msgstr "更新已有分支:"
+msgstr "重命名已有分支:"
 
 #: cola/guicmds.py:349 cola/widgets/browse.py:468
 #: cola/widgets/selectcommits.py:54
@@ -580,9 +575,8 @@ msgid "Select"
 msgstr "选择"
 
 #: cola/guicmds.py:352
-#, fuzzy
 msgid "Enter Branch New Name"
-msgstr "分支名"
+msgstr "输入新分支名"
 
 #: cola/inotify.py:57
 msgid "inotify is disabled because \"cola.inotify\" is false"
@@ -605,7 +599,6 @@ msgstr ""
 "提示: 安装 python-pyinotify 以启用 inotify.\n"
 
 #: cola/inotify.py:72
-#, fuzzy
 msgid "On Debian-based systems try: sudo apt-get install python-pyinotify"
 msgstr ""
 "若使用 Debian 系统, 请尝试如下命令: sudo apt-get install python-pyinotify"
@@ -799,14 +792,12 @@ msgid "Open"
 msgstr "打开"
 
 #: cola/widgets/bookmarks.py:47
-#, fuzzy
 msgid "Favorite repositories"
-msgstr "最近版本库"
+msgstr "版本库收藏夹"
 
 #: cola/widgets/bookmarks.py:49
-#, fuzzy
 msgid "Recent repositories"
-msgstr "最近版本库"
+msgstr "最近使用版本库"
 
 #: cola/widgets/bookmarks.py:100
 msgid "Open in New Window"
@@ -825,9 +816,9 @@ msgid "Enter Git Repository"
 msgstr "输入版本库"
 
 #: cola/widgets/bookmarks.py:218
-#, fuzzy, python-format
+#, python-format
 msgid "%s is not a Git repository."
-msgstr "输入版本库"
+msgstr "%s 不是 Git 版本库"
 
 #: cola/widgets/browse.py:71 cola/widgets/main.py:597
 #, python-format
@@ -853,12 +844,10 @@ msgid "View History..."
 msgstr "查看历史..."
 
 #: cola/widgets/browse.py:108
-#, fuzzy
 msgid "View history for selected path(s)"
 msgstr "查看所选路径历史."
 
 #: cola/widgets/browse.py:114
-#, fuzzy
 msgid "Stage/unstage selected path(s) for commit"
 msgstr "缓存已选路径以提交."
 
@@ -883,12 +872,10 @@ msgid "Launch git-difftool against previous versions."
 msgstr "对前一版本启动 git-difftool."
 
 #: cola/widgets/browse.py:137
-#, fuzzy
 msgid "Revert unstaged changes to selected paths."
 msgstr "撤销所选文件的改动."
 
 #: cola/widgets/browse.py:143
-#, fuzzy
 msgid "Revert uncommitted changes to selected paths."
 msgstr "撤销所选文件的改动."
 
@@ -974,9 +961,8 @@ msgid "Commit staged changes"
 msgstr "提交已缓存修改"
 
 #: cola/widgets/commitmsg.py:49
-#, fuzzy
 msgid "Clear..."
-msgstr "关闭..."
+msgstr "清除..."
 
 #: cola/widgets/commitmsg.py:65
 msgid ""
@@ -996,12 +982,11 @@ msgstr "修正上次提交"
 
 #: cola/widgets/commitmsg.py:91
 msgid "Bypass Commit Hooks"
-msgstr ""
+msgstr "跳过提交钩子"
 
 #: cola/widgets/commitmsg.py:98 cola/widgets/merge.py:100
-#, fuzzy
 msgid "Create Signed Commit"
-msgstr "创建了提交: %s"
+msgstr "创建带签名提交: %s"
 
 #: cola/widgets/commitmsg.py:104
 msgid "Check Spelling"
@@ -1025,23 +1010,20 @@ msgid "Move Down"
 msgstr "下移"
 
 #: cola/widgets/commitmsg.py:285
-#, fuzzy
 msgid "Clear commit message?"
-msgstr "查找提交信息"
+msgstr "清除提交消息吗?"
 
 #: cola/widgets/commitmsg.py:286
-#, fuzzy
 msgid "The commit message will be cleared."
-msgstr "如下文件会被删除:"
+msgstr "如下提交消息会被清除:"
 
 #: cola/widgets/commitmsg.py:287
 msgid "This cannot be undone.  Clear commit message?"
-msgstr ""
+msgstr "此操作无法恢复. 清空提交消息吗?"
 
 #: cola/widgets/commitmsg.py:288
-#, fuzzy
 msgid "Clear commit message"
-msgstr "查找提交信息"
+msgstr "清除提交信息"
 
 #: cola/widgets/commitmsg.py:415
 msgid ""
@@ -1376,7 +1358,7 @@ msgstr "存为压缩存档 Tar/Zip..."
 
 #: cola/widgets/dag.py:137 cola/widgets/search.py:83
 msgid "Cherry Pick"
-msgstr "Cherry Pick"
+msgstr "挑取(Cherry Pick)"
 
 #: cola/widgets/dag.py:140
 msgid "Grab File..."
@@ -1489,9 +1471,8 @@ msgid "Launch git-cola"
 msgstr "启动 git-cola"
 
 #: cola/widgets/diff.py:147
-#, fuzzy
 msgid "Stage Selected Lines"
-msgstr "缓存所选行(&S)"
+msgstr "缓存所选行"
 
 #: cola/widgets/diff.py:148
 msgid "Revert Selected Lines..."
@@ -1506,7 +1487,6 @@ msgid "Revert Diff Hunk..."
 msgstr "撤销差异区域..."
 
 #: cola/widgets/diff.py:173
-#, fuzzy
 msgid "Unstage Selected Lines"
 msgstr "取消缓存所选行(&S)"
 
@@ -1603,7 +1583,7 @@ msgstr "删除内容"
 
 #: cola/widgets/filelist.py:72
 msgid "Show history"
-msgstr ""
+msgstr "显示历史"
 
 #: cola/widgets/finder.py:45
 msgid ""
@@ -1620,19 +1600,30 @@ msgid ""
 "The up and down arrows change focus between the text entry field\n"
 "and the results.\n"
 msgstr ""
+"\n"
+"键盘快捷键\n"
+"------------------\n"
+"J, 向上     = 下移\n"
+"K, 向下     = 上移\n"
+"Enter       = 编辑所选文件\n"
+"Spacebar    = 使用默认程序打开文件\n"
+"Ctrl+L      = 聚焦于文本输入区\n"
+"?           = 显示帮助\n"
+"\n"
+"在文本输入区和结果区之间\n"
+"使用向上/向下键以切换聚焦\n"
 
 #: cola/widgets/finder.py:58
 msgid "Help - Find Files"
-msgstr ""
+msgstr "帮助 - 查找文件"
 
 #: cola/widgets/finder.py:86 cola/widgets/main.py:192
-#, fuzzy
 msgid "Find Files"
-msgstr "文件"
+msgstr "查找文件"
 
 #: cola/widgets/finder.py:91
 msgid "<path> ..."
-msgstr ""
+msgstr "<路径> ..."
 
 #: cola/widgets/finder.py:96 cola/widgets/grep.py:103
 #: cola/widgets/recent.py:72
@@ -1648,15 +1639,16 @@ msgid ""
 "Show help\n"
 "Shortcut: ?"
 msgstr ""
+"显示帮助\n"
+"快捷键: ?"
 
 #: cola/widgets/finder.py:155
-#, fuzzy
 msgid "Show Help"
-msgstr "帮助"
+msgstr "显示帮助"
 
 #: cola/widgets/grep.py:71 cola/widgets/search.py:45 cola/widgets/search.py:63
 msgid "Search"
-msgstr "查找"
+msgstr "搜寻"
 
 #: cola/widgets/grep.py:78
 msgid "command-line arguments"
@@ -1721,12 +1713,11 @@ msgstr "操作"
 
 #: cola/widgets/main.py:103
 msgid "Favorites"
-msgstr ""
+msgstr "收藏夹"
 
 #: cola/widgets/main.py:108
-#, fuzzy
 msgid "Recent"
-msgstr "复位"
+msgstr "最近"
 
 #: cola/widgets/main.py:126 cola/widgets/merge.py:94
 msgid "Commit"
@@ -1782,7 +1773,7 @@ msgstr "最近修改过的文件 ..."
 
 #: cola/widgets/main.py:200
 msgid "Cherry-Pick..."
-msgstr "Cherry-Pick..."
+msgstr "挑取(Cherry-Pick)..."
 
 #: cola/widgets/main.py:204
 msgid "Load Commit Message..."
@@ -1818,7 +1809,7 @@ msgstr "克隆(clone)..."
 
 #: cola/widgets/main.py:242
 msgid "Documentation"
-msgstr "在线文档"
+msgstr "帮助文档"
 
 #: cola/widgets/main.py:246
 msgid "Keyboard Shortcuts"
@@ -1877,9 +1868,8 @@ msgid "Delete Remote Branch..."
 msgstr "删除远端分支..."
 
 #: cola/widgets/main.py:285
-#, fuzzy
 msgid "Rename Branch..."
-msgstr "远端分支"
+msgstr "重命名分支"
 
 #: cola/widgets/main.py:288
 msgid "Checkout..."
@@ -1961,14 +1951,12 @@ msgid "Amending"
 msgstr "修正中"
 
 #: cola/widgets/main.py:731
-#, fuzzy
 msgid "Unable to rebase"
-msgstr "无法清理 %s"
+msgstr "无法进行衍合"
 
 #: cola/widgets/main.py:732
-#, fuzzy
 msgid "You cannot rebase with uncommitted changes."
-msgstr "撤销未提交的修改吗?"
+msgstr "有未提交修改时无法衍合"
 
 #: cola/widgets/main.py:734
 msgid "Select New Upstream"
@@ -2004,7 +1992,7 @@ msgstr "图示"
 
 #: cola/widgets/merge.py:78
 msgid "Squash the merged commit(s) into a single commit"
-msgstr ""
+msgstr "压缩合并中提交成单一提交"
 
 #: cola/widgets/merge.py:80
 msgid "Squash"
@@ -2015,17 +2003,20 @@ msgid ""
 "Always create a merge commit when enabled, even when the merge is a fast-"
 "forward update"
 msgstr ""
+"启用时总是在合并时创建一个提交,"
+"即使是快进合并方式"
 
 #: cola/widgets/merge.py:86
-#, fuzzy
 msgid "No fast forward"
-msgstr "仅快速合并"
+msgstr "不进行快速合并"
 
 #: cola/widgets/merge.py:91
 msgid ""
 "Commit the merge if there are no conflicts.  Uncheck to leave the merge "
 "uncommitted"
 msgstr ""
+"若合并无冲突即可提交."
+"取消勾选以保持此合并操作的未提交状态"
 
 #: cola/widgets/merge.py:102
 msgid "GPG-sign the merge commit"
@@ -2203,7 +2194,7 @@ msgstr "远端分支"
 
 #: cola/widgets/remote.py:134
 msgid "Fast Forward Only "
-msgstr "仅快速合并"
+msgstr "仅快进合并"
 
 #: cola/widgets/remote.py:138
 msgid "Include tags "
@@ -2249,7 +2240,7 @@ msgstr "强制获取?"
 
 #: cola/widgets/remote.py:430
 msgid "Non-fast-forward fetch overwrites local history!"
-msgstr "非快速合并式获取会覆盖本地历史!"
+msgstr "非快进合并式获取会覆盖本地历史!"
 
 #: cola/widgets/remote.py:431
 #, python-format
@@ -2269,7 +2260,7 @@ msgid ""
 "Non-fast-forward push overwrites published history!\n"
 "(Did you pull first?)"
 msgstr ""
-"非快速合并式上传会覆盖远端历史!\n"
+"非快进合并式上传会覆盖远端历史!\n"
 "(之前拉取了吗?)"
 
 #: cola/widgets/remote.py:437
@@ -2290,12 +2281,10 @@ msgid "Have you rebased/pulled lately?"
 msgstr "最近有衍合或拉取操作吗?"
 
 #: cola/widgets/remote.py:497
-#, fuzzy
 msgid "Fetch"
 msgstr "获取..."
 
 #: cola/widgets/remote.py:509
-#, fuzzy
 msgid "Pull"
 msgstr "拉取..."
 
@@ -2427,7 +2416,7 @@ msgstr "丢弃暂存"
 
 #: cola/widgets/status.py:32
 msgid "Toggle the paths filter"
-msgstr ""
+msgstr "切换路径过滤器开关"
 
 #: cola/widgets/status.py:104
 msgid "Untracked"
@@ -2442,13 +2431,12 @@ msgid "Copy Path to Clipboard"
 msgstr "复制路径到剪贴板"
 
 #: cola/widgets/status.py:162
-#, fuzzy
 msgid "Copy Relative Path to Clipboard"
-msgstr "复制路径到剪贴板"
+msgstr "复制相对路径到剪贴板"
 
 #: cola/widgets/status.py:168
 msgid "Move file(s) to trash"
-msgstr ""
+msgstr "移动文件到回收站"
 
 #: cola/widgets/status.py:177
 msgid "Delete File(s)..."
@@ -2468,9 +2456,8 @@ msgid "Add to .gitignore"
 msgstr "添加至 .gitignore"
 
 #: cola/widgets/status.py:919
-#, fuzzy
 msgid "Filter paths..."
-msgstr "获取..."
+msgstr "对路径进行过滤..."
 
 #~ msgid "Bookmarks"
 #~ msgstr "书签"
