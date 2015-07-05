@@ -161,6 +161,7 @@ class Grep(Dialog):
 
     def focus_input(self):
         self.input_txt.setFocus()
+        self.input_txt.selectAll()
 
     def focus_results(self):
         self.result_txt.setFocus()
