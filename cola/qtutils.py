@@ -45,14 +45,17 @@ KNOWN_FILE_EXTENSIONS = {
 
 
 def connect_action(action, fn):
+    """Connectc an action to a function"""
     action.connect(action, SIGNAL('triggered()'), fn)
 
 
 def connect_action_bool(action, fn):
+    """Connect a triggered(bool) action to a function"""
     action.connect(action, SIGNAL('triggered(bool)'), fn)
 
 
 def connect_button(button, fn):
+    """Connect a button to a function"""
     button.connect(button, SIGNAL('clicked()'), fn)
 
 
