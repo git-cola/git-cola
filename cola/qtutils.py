@@ -59,6 +59,11 @@ def connect_button(button, fn):
     button.connect(button, SIGNAL('clicked()'), fn)
 
 
+def button_action(button, action):
+    """Make a button trigger an action"""
+    connect_button(button, action.trigger)
+
+
 def connect_toggle(toggle, fn):
     toggle.connect(toggle, SIGNAL('toggled(bool)'), fn)
 
