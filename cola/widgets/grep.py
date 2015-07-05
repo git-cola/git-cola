@@ -72,6 +72,14 @@ class Grep(Dialog):
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
+        self.edit_action = qtutils.add_action(
+                self, N_('Edit'), self.edit, cmds.Edit.SHORTCUT)
+        self.edit_action.setEnabled(False)
+
+        self.refresh_action = qtutils.add_action(
+                self, N_('Refresh'), self.search, *cmds.Refresh.SHORTCUTS)
+        self.refresh_action.setEnabled(False)
+
         self.input_label = QtGui.QLabel('git grep')
         self.input_label.setFont(diff_font())
 
@@ -103,13 +111,11 @@ class Grep(Dialog):
         self.edit_button = QtGui.QPushButton(N_('Edit'))
         self.edit_button.setIcon(qtutils.open_file_icon())
         self.edit_button.setEnabled(False)
-        self.edit_button.setShortcut(cmds.Edit.SHORTCUT)
-
-        self.refresh_action = qtutils.add_action(
-                self, N_('Refresh'), self.search, *cmds.Refresh.SHORTCUTS)
+        qtutils.button_action(self.edit_button, self.edit_action)
 
         self.refresh_button = QtGui.QPushButton(N_('Refresh'))
         self.refresh_button.setIcon(qtutils.reload_icon())
+        self.refresh_button.setEnabled(False)
         qtutils.button_action(self.refresh_button, self.refresh_action)
 
         self.shell_checkbox = QtGui.QCheckBox(N_('Shell arguments'))
@@ -152,8 +158,6 @@ class Grep(Dialog):
                            Qt.Key_Down, Qt.Key_Enter, Qt.Key_Return)
         qtutils.add_action(self, 'Focus Input', self.focus_input, 'Ctrl+L')
 
-        qtutils.connect_button(self.edit_button, self.edit)
-        qtutils.connect_button(self.refresh_button, self.search)
         qtutils.connect_toggle(self.shell_checkbox, lambda x: self.search())
         qtutils.connect_button(self.close_button, self.close)
         qtutils.add_close_action(self)
@@ -179,8 +183,9 @@ class Grep(Dialog):
         return ustr(data)
 
     def search(self):
-        self.refresh_action.setEnabled(False)
+        self.edit_action.setEnabled(False)
         self.edit_button.setEnabled(False)
+        self.refresh_action.setEnabled(False)
         self.refresh_button.setEnabled(False)
         query = self.input_txt.value()
         if len(query) < 2:
@@ -232,6 +237,7 @@ class Grep(Dialog):
         self.set_text_offset(offset)
 
         enabled = status == 0
+        self.edit_action.setEnabled(enabled)
         self.edit_button.setEnabled(enabled)
         self.refresh_button.setEnabled(True)
         self.refresh_action.setEnabled(True)
