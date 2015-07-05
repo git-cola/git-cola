@@ -105,9 +105,12 @@ class Grep(Dialog):
         self.edit_button.setEnabled(False)
         self.edit_button.setShortcut(cmds.Edit.SHORTCUT)
 
+        self.refresh_action = qtutils.add_action(
+                self, N_('Refresh'), self.search, *cmds.Refresh.SHORTCUTS)
+
         self.refresh_button = QtGui.QPushButton(N_('Refresh'))
         self.refresh_button.setIcon(qtutils.reload_icon())
-        self.refresh_button.setShortcut(QtGui.QKeySequence.Refresh)
+        qtutils.button_action(self.refresh_button, self.refresh_action)
 
         self.shell_checkbox = QtGui.QCheckBox(N_('Shell arguments'))
         self.shell_checkbox.setToolTip(
@@ -176,6 +179,7 @@ class Grep(Dialog):
         return ustr(data)
 
     def search(self):
+        self.refresh_action.setEnabled(False)
         self.edit_button.setEnabled(False)
         self.refresh_button.setEnabled(False)
         query = self.input_txt.value()
@@ -227,8 +231,10 @@ class Grep(Dialog):
         self.set_text_scroll(scroll)
         self.set_text_offset(offset)
 
-        self.edit_button.setEnabled(status == 0)
-        self.refresh_button.setEnabled(status == 0)
+        enabled = status == 0
+        self.edit_button.setEnabled(enabled)
+        self.refresh_button.setEnabled(True)
+        self.refresh_action.setEnabled(True)
 
     def edit(self):
         goto_grep(self.result_txt.selected_line()),
