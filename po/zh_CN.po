@@ -487,11 +487,11 @@ msgstr "浏览"
 
 #: cola/guicmds.py:63
 msgid "Checkout Branch"
-msgstr "Checkout 分支"
+msgstr "签出分支"
 
 #: cola/guicmds.py:63
 msgid "Checkout"
-msgstr "Checkout"
+msgstr "签出"
 
 #: cola/guicmds.py:72
 msgid "Cherry-Pick Commit"
@@ -1189,7 +1189,7 @@ msgstr "获取跟踪分支"
 
 #: cola/widgets/createbranch.py:145
 msgid "Checkout After Creation"
-msgstr "在创建后Checkout"
+msgstr "在创建后签出"
 
 #: cola/widgets/createbranch.py:158
 msgid "Options"
@@ -1873,7 +1873,7 @@ msgstr "重命名分支"
 
 #: cola/widgets/main.py:288
 msgid "Checkout..."
-msgstr "检出..."
+msgstr "签出..."
 
 #: cola/widgets/main.py:290
 msgid "Review..."
