@@ -17,6 +17,10 @@ Unreleased Topics
 
   https://github.com/git-cola/git-cola/pull/467
 
+* Setting commands in the interactive rebase editor was fixed.
+
+  https://github.com/git-cola/git-cola/issues/472
+
 Development version
 ===================
 
