@@ -574,8 +574,8 @@ class RemoveFiles(Command):
 class Delete(RemoveFiles):
     """Delete files."""
 
-    SHORTCUT = 'Ctrl+Shift+Backspace'
-    ALT_SHORTCUT = 'Ctrl+Backspace'
+    SHORTCUT = 'Alt+Shift+Backspace'
+    ALT_SHORTCUT = 'Alt+Backspace'
 
     def __init__(self, filenames):
         RemoveFiles.__init__(self, os.remove, filenames)
