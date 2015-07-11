@@ -51,6 +51,7 @@ Thanks
 * Kelvie Wong
 * Kerrick Staley
 * Kevin Kofler
+* Kirit Sælensminde
 * Leho Kraav
 * Libor Jelinek
 * Liviu Cristian Mirea-Ghiban
