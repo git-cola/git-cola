@@ -328,16 +328,16 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         for item in self.items():
             if item.is_enabled() and item.is_commit():
                 if item.command in invalid_first_choice:
-                    item.set_command(PICK)
+                    item.reset_command(PICK)
                 break
 
     def set_selected_to(self, command):
         for i in self.selected_items():
-            i.set_command(command)
+            i.reset_command(command)
         self.validate()
 
     def set_command(self, item, command):
-        item.set_command(command)
+        item.reset_command(command)
         self.validate()
 
     def copy_sha1(self):
@@ -492,8 +492,9 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
         combo.addItems(items)
         combo.setCurrentIndex(idx)
         combo.setEnabled(self.is_commit())
-        combo.connect(combo, SIGNAL('currentIndexChanged(const QString &)'),
-                      lambda s: self.set_command(s))
+        combo.connect(combo, SIGNAL('currentIndexChanged(const QString&)'),
+                      self.set_command_and_validate)
+        combo.connect(combo, SIGNAL('validate()'), parent.validate)
 
         parent.setItemWidget(self, self.COMMAND_COLUMN, combo)
 
@@ -530,7 +531,20 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
             return
         command = ustr(command)
         self.command = command
+
+    def refresh(self):
+        """Update the view to match the updated state"""
+        command = self.command
         self.combo.setCurrentIndex(COMMAND_IDX[command])
+
+    def reset_command(self, command):
+        """Set and refresh the item in one shot"""
+        self.set_command(command)
+        self.refresh()
+
+    def set_command_and_validate(self, command):
+        self.set_command(command)
+        self.combo.emit(SIGNAL('validate()'))
 
 
 def show_help():
