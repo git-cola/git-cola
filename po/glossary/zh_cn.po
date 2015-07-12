@@ -2,12 +2,13 @@
 # Copyright (C) 2007 Shawn Pearce, et al.
 # This file is distributed under the same license as the git-cola package.
 # Xudong Guan <xudong.guan@gmail.com> and the zh-kernel.org mailing list, 2007
+# ZH <zhanghan@gmx.cn>, 2015
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: git-cola glossary\n"
 "PO-Revision-Date: 2007-07-23 22:07+0200\n"
-"Last-Translator: Xudong Guan <xudong.guan@gmail.com>\n"
+"Last-Translator: ZH <zhanghan@gmx.cn>\n"
 "Language-Team: Simplified Chinese \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +52,7 @@ msgstr "签出"
 
 #. "The action of updating the working tree to a revision which was stored in the object database."
 msgid "checkout [verb]"
-msgstr "签出"
+msgstr "进行签出"
 
 #. "A single point in the git history."
 msgid "commit [noun]"
@@ -59,7 +60,7 @@ msgstr "提交"
 
 #. "The action of storing a new snapshot of the project's state in the git history."
 msgid "commit [verb]"
-msgstr "提交"
+msgstr "进行提交"
 
 #. ""
 #. 差异？差别？
@@ -91,7 +92,7 @@ msgstr "合并"
 
 #. "To bring the contents of another branch into the current branch."
 msgid "merge [verb]"
-msgstr "合并"
+msgstr "进行合并"
 
 #. ""
 #. message是指commit中的文字信息
@@ -100,7 +101,7 @@ msgstr "描述"
 
 #. "Pulling a branch means to fetch it and merge it."
 msgid "pull"
-msgstr "获取＋合并"
+msgstr "拉取"
 
 #. "Pushing a branch means to get the branch's head ref from a remote repository, and ... (well, can someone please explain it for mere mortals?)"
 msgid "push"
