@@ -245,6 +245,13 @@ class CommitTreeWidget(ViewerMixin, standard.TreeWidget):
         if found:
             self.select([found.commit.sha1], block_signals=False)
 
+    def selected_commit_range(self):
+        selected_items = self.selected_items()
+        if not selected_items:
+            return None, None
+        item_below = self.itemBelow(selected_items[-1])
+        return item_below.commit.sha1 if item_below else None, selected_items[0].commit.sha1
+
     def set_selecting(self, selecting):
         self.selecting = selecting
 
@@ -356,6 +363,8 @@ class GitDAG(standard.MainWindow):
         self.notifier.add_observer(refs_updated, self.display)
         self.notifier.add_observer(filelist.HISTORIES_SELECTED,
                                    self.histories_selected)
+        self.notifier.add_observer(filelist.DIFFTOOL_SELECTED,
+                                   self.difftool_selected)
 
         self.treewidget = CommitTreeWidget(notifier, self)
         self.diffwidget = diff.DiffWidget(notifier, self)
@@ -584,6 +593,14 @@ class GitDAG(standard.MainWindow):
         text = subprocess.list2cmdline(argv)
         self.revtext.setText(text)
         self.display()
+
+    def difftool_selected(self, files):
+        bottom, top = self.treewidget.selected_commit_range()
+        if not top:
+            return
+        if not bottom:
+            bottom = '%s^' % top
+        difftool.launch([bottom, top, '--'] + list(files))
 
 
 class ReaderThread(QtCore.QThread):
