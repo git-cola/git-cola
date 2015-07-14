@@ -21,7 +21,7 @@ Unreleased Topics
 
   https://github.com/git-cola/git-cola/issues/472
 
-* The "Delete untracked files" hotkey is now "Alt + backspace",
+* The "Delete untracked files" hotkey is now "Ctrl + Shift + backspace",
   instead of "Ctrl + backspace", to avoid clobbering the prevalent
   "Ctrl + backspace" shortcut to delete the last word in a text edit.
 

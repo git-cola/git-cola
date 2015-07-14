@@ -163,19 +163,23 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 self.copy_relpath, QtGui.QKeySequence.Cut)
         self.copy_relpath_action.setIcon(qtutils.theme_icon('edit-copy.svg'))
 
+        # MoveToTrash and Delete use the same shortcut.
+        # We will only bind one of them, depending on whether or not the
+        # MoveToTrash command is avaialble.  When available, the hotkey
+        # is bound to MoveToTrash, otherwise it is bound to Delete.
         if cmds.MoveToTrash.AVAILABLE:
             self.move_to_trash_action = qtutils.add_action(self,
                     N_('Move file(s) to trash'),
                     self._trash_untracked_files, cmds.MoveToTrash.SHORTCUT)
             self.move_to_trash_action.setIcon(qtutils.discard_icon())
-            delete_shortcut = cmds.Delete.SHORTCUT
+            delete_shortcut = []
         else:
             self.move_to_trash_action = None
-            delete_shortcut = cmds.Delete.ALT_SHORTCUT
+            delete_shortcut = [cmds.Delete.SHORTCUT]
 
         self.delete_untracked_files_action = qtutils.add_action(self,
                 N_('Delete File(s)...'),
-                self._delete_untracked_files, delete_shortcut)
+                self._delete_untracked_files, *delete_shortcut)
         self.delete_untracked_files_action.setIcon(qtutils.discard_icon())
 
         self.connect(self, SIGNAL('about_to_update()'),

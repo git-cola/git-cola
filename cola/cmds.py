@@ -574,8 +574,7 @@ class RemoveFiles(Command):
 class Delete(RemoveFiles):
     """Delete files."""
 
-    SHORTCUT = 'Alt+Shift+Backspace'
-    ALT_SHORTCUT = 'Alt+Backspace'
+    SHORTCUT = 'Ctrl+Shift+Backspace'
 
     def __init__(self, filenames):
         RemoveFiles.__init__(self, os.remove, filenames)
@@ -602,7 +601,7 @@ class Delete(RemoveFiles):
 class MoveToTrash(RemoveFiles):
     """Move files to the trash using send2trash"""
 
-    SHORTCUT = 'Ctrl+Backspace'
+    SHORTCUT = 'Ctrl+Shift+Backspace'
     AVAILABLE = send2trash is not None
 
     def __init__(self, filenames):
