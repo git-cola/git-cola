@@ -14,6 +14,7 @@ from cola import git
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
+from cola.models import prefs
 from cola.settings import Settings
 from cola.widgets import defs
 from cola.widgets import standard
@@ -134,6 +135,9 @@ class BookmarksTreeWidget(standard.TreeWidget):
         if self.style == BOOKMARKS:
             items = [BookmarksTreeWidgetItem(path, icon)
                         for path in settings.bookmarks]
+
+            if prefs.sort_bookmarks():
+                items.sort()
         elif self.style == RECENT_REPOS:
             # recent items
             items = [BookmarksTreeWidgetItem(path, icon)

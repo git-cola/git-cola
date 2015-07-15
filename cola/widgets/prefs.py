@@ -174,6 +174,7 @@ class SettingsFormWidget(FormWidget):
         self.difftool = QtGui.QLineEdit()
         self.mergetool = QtGui.QLineEdit()
         self.keep_merge_backups = QtGui.QCheckBox()
+        self.sort_bookmarks = QtGui.QCheckBox()
         self.save_gui_settings = QtGui.QCheckBox()
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
@@ -186,6 +187,7 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Diff Tool'), self.difftool)
         self.add_row(N_('Merge Tool'), self.mergetool)
         self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
+        self.add_row(N_('Sort bookmarks alphabetically'), self.sort_bookmarks)
         self.add_row(N_('Save GUI Settings'), self.save_gui_settings)
 
         self.set_config({
@@ -193,6 +195,7 @@ class SettingsFormWidget(FormWidget):
             prefs.TABWIDTH: (self.tabwidth, 8),
             prefs.TEXTWIDTH: (self.textwidth, 72),
             prefs.LINEBREAK: (self.linebreak, True),
+            prefs.SORT_BOOKMARKS: (self.sort_bookmarks, True),
             prefs.DIFFTOOL: (self.difftool, 'xxdiff'),
             prefs.EDITOR: (self.editor, os.getenv('VISUAL', 'gvim')),
             prefs.HISTORY_BROWSER: (self.historybrowser, 'gitk'),
