@@ -643,7 +643,7 @@ class GitDialog(QtGui.QDialog):
         qtutils.connect_button(self.ok_button, self.accept)
         qtutils.connect_button(self.close_button, self.reject)
 
-        self.connect(self.lineedit, SIGNAL('textChanged(const QString&)'),
+        self.connect(self.lineedit, SIGNAL('textChanged(QString)'),
                      self.text_changed)
         self.connect(self.lineedit, SIGNAL('return()'), self.accept)
 

@@ -534,7 +534,7 @@ class GitTreeWidget(standard.TreeView):
         standard.TreeView.__init__(self, parent)
         self.setHeaderHidden(True)
 
-        self.connect(self, SIGNAL('doubleClicked(const QModelIndex &)'),
+        self.connect(self, SIGNAL('doubleClicked(QModelIndex)'),
                      self.double_clicked)
 
     def double_clicked(self, index):

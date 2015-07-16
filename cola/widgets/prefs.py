@@ -203,7 +203,7 @@ class SettingsFormWidget(FormWidget):
             prefs.MERGETOOL: (self.mergetool, 'xxdiff'),
         })
 
-        self.connect(self.fixed_font, SIGNAL('currentFontChanged(const QFont &)'),
+        self.connect(self.fixed_font, SIGNAL('currentFontChanged(QFont)'),
                      self.current_font_changed)
 
         self.connect(self.font_size, SIGNAL('valueChanged(int)'),

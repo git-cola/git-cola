@@ -492,7 +492,7 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
         combo.addItems(items)
         combo.setCurrentIndex(idx)
         combo.setEnabled(self.is_commit())
-        combo.connect(combo, SIGNAL('currentIndexChanged(const QString&)'),
+        combo.connect(combo, SIGNAL('currentIndexChanged(QString)'),
                       self.set_command_and_validate)
         combo.connect(combo, SIGNAL('validate()'), parent.validate)
 
