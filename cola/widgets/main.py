@@ -549,6 +549,9 @@ class MainView(standard.MainWindow):
             # enables automatic line breaks
             self.commitmsgeditor.set_linebreak(value)
 
+        elif config == prefs.SORT_BOOKMARKS:
+            self.bookmarkswidget.reload_bookmarks()
+
         elif config == prefs.TEXTWIDTH:
             # text width used for line wrapping
             self.commitmsgeditor.set_textwidth(value)

@@ -10,6 +10,7 @@ DIFFTOOL = 'diff.tool'
 DISPLAY_UNTRACKED = 'gui.displayuntracked'
 EDITOR = 'gui.editor'
 LINEBREAK = 'cola.linebreak'
+SORT_BOOKMARKS = 'cola.sortbookmarks'
 TABWIDTH = 'cola.tabwidth'
 TEXTWIDTH = 'cola.textwidth'
 HISTORY_BROWSER = 'gui.historybrowser'
@@ -39,6 +40,10 @@ def history_browser():
 
 def linebreak():
     return gitcfg.current().get(LINEBREAK, True)
+
+
+def sort_bookmarks():
+    return gitcfg.current().get(SORT_BOOKMARKS, True)
 
 
 def tabwidth():
