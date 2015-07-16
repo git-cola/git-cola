@@ -311,19 +311,6 @@ class MainView(standard.MainWindow):
         self.rebase_abort_action = add_action(self,
                 N_('Abort'), self.rebase_abort)
 
-        # Relayed actions
-        status_tree = self.statusdockwidget.widget().tree
-        self.addAction(status_tree.delete_untracked_files_action)
-
-        if not self.browser_dockable:
-            # These shortcuts conflict with those from the
-            # 'Browser' widget so don't register them when
-            # the browser is a dockable tool.
-            self.addAction(status_tree.revert_unstaged_edits_action)
-            self.addAction(status_tree.up_action)
-            self.addAction(status_tree.down_action)
-            self.addAction(status_tree.process_selection_action)
-
         self.lock_layout_action = add_action_bool(self,
                 N_('Lock Layout'), self.set_lock_layout, False)
 
