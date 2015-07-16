@@ -240,6 +240,103 @@ class HintedTextView(MonoTextView, HintedTextWidgetMixin):
         HintedTextWidgetMixin.__init__(self, hint)
 
 
+# The vim-like read-only text view
+
+class VimMixin(object):
+
+    def __init__(self, base):
+        self._base = base
+        # Common vim/unix-ish keyboard actions
+        self.add_navigation('Up', Qt.Key_K, shift=True)
+        self.add_navigation('Down', Qt.Key_J, shift=True)
+        self.add_navigation('Left', Qt.Key_H, shift=True)
+        self.add_navigation('Right', Qt.Key_L, shift=True)
+        self.add_navigation('WordLeft', Qt.Key_B)
+        self.add_navigation('WordRight', Qt.Key_W)
+        self.add_navigation('StartOfLine', Qt.Key_0)
+        self.add_navigation('EndOfLine', Qt.Key_Dollar)
+
+        qtutils.add_action(self, 'PageUp',
+                           lambda: self.page(-self.height()//2),
+                           Qt.ShiftModifier + Qt.Key_Shift)
+
+        qtutils.add_action(self, 'PageDown',
+                           lambda: self.page(self.height()//2),
+                           Qt.Key_Space)
+
+    def add_navigation(self, name, hotkey, shift=False):
+        """Add a hotkey along with a shift-variant"""
+        direction = getattr(QtGui.QTextCursor, name)
+        qtutils.add_action(self, name,
+                           lambda: self.move(direction), hotkey)
+        if shift:
+            qtutils.add_action(self, 'Shift'+name,
+                               lambda: self.move(direction, True),
+                               Qt.ShiftModifier+hotkey)
+
+    def move(self, direction, select=False):
+        cursor = self.textCursor()
+        if select:
+            mode = QtGui.QTextCursor.KeepAnchor
+        else:
+            mode = QtGui.QTextCursor.MoveAnchor
+        if cursor.movePosition(direction, mode):
+            self.set_text_cursor(cursor)
+
+    def page(self, offset):
+        rect = self.cursorRect()
+        x = rect.x()
+        y = rect.y() + offset
+        new_cursor = self.cursorForPosition(QtCore.QPoint(x, y))
+        if new_cursor is not None:
+            self.set_text_cursor(new_cursor)
+
+    def set_text_cursor(self, cursor):
+        self.setTextCursor(cursor)
+        self.ensureCursorVisible()
+        self.viewport().update()
+
+    def keyPressEvent(self, event):
+        """Custom keyboard behaviors
+
+        The leave() signal is emitted when `Up` is pressed and we're already
+        at the beginning of the text.  This allows the parent widget to
+        orchestrate some higher-level interaction, such as giving focus to
+        another widget.
+
+        When in the  middle of the first line and `Up` is pressed, the cursor
+        is moved to the beginning of the line.
+
+        """
+        if event.key() == Qt.Key_Up:
+            cursor = self.textCursor()
+            position = cursor.position()
+            if position == 0:
+                # The cursor is at the beginning of the line.
+                # Emit a signal so that the parent can e.g. change focus.
+                self.emit(SIGNAL('leave()'))
+            elif self.value()[:position].count('\n') == 0:
+                # The cursor is in the middle of the first line of text.
+                # We can't go up ~ jump to the beginning of the line.
+                # Select the text if shift is pressed.
+                if event.modifiers() & Qt.ShiftModifier:
+                    mode = QtGui.QTextCursor.KeepAnchor
+                else:
+                    mode = QtGui.QTextCursor.MoveAnchor
+                cursor.movePosition(QtGui.QTextCursor.StartOfLine, mode)
+                self.setTextCursor(cursor)
+
+        return self._base.keyPressEvent(self, event)
+
+
+class VimHintedTextView(VimMixin, HintedTextView):
+
+    def __init__(self, hint='', parent=None):
+        HintedTextView.__init__(self, hint, parent=parent)
+        VimMixin.__init__(self, HintedTextView)
+
+
+
 class HintedLineEdit(HintedTextWidgetMixin, BasicLineEdit):
 
     def __init__(self, hint='', parent=None):

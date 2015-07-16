@@ -14,7 +14,7 @@ from cola.i18n import N_
 from cola.qtutils import diff_font
 from cola.widgets import defs
 from cola.widgets.standard import Dialog
-from cola.widgets.text import HintedTextView, HintedLineEdit
+from cola.widgets.text import VimHintedTextView, HintedLineEdit
 from cola.compat import ustr
 
 
@@ -246,52 +246,13 @@ class Grep(Dialog):
         goto_grep(self.result_txt.selected_line()),
 
 
-class GrepTextView(HintedTextView):
+class GrepTextView(VimHintedTextView):
 
     def __init__(self, hint, parent):
-        HintedTextView.__init__(self, hint, parent)
+        VimHintedTextView.__init__(self, hint=hint, parent=parent)
+
         self.goto_action = qtutils.add_action(self, 'Launch Editor', self.edit)
         self.goto_action.setShortcut(cmds.Edit.SHORTCUT)
-
-        qtutils.add_action(self, 'Up',
-                lambda: self.move(QtGui.QTextCursor.Up),
-                Qt.Key_K)
-
-        qtutils.add_action(self, 'Down',
-                lambda: self.move(QtGui.QTextCursor.Down),
-                Qt.Key_J)
-
-        qtutils.add_action(self, 'Left',
-                lambda: self.move(QtGui.QTextCursor.Left),
-                Qt.Key_H)
-
-        qtutils.add_action(self, 'Right',
-                lambda: self.move(QtGui.QTextCursor.Right),
-                Qt.Key_L)
-
-        qtutils.add_action(self, 'StartOfLine',
-                lambda: self.move(QtGui.QTextCursor.StartOfLine),
-                Qt.Key_0)
-
-        qtutils.add_action(self, 'EndOfLine',
-                lambda: self.move(QtGui.QTextCursor.EndOfLine),
-                Qt.Key_Dollar)
-
-        qtutils.add_action(self, 'WordLeft',
-                lambda: self.move(QtGui.QTextCursor.WordLeft),
-                Qt.Key_B)
-
-        qtutils.add_action(self, 'WordRight',
-                lambda: self.move(QtGui.QTextCursor.WordRight),
-                Qt.Key_W)
-
-        qtutils.add_action(self, 'PageUp',
-                lambda: self.page(-self.height()//2),
-                'Shift+Space')
-
-        qtutils.add_action(self, 'PageDown',
-                lambda: self.page(self.height()//2),
-                Qt.Key_Space)
 
     def contextMenuEvent(self, event):
         menu = self.createStandardContextMenu(event.pos())
@@ -301,36 +262,3 @@ class GrepTextView(HintedTextView):
 
     def edit(self):
         goto_grep(self.selected_line())
-
-    def page(self, offset):
-        rect = self.cursorRect()
-        x = rect.x()
-        y = rect.y() + offset
-        new_cursor = self.cursorForPosition(QtCore.QPoint(x, y))
-        if new_cursor is not None:
-            self.set_text_cursor(new_cursor)
-
-    def set_text_cursor(self, cursor):
-        self.setTextCursor(cursor)
-        self.ensureCursorVisible()
-        self.viewport().update()
-
-    def move(self, direction):
-        cursor = self.textCursor()
-        if cursor.movePosition(direction):
-            self.set_text_cursor(cursor)
-
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Up:
-            cursor = self.textCursor()
-            position = cursor.position()
-            if position == 0 and not cursor.hasSelection():
-                # The cursor is at the beginning of the line.
-                # If we have selection then simply reset the cursor.
-                # Otherwise, emit a signal so that the parent can
-                # change focus.
-                self.emit(SIGNAL('leave()'))
-            elif self.value()[:position].count('\n') == 0:
-                cursor.movePosition(QtGui.QTextCursor.StartOfLine)
-                self.setTextCursor(cursor)
-        return HintedTextView.keyPressEvent(self, event)
