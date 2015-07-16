@@ -10,17 +10,64 @@ from cola.models import prefs
 from cola.widgets import defs
 
 
-class MonoTextEdit(QtGui.QTextEdit):
+class BasicLineEdit(QtGui.QLineEdit):
 
-    def __init__(self, parent):
+    def __init__(self, parent=None, row=1):
+        QtGui.QLineEdit.__init__(self, parent)
+        self._row = row
+        self.connect(self, SIGNAL('cursorPositionChanged(int,int)'),
+                     lambda old, new: self.emit_position())
+
+    def set_value(self, value):
+        self.setText(value)
+
+    def as_unicode(self):
+        return ustr(self.text())
+
+    def strip(self):
+        return self.as_unicode().strip()
+
+    def value(self):
+        return self.strip()
+
+    def reset_cursor(self):
+        self.setCursorPosition(0)
+
+    def emit_position(self):
+        row = self._row
+        col = self.cursorPosition()
+        self.emit(SIGNAL('cursorPosition(int,int)'), row, col)
+
+
+class BasicTextEdit(QtGui.QTextEdit):
+
+    def __init__(self, parent=None):
         QtGui.QTextEdit.__init__(self, parent)
         self._tabwidth = 8
         self.setMinimumSize(QtCore.QSize(1, 1))
         self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.setAcceptRichText(False)
-        self.setFont(qtutils.diff_font())
-        self.set_tabwidth(prefs.tabwidth())
         self.setCursorWidth(2)
+
+        self.connect(self, SIGNAL('cursorPositionChanged()'),
+                     self.emit_position)
+
+    def as_unicode(self):
+        return ustr(self.toPlainText())
+
+    def strip(self):
+        return self.as_unicode().strip()
+
+    def value(self):
+        return self.strip()
+
+    def set_value(self, value):
+        self.setPlainText(value)
+
+    def reset_cursor(self):
+        cursor = self.textCursor()
+        cursor.setPosition(0)
+        self.setTextCursor(cursor)
 
     def tabwidth(self):
         return self._tabwidth
@@ -60,6 +107,17 @@ class MonoTextEdit(QtGui.QTextEdit):
             line = data
         return line
 
+    def emit_position(self):
+        cursor = self.textCursor()
+        position = cursor.position()
+        txt = self.as_unicode()
+        before = txt[:position]
+        row = before.count('\n')
+        line = before.split('\n')[row]
+        col = cursor.columnNumber()
+        col += line[:col].count('\t') * (self.tabwidth() - 1)
+        self.emit(SIGNAL('cursorPosition(int,int)'), row+1, col)
+
     def mousePressEvent(self, event):
         # Move the text cursor so that the right-click events operate
         # on the current position, not the last left-clicked position.
@@ -67,6 +125,14 @@ class MonoTextEdit(QtGui.QTextEdit):
             if not self.textCursor().hasSelection():
                 self.setTextCursor(self.cursorForPosition(event.pos()))
         QtGui.QTextEdit.mousePressEvent(self, event)
+
+
+class MonoTextEdit(BasicTextEdit):
+
+    def __init__(self, parent):
+        BasicTextEdit.__init__(self, parent)
+        self.setFont(qtutils.diff_font())
+        self.set_tabwidth(prefs.tabwidth())
 
 
 class MonoTextView(MonoTextEdit):
@@ -88,13 +154,15 @@ class HintedTextWidgetEventFilter(QtCore.QObject):
 
     def eventFilter(self, obj, event):
         if event.type() == QtCore.QEvent.FocusIn:
-            self.widget.emit_position()
-            if self.widget.is_hint():
-                self.widget.enable_hint(False)
+            widget = self.widget
+            widget.emit_position()
+            if widget.is_hint():
+                widget.enable_hint(False)
 
         elif event.type() == QtCore.QEvent.FocusOut:
-            if not bool(self.widget.value()):
-                self.widget.enable_hint(True)
+            widget = self.widget
+            if not bool(widget.value()):
+                widget.enable_hint(True)
 
         return False
 
@@ -116,12 +184,6 @@ class HintedTextWidgetMixin(object):
         pal.setColor(QtGui.QPalette.Active, QtGui.QPalette.Text, color)
         pal.setColor(QtGui.QPalette.Inactive, QtGui.QPalette.Text, color)
 
-    def emit_position(self):
-        pass
-
-    def reset_cursor(self):
-        pass
-
     def set_hint(self, hint):
         is_hint = self.is_hint()
         self._hint = hint
@@ -140,9 +202,6 @@ class HintedTextWidgetMixin(object):
             return ''
         else:
             return text
-
-    def strip(self):
-        return self.as_unicode().strip()
 
     def enable_hint(self, hint):
         blocksignals = self.blockSignals(True)
@@ -164,72 +223,32 @@ class HintedTextWidgetMixin(object):
         self.enable_hint_palette(self.is_hint())
 
 
-class HintedTextEditMixin(HintedTextWidgetMixin):
-
-    def __init__(self, hint):
-        HintedTextWidgetMixin.__init__(self, hint)
-        self.connect(self, SIGNAL('cursorPositionChanged()'),
-                     self.emit_position)
-
-    def as_unicode(self):
-        return ustr(self.toPlainText())
-
-    def set_value(self, value):
-        self.setPlainText(value)
-        self.refresh_palette()
-
-    def emit_position(self):
-        cursor = self.textCursor()
-        position = cursor.position()
-        txt = self.as_unicode()
-        before = txt[:position]
-        row = before.count('\n')
-        line = before.split('\n')[row]
-        col = cursor.columnNumber()
-        if hasattr(self, 'tabwidth'):
-            col += line[:col].count('\t') * (self.tabwidth() - 1)
-        self.emit(SIGNAL('cursorPosition(int,int)'), row+1, col)
-
-
-class HintedTextEdit(MonoTextEdit, HintedTextEditMixin):
+class HintedTextEdit(MonoTextEdit, HintedTextWidgetMixin):
 
     def __init__(self, hint, parent=None):
         MonoTextEdit.__init__(self, parent)
-        HintedTextEditMixin.__init__(self, hint)
+        HintedTextWidgetMixin.__init__(self, hint)
+        # Refresh palettes when text changes
+        self.connect(self, SIGNAL('textChanged()'), self.refresh_palette)
 
 
 # The read-only variant.
-class HintedTextView(MonoTextView, HintedTextEditMixin):
+class HintedTextView(MonoTextView, HintedTextWidgetMixin):
 
     def __init__(self, hint, parent=None):
         MonoTextView.__init__(self, parent)
-        HintedTextEditMixin.__init__(self, hint)
+        HintedTextWidgetMixin.__init__(self, hint)
 
 
-class HintedLineEdit(QtGui.QLineEdit, HintedTextWidgetMixin):
+class HintedLineEdit(HintedTextWidgetMixin, BasicLineEdit):
 
     def __init__(self, hint='', parent=None):
-        QtGui.QLineEdit.__init__(self, parent)
+        BasicLineEdit.__init__(self, parent)
         HintedTextWidgetMixin.__init__(self, hint)
 
         self.setFont(qtutils.diff_font())
-        self.connect(self,
-                     SIGNAL('cursorPositionChanged(int,int)'),
-                     lambda x, y: self.emit_position())
-
-    def emit_position(self):
-        cols = self.cursorPosition()
-        self.emit(SIGNAL('cursorPosition(int,int)'), 1, cols)
-
-    def set_value(self, value):
-        self.setText(value)
-        self.refresh_palette()
-
-    def as_unicode(self):
-        return ustr(self.text())
-
-    def reset_cursor(self):
-        self.setCursorPosition(0)
+        self.connect(self, SIGNAL('textChanged(QString)'),
+                     lambda text: self.refresh_palette())
 
 
 def text_dialog(text, title):
