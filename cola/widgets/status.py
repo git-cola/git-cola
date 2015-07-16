@@ -172,14 +172,14 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                     N_('Move file(s) to trash'),
                     self._trash_untracked_files, cmds.MoveToTrash.SHORTCUT)
             self.move_to_trash_action.setIcon(qtutils.discard_icon())
-            delete_shortcut = []
+            delete_shortcut = cmds.Delete.SHORTCUT
         else:
             self.move_to_trash_action = None
-            delete_shortcut = [cmds.Delete.SHORTCUT]
+            delete_shortcut = cmds.Delete.ALT_SHORTCUT
 
         self.delete_untracked_files_action = qtutils.add_action(self,
                 N_('Delete File(s)...'),
-                self._delete_untracked_files, *delete_shortcut)
+                self._delete_untracked_files, delete_shortcut)
         self.delete_untracked_files_action.setIcon(qtutils.discard_icon())
 
         self.connect(self, SIGNAL('about_to_update()'),
