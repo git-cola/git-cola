@@ -638,8 +638,8 @@ class MainView(standard.MainWindow):
         self.rebase_continue_action.setEnabled(is_rebasing)
         self.rebase_skip_action.setEnabled(is_rebasing)
         self.rebase_abort_action.setEnabled(is_rebasing)
-        self.branch_rename_action.setEnabled(not self.model.is_empty_repository())
-        self.branch_delete_action.setEnabled(not self.model.is_empty_repository())
+        self.rename_branch_action.setEnabled(not self.model.is_empty_repository())
+        self.delete_branch_action.setEnabled(not self.model.is_empty_repository())
 
     def export_state(self):
         state = standard.MainWindow.export_state(self)
