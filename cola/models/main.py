@@ -216,6 +216,9 @@ class MainModel(Observable):
         return not(bool(self.staged or self.modified or
                         self.unmerged or self.untracked))
 
+    def is_empty_repository(self):
+        return not self.local_branches
+
     def _update_remotes(self):
         self.remotes = self.git.remote()[STDOUT].splitlines()
 
