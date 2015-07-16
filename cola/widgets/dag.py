@@ -1464,7 +1464,7 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
 
     def wheelEvent(self, event):
         """Handle Qt mouse wheel events."""
-        if event.modifiers() == Qt.ControlModifier:
+        if event.modifiers() & Qt.ControlModifier:
             self.wheel_zoom(event)
         else:
             self.wheel_pan(event)
