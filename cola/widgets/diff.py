@@ -22,7 +22,7 @@ from cola.qtutils import create_menu
 from cola.qtutils import RGB, make_format
 from cola.qtutils import options_icon
 from cola.widgets import defs
-from cola.widgets.text import MonoTextView
+from cola.widgets.text import VimMonoTextView
 from cola.compat import ustr
 
 
@@ -122,10 +122,10 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.setCurrentBlockState(state)
 
 
-class DiffTextEdit(MonoTextView):
+class DiffTextEdit(VimMonoTextView):
     def __init__(self, parent, whitespace=True):
 
-        MonoTextView.__init__(self, parent)
+        VimMonoTextView.__init__(self, parent)
         # Diff/patch syntax highlighter
         self.highlighter = DiffSyntaxHighlighter(self.document(),
                                                  whitespace=whitespace)

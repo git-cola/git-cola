@@ -336,6 +336,12 @@ class VimHintedTextView(VimMixin, HintedTextView):
         VimMixin.__init__(self, HintedTextView)
 
 
+class VimMonoTextView(VimMixin, MonoTextView):
+
+    def __init__(self, parent=None):
+        MonoTextView.__init__(self, parent)
+        VimMixin.__init__(self, MonoTextView)
+
 
 class HintedLineEdit(HintedTextWidgetMixin, BasicLineEdit):
 

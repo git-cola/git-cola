@@ -8,9 +8,19 @@ Latest Release
 Unreleased Topics
 =================
 
+Usability, bells and whistles
+-----------------------------
+
 * The Interactive Rebase feature now works on Windows!
 
   https://github.com/git-cola/git-cola/issues/463
+
+* The `diff` editor now understands vim-style `hjkl` navigation hotkeys.
+
+  https://github.com/git-cola/git-cola/issues/476
+
+Fixes
+-----
 
 * Diff syntax highlighting was improved to handle more edge cases
   and false positives.
