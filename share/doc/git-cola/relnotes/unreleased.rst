@@ -25,6 +25,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/459
 
+* `git cola` now checks unmerged files for conflict markers before
+  staging them.  This feature can be disabled in the preferences.
+
+  https://github.com/git-cola/git-cola/issues/464
+
 Fixes
 -----
 

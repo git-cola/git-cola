@@ -15,6 +15,7 @@ Thanks
 * Ben Cole
 * Benedict Lee
 * Benoît Nouyrigat
+* Bert Jacobs
 * Charles 101
 * Christian Jann
 * Christopher Meng

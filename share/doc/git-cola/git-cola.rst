@@ -373,6 +373,12 @@ cola.browserdockable
 Whether to create a dock widget with the `Browser` tool.
 Defaults to `false` to speedup startup time.
 
+cola.checkconflicts
+-------------------
+Inspect unmerged files for conflict markers before staging them.
+This feature helps prevent accidental staging of unresolved merge conflicts.
+Defaults to `true`.
+
 cola.fileattributes
 -------------------
 Enables per-file gitattributes encoding support when set to `true`.

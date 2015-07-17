@@ -223,7 +223,7 @@ class HintedTextWidgetMixin(object):
         self.enable_hint_palette(self.is_hint())
 
 
-class HintedTextEdit(MonoTextEdit, HintedTextWidgetMixin):
+class HintedTextEdit(HintedTextWidgetMixin, MonoTextEdit):
 
     def __init__(self, hint, parent=None):
         MonoTextEdit.__init__(self, parent)
@@ -233,7 +233,7 @@ class HintedTextEdit(MonoTextEdit, HintedTextWidgetMixin):
 
 
 # The read-only variant.
-class HintedTextView(MonoTextView, HintedTextWidgetMixin):
+class HintedTextView(HintedTextWidgetMixin, MonoTextView):
 
     def __init__(self, hint, parent=None):
         MonoTextView.__init__(self, parent)

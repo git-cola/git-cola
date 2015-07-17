@@ -204,21 +204,34 @@ def cached_icon_from_path(filename):
     return QtGui.QIcon(filename)
 
 
-def confirm(title, text, informative_text, ok_text,
-            icon=None, default=True):
-    """Confirm that an action should take place"""
-    if icon is None:
-        icon = ok_icon()
+def mkicon(icon, default=None):
+    if icon is None and default is not None:
+        icon = default()
     elif icon and isinstance(icon, (str, ustr)):
         icon = QtGui.QIcon(icon)
+    return icon
+
+
+def confirm(title, text, informative_text, ok_text,
+            icon=None, default=True,
+            cancel_text=None, cancel_icon=None):
+    """Confirm that an action should take place"""
     msgbox = QtGui.QMessageBox(active_window())
     msgbox.setWindowModality(Qt.WindowModal)
     msgbox.setWindowTitle(title)
     msgbox.setText(text)
     msgbox.setInformativeText(informative_text)
+
+    icon = mkicon(icon, ok_icon)
     ok = msgbox.addButton(ok_text, QtGui.QMessageBox.ActionRole)
     ok.setIcon(icon)
+
     cancel = msgbox.addButton(QtGui.QMessageBox.Cancel)
+    cancel_icon = mkicon(cancel_icon, discard_icon)
+    cancel.setIcon(cancel_icon)
+    if cancel_text:
+        cancel.setText(cancel_text)
+
     if default:
         msgbox.setDefaultButton(ok)
     else:
