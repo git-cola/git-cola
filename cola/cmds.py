@@ -1,6 +1,7 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import os
+import re
 import subprocess
 import sys
 from fnmatch import fnmatch
@@ -1432,6 +1433,52 @@ class SignOff(Command):
         return '\nSigned-off-by: %s <%s>' % (name, email)
 
 
+def check_conflicts(unmerged):
+    """Check paths for conflicts
+
+    Conflicting files can be filtered out one-by-one.
+
+    """
+    if prefs.check_conflicts():
+        unmerged = [path for path in unmerged if is_conflict_free(path)]
+    return unmerged
+
+
+def is_conflict_free(path):
+    """Return True if `path` contains no conflict markers
+    """
+    rgx = re.compile(r'^(<<<<<<<|\|\|\|\|\|\|\||>>>>>>>) ')
+    try:
+        with core.xopen(path, 'r') as f:
+            for line in f:
+                line = core.decode(line, errors='ignore')
+                if rgx.match(line):
+                    if should_stage_conflicts(path):
+                        return True
+                    else:
+                        return False
+    except IOError:
+        # We can't read this file ~ we may be staging a removal
+        pass
+    return True
+
+
+def should_stage_conflicts(path):
+    """Inform the user that a file contains merge conflicts
+
+    Return `True` if we should stage the path nonetheless.
+
+    """
+    title = msg = N_('Stage conflicts?')
+    info = N_('%s appears to contain merge conflicts.\n\n'
+              'You should probably skip this file.\n'
+              'Stage it anyways?') % path
+    ok_text = N_('Stage conflicts')
+    cancel_text = N_('Skip')
+    return Interaction.confirm(title, msg, info, ok_text,
+                               default=False, cancel_text=cancel_text)
+
+
 class Stage(Command):
     """Stage a set of paths."""
     SHORTCUT = 'Ctrl+S'
@@ -1488,7 +1535,7 @@ class StageUnmerged(StageModified):
 
     def __init__(self):
         StageModified.__init__(self, None)
-        self.paths = self.model.unmerged
+        self.paths = check_conflicts(self.model.unmerged)
 
 
 class StageUntracked(StageModified):
@@ -1520,8 +1567,9 @@ class StageOrUnstage(Command):
             do(Unstage, s.staged)
 
         unstaged = []
-        if s.unmerged:
-            unstaged.extend(s.unmerged)
+        unmerged = check_conflicts(s.unmerged)
+        if unmerged:
+            unstaged.extend(unmerged)
         if s.modified:
             unstaged.extend(s.modified)
         if s.untracked:

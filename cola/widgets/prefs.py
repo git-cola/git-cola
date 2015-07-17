@@ -131,6 +131,11 @@ class RepoFormWidget(FormWidget):
         self.display_untracked = QtGui.QCheckBox()
         self.display_untracked.setChecked(True)
 
+        tooltip = N_('Detect conflict markers in unmerged files')
+        self.check_conflicts = QtGui.QCheckBox()
+        self.check_conflicts.setChecked(True)
+        self.check_conflicts.setToolTip(tooltip)
+
         self.add_row(N_('User Name'), self.name)
         self.add_row(N_('Email Address'), self.email)
         self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
@@ -138,8 +143,10 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
         self.add_row(N_('Show Diffstat After Merge'), self.merge_diffstat)
         self.add_row(N_('Display Untracked Files'), self.display_untracked)
+        self.add_row(N_('Detect Conflict Markers'), self.check_conflicts)
 
         self.set_config({
+            prefs.CHECKCONFLICTS: (self.check_conflicts, True),
             prefs.DIFFCONTEXT: (self.diff_context, 5),
             prefs.DISPLAY_UNTRACKED: (self.display_untracked, True),
             prefs.USER_NAME: (self.name, ''),
