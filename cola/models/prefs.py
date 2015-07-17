@@ -4,22 +4,22 @@ from cola import gitcfg
 from cola import observable
 
 
-FONTDIFF = 'cola.fontdiff'
 DIFFCONTEXT = 'gui.diffcontext'
 DIFFTOOL = 'diff.tool'
 DISPLAY_UNTRACKED = 'gui.displayuntracked'
 EDITOR = 'gui.editor'
-LINEBREAK = 'cola.linebreak'
-SORT_BOOKMARKS = 'cola.sortbookmarks'
-TABWIDTH = 'cola.tabwidth'
-TEXTWIDTH = 'cola.textwidth'
+FONTDIFF = 'cola.fontdiff'
 HISTORY_BROWSER = 'gui.historybrowser'
-MERGE_SUMMARY = 'merge.summary'
+LINEBREAK = 'cola.linebreak'
 MERGE_DIFFSTAT = 'merge.diffstat'
 MERGE_KEEPBACKUP = 'merge.keepbackup'
+MERGE_SUMMARY = 'merge.summary'
 MERGE_VERBOSITY = 'merge.verbosity'
 MERGETOOL = 'merge.tool'
 SAVEWINDOWSETTINGS = 'cola.savewindowsettings'
+SORT_BOOKMARKS = 'cola.sortbookmarks'
+TABWIDTH = 'cola.tabwidth'
+TEXTWIDTH = 'cola.textwidth'
 USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
 
