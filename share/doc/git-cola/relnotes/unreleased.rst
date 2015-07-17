@@ -19,6 +19,12 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/476
 
+* The `Rename branch` menu action is now disabled in empty repositories.
+
+  https://github.com/git-cola/git-cola/pull/475
+
+  https://github.com/git-cola/git-cola/issues/459
+
 Fixes
 -----
 
