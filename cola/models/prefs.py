@@ -4,6 +4,7 @@ from cola import gitcfg
 from cola import observable
 
 
+CHECKCONFLICTS = 'cola.checkconflicts'
 DIFFCONTEXT = 'gui.diffcontext'
 DIFFTOOL = 'diff.tool'
 DISPLAY_UNTRACKED = 'gui.displayuntracked'
@@ -23,6 +24,9 @@ TEXTWIDTH = 'cola.textwidth'
 USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
 
+
+def check_conflicts():
+    return gitcfg.current().get(CHECKCONFLICTS, True)
 
 
 def display_untracked():
