@@ -1468,9 +1468,17 @@ class StageModified(Stage):
         Stage.__init__(self, None)
         self.paths = self.model.modified
 
+    def ok_to_run(self):
+        """Prevent catch-all "git add -u" from adding unmerged files"""
+        return self.paths or not self.model.unmerged
 
-class StageUnmerged(Stage):
-    """Stage all modified files."""
+    def do(self):
+        if self.ok_to_run():
+            Stage.do(self)
+
+
+class StageUnmerged(StageModified):
+    """Stage unmerged files."""
 
     SHORTCUT = 'Ctrl+S'
 
@@ -1479,11 +1487,11 @@ class StageUnmerged(Stage):
         return N_('Stage Unmerged')
 
     def __init__(self):
-        Stage.__init__(self, None)
+        StageModified.__init__(self, None)
         self.paths = self.model.unmerged
 
 
-class StageUntracked(Stage):
+class StageUntracked(StageModified):
     """Stage all untracked files."""
 
     SHORTCUT = 'Ctrl+S'
@@ -1493,7 +1501,7 @@ class StageUntracked(Stage):
         return N_('Stage Untracked')
 
     def __init__(self):
-        Stage.__init__(self, None)
+        StageModified.__init__(self, None)
         self.paths = self.model.untracked
 
 
