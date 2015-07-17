@@ -30,6 +30,7 @@ def preferences(model=None, parent=None):
 
 
 class FormWidget(QtGui.QWidget):
+
     def __init__(self, model, parent, source='user'):
         QtGui.QWidget.__init__(self, parent)
         self.model = model
@@ -105,6 +106,7 @@ class FormWidget(QtGui.QWidget):
 
 
 class RepoFormWidget(FormWidget):
+
     def __init__(self, model, parent, source):
         FormWidget.__init__(self, model, parent, source=source)
 
@@ -149,6 +151,7 @@ class RepoFormWidget(FormWidget):
 
 
 class SettingsFormWidget(FormWidget):
+
     def __init__(self, model, parent):
         FormWidget.__init__(self, model, parent)
 
