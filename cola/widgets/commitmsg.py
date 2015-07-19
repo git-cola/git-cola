@@ -174,8 +174,8 @@ class CommitMessageEditor(QtGui.QWidget):
 
         self.setFont(qtutils.diff_font())
 
-        self.summary.enable_hint(True)
-        self.description.enable_hint(True)
+        self.summary.hint.enable(True)
+        self.description.hint.enable(True)
 
         self.commit_button.setEnabled(False)
         self.commit_action.setEnabled(False)
@@ -264,9 +264,7 @@ class CommitMessageEditor(QtGui.QWidget):
                 description = description + '\n' + cur_description
             # this callback is triggered by changing `summary`
             # so disable signals for `summary` only.
-            self.summary.blockSignals(True)
-            self.summary.set_value(summary)
-            self.summary.blockSignals(False)
+            self.summary.set_value(summary, block=True)
             self.description.set_value(description)
         self.commit_message_changed()
 
@@ -295,8 +293,8 @@ class CommitMessageEditor(QtGui.QWidget):
 
     def refresh_palettes(self):
         """Update the color palette for the hint text"""
-        self.summary.refresh_palette()
-        self.description.refresh_palette()
+        self.summary.hint.refresh()
+        self.description.hint.refresh()
 
     def _set_commit_message(self, message):
         self.emit(SIGNAL('set_commit_message(PyQt_PyObject)'), message)
@@ -339,20 +337,15 @@ class CommitMessageEditor(QtGui.QWidget):
 
         # Update summary
         if not summary and not self.summary.hasFocus():
-            summary = self.summary.hint()
-
-        blocksignals = self.summary.blockSignals(True)
-        self.summary.setText(summary)
-        self.summary.setCursorPosition(0)
-        self.summary.blockSignals(blocksignals)
+            self.summary.hint.enable(True)
+        else:
+            self.summary.set_value(summary, block=True)
 
         # Update description
         if not description and not self.description.hasFocus():
-            description = self.description.hint()
-
-        blocksignals = self.description.blockSignals(True)
-        self.description.setPlainText(description)
-        self.description.blockSignals(blocksignals)
+            self.description.hint.enable(True)
+        else:
+            self.description.set_value(description, block=True)
 
         # Update text color
         self.refresh_palettes()
@@ -360,12 +353,10 @@ class CommitMessageEditor(QtGui.QWidget):
         # Focus the empty summary or description
         if focus_summary:
             self.summary.setFocus()
-            self.summary.emit_position()
         elif focus_description:
             self.description.setFocus()
-            self.description.emit_position()
         else:
-            self.summary.emit_position()
+            self.summary.cursor_position.emit()
 
         self.update_actions()
 

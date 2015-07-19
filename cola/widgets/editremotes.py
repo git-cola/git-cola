@@ -109,8 +109,8 @@ class RemoteEditor(QtGui.QDialog):
         self.remotes.clear()
         self.remotes.addItems(remotes)
         self.remote_list = remotes
-        self.info.set_hint(self.default_hint)
-        self.info.enable_hint(True)
+        self.info.hint.set_value(self.default_hint)
+        self.info.hint.enable(True)
         for idx, r in enumerate(remotes):
             item = self.remotes.item(idx)
             item.setFlags(item.flags() | Qt.ItemIsEditable)
@@ -155,8 +155,8 @@ class RemoteEditor(QtGui.QDialog):
         remote = qtutils.selected_item(self.remotes, self.remote_list)
         if remote is None:
             return
-        self.info.set_hint(N_('Gathering info for "%s"...') % remote)
-        self.info.enable_hint(True)
+        self.info.hint.set_value(N_('Gathering info for "%s"...') % remote)
+        self.info.hint.enable(True)
 
         self.info_thread.remote = remote
         self.info_thread.start()
@@ -194,7 +194,7 @@ class AddRemoteWidget(QtGui.QDialog):
 
         def lineedit(hint):
             widget = text.HintedLineEdit(hint)
-            widget.enable_hint(True)
+            widget.hint.enable(True)
             metrics = QtGui.QFontMetrics(widget.font())
             widget.setMinimumWidth(metrics.width('_' * 32))
             return widget

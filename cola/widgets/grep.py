@@ -84,7 +84,7 @@ class Grep(Dialog):
         self.input_label.setFont(diff_font())
 
         self.input_txt = HintedLineEdit(N_('command-line arguments'), self)
-        self.input_txt.enable_hint(True)
+        self.input_txt.hint.enable(True)
 
         self.regexp_combo = combo = QtGui.QComboBox()
         combo.setToolTip(N_('Choose the "git grep" regular expression mode'))
@@ -106,7 +106,7 @@ class Grep(Dialog):
         combo.setItemData(2, '--fixed-strings', Qt.UserRole)
 
         self.result_txt = GrepTextView(N_('grep result...'), self)
-        self.result_txt.enable_hint(True)
+        self.result_txt.hint.enable(True)
 
         self.edit_button = QtGui.QPushButton(N_('Edit'))
         self.edit_button.setIcon(qtutils.open_file_icon())
