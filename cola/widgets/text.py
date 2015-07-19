@@ -18,8 +18,14 @@ class BasicLineEdit(QtGui.QLineEdit):
         self.connect(self, SIGNAL('cursorPositionChanged(int,int)'),
                      lambda old, new: self.emit_position())
 
-    def set_value(self, value):
+    def set_value(self, value, block=False):
+        if block:
+            blocksig = self.blockSignals(True)
+        pos = self.cursorPosition()
         self.setText(value)
+        self.setCursorPosition(pos)
+        if block:
+            self.blockSignals(blocksig)
 
     def as_unicode(self):
         return ustr(self.text())
