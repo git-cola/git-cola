@@ -1534,7 +1534,7 @@ class StageUnmerged(StageModified):
         return N_('Stage Unmerged')
 
     def __init__(self):
-        StageModified.__init__(self, None)
+        StageModified.__init__(self)
         self.paths = check_conflicts(self.model.unmerged)
 
 
@@ -1548,7 +1548,7 @@ class StageUntracked(StageModified):
         return N_('Stage Untracked')
 
     def __init__(self):
-        StageModified.__init__(self, None)
+        StageModified.__init__(self)
         self.paths = self.model.untracked
 
 
