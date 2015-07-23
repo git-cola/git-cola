@@ -72,6 +72,12 @@ class StatusWidget(QtGui.QWidget):
         self.filter_widget.text.set_value(txt)
         self.filter_widget.apply_filter()
 
+    def move_up(self):
+        self.tree.move_up()
+
+    def move_down(self):
+        self.tree.move_down()
+
 
 class StatusTreeWidget(QtGui.QTreeWidget):
     # Item categories

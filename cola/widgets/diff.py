@@ -201,6 +201,15 @@ class DiffEditor(DiffTextEdit):
                 cmds.LaunchDifftool.SHORTCUT)
         self.launch_difftool.setIcon(qtutils.git_icon())
 
+        # Emit up/down signals so that they can be routed by the main widget
+        self.move_down = qtutils.add_action(self,
+                N_('Next File'), lambda: self.emit(SIGNAL('move_down()')),
+                Qt.AltModifier + Qt.Key_J)
+
+        self.move_up = qtutils.add_action(self,
+                N_('Previous File'), lambda: self.emit(SIGNAL('move_up()')),
+                Qt.AltModifier + Qt.Key_K)
+
         model.add_observer(model.message_diff_text_changed, self._emit_text)
 
         self.connect(self, SIGNAL('set_text(PyQt_PyObject)'), self.setPlainText)
@@ -283,6 +292,12 @@ class DiffEditor(DiffTextEdit):
 
             # Removed files can still be diffed.
             menu.addAction(self.launch_difftool)
+
+        # Add the Previous/Next File actions, which improves discoverability
+        # of their associated shortcuts
+        menu.addSeparator()
+        menu.addAction(self.move_up)
+        menu.addAction(self.move_down)
 
         menu.addSeparator()
         action = menu.addAction(qtutils.theme_icon('edit-copy.svg'),

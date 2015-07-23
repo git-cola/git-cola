@@ -464,6 +464,12 @@ class MainView(standard.MainWindow):
         self.connect(self.diffeditor, SIGNAL('diff_options_updated()'),
                      self.statuswidget.refresh)
 
+        self.connect(self.diffeditor, SIGNAL('move_down()'),
+                     self.statuswidget.move_down)
+
+        self.connect(self.diffeditor, SIGNAL('move_up()'),
+                     self.statuswidget.move_up)
+
         self.connect(self, SIGNAL('update()'),
                      self._update_callback, Qt.QueuedConnection)
 
