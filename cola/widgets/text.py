@@ -339,13 +339,13 @@ class VimMixin(object):
                                lambda: self.move(direction, True),
                                Qt.ShiftModifier+hotkey)
 
-    def move(self, direction, select=False):
+    def move(self, direction, select=False, n=1):
         cursor = self.textCursor()
         if select:
             mode = QtGui.QTextCursor.KeepAnchor
         else:
             mode = QtGui.QTextCursor.MoveAnchor
-        if cursor.movePosition(direction, mode):
+        if cursor.movePosition(direction, mode, n):
             self.set_text_cursor(cursor)
 
     def page(self, offset):
