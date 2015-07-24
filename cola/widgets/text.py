@@ -323,7 +323,7 @@ class VimMixin(object):
 
         qtutils.add_action(self, 'PageUp',
                            lambda: self.page(-self.height()//2),
-                           Qt.ShiftModifier + Qt.Key_Shift)
+                           Qt.ShiftModifier + Qt.Key_Space)
 
         qtutils.add_action(self, 'PageDown',
                            lambda: self.page(self.height()//2),
