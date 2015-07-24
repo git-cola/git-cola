@@ -210,6 +210,10 @@ class DiffEditor(DiffTextEdit):
                 N_('Previous File'), lambda: self.emit(SIGNAL('move_up()')),
                 Qt.AltModifier + Qt.Key_K)
 
+        self.stage_or_unstage = qtutils.add_action(self,
+                cmds.StageOrUnstage.name(), cmds.run(cmds.StageOrUnstage),
+                cmds.StageOrUnstage.SHORTCUT)
+
         model.add_observer(model.message_diff_text_changed, self._emit_text)
 
         self.connect(self, SIGNAL('set_text(PyQt_PyObject)'), self.setPlainText)
@@ -235,6 +239,9 @@ class DiffEditor(DiffTextEdit):
         menu = QtGui.QMenu(self)
         s = selection.selection()
         filename = selection.filename()
+
+        if self.model.stageable() or self.model.unstageable():
+            menu.addAction(self.stage_or_unstage)
 
         if s.modified and self.model.stageable():
             if s.modified[0] in main.model().submodules:
