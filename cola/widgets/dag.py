@@ -64,6 +64,9 @@ class ViewerMixin(object):
             return None
         return item.commit.sha1
 
+    def selected_sha1s(self):
+        return [i.commit for i in self.selected_items()]
+
     def diff_selected_this(self):
         clicked_sha1 = self.clicked.sha1
         selected_sha1 = self.selected.sha1
@@ -334,6 +337,8 @@ class GitDAG(standard.MainWindow):
 
         self.commits = {}
         self.commit_list = []
+        self.selection = []
+        self.saved_selection = []
 
         self.thread = ReaderThread(ctx, self)
         self.revtext = completion.GitLogLineEdit()
@@ -356,6 +361,7 @@ class GitDAG(standard.MainWindow):
         self.notifier.add_observer(refs_updated, self.display)
         self.notifier.add_observer(filelist.HISTORIES_SELECTED,
                                    self.histories_selected)
+        self.notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
         self.treewidget = CommitTreeWidget(notifier, self)
         self.diffwidget = diff.DiffWidget(notifier, self)
@@ -522,12 +528,16 @@ class GitDAG(standard.MainWindow):
         self.ctx.set_ref(new_ref)
         self.ctx.set_count(new_count)
 
+        self.save_selection()
         self.clear()
         self.thread.start()
 
     def show(self):
         standard.MainWindow.show(self)
         self.treewidget.adjust_columns()
+
+    def commits_selected(self, commits):
+        self.selection = commits
 
     def clear(self):
         self.graphview.clear()
@@ -547,11 +557,29 @@ class GitDAG(standard.MainWindow):
 
     def thread_done(self):
         self.focus_tree()
+        self.restore_selection()
+
+    def save_selection(self):
+        self.saved_selection = self.selection
+
+    def restore_selection(self):
+        selection = self.saved_selection
+        self.saved_selection = []
         try:
             commit_obj = self.commit_list[-1]
         except IndexError:
+            # No commits, exist, early-out
             return
-        self.notifier.notify_observers(diff.COMMITS_SELECTED, [commit_obj])
+
+        new_commits = [self.commits.get(s.sha1, None) for s in selection]
+        new_commits = [c for c in new_commits if c is not None]
+        if new_commits:
+            # The old selection exists in the new state
+            self.notifier.notify_observers(diff.COMMITS_SELECTED, new_commits)
+        else:
+            # The old selection is now empty.  Select the top-most commit
+            self.notifier.notify_observers(diff.COMMITS_SELECTED, [commit_obj])
+
         self.graphview.update_scene_rect()
         self.graphview.set_initial_view()
 

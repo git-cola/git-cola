@@ -30,6 +30,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/464
 
+* `git dag` now remembers which commits were selected when refreshing
+  so that it can restore the selection afterwards.
+
+  https://github.com/git-cola/git-cola/issues/480
+
 Fixes
 -----
 
