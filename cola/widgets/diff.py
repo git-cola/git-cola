@@ -241,6 +241,10 @@ class DiffEditor(DiffTextEdit):
         filename = selection.filename()
 
         if self.model.stageable() or self.model.unstageable():
+            if self.model.stageable():
+                self.stage_or_unstage.setText(N_('Stage'))
+            else:
+                self.stage_or_unstage.setText(N_('Unstage'))
             menu.addAction(self.stage_or_unstage)
 
         if s.modified and self.model.stageable():
@@ -287,7 +291,6 @@ class DiffEditor(DiffTextEdit):
 
                 self.action_apply_selection.setText(apply_text)
                 self.action_apply_selection.setIcon(qtutils.remove_icon())
-
                 menu.addAction(self.action_apply_selection)
 
         if self.model.stageable() or self.model.unstageable():
