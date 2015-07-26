@@ -1231,8 +1231,8 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
             for item in items:
                 pos = item.pos()
                 item_rect = item.boundingRect()
-                x_off = item_rect.width()
-                y_off = item_rect.height()
+                x_off = item_rect.width() * 5
+                y_off = item_rect.height() * 10
                 x_min = min(x_min, pos.x())
                 y_min = min(y_min, pos.y()-y_off)
                 x_max = max(x_max, pos.x()+x_off)
