@@ -820,6 +820,24 @@ def mimedata_from_paths(paths):
 def path_mimetypes():
     return ['text/uri-list', 'text/x-moz-url']
 
+
+class BlockSignals(object):
+    """Context manager for blocking a signals on a widget"""
+
+    def __init__(self, *widgets):
+        self.widgets = widgets
+        self.values = {}
+
+    def __enter__(self):
+        for w in self.widgets:
+            self.values[w] = w.blockSignals(True)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        for w in self.widgets:
+            w.blockSignals(self.values[w])
+
+
 # Syntax highlighting
 
 def rgba(r, g, b, a=255):
