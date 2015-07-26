@@ -246,7 +246,7 @@ class CommitTreeWidget(ViewerMixin, standard.TreeWidget):
             return
         found = finder(item)
         if found:
-            self.select([found.commit.sha1], block_signals=False)
+            self.select([found.commit.sha1])
 
     def set_selecting(self, selecting):
         self.selecting = selecting
@@ -263,19 +263,20 @@ class CommitTreeWidget(ViewerMixin, standard.TreeWidget):
     def commits_selected(self, commits):
         if self.selecting:
             return
-        self.select([commit.sha1 for commit in commits])
+        with qtutils.BlockSignals(self):
+            self.select([commit.sha1 for commit in commits])
 
-    def select(self, sha1s, block_signals=True):
+    def select(self, sha1s):
+        if not sha1s:
+            return
         self.clearSelection()
-        for sha1 in sha1s:
+        for idx, sha1 in enumerate(sha1s):
             try:
                 item = self.sha1map[sha1]
             except KeyError:
                 continue
-            block = self.blockSignals(block_signals)
             self.scrollToItem(item)
             item.setSelected(True)
-            self.blockSignals(block)
 
     def adjust_columns(self):
         width = self.width()-20
@@ -338,7 +339,6 @@ class GitDAG(standard.MainWindow):
         self.commits = {}
         self.commit_list = []
         self.selection = []
-        self.saved_selection = []
 
         self.thread = ReaderThread(ctx, self)
         self.revtext = completion.GitLogLineEdit()
@@ -441,10 +441,12 @@ class GitDAG(standard.MainWindow):
         qtutils.connect_button(self.zoom_to_fit,
                                self.graphview.zoom_to_fit)
 
-        self.thread.connect(self.thread, self.thread.commits_ready,
-                            self.add_commits)
-
-        self.thread.connect(self.thread, self.thread.done, self.thread_done)
+        self.thread.connect(self.thread, self.thread.begin, self.thread_begin,
+                            Qt.QueuedConnection)
+        self.thread.connect(self.thread, self.thread.add, self.add_commits,
+                            Qt.QueuedConnection)
+        self.thread.connect(self.thread, self.thread.end, self.thread_end,
+                            Qt.QueuedConnection)
 
         self.connect(self.treewidget,
                      SIGNAL('diff_commits(PyQt_PyObject,PyQt_PyObject)'),
@@ -527,9 +529,6 @@ class GitDAG(standard.MainWindow):
         self.thread.stop()
         self.ctx.set_ref(new_ref)
         self.ctx.set_count(new_count)
-
-        self.save_selection()
-        self.clear()
         self.thread.start()
 
     def show(self):
@@ -537,13 +536,14 @@ class GitDAG(standard.MainWindow):
         self.treewidget.adjust_columns()
 
     def commits_selected(self, commits):
-        self.selection = commits
+        if commits:
+            self.selection = commits
 
     def clear(self):
-        self.graphview.clear()
-        self.treewidget.clear()
         self.commits.clear()
         self.commit_list = []
+        self.graphview.clear()
+        self.treewidget.clear()
 
     def add_commits(self, commits):
         self.commit_list.extend(commits)
@@ -555,16 +555,15 @@ class GitDAG(standard.MainWindow):
         self.graphview.add_commits(commits)
         self.treewidget.add_commits(commits)
 
-    def thread_done(self):
+    def thread_begin(self):
+        self.clear()
+
+    def thread_end(self):
         self.focus_tree()
         self.restore_selection()
 
-    def save_selection(self):
-        self.saved_selection = self.selection
-
     def restore_selection(self):
-        selection = self.saved_selection
-        self.saved_selection = []
+        selection = self.selection
         try:
             commit_obj = self.commit_list[-1]
         except IndexError:
@@ -615,8 +614,9 @@ class GitDAG(standard.MainWindow):
 
 
 class ReaderThread(QtCore.QThread):
-    commits_ready = SIGNAL('commits_ready')
-    done = SIGNAL('done')
+    begin = SIGNAL('begin')
+    add = SIGNAL('add')
+    end = SIGNAL('end')
 
     def __init__(self, ctx, parent):
         QtCore.QThread.__init__(self, parent)
@@ -629,6 +629,7 @@ class ReaderThread(QtCore.QThread):
     def run(self):
         repo = dag.RepoReader(self.ctx)
         repo.reset()
+        self.emit(self.begin)
         commits = []
         for c in repo:
             self._mutex.lock()
@@ -640,12 +641,12 @@ class ReaderThread(QtCore.QThread):
                 return
             commits.append(c)
             if len(commits) >= 512:
-                self.emit(self.commits_ready, commits)
+                self.emit(self.add, commits)
                 commits = []
 
         if commits:
-            self.emit(self.commits_ready, commits)
-        self.emit(self.done)
+            self.emit(self.add, commits)
+        self.emit(self.end)
 
     def start(self):
         self._abort = False
@@ -1205,8 +1206,11 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
         self_commits = self.commits
         self_items = self.items
 
-        commits = self_commits[-8:]
-        items = [self_items[c.sha1] for c in commits]
+        items = self.selected_items()
+        if not items:
+            commits = self_commits[-8:]
+            items = [self_items[c.sha1] for c in commits]
+
         self.fit_view_to_items(items)
 
     def zoom_to_fit(self):
