@@ -170,13 +170,7 @@ If you are developing *git-cola* on Windows you can use `python.exe` to run
 
     python.exe ./bin/git-cola
 
-If you want to build the `git-cola Installer` yourself run the provided script
-
-    ./contrib/win32/create-installer.sh
-
-You have to make sure that the file */share/InnoSetup/ISCC.exe* exists.
-That is normally the case when you run the *msysGit bash* and not the
-*Git for Windows bash* (look [here](http://msysgit.github.com/) for the differences).
+See "WINDOWS (continued)" below for more details.
 
 # DOCUMENTATION
 
@@ -251,14 +245,31 @@ See `git cola --help-commands` for the full list of commands.
         tag                 create tags
         version             print the version
 
+
+## WINDOWS (continued)
+
 # BUILDING WINDOWS INSTALLERS
 
-Windows installers are built using [Pynsist](http://pynsist.readthedocs.org/en/latest/).
+Windows installers are built using
+[Pynsist](http://pynsist.readthedocs.org/en/latest/).
 [NSIS](http://nsis.sourceforge.net/Main_Page) is also needed.
 
-To build:
+To build the installer using *Pynsist*:
 
-1. (If building from a non-Windows platform), run `./contrib/win32/fetch_pyqt_windows.sh`.
+1. (If building from a non-Windows platform), run
+   `./contrib/win32/fetch_pyqt_windows.sh`.
    This will download a PyQt binary installer for Windows and unpack its files
    into `pynsist_pkgs/`.
-2. Run `pynsist pynsist.cfg`. The installer will be built in `build/nsis/`.
+2. Run `pynsist pynsist.cfg`.
+   The installer will be built in `build/nsis/`.
+
+
+Before *Pynsist*, installers were built using *InnoSetup*.
+The *InnoSetup* scripts are still available:
+
+    ./contrib/win32/create-installer.sh
+
+You have to make sure that the file */share/InnoSetup/ISCC.exe* exists.
+That is normally the case when you run the *msysGit bash* and not the
+*Git for Windows bash* (look [here](http://msysgit.github.com/)
+for the differences).
