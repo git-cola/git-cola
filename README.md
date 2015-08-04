@@ -78,12 +78,18 @@ way to try the latest version.
     ./bin/git-dag
 
 Having *git-cola*'s *bin/* directory in your path allows you to run
-*git-cola* like a built-in Git command:
+*git cola* like a regular built-in Git command:
 
-    PATH=$PWD/bin:"$PATH"
+    # Replace "$PWD/bin" with the path to git-cola's bin/ directory
+    PATH="$PWD/bin":"$PATH"
     export PATH
+
     git cola
     git dag
+
+The instructions below assume that you have *git-cola* present in your
+`$PATH`.  Replace "git cola" with "./bin/git-cola" as needed if you'd like to
+just run it in-place.
 
 # INSTALLATION
 
@@ -193,12 +199,13 @@ launched through the *git-cola*'s "Rebase" menu.
 *git-xbase* can also be launched independently of the main *git-cola* interface
 by telling `git rebase` to use it as its editor:
 
-    GIT_SEQUENCE_EDITOR=$PWD/share/git-cola/bin/git-xbase git rebase -i origin/master
+    env GIT_SEQUENCE_EDITOR="$PWD/share/git-cola/bin/git-xbase" \
+    git rebase -i origin/master
 
-You can also launch *git-xbase* via the *git-cola* rebase sub-command
-(as well as various other sub-commands):
+The quickest way to launch *git-xbase* is via the *git cola rebase*
+sub-command (as well as various other sub-commands):
 
-    ./bin/git-cola rebase origin/master
+    git cola rebase origin/master
 
 # COMMAND-LINE TOOLS
 
@@ -207,9 +214,9 @@ launch tools that are available from within the *git-cola* interface.
 For example, `./bin/git-cola find` launches the file finder,
 and `./bin/git-cola grep` launches the grep tool.
 
-See `./bin/git-cola --help-commands` for the full list of commands.
+See `git cola --help-commands` for the full list of commands.
 
-    $ ./bin/git-cola --help-commands
+    $ git cola --help-commands
     usage: git-cola [-h]
     
                     {cola,am,archive,branch,browse,classic,config,
