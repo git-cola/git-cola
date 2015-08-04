@@ -27,9 +27,11 @@ Thanks
 * David Aguilar
 * David Martínez Martí
 * Dennis Gilmore
+* deniz1a
 * Dmitry Kann
 * Eric Drechsel
 * Geoffrey van Wyk
+* geotavros
 * `Git Hackers <http://git-scm.com/about>`_
 * Glen Mailer
 * Guillaume de Bure

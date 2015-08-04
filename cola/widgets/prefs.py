@@ -208,7 +208,8 @@ class SettingsFormWidget(FormWidget):
             prefs.SORT_BOOKMARKS: (self.sort_bookmarks, True),
             prefs.DIFFTOOL: (self.difftool, 'xxdiff'),
             prefs.EDITOR: (self.editor, os.getenv('VISUAL', 'gvim')),
-            prefs.HISTORY_BROWSER: (self.historybrowser, 'gitk'),
+            prefs.HISTORY_BROWSER: (self.historybrowser,
+                                    prefs.default_history_browser()),
             prefs.MERGE_KEEPBACKUP: (self.keep_merge_backups, True),
             prefs.MERGETOOL: (self.mergetool, 'xxdiff'),
         })
