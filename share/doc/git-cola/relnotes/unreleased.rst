@@ -35,6 +35,15 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/480
 
+* "Launch Editor", "Launch Difftool", "Stage/Unstage",
+  and "Move Up/Down" hotkeys now work when the commit message
+  editor has focus.
+
+  https://github.com/git-cola/git-cola/issues/453
+
+* The diff editor now supports the `Ctrl+u` hotkey for reverting
+  diff hunks and selected lines.
+
 Fixes
 -----
 
