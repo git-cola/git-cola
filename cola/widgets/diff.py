@@ -187,8 +187,9 @@ class DiffEditor(DiffTextEdit):
                 self.apply_selection, Qt.Key_S)
 
         self.action_revert_selection = qtutils.add_action(self, '',
-                self.revert_selection)
-        self.action_revert_selection.setIcon(qtutils.theme_icon('edit-undo.svg'))
+                self.revert_selection, Qt.ControlModifier + Qt.Key_U)
+        icon = qtutils.theme_icon('edit-undo.svg')
+        self.action_revert_selection.setIcon(icon)
 
         self.launch_editor = actions.launch_editor(self, 'Return', 'Enter')
         self.launch_difftool = actions.launch_difftool(self)
@@ -200,7 +201,26 @@ class DiffEditor(DiffTextEdit):
 
         model.add_observer(model.message_diff_text_changed, self._emit_text)
 
+        self.selection_model = selection_model = selection.selection_model()
+        selection_model.add_observer(selection_model.message_selection_changed,
+                                     self._update)
+        self.connect(self, SIGNAL('update()'),
+                     self._update_callback, Qt.QueuedConnection)
+
         self.connect(self, SIGNAL('set_text(PyQt_PyObject)'), self.setPlainText)
+
+    def _update(self):
+        self.emit(SIGNAL('update()'))
+
+    def _update_callback(self):
+        enabled = False
+        s = self.selection_model.selection()
+        if s.modified and self.model.stageable():
+            if s.modified[0] in self.model.submodules:
+                pass
+            elif s.modified[0] not in main.model().unstaged_deleted:
+                enabled = True
+        self.action_revert_selection.setEnabled(enabled)
 
     def _emit_text(self, text):
         self.emit(SIGNAL('set_text(PyQt_PyObject)'), text)
