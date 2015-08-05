@@ -5,6 +5,7 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+from cola import actions
 from cola import cmds
 from cola import core
 from cola import gitcmds
@@ -16,6 +17,7 @@ from cola.gitcmds import commit_message_path
 from cola.i18n import N_
 from cola.models import dag
 from cola.models import prefs
+from cola.models import selection
 from cola.widgets import defs
 from cola.widgets.selectcommits import select_commits
 from cola.widgets.spellcheck import SpellCheckTextEdit
@@ -47,6 +49,13 @@ class CommitMessageEditor(QtGui.QWidget):
         self.commit_action.setToolTip(N_('Commit staged changes'))
         self.clear_action = qtutils.add_action(self, N_('Clear...'), self.clear)
 
+        self.launch_editor = actions.launch_editor(self)
+        self.launch_difftool = actions.launch_difftool(self)
+        self.stage_or_unstage = actions.stage_or_unstage(self)
+
+        self.move_up = actions.move_up(self)
+        self.move_down = actions.move_down(self)
+
         # Widgets
         self.summary = CommitSummaryLineEdit()
         self.summary.setMinimumHeight(defs.tool_button_height)
@@ -54,12 +63,26 @@ class CommitMessageEditor(QtGui.QWidget):
         self.summary.extra_actions.append(None)
         self.summary.extra_actions.append(self.signoff_action)
         self.summary.extra_actions.append(self.commit_action)
+        self.summary.extra_actions.append(None)
+        self.summary.extra_actions.append(self.launch_editor)
+        self.summary.extra_actions.append(self.launch_difftool)
+        self.summary.extra_actions.append(self.stage_or_unstage)
+        self.summary.extra_actions.append(None)
+        self.summary.extra_actions.append(self.move_up)
+        self.summary.extra_actions.append(self.move_down)
 
         self.description = CommitMessageTextEdit()
         self.description.extra_actions.append(self.clear_action)
         self.description.extra_actions.append(None)
         self.description.extra_actions.append(self.signoff_action)
         self.description.extra_actions.append(self.commit_action)
+        self.description.extra_actions.append(None)
+        self.description.extra_actions.append(self.launch_editor)
+        self.description.extra_actions.append(self.launch_difftool)
+        self.description.extra_actions.append(self.stage_or_unstage)
+        self.description.extra_actions.append(None)
+        self.description.extra_actions.append(self.move_up)
+        self.description.extra_actions.append(self.move_down)
 
         commit_button_tooltip = N_('Commit staged changes\n'
                                    'Shortcut: Ctrl+Enter')
@@ -150,8 +173,13 @@ class CommitMessageEditor(QtGui.QWidget):
                            self.summary_cursor_down,
                            Qt.Key_Down)
 
+        self.selection_model = selection_model = selection.selection_model()
+        selection_model.add_observer(selection_model.message_selection_changed,
+                                     self._update)
+
         self.model.add_observer(self.model.message_commit_message_changed,
                                 self._set_commit_message)
+
         self.connect(self, SIGNAL('set_commit_message(PyQt_PyObject)'),
                      self.set_commit_message, Qt.QueuedConnection)
 
@@ -171,6 +199,9 @@ class CommitMessageEditor(QtGui.QWidget):
 
         self.connect(self.description, SIGNAL('leave()'),
                      self.focus_summary)
+
+        self.connect(self, SIGNAL('update()'),
+                     self._update_callback, Qt.QueuedConnection)
 
         self.setFont(qtutils.diff_font())
 
@@ -195,6 +226,16 @@ class CommitMessageEditor(QtGui.QWidget):
 
         # Allow tab to jump from the summary to the description
         self.setTabOrder(self.summary, self.description)
+
+    def _update(self):
+        self.emit(SIGNAL('update()'))
+
+    def _update_callback(self):
+        if self.model.stageable() or self.model.unstageable():
+            if self.model.stageable():
+                self.stage_or_unstage.setText(N_('Stage'))
+            else:
+                self.stage_or_unstage.setText(N_('Unstage'))
 
     def set_initial_size(self):
         self.setMaximumHeight(133)
