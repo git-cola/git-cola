@@ -231,11 +231,13 @@ class CommitMessageEditor(QtGui.QWidget):
         self.emit(SIGNAL('update()'))
 
     def _update_callback(self):
-        if self.model.stageable() or self.model.unstageable():
-            if self.model.stageable():
-                self.stage_or_unstage.setText(N_('Stage'))
-            else:
-                self.stage_or_unstage.setText(N_('Unstage'))
+        enabled = self.model.stageable() or self.model.unstageable()
+        if self.model.stageable():
+            text = N_('Stage')
+        else:
+            text = N_('Unstage')
+        self.stage_or_unstage.setEnabled(enabled)
+        self.stage_or_unstage.setText(text)
 
     def set_initial_size(self):
         self.setMaximumHeight(133)
