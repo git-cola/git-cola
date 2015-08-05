@@ -6,13 +6,13 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt, SIGNAL
 
+from cola import actions
 from cola import cmds
 from cola import core
 from cola import gitcfg
 from cola import gitcmds
 from cola import gravatar
 from cola import qtutils
-from cola.cmds import run
 from cola.i18n import N_
 from cola.models import main
 from cola.models import selection
@@ -190,29 +190,13 @@ class DiffEditor(DiffTextEdit):
                 self.revert_selection)
         self.action_revert_selection.setIcon(qtutils.theme_icon('edit-undo.svg'))
 
-        self.launch_editor = qtutils.add_action(self,
-                cmds.LaunchEditor.name(), run(cmds.LaunchEditor),
-                cmds.LaunchEditor.SHORTCUT,
-                'Return', 'Enter')
-        self.launch_editor.setIcon(qtutils.options_icon())
-
-        self.launch_difftool = qtutils.add_action(self,
-                cmds.LaunchDifftool.name(), run(cmds.LaunchDifftool),
-                cmds.LaunchDifftool.SHORTCUT)
-        self.launch_difftool.setIcon(qtutils.git_icon())
+        self.launch_editor = actions.launch_editor(self, 'Return', 'Enter')
+        self.launch_difftool = actions.launch_difftool(self)
+        self.stage_or_unstage = actions.stage_or_unstage(self)
 
         # Emit up/down signals so that they can be routed by the main widget
-        self.move_down = qtutils.add_action(self,
-                N_('Next File'), lambda: self.emit(SIGNAL('move_down()')),
-                Qt.AltModifier + Qt.Key_J)
-
-        self.move_up = qtutils.add_action(self,
-                N_('Previous File'), lambda: self.emit(SIGNAL('move_up()')),
-                Qt.AltModifier + Qt.Key_K)
-
-        self.stage_or_unstage = qtutils.add_action(self,
-                cmds.StageOrUnstage.name(), cmds.run(cmds.StageOrUnstage),
-                cmds.StageOrUnstage.SHORTCUT)
+        self.move_down = actions.move_down(self)
+        self.move_up = actions.move_up(self)
 
         model.add_observer(model.message_diff_text_changed, self._emit_text)
 
