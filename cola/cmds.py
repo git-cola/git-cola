@@ -822,7 +822,7 @@ class LaunchDifftool(BaseCommand):
 
 class LaunchTerminal(BaseCommand):
 
-    SHORTCUT = 'Ctrl+T'
+    SHORTCUT = 'Shift+Ctrl+T'
 
     @staticmethod
     def name():
