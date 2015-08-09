@@ -371,7 +371,8 @@ class Commit(ResetMode):
 
     def do(self):
         # Create the commit message file
-        msg = self.strip_comments(self.msg)
+        comment_char = prefs.comment_char()
+        msg = self.strip_comments(self.msg, comment_char=comment_char)
         tmpfile = utils.tmp_filename('commit-message')
         try:
             core.write(tmpfile, msg)
@@ -396,10 +397,10 @@ class Commit(ResetMode):
         return status, out, err
 
     @staticmethod
-    def strip_comments(msg):
+    def strip_comments(msg, comment_char='#'):
         # Strip off comments
         message_lines = [line for line in msg.split('\n')
-                            if not line.startswith('#')]
+                            if not line.startswith(comment_char)]
         msg = '\n'.join(message_lines)
         if not msg.endswith('\n'):
             msg += '\n'

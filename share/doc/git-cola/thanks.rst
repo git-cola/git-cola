@@ -61,6 +61,7 @@ Thanks
 * Liviu Cristian Mirea-Ghiban
 * Luke Bakken
 * Maarten Nieber
+* Maaaks
 * Maciej Filipiak
 * Mahmoud Hossam
 * Maicon D. Filippsen

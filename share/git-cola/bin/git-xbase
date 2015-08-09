@@ -29,6 +29,7 @@ from cola import utils
 from cola.compat import ustr
 from cola.i18n import N_
 from cola.models import dag
+from cola.models import prefs
 from cola.widgets import defs
 from cola.widgets import diff
 from cola.widgets import standard
@@ -124,10 +125,11 @@ class Editor(QtGui.QWidget):
 
         self.widget_version = 1
         self.filename = filename
+        self.comment_char = comment_char = prefs.comment_char()
 
         self.notifier = notifier = observable.Observable()
         self.diff = diff.DiffWidget(notifier, self)
-        self.tree = RebaseTreeWidget(notifier, self)
+        self.tree = RebaseTreeWidget(notifier, comment_char, self)
         self.setFocusProxy(self.tree)
 
         self.rebase_button = qtutils.create_button(
@@ -186,10 +188,13 @@ class Editor(QtGui.QWidget):
 
     def parse_sequencer_instructions(self, insns):
         idx = 1
-        exec_rgx = re.compile(r'^\s*(#)?\s*(x|exec)\s+(.+)$')
-        pick_rgx = re.compile(r'^\s*(#)?\s*'
-                              r'(p|pick|r|reword|e|edit|f|fixup|s|squash)'
-                              r'\s+([0-9a-f]{7,40})\s+(.+)$')
+        re_comment_char = re.escape(self.comment_char)
+        exec_rgx = re.compile(r'^\s*(%s)?\s*(x|exec)\s+(.+)$'
+                              % re_comment_char)
+        pick_rgx = re.compile((r'^\s*(%s)?\s*'
+                               r'(p|pick|r|reword|e|edit|f|fixup|s|squash)'
+                               r'\s+([0-9a-f]{7,40})\s+(.+)$')
+                               % re_comment_char)
         for line in insns.splitlines():
             match = pick_rgx.match(line)
             if match:
@@ -240,9 +245,10 @@ class Editor(QtGui.QWidget):
 
 class RebaseTreeWidget(standard.DraggableTreeWidget):
 
-    def __init__(self, notifier, parent=None):
+    def __init__(self, notifier, comment_char, parent=None):
         super(RebaseTreeWidget, self).__init__(parent=parent)
         self.notifier = notifier
+        self.comment_char = comment_char
         # header
         self.setHeaderLabels([N_('#'),
                               N_('Enabled'),
@@ -302,9 +308,10 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
 
     def add_item(self, idx, enabled, command,
                  sha1hex='', summary='', cmdexec=''):
+        comment_char = self.comment_char
         item = RebaseTreeWidgetItem(idx, enabled, command,
                                     sha1hex=sha1hex, summary=summary,
-                                    cmdexec=cmdexec)
+                                    cmdexec=cmdexec, comment_char=comment_char)
         self.invisibleRootItem().addChild(item)
 
     def decorate(self, items):
@@ -445,7 +452,8 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
     SHA1LEN = 7
 
     def __init__(self, idx, enabled, command,
-                 sha1hex='', summary='', cmdexec='', parent=None):
+                 sha1hex='', summary='', cmdexec='', comment_char='#',
+                 parent=None):
         QtGui.QTreeWidgetItem.__init__(self, parent)
         self.combo = None
         self.command = command
@@ -453,6 +461,7 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
         self.sha1hex = sha1hex
         self.summary = summary
         self.cmdexec = cmdexec
+        self.comment_char = comment_char
 
         # if core.abbrev is set to a higher value then we will notice by
         # simply tracking the longest sha1 we've seen
@@ -509,7 +518,7 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
         if self.is_enabled():
             comment = ''
         else:
-            comment = '# '
+            comment = self.comment_char + ' '
         if self.is_exec():
             return ('%s%s %s' % (comment, self.command, self.cmdexec))
         return ('%s%s %s %s' %

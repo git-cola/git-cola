@@ -47,6 +47,14 @@ Usability, bells and whistles
 * The diff editor now supports the `Ctrl+u` hotkey for reverting
   diff hunks and selected lines.
 
+* The `core.commentChar` Git configuration value is now honored.
+  Commit messages and rebase instruction sheets will now use
+  the configured character for comments.  This allows having
+  commit messages that start with `#` when `core.commentChar`
+  is configured to its non-default value.
+
+  https://github.com/git-cola/git-cola/issues/446
+
 Fixes
 -----
 

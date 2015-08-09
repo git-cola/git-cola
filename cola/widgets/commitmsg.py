@@ -1,4 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
+import re
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -565,12 +566,15 @@ class CommitMessageEditor(QtGui.QWidget):
 
 
 class CommitSummaryLineEdit(HintedLineEdit):
+
     def __init__(self, parent=None):
         hint = N_('Commit summary')
         HintedLineEdit.__init__(self, hint, parent)
         self.extra_actions = []
 
-        regex = QtCore.QRegExp(r'^[^#].*')
+        comment_char = prefs.comment_char()
+        re_comment_char = re.escape(comment_char)
+        regex = QtCore.QRegExp(r'^[^%s \t].*' % re_comment_char)
         self._validator = QtGui.QRegExpValidator(regex, self)
         self.setValidator(self._validator)
 

@@ -1,6 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
 
-import os
 import sys
 import subprocess
 
@@ -11,6 +10,7 @@ from cola import utils
 
 
 CHECKCONFLICTS = 'cola.checkconflicts'
+COMMENT_CHAR = 'core.commentchar'
 DIFFCONTEXT = 'gui.diffcontext'
 DIFFTOOL = 'diff.tool'
 DISPLAY_UNTRACKED = 'gui.displayuntracked'
@@ -42,6 +42,10 @@ def display_untracked():
 def editor():
     app = gitcfg.current().get(EDITOR, 'gvim')
     return {'vim': 'gvim -f'}.get(app, app)
+
+
+def comment_char():
+    return gitcfg.current().get(COMMENT_CHAR, '#')
 
 
 def default_history_browser():
