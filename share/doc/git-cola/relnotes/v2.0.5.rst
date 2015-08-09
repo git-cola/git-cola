@@ -27,7 +27,7 @@ Fixes
   https://github.com/git-cola/git-cola/pull/326
 
 * The `Ctrl+P` hotkey was overloaded to both "push" and "cherry-pick",
-  so "cherry-pick" was moved to `Shift+Ctrl+C`.
+  so "cherry-pick" was moved to `Ctrl+Shift+C`.
 
 * Custom GUI tools with mixed-case names are now properly supported.
 

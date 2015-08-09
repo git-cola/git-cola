@@ -26,7 +26,7 @@ Usability, bells and whistles
   https://github.com/git-cola/git-cola/pull/272
 
 * New hotkeys: `Ctrl+F` for fetch, `Ctrl+P` for push,
-  and `Shift+Ctrl+P` for pull.
+  and `Ctrl+Shift+P` for pull.
 
 * The bookmarks widget's context menu actions were made clearer.
 

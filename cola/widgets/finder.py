@@ -49,7 +49,7 @@ J, Down     = Move Down
 K, Up       = Move Up
 Enter       = Edit Selected Files
 Spacebar    = Open File Using Default Application
-Ctrl+L      = Focus Text Entry Field
+Ctrl + L    = Focus Text Entry Field
 ?           = Show Help
 
 The up and down arrows change focus between the text entry field

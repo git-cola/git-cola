@@ -107,7 +107,7 @@ class RepoTreeView(standard.TreeView):
                 N_('View History...'),
                 N_('View history for selected path(s)'),
                 self.view_history,
-                'Shift+Ctrl+H')
+                'Ctrl+Shift+H')
 
         self.action_stage = self._create_action(
                 cmds.StageOrUnstage.name(),
@@ -130,7 +130,7 @@ class RepoTreeView(standard.TreeView):
                 N_('Diff Against Predecessor...'),
                 N_('Launch git-difftool against previous versions.'),
                 self.difftool_predecessor,
-                'Shift+Ctrl+D')
+                'Ctrl+Shift+D')
 
         self.action_revert_unstaged = self._create_action(
                 cmds.RevertUnstagedEdits.name(),

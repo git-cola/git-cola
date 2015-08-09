@@ -28,7 +28,7 @@ Usability, bells and whistles
 * A 'Recently Modified Files...' tool was added.
 
 * Tools can now be hidden with `Alt + #` (where `#` is a keyboard number)
-  and focused with `Shift + Alt + #`.
+  and focused with `Alt + Shift + #`.
 
 * The syntax highlighting colors for diffs was made less intrusive.
 

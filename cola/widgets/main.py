@@ -194,11 +194,11 @@ class MainView(standard.MainWindow):
 
         self.browse_recently_modified_action = add_action(self,
                 N_('Recently Modified Files...'),
-                recent.browse_recent_files, 'Shift+Ctrl+E')
+                recent.browse_recent_files, 'Ctrl+Shift+E')
 
         self.cherry_pick_action = add_action(self,
                 N_('Cherry-Pick...'),
-                guicmds.cherry_pick, 'Shift+Ctrl+C')
+                guicmds.cherry_pick, 'Ctrl+Shift+C')
 
         self.load_commitmsg_action = add_action(self,
                 N_('Load Commit Message...'), guicmds.load_commitmsg)
@@ -211,7 +211,7 @@ class MainView(standard.MainWindow):
         self.grep_action = add_action(self,
                 N_('Grep'), grep.grep, 'Ctrl+G')
         self.merge_local_action = add_action(self,
-                N_('Merge...'), merge.local_merge, 'Shift+Ctrl+M')
+                N_('Merge...'), merge.local_merge, 'Ctrl+Shift+M')
 
         self.merge_abort_action = add_action(self,
                 N_('Abort Merge...'), merge.abort_merge)
@@ -221,7 +221,7 @@ class MainView(standard.MainWindow):
         self.push_action = add_action(self,
                 N_('Push...'), remote.push, 'Ctrl+P')
         self.pull_action = add_action(self,
-                N_('Pull...'), remote.pull, 'Shift+Ctrl+P')
+                N_('Pull...'), remote.pull, 'Ctrl+Shift+P')
 
         self.open_repo_action = add_action(self,
                 N_('Open...'), guicmds.open_repo)

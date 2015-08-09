@@ -44,7 +44,7 @@ class StatusWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
         self.toggle_action = qtutils.add_action(self, tooltip,
-                self.toggle_filter, 'Shift+Ctrl+F')
+                self.toggle_filter, 'Ctrl+Shift+F')
 
         titlebar.add_corner_widget(self.filter_button)
         qtutils.connect_button(self.filter_button, self.toggle_filter)

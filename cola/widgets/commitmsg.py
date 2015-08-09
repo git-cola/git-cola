@@ -594,7 +594,7 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
         self.extra_actions = []
 
         self.action_emit_leave = qtutils.add_action(self,
-                'Shift Tab', self.emit_leave, 'Shift+tab')
+                'Shift Tab', self.emit_leave, 'Shift+Tab')
 
     def contextMenuEvent(self, event):
         menu, spell_menu = self.context_menu()
