@@ -409,9 +409,26 @@ def set_clipboard(text):
     """Sets the copy/paste buffer to text."""
     if not text:
         return
-    clipboard = QtGui.QApplication.instance().clipboard()
+    clipboard = QtGui.QApplication.clipboard()
     clipboard.setText(text, QtGui.QClipboard.Clipboard)
     clipboard.setText(text, QtGui.QClipboard.Selection)
+    persist_clipboard()
+
+
+def persist_clipboard():
+    """Persist the clipboard
+
+    X11 stores only a reference to the clipboard data.
+    Send a clipboard event to force a copy of the clipboard to occur.
+    This ensures that the clipboard is present after git-cola exits.
+    Otherwise, the reference is destroyed on exit.
+
+    C.f. https://stackoverflow.com/questions/2007103/how-can-i-disable-clear-of-clipboard-on-exit-of-pyqt4-application
+
+    """
+    clipboard = QtGui.QApplication.clipboard()
+    event = QtCore.QEvent(QtCore.QEvent.Clipboard)
+    QtGui.QApplication.sendEvent(clipboard, event)
 
 
 def add_action_bool(widget, text, fn, checked, *shortcuts):

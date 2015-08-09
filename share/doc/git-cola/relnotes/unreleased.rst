@@ -61,6 +61,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/453
 
+* The copy/paste clipboard now persists after `git cola` exits.
+
+  https://github.com/git-cola/git-cola/issues/484
+
 Development version
 ===================
 
