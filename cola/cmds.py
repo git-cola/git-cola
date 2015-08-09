@@ -1502,18 +1502,22 @@ class Stage(Command):
             self.model.stage_paths(self.paths)
 
 
-class StageModified(Stage):
-    """Stage all modified files."""
+class StageCarefully(Stage):
+    """Only stage when the path list is non-empty
 
-    SHORTCUT = 'Ctrl+S'
+    We use "git add -u -- <pathspec>" to stage, and it stages everything by
+    default when no pathspec is specified, so this class ensures that paths
+    are specified before calling git.
 
-    @staticmethod
-    def name():
-        return N_('Stage Modified')
+    When no paths are specified, the command does nothing.
 
+    """
     def __init__(self):
         Stage.__init__(self, None)
-        self.paths = self.model.modified
+        self.init_paths()
+
+    def init_paths(self):
+        pass
 
     def ok_to_run(self):
         """Prevent catch-all "git add -u" from adding unmerged files"""
@@ -1524,7 +1528,20 @@ class StageModified(Stage):
             Stage.do(self)
 
 
-class StageUnmerged(StageModified):
+class StageModified(StageCarefully):
+    """Stage all modified files."""
+
+    SHORTCUT = 'Ctrl+S'
+
+    @staticmethod
+    def name():
+        return N_('Stage Modified')
+
+    def init_paths(self):
+        self.paths = self.model.modified
+
+
+class StageUnmerged(StageCarefully):
     """Stage unmerged files."""
 
     SHORTCUT = 'Ctrl+S'
@@ -1533,12 +1550,11 @@ class StageUnmerged(StageModified):
     def name():
         return N_('Stage Unmerged')
 
-    def __init__(self):
-        StageModified.__init__(self)
+    def init_paths(self):
         self.paths = check_conflicts(self.model.unmerged)
 
 
-class StageUntracked(StageModified):
+class StageUntracked(StageCarefully):
     """Stage all untracked files."""
 
     SHORTCUT = 'Ctrl+S'
@@ -1547,8 +1563,7 @@ class StageUntracked(StageModified):
     def name():
         return N_('Stage Untracked')
 
-    def __init__(self):
-        StageModified.__init__(self)
+    def init_paths(self):
         self.paths = self.model.untracked
 
 
