@@ -5,6 +5,7 @@ import os
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 
@@ -94,7 +95,8 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.setHeaderHidden(True)
 
         self.open_action = qtutils.add_action(self,
-                N_('Open'), self.open_repo, QtGui.QKeySequence.Open)
+                N_('Open'), self.open_repo, QtGui.QKeySequence.Open,
+                Qt.Key_Enter, Qt.Key_Return)
         self.open_action.setEnabled(False)
 
         self.open_new_action = qtutils.add_action(self,
