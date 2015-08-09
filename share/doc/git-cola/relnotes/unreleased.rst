@@ -19,6 +19,9 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/476
 
+* `Alt-{j,k}` navigation hotkeys were added to allow changing to the
+  next/previous file from the diff and commit editors.
+
 * The `Rename branch` menu action is now disabled in empty repositories.
 
   https://github.com/git-cola/git-cola/pull/475
