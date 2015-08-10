@@ -11,6 +11,7 @@ def main():
     args = parser.parse_args()
     version = args.version
 
+    ReleaseNotes(version).update()
     PyVersion(version).update()
     PyNsistVersion(version).update()
     RelnotesVersion(version).update()
@@ -23,58 +24,128 @@ def warn(msg):
     sys.stderr.write('warning: %s\n' % msg)
 
 
+def num_version(version):
+    if version.startswith('v'):
+        version = version[1:]
+    return version
+
+
+def tag_version(version):
+    if not version.startswith('v'):
+        version = 'v' + version
+    return version
+
+
+def is_section_end(txt):
+    return (txt.startswith('=') and
+            txt.endswith('=') and
+            txt == ('=' * len(txt)))
+
+
 class Version(object):
 
     path = None
 
     def __init__(self, version):
-        self.raw_version = version
-
-        num_version = version
-        if num_version.startswith('v'):
-            num_version = num_version[1:]
-        self.num_version = num_version
-
-        v_version = version
-        if not v_version.startswith('v'):
-            v_version = 'v' + v_version
-        self.v_version = v_version
+        self.num_version = num_version(version)
+        self.tag_version = tag_version(version)
+        self.readonly = False
 
     def match(self):
         return False
 
-    def replacement(self, line):
-        return line
+    def replacement(self, txt):
+        return txt
+
+    def read(self):
+        with open(self.path, 'r') as f:
+            return f.read()
+
+    def write(self, content):
+        if self.readonly:
+            return
+        with open(self.path, 'w') as f:
+            f.write(content)
+
+    def filter(self, content):
+        if not content:
+            return ''
+        final_content = []
+        for txt in content.splitlines():
+            if self.match(txt):
+                final_content.append(self.replacement(txt))
+            else:
+                final_content.append(txt)
+        return '\n'.join(final_content) + '\n'
 
     def update(self):
-
-        with open(self.path, 'r') as f:
-            content = f.read()
-
-        final_content = []
-        for line in content.splitlines():
-            if self.match(line):
-                final_content.append(self.replacement(line))
-            else:
-                final_content.append(line)
-
-        with open(self.path, 'w') as f:
-            f.write('\n'.join(final_content) + '\n')
-
+        if self.readonly:
+            self.warn()
+            return
+        content = self.filter(self.read())
+        self.write(content)
         self.warn()
 
     def warn(self):
         pass
 
 
+class ReleaseNotes(Version):
+
+    def __init__(self, version):
+        super(ReleaseNotes, self).__init__(version)
+        self.path = 'share/doc/git-cola/relnotes/%s.rst' % self.tag_version
+        self.readonly = os.path.exists(self.path)
+
+    def read(self):
+        path = 'share/doc/git-cola/relnotes/unreleased.rst'
+        with open(path, 'r') as f:
+            return f.read()
+
+    def warn(self):
+        if self.readonly:
+            warn('%s already exists!' % self.path)
+        elif not os.path.exists(self.path):
+            warn('%s does not exist!' % self.path)
+
+    def filter(self, content):
+        section = ''
+        last = ''
+        capture = False
+
+        anchor = '.. _%s:' % self.tag_version
+        git_cola = 'git-cola %s' % self.tag_version
+        underline = '=' * len(git_cola)
+
+        output = [anchor, '', git_cola, underline]
+
+        for txt in content.splitlines():
+            if is_section_end(txt):
+                section = last
+                continue
+
+            if (section == 'Unreleased Topics' and
+                    txt != 'Development Version'):
+                capture = True
+            else:
+                capture = False
+
+            if capture:
+                output.append(txt)
+
+            last = txt
+
+        return '\n'.join(output)
+
+
 class PyVersion(Version):
 
     path = 'cola/_version.py'
 
-    def match(self, line):
-        return line.startswith('VERSION =')
+    def match(self, txt):
+        return txt.startswith('VERSION =')
 
-    def replacement(self, line):
+    def replacement(self, txt):
         return "VERSION = '%s'" % self.num_version
 
 
@@ -86,13 +157,13 @@ class PyNsistVersion(Version):
         super(PyNsistVersion, self).__init__(version)
         self.section = ''
 
-    def match(self, line):
-        if line.startswith('['):
-            self.section = line[1:-1]
+    def match(self, txt):
+        if txt.startswith('['):
+            self.section = txt[1:-1]
             return False
-        return self.section == 'Application' and line.startswith('version=')
+        return self.section == 'Application' and txt.startswith('version=')
 
-    def replacement(self, line):
+    def replacement(self, txt):
         return 'version=%s' % self.num_version
 
 
@@ -102,16 +173,16 @@ class RelnotesVersion(Version):
 
     def __init__(self, version):
         super(RelnotesVersion, self).__init__(version)
-        self.last_line = ''
+        self.last = ''
 
-    def match(self, line):
-        result = (self.last_line.endswith('relnotes/unreleased')
-                  and not line.endswith('relnotes/%s' % self.v_version))
-        self.last_line = line
+    def match(self, txt):
+        result = (self.last.endswith('relnotes/unreleased')
+                  and not txt.endswith('relnotes/%s' % self.tag_version))
+        self.last = txt
         return result
 
-    def replacement(self, line):
-        return '    relnotes/%s\n%s' % (self.v_version, line)
+    def replacement(self, txt):
+        return '    relnotes/%s\n%s' % (self.tag_version, txt)
 
 
 class RelnotesUnreleasedVersion(Version):
@@ -120,26 +191,26 @@ class RelnotesUnreleasedVersion(Version):
 
     def __init__(self, version):
         super(RelnotesUnreleasedVersion, self).__init__(version)
-        self.last_line = ''
+        self.last = ''
         self.section = ''
 
-    def match(self, line):
-        if line.startswith('=') and line.endswith('='):
-            self.section = self.last_line
+    def match(self, txt):
+        if is_section_end(txt):
+            self.section = self.last
             return False
 
         result = (self.section == 'Latest Release' and
-                  line.startswith(':ref:`v'))
-        self.last_line = line
+                    txt.startswith(':ref:`v'))
+        self.last = txt
         return result
 
-    def replacement(self, line):
-        version = self.v_version
+    def replacement(self, txt):
+        version = self.tag_version
         return (r':ref:`%s <%s>` is the latest stable release.'
                 % (version, version))
 
     def warn(self):
-        path = 'share/doc/git-cola/relnotes/%s.rst' % self.v_version
+        path = 'share/doc/git-cola/relnotes/%s.rst' % self.tag_version
         if not os.path.exists(path):
             warn('%s does not exist!' % path)
 
