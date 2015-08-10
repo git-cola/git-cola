@@ -1,12 +1,7 @@
-.. _unreleased:
+.. _v2.3:
 
-Latest Release
-==============
-
-:ref:`v2.3 <v2.3>` is the latest stable release.
-
-Unreleased Topics
-=================
+git-cola v2.3
+=============
 
 Usability, bells and whistles
 -----------------------------
@@ -75,10 +70,3 @@ Fixes
 * The copy/paste clipboard now persists after `git cola` exits.
 
   https://github.com/git-cola/git-cola/issues/484
-
-Development version
-===================
-
-Clone the git-cola repo to get the latest development version:
-
-``git clone git://github.com/git-cola/git-cola.git``
