@@ -6,6 +6,7 @@ do_docs=false
 do_website=false
 do_tarball=false
 do_win32=false
+do_win32_innosetup=false
 do_upload=false
 file_to_upload=
 
@@ -22,6 +23,7 @@ usage () {
 	echo "--doc                     - build the documentation"
 	echo "--doc-dir <dir>           - specify the documentation directory"
 	echo "--win32                   - build the win32 installer"
+	echo "--win32-innosetup         - build the InnoSetup installer"
 	echo "--win32-login <user@host> - specify the win32 host"
 	echo "--win32-port <port #>     - specify the win32 ssh port number"
 	echo "--win32-cola-dir <dir>    - specify the win32 cola repo path"
@@ -59,7 +61,16 @@ build_tarball () {
 }
 
 build_win32_remotely () {
-	title Building win32 remotely
+	if test "$do_win32_innosetup" = true
+	then
+		build_win32_innosetup
+	else
+		build_win32_pynsist
+	fi
+}
+
+build_win32_pynsist () {
+	title Building pynsist installer
 
 	do_or_die ssh -p $WIN32_SSH_PORT "$WIN32_LOGIN" '
 		PATH='"$WIN32_PYTHON"':'"$WIN32_PYTHON/Scripts"':'"$WIN32_GIT"':'"$WIN32_NSIS"':"$PATH"
@@ -75,6 +86,30 @@ build_win32_remotely () {
 		"$WIN32_LOGIN" "/bin/rm '$WIN32_COLA_DIR'/build/nsis/*.exe"
 
 	do_or_die mv git-cola_"$VERSION".exe git-cola-"$VERSION".exe
+	do_or_die chmod 644 git-cola-"$VERSION".exe
+	do_or_die zip -9 -m git-cola-"$VERSION".windows.zip \
+		-xi git-cola-"$VERSION".exe
+	if test "$do_upload" = true
+	then
+		upload_file git-cola-"$VERSION".windows.zip
+	fi
+}
+
+build_win32_innosetup () {
+	title Building InnoSetup installer
+
+	do_or_die ssh -p $WIN32_SSH_PORT "$WIN32_LOGIN" '
+		PATH='"$WIN32_PYTHON"':'"$WIN32_GIT"':"$PATH"
+		export PATH
+		cd '"$WIN32_COLA_DIR"' &&
+		contrib/win32/create-installer.sh
+	'
+	do_or_die scp -P $WIN32_SSH_PORT \
+		"$WIN32_LOGIN":"$WIN32_COLA_DIR"/"*.exe" .
+
+	do_or_die ssh -p $WIN32_SSH_PORT \
+		"$WIN32_LOGIN" "/bin/rm '$WIN32_COLA_DIR'/*.exe"
+
 	do_or_die chmod 644 git-cola-"$VERSION".exe
 	do_or_die zip -9 -m git-cola-"$VERSION".windows.zip \
 		-xi git-cola-"$VERSION".exe
@@ -121,6 +156,10 @@ do
 		;;
 	--win32)
 		do_win32=true
+		shift
+		;;
+	--win32-innosetup)
+		do_win32_innosetup=true
 		shift
 		;;
 	--win32-login)
