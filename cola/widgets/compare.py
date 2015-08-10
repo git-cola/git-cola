@@ -250,7 +250,8 @@ class CompareBranchesDialog(standard.Dialog):
     def compare_file(self, filename):
         """Initiates the difftool session"""
         if self.use_sandbox:
-            arg = self.diff_arg
+            left = self.diff_arg[0]
+            right = self.diff_arg[1] if len(self.diff_arg) > 1 else None
         else:
-            arg = (self.start, self.end)
-        difftool.launch(arg + ('--', filename))
+            left, right = self.start, self.end
+        difftool.launch(left=left, right=right, paths=filename)

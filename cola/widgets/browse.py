@@ -366,7 +366,7 @@ class BrowserController(QtCore.QObject):
         if not commits:
             return
         commit = commits[0]
-        difftool.launch([commit, '--'] + paths)
+        difftool.launch(left=commit, paths=paths)
 
 
 class BrowseModel(object):

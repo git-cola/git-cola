@@ -73,7 +73,7 @@ class FileWidget(TreeWidget):
         menu.addAction(qtutils.add_action(self, N_('Show history'),
                                self.show_file_history))
         menu.addAction(qtutils.add_action(self, N_('Launch Diff Tool'),
-                               self.show_file_diff))
+                               self.show_file_diff, 'Ctrl+D'))
 
         menu.exec_(self.mapToGlobal(event.pos()))
 

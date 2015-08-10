@@ -12,6 +12,7 @@ from PyQt4.QtCore import QPointF
 from PyQt4.QtCore import QRectF
 
 from cola import cmds
+from cola import core
 from cola import difftool
 from cola import observable
 from cola import qtutils
@@ -252,8 +253,7 @@ class CommitTreeWidget(ViewerMixin, standard.TreeWidget):
         selected_items = self.selected_items()
         if not selected_items:
             return None, None
-        item_below = self.itemBelow(selected_items[-1])
-        return item_below.commit.sha1 if item_below else None, selected_items[0].commit.sha1
+        return selected_items[-1].commit.sha1, selected_items[0].commit.sha1
 
     def set_selecting(self, selecting):
         self.selecting = selecting
@@ -600,7 +600,7 @@ class GitDAG(standard.MainWindow):
     def diff_commits(self, a, b):
         paths = self.ctx.paths()
         if paths:
-            difftool.launch([a, b, '--'] + paths)
+            difftool.launch(left=a, right=b, paths=paths)
         else:
             difftool.diff_commits(self, a, b)
 
@@ -625,9 +625,7 @@ class GitDAG(standard.MainWindow):
         bottom, top = self.treewidget.selected_commit_range()
         if not top:
             return
-        if not bottom:
-            bottom = '%s^' % top
-        difftool.launch([bottom, top, '--'] + list(files))
+        difftool.launch(left=bottom, left_take_parent=True, right=top, paths=list(files))
 
 
 class ReaderThread(QtCore.QThread):
