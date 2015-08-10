@@ -49,7 +49,7 @@ J, Down     = Move Down
 K, Up       = Move Up
 Enter       = Edit Selected Files
 Spacebar    = Open File Using Default Application
-Ctrl+L      = Focus Text Entry Field
+Ctrl + L    = Focus Text Entry Field
 ?           = Show Help
 
 The up and down arrows change focus between the text entry field
@@ -89,7 +89,7 @@ class Finder(standard.Dialog):
 
         self.input_label = QtGui.QLabel(os.path.basename(core.getcwd()) + '/')
         self.input_txt = completion.GitTrackedLineEdit(hint=N_('<path> ...'))
-        self.input_txt.enable_hint(True)
+        self.input_txt.hint.enable(True)
 
         self.tree = filetree.FileTree(parent=self)
 

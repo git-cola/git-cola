@@ -204,21 +204,34 @@ def cached_icon_from_path(filename):
     return QtGui.QIcon(filename)
 
 
-def confirm(title, text, informative_text, ok_text,
-            icon=None, default=True):
-    """Confirm that an action should take place"""
-    if icon is None:
-        icon = ok_icon()
+def mkicon(icon, default=None):
+    if icon is None and default is not None:
+        icon = default()
     elif icon and isinstance(icon, (str, ustr)):
         icon = QtGui.QIcon(icon)
+    return icon
+
+
+def confirm(title, text, informative_text, ok_text,
+            icon=None, default=True,
+            cancel_text=None, cancel_icon=None):
+    """Confirm that an action should take place"""
     msgbox = QtGui.QMessageBox(active_window())
     msgbox.setWindowModality(Qt.WindowModal)
     msgbox.setWindowTitle(title)
     msgbox.setText(text)
     msgbox.setInformativeText(informative_text)
+
+    icon = mkicon(icon, ok_icon)
     ok = msgbox.addButton(ok_text, QtGui.QMessageBox.ActionRole)
     ok.setIcon(icon)
+
     cancel = msgbox.addButton(QtGui.QMessageBox.Cancel)
+    cancel_icon = mkicon(cancel_icon, discard_icon)
+    cancel.setIcon(cancel_icon)
+    if cancel_text:
+        cancel.setText(cancel_text)
+
     if default:
         msgbox.setDefaultButton(ok)
     else:
@@ -396,9 +409,26 @@ def set_clipboard(text):
     """Sets the copy/paste buffer to text."""
     if not text:
         return
-    clipboard = QtGui.QApplication.instance().clipboard()
+    clipboard = QtGui.QApplication.clipboard()
     clipboard.setText(text, QtGui.QClipboard.Clipboard)
     clipboard.setText(text, QtGui.QClipboard.Selection)
+    persist_clipboard()
+
+
+def persist_clipboard():
+    """Persist the clipboard
+
+    X11 stores only a reference to the clipboard data.
+    Send a clipboard event to force a copy of the clipboard to occur.
+    This ensures that the clipboard is present after git-cola exits.
+    Otherwise, the reference is destroyed on exit.
+
+    C.f. https://stackoverflow.com/questions/2007103/how-can-i-disable-clear-of-clipboard-on-exit-of-pyqt4-application
+
+    """
+    clipboard = QtGui.QApplication.clipboard()
+    event = QtCore.QEvent(QtCore.QEvent.Clipboard)
+    QtGui.QApplication.sendEvent(clipboard, event)
 
 
 def add_action_bool(widget, text, fn, checked, *shortcuts):
@@ -806,6 +836,24 @@ def mimedata_from_paths(paths):
 
 def path_mimetypes():
     return ['text/uri-list', 'text/x-moz-url']
+
+
+class BlockSignals(object):
+    """Context manager for blocking a signals on a widget"""
+
+    def __init__(self, *widgets):
+        self.widgets = widgets
+        self.values = {}
+
+    def __enter__(self):
+        for w in self.widgets:
+            self.values[w] = w.blockSignals(True)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        for w in self.widgets:
+            w.blockSignals(self.values[w])
+
 
 # Syntax highlighting
 

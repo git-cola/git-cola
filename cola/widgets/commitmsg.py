@@ -1,10 +1,12 @@
 from __future__ import division, absolute_import, unicode_literals
+import re
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+from cola import actions
 from cola import cmds
 from cola import core
 from cola import gitcmds
@@ -16,6 +18,7 @@ from cola.gitcmds import commit_message_path
 from cola.i18n import N_
 from cola.models import dag
 from cola.models import prefs
+from cola.models import selection
 from cola.widgets import defs
 from cola.widgets.selectcommits import select_commits
 from cola.widgets.spellcheck import SpellCheckTextEdit
@@ -47,6 +50,13 @@ class CommitMessageEditor(QtGui.QWidget):
         self.commit_action.setToolTip(N_('Commit staged changes'))
         self.clear_action = qtutils.add_action(self, N_('Clear...'), self.clear)
 
+        self.launch_editor = actions.launch_editor(self)
+        self.launch_difftool = actions.launch_difftool(self)
+        self.stage_or_unstage = actions.stage_or_unstage(self)
+
+        self.move_up = actions.move_up(self)
+        self.move_down = actions.move_down(self)
+
         # Widgets
         self.summary = CommitSummaryLineEdit()
         self.summary.setMinimumHeight(defs.tool_button_height)
@@ -54,12 +64,26 @@ class CommitMessageEditor(QtGui.QWidget):
         self.summary.extra_actions.append(None)
         self.summary.extra_actions.append(self.signoff_action)
         self.summary.extra_actions.append(self.commit_action)
+        self.summary.extra_actions.append(None)
+        self.summary.extra_actions.append(self.launch_editor)
+        self.summary.extra_actions.append(self.launch_difftool)
+        self.summary.extra_actions.append(self.stage_or_unstage)
+        self.summary.extra_actions.append(None)
+        self.summary.extra_actions.append(self.move_up)
+        self.summary.extra_actions.append(self.move_down)
 
         self.description = CommitMessageTextEdit()
         self.description.extra_actions.append(self.clear_action)
         self.description.extra_actions.append(None)
         self.description.extra_actions.append(self.signoff_action)
         self.description.extra_actions.append(self.commit_action)
+        self.description.extra_actions.append(None)
+        self.description.extra_actions.append(self.launch_editor)
+        self.description.extra_actions.append(self.launch_difftool)
+        self.description.extra_actions.append(self.stage_or_unstage)
+        self.description.extra_actions.append(None)
+        self.description.extra_actions.append(self.move_up)
+        self.description.extra_actions.append(self.move_down)
 
         commit_button_tooltip = N_('Commit staged changes\n'
                                    'Shortcut: Ctrl+Enter')
@@ -150,8 +174,13 @@ class CommitMessageEditor(QtGui.QWidget):
                            self.summary_cursor_down,
                            Qt.Key_Down)
 
+        self.selection_model = selection_model = selection.selection_model()
+        selection_model.add_observer(selection_model.message_selection_changed,
+                                     self._update)
+
         self.model.add_observer(self.model.message_commit_message_changed,
                                 self._set_commit_message)
+
         self.connect(self, SIGNAL('set_commit_message(PyQt_PyObject)'),
                      self.set_commit_message, Qt.QueuedConnection)
 
@@ -172,10 +201,13 @@ class CommitMessageEditor(QtGui.QWidget):
         self.connect(self.description, SIGNAL('leave()'),
                      self.focus_summary)
 
+        self.connect(self, SIGNAL('update()'),
+                     self._update_callback, Qt.QueuedConnection)
+
         self.setFont(qtutils.diff_font())
 
-        self.summary.enable_hint(True)
-        self.description.enable_hint(True)
+        self.summary.hint.enable(True)
+        self.description.hint.enable(True)
 
         self.commit_button.setEnabled(False)
         self.commit_action.setEnabled(False)
@@ -195,6 +227,18 @@ class CommitMessageEditor(QtGui.QWidget):
 
         # Allow tab to jump from the summary to the description
         self.setTabOrder(self.summary, self.description)
+
+    def _update(self):
+        self.emit(SIGNAL('update()'))
+
+    def _update_callback(self):
+        enabled = self.model.stageable() or self.model.unstageable()
+        if self.model.stageable():
+            text = N_('Stage')
+        else:
+            text = N_('Unstage')
+        self.stage_or_unstage.setEnabled(enabled)
+        self.stage_or_unstage.setText(text)
 
     def set_initial_size(self):
         self.setMaximumHeight(133)
@@ -264,9 +308,7 @@ class CommitMessageEditor(QtGui.QWidget):
                 description = description + '\n' + cur_description
             # this callback is triggered by changing `summary`
             # so disable signals for `summary` only.
-            self.summary.blockSignals(True)
-            self.summary.set_value(summary)
-            self.summary.blockSignals(False)
+            self.summary.set_value(summary, block=True)
             self.description.set_value(description)
         self.commit_message_changed()
 
@@ -295,8 +337,8 @@ class CommitMessageEditor(QtGui.QWidget):
 
     def refresh_palettes(self):
         """Update the color palette for the hint text"""
-        self.summary.refresh_palette()
-        self.description.refresh_palette()
+        self.summary.hint.refresh()
+        self.description.hint.refresh()
 
     def _set_commit_message(self, message):
         self.emit(SIGNAL('set_commit_message(PyQt_PyObject)'), message)
@@ -339,20 +381,15 @@ class CommitMessageEditor(QtGui.QWidget):
 
         # Update summary
         if not summary and not self.summary.hasFocus():
-            summary = self.summary.hint()
-
-        blocksignals = self.summary.blockSignals(True)
-        self.summary.setText(summary)
-        self.summary.setCursorPosition(0)
-        self.summary.blockSignals(blocksignals)
+            self.summary.hint.enable(True)
+        else:
+            self.summary.set_value(summary, block=True)
 
         # Update description
         if not description and not self.description.hasFocus():
-            description = self.description.hint()
-
-        blocksignals = self.description.blockSignals(True)
-        self.description.setPlainText(description)
-        self.description.blockSignals(blocksignals)
+            self.description.hint.enable(True)
+        else:
+            self.description.set_value(description, block=True)
 
         # Update text color
         self.refresh_palettes()
@@ -360,12 +397,10 @@ class CommitMessageEditor(QtGui.QWidget):
         # Focus the empty summary or description
         if focus_summary:
             self.summary.setFocus()
-            self.summary.emit_position()
         elif focus_description:
             self.description.setFocus()
-            self.description.emit_position()
         else:
-            self.summary.emit_position()
+            self.summary.cursor_position.emit()
 
         self.update_actions()
 
@@ -531,12 +566,15 @@ class CommitMessageEditor(QtGui.QWidget):
 
 
 class CommitSummaryLineEdit(HintedLineEdit):
+
     def __init__(self, parent=None):
         hint = N_('Commit summary')
         HintedLineEdit.__init__(self, hint, parent)
         self.extra_actions = []
 
-        regex = QtCore.QRegExp(r'^[^#].*')
+        comment_char = prefs.comment_char()
+        re_comment_char = re.escape(comment_char)
+        regex = QtCore.QRegExp(r'^[^%s \t].*' % re_comment_char)
         self._validator = QtGui.QRegExpValidator(regex, self)
         self.setValidator(self._validator)
 
@@ -560,7 +598,7 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
         self.extra_actions = []
 
         self.action_emit_leave = qtutils.add_action(self,
-                'Shift Tab', self.emit_leave, 'Shift+tab')
+                'Shift Tab', self.emit_leave, 'Shift+Tab')
 
     def contextMenuEvent(self, event):
         menu, spell_menu = self.context_menu()

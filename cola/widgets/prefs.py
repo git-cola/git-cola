@@ -30,6 +30,7 @@ def preferences(model=None, parent=None):
 
 
 class FormWidget(QtGui.QWidget):
+
     def __init__(self, model, parent, source='user'):
         QtGui.QWidget.__init__(self, parent)
         self.model = model
@@ -105,6 +106,7 @@ class FormWidget(QtGui.QWidget):
 
 
 class RepoFormWidget(FormWidget):
+
     def __init__(self, model, parent, source):
         FormWidget.__init__(self, model, parent, source=source)
 
@@ -129,6 +131,11 @@ class RepoFormWidget(FormWidget):
         self.display_untracked = QtGui.QCheckBox()
         self.display_untracked.setChecked(True)
 
+        tooltip = N_('Detect conflict markers in unmerged files')
+        self.check_conflicts = QtGui.QCheckBox()
+        self.check_conflicts.setChecked(True)
+        self.check_conflicts.setToolTip(tooltip)
+
         self.add_row(N_('User Name'), self.name)
         self.add_row(N_('Email Address'), self.email)
         self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
@@ -136,8 +143,10 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
         self.add_row(N_('Show Diffstat After Merge'), self.merge_diffstat)
         self.add_row(N_('Display Untracked Files'), self.display_untracked)
+        self.add_row(N_('Detect Conflict Markers'), self.check_conflicts)
 
         self.set_config({
+            prefs.CHECKCONFLICTS: (self.check_conflicts, True),
             prefs.DIFFCONTEXT: (self.diff_context, 5),
             prefs.DISPLAY_UNTRACKED: (self.display_untracked, True),
             prefs.USER_NAME: (self.name, ''),
@@ -149,6 +158,7 @@ class RepoFormWidget(FormWidget):
 
 
 class SettingsFormWidget(FormWidget):
+
     def __init__(self, model, parent):
         FormWidget.__init__(self, model, parent)
 
@@ -174,6 +184,7 @@ class SettingsFormWidget(FormWidget):
         self.difftool = QtGui.QLineEdit()
         self.mergetool = QtGui.QLineEdit()
         self.keep_merge_backups = QtGui.QCheckBox()
+        self.sort_bookmarks = QtGui.QCheckBox()
         self.save_gui_settings = QtGui.QCheckBox()
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
@@ -186,6 +197,7 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Diff Tool'), self.difftool)
         self.add_row(N_('Merge Tool'), self.mergetool)
         self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
+        self.add_row(N_('Sort bookmarks alphabetically'), self.sort_bookmarks)
         self.add_row(N_('Save GUI Settings'), self.save_gui_settings)
 
         self.set_config({
@@ -193,14 +205,16 @@ class SettingsFormWidget(FormWidget):
             prefs.TABWIDTH: (self.tabwidth, 8),
             prefs.TEXTWIDTH: (self.textwidth, 72),
             prefs.LINEBREAK: (self.linebreak, True),
+            prefs.SORT_BOOKMARKS: (self.sort_bookmarks, True),
             prefs.DIFFTOOL: (self.difftool, 'xxdiff'),
             prefs.EDITOR: (self.editor, os.getenv('VISUAL', 'gvim')),
-            prefs.HISTORY_BROWSER: (self.historybrowser, 'gitk'),
+            prefs.HISTORY_BROWSER: (self.historybrowser,
+                                    prefs.default_history_browser()),
             prefs.MERGE_KEEPBACKUP: (self.keep_merge_backups, True),
             prefs.MERGETOOL: (self.mergetool, 'xxdiff'),
         })
 
-        self.connect(self.fixed_font, SIGNAL('currentFontChanged(const QFont &)'),
+        self.connect(self.fixed_font, SIGNAL('currentFontChanged(QFont)'),
                      self.current_font_changed)
 
         self.connect(self.font_size, SIGNAL('valueChanged(int)'),

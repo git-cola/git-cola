@@ -87,6 +87,8 @@ class GitRepositoryTestCase(TmpPathTestCase):
 
     def initialize_repo(self):
         self.git('init')
+        self.git('config', '--local', 'user.name', 'Your Name')
+        self.git('config', '--local', 'user.email', 'you@example.com')
         self.touch('A', 'B')
         self.git('add', 'A', 'B')
 

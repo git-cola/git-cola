@@ -15,6 +15,7 @@ Thanks
 * Ben Cole
 * Benedict Lee
 * Benoît Nouyrigat
+* Bert Jacobs
 * Charles 101
 * Christian Jann
 * Christopher Meng
@@ -26,13 +27,16 @@ Thanks
 * David Aguilar
 * David Martínez Martí
 * Dennis Gilmore
+* deniz1a
 * Dmitry Kann
 * Eric Drechsel
 * Geoffrey van Wyk
+* geotavros
 * `Git Hackers <http://git-scm.com/about>`_
 * Glen Mailer
 * Guillaume de Bure
 * Harro Verton
+* Ilya Tumaykin
 * Ingo Weinhold
 * Ismael Juma
 * Iulian Udrea
@@ -57,6 +61,7 @@ Thanks
 * Liviu Cristian Mirea-Ghiban
 * Luke Bakken
 * Maarten Nieber
+* Maaaks
 * Maciej Filipiak
 * Mahmoud Hossam
 * Maicon D. Filippsen

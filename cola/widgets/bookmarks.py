@@ -5,6 +5,7 @@ import os
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 
@@ -14,6 +15,7 @@ from cola import git
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
+from cola.models import prefs
 from cola.settings import Settings
 from cola.widgets import defs
 from cola.widgets import standard
@@ -93,7 +95,8 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.setHeaderHidden(True)
 
         self.open_action = qtutils.add_action(self,
-                N_('Open'), self.open_repo, QtGui.QKeySequence.Open)
+                N_('Open'), self.open_repo, QtGui.QKeySequence.Open,
+                Qt.Key_Enter, Qt.Key_Return)
         self.open_action.setEnabled(False)
 
         self.open_new_action = qtutils.add_action(self,
@@ -134,6 +137,9 @@ class BookmarksTreeWidget(standard.TreeWidget):
         if self.style == BOOKMARKS:
             items = [BookmarksTreeWidgetItem(path, icon)
                         for path in settings.bookmarks]
+
+            if prefs.sort_bookmarks():
+                items.sort()
         elif self.style == RECENT_REPOS:
             # recent items
             items = [BookmarksTreeWidgetItem(path, icon)

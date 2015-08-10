@@ -116,17 +116,14 @@ def start_command(cmd, cwd=None, add_env=None,
         env = os.environ.copy()
         env.update(add_env)
 
-    if PY3:
-        # Python3 on windows always goes through list2cmdline() internally inside
-        # of subprocess.py so we must provide unicode strings here otherwise
-        # Python3 breaks when bytes are provided.
-        #
-        # Additionally, the preferred usage on Python3 is to pass unicode
-        # strings to subprocess.  Python will automatically encode into the
-        # default encoding (utf-8) when it gets unicode strings.
-        cmd = [decode(c) for c in cmd]
-    else:
-        cmd = [encode(c) for c in cmd]
+    # Python3 on windows always goes through list2cmdline() internally inside
+    # of subprocess.py so we must provide unicode strings here otherwise
+    # Python3 breaks when bytes are provided.
+    #
+    # Additionally, the preferred usage on Python3 is to pass unicode
+    # strings to subprocess.  Python will automatically encode into the
+    # default encoding (utf-8) when it gets unicode strings.
+    cmd = prep_for_subprocess(cmd)
 
     if WIN32 and cwd == getcwd():
         # Windows cannot deal with passing a cwd that contains unicode
@@ -139,6 +136,16 @@ def start_command(cmd, cwd=None, add_env=None,
     return subprocess.Popen(cmd, bufsize=1, stdin=stdin, stdout=stdout,
                             stderr=stderr, cwd=cwd, env=env,
                             universal_newlines=universal_newlines, **extra)
+
+
+def prep_for_subprocess(cmd):
+    """Decode on Python3, encode on Python2"""
+    # See the comment in start_command()
+    if PY3:
+        cmd = [decode(c) for c in cmd]
+    else:
+        cmd = [encode(c) for c in cmd]
+    return cmd
 
 
 @interruptable

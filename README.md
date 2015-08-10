@@ -78,12 +78,18 @@ way to try the latest version.
     ./bin/git-dag
 
 Having *git-cola*'s *bin/* directory in your path allows you to run
-*git-cola* like a built-in Git command:
+*git cola* like a regular built-in Git command:
 
-    PATH=$PWD/bin:"$PATH"
+    # Replace "$PWD/bin" with the path to git-cola's bin/ directory
+    PATH="$PWD/bin":"$PATH"
     export PATH
+
     git cola
     git dag
+
+The instructions below assume that you have *git-cola* present in your
+`$PATH`.  Replace "git cola" with "./bin/git-cola" as needed if you'd like to
+just run it in-place.
 
 # INSTALLATION
 
@@ -164,13 +170,7 @@ If you are developing *git-cola* on Windows you can use `python.exe` to run
 
     python.exe ./bin/git-cola
 
-If you want to build the `git-cola Installer` yourself run the provided script
-
-    ./contrib/win32/create-installer.sh
-
-You have to make sure that the file */share/InnoSetup/ISCC.exe* exists.
-That is normally the case when you run the *msysGit bash* and not the
-*Git for Windows bash* (look [here](http://msysgit.github.com/) for the differences).
+See "WINDOWS (continued)" below for more details.
 
 # DOCUMENTATION
 
@@ -193,12 +193,13 @@ launched through the *git-cola*'s "Rebase" menu.
 *git-xbase* can also be launched independently of the main *git-cola* interface
 by telling `git rebase` to use it as its editor:
 
-    GIT_SEQUENCE_EDITOR=$PWD/share/git-cola/bin/git-xbase git rebase -i origin/master
+    env GIT_SEQUENCE_EDITOR="$PWD/share/git-cola/bin/git-xbase" \
+    git rebase -i origin/master
 
-You can also launch *git-xbase* via the *git-cola* rebase sub-command
-(as well as various other sub-commands):
+The quickest way to launch *git-xbase* is via the *git cola rebase*
+sub-command (as well as various other sub-commands):
 
-    ./bin/git-cola rebase origin/master
+    git cola rebase origin/master
 
 # COMMAND-LINE TOOLS
 
@@ -207,9 +208,9 @@ launch tools that are available from within the *git-cola* interface.
 For example, `./bin/git-cola find` launches the file finder,
 and `./bin/git-cola grep` launches the grep tool.
 
-See `./bin/git-cola --help-commands` for the full list of commands.
+See `git cola --help-commands` for the full list of commands.
 
-    $ ./bin/git-cola --help-commands
+    $ git cola --help-commands
     usage: git-cola [-h]
     
                     {cola,am,archive,branch,browse,classic,config,
@@ -244,14 +245,55 @@ See `./bin/git-cola --help-commands` for the full list of commands.
         tag                 create tags
         version             print the version
 
+
+## WINDOWS (continued)
+
+# WINDOWS-ONLY HISTORY BROWSER CONFIGURATION UPGRADE
+
+You may need to configure your history browser if you are upgrading from an
+older version of *git-cola*.
+
+`gitk` was originally the default history browser, but `gitk` cannot be
+launched as-is on Windows because `gitk` is a shell script.
+
+If you are configured to use `gitk`, then change your configuration to
+go through Git's `sh.exe` on Windows.  Similarly,we must go through
+`python.exe` if we want to use `git-dag`.
+
+If you want to use *gitk* as your history browser open the
+*Preferences* screen and change the history browser command to:
+
+    C:/Git/bin/sh.exe --login -i C:/Git/bin/gitk
+
+Alternatively, if you'd like to use *git-dag* as your history browser, use:
+
+    C:/Python27/python.exe C:/git-cola/bin/git-dag
+
+*git-dag* became the default history browser on Windows in `v2.3`, so new
+users should not need to configure anything.
+
 # BUILDING WINDOWS INSTALLERS
 
-Windows installers are built using [Pynsist](http://pynsist.readthedocs.org/en/latest/).
+Windows installers are built using
+[Pynsist](http://pynsist.readthedocs.org/en/latest/).
 [NSIS](http://nsis.sourceforge.net/Main_Page) is also needed.
 
-To build:
+To build the installer using *Pynsist*:
 
-1. (If building from a non-Windows platform), run `./contrib/win32/fetch_pyqt_windows.sh`.
+1. (If building from a non-Windows platform), run
+   `./contrib/win32/fetch_pyqt_windows.sh`.
    This will download a PyQt binary installer for Windows and unpack its files
    into `pynsist_pkgs/`.
-2. Run `pynsist pynsist.cfg`. The installer will be built in `build/nsis/`.
+2. Run `pynsist pynsist.cfg`.
+   The installer will be built in `build/nsis/`.
+
+
+Before *Pynsist*, installers were built using *InnoSetup*.
+The *InnoSetup* scripts are still available:
+
+    ./contrib/win32/create-installer.sh
+
+You have to make sure that the file */share/InnoSetup/ISCC.exe* exists.
+That is normally the case when you run the *msysGit bash* and not the
+*Git for Windows bash* (look [here](http://msysgit.github.com/)
+for the differences).

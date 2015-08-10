@@ -96,8 +96,7 @@ class StartupDialog(QtGui.QDialog):
         qtutils.connect_button(self.close_button, self.reject)
 
         self.connect(self.bookmarks,
-                     SIGNAL('activated(const QModelIndex &)'),
-                     self.open_bookmark)
+                     SIGNAL('activated(QModelIndex)'), self.open_bookmark)
 
     def find_git_repo(self):
         """

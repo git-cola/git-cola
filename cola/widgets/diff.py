@@ -6,13 +6,13 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt, SIGNAL
 
+from cola import actions
 from cola import cmds
 from cola import core
 from cola import gitcfg
 from cola import gitcmds
 from cola import gravatar
 from cola import qtutils
-from cola.cmds import run
 from cola.i18n import N_
 from cola.models import main
 from cola.models import selection
@@ -22,7 +22,7 @@ from cola.qtutils import create_menu
 from cola.qtutils import RGB, make_format
 from cola.qtutils import options_icon
 from cola.widgets import defs
-from cola.widgets.text import MonoTextView
+from cola.widgets.text import VimMonoTextView
 from cola.compat import ustr
 
 
@@ -122,10 +122,10 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.setCurrentBlockState(state)
 
 
-class DiffTextEdit(MonoTextView):
+class DiffTextEdit(VimMonoTextView):
     def __init__(self, parent, whitespace=True):
 
-        MonoTextView.__init__(self, parent)
+        VimMonoTextView.__init__(self, parent)
         # Diff/patch syntax highlighter
         self.highlighter = DiffSyntaxHighlighter(self.document(),
                                                  whitespace=whitespace)
@@ -187,23 +187,40 @@ class DiffEditor(DiffTextEdit):
                 self.apply_selection, Qt.Key_S)
 
         self.action_revert_selection = qtutils.add_action(self, '',
-                self.revert_selection)
-        self.action_revert_selection.setIcon(qtutils.theme_icon('edit-undo.svg'))
+                self.revert_selection, Qt.ControlModifier + Qt.Key_U)
+        icon = qtutils.theme_icon('edit-undo.svg')
+        self.action_revert_selection.setIcon(icon)
 
-        self.launch_editor = qtutils.add_action(self,
-                cmds.LaunchEditor.name(), run(cmds.LaunchEditor),
-                cmds.LaunchEditor.SHORTCUT,
-                'Return', 'Enter')
-        self.launch_editor.setIcon(qtutils.options_icon())
+        self.launch_editor = actions.launch_editor(self, 'Return', 'Enter')
+        self.launch_difftool = actions.launch_difftool(self)
+        self.stage_or_unstage = actions.stage_or_unstage(self)
 
-        self.launch_difftool = qtutils.add_action(self,
-                cmds.LaunchDifftool.name(), run(cmds.LaunchDifftool),
-                cmds.LaunchDifftool.SHORTCUT)
-        self.launch_difftool.setIcon(qtutils.git_icon())
+        # Emit up/down signals so that they can be routed by the main widget
+        self.move_down = actions.move_down(self)
+        self.move_up = actions.move_up(self)
 
         model.add_observer(model.message_diff_text_changed, self._emit_text)
 
+        self.selection_model = selection_model = selection.selection_model()
+        selection_model.add_observer(selection_model.message_selection_changed,
+                                     self._update)
+        self.connect(self, SIGNAL('update()'),
+                     self._update_callback, Qt.QueuedConnection)
+
         self.connect(self, SIGNAL('set_text(PyQt_PyObject)'), self.setPlainText)
+
+    def _update(self):
+        self.emit(SIGNAL('update()'))
+
+    def _update_callback(self):
+        enabled = False
+        s = self.selection_model.selection()
+        if s.modified and self.model.stageable():
+            if s.modified[0] in self.model.submodules:
+                pass
+            elif s.modified[0] not in main.model().unstaged_deleted:
+                enabled = True
+        self.action_revert_selection.setEnabled(enabled)
 
     def _emit_text(self, text):
         self.emit(SIGNAL('set_text(PyQt_PyObject)'), text)
@@ -226,6 +243,13 @@ class DiffEditor(DiffTextEdit):
         menu = QtGui.QMenu(self)
         s = selection.selection()
         filename = selection.filename()
+
+        if self.model.stageable() or self.model.unstageable():
+            if self.model.stageable():
+                self.stage_or_unstage.setText(N_('Stage'))
+            else:
+                self.stage_or_unstage.setText(N_('Unstage'))
+            menu.addAction(self.stage_or_unstage)
 
         if s.modified and self.model.stageable():
             if s.modified[0] in main.model().submodules:
@@ -271,7 +295,6 @@ class DiffEditor(DiffTextEdit):
 
                 self.action_apply_selection.setText(apply_text)
                 self.action_apply_selection.setIcon(qtutils.remove_icon())
-
                 menu.addAction(self.action_apply_selection)
 
         if self.model.stageable() or self.model.unstageable():
@@ -283,6 +306,12 @@ class DiffEditor(DiffTextEdit):
 
             # Removed files can still be diffed.
             menu.addAction(self.launch_difftool)
+
+        # Add the Previous/Next File actions, which improves discoverability
+        # of their associated shortcuts
+        menu.addSeparator()
+        menu.addAction(self.move_up)
+        menu.addAction(self.move_down)
 
         menu.addSeparator()
         action = menu.addAction(qtutils.theme_icon('edit-copy.svg'),

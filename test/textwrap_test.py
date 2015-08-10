@@ -76,6 +76,7 @@ else:
 This test is so meta, even this sentence
 
 Cheered-on-by: Avoids word-wrap
+C.f. This also avoids word-wrap
 """
 
         expect = """
@@ -89,6 +90,7 @@ this
 sentence
 
 Cheered-on-by: Avoids word-wrap
+C.f. This also avoids word-wrap
 """
 
         self.assertEqual(self.wrap(text), expect)

@@ -76,7 +76,7 @@ class CreateTag(standard.Dialog):
 
         self.tag_msg = text.HintedTextEdit(N_('Tag message...'), self)
         self.tag_msg.setToolTip(N_('Specifies the tag message'))
-        self.tag_msg.enable_hint(True)
+        self.tag_msg.hint.enable(True)
         # Revision
         self.rev_label = QtGui.QLabel(self)
         self.rev_label.setText(N_('Revision'))

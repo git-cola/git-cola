@@ -44,7 +44,7 @@ class StatusWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
         self.toggle_action = qtutils.add_action(self, tooltip,
-                self.toggle_filter, 'Shift+Ctrl+F')
+                self.toggle_filter, 'Ctrl+Shift+F')
 
         titlebar.add_corner_widget(self.filter_button)
         qtutils.connect_button(self.filter_button, self.toggle_filter)
@@ -71,6 +71,12 @@ class StatusWidget(QtGui.QWidget):
         self.filter_widget.setVisible(True)
         self.filter_widget.text.set_value(txt)
         self.filter_widget.apply_filter()
+
+    def move_up(self):
+        self.tree.move_up()
+
+    def move_down(self):
+        self.tree.move_down()
 
 
 class StatusTreeWidget(QtGui.QTreeWidget):
@@ -148,10 +154,12 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             self.open_parent_dir_action.setIcon(qtutils.open_file_icon())
 
         self.up_action = qtutils.add_action(self,
-                N_('Move Up'), self.move_up, Qt.Key_K)
+                N_('Move Up'), self.move_up,
+                Qt.Key_K, Qt.AltModifier + Qt.Key_K)
 
         self.down_action = qtutils.add_action(self,
-                N_('Move Down'), self.move_down, Qt.Key_J)
+                N_('Move Down'), self.move_down,
+                Qt.Key_J, Qt.AltModifier + Qt.Key_J)
 
         self.copy_path_action = qtutils.add_action(self,
                 N_('Copy Path to Clipboard'),
@@ -163,6 +171,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 self.copy_relpath, QtGui.QKeySequence.Cut)
         self.copy_relpath_action.setIcon(qtutils.theme_icon('edit-copy.svg'))
 
+        # MoveToTrash and Delete use the same shortcut.
+        # We will only bind one of them, depending on whether or not the
+        # MoveToTrash command is avaialble.  When available, the hotkey
+        # is bound to MoveToTrash, otherwise it is bound to Delete.
         if cmds.MoveToTrash.AVAILABLE:
             self.move_to_trash_action = qtutils.add_action(self,
                     N_('Move file(s) to trash'),
@@ -919,7 +931,7 @@ class StatusFilterWidget(QtGui.QWidget):
         hint = N_('Filter paths...')
         self.text = completion.GitStatusFilterLineEdit(hint=hint, parent=self)
         self.text.setToolTip(hint)
-        self.text.enable_hint(True)
+        self.text.hint.enable(True)
         self.setFocusProxy(self.text)
         self._filter = None
 

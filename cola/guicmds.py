@@ -353,5 +353,3 @@ def rename_branch():
     if not new_branch:
         return
     cmds.do(cmds.RenameBranch, branch, new_branch)
-
-

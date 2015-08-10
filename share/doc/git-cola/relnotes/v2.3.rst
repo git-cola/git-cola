@@ -1,0 +1,72 @@
+.. _v2.3:
+
+git-cola v2.3
+=============
+
+Usability, bells and whistles
+-----------------------------
+
+* The Interactive Rebase feature now works on Windows!
+
+  https://github.com/git-cola/git-cola/issues/463
+
+* The `diff` editor now understands vim-style `hjkl` navigation hotkeys.
+
+  https://github.com/git-cola/git-cola/issues/476
+
+* `Alt-{j,k}` navigation hotkeys were added to allow changing to the
+  next/previous file from the diff and commit editors.
+
+* The `Rename branch` menu action is now disabled in empty repositories.
+
+  https://github.com/git-cola/git-cola/pull/475
+
+  https://github.com/git-cola/git-cola/issues/459
+
+* `git cola` now checks unmerged files for conflict markers before
+  staging them.  This feature can be disabled in the preferences.
+
+  https://github.com/git-cola/git-cola/issues/464
+
+* `git dag` now remembers which commits were selected when refreshing
+  so that it can restore the selection afterwards.
+
+  https://github.com/git-cola/git-cola/issues/480
+
+* "Launch Editor", "Launch Difftool", "Stage/Unstage",
+  and "Move Up/Down" hotkeys now work when the commit message
+  editor has focus.
+
+  https://github.com/git-cola/git-cola/issues/453
+
+* The diff editor now supports the `Ctrl+u` hotkey for reverting
+  diff hunks and selected lines.
+
+* The `core.commentChar` Git configuration value is now honored.
+  Commit messages and rebase instruction sheets will now use
+  the configured character for comments.  This allows having
+  commit messages that start with `#` when `core.commentChar`
+  is configured to its non-default value.
+
+  https://github.com/git-cola/git-cola/issues/446
+
+Fixes
+-----
+
+* Diff syntax highlighting was improved to handle more edge cases
+  and false positives.
+
+  https://github.com/git-cola/git-cola/pull/467
+
+* Setting commands in the interactive rebase editor was fixed.
+
+  https://github.com/git-cola/git-cola/issues/472
+
+* git-cola no longer clobbers the Ctrl+Backspace text editing shortcut
+  in the commit message editor.
+
+  https://github.com/git-cola/git-cola/issues/453
+
+* The copy/paste clipboard now persists after `git cola` exits.
+
+  https://github.com/git-cola/git-cola/issues/484

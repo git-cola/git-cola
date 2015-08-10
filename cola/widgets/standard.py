@@ -145,6 +145,10 @@ class MainWindowMixin(WidgetMixin):
         for widget in self.dockwidgets:
             widget.titleBarWidget().update_tooltips()
 
+    def closeEvent(self, event):
+        qtutils.persist_clipboard()
+        WidgetMixin.closeEvent(self, event)
+
 
 class TreeMixin(object):
 
