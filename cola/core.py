@@ -133,6 +133,10 @@ def start_command(cmd, cwd=None, add_env=None,
         # the subprocess.
         cwd = None
 
+    if WIN32:
+        CREATE_NO_WINDOW = 0x08000000
+        extra['creationflags'] = CREATE_NO_WINDOW
+
     return subprocess.Popen(cmd, bufsize=1, stdin=stdin, stdout=stdout,
                             stderr=stderr, cwd=cwd, env=env,
                             universal_newlines=universal_newlines, **extra)
