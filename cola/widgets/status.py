@@ -171,6 +171,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 self.copy_relpath, QtGui.QKeySequence.Cut)
         self.copy_relpath_action.setIcon(qtutils.theme_icon('edit-copy.svg'))
 
+        self.view_history_action = qtutils.add_action(self,
+                N_('View History...'),
+                self.view_history, 'Ctrl+Shift+H')
+
         # MoveToTrash and Delete use the same shortcut.
         # We will only bind one of them, depending on whether or not the
         # MoveToTrash command is avaialble.  When available, the hotkey
@@ -558,6 +562,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
         menu.addAction(self.copy_relpath_action)
+        menu.addAction(self.view_history_action)
         return menu
 
     def _create_staged_submodule_context_menu(self, menu, s):
@@ -577,6 +582,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         menu.addAction(self.copy_path_action)
         menu.addAction(self.copy_relpath_action)
+        menu.addAction(self.view_history_action)
         return menu
 
     def _create_unmerged_context_menu(self, menu, s):
@@ -604,6 +610,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
         menu.addAction(self.copy_relpath_action)
+        menu.addAction(self.view_history_action)
         return menu
 
     def _create_unstaged_context_menu(self, menu, s):
@@ -658,6 +665,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
         menu.addAction(self.copy_relpath_action)
+        if not selection.selection_model().is_empty():
+            menu.addAction(self.view_history_action)
         return menu
 
     def _create_modified_submodule_context_menu(self, menu, s):
@@ -677,6 +686,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
         menu.addAction(self.copy_relpath_action)
+        menu.addAction(self.view_history_action)
         return menu
 
 
@@ -920,6 +930,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def mimeTypes(self):
         return qtutils.path_mimetypes()
+
+    def view_history(self):
+        """Signal that we should view history for paths."""
+        cmds.do(cmds.VisualizePaths, selection.union(selection.selection_model()))
 
 
 class StatusFilterWidget(QtGui.QWidget):
