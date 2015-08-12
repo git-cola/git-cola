@@ -3,9 +3,10 @@ from __future__ import division, absolute_import, unicode_literals
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
+from cola import hotkeys
+from cola import qtutils
 from cola.i18n import N_
 from cola.git import git
-from cola import qtutils
 from cola.widgets.standard import TreeWidget
 from cola.widgets.diff import COMMITS_SELECTED
 from cola.widgets.diff import FILES_SELECTED
@@ -73,7 +74,7 @@ class FileWidget(TreeWidget):
         menu.addAction(qtutils.add_action(self, N_('Show history'),
                                self.show_file_history))
         menu.addAction(qtutils.add_action(self, N_('Launch Diff Tool'),
-                               self.show_file_diff, 'Ctrl+D'))
+                               self.show_file_diff, hotkeys.DIFF))
 
         menu.exec_(self.mapToGlobal(event.pos()))
 
