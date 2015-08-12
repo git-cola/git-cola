@@ -65,12 +65,10 @@ def launch(left=None, right=None, paths=None,
         difftool_args.append(left)
     if right:
         difftool_args.append(right)
+
     if paths:
         difftool_args.append('--')
-        if isinstance(paths, (tuple, list)):
-            difftool_args.extend(paths)
-        else:
-            difftool_args.append(paths) # paths is a string
+        difftool_args.extend(paths)
     core.fork(difftool_args)
 
 
