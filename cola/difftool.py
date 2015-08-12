@@ -48,27 +48,30 @@ def launch(left=None, right=None, paths=None,
     if left:
         if left_take_parent:
             # Check root commit (no parents and thus cannot execute '~')
-            proc = core.start_command(['git', 'rev-list', '--parents', '-n', '1', left])
-            out, err = proc.communicate()
-            status = proc.returncode
+            model = main.model()
+            git = model.git
+            status, out, err = git.rev_list(left, parents=True, n=1)
             Interaction.log_status(status, out, err)
             if status:
-                raise Exception('git rev-list command failed')
-            line = out.splitlines()[0]
-            if len(line.split()) >= 2:
+                raise StandardError('git rev-list command failed')
+
+            if len(out.split()) >= 2:
                 # Commit has a parent, so we can take its child as requested
                 left += '~'
             else:
-                # No parent, assume it's the root commit, so we have to diff against an empty tree
+                # No parent, assume it's the root commit, so we have to diff
+                # against the empty tree.  The empty tree is a built-in
+                # git constant SHA1.  The empty tree is a built-in Git SHA1.
                 left = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
-
         difftool_args.append(left)
+
     if right:
         difftool_args.append(right)
 
     if paths:
         difftool_args.append('--')
         difftool_args.extend(paths)
+
     core.fork(difftool_args)
 
 
