@@ -77,6 +77,10 @@ This test is so meta, even this sentence
 
 Cheered-on-by: Avoids word-wrap
 C.f. This also avoids word-wrap
+References: This also avoids word-wrap
+See-also: This also avoids word-wrap
+Related-to: This also avoids word-wrap
+Link: This also avoids word-wrap
 """
 
         expect = """
@@ -91,6 +95,10 @@ sentence
 
 Cheered-on-by: Avoids word-wrap
 C.f. This also avoids word-wrap
+References: This also avoids word-wrap
+See-also: This also avoids word-wrap
+Related-to: This also avoids word-wrap
+Link: This also avoids word-wrap
 """
 
         self.assertEqual(self.wrap(text), expect)
