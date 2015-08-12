@@ -6,6 +6,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import cmds
+from cola import hotkeys
 from cola import utils
 from cola import qtutils
 from cola.cmds import do
@@ -73,11 +74,11 @@ class Grep(Dialog):
             self.setWindowModality(Qt.WindowModal)
 
         self.edit_action = qtutils.add_action(
-                self, N_('Edit'), self.edit, cmds.Edit.SHORTCUT)
+                self, N_('Edit'), self.edit, hotkeys.EDIT)
         self.edit_action.setEnabled(False)
 
         self.refresh_action = qtutils.add_action(
-                self, N_('Refresh'), self.search, *cmds.Refresh.SHORTCUTS)
+                self, N_('Refresh'), self.search, *hotkeys.REFRESH_HOTKEYS)
         self.refresh_action.setEnabled(False)
 
         self.input_label = QtGui.QLabel('git grep')
@@ -155,8 +156,8 @@ class Grep(Dialog):
                      lambda: self.input_txt.setFocus())
 
         qtutils.add_action(self.input_txt, 'Focus Results', self.focus_results,
-                           Qt.Key_Down, Qt.Key_Enter, Qt.Key_Return)
-        qtutils.add_action(self, 'Focus Input', self.focus_input, 'Ctrl+L')
+                           hotkeys.DOWN, *hotkeys.ACCEPT)
+        qtutils.add_action(self, 'Focus Input', self.focus_input, hotkeys.FOCUS)
 
         qtutils.connect_toggle(self.shell_checkbox, lambda x: self.search())
         qtutils.connect_button(self.close_button, self.close)
@@ -252,7 +253,7 @@ class GrepTextView(VimHintedTextView):
         VimHintedTextView.__init__(self, hint=hint, parent=parent)
 
         self.goto_action = qtutils.add_action(self, 'Launch Editor', self.edit)
-        self.goto_action.setShortcut(cmds.Edit.SHORTCUT)
+        self.goto_action.setShortcut(hotkeys.EDIT)
 
     def contextMenuEvent(self, event):
         menu = self.createStandardContextMenu(event.pos())

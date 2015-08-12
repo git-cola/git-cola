@@ -16,6 +16,7 @@ from cola import compat
 from cola import core
 from cola import gitcfg
 from cola import gitcmds
+from cola import hotkeys
 from cola import inotify
 from cola import utils
 from cola import difftool
@@ -145,7 +146,6 @@ class Command(ModelCommand):
 class AmendMode(Command):
     """Try to amend a commit."""
 
-    SHORTCUT = 'Ctrl+M'
     LAST_MESSAGE = None
 
     @staticmethod
@@ -357,8 +357,6 @@ class ResetMode(Command):
 
 class Commit(ResetMode):
     """Attempt to create a new commit."""
-
-    SHORTCUT = 'Ctrl+Return'
 
     def __init__(self, amend, msg, sign, no_verify=False):
         ResetMode.__init__(self)
@@ -576,9 +574,6 @@ class RemoveFiles(Command):
 class Delete(RemoveFiles):
     """Delete files."""
 
-    SHORTCUT = 'Ctrl+Shift+Backspace'
-    ALT_SHORTCUT = 'Ctrl+Backspace'
-
     def __init__(self, filenames):
         RemoveFiles.__init__(self, os.remove, filenames)
 
@@ -604,7 +599,6 @@ class Delete(RemoveFiles):
 class MoveToTrash(RemoveFiles):
     """Move files to the trash using send2trash"""
 
-    SHORTCUT = 'Ctrl+Backspace'
     AVAILABLE = send2trash is not None
 
     def __init__(self, filenames):
@@ -734,7 +728,6 @@ class Difftool(Command):
 
 class Edit(Command):
     """Edit a file using the configured gui.editor."""
-    SHORTCUT = 'Ctrl+E'
 
     @staticmethod
     def name():
@@ -795,8 +788,6 @@ class FormatPatch(Command):
 
 class LaunchDifftool(BaseCommand):
 
-    SHORTCUT = 'Ctrl+D'
-
     @staticmethod
     def name():
         return N_('Launch Diff Tool')
@@ -823,8 +814,6 @@ class LaunchDifftool(BaseCommand):
 
 class LaunchTerminal(BaseCommand):
 
-    SHORTCUT = 'Ctrl+Shift+T'
-
     @staticmethod
     def name():
         return N_('Launch Terminal')
@@ -842,7 +831,6 @@ class LaunchTerminal(BaseCommand):
 
 
 class LaunchEditor(Edit):
-    SHORTCUT = 'Ctrl+E'
 
     @staticmethod
     def name():
@@ -950,7 +938,6 @@ class Merge(Command):
 
 class OpenDefaultApp(BaseCommand):
     """Open a file using the OS default."""
-    SHORTCUT = 'Space'
 
     @staticmethod
     def name():
@@ -973,7 +960,6 @@ class OpenDefaultApp(BaseCommand):
 
 class OpenParentDir(OpenDefaultApp):
     """Open parent directories using the OS default."""
-    SHORTCUT = 'Shift+Space'
 
     @staticmethod
     def name():
@@ -1198,8 +1184,6 @@ class Rescan(Command):
 class Refresh(Command):
     """Update refs and refresh the index"""
 
-    SHORTCUTS = ('Ctrl+R', 'F5')
-
     @staticmethod
     def name():
         return N_('Refresh')
@@ -1247,8 +1231,6 @@ class RevertEditsCommand(ConfirmAction):
 
 class RevertUnstagedEdits(RevertEditsCommand):
 
-    SHORTCUT = 'Ctrl+U'
-
     @staticmethod
     def name():
         return N_('Revert Unstaged Edits...')
@@ -1270,8 +1252,6 @@ class RevertUnstagedEdits(RevertEditsCommand):
 
 
 class RevertUncommittedEdits(RevertEditsCommand):
-
-    SHORTCUT = 'Ctrl+Z'
 
     @staticmethod
     def name():
@@ -1401,7 +1381,6 @@ class ShowUntracked(Command):
 
 
 class SignOff(Command):
-    SHORTCUT = 'Ctrl+I'
 
     @staticmethod
     def name():
@@ -1482,7 +1461,6 @@ def should_stage_conflicts(path):
 
 class Stage(Command):
     """Stage a set of paths."""
-    SHORTCUT = 'Ctrl+S'
 
     @staticmethod
     def name():
@@ -1532,8 +1510,6 @@ class StageCarefully(Stage):
 class StageModified(StageCarefully):
     """Stage all modified files."""
 
-    SHORTCUT = 'Ctrl+S'
-
     @staticmethod
     def name():
         return N_('Stage Modified')
@@ -1544,8 +1520,6 @@ class StageModified(StageCarefully):
 
 class StageUnmerged(StageCarefully):
     """Stage unmerged files."""
-
-    SHORTCUT = 'Ctrl+S'
 
     @staticmethod
     def name():
@@ -1558,8 +1532,6 @@ class StageUnmerged(StageCarefully):
 class StageUntracked(StageCarefully):
     """Stage all untracked files."""
 
-    SHORTCUT = 'Ctrl+S'
-
     @staticmethod
     def name():
         return N_('Stage Untracked')
@@ -1570,8 +1542,6 @@ class StageUntracked(StageCarefully):
 
 class StageOrUnstage(Command):
     """If the selection is staged, unstage it, otherwise stage"""
-
-    SHORTCUT = 'Ctrl+S'
 
     @staticmethod
     def name():
@@ -1635,8 +1605,6 @@ class Tag(Command):
 
 class Unstage(Command):
     """Unstage a set of paths."""
-
-    SHORTCUT = 'Ctrl+S'
 
     @staticmethod
     def name():

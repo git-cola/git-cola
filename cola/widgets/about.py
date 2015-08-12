@@ -115,8 +115,7 @@ def show_shortcuts():
         layout = qtutils.hbox(defs.no_margin, defs.spacing, web)
         widget.setLayout(layout)
         widget.resize(800, min(parent.height(), 600))
-
         qtutils.add_action(widget, N_('Close'), widget.accept,
-                           Qt.Key_Question, Qt.Key_Enter, Qt.Key_Return)
+                           hotkeys.QUESTION, *hotkeys.ACCEPT)
     widget.show()
     return widget

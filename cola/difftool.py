@@ -6,9 +6,10 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import core
-from cola import utils
-from cola import qtutils
 from cola import gitcmds
+from cola import hotkeys
+from cola import qtutils
+from cola import utils
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
@@ -144,7 +145,7 @@ class FileDiffDialog(QtGui.QDialog):
         qtutils.connect_button(self.diff_button, self.diff)
         qtutils.connect_button(self.close_button, self.close)
 
-        qtutils.add_action(self, 'Focus Input', self.focus_input, 'Ctrl+L')
+        qtutils.add_action(self, 'Focus Input', self.focus_input, hotkeys.FOCUS)
         qtutils.add_close_action(self)
 
         self.resize(720, 420)

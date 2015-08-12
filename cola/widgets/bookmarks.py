@@ -5,13 +5,13 @@ import os
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 
 from cola import cmds
 from cola import core
 from cola import git
+from cola import hotkeys
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
@@ -95,32 +95,30 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.setHeaderHidden(True)
 
         self.open_action = qtutils.add_action(self,
-                N_('Open'), self.open_repo, QtGui.QKeySequence.Open,
-                Qt.Key_Enter, Qt.Key_Return)
+                N_('Open'), self.open_repo,
+                hotkeys.OPEN, *hotkeys.ACCEPT)
         self.open_action.setEnabled(False)
 
         self.open_new_action = qtutils.add_action(self,
-                N_('Open in New Window'), self.open_new_repo,
-                QtGui.QKeySequence.New)
+                N_('Open in New Window'), self.open_new_repo, hotkeys.NEW)
         self.open_new_action.setEnabled(False)
 
         self.open_default_action = qtutils.add_action(self,
                 cmds.OpenDefaultApp.name(), self.open_default,
-                cmds.OpenDefaultApp.SHORTCUT)
+                hotkeys.PRIMARY_ACTION)
         self.open_default_action.setEnabled(False)
 
         self.launch_editor_action = qtutils.add_action(self,
-                cmds.Edit.name(), self.launch_editor,
-                cmds.Edit.SHORTCUT)
+                cmds.Edit.name(), self.launch_editor, hotkeys.EDIT)
         self.launch_editor_action.setEnabled(False)
 
         self.launch_terminal_action = qtutils.add_action(self,
                 cmds.LaunchTerminal.name(), self.launch_terminal,
-                cmds.LaunchTerminal.SHORTCUT)
+                hotkeys.TERMINAL)
         self.launch_terminal_action.setEnabled(False)
 
         self.copy_action = qtutils.add_action(self,
-                N_('Copy'), self.copy, QtGui.QKeySequence.Copy)
+                N_('Copy'), self.copy, hotkeys.COPY)
         self.copy_action.setEnabled(False)
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),

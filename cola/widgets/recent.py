@@ -7,6 +7,7 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import cmds
 from cola import gitcmds
+from cola import hotkeys
 from cola import qtutils
 from cola.i18n import N_
 from cola.widgets import defs
@@ -112,7 +113,7 @@ class RecentFileDialog(standard.Dialog):
         qtutils.connect_button(self.close_button, self.accept)
         qtutils.connect_button(self.edit_button, self.edit_selected)
 
-        qtutils.add_action(self, N_('Refresh'), self.refresh, 'Ctrl+R')
+        qtutils.add_action(self, N_('Refresh'), self.refresh, hotkeys.REFRESH)
 
         self.update_thread.start()
 

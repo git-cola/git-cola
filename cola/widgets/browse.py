@@ -9,6 +9,7 @@ from cola import cmds
 from cola import core
 from cola import difftool
 from cola import gitcmds
+from cola import hotkeys
 from cola import utils
 from cola import qtutils
 from cola.cmds import BaseCommand
@@ -106,14 +107,12 @@ class RepoTreeView(standard.TreeView):
         self.action_history = self._create_action(
                 N_('View History...'),
                 N_('View history for selected path(s)'),
-                self.view_history,
-                'Ctrl+Shift+H')
+                self.view_history, hotkeys.HISTORY)
 
         self.action_stage = self._create_action(
                 cmds.StageOrUnstage.name(),
                 N_('Stage/unstage selected path(s) for commit'),
-                cmds.run(cmds.StageOrUnstage),
-                cmds.StageOrUnstage.SHORTCUT)
+                cmds.run(cmds.StageOrUnstage), hotkeys.STAGE_SELECTION)
 
         self.action_untrack = self._create_action(
                 N_('Untrack Selected'),
@@ -123,32 +122,27 @@ class RepoTreeView(standard.TreeView):
         self.action_difftool = self._create_action(
                 cmds.LaunchDifftool.name(),
                 N_('Launch git-difftool on the current path.'),
-                cmds.run(cmds.LaunchDifftool),
-                cmds.LaunchDifftool.SHORTCUT)
+                cmds.run(cmds.LaunchDifftool), hotkeys.DIFF)
 
         self.action_difftool_predecessor =self._create_action(
                 N_('Diff Against Predecessor...'),
                 N_('Launch git-difftool against previous versions.'),
-                self.difftool_predecessor,
-                'Ctrl+Shift+D')
+                self.difftool_predecessor, hotkeys.DIFF_SECONDARY)
 
         self.action_revert_unstaged = self._create_action(
                 cmds.RevertUnstagedEdits.name(),
                 N_('Revert unstaged changes to selected paths.'),
-                cmds.run(cmds.RevertUnstagedEdits),
-                cmds.RevertUnstagedEdits.SHORTCUT)
+                cmds.run(cmds.RevertUnstagedEdits), hotkeys.REVERT)
 
         self.action_revert_uncommitted = self._create_action(
                 cmds.RevertUncommittedEdits.name(),
                 N_('Revert uncommitted changes to selected paths.'),
-                cmds.run(cmds.RevertUncommittedEdits),
-                cmds.RevertUncommittedEdits.SHORTCUT)
+                cmds.run(cmds.RevertUncommittedEdits), hotkeys.UNDO)
 
         self.action_editor = self._create_action(
                 cmds.LaunchEditor.name(),
                 N_('Edit selected path(s).'),
-                cmds.run(cmds.LaunchEditor),
-                cmds.LaunchEditor.SHORTCUT)
+                cmds.run(cmds.LaunchEditor), hotkeys.EDIT)
 
     def size_columns(self):
         """Set the column widths."""

@@ -11,6 +11,7 @@ from cola import cmds
 from cola import core
 from cola import gitcmds
 from cola import gitcfg
+from cola import hotkeys
 from cola import textwrap
 from cola import qtutils
 from cola.cmds import Interaction
@@ -40,13 +41,12 @@ class CommitMessageEditor(QtGui.QWidget):
         # Actions
         self.signoff_action = qtutils.add_action(self, cmds.SignOff.name(),
                                                  cmds.run(cmds.SignOff),
-                                                 cmds.SignOff.SHORTCUT)
+                                                 hotkeys.SIGNOFF)
         self.signoff_action.setToolTip(N_('Sign off on this commit'))
 
         self.commit_action = qtutils.add_action(self,
                                                 N_('Commit@@verb'),
-                                                self.commit,
-                                                cmds.Commit.SHORTCUT)
+                                                self.commit, hotkeys.COMMIT)
         self.commit_action.setToolTip(N_('Commit staged changes'))
         self.clear_action = qtutils.add_action(self, N_('Clear...'), self.clear)
 
@@ -106,7 +106,7 @@ class CommitMessageEditor(QtGui.QWidget):
         self.amend_action = self.actions_menu.addAction(
                 N_('Amend Last Commit'))
         self.amend_action.setCheckable(True)
-        self.amend_action.setShortcut(cmds.AmendMode.SHORTCUT)
+        self.amend_action.setShortcut(hotkeys.AMEND)
         self.amend_action.setShortcutContext(Qt.ApplicationShortcut)
 
         # Bypass hooks
@@ -167,12 +167,10 @@ class CommitMessageEditor(QtGui.QWidget):
         qtutils.connect_action_bool(self.autowrap_action, self.set_linebreak)
 
         qtutils.add_action(self.summary, N_('Move Down'),
-                           self.focus_description,
-                           Qt.Key_Return, Qt.Key_Enter)
+                           self.focus_description, *hotkeys.ACCEPT)
 
         qtutils.add_action(self.summary, N_('Move Down'),
-                           self.summary_cursor_down,
-                           Qt.Key_Down)
+                           self.summary_cursor_down, hotkeys.DOWN)
 
         self.selection_model = selection_model = selection.selection_model()
         selection_model.add_observer(selection_model.message_selection_changed,
@@ -598,7 +596,7 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
         self.extra_actions = []
 
         self.action_emit_leave = qtutils.add_action(self,
-                'Shift Tab', self.emit_leave, 'Shift+Tab')
+                'Shift Tab', self.emit_leave, hotkeys.LEAVE)
 
     def contextMenuEvent(self, event):
         menu, spell_menu = self.context_menu()

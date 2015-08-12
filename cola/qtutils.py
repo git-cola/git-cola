@@ -14,6 +14,7 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import core
 from cola import gitcfg
+from cola import hotkeys
 from cola import utils
 from cola import resources
 from cola.decorators import memoize
@@ -614,7 +615,7 @@ def close_icon():
 def add_close_action(widget):
     """Adds close action and shortcuts to a widget."""
     return add_action(widget, N_('Close...'),
-                      widget.close, QtGui.QKeySequence.Close, 'Ctrl+Q')
+                      widget.close, hotkeys.CLOSE, hotkeys.QUIT)
 
 
 def center_on_screen(widget):

@@ -13,6 +13,7 @@ from cola import cmds
 from cola import core
 from cola import guicmds
 from cola import gitcfg
+from cola import hotkeys
 from cola import qtutils
 from cola import resources
 from cola import utils
@@ -153,23 +154,23 @@ class MainView(standard.MainWindow):
         self.unstage_selected_action.setIcon(qtutils.remove_icon())
 
         self.show_diffstat_action = add_action(self,
-                N_('Diffstat'), cmds.run(cmds.Diffstat), 'Alt+D')
+                N_('Diffstat'), cmds.run(cmds.Diffstat), hotkeys.DIFFSTAT)
 
         self.stage_modified_action = add_action(self,
                 N_('Stage Changed Files To Commit'),
-                cmds.run(cmds.StageModified), 'Alt+A')
+                cmds.run(cmds.StageModified), hotkeys.STAGE_MODIFIED)
         self.stage_modified_action.setIcon(qtutils.add_icon())
 
         self.stage_untracked_action = add_action(self,
                 N_('Stage All Untracked'),
-                cmds.run(cmds.StageUntracked), 'Alt+U')
+                cmds.run(cmds.StageUntracked), hotkeys.STAGE_UNTRACKED)
         self.stage_untracked_action.setIcon(qtutils.add_icon())
 
         self.apply_patches_action = add_action(self,
                 N_('Apply Patches...'), patch.apply_patches)
 
         self.export_patches_action = add_action(self,
-                N_('Export Patches...'), guicmds.export_patches, 'Alt+E')
+                N_('Export Patches...'), guicmds.export_patches, hotkeys.EXPORT)
 
         self.new_repository_action = add_action(self,
                 N_('New Repository...'), guicmds.open_new_repo)
@@ -184,21 +185,21 @@ class MainView(standard.MainWindow):
 
         self.rescan_action = add_action(self,
                 cmds.Refresh.name(),
-                cmds.run(cmds.Refresh),
-                *cmds.Refresh.SHORTCUTS)
+                cmds.run(cmds.Refresh), *hotkeys.REFRESH_HOTKEYS)
         self.rescan_action.setIcon(qtutils.reload_icon())
 
         self.find_files_action = add_action(self,
-                N_('Find Files'), finder.finder, 'Ctrl+T', 'T')
+                N_('Find Files'), finder.finder,
+                hotkeys.FINDER, hotkeys.FINDER_SECONDARY)
         self.find_files_action.setIcon(qtutils.theme_icon('zoom-in.png'))
 
         self.browse_recently_modified_action = add_action(self,
                 N_('Recently Modified Files...'),
-                recent.browse_recent_files, 'Ctrl+Shift+E')
+                recent.browse_recent_files, hotkeys.EDIT_SECONDARY)
 
         self.cherry_pick_action = add_action(self,
                 N_('Cherry-Pick...'),
-                guicmds.cherry_pick, 'Ctrl+Shift+C')
+                guicmds.cherry_pick, hotkeys.CHERRY_PICK)
 
         self.load_commitmsg_action = add_action(self,
                 N_('Load Commit Message...'), guicmds.load_commitmsg)
@@ -207,21 +208,21 @@ class MainView(standard.MainWindow):
                 N_('Save As Tarball/Zip...'), self.save_archive)
 
         self.quit_action = add_action(self,
-                N_('Quit'), self.close, 'Ctrl+Q')
+                N_('Quit'), self.close, hotkeys.QUIT)
         self.grep_action = add_action(self,
-                N_('Grep'), grep.grep, 'Ctrl+G')
+                N_('Grep'), grep.grep, hotkeys.GREP)
         self.merge_local_action = add_action(self,
-                N_('Merge...'), merge.local_merge, 'Ctrl+Shift+M')
+                N_('Merge...'), merge.local_merge, hotkeys.MERGE)
 
         self.merge_abort_action = add_action(self,
                 N_('Abort Merge...'), merge.abort_merge)
 
         self.fetch_action = add_action(self,
-                N_('Fetch...'), remote.fetch, 'Ctrl+F')
+                N_('Fetch...'), remote.fetch, hotkeys.FETCH)
         self.push_action = add_action(self,
-                N_('Push...'), remote.push, 'Ctrl+P')
+                N_('Push...'), remote.push, hotkeys.PUSH)
         self.pull_action = add_action(self,
-                N_('Pull...'), remote.pull, 'Ctrl+Shift+P')
+                N_('Pull...'), remote.pull, hotkeys.PULL)
 
         self.open_repo_action = add_action(self,
                 N_('Open...'), guicmds.open_repo)
@@ -232,7 +233,7 @@ class MainView(standard.MainWindow):
         self.open_repo_new_action.setIcon(qtutils.open_icon())
 
         self.stash_action = add_action(self,
-                N_('Stash...'), stash.stash, 'Alt+Shift+S')
+                N_('Stash...'), stash.stash, hotkeys.STASH)
 
         self.clone_repo_action = add_action(self,
                 N_('Clone...'), self.clone_repo)
@@ -244,7 +245,7 @@ class MainView(standard.MainWindow):
 
         self.help_shortcuts_action = add_action(self,
                 N_('Keyboard Shortcuts'), about.show_shortcuts,
-                Qt.Key_Question)
+                hotkeys.QUESTION)
 
         self.visualize_current_action = add_action(self,
                 N_('Visualize Current Branch...'),
@@ -273,7 +274,7 @@ class MainView(standard.MainWindow):
                 N_('Create Tag...'), createtag.create_tag)
 
         self.create_branch_action = add_action(self,
-                N_('Create...'), createbranch.create_new_branch, 'Ctrl+B')
+                N_('Create...'), createbranch.create_new_branch, hotkeys.BRANCH)
 
         self.delete_branch_action = add_action(self,
                 N_('Delete...'), guicmds.delete_branch)
@@ -285,7 +286,7 @@ class MainView(standard.MainWindow):
                 N_('Rename Branch...'), guicmds.rename_branch)
 
         self.checkout_branch_action = add_action(self,
-                N_('Checkout...'), guicmds.checkout_branch, 'Alt+B')
+                N_('Checkout...'), guicmds.checkout_branch, hotkeys.CHECKOUT)
         self.branch_review_action = add_action(self,
                 N_('Review...'), guicmds.review_branch)
 
@@ -692,8 +693,8 @@ class MainView(standard.MainWindow):
             self.addAction(toggleview)
             connect_action(toggleview, focusdock)
 
-        qtutils.add_action(self, 'Focus Commit Message',
-                           lambda: focus_dock(self.commitdockwidget), 'Ctrl+L')
+        focus = lambda: focus_dock(self.commitdockwidget)
+        qtutils.add_action(self, 'Focus Commit Message', focus, hotkeys.FOCUS)
 
     def preferences(self):
         return prefs_widget.preferences(model=self.prefs_model, parent=self)

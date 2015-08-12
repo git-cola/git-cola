@@ -8,6 +8,7 @@ from PyQt4.QtCore import Qt
 
 from cola import core
 from cola import cmds
+from cola import hotkeys
 from cola import qtutils
 from cola.i18n import N_
 from cola.widgets import defs
@@ -99,11 +100,11 @@ class ApplyPatches(Dialog):
                 text=N_('Close'), icon=qtutils.close_icon())
 
         self.add_action = qtutils.add_action(self,
-                N_('Add'), self.add_files, Qt.Key_Plus)
+                N_('Add'), self.add_files, hotkeys.ADD_ITEM)
 
         self.remove_action = qtutils.add_action(self,
                 N_('Remove'), self.tree.remove_selected,
-                QtGui.QKeySequence.Delete, Qt.Key_Backspace, Qt.Key_Minus)
+                hotkeys.DELETE, hotkeys.BACKSPACE, hotkeys.REMOVE_ITEM)
 
         self.top_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
                                        self.add_button, self.remove_button,

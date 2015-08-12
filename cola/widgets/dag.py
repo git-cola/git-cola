@@ -14,6 +14,7 @@ from PyQt4.QtCore import QRectF
 from cola import cmds
 from cola import core
 from cola import difftool
+from cola import hotkeys
 from cola import observable
 from cola import qtutils
 from cola.i18n import N_
@@ -222,11 +223,11 @@ class CommitTreeWidget(ViewerMixin, standard.TreeWidget):
         self.selecting = False
         self.commits = []
 
-        self.action_up = qtutils.add_action(self, N_('Go Up'), self.go_up,
-                                            Qt.Key_K)
+        self.action_up = qtutils.add_action(self, N_('Go Up'),
+                                            self.go_up, hotkeys.MOVE_UP)
 
-        self.action_down = qtutils.add_action(self, N_('Go Down'), self.go_down,
-                                              Qt.Key_J)
+        self.action_down = qtutils.add_action(self, N_('Go Down'),
+                                              self.go_down, hotkeys.MOVE_DOWN)
 
         notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
@@ -410,7 +411,7 @@ class GitDAG(standard.MainWindow):
                 N_('Lock Layout'), self.set_lock_layout, False)
 
         self.refresh_action = qtutils.add_action(self,
-                N_('Refresh'), self.refresh, 'Ctrl+R')
+                N_('Refresh'), self.refresh, hotkeys.REFRESH)
 
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)
@@ -483,7 +484,7 @@ class GitDAG(standard.MainWindow):
         self.connect(self, SIGNAL('model_updated()'), self.model_updated,
                      Qt.QueuedConnection)
 
-        qtutils.add_action(self, 'Focus Input', self.focus_input, 'Ctrl+L')
+        qtutils.add_action(self, 'Focus Input', self.focus_input, hotkeys.FOCUS)
         qtutils.add_close_action(self)
 
     def focus_input(self):
@@ -1067,26 +1068,26 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
         self.setResizeAnchor(QtGui.QGraphicsView.NoAnchor)
         self.setBackgroundBrush(QtGui.QColor(Qt.white))
 
-        qtutils.add_action(self, N_('Zoom In'),
-                           self.zoom_in, Qt.Key_Plus, Qt.Key_Equal)
+        qtutils.add_action(self, N_('Zoom In'), self.zoom_in,
+                           hotkeys.ZOOM_IN, hotkeys.ZOOM_IN_SECONDARY)
 
-        qtutils.add_action(self, N_('Zoom Out'),
-                           self.zoom_out, Qt.Key_Minus)
+        qtutils.add_action(self, N_('Zoom Out'), self.zoom_out,
+                           hotkeys.ZOOM_OUT)
 
         qtutils.add_action(self, N_('Zoom to Fit'),
-                           self.zoom_to_fit, Qt.Key_F)
+                           self.zoom_to_fit, hotkeys.FIT)
 
         qtutils.add_action(self, N_('Select Parent'),
-                           self.select_parent, 'Shift+J')
+                           self.select_parent, hotkeys.MOVE_DOWN_TERTIARY)
 
         qtutils.add_action(self, N_('Select Oldest Parent'),
-                           self.select_oldest_parent, Qt.Key_J)
+                           self.select_oldest_parent, hotkeys.MOVE_DOWN)
 
         qtutils.add_action(self, N_('Select Child'),
-                           self.select_child, 'Shift+K')
+                           self.select_child, hotkeys.MOVE_UP_TERTIARY)
 
         qtutils.add_action(self, N_('Select Newest Child'),
-                           self.select_newest_child, Qt.Key_K)
+                           self.select_newest_child, hotkeys.MOVE_UP)
 
         notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 

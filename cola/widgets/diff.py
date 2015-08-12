@@ -12,6 +12,7 @@ from cola import core
 from cola import gitcfg
 from cola import gitcmds
 from cola import gravatar
+from cola import hotkeys
 from cola import qtutils
 from cola.i18n import N_
 from cola.models import main
@@ -184,10 +185,10 @@ class DiffEditor(DiffTextEdit):
         titlebar.add_corner_widget(self.diffopts_button)
 
         self.action_apply_selection = qtutils.add_action(self, '',
-                self.apply_selection, Qt.Key_S)
+                self.apply_selection, hotkeys.STAGE_DIFF)
 
         self.action_revert_selection = qtutils.add_action(self, '',
-                self.revert_selection, Qt.ControlModifier + Qt.Key_U)
+                self.revert_selection, hotkeys.REVERT)
         icon = qtutils.theme_icon('edit-undo.svg')
         self.action_revert_selection.setIcon(icon)
 
@@ -256,7 +257,7 @@ class DiffEditor(DiffTextEdit):
                 action = menu.addAction(qtutils.add_icon(),
                                         cmds.Stage.name(),
                                         cmds.run(cmds.Stage, s.modified))
-                action.setShortcut(cmds.Stage.SHORTCUT)
+                action.setShortcut(hotkeys.STAGE_SELECTION)
                 menu.addAction(qtutils.git_icon(),
                                N_('Launch git-cola'),
                                cmds.run(cmds.OpenRepo,
@@ -282,7 +283,7 @@ class DiffEditor(DiffTextEdit):
                 action = menu.addAction(qtutils.remove_icon(),
                                         cmds.Unstage.name(),
                                         cmds.do(cmds.Unstage, s.staged))
-                action.setShortcut(cmds.Unstage.SHORTCUT)
+                action.setShortcut(hotkeys.STAGE_SELECTION)
                 menu.addAction(qtutils.git_icon(),
                                N_('Launch git-cola'),
                                cmds.do(cmds.OpenRepo,

@@ -20,9 +20,9 @@ def setup_environment():
 setup_environment()
 
 from cola import app
-from cola import cmds
 from cola import core
 from cola import difftool
+from cola import hotkeys
 from cola import observable
 from cola import qtutils
 from cola import utils
@@ -104,7 +104,7 @@ class MainWindow(QtGui.QMainWindow):
         editor.setFocus()
 
         self.show_help_action = qtutils.add_action(self,
-                N_('Show Help'), show_help, Qt.Key_Question)
+                N_('Show Help'), show_help, hotkeys.QUESTION)
 
         self.menubar = QtGui.QMenuBar(self)
         self.help_menu = self.menubar.addMenu(N_('Help'))
@@ -263,38 +263,37 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
                 N_('Copy SHA-1'), self.copy_sha1, QtGui.QKeySequence.Copy)
 
         self.external_diff_action = qtutils.add_action(self,
-                N_('External Diff'), self.external_diff,
-                cmds.LaunchDifftool.SHORTCUT)
+                N_('External Diff'), self.external_diff, hotkeys.DIFF)
 
         self.toggle_enabled_action = qtutils.add_action(self,
                 N_('Toggle Enabled'), self.toggle_enabled,
-                Qt.Key_Space)
+                hotkeys.PRIMARY_ACTION)
 
         self.action_pick = qtutils.add_action(self,
                 N_('Pick'), lambda: self.set_selected_to(PICK),
-                Qt.Key_1, Qt.Key_P)
+                *hotkeys.REBASE_PICK)
 
         self.action_reword = qtutils.add_action(self,
                 N_('Reword'), lambda: self.set_selected_to(REWORD),
-                Qt.Key_2, Qt.Key_R)
+                *hotkeys.REBASE_REWORD)
 
         self.action_edit = qtutils.add_action(self,
                 N_('Edit'), lambda: self.set_selected_to(EDIT),
-                Qt.Key_3, Qt.Key_E)
+                *hotkeys.REBASE_EDIT)
 
         self.action_fixup = qtutils.add_action(self,
                 N_('Fixup'), lambda: self.set_selected_to(FIXUP),
-                Qt.Key_4, Qt.Key_F)
+                *hotkeys.REBASE_FIXUP)
 
         self.action_squash = qtutils.add_action(self,
                 N_('Squash'), lambda: self.set_selected_to(SQUASH),
-                Qt.Key_5, Qt.Key_S)
+                *hotkeys.REBASE_SQUASH)
 
         self.action_shift_down = qtutils.add_action(self,
-                N_('Shift Down'), self.shift_down, 'Shift+J')
+                N_('Shift Down'), self.shift_down, hotkeys.MOVE_DOWN_TERTIARY)
 
         self.action_shift_up = qtutils.add_action(self,
-                N_('Shift Up'), self.shift_up, 'Shift+K')
+                N_('Shift Up'), self.shift_up, hotkeys.MOVE_UP_TERTIARY)
 
         self.connect(self, SIGNAL('itemChanged(QTreeWidgetItem *, int)'),
                      self.item_changed)

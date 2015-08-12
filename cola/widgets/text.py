@@ -3,6 +3,7 @@ from __future__ import division, absolute_import, unicode_literals
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import Qt, SIGNAL
 
+from cola import hotkeys
 from cola import qtutils
 from cola.compat import ustr
 from cola.i18n import N_
@@ -312,22 +313,22 @@ class VimMixin(object):
     def __init__(self, base):
         self._base = base
         # Common vim/unix-ish keyboard actions
-        self.add_navigation('Up', Qt.Key_K, shift=True)
-        self.add_navigation('Down', Qt.Key_J, shift=True)
-        self.add_navigation('Left', Qt.Key_H, shift=True)
-        self.add_navigation('Right', Qt.Key_L, shift=True)
-        self.add_navigation('WordLeft', Qt.Key_B)
-        self.add_navigation('WordRight', Qt.Key_W)
-        self.add_navigation('StartOfLine', Qt.Key_0)
-        self.add_navigation('EndOfLine', Qt.Key_Dollar)
+        self.add_navigation('Up', hotkeys.MOVE_UP, shift=True)
+        self.add_navigation('Down', hotkeys.MOVE_DOWN, shift=True)
+        self.add_navigation('Left', hotkeys.MOVE_LEFT, shift=True)
+        self.add_navigation('Right', hotkeys.MOVE_RIGHT, shift=True)
+        self.add_navigation('WordLeft', hotkeys.WORD_LEFT)
+        self.add_navigation('WordRight', hotkeys.WORD_RIGHT)
+        self.add_navigation('StartOfLine', hotkeys.START_OF_LINE)
+        self.add_navigation('EndOfLine', hotkeys.END_OF_LINE)
 
         qtutils.add_action(self, 'PageUp',
                            lambda: self.page(-self.height()//2),
-                           Qt.ShiftModifier + Qt.Key_Space)
+                           hotkeys.SECONDARY_ACTION)
 
         qtutils.add_action(self, 'PageDown',
                            lambda: self.page(self.height()//2),
-                           Qt.Key_Space)
+                           hotkeys.PRIMARY_ACTION)
 
     def add_navigation(self, name, hotkey, shift=False):
         """Add a hotkey along with a shift-variant"""
@@ -335,9 +336,9 @@ class VimMixin(object):
         qtutils.add_action(self, name,
                            lambda: self.move(direction), hotkey)
         if shift:
-            qtutils.add_action(self, 'Shift'+name,
+            qtutils.add_action(self, 'Shift' + name,
                                lambda: self.move(direction, True),
-                               Qt.ShiftModifier+hotkey)
+                               Qt.ShiftModifier | hotkey)
 
     def move(self, direction, select=False, n=1):
         cursor = self.textCursor()
