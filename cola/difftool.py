@@ -10,6 +10,7 @@ from cola import utils
 from cola import qtutils
 from cola import gitcmds
 from cola.i18n import N_
+from cola.interaction import Interaction
 from cola.models import main
 from cola.models import selection
 from cola.widgets import completion
@@ -28,20 +29,40 @@ def run():
 
 
 def launch_with_head(filenames, staged, head):
-    args = []
-    if staged:
-        args.append('--cached')
-    if head != 'HEAD':
-        args.append(head)
-    args.append('--')
-    args.extend(filenames)
-    launch(args)
+    launch(left=head if head != 'HEAD' else None, staged=staged, paths=filenames)
 
 
-def launch(args):
-    """Launches 'git difftool' with args"""
+def launch(left=None, right=None, paths=None, left_take_parent=False, staged=False):
+    """Launches 'git difftool' with given parameters"""
     difftool_args = ['git', 'difftool', '--no-prompt']
-    difftool_args.extend(args)
+    if staged:
+        difftool_args.append('--cached')
+    if left:
+        if left_take_parent:
+            # Check root commit (no parents and thus cannot execute '~')
+            proc = core.start_command(['git', 'rev-list', '--parents', '-n', '1', left])
+            out, err = proc.communicate()
+            status = proc.returncode
+            Interaction.log_status(status, out, err)
+            if status:
+                raise Exception('git rev-list command failed')
+            line = out.splitlines()[0]
+            if len(line.split()) >= 2:
+                # Commit has a parent, so we can take its child as requested
+                left += '~'
+            else:
+                # No parent, assume it's the root commit, so we have to diff against an empty tree
+                left = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+
+        difftool_args.append(left)
+    if right:
+        difftool_args.append(right)
+    if paths:
+        difftool_args.append('--')
+        if isinstance(paths, (tuple, list)):
+            difftool_args.extend(paths)
+        else:
+            difftool_args.append(paths) # paths is a string
     core.fork(difftool_args)
 
 
@@ -160,9 +181,13 @@ class FileDiffDialog(QtGui.QDialog):
 
     def tree_double_clicked(self, item, column):
         path = self.tree.filename_from_item(item)
-        launch(self.diff_arg + ['--', path])
+        launch(left=self.diff_arg[0] if self.diff_arg else None,
+               right=self.diff_arg[1] if len(self.diff_arg) > 1 else None,
+               paths=path)
 
     def diff(self):
         paths = self.tree.selected_filenames()
         for path in paths:
-            launch(self.diff_arg + ['--', ustr(path)])
+            launch(left=self.diff_arg[0] if self.diff_arg else None,
+                   right=self.diff_arg[1] if len(self.diff_arg) > 1 else None,
+                   paths=ustr(path))

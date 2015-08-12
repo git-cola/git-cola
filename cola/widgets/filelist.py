@@ -11,6 +11,7 @@ from cola.widgets.diff import COMMITS_SELECTED
 from cola.widgets.diff import FILES_SELECTED
 
 HISTORIES_SELECTED = 'HISTORIES_SELECTED'
+DIFFTOOL_SELECTED = 'DIFFTOOL_SELECTED'
 
 class FileWidget(TreeWidget):
 
@@ -71,7 +72,15 @@ class FileWidget(TreeWidget):
         menu = QtGui.QMenu(self)
         menu.addAction(qtutils.add_action(self, N_('Show history'),
                                self.show_file_history))
+        menu.addAction(qtutils.add_action(self, N_('Launch Diff Tool'),
+                               self.show_file_diff, 'Ctrl+D'))
+
         menu.exec_(self.mapToGlobal(event.pos()))
+
+    def show_file_diff(self):
+        items = self.selected_items()
+        self.notifier.notify_observers(DIFFTOOL_SELECTED,
+                                       [i.file_name for i in items])
 
     def show_file_history(self):
         items = self.selected_items()
