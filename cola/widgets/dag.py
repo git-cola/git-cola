@@ -12,7 +12,6 @@ from PyQt4.QtCore import QPointF
 from PyQt4.QtCore import QRectF
 
 from cola import cmds
-from cola import core
 from cola import difftool
 from cola import hotkeys
 from cola import observable
