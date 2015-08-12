@@ -30,14 +30,21 @@ def run():
 
 
 def launch_with_head(filenames, staged, head):
-    launch(left=head if head != 'HEAD' else None, staged=staged, paths=filenames)
+    if head == 'HEAD':
+        left = None
+    else:
+        left = head
+    launch(left=left, staged=staged, paths=filenames)
 
 
-def launch(left=None, right=None, paths=None, left_take_parent=False, staged=False):
+def launch(left=None, right=None, paths=None,
+           left_take_parent=False, staged=False):
     """Launches 'git difftool' with given parameters"""
+
     difftool_args = ['git', 'difftool', '--no-prompt']
     if staged:
         difftool_args.append('--cached')
+
     if left:
         if left_take_parent:
             # Check root commit (no parents and thus cannot execute '~')
@@ -182,13 +189,21 @@ class FileDiffDialog(QtGui.QDialog):
 
     def tree_double_clicked(self, item, column):
         path = self.tree.filename_from_item(item)
-        launch(left=self.diff_arg[0] if self.diff_arg else None,
-               right=self.diff_arg[1] if len(self.diff_arg) > 1 else None,
-               paths=path)
+        left, right = self._left_right_args()
+        launch(left=left, right=right, paths=[path])
 
     def diff(self):
         paths = self.tree.selected_filenames()
-        for path in paths:
-            launch(left=self.diff_arg[0] if self.diff_arg else None,
-                   right=self.diff_arg[1] if len(self.diff_arg) > 1 else None,
-                   paths=ustr(path))
+        left, right = self._left_right_args()
+        launch(left=left, right=right, paths=paths)
+
+    def _left_right_args(self):
+        if self.diff_arg:
+            left = self.diff_arg[0]
+        else:
+            left = None
+        if len(self.diff_arg) > 1:
+            right = self.diff_arg[1]
+        else:
+            right = None
+        return (left, right)

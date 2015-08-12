@@ -625,7 +625,8 @@ class GitDAG(standard.MainWindow):
         bottom, top = self.treewidget.selected_commit_range()
         if not top:
             return
-        difftool.launch(left=bottom, left_take_parent=True, right=top, paths=list(files))
+        difftool.launch(left=bottom, left_take_parent=True,
+                        right=top, paths=files)
 
 
 class ReaderThread(QtCore.QThread):
