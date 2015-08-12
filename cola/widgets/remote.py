@@ -148,6 +148,8 @@ class RemoteActionDialog(standard.Dialog):
         self.close_button.setText(N_('Close'))
         self.close_button.setIcon(qtutils.close_icon())
 
+        self.buttons = utils.Group(self.action_button, self.close_button)
+
         self.local_branch_layout = qtutils.hbox(defs.small_margin, defs.spacing,
                                                 self.local_label,
                                                 self.local_branch)
@@ -446,8 +448,7 @@ class RemoteActionDialog(standard.Dialog):
                 return
 
         # Disable the GUI by default
-        self.action_button.setEnabled(False)
-        self.close_button.setEnabled(False)
+        self.buttons.setEnabled(False)
 
         # Use a thread to update in the background
         task = ActionTask(self.task_runner, model_action, remote, kwargs)
@@ -457,8 +458,7 @@ class RemoteActionDialog(standard.Dialog):
 
     def action_completed(self, task, status, out, err):
         # Grab the results of the action and finish up
-        self.action_button.setEnabled(True)
-        self.close_button.setEnabled(True)
+        self.buttons.setEnabled(True)
 
         already_up_to_date = N_('Already up-to-date.')
 

@@ -20,6 +20,7 @@ from cola.i18n import N_
 from cola.models import dag
 from cola.models import prefs
 from cola.models import selection
+from cola.utils import Group
 from cola.widgets import defs
 from cola.widgets.selectcommits import select_commits
 from cola.widgets.spellcheck import SpellCheckTextEdit
@@ -90,6 +91,7 @@ class CommitMessageEditor(QtGui.QWidget):
         self.commit_button = qtutils.create_toolbutton(
                 text=N_('Commit@@verb'), tooltip=commit_button_tooltip,
                 icon=qtutils.save_icon())
+        self.commit_group = Group(self.commit_action, self.commit_button)
 
         self.actions_menu = QtGui.QMenu()
         self.actions_button = qtutils.create_toolbutton(
@@ -207,8 +209,7 @@ class CommitMessageEditor(QtGui.QWidget):
         self.summary.hint.enable(True)
         self.description.hint.enable(True)
 
-        self.commit_button.setEnabled(False)
-        self.commit_action.setEnabled(False)
+        self.commit_group.setEnabled(False)
 
         self.setFocusProxy(self.summary)
 
@@ -330,8 +331,7 @@ class CommitMessageEditor(QtGui.QWidget):
 
     def update_actions(self):
         commit_enabled = bool(self.summary.value())
-        self.commit_button.setEnabled(commit_enabled)
-        self.commit_action.setEnabled(commit_enabled)
+        self.commit_group.setEnabled(commit_enabled)
 
     def refresh_palettes(self):
         """Update the color palette for the hint text"""

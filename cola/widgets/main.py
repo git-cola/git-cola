@@ -312,6 +312,19 @@ class MainView(standard.MainWindow):
         self.rebase_abort_action = add_action(self,
                 N_('Abort'), self.rebase_abort)
 
+        # For "Start Rebase" only, reverse the first argument to setEnabled()
+        # so that we can operate on it as a group.
+        # We can do this because can_rebase == not is_rebasing
+        set_disabled = lambda x: self.rebase_start_action.setEnabled(not x)
+        self.rebase_start_action_proxy = utils.Proxy(self.rebase_start_action,
+                                                     setEnabled=set_disabled)
+
+        self.rebase_group = utils.Group(self.rebase_start_action_proxy,
+                                        self.rebase_edit_todo_action,
+                                        self.rebase_continue_action,
+                                        self.rebase_skip_action,
+                                        self.rebase_abort_action)
+
         self.lock_layout_action = add_action_bool(self,
                 N_('Lock Layout'), self.set_lock_layout, False)
 
@@ -632,14 +645,11 @@ class MainView(standard.MainWindow):
 
     def update_actions(self):
         is_rebasing = self.model.is_rebasing
-        can_rebase = not is_rebasing
-        self.rebase_start_action.setEnabled(can_rebase)
-        self.rebase_edit_todo_action.setEnabled(is_rebasing)
-        self.rebase_continue_action.setEnabled(is_rebasing)
-        self.rebase_skip_action.setEnabled(is_rebasing)
-        self.rebase_abort_action.setEnabled(is_rebasing)
-        self.rename_branch_action.setEnabled(not self.model.is_empty_repository())
-        self.delete_branch_action.setEnabled(not self.model.is_empty_repository())
+        self.rebase_group.setEnabled(is_rebasing)
+
+        enabled = not self.model.is_empty_repository()
+        self.rename_branch_action.setEnabled(enabled)
+        self.delete_branch_action.setEnabled(enabled)
 
     def export_state(self):
         state = standard.MainWindow.export_state(self)

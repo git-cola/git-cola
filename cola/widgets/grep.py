@@ -10,13 +10,14 @@ from cola import hotkeys
 from cola import utils
 from cola import qtutils
 from cola.cmds import do
+from cola.compat import ustr
 from cola.git import git
 from cola.i18n import N_
 from cola.qtutils import diff_font
+from cola.utils import Group
 from cola.widgets import defs
 from cola.widgets.standard import Dialog
 from cola.widgets.text import VimHintedTextView, HintedLineEdit
-from cola.compat import ustr
 
 
 def grep():
@@ -75,11 +76,9 @@ class Grep(Dialog):
 
         self.edit_action = qtutils.add_action(
                 self, N_('Edit'), self.edit, hotkeys.EDIT)
-        self.edit_action.setEnabled(False)
 
         self.refresh_action = qtutils.add_action(
                 self, N_('Refresh'), self.search, *hotkeys.REFRESH_HOTKEYS)
-        self.refresh_action.setEnabled(False)
 
         self.input_label = QtGui.QLabel('git grep')
         self.input_label.setFont(diff_font())
@@ -111,12 +110,10 @@ class Grep(Dialog):
 
         self.edit_button = QtGui.QPushButton(N_('Edit'))
         self.edit_button.setIcon(qtutils.open_file_icon())
-        self.edit_button.setEnabled(False)
         qtutils.button_action(self.edit_button, self.edit_action)
 
         self.refresh_button = QtGui.QPushButton(N_('Refresh'))
         self.refresh_button.setIcon(qtutils.reload_icon())
-        self.refresh_button.setEnabled(False)
         qtutils.button_action(self.refresh_button, self.refresh_action)
 
         self.shell_checkbox = QtGui.QCheckBox(N_('Shell arguments'))
@@ -126,6 +123,12 @@ class Grep(Dialog):
         self.shell_checkbox.setChecked(False)
 
         self.close_button = QtGui.QPushButton(N_('Close'))
+
+        self.refresh_group = Group(self.refresh_action, self.refresh_button)
+        self.refresh_group.setEnabled(False)
+
+        self.edit_group = Group(self.edit_action, self.edit_button)
+        self.edit_group.setEnabled(False)
 
         self.input_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
                                          self.input_label, self.input_txt,
@@ -184,10 +187,8 @@ class Grep(Dialog):
         return ustr(data)
 
     def search(self):
-        self.edit_action.setEnabled(False)
-        self.edit_button.setEnabled(False)
-        self.refresh_action.setEnabled(False)
-        self.refresh_button.setEnabled(False)
+        self.edit_group.setEnabled(False)
+        self.refresh_group.setEnabled(False)
         query = self.input_txt.value()
         if len(query) < 2:
             self.result_txt.set_value('')
@@ -238,10 +239,8 @@ class Grep(Dialog):
         self.set_text_offset(offset)
 
         enabled = status == 0
-        self.edit_action.setEnabled(enabled)
-        self.edit_button.setEnabled(enabled)
-        self.refresh_button.setEnabled(True)
-        self.refresh_action.setEnabled(True)
+        self.edit_group.setEnabled(enabled)
+        self.refresh_group.setEnabled(True)
 
     def edit(self):
         goto_grep(self.result_txt.selected_line()),

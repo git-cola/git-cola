@@ -216,3 +216,31 @@ def expandpath(path):
     if path.startswith('~'):
         path = os.path.expanduser(path)
     return path
+
+
+class Group(object):
+    """Operate on a collection of objects as a single unit"""
+
+    def __init__(self, *members):
+        self._members = members
+
+    def __getattr__(self, name):
+        """Return a function that relays calls to the group"""
+        def relay(*args, **kwargs):
+            for member in self._members:
+                method = getattr(member, name)
+                method(*args, **kwargs)
+        setattr(self, name, relay)
+        return relay
+
+
+class Proxy(object):
+    """Wrap an object and override attributes"""
+
+    def __init__(self, obj, **overrides):
+        self._obj = obj
+        for k, v in overrides.items():
+            setattr(self, k, v)
+
+    def __getattr__(self, name):
+        return getattr(self._obj, name)
