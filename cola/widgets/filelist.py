@@ -28,7 +28,7 @@ class FileWidget(TreeWidget):
     def selection_changed(self):
         items = self.selected_items()
         self.notifier.notify_observers(FILES_SELECTED,
-                                       [i.file_name for i in items])
+                                       [i.path for i in items])
 
     def commits_selected(self, commits):
         if not commits:
@@ -81,19 +81,19 @@ class FileWidget(TreeWidget):
     def show_file_diff(self):
         items = self.selected_items()
         self.notifier.notify_observers(DIFFTOOL_SELECTED,
-                                       [i.file_name for i in items])
+                                       [i.path for i in items])
 
     def show_file_history(self):
         items = self.selected_items()
         self.notifier.notify_observers(HISTORIES_SELECTED,
-                                       [i.file_name for i in items])
+                                       [i.path for i in items])
 
 class FileTreeWidgetItem(QtGui.QTreeWidgetItem):
 
     def __init__(self, file_log, parent=None):
         QtGui.QTreeWidgetItem.__init__(self, parent)
         texts = file_log.split('\t')
-        self.file_name = texts[2]
-        self.setText(0, self.file_name) # file name
-        self.setText(1, texts[0]) # addition
-        self.setText(2, texts[1]) # deletion
+        self.path = path = texts[2]
+        self.setText(0, path)
+        self.setText(1, texts[0])
+        self.setText(2, texts[1])
