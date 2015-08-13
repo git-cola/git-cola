@@ -3,6 +3,7 @@ from __future__ import division, absolute_import, unicode_literals
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
+from cola import cmds
 from cola import hotkeys
 from cola import qtutils
 from cola.i18n import N_
@@ -29,6 +30,10 @@ class FileWidget(TreeWidget):
         self.launch_difftool_action = (
                 qtutils.add_action(self, N_('Launch Diff Tool'),
                                    self.show_file_diff, hotkeys.DIFF))
+
+        self.launch_editor_action = (
+                qtutils.add_action(self, N_('Launch Diff Tool'),
+                                   self.edit_paths, hotkeys.EDIT))
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.selection_changed)
@@ -88,6 +93,9 @@ class FileWidget(TreeWidget):
 
     def selected_paths(self):
         return [i.path for i in self.selected_items()]
+
+    def edit_paths(self):
+        cmds.do(cmds.Edit, self.selected_paths())
 
     def show_file_history(self):
         items = self.selected_items()
