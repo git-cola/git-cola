@@ -2004,7 +2004,7 @@ msgid "Deletions"
 msgstr "Penghapusan"
 
 #: cola/widgets/filelist.py:72
-msgid "Show history"
+msgid "Show History"
 msgstr "Tunjukan sejarah"
 
 #: cola/widgets/archive.py:103

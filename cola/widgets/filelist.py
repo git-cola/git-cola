@@ -22,6 +22,14 @@ class FileWidget(TreeWidget):
         self.setHeaderLabels([N_('Filename'), N_('Additions'), N_('Deletions')])
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
 
+        self.show_history_action = (
+                qtutils.add_action(self, N_('Show History'),
+                                   self.show_file_history, hotkeys.HISTORY))
+
+        self.launch_difftool_action = (
+                qtutils.add_action(self, N_('Launch Diff Tool'),
+                                   self.show_file_diff, hotkeys.DIFF))
+
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.selection_changed)
 
@@ -71,11 +79,8 @@ class FileWidget(TreeWidget):
 
     def contextMenuEvent(self, event):
         menu = QtGui.QMenu(self)
-        menu.addAction(qtutils.add_action(self, N_('Show history'),
-                               self.show_file_history))
-        menu.addAction(qtutils.add_action(self, N_('Launch Diff Tool'),
-                               self.show_file_diff, hotkeys.DIFF))
-
+        menu.addAction(self.show_history_action)
+        menu.addAction(self.launch_difftool_action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def show_file_diff(self):
