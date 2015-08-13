@@ -84,9 +84,10 @@ class FileWidget(TreeWidget):
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def show_file_diff(self):
-        items = self.selected_items()
-        self.notifier.notify_observers(DIFFTOOL_SELECTED,
-                                       [i.path for i in items])
+        self.notifier.notify_observers(DIFFTOOL_SELECTED, self.selected_paths())
+
+    def selected_paths(self):
+        return [i.path for i in self.selected_items()]
 
     def show_file_history(self):
         items = self.selected_items()
