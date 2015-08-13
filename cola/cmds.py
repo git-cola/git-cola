@@ -16,7 +16,6 @@ from cola import compat
 from cola import core
 from cola import gitcfg
 from cola import gitcmds
-from cola import hotkeys
 from cola import inotify
 from cola import utils
 from cola import difftool
