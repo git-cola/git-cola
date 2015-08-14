@@ -10,14 +10,13 @@ sys.path.insert(1, extrasdir)
 
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.doctest',
-              'sphinx.ext.intersphinx',
               'sphinx.ext.todo',
               'sphinx.ext.coverage',
               'sphinxtogithub']
 
 templates_path = ['_templates']
 source_suffix = '.rst'
-#source_encoding = 'utf-8'
+source_encoding = 'utf-8'
 master_doc = 'index'
 
 project = 'git-cola'
@@ -54,5 +53,3 @@ latex_documents = [
   ('index', 'git-cola.tex', 'git-cola Documentation',
    'David Aguilar and contributors', 'manual'),
 ]
-
-intersphinx_mapping = {'http://docs.python.org/': None}
