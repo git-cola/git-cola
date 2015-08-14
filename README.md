@@ -133,8 +133,17 @@ Use the [one-click install link](http://software.opensuse.org/package/git-cola).
 
 ## MAC OS X
 
+Before setting up homebrew, use
+[pip](https://pip.readthedocs.org/en/latest/installing.html) to install
+[sphinx](http://sphinx-doc.org/latest/install.html).
+
+Sphinx is used to build the documentation.
+
+    sudo pip install sphinx
+
 [Homebrew](http://mxcl.github.com/homebrew/) is the easiest way to install
-git-cola, *Qt4* and *PyQt4*.
+git-cola's *Qt4* and *PyQt4* dependencies.  We will use homebrew to install
+the git-cola recipe, but build our own .app bundle from source.
 
     brew install git-cola
 
