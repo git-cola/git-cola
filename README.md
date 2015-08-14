@@ -53,6 +53,8 @@ New releases are available on the
   argparse is part of the stdlib in Python 2.7; install argparse separately if
   you are running on Python 2.6.
 
+* [Sphinx](http://sphinx-doc.org/) for building the documentation.
+
 ## ADDITIVES
 
 *git-cola* enables additional features when the following
