@@ -28,29 +28,29 @@ from cola.widgets.selectcommits import select_commits
 from cola.compat import ustr
 
 
-def worktree_browser_widget(parent, update=True):
+def worktree_browser_widget(parent, update=True, settings=None):
     """Return a widget for immediate use."""
-    view = Browser(parent, update=update)
+    view = Browser(parent, update=update, settings=settings)
     view.tree.setModel(GitRepoModel(view.tree))
     view.ctl = BrowserController(view.tree)
     return view
 
 
-def worktree_browser(update=True):
+def worktree_browser(update=True, settings=None):
     """Launch a new worktree browser session."""
-    view = worktree_browser_widget(None, update=update)
+    view = worktree_browser_widget(None, update=update, settings=settings)
     view.show()
     return view
 
 
 class Browser(standard.Widget):
 
-    def __init__(self, parent, update=True):
+    def __init__(self, parent, update=True, settings=None):
         standard.Widget.__init__(self, parent)
+        self.settings = settings
         self.tree = RepoTreeView(self)
         self.mainlayout = qtutils.hbox(defs.no_margin, defs.spacing, self.tree)
         self.setLayout(self.mainlayout)
-        self.resize(720, 420)
 
         self.connect(self, SIGNAL('updated()'),
                      self._updated_callback, Qt.QueuedConnection)
@@ -59,6 +59,11 @@ class Browser(standard.Widget):
         qtutils.add_close_action(self)
         if update:
             self.model_updated()
+
+        # Restore saved settings
+        if not self.restore_state(settings=settings):
+            self.resize(720, 420)
+
 
     # Read-only mode property
     mode = property(lambda self: self.model.mode)

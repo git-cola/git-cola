@@ -305,7 +305,7 @@ def cmd_branch(args):
 def cmd_browse(args):
     context = application_init(args)
     from cola.widgets.browse import worktree_browser
-    view = worktree_browser(update=False)
+    view = worktree_browser(update=False, settings=args.settings)
     return application_start(context, view)
 
 
