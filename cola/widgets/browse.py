@@ -44,6 +44,7 @@ def worktree_browser(update=True):
 
 
 class Browser(standard.Widget):
+
     def __init__(self, parent, update=True):
         standard.Widget.__init__(self, parent)
         self.tree = RepoTreeView(self)
@@ -74,7 +75,8 @@ class Browser(standard.Widget):
         msg += N_('Branch: %s') % branch
         self.setToolTip(msg)
 
-        title = N_('%(project)s: %(branch)s - Browse') % dict(project=self.model.project, branch=branch)
+        scope = dict(project=self.model.project, branch=branch)
+        title = N_('%(project)s: %(branch)s - Browse') % scope
         if self.mode == self.model.mode_amend:
             title += ' %s' % N_('(Amending)')
         self.setWindowTitle(title)
@@ -104,43 +106,43 @@ class RepoTreeView(standard.TreeView):
         # Sync selection before the key press event changes the model index
         self.connect(self, SIGNAL('indexAboutToChange()'), self.sync_selection)
 
-        self.action_history = self._create_action(
-                N_('View History...'),
+        self.action_history = qtutils.add_action_with_status_tip(
+                self, N_('View History...'),
                 N_('View history for selected path(s)'),
                 self.view_history, hotkeys.HISTORY)
 
-        self.action_stage = self._create_action(
-                cmds.StageOrUnstage.name(),
+        self.action_stage = qtutils.add_action_with_status_tip(
+                self, cmds.StageOrUnstage.name(),
                 N_('Stage/unstage selected path(s) for commit'),
                 cmds.run(cmds.StageOrUnstage), hotkeys.STAGE_SELECTION)
 
-        self.action_untrack = self._create_action(
-                N_('Untrack Selected'),
+        self.action_untrack = qtutils.add_action_with_status_tip(
+                self, N_('Untrack Selected'),
                 N_('Stop tracking path(s)'),
                 self.untrack_selected)
 
-        self.action_difftool = self._create_action(
-                cmds.LaunchDifftool.name(),
+        self.action_difftool = qtutils.add_action_with_status_tip(
+                self, cmds.LaunchDifftool.name(),
                 N_('Launch git-difftool on the current path.'),
                 cmds.run(cmds.LaunchDifftool), hotkeys.DIFF)
 
-        self.action_difftool_predecessor =self._create_action(
-                N_('Diff Against Predecessor...'),
+        self.action_difftool_predecessor = qtutils.add_action_with_status_tip(
+                self, N_('Diff Against Predecessor...'),
                 N_('Launch git-difftool against previous versions.'),
                 self.difftool_predecessor, hotkeys.DIFF_SECONDARY)
 
-        self.action_revert_unstaged = self._create_action(
-                cmds.RevertUnstagedEdits.name(),
+        self.action_revert_unstaged = qtutils.add_action_with_status_tip(
+                self, cmds.RevertUnstagedEdits.name(),
                 N_('Revert unstaged changes to selected paths.'),
                 cmds.run(cmds.RevertUnstagedEdits), hotkeys.REVERT)
 
-        self.action_revert_uncommitted = self._create_action(
-                cmds.RevertUncommittedEdits.name(),
+        self.action_revert_uncommitted = qtutils.add_action_with_status_tip(
+                self, cmds.RevertUncommittedEdits.name(),
                 N_('Revert uncommitted changes to selected paths.'),
                 cmds.run(cmds.RevertUncommittedEdits), hotkeys.UNDO)
 
-        self.action_editor = self._create_action(
-                cmds.LaunchEditor.name(),
+        self.action_editor = qtutils.add_action_with_status_tip(
+                self, cmds.LaunchEditor.name(),
                 N_('Edit selected path(s).'),
                 cmds.run(cmds.LaunchEditor), hotkeys.EDIT)
 
@@ -286,18 +288,6 @@ class RepoTreeView(standard.TreeView):
         tracked = staged.union(modified)
         return [p for p in selection
                 if p not in untracked or p in tracked]
-
-    def _create_action(self, name, tooltip, slot, shortcut=None):
-        """Create an action with a shortcut, tooltip, and callback slot."""
-        action = QtGui.QAction(name, self)
-        action.setStatusTip(tooltip)
-        if shortcut is not None:
-            if hasattr(Qt, 'WidgetWithChildrenShortcut'):
-                action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
-            action.setShortcut(shortcut)
-        self.addAction(action)
-        qtutils.connect_action(action, slot)
-        return action
 
     def view_history(self):
         """Signal that we should view history for paths."""
