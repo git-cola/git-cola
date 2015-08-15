@@ -448,7 +448,8 @@ def _add_action(widget, text, fn, connect, *shortcuts):
     connect(action, fn)
     if shortcuts:
         action.setShortcuts(shortcuts)
-        action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
+        if hasattr(Qt, 'WidgetWithChildrenShortcut'):
+            action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
         widget.addAction(action)
     return action
 
