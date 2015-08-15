@@ -433,18 +433,26 @@ def persist_clipboard():
 
 
 def add_action_bool(widget, text, fn, checked, *shortcuts):
-    action = _add_action(widget, text, fn, connect_action_bool, *shortcuts)
+    tip = text
+    action = _add_action(widget, text, tip, fn, connect_action_bool, *shortcuts)
     action.setCheckable(True)
     action.setChecked(checked)
     return action
 
 
 def add_action(widget, text, fn, *shortcuts):
-    return _add_action(widget, text, fn, connect_action, *shortcuts)
+    tip = text
+    return _add_action(widget, text, tip, fn, connect_action, *shortcuts)
 
 
-def _add_action(widget, text, fn, connect, *shortcuts):
+def add_action_with_status_tip(widget, text, tip, fn, *shortcuts):
+    return _add_action(widget, text, tip, fn, connect_action, *shortcuts)
+
+
+def _add_action(widget, text, tip, fn, connect, *shortcuts):
     action = QtGui.QAction(text, widget)
+    if tip:
+        action.setStatusTip(tip)
     connect(action, fn)
     if shortcuts:
         action.setShortcuts(shortcuts)
