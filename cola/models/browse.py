@@ -32,7 +32,7 @@ class Columns(object):
     AGE = 'Age'
     MESSAGE = 'Message'
     AUTHOR = 'Author'
-    ALL = (NAME, STATUS, AGE, MESSAGE, AUTHOR)
+    ALL = (NAME, STATUS, MESSAGE, AUTHOR, AGE)
 
     @classmethod
     def text(cls, column):
@@ -40,12 +40,12 @@ class Columns(object):
             return N_('Name')
         elif column == cls.STATUS:
             return N_('Status')
-        elif column == cls.AGE:
-            return N_('Age')
         elif column == cls.MESSAGE:
             return N_('Message')
         elif column == cls.AUTHOR:
             return N_('Author')
+        elif column == cls.AGE:
+            return N_('Age')
         else:
             raise NotImplementedError('Mapping required for "%s"' % column)
 

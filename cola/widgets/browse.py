@@ -151,9 +151,35 @@ class RepoTreeView(standard.TreeView):
                 N_('Edit selected path(s).'),
                 cmds.run(cmds.LaunchEditor), hotkeys.EDIT)
 
+        self.x_width = QtGui.QFontMetrics(self.font()).width('x')
+
     def size_columns(self):
         """Set the column widths."""
         self.resizeColumnToContents(0)
+        self.resizeColumnToContents(1)
+        self.resizeColumnToContents(2)
+        self.resizeColumnToContents(3)
+        self.resizeColumnToContents(4)
+
+    def sizeHintForColumn(self, column):
+        x_width = self.x_width
+
+        if column == 1:
+            # Status
+            size = x_width * 10
+        elif column == 2:
+            # Summary
+            size = x_width * 64
+        elif column == 3:
+            # Author
+            size = x_width * 18
+        elif column == 4:
+            # Age
+            size = x_width * 16
+        else:
+            # Filename and others use the actual content
+            size = super(RepoTreeView, self).sizeHintForColumn(column)
+        return size
 
     def emit_update(self):
         self.emit(SIGNAL('update()'))

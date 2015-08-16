@@ -8,7 +8,8 @@ Latest Release
 Unreleased Topics
 =================
 
-* Coming soon...
+* The `File Browser` tool now has better default column sizes,
+  and remembers its window size and placement.
 
 Development version
 ===================
