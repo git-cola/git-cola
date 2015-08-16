@@ -17,8 +17,8 @@ from cola.git import git
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
+from cola.models.browse import GitRepoEntryStore
 from cola.models.browse import GitRepoModel
-from cola.models.browse import GitRepoEntryManager
 from cola.models.browse import GitRepoNameItem
 from cola.models.selection import State
 from cola.models.selection import selection_model
@@ -33,6 +33,8 @@ def worktree_browser_widget(parent, update=True, settings=None):
     view = Browser(parent, update=update, settings=settings)
     view.tree.setModel(GitRepoModel(view.tree))
     view.ctl = BrowserController(view.tree)
+    if update:
+        view.tree.refresh()
     return view
 
 
@@ -93,16 +95,24 @@ class RepoTreeView(standard.TreeView):
     def __init__(self, parent):
         standard.TreeView.__init__(self, parent)
 
+        self.saved_selection = []
+        self.restoring_selection = False
+
         self.setDragEnabled(True)
-        self.setRootIsDecorated(True)
+        self.setRootIsDecorated(False)
         self.setSortingEnabled(False)
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 
         # Observe model updates
         model = main.model()
+        model.add_observer(model.message_about_to_update,
+                           self.emit_about_to_update)
         model.add_observer(model.message_updated, self.emit_update)
 
-        self.connect(self, SIGNAL('update()'), self.update_actions)
+        self.connect(self, SIGNAL('about_to_update()'), self.save_selection,
+                     Qt.QueuedConnection)
+        self.connect(self, SIGNAL('update()'), self.update_actions,
+                     Qt.QueuedConnection)
 
         # The non-Qt cola application model
         self.connect(self, SIGNAL('expanded(QModelIndex)'), self.size_columns)
@@ -152,6 +162,10 @@ class RepoTreeView(standard.TreeView):
                 cmds.run(cmds.LaunchEditor), hotkeys.EDIT)
 
         self.x_width = QtGui.QFontMetrics(self.font()).width('x')
+        self.size_columns()
+
+    def refresh(self):
+        self.model().refresh()
 
     def size_columns(self):
         """Set the column widths."""
@@ -183,6 +197,39 @@ class RepoTreeView(standard.TreeView):
 
     def emit_update(self):
         self.emit(SIGNAL('update()'))
+
+    def emit_about_to_update(self):
+        self.emit(SIGNAL('about_to_update()'))
+
+    def save_selection(self):
+        selection = self.selected_paths()
+        if selection:
+            self.saved_selection = selection
+
+    def restore(self):
+        selection = self.selectionModel()
+        flags = selection.Select | selection.Rows | selection.Current
+
+        self.restoring_selection = True
+
+        current_index = None
+        index = None
+        for path in self.saved_selection:
+            row = self.model().row(path, create=False)
+            if row:
+                item = row[0]
+                index = item.index()
+                valid = index.isValid()
+                if valid:
+                    current_index = index
+                    self.scrollTo(index)
+                    selection.select(index, flags)
+
+        if current_index is not None:
+            self.setCurrentIndex(current_index)
+
+        self.size_columns()
+        self.update_diff()
 
     def update_actions(self):
         """Enable/disable actions."""
@@ -254,21 +301,24 @@ class RepoTreeView(standard.TreeView):
         selection_model().set_selection(state)
         return paths
 
-    def selectionChanged(self, old_selection, new_selection):
+    def selectionChanged(self, old, new):
         """Override selectionChanged to update available actions."""
-        result = QtGui.QTreeView.selectionChanged(self, old_selection, new_selection)
-        self.update_actions()
-        paths = self.sync_selection()
+        result = QtGui.QTreeView.selectionChanged(self, old, new)
+        if not self.restoring_selection:
+            self.update_actions()
+            self.update_diff()
+        return result
 
+    def update_diff(self):
+        paths = self.sync_selection()
         if paths and self.model().path_is_interesting(paths[0]):
             cached = paths[0] in main.model().staged
             cmds.do(cmds.Diff, paths[0], cached)
-        return result
 
     def setModel(self, model):
         """Set the concrete QAbstractItemModel instance."""
         QtGui.QTreeView.setModel(self, model)
-        self.size_columns()
+        self.connect(model, SIGNAL('restore()'), self.restore)
 
     def item_from_index(self, model_index):
         """Return the name item corresponding to the model index."""
@@ -342,11 +392,11 @@ class RepoTreeView(standard.TreeView):
 
 
 class BrowserController(QtCore.QObject):
+
     def __init__(self, view=None):
         QtCore.QObject.__init__(self, view)
         self.model = main.model()
         self.view = view
-        self.updated = set()
         self.connect(view, SIGNAL('history(PyQt_PyObject)'),
                      self.view_history)
         self.connect(view, SIGNAL('expanded(QModelIndex)'),
@@ -363,11 +413,8 @@ class BrowserController(QtCore.QObject):
         """Update information about a directory as it is expanded."""
         item = self.view.item_from_index(model_index)
         path = item.path
-        if path in self.updated:
-            return
-        self.updated.add(path)
-        GitRepoEntryManager.entry(path).update()
-        entry = GitRepoEntryManager.entry
+        GitRepoEntryStore.entry(path).update()
+        entry = GitRepoEntryStore.entry
         for row in range(item.rowCount()):
             path = item.child(row, 0).path
             entry(path).update()
@@ -385,6 +432,7 @@ class BrowserController(QtCore.QObject):
 
 
 class BrowseModel(object):
+
     def __init__(self, ref):
         self.ref = ref
         self.relpath = None
@@ -392,6 +440,7 @@ class BrowseModel(object):
 
 
 class SaveBlob(BaseCommand):
+
     def __init__(self, model):
         BaseCommand.__init__(self)
         self.model = model
@@ -545,6 +594,7 @@ class BrowseDialog(QtGui.QDialog):
 
 
 class GitTreeWidget(standard.TreeView):
+
     def __init__(self, parent=None):
         standard.TreeView.__init__(self, parent)
         self.setHeaderHidden(True)
@@ -560,8 +610,12 @@ class GitTreeWidget(standard.TreeView):
             return
         self.emit(SIGNAL('path_chosen(PyQt_PyObject)'), item.path)
 
+    def selected_items(self):
+        item_from_index = self.model().itemFromIndex
+        return [item_from_index(i) for i in self.selectedIndexes()]
+
     def selected_files(self):
-        items = map(self.model().itemFromIndex, self.selectedIndexes())
+        items = self.selected_items()
         return [i.path for i in items if not i.is_dir]
 
     def selectionChanged(self, old_selection, new_selection):
@@ -583,6 +637,7 @@ class GitTreeWidget(standard.TreeView):
 
 class GitFileTreeModel(QtGui.QStandardItemModel):
     """Presents a list of file paths as a hierarchical tree."""
+
     def __init__(self, parent):
         QtGui.QStandardItemModel.__init__(self, parent)
         self.dir_entries = {'': self.invisibleRootItem()}
@@ -658,6 +713,7 @@ class GitFileTreeModel(QtGui.QStandardItemModel):
 
 
 class GitTreeModel(GitFileTreeModel):
+
     def __init__(self, ref, parent):
         GitFileTreeModel.__init__(self, parent)
         self.ref = ref
