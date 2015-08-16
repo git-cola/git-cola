@@ -161,6 +161,9 @@ class RepoTreeView(standard.TreeView):
                 N_('Edit selected path(s).'),
                 cmds.run(cmds.LaunchEditor), hotkeys.EDIT)
 
+        self.action_refresh  = qtutils.add_action(
+                self, N_('Refresh'), cmds.run(cmds.Refresh), hotkeys.REFRESH)
+
         self.x_width = QtGui.QFontMetrics(self.font()).width('x')
         self.size_columns()
 
