@@ -11,21 +11,25 @@ Unreleased Topics
 Usability, bells and whistles
 -----------------------------
 
-* The `File Browser` tool now has better default column sizes,
-  and remembers its window size and placement.
-
 * `git dag` now supports the standard editor, difftool, and history hotkeys.
   It is now possible to invoke these actions from file widget's context
   menu and through the standard hotkeys.
 
   https://github.com/git-cola/git-cola/pull/473
 
-* The `status` tool also learned about the history hotkey.
-  Additionally, the `Alt-{j,k}` aliases are also supported in the `status`
+* The `Status` tool also learned about the history hotkey.
+  Additionally, the `Alt-{j,k}` aliases are also supported in the `Status`
   tool for consistency with the other tools where the non-Alt hotkeys are not
   available.
 
   https://github.com/git-cola/git-cola/pull/488
+
+* The `File Browser` tool now has better default column sizes,
+  and remembers its window size and placement.
+
+* The `File Browser` now supports the refresh hotkey, and has better
+  behavior when refreshing.  The selection is now retained, and new and
+  removed files are found when refreshing.
 
 Fixes
 -----
