@@ -66,7 +66,6 @@ class Browser(standard.Widget):
         if not self.restore_state(settings=settings):
             self.resize(720, 420)
 
-
     # Read-only mode property
     mode = property(lambda self: self.model.mode)
 
@@ -96,6 +95,7 @@ class RepoTreeView(standard.TreeView):
         standard.TreeView.__init__(self, parent)
 
         self.saved_selection = []
+        self.saved_current_path = None
         self.restoring_selection = False
 
         self.setDragEnabled(True)
@@ -209,27 +209,36 @@ class RepoTreeView(standard.TreeView):
         if selection:
             self.saved_selection = selection
 
+        current = self.current_item()
+        if current:
+            self.saved_current_path = current.path
+
     def restore(self):
         selection = self.selectionModel()
-        flags = selection.Select | selection.Rows | selection.Current
+        flags = selection.Select | selection.Rows
 
         self.restoring_selection = True
 
         current_index = None
-        index = None
+        current_path = self.saved_current_path
+        if current_path:
+            row = self.model().row(current_path, create=False)
+            if row:
+                current_index = row[0].index()
+
+        if current_index and current_index.isValid():
+            self.setCurrentIndex(current_index)
+
         for path in self.saved_selection:
             row = self.model().row(path, create=False)
-            if row:
-                item = row[0]
-                index = item.index()
-                valid = index.isValid()
-                if valid:
-                    current_index = index
-                    self.scrollTo(index)
-                    selection.select(index, flags)
+            if not row:
+                continue
+            index = row[0].index()
+            if index.isValid():
+                self.scrollTo(index)
+                selection.select(index, flags)
 
-        if current_index is not None:
-            self.setCurrentIndex(current_index)
+        self.restoring_selection = False
 
         self.size_columns()
         self.update_diff()
