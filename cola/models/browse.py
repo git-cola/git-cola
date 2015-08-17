@@ -215,7 +215,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         new_files = self.get_files()
         new_paths = self.get_paths(files=new_files)
 
-        if new_files != old_files:
+        if new_files != old_files or not old_paths:
             self.clear()
             self._initialize()
             self.emit(SIGNAL('restore()'))
