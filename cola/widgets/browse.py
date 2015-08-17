@@ -96,6 +96,7 @@ class RepoTreeView(standard.TreeView):
 
         self.saved_selection = []
         self.saved_current_path = None
+        self.saved_open_folders = set()
         self.restoring_selection = False
 
         self.setDragEnabled(True)
@@ -116,7 +117,10 @@ class RepoTreeView(standard.TreeView):
 
         # The non-Qt cola application model
         self.connect(self, SIGNAL('expanded(QModelIndex)'), self.size_columns)
+        self.connect(self, SIGNAL('expanded(QModelIndex)'), self.expanded)
+
         self.connect(self, SIGNAL('collapsed(QModelIndex)'), self.size_columns)
+        self.connect(self, SIGNAL('collapsed(QModelIndex)'), self.collapsed)
 
         # Sync selection before the key press event changes the model index
         self.connect(self, SIGNAL('indexAboutToChange()'), self.sync_selection)
@@ -166,6 +170,14 @@ class RepoTreeView(standard.TreeView):
 
         self.x_width = QtGui.QFontMetrics(self.font()).width('x')
         self.size_columns()
+
+    def expanded(self, index):
+        item = self.model().itemFromIndex(index)
+        self.saved_open_folders.add(item.path)
+
+    def collapsed(self, index):
+        item = self.model().itemFromIndex(index)
+        self.saved_open_folders.remove(item.path)
 
     def refresh(self):
         self.model().refresh()
@@ -219,6 +231,17 @@ class RepoTreeView(standard.TreeView):
 
         self.restoring_selection = True
 
+        # Restore opened folders
+        for path in sorted(self.saved_open_folders):
+            row = self.model().row(path, create=False)
+            if not row:
+                continue
+            index = row[0].index()
+            if index.isValid():
+                self.setExpanded(index, True)
+
+        # Restore the current item.  We do this first, otherwise
+        #  setCurrentIndex() can mess with the selection we set below
         current_index = None
         current_path = self.saved_current_path
         if current_path:
@@ -229,6 +252,7 @@ class RepoTreeView(standard.TreeView):
         if current_index and current_index.isValid():
             self.setCurrentIndex(current_index)
 
+        # Restore selected items
         for path in self.saved_selection:
             row = self.model().row(path, create=False)
             if not row:
