@@ -364,6 +364,7 @@ class GitRepoInfoTask(QRunnable):
 
     def __init__(self, path):
         QRunnable.__init__(self)
+        self.setAutoDelete(False)
         self.path = path
         self._cfg = gitcfg.current()
         self._data = {}
