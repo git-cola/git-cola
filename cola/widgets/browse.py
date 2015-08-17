@@ -415,12 +415,15 @@ class BrowserController(QtCore.QObject):
     def query_model(self, model_index):
         """Update information about a directory as it is expanded."""
         item = self.view.item_from_index(model_index)
+        if item.cached:
+            return
         path = item.path
         GitRepoEntryStore.entry(path).update()
         entry = GitRepoEntryStore.entry
         for row in range(item.rowCount()):
             path = item.child(row, 0).path
             entry(path).update()
+        item.cached = True
 
     def difftool_predecessor(self, paths):
         """Prompt for an older commit and launch difftool against it."""

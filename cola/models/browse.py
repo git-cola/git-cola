@@ -481,6 +481,7 @@ class GitRepoItem(QtGui.QStandardItem):
     def __init__(self, column, path):
         QtGui.QStandardItem.__init__(self)
         self.path = path
+        self.cached = False
         self.setDragEnabled(False)
         self.setEditable(False)
         entry = GitRepoEntryStore.entry(path)
