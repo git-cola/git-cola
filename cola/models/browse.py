@@ -504,7 +504,6 @@ class GitRepoNameItem(GitRepoItem):
 
     def __init__(self, path):
         GitRepoItem.__init__(self, Columns.NAME, path)
-        self.path = path
         self.setDragEnabled(True)
 
     def type(self):
