@@ -146,7 +146,8 @@ class Git(object):
                 _raw=False,
                 _stdin=None,
                 _stderr=subprocess.PIPE,
-                _stdout=subprocess.PIPE):
+                _stdout=subprocess.PIPE,
+                _readonly=False):
         """
         Execute a command and returns its output
 
@@ -183,14 +184,17 @@ class Git(object):
 
         # Start the process
         # Guard against thread-unsafe .git/index.lock files
-        INDEX_LOCK.acquire()
+        if not _readonly:
+            INDEX_LOCK.acquire()
         status, out, err = core.run_command(command,
                                             cwd=_cwd,
                                             encoding=_encoding,
                                             stdin=_stdin, stdout=_stdout, stderr=_stderr,
                                             **extra)
         # Let the next thread in
-        INDEX_LOCK.release()
+        if not _readonly:
+            INDEX_LOCK.release()
+
         if not _raw and out is not None:
             out = out.rstrip('\n')
 
@@ -257,6 +261,7 @@ class Git(object):
                 '_stdout',
                 '_stderr',
                 '_raw',
+                '_readonly',
                 )
         for kwarg in execute_kwargs:
             if kwarg in kwargs:
