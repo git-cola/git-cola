@@ -361,6 +361,7 @@ else:
 
 class GitRepoInfoTask(QRunnable):
     """Handles expensive git lookups for a path."""
+
     def __init__(self, path):
         QRunnable.__init__(self)
         self.path = path
@@ -376,10 +377,9 @@ class GitRepoInfoTask(QRunnable):
         """
         if not self._data:
             log_line = main.model().git.log('-1', '--', self.path,
-                                            M=True,
-                                            all=False,
                                             no_color=True,
-                                            pretty='format:%ar%x01%s%x01%an'
+                                            pretty=r'format:%ar%x01%s%x01%an',
+                                            _readonly=True
                                             )[STDOUT]
             if log_line:
                 log_line = log_line
