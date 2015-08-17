@@ -486,9 +486,11 @@ class GitRepoItem(QtGui.QStandardItem):
         self.setEditable(False)
         entry = GitRepoEntryStore.entry(path)
         if column == Columns.STATUS:
-            QtCore.QObject.connect(entry, SIGNAL(column), self.set_status)
+            QtCore.QObject.connect(entry, SIGNAL(column), self.set_status,
+                                   Qt.QueuedConnection)
         else:
-            QtCore.QObject.connect(entry, SIGNAL(column), self.setText)
+            QtCore.QObject.connect(entry, SIGNAL(column), self.setText,
+                                   Qt.QueuedConnection)
 
     def set_status(self, data):
         icon, txt = data

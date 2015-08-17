@@ -123,7 +123,8 @@ class RepoTreeView(standard.TreeView):
         self.connect(self, SIGNAL('collapsed(QModelIndex)'), self.collapsed)
 
         # Sync selection before the key press event changes the model index
-        self.connect(self, SIGNAL('indexAboutToChange()'), self.sync_selection)
+        self.connect(self, SIGNAL('indexAboutToChange()'), self.sync_selection,
+                     Qt.QueuedConnection)
 
         self.action_history = qtutils.add_action_with_status_tip(
                 self, N_('View History...'),
@@ -354,7 +355,8 @@ class RepoTreeView(standard.TreeView):
     def setModel(self, model):
         """Set the concrete QAbstractItemModel instance."""
         QtGui.QTreeView.setModel(self, model)
-        self.connect(model, SIGNAL('restore()'), self.restore)
+        self.connect(model, SIGNAL('restore()'), self.restore,
+                     Qt.QueuedConnection)
 
     def item_from_index(self, model_index):
         """Return the name item corresponding to the model index."""
@@ -589,7 +591,7 @@ class BrowseDialog(QtGui.QDialog):
                          self.save_path)
 
         self.connect(self.tree, SIGNAL('selectionChanged()'),
-                     self.selection_changed)
+                     self.selection_changed, Qt.QueuedConnection)
 
         qtutils.connect_button(self.close, self.reject)
         qtutils.connect_button(self.save, self.save_blob)
