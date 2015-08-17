@@ -616,10 +616,6 @@ class GitTreeWidget(standard.TreeView):
             return
         self.emit(SIGNAL('path_chosen(PyQt_PyObject)'), item.path)
 
-    def selected_items(self):
-        item_from_index = self.model().itemFromIndex
-        return [item_from_index(i) for i in self.selectedIndexes()]
-
     def selected_files(self):
         items = self.selected_items()
         return [i.path for i in items if not i.is_dir]

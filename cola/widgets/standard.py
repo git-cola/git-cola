@@ -272,6 +272,17 @@ class TreeMixin(object):
             return None
         return selected_items[0]
 
+    def current_item(self):
+        if hasattr(self, 'currentItem'):
+            item = self.currentItem()
+        else:
+            index = self.currentIndex()
+            if index.isValid():
+                item = self.model().itemFromIndex(index)
+            else:
+                item = None
+        return item
+
 
 class DraggableTreeMixin(TreeMixin):
     """A tree widget with internal drag+drop reordering of rows"""
