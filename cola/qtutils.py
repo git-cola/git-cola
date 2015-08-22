@@ -93,15 +93,15 @@ def box(cls, margin, spacing, *items):
     layout.setSpacing(spacing)
 
     for i in items:
-        if i is stretch:
-            layout.addStretch()
-        elif i is skipped:
-            continue
-        elif isinstance(i, QtGui.QWidget):
+        if isinstance(i, QtGui.QWidget):
             layout.addWidget(i)
         elif isinstance(i, (QtGui.QHBoxLayout, QtGui.QVBoxLayout,
                             QtGui.QFormLayout, QtGui.QLayout)):
             layout.addLayout(i)
+        elif i is stretch:
+            layout.addStretch()
+        elif i is skipped:
+            continue
         elif isinstance(i, (int, long)):
             layout.addSpacing(i)
 
@@ -149,6 +149,7 @@ def splitter(orientation, *widgets):
         layout.setStretchFactor(idx, 1)
 
     return layout
+
 
 def prompt(msg, title=None, text=''):
     """Presents the user with an input widget and returns the input."""
