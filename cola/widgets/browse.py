@@ -58,7 +58,8 @@ class Browser(standard.Widget):
                      self._updated_callback, Qt.QueuedConnection)
         self.model = main.model()
         self.model.add_observer(self.model.message_updated, self.model_updated)
-        qtutils.add_close_action(self)
+        if parent is None:
+            qtutils.add_close_action(self)
         if update:
             self.model_updated()
 
