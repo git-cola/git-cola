@@ -352,7 +352,7 @@ class VimMixin(object):
     def page(self, offset):
         rect = self.cursorRect()
         x = rect.x()
-        y = max(0, rect.y() + offset)
+        y = rect.y() + offset
         new_cursor = self.cursorForPosition(QtCore.QPoint(x, y))
         if new_cursor is not None:
             self.set_text_cursor(new_cursor)
