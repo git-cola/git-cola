@@ -686,7 +686,8 @@ def diff_font():
     return font
 
 
-def create_button(text='', layout=None, tooltip=None, icon=None):
+def create_button(text='', layout=None, tooltip=None, icon=None,
+                  enabled=True, default=False):
     """Create a button, set its title, and add it to the parent."""
     button = QtGui.QPushButton()
     button.setCursor(Qt.PointingHandCursor)
@@ -698,20 +699,42 @@ def create_button(text='', layout=None, tooltip=None, icon=None):
         button.setToolTip(tooltip)
     if layout is not None:
         layout.addWidget(button)
+    if not enabled:
+        button.setEnabled(False)
+    if default:
+        button.setDefault(True)
     return button
 
 
 def create_action_button(tooltip=None, icon=None):
     button = QtGui.QPushButton()
-    button.setFixedSize(QtCore.QSize(16, 16))
     button.setCursor(Qt.PointingHandCursor)
     button.setFlat(True)
     if tooltip is not None:
         button.setToolTip(tooltip)
     if icon is not None:
-        pixmap = icon.pixmap(QtCore.QSize(16, 16))
-        button.setIcon(QtGui.QIcon(pixmap))
+        button.setIcon(icon)
+        button.setIconSize(QtCore.QSize(defs.small_icon, defs.small_icon))
     return button
+
+
+def ok_button(text, default=False, enabled=True):
+    return create_button(text=text, icon=icons.ok(),
+                         default=default, enabled=enabled)
+
+
+def close_button():
+    return create_button(text=N_('Close'), icon=icons.close())
+
+
+def edit_button(enabled=True, default=False):
+    return create_button(text=N_('Edit'), icon=icons.edit(),
+                         enabled=enabled, default=default)
+
+
+def refresh_button(enabled=True, default=False):
+    return create_button(text=N_('Refresh'), icon=icons.sync(),
+                         enabled=enabled, default=default)
 
 
 def hide_button_menu_indicator(button):
@@ -731,6 +754,71 @@ def hide_button_menu_indicator(button):
     button.setStyleSheet(stylesheet % {'name': name})
 
 
+def checkbox(text='', tooltip='', checked=None):
+    cb = QtGui.QCheckBox()
+    if text:
+        cb.setText(text)
+    if tooltip:
+        cb.setToolTip(tooltip)
+    if checked is not None:
+        cb.setChecked(checked)
+
+    url = icons.check_name()
+    style = """
+        QCheckBox::indicator {
+            width: %(size)dpx;
+            height: %(size)dpx;
+        }
+        QCheckBox::indicator::unchecked {
+            border: %(border)dpx solid #999;
+            background: #fff;
+        }
+        QCheckBox::indicator::checked {
+            image: url(%(url)s);
+            border: %(border)dpx solid black;
+            background: #fff;
+        }
+    """ % dict(size=defs.checkbox, border=defs.border, url=url)
+    cb.setStyleSheet(style)
+
+    return cb
+
+
+def radio(text='', tooltip='', checked=None):
+    rb = QtGui.QRadioButton()
+    if text:
+        rb.setText(text)
+    if tooltip:
+        rb.setToolTip(tooltip)
+    if checked is not None:
+        rb.setChecked(checked)
+
+    size = defs.checkbox
+    radius = size / 2
+    border = defs.radio_border
+    url = icons.dot_name()
+    style = """
+        QRadioButton::indicator {
+            width: %(size)dpx;
+            height: %(size)dpx;
+        }
+        QRadioButton::indicator::unchecked {
+            background: #fff;
+            border: %(border)dpx solid #999;
+            border-radius: %(radius)dpx;
+        }
+        QRadioButton::indicator::checked {
+            image: url(%(url)s);
+            background: #fff;
+            border: %(border)dpx solid black;
+            border-radius: %(radius)dpx;
+        }
+    """ % dict(size=size, radius=radius, border=border, url=url)
+    rb.setStyleSheet(style)
+
+    return rb
+
+
 class DockTitleBarWidget(QtGui.QWidget):
 
     def __init__(self, parent, title, stretch=True):
@@ -740,14 +828,13 @@ class DockTitleBarWidget(QtGui.QWidget):
         font.setBold(True)
         label.setFont(font)
         label.setText(title)
-
-        self.setCursor(Qt.OpenHandCursor)
+        label.setCursor(Qt.OpenHandCursor)
 
         self.close_button = create_action_button(
-                tooltip=N_('Close'), icon=titlebar_close_icon())
+            tooltip=N_('Close'), icon=icons.close())
 
         self.toggle_button = create_action_button(
-                tooltip=N_('Detach'), icon=titlebar_normal_icon())
+            tooltip=N_('Detach'), icon=icons.external())
 
         self.corner_layout = hbox(defs.no_margin, defs.spacing)
 
