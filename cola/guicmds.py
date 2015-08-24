@@ -295,14 +295,14 @@ class TaskRunner(QtCore.QObject):
             finish(task, *args, **kwargs)
 
 
-class Task(QtCore.QRunnable):
+class Task(qtutils.Task):
     """Base class for concrete tasks"""
 
     FINISHED = SIGNAL('finished')
 
-    def __init__(self, sender):
-        QtCore.QRunnable.__init__(self)
-        self.sender = sender
+    def __init__(self, parent):
+        qtutils.Task.__init__(self, parent)
+        self.sender = parent
 
     def finish(self, *args, **kwargs):
         self.sender.emit(self.FINISHED, self, *args, **kwargs)
@@ -311,14 +311,14 @@ class Task(QtCore.QRunnable):
 class CloneTask(Task):
     """Clones a Git repository"""
 
-    def __init__(self, sender, url, destdir, spawn):
-        Task.__init__(self, sender)
+    def __init__(self, parent, url, destdir, spawn):
+        Task.__init__(self, parent)
         self.url = url
         self.destdir = destdir
         self.spawn = spawn
         self.cmd = None
 
-    def run(self):
+    def task(self):
         """Runs the model action and captures the result"""
         self.cmd = cmds.do(cmds.Clone, self.url, self.destdir,
                            spawn=self.spawn)

@@ -772,6 +772,69 @@ class BlockSignals(object):
             w.blockSignals(self.values[w])
 
 
+class Task(QtCore.QRunnable):
+    """Disable auto-deletion to avoid gc issues
+
+    Python's garbage collector will try to double-free the task
+    once it's finished, so disable Qt's auto-deletion as a workaround.
+
+    """
+    def __init__(self, parent, *args, **kwargs):
+        QtCore.QRunnable.__init__(self)
+
+        self.channel = QtCore.QObject(parent)
+        self.result = None
+
+        self.setAutoDelete(False)
+
+    def run(self):
+        self.result = self.task()
+        self.done()
+
+    def task(self):
+        pass
+
+    def done(self):
+        self.channel.emit(SIGNAL('task_done(PyQt_PyObject)'), self)
+
+
+class SimpleTask(Task):
+    """Run a simple callable as a task"""
+
+    def __init__(self, parent, fn, *args, **kwargs):
+        Task.__init__(self, parent)
+
+        self.fn = fn
+        self.args = args
+        self.kwargs = kwargs
+
+    def task(self):
+        return self.fn(*self.args, **self.kwargs)
+
+
+class RunTask(QtCore.QObject):
+    """Jump through hoops to ensure that Python holds onto a reference
+
+    Prevent Python from garbage collecting QRunnable tasks until
+    the task has completed.
+
+    """
+    def __init__(self, parent=None):
+        QtCore.QObject.__init__(self, parent)
+        self.tasks = set()
+
+    def start(self, task):
+        self.tasks.add(task)
+        self.connect(task.channel, SIGNAL('task_done(PyQt_PyObject)'),
+                     self.task_done, Qt.QueuedConnection)
+        QtCore.QThreadPool.globalInstance().start(task)
+
+    def task_done(self, task):
+        self.disconnect(task.channel, SIGNAL('task_done(PyQt_PyObject)'),
+                        self.task_done)
+        self.tasks.remove(task)
+
+
 # Syntax highlighting
 
 def rgba(r, g, b, a=255):

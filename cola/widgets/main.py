@@ -77,6 +77,7 @@ class MainView(standard.MainWindow):
 
         # Runs asynchronous tasks
         self.task_runner = TaskRunner(self)
+        self.runtask = qtutils.RunTask()
         self.progress = standard.ProgressDialog('', '', self)
 
         cfg = gitcfg.current()
@@ -501,8 +502,7 @@ class MainView(standard.MainWindow):
                      self._install_config_actions, Qt.QueuedConnection)
 
         # Install .git-config-defined actions
-        self._config_task = None
-        self.install_config_actions()
+        self.init_config_actions()
 
         # Restore saved settings
         if not self.restore_state(settings=settings):
@@ -573,24 +573,14 @@ class MainView(standard.MainWindow):
             # text width used for line wrapping
             self.commitmsgeditor.set_textwidth(value)
 
-    def install_config_actions(self):
-        """Install .gitconfig-defined actions"""
-        self._config_task = self._start_config_actions_task()
-
-    def _start_config_actions_task(self):
+    def init_config_actions(self):
         """Do the expensive "get_config_actions()" call in the background"""
-        class ConfigActionsTask(QtCore.QRunnable):
-            def __init__(self, sender):
-                QtCore.QRunnable.__init__(self)
-                self._sender = sender
-            def run(self):
-                actions = cfgactions.get_config_actions()
-                self._sender.emit(SIGNAL('install_cfg_actions(PyQt_PyObject)'),
-                                  actions)
+        task = qtutils.SimpleTask(self, self.get_config_actions)
+        self.runtask.start(task)
 
-        task = ConfigActionsTask(self)
-        QtCore.QThreadPool.globalInstance().start(task)
-        return task
+    def get_config_actions(self):
+        actions = cfgactions.get_config_actions()
+        self.emit(SIGNAL('install_cfg_actions(PyQt_PyObject)'), actions)
 
     def _install_config_actions(self, names_and_shortcuts):
         """Install .gitconfig-defined actions"""

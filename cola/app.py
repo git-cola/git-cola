@@ -305,7 +305,8 @@ def application_start(context, view):
     view.raise_()
 
     # Scan for the first time
-    task = _start_update_thread(context.model)
+    runtask = qtutils.RunTask(view)
+    init_update_task(view, runtask, context.model)
 
     # Start the inotify thread
     inotify.start()
@@ -321,7 +322,6 @@ def application_start(context, view):
     # All done, cleanup
     inotify.stop()
     QtCore.QThreadPool.globalInstance().waitForDone()
-    del task
 
     pattern = utils.tmp_file_pattern()
     for filename in glob.glob(pattern):
@@ -368,21 +368,18 @@ def new_model(app, repo, prompt=False):
     return model
 
 
-def _start_update_thread(model):
+def init_update_task(parent, runtask, model):
     """Update the model in the background
 
     git-cola should startup as quickly as possible.
 
     """
-    class UpdateTask(QtCore.QRunnable):
-        def run(self):
-            model.update_status(update_index=True)
 
-    # Hold onto a reference to prevent PyQt from dereferencing
-    task = UpdateTask()
-    QtCore.QThreadPool.globalInstance().start(task)
+    def update_status():
+        model.update_status(update_index=True)
 
-    return task
+    task = qtutils.SimpleTask(parent, update_status)
+    runtask.start(task)
 
 
 def _send_msg():
