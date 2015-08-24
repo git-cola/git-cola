@@ -11,6 +11,7 @@ from cola import cmds
 from cola import core
 from cola import difftool
 from cola import gitcmds
+from cola import icons
 from cola import qtutils
 from cola import utils
 from cola.git import git
@@ -25,7 +26,8 @@ from cola.compat import ustr
 
 def delete_branch():
     """Launch the 'Delete Branch' dialog."""
-    branch = choose_branch(N_('Delete Branch'), N_('Delete'))
+    icon = icons.discard()
+    branch = choose_branch(N_('Delete Branch'), N_('Delete'), icon=icon)
     if not branch:
         return
     cmds.do(cmds.DeleteBranch, branch)
@@ -33,7 +35,8 @@ def delete_branch():
 
 def delete_remote_branch():
     """Launch the 'Delete Remote Branch' dialog."""
-    branch = choose_remote_branch(N_('Delete Remote Branch'), N_('Delete'))
+    branch = choose_remote_branch(N_('Delete Remote Branch'), N_('Delete'),
+                                  icon=icons.discard())
     if not branch:
         return
     rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
@@ -42,6 +45,7 @@ def delete_remote_branch():
         remote = match.group('remote')
         branch = match.group('branch')
         cmds.do(cmds.DeleteRemoteBranch, remote, branch)
+
 
 def browse_current():
     """Launch the 'Browse Current Branch' dialog."""
@@ -224,9 +228,9 @@ def load_commitmsg():
         cmds.do(cmds.LoadCommitMessageFromFile, filename)
 
 
-def choose_from_dialog(get, title, button_text, default):
+def choose_from_dialog(get, title, button_text, default, icon=None):
     parent = qtutils.active_window()
-    return get(title, button_text, parent, default=default)
+    return get(title, button_text, parent, default=default, icon=icon)
 
 
 def choose_ref(title, button_text, default=None):
@@ -234,14 +238,14 @@ def choose_ref(title, button_text, default=None):
                               title, button_text, default)
 
 
-def choose_branch(title, button_text, default=None):
+def choose_branch(title, button_text, default=None, icon=None):
     return choose_from_dialog(completion.GitBranchDialog.get,
-                              title, button_text, default)
+                              title, button_text, default, icon=icon)
 
 
-def choose_remote_branch(title, button_text, default=None):
+def choose_remote_branch(title, button_text, default=None, icon=None):
     return choose_from_dialog(completion.GitRemoteBranchDialog.get,
-                              title, button_text, default)
+                              title, button_text, default, icon=icon)
 
 
 def review_branch():

@@ -51,12 +51,9 @@ class SelectCommitsDialog(QtGui.QDialog):
         self.revision = QtGui.QLineEdit()
         self.revision.setReadOnly(True)
 
-        self.select_button = QtGui.QPushButton(N_('Select'))
-        self.select_button.setIcon(qtutils.apply_icon())
-        self.select_button.setEnabled(False)
-        self.select_button.setDefault(True)
-
-        self.close_button = QtGui.QPushButton(N_('Close'))
+        self.select_button = qtutils.ok_button(N_('Select'),
+                                               enabled=False, default=True)
+        self.close_button = qtutils.close_button()
 
         # Make the list widget slighty larger
         self.splitter = qtutils.splitter(Qt.Vertical,

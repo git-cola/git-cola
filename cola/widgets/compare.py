@@ -8,6 +8,7 @@ from PyQt4.QtCore import SIGNAL
 from cola import qtutils
 from cola import difftool
 from cola import gitcmds
+from cola import icons
 from cola.i18n import N_
 from cola.qtutils import connect_button
 from cola.widgets import defs
@@ -16,6 +17,7 @@ from cola.compat import ustr
 
 
 class FileItem(QtGui.QTreeWidgetItem):
+
     def __init__(self, path, icon):
         QtGui.QTreeWidgetItem.__init__(self, [path])
         self.path = path
@@ -64,11 +66,9 @@ class CompareBranchesDialog(standard.Dialog):
                                                QtGui.QSizePolicy.Expanding,
                                                QtGui.QSizePolicy.Minimum)
 
-        self.button_compare = QtGui.QPushButton()
-        self.button_compare.setText(N_('Compare'))
-
-        self.button_close = QtGui.QPushButton()
-        self.button_close.setText(N_('Close'))
+        self.button_compare = qtutils.create_button(text=N_('Compare'),
+                                                    icon=icons.diff())
+        self.button_close = qtutils.close_button()
 
         self.diff_files = standard.TreeWidget()
         self.diff_files.headerItem().setText(0, N_('File Differences'))
@@ -182,7 +182,7 @@ class CompareBranchesDialog(standard.Dialog):
 
     def set_diff_files(self, files):
         mk = FileItem
-        icon = qtutils.icon('script.png')
+        icon = icons.file_code()
         self.diff_files.clear()
         self.diff_files.addTopLevelItems([mk(f, icon) for f in files])
 

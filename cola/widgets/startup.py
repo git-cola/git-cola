@@ -1,5 +1,4 @@
-"""
-Provides the git-cola startup dialog
+"""Provides the git-cola startup dialog
 
 The startup dialog is presented when no repositories can be
 found at startup.
@@ -13,6 +12,7 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import core
 from cola import guicmds
+from cola import icons
 from cola import qtutils
 from cola.compat import ustr
 from cola.guicmds import TaskRunner
@@ -33,16 +33,13 @@ class StartupDialog(QtGui.QDialog):
         self.task_runner = TaskRunner(self)
         self.progress = ProgressDialog('', '', self)
 
-        self.new_button = QtGui.QPushButton(N_('New...'))
-        self.new_button.setIcon(qtutils.new_icon())
-
-        self.open_button = QtGui.QPushButton(N_('Open...'))
-        self.open_button.setIcon(qtutils.open_icon())
-
-        self.clone_button = QtGui.QPushButton(N_('Clone...'))
-        self.clone_button.setIcon(qtutils.git_icon())
-
-        self.close_button = QtGui.QPushButton(N_('Close'))
+        self.new_button = qtutils.create_button(text=N_('New...'),
+                                                icon=icons.new())
+        self.open_button = qtutils.create_button(text=N_('Open...'),
+                                                 icon=icons.repo())
+        self.clone_button = qtutils.create_button(text=N_('Clone...'),
+                                                  icon=icons.cola())
+        self.close_button = qtutils.close_button()
 
         settings = Settings()
         settings.load()

@@ -64,6 +64,7 @@ from cola import core
 from cola import compat
 from cola import git
 from cola import gitcfg
+from cola import icons
 from cola import inotify
 from cola import i18n
 from cola import qtcompat
@@ -167,6 +168,7 @@ class ColaApplication(object):
         i18n.install(locale)
         qtcompat.install()
         qtutils.install()
+        icons.install()
 
         self.notifier = QtCore.QObject()
         self.notifier.connect(self.notifier, SIGNAL('update_files()'),
@@ -174,13 +176,9 @@ class ColaApplication(object):
         # Call _update_files when inotify detects changes
         inotify.observer(self._update_files_notifier)
 
-        # Add the default style dir so that we find our icons
-        icon_dir = resources.icon_dir()
-        qtcompat.add_search_path(os.path.basename(icon_dir), icon_dir)
-
         if gui:
             self._app = current(tuple(argv))
-            self._app.setWindowIcon(qtutils.git_icon())
+            self._app.setWindowIcon(icons.cola())
             self._app.setStyleSheet("""
                 QMainWindow::separator {
                     width: 3px;

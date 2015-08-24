@@ -122,19 +122,12 @@ class RepoFormWidget(FormWidget):
         self.diff_context.setMaximum(99)
         self.diff_context.setProperty('value', QtCore.QVariant(5))
 
-        self.merge_summary = QtGui.QCheckBox()
-        self.merge_summary.setChecked(True)
-
-        self.merge_diffstat = QtGui.QCheckBox()
-        self.merge_diffstat.setChecked(True)
-
-        self.display_untracked = QtGui.QCheckBox()
-        self.display_untracked.setChecked(True)
+        self.merge_summary = qtutils.checkbox(checked=True)
+        self.merge_diffstat = qtutils.checkbox(checked=True)
+        self.display_untracked = qtutils.checkbox(checked=True)
 
         tooltip = N_('Detect conflict markers in unmerged files')
-        self.check_conflicts = QtGui.QCheckBox()
-        self.check_conflicts.setChecked(True)
-        self.check_conflicts.setToolTip(tooltip)
+        self.check_conflicts = qtutils.checkbox(checked=True, tooltip=tooltip)
 
         self.add_row(N_('User Name'), self.name)
         self.add_row(N_('Email Address'), self.email)
@@ -178,14 +171,14 @@ class SettingsFormWidget(FormWidget):
         self.textwidth.setWrapping(True)
         self.textwidth.setMaximum(150)
 
-        self.linebreak = QtGui.QCheckBox()
+        self.linebreak = qtutils.checkbox()
         self.editor = QtGui.QLineEdit()
         self.historybrowser = QtGui.QLineEdit()
         self.difftool = QtGui.QLineEdit()
         self.mergetool = QtGui.QLineEdit()
-        self.keep_merge_backups = QtGui.QCheckBox()
-        self.sort_bookmarks = QtGui.QCheckBox()
-        self.save_gui_settings = QtGui.QCheckBox()
+        self.keep_merge_backups = qtutils.checkbox()
+        self.sort_bookmarks = qtutils.checkbox()
+        self.save_gui_settings = qtutils.checkbox()
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
         self.add_row(N_('Font Size'), self.font_size)
@@ -269,9 +262,7 @@ class PreferencesView(standard.Dialog):
         self.stack_widget.addWidget(self.repo_form)
         self.stack_widget.addWidget(self.options_form)
 
-        self.close_button = QtGui.QPushButton(self)
-        self.close_button.setText(N_('Close'))
-        self.close_button.setIcon(qtutils.close_icon())
+        self.close_button = qtutils.close_button()
 
         self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
                                           qtutils.STRETCH, self.close_button)

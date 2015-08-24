@@ -65,8 +65,7 @@ class AboutView(QtGui.QDialog):
         self.text.setReadOnly(True)
         self.text.setPlainText(COPYRIGHT)
 
-        self.close_button = QtGui.QPushButton()
-        self.close_button.setText(N_('Close'))
+        self.close_button = qtutils.close_button()
         self.close_button.setDefault(True)
 
         self.button_layout = qtutils.hbox(defs.spacing, defs.margin,

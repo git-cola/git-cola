@@ -10,6 +10,7 @@ from PyQt4.QtCore import SIGNAL
 from cola import cmds
 from cola import core
 from cola import hotkeys
+from cola import icons
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
@@ -31,10 +32,9 @@ class StatusWidget(QtGui.QWidget):
         QtGui.QWidget.__init__(self, parent)
 
         tooltip = N_('Toggle the paths filter')
-        self.filter_button = qtutils.create_action_button(
-                tooltip=tooltip,
-                icon=qtutils.filter_icon())
-
+        icon = icons.ellipsis()
+        self.filter_button = qtutils.create_action_button(tooltip=tooltip,
+                                                          icon=icon)
         self.filter_widget = StatusFilterWidget()
         self.filter_widget.hide()
         self.tree = StatusTreeWidget()
@@ -45,7 +45,8 @@ class StatusWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
         self.toggle_action = qtutils.add_action(self, tooltip,
-                self.toggle_filter, hotkeys.FILTER)
+                                                self.toggle_filter,
+                                                hotkeys.FILTER)
 
         titlebar.add_corner_widget(self.filter_button)
         qtutils.connect_button(self.filter_button, self.toggle_filter)
@@ -117,76 +118,74 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.old_current_item = None
         self.expanded_items = set()
 
-        self.process_selection_action = qtutils.add_action(self,
-                cmds.StageOrUnstage.name(),
-                cmds.run(cmds.StageOrUnstage), hotkeys.STAGE_SELECTION)
+        self.process_selection_action = qtutils.add_action(
+            self, cmds.StageOrUnstage.name(),
+            cmds.run(cmds.StageOrUnstage), hotkeys.STAGE_SELECTION)
 
-        self.revert_unstaged_edits_action = qtutils.add_action(self,
-                cmds.RevertUnstagedEdits.name(),
-                cmds.run(cmds.RevertUnstagedEdits), hotkeys.REVERT)
-        icon = qtutils.theme_icon('edit-undo.svg')
-        self.revert_unstaged_edits_action.setIcon(icon)
+        self.revert_unstaged_edits_action = qtutils.add_action(
+            self, cmds.RevertUnstagedEdits.name(),
+            cmds.run(cmds.RevertUnstagedEdits), hotkeys.REVERT)
+        self.revert_unstaged_edits_action.setIcon(icons.undo())
 
-        self.launch_difftool_action = qtutils.add_action(self,
-                cmds.LaunchDifftool.name(),
-                cmds.run(cmds.LaunchDifftool), hotkeys.DIFF)
-        self.launch_difftool_action.setIcon(qtutils.git_icon())
+        self.launch_difftool_action = qtutils.add_action(
+            self, cmds.LaunchDifftool.name(),
+            cmds.run(cmds.LaunchDifftool), hotkeys.DIFF)
+        self.launch_difftool_action.setIcon(icons.diff())
 
-        self.launch_editor_action = qtutils.add_action(self,
-                cmds.LaunchEditor.name(),
-                cmds.run(cmds.LaunchEditor), hotkeys.EDIT, *hotkeys.ACCEPT)
-        self.launch_editor_action.setIcon(qtutils.options_icon())
+        self.launch_editor_action = qtutils.add_action(
+            self, cmds.LaunchEditor.name(),
+            cmds.run(cmds.LaunchEditor), hotkeys.EDIT, *hotkeys.ACCEPT)
+        self.launch_editor_action.setIcon(icons.edit())
 
         if not utils.is_win32():
-            self.open_using_default_app = qtutils.add_action(self,
-                    cmds.OpenDefaultApp.name(),
-                    self._open_using_default_app, hotkeys.PRIMARY_ACTION)
-            self.open_using_default_app.setIcon(qtutils.file_icon())
+            self.open_using_default_app = qtutils.add_action(
+                self, cmds.OpenDefaultApp.name(),
+                self._open_using_default_app, hotkeys.PRIMARY_ACTION)
+            self.open_using_default_app.setIcon(icons.default_app())
 
-            self.open_parent_dir_action = qtutils.add_action(self,
-                    cmds.OpenParentDir.name(),
-                    self._open_parent_dir, hotkeys.SECONDARY_ACTION)
-            self.open_parent_dir_action.setIcon(qtutils.open_file_icon())
+            self.open_parent_dir_action = qtutils.add_action(
+                self, cmds.OpenParentDir.name(),
+                self._open_parent_dir, hotkeys.SECONDARY_ACTION)
+            self.open_parent_dir_action.setIcon(icons.folder())
 
-        self.up_action = qtutils.add_action(self,
-                N_('Move Up'), self.move_up,
-                hotkeys.MOVE_UP, hotkeys.MOVE_UP_SECONDARY)
+        self.up_action = qtutils.add_action(
+            self, N_('Move Up'), self.move_up,
+            hotkeys.MOVE_UP, hotkeys.MOVE_UP_SECONDARY)
 
-        self.down_action = qtutils.add_action(self,
-                N_('Move Down'), self.move_down,
-                hotkeys.MOVE_DOWN, hotkeys.MOVE_DOWN_SECONDARY)
+        self.down_action = qtutils.add_action(
+            self, N_('Move Down'), self.move_down,
+            hotkeys.MOVE_DOWN, hotkeys.MOVE_DOWN_SECONDARY)
 
-        self.copy_path_action = qtutils.add_action(self,
-                N_('Copy Path to Clipboard'), self.copy_path, hotkeys.COPY)
-        self.copy_path_action.setIcon(qtutils.theme_icon('edit-copy.svg'))
+        self.copy_path_action = qtutils.add_action(
+            self, N_('Copy Path to Clipboard'), self.copy_path, hotkeys.COPY)
+        self.copy_path_action.setIcon(icons.copy())
 
-        self.copy_relpath_action = qtutils.add_action(self,
-                N_('Copy Relative Path to Clipboard'),
-                self.copy_relpath, hotkeys.CUT)
-        self.copy_relpath_action.setIcon(qtutils.theme_icon('edit-copy.svg'))
+        self.copy_relpath_action = qtutils.add_action(
+            self, N_('Copy Relative Path to Clipboard'),
+            self.copy_relpath, hotkeys.CUT)
+        self.copy_relpath_action.setIcon(icons.copy())
 
-        self.view_history_action = qtutils.add_action(self,
-                N_('View History...'),
-                self.view_history, hotkeys.HISTORY)
+        self.view_history_action = qtutils.add_action(
+            self, N_('View History...'), self.view_history, hotkeys.HISTORY)
 
         # MoveToTrash and Delete use the same shortcut.
         # We will only bind one of them, depending on whether or not the
         # MoveToTrash command is avaialble.  When available, the hotkey
         # is bound to MoveToTrash, otherwise it is bound to Delete.
         if cmds.MoveToTrash.AVAILABLE:
-            self.move_to_trash_action = qtutils.add_action(self,
-                    N_('Move file(s) to trash'),
-                    self._trash_untracked_files, hotkeys.TRASH)
-            self.move_to_trash_action.setIcon(qtutils.discard_icon())
+            self.move_to_trash_action = qtutils.add_action(
+                self, N_('Move file(s) to trash'),
+                self._trash_untracked_files, hotkeys.TRASH)
+            self.move_to_trash_action.setIcon(icons.discard())
             delete_shortcut = hotkeys.DELETE_FILE
         else:
             self.move_to_trash_action = None
             delete_shortcut = hotkeys.DELETE_FILE_SECONDARY
 
-        self.delete_untracked_files_action = qtutils.add_action(self,
-                N_('Delete File(s)...'),
-                self._delete_untracked_files, delete_shortcut)
-        self.delete_untracked_files_action.setIcon(qtutils.discard_icon())
+        self.delete_untracked_files_action = qtutils.add_action(
+            self, N_('Delete File(s)...'),
+            self._delete_untracked_files, delete_shortcut)
+        self.delete_untracked_files_action.setIcon(icons.discard())
 
         self.connect(self, SIGNAL('about_to_update()'),
                      self._about_to_update, Qt.QueuedConnection)
@@ -495,26 +494,22 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def _create_header_context_menu(self, menu, idx):
         if idx == self.idx_staged:
-            menu.addAction(qtutils.remove_icon(),
-                           N_('Unstage All'),
+            menu.addAction(icons.remove(), N_('Unstage All'),
                            cmds.run(cmds.UnstageAll))
             return menu
         elif idx == self.idx_unmerged:
-            action = menu.addAction(qtutils.add_icon(),
-                                    cmds.StageUnmerged.name(),
+            action = menu.addAction(icons.add(), cmds.StageUnmerged.name(),
                                     cmds.run(cmds.StageUnmerged))
             action.setShortcut(hotkeys.STAGE_SELECTION)
             return menu
         elif idx == self.idx_modified:
-            action = menu.addAction(qtutils.add_icon(),
-                                    cmds.StageModified.name(),
+            action = menu.addAction(icons.add(), cmds.StageModified.name(),
                                     cmds.run(cmds.StageModified))
             action.setShortcut(hotkeys.STAGE_SELECTION)
             return menu
 
         elif idx == self.idx_untracked:
-            action = menu.addAction(qtutils.add_icon(),
-                                    cmds.StageUntracked.name(),
+            action = menu.addAction(icons.add(), cmds.StageUntracked.name(),
                                     cmds.run(cmds.StageUntracked))
             action.setShortcut(hotkeys.STAGE_SELECTION)
             return menu
@@ -524,8 +519,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             return self._create_staged_submodule_context_menu(menu, s)
 
         if self.m.unstageable():
-            action = menu.addAction(qtutils.remove_icon(),
-                                    N_('Unstage Selected'),
+            action = menu.addAction(icons.remove(), N_('Unstage Selected'),
                                     cmds.run(cmds.Unstage, self.staged()))
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
@@ -539,14 +533,14 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         if all_exist and not utils.is_win32():
             menu.addSeparator()
-            action = menu.addAction(qtutils.file_icon(),
-                    cmds.OpenDefaultApp.name(),
-                    cmds.run(cmds.OpenDefaultApp, self.staged()))
+            open_default = cmds.run(cmds.OpenDefaultApp, self.staged())
+            action = menu.addAction(icons.default_app(),
+                                    cmds.OpenDefaultApp.name(), open_default)
             action.setShortcut(hotkeys.PRIMARY_ACTION)
 
-            action = menu.addAction(qtutils.open_file_icon(),
-                    cmds.OpenParentDir.name(),
-                    self._open_parent_dir)
+            action = menu.addAction(icons.folder(),
+                                    cmds.OpenParentDir.name(),
+                                    self._open_parent_dir)
             action.setShortcut(hotkeys.SECONDARY_ACTION)
 
         if self.m.undoable():
@@ -560,16 +554,14 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         return menu
 
     def _create_staged_submodule_context_menu(self, menu, s):
-        menu.addAction(qtutils.git_icon(),
-                       N_('Launch git-cola'),
+        menu.addAction(icons.cola(), N_('Launch git-cola'),
                        cmds.run(cmds.OpenRepo,
                                 core.abspath(s.staged[0])))
 
         menu.addAction(self.launch_editor_action)
         menu.addSeparator()
 
-        action = menu.addAction(qtutils.remove_icon(),
-                                N_('Unstage Selected'),
+        action = menu.addAction(icons.remove(), N_('Unstage Selected'),
                                 cmds.run(cmds.Unstage, self.staged()))
         action.setShortcut(hotkeys.STAGE_SELECTION)
         menu.addSeparator()
@@ -582,8 +574,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def _create_unmerged_context_menu(self, menu, s):
         menu.addAction(self.launch_difftool_action)
 
-        action = menu.addAction(qtutils.add_icon(),
-                                N_('Stage Selected'),
+        action = menu.addAction(icons.add(), N_('Stage Selected'),
                                 cmds.run(cmds.Stage, self.unstaged()))
         action.setShortcut(hotkeys.STAGE_SELECTION)
         menu.addSeparator()
@@ -591,14 +582,14 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         if not utils.is_win32():
             menu.addSeparator()
-            action = menu.addAction(qtutils.file_icon(),
-                    cmds.OpenDefaultApp.name(),
-                    cmds.run(cmds.OpenDefaultApp, self.unmerged()))
+            open_default = cmds.run(cmds.OpenDefaultApp, self.unmerged())
+            action = menu.addAction(icons.default_app(),
+                                    cmds.OpenDefaultApp.name(), open_default)
             action.setShortcut(hotkeys.PRIMARY_ACTION)
 
-            action = menu.addAction(qtutils.open_file_icon(),
-                    cmds.OpenParentDir.name(),
-                    self._open_parent_dir)
+            action = menu.addAction(icons.folder(),
+                                    cmds.OpenParentDir.name(),
+                                    self._open_parent_dir)
             action.setShortcut(hotkeys.SECONDARY_ACTION)
 
         menu.addSeparator()
@@ -614,8 +605,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             return self._create_modified_submodule_context_menu(menu, s)
 
         if self.m.stageable():
-            action = menu.addAction(qtutils.add_icon(),
-                                    N_('Stage Selected'),
+            action = menu.addAction(icons.add(), N_('Stage Selected'),
                                     cmds.run(cmds.Stage, self.unstaged()))
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
@@ -636,14 +626,14 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         if all_exist and self.unstaged() and not utils.is_win32():
             menu.addSeparator()
-            action = menu.addAction(qtutils.file_icon(),
-                    cmds.OpenDefaultApp.name(),
-                    cmds.run(cmds.OpenDefaultApp, self.unstaged()))
+            open_default = cmds.run(cmds.OpenDefaultApp, self.unstaged())
+            action = menu.addAction(icons.default_app(),
+                                    cmds.OpenDefaultApp.name(), open_default)
             action.setShortcut(hotkeys.PRIMARY_ACTION)
 
-            action = menu.addAction(qtutils.open_file_icon(),
-                    cmds.OpenParentDir.name(),
-                    self._open_parent_dir)
+            action = menu.addAction(icons.folder(),
+                                    cmds.OpenParentDir.name(),
+                                    self._open_parent_dir)
             action.setShortcut(hotkeys.SECONDARY_ACTION)
 
         if all_exist and s.untracked:
@@ -652,10 +642,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 menu.addAction(self.move_to_trash_action)
             menu.addAction(self.delete_untracked_files_action)
             menu.addSeparator()
-            menu.addAction(qtutils.theme_icon('edit-clear.svg'),
+            menu.addAction(icons.edit(),
                            N_('Add to .gitignore'),
                            cmds.run(cmds.Ignore,
-                                map(lambda x: '/' + x, self.untracked())))
+                                    map(lambda x: '/' + x, self.untracked())))
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
         menu.addAction(self.copy_relpath_action)
@@ -664,16 +654,14 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         return menu
 
     def _create_modified_submodule_context_menu(self, menu, s):
-        menu.addAction(qtutils.git_icon(),
-                       N_('Launch git-cola'),
+        menu.addAction(icons.cola(), N_('Launch git-cola'),
                        cmds.run(cmds.OpenRepo, core.abspath(s.modified[0])))
 
         menu.addAction(self.launch_editor_action)
 
         if self.m.stageable():
             menu.addSeparator()
-            action = menu.addAction(qtutils.add_icon(),
-                                    N_('Stage Selected'),
+            action = menu.addAction(icons.add(), N_('Stage Selected'),
                                     cmds.run(cmds.Stage, self.unstaged()))
             action.setShortcut(hotkeys.STAGE_SELECTION)
 

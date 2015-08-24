@@ -16,6 +16,7 @@ from cola import compat
 from cola import core
 from cola import gitcfg
 from cola import gitcmds
+from cola import icons
 from cola import inotify
 from cola import utils
 from cola import difftool
@@ -588,8 +589,7 @@ class Delete(RemoveFiles):
         ok_txt = N_('Delete Files')
 
         if not Interaction.confirm(title, msg, info_txt, ok_txt,
-                                   default=True,
-                                   icon=resources.icon('remove.svg')):
+                                   default=True, icon=icons.remove()):
             return
 
         return RemoveFiles.do(self)
@@ -1196,7 +1196,7 @@ class RevertEditsCommand(ConfirmAction):
     def __init__(self):
         ConfirmAction.__init__(self)
         self.model = main.model()
-        self.icon = resources.icon('edit-undo.svg')
+        self.icon = icons.undo()
 
     def ok_to_run(self):
         return self.model.undoable()

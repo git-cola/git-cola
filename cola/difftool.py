@@ -8,6 +8,7 @@ from PyQt4.QtCore import SIGNAL
 from cola import core
 from cola import gitcmds
 from cola import hotkeys
+from cola import icons
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
@@ -118,12 +119,10 @@ class FileDiffDialog(QtGui.QDialog):
 
         self.tree = filetree.FileTree(parent=self)
 
-        self.diff_button = QtGui.QPushButton(N_('Compare'))
-        self.diff_button.setIcon(qtutils.ok_icon())
-        self.diff_button.setEnabled(False)
-
-        self.close_button = QtGui.QPushButton(N_('Close'))
-        self.close_button.setIcon(qtutils.close_icon())
+        self.diff_button = qtutils.create_button(text=N_('Compare'),
+                                                 icon=icons.diff(),
+                                                 enabled=False)
+        self.close_button = qtutils.close_button()
 
         self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
                                           qtutils.STRETCH,

@@ -1,8 +1,8 @@
-from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import cmds
 from cola import hotkeys
+from cola import icons
 from cola import qtutils
 from cola.i18n import N_
 
@@ -14,17 +14,17 @@ def cmd_action(widget, cmd, icon, *shortcuts):
 
 
 def launch_editor(widget, *shortcuts):
-    icon = qtutils.options_icon()
+    icon = icons.configure()
     return cmd_action(widget, cmds.LaunchEditor, icon, hotkeys.EDIT, *shortcuts)
 
 
 def launch_difftool(widget):
-    icon = qtutils.git_icon()
+    icon = icons.diff()
     return cmd_action(widget, cmds.LaunchDifftool, icon, hotkeys.DIFF)
 
 
 def stage_or_unstage(widget):
-    icon = qtutils.add_icon()
+    icon = icons.add()
     return cmd_action(widget, cmds.StageOrUnstage, icon,
                       hotkeys.STAGE_SELECTION)
 

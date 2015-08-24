@@ -3,8 +3,6 @@
 """
 from __future__ import division, absolute_import, unicode_literals
 
-import mimetypes
-import os
 import subprocess
 
 from PyQt4 import QtGui
@@ -15,34 +13,14 @@ from PyQt4.QtCore import SIGNAL
 from cola import core
 from cola import gitcfg
 from cola import hotkeys
+from cola import icons
 from cola import utils
 from cola import resources
-from cola.decorators import memoize
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models.prefs import FONTDIFF
-from cola.widgets import defs
 from cola.compat import ustr
-
-
-KNOWN_FILE_MIME_TYPES = [
-    ('text',    'script.png'),
-    ('image',   'image.png'),
-    ('python',  'script.png'),
-    ('ruby',    'script.png'),
-    ('shell',   'script.png'),
-    ('perl',    'script.png'),
-    ('octet',   'binary.png'),
-]
-
-KNOWN_FILE_EXTENSIONS = {
-    '.java':    'script.png',
-    '.groovy':  'script.png',
-    '.cpp':     'script.png',
-    '.c':       'script.png',
-    '.h':       'script.png',
-    '.cxx':     'script.png',
-}
+from cola.widgets import defs
 
 
 def connect_action(action, fn):
@@ -164,6 +142,7 @@ def create_listwidget_item(text, filename):
     """Creates a QListWidgetItem with text and the icon at filename."""
     item = QtGui.QListWidgetItem()
     item.setIcon(QtGui.QIcon(filename))
+    item.setIconSize(QtCore.QSize(defs.small_icon, defs.small_icon))
     item.setText(text)
     return item
 
@@ -176,7 +155,7 @@ class TreeWidgetItem(QtGui.QTreeWidgetItem):
         QtGui.QTreeWidgetItem.__init__(self)
         self.path = path
         self.deleted = deleted
-        self.setIcon(0, cached_icon_from_path(icon))
+        self.setIcon(0, icons.from_name(icon))
         self.setText(0, path)
 
     def type(self):
@@ -201,19 +180,6 @@ def paths_from_items(items,
             if i.type() == item_type and item_filter(i)]
 
 
-@memoize
-def cached_icon_from_path(filename):
-    return QtGui.QIcon(filename)
-
-
-def mkicon(icon, default=None):
-    if icon is None and default is not None:
-        icon = default()
-    elif icon and isinstance(icon, (str, ustr)):
-        icon = QtGui.QIcon(icon)
-    return icon
-
-
 def confirm(title, text, informative_text, ok_text,
             icon=None, default=True,
             cancel_text=None, cancel_icon=None):
@@ -224,12 +190,12 @@ def confirm(title, text, informative_text, ok_text,
     msgbox.setText(text)
     msgbox.setInformativeText(informative_text)
 
-    icon = mkicon(icon, ok_icon)
+    icon = icons.mkicon(icon, icons.ok)
     ok = msgbox.addButton(ok_text, QtGui.QMessageBox.ActionRole)
     ok.setIcon(icon)
 
     cancel = msgbox.addButton(QtGui.QMessageBox.Cancel)
-    cancel_icon = mkicon(cancel_icon, discard_icon)
+    cancel_icon = icons.mkicon(cancel_icon, icons.close)
     cancel.setIcon(cancel_icon)
     if cancel_text:
         cancel.setText(cancel_text)
@@ -254,7 +220,7 @@ class ResizeableMessageBox(QtGui.QMessageBox):
         event_type = event.type()
         if (event_type == QtCore.QEvent.MouseMove or
                 event_type == QtCore.QEvent.MouseButtonPress):
-            maxi = QtCore.QSize(1024*4, 1024*4)
+            maxi = QtCore.QSize(defs.max_size, defs.max_size)
             self.setMaximumSize(maxi)
             text = self.findChild(QtGui.QTextEdit)
             if text is not None:
@@ -295,8 +261,8 @@ def information(title, message=None, details=None, informative_text=None):
         mbox.setInformativeText(informative_text)
     if details:
         mbox.setDetailedText(details)
-    # Render git-cola.svg into a 1-inch wide pixmap
-    pixmap = git_icon().pixmap(96)
+    # Render into a 1-inch wide pixmap
+    pixmap = icons.cola().pixmap(defs.large_icon)
     mbox.setIconPixmap(pixmap)
     mbox.exec_()
 
@@ -393,11 +359,6 @@ def save_as(filename, title='Save As...'):
                         .getSaveFileName(active_window(), title, filename))
 
 
-def icon(basename):
-    """Given a basename returns a QIcon from the corresponding cola icon."""
-    return QtGui.QIcon(resources.icon(basename))
-
-
 def copy_path(filename, absolute=True):
     """Copy a filename to the clipboard"""
     if filename is None:
@@ -484,142 +445,15 @@ def set_items(widget, items):
     add_items(widget, items)
 
 
-def icon_name_for_filename(filename):
-    """Returns an icon name based on the filename."""
-    mimetype = mimetypes.guess_type(filename)[0]
-    if mimetype is not None:
-        mimetype = mimetype.lower()
-        for filetype, icon_name in KNOWN_FILE_MIME_TYPES:
-            if filetype in mimetype:
-                return icon_name
-    extension = os.path.splitext(filename)[1]
-    return KNOWN_FILE_EXTENSIONS.get(extension.lower(), 'generic.png')
-
-
-def icon_from_filename(filename):
-    icon_name = icon_name_for_filename(filename)
-    return cached_icon_from_path(resources.icon(icon_name))
-
 
 def create_treeitem(filename, staged=False, deleted=False, untracked=False):
-    """Given a filename, return a TreeListItem suitable for adding to a
-    QListWidget.  "staged", "deleted, and "untracked" control whether to use
-    the appropriate icons."""
-    if deleted:
-        icon_name = 'removed.png'
-    elif staged:
-        icon_name = 'staged-item.png'
-    elif untracked:
-        icon_name = 'untracked.png'
-    else:
-        icon_name = icon_name_for_filename(filename)
+    """Given a filename, return a TreeWidgetItem for a status widget
+
+    "staged", "deleted, and "untracked" control which icon is used.
+
+    """
+    icon_name = icons.status(filename, deleted, staged, untracked)
     return TreeWidgetItem(filename, resources.icon(icon_name), deleted=deleted)
-
-
-@memoize
-def cached_icon(key):
-    """Maintain a cache of standard icons and return cache entries."""
-    style = QtGui.QApplication.instance().style()
-    return style.standardIcon(key)
-
-
-def dir_icon():
-    """Return a standard icon for a directory."""
-    return cached_icon(QtGui.QStyle.SP_DirIcon)
-
-
-def file_icon():
-    """Return a standard icon for a file."""
-    return cached_icon(QtGui.QStyle.SP_FileIcon)
-
-
-def apply_icon():
-    """Return a standard Apply icon"""
-    return cached_icon(QtGui.QStyle.SP_DialogApplyButton)
-
-
-def new_icon():
-    return cached_icon(QtGui.QStyle.SP_FileDialogNewFolder)
-
-
-def save_icon():
-    """Return a standard Save icon"""
-    return cached_icon(QtGui.QStyle.SP_DialogSaveButton)
-
-
-def ok_icon():
-    """Return a standard Ok icon"""
-    return cached_icon(QtGui.QStyle.SP_DialogOkButton)
-
-
-def open_icon():
-    """Return a standard open directory icon"""
-    return cached_icon(QtGui.QStyle.SP_DirOpenIcon)
-
-
-def help_icon():
-    """Return a standard open directory icon"""
-    return cached_icon(QtGui.QStyle.SP_DialogHelpButton)
-
-
-def add_icon():
-    return theme_icon('list-add', fallback='add.svg')
-
-
-def remove_icon():
-    return theme_icon('list-remove', fallback='remove.svg')
-
-
-def open_file_icon():
-    return theme_icon('document-open', fallback='open.svg')
-
-
-def options_icon():
-    """Return a standard open directory icon"""
-    return theme_icon('configure', fallback='options.svg')
-
-
-def filter_icon():
-    """Return a filter icon"""
-    return theme_icon('view-filter.png')
-
-
-def dir_close_icon():
-    """Return a standard closed directory icon"""
-    return cached_icon(QtGui.QStyle.SP_DirClosedIcon)
-
-
-def titlebar_close_icon():
-    """Return a dock widget close icon"""
-    return cached_icon(QtGui.QStyle.SP_TitleBarCloseButton)
-
-
-def titlebar_normal_icon():
-    """Return a dock widget close icon"""
-    return cached_icon(QtGui.QStyle.SP_TitleBarNormalButton)
-
-
-def git_icon():
-    """
-    Return git-cola icon from X11 theme if it exists.
-    Else fallback to default hardcoded icon.
-    """
-    return theme_icon('git-cola.svg')
-
-
-def reload_icon():
-    """Returna  standard Refresh icon"""
-    return cached_icon(QtGui.QStyle.SP_BrowserReload)
-
-
-def discard_icon():
-    """Return a standard Discard icon"""
-    return cached_icon(QtGui.QStyle.SP_DialogDiscardButton)
-
-
-def close_icon():
-    """Return a standard Close icon"""
-    return cached_icon(QtGui.QStyle.SP_DialogCloseButton)
 
 
 def add_close_action(widget):
@@ -643,23 +477,6 @@ def default_size(parent, width, height):
         width = parent.width()
         height = parent.height()
     return (width, height)
-
-@memoize
-def theme_icon(name, fallback=None):
-    """Grab an icon from the current theme with a fallback
-
-    Support older versions of Qt checking for fromTheme's availability.
-
-    """
-    if hasattr(QtGui.QIcon, 'fromTheme'):
-        base, ext = os.path.splitext(name)
-        if fallback:
-            qicon = QtGui.QIcon.fromTheme(base, icon(fallback))
-        else:
-            qicon = QtGui.QIcon.fromTheme(base)
-        if not qicon.isNull():
-            return qicon
-    return icon(fallback or name)
 
 
 def default_monospace_font():
@@ -695,6 +512,7 @@ def create_button(text='', layout=None, tooltip=None, icon=None,
         button.setText(text)
     if icon is not None:
         button.setIcon(icon)
+        button.setIconSize(QtCore.QSize(defs.small_icon, defs.small_icon))
     if tooltip is not None:
         button.setToolTip(tooltip)
     if layout is not None:
@@ -898,6 +716,7 @@ def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
     button.setCursor(Qt.PointingHandCursor)
     if icon is not None:
         button.setIcon(icon)
+        button.setIconSize(QtCore.QSize(defs.small_icon, defs.small_icon))
     if text is not None:
         button.setText(text)
         button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)

@@ -6,6 +6,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import gitcmds
+from cola import icons
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
@@ -112,44 +113,31 @@ class CreateBranchDialog(Dialog):
         if current:
             self.revision.setText(current)
 
-        self.local_radio = QtGui.QRadioButton()
-        self.local_radio.setText(N_('Local branch'))
-        self.local_radio.setChecked(True)
-
-        self.remote_radio = QtGui.QRadioButton()
-        self.remote_radio.setText(N_('Tracking branch'))
-
-        self.tag_radio = QtGui.QRadioButton()
-        self.tag_radio.setText(N_('Tag'))
+        self.local_radio = qtutils.radio(text=N_('Local branch'), checked=True)
+        self.remote_radio = qtutils.radio(text=N_('Tracking branch'))
+        self.tag_radio = qtutils.radio(text=N_('Tag'))
 
         self.branch_list = QtGui.QListWidget()
 
         self.update_existing_label = QtGui.QLabel()
         self.update_existing_label.setText(N_('Update Existing Branch:'))
 
-        self.no_update_radio = QtGui.QRadioButton()
-        self.no_update_radio.setText(N_('No'))
+        self.no_update_radio = qtutils.radio(text=N_('No'))
+        self.ffwd_only_radio = qtutils.radio(text=N_('Fast Forward Only'),
+                                             checked=True)
 
-        self.ffwd_only_radio = QtGui.QRadioButton()
-        self.ffwd_only_radio.setText(N_('Fast Forward Only'))
-        self.ffwd_only_radio.setChecked(True)
+        self.reset_radio = qtutils.radio(text=N_('Reset'))
 
-        self.reset_radio = QtGui.QRadioButton()
-        self.reset_radio.setText(N_('Reset'))
+        text = N_('Fetch Tracking Branch')
+        self.fetch_checkbox = qtutils.checkbox(text=text, checked=True)
 
-        self.fetch_checkbox = QtGui.QCheckBox()
-        self.fetch_checkbox.setText(N_('Fetch Tracking Branch'))
-        self.fetch_checkbox.setChecked(True)
+        text = N_('Checkout After Creation')
+        self.checkout_checkbox = qtutils.checkbox(text=text, checked=True)
 
-        self.checkout_checkbox = QtGui.QCheckBox()
-        self.checkout_checkbox.setText(N_('Checkout After Creation'))
-        self.checkout_checkbox.setChecked(True)
-
+        icon = icons.branch()
         self.create_button = qtutils.create_button(text=N_('Create Branch'),
-                                                   icon=qtutils.git_icon())
-        self.create_button.setDefault(True)
-
-        self.close_button = qtutils.create_button(text=N_('Close'))
+                                                   icon=icon, default=True)
+        self.close_button = qtutils.close_button()
 
         self.rev_start_group = QtGui.QGroupBox()
         self.rev_start_group.setTitle(N_('Starting Revision'))
@@ -175,7 +163,8 @@ class CreateBranchDialog(Dialog):
                                                       self.tag_radio,
                                                       qtutils.STRETCH)
 
-        self.rev_start_textinput_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+        self.rev_start_textinput_layout = qtutils.hbox(defs.no_margin,
+                                                       defs.spacing,
                                                        self.rev_label,
                                                        self.revision)
 
@@ -289,7 +278,7 @@ class CreateBranchDialog(Dialog):
                                     dict(branch=branch, revision=revision)),
                                    N_('Reset Branch'),
                                    default=False,
-                                   icon=qtutils.theme_icon('edit-undo.svg')):
+                                   icon=icons.undo()):
                 return
         self.setEnabled(False)
         self.progress.setEnabled(True)

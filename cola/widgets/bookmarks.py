@@ -1,4 +1,5 @@
 """Provides widgets related to bookmarks"""
+
 from __future__ import division, absolute_import, unicode_literals
 
 import os
@@ -7,11 +8,11 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import SIGNAL
 
-
 from cola import cmds
 from cola import core
 from cola import git
 from cola import hotkeys
+from cola import icons
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
@@ -19,6 +20,7 @@ from cola.models import prefs
 from cola.settings import Settings
 from cola.widgets import defs
 from cola.widgets import standard
+
 
 BOOKMARKS = 0
 RECENT_REPOS = 1
@@ -34,11 +36,13 @@ class BookmarksWidget(QtGui.QWidget):
         self.tree = BookmarksTreeWidget(style, self.settings, parent=self)
 
         self.add_button = qtutils.create_action_button(
-                tooltip=N_('Add'), icon=qtutils.add_icon())
-        self.delete_button = qtutils.create_action_button(
-                tooltip=N_('Delete'), icon=qtutils.remove_icon())
-        self.open_button = qtutils.create_action_button(
-                tooltip=N_('Open'), icon=qtutils.open_icon())
+                tooltip=N_('Add'), icon=icons.add())
+
+        self.delete_button = qtutils.create_action_button(tooltip=N_('Delete'),
+                                                          icon=icons.remove())
+
+        self.open_button = qtutils.create_action_button(tooltip=N_('Open'),
+                                                        icon=icons.repo())
 
         self.button_group = utils.Group(self.delete_button, self.open_button)
         self.button_group.setEnabled(False)
@@ -126,7 +130,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.action_group.setEnabled(False)
 
     def refresh(self):
-        icon = qtutils.dir_icon()
+        icon = icons.folder()
         settings = self.settings
 
         # bookmarks
@@ -226,7 +230,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         else:
             return
         ok, status, out, err = cmds.do(cmd, self.settings, item.path,
-                                       icon=qtutils.discard_icon())
+                                       icon=icons.discard())
         if ok:
             self.refresh()
 

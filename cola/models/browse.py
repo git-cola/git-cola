@@ -11,10 +11,10 @@ from PyQt4.QtCore import SIGNAL
 from cola import gitcfg
 from cola import gitcmds
 from cola import core
+from cola import icons
 from cola import utils
 from cola import qtutils
 from cola import version
-from cola import resources
 from cola.git import STDOUT
 from cola.i18n import N_
 from cola.models import main
@@ -100,8 +100,8 @@ class GitRepoModel(QtGui.QStandardItemModel):
         model = main.model()
         model.add_observer(model.message_updated, self._model_updated)
 
-        self.file_icon = qtutils.file_icon()
-        self.dir_icon = qtutils.dir_icon()
+        self.file_icon = icons.file_text()
+        self.dir_icon = icons.directory()
 
     def mimeData(self, indexes):
         paths = qtutils.paths_from_indexes(self, indexes,
@@ -430,18 +430,20 @@ class GitRepoInfoTask(QRunnable):
         upstream_changed = utils.add_parents(model.upstream_changed)
 
         if self.path in unmerged:
-            return (resources.icon('modified.png'), N_('Unmerged'))
-        if self.path in modified and self.path in staged:
-            return (resources.icon('partial.png'), N_('Partially Staged'))
-        if self.path in modified:
-            return (resources.icon('modified.png'), N_('Modified'))
-        if self.path in staged:
-            return (resources.icon('staged.png'), N_('Staged'))
-        if self.path in upstream_changed:
-            return (resources.icon('upstream.png'), N_('Changed Upstream'))
-        if self.path in untracked:
-            return (None, '?')
-        return (None, '')
+            status = (icons.modified_name(), N_('Unmerged'))
+        elif self.path in modified and self.path in staged:
+            status = (icons.partial_name(), N_('Partially Staged'))
+        elif self.path in modified:
+            status = (icons.modified_name(), N_('Modified'))
+        elif self.path in staged:
+            status = (icons.staged_name(), N_('Staged'))
+        elif self.path in upstream_changed:
+            status = (icons.upstream_name(), N_('Changed Upstream'))
+        elif self.path in untracked:
+            status = (None, '?')
+        else:
+            status = (None, '')
+        return status
 
     def run(self):
         """Perform expensive lookups and post corresponding events."""

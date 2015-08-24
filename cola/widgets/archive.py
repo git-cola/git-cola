@@ -9,6 +9,7 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import cmds
 from cola import core
+from cola import icons
 from cola import qtutils
 from cola.git import git
 from cola.git import STDOUT
@@ -18,12 +19,13 @@ from cola.compat import ustr
 
 
 class ExpandableGroupBox(QtGui.QGroupBox):
+
     def __init__(self, parent=None):
         QtGui.QGroupBox.__init__(self, parent)
         self.setFlat(True)
         self.expanded = True
         self.click_pos = None
-        self.arrow_icon_size = 16
+        self.arrow_icon_size = defs.small_icon
 
     def set_expanded(self, expanded):
         if expanded == self.expanded:
@@ -38,9 +40,9 @@ class ExpandableGroupBox(QtGui.QGroupBox):
         if event.button() == Qt.LeftButton:
             option = QtGui.QStyleOptionGroupBox()
             self.initStyleOption(option)
-            icon_size = self.arrow_icon_size
+            icon_size = defs.small_icon
             button_area = QtCore.QRect(0, 0, icon_size, icon_size)
-            offset = self.arrow_icon_size + defs.spacing
+            offset = icon_size + defs.spacing
             adjusted = option.rect.adjusted(0, 0, -offset, 0)
             top_left = adjusted.topLeft()
             button_area.moveTopLeft(QtCore.QPoint(top_left))
@@ -105,10 +107,7 @@ class GitArchiveDialog(QtGui.QDialog):
         self.filetext = QtGui.QLineEdit()
         self.filetext.setText(self.filename)
 
-        self.browse = QtGui.QToolButton()
-        self.browse.setAutoRaise(True)
-        style = self.style()
-        self.browse.setIcon(style.standardIcon(QtGui.QStyle.SP_DirIcon))
+        self.browse = qtutils.create_toolbutton(icon=icons.file_zip())
 
         self.format_strings = (
                 git.archive('--list')[STDOUT].rstrip().splitlines())
@@ -116,13 +115,10 @@ class GitArchiveDialog(QtGui.QDialog):
         self.format_combo.setEditable(False)
         self.format_combo.addItems(self.format_strings)
 
-        self.cancel = QtGui.QPushButton()
-        self.cancel.setText(N_('Cancel'))
-
-        self.save = QtGui.QPushButton()
-        self.save.setText(N_('Save'))
-        self.save.setDefault(True)
-
+        self.close_button = qtutils.close_button()
+        self.save_button = qtutils.create_button(text=N_('Save'),
+                                                 icon=icons.save(),
+                                                 default=True)
         self.prefix_label = QtGui.QLabel()
         self.prefix_label.setText(N_('Prefix'))
         self.prefix_text = QtGui.QLineEdit()
@@ -142,13 +138,14 @@ class GitArchiveDialog(QtGui.QDialog):
         self.prefix_group.set_expanded(False)
 
         self.btnlayt = qtutils.hbox(defs.no_margin, defs.spacing,
-                                    qtutils.STRETCH, self.cancel, self.save)
+                                    qtutils.STRETCH, self.close_button,
+                                    self.save_button)
 
         self.mainlayt = qtutils.vbox(defs.margin, defs.no_spacing,
                                      self.filelayt, self.prefix_group,
                                      qtutils.STRETCH, self.btnlayt)
         self.setLayout(self.mainlayt)
-        self.resize(555, 0)
+        self.resize(defs.scale(520), defs.scale(10))
 
         # initial setup; done before connecting to avoid
         # signal/slot side-effects
@@ -177,8 +174,8 @@ class GitArchiveDialog(QtGui.QDialog):
         self.connect(self, SIGNAL('accepted()'), self.archive_saved)
 
         qtutils.connect_button(self.browse, self.choose_filename)
-        qtutils.connect_button(self.cancel, self.reject)
-        qtutils.connect_button(self.save, self.save_archive)
+        qtutils.connect_button(self.close_button, self.reject)
+        qtutils.connect_button(self.save_button, self.save_archive)
 
     def archive_saved(self):
         cmds.do(cmds.Archive, self.ref, self.fmt, self.prefix, self.filename)
@@ -194,9 +191,8 @@ class GitArchiveDialog(QtGui.QDialog):
             msg = N_('The file "%s" exists and will be overwritten.') % filename
             info_txt = N_('Overwrite "%s"?') % filename
             ok_txt = N_('Overwrite')
-            icon = qtutils.save_icon()
             if not qtutils.confirm(title, msg, info_txt, ok_txt,
-                                   default=False, icon=icon):
+                                   default=False, icon=icons.save()):
                 return
         self.accept()
 

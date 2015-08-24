@@ -23,6 +23,7 @@ from cola import app
 from cola import core
 from cola import difftool
 from cola import hotkeys
+from cola import icons
 from cola import observable
 from cola import qtutils
 from cola import utils
@@ -133,26 +134,24 @@ class Editor(QtGui.QWidget):
         self.setFocusProxy(self.tree)
 
         self.rebase_button = qtutils.create_button(
-                text=core.getenv('GIT_XBASE_ACTION', N_('Rebase')),
-                tooltip=N_('Accept changes and rebase\n'
-                           'Shortcut: Ctrl+Enter'),
-                icon=qtutils.apply_icon())
+            text=core.getenv('GIT_XBASE_ACTION', N_('Rebase')),
+            tooltip=N_('Accept changes and rebase\n'
+                       'Shortcut: Ctrl+Enter'),
+            icon=icons.ok())
 
         self.extdiff_button = qtutils.create_button(
-                text=N_('External Diff'),
-                tooltip=N_('Launch external diff\n'
-                           'Shortcut: Ctrl+D'))
+            text=N_('External Diff'),
+            tooltip=N_('Launch external diff\n'
+                       'Shortcut: Ctrl+D'))
         self.extdiff_button.setEnabled(False)
 
         self.help_button = qtutils.create_button(
-                text=N_('Help'),
-                tooltip=N_('Show help\nShortcut: ?'),
-                icon=qtutils.help_icon())
+            text=N_('Help'), tooltip=N_('Show help\nShortcut: ?'),
+            icon=icons.question())
 
         self.cancel_button = qtutils.create_button(
-                text=N_('Cancel'),
-                tooltip=N_('Cancel rebase\nShortcut: Ctrl+Q'),
-                icon=qtutils.close_icon())
+            text=N_('Cancel'), tooltip=N_('Cancel rebase\nShortcut: Ctrl+Q'),
+            icon=icons.close())
 
         splitter = qtutils.splitter(Qt.Vertical, self.tree, self.diff)
 
@@ -164,8 +163,8 @@ class Editor(QtGui.QWidget):
                               splitter, controls_layout)
         self.setLayout(layout)
 
-        self.action_rebase = qtutils.add_action(self,
-                N_('Rebase'), self.rebase, 'Ctrl+Return')
+        self.action_rebase = qtutils.add_action(
+            self, N_('Rebase'), self.rebase, 'Ctrl+Return')
 
         notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 

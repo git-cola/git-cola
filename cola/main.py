@@ -452,7 +452,8 @@ def cmd_stash(args):
 def cmd_tag(args):
     context = application_init(args)
     from cola.widgets.createtag import new_create_tag
-    view = new_create_tag(name=args.name, ref=args.ref, sign=args.sign)
+    view = new_create_tag(name=args.name, ref=args.ref, sign=args.sign,
+                          settings=args.settings)
     return application_start(context, view)
 
 

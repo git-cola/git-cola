@@ -28,6 +28,7 @@ def add_search_path(prefix, path):
     if hasattr(QtCore.QDir, 'addSearchPath'):
         QtCore.QDir.addSearchPath(prefix, path)
 
+
 def set_common_dock_options(window):
     if not hasattr(window, 'setDockOptions'):
         return

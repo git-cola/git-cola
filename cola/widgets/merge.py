@@ -7,6 +7,7 @@ from PyQt4.QtCore import SIGNAL
 from cola import cmds
 from cola import gitcfg
 from cola import gitcmds
+from cola import icons
 from cola import qtutils
 from cola.i18n import N_
 from cola.models import main
@@ -35,7 +36,7 @@ def abort_merge():
     info_txt = N_('Aborting the current merge?')
     ok_txt = N_('Abort Merge')
     if qtutils.confirm(title, txt, info_txt, ok_txt,
-                       default=False, icon=qtutils.theme_icon('edit-undo.svg')):
+                       default=False, icon=icons.undo()):
         gitcmds.abort_merge()
 
 
@@ -59,53 +60,42 @@ class MergeView(QtGui.QDialog):
         self.revision.setFocus()
         self.revision.setToolTip(N_('Revision to Merge'))
 
-        self.radio_local = QtGui.QRadioButton()
-        self.radio_local.setText(N_('Local Branch'))
-        self.radio_local.setChecked(True)
+        self.radio_local = qtutils.radio(text=N_('Local Branch'), checked=True)
+        self.radio_remote = qtutils.radio(text=N_('Tracking Branch'))
 
-        self.radio_remote = QtGui.QRadioButton()
-        self.radio_remote.setText(N_('Tracking Branch'))
-
-        self.radio_tag = QtGui.QRadioButton()
-        self.radio_tag.setText(N_('Tag'))
+        self.radio_tag = qtutils.radio(text=N_('Tag'))
 
         self.revisions = QtGui.QListWidget()
         self.revisions.setAlternatingRowColors(True)
 
-        self.button_viz = QtGui.QPushButton()
-        self.button_viz.setText(N_('Visualize'))
+        self.button_viz = qtutils.create_button(text=N_('Visualize'),
+                                                icon=icons.visualize())
 
         tooltip = N_('Squash the merged commit(s) into a single commit')
-        self.checkbox_squash = QtGui.QCheckBox()
-        self.checkbox_squash.setText(N_('Squash'))
-        self.checkbox_squash.setToolTip(tooltip)
+        self.checkbox_squash = qtutils.checkbox(text=N_('Squash'),
+                                                tooltip=tooltip)
 
         tooltip = N_('Always create a merge commit when enabled, '
                      'even when the merge is a fast-forward update')
-        self.checkbox_noff = QtGui.QCheckBox()
-        self.checkbox_noff.setText(N_('No fast forward'))
-        self.checkbox_noff.setToolTip(tooltip)
-        self.checkbox_noff.setChecked(False)
+        self.checkbox_noff = qtutils.checkbox(text=N_('No fast forward'),
+                                              tooltip=tooltip, checked=False)
         self.checkbox_noff_state = False
 
         tooltip = N_('Commit the merge if there are no conflicts.  '
                      'Uncheck to leave the merge uncommitted')
-        self.checkbox_commit = QtGui.QCheckBox()
-        self.checkbox_commit.setText(N_('Commit'))
-        self.checkbox_commit.setToolTip(tooltip)
-        self.checkbox_commit.setChecked(True)
+        self.checkbox_commit = qtutils.checkbox(text=N_('Commit'),
+                                                tooltip=tooltip, checked=True)
         self.checkbox_commit_state = True
 
-        self.checkbox_sign = QtGui.QCheckBox()
-        self.checkbox_sign.setText(N_('Create Signed Commit'))
-        self.checkbox_sign.setChecked(cfg.get('cola.signcommits', False))
-        self.checkbox_sign.setToolTip(N_('GPG-sign the merge commit'))
+        text = N_('Create Signed Commit')
+        checked = cfg.get('cola.signcommits', False)
+        tooltip = N_('GPG-sign the merge commit')
+        self.checkbox_sign = qtutils.checkbox(text=text, checked=checked,
+                                              tooltip=tooltip)
+        self.button_close = qtutils.close_button()
 
-        self.button_cancel = QtGui.QPushButton()
-        self.button_cancel.setText(N_('Cancel'))
-
-        self.button_merge = QtGui.QPushButton()
-        self.button_merge.setText(N_('Merge'))
+        icon = icons.merge()
+        self.button_merge = qtutils.create_button(text=N_('Merge'), icon=icon)
 
         # Layouts
         self.revlayt = qtutils.hbox(defs.no_margin, defs.spacing,
@@ -120,7 +110,7 @@ class MergeView(QtGui.QDialog):
                                        self.button_viz, qtutils.STRETCH,
                                        self.checkbox_squash, self.checkbox_noff,
                                        self.checkbox_commit, self.checkbox_sign,
-                                       self.button_cancel, self.button_merge)
+                                       self.button_close, self.button_merge)
 
         self.mainlayt = qtutils.vbox(defs.margin, defs.spacing,
                                      self.radiolayt, self.revisions,
@@ -134,7 +124,7 @@ class MergeView(QtGui.QDialog):
         self.connect(self.revisions, SIGNAL('itemSelectionChanged()'),
                      self.revision_selected)
 
-        qtutils.connect_button(self.button_cancel, self.reject)
+        qtutils.connect_button(self.button_close, self.reject)
         qtutils.connect_button(self.checkbox_squash, self.toggle_squash)
         qtutils.connect_button(self.radio_local, self.update_revisions)
         qtutils.connect_button(self.radio_remote, self.update_revisions)

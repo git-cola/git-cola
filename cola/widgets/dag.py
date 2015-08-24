@@ -14,6 +14,7 @@ from PyQt4.QtCore import QRectF
 from cola import cmds
 from cola import difftool
 from cola import hotkeys
+from cola import icons
 from cola import observable
 from cola import qtutils
 from cola.i18n import N_
@@ -352,16 +353,13 @@ class GitDAG(standard.MainWindow):
         self.maxresults = standard.SpinBox()
 
         self.zoom_out = qtutils.create_action_button(
-                tooltip=N_('Zoom Out'),
-                icon=qtutils.theme_icon('zoom-out.png'))
+                tooltip=N_('Zoom Out'), icon=icons.zoom_out())
 
         self.zoom_in = qtutils.create_action_button(
-                tooltip=N_('Zoom In'),
-                icon=qtutils.theme_icon('zoom-in.png'))
+                tooltip=N_('Zoom In'), icon=icons.zoom_in())
 
         self.zoom_to_fit = qtutils.create_action_button(
-                tooltip=N_('Zoom to Fit'),
-                icon=qtutils.theme_icon('zoom-fit-best.png'))
+                tooltip=N_('Zoom to Fit'), icon=icons.zoom_fit_best())
 
         self.notifier = notifier = observable.Observable()
         self.notifier.refs_updated = refs_updated = 'refs_updated'
@@ -396,7 +394,7 @@ class GitDAG(standard.MainWindow):
 
         self.graph_controls_layout = qtutils.hbox(
                 defs.no_margin, defs.button_spacing,
-                self.zoom_out, self.zoom_in, self.zoom_to_fit)
+                self.zoom_out, self.zoom_in, self.zoom_to_fit, qtutils.STRETCH)
 
         self.graph_controls_widget = QtGui.QWidget()
         self.graph_controls_widget.setLayout(self.graph_controls_layout)

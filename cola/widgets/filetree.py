@@ -1,8 +1,7 @@
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 
-from cola import decorators
-from cola import qtutils
+from cola import icons
 from cola.compat import ustr
 from cola.widgets import standard
 
@@ -11,7 +10,6 @@ class FileTree(standard.TreeWidget):
 
     def __init__(self, parent=None):
         standard.TreeWidget.__init__(self, parent=parent)
-        self.icon_from_filename = decorators.memoize(qtutils.icon_from_filename)
         self.setSelectionMode(self.ExtendedSelection)
         self.setHeaderHidden(True)
 
@@ -20,8 +18,9 @@ class FileTree(standard.TreeWidget):
         if not filenames:
             return
         items = []
+        from_filename = icons.from_filename
         for filename in filenames:
-            icon = self.icon_from_filename(filename)
+            icon = from_filename(filename)
             item = QtGui.QTreeWidgetItem()
             item.setIcon(0, icon)
             item.setText(0, filename)

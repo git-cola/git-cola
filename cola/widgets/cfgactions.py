@@ -9,10 +9,10 @@ from PyQt4.QtCore import SIGNAL
 from cola import core
 from cola import gitcfg
 from cola import gitcmds
+from cola import icons
 from cola import qtutils
 from cola.i18n import N_
 from cola.interaction import Interaction
-from cola.qtutils import create_button
 from cola.widgets import defs
 from cola.widgets import completion
 from cola.widgets import standard
@@ -56,6 +56,7 @@ def run_command(title, command):
 
 class GitCommandWidget(standard.Dialog):
     """Nice TextView that reads the output of a command syncronously"""
+
     # Keep us in scope otherwise PyQt kills the widget
     def __init__(self, title, parent=None):
         standard.Dialog.__init__(self, parent)
@@ -78,10 +79,10 @@ class GitCommandWidget(standard.Dialog):
         self.output_text.setAcceptRichText(False)
 
         # Create abort / close buttons
-        self.button_abort = QtGui.QPushButton(self)
-        self.button_abort.setText(N_('Abort'))
-        self.button_close = QtGui.QPushButton(self)
-        self.button_close.setText(N_('Close'))
+        # Start with abort disabled - will be enabled when the process is run.
+        self.button_abort = qtutils.create_button(text=N_('Abort'),
+                                                  enabled=False)
+        self.button_close = qtutils.close_button()
 
         # Put them in a horizontal layout at the bottom.
         self.button_box = QtGui.QDialogButtonBox(self)
@@ -95,9 +96,6 @@ class GitCommandWidget(standard.Dialog):
                 self.read_stderr)
         self.connect(self.proc, SIGNAL('finished(int)'), self.finishProc)
         self.connect(self.proc, SIGNAL('stateChanged(QProcess::ProcessState)'), self.stateChanged)
-
-        # Start with abort disabled - will be enabled when the process is run.
-        self.button_abort.setEnabled(False)
 
         qtutils.connect_button(self.button_abort, self.abortProc)
         qtutils.connect_button(self.button_close, self.close)
@@ -156,7 +154,7 @@ class GitCommandWidget(standard.Dialog):
             info_text = N_('Abort the action?')
             ok_text = N_('Abort Action')
             if qtutils.confirm(title, msg, info_text, ok_text,
-                               default=False, icon=qtutils.discard_icon()):
+                               default=False, icon=icons.close()):
                 self.abortProc()
                 event.accept()
             else:
@@ -240,15 +238,15 @@ class ActionDialog(standard.Dialog):
             self.revselect.hide()
 
         # Close/Run buttons
-        self.closebtn = create_button(text=N_('Close'))
-        self.runbtn = create_button(text=N_('Run'))
-        self.runbtn.setDefault(True)
+        self.closebtn = qtutils.close_button()
+        self.runbtn = qtutils.create_button(text=N_('Run'), default=True,
+                                            icon=icons.ok())
 
         self.argslayt = qtutils.hbox(defs.margin, defs.spacing,
                                      self.argslabel, self.argstxt)
 
-        self.btnlayt = qtutils.hbox(defs.margin, defs.spacing,
-                                    qtutils.STRETCH, self.closebtn, self.runbtn)
+        self.btnlayt = qtutils.hbox(defs.margin, defs.spacing, qtutils.STRETCH,
+                                    self.closebtn, self.runbtn)
 
         self.layt = qtutils.vbox(defs.margin, defs.spacing,
                                  self.prompt, self.argslayt,
@@ -290,8 +288,7 @@ class RevisionSelector(QtGui.QWidget):
         radio_btns = []
         self._radio_btns = {}
         for label, rev_list in self._revs:
-            radio = QtGui.QRadioButton()
-            radio.setText(label)
+            radio = qtutils.radio(text=label)
             radio.setObjectName(label)
             qtutils.connect_button(radio, self._set_revision_list)
             radio_btns.append(radio)

@@ -108,21 +108,18 @@ class Grep(Dialog):
         self.result_txt = GrepTextView(N_('grep result...'), self)
         self.result_txt.hint.enable(True)
 
-        self.edit_button = QtGui.QPushButton(N_('Edit'))
-        self.edit_button.setIcon(qtutils.open_file_icon())
+        self.edit_button = qtutils.edit_button()
         qtutils.button_action(self.edit_button, self.edit_action)
 
-        self.refresh_button = QtGui.QPushButton(N_('Refresh'))
-        self.refresh_button.setIcon(qtutils.reload_icon())
+        self.refresh_button = qtutils.refresh_button()
         qtutils.button_action(self.refresh_button, self.refresh_action)
 
-        self.shell_checkbox = QtGui.QCheckBox(N_('Shell arguments'))
-        self.shell_checkbox.setToolTip(
-                N_('Parse arguments using a shell.\n'
-                   'Queries with spaces will require "double quotes".'))
-        self.shell_checkbox.setChecked(False)
-
-        self.close_button = QtGui.QPushButton(N_('Close'))
+        text = N_('Shell arguments')
+        tooltip = N_('Parse arguments using a shell.\n'
+                     'Queries with spaces will require "double quotes".')
+        self.shell_checkbox = qtutils.checkbox(text=text, tooltip=tooltip,
+                                               checked=False)
+        self.close_button = qtutils.close_button()
 
         self.refresh_group = Group(self.refresh_action, self.refresh_button)
         self.refresh_group.setEnabled(False)

@@ -12,6 +12,7 @@ from cola import core
 from cola import gitcmds
 from cola import gitcfg
 from cola import hotkeys
+from cola import icons
 from cola import textwrap
 from cola import qtutils
 from cola.cmds import Interaction
@@ -89,13 +90,13 @@ class CommitMessageEditor(QtGui.QWidget):
         commit_button_tooltip = N_('Commit staged changes\n'
                                    'Shortcut: Ctrl+Enter')
         self.commit_button = qtutils.create_toolbutton(
-                text=N_('Commit@@verb'), tooltip=commit_button_tooltip,
-                icon=qtutils.save_icon())
+            text=N_('Commit@@verb'), tooltip=commit_button_tooltip,
+            icon=icons.save())
         self.commit_group = Group(self.commit_action, self.commit_button)
 
         self.actions_menu = QtGui.QMenu()
         self.actions_button = qtutils.create_toolbutton(
-                icon=qtutils.options_icon(), tooltip=N_('Actions...'))
+            icon=icons.configure(), tooltip=N_('Actions...'))
         self.actions_button.setMenu(self.actions_menu)
         self.actions_button.setPopupMode(QtGui.QToolButton.InstantPopup)
         qtutils.hide_button_menu_indicator(self.actions_button)
@@ -323,9 +324,7 @@ class CommitMessageEditor(QtGui.QWidget):
                 N_('Clear commit message?'),
                 N_('The commit message will be cleared.'),
                 N_('This cannot be undone.  Clear commit message?'),
-                N_('Clear commit message'),
-                default=True,
-                icon=qtutils.discard_icon()):
+                N_('Clear commit message'), default=True, icon=icons.discard()):
             return
         self.model.set_commitmsg('')
 
@@ -457,11 +456,9 @@ class CommitMessageEditor(QtGui.QWidget):
                 informative_text = N_('Would you like to stage and '
                                       'commit all modified files?')
                 if not qtutils.confirm(
-                        N_('Stage and commit?'),
-                        error_msg, informative_text,
+                        N_('Stage and commit?'), error_msg, informative_text,
                         N_('Stage and Commit'),
-                        default=True,
-                        icon=qtutils.save_icon()):
+                        default=True, icon=icons.save()):
                     return
             else:
                 Interaction.information(N_('Nothing to commit'), error_msg)
@@ -477,8 +474,7 @@ class CommitMessageEditor(QtGui.QWidget):
                            'This operation will rewrite published history.\n'
                            'You probably don\'t want to do this.'),
                         N_('Amend the published commit?'),
-                        N_('Amend Commit'),
-                        default=False, icon=qtutils.save_icon())):
+                        N_('Amend Commit'), default=False, icon=icons.save())):
             return
         no_verify = self.bypass_commit_hooks_action.isChecked()
         sign = self.sign_action.isChecked()

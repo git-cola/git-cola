@@ -10,6 +10,7 @@ from cola import core
 from cola import difftool
 from cola import gitcmds
 from cola import hotkeys
+from cola import icons
 from cola import utils
 from cola import qtutils
 from cola.cmds import BaseCommand
@@ -570,10 +571,14 @@ class BrowseDialog(QtGui.QDialog):
 
         # widgets
         self.tree = GitTreeWidget(parent=self)
-        self.close = QtGui.QPushButton(N_('Close'))
-        self.save = QtGui.QPushButton(select_file and N_('Select') or N_('Save'))
-        self.save.setDefault(True)
-        self.save.setEnabled(False)
+        self.close = qtutils.close_button()
+
+        if select_file:
+            text = N_('Select')
+        else:
+            text = N_('Save')
+        self.save = qtutils.create_button(text=text, enabled=False,
+                                          default=True)
 
         # layouts
         self.btnlayt = qtutils.hbox(defs.margin, defs.spacing,
@@ -798,6 +803,7 @@ class GitTreeItem(QtGui.QStandardItem):
         self.setDragEnabled(False)
         self.setText(utils.basename(path))
         if is_dir:
-            self.setIcon(qtutils.dir_icon())
+            icon = icons.directory()
         else:
-            self.setIcon(qtutils.file_icon())
+            icon = icons.file_text()
+        self.setIcon(icon)

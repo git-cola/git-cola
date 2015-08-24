@@ -7,6 +7,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 from cola import cmds
+from cola import icons
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
@@ -48,25 +49,24 @@ class StashView(Dialog):
         self.stash_list = QtGui.QListWidget(self)
         self.stash_text = DiffTextEdit(self)
 
-        self.button_apply =\
-            self.toolbutton(N_('Apply'),
-                            N_('Apply the selected stash'),
-                            qtutils.apply_icon())
-        self.button_save =\
-            self.toolbutton(N_('Save'),
-                            N_('Save modified state to new stash'),
-                            qtutils.save_icon())
-        self.button_drop = \
-            self.toolbutton(N_('Drop'),
-                            N_('Drop the selected stash'),
-                            qtutils.discard_icon())
-        self.button_close = \
-            self.pushbutton(N_('Close'),
-                            N_('Close'), qtutils.close_icon())
+        self.button_apply = qtutils.create_toolbutton(
+            text=N_('Apply'),
+            tooltip=N_('Apply the selected stash'),
+            icon=icons.ok())
 
-        self.keep_index = QtGui.QCheckBox(self)
-        self.keep_index.setText(N_('Keep Index'))
-        self.keep_index.setChecked(True)
+        self.button_save = qtutils.create_toolbutton(
+            text=N_('Save'),
+            tooltip=N_('Save modified state to new stash'),
+            icon=icons.save())
+
+        self.button_drop = qtutils.create_toolbutton(
+            text=N_('Drop'),
+            tooltip=N_('Drop the selected stash'),
+            icon=icons.discard())
+
+        self.button_close = qtutils.close_button()
+
+        self.keep_index = qtutils.checkbox(text=N_('Keep Index'), checked=True)
 
         # Arrange layouts
         self.splitter = qtutils.splitter(Qt.Horizontal,
@@ -102,16 +102,6 @@ class StashView(Dialog):
     def close(self):
         self.accept()
         cmds.do(cmds.Rescan)
-
-    def toolbutton(self, text, tooltip, icon):
-        return qtutils.create_toolbutton(text=text, tooltip=tooltip, icon=icon)
-
-    def pushbutton(self, text, tooltip, icon):
-        btn = QtGui.QPushButton(self)
-        btn.setText(text)
-        btn.setToolTip(tooltip)
-        btn.setIcon(icon)
-        return btn
 
     def selected_stash(self):
         """Returns the stash name of the currently selected stash
@@ -197,8 +187,7 @@ class StashView(Dialog):
                                N_('Recovering a dropped stash is not possible.'),
                                N_('Drop the "%s" stash?') % name,
                                N_('Drop Stash'),
-                               default=True,
-                               icon=qtutils.discard_icon()):
+                               default=True, icon=icons.discard()):
             return
         cmds.do(DropStash, selection)
         self.update_from_model()

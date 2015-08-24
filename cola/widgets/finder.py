@@ -10,6 +10,7 @@ from cola import cmds
 from cola import core
 from cola import gitcmds
 from cola import hotkeys
+from cola import icons
 from cola import utils
 from cola import qtutils
 from cola.i18n import N_
@@ -95,27 +96,25 @@ class Finder(standard.Dialog):
 
         self.tree = filetree.FileTree(parent=self)
 
-        self.edit_button = QtGui.QPushButton(N_('Edit'))
-        self.edit_button.setIcon(qtutils.open_file_icon())
+        self.edit_button = qtutils.edit_button()
         self.edit_button.setShortcut(hotkeys.EDIT)
 
-        self.open_default_button = QtGui.QPushButton(cmds.OpenDefaultApp.name())
-        self.open_default_button.setIcon(qtutils.open_file_icon())
+        text = cmds.OpenDefaultApp.name()
+        icon = icons.default_app()
+        self.open_default_button = qtutils.create_button(text=text, icon=icon)
         self.open_default_button.setShortcut(hotkeys.PRIMARY_ACTION)
 
         self.button_group = Group(self.edit_button, self.open_default_button)
         self.button_group.setEnabled(False)
 
-        self.refresh_button = QtGui.QPushButton(N_('Refresh'))
-        self.refresh_button.setIcon(qtutils.reload_icon())
+        self.refresh_button = qtutils.refresh_button()
         self.refresh_button.setShortcut(hotkeys.REFRESH)
 
         self.help_button = qtutils.create_button(
-                text=N_('Help'),
-                tooltip=N_('Show help\nShortcut: ?'),
-                icon=qtutils.help_icon())
+            text=N_('Help'), tooltip=N_('Show help\nShortcut: ?'),
+            icon=icons.question())
 
-        self.close_button = QtGui.QPushButton(N_('Close'))
+        self.close_button = qtutils.close_button()
 
         self.input_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
                                          self.input_label, self.input_txt)
