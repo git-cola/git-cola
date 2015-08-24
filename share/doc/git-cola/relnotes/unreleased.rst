@@ -11,6 +11,10 @@ Unreleased Topics
 Usability, bells and whistles
 -----------------------------
 
+* The user interface is now HiDPI-capable.  git-cola now uses SVG
+  icons, and its interface can be scaled by setting the `GIT_COLA_SCALE`
+  environment variable.
+
 * `git dag` now supports the standard editor, difftool, and history hotkeys.
   It is now possible to invoke these actions from file widget's context
   menu and through the standard hotkeys.
