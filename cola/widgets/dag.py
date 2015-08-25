@@ -394,7 +394,8 @@ class GitDAG(standard.MainWindow):
 
         self.graph_controls_layout = qtutils.hbox(
                 defs.no_margin, defs.button_spacing,
-                self.zoom_out, self.zoom_in, self.zoom_to_fit, qtutils.STRETCH)
+                self.zoom_out, self.zoom_in, self.zoom_to_fit,
+                defs.spacing)
 
         self.graph_controls_widget = QtGui.QWidget()
         self.graph_controls_widget.setLayout(self.graph_controls_layout)
