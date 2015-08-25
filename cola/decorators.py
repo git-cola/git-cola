@@ -19,11 +19,13 @@ def decorator(caller, func=None):
             def _caller(*args, **opts):
                 return caller(f, *args, **opts)
             return _caller
+        _decorator.func = func
         return _decorator
     else:
         # return a decorated function
         def _decorated(*args, **opts):
             return caller(func, *args, **opts)
+        _decorated.func = func
         return _decorated
 
 
