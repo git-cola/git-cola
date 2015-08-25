@@ -42,6 +42,7 @@ class ColaUtilsTestCase(unittest.TestCase):
         self.assertTrue('foo/bar/baz' in path_set)
         self.assertTrue('foo/bar' in path_set)
         self.assertTrue('foo' in path_set)
+        self.assertFalse('foo///bar///baz' in path_set)
 
         # Ensure that the original set is unchanged
         expect = set(['foo///bar///baz'])

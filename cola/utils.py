@@ -18,21 +18,17 @@ random.seed(hash(time.time()))
 
 def add_parents(paths):
     """Iterate over each item in the set and add its parent directories."""
-    if isinstance(paths, set):
-        path_entry_set = paths
-    else:
-        path_entry_set = set(paths)
-    for path in list(path_entry_set):
+    all_paths = set()
+    for path in paths:
         while '//' in path:
             path = path.replace('//', '/')
-        if path not in path_entry_set:
-            path_entry_set.add(path)
+        all_paths.add(path)
         if '/' in path:
             parent_dir = dirname(path)
-            while parent_dir and parent_dir not in path_entry_set:
-                path_entry_set.add(parent_dir)
+            while parent_dir:
+                all_paths.add(parent_dir)
                 parent_dir = dirname(parent_dir)
-    return path_entry_set
+    return all_paths
 
 
 def format_exception(e):
