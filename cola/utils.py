@@ -12,6 +12,7 @@ import time
 import traceback
 
 from cola import core
+from cola.decorators import memoize
 
 random.seed(hash(time.time()))
 
@@ -177,16 +178,16 @@ else:
         return [core.decode(arg) for arg in _shell_split(s)]
 
 
-def tmp_file_pattern():
-    return os.path.join(tempfile.gettempdir(), 'git-cola-%s-*' % os.getpid())
-
-
 def tmp_filename(label):
-    prefix = 'git-cola-%s-' % (os.getpid())
-    suffix = '-%s' % label.replace('/', '-').replace('\\', '-')
-    fd, path = tempfile.mkstemp(suffix, prefix)
-    os.close(fd)
-    return path
+    label = label.replace('/', '-').replace('\\', '-')
+    fd = tempfile.NamedTemporaryFile(dir=tmpdir(), prefix=label+'-')
+    fd.close()
+    return fd.name
+
+
+@memoize
+def tmpdir():
+    return tempfile.mkdtemp(prefix='git-cola-')
 
 
 def is_linux():

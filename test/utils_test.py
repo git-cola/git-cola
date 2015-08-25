@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 from __future__ import unicode_literals
 
+import shutil
+import os
 import unittest
 
 from cola import utils
@@ -47,6 +49,32 @@ class ColaUtilsTestCase(unittest.TestCase):
         # Ensure that the original set is unchanged
         expect = set(['foo///bar///baz'])
         self.assertEqual(expect, paths)
+
+
+    def test_tmpdir_gives_consistent_results(self):
+        utils.tmpdir.func.cache.clear()
+
+        first = utils.tmpdir()
+        second = utils.tmpdir()
+        third = utils.tmpdir()
+
+        self.assertEqual(first, second)
+        self.assertEqual(first, third)
+
+        shutil.rmtree(first)
+
+    def test_tmp_filename_gives_good_file(self):
+        utils.tmpdir.func.cache.clear()
+
+        tmpdir = utils.tmpdir()
+        first = utils.tmp_filename('test')
+        second = utils.tmp_filename('test')
+
+        self.assertNotEqual(first, second)
+        self.assertTrue(first.startswith(os.path.join(tmpdir, 'test')))
+        self.assertTrue(second.startswith(os.path.join(tmpdir, 'test')))
+
+        shutil.rmtree(tmpdir)
 
 
 if __name__ == '__main__':

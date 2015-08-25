@@ -4,8 +4,8 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import argparse
-import glob
 import os
+import shutil
 import signal
 import sys
 
@@ -323,9 +323,8 @@ def application_start(context, view):
     inotify.stop()
     QtCore.QThreadPool.globalInstance().waitForDone()
 
-    pattern = utils.tmp_file_pattern()
-    for filename in glob.glob(pattern):
-        os.unlink(filename)
+    tmpdir = utils.tmpdir()
+    shutil.rmtree(tmpdir, ignore_errors=True)
 
     return result
 
