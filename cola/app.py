@@ -87,7 +87,7 @@ def setup_environment():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     # Session management wants an absolute path when restarting
-    sys.argv[0] = core.abspath(sys.argv[0])
+    sys.argv[0] = sys_argv0 = core.abspath(sys.argv[0])
 
     # Spoof an X11 display for SSH
     os.environ.setdefault('DISPLAY', ':0')
@@ -100,8 +100,8 @@ def setup_environment():
 
     # Setup the path so that git finds us when we run 'git cola'
     path_entries = core.getenv('PATH', '').split(os.pathsep)
-    bindir = os.path.dirname(core.abspath(__file__))
-    path_entries.insert(0, bindir)
+    bindir = os.path.dirname(sys_argv0)
+    path_entries.append(bindir)
     path = os.pathsep.join(path_entries)
     compat.setenv('PATH', path)
 

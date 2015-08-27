@@ -46,6 +46,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/pull/486
 
+* Launching difftool with `.PY` in `$PATHEXT` on Windows was fixed.
+
+  https://github.com/git-cola/git-cola/issues/492
+
 * Miscellaneous fixes
 
   https://github.com/git-cola/git-cola/pull/485
