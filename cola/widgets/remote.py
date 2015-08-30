@@ -445,8 +445,9 @@ class RemoteActionDialog(standard.Dialog):
                            progress=self.progress,
                            finish=self.action_completed)
 
-    def action_completed(self, task, status, out, err):
+    def action_completed(self, task):
         # Grab the results of the action and finish up
+        status, out, err = task.result
         self.buttons.setEnabled(True)
 
         already_up_to_date = N_('Already up-to-date.')
