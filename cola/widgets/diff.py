@@ -447,11 +447,12 @@ class DiffEditor(DiffTextEdit):
                 self.has_selection(), reverse, apply_to_worktree)
 
 
-
 class DiffWidget(QtGui.QWidget):
 
     def __init__(self, notifier, parent):
         QtGui.QWidget.__init__(self, parent)
+
+        self.runtask = qtutils.RunTask(parent=self)
 
         author_font = QtGui.QFont(self.font())
         author_font.setPointSize(int(author_font.pointSize() * 1.1))
@@ -485,8 +486,6 @@ class DiffWidget(QtGui.QWidget):
         self.sha1_label.elide()
 
         self.diff = DiffTextEdit(self, whitespace=False)
-        self.tasks = set()
-        self.reflector = QtCore.QObject(self)
 
         self.info_layout = qtutils.vbox(defs.no_margin, defs.no_spacing,
                                         self.author_label, self.summary_label,
@@ -502,22 +501,12 @@ class DiffWidget(QtGui.QWidget):
 
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
         notifier.add_observer(FILES_SELECTED, self.files_selected)
-        self.connect(self.reflector, SIGNAL('diff(PyQt_PyObject)'),
-                     self.diff.setText, Qt.QueuedConnection)
-        self.connect(self.reflector, SIGNAL('task_done(PyQt_PyObject)'),
-                     self.task_done, Qt.QueuedConnection)
-
-    def task_done(self, task):
-        try:
-            self.tasks.remove(task)
-        except:
-            pass
 
     def set_diff_sha1(self, sha1, filename=None):
         self.diff.setText('+++ ' + N_('Loading...'))
-        task = DiffInfoTask(sha1, self.reflector, filename=filename)
-        self.tasks.add(task)
-        QtCore.QThreadPool.globalInstance().start(task)
+        task = DiffInfoTask(sha1, filename, self)
+        task.connect(self.diff.setText)
+        self.runtask.start(task)
 
     def commits_selected(self, commits):
         if len(commits) != 1:
@@ -603,14 +592,12 @@ class TextLabel(QtGui.QLabel):
         QtGui.QLabel.resizeEvent(self, event)
 
 
-class DiffInfoTask(QtCore.QRunnable):
+class DiffInfoTask(qtutils.Task):
 
-    def __init__(self, sha1, reflector, filename=None):
-        QtCore.QRunnable.__init__(self)
+    def __init__(self, sha1, filename, parent):
+        qtutils.Task.__init__(self, parent)
         self.sha1 = sha1
-        self.reflector = reflector
         self.filename = filename
 
-    def run(self):
-        diff = gitcmds.diff_info(self.sha1, filename=self.filename)
-        self.reflector.emit(SIGNAL('diff(PyQt_PyObject)'), diff)
+    def task(self):
+        return gitcmds.diff_info(self.sha1, filename=self.filename)

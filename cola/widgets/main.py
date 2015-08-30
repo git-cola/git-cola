@@ -21,7 +21,6 @@ from cola import version
 from cola.compat import unichr
 from cola.git import git
 from cola.git import STDOUT
-from cola.guicmds import TaskRunner
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import prefs
@@ -76,7 +75,6 @@ class MainView(standard.MainWindow):
         self.widget_version = 2
 
         # Runs asynchronous tasks
-        self.task_runner = TaskRunner(self)
         self.runtask = qtutils.RunTask()
         self.progress = standard.ProgressDialog('', '', self)
 
@@ -762,7 +760,7 @@ class MainView(standard.MainWindow):
         cmds.do(cmds.RebaseAbort)
 
     def clone_repo(self):
-        guicmds.clone_repo(self.task_runner, self.progress,
+        guicmds.clone_repo(self, self.runtask, self.progress,
                            guicmds.report_clone_repo_errors, True)
 
 

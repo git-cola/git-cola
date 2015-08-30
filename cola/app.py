@@ -305,7 +305,7 @@ def application_start(context, view):
     view.raise_()
 
     # Scan for the first time
-    runtask = qtutils.RunTask(view)
+    runtask = qtutils.RunTask(parent=view)
     init_update_task(view, runtask, context.model)
 
     # Start the inotify thread

@@ -11,8 +11,6 @@ from cola import icons
 from cola import qtutils
 from cola import utils
 from cola.compat import ustr
-from cola.guicmds import Task
-from cola.guicmds import TaskRunner
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
@@ -75,18 +73,17 @@ def combine(result, existing):
             return result
 
 
-class ActionTask(Task):
+class ActionTask(qtutils.Task):
 
-    def __init__(self, sender, model_action, remote, kwargs):
-        Task.__init__(self, sender)
+    def __init__(self, parent, model_action, remote, kwargs):
+        qtutils.Task.__init__(self, parent)
         self.model_action = model_action
         self.remote = remote
         self.kwargs = kwargs
 
-    def run(self):
+    def task(self):
         """Runs the model action and captures the result"""
-        status, out, err = self.model_action(self.remote, **self.kwargs)
-        self.finish(status, out, err)
+        return self.model_action(self.remote, **self.kwargs)
 
 
 class RemoteActionDialog(standard.Dialog):
@@ -105,7 +102,7 @@ class RemoteActionDialog(standard.Dialog):
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
-        self.task_runner = TaskRunner(self)
+        self.runtask = qtutils.RunTask(parent=self)
         self.progress = ProgressDialog(title, N_('Updating'), self)
 
         self.local_label = QtGui.QLabel()
@@ -443,10 +440,10 @@ class RemoteActionDialog(standard.Dialog):
         self.buttons.setEnabled(False)
 
         # Use a thread to update in the background
-        task = ActionTask(self.task_runner, model_action, remote, kwargs)
-        self.task_runner.start(task,
-                               progress=self.progress,
-                               finish=self.action_completed)
+        task = ActionTask(self, model_action, remote, kwargs)
+        self.runtask.start(task,
+                           progress=self.progress,
+                           finish=self.action_completed)
 
     def action_completed(self, task, status, out, err):
         # Grab the results of the action and finish up

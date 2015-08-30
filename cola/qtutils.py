@@ -779,23 +779,31 @@ class Task(QtCore.QRunnable):
     once it's finished, so disable Qt's auto-deletion as a workaround.
 
     """
+
+    FINISHED = SIGNAL('TASK_FINISHED')
+    RESULT = SIGNAL('TASK_RESULT')
+
     def __init__(self, parent, *args, **kwargs):
         QtCore.QRunnable.__init__(self)
 
         self.channel = QtCore.QObject(parent)
         self.result = None
-
         self.setAutoDelete(False)
 
     def run(self):
         self.result = self.task()
+        self.channel.emit(self.RESULT, self.result)
         self.done()
 
     def task(self):
         pass
 
     def done(self):
-        self.channel.emit(SIGNAL('task_done(PyQt_PyObject)'), self)
+        self.channel.emit(self.FINISHED, self)
+
+    def connect(self, handler):
+        self.channel.connect(self.channel, self.RESULT,
+                             handler, Qt.QueuedConnection)
 
 
 class SimpleTask(Task):
@@ -813,26 +821,44 @@ class SimpleTask(Task):
 
 
 class RunTask(QtCore.QObject):
-    """Jump through hoops to ensure that Python holds onto a reference
+    """Runs QRunnable instances and transfers control when they finish"""
 
-    Prevent Python from garbage collecting QRunnable tasks until
-    the task has completed.
-
-    """
     def __init__(self, parent=None):
         QtCore.QObject.__init__(self, parent)
-        self.tasks = set()
+        self.tasks = []
+        self.task_details = {}
+        self.threadpool = QtCore.QThreadPool.globalInstance()
 
-    def start(self, task):
-        self.tasks.add(task)
-        self.connect(task.channel, SIGNAL('task_done(PyQt_PyObject)'),
-                     self.task_done, Qt.QueuedConnection)
-        QtCore.QThreadPool.globalInstance().start(task)
+    def start(self, task, progress=None, finish=None):
+        """Start the task and register a callback"""
+        if progress is not None:
+            progress.show()
+        # prevents garbage collection bugs in certain PyQt4 versions
+        self.tasks.append(task)
+        task_id = id(task)
+        self.task_details[task_id] = (progress, finish)
 
-    def task_done(self, task):
-        self.disconnect(task.channel, SIGNAL('task_done(PyQt_PyObject)'),
-                        self.task_done)
-        self.tasks.remove(task)
+        self.connect(task.channel, Task.FINISHED, self.finish,
+                     Qt.QueuedConnection)
+        self.threadpool.start(task)
+
+    def finish(self, task, *args, **kwargs):
+        task_id = id(task)
+        try:
+            self.tasks.remove(task)
+        except:
+            pass
+        try:
+            progress, finish = self.task_details[task_id]
+            del self.task_details[task_id]
+        except KeyError:
+            finish = progress = None
+
+        if progress is not None:
+            progress.hide()
+
+        if finish is not None:
+            finish(task, *args, **kwargs)
 
 
 # Syntax highlighting

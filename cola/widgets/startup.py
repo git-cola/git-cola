@@ -15,7 +15,6 @@ from cola import guicmds
 from cola import icons
 from cola import qtutils
 from cola.compat import ustr
-from cola.guicmds import TaskRunner
 from cola.i18n import N_
 from cola.settings import Settings
 from cola.widgets import defs
@@ -30,7 +29,7 @@ class StartupDialog(QtGui.QDialog):
         self.setWindowTitle(N_('git-cola'))
 
         self.repodir = None
-        self.task_runner = TaskRunner(self)
+        self.runtask = qtutils.RunTask(parent=self)
         self.progress = ProgressDialog('', '', self)
 
         self.new_button = qtutils.create_button(text=N_('New...'),
@@ -120,7 +119,7 @@ class StartupDialog(QtGui.QDialog):
             self.accept()
 
     def clone_repo(self):
-        guicmds.clone_repo(self.task_runner, self.progress,
+        guicmds.clone_repo(self, self.runtask, self.progress,
                            self.clone_repo_done, False)
 
     def clone_repo_done(self, task):

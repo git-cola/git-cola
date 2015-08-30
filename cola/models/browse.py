@@ -14,7 +14,6 @@ from cola import core
 from cola import icons
 from cola import utils
 from cola import qtutils
-from cola import version
 from cola.git import STDOUT
 from cola.i18n import N_
 from cola.models import main
@@ -55,12 +54,12 @@ class GitRepoEntryStore(object):
     entries = {}
 
     @classmethod
-    def entry(cls, path):
+    def entry(cls, path, parent, runtask):
         """Return the shared GitRepoEntry for a path."""
         try:
             e = cls.entries[path]
         except KeyError:
-            e = cls.entries[path] = GitRepoEntry(path)
+            e = cls.entries[path] = GitRepoEntry(path, parent, runtask)
         return e
 
     @classmethod
@@ -88,6 +87,8 @@ class GitRepoModel(QtGui.QStandardItemModel):
         QtGui.QStandardItemModel.__init__(self, parent)
 
         self.entries = {}
+        self._runtask = qtutils.RunTask(parent=parent)
+        self._parent = parent
         self._interesting_paths = set()
         self._interesting_files = set()
         self._known_paths = set()
@@ -131,9 +132,9 @@ class GitRepoModel(QtGui.QStandardItemModel):
         # GitRepoNameItem is the only one that returns a custom type(),
         # so we use to infer selections.
         if col == Columns.NAME:
-            item = GitRepoNameItem(path)
+            item = GitRepoNameItem(path, self._parent, self._runtask)
         else:
-            item = GitRepoItem(col, path)
+            item = GitRepoItem(col, path, self._parent, self._runtask)
         return item
 
     def _add_file(self, parent, path, insert=False):
@@ -278,44 +279,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def entry(self, path):
         """Return the GitRepoEntry for a path."""
-        return GitRepoEntryStore.entry(path)
-
-
-class TaskRunner(object):
-    """Manages QRunnable tasks to avoid python's garbage collector
-
-    When PyQt stops referencing a QRunnable Python cleans it up which leads to
-    segfaults, e.g. the dreaded "C++ object has gone away".
-
-    This class keeps track of tasks and cleans up references to them as they
-    complete.
-
-    """
-    singleton = None
-
-    @classmethod
-    def current(cls):
-        if cls.singleton is None:
-            cls.singleton = TaskRunner()
-        return cls.singleton
-
-    def __init__(self):
-        self.tasks = set()
-        self.threadpool = QtCore.QThreadPool.globalInstance()
-        self.notifier = QtCore.QObject()
-        self.notifier.connect(self.notifier, SIGNAL('task_done(PyQt_PyObject)'),
-                              self.task_done, Qt.QueuedConnection)
-
-    def run(self, task):
-        self.tasks.add(task)
-        self.threadpool.start(task)
-
-    def task_done(self, task):
-        if task in self.tasks:
-            self.tasks.remove(task)
-
-    def cleanup_task(self, task):
-        self.notifier.emit(SIGNAL('task_done(PyQt_PyObject)'), task)
+        return GitRepoEntryStore.entry(path, self._parent, self._runtask)
 
 
 class GitRepoEntry(QtCore.QObject):
@@ -325,9 +289,10 @@ class GitRepoEntry(QtCore.QObject):
     Emits signal names matching those defined in Columns.
 
     """
-    def __init__(self, path):
-        QtCore.QObject.__init__(self)
+    def __init__(self, path, parent, runtask):
+        QtCore.QObject.__init__(self, parent)
         self.path = path
+        self.runtask = runtask
 
     def update_name(self):
         """Emits a signal corresponding to the entry's name."""
@@ -339,8 +304,8 @@ class GitRepoEntry(QtCore.QObject):
     def update(self):
         """Starts a GitRepoInfoTask to calculate info for entries."""
         # GitRepoInfoTask handles expensive lookups
-        task = GitRepoInfoTask(self.path)
-        TaskRunner.current().run(task)
+        task = GitRepoInfoTask(self.path, self, self.runtask)
+        self.runtask.start(task)
 
     def event(self, e):
         """Receive GitRepoInfoEvents and emit corresponding Qt signals."""
@@ -351,21 +316,14 @@ class GitRepoEntry(QtCore.QObject):
         return QtCore.QObject.event(self, e)
 
 
-# Support older versions of PyQt
-if version.check('pyqt_qrunnable', QtCore.PYQT_VERSION_STR):
-    QRunnable = QtCore.QRunnable
-else:
-    class QRunnable(object):
-        pass
-
-
-class GitRepoInfoTask(QRunnable):
+class GitRepoInfoTask(qtutils.Task):
     """Handles expensive git lookups for a path."""
 
-    def __init__(self, path):
-        QRunnable.__init__(self)
-        self.setAutoDelete(False)
+    def __init__(self, path, parent, runtask):
+        qtutils.Task.__init__(self, parent)
         self.path = path
+        self._parent = parent
+        self._runtask = runtask
         self._cfg = gitcfg.current()
         self._data = {}
 
@@ -445,10 +403,10 @@ class GitRepoInfoTask(QRunnable):
             status = (None, '')
         return status
 
-    def run(self):
+    def task(self):
         """Perform expensive lookups and post corresponding events."""
         app = QtGui.QApplication.instance()
-        entry = GitRepoEntryStore.entry(self.path)
+        entry = GitRepoEntryStore.entry(self.path, self._parent, self._runtask)
         app.postEvent(entry,
                 GitRepoInfoEvent(Columns.MESSAGE, self.data('message')))
         app.postEvent(entry,
@@ -457,8 +415,6 @@ class GitRepoInfoTask(QRunnable):
                 GitRepoInfoEvent(Columns.AUTHOR, self.data('author')))
         app.postEvent(entry,
                 GitRepoInfoEvent(Columns.STATUS, self.status()))
-
-        TaskRunner.current().cleanup_task(self)
 
 
 class GitRepoInfoEvent(QtCore.QEvent):
@@ -481,13 +437,14 @@ class GitRepoItem(QtGui.QStandardItem):
     One is created for each column -- Name, Status, Age, etc.
 
     """
-    def __init__(self, column, path):
+    def __init__(self, column, path, parent, runtask):
         QtGui.QStandardItem.__init__(self)
         self.path = path
+        self.runtask = runtask
         self.cached = False
         self.setDragEnabled(False)
         self.setEditable(False)
-        entry = GitRepoEntryStore.entry(path)
+        entry = GitRepoEntryStore.entry(path, parent, runtask)
         if column == Columns.STATUS:
             QtCore.QObject.connect(entry, SIGNAL(column), self.set_status,
                                    Qt.QueuedConnection)
@@ -508,8 +465,8 @@ class GitRepoNameItem(GitRepoItem):
     """Subclass GitRepoItem to provide a custom type()."""
     TYPE = QtGui.QStandardItem.UserType + 1
 
-    def __init__(self, path):
-        GitRepoItem.__init__(self, Columns.NAME, path)
+    def __init__(self, path, parent, runtask):
+        GitRepoItem.__init__(self, Columns.NAME, path, parent, runtask)
         self.setDragEnabled(True)
 
     def type(self):

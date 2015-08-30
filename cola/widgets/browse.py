@@ -437,6 +437,7 @@ class BrowserController(QtCore.QObject):
         QtCore.QObject.__init__(self, view)
         self.model = main.model()
         self.view = view
+        self.runtask = qtutils.RunTask(parent=self)
         self.connect(view, SIGNAL('history(PyQt_PyObject)'),
                      self.view_history)
         self.connect(view, SIGNAL('expanded(QModelIndex)'),
@@ -455,11 +456,11 @@ class BrowserController(QtCore.QObject):
         if item.cached:
             return
         path = item.path
-        GitRepoEntryStore.entry(path).update()
+        GitRepoEntryStore.entry(path, self.view, self.runtask).update()
         entry = GitRepoEntryStore.entry
         for row in range(item.rowCount()):
             path = item.child(row, 0).path
-            entry(path).update()
+            entry(path, self.view, self.runtask).update()
         item.cached = True
 
     def difftool_predecessor(self, paths):
