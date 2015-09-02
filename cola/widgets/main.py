@@ -11,6 +11,7 @@ from PyQt4.QtCore import SIGNAL
 from cola import cmds
 from cola import core
 from cola import guicmds
+from cola import git
 from cola import gitcfg
 from cola import hotkeys
 from cola import icons
@@ -19,17 +20,9 @@ from cola import resources
 from cola import utils
 from cola import version
 from cola.compat import unichr
-from cola.git import git
-from cola.git import STDOUT
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import prefs
-from cola.qtutils import add_action
-from cola.qtutils import add_action_bool
-from cola.qtutils import connect_action
-from cola.qtutils import connect_action_bool
-from cola.qtutils import create_dock
-from cola.qtutils import create_menu
 from cola.settings import Settings
 from cola.widgets import about
 from cola.widgets import action
@@ -78,6 +71,7 @@ class MainView(standard.MainWindow):
         self.runtask = qtutils.RunTask()
         self.progress = standard.ProgressDialog('', '', self)
 
+        create_dock = qtutils.create_dock
         cfg = gitcfg.current()
         self.browser_dockable = (cfg.get('cola.browserdockable') or
                                  cfg.get('cola.classicdockable'))
@@ -145,6 +139,7 @@ class MainView(standard.MainWindow):
         self.diffdockwidget.setWidget(self.diffeditorwidget)
 
         # All Actions
+        add_action = qtutils.add_action
         self.unstage_all_action = add_action(
             self, N_('Unstage All'), cmds.run(cmds.UnstageAll))
         self.unstage_all_action.setIcon(icons.remove())
@@ -328,13 +323,14 @@ class MainView(standard.MainWindow):
                                         self.rebase_skip_action,
                                         self.rebase_abort_action)
 
-        self.lock_layout_action = add_action_bool(self,
-                N_('Lock Layout'), self.set_lock_layout, False)
+        self.lock_layout_action = qtutils.add_action_bool(
+            self, N_('Lock Layout'), self.set_lock_layout, False)
 
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)
 
         # File Menu
+        create_menu = qtutils.create_menu
         self.file_menu = create_menu(N_('File'), self.menubar)
         self.file_menu.addAction(self.new_repository_action)
         self.open_recent_menu = self.file_menu.addMenu(N_('Open Recent'))
@@ -685,7 +681,7 @@ class MainView(standard.MainWindow):
                 else:
                     self.setFocus()
             self.addAction(toggleview)
-            connect_action_bool(toggleview, showdock)
+            qtutils.connect_action_bool(toggleview, showdock)
 
             # Create a new shortcut Shift+<shortcut> that gives focus
             toggleview = QtGui.QAction(self)
@@ -693,7 +689,7 @@ class MainView(standard.MainWindow):
             def focusdock(dockwidget=dockwidget):
                 focus_dock(dockwidget)
             self.addAction(toggleview)
-            connect_action(toggleview, focusdock)
+            qtutils.connect_action(toggleview, focusdock)
 
         focus = lambda: focus_dock(self.commitdockwidget)
         qtutils.add_action(self, 'Focus Commit Message', focus, hotkeys.FOCUS)
@@ -707,7 +703,7 @@ class MainView(standard.MainWindow):
         view.raise_()
 
     def save_archive(self):
-        ref = git.rev_parse('HEAD')[STDOUT]
+        ref = self.model.git.rev_parse('HEAD')[git.STDOUT]
         shortref = ref[:7]
         archive.GitArchiveDialog.save_hashed_objects(ref, shortref, self)
 
