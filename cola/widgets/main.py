@@ -108,15 +108,15 @@ class MainView(standard.MainWindow):
 
         # "Commit Message Editor" widget
         self.position_label = QtGui.QLabel()
+        self.position_label.setAlignment(Qt.AlignCenter)
         font = qtutils.default_monospace_font()
         font.setPointSize(int(font.pointSize() * 0.8))
         self.position_label.setFont(font)
 
         # make the position label fixed size to avoid layout issues
         fm = self.position_label.fontMetrics()
-        width = fm.width('999:999') + defs.spacing
-        height = self.position_label.sizeHint().height() + defs.spacing
-        self.position_label.setFixedSize(width, height)
+        width = fm.width('99:999') + defs.spacing
+        self.position_label.setMinimumWidth(width)
 
         self.commitdockwidget = create_dock(N_('Commit'), self)
         titlebar = self.commitdockwidget.titleBarWidget()
@@ -708,23 +708,36 @@ class MainView(standard.MainWindow):
         archive.GitArchiveDialog.save_hashed_objects(ref, shortref, self)
 
     def show_cursor_position(self, rows, cols):
-        display = '&nbsp;%02d:%02d&nbsp;' % (rows, cols)
-        if cols > 78:
-            display = ('<span style="color: white; '
-                       '             background-color: red;"'
-                       '>%s</span>' % display)
-        elif cols > 72:
-            display = ('<span style="color: black; '
-                       '             background-color: orange;"'
-                       '>%s</span>' % display)
-        elif cols > 64:
-            display = ('<span style="color: black; '
-                       '             background-color: yellow;"'
-                       '>%s</span>' % display)
-        else:
-            display = ('<span style="color: grey;">%s</span>' % display)
+        display = '%02d:%02d' % (rows, cols)
+        css = """
+            <style>
+            .good {
+            }
+            .first-warning {
+                color: black;
+                background-color: yellow;
+            }
+            .second-warning {
+                color: black;
+                background-color: #f83;
+            }
+            .error {
+                color: white;
+                background-color: red;
+            }
+            </style>
+        """
 
-        self.position_label.setText(display)
+        if cols > 78:
+            cls = 'error'
+        elif cols > 72:
+            cls = 'second-warning'
+        elif cols > 64:
+            cls = 'first-warning'
+        else:
+            cls = 'good'
+        div = ('<div class="%s">%s</div>' % (cls, display))
+        self.position_label.setText(css + div)
 
     def rebase_start(self):
         cfg = gitcfg.current()
