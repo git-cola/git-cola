@@ -76,7 +76,7 @@ class TextEdit(QtGui.QTextEdit):
         self.setMinimumSize(QtCore.QSize(1, 1))
         self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.setAcceptRichText(False)
-        self.setCursorWidth(2)
+        self.setCursorWidth(defs.cursor_width)
 
     def as_unicode(self):
         return ustr(self.toPlainText())

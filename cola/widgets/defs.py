@@ -16,6 +16,7 @@ margin = scale(4)
 no_spacing = 0
 spacing = scale(4)
 
+cursor_width = scale(2)
 handle_width = scale(4)
 button_spacing = scale(12)
 tool_button_height = scale(28)
