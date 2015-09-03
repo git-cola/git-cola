@@ -18,8 +18,8 @@ from cola import utils
 from cola import resources
 from cola.i18n import N_
 from cola.interaction import Interaction
-from cola.models.prefs import FONTDIFF
 from cola.compat import ustr
+from cola.models import prefs
 from cola.widgets import defs
 
 
@@ -489,7 +489,7 @@ def default_monospace_font():
 
 
 def diff_font_str():
-    font_str = gitcfg.current().get(FONTDIFF)
+    font_str = gitcfg.current().get(prefs.FONTDIFF)
     if font_str is None:
         font = default_monospace_font()
         font_str = ustr(font.toString())
@@ -497,9 +497,12 @@ def diff_font_str():
 
 
 def diff_font():
-    font_str = diff_font_str()
+    return font(diff_font_str())
+
+
+def font(string):
     font = QtGui.QFont()
-    font.fromString(font_str)
+    font.fromString(string)
     return font
 
 
