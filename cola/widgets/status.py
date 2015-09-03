@@ -106,10 +106,13 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.setIndentation(0)
         self.setDragEnabled(True)
 
-        self.add_item(N_('Staged'), hide=True)
-        self.add_item(N_('Unmerged'), hide=True)
-        self.add_item(N_('Modified'), hide=True)
-        self.add_item(N_('Untracked'), hide=True)
+        ok = icons.ok()
+        compare = icons.compare()
+        question = icons.question()
+        self.add_toplevel_item(N_('Staged'), ok, hide=True)
+        self.add_toplevel_item(N_('Unmerged'), compare, hide=True)
+        self.add_toplevel_item(N_('Modified'), compare, hide=True)
+        self.add_toplevel_item(N_('Untracked'), question, hide=True)
 
         # Used to restore the selection
         self.old_scroll = None
@@ -209,15 +212,15 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.connect(self, SIGNAL('itemExpanded(QTreeWidgetItem*)'),
                      lambda x: self.update_column_widths())
 
-    def add_item(self, txt, hide=False):
-        """Create a new top-level item in the status tree."""
-        # TODO no icon
+    def add_toplevel_item(self, txt, icon, hide=False):
         font = self.font()
         font.setBold(True)
 
         item = QtGui.QTreeWidgetItem(self)
         item.setFont(0, font)
         item.setText(0, txt)
+        item.setIcon(0, icon)
+        item.setBackground(0, self.palette().midlight())
         if hide:
             self.setItemHidden(item, True)
 
