@@ -11,9 +11,6 @@ from cola import qtutils
 from cola import gitcfg
 from cola.i18n import N_
 from cola.models import prefs
-from cola.models.prefs import PreferencesModel
-from cola.models.prefs import SetConfig
-from cola.models.prefs import FONTDIFF
 from cola.qtutils import diff_font
 from cola.widgets import defs
 from cola.widgets import standard
@@ -22,7 +19,7 @@ from cola.compat import ustr
 
 def preferences(model=None, parent=None):
     if model is None:
-        model = PreferencesModel()
+        model = prefs.PreferencesModel()
     view = PreferencesView(model, parent=parent)
     view.show()
     view.raise_()
@@ -68,18 +65,18 @@ class FormWidget(QtGui.QWidget):
 
     def _int_config_changed(self, config):
         def runner(value):
-            cmds.do(SetConfig, self.model, self.source, config, value)
+            cmds.do(prefs.SetConfig, self.model, self.source, config, value)
         return runner
 
     def _bool_config_changed(self, config):
         def runner(value):
-            cmds.do(SetConfig, self.model, self.source, config, value)
+            cmds.do(prefs.SetConfig, self.model, self.source, config, value)
         return runner
 
     def _text_config_changed(self, config):
         def runner():
             value = ustr(self.sender().text())
-            cmds.do(SetConfig, self.model, self.source, config, value)
+            cmds.do(prefs.SetConfig, self.model, self.source, config, value)
         return runner
 
     def update_from_config(self):
@@ -229,12 +226,12 @@ class SettingsFormWidget(FormWidget):
     def font_size_changed(self, size):
         font = self.fixed_font.currentFont()
         font.setPointSize(size)
-        cmds.do(SetConfig, self.model,
-                'user', FONTDIFF, ustr(font.toString()))
+        cmds.do(prefs.SetConfig, self.model,
+                'user', prefs.FONTDIFF, ustr(font.toString()))
 
     def current_font_changed(self, font):
-        cmds.do(SetConfig, self.model,
-                'user', FONTDIFF, ustr(font.toString()))
+        cmds.do(prefs.SetConfig, self.model,
+                'user', prefs.FONTDIFF, ustr(font.toString()))
 
 
 class PreferencesView(standard.Dialog):
