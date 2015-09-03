@@ -43,6 +43,7 @@ file-zip.svg
 fold.svg
 gear.svg
 git-branch.svg
+git-compare.svg
 git-merge.svg
 link-external.svg
 pencil.svg
@@ -93,5 +94,6 @@ Google Icons
 The following files are by Google:
 
 edit-select-all.svg
+download.svg
 
 License: [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
