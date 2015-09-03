@@ -140,6 +140,10 @@ def cola():
     return from_theme('git-cola.svg')
 
 
+def compare():
+    return icon('git-compare.svg')
+
+
 def configure():
     return from_theme('configure', fallback='gear.svg')
 
@@ -154,6 +158,10 @@ def default_app():
 
 def dot_name():
     return name_from_basename('primitive-dot.svg')
+
+
+def download():
+    return icon('download.svg')
 
 
 def discard():
@@ -256,6 +264,10 @@ def search():
 
 def select_all():
     return from_theme('edit-select-all.svg')
+
+
+def staged():
+    return icon('staged.svg')
 
 
 def staged_name():
