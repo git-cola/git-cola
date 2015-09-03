@@ -91,7 +91,7 @@ class CommitMessageEditor(QtGui.QWidget):
                                    'Shortcut: Ctrl+Enter')
         self.commit_button = qtutils.create_toolbutton(
             text=N_('Commit@@verb'), tooltip=commit_button_tooltip,
-            icon=icons.save())
+            icon=icons.download())
         self.commit_group = Group(self.commit_action, self.commit_button)
 
         self.actions_menu = QtGui.QMenu()
