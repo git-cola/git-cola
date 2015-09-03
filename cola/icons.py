@@ -161,7 +161,7 @@ def dot_name():
 
 
 def download():
-    return icon('download.svg')
+    return icon('file-download.svg')
 
 
 def discard():

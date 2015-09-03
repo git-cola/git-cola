@@ -94,6 +94,6 @@ Google Icons
 The following files are by Google:
 
 edit-select-all.svg
-download.svg
+file-download.svg
 
 License: [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
