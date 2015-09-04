@@ -82,10 +82,16 @@ Flaticon.com Icons
 
 The following files are designed by Freepik from http://www.flaticons.com/
 
-edit-copy.svg
 edit-undo.svg
 
 License: [Flatpik Basic License](http://cdn.flaticon.com/license/license.pdf)
+
+
+The following files are by Linh Pham from http://flaticons.com/
+
+edit-copy.svg
+
+License: [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
 
 
 Google Icons
