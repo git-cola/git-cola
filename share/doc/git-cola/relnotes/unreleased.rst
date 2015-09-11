@@ -50,6 +50,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/492
 
+* Creating a local branch tracking a remote branch that contains
+  slashes in its name is now properly handled.
+
+  https://github.com/git-cola/git-cola/issues/496
+
 * Miscellaneous fixes
 
   https://github.com/git-cola/git-cola/pull/485

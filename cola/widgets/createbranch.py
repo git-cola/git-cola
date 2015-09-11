@@ -321,11 +321,12 @@ class CreateBranchDialog(Dialog):
         # Set the branch field if we're branching from a remote branch.
         if not self.remote_radio.isChecked():
             return
-        branch = utils.basename(rev)
+        branch = rev.split('/', 1)[-1]
         if branch == 'HEAD':
             return
         # Signal that we've clicked on a remote branch
-        self.branch_name.setText(branch)
+        if branch:
+            self.branch_name.setText(branch)
 
     def display_model(self):
         """Sets the branch list to the available branches
