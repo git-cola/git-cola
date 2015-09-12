@@ -312,21 +312,27 @@ class CreateBranchDialog(Dialog):
         # When the branch selection changes then we should update
         # the "Revision Expression" accordingly.
         qlist = self.branch_list
-        rev = qtutils.selected_item(qlist, self.branch_sources())
-        if rev is None:
+        remote_branch = qtutils.selected_item(qlist, self.branch_sources())
+        if not remote_branch:
             return
         # Update the model with the selection
-        self.revision.setText(rev)
+        self.revision.setText(remote_branch)
 
         # Set the branch field if we're branching from a remote branch.
         if not self.remote_radio.isChecked():
             return
-        branch = rev.split('/', 1)[-1]
+        branch = self.strip_remote(remote_branch)
         if branch == 'HEAD':
             return
         # Signal that we've clicked on a remote branch
-        if branch:
-            self.branch_name.setText(branch)
+        self.branch_name.setText(branch)
+
+    def strip_remote(self, remote_branch):
+        for remote in self.model.remotes:
+            prefix = remote + '/'
+            if remote_branch.startswith(prefix):
+                return remote_branch[len(prefix):]
+        return remote_branch.split('/', 1)[-1]
 
     def display_model(self):
         """Sets the branch list to the available branches
