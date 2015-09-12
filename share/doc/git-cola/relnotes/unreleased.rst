@@ -35,6 +35,12 @@ Usability, bells and whistles
   behavior when refreshing.  The selection is now retained, and new and
   removed files are found when refreshing.
 
+* A new `git-cola-completion.bash` completion script is provided in the
+  `contrib/` directory.  It must be used alongside Git's completion script.
+  Source it from your `~/.bashrc` (or `~/.zshrc`, etc) after sourcing
+  the `git-completion.bash` script and you will have command-line completion
+  support for the `git cola` sub-command.
+
 Fixes
 -----
 
