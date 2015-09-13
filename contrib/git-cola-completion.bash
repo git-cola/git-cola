@@ -2,6 +2,9 @@
 #
 # This script must be sourced *after* Git's git-completion.bash script.
 # See git.git's contrib/completion/git-completion.bash for details.
+#
+# Completion is provided for "git cola ..." and "git dag ..." via the
+# _git_cola() and _git_dag() functions.
 
 __git_cola_common_options="--prompt --repo --version"
 __git_cola_subcommands_list=
@@ -46,8 +49,11 @@ _git_cola () {
 	am)
 		return
 		;;
-
-	archive|dag|diff|merge)
+	dag)
+		_git_dag "$@"
+		return
+		;;
+	archive|diff|merge)
 		__git_complete_revlist
 		__git_cola_common_opts
 		;;
@@ -134,4 +140,15 @@ _git_cola () {
 		__git_cola_common_opts
 		;;
 	esac
+}
+
+_git_dag () {
+	__git_has_doubledash && return
+
+	if test "$prev" = "--max-count"
+	then
+		return
+	fi
+	__git_cola_common_opts --max-count
+	__git_complete_revlist
 }
