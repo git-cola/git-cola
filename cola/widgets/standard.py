@@ -86,11 +86,14 @@ class WidgetMixin(object):
             'maximized': maximized,
         }
 
-    def closeEvent(self, event):
+    def save_settings(self):
         settings = Settings()
         settings.load()
         settings.add_recent(core.getcwd())
-        self.save_state(settings=settings)
+        return self.save_state(settings=settings)
+
+    def closeEvent(self, event):
+        self.save_settings()
         self.QtClass.closeEvent(self, event)
 
 
