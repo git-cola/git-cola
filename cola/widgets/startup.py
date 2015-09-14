@@ -90,7 +90,7 @@ class StartupDialog(QtGui.QDialog):
         qtutils.connect_button(self.clone_button, self.clone_repo)
         qtutils.connect_button(self.new_button, self.new_repo)
         qtutils.connect_button(self.close_button, self.reject)
-        screen = QtGui.QDesktopWidget().screenGeometry()
+        screen = QtGui.QApplication.instance().desktop()
         self.setGeometry(screen.width() // 4, screen.height() // 4,
                          screen.width() // 2, screen.height() // 2)
 
