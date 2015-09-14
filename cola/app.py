@@ -288,7 +288,8 @@ def application_init(args, update=False):
     process_args(args)
 
     app = new_application(args)
-    model = new_model(app, args.repo, prompt=args.prompt)
+    model = new_model(app, args.repo,
+                      prompt=args.prompt, settings=args.settings)
     if update:
         model.update_status()
     cfg = gitcfg.current()
@@ -352,11 +353,12 @@ def new_application(args):
     return ColaApplication(sys.argv)
 
 
-def new_model(app, repo, prompt=False):
+def new_model(app, repo, prompt=False, settings=None):
     model = main.model()
     valid = model.set_worktree(repo) and not prompt
     while not valid:
-        startup_dlg = startup.StartupDialog(app.activeWindow())
+        startup_dlg = startup.StartupDialog(app.activeWindow(),
+                                            settings=settings)
         gitdir = startup_dlg.find_git_repo()
         if not gitdir:
             sys.exit(EX_NOINPUT)

@@ -18,19 +18,19 @@ from cola.compat import ustr
 from cola.i18n import N_
 from cola.settings import Settings
 from cola.widgets import defs
-from cola.widgets.standard import ProgressDialog
+from cola.widgets import standard
 
 
-class StartupDialog(QtGui.QDialog):
+class StartupDialog(standard.Dialog):
     """Provides a GUI to Open or Clone a git repository."""
 
-    def __init__(self, parent=None):
-        QtGui.QDialog.__init__(self, parent)
+    def __init__(self, parent=None, settings=None):
+        standard.Dialog.__init__(self, parent, save_settings=True)
         self.setWindowTitle(N_('git-cola'))
 
         self.repodir = None
         self.runtask = qtutils.RunTask(parent=self)
-        self.progress = ProgressDialog('', '', self)
+        self.progress = standard.ProgressDialog('', '', self)
 
         self.new_button = qtutils.create_button(text=N_('New...'),
                                                 icon=icons.new())
@@ -40,8 +40,10 @@ class StartupDialog(QtGui.QDialog):
                                                   icon=icons.cola())
         self.close_button = qtutils.close_button()
 
-        settings = Settings()
+        if settings is None:
+            settings = Settings()
         settings.load()
+        self.settings = settings
 
         self.bookmarks_label = QtGui.QLabel(N_('Select Repository...'))
         self.bookmarks_label.setAlignment(Qt.AlignCenter)
@@ -90,12 +92,14 @@ class StartupDialog(QtGui.QDialog):
         qtutils.connect_button(self.clone_button, self.clone_repo)
         qtutils.connect_button(self.new_button, self.new_repo)
         qtutils.connect_button(self.close_button, self.reject)
-        screen = QtGui.QApplication.instance().desktop()
-        self.setGeometry(screen.width() // 4, screen.height() // 4,
-                         screen.width() // 2, screen.height() // 2)
 
         self.connect(self.bookmarks,
                      SIGNAL('activated(QModelIndex)'), self.open_bookmark)
+
+        if not self.restore_state(settings=settings):
+            screen = QtGui.QApplication.instance().desktop()
+            self.setGeometry(screen.width() // 4, screen.height() // 4,
+                            screen.width() // 2, screen.height() // 2)
 
     def find_git_repo(self):
         """
