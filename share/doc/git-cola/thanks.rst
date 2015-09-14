@@ -21,6 +21,7 @@ Thanks
 * Christopher Meng
 * Clément Pit--Claudel
 * Daniel Fahlke
+* Daniel Jay Haskin
 * Daniel Harding
 * Daniel King
 * Dave Thomas
