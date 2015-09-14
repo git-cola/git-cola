@@ -353,9 +353,20 @@ class Widget(WidgetMixin, QtGui.QWidget):
 
 class Dialog(WidgetMixin, QtGui.QDialog):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, save_settings=False):
         QtGui.QDialog.__init__(self, parent)
         WidgetMixin.__init__(self, QtGui.QDialog)
+        self._save_settings = save_settings
+
+    def close(self):
+        if self._save_settings:
+            self.save_settings()
+        return self.QtClass.close(self)
+
+    def reject(self):
+        if self._save_settings:
+            self.save_settings()
+        return self.QtClass.reject(self)
 
 
 class MainWindow(MainWindowMixin, QtGui.QMainWindow):
