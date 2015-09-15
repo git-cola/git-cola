@@ -214,13 +214,12 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def add_toplevel_item(self, txt, icon, hide=False):
         font = self.font()
-        font.setBold(True)
+        font.setItalic(True)
 
         item = QtGui.QTreeWidgetItem(self)
         item.setFont(0, font)
         item.setText(0, txt)
         item.setIcon(0, icon)
-        item.setBackground(0, self.palette().midlight())
         if hide:
             self.setItemHidden(item, True)
 
