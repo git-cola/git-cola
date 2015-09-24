@@ -485,6 +485,37 @@ class GitRefCompletionModel(GitCompletionModel):
         return model.local_branches + model.remote_branches + model.tags
 
 
+class GitPotentialBranchCompletionModel(GitCompletionModel):
+    """Completer for branches, tags, and potential branches"""
+
+    def __init__(self, parent):
+        GitCompletionModel.__init__(self, parent)
+
+    def matches(self):
+        model = self.main_model
+        remotes = model.remotes
+        remote_branches = model.remote_branches
+
+        ambiguous = set()
+        allnames = set(model.local_branches)
+        potential = []
+
+        for remote_branch in remote_branches:
+            branch = gitcmds.strip_remote(remotes, remote_branch)
+            if branch in allnames or branch == remote_branch:
+                ambiguous.add(branch)
+                continue
+            potential.append(branch)
+            allnames.add(branch)
+
+        potential_branches = [p for p in potential if p not in ambiguous]
+
+        return (model.local_branches +
+                potential_branches +
+                model.remote_branches +
+                model.tags)
+
+
 class GitBranchCompletionModel(GitCompletionModel):
     """Completer for remote branches"""
 
@@ -604,6 +635,7 @@ def bind_lineedit(model):
 # Concrete classes
 GitLogLineEdit = bind_lineedit(GitLogCompletionModel)
 GitRefLineEdit = bind_lineedit(GitRefCompletionModel)
+GitPotentialBranchLineEdit = bind_lineedit(GitPotentialBranchCompletionModel)
 GitBranchLineEdit = bind_lineedit(GitBranchCompletionModel)
 GitRemoteBranchLineEdit = bind_lineedit(GitRemoteBranchCompletionModel)
 GitStatusFilterLineEdit = bind_lineedit(GitStatusFilterCompletionModel)
@@ -686,6 +718,13 @@ class GitRefDialog(GitDialog):
 
     def __init__(self, title, button_text, parent, icon=None):
         GitDialog.__init__(self, GitRefLineEdit,
+                           title, button_text, parent, icon=icon)
+
+
+class GitPotentialBranchDialog(GitDialog):
+
+    def __init__(self, title, button_text, parent, icon=None):
+        GitDialog.__init__(self, GitPotentialBranchLineEdit,
                            title, button_text, parent, icon=icon)
 
 
