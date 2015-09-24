@@ -73,6 +73,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/501
 
+* We now avoid `long` for better Python3 compatibility.
+
+  https://github.com/git-cola/git-cola/issues/502
+
 * Miscellaneous fixes
 
   https://github.com/git-cola/git-cola/pull/485
