@@ -231,9 +231,9 @@ def choose_from_dialog(get, title, button_text, default, icon=None):
     return get(title, button_text, parent, default=default, icon=icon)
 
 
-def choose_ref(title, button_text, default=None):
+def choose_ref(title, button_text, default=None, icon=None):
     return choose_from_dialog(completion.GitRefDialog.get,
-                              title, button_text, default)
+                              title, button_text, default, icon=icon)
 
 
 def choose_branch(title, button_text, default=None, icon=None):
