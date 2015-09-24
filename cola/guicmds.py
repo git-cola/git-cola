@@ -62,7 +62,7 @@ def browse_other():
 
 def checkout_branch():
     """Launch the 'Checkout Branch' dialog."""
-    branch = choose_branch(N_('Checkout Branch'), N_('Checkout'))
+    branch = choose_potential_branch(N_('Checkout Branch'), N_('Checkout'))
     if not branch:
         return
     cmds.do(cmds.CheckoutBranch, branch)
@@ -238,6 +238,11 @@ def choose_ref(title, button_text, default=None, icon=None):
 
 def choose_branch(title, button_text, default=None, icon=None):
     return choose_from_dialog(completion.GitBranchDialog.get,
+                              title, button_text, default, icon=icon)
+
+
+def choose_potential_branch(title, button_text, default=None, icon=None):
+    return choose_from_dialog(completion.GitPotentialBranchDialog.get,
                               title, button_text, default, icon=icon)
 
 

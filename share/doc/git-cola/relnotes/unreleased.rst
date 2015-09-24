@@ -41,6 +41,14 @@ Usability, bells and whistles
   the `git-completion.bash` script and you will have command-line completion
   support for the `git cola` and `git dag` sub-commands.
 
+* The "checkout" dialog now offers completion for remote branches and other
+  git refs.  This makes it easier to checkout remote branches in a detached
+  head state.  Additionally, the checkout dialog also offers completion for
+  remote branches that have not yet been checked out, which makes it easier to
+  create a local tracking branch by just completing for that potential name.
+
+  https://github.com/git-cola/git-cola/issues/390
+
 Fixes
 -----
 
