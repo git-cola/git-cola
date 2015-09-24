@@ -715,14 +715,19 @@ class GitFileTreeModel(QtGui.QStandardItemModel):
         # Create model items
         row_items = self.create_row(path, True)
 
+        try:
+            parent_path = parent.path
+        except AttributeError:  # root QStandardItem
+            parent_path = ''
+
         # Insert directories before file paths
         try:
-            row = self.dir_rows[parent]
+            row = self.dir_rows[parent_path]
         except KeyError:
-            row = self.dir_rows[parent] = 0
+            row = self.dir_rows[parent_path] = 0
 
         parent.insertRow(row, row_items)
-        self.dir_rows[parent] += 1
+        self.dir_rows[parent_path] += 1
         self.dir_entries[path] = row_items[0]
 
         return row_items[0]

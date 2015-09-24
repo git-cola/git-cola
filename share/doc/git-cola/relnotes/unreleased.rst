@@ -69,6 +69,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/496
 
+* The "Browse Other Branch" feature was broken by Python3, and is now fixed.
+
+  https://github.com/git-cola/git-cola/issues/501
+
 * Miscellaneous fixes
 
   https://github.com/git-cola/git-cola/pull/485

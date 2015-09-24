@@ -9,6 +9,7 @@ Thanks
 * Alex Chernetz
 * Alexander Kozienko
 * Andreas Sommer
+* Andrew Chen
 * Audrius Karabanovas
 * Barry Roberts
 * Boris W
