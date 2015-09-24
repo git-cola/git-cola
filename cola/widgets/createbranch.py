@@ -8,7 +8,6 @@ from PyQt4.QtCore import SIGNAL
 from cola import gitcmds
 from cola import icons
 from cola import qtutils
-from cola import utils
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
@@ -321,18 +320,11 @@ class CreateBranchDialog(Dialog):
         # Set the branch field if we're branching from a remote branch.
         if not self.remote_radio.isChecked():
             return
-        branch = self.strip_remote(remote_branch)
+        branch = gitcmds.strip_remote(self.model.remotes, remote_branch)
         if branch == 'HEAD':
             return
         # Signal that we've clicked on a remote branch
         self.branch_name.setText(branch)
-
-    def strip_remote(self, remote_branch):
-        for remote in self.model.remotes:
-            prefix = remote + '/'
-            if remote_branch.startswith(prefix):
-                return remote_branch[len(prefix):]
-        return remote_branch.split('/', 1)[-1]
 
     def display_model(self):
         """Sets the branch list to the available branches

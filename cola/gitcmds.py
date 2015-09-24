@@ -655,3 +655,11 @@ def merge_message(revision):
     if core.exists(fetch_head):
         return git.fmt_merge_msg('--file', fetch_head)[STDOUT]
     return "Merge branch '%s'" % revision
+
+
+def strip_remote(remotes, remote_branch):
+    for remote in remotes:
+        prefix = remote + '/'
+        if remote_branch.startswith(prefix):
+            return remote_branch[len(prefix):]
+    return remote_branch.split('/', 1)[-1]
