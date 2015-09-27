@@ -49,6 +49,9 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/390
 
+* The "create branch" and "create tag" dialogs now save and restore their
+  window settings.
+
 Fixes
 -----
 
