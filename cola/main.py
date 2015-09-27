@@ -298,7 +298,7 @@ def cmd_archive(args):
 def cmd_branch(args):
     context = application_init(args, update=True)
     from cola.widgets.createbranch import create_new_branch
-    view = create_new_branch()
+    view = create_new_branch(settings=args.settings)
     return application_start(context, view)
 
 

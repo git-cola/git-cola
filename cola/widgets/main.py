@@ -271,7 +271,8 @@ class MainView(standard.MainWindow):
             self, N_('Create Tag...'), createtag.create_tag)
 
         self.create_branch_action = add_action(
-            self, N_('Create...'), createbranch.create_new_branch,
+            self, N_('Create...'),
+            lambda: createbranch.create_new_branch(settings=settings),
             hotkeys.BRANCH)
 
         self.delete_branch_action = add_action(

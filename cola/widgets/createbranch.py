@@ -20,11 +20,12 @@ from cola.compat import ustr
 COMMAND_SIGNAL = 'command(PyQt_PyObject,PyQt_PyObject,PyQt_PyObject)'
 
 
-def create_new_branch(revision=''):
+def create_new_branch(revision='', settings=None):
     """Launches a dialog for creating a new branch"""
     model = main.MainModel()
     model.update_status()
-    view = CreateBranchDialog(model, qtutils.active_window())
+    view = CreateBranchDialog(model, settings=settings,
+                              parent=qtutils.active_window())
     if revision:
         view.set_revision(revision)
     view.show()
@@ -82,7 +83,7 @@ class CreateThread(QtCore.QThread):
 class CreateBranchDialog(Dialog):
     """A dialog for creating branches."""
 
-    def __init__(self, model, parent=None):
+    def __init__(self, model, settings=None, parent=None):
         Dialog.__init__(self, parent=parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(N_('Create Branch'))
@@ -198,7 +199,8 @@ class CreateBranchDialog(Dialog):
                                         self.options_section_layout)
         self.setLayout(self.main_layout)
 
-        qtutils.connect_button(self.close_button, self.reject)
+        qtutils.add_close_action(self)
+        qtutils.connect_button(self.close_button, self.close)
         qtutils.connect_button(self.create_button, self.create_branch)
         qtutils.connect_button(self.local_radio, self.display_model)
         qtutils.connect_button(self.remote_radio, self.display_model)
@@ -213,7 +215,9 @@ class CreateBranchDialog(Dialog):
         self.connect(self.thread, SIGNAL('done(PyQt_PyObject)'),
                      self.thread_done, Qt.QueuedConnection)
 
-        self.resize(555, 333)
+        if not self.restore_state(settings=settings):
+            self.resize(555, 333)
+
         self.display_model()
 
     def set_revision(self, revision):
