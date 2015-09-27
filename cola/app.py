@@ -179,15 +179,6 @@ class ColaApplication(object):
         if gui:
             self._app = current(tuple(argv))
             self._app.setWindowIcon(icons.cola())
-            self._app.setStyleSheet("""
-                QMainWindow::separator {
-                    width: 3px;
-                    height: 3px;
-                }
-                QMainWindow::separator:hover {
-                    background: white;
-                }
-                """)
         else:
             self._app = QtCore.QCoreApplication(argv)
 

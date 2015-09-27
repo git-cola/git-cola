@@ -14,6 +14,7 @@ from cola import gitcfg
 from cola import qtcompat
 from cola import qtutils
 from cola.settings import Settings
+from cola.widgets import defs
 
 
 class WidgetMixin(object):
@@ -374,6 +375,15 @@ class MainWindow(MainWindowMixin, QtGui.QMainWindow):
     def __init__(self, parent=None):
         QtGui.QMainWindow.__init__(self, parent)
         MainWindowMixin.__init__(self, QtGui.QMainWindow)
+        self.setStyleSheet("""
+            QMainWindow::separator {
+                width: %(separator)spx;
+                height: %(separator)spx;
+            }
+            QMainWindow::separator:hover {
+                background: white;
+            }
+            """ % dict(separator=defs.separator))
 
 
 class TreeView(TreeMixin, QtGui.QTreeView):

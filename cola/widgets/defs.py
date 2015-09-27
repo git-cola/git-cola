@@ -31,3 +31,5 @@ border = max(1, scale(0.5))
 checkbox = scale(12)
 
 radio_border = max(1, scale(1.0 - (1.0 / math.pi)))
+
+separator = scale(3)
