@@ -442,6 +442,8 @@ def set_selected_item(widget, idx):
 def add_items(widget, items):
     """Adds items to a widget."""
     for item in items:
+        if item is None:
+            continue
         widget.addItem(item)
 
 
