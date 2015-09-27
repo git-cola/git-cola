@@ -125,7 +125,6 @@ class CreateBranchDialog(Dialog):
         self.no_update_radio = qtutils.radio(text=N_('No'))
         self.ffwd_only_radio = qtutils.radio(text=N_('Fast Forward Only'),
                                              checked=True)
-
         self.reset_radio = qtutils.radio(text=N_('Reset'))
 
         text = N_('Fetch Tracking Branch')
@@ -139,64 +138,59 @@ class CreateBranchDialog(Dialog):
                                                    icon=icon, default=True)
         self.close_button = qtutils.close_button()
 
-        self.rev_start_group = QtGui.QGroupBox()
-        self.rev_start_group.setTitle(N_('Starting Revision'))
-
-        self.option_group = QtGui.QGroupBox()
-        self.option_group.setTitle(N_('Options'))
-
-        self.options_checkbox_layout = qtutils.vbox(defs.margin, defs.spacing,
+        self.options_checkbox_layout = qtutils.hbox(defs.margin, defs.spacing,
                                                     self.fetch_checkbox,
-                                                    self.checkout_checkbox)
-
-        self.options_bottom_layout = qtutils.hbox(defs.margin, defs.spacing,
-                                                  self.options_checkbox_layout,
-                                                  qtutils.STRETCH)
+                                                    self.checkout_checkbox,
+                                                    qtutils.STRETCH)
 
         self.branch_name_layout = qtutils.hbox(defs.margin, defs.spacing,
                                                self.branch_name_label,
                                                self.branch_name)
 
-        self.rev_start_radiobtn_layout = qtutils.hbox(defs.margin, defs.spacing,
-                                                      self.local_radio,
-                                                      self.remote_radio,
-                                                      self.tag_radio,
-                                                      qtutils.STRETCH)
+        self.rev_radio_group = qtutils.buttongroup(self.local_radio,
+                                                   self.remote_radio,
+                                                   self.tag_radio)
+
+        self.rev_radio_layout = qtutils.hbox(defs.margin, defs.spacing,
+                                             self.local_radio,
+                                             self.remote_radio,
+                                             self.tag_radio,
+                                             qtutils.STRETCH)
 
         self.rev_start_textinput_layout = qtutils.hbox(defs.no_margin,
                                                        defs.spacing,
                                                        self.rev_label,
+                                                       defs.spacing,
                                                        self.revision)
 
         self.rev_start_layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                                             self.rev_start_radiobtn_layout,
+                                             self.rev_radio_layout,
                                              self.branch_list,
                                              self.rev_start_textinput_layout)
-        self.rev_start_group.setLayout(self.rev_start_layout)
+
+        self.options_radio_group = qtutils.buttongroup(self.no_update_radio,
+                                                       self.ffwd_only_radio,
+                                                       self.reset_radio)
 
         self.options_radio_layout = qtutils.hbox(defs.no_margin, defs.spacing,
                                                  self.update_existing_label,
                                                  self.no_update_radio,
                                                  self.ffwd_only_radio,
-                                                 self.reset_radio)
-
-        self.options_grp_layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                                               self.options_radio_layout,
-                                               self.options_bottom_layout)
-        self.option_group.setLayout(self.options_grp_layout)
+                                                 self.reset_radio,
+                                                 qtutils.STRETCH)
 
         self.buttons_layout = qtutils.hbox(defs.margin, defs.spacing,
+                                           qtutils.STRETCH,
                                            self.create_button,
                                            self.close_button)
 
-        self.options_section_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                                   self.option_group,
-                                                   self.buttons_layout)
-
         self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
                                         self.branch_name_layout,
-                                        self.rev_start_group,
-                                        self.options_section_layout)
+                                        self.rev_start_layout,
+                                        defs.button_spacing,
+                                        self.options_radio_layout,
+                                        self.options_checkbox_layout,
+                                        self.buttons_layout)
         self.setLayout(self.main_layout)
 
         qtutils.add_close_action(self)
