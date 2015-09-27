@@ -115,7 +115,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.add_toplevel_item(N_('Untracked'), question, hide=True)
 
         # Used to restore the selection
-        self.old_scroll = None
+        self.old_vscroll = None
         self.old_selection = None
         self.old_contents = None
         self.old_current_item = None
@@ -312,9 +312,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def restore_scrollbar(self):
         vscroll = self.verticalScrollBar()
-        if vscroll and self.old_scroll is not None:
-            vscroll.setValue(self.old_scroll)
-            self.old_scroll = None
+        if vscroll and self.old_vscroll is not None:
+            vscroll.setValue(self.old_vscroll)
+            self.old_vscroll = None
+
 
     def staged_item(self, itemidx):
         return self._subtree_item(self.idx_staged, itemidx)
@@ -361,9 +362,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def save_scrollbar(self):
         vscroll = self.verticalScrollBar()
         if vscroll:
-            self.old_scroll = vscroll.value()
+            self.old_vscroll = vscroll.value()
         else:
-            self.old_scroll = None
+            self.old_vscroll = None
 
     def current_item(self):
         s = self.selected_indexes()
