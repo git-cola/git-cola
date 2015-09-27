@@ -908,9 +908,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def mimeData(self, items):
         """Return a list of absolute-path URLs"""
-        paths = qtutils.paths_from_items(items, item_filter=lambda item:
-                                                    not item.deleted
-                                                    and core.exists(item.path))
+        item_filter = lambda item: not item.deleted and core.exists(item.path)
+        paths = qtutils.paths_from_items(items, item_filter=item_filter)
         return qtutils.mimedata_from_paths(paths)
 
     def mimeTypes(self):
