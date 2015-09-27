@@ -268,7 +268,8 @@ class MainView(standard.MainWindow):
             self, N_('Branches...'), compare.compare_branches)
 
         self.create_tag_action = add_action(
-            self, N_('Create Tag...'), createtag.create_tag)
+            self, N_('Create Tag...'),
+            lambda: createtag.create_tag(settings=settings))
 
         self.create_branch_action = add_action(
             self, N_('Create...'),

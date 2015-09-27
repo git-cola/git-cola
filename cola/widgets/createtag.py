@@ -14,16 +14,17 @@ from cola.widgets import standard
 from cola.widgets import text
 
 
-def new_create_tag(name='', ref='', sign=False, parent=None, settings=None):
+def new_create_tag(name='', ref='', sign=False, settings=None, parent=None):
     """Entry point for external callers."""
     opts = TagOptions(name, ref, sign)
-    view = CreateTag(opts, parent=parent, settings=settings)
+    view = CreateTag(opts, settings=settings, parent=parent)
     return view
 
 
-def create_tag(name='', ref='', sign=False):
+def create_tag(name='', ref='', sign=False, settings=None):
     """Entry point for external callers."""
     view = new_create_tag(name=name, ref=ref, sign=sign,
+                          settings=settings,
                           parent=qtutils.active_window())
     view.show()
     view.raise_()
@@ -42,7 +43,7 @@ class TagOptions(object):
 
 class CreateTag(standard.Dialog):
 
-    def __init__(self, opts, parent=None, settings=None):
+    def __init__(self, opts, settings=None, parent=None):
         standard.Dialog.__init__(self, parent=parent)
 
         self.opts = opts
@@ -101,7 +102,7 @@ class CreateTag(standard.Dialog):
                                       self.input_layout, self.button_layout)
         self.setLayout(self.main_layt)
 
-        qtutils.connect_button(self.close_button, self.accept)
+        qtutils.connect_button(self.close_button, self.close)
         qtutils.connect_button(self.create_button, self.create_tag)
 
         if not self.restore_state(settings=settings):
@@ -141,7 +142,7 @@ class CreateTag(standard.Dialog):
             qtutils.information(N_('Tag Created'),
                                 N_('Created a new tag named "%s"') % tag_name,
                                 details=tag_msg or None)
-            self.accept()
+            self.close()
         else:
             qtutils.critical(N_('Error: could not create tag "%s"') % tag_name,
                              (N_('git tag returned exit code %s') % status) +
