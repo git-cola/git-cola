@@ -60,6 +60,13 @@ def vbox(margin, spacing, *items):
     return box(QtGui.QVBoxLayout, margin, spacing, *items)
 
 
+def buttongroup(*items):
+    group = QtGui.QButtonGroup()
+    for i in items:
+        group.addButton(i)
+    return group
+
+
 STRETCH = object()
 SKIPPED = object()
 
