@@ -494,6 +494,8 @@ class MainView(standard.MainWindow):
         self.connect(self, SIGNAL('update()'),
                      self._update_callback, Qt.QueuedConnection)
 
+        self.installEventFilter(self)
+
         self.connect(self, SIGNAL('install_cfg_actions(PyQt_PyObject)'),
                      self._install_config_actions, Qt.QueuedConnection)
 
@@ -512,6 +514,13 @@ class MainView(standard.MainWindow):
         Interaction.log = self.logwidget.log
         Interaction.log(version.git_version_str() + '\n' +
                         N_('git cola version %s') % version.version())
+
+    def eventFilter(self, obj, event):
+        if event.type() == QtCore.QEvent.WindowActivate:
+            # Update status (e.g. current branch) because it may have been changed from outside
+            self.model.update_status()
+
+        return False
 
     def set_initial_size(self):
         self.statuswidget.set_initial_size()
