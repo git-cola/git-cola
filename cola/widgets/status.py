@@ -15,6 +15,7 @@ from cola import qtutils
 from cola import utils
 from cola.i18n import N_
 from cola.models import main
+from cola.models import prefs
 from cola.models import selection
 from cola.widgets import completion
 from cola.widgets import defs
@@ -214,12 +215,17 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def add_toplevel_item(self, txt, icon, hide=False):
         font = self.font()
-        font.setItalic(True)
+        if prefs.bold_headers():
+            font.setBold(True)
+        else:
+            font.setItalic(True)
 
         item = QtGui.QTreeWidgetItem(self)
         item.setFont(0, font)
         item.setText(0, txt)
         item.setIcon(0, icon)
+        if prefs.bold_headers():
+            item.setBackground(0, self.palette().midlight())
         if hide:
             self.setItemHidden(item, True)
 
