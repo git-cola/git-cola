@@ -242,19 +242,28 @@ if AVAILABLE == 'inotify':
                     wd_set.add(wd)
                     wd_map[path] = wd
 
+        def _filter_event(self, wd, mask, name):
+            # An event is relevant iff:
+            # 1) it is an event queue overflow
+            # 2) the wd is for the worktree
+            # 3) the wd is for the git dir and
+            #    a) the event is for a file, and
+            #    b) the file name does not end with ".lock"
+            if mask & inotify.IN_Q_OVERFLOW:
+                return True
+            if mask & self._TRIGGER_MASK:
+                if wd in self._worktree_wds:
+                    return True
+                if (wd in self._git_dir_wds
+                        and not mask & inotify.IN_ISDIR
+                        and not core.decode(name).endswith('.lock')):
+                    return True
+            return False
+
         def _handle_events(self):
             for wd, mask, cookie, name in \
                     inotify.read_events(self._inotify_fd):
-                if (mask & self._TRIGGER_MASK
-                        and (wd in self._worktree_wds
-                            or (wd in self._git_dir_wds
-                                and not mask & inotify.IN_ISDIR
-                                and not core.decode(name).endswith('.lock')))):
-                    # Enable a pending refresh iff:
-                    # 1) the wd was for the worktree or
-                    # 2) the wd was for the git dir and
-                    #    a) the event was for a file, not a directory, and
-                    #    b) the file name does not end with ".lock"
+                if self._filter_event(wd, mask, name):
                     self._pending = True
 
         def stop(self):
