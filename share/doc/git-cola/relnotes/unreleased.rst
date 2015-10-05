@@ -57,6 +57,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/506
 
+* The "status" widget now remembers its horizontol scrollbar position across
+  updates.  This is helpful when working on projects with long paths.
+
+  https://github.com/git-cola/git-cola/issues/494
+
 Fixes
 -----
 

@@ -106,6 +106,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.setRootIsDecorated(False)
         self.setIndentation(0)
         self.setDragEnabled(True)
+        self.setAutoScroll(False)
 
         ok = icons.ok()
         compare = icons.compare()
@@ -117,6 +118,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
         # Used to restore the selection
         self.old_vscroll = None
+        self.old_hscroll = None
         self.old_selection = None
         self.old_contents = None
         self.old_current_item = None
@@ -316,12 +318,16 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                         reselect(j, current=True)
                         return
 
-    def restore_scrollbar(self):
+    def restore_scrollbars(self):
         vscroll = self.verticalScrollBar()
         if vscroll and self.old_vscroll is not None:
             vscroll.setValue(self.old_vscroll)
             self.old_vscroll = None
 
+        hscroll = self.horizontalScrollBar()
+        if hscroll and self.old_hscroll is not None:
+            hscroll.setValue(self.old_hscroll)
+            self.old_hscroll = None
 
     def staged_item(self, itemidx):
         return self._subtree_item(self.idx_staged, itemidx)
@@ -362,15 +368,17 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.emit(SIGNAL('about_to_update()'))
 
     def _about_to_update(self):
+        self.save_scrollbars()
         self.save_selection()
-        self.save_scrollbar()
 
-    def save_scrollbar(self):
+    def save_scrollbars(self):
         vscroll = self.verticalScrollBar()
         if vscroll:
             self.old_vscroll = vscroll.value()
-        else:
-            self.old_vscroll = None
+
+        hscroll = self.horizontalScrollBar()
+        if hscroll:
+            self.old_hscroll = hscroll.value()
 
     def current_item(self):
         s = self.selected_indexes()
@@ -401,10 +409,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.set_modified(self.m.modified)
         self.set_unmerged(self.m.unmerged)
         self.set_untracked(self.m.untracked)
-        self.restore_selection()
-        self.restore_scrollbar()
         self.update_column_widths()
         self.update_actions()
+        self.restore_selection()
+        self.restore_scrollbars()
 
     def update_actions(self, selected=None):
         if selected is None:
@@ -767,7 +775,15 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             idx -= len(content)
 
     def select_item(self, item):
+        # First, scroll to the item, but keep the original hscroll
+        hscroll = None
+        hscrollbar = self.horizontalScrollBar()
+        if hscrollbar:
+            hscroll = hscrollbar.value()
         self.scrollToItem(item)
+        if hscroll is not None:
+            hscrollbar.setValue(hscroll)
+
         self.setCurrentItem(item)
         self.setItemSelected(item, True)
 
