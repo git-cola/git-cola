@@ -9,6 +9,7 @@ from cola import observable
 from cola import utils
 
 
+BOLD_HEADERS = 'cola.boldheaders'
 CHECKCONFLICTS = 'cola.checkconflicts'
 COMMENT_CHAR = 'core.commentchar'
 DIFFCONTEXT = 'gui.diffcontext'
@@ -29,6 +30,10 @@ TABWIDTH = 'cola.tabwidth'
 TEXTWIDTH = 'cola.textwidth'
 USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
+
+
+def bold_headers():
+    return gitcfg.current().get(BOLD_HEADERS, False)
 
 
 def check_conflicts():

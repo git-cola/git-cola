@@ -175,6 +175,7 @@ class SettingsFormWidget(FormWidget):
         self.mergetool = QtGui.QLineEdit()
         self.keep_merge_backups = qtutils.checkbox()
         self.sort_bookmarks = qtutils.checkbox()
+        self.bold_headers = qtutils.checkbox()
         self.save_gui_settings = qtutils.checkbox()
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
@@ -188,6 +189,8 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Merge Tool'), self.mergetool)
         self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
         self.add_row(N_('Sort bookmarks alphabetically'), self.sort_bookmarks)
+        self.add_row(N_('Bold with dark background font instead of italic '
+                        'headers (restart required)'), self.bold_headers)
         self.add_row(N_('Save GUI Settings'), self.save_gui_settings)
 
         self.set_config({
@@ -196,6 +199,7 @@ class SettingsFormWidget(FormWidget):
             prefs.TEXTWIDTH: (self.textwidth, 72),
             prefs.LINEBREAK: (self.linebreak, True),
             prefs.SORT_BOOKMARKS: (self.sort_bookmarks, True),
+            prefs.BOLD_HEADERS: (self.bold_headers, False),
             prefs.DIFFTOOL: (self.difftool, 'xxdiff'),
             prefs.EDITOR: (self.editor, os.getenv('VISUAL', 'gvim')),
             prefs.HISTORY_BROWSER: (self.historybrowser,
