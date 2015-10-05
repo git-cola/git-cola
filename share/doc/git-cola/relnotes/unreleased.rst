@@ -52,6 +52,11 @@ Usability, bells and whistles
 * The "create branch" and "create tag" dialogs now save and restore their
   window settings.
 
+* The "status" widget can now be configured to use a bold font with a darker
+  background for the header items.
+
+  https://github.com/git-cola/git-cola/pull/506
+
 Fixes
 -----
 
