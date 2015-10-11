@@ -90,6 +90,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/502
 
+* We now use Git's default merge message when merging branches.
+
+  https://github.com/git-cola/git-cola/issues/508
+
 * Miscellaneous fixes
 
   https://github.com/git-cola/git-cola/pull/485
