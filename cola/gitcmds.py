@@ -649,14 +649,6 @@ def abort_merge():
         merge_msg_path = merge_message_path()
 
 
-def merge_message(revision):
-    """Return a merge message for FETCH_HEAD."""
-    fetch_head = git.git_path('FETCH_HEAD')
-    if core.exists(fetch_head):
-        return git.fmt_merge_msg('--file', fetch_head)[STDOUT]
-    return "Merge branch '%s'" % revision
-
-
 def strip_remote(remotes, remote_branch):
     for remote in remotes:
         prefix = remote + '/'

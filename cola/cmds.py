@@ -924,9 +924,8 @@ class Merge(Command):
         no_ff = self.no_ff
         no_commit = self.no_commit
         sign = self.sign
-        msg = gitcmds.merge_message(revision)
 
-        status, out, err = self.model.git.merge('-m', msg, revision,
+        status, out, err = self.model.git.merge(revision,
                                                 gpg_sign=sign,
                                                 no_ff=no_ff,
                                                 no_commit=no_commit,
