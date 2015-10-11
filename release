@@ -6,7 +6,7 @@ do_docs=false
 do_website=false
 do_tarball=false
 do_win32=false
-do_win32_innosetup=false
+win32_installer=innosetup
 do_upload=false
 file_to_upload=
 
@@ -61,12 +61,18 @@ build_tarball () {
 }
 
 build_win32_remotely () {
-	if test "$do_win32_innosetup" = true
-	then
+	case "$win32_installer" in
+	innosetup)
 		build_win32_innosetup
-	else
+		;;
+	pynsist)
 		build_win32_pynsist
-	fi
+		;;
+	*)
+		echo 1>&2 "unknown win32 installer: $win32_installer"
+		exit 1
+		;;
+	esac
 }
 
 build_win32_pynsist () {
@@ -159,7 +165,11 @@ do
 		shift
 		;;
 	--win32-innosetup)
-		do_win32_innosetup=true
+		win32_installer=innosetup
+		shift
+		;;
+	--win32-pynsist)
+		win32_installer=pynsist
 		shift
 		;;
 	--win32-login)
