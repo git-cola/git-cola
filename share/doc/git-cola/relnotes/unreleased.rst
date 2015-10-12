@@ -22,3 +22,7 @@ Usability, bells and whistles
   between files and the "Untracked" header.
 
   https://github.com/git-cola/git-cola/issues/509
+
+* Ctrl+O was added as a hotkey for opening repositories.
+
+  https://github.com/git-cola/git-cola/pull/507
