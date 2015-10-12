@@ -15,4 +15,10 @@ Clone the git-cola repo to get the latest development version:
 Unreleased Topics
 =================
 
-Coming soon...
+Usability, bells and whistles
+-----------------------------
+
+* The icon for untracked files was adjusted to better differentiate
+  between files and the "Untracked" header.
+
+  https://github.com/git-cola/git-cola/issues/509

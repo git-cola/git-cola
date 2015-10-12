@@ -112,7 +112,7 @@ def status(filename, deleted, staged, untracked):
     elif staged:
         icon_name = 'staged.svg'
     elif untracked:
-        icon_name = 'question.svg'
+        icon_name = 'question-plain.svg'
     else:
         icon_name = basename_from_filename(filename)
     return icon_name

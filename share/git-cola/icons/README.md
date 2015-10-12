@@ -50,6 +50,7 @@ pencil.svg
 plus.svg
 primitive-dot.svg
 question.svg
+question-plain.svg
 repo-pull.svg
 repo-push.svg
 repo.svg
