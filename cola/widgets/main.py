@@ -222,7 +222,7 @@ class MainView(standard.MainWindow):
             self, N_('Pull...'), remote.pull, hotkeys.PULL)
 
         self.open_repo_action = add_action(
-            self, N_('Open...'), guicmds.open_repo)
+            self, N_('Open...'), guicmds.open_repo, hotkeys.OPEN)
         self.open_repo_action.setIcon(icons.folder())
 
         self.open_repo_new_action = add_action(
