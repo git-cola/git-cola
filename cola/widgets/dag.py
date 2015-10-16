@@ -451,6 +451,8 @@ class GitDAG(standard.MainWindow):
 
         self.thread.connect(self.thread, self.thread.begin, self.thread_begin,
                             Qt.QueuedConnection)
+        self.thread.connect(self.thread, self.thread.status, self.thread_status,
+                            Qt.QueuedConnection)
         self.thread.connect(self.thread, self.thread.add, self.add_commits,
                             Qt.QueuedConnection)
         self.thread.connect(self.thread, self.thread.end, self.thread_end,
@@ -570,6 +572,9 @@ class GitDAG(standard.MainWindow):
         self.focus_tree()
         self.restore_selection()
 
+    def thread_status(self, successful):
+        self.revtext.hint.set_error(not successful)
+
     def restore_selection(self):
         selection = self.selection
         try:
@@ -632,6 +637,7 @@ class ReaderThread(QtCore.QThread):
     begin = SIGNAL('begin')
     add = SIGNAL('add')
     end = SIGNAL('end')
+    status = SIGNAL('status')
 
     def __init__(self, ctx, parent):
         QtCore.QThread.__init__(self, parent)
@@ -659,6 +665,7 @@ class ReaderThread(QtCore.QThread):
                 self.emit(self.add, commits)
                 commits = []
 
+        self.emit(self.status, repo.returncode == 0)
         if commits:
             self.emit(self.add, commits)
         self.emit(self.end)

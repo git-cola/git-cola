@@ -213,6 +213,7 @@ class HintWidget(QtCore.QObject):
         QtCore.QObject.__init__(self, widget)
         self._widget = widget
         self._hint = hint
+        self._is_error = False
         widget.installEventFilter(self)
 
         # Palette for normal text
@@ -222,6 +223,13 @@ class HintWidget(QtCore.QObject):
         self.hint_palette = pal = QtGui.QPalette(widget.palette())
         color = self.hint_palette.text().color()
         color.setAlpha(128)
+        pal.setColor(QtGui.QPalette.Active, QtGui.QPalette.Text, color)
+        pal.setColor(QtGui.QPalette.Inactive, QtGui.QPalette.Text, color)
+
+        # Palette for error text
+        self.error_palette = pal = QtGui.QPalette(widget.palette())
+        color = QtGui.QColor(Qt.red)
+        color.setAlpha(200)
         pal.setColor(QtGui.QPalette.Active, QtGui.QPalette.Text, color)
         pal.setColor(QtGui.QPalette.Inactive, QtGui.QPalette.Text, color)
 
@@ -236,6 +244,11 @@ class HintWidget(QtCore.QObject):
     def value(self):
         """Return the current hint text"""
         return self._hint
+
+    def set_error(self, is_error):
+        """Enable/disable error mode"""
+        self._is_error = is_error
+        self.refresh()
 
     def set_value(self, hint):
         """Change the hint text"""
@@ -252,18 +265,21 @@ class HintWidget(QtCore.QObject):
             self._widget.cursor_position.reset()
         else:
             self._widget.clear()
-        self._enable_hint_palette(hint)
+        self._update_palette(hint)
 
     def refresh(self):
         """Update the palette to match the current mode"""
-        self._enable_hint_palette(self.active())
+        self._update_palette(self.active())
 
-    def _enable_hint_palette(self, hint):
-        """Enable/disable the hint-mode palette"""
-        if hint:
-            self._widget.setPalette(self.hint_palette)
+    def _update_palette(self, hint):
+        """Update to palette for normal/error/hint mode"""
+        if self._is_error:
+            self._widget.setPalette(self.error_palette)
         else:
-            self._widget.setPalette(self.default_palette)
+            if hint:
+                self._widget.setPalette(self.hint_palette)
+            else:
+                self._widget.setPalette(self.default_palette)
 
     def eventFilter(self, obj, event):
         """Enable/disable hint-mode when focus changes"""

@@ -272,6 +272,7 @@ class RepoReader(object):
         if not log_entry:
             self._cached = True
             self._proc.wait()
+            self.returncode = self._proc.returncode
             self._proc = None
             raise StopIteration
 
