@@ -391,8 +391,9 @@ Specifies the font to use for `git cola`'s diff display.
 
 cola.inotify
 ------------
-Set to `false` to disable inotify support.
-Defaults to `true` when the `pyinotify` module is available.
+Set to `false` to disable file system change monitoring.  Defaults to `true`,
+but also requires either Linux with inotify support or Windows with `pywin32`
+installed for file system change monitoring to actually function.
 
 cola.refreshonfocus
 ----------------------

@@ -80,3 +80,5 @@ class Interaction(object):
     def log(cls, message):
         if cls.VERBOSE:
             core.stdout(message)
+
+    safe_log = log

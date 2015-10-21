@@ -1,292 +1,85 @@
-# Copyright (c) 2008 David Aguilar
-"""Provides an inotify plugin for Linux and other systems with pyinotify"""
-from __future__ import division, absolute_import, unicode_literals
-
+import ctypes
+import ctypes.util
+import errno
 import os
-from threading import Timer
-from threading import Lock
+
+# constant from Linux include/uapi/linux/limits.h
+NAME_MAX = 255
+
+# constants from Linux include/uapi/linux/inotify.h
+IN_MODIFY       = 0x00000002
+IN_ATTRIB       = 0x00000004
+IN_CLOSE_WRITE  = 0x00000008
+IN_MOVED_FROM   = 0x00000040
+IN_MOVED_TO     = 0x00000080
+IN_CREATE       = 0x00000100
+IN_DELETE       = 0x00000200
+
+IN_Q_OVERFLOW   = 0x00004000
+
+IN_ONLYDIR      = 0x01000000
+IN_EXCL_UNLINK  = 0x04000000
+IN_ISDIR        = 0x80000000
+
+
+class inotify_event(ctypes.Structure):
+    _fields_ = [
+        ('wd', ctypes.c_int),
+        ('mask', ctypes.c_uint32),
+        ('cookie', ctypes.c_uint32),
+        ('len', ctypes.c_uint32),
+    ]
+
+MAX_EVENT_SIZE = ctypes.sizeof(inotify_event) + NAME_MAX + 1
+
+
+def _errcheck(result, func, arguments):
+    if result >= 0:
+        return result
+    err = ctypes.get_errno()
+    if err == errno.EINTR:
+        return func(*arguments)
+    raise OSError(err, os.strerror(err))
+
 
 try:
-    import pyinotify
-    from pyinotify import ProcessEvent
-    from pyinotify import WatchManager
-    from pyinotify import WatchManagerError
-    from pyinotify import Notifier
-    from pyinotify import EventsCodes
-    AVAILABLE = True
-except Exception:
-    ProcessEvent = object
-    AVAILABLE = False
-
-from cola import utils
-if utils.is_win32():
-    try:
-        import win32file
-        import win32con
-        import pywintypes
-        import win32event
-        AVAILABLE = True
-    except ImportError:
-        ProcessEvent = object
-        AVAILABLE = False
-
-from PyQt4 import QtCore
-
-from cola import gitcfg
-from cola import core
-from cola.compat import ustr, PY3
-from cola.git import STDOUT
-from cola.i18n import N_
-from cola.interaction import Interaction
-from cola.models import main
+    _libc = ctypes.CDLL(ctypes.util.find_library('c'), use_errno=True)
+    _read = _libc.read
+    init = _libc.inotify_init
+    add_watch = _libc.inotify_add_watch
+    rm_watch = _libc.inotify_rm_watch
+except AttributeError:
+    raise ImportError('Could not load inotify functions from libc')
 
 
-_thread = None
-_observers = []
+_read.argtypes = [ctypes.c_int, ctypes.c_void_p, ctypes.c_size_t]
+_read.errcheck = _errcheck
+
+init.argtypes = []
+init.errcheck = _errcheck
+
+add_watch.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_uint32]
+add_watch.errcheck = _errcheck
+
+rm_watch.argtypes = [ctypes.c_int, ctypes.c_int]
+rm_watch.errcheck = _errcheck
 
 
-def observer(fn):
-    _observers.append(fn)
+def read_events(inotify_fd, count=64):
+    buf = ctypes.create_string_buffer(MAX_EVENT_SIZE * count)
+    n = _read(inotify_fd, buf, ctypes.sizeof(buf))
 
-
-def start():
-    global _thread
-
-    cfg = gitcfg.current()
-    if not cfg.get('cola.inotify', True):
-        msg = N_('inotify is disabled because "cola.inotify" is false')
-        Interaction.log(msg)
-        return
-
-    if not AVAILABLE:
-        if utils.is_win32():
-            msg = N_('file notification: disabled\n'
-                     'Note: install pywin32 to enable.\n')
-        elif utils.is_linux():
-            msg = N_('inotify: disabled\n'
-                     'Note: install python-pyinotify to enable inotify.\n')
+    addr = ctypes.addressof(buf)
+    while n:
+        assert n >= ctypes.sizeof(inotify_event)
+        event = inotify_event.from_address(addr)
+        addr += ctypes.sizeof(inotify_event)
+        n -= ctypes.sizeof(inotify_event)
+        if event.len:
+            assert n >= event.len
+            name = ctypes.string_at(addr)
+            addr += event.len
+            n -= event.len
         else:
-            return
-
-        if utils.is_debian():
-            msg += N_('On Debian-based systems '
-                      'try: sudo apt-get install python-pyinotify')
-        Interaction.log(msg)
-        return
-
-    # Start the notification thread
-    _thread = GitNotifier()
-    _thread.start()
-    if utils.is_win32():
-        msg = N_('File notification enabled.')
-    else:
-        msg = N_('inotify enabled.')
-    Interaction.log(msg)
-
-
-def stop():
-    if not has_inotify():
-        return
-    _thread.stop(True)
-    _thread.wait()
-
-
-def has_inotify():
-    """Return True if pyinotify is available."""
-    return AVAILABLE and _thread and _thread.isRunning()
-
-
-class Handler():
-    """Queues filesystem events for broadcast"""
-
-    def __init__(self):
-        """Create an event handler"""
-        ## Timer used to prevent notification floods
-        self._timer = None
-        ## Lock to protect files and timer from threading issues
-        self._lock = Lock()
-
-    def broadcast(self):
-        """Broadcasts a list of all files touched since last broadcast"""
-        with self._lock:
-            for observer in _observers:
-                observer()
-            self._timer = None
-
-    def handle(self, path):
-        """Queues up filesystem events for broadcast"""
-        with self._lock:
-            if self._timer is None:
-                self._timer = Timer(0.888, self.broadcast)
-                self._timer.start()
-
-
-class FileSysEvent(ProcessEvent):
-    """Generated by GitNotifier in response to inotify events"""
-
-    def __init__(self):
-        """Maintain event state"""
-        ProcessEvent.__init__(self)
-        ## Takes care of Queueing events for broadcast
-        self._handler = Handler()
-
-    def process_default(self, event):
-        """Queues up inotify events for broadcast"""
-        if not event.name:
-            return
-        path = os.path.relpath(os.path.join(event.path, event.name))
-        self._handler.handle(path)
-
-
-class GitNotifier(QtCore.QThread):
-    """Polls inotify for changes and generates FileSysEvents"""
-
-    def __init__(self, timeout=333):
-        """Set up the pyinotify thread"""
-        QtCore.QThread.__init__(self)
-        ## Git command object
-        self._git = main.model().git
-        ## pyinotify timeout
-        self._timeout = timeout
-        ## Path to monitor
-        self._path = self._git.worktree()
-        ## Signals thread termination
-        self._running = True
-        ## Directories to watching
-        self._dirs_seen = set()
-        ## The inotify watch manager instantiated in run()
-        self._wmgr = None
-        ## Has add_watch() failed?
-        self._add_watch_failed = False
-        ## Events to capture
-        if utils.is_linux():
-            self._mask = (EventsCodes.ALL_FLAGS['IN_ATTRIB'] |
-                          EventsCodes.ALL_FLAGS['IN_CLOSE_WRITE'] |
-                          EventsCodes.ALL_FLAGS['IN_CREATE'] |
-                          EventsCodes.ALL_FLAGS['IN_DELETE'] |
-                          EventsCodes.ALL_FLAGS['IN_MODIFY'] |
-                          EventsCodes.ALL_FLAGS['IN_MOVED_TO'])
-
-    def stop(self, stopped):
-        """Tells the GitNotifier to stop"""
-        self._timeout = 0
-        self._running = not stopped
-
-    def _watch_directory(self, directory):
-        """Set up a directory for monitoring by inotify"""
-        if self._wmgr is None or self._add_watch_failed:
-            return
-        directory = core.realpath(directory)
-        if directory in self._dirs_seen:
-            return
-        self._dirs_seen.add(directory)
-        if core.exists(directory):
-            dir_arg = directory if PY3 else core.encode(directory)
-            try:
-                self._wmgr.add_watch(dir_arg, self._mask, quiet=False)
-            except WatchManagerError as e:
-                self._add_watch_failed = True
-                self._add_watch_failed_warning(directory, e)
-
-    def _add_watch_failed_warning(self, directory, e):
-        core.stderr('inotify: failed to watch "%s"' % directory)
-        core.stderr(ustr(e))
-        core.stderr('')
-        core.stderr('If you have run out of watches then you may be able to')
-        core.stderr('increase the number of allowed watches by running:')
-        core.stderr('')
-        core.stderr('    echo fs.inotify.max_user_watches=100000 |')
-        core.stderr('    sudo tee -a /etc/sysctl.conf &&')
-        core.stderr('    sudo sysctl -p\n')
-
-    def _is_pyinotify_08x(self):
-        """Is this pyinotify 0.8.x?
-
-        The pyinotify API changed between 0.7.x and 0.8.x.
-        This allows us to maintain backwards compatibility.
-        """
-        if hasattr(pyinotify, '__version__'):
-            if pyinotify.__version__[:3] < '0.8':
-                return False
-        return True
-
-    def run(self):
-        """Create the inotify WatchManager and generate FileSysEvents"""
-
-        if utils.is_win32():
-            self.run_win32()
-            return
-
-        # Only capture events that git cares about
-        self._wmgr = WatchManager()
-        if self._is_pyinotify_08x():
-            notifier = Notifier(self._wmgr, FileSysEvent(),
-                                timeout=self._timeout)
-        else:
-            notifier = Notifier(self._wmgr, FileSysEvent())
-
-        self._watch_directory(self._path)
-
-        # Register files/directories known to git
-        for filename in self._git.ls_files()[STDOUT].splitlines():
-            filename = core.realpath(filename)
-            directory = os.path.dirname(filename)
-            self._watch_directory(directory)
-
-        # self._running signals app termination.  The timeout is a tradeoff
-        # between fast notification response and waiting too long to exit.
-        while self._running:
-            if self._is_pyinotify_08x():
-                check = notifier.check_events()
-            else:
-                check = notifier.check_events(timeout=self._timeout)
-            if not self._running:
-                break
-            if check:
-                notifier.read_events()
-                notifier.process_events()
-        notifier.stop()
-
-    def run_win32(self):
-        """Generate notifications using pywin32"""
-
-        hdir = win32file.CreateFile(
-                self._path,
-                0x0001,
-                win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE,
-                None,
-                win32con.OPEN_EXISTING,
-                win32con.FILE_FLAG_BACKUP_SEMANTICS |
-                win32con.FILE_FLAG_OVERLAPPED,
-                None)
-
-        flags = (win32con.FILE_NOTIFY_CHANGE_FILE_NAME |
-                 win32con.FILE_NOTIFY_CHANGE_DIR_NAME |
-                 win32con.FILE_NOTIFY_CHANGE_ATTRIBUTES |
-                 win32con.FILE_NOTIFY_CHANGE_SIZE |
-                 win32con.FILE_NOTIFY_CHANGE_LAST_WRITE |
-                 win32con.FILE_NOTIFY_CHANGE_SECURITY)
-
-        buf = win32file.AllocateReadBuffer(8192)
-        overlapped = pywintypes.OVERLAPPED()
-        overlapped.hEvent = win32event.CreateEvent(None, 0, 0, None)
-
-        handler = Handler()
-        while self._running:
-            win32file.ReadDirectoryChangesW(hdir, buf, True, flags, overlapped)
-
-            rc = win32event.WaitForSingleObject(overlapped.hEvent,
-                                                self._timeout)
-            if rc != win32event.WAIT_OBJECT_0:
-                continue
-            nbytes = win32file.GetOverlappedResult(hdir, overlapped, True)
-            if not nbytes:
-                continue
-            results = win32file.FILE_NOTIFY_INFORMATION(buf, nbytes)
-            for action, path in results:
-                if not self._running:
-                    break
-                path = path.replace('\\', '/')
-                if (not path.startswith('.git/') and
-                        '/.git/' not in path and os.path.isfile(path)):
-                    handler.handle(path)
+            name = None
+        yield event.wd, event.mask, event.cookie, name
