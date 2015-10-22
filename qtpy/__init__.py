@@ -59,8 +59,7 @@ importing pyqode::
 import os
 import sys
 import logging
-
-__version__ = '0.1.2'
+from ._version import version_info, __version__
 
 #: Qt API environment variable name
 QT_API = 'QT_API'
