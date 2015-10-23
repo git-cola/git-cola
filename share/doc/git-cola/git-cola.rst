@@ -379,6 +379,13 @@ Inspect unmerged files for conflict markers before staging them.
 This feature helps prevent accidental staging of unresolved merge conflicts.
 Defaults to `true`.
 
+cola.defaultrepo
+----------------
+`git cola`, when run outside of a Git repository, prompts the user for a
+repository.  Set `cola.defaultrepo` to the path of a Git repostiory to make
+`git cola` attempt to use that repository before falling back to prompting
+the user for a repository.
+
 cola.fileattributes
 -------------------
 Enables per-file gitattributes encoding support when set to `true`.

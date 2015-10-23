@@ -340,8 +340,21 @@ def new_application(args):
 
 def new_model(app, repo, prompt=False, settings=None):
     model = main.model()
-    valid = model.set_worktree(repo) and not prompt
+    valid = False
+    if not prompt:
+        valid = model.set_worktree(repo)
+        if not valid:
+            # We are not currently in a git repository so we need to find one.
+            # Before prompting the user for a repostiory, check if they've
+            # configured a default repository and attempt to use it.
+            default_repo = gitcfg.current().get('cola.defaultrepo')
+            if default_repo:
+                valid = model.set_worktree(default_repo)
+
     while not valid:
+        # If we've gotten into this loop then that means that neither the
+        # current directory nor the default repository were available.
+        # Prompt the user for a repository.
         startup_dlg = startup.StartupDialog(app.activeWindow(),
                                             settings=settings)
         gitdir = startup_dlg.find_git_repo()
