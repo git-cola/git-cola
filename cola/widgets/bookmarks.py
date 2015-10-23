@@ -66,7 +66,6 @@ class BookmarksWidget(QtGui.QWidget):
         titlebar = parent.titleBarWidget()
         titlebar.add_corner_widget(self.corner_widget)
 
-
         qtutils.connect_button(self.add_button, self.tree.add_bookmark)
         qtutils.connect_button(self.delete_button, self.tree.delete_bookmark)
         qtutils.connect_button(self.open_button, self.tree.open_repo)
@@ -87,6 +86,7 @@ class BookmarksWidget(QtGui.QWidget):
 
 
 class BookmarksTreeWidget(standard.TreeWidget):
+
     def __init__(self, style, settings, parent=None):
         standard.TreeWidget.__init__(self, parent=parent)
         self.style = style
@@ -160,41 +160,28 @@ class BookmarksTreeWidget(standard.TreeWidget):
         menu.addAction(self.launch_terminal_action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
-    def copy(self):
+    def apply_fn(self, fn, *args, **kwargs):
         item = self.selected_item()
-        if not item:
-            return
-        qtutils.set_clipboard(item.path)
+        if item:
+            fn(item, *args, **kwargs)
+
+    def copy(self):
+        self.apply_fn(lambda item: qtutils.set_clipboard(item.path))
 
     def open_default(self):
-        item = self.selected_item()
-        if not item:
-            return
-        cmds.do(cmds.OpenDefaultApp, [item.path])
+        self.apply_fn(lambda item: cmds.do(cmds.OpenDefaultApp, [item.path]))
 
     def open_repo(self):
-        item = self.selected_item()
-        if not item:
-            return
-        cmds.do(cmds.OpenRepo, item.path)
+        self.apply_fn(lambda item: cmds.do(cmds.OpenRepo, item.path))
 
     def open_new_repo(self):
-        item = self.selected_item()
-        if not item:
-            return
-        cmds.do(cmds.OpenNewRepo, item.path)
+        self.apply_fn(lambda item: cmds.do(cmds.OpenNewRepo, item.path))
 
     def launch_editor(self):
-        item = self.selected_item()
-        if not item:
-            return
-        cmds.do(cmds.Edit, [item.path])
+        self.apply_fn(lambda item: cmds.do(cmds.Edit, [item.path]))
 
     def launch_terminal(self):
-        item = self.selected_item()
-        if not item:
-            return
-        cmds.do(cmds.LaunchTerminal, item.path)
+        self.apply_fn(lambda item: cmds.do(cmds.LaunchTerminal, item.path))
 
     def item_selection_changed(self):
         enabled = bool(self.selected_item())
