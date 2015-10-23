@@ -113,4 +113,5 @@ Thanks
 * Vitor Lobo
 * v.paritskiy
 * Wolfgang Ocker
+* Zeioth
 * Zhang Han

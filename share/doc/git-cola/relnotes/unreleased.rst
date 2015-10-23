@@ -26,3 +26,11 @@ Usability, bells and whistles
 * Ctrl+O was added as a hotkey for opening repositories.
 
   https://github.com/git-cola/git-cola/pull/507
+
+* `git cola`'s Bookmarks widget can now be used to set a "Default Repository".
+  Under the hood, we set the `cola.defaultrepo` configuration variable.
+  The default repository is used whenever `git cola` is launched outside of
+  a Git repostiory.  When unset, or when set to a bogus value, `git cola`
+  will still prompt for a repository.
+
+  https://github.com/git-cola/git-cola/issues/513
