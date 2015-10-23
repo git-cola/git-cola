@@ -519,7 +519,7 @@ GIT_COLA_SCALE
 `git cola` can be made to scale its interface for HiDPI displays.
 When defined, `git cola` will scale icons, radioboxes, and checkboxes
 according to the scale factor.  The default value is `1`.
-A value is `2` for high-resolution displays.
+A good value is `2` for high-resolution displays.
 
 Fonts are not scaled, as their size can already be set in the settings.
 
