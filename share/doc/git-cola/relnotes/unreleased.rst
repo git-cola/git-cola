@@ -26,3 +26,7 @@ Usability, bells and whistles
 * Ctrl+O was added as a hotkey for opening repositories.
 
   https://github.com/git-cola/git-cola/pull/507
+
+* `git dag` now uses consistent edge colors across updates.
+
+  https://github.com/git-cola/git-cola/issues/512
