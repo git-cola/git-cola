@@ -274,6 +274,10 @@ def staged_name():
     return name_from_basename('staged.svg')
 
 
+def star():
+    return icon('star.svg')
+
+
 def sync():
     return icon('sync.svg')
 

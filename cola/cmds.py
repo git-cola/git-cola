@@ -1348,6 +1348,16 @@ class RunConfigAction(Command):
         return status
 
 
+class SetDefaultRepo(Command):
+
+    def __init__(self, repo):
+        Command.__init__(self)
+        self.repo = repo
+
+    def do(self):
+        gitcfg.current().set_user('cola.defaultrepo', self.repo)
+
+
 class SetDiffText(Command):
 
     def __init__(self, text):

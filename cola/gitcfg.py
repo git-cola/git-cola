@@ -287,16 +287,25 @@ class GitConfig(observable.Observable):
         return value
 
     def set_user(self, key, value):
-        msg = self.message_user_config_changed
+        if value is None:
+            self.unset_user(key)
+            return
         self.git.config('--global', key, self.python_to_git(value))
         self.update()
+        msg = self.message_user_config_changed
         self.notify_observers(msg, key, value)
 
     def set_repo(self, key, value):
-        msg = self.message_repo_config_changed
         self.git.config(key, self.python_to_git(value))
         self.update()
+        msg = self.message_repo_config_changed
         self.notify_observers(msg, key, value)
+
+    def unset_user(self, key):
+        self.git.config('--global', '--unset', key)
+        self.update()
+        msg = self.message_repo_config_changed
+        self.notify_observers(msg, key, None)
 
     def find(self, pat):
         pat = pat.lower()

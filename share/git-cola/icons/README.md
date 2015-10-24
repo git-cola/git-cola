@@ -56,6 +56,7 @@ repo-push.svg
 repo.svg
 screen-full.svg
 search.svg
+star.svg
 sync.svg
 tag.svg
 telescope.svg
