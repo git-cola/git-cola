@@ -825,6 +825,10 @@ class EdgeColor(object):
     def current(cls):
         return cls.colors[cls.current_color_index]
 
+    @classmethod
+    def reset(cls):
+        cls.current_color_index = 0
+
 
 class Commit(QtGui.QGraphicsItem):
     item_type = QtGui.QGraphicsItem.UserType + 2
@@ -1098,6 +1102,7 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
         notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
     def clear(self):
+        EdgeColor.reset()
         self.scene().clear()
         self.selection_list = []
         self.items.clear()
