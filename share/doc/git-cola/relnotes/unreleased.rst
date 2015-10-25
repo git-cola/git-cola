@@ -38,3 +38,9 @@ Usability, bells and whistles
   will still prompt for a repository.
 
   https://github.com/git-cola/git-cola/issues/513
+
+* `git cola`'s Russian and Spanish translations were improved.
+
+  https://github.com/git-cola/git-cola/pull/514
+
+  https://github.com/git-cola/git-cola/pull/515
