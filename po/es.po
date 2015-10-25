@@ -123,12 +123,12 @@ msgstr "Favoritos"
 #: cola/cmds.py:528
 #, python-format
 msgid "Remove %s from the recent list?"
-msgstr ""
+msgstr "Eliminar %s de la lista de recientes?"
 
 #: cola/cmds.py:529
 #, python-format
 msgid "%s will be removed from your recent repositories."
-msgstr ""
+msgstr "%s seran eliminado de tus repositorios recientes."
 
 #: cola/cmds.py:530 cola/widgets/patch.py:92 cola/widgets/patch.py:105
 msgid "Remove"
@@ -218,6 +218,9 @@ msgid ""
 "Use \"git config\" to define \"commit.template\"\n"
 "so that it points to a commit template."
 msgstr ""
+"Primero debes configurar una plantilla de commit.\n"
+"Usa \"git config\" y modifica \"commit.template\"\n"
+"para que apunte a una plantilla."
 
 #: cola/cmds.py:956
 msgid "Open Using Default Application"
@@ -568,7 +571,7 @@ msgstr ""
 
 #: cola/guicmds.py:134
 msgid "Path or URL to clone (Env. $VARS okay)"
-msgstr ""
+msgstr "Ruta o URL a Clonar (Env. $VARS okay)"
 
 #: cola/guicmds.py:155
 msgid "Error Cloning"
@@ -899,7 +902,7 @@ msgstr ""
 
 #: cola/widgets/commitmsg.py:109 cola/widgets/prefs.py:194
 msgid "Auto-Wrap Lines"
-msgstr ""
+msgstr "Salto de Linea Automatico"
 
 #: cola/widgets/commitmsg.py:116
 msgid "Load Previous Commit Message"
@@ -1252,7 +1255,7 @@ msgstr ""
 
 #: cola/widgets/dag.py:395 cola/widgets/main.py:315
 msgid "Lock Layout"
-msgstr ""
+msgstr "Bloquear Paneles"
 
 #: cola/widgets/dag.py:404 cola/widgets/main.py:408
 msgid "View"
@@ -1853,19 +1856,19 @@ msgstr ""
 
 #: cola/widgets/diff.py:153
 msgid "Ignore changes in whitespace at EOL"
-msgstr ""
+msgstr "Ignorar cambios de espacios en blanco en EOL"
 
 #: cola/widgets/diff.py:158
 msgid "Ignore changes in amount of whitespace"
-msgstr ""
+msgstr "Ignorar cambios en la cantidad de espacios en blanco"
 
 #: cola/widgets/diff.py:163
 msgid "Ignore all whitespace"
-msgstr ""
+msgstr "Ignorar todos los espacios en blanco"
 
 #: cola/widgets/diff.py:168
 msgid "Show whole surrounding functions of changes"
-msgstr ""
+msgstr "Mostrar todo lo que rodea"
 
 #: cola/widgets/diff.py:173 cola/widgets/diff.py:174
 msgid "Diff Options"
@@ -1942,11 +1945,11 @@ msgstr "Mostrando cambios desde"
 
 #: cola/widgets/recent.py:64
 msgid "Expand all"
-msgstr ""
+msgstr "Expandir todo"
 
 #: cola/widgets/recent.py:68
 msgid "Collapse all"
-msgstr ""
+msgstr "Colapsar todo"
 
 #: cola/widgets/filelist.py:20
 msgid "Filename"
@@ -2093,27 +2096,27 @@ msgstr "Email"
 
 #: cola/widgets/prefs.py:141
 msgid "Merge Verbosity"
-msgstr ""
+msgstr "Verbosidad de Merge"
 
 #: cola/widgets/prefs.py:142
 msgid "Number of Diff Context Lines"
-msgstr ""
+msgstr "Numero de lineas de contexto Diff"
 
 #: cola/widgets/prefs.py:143
 msgid "Summarize Merge Commits"
-msgstr ""
+msgstr "Sumario de Merge Commits"
 
 #: cola/widgets/prefs.py:144
 msgid "Show Diffstat After Merge"
-msgstr ""
+msgstr "Mostrar Diffstat tras Merge"
 
 #: cola/widgets/prefs.py:145
 msgid "Display Untracked Files"
-msgstr ""
+msgstr "Mostrar ficheros sin seguimiento"
 
 #: cola/widgets/prefs.py:146
 msgid "Detect Conflict Markers"
-msgstr ""
+msgstr "Detectar Conflict Markers"
 
 #: cola/widgets/prefs.py:190
 msgid "Fixed-Width Font"
@@ -2125,11 +2128,11 @@ msgstr "Tamaño de Fuente"
 
 #: cola/widgets/prefs.py:192
 msgid "Tab Width"
-msgstr ""
+msgstr "Ancho de Tabulacion"
 
 #: cola/widgets/prefs.py:193
 msgid "Text Width"
-msgstr ""
+msgstr "Ancho del texto"
 
 #: cola/widgets/prefs.py:195
 msgid "Editor"
@@ -2137,27 +2140,27 @@ msgstr ""
 
 #: cola/widgets/prefs.py:196
 msgid "History Browser"
-msgstr ""
+msgstr "Herramienta de Historial"
 
 #: cola/widgets/prefs.py:197
 msgid "Diff Tool"
-msgstr "Herramienta de Comparación"
+msgstr "Herramienta de Diff"
 
 #: cola/widgets/prefs.py:198
 msgid "Merge Tool"
-msgstr ""
+msgstr "Herramienta Merge"
 
 #: cola/widgets/prefs.py:199
 msgid "Keep *.orig Merge Backups"
-msgstr ""
+msgstr "Conservar Merge Backups *.orig"
 
 #: cola/widgets/prefs.py:200
 msgid "Sort bookmarks alphabetically"
-msgstr ""
+msgstr "Ordenar Favoritos Alfabeticamente"
 
 #: cola/widgets/prefs.py:201
 msgid "Save GUI Settings"
-msgstr ""
+msgstr "Guardar GUI al salir"
 
 #: cola/widgets/prefs.py:250 cola/widgets/main.py:179
 msgid "Preferences"
@@ -2189,7 +2192,7 @@ msgstr "Estado"
 
 #: cola/widgets/main.py:103
 msgid "Favorites"
-msgstr ""
+msgstr "Favoritos"
 
 #: cola/widgets/main.py:108
 #, fuzzy
@@ -2242,7 +2245,7 @@ msgstr ""
 
 #: cola/widgets/main.py:204
 msgid "Load Commit Message..."
-msgstr ""
+msgstr "Cargar Mensaje de Commit..."
 
 #: cola/widgets/main.py:210
 msgid "Quit"
@@ -2290,7 +2293,7 @@ msgstr "Explorar Otra Rama..."
 
 #: cola/widgets/main.py:262
 msgid "Get Commit Message Template"
-msgstr ""
+msgstr "Aplicar Plantilla de Mensaje de Commit"
 
 #: cola/widgets/main.py:265
 msgid "About"
@@ -2343,7 +2346,7 @@ msgstr ""
 
 #: cola/widgets/main.py:300
 msgid "Start Interactive Rebase..."
-msgstr ""
+msgstr "Comenzar Rebase Interactivo..."
 
 #: cola/widgets/main.py:303
 msgid "Edit..."
