@@ -661,27 +661,37 @@ Install gpg-agent and friends
 On Mac OS X, you may need to `brew install gpg-agent` and install the
 `Mac GPG Suite <https://gpgtools.org/macgpg2/>`_.
 
-On Linux use your package manager to install gnupg-agent and pinentry-qt4, e.g.::
+On Linux use your package manager to install gnupg2,
+gnupg-agent and pinentry-qt, e.g.::
 
-    sudo apt-get install gnupg-agent pinentry-qt4
+    sudo apt-get install gnupg2 gnupg-agent pinentry-qt
+
+On Linux, you should also configure Git so that it uses gpg2 (gnupg2),
+otherwise you will get errors mentioning, "unable to open /dev/tty".
+Set Git's `gpg.program` to `gpg2`::
+
+    git config --global gpg.program gpg2
 
 Configure gpg-agent and a pin-entry program
 -------------------------------------------
-Edit `~/.gnupg/gpg.conf` to include the line,::
+On Mac OS X, edit `~/.gnupg/gpg.conf` to include the line,::
 
     use-agent
 
-Edit `~/.gnupg/gpg-agent.conf` to contain a pinentry-program line pointing to
-the pin-entry program for your platform.
+This is typically not needed on Linux, where `gpg2` is used, as
+this is the default value when using `gpg2`.
 
-The following example `gpg-agent.conf` shows how to use pinentry-qt4 on Linux::
+Next, edit `~/.gnupg/gpg-agent.conf` to contain a pinentry-program line
+pointing to the pinentry program for your platform.
 
-    pinentry-program /usr/bin/pinentry-qt4
+The following example `~/.gnupg/gpg-agent.conf` shows how to use pinentry-qt on Linux::
+
+    pinentry-program /usr/bin/pinentry-qt
     default-cache-ttl 3600
     enable-ssh-support
     use-standard-socket
 
-This following example `gpg-agent.conf` shows how to use MacGPG2's
+This following example `.gnupg/gpg-agent.conf` shows how to use MacGPG2's
 pinentry app on On Mac OS X::
 
     pinentry-program /usr/local/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac
@@ -689,8 +699,21 @@ pinentry app on On Mac OS X::
     enable-ssh-support
     use-standard-socket
 
-Once this has been setup then you will need to eval the output
-of `gpg-agent --daemon` in your shell prior to launching git-cola.::
+Once this has been setup then you will need to start the gpg-agent daemon.
+First, check if it is already running.::
+
+    env | grep GPG_AGENT_INFO
+    echo bye | gpg-connect-agent
+
+If you see the following output::
+
+    GPG_AGENT_INFO=...
+    OK closing connection
+
+Then the daemon is already running, and you do not need to start it yourself.
+
+If it is not running, eval the output of `gpg-agent --daemon` in your shell
+prior to launching git-cola.::
 
     eval $(gpg-agent --daemon)
     bin/git-cola
