@@ -33,6 +33,8 @@ New releases are available on the
 
     git clone git://github.com/git-cola/git-cola.git
 
+[![git-cola build status](https://api.travis-ci.org/git-cola/git-cola.svg?branch=master)](https://travis-ci.org/git-cola/git-cola)
+
 [git-cola on github](https://github.com/git-cola/git-cola)
 
 [git-cola google group](http://groups.google.com/group/git-cola/)
