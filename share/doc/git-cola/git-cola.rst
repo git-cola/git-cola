@@ -713,10 +713,22 @@ If you see the following output::
 Then the daemon is already running, and you do not need to start it yourself.
 
 If it is not running, eval the output of `gpg-agent --daemon` in your shell
-prior to launching git-cola.::
+prior to launching `git cola`.::
 
     eval $(gpg-agent --daemon)
-    bin/git-cola
+    git cola
+
+WINDOWS NOTES
+=============
+
+Git Installation
+----------------
+If Git is installed in a custom location, e.g. not installed in `C:/Git` or
+Program Files, then the path to Git must be configured by creating a file in
+your home directory `~/.config/git-cola/git-bindir` that points to your git
+installation.  e.g.::
+
+    C:/Tools/Git/bin
 
 LINKS
 =====
