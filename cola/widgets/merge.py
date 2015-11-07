@@ -211,8 +211,8 @@ class MergeView(QtGui.QDialog):
             return
 
         noff = self.checkbox_noff.isChecked()
-        do_commit = self.checkbox_commit.isChecked()
+        no_commit = not self.checkbox_commit.isChecked()
         squash = self.checkbox_squash.isChecked()
         sign = self.checkbox_sign.isChecked()
-        cmds.do(cmds.Merge, revision, not(do_commit), squash, noff, sign)
+        cmds.do(cmds.Merge, revision, no_commit, squash, noff, sign)
         self.accept()
