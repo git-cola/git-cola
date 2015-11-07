@@ -215,7 +215,7 @@ class CommitTreeWidget(ViewerMixin, standard.TreeWidget):
         standard.TreeWidget.__init__(self, parent)
         ViewerMixin.__init__(self)
 
-        self.setSelectionMode(self.ContiguousSelection)
+        self.setSelectionMode(self.ExtendedSelection)
         self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
 
         self.sha1map = {}
