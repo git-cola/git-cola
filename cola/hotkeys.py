@@ -4,6 +4,7 @@ from PyQt4.QtCore import Qt
 # A-G
 STAGE_MODIFIED = Qt.AltModifier + Qt.Key_A
 WORD_LEFT = Qt.Key_B
+BLAME = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_B
 BRANCH = Qt.ControlModifier + Qt.Key_B
 CHECKOUT = Qt.AltModifier + Qt.Key_B
 CHERRY_PICK = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_C

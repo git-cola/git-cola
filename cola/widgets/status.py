@@ -174,6 +174,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.view_history_action = qtutils.add_action(
             self, N_('View History...'), self.view_history, hotkeys.HISTORY)
 
+        self.view_blame_action = qtutils.add_action(
+            self, N_('Blame...'), self.view_blame, hotkeys.BLAME)
+
         # MoveToTrash and Delete use the same shortcut.
         # We will only bind one of them, depending on whether or not the
         # MoveToTrash command is avaialble.  When available, the hotkey
@@ -568,6 +571,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         menu.addAction(self.copy_path_action)
         menu.addAction(self.copy_relpath_action)
         menu.addAction(self.view_history_action)
+        menu.addAction(self.view_blame_action)
         return menu
 
     def _create_staged_submodule_context_menu(self, menu, s):
@@ -613,6 +617,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         menu.addAction(self.copy_path_action)
         menu.addAction(self.copy_relpath_action)
         menu.addAction(self.view_history_action)
+        menu.addAction(self.view_blame_action)
         return menu
 
     def _create_unstaged_context_menu(self, menu, s):
@@ -668,6 +673,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         menu.addAction(self.copy_relpath_action)
         if not selection.selection_model().is_empty():
             menu.addAction(self.view_history_action)
+            menu.addAction(self.view_blame_action)
         return menu
 
     def _create_modified_submodule_context_menu(self, menu, s):
@@ -936,6 +942,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def mimeTypes(self):
         return qtutils.path_mimetypes()
+
+    def view_blame(self):
+        """Signal that we should view blame for paths."""
+        cmds.do(cmds.BlamePaths, selection.union(selection.selection_model()))
 
     def view_history(self):
         """Signal that we should view history for paths."""

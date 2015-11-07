@@ -322,6 +322,25 @@ class Checkout(Command):
             self.model.update_file_status()
 
 
+class BlamePaths(Command):
+    """Blame view for paths."""
+
+    def __init__(self, paths):
+        Command.__init__(self)
+        viewer = utils.shell_split(prefs.blame_viewer())
+        self.argv = viewer + list(paths)
+
+    def do(self):
+        try:
+            core.fork(self.argv)
+        except Exception as e:
+            _, details = utils.format_exception(e)
+            title = N_('Error Launching Blame Viewer')
+            msg = (N_('Cannot exec "%s": please configure a blame viewer') %
+                   ' '.join(self.argv))
+            Interaction.critical(title, message=msg, details=details)
+
+
 class CheckoutBranch(Checkout):
     """Checkout a branch."""
 

@@ -9,6 +9,7 @@ from cola import observable
 from cola import utils
 
 
+BLAME_VIEWER = 'cola.blameviewer'
 BOLD_HEADERS = 'cola.boldheaders'
 CHECKCONFLICTS = 'cola.checkconflicts'
 COMMENT_CHAR = 'core.commentchar'
@@ -30,6 +31,15 @@ TABWIDTH = 'cola.tabwidth'
 TEXTWIDTH = 'cola.textwidth'
 USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
+
+
+def default_blame_viewer():
+    return 'git gui blame'
+
+
+def blame_viewer():
+    default = default_blame_viewer()
+    return gitcfg.current().get(BLAME_VIEWER, default)
 
 
 def bold_headers():
