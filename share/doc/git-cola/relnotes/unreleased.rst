@@ -44,3 +44,7 @@ Usability, bells and whistles
   https://github.com/git-cola/git-cola/pull/514
 
   https://github.com/git-cola/git-cola/pull/515
+
+* `git dag` now allows selecting non-contiguous ranges in the log widget.
+
+  https://github.com/git-cola/git-cola/issues/468
