@@ -384,14 +384,18 @@ def format_patchsets(to_export, revs, output='patches'):
     # Group the patches into continuous sets
     for idx, rev in enumerate(to_export[1:]):
         # Limit the search to the current neighborhood for efficiency
-        master_idx = revs[cur_master_idx:].index(rev)
-        master_idx += cur_master_idx
+        try:
+            master_idx = revs[cur_master_idx:].index(rev)
+            master_idx += cur_master_idx
+        except ValueError:
+            master_idx  = revs.index(rev)
+
         if master_idx == cur_master_idx + 1:
-            patches_to_export[ patchset_idx ].append(rev)
+            patches_to_export[patchset_idx].append(rev)
             cur_master_idx += 1
             continue
         else:
-            patches_to_export.append([ rev ])
+            patches_to_export.append([rev])
             cur_master_idx = master_idx
             patchset_idx += 1
 
