@@ -910,10 +910,10 @@ class LoadFixupMessage(LoadCommitMessageFromSHA1):
 class Merge(Command):
     """Merge commits"""
 
-    def __init__(self, revision, no_commit, squash, noff, sign):
+    def __init__(self, revision, no_commit, squash, no_ff, sign):
         Command.__init__(self)
         self.revision = revision
-        self.no_ff = noff
+        self.no_ff = no_ff
         self.no_commit = no_commit
         self.squash = squash
         self.sign = sign
