@@ -87,6 +87,7 @@ Thanks
 * Patrick Browne
 * Paul Hildebrandt
 * Paul Weingardt
+* Paulo Fidalgo
 * Peter Dave Hello
 * Peter Júnoš
 * Pilar Molina Lopez
