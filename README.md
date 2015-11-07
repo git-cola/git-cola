@@ -120,7 +120,7 @@ If not, please file a bug against your distribution ;-)
 
 ### fedora
 
-    yum install git-cola
+    dnf install git-cola
 
 ### gentoo
 
