@@ -171,6 +171,7 @@ class SettingsFormWidget(FormWidget):
         self.linebreak = qtutils.checkbox()
         self.editor = QtGui.QLineEdit()
         self.historybrowser = QtGui.QLineEdit()
+        self.blameviewer = QtGui.QLineEdit()
         self.difftool = QtGui.QLineEdit()
         self.mergetool = QtGui.QLineEdit()
         self.keep_merge_backups = qtutils.checkbox()
@@ -185,6 +186,7 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Auto-Wrap Lines'), self.linebreak)
         self.add_row(N_('Editor'), self.editor)
         self.add_row(N_('History Browser'), self.historybrowser)
+        self.add_row(N_('Blame Viewer'), self.blameviewer)
         self.add_row(N_('Diff Tool'), self.difftool)
         self.add_row(N_('Merge Tool'), self.mergetool)
         self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
@@ -204,6 +206,8 @@ class SettingsFormWidget(FormWidget):
             prefs.EDITOR: (self.editor, os.getenv('VISUAL', 'gvim')),
             prefs.HISTORY_BROWSER: (self.historybrowser,
                                     prefs.default_history_browser()),
+            prefs.BLAME_VIEWER: (self.blameviewer,
+                                 prefs.default_blame_viewer()),
             prefs.MERGE_KEEPBACKUP: (self.keep_merge_backups, True),
             prefs.MERGETOOL: (self.mergetool, 'xxdiff'),
         })
