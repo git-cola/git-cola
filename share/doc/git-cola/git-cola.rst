@@ -368,6 +368,10 @@ CONFIGURATION VARIABLES
 =======================
 These variables can be set using `git config` or from the settings.
 
+cola.blameviewer
+----------------
+The command used to blame files.  Defaults to `git gui blame`.
+
 cola.browserdockable
 --------------------
 Whether to create a dock widget with the `Browser` tool.

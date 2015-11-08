@@ -52,3 +52,8 @@ Usability, bells and whistles
 * `git cola` was translated to Turkish thanks to Barış ÇELİK
 
   https://github.com/git-cola/git-cola/pull/520
+
+* The status view now supports launching `git gui blame`.  It can be
+  configured to use a different command by setting `cola.blameviewer`.
+
+  https://github.com/git-cola/git-cola/pull/521
