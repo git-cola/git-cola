@@ -602,24 +602,23 @@ msgstr "Каталог существует"
 
 #: cola/guicmds.py:185 cola/widgets/search.py:80
 msgid "Export Patches"
-msgstr ""
+msgstr "Экспортировать патчи"
 
 #: cola/guicmds.py:203 cola/guicmds.py:212 cola/widgets/startup.py:120
 msgid "Open Git Repository..."
-msgstr "Открыть Git репозиторий"
+msgstr "Открыть Git репозиторий..."
 
 #: cola/guicmds.py:221
 msgid "Load Commit Message"
 msgstr "Загрузить комментарий к коммиту"
 
 #: cola/guicmds.py:249
-#, fuzzy
 msgid "Select Branch to Review"
-msgstr "Выбрать ветвь для review"
+msgstr "Выбрать ветвь для просмотра"
 
 #: cola/guicmds.py:249
 msgid "Review"
-msgstr ""
+msgstr "Просмотр"
 
 #: cola/guicmds.py:331
 msgid "Clone Repository"
@@ -762,7 +761,7 @@ msgstr "Получить все (fetch)"
 
 #: cola/widgets/remote.py:509
 msgid "Pull"
-msgstr "Отправить (pull)"
+msgstr "Получить (pull)"
 
 #: cola/widgets/selectcommits.py:50
 msgid "Revision Expression:"
@@ -803,9 +802,9 @@ msgid "Delete remote"
 msgstr "Удалить внешний репозиторий"
 
 #: cola/widgets/editremotes.py:158
-#, fuzzy, python-format
+#, python-format
 msgid "Gathering info for \"%s\"..."
-msgstr "Загрузка изменений в %s..."
+msgstr "Получение информации о \"%s\"..."
 
 #: cola/widgets/editremotes.py:189
 msgid "Add Remote"
@@ -1195,7 +1194,7 @@ msgstr "Поиск авторов коммитов"
 
 #: cola/widgets/search.py:214
 msgid "Search Date Range"
-msgstr ""
+msgstr "Поиск по диапазону дат"
 
 #: cola/widgets/search.py:307
 msgid "Choose Path(s)"
@@ -1203,11 +1202,11 @@ msgstr "Выберите путь"
 
 #: cola/widgets/dag.py:119
 msgid "Diff this -> selected"
-msgstr "Сравнить текущее с выделенным"
+msgstr "Сравнить текущее состояние с выделенным"
 
 #: cola/widgets/dag.py:122
 msgid "Diff selected -> this"
-msgstr "Сравнить выделенное с текущим"
+msgstr "Сравнить выделенное состояние с текущим"
 
 #: cola/widgets/dag.py:125 cola/widgets/createbranch.py:88
 #: cola/widgets/createbranch.py:99 cola/widgets/createbranch.py:148
@@ -1395,7 +1394,7 @@ msgstr "Добавить/убрать выбранные пути к/из ком
 
 #: cola/widgets/browse.py:119
 msgid "Untrack Selected"
-msgstr ""
+msgstr "Убрать выбранные файлы из контроля версий"
 
 #: cola/widgets/browse.py:120
 msgid "Stop tracking path(s)"
@@ -1415,15 +1414,15 @@ msgstr "Сравнить c помощью git-difftool с предыдущей �
 
 #: cola/widgets/browse.py:137
 msgid "Revert unstaged changes to selected paths."
-msgstr "Отменить незафиксированные изменения по выбранным путям?"
+msgstr "Отменить незафиксированные изменения по выбранным путям."
 
 #: cola/widgets/browse.py:143
 msgid "Revert uncommitted changes to selected paths."
-msgstr "Отменить незакомиченные изменения по выбранным путям?"
+msgstr "Отменить незакомиченные изменения по выбранным путям."
 
 #: cola/widgets/browse.py:149
 msgid "Edit selected path(s)."
-msgstr "Редактировать выбрынный путь(и)"
+msgstr "Редактировать выбранный путь(и)"
 
 #: cola/widgets/browse.py:364
 msgid "Select Previous Version"
@@ -1843,19 +1842,19 @@ msgstr "\"%(command)s\" завершилась с кодом \"%(status)d\""
 
 #: cola/widgets/grep.py:86
 msgid "command-line arguments"
-msgstr ""
+msgstr "фраза для поиска / аргументы командной строки"
 
 #: cola/widgets/grep.py:90
 msgid "Choose the \"git grep\" regular expression mode"
-msgstr ""
+msgstr "Выберите тип синтаксиса для \"git grep\""
 
 #: cola/widgets/grep.py:91
 msgid "Basic Regexp"
-msgstr ""
+msgstr "Базовый синтаксис"
 
 #: cola/widgets/grep.py:91
 msgid "Extended Regexp"
-msgstr ""
+msgstr "Расширенный синтаксис"
 
 #: cola/widgets/grep.py:91
 msgid "Fixed String"
@@ -1875,11 +1874,11 @@ msgstr "Искать фиксированную строку"
 
 #: cola/widgets/grep.py:108
 msgid "grep result..."
-msgstr ""
+msgstr "результаты поиска..."
 
 #: cola/widgets/grep.py:121
 msgid "Shell arguments"
-msgstr ""
+msgstr "Ручной ввод аргументов \"git grep\""
 
 #: cola/widgets/grep.py:123
 msgid ""
@@ -1926,13 +1925,12 @@ msgid "Revert Selected Lines..."
 msgstr "Откатить выделенные линии..."
 
 #: cola/widgets/diff.py:254
-#, fuzzy
 msgid "Stage Diff Hunk"
-msgstr ""
+msgstr "Добавить эту часть к коммиту"
 
 #: cola/widgets/diff.py:255
 msgid "Revert Diff Hunk..."
-msgstr ""
+msgstr "Откатить изменения в этой части"
 
 #: cola/widgets/diff.py:277
 msgid "Unstage Selected Lines"
@@ -1940,7 +1938,7 @@ msgstr "Убрать из коммита выбранные линии"
 
 #: cola/widgets/diff.py:279
 msgid "Unstage Diff Hunk"
-msgstr ""
+msgstr "Убрать эту часть из коммита"
 
 #: cola/widgets/diff.py:308
 msgid "Select All"
@@ -1956,11 +1954,11 @@ msgstr "Отменить изменения в выбранных линиях"
 
 #: cola/widgets/diff.py:422
 msgid "Revert Diff Hunk?"
-msgstr ""
+msgstr "Откатить изменения в этой части?"
 
 #: cola/widgets/diff.py:423
 msgid "Revert Diff Hunk"
-msgstr ""
+msgstr "Откатить изменения в этой части"
 
 #: cola/widgets/diff.py:511
 msgid "Loading..."
@@ -1992,11 +1990,11 @@ msgstr "Имя файла"
 
 #: cola/widgets/filelist.py:20
 msgid "Additions"
-msgstr "Дополнительно"
+msgstr "Добавлено строк"
 
 #: cola/widgets/filelist.py:20
 msgid "Deletions"
-msgstr "Удаления"
+msgstr "Удалено строк"
 
 #: cola/widgets/filelist.py:72
 msgid "Show history"
@@ -2008,7 +2006,7 @@ msgstr "Сохранить архив"
 
 #: cola/widgets/archive.py:127
 msgid "Prefix"
-msgstr ""
+msgstr "Префикс"
 
 #: cola/widgets/archive.py:132
 msgid "Advanced"
@@ -2290,7 +2288,7 @@ msgstr "Выход"
 
 #: cola/widgets/main.py:212
 msgid "Grep"
-msgstr ""
+msgstr "Поиск подстроки (git grep)"
 
 #: cola/widgets/main.py:214
 msgid "Merge..."
@@ -2369,9 +2367,8 @@ msgid "Checkout..."
 msgstr "Перейти..."
 
 #: cola/widgets/main.py:290
-#, fuzzy
 msgid "Review..."
-msgstr "Сбросить..."
+msgstr "Просмотр..."
 
 #: cola/widgets/main.py:293
 msgid "File Browser..."
@@ -2383,7 +2380,7 @@ msgstr ""
 
 #: cola/widgets/main.py:300
 msgid "Start Interactive Rebase..."
-msgstr ""
+msgstr "Начать интерактивное перемещение (rebase)..."
 
 #: cola/widgets/main.py:303
 msgid "Edit..."
@@ -2459,7 +2456,7 @@ msgstr "Выбрать"
 
 #: cola/widgets/main.py:733
 msgid "Interactive Rebase"
-msgstr ""
+msgstr "Интерактивное перемещение (rebase)"
 
 #: cola/models/browse.py:44
 msgid "Age"
