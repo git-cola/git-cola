@@ -35,21 +35,20 @@ Usability, bells and whistles
   Under the hood, we set the `cola.defaultrepo` configuration variable.
   The default repository is used whenever `git cola` is launched outside of
   a Git repostiory.  When unset, or when set to a bogus value, `git cola`
-  will still prompt for a repository.
+  will prompt for a repository, as it previously did.
 
   https://github.com/git-cola/git-cola/issues/513
 
-* `git cola`'s Russian and Spanish translations were improved.
+* `git cola`'s Russian and Spanish translations were improved
+  thanks to Vaiz and Zeioth.
 
   https://github.com/git-cola/git-cola/pull/514
 
   https://github.com/git-cola/git-cola/pull/515
 
-* `git dag` now allows selecting non-contiguous ranges in the log widget.
+  https://github.com/git-cola/git-cola/pull/523
 
-  https://github.com/git-cola/git-cola/issues/468
-
-* `git cola` was translated to Turkish thanks to Barış ÇELİK
+* `git cola` was translated to Turkish thanks to Barış ÇELİK.
 
   https://github.com/git-cola/git-cola/pull/520
 
@@ -57,3 +56,8 @@ Usability, bells and whistles
   configured to use a different command by setting `cola.blameviewer`.
 
   https://github.com/git-cola/git-cola/pull/521
+
+* `git dag` now allows selecting non-contiguous ranges in the log widget.
+
+  https://github.com/git-cola/git-cola/issues/468
+
