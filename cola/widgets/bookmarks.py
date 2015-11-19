@@ -85,6 +85,10 @@ class BookmarksWidget(QtGui.QWidget):
         enabled = bool(self.tree.selected_item())
         self.button_group.setEnabled(enabled)
 
+    def connect_to(self, other):
+        self.connect(self.tree, SIGNAL('default_changed()'), other.tree.refresh)
+        self.connect(other.tree, SIGNAL('default_changed()'), self.tree.refresh)
+
 
 class BookmarksTreeWidget(standard.TreeWidget):
 
@@ -191,9 +195,11 @@ class BookmarksTreeWidget(standard.TreeWidget):
     def set_default_item(self, item):
         cmds.do(cmds.SetDefaultRepo, item.path)
         self.refresh()
+        self.emit(SIGNAL('default_changed()'))
 
     def clear_default_repo(self):
         self.apply_fn(self.clear_default_item)
+        self.emit(SIGNAL('default_changed()'))
 
     def clear_default_item(self, item):
         cmds.do(cmds.SetDefaultRepo, None)

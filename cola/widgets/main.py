@@ -105,6 +105,7 @@ class MainView(standard.MainWindow):
                 bookmarks.RECENT_REPOS, parent=self.recentdockwidget)
         self.recentdockwidget.setWidget(self.recentwidget)
         self.recentdockwidget.hide()
+        self.bookmarkswidget.connect_to(self.recentwidget)
 
         # "Commit Message Editor" widget
         self.position_label = QtGui.QLabel()
