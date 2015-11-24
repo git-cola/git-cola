@@ -385,7 +385,7 @@ class GitConfig(observable.Observable):
         if not term:
             # find a suitable default terminal
             term = 'xterm -e' # for mac osx
-            candidates = ('xfce4-terminal', 'konsole')
+            candidates = ('xfce4-terminal', 'konsole', 'gnome-terminal')
             for basename in candidates:
                 if core.exists('/usr/bin/%s' % basename):
                     term = '%s -e' % basename

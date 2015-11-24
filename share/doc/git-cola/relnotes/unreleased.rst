@@ -61,3 +61,12 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/468
 
+Fixes
+-----
+
+* `xfce4-terminal` and `gnome-terminal` are now supported when launching
+  `git mergetool` to resolve merges.  These terminals require that the command
+  to execute is shell-quoted and passed as a single string argument to `-e`
+  rather than as additional command line arguments.
+
+  https://github.com/git-cola/git-cola/issues/524

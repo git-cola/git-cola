@@ -823,8 +823,13 @@ class LaunchDifftool(BaseCommand):
                 cfg = gitcfg.current()
                 cmd = cfg.terminal()
                 argv = utils.shell_split(cmd)
-                argv.extend(['git', 'mergetool', '--no-prompt', '--'])
-                argv.extend(paths)
+                mergetool = ['git', 'mergetool', '--no-prompt', '--']
+                mergetool.extend(paths)
+                needs_shellquote = set(['gnome-terminal', 'xfce4-terminal'])
+                if os.path.basename(argv[0]) in needs_shellquote:
+                    argv.append(subprocess.list2cmdline(mergetool))
+                else:
+                    argv.extend(mergetool)
                 core.fork(argv)
         else:
             difftool.run()
