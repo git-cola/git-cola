@@ -61,6 +61,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/468
 
+* Any font can now be chosen for the diff editor, not just monospace fonts.
+
+  https://github.com/git-cola/git-cola/issues/525
+
 Fixes
 -----
 

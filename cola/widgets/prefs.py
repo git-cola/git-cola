@@ -153,7 +153,6 @@ class SettingsFormWidget(FormWidget):
         FormWidget.__init__(self, model, parent)
 
         self.fixed_font = QtGui.QFontComboBox()
-        self.fixed_font.setFontFilters(QtGui.QFontComboBox.MonospacedFonts)
 
         self.font_size = QtGui.QSpinBox()
         self.font_size.setMinimum(8)
