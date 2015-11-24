@@ -1,13 +1,13 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import re
-import subprocess
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
+from cola import core
 from cola import gitcmds
 from cola import icons
 from cola import qtutils
@@ -127,7 +127,7 @@ class CompletionLineEdit(text.HintedLineEdit):
             words.pop()
 
         words.append(completion)
-        text = subprocess.list2cmdline(words)
+        text = core.list2cmdline(words)
         self.setText(text)
         self.emit(SIGNAL('changed()'))
         self._do_text_changed(text, '')

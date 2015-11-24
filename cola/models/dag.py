@@ -1,7 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
 
-import subprocess
-
 from cola import core
 from cola import utils
 from cola.git import git
@@ -74,7 +72,7 @@ class DAG(Observable):
             self.overrides['count'] = args.count
 
         if hasattr(args, 'args') and args.args:
-            ref = subprocess.list2cmdline(map(core.decode, args.args))
+            ref = core.list2cmdline(args.args)
             if self.set_ref(ref):
                 self.overrides['ref'] = ref
 

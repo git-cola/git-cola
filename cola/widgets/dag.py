@@ -1,7 +1,6 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import collections
-import subprocess
 import math
 
 from PyQt4 import QtGui
@@ -11,6 +10,7 @@ from PyQt4.QtCore import SIGNAL
 from PyQt4.QtCore import QPointF
 from PyQt4.QtCore import QRectF
 
+from cola import core
 from cola import cmds
 from cola import difftool
 from cola import hotkeys
@@ -621,7 +621,7 @@ class GitDAG(standard.MainWindow):
     def histories_selected(self, histories):
         argv = [self.model.currentbranch, '--']
         argv.extend(histories)
-        text = subprocess.list2cmdline(argv)
+        text = core.list2cmdline(argv)
         self.revtext.setText(text)
         self.display()
 

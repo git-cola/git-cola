@@ -1,7 +1,6 @@
 """Launcher and command line interface to git-cola"""
 import argparse
 import os
-import subprocess
 import sys
 
 from cola.app import add_common_arguments
@@ -326,7 +325,7 @@ def cmd_dag(args):
 def cmd_diff(args):
     context = application_init(args)
     from cola.difftool import diff_expression
-    expr = subprocess.list2cmdline(map(core.decode, args.args))
+    expr = core.list2cmdline(args.args)
     view = diff_expression(None, expr, create_widget=True)
     return application_start(context, view)
 
@@ -344,7 +343,7 @@ def cmd_fetch(args):
 def cmd_find(args):
     context = application_init(args)
     from cola.widgets import finder
-    paths = subprocess.list2cmdline(map(core.decode, args.paths))
+    paths = core.list2cmdline(args.paths)
     view = finder.finder(paths=paths)
     return application_start(context, view)
 
@@ -352,7 +351,7 @@ def cmd_find(args):
 def cmd_grep(args):
     context = application_init(args)
     from cola.widgets import grep
-    text = subprocess.list2cmdline(map(core.decode, args.args))
+    text = core.list2cmdline(args.args)
     view = grep.new_grep(text=text, parent=None)
     return application_start(context, view)
 

@@ -1,7 +1,6 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import sys
-import subprocess
 
 from cola import core
 from cola import gitcfg
@@ -72,7 +71,7 @@ def default_history_browser():
         python = sys.executable.replace("\\", '/')
         argv = [python, git_cola, 'dag']
         argv = core.prep_for_subprocess(argv)
-        default = core.decode(subprocess.list2cmdline(argv))
+        default = core.list2cmdline(argv)
     else:
         # The `gitk` script can be launched as-is on unix
         default = 'gitk'

@@ -64,6 +64,10 @@ def mkpath(path, encoding=None):
     return encode(path, encoding=encoding)
 
 
+def list2cmdline(cmd):
+    return subprocess.list2cmdline(map(decode, cmd))
+
+
 def read(filename, size=-1, encoding=None, errors='strict'):
     """Read filename and return contents"""
     with xopen(filename, 'rb') as fh:

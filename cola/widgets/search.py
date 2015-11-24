@@ -2,7 +2,6 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import time
-import subprocess
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -312,7 +311,7 @@ class Search(SearchWidget):
             if not path.startswith(core.getcwd()):
                 continue
             filepaths.append(path[lenprefix:])
-        query = subprocess.list2cmdline(filepaths)
+        query = core.list2cmdline(filepaths)
         self.query.setText(query)
         if query:
             self.search_callback()

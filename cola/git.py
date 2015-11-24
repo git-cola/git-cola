@@ -200,7 +200,7 @@ class Git(object):
 
         cola_trace = GIT_COLA_TRACE
         if cola_trace == 'trace':
-            msg = 'trace: ' + subprocess.list2cmdline(command)
+            msg = 'trace: ' + core.list2cmdline(command)
             Interaction.log_status(status, msg, '')
         elif cola_trace == 'full':
             if out or err:

@@ -446,7 +446,7 @@ class Ignore(Command):
 
 
 def file_summary(files):
-    txt = subprocess.list2cmdline(files)
+    txt = core.list2cmdline(files)
     if len(txt) > 768:
         txt = txt[:768].rstrip() + '...'
     return txt
@@ -827,7 +827,7 @@ class LaunchDifftool(BaseCommand):
                 mergetool.extend(paths)
                 needs_shellquote = set(['gnome-terminal', 'xfce4-terminal'])
                 if os.path.basename(argv[0]) in needs_shellquote:
-                    argv.append(subprocess.list2cmdline(mergetool))
+                    argv.append(core.list2cmdline(mergetool))
                 else:
                     argv.extend(mergetool)
                 core.fork(argv)

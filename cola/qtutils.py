@@ -3,8 +3,6 @@
 """
 from __future__ import division, absolute_import, unicode_literals
 
-import subprocess
-
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
@@ -761,7 +759,7 @@ def mimedata_from_paths(paths):
     # gnome-terminal expects utf-16 encoded text, but other terminals,
     # e.g. terminator, prefer utf-8, so allow cola.dragencoding
     # to override the default.
-    paths_text = subprocess.list2cmdline(abspaths)
+    paths_text = core.list2cmdline(abspaths)
     encoding = gitcfg.current().get('cola.dragencoding', 'utf-16')
     moz_text = core.encode(paths_text, encoding=encoding)
     mimedata.setData('text/x-moz-url', moz_text)
