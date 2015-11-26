@@ -11,7 +11,7 @@ def main():
     args = parser.parse_args()
     version = args.version
 
-    ReleaseNotes(version).update()
+    #ReleaseNotes(version).update()
     PyVersion(version).update()
     PyNsistVersion(version).update()
     RelnotesVersion(version).update()
