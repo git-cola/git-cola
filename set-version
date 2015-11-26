@@ -12,6 +12,7 @@ def main():
     version = args.version
 
     #ReleaseNotes(version).update()
+    CreateReleaseNotes(version).update()
     PyVersion(version).update()
     PyNsistVersion(version).update()
     RelnotesVersion(version).update()
@@ -88,6 +89,30 @@ class Version(object):
 
     def warn(self):
         pass
+
+
+class CreateReleaseNotes(Version):
+
+    def __init__(self, version):
+        super(ReleaseNotes, self).__init__(version)
+        self.path = 'share/doc/git-cola/relnotes/%s.rst' % self.tag_version
+        self.readonly = os.path.exists(self.path)
+
+    def read(self):
+        anchor = '.. _%s:' % self.tag_version
+        git_cola = 'git-cola %s' % self.tag_version
+        underline = '=' * len(git_cola)
+        output = [anchor, '', git_cola, underline]
+        return '\n'.join(output) + '\n'
+
+    def warn(self):
+        if self.readonly:
+            warn('%s already exists!' % self.path)
+        elif not os.path.exists(self.path):
+            warn('%s does not exist!' % self.path)
+
+    def filter(self, content):
+        return content
 
 
 class ReleaseNotes(Version):
