@@ -35,11 +35,11 @@ def add_parents(paths):
 def format_exception(e):
     exc_type, exc_value, exc_tb = sys.exc_info()
     details = traceback.format_exception(exc_type, exc_value, exc_tb)
-    details = '\n'.join(details)
+    details = '\n'.join(map(core.decode, details))
     if hasattr(e, 'msg'):
         msg = e.msg
     else:
-        msg = str(e)
+        msg = core.decode(repr(e))
     return (msg, details)
 
 
