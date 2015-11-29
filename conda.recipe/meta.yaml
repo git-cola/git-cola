@@ -1,0 +1,28 @@
+package:
+  name: qtpy
+  version: {{ environ.get('GIT_DESCRIBE_TAG') }}
+
+source:
+  git_url: ../
+  git_tag: {{ environ.get('GIT_DESCRIBE_TAG') }}
+
+build:
+  noarch_python: True
+
+requirements:
+  build:
+    - python
+  run:
+    - python
+
+test:
+  imports:
+    - qtpy
+
+  requires:
+    - pyqt
+
+about:
+  home: https://github.com/spyder-ide/qtpy
+  license: MIT
+  summary: Provides an uniform layer to support PyQt4, PyQt5 and PySide with a single codebase
