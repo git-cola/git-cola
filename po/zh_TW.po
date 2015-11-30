@@ -2036,7 +2036,7 @@ msgstr "覆寫"
 
 #: cola/widgets/createtag.py:61
 msgid "vX.Y.Z"
-msgstr "X.Y.Z 版本"
+msgstr "X.Y.Z版本"
 
 #: cola/widgets/createtag.py:63
 msgid "Specifies the tag name"
