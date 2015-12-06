@@ -6,7 +6,6 @@
 
 # PyPi configuration
 .pypirc
-setup.cfg
 
 # Packages
 *.egg
