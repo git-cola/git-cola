@@ -96,6 +96,7 @@ Thanks
 * Raghavendra Karunanidhi
 * Rustam Safin
 * Samsul Ma'arif
+* Sebastian Brass
 * Sergey Leschina
 * Srinivasa Nallapati
 * Stan Angeloff
