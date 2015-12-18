@@ -12,7 +12,7 @@ from cola import gitcmds
 from cola import icons
 from cola import qtutils
 from cola import utils
-from cola.git import git
+from cola import git
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.models import main
