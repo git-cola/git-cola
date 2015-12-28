@@ -114,21 +114,21 @@ def current_branch():
 
 def _read_git_head(head, default='master', git=git):
     """Pure-python .git/HEAD reader"""
-    # Legacy .git/HEAD symlinks
-    if core.islink(head):
-        refs_heads = core.realpath(git.git_path('refs', 'heads'))
-        path = core.abspath(head).replace('\\', '/')
-        if path.startswith(refs_heads + '/'):
-            return path[len(refs_heads)+1:]
-
-    # Common .git/HEAD "ref: refs/heads/master" file
-    elif core.isfile(head):
+    # Common .git/HEAD "ref: refs/heads/master" files
+    islink = core.islink(head)
+    if core.isfile(head) and not islink:
         data = core.read(head).rstrip()
         ref_prefix = 'ref: '
         if data.startswith(ref_prefix):
             return data[len(ref_prefix):]
         # Detached head
         return data
+    # Legacy .git/HEAD symlinks
+    elif islink:
+        refs_heads = core.realpath(git.git_path('refs', 'heads'))
+        path = core.abspath(head).replace('\\', '/')
+        if path.startswith(refs_heads + '/'):
+            return path[len(refs_heads)+1:]
 
     return default
 
