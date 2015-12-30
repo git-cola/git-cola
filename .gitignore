@@ -4,6 +4,9 @@
 # C extensions
 *.so
 
+# Kate
+.directory
+
 # PyPi configuration
 .pypirc
 
