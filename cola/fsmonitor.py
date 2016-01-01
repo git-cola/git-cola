@@ -50,10 +50,10 @@ class _Monitor(QtCore.QObject):
         self._thread_class = thread_class
         self._thread = None
 
-    def start(self):
+    def start(self, refs_only=False):
         if self._thread_class is not None:
             assert self._thread is None
-            self._thread = self._thread_class(self)
+            self._thread = self._thread_class(self, refs_only)
             self._thread.start()
 
     def stop(self):
@@ -74,9 +74,10 @@ class _BaseThread(QtCore.QThread):
     #: modifications into a single signal.
     _NOTIFICATION_DELAY = 888
 
-    def __init__(self, monitor):
+    def __init__(self, monitor, refs_only):
         QtCore.QThread.__init__(self)
         self._monitor = monitor
+        self._refs_only = refs_only
         self._running = True
         self._pending = False
 
@@ -112,8 +113,8 @@ if AVAILABLE == 'inotify':
                 inotify.IN_ONLYDIR
         )
 
-        def __init__(self, monitor):
-            _BaseThread.__init__(self, monitor)
+        def __init__(self, monitor, refs_only):
+            _BaseThread.__init__(self, monitor, refs_only)
             self._worktree = core.abspath(git.worktree())
             self._git_dir = git.git_dir()
             self._lock = Lock()
@@ -189,11 +190,13 @@ if AVAILABLE == 'inotify':
                 if self._inotify_fd is None:
                     return
                 try:
-                    tracked_dirs = set(os.path.dirname(
-                                           os.path.join(self._worktree, path))
-                                       for path in gitcmds.tracked_files())
-                    self._refresh_watches(tracked_dirs, self._worktree_wds,
-                                          self._worktree_wd_map)
+                    if not self._refs_only:
+                        tracked_dirs = set(
+                                os.path.dirname(os.path.join(self._worktree,
+                                                             path))
+                                for path in gitcmds.tracked_files())
+                        self._refresh_watches(tracked_dirs, self._worktree_wds,
+                                              self._worktree_wd_map)
                     git_dirs = set()
                     git_dirs.add(self._git_dir)
                     for dirpath, dirnames, filenames in core.walk(
@@ -255,7 +258,9 @@ if AVAILABLE == 'inotify':
                 return False
             elif wd == self._git_dir_wd:
                 name = core.decode(name)
-                if name == 'index' or name == 'HEAD':
+                if name == 'HEAD':
+                    return True
+                elif not self._refs_only and name == 'index':
                     return True
             elif (wd in self._git_dir_wds
                     and not core.decode(name).endswith('.lock')):
@@ -336,8 +341,8 @@ if AVAILABLE == 'pywin32':
                   win32con.FILE_NOTIFY_CHANGE_LAST_WRITE |
                   win32con.FILE_NOTIFY_CHANGE_SECURITY)
 
-        def __init__(self, monitor):
-            _BaseThread.__init__(self, monitor)
+        def __init__(self, monitor, refs_only):
+            _BaseThread.__init__(self, monitor, refs_only)
             self._worktree = self._transform_path(core.abspath(git.worktree()))
             self._worktree_watch = None
             self._git_dir = self._transform_path(core.abspath(git.git_dir()))
@@ -364,14 +369,18 @@ if AVAILABLE == 'pywin32':
                     self._stop_event = win32event.CreateEvent(None, True,
                                                               False, None)
 
-                self._worktree_watch = _Win32Watch(self._worktree, self._FLAGS)
+                events = [self._stop_event]
+
+                if not self._refs_only:
+                    self._worktree_watch = _Win32Watch(self._worktree,
+                                                       self._FLAGS)
+                    events.append(self._worktree_watch.event)
+
                 self._git_dir_watch = _Win32Watch(self._git_dir, self._FLAGS)
+                events.append(self._git_dir_watch.event)
 
                 self._log_enabled_message()
 
-                events = [self._worktree_watch.event,
-                          self._git_dir_watch.event,
-                          self._stop_event]
                 while self._running:
                     if self._pending:
                         timeout = self._NOTIFICATION_DELAY
@@ -396,21 +405,23 @@ if AVAILABLE == 'pywin32':
                     self._git_dir_watch.close()
 
         def _handle_results(self):
-            for action, path in self._worktree_watch.read():
-                if not self._running:
-                    break
-                path = self._worktree + '/' + self._transform_path(path)
-                if (path != self._git_dir
-                        and not path.startswith(self._git_dir + '/')):
-                    self._pending = True
+            if not self._refs_only:
+                for action, path in self._worktree_watch.read():
+                    if not self._running:
+                        break
+                    path = self._worktree + '/' + self._transform_path(path)
+                    if (path != self._git_dir
+                            and not path.startswith(self._git_dir + '/')):
+                        self._pending = True
             for action, path in self._git_dir_watch.read():
                 if not self._running:
                     break
                 path = self._transform_path(path)
                 if path.endswith('.lock'):
                     continue
-                if (path == 'index' or path == 'head'
-                    or path.startswith('refs/'):
+                if path == 'head' or path.startswith('refs/'):
+                    self._pending = True
+                elif not self._refs_only and path == 'index':
                     self._pending = True
 
         def stop(self):
