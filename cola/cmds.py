@@ -929,6 +929,8 @@ class LoadFixupMessage(LoadCommitMessageFromSHA1):
 
     def __init__(self, sha1):
         LoadCommitMessageFromSHA1.__init__(self, sha1, prefix='fixup! ')
+        if self.new_commitmsg:
+            self.new_commitmsg = self.new_commitmsg.splitlines()[0]
 
 
 class Merge(Command):
