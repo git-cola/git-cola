@@ -94,7 +94,7 @@ class Version(object):
 class CreateReleaseNotes(Version):
 
     def __init__(self, version):
-        super(ReleaseNotes, self).__init__(version)
+        super(CreateReleaseNotes, self).__init__(version)
         self.path = 'share/doc/git-cola/relnotes/%s.rst' % self.tag_version
         self.readonly = os.path.exists(self.path)
 
