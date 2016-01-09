@@ -84,7 +84,7 @@ def parse_args():
 def cmd_dag(args):
     context = application_init(args)
     view = git_dag(context.model, args=args, settings=args.settings)
-    return application_start(context, view)
+    return application_start(context, view, monitor_refs_only=True)
 
 
 if __name__ == '__main__':
