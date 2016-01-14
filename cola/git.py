@@ -268,8 +268,9 @@ class Git(object):
                 _kwargs[kwarg] = kwargs.pop(kwarg)
 
         # Prepare the argument list
+        git_args = ['git', '-c', 'diff.suppressBlankEmpty=false', dashify(cmd)]
         opt_args = self.transform_kwargs(**kwargs)
-        call = ['git', dashify(cmd)] + opt_args
+        call = git_args + opt_args
         call.extend(args)
         try:
             return self.execute(call, **_kwargs)

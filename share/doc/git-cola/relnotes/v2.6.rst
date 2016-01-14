@@ -1,0 +1,12 @@
+.. _v2.6:
+
+git-cola v2.6 (pre-release)
+===========================
+
+Fixes
+-----
+
+* Diff highlighting is now robust to the user having
+  diff.supressBlankEmpty=true in their git config.
+
+  https://github.com/git-cola/git-cola/issues/541
