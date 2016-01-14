@@ -17,7 +17,7 @@ class QtUtilsTestCase(unittest.TestCase):
         super(QtUtilsTestCase, self).tearDown()
 
     def test_copy_path(self):
-        # This doesn't do much except make sure it doesn't throw and exception
+        # This doesn't do much except make sure it doesn't throw an exception
         qtutils.copy_path('dummy_string')
 
 
