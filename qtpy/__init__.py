@@ -73,6 +73,7 @@ API_NAME = {'pyqt5': 'PyQt5', 'pyqt': 'PyQt4', 'pyqt4': 'PyQt4',
 
 is_old_pyqt = is_pyqt46 = False
 PYQT5 = True
+PYQT4 = PYSIDE = False
 
 
 class PythonQtError(Exception):
@@ -106,6 +107,7 @@ if API in PYQT4_API:
         from PyQt4.QtCore import PYQT_VERSION_STR as __version__  # analysis:ignore
         from PyQt4 import uic                                     # analysis:ignore
         PYQT5 = False
+        PYQT4 = True
     except ImportError:
         API = os.environ['QT_API'] = 'pyside'
         API_NAME = 'PySide'
@@ -122,5 +124,6 @@ if API in PYSIDE_API:
     try:
         from PySide import __version__                            # analysis:ignore
         PYQT5 = False
+        PYSIDE = True
     except ImportError:
         raise PythonQtError('No Qt bindings could be found')
