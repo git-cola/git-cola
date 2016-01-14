@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2014-2015 Colin Duquesnoy
-# Copyright © 2011 Pierre Raybaut
+# Copyright © 2009- The Spyder Developmet Team
 #
 # Licensed under the terms of the MIT License
 # (see LICENSE.txt for details)
@@ -13,6 +13,7 @@ Provides QtTest and functions
 """
 
 import os
+
 from qtpy import QT_API
 from qtpy import PYQT5_API
 from qtpy import PYQT4_API
@@ -33,4 +34,3 @@ elif os.environ[QT_API] in PYSIDE_API:
     raise ImportError('QtTest support is incomplete for PySide')
 else:
     raise PythonQtError('No Qt bindings could be found')
-

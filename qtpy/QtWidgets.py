@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2014-2015 Colin Duquesnoy
-# Copyright © 2011 Pierre Raybaut
+# Copyright © 2009- The Spyder Developmet Team
 #
 # Licensed under the terms of the MIT License
 # (see LICENSE.txt for details)
@@ -14,6 +14,7 @@ Provides widget classes and functions.
 """
 
 import os
+
 from qtpy import QT_API
 from qtpy import PYQT5_API
 from qtpy import PYQT4_API
@@ -22,9 +23,9 @@ from qtpy import PythonQtError
 
 
 if os.environ[QT_API] in PYQT5_API:
-    from PyQt5.QtWidgets import *                             # analysis:ignore
+    from PyQt5.QtWidgets import *
 elif os.environ[QT_API] in PYQT4_API:
-    from PyQt4.QtGui import *                                 # analysis:ignore
+    from PyQt4.QtGui import *
     from PyQt4.QtGui import QFileDialog as OldFileDialog
 
     class QFileDialog(OldFileDialog):
@@ -53,7 +54,6 @@ elif os.environ[QT_API] in PYQT4_API:
                 parent, caption, directory, filter, selectedFilter,
                 options)
 elif os.environ[QT_API] in PYSIDE_API:
-    from PySide.QtGui import *                                # analysis:ignore
+    from PySide.QtGui import *
 else:
     raise PythonQtError('No Qt bindings could be found')
-
