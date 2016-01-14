@@ -1,20 +1,10 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2011-2012 Pierre Raybaut
+# Copyright © 2009- The Spyder Development Team
 # Licensed under the terms of the MIT License
-# (see spyderlib/__init__.py for details)
 
 """
-spyderlib.qt.compat
--------------------
-
-Transitional module providing compatibility functions intended to help
-migrating from PyQt to PySide.
-
-This module should be fully compatible with:
-    * PyQt >=v4.4
-    * both PyQt API #1 and API #2
-    * PySide
+Compatibility functions
 """
 
 from __future__ import print_function
@@ -22,7 +12,7 @@ import os
 import sys
 import collections
 
-from qtpy.QtGui import QFileDialog
+from qtpy.QtWidgets import QFileDialog
 from qtpy.py3compat import is_text_string, to_text_string, TEXT_TYPES
 
 
