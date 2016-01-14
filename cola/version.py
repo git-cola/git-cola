@@ -16,13 +16,12 @@ from cola._version import VERSION
 
 # minimum version requirements
 _versions = {
-    # git-diff learned --patience in 1.6.2
-    # git-mergetool learned --no-prompt in 1.6.2
-    # git-difftool moved out of contrib in git 1.6.3
+    # git diff learned --patience in 1.6.2
+    # git mergetool learned --no-prompt in 1.6.2
+    # git difftool moved out of contrib in git 1.6.3
     'git': '1.6.3',
     'python': '2.6',
-    'pyqt': '4.4',
-    'pyqt_qrunnable': '4.4',
+    # git diff --submodule was introduced in 1.6.6
     'diff-submodule': '1.6.6',
 }
 
