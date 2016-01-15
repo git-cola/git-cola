@@ -8,7 +8,7 @@
 
 """
 Provides QtGui classes and functions.
-.. warning:: Only PyQt4/PySide Gui classes compatible with PyQt5.QtGui are
+.. warning:: Only PyQt4/PySide QtGui classes compatible with PyQt5.QtGui are
     exposed here. Therefore, you need to treat/use this package as if it were
     the ``PyQt5.QtGui`` module.
 """
