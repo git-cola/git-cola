@@ -105,7 +105,7 @@ def _qfiledialog_wrapper(attr, parent=None, caption='', basedir='',
         options = QFileDialog.Options(0)
     try:
         # PyQt <v4.6 (API #1)
-        from spyderlib.qt.QtCore import QString
+        from qtpy.QtCore import QString
     except ImportError:
         # PySide or PyQt >=v4.6
         QString = None  # analysis:ignore
