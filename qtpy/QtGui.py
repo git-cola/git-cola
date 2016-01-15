@@ -71,7 +71,7 @@ elif os.environ[QT_API] in PYSIDE_API:
                               QDragEnterEvent, QDragLeaveEvent, QDragMoveEvent,
                               QDropEvent, QFileOpenEvent, QFocusEvent, QFont,
                               QFontDatabase, QFontInfo, QFontMetrics,
-                              QFontMetricsF, QGlyphRun, QGradient, QHelpEvent,
+                              QFontMetricsF, QGradient, QHelpEvent,
                               QHideEvent, QHoverEvent, QIcon, QIconDragEvent,
                               QIconEngine, QImage, QImageIOHandler, QImageReader,
                               QImageWriter, QInputEvent, QInputMethodEvent,
@@ -83,15 +83,15 @@ elif os.environ[QT_API] in PYSIDE_API:
                               QPaintEvent, QPainter, QPainterPath,
                               QPainterPathStroker, QPalette, QPen, QPicture,
                               QPictureIO, QPixmap, QPixmapCache, QPolygon,
-                              QPolygonF, QQuaternion, QRadialGradient, QRawFont,
+                              QPolygonF, QQuaternion, QRadialGradient,
                               QRegExpValidator, QRegion, QResizeEvent,
                               QSessionManager, QShortcutEvent, QShowEvent,
-                              QStandardItem, QStandardItemModel, QStaticText,
+                              QStandardItem, QStandardItemModel,
                               QStatusTipEvent, QSyntaxHighlighter, QTabletEvent,
                               QTextBlock, QTextBlockFormat, QTextBlockGroup,
                               QTextBlockUserData, QTextCharFormat, QTextCursor,
                               QTextDocument, QTextDocumentFragment,
-                              QTextDocumentWriter, QTextFormat, QTextFragment,
+                              QTextFormat, QTextFragment,
                               QTextFrame, QTextFrameFormat, QTextImageFormat,
                               QTextInlineObject, QTextItem, QTextLayout,
                               QTextLength, QTextLine, QTextList, QTextListFormat,
@@ -101,8 +101,7 @@ elif os.environ[QT_API] in PYSIDE_API:
                               QValidator, QVector2D, QVector3D, QVector4D,
                               QWhatsThisClickedEvent, QWheelEvent,
                               QWindowStateChangeEvent, qAlpha, qBlue,
-                              qFuzzyCompare, qGray, qGreen, qIsGray, qRed, qRgb,
-                              qRgba)
+                              qGray, qGreen, qIsGray, qRed, qRgb, qRgba)
 else:
     raise PythonQtError('No Qt bindings could be found')
 

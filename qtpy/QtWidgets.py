@@ -60,7 +60,7 @@ elif os.environ[QT_API] in PYSIDE_API:
          QDesktopServices, QDoubleValidator, QDrag, QDragEnterEvent,
          QDragLeaveEvent, QDragMoveEvent, QDropEvent, QFileOpenEvent,
          QFocusEvent, QFont, QFontDatabase, QFontInfo, QFontMetrics,
-         QFontMetricsF, QGlyphRun, QGradient, QHelpEvent, QHideEvent,
+         QFontMetricsF, QGradient, QHelpEvent, QHideEvent,
          QHoverEvent, QIcon, QIconDragEvent, QIconEngine, QImage,
          QImageIOHandler, QImageReader, QImageWriter, QInputEvent,
          QInputMethodEvent, QKeyEvent, QKeySequence, QLinearGradient,
@@ -69,20 +69,20 @@ elif os.environ[QT_API] in PYSIDE_API:
          QMoveEvent, QMovie, QPaintDevice, QPaintEngine, QPaintEngineState,
          QPaintEvent, QPainter, QPainterPath, QPainterPathStroker, QPalette,
          QPen, QPicture, QPictureIO, QPixmap, QPixmapCache, QPolygon,
-         QPolygonF, QQuaternion, QRadialGradient, QRawFont, QRegExpValidator,
+         QPolygonF, QQuaternion, QRadialGradient, QRegExpValidator,
          QRegion, QResizeEvent, QSessionManager, QShortcutEvent, QShowEvent,
-         QStandardItem, QStandardItemModel, QStaticText, QStatusTipEvent,
+         QStandardItem, QStandardItemModel, QStatusTipEvent,
          QSyntaxHighlighter, QTabletEvent, QTextBlock, QTextBlockFormat,
          QTextBlockGroup, QTextBlockUserData, QTextCharFormat, QTextCursor,
-         QTextDocument, QTextDocumentFragment, QTextDocumentWriter,
+         QTextDocument, QTextDocumentFragment,
          QTextFormat, QTextFragment, QTextFrame, QTextFrameFormat,
          QTextImageFormat, QTextInlineObject, QTextItem, QTextLayout,
          QTextLength, QTextLine, QTextList, QTextListFormat, QTextObject,
          QTextObjectInterface, QTextOption, QTextTable, QTextTableCell,
          QTextTableCellFormat, QTextTableFormat, QTouchEvent, QTransform,
          QValidator, QVector2D, QVector3D, QVector4D, QWhatsThisClickedEvent,
-         QWheelEvent, QWindowStateChangeEvent, qAlpha, qBlue, qFuzzyCompare,
-         qGray, qGreen, qIsGray, qRed, qRgb, qRgba)
+         QWheelEvent, QWindowStateChangeEvent, qAlpha, qBlue, qGray, qGreen,
+         qIsGray, qRed, qRgb, qRgba)
 else:
     raise PythonQtError('No Qt bindings could be found')
 
