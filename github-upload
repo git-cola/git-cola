@@ -1,9 +1,0 @@
-#!/bin/sh
-here=$(dirname "$0")
-. "$here/common.sh"
-
-curl -H "Authorization: token $GITHUB_TOKEN" \
-     -H "Accept: application/vnd.github.manifold-preview" \
-     -H "Content-Type: application/zip" \
-     --data-binary @build/mac/package.zip \
-     "https://uploads.github.com/repos/hubot/singularity/releases/123/assets?name=1.0.0-mac.zip"
