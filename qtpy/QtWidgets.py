@@ -53,6 +53,9 @@ elif os.environ[QT_API] in PYQT4_API:
          QValidator, QVector2D, QVector3D, QVector4D, QWhatsThisClickedEvent,
          QWheelEvent, QWindowStateChangeEvent, qAlpha, qBlue, qFuzzyCompare,
          qGray, qGreen, qIsGray, qRed, qRgb, qRgba)
+
+    del (QAbstractPrintDialog, QPageSetupDialog, QPrintDialog, QPrintEngine,
+         QPrintPreviewDialog, QPrintPreviewWidget, QPrinter, QPrinterInfo)
 elif os.environ[QT_API] in PYSIDE_API:
     from PySide.QtGui import *                                # analysis:ignore
     del (QAbstractTextDocumentLayout, QActionEvent, QBitmap, QBrush, QClipboard,
@@ -83,6 +86,9 @@ elif os.environ[QT_API] in PYSIDE_API:
          QValidator, QVector2D, QVector3D, QVector4D, QWhatsThisClickedEvent,
          QWheelEvent, QWindowStateChangeEvent, qAlpha, qBlue, qGray, qGreen,
          qIsGray, qRed, qRgb, qRgba)
+
+    del (QAbstractPrintDialog, QPageSetupDialog, QPrintDialog, QPrintEngine,
+         QPrintPreviewDialog, QPrintPreviewWidget, QPrinter, QPrinterInfo)
 else:
     raise PythonQtError('No Qt bindings could be found')
 
