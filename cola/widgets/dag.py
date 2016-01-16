@@ -104,11 +104,7 @@ class ViewerMixin(object):
         self.with_oid(lambda oid: createtag.create_tag(ref=oid))
 
     def create_tarball(self):
-        sha1 = self.selected_sha1()
-        if sha1 is None:
-            return
-        short_sha1 = sha1[:7]
-        archive.GitArchiveDialog.save_hashed_objects(sha1, short_sha1, self)
+        self.with_oid(lambda oid: archive.show_save_dialog(oid, parent=self))
 
     def reset_branch_head(self):
         self.with_oid(lambda oid: cmds.do(cmds.ResetBranchHead, ref=oid))

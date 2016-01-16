@@ -74,15 +74,17 @@ class ExpandableGroupBox(QtGui.QGroupBox):
             painter.drawPrimitive(style.PE_IndicatorArrowRight, option)
 
 
+def show_save_dialog(oid, parent=None):
+    shortoid = oid[:7]
+    dlg = GitArchiveDialog(oid, shortoid, parent=parent)
+    dlg.show()
+    dlg.raise_()
+    if dlg.exec_() != dlg.Accepted:
+        return None
+    return dlg
+
 
 class GitArchiveDialog(QtGui.QDialog):
-
-    @staticmethod
-    def save_hashed_objects(ref, shortref, parent=None):
-        dlg = GitArchiveDialog(ref, shortref, parent)
-        if dlg.exec_() != dlg.Accepted:
-            return None
-        return dlg
 
     def __init__(self, ref, shortref=None, parent=None):
         QtGui.QDialog.__init__(self, parent)

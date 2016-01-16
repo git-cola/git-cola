@@ -707,9 +707,8 @@ class MainView(standard.MainWindow):
         view.raise_()
 
     def save_archive(self):
-        ref = self.model.git.rev_parse('HEAD')[git.STDOUT]
-        shortref = ref[:7]
-        archive.GitArchiveDialog.save_hashed_objects(ref, shortref, self)
+        oid = self.model.git.rev_parse('HEAD')[git.STDOUT]
+        archive.show_save_dialog(oid, parent=self)
 
     def show_cursor_position(self, rows, cols):
         display = '%02d:%02d' % (rows, cols)
