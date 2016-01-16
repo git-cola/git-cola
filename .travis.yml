@@ -9,12 +9,12 @@ python:
 
 before_install:
   # Update APT cache data since it may outdated
-  - sudo apt-get update
+  - sudo apt-get -qq update
+  # according to Debian control file from Ubuntu 12.04
+  - sudo apt-get install -y git rsync gettext
 
 # command to install dependencies, git and python are pre-installed in build box thus are ignored
 install:
-  # according to Debian control file from Ubuntu 12.04
-  - sudo apt-get install rsync gettext
   - pip install sphinx
   # SIP
   - wget "http://sourceforge.net/projects/pyqt/files/sip/sip-4.16.5/sip-4.16.5.tar.gz"
