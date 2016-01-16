@@ -207,8 +207,10 @@ class MainView(standard.MainWindow):
 
         self.quit_action = add_action(
             self, N_('Quit'), self.close, hotkeys.QUIT)
+
         self.grep_action = add_action(
             self, N_('Grep'), grep.grep, hotkeys.GREP)
+
         self.merge_local_action = add_action(
             self, N_('Merge...'), merge.local_merge, hotkeys.MERGE)
 
@@ -233,6 +235,12 @@ class MainView(standard.MainWindow):
         self.stash_action = add_action(
             self, N_('Stash...'), stash.stash, hotkeys.STASH)
 
+        self.reset_branch_head_action = add_action(
+            self, N_('Reset Branch Head'), guicmds.reset_branch_head)
+
+        self.reset_worktree_action = add_action(
+            self, N_('Reset Worktree'), guicmds.reset_worktree)
+
         self.clone_repo_action = add_action(
             self, N_('Clone...'), self.clone_repo)
         self.clone_repo_action.setIcon(icons.repo())
@@ -253,6 +261,7 @@ class MainView(standard.MainWindow):
             cmds.run(cmds.VisualizeAll))
         self.search_commits_action = add_action(
             self, N_('Search...'), search.search)
+
         self.browse_branch_action = add_action(
             self, N_('Browse Current Branch...'), guicmds.browse_current)
         self.browse_other_branch_action = add_action(
@@ -369,6 +378,10 @@ class MainView(standard.MainWindow):
         self.actions_menu.addAction(self.cherry_pick_action)
         self.actions_menu.addAction(self.merge_local_action)
         self.actions_menu.addAction(self.merge_abort_action)
+        self.actions_menu.addSeparator()
+        self.actions_reset_menu = self.actions_menu.addMenu(N_('Reset'))
+        self.actions_reset_menu.addAction(self.reset_branch_head_action)
+        self.actions_reset_menu.addAction(self.reset_worktree_action)
         self.actions_menu.addSeparator()
         self.actions_menu.addAction(self.grep_action)
         self.actions_menu.addAction(self.search_commits_action)

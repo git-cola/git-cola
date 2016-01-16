@@ -3,6 +3,15 @@
 git-cola v2.6 (pre-release)
 ===========================
 
+Usability, bells and whistles
+-----------------------------
+
+* A new "Reset" sub-menu provides access to running "git reset --mixed"
+  when resetting branch heads and "git reset  --merge" when resetting
+  worktrees.
+
+  https://github.com/git-cola/git-cola/issues/542
+
 Fixes
 -----
 

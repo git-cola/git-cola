@@ -138,6 +138,12 @@ class ViewerMixin(object):
         'cherry_pick':
             qtutils.add_action(self, N_('Cherry Pick'),
                                self.cherry_pick),
+        'reset_branch_head':
+            qtutils.add_action(self, N_('Reset Branch Head'),
+                               self.reset_branch_head),
+        'reset_worktree':
+            qtutils.add_action(self, N_('Reset Worktree'),
+                               self.reset_worktree),
         'save_blob':
             qtutils.add_action(self, N_('Grab File...'),
                                self.save_blob_dialog),
@@ -168,15 +174,15 @@ class ViewerMixin(object):
         self.menu_actions['diff_this_selected'].setEnabled(can_diff)
         self.menu_actions['diff_selected_this'].setEnabled(can_diff)
 
-        self.menu_actions['create_branch'].setEnabled(has_single_selection)
-        self.menu_actions['create_tag'].setEnabled(has_single_selection)
-
         self.menu_actions['cherry_pick'].setEnabled(has_single_selection)
-        self.menu_actions['create_patch'].setEnabled(has_selection)
-        self.menu_actions['create_tarball'].setEnabled(has_single_selection)
-
-        self.menu_actions['save_blob'].setEnabled(has_single_selection)
         self.menu_actions['copy'].setEnabled(has_single_selection)
+        self.menu_actions['create_branch'].setEnabled(has_single_selection)
+        self.menu_actions['create_patch'].setEnabled(has_selection)
+        self.menu_actions['create_tag'].setEnabled(has_single_selection)
+        self.menu_actions['create_tarball'].setEnabled(has_single_selection)
+        self.menu_actions['reset_branch_head'].setEnabled(has_single_selection)
+        self.menu_actions['reset_worktree'].setEnabled(has_single_selection)
+        self.menu_actions['save_blob'].setEnabled(has_single_selection)
 
     def context_menu_event(self, event):
         self.update_menu_actions(event)
@@ -190,6 +196,10 @@ class ViewerMixin(object):
         menu.addAction(self.menu_actions['cherry_pick'])
         menu.addAction(self.menu_actions['create_patch'])
         menu.addAction(self.menu_actions['create_tarball'])
+        menu.addSeparator()
+        reset_menu = menu.addMenu(N_('Reset'))
+        reset_menu.addAction(self.menu_actions['reset_branch_head'])
+        reset_menu.addAction(self.menu_actions['reset_worktree'])
         menu.addSeparator()
         menu.addAction(self.menu_actions['save_blob'])
         menu.addAction(self.menu_actions['copy'])
@@ -1524,3 +1534,9 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
             self.wheel_zoom(event)
         else:
             self.wheel_pan(event)
+
+
+# Glossary
+# ========
+# oid -- Git objects IDs (i.e. SHA-1 IDs)
+# ref -- Git references that resolve to a commit-ish (HEAD, branches, tags)
