@@ -118,7 +118,7 @@ def print_releases(args):
 
 
 def create_release(args):
-    add_sha1(args)
+    add_target_commitish(args)
     print_release_info(args)
     if not Interaction.confirm('Creating release %s' % args.version,
                                'This will create a new release on github.',
@@ -134,7 +134,7 @@ def create_release(args):
 
 
 def edit_release(args):
-    add_sha1(args)
+    add_target_commitish(args)
     details = release_details(args)
     if details is None:
         return 1
@@ -227,12 +227,12 @@ def print_response(resp, printer=core.stdout):
     printer(beautify(resp.text))
 
 
-def add_sha1(args):
-    if args.sha1:
+def add_target_commitish(args):
+    if args.target_commitish:
         return
     cmd = ['git', 'rev-parse', args.version+'^{commit}']
     status, out, err = core.run_command(cmd)
-    args.sha1 = out.strip('\n')
+    args.target_commitish = out.strip()
 
 
 def print_release_info(args):
@@ -247,7 +247,7 @@ def new_release_data(args):
     data['name'] = args.version
     data['prerelease'] = args.prerelease
     data['tag_name'] = args.version
-    data['target_commitish'] = args.sha1
+    data['target_commitish'] = args.target_commitish
     return data
 
 
