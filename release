@@ -99,6 +99,7 @@ build_win32_pynsist () {
 	then
 		upload_file git-cola-"$VERSION".windows.zip
 	fi
+	do_or_die mv git-cola-"$VERSION".windows.zip ../git-cola.github.com/releases/
 }
 
 build_win32_innosetup () {
@@ -123,8 +124,13 @@ build_win32_innosetup () {
 	then
 		upload_file git-cola-"$VERSION".windows.zip
 	fi
+	do_or_die mv git-cola-"$VERSION".windows.zip ../git-cola.github.com/releases/
 }
 
+# The github upload file feature[1] went away2], but this and the
+# code in github-release is left here for reference.
+# [1] https://github.com/blog/1547-release-your-software
+# [2] https://github.com/blog/1302-goodbye-uploads
 upload_file () {
 	filename="$1"
 	do_or_die "$GH_RELEASE" upload "$vVERSION" "$filename"
@@ -144,7 +150,6 @@ do
 		# do_tarball=true
 		do_win32=true
 		do_docs=true
-		do_upload=true
 		shift
 		;;
 	--tarball)
