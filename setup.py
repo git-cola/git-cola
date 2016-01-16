@@ -85,5 +85,6 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
-        'Topic :: Software Development :: Widget Sets'])
-
+        'Programming Language :: Python :: 3.5',
+        'Topic :: Software Development :: Widget Sets']
+)
