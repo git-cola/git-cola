@@ -378,6 +378,55 @@ class ResetMode(Command):
         self.model.update_file_status()
 
 
+class ResetCommand(ConfirmAction):
+
+    def __init__(self, ref):
+        ConfirmAction.__init__(self, model=main.model(), ref=ref)
+
+    def action(self):
+        status, out, err = self.reset()
+        Interaction.log_status(status, out, err)
+        return status, out, err
+
+    def success(self):
+        self.model.update_file_status()
+
+    def confirm(self):
+        raise NotImplemented('confirm() must be overridden')
+
+    def reset(self):
+        raise NotImplemented('reset() must be overridden')
+
+
+class ResetBranchHead(ResetCommand):
+
+    def confirm(self):
+        title = N_('Reset Branch')
+        question = N_('Point the current branch head to a new commit?')
+        info = N_('The branch will be reset using "git reset --mixed %s"')
+        ok_btn = N_('Reset Branch')
+        info = info % self.ref
+        return Interaction.confirm(title, question, info, ok_btn)
+
+    def reset(self):
+        git = self.model.git
+        return git.reset(self.ref, '--', mixed=True)
+
+
+class ResetWorktree(ResetCommand):
+
+    def confirm(self):
+        title = N_('Reset Worktree')
+        question = N_('Reset worktree?')
+        info = N_('The worktree will be reset using "git reset --merge %s"')
+        ok_btn = N_('Reset Worktree')
+        info = info % self.ref
+        return Interaction.confirm(title, question, info, ok_btn)
+
+    def reset(self):
+        return self.model.git.reset(self.ref, '--', merge=True)
+
+
 class Commit(ResetMode):
     """Attempt to create a new commit."""
 
