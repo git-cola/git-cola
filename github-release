@@ -186,20 +186,26 @@ def upload_file(args):
     when_undef(details).error('could not identify %s' % args.version)
 
     filename = args.filename
-    url = details['upload_url'].replace('{', '').replace('}', '')
+    upload_url = details['upload_url']
+    suffix = '{?name,label}'
+    unless(upload_url.endswith(suffix)).error(
+        'upload_url "%s" does not end with "%s"' % (upload_url, suffix))
+
+    url = details['upload_url'][:-len(suffix)]
+    url += '?name=' + os.path.basename(filename)
 
     api = github.GithubAPI()
     headers = api.upload_headers(filename)
 
-    cmd = ['curl']
+    cmd = ['curl', '--request', 'POST']
     for header in headers:
         cmd.append('--header')
         cmd.append(header)
     cmd.append('--data-binary')
     cmd.append('@' + filename)
-    cmd.append(url + '=' + os.path.basename(filename))
+    cmd.append(url)
 
-    core.stdout('$ ' + ' '.join(cmd))
+    core.stdout('$ ' + subprocess.list2cmdline(cmd))
     status, out, err = core.run_command(cmd)
     if out:
         core.stdout(out)
