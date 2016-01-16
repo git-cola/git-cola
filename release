@@ -39,7 +39,7 @@ init_release () {
 	then
 		return 1
 	fi
-	if ! "$GH_RELEASE" identify "$vVERSION"
+	if ! "$GH_RELEASE" get "$vVERSION"
 	then
 		commit=$(git rev-parse "$vVERSION""^{commit}")
 		do_or_die "$GH_RELEASE" create "$vVERSION" "$commit"

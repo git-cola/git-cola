@@ -80,8 +80,8 @@ def parse_args():
     delete.set_defaults(func=delete_release)
     add_version_arguments(delete)
 
-    identify = subparsers.add_parser('identify')
-    identify.set_defaults(func=identify_release)
+    identify = subparsers.add_parser('get')
+    identify.set_defaults(func=get_release)
     add_version_arguments(identify)
     identify.add_argument('--full', action='store_true', default=False,
                           help='show full release details')
@@ -171,7 +171,7 @@ def delete_release(args):
     return 0
 
 
-def identify_release(args):
+def get_release(args):
     details = release_details(args)
     when_undef(details).error('could not identify %s' % args.version)
     if args.full:
