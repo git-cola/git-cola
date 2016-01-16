@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import subprocess
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -19,6 +20,40 @@ def main():
 def usage(args):
     print(args)
     return 0
+
+
+def error(msg):
+    core.stderr('error: %s' % msg)
+    sys.exit(1)
+
+
+def when_undef(var):
+    if var is None:
+        result = Error()
+    else:
+        result = NoOp()
+    return result
+
+
+def unless(var):
+    if var:
+        result = NoOp()
+    else:
+        result = Error()
+    return result
+
+
+class NoOp(object):
+
+    def error(self, msg):
+        # nothing
+        return
+
+class Error(object):
+
+    def error(self, msg):
+        # a predicate failed
+        error(msg)
 
 
 def parse_args():
@@ -138,9 +173,7 @@ def delete_release(args):
 
 def identify_release(args):
     details = release_details(args)
-    if details is None:
-        core.stderr('error: could not identify %s' % args.version)
-        return 1
+    when_undef(details).error('could not identify %s' % args.version)
     if args.full:
         core.stdout(json.dumps(details, indent=4, sort_keys=True))
     else:
@@ -150,8 +183,8 @@ def identify_release(args):
 
 def upload_file(args):
     details = release_details(args)
-    if details is None:
-        return 1
+    when_undef(details).error('could not identify %s' % args.version)
+
     filename = args.filename
     url = details['upload_url'].replace('{', '').replace('}', '')
 
