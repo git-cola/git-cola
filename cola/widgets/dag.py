@@ -63,11 +63,21 @@ class ViewerMixin(object):
     def selected_sha1(self):
         item = self.selected_item()
         if item is None:
-            return None
-        return item.commit.sha1
+            result = None
+        else:
+            result = item.commit.sha1
+        return result
 
     def selected_sha1s(self):
         return [i.commit for i in self.selected_items()]
+
+    def with_oid(self, fn):
+        oid = self.selected_sha1()
+        if oid:
+            result = fn(oid)
+        else:
+            result = None
+        return result
 
     def diff_selected_this(self):
         clicked_sha1 = self.clicked.sha1
@@ -82,28 +92,16 @@ class ViewerMixin(object):
                   clicked_sha1, selected_sha1)
 
     def cherry_pick(self):
-        sha1 = self.selected_sha1()
-        if sha1 is None:
-            return
-        cmds.do(cmds.CherryPick, [sha1])
+        self.with_oid(lambda oid: cmds.do(cmds.CherryPick, [oid]))
 
     def copy_to_clipboard(self):
-        sha1 = self.selected_sha1()
-        if sha1 is None:
-            return
-        qtutils.set_clipboard(sha1)
+        self.with_oid(lambda oid: qtutils.set_clipboard(oid))
 
     def create_branch(self):
-        sha1 = self.selected_sha1()
-        if sha1 is None:
-            return
-        createbranch.create_new_branch(revision=sha1)
+        self.with_oid(lambda oid: createbranch.create_new_branch(revision=oid))
 
     def create_tag(self):
-        sha1 = self.selected_sha1()
-        if sha1 is None:
-            return
-        createtag.create_tag(ref=sha1)
+        self.with_oid(lambda oid: createtag.create_tag(ref=oid))
 
     def create_tarball(self):
         sha1 = self.selected_sha1()
@@ -112,11 +110,14 @@ class ViewerMixin(object):
         short_sha1 = sha1[:7]
         archive.GitArchiveDialog.save_hashed_objects(sha1, short_sha1, self)
 
+    def reset_branch_head(self):
+        self.with_oid(lambda oid: cmds.do(cmds.ResetBranchHead, ref=oid))
+
+    def reset_worktree(self):
+        self.with_oid(lambda oid: cmds.do(cmds.ResetWorktree, ref=oid))
+
     def save_blob_dialog(self):
-        sha1 = self.selected_sha1()
-        if sha1 is None:
-            return
-        return browse.BrowseDialog.browse(sha1)
+        self.with_oid(lambda oid: browse.BrowseDialog.browse(oid))
 
     def context_menu_actions(self):
         return {
