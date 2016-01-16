@@ -2,7 +2,6 @@ from __future__ import division, absolute_import, unicode_literals
 
 import os
 import re
-import subprocess
 import sys
 from fnmatch import fnmatch
 from io import StringIO
@@ -43,8 +42,10 @@ class BaseCommand(object):
 
     DISABLED = False
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.undoable = False
+        for k, v in kwargs.items():
+            setattr(self, k, v)
 
     def is_undoable(self):
         """Can this be undone?"""
@@ -63,8 +64,8 @@ class BaseCommand(object):
 
 class ConfirmAction(BaseCommand):
 
-    def __init__(self):
-        BaseCommand.__init__(self)
+    def __init__(self, **kwargs):
+        BaseCommand.__init__(self, **kwargs)
 
     def ok_to_run(self):
         return True
@@ -109,9 +110,12 @@ class ConfirmAction(BaseCommand):
 class ModelCommand(BaseCommand):
     """Commands that manipulate the main models"""
 
-    def __init__(self):
-        BaseCommand.__init__(self)
+    def __init__(self, **kwargs):
+        # Note: self.model is set before calling the base class constructor
+        # to allow being having the `model` value be overridden by passing
+        # `model=xxx` during construction.
         self.model = main.model()
+        BaseCommand.__init__(self, **kwargs)
 
 
 class Command(ModelCommand):
