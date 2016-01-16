@@ -3,8 +3,9 @@
 """
 from __future__ import absolute_import, division, unicode_literals
 
-import time
+import os
 import signal
+import time
 import unittest
 
 from cola import git
@@ -56,13 +57,15 @@ class GitCommandTest(unittest.TestCase):
     def test_tag(self):
         """Test running 'git tag'"""
         tags = self.git.tag()[STDOUT].splitlines()
-        self.failUnless( 'v1.0.0' in tags )
+        if os.getenv('COLA_NO_GIT_HISTORY_TESTS', False):
+            return
+        self.failUnless('v1.0.0' in tags)
 
     def test_show(self):
         """Test running 'git show'"""
-        sha = '1b9742bda5d26a4f250fa64657f66ed20624a084'
-        contents = self.git.show(sha)[STDOUT].splitlines()
-        self.failUnless(contents[0] == '/build')
+        sha = 'HEAD'
+        content = self.git.show(sha)[STDOUT]
+        self.failUnless(content.startswith('commit '))
 
     def test_stdout(self):
         """Test overflowing the stdout buffer"""

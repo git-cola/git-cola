@@ -30,7 +30,7 @@ install:
   - cd PyQt-x11-gpl-4.11.3
   - python configure.py --confirm-license
   - make -j4
-  - sudo make install
+  - make install
   - cd ..
   # Additional dependency for python 2.6
   - pip install argparse
@@ -38,4 +38,8 @@ install:
 script:
   - make all
   - make doc
-#  - make test # Disabled due to issue #404
+  # Git test setup
+  - git config --global user.name "Git Cola"
+  - git config --global user.email git-cola@localhost.localdomain
+  # TODO tests currently fail on Python3 due to sip
+  - make flags=--verbose COLA_NO_GIT_HISTORY_TESTS=1 test || test "3" = "$(python -c 'import sys; print(sys.version_info[0])')"
