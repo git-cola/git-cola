@@ -297,12 +297,25 @@ def report_clone_repo_errors(task):
                          message=task.cmd.error_message,
                          details=task.cmd.error_details)
 
+
 def rename_branch():
     """Launch the 'Rename Branch' dialogs."""
     branch = choose_branch(N_('Rename Existing Branch'), N_('Select'))
     if not branch:
         return
-    new_branch = choose_branch(N_('Enter Branch New Name'), N_('Rename'))
+    new_branch = choose_branch(N_('Enter New Branch Name'), N_('Rename'))
     if not new_branch:
         return
     cmds.do(cmds.RenameBranch, branch, new_branch)
+
+
+def reset_branch_head():
+    ref = choose_ref(N_('Reset Branch Head'), N_('Reset'), default='HEAD^')
+    if ref:
+        cmds.do(cmds.ResetBranchHead, ref)
+
+
+def reset_worktree():
+    ref = choose_ref(N_('Reset Worktree'), N_('Reset'))
+    if ref:
+        cmds.do(cmds.ResetWorktree, ref)
