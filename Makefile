@@ -12,11 +12,15 @@ LN_S = $(LN) -s -f
 MARKDOWN = markdown
 MKDIR_P = mkdir -p
 NOSETESTS = nosetests
+PYLINT = pylint
 PYTHON = python
 RM = rm -f
 RM_R = rm -fr
 RMDIR = rmdir
 TAR = tar
+
+# Flags
+PYLINT_FLAGS = --py3k --output-format=colorized --rcfile=.pylintrc
 
 # These values can be overridden on the command-line or via config.mak
 prefix = $(HOME)
@@ -50,8 +54,19 @@ ifdef DESTDIR
 endif
 export prefix
 
-PYTHON_DIRS = test
-PYTHON_DIRS += cola
+PYTHON_DIRS = cola
+PYTHON_DIRS += test
+
+ALL_PYTHON_DIRS = $(PYTHON_DIRS)
+ALL_PYTHON_DIRS += extras
+
+PYTHON_SOURCES = bin/git-cola
+PYTHON_SOURCES += bin/git-dag
+PYTHON_SOURCES += share/git-cola/bin/git-xbase
+PYTHON_SOURCES += cola
+PYTHON_SOURCES += test
+PYTHON_SOURCES += setup.py
+PYTHON_SOURCES += extras
 
 # User customizations
 -include config.mak
@@ -132,14 +147,14 @@ coverage:
 .PHONY: coverage
 
 clean:
-	$(FIND) $(PYTHON_DIRS) -name '*.py[cod]' -print0 | xargs -0 rm -f
+	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py[cod]' -print0 | xargs -0 rm -f
 	$(RM_R) build dist tags git-cola.app
 	$(RM_R) share/locale
 	$(MAKE) -C share/doc/git-cola clean
 .PHONY: clean
 
 tags:
-	$(FIND) $(PYTHON_DIRS) -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
+	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
 .PHONY: tags
 
 pot:
@@ -167,3 +182,7 @@ app-tarball: git-cola.app
 # Preview the markdown using "make README.html"
 %.html: %.md
 	$(MARKDOWN) $< >$@
+
+pylint:
+	$(PYLINT) $(PYLINT_FLAGS) $(PYTHON_SOURCES)
+.PHONY: pylint
