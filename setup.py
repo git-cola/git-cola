@@ -65,7 +65,7 @@ setup(
     keywords=["qt PyQt4 PyQt5 PySide Widget QWidget"],
     url='https://github.com/goanpeca/QtPy',
     license='MIT',
-    author='Colin Duquesnoy, Pierre Raybaut, Gonzalo Peña-Castellanos',
+    author='Colin Duquesnoy, The Spyder Development Team',
     author_email='goanpeca@gmail.com',
     maintainer='Gonzalo Peña-Castellanos',
     maintainer_email='goanpeca@gmail.com',
