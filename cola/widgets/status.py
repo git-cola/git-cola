@@ -667,7 +667,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             menu.addAction(icons.edit(),
                            N_('Add to .gitignore'),
                            cmds.run(cmds.Ignore,
-                                    map(lambda x: '/' + x, self.untracked())))
+                                    [('/' + x) for x in self.untracked()]))
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
         menu.addAction(self.copy_relpath_action)

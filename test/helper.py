@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+from __future__ import absolute_import, division, unicode_literals
 
 import os
 import shutil
@@ -38,6 +38,7 @@ def remove_readonly(func, path, exc_info):
 
 
 class TmpPathTestCase(unittest.TestCase):
+
     def setUp(self):
         self._testdir = tempfile.mkdtemp('_cola_test')
         os.chdir(self._testdir)
@@ -69,6 +70,7 @@ class TmpPathTestCase(unittest.TestCase):
 
 class GitRepositoryTestCase(TmpPathTestCase):
     """Tests that operate on temporary git repositories."""
+
     def setUp(self, commit=True):
         TmpPathTestCase.setUp(self)
         self.initialize_repo()

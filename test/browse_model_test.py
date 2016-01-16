@@ -1,5 +1,5 @@
 """Covers interfaces used by the classic view."""
-from __future__ import unicode_literals
+from __future__ import absolute_import, division, unicode_literals
 
 from cola import core
 from cola import gitcmds

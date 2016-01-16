@@ -150,7 +150,7 @@ def for_each_ref_basename(refs, git=git):
     """Return refs starting with 'refs'."""
     out = git.for_each_ref(refs, format='%(refname)')[STDOUT]
     output = out.splitlines()
-    non_heads = filter(lambda x: not x.endswith('/HEAD'), output)
+    non_heads = [x for x in output if not x.endswith('/HEAD')]
     return list(map(lambda x: x[len(refs) + 1:], non_heads))
 
 

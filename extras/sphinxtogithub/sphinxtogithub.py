@@ -1,11 +1,17 @@
 #! /usr/bin/env python
- 
+
+from __future__ import absolute_import
+
 from optparse import OptionParser
 
 import os
 import sys
 import shutil
 import codecs
+
+
+def stdout(msg):
+    sys.stdout.write(msg + '\n')
 
 
 class DirHelper(object):
@@ -17,6 +23,7 @@ class DirHelper(object):
         self.walk = walk
         self.rmtree = rmtree
 
+
 class FileSystemHelper(object):
 
     def __init__(self, open_, path_join, move, exists):
@@ -25,6 +32,7 @@ class FileSystemHelper(object):
         self.path_join = path_join
         self.move = move
         self.exists = exists
+
 
 class Replacer(object):
     "Encapsulates a simple text replace"
@@ -37,6 +45,7 @@ class Replacer(object):
     def process(self, text):
 
         return text.replace( self.from_, self.to )
+
 
 class FileHandler(object):
     "Applies a series of replacements the contents of a file inplace"
@@ -55,6 +64,7 @@ class FileHandler(object):
             text = replacer.process( text )
 
         self.opener(self.name, "w").write(text)
+
 
 class Remover(object):
 
@@ -276,12 +286,12 @@ def sphinx_extension(app, exception):
 
     if not app.config.sphinx_to_github:
         if app.config.sphinx_to_github_verbose:
-            print("Sphinx-to-github: Disabled, doing nothing.")
+            stdout("Sphinx-to-github: Disabled, doing nothing.")
         return
 
     if exception:
         if app.config.sphinx_to_github_verbose:
-            print("Sphinx-to-github: Exception raised in main build, doing nothing.")
+            stdout("Sphinx-to-github: Exception raised in main build, doing nothing.")
         return
 
     dir_helper = DirHelper(
@@ -357,7 +367,7 @@ def main(args):
             shutil.move,
             os.path.exists
             )
-    
+
     operations_factory = OperationsFactory()
     handler_factory = HandlerFactory()
 
@@ -373,11 +383,7 @@ def main(args):
 
     layout = layout_factory.create_layout(path)
     layout.process()
-    
 
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-
-
-

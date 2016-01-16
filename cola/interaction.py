@@ -1,6 +1,8 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import os
+import sys
+
 from cola import core
 from cola.i18n import N_
 
@@ -22,10 +24,10 @@ class Interaction(object):
         scope['details'] = details and '\n'+details or ''
         scope['informative_text'] = (informative_text and
                 '\n'+informative_text or '')
-        print("""
+        sys.stdout.write("""
 %(title)s
 %(title_dashes)s
-%(message)s%(details)s%(informative_text)s""" % scope)
+%(message)s%(details)s%(informative_text)s\n""" % scope)
 
     @classmethod
     def critical(cls, title, message=None, details=None):
@@ -39,13 +41,16 @@ class Interaction(object):
         cls.information(title, message=text,
                         informative_text=informative_text)
         if default:
-            prompt = '%s? [Y/n]:' % ok_text
+            prompt = '%s? [Y/n]' % ok_text
         else:
-            prompt = '%s? [y/N]: ' % ok_text
-        answer = raw_input(prompt)
-        if answer == '':
-            return default
-        return answer.lower().startswith('y')
+            prompt = '%s? [y/N] ' % ok_text
+        sys.stdout.write(prompt)
+        answer = sys.stdin.readline().strip()
+        if answer:
+            result = answer.lower().startswith('y')
+        else:
+            result = default
+        return result
 
     @classmethod
     def question(cls, title, message, default=True):

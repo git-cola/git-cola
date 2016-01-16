@@ -82,10 +82,11 @@ def git_version():
 
 def print_version(brief=False):
     if brief:
-        print('%s' % version())
+        msg = '%s\n' % version()
     else:
-        print('cola version %s' % version())
+        msg = 'cola version %s\n' % version()
+    sys.stdout.write(msg)
 
 
 if __name__ == '__main__':
-    print(version())
+    print_version(brief=True)

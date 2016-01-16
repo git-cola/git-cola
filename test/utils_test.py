@@ -1,11 +1,13 @@
 #!/usr/bin/env python
-from __future__ import unicode_literals
+
+from __future__ import absolute_import, division, unicode_literals
 
 import shutil
 import os
 import unittest
 
 from cola import utils
+
 
 class ColaUtilsTestCase(unittest.TestCase):
     """Tests the cola.utils module."""

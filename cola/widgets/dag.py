@@ -728,7 +728,7 @@ class Edge(QtGui.QGraphicsItem):
 
         # Choose a new color for new branch edges
         if self.source.x() < self.dest.x():
-            color = EdgeColor.next()
+            color = EdgeColor.cycle()
             line = Qt.SolidLine
         elif self.source.x() != self.dest.x():
             color = EdgeColor.current()
@@ -821,7 +821,7 @@ class EdgeColor(object):
              ]
 
     @classmethod
-    def next(cls):
+    def cycle(cls):
         cls.current_color_index += 1
         cls.current_color_index %= len(cls.colors)
         color = cls.colors[cls.current_color_index]

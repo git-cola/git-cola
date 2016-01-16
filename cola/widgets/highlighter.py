@@ -85,7 +85,7 @@ def highlight_document(edit, filename):
             if block_len == 0:
                 block.layout().setAdditionalFormats(block_formats)
                 doc.markContentsDirty(block.position(), block.length())
-                block = block.next()
+                block = block.next()  # pylint: disable=next-method-called
                 block_pos = 0
                 block_len = block.length()
                 block_formats = []

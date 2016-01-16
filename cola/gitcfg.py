@@ -142,7 +142,7 @@ class GitConfig(observable.Observable):
         """
         # Try the git config in git's installation prefix
         statinfo = _stat_info()
-        self._configs = map(lambda x: x[1], statinfo)
+        self._configs = [x[1] for x in statinfo]
         self._config_files = {}
         for (cat, path, mtime) in statinfo:
             self._config_files[cat] = path
@@ -219,8 +219,10 @@ class GitConfig(observable.Observable):
         header_subkey = re.compile(r'^\[(\s+) "(\s+)"\]$')
 
         with core.xopen(path, 'rt') as f:
-            lines = filter(bool, [line.strip() for line in f.readlines()])
+            file_lines  = f.readlines()
 
+        stripped_lines = [line.strip() for line in file_lines]
+        lines = [line for line in stripped_lines if bool(line)]
         prefix = ''
         for line in lines:
             if line.startswith('#'):

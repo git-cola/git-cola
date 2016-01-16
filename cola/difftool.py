@@ -54,7 +54,7 @@ def launch(left=None, right=None, paths=None,
             status, out, err = git.rev_list(left, parents=True, n=1)
             Interaction.log_status(status, out, err)
             if status:
-                raise StandardError('git rev-list command failed')
+                raise OSError('git rev-list command failed')
 
             if len(out.split()) >= 2:
                 # Commit has a parent, so we can take its child as requested

@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 
+from __future__ import absolute_import, division, unicode_literals
+
 import os
 import sys
 import re
 from argparse import ArgumentParser
 
-from os.path import abspath
-from os.path import dirname
-
 
 def setup_environment():
+    abspath = os.path.abspath
+    dirname = os.path.dirname
     prefix = dirname(dirname(dirname(dirname(abspath(__file__)))))
     source_tree = os.path.join(prefix, 'cola', '__init__.py')
     if os.path.exists(source_tree):

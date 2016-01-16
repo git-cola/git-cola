@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+from __future__ import absolute_import, division, unicode_literals
 
 import unittest
 import os
@@ -10,6 +10,7 @@ from test import helper
 
 class SettingsTestCase(unittest.TestCase):
     """Tests the cola.settings module"""
+
     def setUp(self):
         Settings._file = self._file = helper.tmp_path('settings')
         self.settings = self.new_settings()

@@ -49,7 +49,7 @@ def get_patches_from_mimedata(mimedata):
     urls = mimedata.urls()
     if not urls:
         return []
-    paths = map(lambda x: ustr(x.path()), urls)
+    paths = [ustr(x.path()) for x in urls]
     return get_patches_from_paths(paths)
 
 

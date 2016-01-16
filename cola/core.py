@@ -65,7 +65,7 @@ def mkpath(path, encoding=None):
 
 
 def list2cmdline(cmd):
-    return subprocess.list2cmdline(map(decode, cmd))
+    return subprocess.list2cmdline([decode(c) for c in cmd])
 
 
 def read(filename, size=-1, encoding=None, errors='strict'):

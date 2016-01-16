@@ -1,5 +1,7 @@
 """build_mo command for setup.py"""
 
+from __future__ import absolute_import, division, unicode_literals
+
 from distutils import log
 from distutils.command.build import build
 from distutils.core import Command

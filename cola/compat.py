@@ -1,3 +1,5 @@
+from __future__  import absolute_import, division, unicode_literals
+
 import os
 import sys
 
@@ -7,12 +9,14 @@ PY3 = sys.version_info[0] >= 3
 WIN32 = sys.platform == 'win32' or sys.platform == 'cygwin'
 
 try:
+    # pylint: disable=unicode-builtin
     ustr = unicode
 except NameError:
     # Python 3
     ustr = str
 
 try:
+    # pylint: disable=unichr-builtin
     unichr = unichr
 except NameError:
     # Python 3
@@ -22,6 +26,11 @@ if PY3:
     bchr = lambda i: bytes([i])
 else:
     bchr = chr
+
+if PY3:
+    int_types = (int,)
+else:
+    int_types = (int, long)  # pylint: disable=long-builtin
 
 try:
     # Python 3

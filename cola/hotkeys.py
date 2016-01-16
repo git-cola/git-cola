@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from PyQt4.QtGui import QKeySequence
 from PyQt4.QtCore import Qt
 

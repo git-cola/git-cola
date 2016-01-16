@@ -16,8 +16,8 @@ from cola import utils
 from cola import resources
 from cola.i18n import N_
 from cola.interaction import Interaction
+from cola.compat import int_types
 from cola.compat import ustr
-from cola.compat import PY3
 from cola.models import prefs
 from cola.widgets import defs
 
@@ -75,11 +75,6 @@ def box(cls, margin, spacing, *items):
     layout = cls()
     layout.setMargin(margin)
     layout.setSpacing(spacing)
-
-    if PY3:
-        int_types = (int,)
-    else:
-        int_types = (int, long)
 
     for i in items:
         if isinstance(i, QtGui.QWidget):

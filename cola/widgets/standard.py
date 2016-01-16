@@ -470,7 +470,7 @@ class ProgressAnimationThread(QtCore.QThread):
     def set_text(self, txt):
         self.txt = txt
 
-    def next(self):
+    def cycle(self):
         self.idx = (self.idx + 1) % len(self.symbols)
         return self.txt + self.symbols[self.idx]
 
@@ -480,7 +480,7 @@ class ProgressAnimationThread(QtCore.QThread):
     def run(self):
         self.running = True
         while self.running:
-            self.emit(SIGNAL('update_progress(PyQt_PyObject)'), self.next())
+            self.emit(SIGNAL('update_progress(PyQt_PyObject)'), self.cycle())
             time.sleep(self.timeout)
 
 

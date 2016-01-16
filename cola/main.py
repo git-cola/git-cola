@@ -1,4 +1,7 @@
 """Launcher and command line interface to git-cola"""
+
+from __future__ import absolute_import, division, unicode_literals
+
 import argparse
 import os
 import sys
