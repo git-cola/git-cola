@@ -111,6 +111,21 @@ Link: This also avoids word-wrap
         actual = self.wrap(inputs)
         self.assertEqual(expect, actual)
 
+    def test_word_wrap_ranges(self):
+        text = 'a bb ccc dddd\neeeee'
+        expect = 'a\nbb\nccc\ndddd\neeeee'
+        actual = textwrap.word_wrap(text, 8, 2)
+        self.assertEqual(expect, actual)
+
+        expect = 'a bb\nccc\ndddd\neeeee'
+        actual = textwrap.word_wrap(text, 8, 4)
+        self.assertEqual(expect, actual)
+
+        text = 'a bb ccc dddd\n\teeeee'
+        expect = 'a bb\nccc\ndddd\n\t\neeeee'
+        actual = textwrap.word_wrap(text, 8, 4)
+        self.assertEqual(expect, actual)
+
 
 if __name__ == '__main__':
     unittest.main()

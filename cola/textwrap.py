@@ -199,20 +199,7 @@ class TextWrapper(object):
 
 
 def word_wrap(text, tabwidth, limit):
-    r"""Wrap long lines to the specified limit
-
-    >>> text = 'a bb ccc dddd\neeeee'
-    >>> word_wrap(text, 8, 2)
-    u'a\nbb\nccc\ndddd\neeeee'
-
-    >>> word_wrap(text, 8, 4)
-    u'a bb\nccc\ndddd\neeeee'
-
-    >>> text = 'a bb ccc dddd\n\teeeee'
-    >>> word_wrap(text, 8, 4)
-    u'a bb\nccc\ndddd\n\t\neeeee'
-
-    """
+    """Wrap long lines to the specified limit"""
 
     lines = []
 
