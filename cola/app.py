@@ -55,7 +55,6 @@ except ImportError:
     sys.exit(EX_UNAVAILABLE)
 
 from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
 
 # Import cola modules
