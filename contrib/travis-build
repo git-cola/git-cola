@@ -1,0 +1,480 @@
+#!/usr/bin/env python
+
+from __future__  import absolute_import, division, unicode_literals
+
+import argparse
+import distutils.spawn
+import json
+import os
+import re
+import shlex
+import signal
+import sys
+import unittest
+import yaml
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from cola import core
+from cola import git
+from cola import gitcmds
+from cola import gitcfg
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('filename', metavar='<travis.yaml>',
+                        help='yaml travis config')
+    parser.add_argument('--build-versions', '-V', action='append',
+                        help='build the specified versions')
+    parser.add_argument('--dry-run', '-k', default=False, action='store_true',
+                        help='dry-run, do nothing')
+    parser.add_argument('--sudo', default=False, action='store_true',
+                        help='allow commands to use sudo')
+    parser.add_argument('--skip-missing', default=False, action='store_true',
+                        help='skip missing interpretors')
+    parser.add_argument('--no-prompt', '-y', default=False, action='store_true',
+                        help='do not prompt before each command')
+    parser.add_argument('--remote', default='origin',
+                        help='remote name whose URL will used for slugs')
+    parser.add_argument('--before-install', '-b', default=False,
+                        action='store_true',
+                        help='run the before_install step')
+    parser.add_argument('--before-script', '-B', default=False,
+                        action='store_true',
+                        help='run the before_script step')
+    parser.add_argument('--slug', '-s', metavar='<slug>',
+                        help='specify the URL slug')
+    parser.add_argument('--start', metavar='<int>', type=int, default=0,
+                        help='specify the starting command index')
+    parser.add_argument('--test', default=False, action='store_true',
+                        help='run built-in unit tests')
+    parser.add_argument('--verbose', '-v', default=False, action='store_true',
+                        help='increase verbosity')
+    return parser.parse_args()
+
+
+def load_yaml(filename):
+    with core.xopen(filename, 'r') as f:
+        return yaml.load(f)
+
+
+def find_interpretor(language, version):
+    return distutils.spawn.find_executable(language + version)
+
+
+def get_platform(platform):
+    if platform.lower().startswith('linux'):
+        platform = 'linux'
+    else:
+        platform = 'osx'
+    return platform
+
+
+def error(msg):
+    core.stderr('error: %s' % msg)
+    sys.exit(1)
+
+
+def parse_slug(url):
+    url = url.rstrip('/')
+    if url.endswith('.git'):
+        url = url[:-len('.git')]
+
+    github_prefixes = (
+            'https://github.com/',
+            'git://github.com/',
+            'git@github.com:',
+    )
+    for prefix in github_prefixes:
+        if url.startswith(prefix):
+            return url[len(prefix):]
+
+    patterns = (
+            # ssh+git://user:password@host/slug
+            r'^ssh\+git://[^@]+:[^@]+@[^@/]+/([^:]+)$',
+            # ssh+git://user@host/slug
+            r'^ssh\+git://[^@]+@[^@]+?/([^:]+)$',
+            # user@host:slug (no ports, etc
+            r'^[^@]+@[^@]+:([^:]+)$',
+    )
+    for pattern in patterns:
+        rgx = re.compile(pattern)
+        match = rgx.match(url)
+        if match:
+            return match.group(1)
+
+    return ''
+
+
+def guess_slug(remote):
+    key = 'remote.%s.url' % remote
+    url = gitcfg.current().get(key)
+
+    default_slug = 'git-cola/git-cola'
+    if url:
+        slug = parse_slug(url) or default_slug
+    else:
+        slug = default_slug
+
+    return slug
+
+
+def get_slug(args):
+    if args.slug:
+        slug = args.slug
+    else:
+        slug = guess_slug(args.remote)
+    return slug
+
+
+def get_current_branch():
+    return gitcmds.current_branch()
+
+
+def setup_environment(args, language, version):
+    env = os.environ.copy()
+
+    repo = git.Git()
+    if not repo.is_valid():
+        error('%s is not a Git repository' % core.getcwd())
+
+    version_var = '%s_VERSION' % language.upper()
+    env.setdefault(version_var, version)
+    env.setdefault('CI', 'true')
+    env.setdefault('TRAVIS', 'true')
+    env.setdefault('CONTINUOUS_INTEGRATION', 'true')
+    env.setdefault('DEBIAN_FRONTEND', 'noninteractive')
+    env.setdefault('HAS_DAVID_A_SEAL_OF_APPROVAL', 'true')
+    env.setdefault('USER', 'travis')
+    env.setdefault('HOME', '/home/travis')
+    env.setdefault('LANG', 'en_US.UTF-8')
+    env.setdefault('LC_ALL', 'en_US.UTF-8')
+    env.setdefault('RAILS_ENV', 'test')
+    env.setdefault('RACK_ENV', 'test')
+    env.setdefault('MERB_ENV', 'test')
+    env.setdefault('TRAVIS_BRANCH', gitcmds.current_branch())
+    env.setdefault('TRAVIS_BUILD_DIR', core.getcwd())
+    env.setdefault('TRAVIS_BUILD_ID', '1')
+    env.setdefault('TRAVIS_BUILD_NUMBER', '1')
+    env.setdefault('TRAVIS_COMMIT', 'HEAD')
+    env.setdefault('TRAVIS_COMMIT_RANGE', 'HEAD^..HEAD')
+    env.setdefault('TRAVIS_JOB_ID', '1')
+    env.setdefault('TRAVIS_JOB_NUMBER', '1.1')
+    env.setdefault('TRAVIS_PULL_REQUEST', 'false')
+    env.setdefault('TRAVIS_SECURE_ENV_VARS', 'false')
+    env.setdefault('TRAVIS_REPO_SLUG', get_slug(args))
+    env.setdefault('TRAVIS_OS_NAME', get_platform(sys.platform))
+    env.setdefault('TRAVIS_TAG', '')
+
+    return env
+
+
+def jsonify(obj):
+    return json.dumps(obj, sort_keys=True, indent=2)
+
+
+_expandvars_re = None
+
+def expandvars(path, environ=None):
+    """
+    Like os.path.expandvars, but operates on a provided dictionary
+
+    `os.environ` is used when `environ` is None.
+
+    >>> expandvars('$foo', environ={'foo': 'bar'}) == 'bar'
+    True
+
+    >>> environ = {'foo': 'a', 'bar': 'b'}
+    >>> expandvars('$foo:$bar:${foo}${bar}', environ=environ)  == 'a:b:ab'
+    True
+
+    """
+    global _expandvars_re
+    if '$' not in path:
+        return path
+    if _expandvars_re is None:
+        _expandvars_re = re.compile(r'\$(\w+|\{[^}]*\})')
+    if environ is None:
+        environ = os.environ.copy()
+    i = 0
+    while True:
+        m = _expandvars_re.search(path, i)
+        if not m:
+            break
+        i, j = m.span(0)
+        name = m.group(1)
+        if name.startswith('{') and name.endswith('}'):
+            name = name[1:-1]
+        if name in environ:
+            tail = path[j:]
+            path = path[:i] + environ[name]
+            i = len(path)
+            path += tail
+        else:
+            i = j
+    return path
+
+
+class RunCommands(object):
+
+    def __init__(self, state, cmds=None):
+        self.state = state
+        self.cmds = cmds
+        self.idx = state.start
+        self.running = False
+        self.errors = []
+        if cmds:
+            self.idx = min(self.idx, len(cmds)-1)
+
+    def loop(self, cmds=None, title=None):
+        if cmds:
+            self.cmds = cmds
+        self.errors = []
+        self.show_initial_prompt(title=title)
+
+        self.running = True
+        while self.running:
+            self.show_prompt()
+            self.eval_input(self.read_input())
+
+    def show_initial_prompt(self, title=None):
+        state = self.state
+        prompt = '# %s %s' % (state.language.title(), state.version)
+        if title:
+            prompt += ' - ' + title
+        prompt += ' #'
+        dashes = '#' * len(prompt)
+        print(dashes)
+        print(prompt)
+        print(dashes)
+        print("""
+*** Commands ***
+    y, r ... yes/run
+ b, k, p ... back/prev
+ j, n, s ... next/no/skip (default)
+       q ... quit
+""")
+
+    def current_command(self):
+        sudo = self.state.sudo
+        cmd = self.cmds[self.idx]
+        if not sudo and cmd.startswith('sudo '):
+            cmd = cmd[len('sudo '):]
+        return cmd
+
+    def expandvars(self, string):
+        return expandvars(string, environ=self.state.environ)
+
+    def show_prompt(self):
+        state = self.state
+        prompt = state.prompt
+
+        cmd = self.current_command()
+        expanded = self.expandvars(cmd)
+        print('$ %s' % expanded)
+        if prompt:
+            sys.stdout.write('? ')
+
+    def read_input(self):
+        if self.state.prompt:
+            answer = sys.stdin.readline().strip().lower()
+        else:
+            answer = 'y'
+        return answer
+
+    def chdir(self, directory):
+        os.chdir(directory)
+        self.state.environ['PWD'] = os.getcwd()
+
+    def goto_next(self):
+        if self.is_last():
+            self.running = False
+            return
+        self.idx = min(len(self.cmds) - 1, self.idx + 1)
+
+    def goto_prev(self):
+        self.idx = max(0, self.idx - 1)
+
+    def is_last(self):
+        return self.idx == len(self.cmds) - 1
+
+    def eval_input(self, answer):
+        state = self.state
+        dry_run = state.dry_run
+        environ = state.environ
+
+        if answer in ('', 'j', 'n', 's'):
+            self.goto_next()
+            return
+
+        elif answer in ('b', 'k', 'p'):
+            self.goto_prev()
+            return
+
+        elif answer == 'q':
+            self.running = False
+            return
+
+        elif answer in ('r', 'y'):
+            cmd = self.current_command()
+            self.goto_next()
+            expanded = self.expandvars(cmd)
+            argv = shlex.split(expanded)
+            if not argv:
+                error('empty command at index %s' % self.idx - 1)
+
+            if len(argv) == 2 and argv[0] == 'cd':
+                directory = argv[1]
+                self.chdir(directory)
+                return
+            if dry_run:
+                return
+            status, out, err = core.run_command(cmd, env=environ, shell=True,
+                                                stdin=None, stdout=None,
+                                                stderr=None)
+            print('The command "%s" exited with %d.' % (expanded, status))
+            if status != 0:
+                self.errors.append(expanded)
+            return
+
+
+class State(object):
+    def __init__(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
+
+
+def expand_config_environment(envs, environ):
+    # Operate on a copy so that we can add to it as we expand the variables.
+    # This allows subsequent variables to reference previous variables.
+    expanded = []
+    environ = environ.copy()
+
+    for env in envs:
+        env_values = {}
+        # Entries look like "VAR1=x VAR2=x$VAR1" so we split using
+        # the shell lexer to get the individual VAR=value entries
+        env_entries = shlex.split(env)
+        for entry in env_entries:
+            key, value = entry.split('=', 1)
+            expanded_value = expandvars(value, environ=environ)
+            # Add to the returned environment
+            env_values[key] = expanded_value
+            # Also add to the outer environ to allow subsequent lookups
+            # to use a previously defined value
+            environ[key] = expanded_value
+        expanded.append(env_values)
+
+    # Ensure that we have at least a single environment
+    if not expanded:
+        expanded.append({})
+
+    return expanded
+
+
+def build_version(args, data, language, version):
+    errors = []
+    environ = setup_environment(args, language, version)
+
+    # Get the possibly config-specified execution environments
+    envs = expand_config_environment(data.get('env', []), environ)
+    for env in envs:
+        environ = environ.copy()
+        environ.update(env)
+
+        state = State(dry_run=args.dry_run,
+                      environ=environ,
+                      language=language,
+                      prompt=not args.no_prompt,
+                      start=args.start,
+                      sudo=args.sudo,
+                      verbose=args.verbose,
+                      version=version)
+
+        if state.verbose:
+            print('# Environment')
+            print(jsonify(environ))
+
+        cmds = []
+        if args.before_install:
+            cmds.extend(data.get('before_install', []))
+        cmds.extend(data.get('install', []))
+
+        if args.before_script:
+            cmds.extend(data.get('before_script', []))
+        cmds.extend(data.get('script', []))
+
+        run_commands = RunCommands(state, cmds=cmds)
+        run_commands.loop()
+        errors.extend(run_commands.errors)
+
+    return errors
+
+
+def build(args, data):
+    language = data['language']
+    if args.build_versions:
+        versions = args.build_versions
+    else:
+        versions = data[language]
+
+    if args.skip_missing:
+        versions = [v for v in versions if find_interpretor(language, v)]
+
+    status = 0
+
+    for version in versions:
+        errors = build_version(args, data, language, version)
+        if errors:
+            status = 1
+
+    return status
+
+
+class TravisBuildTestCase(unittest.TestCase):
+
+    def test_parse_slug(self):
+        urls = (
+            'https://github.com/example/slug',
+            'https://github.com/example/slug.git',
+            'git://github.com/example/slug',
+            'git://github.com/example/slug.git',
+            'git@github.com:example/slug',
+            'git@github.com:example/slug.git',
+            'git@example.com:example/slug',
+            'git@example.com:example/slug.git',
+            'ssh+git://git@example.com/example/slug.git',
+            'ssh+git://user:password@example.com/example/slug.git',
+            'ssh+git://user:password@example.com:66/example/slug.git',
+        )
+        expect = 'example/slug'
+        for url in urls:
+            actual = parse_slug(url)
+            self.assertEqual(expect, actual)
+
+
+def test():
+    suite = unittest.TestLoader().loadTestsFromTestCase(TravisBuildTestCase)
+    runner = unittest.TextTestRunner(verbosity=2)
+    result = runner.run(suite)
+    if result.errors or result.failures:
+        status = 1
+    else:
+        status = 0
+
+    return status
+
+
+def main():
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+    args = parse_args()
+    if args.test:
+        return test()
+
+    data = load_yaml(args.filename)
+    return build(args, data)
+
+
+if __name__ == '__main__':
+    sys.exit(main())
