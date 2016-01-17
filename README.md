@@ -265,7 +265,7 @@ The following commands should be run during development:
    # Check for pylint warnings.  All new code must pass 100%.
    $ make pylint
 
-The test suite can be found in the [tests](tests) directory.
+The test suite can be found in the [test](test) directory.
 
 The tests are setup to run automatically when code is pushed using
 [Travis CI](https://travis-ci.org/git-cola/git-cola).
