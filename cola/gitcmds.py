@@ -76,7 +76,7 @@ def all_files(*args):
     return sorted([f for f in ls_files.split('\0') if f])
 
 
-class _current_branch:
+class _current_branch(object):
     """Cache for current_branch()"""
     key = None
     value = None
