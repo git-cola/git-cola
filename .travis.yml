@@ -28,7 +28,7 @@ install:
   - wget "http://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.11.3/PyQt-x11-gpl-4.11.3.tar.gz"
   - tar xzf PyQt-x11-gpl-4.11.3.tar.gz
   - cd PyQt-x11-gpl-4.11.3
-  - python configure.py --confirm-license
+  - python configure.py --confirm-license --no-designer-plugin --no-qsci-api --no-timestamp
   - make -j4
   - make install
   - cd ..
