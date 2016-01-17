@@ -255,6 +255,23 @@ See `git cola --help-commands` for the full list of commands.
         tag                 create tags
         version             print the version
 
+## HACKING
+
+The following commands should be run during development:
+
+   # Run the unit tests
+   $ make test
+
+   # Check for pylint warnings.  All new code must pass 100%.
+   $ make pylint
+
+The test suite can be found in the [tests](tests) directory.
+
+The tests are setup to run automatically when code is pushed using
+[Travis CI](https://travis-ci.org/git-cola/git-cola).
+Checkout the [Travis config file](.travis.yml) for more details.
+
+When submitting patches, consult the [contributing guidelines](CONTRIBUTING.md).
 
 ## WINDOWS (continued)
 
