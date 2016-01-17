@@ -5,6 +5,7 @@ all::
 CTAGS = ctags
 CP = cp
 FIND = find
+FLAKE8 = flake8
 GIT = git
 GZIP = gzip
 LN = ln
@@ -20,6 +21,7 @@ RMDIR = rmdir
 TAR = tar
 
 # Flags
+FLAKE8_FLAGS = --max-line-length=80 --statistics --doctests --format=pylint
 PYLINT_FLAGS = --py3k --output-format=colorized --rcfile=.pylintrc
 
 # These values can be overridden on the command-line or via config.mak
@@ -63,10 +65,7 @@ ALL_PYTHON_DIRS += extras
 PYTHON_SOURCES = bin/git-cola
 PYTHON_SOURCES += bin/git-dag
 PYTHON_SOURCES += share/git-cola/bin/git-xbase
-PYTHON_SOURCES += cola
-PYTHON_SOURCES += test
 PYTHON_SOURCES += setup.py
-PYTHON_SOURCES += extras
 
 # User customizations
 -include config.mak
@@ -183,6 +182,10 @@ app-tarball: git-cola.app
 %.html: %.md
 	$(MARKDOWN) $< >$@
 
+flake8:
+	$(FLAKE8) $(FLAKE8_FLAGS) $(PYTHON_SOURCES) $(PYTHON_DIRS)
+.PHONY: flake8
+
 pylint:
-	$(PYLINT) $(PYLINT_FLAGS) $(PYTHON_SOURCES)
+	$(PYLINT) $(PYLINT_FLAGS) $(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
 .PHONY: pylint
