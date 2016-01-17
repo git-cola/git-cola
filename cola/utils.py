@@ -103,21 +103,7 @@ def basename(path):
 
 
 def strip_one(path):
-    """Strip one level of directory
-
-    >>> strip_one('/usr/bin/git')
-    u'bin/git'
-
-    >>> strip_one('local/bin/git')
-    u'bin/git'
-
-    >>> strip_one('bin/git')
-    u'git'
-
-    >>> strip_one('git')
-    u'git'
-
-    """
+    """Strip one level of directory"""
     return path.strip('/').split('/', 1)[-1]
 
 

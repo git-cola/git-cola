@@ -78,6 +78,26 @@ class ColaUtilsTestCase(unittest.TestCase):
 
         shutil.rmtree(tmpdir)
 
+    def test_strip_one_abspath(self):
+        expect = 'bin/git'
+        actual = utils.strip_one('/usr/bin/git')
+        self.assertEqual(expect, actual)
+
+    def test_strip_one_relpath(self):
+        expect = 'git'
+        actual = utils.strip_one('bin/git')
+        self.assertEqual(expect, actual)
+
+    def test_strip_one_nested_relpath(self):
+        expect = 'bin/git'
+        actual = utils.strip_one('local/bin/git')
+        self.assertEqual(expect, actual)
+
+    def test_strip_one_basename(self):
+        expect = 'git'
+        actual = utils.strip_one('git')
+        self.assertEqual(expect, actual)
+
 
 if __name__ == '__main__':
     unittest.main()
