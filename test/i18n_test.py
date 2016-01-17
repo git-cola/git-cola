@@ -64,7 +64,11 @@ class ColaI18nTestCase(unittest.TestCase):
         """
         i18n.install('en_US.UTF-8')
         expect = 'Random'
-        actual = i18n.gettext(QtCore.QString('Random'))
+        if hasattr(QtCore, 'QString'):
+            text = QtCore.QString('Random')
+        else:
+            text = 'Random'
+        actual = i18n.gettext(text)
         self.assertEqual(expect, actual)
 
 
