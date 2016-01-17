@@ -115,7 +115,7 @@ def start_command(cmd, cwd=None, add_env=None,
     This provides a simpler interface to the subprocess module.
 
     """
-    env = None
+    env = extra.pop('env', None)
     if add_env is not None:
         env = os.environ.copy()
         env.update(add_env)
