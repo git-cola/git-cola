@@ -41,7 +41,7 @@ class Interaction(object):
         cls.information(title, message=text,
                         informative_text=informative_text)
         if default:
-            prompt = '%s? [Y/n]' % ok_text
+            prompt = '%s? [Y/n] ' % ok_text
         else:
             prompt = '%s? [y/N] ' % ok_text
         sys.stdout.write(prompt)
