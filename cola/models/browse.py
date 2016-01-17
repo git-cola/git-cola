@@ -3,6 +3,9 @@ from __future__ import division, absolute_import, unicode_literals
 import collections
 import time
 
+from cola import sipcompat
+sipcompat.initialize()
+
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
@@ -233,7 +236,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         self.setColumnCount(len(Columns.ALL))
         for idx, header in enumerate(Columns.ALL):
             text = Columns.text(header)
-            self.setHeaderData(idx, Qt.Horizontal, QtCore.QVariant(text))
+            self.setHeaderData(idx, Qt.Horizontal, text)
 
         self._entries = {}
         self._dir_rows = collections.defaultdict(int)

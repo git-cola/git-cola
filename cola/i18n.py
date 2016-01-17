@@ -10,22 +10,29 @@ from cola import core
 from cola import resources
 
 _null_translation = _gettext.NullTranslations()
-# Python 3 compat
-if not hasattr(_null_translation, 'ugettext'):
-    _null_translation.ugettext = _null_translation.gettext
-    _null_translation.ungettext = _null_translation.ngettext
 _translation = _null_translation
 
 
 def gettext(s):
-    txt = _translation.ugettext(s)
+    try:
+        txt = _translation.ugettext(s)
+    except AttributeError:
+        # Python 3 compat
+        _translation.ugettext = _translation.gettext
+        txt = _translation.gettext(s)
     if txt[-6:-4] == '@@': # handle @@verb / @@noun
         txt = txt[:-6]
     return txt
 
 
 def ngettext(s, p, n):
-    return _translation.ungettext(s, p, n)
+    try:
+        txt = _translation.ungettext(s, p, n)
+    except AttributeError:
+        # Python 3 compat
+        _translation.ungettext = _translation.ngettext
+        txt = _translation.ngettext(s, p, n)
+    return txt
 
 
 def N_(s):
@@ -45,10 +52,6 @@ def install(locale):
     _translation = _gettext.translation('git-cola',
                                         localedir=_get_locale_dir(),
                                         fallback=True)
-    # Python 3 compat
-    if not hasattr(_translation, 'ugettext'):
-        _translation.ugettext = _translation.gettext
-        _translation.ungettext = _translation.ngettext
 
 def uninstall():
     global _translation

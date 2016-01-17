@@ -912,7 +912,7 @@ class Commit(QtGui.QGraphicsItem):
             self.scene().parent().set_selecting(False)
 
             # Cache the pen for use in paint()
-            if value.toPyObject():
+            if value:
                 self.brush = self.commit_selected_color
                 color = self.selected_outline_color
             else:

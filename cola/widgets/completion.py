@@ -2,6 +2,9 @@ from __future__ import division, absolute_import, unicode_literals
 
 import re
 
+from cola import sipcompat
+sipcompat.initialize()
+
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
@@ -286,7 +289,7 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
         if not self.highlight_text:
             return QtGui.QStyledItemDelegate.paint(self, painter, option, index)
 
-        text = ustr(index.data().toPyObject())
+        text = index.data()
         if self.case_sensitive:
             html = text.replace(self.highlight_text,
                                 '<strong>%s</strong>' % self.highlight_text)
@@ -305,7 +308,7 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
         # Painting item without text, Text Document will paint the text
         optionV4 = QtGui.QStyleOptionViewItemV4(option)
         self.initStyleOption(optionV4, index)
-        optionV4.text = QtCore.QString()
+        optionV4.text = ''
 
         style = QtGui.QApplication.style()
         style.drawControl(QtGui.QStyle.CE_ItemViewItem, optionV4, painter)

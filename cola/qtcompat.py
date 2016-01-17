@@ -1,5 +1,8 @@
 from __future__ import division, absolute_import, unicode_literals
 
+from cola import sipcompat
+sipcompat.initialize()
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 

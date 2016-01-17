@@ -35,19 +35,12 @@ EX_UNAVAILABLE = 69
 
 
 try:
-    import sip
+    from cola import sipcompat
 except ImportError:
     sys.stderr.write(errmsg)
     sys.exit(EX_UNAVAILABLE)
 
-if not os.getenv('GIT_COLA_NO_SIP_SETAPI', False):
-    sip.setapi('QString', 1)
-    sip.setapi('QDate', 1)
-    sip.setapi('QDateTime', 1)
-    sip.setapi('QTextStream', 1)
-    sip.setapi('QTime', 1)
-    sip.setapi('QUrl', 1)
-    sip.setapi('QVariant', 1)
+sipcompat.initialize()
 
 try:
     from PyQt4 import QtCore

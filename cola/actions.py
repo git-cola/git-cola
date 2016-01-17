@@ -1,5 +1,8 @@
 from __future__ import absolute_import
 
+from cola import sipcompat
+sipcompat.initialize()
+
 from PyQt4.QtCore import SIGNAL
 
 from cola import cmds

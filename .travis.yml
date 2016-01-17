@@ -45,6 +45,6 @@ script:
   - git config --global user.name "Git Cola"
   - git config --global user.email git-cola@localhost.localdomain
   # TODO tests currently fail on Python3 due to sip
-  - env GIT_COLA_NO_SIP_SETAPI=1 GIT_COLA_NO_HISTORY=1 make test flags=--verbose
+  - env GIT_COLA_NO_HISTORY=1 make test flags=--verbose
   # pylint 1.4 uses python2.7+ syntax so skip pylint on python2.6
   - test "2.6" = "$TRAVIS_PYTHON_VERSION" || make pylint

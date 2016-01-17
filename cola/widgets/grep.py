@@ -10,7 +10,6 @@ from cola import hotkeys
 from cola import utils
 from cola import qtutils
 from cola.cmds import do
-from cola.compat import ustr
 from cola.git import git
 from cola.i18n import N_
 from cola.qtutils import diff_font
@@ -180,8 +179,7 @@ class Grep(Dialog):
 
     def regexp_mode(self):
         idx = self.regexp_combo.currentIndex()
-        data = self.regexp_combo.itemData(idx, Qt.UserRole).toPyObject()
-        return ustr(data)
+        return self.regexp_combo.itemData(idx, Qt.UserRole)
 
     def search(self):
         self.edit_group.setEnabled(False)

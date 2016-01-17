@@ -112,12 +112,12 @@ class RepoFormWidget(FormWidget):
         self.merge_verbosity = QtGui.QSpinBox()
         self.merge_verbosity.setMinimum(0)
         self.merge_verbosity.setMaximum(5)
-        self.merge_verbosity.setProperty('value', QtCore.QVariant(5))
+        self.merge_verbosity.setProperty('value', 5)
 
         self.diff_context = QtGui.QSpinBox()
         self.diff_context.setMinimum(2)
         self.diff_context.setMaximum(99)
-        self.diff_context.setProperty('value', QtCore.QVariant(5))
+        self.diff_context.setProperty('value', 5)
 
         self.merge_summary = qtutils.checkbox(checked=True)
         self.merge_diffstat = qtutils.checkbox(checked=True)
@@ -156,7 +156,7 @@ class SettingsFormWidget(FormWidget):
 
         self.font_size = QtGui.QSpinBox()
         self.font_size.setMinimum(8)
-        self.font_size.setProperty('value', QtCore.QVariant(12))
+        self.font_size.setProperty('value', 12)
         self._font_str = None
 
         self.tabwidth = QtGui.QSpinBox()

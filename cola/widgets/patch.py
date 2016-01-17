@@ -49,7 +49,7 @@ def get_patches_from_mimedata(mimedata):
     urls = mimedata.urls()
     if not urls:
         return []
-    paths = [ustr(x.path()) for x in urls]
+    paths = [x.path() for x in urls]
     return get_patches_from_paths(paths)
 
 
@@ -131,7 +131,7 @@ class ApplyPatches(Dialog):
         items = self.tree.items()
         if not items:
             return
-        patches = [ustr(i.data(0, Qt.UserRole).toPyObject()) for i in items]
+        patches = [i.data(0, Qt.UserRole) for i in items]
         cmds.do(cmds.ApplyPatches, patches)
         self.accept()
 
@@ -141,7 +141,6 @@ class ApplyPatches(Dialog):
                                    filter='Patches (*.patch *.mbox)')
         if not files:
             return
-        files = [ustr(f) for f in files]
         self.curdir = os.path.dirname(files[0])
         self.add_paths([os.path.relpath(f) for f in files])
 
@@ -181,7 +180,7 @@ class PatchTreeWidget(DraggableTreeWidget):
             item.setFlags(flags)
             item.setIcon(0, icon)
             item.setText(0, os.path.basename(patch))
-            item.setData(0, Qt.UserRole, QtCore.QVariant(patch))
+            item.setData(0, Qt.UserRole, patch)
             item.setToolTip(0, patch)
             items.append(item)
         self.addTopLevelItems(items)
