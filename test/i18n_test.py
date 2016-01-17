@@ -1,9 +1,12 @@
 from __future__ import absolute_import, division, unicode_literals
 
-import sip
-sip.setapi('QString', 1)
-
+import os
 import unittest
+
+import sip
+
+if not os.getenv('GIT_COLA_NO_SIP_SETAPI', False):
+    sip.setapi('QString', 1)
 
 from PyQt4 import QtCore
 

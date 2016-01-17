@@ -57,7 +57,7 @@ class GitCommandTest(unittest.TestCase):
     def test_tag(self):
         """Test running 'git tag'"""
         tags = self.git.tag()[STDOUT].splitlines()
-        if os.getenv('COLA_NO_GIT_HISTORY_TESTS', False):
+        if os.getenv('GIT_COLA_NO_HISTORY', False):
             return
         self.failUnless('v1.0.0' in tags)
 
