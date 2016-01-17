@@ -34,6 +34,9 @@ install:
   - cd ..
   # Additional dependency for python 2.6
   - pip install argparse
+  # Pylint
+  - pip install astroid==1.3.8
+  - pip install pylint==1.4.4
 
 script:
   - make all
@@ -43,3 +46,5 @@ script:
   - git config --global user.email git-cola@localhost.localdomain
   # TODO tests currently fail on Python3 due to sip
   - make flags=--verbose COLA_NO_GIT_HISTORY_TESTS=1 test || test "3" = "$(python -c 'import sys; print(sys.version_info[0])')"
+  # pylint 1.4 uses python2.7+ syntax so skip pylint on python2.6
+  - test "2.6" = "$TRAVIS_PYTHON_VERSION" || make pylint
