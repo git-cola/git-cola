@@ -17,6 +17,8 @@ before_install:
 install:
   - pip install sphinx
   # SIP
+  - mkdir -p local/sandbox
+  - cd local/sandbox
   - wget "http://sourceforge.net/projects/pyqt/files/sip/sip-4.16.5/sip-4.16.5.tar.gz"
   - tar xzf sip-4.16.5.tar.gz
   - cd sip-4.16.5
@@ -31,7 +33,7 @@ install:
   - python configure.py --confirm-license --no-designer-plugin --no-qsci-api --no-timestamp
   - make -j4
   - make install
-  - cd ..
+  - cd ../../..
   # Additional dependency for python 2.6
   - pip install argparse
   # Pylint

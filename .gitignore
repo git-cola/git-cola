@@ -2,6 +2,7 @@
 /build
 /config.mak
 /dist
+/local
 /Meta
 /share/locale
 /test/tmp
