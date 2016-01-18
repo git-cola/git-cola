@@ -22,9 +22,9 @@ install:
   - wget "http://sourceforge.net/projects/pyqt/files/sip/sip-4.16.5/sip-4.16.5.tar.gz"
   - tar xzf sip-4.16.5.tar.gz
   - cd sip-4.16.5
-  - python configure.py
+  - python configure.py --incdir="$(python -c 'import sys; print(sys.prefix)')"/include/python"$PYTHON_VERSION"
   - make -j4
-  - sudo make install
+  - make install
   - cd ..
   # PyQt4
   - wget "http://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.11.3/PyQt-x11-gpl-4.11.3.tar.gz"
