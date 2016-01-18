@@ -1,0 +1,50 @@
+language: python
+python:
+  - "2.6"
+
+env:
+  - PATH="$PWD/local/python2.6/bin":"$PATH"
+
+before_install:
+  - sudo apt-get install -y libreadline-gplv2-dev
+  - sudo apt-get install -y libsqlite3-dev zlib1g-dev libssl-dev
+  - sudo apt-get install -y libgdbm-dev tk-dev libncursesw5-dev
+
+# setup setuptools, etc. for virtualenv
+# This is intended to be used on a Debian sid system where python2.6
+# is a minimal install without setuptools or virtualenv.
+install:
+  - mkdir -p local/sandbox
+  - cd local/sandbox
+  # python 2.6
+  - wget "https://www.python.org/ftp/python/2.6.9/Python-2.6.9.tgz"
+  - tar xzf Python-2.6.9.tgz
+  - cd Python-2.6.9
+  # Debian sid disabled SSLv3
+  - sed -i -e "s,SSL_CTX_new(SSLv3_method()),NULL," Modules/_ssl.c
+  - ./configure --prefix="$(readlink -f ../../python2.6)"
+  - echo "_ssl _ssl.c -DUSE_SSL -I/usr/include/openssl -lssl -lcrypto" >Modules/Setup.local
+  - echo "crypt cryptmodule.c -lcrypt" >>Modules/Setup.local
+  - echo "_md5 md5module.c md5.c" >>Modules/Setup.local
+  - echo "_sha shamodule.c" >>Modules/Setup.local
+  - echo "_sha256 sha256module.c" >>Modules/Setup.local
+  - echo "_sha512 sha512module.c" >>Modules/Setup.local
+  - echo "readline readline.c -lreadline -ltermcap" >>Modules/Setup.local
+  - echo "zlib zlibmodule.c -lz" >>Modules/Setup.local
+  - make -j4
+  - make install
+  - cd ..
+  # setuptools
+  - wget "https://pypi.python.org/packages/source/s/setuptools/setuptools-19.4.zip"
+  - unzip -o setuptools-19.4.zip
+  - cd setuptools-19.4
+  - python setup.py install
+  - cd ..
+  # pip, virtualenv
+  - easy_install pip
+  - pip install virtualenv
+  # for travis-build
+  - cd ../..
+  - ./local/python2.6/bin/virtualenv env26
+  - ./env26/bin/pip install pyyaml
+  - ./env26/bin/pip install nose
