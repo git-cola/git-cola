@@ -60,7 +60,7 @@ install:
   - cd ..
 
   # Git Cola
-  - cd ..
+  - cd ../..
   - make all
   - make doc
   - make prefix="$COLA_PREFIX" install install-doc
