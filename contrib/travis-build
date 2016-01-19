@@ -72,8 +72,12 @@ def get_platform(platform):
     return platform
 
 
-def error(msg):
+def print_error(msg):
     core.stderr('error: %s' % msg)
+
+
+def error(msg):
+    print_error(msg)
     sys.exit(1)
 
 
@@ -175,7 +179,10 @@ def jsonify(obj):
     return json.dumps(obj, sort_keys=True, indent=2)
 
 
-_expandvars_re = None
+def print_environment(environ):
+    print('# Environment')
+    print(jsonify(environ))
+
 
 def expandvars(path, environ=None):
     """
@@ -229,11 +236,10 @@ class RunCommands(object):
         if cmds:
             self.idx = min(self.idx, len(cmds)-1)
 
-    def loop(self, cmds=None, title=None):
+    def loop(self, cmds=None):
         if cmds:
             self.cmds = cmds
         self.errors = []
-        self.show_initial_prompt(title=title)
 
         self.running = True
         while self.running:
@@ -268,6 +274,8 @@ class RunCommands(object):
          rr ... rewind to beginning
          ff ... fast-forward to end
    cd <dir> ... change directories
+        env ... print config-provided environment variables
+    environ ... print current environment variables
     h, help ... show help
     q, quit ... quit
 """)
@@ -403,6 +411,12 @@ class RunCommands(object):
         elif answer in ('st', 'status'):
             self.show_status()
             return
+        elif answer in ('env',):
+            print_environment(self.state.env)
+            return
+        elif answer in ('environ',):
+            print_environment(self.state.environ)
+            return
         elif first in ('g', 'go', 'goto'):
             self.goto(int(words[1]))
         elif first in ('cd', 'chdir'):
@@ -473,6 +487,7 @@ def build_version(args, data, language, version):
 
         state = State(default=args.default,
                       dry_run=args.dry_run,
+                      env=env,
                       environ=environ,
                       language=language,
                       prompt=not args.no_prompt,
@@ -482,8 +497,7 @@ def build_version(args, data, language, version):
                       version=version)
 
         if state.verbose:
-            print('# Environment')
-            print(jsonify(environ))
+            print_environment(environ)
 
         cmds = []
         if args.before_install:
@@ -495,6 +509,7 @@ def build_version(args, data, language, version):
         cmds.extend(data.get('script', []))
 
         run_commands = RunCommands(state, cmds=cmds)
+        run_commands.show_initial_prompt()
         run_commands.loop()
         errors.extend(run_commands.errors)
 
