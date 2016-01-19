@@ -34,6 +34,8 @@ def parse_args():
                         help='skip missing interpretors')
     parser.add_argument('--no-prompt', '-y', default=False, action='store_true',
                         help='do not prompt before each command')
+    parser.add_argument('--default', default='y', metavar='<cmd>',
+                        help='default command for empty input (default: y)')
     parser.add_argument('--remote', default='origin',
                         help='remote name whose URL will used for slugs')
     parser.add_argument('--before-install', '-b', default=False,
@@ -364,7 +366,7 @@ class RunCommands(object):
     def eval_input(self, answer):
         # Accept the action by default
         if not answer:
-            answer = 'y'
+            answer = self.state.default
 
         words = shlex.split(answer)
         first = words[0]
@@ -462,7 +464,8 @@ def build_version(args, data, language, version):
         environ = environ.copy()
         environ.update(env)
 
-        state = State(dry_run=args.dry_run,
+        state = State(default=args.default,
+                      dry_run=args.dry_run,
                       environ=environ,
                       language=language,
                       prompt=not args.no_prompt,
