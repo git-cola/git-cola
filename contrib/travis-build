@@ -276,6 +276,7 @@ class RunCommands(object):
    cd <dir> ... change directories
         env ... print config-provided environment variables
     environ ... print current environment variables
+        pwd ... print current working directory
     h, help ... show help
     q, quit ... quit
 """)
@@ -410,6 +411,9 @@ class RunCommands(object):
             return
         elif answer in ('st', 'status'):
             self.show_status()
+            return
+        elif answer in ('pwd',):
+            print(os.getcwd())
             return
         elif answer in ('env',):
             print_environment(self.state.env)
