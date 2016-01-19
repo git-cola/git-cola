@@ -1,14 +1,14 @@
-/git-cola.app
 /build
 /config.mak
 /dist
+/git-cola.app
 /local
 /Meta
+/pynsist_pkgs
+/README.html
 /share/locale
 /test/tmp
 /tags
-/*.html
-/pynsist_pkgs/
 .DS_Store
 .noseids
 *.gz
