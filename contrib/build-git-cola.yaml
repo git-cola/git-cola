@@ -1,0 +1,66 @@
+# Based on a script originally by Aaron Cook <cookacounty@gmail.com>
+
+# This script will build git-cola on an older Linux distribution, e.g. RHEL 5.
+# Replace COLA_PREFIX with your path to install somewhere else.
+# Set NUM_JOBS to control the number of cores used to build.
+# This script defaults to 2.
+#
+# To run git cola, use it directly through $COLA_PREFIX/bin/git-cola.
+# There is also a softlink at $COLA_PREFIX/bin/cola.
+# You can add the $COLA_PREFIX/bin to your PATH or softlink git-cola (or cola)
+# from a directory that is already in your PATH.
+#
+language: python
+
+python:
+  - "2.7"
+
+env:
+  - PATH="$PWD/local/git-cola/bin":"$PATH" COLA_PREFIX="$PWD/local/git-cola" NUM_JOBS=4
+
+install:
+  - mkdir -p local/git-cola
+  - mkdir -p local/sandbox
+  - cd local/sandbox
+
+  # Python
+  - wget https://www.python.org/ftp/python/2.7.11/Python-2.7.11.tgz
+  - tar xzf Python-2.7.11.tgz
+  - cd Python-2.7.11
+  - ./configure --prefix=$COLA_PREFIX --enable-unicode=ucs4
+  - make -j $NUM_JOBS
+  - make install
+  - cd ..
+
+  # Qt4
+  - wget https://download.qt.io/archive/qt/4.8/4.8.6/qt-everywhere-opensource-src-4.8.6.tar.gz
+  - tar xzf qt-everywhere-opensource-src-4.8.6.tar.gz
+  - cd qt-everywhere-opensource-src-4.8.6
+  - echo yes | ./configure -prefix "$COLA_PREFIX" -opensource -no-qt3support -qt-zlib -qt-libtiff -qt-libpng -qt-libmng -qt-libjpeg
+  - make -j $NUM_JOBS
+  - make install
+  - cd ..
+
+  # SIP
+  - wget "http://sourceforge.net/projects/pyqt/files/sip/sip-4.16.5/sip-4.16.5.tar.gz"
+  - tar xzf sip-4.16.5.tar.gz
+  - cd sip-4.16.5
+  - python ./configure.py
+  - make -j $NUM_JOBS
+  - make install
+  - cd ..
+
+  # PyQt4
+  - wget "http://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.11.3/PyQt-x11-gpl-4.11.3.tar.gz"
+  - tar xzf PyQt-x11-gpl-4.11.3.tar.gz
+  - cd PyQt-x11-gpl-4.11.3
+  - python ./configure.py -q "$COLA_PREFIX/bin/qmake" --confirm-license --no-designer-plugin --no-qsci-api --no-timestamp
+  - make -j $NUM_JOBS
+  - make install
+  - cd ..
+
+  # Git Cola
+  - cd ..
+  - make all
+  - make doc
+  - make prefix="$COLA_PREFIX" install install-doc
