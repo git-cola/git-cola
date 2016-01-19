@@ -138,7 +138,7 @@ def setup_environment(args, language, version):
     if not repo.is_valid():
         error('%s is not a Git repository' % core.getcwd())
 
-    version_var = '%s_VERSION' % language.upper()
+    version_var = 'TRAVIS_%s_VERSION' % language.upper()
     env.setdefault(version_var, version)
     env.setdefault('CI', 'true')
     env.setdefault('TRAVIS', 'true')
