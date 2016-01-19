@@ -225,6 +225,20 @@ def expandvars(path, environ=None):
     return path
 
 
+def default_shell():
+    shell_env = os.getenv('SHELL')
+    if shell_env:
+        shell = shell_env
+    else:
+        shell = '/bin/sh'
+    for sh in ('bash', 'zsh', 'ksh', 'sh'):
+        executable = distutils.spawn.find_executable(sh)
+        if executable:
+            shell = executable
+            break
+    return shell
+
+
 class RunCommands(object):
 
     def __init__(self, state, cmds=None):
@@ -273,6 +287,7 @@ class RunCommands(object):
   rw, begin ... start over from the beginning
     ff, end ... fast-forward to end
    ls, list ... list commands
+      shell ... enter a subshell (also "bash", "zsh")
    cd <dir> ... change directories
         env ... print config-provided environment variables
     environ ... print current environment variables
@@ -377,6 +392,9 @@ class RunCommands(object):
         if status != 0:
             self.errors.append(expanded)
 
+    def run_shell(self, shell):
+        self.run_command(shell)
+
     def eval_input(self, answer):
         # Accept the action by default
         if not answer:
@@ -408,6 +426,12 @@ class RunCommands(object):
             return
         elif answer in ('ls', 'list'):
             self.list_commands()
+            return
+        elif answer in ('shell',):
+            self.run_shell(default_shell())
+            return
+        elif answer in ('bash', 'sh', 'zsh', 'ash', 'dash', 'ksh', 'csh'):
+            self.run_shell(answer)
             return
         elif answer in ('st', 'status'):
             self.show_status()
