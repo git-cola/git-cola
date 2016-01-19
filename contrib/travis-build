@@ -258,6 +258,8 @@ class RunCommands(object):
     def print_help(self):
         print("""
 *** Commands ***
+
+ #<command> ... repeat <command> # times, ex: "5s" skips 5
        y, r ... yes/run current command (default)
     b, k, p ... back/prev
  f, j, n, s ... forward/next/no/skip
@@ -265,9 +267,9 @@ class RunCommands(object):
    ls, list ... list commands
          rr ... rewind to beginning
          ff ... fast-forward to end
+   cd <dir> ... change directories
     h, help ... show help
     q, quit ... quit
-     <#><X> ... repeat <X> <#> times
 """)
 
     def prep_command(self, cmd):
@@ -342,23 +344,26 @@ class RunCommands(object):
     def run_current_command(self):
         state = self.state
         dry_run = state.dry_run
-        environ = state.environ
 
         cmd = self.current_command()
-        expanded = self.expandvars(cmd)
-        argv = shlex.split(expanded)
+        argv = shlex.split(cmd)
         if not argv:
             error('empty command at index %s' % self.idx - 1)
 
         if len(argv) == 2 and argv[0] == 'cd':
-            directory = argv[1]
+            directory = self.expandvars(argv[1])
             self.chdir(directory)
             return
         if dry_run:
             return
+        self.run_command(cmd)
+
+    def run_command(self, cmd):
+        environ = self.state.environ
         status, out, err = core.run_command(cmd, env=environ, shell=True,
                                             stdin=None, stdout=None,
                                             stderr=None)
+        expanded = self.expandvars(cmd)
         print('The command "%s" exited with %d.' % (expanded, status))
         if status != 0:
             self.errors.append(expanded)
@@ -400,6 +405,8 @@ class RunCommands(object):
             return
         elif first in ('g', 'go', 'goto'):
             self.goto(int(words[1]))
+        elif first in ('cd', 'chdir'):
+            self.chdir(self.expandvars(words[1]))
         elif answer in ('h', 'help', '?'):
             self.print_help()
             return
