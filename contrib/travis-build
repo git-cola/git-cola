@@ -189,16 +189,17 @@ def expandvars(path, environ=None):
     True
 
     """
-    global _expandvars_re
     if '$' not in path:
         return path
-    if _expandvars_re is None:
-        _expandvars_re = re.compile(r'\$(\w+|\{[^}]*\})')
     if environ is None:
         environ = os.environ.copy()
+    try:
+        expandvars_re = expandvars._re_cache
+    except AttributeError:
+        expandvars_re = expandvars._re_cache = re.compile(r'\$(\w+|\{[^}]*\})')
     i = 0
     while True:
-        m = _expandvars_re.search(path, i)
+        m = expandvars_re.search(path, i)
         if not m:
             break
         i, j = m.span(0)
