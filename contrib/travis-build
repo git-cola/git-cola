@@ -270,9 +270,9 @@ class RunCommands(object):
     b, k, p ... back/prev
  f, j, n, s ... forward/next/no/skip
   g, goto # ... goto command at index
+  rw, begin ... start over from the beginning
+    ff, end ... fast-forward to end
    ls, list ... list commands
-         rr ... rewind to beginning
-         ff ... fast-forward to end
    cd <dir> ... change directories
         env ... print config-provided environment variables
     environ ... print current environment variables
@@ -399,7 +399,7 @@ class RunCommands(object):
             self.run_current_command()
             self.goto_next()
             return
-        elif answer in ('rr', 'rewind'):
+        elif answer in ('rw', 'rewind'):
             self.rewind()
             return
         elif answer in ('ff', 'last', 'end'):
