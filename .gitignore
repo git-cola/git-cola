@@ -1,6 +1,7 @@
 /build
 /config.mak
 /dist
+/env*
 /git-cola.app
 /local
 /Meta
