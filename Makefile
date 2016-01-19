@@ -41,7 +41,7 @@ cola_dist := $(cola_base)-$(cola_version)
 
 # Allows e.g. "make test flags=--stop"
 flags =
-NOSE ?= $(NOSETESTS) --with-doctest --exclude=sphinxtogithub $(flags)
+NOSE ?= $(NOSETESTS) --with-doctest --with-id --exclude=sphinxtogithub $(flags)
 
 SETUP ?= $(PYTHON) setup.py
 setup_args += --prefix=$(prefix)
