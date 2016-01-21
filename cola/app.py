@@ -65,7 +65,6 @@ from cola import qtutils
 from cola import resources
 from cola import utils
 from cola import version
-from cola.compat import ustr
 from cola.decorators import memoize
 from cola.i18n import N_
 from cola.interaction import Interaction
@@ -214,8 +213,8 @@ class ColaQApplication(QtGui.QApplication):
         """Save session data"""
         if self.view is None:
             return
-        sid = ustr(session_mgr.sessionId())
-        skey = ustr(session_mgr.sessionKey())
+        sid = session_mgr.sessionId()
+        skey = session_mgr.sessionKey()
         session_id = '%s_%s' % (sid, skey)
         session = Session(session_id, repo=core.getcwd())
         self.view.save_state(settings=session)
