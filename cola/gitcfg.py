@@ -11,6 +11,7 @@ from os.path import join
 from cola import core
 from cola import git
 from cola import observable
+from cola.compat import int_types
 from cola.decorators import memoize
 from cola.git import STDOUT
 from cola.compat import ustr
@@ -284,7 +285,7 @@ class GitConfig(observable.Observable):
                 return 'true'
             else:
                 return 'false'
-        if type(value) is int:
+        if isinstance(value, int_types):
             return ustr(value)
         return value
 
