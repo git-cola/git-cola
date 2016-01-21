@@ -13,7 +13,6 @@ from cola.i18n import N_
 from cola.qtutils import connect_button
 from cola.widgets import defs
 from cola.widgets import standard
-from cola.compat import ustr
 
 
 class FileItem(QtGui.QTreeWidgetItem):
@@ -134,12 +133,12 @@ class CompareBranchesDialog(standard.Dialog):
     def selection(self):
         left_item = self.left_list.currentItem()
         if left_item and left_item.isSelected():
-            left_item = ustr(left_item.text())
+            left_item = left_item.text()
         else:
             left_item = None
         right_item = self.right_list.currentItem()
         if right_item and right_item.isSelected():
-            right_item = ustr(right_item.text())
+            right_item = right_item.text()
         else:
             right_item = None
         return (left_item, right_item)
@@ -217,10 +216,10 @@ class CompareBranchesDialog(standard.Dialog):
         to reflect the available items.
         """
         if left:
-            which = ustr(self.left_combo.currentText())
+            which = self.left_combo.currentText()
             widget = self.left_list
         else:
-            which = ustr(self.right_combo.currentText())
+            which = self.right_combo.currentText()
             widget = self.right_list
         if not which:
             return
