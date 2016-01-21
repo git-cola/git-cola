@@ -14,7 +14,6 @@ from cola import core
 from cola import guicmds
 from cola import icons
 from cola import qtutils
-from cola.compat import ustr
 from cola.i18n import N_
 from cola.settings import Settings
 from cola.widgets import defs
@@ -146,12 +145,12 @@ class StartupDialog(standard.Dialog):
         if(index.row() == 0):
             self.open_repo()
         else:
-            self.repodir = ustr(self.bookmarks_model.data(index).toString())
+            self.repodir = self.bookmarks_model.data(index)
             if self.repodir:
                 self.accept()
 
     def get_selected_bookmark(self):
         selected = self.bookmarks.selectedIndexes()
         if(len(selected) > 0 and selected[0].row() != 0):
-            return ustr(self.bookmarks_model.data(selected[0]).toString())
+            return self.bookmarks_model.data(selected[0])
         return None
