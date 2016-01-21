@@ -19,7 +19,6 @@ from cola.models import main
 from cola.widgets import completion
 from cola.widgets.browse import BrowseDialog
 from cola.widgets.selectcommits import select_commits
-from cola.compat import ustr
 
 
 def delete_branch():
@@ -94,7 +93,7 @@ def new_repo():
     paths = dlg.selectedFiles()
     if not paths:
         return None
-    path = ustr(paths[0])
+    path = paths[0]
     if not path:
         return None
     # Avoid needlessly calling `git init`.
