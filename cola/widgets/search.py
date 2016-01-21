@@ -22,7 +22,6 @@ from cola.qtutils import create_toolbutton
 from cola.widgets import defs
 from cola.widgets import standard
 from cola.widgets.diff import DiffTextEdit
-from cola.compat import ustr
 
 
 def mkdate(timespec):
@@ -282,16 +281,16 @@ class Search(SearchWidget):
         self.end_date.setVisible(date_shown)
 
     def mode(self):
-        return ustr(self.mode_combo.currentText())
+        return self.mode_combo.currentText()
 
     def search_callback(self, *args):
         engineclass = self.engines[self.mode()]
-        self.model.query = ustr(self.query.text())
+        self.model.query = self.query.text()
         self.model.max_count = self.max_count.value()
 
         fmt = Qt.ISODate
-        self.model.start_date = str(self.start_date.date().toString(fmt))
-        self.model.end_date = str(self.end_date.date().toString(fmt))
+        self.model.start_date = self.start_date.date().toString(fmt)
+        self.model.end_date = self.end_date.date().toString(fmt)
 
         self.results = engineclass(self.model).search()
         if self.results:
@@ -307,7 +306,7 @@ class Search(SearchWidget):
             return
         filepaths = []
         lenprefix = len(core.getcwd()) + 1
-        for path in map(lambda x: ustr(x), paths):
+        for path in paths:
             if not path.startswith(core.getcwd()):
                 continue
             filepaths.append(path[lenprefix:])
