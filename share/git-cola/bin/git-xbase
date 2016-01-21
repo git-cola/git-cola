@@ -28,7 +28,6 @@ from cola import icons
 from cola import observable
 from cola import qtutils
 from cola import utils
-from cola.compat import ustr
 from cola.i18n import N_
 from cola.models import dag
 from cola.models import prefs
@@ -537,7 +536,6 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
         """Set the item to a different command, no-op for exec items"""
         if self.is_exec():
             return
-        command = ustr(command)
         self.command = command
 
     def refresh(self):
