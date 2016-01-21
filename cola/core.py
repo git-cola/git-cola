@@ -44,8 +44,7 @@ def decode(enc, encoding=None, errors='strict'):
             return enc.decode(encoding, errors)
         except:
             pass
-    # this shouldn't ever happen... FIXME
-    return ustr(enc)
+    return enc.decode('utf-8', errors='ignore')
 
 
 def encode(string, encoding=None):
