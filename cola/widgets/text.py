@@ -5,7 +5,6 @@ from PyQt4.QtCore import Qt, SIGNAL
 
 from cola import hotkeys
 from cola import qtutils
-from cola.compat import ustr
 from cola.i18n import N_
 from cola.models import prefs
 from cola.widgets import defs
@@ -38,7 +37,7 @@ class LineEdit(QtGui.QLineEdit):
             self.blockSignals(blocksig)
 
     def as_unicode(self):
-        return ustr(self.text())
+        return self.text()
 
     def reset_cursor(self):
         self.setCursorPosition(0)
@@ -79,7 +78,7 @@ class TextEdit(QtGui.QTextEdit):
         self.setCursorWidth(defs.cursor_width)
 
     def as_unicode(self):
-        return ustr(self.toPlainText())
+        return self.toPlainText()
 
     def value(self):
         return self._get_value(self)
@@ -124,7 +123,7 @@ class TextEdit(QtGui.QTextEdit):
     def selected_line(self):
         cursor = self.textCursor()
         offset = cursor.position()
-        contents = ustr(self.toPlainText())
+        contents = self.toPlainText()
         while (offset >= 1
                 and contents[offset-1]
                 and contents[offset-1] != '\n'):
