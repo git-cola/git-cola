@@ -25,6 +25,7 @@ from qtpy import PythonQtError
 if os.environ[QT_API] in PYQT5_API:
     from PyQt5.QtGui import *
 elif os.environ[QT_API] in PYQT4_API:
+    from PyQt4.Qt import QKeySequence, QTextCursor
     from PyQt4.QtGui import (QAbstractTextDocumentLayout, QActionEvent, QBitmap,
                              QBrush, QClipboard, QCloseEvent, QColor,
                              QConicalGradient, QContextMenuEvent, QCursor,
@@ -36,7 +37,7 @@ elif os.environ[QT_API] in PYQT4_API:
                              QHideEvent, QHoverEvent, QIcon, QIconDragEvent,
                              QIconEngine, QImage, QImageIOHandler, QImageReader,
                              QImageWriter, QInputEvent, QInputMethodEvent,
-                             QKeyEvent, QKeySequence, QLinearGradient,
+                             QKeyEvent, QLinearGradient,
                              QMatrix2x2, QMatrix2x3, QMatrix2x4, QMatrix3x2,
                              QMatrix3x3, QMatrix3x4, QMatrix4x2, QMatrix4x3,
                              QMatrix4x4, QMouseEvent, QMoveEvent, QMovie,
@@ -50,7 +51,7 @@ elif os.environ[QT_API] in PYQT4_API:
                              QStandardItem, QStandardItemModel, QStaticText,
                              QStatusTipEvent, QSyntaxHighlighter, QTabletEvent,
                              QTextBlock, QTextBlockFormat, QTextBlockGroup,
-                             QTextBlockUserData, QTextCharFormat, QTextCursor,
+                             QTextBlockUserData, QTextCharFormat,
                              QTextDocument, QTextDocumentFragment,
                              QTextDocumentWriter, QTextFormat, QTextFragment,
                              QTextFrame, QTextFrameFormat, QTextImageFormat,

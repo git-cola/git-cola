@@ -26,6 +26,8 @@ if os.environ[QT_API] in PYQT5_API:
     from PyQt5.QtWidgets import *
 elif os.environ[QT_API] in PYQT4_API:
     from PyQt4.QtGui import *
+    QStyleOptionViewItem = QStyleOptionViewItemV4
+
     del (QAbstractTextDocumentLayout, QActionEvent, QBitmap, QBrush, QClipboard,
          QCloseEvent, QColor, QConicalGradient, QContextMenuEvent, QCursor,
          QDesktopServices, QDoubleValidator, QDrag, QDragEnterEvent,
@@ -59,6 +61,8 @@ elif os.environ[QT_API] in PYQT4_API:
          QPrintPreviewDialog, QPrintPreviewWidget, QPrinter, QPrinterInfo)
 elif os.environ[QT_API] in PYSIDE_API:
     from PySide.QtGui import *
+    QStyleOptionViewItem = QStyleOptionViewItemV4
+
     del (QAbstractTextDocumentLayout, QActionEvent, QBitmap, QBrush, QClipboard,
          QCloseEvent, QColor, QConicalGradient, QContextMenuEvent, QCursor,
          QDesktopServices, QDoubleValidator, QDrag, QDragEnterEvent,
