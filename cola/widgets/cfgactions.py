@@ -16,7 +16,6 @@ from cola.interaction import Interaction
 from cola.widgets import defs
 from cola.widgets import completion
 from cola.widgets import standard
-from cola.compat import ustr
 
 
 def install():
@@ -34,10 +33,10 @@ def confirm_config_action(name, opts):
     dlg.show()
     if dlg.exec_() != QtGui.QDialog.Accepted:
         return False
-    rev = ustr(dlg.revision())
+    rev = dlg.revision()
     if rev:
         opts['revision'] = rev
-    args = ustr(dlg.args())
+    args = dlg.args()
     if args:
         opts['args'] = args
     return True
@@ -270,7 +269,7 @@ class ActionDialog(standard.Dialog):
 
     def _argstxt_changed(self, value):
         """Store the argstxt value so that we can remember it between calls"""
-        self.VALUES[self.name]['argstxt'] = ustr(value)
+        self.VALUES[self.name]['argstxt'] = value
 
 
 class RevisionSelector(QtGui.QWidget):
@@ -321,7 +320,7 @@ class RevisionSelector(QtGui.QWidget):
         self._rev_label.setText(txt)
 
     def _set_revision_list(self):
-        sender = ustr(self.sender().objectName())
+        sender = self.sender().objectName()
         revs = self._revdict[sender]
         qtutils.set_items(self._rev_list, revs)
 
