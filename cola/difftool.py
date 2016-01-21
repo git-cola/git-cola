@@ -18,7 +18,6 @@ from cola.models import selection
 from cola.widgets import completion
 from cola.widgets import defs
 from cola.widgets import filetree
-from cola.compat import ustr
 
 
 def run():
@@ -165,7 +164,7 @@ class FileDiffDialog(QtGui.QDialog):
         self.expr.setFocus()
 
     def text_changed(self, txt):
-        self.diff_expr = ustr(txt)
+        self.diff_expr = txt
         self.refresh()
 
     def refresh(self):
