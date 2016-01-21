@@ -14,7 +14,6 @@ from cola.models import main
 from cola.widgets import defs
 from cola.widgets import completion
 from cola.widgets.standard import Dialog
-from cola.compat import ustr
 
 
 COMMAND_SIGNAL = 'command(PyQt_PyObject,PyQt_PyObject,PyQt_PyObject)'
@@ -219,7 +218,7 @@ class CreateBranchDialog(Dialog):
 
     def getopts(self):
         self.opts.revision = self.revision.value()
-        self.opts.branch = ustr(self.branch_name.text())
+        self.opts.branch = self.branch_name.text()
         self.opts.checkout = self.checkout_checkbox.isChecked()
         self.opts.reset = self.reset_radio.isChecked()
         self.opts.fetch = self.fetch_checkbox.isChecked()
