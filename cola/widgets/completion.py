@@ -18,7 +18,6 @@ from cola import utils
 from cola.models import main
 from cola.widgets import defs
 from cola.widgets import text
-from cola.compat import ustr
 
 
 UPDATE_SIGNAL = 'update()'
@@ -95,9 +94,8 @@ class CompletionLineEdit(text.HintedLineEdit):
     def _is_case_sensitive(self, text):
         return bool([char for char in text if char.isupper()])
 
-    def _text_changed(self, text):
+    def _text_changed(self, full_text):
         match_text = self._last_word()
-        full_text = ustr(text)
         self._do_text_changed(full_text, match_text)
         self.complete_last_word()
 
@@ -121,7 +119,6 @@ class CompletionLineEdit(text.HintedLineEdit):
         This is the event handler for the QCompleter.activated(QString) signal,
         it is called when the user selects an item in the completer popup.
         """
-        completion = ustr(completion)
         if not completion:
             self._do_text_changed('', '')
             return
@@ -194,7 +191,7 @@ class CompletionLineEdit(text.HintedLineEdit):
         item = self._completion_model.itemFromIndex(idx)
         if not item:
             return
-        return ustr(item.text())
+        return item.text()
 
     # Qt events
     def keyPressEvent(self, event):
@@ -683,7 +680,7 @@ class GitDialog(QtGui.QDialog):
         self.ok_button.setEnabled(False)
 
     def text(self):
-        return ustr(self.lineedit.text())
+        return self.lineedit.text()
 
     def text_changed(self, txt):
         self.ok_button.setEnabled(bool(self.text()))
