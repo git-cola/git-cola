@@ -13,7 +13,6 @@ from cola.i18n import N_
 from cola.models import main
 from cola.widgets import completion
 from cola.widgets import defs
-from cola.compat import ustr
 
 
 def local_merge():
@@ -144,7 +143,7 @@ class MergeView(QtGui.QDialog):
 
     def update_title(self, dummy_txt=None):
         branch = self.model.currentbranch
-        revision = ustr(self.revision.text())
+        revision = self.revision.text()
         if revision:
             txt = (N_('Merge "%(revision)s" into "%(branch)s"') %
                    dict(revision=revision, branch=branch))
@@ -195,7 +194,7 @@ class MergeView(QtGui.QDialog):
 
     def viz_revision(self):
         """Launch a gitk-like viewer on the selection revision"""
-        revision = ustr(self.revision.text())
+        revision = self.revision.text()
         if not revision:
             qtutils.information(N_('No Revision Specified'),
                                 N_('You must specify a revision to view.'))
@@ -204,7 +203,7 @@ class MergeView(QtGui.QDialog):
 
     def merge_revision(self):
         """Merge the selected revision/branch"""
-        revision = ustr(self.revision.text())
+        revision = self.revision.text()
         if not revision:
             qtutils.information(N_('No Revision Specified'),
                                 N_('You must specify a revision to merge.'))
