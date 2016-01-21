@@ -28,7 +28,6 @@ from cola.widgets import defs
 from cola.widgets import diff
 from cola.widgets import filelist
 from cola.widgets import standard
-from cola.compat import ustr
 
 
 def git_dag(model, args=None, settings=None):
@@ -501,7 +500,7 @@ class GitDAG(standard.MainWindow):
         self.treewidget.setFocus()
 
     def text_changed(self, txt):
-        self.ctx.ref = ustr(txt)
+        self.ctx.ref = txt
         self.update_window_title()
 
     def update_window_title(self):
