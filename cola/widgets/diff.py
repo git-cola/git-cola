@@ -2,7 +2,6 @@ from __future__ import division, absolute_import, unicode_literals
 
 import re
 
-from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt, SIGNAL
 
@@ -24,7 +23,6 @@ from cola.qtutils import create_menu
 from cola.qtutils import RGB, make_format
 from cola.widgets import defs
 from cola.widgets.text import VimMonoTextView
-from cola.compat import ustr
 
 
 COMMITS_SELECTED = 'COMMITS_SELECTED'
@@ -70,13 +68,8 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.enabled = enabled
 
     def highlightBlock(self, text):
-        if not self.enabled:
+        if not self.enabled or not text:
             return
-
-        text = ustr(text)
-        if not text:
-            return
-
         state = self.previousBlockState()
         if state == self.INITIAL_STATE:
             if text.startswith('Submodule '):
@@ -357,7 +350,7 @@ class DiffEditor(DiffTextEdit):
             return
 
         offset, selection_text = self.offset_and_selection()
-        old_text = ustr(self.toPlainText())
+        old_text = self.toPlainText()
 
         DiffTextEdit.setPlainText(self, text)
 
@@ -393,7 +386,7 @@ class DiffEditor(DiffTextEdit):
     def offset_and_selection(self):
         cursor = self.textCursor()
         offset = cursor.selectionStart()
-        selection_text = ustr(cursor.selection().toPlainText())
+        selection_text = cursor.selection().toPlainText()
         return offset, selection_text
 
     def selected_lines(self):
@@ -402,7 +395,7 @@ class DiffEditor(DiffTextEdit):
         selection_end = cursor.selectionEnd()
 
         line_start = 0
-        for line_idx, line in enumerate(ustr(self.toPlainText()).split('\n')):
+        for line_idx, line in enumerate(self.toPlainText().split('\n')):
             line_end = line_start + len(line)
             if line_start <= selection_start <= line_end:
                 first_line_idx = line_idx
@@ -575,7 +568,7 @@ class TextLabel(QtGui.QLabel):
             return
         text = self._metrics.elidedText(self._template,
                                         Qt.ElideRight, width-2)
-        if ustr(text) != self._template:
+        if text != self._template:
             self._display = text
 
     # Qt overrides
