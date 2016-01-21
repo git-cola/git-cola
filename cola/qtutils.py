@@ -141,7 +141,7 @@ def prompt(msg, title=None, text=''):
         title = msg
     result = QtGui.QInputDialog.getText(active_window(), msg, title,
                                         QtGui.QLineEdit.Normal, text)
-    return (ustr(result[0]), result[1])
+    return (result[0], result[1])
 
 
 def create_listwidget_item(text, filename):
@@ -339,8 +339,8 @@ def selected_items(list_widget, items):
 
 def open_file(title, directory=None):
     """Creates an Open File dialog and returns a filename."""
-    return ustr(QtGui.QFileDialog
-                        .getOpenFileName(active_window(), title, directory))
+    return (QtGui.QFileDialog
+                 .getOpenFileName(active_window(), title, directory))
 
 
 def open_files(title, directory=None, filter=None):
@@ -354,15 +354,14 @@ def opendir_dialog(title, path):
 
     flags = (QtGui.QFileDialog.ShowDirsOnly |
              QtGui.QFileDialog.DontResolveSymlinks)
-    return ustr(QtGui.QFileDialog
-                     .getExistingDirectory(active_window(),
-                                           title, path, flags))
+    return (QtGui.QFileDialog
+                 .getExistingDirectory(active_window(), title, path, flags))
 
 
 def save_as(filename, title='Save As...'):
     """Creates a Save File dialog and returns a filename."""
-    return ustr(QtGui.QFileDialog
-                        .getSaveFileName(active_window(), title, filename))
+    return (QtGui.QFileDialog
+                 .getSaveFileName(active_window(), title, filename))
 
 
 def copy_path(filename, absolute=True):
