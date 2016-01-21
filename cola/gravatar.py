@@ -79,9 +79,8 @@ class GravatarLabel(QtGui.QLabel):
         email = self.email
 
         header = QtCore.QByteArray('Location')
-        raw_header = reply.rawHeader(header)
-        if raw_header:
-            location = ustr(raw_header).strip()
+        location = ustr(reply.rawHeader(header)).strip()
+        if location:
             request_location = Gravatar.url_for_email(self.email, self.imgsize)
             relocated = location != request_location
         else:
