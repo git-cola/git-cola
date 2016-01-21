@@ -1,6 +1,6 @@
 import os
 
-os.environ['QT_API'] = os.environ['USE_QT_API']
+os.environ['QT_API'] = os.environ['USE_QT_API'].lower()
 
 from qtpy import QtCore, QtGui, QtWidgets
 

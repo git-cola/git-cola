@@ -6,13 +6,6 @@ Gonzalo Peña-Castellanos ([@goanpeca](http://github.com/goanpeca))
 Main Authors
 ============
 
-Colin Duquesnoy ([@ColinDuquesnoy](http://github.com/goanpeca))
+* Colin Duquesnoy ([@ColinDuquesnoy](http://github.com/ColinDuquesnoy))
 
-Pierre Raybaut ([@PierreRaybaut](http://github.com/goanpeca))
-
-Gonzalo Peña-Castellanos ([@goanpeca](http://github.com/goanpeca))
-
-Code Contributors
-=================
-
-
+* [The Spyder Development Team](https://github.com/spyder-ide/spyder/graphs/contributors)

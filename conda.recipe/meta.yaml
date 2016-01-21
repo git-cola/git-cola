@@ -12,13 +12,13 @@ build:
 requirements:
   build:
     - python
+    - setuptools
   run:
     - python
 
 test:
   imports:
     - qtpy
-
   requires:
     - pyqt
 
