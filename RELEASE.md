@@ -11,6 +11,7 @@ pip install twine
 ```python
 git add .
 git commit -m 'comment'
+python setup.py sdist
 twine upload dist/*
 git tag -a vX.X.X -m 'comment'
 ```
@@ -23,3 +24,4 @@ git commit -m 'comment'
 git push
 git push --tags
 ```
+
