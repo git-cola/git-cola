@@ -97,7 +97,7 @@ def new_repo():
     if not path:
         return None
     # Avoid needlessly calling `git init`.
-    if git.is_git_dir(path):
+    if git.is_git_worktree(path) or git.is_git_dir(path):
         # We could prompt here and confirm that they really didn't
         # mean to open an existing repository, but I think
         # treating it like an "Open" is a sensible DWIM answer.
