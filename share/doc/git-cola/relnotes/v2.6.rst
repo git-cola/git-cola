@@ -19,3 +19,10 @@ Fixes
   diff.supressBlankEmpty=true in their git config.
 
   https://github.com/git-cola/git-cola/issues/541
+
+* The filesystem monitor now properly handles repositories that use
+  `.git`-files, e.g. when using submodules.
+
+  https://github.com/git-cola/git-cola/issues/545
+
+  https://github.com/git-cola/git-cola/pulls/546

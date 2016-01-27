@@ -116,7 +116,7 @@ if AVAILABLE == 'inotify':
         def __init__(self, monitor, refs_only):
             _BaseThread.__init__(self, monitor, refs_only)
             self._worktree = core.abspath(git.worktree())
-            self._git_dir = git.git_dir()
+            self._git_dir = git.git_path()
             self._lock = Lock()
             self._inotify_fd = None
             self._pipe_r = None
