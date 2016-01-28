@@ -345,7 +345,7 @@ if AVAILABLE == 'pywin32':
             _BaseThread.__init__(self, monitor, refs_only)
             self._worktree = self._transform_path(core.abspath(git.worktree()))
             self._worktree_watch = None
-            self._git_dir = self._transform_path(core.abspath(git.git_dir()))
+            self._git_dir = self._transform_path(core.abspath(git.git_path()))
             self._git_dir_watch = None
             self._stop_event_lock = Lock()
             self._stop_event = None
