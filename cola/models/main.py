@@ -116,7 +116,7 @@ class MainModel(Observable):
         self.git.set_worktree(worktree)
         is_valid = self.git.is_valid()
         if is_valid:
-            self.project = os.path.basename(self.git.worktree())
+            self.project = os.path.basename(self.git.getcwd())
         return is_valid
 
     def set_commitmsg(self, msg, notify=True):

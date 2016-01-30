@@ -66,10 +66,13 @@ class Git(object):
     The Git class manages communication with the Git binary
     """
     def __init__(self):
-        self._git_cwd = None #: The working directory used by execute()
         self._worktree = None
         self._git_file_path = None
+        self._git_cwd = None  #: The working directory used by execute()
         self.set_worktree(core.getcwd())
+
+    def getcwd(self):
+        return self._git_cwd
 
     def set_worktree(self, path):
         self._git_dir = core.decode(path)

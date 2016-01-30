@@ -115,7 +115,7 @@ if AVAILABLE == 'inotify':
 
         def __init__(self, monitor, refs_only):
             _BaseThread.__init__(self, monitor, refs_only)
-            self._worktree = core.abspath(git.worktree())
+            self._worktree = core.abspath(git.getcwd())
             self._git_dir = git.git_path()
             self._lock = Lock()
             self._inotify_fd = None
@@ -343,7 +343,7 @@ if AVAILABLE == 'pywin32':
 
         def __init__(self, monitor, refs_only):
             _BaseThread.__init__(self, monitor, refs_only)
-            self._worktree = self._transform_path(core.abspath(git.worktree()))
+            self._worktree = self._transform_path(core.abspath(git.getcwd()))
             self._worktree_watch = None
             self._git_dir = self._transform_path(core.abspath(git.git_path()))
             self._git_dir_watch = None
