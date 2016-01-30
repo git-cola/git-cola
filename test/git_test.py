@@ -119,6 +119,36 @@ class GitModuleTestCase(unittest.TestCase):
         ])
         read_git_file.assert_called_once_with('/the/root/.git')
 
+    @patch('cola.core.getenv')
+    @patch('cola.git.is_git_dir')
+    def test_find_git_honors_ceiling_dirs(self, is_git_dir, getenv):
+
+        git_dir = '/ceiling/.git'
+        ceiling = '/tmp:/ceiling:/other/ceiling'
+        is_git_dir.side_effect = lambda x: x == git_dir
+
+        def mock_getenv(k, v=None):
+            if k == 'GIT_CEILING_DIRECTORIES':
+                return ceiling
+            return v
+
+        getenv.side_effect = mock_getenv
+
+        paths = git.find_git_directory('/ceiling/sub/dir')
+
+        self.assertEqual(None, paths.git_dir)
+        self.assertEqual(None, paths.git_file)
+        self.assertEqual(None, paths.worktree)
+
+        self.assertEqual(4, is_git_dir.call_count)
+        kwargs = {}
+        is_git_dir.assert_has_calls([
+            (('/ceiling/sub/dir',), kwargs),
+            (('/ceiling/sub/dir/.git',), kwargs),
+            (('/ceiling/sub',), kwargs),
+            (('/ceiling/sub/.git',), kwargs),
+        ])
+
 
 class GitCommandTest(unittest.TestCase):
     """Runs tests using a git.Git instance"""

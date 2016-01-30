@@ -31,10 +31,13 @@ def current():
 
 def _stat_info():
     # Try /etc/gitconfig as a fallback for the system config
-    paths = (('system', '/etc/gitconfig'),
+    paths = [('system', '/etc/gitconfig'),
              ('user', _USER_XDG_CONFIG),
-             ('user', _USER_CONFIG),
-             ('repo', git.current().git_path('config')))
+             ('user', _USER_CONFIG)]
+    config = git.current().git_path('config')
+    if config:
+         paths.append(('repo', config))
+
     statinfo = []
     for category, path in paths:
         try:
@@ -46,10 +49,13 @@ def _stat_info():
 
 def _cache_key():
     # Try /etc/gitconfig as a fallback for the system config
-    paths = ('/etc/gitconfig',
+    paths = ['/etc/gitconfig',
              _USER_XDG_CONFIG,
-             _USER_CONFIG,
-             git.current().git_path('config'))
+             _USER_CONFIG]
+    config = git.current().git_path('config')
+    if config:
+        paths.append(config)
+
     mtimes = []
     for path in paths:
         try:

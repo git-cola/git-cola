@@ -85,12 +85,19 @@ def find_git_directory(curpath):
                   worktree=core.getenv('GIT_WORKTREE'),
                   git_file=None)
 
+    ceiling_dirs = set()
+    ceiling = core.getenv('GIT_CEILING_DIRECTORIES')
+    if ceiling:
+        ceiling_dirs.update([x for x in ceiling.split(':') if x])
+
     if not paths.git_dir or not paths.worktree:
         if curpath:
             curpath = core.abspath(curpath)
 
         # Search for a .git directory
         while curpath:
+            if curpath in ceiling_dirs:
+                break
             if is_git_dir(curpath):
                 paths.git_dir = curpath
                 if os.path.basename(curpath) == '.git':
