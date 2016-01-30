@@ -47,13 +47,18 @@ def is_git_worktree(d):
 
 
 def read_git_file(path):
-    if path is None:
-        return None
-    if is_git_file(path):
+    """Read the path from a .git-file
+
+    `None` is returned when <path> is not a .git-file.
+
+    """
+    result = None
+    if path and is_git_file(path):
+        header = 'gitdir: '
         data = core.read(path).strip()
-        if data.startswith('gitdir: '):
-            return data[len('gitdir: '):]
-    return None
+        if data.startswith(header):
+            result = data[len(header):]
+    return result
 
 
 class Git(object):
