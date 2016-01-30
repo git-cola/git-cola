@@ -8,9 +8,116 @@ import signal
 import time
 import unittest
 
+from mock import patch
+
 from cola import git
 from cola.compat import WIN32
 from cola.git import STDOUT
+
+
+class GitModuleTestCase(unittest.TestCase):
+
+    @patch('cola.git.is_git_dir')
+    def test_find_git_dir_None(self, is_git_dir):
+
+        paths = git.find_git_directory(None)
+
+        self.assertFalse(is_git_dir.called)
+        self.assertEqual(None, paths.git_dir)
+        self.assertEqual(None, paths.git_file)
+        self.assertEqual(None, paths.worktree)
+
+    @patch('cola.git.is_git_dir')
+    def test_find_git_dir_empty_string(self, is_git_dir):
+
+        paths = git.find_git_directory('')
+
+        self.assertFalse(is_git_dir.called)
+        self.assertEqual(None, paths.git_dir)
+        self.assertEqual(None, paths.git_file)
+        self.assertEqual(None, paths.worktree)
+
+    @patch('cola.git.is_git_dir')
+    def test_find_git_dir_never_found(self, is_git_dir):
+        is_git_dir.return_value = False
+
+        paths = git.find_git_directory('/does/not/exist')
+
+        self.assertTrue(is_git_dir.called)
+        self.assertEqual(None, paths.git_dir)
+        self.assertEqual(None, paths.git_file)
+        self.assertEqual(None, paths.worktree)
+
+        self.assertEqual(8, is_git_dir.call_count)
+        kwargs = {}
+        is_git_dir.assert_has_calls([
+            (('/does/not/exist',), kwargs),
+            (('/does/not/exist/.git',), kwargs),
+            (('/does/not',), kwargs),
+            (('/does/not/.git',), kwargs),
+            (('/does',), kwargs),
+            (('/does/.git',), kwargs),
+            (('/',), kwargs),
+            (('/.git',), kwargs),
+        ])
+
+    @patch('cola.git.is_git_dir')
+    def test_find_git_dir_found_right_away(self, is_git_dir):
+        git_dir = '/seems/to/exist/.git'
+        worktree = '/seems/to/exist'
+        is_git_dir.return_value = True
+
+        paths = git.find_git_directory(git_dir)
+
+        self.assertTrue(is_git_dir.called)
+        self.assertEqual(git_dir, paths.git_dir)
+        self.assertEqual(None, paths.git_file)
+        self.assertEqual(worktree, paths.worktree)
+
+    @patch('cola.git.is_git_dir')
+    def test_find_git_does_discovery(self, is_git_dir):
+        git_dir = '/the/root/.git'
+        worktree = '/the/root'
+        is_git_dir.side_effect = lambda x: x == git_dir
+
+        paths = git.find_git_directory('/the/root/sub/dir')
+
+        self.assertEqual(git_dir, paths.git_dir)
+        self.assertEqual(None, paths.git_file)
+        self.assertEqual(worktree, paths.worktree)
+
+    @patch('cola.git.read_git_file')
+    @patch('cola.git.is_git_file')
+    @patch('cola.git.is_git_dir')
+    def test_find_git_honors_git_files(self,
+                                       is_git_dir,
+                                       is_git_file,
+                                       read_git_file):
+        git_file = '/the/root/.git'
+        worktree = '/the/root'
+        git_dir = '/super/module/.git/modules/root'
+
+        is_git_dir.side_effect = lambda x: x == git_file
+        is_git_file.side_effect = lambda x: x == git_file
+        read_git_file.return_value = git_dir
+
+        paths = git.find_git_directory('/the/root/sub/dir')
+
+        self.assertEqual(git_dir, paths.git_dir)
+        self.assertEqual(git_file, paths.git_file)
+        self.assertEqual(worktree, paths.worktree)
+
+        kwargs = {}
+        self.assertEqual(6, is_git_dir.call_count)
+        is_git_dir.assert_has_calls([
+            (('/the/root/sub/dir',), kwargs),
+            (('/the/root/sub/dir/.git',), kwargs),
+            (('/the/root/sub',), kwargs),
+            (('/the/root/sub/.git',), kwargs),
+            (('/the/root',), kwargs),
+            (('/the/root/.git',), kwargs),
+        ])
+        read_git_file.assert_called_once_with('/the/root/.git')
 
 
 class GitCommandTest(unittest.TestCase):
