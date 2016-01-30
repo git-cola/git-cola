@@ -26,16 +26,23 @@ def dashify(s):
     return s.replace('_', '-')
 
 
-def is_git_dir(d):
+def is_git_dir(git_dir):
     """From git's setup.c:is_git_directory()."""
-    if (core.isdir(d) and core.isdir(join(d, 'objects')) and
-            core.isdir(join(d, 'refs'))):
-        headref = join(d, 'HEAD')
-        return (core.isfile(headref) or
-                (core.islink(headref) and
-                    core.readlink(headref).startswith('refs')))
+    result = False
+    if git_dir:
+        headref = join(git_dir, 'HEAD')
 
-    return is_git_file(d)
+        if (core.isdir(git_dir) and
+                core.isdir(join(git_dir, 'objects')) and
+                core.isdir(join(git_dir, 'refs'))):
+
+            result = (core.isfile(headref) or
+                      (core.islink(headref) and
+                        core.readlink(headref).startswith('refs/')))
+        else:
+            result = is_git_file(git_dir)
+
+    return result
 
 
 def is_git_file(f):
