@@ -60,7 +60,7 @@ proc finish {} {
 	set ::rc 0
 }
 
-wm title . "OpenSSH"
+wm title . "Git Authentication"
 tk::PlaceWindow .
 vwait rc
 exit $rc
