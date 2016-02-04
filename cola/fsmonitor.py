@@ -434,7 +434,7 @@ if AVAILABLE == 'pywin32':
 
 
 @memoize
-def instance():
+def current():
     return _create_instance()
 
 

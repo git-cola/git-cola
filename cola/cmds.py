@@ -1073,8 +1073,8 @@ class OpenRepo(Command):
         git = self.model.git
         old_repo = git.gitcwd()
         if self.model.set_worktree(self.repo_path):
-            fsmonitor.instance().stop()
-            fsmonitor.instance().start()
+            fsmonitor.current().stop()
+            fsmonitor.current().start()
             self.model.update_status()
         else:
             self.model.set_worktree(old_repo)
@@ -1262,7 +1262,7 @@ class Refresh(Command):
 
     def do(self):
         self.model.update_status(update_index=True)
-        fsmonitor.instance().refresh()
+        fsmonitor.current().refresh()
 
 
 class RevertEditsCommand(ConfirmAction):
