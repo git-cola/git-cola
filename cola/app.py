@@ -355,7 +355,7 @@ def new_model(app, repo, prompt=False, settings=None):
         valid = model.set_worktree(gitdir)
 
     # Finally, go to the root of the git repo
-    os.chdir(model.git.worktree())
+    os.chdir(model.git.getcwd())
     return model
 
 

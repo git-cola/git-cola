@@ -26,16 +26,23 @@ def dashify(s):
     return s.replace('_', '-')
 
 
-def is_git_dir(d):
+def is_git_dir(git_dir):
     """From git's setup.c:is_git_directory()."""
-    if (core.isdir(d) and core.isdir(join(d, 'objects')) and
-            core.isdir(join(d, 'refs'))):
-        headref = join(d, 'HEAD')
-        return (core.isfile(headref) or
-                (core.islink(headref) and
-                    core.readlink(headref).startswith('refs')))
+    result = False
+    if git_dir:
+        headref = join(git_dir, 'HEAD')
 
-    return is_git_file(d)
+        if (core.isdir(git_dir) and
+                core.isdir(join(git_dir, 'objects')) and
+                core.isdir(join(git_dir, 'refs'))):
+
+            result = (core.isfile(headref) or
+                      (core.islink(headref) and
+                        core.readlink(headref).startswith('refs/')))
+        else:
+            result = is_git_file(git_dir)
+
+    return result
 
 
 def is_git_file(f):
@@ -47,13 +54,70 @@ def is_git_worktree(d):
 
 
 def read_git_file(path):
-    if path is None:
-        return None
-    if is_git_file(path):
+    """Read the path from a .git-file
+
+    `None` is returned when <path> is not a .git-file.
+
+    """
+    result = None
+    if path and is_git_file(path):
+        header = 'gitdir: '
         data = core.read(path).strip()
-        if data.startswith('gitdir: '):
-            return data[len('gitdir: '):]
-    return None
+        if data.startswith(header):
+            result = data[len(header):]
+    return result
+
+
+class Paths(object):
+    """Git repository paths of interest"""
+
+    def __init__(self, git_dir=None, git_file=None, worktree=None):
+        self.git_dir = git_dir
+        self.git_file = git_file
+        self.worktree = worktree
+
+
+def find_git_directory(curpath):
+    """Perform Git repository discovery
+
+    """
+    paths = Paths(git_dir=core.getenv('GIT_DIR'),
+                  worktree=core.getenv('GIT_WORKTREE'),
+                  git_file=None)
+
+    ceiling_dirs = set()
+    ceiling = core.getenv('GIT_CEILING_DIRECTORIES')
+    if ceiling:
+        ceiling_dirs.update([x for x in ceiling.split(':') if x])
+
+    if not paths.git_dir or not paths.worktree:
+        if curpath:
+            curpath = core.abspath(curpath)
+
+        # Search for a .git directory
+        while curpath:
+            if curpath in ceiling_dirs:
+                break
+            if is_git_dir(curpath):
+                paths.git_dir = curpath
+                if os.path.basename(curpath) == '.git':
+                    paths.worktree = os.path.dirname(curpath)
+                break
+            gitpath = join(curpath, '.git')
+            if is_git_dir(gitpath):
+                paths.git_dir = gitpath
+                paths.worktree = curpath
+                break
+            curpath, dummy = os.path.split(curpath)
+            if not dummy:
+                break
+
+        git_dir_path = read_git_file(paths.git_dir)
+        if git_dir_path:
+            paths.git_file = paths.git_dir
+            paths.git_dir = git_dir_path
+
+    return paths
 
 
 class Git(object):
@@ -61,78 +125,62 @@ class Git(object):
     The Git class manages communication with the Git binary
     """
     def __init__(self):
-        self._git_cwd = None #: The working directory used by execute()
-        self._worktree = None
-        self._git_file_path = None
+        self.paths = Paths()
+
+        self._git_cwd = None  #: The working directory used by execute()
+        self._valid = {}  #: Store the result of is_git_dir() for performance
         self.set_worktree(core.getcwd())
 
+    def getcwd(self):
+        return self._git_cwd
+
+    def _find_git_directory(self, path):
+        self._git_cwd = None
+        self.paths = find_git_directory(path)
+
+        # Update the current directory for executing commands
+        if self.paths.worktree:
+            self._git_cwd = self.paths.worktree
+        elif self.paths.git_dir:
+            self._git_cwd = self.paths.git_dir
+
     def set_worktree(self, path):
-        self._git_dir = core.decode(path)
-        self._git_file_path = None
-        self._worktree = None
-        return self.worktree()
+        path = core.decode(path)
+        self._find_git_directory(path)
+        return self.paths.worktree
 
     def worktree(self):
-        if self._worktree:
-            return self._worktree
-        self.git_dir()
-        if self._git_dir:
-            curdir = self._git_dir
-        else:
-            curdir = core.getcwd()
-
-        if is_git_dir(join(curdir, '.git')):
-            return curdir
-
-        # Handle bare repositories
-        if (len(os.path.basename(curdir)) > 4
-                and curdir.endswith('.git')):
-            return curdir
-        if 'GIT_WORK_TREE' in os.environ:
-            self._worktree = core.getenv('GIT_WORK_TREE')
-        if not self._worktree or not core.isdir(self._worktree):
-            if self._git_dir:
-                gitparent = join(core.abspath(self._git_dir), '..')
-                self._worktree = core.abspath(gitparent)
-                self.set_cwd(self._worktree)
-        return self._worktree
+        if not self.paths.worktree:
+            path = core.abspath(core.getcwd())
+            self._find_git_directory(path)
+        return self.paths.worktree
 
     def is_valid(self):
-        return self._git_dir and is_git_dir(self._git_dir)
+        """Is this a valid git repostiory?
+
+        Cache the result to avoid hitting the filesystem.
+
+        """
+        git_dir = self.paths.git_dir
+        try:
+            valid = bool(git_dir) and self._valid[git_dir]
+        except KeyError:
+            valid = self._valid[git_dir] = is_git_dir(git_dir)
+
+        return valid
 
     def git_path(self, *paths):
-        if self._git_file_path is None:
-            return join(self.git_dir(), *paths)
+        if self.paths.git_dir:
+            result = join(self.paths.git_dir, *paths)
         else:
-            return join(self._git_file_path, *paths)
+            result = None
+        return result
 
     def git_dir(self):
-        if self.is_valid():
-            return self._git_dir
-        if 'GIT_DIR' in os.environ:
-            self._git_dir = core.getenv('GIT_DIR')
-        if self._git_dir:
-            curpath = core.abspath(self._git_dir)
-        else:
-            curpath = core.abspath(core.getcwd())
-        # Search for a .git directory
-        while curpath:
-            if is_git_dir(curpath):
-                self._git_dir = curpath
-                break
-            gitpath = join(curpath, '.git')
-            if is_git_dir(gitpath):
-                self._git_dir = gitpath
-                break
-            curpath, dummy = os.path.split(curpath)
-            if not dummy:
-                break
-        self._git_file_path = read_git_file(self._git_dir)
-        return self._git_dir
-
-    def set_cwd(self, path):
-        """Sets the current directory."""
-        self._git_cwd = path
+        if not self.paths.git_dir:
+            path = core.abspath(core.getcwd())
+            self._find_git_directory(path)
+        return self.paths.git_dir
 
     def __getattr__(self, name):
         git_cmd = functools.partial(self.git, name)

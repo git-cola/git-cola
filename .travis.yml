@@ -39,9 +39,11 @@ install:
   - cd ../../..
   # Additional dependency for python 2.6
   - pip install argparse
+  # Test dependencies
+  - pip install mock
   # Pylint
-  - pip install astroid==1.3.8
-  - pip install pylint==1.4.4
+  - pip install astroid==1.4.3
+  - pip install pylint==1.5.2
 
 script:
   - make all
