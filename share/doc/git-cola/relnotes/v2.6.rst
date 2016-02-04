@@ -26,3 +26,8 @@ Fixes
   https://github.com/git-cola/git-cola/issues/545
 
   https://github.com/git-cola/git-cola/pulls/546
+
+* Per-repository git configuration is now properly detected when launching
+  `git cola` from an application launcher.
+
+  https://github.com/git-cola/git-cola/issues/548

@@ -1071,18 +1071,13 @@ class OpenRepo(Command):
 
     def do(self):
         git = self.model.git
-        old_worktree = git.worktree()
-        if not self.model.set_worktree(self.repo_path):
-            self.model.set_worktree(old_worktree)
-            return
-        new_worktree = git.worktree()
-        core.chdir(new_worktree)
-        self.model.set_directory(self.repo_path)
-        cfg = gitcfg.current()
-        cfg.reset()
-        fsmonitor.instance().stop()
-        fsmonitor.instance().start()
-        self.model.update_status()
+        old_repo = git.gitcwd()
+        if self.model.set_worktree(self.repo_path):
+            fsmonitor.instance().stop()
+            fsmonitor.instance().start()
+            self.model.update_status()
+        else:
+            self.model.set_worktree(old_repo)
 
 
 class Clone(Command):

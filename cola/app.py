@@ -240,10 +240,6 @@ def process_args(args):
         core.stderr(errmsg)
         sys.exit(EX_USAGE)
 
-    # We do everything relative to the repo root
-    os.chdir(args.repo)
-    return repo
-
 
 def restore_session(args):
     # args.settings is provided when restoring from a session.
@@ -354,8 +350,6 @@ def new_model(app, repo, prompt=False, settings=None):
             sys.exit(EX_NOINPUT)
         valid = model.set_worktree(gitdir)
 
-    # Finally, go to the root of the git repo
-    os.chdir(model.git.getcwd())
     return model
 
 

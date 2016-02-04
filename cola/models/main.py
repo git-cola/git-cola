@@ -9,6 +9,7 @@ import os
 from cola import core
 from cola import git
 from cola import gitcmds
+from cola import gitcfg
 from cola.git import STDOUT
 from cola.observable import Observable
 from cola.decorators import memoize
@@ -30,7 +31,6 @@ class MainModel(Observable):
     message_about_to_update = 'about_to_update'
     message_commit_message_changed = 'commit_message_changed'
     message_diff_text_changed = 'diff_text_changed'
-    message_directory_changed = 'directory_changed'
     message_filename_changed = 'filename_changed'
     message_mode_about_to_change = 'mode_about_to_change'
     message_mode_changed = 'mode_changed'
@@ -116,7 +116,11 @@ class MainModel(Observable):
         self.git.set_worktree(worktree)
         is_valid = self.git.is_valid()
         if is_valid:
-            self.project = os.path.basename(self.git.getcwd())
+            cwd = self.git.getcwd()
+            self.project = os.path.basename(cwd)
+            self.set_directory(cwd)
+            core.chdir(cwd)
+            gitcfg.current().reset()
         return is_valid
 
     def set_commitmsg(self, msg, notify=True):
@@ -137,7 +141,6 @@ class MainModel(Observable):
 
     def set_directory(self, path):
         self.directory = path
-        self.notify_observers(self.message_directory_changed, path)
 
     def set_filename(self, filename):
         self.filename = filename
