@@ -11,6 +11,7 @@ import select
 from threading import Lock
 
 from cola import utils
+from cola.decorators import memoize
 
 AVAILABLE = None
 
@@ -432,13 +433,9 @@ if AVAILABLE == 'pywin32':
             self.wait()
 
 
-_instance = None
-
+@memoize
 def instance():
-    global _instance
-    if _instance is None:
-        _instance = _create_instance()
-    return _instance
+    return _create_instance()
 
 
 def _create_instance():
