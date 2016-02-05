@@ -162,7 +162,7 @@ class ColaApplication(object):
         qtutils.install()
         icons.install()
 
-        QtCore.QObject.connect(fsmonitor.instance(), SIGNAL('files_changed'),
+        QtCore.QObject.connect(fsmonitor.current(), SIGNAL('files_changed'),
                                self._update_files)
 
         if gui:
@@ -240,10 +240,6 @@ def process_args(args):
         core.stderr(errmsg)
         sys.exit(EX_USAGE)
 
-    # We do everything relative to the repo root
-    os.chdir(args.repo)
-    return repo
-
 
 def restore_session(args):
     # args.settings is provided when restoring from a session.
@@ -287,7 +283,7 @@ def application_start(context, view, monitor_refs_only=False):
     init_update_task(view, runtask, context.model)
 
     # Start the filesystem monitor thread
-    fsmonitor.instance().start(monitor_refs_only)
+    fsmonitor.current().start(monitor_refs_only)
 
     msg_timer = QtCore.QTimer()
     msg_timer.setSingleShot(True)
@@ -298,7 +294,7 @@ def application_start(context, view, monitor_refs_only=False):
     result = context.app.exec_()
 
     # All done, cleanup
-    fsmonitor.instance().stop()
+    fsmonitor.current().stop()
     QtCore.QThreadPool.globalInstance().waitForDone()
 
     tmpdir = utils.tmpdir()
@@ -354,8 +350,6 @@ def new_model(app, repo, prompt=False, settings=None):
             sys.exit(EX_NOINPUT)
         valid = model.set_worktree(gitdir)
 
-    # Finally, go to the root of the git repo
-    os.chdir(model.git.getcwd())
     return model
 
 
