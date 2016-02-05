@@ -6,6 +6,7 @@ from __future__ import absolute_import, division, unicode_literals
 # breaks inside distutils when installing from utf-8 paths.
 import sys
 try:
+    # pylint: disable=reload-builtin
     reload(sys)
     sys.setdefaultencoding('utf-8')
 except NameError:  # Python3
