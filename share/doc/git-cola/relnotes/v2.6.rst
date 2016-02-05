@@ -31,3 +31,11 @@ Fixes
   `git cola` from an application launcher.
 
   https://github.com/git-cola/git-cola/issues/548
+
+Packaging
+---------
+
+* It is now possible to install `git cola` to and from utf8-encoded
+  filesystem paths.  Previously, Python's stdlib would during installation.
+
+  https://github.com/git-cola/git-cola/issues/551
