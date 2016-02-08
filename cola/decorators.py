@@ -3,6 +3,7 @@ from __future__ import division, absolute_import, unicode_literals
 __all__ = ('decorator', 'memoize', 'interruptable')
 
 import errno
+import functools
 
 
 def decorator(caller, func=None):
@@ -15,14 +16,17 @@ def decorator(caller, func=None):
     """
     if func is None:
         # return a decorator
+        @functools.wraps(caller)
         def _decorator(f, *args, **opts):
+            @functools.wraps(f)
             def _caller(*args, **opts):
                 return caller(f, *args, **opts)
             return _caller
-        _decorator.func = func
+        _decorator.func = caller
         return _decorator
     else:
         # return a decorated function
+        @functools.wraps(func)
         def _decorated(*args, **opts):
             return caller(func, *args, **opts)
         _decorated.func = func
@@ -46,7 +50,7 @@ def _memoize(func, *args, **opts):
         key = args, frozenset(opts.items())
     else:
         key = args
-    cache = func.cache # attribute added by memoize
+    cache = func.cache  # attribute added by memoize
     try:
         result = cache[key]
     except KeyError:
