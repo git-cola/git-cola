@@ -149,6 +149,32 @@ class GitModuleTestCase(unittest.TestCase):
             (('/ceiling/sub/.git',), kwargs),
         ])
 
+    @patch('cola.core.islink')
+    @patch('cola.core.isdir')
+    @patch('cola.core.isfile')
+    def test_is_git_dir_finds_linked_repository(self, isfile, isdir, islink):
+        dirs = set([
+            '/foo',
+            '/foo/.git',
+            '/foo/.git/refs',
+            '/foo/.git/objects',
+            '/foo/.git/worktrees',
+            '/foo/.git/worktrees/foo',
+        ])
+        files = set([
+            '/foo/.git/HEAD',
+            '/foo/.git/worktrees/foo/HEAD',
+            '/foo/.git/worktrees/foo/index',
+            '/foo/.git/worktrees/foo/commondir',
+            '/foo/.git/worktrees/foo/gitdir',
+        ])
+        islink.return_value = False
+        isfile.side_effect = lambda x: x in files
+        isdir.side_effect = lambda x: x in dirs
+
+        self.assertTrue(git.is_git_dir('/foo/.git/worktrees/foo'))
+        self.assertTrue(git.is_git_dir('/foo/.git'))
+
 
 class GitCommandTest(unittest.TestCase):
     """Runs tests using a git.Git instance"""

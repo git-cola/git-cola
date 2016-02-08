@@ -12,6 +12,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/542
 
+* `git cola` now supports linked worktrees, i.e. worktrees created by
+  `git worktree`.
+
+  https://github.com/git-cola/git-cola/issues/554
+
 Fixes
 -----
 

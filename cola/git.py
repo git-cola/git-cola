@@ -32,9 +32,11 @@ def is_git_dir(git_dir):
     if git_dir:
         headref = join(git_dir, 'HEAD')
 
-        if (core.isdir(git_dir) and
-                core.isdir(join(git_dir, 'objects')) and
-                core.isdir(join(git_dir, 'refs'))):
+        if (core.isdir(git_dir)
+            and (core.isdir(join(git_dir, 'objects'))
+                and core.isdir(join(git_dir, 'refs')))
+            or (core.isfile(join(git_dir, 'gitdir'))
+                and core.isfile(join(git_dir, 'commondir')))):
 
             result = (core.isfile(headref) or
                       (core.islink(headref) and
