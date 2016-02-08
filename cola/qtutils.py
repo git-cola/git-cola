@@ -13,7 +13,6 @@ from cola import gitcfg
 from cola import hotkeys
 from cola import icons
 from cola import utils
-from cola import resources
 from cola.i18n import N_
 from cola.interaction import Interaction
 from cola.compat import int_types
@@ -142,15 +141,6 @@ def prompt(msg, title=None, text=''):
     result = QtGui.QInputDialog.getText(active_window(), msg, title,
                                         QtGui.QLineEdit.Normal, text)
     return (result[0], result[1])
-
-
-def create_listwidget_item(text, filename):
-    """Creates a QListWidgetItem with text and the icon at filename."""
-    item = QtGui.QListWidgetItem()
-    item.setIcon(QtGui.QIcon(filename))
-    item.setIconSize(QtCore.QSize(defs.small_icon, defs.small_icon))
-    item.setText(text)
-    return item
 
 
 class TreeWidgetItem(QtGui.QTreeWidgetItem):
@@ -460,7 +450,8 @@ def create_treeitem(filename, staged=False, deleted=False, untracked=False):
 
     """
     icon_name = icons.status(filename, deleted, staged, untracked)
-    return TreeWidgetItem(filename, resources.icon(icon_name), deleted=deleted)
+    return TreeWidgetItem(filename, icons.name_from_basename(icon_name),
+                          deleted=deleted)
 
 
 def add_close_action(widget):

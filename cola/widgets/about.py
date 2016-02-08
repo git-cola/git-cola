@@ -7,6 +7,7 @@ from PyQt4.QtCore import Qt
 from cola import core
 from cola import resources
 from cola import hotkeys
+from cola import icons
 from cola import qtutils
 from cola import version
 from cola.i18n import N_
@@ -51,7 +52,7 @@ class AboutView(QtGui.QDialog):
         self.setWindowModality(Qt.WindowModal)
 
         self.label = QtGui.QLabel()
-        self.pixmap = QtGui.QPixmap('icons:logo-top.png')
+        self.pixmap = QtGui.QPixmap(icons.name_from_basename('logo-top.png'))
         #self.label.setStyleSheet('QWidget {background: #000; }')
         self.label.setPixmap(self.pixmap)
         self.label.setAlignment(Qt.AlignRight | Qt.AlignTop)

@@ -51,14 +51,10 @@ def show_html_docs():
     url = html_docs()
     webbrowser.open_new_tab('file://' + url)
 
+
 def share(*args):
     """Return a path relative to cola's /usr/share/ directory"""
     return prefix('share', 'git-cola', *args)
-
-
-def icon(basename):
-    """Return the full path to an icon file given a basename."""
-    return 'icons:'+basename
 
 
 def icon_dir():
