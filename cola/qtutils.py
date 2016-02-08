@@ -408,6 +408,8 @@ def add_action_with_status_tip(widget, text, tip, fn, *shortcuts):
 
 def _add_action(widget, text, tip, fn, connect, *shortcuts):
     action = QtGui.QAction(text, widget)
+    if hasattr(action, 'setIconVisibleInMenu'):
+        action.setIconVisibleInMenu(True)
     if tip:
         action.setStatusTip(tip)
     connect(action, fn)
