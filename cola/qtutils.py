@@ -706,8 +706,7 @@ def create_dock(title, parent, stretch=True):
 
 def create_menu(title, parent):
     """Create a menu and set its title."""
-    qmenu = QtGui.QMenu(parent)
-    qmenu.setTitle(title)
+    qmenu = QtGui.QMenu(title, parent)
     return qmenu
 
 
