@@ -22,6 +22,7 @@ from PyQt4.Qt import QTextCursor
 from PyQt4.Qt import Qt
 from PyQt4.QtCore import SIGNAL
 
+from cola import qtutils
 from cola.i18n import N_
 from cola.widgets.text import HintedTextEdit
 
@@ -136,7 +137,8 @@ class SpellCheckTextEdit(HintedTextEdit):
         if self.textCursor().hasSelection():
             text = self.textCursor().selectedText()
             if not self.spellcheck.check(text):
-                spell_menu = QMenu(N_('Spelling Suggestions'))
+                title = N_('Spelling Suggestions')
+                spell_menu = qtutils.create_menu(title, self)
                 for word in self.spellcheck.suggest(text):
                     action = SpellAction(word, spell_menu)
                     self.connect(action, SIGNAL('correct(PyQt_PyObject)'),
