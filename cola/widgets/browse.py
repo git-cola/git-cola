@@ -291,7 +291,7 @@ class RepoTreeView(standard.TreeView):
     def contextMenuEvent(self, event):
         """Create a context menu."""
         self.update_actions()
-        menu = QtGui.QMenu(self)
+        menu = qtutils.create_menu(N_('Actions'), self)
         menu.addAction(self.action_editor)
         menu.addAction(self.action_stage)
         menu.addSeparator()

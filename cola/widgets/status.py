@@ -495,7 +495,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     def create_context_menu(self):
         """Set up the status menu for the repo status tree."""
         s = self.selection()
-        menu = QtGui.QMenu(self)
+        menu = qtutils.create_menu('Status', self)
 
         selected_indexes = self.selected_indexes()
         if selected_indexes:

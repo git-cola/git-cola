@@ -185,7 +185,7 @@ class ViewerMixin(object):
 
     def context_menu_event(self, event):
         self.update_menu_actions(event)
-        menu = QtGui.QMenu(self)
+        menu = qtutils.create_menu(N_('Actions'), self)
         menu.addAction(self.menu_actions['diff_this_selected'])
         menu.addAction(self.menu_actions['diff_selected_this'])
         menu.addSeparator()

@@ -83,7 +83,7 @@ class FileWidget(TreeWidget):
         self.adjust_columns()
 
     def contextMenuEvent(self, event):
-        menu = QtGui.QMenu(self)
+        menu = qtutils.create_menu(N_('Actions'), self)
         menu.addAction(self.show_history_action)
         menu.addAction(self.launch_difftool_action)
         menu.exec_(self.mapToGlobal(event.pos()))

@@ -93,7 +93,7 @@ class CommitMessageEditor(QtGui.QWidget):
             icon=icons.download())
         self.commit_group = Group(self.commit_action, self.commit_button)
 
-        self.actions_menu = QtGui.QMenu()
+        self.actions_menu = qtutils.create_menu(N_('Actions'), self)
         self.actions_button = qtutils.create_toolbutton(
             icon=icons.configure(), tooltip=N_('Actions...'))
         self.actions_button.setMenu(self.actions_menu)

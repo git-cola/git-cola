@@ -161,7 +161,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.addTopLevelItems(items)
 
     def contextMenuEvent(self, event):
-        menu = QtGui.QMenu(self)
+        menu = qtutils.create_menu(N_('Actions'), self)
         menu.addAction(self.open_action)
         menu.addAction(self.open_new_action)
         menu.addAction(self.open_default_action)

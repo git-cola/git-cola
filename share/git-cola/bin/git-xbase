@@ -429,7 +429,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.validate()
 
     def contextMenuEvent(self, event):
-        menu = QtGui.QMenu(self)
+        menu = qtutils.create_menu(N_('Actions'), self)
         menu.addAction(self.action_pick)
         menu.addAction(self.action_reword)
         menu.addAction(self.action_edit)

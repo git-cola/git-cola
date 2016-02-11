@@ -232,7 +232,7 @@ class DiffEditor(DiffTextEdit):
     # Qt overrides
     def contextMenuEvent(self, event):
         """Create the context menu for the diff display."""
-        menu = QtGui.QMenu(self)
+        menu = qtutils.create_menu(N_('Actions'), self)
         s = selection.selection()
         filename = selection.filename()
 
