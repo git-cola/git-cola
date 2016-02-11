@@ -28,6 +28,7 @@ elif os.environ[QT_API] in PYQT4_API:
     from PyQt4.QtGui import *
     QStyleOptionViewItem = QStyleOptionViewItemV4
 
+    # These objects belong to QtGui
     del (QAbstractTextDocumentLayout, QActionEvent, QBitmap, QBrush, QClipboard,
          QCloseEvent, QColor, QConicalGradient, QContextMenuEvent, QCursor,
          QDesktopServices, QDoubleValidator, QDrag, QDragEnterEvent,
@@ -57,12 +58,17 @@ elif os.environ[QT_API] in PYQT4_API:
          QWheelEvent, QWindowStateChangeEvent, qAlpha, qBlue, qFuzzyCompare,
          qGray, qGreen, qIsGray, qRed, qRgb, qRgba)
 
+    # These objects belong to QtPrintSupport
     del (QAbstractPrintDialog, QPageSetupDialog, QPrintDialog, QPrintEngine,
          QPrintPreviewDialog, QPrintPreviewWidget, QPrinter, QPrinterInfo)
+
+    # These objects belong to QtCore
+    del (QItemSelection, QItemSelectionRange, QSortFilterProxyModel)
 elif os.environ[QT_API] in PYSIDE_API:
     from PySide.QtGui import *
     QStyleOptionViewItem = QStyleOptionViewItemV4
 
+    # These objects belong to QtGui
     del (QAbstractTextDocumentLayout, QActionEvent, QBitmap, QBrush, QClipboard,
          QCloseEvent, QColor, QConicalGradient, QContextMenuEvent, QCursor,
          QDesktopServices, QDoubleValidator, QDrag, QDragEnterEvent,
@@ -92,7 +98,11 @@ elif os.environ[QT_API] in PYSIDE_API:
          QWheelEvent, QWindowStateChangeEvent, qAlpha, qBlue, qGray, qGreen,
          qIsGray, qRed, qRgb, qRgba)
 
+    # These objects belong to QtPrintSupport
     del (QAbstractPrintDialog, QPageSetupDialog, QPrintDialog, QPrintEngine,
          QPrintPreviewDialog, QPrintPreviewWidget, QPrinter, QPrinterInfo)
+
+    # These objects belong to QtCore
+    del (QItemSelection, QItemSelectionRange, QSortFilterProxyModel)
 else:
     raise PythonQtError('No Qt bindings could be found')
