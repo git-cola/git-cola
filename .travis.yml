@@ -68,4 +68,4 @@ install:
 before_script:
   - cd tests
 script:
-  - python travis.py
+  - python tests.py
