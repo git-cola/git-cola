@@ -4,10 +4,11 @@ package:
 
 source:
   git_url: ../
-  git_tag: {{ environ.get('GIT_DESCRIBE_TAG') }}
+  git_tag: {% if environ.get('PRERELEASE') == 'True' %} master {% else %} {{ environ.get('GIT_DESCRIBE_TAG') }} {% endif %}
 
 build:
   noarch_python: True
+  number: {% if environ.get('PRERELEASE') == 'True' %} {{ environ.get('GIT_DESCRIBE_NUMBER', 0) }} {% else %} 0 {% endif %}
 
 requirements:
   build:
