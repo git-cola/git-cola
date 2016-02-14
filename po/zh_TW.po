@@ -12,20 +12,19 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-02-05 02:58-0800\n"
-"PO-Revision-Date: 2015-05-21 03:41+0800\n"
-"Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
+"PO-Revision-Date: 2016-02-14 12:17+0800\n"
+"Last-Translator: Ｖ字龍 <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Poedit 1.8.7\n"
 
 #: cola/fsmonitor.py:96
-#, fuzzy
 msgid "File system change monitoring: enabled.\n"
-msgstr "檔案變動通知已啟用"
+msgstr "檔案系統變動監控：已啟用。\n"
 
 #: cola/fsmonitor.py:133
 msgid ""
@@ -36,24 +35,28 @@ msgid ""
 "    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf "
 "&& sudo sysctl -p\n"
 msgstr ""
+"檔案系統變動監控：因為已經達到 inotify watch 的總數上限而被停用。您可以執行下"
+"列命令來增加 watch 的數量限制：\n"
+"\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf "
+"&& sudo sysctl -p\n"
 
 #: cola/fsmonitor.py:445
-#, fuzzy
 msgid ""
 "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
 msgstr ""
-"因為「cola.inotify」 Git 設定值被設定為 false，inotify 檔案變更通知功能被停用"
+"檔案系統變動監控：因為「cola.inotify」 Git 設定值被設定為 false 而被停用。\n"
 
 #: cola/fsmonitor.py:454
 msgid ""
 "File system change monitoring: disabled because pywin32 is not installed.\n"
-msgstr ""
+msgstr "檔案系統變動監控：因為 pywin32 沒有安裝而被停用。\n"
 
 #: cola/fsmonitor.py:458
 msgid ""
 "File system change monitoring: disabled because libc does not support the "
 "inotify system calls.\n"
-msgstr ""
+msgstr "檔案系統變動監控：因為 libc 程式庫不支援 inotify 系統呼叫而被停用。\n"
 
 #: cola/cmds.py:157
 msgid "Amend"
@@ -68,13 +71,13 @@ msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
 msgstr ""
-"您現在正在進行分支合併(merge)。\n"
-"您不能在進行分支合併(merge)時修正前一次的版本提交。"
+"您現在正在進行分支合併。\n"
+"您不能在進行分支合併時修正前一次的版本提交。"
 
 #: cola/cmds.py:264
 #, python-format
 msgid "PATCH %(current)d/%(count)d"
-msgstr "套用修正 %(current)d/%(count)d"
+msgstr "正在套用 %(current)d/%(count)d 修正"
 
 #: cola/cmds.py:268
 msgid "Summary:"
@@ -90,41 +93,40 @@ msgid "%d patch(es) applied."
 msgstr "已套用 %d 個修正。"
 
 #: cola/cmds.py:342
-#, fuzzy
 msgid "Error Launching Blame Viewer"
-msgstr "無法啟動變動紀錄瀏覽器"
+msgstr "啟動指謫(Blame)檢視器時發生錯誤"
 
 #: cola/cmds.py:343
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot exec \"%s\": please configure a blame viewer"
-msgstr "無法執行「%s」：請設定您慣用的文字編輯器"
+msgstr "無法執行「%s」：請設定您慣用的 Blame 檢視器"
 
 #: cola/cmds.py:404 cola/cmds.py:407 cola/widgets/createbranch.py:275
 msgid "Reset Branch"
-msgstr "重置分支"
+msgstr "重設分支"
 
 #: cola/cmds.py:405
 msgid "Point the current branch head to a new commit?"
-msgstr ""
+msgstr "將當前分支的 head 指向一個新的版本提交？"
 
 #: cola/cmds.py:406
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
-msgstr ""
+msgstr "這個分支將會被用「git reset --mixed %s」命令重設"
 
 #: cola/cmds.py:419 cola/cmds.py:422 cola/guicmds.py:318
 #: cola/widgets/main.py:242 cola/widgets/dag.py:144
 msgid "Reset Worktree"
-msgstr ""
+msgstr "重設工作目錄樹"
 
 #: cola/cmds.py:420
 msgid "Reset worktree?"
-msgstr ""
+msgstr "要重設工作目錄樹嗎？"
 
 #: cola/cmds.py:421
 #, python-format
 msgid "The worktree will be reset using \"git reset --merge %s\""
-msgstr ""
+msgstr "工作目錄數將被用「git reset --merge %s」命令重設"
 
 #: cola/cmds.py:462
 #, python-format
@@ -317,16 +319,16 @@ msgstr "git clone 命令傳回了 %s 錯誤狀態碼"
 #: cola/cmds.py:1194
 #, python-format
 msgid "Rebase onto %s"
-msgstr "Rebase 至 %s 版本"
+msgstr "變更基底(rebase)至 %s 版本"
 
 #: cola/cmds.py:1195 cola/cmds.py:1220 cola/cmds.py:1221 cola/cmds.py:1233
 #: cola/cmds.py:1234 cola/widgets/main.py:426
 msgid "Rebase"
-msgstr "Rebase"
+msgstr "變更基底(rebase)"
 
 #: cola/cmds.py:1207
 msgid "Edit Rebase"
-msgstr "編輯 Rebase"
+msgstr "編輯變更基底(rebase)"
 
 #: cola/cmds.py:1208 cola/widgets/stash.py:58 cola/widgets/browse.py:580
 #: cola/widgets/archive.py:120
@@ -335,7 +337,8 @@ msgstr "保存"
 
 #: cola/cmds.py:1261 cola/qtutils.py:563 cola/widgets/recent.py:106
 #: cola/widgets/grep.py:80 cola/widgets/editremotes.py:68
-#: cola/widgets/dag.py:418 cola/widgets/browse.py:172 cola/widgets/action.py:59
+#: cola/widgets/dag.py:418 cola/widgets/browse.py:172
+#: cola/widgets/action.py:59
 msgid "Refresh"
 msgstr "重新整理"
 
@@ -433,9 +436,8 @@ msgid "unknown"
 msgstr "未知使用者"
 
 #: cola/cmds.py:1535
-#, fuzzy
 msgid "Stage conflicts?"
-msgstr "要移入版本提交準備區域並提交出去嗎？"
+msgstr "要將合併衝突移入版本提交準備區域嗎？"
 
 #: cola/cmds.py:1536
 #, python-format
@@ -445,15 +447,18 @@ msgid ""
 "You should probably skip this file.\n"
 "Stage it anyways?"
 msgstr ""
+"%s 看起來包含未解決的合併衝突。\n"
+"\n"
+"您可能應該要跳過這個檔案。\n"
+"無論如何都要將它移入版本提交準備區域嗎？"
 
 #: cola/cmds.py:1539
-#, fuzzy
 msgid "Stage conflicts"
-msgstr "要移入版本提交準備區域並提交出去嗎？"
+msgstr "將合併衝突移入版本提交準備區域"
 
 #: cola/cmds.py:1540
 msgid "Skip"
-msgstr ""
+msgstr "跳過"
 
 #: cola/cmds.py:1550 cola/widgets/diff.py:241 cola/widgets/commitmsg.py:236
 #: cola/widgets/action.py:57
@@ -670,14 +675,12 @@ msgid "Select"
 msgstr "選擇"
 
 #: cola/guicmds.py:305
-#, fuzzy
 msgid "Enter New Branch Name"
 msgstr "輸入新的分支名稱"
 
 #: cola/guicmds.py:312 cola/widgets/main.py:239 cola/widgets/dag.py:141
-#, fuzzy
 msgid "Reset Branch Head"
-msgstr "重置分支"
+msgstr "重設分支 Head"
 
 #: cola/guicmds.py:312 cola/guicmds.py:318 cola/widgets/main.py:382
 #: cola/widgets/dag.py:199 cola/widgets/createbranch.py:127
@@ -697,13 +700,12 @@ msgid "Compare"
 msgstr "比較差異"
 
 #: cola/actions.py:39
-#, fuzzy
 msgid "Next File"
-msgstr "選取檔案"
+msgstr "下個檔案"
 
 #: cola/actions.py:45
 msgid "Previous File"
-msgstr ""
+msgstr "上個檔案"
 
 #: cola/widgets/status.py:35
 msgid "Toggle the paths filter"
@@ -747,9 +749,8 @@ msgid "View History..."
 msgstr "檢視變更紀錄"
 
 #: cola/widgets/status.py:178
-#, fuzzy
 msgid "Blame..."
-msgstr "更名..."
+msgstr "指摘(Blame)..."
 
 #: cola/widgets/status.py:186
 msgid "Move file(s) to trash"
@@ -787,7 +788,7 @@ msgstr "過濾檔案路徑……"
 
 #: cola/widgets/stash.py:41
 msgid "Stash"
-msgstr "Stash"
+msgstr "蒐藏"
 
 #: cola/widgets/stash.py:53 cola/widgets/patch.py:98
 msgid "Apply"
@@ -811,41 +812,41 @@ msgstr "丟棄被選取的 stash"
 
 #: cola/widgets/stash.py:69
 msgid "Keep Index"
-msgstr ""
+msgstr "保留 index"
 
 #: cola/widgets/stash.py:163
 msgid "Save Stash"
-msgstr "保存 stash"
+msgstr "保存蒐藏(stash)"
 
 #: cola/widgets/stash.py:164
 msgid "Enter a name for the stash"
-msgstr "輸入 stash 的名稱"
+msgstr "輸入蒐藏(stash)的名稱"
 
 #: cola/widgets/stash.py:170
 msgid "Error: Stash exists"
-msgstr "錯誤：stash 已存在"
+msgstr "錯誤：蒐藏(stash)已存在"
 
 #: cola/widgets/stash.py:171
 #, python-format
 msgid "A stash named \"%s\" already exists"
-msgstr "名為「%s」的 stash 已經存在。"
+msgstr "名為「%s」的蒐藏(stash)已經存在。"
 
 #: cola/widgets/stash.py:186
 msgid "Drop Stash?"
-msgstr "丟棄 stash"
+msgstr "丟棄蒐藏(stash)？"
 
 #: cola/widgets/stash.py:187
 msgid "Recovering a dropped stash is not possible."
-msgstr "要救回一個丟棄的 stash 是不可能的。"
+msgstr "要救回一個丟棄的蒐藏(stash)是不可能的。"
 
 #: cola/widgets/stash.py:188
 #, python-format
 msgid "Drop the \"%s\" stash?"
-msgstr "是否要丟棄名為「%s」的 stash"
+msgstr "是否要丟棄名為「%s」的蒐藏(stash)"
 
 #: cola/widgets/stash.py:189
 msgid "Drop Stash"
-msgstr "丟棄 stash"
+msgstr "丟棄蒐藏(stash)"
 
 #: cola/widgets/startup.py:28
 msgid "git-cola"
@@ -959,7 +960,7 @@ msgstr "包含標籤 "
 
 #: cola/widgets/remote.py:133
 msgid "Rebase "
-msgstr "Rebase"
+msgstr "變更基底(rebase)"
 
 #: cola/widgets/remote.py:297
 #, python-format
@@ -1051,7 +1052,7 @@ msgstr "最近修改過的檔案"
 
 #: cola/widgets/recent.py:51
 msgid " commits ago"
-msgstr " 個版本提交"
+msgstr " 個版本提交前"
 
 #: cola/widgets/recent.py:54
 msgid "Showing changes since"
@@ -1067,7 +1068,7 @@ msgstr "全部折疊"
 
 #: cola/widgets/prefs.py:125
 msgid "Detect conflict markers in unmerged files"
-msgstr ""
+msgstr "偵測尚未合併檔案中的衝突標記"
 
 #: cola/widgets/prefs.py:128
 msgid "User Name"
@@ -1099,7 +1100,7 @@ msgstr "顯示未納入版本追蹤的檔案"
 
 #: cola/widgets/prefs.py:135
 msgid "Detect Conflict Markers"
-msgstr ""
+msgstr "偵測衝突標記"
 
 #: cola/widgets/prefs.py:180
 msgid "Fixed-Width Font"
@@ -1130,9 +1131,8 @@ msgid "History Browser"
 msgstr "變更紀錄瀏覽器"
 
 #: cola/widgets/prefs.py:187
-#, fuzzy
 msgid "Blame Viewer"
-msgstr "文件查看器"
+msgstr "指謫(blame)查看器"
 
 #: cola/widgets/prefs.py:188
 msgid "Diff Tool"
@@ -1148,12 +1148,12 @@ msgstr "保留 *.orig merge 備份檔"
 
 #: cola/widgets/prefs.py:191
 msgid "Sort bookmarks alphabetically"
-msgstr ""
+msgstr "以字母順序排序書籤"
 
 #: cola/widgets/prefs.py:192
 msgid ""
 "Bold with dark background font instead of italic headers (restart required)"
-msgstr ""
+msgstr "標題用帶深色底色的粗體而非斜體（需要重新啟動應用軟體設定才會生效）"
 
 #: cola/widgets/prefs.py:194
 msgid "Save GUI Settings"
@@ -1251,20 +1251,19 @@ msgstr "視覺化顯示"
 
 #: cola/widgets/merge.py:73
 msgid "Squash the merged commit(s) into a single commit"
-msgstr ""
+msgstr "將合併之版本提交（們）壓為單一版本提交"
 
 #: cola/widgets/merge.py:74
 msgid "Squash"
-msgstr "合併為單一版本提交"
+msgstr "壓為單一版本提交"
 
 #: cola/widgets/merge.py:77
 msgid ""
 "Always create a merge commit when enabled, even when the merge is a fast-"
 "forward update"
-msgstr ""
+msgstr "於啟用時，就算該合併是一個快速前移式更新也總是建立一個合併版本提交"
 
 #: cola/widgets/merge.py:79
-#, fuzzy
 msgid "No fast forward"
 msgstr "不進行快速前移式合併"
 
@@ -1272,7 +1271,7 @@ msgstr "不進行快速前移式合併"
 msgid ""
 "Commit the merge if there are no conflicts.  Uncheck to leave the merge "
 "uncommitted"
-msgstr ""
+msgstr "若不存在版本衝突時提交該合併。取消勾選以保持合併於尚未提交狀態"
 
 # Ｖ字龍：注意此應翻譯為動詞。
 #: cola/widgets/merge.py:85 cola/widgets/main.py:122
@@ -1285,7 +1284,7 @@ msgstr "建立經 GPG 簽署過的版本提交"
 
 #: cola/widgets/merge.py:91
 msgid "GPG-sign the merge commit"
-msgstr ""
+msgstr "用 GPG 簽署合併版本提交"
 
 #: cola/widgets/merge.py:97
 msgid "Merge"
@@ -1423,7 +1422,7 @@ msgstr "於新 git-cola 視窗中開啟版本倉庫……"
 
 #: cola/widgets/main.py:236 cola/widgets/action.py:63
 msgid "Stash..."
-msgstr "Stash..."
+msgstr "蒐藏(stash)..."
 
 #: cola/widgets/main.py:249
 msgid "Documentation"
@@ -1552,7 +1551,7 @@ msgstr "尋求幫助"
 #: cola/widgets/main.py:529
 #, python-format
 msgid "git cola version %s"
-msgstr "git cola %s 版本"
+msgstr "git cola %s 版"
 
 #: cola/widgets/main.py:618 cola/widgets/browse.py:81
 #, python-format
@@ -1596,7 +1595,7 @@ msgstr "正在修正前一個版本提交"
 
 #: cola/widgets/main.py:763
 msgid "Unable to rebase"
-msgstr "無法 rebase"
+msgstr "無法變更基底"
 
 #: cola/widgets/main.py:764
 msgid "You cannot rebase with uncommitted changes."
@@ -1608,7 +1607,7 @@ msgstr "選擇新的上游版本"
 
 #: cola/widgets/main.py:767
 msgid "Interactive Rebase"
-msgstr "互動式 rebase"
+msgstr "互動式變更基底"
 
 #: cola/widgets/log.py:40
 #, python-format
@@ -1694,7 +1693,7 @@ msgstr ""
 
 #: cola/widgets/finder.py:61
 msgid "Help - Find Files"
-msgstr ""
+msgstr "尋求幫助 - 尋找檔案"
 
 #: cola/widgets/finder.py:94
 msgid "<path> ..."
@@ -1725,7 +1724,6 @@ msgid "Deletions"
 msgstr "移除行數"
 
 #: cola/widgets/filelist.py:27
-#, fuzzy
 msgid "Show History"
 msgstr "檢視變更紀錄"
 
@@ -2434,14 +2432,12 @@ msgid "Open in New Window"
 msgstr "於新 git-cola 視窗中開啟"
 
 #: cola/widgets/bookmarks.py:110
-#, fuzzy
 msgid "Set Default Repository"
-msgstr "選擇版本倉庫"
+msgstr "設定預設版本倉庫"
 
 #: cola/widgets/bookmarks.py:113
-#, fuzzy
 msgid "Clear Default Repository"
-msgstr "當前的版本倉庫"
+msgstr "清除預設版本倉庫"
 
 #: cola/widgets/bookmarks.py:233
 msgid "Path to git repository"
@@ -2462,7 +2458,7 @@ msgstr "保存封存檔"
 
 #: cola/widgets/archive.py:124
 msgid "Prefix"
-msgstr "目錄前綴"
+msgstr "前綴路徑"
 
 #: cola/widgets/archive.py:129
 msgid "Advanced"
@@ -2470,7 +2466,7 @@ msgstr "進階選項"
 
 #: cola/widgets/archive.py:191
 msgid "Overwrite File?"
-msgstr "要付寫檔案嗎？"
+msgstr "要覆寫檔案嗎？"
 
 #: cola/widgets/archive.py:192
 #, python-format
