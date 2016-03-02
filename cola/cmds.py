@@ -1395,7 +1395,7 @@ class RunConfigAction(Command):
         elif opts.get('confirm'):
             title = os.path.expandvars(opts.get('title'))
             prompt = os.path.expandvars(opts.get('prompt'))
-            if Interaction.question(title, prompt):
+            if not Interaction.question(title, prompt):
                 return
         if rev:
             compat.setenv('REVISION', rev)
