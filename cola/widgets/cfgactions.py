@@ -110,7 +110,7 @@ class GitCommandWidget(standard.Dialog):
 
     def run(self):
         """Runs the process"""
-        self.proc.start(self.command[0], QtCore.QStringList(self.command[1:]))
+        self.proc.start(self.command[0], self.command[1:])
 
     def read_stdout(self):
         rawbytes = self.proc.readAllStandardOutput()
