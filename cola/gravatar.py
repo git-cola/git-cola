@@ -12,7 +12,7 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import core
 from cola import icons
-from cola.compat import ustr, urllib
+from cola.compat import ustr, parse
 from cola.widgets import defs
 import hashlib
 
@@ -22,10 +22,10 @@ class Gravatar(object):
     @staticmethod
     def url_for_email(email, imgsize):
         email_hash = core.decode(hashlib.md5(core.encode(email)).hexdigest())
-        # Python2.6 requires byte strings for urllib.quote() so we have
+        # Python2.6 requires byte strings for urllib2.quote() so we have
         # to force
         default_url = 'https://git-cola.github.io/images/git-64x64.jpg'
-        encoded_url = urllib.quote(core.encode(default_url), core.encode(''))
+        encoded_url = parse.quote(core.encode(default_url), core.encode(''))
         query = '?s=%d&d=%s' % (imgsize, core.decode(encoded_url))
         url = 'https://gravatar.com/avatar/' + email_hash + query
         return url
@@ -88,7 +88,7 @@ class GravatarLabel(QtGui.QLabel):
 
         if reply.error() == QtNetwork.QNetworkReply.NoError:
             if relocated:
-                # We could do get_url(urllib.unquote(location)) to
+                # We could do get_url(parse.unquote(location)) to
                 # download the default image.
                 # Save bandwidth by using a pixmap.
                 self.response = self.default_pixmap_as_bytes()

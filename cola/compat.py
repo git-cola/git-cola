@@ -33,11 +33,10 @@ else:
     int_types = (int, long)  # pylint: disable=long-builtin
 
 try:
+    import urllib2 as parse
+except ImportError:
     # Python 3
     from urllib import parse
-    urllib = parse
-except ImportError:
-    import urllib
 
 
 def setenv(key, value):
