@@ -7,7 +7,7 @@
 # (see LICENSE.txt for details)
 
 """
-Provides QtWebkit classes and functions.
+Provides QtWebEngineWidgets classes and functions.
 """
 
 import os
@@ -21,15 +21,20 @@ from qtpy import PythonQtError
 
 if os.environ[QT_API] in PYQT5_API:
     try:
-        from PyQt5.QtWebKitWidgets import QWebPage, QWebView
-        from PyQt5.QtWebKit import QWebSettings
+        from PyQt5.QtWebEngineWidgets import QWebEnginePage
+        from PyQt5.QtWebEngineWidgets import QWebEngineView
+        from PyQt5.QtWebEngineWidgets import QWebEngineSettings
     except ImportError:
-        from PyQt5.QtWebEngineWidgets import QWebEnginePage as QWebPage
-        from PyQt5.QtWebEngineWidgets import QWebEngineView as QWebView
-        from PyQt5.QtWebEngineWidgets import QWebEngineSettings as QWebSettings
+        from PyQt5.QtWebKitWidgets import QWebPage as QWebEnginePage
+        from PyQt5.QtWebKitWidgets import QWebView as QWebEngineView
+        from PyQt5.QtWebKit import QWebSettings as QWebEngineSettings 
 elif os.environ[QT_API] in PYQT4_API:
-    from PyQt4.QtWebKit import QWebPage, QWebView, QWebSettings
+    from PyQt4.QtWebKit import QWebPage as QWebEnginePage
+    from PyQt4.QtWebKit import QWebView as QWebEngineView
+    from PyQt4.QtWebKit import QWebSettings as QWebEngineSettings
 elif os.environ[QT_API] in PYSIDE_API:
-    from PySide.QtWebKit import QWebPage, QWebView, QWebSettings
+    from PySide.QtWebKit import QWebPage as QWebEnginePage
+    from PySide.QtWebKit import QWebView as QWebEngineView
+    from PySide.QtWebKit import QWebSettings as QWebEngineSettings
 else:
     raise PythonQtError('No Qt bindings could be found')
