@@ -1,26 +1,19 @@
 To release a new version of qtpy on PyPI:
 
-* Install `twine`
+* Update `_version.py` (set release version, remove 'dev0')
 
-```bash
-pip install twine
-```
+* git add and git commit
 
-* Update `_version.py` (set release version, remove 'dev')
+* python setup.py sdist upload
 
-```bash
-git add .
-git commit -m 'comment'
-python setup.py sdist
-twine upload dist/*
-git tag -a vX.X.X -m 'comment'
-```
+* python setup.py bdist_wheel upload
 
-* Update `_version.py` (add 'dev' and increment minor)
+* git tag -a vX.X.X -m 'comment'
 
-```bash
-git add .
-git commit -m 'comment'
-git push
-git push --tags
-```
+* Update `_version.py` (add 'dev0' and increment minor)
+
+* git add and git commit
+
+* git push
+
+* git push --tags
