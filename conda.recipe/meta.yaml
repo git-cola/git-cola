@@ -1,6 +1,6 @@
 package:
   name: qtpy
-  version: {{ environ.get('GIT_DESCRIBE_TAG') }}
+  version: {{ environ.get('GIT_DESCRIBE_TAG', '').replace('v', '') }}
 
 source:
   git_url: ../
