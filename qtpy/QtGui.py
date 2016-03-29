@@ -64,7 +64,7 @@ elif os.environ[QT_API] in PYQT4_API:
                              QWhatsThisClickedEvent, QWheelEvent,
                              QWindowStateChangeEvent, qAlpha, qBlue,
                              qFuzzyCompare, qGray, qGreen, qIsGray, qRed, qRgb,
-                             qRgba)
+                             qRgba, QIntValidator)
 elif os.environ[QT_API] in PYSIDE_API:
     from PySide.QtGui import (QAbstractTextDocumentLayout, QActionEvent, QBitmap,
                               QBrush, QClipboard, QCloseEvent, QColor,
@@ -103,6 +103,7 @@ elif os.environ[QT_API] in PYSIDE_API:
                               QValidator, QVector2D, QVector3D, QVector4D,
                               QWhatsThisClickedEvent, QWheelEvent,
                               QWindowStateChangeEvent, qAlpha, qBlue,
-                              qGray, qGreen, qIsGray, qRed, qRgb, qRgba)
+                              qGray, qGreen, qIsGray, qRed, qRgb, qRgba,
+                              QIntValidator)
 else:
     raise PythonQtError('No Qt bindings could be found')
