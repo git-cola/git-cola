@@ -19,7 +19,7 @@ LONG_DESCRIPTION = """
    :target: https://pypi.python.org/pypi/QtPy/
    :alt: Latest PyPI version
 
-.. image:: https://img.shields.io/pypi/dm/QtAwesome.svg
+.. image:: https://img.shields.io/pypi/dm/QtPy.svg
    :target: https://pypi.python.org/pypi/QtPy/
    :alt: Number of PyPI downloads
 
@@ -53,9 +53,8 @@ to a particular project, or namespace.
 .. _spyder: https://github.com/spyder-ide/spyder
 .. _spyderlib.qt: https://github.com/spyder-ide/spyder/tree/master/spyderlib/qt
 .. _pyqode.qt: https://github.com/pyQode/pyqode.qt
-.. _Changelog: https://github.com/goanpeca/QtPy/blob/master/CHANGELOG.rst
-.. _Contributing: https://github.com/goanpeca/QtPy/blob/master/CONTRIBUTING.rst
-.. _Issue tracker: https://github.com/goanpeca/QtPy/issues
+.. _Changelog: https://github.com/spyder-ide/qtpy/blob/master/CHANGELOG.md
+.. _Issue tracker: https://github.com/spyder-ide/qtpy/issues
 """
 
 setup(
@@ -63,7 +62,7 @@ setup(
     version=version_ns['__version__'],
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     keywords=["qt PyQt4 PyQt5 PySide Widget QWidget"],
-    url='https://github.com/goanpeca/QtPy',
+    url='https://github.com/spyder-ide/qtpy',
     license='MIT',
     author='Colin Duquesnoy, The Spyder Development Team',
     author_email='goanpeca@gmail.com',
