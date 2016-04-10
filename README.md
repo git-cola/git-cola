@@ -40,5 +40,5 @@ pip install qtpy
 or
 
 ```bash
-conda install -c spyder-ide qtpy
+conda install qtpy
 ```
