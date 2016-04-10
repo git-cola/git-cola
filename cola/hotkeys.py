@@ -34,7 +34,6 @@ MOVE_RIGHT = Qt.Key_L
 FOCUS = Qt.ControlModifier + Qt.Key_L
 AMEND = Qt.ControlModifier + Qt.Key_M
 MERGE = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_M
-OPEN = Qt.ControlModifier + Qt.Key_O
 PUSH = Qt.ControlModifier + Qt.Key_P
 PULL = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_P
 # Q-Z
