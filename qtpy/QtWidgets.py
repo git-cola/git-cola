@@ -56,7 +56,7 @@ elif os.environ[QT_API] in PYQT4_API:
          QTextTableCellFormat, QTextTableFormat, QTouchEvent, QTransform,
          QValidator, QVector2D, QVector3D, QVector4D, QWhatsThisClickedEvent,
          QWheelEvent, QWindowStateChangeEvent, qAlpha, qBlue, qFuzzyCompare,
-         qGray, qGreen, qIsGray, qRed, qRgb, qRgba)
+         qGray, qGreen, qIsGray, qRed, qRgb, qRgba, QIntValidator)
 
     # These objects belong to QtPrintSupport
     del (QAbstractPrintDialog, QPageSetupDialog, QPrintDialog, QPrintEngine,
@@ -96,7 +96,7 @@ elif os.environ[QT_API] in PYSIDE_API:
          QTextTableCellFormat, QTextTableFormat, QTouchEvent, QTransform,
          QValidator, QVector2D, QVector3D, QVector4D, QWhatsThisClickedEvent,
          QWheelEvent, QWindowStateChangeEvent, qAlpha, qBlue, qGray, qGreen,
-         qIsGray, qRed, qRgb, qRgba)
+         qIsGray, qRed, qRgb, qRgba, QIntValidator)
 
     # These objects belong to QtPrintSupport
     del (QAbstractPrintDialog, QPageSetupDialog, QPrintDialog, QPrintEngine,
