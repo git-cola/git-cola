@@ -77,9 +77,9 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
         opts = self.config.find('guitool.Meow Cat.*')
         self.assertEqual(opts['guitool.Meow Cat.cmd'], 'cat hello')
 
-    def get_guitool_opts_mixed_case(self):
+    def test_guitool_opts_mixed_case(self):
         self.git('config', 'guitool.Meow Cat.cmd', 'cat hello')
-        opts = self.get_guitool_opts('Meow Cat')
+        opts = self.config.get_guitool_opts('Meow Cat')
         self.assertEqual(opts['cmd'], 'cat hello')
 
 
