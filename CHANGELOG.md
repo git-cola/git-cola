@@ -1,5 +1,9 @@
 # History of changes
 
+## Version 1.0.1 (10/04/16)
+
+* Import QIntValidator in QtGui and remove it from QtWidgets (PR #19)
+
 ## Version 1.0 (22/03/16)
 
 * Add QtWebEngineWidgets module for Qt 5.6. This module replaces the previous
