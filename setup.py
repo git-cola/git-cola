@@ -37,7 +37,6 @@ Basically, you write your code as if you were using PyQt5 but import qt from
 ``qtpy`` instead of ``PyQt5``.
 
 - `Issue tracker`_
-- `Contributing`_
 - `Changelog`_
 
 
@@ -61,7 +60,7 @@ setup(
     name='QtPy',
     version=version_ns['__version__'],
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    keywords=["qt PyQt4 PyQt5 PySide Widget QWidget"],
+    keywords=["qt PyQt4 PyQt5 PySide"],
     url='https://github.com/spyder-ide/qtpy',
     license='MIT',
     author='Colin Duquesnoy, The Spyder Development Team',
