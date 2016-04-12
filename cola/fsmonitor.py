@@ -116,7 +116,13 @@ if AVAILABLE == 'inotify':
 
         def __init__(self, monitor, refs_only):
             _BaseThread.__init__(self, monitor, refs_only)
-            self._worktree = core.abspath(git.getcwd())
+            if refs_only:
+                worktree = None
+            else:
+                worktree = git.worktree()
+                if worktree is not None:
+                    worktree = core.abspath(worktree)
+            self._worktree = worktree
             self._git_dir = git.git_path()
             self._lock = Lock()
             self._inotify_fd = None
@@ -191,7 +197,7 @@ if AVAILABLE == 'inotify':
                 if self._inotify_fd is None:
                     return
                 try:
-                    if not self._refs_only:
+                    if self._worktree is not None:
                         tracked_dirs = set(
                                 os.path.dirname(os.path.join(self._worktree,
                                                              path))
@@ -344,7 +350,13 @@ if AVAILABLE == 'pywin32':
 
         def __init__(self, monitor, refs_only):
             _BaseThread.__init__(self, monitor, refs_only)
-            self._worktree = self._transform_path(core.abspath(git.getcwd()))
+            if refs_only:
+                worktree = None
+            else:
+                worktree = git.worktree()
+                if worktree is not None:
+                    worktree = self._transform_path(core.abspath(worktree))
+            self._worktree = worktree
             self._worktree_watch = None
             self._git_dir = self._transform_path(core.abspath(git.git_path()))
             self._git_dir_watch = None
@@ -372,7 +384,7 @@ if AVAILABLE == 'pywin32':
 
                 events = [self._stop_event]
 
-                if not self._refs_only:
+                if self._worktree is not None:
                     self._worktree_watch = _Win32Watch(self._worktree,
                                                        self._FLAGS)
                     events.append(self._worktree_watch.event)
@@ -406,7 +418,7 @@ if AVAILABLE == 'pywin32':
                     self._git_dir_watch.close()
 
         def _handle_results(self):
-            if not self._refs_only:
+            if self._worktree_watch is not None:
                 for action, path in self._worktree_watch.read():
                     if not self._running:
                         break
