@@ -703,13 +703,16 @@ class MainView(standard.MainWindow):
             # Create a new shortcut Shift+<shortcut> that gives focus
             toggleview = QtGui.QAction(self)
             toggleview.setShortcut(shortcut)
+
             def focusdock(dockwidget=dockwidget):
                 focus_dock(dockwidget)
             self.addAction(toggleview)
             qtutils.connect_action(toggleview, focusdock)
 
         focus = lambda: focus_dock(self.commitdockwidget)
+        focus_status = lambda: focus_dock(self.statusdockwidget)
         qtutils.add_action(self, 'Focus Commit Message', focus, hotkeys.FOCUS)
+        qtutils.add_action(self, 'Focus Status Window', focus_status, hotkeys.FOCUS_STATUS)
 
     def preferences(self):
         return prefs_widget.preferences(model=self.prefs_model, parent=self)

@@ -32,6 +32,7 @@ MOVE_UP_SECONDARY = Qt.AltModifier + Qt.Key_K
 MOVE_UP_TERTIARY = Qt.ShiftModifier + Qt.Key_K
 MOVE_RIGHT = Qt.Key_L
 FOCUS = Qt.ControlModifier + Qt.Key_L
+FOCUS_STATUS = Qt.ControlModifier + Qt.Key_K
 AMEND = Qt.ControlModifier + Qt.Key_M
 MERGE = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_M
 PUSH = Qt.ControlModifier + Qt.Key_P
