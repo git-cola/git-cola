@@ -165,14 +165,14 @@ else:
 
 
 def tmp_filename(label):
+    dirpath = tmp_dir()
     label = label.replace('/', '-').replace('\\', '-')
-    fd = tempfile.NamedTemporaryFile(dir=tmpdir(), prefix=label+'-')
+    fd = tempfile.NamedTemporaryFile(dir=dirpath, prefix=label+'-')
     fd.close()
-    return fd.name
+    return (dirpath, fd.name)
 
 
-@memoize
-def tmpdir():
+def tmp_dir():
     return tempfile.mkdtemp(prefix='git-cola-')
 
 

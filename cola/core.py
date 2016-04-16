@@ -10,6 +10,7 @@ import os
 import sys
 import itertools
 import platform
+import shutil
 import subprocess
 
 from cola.decorators import interruptable
@@ -272,6 +273,10 @@ def getenv(name, default=None):
 
 def xopen(path, mode='r', encoding=None):
     return open(mkpath(path, encoding=encoding), mode)
+
+
+def rmtree(path, ignore_errors=True):
+    shutil.rmtree(mkpath(path), ignore_errors=ignore_errors)
 
 
 def stdout(msg):

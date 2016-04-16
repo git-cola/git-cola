@@ -52,31 +52,26 @@ class ColaUtilsTestCase(unittest.TestCase):
         expect = set(['foo///bar///baz'])
         self.assertEqual(expect, paths)
 
-
-    def test_tmpdir_gives_consistent_results(self):
-        utils.tmpdir.func.cache.clear()
-
-        first = utils.tmpdir()
-        second = utils.tmpdir()
-        third = utils.tmpdir()
-
-        self.assertEqual(first, second)
-        self.assertEqual(first, third)
-
-        shutil.rmtree(first)
+    def test_tmpdir_gives_unique_results(self):
+        tmp_dir1 = utils.tmp_dir()
+        tmp_dir2 = utils.tmp_dir()
+        self.assertNotEqual(tmp_dir1, tmp_dir2)
+        self.assertTrue(os.path.isdir(tmp_dir1))
+        self.assertTrue(os.path.isdir(tmp_dir2))
+        os.rmdir(tmp_dir1)
+        os.rmdir(tmp_dir2)
 
     def test_tmp_filename_gives_good_file(self):
-        utils.tmpdir.func.cache.clear()
-
-        tmpdir = utils.tmpdir()
-        first = utils.tmp_filename('test')
-        second = utils.tmp_filename('test')
+        tmp_dir1, first = utils.tmp_filename('test')
+        tmp_dir2, second = utils.tmp_filename('test')
 
         self.assertNotEqual(first, second)
-        self.assertTrue(first.startswith(os.path.join(tmpdir, 'test')))
-        self.assertTrue(second.startswith(os.path.join(tmpdir, 'test')))
+        self.assertNotEqual(tmp_dir1, tmp_dir2)
+        self.assertTrue(first.startswith(os.path.join(tmp_dir1, 'test')))
+        self.assertTrue(second.startswith(os.path.join(tmp_dir2, 'test')))
 
-        shutil.rmtree(tmpdir)
+        shutil.rmtree(tmp_dir1)
+        shutil.rmtree(tmp_dir2)
 
     def test_strip_one_abspath(self):
         expect = 'bin/git'

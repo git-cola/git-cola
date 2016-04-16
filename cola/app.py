@@ -297,9 +297,6 @@ def application_start(context, view, monitor_refs_only=False):
     fsmonitor.current().stop()
     QtCore.QThreadPool.globalInstance().waitForDone()
 
-    tmpdir = utils.tmpdir()
-    shutil.rmtree(tmpdir, ignore_errors=True)
-
     return result
 
 
