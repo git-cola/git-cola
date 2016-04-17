@@ -165,15 +165,10 @@ else:
 
 
 def tmp_filename(label):
-    dirpath = tmp_dir()
-    label = label.replace('/', '-').replace('\\', '-')
-    fd = tempfile.NamedTemporaryFile(dir=dirpath, prefix=label+'-')
+    label = 'git-cola-' + label.replace('/', '-').replace('\\', '-')
+    fd = tempfile.NamedTemporaryFile(prefix=label+'-')
     fd.close()
-    return (dirpath, fd.name)
-
-
-def tmp_dir():
-    return tempfile.mkdtemp(prefix='git-cola-')
+    return fd.name
 
 
 def is_linux():

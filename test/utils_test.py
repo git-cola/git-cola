@@ -2,10 +2,10 @@
 
 from __future__ import absolute_import, division, unicode_literals
 
-import shutil
 import os
 import unittest
 
+from cola import core
 from cola import utils
 
 
@@ -52,26 +52,16 @@ class ColaUtilsTestCase(unittest.TestCase):
         expect = set(['foo///bar///baz'])
         self.assertEqual(expect, paths)
 
-    def test_tmpdir_gives_unique_results(self):
-        tmp_dir1 = utils.tmp_dir()
-        tmp_dir2 = utils.tmp_dir()
-        self.assertNotEqual(tmp_dir1, tmp_dir2)
-        self.assertTrue(os.path.isdir(tmp_dir1))
-        self.assertTrue(os.path.isdir(tmp_dir2))
-        os.rmdir(tmp_dir1)
-        os.rmdir(tmp_dir2)
-
     def test_tmp_filename_gives_good_file(self):
-        tmp_dir1, first = utils.tmp_filename('test')
-        tmp_dir2, second = utils.tmp_filename('test')
+        first = utils.tmp_filename('test')
+        second = utils.tmp_filename('test')
+
+        self.assertFalse(core.exists(first))
+        self.assertFalse(core.exists(second))
 
         self.assertNotEqual(first, second)
-        self.assertNotEqual(tmp_dir1, tmp_dir2)
-        self.assertTrue(first.startswith(os.path.join(tmp_dir1, 'test')))
-        self.assertTrue(second.startswith(os.path.join(tmp_dir2, 'test')))
-
-        shutil.rmtree(tmp_dir1)
-        shutil.rmtree(tmp_dir2)
+        self.assertTrue(os.path.basename(first).startswith('git-cola-test'))
+        self.assertTrue(os.path.basename(second).startswith('git-cola-test'))
 
     def test_strip_one_abspath(self):
         expect = 'bin/git'

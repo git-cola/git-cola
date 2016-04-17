@@ -229,16 +229,16 @@ class ApplyDiffSelection(Command):
             return
 
         cfg = gitcfg.current()
-        tmp_dir, tmp_file = utils.tmp_filename('patch')
+        encoding = cfg.file_encoding(self.model.filename)
+        tmp_file = utils.tmp_filename('patch')
         try:
-            core.write(tmp_file, patch,
-                       encoding=cfg.file_encoding(self.model.filename))
+            core.write(tmp_file, patch, encoding=encoding)
             if self.apply_to_worktree:
                 status, out, err = self.model.apply_diff_to_worktree(tmp_file)
             else:
                 status, out, err = self.model.apply_diff(tmp_file)
         finally:
-            core.rmtree(tmp_dir)
+            core.unlink(tmp_file)
 
         Interaction.log_status(status, out, err)
         self.model.update_file_status(update_index=True)
@@ -444,7 +444,7 @@ class Commit(ResetMode):
         # Create the commit message file
         comment_char = prefs.comment_char()
         msg = self.strip_comments(self.msg, comment_char=comment_char)
-        tmp_dir, tmp_file = utils.tmp_filename('commit-message')
+        tmp_file = utils.tmp_filename('commit-message')
         try:
             core.write(tmp_file, msg)
 
@@ -455,7 +455,7 @@ class Commit(ResetMode):
                                                      amend=self.amend,
                                                      no_verify=self.no_verify)
         finally:
-            core.rmtree(tmp_dir)
+            core.unlink(tmp_file)
 
         if status == 0:
             ResetMode.do(self)
@@ -1662,10 +1662,10 @@ class Tag(Command):
         log_msg = (N_('Tagging "%(revision)s" as "%(name)s"') %
                    dict(revision=self._revision, name=self._name))
         opts = {}
-        tmp_dir = None
+        tmp_file = None
         try:
             if self._message:
-                tmp_dir, tmp_file = utils.tmp_filename('tag-message')
+                tmp_file = utils.tmp_filename('tag-message')
                 opts['F'] = tmp_file
                 core.write(tmp_file, self._message)
 
@@ -1677,8 +1677,8 @@ class Tag(Command):
             status, output, err = self.model.git.tag(self._name,
                                                      self._revision, **opts)
         finally:
-            if tmp_dir:
-                core.rmtree(tmp_dir)
+            if tmp_file:
+                core.unlink(tmp_file)
 
         if output:
             log_msg += '\n' + (N_('Output: %s') % output)
