@@ -111,6 +111,12 @@ class ViewerMixin(object):
     def reset_worktree(self):
         self.with_oid(lambda oid: cmds.do(cmds.ResetWorktree, ref=oid))
 
+    def reset_to_commit(self, reset_type):
+        sha1 = self.selected_sha1()
+        if sha1 is None:
+            return
+        cmds.do(cmds.ResetToCommit, reset_type=reset_type, ref=sha1)
+
     def save_blob_dialog(self):
         self.with_oid(lambda oid: browse.BrowseDialog.browse(oid))
 
@@ -131,6 +137,15 @@ class ViewerMixin(object):
         'create_tag':
             qtutils.add_action(self, N_('Create Tag'),
                                self.create_tag),
+        'reset_soft':
+            qtutils.add_action(self, N_('Reset (soft)...'),
+                               lambda: self.reset_to_commit(reset_type='soft')),
+        'reset_mixed':
+            qtutils.add_action(self, N_('Reset (mixed)...'),
+                               lambda: self.reset_to_commit(reset_type='mixed')),
+        'reset_hard':
+            qtutils.add_action(self, N_('Reset (hard)...'),
+                               lambda: self.reset_to_commit(reset_type='hard')),
         'create_tarball':
             qtutils.add_action(self, N_('Save As Tarball/Zip...'),
                                self.create_tarball),
@@ -178,6 +193,9 @@ class ViewerMixin(object):
         self.menu_actions['create_branch'].setEnabled(has_single_selection)
         self.menu_actions['create_patch'].setEnabled(has_selection)
         self.menu_actions['create_tag'].setEnabled(has_single_selection)
+        self.menu_actions['reset_soft'].setEnabled(has_single_selection)
+        self.menu_actions['reset_mixed'].setEnabled(has_single_selection)
+        self.menu_actions['reset_hard'].setEnabled(has_single_selection)
         self.menu_actions['create_tarball'].setEnabled(has_single_selection)
         self.menu_actions['reset_branch_head'].setEnabled(has_single_selection)
         self.menu_actions['reset_worktree'].setEnabled(has_single_selection)
@@ -191,6 +209,11 @@ class ViewerMixin(object):
         menu.addSeparator()
         menu.addAction(self.menu_actions['create_branch'])
         menu.addAction(self.menu_actions['create_tag'])
+        reset_menu = menu.addMenu(N_('Reset'))
+        reset_menu.setEnabled(self.menu_actions['reset_soft'].isEnabled())
+        reset_menu.addAction(self.menu_actions['reset_soft'])
+        reset_menu.addAction(self.menu_actions['reset_mixed'])
+        reset_menu.addAction(self.menu_actions['reset_hard'])
         menu.addSeparator()
         menu.addAction(self.menu_actions['cherry_pick'])
         menu.addAction(self.menu_actions['create_patch'])
