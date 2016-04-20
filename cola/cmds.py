@@ -1266,6 +1266,30 @@ class Refresh(Command):
         fsmonitor.current().refresh()
 
 
+class ResetToCommit(ConfirmAction):
+
+    def __init__(self, ref, reset_type):
+        ConfirmAction.__init__(self)
+        self.model = main.model()
+        self.icon = icons.undo()
+        self.ref = ref # the commit
+        self.reset_type = reset_type
+
+    def confirm(self):
+        title = N_('Reset to commit?')
+        text = N_('This will reset to the selected commit.')
+        info = N_('Reset to commit?')
+        ok_text = N_('Reset to commit')
+        return Interaction.confirm(title, text, info, ok_text,
+                                   default=True, icon=self.icon)
+
+    def action(self):
+        return self.model.git.reset('--%s' % self.reset_type, self.ref)
+
+    def success(self):
+        self.model.update_file_status()
+
+
 class RevertEditsCommand(ConfirmAction):
 
     def __init__(self):
