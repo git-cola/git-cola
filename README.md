@@ -133,7 +133,7 @@ Use the [one-click install link](http://software.opensuse.org/package/git-cola).
 ## MAC OS X
 
 Before setting up homebrew, use
-[pip](https://pip.readthedocs.org/en/latest/installing.html) to install
+[pip](https://pip.readthedocs.io/en/latest/installing.html) to install
 [sphinx](http://sphinx-doc.org/latest/install.html).
 
 Sphinx is used to build the documentation.
@@ -184,7 +184,7 @@ See "WINDOWS (continued)" below for more details.
 
 # DOCUMENTATION
 
-* [HTML documentation](https://git-cola.readthedocs.org/en/latest/)
+* [HTML documentation](https://git-cola.readthedocs.io/en/latest/)
 
 * [git-cola manual](share/doc/git-cola/git-cola.rst)
 
@@ -302,7 +302,7 @@ users should not need to configure anything.
 # BUILDING WINDOWS INSTALLERS
 
 Windows installers are built using
-[Pynsist](http://pynsist.readthedocs.org/en/latest/).
+[Pynsist](http://pynsist.readthedocs.io/en/latest/).
 [NSIS](http://nsis.sourceforge.net/Main_Page) is also needed.
 
 To build the installer using *Pynsist*:

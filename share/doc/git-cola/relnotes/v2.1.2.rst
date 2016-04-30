@@ -26,7 +26,7 @@ Usability, bells and whistles
 
 * The diff colors are now configurable.  `cola.color.{text,add,remove,header}`
   can now be set with 6-digit hexadecimal colors.
-  See the `git cola manual <https://git-cola.readthedocs.org/en/latest/git-cola.html#configuration-variables>_`
+  See the `git cola manual <https://git-cola.readthedocs.io/en/latest/git-cola.html#configuration-variables>_`
   for more details.
 
 * Improved hotkey documentation.
