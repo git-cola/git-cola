@@ -1,7 +1,7 @@
 .. _v2.6:
 
-git-cola v2.6 (pre-release)
-===========================
+git-cola v2.6
+=============
 
 Usability, bells and whistles
 -----------------------------
