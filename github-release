@@ -73,7 +73,6 @@ def parse_args():
 
     edit = subparsers.add_parser('edit')
     edit.set_defaults(func=edit_release)
-    add_version_arguments(edit)
     add_release_arguments(edit)
 
     delete = subparsers.add_parser('delete')
@@ -101,8 +100,8 @@ def add_version_arguments(parser):
 
 def add_release_arguments(parser):
     add_version_arguments(parser)
-    parser.add_argument('sha1', metavar='<SHA-1>', nargs='?', default=None,
-                        help='SHA-1 for the release')
+    parser.add_argument('commit', metavar='<commit>', nargs='?', default=None,
+                        help='commit to use for the release')
     parser.add_argument('--draft', action='store_true', default=False,
                         help='create draft (unpublished) release')
     parser.add_argument('--prerelease', action='store_true', default=False,
@@ -118,7 +117,7 @@ def print_releases(args):
 
 
 def create_release(args):
-    add_target_commitish(args)
+    add_commit(args)
     print_release_info(args)
     if not Interaction.confirm('Creating release %s' % args.version,
                                'This will create a new release on github.',
@@ -134,7 +133,7 @@ def create_release(args):
 
 
 def edit_release(args):
-    add_target_commitish(args)
+    add_commit(args)
     details = release_details(args)
     if details is None:
         return 1
@@ -227,12 +226,12 @@ def print_response(resp, printer=core.stdout):
     printer(beautify(resp.text))
 
 
-def add_target_commitish(args):
-    if args.target_commitish:
+def add_commit(args):
+    if args.commit:
         return
     cmd = ['git', 'rev-parse', args.version+'^{commit}']
     status, out, err = core.run_command(cmd)
-    args.target_commitish = out.strip()
+    args.commit = out.strip()
 
 
 def print_release_info(args):
@@ -247,7 +246,7 @@ def new_release_data(args):
     data['name'] = args.version
     data['prerelease'] = args.prerelease
     data['tag_name'] = args.version
-    data['target_commitish'] = args.target_commitish
+    data['target_commitish'] = args.commit
     return data
 
 
