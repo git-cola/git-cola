@@ -20,7 +20,7 @@ source_encoding = 'utf-8'
 master_doc = 'index'
 
 project = 'git-cola'
-copyright = '2007-2015, David Aguilar and contributors'
+copyright = '2007-2016, David Aguilar and contributors'
 authors = 'David Aguilar and contributors'
 
 versionfile = os.path.join(srcdir, 'cola', '_version.py')
