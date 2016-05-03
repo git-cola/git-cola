@@ -1,0 +1,12 @@
+.. _v2.7:
+
+git-cola v2.7 (pre-release)
+===========================
+
+Development
+-----------
+
+* The `unittest.mock` module is now used instead of the original `mock` module
+  when running the `git cola` test suite using Python3.
+
+  https://github.com/git-cola/git-cola/issues/569

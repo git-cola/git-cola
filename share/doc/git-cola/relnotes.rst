@@ -6,6 +6,7 @@ Releases
     :titlesonly:
 
     relnotes/unreleased
+    relnotes/v2.7
     relnotes/v2.6
     relnotes/v2.5
     relnotes/v2.4

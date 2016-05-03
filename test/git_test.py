@@ -8,7 +8,10 @@ import signal
 import time
 import unittest
 
-from mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 from cola import git
 from cola.compat import WIN32
