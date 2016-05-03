@@ -2,7 +2,7 @@
 
     git-cola is a powerful Git GUI with a slick and intuitive user interface.
 
-    Copyright (C) 2007-2015, David Aguilar and contributors
+    Copyright (C) 2007-2016, David Aguilar and contributors
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

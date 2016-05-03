@@ -6,8 +6,7 @@
 from __future__ import division, absolute_import, unicode_literals
 
 __copyright__ = """
-Copyright (C) 2007-2015
-David Aguilar <davvid@gmail.com> and contributors
+Copyright (C) 2007-2016 David Aguilar and contributors
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 2 as

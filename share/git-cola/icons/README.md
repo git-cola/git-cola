@@ -8,8 +8,8 @@ modified.svg
 partial.svg
 upstream.svg
 
-Copyright (c) 2011 Uri Okrent
-Copyright (c) 2015 David Aguilar and contributors
+Copyright (C) 2011 Uri Okrent
+Copyright (C) 2015-2016 David Aguilar and contributors
 
 License: MIT
 
@@ -64,7 +64,7 @@ trashcan.svg
 unfold.svg
 x.svg
 
-(c) 2012-2015 GitHub
+Copyright (C) 2012-2015 GitHub
 License: [MIT](http://choosealicense.com/licenses/mit/)
 
 

@@ -1,13 +1,14 @@
-# Copyright (C) 2009, 2010, 2011, 2012, 2013
-# David Aguilar <davvid@gmail.com>
 """Provides the main() routine and ColaApplication"""
 from __future__ import division, absolute_import, unicode_literals
 
 import argparse
 import os
-import shutil
 import signal
 import sys
+
+__copyright__ = """
+Copyright (C) 2009-2016 David Aguilar and contributors
+"""
 
 # Make homebrew work by default
 if sys.platform == 'darwin':

@@ -23,7 +23,7 @@ def launch_about_dialog():
 
 COPYRIGHT = """git-cola: The highly caffeinated git GUI v$VERSION
 
-Copyright (C) 2007-2014, David Aguilar and contributors
+Copyright (C) 2007-2016 David Aguilar and contributors
 
 This program is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License
