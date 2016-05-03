@@ -1,0 +1,7 @@
+coverage
+flake8
+nose
+mock
+pbr
+pylint
+PyYAML

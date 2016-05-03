@@ -13,6 +13,7 @@ LN_S = $(LN) -s -f
 MARKDOWN = markdown
 MKDIR_P = mkdir -p
 NOSETESTS = nosetests
+PIP = pip
 PYLINT = pylint
 PYTHON = python
 RM = rm -f
@@ -189,3 +190,8 @@ flake8:
 pylint:
 	$(PYLINT) $(PYLINT_FLAGS) $(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
 .PHONY: pylint
+
+requirements:
+	$(PIP) install --requirement extras/requirements.txt
+	$(PIP) install --requirement extras/requirements-dev.txt
+.PHONY: requirements
