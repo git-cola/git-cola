@@ -10,6 +10,7 @@
 /share/locale
 /test/tmp
 /tags
+/.coverage
 .DS_Store
 .noseids
 *.gz
