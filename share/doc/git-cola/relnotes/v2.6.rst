@@ -47,6 +47,8 @@ Packaging
 ---------
 
 * It is now possible to install `git cola` to and from utf8-encoded
-  filesystem paths.  Previously, Python's stdlib would during installation.
+  filesystem paths.  Previously, Python's stdlib would throw an string
+  encoding error during installation.  We workaround the stdlib by forcing
+  python2 to use utf-8, thus fixing assumptions in the stdlib library code.
 
   https://github.com/git-cola/git-cola/issues/551
