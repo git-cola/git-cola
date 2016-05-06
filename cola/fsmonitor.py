@@ -54,10 +54,10 @@ class _Monitor(QtCore.QObject):
         self._thread_class = thread_class
         self._thread = None
 
-    def start(self, refs_only=False):
+    def start(self):
         if self._thread_class is not None:
             assert self._thread is None
-            self._thread = self._thread_class(self, refs_only)
+            self._thread = self._thread_class(self)
             self._thread.start()
 
     def stop(self):
@@ -78,10 +78,9 @@ class _BaseThread(QtCore.QThread):
     #: modifications into a single signal.
     _NOTIFICATION_DELAY = 888
 
-    def __init__(self, monitor, refs_only):
+    def __init__(self, monitor):
         QtCore.QThread.__init__(self)
         self._monitor = monitor
-        self._refs_only = refs_only
         self._running = True
         self._pending = False
 
@@ -118,14 +117,11 @@ if AVAILABLE == 'inotify':
                 inotify.IN_ONLYDIR
         )
 
-        def __init__(self, monitor, refs_only):
-            _BaseThread.__init__(self, monitor, refs_only)
-            if refs_only:
-                worktree = None
-            else:
-                worktree = git.worktree()
-                if worktree is not None:
-                    worktree = core.abspath(worktree)
+        def __init__(self, monitor):
+            _BaseThread.__init__(self, monitor)
+            worktree = git.worktree()
+            if worktree is not None:
+                worktree = core.abspath(worktree)
             self._worktree = worktree
             self._git_dir = git.git_path()
             self._lock = Lock()
@@ -271,9 +267,7 @@ if AVAILABLE == 'inotify':
                 return False
             elif wd == self._git_dir_wd:
                 name = core.decode(name)
-                if name == 'HEAD':
-                    return True
-                elif not self._refs_only and name == 'index':
+                if name == 'HEAD' or name == 'index':
                     return True
             elif (wd in self._git_dir_wds and
                     not core.decode(name).endswith('.lock')):
@@ -355,14 +349,11 @@ if AVAILABLE == 'pywin32':
                   win32con.FILE_NOTIFY_CHANGE_LAST_WRITE |
                   win32con.FILE_NOTIFY_CHANGE_SECURITY)
 
-        def __init__(self, monitor, refs_only):
-            _BaseThread.__init__(self, monitor, refs_only)
-            if refs_only:
-                worktree = None
-            else:
-                worktree = git.worktree()
-                if worktree is not None:
-                    worktree = self._transform_path(core.abspath(worktree))
+        def __init__(self, monitor):
+            _BaseThread.__init__(self, monitor)
+            worktree = git.worktree()
+            if worktree is not None:
+                worktree = self._transform_path(core.abspath(worktree))
             self._worktree = worktree
             self._worktree_watch = None
             self._git_dir = self._transform_path(core.abspath(git.git_path()))
@@ -439,9 +430,10 @@ if AVAILABLE == 'pywin32':
                 path = self._transform_path(path)
                 if path.endswith('.lock'):
                     continue
-                if path == 'head' or path.startswith('refs/'):
-                    self._pending = True
-                elif not self._refs_only and path == 'index':
+                if (path == 'head'
+                    or path == 'index'
+                    or path.startswith('refs/')
+                   ):
                     self._pending = True
 
         def stop(self):
