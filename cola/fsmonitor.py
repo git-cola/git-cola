@@ -11,6 +11,7 @@ import select
 from threading import Lock
 
 from . import utils
+from . import version
 from .decorators import memoize
 
 AVAILABLE = None
@@ -82,7 +83,14 @@ class _BaseThread(QtCore.QThread):
         QtCore.QThread.__init__(self)
         self._monitor = monitor
         self._running = True
-        self._pending = False
+        self._use_check_ignore = version.check('check-ignore',
+                                               version.git_version())
+        self._force_notify = False
+        self._file_paths = set()
+
+    @property
+    def _pending(self):
+        return self._force_notify or self._file_paths
 
     def refresh(self):
         """Do any housekeeping necessary in response to repository changes."""
@@ -90,8 +98,31 @@ class _BaseThread(QtCore.QThread):
 
     def notify(self):
         """Notifies all observers"""
-        self._pending = False
-        self._monitor.files_changed.emit()
+        do_notify = False
+        if self._force_notify:
+            do_notify = True
+        elif self._file_paths:
+            proc = core.start_command(['git', 'check-ignore', '--verbose',
+                                       '--non-matching', '-z', '--stdin'])
+            path_list = bchr(0).join(core.encode(path)
+                                     for path in self._file_paths)
+            out, err = proc.communicate(path_list)
+            if proc.returncode:
+                do_notify = True
+            else:
+                # Each output record is four fields separated by NULL
+                # characters (records are also separated by NULL characters):
+                # <source> <NULL> <linenum> <NULL> <pattern> <NULL> <pathname>
+                # For paths which are not ignored, all fields will be empty
+                # except for <pathname>.  So to see if we have any non-ignored
+                # files, we simply check every fourth field to see if any of
+                # them are empty.
+                source_fields = out.split(bchr(0))[0:-1:4]
+                do_notify = not all(source_fields)
+        self._force_notify = False
+        self._file_paths = set()
+        if do_notify:
+            self._monitor.emit(SIGNAL('files_changed'))
 
     @staticmethod
     def _log_enabled_message():
@@ -260,31 +291,33 @@ if AVAILABLE == 'inotify':
                     wd_to_path_map[wd] = path
                     path_to_wd_map[path] = wd
 
-        def _event_is_relevant(self, wd, mask, name):
+        def _check_event(self, wd, mask, name):
             if mask & inotify.IN_Q_OVERFLOW:
-                return True
+                self._force_notify = True
             elif not mask & self._TRIGGER_MASK:
-                return False
+                pass
             elif mask & inotify.IN_ISDIR:
-                return False
+                pass
             elif wd in self._worktree_wd_to_path_map:
-                return True
+                if self._use_check_ignore:
+                    self._file_paths.add(
+                            os.path.join(self._worktree_wd_to_path_map[wd],
+                                         core.decode(name)))
+                else:
+                    self._force_notify = True
             elif wd == self._git_dir_wd:
                 name = core.decode(name)
                 if name == 'HEAD' or name == 'index':
-                    return True
+                    self._force_notify = True
             elif (wd in self._git_dir_wd_to_path_map
                     and not core.decode(name).endswith('.lock')):
-                return True
-            else:
-                return False
+                self._force_notify = True
 
         def _handle_events(self):
             for wd, mask, cookie, name in \
                     inotify.read_events(self._inotify_fd):
-                if not self._pending:
-                    if self._event_is_relevant(wd, mask, name):
-                        self._pending = True
+                if not self._force_notify:
+                    self._check_event(wd, mask, name)
 
         def stop(self):
             self._running = False
@@ -425,18 +458,21 @@ if AVAILABLE == 'pywin32':
                 for action, path in self._worktree_watch.read():
                     if not self._running:
                         break
-                    if self._pending:
+                    if self._force_notify:
                         continue
                     path = self._worktree + '/' + self._transform_path(path)
                     if (path != self._git_dir
                         and not path.startswith(self._git_dir + '/')
                         and not os.path.isdir(path)
                        ):
-                        self._pending = True
+                        if self._use_check_ignore:
+                            self._file_paths.add(path)
+                        else:
+                            self._force_notify = True
             for action, path in self._git_dir_watch.read():
                 if not self._running:
                     break
-                if self._pending:
+                if self._force_notify:
                     continue
                 path = self._transform_path(path)
                 if path.endswith('.lock'):
@@ -445,7 +481,7 @@ if AVAILABLE == 'pywin32':
                     or path == 'index'
                     or path.startswith('refs/')
                    ):
-                    self._pending = True
+                    self._force_notify = True
 
         def stop(self):
             self._running = False
