@@ -128,10 +128,10 @@ if AVAILABLE == 'inotify':
             self._inotify_fd = None
             self._pipe_r = None
             self._pipe_w = None
-            self._worktree_wds = set()
-            self._worktree_wd_map = {}
-            self._git_dir_wds = set()
-            self._git_dir_wd_map = {}
+            self._worktree_wd_to_path_map = {}
+            self._worktree_path_to_wd_map = {}
+            self._git_dir_wd_to_path_map = {}
+            self._git_dir_path_to_wd_map = {}
             self._git_dir_wd = None
 
         @staticmethod
@@ -204,16 +204,19 @@ if AVAILABLE == 'inotify':
                                 os.path.dirname(os.path.join(self._worktree,
                                                              path))
                                 for path in gitcmds.tracked_files())
-                        self._refresh_watches(tracked_dirs, self._worktree_wds,
-                                              self._worktree_wd_map)
+                        self._refresh_watches(tracked_dirs,
+                                              self._worktree_wd_to_path_map,
+                                              self._worktree_path_to_wd_map)
                     git_dirs = set()
                     git_dirs.add(self._git_dir)
                     for dirpath, dirnames, filenames in core.walk(
                             os.path.join(self._git_dir, 'refs')):
                         git_dirs.add(dirpath)
-                    self._refresh_watches(git_dirs, self._git_dir_wds,
-                                          self._git_dir_wd_map)
-                    self._git_dir_wd = self._git_dir_wd_map[self._git_dir]
+                    self._refresh_watches(git_dirs,
+                                          self._git_dir_wd_to_path_map,
+                                          self._git_dir_path_to_wd_map)
+                    self._git_dir_wd = \
+                            self._git_dir_path_to_wd_map[self._git_dir]
                 except OSError as e:
                     if e.errno == errno.ENOSPC:
                         self._log_out_of_wds_message()
@@ -221,11 +224,12 @@ if AVAILABLE == 'inotify':
                     else:
                         raise
 
-        def _refresh_watches(self, paths_to_watch, wd_set, wd_map):
-            watched_paths = set(wd_map)
+        def _refresh_watches(self, paths_to_watch, wd_to_path_map,
+                             path_to_wd_map):
+            watched_paths = set(path_to_wd_map)
             for path in watched_paths - paths_to_watch:
-                wd = wd_map.pop(path)
-                wd_set.remove(wd)
+                wd = path_to_wd_map.pop(path)
+                wd_to_path_set.pop(wd)
                 try:
                     inotify.rm_watch(self._inotify_fd, wd)
                 except OSError as e:
@@ -253,15 +257,15 @@ if AVAILABLE == 'inotify':
                     else:
                         raise
                 else:
-                    wd_set.add(wd)
-                    wd_map[path] = wd
+                    wd_to_path_map[wd] = path
+                    path_to_wd_map[path] = wd
 
         def _event_is_relevant(self, wd, mask, name):
             if mask & inotify.IN_Q_OVERFLOW:
                 return True
             elif not mask & self._TRIGGER_MASK:
                 return False
-            elif wd in self._worktree_wds:
+            elif wd in self._worktree_wd_to_path_map:
                 return True
             elif mask & inotify.IN_ISDIR:
                 return False
@@ -269,8 +273,8 @@ if AVAILABLE == 'inotify':
                 name = core.decode(name)
                 if name == 'HEAD' or name == 'index':
                     return True
-            elif (wd in self._git_dir_wds and
-                    not core.decode(name).endswith('.lock')):
+            elif (wd in self._git_dir_wd_to_path_map
+                    and not core.decode(name).endswith('.lock')):
                 return True
             else:
                 return False
