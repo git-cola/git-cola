@@ -265,10 +265,10 @@ if AVAILABLE == 'inotify':
                 return True
             elif not mask & self._TRIGGER_MASK:
                 return False
-            elif wd in self._worktree_wd_to_path_map:
-                return True
             elif mask & inotify.IN_ISDIR:
                 return False
+            elif wd in self._worktree_wd_to_path_map:
+                return True
             elif wd == self._git_dir_wd:
                 name = core.decode(name)
                 if name == 'HEAD' or name == 'index':
@@ -428,8 +428,10 @@ if AVAILABLE == 'pywin32':
                     if self._pending:
                         continue
                     path = self._worktree + '/' + self._transform_path(path)
-                    if (path != self._git_dir and
-                            not path.startswith(self._git_dir + '/')):
+                    if (path != self._git_dir
+                        and not path.startswith(self._git_dir + '/')
+                        and not os.path.isdir(path)
+                       ):
                         self._pending = True
             for action, path in self._git_dir_watch.read():
                 if not self._running:
