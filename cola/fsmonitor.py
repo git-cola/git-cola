@@ -282,8 +282,9 @@ if AVAILABLE == 'inotify':
         def _handle_events(self):
             for wd, mask, cookie, name in \
                     inotify.read_events(self._inotify_fd):
-                if self._event_is_relevant(wd, mask, name):
-                    self._pending = True
+                if not self._pending:
+                    if self._event_is_relevant(wd, mask, name):
+                        self._pending = True
 
         def stop(self):
             self._running = False
@@ -424,6 +425,8 @@ if AVAILABLE == 'pywin32':
                 for action, path in self._worktree_watch.read():
                     if not self._running:
                         break
+                    if self._pending:
+                        continue
                     path = self._worktree + '/' + self._transform_path(path)
                     if (path != self._git_dir and
                             not path.startswith(self._git_dir + '/')):
@@ -431,6 +434,8 @@ if AVAILABLE == 'pywin32':
             for action, path in self._git_dir_watch.read():
                 if not self._running:
                     break
+                if self._pending:
+                    continue
                 path = self._transform_path(path)
                 if path.endswith('.lock'):
                     continue
