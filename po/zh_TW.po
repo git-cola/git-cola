@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-02-05 02:58-0800\n"
-"PO-Revision-Date: 2016-02-14 12:17+0800\n"
+"PO-Revision-Date: 2016-05-14 17:44+0800\n"
 "Last-Translator: Ｖ字龍 <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #: cola/fsmonitor.py:96
 msgid "File system change monitoring: enabled.\n"
@@ -2063,15 +2063,15 @@ msgstr "追蹤分支"
 
 #: cola/widgets/createbranch.py:122
 msgid "Update Existing Branch:"
-msgstr "更新已有分支:"
+msgstr "是否更新既有分支："
 
 #: cola/widgets/createbranch.py:124
 msgid "No"
-msgstr "號碼"
+msgstr "不更新"
 
 #: cola/widgets/createbranch.py:125
 msgid "Fast Forward Only"
-msgstr "僅可快速前移式合併者"
+msgstr "僅更新可進行快速前移式合併者"
 
 #: cola/widgets/createbranch.py:129
 msgid "Fetch Tracking Branch"
