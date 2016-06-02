@@ -23,12 +23,11 @@ LONG_DESCRIPTION = """
    :target: https://pypi.python.org/pypi/QtPy/
    :alt: Number of PyPI downloads
 
-QtPy: Abtraction layer for PySide/PyQt4/PyQt5
+QtPy: Abtraction layer for PyQt5/PyQt4/PySide
 =============================================
 
 **QtPy** (pronounced *'cutie pie'*) is a small abstraction layer that lets you
-write applications using a single api call to either PyQt or PySide. **QtPy**
-also provides a set of additional QWidgets.
+write applications using a single api call to either PyQt or PySide.
 
 It provides support for PyQt5, PyQt4 and PySide using the PyQt5 layout (where
 the QtGui module has been split into QtGui and QtWidgets).
@@ -72,7 +71,7 @@ setup(
                 'QWidgets.',
     long_description=LONG_DESCRIPTION,
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: X11 Applications :: Qt',
         'Environment :: Win32 (MS Windows)',
         'Intended Audience :: Developers',
