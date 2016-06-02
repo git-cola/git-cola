@@ -1,2 +1,2 @@
-version_info = (1, 1, 0, 'dev0')
+version_info = (1, 0, 2)
 __version__ = '.'.join(map(str, version_info))
