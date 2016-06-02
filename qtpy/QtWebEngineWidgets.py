@@ -19,6 +19,10 @@ from qtpy import PYSIDE_API
 from qtpy import PythonQtError
 
 
+# To test if we are using WebEngine or WebKit
+WEBENGINE = True
+
+
 if os.environ[QT_API] in PYQT5_API:
     try:
         from PyQt5.QtWebEngineWidgets import QWebEnginePage
@@ -27,14 +31,17 @@ if os.environ[QT_API] in PYQT5_API:
     except ImportError:
         from PyQt5.QtWebKitWidgets import QWebPage as QWebEnginePage
         from PyQt5.QtWebKitWidgets import QWebView as QWebEngineView
-        from PyQt5.QtWebKit import QWebSettings as QWebEngineSettings 
+        from PyQt5.QtWebKit import QWebSettings as QWebEngineSettings
+        WEBENGINE = False
 elif os.environ[QT_API] in PYQT4_API:
     from PyQt4.QtWebKit import QWebPage as QWebEnginePage
     from PyQt4.QtWebKit import QWebView as QWebEngineView
     from PyQt4.QtWebKit import QWebSettings as QWebEngineSettings
+    WEBENGINE = False
 elif os.environ[QT_API] in PYSIDE_API:
     from PySide.QtWebKit import QWebPage as QWebEnginePage
     from PySide.QtWebKit import QWebView as QWebEngineView
     from PySide.QtWebKit import QWebSettings as QWebEngineSettings
+    WEBENGINE = False
 else:
     raise PythonQtError('No Qt bindings could be found')
