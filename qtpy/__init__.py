@@ -116,7 +116,7 @@ if API in PYQT4_API:
         is_pyqt46 = __version__.startswith('4.6')
         import sip
         try:
-            API_NAME += (" (API v%d)" % sip.getapi('QString'))
+            API_NAME += (" (API v{0})".format(sip.getapi('QString')))
         except AttributeError:
             pass
 
