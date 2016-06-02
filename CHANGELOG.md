@@ -1,5 +1,10 @@
 # History of changes
 
+## Version 1.0.2 (01/06/16)
+
+* Add a WEBENGINE constant to QtWebEngineWidgets, which is True if Qt 5 comes
+  with the WebEngine module and False otherwise.
+
 ## Version 1.0.1 (10/04/16)
 
 * Import QIntValidator in QtGui and remove it from QtWidgets (PR #19)
