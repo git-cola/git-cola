@@ -1,8 +1,8 @@
 To release a new version of qtpy on PyPI:
 
-* Update CHANGELOG.md
-
 * git pull
+
+* Update CHANGELOG.md
 
 * Update `_version.py` (set release version, remove 'dev0')
 
