@@ -1,5 +1,11 @@
 from qtpy import QtGui, QtWidgets
 
+def get_qapp(icon_path=None):
+    qapp = QtWidgets.QApplication.instance()
+    if qapp is None:
+        qapp = QtWidgets.QApplication([''])
+    return qapp
+
 
 def test_patched_qcombobox():
     """
@@ -10,7 +16,9 @@ def test_patched_qcombobox():
     other hand, PyQt5 deals with this case correctly. We therefore patch
     QComboBox when using PyQt4 and PySide to avoid issues.
     """
-    
+
+    app = get_qapp()
+
     class Data(object):
         """
         Test class to store in userData. The __getitem__ is needed in order to
