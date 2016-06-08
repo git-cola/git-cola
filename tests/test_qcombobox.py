@@ -2,16 +2,20 @@ from qtpy import QtGui, QtWidgets
 
 
 def test_patched_qcombobox():
-
-    # In PySide, using Python objects as userData in QComboBox causes
-    # Segmentation faults under certain conditions. Even in cases where it
-    # doesn't, findData does not work correctly. Likewise, findData also
-    # does not work correctly with Python objects when using PyQt4. On the
-    # other hand, PyQt5 deals with this case correctly. We therefore patch
-    # QComboBox when using PyQt4 and PySide to avoid issues.
-
-    # The __getitem__ is needed in order to reproduce the Segmentation Fault
+    """
+    In PySide, using Python objects as userData in QComboBox causes
+    Segmentation faults under certain conditions. Even in cases where it
+    doesn't, findData does not work correctly. Likewise, findData also
+    does not work correctly with Python objects when using PyQt4. On the
+    other hand, PyQt5 deals with this case correctly. We therefore patch
+    QComboBox when using PyQt4 and PySide to avoid issues.
+    """
+    
     class Data(object):
+        """
+        Test class to store in userData. The __getitem__ is needed in order to
+        reproduce the segmentation fault.
+        """
         def __getitem__(self, item):
             raise ValueError("Failing")
 
