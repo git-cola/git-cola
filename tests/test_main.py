@@ -4,6 +4,9 @@ from qtpy import QtCore, QtGui, QtWidgets, QtWebEngineWidgets
 
 
 def assert_pyside():
+    """
+    Make sure that we are using PySide
+    """
     import PySide
     assert QtCore.QEvent is PySide.QtCore.QEvent
     assert QtGui.QPainter is PySide.QtGui.QPainter
@@ -12,6 +15,9 @@ def assert_pyside():
 
 
 def assert_pyqt4():
+    """
+    Make sure that we are using PyQt4
+    """
     import PyQt4
     assert QtCore.QEvent is PyQt4.QtCore.QEvent
     assert QtGui.QPainter is PyQt4.QtGui.QPainter
@@ -20,6 +26,9 @@ def assert_pyqt4():
 
 
 def assert_pyqt5():
+    """
+    Make sure that we are using PyQt5
+    """
     import PyQt5
     assert QtCore.QEvent is PyQt5.QtCore.QEvent
     assert QtGui.QPainter is PyQt5.QtGui.QPainter
@@ -32,7 +41,7 @@ def test_qt_api():
     If QT_API is specified, we check that the correct Qt wrapper was used
     """
 
-    QT_API = os.environ.get('QT_API', None)
+    QT_API = os.environ.get('QT_API')
 
     if QT_API == 'pyside':
         assert_pyside()
