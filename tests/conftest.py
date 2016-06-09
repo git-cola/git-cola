@@ -2,8 +2,13 @@ import os
 
 
 def pytest_configure(config):
+
     if 'USE_QT_API' in os.environ:
         os.environ['QT_API'] = os.environ['USE_QT_API'].lower()
+
+    # We need to import qtpy here to make sure that the API versions get set
+    # straight away.
+    import qtpy
 
 
 def pytest_report_header(config):
