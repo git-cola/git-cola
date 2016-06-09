@@ -28,7 +28,7 @@ install:
     - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
     - "activate test"
 
-# Not a .NET project, we build SunPy in the install step instead
+# Not a .NET project, we build in the install step instead
 build: false
 
 test_script:
