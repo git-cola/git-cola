@@ -22,6 +22,72 @@ from qtpy import PYSIDE_API
 from qtpy import PythonQtError
 
 
+def patch_qcombobox():
+
+    from qtpy.QtGui import QIcon
+    from qtpy.QtCore import Qt, QObject
+
+    # In PySide, using Python objects as userData in QComboBox causes
+    # Segmentation faults under certain conditions. Even in cases where it
+    # doesn't, findData does not work correctly. Likewise, findData also
+    # does not work correctly with Python objects when using PyQt4. On the
+    # other hand, PyQt5 deals with this case correctly. We therefore patch
+    # QComboBox when using PyQt4 and PySide to avoid issues.
+
+    class userDataWrapper(QObject):
+        def __init__(self, data, parent=None):
+            super(userDataWrapper, self).__init__(parent)
+            self.data = data
+
+    _addItem = QComboBox.addItem
+
+    def addItem(self, *args, **kwargs):
+        if len(args) == 3 or (not isinstance(args[0], QIcon)
+                              and len(args) == 2):
+            args, kwargs['userData'] = args[:-1], args[-1]
+        if 'userData' in kwargs:
+            kwargs['userData'] = userDataWrapper(kwargs['userData'],
+                                                 parent=self)
+        _addItem(self, *args, **kwargs)
+
+    _insertItem = QComboBox.insertItem
+
+    def insertItem(self, *args, **kwargs):
+        if len(args) == 4 or (not isinstance(args[1], QIcon)
+                              and len(args) == 3):
+            args, kwargs['userData'] = args[:-1], args[-1]
+        if 'userData' in kwargs:
+            kwargs['userData'] = userDataWrapper(kwargs['userData'],
+                                                 parent=self)
+        _insertItem(self, *args, **kwargs)
+
+    _setItemData = QComboBox.setItemData
+
+    def setItemData(self, index, value, role=Qt.UserRole):
+        value = userDataWrapper(value, parent=self)
+        _setItemData(self, index, value, role=role)
+
+    _itemData = QComboBox.itemData
+
+    def itemData(self, index, role=Qt.UserRole):
+        userData = _itemData(self, index, role=role)
+        if isinstance(userData, userDataWrapper):
+            userData = userData.data
+        return userData
+
+    def findData(self, value):
+        for i in range(self.count()):
+            if self.itemData(i) == value:
+                return i
+        return -1
+
+    QComboBox.addItem = addItem
+    QComboBox.insertItem = insertItem
+    QComboBox.setItemData = setItemData
+    QComboBox.itemData = itemData
+    QComboBox.findData = findData
+
+
 if os.environ[QT_API] in PYQT5_API:
     from PyQt5.QtWidgets import *
 elif os.environ[QT_API] in PYQT4_API:
@@ -65,6 +131,10 @@ elif os.environ[QT_API] in PYQT4_API:
     # These objects belong to QtCore
     del (QItemSelection, QItemSelectionModel, QItemSelectionRange,
          QSortFilterProxyModel)
+
+    # Patch QComboBox
+    patch_qcombobox()
+
 elif os.environ[QT_API] in PYSIDE_API:
     from PySide.QtGui import *
     QStyleOptionViewItem = QStyleOptionViewItemV4
@@ -106,5 +176,9 @@ elif os.environ[QT_API] in PYSIDE_API:
     # These objects belong to QtCore
     del (QItemSelection, QItemSelectionModel, QItemSelectionRange,
          QSortFilterProxyModel)
+
+    # Patch QComboBox
+    patch_qcombobox()
+
 else:
     raise PythonQtError('No Qt bindings could be found')
