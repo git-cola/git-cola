@@ -11,18 +11,12 @@ env:
     - SETUP_XVFB=True
     - CONDA_DEPENDENCIES='pytest'
   matrix:
-    - python: "2.7"
-      env: USE_QT_API=PyQt5
-    - python: "2.7"
-      env: USE_QT_API=PyQt4
-    - python: "2.7"
-      env: USE_QT_API=PySide
-    - python: "3.4"
-      env: USE_QT_API=PyQt4
-    - python: "3.5"
-      env: USE_QT_API=PyQt5
-    - python: "3.5"
-      env: USE_QT_API=PyQt4
+    - env: PYTHON_VERSION=2.7 USE_QT_API=PyQt5
+    - env: PYTHON_VERSION=2.7 USE_QT_API=PyQt4
+    - env: PYTHON_VERSION=2.7 USE_QT_API=PySide
+    - env: PYTHON_VERSION=3.4 USE_QT_API=PyQt4
+    - env: PYTHON_VERSION=3.5 USE_QT_API=PyQt4
+    - env: PYTHON_VERSION=3.5 USE_QT_API=PyQt5
 
 before_install:
   # Test environments for different Qt bindings
