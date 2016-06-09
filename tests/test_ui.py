@@ -1,5 +1,7 @@
-from qtpy import QtGui, QtWidgets
-from qtpy.uic import loadUi
+import os
+
+from qtpy import QtWidgets
+from qtpy.uic import loadUi, _QComboBoxSubclass
 
 
 def get_qapp(icon_path=None):
@@ -11,6 +13,6 @@ def get_qapp(icon_path=None):
 
 def test_load_ui():
     app = get_qapp()
-    ui = loadUi('test.ui')
-    assert hasattr(ui, 'pushButton')
-    assert hasattr(ui, 'comboBox')
+    ui = loadUi(os.path.join(os.path.dirname(__file__), 'test.ui'))
+    assert isinstance(ui.pushButton, QtWidgets.QPushButton)
+    assert isinstance(ui.comboBox, _QComboBoxSubclass)

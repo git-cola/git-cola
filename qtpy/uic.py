@@ -4,6 +4,7 @@ from qtpy import QT_API
 from qtpy import PYQT5_API
 from qtpy import PYQT4_API
 from qtpy import PYSIDE_API
+from qtpy.QtWidgets import QComboBox
 
 __all__ = ['loadUi']
 
@@ -188,3 +189,10 @@ elif os.environ[QT_API] in PYSIDE_API:
         widget = loader.load(uifile)
         QMetaObject.connectSlotsByName(widget)
         return widget
+
+
+# The following class is private and only for testing purposes (it is needed by
+# test_ui.py)
+
+class _QComboBoxSubclass(QComboBox):
+    pass
