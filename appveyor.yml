@@ -16,9 +16,9 @@ environment:
       CONDA_DEPENDENCIES: "pytest qt pyqt"
     - PYTHON_VERSION: "2.7"
       CONDA_DEPENDENCIES: "pytest qt pyside"
-    - PYTHON_VERSION: "3.5"
-      CONDA_CHANNELS: "msarahan"
-      CONDA_DEPENDENCIES: "pytest qt5 pyqt5"
+    # - PYTHON_VERSION: "3.5"
+    #   CONDA_CHANNELS: "msarahan"
+    #   CONDA_DEPENDENCIES: "pytest qt5 pyqt5"
     - PYTHON_VERSION: "3.5"
       CONDA_DEPENDENCIES: "pytest qt pyqt"
 
