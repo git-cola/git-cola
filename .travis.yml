@@ -1,3 +1,6 @@
+# We set the language to c because python isn't supported on the MacOS X nodes
+# on Travis. However, the language ends up being irrelevant anyway, since we
+# install Python ourselves using conda.
 language: c
 
 sudo: false
